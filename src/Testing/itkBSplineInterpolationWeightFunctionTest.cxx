@@ -67,11 +67,20 @@ int main( int argc, char *argv[] )
 
   /** Run evaluate for the original ITK implementation. */
   WeightsType2D weights2D = weightFunction2D->Evaluate( cindex );
-  std::cerr << "weights (ITK) " << weights2D << std::endl;
+  //std::cerr << "weights (ITK) " << weights2D << std::endl;
+  unsigned int weightsSize = weights2D.Size();
+  std::cerr << "weights (ITK): ["
+    << weights2D[ 0 ] << ", " << weights2D[ 1 ] << ", ..., "
+    << weights2D[ weightsSize - 2 ] << ", " << weights2D[ weightsSize - 1 ]
+    << "]" << std::endl;
 
   /** Run evaluate for our modified implementation. */
   WeightsType2D weights2_2D = weight2Function2D->Evaluate( cindex );
-  std::cerr << "weights (our) " << weights2_2D << std::endl;
+  //std::cerr << "weights (our) " << weights2_2D << std::endl;
+  std::cerr << "weights (our): ["
+    << weights2_2D[ 0 ] << ", " << weights2_2D[ 1 ] << ", ..., "
+    << weights2_2D[ weightsSize - 2 ] << ", " << weights2_2D[ weightsSize - 1 ]
+    << "]" << std::endl;
 
   /** Compute the distance between the two vectors. */
   double error = 0.0;
@@ -88,7 +97,7 @@ int main( int argc, char *argv[] )
       << "implementation with more than "
       << static_cast<unsigned int>( distance * 100.0 )
       << "%." << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
   std::cerr << std::showpoint;
   std::cerr << std::scientific;
@@ -134,7 +143,7 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: the ITK implementation is more than "
       << static_cast<unsigned int>( allowedTimeDifference * 100.0 )
       << "% faster than our implementation." << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
 
   /**
@@ -155,11 +164,20 @@ int main( int argc, char *argv[] )
   /** Run evaluate for the original ITK implementation. */
   WeightsType3D weights3D = weightFunction3D->Evaluate( cindex3D );
   std::cerr << std::setprecision( 6 );
-  std::cerr << "weights (ITK) " << weights3D << std::endl;
+  //std::cerr << "weights (ITK) " << weights3D << std::endl;
+  weightsSize = weights3D.Size();
+  std::cerr << "weights (ITK): ["
+    << weights3D[ 0 ] << ", " << weights3D[ 1 ] << ", ..., "
+    << weights3D[ weightsSize - 2 ] << ", " << weights3D[ weightsSize - 1 ]
+    << "]" << std::endl;
 
   /** Run evaluate for our modified implementation. */
   WeightsType3D weights2_3D = weight2Function3D->Evaluate( cindex3D );
-  std::cerr << "weights (our) " << weights2_3D << std::endl;
+  //std::cerr << "weights (our) " << weights2_3D << std::endl;
+  std::cerr << "weights (our): ["
+    << weights2_3D[ 0 ] << ", " << weights2_3D[ 1 ] << ", ..., "
+    << weights2_3D[ weightsSize - 2 ] << ", " << weights2_3D[ weightsSize - 1 ]
+    << "]" << std::endl;
 
   /** Compute the distance between the two vectors. */
   error = 0.0;
@@ -176,7 +194,7 @@ int main( int argc, char *argv[] )
       << "implementation with more than "
       << static_cast<unsigned int>( distance * 100.0 )
       << "%." << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
   std::cerr << std::scientific;
   std::cerr << std::setprecision( 4 );
@@ -224,7 +242,7 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: the ITK implementation is more than "
       << static_cast<unsigned int>( allowedTimeDifference * 100.0 )
       << "% faster than our implementation." << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
 
   /**
@@ -242,7 +260,7 @@ int main( int argc, char *argv[] )
   if ( startIndex != trueStartIndex )
   {
     std::cerr << "ERROR: wrong start index was computed." << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
 
   WeightFunction2Type2D::SizeType trueSize;
@@ -250,7 +268,7 @@ int main( int argc, char *argv[] )
   if ( weight2Function2D->GetSupportSize() != trueSize )
   {
     std::cerr << "ERROR: wrong support size was computed." << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
 
   if ( weight2Function2D->GetNumberOfWeights()
@@ -258,7 +276,7 @@ int main( int argc, char *argv[] )
     static_cast<float>( SplineOrder + 1 ), 2.0f ) ) )
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
 
   std::cerr << "All public functions returned valid output." << std::endl;
@@ -279,6 +297,6 @@ int main( int argc, char *argv[] )
   weight2Function3D->Print( std::cerr, 0 );
 
   /** Return a value. */
-  return 0;
+  return EXIT_SUCCESS;
 
 } // end main
