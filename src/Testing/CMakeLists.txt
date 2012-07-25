@@ -286,17 +286,24 @@ if( ELASTIX_USE_OPENCL )
     ${TestDataDir}/3DCT_lung_baseline.mha
     ${TestOutputDir} )
 
-  # Non-functional GPU tests:
+  # messy test:
   #elx_add_test( GPUBSplineTransformTest "OpenCL" )
-  #elx_add_test( GPUCastImageFilterTest "OpenCL" )
-  #elx_add_test( GPUGenericMultiResolutionPyramidImageFilterTest1 "OpenCL" )
+
+  elx_add_test( GPUCastImageFilterTest "OpenCL"
+    ${TestDataDir}/3DCT_lung_baseline.mha
+    ${TestOutputDir} )
+
+  # Non-functional GPU tests:
+  #elx_add_test( GPUGenericMultiResolutionPyramidImageFilterTest "OpenCL" )
+
+  # contain hard-coded paths:
   #elx_add_test( GPUImageBaseTest "OpenCL" )
   #elx_add_test( GPUMathRoundTest "OpenCL" )
-  #elx_add_test( GPURecursiveGaussianImageFilterTest1 "OpenCL" )
+
   #elx_add_test( GPUResampleImageFilterAffineTransformTest "OpenCL" )
   #elx_add_test( GPUResampleImageFilterBSplineTransformTest "OpenCL" )
   #elx_add_test( GPUShrinkImageFilterTest "OpenCL" )
-  #elx_add_test( GPUSmoothingRecursiveGaussianImageFilterTest1 "OpenCL" )
+  #elx_add_test( GPUSmoothingRecursiveGaussianImageFilterTest "OpenCL" )
 endif()
 
 #---------------------------------------------------------------------

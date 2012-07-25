@@ -26,6 +26,9 @@
 
 
 //------------------------------------------------------------------------------
+// This test compares the CPU with the GPU version of the BSplineDecompositionImageFilter.
+// The filter takes an input image and produces an output image.
+// We compare the CPU and GPU output image wrt RMSE and speed.
 
 int main( int argc, char * argv[] )
 {
@@ -33,7 +36,7 @@ int main( int argc, char * argv[] )
   if( argc < 2 )
   {
     std::cerr << "ERROR: insufficient command line arguments.\n"
-      << "  inputFileName" << std::endl;
+      << "  inputFileName outputDirectory" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -119,8 +122,8 @@ int main( int argc, char * argv[] )
   // Use a try/catch, because construction of this filter will trigger
   // OpenCL compilation, which may fail.
   FilterType::Pointer gpuFilter;
-  try{ gpuFilter= FilterType::New(); }
-  catch( itk::ExceptionObject &e )
+  try{ gpuFilter = FilterType::New(); }
+  catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: " << e << std::endl;
     return EXIT_FAILURE;
@@ -141,7 +144,7 @@ int main( int argc, char * argv[] )
   {
     gpuFilter->SetInput( gpuReader->GetOutput() );
     try{ gpuFilter->Update(); }
-    catch( itk::ExceptionObject &e )
+    catch( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: " << e << std::endl;
       return EXIT_FAILURE;
