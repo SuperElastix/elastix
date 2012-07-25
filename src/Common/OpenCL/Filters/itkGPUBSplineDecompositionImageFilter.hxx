@@ -163,7 +163,11 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
     imageSize[i] = outSize[i];
   }
 
-  switch( InputImageDimension )
+  // Solving warning "case label value exceeds maximum value for type"
+  // by making a local copy of the input image dimension.
+  //switch( InputImageDimension )
+  const unsigned int ImageDim = (unsigned int)(InputImageDimension);
+  switch( ImageDim )
   {
   case 1:
     unsigned int imageSize1D[2];
@@ -221,7 +225,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
       break;
     }
 
-    switch( InputImageDimension )
+    switch( ImageDim )
     {
     case 1:
     case 2:
