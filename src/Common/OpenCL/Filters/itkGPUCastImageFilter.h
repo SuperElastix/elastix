@@ -19,60 +19,64 @@
 #include "itkGPUKernelManager.h"
 #include "itkCastImageFilter.h"
 #include "itkGPUUnaryFunctorImageFilter.h"
+#include "itkSimpleDataObjectDecorator.h"
 
 namespace itk
 {
 /** \class GPUCastImageFilter
-*
-* \brief GPU version of cast image filter.
-*
-* \ingroup GPUCommon
-*/
+ *
+ * \brief GPU version of cast image filter.
+ *
+ * \ingroup GPUCommon
+ */
 namespace Functor
 {
-  template< class TInput, class TOutput >
-  class GPUCast : public GPUFunctorBase
-  {
-  public:
-    GPUCast() {}
-    ~GPUCast() {}
 
-    /** Setup GPU kernel arguments for this functor.
-    * Returns current argument index to set additional arguments in the GPU kernel */
-    int SetGPUKernelArguments(GPUKernelManager::Pointer KernelManager, int KernelHandle)
-    {
-      return 0;
-    }
-  };
+template< class TInput, class TOutput >
+class GPUCast : public GPUFunctorBase
+{
+public:
+  GPUCast() {}
+  ~GPUCast() {}
+
+  /** Setup GPU kernel arguments for this functor.
+   * Returns current argument index to set additional arguments in the GPU kernel.
+   */
+  int SetGPUKernelArguments( GPUKernelManager::Pointer KernelManager, int KernelHandle )
+  {
+    return 0;
+  }
+};
 } // end of namespace Functor
+
 
 /** GPUCastImageFilter class definition */
 template< class TInputImage, class TOutputImage >
-class ITK_EXPORT GPUCastImageFilter :
-  public
-  GPUUnaryFunctorImageFilter< TInputImage, TOutputImage,
-  Functor::GPUCast<
-  typename TInputImage::PixelType,
-  typename TOutputImage::PixelType >,
-  CastImageFilter<TInputImage, TOutputImage> >
+class ITK_EXPORT GPUCastImageFilter
+  : public GPUUnaryFunctorImageFilter<
+    TInputImage, TOutputImage,
+    Functor::GPUCast< typename TInputImage::PixelType,
+                      typename TOutputImage::PixelType >,
+    CastImageFilter<TInputImage, TOutputImage> >
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUCastImageFilter Self;
-  typedef GPUUnaryFunctorImageFilter< TInputImage, TOutputImage,
+  typedef GPUCastImageFilter                          Self;
+  typedef GPUUnaryFunctorImageFilter<
+    TInputImage, TOutputImage,
     Functor::GPUCast<
     typename TInputImage::PixelType,
     typename TOutputImage::PixelType >,
-    CastImageFilter<TInputImage, TOutputImage> > GPUSuperclass;
-  typedef CastImageFilter<TInputImage, TOutputImage> CPUSuperclass;
-  typedef SmartPointer< Self >                       Pointer;
-  typedef SmartPointer< const Self >                 ConstPointer;
+    CastImageFilter<TInputImage, TOutputImage> >      GPUSuperclass;
+  typedef CastImageFilter<TInputImage, TOutputImage>  CPUSuperclass;
+  typedef SmartPointer< Self >                        Pointer;
+  typedef SmartPointer< const Self >                  ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUCastImageFilter, GPUUnaryFunctorImageFilter);
+  itkTypeMacro( GPUCastImageFilter, GPUUnaryFunctorImageFilter );
 
   /** Pixel types. */
   typedef typename TInputImage::PixelType  InputPixelType;
@@ -87,11 +91,11 @@ protected:
 
   /** Unlike CPU version, GPU version of binary threshold filter is not
   multi-threaded */
-  virtual void GPUGenerateData();
+  virtual void GPUGenerateData( void );
 
 private:
-  GPUCastImageFilter(const Self &); //purposely not implemented
-  void operator=(const Self &);     //purposely not implemented
+  GPUCastImageFilter(const Self &); // purposely not implemented
+  void operator=(const Self &);     // purposely not implemented
 };
 
 /** Object Factory implementation for GPUCastImageFilter */
@@ -104,29 +108,31 @@ public:
   typedef SmartPointer<const Self>  ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const {
+  virtual const char* GetITKSourceVersion() const
+  {
     return ITK_SOURCE_VERSION;
   }
-  const char* GetDescription() const {
+  const char * GetDescription() const
+  {
     return "A Factory for GPUCastImageFilter";
   }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro(Self);
+  itkFactorylessNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUCastImageFilterFactory, itk::ObjectFactoryBase);
+  itkTypeMacro( GPUCastImageFilterFactory, itk::ObjectFactoryBase );
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory(void)
+  static void RegisterOneFactory( void )
   {
     GPUCastImageFilterFactory::Pointer factory = GPUCastImageFilterFactory::New();
-    itk::ObjectFactoryBase::RegisterFactory(factory);
+    itk::ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
-  GPUCastImageFilterFactory(const Self&); //purposely not implemented
-  void operator=(const Self&);            //purposely not implemented
+  GPUCastImageFilterFactory(const Self&); // purposely not implemented
+  void operator=(const Self&);            // purposely not implemented
 
 // Override default
 #define OverrideCastFilterTypeMacro(ipt,opt,dm1,dm2,dm3) \

@@ -11,415 +11,201 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-#include "itkCommandLineArgumentParser.h"
-#include "CommandLineArgumentHelper.h"
-#include "LoggerHelper.h"
-
-#pragma warning(push)
-// warning C4996: 'std::copy': Function call with parameters that may be unsafe
-// - this call relies on the caller to check that the passed values are correct.
-// To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on
-// how to use Visual C++ 'Checked Iterators'
-#pragma warning(disable:4996)
-#include "itkImageFileReader.h"
-#include "itkImageFileWriter.h"
-#pragma warning(pop)
-
-#include "itkTimeProbe.h"
 
 // GPU include files
 #include "itkGPUBSplineDecompositionImageFilter.h"
 #include "itkGPUExplicitSynchronization.h"
 
-void PrintHelp();
-//------------------------------------------------------------------------------
-/** run: A macro to call a function. */
-#define run(function,type0,type1,dim) \
-  if (ComponentType == #type0 && Dimension == dim) \
-{ \
-  typedef itk::Image< type0, dim > InputImageType; \
-  typedef itk::Image< type1, dim > OutputImageType; \
-  supported = true; \
-  result = function< InputImageType, OutputImageType >( parameters ); \
-}
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
+
+#include "itkTimeProbe.h"
+#include "itkOpenCLUtil.h" // IsGPUAvailable()
+
 
 //------------------------------------------------------------------------------
-namespace {
-  class Parameters
-  {
-  public:
-    // Constructor
-    Parameters()
-    {
-      useCompression = false;
-      outputWrite = true;
-      outputLog = true;
-      GPUEnable = 0;
-      RMSError = 0.0;
-      runTimes = 1;
-      skipCPU = false;
-      skipGPU = false;
 
-      splineorder = 3;
-
-      // Files
-      logFileName = "CPUGPULog.txt";
-    }
-
-    bool useCompression;
-    bool outputWrite;
-    bool outputLog;
-    bool skipCPU;
-    bool skipGPU;
-    int GPUEnable;
-    float RMSError;
-    unsigned int runTimes;
-
-    // Files
-    std::string inputFileName;
-    std::vector<std::string> outputFileNames;
-    std::string logFileName;
-
-    // Filter
-    unsigned int splineorder;
-  };
-}
-
-//------------------------------------------------------------------------------
-template<class InputImageType, class OutputImageType>
-int ProcessImage(const Parameters &_parameters);
-
-// Testing GPU BSplineDecompositionImageFilter
-// 1D:
-// -in D:\\work\\elastix-ext\\ITK4OpenCL\\data\\image-512-1D.mha -out D:\\work\\elastix-ext\\ITK4OpenCL\\data\\test4\\image-512-1D-out-cpu.mha D:\\work\\elastix-ext\\ITK4OpenCL\\data\\test4\\image-512-1D-out-gpu.mha -gpu -rsm 0.000002
-// 2D:
-// -in D:\\work\\elastix-ext\\ITK4OpenCL\\data\\image-256x256-2D.mha -out D:\\work\\elastix-ext\\ITK4OpenCL\\data\\test4\\image-256x256-2D-out-cpu.mha D:\\work\\elastix-ext\\ITK4OpenCL\\data\\test4\\image-256x256-2D-out-gpu.mha -gpu -rsm 0.00002
-// 3D:
-// -in D:\\work\\elastix-ext\\ITK4OpenCL\\data\\image-256x256x256-3D.mha -out D:\\work\\elastix-ext\\ITK4OpenCL\\data\\test4\\image-256x256x256-3D-out-cpu.mha D:\\work\\elastix-ext\\ITK4OpenCL\\data\\test4\\image-256x256x256-3D-out-gpu.mha -gpu -rsm 0.0005
-int main(int argc, char *argv[])
+int main( int argc, char * argv[] )
 {
   // Check arguments for help
-  if ( argc < 5 )
+  if( argc < 2 )
   {
-    PrintHelp();
+    std::cerr << "ERROR: insufficient command line arguments.\n"
+      << "  inputFileName" << std::endl;
     return EXIT_FAILURE;
   }
 
   // Check for GPU
-  if(!itk::IsGPUAvailable())
+  if( !itk::IsGPUAvailable() )
   {
-    std::cerr << "OpenCL-enabled GPU is not present." << std::endl;
+    std::cerr << "ERROR: OpenCL-enabled GPU is not present." << std::endl;
     return EXIT_FAILURE;
   }
 
-  // Create a command line argument parser
-  itk::CommandLineArgumentParser::Pointer parser = itk::CommandLineArgumentParser::New();
-  parser->SetCommandLineArguments(argc, argv);
+  /** Get the command line arguments. */
+  std::string inputFileName = argv[1];
+  std::string outputDirectory = argv[2];
+  std::string baseName = inputFileName.substr( 0, inputFileName.rfind( "." ) );
+  std::string outputFileNameCPU = outputDirectory + "/" + baseName + "-out-cpu.mha";
+  std::string outputFileNameGPU = outputDirectory + "/" + baseName + "-out-gpu.mha";
+  const unsigned int splineOrder = 3;
+  const double eps = 1e-3;
+  const unsigned int runTimes = 5;
 
-  // Create parameters class.
-  Parameters parameters;
-
-  // Get file names arguments
-  const bool retin = parser->GetCommandLineArgument("-in", parameters.inputFileName);
-  parameters.outputFileNames.push_back(parameters.inputFileName.substr(0, parameters.inputFileName.rfind( "." ))+"-out-cpu.mha");
-  parameters.outputFileNames.push_back(parameters.inputFileName.substr(0, parameters.inputFileName.rfind( "." ))+"-out-gpu.mha");
-  parser->GetCommandLineArgument("-out", parameters.outputFileNames);
-  parameters.outputWrite = !(parser->ArgumentExists( "-nooutput" ));
-  parser->GetCommandLineArgument("-outlog", parameters.logFileName);
-  parser->GetCommandLineArgument("-runtimes", parameters.runTimes);
-
-  parser->GetCommandLineArgument("-so", parameters.splineorder);
-
-  parser->GetCommandLineArgument("-rsm", parameters.RMSError);
-  parameters.GPUEnable = parser->ArgumentExists("-gpu");
-  parameters.skipCPU = parser->ArgumentExists("-skipcpu");
-  parameters.skipGPU = parser->ArgumentExists("-skipgpu");
-
-  // Threads.
-  unsigned int maximumNumberOfThreads = itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
-  parser->GetCommandLineArgument( "-threads", maximumNumberOfThreads );
-  itk::MultiThreader::SetGlobalMaximumNumberOfThreads( maximumNumberOfThreads );
-
-  // Determine image properties.
-  std::string ComponentType = "short";
-  std::string PixelType; //we don't use this
-  unsigned int Dimension = 2;
-  unsigned int NumberOfComponents = 1;
-  std::vector<unsigned int> imagesize( Dimension, 0 );
-  int retgip = GetImageProperties(
-    parameters.inputFileName,
-    PixelType,
-    ComponentType,
-    Dimension,
-    NumberOfComponents,
-    imagesize );
-
-  if(retgip != 0)
-  {
-    return EXIT_FAILURE;
-  }
-
-  // Let the user overrule this
-  if (NumberOfComponents > 1)
-  {
-    std::cerr << "ERROR: The NumberOfComponents is larger than 1!" << std::endl;
-    std::cerr << "Vector images are not supported!" << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  // Get rid of the possible "_" in ComponentType.
-  ReplaceUnderscoreWithSpace( ComponentType );
-
-  // Run the program.
-  bool supported = false;
-  int result = EXIT_SUCCESS;
-  try
-  {
-    // 1D
-    //run( ProcessImage, char, float, 1 );
-    //run( ProcessImage, unsigned char, float, 1 );
-    run( ProcessImage, short, float, 1 );
-    //run( ProcessImage, float, float, 1 );
-
-    // 2D
-    //run( ProcessImage, char, float, 2 );
-    //run( ProcessImage, unsigned char, float, 2 );
-    run( ProcessImage, short, float, 2 );
-    //run( ProcessImage, float, float, 2 );
-
-    // 3D
-    //run( ProcessImage, char, float, 3 );
-    //run( ProcessImage, unsigned char, float, 3 );
-    run( ProcessImage, short, float, 3 );
-    //run( ProcessImage, float, float, 3 );
-  }
-  catch( itk::ExceptionObject &e )
-  {
-    std::cerr << "Caught ITK exception: " << e << std::endl;
-    result = EXIT_FAILURE;
-  }
-  if ( !supported )
-  {
-    std::cerr << "ERROR: this combination of pixeltype and dimension is not supported!" << std::endl;
-    std::cerr
-      << "pixel (component) type = " << ComponentType
-      << " ; dimension = " << Dimension
-      << std::endl;
-    result = EXIT_FAILURE;
-  }
-
-  // End program.
-  return result;
-}
-
-//------------------------------------------------------------------------------
-template<class InputImageType, class OutputImageType>
-int ProcessImage(const Parameters &_parameters)
-{
   // Typedefs.
-  const unsigned int ImageDim = (unsigned int)InputImageType::ImageDimension;
-  typedef typename InputImageType::PixelType   InputPixelType;
-  typedef typename OutputImageType::PixelType  OutputPixelType;
+  const unsigned int  Dimension = 3;
+  typedef float       PixelType;
+  typedef itk::Image<PixelType, Dimension>  ImageType;
 
   // CPU Typedefs
-  typedef itk::BSplineDecompositionImageFilter<InputImageType, OutputImageType> CPUFilterType;
-  typedef itk::ImageFileReader<InputImageType>  CPUReaderType;
-  typedef itk::ImageFileWriter<OutputImageType> CPUWriterType;
-
-  // GPU Typedefs
-  typedef itk::BSplineDecompositionImageFilter<InputImageType, OutputImageType> GPUFilterType;
-  typedef itk::ImageFileReader<InputImageType>  GPUReaderType;
-  typedef itk::ImageFileWriter<OutputImageType> GPUWriterType;
+  typedef itk::BSplineDecompositionImageFilter<ImageType, ImageType> FilterType;
+  typedef itk::ImageFileReader<ImageType> ReaderType;
+  typedef itk::ImageFileWriter<ImageType> WriterType;
 
   // Reader
-  typename CPUReaderType::Pointer CPUReader = CPUReaderType::New();
-  CPUReader->SetFileName(_parameters.inputFileName);
-  CPUReader->Update();
+  ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName( inputFileName );
+  reader->Update();
 
-  // Test CPU
-  typename CPUFilterType::Pointer CPUFilter = CPUFilterType::New();
+  // Construct the filter
+  FilterType::Pointer filter = FilterType::New();
+  filter->SetSplineOrder( splineOrder );
 
-  typename InputImageType::ConstPointer  inputImage  = CPUReader->GetOutput();
-  typename InputImageType::RegionType    inputRegion = inputImage->GetBufferedRegion();
-  typename InputImageType::SizeType      inputSize   = inputRegion.GetSize();
-
-  // Speed CPU vs GPU
-  std::cout << "Testing "<< itk::MultiThreader::GetGlobalMaximumNumberOfThreads() <<" threads for CPU vs GPU:\n";
-  std::cout << "Filter type: "<< CPUFilter->GetNameOfClass() <<"\n";
-
+  // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
   cputimer.Start();
-
-  CPUFilter->SetNumberOfThreads( itk::MultiThreader::GetGlobalMaximumNumberOfThreads() );
-
-  if(!_parameters.skipCPU)
+  for( unsigned int i = 0; i < runTimes; i++ )
   {
-    for(unsigned int i=0; i<_parameters.runTimes; i++)
+    filter->SetInput( reader->GetOutput() );
+    try{ filter->Update(); }
+    catch( itk::ExceptionObject & e )
     {
-      CPUFilter->SetInput( CPUReader->GetOutput() );
-      CPUFilter->SetSplineOrder(_parameters.splineorder);
-      CPUFilter->Update();
-
-      if(_parameters.runTimes > 1)
-      {
-        CPUFilter->Modified();
-      }
+      std::cerr << "ERROR: " << e << std::endl;
+      return EXIT_FAILURE;
     }
+    filter->Modified();
   }
-
   cputimer.Stop();
 
-  if(!_parameters.skipCPU)
+  std::cout << "CPU " << filter->GetNameOfClass()
+    << " took " << cputimer.GetMean() / runTimes << " seconds with "
+    << filter->GetNumberOfThreads() << " threads." << std::endl;
+
+  // Copy the result
+
+  // Register object factory for GPU image and filter
+  // All these filters that are constructed after this point are
+  // turned into a GPU filter.
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUImageFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineDecompositionImageFilterFactory::New() );
+  
+  // Construct the filter
+  // Use a try/catch, because construction of this filter will trigger
+  // OpenCL compilation, which may fail.
+  FilterType::Pointer gpuFilter;
+  try{ gpuFilter= FilterType::New(); }
+  catch( itk::ExceptionObject &e )
   {
-    std::cout << "CPU " << CPUFilter->GetNameOfClass() << " took " << cputimer.GetMeanTime() << " seconds with "
-      << CPUFilter->GetNumberOfThreads() << " threads. run times " << _parameters.runTimes << std::endl;
+    std::cerr << "ERROR: " << e << std::endl;
+    return EXIT_FAILURE;
   }
+  gpuFilter->SetSplineOrder( splineOrder );
 
-  if(_parameters.GPUEnable)
-  {
-    // register object factory for GPU image and filter
-    itk::ObjectFactoryBase::RegisterFactory( itk::GPUImageFactory::New() );
-    itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineDecompositionImageFilterFactory::New() );
-  }
+  // Also need to re-construct the image reader, so that it now
+  // reads a GPUImage instead of a normal image.
+  // Otherwise, you will get an exception when running the GPU filter:
+  // "ERROR: The GPU InputImage is NULL. Filter unable to perform."
+  ReaderType::Pointer gpuReader = ReaderType::New();
+  gpuReader->SetFileName( inputFileName );
 
-  typename GPUReaderType::Pointer GPUReader = GPUReaderType::New();
-  GPUReader->SetFileName(_parameters.inputFileName);
-  GPUReader->Update();
-
-  // Test GPU
-  typename GPUFilterType::Pointer GPUFilter = GPUFilterType::New();
-
-  bool updateException = false;
+  // Time the filter, run on the GPU
   itk::TimeProbe gputimer;
   gputimer.Start();
-
-  if(!_parameters.skipGPU)
+  for( unsigned int i = 0; i < runTimes; i++ )
   {
-    for(unsigned int i=0; i<_parameters.runTimes; i++)
+    std::cerr << i << std::endl;
+    gpuFilter->SetInput( gpuReader->GetOutput() );
+    // I get an OpenCL Error: CL_INVALID_WORK_GROUP_SIZE on my NVidia FX1700 with OPenCL 1.0
+    try{ gpuFilter->Update(); }
+    catch( itk::ExceptionObject &e )
     {
-      GPUFilter->SetInput( GPUReader->GetOutput() );
-      GPUFilter->SetSplineOrder(_parameters.splineorder);
-
-      try
-      {
-        GPUFilter->Update();
-      }
-      catch( itk::ExceptionObject &e )
-      {
-        std::cerr << "Caught ITK exception during GPUFilter->Update(): " << e << std::endl;
-        updateException = updateException || true;
-      }
-
-      if(_parameters.runTimes > 1)
-      {
-        GPUFilter->Modified();
-      }
+      std::cerr << "ERROR: " << e << std::endl;
+      return EXIT_FAILURE;
     }
+    // Due to some bug in the ITK synchronisation we now manually
+    // copy the result from GPU to CPU, without calling Update() again,
+    // and not clearing GPU memory afterwards.
+    itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, false );
+    //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true ); // crashes!
+    gpuFilter->Modified();
   }
-
   // GPU buffer has not been copied yet, so we have to make manual update
-  if (!updateException)
-    itk::GPUExplicitSync<GPUFilterType, OutputImageType>( GPUFilter, false );
-
+  //itk::GPUExplicitSync<GPUFilterType, OutputImageType>( GPUFilter, false );
   gputimer.Stop();
 
-  if(!_parameters.skipGPU)
-  {  
-    std::cout << "GPU " << GPUFilter->GetNameOfClass() << " took ";
-    if(!updateException)
-      std::cout << gputimer.GetMeanTime() << " seconds. run times " << _parameters.runTimes << std::endl;
-    else
-      std::cout << "<na>. run times " << _parameters.runTimes << std::endl;
-  }
+  std::cout << "GPU " << gpuFilter->GetNameOfClass()
+    << " took " << gputimer.GetMean() / runTimes
+    << " seconds" << std::endl;
 
-  // RMS Error check
-  const double epsilon = 0.01;
-  float diff = 0.0;
-  unsigned int nPix = 0;
-  if(!_parameters.skipCPU && !_parameters.skipGPU && !updateException)
-  {
-    itk::ImageRegionIterator<OutputImageType> cit(CPUFilter->GetOutput(),
-      CPUFilter->GetOutput()->GetLargestPossibleRegion());
-    itk::ImageRegionIterator<OutputImageType> git(GPUFilter->GetOutput(),
-      GPUFilter->GetOutput()->GetLargestPossibleRegion());
-    for(cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git)
-    {
-      float c = (float)(cit.Get());
-      float g = (float)(git.Get());
-      float err = vnl_math_abs( c - g );
-      //if(err > epsilon)
-      //  std::cout << "CPU : " << (double)(cit.Get()) << ", GPU : " << (double)(git.Get()) << std::endl;
-      diff += err*err;
-      nPix++;
-    }
-  }
+  //// RMS Error check
+  //const double epsilon = 0.01;
+  //float diff = 0.0;
+  //unsigned int nPix = 0;
 
-  float RMSError = 0.0;
-  if(!_parameters.skipCPU && !_parameters.skipGPU && !updateException)
-  {
-    RMSError = sqrt( diff / (float)nPix );
-    std::cout << "RMS Error: " << std::fixed << std::setprecision(8) << RMSError << std::endl;
-  }
-  bool testPassed = false;
-  if (!updateException)
-    testPassed = (RMSError <= _parameters.RMSError);
+  //  itk::ImageRegionIterator<OutputImageType> cit( CPUFilter->GetOutput(),
+  //    CPUFilter->GetOutput()->GetLargestPossibleRegion() );
+  //  itk::ImageRegionIterator<OutputImageType> git( GPUFilter->GetOutput(),
+  //    GPUFilter->GetOutput()->GetLargestPossibleRegion() );
+  //  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
+  //  {
+  //    float c = (float)(cit.Get());
+  //    float g = (float)(git.Get());
+  //    float err = vnl_math_abs( c - g );
+  //    //if(err > epsilon)
+  //    //  std::cout << "CPU : " << (double)(cit.Get()) << ", GPU : " << (double)(git.Get()) << std::endl;
+  //    diff += err*err;
+  //    nPix++;
+  //  }
+  //}
 
-  // Write output
-  if(_parameters.outputWrite)
-  {
-    if(!_parameters.skipCPU)
-    {
-      // Write output CPU image
-      typename CPUWriterType::Pointer writerCPU = CPUWriterType::New();
-      writerCPU->SetInput(CPUFilter->GetOutput());
-      writerCPU->SetFileName( _parameters.outputFileNames[0] );
-      writerCPU->Update();
-    }
+  //float RMSError = 0.0;
+  //if( !_parameters.skipCPU && !_parameters.skipGPU && !updateException )
+  //{
+  //  RMSError = vcl_sqrt( diff / (float)nPix );
+  //  std::cout << "RMS Error: " << std::fixed << std::setprecision(8) << RMSError << std::endl;
+  //}
+  //bool testPassed = false;
+  //if( !updateException )
+  //{
+  //  testPassed = ( RMSError <= _parameters.RMSError );
+  //}
 
-    if(!_parameters.skipGPU && !updateException)
-    {
-      // Write output GPU image
-      typename GPUWriterType::Pointer writerGPU = GPUWriterType::New();
-      writerGPU->SetInput(GPUFilter->GetOutput());
-      writerGPU->SetFileName( _parameters.outputFileNames[1] );
-      writerGPU->Update();
-    }
-  }
+  //// Write output
+  //if( _parameters.outputWrite )
+  //{
+  //  if( !_parameters.skipCPU )
+  //  {
+  //    // Write output CPU image
+  //    typename CPUWriterType::Pointer writerCPU = CPUWriterType::New();
+  //    writerCPU->SetInput( CPUFilter->GetOutput() );
+  //    writerCPU->SetFileName( _parameters.outputFileNames[0] );
+  //    writerCPU->Update();
+  //  }
 
-  // Write log
-  if(_parameters.outputLog)
-  {
-    std::string comments;
-    if(updateException)
-      comments.append(", Exception during update");
+  //  if( !_parameters.skipGPU && !updateException )
+  //  {
+  //    // Write output GPU image
+  //    typename GPUWriterType::Pointer writerGPU = GPUWriterType::New();
+  //    writerGPU->SetInput( GPUFilter->GetOutput() );
+  //    writerGPU->SetFileName( _parameters.outputFileNames[1] );
+  //    writerGPU->Update();
+  //  }
+  //}
 
-    itk::WriteLog<InputImageType>(
-      _parameters.logFileName, ImageDim, inputSize, RMSError,
-      testPassed, updateException,
-      CPUFilter->GetNumberOfThreads(), _parameters.runTimes,
-      CPUFilter->GetNameOfClass(),
-      cputimer.GetMeanTime(), gputimer.GetMeanTime(), comments);
-  }
 
-  if(testPassed)
-    return EXIT_SUCCESS;
-  else
-    return EXIT_FAILURE;
-}
 
-//------------------------------------------------------------------------------
-void PrintHelp( void )
-{
-  std::cout << "Usage:" << std::endl;
-  std::cout << "  -in           input file name" << std::endl;
-  std::cout << "  [-so]         spline order, default 3" << std::endl;
-  std::cout << "  [-out]        output file names.(outputCPU outputGPU)" << std::endl;
-  std::cout << "  [-outlog]     output log file name, default 'CPUGPULog.txt'" << std::endl;
-  std::cout << "  [-nooutput]   controls where output is created, default write output" << std::endl;
-  std::cout << "  [-runtimes]   controls how many times filter will execute, default 1" << std::endl;
-  std::cout << "  [-skipcpu]    skip running CPU part, default false" << std::endl;
-  std::cout << "  [-skipgpu]    skip running GPU part, default false" << std::endl;
-  std::cout << "  [-rms]        rms error, default 0" << std::endl;
-  std::cout << "  [-gpu]        use GPU, default 0" << std::endl;
-  std::cout << "  [-threads]    number of threads, default maximum" << std::endl;
-}
+
+  // End program.
+  return EXIT_SUCCESS;
+
+} // end main()

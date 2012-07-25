@@ -156,7 +156,7 @@ int main( int argc, char * argv[] )
     }
 
     // Check
-    if ( rmse > epsilon )
+    if( rmse > epsilon )
     {
       std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
       return EXIT_FAILURE;
@@ -200,7 +200,7 @@ int main( int argc, char * argv[] )
       std::cout << " " << rmse << std::endl;
 
       // Check
-      if ( rmse > epsilon )
+      if( rmse > epsilon )
       {
         std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
         return EXIT_FAILURE;

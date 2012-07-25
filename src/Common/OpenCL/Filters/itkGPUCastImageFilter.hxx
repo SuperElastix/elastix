@@ -20,17 +20,17 @@
 namespace itk
 {
 /**
-* Constructor
-*/
+ * Constructor
+ */
 template< class TInputImage, class TOutputImage >
 GPUCastImageFilter< TInputImage, TOutputImage >
 ::GPUCastImageFilter()
 {
   std::ostringstream defines;
 
-  if(TInputImage::ImageDimension > 3 || TInputImage::ImageDimension < 1)
+  if( TInputImage::ImageDimension > 3 || TInputImage::ImageDimension < 1 )
   {
-    itkExceptionMacro("GPUCastImageFilter supports 1/2/3D image.");
+    itkExceptionMacro( "GPUCastImageFilter supports 1/2/3D image." );
   }
 
   defines << "#define DIM_" << TInputImage::ImageDimension << "\n";
@@ -40,10 +40,10 @@ GPUCastImageFilter< TInputImage, TOutputImage >
   GetTypenameInString( typeid ( typename TOutputImage::PixelType ), defines );
 
   // OpenCL source path
-  const std::string oclSrcPath(oclGPUCastImageFilter);
+  const std::string oclSrcPath( oclGPUCastImageFilter );
   // Load and create kernel
-  bool loaded = this->m_GPUKernelManager->LoadProgramFromFile(oclSrcPath.c_str(), defines.str().c_str());
-  if(loaded)
+  bool loaded = this->m_GPUKernelManager->LoadProgramFromFile( oclSrcPath.c_str(), defines.str().c_str() );
+  if( loaded )
   {
     this->m_UnaryFunctorImageFilterGPUKernelHandle = this->m_GPUKernelManager->CreateKernel("CastImageFilter");
   }

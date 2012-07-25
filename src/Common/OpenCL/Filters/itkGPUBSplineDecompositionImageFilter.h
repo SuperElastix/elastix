@@ -64,10 +64,10 @@ public:
   typedef SmartPointer< Self >                Pointer;
   typedef SmartPointer< const Self >          ConstPointer;
 
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUBSplineDecompositionImageFilter, GPUSuperclass);
+  itkTypeMacro( GPUBSplineDecompositionImageFilter, GPUSuperclass );
 
   /** Superclass typedefs. */
   typedef typename GPUSuperclass::OutputImageRegionType OutputImageRegionType;
@@ -82,21 +82,21 @@ public:
   typedef typename InputImageType::PixelType    InputImagePixelType;
 
   /** ImageDimension constants */
-  itkStaticConstMacro(InputImageDimension, unsigned int,
-    TInputImage::ImageDimension);
-  itkStaticConstMacro(OutputImageDimension, unsigned int,
-    TOutputImage::ImageDimension);
+  itkStaticConstMacro( InputImageDimension, unsigned int,
+    TInputImage::ImageDimension );
+  itkStaticConstMacro( OutputImageDimension, unsigned int,
+    TOutputImage::ImageDimension );
 
 protected:
   GPUBSplineDecompositionImageFilter();
   ~GPUBSplineDecompositionImageFilter(){};
 
-  virtual void GPUGenerateData();
-  virtual void PrintSelf(std::ostream & os, Indent indent) const;
+  virtual void GPUGenerateData( void );
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
 private:
-  GPUBSplineDecompositionImageFilter(const Self &);  //purposely not implemented
-  void operator=(const Self &);                   //purposely not implemented
+  GPUBSplineDecompositionImageFilter(const Self &); // purposely not implemented
+  void operator=(const Self &);                     // purposely not implemented
 
   int m_FilterGPUKernelHandle;
   size_t m_DeviceLocalMemorySize;
@@ -121,13 +121,14 @@ public:
   itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUBSplineDecompositionImageFilterFactory, itk::ObjectFactoryBase);
+  itkTypeMacro( GPUBSplineDecompositionImageFilterFactory, itk::ObjectFactoryBase );
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory(void)
+  static void RegisterOneFactory( void )
   {
-    GPUBSplineDecompositionImageFilterFactory::Pointer factory = GPUBSplineDecompositionImageFilterFactory::New();
-    ObjectFactoryBase::RegisterFactory(factory);
+    GPUBSplineDecompositionImageFilterFactory::Pointer factory
+      = GPUBSplineDecompositionImageFilterFactory::New();
+    ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
@@ -171,6 +172,7 @@ private:
       //OverrideBSplineDecompositionImageFilterTypeMacro(char, float, 1, 2, 3);
       //OverrideBSplineDecompositionImageFilterTypeMacro(unsigned short, float, 1, 2, 3);
       OverrideBSplineDecompositionImageFilterTypeMacro(short, float, 1, 2, 3);
+      OverrideBSplineDecompositionImageFilterTypeMacro(float, float, 1, 2, 3);
       //OverrideBSplineDecompositionImageFilterTypeMacro(unsigned int, float, 1, 2, 3);
       //OverrideBSplineDecompositionImageFilterTypeMacro(int, float, 1, 2, 3);
     }
