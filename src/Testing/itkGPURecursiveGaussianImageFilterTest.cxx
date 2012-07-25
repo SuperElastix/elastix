@@ -16,6 +16,8 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+#include "itkImageRegionConstIterator.h"
+
 #include "itkTimeProbe.h"
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
 #include <iomanip> // setprecision, etc.
@@ -25,9 +27,9 @@
 template<class ImageType>
 double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
 {
-  itk::ImageRegionIterator<ImageType> cit(
+  itk::ImageRegionConstIterator<ImageType> cit(
     cpuImage, cpuImage->GetLargestPossibleRegion() );
-  itk::ImageRegionIterator<ImageType> git(
+  itk::ImageRegionConstIterator<ImageType> git(
     gpuImage, gpuImage->GetLargestPossibleRegion() );
 
   double rmse = 0.0;
@@ -110,7 +112,7 @@ int main( int argc, char * argv[] )
   if( testspeed )
   {
     std::cout << "Testing the Recursive Gaussian filter, CPU vs GPU:\n";
-    std::cout << "CPU/GPU sigma direction #threads RMSE\n";
+    std::cout << "CPU/GPU sigma direction #threads time RMSE\n";
 
     for( unsigned int nThreads = 1; nThreads <= maximumNumberOfThreads; nThreads++ )
     {
@@ -167,7 +169,7 @@ int main( int argc, char * argv[] )
   if( testdirections )
   {
     std::cout << "\n\nTesting directions switch, CPU vs GPU:\n";
-    std::cout << "CPU/GPU sigma direction #threads RMSE\n";
+    std::cout << "CPU/GPU sigma direction #threads time RMSE\n";
 
     // Check directions
     for( direction = 0; direction < ImageDimension; direction++ )

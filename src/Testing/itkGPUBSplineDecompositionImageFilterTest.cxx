@@ -18,9 +18,11 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+#include "itkImageRegionConstIterator.h"
 
 #include "itkTimeProbe.h"
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
+#include <iomanip> // setprecision, etc.
 
 
 //------------------------------------------------------------------------------
@@ -49,8 +51,10 @@ int main( int argc, char * argv[] )
   std::string outputFileNameCPU = outputDirectory + "/" + baseName + "-out-cpu.mha";
   std::string outputFileNameGPU = outputDirectory + "/" + baseName + "-out-gpu.mha";
   const unsigned int splineOrder = 3;
-  const double eps = 1e-3;
+  const double epsilon = 1e-3;
   const unsigned int runTimes = 5;
+
+  std::cout << std::showpoint << std::setprecision( 4 );
 
   // Typedefs.
   const unsigned int  Dimension = 3;
@@ -71,6 +75,9 @@ int main( int argc, char * argv[] )
   FilterType::Pointer filter = FilterType::New();
   filter->SetSplineOrder( splineOrder );
 
+  std::cout << "Testing the BSplineDecompositionImageFilter, CPU vs GPU:\n";
+  std::cout << "CPU/GPU splineOrder #threads time RMSE\n";
+
   // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
   cputimer.Start();
@@ -87,11 +94,20 @@ int main( int argc, char * argv[] )
   }
   cputimer.Stop();
 
-  std::cout << "CPU " << filter->GetNameOfClass()
-    << " took " << cputimer.GetMean() / runTimes << " seconds with "
-    << filter->GetNumberOfThreads() << " threads." << std::endl;
+  std::cout << "CPU " << splineOrder
+    << " " << filter->GetNumberOfThreads()
+    << " " << cputimer.GetMean() / runTimes << std::endl;
 
-  // Copy the result
+  /** Write the CPU result. */
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetInput( filter->GetOutput() );
+  writer->SetFileName( outputFileNameCPU.c_str() );
+  try{ writer->Update(); }
+  catch( itk::ExceptionObject & e )
+  {
+    std::cerr << "ERROR: " << e << std::endl;
+    return EXIT_FAILURE;
+  }
 
   // Register object factory for GPU image and filter
   // All these filters that are constructed after this point are
@@ -123,9 +139,7 @@ int main( int argc, char * argv[] )
   gputimer.Start();
   for( unsigned int i = 0; i < runTimes; i++ )
   {
-    std::cerr << i << std::endl;
     gpuFilter->SetInput( gpuReader->GetOutput() );
-    // I get an OpenCL Error: CL_INVALID_WORK_GROUP_SIZE on my NVidia FX1700 with OPenCL 1.0
     try{ gpuFilter->Update(); }
     catch( itk::ExceptionObject &e )
     {
@@ -140,70 +154,44 @@ int main( int argc, char * argv[] )
     gpuFilter->Modified();
   }
   // GPU buffer has not been copied yet, so we have to make manual update
-  //itk::GPUExplicitSync<GPUFilterType, OutputImageType>( GPUFilter, false );
+  //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true );
   gputimer.Stop();
 
-  std::cout << "GPU " << gpuFilter->GetNameOfClass()
-    << " took " << gputimer.GetMean() / runTimes
-    << " seconds" << std::endl;
+  std::cout << "GPU " << splineOrder
+    << " x " << gputimer.GetMean() / runTimes;
 
-  //// RMS Error check
-  //const double epsilon = 0.01;
-  //float diff = 0.0;
-  //unsigned int nPix = 0;
+  /** Write the GPU result. */
+  WriterType::Pointer gpuWriter = WriterType::New();
+  gpuWriter->SetInput( gpuFilter->GetOutput() );
+  gpuWriter->SetFileName( outputFileNameGPU.c_str() );
+  try{ gpuWriter->Update(); }
+  catch( itk::ExceptionObject & e )
+  {
+    std::cerr << "ERROR: " << e << std::endl;
+    return EXIT_FAILURE;
+  }
 
-  //  itk::ImageRegionIterator<OutputImageType> cit( CPUFilter->GetOutput(),
-  //    CPUFilter->GetOutput()->GetLargestPossibleRegion() );
-  //  itk::ImageRegionIterator<OutputImageType> git( GPUFilter->GetOutput(),
-  //    GPUFilter->GetOutput()->GetLargestPossibleRegion() );
-  //  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
-  //  {
-  //    float c = (float)(cit.Get());
-  //    float g = (float)(git.Get());
-  //    float err = vnl_math_abs( c - g );
-  //    //if(err > epsilon)
-  //    //  std::cout << "CPU : " << (double)(cit.Get()) << ", GPU : " << (double)(git.Get()) << std::endl;
-  //    diff += err*err;
-  //    nPix++;
-  //  }
-  //}
+  // Compute RMSE
+  itk::ImageRegionConstIterator<ImageType> cit(
+    filter->GetOutput(), filter->GetOutput()->GetLargestPossibleRegion() );
+  itk::ImageRegionConstIterator<ImageType> git(
+    gpuFilter->GetOutput(), gpuFilter->GetOutput()->GetLargestPossibleRegion() );
 
-  //float RMSError = 0.0;
-  //if( !_parameters.skipCPU && !_parameters.skipGPU && !updateException )
-  //{
-  //  RMSError = vcl_sqrt( diff / (float)nPix );
-  //  std::cout << "RMS Error: " << std::fixed << std::setprecision(8) << RMSError << std::endl;
-  //}
-  //bool testPassed = false;
-  //if( !updateException )
-  //{
-  //  testPassed = ( RMSError <= _parameters.RMSError );
-  //}
+  double rmse = 0.0;
+  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
+  {
+    double err = static_cast<double>( cit.Get() ) - static_cast<double>( git.Get() );
+    rmse += err * err;
+  }
+  rmse = vcl_sqrt( rmse / filter->GetOutput()->GetLargestPossibleRegion().GetNumberOfPixels() );
+  std::cout << " " << rmse << std::endl;
 
-  //// Write output
-  //if( _parameters.outputWrite )
-  //{
-  //  if( !_parameters.skipCPU )
-  //  {
-  //    // Write output CPU image
-  //    typename CPUWriterType::Pointer writerCPU = CPUWriterType::New();
-  //    writerCPU->SetInput( CPUFilter->GetOutput() );
-  //    writerCPU->SetFileName( _parameters.outputFileNames[0] );
-  //    writerCPU->Update();
-  //  }
-
-  //  if( !_parameters.skipGPU && !updateException )
-  //  {
-  //    // Write output GPU image
-  //    typename GPUWriterType::Pointer writerGPU = GPUWriterType::New();
-  //    writerGPU->SetInput( GPUFilter->GetOutput() );
-  //    writerGPU->SetFileName( _parameters.outputFileNames[1] );
-  //    writerGPU->Update();
-  //  }
-  //}
-
-
-
+  // Check
+  if( rmse > epsilon )
+  {
+    std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
+    return EXIT_FAILURE;
+  }
 
   // End program.
   return EXIT_SUCCESS;

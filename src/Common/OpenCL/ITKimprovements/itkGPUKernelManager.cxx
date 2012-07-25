@@ -423,11 +423,12 @@ bool GPUKernelManager::LaunchKernel1D(int kernelIdx, size_t globalWorkSize)
   return true;
 }
 
-bool GPUKernelManager::LaunchKernel2D(int kernelIdx,
+bool GPUKernelManager::LaunchKernel2D(
+  int kernelIdx,
   size_t globalWorkSizeX, size_t globalWorkSizeY,
   size_t localWorkSizeX,  size_t localWorkSizeY )
 {
-  if(kernelIdx < 0 || kernelIdx >= (int)m_KernelContainer.size()) return false;
+  if( kernelIdx < 0 || kernelIdx >= (int)m_KernelContainer.size()) return false;
 
   if(!CheckArgumentReady(kernelIdx))
   {
@@ -447,10 +448,13 @@ bool GPUKernelManager::LaunchKernel2D(int kernelIdx,
 #ifdef _DEBUG
   std::cout<<"clEnqueueNDRangeKernel" << "..." << std::endl;
 #endif
-  errid = clEnqueueNDRangeKernel(m_Manager->GetCommandQueue(m_CommandQueueId), m_KernelContainer[kernelIdx], 2, NULL, gws, lws, 0, NULL, NULL);
-  OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
+  errid = clEnqueueNDRangeKernel(
+    this->m_Manager->GetCommandQueue( this->m_CommandQueueId ),
+    this->m_KernelContainer[kernelIdx],
+    2, NULL, gws, lws, 0, NULL, NULL );
+  OpenCLCheckError( errid, __FILE__, __LINE__, ITK_LOCATION );
 
-  if(errid != CL_SUCCESS)
+  if( errid != CL_SUCCESS )
   {
     itkWarningMacro("GPU kernel launch failed");
     return false;

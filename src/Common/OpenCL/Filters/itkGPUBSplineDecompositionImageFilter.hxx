@@ -20,6 +20,11 @@
 
 namespace itk
 {
+
+/**
+ * ****************** Constructor ***********************
+ */
+
 template< class TInputImage, class TOutputImage >
 GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
 ::GPUBSplineDecompositionImageFilter()
@@ -70,9 +75,13 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   {
     itkExceptionMacro( << "Kernel has not been loaded from: " << oclSrcPath );
   }
-}
+} // end Constructor()
 
-//------------------------------------------------------------------------------
+
+/**
+ * ****************** GPUGenerateData ***********************
+ */
+
 template< class TInputImage, class TOutputImage >
 void
 GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
@@ -103,9 +112,8 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   const typename GPUInputImage::SizeType dataLength
     = inPtr->GetLargestPossibleRegion().GetSize();
   typename GPUOutputImage::SizeValueType maxLength = 0;
-  const unsigned int ImageDim = (unsigned int)(TInputImage::ImageDimension);
 
-  for( unsigned int n = 0; n < ImageDim; n++ )
+  for( unsigned int n = 0; n < InputImageDimension; ++n )
   {
     if( dataLength[n] > maxLength )
     {
@@ -129,12 +137,13 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   caster->Update();
 
   size_t localSize[3], globalSize[3];
-  localSize[0] = localSize[1] = localSize[2] = OpenCLGetLocalBlockSize(ImageDim);
+  localSize[0] = localSize[1] = localSize[2] = OpenCLGetLocalBlockSize( InputImageDimension );
 
-  for( unsigned int i=0; i<ImageDim; i++ )
+  for( unsigned int i = 0; i < InputImageDimension; ++i )
   {
     // total # of threads
-    globalSize[i] = localSize[i]*(unsigned int)ceil( (float)outSize[i]/(float)localSize[i] );
+    globalSize[i] = localSize[i] * ( static_cast<unsigned int>(
+      vcl_ceil( static_cast<float>( outSize[i] ) / static_cast<float>( localSize[i] ) ) ) );
   }
 
   // Make GPU buffer not dirty 
@@ -153,7 +162,8 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   {
     imageSize[i] = outSize[i];
   }
-  switch (ImageDim)
+
+  switch( InputImageDimension )
   {
   case 1:
     unsigned int imageSize1D[2];
@@ -191,31 +201,27 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   this->m_GPUKernelManager->SetKernelArg(
     this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_int), &this->m_NumberOfPoles );
 
-  size_t globalSize2D[2];
-
   // Loop over directions
-  for( unsigned int n = 0; n < ImageDim; n++ )
+  for( unsigned int n = 0; n < InputImageDimension; n++ )
   {
     this->m_GPUKernelManager->SetKernelArg(
       this->m_FilterGPUKernelHandle, argidx, sizeof(cl_uint), &n );
 
+    unsigned int x, y;
     switch( n )
     {
     case 0:
-      globalSize2D[0] = imageSize[1];
-      globalSize2D[1] = imageSize[2];
+      x = 1; y = 2;
       break;
     case 1:
-      globalSize2D[0] = imageSize[0];
-      globalSize2D[1] = imageSize[2];
+      x = 0; y = 2;
       break;
     case 2:
-      globalSize2D[0] = imageSize[0];
-      globalSize2D[1] = imageSize[1];
+      x = 0; y = 1;
       break;
     }
 
-    switch( ImageDim )
+    switch( InputImageDimension )
     {
     case 1:
     case 2:
@@ -224,11 +230,18 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
       break;
     case 3:
       this->m_GPUKernelManager->LaunchKernel2D(
-        this->m_FilterGPUKernelHandle, globalSize2D[0], globalSize[1], localSize[n], localSize[n] );
+        this->m_FilterGPUKernelHandle,
+        globalSize[x], globalSize[y], localSize[n], localSize[n] );
       break;
     }
-  }
-}
+  } // end loop over InputImageDimension
+
+} // end GPUGenerateData()
+
+
+/**
+ * ****************** PrintSelf ***********************
+ */
 
 template< class TInputImage, class TOutputImage >
 void
@@ -237,6 +250,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
 {
   CPUSuperclass::PrintSelf( os, indent );
   GPUSuperclass::PrintSelf( os, indent );
+
 } // end PrintSelf()
 
 
