@@ -39,11 +39,14 @@ macro( elx_add_test name group )
   set( ELXTEST_TEST_NAME ${name} )
 
   # Create the test executable.
-  add_executable( ${ELXTEST_EXECUTABLE_NAME} ${ELXTEST_SOURCE_NAME} )
+  add_executable( ${ELXTEST_EXECUTABLE_NAME} ${ELXTEST_SOURCE_NAME}
+    itkCommandLineArgumentParser.cxx # some test use the CommandLineArgumentParser
+    )
 
   # Link against other libraries.
   target_link_libraries( ${ELXTEST_EXECUTABLE_NAME}
     elxCommon           # needed for elxTimer
+    param               # some test use the CommandLineArgumentParser
     elastix_opencl      # is empty if not selected in CMake
     ${mevisdcmtifflib}  # is empty if not selected in CMake
     ${ITK_LIBRARIES}
@@ -302,9 +305,14 @@ if( ELASTIX_USE_OPENCL )
     ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
     ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha )
 
+  elx_add_test( GPUResampleImageFilterAffineTransformTest "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha
+    -i   NearestNeighbor )
+
   # Non-functional GPU tests:
   #elx_add_test( GPUGenericMultiResolutionPyramidImageFilterTest "OpenCL" )
-  #elx_add_test( GPUResampleImageFilterAffineTransformTest "OpenCL" )
   #elx_add_test( GPUResampleImageFilterBSplineTransformTest "OpenCL" )
 
 endif()
