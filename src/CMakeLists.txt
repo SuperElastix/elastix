@@ -37,19 +37,24 @@ mark_as_advanced( ELASTIX_USE_OPENCL )
 option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
 
 IF( ELASTIX_USE_OPENCL )
-  FIND_PACKAGE( OpenCL REQUIRED )
-  INCLUDE_DIRECTORIES( ${OPENCL_INCLUDE_DIRS} )
-ENDIF()
+  find_package( OpenCL REQUIRED )
+  include_directories( ${OPENCL_INCLUDE_DIRS} )
+endif()
 
 #----------------------------------------------------------------------
-
 # Find Eigen
-find_package( Eigen3 REQUIRED )
-include_directories( ${EIGEN3_INCLUDE_DIR} )
-#message( STATUS EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR} )
+mark_as_advanced( ELASTIX_USE_EIGEN )
+option( ELASTIX_USE_EIGEN "Use Eigen library" OFF )
 
+if( ELASTIX_USE_EIGEN )
+  find_package( Eigen3 REQUIRED )
+  include_directories( ${EIGEN3_INCLUDE_DIR} )
+endif()
+
+#---------------------------------------------------------------------
 # Find OpenMP
 find_package( OpenMP )
+
 if( OPENMP_FOUND )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}" )
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}" )

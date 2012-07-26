@@ -283,9 +283,6 @@ if( ELASTIX_USE_OPENCL )
     ${TestOutputDir}/3DCT_lung_baseline_decompose_CPU.mha
     ${TestOutputDir}/3DCT_lung_baseline_decompose_GPU.mha )
 
-  # messy test:
-  #elx_add_test( GPUBSplineTransformTest "OpenCL" )
-
   elx_add_test( GPUCastImageFilterTest "OpenCL"
     ${TestDataDir}/3DCT_lung_baseline.mha
     ${TestOutputDir}/3DCT_lung_baseline_cast_CPU.mha
@@ -307,11 +304,6 @@ if( ELASTIX_USE_OPENCL )
 
   # Non-functional GPU tests:
   #elx_add_test( GPUGenericMultiResolutionPyramidImageFilterTest "OpenCL" )
-
-  # contain hard-coded paths:
-  #elx_add_test( GPUImageBaseTest "OpenCL" )
-  #elx_add_test( GPUMathRoundTest "OpenCL" )
-
   #elx_add_test( GPUResampleImageFilterAffineTransformTest "OpenCL" )
   #elx_add_test( GPUResampleImageFilterBSplineTransformTest "OpenCL" )
 
