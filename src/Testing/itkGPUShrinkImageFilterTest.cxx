@@ -26,7 +26,7 @@
 
 
 //------------------------------------------------------------------------------
-// This test compares the CPU with the GPU version of the GPUShrinkImageFilter.
+// This test compares the CPU with the GPU version of the ShrinkImageFilter.
 // The filter takes an input image and produces an output image.
 // We compare the CPU and GPU output image wrt RMSE and speed.
 
