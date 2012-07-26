@@ -19,8 +19,14 @@
 
 namespace itk
 {
+
+/**
+ * ****************** Constructor ***********************
+ */
+
 template< class TInputImage, class TOutputImage >
-GPUShrinkImageFilter< TInputImage, TOutputImage >::GPUShrinkImageFilter()
+GPUShrinkImageFilter< TInputImage, TOutputImage >
+::GPUShrinkImageFilter()
 {
   std::ostringstream defines;
 
@@ -47,34 +53,42 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >::GPUShrinkImageFilter()
   {
     itkExceptionMacro( << "Kernel has not been loaded from: " << oclSrcPath );
   }
-}
+} // end Constructor()
 
-//------------------------------------------------------------------------------
+
+/**
+ * ****************** GPUGenerateData ***********************
+ */
+
 template< class TInputImage, class TOutputImage >
-void GPUShrinkImageFilter< TInputImage, TOutputImage >::GPUGenerateData()
+void
+GPUShrinkImageFilter< TInputImage, TOutputImage >
+::GPUGenerateData( void )
 {
   typedef typename GPUTraits<TInputImage>::Type  GPUInputImage;
   typedef typename GPUTraits<TOutputImage>::Type GPUOutputImage;
 
-  typename GPUInputImage::Pointer  inPtr = dynamic_cast<GPUInputImage *>( this->ProcessObject::GetInput(0) );
-  typename GPUOutputImage::Pointer otPtr = dynamic_cast<GPUOutputImage *>( this->ProcessObject::GetOutput(0) );
+  typename GPUInputImage::Pointer  inPtr
+    = dynamic_cast<GPUInputImage *>( this->ProcessObject::GetInput(0) );
+  typename GPUOutputImage::Pointer otPtr
+    = dynamic_cast<GPUOutputImage *>( this->ProcessObject::GetOutput(0) );
 
   // Perform the safe check
-  if(inPtr.IsNull())
+  if( inPtr.IsNull() )
   {
-    itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro( << "ERROR: The GPU InputImage is NULL. Filter unable to perform." );
     return;
   }
-  if(otPtr.IsNull())
+  if( otPtr.IsNull() )
   {
-    itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
+    itkExceptionMacro( << "ERROR: The GPU OutputImage is NULL. Filter unable to perform." );
     return;
   }
 
   // Convert the factor for convenient multiplication
   typename TOutputImage::SizeType factorSize;
   const ShrinkFactorsType shrinkFactors = this->GetShrinkFactors();
-  for(unsigned int i = 0; i < TInputImage::ImageDimension; i++)
+  for( unsigned int i = 0; i < InputImageDimension; i++ )
   {
     factorSize[i] = shrinkFactors[i];
   }
@@ -92,43 +106,45 @@ void GPUShrinkImageFilter< TInputImage, TOutputImage >::GPUGenerateData()
 
   // We wish to perform the following mapping of outputIndex to
   // inputIndex on all points in our region
-  otPtr->TransformIndexToPhysicalPoint(outputIndex, tempPoint);
-  inPtr->TransformPhysicalPointToIndex(tempPoint, inputIndex);
+  otPtr->TransformIndexToPhysicalPoint( outputIndex, tempPoint );
+  inPtr->TransformPhysicalPointToIndex( tempPoint, inputIndex );
 
   // Given that the size is scaled by a constant factor eq:
   // inputIndex = outputIndex * factorSize
   // is equivalent up to a fixed offset which we now compute
   OffsetValueType zeroOffset = 0;
-  for(unsigned int i = 0; i < TInputImage::ImageDimension; i++)
+  for( unsigned int i = 0; i < InputImageDimension; i++ )
   {
     offsetIndex[i] = inputIndex[i] - outputIndex[i] * shrinkFactors[i];
     // It is plausible that due to small amounts of loss of numerical
-    // precision that the offset it negaive, this would cause sampling
+    // precision that the offset is negative, this would cause sampling
     // out of out region, this is insurance against that possibility
-    offsetIndex[i] = vnl_math_max(zeroOffset, offsetIndex[i]);
+    offsetIndex[i] = vnl_math_max( zeroOffset, offsetIndex[i] );
   }
 
-  const unsigned int ImageDim = (unsigned int)(TInputImage::ImageDimension);
   typename GPUOutputImage::SizeType inSize  = inPtr->GetLargestPossibleRegion().GetSize();
   typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
   size_t localSize[3], globalSize[3];
-  localSize[0] = localSize[1] = localSize[2] = OpenCLGetLocalBlockSize(ImageDim);
+  localSize[0] = localSize[1] = localSize[2] = OpenCLGetLocalBlockSize( InputImageDimension );
 
-  for(unsigned int i=0; i<ImageDim; i++)
+  for( unsigned int i = 0; i < InputImageDimension; ++i )
   {
     // total # of threads
-    globalSize[i] = localSize[i]*(unsigned int)ceil( (float)outSize[i]/(float)localSize[i]);
+    globalSize[i] = localSize[i] * ( static_cast<unsigned int>(
+      vcl_ceil( static_cast<float>( outSize[i] ) / static_cast<float>( localSize[i] ) ) ) );
   }
 
   // arguments set up
   int argidx = 0;
-  this->m_GPUKernelManager->SetKernelArgWithImage(m_FilterGPUKernelHandle, argidx++, inPtr->GetGPUDataManager());
-  this->m_GPUKernelManager->SetKernelArgWithImage(m_FilterGPUKernelHandle, argidx++, otPtr->GetGPUDataManager());
+  this->m_GPUKernelManager->SetKernelArgWithImage(
+    this->m_FilterGPUKernelHandle, argidx++, inPtr->GetGPUDataManager() );
+  this->m_GPUKernelManager->SetKernelArgWithImage(
+    this->m_FilterGPUKernelHandle, argidx++, otPtr->GetGPUDataManager() );
 
   // set arguments for image size/offset/shrinkfactors
-  unsigned int inImageSize[TInputImage::ImageDimension];
-  unsigned int outImageSize[TInputImage::ImageDimension];
-  for(unsigned int i=0; i<TInputImage::ImageDimension; i++)
+  unsigned int inImageSize[InputImageDimension];
+  unsigned int outImageSize[InputImageDimension];
+  for( unsigned int i = 0; i < InputImageDimension; i++ )
   {
     inImageSize[i]  = inSize[i];
     outImageSize[i] = outSize[i];
@@ -136,47 +152,71 @@ void GPUShrinkImageFilter< TInputImage, TOutputImage >::GPUGenerateData()
 
   //signed long offset[TInputImage::ImageDimension];
   //unsigned long factorsize[TInputImage::ImageDimension];
-  unsigned int offset[TInputImage::ImageDimension];
-  unsigned int shrinkfactors[TInputImage::ImageDimension];
+  unsigned int offset[InputImageDimension];
+  unsigned int shrinkfactors[InputImageDimension];
 
-  for(unsigned int i = 0; i < TInputImage::ImageDimension; i++)
+  for( unsigned int i = 0; i < InputImageDimension; i++ )
   {
     offset[i] = offsetIndex[i];
     shrinkfactors[i] = factorSize[i];
   }
 
-  switch (ImageDim)
+  const unsigned int ImageDim = static_cast<unsigned int>( InputImageDimension );
+  switch ( ImageDim )
   {
   case 1:
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint), &(inImageSize));
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint), &(outImageSize));
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint), &(offset));
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint), &(shrinkfactors));
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint), &inImageSize );
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint), &outImageSize );
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint), &offset );
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint), &shrinkfactors );
     break;
   case 2:
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint2), &(inImageSize));
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint2), &(outImageSize));
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint2), &(offset));
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint2), &(shrinkfactors));
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint2), &inImageSize );
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint2), &outImageSize );
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint2), &offset );
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint2), &shrinkfactors );
     break;
   case 3:
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint3), &(inImageSize));
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint3), &(outImageSize));
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint3), &(offset));
-    this->m_GPUKernelManager->SetKernelArg(m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint3), &(shrinkfactors));
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint3), &inImageSize );
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint3), &outImageSize );
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint3), &offset );
+    this->m_GPUKernelManager->SetKernelArg(
+      this->m_FilterGPUKernelHandle, argidx++, sizeof(cl_uint3), &shrinkfactors );
     break;
   }
 
   // launch kernel
-  this->m_GPUKernelManager->LaunchKernel(m_FilterGPUKernelHandle, ImageDim, globalSize, localSize);
-}
+  this->m_GPUKernelManager->LaunchKernel(
+    this->m_FilterGPUKernelHandle,
+    InputImageDimension, globalSize, localSize );
+
+} // end GPUGenerateData()
+
+
+/**
+ * ****************** PrintSelf ***********************
+ */
 
 template< class TInputImage, class TOutputImage >
-void GPUShrinkImageFilter< TInputImage, TOutputImage >::PrintSelf(std::ostream & os, Indent indent) const
+void
+GPUShrinkImageFilter< TInputImage, TOutputImage >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  CPUSuperclass::PrintSelf(os, indent);
-  GPUSuperclass::PrintSelf(os, indent);
-}
+  CPUSuperclass::PrintSelf( os, indent );
+  GPUSuperclass::PrintSelf( os, indent );
+} // end PrintSelf()
+
 
 } // end namespace itk
 

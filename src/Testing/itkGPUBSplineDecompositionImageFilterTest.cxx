@@ -33,10 +33,10 @@
 int main( int argc, char * argv[] )
 {
   // Check arguments for help
-  if( argc < 2 )
+  if( argc < 4 )
   {
     std::cerr << "ERROR: insufficient command line arguments.\n"
-      << "  inputFileName outputDirectory" << std::endl;
+      << "  inputFileName outputNameCPU outputNameGPU" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -49,10 +49,8 @@ int main( int argc, char * argv[] )
 
   /** Get the command line arguments. */
   std::string inputFileName = argv[1];
-  std::string outputDirectory = argv[2];
-  std::string baseName = inputFileName.substr( 0, inputFileName.rfind( "." ) );
-  std::string outputFileNameCPU = outputDirectory + "/" + baseName + "-out-cpu.mha";
-  std::string outputFileNameGPU = outputDirectory + "/" + baseName + "-out-gpu.mha";
+  std::string outputFileNameCPU = argv[2];
+  std::string outputFileNameGPU = argv[3];
   const unsigned int splineOrder = 3;
   const double epsilon = 1e-3;
   const unsigned int runTimes = 5;

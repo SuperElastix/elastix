@@ -36,44 +36,46 @@ __kernel void ShrinkImageFilter(__global const INPIXELTYPE* in,
 #endif
 
 #ifdef DIM_2
-__kernel void ShrinkImageFilter(__global const INPIXELTYPE* in, 
-                                __global OUTPIXELTYPE* out, 
-                                uint2 in_image_size, uint2 out_image_size,
-                                uint2 offset, uint2 shrinkfactors)
+__kernel void ShrinkImageFilter(
+  __global const INPIXELTYPE* in, 
+  __global OUTPIXELTYPE* out, 
+  uint2 image_size_in, uint2 image_size_out,
+  uint2 offset, uint2 shrinkfactors )
 {
-  uint2 index = (uint2)(get_global_id(0), get_global_id(1));
-  if(index.x < out_image_size.x && index.y < out_image_size.y)
+  uint2 index_out = (uint2)(get_global_id(0), get_global_id(1));
+  if( index_out.x < image_size_out.x && index_out.y < image_size_out.y )
   {
-    uint2 input_index = index * shrinkfactors + offset;
-    uint out_gidx = out_image_size.x * index.y + index.x;
-    uint in_gidx = in_image_size.x * input_index.y + input_index.x;
-    out[out_gidx] = Functor(in[in_gidx]);
+    uint2 index_in = index_out * shrinkfactors + offset;
+    uint gidx_in  = image_size_in.x  * index_in.y  + index_in.x;
+    uint gidx_out = image_size_out.x * index_out.y + index_out.x;
+    out[gidx_out] = Functor( in[gidx_in] );
   }
 }
 #endif
 
 #ifdef DIM_3
-__kernel void ShrinkImageFilter(__global const INPIXELTYPE* in,
-                                __global OUTPIXELTYPE* out,
-                                uint3 in_image_size, uint3 out_image_size,
-                                uint3 offset, uint3 shrinkfactors)
+__kernel void ShrinkImageFilter(
+  __global const INPIXELTYPE* in,
+  __global OUTPIXELTYPE* out,
+  uint3 image_size_in, uint3 image_size_out,
+  uint3 offset, uint3 shrinkfactors )
 {
-  uint3 index = (uint3)(get_global_id(0), get_global_id(1), get_global_id(2));
+  uint3 index_out = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
 
   /* NOTE: More than three-level nested conditional statements (e.g.,
   if A && B && C..) invalidates command queue during kernel
   execution on Apple OpenCL 1.0 (such Macbook Pro with NVIDIA 9600M
   GT). Therefore, we flattened conditional statements. */
   bool isValid = true;
-  if(index.x >= out_image_size.x) isValid = false;
-  if(index.y >= out_image_size.y) isValid = false;
-  if(index.z >= out_image_size.z) isValid = false;
-  if(isValid)
+  if( index_out.x >= image_size_out.x ) isValid = false;
+  if( index_out.y >= image_size_out.y ) isValid = false;
+  if( index_out.z >= image_size_out.z ) isValid = false;
+  if( isValid )
   {
-    uint3 input_index = index * shrinkfactors + offset;
-    uint out_gidx = out_image_size.x * (index.z * out_image_size.y + index.y) + index.x;
-    uint in_gidx = in_image_size.x * (input_index.z * in_image_size.y + input_index.y) + input_index.x;
-    out[out_gidx] = Functor(in[in_gidx]);
+    uint3 index_in = index_out * shrinkfactors + offset;
+    uint gidx_in  = image_size_in.x  * (index_in.z  * image_size_in.y  + index_in.y)  + index_in.x;
+    uint gidx_out = image_size_out.x * (index_out.z * image_size_out.y + index_out.y) + index_out.x;
+    out[gidx_out] = Functor( in[gidx_in] );
   }
 }
 #endif
