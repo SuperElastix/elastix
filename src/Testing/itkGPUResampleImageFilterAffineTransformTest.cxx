@@ -34,8 +34,8 @@
 
 
 /**
- * ******************* GetHelpString *******************
- */
+* ******************* GetHelpString *******************
+*/
 
 std::string GetHelpString( void )
 {
@@ -44,7 +44,8 @@ std::string GetHelpString( void )
     << "itkGPUResampleImageFilterAffineTransformTest" << std::endl
     << "  -in           input file name\n"
     << "  -out          output file names.(outputCPU outputGPU)\n"
-    << "  [-i]          interpolator, one of {NearestNeighbor, Linear, BSpline}, default NearestNeighbor\n";
+    << "  [-i]          interpolator, one of {NearestNeighbor, Linear, BSpline}, default NearestNeighbor\n"
+    << "  [-t]          transform, one of {Affine, BSpline}, default Affine\n";
   return ss.str();
 
 } // end GetHelpString()
@@ -90,6 +91,7 @@ int main( int argc, char * argv[] )
   std::vector<std::string> outputFileNames( 2, "" );
   parser->GetCommandLineArgument( "-out", outputFileNames );
 
+  // interpolator argument
   std::string interp = "NearestNeighbor";
   parser->GetCommandLineArgument( "-i", interp );
 
@@ -101,9 +103,31 @@ int main( int argc, char * argv[] )
     return EXIT_FAILURE;
   }
 
+  // transform argument
+  std::string trans = "Affine";
+  parser->GetCommandLineArgument( "-t", trans );
+
+  if( trans != "Affine"
+    && trans != "BSpline" )
+  {
+    std::cerr << "ERROR: transform \"-t\" should be one of {Affine, BSpline}." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::string parametersFileName = "";
+  if( trans == "BSpline" )
+  {
+    const bool retp = parser->GetCommandLineArgument( "-p", parametersFileName );
+    if(!retp)
+    {
+      std::cerr << "ERROR: You should specify parameters file \"-p\" for BSpline transform." << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+
   const unsigned int splineOrderInterpolator = 3;
   const double epsilon = 1e-3;
-  const unsigned int runTimes = 5;
+  const unsigned int runTimes = 1; // 5
 
   std::cout << std::showpoint << std::setprecision( 4 );
 
@@ -120,7 +144,13 @@ int main( int argc, char * argv[] )
   typedef float       ScalarType;
   typedef itk::ResampleImageFilter<
     InputImageType, OutputImageType, InterpolatorPrecisionType>       FilterType;
-  typedef itk::AffineTransform<ScalarType, Dimension>                 TransformType;
+
+  // Transform typedefs
+  typedef itk::Transform<ScalarType, Dimension, Dimension>            TransformType;
+  typedef itk::AffineTransform<ScalarType, Dimension>                 AffineTransformType;
+  typedef itk::BSplineTransform<ScalarType, Dimension, 3>             BSplineTransformType;
+
+  // Interpolate typedefs
   typedef itk::InterpolateImageFunction<
     InputImageType, InterpolatorPrecisionType>                        InterpolatorType;
   typedef itk::NearestNeighborInterpolateImageFunction<
@@ -186,6 +216,97 @@ int main( int argc, char * argv[] )
   filter->SetSize( outputSize );
   filter->SetOutputStartIndex( inputRegion.GetIndex() );
 
+  // Construct, select and setup transform
+  TransformType::Pointer transform;
+  TransformType::ParametersType parameters;
+
+  typedef BSplineTransformType::MeshSizeType MeshSizeType;
+  MeshSizeType meshSize;
+  typedef BSplineTransformType::PhysicalDimensionsType PhysicalDimensionsType;
+  PhysicalDimensionsType fixedDimensions;
+
+  if( trans == "Affine" )
+  {
+    AffineTransformType::Pointer tmpTransform
+      = AffineTransformType::New();
+
+    // Setup parameters
+    parameters.SetSize( Dimension * Dimension + Dimension );
+    unsigned int par = 0;
+    if( Dimension == 2 )
+    {
+      // matrix part
+      parameters[ par++ ] = 0.9;
+      parameters[ par++ ] = 0.1;
+      parameters[ par++ ] = 0.2;
+      parameters[ par++ ] = 1.1;
+      // translation
+      parameters[ par++ ] = 0.0;
+      parameters[ par++ ] = 0.0;
+    }
+    else if( Dimension == 3 )
+    {
+      // matrix part
+      parameters[ par++ ] = 1.03;
+      parameters[ par++ ] = 0.2;
+      parameters[ par++ ] = 0.0;
+      parameters[ par++ ] = -0.21;
+      parameters[ par++ ] = 1.12;
+      parameters[ par++ ] = 0.3;
+      parameters[ par++ ] = 0.0;
+      parameters[ par++ ] = 0.01;
+      parameters[ par++ ] = 0.8;
+      // translation
+      parameters[ par++ ] = -10.0;
+      parameters[ par++ ] = 5.1;
+      parameters[ par++ ] = 0.0;
+    }
+
+    // assign parameters
+    transform = tmpTransform;
+  }
+  else if( trans == "BSpline" )
+  {
+    BSplineTransformType::Pointer tmpTransform
+      = BSplineTransformType::New();
+
+    // Setup parameters
+    meshSize.Fill( 4 );
+
+    for(unsigned int d=0; d<Dimension; d++)
+    {
+      fixedDimensions[d] = inputSpacing[d] * ( inputSize[d] - 1.0 );
+    }
+
+    tmpTransform->SetTransformDomainOrigin( inputOrigin );
+    tmpTransform->SetTransformDomainDirection( inputDirection );
+    tmpTransform->SetTransformDomainPhysicalDimensions( fixedDimensions );
+    tmpTransform->SetTransformDomainMeshSize( meshSize );
+
+    const unsigned int numberOfParameters = tmpTransform->GetNumberOfParameters();
+    parameters.SetSize( numberOfParameters );
+
+    std::ifstream infile;
+    infile.open( parametersFileName.c_str() );
+
+    const unsigned int numberOfNodes = numberOfParameters / Dimension;
+    for( unsigned int n=0; n < numberOfNodes; n++ )
+    {
+      unsigned int parValue;
+      infile >> parValue;
+      parameters[n] = parValue;
+      if(Dimension > 1)
+        parameters[n+numberOfNodes] = parValue;
+      if(Dimension > 2)
+        parameters[n+numberOfNodes*2] = parValue;
+    }
+    infile.close();
+
+    // assign parameters
+    transform = tmpTransform;
+  }
+  transform->SetParameters( parameters );
+
   // Construct, select and setup interpolator
   InterpolatorType::Pointer interpolator;
   if( interp == "NearestNeighbor" )
@@ -208,40 +329,6 @@ int main( int argc, char * argv[] )
     interpolator = tmpInterpolator;
   }
 
-  // Construct and setup the affine transform
-  TransformType::Pointer transform = TransformType::New();
-  TransformType::ParametersType parameters( Dimension * Dimension + Dimension );
-  unsigned int par = 0;
-  if( Dimension == 2 )
-  {
-    // matrix part
-    parameters[ par++ ] = 0.9;
-    parameters[ par++ ] = 0.1;
-    parameters[ par++ ] = 0.2;
-    parameters[ par++ ] = 1.1;
-    // translation
-    parameters[ par++ ] = 0.0;
-    parameters[ par++ ] = 0.0;
-  }
-  else if( Dimension == 3 )
-  {
-    // matrix part
-    parameters[ par++ ] = 1.03;
-    parameters[ par++ ] = 0.2;
-    parameters[ par++ ] = 0.0;
-    parameters[ par++ ] = -0.21;
-    parameters[ par++ ] = 1.12;
-    parameters[ par++ ] = 0.3;
-    parameters[ par++ ] = 0.0;
-    parameters[ par++ ] = 0.01;
-    parameters[ par++ ] = 0.8;
-    // translation
-    parameters[ par++ ] = -10.0;
-    parameters[ par++ ] = 5.1;
-    parameters[ par++ ] = 0.0;
-  }
-  transform->SetParameters( parameters );
-
   //
   std::cout << "Testing the ResampleImageFilter, CPU vs GPU:\n";
   std::cout << "CPU/GPU transform interpolator #threads time RMSE\n";
@@ -261,7 +348,11 @@ int main( int argc, char * argv[] )
       std::cerr << "ERROR: " << e << std::endl;
       return EXIT_FAILURE;
     }
-    filter->Modified();
+
+    if(runTimes > 1)
+    {
+      filter->Modified();
+    }
   }
   cputimer.Stop();
 
@@ -284,14 +375,34 @@ int main( int argc, char * argv[] )
   // Register object factory for GPU image and filter
   // All these filters that are constructed after this point are
   // turned into a GPU filter.
-  itk::ObjectFactoryBase::RegisterFactory( itk::GPUImageFactory::New() );
+  itk::ObjectFactoryBase::Pointer imageFactory = NULL;
+  imageFactory = itk::GPUImageFactory::New();
+  itk::ObjectFactoryBase::RegisterFactory( imageFactory );
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUResampleImageFilterFactory::New() );
-  itk::ObjectFactoryBase::RegisterFactory( itk::GPUAffineTransformFactory::New() );
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUCastImageFilterFactory::New() );
-  itk::ObjectFactoryBase::RegisterFactory( itk::GPUNearestNeighborInterpolateImageFunctionFactory::New() );
-  itk::ObjectFactoryBase::RegisterFactory( itk::GPULinearInterpolateImageFunctionFactory::New() );
-  itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineInterpolateImageFunctionFactory::New() );
-  itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineDecompositionImageFilterFactory::New() );
+
+  if( trans == "Affine")
+  {
+    itk::ObjectFactoryBase::RegisterFactory( itk::GPUAffineTransformFactory::New() );
+  }
+  else if( trans == "BSpline" )
+  {
+    itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineTransformFactory::New() );
+  }
+
+  if( interp == "NearestNeighbor" )
+  {
+    itk::ObjectFactoryBase::RegisterFactory( itk::GPUNearestNeighborInterpolateImageFunctionFactory::New() );
+  }
+  else if( interp == "Linear" )
+  {
+    itk::ObjectFactoryBase::RegisterFactory( itk::GPULinearInterpolateImageFunctionFactory::New() );
+  }
+  else if( interp == "BSpline" )
+  {
+    itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineInterpolateImageFunctionFactory::New() );
+    itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineDecompositionImageFilterFactory::New() );
+  }
 
   // Construct the filter
   // Use a try/catch, because construction of this filter will trigger
@@ -319,8 +430,27 @@ int main( int argc, char * argv[] )
   gpuReader->SetFileName( inputFileName );
   gpuReader->Update(); // needed?
 
-  // 
-  TransformType::Pointer gpuTransform = TransformType::New();
+  // Setup GPU transform
+  TransformType::Pointer gpuTransform;
+
+  if( trans == "Affine" )
+  {
+    AffineTransformType::Pointer tmpTransform
+      = AffineTransformType::New();
+    gpuTransform = tmpTransform;
+  }
+  else if( trans == "BSpline" )
+  {
+    BSplineTransformType::Pointer tmpTransform
+      = BSplineTransformType::New();
+
+    tmpTransform->SetTransformDomainOrigin( inputOrigin );
+    tmpTransform->SetTransformDomainDirection( inputDirection );
+    tmpTransform->SetTransformDomainPhysicalDimensions( fixedDimensions );
+    tmpTransform->SetTransformDomainMeshSize( meshSize );
+
+    gpuTransform = tmpTransform;
+  }
   gpuTransform->SetParameters( parameters );
 
   // Construct, select and setup interpolator
@@ -364,17 +494,21 @@ int main( int argc, char * argv[] )
     // and not clearing GPU memory afterwards.
     itk::GPUExplicitSync<FilterType, OutputImageType>( gpuFilter, false, false );
     //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true ); // crashes!
-    gpuFilter->Modified();
+
+    if(runTimes > 1)
+    {
+      gpuFilter->Modified();
+    }
   }
   // GPU buffer has not been copied yet, so we have to make manual update
   //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true );
   gputimer.Stop();
 
-  std::cout << "gPU " << transform->GetNameOfClass()
+  std::cout << "GPU " << transform->GetNameOfClass()
     << " " << interpolator->GetNameOfClass()
-    << " x " << gputimer.GetMean() / runTimes << std::endl;
+    << " x " << gputimer.GetMean() / runTimes;
 
-/** Write the GPU result. */
+  /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();
   gpuWriter->SetInput( gpuFilter->GetOutput() );
   gpuWriter->SetFileName( outputFileNames[ 1 ].c_str() );
@@ -384,6 +518,10 @@ int main( int argc, char * argv[] )
     std::cerr << "ERROR: " << e << std::endl;
     return EXIT_FAILURE;
   }
+
+  // UnRegister GPUImage before using BinaryThresholdImageFilter,
+  // Otherwise GPU memory will be allocated
+  itk::ObjectFactoryBase::UnRegisterFactory( imageFactory );
 
   // Compute RMSE
   itk::ImageRegionConstIterator<OutputImageType> cit(
