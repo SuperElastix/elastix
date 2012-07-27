@@ -305,14 +305,14 @@ if( ELASTIX_USE_OPENCL )
     ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
     ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha )
 
-  elx_add_test( GPUResampleImageFilterAffineTransformTest "OpenCL"
+  elx_add_test( GPUResampleImageFilterTest "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
     -out ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
          ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha
     -i   NearestNeighbor
     -t   Affine )
 
-  add_test( GPUResampleImageFilterAffineTransformTest-1 ${EXECUTABLE_OUTPUT_PATH}/itkGPUResampleImageFilterAffineTransformTest
+  add_test( GPUResampleImageFilterTest1 ${EXECUTABLE_OUTPUT_PATH}/itkGPUResampleImageFilterTest
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
     -out ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
          ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha
