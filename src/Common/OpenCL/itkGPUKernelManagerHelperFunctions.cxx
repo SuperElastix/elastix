@@ -25,7 +25,7 @@ namespace itk
   bool LoadProgramFromFile(const std::string &_filename, std::string &_source,
     const bool skipHeader)
   {
-    const std::size_t headerSize = 760;
+    const std::size_t headerSize = 572;
     std::ifstream fileStream(_filename.c_str());
     if (fileStream.fail())
     {
