@@ -126,8 +126,8 @@ int main( int argc, char * argv[] )
   }
 
   const unsigned int splineOrderInterpolator = 3;
-  const double epsilon = 1e-3;
-  const unsigned int runTimes = 1; // 5
+  const double epsilon = 0.03; //1e-3;
+  const unsigned int runTimes = 5; // 5
 
   std::cout << std::showpoint << std::setprecision( 4 );
 

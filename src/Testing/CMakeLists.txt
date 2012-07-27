@@ -320,6 +320,14 @@ if( ELASTIX_USE_OPENCL )
     -t   BSpline
     -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
 
+  add_test( GPUResampleImageFilterTest2 ${EXECUTABLE_OUTPUT_PATH}/itkGPUResampleImageFilterTest
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha
+    -i   BSpline
+    -t   BSpline
+    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
+
   # Non-functional GPU tests:
   #elx_add_test( GPUGenericMultiResolutionPyramidImageFilterTest "OpenCL" )
   #elx_add_test( GPUResampleImageFilterBSplineTransformTest "OpenCL" )
