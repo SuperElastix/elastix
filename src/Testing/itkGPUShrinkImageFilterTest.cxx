@@ -167,7 +167,7 @@ int main( int argc, char * argv[] )
 
   std::cout << "GPU " << shrinkFactor
     << " x " << gputimer.GetMean() / runTimes
-    << " " << (cputimer.GetMean()/gputimer.GetMean());
+    << " " << cputimer.GetMean() / gputimer.GetMean();
 
   /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();

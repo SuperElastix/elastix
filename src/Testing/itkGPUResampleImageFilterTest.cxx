@@ -45,7 +45,8 @@ std::string GetHelpString( void )
     << "  -in           input file name\n"
     << "  -out          output file names.(outputCPU outputGPU)\n"
     << "  [-i]          interpolator, one of {NearestNeighbor, Linear, BSpline}, default NearestNeighbor\n"
-    << "  [-t]          transform, one of {Affine, BSpline}, default Affine\n";
+    << "  [-t]          transform, one of {Affine, BSpline}, default Affine\n"
+    << "  [-p]          parameter file for the B-spline transform\n";
   return ss.str();
 
 } // end GetHelpString()
@@ -118,16 +119,16 @@ int main( int argc, char * argv[] )
   if( trans == "BSpline" )
   {
     const bool retp = parser->GetCommandLineArgument( "-p", parametersFileName );
-    if(!retp)
+    if( !retp )
     {
-      std::cerr << "ERROR: You should specify parameters file \"-p\" for BSpline transform." << std::endl;
+      std::cerr << "ERROR: You should specify parameters file \"-p\" for the B-spline transform." << std::endl;
       return EXIT_FAILURE;
     }
   }
 
   const unsigned int splineOrderInterpolator = 3;
   const double epsilon = 0.03; //1e-3;
-  const unsigned int runTimes = 5; // 5
+  unsigned int runTimes = 5;
 
   std::cout << std::showpoint << std::setprecision( 4 );
 
@@ -167,12 +168,6 @@ int main( int argc, char * argv[] )
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputFileName );
   reader->Update();
-
-  //double spacing[ Dimension ];
-  //for( unsigned int i = 0; i < Dimension; i++ )
-  //{
-  //  spacing[i] = 1.0;
-  //}
 
   // Construct and setup the resample filter
   FilterType::Pointer filter = FilterType::New();
@@ -229,6 +224,7 @@ int main( int argc, char * argv[] )
   {
     AffineTransformType::Pointer tmpTransform
       = AffineTransformType::New();
+    transform = tmpTransform;
 
     // Setup parameters
     parameters.SetSize( Dimension * Dimension + Dimension );
@@ -261,12 +257,12 @@ int main( int argc, char * argv[] )
       parameters[ par++ ] = 5.1;
       parameters[ par++ ] = 0.0;
     }
-
-    // assign parameters
-    transform = tmpTransform;
   }
   else if( trans == "BSpline" )
   {
+    // Faster B-spline tests
+    runTimes = 1;
+
     BSplineTransformType::Pointer tmpTransform
       = BSplineTransformType::New();
 
@@ -282,6 +278,7 @@ int main( int argc, char * argv[] )
     tmpTransform->SetTransformDomainDirection( inputDirection );
     tmpTransform->SetTransformDomainPhysicalDimensions( fixedDimensions );
     tmpTransform->SetTransformDomainMeshSize( meshSize );
+    transform = tmpTransform;
 
     const unsigned int numberOfParameters = tmpTransform->GetNumberOfParameters();
     parameters.SetSize( numberOfParameters );
@@ -290,20 +287,21 @@ int main( int argc, char * argv[] )
     infile.open( parametersFileName.c_str() );
 
     const unsigned int numberOfNodes = numberOfParameters / Dimension;
-    for( unsigned int n=0; n < numberOfNodes; n++ )
+    for( unsigned int n = 0; n < numberOfNodes; n++ )
     {
       unsigned int parValue;
       infile >> parValue;
-      parameters[n] = parValue;
-      if(Dimension > 1)
+      parameters[ n ] = parValue;
+      if( Dimension > 1 )
+      {
         parameters[n+numberOfNodes] = parValue;
-      if(Dimension > 2)
-        parameters[n+numberOfNodes*2] = parValue;
+      }
+      if( Dimension > 2 )
+      {
+        parameters[ n + numberOfNodes * 2 ] = parValue;
+      }
     }
     infile.close();
-
-    // assign parameters
-    transform = tmpTransform;
   }
   transform->SetParameters( parameters );
 
@@ -349,7 +347,8 @@ int main( int argc, char * argv[] )
       return EXIT_FAILURE;
     }
 
-    if(runTimes > 1)
+    // Modify the filter, only not the last iteration
+    if( i != runTimes - 1 )
     {
       filter->Modified();
     }
@@ -375,11 +374,9 @@ int main( int argc, char * argv[] )
   // Register object factory for GPU image and filter
   // All these filters that are constructed after this point are
   // turned into a GPU filter.
-  itk::ObjectFactoryBase::Pointer imageFactory = NULL;
-  imageFactory = itk::GPUImageFactory::New();
-  itk::ObjectFactoryBase::RegisterFactory( imageFactory );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUImageFactory::New() );
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUResampleImageFilterFactory::New() );
-  itk::ObjectFactoryBase::RegisterFactory( itk::GPUCastImageFilterFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUCastImageFilterFactory::New() ); // requires double support GPU
 
   // Transforms factory registration
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUAffineTransformFactory::New() );
@@ -482,7 +479,8 @@ int main( int argc, char * argv[] )
     itk::GPUExplicitSync<FilterType, OutputImageType>( gpuFilter, false, false );
     //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true ); // crashes!
 
-    if(runTimes > 1)
+    // Modify the filter, only not the last iteration
+    if( i != runTimes - 1 )
     {
       gpuFilter->Modified();
     }
@@ -494,7 +492,7 @@ int main( int argc, char * argv[] )
   std::cout << "GPU " << transform->GetNameOfClass()
     << " " << interpolator->GetNameOfClass()
     << " x " << gputimer.GetMean() / runTimes
-    << " " << (cputimer.GetMean()/gputimer.GetMean());
+    << " " << cputimer.GetMean() / gputimer.GetMean();
 
   /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();
@@ -506,10 +504,6 @@ int main( int argc, char * argv[] )
     std::cerr << "ERROR: " << e << std::endl;
     return EXIT_FAILURE;
   }
-
-  // UnRegister GPUImage before using BinaryThresholdImageFilter,
-  // Otherwise GPU memory will be allocated
-  itk::ObjectFactoryBase::UnRegisterFactory( imageFactory );
 
   // Compute RMSE
   itk::ImageRegionConstIterator<OutputImageType> cit(

@@ -49,10 +49,6 @@ double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
 
 int main( int argc, char * argv[] )
 {
-  // register object factory for GPU image and filter
-  //itk::ObjectFactoryBase::RegisterFactory( itk::GPUImageFactory::New() );
-  //itk::ObjectFactoryBase::RegisterFactory( itk::GPURecursiveGaussianImageFilterFactory::New() );
-
   const unsigned int ImageDimension = 3; // 2
   typedef float InputPixelType;
   typedef float OutputPixelType;
@@ -84,8 +80,6 @@ int main( int argc, char * argv[] )
   const double epsilon = 0.01;
   const unsigned int maximumNumberOfThreads
     = itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
-  const bool testspeed      = true;
-  const bool testdirections = true; // Works for 48x62x42 image, Does not work for 512x512x107 ! Why?
 
   std::cout << std::showpoint << std::setprecision( 4 );
 
@@ -109,106 +103,99 @@ int main( int argc, char * argv[] )
 
   // Test 1~n threads for CPU
   // Speed CPU vs GPU
-  if( testspeed )
+  std::cout << "Testing the Recursive Gaussian filter, CPU vs GPU:\n";
+  std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
+
+  for( unsigned int nThreads = 1; nThreads <= maximumNumberOfThreads; nThreads++ )
   {
-    std::cout << "Testing the Recursive Gaussian filter, CPU vs GPU:\n";
-    std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
+    // Test CPU
+    cputimer.Start();
+    CPUFilter->SetNumberOfThreads( nThreads );
+    CPUFilter->SetInput( reader->GetOutput() );
+    CPUFilter->SetSigma( sigma );
+    CPUFilter->SetDirection( direction );
+    CPUFilter->Update();
+    cputimer.Stop();
 
-    for( unsigned int nThreads = 1; nThreads <= maximumNumberOfThreads; nThreads++ )
-    {
-      // Test CPU
-      cputimer.Start();
-      CPUFilter->SetNumberOfThreads( nThreads );
-      CPUFilter->SetInput( reader->GetOutput() );
-      CPUFilter->SetSigma( sigma );
-      CPUFilter->SetDirection( direction );
-      CPUFilter->Update();
-      cputimer.Stop();
+    std::cout << "CPU " << sigma << " " << direction << " " << nThreads
+      << " " << cputimer.GetMean() << std::endl;
+  }
 
-      std::cout << "CPU " << sigma << " " << direction << " " << nThreads
-        << " " << cputimer.GetMean() << std::endl;
-    }
+  // Test GPU
+  gputimer.Start();
+  GPUFilter->SetInput( reader->GetOutput() );
+  GPUFilter->SetSigma( sigma );
+  GPUFilter->SetDirection( direction );
+  GPUFilter->Update();
+  gputimer.Stop();
+
+  std::cout << "GPU " << sigma << " " << direction << " x "
+    << gputimer.GetMean()
+    << " " << cputimer.GetMean() / gputimer.GetMean();
+
+  double rmse = ComputeRMSE<OutputImageType>( CPUFilter->GetOutput(), GPUFilter->GetOutput() );
+  std::cout << " " << rmse << std::endl;
+
+  // Write output image
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetInput( GPUFilter->GetOutput() );
+  writer->SetFileName( argv[2] );
+  try
+  {
+    writer->Update();
+  }
+  catch( itk::ExceptionObject & excp )
+  {
+    std::cerr << "ERROR: " << excp << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  // Check
+  if( rmse > epsilon )
+  {
+    std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::cout << "\n\nTesting directions switch, CPU vs GPU:\n";
+  std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
+
+  // Check directions
+  for( direction = 0; direction < ImageDimension; direction++ )
+  {
+    cputimer.Start();
+    CPUFilter->SetNumberOfThreads( maximumNumberOfThreads );
+    CPUFilter->SetInput( reader->GetOutput() );
+    CPUFilter->SetSigma( sigma );
+    CPUFilter->SetDirection( direction );
+    CPUFilter->Modified();
+    CPUFilter->Update();
+    cputimer.Stop();
+
+    std::cout << "CPU " << sigma << " " << direction << " " << maximumNumberOfThreads
+      << " " << cputimer.GetMean() << std::endl;
 
     // Test GPU
     gputimer.Start();
     GPUFilter->SetInput( reader->GetOutput() );
     GPUFilter->SetSigma( sigma );
     GPUFilter->SetDirection( direction );
+    GPUFilter->Modified();
     GPUFilter->Update();
     gputimer.Stop();
 
     std::cout << "GPU " << sigma << " " << direction << " x "
       << gputimer.GetMean()
-      << " " << (cputimer.GetMean()/gputimer.GetMean());
+      << " " << cputimer.GetMean() / gputimer.GetMean();
 
     double rmse = ComputeRMSE<OutputImageType>( CPUFilter->GetOutput(), GPUFilter->GetOutput() );
     std::cout << " " << rmse << std::endl;
-
-    // Write output image
-    WriterType::Pointer writer = WriterType::New();
-    writer->SetInput( GPUFilter->GetOutput() );
-    writer->SetFileName( argv[2] );
-    try
-    {
-      writer->Update();
-    }
-    catch( itk::ExceptionObject & excp )
-    {
-      std::cerr << "ERROR: " << excp << std::endl;
-      return EXIT_FAILURE;
-    }
 
     // Check
     if( rmse > epsilon )
     {
       std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
       return EXIT_FAILURE;
-    }
-  } // end if testing over resolutions
-
-  // Works for 48x62x42 image, Does not work for 512x512x107 ! Why?
-  if( testdirections )
-  {
-    std::cout << "\n\nTesting directions switch, CPU vs GPU:\n";
-    std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
-
-    // Check directions
-    for( direction = 0; direction < ImageDimension; direction++ )
-    {
-      cputimer.Start();
-      CPUFilter->SetNumberOfThreads( maximumNumberOfThreads );
-      CPUFilter->SetInput( reader->GetOutput() );
-      CPUFilter->SetSigma( sigma );
-      CPUFilter->SetDirection( direction );
-      CPUFilter->Modified();
-      CPUFilter->Update();
-      cputimer.Stop();
-
-      std::cout << "CPU " << sigma << " " << direction << " " << maximumNumberOfThreads
-        << " " << cputimer.GetMean() << std::endl;
-
-      // Test GPU
-      gputimer.Start();
-      GPUFilter->SetInput( reader->GetOutput() );
-      GPUFilter->SetSigma( sigma );
-      GPUFilter->SetDirection( direction );
-      GPUFilter->Modified();
-      GPUFilter->Update();
-      gputimer.Stop();
-
-      std::cout << "GPU " << sigma << " " << direction << " x "
-        << gputimer.GetMean()
-        << " " << (cputimer.GetMean()/gputimer.GetMean());
-
-      double rmse = ComputeRMSE<OutputImageType>( CPUFilter->GetOutput(), GPUFilter->GetOutput() );
-      std::cout << " " << rmse << std::endl;
-
-      // Check
-      if( rmse > epsilon )
-      {
-        std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
-        return EXIT_FAILURE;
-      }
     }
   }
 
