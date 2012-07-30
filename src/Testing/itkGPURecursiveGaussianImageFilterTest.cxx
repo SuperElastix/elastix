@@ -170,7 +170,7 @@ int main( int argc, char * argv[] )
   if( testdirections )
   {
     std::cout << "\n\nTesting directions switch, CPU vs GPU:\n";
-    std::cout << "CPU/GPU sigma direction #threads time RMSE\n";
+    std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
 
     // Check directions
     for( direction = 0; direction < ImageDimension; direction++ )
