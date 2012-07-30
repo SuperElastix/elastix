@@ -86,7 +86,7 @@ int main( int argc, char * argv[] )
   filter->SetSigmaArray( sigmaArray );
 
   std::cout << "Testing the SmoothingRecursiveGaussianImageFilter, CPU vs GPU:\n";
-  std::cout << "CPU/GPU sigma #threads time RMSE\n";
+  std::cout << "CPU/GPU sigma #threads time speedup RMSE\n";
 
   // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
@@ -106,7 +106,7 @@ int main( int argc, char * argv[] )
 
   std::cout << "CPU " << sigmaArray[0]
     << " " << filter->GetNumberOfThreads()
-    << " " << cputimer.GetMean() / runTimes << std::endl;
+    << " " << cputimer.GetMean() / runTimes;
 
   /** Write the CPU result. */
   WriterType::Pointer writer = WriterType::New();
@@ -180,7 +180,8 @@ int main( int argc, char * argv[] )
   gputimer.Stop();
 
   std::cout << "GPU " << sigmaArray[0]
-    << " x " << gputimer.GetMean() / runTimes;
+    << " x " << gputimer.GetMean() / runTimes
+    << " " << (cputimer.GetMean()/gputimer.GetMean());
 
   /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();

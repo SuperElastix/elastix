@@ -77,7 +77,7 @@ int main( int argc, char * argv[] )
   filter->SetShrinkFactors( shrinkFactor );
 
   std::cout << "Testing the ShrinkImageFilter, CPU vs GPU:\n";
-  std::cout << "CPU/GPU shrinkFactor #threads time RMSE\n";
+  std::cout << "CPU/GPU shrinkFactor #threads time speedup RMSE\n";
 
   // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
@@ -166,7 +166,8 @@ int main( int argc, char * argv[] )
   gputimer.Stop();
 
   std::cout << "GPU " << shrinkFactor
-    << " x " << gputimer.GetMean() / runTimes;
+    << " x " << gputimer.GetMean() / runTimes
+    << " " << (cputimer.GetMean()/gputimer.GetMean());
 
   /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();

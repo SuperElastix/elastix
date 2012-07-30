@@ -77,7 +77,7 @@ int main( int argc, char * argv[] )
   filter->SetSplineOrder( splineOrder );
 
   std::cout << "Testing the BSplineDecompositionImageFilter, CPU vs GPU:\n";
-  std::cout << "CPU/GPU splineOrder #threads time RMSE\n";
+  std::cout << "CPU/GPU splineOrder #threads time speedup RMSE\n";
 
   // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
@@ -159,7 +159,8 @@ int main( int argc, char * argv[] )
   gputimer.Stop();
 
   std::cout << "GPU " << splineOrder
-    << " x " << gputimer.GetMean() / runTimes;
+    << " x " << gputimer.GetMean() / runTimes
+    << " " << (cputimer.GetMean()/gputimer.GetMean());
 
   /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();

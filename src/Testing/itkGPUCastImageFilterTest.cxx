@@ -78,7 +78,7 @@ int main( int argc, char * argv[] )
   FilterType::Pointer filter = FilterType::New();
 
   std::cout << "Testing the CastImageFilter, CPU vs GPU:\n";
-  std::cout << "CPU/GPU splineOrder #threads time RMSE\n";
+  std::cout << "CPU/GPU splineOrder #threads time speedup RMSE\n";
 
   // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
@@ -158,7 +158,8 @@ int main( int argc, char * argv[] )
   //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true );
   gputimer.Stop();
 
-  std::cout << "GPU x " << gputimer.GetMean() / runTimes;
+  std::cout << "GPU x " << gputimer.GetMean() / runTimes
+    << " " << (cputimer.GetMean()/gputimer.GetMean());
 
   /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();

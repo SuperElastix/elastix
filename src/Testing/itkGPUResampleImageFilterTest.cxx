@@ -331,7 +331,7 @@ int main( int argc, char * argv[] )
 
   //
   std::cout << "Testing the ResampleImageFilter, CPU vs GPU:\n";
-  std::cout << "CPU/GPU transform interpolator #threads time RMSE\n";
+  std::cout << "CPU/GPU transform interpolator #threads time speedup RMSE\n";
 
   // Time the filter, run on the CPU
   itk::TimeProbe cputimer;
@@ -381,28 +381,15 @@ int main( int argc, char * argv[] )
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUResampleImageFilterFactory::New() );
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUCastImageFilterFactory::New() );
 
-  if( trans == "Affine")
-  {
-    itk::ObjectFactoryBase::RegisterFactory( itk::GPUAffineTransformFactory::New() );
-  }
-  else if( trans == "BSpline" )
-  {
-    itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineTransformFactory::New() );
-  }
+  // Transforms factory registration
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUAffineTransformFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineTransformFactory::New() );
 
-  if( interp == "NearestNeighbor" )
-  {
-    itk::ObjectFactoryBase::RegisterFactory( itk::GPUNearestNeighborInterpolateImageFunctionFactory::New() );
-  }
-  else if( interp == "Linear" )
-  {
-    itk::ObjectFactoryBase::RegisterFactory( itk::GPULinearInterpolateImageFunctionFactory::New() );
-  }
-  else if( interp == "BSpline" )
-  {
-    itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineInterpolateImageFunctionFactory::New() );
-    itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineDecompositionImageFilterFactory::New() );
-  }
+  // Interpolators factory registration
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUNearestNeighborInterpolateImageFunctionFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPULinearInterpolateImageFunctionFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineInterpolateImageFunctionFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineDecompositionImageFilterFactory::New() );
 
   // Construct the filter
   // Use a try/catch, because construction of this filter will trigger
@@ -506,7 +493,8 @@ int main( int argc, char * argv[] )
 
   std::cout << "GPU " << transform->GetNameOfClass()
     << " " << interpolator->GetNameOfClass()
-    << " x " << gputimer.GetMean() / runTimes;
+    << " x " << gputimer.GetMean() / runTimes
+    << " " << (cputimer.GetMean()/gputimer.GetMean());
 
   /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();

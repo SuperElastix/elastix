@@ -112,7 +112,7 @@ int main( int argc, char * argv[] )
   if( testspeed )
   {
     std::cout << "Testing the Recursive Gaussian filter, CPU vs GPU:\n";
-    std::cout << "CPU/GPU sigma direction #threads time RMSE\n";
+    std::cout << "CPU/GPU sigma direction #threads time speedup RMSE\n";
 
     for( unsigned int nThreads = 1; nThreads <= maximumNumberOfThreads; nThreads++ )
     {
@@ -138,7 +138,8 @@ int main( int argc, char * argv[] )
     gputimer.Stop();
 
     std::cout << "GPU " << sigma << " " << direction << " x "
-      << gputimer.GetMean();
+      << gputimer.GetMean()
+      << " " << (cputimer.GetMean()/gputimer.GetMean());
 
     double rmse = ComputeRMSE<OutputImageType>( CPUFilter->GetOutput(), GPUFilter->GetOutput() );
     std::cout << " " << rmse << std::endl;
