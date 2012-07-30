@@ -44,8 +44,8 @@ double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
 
 
 /**
- * Testing GPU Recursive Gaussian Image Filter
- */
+* Testing GPU Recursive Gaussian Image Filter
+*/
 
 int main( int argc, char * argv[] )
 {
@@ -197,7 +197,8 @@ int main( int argc, char * argv[] )
       gputimer.Stop();
 
       std::cout << "GPU " << sigma << " " << direction << " x "
-      << gputimer.GetMean();
+        << gputimer.GetMean()
+        << " " << (cputimer.GetMean()/gputimer.GetMean());
 
       double rmse = ComputeRMSE<OutputImageType>( CPUFilter->GetOutput(), GPUFilter->GetOutput() );
       std::cout << " " << rmse << std::endl;

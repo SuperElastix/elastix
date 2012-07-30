@@ -105,7 +105,7 @@ int main( int argc, char * argv[] )
   cputimer.Stop();
 
   std::cout << "CPU " << sigmaArray[0]
-    << " " << filter->GetNumberOfThreads()
+  << " " << filter->GetNumberOfThreads()
     << " " << cputimer.GetMean() / runTimes;
 
   /** Write the CPU result. */
@@ -129,7 +129,7 @@ int main( int argc, char * argv[] )
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUImageFactory::New() );
   itk::ObjectFactoryBase::RegisterFactory( itk::GPURecursiveGaussianImageFilterFactory::New() );
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUCastImageFilterFactory::New() );
-  
+
   // Construct the filter
   // Use a try/catch, because construction of this filter will trigger
   // OpenCL compilation, which may fail.
@@ -180,7 +180,7 @@ int main( int argc, char * argv[] )
   gputimer.Stop();
 
   std::cout << "GPU " << sigmaArray[0]
-    << " x " << gputimer.GetMean() / runTimes
+  << " x " << gputimer.GetMean() / runTimes
     << " " << (cputimer.GetMean()/gputimer.GetMean());
 
   /** Write the GPU result. */

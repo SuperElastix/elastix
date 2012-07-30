@@ -116,7 +116,7 @@ int main( int argc, char * argv[] )
   // turned into a GPU filter.
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUImageFactory::New() );
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUCastImageFilterFactory::New() );
-  
+
   // Construct the filter
   // Use a try/catch, because construction of this filter will trigger
   // OpenCL compilation, which may fail.
