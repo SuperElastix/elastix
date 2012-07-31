@@ -32,6 +32,10 @@ namespace itk
 /** \class GPUResampleImageFilter
 * \ingroup ITK-GPUCommon
 */
+
+/** Create a helper GPU Kernel class for GPUResampleImageFilter */
+itkGPUKernelClassMacro(GPUResampleImageFilterKernel);
+
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType = float >
 class ITK_EXPORT GPUResampleImageFilter
   : public GPUImageToImageFilter< TInputImage, TOutputImage,

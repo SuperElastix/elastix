@@ -15,12 +15,19 @@
 #define __itkGPUNearestNeighborInterpolateImageFunction_h
 
 #include "itkNearestNeighborInterpolateImageFunction.h"
+#include "itkVersion.h"
+#include "itkImage.h"
+
 #include "itkGPUInterpolateImageFunction.h"
 
 namespace itk
 {
 /** \class GPUNearestNeighborInterpolateImageFunction
  */
+
+/** Create a helper GPU Kernel class for GPUNearestNeighborInterpolateImageFunction */
+itkGPUKernelClassMacro(GPUNearestNeighborInterpolateImageFunctionKernel);
+
 template< class TInputImage, class TCoordRep = float >
 class ITK_EXPORT GPUNearestNeighborInterpolateImageFunction
   : public GPUInterpolateImageFunction< TInputImage, TCoordRep,

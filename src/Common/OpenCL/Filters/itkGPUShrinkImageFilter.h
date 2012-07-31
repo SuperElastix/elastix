@@ -53,6 +53,10 @@ namespace itk
 * \wikiexample{Images/ShrinkImageFilter,Shrink an image}
 * \endwiki
 */
+
+/** Create a helper GPU Kernel class for GPUShrinkImageFilter */
+itkGPUKernelClassMacro(GPUShrinkImageFilterKernel);
+
 template< class TInputImage, class TOutputImage >
 class ITK_EXPORT GPUShrinkImageFilter
   : public GPUImageToImageFilter< TInputImage, TOutputImage,

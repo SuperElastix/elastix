@@ -18,7 +18,7 @@
 #include "itkOCLOstreamSupport.h"
 
 // begin of unnamed namespace
-namespace 
+namespace
 {
 typedef struct{
   cl_uint  StartIndex;

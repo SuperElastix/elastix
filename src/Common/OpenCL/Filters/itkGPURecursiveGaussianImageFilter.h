@@ -47,6 +47,10 @@ namespace itk
 * \see RecursiveGaussianImageFilter
 * \ingroup ITK-GPUCommon
 */
+
+/** Create a helper GPU Kernel class for GPURecursiveGaussianImageFilter */
+itkGPUKernelClassMacro(GPURecursiveGaussianImageFilterKernel);
+
 template< class TInputImage, class TOutputImage >
 class ITK_EXPORT GPURecursiveGaussianImageFilter
   : public GPUInPlaceImageFilter< TInputImage, TOutputImage,

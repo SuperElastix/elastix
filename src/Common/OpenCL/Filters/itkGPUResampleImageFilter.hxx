@@ -20,6 +20,7 @@
 
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkCastImageFilter.h"
+#include "itkTimeProbe.h"
 
 namespace
 {
@@ -394,7 +395,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 //  this->BeforeThreadedGenerateData();
 //#ifdef OPENCL_PROFILING 
 //  gputimerstepBTGD.Stop();
-//  std::cout << "GPU ResampleImageFilter BeforeThreadedGenerateData() took " << gputimerstepBTGD.GetMeanTime() << " seconds." << std::endl;
+//  std::cout << "GPU ResampleImageFilter BeforeThreadedGenerateData() took " << gputimerstepBTGD.GetMean() << " seconds." << std::endl;
 //#endif
 
   // Profiling
@@ -406,7 +407,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   this->AllocateBSplineCoefficientsGPUBuffer();
 #ifdef OPENCL_PROFILING
   gputimerstepABCB.Stop();
-  std::cout << "GPU ResampleImageFilter AllocateBSplineCoefficientsGPUBuffer() took " << gputimerstepABCB.GetMeanTime() << " seconds." << std::endl;
+  std::cout << "GPU ResampleImageFilter AllocateBSplineCoefficientsGPUBuffer() took " << gputimerstepABCB.GetMean() << " seconds." << std::endl;
 #endif
 
   std::string source;
@@ -519,7 +520,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   // Profiling
 #ifdef OPENCL_PROFILING
   gputimer.Stop();
-  std::cout << "GPU ResampleImageFilter before LaunchKernel() took " << gputimer.GetMeanTime() << " seconds." << std::endl;
+  std::cout << "GPU ResampleImageFilter before LaunchKernel() took " << gputimer.GetMean() << " seconds." << std::endl;
 #endif
 
   // launch kernel

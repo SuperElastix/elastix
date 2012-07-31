@@ -53,6 +53,9 @@ namespace itk
  * \ingroup ITK-GPUCommon
  */
 
+/** Create a helper GPU Kernel class for GPUBSplineDecompositionImageFilter */
+itkGPUKernelClassMacro(GPUBSplineDecompositionImageFilterKernel);
+
 template< class TInputImage, class TOutputImage >
 class ITK_EXPORT GPUBSplineDecompositionImageFilter
   : public GPUImageToImageFilter< TInputImage, TOutputImage,

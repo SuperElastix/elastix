@@ -16,11 +16,16 @@
 
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkGPUInterpolateImageFunction.h"
+#include "itkVersion.h"
 
 namespace itk
 {
 /** \class GPUBSplineInterpolateImageFunction
  */
+
+/** Create a helper GPU Kernel class for GPUBSplineInterpolateImageFunction */
+itkGPUKernelClassMacro(GPUBSplineInterpolateImageFunctionKernel);
+
 template< class TInputImage, class TCoordRep = float, class TCoefficientType = float >
 class ITK_EXPORT GPUBSplineInterpolateImageFunction
   : public GPUInterpolateImageFunction< TInputImage, TCoordRep,

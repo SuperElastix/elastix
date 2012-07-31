@@ -15,12 +15,19 @@
 #define __itkGPULinearInterpolateImageFunction_h
 
 #include "itkLinearInterpolateImageFunction.h"
+#include "itkImage.h"
+#include "itkVersion.h"
+
 #include "itkGPUInterpolateImageFunction.h"
 
 namespace itk
 {
 /** \class GPULinearInterpolateImageFunction
  */
+
+/** Create a helper GPU Kernel class for GPULinearInterpolateImageFunction */
+itkGPUKernelClassMacro(GPULinearInterpolateImageFunctionKernel);
+
 template< class TInputImage, class TCoordRep = float >
 class ITK_EXPORT GPULinearInterpolateImageFunction
   : public GPUInterpolateImageFunction< TInputImage, TCoordRep,

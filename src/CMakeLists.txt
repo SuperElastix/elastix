@@ -39,6 +39,7 @@ option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
 IF( ELASTIX_USE_OPENCL )
   find_package( OpenCL REQUIRED )
   include_directories( ${OPENCL_INCLUDE_DIRS} )
+  include(elastixOpenCL)
 endif()
 
 #----------------------------------------------------------------------

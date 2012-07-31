@@ -24,6 +24,10 @@ namespace itk
 {
 /** \class GPUBSplineTransform
  */
+
+/** Create a helper GPU Kernel class for GPUBSplineTransform */
+itkGPUKernelClassMacro(GPUBSplineTransformKernel);
+
 template<class TScalarType = float, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3,
 class TParentImageFilter = BSplineTransform< TScalarType, NDimensions, VSplineOrder > >
 class GPUBSplineTransform : public TParentImageFilter, public GPUTransformBase

@@ -15,7 +15,6 @@
 #define __itkGPUCastImageFilter_hxx
 
 #include "itkGPUCastImageFilter.h"
-#include "itkGPUKernels.h"
 
 namespace itk
 {
@@ -39,17 +38,17 @@ GPUCastImageFilter< TInputImage, TOutputImage >
   defines << "#define OUTPIXELTYPE ";
   GetTypenameInString( typeid ( typename TOutputImage::PixelType ), defines );
 
-  // OpenCL source path
-  const std::string oclSrcPath( oclGPUCastImageFilter );
+  // OpenCL kernel source
+  const char* GPUSource = GPUCastImageFilterKernel::GetOpenCLSource();
   // Load and create kernel
-  bool loaded = this->m_GPUKernelManager->LoadProgramFromFile( oclSrcPath.c_str(), defines.str().c_str() );
+  bool loaded = this->m_GPUKernelManager->LoadProgramFromString( GPUSource, defines.str().c_str() );
   if( loaded )
   {
     this->m_UnaryFunctorImageFilterGPUKernelHandle = this->m_GPUKernelManager->CreateKernel("CastImageFilter");
   }
   else
   {
-    itkExceptionMacro( << "Kernel has not been loaded from: " << oclSrcPath );
+    itkExceptionMacro( << "Kernel has not been loaded from string:\n" << GPUSource );
   }
 }
 

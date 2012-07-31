@@ -15,12 +15,18 @@
 #define __itkGPUIdentityTransform_h
 
 #include "itkIdentityTransform.h"
+#include "itkVersion.h"
+
 #include "itkGPUTransformBase.h"
 
 namespace itk
 {
 /** \class GPUIdentityTransform
  */
+
+/** Create a helper GPU Kernel class for GPUIdentityTransform */
+itkGPUKernelClassMacro(GPUIdentityTransformKernel);
+
 template<class TScalarType = float, unsigned int NDimensions = 3,
 class TParentImageFilter = IdentityTransform< TScalarType, NDimensions > >
 class GPUIdentityTransform : public TParentImageFilter, public GPUTransformBase

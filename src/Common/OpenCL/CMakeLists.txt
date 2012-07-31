@@ -32,12 +32,15 @@ source_group( "Filters" FILES ${OpenCL_FiltersFiles} )
 file( GLOB OpenCL_KernelsFiles Kernels/*.* )
 source_group( "Kernels" FILES ${OpenCL_KernelsFiles} )
 
+write_gpu_kernels("${OpenCL_KernelsFiles}" OpenCL_KernelsFiles_SRC "Kernels Generated")
+
 # Set the files, so that they are shown in the editor
 SET( OpenCL_Files
   ${OpenCL_CommonFiles}
   ${OpenCL_ITKimprovementsFiles}
   ${OpenCL_FiltersFiles}
-  ${OpenCL_KernelsFiles} )
+  ${OpenCL_KernelsFiles} 
+  ${OpenCL_KernelsFiles_SRC} )
 
 # Create the openCL library
 add_library( elastix_opencl ${OpenCL_Files} )
@@ -49,4 +52,3 @@ target_link_libraries( elastix_opencl
 
 # Group in IDE's like Visual Studio
 set_property( TARGET elastix_opencl PROPERTY FOLDER "libraries" )
-

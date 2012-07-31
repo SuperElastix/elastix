@@ -14,12 +14,13 @@
 #ifndef __itkGPUCastImageFilter_h
 #define __itkGPUCastImageFilter_h
 
+#include "itkCastImageFilter.h"
+#include "itkSimpleDataObjectDecorator.h"
+
 #include "itkOpenCLUtil.h"
 #include "itkGPUFunctorBase.h"
 #include "itkGPUKernelManager.h"
-#include "itkCastImageFilter.h"
 #include "itkGPUUnaryFunctorImageFilter.h"
-#include "itkSimpleDataObjectDecorator.h"
 
 namespace itk
 {
@@ -49,6 +50,8 @@ public:
 };
 } // end of namespace Functor
 
+/** Create a helper GPU Kernel class for GPUCastImageFilter */
+itkGPUKernelClassMacro(GPUCastImageFilterKernel);
 
 /** GPUCastImageFilter class definition */
 template< class TInputImage, class TOutputImage >
