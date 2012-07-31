@@ -31,7 +31,7 @@ namespace itk
     }
 
     typedef typename OutputImageType::PixelType OutputImagePixelType;
-    typedef itk::GPUImage<OutputImagePixelType, OutputImageType::ImageDimension> GPUOutputImageType;
+    typedef GPUImage<OutputImagePixelType, OutputImageType::ImageDimension> GPUOutputImageType;
     GPUOutputImageType *GPUOutput = dynamic_cast<GPUOutputImageType *>(filter->GetOutput());
     if(GPUOutput)
     {

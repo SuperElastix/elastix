@@ -15,7 +15,7 @@
 #define __itkGPUIdentityTransform_hxx
 
 #include "itkGPUIdentityTransform.h"
-#include "itkGPUKernelManagerHelperFunctions.h"
+#include "itkGPUMatrixOffsetTransformBase.h"
 #include <iomanip>
 
 namespace itk
@@ -23,23 +23,16 @@ namespace itk
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >::GPUIdentityTransform()
 {
-  // Load GPUMatrixOffsetTransformBase header
+  // Add GPUMatrixOffsetTransformBase header
   std::string sname = "GPUMatrixOffsetTransformBase header";
-  const std::string sourcePath0(oclhGPUMatrixOffsetTransformBase);
-  m_SourcesLoaded = LoadProgramFromFile(sourcePath0, m_Sources, sname, true);
-  if(!m_SourcesLoaded)
-  {
-    itkGenericExceptionMacro( << sname << " has not been loaded from: " << sourcePath0 );
-  }
+  const std::string sourcePath0(GPUMatrixOffsetTransformBaseHeaderKernel::GetOpenCLSource());
+  m_Sources.push_back(sourcePath0);
 
-  // Load GPUIdentityTransform source
-  sname = "GPUIdentityTransform source";
-  const std::string sourcePath1(oclGPUIdentityTransform);
-  m_SourcesLoaded = m_SourcesLoaded && LoadProgramFromFile(sourcePath1, m_Sources, sname, true);
-  if(!m_SourcesLoaded)
-  {
-    itkGenericExceptionMacro( << sname << " has not been loaded from: " << sourcePath1 );
-  }
+  // Add GPUIdentityTransform source
+  const std::string sourcePath1(GPUIdentityTransformKernel::GetOpenCLSource());
+  m_Sources.push_back(sourcePath1);
+
+  m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 }
 
 //------------------------------------------------------------------------------

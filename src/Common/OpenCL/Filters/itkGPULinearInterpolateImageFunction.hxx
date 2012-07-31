@@ -15,7 +15,7 @@
 #define __itkGPULinearInterpolateImageFunction_hxx
 
 #include "itkGPULinearInterpolateImageFunction.h"
-#include "itkGPUKernelManagerHelperFunctions.h"
+#include "itkGPUImageFunction.h"
 #include <iomanip>
 
 namespace itk
@@ -24,23 +24,15 @@ template< class TInputImage, class TCoordRep >
 GPULinearInterpolateImageFunction< TInputImage, TCoordRep >
 ::GPULinearInterpolateImageFunction()
 {
-  // Load GPUImageFunction implementation
-  std::string sname = "GPUImageFunction implementation";
-  const std::string sourcePath0(oclGPUImageFunction);
-  m_SourcesLoaded = LoadProgramFromFile(sourcePath0, m_Sources, sname, true);
-  if(!m_SourcesLoaded)
-  {
-    itkGenericExceptionMacro( << sname << " has not been loaded from: " << sourcePath0 );
-  }
+  // Add GPUImageFunction implementation
+  const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
+  m_Sources.push_back(sourcePath0);
 
-  // Load GPULinearInterpolateImageFunction implementation
-  sname = "GPULinearInterpolateImageFunction implementation";
-  const std::string sourcePath1(oclGPULinearInterpolateImageFunction);
-  m_SourcesLoaded = m_SourcesLoaded && LoadProgramFromFile(sourcePath1, m_Sources, sname, true);
-  if(!m_SourcesLoaded)
-  {
-    itkGenericExceptionMacro( << sname << " has not been loaded from: " << sourcePath1 );
-  }
+  // Add GPULinearInterpolateImageFunction implementation
+  const std::string sourcePath1(GPULinearInterpolateImageFunctionKernel::GetOpenCLSource());
+  m_Sources.push_back(sourcePath1);
+
+  m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 }
 
 //------------------------------------------------------------------------------

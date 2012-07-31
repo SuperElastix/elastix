@@ -15,7 +15,6 @@
 #define __itkGPURecursiveGaussianImageFilter_hxx
 
 #include "itkGPURecursiveGaussianImageFilter.h"
-#include "itkGPUKernels.h"
 
 namespace itk
 {
@@ -49,17 +48,17 @@ GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >::GPURecursiveGaussi
   defines << "#define OUTPIXELTYPE ";
   GetTypenameInString( typeid ( typename TOutputImage::PixelType ), defines );
 
-  // OpenCL source path
-  const std::string oclSrcPath(oclGPURecursiveGaussianImageFilter);
+  // OpenCL kernel source
+  const char* GPUSource = GPURecursiveGaussianImageFilterKernel::GetOpenCLSource();
   // Load and create kernel
-  const bool loaded = this->m_GPUKernelManager->LoadProgramFromFile(oclSrcPath.c_str(), defines.str().c_str());
+  bool loaded = this->m_GPUKernelManager->LoadProgramFromString( GPUSource, defines.str().c_str() );
   if(loaded)
   {
     m_FilterGPUKernelHandle = this->m_GPUKernelManager->CreateKernel("RecursiveGaussianImageFilter");
   }
   else
   {
-    itkExceptionMacro( << "Kernel has not been loaded from: " << oclSrcPath );
+    itkExceptionMacro( << "Kernel has not been loaded from:\n" << GPUSource );
   }
 }
 

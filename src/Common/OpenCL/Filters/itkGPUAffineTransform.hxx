@@ -15,7 +15,7 @@
 #define __itkGPUAffineTransform_hxx
 
 #include "itkGPUAffineTransform.h"
-#include "itkGPUKernelManagerHelperFunctions.h"
+#include "itkGPUMatrixOffsetTransformBase.h"
 #include <iomanip>
 
 // begin of unnamed namespace
@@ -172,23 +172,15 @@ template< class TScalarType, unsigned int NDimensions, class TParentImageFilter 
 GPUAffineTransform< TScalarType, NDimensions, TParentImageFilter >::GPUAffineTransform()
 :Superclass(ParametersDimension)
 {
-  // Load GPUMatrixOffsetTransformBase header
-  std::string sname = "GPUMatrixOffsetTransformBase header";
-  const std::string sourcePath0(oclhGPUMatrixOffsetTransformBase);
-  m_SourcesLoaded = LoadProgramFromFile(sourcePath0, m_Sources, sname, true);
-  if(!m_SourcesLoaded)
-  {
-    itkGenericExceptionMacro( << sname << " has not been loaded from: " << sourcePath0 );
-  }
+  // Add GPUMatrixOffsetTransformBase header
+  const std::string sourcePath0(GPUMatrixOffsetTransformBaseHeaderKernel::GetOpenCLSource());
+  m_Sources.push_back(sourcePath0);
 
-  // Load GPUMatrixOffsetTransformBase source
-  sname = "GPUMatrixOffsetTransformBase source";
-  const std::string sourcePath1(oclGPUMatrixOffsetTransformBase);
-  m_SourcesLoaded = m_SourcesLoaded && LoadProgramFromFile(sourcePath1, m_Sources, sname, true);
-  if(!m_SourcesLoaded)
-  {
-    itkGenericExceptionMacro( << sname << " has not been loaded from: " << sourcePath1 );
-  }
+  // Add GPUMatrixOffsetTransformBase source
+  const std::string sourcePath1(GPUMatrixOffsetTransformBaseKernel::GetOpenCLSource());
+  m_Sources.push_back(sourcePath1);
+  
+  m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 
   const unsigned int InputDimension  = InputSpaceDimension;
   const unsigned int OutputDimension = OutputSpaceDimension;

@@ -16,7 +16,6 @@
 
 #include "itkGPUBSplineDecompositionImageFilter.h"
 #include "itkGPUCastImageFilter.h"
-#include "itkGPUKernels.h"
 
 namespace itk
 {
@@ -61,11 +60,10 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   defines << "#define OUTPIXELTYPE ";
   GetTypenameInString( typeid ( typename TOutputImage::PixelType ), defines );
   
-  // OpenCL source path
-  const std::string oclSrcPath( oclGPUBSplineDecompositionImageFilter );
+  // OpenCL kernel source
+  const char* GPUSource = GPUBSplineDecompositionImageFilterKernel::GetOpenCLSource();
   // Load and create kernel
-  const bool loaded = this->m_GPUKernelManager->LoadProgramFromFile(
-    oclSrcPath.c_str(), defines.str().c_str() );
+  bool loaded = this->m_GPUKernelManager->LoadProgramFromString( GPUSource, defines.str().c_str() );
   if( loaded )
   {
     this->m_FilterGPUKernelHandle
@@ -73,7 +71,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   }
   else
   {
-    itkExceptionMacro( << "Kernel has not been loaded from: " << oclSrcPath );
+    itkExceptionMacro( << "Kernel has not been loaded from:\n" << GPUSource );
   }
 } // end Constructor()
 

@@ -15,7 +15,8 @@
 #define __itkGPUBSplineTransform_hxx
 
 #include "itkGPUBSplineTransform.h"
-#include "itkGPUKernelManagerHelperFunctions.h"
+#include "itkGPUMatrixOffsetTransformBase.h"
+#include "itkGPUImage.h"
 #include <iomanip>
 
 namespace itk
@@ -23,23 +24,15 @@ namespace itk
 template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, class TParentImageFilter >
 GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >::GPUBSplineTransform()
 {
-  // Load GPUMatrixOffsetTransformBase header
-  std::string sname = "GPUMatrixOffsetTransformBase header";
-  const std::string sourcePath0(oclhGPUMatrixOffsetTransformBase);
-  m_SourcesLoaded = LoadProgramFromFile(sourcePath0, m_Sources, sname, true);
-  if(!m_SourcesLoaded)
-  {
-    itkGenericExceptionMacro( << sname << " has not been loaded from: " << sourcePath0 );
-  }
+  // Add GPUMatrixOffsetTransformBase header
+  const std::string sourcePath0(GPUMatrixOffsetTransformBaseHeaderKernel::GetOpenCLSource());
+  m_Sources.push_back(sourcePath0);
 
-  // Load GPUBSplineTransform source
-  sname = "GPUBSplineTransform source";
-  const std::string sourcePath1(oclGPUBSplineTransform);
-  m_SourcesLoaded = m_SourcesLoaded && LoadProgramFromFile(sourcePath1, m_Sources, sname, true);
-  if(!m_SourcesLoaded)
-  {
-    itkGenericExceptionMacro( << sname << " has not been loaded from: " << sourcePath1 );
-  }
+  // Add GPUBSplineTransform source
+  const std::string sourcePath1(GPUBSplineTransformKernel::GetOpenCLSource());
+  m_Sources.push_back(sourcePath1);
+
+  m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 }
 
 //------------------------------------------------------------------------------
@@ -84,7 +77,7 @@ void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
 
   typedef typename Superclass::ImageType CPUCoefficientImage;
   typedef typename CPUCoefficientImage::PixelType CPUCoefficientsImagePixelType;
-  typedef itk::GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension> GPUCoefficientsImageType;
+  typedef GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension> GPUCoefficientsImageType;
 
   for(unsigned int j = 0; j < SpaceDimension; j++)
   {

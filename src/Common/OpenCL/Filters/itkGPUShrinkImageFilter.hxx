@@ -15,7 +15,6 @@
 #define __itkGPUShrinkImageFilter_hxx
 
 #include "itkGPUShrinkImageFilter.h"
-#include "itkGPUKernels.h"
 
 namespace itk
 {
@@ -41,17 +40,17 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   defines << "#define OUTPIXELTYPE ";
   GetTypenameInString( typeid ( typename TOutputImage::PixelType ), defines );
 
-  // OpenCL source path
-  const std::string oclSrcPath(oclGPUShrinkImageFilter);
+  // OpenCL kernel source
+  const char* GPUSource = GPUShrinkImageFilterKernel::GetOpenCLSource();
   // Load and create kernel
-  const bool loaded = this->m_GPUKernelManager->LoadProgramFromFile(oclSrcPath.c_str(), defines.str().c_str());
+  bool loaded = this->m_GPUKernelManager->LoadProgramFromString( GPUSource, defines.str().c_str() );
   if(loaded)
   {
     m_FilterGPUKernelHandle = this->m_GPUKernelManager->CreateKernel("ShrinkImageFilter");
   }
   else
   {
-    itkExceptionMacro( << "Kernel has not been loaded from: " << oclSrcPath );
+    itkExceptionMacro( << "Kernel has not been loaded from:\n" << GPUSource );
   }
 } // end Constructor()
 

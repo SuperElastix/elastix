@@ -17,6 +17,8 @@
 #include "itkGPUResampleImageFilter.h"
 #include "itkGPUKernelManagerHelperFunctions.h"
 #include "itkGPUExplicitSynchronization.h"
+#include "itkGPUMath.h"
+#include "itkGPUImageBase.h"
 
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkCastImageFilter.h"
@@ -46,20 +48,20 @@ void CopyCoefficientImagesToGPU(
   FixedArray<typename GPUDataManager::Pointer, NDimensions> &coefficientBaseArray)
 {
   // CPU Typedefs
-  typedef itk::BSplineTransform<TScalarType, NDimensions, VSplineOrder> BSplineTransformType;
+  typedef BSplineTransform<TScalarType, NDimensions, VSplineOrder> BSplineTransformType;
   typedef typename BSplineTransformType::ImageType                      TransformCoefficientImageType;
   typedef typename BSplineTransformType::ImagePointer                   TransformCoefficientImagePointer;
   typedef typename BSplineTransformType::CoefficientImageArray          CoefficientImageArray;
 
   // GPU Typedefs
-  typedef itk::GPUImage<TScalarType, NDimensions>                       GPUTransformCoefficientImageType;
+  typedef GPUImage<TScalarType, NDimensions>                       GPUTransformCoefficientImageType;
   typedef typename GPUTransformCoefficientImageType::Pointer            GPUTransformCoefficientImagePointer;
   typedef typename GPUDataManager::Pointer                              GPUDataManagerPointer;
 
   const CoefficientImageArray coefficientImageArray = transform->GetCoefficientImages();
 
   // Typedef for caster
-  typedef itk::CastImageFilter<TransformCoefficientImageType, GPUTransformCoefficientImageType> CasterType;
+  typedef CastImageFilter<TransformCoefficientImageType, GPUTransformCoefficientImageType> CasterType;
 
   for(unsigned int i=0; i<coefficientImageArray.Size(); i++)
   {
@@ -128,37 +130,21 @@ GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
   GetTypenameInString( typeid ( TInterpolatorPrecisionType ), defines );
 
   // Resize m_Sources
-  const unsigned int numberOfIncludes = 2 + 1; // Defines, GPUMath, GPUImageBase
-  const unsigned int numberOfSources  = 3;     // GPUInterpolator, GPUTransform, GPUResampleImageFilter
+  const unsigned int numberOfIncludes = 3; // Defines, GPUMath, GPUImageBase
+  const unsigned int numberOfSources  = 3; // GPUInterpolator, GPUTransform, GPUResampleImageFilter
   m_Sources.resize(numberOfIncludes + numberOfSources);
   m_SourceIndex = 0;
 
   // Add defines
   m_Sources[m_SourceIndex++] = defines.str();
 
-  // Load GPUMath
-  const std::string oclGPUMathPath(oclGPUMath);
-  std::string oclGPUMathSource;
-  if(!itk::LoadProgramFromFile(oclGPUMathPath, oclGPUMathSource, true))
-  {
-    itkGenericExceptionMacro( << "GPUMath has not been loaded from: " << oclGPUMathPath );
-  }
-  else
-  {
-    m_Sources[m_SourceIndex++] = oclGPUMathSource;
-  }
+  // Add GPUMath source
+  const std::string oclGPUMathSource(GPUMathKernel::GetOpenCLSource());
+  m_Sources[m_SourceIndex++] = oclGPUMathSource;
 
   // Load GPUImageBase
-  const std::string oclImageBaseSourcePath(oclGPUImageBase);
-  std::string oclImageBaseSource;
-  if(!LoadProgramFromFile(oclImageBaseSourcePath, oclImageBaseSource, true))
-  {
-    itkExceptionMacro( << "GPUImageBase has not been loaded from: " << oclImageBaseSourcePath );
-  }
-  else
-  {
-    m_Sources[m_SourceIndex++] = oclImageBaseSource;
-  }
+  const std::string oclImageBaseSource(GPUImageBaseKernel::GetOpenCLSource());
+  m_Sources[m_SourceIndex++] = oclImageBaseSource;
 }
 
 //------------------------------------------------------------------------------
@@ -331,10 +317,9 @@ void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionTyp
     }
 
     // OpenCL source path
-    const std::string oclResampleSourcePath(oclGPUResampleImageFilter);
+    const char* GPUSource = GPUResampleImageFilterKernel::GetOpenCLSource();
     // Load and create kernel
-    const bool loaded = this->m_GPUKernelManager->LoadProgramFromFile( 
-      oclResampleSourcePath.c_str(), loadedSources.str().c_str());;
+    bool loaded = this->m_GPUKernelManager->LoadProgramFromString( GPUSource, loadedSources.str().c_str() );
     if(loaded)
     {
       if(!m_InterpolatorIsBSpline)
@@ -354,7 +339,7 @@ void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionTyp
     }
     else
     {
-      itkExceptionMacro( << "Kernel has not been loaded from: " << oclResampleSourcePath );
+      itkExceptionMacro( << "Kernel has not been loaded from:\n" << GPUSource );
     }
   }
 }
