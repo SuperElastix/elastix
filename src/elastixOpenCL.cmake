@@ -40,11 +40,11 @@ if (ELASTIX_USE_OPENCL)
     add_custom_target(${GPUFILTER_KERNELNAME}_Target SOURCES ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_FILE})
     add_dependencies(${GPUFILTER_KERNELNAME}_Target ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_FILE})
     add_dependencies(${GPUFILTER_KERNELNAME}_Target ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt)
-    
+
     # make sure that if we modify original OpenCL file ${OPENCL_FILE}, then kernel string has to be recreated
     configure_file(${OPENCL_FILE} ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_FILE}.cl COPYONLY)
     add_dependencies(${GPUFILTER_KERNELNAME}_Target ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_FILE}.cl)
-    
+
     set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_FILE} PROPERTIES GENERATED ON)
     set(${SRC_VAR} ${${SRC_VAR}} ${OUTPUT_FILE})
 

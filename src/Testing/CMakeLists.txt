@@ -50,10 +50,14 @@ macro( elx_add_test name number group )
     target_link_libraries( ${ELXTEST_EXECUTABLE_NAME}
       elxCommon           # needed for elxTimer
       param               # some test use the CommandLineArgumentParser
-      elastix_opencl      # is empty if not selected in CMake
+      #elastix_opencl      # is empty if not selected in CMake
       ${mevisdcmtifflib}  # is empty if not selected in CMake
       ${ITK_LIBRARIES}
     )
+
+    if( ELASTIX_USE_OPENCL )
+      target_link_libraries( ${ELXTEST_EXECUTABLE_NAME} elastix_opencl )
+    endif()
 
     # Group in IDE's like Visual Studio
     set_property( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests/${group}" )
