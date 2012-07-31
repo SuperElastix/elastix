@@ -24,7 +24,7 @@ __kernel void CastImageFilter(__global const INPIXELTYPE* in,
                               __global OUTPIXELTYPE* out,
                               int width)
 {
-  int gix = get_global_id(0);
+  uint gix = get_global_id(0);
   if(gix < width)
   {
     out[gix] = Functor(in[gix]);
@@ -37,11 +37,10 @@ __kernel void CastImageFilter(__global const INPIXELTYPE* in,
                               __global OUTPIXELTYPE* out,
                               int width, int height)
 {
-  int gix = get_global_id(0);
-  int giy = get_global_id(1);
-  if(gix < width && giy < height)
+  uint2 index = (uint2)(get_global_id(0), get_global_id(1));
+  if(index.x < width && index.y < height)
   {
-    unsigned int gidx = width*giy + gix;
+    uint gidx = width*index.y + index.x;
     out[gidx] = Functor(in[gidx]);
   }
 }
@@ -52,22 +51,20 @@ __kernel void CastImageFilter(__global const INPIXELTYPE* in,
                               __global OUTPIXELTYPE* out,
                               int width, int height, int depth)
 {
-  int gix = get_global_id(0);
-  int giy = get_global_id(1);
-  int giz = get_global_id(2);
+  uint3 index = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
 
   /* NOTE: More than three-level nested conditional statements (e.g.,
   if A && B && C..) invalidates command queue during kernel
   execution on Apple OpenCL 1.0 (such Macbook Pro with NVIDIA 9600M
   GT). Therefore, we flattened conditional statements. */
   bool isValid = true;
-  if(gix < 0 || gix >= width) isValid = false;
-  if(giy < 0 || giy >= height) isValid = false;
-  if(giz < 0 || giz >= depth) isValid = false;
+  if(index.x >= width) isValid = false;
+  if(index.y >= height) isValid = false;
+  if(index.z >= depth) isValid = false;
 
   if( isValid )
   {
-    unsigned int gidx = width*(giz*height + giy) + gix;
+    uint gidx = width*(index.z*height + index.y) + index.x;
     out[gidx] = Functor(in[gidx]);
   }
 }
