@@ -236,7 +236,7 @@ bool GPUKernelManager::CreateOpenCLProgram(const std::string &filename,
 
 #ifdef OPENCL_PROFILING
   buildtimer.Stop();
-  std::cout << "GPU Build program took " << buildtimer.GetMeanTime() << " seconds." << std::endl;
+  std::cout << "GPU Build program took " << buildtimer.GetMean() << " seconds." << std::endl;
 #endif
 
   return true;
