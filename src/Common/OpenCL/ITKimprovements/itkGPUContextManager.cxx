@@ -100,7 +100,12 @@ void GPUContextManager::SetPlatform(const std::string &platformName,
   OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
 
   // Set platform
-  m_Platform = OpenCLSelectPlatform(platformName.c_str());
+#ifdef OPENCL_PROFILING
+  m_Platform = OpenCLSelectPlatform(platformName.c_str(), true);
+#else
+  m_Platform = OpenCLSelectPlatform(platformName.c_str(), false);
+#endif
+
   if(m_Platform == NULL)
   {
     itkGenericExceptionMacro(<< "Unknow " << platformName << "platform.");
