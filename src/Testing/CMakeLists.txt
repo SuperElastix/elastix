@@ -291,8 +291,8 @@ elx_add_test( TimerTest "" "Common" )
 if( ELASTIX_USE_OPENCL )
   elx_add_test( GPUBSplineDecompositionImageFilterTest "" "OpenCL"
     ${TestDataDir}/3DCT_lung_baseline.mha
-    ${TestOutputDir}/3DCT_lung_baseline_decompose_CPU.mha
-    ${TestOutputDir}/3DCT_lung_baseline_decompose_GPU.mha )
+    ${TestOutputDir}/3DCT_lung_baseline_decomposition_CPU.mha
+    ${TestOutputDir}/3DCT_lung_baseline_decomposition_GPU.mha )
 
   elx_add_test( GPUCastImageFilterTest "" "OpenCL"
     ${TestDataDir}/3DCT_lung_baseline.mha
@@ -306,7 +306,8 @@ if( ELASTIX_USE_OPENCL )
 
   elx_add_test( GPURecursiveGaussianImageFilterTest "" "OpenCL"
     ${TestDataDir}/3DCT_lung_baseline.mha
-    ${TestOutputDir}/3DCT_lung_baseline_OCLblurred.mha )
+    ${TestOutputDir}/3DCT_lung_baseline_recursive_CPU.mha
+    ${TestOutputDir}/3DCT_lung_baseline_recursive_GPU.mha )
 
   elx_add_test( GPUSmoothingRecursiveGaussianImageFilterTest "" "OpenCL"
     ${TestDataDir}/3DCT_lung_baseline.mha
@@ -315,28 +316,50 @@ if( ELASTIX_USE_OPENCL )
 
   elx_add_test( GPUGenericMultiResolutionPyramidImageFilterTest "" "OpenCL"
     ${TestDataDir}/3DCT_lung_baseline.mha
-    ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
-    ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha )
+    ${TestOutputDir}/3DCT_lung_baseline_generic_CPU.mha
+    ${TestOutputDir}/3DCT_lung_baseline_generic_GPU.mha )
 
-  elx_add_test( GPUResampleImageFilterTest "" "OpenCL"
+  elx_add_test( GPUResampleImageFilterTest "-NearestAffine" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
-    -out ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
-         ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_affine_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_affine_GPU.mha
     -i   NearestNeighbor
     -t   Affine )
 
-  elx_add_test( GPUResampleImageFilterTest "1" "OpenCL"
+  elx_add_test( GPUResampleImageFilterTest "-LinearAffine" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
-    -out ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
-         ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_affine_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_affine_GPU.mha
+    -i   Linear
+    -t   Affine )
+
+  elx_add_test( GPUResampleImageFilterTest "-BSplineAffine" "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_affine_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_affine_GPU.mha
+    -i   BSpline
+    -t   Affine )
+    
+  elx_add_test( GPUResampleImageFilterTest "-NearestBSpline" "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_bspline_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_bspline_GPU.mha
     -i   NearestNeighbor
     -t   BSpline
     -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
 
-  elx_add_test( GPUResampleImageFilterTest "2" "OpenCL"
+  elx_add_test( GPUResampleImageFilterTest "-LinearBSpline" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
-    -out ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
-         ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_bspline_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_bspline_GPU.mha
+    -i   Linear
+    -t   BSpline
+    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
+
+  elx_add_test( GPUResampleImageFilterTest "-BSplineBSpline" "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_bspline_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_bspline_GPU.mha
     -i   BSpline
     -t   BSpline
     -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )

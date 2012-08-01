@@ -26,6 +26,24 @@
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
 #include <iomanip> // setprecision, etc.
 
+// Helper function
+template<class ImageType>
+double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
+{
+  itk::ImageRegionConstIterator<ImageType> cit(
+    cpuImage, cpuImage->GetLargestPossibleRegion() );
+  itk::ImageRegionConstIterator<ImageType> git(
+    gpuImage, gpuImage->GetLargestPossibleRegion() );
+
+  double rmse = 0.0;
+  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
+  {
+    double err = static_cast<double>( cit.Get() ) - static_cast<double>( git.Get() );
+    rmse += err * err;
+  }
+  rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
+  return rmse;
+} // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
 // This test compares the CPU with the GPU version of the SmoothingRecursiveGaussianImageFilter.
@@ -50,9 +68,9 @@ int main( int argc, char * argv[] )
   }
 
   /** Get the command line arguments. */
-  std::string inputFileName = argv[1];
-  std::string outputFileNameCPU = argv[2];
-  std::string outputFileNameGPU = argv[3];
+  const std::string inputFileName = argv[1];
+  const std::string outputFileNameCPU = argv[2];
+  const std::string outputFileNameGPU = argv[3];
   const double epsilon = 1e-3;
   const unsigned int runTimes = 5;
 
@@ -195,18 +213,7 @@ int main( int argc, char * argv[] )
   }
 
   // Compute RMSE
-  itk::ImageRegionConstIterator<OutputImageType> cit(
-    filter->GetOutput(), filter->GetOutput()->GetLargestPossibleRegion() );
-  itk::ImageRegionConstIterator<OutputImageType> git(
-    gpuFilter->GetOutput(), gpuFilter->GetOutput()->GetLargestPossibleRegion() );
-
-  double rmse = 0.0;
-  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
-  {
-    double err = static_cast<double>( cit.Get() ) - static_cast<double>( git.Get() );
-    rmse += err * err;
-  }
-  rmse = vcl_sqrt( rmse / filter->GetOutput()->GetLargestPossibleRegion().GetNumberOfPixels() );
+  const double rmse = ComputeRMSE<OutputImageType>( filter->GetOutput(), gpuFilter->GetOutput() );
   std::cout << " " << rmse << std::endl;
 
   // Check

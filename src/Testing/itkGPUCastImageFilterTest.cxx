@@ -24,6 +24,24 @@
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
 #include <iomanip> // setprecision, etc.
 
+// Helper function
+template<class ImageType>
+double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
+{
+  itk::ImageRegionConstIterator<ImageType> cit(
+    cpuImage, cpuImage->GetLargestPossibleRegion() );
+  itk::ImageRegionConstIterator<ImageType> git(
+    gpuImage, gpuImage->GetLargestPossibleRegion() );
+
+  double rmse = 0.0;
+  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
+  {
+    double err = static_cast<double>( cit.Get() ) - static_cast<double>( git.Get() );
+    rmse += err * err;
+  }
+  rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
+  return rmse;
+} // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
 // This test compares the CPU with the GPU version of the GPUCastImageFilter.
@@ -92,7 +110,12 @@ int main( int argc, char * argv[] )
       std::cerr << "ERROR: " << e << std::endl;
       return EXIT_FAILURE;
     }
-    filter->Modified();
+
+    // Modify the filter, only not the last iteration
+    if( i != runTimes - 1 )
+    {
+      filter->Modified();
+    }
   }
   cputimer.Stop();
 
@@ -152,7 +175,12 @@ int main( int argc, char * argv[] )
     // and not clearing GPU memory afterwards.
     itk::GPUExplicitSync<FilterType, OutputImageType>( gpuFilter, false, false );
     //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true ); // crashes!
-    gpuFilter->Modified();
+
+    // Modify the filter, only not the last iteration
+    if( i != runTimes - 1 )
+    {
+      gpuFilter->Modified();
+    }
   }
   // GPU buffer has not been copied yet, so we have to make manual update
   //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true );
@@ -173,18 +201,7 @@ int main( int argc, char * argv[] )
   }
 
   // Compute RMSE
-  itk::ImageRegionConstIterator<OutputImageType> cit(
-    filter->GetOutput(), filter->GetOutput()->GetLargestPossibleRegion() );
-  itk::ImageRegionConstIterator<OutputImageType> git(
-    gpuFilter->GetOutput(), gpuFilter->GetOutput()->GetLargestPossibleRegion() );
-
-  double rmse = 0.0;
-  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
-  {
-    double err = static_cast<double>( cit.Get() ) - static_cast<double>( git.Get() );
-    rmse += err * err;
-  }
-  rmse = vcl_sqrt( rmse / filter->GetOutput()->GetLargestPossibleRegion().GetNumberOfPixels() );
+  const double rmse = ComputeRMSE<OutputImageType>( filter->GetOutput(), gpuFilter->GetOutput() );
   std::cout << " " << rmse << std::endl;
 
   // Check

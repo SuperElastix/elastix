@@ -24,6 +24,24 @@
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
 #include <iomanip> // setprecision, etc.
 
+// Helper function
+template<class ImageType>
+double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
+{
+  itk::ImageRegionConstIterator<ImageType> cit(
+    cpuImage, cpuImage->GetLargestPossibleRegion() );
+  itk::ImageRegionConstIterator<ImageType> git(
+    gpuImage, gpuImage->GetLargestPossibleRegion() );
+
+  double rmse = 0.0;
+  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
+  {
+    double err = static_cast<double>( cit.Get() ) - static_cast<double>( git.Get() );
+    rmse += err * err;
+  }
+  rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
+  return rmse;
+} // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
 // This test compares the CPU with the GPU version of the BSplineDecompositionImageFilter.
@@ -60,7 +78,7 @@ int main( int argc, char * argv[] )
   // Typedefs.
   const unsigned int  Dimension = 3;
   typedef float       PixelType;
-  typedef itk::Image<PixelType, Dimension>  ImageType;
+  typedef itk::Image<PixelType, Dimension> ImageType;
 
   // CPU Typedefs
   typedef itk::BSplineDecompositionImageFilter<ImageType, ImageType> FilterType;
@@ -174,18 +192,7 @@ int main( int argc, char * argv[] )
   }
 
   // Compute RMSE
-  itk::ImageRegionConstIterator<ImageType> cit(
-    filter->GetOutput(), filter->GetOutput()->GetLargestPossibleRegion() );
-  itk::ImageRegionConstIterator<ImageType> git(
-    gpuFilter->GetOutput(), gpuFilter->GetOutput()->GetLargestPossibleRegion() );
-
-  double rmse = 0.0;
-  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
-  {
-    double err = static_cast<double>( cit.Get() ) - static_cast<double>( git.Get() );
-    rmse += err * err;
-  }
-  rmse = vcl_sqrt( rmse / filter->GetOutput()->GetLargestPossibleRegion().GetNumberOfPixels() );
+  const double rmse = ComputeRMSE<ImageType>( filter->GetOutput(), gpuFilter->GetOutput() );
   std::cout << " " << rmse << std::endl;
 
   // Check

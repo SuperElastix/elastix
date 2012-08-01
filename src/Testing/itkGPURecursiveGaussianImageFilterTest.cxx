@@ -22,7 +22,6 @@
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
 #include <iomanip> // setprecision, etc.
 
-
 // Helper function
 template<class ImageType>
 double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
@@ -41,7 +40,6 @@ double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
   rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
   return rmse;
 } // end ComputeRMSE()
-
 
 /**
 * Testing GPU Recursive Gaussian Image Filter
@@ -75,6 +73,9 @@ int main( int argc, char * argv[] )
   }
 
   // Some hard-coded testing options
+  const std::string inputFileName = argv[1];
+  const std::string outputFileNameCPU = argv[2];
+  const std::string outputFileNameGPU = argv[3];
   const double sigma = 3.0;
   unsigned int direction = 0;
   const double epsilon = 0.01;
@@ -85,7 +86,7 @@ int main( int argc, char * argv[] )
 
   // Reader
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( argv[1] );
+  reader->SetFileName( inputFileName );
   try
   {
     reader->Update();
@@ -96,10 +97,10 @@ int main( int argc, char * argv[] )
     return EXIT_FAILURE;
   }
 
-  CPUFilterType::Pointer CPUFilter = CPUFilterType::New();
-  GPUFilterType::Pointer GPUFilter = GPUFilterType::New();
   itk::TimeProbe cputimer;
   itk::TimeProbe gputimer;
+
+  CPUFilterType::Pointer CPUFilter = CPUFilterType::New();
 
   // Test 1~n threads for CPU
   // Speed CPU vs GPU
@@ -121,6 +122,28 @@ int main( int argc, char * argv[] )
       << " " << cputimer.GetMean() << std::endl;
   }
 
+  /** Write the CPU result. */
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetInput( CPUFilter->GetOutput() );
+  writer->SetFileName( outputFileNameCPU.c_str() );
+  try{ writer->Update(); }
+  catch( itk::ExceptionObject & e )
+  {
+    std::cerr << "ERROR: " << e << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  // Construct the filter
+  // Use a try/catch, because construction of this filter will trigger
+  // OpenCL compilation, which may fail.
+  GPUFilterType::Pointer GPUFilter;
+  try{ GPUFilter = GPUFilterType::New(); }
+  catch( itk::ExceptionObject & e )
+  {
+    std::cerr << "ERROR: " << e << std::endl;
+    return EXIT_FAILURE;
+  }
+
   // Test GPU
   gputimer.Start();
   GPUFilter->SetInput( reader->GetOutput() );
@@ -133,22 +156,20 @@ int main( int argc, char * argv[] )
     << gputimer.GetMean()
     << " " << cputimer.GetMean() / gputimer.GetMean();
 
-  double rmse = ComputeRMSE<OutputImageType>( CPUFilter->GetOutput(), GPUFilter->GetOutput() );
-  std::cout << " " << rmse << std::endl;
-
-  // Write output image
-  WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( GPUFilter->GetOutput() );
-  writer->SetFileName( argv[2] );
-  try
+  /** Write the GPU result. */
+  WriterType::Pointer gpuWriter = WriterType::New();
+  gpuWriter->SetInput( GPUFilter->GetOutput() );
+  gpuWriter->SetFileName( outputFileNameGPU.c_str() );
+  try{ gpuWriter->Update(); }
+  catch( itk::ExceptionObject & e )
   {
-    writer->Update();
-  }
-  catch( itk::ExceptionObject & excp )
-  {
-    std::cerr << "ERROR: " << excp << std::endl;
+    std::cerr << "ERROR: " << e << std::endl;
     return EXIT_FAILURE;
   }
+
+  // Compute RMSE
+  const double rmse = ComputeRMSE<OutputImageType>( CPUFilter->GetOutput(), GPUFilter->GetOutput() );
+  std::cout << " " << rmse << std::endl;
 
   // Check
   if( rmse > epsilon )
