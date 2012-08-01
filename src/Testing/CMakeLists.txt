@@ -324,21 +324,24 @@ if( ELASTIX_USE_OPENCL )
     -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_affine_CPU.mha
          ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_affine_GPU.mha
     -i   NearestNeighbor
-    -t   Affine )
+    -t   Affine
+    -rmse 0.8 )
 
   elx_add_test( GPUResampleImageFilterTest "-LinearAffine" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
     -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_affine_CPU.mha
          ${TestOutputDir}/3DCT_lung_baseline_resample_linear_affine_GPU.mha
     -i   Linear
-    -t   Affine )
+    -t   Affine
+    -rmse 0.1 )
 
   elx_add_test( GPUResampleImageFilterTest "-BSplineAffine" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
     -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_affine_CPU.mha
          ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_affine_GPU.mha
     -i   BSpline
-    -t   Affine )
+    -t   Affine
+    -rmse 0.1 )
     
   elx_add_test( GPUResampleImageFilterTest "-NearestBSpline" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -346,7 +349,8 @@ if( ELASTIX_USE_OPENCL )
          ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_bspline_GPU.mha
     -i   NearestNeighbor
     -t   BSpline
-    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
+    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+    -rmse 0.03 )
 
   elx_add_test( GPUResampleImageFilterTest "-LinearBSpline" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -354,7 +358,8 @@ if( ELASTIX_USE_OPENCL )
          ${TestOutputDir}/3DCT_lung_baseline_resample_linear_bspline_GPU.mha
     -i   Linear
     -t   BSpline
-    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
+    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+    -rmse 0.03 )
 
   elx_add_test( GPUResampleImageFilterTest "-BSplineBSpline" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -362,7 +367,8 @@ if( ELASTIX_USE_OPENCL )
          ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_bspline_GPU.mha
     -i   BSpline
     -t   BSpline
-    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
+    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+    -rmse 0.03 )
 
 endif()
 
@@ -561,4 +567,3 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.txt )
-

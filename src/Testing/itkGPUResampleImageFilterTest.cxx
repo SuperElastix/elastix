@@ -48,6 +48,7 @@ std::string GetHelpString( void )
     << "itkGPUResampleImageFilterAffineTransformTest" << std::endl
     << "  -in           input file name\n"
     << "  -out          output file names.(outputCPU outputGPU)\n"
+    << "  -rmse         acceptable rmse error\n"
     << "  [-i]          interpolator, one of {NearestNeighbor, Linear, BSpline}, default NearestNeighbor\n"
     << "  [-t]          transforms, one of {Affine, BSpline} or combinations with option \"-p\", default Affine\n"
     << "  [-c]          use combo transform, default false\n"
@@ -118,6 +119,7 @@ int main( int argc, char * argv[] )
 
   parser->MarkArgumentAsRequired( "-in", "The input filename" );
   parser->MarkArgumentAsRequired( "-out", "The output filenames" );
+  parser->MarkArgumentAsRequired( "-rmse", "The acceptable rmse error" );
 
   itk::CommandLineArgumentParser::ReturnValue validateArguments = parser->CheckForRequiredArguments();
 
@@ -136,6 +138,10 @@ int main( int argc, char * argv[] )
 
   std::vector<std::string> outputFileNames( 2, "" );
   parser->GetCommandLineArgument( "-out", outputFileNames );
+
+  // Get acceptable rmse error
+  double rmseError;
+  parser->GetCommandLineArgument( "-rmse", rmseError );
 
   // interpolator argument
   std::string interp = "NearestNeighbor";
@@ -180,7 +186,6 @@ int main( int argc, char * argv[] )
   }
 
   const unsigned int splineOrderInterpolator = 3;
-  const double epsilon = 0.04;
   unsigned int runTimes = 5;
 
   std::cout << std::showpoint << std::setprecision( 4 );
@@ -296,23 +301,26 @@ int main( int argc, char * argv[] )
       unsigned int par = 0;
       if( Dimension == 2 )
       {
-        // matrix part
-        parameters[ par++ ] = 0.9;
-        parameters[ par++ ] = 0.1;
-        parameters[ par++ ] = 0.2;
-        parameters[ par++ ] = 1.1;
-        // translation
-        parameters[ par++ ] = 0.0;
-        parameters[ par++ ] = 0.0;
+        const double matrix[] =
+        {
+          0.9, 0.1, // matrix part
+          0.2, 1.1, // matrix part
+          0.0, 0.0, // translation
+        };
+
+        for( unsigned int i = 0; i < 6; i++ )
+        {
+          parameters[ par++ ] = matrix[ i ];
+        }
       }
       else if( Dimension == 3 )
       {
         const double matrix[] =
         {
-          1.0, 0.0, 0.0,
-          0.0, 1.0, 0.0,
-          0.0, 0.0, 1.0,
-          -3.02, 1.3, -0.045
+          1.0, -0.045, 0.02,   // matrix part
+          0.0, 1.0, 0.0,       // matrix part
+          -0.075, 0.09, 1.0,   // matrix part
+          -3.02, 1.3, -0.045   // translation
         };
 
         for( unsigned int i = 0; i < 12; i++ )
@@ -608,7 +616,7 @@ int main( int argc, char * argv[] )
   std::cout << " " << rmse << std::endl;
 
   // Check
-  if( rmse > epsilon )
+  if( rmse > rmseError )
   {
     std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
     return EXIT_FAILURE;
