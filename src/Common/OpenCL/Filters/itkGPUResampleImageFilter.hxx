@@ -169,6 +169,10 @@ void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionTyp
   {
     this->m_InterpolatorBase = (GPUInterpolatorBase *)interpolatorBase;
   }
+  else
+  {
+    itkExceptionMacro("Setting unsupported GPU interpolator to " << _arg);
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -205,6 +209,10 @@ void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionTyp
         m_Sources[m_TransformSourceLoadedIndex] = source;
       }
     }
+  }
+  else
+  {
+    itkExceptionMacro("Setting unsupported GPU transform to " << _arg);
   }
 }
 
