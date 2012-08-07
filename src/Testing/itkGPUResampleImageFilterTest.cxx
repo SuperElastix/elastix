@@ -15,6 +15,7 @@
 // GPU include files
 #include "itkGPUResampleImageFilter.h"
 #include "itkGPUAffineTransform.h"
+#include "itkGPUBSplineTransform.h"
 #include "itkGPUNearestNeighborInterpolateImageFunction.h"
 #include "itkGPULinearInterpolateImageFunction.h"
 #include "itkGPUBSplineInterpolateImageFunction.h"
@@ -33,7 +34,8 @@
 
 // elastix include files
 #include "itkCommandLineArgumentParser.h"
-#include "itkAdvancedCombinationTransform.h"
+
+#include "itkGPUAdvancedCombinationTransform.h"
 #include "itkAdvancedMatrixOffsetTransformBase.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
 
@@ -78,23 +80,215 @@ double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
 } // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
-template<class AdvancedCombinationTransformType,
-class AdvancedAffineTransformType,
-class AdvancedBSplineTransformType>
-  void SetAdvancedTransform(const std::string &transformName,
-  typename AdvancedCombinationTransformType::Pointer &transform)
+template<class AffineTransformType>
+void DefineAffineParameters( typename AffineTransformType::ParametersType &parameters )
 {
-  if ( transformName == "Affine" )
+  const unsigned int Dimension = AffineTransformType::InputSpaceDimension;
+  // Setup parameters
+  parameters.SetSize( Dimension * Dimension + Dimension );
+  unsigned int par = 0;
+  if( Dimension == 2 )
   {
-    AdvancedAffineTransformType::Pointer affineTransform
-      = AdvancedAffineTransformType::New();
-    transform->SetCurrentTransform( affineTransform );
+    const double matrix[] =
+    {
+      0.9, 0.1, // matrix part
+      0.2, 1.1, // matrix part
+      0.0, 0.0, // translation
+    };
+
+    for( unsigned int i = 0; i < 6; i++ )
+    {
+      parameters[ par++ ] = matrix[ i ];
+    }
   }
-  else if ( transformName == "BSpline" )
+  else if( Dimension == 3 )
   {
-    AdvancedBSplineTransformType::Pointer bsplineTransform
-      = AdvancedBSplineTransformType::New();
-    transform->SetCurrentTransform( bsplineTransform );
+    const double matrix[] =
+    {
+      1.0, -0.045, 0.02,   // matrix part
+      0.0, 1.0, 0.0,       // matrix part
+      -0.075, 0.09, 1.0,   // matrix part
+      -3.02, 1.3, -0.045   // translation
+    };
+
+    for( unsigned int i = 0; i < 12; i++ )
+    {
+      parameters[ par++ ] = matrix[ i ];
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+template<class BSplineTransformType>
+void DefineBSplineParameters( typename BSplineTransformType::ParametersType &parameters,
+                             typename BSplineTransformType::Pointer &transform,
+                             const std::string &parametersFileName )
+{
+  const unsigned int numberOfParameters = transform->GetNumberOfParameters();
+  const unsigned int Dimension = BSplineTransformType::SpaceDimension;
+  const unsigned int numberOfNodes = numberOfParameters / Dimension;
+
+  parameters.SetSize( numberOfParameters );
+
+  // Open file and read parameters
+  std::ifstream infile;
+  infile.open( parametersFileName.c_str() );
+  for( unsigned int n = 0; n < numberOfNodes; n++ )
+  {
+    double parValue;
+    infile >> parValue;
+    parameters[ n ] = parValue;
+    if( Dimension > 1 )
+    {
+      parameters[ n + numberOfNodes ] = parValue;
+    }
+    if( Dimension > 2 )
+    {
+      parameters[ n + numberOfNodes * 2 ] = parValue;
+    }
+  }
+  infile.close();
+}
+
+//------------------------------------------------------------------------------
+// This helper function completely set the transform
+// We are using ITK elastix transforms:
+// ITK transforms:
+// TransformType, AffineTransformType, BSplineTransformType
+// elastix Transforms:
+// AdvancedCombinationTransformType, AdvancedAffineTransformType, AdvancedBSplineTransformType
+template<class TransformType, class AffineTransformType, class BSplineTransformType,
+class AdvancedCombinationTransformType, class AdvancedAffineTransformType, class AdvancedBSplineTransformType,
+class InputImageType>
+  void SetAffineBSplineTransform( const std::string &transformName,
+  typename TransformType::Pointer &transform,
+  typename AdvancedCombinationTransformType::Pointer &advancedTransform,
+  typename TransformType::ParametersType &parameters,
+  const typename InputImageType::ConstPointer &image,
+  const std::string parametersFileName )
+{
+  if( transformName == "Affine" )
+  {
+    if( advancedTransform.IsNull() )
+    {
+      AffineTransformType::Pointer affineTransform
+        = AffineTransformType::New();
+      transform = affineTransform;
+
+      // Define and set affine parameters
+      DefineAffineParameters<AffineTransformType>( parameters );
+      transform->SetParameters( parameters );
+    }
+    else
+    {
+      AdvancedAffineTransformType::Pointer affineTransform
+        = AdvancedAffineTransformType::New();
+      advancedTransform->SetCurrentTransform( affineTransform );
+
+      // Define and set advanced affine parameters
+      DefineAffineParameters<AdvancedAffineTransformType>( parameters );
+      affineTransform->SetParameters( parameters );
+    }
+  }
+  else if( transformName == "BSpline" )
+  {
+    const unsigned int Dimension = image->GetImageDimension();
+    const InputImageType::SpacingType   inputSpacing   = image->GetSpacing();
+    const InputImageType::PointType     inputOrigin    = image->GetOrigin();
+    const InputImageType::DirectionType inputDirection = image->GetDirection();
+    const InputImageType::RegionType    inputRegion    = image->GetBufferedRegion();
+    const InputImageType::SizeType      inputSize      = inputRegion.GetSize();
+
+    typedef BSplineTransformType::MeshSizeType MeshSizeType;
+    MeshSizeType gridSize;
+    gridSize.Fill( 4 );
+
+    typedef BSplineTransformType::PhysicalDimensionsType PhysicalDimensionsType;
+    PhysicalDimensionsType gridSpacing;
+    for( unsigned int d = 0; d < Dimension; d++ )
+    {
+      gridSpacing[d] = inputSpacing[d] * ( inputSize[d] - 1.0 );
+    }
+
+    if( advancedTransform.IsNull() )
+    {
+      BSplineTransformType::Pointer bsplineTransform
+        = BSplineTransformType::New();
+
+      // Set grid properties
+      bsplineTransform->SetTransformDomainOrigin( inputOrigin );
+      bsplineTransform->SetTransformDomainDirection( inputDirection );
+      bsplineTransform->SetTransformDomainPhysicalDimensions( gridSpacing );
+      bsplineTransform->SetTransformDomainMeshSize( gridSize );
+      transform = bsplineTransform;
+
+      // Define and set b-spline parameters
+      DefineBSplineParameters<BSplineTransformType>
+        ( parameters, bsplineTransform, parametersFileName );
+      transform->SetParameters( parameters );
+    }
+    else
+    {
+      AdvancedBSplineTransformType::Pointer bsplineTransform
+        = AdvancedBSplineTransformType::New();
+      advancedTransform->SetCurrentTransform( bsplineTransform );
+
+      // Set grid properties
+      bsplineTransform->SetGridOrigin( inputOrigin );
+      bsplineTransform->SetGridDirection( inputDirection );
+      bsplineTransform->SetGridSpacing( gridSpacing );
+      bsplineTransform->SetGridRegion( gridSize );
+
+      // Define and set b-spline parameters
+      DefineBSplineParameters<AdvancedBSplineTransformType>
+        ( parameters, bsplineTransform, parametersFileName );
+      bsplineTransform->SetParameters( parameters );
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+// This helper function completely to set the advanced transform
+// elastix Transforms:
+// AdvancedCombinationTransformType, AdvancedAffineTransformType, AdvancedBSplineTransformType
+template<class AdvancedCombinationTransformType,
+class AdvancedAffineTransformType, class AdvancedBSplineTransformType>
+  void SetAdvancedCombinationTransform(
+  typename AdvancedCombinationTransformType::Pointer &advancedTransform,
+  typename AdvancedCombinationTransformType::CurrentTransformPointer &current )
+{
+  if( current.IsNotNull() )
+  {
+    AdvancedAffineTransformType *affine =
+      dynamic_cast<AdvancedAffineTransformType *>( current.GetPointer() );
+
+    if(affine)
+    {
+      AdvancedAffineTransformType::Pointer affineTransform
+        = AdvancedAffineTransformType::New();
+      advancedTransform->SetCurrentTransform( affineTransform );
+      affineTransform->SetParameters( affine->GetParameters() );
+    }
+    else
+    {
+      AdvancedBSplineTransformType *bspline =
+        dynamic_cast<AdvancedBSplineTransformType *>( current.GetPointer() );
+
+      if(bspline)
+      {
+        AdvancedBSplineTransformType::Pointer bsplineTransform
+          = AdvancedBSplineTransformType::New();
+        advancedTransform->SetCurrentTransform( bsplineTransform );
+
+        // Set the same properties and grid
+        bsplineTransform->SetGridOrigin( bspline->GetGridOrigin() );
+        bsplineTransform->SetGridDirection( bspline->GetGridDirection() );
+        bsplineTransform->SetGridSpacing( bspline->GetGridSpacing() );
+        bsplineTransform->SetGridRegion( bspline->GetGridRegion() );
+
+        bsplineTransform->SetParameters( bspline->GetParameters() );
+      }
+    }
   }
 }
 
@@ -102,7 +296,6 @@ class AdvancedBSplineTransformType>
 // This test compares the CPU with the GPU version of the ResampleImageFilter.
 // The filter takes an input image and produces an output image.
 // We compare the CPU and GPU output image using RMSE and speed.
-
 int main( int argc, char * argv[] )
 {
   // Check for GPU
@@ -171,6 +364,7 @@ int main( int argc, char * argv[] )
     }
   }
 
+  unsigned int runTimes = 3;
   std::string parametersFileName = "";
   for( unsigned int i = 0; i < transforms.size(); i++ )
   {
@@ -182,12 +376,12 @@ int main( int argc, char * argv[] )
         std::cerr << "ERROR: You should specify parameters file \"-p\" for the B-spline transform." << std::endl;
         return EXIT_FAILURE;
       }
+      // Faster B-spline tests
+      runTimes = 1;
     }
   }
 
   const unsigned int splineOrderInterpolator = 3;
-  unsigned int runTimes = 5;
-
   std::cout << std::showpoint << std::setprecision( 4 );
 
   // Typedefs.
@@ -243,12 +437,12 @@ int main( int argc, char * argv[] )
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomNumberGeneratorType;
   RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
 
-  InputImageType::ConstPointer  inputImage     = reader->GetOutput();
-  InputImageType::SpacingType   inputSpacing   = inputImage->GetSpacing();
-  InputImageType::PointType     inputOrigin    = inputImage->GetOrigin();
-  InputImageType::DirectionType inputDirection = inputImage->GetDirection();
-  InputImageType::RegionType    inputRegion    = inputImage->GetBufferedRegion();
-  InputImageType::SizeType      inputSize      = inputRegion.GetSize();
+  InputImageType::ConstPointer  inputImage           = reader->GetOutput();
+  const InputImageType::SpacingType   inputSpacing   = inputImage->GetSpacing();
+  const InputImageType::PointType     inputOrigin    = inputImage->GetOrigin();
+  const InputImageType::DirectionType inputDirection = inputImage->GetDirection();
+  const InputImageType::RegionType    inputRegion    = inputImage->GetBufferedRegion();
+  const InputImageType::SizeType      inputSize      = inputRegion.GetSize();
 
   OutputImageType::SpacingType    outputSpacing;
   OutputImageType::PointType      outputOrigin;
@@ -283,98 +477,16 @@ int main( int argc, char * argv[] )
   TransformType::Pointer transform;
   TransformType::ParametersType parameters;
 
-  typedef BSplineTransformType::MeshSizeType MeshSizeType;
-  MeshSizeType meshSize;
-  typedef BSplineTransformType::PhysicalDimensionsType PhysicalDimensionsType;
-  PhysicalDimensionsType fixedDimensions;
-
   if( !useComboTransform )
   {
-    if( transforms[0] == "Affine" )
-    {
-      AffineTransformType::Pointer tmpTransform
-        = AffineTransformType::New();
-      transform = tmpTransform;
-
-      // Setup parameters
-      parameters.SetSize( Dimension * Dimension + Dimension );
-      unsigned int par = 0;
-      if( Dimension == 2 )
-      {
-        const double matrix[] =
-        {
-          0.9, 0.1, // matrix part
-          0.2, 1.1, // matrix part
-          0.0, 0.0, // translation
-        };
-
-        for( unsigned int i = 0; i < 6; i++ )
-        {
-          parameters[ par++ ] = matrix[ i ];
-        }
-      }
-      else if( Dimension == 3 )
-      {
-        const double matrix[] =
-        {
-          1.0, -0.045, 0.02,   // matrix part
-          0.0, 1.0, 0.0,       // matrix part
-          -0.075, 0.09, 1.0,   // matrix part
-          -3.02, 1.3, -0.045   // translation
-        };
-
-        for( unsigned int i = 0; i < 12; i++ )
-        {
-          parameters[ par++ ] = matrix[ i ];
-        }
-      }
-    }
-    else if( transforms[0] == "BSpline" )
-    {
-      // Faster B-spline tests
-      runTimes = 1;
-
-      BSplineTransformType::Pointer tmpTransform
-        = BSplineTransformType::New();
-
-      // Setup parameters
-      meshSize.Fill( 4 );
-
-      for(unsigned int d=0; d<Dimension; d++)
-      {
-        fixedDimensions[d] = inputSpacing[d] * ( inputSize[d] - 1.0 );
-      }
-
-      tmpTransform->SetTransformDomainOrigin( inputOrigin );
-      tmpTransform->SetTransformDomainDirection( inputDirection );
-      tmpTransform->SetTransformDomainPhysicalDimensions( fixedDimensions );
-      tmpTransform->SetTransformDomainMeshSize( meshSize );
-      transform = tmpTransform;
-
-      const unsigned int numberOfParameters = tmpTransform->GetNumberOfParameters();
-      parameters.SetSize( numberOfParameters );
-
-      std::ifstream infile;
-      infile.open( parametersFileName.c_str() );
-
-      const unsigned int numberOfNodes = numberOfParameters / Dimension;
-      for( unsigned int n = 0; n < numberOfNodes; n++ )
-      {
-        unsigned int parValue;
-        infile >> parValue;
-        parameters[ n ] = parValue;
-        if( Dimension > 1 )
-        {
-          parameters[n+numberOfNodes] = parValue;
-        }
-        if( Dimension > 2 )
-        {
-          parameters[ n + numberOfNodes * 2 ] = parValue;
-        }
-      }
-      infile.close();
-    }
-    transform->SetParameters( parameters );
+    AdvancedCombinationTransformType::Pointer dummy;
+    SetAffineBSplineTransform<
+      // ITK Transforms
+      TransformType, AffineTransformType, BSplineTransformType,
+      // elastix Transforms
+      AdvancedCombinationTransformType, AdvancedAffineTransformType, AdvancedBSplineTransformType,
+      InputImageType>
+      ( transforms[0], transform, dummy, parameters, inputImage, parametersFileName );
   }
   else
   {
@@ -389,20 +501,28 @@ int main( int argc, char * argv[] )
     {
       if ( i == 0 )
       {
-        SetAdvancedTransform<AdvancedCombinationTransformType,
-          AdvancedAffineTransformType, AdvancedBSplineTransformType>
-          (transforms[i], initialTransform);
+        SetAffineBSplineTransform<
+          // ITK Transforms
+          TransformType, AffineTransformType, BSplineTransformType,
+          // elastix Transforms
+          AdvancedCombinationTransformType, AdvancedAffineTransformType, AdvancedBSplineTransformType,
+          InputImageType>
+          ( transforms[i], transform, initialTransform, parameters, inputImage, parametersFileName );
       }
       else
       {
         AdvancedCombinationTransformType::Pointer initialNext
           = AdvancedCombinationTransformType::New();
 
-        SetAdvancedTransform<AdvancedCombinationTransformType,
-          AdvancedAffineTransformType, AdvancedBSplineTransformType>
-          (transforms[i], initialNext);
+        SetAffineBSplineTransform<
+          // ITK Transforms
+          TransformType, AffineTransformType, BSplineTransformType,
+          // elastix Transforms
+          AdvancedCombinationTransformType, AdvancedAffineTransformType, AdvancedBSplineTransformType,
+          InputImageType>
+          ( transforms[i], transform, initialNext, parameters, inputImage, parametersFileName );
 
-        initialTransform->SetInitialTransform( initialTransform );
+        initialTransform->SetInitialTransform( initialNext );
         initialTransform = initialNext;
       }
     }
@@ -474,6 +594,12 @@ int main( int argc, char * argv[] )
     return EXIT_FAILURE;
   }
 
+  // GPU version of this test are not implemented yet.
+  //if ( useComboTransform )
+  //{
+  //  return EXIT_SUCCESS;
+  //}
+
   // Register object factory for GPU image and filter
   // All these filters that are constructed after this point are
   // turned into a GPU filter.
@@ -491,6 +617,9 @@ int main( int argc, char * argv[] )
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineInterpolateImageFunctionFactory::New() );
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUBSplineDecompositionImageFilterFactory::New() );
 
+  // Advanced transforms factory registration
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUAdvancedCombinationTransformFactory::New() );
+  
   // Construct the filter
   // Use a try/catch, because construction of this filter will trigger
   // OpenCL compilation, which may fail.
@@ -533,15 +662,85 @@ int main( int argc, char * argv[] )
       BSplineTransformType::Pointer tmpTransform
         = BSplineTransformType::New();
 
-      tmpTransform->SetTransformDomainOrigin( inputOrigin );
-      tmpTransform->SetTransformDomainDirection( inputDirection );
-      tmpTransform->SetTransformDomainPhysicalDimensions( fixedDimensions );
-      tmpTransform->SetTransformDomainMeshSize( meshSize );
-
+      // Get fixedDimensions and meshSize from CPU BSplineTransform
+      const BSplineTransformType *CPUBSplineTransform =
+        dynamic_cast<const BSplineTransformType *>(transform.GetPointer());
+      if(CPUBSplineTransform)
+      {
+        tmpTransform->SetTransformDomainOrigin( inputOrigin );
+        tmpTransform->SetTransformDomainDirection( inputDirection );
+        tmpTransform->SetTransformDomainPhysicalDimensions(
+          CPUBSplineTransform->GetTransformDomainPhysicalDimensions() );
+        tmpTransform->SetTransformDomainMeshSize(
+          CPUBSplineTransform->GetTransformDomainMeshSize() );
+      }
+      else
+      {
+        std::cerr << "ERROR: Unable to retrieve CPU BSplineTransform." << std::endl;
+        return EXIT_FAILURE;
+      }
       gpuTransform = tmpTransform;
     }
+    gpuTransform->SetParameters( parameters );
   }
-  gpuTransform->SetParameters( parameters );
+  else
+  {
+    // Get CPU AdvancedCombinationTransform
+    AdvancedCombinationTransformType *CPUAdvancedCombinationTransform =
+      dynamic_cast<AdvancedCombinationTransformType *>( transform.GetPointer() );
+    if(CPUAdvancedCombinationTransform)
+    {
+      AdvancedTransformType::Pointer currentTransform;
+      AdvancedCombinationTransformType::Pointer initialTransform;
+      AdvancedCombinationTransformType::Pointer tmpTransform
+        = AdvancedCombinationTransformType::New();
+      initialTransform = tmpTransform;
+      gpuTransform = tmpTransform;
+
+      for( unsigned int i = 0; i < transforms.size(); i++ )
+      {
+        if ( i == 0 )
+        {
+          AdvancedCombinationTransformType::CurrentTransformPointer currentTransformCPU =
+            CPUAdvancedCombinationTransform->GetCurrentTransform();
+
+          SetAdvancedCombinationTransform<AdvancedCombinationTransformType,
+            AdvancedAffineTransformType, AdvancedBSplineTransformType>
+            ( initialTransform, currentTransformCPU );
+        }
+        else
+        {
+          AdvancedCombinationTransformType::Pointer initialNext
+            = AdvancedCombinationTransformType::New();
+
+          AdvancedCombinationTransformType::InitialTransformConstPointer initialTransformCPU =
+            CPUAdvancedCombinationTransform->GetInitialTransform();
+
+          // Works but ugly, I want to get current transform in one call, how?
+          const AdvancedCombinationTransformType *advancedCombinationTransformConst =
+            dynamic_cast<const AdvancedCombinationTransformType *>( initialTransformCPU.GetPointer() );
+
+          AdvancedCombinationTransformType *advancedCombinationTransform =
+            const_cast<AdvancedCombinationTransformType *>( advancedCombinationTransformConst );
+
+          AdvancedCombinationTransformType::CurrentTransformPointer currentTransformCPU =
+            advancedCombinationTransform->GetCurrentTransform();
+
+          SetAdvancedCombinationTransform<AdvancedCombinationTransformType,
+            AdvancedAffineTransformType, AdvancedBSplineTransformType>
+            ( initialNext, currentTransformCPU );
+
+          initialTransform->SetInitialTransform( initialNext );
+          initialTransform = initialNext;
+        }
+      }
+    }
+    else
+    {
+      std::cerr << "ERROR: Unable to retrieve CPU AdvancedCombinationTransform." << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
 
   // Construct, select and setup interpolator
   InterpolatorType::Pointer gpuInterpolator;
@@ -570,9 +769,18 @@ int main( int argc, char * argv[] )
   gputimer.Start();
   for( unsigned int i = 0; i < runTimes; i++ )
   {
-    gpuFilter->SetInput( gpuReader->GetOutput() );
-    gpuFilter->SetTransform( gpuTransform );
-    gpuFilter->SetInterpolator( gpuInterpolator );
+    try
+    {
+      gpuFilter->SetInput( gpuReader->GetOutput() );
+      gpuFilter->SetTransform( gpuTransform );
+      gpuFilter->SetInterpolator( gpuInterpolator );
+    }
+    catch( itk::ExceptionObject & e )
+    {
+      std::cerr << "ERROR: " << e << std::endl;
+      return EXIT_FAILURE;
+    }
+
     try{ gpuFilter->Update(); }
     catch( itk::ExceptionObject & e )
     {
