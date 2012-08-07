@@ -127,7 +127,7 @@ namespace itk
     
     if(image.IsNull())
     {
-      itkGenericExceptionMacro(<< "The ITK image is NULL."
+      itkGenericExceptionMacro(<< "The ITK image is NULL. "
         "Unable to set ITK image information to the kernel manager.");
       return;
     }
