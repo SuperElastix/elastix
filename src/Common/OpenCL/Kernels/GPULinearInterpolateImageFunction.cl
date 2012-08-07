@@ -1,14 +1,14 @@
 /*======================================================================
 
-  This file is part of the elastix software.
+This file is part of the elastix software.
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+Copyright (c) University Medical Center Utrecht. All rights reserved.
+See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
+This software is distributed WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
 
@@ -73,8 +73,7 @@ float evaluate_at_continuous_index_1d(const float index,
     return val0;
   }
   const float val1 = get_pixel_1d(basei, in, image);
-
-  return (val0 + ( val1 - val0 ) * distance);
+  return (mad(distance, ( val1 - val0 ), val0));
 }
 #endif // DIM_1
 
@@ -111,7 +110,7 @@ float evaluate_at_continuous_index_2d(const float2 index,
       return val00;
     }
     const float val10 = get_pixel_2d(basei, in, image);
-    return (val00 + ( val10 - val00 ) * distance0);
+    return (mad(distance0, ( val10 - val00 ), val00));
   }
   else if(distance0 <= 0.) // if they have the same "x"
   {
@@ -121,7 +120,7 @@ float evaluate_at_continuous_index_2d(const float2 index,
       return val00;
     }
     const float val01 = get_pixel_2d(basei, in, image);
-    return (val00 + ( val01 - val00 ) * distance1);
+    return (mad(distance1, ( val01 - val00 ), val00));
   }
   // fall-through case:
   // interpolate across "xy"
@@ -135,10 +134,10 @@ float evaluate_at_continuous_index_2d(const float2 index,
       return val00;
     }
     const float val01 = get_pixel_2d(basei, in, image);
-    return (val00 + ( val01 - val00 ) * distance1);
+    return (mad(distance1, ( val01 - val00 ), val00));
   }
   const float val10 = get_pixel_2d(basei, in, image);
-  const float valx0 = val00 + ( val10 - val00 ) * distance0;
+  const float valx0 = mad(distance0, ( val10 - val00 ), val00);
 
   basei.y = basei.y + 1;
   if(basei.y > image_function->EndIndex.y) // interpolate across "x"
@@ -148,10 +147,8 @@ float evaluate_at_continuous_index_2d(const float2 index,
   const float val11 = get_pixel_2d(basei, in, image);
   basei.x = basei.x - 1;
   const float val01 = get_pixel_2d(basei, in, image);
-
-  const float valx1 = val01 + ( val11 - val01 ) * distance0;
-
-  return (valx0 + ( valx1 - valx0 ) * distance1);
+  const float valx1 = mad(distance0, ( val11 - val01 ), val01);
+  return (mad(distance1, ( valx1 - valx0 ), valx0)); 
 }
 #endif // DIM_2
 
@@ -198,8 +195,7 @@ float evaluate_at_continuous_index_3d(const float3 index,
         return val000;
       }
       const float val100 = get_pixel_3d(basei, in, image);
-
-      return (val000 + ( val100 - val000 ) * distance0);
+      return (mad(distance0, ( val100 - val000 ), val000));
     }
     else if(distance0 <= 0.) // interpolate across "y"
     {
@@ -209,8 +205,7 @@ float evaluate_at_continuous_index_3d(const float3 index,
         return val000;
       }
       const float val010 = get_pixel_3d(basei, in, image);
-
-      return (val000 + ( val010 - val000 ) * distance1);
+      return (mad(distance1, ( val010 - val000 ), val000));
     }
     else  // interpolate across "xy"
     {
@@ -224,11 +219,10 @@ float evaluate_at_continuous_index_3d(const float3 index,
           return val000;
         }
         const float val010 = get_pixel_3d(basei, in, image);
-
-        return (val000 + ( val010 - val000 ) * distance1);
+        return (mad(distance1, ( val010 - val000 ), val000));
       }
       const float val100 = get_pixel_3d(basei, in, image);
-      const float valx00 = val000 + ( val100 - val000 ) * distance0;
+      const float valx00 = mad(distance0, ( val100 - val000 ), val000);
       basei.y = basei.y + 1;
       if(basei.y > image_function->EndIndex.y) // interpolate across "x"
       {
@@ -237,9 +231,8 @@ float evaluate_at_continuous_index_3d(const float3 index,
       const float val110 = get_pixel_3d(basei, in, image);
       basei.x = basei.x - 1;
       const float val010 = get_pixel_3d(basei, in, image);
-      const float valx10 = val010 + ( val110 - val010 ) * distance0;
-
-      return (valx00 + ( valx10 - valx00 ) * distance1);
+      const float valx10 = mad(distance0, ( val110 - val010 ), val010);
+      return (mad(distance1, ( valx10 - valx00 ), valx00));
     }
   }
   else
@@ -254,8 +247,7 @@ float evaluate_at_continuous_index_3d(const float3 index,
           return val000;
         }
         const float val001 = get_pixel_3d(basei, in, image);
-
-        return (val000 + ( val001 - val000 ) * distance2);
+        return (mad(distance2, ( val001 - val000 ), val000));
       }
       else // interpolate across "xz"
       {
@@ -269,11 +261,10 @@ float evaluate_at_continuous_index_3d(const float3 index,
             return val000;
           }
           const float val001 = get_pixel_3d(basei, in, image);
-
-          return (val000 + ( val001 - val000 ) * distance2);
+          return (mad(distance2, ( val001 - val000 ), val000));
         }
         const float val100 = get_pixel_3d(basei, in, image);
-        const float valx00 = val000 + ( val100 - val000 ) * distance0;
+        const float valx00 = mad(distance0, ( val100 - val000 ), val000);
         basei.z = basei.z + 1;
         if(basei.z > image_function->EndIndex.z) // interpolate across "x"
         {
@@ -282,9 +273,8 @@ float evaluate_at_continuous_index_3d(const float3 index,
         const float val101 = get_pixel_3d(basei, in, image);
         basei.x = basei.x - 1;
         const float val001 = get_pixel_3d(basei, in, image);
-        const float valx01 = val001 + ( val101 - val001 ) * distance0;
-
-        return (valx00 + ( valx01 - valx00 ) * distance2);
+        const float valx01 = mad(distance0, ( val101 - val001 ), val001);
+        return (mad(distance2, ( valx01 - valx00 ), valx00));
       }
     }
     else if(distance0 <= 0.) // interpolate across "yz"
@@ -299,11 +289,10 @@ float evaluate_at_continuous_index_3d(const float3 index,
           return ( ( val000 ) );
         }
         const float val001 = get_pixel_3d(basei, in, image);
-
-        return (val000 + ( val001 - val000 ) * distance2);
+        return (mad(distance2, ( val001 - val000 ), val000));
       }
       const float val010 = get_pixel_3d(basei, in, image);
-      const float val0x0 = val000 + ( val010 - val000 ) * distance1;
+      const float val0x0 = mad(distance1, ( val010 - val000 ), val000);
 
       basei.z = basei.z + 1;
       if(basei.z > image_function->EndIndex.z) // interpolate across "y"
@@ -313,9 +302,8 @@ float evaluate_at_continuous_index_3d(const float3 index,
       const float val011 = get_pixel_3d(basei, in, image);
       basei.y = basei.y - 1;
       const float val001 = get_pixel_3d(basei, in, image);
-      const float val0x1 = val001 + ( val011 - val001 ) * distance1;
-
-      return (val0x0 + ( val0x1 - val0x0 ) * distance2);
+      const float val0x1 = mad(distance1, ( val011 - val001 ), val001);
+      return (mad(distance2, ( val0x1 - val0x0 ), val0x0));
     }
     else // interpolate across "xyz"
     {
@@ -333,11 +321,10 @@ float evaluate_at_continuous_index_3d(const float3 index,
             return val000;
           }
           const float val001 = get_pixel_3d(basei, in, image);
-
-          return (val000 + ( val001 - val000 ) * distance2);
+          return (mad(distance2, ( val001 - val000 ), val000));
         }
         const float val010 = get_pixel_3d(basei, in, image);
-        const float val0x0 = val000 + ( val010 - val000 ) * distance1;
+        const float val0x0 = mad(distance1, ( val010 - val000 ), val000);
         basei.z = basei.z + 1;
         if(basei.z > image_function->EndIndex.z) // interpolate across "y"
         {
@@ -346,12 +333,11 @@ float evaluate_at_continuous_index_3d(const float3 index,
         const float val011 = get_pixel_3d(basei, in, image);
         basei.y = basei.y - 1;
         const float val001 = get_pixel_3d(basei, in, image);
-        const float val0x1 = val001 + ( val011 - val001 ) * distance1;
-
-        return (val0x0 + ( val0x1 - val0x0 ) * distance2);
+        const float val0x1 = mad(distance1, ( val011 - val001 ), val001);
+        return (mad(distance2, ( val0x1 - val0x0 ), val0x0));
       }
       const float val100 = get_pixel_3d(basei, in, image);
-      const float valx00 = val000 + ( val100 - val000 ) * distance0;
+      const float valx00 = mad(distance0, ( val100 - val000 ), val000);
       basei.y = basei.y + 1;
       if(basei.y > image_function->EndIndex.y) // interpolate across "xz"
       {
@@ -364,15 +350,14 @@ float evaluate_at_continuous_index_3d(const float3 index,
         const float val101 = get_pixel_3d(basei, in, image);
         basei.x = basei.x - 1;
         const float val001 = get_pixel_3d(basei, in, image);
-        const float valx01 = val001 + ( val101 - val001 ) * distance0;
-
-        return (valx00 + ( valx01 - valx00 ) * distance2);
+        const float valx01 = mad(distance0, ( val101 - val001 ), val001);
+        return (mad(distance2, ( valx01 - valx00 ), valx00));
       }
       const float val110 = get_pixel_3d(basei, in, image);
       basei.x = basei.x - 1;
       const float val010 = get_pixel_3d(basei, in, image);
-      const float valx10 = val010 + ( val110 - val010 ) * distance0;
-      const float valxx0 = valx00 + ( valx10 - valx00 ) * distance1;
+      const float valx10 = mad(distance0, ( val110 - val010 ), val010);
+      const float valxx0 = mad(distance1, ( valx10 - valx00 ), valx00);
       basei.z = basei.z + 1;
       if(basei.z > image_function->EndIndex.z) // interpolate across "xy"
       {
@@ -385,11 +370,10 @@ float evaluate_at_continuous_index_3d(const float3 index,
       const float val101 = get_pixel_3d(basei, in, image);
       basei.x = basei.x - 1;
       const float val001 = get_pixel_3d(basei, in, image);
-      const float valx01 = val001 + ( val101 - val001 ) * distance0;
-      const float valx11 = val011 + ( val111 - val011 ) * distance0;
-      const float valxx1 = valx01 + ( valx11 - valx01 ) * distance1;
-
-      return (valxx0 + ( valxx1 - valxx0 ) * distance2);
+      const float valx01 = mad(distance0, ( val101 - val001 ), val001);
+      const float valx11 = mad(distance0, ( val111 - val011 ), val011);
+      const float valxx1 = mad(distance1, ( valx11 - valx01 ), valx01);
+      return (mad(distance2, ( valxx1 - valxx0 ), valxx0));
     }
   }
 }

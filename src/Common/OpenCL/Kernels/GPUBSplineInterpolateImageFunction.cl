@@ -91,7 +91,7 @@ void determine_region_of_support_3d(long* evaluate_index,
 // get offset in array
 uint get_array_offset(const uint x, const uint y, const uint width)
 {
-  uint idx = width*y + x;
+  uint idx = mad24(width, y, x);
   return idx;
 }
 
@@ -813,7 +813,7 @@ float bspline_evaluate_at_continuous_index_2d(const float2 index,
       w *= weights[n][indx];
       coefficient_index[n] = evaluate_index[n][indx];
     }
-    uint gidx = coefficients_image->Size.x * coefficient_index[1] + coefficient_index[0];
+    uint gidx = mad24(coefficients_image->Size.x, coefficient_index[1], coefficient_index[0]);
     interpolated += w * (float)(coefficients[gidx]);
   }
 
@@ -872,7 +872,7 @@ float bspline_evaluate_at_continuous_index_3d(const float3 index,
       w *= weights[n][indx];
       coefficient_index[n] = evaluate_index[n][indx];
     }
-    uint gidx = coefficients_image->Size.x *(coefficient_index[2] * coefficients_image->Size.y + coefficient_index[1]) + coefficient_index[0];
+    uint gidx = mad24(coefficients_image->Size.x, mad24(coefficient_index[2], coefficients_image->Size.y, coefficient_index[1]), coefficient_index[0]);
     interpolated += w * (float)(coefficients[gidx]);
   }
 

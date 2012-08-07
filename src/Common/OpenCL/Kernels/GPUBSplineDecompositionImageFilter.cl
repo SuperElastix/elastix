@@ -45,7 +45,7 @@ void set_initial_causal_coefficient(BUFFPIXELTYPE* scratch,
     // full loop
     iz = 1.0 / z;
     z2n = pow( z, (float)( data_length - 1L ) );
-    sum = scratch[0] + z2n * scratch[data_length - 1L];
+    sum = mad( z2n, scratch[data_length - 1L], scratch[0] );
     z2n *= z2n * iz;
     for(uint n = 1; n <= ( data_length - 2 ); n++)
     {
@@ -68,7 +68,7 @@ void set_initial_anticausal_coefficient(BUFFPIXELTYPE* scratch,
   // Also see erratum at http://bigwww.epfl.ch/publications/unser9902.html
   scratch[data_length - 1] =
     ( z / ( z * z - 1.0 ) )
-    * ( z * scratch[data_length - 2] + scratch[data_length - 1] );
+    * ( mad( z, scratch[data_length - 2], scratch[data_length - 1]) );
 }
 
 //------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ uint get_image_offset(const uint gix,
                       const uint giz,
                       const uint width, const uint height)
 {
-  uint gidx = width*(giz*height + giy) + gix;
+  uint gidx = mad24(width, mad24(giz, height, giy), gix);
   return gidx;
 }
 

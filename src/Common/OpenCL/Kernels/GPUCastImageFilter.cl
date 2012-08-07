@@ -22,7 +22,7 @@ OUTPIXELTYPE Functor(const INPIXELTYPE in)
 #ifdef DIM_1
 __kernel void CastImageFilter(__global const INPIXELTYPE* in,
                               __global OUTPIXELTYPE* out,
-                              int width)
+                              uint width)
 {
   uint gix = get_global_id(0);
   if(gix < width)
@@ -35,12 +35,12 @@ __kernel void CastImageFilter(__global const INPIXELTYPE* in,
 #ifdef DIM_2
 __kernel void CastImageFilter(__global const INPIXELTYPE* in,
                               __global OUTPIXELTYPE* out,
-                              int width, int height)
+                              uint width, uint height)
 {
   uint2 index = (uint2)(get_global_id(0), get_global_id(1));
   if(index.x < width && index.y < height)
   {
-    uint gidx = width*index.y + index.x;
+    uint gidx = mad24(width, index.y, index.x);
     out[gidx] = Functor(in[gidx]);
   }
 }
@@ -49,7 +49,7 @@ __kernel void CastImageFilter(__global const INPIXELTYPE* in,
 #ifdef DIM_3
 __kernel void CastImageFilter(__global const INPIXELTYPE* in,
                               __global OUTPIXELTYPE* out,
-                              int width, int height, int depth)
+                              uint width, uint height, uint depth)
 {
   uint3 index = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
 
@@ -64,7 +64,7 @@ __kernel void CastImageFilter(__global const INPIXELTYPE* in,
 
   if( isValid )
   {
-    uint gidx = width*(index.z*height + index.y) + index.x;
+    uint gidx = mad24(width, mad24(index.z, height, index.y), index.x);
     out[gidx] = Functor(in[gidx]);
   }
 }

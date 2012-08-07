@@ -77,9 +77,3 @@ int round_half_integer_up(const float v)
           r :
           ( x == (float)( r ) ? r : r - (int)( 1 ) );
 }
-
-//------------------------------------------------------------------------------
-float math_abs(float x)
-{
-  return x < 0.0f ? -x : x;
-}

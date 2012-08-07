@@ -27,7 +27,7 @@ __kernel void ShrinkImageFilter(__global const INPIXELTYPE* in,
   uint index = get_global_id(0);
   if(index < out_image_size)
   {
-    uint input_index = index * shrinkfactors + offset;
+    uint input_index = mad24(index, shrinkfactors, offset);
     uint out_gidx = index;
     uint in_gidx = input_index;
     out[out_gidx] = Functor(in[in_gidx]);
@@ -45,9 +45,9 @@ __kernel void ShrinkImageFilter(
   uint2 index_out = (uint2)(get_global_id(0), get_global_id(1));
   if( index_out.x < image_size_out.x && index_out.y < image_size_out.y )
   {
-    uint2 index_in = index_out * shrinkfactors + offset;
-    uint gidx_in  = image_size_in.x  * index_in.y  + index_in.x;
-    uint gidx_out = image_size_out.x * index_out.y + index_out.x;
+    uint2 index_in = mad24(index_out, shrinkfactors, offset);
+    uint gidx_in = mad24(image_size_in.x, index_in.y, index_in.x);
+    uint gidx_out = mad24(image_size_out.x, index_out.y, index_out.x);
     out[gidx_out] = Functor( in[gidx_in] );
   }
 }
@@ -72,9 +72,9 @@ __kernel void ShrinkImageFilter(
   if( index_out.z >= image_size_out.z ) isValid = false;
   if( isValid )
   {
-    uint3 index_in = index_out * shrinkfactors + offset;
-    uint gidx_in  = image_size_in.x  * (index_in.z  * image_size_in.y  + index_in.y)  + index_in.x;
-    uint gidx_out = image_size_out.x * (index_out.z * image_size_out.y + index_out.y) + index_out.x;
+    uint3 index_in = mad24(index_out, shrinkfactors, offset);
+    uint gidx_in = mad24(image_size_in.x, mad24(index_in.z, image_size_in.y,index_in.y), index_in.x);
+    uint gidx_out = mad24(image_size_out.x, mad24(index_out.z, image_size_out.y, index_out.y), index_out.x);
     out[gidx_out] = Functor( in[gidx_in] );
   }
 }

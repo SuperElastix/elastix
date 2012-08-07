@@ -1,129 +1,47 @@
 /*======================================================================
 
-  This file is part of the elastix software.
+This file is part of the elastix software.
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+Copyright (c) University Medical Center Utrecht. All rights reserved.
+See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
+This software is distributed WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
 
 // OpenCL implementation of itk::BSplineTransform
 
 //------------------------------------------------------------------------------
-#ifdef DIM_1
-bool inside_valid_region_1d(const float ind,
-                            __constant GPUImageBase1D *coefficients_image)
+bool is_inside(const uint grid_size, const float ind)
 {
-  uint grid_size = coefficients_image->Size;
   float index = ind;
   const float min_limit = 0.5 * (float)(GPUBSplineTransformOrder - 1);
-  bool inside = true;
-  float max_limit = (float)(grid_size) - 0.5
-    * (float)(GPUBSplineTransformOrder - 1) - 1.0;
+  const float max_limit = (float)(grid_size) - 0.5 * (float)(GPUBSplineTransformOrder - 1) - 1.0;
   // originally if( index[j] == max_limit ) has been changed to
-  if( math_abs( index - max_limit ) < 1e-6 )
+  if( fabs( index - max_limit ) < 1e-6 )
   {
     index -= 1e-6;
   }
   else if( index >= max_limit )
   {
-    inside = false;
+    return false;
   }
   else if( index < min_limit )
   {
-    inside = false;
+    return false;
   }
-  return inside;
+  return true;
 }
-#endif // DIM_1
-
-//------------------------------------------------------------------------------
-#ifdef DIM_2
-bool inside_valid_region_2d(const float2 ind,
-                            __constant GPUImageBase2D *coefficients_image)
-{
-  uint grid_size[2];
-  float index[2];
-  index[0] = ind.x;
-  index[1] = ind.y;
-  grid_size[0] = coefficients_image->Size.x;
-  grid_size[1] = coefficients_image->Size.y;
-  const float min_limit = 0.5 * (float)(GPUBSplineTransformOrder - 1);
-  bool inside = true;
-  for(uint j = 0; j < 2; j++)
-  {
-    float max_limit = (float)(grid_size[j]) - 0.5
-      * (float)(GPUBSplineTransformOrder - 1) - 1.0;
-    // originally if( index[j] == max_limit ) has been changed to
-    if( math_abs( index[j] - max_limit ) < 1e-6 )
-    {
-      index[j] -= 1e-6;
-    }
-    else if( index[j] >= max_limit )
-    {
-      inside = false;
-      break;
-    }
-    else if( index[j] < min_limit )
-    {
-      inside = false;
-      break;
-    }
-  }
-  return inside;
-}
-#endif // DIM_2
-
-//------------------------------------------------------------------------------
-#ifdef DIM_3
-bool inside_valid_region_3d(const float3 ind,
-                            __constant GPUImageBase3D *coefficients_image)
-{
-  uint grid_size[3];
-  float index[3];
-  index[0] = ind.x;
-  index[1] = ind.y;
-  index[2] = ind.z;
-  grid_size[0] = coefficients_image->Size.x;
-  grid_size[1] = coefficients_image->Size.y;
-  grid_size[2] = coefficients_image->Size.z;
-  const float min_limit = 0.5 * (float)(GPUBSplineTransformOrder - 1);
-  bool inside = true;
-  for(uint j = 0; j < 3; j++)
-  {
-    float max_limit = (float)(grid_size[j]) - 0.5
-      * (float)(GPUBSplineTransformOrder - 1) - 1.0;
-    // originally if( index[j] == max_limit ) has been changed to
-    if( math_abs( index[j] - max_limit ) < 1e-6 )
-    {
-      index[j] -= 1e-6;
-    }
-    else if( index[j] >= max_limit )
-    {
-      inside = false;
-      break;
-    }
-    else if( index[j] < min_limit )
-    {
-      inside = false;
-      break;
-    }
-  }
-  return inside;
-}
-#endif // DIM_3
 
 //------------------------------------------------------------------------------
 float kernel_evaluate(float u)
 {
   // third order spline.
-  float absValue = math_abs(u);
-  float sqrValue = u*u;
+  const float absValue = fabs(u);
+  const float sqrValue = u*u;
 
   if ( absValue < 1.0 )
   {
@@ -131,8 +49,7 @@ float kernel_evaluate(float u)
   }
   else if ( absValue < 2.0 )
   {
-    return ( 8.0 - 12 * absValue + 6.0 * sqrValue
-      - sqrValue * absValue ) / 6.0;
+    return ( 8.0 - 12 * absValue + 6.0 * sqrValue - sqrValue * absValue ) / 6.0;
   }
   else
   {
@@ -141,12 +58,61 @@ float kernel_evaluate(float u)
 }
 
 //------------------------------------------------------------------------------
-#ifdef DIM_1
-long evaluate_1d(const float ind, float* weights)
+void set_weights(const float index, const long startindex,
+                 const uint i, float *weights)
 {
-  long start_index;
-  float index = ind;
+  float x = index - (float)(startindex);
+  for (uint k = 0; k <= GPUBSplineTransformOrder; k++)
+  {
+    weights[k + i] = kernel_evaluate(x);
+    x -= 1.0;
+  }
+}
 
+//------------------------------------------------------------------------------
+#ifdef DIM_1
+bool inside_valid_region_1d(const float ind,
+                            __constant GPUImageBase1D *coefficients_image)
+{
+  if(!is_inside(coefficients_image->Size, ind))
+    return false;
+  return true;
+}
+#endif // DIM_1
+
+//------------------------------------------------------------------------------
+#ifdef DIM_2
+bool inside_valid_region_2d(const float2 ind,
+                            __constant GPUImageBase2D *coefficients_image)
+{
+  if(!is_inside(coefficients_image->Size.x, ind.x))
+    return false;
+  if(!is_inside(coefficients_image->Size.y, ind.y))
+    return false;
+  return true;
+}
+#endif // DIM_2
+
+//------------------------------------------------------------------------------
+#ifdef DIM_3
+
+bool inside_valid_region_3d(const float3 ind,
+                            __constant GPUImageBase3D *coefficients_image)
+{
+  if(!is_inside(coefficients_image->Size.x, ind.x))
+    return false;
+  if(!is_inside(coefficients_image->Size.y, ind.y))
+    return false;
+  if(!is_inside(coefficients_image->Size.z, ind.z))
+    return false;
+  return true;
+}
+#endif // DIM_3
+
+//------------------------------------------------------------------------------
+#ifdef DIM_1
+long evaluate_1d(const float index, float* weights)
+{
   // define offset_to_index_table
   ulong offset_to_index_table[GPUBSplineTransformNumberOfWeights];
   uint support_size = GPUBSplineTransformOrder + 1;
@@ -156,16 +122,11 @@ long evaluate_1d(const float ind, float* weights)
   }
 
   // find the starting index of the support region
-  start_index = (long)(floor(index - (float)(GPUBSplineTransformOrder - 1) / 2.0));
+  long start_index = (long)(floor(index - (float)(GPUBSplineTransformOrder - 1) / 2.0));
 
   // compute the weights
   float weights1D[GPUBSplineTransformOrder+1];
-  float x = index - (float)(start_index);
-  for (uint k = 0; k <= GPUBSplineTransformOrder; k++)
-  {
-    weights1D[k] = kernel_evaluate(x);
-    x -= 1.0;
-  }
+  set_weights(index, startindex, 0, weights1D);
 
   for (uint k = 0; k < GPUBSplineTransformNumberOfWeights; k++)
   {
@@ -180,13 +141,8 @@ long evaluate_1d(const float ind, float* weights)
 
 //------------------------------------------------------------------------------
 #ifdef DIM_2
-long2 evaluate_2d(const float2 ind, float* weights)
+long2 evaluate_2d(const float2 index, float* weights)
 {
-  long start_index[2];
-  float index[2];
-  index[0] = ind.x;
-  index[1] = ind.y;
-
   // define offset_to_index_table
   ulong offset_to_index_table[GPUBSplineTransformNumberOfWeights][2];
   uint support_size = GPUBSplineTransformOrder + 1;
@@ -202,55 +158,34 @@ long2 evaluate_2d(const float2 ind, float* weights)
   }
 
   // find the starting index of the support region
-  for (uint j = 0; j < 2; j++)
-  {
-    start_index[j] = (long)(floor(index[j] - (float)(GPUBSplineTransformOrder - 1) / 2.0));
-  }
+  long2 startindex;
+  startindex.x = (long)(floor(index.x - (float)(GPUBSplineTransformOrder - 1) / 2.0));
+  startindex.y = (long)(floor(index.y - (float)(GPUBSplineTransformOrder - 1) / 2.0));
 
   // compute the weights
   float weights1D[2][GPUBSplineTransformOrder+1];
-  for (uint j = 0; j < 2; j++)
-  {
-    float x = index[j] - (float)(start_index[j]);
-
-    for (uint k = 0; k <= GPUBSplineTransformOrder; k++)
-    {
-      weights1D[j][k] = kernel_evaluate(x);
-      x -= 1.0;
-    }
-  }
+  set_weights(index.x, startindex.x, 0, weights1D);
+  set_weights(index.y, startindex.y, GPUBSplineTransformOrder+1, weights1D);
 
   for (uint k = 0; k < GPUBSplineTransformNumberOfWeights; k++)
   {
     weights[k] = 1.0;
-    for (uint j = 0; j < 2; j++)
-    {
-      weights[k] *= weights1D[j][offset_to_index_table[k][j]];
-    }
+    weights[k] *= weights1D[0][offset_to_index_table[k][0]];
+    weights[k] *= weights1D[1][offset_to_index_table[k][1]];
   }
 
   // return start index
-  long2 startindex;
-  startindex.x = start_index[0];
-  startindex.y = start_index[1];
-
   return startindex;
 }
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
 #ifdef DIM_3
-long3 evaluate_3d(const float3 ind, float* weights)
+long3 evaluate_3d(const float3 index, float* weights)
 {
-  long start_index[3];
-  float index[3];
-  index[0] = ind.x;
-  index[1] = ind.y;
-  index[2] = ind.z;
-
   // define offset_to_index_table
   ulong offset_to_index_table[GPUBSplineTransformNumberOfWeights][3];
-  uint support_size = GPUBSplineTransformOrder + 1;
+  const uint support_size = GPUBSplineTransformOrder + 1;
   ulong counter = 0;
   for(uint k = 0; k < support_size; k++)
   {
@@ -267,39 +202,26 @@ long3 evaluate_3d(const float3 ind, float* weights)
   }
 
   // find the starting index of the support region
-  for (uint j = 0; j < 3; j++)
-  {
-    start_index[j] = (long)(floor(index[j] - (float)(GPUBSplineTransformOrder - 1) / 2.0));
-  }
+  long3 startindex;
+  startindex.x = (long)(floor(index.x - (float)(GPUBSplineTransformOrder - 1) / 2.0));
+  startindex.y = (long)(floor(index.y - (float)(GPUBSplineTransformOrder - 1) / 2.0));
+  startindex.z = (long)(floor(index.z - (float)(GPUBSplineTransformOrder - 1) / 2.0));
 
   // compute the weights
   float weights1D[3][GPUBSplineTransformOrder+1];
-  for (uint j = 0; j < 3; j++)
-  {
-    float x = index[j] - (float)(start_index[j]);
-
-    for (uint k = 0; k <= GPUBSplineTransformOrder; k++)
-    {
-      weights1D[j][k] = kernel_evaluate(x);
-      x -= 1.0;
-    }
-  }
+  set_weights(index.x, startindex.x, 0, weights1D);
+  set_weights(index.y, startindex.y, GPUBSplineTransformOrder+1, weights1D);
+  set_weights(index.z, startindex.z, (GPUBSplineTransformOrder+1)*2, weights1D);
 
   for (uint k = 0; k < GPUBSplineTransformNumberOfWeights; k++)
   {
     weights[k] = 1.0;
-    for (uint j = 0; j < 3; j++)
-    {
-      weights[k] *= weights1D[j][offset_to_index_table[k][j]];
-    }
+    weights[k] *= weights1D[0][offset_to_index_table[k][0]];
+    weights[k] *= weights1D[1][offset_to_index_table[k][1]];
+    weights[k] *= weights1D[2][offset_to_index_table[k][2]];
   }
 
   // return start index
-  long3 startindex;
-  startindex.x = start_index[0];
-  startindex.y = start_index[1];
-  startindex.z = start_index[2];
-
   return startindex;
 }
 #endif // DIM_3
@@ -344,7 +266,7 @@ float bspline_transform_point_1d(const float point,
       uint gidx = i;
 
       float c = coefficients[gidx];
-      tpoint += (float)(weights[counter] * c);
+      tpoint = mad( c, weights[counter], tpoint );
 
       ++counter;
     }
@@ -400,17 +322,13 @@ float2 bspline_transform_point_2d(const float2 point,
     {
       if(i < coefficients_image0->Size.x && j < coefficients_image0->Size.y)
       {
-        uint gidx = coefficients_image0->Size.x * j + i;
-        // uint gidx = mad( j, coefficients_image0->Size.x, i );
+        uint gidx = mad24(coefficients_image0->Size.x, j, i);
 
         float c0 = coefficients0[gidx];
         float c1 = coefficients1[gidx];
 
-        tpoint.x += (float)(weights[counter] * c0);
-        tpoint.y += (float)(weights[counter] * c1);
-
-        // #ifdef special
-        //tpoint.y = mad( c1, weights[counter], tpoint.y );
+        tpoint.x = mad( c0, weights[counter], tpoint.x );
+        tpoint.y = mad( c1, weights[counter], tpoint.y );
 
         ++counter;
       }
@@ -481,15 +399,15 @@ float3 bspline_transform_point_3d(const float3 point,
 
         if( is_valid )
         {
-          uint gidx = coefficients_image0->Size.x *(k * coefficients_image0->Size.y + j) + i;
+          uint gidx = mad24(coefficients_image0->Size.x, mad24(k,coefficients_image0->Size.y, j), i);
 
           float c0 = coefficients0[gidx];
           float c1 = coefficients1[gidx];
           float c2 = coefficients2[gidx];
 
-          tpoint.x += (float)(weights[counter] * c0);
-          tpoint.y += (float)(weights[counter] * c1);
-          tpoint.z += (float)(weights[counter] * c2);
+          tpoint.x = mad( c0, weights[counter], tpoint.x );
+          tpoint.y = mad( c1, weights[counter], tpoint.y );
+          tpoint.z = mad( c2, weights[counter], tpoint.z );
 
           ++counter;
         }

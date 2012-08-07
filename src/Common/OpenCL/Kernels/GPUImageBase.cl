@@ -397,7 +397,7 @@ float get_pixel_2d(const long2 index,
                    __global const INPIXELTYPE* in,
                    __constant GPUImageBase2D *image)
 {
-  uint gidx = image->Size.x * index.y + index.x;
+  uint gidx = mad24(image->Size.x, index.y, index.x);
   float value = (float)(in[gidx]);
   return value;
 }
@@ -409,7 +409,7 @@ float get_pixel_3d(const long3 index,
                    __global const INPIXELTYPE* in,
                    __constant GPUImageBase3D *image)
 {
-  uint gidx = image->Size.x *(index.z * image->Size.y + index.y) + index.x;
+  uint gidx = mad24(image->Size.x, mad24(index.z, image->Size.y, index.y), index.x);
   float value = (float)(in[gidx]);
   return value;
 }

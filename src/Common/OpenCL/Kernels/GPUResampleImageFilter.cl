@@ -256,7 +256,7 @@ void resample_2d(__global const INPIXELTYPE* in,
                  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients1,
                  __constant GPUImageBase2D *transform_coefficientsImage1)
 {
-  uint gidx = outputImage->Size.x * index.y + index.x;
+  uint gidx = mad24(outputImage->Size.x, index.y, index.x);
 
   // compute continuous index
   float2 continuous_index;
@@ -465,7 +465,7 @@ void resample_3d(__global const INPIXELTYPE* in,
                  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients2,
                  __constant GPUImageBase3D *transform_coefficientsImage2)
 {
-  uint gidx = outputImage->Size.x *(index.z * outputImage->Size.y + index.y) + index.x;
+  uint gidx = mad24(outputImage->Size.x, mad24(index.z, outputImage->Size.y, index.y), index.x);
 
   // compute continuous index
   float3 continuous_index;
