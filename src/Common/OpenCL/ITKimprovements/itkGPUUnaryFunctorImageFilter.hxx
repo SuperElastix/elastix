@@ -86,7 +86,7 @@ GPUUnaryFunctorImageFilter< TInputImage, TOutputImage, TFunction, TParentImageFi
 
   for(unsigned int i=0; i<ImageDim; i++)
   {
-    this->m_GPUKernelManager->SetKernelArg(m_UnaryFunctorImageFilterGPUKernelHandle, argidx++, sizeof(int),
+    this->m_GPUKernelManager->SetKernelArg(m_UnaryFunctorImageFilterGPUKernelHandle, argidx++, sizeof(unsigned int),
       &(imgSize[i]) );
   }
 
