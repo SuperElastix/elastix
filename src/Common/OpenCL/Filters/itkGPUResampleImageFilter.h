@@ -18,8 +18,7 @@
 
 #include "itkGPUImageToImageFilter.h"
 #include "itkGPUInterpolateImageFunction.h"
-#include "itkGPUBSplineInterpolateImageFunction.h"
-#include "itkGPUBSplineTransform.h"
+#include "itkGPUTransformBase.h"
 
 #include "itkVersion.h"
 #include "itkObjectFactoryBase.h"
@@ -59,19 +58,12 @@ public:
   typedef typename GPUSuperclass::OutputImagePixelType  OutputImagePixelType;
 
   /** Some convenient typedefs. */
-  typedef TInputImage                           InputImageType;
-  typedef TOutputImage                          OutputImageType;
-  typedef typename InputImageType::Pointer      InputImagePointer;
-  typedef typename InputImageType::ConstPointer InputImageConstPointer;
-  typedef typename InputImageType::PixelType    InputImagePixelType;
-  typedef typename OutputImageType::Pointer     OutputImagePointer;
-  typedef typename OutputImageType::IndexType   IndexType;
-
-  typedef typename GPUTraits<TInputImage>::Type  GPUInputImage;
-  typedef typename GPUTraits<TOutputImage>::Type GPUOutputImage;
-
-  typedef typename CPUSuperclass::InterpolatorType InterpolatorType;
-  typedef typename CPUSuperclass::TransformType    TransformType;
+  typedef TInputImage                               InputImageType;
+  typedef TOutputImage                              OutputImageType;
+  typedef typename GPUTraits<TInputImage>::Type     GPUInputImage;
+  typedef typename GPUTraits<TOutputImage>::Type    GPUOutputImage;
+  typedef typename CPUSuperclass::InterpolatorType  InterpolatorType;
+  typedef typename CPUSuperclass::TransformType     TransformType;
 
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int,
@@ -79,22 +71,15 @@ public:
   itkStaticConstMacro(OutputImageDimension, unsigned int,
     TOutputImage::ImageDimension);
 
-  typedef GPUBSplineInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType> GPUBSplineInterpolatorType;
-
-  typedef GPUImage<TInterpolatorPrecisionType, InputImageDimension> GPUInterpolatorCoefficientImageType;
-  typedef GPUImage<TInterpolatorPrecisionType, InputImageDimension> GPUBSplineTransformCoefficientImageType;
-  typedef typename GPUBSplineTransformCoefficientImageType::Pointer GPUBSplineTransformCoefficientImagePointer;
-  typedef typename GPUDataManager::Pointer GPUDataManagerPointer;
-
-  typedef FixedArray<GPUBSplineTransformCoefficientImagePointer, InputImageDimension> BSplineTransformCoefficientImageArray;
-  typedef FixedArray<GPUDataManagerPointer, InputImageDimension> BSplineTransformCoefficientImageBaseArray;
-
   virtual void SetInterpolator(InterpolatorType *_arg);
   virtual void SetTransform(const TransformType *_arg);
 
+  /** This method is used to set the state of the filter after multi-threading. */
+  virtual void AfterThreadedGenerateData();
+
 protected:
   GPUResampleImageFilter();
-  ~GPUResampleImageFilter();
+  ~GPUResampleImageFilter() {};
 
   virtual void GPUGenerateData();
   void CompileOpenCLCode();
@@ -104,9 +89,6 @@ protected:
     const typename GPUOutputImage::Pointer &_outputPtr,
     float *_delta);
 
-  void AllocateBSplineCoefficientsGPUBuffer();
-  void ReleaseBSplineCoefficientsGPUBuffer();
-
   virtual void PrintSelf(std::ostream & os, Indent indent) const;
 
 private:
@@ -115,12 +97,6 @@ private:
 
   GPUInterpolatorBase *m_InterpolatorBase;
   GPUTransformBase    *m_TransformBase;
-
-  typename GPUInterpolatorCoefficientImageType::Pointer m_GPUInterpolatorCoefficients;
-  typename GPUDataManager::Pointer m_GPUInterpolatorCoefficientsImageBase;
-
-  BSplineTransformCoefficientImageArray     m_GPUBSplineTransformCoefficientImages;
-  BSplineTransformCoefficientImageBaseArray m_GPUBSplineTransformCoefficientImagesBase;
 
   typename GPUDataManager::Pointer m_InputGPUImageBase;
   typename GPUDataManager::Pointer m_OutputGPUImageBase;

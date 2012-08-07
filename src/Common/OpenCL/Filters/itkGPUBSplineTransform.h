@@ -18,7 +18,7 @@
 #include "itkVersion.h"
 
 #include "itkBSplineTransform.h"
-#include "itkGPUTransformBase.h"
+#include "itkGPUBSplineBaseTransform.h"
 
 namespace itk
 {
@@ -30,12 +30,14 @@ itkGPUKernelClassMacro(GPUBSplineTransformKernel);
 
 template<class TScalarType = float, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3,
 class TParentImageFilter = BSplineTransform< TScalarType, NDimensions, VSplineOrder > >
-class GPUBSplineTransform : public TParentImageFilter, public GPUTransformBase
+class GPUBSplineTransform :
+  public TParentImageFilter, public GPUBSplineBaseTransform< TScalarType, NDimensions >
 {
 public:
   /** Standard class typedefs. */
   typedef GPUBSplineTransform                 Self;
   typedef TParentImageFilter                  Superclass;
+  typedef GPUBSplineBaseTransform             SuperSuperclass;
   typedef SmartPointer< Self >                Pointer;
   typedef SmartPointer< const Self >          ConstPointer;
   typedef typename Superclass::ParametersType ParametersType;
@@ -56,6 +58,7 @@ protected:
   void PrintSelf(std::ostream &s, Indent indent) const;
 
   virtual bool GetSourceCode(std::string &_source) const;
+  void CopyCoefficientImagesToGPU();
 
 private:
   GPUBSplineTransform(const Self & other); // purposely not implemented

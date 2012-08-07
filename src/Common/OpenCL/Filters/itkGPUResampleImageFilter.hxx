@@ -16,12 +16,12 @@
 
 #include "itkGPUResampleImageFilter.h"
 #include "itkGPUKernelManagerHelperFunctions.h"
-#include "itkGPUExplicitSynchronization.h"
 #include "itkGPUMath.h"
 #include "itkGPUImageBase.h"
+#include "itkGPUBSplineBaseTransform.h"
+#include "itkGPUBSplineInterpolateImageFunction.h"
 
 #include "itkImageLinearIteratorWithIndex.h"
-#include "itkCastImageFilter.h"
 #include "itkTimeProbe.h"
 
 namespace
@@ -41,67 +41,18 @@ namespace
 namespace itk
 {
 //------------------------------------------------------------------------------
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void CopyCoefficientImagesToGPU(
-  const GPUBSplineTransform<TScalarType, NDimensions, VSplineOrder> *transform,
-  FixedArray<typename GPUImage<TScalarType, NDimensions>::Pointer, NDimensions> &coefficientArray,
-  FixedArray<typename GPUDataManager::Pointer, NDimensions> &coefficientBaseArray)
-{
-  // CPU Typedefs
-  typedef BSplineTransform<TScalarType, NDimensions, VSplineOrder> BSplineTransformType;
-  typedef typename BSplineTransformType::ImageType                      TransformCoefficientImageType;
-  typedef typename BSplineTransformType::ImagePointer                   TransformCoefficientImagePointer;
-  typedef typename BSplineTransformType::CoefficientImageArray          CoefficientImageArray;
-
-  // GPU Typedefs
-  typedef GPUImage<TScalarType, NDimensions>                       GPUTransformCoefficientImageType;
-  typedef typename GPUTransformCoefficientImageType::Pointer            GPUTransformCoefficientImagePointer;
-  typedef typename GPUDataManager::Pointer                              GPUDataManagerPointer;
-
-  const CoefficientImageArray coefficientImageArray = transform->GetCoefficientImages();
-
-  // Typedef for caster
-  typedef CastImageFilter<TransformCoefficientImageType, GPUTransformCoefficientImageType> CasterType;
-
-  for(unsigned int i=0; i<coefficientImageArray.Size(); i++)
-  {
-    TransformCoefficientImagePointer coefficients = coefficientImageArray[i];
-
-    GPUTransformCoefficientImagePointer GPUCoefficients = GPUTransformCoefficientImageType::New();
-    GPUCoefficients->CopyInformation(coefficients);
-    GPUCoefficients->SetRegions(coefficients->GetBufferedRegion());
-    GPUCoefficients->Allocate();
-
-    // Create caster
-    typename CasterType::Pointer caster = CasterType::New();
-    caster->SetInput( coefficients );
-    caster->GraftOutput( GPUCoefficients );
-    caster->Update();
-
-    GPUExplicitSync<CasterType, GPUTransformCoefficientImageType>( caster, false );
-
-    coefficientArray[i] = GPUCoefficients;
-
-    GPUDataManagerPointer GPUCoefficientsBase = GPUDataManager::New();
-    coefficientBaseArray[i] = GPUCoefficientsBase;
-  }
-}
-
-//------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
 ::GPUResampleImageFilter()
 {
   this->m_InputGPUImageBase = GPUDataManager::New();
   this->m_OutputGPUImageBase = GPUDataManager::New();
-  
+
   this->m_Parameters = GPUDataManager::New();
   this->m_Parameters->Initialize();
   this->m_Parameters->SetBufferFlag(CL_MEM_READ_ONLY);
   this->m_Parameters->SetBufferSize(sizeof(FilterParameters));
   this->m_Parameters->Allocate();
-
-  this->m_GPUInterpolatorCoefficientsImageBase = GPUDataManager::New();
 
   this->m_InterpolatorSourceLoaded = false;
   this->m_TransformSourceLoaded = false;
@@ -110,7 +61,7 @@ GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
 
   this->m_InterpolatorIsBSpline = false; // make it protected in base class
   this->m_TransformIsBSpline = false;
-  
+
   this->m_InterpolatorBase = NULL;
   this->m_TransformBase = NULL;
 
@@ -149,25 +100,32 @@ GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
 
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
-GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
-::~GPUResampleImageFilter()
-{
-}
-
-//------------------------------------------------------------------------------
-template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType  >
 void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 ::SetInterpolator(InterpolatorType *_arg)
 {
   itkDebugMacro("setting Interpolator to " << _arg);
   CPUSuperclass::SetInterpolator(_arg);
 
-  const GPUInterpolatorBase *interpolatorBase = 
+  const GPUInterpolatorBase *interpolatorBase =
     dynamic_cast<const GPUInterpolatorBase *>(_arg);
 
   if(interpolatorBase)
   {
     this->m_InterpolatorBase = (GPUInterpolatorBase *)interpolatorBase;
+
+    // Test for a GPU BSpline interpolator
+    typedef GPUBSplineInterpolateImageFunction<InputImageType,
+      TInterpolatorPrecisionType> GPUBSplineInterpolatorType;
+    const GPUBSplineInterpolatorType *GPUBSplineInterpolator =
+      dynamic_cast<const GPUBSplineInterpolatorType *>(_arg);
+    if(GPUBSplineInterpolator)
+    {
+      m_InterpolatorIsBSpline = true;
+    }
+    else
+    {
+      m_InterpolatorIsBSpline = false;
+    }
   }
   else
   {
@@ -176,20 +134,35 @@ void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionTyp
 }
 
 //------------------------------------------------------------------------------
-template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType  >
+template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 ::SetTransform(const TransformType *_arg)
 {
   itkDebugMacro("setting Transform to " << _arg);
   CPUSuperclass::SetTransform(_arg);
 
-  const GPUTransformBase *transformBase = 
+  const GPUTransformBase *transformBase =
     dynamic_cast<const GPUTransformBase *>(_arg);
 
   if(transformBase)
   {
     this->m_TransformBase = (GPUTransformBase *)transformBase;
 
+    // Test for a GPU BSpline transforms
+    typedef GPUBSplineBaseTransform<TInterpolatorPrecisionType,
+      InputImageDimension> BSplineTransformType;
+    const BSplineTransformType *bsplineTransformBase =
+      dynamic_cast<const BSplineTransformType *>(_arg);
+    if(bsplineTransformBase)
+    {
+      m_TransformIsBSpline = true;
+    }
+    else
+    {
+      m_TransformIsBSpline = false;
+    }
+
+    // Get transform source
     std::string source;
     if(!transformBase->GetSourceCode(source))
     {
@@ -217,102 +190,15 @@ void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionTyp
 }
 
 //------------------------------------------------------------------------------
-template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType  >
+template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
-::AllocateBSplineCoefficientsGPUBuffer()
+::AfterThreadedGenerateData()
 {
-  // Test for a GPU BSpline interpolator
-  const GPUBSplineInterpolatorType *GPUBSplineInterpolator =
-    dynamic_cast<const GPUBSplineInterpolatorType *>(this->GetInterpolator());
-
-  if(GPUBSplineInterpolator)
-  {
-    typename GPUBSplineInterpolatorType::CoefficientImageType::ConstPointer coefficients =
-      GPUBSplineInterpolator->GetCoefficients();
-
-    // GPU Coefficients
-    if(m_GPUInterpolatorCoefficients.IsNull())
-    {
-      m_GPUInterpolatorCoefficients = GPUInterpolatorCoefficientImageType::New();
-      m_GPUInterpolatorCoefficients->Graft(coefficients);
-      m_InterpolatorIsBSpline = true;
-    }
-  }
-  else
-  {
-    m_InterpolatorIsBSpline = false;
-  }
-
-  m_TransformIsBSpline = false;
-
-  typedef GPUBSplineTransform<TInterpolatorPrecisionType, InputImageDimension, 3>
-    GPUBSplineTransformSplineOrder3Type;
-  const GPUBSplineTransformSplineOrder3Type *GPUBSplineTransformSO3 = 
-    dynamic_cast<const GPUBSplineTransformSplineOrder3Type *>(this->GetTransform());
-  if(GPUBSplineTransformSO3)
-  {
-    m_TransformIsBSpline = true;
-    CopyCoefficientImagesToGPU<TInterpolatorPrecisionType, InputImageDimension, 3>(
-      GPUBSplineTransformSO3,
-      m_GPUBSplineTransformCoefficientImages,
-      m_GPUBSplineTransformCoefficientImagesBase);
-  }
-  else
-  {
-    typedef GPUBSplineTransform<TInterpolatorPrecisionType, InputImageDimension, 2>
-      GPUBSplineTransformSplineOrder2Type;
-    const GPUBSplineTransformSplineOrder2Type *GPUBSplineTransformSO2 = 
-      dynamic_cast<const GPUBSplineTransformSplineOrder2Type *>(this->GetTransform());
-    if(GPUBSplineTransformSO2)
-    {
-      m_TransformIsBSpline = true;
-      CopyCoefficientImagesToGPU<TInterpolatorPrecisionType, InputImageDimension, 2>(
-        GPUBSplineTransformSO2,
-        m_GPUBSplineTransformCoefficientImages,
-        m_GPUBSplineTransformCoefficientImagesBase);
-    }
-    else
-    {
-      typedef GPUBSplineTransform<TInterpolatorPrecisionType, InputImageDimension, 1>
-        GPUBSplineTransformSplineOrder1Type;
-      const GPUBSplineTransformSplineOrder1Type *GPUBSplineTransformSO1 = 
-        dynamic_cast<const GPUBSplineTransformSplineOrder1Type *>(this->GetTransform());
-      if(GPUBSplineTransformSO1)
-      {
-        m_TransformIsBSpline = true;
-        CopyCoefficientImagesToGPU<TInterpolatorPrecisionType, InputImageDimension, 1>(
-          GPUBSplineTransformSO1,
-          m_GPUBSplineTransformCoefficientImages,
-          m_GPUBSplineTransformCoefficientImagesBase);
-      }
-    }
-  }
+  // Nothing here
 }
 
 //------------------------------------------------------------------------------
-template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType  >
-void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
-::ReleaseBSplineCoefficientsGPUBuffer()
-{
-  //if(m_GPUCoefficients.IsNotNull())
-  //  m_GPUCoefficients->Initialize();
-
-  //if(m_TransformIsBSpline)
-  //{
-  //  for(unsigned int i=0; i<m_GPUBSplineTransformCoefficientImages.Size(); i++)
-  //  {
-  //    GPUBSplineTransformCoefficientImageTypeImagePointer coefficients = 
-  //      m_GPUBSplineTransformCoefficientImages[i];
-  //    coefficients->Initialize();
-
-  //    coefficients->Delete();
-  //    //coefficients[i]->;
-  //  }
-  //}
-}
-
-//------------------------------------------------------------------------------
-template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType  >
+template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 ::CompileOpenCLCode()
 {
@@ -379,30 +265,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
   typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
 
-  // Profiling
-//#ifdef OPENCL_PROFILING 
-//  itk::TimeProbe gputimerstepBTGD;
-//  gputimerstepBTGD.Start();
-//#endif
-  // Connect input image to interpolator
-//  this->BeforeThreadedGenerateData();
-//#ifdef OPENCL_PROFILING 
-//  gputimerstepBTGD.Stop();
-//  std::cout << "GPU ResampleImageFilter BeforeThreadedGenerateData() took " << gputimerstepBTGD.GetMean() << " seconds." << std::endl;
-//#endif
-
-  // Profiling
-#ifdef OPENCL_PROFILING 
-  itk::TimeProbe gputimerstepABCB;
-  gputimerstepABCB.Start();
-#endif
-  // Copy BSpline coefficients to GPU
-  this->AllocateBSplineCoefficientsGPUBuffer();
-#ifdef OPENCL_PROFILING
-  gputimerstepABCB.Stop();
-  std::cout << "GPU ResampleImageFilter AllocateBSplineCoefficientsGPUBuffer() took " << gputimerstepABCB.GetMean() << " seconds." << std::endl;
-#endif
-
+  // Get interpolator source
   std::string source;
   if(!this->m_InterpolatorBase->GetSourceCode(source))
   {
@@ -488,20 +351,63 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
   if(m_InterpolatorIsBSpline)
   {
-    itk::SetKernelWithITKImage<GPUInterpolatorCoefficientImageType>(this->m_GPUKernelManager,
-      m_FilterGPUKernelHandle, argidx, m_GPUInterpolatorCoefficients, m_GPUInterpolatorCoefficientsImageBase);
-  }
- 
-  if(m_TransformIsBSpline)
-  {
-    for(unsigned int i=0; i<ImageDim; i++)
-    {
-      GPUBSplineTransformCoefficientImagePointer coefficient = m_GPUBSplineTransformCoefficientImages[i];
-      GPUDataManagerPointer coefficientbase = m_GPUBSplineTransformCoefficientImagesBase[i];
+    typedef GPUBSplineInterpolateImageFunction<InputImageType,
+      TInterpolatorPrecisionType> GPUBSplineInterpolatorType;
+    typedef typename GPUBSplineInterpolatorType::GPUCoefficientImagePointer GPUCoefficientImagePointer;
+    typedef typename GPUBSplineInterpolatorType::GPUDataManagerPointer      GPUDataManagerPointer;
 
-      itk::SetKernelWithITKImage<GPUBSplineTransformCoefficientImageType>(
+    const GPUBSplineInterpolatorType *GPUBSplineInterpolator =
+      dynamic_cast<const GPUBSplineInterpolatorType *>(m_InterpolatorBase);
+
+    if(GPUBSplineInterpolator)
+    {
+      GPUCoefficientImagePointer coefficient =
+        GPUBSplineInterpolator->GetGPUCoefficients();
+      GPUDataManagerPointer coefficientbase =
+        GPUBSplineInterpolator->GetGPUCoefficientsImageBase();
+
+      itk::SetKernelWithITKImage<GPUBSplineInterpolatorType::GPUCoefficientImageType>(
         this->m_GPUKernelManager,
         m_FilterGPUKernelHandle, argidx, coefficient, coefficientbase);
+    }
+    else
+    {
+      itkExceptionMacro(<< "Could not get coefficients from GPU BSpline interpolator.");
+    }
+  }
+
+  if(m_TransformIsBSpline)
+  {
+    typedef GPUBSplineBaseTransform<TInterpolatorPrecisionType,
+      InputImageDimension> GPUBSplineTransformType;
+    typedef typename GPUBSplineTransformType::GPUCoefficientImageArray     GPUCoefficientImageArray;
+    typedef typename GPUBSplineTransformType::GPUCoefficientImageBaseArray GPUCoefficientImageBaseArray;
+    typedef typename GPUBSplineTransformType::GPUCoefficientImagePointer   GPUCoefficientImagePointer;
+    typedef typename GPUBSplineTransformType::GPUDataManagerPointer        GPUDataManagerPointer;
+
+    const GPUBSplineTransformType *GPUBSplineTransformBase =
+      dynamic_cast<const GPUBSplineTransformType *>(m_TransformBase);
+
+    if(GPUBSplineTransformBase)
+    {
+      GPUCoefficientImageArray GPUCoefficientImages =
+        GPUBSplineTransformBase->GetGPUCoefficientImages();
+      GPUCoefficientImageBaseArray GPUCoefficientImagesBases =
+        GPUBSplineTransformBase->GetGPUCoefficientImagesBases();
+
+      for(unsigned int i=0; i<ImageDim; i++)
+      {
+        GPUCoefficientImagePointer coefficient = GPUCoefficientImages[i];
+        GPUDataManagerPointer coefficientbase = GPUCoefficientImagesBases[i];
+
+        itk::SetKernelWithITKImage<GPUBSplineTransformType::GPUCoefficientImageType>(
+          this->m_GPUKernelManager,
+          m_FilterGPUKernelHandle, argidx, coefficient, coefficientbase);
+      }
+    }
+    else
+    {
+      itkExceptionMacro(<< "Could not get coefficients from GPU BSpline transform.");
     }
   }
   else
@@ -518,8 +424,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
   // launch kernel
   //this->m_GPUKernelManager->LaunchKernel(m_FilterGPUKernelHandle, (int)TInputImage::ImageDimension, globalSize, localSize);
-	this->m_GPUKernelManager->LaunchKernel(m_FilterGPUKernelHandle, (int)TInputImage::ImageDimension, globalSize);
-  this->ReleaseBSplineCoefficientsGPUBuffer();
+  this->m_GPUKernelManager->LaunchKernel(m_FilterGPUKernelHandle, (int)TInputImage::ImageDimension, globalSize);
   //std::cout<<"LaunchKernel finished." <<std::endl;
 }
 
@@ -601,7 +506,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 }
 
 //------------------------------------------------------------------------------
-template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType  >
+template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
 ::PrintSelf(std::ostream & os, Indent indent) const
 {

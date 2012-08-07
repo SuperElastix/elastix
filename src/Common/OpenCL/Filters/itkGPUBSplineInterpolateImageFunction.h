@@ -14,8 +14,11 @@
 #ifndef __itkGPUBSplineInterpolateImageFunction_h
 #define __itkGPUBSplineInterpolateImageFunction_h
 
-#include "itkBSplineInterpolateImageFunction.h"
 #include "itkGPUInterpolateImageFunction.h"
+#include "itkGPUDataManager.h"
+#include "itkGPUImage.h"
+
+#include "itkBSplineInterpolateImageFunction.h"
 #include "itkVersion.h"
 
 namespace itk
@@ -41,8 +44,6 @@ public:
   typedef SmartPointer< Self >                Pointer;
   typedef SmartPointer< const Self >          ConstPointer;
 
-  typedef typename GPUSuperclass::Superclass::CoefficientImageType CoefficientImageType;
-
   /** Run-time type information (and related methods). */
   itkTypeMacro(GPUBSplineInterpolateImageFunction, GPUSuperclass);
 
@@ -53,7 +54,26 @@ public:
   itkStaticConstMacro(InputImageDimension, unsigned int,
     TInputImage::ImageDimension);
 
-  typename CoefficientImageType::ConstPointer GetCoefficients() const {return this->m_Coefficients; };
+  typedef GPUImage<TCoefficientType, InputImageDimension> GPUCoefficientImageType;
+  typedef typename GPUCoefficientImageType::Pointer       GPUCoefficientImagePointer;
+  typedef typename GPUDataManager::Pointer                GPUDataManagerPointer;
+
+  /** Set the input image. This must be set by the user. */
+  virtual void SetInputImage(const TInputImage *inputData);
+
+  /** Get the GPU coefficient image. */
+  const GPUCoefficientImagePointer GetGPUCoefficients() const
+  {
+    return this->m_GPUCoefficients;
+  }
+
+  /** Get the GPU coefficient image base. */
+  const GPUDataManagerPointer GetGPUCoefficientsImageBase() const
+  {
+    return this->m_GPUCoefficientsImageBase;
+  }
+
+  //typename CoefficientImageType::ConstPointer GetCoefficients() const {return this->m_Coefficients; };
 
 protected:
   GPUBSplineInterpolateImageFunction();
@@ -65,6 +85,9 @@ protected:
 private:
   GPUBSplineInterpolateImageFunction(const Self &); //purposely not implemented
   void operator=(const Self &);                     //purposely not implemented
+
+  GPUCoefficientImagePointer  m_GPUCoefficients;
+  GPUDataManagerPointer       m_GPUCoefficientsImageBase;
 
   std::vector<std::string> m_Sources;
   bool m_SourcesLoaded;

@@ -15,10 +15,66 @@
 #define __itkGPUBSplineTransform_hxx
 
 #include "itkGPUBSplineTransform.h"
+
 #include "itkGPUMatrixOffsetTransformBase.h"
 #include "itkGPUImage.h"
+#include "itkGPUExplicitSynchronization.h"
+
+#include "itkCastImageFilter.h"
+
 #include <iomanip>
 
+namespace itk
+{
+  ////------------------------------------------------------------------------------
+  //template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+  //void CopyCoefficientImagesToGPU1(
+  //  const GPUBSplineTransform<TScalarType, NDimensions, VSplineOrder> *transform,
+  //  FixedArray<typename GPUImage<TScalarType, NDimensions>::Pointer, NDimensions> &coefficientArray,
+  //  FixedArray<typename GPUDataManager::Pointer, NDimensions> &coefficientBaseArray)
+  //{
+  //  // CPU Typedefs
+  //  typedef BSplineTransform<TScalarType, NDimensions, VSplineOrder> BSplineTransformType;
+  //  typedef typename BSplineTransformType::ImageType                 TransformCoefficientImageType;
+  //  typedef typename BSplineTransformType::ImagePointer              TransformCoefficientImagePointer;
+  //  typedef typename BSplineTransformType::CoefficientImageArray     CoefficientImageArray;
+
+  //  // GPU Typedefs
+  //  typedef GPUImage<TScalarType, NDimensions>                       GPUTransformCoefficientImageType;
+  //  typedef typename GPUTransformCoefficientImageType::Pointer       GPUTransformCoefficientImagePointer;
+  //  typedef typename GPUDataManager::Pointer                         GPUDataManagerPointer;
+
+  //  const CoefficientImageArray coefficientImageArray = transform->GetCoefficientImages();
+
+  //  // Typedef for caster
+  //  typedef CastImageFilter<TransformCoefficientImageType, GPUTransformCoefficientImageType> CasterType;
+
+  //  for(unsigned int i=0; i<coefficientImageArray.Size(); i++)
+  //  {
+  //    TransformCoefficientImagePointer coefficients = coefficientImageArray[i];
+
+  //    GPUTransformCoefficientImagePointer GPUCoefficients = GPUTransformCoefficientImageType::New();
+  //    GPUCoefficients->CopyInformation(coefficients);
+  //    GPUCoefficients->SetRegions(coefficients->GetBufferedRegion());
+  //    GPUCoefficients->Allocate();
+
+  //    // Create caster
+  //    typename CasterType::Pointer caster = CasterType::New();
+  //    caster->SetInput( coefficients );
+  //    caster->GraftOutput( GPUCoefficients );
+  //    caster->Update();
+
+  //    GPUExplicitSync<CasterType, GPUTransformCoefficientImageType>( caster, false );
+
+  //    coefficientArray[i] = GPUCoefficients;
+
+  //    GPUDataManagerPointer GPUCoefficientsBase = GPUDataManager::New();
+  //    coefficientBaseArray[i] = GPUCoefficientsBase;
+  //  }
+  //}
+}
+
+//------------------------------------------------------------------------------
 namespace itk
 {
 template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, class TParentImageFilter >
@@ -95,6 +151,53 @@ void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
       GPUCoefficientImage->GetGPUDataManager()->SetGPUBufferLock(true);
       GPUCoefficientImage->GetGPUDataManager()->SetCPUBufferLock(true);
     }
+  }
+
+  CopyCoefficientImagesToGPU();
+}
+
+//------------------------------------------------------------------------------
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, class TParentImageFilter >
+void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
+::CopyCoefficientImagesToGPU()
+{
+  // CPU Typedefs
+  typedef BSplineTransform<TScalarType, NDimensions, VSplineOrder> BSplineTransformType;
+  typedef typename BSplineTransformType::ImageType                 TransformCoefficientImageType;
+  typedef typename BSplineTransformType::ImagePointer              TransformCoefficientImagePointer;
+  typedef typename BSplineTransformType::CoefficientImageArray     CoefficientImageArray;
+
+  // GPU Typedefs
+  typedef SuperSuperclass::GPUCoefficientImageType                 GPUTransformCoefficientImageType;
+  typedef typename SuperSuperclass::GPUCoefficientImagePointer     GPUTransformCoefficientImagePointer;
+  typedef typename SuperSuperclass::GPUDataManagerPointer          GPUDataManagerPointer;
+
+  const CoefficientImageArray coefficientImageArray = this->GetCoefficientImages();
+
+  // Typedef for caster
+  typedef CastImageFilter<TransformCoefficientImageType, GPUTransformCoefficientImageType> CasterType;
+
+  for(unsigned int i=0; i<coefficientImageArray.Size(); i++)
+  {
+    TransformCoefficientImagePointer coefficients = coefficientImageArray[i];
+
+    GPUTransformCoefficientImagePointer GPUCoefficients = GPUTransformCoefficientImageType::New();
+    GPUCoefficients->CopyInformation(coefficients);
+    GPUCoefficients->SetRegions(coefficients->GetBufferedRegion());
+    GPUCoefficients->Allocate();
+
+    // Create caster
+    typename CasterType::Pointer caster = CasterType::New();
+    caster->SetInput( coefficients );
+    caster->GraftOutput( GPUCoefficients );
+    caster->Update();
+
+    GPUExplicitSync<CasterType, GPUTransformCoefficientImageType>( caster, false );
+
+    m_GPUBSplineTransformCoefficientImages[i] = GPUCoefficients;
+
+    GPUDataManagerPointer GPUCoefficientsBase = GPUDataManager::New();
+    m_GPUBSplineTransformCoefficientImagesBase[i] = GPUCoefficientsBase;
   }
 }
 
