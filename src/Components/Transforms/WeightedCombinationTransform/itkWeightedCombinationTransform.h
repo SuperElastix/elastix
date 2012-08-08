@@ -223,6 +223,9 @@ protected:
   TransformContainerType m_TransformContainer;
   double m_SumOfWeights;
 
+  /** Precomputed nonzero Jacobian indices (simply all params) */
+  NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
+
 private:
 
   WeightedCombinationTransform(const Self&); // purposely not implemented

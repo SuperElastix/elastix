@@ -31,6 +31,8 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
 {
   this->m_SumOfWeights = 1.0;
   this->m_NormalizeWeights = false;
+  this->m_HasNonZeroSpatialHessian = true;
+  this->m_HasNonZeroJacobianOfSpatialHessian = true;
 } // end Constructor
 
 
@@ -53,7 +55,18 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
   this->m_SumOfWeights = param.sum();
   if ( this->m_SumOfWeights < 1e-10 && this->m_NormalizeWeights )
   {
-    itkExceptionMacro( << "Weights sum to 0." );
+    itkExceptionMacro( << "Sum of weights for WeightedCombinationTransform is smaller than 0." );
+  }
+
+  // Precompute the nonzerojacobianindices vector
+  const NumberOfParametersType nrParams = param.GetSize();
+  if ( nrParams != this->m_NonZeroJacobianIndices.size() )
+  {
+    this->m_NonZeroJacobianIndices.resize( nrParams );
+    for ( unsigned int i = 0; i < nrParams; ++i )
+    {
+      this->m_NonZeroJacobianIndices[ i ] = i;
+    }  
   }
 
   this->Modified();
@@ -123,12 +136,15 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
   JacobianType & jac,
   NonZeroJacobianIndicesType & nzji ) const
 {
-  /** This transform has no nonzerojacobianindices */
-
   OutputPointType tempopp;
   const TransformContainerType & tc = this->m_TransformContainer;
   const unsigned int N = tc.size();
   const ParametersType & param = this->m_Parameters;
+  jac.SetSize(OutputSpaceDimension, N);
+
+  /** This transform has only nonzero jacobians. */
+  nzji = this->m_NonZeroJacobianIndices;
+
 
   if ( this->m_NormalizeWeights )
   {
