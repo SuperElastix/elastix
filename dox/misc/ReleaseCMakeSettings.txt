@@ -1,0 +1,17 @@
+
+message( STATUS "Setting user-defined variables from CMakeSettings.txt for making an elastix release.")
+
+# Set ITK_DIR
+# Set CMAKE_INSTALL_PREFIX
+
+SET( CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" )
+SET( ELASTIX_BUILD_TESTING OFF CACHE BOOL "Build the testing tree" )
+SET( ELASTIX_ENABLE_PACKAGER ON CACHE BOOL "Enable the packaging make targets")
+SET( ELASTIX_USE_CUDA OFF CACHE BOOL "Use GPU (limited support)" )
+SET( ELASTIX_USE_MEVISDICOMTIFF ON CACHE BOOL "Support Mevis dcmtiff format")
+SET( ELASTIX_IMAGE_DIMENSION "2;3;4" CACHE STRING "Image dimensions" )
+SET( ELASTIX_IMAGE_2D_PIXELTYPES "float" CACHE STRING "2D support" )
+SET( ELASTIX_IMAGE_3D_PIXELTYPES "short;float" CACHE STRING "3D support" )
+SET( ELASTIX_IMAGE_4D_PIXELTYPES "short" CACHE STRING "4D support" )
+SET( USE_ALL_COMPONENTS ON CACHE BOOL "Compile all elastix components")
+

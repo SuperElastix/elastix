@@ -42,19 +42,19 @@
 arg="$1"
 
 # You have to set the following
-version="4.5"
-fullversion="4.5.0"
-tag="elastix_04_5"
+version="4.6"
+fullversion="4.6.0"
+tag="elastix_04_6"
 
 username="sklein"
 
 # Some base directories
 exportbasedirwin="d:/tk/elastix/exports/tagspublic"
-exportbasedirlinux64="m:/tk/elastix/exports/tagspublic"
+exportbasedirlinux64="m:/tk2/elastix/exports/tagspublic"
 # when using rashindra's machine:
 exportbasedirlinux32="/home/stefan/tk/elastix/exports/tagspublic"
 # when using the biggrid
-exportbasedirlinux32grid="m:/tk/elastix/exports/tagspublic"
+exportbasedirlinux32grid="m:/tk2/elastix/exports/tagspublic"
 exportdirwin="$exportbasedirwin/$tag"
 exportdirlinux64="$exportbasedirlinux64/$tag"
 # when using the biggrid
