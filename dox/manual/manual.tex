@@ -1030,7 +1030,8 @@ VV & $\checkmark$ & $\checkmark\checkmark\checkmark$ &
 \url{http://www.creatis.insa-lyon.fr/rio/vv} The 4D Slicer, a fast
 and simple viewer. VV is more specifically designed for qualitative
 evaluation of image registration and deformation field
-visualization. \\
+visualization. A tutorial on the use of VV in combination with elastix
+can be found in Appendix \ref{chp:vvtutorial} of this manual.\\
 \end{tabular*}
 \caption{A number of visualization tools. The three marks for the
 platforms column denote Windows, Linux and Mac OSX support,
@@ -1090,11 +1091,11 @@ code though, such as the use of samplers, a transformation class
 that combines multiple transformation using composition or
 addition, and more.
 
-\item suitable for many image formats. The use of ITK implies that
-all image formats supported by ITK are supported by \elastix. Some
-often used (medical) image formats are: .mhd (MetaIO), .hdr
-(Analyze/NIfTI), .gipl, .dcm (DICOM slices). DICOM directories are
-not directly supported by \elastix;
+\item suitable for many image formats. The use of ITK implies that all
+    image formats supported by ITK are supported by \elastix. Some often
+    used (medical) image formats are: .mhd (MetaIO), .hdr (Analyze), .nii
+    (NIfTI), .gipl, .dcm (DICOM slices). DICOM directories are not directly
+    supported by \elastix;
 
 \item multi-platform (at least Windows, Linux and Mac OS), multi-compiler
     (at least Visual C++ 2008, 2010, gcc 4.1.2, 4.2.1, 4.4.3), and supports
@@ -1159,9 +1160,9 @@ Linux/MacOS.
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
 
-\item Download and compile the ITK version 4.1.0: \url{www.itk.org}.
-Make sure to set the following (advanced) CMake variable to
-\texttt{ON}: \texttt{ITK\_USE\_REVIEW}.
+\item Download and compile the ITK version 4.2.0: \url{www.itk.org}. Make
+    sure to set the following (advanced) CMake variable to \texttt{ON}:
+    \texttt{ITK\_USE\_REVIEW}.
 
 \item Obtain the sources. There are three possibilities:
   \begin{enumerate}
@@ -2365,7 +2366,7 @@ moving image. Select it with: \small
 similar to performing an image registration in this way. Consequently, the same
 choices are relevant: optimisation algorithm, multiresolution etc...
 
-Note that this procedure was described and evaluated in \cite{Metz10}.
+Note that this procedure was described and evaluated in \cite{Metz11}.
 
 \subsection{Corresponding points: help the registration}
 
@@ -2410,7 +2411,7 @@ identical to supplying points to \transformix, see Section
 
 \subsection{VarianceOverLastDimensionMetric: aligning time series}
 
-This metric is explained in \cite{Metz10}. Example parameter files can be found
+This metric is explained in \cite{Metz11}. Example parameter files can be found
 on the wiki parameter file database, entry \texttt{par0012}.
 
 This metric should be used to estimate the motion in dynamic imaging data (time
@@ -2485,7 +2486,7 @@ file, in the parameter ``\texttt{TransformParameters}''. See Section
 
 \item[BSplineStackTransform] This transformation model defines a stack of
     independent B-spline transformations. Its usage is illustrated in
-    \cite{Metz10}. Example parameter files can be found on the wiki
+    \cite{Metz11}. Example parameter files can be found on the wiki
     parameter file database, entry \texttt{par0012}.
 \end{description}
 
@@ -3030,7 +3031,7 @@ Also for \texttt{for}-loops.
 \normalsize
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Practical exercise: using VV with \elastix}
+\chapter{Practical exercise: using VV with \elastix}\label{chp:vvtutorial}
 
 \textbf{This exercise has been kindly provided by Simon Rit (Creatis).}
 
