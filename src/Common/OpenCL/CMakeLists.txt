@@ -29,7 +29,7 @@ file( GLOB OpenCL_FiltersFiles Filters/*.* )
 source_group( "Filters" FILES ${OpenCL_FiltersFiles} )
 
 # Get the files in the subdir Kernels
-file( GLOB OpenCL_KernelsFiles Kernels/*.* )
+file( GLOB OpenCL_KernelsFiles Kernels/*.cl* )
 source_group( "Kernels" FILES ${OpenCL_KernelsFiles} )
 
 write_gpu_kernels( "${OpenCL_KernelsFiles}" OpenCL_KernelsFiles_SRC "Kernels Generated" )
