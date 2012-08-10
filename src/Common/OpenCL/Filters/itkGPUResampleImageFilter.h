@@ -64,6 +64,7 @@ public:
   typedef typename GPUTraits<TOutputImage>::Type    GPUOutputImage;
   typedef typename CPUSuperclass::InterpolatorType  InterpolatorType;
   typedef typename CPUSuperclass::TransformType     TransformType;
+  typedef typename OutputImageType::IndexType       IndexType;
 
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int,
