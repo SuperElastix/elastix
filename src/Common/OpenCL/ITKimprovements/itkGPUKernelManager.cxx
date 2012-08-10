@@ -39,7 +39,7 @@ bool GPUKernelManager::LoadProgramFromFile(const char* filename, const char* pre
     itkWarningMacro( << "The filename must be specified.");
     return false;
   }
-  
+
   // open the file
   std::ifstream inputFile( filename, std::ifstream::in | std::ifstream::binary );
   if ( inputFile.is_open() == false )
@@ -68,12 +68,12 @@ bool GPUKernelManager::LoadProgramFromFile(const char* filename, const char* pre
   std::string fileName(filename);
   bool created = false;
 
-  // Intel OpenCL Debugging is enabled only when the target device is a CPU. 
-  // If you target your code to run on Intel Processor Graphics, you can debug 
+  // Intel OpenCL Debugging is enabled only when the target device is a CPU.
+  // If you target your code to run on Intel Processor Graphics, you can debug
   // it on the CPU device during development phase and when ready to change the target device.
 #if defined( ITK_USE_INTEL_CPU_OPENCL ) && defined( _DEBUG )
-  // To work with the Intel SDK for OpenCL* - Debugger plug-in, the OpenCL* 
-  // kernel code must exist in a text file separate from the code of the host. 
+  // To work with the Intel SDK for OpenCL* - Debugger plug-in, the OpenCL*
+  // kernel code must exist in a text file separate from the code of the host.
   if(preamble != "")
   {
     fileName = fileName.substr(0, fileName.rfind( "." )) + "-Debug.cl";
@@ -94,7 +94,7 @@ bool GPUKernelManager::LoadProgramFromFile(const char* filename, const char* pre
   std::cout << "Creating OpenCL program from : " << fileName << std::endl;
 #endif
 
-  // Create 
+  // Create
   created = CreateOpenCLProgram(fileName, oclSource, oclSourceSize);
   return created;
 }
@@ -126,7 +126,7 @@ bool GPUKernelManager::LoadProgramFromString(const char* source, const char* pre
   std::cout << "Creating OpenCL program from source." << std::endl;
 #endif
 
-  // Create 
+  // Create
   const bool created = CreateOpenCLProgram(std::string(), oclSource, oclSourceSize);
   return created;
 }
@@ -144,7 +144,7 @@ bool GPUKernelManager::CreateOpenCLProgram(const std::string &filename,
   std::cout<<"clCreateProgramWithSource" << "..." << std::endl;
 #endif
   const char *code = source.c_str();
-  m_Program = clCreateProgramWithSource(m_Manager->GetCurrentContext(), 1, 
+  m_Program = clCreateProgramWithSource(m_Manager->GetCurrentContext(), 1,
     &code, &sourceSize, &errid);
   OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
 
@@ -156,7 +156,7 @@ bool GPUKernelManager::CreateOpenCLProgram(const std::string &filename,
 
   // Get OpenCL math and optimization options
   std::string oclMathAndOptimization;
-  const bool oclMathAndOptimizationEnabled = 
+  const bool oclMathAndOptimizationEnabled =
     GetOpenCLMathAndOptimizationOptions(oclMathAndOptimization);
 
 #ifdef _DEBUG

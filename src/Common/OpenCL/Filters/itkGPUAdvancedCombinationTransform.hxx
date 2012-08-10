@@ -37,7 +37,7 @@ GPUAdvancedCombinationTransform< TScalarType, NDimensions, TParentImageFilter >:
   // Add GPUMatrixOffsetTransformBase source
   const std::string sourcePath1(GPUMatrixOffsetTransformBaseKernel::GetOpenCLSource());
   m_Sources.push_back(sourcePath1);
-  
+
   m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 
   const unsigned int InputDimension  = InputSpaceDimension;

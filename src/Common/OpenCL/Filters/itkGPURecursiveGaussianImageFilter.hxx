@@ -136,7 +136,7 @@ void GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >::GPUGenerateDa
       localSize2D[0] = OpenCLGetLocalBlockSize(ImageDim);
     else
       localSize2D[0]  = 1; // Always safe
-    
+
     localSize2D[1] = 1;
   }
   else if(ImageDim == 2)

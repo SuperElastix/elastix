@@ -37,8 +37,8 @@ __kernel void ShrinkImageFilter(__global const INPIXELTYPE* in,
 
 #ifdef DIM_2
 __kernel void ShrinkImageFilter(
-  __global const INPIXELTYPE* in, 
-  __global OUTPIXELTYPE* out, 
+  __global const INPIXELTYPE* in,
+  __global OUTPIXELTYPE* out,
   uint2 image_size_in, uint2 image_size_out,
   uint2 offset, uint2 shrinkfactors )
 {

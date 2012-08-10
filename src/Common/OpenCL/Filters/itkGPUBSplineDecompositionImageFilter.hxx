@@ -59,7 +59,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   GetTypenameInString( typeid ( typename TInputImage::PixelType ), defines );
   defines << "#define OUTPIXELTYPE ";
   GetTypenameInString( typeid ( typename TOutputImage::PixelType ), defines );
-  
+
   // OpenCL kernel source
   const char* GPUSource = GPUBSplineDecompositionImageFilterKernel::GetOpenCLSource();
   // Load and create kernel
@@ -118,7 +118,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
       maxLength = dataLength[n];
     }
   }
-  
+
   // Check if GPU filter are able to perform for this image
   if( maxLength > this->m_DeviceLocalMemorySize )
   {
@@ -126,7 +126,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
     return;
   }
 
-  // Cast here, see the same call in this->CopyImageToImage() of 
+  // Cast here, see the same call in this->CopyImageToImage() of
   // BSplineDecompositionImageFilter::DataToCoefficientsND()
   typedef GPUCastImageFilter<GPUInputImage, GPUOutputImage> CasterType;
   typename CasterType::Pointer caster = CasterType::New();
@@ -144,7 +144,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
       vcl_ceil( static_cast<float>( outSize[i] ) / static_cast<float>( localSize[i] ) ) ) );
   }
 
-  // Make GPU buffer not dirty 
+  // Make GPU buffer not dirty
   otPtr->GetGPUDataManager()->SetGPUDirtyFlag( false );
 
   // arguments set up

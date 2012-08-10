@@ -58,7 +58,7 @@ void GPUImageDataManager< ImageType >::UpdateCPUBuffer()
       std::cout<<"clEnqueueReadBuffer GPU->CPU" << "..." << std::endl;
 #endif
 
-#ifdef OPENCL_PROFILING 
+#ifdef OPENCL_PROFILING
       errid = clEnqueueReadBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId),
         m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent);
 #else
@@ -108,7 +108,7 @@ void GPUImageDataManager< ImageType >::UpdateGPUBuffer()
       std::cout<<"clEnqueueWriteBuffer CPU->GPU" << "..." << std::endl;
 #endif
 
-#ifdef OPENCL_PROFILING 
+#ifdef OPENCL_PROFILING
       errid = clEnqueueWriteBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId),
         m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent);
 #else

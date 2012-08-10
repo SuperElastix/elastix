@@ -266,7 +266,7 @@ float bspline_transform_point_1d(const float point,
       uint gidx = i;
 
       float c = coefficients[gidx];
-      tpoint = mad( c, weights[counter], tpoint );
+      tpoint = mad(c, weights[counter], tpoint);
 
       ++counter;
     }
@@ -327,8 +327,8 @@ float2 bspline_transform_point_2d(const float2 point,
         float c0 = coefficients0[gidx];
         float c1 = coefficients1[gidx];
 
-        tpoint.x = mad( c0, weights[counter], tpoint.x );
-        tpoint.y = mad( c1, weights[counter], tpoint.y );
+        tpoint.x = mad(c0, weights[counter], tpoint.x);
+        tpoint.y = mad(c1, weights[counter], tpoint.y);
 
         ++counter;
       }
@@ -405,9 +405,9 @@ float3 bspline_transform_point_3d(const float3 point,
           float c1 = coefficients1[gidx];
           float c2 = coefficients2[gidx];
 
-          tpoint.x = mad( c0, weights[counter], tpoint.x );
-          tpoint.y = mad( c1, weights[counter], tpoint.y );
-          tpoint.z = mad( c2, weights[counter], tpoint.z );
+          tpoint.x = mad(c0, weights[counter], tpoint.x);
+          tpoint.y = mad(c1, weights[counter], tpoint.y);
+          tpoint.z = mad(c2, weights[counter], tpoint.z);
 
           ++counter;
         }

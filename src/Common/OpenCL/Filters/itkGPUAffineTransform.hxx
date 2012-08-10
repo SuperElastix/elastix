@@ -118,7 +118,7 @@ template<class TScalarType,
 template<class TScalarType,
   unsigned int OutputSpaceDimension, unsigned int InputSpaceDimension>
   void SetMatrix3(const itk::Matrix<TScalarType, OutputSpaceDimension, InputSpaceDimension> &,
-  cl_float16 &, 
+  cl_float16 &,
   SpaceDimensionToType<OutputSpaceDimension>,
   SpaceDimensionToType<InputSpaceDimension>)
 {
@@ -179,7 +179,7 @@ GPUAffineTransform< TScalarType, NDimensions, TParentImageFilter >::GPUAffineTra
   // Add GPUMatrixOffsetTransformBase source
   const std::string sourcePath1(GPUMatrixOffsetTransformBaseKernel::GetOpenCLSource());
   m_Sources.push_back(sourcePath1);
-  
+
   m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 
   const unsigned int InputDimension  = InputSpaceDimension;

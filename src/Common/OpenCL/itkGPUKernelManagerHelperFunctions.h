@@ -124,7 +124,7 @@ namespace itk
       itkGenericExceptionMacro(<< "The kernel manager is NULL.");
       return;
     }
-    
+
     if(image.IsNull())
     {
       itkGenericExceptionMacro(<< "The ITK image is NULL. "

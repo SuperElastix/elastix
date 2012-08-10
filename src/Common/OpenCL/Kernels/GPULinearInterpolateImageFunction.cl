@@ -148,7 +148,7 @@ float evaluate_at_continuous_index_2d(const float2 index,
   basei.x = basei.x - 1;
   const float val01 = get_pixel_2d(basei, in, image);
   const float valx1 = mad(distance0, ( val11 - val01 ), val01);
-  return (mad(distance1, ( valx1 - valx0 ), valx0)); 
+  return (mad(distance1, ( valx1 - valx0 ), valx0));
 }
 #endif // DIM_2
 

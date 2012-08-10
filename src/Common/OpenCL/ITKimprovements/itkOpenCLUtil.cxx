@@ -33,7 +33,7 @@ int OpenCLGetLocalBlockSize(unsigned int ImageDim)
   * 2D : 16x16 = 256
   * 3D : 4x4x4 = 64
   */
-  
+
   if (ImageDim > 3 || ImageDim < 1 )
   {
     itkGenericExceptionMacro("Only ImageDimensions up to 3 are supported");

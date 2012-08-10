@@ -44,8 +44,8 @@ void set_initial_causal_coefficient(BUFFPIXELTYPE* scratch,
   {
     // full loop
     iz = 1.0 / z;
-    z2n = pow( z, (float)( data_length - 1L ) );
-    sum = mad( z2n, scratch[data_length - 1L], scratch[0] );
+    z2n = pow(z, (float)( data_length - 1L ));
+    sum = mad(z2n, scratch[data_length - 1L], scratch[0]);
     z2n *= z2n * iz;
     for(uint n = 1; n <= ( data_length - 2 ); n++)
     {

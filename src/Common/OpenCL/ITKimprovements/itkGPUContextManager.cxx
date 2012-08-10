@@ -165,7 +165,7 @@ void GPUContextManager::OpenCLProfile(cl_event clEvent, const std::string &messa
 
   cl_int errid;
 
-  // Execution time 
+  // Execution time
   errid = clWaitForEvents(1, &clEvent);
   OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
   if(errid != CL_SUCCESS)

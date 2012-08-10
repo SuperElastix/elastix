@@ -51,8 +51,8 @@ namespace itk
 int OpenCLGetLocalBlockSize(unsigned int ImageDim);
 
 /** Get the devices that are available */
-cl_device_id* OpenCLGetAvailableDevices(const cl_platform_id platform, 
-  const cl_device_type devType, 
+cl_device_id* OpenCLGetAvailableDevices(const cl_platform_id platform,
+  const cl_device_type devType,
   cl_uint* numAvailableDevices);
 
 /** Get the device that has the maximum FLOPS in the current context */
