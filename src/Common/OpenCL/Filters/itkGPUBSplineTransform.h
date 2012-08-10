@@ -37,7 +37,7 @@ public:
   /** Standard class typedefs. */
   typedef GPUBSplineTransform                 Self;
   typedef TParentImageFilter                  Superclass;
-  typedef GPUBSplineBaseTransform             SuperSuperclass;
+  typedef GPUBSplineBaseTransform< TScalarType, NDimensions > SuperSuperclass;
   typedef SmartPointer< Self >                Pointer;
   typedef SmartPointer< const Self >          ConstPointer;
   typedef typename Superclass::ParametersType ParametersType;

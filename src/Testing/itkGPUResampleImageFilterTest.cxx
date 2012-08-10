@@ -171,7 +171,7 @@ class InputImageType>
   {
     if( advancedTransform.IsNull() )
     {
-      AffineTransformType::Pointer affineTransform
+      typename AffineTransformType::Pointer affineTransform
         = AffineTransformType::New();
       transform = affineTransform;
 
@@ -181,7 +181,7 @@ class InputImageType>
     }
     else
     {
-      AdvancedAffineTransformType::Pointer affineTransform
+      typename AdvancedAffineTransformType::Pointer affineTransform
         = AdvancedAffineTransformType::New();
       advancedTransform->SetCurrentTransform( affineTransform );
 
@@ -193,17 +193,17 @@ class InputImageType>
   else if( transformName == "BSpline" )
   {
     const unsigned int Dimension = image->GetImageDimension();
-    const InputImageType::SpacingType   inputSpacing   = image->GetSpacing();
-    const InputImageType::PointType     inputOrigin    = image->GetOrigin();
-    const InputImageType::DirectionType inputDirection = image->GetDirection();
-    const InputImageType::RegionType    inputRegion    = image->GetBufferedRegion();
-    const InputImageType::SizeType      inputSize      = inputRegion.GetSize();
+    const typename InputImageType::SpacingType   inputSpacing   = image->GetSpacing();
+    const typename InputImageType::PointType     inputOrigin    = image->GetOrigin();
+    const typename InputImageType::DirectionType inputDirection = image->GetDirection();
+    const typename InputImageType::RegionType    inputRegion    = image->GetBufferedRegion();
+    const typename InputImageType::SizeType      inputSize      = inputRegion.GetSize();
 
-    typedef BSplineTransformType::MeshSizeType MeshSizeType;
+    typedef typename BSplineTransformType::MeshSizeType MeshSizeType;
     MeshSizeType gridSize;
     gridSize.Fill( 4 );
 
-    typedef BSplineTransformType::PhysicalDimensionsType PhysicalDimensionsType;
+    typedef typename BSplineTransformType::PhysicalDimensionsType PhysicalDimensionsType;
     PhysicalDimensionsType gridSpacing;
     for( unsigned int d = 0; d < Dimension; d++ )
     {
@@ -212,7 +212,7 @@ class InputImageType>
 
     if( advancedTransform.IsNull() )
     {
-      BSplineTransformType::Pointer bsplineTransform
+      typename BSplineTransformType::Pointer bsplineTransform
         = BSplineTransformType::New();
 
       // Set grid properties
@@ -229,7 +229,7 @@ class InputImageType>
     }
     else
     {
-      AdvancedBSplineTransformType::Pointer bsplineTransform
+      typename AdvancedBSplineTransformType::Pointer bsplineTransform
         = AdvancedBSplineTransformType::New();
       advancedTransform->SetCurrentTransform( bsplineTransform );
 
@@ -264,7 +264,7 @@ class AdvancedAffineTransformType, class AdvancedBSplineTransformType>
 
     if(affine)
     {
-      AdvancedAffineTransformType::Pointer affineTransform
+      typename AdvancedAffineTransformType::Pointer affineTransform
         = AdvancedAffineTransformType::New();
       advancedTransform->SetCurrentTransform( affineTransform );
       affineTransform->SetParameters( affine->GetParameters() );
@@ -276,7 +276,7 @@ class AdvancedAffineTransformType, class AdvancedBSplineTransformType>
 
       if(bspline)
       {
-        AdvancedBSplineTransformType::Pointer bsplineTransform
+        typename AdvancedBSplineTransformType::Pointer bsplineTransform
           = AdvancedBSplineTransformType::New();
         advancedTransform->SetCurrentTransform( bsplineTransform );
 

@@ -41,6 +41,7 @@ public:
     BSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType > > GPUSuperclass;
   typedef BSplineInterpolateImageFunction< TInputImage, TCoordRep,
     BSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType > > CPUSuperclass;
+  typedef GPUSuperclass                       Superclass;
   typedef SmartPointer< Self >                Pointer;
   typedef SmartPointer< const Self >          ConstPointer;
 

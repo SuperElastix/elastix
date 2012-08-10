@@ -168,7 +168,7 @@ void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
   typedef typename BSplineTransformType::CoefficientImageArray     CoefficientImageArray;
 
   // GPU Typedefs
-  typedef SuperSuperclass::GPUCoefficientImageType                 GPUTransformCoefficientImageType;
+  typedef typename SuperSuperclass::GPUCoefficientImageType        GPUTransformCoefficientImageType;
   typedef typename SuperSuperclass::GPUCoefficientImagePointer     GPUTransformCoefficientImagePointer;
   typedef typename SuperSuperclass::GPUDataManagerPointer          GPUDataManagerPointer;
 
@@ -194,10 +194,10 @@ void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
 
     GPUExplicitSync<CasterType, GPUTransformCoefficientImageType>( caster, false );
 
-    m_GPUBSplineTransformCoefficientImages[i] = GPUCoefficients;
+    this->m_GPUBSplineTransformCoefficientImages[i] = GPUCoefficients;
 
     GPUDataManagerPointer GPUCoefficientsBase = GPUDataManager::New();
-    m_GPUBSplineTransformCoefficientImagesBase[i] = GPUCoefficientsBase;
+    this->m_GPUBSplineTransformCoefficientImagesBase[i] = GPUCoefficientsBase;
   }
 }
 

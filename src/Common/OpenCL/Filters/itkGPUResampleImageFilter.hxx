@@ -353,6 +353,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     typedef GPUBSplineInterpolateImageFunction<InputImageType,
       TInterpolatorPrecisionType> GPUBSplineInterpolatorType;
+    typedef typename GPUBSplineInterpolatorType::GPUCoefficientImageType    GPUCoefficientImageType;
     typedef typename GPUBSplineInterpolatorType::GPUCoefficientImagePointer GPUCoefficientImagePointer;
     typedef typename GPUBSplineInterpolatorType::GPUDataManagerPointer      GPUDataManagerPointer;
 
@@ -366,7 +367,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
       GPUDataManagerPointer coefficientbase =
         GPUBSplineInterpolator->GetGPUCoefficientsImageBase();
 
-      itk::SetKernelWithITKImage<GPUBSplineInterpolatorType::GPUCoefficientImageType>(
+      SetKernelWithITKImage<GPUCoefficientImageType>(
         this->m_GPUKernelManager,
         m_FilterGPUKernelHandle, argidx, coefficient, coefficientbase);
     }
@@ -380,6 +381,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     typedef GPUBSplineBaseTransform<TInterpolatorPrecisionType,
       InputImageDimension> GPUBSplineTransformType;
+    typedef typename GPUBSplineTransformType::GPUCoefficientImageType      GPUCoefficientImageType;
     typedef typename GPUBSplineTransformType::GPUCoefficientImageArray     GPUCoefficientImageArray;
     typedef typename GPUBSplineTransformType::GPUCoefficientImageBaseArray GPUCoefficientImageBaseArray;
     typedef typename GPUBSplineTransformType::GPUCoefficientImagePointer   GPUCoefficientImagePointer;
@@ -400,7 +402,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
         GPUCoefficientImagePointer coefficient = GPUCoefficientImages[i];
         GPUDataManagerPointer coefficientbase = GPUCoefficientImagesBases[i];
 
-        itk::SetKernelWithITKImage<GPUBSplineTransformType::GPUCoefficientImageType>(
+        itk::SetKernelWithITKImage<GPUCoefficientImageType>(
           this->m_GPUKernelManager,
           m_FilterGPUKernelHandle, argidx, coefficient, coefficientbase);
       }
