@@ -53,7 +53,7 @@ double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
 //------------------------------------------------------------------------------
 // This test compares the CPU with the GPU version of the GenericMultiResolutionPyramidImageFilter.
 // The filter takes an input image and produces an output image.
-// We compare the CPU and GPU output image wrt RMSE and speed.
+// We compare the CPU and GPU output image write RMSE and speed.
 
 int main( int argc, char * argv[] )
 {
