@@ -51,7 +51,7 @@ double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
 } // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
-// This test compares the CPU with the GPU version of the SmoothingRecursiveGaussianImageFilter.
+// This test compares the CPU with the GPU version of the GenericMultiResolutionPyramidImageFilter.
 // The filter takes an input image and produces an output image.
 // We compare the CPU and GPU output image wrt RMSE and speed.
 

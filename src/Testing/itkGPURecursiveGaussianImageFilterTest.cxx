@@ -41,9 +41,10 @@ double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
   return rmse;
 } // end ComputeRMSE()
 
-/**
-* Testing GPU Recursive Gaussian Image Filter
-*/
+//------------------------------------------------------------------------------
+// This test compares the CPU with the GPU version of the RecursiveGaussianImageFilter.
+// The filter takes an input image and produces an output image.
+// We compare the CPU and GPU output image write RMSE and speed.
 
 int main( int argc, char * argv[] )
 {
