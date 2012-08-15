@@ -62,7 +62,7 @@ std::string GetHelpString( void )
 //------------------------------------------------------------------------------
 // Helper function
 template<class ImageType>
-double ComputeRMSE( ImageType * cpuImage, ImageType * gpuImage )
+double ComputeRMSE( const ImageType * cpuImage, const ImageType * gpuImage )
 {
   itk::ImageRegionConstIterator<ImageType> cit(
     cpuImage, cpuImage->GetLargestPossibleRegion() );
