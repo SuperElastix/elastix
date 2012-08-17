@@ -25,37 +25,37 @@ namespace itk
  */
 
 /** Create a helper GPU Kernel class for GPUIdentityTransform */
-itkGPUKernelClassMacro(GPUIdentityTransformKernel);
+itkGPUKernelClassMacro( GPUIdentityTransformKernel );
 
-template<class TScalarType = float, unsigned int NDimensions = 3,
-class TParentImageFilter = IdentityTransform< TScalarType, NDimensions > >
+template< class TScalarType = float, unsigned int NDimensions = 3,
+          class TParentImageFilter = IdentityTransform< TScalarType, NDimensions > >
 class GPUIdentityTransform : public TParentImageFilter, public GPUTransformBase
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUIdentityTransform        Self;
-  typedef TParentImageFilter          Superclass;
-  typedef SmartPointer< Self >        Pointer;
-  typedef SmartPointer< const Self >  ConstPointer;
+  typedef GPUIdentityTransform       Self;
+  typedef TParentImageFilter         Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUIdentityTransform, TParentImageFilter);
+  itkTypeMacro( GPUIdentityTransform, TParentImageFilter );
 
 protected:
   GPUIdentityTransform();
-  virtual ~GPUIdentityTransform() {};
-  void PrintSelf(std::ostream &s, Indent indent) const;
+  virtual ~GPUIdentityTransform() {}
+  void PrintSelf( std::ostream & s, Indent indent ) const;
 
-  virtual bool GetSourceCode(std::string &_source) const;
+  virtual bool GetSourceCode( std::string & _source ) const;
 
 private:
-  GPUIdentityTransform(const Self & other); // purposely not implemented
-  const Self & operator=(const Self &);     // purposely not implemented
+  GPUIdentityTransform( const Self & other ); // purposely not implemented
+  const Self & operator=( const Self & );     // purposely not implemented
 
-  std::vector<std::string> m_Sources;
-  bool m_SourcesLoaded;
+  std::vector< std::string > m_Sources;
+  bool                       m_SourcesLoaded;
 };
 
 /** \class GPUIdentityTransformFactory
@@ -65,52 +65,53 @@ class GPUIdentityTransformFactory : public ObjectFactoryBase
 {
 public:
   typedef GPUIdentityTransformFactory Self;
-  typedef ObjectFactoryBase         Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef ObjectFactoryBase           Superclass;
+  typedef SmartPointer< Self >        Pointer;
+  typedef SmartPointer< const Self >  ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
-  const char* GetDescription() const { return "A Factory for GPUIdentityTransform"; }
+  virtual const char * GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
+  const char * GetDescription() const { return "A Factory for GPUIdentityTransform"; }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro(Self);
+  itkFactorylessNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUIdentityTransformFactory, itk::ObjectFactoryBase);
+  itkTypeMacro( GPUIdentityTransformFactory, itk::ObjectFactoryBase );
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory(void)
+  static void RegisterOneFactory( void )
   {
-    GPUIdentityTransformFactory::Pointer factory = GPUIdentityTransformFactory::New();
-    ObjectFactoryBase::RegisterFactory(factory);
+    GPUIdentityTransformFactory::Pointer factory
+      = GPUIdentityTransformFactory::New();
+    ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
-  GPUIdentityTransformFactory(const Self&); // purposely not implemented
-  void operator=(const Self&);            // purposely not implemented
+  GPUIdentityTransformFactory( const Self & ); // purposely not implemented
+  void operator=( const Self & );              // purposely not implemented
 
-#define OverrideIdentityTransformTypeMacro(st,dm)\
-  {\
-  this->RegisterOverride(\
-  typeid(IdentityTransform<st,dm>).name(),\
-  typeid(GPUIdentityTransform<st,dm>).name(),\
-  "GPU IdentityTransform Override",\
-  true,\
-  CreateObjectFunction<GPUIdentityTransform<st,dm> >::New());\
+#define OverrideIdentityTransformTypeMacro( st, dm )                   \
+  {                                                                    \
+    this->RegisterOverride(                                            \
+      typeid( IdentityTransform< st, dm > ).name(),                    \
+      typeid( GPUIdentityTransform< st, dm > ).name(),                 \
+      "GPU IdentityTransform Override",                                \
+      true,                                                            \
+      CreateObjectFunction< GPUIdentityTransform< st, dm > >::New() ); \
   }
 
   GPUIdentityTransformFactory()
   {
-    if( IsGPUAvailable() )
+    if ( IsGPUAvailable() )
     {
-      OverrideIdentityTransformTypeMacro(float, 1);
+      OverrideIdentityTransformTypeMacro( float, 1 );
       //OverrideIdentityTransformTypeMacro(double, 1);
 
-      OverrideIdentityTransformTypeMacro(float, 2);
+      OverrideIdentityTransformTypeMacro( float, 2 );
       //OverrideIdentityTransformTypeMacro(double, 2);
 
-      OverrideIdentityTransformTypeMacro(float, 3);
+      OverrideIdentityTransformTypeMacro( float, 3 );
       //OverrideIdentityTransformTypeMacro(double, 3);
     }
   }

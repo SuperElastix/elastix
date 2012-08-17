@@ -49,25 +49,25 @@ namespace itk
 */
 
 /** Create a helper GPU Kernel class for GPURecursiveGaussianImageFilter */
-itkGPUKernelClassMacro(GPURecursiveGaussianImageFilterKernel);
+itkGPUKernelClassMacro( GPURecursiveGaussianImageFilterKernel );
 
 template< class TInputImage, class TOutputImage >
-class ITK_EXPORT GPURecursiveGaussianImageFilter
-  : public GPUInPlaceImageFilter< TInputImage, TOutputImage,
-  RecursiveGaussianImageFilter< TInputImage, TOutputImage > >
+class ITK_EXPORT GPURecursiveGaussianImageFilter :
+  public GPUInPlaceImageFilter< TInputImage, TOutputImage,
+                                RecursiveGaussianImageFilter< TInputImage, TOutputImage > >
 {
 public:
   /** Standard class typedefs. */
-  typedef GPURecursiveGaussianImageFilter Self;
-  typedef RecursiveGaussianImageFilter< TInputImage, TOutputImage > CPUSuperclass;
+  typedef GPURecursiveGaussianImageFilter                                   Self;
+  typedef RecursiveGaussianImageFilter< TInputImage, TOutputImage >         CPUSuperclass;
   typedef GPUImageToImageFilter< TInputImage, TOutputImage, CPUSuperclass > GPUSuperclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  typedef SmartPointer< Self >                                              Pointer;
+  typedef SmartPointer< const Self >                                        ConstPointer;
 
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPURecursiveGaussianImageFilter, GPUSuperclass);
+  itkTypeMacro( GPURecursiveGaussianImageFilter, GPUSuperclass );
 
   /** Superclass typedefs. */
   typedef typename GPUSuperclass::OutputImageRegionType OutputImageRegionType;
@@ -82,23 +82,23 @@ public:
   typedef typename InputImageType::PixelType    InputImagePixelType;
 
   /** ImageDimension constants */
-  itkStaticConstMacro(InputImageDimension, unsigned int,
-    TInputImage::ImageDimension);
-  itkStaticConstMacro(OutputImageDimension, unsigned int,
-    TOutputImage::ImageDimension);
+  itkStaticConstMacro( InputImageDimension, unsigned int,
+                       TInputImage::ImageDimension );
+  itkStaticConstMacro( OutputImageDimension, unsigned int,
+                       TOutputImage::ImageDimension );
 
 protected:
   GPURecursiveGaussianImageFilter();
-  ~GPURecursiveGaussianImageFilter(){};
+  ~GPURecursiveGaussianImageFilter(){}
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
   virtual void GPUGenerateData();
-  virtual void PrintSelf(std::ostream & os, Indent indent) const;
 
 private:
-  GPURecursiveGaussianImageFilter(const Self &);  //purposely not implemented
-  void operator=(const Self &);                   //purposely not implemented
+  GPURecursiveGaussianImageFilter( const Self & ); // purposely not implemented
+  void operator=( const Self & );                  // purposely not implemented
 
-  int m_FilterGPUKernelHandle;
+  int    m_FilterGPUKernelHandle;
   size_t m_DeviceLocalMemorySize;
 };
 
@@ -108,85 +108,95 @@ private:
 class GPURecursiveGaussianImageFilterFactory : public ObjectFactoryBase
 {
 public:
-  typedef GPURecursiveGaussianImageFilterFactory  Self;
-  typedef ObjectFactoryBase                       Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef GPURecursiveGaussianImageFilterFactory Self;
+  typedef ObjectFactoryBase                      Superclass;
+  typedef SmartPointer< Self >                   Pointer;
+  typedef SmartPointer< const Self >             ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
-  const char* GetDescription() const { return "A Factory for GPURecursiveGaussianImageFilter"; }
+  virtual const char * GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
+  const char * GetDescription() const { return "A Factory for GPURecursiveGaussianImageFilter"; }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro(Self);
+  itkFactorylessNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPURecursiveGaussianImageFilterFactory, itk::ObjectFactoryBase);
+  itkTypeMacro( GPURecursiveGaussianImageFilterFactory, itk::ObjectFactoryBase );
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory(void)
+  static void RegisterOneFactory( void )
   {
-    GPURecursiveGaussianImageFilterFactory::Pointer factory = GPURecursiveGaussianImageFilterFactory::New();
-    ObjectFactoryBase::RegisterFactory(factory);
+    GPURecursiveGaussianImageFilterFactory::Pointer factory
+      = GPURecursiveGaussianImageFilterFactory::New();
+    ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
-  GPURecursiveGaussianImageFilterFactory(const Self&); //purposely not implemented
-  void operator=(const Self&);                         //purposely not implemented
+  GPURecursiveGaussianImageFilterFactory( const Self & ); // purposely not implemented
+  void operator=( const Self & );                         // purposely not implemented
 
-#define OverrideRecursiveGaussianImageFilterTypeMacro(ipt,opt,dm1,dm2,dm3)\
-  {\
-  typedef Image<ipt,dm1> InputImageType1D;\
-  typedef Image<opt,dm1> OutputImageType1D;\
-  this->RegisterOverride(\
-  typeid(RecursiveGaussianImageFilter<InputImageType1D,OutputImageType1D>).name(),\
-  typeid(GPURecursiveGaussianImageFilter<InputImageType1D,OutputImageType1D>).name(),\
-  "GPU RecursiveGaussianImageFilter Override 1D",\
-  true,\
-  CreateObjectFunction<GPURecursiveGaussianImageFilter<InputImageType1D,OutputImageType1D> >::New());\
-  typedef Image<ipt,dm2> InputImageType2D;\
-  typedef Image<opt,dm2> OutputImageType2D;\
-  this->RegisterOverride(\
-  typeid(RecursiveGaussianImageFilter<InputImageType2D,OutputImageType2D>).name(),\
-  typeid(GPURecursiveGaussianImageFilter<InputImageType2D,OutputImageType2D>).name(),\
-  "GPU RecursiveGaussianImageFilter Override 2D",\
-  true,\
-  CreateObjectFunction<GPURecursiveGaussianImageFilter<InputImageType2D,OutputImageType2D> >::New());\
-  typedef Image<ipt,dm3> InputImageType3D;\
-  typedef Image<opt,dm3> OutputImageType3D;\
-  this->RegisterOverride(\
-  typeid(RecursiveGaussianImageFilter<InputImageType3D,OutputImageType3D>).name(),\
-  typeid(GPURecursiveGaussianImageFilter<InputImageType3D,OutputImageType3D>).name(),\
-  "GPU RecursiveGaussianImageFilter Override 3D",\
-  true,\
-  CreateObjectFunction<GPURecursiveGaussianImageFilter<InputImageType3D,OutputImageType3D> >::New());\
+#define OverrideRecursiveGaussianImageFilterTypeMacro( ipt, opt, dm1, dm2, dm3 )                               \
+  {                                                                                                            \
+    typedef Image< ipt, dm1 > InputImageType1D;                                                                \
+    typedef Image< opt, dm1 > OutputImageType1D;                                                               \
+    this->RegisterOverride(                                                                                    \
+      typeid( RecursiveGaussianImageFilter< InputImageType1D, OutputImageType1D > ).name(),                    \
+      typeid( GPURecursiveGaussianImageFilter< InputImageType1D, OutputImageType1D > ).name(),                 \
+      "GPU RecursiveGaussianImageFilter Override 1D",                                                          \
+      true,                                                                                                    \
+      CreateObjectFunction< GPURecursiveGaussianImageFilter< InputImageType1D, OutputImageType1D > >::New() ); \
+    typedef Image< ipt, dm2 > InputImageType2D;                                                                \
+    typedef Image< opt, dm2 > OutputImageType2D;                                                               \
+    this->RegisterOverride(                                                                                    \
+      typeid( RecursiveGaussianImageFilter< InputImageType2D, OutputImageType2D > ).name(),                    \
+      typeid( GPURecursiveGaussianImageFilter< InputImageType2D, OutputImageType2D > ).name(),                 \
+      "GPU RecursiveGaussianImageFilter Override 2D",                                                          \
+      true,                                                                                                    \
+      CreateObjectFunction< GPURecursiveGaussianImageFilter< InputImageType2D, OutputImageType2D > >::New() ); \
+    typedef Image< ipt, dm3 > InputImageType3D;                                                                \
+    typedef Image< opt, dm3 > OutputImageType3D;                                                               \
+    this->RegisterOverride(                                                                                    \
+      typeid( RecursiveGaussianImageFilter< InputImageType3D, OutputImageType3D > ).name(),                    \
+      typeid( GPURecursiveGaussianImageFilter< InputImageType3D, OutputImageType3D > ).name(),                 \
+      "GPU RecursiveGaussianImageFilter Override 3D",                                                          \
+      true,                                                                                                    \
+      CreateObjectFunction< GPURecursiveGaussianImageFilter< InputImageType3D, OutputImageType3D > >::New() ); \
   }
 
   GPURecursiveGaussianImageFilterFactory()
   {
-    if( IsGPUAvailable() )
+    if ( IsGPUAvailable() )
     {
       // general types
-      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned char, unsigned char, 1, 2, 3);
+      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned char, unsigned
+      // char, 1, 2, 3);
       //OverrideRecursiveGaussianImageFilterTypeMacro(char, char, 1, 2, 3);
-      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned short, unsigned short, 1, 2, 3);
-      OverrideRecursiveGaussianImageFilterTypeMacro(short, short, 1, 2, 3);
-      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned int, unsigned int, 1, 2, 3);
+      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned short, unsigned
+      // short, 1, 2, 3);
+      OverrideRecursiveGaussianImageFilterTypeMacro( short, short, 1, 2, 3 );
+      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned int, unsigned
+      // int, 1, 2, 3);
       //OverrideRecursiveGaussianImageFilterTypeMacro(int, int, 1, 2, 3);
-      OverrideRecursiveGaussianImageFilterTypeMacro(float, float, 1, 2, 3);
+      OverrideRecursiveGaussianImageFilterTypeMacro( float, float, 1, 2, 3 );
       //OverrideRecursiveGaussianImageFilterTypeMacro(double, double, 1, 2, 3);
 
-       // type to float, float to type
-      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned char, float, 1, 2, 3);
-      //OverrideRecursiveGaussianImageFilterTypeMacro(float, unsigned char, 1, 2, 3);
+      // type to float, float to type
+      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned char, float, 1,
+      // 2, 3);
+      //OverrideRecursiveGaussianImageFilterTypeMacro(float, unsigned char, 1,
+      // 2, 3);
       //OverrideRecursiveGaussianImageFilterTypeMacro(char, float, 1, 2, 3);
       //OverrideRecursiveGaussianImageFilterTypeMacro(float, char, 1, 2, 3);
-      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned short, float, 1, 2, 3);
-      //OverrideRecursiveGaussianImageFilterTypeMacro(float, unsigned short, 1, 2, 3);
-      OverrideRecursiveGaussianImageFilterTypeMacro(short, float, 1, 2, 3);
+      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned short, float, 1,
+      // 2, 3);
+      //OverrideRecursiveGaussianImageFilterTypeMacro(float, unsigned short, 1,
+      // 2, 3);
+      OverrideRecursiveGaussianImageFilterTypeMacro( short, float, 1, 2, 3 );
       //OverrideRecursiveGaussianImageFilterTypeMacro(float, short, 1, 2, 3);
-      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned int, float, 1, 2, 3);
-      //OverrideRecursiveGaussianImageFilterTypeMacro(float, unsigned int, 1, 2, 3);
+      //OverrideRecursiveGaussianImageFilterTypeMacro(unsigned int, float, 1, 2,
+      // 3);
+      //OverrideRecursiveGaussianImageFilterTypeMacro(float, unsigned int, 1, 2,
+      // 3);
       //OverrideRecursiveGaussianImageFilterTypeMacro(int, float, 1, 2, 3);
       //OverrideRecursiveGaussianImageFilterTypeMacro(float, int, 1, 2, 3);
       //OverrideRecursiveGaussianImageFilterTypeMacro(float, double, 1, 2, 3);
@@ -201,4 +211,4 @@ private:
 #include "itkGPURecursiveGaussianImageFilter.hxx"
 #endif
 
-#endif
+#endif /* __itkGPURecursiveGaussianImageFilter_h */

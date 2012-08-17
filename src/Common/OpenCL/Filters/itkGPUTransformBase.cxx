@@ -21,7 +21,7 @@ GPUTransformBase::GPUTransformBase()
 }
 
 //------------------------------------------------------------------------------
-bool GPUTransformBase::GetSourceCode(std::string &_source) const
+bool GPUTransformBase::GetSourceCode( std::string & _source ) const
 {
   // do nothing here
   return true;

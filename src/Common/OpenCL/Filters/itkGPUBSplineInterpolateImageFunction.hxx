@@ -29,19 +29,21 @@ GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
   this->m_GPUCoefficientsImageBase = GPUDataManager::New();
 
   // Add GPUImageFunction implementation
-  const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
-  m_Sources.push_back(sourcePath0);
+  const std::string sourcePath0(
+    GPUImageFunctionKernel::GetOpenCLSource() );
+  m_Sources.push_back( sourcePath0 );
 
   // Add GPUBSplineInterpolateImageFunction implementation
-  const std::string sourcePath1(GPUBSplineInterpolateImageFunctionKernel::GetOpenCLSource());
-  m_Sources.push_back(sourcePath1);
+  const std::string sourcePath1(
+    GPUBSplineInterpolateImageFunctionKernel::GetOpenCLSource() );
+  m_Sources.push_back( sourcePath1 );
 
   m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 }
 
 //------------------------------------------------------------------------------
-template< class TInputImage, class TCoordRep , class TCoefficientType >
-void GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>
+template< class TInputImage, class TCoordRep, class TCoefficientType >
+void GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
 ::SetInputImage( const TInputImage *inputData )
 {
   Superclass::SetInputImage( inputData );
@@ -51,28 +53,32 @@ void GPUBSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType
 //------------------------------------------------------------------------------
 template< class TInputImage, class TCoordRep, class TCoefficientType >
 bool GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
-::GetSourceCode(std::string &_source) const
+::GetSourceCode( std::string & _source ) const
 {
-  if(!m_SourcesLoaded)
+  if ( !m_SourcesLoaded )
+  {
     return false;
+  }
 
   // Create the source code
   std::ostringstream source;
 
-  // Variable length array declaration not allowed in OpenCL, therefore we are using #define
+  // Variable length array declaration not allowed in OpenCL, therefore we are
+  // using #define
   source << "#define GPUBSplineOrder (" << this->m_SplineOrder << ")" << std::endl;
 
   // Calculate MaxNumberInterpolationPoints
   unsigned int maxNumberInterpolationPoints = 1;
-  for(unsigned int n = 0; n < InputImageDimension; n++)
+  for ( unsigned int n = 0; n < InputImageDimension; n++ )
   {
-    maxNumberInterpolationPoints *= (this->m_SplineOrder + 1);
+    maxNumberInterpolationPoints *= ( this->m_SplineOrder + 1 );
   }
-  // Variable length array declaration not allowed in OpenCL, therefore we are using #define
+  // Variable length array declaration not allowed in OpenCL, therefore we are
+  // using #define
   source << "#define GPUMaxNumberInterpolationPoints (" << maxNumberInterpolationPoints << ")" << std::endl;
 
   // Add other sources
-  for(std::size_t i=0; i<m_Sources.size(); i++)
+  for ( std::size_t i = 0; i < m_Sources.size(); i++ )
   {
     source << m_Sources[i] << std::endl;
   }
@@ -84,12 +90,12 @@ bool GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientTyp
 //------------------------------------------------------------------------------
 template< class TInputImage, class TCoordRep, class TCoefficientType >
 void GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType >
-::PrintSelf(std::ostream & os, Indent indent) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   //CPUSuperclass::PrintSelf(os, indent);
-  GPUSuperclass::PrintSelf(os, indent);
+  GPUSuperclass::PrintSelf( os, indent );
 }
 
-} // namespace
+} // end namespace itk
 
-#endif
+#endif /* __itkGPUBSplineInterpolateImageFunction_hxx */

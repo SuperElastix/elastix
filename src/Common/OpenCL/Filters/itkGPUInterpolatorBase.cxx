@@ -21,7 +21,7 @@ GPUInterpolatorBase::GPUInterpolatorBase()
 }
 
 //------------------------------------------------------------------------------
-bool GPUInterpolatorBase::GetSourceCode(std::string &_source) const
+bool GPUInterpolatorBase::GetSourceCode( std::string & _source ) const
 {
   // do nothing here
   return true;

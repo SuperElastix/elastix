@@ -55,25 +55,25 @@ namespace itk
 */
 
 /** Create a helper GPU Kernel class for GPUShrinkImageFilter */
-itkGPUKernelClassMacro(GPUShrinkImageFilterKernel);
+itkGPUKernelClassMacro( GPUShrinkImageFilterKernel );
 
 template< class TInputImage, class TOutputImage >
-class ITK_EXPORT GPUShrinkImageFilter
-  : public GPUImageToImageFilter< TInputImage, TOutputImage,
-  ShrinkImageFilter< TInputImage, TOutputImage > >
+class ITK_EXPORT GPUShrinkImageFilter :
+  public GPUImageToImageFilter< TInputImage, TOutputImage,
+                                ShrinkImageFilter< TInputImage, TOutputImage > >
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUShrinkImageFilter       Self;
-  typedef ShrinkImageFilter< TInputImage, TOutputImage > CPUSuperclass;
+  typedef GPUShrinkImageFilter                                              Self;
+  typedef ShrinkImageFilter< TInputImage, TOutputImage >                    CPUSuperclass;
   typedef GPUImageToImageFilter< TInputImage, TOutputImage, CPUSuperclass > GPUSuperclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef SmartPointer< Self >                                              Pointer;
+  typedef SmartPointer< const Self >                                        ConstPointer;
 
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUShrinkImageFilter, GPUSuperclass);
+  itkTypeMacro( GPUShrinkImageFilter, GPUSuperclass );
 
   /** Superclass typedefs. */
   typedef typename GPUSuperclass::OutputImageRegionType OutputImageRegionType;
@@ -92,23 +92,23 @@ public:
   typedef typename CPUSuperclass::OutputOffsetType  OutputOffsetType;
 
   /** ImageDimension constants */
-  itkStaticConstMacro(InputImageDimension, unsigned int,
-    TInputImage::ImageDimension);
-  itkStaticConstMacro(OutputImageDimension, unsigned int,
-    TOutputImage::ImageDimension);
+  itkStaticConstMacro( InputImageDimension, unsigned int,
+                       TInputImage::ImageDimension );
+  itkStaticConstMacro( OutputImageDimension, unsigned int,
+                       TOutputImage::ImageDimension );
 
 protected:
   GPUShrinkImageFilter();
-  ~GPUShrinkImageFilter(){};
+  ~GPUShrinkImageFilter(){}
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
   virtual void GPUGenerateData();
-  virtual void PrintSelf(std::ostream & os, Indent indent) const;
 
 private:
-  GPUShrinkImageFilter(const Self &);  //purposely not implemented
-  void operator=(const Self &);                   //purposely not implemented
+  GPUShrinkImageFilter( const Self & );  // purposely not implemented
+  void operator=( const Self & );        // purposely not implemented
 
-  int m_FilterGPUKernelHandle;
+  int    m_FilterGPUKernelHandle;
   size_t m_DeviceLocalMemorySize;
 };
 
@@ -118,72 +118,75 @@ private:
 class GPUShrinkImageFilterFactory : public ObjectFactoryBase
 {
 public:
-  typedef GPUShrinkImageFilterFactory  Self;
-  typedef ObjectFactoryBase                       Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef GPUShrinkImageFilterFactory Self;
+  typedef ObjectFactoryBase           Superclass;
+  typedef SmartPointer< Self >        Pointer;
+  typedef SmartPointer< const Self >  ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
-  const char* GetDescription() const { return "A Factory for GPUShrinkImageFilter"; }
+  virtual const char * GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
+  const char * GetDescription() const { return "A Factory for GPUShrinkImageFilter"; }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro(Self);
+  itkFactorylessNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUShrinkImageFilterFactory, itk::ObjectFactoryBase);
+  itkTypeMacro( GPUShrinkImageFilterFactory, itk::ObjectFactoryBase );
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory(void)
+  static void RegisterOneFactory( void )
   {
-    GPUShrinkImageFilterFactory::Pointer factory = GPUShrinkImageFilterFactory::New();
-    ObjectFactoryBase::RegisterFactory(factory);
+    GPUShrinkImageFilterFactory::Pointer factory
+      = GPUShrinkImageFilterFactory::New();
+    ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
-  GPUShrinkImageFilterFactory(const Self&); //purposely not implemented
-  void operator=(const Self&);                         //purposely not implemented
+  GPUShrinkImageFilterFactory( const Self & ); // purposely not implemented
+  void operator=( const Self & );              // purposely not implemented
 
-#define OverrideShrinkImageFilterTypeMacro(ipt,opt,dm1,dm2,dm3)\
-  {\
-  typedef Image<ipt,dm1> InputImageType1D;\
-  typedef Image<opt,dm1> OutputImageType1D;\
-  this->RegisterOverride(\
-  typeid(ShrinkImageFilter<InputImageType1D,OutputImageType1D>).name(),\
-  typeid(GPUShrinkImageFilter<InputImageType1D,OutputImageType1D>).name(),\
-  "GPU ShrinkImageFilter Override 1D",\
-  true,\
-  CreateObjectFunction<GPUShrinkImageFilter<InputImageType1D,OutputImageType1D> >::New());\
-  typedef Image<ipt,dm2> InputImageType2D;\
-  typedef Image<opt,dm2> OutputImageType2D;\
-  this->RegisterOverride(\
-  typeid(ShrinkImageFilter<InputImageType2D,OutputImageType2D>).name(),\
-  typeid(GPUShrinkImageFilter<InputImageType2D,OutputImageType2D>).name(),\
-  "GPU ShrinkImageFilter Override 2D",\
-  true,\
-  CreateObjectFunction<GPUShrinkImageFilter<InputImageType2D,OutputImageType2D> >::New());\
-  typedef Image<ipt,dm3> InputImageType3D;\
-  typedef Image<opt,dm3> OutputImageType3D;\
-  this->RegisterOverride(\
-  typeid(ShrinkImageFilter<InputImageType3D,OutputImageType3D>).name(),\
-  typeid(GPUShrinkImageFilter<InputImageType3D,OutputImageType3D>).name(),\
-  "GPU ShrinkImageFilter Override 3D",\
-  true,\
-  CreateObjectFunction<GPUShrinkImageFilter<InputImageType3D,OutputImageType3D> >::New());\
+#define OverrideShrinkImageFilterTypeMacro( ipt, opt, dm1, dm2, dm3 )                               \
+  {                                                                                                 \
+    typedef Image< ipt, dm1 > InputImageType1D;                                                     \
+    typedef Image< opt, dm1 > OutputImageType1D;                                                    \
+    this->RegisterOverride(                                                                         \
+      typeid( ShrinkImageFilter< InputImageType1D, OutputImageType1D > ).name(),                    \
+      typeid( GPUShrinkImageFilter< InputImageType1D, OutputImageType1D > ).name(),                 \
+      "GPU ShrinkImageFilter Override 1D",                                                          \
+      true,                                                                                         \
+      CreateObjectFunction< GPUShrinkImageFilter< InputImageType1D, OutputImageType1D > >::New() ); \
+    typedef Image< ipt, dm2 > InputImageType2D;                                                     \
+    typedef Image< opt, dm2 > OutputImageType2D;                                                    \
+    this->RegisterOverride(                                                                         \
+      typeid( ShrinkImageFilter< InputImageType2D, OutputImageType2D > ).name(),                    \
+      typeid( GPUShrinkImageFilter< InputImageType2D, OutputImageType2D > ).name(),                 \
+      "GPU ShrinkImageFilter Override 2D",                                                          \
+      true,                                                                                         \
+      CreateObjectFunction< GPUShrinkImageFilter< InputImageType2D, OutputImageType2D > >::New() ); \
+    typedef Image< ipt, dm3 > InputImageType3D;                                                     \
+    typedef Image< opt, dm3 > OutputImageType3D;                                                    \
+    this->RegisterOverride(                                                                         \
+      typeid( ShrinkImageFilter< InputImageType3D, OutputImageType3D > ).name(),                    \
+      typeid( GPUShrinkImageFilter< InputImageType3D, OutputImageType3D > ).name(),                 \
+      "GPU ShrinkImageFilter Override 3D",                                                          \
+      true,                                                                                         \
+      CreateObjectFunction< GPUShrinkImageFilter< InputImageType3D, OutputImageType3D > >::New() ); \
   }
 
   GPUShrinkImageFilterFactory()
   {
-    if( IsGPUAvailable() )
+    if ( IsGPUAvailable() )
     {
       // general types
-      //OverrideShrinkImageFilterTypeMacro(unsigned char, unsigned char, 1, 2, 3);
+      //OverrideShrinkImageFilterTypeMacro(unsigned char, unsigned char, 1, 2,
+      // 3);
       //OverrideShrinkImageFilterTypeMacro(char, char, 1, 2, 3);
-      //OverrideShrinkImageFilterTypeMacro(unsigned short, unsigned short, 1, 2, 3);
-      OverrideShrinkImageFilterTypeMacro(short, short, 1, 2, 3);
+      //OverrideShrinkImageFilterTypeMacro(unsigned short, unsigned short, 1, 2,
+      // 3);
+      OverrideShrinkImageFilterTypeMacro( short, short, 1, 2, 3 );
       //OverrideShrinkImageFilterTypeMacro(unsigned int, unsigned int, 1, 2, 3);
       //OverrideShrinkImageFilterTypeMacro(int, int, 1, 2, 3);
-      OverrideShrinkImageFilterTypeMacro(float, float, 1, 2, 3);
+      OverrideShrinkImageFilterTypeMacro( float, float, 1, 2, 3 );
       //OverrideShrinkImageFilterTypeMacro(double, double, 1, 2, 3);
 
       // type to float, float to type
@@ -193,7 +196,7 @@ private:
       //OverrideShrinkImageFilterTypeMacro(float, char, 1, 2, 3);
       //OverrideShrinkImageFilterTypeMacro(unsigned short, float, 1, 2, 3);
       //OverrideShrinkImageFilterTypeMacro(float, unsigned short, 1, 2, 3);
-      OverrideShrinkImageFilterTypeMacro(short, float, 1, 2, 3);
+      OverrideShrinkImageFilterTypeMacro( short, float, 1, 2, 3 );
       //OverrideShrinkImageFilterTypeMacro(float, short, 1, 2, 3);
       //OverrideShrinkImageFilterTypeMacro(unsigned int, float, 1, 2, 3);
       //OverrideShrinkImageFilterTypeMacro(float, unsigned int, 1, 2, 3);
@@ -211,4 +214,4 @@ private:
 #include "itkGPUShrinkImageFilter.hxx"
 #endif
 
-#endif
+#endif /* __itkGPUShrinkImageFilter_h */

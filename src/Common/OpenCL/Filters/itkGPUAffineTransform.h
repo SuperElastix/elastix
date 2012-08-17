@@ -21,8 +21,8 @@ namespace itk
 {
 /** \class GPUAffineTransform
  */
-template<class TScalarType = float, unsigned int NDimensions = 3,
-class TParentImageFilter = AffineTransform< TScalarType, NDimensions > >
+template< class TScalarType = float, unsigned int NDimensions = 3,
+          class TParentImageFilter = AffineTransform< TScalarType, NDimensions > >
 class GPUAffineTransform : public TParentImageFilter, public GPUTransformBase
 {
 public:
@@ -32,10 +32,10 @@ public:
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
 
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAffineTransform, TParentImageFilter);
+  itkTypeMacro( GPUAffineTransform, TParentImageFilter );
 
   /** Type of the scalar representing coordinate and vector elements. */
   typedef typename Superclass::ScalarType ScalarType;
@@ -43,22 +43,23 @@ public:
   /** Dimension of the domain space. */
   itkStaticConstMacro( InputSpaceDimension, unsigned int, NDimensions );
   itkStaticConstMacro( OutputSpaceDimension, unsigned int, NDimensions );
-  itkStaticConstMacro( ParametersDimension, unsigned int, NDimensions *( NDimensions + 1 ) );
+  itkStaticConstMacro( ParametersDimension, unsigned int, NDimensions * ( NDimensions + 1 ) );
 
 protected:
   GPUAffineTransform();
-  virtual ~GPUAffineTransform() {};
-  void PrintSelf(std::ostream &s, Indent indent) const;
+  virtual ~GPUAffineTransform() {}
+  void PrintSelf( std::ostream & s, Indent indent ) const;
 
-  virtual bool GetSourceCode(std::string &_source) const;
+  virtual bool GetSourceCode( std::string & _source ) const;
+
   virtual GPUDataManager::Pointer GetParametersDataManager() const;
 
 private:
-  GPUAffineTransform(const Self & other); // purposely not implemented
-  const Self & operator=(const Self &);   // purposely not implemented
+  GPUAffineTransform( const Self & other ); // purposely not implemented
+  const Self & operator=( const Self & );   // purposely not implemented
 
-  std::vector<std::string> m_Sources;
-  bool m_SourcesLoaded;
+  std::vector< std::string > m_Sources;
+  bool                       m_SourcesLoaded;
 };
 
 /** \class GPUAffineTransformFactory
@@ -67,53 +68,54 @@ private:
 class GPUAffineTransformFactory : public ObjectFactoryBase
 {
 public:
-  typedef GPUAffineTransformFactory Self;
-  typedef ObjectFactoryBase         Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef GPUAffineTransformFactory  Self;
+  typedef ObjectFactoryBase          Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
-  const char* GetDescription() const { return "A Factory for GPUAffineTransform"; }
+  virtual const char * GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
+  const char * GetDescription() const { return "A Factory for GPUAffineTransform"; }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro(Self);
+  itkFactorylessNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAffineTransformFactory, itk::ObjectFactoryBase);
+  itkTypeMacro( GPUAffineTransformFactory, itk::ObjectFactoryBase );
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory(void)
+  static void RegisterOneFactory( void )
   {
-    GPUAffineTransformFactory::Pointer factory = GPUAffineTransformFactory::New();
-    ObjectFactoryBase::RegisterFactory(factory);
+    GPUAffineTransformFactory::Pointer factory
+      = GPUAffineTransformFactory::New();
+    ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
-  GPUAffineTransformFactory(const Self&); // purposely not implemented
-  void operator=(const Self&);            // purposely not implemented
+  GPUAffineTransformFactory( const Self & ); // purposely not implemented
+  void operator=( const Self & );            // purposely not implemented
 
-#define OverrideAffineTransformTypeMacro(st,dm)\
-  {\
-  this->RegisterOverride(\
-  typeid(AffineTransform<st,dm>).name(),\
-  typeid(GPUAffineTransform<st,dm>).name(),\
-  "GPU AffineTransform Override",\
-  true,\
-  CreateObjectFunction<GPUAffineTransform<st,dm> >::New());\
+#define OverrideAffineTransformTypeMacro( st, dm )                   \
+  {                                                                  \
+    this->RegisterOverride(                                          \
+      typeid( AffineTransform< st, dm > ).name(),                    \
+      typeid( GPUAffineTransform< st, dm > ).name(),                 \
+      "GPU AffineTransform Override",                                \
+      true,                                                          \
+      CreateObjectFunction< GPUAffineTransform< st, dm > >::New() ); \
   }
 
   GPUAffineTransformFactory()
   {
-    if( IsGPUAvailable() )
+    if ( IsGPUAvailable() )
     {
-      OverrideAffineTransformTypeMacro(float, 1);
+      OverrideAffineTransformTypeMacro( float, 1 );
       //OverrideAffineTransformTypeMacro(double, 1);
 
-      OverrideAffineTransformTypeMacro(float, 2);
+      OverrideAffineTransformTypeMacro( float, 2 );
       //OverrideAffineTransformTypeMacro(double, 2);
 
-      OverrideAffineTransformTypeMacro(float, 3);
+      OverrideAffineTransformTypeMacro( float, 3 );
       //OverrideAffineTransformTypeMacro(double, 3);
     }
   }

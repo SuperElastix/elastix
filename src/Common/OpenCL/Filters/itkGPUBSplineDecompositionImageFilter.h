@@ -22,7 +22,6 @@
 
 namespace itk
 {
-
 /** \class GPUBSplineDecompositionImageFilter
  * \brief Calculates the B-Spline coefficients of an image. Spline order may be from 0 to 5.
  *
@@ -54,22 +53,22 @@ namespace itk
  */
 
 /** Create a helper GPU Kernel class for GPUBSplineDecompositionImageFilter */
-itkGPUKernelClassMacro(GPUBSplineDecompositionImageFilterKernel);
+itkGPUKernelClassMacro( GPUBSplineDecompositionImageFilterKernel );
 
 template< class TInputImage, class TOutputImage >
-class ITK_EXPORT GPUBSplineDecompositionImageFilter
-  : public GPUImageToImageFilter< TInputImage, TOutputImage,
-  BSplineDecompositionImageFilter< TInputImage, TOutputImage > >
+class ITK_EXPORT GPUBSplineDecompositionImageFilter :
+  public GPUImageToImageFilter< TInputImage, TOutputImage,
+                                BSplineDecompositionImageFilter< TInputImage, TOutputImage > >
 {
 public:
   /** Standard ITK-stuff. */
-  typedef GPUBSplineDecompositionImageFilter    Self;
+  typedef GPUBSplineDecompositionImageFilter Self;
   typedef BSplineDecompositionImageFilter<
-    TInputImage, TOutputImage >                 CPUSuperclass;
+      TInputImage, TOutputImage >                 CPUSuperclass;
   typedef GPUImageToImageFilter<
-    TInputImage, TOutputImage, CPUSuperclass >  GPUSuperclass;
-  typedef SmartPointer< Self >                  Pointer;
-  typedef SmartPointer< const Self >            ConstPointer;
+      TInputImage, TOutputImage, CPUSuperclass >  GPUSuperclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -91,22 +90,22 @@ public:
 
   /** ImageDimension constants */
   itkStaticConstMacro( InputImageDimension, unsigned int,
-    TInputImage::ImageDimension );
+                       TInputImage::ImageDimension );
   itkStaticConstMacro( OutputImageDimension, unsigned int,
-    TOutputImage::ImageDimension );
+                       TOutputImage::ImageDimension );
 
 protected:
   GPUBSplineDecompositionImageFilter();
-  ~GPUBSplineDecompositionImageFilter(){};
-
-  virtual void GPUGenerateData( void );
+  ~GPUBSplineDecompositionImageFilter(){}
   virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
-private:
-  GPUBSplineDecompositionImageFilter(const Self &); // purposely not implemented
-  void operator=(const Self &);                     // purposely not implemented
+  virtual void GPUGenerateData( void );
 
-  int m_FilterGPUKernelHandle;
+private:
+  GPUBSplineDecompositionImageFilter( const Self & ); // purposely not implemented
+  void operator=( const Self & );                     // purposely not implemented
+
+  int    m_FilterGPUKernelHandle;
   size_t m_DeviceLocalMemorySize;
 };
 
@@ -118,15 +117,15 @@ class GPUBSplineDecompositionImageFilterFactory : public ObjectFactoryBase
 public:
   typedef GPUBSplineDecompositionImageFilterFactory Self;
   typedef ObjectFactoryBase                         Superclass;
-  typedef SmartPointer<Self>                        Pointer;
-  typedef SmartPointer<const Self>                  ConstPointer;
+  typedef SmartPointer< Self >                      Pointer;
+  typedef SmartPointer< const Self >                ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
-  const char* GetDescription() const { return "A Factory for GPUBSplineDecompositionImageFilter"; }
+  virtual const char * GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
+  const char * GetDescription() const { return "A Factory for GPUBSplineDecompositionImageFilter"; }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro(Self);
+  itkFactorylessNewMacro( Self );
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( GPUBSplineDecompositionImageFilterFactory, itk::ObjectFactoryBase );
@@ -134,54 +133,57 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPUBSplineDecompositionImageFilterFactory::Pointer factory
-      = GPUBSplineDecompositionImageFilterFactory::New();
+    GPUBSplineDecompositionImageFilterFactory::Pointer factory =
+      GPUBSplineDecompositionImageFilterFactory::New();
     ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
-  GPUBSplineDecompositionImageFilterFactory(const Self&); //purposely not implemented
-  void operator=(const Self&);                            //purposely not implemented
+  GPUBSplineDecompositionImageFilterFactory( const Self & ); // purposely not implemented
+  void operator=( const Self & );                            // purposely not implemented
 
-#define OverrideBSplineDecompositionImageFilterTypeMacro(ipt,opt,dm1,dm2,dm3)\
-  {\
-  typedef Image<ipt,dm1> InputImageType1D;\
-  typedef Image<opt,dm1> OutputImageType1D;\
-  this->RegisterOverride(\
-  typeid(BSplineDecompositionImageFilter<InputImageType1D,OutputImageType1D>).name(),\
-  typeid(GPUBSplineDecompositionImageFilter<InputImageType1D,OutputImageType1D>).name(),\
-  "GPU BSplineDecompositionImageFilter Override 1D",\
-  true,\
-  CreateObjectFunction<GPUBSplineDecompositionImageFilter<InputImageType1D,OutputImageType1D> >::New());\
-  typedef Image<ipt,dm2> InputImageType2D;\
-  typedef Image<opt,dm2> OutputImageType2D;\
-  this->RegisterOverride(\
-  typeid(BSplineDecompositionImageFilter<InputImageType2D,OutputImageType2D>).name(),\
-  typeid(GPUBSplineDecompositionImageFilter<InputImageType2D,OutputImageType2D>).name(),\
-  "GPU BSplineDecompositionImageFilter Override 2D",\
-  true,\
-  CreateObjectFunction<GPUBSplineDecompositionImageFilter<InputImageType2D,OutputImageType2D> >::New());\
-  typedef Image<ipt,dm3> InputImageType3D;\
-  typedef Image<opt,dm3> OutputImageType3D;\
-  this->RegisterOverride(\
-  typeid(BSplineDecompositionImageFilter<InputImageType3D,OutputImageType3D>).name(),\
-  typeid(GPUBSplineDecompositionImageFilter<InputImageType3D,OutputImageType3D>).name(),\
-  "GPU BSplineDecompositionImageFilter Override 3D",\
-  true,\
-  CreateObjectFunction<GPUBSplineDecompositionImageFilter<InputImageType3D,OutputImageType3D> >::New());\
+#define OverrideBSplineDecompositionImageFilterTypeMacro( ipt, opt, dm1, dm2, dm3 )                               \
+  {                                                                                                               \
+    typedef Image< ipt, dm1 > InputImageType1D;                                                                   \
+    typedef Image< opt, dm1 > OutputImageType1D;                                                                  \
+    this->RegisterOverride(                                                                                       \
+      typeid( BSplineDecompositionImageFilter< InputImageType1D, OutputImageType1D > ).name(),                    \
+      typeid( GPUBSplineDecompositionImageFilter< InputImageType1D, OutputImageType1D > ).name(),                 \
+      "GPU BSplineDecompositionImageFilter Override 1D",                                                          \
+      true,                                                                                                       \
+      CreateObjectFunction< GPUBSplineDecompositionImageFilter< InputImageType1D, OutputImageType1D > >::New() ); \
+    typedef Image< ipt, dm2 > InputImageType2D;                                                                   \
+    typedef Image< opt, dm2 > OutputImageType2D;                                                                  \
+    this->RegisterOverride(                                                                                       \
+      typeid( BSplineDecompositionImageFilter< InputImageType2D, OutputImageType2D > ).name(),                    \
+      typeid( GPUBSplineDecompositionImageFilter< InputImageType2D, OutputImageType2D > ).name(),                 \
+      "GPU BSplineDecompositionImageFilter Override 2D",                                                          \
+      true,                                                                                                       \
+      CreateObjectFunction< GPUBSplineDecompositionImageFilter< InputImageType2D, OutputImageType2D > >::New() ); \
+    typedef Image< ipt, dm3 > InputImageType3D;                                                                   \
+    typedef Image< opt, dm3 > OutputImageType3D;                                                                  \
+    this->RegisterOverride(                                                                                       \
+      typeid( BSplineDecompositionImageFilter< InputImageType3D, OutputImageType3D > ).name(),                    \
+      typeid( GPUBSplineDecompositionImageFilter< InputImageType3D, OutputImageType3D > ).name(),                 \
+      "GPU BSplineDecompositionImageFilter Override 3D",                                                          \
+      true,                                                                                                       \
+      CreateObjectFunction< GPUBSplineDecompositionImageFilter< InputImageType3D, OutputImageType3D > >::New() ); \
   }
 
   GPUBSplineDecompositionImageFilterFactory()
   {
-    if( IsGPUAvailable() )
+    if ( IsGPUAvailable() )
     {
       // explicit type to float
-      //OverrideBSplineDecompositionImageFilterTypeMacro(unsigned char, float, 1, 2, 3);
+      //OverrideBSplineDecompositionImageFilterTypeMacro(unsigned char, float,
+      // 1, 2, 3);
       //OverrideBSplineDecompositionImageFilterTypeMacro(char, float, 1, 2, 3);
-      //OverrideBSplineDecompositionImageFilterTypeMacro(unsigned short, float, 1, 2, 3);
-      OverrideBSplineDecompositionImageFilterTypeMacro(short, float, 1, 2, 3);
-      OverrideBSplineDecompositionImageFilterTypeMacro(float, float, 1, 2, 3);
-      //OverrideBSplineDecompositionImageFilterTypeMacro(unsigned int, float, 1, 2, 3);
+      //OverrideBSplineDecompositionImageFilterTypeMacro(unsigned short, float,
+      // 1, 2, 3);
+      OverrideBSplineDecompositionImageFilterTypeMacro( short, float, 1, 2, 3 );
+      OverrideBSplineDecompositionImageFilterTypeMacro( float, float, 1, 2, 3 );
+      //OverrideBSplineDecompositionImageFilterTypeMacro(unsigned int, float, 1,
+      // 2, 3);
       //OverrideBSplineDecompositionImageFilterTypeMacro(int, float, 1, 2, 3);
     }
   }
@@ -193,4 +195,4 @@ private:
 #include "itkGPUBSplineDecompositionImageFilter.hxx"
 #endif
 
-#endif
+#endif /* __itkGPUBSplineDecompositionImageFilter_h */

@@ -22,7 +22,7 @@ namespace itk
 {
 /** \class GPUBSplineBaseTransform
 */
-template<class TScalarType = float, unsigned int NDimensions = 3>
+template< class TScalarType = float, unsigned int NDimensions = 3 >
 class ITK_EXPORT GPUBSplineBaseTransform : public GPUTransformBase
 {
 public:
@@ -30,14 +30,14 @@ public:
   typedef GPUBSplineBaseTransform Self;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUBSplineBaseTransform, Object);
+  itkTypeMacro( GPUBSplineBaseTransform, Object );
 
-  typedef GPUImage<TScalarType, NDimensions>        GPUCoefficientImageType;
+  typedef GPUImage< TScalarType, NDimensions >      GPUCoefficientImageType;
   typedef typename GPUCoefficientImageType::Pointer GPUCoefficientImagePointer;
   typedef typename GPUDataManager::Pointer          GPUDataManagerPointer;
 
-  typedef FixedArray<GPUCoefficientImagePointer, NDimensions> GPUCoefficientImageArray;
-  typedef FixedArray<GPUDataManagerPointer, NDimensions>      GPUCoefficientImageBaseArray;
+  typedef FixedArray< GPUCoefficientImagePointer, NDimensions > GPUCoefficientImageArray;
+  typedef FixedArray< GPUDataManagerPointer, NDimensions >      GPUCoefficientImageBaseArray;
 
   /** Get the GPU array of coefficient images. */
   const GPUCoefficientImageArray GetGPUCoefficientImages() const
@@ -52,15 +52,15 @@ public:
   }
 
 protected:
-  GPUBSplineBaseTransform() {};
-  virtual ~GPUBSplineBaseTransform() {};
+  GPUBSplineBaseTransform() {}
+  virtual ~GPUBSplineBaseTransform() {}
 
   GPUCoefficientImageArray     m_GPUBSplineTransformCoefficientImages;
   GPUCoefficientImageBaseArray m_GPUBSplineTransformCoefficientImagesBase;
 
 private:
-  GPUBSplineBaseTransform(const Self & other);  // purposely not implemented
-  const Self & operator=(const Self &);         // purposely not implemented
+  GPUBSplineBaseTransform( const Self & other );  // purposely not implemented
+  const Self & operator=( const Self & );         // purposely not implemented
 };
 
 } // end namespace itk

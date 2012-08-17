@@ -25,17 +25,17 @@ class ITK_EXPORT GPUTransformBase
 {
 public:
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUTransformBase, Object);
+  itkTypeMacro( GPUTransformBase, Object );
 
   /** */
-  virtual bool GetSourceCode(std::string &_source) const;
+  virtual bool GetSourceCode( std::string & _source ) const;
 
   /** */
   virtual GPUDataManager::Pointer GetParametersDataManager() const;
 
 protected:
   GPUTransformBase();
-  virtual ~GPUTransformBase() {};
+  virtual ~GPUTransformBase() {}
 
   GPUDataManager::Pointer m_ParametersDataManager;
 };

@@ -27,40 +27,42 @@ namespace itk
  */
 
 /** Create a helper GPU Kernel class for GPUBSplineInterpolateImageFunction */
-itkGPUKernelClassMacro(GPUBSplineInterpolateImageFunctionKernel);
+itkGPUKernelClassMacro( GPUBSplineInterpolateImageFunctionKernel );
 
 template< class TInputImage, class TCoordRep = float, class TCoefficientType = float >
-class ITK_EXPORT GPUBSplineInterpolateImageFunction
-  : public GPUInterpolateImageFunction< TInputImage, TCoordRep,
-  BSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType > >
+class ITK_EXPORT GPUBSplineInterpolateImageFunction :
+  public GPUInterpolateImageFunction< TInputImage, TCoordRep,
+                                      BSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType > >
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUBSplineInterpolateImageFunction  Self;
-  typedef GPUInterpolateImageFunction< TInputImage, TCoordRep,
-    BSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType > > GPUSuperclass;
-  typedef BSplineInterpolateImageFunction< TInputImage, TCoordRep,
-    BSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientType > > CPUSuperclass;
-  typedef GPUSuperclass                       Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef GPUBSplineInterpolateImageFunction Self;
+  typedef GPUInterpolateImageFunction<
+    TInputImage, TCoordRep, BSplineInterpolateImageFunction<
+    TInputImage, TCoordRep, TCoefficientType > > GPUSuperclass;
+  typedef BSplineInterpolateImageFunction<
+    TInputImage, TCoordRep, BSplineInterpolateImageFunction<
+    TInputImage, TCoordRep, TCoefficientType > > CPUSuperclass;
+  typedef GPUSuperclass              Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUBSplineInterpolateImageFunction, GPUSuperclass);
+  itkTypeMacro( GPUBSplineInterpolateImageFunction, GPUSuperclass );
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** ImageDimension constants */
-  itkStaticConstMacro(InputImageDimension, unsigned int,
-    TInputImage::ImageDimension);
+  itkStaticConstMacro( InputImageDimension, unsigned int,
+                       TInputImage::ImageDimension );
 
-  typedef GPUImage<TCoefficientType, InputImageDimension> GPUCoefficientImageType;
-  typedef typename GPUCoefficientImageType::Pointer       GPUCoefficientImagePointer;
-  typedef typename GPUDataManager::Pointer                GPUDataManagerPointer;
+  typedef GPUImage< TCoefficientType, InputImageDimension > GPUCoefficientImageType;
+  typedef typename GPUCoefficientImageType::Pointer         GPUCoefficientImagePointer;
+  typedef typename GPUDataManager::Pointer                  GPUDataManagerPointer;
 
   /** Set the input image. This must be set by the user. */
-  virtual void SetInputImage(const TInputImage *inputData);
+  virtual void SetInputImage( const TInputImage *inputData );
 
   /** Get the GPU coefficient image. */
   const GPUCoefficientImagePointer GetGPUCoefficients() const
@@ -74,24 +76,25 @@ public:
     return this->m_GPUCoefficientsImageBase;
   }
 
-  //typename CoefficientImageType::ConstPointer GetCoefficients() const {return this->m_Coefficients; };
+  //typename CoefficientImageType::ConstPointer GetCoefficients() const {return
+  // this->m_Coefficients; };
 
 protected:
   GPUBSplineInterpolateImageFunction();
   ~GPUBSplineInterpolateImageFunction() {}
-  void PrintSelf(std::ostream & os, Indent indent) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
-  virtual bool GetSourceCode(std::string &_source) const;
+  virtual bool GetSourceCode( std::string & _source ) const;
 
 private:
-  GPUBSplineInterpolateImageFunction(const Self &); //purposely not implemented
-  void operator=(const Self &);                     //purposely not implemented
+  GPUBSplineInterpolateImageFunction( const Self & ); // purposely not implemented
+  void operator=( const Self & );                     // purposely not implemented
 
-  GPUCoefficientImagePointer  m_GPUCoefficients;
-  GPUDataManagerPointer       m_GPUCoefficientsImageBase;
+  GPUCoefficientImagePointer m_GPUCoefficients;
+  GPUDataManagerPointer      m_GPUCoefficientsImageBase;
 
-  std::vector<std::string> m_Sources;
-  bool m_SourcesLoaded;
+  std::vector< std::string > m_Sources;
+  bool                       m_SourcesLoaded;
 };
 
 /** \class GPUBSplineInterpolateImageFunctionFactory
@@ -101,79 +104,95 @@ class GPUBSplineInterpolateImageFunctionFactory : public ObjectFactoryBase
 {
 public:
   typedef GPUBSplineInterpolateImageFunctionFactory Self;
-  typedef ObjectFactoryBase        Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef ObjectFactoryBase                         Superclass;
+  typedef SmartPointer< Self >                      Pointer;
+  typedef SmartPointer< const Self >                ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
-  const char* GetDescription() const { return "A Factory for GPUBSplineInterpolateImageFunction"; }
+  virtual const char * GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
+  const char * GetDescription() const { return "A Factory for GPUBSplineInterpolateImageFunction"; }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro(Self);
+  itkFactorylessNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUBSplineInterpolateImageFunctionFactory, itk::ObjectFactoryBase);
+  itkTypeMacro( GPUBSplineInterpolateImageFunctionFactory, itk::ObjectFactoryBase );
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory(void)
+  static void RegisterOneFactory( void )
   {
-    GPUBSplineInterpolateImageFunctionFactory::Pointer factory = GPUBSplineInterpolateImageFunctionFactory::New();
-    ObjectFactoryBase::RegisterFactory(factory);
+    GPUBSplineInterpolateImageFunctionFactory::Pointer
+      factory = GPUBSplineInterpolateImageFunctionFactory::New();
+    ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
-  GPUBSplineInterpolateImageFunctionFactory(const Self&); // purposely not implemented
-  void operator=(const Self&);                                    // purposely not implemented
+  GPUBSplineInterpolateImageFunctionFactory( const Self & ); // purposely not implemented
+  void operator=( const Self & );                            // purposely not implemented
 
-#define OverrideBSplineInterpolateImageFunctionTypeMacro(ipt,cr,ct,dm1,dm2,dm3)\
-  {\
-  typedef Image<ipt,dm1> InputImageType1D;\
-  this->RegisterOverride(\
-  typeid(BSplineInterpolateImageFunction<InputImageType1D,cr,ct>).name(),\
-  typeid(GPUBSplineInterpolateImageFunction<InputImageType1D,cr,ct>).name(),\
-  "GPU BSplineInterpolateImageFunction Override 1D",\
-  true,\
-  CreateObjectFunction<GPUBSplineInterpolateImageFunction<InputImageType1D,cr,ct> >::New());\
-  typedef Image<ipt,dm2> InputImageType2D;\
-  this->RegisterOverride(\
-  typeid(BSplineInterpolateImageFunction<InputImageType2D,cr,ct>).name(),\
-  typeid(GPUBSplineInterpolateImageFunction<InputImageType2D,cr,ct>).name(),\
-  "GPU BSplineInterpolateImageFunction Override 2D",\
-  true,\
-  CreateObjectFunction<GPUBSplineInterpolateImageFunction<InputImageType2D,cr,ct> >::New());\
-  typedef Image<ipt,dm3> InputImageType3D;\
-  this->RegisterOverride(\
-  typeid(BSplineInterpolateImageFunction<InputImageType3D,cr,ct>).name(),\
-  typeid(GPUBSplineInterpolateImageFunction<InputImageType3D,cr,ct>).name(),\
-  "GPU BSplineInterpolateImageFunction Override 3D",\
-  true,\
-  CreateObjectFunction<GPUBSplineInterpolateImageFunction<InputImageType3D,cr,ct> >::New());\
+#define OverrideBSplineInterpolateImageFunctionTypeMacro( ipt, cr, ct, dm1, dm2, dm3 )                 \
+  {                                                                                                    \
+    typedef Image< ipt, dm1 > InputImageType1D;                                                        \
+    this->RegisterOverride(                                                                            \
+      typeid( BSplineInterpolateImageFunction< InputImageType1D, cr, ct > ).name(),                    \
+      typeid( GPUBSplineInterpolateImageFunction< InputImageType1D, cr, ct > ).name(),                 \
+      "GPU BSplineInterpolateImageFunction Override 1D",                                               \
+      true,                                                                                            \
+      CreateObjectFunction< GPUBSplineInterpolateImageFunction< InputImageType1D, cr, ct > >::New() ); \
+    typedef Image< ipt, dm2 > InputImageType2D;                                                        \
+    this->RegisterOverride(                                                                            \
+      typeid( BSplineInterpolateImageFunction< InputImageType2D, cr, ct > ).name(),                    \
+      typeid( GPUBSplineInterpolateImageFunction< InputImageType2D, cr, ct > ).name(),                 \
+      "GPU BSplineInterpolateImageFunction Override 2D",                                               \
+      true,                                                                                            \
+      CreateObjectFunction< GPUBSplineInterpolateImageFunction< InputImageType2D, cr, ct > >::New() ); \
+    typedef Image< ipt, dm3 > InputImageType3D;                                                        \
+    this->RegisterOverride(                                                                            \
+      typeid( BSplineInterpolateImageFunction< InputImageType3D, cr, ct > ).name(),                    \
+      typeid( GPUBSplineInterpolateImageFunction< InputImageType3D, cr, ct > ).name(),                 \
+      "GPU BSplineInterpolateImageFunction Override 3D",                                               \
+      true,                                                                                            \
+      CreateObjectFunction< GPUBSplineInterpolateImageFunction< InputImageType3D, cr, ct > >::New() ); \
   }
 
   GPUBSplineInterpolateImageFunctionFactory()
   {
-    if( IsGPUAvailable() )
+    if ( IsGPUAvailable() )
     {
       // TCoordRep = float, TCoefficientType = float
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned char, float, float, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(char, float, float, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned short, float, float, 1, 2, 3);
-      OverrideBSplineInterpolateImageFunctionTypeMacro(short, float, float, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned int, float, float, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(int, float, float, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(float, float, float, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(double, float, float, 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned char, float,
+      // float, 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(char, float, float, 1,
+      // 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned short, float,
+      // float, 1, 2, 3);
+      OverrideBSplineInterpolateImageFunctionTypeMacro( short, float, float, 1, 2, 3 );
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned int, float,
+      // float, 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(int, float, float, 1,
+      // 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(float, float, float, 1,
+      // 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(double, float, float,
+      // 1, 2, 3);
 
       // TCoordRep = double, TCoefficientType = double
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned char, double, double, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(char, double, double, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned short, double, double, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(short, double, double, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned int, double, double, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(int, double, double, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(float, double, double, 1, 2, 3);
-      //OverrideBSplineInterpolateImageFunctionTypeMacro(double, double, double, 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned char, double,
+      // double, 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(char, double, double,
+      // 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned short, double,
+      // double, 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(short, double, double,
+      // 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(unsigned int, double,
+      // double, 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(int, double, double, 1,
+      // 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(float, double, double,
+      // 1, 2, 3);
+      //OverrideBSplineInterpolateImageFunctionTypeMacro(double, double, double,
+      // 1, 2, 3);
     }
   }
 };
@@ -184,4 +203,4 @@ private:
 #include "itkGPUBSplineInterpolateImageFunction.hxx"
 #endif
 
-#endif
+#endif /* __itkGPUBSplineInterpolateImageFunction_h */

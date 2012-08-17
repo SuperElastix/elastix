@@ -21,8 +21,7 @@ namespace itk
 /** \class GPUMath
  */
 /** Create a helper GPU Kernel class for itkGPUMath */
-itkGPUKernelClassMacro(GPUMathKernel);
-
+itkGPUKernelClassMacro( GPUMathKernel );
 } // end namespace itk
 
 #endif /* itkGPUMath_h */

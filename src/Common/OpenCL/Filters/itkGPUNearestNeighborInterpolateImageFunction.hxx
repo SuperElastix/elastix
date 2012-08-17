@@ -25,12 +25,14 @@ GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
 ::GPUNearestNeighborInterpolateImageFunction()
 {
   // Add GPUImageFunction implementation
-  const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
-  m_Sources.push_back(sourcePath0);
+  const std::string sourcePath0(
+    GPUImageFunctionKernel::GetOpenCLSource() );
+  m_Sources.push_back( sourcePath0 );
 
   // Add GPUNearestNeighborInterpolateImageFunction implementation
-  const std::string sourcePath1(GPUNearestNeighborInterpolateImageFunctionKernel::GetOpenCLSource());
-  m_Sources.push_back(sourcePath1);
+  const std::string sourcePath1(
+    GPUNearestNeighborInterpolateImageFunctionKernel::GetOpenCLSource() );
+  m_Sources.push_back( sourcePath1 );
 
   m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 }
@@ -38,14 +40,16 @@ GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
 //------------------------------------------------------------------------------
 template< class TInputImage, class TCoordRep >
 bool GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
-::GetSourceCode(std::string &_source) const
+::GetSourceCode( std::string & _source ) const
 {
-  if(!m_SourcesLoaded)
+  if ( !m_SourcesLoaded )
+  {
     return false;
+  }
 
   // Create the source code
   std::ostringstream source;
-  for(std::size_t i=0; i<m_Sources.size(); i++)
+  for ( std::size_t i = 0; i < m_Sources.size(); i++ )
   {
     source << m_Sources[i] << std::endl;
   }
@@ -57,12 +61,12 @@ bool GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
 //------------------------------------------------------------------------------
 template< class TInputImage, class TCoordRep >
 void GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
-::PrintSelf(std::ostream & os, Indent indent) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  CPUSuperclass::PrintSelf(os, indent);
-  GPUSuperclass::PrintSelf(os, indent);
+  CPUSuperclass::PrintSelf( os, indent );
+  GPUSuperclass::PrintSelf( os, indent );
 }
 
-} // namespace
+} // end namespace itk
 
-#endif
+#endif /* __itkGPUNearestNeighborInterpolateImageFunction_hxx */

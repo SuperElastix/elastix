@@ -21,8 +21,8 @@ namespace itk
 {
 /** \class GPUAdvancedCombinationTransform
  */
-template<class TScalarType = float, unsigned int NDimensions = 3,
-class TParentImageFilter = AdvancedCombinationTransform< TScalarType, NDimensions > >
+template< class TScalarType = float, unsigned int NDimensions = 3,
+          class TParentImageFilter = AdvancedCombinationTransform< TScalarType, NDimensions > >
 class GPUAdvancedCombinationTransform : public TParentImageFilter, public GPUTransformBase
 {
 public:
@@ -32,10 +32,10 @@ public:
   typedef SmartPointer< Self >            Pointer;
   typedef SmartPointer< const Self >      ConstPointer;
 
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAdvancedCombinationTransform, TParentImageFilter);
+  itkTypeMacro( GPUAdvancedCombinationTransform, TParentImageFilter );
 
   /** Type of the scalar representing coordinate and vector elements. */
   typedef typename Superclass::ScalarType ScalarType;
@@ -46,18 +46,19 @@ public:
 
 protected:
   GPUAdvancedCombinationTransform();
-  virtual ~GPUAdvancedCombinationTransform() {};
-  void PrintSelf(std::ostream &s, Indent indent) const;
+  virtual ~GPUAdvancedCombinationTransform() {}
+  void PrintSelf( std::ostream & s, Indent indent ) const;
 
-  virtual bool GetSourceCode(std::string &_source) const;
+  virtual bool GetSourceCode( std::string & _source ) const;
+
   virtual GPUDataManager::Pointer GetParametersDataManager() const;
 
 private:
-  GPUAdvancedCombinationTransform(const Self & other); // purposely not implemented
-  const Self & operator=(const Self &);   // purposely not implemented
+  GPUAdvancedCombinationTransform( const Self & other ); // purposely not implemented
+  const Self & operator=( const Self & );                // purposely not implemented
 
-  std::vector<std::string> m_Sources;
-  bool m_SourcesLoaded;
+  std::vector< std::string > m_Sources;
+  bool                       m_SourcesLoaded;
 };
 
 /** \class GPUAdvancedCombinationTransformFactory
@@ -67,57 +68,57 @@ class GPUAdvancedCombinationTransformFactory : public ObjectFactoryBase
 {
 public:
   typedef GPUAdvancedCombinationTransformFactory Self;
-  typedef ObjectFactoryBase         Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef ObjectFactoryBase                      Superclass;
+  typedef SmartPointer< Self >                   Pointer;
+  typedef SmartPointer< const Self >             ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
-  const char* GetDescription() const { return "A Factory for GPUAdvancedCombinationTransform"; }
+  virtual const char * GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
+  const char * GetDescription() const { return "A Factory for GPUAdvancedCombinationTransform"; }
 
   /** Method for class instantiation. */
-  itkFactorylessNewMacro(Self);
+  itkFactorylessNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAdvancedCombinationTransformFactory, itk::ObjectFactoryBase);
+  itkTypeMacro( GPUAdvancedCombinationTransformFactory, itk::ObjectFactoryBase );
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory(void)
+  static void RegisterOneFactory( void )
   {
-    GPUAdvancedCombinationTransformFactory::Pointer factory = GPUAdvancedCombinationTransformFactory::New();
-    ObjectFactoryBase::RegisterFactory(factory);
+    GPUAdvancedCombinationTransformFactory::Pointer factory
+      = GPUAdvancedCombinationTransformFactory::New();
+    ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
-  GPUAdvancedCombinationTransformFactory(const Self&); // purposely not implemented
-  void operator=(const Self&);            // purposely not implemented
+  GPUAdvancedCombinationTransformFactory( const Self & ); // purposely not implemented
+  void operator=( const Self & );                         // purposely not implemented
 
-#define OverrideAdvancedCombinationTransformTypeMacro(st,dm)\
-  {\
-  this->RegisterOverride(\
-  typeid(AdvancedCombinationTransform<st,dm>).name(),\
-  typeid(GPUAdvancedCombinationTransform<st,dm>).name(),\
-  "GPU AdvancedCombinationTransform Override",\
-  true,\
-  CreateObjectFunction<GPUAdvancedCombinationTransform<st,dm> >::New());\
+#define OverrideAdvancedCombinationTransformTypeMacro( st, dm )                   \
+  {                                                                               \
+    this->RegisterOverride(                                                       \
+      typeid( AdvancedCombinationTransform< st, dm > ).name(),                    \
+      typeid( GPUAdvancedCombinationTransform< st, dm > ).name(),                 \
+      "GPU AdvancedCombinationTransform Override",                                \
+      true,                                                                       \
+      CreateObjectFunction< GPUAdvancedCombinationTransform< st, dm > >::New() ); \
   }
 
   GPUAdvancedCombinationTransformFactory()
   {
-    if( IsGPUAvailable() )
+    if ( IsGPUAvailable() )
     {
-      OverrideAdvancedCombinationTransformTypeMacro(float, 1);
+      OverrideAdvancedCombinationTransformTypeMacro( float, 1 );
       //OverrideAdvancedCombinationTransformTypeMacro(double, 1);
 
-      OverrideAdvancedCombinationTransformTypeMacro(float, 2);
+      OverrideAdvancedCombinationTransformTypeMacro( float, 2 );
       //OverrideAdvancedCombinationTransformTypeMacro(double, 2);
 
-      OverrideAdvancedCombinationTransformTypeMacro(float, 3);
+      OverrideAdvancedCombinationTransformTypeMacro( float, 3 );
       //OverrideAdvancedCombinationTransformTypeMacro(double, 3);
     }
   }
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

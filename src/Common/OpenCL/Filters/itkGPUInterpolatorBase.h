@@ -25,17 +25,17 @@ class ITK_EXPORT GPUInterpolatorBase
 {
 public:
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUInterpolatorBase, Object);
+  itkTypeMacro( GPUInterpolatorBase, Object );
 
   /** */
-  virtual bool GetSourceCode(std::string &_source) const;
+  virtual bool GetSourceCode( std::string & _source ) const;
 
   /** */
   virtual GPUDataManager::Pointer GetParametersDataManager() const;
 
 protected:
   GPUInterpolatorBase();
-  virtual ~GPUInterpolatorBase() {};
+  virtual ~GPUInterpolatorBase() {}
 
   GPUDataManager::Pointer m_ParametersDataManager;
 };

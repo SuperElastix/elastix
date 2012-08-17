@@ -18,31 +18,31 @@
 
 namespace itk
 {
-  //------------------------------------------------------------------------------
-  // GPU explicit synchronization helper function
-  template<class ImageToImageFilterType, class OutputImageType>
-  void GPUExplicitSync(typename ImageToImageFilterType::Pointer &filter,
-    const bool filterUpdate = true,
-    const bool releaseGPUMemory = false)
+//------------------------------------------------------------------------------
+// GPU explicit synchronization helper function
+template< class ImageToImageFilterType, class OutputImageType >
+void GPUExplicitSync( typename ImageToImageFilterType::Pointer & filter,
+                      const bool filterUpdate = true,
+                      const bool releaseGPUMemory = false )
+{
+  if ( filterUpdate )
   {
-    if(filterUpdate)
-    {
-      filter->Update();
-    }
+    filter->Update();
+  }
 
-    typedef typename OutputImageType::PixelType OutputImagePixelType;
-    typedef GPUImage<OutputImagePixelType, OutputImageType::ImageDimension> GPUOutputImageType;
-    GPUOutputImageType *GPUOutput = dynamic_cast<GPUOutputImageType *>(filter->GetOutput());
-    if(GPUOutput)
-    {
-      GPUOutput->UpdateBuffers();
-    }
+  typedef typename OutputImageType::PixelType                               OutputImagePixelType;
+  typedef GPUImage< OutputImagePixelType, OutputImageType::ImageDimension > GPUOutputImageType;
+  GPUOutputImageType *GPUOutput = dynamic_cast< GPUOutputImageType * >( filter->GetOutput() );
+  if ( GPUOutput )
+  {
+    GPUOutput->UpdateBuffers();
+  }
 
-    if(releaseGPUMemory)
-    {
-      GPUOutput->GetGPUDataManager()->Initialize();
-    }
+  if ( releaseGPUMemory )
+  {
+    GPUOutput->GetGPUDataManager()->Initialize();
   }
 }
+}
 
-#endif // end #ifndef __LoggerHelper_h
+#endif /* __itkGPUExplicitSynchronization_h */

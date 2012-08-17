@@ -32,7 +32,6 @@ namespace itk
  */
 namespace Functor
 {
-
 template< class TInput, class TOutput >
 class GPUCast : public GPUFunctorBase
 {
@@ -51,29 +50,29 @@ public:
 } // end of namespace Functor
 
 /** Create a helper GPU Kernel class for GPUCastImageFilter */
-itkGPUKernelClassMacro(GPUCastImageFilterKernel);
+itkGPUKernelClassMacro( GPUCastImageFilterKernel );
 
 /** GPUCastImageFilter class definition */
 template< class TInputImage, class TOutputImage >
-class ITK_EXPORT GPUCastImageFilter
-  : public GPUUnaryFunctorImageFilter<
+class ITK_EXPORT GPUCastImageFilter :
+  public GPUUnaryFunctorImageFilter<
     TInputImage, TOutputImage,
     Functor::GPUCast< typename TInputImage::PixelType,
                       typename TOutputImage::PixelType >,
-    CastImageFilter<TInputImage, TOutputImage> >
+    CastImageFilter< TInputImage, TOutputImage > >
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUCastImageFilter                          Self;
+  typedef GPUCastImageFilter Self;
   typedef GPUUnaryFunctorImageFilter<
-    TInputImage, TOutputImage,
-    Functor::GPUCast<
-    typename TInputImage::PixelType,
-    typename TOutputImage::PixelType >,
-    CastImageFilter<TInputImage, TOutputImage> >      GPUSuperclass;
-  typedef CastImageFilter<TInputImage, TOutputImage>  CPUSuperclass;
-  typedef SmartPointer< Self >                        Pointer;
-  typedef SmartPointer< const Self >                  ConstPointer;
+      TInputImage, TOutputImage,
+      Functor::GPUCast<
+        typename TInputImage::PixelType,
+        typename TOutputImage::PixelType >,
+      CastImageFilter< TInputImage, TOutputImage > >   GPUSuperclass;
+  typedef CastImageFilter< TInputImage, TOutputImage > CPUSuperclass;
+  typedef SmartPointer< Self >                         Pointer;
+  typedef SmartPointer< const Self >                   ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -97,24 +96,25 @@ protected:
   virtual void GPUGenerateData( void );
 
 private:
-  GPUCastImageFilter(const Self &); // purposely not implemented
-  void operator=(const Self &);     // purposely not implemented
+  GPUCastImageFilter( const Self & ); // purposely not implemented
+  void operator=( const Self & );     // purposely not implemented
 };
 
 /** Object Factory implementation for GPUCastImageFilter */
 class GPUCastImageFilterFactory : public ObjectFactoryBase
 {
 public:
-  typedef GPUCastImageFilterFactory Self;
-  typedef ObjectFactoryBase         Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef GPUCastImageFilterFactory  Self;
+  typedef ObjectFactoryBase          Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const
+  virtual const char * GetITKSourceVersion() const
   {
     return ITK_SOURCE_VERSION;
   }
+
   const char * GetDescription() const
   {
     return "A Factory for GPUCastImageFilter";
@@ -129,84 +129,85 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPUCastImageFilterFactory::Pointer factory = GPUCastImageFilterFactory::New();
+    GPUCastImageFilterFactory::Pointer factory
+      = GPUCastImageFilterFactory::New();
     itk::ObjectFactoryBase::RegisterFactory( factory );
   }
 
 private:
-  GPUCastImageFilterFactory(const Self&); // purposely not implemented
-  void operator=(const Self&);            // purposely not implemented
+  GPUCastImageFilterFactory( const Self & ); // purposely not implemented
+  void operator=( const Self & );            // purposely not implemented
 
 // Override default
-#define OverrideCastFilterTypeMacro(ipt,opt,dm1,dm2,dm3) \
-  { \
-  typedef itk::Image<ipt,dm1> InputImageType1D; \
-  typedef itk::Image<opt,dm1> OutputImageType1D; \
-  this->RegisterOverride( \
-  typeid(itk::CastImageFilter<InputImageType1D,OutputImageType1D>).name(), \
-  typeid(itk::GPUCastImageFilter<InputImageType1D,OutputImageType1D>).name(), \
-  "GPU Cast Image Filter Override 1D", \
-  true, \
-  itk::CreateObjectFunction<GPUCastImageFilter<InputImageType1D,OutputImageType1D> >::New() ); \
-  typedef itk::Image<ipt,dm2> InputImageType2D; \
-  typedef itk::Image<opt,dm2> OutputImageType2D; \
-  this->RegisterOverride( \
-  typeid(itk::CastImageFilter<InputImageType2D,OutputImageType2D>).name(), \
-  typeid(itk::GPUCastImageFilter<InputImageType2D,OutputImageType2D>).name(), \
-  "GPU Cast Image Filter Override 2D", \
-  true, \
-  itk::CreateObjectFunction<GPUCastImageFilter<InputImageType2D,OutputImageType2D> >::New() ); \
-  typedef itk::Image<ipt,dm3> InputImageType3D; \
-  typedef itk::Image<opt,dm3> OutputImageType3D; \
-  this->RegisterOverride( \
-  typeid(itk::CastImageFilter<InputImageType3D,OutputImageType3D>).name(), \
-  typeid(itk::GPUCastImageFilter<InputImageType3D,OutputImageType3D>).name(), \
-  "GPU Cast Image Filter Override 3D", \
-  true, \
-  itk::CreateObjectFunction<GPUCastImageFilter<InputImageType3D,OutputImageType3D> >::New() ); \
+#define OverrideCastFilterTypeMacro( ipt, opt, dm1, dm2, dm3 )                                         \
+  {                                                                                                    \
+    typedef itk::Image< ipt, dm1 > InputImageType1D;                                                   \
+    typedef itk::Image< opt, dm1 > OutputImageType1D;                                                  \
+    this->RegisterOverride(                                                                            \
+      typeid( itk::CastImageFilter< InputImageType1D, OutputImageType1D > ).name(),                    \
+      typeid( itk::GPUCastImageFilter< InputImageType1D, OutputImageType1D > ).name(),                 \
+      "GPU Cast Image Filter Override 1D",                                                             \
+      true,                                                                                            \
+      itk::CreateObjectFunction< GPUCastImageFilter< InputImageType1D, OutputImageType1D > >::New() ); \
+    typedef itk::Image< ipt, dm2 > InputImageType2D;                                                   \
+    typedef itk::Image< opt, dm2 > OutputImageType2D;                                                  \
+    this->RegisterOverride(                                                                            \
+      typeid( itk::CastImageFilter< InputImageType2D, OutputImageType2D > ).name(),                    \
+      typeid( itk::GPUCastImageFilter< InputImageType2D, OutputImageType2D > ).name(),                 \
+      "GPU Cast Image Filter Override 2D",                                                             \
+      true,                                                                                            \
+      itk::CreateObjectFunction< GPUCastImageFilter< InputImageType2D, OutputImageType2D > >::New() ); \
+    typedef itk::Image< ipt, dm3 > InputImageType3D;                                                   \
+    typedef itk::Image< opt, dm3 > OutputImageType3D;                                                  \
+    this->RegisterOverride(                                                                            \
+      typeid( itk::CastImageFilter< InputImageType3D, OutputImageType3D > ).name(),                    \
+      typeid( itk::GPUCastImageFilter< InputImageType3D, OutputImageType3D > ).name(),                 \
+      "GPU Cast Image Filter Override 3D",                                                             \
+      true,                                                                                            \
+      itk::CreateObjectFunction< GPUCastImageFilter< InputImageType3D, OutputImageType3D > >::New() ); \
   }
 
 // Override when itkGPUImage is second template argument
-#define OverrideCastFilterGPUOutTypeMacro(ipt,opt,dm1,dm2,dm3) \
-  { \
-  typedef itk::Image<ipt,dm1> InputImageType1D; \
-  typedef itk::GPUImage<opt,dm1> GPUOutputImageType1D; \
-  this->RegisterOverride( \
-  typeid(itk::CastImageFilter<InputImageType1D,GPUOutputImageType1D>).name(), \
-  typeid(itk::GPUCastImageFilter<InputImageType1D,GPUOutputImageType1D>).name(), \
-  "GPU Cast Image Filter Override 1D", \
-  true, \
-  itk::CreateObjectFunction<GPUCastImageFilter<InputImageType1D,GPUOutputImageType1D> >::New() ); \
-  typedef itk::Image<ipt,dm2> InputImageType2D; \
-  typedef itk::GPUImage<opt,dm2> GPUOutputImageType2D; \
-  this->RegisterOverride( \
-  typeid(itk::CastImageFilter<InputImageType2D,GPUOutputImageType2D>).name(), \
-  typeid(itk::GPUCastImageFilter<InputImageType2D,GPUOutputImageType2D>).name(), \
-  "GPU Cast Image Filter Override 2D", \
-  true, \
-  itk::CreateObjectFunction<GPUCastImageFilter<InputImageType2D,GPUOutputImageType2D> >::New() ); \
-  typedef itk::Image<ipt,dm3> InputImageType3D; \
-  typedef itk::GPUImage<opt,dm3> GPUOutputImageType3D; \
-  this->RegisterOverride( \
-  typeid(itk::CastImageFilter<InputImageType3D,GPUOutputImageType3D>).name(), \
-  typeid(itk::GPUCastImageFilter<InputImageType3D,GPUOutputImageType3D>).name(), \
-  "GPU Cast Image Filter Override 3D", \
-  true, \
-  itk::CreateObjectFunction<GPUCastImageFilter<InputImageType3D,GPUOutputImageType3D> >::New() ); \
+#define OverrideCastFilterGPUOutTypeMacro( ipt, opt, dm1, dm2, dm3 )                                      \
+  {                                                                                                       \
+    typedef itk::Image< ipt, dm1 >    InputImageType1D;                                                   \
+    typedef itk::GPUImage< opt, dm1 > GPUOutputImageType1D;                                               \
+    this->RegisterOverride(                                                                               \
+      typeid( itk::CastImageFilter< InputImageType1D, GPUOutputImageType1D > ).name(),                    \
+      typeid( itk::GPUCastImageFilter< InputImageType1D, GPUOutputImageType1D > ).name(),                 \
+      "GPU Cast Image Filter Override 1D",                                                                \
+      true,                                                                                               \
+      itk::CreateObjectFunction< GPUCastImageFilter< InputImageType1D, GPUOutputImageType1D > >::New() ); \
+    typedef itk::Image< ipt, dm2 >    InputImageType2D;                                                   \
+    typedef itk::GPUImage< opt, dm2 > GPUOutputImageType2D;                                               \
+    this->RegisterOverride(                                                                               \
+      typeid( itk::CastImageFilter< InputImageType2D, GPUOutputImageType2D > ).name(),                    \
+      typeid( itk::GPUCastImageFilter< InputImageType2D, GPUOutputImageType2D > ).name(),                 \
+      "GPU Cast Image Filter Override 2D",                                                                \
+      true,                                                                                               \
+      itk::CreateObjectFunction< GPUCastImageFilter< InputImageType2D, GPUOutputImageType2D > >::New() ); \
+    typedef itk::Image< ipt, dm3 >    InputImageType3D;                                                   \
+    typedef itk::GPUImage< opt, dm3 > GPUOutputImageType3D;                                               \
+    this->RegisterOverride(                                                                               \
+      typeid( itk::CastImageFilter< InputImageType3D, GPUOutputImageType3D > ).name(),                    \
+      typeid( itk::GPUCastImageFilter< InputImageType3D, GPUOutputImageType3D > ).name(),                 \
+      "GPU Cast Image Filter Override 3D",                                                                \
+      true,                                                                                               \
+      itk::CreateObjectFunction< GPUCastImageFilter< InputImageType3D, GPUOutputImageType3D > >::New() ); \
   }
 
   GPUCastImageFilterFactory()
   {
-    if( IsGPUAvailable() )
+    if ( IsGPUAvailable() )
     {
       // general types
       //OverrideCastFilterTypeMacro(unsigned char, unsigned char, 1, 2, 3);
       //OverrideCastFilterTypeMacro(char, char, 1, 2, 3);
       //OverrideCastFilterTypeMacro(unsigned short, unsigned short, 1, 2, 3);
-      OverrideCastFilterTypeMacro(short, short, 1, 2, 3);
+      OverrideCastFilterTypeMacro( short, short, 1, 2, 3 );
       //OverrideCastFilterTypeMacro(unsigned int, unsigned int, 1, 2, 3);
       //OverrideCastFilterTypeMacro(int, int, 1, 2, 3);
-      OverrideCastFilterTypeMacro(float, float, 1, 2, 3);
+      OverrideCastFilterTypeMacro( float, float, 1, 2, 3 );
       //OverrideCastFilterTypeMacro(double, double, 1, 2, 3);
 
       // type to float, float to type
@@ -225,10 +226,10 @@ private:
       //OverrideCastFilterGPUOutTypeMacro(unsigned short, float, 1, 2, 3);
       //OverrideCastFilterGPUOutTypeMacro(float, unsigned short, 1, 2, 3);
 
-      OverrideCastFilterTypeMacro(short, float, 1, 2, 3);
-      OverrideCastFilterTypeMacro(float, short, 1, 2, 3);
-      OverrideCastFilterGPUOutTypeMacro(short, float, 1, 2, 3);
-      OverrideCastFilterGPUOutTypeMacro(float, short, 1, 2, 3);
+      OverrideCastFilterTypeMacro( short, float, 1, 2, 3 );
+      OverrideCastFilterTypeMacro( float, short, 1, 2, 3 );
+      OverrideCastFilterGPUOutTypeMacro( short, float, 1, 2, 3 );
+      OverrideCastFilterGPUOutTypeMacro( float, short, 1, 2, 3 );
 
       //OverrideCastFilterTypeMacro(unsigned int, float, 1, 2, 3);
       //OverrideCastFilterTypeMacro(float, unsigned int, 1, 2, 3);
@@ -240,10 +241,10 @@ private:
       //OverrideCastFilterGPUOutTypeMacro(int, float, 1, 2, 3);
       //OverrideCastFilterGPUOutTypeMacro(float, int, 1, 2, 3);
 
-      OverrideCastFilterTypeMacro(double, float, 1, 2, 3);
-      OverrideCastFilterTypeMacro(float, double, 1, 2, 3);
-      OverrideCastFilterGPUOutTypeMacro(double, float, 1, 2, 3);
-      OverrideCastFilterGPUOutTypeMacro(float ,double, 1, 2, 3);
+      OverrideCastFilterTypeMacro( double, float, 1, 2, 3 );
+      OverrideCastFilterTypeMacro( float, double, 1, 2, 3 );
+      OverrideCastFilterGPUOutTypeMacro( double, float, 1, 2, 3 );
+      OverrideCastFilterGPUOutTypeMacro( float, double, 1, 2, 3 );
     }
   }
 };
@@ -254,4 +255,4 @@ private:
 #include "itkGPUCastImageFilter.hxx"
 #endif
 
-#endif
+#endif /* __itkGPUCastImageFilter_h */

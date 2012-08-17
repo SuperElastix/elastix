@@ -22,9 +22,9 @@ namespace itk
 /** \class GPUInterpolateImageFunction
  */
 template< class TInputImage, class TCoordRep = float, class TParentImageFilter =
-  InterpolateImageFunction< TInputImage, TCoordRep > >
-class ITK_EXPORT GPUInterpolateImageFunction
-  : public TParentImageFilter, public GPUInterpolatorBase
+          InterpolateImageFunction< TInputImage, TCoordRep > >
+class ITK_EXPORT GPUInterpolateImageFunction :
+  public TParentImageFilter, public GPUInterpolatorBase
 {
 public:
   /** Standard class typedefs. */
@@ -34,11 +34,11 @@ public:
   typedef SmartPointer< const Self >  ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUInterpolateImageFunction, TParentImageFilter);
+  itkTypeMacro( GPUInterpolateImageFunction, TParentImageFilter );
 
   /** ImageDimension constants */
-  itkStaticConstMacro(InputImageDimension, unsigned int,
-    TInputImage::ImageDimension);
+  itkStaticConstMacro( InputImageDimension, unsigned int,
+                       TInputImage::ImageDimension );
 
   /** InputImageType typedef support. */
   typedef typename Superclass::InputImageType InputImageType;
@@ -49,13 +49,13 @@ public:
 protected:
   GPUInterpolateImageFunction();
   ~GPUInterpolateImageFunction() {}
-  void PrintSelf(std::ostream & os, Indent indent) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   virtual GPUDataManager::Pointer GetParametersDataManager() const;
 
 private:
-  GPUInterpolateImageFunction(const Self &); //purposely not implemented
-  void operator=(const Self &);              //purposely not implemented
+  GPUInterpolateImageFunction( const Self & ); // purposely not implemented
+  void operator=( const Self & );              // purposely not implemented
 };
 
 } // end namespace itk
@@ -64,4 +64,4 @@ private:
 #include "itkGPUInterpolateImageFunction.hxx"
 #endif
 
-#endif
+#endif /* __itkGPUInterpolateImageFunction_h */

@@ -25,12 +25,14 @@ GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >::GPUIdentit
 {
   // Add GPUMatrixOffsetTransformBase header
   std::string sname = "GPUMatrixOffsetTransformBase header";
-  const std::string sourcePath0(GPUMatrixOffsetTransformBaseHeaderKernel::GetOpenCLSource());
-  m_Sources.push_back(sourcePath0);
+  const std::string sourcePath0(
+    GPUMatrixOffsetTransformBaseHeaderKernel::GetOpenCLSource() );
+  m_Sources.push_back( sourcePath0 );
 
   // Add GPUIdentityTransform source
-  const std::string sourcePath1(GPUIdentityTransformKernel::GetOpenCLSource());
-  m_Sources.push_back(sourcePath1);
+  const std::string sourcePath1(
+    GPUIdentityTransformKernel::GetOpenCLSource() );
+  m_Sources.push_back( sourcePath1 );
 
   m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 }
@@ -38,14 +40,16 @@ GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >::GPUIdentit
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 bool GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >
-::GetSourceCode(std::string &_source) const
+::GetSourceCode( std::string & _source ) const
 {
-  if(!m_SourcesLoaded)
+  if ( !m_SourcesLoaded )
+  {
     return false;
+  }
 
   // Create the final source code
   std::ostringstream source;
-  for(unsigned int i=0; i<m_Sources.size(); i++)
+  for ( unsigned int i = 0; i < m_Sources.size(); i++ )
   {
     source << m_Sources[i] << std::endl;
   }
@@ -56,11 +60,11 @@ bool GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 void GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >
-::PrintSelf(std::ostream & os, Indent indent) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  Superclass::PrintSelf(os, indent);
+  Superclass::PrintSelf( os, indent );
 }
 
-} // namespace
+} // end namespace itk
 
-#endif
+#endif /* __itkGPUIdentityTransform_hxx */

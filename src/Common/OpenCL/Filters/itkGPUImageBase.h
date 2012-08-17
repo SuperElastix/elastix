@@ -21,8 +21,7 @@ namespace itk
 /** \class GPUImageBase
  */
 /** Create a helper GPU Kernel class for itkGPUImageBase */
-itkGPUKernelClassMacro(GPUImageBaseKernel);
-
+itkGPUKernelClassMacro( GPUImageBaseKernel );
 } // end namespace itk
 
 #endif /* itkGPUImageBase_h */
