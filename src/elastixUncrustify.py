@@ -13,18 +13,18 @@ from optparse import OptionParser
 # Execute this script without any option to create preview directory
 # called '_beautiful_code'. To apply Uncrustify directly to the code use
 # option '-a'. Including and excluding files and directories could be also
-# indicated, see options. 
+# indicated, see options.
 def main():
     # usage, parse parameters
     usage = "usage: %prog [options] arg"
     parser = OptionParser( usage )
 
     # option to debug and verbose
-    parser.add_option( "-d", "--debug", action="store_true", dest="debug", 
+    parser.add_option( "-d", "--debug", action="store_true", dest="debug",
                        default=False, help="debug commands calls" )
-    parser.add_option( "-v", "--verbose", action="store_true", 
+    parser.add_option( "-v", "--verbose", action="store_true",
                        default=False, dest="verbose", help="verbose" )
-    parser.add_option( "-q", "--quiet", action="store_true", 
+    parser.add_option( "-q", "--quiet", action="store_true",
                        default=False, dest="quiet", help="quiet mode for uncrustify" )
 
     # user defined uncrustify configuration file
@@ -34,17 +34,17 @@ def main():
     # options to control files. use -o output1 not -o c:\\temp
     parser.add_option( "-o", "--output", dest="output_directory",
                        default="_beautiful_code", help="relative uncrustify output directory" )
-    
+
     # include regex, use syntax -i "value1 value2" NOT -i value1 value2
-    parser.add_option( "-i", "--include-regex", dest="include", 
+    parser.add_option( "-i", "--include-regex", dest="include",
                        type="string", help="include files matching regular expression" )
-    
-    # exclude regex, use syntax -e "value1 value2" NOT -e value1 value2    
-    parser.add_option( "-e", "--exclude-regex", dest="exclude", 
+
+    # exclude regex, use syntax -e "value1 value2" NOT -e value1 value2
+    parser.add_option( "-e", "--exclude-regex", dest="exclude",
                        help="exclude files matching regular expression" )
 
     # apply directly to the code, has to be confirmed
-    parser.add_option( "-a", "--apply", action="store_true", default=False, 
+    parser.add_option( "-a", "--apply", action="store_true", default=False,
                        dest="apply", help="apply uncrustify directly to the svn files" )
 
     (options, args) = parser.parse_args();
@@ -54,15 +54,15 @@ def main():
         answer = query_yes_no("WARNING: Do you want to apply Uncrustify directly to the code?")
         if answer == False:
             return 0
-    
-    # get include and exclude options as lists    
+
+    # get include and exclude options as lists
     include_list = None
     exclude_list = None
     if options.include != None:
         include_list = options.include.split(" ")
     if options.exclude != None:
         exclude_list = options.exclude.split(" ")
-    
+
     # check for contradictory options
     if options.include != None and options.exclude != None:
         for include in include_list:
@@ -70,7 +70,7 @@ def main():
                 if include == exclude:
                     print "ERROR: The contradictory options provided -i %s -e %s." % (include, exclude)
                     return 1
-    
+
     # support for other uncrustify configuration file
     app_uncrustify_cfg_file_name = ""
     if options.config == None:
@@ -78,7 +78,7 @@ def main():
     else:
         app_uncrustify_cfg_file_name = options.config
         print "WARNING: Using other uncrustify configuration file '%s'" % app_uncrustify_cfg_file_name
-    
+
     # uncrustify executable
     uncrustify_exe_name = ""
 
@@ -93,14 +93,14 @@ def main():
     else:
         print "ERROR: unable to detect system type."
         return 1
-    
+
     # list of valid C++ extensions and top directories
     src_valid_cxx_extensions = {".h", ".cpp", ".cxx", ".hxx", ".txx"} # not .in.h
     src_top_dirs = ["Common", "Components", "Core", "Testing"]
 
     # current directory
     current_dir = os.getcwd()
-    
+
     # check that uncrustify executable end configuration file exist
     app_uncrustify_cfg_file = os.path.join(current_dir, app_uncrustify_cfg_file_name)
     if os.access(app_uncrustify_cfg_file, os.F_OK) == False:
@@ -113,7 +113,7 @@ def main():
 
     # create files list for uncrustify and place it in the output directory
     output_dir = os.path.join(current_dir, options.output_directory)
-    if options.apply == False:    
+    if options.apply == False:
         create_dir(output_dir, options)
 
     # files list for uncrustify option -F:
@@ -275,13 +275,13 @@ def get_system_name():
 def file_valid(file, include_list, exclude_list, elx_extensions):
     # check exclude
     if exclude_list != None:
-        for exclude in exclude_list:    
+        for exclude in exclude_list:
             if file.find(exclude) != -1:
                 return False
 
     # check within include
     if include_list != None:
-        for include in include_list:    
+        for include in include_list:
             if file.find(include) != -1:
                 for extension in elx_extensions:
                     if file.endswith(extension):
@@ -290,7 +290,7 @@ def file_valid(file, include_list, exclude_list, elx_extensions):
         for extension in elx_extensions:
             if file.endswith(extension):
                 return True
-    
+
     return False
 
 #-------------------------------------------------------------------------------
