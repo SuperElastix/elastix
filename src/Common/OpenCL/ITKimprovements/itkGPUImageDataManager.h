@@ -72,8 +72,8 @@ protected:
   virtual ~GPUImageDataManager() {};
 
 private:
-  GPUImageDataManager(const Self&); //purposely not implemented
-  void operator=(const Self&);
+  GPUImageDataManager(const Self&); // purposely not implemented
+  void operator=(const Self&);			// purposely not implemented
 
   typename ImageType::Pointer m_Image;
 };

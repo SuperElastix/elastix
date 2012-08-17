@@ -95,8 +95,8 @@ protected:
   virtual void ReleaseInputs();
 
 private:
-  GPUInPlaceImageFilter(const Self &); //purposely not implemented
-  void operator=(const Self &);     //purposely not implemented
+  GPUInPlaceImageFilter(const Self &);  // purposely not implemented
+  void operator=(const Self &);         // purposely not implemented
 
 };
 

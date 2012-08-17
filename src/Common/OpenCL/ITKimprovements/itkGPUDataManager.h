@@ -127,8 +127,8 @@ protected:
   virtual void PrintSelf(std::ostream & os, Indent indent) const;
 
 private:
-  GPUDataManager(const Self&); //purposely not implemented
-  void operator=(const Self&);
+  GPUDataManager(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 protected:
   unsigned int m_BufferSize; // # of bytes

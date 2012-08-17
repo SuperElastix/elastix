@@ -104,8 +104,8 @@ protected:
     const std::string &source, const std::size_t sourceSize);
 
 private:
-  GPUKernelManager(const Self&); //purposely not implemented
-  void operator=(const Self&);
+  GPUKernelManager(const Self&);  // purposely not implemented
+  void operator=(const Self&);    // purposely not implemented
 
   cl_program            m_Program;
 

@@ -224,13 +224,12 @@ public:
   static void RegisterOneFactory(void)
   {
     GPUImageFactory::Pointer factory = GPUImageFactory::New();
-
     itk::ObjectFactoryBase::RegisterFactory(factory);
   }
 
 private:
-  GPUImageFactory(const Self&); //purposely not implemented
-  void operator=(const Self&);  //purposely not implemented
+  GPUImageFactory(const Self&); // purposely not implemented
+  void operator=(const Self&);  // purposely not implemented
 
 #define OverrideImageTypeMacro(pt,dm)    this->RegisterOverride( \
   typeid(itk::Image<pt,dm>).name(), \

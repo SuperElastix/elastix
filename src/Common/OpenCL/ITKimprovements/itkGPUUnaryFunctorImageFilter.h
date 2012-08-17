@@ -95,8 +95,8 @@ protected:
    * because GPUGenerateData() in this base class is used. */
   int m_UnaryFunctorImageFilterGPUKernelHandle;
 private:
-  GPUUnaryFunctorImageFilter(const Self &); //purposely not implemented
-  void operator=(const Self &);             //purposely not implemented
+  GPUUnaryFunctorImageFilter(const Self &); // purposely not implemented
+  void operator=(const Self &);             // purposely not implemented
 
   FunctorType m_Functor;
 
