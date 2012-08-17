@@ -95,8 +95,8 @@ def main():
         return 1
     
     # list of valid C++ extensions and top directories
-    src_valid_cxx_extensions = {".h",".cpp",".cxx",".hxx",".txx"} # not .in.h
-    src_top_dirs = ["Common","Components","Core","Testing"]    
+    src_valid_cxx_extensions = {".h", ".cpp", ".cxx", ".hxx", ".txx"} # not .in.h
+    src_top_dirs = ["Common", "Components", "Core", "Testing"]
 
     # current directory
     current_dir = os.getcwd()
