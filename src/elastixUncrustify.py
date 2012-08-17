@@ -276,7 +276,7 @@ def file_valid(file, include_list, exclude_list, elx_extensions):
     # check exclude
     if exclude_list != None:
         for exclude in exclude_list:    
-            if filename.find(exclude) != -1:
+            if file.find(exclude) != -1:
                 return False
 
     # check within include
