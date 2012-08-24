@@ -703,6 +703,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         ++itA[ i ];++itB[ i ];
         if ( ImageDimension == 3 ) ++itC[ i ];
       }
+      ++it_RCI;
     } // end while
   } // end if do orthonormality
 
@@ -718,6 +719,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     itA[ i ].GoToBegin(); itB[ i ].GoToBegin();
     if ( ImageDimension == 3 ) itC[ i ].GoToBegin();
   }
+  it_RCI.GoToBegin();
 
   if ( this->m_CalculatePropernessCondition )
   {
@@ -768,6 +770,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         ++itA[ i ];++itB[ i ];
         if ( ImageDimension == 3 ) ++itC[ i ];
       }
+      ++it_RCI;
 
     } // end while
   } // end if do properness
@@ -814,6 +817,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itF[ i ];++itH[ i ];++itI[ i ];
         }
       }
+      ++it_RCI;
 
     } // end while
   } // end if do properness
@@ -1367,6 +1371,8 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itOCp[ i ][ j ];
         }
       }
+      ++it_RCI;
+
     } // end while
   } // end if do orthonormality
 
@@ -1608,6 +1614,8 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itPCp[ i ][ j ];
         }
       }
+      ++it_RCI;
+
     } // end while
   } // end if do properness
 
@@ -1689,6 +1697,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itLCp[ i ][ j ];
         }
       }
+      ++it_RCI;
 
     } // end while
   } // end if do linearity
