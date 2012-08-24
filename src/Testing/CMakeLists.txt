@@ -378,6 +378,16 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.004.txt )
 
+configure_file(
+  ${TestDataDir}/parameters.3D.NC.bspline.ASGD.004b.txt.in
+  ${TestOutputDir}/parameters.3D.NC.bspline.ASGD.004b.txt @ONLY )
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004b
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestOutputDir}/parameters.3D.NC.bspline.ASGD.004b.txt )
+
 # Test some optimizers
 elx_add_run_test( 3DCT_lung.NC.bspline.SGD.001
   "CHECKSUM" "auto"
