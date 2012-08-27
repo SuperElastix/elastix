@@ -76,7 +76,7 @@ def main() :
     # Extract checksum
     tmp = checksumline.split(': ');
     if len( tmp ) > 1 :
-      testChecksum = tmp[1].rstrip( "\n" );
+      testChecksum = tmp[1].rstrip( "\r\n" );
     else :
       testChecksum = "not found";
 
