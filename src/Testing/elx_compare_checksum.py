@@ -45,7 +45,7 @@ def main() :
         checksumlineBaseline = ""
         dirString = options.directory.rsplit( "/", 1 )[1];
         for line in fb:
-          if dirString in line:
+          if dirString in line.split() :
             checksumlineBaseline = line
         fb.close();
 
