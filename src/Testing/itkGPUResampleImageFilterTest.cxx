@@ -121,7 +121,7 @@ void DefineAffineParameters( typename AffineTransformType::ParametersType & para
 //------------------------------------------------------------------------------
 template< class BSplineTransformType >
 void DefineBSplineParameters( typename BSplineTransformType::ParametersType & parameters,
-                              typename BSplineTransformType::Pointer & transform,
+                              const typename BSplineTransformType::Pointer & transform,
                               const std::string & parametersFileName )
 {
   const unsigned int numberOfParameters = transform->GetNumberOfParameters();
@@ -133,19 +133,11 @@ void DefineBSplineParameters( typename BSplineTransformType::ParametersType & pa
   // Open file and read parameters
   std::ifstream infile;
   infile.open( parametersFileName.c_str() );
-  for ( unsigned int n = 0; n < numberOfNodes; n++ )
+  for ( unsigned int n = 0; n < numberOfNodes * Dimension; n++ )
   {
     double parValue;
     infile >> parValue;
     parameters[n] = parValue;
-    if ( Dimension > 1 )
-    {
-      parameters[n + numberOfNodes] = parValue;
-    }
-    if ( Dimension > 2 )
-    {
-      parameters[n + numberOfNodes * 2] = parValue;
-    }
   }
   infile.close();
 }
@@ -249,13 +241,13 @@ void SetAffineBSplineTransform( const std::string & transformName,
 }
 
 //------------------------------------------------------------------------------
-// This helper function completely to set the advanced transform
+// This helper function completely copies the advanced transform
 // elastix Transforms:
 // AdvancedCombinationTransformType, AdvancedAffineTransformType,
 // AdvancedBSplineTransformType
 template< class AdvancedCombinationTransformType,
           class AdvancedAffineTransformType, class AdvancedBSplineTransformType >
-void SetAdvancedCombinationTransform(
+void CopyAffineBSplineTransform(
   typename AdvancedCombinationTransformType::Pointer & advancedTransform,
   typename AdvancedCombinationTransformType::CurrentTransformPointer & current )
 {
@@ -720,8 +712,8 @@ int main( int argc, char *argv[] )
           AdvancedCombinationTransformType::CurrentTransformPointer currentTransformCPU =
             CPUAdvancedCombinationTransform->GetCurrentTransform();
 
-          SetAdvancedCombinationTransform< AdvancedCombinationTransformType,
-                                           AdvancedAffineTransformType, AdvancedBSplineTransformType >
+          CopyAffineBSplineTransform< AdvancedCombinationTransformType,
+                                      AdvancedAffineTransformType, AdvancedBSplineTransformType >
             ( initialTransform, currentTransformCPU );
         }
         else
@@ -742,8 +734,8 @@ int main( int argc, char *argv[] )
           AdvancedCombinationTransformType::CurrentTransformPointer currentTransformCPU =
             advancedCombinationTransform->GetCurrentTransform();
 
-          SetAdvancedCombinationTransform< AdvancedCombinationTransformType,
-                                           AdvancedAffineTransformType, AdvancedBSplineTransformType >
+          CopyAffineBSplineTransform< AdvancedCombinationTransformType,
+                                      AdvancedAffineTransformType, AdvancedBSplineTransformType >
             ( initialNext, currentTransformCPU );
 
           initialTransform->SetInitialTransform( initialNext );
