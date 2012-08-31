@@ -51,7 +51,8 @@ std::string GetHelpString( void )
      << "  -out          output file names.(outputCPU outputGPU)\n"
      << "  -rmse         acceptable rmse error\n"
      << "  [-i]          interpolator, one of {NearestNeighbor, Linear, BSpline}, default NearestNeighbor\n"
-     << "  [-t]          transforms, one of {Affine, BSpline} or combinations with option \"-p\", default Affine\n"
+     << "  [-t]          transforms, one of {Affine, BSpline, Euler, Similarity, Translation}"
+     << " or combinations with option \"-c\", default Affine\n"
      << "  [-c]          use combo transform, default false\n"
      << "  [-p]          parameter file for the B-spline transform\n";
   return ss.str();
@@ -290,6 +291,13 @@ void CopyAffineBSplineTransform(
 // This test compares the CPU with the GPU version of the ResampleImageFilter.
 // The filter takes an input image and produces an output image.
 // We compare the CPU and GPU output image using RMSE and speed.
+// The following elastix transforms are supported:
+// AdvancedCombinationTransform
+// AdvancedAffineTransform
+// AdvancedBSplineTransform
+// EulerTransform
+// SimilarityTransform
+// TranslationTransform
 int main( int argc, char *argv[] )
 {
   // Check for GPU
