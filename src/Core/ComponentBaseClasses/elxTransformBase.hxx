@@ -33,6 +33,7 @@
 #include "itkMeshFileReader.h"
 #include "itkMeshFileWriter.h"
 #include "itkTransformMeshFilter.h"
+#include <itkImage.h>
 
 
 namespace itk
@@ -1567,6 +1568,110 @@ TransformBase<TElastix>
   scales /= static_cast<double>( nrofsamples );
 
 } // end AutomaticScalesEstimation()
+
+/**
+ * ************** AutomaticScalesEstimationStackTransform ***************
+ */
+
+template <class TElastix>
+void
+TransformBase<TElastix>
+::AutomaticScalesEstimationStackTransform( ScalesType & scales ) const
+{
+  typedef typename FixedImageType::RegionType               FixedImageRegionType;
+  typedef typename FixedImageType::IndexType                FixedImageIndexType;
+  typedef typename FixedImageType::SizeType                 SizeType;
+
+  typedef itk::ImageGridSampler< FixedImageType >           ImageSamplerType;
+  typedef typename ImageSamplerType::Pointer                ImageSamplerPointer;
+  typedef typename
+      ImageSamplerType::ImageSampleContainerType            ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer        ImageSampleContainerPointer;
+  typedef typename ITKBaseType::JacobianType                JacobianType;
+  typedef typename ITKBaseType::NonZeroJacobianIndicesType  NonZeroJacobianIndicesType;
+
+  const ITKBaseType * const thisITK = this->GetAsITKBaseType();
+  const unsigned int outdim = FixedImageDimension;
+  const unsigned int N = thisITK->GetNumberOfParameters();
+  scales = ScalesType( N );
+
+  /** Get fixed image region from registration */
+  FixedImageRegionType inputRegion = this->GetRegistration()->GetAsITKBaseType()->GetFixedImageRegion();
+  SizeType size = inputRegion.GetSize();
+
+  /** Set size of last dimension to 1 */
+  size[ FixedImageDimension - 1 ] = 1;
+
+  /** Set desired extraction region */
+  FixedImageIndexType start = inputRegion.GetIndex();
+  FixedImageRegionType desiredRegion;
+  desiredRegion.SetSize( size );
+  desiredRegion.SetIndex( start );
+
+   /** Set up grid sampler. */
+  ImageSamplerPointer sampler = ImageSamplerType::New();
+  sampler->SetInput( this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
+  sampler->SetInputImageRegion( desiredRegion );
+
+  /** Compute the grid spacing. */
+  unsigned long nrofsamples = 10000;
+  sampler->SetNumberOfSamples( nrofsamples );
+
+  /** Get samples and check the actually obtained number of samples. */
+  sampler->Update();
+  ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
+  nrofsamples = sampleContainer->Size();
+  if ( nrofsamples == 0 )
+  {
+    /** \todo: should we demand a minimum number (~100) of voxels? */
+    itkExceptionMacro( << "No valid voxels found to estimate the scales." );
+  }
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator iter;
+  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+
+  /** initialize */
+  scales.Fill( 0.0 );
+
+  /** Read fixed coordinates and get Jacobian. */
+  for ( iter = begin; iter != end; ++iter )
+  {
+    const InputPointType & point = (*iter).Value().m_ImageCoordinates;
+    //const JacobianType & jacobian = thisITK->GetJacobian( point );
+    JacobianType jacobian; NonZeroJacobianIndicesType nzji;
+    thisITK->GetJacobian(point, jacobian, nzji );
+
+    /** Square each element of the Jacobian and add each row
+     * to the newscales.
+     */
+    for( unsigned int d = 0; d < outdim; ++d )
+    {
+      ScalesType jacd(jacobian[d], N, false);
+      scales += element_product( jacd, jacd );
+    }
+  }
+
+  scales /= static_cast<double>( nrofsamples );
+
+  const unsigned int NumberOfScalesSubTransform = (FixedImageDimension)*(FixedImageDimension - 1);
+
+  unsigned int i=0;
+
+  for (i = 0; i < N; i += NumberOfScalesSubTransform )
+  {
+     for (unsigned int j = 0; j < NumberOfScalesSubTransform; j++)
+     {
+        scales ( i+j ) = scales( j );
+     }
+  }
+  
+  elxout << scales << std::endl;
+
+
+} // end AutomaticScalesEstimationStackTransform()
+
 
 
 } // end namespace elastix
