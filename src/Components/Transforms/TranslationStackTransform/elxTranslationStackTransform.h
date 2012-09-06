@@ -110,9 +110,6 @@ public:
     itkGetStaticConstMacro( SpaceDimension ) >                TranslationStackTransformType;
   typedef typename TranslationStackTransformType::Pointer     TranslationStackTransformPointer;
 
-  /** Typedef SizeType. */
-  typedef typename FixedImageType::SizeType               SizeType;
-
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ParametersType            ParametersType;
   typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
@@ -129,6 +126,9 @@ public:
   typedef typename Superclass2::MovingImageType           MovingImageType;
   typedef typename Superclass2::ITKBaseType               ITKBaseType;
   typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
+
+  /** Typedef SizeType. */
+  typedef typename FixedImageType::SizeType               SizeType;
 
    /** Execute stuff before the actual registration:
    * \li Set the stack transform parameters.
