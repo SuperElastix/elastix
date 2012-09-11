@@ -218,6 +218,8 @@ void AffineStackTransform<TElastix>
     itkExceptionMacro( << "Transform parameter file is corrupt.")
   }
 
+  this->InitializeAffineTransform();
+
   this->m_AffineDummySubTransform->SetCenter( centerOfRotationPoint );
 
   /** Set stack transform parameters. */
