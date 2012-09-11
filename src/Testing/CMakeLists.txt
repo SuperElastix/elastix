@@ -106,6 +106,10 @@ elseif( SITE STREQUAL "LKEB.goliath"
     AND BUILDNAME STREQUAL "Linux-64bit-gcc4.4.3-Release" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
+elseif( SITE STREQUAL "LKEB.goliath"
+    AND BUILDNAME STREQUAL "Linux-64bit-gcc4.4.3-Release-perf" )
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
+  set( knownChecksumSystem true )
 elseif( SITE STREQUAL "LKEB.MacMini"
     AND BUILDNAME STREQUAL "MacOSX-64bit-gcc4.2.1" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.MacMini_MacOSX-64bit-gcc4.txt )
@@ -342,7 +346,7 @@ if( ELASTIX_USE_OPENCL )
     -i   BSpline
     -t   Affine
     -rmse 0.1 )
-    
+
   elx_add_test( GPUResampleImageFilterTest "-NearestBSpline" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
     -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_bspline_CPU.mha
