@@ -23,8 +23,9 @@ set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
 set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix" )
+set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix-perf" )
 set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_release_perf )
+set( dashboard_url "https://svn.bigr.nl/elastix/branches/performance_ITK4" )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
@@ -54,7 +55,8 @@ ELASTIX_IMAGE_4D_PIXELTYPES:STRING=short
 
 // Eigen and OpenCL
 OPENCL_INCLUDE_DIRS:PATH=/usr/local/cuda/include
-OPENCL_LIBRARIES:PATH=/usr/lib/libOpenCL.so
+OPENCL_LIBRARIES:FILEPATH=/usr/lib/libOpenCL.so
+OPENCL_USE_PLATFORM_NVIDIA:BOOL=ON
 EIGEN3_INCLUDE_DIR:PATH=/home/marius/toolkits/eigen/eigen-3.0.5
 
 // Compile all elastix components;
