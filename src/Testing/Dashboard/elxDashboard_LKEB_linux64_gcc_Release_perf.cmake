@@ -13,17 +13,18 @@
 #
 # Setup: Linux 64bit, Ubuntu 2.6.32-25-server
 # gcc 4.4.3
-# Debug mode, ITK 3.20.0, code coverage by gcov
+# Release mode, ITK 3.20.0
 # PC: LKEB (MS), goliath
 
 # Client maintainer: m.staring@lumc.nl
 set( CTEST_SITE "LKEB.goliath" )
-set( CTEST_BUILD_NAME "Linux-64bit-gcc4.4.3" )
+set( CTEST_BUILD_NAME "Linux-64bit-gcc4.4.3-Release-perf" )
 set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
 set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
-set( CTEST_BUILD_CONFIGURATION Debug )
+set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix/" )
+set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix" )
+set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_release_perf )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
@@ -34,37 +35,27 @@ ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
   SET( dashboard_model Continuous )
 ENDIF()
 
-# This machine performs code coverage analysis and dynamic memory checking.
-set( dashboard_do_coverage ON )
-set( dashboard_do_memcheck ON )
-
-# Valgrind options
-#set( CTEST_MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --quiet --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=100 --verbose --demangle=yes --gen-suppressions=all" )
-#set( CTEST_MEMORYCHECK_SUPPRESSIONS_FILE ${CTEST_SOURCE_DIRECTORY}/CMake/InsightValgrind.supp )
-
 # Dashboard settings
 SET( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=/usr/local/toolkits/ITK/3.20.0/bin_debug
-
-// Coverage settings: -fprofile-arcs -ftest-coverage
-CMAKE_CXX_FLAGS_DEBUG:STRING=-g -O0 -fprofile-arcs -ftest-coverage
-CMAKE_C_FLAGS_DEBUG:STRING=-g -O0 -fprofile-arcs -ftest-coverage
-CMAKE_EXE_LINKER_FLAGS_DEBUG:STRING=-g -O0 -fprofile-arcs -ftest-coverage
-
-// Memory check setting for valgrind:
-//MEMORYCHECK_COMMAND_OPTIONS:STRING=${CTEST_MEMORYCHECK_COMMAND_OPTIONS}
-//MEMORYCHECK_SUPPRESSIONS_FILE:FILEPATH=${CTEST_MEMORYCHECK_SUPPRESSIONS_FILE}
+ITK_DIR:PATH=/usr/local/toolkits/ITK/git/bin_release
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
-ELASTIX_USE_CUDA:BOOL=ON
+ELASTIX_USE_CUDA:BOOL=OFF
+ELASTIX_USE_EIGEN:BOOL=ON
+ELASTIX_USE_OPENCL:BOOL=ON
 ELASTIX_USE_MEVISDICOMTIFF:BOOL=OFF
 ELASTIX_IMAGE_DIMENSION:STRING=2;3;4
 ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_3D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_4D_PIXELTYPES:STRING=short
+
+// Eigen and OpenCL
+OPENCL_INCLUDE_DIRS:PATH=/usr/local/cuda/include
+OPENCL_LIBRARIES:PATH=/usr/lib/libOpenCL.so
+EIGEN3_INCLUDE_DIR:PATH=/home/marius/toolkits/eigen/eigen-3.0.5
 
 // Compile all elastix components;
 USE_ALL_COMPONENTS:BOOL=ON
