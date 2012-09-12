@@ -119,16 +119,14 @@ MetricBase<TElastix>
       thisAsAdvanced->SetRequiredRatioOfValidSamples( ratio );
     }
 
-    /** Temporary?: Use the multi-threaded version or not. */
-    bool useMultiThread = false;
+    /** Temporary?: Use the multi-threaded version or not. Default true. */
     std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mtm" ); // mtm: multi-threaded metrics
-    if ( tmp == "true" )
+    if( tmp == "true" || tmp == "" )
     {
       thisAsAdvanced->SetUseMultiThread( true );
-      thisAsAdvanced->SetNumberOfThreads( 4 );
       std::string tmp2 = this->m_Configuration->GetCommandLineArgument( "-threads" );
       unsigned int nrOfThreads = atoi( tmp2.c_str() );
-      if ( tmp2 != "" )
+      if( tmp2 != "" )
       {
         thisAsAdvanced->SetNumberOfThreads( nrOfThreads );
       }
