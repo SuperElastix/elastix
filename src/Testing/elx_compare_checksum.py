@@ -89,8 +89,9 @@ def main() :
       if options.verbose:
         print "Complete elastix.log file:\n"
         f.seek(0,0)
-        for line in f:
-          print "%s" % line,
+        for line in f :
+          if "(TransformParameters" not in line : print "%s" % line,
+          else : print "(TransformParameters ... )"
       f.close();
       return 1
 
