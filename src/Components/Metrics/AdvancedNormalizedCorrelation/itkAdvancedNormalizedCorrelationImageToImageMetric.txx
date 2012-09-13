@@ -727,7 +727,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   }
   derivative = ( derivativeF - ( sfm / smm )*derivativeM ) / denom;
 #else // multi-threaded
-  MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
+  MultiThreaderComputeDerivativeType * temp = new MultiThreaderComputeDerivativeType;
 
   temp->sf_N = sf / N;
   temp->sm_N = sm / N;
@@ -745,7 +745,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   local_threader->SetSingleMethod( ComputeDerivativesThreaderCallback, temp );
   local_threader->SingleMethodExecute();
 
-  delete[] temp;
+  delete temp;
 
 #endif
 

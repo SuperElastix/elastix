@@ -423,11 +423,15 @@ protected:
   FixedImageRegionType        m_NullFixedImageRegion;
   DerivativeType              m_NullDerivative;
 
-  ThreadIdType  m_NumberOfThreadsPerMetric;
-
 private:
   CombinationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
+
+  /** Initialize some multi-threading related parameters.
+   * Overrides function in AdvancedImageToImageMetric, because
+   * here we use other parameters.
+   */
+  virtual void InitializeThreadingParameters( void ) const;
 
   /** For threading: store thread data. */
   struct MultiThreaderComboMetricsType
@@ -447,11 +451,9 @@ private:
     std::vector< bool   >                          m_UseMetric;
     bool                                           m_UseRelativeWeights;
     typename DerivativeType::iterator              m_ThreaderDerivatives;
-    unsigned int                                   size;
     unsigned int                                   m_NumberOfMetrics;
     unsigned int                                   numberOfParameters;
-    ThreadIdType                                   numberOfThreads;
-    std::vector< double >                          threaderDerivativesMagnitude;
+    std::vector< double >                          threaderDerivativesMagnitude;//needed?
   };
 
   bool m_UseMultiThread;
