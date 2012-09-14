@@ -45,16 +45,6 @@ MultiMetricMultiResolutionRegistration<TElastix>
   /** Get the components from this->m_Elastix and set them. */
   this->SetComponents();
 
-  /** Set the number of Threads per metric *
-  unsigned int numberOfThreads = 1;
-  std::string strNumberOfThreads = this->m_Configuration->GetCommandLineArgument( "-nt" );
-  if( !strNumberOfThreads.empty() )
-  {
-    numberOfThreads = (unsigned int) atoi( strNumberOfThreads.c_str() );
-    numberOfThreads = (numberOfThreads == 0) ? 1 : numberOfThreads ;
-  }
-  this->SetNumberOfThreadsPerMetric( numberOfThreads );
-
   /** Set the number of resolutions.*/
   unsigned int numberOfResolutions = 3;
   this->m_Configuration->ReadParameter(
@@ -113,8 +103,8 @@ MultiMetricMultiResolutionRegistration<TElastix>
   }
 
   /** Temporary? Use the multi-threaded version or not. */
-  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mt" );
-  if ( tmp == "true" )
+  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mtcombo" );
+  if( tmp == "true" || tmp == "" )
   {
     this->GetCombinationMetric()->SetUseMultiThread( true );
   }
