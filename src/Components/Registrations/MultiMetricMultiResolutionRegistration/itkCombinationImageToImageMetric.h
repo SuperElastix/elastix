@@ -433,6 +433,11 @@ private:
    */
   virtual void InitializeThreadingParameters( void ) const;
 
+  /** Compute the current metric weight, given the user selected
+   * strategy and derivative magnitude.
+   */
+  double GetFinalMetricWeight( unsigned int pos ) const;
+
   /** For threading: store thread data. */
   struct MultiThreaderComboMetricsType
   {
@@ -444,16 +449,9 @@ private:
 
   struct MultiThreaderCombineDerivativeType
   {
-    typename std::vector<DerivativeType>::iterator m_MetricDerivativesIterator;
-    typename std::vector<MeasureType>::iterator    m_MetricDerivativesMagnitudeIterator;
-    std::vector< double >                          m_MetricRelativeWeights;
-    std::vector< double >                          m_MetricWeights;
-    std::vector< bool   >                          m_UseMetric;
-    bool                                           m_UseRelativeWeights;
-    typename DerivativeType::iterator              m_ThreaderDerivatives;
-    unsigned int                                   m_NumberOfMetrics;
-    unsigned int                                   numberOfParameters;
-    std::vector< double >                          threaderDerivativesMagnitude;//needed?
+    Self * st_ThisComboMetric;
+    std::vector< double >   st_DerivativesSumOfSquares;
+    DerivativeValueType *   st_Derivative;
   };
 
   bool m_UseMultiThread;
