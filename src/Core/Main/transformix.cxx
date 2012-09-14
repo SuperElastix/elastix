@@ -76,11 +76,10 @@ int main( int argc, char **argv )
 
     if ( key == "-out" )
     {
-      /** Make sure that last character of the output folder equals a '/'. */
-      if ( value.find_last_of( "/" ) != value.size() - 1 )
-      {
-        value.append( "/" );
-      }
+      /** Make sure that last character of the output folder equals a '/' or '\'. */
+      const char last = value[ value.size() - 1 ];
+      if( last != '/' && last != '\\' ) value.append( "/" );
+      value = itksys::SystemTools::ConvertToOutputPath( value.c_str() );
 
       /** Save this information. */
       outFolderPresent = true;
