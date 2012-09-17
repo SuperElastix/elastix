@@ -33,152 +33,181 @@ GPUDataManager::GPUDataManager()
   this->Initialize();
 }
 
+//------------------------------------------------------------------------------
 GPUDataManager::~GPUDataManager()
 {
-  if( m_GPUBuffer )
-  {
+  if ( m_GPUBuffer )
+    {
   #ifdef _DEBUG
-    std::cout<<"clReleaseMemObject" << "..." << std::endl;
+    std::cout << "clReleaseMemObject" << "..." << std::endl;
 #endif
     cl_int errid = clReleaseMemObject(m_GPUBuffer);
     OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
-  }
+    }
 }
 
-void GPUDataManager::SetBufferSize( unsigned int num )
+//------------------------------------------------------------------------------
+void GPUDataManager::SetBufferSize(unsigned int num)
 {
   m_BufferSize = num;
 }
 
-void GPUDataManager::SetBufferFlag( cl_mem_flags flags )
+//------------------------------------------------------------------------------
+void GPUDataManager::SetBufferFlag(cl_mem_flags flags)
 {
   m_MemFlags = flags;
 }
 
+//------------------------------------------------------------------------------
 void GPUDataManager::Allocate()
 {
   cl_int errid;
 
-  if( m_BufferSize > 0 )
-  {
+  if ( m_BufferSize > 0 )
+    {
 #ifdef _DEBUG
-    std::cout << "clCreateBuffer, "<< this <<  "::Allocate Create GPU buffer of size "
-      << m_BufferSize << " Bytes" << std::endl;
+    std::cout << "clCreateBuffer, "
+              << this <<  "::Allocate Create GPU buffer of size "
+              << m_BufferSize << " Bytes" << std::endl;
 #endif
-    m_GPUBuffer = clCreateBuffer(m_ContextManager->GetCurrentContext(), m_MemFlags, m_BufferSize, NULL, &errid);
+    m_GPUBuffer = clCreateBuffer(m_ContextManager->GetCurrentContext(),
+                                 m_MemFlags, m_BufferSize, NULL, &errid);
     OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
     m_IsGPUBufferDirty = true;
     }
 
-
   //this->UpdateGPUBuffer();
 }
 
-void GPUDataManager::SetCPUBufferPointer( void* ptr )
+//------------------------------------------------------------------------------
+void GPUDataManager::SetCPUBufferPointer(void *ptr)
 {
   m_CPUBuffer = ptr;
 }
 
-void GPUDataManager::SetCPUDirtyFlag( bool isDirty )
+//------------------------------------------------------------------------------
+void GPUDataManager::SetCPUDirtyFlag(bool isDirty)
 {
   m_IsCPUBufferDirty = isDirty;
 }
 
-void GPUDataManager::SetGPUDirtyFlag( bool isDirty )
+//------------------------------------------------------------------------------
+void GPUDataManager::SetGPUDirtyFlag(bool isDirty)
 {
   m_IsGPUBufferDirty = isDirty;
 }
 
+//------------------------------------------------------------------------------
 void GPUDataManager::SetGPUBufferDirty()
 {
   this->UpdateCPUBuffer();
   m_IsGPUBufferDirty = true;
 }
 
+//------------------------------------------------------------------------------
 void GPUDataManager::SetCPUBufferDirty()
 {
   this->UpdateGPUBuffer();
   m_IsCPUBufferDirty = true;
 }
 
+//------------------------------------------------------------------------------
 void GPUDataManager::UpdateCPUBuffer()
 {
-  if( this->m_CPUBufferLock )
+  if ( this->m_CPUBufferLock )
+    {
     return;
+    }
 
   MutexHolderType holder(m_Mutex);
 
-  if( m_IsCPUBufferDirty && m_GPUBuffer != NULL && m_CPUBuffer != NULL )
-  {
+  if ( m_IsCPUBufferDirty && m_GPUBuffer != NULL && m_CPUBuffer != NULL )
+    {
 #ifdef _DEBUG
-    std::cout << "clEnqueueReadBuffer, " << this << "::UpdateCPUBuffer GPU->CPU data copy "
-      << m_GPUBuffer << "->" << m_CPUBuffer << std::endl;
+    std::cout << "clEnqueueReadBuffer, " << this
+              << "::UpdateCPUBuffer GPU->CPU data copy "
+              << m_GPUBuffer << "->" << m_CPUBuffer << std::endl;
 #endif
 
-    cl_int errid;
+    cl_int   errid;
     cl_event clEvent = NULL;
 
 #ifdef OPENCL_PROFILING
-    errid = clEnqueueReadBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent);
+    errid = clEnqueueReadBuffer(m_ContextManager->GetCommandQueue(
+                                  m_CommandQueueId), m_GPUBuffer, CL_TRUE, 0,
+                                m_BufferSize, m_CPUBuffer, 0, NULL,
+                                &clEvent);
 #else
-    errid = clEnqueueReadBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, NULL);
+    errid = clEnqueueReadBuffer(m_ContextManager->GetCommandQueue(
+                                  m_CommandQueueId), m_GPUBuffer, CL_TRUE, 0,
+                                m_BufferSize, m_CPUBuffer, 0, NULL, NULL);
 #endif
 
     OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
     m_ContextManager->OpenCLProfile(clEvent, "clEnqueueReadBuffer GPU->CPU");
 
     m_IsCPUBufferDirty = false;
-  }
+    }
 }
 
+//------------------------------------------------------------------------------
 void GPUDataManager::UpdateGPUBuffer()
 {
-  if( this->m_GPUBufferLock )
+  if ( this->m_GPUBufferLock )
+    {
     return;
+    }
 
   MutexHolderType holder(m_Mutex);
 
-  if( m_IsGPUBufferDirty && m_CPUBuffer != NULL && m_GPUBuffer != NULL )
-  {
+  if ( m_IsGPUBufferDirty && m_CPUBuffer != NULL && m_GPUBuffer != NULL )
+    {
 #ifdef _DEBUG
     std::cout << "clEnqueueWriteBuffer, " << this << "::UpdateGPUBuffer CPU->GPU data copy "
-      << m_CPUBuffer << "->" << m_GPUBuffer << std::endl;
+              << m_CPUBuffer << "->" << m_GPUBuffer << std::endl;
 #endif
 
-    cl_int errid;
+    cl_int   errid;
     cl_event clEvent = NULL;
 
 #ifdef OPENCL_PROFILING
-    errid = clEnqueueWriteBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent);
+    errid = clEnqueueWriteBuffer(m_ContextManager->GetCommandQueue(
+                                   m_CommandQueueId), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL,
+                                 &clEvent);
 #else
-    errid = clEnqueueWriteBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, NULL);
+    errid = clEnqueueWriteBuffer(m_ContextManager->GetCommandQueue(
+                                   m_CommandQueueId), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL,
+                                 NULL);
 #endif
     OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
     m_ContextManager->OpenCLProfile(clEvent, "clEnqueueWriteBuffer CPU->GPU");
 
     m_IsGPUBufferDirty = false;
-  }
+    }
 }
 
-cl_mem* GPUDataManager::GetGPUBufferPointer()
+//------------------------------------------------------------------------------
+cl_mem * GPUDataManager::GetGPUBufferPointer()
 {
   SetCPUBufferDirty();
   return &m_GPUBuffer;
 }
 
-void* GPUDataManager::GetCPUBufferPointer()
+//------------------------------------------------------------------------------
+void * GPUDataManager::GetCPUBufferPointer()
 {
   SetGPUBufferDirty();
   return m_CPUBuffer;
 }
 
+//------------------------------------------------------------------------------
 bool GPUDataManager::Update()
 {
-  if( m_IsGPUBufferDirty && m_IsCPUBufferDirty )
-  {
+  if ( m_IsGPUBufferDirty && m_IsCPUBufferDirty )
+    {
     itkExceptionMacro("Cannot make up-to-date buffer because both CPU and GPU buffers are dirty");
     return false;
-  }
+    }
 
   this->UpdateGPUBuffer();
   this->UpdateCPUBuffer();
@@ -188,55 +217,58 @@ bool GPUDataManager::Update()
   return true;
 }
 
+//------------------------------------------------------------------------------
 /**
 * NOTE: each device has a command queue. Therefore, changing command queue
 *       means change a compute device.
 */
-void GPUDataManager::SetCurrentCommandQueue( int queueid )
+void GPUDataManager::SetCurrentCommandQueue(int queueid)
 {
-  if( queueid >= 0 && queueid < (int)m_ContextManager->GetNumberOfCommandQueues() )
-  {
+  if ( queueid >= 0 && queueid < (int)m_ContextManager->GetNumberOfCommandQueues() )
+    {
     this->UpdateCPUBuffer();
 
     // Assumption: different command queue is assigned to different device
     m_CommandQueueId = queueid;
 
     m_IsGPUBufferDirty = true;
-  }
+    }
   else
-  {
+    {
     itkWarningMacro("Not a valid command queue id");
-  }
+    }
 }
 
+//------------------------------------------------------------------------------
 int GPUDataManager::GetCurrentCommandQueueID()
 {
   return m_CommandQueueId;
 }
 
-void GPUDataManager::Graft(const GPUDataManager* data)
+//------------------------------------------------------------------------------
+void GPUDataManager::Graft(const GPUDataManager *data)
 {
-  if( data )
-  {
+  if ( data )
+    {
     m_BufferSize = data->m_BufferSize;
     m_ContextManager = data->m_ContextManager;
     m_CommandQueueId = data->m_CommandQueueId;
     m_MemFlags = data->m_MemFlags;
 
     if ( m_GPUBuffer ) // Decrease reference count to GPU memory
-    {
+      {
 #ifdef _DEBUG
-      std::cout<<"clReleaseMemObject" << "..." << std::endl;
+      std::cout << "clReleaseMemObject" << "..." << std::endl;
 #endif
       clReleaseMemObject(m_GPUBuffer);
-    }
+      }
     if ( data->m_GPUBuffer ) // Increase reference count to GPU memory
-    {
+      {
 #ifdef _DEBUG
-      std::cout<<"clRetainMemObject" << "..." << std::endl;
+      std::cout << "clRetainMemObject" << "..." << std::endl;
 #endif
       clRetainMemObject(data->m_GPUBuffer);
-    }
+      }
 
     m_GPUBuffer = data->m_GPUBuffer;
     m_CPUBuffer = data->m_CPUBuffer;
@@ -246,24 +278,25 @@ void GPUDataManager::Graft(const GPUDataManager* data)
 
     m_IsCPUBufferDirty = data->m_IsCPUBufferDirty;
     m_IsGPUBufferDirty = data->m_IsGPUBufferDirty;
-  }
+    }
 }
 
+//------------------------------------------------------------------------------
 void GPUDataManager::Initialize()
 {
-  if( m_ContextManager->GetNumberOfCommandQueues() > 0 )
-  {
+  if ( m_ContextManager->GetNumberOfCommandQueues() > 0 )
+    {
     m_CommandQueueId = 0; // default command queue
-  }
+    }
 
-  if( m_GPUBuffer ) // Release GPU memory if exists
-  {
+  if ( m_GPUBuffer ) // Release GPU memory if exists
+    {
 #ifdef _DEBUG
-    std::cout<<"clReleaseMemObject" << "..." << std::endl;
+    std::cout << "clReleaseMemObject" << "..." << std::endl;
 #endif
     cl_int errid = clReleaseMemObject(m_GPUBuffer);
     OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
-  }
+    }
 
   m_BufferSize = 0;
   m_GPUBuffer = NULL;
@@ -276,6 +309,7 @@ void GPUDataManager::Initialize()
   m_GPUBufferLock = false;
 }
 
+//------------------------------------------------------------------------------
 void GPUDataManager::PrintSelf(std::ostream & os, Indent indent) const
 {
   os << indent << "GPUDataManager (" << this << ")" << std::endl;
@@ -287,5 +321,4 @@ void GPUDataManager::PrintSelf(std::ostream & os, Indent indent) const
   os << indent << "m_CPUBufferLock: " << m_CPUBufferLock << std::endl;
   os << indent << "m_GPUBufferLock: " << m_GPUBufferLock << std::endl;
 }
-
 } // namespace itk

@@ -32,54 +32,57 @@ namespace itk
  *
  * \ingroup ITKGPUCommon
  */
-class ITK_EXPORT GPUContextManager : public LightObject
+class ITKOpenCL_EXPORT GPUContextManager:public LightObject
 {
 public:
 
-  static GPUContextManager* GetInstance();
+  static GPUContextManager * GetInstance();
 
   void DestroyInstance();
 
   cl_command_queue GetCommandQueue(int i);
 
-  unsigned int GetNumberOfCommandQueues() {
+  unsigned int GetNumberOfCommandQueues()
+  {
     return m_NumberOfDevices;
   }
 
-  cl_context GetCurrentContext() {
+  cl_context GetCurrentContext()
+  {
     return m_Context;
   }
 
   cl_device_id GetDeviceId(int i);
 
-  cl_device_id* GetDevices() {
+  cl_device_id * GetDevices()
+  {
     return m_Devices;
   }
 
-  cl_uint GetTargetDeviceId() {
+  cl_uint GetTargetDeviceId()
+  {
     return m_TargetDevice;
   }
 
-  void SetPlatform(const std::string &platformName, const cl_device_type deviceType);
+  void SetPlatform(const std::string & platformName, const cl_device_type deviceType);
 
-  void OpenCLProfile(cl_event clEvent, const std::string &message);
+  void OpenCLProfile(cl_event clEvent, const std::string & message);
 
 private:
 
   GPUContextManager();
   ~GPUContextManager();
 
-  cl_platform_id     m_Platform;
-  cl_context         m_Context;
-  cl_device_id*      m_Devices;
-  cl_command_queue*  m_CommandQueue; // one queue per device
-  cl_uint            m_NumberOfDevices;
-  cl_uint            m_NumberOfPlatforms;
-  cl_uint            m_TargetDevice;
+  cl_platform_id    m_Platform;
+  cl_context        m_Context;
+  cl_device_id *    m_Devices;
+  cl_command_queue *m_CommandQueue;  // one queue per device
+  cl_uint           m_NumberOfDevices;
+  cl_uint           m_NumberOfPlatforms;
+  cl_uint           m_TargetDevice;
 
-  static GPUContextManager* m_Instance;
+  static GPUContextManager *m_Instance;
 };
-
 } // namespace itk
 
 #endif

@@ -39,36 +39,37 @@ namespace itk
  *
  * \ingroup ITKGPUCommon
  */
-class ITK_EXPORT GPUDataManager : public Object   //DataObject//
+class ITKOpenCL_EXPORT GPUDataManager:public Object //DataObject//
 {
   /** allow GPUKernelManager to access GPU buffer pointer */
   friend class GPUKernelManager;
 
 public:
-  typedef GPUDataManager           Self;
-  typedef Object                   Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef GPUDataManager             Self;
+  typedef Object                     Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   itkNewMacro(Self);
   itkTypeMacro(GPUDataManager, Object);
 
-  typedef MutexLockHolder<SimpleFastMutexLock> MutexHolderType;
+  typedef MutexLockHolder< SimpleFastMutexLock > MutexHolderType;
 
   /** total buffer size in bytes */
-  void SetBufferSize( unsigned int num );
+  void SetBufferSize(unsigned int num);
 
-  unsigned int GetBufferSize() {
+  unsigned int GetBufferSize()
+  {
     return m_BufferSize;
   }
 
-  void SetBufferFlag( cl_mem_flags flags );
+  void SetBufferFlag(cl_mem_flags flags);
 
-  void SetCPUBufferPointer( void* ptr );
+  void SetCPUBufferPointer(void *ptr);
 
-  void SetCPUDirtyFlag( bool isDirty );
+  void SetCPUDirtyFlag(bool isDirty);
 
-  void SetGPUDirtyFlag( bool isDirty );
+  void SetGPUDirtyFlag(bool isDirty);
 
   /** Make GPU up-to-date and mark CPU as dirty.
    * Call this function when you want to modify CPU data */
@@ -78,11 +79,13 @@ public:
    * Call this function when you want to modify GPU data */
   void SetGPUBufferDirty();
 
-  bool IsCPUBufferDirty() {
+  bool IsCPUBufferDirty()
+  {
     return m_IsCPUBufferDirty;
   }
 
-  bool IsGPUBufferDirty() {
+  bool IsGPUBufferDirty()
+  {
     return m_IsGPUBufferDirty;
   }
 
@@ -94,7 +97,7 @@ public:
 
   void Allocate();
 
-  void SetCurrentCommandQueue( int queueid );
+  void SetCurrentCommandQueue(int queueid);
 
   int  GetCurrentCommandQueueID();
 
@@ -102,24 +105,24 @@ public:
   bool Update();
 
   /** Method for grafting the content of one GPUDataManager into another one */
-  virtual void Graft(const GPUDataManager* data);
+  virtual void Graft(const GPUDataManager *data);
 
   /** Initialize GPUDataManager */
   virtual void Initialize();
 
   /** Get GPU buffer pointer */
-  cl_mem* GetGPUBufferPointer();
+  cl_mem * GetGPUBufferPointer();
 
   /** Get GPU buffer pointer */
-  void* GetCPUBufferPointer();
+  void * GetCPUBufferPointer();
 
   /** Make CPU buffer locked to avoid extra update from ITK pipeline. */
-  void SetCPUBufferLock( const bool v ) { this->m_CPUBufferLock = v; }
-  itkGetConstReferenceMacro( CPUBufferLock, bool );
+  void SetCPUBufferLock(const bool v) { this->m_CPUBufferLock = v; }
+  itkGetConstReferenceMacro(CPUBufferLock, bool);
 
   /** Make GPU buffer locked to avoid extra update from ITK pipeline. */
-  void SetGPUBufferLock( const bool v ) { this->m_GPUBufferLock = v; }
-  itkGetConstReferenceMacro( GPUBufferLock, bool );
+  void SetGPUBufferLock(const bool v) { this->m_GPUBufferLock = v; }
+  itkGetConstReferenceMacro(GPUBufferLock, bool);
 
 protected:
   GPUDataManager();
@@ -127,8 +130,8 @@ protected:
   virtual void PrintSelf(std::ostream & os, Indent indent) const;
 
 private:
-  GPUDataManager(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+  GPUDataManager(const Self &); // purposely not implemented
+  void operator=(const Self &); // purposely not implemented
 
 protected:
   unsigned int m_BufferSize; // # of bytes
@@ -142,7 +145,7 @@ protected:
 
   /** buffer pointers */
   cl_mem m_GPUBuffer;
-  void*  m_CPUBuffer;
+  void * m_CPUBuffer;
 
   /** checks if buffer needs to be updated */
   bool m_IsGPUBufferDirty;
@@ -155,7 +158,6 @@ protected:
   /** Mutex lock to prevent r/w hazard for multithreaded code */
   SimpleFastMutexLock m_Mutex;
 };
-
 } // namespace itk
 
 #endif

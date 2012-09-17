@@ -23,7 +23,6 @@
 
 namespace itk
 {
-
 /** \class GPUImageToImageFilter
  *
  * \brief class to abstract the behaviour of the GPU filters.
@@ -37,8 +36,8 @@ namespace itk
  * \ingroup ITKGPUCommon
  */
 template< class TInputImage, class TOutputImage, class TParentImageFilter =
-  ImageToImageFilter< TInputImage, TOutputImage > >
-class ITK_EXPORT GPUImageToImageFilter : public TParentImageFilter
+            ImageToImageFilter< TInputImage, TOutputImage > >
+class ITKOpenCL_EXPORT GPUImageToImageFilter:public TParentImageFilter
 {
 public:
   /** Standard class typedefs. */
@@ -76,20 +75,19 @@ public:
 
   void GenerateData();
 
-  virtual void GraftOutput(DataObject *output);
+  virtual void GraftOutput(DataObject *graft);
 
-  virtual void GraftOutput(const DataObjectIdentifierType & key, DataObject *output);
+  virtual void GraftOutput(const DataObjectIdentifierType & key, DataObject *graft);
 
   virtual void SetNumberOfThreads(ThreadIdType _arg);
 
 protected:
   GPUImageToImageFilter();
-  ~GPUImageToImageFilter();
+  ~GPUImageToImageFilter() {}
 
   virtual void PrintSelf(std::ostream & os, Indent indent) const;
 
-  virtual void GPUGenerateData() {
-  }
+  virtual void GPUGenerateData() {}
 
   // GPU kernel manager
   typename GPUKernelManager::Pointer m_GPUKernelManager;
@@ -104,7 +102,6 @@ private:
 
   bool m_GPUEnabled;
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

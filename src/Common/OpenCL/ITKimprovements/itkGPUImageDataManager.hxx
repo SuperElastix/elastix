@@ -24,24 +24,27 @@
 
 namespace itk
 {
-template < class ImageType >
-void GPUImageDataManager< ImageType >::SetImagePointer( typename ImageType::Pointer img )
+template< class ImageType >
+void GPUImageDataManager< ImageType >::SetImagePointer(typename ImageType::Pointer img)
 {
   m_Image = img;
 }
 
-template < class ImageType >
+//------------------------------------------------------------------------------
+template< class ImageType >
 void GPUImageDataManager< ImageType >::UpdateCPUBuffer()
 {
-  if( this->m_CPUBufferLock )
+  if ( this->m_CPUBufferLock )
+    {
     return;
+    }
 
-  if( m_Image.IsNotNull() )
-  {
+  if ( m_Image.IsNotNull() )
+    {
     m_Mutex.Lock();
 
     unsigned long gpu_time = this->GetMTime();
-    TimeStamp cpu_time_stamp = m_Image->GetTimeStamp();
+    TimeStamp     cpu_time_stamp = m_Image->GetTimeStamp();
     unsigned long cpu_time = cpu_time_stamp.GetMTime();
 
     /* Why we check dirty flag and time stamp together?
@@ -50,20 +53,20 @@ void GPUImageDataManager< ImageType >::UpdateCPUBuffer()
     * correctly managed. Therefore, we check the time stamp of
     * CPU and GPU data as well
     */
-    if( (m_IsCPUBufferDirty || (gpu_time > cpu_time)) && m_GPUBuffer != NULL && m_CPUBuffer != NULL )
-    {
-      cl_int errid;
+    if ( ( m_IsCPUBufferDirty || ( gpu_time > cpu_time ) ) && m_GPUBuffer != NULL && m_CPUBuffer != NULL )
+      {
+      cl_int   errid;
       cl_event clEvent = NULL;
 #ifdef _DEBUG
-      std::cout<<"clEnqueueReadBuffer GPU->CPU" << "..." << std::endl;
+      std::cout << "clEnqueueReadBuffer GPU->CPU" << "..." << std::endl;
 #endif
 
 #ifdef OPENCL_PROFILING
       errid = clEnqueueReadBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId),
-        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent);
+                                  m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent);
 #else
       errid = clEnqueueReadBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId),
-        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, 0, 0);
+                                  m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, 0, 0);
 #endif
 
       OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
@@ -74,24 +77,27 @@ void GPUImageDataManager< ImageType >::UpdateCPUBuffer()
 
       m_IsCPUBufferDirty = false;
       m_IsGPUBufferDirty = false;
-    }
+      }
 
     m_Mutex.Unlock();
-  }
+    }
 }
 
-template < class ImageType >
+//------------------------------------------------------------------------------
+template< class ImageType >
 void GPUImageDataManager< ImageType >::UpdateGPUBuffer()
 {
-  if( this->m_GPUBufferLock )
+  if ( this->m_GPUBufferLock )
+    {
     return;
+    }
 
-  if( m_Image.IsNotNull() )
-  {
+  if ( m_Image.IsNotNull() )
+    {
     m_Mutex.Lock();
 
     unsigned long gpu_time = this->GetMTime();
-    TimeStamp cpu_time_stamp = m_Image->GetTimeStamp();
+    TimeStamp     cpu_time_stamp = m_Image->GetTimeStamp();
     unsigned long cpu_time = m_Image->GetMTime();
 
     /* Why we check dirty flag and time stamp together?
@@ -100,46 +106,46 @@ void GPUImageDataManager< ImageType >::UpdateGPUBuffer()
     * correctly managed. Therefore, we check the time stamp of
     * CPU and GPU data as well
     */
-    if( (m_IsGPUBufferDirty || (gpu_time < cpu_time)) && m_CPUBuffer != NULL && m_GPUBuffer != NULL )
-    {
-      cl_int errid;
+    if ( ( m_IsGPUBufferDirty || ( gpu_time < cpu_time ) ) && m_CPUBuffer != NULL && m_GPUBuffer != NULL )
+      {
+      cl_int   errid;
       cl_event clEvent = NULL;
 #ifdef _DEBUG
-      std::cout<<"clEnqueueWriteBuffer CPU->GPU" << "..." << std::endl;
+      std::cout << "clEnqueueWriteBuffer CPU->GPU" << "..." << std::endl;
 #endif
 
 #ifdef OPENCL_PROFILING
       errid = clEnqueueWriteBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId),
-        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent);
+                                   m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent);
 #else
       errid = clEnqueueWriteBuffer(m_ContextManager->GetCommandQueue(m_CommandQueueId),
-        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, NULL);
+                                   m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, NULL);
 #endif
       OpenCLCheckError(errid, __FILE__, __LINE__, ITK_LOCATION);
       m_ContextManager->OpenCLProfile(clEvent, "clEnqueueWriteBuffer CPU->GPU");
 
-      this->SetTimeStamp( cpu_time_stamp );
+      this->SetTimeStamp(cpu_time_stamp);
 
       m_IsCPUBufferDirty = false;
       m_IsGPUBufferDirty = false;
-    }
+      }
 
     m_Mutex.Unlock();
-  }
+    }
 }
 
-template < class ImageType >
-void GPUImageDataManager< ImageType >::Graft(const GPUImageDataManager* data)
+//------------------------------------------------------------------------------
+template< class ImageType >
+void GPUImageDataManager< ImageType >::Graft(const GPUImageDataManager *data)
 {
   //std::cout << "GPU timestamp : " << this->GetMTime() << ", CPU timestamp : "
   // << m_Image->GetMTime() << std::endl;
 
-  Superclass::Graft( data );
+  Superclass::Graft(data);
 
   //std::cout << "GPU timestamp : " << this->GetMTime() << ", CPU timestamp : "
   // << m_Image->GetMTime() << std::endl;
 }
-
 } // namespace itk
 
 #endif

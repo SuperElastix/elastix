@@ -33,8 +33,9 @@ namespace itk
  * \ingroup ITKGPUCommon
  */
 template< class TInputImage, class TOutputImage = TInputImage, class TParentImageFilter =
-  InPlaceImageFilter< TInputImage, TOutputImage > >
-class ITK_EXPORT GPUInPlaceImageFilter : public GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
+            InPlaceImageFilter< TInputImage, TOutputImage > >
+class ITKOpenCL_EXPORT GPUInPlaceImageFilter:public GPUImageToImageFilter< TInputImage, TOutputImage,
+                                                                           TParentImageFilter >
 {
 public:
   /** Standard class typedefs. */
@@ -63,9 +64,10 @@ public:
   typedef typename InputImageType::ConstPointer InputImageConstPointer;
   typedef typename InputImageType::RegionType   InputImageRegionType;
   typedef typename InputImageType::PixelType    InputImagePixelType;
+
 protected:
-  GPUInPlaceImageFilter();
-  ~GPUInPlaceImageFilter();
+  GPUInPlaceImageFilter() {}
+  ~GPUInPlaceImageFilter() {}
 
   virtual void PrintSelf(std::ostream & os, Indent indent) const;
 
@@ -95,11 +97,9 @@ protected:
   virtual void ReleaseInputs();
 
 private:
-  GPUInPlaceImageFilter(const Self &);  // purposely not implemented
-  void operator=(const Self &);         // purposely not implemented
-
+  GPUInPlaceImageFilter(const Self &); // purposely not implemented
+  void operator=(const Self &);        // purposely not implemented
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

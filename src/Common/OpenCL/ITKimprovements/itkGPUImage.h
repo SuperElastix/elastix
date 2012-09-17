@@ -35,15 +35,15 @@ namespace itk
  *
  * \ingroup ITKGPUCommon
  */
-template <class TPixel, unsigned int VImageDimension = 2>
-class ITK_EXPORT GPUImage : public Image<TPixel,VImageDimension>
+template< class TPixel, unsigned int VImageDimension = 2 >
+class ITKOpenCL_EXPORT GPUImage:public Image< TPixel, VImageDimension >
 {
 public:
-  typedef GPUImage                      Self;
-  typedef Image<TPixel,VImageDimension> Superclass;
-  typedef SmartPointer<Self>            Pointer;
-  typedef SmartPointer<const Self>      ConstPointer;
-  typedef WeakPointer<const Self>       ConstWeakPointer;
+  typedef GPUImage                         Self;
+  typedef Image< TPixel, VImageDimension > Superclass;
+  typedef SmartPointer< Self >             Pointer;
+  typedef SmartPointer< const Self >       ConstPointer;
+  typedef WeakPointer< const Self >        ConstWeakPointer;
 
   itkNewMacro(Self);
 
@@ -97,7 +97,7 @@ public:
   //
   // Get CPU buffer pointer
   //
-  TPixel* GetBufferPointer();
+  TPixel * GetBufferPointer();
 
   const TPixel * GetBufferPointer() const;
 
@@ -145,12 +145,13 @@ public:
     return Superclass::GetPixelContainer();
   }
 
-  void SetCurrentCommandQueue( int queueid )
+  void SetCurrentCommandQueue(int queueid)
   {
-    m_DataManager->SetCurrentCommandQueue( queueid );
+    m_DataManager->SetCurrentCommandQueue(queueid);
   }
 
-  int  GetCurrentCommandQueueID() {
+  int  GetCurrentCommandQueueID()
+  {
     return m_DataManager->GetCurrentCommandQueueID();
   }
 
@@ -166,10 +167,11 @@ public:
   void DataHasBeenGenerated()
   {
     Superclass::DataHasBeenGenerated();
-    if( m_DataManager->IsCPUBufferDirty() )
-    {
+
+    if ( m_DataManager->IsCPUBufferDirty() )
+      {
       m_DataManager->Modified();
-    }
+      }
   }
 
   /** Graft the data and information from one GPUImage to another. */
@@ -185,32 +187,35 @@ public:
 
 protected:
   GPUImage();
-  virtual ~GPUImage();
+  virtual ~GPUImage() {}
 
 private:
 
   // functions that are purposely not implemented
-  GPUImage(const Self&);
-  void operator=(const Self&);
+  GPUImage(const Self &);
+  void operator=(const Self &);
+
   bool m_Graft;
 
   typename GPUImageDataManager< GPUImage >::Pointer m_DataManager;
 };
 
-
-class GPUImageFactory : public itk::ObjectFactoryBase
+class GPUImageFactory:public itk::ObjectFactoryBase
 {
 public:
-  typedef GPUImageFactory               Self;
-  typedef itk::ObjectFactoryBase        Superclass;
-  typedef itk::SmartPointer<Self>       Pointer;
-  typedef itk::SmartPointer<const Self> ConstPointer;
+  typedef GPUImageFactory                 Self;
+  typedef itk::ObjectFactoryBase          Superclass;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const {
+  virtual const char * GetITKSourceVersion() const
+  {
     return ITK_SOURCE_VERSION;
   }
-  const char* GetDescription() const {
+
+  const char * GetDescription() const
+  {
     return "A Factory for GPUImage";
   }
 
@@ -228,20 +233,21 @@ public:
   }
 
 private:
-  GPUImageFactory(const Self&); // purposely not implemented
-  void operator=(const Self&);  // purposely not implemented
+  GPUImageFactory(const Self &); // purposely not implemented
+  void operator=(const Self &);  // purposely not implemented
 
-#define OverrideImageTypeMacro(pt,dm)    this->RegisterOverride( \
-  typeid(itk::Image<pt,dm>).name(), \
-  typeid(itk::GPUImage<pt,dm>).name(), \
-  "GPU Image Override", \
-  true, \
-  itk::CreateObjectFunction<GPUImage<pt,dm> >::New() )
+#define OverrideImageTypeMacro(pt, dm)        \
+  this->RegisterOverride(                     \
+    typeid( itk::Image< pt, dm > ).name(),    \
+    typeid( itk::GPUImage< pt, dm > ).name(), \
+    "GPU Image Override",                     \
+    true,                                     \
+    itk::CreateObjectFunction< GPUImage< pt, dm > >::New() )
 
   GPUImageFactory()
   {
-    if( IsGPUAvailable() )
-    {
+    if ( IsGPUAvailable() )
+      {
       // 1/2/3D
       OverrideImageTypeMacro(unsigned char, 1);
       OverrideImageTypeMacro(char, 1);
@@ -269,25 +275,24 @@ private:
       OverrideImageTypeMacro(int, 3);
       OverrideImageTypeMacro(float, 3);
       OverrideImageTypeMacro(double, 3);
-    }
+      }
   }
 };
 
-template <class T>
+//------------------------------------------------------------------------------
+template< class T >
 class GPUTraits
 {
 public:
-  typedef T   Type;
+  typedef T Type;
 };
 
-
-template <class TPixelType, unsigned int NDimension>
+template< class TPixelType, unsigned int NDimension >
 class GPUTraits< Image< TPixelType, NDimension > >
 {
 public:
-  typedef GPUImage<TPixelType,NDimension>   Type;
+  typedef GPUImage< TPixelType, NDimension > Type;
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

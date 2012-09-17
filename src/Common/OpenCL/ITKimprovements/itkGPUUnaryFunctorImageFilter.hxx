@@ -30,6 +30,7 @@ GPUUnaryFunctorImageFilter< TInputImage, TOutputImage, TFunction, TParentImageFi
   CPUSuperclass::GenerateOutputInformation();
 }
 
+//------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TFunction, class TParentImageFilter >
 void
 GPUUnaryFunctorImageFilter< TInputImage, TOutputImage, TFunction, TParentImageFilter >
@@ -39,20 +40,20 @@ GPUUnaryFunctorImageFilter< TInputImage, TOutputImage, TFunction, TParentImageFi
   typedef typename itk::GPUTraits< TInputImage >::Type  GPUInputImage;
   typedef typename itk::GPUTraits< TOutputImage >::Type GPUOutputImage;
 
-  typename GPUInputImage::Pointer  inPtr =  dynamic_cast< GPUInputImage * >( this->ProcessObject::GetInput(0) );
+  typename GPUInputImage::Pointer inPtr =  dynamic_cast< GPUInputImage * >( this->ProcessObject::GetInput(0) );
   typename GPUOutputImage::Pointer otPtr =  dynamic_cast< GPUOutputImage * >( this->ProcessObject::GetOutput(0) );
 
   // Perform the safe check
-  if(inPtr.IsNull())
-  {
+  if ( inPtr.IsNull() )
+    {
     itkExceptionMacro(<< "The GPU InputImage is NULL. Filter unable to perform.");
     return;
-  }
-  if(otPtr.IsNull())
-  {
+    }
+  if ( otPtr.IsNull() )
+    {
     itkExceptionMacro(<< "The GPU OutputImage is NULL. Filter unable to perform.");
     return;
-  }
+    }
 
   const typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
 
@@ -61,39 +62,41 @@ GPUUnaryFunctorImageFilter< TInputImage, TOutputImage, TFunction, TParentImageFi
 
   const unsigned int ImageDim = (unsigned int)TInputImage::ImageDimension;
 
-  for(unsigned int i=0; i<ImageDim; i++)
-  {
+  for ( size_t i = 0; i < ImageDim; i++ )
+    {
     imgSize[i] = outSize[i];
-  }
+    }
 
-  size_t localSize[3], globalSize[3];
-  localSize[0] = localSize[1] = localSize[2] = OpenCLGetLocalBlockSize(ImageDim);
-
-  for(int i=0; i<ImageDim; i++)
-  {
-    globalSize[i] = localSize[i]*(unsigned int)ceil( (float)outSize[i]/(float)localSize[i]);
-  }
+  typename GPUInputImage::SizeType localSize, globalSize;
+  for ( size_t i = 0; i < ImageDim; i++ )
+    {
+    localSize[i] = OpenCLGetLocalBlockSize(InputImageDimension);
+    // total # of threads
+    globalSize[i] = localSize[i] * ( static_cast< unsigned int >(
+                                       vcl_ceil( static_cast< float >( outSize[i] )
+                                                 / static_cast< float >( localSize[i] ) ) ) );
+    }
 
   // arguments set up using Functor
-  int argidx = (this->GetFunctor() ).SetGPUKernelArguments(this->m_GPUKernelManager,
-    m_UnaryFunctorImageFilterGPUKernelHandle);
+  int argidx = ( this->GetFunctor() ).SetGPUKernelArguments(this->m_GPUKernelManager,
+                                                            m_UnaryFunctorImageFilterGPUKernelHandle);
 
   // arguments set up
-  this->m_GPUKernelManager->SetKernelArgWithImage(m_UnaryFunctorImageFilterGPUKernelHandle, argidx++,
-    inPtr->GetGPUDataManager() );
-  this->m_GPUKernelManager->SetKernelArgWithImage(m_UnaryFunctorImageFilterGPUKernelHandle, argidx++,
-    otPtr->GetGPUDataManager() );
+  this->m_GPUKernelManager->SetKernelArgWithImage( m_UnaryFunctorImageFilterGPUKernelHandle, argidx++,
+                                                   inPtr->GetGPUDataManager() );
+  this->m_GPUKernelManager->SetKernelArgWithImage( m_UnaryFunctorImageFilterGPUKernelHandle, argidx++,
+                                                   otPtr->GetGPUDataManager() );
 
-  for(unsigned int i=0; i<ImageDim; i++)
-  {
-    this->m_GPUKernelManager->SetKernelArg(m_UnaryFunctorImageFilterGPUKernelHandle, argidx++, sizeof(unsigned int),
-      &(imgSize[i]) );
-  }
+  for ( size_t i = 0; i < ImageDim; i++ )
+    {
+    this->m_GPUKernelManager->SetKernelArg( m_UnaryFunctorImageFilterGPUKernelHandle, argidx++,
+                                            sizeof( cl_uint ), &( imgSize[i] ) );
+    }
 
   // launch kernel
-  this->m_GPUKernelManager->LaunchKernel(m_UnaryFunctorImageFilterGPUKernelHandle, ImageDim, globalSize, localSize );
+  this->m_GPUKernelManager->LaunchKernel( m_UnaryFunctorImageFilterGPUKernelHandle,
+                                          OpenCLSize(globalSize), OpenCLSize(localSize) );
 }
-
 } // end of namespace itk
 
 #endif

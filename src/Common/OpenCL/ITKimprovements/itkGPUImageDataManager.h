@@ -38,10 +38,11 @@ namespace itk
  *
  * \ingroup ITKGPUCommon
  */
-template < class TPixel, unsigned int NDimension > class GPUImage;
+template< class TPixel, unsigned int NDimension >
+class GPUImage;
 
-template < class ImageType >
-class ITK_EXPORT GPUImageDataManager : public GPUDataManager
+template< class ImageType >
+class ITKOpenCL_EXPORT GPUImageDataManager:public GPUDataManager
 {
   // allow GPUKernelManager to access GPU buffer pointer
   friend class GPUKernelManager;
@@ -50,13 +51,13 @@ class ITK_EXPORT GPUImageDataManager : public GPUDataManager
 public:
   typedef GPUImageDataManager        Self;
   typedef GPUDataManager             Superclass;
-  typedef SmartPointer<Self>         Pointer;
-  typedef SmartPointer<const Self>   ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   itkNewMacro(Self);
   itkTypeMacro(GPUImageDataManager, GPUDataManager);
 
-  void SetImagePointer( typename ImageType::Pointer img );
+  void SetImagePointer(typename ImageType::Pointer img);
 
   /** actual GPU->CPU memory copy takes place here */
   virtual void UpdateCPUBuffer();
@@ -65,19 +66,18 @@ public:
   virtual void UpdateGPUBuffer();
 
   /** Grafting GPU Image Data */
-  virtual void Graft(const GPUImageDataManager* data);
+  virtual void Graft(const GPUImageDataManager *data);
 
 protected:
-  GPUImageDataManager() { m_Image = NULL; };
-  virtual ~GPUImageDataManager() {};
+  GPUImageDataManager() { m_Image = NULL; }
+  virtual ~GPUImageDataManager() {}
 
 private:
-  GPUImageDataManager(const Self&); // purposely not implemented
-  void operator=(const Self&);			// purposely not implemented
+  GPUImageDataManager(const Self &); // purposely not implemented
+  void operator=(const Self &);      // purposely not implemented
 
   typename ImageType::Pointer m_Image;
 };
-
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

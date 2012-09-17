@@ -27,6 +27,8 @@
 #include <itkLightObject.h>
 #include <itkObjectFactory.h>
 #include "itkOpenCLUtil.h"
+#include "itkOpenCLEvent.h"
+#include "itkOpenCLSize.h"
 #include "itkGPUImage.h"
 #include "itkGPUContextManager.h"
 #include "itkGPUDataManager.h"
@@ -41,81 +43,97 @@ namespace itk
  *
  * \ingroup ITKGPUCommon
  */
-class ITK_EXPORT GPUKernelManager : public LightObject
+
+class OpenCLKernelPrivate;
+
+//------------------------------------------------------------------------------
+class ITKOpenCL_EXPORT GPUKernelManager:public LightObject
 {
 public:
 
-  struct KernelArgumentList
-  {
+  struct KernelArgumentList {
     bool m_IsReady;
     GPUDataManager::Pointer m_GPUDataManager;
   };
 
-  typedef GPUKernelManager         Self;
-  typedef LightObject              Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef GPUKernelManager           Self;
+  typedef LightObject                Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   itkNewMacro(Self);
   itkTypeMacro(GPUKernelManager, LightObject);
 
-  bool LoadProgramFromFile(const char* filename, const char* preamble="");
+  void SetGlobalWorkSize(const size_t kernelId, const OpenCLSize & size);
 
-  bool LoadProgramFromString(const char* source, const char* preamble="");
+  OpenCLSize GetGlobalWorkSize(const std::size_t kernelId) const;
 
-  int  CreateKernel(const char* kernelName);
+  void SetLocalWorkSize(const size_t kernelId, const OpenCLSize & size);
 
-  cl_int GetKernelWorkGroupInfo(int kernelIdx,
-    cl_kernel_work_group_info paramName,void *value);
+  OpenCLSize GetLocalWorkSize(const std::size_t kernelId) const;
 
-  bool SetKernelArg(int kernelIdx, cl_uint argIdx, size_t argSize, const void* argVal);
-  bool SetKernelArgWithImage(int kernelIdx, cl_uint argIdx, GPUDataManager::Pointer manager);
+  void SetGlobalWorkOffset(const size_t kernelId, const OpenCLSize & offset);
 
-  bool LaunchKernel(int kernelIdx, int dim, size_t *globalWorkSize, size_t *localWorkSize);
-	bool LaunchKernel(int kernelIdx, int dim, size_t *globalWorkSize);
+  OpenCLSize GetGlobalWorkOffset(const std::size_t kernelId) const;
 
-  bool LaunchKernel1D(int kernelIdx, size_t globalWorkSize, size_t localWorkSize);
-  bool LaunchKernel1D(int kernelIdx, size_t globalWorkSize);
+  OpenCLEvent LaunchKernel(const size_t kernelId);
 
-  bool LaunchKernel2D(int kernelIdx,
-    size_t globalWorkSizeX, size_t globalWorkSizeY,
-    size_t localWorkSizeX,  size_t localWorkSizeY );
-  bool LaunchKernel2D(int kernelIdx,
-    size_t globalWorkSizeX, size_t globalWorkSizeY);
+  OpenCLEvent LaunchKernel(const size_t kernelId,
+                           const OpenCLSize & global_work_size,
+                           const OpenCLSize & local_work_size = OpenCLSize::null,
+                           const OpenCLSize & global_work_offset = OpenCLSize::null);
 
-  bool LaunchKernel3D(int kernelIdx,
-    size_t globalWorkSizeX, size_t globalWorkSizeY, size_t globalWorkSizeZ,
-    size_t localWorkSizeX,  size_t localWorkSizeY, size_t localWorkSizeZ );
-  bool LaunchKernel3D(int kernelIdx,
-    size_t globalWorkSizeX, size_t globalWorkSizeY, size_t globalWorkSizeZ);
+  OpenCLEvent LaunchKernel(const size_t kernelId, const OpenCLEventList & after);
 
-  void SetCurrentCommandQueue( int queueid );
+  OpenCLEvent LaunchKernel(const size_t kernelId, const OpenCLEventList & after,
+                           const OpenCLSize & global_work_size,
+                           const OpenCLSize & local_work_size = OpenCLSize::null,
+                           const OpenCLSize & global_work_offset = OpenCLSize::null);
+
+  bool LoadProgramFromFile(const char *filename, const char *preamble = "");
+
+  bool LoadProgramFromString(const char *source, const char *preamble = "");
+
+  int  CreateKernel(const char *kernelName);
+
+  cl_int GetKernelWorkGroupInfo(const size_t kernelId,
+                                cl_kernel_work_group_info paramName, void *value);
+
+  bool SetKernelArg(const size_t kernelId,
+                    const cl_uint argId, const size_t argSize, const void *argVal);
+
+  bool SetKernelArgWithImage(const size_t kernelId, cl_uint argId, GPUDataManager::Pointer manager);
+
+  void SetCurrentCommandQueue(const size_t queueid);
 
   int  GetCurrentCommandQueueID();
 
 protected:
   GPUKernelManager();
-  virtual ~GPUKernelManager() {
-  }
+  virtual ~GPUKernelManager();
 
-  bool CheckArgumentReady(int kernelIdx);
-  void ResetArguments(int kernelIdx);
-  bool CreateOpenCLProgram(const std::string &filename,
-    const std::string &source, const std::size_t sourceSize);
+  bool CheckArgumentReady(const size_t kernelId);
+
+  void ResetArguments(const size_t kernelIdx);
+
+  bool CreateOpenCLProgram(const std::string & filename,
+                           const std::string & source, const std::size_t sourceSize);
 
 private:
-  GPUKernelManager(const Self&);  // purposely not implemented
-  void operator=(const Self&);    // purposely not implemented
+  GPUKernelManager(const Self &); // purposely not implemented
+  void operator=(const Self &);   // purposely not implemented
 
-  cl_program            m_Program;
+  cl_program m_Program;
 
-  GPUContextManager *   m_Manager;
-  int                   m_CommandQueueId;
+  GPUContextManager *m_Manager;
+  int                m_CommandQueueId;
 
-  std::vector< cl_kernel >                              m_KernelContainer;
-  std::vector< std::vector< KernelArgumentList > >      m_KernelArgumentReady;
+  std::vector< OpenCLKernelPrivate * > d_ptr;
+  //WeakPointer<OpenCLKernelPrivate> d_ptr;
+
+  std::vector< cl_kernel >                         m_KernelContainer;
+  std::vector< std::vector< KernelArgumentList > > m_KernelArgumentReady;
 };
-
 } // end namespace itk
 
 #endif
