@@ -33,4 +33,9 @@ GPUDataManager::Pointer GPUTransformBase::GetParametersDataManager() const
   return this->m_ParametersDataManager;
 }
 
+//------------------------------------------------------------------------------
+GPUDataManager::Pointer GPUTransformBase::GetParametersDataManager( const std::size_t index ) const
+{
+  return this->m_ParametersDataManager;
+}
 } // end namespace itk

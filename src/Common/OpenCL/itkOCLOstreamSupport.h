@@ -707,7 +707,6 @@ std::basic_ostream< charT, traits > & operator<<(
   strm << ")";
   return strm;
 }
-
 } // end namespace itk
 
 #endif

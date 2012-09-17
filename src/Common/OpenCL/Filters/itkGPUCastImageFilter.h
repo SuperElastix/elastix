@@ -129,8 +129,8 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPUCastImageFilterFactory::Pointer factory
-      = GPUCastImageFilterFactory::New();
+    GPUCastImageFilterFactory::Pointer factory =
+      GPUCastImageFilterFactory::New();
     itk::ObjectFactoryBase::RegisterFactory( factory );
   }
 
@@ -248,7 +248,6 @@ private:
     }
   }
 };
-
 } // end of namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

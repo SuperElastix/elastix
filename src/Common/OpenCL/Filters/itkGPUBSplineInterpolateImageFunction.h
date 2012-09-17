@@ -38,11 +38,11 @@ public:
   /** Standard class typedefs. */
   typedef GPUBSplineInterpolateImageFunction Self;
   typedef GPUInterpolateImageFunction<
-    TInputImage, TCoordRep, BSplineInterpolateImageFunction<
-    TInputImage, TCoordRep, TCoefficientType > > GPUSuperclass;
+      TInputImage, TCoordRep, BSplineInterpolateImageFunction<
+        TInputImage, TCoordRep, TCoefficientType > > GPUSuperclass;
   typedef BSplineInterpolateImageFunction<
-    TInputImage, TCoordRep, BSplineInterpolateImageFunction<
-    TInputImage, TCoordRep, TCoefficientType > > CPUSuperclass;
+      TInputImage, TCoordRep, BSplineInterpolateImageFunction<
+        TInputImage, TCoordRep, TCoefficientType > > CPUSuperclass;
   typedef GPUSuperclass              Superclass;
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
@@ -196,7 +196,6 @@ private:
     }
   }
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

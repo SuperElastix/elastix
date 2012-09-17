@@ -96,15 +96,11 @@ template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder
 GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
 ::GPUBSplineTransform()
 {
-  // Add GPUMatrixOffsetTransformBase header
-  const std::string sourcePath0(
-    GPUMatrixOffsetTransformBaseHeaderKernel::GetOpenCLSource() );
-  m_Sources.push_back( sourcePath0 );
-
   // Add GPUBSplineTransform source
-  const std::string sourcePath1(
+  const std::string sourcePath(
     GPUBSplineTransformKernel::GetOpenCLSource() );
-  m_Sources.push_back( sourcePath1 );
+
+  m_Sources.push_back( sourcePath );
 
   m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 }
@@ -137,7 +133,7 @@ bool GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
   source << "#define GPUBSplineTransformNumberOfWeights (" << numberOfWeights << ")" << std::endl;
 
   // Add other sources
-  for ( unsigned int i = 0; i < m_Sources.size(); i++ )
+  for ( size_t i = 0; i < m_Sources.size(); i++ )
   {
     source << m_Sources[i] << std::endl;
   }
@@ -149,13 +145,29 @@ bool GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, class TParentImageFilter >
 void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
+::SetCoefficientImages( const CoefficientImageArray & images )
+{
+  Superclass::SetCoefficientImages( images );
+  CopyCoefficientImagesToGPU();
+}
+
+//------------------------------------------------------------------------------
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, class TParentImageFilter >
+void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
 ::SetParameters( const ParametersType & parameters )
 {
   Superclass::SetParameters( parameters );
+  CopyCoefficientImagesToGPU();
+}
 
-  typedef typename Superclass::ImageType CPUCoefficientImage;
-  typedef typename CPUCoefficientImage::PixelType CPUCoefficientsImagePixelType;
-  typedef GPUImage<CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension > GPUCoefficientsImageType;
+//------------------------------------------------------------------------------
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, class TParentImageFilter >
+void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
+::CopyCoefficientImagesToGPU()
+{
+  typedef typename Superclass::ImageType                                                 CPUCoefficientImage;
+  typedef typename CPUCoefficientImage::PixelType                                        CPUCoefficientsImagePixelType;
+  typedef GPUImage< CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension > GPUCoefficientsImageType;
 
   for ( unsigned int j = 0; j < SpaceDimension; j++ )
   {
@@ -175,14 +187,6 @@ void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
     }
   }
 
-  CopyCoefficientImagesToGPU();
-}
-
-//------------------------------------------------------------------------------
-template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder, class TParentImageFilter >
-void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
-::CopyCoefficientImagesToGPU()
-{
   // CPU Typedefs
   typedef BSplineTransform< TScalarType, NDimensions, VSplineOrder > BSplineTransformType;
   typedef typename BSplineTransformType::ImageType                   TransformCoefficientImageType;
@@ -230,7 +234,6 @@ void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
 {
   Superclass::PrintSelf( os, indent );
 }
-
 } // namespace
 
 #endif /* __itkGPUBSplineTransform_hxx */

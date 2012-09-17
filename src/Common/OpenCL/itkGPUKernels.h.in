@@ -1,41 +1,47 @@
-/*======================================================================
+/*=========================================================================
+*
+*  Copyright Insight Software Consortium
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*         http://www.apache.org/licenses/LICENSE-2.0.txt
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+*
+*=========================================================================*/
 
-  This file is part of the elastix software.
+// GPU Kernels
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
 #ifndef __itkGPUKernels_h
 #define __itkGPUKernels_h
 
 namespace itk
 {
-  const char* const oclGPUBSplineDecompositionImageFilter           = "@ELASTIX_OPENCL_KERNELS_PATH@GPUBSplineDecompositionImageFilter.cl";
-  const char* const oclGPUBSplineInterpolateImageFunction           = "@ELASTIX_OPENCL_KERNELS_PATH@GPUBSplineInterpolateImageFunction.cl";
-  const char* const oclGPUBSplineTransform                          = "@ELASTIX_OPENCL_KERNELS_PATH@GPUBSplineTransform.cl";
-  const char* const oclGPUCastImageFilter                           = "@ELASTIX_OPENCL_KERNELS_PATH@GPUCastImageFilter.cl";
-  const char* const oclGPUIdentityTransform                         = "@ELASTIX_OPENCL_KERNELS_PATH@GPUIdentityTransform.cl";
-  const char* const oclGPUImageBase                                 = "@ELASTIX_OPENCL_KERNELS_PATH@GPUImageBase.cl";
-  const char* const oclGPUImageBaseTest                             = "@ELASTIX_OPENCL_KERNELS_PATH@GPUImageBaseTest.cl";
-  const char* const oclGPUImageFunction                             = "@ELASTIX_OPENCL_KERNELS_PATH@GPUImageFunction.cl";
-  const char* const oclGPULinearInterpolateImageFunction            = "@ELASTIX_OPENCL_KERNELS_PATH@GPULinearInterpolateImageFunction.cl";
-  const char* const oclGPUMath                                      = "@ELASTIX_OPENCL_KERNELS_PATH@GPUMath.cl";
-  const char* const oclGPUMatrixOffsetTransformBase                 = "@ELASTIX_OPENCL_KERNELS_PATH@GPUMatrixOffsetTransformBase.cl";
-  const char* const oclhGPUMatrixOffsetTransformBase                = "@ELASTIX_OPENCL_KERNELS_PATH@GPUMatrixOffsetTransformBase.clh";
-  const char* const oclGPUNearestNeighborInterpolateImageFunction   = "@ELASTIX_OPENCL_KERNELS_PATH@GPUNearestNeighborInterpolateImageFunction.cl";
-  const char* const oclGPURecursiveGaussianImageFilter              = "@ELASTIX_OPENCL_KERNELS_PATH@GPURecursiveGaussianImageFilter.cl";
-  const char* const oclGPUResampleImageFilter                       = "@ELASTIX_OPENCL_KERNELS_PATH@GPUResampleImageFilter.cl";
-  const char* const oclGPUShrinkImageFilter                         = "@ELASTIX_OPENCL_KERNELS_PATH@GPUShrinkImageFilter.cl";
+  const char* const oclGPUBSplineDecompositionImageFilter           = "@ITK4OPENCL_KERNELS_PATH@GPUBSplineDecompositionImageFilter.cl";
+  const char* const oclGPUBSplineInterpolateImageFunction           = "@ITK4OPENCL_KERNELS_PATH@GPUBSplineInterpolateImageFunction.cl";
+  const char* const oclGPUBSplineTransform                          = "@ITK4OPENCL_KERNELS_PATH@GPUBSplineTransform.cl";
+  const char* const oclGPUCastImageFilter                           = "@ITK4OPENCL_KERNELS_PATH@GPUCastImageFilter.cl";
+  const char* const oclGPUIdentityTransform                         = "@ITK4OPENCL_KERNELS_PATH@GPUIdentityTransform.cl";
+  const char* const oclGPUImageBase                                 = "@ITK4OPENCL_KERNELS_PATH@GPUImageBase.cl";
+  const char* const oclGPUImageBaseTest                             = "@ITK4OPENCL_KERNELS_PATH@GPUImageBaseTest.cl";
+  const char* const oclGPUImageFunction                             = "@ITK4OPENCL_KERNELS_PATH@GPUImageFunction.cl";
+  const char* const oclGPULinearInterpolateImageFunction            = "@ITK4OPENCL_KERNELS_PATH@GPULinearInterpolateImageFunction.cl";
+  const char* const oclGPUMath                                      = "@ITK4OPENCL_KERNELS_PATH@GPUMath.cl";
+  const char* const oclGPUMatrixOffsetTransformBase                 = "@ITK4OPENCL_KERNELS_PATH@GPUMatrixOffsetTransformBase.cl";
+  const char* const oclhGPUMatrixOffsetTransformBase                = "@ITK4OPENCL_KERNELS_PATH@GPUMatrixOffsetTransformBase.clh";
+  const char* const oclGPUNearestNeighborInterpolateImageFunction   = "@ITK4OPENCL_KERNELS_PATH@GPUNearestNeighborInterpolateImageFunction.cl";
+  const char* const oclGPURecursiveGaussianImageFilter              = "@ITK4OPENCL_KERNELS_PATH@GPURecursiveGaussianImageFilter.cl";
+  const char* const oclGPUResampleImageFilter                       = "@ITK4OPENCL_KERNELS_PATH@GPUResampleImageFilter.cl";
+  const char* const oclGPUShrinkImageFilter                         = "@ITK4OPENCL_KERNELS_PATH@GPUShrinkImageFilter.cl";
 
 // This is only for debug purpose and will be removed later
-  const char* const oclGPUResampleImageFilterFinal                  = "@ELASTIX_OPENCL_KERNELS_PATH@GPUResampleImageFilterFinal.cl";
-
+  const char* const oclGPUResampleImageFilterFinal                  = "@ITK4OPENCL_KERNELS_PATH@GPUResampleImageFilterFinal.cl";
 } // end namespace itk
 
 #endif

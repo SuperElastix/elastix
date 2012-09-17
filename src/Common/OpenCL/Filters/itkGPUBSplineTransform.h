@@ -41,6 +41,7 @@ public:
   typedef SmartPointer< Self >                                Pointer;
   typedef SmartPointer< const Self >                          ConstPointer;
   typedef typename Superclass::ParametersType                 ParametersType;
+  typedef typename Superclass::CoefficientImageArray          CoefficientImageArray;
 
   itkNewMacro( Self );
 
@@ -51,6 +52,7 @@ public:
   itkTypeMacro( GPUBSplineTransform, TParentImageFilter );
 
   void SetParameters( const ParametersType & parameters );
+  void SetCoefficientImages( const CoefficientImageArray & images );
 
 protected:
   GPUBSplineTransform();
@@ -94,8 +96,8 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPUBSplineTransformFactory::Pointer factory
-      = GPUBSplineTransformFactory::New();
+    GPUBSplineTransformFactory::Pointer factory =
+      GPUBSplineTransformFactory::New();
     ObjectFactoryBase::RegisterFactory( factory );
   }
 
@@ -149,7 +151,6 @@ private:
     }
   }
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

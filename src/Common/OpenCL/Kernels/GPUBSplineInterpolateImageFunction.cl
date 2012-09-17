@@ -17,39 +17,40 @@
 //------------------------------------------------------------------------------
 // purposely not implemented. Supporting OpenCL compilation.
 float evaluate_at_continuous_index_1d(const float index,
-                                      __global const INPIXELTYPE* in,
+                                      __global const INPIXELTYPE *in,
                                       __constant GPUImageBase1D *image,
-                                      __constant GPUImageFunction1D* image_function)
+                                      __constant GPUImageFunction1D *image_function)
 {
-  return 0.0;
+  return 0.0f;
 }
 
 //------------------------------------------------------------------------------
 // purposely not implemented. Supporting OpenCL compilation.
 float evaluate_at_continuous_index_2d(const float2 index,
-                                      __global const INPIXELTYPE* in,
+                                      __global const INPIXELTYPE *in,
                                       __constant GPUImageBase2D *image,
-                                      __constant GPUImageFunction2D* image_function)
+                                      __constant GPUImageFunction2D *image_function)
 {
-  return 0.0;
+  return 0.0f;
 }
 
 //------------------------------------------------------------------------------
 // purposely not implemented. Supporting OpenCL compilation.
 float evaluate_at_continuous_index_3d(const float3 index,
-                                      __global const INPIXELTYPE* in,
+                                      __global const INPIXELTYPE *in,
                                       __constant GPUImageBase3D *image,
-                                      __constant GPUImageFunction3D* image_function)
+                                      __constant GPUImageFunction3D *image_function)
 {
-  return 0.0;
+  return 0.0f;
 }
 
 //------------------------------------------------------------------------------
-void determine(long* evaluate_index, const float index,
+void determine(long *evaluate_index, const float index,
                const uint offset, const float half_offset,
                const uint spline_order)
 {
   long indx = (long)(floor(index + half_offset) - spline_order / 2);
+
   for(uint k = 0; k <= spline_order; k++)
   {
     uint eindx = offset + k;
@@ -58,33 +59,36 @@ void determine(long* evaluate_index, const float index,
 }
 
 //------------------------------------------------------------------------------
-void determine_region_of_support_1d(long* evaluate_index,
+void determine_region_of_support_1d(long *evaluate_index,
                                     const float continuous_index,
                                     const uint spline_order)
 {
   const float half_offset = spline_order & 1 ? 0.0 : 0.5;
+
   determine(evaluate_index, continuous_index, 0, half_offset, spline_order);
 }
 
 //------------------------------------------------------------------------------
-void determine_region_of_support_2d(long* evaluate_index,
+void determine_region_of_support_2d(long *evaluate_index,
                                     const float2 continuous_index,
                                     const uint spline_order)
 {
   const float half_offset = spline_order & 1 ? 0.0 : 0.5;
+
   determine(evaluate_index, continuous_index.x, 0, half_offset, spline_order);
   determine(evaluate_index, continuous_index.y, (spline_order + 1), half_offset, spline_order);
 }
 
 //------------------------------------------------------------------------------
-void determine_region_of_support_3d(long* evaluate_index,
+void determine_region_of_support_3d(long *evaluate_index,
                                     const float3 continuous_index,
                                     const uint spline_order)
 {
   const float half_offset = spline_order & 1 ? 0.0 : 0.5;
+
   determine(evaluate_index, continuous_index.x, 0, half_offset, spline_order);
   determine(evaluate_index, continuous_index.y, (spline_order + 1), half_offset, spline_order);
-  determine(evaluate_index, continuous_index.z, (spline_order + 1)*2, half_offset, spline_order);
+  determine(evaluate_index, continuous_index.z, (spline_order + 1) * 2, half_offset, spline_order);
 }
 
 //------------------------------------------------------------------------------
@@ -92,13 +96,14 @@ void determine_region_of_support_3d(long* evaluate_index,
 uint get_array_offset(const uint x, const uint y, const uint width)
 {
   uint idx = mad24(width, y, x);
+
   return idx;
 }
 
 //------------------------------------------------------------------------------
 void set_interpolation_weights_1d(const float index,
-                                  const long* evaluate_index,
-                                  float* weights,
+                                  const long *evaluate_index,
+                                  float *weights,
                                   const uint spline_order)
 {
   // For speed improvements we could make each case a separate function and use
@@ -108,47 +113,42 @@ void set_interpolation_weights_1d(const float index,
 
   // create float x from float, makes it easy to use
   float x = index;
-  uint width = spline_order + 1;
+  uint  width = spline_order + 1;
 
   // spline_order must be between 0 and 5.
   if(spline_order == 3)
   {
-     w = x - (float)evaluate_index[get_array_offset(1,0,width)];
-     weights[get_array_offset(3,0,width)] = ( 1.0 / 6.0 ) * w * w * w;
-     weights[get_array_offset(0,0,width)] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[get_array_offset(3,0,width)];
-     weights[get_array_offset(2,0,width)] = w + weights[get_array_offset(0,0,width)] - 2.0 * weights[get_array_offset(3,0,width)];
-     weights[get_array_offset(1,0,width)] = 1.0 - weights[get_array_offset(0,0,width)] - weights[get_array_offset(2,0,width)] - weights[get_array_offset(3,0,width)];
+    w = x - (float)evaluate_index[get_array_offset(1, 0, width)];
+    weights[get_array_offset(3, 0, width)] = (1.0 / 6.0) * w * w * w;
+    weights[get_array_offset(0, 0, width)] = (1.0 / 6.0) + 0.5 * w * (w - 1.0) - weights[get_array_offset(3, 0, width)];
+    weights[get_array_offset(2,0,width)] = w + weights[get_array_offset(0,0,width)] - 2.0 * weights[get_array_offset(3,0,width)];
+    weights[get_array_offset(1,0,width)] = 1.0 - weights[get_array_offset(0,0,width)] - weights[get_array_offset(2,0,width)] - weights[get_array_offset(3,0,width)];
 
-      //w = x[n] - (float)evaluate_index[n][1];
-      //weights[n][3] = ( 1.0 / 6.0 ) * w * w * w;
-      //weights[n][0] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[n][3];
-      //weights[n][2] = w + weights[n][0] - 2.0 * weights[n][3];
-      //weights[n][1] = 1.0 - weights[n][0] - weights[n][2] - weights[n][3];
+    //w = x[n] - (float)evaluate_index[n][1];
+    //weights[n][3] = ( 1.0 / 6.0 ) * w * w * w;
+    //weights[n][0] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[n][3];
+    //weights[n][2] = w + weights[n][0] - 2.0 * weights[n][3];
+    //weights[n][1] = 1.0 - weights[n][0] - weights[n][2] - weights[n][3];
     return;
   }
   else if(spline_order == 0)
   {
-
     return;
   }
   else if(spline_order == 1)
   {
-
     return;
   }
   else if(spline_order == 2)
   {
-
     return;
   }
   else if(spline_order == 4)
   {
-
     return;
   }
   else if(spline_order == 5)
   {
-
     return;
   }
 
@@ -253,8 +253,8 @@ void set_interpolation_weights_1d(const float index,
 
 //------------------------------------------------------------------------------
 void set_interpolation_weights_2d(const float2 index,
-                                  const long* evaluate_index,
-                                  float* weights,
+                                  const long *evaluate_index,
+                                  float *weights,
                                   const uint spline_order)
 {
   // For speed improvements we could make each case a separate function and use
@@ -264,6 +264,7 @@ void set_interpolation_weights_2d(const float2 index,
 
   // create float x[2] from float2, makes it easy to use in loops
   float x[2];
+
   x[0] = index.x;
   x[1] = index.y;
   uint width = spline_order + 1;
@@ -273,8 +274,8 @@ void set_interpolation_weights_2d(const float2 index,
   {
     for(unsigned int n = 0; n < 2; n++)
     {
-      w = x[n] - (float)evaluate_index[get_array_offset(1,n,width)];
-      weights[get_array_offset(3,n,width)] = ( 1.0 / 6.0 ) * w * w * w;
+      w = x[n] - (float)evaluate_index[get_array_offset(1, n, width)];
+      weights[get_array_offset(3, n, width)] = (1.0 / 6.0) * w * w * w;
       weights[get_array_offset(0,n,width)] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[get_array_offset(3,n,width)];
       weights[get_array_offset(2,n,width)] = w + weights[get_array_offset(0,n,width)] - 2.0 * weights[get_array_offset(3,n,width)];
       weights[get_array_offset(1,n,width)] = 1.0 - weights[get_array_offset(0,n,width)] - weights[get_array_offset(2,n,width)] - weights[get_array_offset(3,n,width)];
@@ -289,27 +290,22 @@ void set_interpolation_weights_2d(const float2 index,
   }
   else if(spline_order == 0)
   {
-
     return;
   }
   else if(spline_order == 1)
   {
-
     return;
   }
   else if(spline_order == 2)
   {
-
     return;
   }
   else if(spline_order == 4)
   {
-
     return;
   }
   else if(spline_order == 5)
   {
-
     return;
   }
 
@@ -414,8 +410,8 @@ void set_interpolation_weights_2d(const float2 index,
 
 //------------------------------------------------------------------------------
 void set_interpolation_weights_3d(const float3 index,
-                                  const long* evaluate_index,
-                                  float* weights,
+                                  const long *evaluate_index,
+                                  float *weights,
                                   const uint spline_order)
 {
   // For speed improvements we could make each case a separate function and use
@@ -425,6 +421,7 @@ void set_interpolation_weights_3d(const float3 index,
 
   // create float x[3] from float3, makes it easy to use in loops
   float x[3];
+
   x[0] = index.x;
   x[1] = index.y;
   x[2] = index.z;
@@ -435,8 +432,8 @@ void set_interpolation_weights_3d(const float3 index,
   {
     for(unsigned int n = 0; n < 3; n++)
     {
-      w = x[n] - (float)evaluate_index[get_array_offset(1,n,width)];
-      weights[get_array_offset(3,n,width)] = ( 1.0 / 6.0 ) * w * w * w;
+      w = x[n] - (float)evaluate_index[get_array_offset(1, n, width)];
+      weights[get_array_offset(3, n, width)] = (1.0 / 6.0) * w * w * w;
       weights[get_array_offset(0,n,width)] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[get_array_offset(3,n,width)];
       weights[get_array_offset(2,n,width)] = w + weights[get_array_offset(0,n,width)] - 2.0 * weights[get_array_offset(3,n,width)];
       weights[get_array_offset(1,n,width)] = 1.0 - weights[get_array_offset(0,n,width)] - weights[get_array_offset(2,n,width)] - weights[get_array_offset(3,n,width)];
@@ -451,27 +448,22 @@ void set_interpolation_weights_3d(const float3 index,
   }
   else if(spline_order == 0)
   {
-
     return;
   }
   else if(spline_order == 1)
   {
-
     return;
   }
   else if(spline_order == 2)
   {
-
     return;
   }
   else if(spline_order == 4)
   {
-
     return;
   }
   else if(spline_order == 5)
   {
-
     return;
   }
 
@@ -574,62 +566,64 @@ void set_interpolation_weights_3d(const float3 index,
   */
 }
 
-#ifdef DIM_1
 //------------------------------------------------------------------------------
-void apply_mirror_boundary_conditions_1d(long* evaluate_index,
+#ifdef DIM_1
+void apply_mirror_boundary_conditions_1d(long *evaluate_index,
                                          __constant GPUImageBase1D *coefficients_image,
-                                         __constant GPUImageFunction1D* image_function,
+                                         __constant GPUImageFunction1D *image_function,
                                          const uint spline_order)
 {
-  long start_index = image_function->StartIndex;
-  long end_index = image_function->EndIndex;
-  uint data_length = coefficients_image->Size;
+  long start_index = image_function->start_index;
+  long end_index = image_function->end_index;
+  uint data_length = coefficients_image->size;
   uint width = spline_order + 1;
 
   if(data_length == 1)
   {
-    for (unsigned int k = 0; k <= spline_order; k++)
+    for(unsigned int k = 0; k <= spline_order; k++)
     {
-      evaluate_index[get_array_offset(k,0,width)] = 0;
+      evaluate_index[get_array_offset(k, 0, width)] = 0;
     }
   }
   else
   {
     for(unsigned int k = 0; k <= spline_order; k++)
     {
-      if(evaluate_index[get_array_offset(k,0,width)] < start_index)
+      if(evaluate_index[get_array_offset(k, 0, width)] < start_index)
       {
-        evaluate_index[get_array_offset(k,0,width)] = start_index +
-          ( start_index - evaluate_index[get_array_offset(k,0,width)] );
+        evaluate_index[get_array_offset(k, 0, width)] =
+          start_index + (start_index - evaluate_index[get_array_offset(k, 0, width)]);
       }
-      if(evaluate_index[get_array_offset(k,0,width)] >= end_index)
+      if(evaluate_index[get_array_offset(k, 0, width)] >= end_index)
       {
-        evaluate_index[get_array_offset(k,0,width)] = end_index -
-          ( evaluate_index[get_array_offset(k,0,width)] - end_index );
+        evaluate_index[get_array_offset(k, 0, width)] =
+          end_index - (evaluate_index[get_array_offset(k, 0, width)] - end_index);
       }
     }
   }
 }
+
 #endif // DIM_1
 
-#ifdef DIM_2
 //------------------------------------------------------------------------------
-void apply_mirror_boundary_conditions_2d(long* evaluate_index,
+#ifdef DIM_2
+void apply_mirror_boundary_conditions_2d(long *evaluate_index,
                                          __constant GPUImageBase2D *coefficients_image,
-                                         __constant GPUImageFunction2D* image_function,
+                                         __constant GPUImageFunction2D *image_function,
                                          const uint spline_order)
 {
   long start_index[2];
-  start_index[0] = image_function->StartIndex.x;
-  start_index[1] = image_function->StartIndex.y;
+
+  start_index[0] = image_function->start_index.x;
+  start_index[1] = image_function->start_index.y;
 
   long end_index[2];
-  end_index[0] = image_function->EndIndex.x;
-  end_index[1] = image_function->EndIndex.y;
+  end_index[0] = image_function->end_index.x;
+  end_index[1] = image_function->end_index.y;
 
   uint data_length[2];
-  data_length[0] = coefficients_image->Size.x;
-  data_length[1] = coefficients_image->Size.y;
+  data_length[0] = coefficients_image->size.x;
+  data_length[1] = coefficients_image->size.y;
 
   uint width = spline_order + 1;
 
@@ -637,52 +631,54 @@ void apply_mirror_boundary_conditions_2d(long* evaluate_index,
   {
     if(data_length[n] == 1)
     {
-      for (unsigned int k = 0; k <= spline_order; k++)
+      for(unsigned int k = 0; k <= spline_order; k++)
       {
-        evaluate_index[get_array_offset(k,n,width)] = 0;
+        evaluate_index[get_array_offset(k, n, width)] = 0;
       }
     }
     else
     {
       for(unsigned int k = 0; k <= spline_order; k++)
       {
-        if(evaluate_index[get_array_offset(k,n,width)] < start_index[n])
+        if(evaluate_index[get_array_offset(k, n, width)] < start_index[n])
         {
-          evaluate_index[get_array_offset(k,n,width)] = start_index[n] +
-            ( start_index[n] - evaluate_index[get_array_offset(k,n,width)] );
+          evaluate_index[get_array_offset(k, n, width)] =
+            start_index[n] + (start_index[n] - evaluate_index[get_array_offset(k, n, width)]);
         }
-        if(evaluate_index[get_array_offset(k,n,width)] >= end_index[n])
+        if(evaluate_index[get_array_offset(k, n, width)] >= end_index[n])
         {
-          evaluate_index[get_array_offset(k,n,width)] = end_index[n] -
-            ( evaluate_index[get_array_offset(k,n,width)] - end_index[n] );
+          evaluate_index[get_array_offset(k, n, width)] =
+            end_index[n] - (evaluate_index[get_array_offset(k, n, width)] - end_index[n]);
         }
       }
     }
   }
 }
+
 #endif // DIM_2
 
-#ifdef DIM_3
 //------------------------------------------------------------------------------
-void apply_mirror_boundary_conditions_3d(long* evaluate_index,
+#ifdef DIM_3
+void apply_mirror_boundary_conditions_3d(long *evaluate_index,
                                          __constant GPUImageBase3D *coefficients_image,
-                                         __constant GPUImageFunction3D* image_function,
+                                         __constant GPUImageFunction3D *image_function,
                                          const uint spline_order)
 {
   long start_index[3];
-  start_index[0] = image_function->StartIndex.x;
-  start_index[1] = image_function->StartIndex.y;
-  start_index[2] = image_function->StartIndex.z;
+
+  start_index[0] = image_function->start_index.x;
+  start_index[1] = image_function->start_index.y;
+  start_index[2] = image_function->start_index.z;
 
   long end_index[3];
-  end_index[0] = image_function->EndIndex.x;
-  end_index[1] = image_function->EndIndex.y;
-  end_index[2] = image_function->EndIndex.z;
+  end_index[0] = image_function->end_index.x;
+  end_index[1] = image_function->end_index.y;
+  end_index[2] = image_function->end_index.z;
 
   uint data_length[3];
-  data_length[0] = coefficients_image->Size.x;
-  data_length[1] = coefficients_image->Size.y;
-  data_length[2] = coefficients_image->Size.z;
+  data_length[0] = coefficients_image->size.x;
+  data_length[1] = coefficients_image->size.y;
+  data_length[2] = coefficients_image->size.z;
 
   uint width = spline_order + 1;
 
@@ -690,45 +686,46 @@ void apply_mirror_boundary_conditions_3d(long* evaluate_index,
   {
     if(data_length[n] == 1)
     {
-      for (unsigned int k = 0; k <= spline_order; k++)
+      for(unsigned int k = 0; k <= spline_order; k++)
       {
-        evaluate_index[get_array_offset(k,n,width)] = 0;
+        evaluate_index[get_array_offset(k, n, width)] = 0;
       }
     }
     else
     {
       for(unsigned int k = 0; k <= spline_order; k++)
       {
-        if(evaluate_index[get_array_offset(k,n,width)] < start_index[n])
+        if(evaluate_index[get_array_offset(k, n, width)] < start_index[n])
         {
-          evaluate_index[get_array_offset(k,n,width)] = start_index[n] +
-            ( start_index[n] - evaluate_index[get_array_offset(k,n,width)] );
+          evaluate_index[get_array_offset(k, n, width)] =
+            start_index[n] + (start_index[n] - evaluate_index[get_array_offset(k, n, width)]);
         }
-        if(evaluate_index[get_array_offset(k,n,width)] >= end_index[n])
+        if(evaluate_index[get_array_offset(k, n, width)] >= end_index[n])
         {
-          evaluate_index[get_array_offset(k,n,width)] = end_index[n] -
-            ( evaluate_index[get_array_offset(k,n,width)] - end_index[n] );
+          evaluate_index[get_array_offset(k, n, width)] =
+            end_index[n] - (evaluate_index[get_array_offset(k, n, width)] - end_index[n]);
         }
       }
     }
   }
 }
+
 #endif // DIM_3
 
-#ifdef DIM_1
 //------------------------------------------------------------------------------
+#ifdef DIM_1
 float bspline_evaluate_at_continuous_index_1d(const float index,
-                                              __global const INPIXELTYPE* in,
+                                              __global const INPIXELTYPE *in,
                                               __constant GPUImageBase1D *in_image,
-                                              __constant GPUImageFunction1D* image_function,
-                                              __global const INTERPOLATOR_PRECISION_TYPE* coefficients,
+                                              __constant GPUImageFunction1D *image_function,
+                                              __global const INTERPOLATOR_PRECISION_TYPE *coefficients,
                                               __constant GPUImageBase1D *coefficients_image)
 {
   // variable length array declaration not allowed in OpenCL,
   // therefore we are using #define GPUBSplineOrder num
-  long evaluate_index[GPUBSplineOrder+1];
-  float weights[GPUBSplineOrder+1];
-  ulong width = (ulong)(GPUBSplineOrder+1);
+  long  evaluate_index[GPUBSplineOrder + 1];
+  float weights[GPUBSplineOrder + 1];
+  ulong width = (ulong)(GPUBSplineOrder + 1);
 
   // compute the interpolation indexes
   determine_region_of_support_1d(evaluate_index, index, GPUBSplineOrder);
@@ -739,7 +736,7 @@ float bspline_evaluate_at_continuous_index_1d(const float index,
 
   // define points_to_index
   ulong index_factor;
-  uint points_to_index[GPUMaxNumberInterpolationPoints];
+  uint  points_to_index[GPUMaxNumberInterpolationPoints];
   for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
   {
     points_to_index[p] = p;
@@ -747,13 +744,13 @@ float bspline_evaluate_at_continuous_index_1d(const float index,
 
   // perform interpolation
   float interpolated = 0.0;
-  uint coefficient_index;
+  uint  coefficient_index;
 
   // Step through each point in the N-dimensional interpolation cube.
   for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
   {
     float w = 1.0;
-    uint indx = points_to_index[p];
+    uint  indx = points_to_index[p];
     w *= weights[indx];
     coefficient_index = evaluate_index[indx];
 
@@ -763,22 +760,23 @@ float bspline_evaluate_at_continuous_index_1d(const float index,
 
   return interpolated;
 }
+
 #endif // DIM_1
 
-#ifdef DIM_2
 //------------------------------------------------------------------------------
+#ifdef DIM_2
 float bspline_evaluate_at_continuous_index_2d(const float2 index,
-                                              __global const INPIXELTYPE* in,
+                                              __global const INPIXELTYPE *in,
                                               __constant GPUImageBase2D *in_image,
-                                              __constant GPUImageFunction2D* image_function,
-                                              __global const INTERPOLATOR_PRECISION_TYPE* coefficients,
+                                              __constant GPUImageFunction2D *image_function,
+                                              __global const INTERPOLATOR_PRECISION_TYPE *coefficients,
                                               __constant GPUImageBase2D *coefficients_image)
 {
   // variable length array declaration not allowed in OpenCL,
   // therefore we are using #define GPUBSplineOrder num
-  long evaluate_index[2][GPUBSplineOrder+1];
-  float weights[2][GPUBSplineOrder+1];
-  ulong width = (ulong)(GPUBSplineOrder+1);
+  long  evaluate_index[2][GPUBSplineOrder + 1];
+  float weights[2][GPUBSplineOrder + 1];
+  ulong width = (ulong)(GPUBSplineOrder + 1);
 
   // compute the interpolation indexes
   determine_region_of_support_2d(evaluate_index, index, GPUBSplineOrder);
@@ -789,11 +787,11 @@ float bspline_evaluate_at_continuous_index_2d(const float2 index,
 
   // define points_to_index
   ulong2 index_factor;
-  uint points_to_index[GPUMaxNumberInterpolationPoints][2];
+  uint   points_to_index[GPUMaxNumberInterpolationPoints][2];
   for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
   {
-    int pp = p;
-    ulong2 index_factor = (ulong2)(1,width);
+    int    pp = p;
+    ulong2 index_factor = (ulong2)(1, width);
     points_to_index[p][1] = pp / index_factor.s1;
     pp = pp % index_factor.s1;
     points_to_index[p][0] = pp / index_factor.s0;
@@ -801,7 +799,7 @@ float bspline_evaluate_at_continuous_index_2d(const float2 index,
 
   // perform interpolation
   float interpolated = 0.0;
-  uint coefficient_index[2];
+  uint  coefficient_index[2];
 
   // Step through each point in the N-dimensional interpolation cube.
   for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
@@ -813,28 +811,29 @@ float bspline_evaluate_at_continuous_index_2d(const float2 index,
       w *= weights[n][indx];
       coefficient_index[n] = evaluate_index[n][indx];
     }
-    uint gidx = mad24(coefficients_image->Size.x, coefficient_index[1], coefficient_index[0]);
+    uint gidx = mad24(coefficients_image->size.x, coefficient_index[1], coefficient_index[0]);
     interpolated += w * (float)(coefficients[gidx]);
   }
 
   return interpolated;
 }
+
 #endif // DIM_2
 
-#ifdef DIM_3
 //------------------------------------------------------------------------------
+#ifdef DIM_3
 float bspline_evaluate_at_continuous_index_3d(const float3 index,
-                                              __global const INPIXELTYPE* in,
+                                              __global const INPIXELTYPE *in,
                                               __constant GPUImageBase3D *in_image,
-                                              __constant GPUImageFunction3D* image_function,
-                                              __global const INTERPOLATOR_PRECISION_TYPE* coefficients,
+                                              __constant GPUImageFunction3D *image_function,
+                                              __global const INTERPOLATOR_PRECISION_TYPE *coefficients,
                                               __constant GPUImageBase3D *coefficients_image)
 {
   // variable length array declaration not allowed in OpenCL,
   // therefore we are using #define GPUBSplineOrder num
-  long evaluate_index[3][GPUBSplineOrder+1];
-  float weights[3][GPUBSplineOrder+1];
-  ulong width = (ulong)(GPUBSplineOrder+1);
+  long  evaluate_index[3][GPUBSplineOrder + 1];
+  float weights[3][GPUBSplineOrder + 1];
+  ulong width = (ulong)(GPUBSplineOrder + 1);
 
   // compute the interpolation indexes
   determine_region_of_support_3d(evaluate_index, index, GPUBSplineOrder);
@@ -845,11 +844,11 @@ float bspline_evaluate_at_continuous_index_3d(const float3 index,
 
   // define points_to_index
   ulong3 index_factor;
-  uint points_to_index[GPUMaxNumberInterpolationPoints][3];
+  uint   points_to_index[GPUMaxNumberInterpolationPoints][3];
   for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
   {
-    int pp = p;
-    ulong3 index_factor = (ulong3)(1,width,width*width);
+    int    pp = p;
+    ulong3 index_factor = (ulong3)(1, width, width * width);
 
     points_to_index[p][2] = pp / index_factor.s2;
     pp = pp % index_factor.s2;
@@ -860,7 +859,7 @@ float bspline_evaluate_at_continuous_index_3d(const float3 index,
 
   // perform interpolation
   float interpolated = 0.0;
-  uint coefficient_index[3];
+  uint  coefficient_index[3];
 
   // Step through each point in the N-dimensional interpolation cube.
   for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
@@ -872,10 +871,14 @@ float bspline_evaluate_at_continuous_index_3d(const float3 index,
       w *= weights[n][indx];
       coefficient_index[n] = evaluate_index[n][indx];
     }
-    uint gidx = mad24(coefficients_image->Size.x, mad24(coefficient_index[2], coefficients_image->Size.y, coefficient_index[1]), coefficient_index[0]);
+    uint gidx =
+      mad24(coefficients_image->size.x, mad24(coefficient_index[2],
+                                              coefficients_image->size.y,
+                                              coefficient_index[1]), coefficient_index[0]);
     interpolated += w * (float)(coefficients[gidx]);
   }
 
   return interpolated;
 }
+
 #endif // DIM_3

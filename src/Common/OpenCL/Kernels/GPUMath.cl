@@ -28,14 +28,15 @@
 //  }
 //
 //  const TReturn r = static_cast< TReturn >( x );
-//  return ( x != static_cast< TInput >( r ) ) ? r : static_cast< TReturn >( 2 * ( r / 2 ) );
+//  return ( x != static_cast< TInput >( r ) ) ? r : static_cast< TReturn >( 2 *
+// ( r / 2 ) );
 //}
 //------------------------------------------------------------------------------
 // OpenCL implementation of
 // itkMathDetail::RoundHalfIntegerToEven_32()
 int round_half_integer_to_even_32(float x)
 {
-  if ( x >= 0.0 )
+  if(x >= 0.0)
   {
     x += 0.5f;
   }
@@ -44,8 +45,8 @@ int round_half_integer_to_even_32(float x)
     x -= 0.5f;
   }
 
-  const int r = (int)( x );
-  return ( x != (float)( r ) ) ? r : (int)( 2 * ( r / 2 ) );
+  const int r = (int)(x);
+  return ( x != (float)(r) ) ? r : (int)( 2 * (r / 2) );
 }
 
 int round_half_integer_up_32(float x)
@@ -71,9 +72,9 @@ int round_half_integer_up_32(float x)
 int round_half_integer_up(const float v)
 {
   float x = v + 0.5;
-  int r = (int) x;
+  int   r = (int)x;
 
-  return  ( x >= 0.0 ) ?
-          r :
-          ( x == (float)( r ) ? r : r - (int)( 1 ) );
+  return (x >= 0.0) ?
+         r :
+         ( x == (float)(r) ? r : r - (int)(1) );
 }

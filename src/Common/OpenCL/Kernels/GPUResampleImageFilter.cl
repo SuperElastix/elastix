@@ -1,19 +1,20 @@
 /*======================================================================
 
-  This file is part of the elastix software.
+This file is part of the elastix software.
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+Copyright (c) University Medical Center Utrecht. All rights reserved.
+See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
+This software is distributed WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
 
+//------------------------------------------------------------------------------
 // Typedef for FilterParameters struct
-typedef struct{
+typedef struct {
   int transform_linear;
   int interpolator_is_bspline;
   int transform_is_bspline;
@@ -23,18 +24,34 @@ typedef struct{
   float3 delta;
 } FilterParameters;
 
+//------------------------------------------------------------------------------
+// Apple OpenCL 1.0 support function
+bool is_valid(const uint3 index, const uint3 size)
+{
+  /* NOTE: More than three-level nested conditional statements (e.g.,
+  if A && B && C..) invalidates command queue during kernel
+  execution on Apple OpenCL 1.0 (such Macbook Pro with NVIDIA 9600M
+  GT). Therefore, we flattened conditional statements. */
+  if(index.x >= size.x){ return false; }
+  if(index.y >= size.y){ return false; }
+  if(index.z >= size.z){ return false; }
+  return true;
+}
+
+//------------------------------------------------------------------------------
 // cast from interpolator output to pixel type
-OUTPIXELTYPE cast_pixel_with_bounds_checking(const OUTPIXELTYPE value,
-                                             const float2 min_max,
-                                             const float2 min_max_output)
+OUTPIXELTYPE cast_pixel_with_bounds_checking(
+  const OUTPIXELTYPE value,
+  const float2 min_max,
+  const float2 min_max_output)
 {
   OUTPIXELTYPE output_value;
   // check for value min/max
-  if (value < min_max_output.x)
+  if(value < min_max_output.x)
   {
     output_value = min_max.x;
   }
-  else if (value > min_max_output.y)
+  else if(value > min_max_output.y)
   {
     output_value = min_max.y;
   }
@@ -45,481 +62,292 @@ OUTPIXELTYPE cast_pixel_with_bounds_checking(const OUTPIXELTYPE value,
   return output_value;
 }
 
-#ifdef DIM_1
-void resample_1d(__global const INPIXELTYPE* in,
-                 __constant GPUImageBase1D *inputImage,
-                 __global OUTPIXELTYPE* out,
-                 __constant GPUImageBase1D *outputImage,
-                 const uint index,
-                 __constant FilterParameters* parameters,
-                 __constant GPUImageFunction1D* image_function,
-                 __constant GPUMatrixOffsetTransformBase1D* transform_base,
-                 __global const INTERPOLATOR_PRECISION_TYPE* interpolator_coefficients,
-                 __constant GPUImageBase1D *interpolator_coefficientsImage,
-                 __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients,
-                 __constant GPUImageBase1D *transform_coefficientsImage)
+//------------------------------------------------------------------------------
+#if defined( DIM_3 ) && defined( RESAMPLE_PRE )
+__kernel void ResampleImageFilterPre(
+  /* output ImageBase information */
+  __global OUTPIXELTYPE *out,
+  __constant GPUImageBase3D *output_image,
+  /* */
+  __global float3 *tout,
+  uint3 tsize,
+  /* filter parameters */
+  __constant FilterParameters *parameters)
 {
-  // compute continuous index
-  float continuous_index;
-  if( parameters->transform_linear )
+  uint3 global_id = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
+  uint3 global_offset = (uint3)( get_global_offset(0), get_global_offset(1), get_global_offset(2) );
+
+  // recalculate index
+  uint3 index = global_id - global_offset;
+
+  if(is_valid(index, tsize) && is_valid(global_id, output_image->size))
   {
-    // compute continuous index for the first index
-    uint first_index = 0;
-    float point = transform_index_to_physical_point_1d(first_index, outputImage);
-    float tpoint;
-    if( parameters->transform_is_bspline )
+    float3 point;
+    if(parameters->transform_linear)
     {
-      tpoint = bspline_transform_point_1d(point,
-        transform_coefficients, transform_coefficientsImage);
+      // compute continuous index for the first index
+      uint3 first_index = (uint3)(0, global_id.y, global_id.z);
+      point = transform_index_to_physical_point_3d(first_index, output_image);
     }
     else
     {
-      tpoint = transform_point_1d(point, transform_base);
+      point = transform_index_to_physical_point_3d(global_id, output_image);
     }
-    float first_continuous_index;
-    transform_physical_point_to_continuous_index_1d(tpoint, &first_continuous_index, inputImage);
-    continuous_index = first_continuous_index + index * parameters->delta.x;
-  }
-  else
-  {
-    float point = transform_index_to_physical_point_1d(index, outputImage);
-    float tpoint;
-    if( parameters->transform_is_bspline )
-    {
-      tpoint = bspline_transform_point_1d(point,
-        transform_coefficients, transform_coefficientsImage);
-    }
-    else
-    {
-      tpoint = transform_point_1d(point, transform_base);
-    }
-    transform_physical_point_to_continuous_index_1d(tpoint, &continuous_index, inputImage);
-  }
 
-  // evaluate input at right position and copy to the output
-  if ( interpolator_is_inside_buffer_1d(continuous_index, image_function) )
-  {
-    OUTPIXELTYPE value;
-    if ( parameters->interpolator_is_bspline )
-    {
-      value = bspline_evaluate_at_continuous_index_1d(continuous_index,
-        in, inputImage, image_function, interpolator_coefficients, interpolator_coefficientsImage);
-    }
-    else
-    {
-      value = evaluate_at_continuous_index_1d(continuous_index, in, inputImage, image_function);
-    }
-    out[index] = cast_pixel_with_bounds_checking(value, parameters->min_max, parameters->min_max_output);
-  }
-  else
-  {
-    out[index] = parameters->default_value;
-  }
-}
-#endif
-
-#ifdef DIM_1
-// General ResampleImageFilter implementation in 1D
-__kernel void ResampleImageFilter(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase1D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase1D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction1D* imageFunction,
-  /* transform base parameters */
-  __constant GPUMatrixOffsetTransformBase1D* transformBase)
-{
-  uint index = get_global_id(0);
-
-  if(index < outputImage->Size)
-  {
-    // resample
-    resample_1d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction, transformBase,
-      0, 0,  // interpolate coefficients are null
-      0, 0); // transform coefficients are null
-  }
-}
-
-// ResampleImageFilter with BSplineInterpolateImageFunction implementation in 1D
-__kernel void ResampleImageFilter_InterpolatorBSpline(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase1D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase1D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction1D* imageFunction,
-  /* interpolator coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* interpolator_coefficients,
-  __constant GPUImageBase1D* interpolatorCoefficientsImage,
-  /* transform base parameters */
-  __constant GPUMatrixOffsetTransformBase1D* transformBase)
-{
-  uint index = get_global_id(0);
-
-  if(index < outputImage->Size)
-  {
-    // resample
-    resample_1d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction, transformBase,
-      interpolator_coefficients, interpolatorCoefficientsImage,
-      0, 0); // transform coefficients are null
-  }
-}
-
-// ResampleImageFilter with BSplineTransform implementation in 1D
-__kernel void ResampleImageFilter_TransformBSpline(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase1D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase1D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction1D* imageFunction,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients,
-  __constant GPUImageBase1D* transformCoefficientsImage)
-{
-  uint index = get_global_id(0);
-
-  if(index < outputImage->Size)
-  {
-    // resample
-    resample_1d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction,
-      0, // transform base is null
-      0, 0, // interpolate coefficients are null
-      transform_coefficients, transformCoefficientsImage);
-  }
-}
-
-// ResampleImageFilter with BSplineInterpolateImageFunction and
-// BSplineTransform implementation in 1D
-__kernel void ResampleImageFilter_InterpolatorBSpline_TransformBSpline(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase1D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase1D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction1D* imageFunction,
-  /* interpolator coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* interpolator_coefficients,
-  __constant GPUImageBase1D* interpolatorCoefficientsImage,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients,
-  __constant GPUImageBase1D* transformCoefficientsImage)
-{
-  uint index = get_global_id(0);
-
-  if(index < outputImage->Size)
-  {
-    // resample
-    resample_1d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction,
-      0, // transform base is null
-      interpolator_coefficients, interpolatorCoefficientsImage,
-      transform_coefficients, transformCoefficientsImage);
+    // calculate gidx within buffer
+    uint gidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
+    tout[gidx] = point;
   }
 }
 #endif
 
 //------------------------------------------------------------------------------
-#ifdef DIM_2
-void resample_2d(__global const INPIXELTYPE* in,
-                 __constant GPUImageBase2D *inputImage,
-                 __global OUTPIXELTYPE* out,
-                 __constant GPUImageBase2D *outputImage,
-                 const uint2 index,
-                 __constant FilterParameters* parameters,
-                 __constant GPUImageFunction2D* image_function,
-                 __constant GPUMatrixOffsetTransformBase2D* transform_base,
-                 __global const INTERPOLATOR_PRECISION_TYPE* interpolator_coefficients,
-                 __constant GPUImageBase2D *interpolator_coefficientsImage,
-                 __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients0,
-                 __constant GPUImageBase2D *transform_coefficientsImage0,
-                 __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients1,
-                 __constant GPUImageBase2D *transform_coefficientsImage1)
+// This kernel executed for itk::GPUResampleImageFilter with identity transform
+// \sa IdentityTransform
+#if defined( DIM_3 ) && defined( RESAMPLE_LOOP ) && defined( IDENTITY_TRANSFORM )
+__kernel void ResampleImageFilterLoop_IdentityTransform(
+  /* input ImageBase information */
+  __global const INPIXELTYPE *in,
+  __constant GPUImageBase3D *input_image,
+  /* */
+  __global float3 *tout,
+  uint3 tsize,
+  uint combo,
+  /* filter parameters */
+  __constant FilterParameters *parameters)
 {
-  uint gidx = mad24(outputImage->Size.x, index.y, index.x);
+  uint3 global_id = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
+  uint3 global_offset = (uint3)( get_global_offset(0), get_global_offset(1), get_global_offset(2) );
 
-  // compute continuous index
-  float2 continuous_index;
-  if( parameters->transform_linear )
+  // recalculate index
+  uint3 index = global_id - global_offset;
+
+  if(is_valid(index, tsize) && is_valid(global_id, input_image->size))
   {
-    // compute continuous index for the first index
-    uint2 first_index = (uint2)( 0, index.y );
-    float2 point = transform_index_to_physical_point_2d(first_index, outputImage);
-    float2 tpoint;
-    if( parameters->transform_is_bspline )
+    // get point
+    const uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
+    const float3 point = tout[tidx];
+
+    // IdentityTransform is linear transform, execute linear call
+    // \sa IdentityTransform::IsLinear()
+    const float3 tpoint = identity_transform_point_3d(point);
+
+    if(combo)
     {
-      tpoint = bspline_transform_point_2d(point,
-        transform_coefficients0, transform_coefficientsImage0,
-        transform_coefficients1, transform_coefficientsImage1);
+      // roll it back
+      tout[tidx] = tpoint;
     }
     else
     {
-      tpoint = transform_point_2d(point, transform_base);
-    }
-    float2 first_continuous_index;
-    transform_physical_point_to_continuous_index_2d(tpoint, &first_continuous_index, inputImage);
-    continuous_index = first_continuous_index + index.x * parameters->delta.xy;
-  }
-  else
-  {
-    float2 point = transform_index_to_physical_point_2d(index, outputImage);
-    float2 tpoint;
-    if( parameters->transform_is_bspline )
-    {
-      tpoint = bspline_transform_point_2d(point,
-        transform_coefficients0, transform_coefficientsImage0,
-        transform_coefficients1, transform_coefficientsImage1);
-    }
-    else
-    {
-      tpoint = transform_point_2d(point, transform_base);
-    }
-    transform_physical_point_to_continuous_index_2d(tpoint, &continuous_index, inputImage);
-  }
+      float3 first_continuous_index;
+      transform_physical_point_to_continuous_index_3d(tpoint, &first_continuous_index, input_image);
+      const float3 continuous_index = first_continuous_index + index.x * parameters->delta;
 
-  // evaluate input at right position and copy to the output
-  if ( interpolator_is_inside_buffer_2d(continuous_index, image_function) )
-  {
-    OUTPIXELTYPE value;
-    if ( parameters->interpolator_is_bspline )
-    {
-      value = bspline_evaluate_at_continuous_index_2d(continuous_index,
-        in, inputImage, image_function, interpolator_coefficients, interpolator_coefficientsImage);
+      // roll it back
+      tout[tidx] = continuous_index;
     }
-    else
-    {
-      value = evaluate_at_continuous_index_2d(continuous_index, in, inputImage, image_function);
-    }
-    out[gidx] = cast_pixel_with_bounds_checking(value, parameters->min_max, parameters->min_max_output);
-  }
-  else
-  {
-    out[gidx] = parameters->default_value;
-  }
-}
-#endif
-
-#ifdef DIM_2
-// General ResampleImageFilter implementation in 2D
-__kernel void ResampleImageFilter(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase2D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase2D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction2D* imageFunction,
-  /* transform base parameters */
-  __constant GPUMatrixOffsetTransformBase2D* transformBase)
-{
-  uint2 index = (uint2)(get_global_id(0), get_global_id(1));
-  if(index.x < outputImage->Size.x && index.y < outputImage->Size.y)
-  {
-    // resample
-    resample_2d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction, transformBase,
-      0, 0,   // interpolate coefficients are null
-      0, 0,   // transform coefficients0 are null
-      0, 0);  // transform coefficients1 are null
-  }
-}
-
-// ResampleImageFilter with BSplineInterpolateImageFunction implementation in 2D
-__kernel void ResampleImageFilter_InterpolatorBSpline(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase2D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase2D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction2D* imageFunction,
-  /* interpolator coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* interpolator_coefficients,
-  __constant GPUImageBase2D* interpolatorCoefficientsImage,
-    /* transform base parameters */
-  __constant GPUMatrixOffsetTransformBase2D* transformBase)
-{
-  uint2 index = (uint2)(get_global_id(0), get_global_id(1));
-  if(index.x < outputImage->Size.x && index.y < outputImage->Size.y)
-  {
-    // resample
-    resample_2d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction, transformBase,
-      interpolator_coefficients, interpolatorCoefficientsImage,
-      0, 0,  // transform coefficients0 are null
-      0, 0); // transform coefficients1 are null
-  }
-}
-
-// ResampleImageFilter with BSplineTransform implementation in 2D
-__kernel void ResampleImageFilter_TransformBSpline(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase2D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase2D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction2D* imageFunction,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients0,
-  __constant GPUImageBase2D* transformCoefficientsImage0,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients1,
-  __constant GPUImageBase2D* transformCoefficientsImage1)
-{
-  uint2 index = (uint2)(get_global_id(0), get_global_id(1));
-  if(index.x < outputImage->Size.x && index.y < outputImage->Size.y)
-  {
-    // resample
-    resample_2d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction,
-      0, // transform base is null
-      0, 0, // interpolate coefficients are null
-      transform_coefficients0, transformCoefficientsImage0,
-      transform_coefficients1, transformCoefficientsImage1);
-  }
-}
-
-// ResampleImageFilter with BSplineInterpolateImageFunction and
-// BSplineTransform implementation in 2D
-__kernel void ResampleImageFilter_InterpolatorBSpline_TransformBSpline(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase2D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase2D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction2D* imageFunction,
-  /* interpolator coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* interpolator_coefficients,
-  __constant GPUImageBase2D* interpolatorCoefficientsImage,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients0,
-  __constant GPUImageBase2D* transformCoefficientsImage0,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients1,
-  __constant GPUImageBase2D* transformCoefficientsImage1)
-{
-  uint2 index = (uint2)(get_global_id(0), get_global_id(1));
-  if(index.x < outputImage->Size.x && index.y < outputImage->Size.y)
-  {
-    // resample
-    resample_2d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction,
-      0, // transform base is null
-      interpolator_coefficients, interpolatorCoefficientsImage,
-      transform_coefficients0, transformCoefficientsImage0,
-      transform_coefficients1, transformCoefficientsImage1);
   }
 }
 #endif
 
 //------------------------------------------------------------------------------
-#ifdef DIM_3
-void resample_3d(__global const INPIXELTYPE* in,
-                 __constant GPUImageBase3D *inputImage,
-                 __global OUTPIXELTYPE* out,
-                 __constant GPUImageBase3D *outputImage,
-                 const uint3 index,
-                 __constant FilterParameters* parameters,
-                 __constant GPUImageFunction3D* image_function,
-                 __constant GPUMatrixOffsetTransformBase3D* transform_base,
-                 __global const INTERPOLATOR_PRECISION_TYPE* interpolator_coefficients,
-                 __constant GPUImageBase3D *interpolator_coefficientsImage,
-                 __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients0,
-                 __constant GPUImageBase3D *transform_coefficientsImage0,
-                 __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients1,
-                 __constant GPUImageBase3D *transform_coefficientsImage1,
-                 __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients2,
-                 __constant GPUImageBase3D *transform_coefficientsImage2)
+// This kernel executed for itk::GPUResampleImageFilter with matrix offset transform
+// \sa MatrixOffsetTransformBase
+#if defined( DIM_3 ) && defined( RESAMPLE_LOOP ) && defined( MATRIX_OFFSET_TRANSFORM )
+__kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
+  /* input ImageBase information */
+  __global const INPIXELTYPE *in,
+  __constant GPUImageBase3D *input_image,
+  /* */
+  __global float3 *tout,
+  uint3 tsize,
+  uint combo,
+  /* filter parameters */
+  __constant FilterParameters *parameters,
+  /* transform base parameters */
+  __constant GPUMatrixOffsetTransformBase3D *transform_base)
 {
-  uint gidx = mad24(outputImage->Size.x, mad24(index.z, outputImage->Size.y, index.y), index.x);
+  uint3 global_id = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
+  uint3 global_offset = (uint3)( get_global_offset(0), get_global_offset(1), get_global_offset(2) );
 
-  // compute continuous index
-  float3 continuous_index;
-  if( parameters->transform_linear )
+  // recalculate index
+  uint3 index = global_id - global_offset;
+
+  if(is_valid(index, tsize) && is_valid(global_id, input_image->size))
   {
-    // compute continuous index for the first index
-    uint3 first_index = (uint3)(0, index.y, index.z);
-    float3 point = transform_index_to_physical_point_3d(first_index, outputImage);
-    float3 tpoint;
-    if( parameters->transform_is_bspline )
+    // get point
+    uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
+    float3 point = tout[tidx];
+
+    // MatrixOffsetTransformBase is linear transform, execute linear call
+    // \sa MatrixOffsetTransformBase::IsLinear()
+    float3 tpoint = matrix_offset_transform_point_3d(point, transform_base);
+
+    if(combo)
     {
-      tpoint = bspline_transform_point_3d(point,
-        transform_coefficients0, transform_coefficientsImage0,
-        transform_coefficients1, transform_coefficientsImage1,
-        transform_coefficients2, transform_coefficientsImage2);
+      // roll it back
+      tout[tidx] = tpoint;
     }
     else
     {
-      tpoint = transform_point_3d(point, transform_base);
+      float3 first_continuous_index;
+      transform_physical_point_to_continuous_index_3d(tpoint, &first_continuous_index, input_image);
+      float3 continuous_index = first_continuous_index + index.x * parameters->delta;
+
+      // roll it back
+      tout[tidx] = continuous_index;
     }
-    float3 first_continuous_index;
-    transform_physical_point_to_continuous_index_3d(tpoint, &first_continuous_index, inputImage);
-    continuous_index = first_continuous_index + index.x * parameters->delta;
   }
-  else
+}
+#endif
+
+//------------------------------------------------------------------------------
+// This kernel executed for itk::GPUResampleImageFilter with matrix offset transform
+// \sa TranslationTransform
+#if defined( DIM_3 ) && defined( RESAMPLE_LOOP ) && defined( TRANSLATION_TRANSFORM )
+__kernel void ResampleImageFilterLoop_TranslationTransform(
+  /* input ImageBase information */
+  __global const INPIXELTYPE *in,
+  __constant GPUImageBase3D *input_image,
+  /* */
+  __global float3 *tout,
+  uint3 tsize,
+  uint combo,
+  /* filter parameters */
+  __constant FilterParameters *parameters,
+  /* transform base parameters */
+  __constant GPUTranslationTransformBase3D *transform_base)
+{
+  uint3 global_id = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
+  uint3 global_offset = (uint3)( get_global_offset(0), get_global_offset(1), get_global_offset(2) );
+
+  // recalculate index
+  uint3 index = global_id - global_offset;
+
+  if(is_valid(index, tsize) && is_valid(global_id, input_image->size))
   {
-    float3 point = transform_index_to_physical_point_3d(index, outputImage);
-    float3 tpoint;
-    if( parameters->transform_is_bspline )
+    // get point
+    uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
+    float3 point = tout[tidx];
+
+    // TranslationTransform is linear transform, execute linear call
+    // \sa TranslationTransform::IsLinear()
+    float3 tpoint = translation_transform_point_3d(point, transform_base);
+
+    if(combo)
     {
-      tpoint = bspline_transform_point_3d(point,
-        transform_coefficients0, transform_coefficientsImage0,
-        transform_coefficients1, transform_coefficientsImage1,
-        transform_coefficients2, transform_coefficientsImage2);
+      // roll it back
+      tout[tidx] = tpoint;
     }
     else
     {
-      tpoint = transform_point_3d(point, transform_base);
+      float3 first_continuous_index;
+      transform_physical_point_to_continuous_index_3d(tpoint, &first_continuous_index, input_image);
+      float3 continuous_index = first_continuous_index + index.x * parameters->delta;
+
+      // roll it back
+      tout[tidx] = continuous_index;
     }
-    transform_physical_point_to_continuous_index_3d(tpoint, &continuous_index, inputImage);
   }
+}
+#endif
+
+//------------------------------------------------------------------------------
+// This kernel executed for itk::GPUResampleImageFilter with BSpline transform
+// \sa BSplineBaseTransform
+#if defined( DIM_3 ) && defined( RESAMPLE_LOOP ) && defined( BSPLINE_TRANSFORM )
+__kernel void ResampleImageFilterLoop_BSplineTransform(
+  /* input ImageBase information */
+  __global const INPIXELTYPE *in,
+  __constant GPUImageBase3D *input_image,
+  /* */
+  __global float3 *tout,
+  uint3 tsize,
+  uint combo,
+  /* filter parameters */
+  __constant FilterParameters *parameters,
+  /* transform coefficients ImageBase information */
+  __global const INTERPOLATOR_PRECISION_TYPE *transform_coefficients0,
+  __constant GPUImageBase3D *transform_coefficients_image0,
+  /* transform coefficients ImageBase information */
+  __global const INTERPOLATOR_PRECISION_TYPE *transform_coefficients1,
+  __constant GPUImageBase3D *transform_coefficients_image1,
+  /* transform coefficients ImageBase information */
+  __global const INTERPOLATOR_PRECISION_TYPE *transform_coefficients2,
+  __constant GPUImageBase3D *transform_coefficients_image2)
+{
+  uint3 global_id = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
+  uint3 global_offset = (uint3)( get_global_offset(0), get_global_offset(1), get_global_offset(2) );
+
+  // recalculate index
+  uint3 index = global_id - global_offset;
+
+  if(is_valid(index, tsize) && is_valid(global_id, input_image->size))
+  {
+    // get point
+    uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
+    float3 point = tout[tidx];
+
+    // BSplineBaseTransform is not linear transform, execute non linear call
+    // \sa BSplineBaseTransform::IsLinear()
+    float3 tpoint = bspline_transform_point_3d(point,
+      transform_coefficients0, transform_coefficients_image0,
+      transform_coefficients1, transform_coefficients_image1,
+      transform_coefficients2, transform_coefficients_image2);
+
+    if(combo)
+    {
+      // roll it back
+      tout[tidx] = tpoint;
+    }
+    else
+    {
+      float3 continuous_index;
+      transform_physical_point_to_continuous_index_3d(tpoint, &continuous_index, input_image);
+
+      // roll it back
+      tout[tidx] = continuous_index;
+    }
+  }
+}
+#endif
+
+//------------------------------------------------------------------------------
+#if defined( DIM_3 ) && defined( RESAMPLE_POST )
+void resample_3d_post(__global const INPIXELTYPE *in,
+  __constant GPUImageBase3D *input_image,
+  __global OUTPIXELTYPE *out,
+  __constant GPUImageBase3D *output_image,
+  __global const float3 *tin,
+  const uint3 tsize,
+  const uint3 global_id,
+  const uint3 index,
+  __constant FilterParameters *parameters,
+  __constant GPUImageFunction3D *image_function,
+  __global const INTERPOLATOR_PRECISION_TYPE *interpolator_coefficients,
+  __constant GPUImageBase3D *interpolator_coefficients_image)
+{
+  const uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
+  const uint gidx = mad24(output_image->size.x, mad24(global_id.z, output_image->size.y, global_id.y), global_id.x);
+
+  const float3 continuous_index = tin[tidx];
 
   // evaluate input at right position and copy to the output
-  if ( interpolator_is_inside_buffer_3d(continuous_index, image_function) )
+  if(interpolator_is_inside_buffer_3d(continuous_index, image_function))
   {
     OUTPIXELTYPE value;
-    if ( parameters->interpolator_is_bspline )
+    if(parameters->interpolator_is_bspline)
     {
       value = bspline_evaluate_at_continuous_index_3d(continuous_index,
-        in, inputImage, image_function, interpolator_coefficients, interpolator_coefficientsImage);
+        in,
+        input_image,
+        image_function,
+        interpolator_coefficients,
+        interpolator_coefficients_image);
     }
     else
     {
-      value = evaluate_at_continuous_index_3d(continuous_index, in, inputImage, image_function);
+      value = evaluate_at_continuous_index_3d(continuous_index, in, input_image, image_function);
     }
     out[gidx] = cast_pixel_with_bounds_checking(value, parameters->min_max, parameters->min_max_output);
   }
@@ -530,179 +358,68 @@ void resample_3d(__global const INPIXELTYPE* in,
 }
 #endif
 
-#ifdef DIM_3
-// General ResampleImageFilter implementation in 3D
-__kernel void ResampleImageFilter(
+//------------------------------------------------------------------------------
+#if defined( DIM_3 ) && defined( RESAMPLE_POST )
+__kernel void ResampleImageFilterPost(
   /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase3D* inputImage,
+  __global const INPIXELTYPE *in,
+  __constant GPUImageBase3D *input_image,
   /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase3D* outputImage,
+  __global OUTPIXELTYPE *out,
+  __constant GPUImageBase3D *output_image,
+  /* */
+  __global const float3 *tin,
+  uint3 tsize,
   /* filter parameters */
-  __constant FilterParameters* parameters,
+  __constant FilterParameters *parameters,
   /* image function parameters */
-  __constant GPUImageFunction3D* imageFunction,
-  /* transform base parameters */
-  __constant GPUMatrixOffsetTransformBase2D* transformBase)
+  __constant GPUImageFunction3D *image_function)
 {
-  uint3 index = (uint3)(get_global_id(0), get_global_id(1), get_global_id(2));
+  uint3 global_id = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
+  uint3 global_offset = (uint3)( get_global_offset(0), get_global_offset(1), get_global_offset(2) );
 
-  /* NOTE: More than three-level nested conditional statements (e.g.,
-  if A && B && C..) invalidates command queue during kernel
-  execution on Apple OpenCL 1.0 (such Macbook Pro with NVIDIA 9600M
-  GT). Therefore, we flattened conditional statements. */
-  bool isValid = true;
-  if(index.x >= outputImage->Size.x) isValid = false;
-  if(index.y >= outputImage->Size.y) isValid = false;
-  if(index.z >= outputImage->Size.z) isValid = false;
+  // recalculate index
+  uint3 index = global_id - global_offset;
 
-  if( isValid )
+  if(is_valid(index, tsize) && is_valid(global_id, output_image->size))
   {
-    // resample
-    resample_3d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction, transformBase,
-      0, 0,  // interpolate coefficients are null
-      0, 0,  // transform coefficients0 are null
-      0, 0,  // transform coefficients1 are null
-      0, 0); // transform coefficients2 are null
+    // resample 3d post
+    resample_3d_post(in, input_image, out, output_image, tin, tsize,
+      global_id, index, parameters, image_function, 0, 0);
   }
 }
 
-// ResampleImageFilter with BSplineInterpolateImageFunction implementation in 3D
-__kernel void ResampleImageFilter_InterpolatorBSpline(
+//------------------------------------------------------------------------------
+__kernel void ResampleImageFilterPost_InterpolatorBSpline(
   /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase3D* inputImage,
+  __global const INPIXELTYPE *in,
+  __constant GPUImageBase3D *input_image,
   /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase3D* outputImage,
+  __global OUTPIXELTYPE *out,
+  __constant GPUImageBase3D *output_image,
+  /* */
+  __global const float3 *tin,
+  uint3 tsize,
   /* filter parameters */
-  __constant FilterParameters* parameters,
+  __constant FilterParameters *parameters,
   /* image function parameters */
-  __constant GPUImageFunction3D* imageFunction,
+  __constant GPUImageFunction3D *image_function,
   /* interpolator coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* interpolator_coefficients,
-  __constant GPUImageBase3D* interpolatorCoefficientsImage,
-  /* transform base parameters */
-  __constant GPUMatrixOffsetTransformBase3D* transformBase)
+  __global const INTERPOLATOR_PRECISION_TYPE *interpolator_coefficients,
+  __constant GPUImageBase3D *interpolator_coefficients_image)
 {
-  uint3 index = (uint3)(get_global_id(0), get_global_id(1), get_global_id(2));
+  uint3 global_id = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
+  uint3 global_offset = (uint3)( get_global_offset(0), get_global_offset(1), get_global_offset(2) );
 
-  /* NOTE: More than three-level nested conditional statements (e.g.,
-  if A && B && C..) invalidates command queue during kernel
-  execution on Apple OpenCL 1.0 (such Macbook Pro with NVIDIA 9600M
-  GT). Therefore, we flattened conditional statements. */
-  bool isValid = true;
-  if(index.x >= outputImage->Size.x) isValid = false;
-  if(index.y >= outputImage->Size.y) isValid = false;
-  if(index.z >= outputImage->Size.z) isValid = false;
+  // recalculate index
+  uint3 index = global_id - global_offset;
 
-  if( isValid )
+  if(is_valid(index, tsize) && is_valid(global_id, output_image->size))
   {
-    // resample
-    resample_3d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction, transformBase,
-      interpolator_coefficients, interpolatorCoefficientsImage,
-      0, 0,  // transform coefficients0 are null
-      0, 0,  // transform coefficients1 are null
-      0, 0); // transform coefficients2 are null
-  }
-}
-
-// ResampleImageFilter with BSplineTransform implementation in 3D
-__kernel void ResampleImageFilter_TransformBSpline(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase3D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase3D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction3D* imageFunction,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients0,
-  __constant GPUImageBase3D* transformCoefficientsImage0,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients1,
-  __constant GPUImageBase3D* transformCoefficientsImage1,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients2,
-  __constant GPUImageBase3D* transformCoefficientsImage2)
-{
-  uint3 index = (uint3)(get_global_id(0), get_global_id(1), get_global_id(2));
-
-  /* NOTE: More than three-level nested conditional statements (e.g.,
-  if A && B && C..) invalidates command queue during kernel
-  execution on Apple OpenCL 1.0 (such Macbook Pro with NVIDIA 9600M
-  GT). Therefore, we flattened conditional statements. */
-  bool isValid = true;
-  if(index.x >= outputImage->Size.x) isValid = false;
-  if(index.y >= outputImage->Size.y) isValid = false;
-  if(index.z >= outputImage->Size.z) isValid = false;
-
-  if( isValid )
-  {
-    // resample
-    resample_3d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction,
-      0, // transform base is null
-      transform_coefficients0, transformCoefficientsImage0,
-      transform_coefficients0, transformCoefficientsImage0,
-      transform_coefficients1, transformCoefficientsImage1,
-      transform_coefficients2, transformCoefficientsImage2);
-  }
-}
-
-// ResampleImageFilter with BSplineInterpolateImageFunction and
-// BSplineTransform implementation in 3D
-__kernel void ResampleImageFilter_InterpolatorBSpline_TransformBSpline(
-  /* input ImageBase information */
-  __global const INPIXELTYPE* in,
-  __constant GPUImageBase3D* inputImage,
-  /* output ImageBase information */
-  __global OUTPIXELTYPE* out,
-  __constant GPUImageBase3D* outputImage,
-  /* filter parameters */
-  __constant FilterParameters* parameters,
-  /* image function parameters */
-  __constant GPUImageFunction3D* imageFunction,
-  /* interpolator coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* interpolator_coefficients,
-  __constant GPUImageBase3D* interpolatorCoefficientsImage,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients0,
-  __constant GPUImageBase3D* transformCoefficientsImage0,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients1,
-  __constant GPUImageBase3D* transformCoefficientsImage1,
-  /* transform coefficients ImageBase information */
-  __global const INTERPOLATOR_PRECISION_TYPE* transform_coefficients2,
-  __constant GPUImageBase3D* transformCoefficientsImage2)
-{
-  uint3 index = (uint3)(get_global_id(0), get_global_id(1), get_global_id(2));
-
-  /* NOTE: More than three-level nested conditional statements (e.g.,
-  if A && B && C..) invalidates command queue during kernel
-  execution on Apple OpenCL 1.0 (such Macbook Pro with NVIDIA 9600M
-  GT). Therefore, we flattened conditional statements. */
-  bool isValid = true;
-  if(index.x >= outputImage->Size.x) isValid = false;
-  if(index.y >= outputImage->Size.y) isValid = false;
-  if(index.z >= outputImage->Size.z) isValid = false;
-
-  if( isValid )
-  {
-    // resample
-    resample_3d(in, inputImage, out, outputImage, index,
-      parameters, imageFunction,
-      0, // transform base is null
-      interpolator_coefficients, interpolatorCoefficientsImage,
-      transform_coefficients0, transformCoefficientsImage0,
-      transform_coefficients1, transformCoefficientsImage1,
-      transform_coefficients2, transformCoefficientsImage2);
+    // resample 3d post
+    resample_3d_post(in, input_image, out, output_image, tin, tsize,
+      global_id, index, parameters, image_function,
+      interpolator_coefficients, interpolator_coefficients_image);
   }
 }
 #endif

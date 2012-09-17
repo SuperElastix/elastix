@@ -43,6 +43,9 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( GPUIdentityTransform, TParentImageFilter );
 
+  /**  */
+  virtual bool IsIdentityTransform() const { return true; }
+
 protected:
   GPUIdentityTransform();
   virtual ~GPUIdentityTransform() {}
@@ -82,8 +85,8 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPUIdentityTransformFactory::Pointer factory
-      = GPUIdentityTransformFactory::New();
+    GPUIdentityTransformFactory::Pointer factory =
+      GPUIdentityTransformFactory::New();
     ObjectFactoryBase::RegisterFactory( factory );
   }
 
@@ -116,7 +119,6 @@ private:
     }
   }
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

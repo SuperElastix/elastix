@@ -86,8 +86,8 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPULinearInterpolateImageFunctionFactory::Pointer factory
-      = GPULinearInterpolateImageFunctionFactory::New();
+    GPULinearInterpolateImageFunctionFactory::Pointer factory =
+      GPULinearInterpolateImageFunctionFactory::New();
     ObjectFactoryBase::RegisterFactory( factory );
   }
 
@@ -153,7 +153,6 @@ private:
     }
   }
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

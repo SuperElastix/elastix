@@ -27,6 +27,7 @@ GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
   // Add GPUImageFunction implementation
   const std::string sourcePath0(
     GPUImageFunctionKernel::GetOpenCLSource() );
+
   m_Sources.push_back( sourcePath0 );
 
   // Add GPUNearestNeighborInterpolateImageFunction implementation
@@ -66,7 +67,6 @@ void GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
   CPUSuperclass::PrintSelf( os, indent );
   GPUSuperclass::PrintSelf( os, indent );
 }
-
 } // end namespace itk
 
 #endif /* __itkGPUNearestNeighborInterpolateImageFunction_hxx */

@@ -76,5 +76,4 @@ bool LoadProgramFromFile( const std::string & _filename,
 
   return sourceLoaded;
 }
-
 } // end namespace itk

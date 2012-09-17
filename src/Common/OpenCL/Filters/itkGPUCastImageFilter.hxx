@@ -26,6 +26,7 @@ GPUCastImageFilter< TInputImage, TOutputImage >
 ::GPUCastImageFilter()
 {
   std::ostringstream defines;
+
   if ( TInputImage::ImageDimension > 3 || TInputImage::ImageDimension < 1 )
   {
     itkExceptionMacro( "GPUCastImageFilter supports 1/2/3D image." );
@@ -57,7 +58,6 @@ void GPUCastImageFilter< TInputImage, TOutputImage >::GPUGenerateData()
 {
   GPUSuperclass::GPUGenerateData();
 }
-
 } // end of namespace itk
 
 #endif /* __itkGPUCastImageFilter_hxx */

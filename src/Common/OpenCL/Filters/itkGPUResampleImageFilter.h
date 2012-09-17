@@ -25,6 +25,7 @@
 
 #include <vector>
 #include <string>
+#include <utility>
 
 namespace itk
 {
@@ -66,6 +67,9 @@ public:
   typedef typename CPUSuperclass::TransformType    TransformType;
   typedef typename OutputImageType::IndexType      IndexType;
 
+  /** Scheduler typedefs. */
+  typedef typename GPUKernelManager::Pointer GPUKernelManagerPointer;
+
   /** ImageDimension constants */
   itkStaticConstMacro( InputImageDimension, unsigned int,
                        TInputImage::ImageDimension );
@@ -76,10 +80,6 @@ public:
 
   virtual void SetTransform( const TransformType *_arg );
 
-  /** This method is used to set the state of the filter after multi-threading.
-    */
-  virtual void AfterThreadedGenerateData();
-
 protected:
   GPUResampleImageFilter();
   ~GPUResampleImageFilter() {}
@@ -87,7 +87,41 @@ protected:
 
   virtual void GPUGenerateData();
 
-  void CompileOpenCLCode();
+  // Supported GPU transform types
+  typedef enum {
+    IdentityTransform = 1,
+    MatrixOffsetTransform,
+    TranslationTransform,
+    BSplineTransform,
+    Else
+  } GPUInputTransformType;
+
+  void SetArgumentsForPreKernelManager(
+    typename GPUOutputImage::Pointer & output,
+    cl_uint & index );
+
+  void SetArgumentsForLoopKernelManager(
+    typename GPUOutputImage::Pointer & input,
+    cl_uint & tsizeLoopIntex,
+    cl_uint & comboIntex,
+    cl_uint & transformIndex );
+
+  void SetTransformArgumentsForLoopKernelManager(
+    const std::size_t index,
+    const cl_uint comboIndex,
+    const cl_uint transformIndex );
+
+  void SetArgumentsForPostKernelManager(
+    typename GPUOutputImage::Pointer & input,
+    typename GPUOutputImage::Pointer & output,
+    cl_uint & index );
+
+  void SetGPUCoefficients(
+    const std::size_t index, const cl_uint transformindex );
+
+  bool HasTransform( const GPUInputTransformType type );
+
+  int  GetTransformHandle( const GPUInputTransformType type );
 
   void CalculateDelta(
     const typename GPUInputImage::Pointer & _inputPtr,
@@ -104,19 +138,28 @@ private:
   typename GPUDataManager::Pointer m_InputGPUImageBase;
   typename GPUDataManager::Pointer m_OutputGPUImageBase;
   typename GPUDataManager::Pointer m_Parameters;
+  typename GPUDataManager::Pointer m_TransformBuffer;
+
+  typedef std::pair< int, bool >                             TransformHandle;
+  typedef std::map< GPUInputTransformType, TransformHandle > TransformsHandle;
 
   std::vector< std::string > m_Sources;
   std::size_t                m_SourceIndex;
 
-  bool        m_InterpolatorSourceLoaded;
-  bool        m_TransformSourceLoaded;
   std::size_t m_InterpolatorSourceLoadedIndex;
   std::size_t m_TransformSourceLoadedIndex;
 
   bool m_InterpolatorIsBSpline;
-  bool m_TransformIsBSpline;
+  bool m_TransformIsCombo;
 
-  int m_FilterGPUKernelHandle;
+  int              m_FilterPreGPUKernelHandle;
+  TransformsHandle m_FilterLoopGPUKernelHandle;
+  int              m_FilterPostGPUKernelHandle;
+
+  // GPU kernel managers
+  GPUKernelManagerPointer m_PreKernelManager;
+  GPUKernelManagerPointer m_LoopKernelManager;
+  GPUKernelManagerPointer m_PostKernelManager;
 };
 
 /** \class GPUResampleImageFilterFactory
@@ -143,8 +186,8 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPUResampleImageFilterFactory::Pointer factory
-      = GPUResampleImageFilterFactory::New();
+    GPUResampleImageFilterFactory::Pointer factory =
+      GPUResampleImageFilterFactory::New();
     ObjectFactoryBase::RegisterFactory( factory );
   }
 
@@ -229,7 +272,6 @@ private:
     }
   }
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

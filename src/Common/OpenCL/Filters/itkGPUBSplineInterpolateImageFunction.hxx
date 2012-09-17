@@ -47,6 +47,7 @@ void GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientTyp
 ::SetInputImage( const TInputImage *inputData )
 {
   Superclass::SetInputImage( inputData );
+
   m_GPUCoefficients->Graft( this->m_Coefficients );
 }
 
@@ -95,7 +96,6 @@ void GPUBSplineInterpolateImageFunction< TInputImage, TCoordRep, TCoefficientTyp
   //CPUSuperclass::PrintSelf(os, indent);
   GPUSuperclass::PrintSelf( os, indent );
 }
-
 } // end namespace itk
 
 #endif /* __itkGPUBSplineInterpolateImageFunction_hxx */

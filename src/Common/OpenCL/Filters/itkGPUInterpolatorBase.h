@@ -39,7 +39,6 @@ protected:
 
   GPUDataManager::Pointer m_ParametersDataManager;
 };
-
 } // end namespace itk
 
 #endif /* __itkGPUInterpolatorBase_h */

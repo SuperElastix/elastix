@@ -14,7 +14,6 @@
 #ifndef __itkGPUTransformBase_h
 #define __itkGPUTransformBase_h
 
-#include "itkMacro.h"
 #include "itkGPUDataManager.h"
 
 namespace itk
@@ -25,13 +24,22 @@ class ITK_EXPORT GPUTransformBase
 {
 public:
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUTransformBase, Object );
+  virtual const char * GetNameOfClass() const { return "GPUTransformBase"; }
 
   /** */
   virtual bool GetSourceCode( std::string & _source ) const;
 
   /** */
+  virtual bool IsIdentityTransform() const { return false; }
+  virtual bool IsMatrixOffsetTransform() const { return false; }
+  virtual bool IsTranslationTransform() const { return false; }
+  virtual bool IsBSplineTransform() const { return false; }
+
+  /** */
   virtual GPUDataManager::Pointer GetParametersDataManager() const;
+
+  /** */
+  virtual GPUDataManager::Pointer GetParametersDataManager( const std::size_t index ) const;
 
 protected:
   GPUTransformBase();
@@ -39,7 +47,6 @@ protected:
 
   GPUDataManager::Pointer m_ParametersDataManager;
 };
-
 } // end namespace itk
 
 #endif /* __itkGPUTransformBase_h */

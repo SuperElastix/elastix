@@ -21,24 +21,24 @@
 namespace
 {
 typedef struct {
-  cl_uint StartIndex;
-  cl_uint EndIndex;
-  cl_float StartContinuousIndex;
-  cl_float EndContinuousIndex;
+  cl_uint start_index;
+  cl_uint end_index;
+  cl_float start_continuous_index;
+  cl_float end_continuous_index;
 } GPUImageFunction1D;
 
 typedef struct {
-  cl_uint2 StartIndex;
-  cl_uint2 EndIndex;
-  cl_float2 StartContinuousIndex;
-  cl_float2 EndContinuousIndex;
+  cl_uint2 start_index;
+  cl_uint2 end_index;
+  cl_float2 start_continuous_index;
+  cl_float2 end_continuous_index;
 } GPUImageFunction2D;
 
 typedef struct {
-  cl_uint4 StartIndex;
-  cl_uint4 EndIndex;
-  cl_float4 StartContinuousIndex;
-  cl_float4 EndContinuousIndex;
+  cl_uint4 start_index;
+  cl_uint4 end_index;
+  cl_float4 start_continuous_index;
+  cl_float4 end_continuous_index;
 } GPUImageFunction3D;
 
 //------------------------------------------------------------------------------
@@ -90,6 +90,7 @@ void SetIndex( const typename ImageType::IndexType index,
                cl_uint2 & oclindex, ImageDimensionToType< 2 > )
 {
   unsigned int id = 0;
+
   for ( unsigned int i = 0; i < 2; i++ )
   {
     oclindex.s[id++] = index[i];
@@ -101,6 +102,7 @@ void SetIndex( const typename ImageType::IndexType index,
                cl_uint4 & oclindex, ImageDimensionToType< 3 > )
 {
   unsigned int id = 0;
+
   for ( unsigned int i = 0; i < 3; i++ )
   {
     oclindex.s[id++] = index[i];
@@ -121,6 +123,7 @@ void SetContinuousIndex( const itk::ContinuousIndex< TCoordRep, 2 > index,
                          cl_float2 & oclindex, ImageDimensionToType< 2 > )
 {
   unsigned int id = 0;
+
   for ( unsigned int i = 0; i < 2; i++ )
   {
     oclindex.s[id++] = index[i];
@@ -132,6 +135,7 @@ void SetContinuousIndex( const itk::ContinuousIndex< TCoordRep, 3 > index,
                          cl_float4 & oclindex, ImageDimensionToType< 3 > )
 {
   unsigned int id = 0;
+
   for ( unsigned int i = 0; i < 3; i++ )
   {
     oclindex.s[id++] = index[i];
@@ -175,7 +179,7 @@ template< class TInputImage, class TCoordRep, class TParentImageFilter >
 GPUDataManager::Pointer GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentImageFilter >
 ::GetParametersDataManager() const
 {
-  const unsigned int ImageDim = InputImageType::ImageDimension;
+  const unsigned int                                ImageDim = InputImageType::ImageDimension;
   const ImageDimensionToType< InputImageDimension > idim = {};
 
   switch ( ImageDim )
@@ -184,12 +188,12 @@ GPUDataManager::Pointer GPUInterpolateImageFunction< TInputImage, TCoordRep, TPa
     {
       GPUImageFunction1D imageFunction;
 
-      SetIndex< InputImageType >( this->m_StartIndex, imageFunction.StartIndex, idim );
-      SetIndex< InputImageType >( this->m_EndIndex, imageFunction.EndIndex, idim );
+      SetIndex< InputImageType >( this->m_StartIndex, imageFunction.start_index, idim );
+      SetIndex< InputImageType >( this->m_EndIndex, imageFunction.end_index, idim );
       SetContinuousIndex< InputImageType, CoordRepType >( this->m_StartContinuousIndex,
-                                                          imageFunction.StartContinuousIndex, idim );
+                                                          imageFunction.start_continuous_index, idim );
       SetContinuousIndex< InputImageType, CoordRepType >( this->m_EndContinuousIndex,
-                                                          imageFunction.EndContinuousIndex, idim );
+                                                          imageFunction.end_continuous_index, idim );
       this->m_ParametersDataManager->SetCPUBufferPointer( &imageFunction );
     }
     break;
@@ -197,12 +201,12 @@ GPUDataManager::Pointer GPUInterpolateImageFunction< TInputImage, TCoordRep, TPa
     {
       GPUImageFunction2D imageFunction;
 
-      SetIndex< InputImageType >( this->m_StartIndex, imageFunction.StartIndex, idim );
-      SetIndex< InputImageType >( this->m_EndIndex, imageFunction.EndIndex, idim );
+      SetIndex< InputImageType >( this->m_StartIndex, imageFunction.start_index, idim );
+      SetIndex< InputImageType >( this->m_EndIndex, imageFunction.end_index, idim );
       SetContinuousIndex< InputImageType, CoordRepType >( this->m_StartContinuousIndex,
-                                                          imageFunction.StartContinuousIndex, idim );
+                                                          imageFunction.start_continuous_index, idim );
       SetContinuousIndex< InputImageType, CoordRepType >( this->m_EndContinuousIndex,
-                                                          imageFunction.EndContinuousIndex, idim );
+                                                          imageFunction.end_continuous_index, idim );
       this->m_ParametersDataManager->SetCPUBufferPointer( &imageFunction );
     }
     break;
@@ -210,12 +214,12 @@ GPUDataManager::Pointer GPUInterpolateImageFunction< TInputImage, TCoordRep, TPa
     {
       GPUImageFunction3D imageFunction;
 
-      SetIndex< InputImageType >( this->m_StartIndex, imageFunction.StartIndex, idim );
-      SetIndex< InputImageType >( this->m_EndIndex, imageFunction.EndIndex, idim );
+      SetIndex< InputImageType >( this->m_StartIndex, imageFunction.start_index, idim );
+      SetIndex< InputImageType >( this->m_EndIndex, imageFunction.end_index, idim );
       SetContinuousIndex< InputImageType, CoordRepType >( this->m_StartContinuousIndex,
-                                                          imageFunction.StartContinuousIndex, idim );
+                                                          imageFunction.start_continuous_index, idim );
       SetContinuousIndex< InputImageType, CoordRepType >( this->m_EndContinuousIndex,
-                                                          imageFunction.EndContinuousIndex, idim );
+                                                          imageFunction.end_continuous_index, idim );
       this->m_ParametersDataManager->SetCPUBufferPointer( &imageFunction );
     }
     break;
@@ -236,7 +240,6 @@ void GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentImageFilter >
 {
   Superclass::PrintSelf( os, indent );
 }
-
 } // end namespace itk
 
 #endif /* __itkGPUInterpolateImageFunction_hxx */

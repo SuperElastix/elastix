@@ -105,8 +105,8 @@ protected:
   virtual void GPUGenerateData();
 
 private:
-  GPUShrinkImageFilter( const Self & );  // purposely not implemented
-  void operator=( const Self & );        // purposely not implemented
+  GPUShrinkImageFilter( const Self & ); // purposely not implemented
+  void operator=( const Self & );       // purposely not implemented
 
   int    m_FilterGPUKernelHandle;
   size_t m_DeviceLocalMemorySize;
@@ -136,8 +136,8 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPUShrinkImageFilterFactory::Pointer factory
-      = GPUShrinkImageFilterFactory::New();
+    GPUShrinkImageFilterFactory::Pointer factory =
+      GPUShrinkImageFilterFactory::New();
     ObjectFactoryBase::RegisterFactory( factory );
   }
 
@@ -207,7 +207,6 @@ private:
     }
   }
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

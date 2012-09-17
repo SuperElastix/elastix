@@ -22,7 +22,7 @@ namespace itk
 /** \class GPUInterpolateImageFunction
  */
 template< class TInputImage, class TCoordRep = float, class TParentImageFilter =
-          InterpolateImageFunction< TInputImage, TCoordRep > >
+            InterpolateImageFunction< TInputImage, TCoordRep > >
 class ITK_EXPORT GPUInterpolateImageFunction :
   public TParentImageFilter, public GPUInterpolatorBase
 {
@@ -57,7 +57,6 @@ private:
   GPUInterpolateImageFunction( const Self & ); // purposely not implemented
   void operator=( const Self & );              // purposely not implemented
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

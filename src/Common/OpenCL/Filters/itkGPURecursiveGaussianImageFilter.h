@@ -126,8 +126,8 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPURecursiveGaussianImageFilterFactory::Pointer factory
-      = GPURecursiveGaussianImageFilterFactory::New();
+    GPURecursiveGaussianImageFilterFactory::Pointer factory =
+      GPURecursiveGaussianImageFilterFactory::New();
     ObjectFactoryBase::RegisterFactory( factory );
   }
 
@@ -204,7 +204,6 @@ private:
     }
   }
 };
-
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

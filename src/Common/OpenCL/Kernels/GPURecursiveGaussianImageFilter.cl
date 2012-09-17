@@ -12,51 +12,48 @@
 
 ======================================================================*/
 
+//------------------------------------------------------------------------------
 // Exact copy of FilterDataArray from RecursiveSeparableImageFilter
-void FilterDataArray(BUFFPIXELTYPE* outs,
-                     const BUFFPIXELTYPE* data,
-                     BUFFPIXELTYPE* scratch,
-                     unsigned int ln,
-                     float m_N0, float m_N1, float m_N2, float m_N3,
-                     float m_D1, float m_D2, float m_D3, float m_D4,
-                     float m_M1, float m_M2, float m_M3, float m_M4,
-                     float m_BN1, float m_BN2, float m_BN3, float m_BN4,
-                     float m_BM1, float m_BM2, float m_BM3, float m_BM4)
-
+void filter_data_array(BUFFPIXELTYPE *outs,
+                       const BUFFPIXELTYPE *data,
+                       BUFFPIXELTYPE *scratch,
+                       const unsigned int ln,
+                       const float4 N, const float4 D, const float4 M,
+                       const float4 BN, const float4 BM)
 {
   /**
   * Causal direction pass
   */
   // this value is assumed to exist from the border to infinity.
-  const float outV1 = data[0];
+  const BUFFPIXELTYPE outV1 = data[0];
 
   /**
   * Initialize borders
   */
-  scratch[0] = (outV1   * m_N0 +   outV1 * m_N1 + outV1   * m_N2 + outV1 * m_N3);
-  scratch[1] = (data[1] * m_N0 +   outV1 * m_N1 + outV1   * m_N2 + outV1 * m_N3);
-  scratch[2] = (data[2] * m_N0 + data[1] * m_N1 + outV1   * m_N2 + outV1 * m_N3);
-  scratch[3] = (data[3] * m_N0 + data[2] * m_N1 + data[1] * m_N2 + outV1 * m_N3);
+  scratch[0] = (outV1   * N.x +   outV1 * N.y + outV1   * N.z + outV1 * N.w);
+  scratch[1] = (data[1] * N.x +   outV1 * N.y + outV1   * N.z + outV1 * N.w);
+  scratch[2] = (data[2] * N.x + data[1] * N.y + outV1   * N.z + outV1 * N.w);
+  scratch[3] = (data[3] * N.x + data[2] * N.y + data[1] * N.z + outV1 * N.w);
 
   // note that the outV1 value is multiplied by the Boundary coefficients m_BNi
-  scratch[0] -= (outV1      * m_BN1 + outV1      * m_BN2 + outV1      * m_BN3 + outV1 * m_BN4);
-  scratch[1] -= (scratch[0] * m_D1  + outV1      * m_BN2 + outV1      * m_BN3 + outV1 * m_BN4);
-  scratch[2] -= (scratch[1] * m_D1  + scratch[0] * m_D2  + outV1      * m_BN3 + outV1 * m_BN4);
-  scratch[3] -= (scratch[2] * m_D1  + scratch[1] * m_D2  + scratch[0] * m_D3  + outV1 * m_BN4);
+  scratch[0] -= (outV1      * BN.x + outV1      * BN.y + outV1      * BN.z + outV1 * BN.w);
+  scratch[1] -= (scratch[0] * D.x  + outV1      * BN.y + outV1      * BN.z + outV1 * BN.w);
+  scratch[2] -= (scratch[1] * D.x  + scratch[0] * D.y  + outV1      * BN.z + outV1 * BN.w);
+  scratch[3] -= (scratch[2] * D.x  + scratch[1] * D.y  + scratch[0] * D.z  + outV1 * BN.w);
 
   /**
   * Recursively filter the rest
   */
-  for ( unsigned int i = 4; i < ln; i++ )
+  for(unsigned int i = 4; i < ln; i++)
   {
-    scratch[i]  = (data[i]        * m_N0 + data[i - 1]    * m_N1 + data[i - 2]    * m_N2 + data[i - 3]    * m_N3);
-    scratch[i] -= (scratch[i - 1] * m_D1 + scratch[i - 2] * m_D2 + scratch[i - 3] * m_D3 + scratch[i - 4] * m_D4);
+    scratch[i]  = (data[i]        * N.x + data[i - 1]    * N.y + data[i - 2]    * N.z + data[i - 3]    * N.w);
+    scratch[i] -= (scratch[i - 1] * D.x + scratch[i - 2] * D.y + scratch[i - 3] * D.z + scratch[i - 4] * D.w);
   }
 
   /**
   * Store the causal result
   */
-  for ( unsigned int i = 0; i < ln; i++ )
+  for(unsigned int i = 0; i < ln; i++)
   {
     outs[i] = scratch[i];
   }
@@ -65,88 +62,97 @@ void FilterDataArray(BUFFPIXELTYPE* outs,
   * AntiCausal direction pass
   */
   // this value is assumed to exist from the border to infinity.
-  const float outV2 = data[ln - 1];
+  const BUFFPIXELTYPE outV2 = data[ln - 1];
 
   /**
   * Initialize borders
   */
-  scratch[ln - 1] = (outV2        * m_M1 + outV2        * m_M2 + outV2        * m_M3 + outV2 * m_M4);
-  scratch[ln - 2] = (data[ln - 1] * m_M1 + outV2        * m_M2 + outV2        * m_M3 + outV2 * m_M4);
-  scratch[ln - 3] = (data[ln - 2] * m_M1 + data[ln - 1] * m_M2 + outV2        * m_M3 + outV2 * m_M4);
-  scratch[ln - 4] = (data[ln - 3] * m_M1 + data[ln - 2] * m_M2 + data[ln - 1] * m_M3 + outV2 * m_M4);
+  scratch[ln - 1] = (outV2        * M.x + outV2        * M.y + outV2        * M.z + outV2 * M.w);
+  scratch[ln - 2] = (data[ln - 1] * M.x + outV2        * M.y + outV2        * M.z + outV2 * M.w);
+  scratch[ln - 3] = (data[ln - 2] * M.x + data[ln - 1] * M.y + outV2        * M.z + outV2 * M.w);
+  scratch[ln - 4] = (data[ln - 3] * M.x + data[ln - 2] * M.y + data[ln - 1] * M.z + outV2 * M.w);
 
   // note that the outV2value is multiplied by the Boundary coefficients m_BMi
-  scratch[ln - 1] -= (outV2           * m_BM1 + outV2           * m_BM2 + outV2           * m_BM3 + outV2 * m_BM4);
-  scratch[ln - 2] -= (scratch[ln - 1] * m_D1  + outV2           * m_BM2 + outV2           * m_BM3 + outV2 * m_BM4);
-  scratch[ln - 3] -= (scratch[ln - 2] * m_D1  + scratch[ln - 1] * m_D2  + outV2           * m_BM3 + outV2 * m_BM4);
-  scratch[ln - 4] -= (scratch[ln - 3] * m_D1  + scratch[ln - 2] * m_D2  + scratch[ln - 1] * m_D3  + outV2 * m_BM4);
+  scratch[ln - 1] -= (outV2           * BM.x + outV2           * BM.y + outV2           * BM.z + outV2 * BM.w);
+  scratch[ln - 2] -= (scratch[ln - 1] * D.x  + outV2           * BM.y + outV2           * BM.z + outV2 * BM.w);
+  scratch[ln - 3] -= (scratch[ln - 2] * D.x  + scratch[ln - 1] * D.y  + outV2           * BM.z + outV2 * BM.w);
+  scratch[ln - 4] -= (scratch[ln - 3] * D.x  + scratch[ln - 2] * D.y  + scratch[ln - 1] * D.z  + outV2 * BM.w);
 
   /**
   * Recursively filter the rest
   */
-  for ( unsigned int i = ln - 4; i > 0; i-- )
+  for(unsigned int i = ln - 4; i > 0; i--)
   {
-    scratch[i - 1] = (data[i]     * m_M1 + data[i + 1]    * m_M2 + data[i + 2]    * m_M3 + data[i + 3]    * m_M4);
-    scratch[i - 1] -= (scratch[i] * m_D1 + scratch[i + 1] * m_D2 + scratch[i + 2] * m_D3 + scratch[i + 3] * m_D4);
+    scratch[i - 1] = (data[i]     * M.x + data[i + 1]    * M.y + data[i + 2]    * M.z + data[i + 3]    * M.w);
+    scratch[i - 1] -= (scratch[i] * D.x + scratch[i + 1] * D.y + scratch[i + 2] * D.z + scratch[i + 3] * D.w);
   }
 
   /**
   * Roll the antiCausal part into the output
   */
-  for ( unsigned int i = 0; i < ln; i++ )
+  for(unsigned int i = 0; i < ln; i++)
   {
     outs[i] += scratch[i];
   }
 }
 
+//------------------------------------------------------------------------------
 // Get global memory offset
-unsigned int GetImageOffset(const int gix,
-                            const int giy,
-                            const int giz,
-                            const int width, const int height)
+uint get_image_offset(const uint gix,
+                      const uint giy,
+                      const uint giz,
+                      const uint width, const uint height)
 {
-  unsigned int gidx = width*(giz*height + giy) + gix;
+  uint gidx = mad24(width, mad24(giz, height, giy), gix);
+
   return gidx;
 }
 
+//------------------------------------------------------------------------------
 #ifdef DIM_1
-#define DIM 1
-__kernel void RecursiveGaussianImageFilter(__global const INPIXELTYPE* in, __global OUTPIXELTYPE* out,
+__kernel void RecursiveGaussianImageFilter(__global const INPIXELTYPE *in,
+                                           __global OUTPIXELTYPE *out,
                                            unsigned int ln, int direction,
-                                           float m_N0, float m_N1, float m_N2, float m_N3,
-                                           float m_D1, float m_D2, float m_D3, float m_D4,
-                                           float m_M1, float m_M2, float m_M3, float m_M4,
-                                           float m_BN1, float m_BN2, float m_BN3, float m_BN4,
-                                           float m_BM1, float m_BM2, float m_BM3, float m_BM4,
-                                           int width, int height)
+                                           float4 N, float4 D, float4 M,
+                                           float4 BN, float4 BM,
+                                           uint width, uint height)
 {
-  int gi = get_global_id(0);
+  uint index = get_global_id(0);
 
   // Define length
-  int length = 0;
-  if(direction == 0)
-    length = width;
-  else if(direction == 1)
-    length = height;
+  uint length = 0;
 
-  if(gi < length)
+  if(direction == 0)
   {
-    // Local buffers
+    length = width;
+  }
+  else if(direction == 1)
+  {
+    length = height;
+  }
+
+  if(index < length)
+  {
+    // local buffers
     BUFFPIXELTYPE inps[BUFFSIZE];
     BUFFPIXELTYPE outs[BUFFSIZE];
     BUFFPIXELTYPE scratch[BUFFSIZE];
 
-    // Fill local input buffer
-    unsigned int id = 0;
-    unsigned int lidx = 0;
-    for (int i = 0; i < length; i++)
+    // fill local input buffer
+    uint id = 0;
+    uint lidx = 0;
+    for(uint i = 0; i < length; i++)
     {
       if(height != 0)
       {
         if(direction == 0)
-          lidx = GetImageOffset(i, 0, gi, width, 1);
+        {
+          lidx = get_image_offset(i, 0, index, width, 1);
+        }
         else if(direction == 1)
-          lidx = GetImageOffset(gi, 0, i, width, 1);
+        {
+          lidx = get_image_offset(index, 0, i, width, 1);
+        }
       }
       else
       {
@@ -160,24 +166,23 @@ __kernel void RecursiveGaussianImageFilter(__global const INPIXELTYPE* in, __glo
     * for each line of the volume. Parameter "scratch" is a scratch
     * area used for internal computations that is the same size as the
     * parameters "outs" and "data".*/
-    FilterDataArray(outs, inps, scratch, ln,
-      m_N0, m_N1, m_N2, m_N3,
-      m_D1, m_D2, m_D3, m_D4,
-      m_M1, m_M2, m_M3, m_M4,
-      m_BN1, m_BN2, m_BN3, m_BN4,
-      m_BM1, m_BM2, m_BM3, m_BM4);
+    filter_data_array(outs, inps, scratch, ln, N, D, M, BN, BM);
 
-    // Copy to output
+    // copy to output
     id = 0;
     lidx = 0;
-    for (int i = 0; i < length; i++)
+    for(uint i = 0; i < length; i++)
     {
       if(height != 0)
       {
         if(direction == 0)
-          lidx = GetImageOffset(i, 0, gi, width, 1);
+        {
+          lidx = get_image_offset(i, 0, index, width, 1);
+        }
         else if(direction == 1)
-          lidx = GetImageOffset(gi, 0, i, width, 1);
+        {
+          lidx = get_image_offset(index, 0, i, width, 1);
+        }
       }
       else
       {
@@ -188,63 +193,68 @@ __kernel void RecursiveGaussianImageFilter(__global const INPIXELTYPE* in, __glo
     }
   }
 }
+
 #endif
 
+//------------------------------------------------------------------------------
 #ifdef DIM_2
-#define DIM 2
-__kernel void RecursiveGaussianImageFilter(__global const INPIXELTYPE* in, __global OUTPIXELTYPE* out,
+__kernel void RecursiveGaussianImageFilter(__global const INPIXELTYPE *in,
+                                           __global OUTPIXELTYPE *out,
                                            unsigned int ln, int direction,
-                                           float m_N0, float m_N1, float m_N2, float m_N3,
-                                           float m_D1, float m_D2, float m_D3, float m_D4,
-                                           float m_M1, float m_M2, float m_M3, float m_M4,
-                                           float m_BN1, float m_BN2, float m_BN3, float m_BN4,
-                                           float m_BM1, float m_BM2, float m_BM3, float m_BM4,
-                                           int width, int height, int depth)
+                                           float4 N, float4 D, float4 M,
+                                           float4 BN, float4 BM,
+                                           uint width, uint height, uint depth)
 {
-  int gi1 = get_global_id(0);
-  int gi2 = get_global_id(1);
+  uint2 index = (uint2)( get_global_id(0), get_global_id(1) );
 
   // 0 (direction x) : y/z
   // 1 (direction y) : x/z
   // 2 (direction z) : x/y
-  int length[3];
+  uint3 length;
+
   if(direction == 0)
   {
-    length[0] = height;
-    length[1] = depth;
-    length[2] = width;  // looping over
+    length.x = height;
+    length.y = depth;
+    length.z = width;  // looping over
   }
   else if(direction == 1)
   {
-    length[0] = width;
-    length[1] = depth;
-    length[2] = height; // looping over
+    length.x = width;
+    length.y = depth;
+    length.z = height; // looping over
   }
   else if(direction == 2)
   {
-    length[0] = width;
-    length[1] = height;
-    length[2] = depth;  // looping over
+    length.x = width;
+    length.y = height;
+    length.z = depth;  // looping over
   }
 
-  if(gi1 < length[0] && gi2 < length[1])
+  if(index.x < length.x && index.y < length.y)
   {
-    // Local buffers
+    // local buffers
     BUFFPIXELTYPE inps[BUFFSIZE];
     BUFFPIXELTYPE outs[BUFFSIZE];
     BUFFPIXELTYPE scratch[BUFFSIZE];
 
-    // Fill local input buffer
-    unsigned int id = 0;
-    unsigned int lidx = 0;
-    for (int i = 0; i < length[2]; i++)
+    // fill local input buffer
+    uint id = 0;
+    uint lidx = 0;
+    for(uint i = 0; i < length.z; i++)
     {
       if(direction == 0)
-        lidx = GetImageOffset(i, gi1, gi2, width, height);
+      {
+        lidx = get_image_offset(i, index.x, index.y, width, height);
+      }
       else if(direction == 1)
-        lidx = GetImageOffset(gi1, i, gi2, width, height);
+      {
+        lidx = get_image_offset(index.x, i, index.y, width, height);
+      }
       else if(direction == 2)
-        lidx = GetImageOffset(gi1, gi2, i, width, height);
+      {
+        lidx = get_image_offset(index.x, index.y, i, width, height);
+      }
 
       inps[id++] = (BUFFPIXELTYPE)(in[lidx]);
     }
@@ -253,27 +263,29 @@ __kernel void RecursiveGaussianImageFilter(__global const INPIXELTYPE* in, __glo
     * for each line of the volume. Parameter "scratch" is a scratch
     * area used for internal computations that is the same size as the
     * parameters "outs" and "data".*/
-    FilterDataArray(outs, inps, scratch, ln,
-      m_N0, m_N1, m_N2, m_N3,
-      m_D1, m_D2, m_D3, m_D4,
-      m_M1, m_M2, m_M3, m_M4,
-      m_BN1, m_BN2, m_BN3, m_BN4,
-      m_BM1, m_BM2, m_BM3, m_BM4);
+    filter_data_array(outs, inps, scratch, ln, N, D, M, BN, BM);
 
-    // Copy to output
+    // copy to output
     id = 0;
     lidx = 0;
-    for (int i = 0; i < length[2]; i++)
+    for(uint i = 0; i < length.z; i++)
     {
       if(direction == 0)
-        lidx = GetImageOffset(i, gi1, gi2, width, height);
+      {
+        lidx = get_image_offset(i, index.x, index.y, width, height);
+      }
       else if(direction == 1)
-        lidx = GetImageOffset(gi1, i, gi2, width, height);
+      {
+        lidx = get_image_offset(index.x, i, index.y, width, height);
+      }
       else if(direction == 2)
-        lidx = GetImageOffset(gi1, gi2, i, width, height);
+      {
+        lidx = get_image_offset(index.x, index.y, i, width, height);
+      }
 
       out[lidx] = (OUTPIXELTYPE)(outs[id++]);
     }
   }
 }
+
 #endif

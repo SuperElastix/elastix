@@ -15,7 +15,7 @@
 #define __itkGPUAffineTransform_h
 
 #include "itkAffineTransform.h"
-#include "itkGPUTransformBase.h"
+#include "itkGPUMatrixOffsetTransformBase.h"
 
 namespace itk
 {
@@ -23,43 +23,43 @@ namespace itk
  */
 template< class TScalarType = float, unsigned int NDimensions = 3,
           class TParentImageFilter = AffineTransform< TScalarType, NDimensions > >
-class GPUAffineTransform : public TParentImageFilter, public GPUTransformBase
+class GPUAffineTransform :
+  public TParentImageFilter,
+  public GPUMatrixOffsetTransformBase< TScalarType, NDimensions, NDimensions >
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUAffineTransform         Self;
-  typedef TParentImageFilter         Superclass;
+  typedef GPUAffineTransform Self;
+  typedef TParentImageFilter CPUSuperclass;
+  typedef GPUMatrixOffsetTransformBase< TScalarType,
+                                        NDimensions,
+                                        NDimensions > GPUSuperclass;
+
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
 
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUAffineTransform, TParentImageFilter );
+  itkTypeMacro( GPUAffineTransform, CPUSuperclass );
 
-  /** Type of the scalar representing coordinate and vector elements. */
-  typedef typename Superclass::ScalarType ScalarType;
+  /** Typedefs */
+  typedef typename GPUSuperclass::CPUMatrixType        CPUMatrixType;
+  typedef typename GPUSuperclass::CPUInverseMatrixType CPUInverseMatrixType;
+  typedef typename GPUSuperclass::CPUOutputVectorType  CPUOutputVectorType;
 
-  /** Dimension of the domain space. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, NDimensions );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, NDimensions );
-  itkStaticConstMacro( ParametersDimension, unsigned int, NDimensions * ( NDimensions + 1 ) );
+  /**  */
+  virtual const CPUMatrixType &        GetCPUMatrix( void ) const { return this->GetMatrix(); }
+  virtual const CPUInverseMatrixType & GetCPUInverseMatrix( void ) const { return this->GetInverseMatrix(); }
+  virtual const CPUOutputVectorType &  GetCPUOffset( void ) const { return this->GetOffset(); }
 
 protected:
-  GPUAffineTransform();
+  GPUAffineTransform() {}
   virtual ~GPUAffineTransform() {}
-  void PrintSelf( std::ostream & s, Indent indent ) const;
-
-  virtual bool GetSourceCode( std::string & _source ) const;
-
-  virtual GPUDataManager::Pointer GetParametersDataManager() const;
 
 private:
   GPUAffineTransform( const Self & other ); // purposely not implemented
   const Self & operator=( const Self & );   // purposely not implemented
-
-  std::vector< std::string > m_Sources;
-  bool                       m_SourcesLoaded;
 };
 
 /** \class GPUAffineTransformFactory
@@ -86,8 +86,8 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPUAffineTransformFactory::Pointer factory
-      = GPUAffineTransformFactory::New();
+    GPUAffineTransformFactory::Pointer factory =
+      GPUAffineTransformFactory::New();
     ObjectFactoryBase::RegisterFactory( factory );
   }
 
@@ -120,11 +120,6 @@ private:
     }
   }
 };
-
 } // end namespace itk
-
-#ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUAffineTransform.hxx"
-#endif
 
 #endif /* __itkGPUAffineTransform_h */

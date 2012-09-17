@@ -32,5 +32,4 @@ GPUDataManager::Pointer GPUInterpolatorBase::GetParametersDataManager() const
 {
   return this->m_ParametersDataManager;
 }
-
 } // end namespace itk

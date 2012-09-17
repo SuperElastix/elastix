@@ -15,19 +15,20 @@
 //------------------------------------------------------------------------------
 // OpenCL implementation of
 // BSplineDecompositionImageFilter::SetInitialCausalCoefficient()
-void set_initial_causal_coefficient(BUFFPIXELTYPE* scratch,
+void set_initial_causal_coefficient(BUFFPIXELTYPE *scratch,
                                     const float z, const ulong data_length)
 {
-  float sum;
-  float zn, z2n, iz;
+  float       sum;
+  float       zn, z2n, iz;
   const float tolerance = 1e-10;
 
   // this initialization corresponds to mirror boundaries
   uint horizon = data_length;
+
   zn = z;
   if(tolerance > 0.0)
   {
-    horizon = (uint)(ceil(log(tolerance)/log(fabs(z))));
+    horizon = (uint)( ceil( log(tolerance) / log( fabs(z) ) ) );
   }
   if(horizon < data_length)
   {
@@ -44,36 +45,37 @@ void set_initial_causal_coefficient(BUFFPIXELTYPE* scratch,
   {
     // full loop
     iz = 1.0 / z;
-    z2n = pow(z, (float)( data_length - 1L ));
+    z2n = pow( z, (float)(data_length - 1L) );
     sum = mad(z2n, scratch[data_length - 1L], scratch[0]);
     z2n *= z2n * iz;
-    for(uint n = 1; n <= ( data_length - 2 ); n++)
+    for(uint n = 1; n <= (data_length - 2); n++)
     {
-      sum += ( zn + z2n ) * scratch[n];
+      sum += (zn + z2n) * scratch[n];
       zn *= z;
       z2n *= iz;
     }
-    scratch[0] = sum / ( 1.0 - zn * zn );
+    scratch[0] = sum / (1.0 - zn * zn);
   }
 }
 
 //------------------------------------------------------------------------------
 // OpenCL implementation of
 // BSplineDecompositionImageFilter::SetInitialAntiCausalCoefficient()
-void set_initial_anticausal_coefficient(BUFFPIXELTYPE* scratch,
+void set_initial_anticausal_coefficient(BUFFPIXELTYPE *scratch,
                                         const float z, const ulong data_length)
 {
   // this initialization corresponds to mirror boundaries
   // See Unser, 1999, Box 2 for explanation
   // Also see erratum at http://bigwww.epfl.ch/publications/unser9902.html
   scratch[data_length - 1] =
-    ( z / ( z * z - 1.0 ) )
-    * ( mad( z, scratch[data_length - 2], scratch[data_length - 1]) );
+    ( z / (z * z - 1.0) )
+    * ( mad(z, scratch[data_length - 2], scratch[data_length - 1]) );
 }
 
 //------------------------------------------------------------------------------
-// OpenCL implementation of BSplineDecompositionImageFilter::DataToCoefficients1D()
-bool data_to_coefficients_1d(BUFFPIXELTYPE* scratch,
+// OpenCL implementation of
+// BSplineDecompositionImageFilter::DataToCoefficients1D()
+bool data_to_coefficients_1d(BUFFPIXELTYPE *scratch,
                              const uint3 image_size,
                              const float2 in_spline_poles,
                              const int number_of_poles,
@@ -81,6 +83,7 @@ bool data_to_coefficients_1d(BUFFPIXELTYPE* scratch,
 
 {
   float spline_poles[2];
+
   spline_poles[0] = in_spline_poles.x;
   spline_poles[1] = in_spline_poles.y;
 
@@ -90,11 +93,11 @@ bool data_to_coefficients_1d(BUFFPIXELTYPE* scratch,
   {
     data_length = image_size.x;
   }
-  else if (direction == 1)
+  else if(direction == 1)
   {
     data_length = image_size.y;
   }
-  else if (direction == 2)
+  else if(direction == 2)
   {
     data_length = image_size.z;
   }
@@ -109,7 +112,7 @@ bool data_to_coefficients_1d(BUFFPIXELTYPE* scratch,
   for(int k = 0; k < number_of_poles; k++)
   {
     // Note for cubic splines lambda = 6
-    c0 = c0 * ( 1.0 - spline_poles[k] ) * ( 1.0 - 1.0 / spline_poles[k] );
+    c0 = c0 * (1.0 - spline_poles[k]) * (1.0 - 1.0 / spline_poles[k]);
   }
 
   // apply the gain
@@ -133,7 +136,7 @@ bool data_to_coefficients_1d(BUFFPIXELTYPE* scratch,
     // anticausal recursion
     for(int n = data_length - 2; 0 <= n; n--)
     {
-      scratch[n] = spline_poles[k] * ( scratch[n + 1] - scratch[n] );
+      scratch[n] = spline_poles[k] * (scratch[n + 1] - scratch[n]);
     }
   }
   return true;
@@ -147,13 +150,14 @@ uint get_image_offset(const uint gix,
                       const uint width, const uint height)
 {
   uint gidx = mad24(width, mad24(giz, height, giy), gix);
+
   return gidx;
 }
 
-#ifdef DIM_1
 //------------------------------------------------------------------------------
-__kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE* in,
-                                              __global OUTPIXELTYPE* out,
+#ifdef DIM_1
+__kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE *in,
+                                              __global OUTPIXELTYPE *out,
                                               uint2 image_size,
                                               float2 spline_poles,
                                               uint number_of_poles,
@@ -162,10 +166,15 @@ __kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE* in,
   uint gi = get_global_id(0);
   // Define length
   uint length = 0;
+
   if(direction == 0)
+  {
     length = image_size.x;
+  }
   else if(direction == 1)
+  {
     length = image_size.y;
+  }
 
   if(gi < length)
   {
@@ -180,9 +189,13 @@ __kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE* in,
       if(image_size.y != 0)
       {
         if(direction == 0)
+        {
           lidx = get_image_offset(i, 0, gi, image_size.x, 1);
+        }
         else if(direction == 1)
+        {
           lidx = get_image_offset(gi, 0, i, image_size.x, 1);
+        }
       }
       else
       {
@@ -193,7 +206,7 @@ __kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE* in,
 
     // Perform 1D BSpline calculations
     data_to_coefficients_1d(scratch, (uint3)(image_size.x, image_size.y, 0),
-      spline_poles, number_of_poles, direction);
+                            spline_poles, number_of_poles, direction);
 
     // Copy scratch back to coefficients
     id = 0;
@@ -203,9 +216,13 @@ __kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE* in,
       if(image_size.y != 0)
       {
         if(direction == 0)
+        {
           lidx = get_image_offset(i, 0, gi, image_size.x, 1);
+        }
         else if(direction == 1)
+        {
           lidx = get_image_offset(gi, 0, i, image_size.x, 1);
+        }
       }
       else
       {
@@ -215,43 +232,45 @@ __kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE* in,
     }
   }
 }
+
 #endif
 
-#ifdef DIM_2
 //------------------------------------------------------------------------------
-__kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE* in,
-                                              __global OUTPIXELTYPE* out,
+#ifdef DIM_2
+__kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE *in,
+                                              __global OUTPIXELTYPE *out,
                                               uint3 image_size,
                                               float2 spline_poles,
                                               int number_of_poles,
                                               uint direction)
 {
-  uint2 index = (uint2)(get_global_id(0), get_global_id(1));
+  uint2 index = (uint2)( get_global_id(0), get_global_id(1) );
 
   // 0 (direction x) : y/z
   // 1 (direction y) : x/z
   // 2 (direction z) : x/y
-  uint length[3];
+  uint3 length;
+
   if(direction == 0)
   {
-    length[0] = image_size.y;
-    length[1] = image_size.z;
-    length[2] = image_size.x; // looping over
+    length.x = image_size.y;
+    length.y = image_size.z;
+    length.z = image_size.x; // looping over
   }
   else if(direction == 1)
   {
-    length[0] = image_size.x;
-    length[1] = image_size.z;
-    length[2] = image_size.y; // looping over
+    length.x = image_size.x;
+    length.y = image_size.z;
+    length.z = image_size.y; // looping over
   }
   else if(direction == 2)
   {
-    length[0] = image_size.x;
-    length[1] = image_size.y;
-    length[2] = image_size.z; // looping over
+    length.x = image_size.x;
+    length.y = image_size.y;
+    length.z = image_size.z; // looping over
   }
 
-  if(index.x < length[0] && index.y < length[1])
+  if(index.x < length.x && index.y < length.y)
   {
     // Local scratch buffer
     BUFFPIXELTYPE scratch[BUFFSIZE];
@@ -259,36 +278,49 @@ __kernel void BSplineDecompositionImageFilter(__global const INPIXELTYPE* in,
     // Copy coefficients to scratch
     uint id = 0;
     uint lidx = 0;
-    for(int i = 0; i < length[2]; i++)
+    for(uint i = 0; i < length.z; i++)
     {
       if(direction == 0)
+      {
         lidx = get_image_offset(i, index.x, index.y, image_size.x, image_size.y);
+      }
       else if(direction == 1)
+      {
         lidx = get_image_offset(index.x, i, index.y, image_size.x, image_size.y);
+      }
       else if(direction == 2)
+      {
         lidx = get_image_offset(index.x, index.y, i, image_size.x, image_size.y);
+      }
 
       scratch[id++] = (BUFFPIXELTYPE)(out[lidx]);
     }
 
     // Perform 1D BSpline calculations
     data_to_coefficients_1d(scratch, image_size,
-      spline_poles, number_of_poles, direction);
+                            spline_poles, number_of_poles, direction);
 
     // Copy scratch back to coefficients
     id = 0;
     lidx = 0;
-    for(uint i = 0; i < length[2]; i++)
+    for(uint i = 0; i < length.z; i++)
     {
       if(direction == 0)
+      {
         lidx = get_image_offset(i, index.x, index.y, image_size.x, image_size.y);
+      }
       else if(direction == 1)
+      {
         lidx = get_image_offset(index.x, i, index.y, image_size.x, image_size.y);
+      }
       else if(direction == 2)
+      {
         lidx = get_image_offset(index.x, index.y, i, image_size.x, image_size.y);
+      }
 
       out[lidx] = (OUTPIXELTYPE)(scratch[id++]);
     }
   }
 }
+
 #endif

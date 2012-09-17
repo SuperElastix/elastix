@@ -28,6 +28,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
 ::GPUBSplineDecompositionImageFilter()
 {
   std::ostringstream defines;
+
   if ( TInputImage::ImageDimension > 3 || TInputImage::ImageDimension < 1 )
   {
     itkExceptionMacro( "ERROR: GPUBSplineDecompositionImageFilter supports 1/2/3D image." );
@@ -110,7 +111,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
     inPtr->GetLargestPossibleRegion().GetSize();
   typename GPUOutputImage::SizeValueType maxLength = 0;
 
-  for ( unsigned int n = 0; n < InputImageDimension; ++n )
+  for ( size_t n = 0; n < InputImageDimension; n++ )
   {
     if ( dataLength[n] > maxLength )
     {
@@ -133,11 +134,10 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   caster->GraftOutput( otPtr );
   caster->Update();
 
-  size_t localSize[3], globalSize[3];
-  localSize[0] = localSize[1] = localSize[2] = OpenCLGetLocalBlockSize( InputImageDimension );
-
-  for ( unsigned int i = 0; i < InputImageDimension; ++i )
+  typename GPUInputImage::SizeType localSize, globalSize;
+  for ( size_t i = 0; i < InputImageDimension; i++ )
   {
+    localSize[i] = OpenCLGetLocalBlockSize( InputImageDimension );
     // total # of threads
     globalSize[i] = localSize[i] * ( static_cast< unsigned int >(
                                        vcl_ceil( static_cast< float >( outSize[i] )
@@ -156,7 +156,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
 
   // set image size
   unsigned int imageSize[InputImageDimension];
-  for ( unsigned int i = 0; i < InputImageDimension; i++ )
+  for ( size_t i = 0; i < InputImageDimension; i++ )
   {
     imageSize[i] = outSize[i];
   }
@@ -204,7 +204,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
     this->m_FilterGPUKernelHandle, argidx++, sizeof( cl_int ), &this->m_NumberOfPoles );
 
   // Loop over directions
-  for ( unsigned int n = 0; n < InputImageDimension; n++ )
+  for ( size_t n = 0; n < InputImageDimension; n++ )
   {
     this->m_GPUKernelManager->SetKernelArg(
       this->m_FilterGPUKernelHandle, argidx, sizeof( cl_uint ), &n );
@@ -227,13 +227,13 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
     {
       case 1:
       case 2:
-        this->m_GPUKernelManager->LaunchKernel1D(
-          this->m_FilterGPUKernelHandle, globalSize[n], localSize[n] );
+        this->m_GPUKernelManager->LaunchKernel(
+          this->m_FilterGPUKernelHandle, OpenCLSize( globalSize[n] ), OpenCLSize( localSize[n] ) );
         break;
       case 3:
-        this->m_GPUKernelManager->LaunchKernel2D(
+        this->m_GPUKernelManager->LaunchKernel(
           this->m_FilterGPUKernelHandle,
-          globalSize[x], globalSize[y], localSize[n], localSize[n] );
+          OpenCLSize( globalSize[x], globalSize[y] ), OpenCLSize( localSize[n], localSize[n] ) );
         break;
     }
   } // end loop over InputImageDimension
@@ -251,7 +251,6 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   CPUSuperclass::PrintSelf( os, indent );
   GPUSuperclass::PrintSelf( os, indent );
 } // end PrintSelf()
-
 } // end namespace itk
 
 #endif /* __itkGPUBSplineDecompositionImageFilter_hxx */

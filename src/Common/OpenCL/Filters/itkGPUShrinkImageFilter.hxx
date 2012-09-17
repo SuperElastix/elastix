@@ -27,6 +27,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
 ::GPUShrinkImageFilter()
 {
   std::ostringstream defines;
+
   if ( TInputImage::ImageDimension > 3 || TInputImage::ImageDimension < 1 )
   {
     itkExceptionMacro( "GPUShrinkImageFilter supports 1/2/3D image." );
@@ -84,7 +85,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   // Convert the factor for convenient multiplication
   typename TOutputImage::SizeType factorSize;
   const ShrinkFactorsType shrinkFactors = this->GetShrinkFactors();
-  for ( unsigned int i = 0; i < InputImageDimension; i++ )
+  for ( size_t i = 0; i < InputImageDimension; i++ )
   {
     factorSize[i] = shrinkFactors[i];
   }
@@ -109,7 +110,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   // inputIndex = outputIndex * factorSize
   // is equivalent up to a fixed offset which we now compute
   OffsetValueType zeroOffset = 0;
-  for ( unsigned int i = 0; i < InputImageDimension; i++ )
+  for ( size_t i = 0; i < InputImageDimension; i++ )
   {
     offsetIndex[i] = inputIndex[i] - outputIndex[i] * shrinkFactors[i];
     // It is plausible that due to small amounts of loss of numerical
@@ -118,13 +119,13 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
     offsetIndex[i] = vnl_math_max( zeroOffset, offsetIndex[i] );
   }
 
-  typename GPUOutputImage::SizeType inSize  = inPtr->GetLargestPossibleRegion().GetSize();
-  typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
-  size_t localSize[3], globalSize[3];
-  localSize[0] = localSize[1] = localSize[2] = OpenCLGetLocalBlockSize( InputImageDimension );
+  const typename GPUOutputImage::SizeType inSize  = inPtr->GetLargestPossibleRegion().GetSize();
+  const typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
 
-  for ( unsigned int i = 0; i < InputImageDimension; ++i )
+  typename GPUInputImage::SizeType localSize, globalSize;
+  for ( size_t i = 0; i < InputImageDimension; i++ )
   {
+    localSize[i] = OpenCLGetLocalBlockSize( InputImageDimension );
     // total # of threads
     globalSize[i] = localSize[i] * ( static_cast< unsigned int >(
                                        vcl_ceil( static_cast< float >( outSize[i] )
@@ -147,12 +148,10 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
     outImageSize[i] = outSize[i];
   }
 
-  //signed long offset[TInputImage::ImageDimension];
-  //unsigned long factorsize[TInputImage::ImageDimension];
   unsigned int offset[InputImageDimension];
   unsigned int shrinkfactors[InputImageDimension];
 
-  for ( unsigned int i = 0; i < InputImageDimension; i++ )
+  for ( size_t i = 0; i < InputImageDimension; i++ )
   {
     offset[i] = offsetIndex[i];
     shrinkfactors[i] = factorSize[i];
@@ -194,9 +193,8 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   }
 
   // launch kernel
-  this->m_GPUKernelManager->LaunchKernel(
-    this->m_FilterGPUKernelHandle,
-    InputImageDimension, globalSize, localSize );
+  OpenCLEvent event = this->m_GPUKernelManager->LaunchKernel( this->m_FilterGPUKernelHandle,
+                                                              OpenCLSize( globalSize ), OpenCLSize( localSize ) );
 } // end GPUGenerateData()
 
 /**
@@ -211,7 +209,6 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   CPUSuperclass::PrintSelf( os, indent );
   GPUSuperclass::PrintSelf( os, indent );
 } // end PrintSelf()
-
 } // end namespace itk
 
 #endif /* __itkGPUShrinkImageFilter_hxx */

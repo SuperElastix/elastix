@@ -23,16 +23,11 @@ namespace itk
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >::GPUIdentityTransform()
 {
-  // Add GPUMatrixOffsetTransformBase header
-  std::string sname = "GPUMatrixOffsetTransformBase header";
-  const std::string sourcePath0(
-    GPUMatrixOffsetTransformBaseHeaderKernel::GetOpenCLSource() );
-  m_Sources.push_back( sourcePath0 );
-
   // Add GPUIdentityTransform source
-  const std::string sourcePath1(
+  const std::string sourcePath(
     GPUIdentityTransformKernel::GetOpenCLSource() );
-  m_Sources.push_back( sourcePath1 );
+
+  m_Sources.push_back( sourcePath );
 
   m_SourcesLoaded = true; // we set it to true, sources are loaded from strings
 }
@@ -49,7 +44,7 @@ bool GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >
 
   // Create the final source code
   std::ostringstream source;
-  for ( unsigned int i = 0; i < m_Sources.size(); i++ )
+  for ( size_t i = 0; i < m_Sources.size(); i++ )
   {
     source << m_Sources[i] << std::endl;
   }
@@ -64,7 +59,6 @@ void GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >
 {
   Superclass::PrintSelf( os, indent );
 }
-
 } // end namespace itk
 
 #endif /* __itkGPUIdentityTransform_hxx */

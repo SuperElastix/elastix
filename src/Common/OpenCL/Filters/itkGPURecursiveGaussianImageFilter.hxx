@@ -23,6 +23,7 @@ GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >
 ::GPURecursiveGaussianImageFilter()
 {
   std::ostringstream defines;
+
   if ( TInputImage::ImageDimension > 3 || TInputImage::ImageDimension < 1 )
   {
     itkExceptionMacro( "GPURecursiveGaussianImageFilter supports 1/2/3D image." );
@@ -181,63 +182,53 @@ void GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >::GPUGenerateDa
   this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( int ), &( direction ) );
 
   // Set causal coefficients
-  const float N0 = static_cast< float >( this->m_N0 );
-  const float N1 = static_cast< float >( this->m_N1 );
-  const float N2 = static_cast< float >( this->m_N2 );
-  const float N3 = static_cast< float >( this->m_N3 );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( N0 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( N1 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( N2 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( N3 ) );
+  cl_float4 N;
+  N.s[0] = static_cast< float >( this->m_N0 );
+  N.s[1] = static_cast< float >( this->m_N1 );
+  N.s[2] = static_cast< float >( this->m_N2 );
+  N.s[3] = static_cast< float >( this->m_N3 );
+  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( cl_float4 ), (void *)&N );
 
   // Set recursive coefficients
-  const float D1 = static_cast< float >( this->m_D1 );
-  const float D2 = static_cast< float >( this->m_D2 );
-  const float D3 = static_cast< float >( this->m_D3 );
-  const float D4 = static_cast< float >( this->m_D4 );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( D1 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( D2 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( D3 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( D4 ) );
+  cl_float4 D;
+  D.s[0] = static_cast< float >( this->m_D1 );
+  D.s[1] = static_cast< float >( this->m_D2 );
+  D.s[2] = static_cast< float >( this->m_D3 );
+  D.s[3] = static_cast< float >( this->m_D4 );
+  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( cl_float4 ), (void *)&D );
 
   // Set anti-causal coefficients
-  const float M1 = static_cast< float >( this->m_M1 );
-  const float M2 = static_cast< float >( this->m_M2 );
-  const float M3 = static_cast< float >( this->m_M3 );
-  const float M4 = static_cast< float >( this->m_M4 );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( M1 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( M2 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( M3 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( M4 ) );
+  cl_float4 M;
+  M.s[0] = static_cast< float >( this->m_M1 );
+  M.s[1] = static_cast< float >( this->m_M2 );
+  M.s[2] = static_cast< float >( this->m_M3 );
+  M.s[3] = static_cast< float >( this->m_M4 );
+  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( cl_float4 ), (void *)&M );
 
   // Set recursive coefficients to be used at the boundaries
-  const float BN1 = static_cast< float >( this->m_BN1 );
-  const float BN2 = static_cast< float >( this->m_BN2 );
-  const float BN3 = static_cast< float >( this->m_BN3 );
-  const float BN4 = static_cast< float >( this->m_BN4 );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( BN1 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( BN2 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( BN3 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( BN4 ) );
+  cl_float4 BN;
+  BN.s[0] = static_cast< float >( this->m_BN1 );
+  BN.s[1] = static_cast< float >( this->m_BN2 );
+  BN.s[2] = static_cast< float >( this->m_BN3 );
+  BN.s[3] = static_cast< float >( this->m_BN4 );
+  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( cl_float4 ), (void *)&BN );
 
-  const float BM1 = static_cast< float >( this->m_BM1 );
-  const float BM2 = static_cast< float >( this->m_BM2 );
-  const float BM3 = static_cast< float >( this->m_BM3 );
-  const float BM4 = static_cast< float >( this->m_BM4 );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( BM1 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( BM2 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( BM3 ) );
-  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( float ), &( BM4 ) );
+  cl_float4 BM;
+  BM.s[0] = static_cast< float >( this->m_BM1 );
+  BM.s[1] = static_cast< float >( this->m_BM2 );
+  BM.s[2] = static_cast< float >( this->m_BM3 );
+  BM.s[3] = static_cast< float >( this->m_BM4 );
+  this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( cl_float4 ), (void *)&BM );
 
   // Set image size
   for ( unsigned int i = 0; i < ImageDim; i++ )
   {
-    this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( int ), &( imgSize[i] ) );
+    this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( cl_uint ), &( imgSize[i] ) );
   }
   if ( ImageDim == 1 )
   {
     const int height = 0;
-    this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( int ), &( height ) );
+    this->m_GPUKernelManager->SetKernelArg( m_FilterGPUKernelHandle, argidx++, sizeof( cl_uint ), &( height ) );
   }
 
   // Launch kernel
@@ -245,16 +236,12 @@ void GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >::GPUGenerateDa
   {
     case 1:
     case 2:
-      //this->m_GPUKernelManager->LaunchKernel1D(m_FilterGPUKernelHandle,
-      //  globalSize1D, localSize1D);
-      this->m_GPUKernelManager->LaunchKernel1D( m_FilterGPUKernelHandle,
-                                                globalSize1D );
+      this->m_GPUKernelManager->LaunchKernel( m_FilterGPUKernelHandle,
+                                              OpenCLSize( globalSize1D ) );
       break;
     case 3:
-      //this->m_GPUKernelManager->LaunchKernel2D(m_FilterGPUKernelHandle,
-      //  globalSize2D[0], globalSize2D[1], localSize2D[0], localSize2D[1]);
-      this->m_GPUKernelManager->LaunchKernel2D( m_FilterGPUKernelHandle,
-                                                globalSize2D[0], globalSize2D[1] );
+      this->m_GPUKernelManager->LaunchKernel( m_FilterGPUKernelHandle,
+                                              OpenCLSize( globalSize2D[0], globalSize2D[1] ) );
       break;
   }
 }
@@ -267,7 +254,6 @@ void GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >
   CPUSuperclass::PrintSelf( os, indent );
   GPUSuperclass::PrintSelf( os, indent );
 }
-
 } // end namespace itk
 
 #endif /* __itkGPURecursiveGaussianImageFilter_hxx */

@@ -16,73 +16,88 @@
 
 //------------------------------------------------------------------------------
 // Definition of GPUFunction 1D/2D/3D
-typedef struct{
-  uint   StartIndex;
-  uint   EndIndex;
-  float  StartContinuousIndex;
-  float  EndContinuousIndex;
+typedef struct {
+  uint start_index;
+  uint end_index;
+  float start_continuous_index;
+  float end_continuous_index;
 } GPUImageFunction1D;
 
-typedef struct{
-  uint2  StartIndex;
-  uint2  EndIndex;
-  float2 StartContinuousIndex;
-  float2 EndContinuousIndex;
+typedef struct {
+  uint2 start_index;
+  uint2 end_index;
+  float2 start_continuous_index;
+  float2 end_continuous_index;
 } GPUImageFunction2D;
 
-typedef struct{
-  uint3  StartIndex;           // OpenCL does not have uint3
-  uint3  EndIndex;             // OpenCL does not have uint3
-  float3 StartContinuousIndex; // OpenCL does not have float3
-  float3 EndContinuousIndex;   // OpenCL does not have float3
+typedef struct {
+  uint3 start_index;
+  uint3 end_index;
+  float3 start_continuous_index;
+  float3 end_continuous_index;
 } GPUImageFunction3D;
 
-#ifdef DIM_1
 //------------------------------------------------------------------------------
+#ifdef DIM_1
 bool interpolator_is_inside_buffer_1d(const float index,
-                                      __constant GPUImageFunction1D* image_function)
+                                      __constant GPUImageFunction1D *image_function)
 {
-  if( ! (index >= image_function->StartContinuousIndex
-    && index < image_function->EndContinuousIndex) )
+  if( !(index >= image_function->start_continuous_index
+        && index < image_function->end_continuous_index) )
+  {
     return false;
+  }
 
   return true;
 }
+
 #endif // DIM_1
 
-#ifdef DIM_2
 //------------------------------------------------------------------------------
+#ifdef DIM_2
 bool interpolator_is_inside_buffer_2d(const float2 index,
-                                      __constant GPUImageFunction2D* image_function)
+                                      __constant GPUImageFunction2D *image_function)
 {
-  if( ! (index.x >= image_function->StartContinuousIndex.x
-    && index.x < image_function->EndContinuousIndex.x) )
+  if( !(index.x >= image_function->start_continuous_index.x
+        && index.x < image_function->end_continuous_index.x) )
+  {
     return false;
-  if( ! (index.y >= image_function->StartContinuousIndex.y
-    && index.y < image_function->EndContinuousIndex.y) )
+  }
+  if( !(index.y >= image_function->start_continuous_index.y
+        && index.y < image_function->end_continuous_index.y) )
+  {
     return false;
+  }
 
   return true;
 }
+
 #endif // DIM_2
 
-#ifdef DIM_3
 //------------------------------------------------------------------------------
+#ifdef DIM_3
 bool interpolator_is_inside_buffer_3d(const float3 index,
-                                      __constant GPUImageFunction3D* image_function)
+                                      __constant GPUImageFunction3D *image_function)
 {
-  if( ! (index.x >= image_function->StartContinuousIndex.x
-    && index.x < image_function->EndContinuousIndex.x) )
+  if( !(index.x >= image_function->start_continuous_index.x
+        && index.x < image_function->end_continuous_index.x) )
+  {
     return false;
-  if( ! (index.y >= image_function->StartContinuousIndex.y
-    && index.y < image_function->EndContinuousIndex.y) )
+  }
+  if( !(index.y >= image_function->start_continuous_index.y
+        && index.y < image_function->end_continuous_index.y) )
+  {
     return false;
-  if( ! (index.z >= image_function->StartContinuousIndex.z
-    && index.z < image_function->EndContinuousIndex.z) )
+  }
+  if( !(index.z >= image_function->start_continuous_index.z
+        && index.z < image_function->end_continuous_index.z) )
+  {
     return false;
+  }
 
   return true;
 }
+
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
