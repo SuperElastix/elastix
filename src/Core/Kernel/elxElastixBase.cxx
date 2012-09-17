@@ -141,7 +141,7 @@ int ElastixBase::BeforeAllBase( void )
 
   /** Check for appearance of "-out".
    * This check has already been performed in elastix.cxx,
-   * Here we do it again.
+   * Here we do it again. MS: WHY?
    */
   check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
@@ -152,11 +152,13 @@ int ElastixBase::BeforeAllBase( void )
   }
   else
   {
-    /** Make sure that last character of -out equals a '/'. */
+    /** Make sure that last character of the output folder equals a '/' or '\'. */
     std::string folder( check );
-    if ( folder.find_last_of( "/" ) != folder.size() - 1 )
+    const char last = folder[ folder.size() - 1 ];
+    if( last != '/' && last != '\\' )
     {
       folder.append( "/" );
+      folder = itksys::SystemTools::ConvertToOutputPath( folder.c_str() );
       this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
     }
     elxout << "-out      " << check << std::endl;
