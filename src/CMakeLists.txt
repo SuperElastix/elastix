@@ -219,7 +219,11 @@ if( MSVC )
     set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj" )
     set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /bigobj" )
     set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj" )
-
+    
+    # NOTE: that this flag makes it impossible to set and stop at Debug breakpoints in 
+    # Visual Studio 10.0. It is probably the Visual Studio 10.0 bug. 
+    # Or you have to recompile ITK with the same flag in Debug as well.
+    # Or it has something to do with building it with IncrediBuild where this flag is not welcome.
     set( CMAKE_EXE_LINKER_FLAGS_DEBUG "/INCREMENTAL:NO" )
   endif()
 endif()
