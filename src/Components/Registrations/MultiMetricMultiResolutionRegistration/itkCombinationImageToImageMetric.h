@@ -107,7 +107,7 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
-  //typedef typename Superclass::DerivativeValueType        DerivativeValueType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
 
   /** Some typedefs for computing the SelfHessian */
