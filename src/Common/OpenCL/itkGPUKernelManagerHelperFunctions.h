@@ -18,7 +18,6 @@
 #include "itkGPUKernelManager.h"
 #include "itkGPUContextManager.h"
 
-#include "itkGPUKernels.h"
 #include "itkOCLOstreamSupport.h"
 #include <string>
 

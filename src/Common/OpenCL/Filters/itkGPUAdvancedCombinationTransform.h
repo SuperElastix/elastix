@@ -51,8 +51,6 @@ protected:
 
   virtual bool GetSourceCode( std::string & _source ) const;
 
-  virtual GPUDataManager::Pointer GetParametersDataManager() const;
-
 private:
   GPUAdvancedCombinationTransform( const Self & other ); // purposely not implemented
   const Self & operator=( const Self & );                // purposely not implemented

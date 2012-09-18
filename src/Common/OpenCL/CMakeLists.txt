@@ -1,23 +1,27 @@
 
 project( elastix_opencl )
 
-# Get the full paths to the OpenCL kernels and define
-# a new list of those files in the binary directory.
-file( TO_NATIVE_PATH
-  ${CMAKE_CURRENT_SOURCE_DIR}/Kernels/
-  ELASTIX_OPENCL_KERNELS_PATH )
-if( WIN32 )
-  # Define ITK4OPENCL_KERNELS_PATH in Windows style with back slashes
-  string( REGEX REPLACE "\\\\" "\\\\\\\\" ELASTIX_OPENCL_KERNELS_PATH ${ELASTIX_OPENCL_KERNELS_PATH})
-endif()
+# Define directory to OpenCL Debug kernels
+set(elastix_OPENCL_KERNELS_DEBUG_PATH
+  ${elastix_BINARY_DIR}/
+CACHE INTERNAL "Path to itkOpenCLKernels.h")
+
+set(elastix_OPENCL_KERNELS_DEBUG_DIR
+  ${elastix_OPENCL_KERNELS_DEBUG_PATH}/elastixOpenCLDebug
+CACHE INTERNAL "Directory to OpenCL debug kernels")
+
+file(MAKE_DIRECTORY ${elastix_OPENCL_KERNELS_DEBUG_DIR})
+
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/itkGPUKernels.h.in
-  ${elastix_BINARY_DIR}/itkGPUKernels.h
-  @ONLY )
+  ${CMAKE_CURRENT_SOURCE_DIR}/ITKimprovements/itkOpenCLKernels.h.in
+  ${elastix_OPENCL_KERNELS_DEBUG_PATH}/itkOpenCLKernels.h
+  @ONLY
+)
 
 # Get the files in the main directory
 file( GLOB OpenCL_CommonFiles itk*.* )
-list( APPEND OpenCL_CommonFiles ${elastix_BINARY_DIR}/itkGPUKernels.h )
+list( APPEND OpenCL_CommonFiles ${elastix_OPENCL_KERNELS_DEBUG_PATH}/itkOpenCLKernels.h )
+
 source_group( "Common" FILES ${OpenCL_CommonFiles} )
 
 # Get the files in the subdir ITKimprovements
@@ -41,7 +45,7 @@ SET( OpenCL_Files
   ${OpenCL_FiltersFiles}
   ${OpenCL_KernelsFiles}
   ${OpenCL_KernelsFiles_SRC} )
-
+  
 # Create the openCL library
 add_library( elastix_opencl ${OpenCL_Files} )
 
