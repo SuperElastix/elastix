@@ -58,16 +58,16 @@ public:
   bool HasBSplineTransform() const;
 
   /**  */
-  bool IsIdentityTransform( const std::size_t index ) const;
+  bool IsIdentityTransform( const size_t index ) const;
 
   /**  */
-  bool IsMatrixOffsetTransform( const std::size_t index ) const;
+  bool IsMatrixOffsetTransform( const size_t index ) const;
 
   /**  */
-  bool IsTranslationTransform( const std::size_t index ) const;
+  bool IsTranslationTransform( const size_t index ) const;
 
   /**  */
-  bool IsBSplineTransform( const std::size_t index ) const;
+  bool IsBSplineTransform( const size_t index ) const;
 
 protected:
   GPUCompositeTransform();
@@ -76,22 +76,22 @@ protected:
 
   virtual bool GetSourceCode( std::string & _source ) const;
 
-  virtual GPUDataManager::Pointer GetParametersDataManager( const std::size_t index ) const;
+  virtual GPUDataManager::Pointer GetParametersDataManager( const size_t index ) const;
 
 private:
   GPUCompositeTransform( const Self & other ); // purposely not implemented
   const Self & operator=( const Self & );      // purposely not implemented
 
-  bool IsIdentityTransform( const std::size_t index,
+  bool IsIdentityTransform( const size_t index,
                             const bool _loadSource, std::string & _source ) const;
 
-  bool IsMatrixOffsetTransform( const std::size_t index,
+  bool IsMatrixOffsetTransform( const size_t index,
                                 const bool _loadSource, std::string & _source ) const;
 
-  bool IsTranslationTransform( const std::size_t index,
+  bool IsTranslationTransform( const size_t index,
                                const bool _loadSource, std::string & _source ) const;
 
-  bool IsBSplineTransform( const std::size_t index,
+  bool IsBSplineTransform( const size_t index,
                            const bool _loadSource, std::string & _source ) const;
 
   std::vector< std::string > m_Sources;

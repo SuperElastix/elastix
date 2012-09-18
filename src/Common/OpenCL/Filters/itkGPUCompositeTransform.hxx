@@ -37,7 +37,7 @@ GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 GPUDataManager::Pointer GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
-::GetParametersDataManager( const std::size_t index ) const
+::GetParametersDataManager( const size_t index ) const
 {
   GPUDataManager::Pointer parameters;
 
@@ -76,7 +76,7 @@ bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
   bool bsplineLoaded     = false;
 
   // Add sources based on Transform type
-  for ( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for ( size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
   {
     if ( IsIdentityTransform( i, true, source ) && !identityLoaded )
     {
@@ -113,7 +113,7 @@ template< class TScalarType, unsigned int NDimensions, class TParentImageFilter 
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 ::HasIdentityTransform() const
 {
-  for ( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for ( size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
   {
     if ( IsIdentityTransform( i ) )
     {
@@ -129,7 +129,7 @@ template< class TScalarType, unsigned int NDimensions, class TParentImageFilter 
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 ::HasMatrixOffsetTransform() const
 {
-  for ( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for ( size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
   {
     if ( IsMatrixOffsetTransform( i ) )
     {
@@ -145,7 +145,7 @@ template< class TScalarType, unsigned int NDimensions, class TParentImageFilter 
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 ::HasTranslationTransform() const
 {
-  for ( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for ( size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
   {
     if ( IsTranslationTransform( i ) )
     {
@@ -161,7 +161,7 @@ template< class TScalarType, unsigned int NDimensions, class TParentImageFilter 
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 ::HasBSplineTransform() const
 {
-  for ( std::size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
+  for ( size_t i = 0; i < this->GetNumberOfTransforms(); i++ )
   {
     if ( IsBSplineTransform( i ) )
     {
@@ -175,7 +175,7 @@ bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
-::IsIdentityTransform( const std::size_t _index ) const
+::IsIdentityTransform( const size_t _index ) const
 {
   typedef GPUIdentityTransform< ScalarType, NDimensions > IdentityTransformType;
   const IdentityTransformType *identity =
@@ -193,7 +193,7 @@ bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
-::IsMatrixOffsetTransform( const std::size_t _index ) const
+::IsMatrixOffsetTransform( const size_t _index ) const
 {
   typedef GPUMatrixOffsetTransformBase<
       ScalarType, InputSpaceDimension, OutputSpaceDimension > MatrixOffsetTransformBaseType;
@@ -212,7 +212,7 @@ bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
-::IsTranslationTransform( const std::size_t _index ) const
+::IsTranslationTransform( const size_t _index ) const
 {
   typedef GPUTranslationTransformBase<
     ScalarType, InputSpaceDimension > TranslationTransformBaseType;
@@ -231,7 +231,7 @@ bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
-::IsBSplineTransform( const std::size_t _index ) const
+::IsBSplineTransform( const size_t _index ) const
 {
   typedef GPUBSplineTransform< ScalarType, NDimensions, 1 > BSplineTransformType1;
   typedef GPUBSplineTransform< ScalarType, NDimensions, 2 > BSplineTransformType2;
@@ -257,7 +257,7 @@ bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
-::IsIdentityTransform( const std::size_t _index,
+::IsIdentityTransform( const size_t _index,
                        const bool _loadSource, std::string & _source ) const
 {
   typedef GPUIdentityTransform< ScalarType, NDimensions > IdentityTransformType;
@@ -282,7 +282,7 @@ bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
-::IsMatrixOffsetTransform( const std::size_t _index,
+::IsMatrixOffsetTransform( const size_t _index,
                            const bool _loadSource, std::string & _source ) const
 {
   typedef GPUMatrixOffsetTransformBase<
@@ -308,7 +308,7 @@ bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
-::IsTranslationTransform( const std::size_t _index,
+::IsTranslationTransform( const size_t _index,
                           const bool _loadSource, std::string & _source ) const
 {
   typedef GPUTranslationTransformBase<
@@ -334,7 +334,7 @@ bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
 //------------------------------------------------------------------------------
 template< class TScalarType, unsigned int NDimensions, class TParentImageFilter >
 bool GPUCompositeTransform< TScalarType, NDimensions, TParentImageFilter >
-::IsBSplineTransform( const std::size_t _index,
+::IsBSplineTransform( const size_t _index,
                       const bool _loadSource, std::string & _source ) const
 {
   typedef GPUBSplineTransform< ScalarType, NDimensions, 1 > BSplineTransformType1;

@@ -39,7 +39,7 @@ public:
   virtual GPUDataManager::Pointer GetParametersDataManager() const;
 
   /** */
-  virtual GPUDataManager::Pointer GetParametersDataManager( const std::size_t index ) const;
+  virtual GPUDataManager::Pointer GetParametersDataManager( const size_t index ) const;
 
 protected:
   GPUTransformBase();

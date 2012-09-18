@@ -34,7 +34,7 @@ GPUDataManager::Pointer GPUTransformBase::GetParametersDataManager() const
 }
 
 //------------------------------------------------------------------------------
-GPUDataManager::Pointer GPUTransformBase::GetParametersDataManager( const std::size_t index ) const
+GPUDataManager::Pointer GPUTransformBase::GetParametersDataManager( const size_t index ) const
 {
   return this->m_ParametersDataManager;
 }

@@ -50,7 +50,7 @@ bool GPUNearestNeighborInterpolateImageFunction< TInputImage, TCoordRep >
 
   // Create the source code
   std::ostringstream source;
-  for ( std::size_t i = 0; i < m_Sources.size(); i++ )
+  for ( size_t i = 0; i < m_Sources.size(); i++ )
   {
     source << m_Sources[i] << std::endl;
   }

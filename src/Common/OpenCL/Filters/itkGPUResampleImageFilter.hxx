@@ -421,7 +421,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     const typename RegionSplitterType::RegionType currentRegion = splitter->GetSplit( i, numberOfSplits, splitRegion );
     const typename RegionSplitterType::SizeType currentSize = currentRegion.GetSize();
-    std::size_t cSize = 1, mSize = 1;
+    size_t cSize = 1, mSize = 1;
     for ( unsigned int i = 0; i < 3; i++ )
     {
       cSize *= currentSize[i];
@@ -439,7 +439,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   //std::cout<< "MaxSize for requested number of splits("<<
   // requestedNumberOfSplits <<"): " << maxSize << std::endl << std::endl;
 
-  std::size_t sizeT = 1;
+  size_t sizeT = 1;
   for ( unsigned int i = 0; i < 3; i++ )
   {
     sizeT *= maxSize[i];
@@ -672,7 +672,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
     //  if ( compositeTransform )
     //  {
-    //    for ( std::size_t i = 0; i < compositeTransform->GetNumberOfTransforms(); i++ )
+    //    for ( size_t i = 0; i < compositeTransform->GetNumberOfTransforms(); i++ )
     //    {
     //      SetTransformArgumentsForLoopKernelManager( i, comboIndex, transformIndex );
     //    }
@@ -930,7 +930,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
-::SetTransformArgumentsForLoopKernelManager( const std::size_t index,
+::SetTransformArgumentsForLoopKernelManager( const size_t index,
                                              const cl_uint comboIndex,
                                              const cl_uint transformIndex )
 {
@@ -987,7 +987,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
-::SetGPUCoefficients( const std::size_t index, const cl_uint transformindex )
+::SetGPUCoefficients( const size_t index, const cl_uint transformindex )
 {
   // Typedefs
   typedef GPUBSplineBaseTransform< TInterpolatorPrecisionType,

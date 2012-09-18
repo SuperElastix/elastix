@@ -66,15 +66,15 @@ public:
 
   void SetGlobalWorkSize(const size_t kernelId, const OpenCLSize & size);
 
-  OpenCLSize GetGlobalWorkSize(const std::size_t kernelId) const;
+  OpenCLSize GetGlobalWorkSize(const size_t kernelId) const;
 
   void SetLocalWorkSize(const size_t kernelId, const OpenCLSize & size);
 
-  OpenCLSize GetLocalWorkSize(const std::size_t kernelId) const;
+  OpenCLSize GetLocalWorkSize(const size_t kernelId) const;
 
   void SetGlobalWorkOffset(const size_t kernelId, const OpenCLSize & offset);
 
-  OpenCLSize GetGlobalWorkOffset(const std::size_t kernelId) const;
+  OpenCLSize GetGlobalWorkOffset(const size_t kernelId) const;
 
   OpenCLEvent LaunchKernel(const size_t kernelId);
 
@@ -117,7 +117,7 @@ protected:
   void ResetArguments(const size_t kernelIdx);
 
   bool CreateOpenCLProgram(const std::string & filename,
-                           const std::string & source, const std::size_t sourceSize);
+                           const std::string & source, const size_t sourceSize);
 
 private:
   GPUKernelManager(const Self &); // purposely not implemented
