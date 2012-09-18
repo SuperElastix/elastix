@@ -29,12 +29,12 @@ namespace itk
 std::string GetOpenCLDebugFileName(const std::string & source)
 {
   // Create unique filename based on the source code
-  const size_t sourceSize = source.size();
+  const std::size_t sourceSize = source.size();
   itksysMD5 *  md5 = itksysMD5_New();
 
   itksysMD5_Initialize(md5);
   itksysMD5_Append(md5, (unsigned char *)source.c_str(), sourceSize);
-  const size_t DigestSize = 32u;
+  const std::size_t DigestSize = 32u;
   char         Digest[DigestSize];
   itksysMD5_FinalizeHex(md5, Digest);
   const std::string hex(Digest, DigestSize);
@@ -126,7 +126,7 @@ GPUKernelManager::GPUKernelManager()
 //------------------------------------------------------------------------------
 GPUKernelManager::~GPUKernelManager()
 {
-  for ( size_t i = 0; i < d_ptr.size(); i++ )
+  for ( std::size_t i = 0; i < d_ptr.size(); i++ )
     {
     OpenCLKernelPrivate *d = d_ptr[i];
     delete d;
@@ -135,7 +135,7 @@ GPUKernelManager::~GPUKernelManager()
 }
 
 //------------------------------------------------------------------------------
-void GPUKernelManager::SetGlobalWorkSize(const size_t kernelId,
+void GPUKernelManager::SetGlobalWorkSize(const std::size_t kernelId,
                                          const OpenCLSize & size)
 {
   OpenCLKernelPrivate *d = d_ptr[kernelId];
@@ -144,7 +144,7 @@ void GPUKernelManager::SetGlobalWorkSize(const size_t kernelId,
 }
 
 //------------------------------------------------------------------------------
-OpenCLSize GPUKernelManager::GetGlobalWorkSize(const size_t kernelId) const
+OpenCLSize GPUKernelManager::GetGlobalWorkSize(const std::size_t kernelId) const
 {
   const OpenCLKernelPrivate *d = d_ptr[kernelId];
 
@@ -152,7 +152,7 @@ OpenCLSize GPUKernelManager::GetGlobalWorkSize(const size_t kernelId) const
 }
 
 //------------------------------------------------------------------------------
-void GPUKernelManager::SetLocalWorkSize(const size_t kernelId,
+void GPUKernelManager::SetLocalWorkSize(const std::size_t kernelId,
                                         const OpenCLSize & size)
 {
   OpenCLKernelPrivate *d = d_ptr[kernelId];
@@ -161,7 +161,7 @@ void GPUKernelManager::SetLocalWorkSize(const size_t kernelId,
 }
 
 //------------------------------------------------------------------------------
-OpenCLSize GPUKernelManager::GetLocalWorkSize(const size_t kernelId) const
+OpenCLSize GPUKernelManager::GetLocalWorkSize(const std::size_t kernelId) const
 {
   const OpenCLKernelPrivate *d = d_ptr[kernelId];
 
@@ -169,7 +169,7 @@ OpenCLSize GPUKernelManager::GetLocalWorkSize(const size_t kernelId) const
 }
 
 //------------------------------------------------------------------------------
-void GPUKernelManager::SetGlobalWorkOffset(const size_t kernelId,
+void GPUKernelManager::SetGlobalWorkOffset(const std::size_t kernelId,
                                            const OpenCLSize & offset)
 {
   OpenCLKernelPrivate *d = d_ptr[kernelId];
@@ -178,7 +178,7 @@ void GPUKernelManager::SetGlobalWorkOffset(const size_t kernelId,
 }
 
 //------------------------------------------------------------------------------
-OpenCLSize GPUKernelManager::GetGlobalWorkOffset(const size_t kernelId) const
+OpenCLSize GPUKernelManager::GetGlobalWorkOffset(const std::size_t kernelId) const
 {
   const OpenCLKernelPrivate *d = d_ptr[kernelId];
 
@@ -215,7 +215,7 @@ bool GPUKernelManager::LoadProgramFromFile(const char *filename, const char *pre
   inputFile.close();
 
   const std::string oclSource = sstream.str();
-  const size_t      oclSourceSize = oclSource.size();
+  const std::size_t      oclSourceSize = oclSource.size();
 
   if ( oclSourceSize == 0 )
     {
@@ -279,7 +279,7 @@ bool GPUKernelManager::LoadProgramFromString(const char *source, const char *pre
     }
 
   const std::string oclSource = sstream.str();
-  const size_t      oclSourceSize = oclSource.size();
+  const std::size_t      oclSourceSize = oclSource.size();
 
   if ( oclSourceSize == 0 )
     {
@@ -326,7 +326,7 @@ bool GPUKernelManager::LoadProgramFromString(const char *source, const char *pre
 //------------------------------------------------------------------------------
 bool GPUKernelManager::CreateOpenCLProgram(const std::string & filename,
                                            const std::string & source,
-                                           const size_t sourceSize)
+                                           const std::size_t sourceSize)
 {
 #ifdef OPENCL_PROFILING
   itk::TimeProbe buildtimer;
@@ -403,7 +403,7 @@ bool GPUKernelManager::CreateOpenCLProgram(const std::string & filename,
     //itkWarningMacro("OpenCL program build error");
 
     // print out build error
-    size_t paramValueSize = 0;
+    std::size_t paramValueSize = 0;
 
     // get error message size
     clGetProgramBuildInfo(m_Program, m_Manager->GetDeviceId(0),
@@ -482,19 +482,19 @@ int GPUKernelManager::CreateKernel(const char *kernelName)
 }
 
 //------------------------------------------------------------------------------
-cl_int GPUKernelManager::GetKernelWorkGroupInfo(const size_t kernelId,
+cl_int GPUKernelManager::GetKernelWorkGroupInfo(const std::size_t kernelId,
                                                 cl_kernel_work_group_info paramName,
                                                 void *value)
 {
-  size_t valueSize, valueSizeRet;
+  std::size_t valueSize, valueSizeRet;
 
   switch ( paramName )
     {
     case CL_KERNEL_WORK_GROUP_SIZE:
-      valueSize = sizeof( size_t );
+      valueSize = sizeof( std::size_t );
       break;
     case CL_KERNEL_COMPILE_WORK_GROUP_SIZE:
-      valueSize = 3 * sizeof( size_t );
+      valueSize = 3 * sizeof( std::size_t );
       break;
     case CL_KERNEL_LOCAL_MEM_SIZE:
       valueSize = sizeof( cl_ulong );
@@ -515,8 +515,8 @@ cl_int GPUKernelManager::GetKernelWorkGroupInfo(const size_t kernelId,
 }
 
 //------------------------------------------------------------------------------
-bool GPUKernelManager::SetKernelArg(const size_t kernelId,
-                                    const cl_uint argIdx, const size_t argSize,
+bool GPUKernelManager::SetKernelArg(const std::size_t kernelId,
+                                    const cl_uint argIdx, const std::size_t argSize,
                                     const void *argVal)
 {
   if ( kernelId >= m_KernelContainer.size() ) { return false; }
@@ -535,7 +535,7 @@ bool GPUKernelManager::SetKernelArg(const size_t kernelId,
 }
 
 //------------------------------------------------------------------------------
-bool GPUKernelManager::SetKernelArgWithImage(const size_t kernelId, const cl_uint argId,
+bool GPUKernelManager::SetKernelArgWithImage(const std::size_t kernelId, const cl_uint argId,
                                              GPUDataManager::Pointer manager)
 {
   if ( kernelId >= m_KernelContainer.size() ) { return false; }
@@ -555,11 +555,11 @@ bool GPUKernelManager::SetKernelArgWithImage(const size_t kernelId, const cl_uin
 
 //------------------------------------------------------------------------------
 // this function must be called right before GPU kernel is launched
-bool GPUKernelManager::CheckArgumentReady(const size_t kernelId)
+bool GPUKernelManager::CheckArgumentReady(const std::size_t kernelId)
 {
-  const size_t nArg = m_KernelArgumentReady[kernelId].size();
+  const std::size_t nArg = m_KernelArgumentReady[kernelId].size();
 
-  for ( size_t i = 0; i < nArg; i++ )
+  for ( std::size_t i = 0; i < nArg; i++ )
     {
     if ( !( m_KernelArgumentReady[kernelId][i].m_IsReady ) ) { return false; }
 
@@ -573,11 +573,11 @@ bool GPUKernelManager::CheckArgumentReady(const size_t kernelId)
 }
 
 //------------------------------------------------------------------------------
-void GPUKernelManager::ResetArguments(const size_t kernelIdx)
+void GPUKernelManager::ResetArguments(const std::size_t kernelIdx)
 {
-  const size_t nArg = m_KernelArgumentReady[kernelIdx].size();
+  const std::size_t nArg = m_KernelArgumentReady[kernelIdx].size();
 
-  for ( size_t i = 0; i < nArg; i++ )
+  for ( std::size_t i = 0; i < nArg; i++ )
     {
     m_KernelArgumentReady[kernelIdx][i].m_IsReady = false;
     m_KernelArgumentReady[kernelIdx][i].m_GPUDataManager = (GPUDataManager::Pointer)NULL;
@@ -585,7 +585,7 @@ void GPUKernelManager::ResetArguments(const size_t kernelIdx)
 }
 
 //------------------------------------------------------------------------------
-OpenCLEvent GPUKernelManager::LaunchKernel(const size_t kernelId)
+OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId)
 {
   if ( kernelId >= m_KernelContainer.size() )
     {
@@ -656,7 +656,7 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const size_t kernelId)
 }
 
 //------------------------------------------------------------------------------
-OpenCLEvent GPUKernelManager::LaunchKernel(const size_t kernelId,
+OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId,
                                            const OpenCLSize & global_work_size,
                                            const OpenCLSize & local_work_size,
                                            const OpenCLSize & global_work_offset)
@@ -668,7 +668,7 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const size_t kernelId,
 }
 
 //------------------------------------------------------------------------------
-OpenCLEvent GPUKernelManager::LaunchKernel(const size_t kernelId,
+OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId,
                                            const OpenCLEventList & after)
 {
   if ( kernelId >= m_KernelContainer.size() )
@@ -741,7 +741,7 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const size_t kernelId,
 }
 
 //------------------------------------------------------------------------------
-OpenCLEvent GPUKernelManager::LaunchKernel(const size_t kernelId,
+OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId,
                                            const OpenCLEventList & after,
                                            const OpenCLSize & global_work_size,
                                            const OpenCLSize & local_work_size,
@@ -754,7 +754,7 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const size_t kernelId,
 }
 
 //------------------------------------------------------------------------------
-void GPUKernelManager::SetCurrentCommandQueue(const size_t queueid)
+void GPUKernelManager::SetCurrentCommandQueue(const std::size_t queueid)
 {
   if ( queueid >= 0 && queueid < m_Manager->GetNumberOfCommandQueues() )
     {

@@ -359,7 +359,7 @@ void OpenCLEventList::Remove(const OpenCLEvent & event)
 }
 
 //------------------------------------------------------------------------------
-OpenCLEvent OpenCLEventList::At(size_t index) const
+OpenCLEvent OpenCLEventList::At(std::size_t index) const
 {
   if ( index >= 0 && index < m_Events.size() )
     {

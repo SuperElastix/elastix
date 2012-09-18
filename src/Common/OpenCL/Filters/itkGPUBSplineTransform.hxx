@@ -133,7 +133,7 @@ bool GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
   source << "#define GPUBSplineTransformNumberOfWeights (" << numberOfWeights << ")" << std::endl;
 
   // Add other sources
-  for ( size_t i = 0; i < m_Sources.size(); i++ )
+  for ( std::size_t i = 0; i < m_Sources.size(); i++ )
   {
     source << m_Sources[i] << std::endl;
   }

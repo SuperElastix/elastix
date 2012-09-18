@@ -397,7 +397,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
     imgSize[i] = outSize[i];
   }
 
-  size_t localSize[3], globalSize[3];
+  std::size_t localSize[3], globalSize[3];
   localSize[0] = localSize[1] = localSize[2] = OpenCLGetLocalBlockSize( ImageDim );
 
   for ( unsigned int i = 0; i < ImageDim; i++ )
@@ -421,7 +421,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     const typename RegionSplitterType::RegionType currentRegion = splitter->GetSplit( i, numberOfSplits, splitRegion );
     const typename RegionSplitterType::SizeType currentSize = currentRegion.GetSize();
-    size_t cSize = 1, mSize = 1;
+    std::size_t cSize = 1, mSize = 1;
     for ( unsigned int i = 0; i < 3; i++ )
     {
       cSize *= currentSize[i];
@@ -439,7 +439,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   //std::cout<< "MaxSize for requested number of splits("<<
   // requestedNumberOfSplits <<"): " << maxSize << std::endl << std::endl;
 
-  size_t sizeT = 1;
+  std::size_t sizeT = 1;
   for ( unsigned int i = 0; i < 3; i++ )
   {
     sizeT *= maxSize[i];
@@ -472,7 +472,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   SetArgumentsForPostKernelManager( inPtr, otPtr, tsizePostIntex );
 
   //
-  size_t local3D[3], local2D[2], local1D;
+  std::size_t local3D[3], local2D[2], local1D;
 
 #if ITK_USE_NVIDIA_OPENCL
   local3D[0] = local3D[1] = local3D[2] = OpenCLGetLocalBlockSize(InputImageDimension);
@@ -494,8 +494,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   unsigned int       piece;
 
   cl_uint3 tsize3D; cl_uint2 tsize2D; cl_uint tsize1D;
-  size_t   global3D[3], global2D[2], global1D;
-  size_t   offset3D[3], offset2D[2], offset1D;
+  std::size_t   global3D[3], global2D[2], global1D;
+  std::size_t   offset3D[3], offset2D[2], offset1D;
 
   OpenCLSize global;
   OpenCLSize offset;
@@ -672,7 +672,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
     //  if ( compositeTransform )
     //  {
-    //    for ( size_t i = 0; i < compositeTransform->GetNumberOfTransforms(); i++ )
+    //    for ( std::size_t i = 0; i < compositeTransform->GetNumberOfTransforms(); i++ )
     //    {
     //      SetTransformArgumentsForLoopKernelManager( i, comboIndex, transformIndex );
     //    }
@@ -930,7 +930,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
-::SetTransformArgumentsForLoopKernelManager( const size_t index,
+::SetTransformArgumentsForLoopKernelManager( const std::size_t index,
                                              const cl_uint comboIndex,
                                              const cl_uint transformIndex )
 {
@@ -987,7 +987,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
-::SetGPUCoefficients( const size_t index, const cl_uint transformindex )
+::SetGPUCoefficients( const std::size_t index, const cl_uint transformindex )
 {
   // Typedefs
   typedef GPUBSplineBaseTransform< TInterpolatorPrecisionType,

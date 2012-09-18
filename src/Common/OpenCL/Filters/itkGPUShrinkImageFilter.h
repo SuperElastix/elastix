@@ -109,7 +109,7 @@ private:
   void operator=( const Self & );       // purposely not implemented
 
   int    m_FilterGPUKernelHandle;
-  size_t m_DeviceLocalMemorySize;
+  std::size_t m_DeviceLocalMemorySize;
 };
 
 /** \class GPUShrinkImageFilterFactory

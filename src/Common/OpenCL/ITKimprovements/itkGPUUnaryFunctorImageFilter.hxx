@@ -62,13 +62,13 @@ GPUUnaryFunctorImageFilter< TInputImage, TOutputImage, TFunction, TParentImageFi
 
   const unsigned int ImageDim = (unsigned int)TInputImage::ImageDimension;
 
-  for ( size_t i = 0; i < ImageDim; i++ )
+  for ( std::size_t i = 0; i < ImageDim; i++ )
     {
     imgSize[i] = outSize[i];
     }
 
   typename GPUInputImage::SizeType localSize, globalSize;
-  for ( size_t i = 0; i < ImageDim; i++ )
+  for ( std::size_t i = 0; i < ImageDim; i++ )
     {
     localSize[i] = OpenCLGetLocalBlockSize(InputImageDimension);
     // total # of threads
@@ -87,7 +87,7 @@ GPUUnaryFunctorImageFilter< TInputImage, TOutputImage, TFunction, TParentImageFi
   this->m_GPUKernelManager->SetKernelArgWithImage( m_UnaryFunctorImageFilterGPUKernelHandle, argidx++,
                                                    otPtr->GetGPUDataManager() );
 
-  for ( size_t i = 0; i < ImageDim; i++ )
+  for ( std::size_t i = 0; i < ImageDim; i++ )
     {
     this->m_GPUKernelManager->SetKernelArg( m_UnaryFunctorImageFilterGPUKernelHandle, argidx++,
                                             sizeof( cl_uint ), &( imgSize[i] ) );

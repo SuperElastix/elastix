@@ -107,7 +107,7 @@ protected:
     cl_uint & transformIndex );
 
   void SetTransformArgumentsForLoopKernelManager(
-    const size_t index,
+    const std::size_t index,
     const cl_uint comboIndex,
     const cl_uint transformIndex );
 
@@ -117,7 +117,7 @@ protected:
     cl_uint & index );
 
   void SetGPUCoefficients(
-    const size_t index, const cl_uint transformindex );
+    const std::size_t index, const cl_uint transformindex );
 
   bool HasTransform( const GPUInputTransformType type );
 
@@ -144,10 +144,10 @@ private:
   typedef std::map< GPUInputTransformType, TransformHandle > TransformsHandle;
 
   std::vector< std::string > m_Sources;
-  size_t                m_SourceIndex;
+  std::size_t                m_SourceIndex;
 
-  size_t m_InterpolatorSourceLoadedIndex;
-  size_t m_TransformSourceLoadedIndex;
+  std::size_t m_InterpolatorSourceLoadedIndex;
+  std::size_t m_TransformSourceLoadedIndex;
 
   bool m_InterpolatorIsBSpline;
   bool m_TransformIsCombo;

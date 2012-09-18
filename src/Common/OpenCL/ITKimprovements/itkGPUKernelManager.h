@@ -64,28 +64,28 @@ public:
   itkNewMacro(Self);
   itkTypeMacro(GPUKernelManager, LightObject);
 
-  void SetGlobalWorkSize(const size_t kernelId, const OpenCLSize & size);
+  void SetGlobalWorkSize(const std::size_t kernelId, const OpenCLSize & size);
 
-  OpenCLSize GetGlobalWorkSize(const size_t kernelId) const;
+  OpenCLSize GetGlobalWorkSize(const std::size_t kernelId) const;
 
-  void SetLocalWorkSize(const size_t kernelId, const OpenCLSize & size);
+  void SetLocalWorkSize(const std::size_t kernelId, const OpenCLSize & size);
 
-  OpenCLSize GetLocalWorkSize(const size_t kernelId) const;
+  OpenCLSize GetLocalWorkSize(const std::size_t kernelId) const;
 
-  void SetGlobalWorkOffset(const size_t kernelId, const OpenCLSize & offset);
+  void SetGlobalWorkOffset(const std::size_t kernelId, const OpenCLSize & offset);
 
-  OpenCLSize GetGlobalWorkOffset(const size_t kernelId) const;
+  OpenCLSize GetGlobalWorkOffset(const std::size_t kernelId) const;
 
-  OpenCLEvent LaunchKernel(const size_t kernelId);
+  OpenCLEvent LaunchKernel(const std::size_t kernelId);
 
-  OpenCLEvent LaunchKernel(const size_t kernelId,
+  OpenCLEvent LaunchKernel(const std::size_t kernelId,
                            const OpenCLSize & global_work_size,
                            const OpenCLSize & local_work_size = OpenCLSize::null,
                            const OpenCLSize & global_work_offset = OpenCLSize::null);
 
-  OpenCLEvent LaunchKernel(const size_t kernelId, const OpenCLEventList & after);
+  OpenCLEvent LaunchKernel(const std::size_t kernelId, const OpenCLEventList & after);
 
-  OpenCLEvent LaunchKernel(const size_t kernelId, const OpenCLEventList & after,
+  OpenCLEvent LaunchKernel(const std::size_t kernelId, const OpenCLEventList & after,
                            const OpenCLSize & global_work_size,
                            const OpenCLSize & local_work_size = OpenCLSize::null,
                            const OpenCLSize & global_work_offset = OpenCLSize::null);
@@ -96,15 +96,15 @@ public:
 
   int  CreateKernel(const char *kernelName);
 
-  cl_int GetKernelWorkGroupInfo(const size_t kernelId,
+  cl_int GetKernelWorkGroupInfo(const std::size_t kernelId,
                                 cl_kernel_work_group_info paramName, void *value);
 
-  bool SetKernelArg(const size_t kernelId,
-                    const cl_uint argId, const size_t argSize, const void *argVal);
+  bool SetKernelArg(const std::size_t kernelId,
+                    const cl_uint argId, const std::size_t argSize, const void *argVal);
 
-  bool SetKernelArgWithImage(const size_t kernelId, cl_uint argId, GPUDataManager::Pointer manager);
+  bool SetKernelArgWithImage(const std::size_t kernelId, cl_uint argId, GPUDataManager::Pointer manager);
 
-  void SetCurrentCommandQueue(const size_t queueid);
+  void SetCurrentCommandQueue(const std::size_t queueid);
 
   int  GetCurrentCommandQueueID();
 
@@ -112,12 +112,12 @@ protected:
   GPUKernelManager();
   virtual ~GPUKernelManager();
 
-  bool CheckArgumentReady(const size_t kernelId);
+  bool CheckArgumentReady(const std::size_t kernelId);
 
-  void ResetArguments(const size_t kernelIdx);
+  void ResetArguments(const std::size_t kernelIdx);
 
   bool CreateOpenCLProgram(const std::string & filename,
-                           const std::string & source, const size_t sourceSize);
+                           const std::string & source, const std::size_t sourceSize);
 
 private:
   GPUKernelManager(const Self &); // purposely not implemented

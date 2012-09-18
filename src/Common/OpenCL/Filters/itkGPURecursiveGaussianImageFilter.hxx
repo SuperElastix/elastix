@@ -108,8 +108,8 @@ void GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >::GPUGenerateDa
     imgSize[i] = outSize[i];
   }
 
-  size_t globalSize1D = 0, globalSize2D[2];
-  size_t localSize1D = 0, localSize2D[2];
+  std::size_t globalSize1D = 0, globalSize2D[2];
+  std::size_t localSize1D = 0, localSize2D[2];
   for ( unsigned int i = 0; i < 2; i++ )
   {
     globalSize2D[i] = 0;

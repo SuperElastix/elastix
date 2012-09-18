@@ -170,7 +170,7 @@ public:
 
   /** Returns the size of this event list.
    * \sa IsEmpty(), At() */
-  size_t GetSize() const { return m_Events.size(); }
+  std::size_t GetSize() const { return m_Events.size(); }
 
   /** Appends event to this list of OpenCL events if it is not null.
    * Does nothing if  event is null.
@@ -187,7 +187,7 @@ public:
   /** Returns the event at index in this event list, or a null OpenCLEvent
    * if index is out of range.
    * \sa GetSize(), Contains() */
-  OpenCLEvent At(size_t index) const;
+  OpenCLEvent At(std::size_t index) const;
 
   /** Returns true if this event list contains event; false otherwise.
    * \sa At(), Remove() */

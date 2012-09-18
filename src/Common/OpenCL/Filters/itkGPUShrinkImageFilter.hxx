@@ -85,7 +85,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   // Convert the factor for convenient multiplication
   typename TOutputImage::SizeType factorSize;
   const ShrinkFactorsType shrinkFactors = this->GetShrinkFactors();
-  for ( size_t i = 0; i < InputImageDimension; i++ )
+  for ( std::size_t i = 0; i < InputImageDimension; i++ )
   {
     factorSize[i] = shrinkFactors[i];
   }
@@ -110,7 +110,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   // inputIndex = outputIndex * factorSize
   // is equivalent up to a fixed offset which we now compute
   OffsetValueType zeroOffset = 0;
-  for ( size_t i = 0; i < InputImageDimension; i++ )
+  for ( std::size_t i = 0; i < InputImageDimension; i++ )
   {
     offsetIndex[i] = inputIndex[i] - outputIndex[i] * shrinkFactors[i];
     // It is plausible that due to small amounts of loss of numerical
@@ -123,7 +123,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   const typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
 
   typename GPUInputImage::SizeType localSize, globalSize;
-  for ( size_t i = 0; i < InputImageDimension; i++ )
+  for ( std::size_t i = 0; i < InputImageDimension; i++ )
   {
     localSize[i] = OpenCLGetLocalBlockSize( InputImageDimension );
     // total # of threads
@@ -151,7 +151,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   unsigned int offset[InputImageDimension];
   unsigned int shrinkfactors[InputImageDimension];
 
-  for ( size_t i = 0; i < InputImageDimension; i++ )
+  for ( std::size_t i = 0; i < InputImageDimension; i++ )
   {
     offset[i] = offsetIndex[i];
     shrinkfactors[i] = factorSize[i];

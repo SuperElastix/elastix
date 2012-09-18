@@ -111,7 +111,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
     inPtr->GetLargestPossibleRegion().GetSize();
   typename GPUOutputImage::SizeValueType maxLength = 0;
 
-  for ( size_t n = 0; n < InputImageDimension; n++ )
+  for ( std::size_t n = 0; n < InputImageDimension; n++ )
   {
     if ( dataLength[n] > maxLength )
     {
@@ -135,7 +135,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   caster->Update();
 
   typename GPUInputImage::SizeType localSize, globalSize;
-  for ( size_t i = 0; i < InputImageDimension; i++ )
+  for ( std::size_t i = 0; i < InputImageDimension; i++ )
   {
     localSize[i] = OpenCLGetLocalBlockSize( InputImageDimension );
     // total # of threads
@@ -156,7 +156,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
 
   // set image size
   unsigned int imageSize[InputImageDimension];
-  for ( size_t i = 0; i < InputImageDimension; i++ )
+  for ( std::size_t i = 0; i < InputImageDimension; i++ )
   {
     imageSize[i] = outSize[i];
   }
@@ -204,7 +204,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
     this->m_FilterGPUKernelHandle, argidx++, sizeof( cl_int ), &this->m_NumberOfPoles );
 
   // Loop over directions
-  for ( size_t n = 0; n < InputImageDimension; n++ )
+  for ( std::size_t n = 0; n < InputImageDimension; n++ )
   {
     this->m_GPUKernelManager->SetKernelArg(
       this->m_FilterGPUKernelHandle, argidx, sizeof( cl_uint ), &n );

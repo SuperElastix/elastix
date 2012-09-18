@@ -57,18 +57,18 @@ public:
 
   /** Constructs a single-dimensional size with width set to size.
    * The height and depth will be set to 1. */
-  OpenCLSize(const size_t size):
+  OpenCLSize(const std::size_t size):
     m_Dim(1)
   { m_Sizes[0] = size; m_Sizes[1] = 1; m_Sizes[2] = 1; }
 
   /** Constructs a two-dimensional size of width, height.
    * The depth will be set to 1. */
-  OpenCLSize(const size_t width, const size_t height):
+  OpenCLSize(const std::size_t width, const std::size_t height):
     m_Dim(2)
   { m_Sizes[0] = width; m_Sizes[1] = height; m_Sizes[2] = 1; }
 
   /** Constructs a three-dimensional size of width, height and depth. */
-  OpenCLSize(const size_t width, const size_t height, const size_t depth):
+  OpenCLSize(const std::size_t width, const std::size_t height, const std::size_t depth):
     m_Dim(3)
   { m_Sizes[0] = width; m_Sizes[1] = height; m_Sizes[2] = depth; }
 
@@ -96,16 +96,16 @@ public:
   cl_uint GetDimension() const { return m_Dim; }
 
   /** Returns the width of this size. */
-  size_t GetWidth() const { return m_Sizes[0]; }
+  std::size_t GetWidth() const { return m_Sizes[0]; }
 
   /** Returns the height of this size. */
-  size_t GetHeight() const { return m_Sizes[1]; }
+  std::size_t GetHeight() const { return m_Sizes[1]; }
 
   /** Returns the depth of this size. */
-  size_t GetDepth() const { return m_Sizes[2]; }
+  std::size_t GetDepth() const { return m_Sizes[2]; }
 
   /** Returns a const pointer to the size array within this object. */
-  const size_t * GetSizes() const { return m_Sizes; }
+  const std::size_t * GetSizes() const { return m_Sizes; }
 
   /** Returns the best-fit local work size that evenly divides this work
    * size and fits within the maximums defined by maxWorkItemSize
@@ -113,7 +113,7 @@ public:
    * This function is typically used to convert an arbitrary global
    * work size on a QCLKernel into a compatible local work size. */
   OpenCLSize toLocalWorkSize
-    (const OpenCLSize & maxWorkItemSize, const size_t maxItemsPerGroup) const;
+    (const OpenCLSize & maxWorkItemSize, const std::size_t maxItemsPerGroup) const;
 
   /** Returns the best-fit local work size that evenly divides this
    * work size and fits within the maximum work group size of \a device.
@@ -126,7 +126,7 @@ public:
 
 private:
   cl_uint m_Dim;
-  size_t  m_Sizes[3];
+  std::size_t  m_Sizes[3];
 };
 
 /** Operator ==

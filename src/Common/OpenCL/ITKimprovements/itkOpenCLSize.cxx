@@ -20,9 +20,9 @@
 
 namespace itk
 {
-static size_t opencl_gcd_of_size(size_t x, size_t y)
+static std::size_t opencl_gcd_of_size(std::size_t x, std::size_t y)
 {
-  size_t remainder;
+  std::size_t remainder;
 
   while ( ( remainder = x % y ) != 0 )
     {
@@ -36,12 +36,12 @@ const OpenCLSize::Null OpenCLSize::null = {};
 
 //------------------------------------------------------------------------------
 OpenCLSize OpenCLSize::toLocalWorkSize(const OpenCLSize & maxWorkItemSize,
-                                       const size_t maxItemsPerGroup) const
+                                       const std::size_t maxItemsPerGroup) const
 {
   // Adjust for the maximum work item size in each dimension.
-  size_t width = m_Dim >= 1 ? opencl_gcd_of_size( m_Sizes[0], maxWorkItemSize.GetWidth() ) : 1;
-  size_t height = m_Dim >= 2 ? opencl_gcd_of_size( m_Sizes[1], maxWorkItemSize.GetHeight() ) : 1;
-  size_t depth = m_Dim >= 3 ? opencl_gcd_of_size( m_Sizes[2], maxWorkItemSize.GetDepth() ) : 1;
+  std::size_t width = m_Dim >= 1 ? opencl_gcd_of_size( m_Sizes[0], maxWorkItemSize.GetWidth() ) : 1;
+  std::size_t height = m_Dim >= 2 ? opencl_gcd_of_size( m_Sizes[1], maxWorkItemSize.GetHeight() ) : 1;
+  std::size_t depth = m_Dim >= 3 ? opencl_gcd_of_size( m_Sizes[2], maxWorkItemSize.GetDepth() ) : 1;
 
   // Reduce in size by a factor of 2 until underneath the maximum group size.
   while ( maxItemsPerGroup && ( width * height * depth ) > maxItemsPerGroup )
@@ -74,13 +74,13 @@ OpenCLSize OpenCLSize::toLocalWorkSize(const OpenCLSize & maxWorkItemSize,
 //}
 
 //------------------------------------------------------------------------------
-static inline size_t opencl_cl_round_to(const size_t value, const size_t multiple)
+static inline std::size_t opencl_cl_round_to(const std::size_t value, const std::size_t multiple)
 {
   if ( multiple <= 1 )
     {
     return value;
     }
-  size_t remainder = value % multiple;
+  std::size_t remainder = value % multiple;
   if ( !remainder )
     {
     return value;

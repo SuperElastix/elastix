@@ -109,20 +109,20 @@ cl_device_id * OpenCLGetAvailableDevices(const cl_platform_id platform,
 //
 cl_device_id OpenCLGetMaxFlopsDev(cl_context cxGPUContext)
 {
-  size_t        szParmDataBytes;
+  std::size_t        szParmDataBytes;
   cl_device_id *cdDevices;
 
   // get the list of GPU devices associated with context
   clGetContextInfo(cxGPUContext, CL_CONTEXT_DEVICES, 0, NULL, &szParmDataBytes);
   cdDevices = (cl_device_id *)malloc(szParmDataBytes);
-  size_t device_count = szParmDataBytes / sizeof( cl_device_id );
+  std::size_t device_count = szParmDataBytes / sizeof( cl_device_id );
 
   clGetContextInfo(cxGPUContext, CL_CONTEXT_DEVICES, szParmDataBytes, cdDevices, NULL);
 
   cl_device_id max_flops_device = cdDevices[0];
   int          max_flops = 0;
 
-  size_t current_device = 0;
+  std::size_t current_device = 0;
 
   // CL_DEVICE_MAX_COMPUTE_UNITS
   cl_uint compute_units;
@@ -182,12 +182,12 @@ void OpenCLPrintDeviceInfo(cl_device_id device, const bool verbose)
   err = clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof( device_string ), &device_string, NULL);
   printf("%s\n", device_string);
 
-  size_t worksize[3];
+  std::size_t worksize[3];
   err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES, sizeof( worksize ), &worksize, NULL);
   std::cout << "Maximum Work Item Sizes : { " << worksize[0] << ", " << worksize[1] << ", " << worksize[2] << " }"
             << std::endl;
 
-  size_t maxWorkgroupSize;
+  std::size_t maxWorkgroupSize;
   err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, sizeof( maxWorkgroupSize ), &maxWorkgroupSize, NULL);
   std::cout << "Maximum Work Group Size : " << maxWorkgroupSize << std::endl;
 
