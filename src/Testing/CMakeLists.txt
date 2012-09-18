@@ -323,6 +323,7 @@ if( ELASTIX_USE_OPENCL )
     ${TestOutputDir}/3DCT_lung_baseline_generic_CPU.mha
     ${TestOutputDir}/3DCT_lung_baseline_generic_GPU.mha )
 
+  # Affine transform tests
   elx_add_test( GPUResampleImageFilterTest "-NearestAffine" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
     -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_affine_CPU.mha
@@ -347,6 +348,32 @@ if( ELASTIX_USE_OPENCL )
     -t   Affine
     -rmse 0.1 )
 
+  # Translation transform tests
+  elx_add_test( GPUResampleImageFilterTest "-NearestTranslation" "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_translation_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_translation_GPU.mha
+    -i   NearestNeighbor
+    -t   Translation
+    -rmse 0.0 )
+
+  elx_add_test( GPUResampleImageFilterTest "-LinearTranslation" "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_translation_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_translation_GPU.mha
+    -i   Linear
+    -t   Translation
+    -rmse 0.0 )
+
+  elx_add_test( GPUResampleImageFilterTest "-BSplineTranslation" "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_translation_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_translation_GPU.mha
+    -i   BSpline
+    -t   Translation
+    -rmse 0.0 )
+
+  # BSpline transform tests
   elx_add_test( GPUResampleImageFilterTest "-NearestBSpline" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
     -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_bspline_CPU.mha
@@ -373,32 +400,82 @@ if( ELASTIX_USE_OPENCL )
     -t   BSpline
     -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
     -rmse 0.03 )
-
-  elx_add_test( GPUResampleImageFilterTest "-NearestComboAffine" "OpenCL"
+    
+  # Euler transform tests
+  elx_add_test( GPUResampleImageFilterTest "-NearestEuler" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
-    -out ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_CPU.mha
-         ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_GPU.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_euler_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_euler_GPU.mha
     -i   NearestNeighbor
-    -t   Affine
-    -c -rmse 0.8 )
-
-  elx_add_test( GPUResampleImageFilterTest "-NearestComboBSpline" "OpenCL"
+    -t   Euler
+    -rmse 0.0 )
+  
+  elx_add_test( GPUResampleImageFilterTest "-LinearEuler" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
-    -out ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_bspline_CPU.mha
-         ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_bspline_GPU.mha
-    -i   NearestNeighbor
-    -t   BSpline
-    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
-    -c -rmse 0.8 )
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_euler_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_euler_GPU.mha
+    -i   Linear
+    -t   Euler
+    -rmse 0.0 )
 
-  elx_add_test( GPUResampleImageFilterTest "-NearestComboAffineBSpline" "OpenCL"
+  elx_add_test( GPUResampleImageFilterTest "-BSplineEuler" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
-    -out ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_bspline_CPU.mha
-         ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_bspline_GPU.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_euler_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_euler_GPU.mha
+    -i   BSpline
+    -t   Euler
+    -rmse 0.0 )
+  
+  # Similarity transform tests
+  elx_add_test( GPUResampleImageFilterTest "-NearestSimilarity" "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_similarity_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_similarity_GPU.mha
     -i   NearestNeighbor
-    -t   Affine BSpline
-    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
-    -c -rmse 0.8 )
+    -t   Similarity
+    -rmse 0.0 )
+  
+  elx_add_test( GPUResampleImageFilterTest "-LinearSimilarity" "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_similarity_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_similarity_GPU.mha
+    -i   Linear
+    -t   Similarity
+    -rmse 0.0 )
+
+  elx_add_test( GPUResampleImageFilterTest "-BSplineSimilarity" "OpenCL"
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_similarity_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_similarity_GPU.mha
+    -i   BSpline
+    -t   Similarity
+    -rmse 0.0 )
+    
+  # elx_add_test( GPUResampleImageFilterTest "-NearestComboAffine" "OpenCL"
+    # -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    # -out ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_CPU.mha
+         # ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_GPU.mha
+    # -i   NearestNeighbor
+    # -t   Affine
+    # -c -rmse 0.8 )
+
+  # elx_add_test( GPUResampleImageFilterTest "-NearestComboBSpline" "OpenCL"
+    # -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    # -out ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_bspline_CPU.mha
+         # ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_bspline_GPU.mha
+    # -i   NearestNeighbor
+    # -t   BSpline
+    # -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+    # -c -rmse 0.8 )
+
+  # elx_add_test( GPUResampleImageFilterTest "-NearestComboAffineBSpline" "OpenCL"
+    # -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    # -out ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_bspline_CPU.mha
+         # ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_bspline_GPU.mha
+    # -i   NearestNeighbor
+    # -t   Affine BSpline
+    # -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+    # -c -rmse 0.8 )
 
 endif()
 
