@@ -55,6 +55,23 @@ if( OPENCL_USE_PLATFORM_INTEL OR OPENCL_USE_PLATFORM_NVIDIA OR OPENCL_USE_PLATFO
   mark_as_advanced( OPENCL_OPTIMIZATION_FAST_RELAXED_MATH )
 endif()
 
+# OpenCL Options to Request or Suppress Warnings
+if( OPENCL_USE_PLATFORM_INTEL OR OPENCL_USE_PLATFORM_NVIDIA OR OPENCL_USE_PLATFORM_AMD )
+  set( OPENCL_WARNINGS_DISABLE CACHE BOOL
+    "This option inhibit all warning messages." )
+  set( OPENCL_WARNINGS_AS_ERRORS CACHE BOOL
+    "This option make all warnings into errors." )
+endif()
+
+# OpenCL Options Controlling the OpenCL C Version
+if( OPENCL_USE_PLATFORM_INTEL OR OPENCL_USE_PLATFORM_NVIDIA OR OPENCL_USE_PLATFORM_AMD )
+  set( OPENCL_C_VERSION_1_1 CACHE BOOL
+    "This option determine the OpenCL C language version to use. Support all OpenCL C programs that use the OpenCL C language 1.1 specification." )
+  set( OPENCL_C_VERSION_1_2 CACHE BOOL
+    "This option determine the OpenCL C language version to use. Support all OpenCL C programs that use the OpenCL C language 1.2 specification." )
+endif()
+
+# Apple here
 if( APPLE )
 endif()
 
@@ -127,6 +144,14 @@ if( WIN32 OR UNIX )
     unset( OPENCL_OPTIMIZATION_UNSAFE_MATH_OPTIMIZATIONS CACHE )
     unset( OPENCL_OPTIMIZATION_FINITE_MATH_ONLY CACHE )
     unset( OPENCL_OPTIMIZATION_FAST_RELAXED_MATH CACHE )
+    
+    # Unset warnings
+    unset( OPENCL_WARNINGS_DISABLE CACHE )
+    unset( OPENCL_WARNINGS_AS_ERRORS CACHE )
+
+    # Unset options controlling the OpenCL C version
+    unset( OPENCL_C_VERSION_1_1 CACHE )
+    unset( OPENCL_C_VERSION_1_2 CACHE )
 
     set( OPENCL_PLATFORM_STRING "OpenCL not found" CACHE INTERNAL "OpenCL Platform" )
 
@@ -164,11 +189,10 @@ if( WIN32 OR UNIX )
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DITK_USE_INTEL_CPU_OPENCL" )
     endif()
 
-
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DITK_USE_INTEL_OPENCL" )
     set( OPENCL_PLATFORM_STRING "Intel OpenCL" CACHE INTERNAL "OpenCL Platform" )
 
-  endif()
+  endif() # Intel OpenCL
 
   # NVidia OpenCL
   if( OPENCL_USE_PLATFORM_NVIDIA )
@@ -213,7 +237,7 @@ if( WIN32 OR UNIX )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DITK_USE_NVIDIA_OPENCL" )
     set( OPENCL_PLATFORM_STRING "NVidia OpenCL" CACHE INTERNAL "OpenCL Platform" )
 
-  endif()
+  endif() # NVidia OpenCL
 
   # AMD OpenCL
   if( OPENCL_USE_PLATFORM_AMD )
@@ -258,7 +282,7 @@ if( WIN32 OR UNIX )
 
     set( OPENCL_PLATFORM_STRING "AMD OpenCL" CACHE INTERNAL "OpenCL Platform" )
 
-  endif()
+  endif() # AMD OpenCL
 
 endif()
 
@@ -317,6 +341,26 @@ if( NOT OPENCL_OPTIMIZATION_OPT_DISABLE )
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENCL_OPTIMIZATION_FINITE_MATH_ONLY" )
     endif()
   endif()
+endif()
+
+# Add OpenCL Warnings
+if( OPENCL_WARNINGS_DISABLE )
+  unset( OPENCL_WARNINGS_AS_ERRORS CACHE )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENCL_WARNINGS_DISABLE" )
+endif()
+if( OPENCL_WARNINGS_AS_ERRORS )
+  unset( OPENCL_WARNINGS_DISABLE CACHE )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENCL_WARNINGS_AS_ERRORS" )
+endif()
+
+# Add Options Controlling the OpenCL C Version
+if( OPENCL_C_VERSION_1_1 )
+  unset( OPENCL_C_VERSION_1_2 CACHE )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENCL_C_VERSION_1_1" )
+endif()
+if( OPENCL_C_VERSION_1_2 )
+  unset( OPENCL_C_VERSION_1_1 CACHE )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENCL_C_VERSION_1_2" )
 endif()
 
 # Add OpenCL Profiling

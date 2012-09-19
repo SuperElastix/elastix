@@ -697,6 +697,44 @@ bool GetOpenCLMathAndOptimizationOptions(std::string & options)
 #endif // #ifndef OPENCL_OPTIMIZATION_FAST_RELAXED_MATH
 #endif // #ifndef OPENCL_OPTIMIZATION_CL_OPT_DISABLE
 
+  // OpenCL Options to Request or Suppress Warnings
+#ifdef OPENCL_WARNINGS_DISABLE
+  if ( options.size() != 0 )
+  {
+    options.append(" ");
+  }
+  options.append("-w");
+  anyOptionSet = true;
+#elif OPENCL_WARNINGS_AS_ERRORS
+  if ( options.size() != 0 )
+  {
+    options.append(" ");
+  }
+  options.append("-Werror");
+  anyOptionSet = true;
+#endif
+
+  // Options Controlling the OpenCL C Version
+#ifdef OPENCL_C_VERSION_1_1
+  if ( options.size() != 0 )
+  {
+    options.append(" ");
+  }
+  // With the -cl-std=CL1.1 option will fail to compile the program for any
+  // devices with CL_DEVICE_OPENCL_C_VERSION = OpenCL C 1.0.
+  options.append("-cl-std=CL1.1");
+  anyOptionSet = true;
+#elif OPENCL_C_VERSION_1_2
+  if ( options.size() != 0 )
+  {
+    options.append(" ");
+  }
+  // With the -cl-std=CL1.2 option will fail to compile the program for any
+  // devices with CL_DEVICE_OPENCL_C_VERSION = OpenCL C 1.0 or OpenCL C 1.1.
+  options.append("-cl-std=CL1.2");
+  anyOptionSet = true;
+#endif
+
   return anyOptionSet;
 }
 } // end of namespace itk
