@@ -67,7 +67,8 @@ std::string GetHelpString( void )
      << "  [-t]          transforms, one of {Affine, Translation, BSpline, Euler, Similarity}"
      << " or combinations with option \"-c\", default Affine\n"
      << "  [-c]          use combo transform, default false\n"
-     << "  [-p]          parameter file for the B-spline transform\n";
+     << "  [-p]          parameter file for the B-spline transform\n"
+     << "  [-threads]    number of threads, default maximum\n";
   return ss.str();
 } // end GetHelpString()
 
@@ -869,6 +870,11 @@ int main( int argc, char *argv[] )
       runTimes = 1;
     }
   }
+
+  // Threads.
+  unsigned int maximumNumberOfThreads = itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
+  parser->GetCommandLineArgument( "-threads", maximumNumberOfThreads );
+  itk::MultiThreader::SetGlobalMaximumNumberOfThreads( maximumNumberOfThreads );
 
   const unsigned int splineOrderInterpolator = 3;
   std::cout << std::showpoint << std::setprecision( 4 );
