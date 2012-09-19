@@ -113,7 +113,8 @@ template< class ImageType >
 void SetKernelWithITKImage( GPUKernelManager::Pointer & kernelManager,
                             const int kernelIdx, cl_uint & argIdx,
                             const typename ImageType::Pointer & image,
-                            typename GPUDataManager::Pointer & imageBase )
+                            typename GPUDataManager::Pointer & imageBase,
+                            const bool onlyImageBase = false)
 {
   if ( ImageType::ImageDimension > 3 || ImageType::ImageDimension < 1 )
   {
@@ -134,7 +135,10 @@ void SetKernelWithITKImage( GPUKernelManager::Pointer & kernelManager,
   }
 
   // Set ITK image information to the kernelManager
-  kernelManager->SetKernelArgWithImage( kernelIdx, argIdx++, image->GetGPUDataManager() );
+  if(!onlyImageBase)
+  {
+    kernelManager->SetKernelArgWithImage( kernelIdx, argIdx++, image->GetGPUDataManager() );
+  }
 
   const unsigned int ImageDim = (unsigned int)(ImageType::ImageDimension);
   GPUImageBase1D     imageBase1D;
