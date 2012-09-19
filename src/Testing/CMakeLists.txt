@@ -363,7 +363,7 @@ if( ELASTIX_USE_OPENCL )
          ${TestOutputDir}/3DCT_lung_baseline_resample_linear_translation_GPU.mha
     -i   Linear
     -t   Translation
-    -rmse 0.0 )
+    -rmse 0.1 )
 
   elx_add_test( GPUResampleImageFilterTest "-BSplineTranslation" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -371,7 +371,7 @@ if( ELASTIX_USE_OPENCL )
          ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_translation_GPU.mha
     -i   BSpline
     -t   Translation
-    -rmse 0.0 )
+    -rmse 0.1 )
 
   # BSpline transform tests
   elx_add_test( GPUResampleImageFilterTest "-NearestBSpline" "OpenCL"
@@ -416,7 +416,7 @@ if( ELASTIX_USE_OPENCL )
          ${TestOutputDir}/3DCT_lung_baseline_resample_linear_euler_GPU.mha
     -i   Linear
     -t   Euler
-    -rmse 0.0 )
+    -rmse 0.1 )
 
   elx_add_test( GPUResampleImageFilterTest "-BSplineEuler" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -424,7 +424,7 @@ if( ELASTIX_USE_OPENCL )
          ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_euler_GPU.mha
     -i   BSpline
     -t   Euler
-    -rmse 0.0 )
+    -rmse 0.1 )
   
   # Similarity transform tests
   elx_add_test( GPUResampleImageFilterTest "-NearestSimilarity" "OpenCL"
@@ -441,7 +441,7 @@ if( ELASTIX_USE_OPENCL )
          ${TestOutputDir}/3DCT_lung_baseline_resample_linear_similarity_GPU.mha
     -i   Linear
     -t   Similarity
-    -rmse 0.0 )
+    -rmse 0.1 )
 
   elx_add_test( GPUResampleImageFilterTest "-BSplineSimilarity" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -449,7 +449,7 @@ if( ELASTIX_USE_OPENCL )
          ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_similarity_GPU.mha
     -i   BSpline
     -t   Similarity
-    -rmse 0.0 )
+    -rmse 0.1 )
     
   # elx_add_test( GPUResampleImageFilterTest "-NearestComboAffine" "OpenCL"
     # -in  ${TestDataDir}/3DCT_lung_baseline.mha

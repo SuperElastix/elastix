@@ -66,7 +66,6 @@ OUTPIXELTYPE cast_pixel_with_bounds_checking(
 #if defined( DIM_3 ) && defined( RESAMPLE_PRE )
 __kernel void ResampleImageFilterPre(
   /* output ImageBase information */
-  __global OUTPIXELTYPE *out,
   __constant GPUImageBase3D *output_image,
   /* */
   __global float3 *tout,
@@ -107,8 +106,9 @@ __kernel void ResampleImageFilterPre(
 #if defined( DIM_3 ) && defined( RESAMPLE_LOOP ) && defined( IDENTITY_TRANSFORM )
 __kernel void ResampleImageFilterLoop_IdentityTransform(
   /* input ImageBase information */
-  __global const INPIXELTYPE *in,
   __constant GPUImageBase3D *input_image,
+  /* output ImageBase information */
+  __constant GPUImageBase3D *output_image,
   /* */
   __global float3 *tout,
   uint3 tsize,
@@ -122,26 +122,26 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid(index, tsize) && is_valid(global_id, input_image->size))
+  if(is_valid(index, tsize) && is_valid(global_id, output_image->size))
   {
     // get point
-    const uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
-    const float3 point = tout[tidx];
+    uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
+    float3 output_point = tout[tidx];
 
     // IdentityTransform is linear transform, execute linear call
     // \sa IdentityTransform::IsLinear()
-    const float3 tpoint = identity_transform_point_3d(point);
+    float3 input_point = identity_transform_point_3d(output_point);
 
     if(combo)
     {
       // roll it back
-      tout[tidx] = tpoint;
+      tout[tidx] = input_point;
     }
     else
     {
-      float3 first_continuous_index;
-      transform_physical_point_to_continuous_index_3d(tpoint, &first_continuous_index, input_image);
-      const float3 continuous_index = first_continuous_index + index.x * parameters->delta;
+      float3 input_index;
+      transform_physical_point_to_continuous_index_3d(input_point, &input_index, input_image);
+      float3 continuous_index = input_index + index.x * parameters->delta;
 
       // roll it back
       tout[tidx] = continuous_index;
@@ -156,8 +156,9 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
 #if defined( DIM_3 ) && defined( RESAMPLE_LOOP ) && defined( MATRIX_OFFSET_TRANSFORM )
 __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
   /* input ImageBase information */
-  __global const INPIXELTYPE *in,
   __constant GPUImageBase3D *input_image,
+  /* output ImageBase information */
+  __constant GPUImageBase3D *output_image,
   /* */
   __global float3 *tout,
   uint3 tsize,
@@ -173,26 +174,26 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid(index, tsize) && is_valid(global_id, input_image->size))
+  if(is_valid(index, tsize) && is_valid(global_id, output_image->size))
   {
     // get point
     uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
-    float3 point = tout[tidx];
+    float3 output_point = tout[tidx];
 
     // MatrixOffsetTransformBase is linear transform, execute linear call
     // \sa MatrixOffsetTransformBase::IsLinear()
-    float3 tpoint = matrix_offset_transform_point_3d(point, transform_base);
+    float3 input_point = matrix_offset_transform_point_3d(output_point, transform_base);
 
     if(combo)
     {
       // roll it back
-      tout[tidx] = tpoint;
+      tout[tidx] = input_point;
     }
     else
     {
-      float3 first_continuous_index;
-      transform_physical_point_to_continuous_index_3d(tpoint, &first_continuous_index, input_image);
-      float3 continuous_index = first_continuous_index + index.x * parameters->delta;
+      float3 input_index;
+      transform_physical_point_to_continuous_index_3d(input_point, &input_index, input_image);
+      float3 continuous_index = input_index + index.x * parameters->delta;
 
       // roll it back
       tout[tidx] = continuous_index;
@@ -207,8 +208,9 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
 #if defined( DIM_3 ) && defined( RESAMPLE_LOOP ) && defined( TRANSLATION_TRANSFORM )
 __kernel void ResampleImageFilterLoop_TranslationTransform(
   /* input ImageBase information */
-  __global const INPIXELTYPE *in,
   __constant GPUImageBase3D *input_image,
+  /* output ImageBase information */
+  __constant GPUImageBase3D *output_image,
   /* */
   __global float3 *tout,
   uint3 tsize,
@@ -224,26 +226,26 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid(index, tsize) && is_valid(global_id, input_image->size))
+  if(is_valid(index, tsize) && is_valid(global_id, output_image->size))
   {
     // get point
     uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
-    float3 point = tout[tidx];
+    float3 output_point = tout[tidx];
 
     // TranslationTransform is linear transform, execute linear call
     // \sa TranslationTransform::IsLinear()
-    float3 tpoint = translation_transform_point_3d(point, transform_base);
+    float3 input_point = translation_transform_point_3d(output_point, transform_base);
 
     if(combo)
     {
       // roll it back
-      tout[tidx] = tpoint;
+      tout[tidx] = input_point;
     }
     else
     {
-      float3 first_continuous_index;
-      transform_physical_point_to_continuous_index_3d(tpoint, &first_continuous_index, input_image);
-      float3 continuous_index = first_continuous_index + index.x * parameters->delta;
+      float3 input_index;
+      transform_physical_point_to_continuous_index_3d(input_point, &input_index, input_image);
+      float3 continuous_index = input_index + index.x * parameters->delta;
 
       // roll it back
       tout[tidx] = continuous_index;
@@ -258,8 +260,9 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
 #if defined( DIM_3 ) && defined( RESAMPLE_LOOP ) && defined( BSPLINE_TRANSFORM )
 __kernel void ResampleImageFilterLoop_BSplineTransform(
   /* input ImageBase information */
-  __global const INPIXELTYPE *in,
   __constant GPUImageBase3D *input_image,
+  /* output ImageBase information */
+  __constant GPUImageBase3D *output_image,
   /* */
   __global float3 *tout,
   uint3 tsize,
@@ -282,15 +285,15 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid(index, tsize) && is_valid(global_id, input_image->size))
+  if(is_valid(index, tsize) && is_valid(global_id, output_image->size))
   {
     // get point
     uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
-    float3 point = tout[tidx];
+    float3 output_point = tout[tidx];
 
     // BSplineBaseTransform is not linear transform, execute non linear call
     // \sa BSplineBaseTransform::IsLinear()
-    float3 tpoint = bspline_transform_point_3d(point,
+    float3 input_point = bspline_transform_point_3d(output_point,
       transform_coefficients0, transform_coefficients_image0,
       transform_coefficients1, transform_coefficients_image1,
       transform_coefficients2, transform_coefficients_image2);
@@ -298,15 +301,15 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = tpoint;
+      tout[tidx] = input_point;
     }
     else
     {
-      float3 continuous_index;
-      transform_physical_point_to_continuous_index_3d(tpoint, &continuous_index, input_image);
+      float3 input_index;
+      transform_physical_point_to_continuous_index_3d(input_point, &input_index, input_image);
 
       // roll it back
-      tout[tidx] = continuous_index;
+      tout[tidx] = input_index;
     }
   }
 }

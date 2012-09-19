@@ -342,8 +342,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   gputimer.Start();
 #endif
 
-  typename GPUInputImage::Pointer inPtr = dynamic_cast< GPUInputImage * >( this->ProcessObject::GetInput( 0 ) );
-  typename GPUOutputImage::Pointer otPtr = dynamic_cast< GPUOutputImage * >( this->ProcessObject::GetOutput( 0 ) );
+  const typename GPUInputImage::Pointer inPtr = dynamic_cast< GPUInputImage * >( this->ProcessObject::GetInput( 0 ) );
+  const typename GPUOutputImage::Pointer outPtr = dynamic_cast< GPUOutputImage * >( this->ProcessObject::GetOutput( 0 ) );
 
   // Perform the safe check
   if ( inPtr.IsNull() )
@@ -351,13 +351,13 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
     itkExceptionMacro( << "The GPU InputImage is NULL. Filter unable to perform." );
     return;
   }
-  if ( otPtr.IsNull() )
+  if ( outPtr.IsNull() )
   {
     itkExceptionMacro( << "The GPU OutputImage is NULL. Filter unable to perform." );
     return;
   }
 
-  typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
+  const typename GPUOutputImage::SizeType outSize = outPtr->GetLargestPossibleRegion().GetSize();
 
   // Define parameters
   FilterParameters parameters;
@@ -377,7 +377,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
   // Calculate delta
   float delta[3];
-  CalculateDelta( inPtr, otPtr, &delta[0] );
+  CalculateDelta( inPtr, outPtr, &delta[0] );
   for ( unsigned int i = 0; i < OutputImageType::ImageDimension; i++ )
   {
     parameters.delta.s[i] = delta[i];
@@ -457,11 +457,11 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   cl_uint argidx = 0;
 
   cl_uint tsizePreIntex = 0;
-  SetArgumentsForPreKernelManager( otPtr, tsizePreIntex );
+  SetArgumentsForPreKernelManager( outPtr, tsizePreIntex );
 
   // Set arguments for loop kernel
   cl_uint tsizeLoopIntex = 0, comboIndex = 0, transformIndex = 0;
-  SetArgumentsForLoopKernelManager( inPtr, tsizeLoopIntex, comboIndex, transformIndex );
+  SetArgumentsForLoopKernelManager( inPtr, outPtr, tsizeLoopIntex, comboIndex, transformIndex );
   if ( !m_TransformIsCombo )
   {
     SetTransformArgumentsForLoopKernelManager( 0, comboIndex, transformIndex );
@@ -469,23 +469,19 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
   // Set arguments for post kernel
   cl_uint tsizePostIntex = 0;
-  SetArgumentsForPostKernelManager( inPtr, otPtr, tsizePostIntex );
+  SetArgumentsForPostKernelManager( inPtr, outPtr, tsizePostIntex );
 
   //
   std::size_t local3D[3], local2D[2], local1D;
 
-#if ITK_USE_NVIDIA_OPENCL
-  local3D[0] = local3D[1] = local3D[2] = OpenCLGetLocalBlockSize(InputImageDimension);
-  local2D[0] = local2D[1] = OpenCLGetLocalBlockSize(InputImageDimension);
-  local1D = OpenCLGetLocalBlockSize(InputImageDimension);
-#elif ITK_USE_AMD_OPENCL
-  local3D[0] = local3D[1] = local3D[2] = OpenCLGetLocalBlockSize(InputImageDimension);
-  local2D[0] = local2D[1] = OpenCLGetLocalBlockSize(InputImageDimension);
-  local1D = OpenCLGetLocalBlockSize(InputImageDimension);
-#elif ITK_USE_INTEL_OPENCL
+#if ITK_USE_INTEL_OPENCL
   local3D[0] = local3D[1] = local3D[2] = 1;
   local2D[0] = local2D[1] = 2;
   local1D = 2;
+#else
+  local3D[0] = local3D[1] = local3D[2] = OpenCLGetLocalBlockSize( InputImageDimension );
+  local2D[0] = local2D[1] = OpenCLGetLocalBlockSize( InputImageDimension );
+  local1D = OpenCLGetLocalBlockSize( InputImageDimension );
 #endif
 
   // Start
@@ -493,9 +489,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   const unsigned int numDivisions = numberOfSplits; // numberOfSplits
   unsigned int       piece;
 
-  cl_uint3 tsize3D; cl_uint2 tsize2D; cl_uint tsize1D;
-  std::size_t   global3D[3], global2D[2], global1D;
-  std::size_t   offset3D[3], offset2D[2], offset1D;
+  cl_uint3    tsize3D; cl_uint2 tsize2D; cl_uint tsize1D;
+  std::size_t global3D[3], global2D[2], global1D;
+  std::size_t offset3D[3], offset2D[2], offset1D;
 
   OpenCLSize global;
   OpenCLSize offset;
@@ -533,7 +529,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
         if ( HasTransform( TranslationTransform ) )
         {
           m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
-            tsizeLoopIntex, sizeof( cl_uint ), (void *)&tsize1D );
+                                             tsizeLoopIntex, sizeof( cl_uint ), (void *)&tsize1D );
         }
         if ( HasTransform( BSplineTransform ) )
         {
@@ -571,7 +567,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
         if ( HasTransform( TranslationTransform ) )
         {
           m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
-            tsizeLoopIntex, sizeof( cl_uint2 ), (void *)&tsize2D );
+                                             tsizeLoopIntex, sizeof( cl_uint2 ), (void *)&tsize2D );
         }
         if ( HasTransform( BSplineTransform ) )
         {
@@ -609,7 +605,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
         if ( HasTransform( TranslationTransform ) )
         {
           m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
-            tsizeLoopIntex, sizeof( cl_uint3 ), (void *)&tsize3D );
+                                             tsizeLoopIntex, sizeof( cl_uint3 ), (void *)&tsize3D );
         }
         if ( HasTransform( BSplineTransform ) )
         {
@@ -627,63 +623,37 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
     }
 
     m_PreKernelManager->SetGlobalWorkSize( 0, global );
-    //m_PreKernelManager->SetLocalWorkSize( 0, local );
     m_PreKernelManager->SetGlobalWorkOffset( 0, offset );
 
     if ( HasTransform( IdentityTransform ) )
     {
       const int kernelId = GetTransformHandle( IdentityTransform );
       m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
-      //m_LoopKernelManager->SetLocalWorkSize( kernelId, local );
       m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
     }
     if ( HasTransform( MatrixOffsetTransform ) )
     {
       const int kernelId = GetTransformHandle( MatrixOffsetTransform );
       m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
-      //m_LoopKernelManager->SetLocalWorkSize( kernelId, local );
       m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
     }
     if ( HasTransform( TranslationTransform ) )
     {
       const int kernelId = GetTransformHandle( TranslationTransform );
       m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
-      //m_LoopKernelManager->SetLocalWorkSize( kernelId, local );
       m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
     }
     if ( HasTransform( BSplineTransform ) )
     {
       const int kernelId = GetTransformHandle( BSplineTransform );
       m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
-      //m_LoopKernelManager->SetLocalWorkSize( kernelId, local );
       m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
     }
 
     m_PostKernelManager->SetGlobalWorkSize( 0, global );
-    //m_PostKernelManager->SetLocalWorkSize( 0, local );
     m_PostKernelManager->SetGlobalWorkOffset( 0, offset );
 
-    //if ( m_TransformIsCombo )
-    //{
-    //  typedef GPUCompositeTransform< TInterpolatorPrecisionType,
-    //                                 InputImageDimension > CompositeTransformType;
-    //  const CompositeTransformType *compositeTransform =
-    //    dynamic_cast< const CompositeTransformType * >( m_TransformBase );
-
-    //  if ( compositeTransform )
-    //  {
-    //    for ( std::size_t i = 0; i < compositeTransform->GetNumberOfTransforms(); i++ )
-    //    {
-    //      SetTransformArgumentsForLoopKernelManager( i, comboIndex, transformIndex );
-    //    }
-    //  }
-    //  else
-    //  {
-    //    itkExceptionMacro( << "Could not get GPU composite transform." );
-    //  }
-    //}
-
-    if( eventList.GetSize() == 0 )
+    if ( eventList.GetSize() == 0 )
     {
       OpenCLEvent preEvent = m_PreKernelManager->LaunchKernel( m_FilterPreGPUKernelHandle );
       eventList.Append( preEvent );
@@ -730,7 +700,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
           {
             if ( i != 0 )
             {
-              m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ), 
+              m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
                                                  comboIndex, sizeof( cl_uint ), (const void *)&withCombo );
             }
             else
@@ -747,13 +717,13 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
           {
             if ( i != 0 )
             {
-              m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ), 
-                comboIndex, sizeof( cl_uint ), (const void *)&withCombo );
+              m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
+                                                 comboIndex, sizeof( cl_uint ), (const void *)&withCombo );
             }
             else
             {
               m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
-                comboIndex, sizeof( cl_uint ), (const void *)&withoutCombo );
+                                                 comboIndex, sizeof( cl_uint ), (const void *)&withoutCombo );
             }
 
             OpenCLEvent loopEvent =
@@ -822,7 +792,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
-::SetArgumentsForPreKernelManager( typename GPUOutputImage::Pointer & output,
+::SetArgumentsForPreKernelManager( const typename GPUOutputImage::Pointer & output,
                                    cl_uint & index )
 {
   cl_uint argidx = 0;
@@ -830,7 +800,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                 m_FilterPreGPUKernelHandle,
                                                 argidx,
                                                 output,
-                                                m_OutputGPUImageBase );
+                                                m_OutputGPUImageBase,
+                                                true );
 
   m_PreKernelManager->SetKernelArgWithImage( m_FilterPreGPUKernelHandle, argidx++,
                                              this->m_TransformBuffer );
@@ -843,7 +814,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
-::SetArgumentsForLoopKernelManager( typename GPUOutputImage::Pointer & input,
+::SetArgumentsForLoopKernelManager( const typename GPUInputImage::Pointer & input,
+                                    const typename GPUOutputImage::Pointer & output,
                                     cl_uint & tsizeLoopIntex,
                                     cl_uint & comboIntex,
                                     cl_uint & transformIndex )
@@ -854,11 +826,23 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     cl_uint   argidx = 0;
     const int handleId = GetTransformHandle( IdentityTransform );
+
+    // Set input image to the kernel
     itk::SetKernelWithITKImage< GPUInputImage >( m_LoopKernelManager,
                                                  handleId,
                                                  argidx,
                                                  input,
-                                                 m_InputGPUImageBase );
+                                                 m_InputGPUImageBase,
+                                                 true );
+
+    // Set output image to the kernel
+    itk::SetKernelWithITKImage< GPUOutputImage >( m_LoopKernelManager,
+                                                  handleId,
+                                                  argidx,
+                                                  output,
+                                                  m_OutputGPUImageBase,
+                                                  true );
+
     m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_TransformBuffer );
     tsizeLoopIntex = argidx;
     argidx++;
@@ -873,11 +857,23 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     cl_uint   argidx = 0;
     const int handleId = GetTransformHandle( MatrixOffsetTransform );
+
+    // Set input image to the kernel
     itk::SetKernelWithITKImage< GPUInputImage >( m_LoopKernelManager,
                                                  handleId,
                                                  argidx,
                                                  input,
-                                                 m_InputGPUImageBase );
+                                                 m_InputGPUImageBase,
+                                                 true );
+
+    // Set output image to the kernel
+    itk::SetKernelWithITKImage< GPUOutputImage >( m_LoopKernelManager,
+                                                  handleId,
+                                                  argidx,
+                                                  output,
+                                                  m_OutputGPUImageBase,
+                                                  true );
+
     m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_TransformBuffer );
     tsizeLoopIntex = argidx;
     argidx++;
@@ -892,11 +888,23 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     cl_uint   argidx = 0;
     const int handleId = GetTransformHandle( TranslationTransform );
+
+    // Set input image to the kernel
     itk::SetKernelWithITKImage< GPUInputImage >( m_LoopKernelManager,
-      handleId,
-      argidx,
-      input,
-      m_InputGPUImageBase );
+                                                 handleId,
+                                                 argidx,
+                                                 input,
+                                                 m_InputGPUImageBase,
+                                                 true );
+
+    // Set output image to the kernel
+    itk::SetKernelWithITKImage< GPUOutputImage >( m_LoopKernelManager,
+                                                  handleId,
+                                                  argidx,
+                                                  output,
+                                                  m_OutputGPUImageBase,
+                                                  true );
+
     m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_TransformBuffer );
     tsizeLoopIntex = argidx;
     argidx++;
@@ -911,11 +919,23 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     cl_uint   argidx = 0;
     const int handleId = GetTransformHandle( BSplineTransform );
+
+    // Set input image to the kernel
     itk::SetKernelWithITKImage< GPUInputImage >( m_LoopKernelManager,
                                                  handleId,
                                                  argidx,
                                                  input,
-                                                 m_InputGPUImageBase );
+                                                 m_InputGPUImageBase,
+                                                 true );
+
+    // Set output image to the kernel
+    itk::SetKernelWithITKImage< GPUOutputImage >( m_LoopKernelManager,
+                                                  handleId,
+                                                  argidx,
+                                                  output,
+                                                  m_OutputGPUImageBase,
+                                                  true );
+
     m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_TransformBuffer );
     tsizeLoopIntex = argidx;
     argidx++;
@@ -946,7 +966,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
     else if ( m_TransformBase->IsTranslationTransform() )
     {
       m_LoopKernelManager->SetKernelArgWithImage( GetTransformHandle( TranslationTransform ), argidx++,
-        this->m_TransformBase->GetParametersDataManager() );
+                                                  this->m_TransformBase->GetParametersDataManager() );
     }
     else if ( m_TransformBase->IsBSplineTransform() )
     {
@@ -970,7 +990,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
       else if ( compositeTransform->IsTranslationTransform( index ) )
       {
         m_LoopKernelManager->SetKernelArgWithImage( GetTransformHandle( TranslationTransform ), argidx++,
-          this->m_TransformBase->GetParametersDataManager( index ) );
+                                                    this->m_TransformBase->GetParametersDataManager( index ) );
       }
       else if ( compositeTransform->IsBSplineTransform( index ) )
       {
@@ -1052,16 +1072,20 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
-::SetArgumentsForPostKernelManager( typename GPUOutputImage::Pointer & input,
-                                    typename GPUOutputImage::Pointer & output,
+::SetArgumentsForPostKernelManager( const typename GPUOutputImage::Pointer & input,
+                                    const typename GPUOutputImage::Pointer & output,
                                     cl_uint & index )
 {
   cl_uint argidx = 0;
+
+  // Set input image to the kernel
   itk::SetKernelWithITKImage< GPUInputImage >( m_PostKernelManager,
                                                m_FilterPostGPUKernelHandle,
                                                argidx,
                                                input,
                                                m_InputGPUImageBase );
+
+  // Set output image to the kernel
   itk::SetKernelWithITKImage< GPUOutputImage >( m_PostKernelManager,
                                                 m_FilterPostGPUKernelHandle,
                                                 argidx,

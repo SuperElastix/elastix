@@ -97,11 +97,12 @@ protected:
   } GPUInputTransformType;
 
   void SetArgumentsForPreKernelManager(
-    typename GPUOutputImage::Pointer & output,
+    const typename GPUOutputImage::Pointer & output,
     cl_uint & index );
 
   void SetArgumentsForLoopKernelManager(
-    typename GPUOutputImage::Pointer & input,
+    const typename GPUInputImage::Pointer & input,
+    const typename GPUOutputImage::Pointer & output,
     cl_uint & tsizeLoopIntex,
     cl_uint & comboIntex,
     cl_uint & transformIndex );
@@ -112,8 +113,8 @@ protected:
     const cl_uint transformIndex );
 
   void SetArgumentsForPostKernelManager(
-    typename GPUOutputImage::Pointer & input,
-    typename GPUOutputImage::Pointer & output,
+    const typename GPUOutputImage::Pointer & input,
+    const typename GPUOutputImage::Pointer & output,
     cl_uint & index );
 
   void SetGPUCoefficients(
