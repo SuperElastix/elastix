@@ -3,7 +3,7 @@ project( elastix_opencl )
 
 # Define directory to OpenCL Debug kernels
 set(elastix_OPENCL_KERNELS_DEBUG_PATH
-  ${elastix_BINARY_DIR}/
+  ${elastix_BINARY_DIR}
 CACHE INTERNAL "Path to itkOpenCLKernels.h")
 
 set(elastix_OPENCL_KERNELS_DEBUG_DIR
