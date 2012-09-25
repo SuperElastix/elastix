@@ -96,7 +96,14 @@ namespace itk
     }
 
     /** Compute average variance. */
-    this->m_InitialVariance = sumvar / static_cast< float > ( num );
+    if ( sumvar == 0 )
+    {
+      this->m_InitialVariance = 1.0f;
+    }
+    else
+    {
+      this->m_InitialVariance = sumvar / static_cast< float > ( num );
+    }
 
   } // end Initialize
 
