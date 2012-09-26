@@ -252,7 +252,7 @@ public:
 
   virtual unsigned int GetNumberOfAffectedWeights( void ) const = 0;
 
-  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const = 0;
+  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const = 0;
 
   /** This typedef should be equal to the typedef used
    * in derived classes based on the weights function.

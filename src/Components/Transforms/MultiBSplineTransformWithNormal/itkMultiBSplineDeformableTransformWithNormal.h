@@ -301,7 +301,7 @@ public:
     return m_Trans[0]->m_WeightsFunction->GetNumberOfWeights();
   }
 
-  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const
+  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const
   {
     return m_Trans[0]->m_WeightsFunction->GetNumberOfWeights() * SpaceDimension;
   }

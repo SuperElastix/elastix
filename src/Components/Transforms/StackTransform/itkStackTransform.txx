@@ -184,9 +184,9 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
  * ********************* GetNumberOfNonZeroJacobianIndices ****************************
  */
 
-template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-unsigned long
-StackTransform<TScalarType, NDimensions,VSplineOrder>
+template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+typename StackTransform<TScalarType,NInputDimensions,NOutputDimensions>::NumberOfParametersType
+StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::GetNumberOfNonZeroJacobianIndices( void ) const
 {
   return this->m_SubTransformContainer[ 0 ]->GetNumberOfNonZeroJacobianIndices();

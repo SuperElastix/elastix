@@ -211,7 +211,7 @@ public:
   }
 
   /** Get number of nonzero Jacobian indices. */
-  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
+  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
 
   /** Must be provided. */
   virtual void GetSpatialJacobian(

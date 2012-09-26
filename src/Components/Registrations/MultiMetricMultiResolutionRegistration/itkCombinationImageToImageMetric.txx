@@ -576,7 +576,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
  */
 
 template <class TFixedImage, class TMovingImage>
-const unsigned long &
+const SizeValueType &
 CombinationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetNumberOfPixelsCounted( void ) const
 {
