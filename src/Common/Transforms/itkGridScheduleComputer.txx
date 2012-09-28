@@ -35,13 +35,14 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
 {
   this->m_BSplineOrder = 3;
   this->m_InitialTransform = 0;
+  this->m_UpsamplingFactor = 2.0;
   this->SetDefaultSchedule( 3, 2.0 );
 
 } // end Constructor()
 
 
 /**
- * ********************* SetDefaultGridSpacingSchedule ****************************
+ * ********************* SetDefaultSchedule ****************************
  */
 
 template < typename TTransformScalarType, unsigned int VImageDimension >
@@ -67,11 +68,11 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
     factor *= this->m_UpsamplingFactor;
   }
 
-} // end SetDefaultGridSpacingSchedule()
+} // end SetDefaultSchedule()
 
 
 /**
- * ********************* SetGridSpacingSchedule ****************************
+ * ********************* SetSchedule ****************************
  */
 
 template < typename TTransformScalarType, unsigned int VImageDimension >
@@ -83,11 +84,11 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   this->m_GridSpacingFactors = schedule;
   this->m_NumberOfLevels = schedule.size();
 
-} // end SetGridSpacingSchedule()
+} // end SetSchedule()
 
 
 /**
- * ********************* GetGridSpacingSchedule ****************************
+ * ********************* GetSchedule ****************************
  */
 
 template < typename TTransformScalarType, unsigned int VImageDimension >
@@ -97,7 +98,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
 {
   schedule = this->m_GridSpacingFactors;
 
-} // end GetGridSpacingSchedule()
+} // end GetSchedule()
 
 
 /**
