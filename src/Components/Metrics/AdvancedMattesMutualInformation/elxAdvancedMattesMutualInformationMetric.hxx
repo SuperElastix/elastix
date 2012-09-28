@@ -32,6 +32,7 @@ namespace elastix
     AdvancedMattesMutualInformationMetric<TElastix>
     ::AdvancedMattesMutualInformationMetric()
   {
+    this->m_CurrentIteration = 0.0;
     this->m_Param_c = 1.0;
     this->m_Param_gamma = 0.101;
     this->SetUseDerivative( true );
@@ -147,6 +148,7 @@ namespace elastix
     /** Set whether to use moving image derivative scales. */
     this->SetUseMovingImageDerivativeScales( false );
     MovingImageDerivativeScalesType movingImageDerivativeScales;
+    movingImageDerivativeScales.Fill( 1.0 );
     bool usescales = false;
     for ( unsigned int i = 0; i < MovingImageDimension; ++i )
     {

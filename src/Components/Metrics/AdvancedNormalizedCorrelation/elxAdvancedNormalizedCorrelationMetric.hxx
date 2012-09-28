@@ -43,6 +43,7 @@ namespace elastix
     /** Set moving image derivative scales. */
     this->SetUseMovingImageDerivativeScales( false );
     MovingImageDerivativeScalesType movingImageDerivativeScales;
+    movingImageDerivativeScales.Fill( 1.0 );
     bool usescales = true;
     for ( unsigned int i = 0; i < MovingImageDimension; ++i )
     {
