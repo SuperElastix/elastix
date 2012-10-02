@@ -483,6 +483,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
     if ( !this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat
       && !this->m_InterpolatorIsReducedBSpline
+      && !this->m_InterpolatorIsLinear
       && !interpolatorIsRayCast )
     {
       this->m_CentralDifferenceGradientFilter = CentralDifferenceGradientFilterType::New();
@@ -644,6 +645,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
         /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
          * It is assumed that the gradient image is computed.
          */
+        movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
         MovingImageIndexType index;
         for ( unsigned int j = 0; j < MovingImageDimension; j++ )
         {
