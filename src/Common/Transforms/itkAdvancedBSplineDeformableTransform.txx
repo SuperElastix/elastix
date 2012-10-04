@@ -409,11 +409,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     jacobian.SetSize( SpaceDimension, nnzji );
   }
-  if ( !this->m_UseMultiThread ) jacobian.Fill( 0.0 );
+  if( !this->m_UseMultiThread ) jacobian.Fill( 0.0 );
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and zero Jacobian
-  if ( !this->InsideValidRegion( cindex ) )
+  if( !this->InsideValidRegion( cindex ) )
   {
     /** Return some dummy */
     nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
@@ -444,9 +444,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** Put at the right positions */
   unsigned int counter = 0;
-  for ( unsigned int d = 0; d < SpaceDimension; ++d )
+  for( unsigned int d = 0; d < SpaceDimension; ++d )
   {
-    for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+    for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
     {
       jacobian( d, counter ) = weights[ mu ];
       ++counter;
@@ -1227,7 +1227,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,
   const RegionType & supportRegion ) const
 {
-if ( !this->m_UseMultiThread )
+if( !this->m_UseMultiThread )
 //if ( true )
 {
   nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );

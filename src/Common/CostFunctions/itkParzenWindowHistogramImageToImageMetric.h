@@ -18,6 +18,7 @@
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkBSplineKernelFunction.h"
 
+//#include "itkCompensatedSummation.h" // testing it
 
 namespace itk
 {
@@ -216,6 +217,7 @@ public:
   itkSetMacro( FiniteDifferencePerturbation, double );
   itkGetConstMacro( FiniteDifferencePerturbation, double );
 
+  //mutable std::vector<float> m_TemporaryNormalizedSumJointPDF;
 protected:
 
   /** The constructor. */
@@ -243,13 +245,16 @@ protected:
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
   /** Typedefs for the PDFs and PDF derivatives. */
-  typedef float                                   PDFValueType;
-  //typedef double                                  PDFValueType;
+  typedef double                                  PDFValueType;
+  typedef float                                   PDFDerivativeValueType;
   typedef Array<PDFValueType>                     MarginalPDFType;
   typedef Image<PDFValueType,2>                   JointPDFType;
   typedef typename JointPDFType::Pointer          JointPDFPointer;
-  typedef Image<PDFValueType,3>                   JointPDFDerivativesType;
+  typedef Image<PDFDerivativeValueType,3>         JointPDFDerivativesType;
   typedef Image<PDFValueType,2>                   IncrementalMarginalPDFType;
+  //typedef CompensatedSummation<PDFValueType>      CompensatedSumType;
+  //typedef Image<CompensatedSumType,2>             JointPDFCompensatedSumType;
+  //typedef typename JointPDFCompensatedSumType::Pointer  JointPDFCompensatedSumPointer;
   typedef JointPDFType::IndexType                 JointPDFIndexType;
   typedef JointPDFType::RegionType                JointPDFRegionType;
   typedef JointPDFType::SizeType                  JointPDFSizeType;
@@ -259,10 +264,10 @@ protected:
   typedef IncrementalMarginalPDFType::IndexType   IncrementalMarginalPDFIndexType;
   typedef IncrementalMarginalPDFType::RegionType  IncrementalMarginalPDFRegionType;
   typedef IncrementalMarginalPDFType::SizeType    IncrementalMarginalPDFSizeType;
-  typedef Array<double>                           ParzenValueContainerType;
+  typedef Array<PDFValueType>                     ParzenValueContainerType;
 
   /** Typedefs for Parzen kernel. */
-  typedef KernelFunctionBase<double>              KernelFunctionType;
+  typedef KernelFunctionBase<PDFValueType>        KernelFunctionType;
 
   /** Protected variables **************************** */
 
@@ -297,6 +302,7 @@ protected:
 
   /** Threading related parameters. */
   mutable std::vector<JointPDFPointer>  m_ThreaderJointPDFs;
+  //mutable std::vector<JointPDFCompensatedSumPointer>  m_ThreaderJointPDFs;
 
   struct ParzenWindowHistogramMultiThreaderParameterType
   {
@@ -339,6 +345,7 @@ protected:
     const DerivativeType * imageJacobian,
     const NonZeroJacobianIndicesType * nzji,
     JointPDFType * jointPDF ) const;
+    //JointPDFCompensatedSumType * jointPDF ) const;
 
   /** Update the joint PDF and the incremental pdfs.
    * The input is a pixel pair (fixed, moving, moving mask) and

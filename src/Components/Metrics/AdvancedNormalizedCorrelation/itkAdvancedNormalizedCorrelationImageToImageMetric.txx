@@ -490,7 +490,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   MeasureType & value, DerivativeType & derivative ) const
 {
   /** Option for now to still use the single threaded code. */
-  if ( !this->m_UseMultiThread )
+  if( !this->m_UseMultiThread )
   {
     return this->GetValueAndDerivativeSingleThreaded(
       parameters, value, derivative );
@@ -706,48 +706,49 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   value = sfm / denom;
 
   /** Calculate the metric derivative. */
-#if 0 // single-threaded
-  DerivativeType & derivativeF = this->m_ThreaderDerivativeF[0];
-  DerivativeType & derivativeM = this->m_ThreaderDerivativeM[0];
-  DerivativeType & differential= this->m_ThreaderDifferential[0];
-
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  if( !this->m_UseMultiThread ) // single-threaded
   {
-    derivativeF  += this->m_ThreaderDerivativeF[ i ];
-    derivativeM  += this->m_ThreaderDerivativeM[ i ];
-    differential += this->m_ThreaderDifferential[ i ];
-  }
+    DerivativeType & derivativeF = this->m_ThreaderDerivativeF[0];
+    DerivativeType & derivativeM = this->m_ThreaderDerivativeM[0];
+    DerivativeType & differential= this->m_ThreaderDifferential[0];
 
-  /** If SubtractMean, then subtract things from  derivativeF and derivativeM. */
-  const RealType N = static_cast<RealType>( this->m_NumberOfPixelsCounted );
-  if ( this->m_SubtractMean )
+    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+    {
+      derivativeF  += this->m_ThreaderDerivativeF[ i ];
+      derivativeM  += this->m_ThreaderDerivativeM[ i ];
+      differential += this->m_ThreaderDifferential[ i ];
+    }
+
+    /** If SubtractMean, then subtract things from  derivativeF and derivativeM. */
+    if ( this->m_SubtractMean )
+    {
+      derivativeF -= (sf/N) * differential;
+      derivativeM -= (sm/N) * differential;
+    }
+    derivative = ( derivativeF - ( sfm / smm )*derivativeM ) / denom;
+  }
+  else // multi-threaded
   {
-    derivativeF -= (sf/N) * differential;
-    derivativeM -= (sm/N) * differential;
+    MultiThreaderComputeDerivativeType * temp = new MultiThreaderComputeDerivativeType;
+
+    temp->sf_N = sf / N;
+    temp->sm_N = sm / N;
+    temp->sfm_smm = sfm / smm;
+    temp->invDenom = 1.0 / denom;
+    temp->subtractMean = this->m_SubtractMean;
+    temp->derivativeIterator = derivative.begin();
+    temp->m_ThreaderDerivativeFIterator = this->m_ThreaderDerivativeF.begin();
+    temp->m_ThreaderDerivativeMIterator = this->m_ThreaderDerivativeM.begin();
+    temp->m_ThreaderDifferentialIterator = this->m_ThreaderDifferential.begin();
+    temp->numberOfParameters = this->GetNumberOfParameters();
+
+    typename ThreaderType::Pointer local_threader = ThreaderType::New();
+    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+    local_threader->SetSingleMethod( ComputeDerivativesThreaderCallback, temp );
+    local_threader->SingleMethodExecute();
+
+    delete temp;
   }
-  derivative = ( derivativeF - ( sfm / smm )*derivativeM ) / denom;
-#else // multi-threaded
-  MultiThreaderComputeDerivativeType * temp = new MultiThreaderComputeDerivativeType;
-
-  temp->sf_N = sf / N;
-  temp->sm_N = sm / N;
-  temp->sfm_smm = sfm / smm;
-  temp->invDenom = 1.0 / denom;
-  temp->subtractMean = this->m_SubtractMean;
-  temp->derivativeIterator = derivative.begin();
-  temp->m_ThreaderDerivativeFIterator = this->m_ThreaderDerivativeF.begin();
-  temp->m_ThreaderDerivativeMIterator = this->m_ThreaderDerivativeM.begin();
-  temp->m_ThreaderDifferentialIterator = this->m_ThreaderDifferential.begin();
-  temp->numberOfParameters = this->GetNumberOfParameters();
-
-  typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-  local_threader->SetSingleMethod( ComputeDerivativesThreaderCallback, temp );
-  local_threader->SingleMethodExecute();
-
-  delete temp;
-
-#endif
 
 } // end AfterThreadedGetValueAndDerivative()
 
@@ -777,7 +778,6 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   jmax = ( jmax > temp->numberOfParameters ) ? temp->numberOfParameters : jmax;
 
   DerivativeValueType derivativeF, derivativeM, differential;
-
   for( unsigned int j = jmin; j < jmax; j++ )
   {
     derivativeF = temp->m_ThreaderDerivativeFIterator [0][j];

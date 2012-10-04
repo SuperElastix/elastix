@@ -21,6 +21,7 @@
 #include <omp.h> // OpenMP
 #include <Eigen/Dense> // Eigen
 #include <Eigen/Core> // Eigen
+#include "itkCompensatedSummation.h" // testing it
 
 
 namespace itk
@@ -526,12 +527,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   MeasureType & value, DerivativeType & derivative ) const
 {
   /** Option for now to still use the single threaded code. */
-  if ( !this->m_UseMultiThread )
+  if( !this->m_UseMultiThread )
   {
     return this->GetValueAndDerivativeSingleThreaded(
       parameters, value, derivative );
   }
-  else if ( this->m_UseOpenMP )
+  else if( this->m_UseOpenMP )
   {
     return this->GetValueAndDerivativeOpenMP(
       parameters, value, derivative );
@@ -705,52 +706,60 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   /** Accumulate derivatives. */
   // it seems that multi-threaded adding is faster than single-threaded
   // it seems that openmp is faster than itk threads
-#if 1 // compute single-threadedly
-  derivative = this->m_ThreaderDerivatives[ 0 ] * normal_sum;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; i++ )
+  // compute single-threadedly
+  if( !this->m_UseMultiThread )
   {
-    derivative += this->m_ThreaderDerivatives[ i ] * normal_sum;
-  }
-#elif 0 // compute multi-threadedly with itk threads
-  MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
-  temp->normal_sum = normal_sum;
-  temp->m_ThreaderDerivativesIterator = this->m_ThreaderDerivatives.begin();
-  temp->derivativeIterator = derivative.begin();
-  temp->numberOfParameters = this->GetNumberOfParameters();
-
-  typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( this->m_NumberOfThreadsPerMetric );
-  local_threader->SetSingleMethod( ComputeDerivativesThreaderCallback, temp );
-  local_threader->SingleMethodExecute();
-
-  delete temp;
-#elif 0 // compute multi-threadedly with openmp
-  const int nthreads = static_cast<int>( this->m_NumberOfThreads );
-  omp_set_num_threads( nthreads );
-  const unsigned int spaceDimension = this->GetNumberOfParameters();
-  #pragma omp parallel for
-  for( int j = 0; j < spaceDimension; ++j )
-  {
-    DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
-    for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+    derivative = this->m_ThreaderDerivatives[ 0 ] * normal_sum;
+    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; i++ )
     {
-      tmp += this->m_ThreaderDerivatives[ i ][ j ];
+      derivative += this->m_ThreaderDerivatives[ i ] * normal_sum;
     }
-    derivative[ j ] = tmp * normal_sum;
   }
-#endif
+  // compute multi-threadedly with itk threads
+  else if( !this->m_UseOpenMP )
+  {
+    MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
+    temp->normal_sum = normal_sum;
+    temp->m_ThreaderDerivativesIterator = this->m_ThreaderDerivatives.begin();
+    temp->derivativeIterator = derivative.begin();
+    temp->numberOfParameters = this->GetNumberOfParameters();
+
+    typename ThreaderType::Pointer local_threader = ThreaderType::New();
+    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
+    local_threader->SingleMethodExecute();
+
+    delete temp;
+  }
+  // compute multi-threadedly with openmp
+  else
+  {
+    const int nthreads = static_cast<int>( this->m_NumberOfThreads );
+    omp_set_num_threads( nthreads );
+    const unsigned int spaceDimension = this->GetNumberOfParameters();
+    #pragma omp parallel for
+    for( int j = 0; j < spaceDimension; ++j )
+    {
+      DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
+      for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+      {
+        tmp += this->m_ThreaderDerivatives[ i ][ j ];
+      }
+      derivative[ j ] = tmp * normal_sum;
+    }
+  }
 
 } // end AfterThreadedGetValueAndDerivative()
 
 
 /**
- *********** ComputeDerivativesThreaderCallback *************
+ *********** AccumulateDerivativesThreaderCallback *************
  */
 
 template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_TYPE
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-::ComputeDerivativesThreaderCallback( void * arg )
+::AccumulateDerivativesThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
   ThreadIdType threadID = infoStruct->ThreadID;
@@ -778,7 +787,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   return ITK_THREAD_RETURN_VALUE;
 
-} // end ComputeDerivativesThreaderCallback()
+} // end AccumulateDerivativesThreaderCallback()
 
 
 /**

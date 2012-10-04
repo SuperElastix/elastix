@@ -81,6 +81,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Resize and initialize the threading related parameters. */
   this->m_ThreaderDerivatives.resize( this->m_NumberOfThreads );
+  //this->m_ThreaderCompensatedSumDerivatives.resize( 0 );
+  //this->m_ThreaderCompensatedSumDerivatives.resize( this->m_NumberOfThreads );
 
   /** Initialize the derivatives. */
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
@@ -88,6 +90,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     // only resizes when different size, is good:
     this->m_ThreaderDerivatives[ i ].SetSize( this->GetNumberOfParameters() );
     this->m_ThreaderDerivatives[ i ].Fill( 0 );
+
+    //this->m_ThreaderCompensatedSumDerivatives[ i ].SetSize( this->GetNumberOfParameters() );
+    //this->m_ThreaderCompensatedSumDerivatives[ i ].resize( this->GetNumberOfParameters() );
+    //this->m_ThreaderCompensatedSumDerivatives[ i ].Fill( 0 );
   }
 
 } // end InitializeThreadingParameters()
@@ -444,7 +450,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputeDerivativeLowMemory( DerivativeType & derivative ) const
 {
   /** Option for now to still use the single threaded code. */
-  if ( !this->m_UseMultiThread )
+  if( !this->m_UseMultiThread )
   {
     return this->ComputeDerivativeLowMemorySingleThreaded( derivative );
   }
@@ -569,6 +575,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       this->UpdateDerivativeLowMemory(
         fixedImageValue, movingImageValue, imageJacobian, nzji,
         this->m_ThreaderDerivatives[ threadId ] );
+      //this->UpdateDerivativeLowMemory(
+      //  fixedImageValue, movingImageValue, imageJacobian, nzji,
+      //  this->m_ThreaderCompensatedSumDerivatives[ threadId ] );
 
     } // end sampleOk
   } // end loop over sample container
@@ -605,28 +614,95 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::AfterThreadedComputeDerivativeLowMemory( DerivativeType & derivative ) const
 {
   /** Accumulate derivatives. */
-#if 0 // compute single-threadedly
-  derivative = this->m_ThreaderDerivatives[ 0 ];
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; i++ )
+  bool useOpenMP = false;
+  // compute single-threadedly
+  if( !this->m_UseMultiThread )
   {
-    derivative += this->m_ThreaderDerivatives[ i ];
+    derivative = this->m_ThreaderDerivatives[ 0 ];
+    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; i++ )
+    {
+      derivative += this->m_ThreaderDerivatives[ i ];
+    }
   }
-#elif 1 // compute multi-threadedly with openmp
-  const int nthreads = static_cast<int>( this->m_NumberOfThreads );
-  omp_set_num_threads( nthreads );
-  const unsigned int spaceDimension = this->GetNumberOfParameters();
-  #pragma omp parallel for
-  for( int j = 0; j < spaceDimension; ++j )
+  // compute multi-threadedly with openmp
+  else if( useOpenMP )
+  //else if( this->m_UseOpenMP )
+  {
+    // contains a bug!!
+    //CompensatedSumType sum;
+    DerivativeValueType sum;
+    const int nthreads = static_cast<int>( this->m_NumberOfThreads );
+    omp_set_num_threads( nthreads );
+    const unsigned int spaceDimension = this->GetNumberOfParameters();
+    #pragma omp parallel for
+    for( int j = 0; j < spaceDimension; ++j )
+    {
+      //sum.ResetToZero();
+      sum = this->m_ThreaderDerivatives[ 0 ][ j ];
+      for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+      {
+        sum += this->m_ThreaderDerivatives[ i ][ j ];
+        //sum += this->m_ThreaderCompensatedSumDerivatives[ i ][ j ].GetSum();
+      }
+      //derivative[ j ] = sum.GetSum();
+      derivative[ j ] = sum;
+    }
+  }
+  // compute multi-threadedly with itk threads
+  else
+  {
+    MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
+    temp->m_ThreaderDerivativesIterator = this->m_ThreaderDerivatives.begin();
+    temp->derivativeIterator = derivative.begin();
+    temp->numberOfParameters = this->GetNumberOfParameters();
+
+    typename ThreaderType::Pointer local_threader = ThreaderType::New();
+    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
+    local_threader->SingleMethodExecute();
+
+    delete temp;
+  }
+
+} // end AfterThreadedComputeDerivativeLowMemory()
+
+
+/**
+ *********** AccumulateDerivativesThreaderCallback *************
+ */
+
+template <class TFixedImage, class TMovingImage>
+ITK_THREAD_RETURN_TYPE
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+::AccumulateDerivativesThreaderCallback( void * arg )
+{
+  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
+  ThreadIdType threadID = infoStruct->ThreadID;
+  ThreadIdType nrOfThreads = infoStruct->NumberOfThreads;
+
+  MultiThreaderComputeDerivativeType * temp
+    = static_cast<MultiThreaderComputeDerivativeType * >( infoStruct->UserData );
+
+  const unsigned int subSize = static_cast<unsigned int>(
+    vcl_ceil( static_cast<double>( temp->numberOfParameters )
+    / static_cast<double>( nrOfThreads ) ) );
+  const unsigned int jmin = threadID * subSize;
+  unsigned int jmax = ( threadID + 1 ) * subSize;
+  jmax = ( jmax > temp->numberOfParameters ) ? temp->numberOfParameters : jmax;
+
+  for( unsigned int j = jmin; j < jmax; ++j )
   {
     DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
-    for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+    for( ThreadIdType i = 0; i < nrOfThreads; ++i )
     {
-      tmp += this->m_ThreaderDerivatives[ i ][ j ];
+      tmp += temp->m_ThreaderDerivativesIterator[ i ][ j ];
     }
-    derivative[ j ] = tmp;
+    temp->derivativeIterator[ j ] = tmp;
   }
-#endif
-} // end AfterThreadedComputeDerivativeLowMemory()
+
+  return ITK_THREAD_RETURN_VALUE;
+
+} // end AccumulateDerivativesThreaderCallback()
 
 
 /**
@@ -702,7 +778,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   this->m_PRatioArray.Fill( itk::NumericTraits<PRatioType>::Zero  );
 
   /** Loop over the joint histogram. */
-  MI = 0.0;
+  //CompensatedSumType sum; sum.ResetToZero();
+  PDFValueType sum = 0.0;
   unsigned int fixedIndex = 0;
   unsigned int movingIndex = 0;
   while ( fixedPDFit != fixedPDFend )
@@ -718,20 +795,20 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
     while ( movingPDFit != movingPDFend )
     {
-      const double movingPDFValue = *movingPDFit; //returns float actually
-      const double jointPDFValue = jointPDFit.Get();
+      const PDFValueType movingPDFValue = *movingPDFit;
+      const PDFValueType jointPDFValue = jointPDFit.Get();
 
       /** Check for non-zero bin contribution. */
       if ( jointPDFValue > 1e-16 &&  movingPDFValue > 1e-16 )
       {
-        const double pRatio = vcl_log( jointPDFValue / movingPDFValue );
+        const PDFValueType pRatio = vcl_log( jointPDFValue / movingPDFValue );
         // BETTER with ITERATORS TOO
         this->m_PRatioArray[ fixedIndex ][ movingIndex ] = static_cast<PRatioType>(
           this->m_Alpha * pRatio );
 
         if ( fixedPDFValue > 1e-16 )
         {
-          MI += jointPDFValue * ( pRatio - logFixedPDFValue );
+          sum += jointPDFValue * ( pRatio - logFixedPDFValue );
         }
       } // end if-block to check non-zero bin contribution
 
@@ -748,6 +825,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ++fixedIndex;
 
   }  // end while-loop over fixed index
+
+  // Assign
+  MI = sum;
+  //MI = sum.GetSum();
 
 } // end ComputeValueAndPRatioArray()
 
@@ -812,7 +893,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   const double et = static_cast<double>( this->m_MovingImageBinSize );
 
   /** Loop over the Parzen window region and increment sum. */
-  double sum = 0.0;
+  //CompensatedSumType sum; sum.ResetToZero();
+  PDFValueType sum = 0.0;
   for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
   {
     const double fv_et = fixedParzenValues[ f ] / et;
@@ -835,6 +917,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     {
       derivative[ mu ] += static_cast<DerivativeValueType>(
         imageJacobian[ mu ] * sum ); // \todo: iterators?
+        //imageJacobian[ mu ] * sum.GetSum() );
     }
   }
   else
@@ -845,6 +928,109 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       const unsigned int mu = nzji[ i ];
       derivative[ mu ] += static_cast<DerivativeValueType>(
         imageJacobian[ i ] * sum ); // \todo: iterators?
+        //imageJacobian[ i ] * sum.GetSum() );
+    }
+  }
+
+} // end UpdateDerivativeLowMemory()
+
+
+/**
+ * ******************* UpdateDerivativeLowMemory *******************
+ *
+
+template < class TFixedImage, class TMovingImage >
+void
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+::UpdateDerivativeLowMemory(
+  const RealType & fixedImageValue,
+  const RealType & movingImageValue,
+  const DerivativeType & imageJacobian,
+  const NonZeroJacobianIndicesType & nzji,
+  CompensatedSumDerivativeType & derivative ) const
+{
+  /** In this function we need to do (see eq. 24 of Thevenaz [3]):
+   *      derivative -= constant * imageJacobian *
+   *          \sum_i \sum_k PRatio(i,k) * dB/dxi(xi,i,k),
+   * with i, k, the fixed and moving histogram bins,
+   * PRatio the precomputed log(p(i,k)/p(i),
+   * dB/dxi the B-spline derivative.
+   *
+   * Note (1) that we only have to loop over i,k within the support
+   * of the B-spline Parzen-window.
+   * Note (2) that imageJacobian may be sparse.
+   */
+
+  /** Determine the affected region. */
+
+  /** Determine Parzen window arguments (see eq. 6 of Mattes paper [2]). *
+  const double fixedImageParzenWindowTerm =
+    fixedImageValue / this->m_FixedImageBinSize - this->m_FixedImageNormalizedMin;
+  const double movingImageParzenWindowTerm =
+    movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
+
+  /** The lowest bin numbers affected by this pixel: *
+  const int fixedParzenWindowIndex
+    = static_cast<int>( vcl_floor(
+    fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
+  const int movingParzenWindowIndex
+    = static_cast<int>( vcl_floor(
+    movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
+
+  /** The Parzen values. *
+  ParzenValueContainerType fixedParzenValues( this->m_JointPDFWindow.GetSize()[ 1 ] );
+  ParzenValueContainerType movingParzenValues( this->m_JointPDFWindow.GetSize()[ 0 ] );
+  this->EvaluateParzenValues(
+    fixedImageParzenWindowTerm, fixedParzenWindowIndex,
+    this->m_FixedKernel, fixedParzenValues );
+
+  /** Compute the derivatives of the moving Parzen window. *
+  ParzenValueContainerType derivativeMovingParzenValues(
+    this->m_JointPDFWindow.GetSize()[ 0 ] );
+  this->EvaluateParzenValues(
+    movingImageParzenWindowTerm, movingParzenWindowIndex,
+    this->m_DerivativeMovingKernel, derivativeMovingParzenValues );
+
+  /** Get the moving image bin size. *
+  const double et = static_cast<double>( this->m_MovingImageBinSize );
+
+  /** Loop over the Parzen window region and increment sum. *
+  CompensatedSumType sum; sum.ResetToZero();
+  //double sum = 0.0;
+  for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
+  {
+    const double fv_et = fixedParzenValues[ f ] / et;
+    for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
+    {
+      sum += this->m_PRatioArray[ f + fixedParzenWindowIndex ][ m + movingParzenWindowIndex ]
+      * fv_et * derivativeMovingParzenValues[ m ];
+    }
+  }
+
+  /** Now compute derivative -= sum * imageJacobian. *
+  //typedef typename DerivativeType::iterator   DerivativeIteratorType;
+  //DerivativeIteratorType itDerivative( derivative );
+
+  if( nzji.size() == this->GetNumberOfParameters() )
+  {
+    /** Loop over all Jacobians. *
+    //typename DerivativeType::const_iterator imjac = imageJacobian.begin();
+    for( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
+    {
+      derivative[ mu ] += static_cast<DerivativeValueType>(
+        //imageJacobian[ mu ] * sum ); // \todo: iterators?
+        imageJacobian[ mu ] * sum.GetSum() );
+    }
+  }
+  else
+  {
+    /** Loop only over the non-zero Jacobians. *
+    for( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
+    {
+      const unsigned int mu = nzji[ i ];
+      derivative[ mu ] += static_cast<DerivativeValueType>(
+        //imageJacobian[ i ] * sum ); // \todo: iterators?
+        imageJacobian[ i ] * sum.GetSum() );
     }
   }
 

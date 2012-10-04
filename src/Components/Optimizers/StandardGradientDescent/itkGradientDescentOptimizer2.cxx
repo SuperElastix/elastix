@@ -228,7 +228,7 @@ namespace itk
     // This saves and allocation and a copy at every iteration
     ParametersType & newPosition = this->m_ScaledCurrentPosition;
 
-    if ( !this->m_UseMultiThread )
+    if( !this->m_UseMultiThread )
     {
       /** Get a reference to the current position. */
       const ParametersType & currentPosition = this->GetScaledCurrentPosition();
@@ -239,7 +239,7 @@ namespace itk
         newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
       }
     }
-    else if ( this->m_UseOpenMP && !this->m_UseEigen )
+    else if( this->m_UseOpenMP && !this->m_UseEigen )
     {
       /** Get a reference to the current position. */
       const ParametersType & currentPosition = this->GetScaledCurrentPosition();
@@ -253,7 +253,7 @@ namespace itk
         newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
       }
     }
-    else if ( !this->m_UseOpenMP && this->m_UseEigen )
+    else if( !this->m_UseOpenMP && this->m_UseEigen )
     {
       /** Get a reference to the current position. */
       const ParametersType & currentPosition = this->GetScaledCurrentPosition();
@@ -267,7 +267,7 @@ namespace itk
       /** Update the new position. */
       newPositionE = currentPositionE - learningRate * gradientE;
     }
-    else if ( this->m_UseOpenMP && this->m_UseEigen )
+    else if( this->m_UseOpenMP && this->m_UseEigen )
     {
       /** Get a reference to the current position. */
       const ParametersType & currentPosition = this->GetScaledCurrentPosition();

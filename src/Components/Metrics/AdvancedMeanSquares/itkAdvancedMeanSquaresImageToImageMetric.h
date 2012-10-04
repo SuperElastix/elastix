@@ -51,7 +51,7 @@ namespace itk
 
 template < class TFixedImage, class TMovingImage >
 class AdvancedMeanSquaresImageToImageMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
 
@@ -150,9 +150,6 @@ public:
   /** Gather the values and derivatives from all threads */
   inline void AfterThreadedGetValueAndDerivative(
     MeasureType & value, DerivativeType & derivative ) const;
-
-  /** ComputeDerivatives threader callback function */
-  static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );
 
   /** Experimental feature: compute SelfHessian */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
@@ -253,6 +250,9 @@ private:
     unsigned int numberOfParameters;
     double normal_sum;
   };
+
+  /** ComputeDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
 
 }; // end class AdvancedMeanSquaresImageToImageMetric
 
