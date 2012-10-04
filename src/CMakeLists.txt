@@ -8,11 +8,7 @@ project( elastix )
 #---------------------------------------------------------------------
 # Find ITK.
 find_package( ITK REQUIRED )
-if( ITK_FOUND )
-  include( ${ITK_USE_FILE} )
-else()
-  message( FATAL_ERROR "Cannot build without ITK. Please set ITK_DIR. The ITK_DIR should point to location of UseITK.cmake" )
-endif()
+include( ${ITK_USE_FILE} )
 
 #---------------------------------------------------------------------
 # Add the elastix source dir as an additional module path,
@@ -40,15 +36,15 @@ option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
 
 if( ELASTIX_USE_OPENCL )
   find_package( OpenCL REQUIRED )
-  if( NOT ${OPENCL_FOUND} )
-    message( FATAL_ERROR "Could not find OpenCL" )
-  else()
-    # Force OPENCL_OPTIMIZATION_MAD_ENABLE to on
-    set( OPENCL_OPTIMIZATION_MAD_ENABLE ON CACHE BOOL
-    "Allow a * b + c to be replaced by a mad. The mad computes a * b + c with reduced accuracy." FORCE)
-    include_directories( ${OPENCL_INCLUDE_DIRS} )
-    include( elastixOpenCL )
-  endif()
+  # Force OPENCL_OPTIMIZATION_MAD_ENABLE to on
+  set( OPENCL_OPTIMIZATION_MAD_ENABLE ON CACHE BOOL
+    "Allow a * b + c to be replaced by a mad. The mad computes a * b + c with reduced accuracy." FORCE )
+
+  # Include the OpenCL include directories to elastix
+  include_directories( ${OPENCL_INCLUDE_DIRS} )
+
+  # Add some useful macro's
+  include( elastixOpenCL )
 endif()
 
 #----------------------------------------------------------------------
@@ -59,6 +55,7 @@ option( ELASTIX_USE_EIGEN "Use Eigen library" OFF )
 if( ELASTIX_USE_EIGEN )
   find_package( Eigen3 REQUIRED )
   include_directories( ${EIGEN3_INCLUDE_DIR} )
+  add_definitions( -DELASTIX_USE_EIGEN )
 endif()
 
 #---------------------------------------------------------------------
@@ -70,6 +67,7 @@ if( OPENMP_FOUND )
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}" )
   #  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}
   #  ${OpenMP_EXE_LINKER_FLAGS}")
+  add_definitions( -DELASTIX_USE_OPENMP )
 endif()
 
 #----------------------------------------------------------------------

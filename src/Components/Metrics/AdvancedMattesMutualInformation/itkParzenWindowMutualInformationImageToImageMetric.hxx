@@ -23,7 +23,10 @@
 #include "vnl/vnl_inverse.h"
 #include "vnl/vnl_det.h"
 
-#include <omp.h> // OpenMP
+#ifdef ELASTIX_USE_OPENMP
+#include <omp.h>
+#endif
+
 #include "elxTimer.h"//tmp
 
 namespace itk
@@ -624,6 +627,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       derivative += this->m_ThreaderDerivatives[ i ];
     }
   }
+#ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp
   else if( useOpenMP )
   //else if( this->m_UseOpenMP )
@@ -648,6 +652,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       derivative[ j ] = sum;
     }
   }
+#endif
   // compute multi-threadedly with itk threads
   else
   {

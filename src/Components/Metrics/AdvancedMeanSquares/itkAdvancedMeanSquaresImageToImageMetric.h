@@ -138,8 +138,10 @@ public:
   void GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
+#ifdef ELASTIX_USE_OPENMP
   void GetValueAndDerivativeOpenMP( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
+#endif
 
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;

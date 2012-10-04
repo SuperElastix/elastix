@@ -21,9 +21,15 @@
 #include "itkExceptionObject.h"
 
 #include "elxTimer.h" // tmp
-#include <omp.h> // OpenMP
-#include <Eigen/Dense> // Eigen
-#include <Eigen/Core> // Eigen
+
+#ifdef ELASTIX_USE_OPENMP
+#include <omp.h>
+#endif
+
+#ifdef ELASTIX_USE_EIGEN
+#include <Eigen/Dense>
+#include <Eigen/Core>
+#endif
 
 namespace itk
 {
@@ -239,6 +245,7 @@ namespace itk
         newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
       }
     }
+#ifdef ELASTIX_USE_OPENMP
     else if( this->m_UseOpenMP && !this->m_UseEigen )
     {
       /** Get a reference to the current position. */
@@ -253,6 +260,8 @@ namespace itk
         newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
       }
     }
+#endif
+#ifdef ELASTIX_USE_EIGEN
     else if( !this->m_UseOpenMP && this->m_UseEigen )
     {
       /** Get a reference to the current position. */
@@ -267,6 +276,8 @@ namespace itk
       /** Update the new position. */
       newPositionE = currentPositionE - learningRate * gradientE;
     }
+#endif
+#if defined( ELASTIX_USE_OPENMP ) && defined( ELASTIX_USE_EIGEN )
     else if( this->m_UseOpenMP && this->m_UseEigen )
     {
       /** Get a reference to the current position. */
@@ -294,6 +305,7 @@ namespace itk
           - learningRate * gradientE.segment( jmin, subSize );
       }
     }
+#endif
     else
     {
       /** Fill the threader parameter struct with information. */

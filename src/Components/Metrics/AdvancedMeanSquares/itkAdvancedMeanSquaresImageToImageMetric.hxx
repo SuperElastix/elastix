@@ -18,10 +18,14 @@
 #include "vnl/algo/vnl_matrix_update.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
-#include <omp.h> // OpenMP
-#include <Eigen/Dense> // Eigen
-#include <Eigen/Core> // Eigen
-#include "itkCompensatedSummation.h" // testing it
+#ifdef ELASTIX_USE_OPENMP
+#include <omp.h>
+#endif
+
+//#ifdef ELASTIX_USE_EIGEN
+//#include <Eigen/Dense>
+//#include <Eigen/Core>
+//#endif
 
 
 namespace itk
@@ -377,6 +381,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetValueAndDerivativeOpenMP *******************
  */
 
+#ifdef ELASTIX_USE_OPENMP
 template <class TFixedImage, class TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
@@ -513,7 +518,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   }
 
 } // end GetValueAndDerivativeOpenMP()
-
+#endif
 
 /**
  * ******************* GetValueAndDerivative *******************
@@ -532,11 +537,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     return this->GetValueAndDerivativeSingleThreaded(
       parameters, value, derivative );
   }
+#ifdef ELASTIX_USE_OPENMP
   else if( this->m_UseOpenMP )
   {
     return this->GetValueAndDerivativeOpenMP(
       parameters, value, derivative );
   }
+#endif
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -731,6 +738,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
     delete temp;
   }
+#ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp
   else
   {
@@ -748,6 +756,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       derivative[ j ] = tmp * normal_sum;
     }
   }
+#endif
 
 } // end AfterThreadedGetValueAndDerivative()
 
