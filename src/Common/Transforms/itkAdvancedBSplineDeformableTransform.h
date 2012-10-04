@@ -237,7 +237,7 @@ public:
 
   unsigned int GetNumberOfAffectedWeights( void ) const;
 
-  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
+  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(

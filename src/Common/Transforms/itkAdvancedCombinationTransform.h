@@ -159,7 +159,7 @@ public:
   virtual NumberOfParametersType GetNumberOfParameters( void ) const;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
-  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
+  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
 
   /** Get the transformation parameters from the CurrentTransform. */
   virtual const ParametersType & GetParameters( void ) const;

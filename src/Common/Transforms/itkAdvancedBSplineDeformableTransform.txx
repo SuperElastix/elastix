@@ -368,7 +368,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
  */
 
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-unsigned long
+typename AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::NumberOfParametersType
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 ::GetNumberOfNonZeroJacobianIndices( void ) const
 {

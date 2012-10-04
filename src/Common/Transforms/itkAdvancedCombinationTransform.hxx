@@ -103,7 +103,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
  */
 
 template <typename TScalarType, unsigned int NDimensions>
-unsigned long
+typename AdvancedCombinationTransform<TScalarType, NDimensions>::NumberOfParametersType
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetNumberOfNonZeroJacobianIndices( void ) const
 {
