@@ -306,7 +306,7 @@ ParameterFileParser
   }
 
   /** 5) Perform checks on the parameter values. */
-  itksys::RegularExpression reInvalidCharacters2( "[,;!@#$%^&|<>?]" );
+  itksys::RegularExpression reInvalidCharacters2( "[,;!@#$%&|<>?]" );
   for ( unsigned int i = 0; i < parameterValues.size(); ++i )
   {
     /** For all entries some characters are not allowed. */
@@ -314,7 +314,7 @@ ParameterFileParser
     {
       std::string hint = "The parameter value \""
         + parameterValues[ i ]
-      + "\" contains invalid characters (,;!@#$%^&|<>?).";
+      + "\" contains invalid characters (,;!@#$%&|<>?).";
       this->ThrowException( fullLine, hint );
     }
   }
