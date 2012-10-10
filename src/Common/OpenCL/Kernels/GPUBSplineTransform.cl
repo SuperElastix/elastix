@@ -52,71 +52,43 @@ bool is_inside( const uint grid_size, const float ind )
 }
 
 //------------------------------------------------------------------------------
-// MS: \todo: make a version that immediately returns the complete array
-// instead of everything one by one. That way we will avoid all the if's and
-// have loop unrolling. See BSplineKernelFunction2 for the CPU code.
-float kernel_evaluate( float u )
+void set_weights( const float index, const long startindex,
+                 const uint i, float *weights )
 {
+  // The code below was taken from:
+  //   elastix/src/Common/Transforms/itkBSplineKernelFunction2.h
+  // Compared to the ITK version this code assigns to the entire
+  // weights vector at once, instead of in a loop, thereby avoiding
+  // the excessive use of if statements.
+  const float u = index - (float)(startindex);
+
   if( GPUBSplineTransformOrder == 3 )
   {
-    const float absValue = fabs( u );
-    const float sqrValue = u * u;
+    const float uu  = u * u;
+    const float uuu = uu * u;
 
-    if( absValue < 1.0f )
-    {
-      return ( 4.0f - 6.0f * sqrValue + 3.0f * sqrValue * absValue ) / 6.0f;
-    }
-    else if( absValue < 2.0f )
-    {
-      return ( 8.0f - 12.0f * absValue + 6.0f * sqrValue - sqrValue * absValue ) / 6.0f;
-    }
-    else
-    {
-      return 0.0f;
-    }
+    weights[ i + 0 ] = (  8.0f - 12.0f * u +  6.0f * uu - uuu ) / 6.0f;
+    weights[ i + 1 ] = ( -5.0f + 21.0f * u - 15.0f * uu + 3.0f * uuu ) / 6.0f;
+    weights[ i + 2 ] = (  4.0f - 12.0f * u + 12.0f * uu - 3.0f * uuu ) / 6.0f;
+    weights[ i + 3 ] = ( -1.0f +  3.0f * u -  3.0f * uu + uuu ) / 6.0f;
   }
   else if( GPUBSplineTransformOrder == 0 )
   {
-    const float absValue = fabs( u );
-
-    if( absValue < 0.5f ) return 1.0f;
-    else if( absValue == 0.5f ) return 0.5f;
-    else return 0.0f;
+    if ( u < 0.5f ) weights[ i + 0 ] = 1.0f;
+    else weights[ i + 0 ] = 0.5f;
   }
   else if( GPUBSplineTransformOrder == 1 )
   {
-    const float absValue = fabs( u );
-
-    if( absValue < 1.0f ) return 1.0f - absValue;
-    else return 0.0f;
+    weights[ i + 0 ] = 1.0f - u;
+    weights[ i + 1 ] = u - 1.0f;
   }
   else if( GPUBSplineTransformOrder == 2 )
   {
-    const float absValue = fabs( u );
-    const float sqrValue = u * u;
+    const float uu = u * u;
 
-    if( absValue < 0.5f )
-    {
-      return 0.75f - sqrValue;
-    }
-    else if( absValue < 1.5f )
-    {
-      return ( 9.0f - 12.0f * absValue + 4.0f * sqrValue ) / 8.0f;
-    }
-    else return 0.0f;
-  }
-}
-
-//------------------------------------------------------------------------------
-void set_weights(const float index, const long startindex,
-                 const uint i, float *weights)
-{
-  float x = index - (float)(startindex);
-
-  for( uint k = 0; k <= GPUBSplineTransformOrder; k++ )
-  {
-    weights[k + i] = kernel_evaluate( x );
-    x -= 1.0f;
+    weights[ i + 0 ] = ( 9.0f  - 12.0f * u + 4.0f * uu ) / 8.0f;
+    weights[ i + 1 ] =  -0.25f +  2.0f * u - uu;
+    weights[ i + 2 ] = ( 1.0f  -  4.0f * u + 4.0f * uu ) / 8.0f;
   }
 }
 
@@ -189,12 +161,12 @@ long evaluate_1d( const float index, float *weights )
 
   // compute the weights
   float weights1D[GPUBSplineTransformOrder + 1];
-  set_weights(index, startindex, 0, weights1D);
+  set_weights( index, startindex, 0, weights1D );
 
   for( uint k = 0; k < GPUBSplineTransformNumberOfWeights; k++ )
   {
     weights[k] = 1.0;
-    weights[k] *= weights1D[offset_to_index_table[k]];
+    weights[k] *= weights1D[ offset_to_index_table[k] ];
   }
 
   // return start index
@@ -228,8 +200,8 @@ long2 evaluate_2d( const float2 index, float *weights )
 
   // compute the weights
   float weights1D[2][GPUBSplineTransformOrder + 1];
-  set_weights(index.x, startindex.x, 0, weights1D);
-  set_weights(index.y, startindex.y, GPUBSplineTransformOrder + 1, weights1D);
+  set_weights( index.x, startindex.x, 0, weights1D );
+  set_weights( index.y, startindex.y, GPUBSplineTransformOrder + 1, weights1D );
 
   for( uint k = 0; k < GPUBSplineTransformNumberOfWeights; k++ )
   {
@@ -252,6 +224,10 @@ long3 evaluate_3d( const float3 index, float *weights )
   const uint support_size = GPUBSplineTransformOrder + 1;
   ulong      counter = 0;
 
+  // MS: \todo: can be computed once beforehand and put in const memory.
+  // Will likely give a performance benefit compared to this code, where
+  // the table is re-computed for every voxel.
+  // I count 3*4^3=192 assignments plus 4^3=64 ++ calls.
   for( uint k = 0; k < support_size; k++ )
   {
     for( uint j = 0; j < support_size; j++ )
@@ -274,9 +250,9 @@ long3 evaluate_3d( const float3 index, float *weights )
 
   // compute the weights
   float weights1D[3][GPUBSplineTransformOrder + 1];
-  set_weights(index.x, startindex.x, 0, weights1D);
-  set_weights(index.y, startindex.y, GPUBSplineTransformOrder + 1, weights1D);
-  set_weights(index.z, startindex.z, (GPUBSplineTransformOrder + 1) * 2, weights1D);
+  set_weights( index.x, startindex.x, 0, weights1D );
+  set_weights( index.y, startindex.y, GPUBSplineTransformOrder + 1, weights1D );
+  set_weights( index.z, startindex.z, (GPUBSplineTransformOrder + 1) * 2, weights1D );
 
   for( uint k = 0; k < GPUBSplineTransformNumberOfWeights; k++ )
   {
@@ -311,7 +287,7 @@ float bspline_transform_point_1d(const float point,
 
   // evaluate
   float weights[GPUBSplineTransformNumberOfWeights];
-  long  support_index = evaluate_1d(index, weights);
+  long  support_index = evaluate_1d( index, weights );
   uint  support_size = (uint)(GPUBSplineTransformOrder + 1);
   uint  support_region = support_index + support_size;
 
@@ -357,7 +333,7 @@ float2 bspline_transform_point_2d(const float2 point,
 
   // evaluate
   float weights[GPUBSplineTransformNumberOfWeights];
-  long2 support_index = evaluate_2d(index, weights);
+  long2 support_index = evaluate_2d( index, weights );
   uint  support_size = (uint)(GPUBSplineTransformOrder + 1);
   uint2 support_region;
   support_region.x = support_index.x + support_size;
@@ -376,8 +352,8 @@ float2 bspline_transform_point_2d(const float2 point,
         float c0 = coefficients0[gidx];
         float c1 = coefficients1[gidx];
 
-        tpoint.x = mad(c0, weights[counter], tpoint.x);
-        tpoint.y = mad(c1, weights[counter], tpoint.y);
+        tpoint.x = mad( c0, weights[counter], tpoint.x );
+        tpoint.y = mad( c1, weights[counter], tpoint.y );
 
         ++counter;
       }
@@ -413,7 +389,7 @@ float3 bspline_transform_point_3d(const float3 point,
 
   // evaluate
   float weights[GPUBSplineTransformNumberOfWeights];
-  long3 support_index = evaluate_3d(index, weights);
+  long3 support_index = evaluate_3d( index, weights );
   uint  support_size = (uint)(GPUBSplineTransformOrder + 1);
   uint3 support_region;
   support_region.x = support_index.x + support_size;
