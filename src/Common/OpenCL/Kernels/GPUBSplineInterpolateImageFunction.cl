@@ -51,7 +51,7 @@ void determine(long *evaluate_index, const float index,
 {
   long indx = (long)(floor(index + half_offset) - spline_order / 2);
 
-  for(uint k = 0; k <= spline_order; k++)
+  for( uint k = 0; k <= spline_order; k++ )
   {
     uint eindx = offset + k;
     evaluate_index[eindx] = indx++;
@@ -59,6 +59,7 @@ void determine(long *evaluate_index, const float index,
 }
 
 //------------------------------------------------------------------------------
+#ifdef DIM_1
 void determine_region_of_support_1d(long *evaluate_index,
                                     const float continuous_index,
                                     const uint spline_order)
@@ -67,40 +68,45 @@ void determine_region_of_support_1d(long *evaluate_index,
 
   determine(evaluate_index, continuous_index, 0, half_offset, spline_order);
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
+#ifdef DIM_2
 void determine_region_of_support_2d(long *evaluate_index,
                                     const float2 continuous_index,
                                     const uint spline_order)
 {
   const float half_offset = spline_order & 1 ? 0.0 : 0.5;
 
-  determine(evaluate_index, continuous_index.x, 0, half_offset, spline_order);
-  determine(evaluate_index, continuous_index.y, (spline_order + 1), half_offset, spline_order);
+  determine( evaluate_index, continuous_index.x, 0, half_offset, spline_order );
+  determine( evaluate_index, continuous_index.y, (spline_order + 1), half_offset, spline_order );
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
+#ifdef DIM_3
 void determine_region_of_support_3d(long *evaluate_index,
                                     const float3 continuous_index,
                                     const uint spline_order)
 {
   const float half_offset = spline_order & 1 ? 0.0 : 0.5;
 
-  determine(evaluate_index, continuous_index.x, 0, half_offset, spline_order);
-  determine(evaluate_index, continuous_index.y, (spline_order + 1), half_offset, spline_order);
-  determine(evaluate_index, continuous_index.z, (spline_order + 1) * 2, half_offset, spline_order);
+  determine( evaluate_index, continuous_index.x, 0, half_offset, spline_order );
+  determine( evaluate_index, continuous_index.y, (spline_order + 1), half_offset, spline_order );
+  determine( evaluate_index, continuous_index.z, (spline_order + 1) * 2, half_offset, spline_order );
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 // get offset in array
-uint get_array_offset(const uint x, const uint y, const uint width)
+uint get_array_offset( const uint x, const uint y, const uint width )
 {
-  uint idx = mad24(width, y, x);
-
+  uint idx = mad24( width, y, x );
   return idx;
 }
 
 //------------------------------------------------------------------------------
+#ifdef DIM_1
 void set_interpolation_weights_1d(const float index,
                                   const long *evaluate_index,
                                   float *weights,
@@ -116,142 +122,69 @@ void set_interpolation_weights_1d(const float index,
   uint  width = spline_order + 1;
 
   // spline_order must be between 0 and 5.
-  if(spline_order == 3)
+  if( spline_order == 3 )
   {
-    w = x - (float)evaluate_index[get_array_offset(1, 0, width)];
-    weights[get_array_offset(3, 0, width)] = (1.0 / 6.0) * w * w * w;
-    weights[get_array_offset(0, 0, width)] = (1.0 / 6.0) + 0.5 * w * (w - 1.0) - weights[get_array_offset(3, 0, width)];
-    weights[get_array_offset(2,0,width)] = w + weights[get_array_offset(0,0,width)] - 2.0 * weights[get_array_offset(3,0,width)];
-    weights[get_array_offset(1,0,width)] = 1.0 - weights[get_array_offset(0,0,width)] - weights[get_array_offset(2,0,width)] - weights[get_array_offset(3,0,width)];
-
-    //w = x[n] - (float)evaluate_index[n][1];
-    //weights[n][3] = ( 1.0 / 6.0 ) * w * w * w;
-    //weights[n][0] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[n][3];
-    //weights[n][2] = w + weights[n][0] - 2.0 * weights[n][3];
-    //weights[n][1] = 1.0 - weights[n][0] - weights[n][2] - weights[n][3];
-    return;
+    w = x - (float)evaluate_index[ 1 ];
+    weights[ 3 ] = (1.0 / 6.0) * w * w * w;
+    weights[ 0 ] = (1.0 / 6.0) + 0.5 * w * (w - 1.0) - weights[ 3 ];
+    weights[ 2 ] = w + weights[ 0 ] - 2.0 * weights[ 3 ];
+    weights[ 1 ] = 1.0 - weights[ 0 ] - weights[ 2 ] - weights[ 3 ];
   }
-  else if(spline_order == 0)
+  else if( spline_order == 0 )
   {
-    return;
+    weights[ 0 ] = 1; // implements nearest neighbor
   }
-  else if(spline_order == 1)
+  else if( spline_order == 1 )
   {
-    return;
+    w = x - (float)evaluate_index[ 1 ];
+    weights[ 1 ] = w;
+    weights[ 0 ] = 1.0 - w;
   }
-  else if(spline_order == 2)
+  else if( spline_order == 2 )
   {
-    return;
+    w = x - (float)evaluate_index[ 1 ];
+    weights[ 1 ] = 0.75 - w * w;
+    weights[ 2 ] = 0.5 * ( w - weights[ 1 ] + 1.0 );
+    weights[ 0 ] = 1.0 - weights[ 1 ] - weights[ 2 ];
   }
-  else if(spline_order == 4)
+  else if( spline_order == 4 )
   {
-    return;
+    w = x - (float)evaluate_index[ 2 ];
+    w2 = w * w;
+    t2 = ( 0.5 - w ); t2 *= t2; t2 *= t2;
+    weights[ 0 ] = (1.0 / 24.0) * t2;
+    t = (1.0 / 6.0) * w2;
+    t0 = w * ( t - 11.0 / 24.0 );
+    t1 = 19.0 / 96.0 + w2 * ( 0.25 - t );
+    weights[ 1 ] = t1 + t0;
+    weights[ 3 ] = t1 - t0;
+    weights[ 4 ] = weights[ 0 ] + t0 + 0.5 * w;
+    weights[ 2 ] = 1.0 - weights[ 0 ] - weights[ 1 ] - weights[ 3 ] - weights[ 4 ];
   }
-  else if(spline_order == 5)
+  else if( spline_order == 5 )
   {
-    return;
+    w = x - (float)evaluate_index[ 2 ];
+    w2 = w * w;
+    weights[ 5 ] = ( 1.0 / 120.0 ) * w * w2 * w2;
+    w2 -= w;
+    w4 = w2 * w2;
+    w -= 0.5;
+    t = w2 * ( w2 - 3.0 );
+    weights[ 0 ] = ( 1.0 / 24.0 ) * ( 1.0 / 5.0 + w2 + w4 ) - weights[ 5 ];
+    t0 = ( 1.0 / 24.0 ) * ( w2 * ( w2 - 5.0 ) + 46.0 / 5.0 );
+    t1 = ( -1.0 / 12.0 ) * w * ( t + 4.0 );
+    weights[ 2 ] = t0 + t1;
+    weights[ 3 ] = t0 - t1;
+    t0 = ( 1.0 / 16.0 ) * ( 9.0 / 5.0 - t );
+    t1 = ( 1.0 / 24.0 ) * w * ( w4 - w2 - 5.0 );
+    weights[ 1 ] = t0 + t1;
+    weights[ 4 ] = t0 - t1;
   }
-
-  /*
-  switch ( spline_order )
-  {
-  case 3:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][1];
-        weights[n][3] = ( 1.0 / 6.0 ) * w * w * w;
-        weights[n][0] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[n][3];
-        weights[n][2] = w + weights[n][0] - 2.0 * weights[n][3];
-        weights[n][1] = 1.0 - weights[n][0] - weights[n][2] - weights[n][3];
-      }
-      break;
-    }
-  case 0:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        weights[n][0] = 1; // implements nearest neighbor
-      }
-      break;
-    }
-  case 1:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][0];
-        weights[n][1] = w;
-        weights[n][0] = 1.0 - w;
-      }
-      break;
-    }
-  case 2:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][1];
-        weights[n][1] = 0.75 - w * w;
-        weights[n][2] = 0.5 * ( w - weights[n][1] + 1.0 );
-        weights[n][0] = 1.0 - weights[n][1] - weights[n][2];
-      }
-      break;
-    }
-  case 4:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][2];
-        w2 = w * w;
-        t = ( 1.0 / 6.0 ) * w2;
-        weights[n][0] = 0.5 - w;
-        weights[n][0] *= weights[n][0];
-        weights[n][0] *= ( 1.0 / 24.0 ) * weights[n][0];
-        t0 = w * ( t - 11.0 / 24.0 );
-        t1 = 19.0 / 96.0 + w2 * ( 0.25 - t );
-        weights[n][1] = t1 + t0;
-        weights[n][3] = t1 - t0;
-        weights[n][4] = weights[n][0] + t0 + 0.5 * w;
-        weights[n][2] = 1.0 - weights[n][0] - weights[n][1] - weights[n][3] - weights[n][4];
-      }
-      break;
-    }
-  case 5:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][2];
-        w2 = w * w;
-        weights[n][5] = ( 1.0 / 120.0 ) * w * w2 * w2;
-        w2 -= w;
-        w4 = w2 * w2;
-        w -= 0.5;
-        t = w2 * ( w2 - 3.0 );
-        weights[n][0] = ( 1.0 / 24.0 ) * ( 1.0 / 5.0 + w2 + w4 ) - weights[n][5];
-        t0 = ( 1.0 / 24.0 ) * ( w2 * ( w2 - 5.0 ) + 46.0 / 5.0 );
-        t1 = ( -1.0 / 12.0 ) * w * ( t + 4.0 );
-        weights[n][2] = t0 + t1;
-        weights[n][3] = t0 - t1;
-        t0 = ( 1.0 / 16.0 ) * ( 9.0 / 5.0 - t );
-        t1 = ( 1.0 / 24.0 ) * w * ( w4 - w2 - 5.0 );
-        weights[n][1] = t0 + t1;
-        weights[n][4] = t0 - t1;
-      }
-      break;
-    }
-  default:
-    {
-      // SplineOrder not implemented yet.
-      ExceptionObject err(__FILE__, __LINE__);
-      err.SetLocation(ITK_LOCATION);
-      err.SetDescription("SplineOrder must be between 0 and 5. Requested spline order has not been implemented yet.");
-      throw err;
-      break;
-    }
-  }
-  */
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
+#ifdef DIM_2
 void set_interpolation_weights_2d(const float2 index,
                                   const long *evaluate_index,
                                   float *weights,
@@ -260,155 +193,123 @@ void set_interpolation_weights_2d(const float2 index,
   // For speed improvements we could make each case a separate function and use
   // function pointers to reference the correct weight order.
   // Left as is for now for readability.
-  float w, w2, w4, t, t0, t1;
+  float w, w2, w4, t, t0, t1, t2;
 
   // create float x[2] from float2, makes it easy to use in loops
   float x[2];
-
   x[0] = index.x;
   x[1] = index.y;
   uint width = spline_order + 1;
 
   // spline_order must be between 0 and 5.
-  if(spline_order == 3)
+  if( spline_order == 3 )
   {
-    for(unsigned int n = 0; n < 2; n++)
+    for( uint n = 0; n < 2; n++ )
     {
-      w = x[n] - (float)evaluate_index[get_array_offset(1, n, width)];
-      weights[get_array_offset(3, n, width)] = (1.0 / 6.0) * w * w * w;
-      weights[get_array_offset(0,n,width)] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[get_array_offset(3,n,width)];
-      weights[get_array_offset(2,n,width)] = w + weights[get_array_offset(0,n,width)] - 2.0 * weights[get_array_offset(3,n,width)];
-      weights[get_array_offset(1,n,width)] = 1.0 - weights[get_array_offset(0,n,width)] - weights[get_array_offset(2,n,width)] - weights[get_array_offset(3,n,width)];
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+      uint ao2 = get_array_offset( 2, n, width );
+      uint ao3 = get_array_offset( 3, n, width );
 
-      //w = x[n] - (float)evaluate_index[n][1];
-      //weights[n][3] = ( 1.0 / 6.0 ) * w * w * w;
-      //weights[n][0] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[n][3];
-      //weights[n][2] = w + weights[n][0] - 2.0 * weights[n][3];
-      //weights[n][1] = 1.0 - weights[n][0] - weights[n][2] - weights[n][3];
+      w = x[n] - (float)evaluate_index[ ao1 ];
+      weights[ ao3 ] = (1.0 / 6.0) * w * w * w;
+      weights[ ao0 ] = (1.0 / 6.0) + 0.5 * w * ( w - 1.0 ) - weights[ ao3 ];
+      weights[ ao2 ] = w + weights[ ao0 ] - 2.0 * weights[ ao3 ];
+      weights[ ao1 ] = 1.0 - weights[ ao0 ] - weights[ ao2 ] - weights[ ao3 ];
     }
-    return;
   }
-  else if(spline_order == 0)
+  else if( spline_order == 0 )
   {
-    return;
-  }
-  else if(spline_order == 1)
-  {
-    return;
-  }
-  else if(spline_order == 2)
-  {
-    return;
-  }
-  else if(spline_order == 4)
-  {
-    return;
-  }
-  else if(spline_order == 5)
-  {
-    return;
-  }
+    for( uint n = 0; n < 2; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
 
-  /*
-  switch ( spline_order )
-  {
-  case 3:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][1];
-        weights[n][3] = ( 1.0 / 6.0 ) * w * w * w;
-        weights[n][0] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[n][3];
-        weights[n][2] = w + weights[n][0] - 2.0 * weights[n][3];
-        weights[n][1] = 1.0 - weights[n][0] - weights[n][2] - weights[n][3];
-      }
-      break;
-    }
-  case 0:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        weights[n][0] = 1; // implements nearest neighbor
-      }
-      break;
-    }
-  case 1:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][0];
-        weights[n][1] = w;
-        weights[n][0] = 1.0 - w;
-      }
-      break;
-    }
-  case 2:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][1];
-        weights[n][1] = 0.75 - w * w;
-        weights[n][2] = 0.5 * ( w - weights[n][1] + 1.0 );
-        weights[n][0] = 1.0 - weights[n][1] - weights[n][2];
-      }
-      break;
-    }
-  case 4:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][2];
-        w2 = w * w;
-        t = ( 1.0 / 6.0 ) * w2;
-        weights[n][0] = 0.5 - w;
-        weights[n][0] *= weights[n][0];
-        weights[n][0] *= ( 1.0 / 24.0 ) * weights[n][0];
-        t0 = w * ( t - 11.0 / 24.0 );
-        t1 = 19.0 / 96.0 + w2 * ( 0.25 - t );
-        weights[n][1] = t1 + t0;
-        weights[n][3] = t1 - t0;
-        weights[n][4] = weights[n][0] + t0 + 0.5 * w;
-        weights[n][2] = 1.0 - weights[n][0] - weights[n][1] - weights[n][3] - weights[n][4];
-      }
-      break;
-    }
-  case 5:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][2];
-        w2 = w * w;
-        weights[n][5] = ( 1.0 / 120.0 ) * w * w2 * w2;
-        w2 -= w;
-        w4 = w2 * w2;
-        w -= 0.5;
-        t = w2 * ( w2 - 3.0 );
-        weights[n][0] = ( 1.0 / 24.0 ) * ( 1.0 / 5.0 + w2 + w4 ) - weights[n][5];
-        t0 = ( 1.0 / 24.0 ) * ( w2 * ( w2 - 5.0 ) + 46.0 / 5.0 );
-        t1 = ( -1.0 / 12.0 ) * w * ( t + 4.0 );
-        weights[n][2] = t0 + t1;
-        weights[n][3] = t0 - t1;
-        t0 = ( 1.0 / 16.0 ) * ( 9.0 / 5.0 - t );
-        t1 = ( 1.0 / 24.0 ) * w * ( w4 - w2 - 5.0 );
-        weights[n][1] = t0 + t1;
-        weights[n][4] = t0 - t1;
-      }
-      break;
-    }
-  default:
-    {
-      // SplineOrder not implemented yet.
-      ExceptionObject err(__FILE__, __LINE__);
-      err.SetLocation(ITK_LOCATION);
-      err.SetDescription("SplineOrder must be between 0 and 5. Requested spline order has not been implemented yet.");
-      throw err;
-      break;
+      weights[ ao0 ] = 1;
     }
   }
-  */
+  else if( spline_order == 1 )
+  {
+    for( uint n = 0; n < 2; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+
+      w = x[n] - (float)evaluate_index[ ao0 ];
+      weights[ ao1 ] = w;
+      weights[ ao0 ] = 1.0 - w;
+    }
+  }
+  else if( spline_order == 2 )
+  {
+    for( uint n = 0; n < 2; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+      uint ao2 = get_array_offset( 2, n, width );
+
+      w = x[n] - (float)evaluate_index[ ao1 ];
+      weights[ ao1 ] = 0.75 - w * w;
+      weights[ ao2 ] = 0.5 * ( w - weights[ ao1 ] + 1.0 );
+      weights[ ao0 ] = 1.0 - weights[ ao1 ] - weights[ ao2 ];
+    }
+  }
+  else if( spline_order == 4 )
+  {
+    for( uint n = 0; n < 2; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+      uint ao2 = get_array_offset( 2, n, width );
+      uint ao3 = get_array_offset( 3, n, width );
+      uint ao4 = get_array_offset( 4, n, width );
+
+      w = x[n] - (float)evaluate_index[ ao2 ];
+      w2 = w * w;
+      t2 = ( 0.5 - w ); t2 *= t2; t2 *= t2;
+      weights[ ao0 ] = (1.0 / 24.0) * t2;
+      t = (1.0 / 6.0) * w2;
+      t0 = w * ( t - 11.0 / 24.0 );
+      t1 = 19.0 / 96.0 + w2 * ( 0.25 - t );
+      weights[ ao1 ] = t1 + t0;
+      weights[ ao3 ] = t1 - t0;
+      weights[ ao4 ] = weights[ ao0 ] + t0 + 0.5 * w;
+      weights[ ao2 ] = 1.0 - weights[ ao0 ] - weights[ ao1 ] - weights[ ao3 ] - weights[ ao4 ];
+    }
+  }
+  else if( spline_order == 5 )
+  {
+    for( uint n = 0; n < 2; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+      uint ao2 = get_array_offset( 2, n, width );
+      uint ao3 = get_array_offset( 3, n, width );
+      uint ao4 = get_array_offset( 4, n, width );
+      uint ao5 = get_array_offset( 5, n, width );
+
+      w = x[n] - (float)evaluate_index[ ao2 ];
+      w2 = w * w;
+      weights[ ao5 ] = ( 1.0 / 120.0 ) * w * w2 * w2;
+      w2 -= w;
+      w4 = w2 * w2;
+      w -= 0.5;
+      t = w2 * ( w2 - 3.0 );
+      weights[ ao0 ] = ( 1.0 / 24.0 ) * ( 1.0 / 5.0 + w2 + w4 ) - weights[ ao5 ];
+      t0 = ( 1.0 / 24.0 ) * ( w2 * ( w2 - 5.0 ) + 46.0 / 5.0 );
+      t1 = ( -1.0 / 12.0 ) * w * ( t + 4.0 );
+      weights[ ao2 ] = t0 + t1;
+      weights[ ao3 ] = t0 - t1;
+      t0 = ( 1.0 / 16.0 ) * ( 9.0 / 5.0 - t );
+      t1 = ( 1.0 / 24.0 ) * w * ( w4 - w2 - 5.0 );
+      weights[ ao1 ] = t0 + t1;
+      weights[ ao4 ] = t0 - t1;
+    }
+  }
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
+#ifdef DIM_3
 void set_interpolation_weights_3d(const float3 index,
                                   const long *evaluate_index,
                                   float *weights,
@@ -421,150 +322,117 @@ void set_interpolation_weights_3d(const float3 index,
 
   // create float x[3] from float3, makes it easy to use in loops
   float x[3];
-
   x[0] = index.x;
   x[1] = index.y;
   x[2] = index.z;
   uint width = spline_order + 1;
 
   // spline_order must be between 0 and 5.
-  if(spline_order == 3)
+  if( spline_order == 3 )
   {
-    for(unsigned int n = 0; n < 3; n++)
+    for( uint n = 0; n < 3; n++ )
     {
-      w = x[n] - (float)evaluate_index[get_array_offset(1, n, width)];
-      weights[get_array_offset(3, n, width)] = (1.0 / 6.0) * w * w * w;
-      weights[get_array_offset(0,n,width)] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[get_array_offset(3,n,width)];
-      weights[get_array_offset(2,n,width)] = w + weights[get_array_offset(0,n,width)] - 2.0 * weights[get_array_offset(3,n,width)];
-      weights[get_array_offset(1,n,width)] = 1.0 - weights[get_array_offset(0,n,width)] - weights[get_array_offset(2,n,width)] - weights[get_array_offset(3,n,width)];
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+      uint ao2 = get_array_offset( 2, n, width );
+      uint ao3 = get_array_offset( 3, n, width );
 
-      //w = x[n] - (float)evaluate_index[n][1];
-      //weights[n][3] = ( 1.0 / 6.0 ) * w * w * w;
-      //weights[n][0] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[n][3];
-      //weights[n][2] = w + weights[n][0] - 2.0 * weights[n][3];
-      //weights[n][1] = 1.0 - weights[n][0] - weights[n][2] - weights[n][3];
+      w = x[n] - (float)evaluate_index[ ao1 ];
+      weights[ ao3 ] = (1.0 / 6.0) * w * w * w;
+      weights[ ao0 ] = (1.0 / 6.0) + 0.5 * w * ( w - 1.0 ) - weights[ ao3 ];
+      weights[ ao2 ] = w + weights[ ao0 ] - 2.0 * weights[ ao3 ];
+      weights[ ao1 ] = 1.0 - weights[ ao0 ] - weights[ ao2 ] - weights[ ao3 ];
     }
-    return;
   }
-  else if(spline_order == 0)
+  else if( spline_order == 0 )
   {
-    return;
-  }
-  else if(spline_order == 1)
-  {
-    return;
-  }
-  else if(spline_order == 2)
-  {
-    return;
-  }
-  else if(spline_order == 4)
-  {
-    return;
-  }
-  else if(spline_order == 5)
-  {
-    return;
-  }
+    for( uint n = 0; n < 3; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
 
-  /*
-  switch ( spline_order )
-  {
-  case 3:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][1];
-        weights[n][3] = ( 1.0 / 6.0 ) * w * w * w;
-        weights[n][0] = ( 1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - weights[n][3];
-        weights[n][2] = w + weights[n][0] - 2.0 * weights[n][3];
-        weights[n][1] = 1.0 - weights[n][0] - weights[n][2] - weights[n][3];
-      }
-      break;
-    }
-  case 0:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        weights[n][0] = 1; // implements nearest neighbor
-      }
-      break;
-    }
-  case 1:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][0];
-        weights[n][1] = w;
-        weights[n][0] = 1.0 - w;
-      }
-      break;
-    }
-  case 2:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][1];
-        weights[n][1] = 0.75 - w * w;
-        weights[n][2] = 0.5 * ( w - weights[n][1] + 1.0 );
-        weights[n][0] = 1.0 - weights[n][1] - weights[n][2];
-      }
-      break;
-    }
-  case 4:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][2];
-        w2 = w * w;
-        t = ( 1.0 / 6.0 ) * w2;
-        weights[n][0] = 0.5 - w;
-        weights[n][0] *= weights[n][0];
-        weights[n][0] *= ( 1.0 / 24.0 ) * weights[n][0];
-        t0 = w * ( t - 11.0 / 24.0 );
-        t1 = 19.0 / 96.0 + w2 * ( 0.25 - t );
-        weights[n][1] = t1 + t0;
-        weights[n][3] = t1 - t0;
-        weights[n][4] = weights[n][0] + t0 + 0.5 * w;
-        weights[n][2] = 1.0 - weights[n][0] - weights[n][1] - weights[n][3] - weights[n][4];
-      }
-      break;
-    }
-  case 5:
-    {
-      for ( unsigned int n = 0; n < ImageDimension; n++ )
-      {
-        w = x[n] - (float)evaluate_index[n][2];
-        w2 = w * w;
-        weights[n][5] = ( 1.0 / 120.0 ) * w * w2 * w2;
-        w2 -= w;
-        w4 = w2 * w2;
-        w -= 0.5;
-        t = w2 * ( w2 - 3.0 );
-        weights[n][0] = ( 1.0 / 24.0 ) * ( 1.0 / 5.0 + w2 + w4 ) - weights[n][5];
-        t0 = ( 1.0 / 24.0 ) * ( w2 * ( w2 - 5.0 ) + 46.0 / 5.0 );
-        t1 = ( -1.0 / 12.0 ) * w * ( t + 4.0 );
-        weights[n][2] = t0 + t1;
-        weights[n][3] = t0 - t1;
-        t0 = ( 1.0 / 16.0 ) * ( 9.0 / 5.0 - t );
-        t1 = ( 1.0 / 24.0 ) * w * ( w4 - w2 - 5.0 );
-        weights[n][1] = t0 + t1;
-        weights[n][4] = t0 - t1;
-      }
-      break;
-    }
-  default:
-    {
-      // SplineOrder not implemented yet.
-      ExceptionObject err(__FILE__, __LINE__);
-      err.SetLocation(ITK_LOCATION);
-      err.SetDescription("SplineOrder must be between 0 and 5. Requested spline order has not been implemented yet.");
-      throw err;
-      break;
+      weights[ ao0 ] = 1;
     }
   }
-  */
+  else if( spline_order == 1 )
+  {
+    for( uint n = 0; n < 3; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+
+      w = x[n] - (float)evaluate_index[ ao0 ];
+      weights[ ao1 ] = w;
+      weights[ ao0 ] = 1.0 - w;
+    }
+  }
+  else if( spline_order == 2 )
+  {
+    for( uint n = 0; n < 3; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+      uint ao2 = get_array_offset( 2, n, width );
+
+      w = x[n] - (float)evaluate_index[ ao1 ];
+      weights[ ao1 ] = 0.75 - w * w;
+      weights[ ao2 ] = 0.5 * ( w - weights[ ao1 ] + 1.0 );
+      weights[ ao0 ] = 1.0 - weights[ ao1 ] - weights[ ao2 ];
+    }
+  }
+  else if( spline_order == 4 )
+  {
+    for( uint n = 0; n < 3; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+      uint ao2 = get_array_offset( 2, n, width );
+      uint ao3 = get_array_offset( 3, n, width );
+      uint ao4 = get_array_offset( 4, n, width );
+
+      w = x[n] - (float)evaluate_index[ ao2 ];
+      w2 = w * w;
+      t2 = ( 0.5 - w ); t2 *= t2; t2 *= t2;
+      weights[ ao0 ] = (1.0 / 24.0) * t2;
+      t = (1.0 / 6.0) * w2;
+      t0 = w * ( t - 11.0 / 24.0 );
+      t1 = 19.0 / 96.0 + w2 * ( 0.25 - t );
+      weights[ ao1 ] = t1 + t0;
+      weights[ ao3 ] = t1 - t0;
+      weights[ ao4 ] = weights[ ao0 ] + t0 + 0.5 * w;
+      weights[ ao2 ] = 1.0 - weights[ ao0 ] - weights[ ao1 ] - weights[ ao3 ] - weights[ ao4 ];
+    }
+  }
+  else if( spline_order == 5 )
+  {
+    for( uint n = 0; n < 3; n++ )
+    {
+      uint ao0 = get_array_offset( 0, n, width );
+      uint ao1 = get_array_offset( 1, n, width );
+      uint ao2 = get_array_offset( 2, n, width );
+      uint ao3 = get_array_offset( 3, n, width );
+      uint ao4 = get_array_offset( 4, n, width );
+      uint ao5 = get_array_offset( 5, n, width );
+
+      w = x[n] - (float)evaluate_index[ ao2 ];
+      w2 = w * w;
+      weights[ ao5 ] = ( 1.0 / 120.0 ) * w * w2 * w2;
+      w2 -= w;
+      w4 = w2 * w2;
+      w -= 0.5;
+      t = w2 * ( w2 - 3.0 );
+      weights[ ao0 ] = ( 1.0 / 24.0 ) * ( 1.0 / 5.0 + w2 + w4 ) - weights[ ao5 ];
+      t0 = ( 1.0 / 24.0 ) * ( w2 * ( w2 - 5.0 ) + 46.0 / 5.0 );
+      t1 = ( -1.0 / 12.0 ) * w * ( t + 4.0 );
+      weights[ ao2 ] = t0 + t1;
+      weights[ ao3 ] = t0 - t1;
+      t0 = ( 1.0 / 16.0 ) * ( 9.0 / 5.0 - t );
+      t1 = ( 1.0 / 24.0 ) * w * ( w4 - w2 - 5.0 );
+      weights[ ao1 ] = t0 + t1;
+      weights[ ao4 ] = t0 - t1;
+    }
+  }
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 #ifdef DIM_1
@@ -578,31 +446,28 @@ void apply_mirror_boundary_conditions_1d(long *evaluate_index,
   uint data_length = coefficients_image->size;
   uint width = spline_order + 1;
 
-  if(data_length == 1)
+  if( data_length == 1 )
   {
-    for(unsigned int k = 0; k <= spline_order; k++)
+    for( uint k = 0; k <= spline_order; k++ )
     {
-      evaluate_index[get_array_offset(k, 0, width)] = 0;
+      evaluate_index[ k ] = 0;
     }
   }
   else
   {
-    for(unsigned int k = 0; k <= spline_order; k++)
+    for( uint k = 0; k <= spline_order; k++ )
     {
-      if(evaluate_index[get_array_offset(k, 0, width)] < start_index)
+      if( evaluate_index[ k ] < start_index )
       {
-        evaluate_index[get_array_offset(k, 0, width)] =
-          start_index + (start_index - evaluate_index[get_array_offset(k, 0, width)]);
+        evaluate_index[ k ] = start_index + (start_index - evaluate_index[ k ]);
       }
-      if(evaluate_index[get_array_offset(k, 0, width)] >= end_index)
+      else if( evaluate_index[ k ] >= end_index )
       {
-        evaluate_index[get_array_offset(k, 0, width)] =
-          end_index - (evaluate_index[get_array_offset(k, 0, width)] - end_index);
+        evaluate_index[ k ] = end_index - (evaluate_index[ k ] - end_index);
       }
     }
   }
 }
-
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -613,7 +478,6 @@ void apply_mirror_boundary_conditions_2d(long *evaluate_index,
                                          const uint spline_order)
 {
   long start_index[2];
-
   start_index[0] = image_function->start_index.x;
   start_index[1] = image_function->start_index.y;
 
@@ -627,34 +491,32 @@ void apply_mirror_boundary_conditions_2d(long *evaluate_index,
 
   uint width = spline_order + 1;
 
-  for(unsigned int n = 0; n < 2; n++)
+  for( uint n = 0; n < 2; n++ )
   {
-    if(data_length[n] == 1)
+    if( data_length[n] == 1 )
     {
-      for(unsigned int k = 0; k <= spline_order; k++)
+      for( uint k = 0; k <= spline_order; k++ )
       {
-        evaluate_index[get_array_offset(k, n, width)] = 0;
+        evaluate_index[ get_array_offset(k, n, width) ] = 0;
       }
     }
     else
     {
-      for(unsigned int k = 0; k <= spline_order; k++)
+      for( uint k = 0; k <= spline_order; k++ )
       {
-        if(evaluate_index[get_array_offset(k, n, width)] < start_index[n])
+        uint ao = get_array_offset( k, n, width );
+        if( evaluate_index[ ao ] < start_index[ n ] )
         {
-          evaluate_index[get_array_offset(k, n, width)] =
-            start_index[n] + (start_index[n] - evaluate_index[get_array_offset(k, n, width)]);
+          evaluate_index[ ao ] = start_index[ n ] + (start_index[ n ] - evaluate_index[ ao ] );
         }
-        if(evaluate_index[get_array_offset(k, n, width)] >= end_index[n])
+        else if( evaluate_index[ ao ] >= end_index[ n ] )
         {
-          evaluate_index[get_array_offset(k, n, width)] =
-            end_index[n] - (evaluate_index[get_array_offset(k, n, width)] - end_index[n]);
+          evaluate_index[ ao ] = end_index[ n ] - (evaluate_index[ ao ] - end_index[ n ] );
         }
       }
     }
   }
 }
-
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -665,7 +527,6 @@ void apply_mirror_boundary_conditions_3d(long *evaluate_index,
                                          const uint spline_order)
 {
   long start_index[3];
-
   start_index[0] = image_function->start_index.x;
   start_index[1] = image_function->start_index.y;
   start_index[2] = image_function->start_index.z;
@@ -682,34 +543,33 @@ void apply_mirror_boundary_conditions_3d(long *evaluate_index,
 
   uint width = spline_order + 1;
 
-  for(unsigned int n = 0; n < 3; n++)
+  for( uint n = 0; n < 3; n++ )
   {
-    if(data_length[n] == 1)
+    // MS: is this check needed?
+    if( data_length[ n ] == 1 )
     {
-      for(unsigned int k = 0; k <= spline_order; k++)
+      for( uint k = 0; k <= spline_order; k++ )
       {
-        evaluate_index[get_array_offset(k, n, width)] = 0;
+        evaluate_index[ get_array_offset( k, n, width ) ] = 0;
       }
     }
     else
     {
-      for(unsigned int k = 0; k <= spline_order; k++)
+      for( uint k = 0; k <= spline_order; k++ )
       {
-        if(evaluate_index[get_array_offset(k, n, width)] < start_index[n])
+        uint ao = get_array_offset( k, n, width );
+        if( evaluate_index[ ao ] < start_index[ n ] )
         {
-          evaluate_index[get_array_offset(k, n, width)] =
-            start_index[n] + (start_index[n] - evaluate_index[get_array_offset(k, n, width)]);
+          evaluate_index[ ao ] = start_index[ n ] + (start_index[ n ] - evaluate_index[ ao ] );
         }
-        if(evaluate_index[get_array_offset(k, n, width)] >= end_index[n])
+        else if( evaluate_index[ ao ] >= end_index[ n ] )
         {
-          evaluate_index[get_array_offset(k, n, width)] =
-            end_index[n] - (evaluate_index[get_array_offset(k, n, width)] - end_index[n]);
+          evaluate_index[ ao ] = end_index[ n ] - (evaluate_index[ ao ] - end_index[ n ] );
         }
       }
     }
   }
 }
-
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
@@ -728,16 +588,16 @@ float bspline_evaluate_at_continuous_index_1d(const float index,
   ulong width = (ulong)(GPUBSplineOrder + 1);
 
   // compute the interpolation indexes
-  determine_region_of_support_1d(evaluate_index, index, GPUBSplineOrder);
+  determine_region_of_support_1d( evaluate_index, index, GPUBSplineOrder );
   // determine weights
-  set_interpolation_weights_1d(index, evaluate_index, weights, GPUBSplineOrder);
+  set_interpolation_weights_1d( index, evaluate_index, weights, GPUBSplineOrder );
   // modify evaluateIndex at the boundaries using mirror boundary conditions
-  apply_mirror_boundary_conditions_1d(evaluate_index, coefficients_image, image_function, GPUBSplineOrder);
+  apply_mirror_boundary_conditions_1d( evaluate_index, coefficients_image, image_function, GPUBSplineOrder );
 
   // define points_to_index
   ulong index_factor;
   uint  points_to_index[GPUMaxNumberInterpolationPoints];
-  for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
+  for( uint p = 0; p < GPUMaxNumberInterpolationPoints; p++ )
   {
     points_to_index[p] = p;
   }
@@ -747,7 +607,7 @@ float bspline_evaluate_at_continuous_index_1d(const float index,
   uint  coefficient_index;
 
   // Step through each point in the N-dimensional interpolation cube.
-  for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
+  for( uint p = 0; p < GPUMaxNumberInterpolationPoints; p++ )
   {
     float w = 1.0;
     uint  indx = points_to_index[p];
@@ -760,7 +620,6 @@ float bspline_evaluate_at_continuous_index_1d(const float index,
 
   return interpolated;
 }
-
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -779,16 +638,16 @@ float bspline_evaluate_at_continuous_index_2d(const float2 index,
   ulong width = (ulong)(GPUBSplineOrder + 1);
 
   // compute the interpolation indexes
-  determine_region_of_support_2d(evaluate_index, index, GPUBSplineOrder);
+  determine_region_of_support_2d( evaluate_index, index, GPUBSplineOrder );
   // determine weights
-  set_interpolation_weights_2d(index, evaluate_index, weights, GPUBSplineOrder);
+  set_interpolation_weights_2d( index, evaluate_index, weights, GPUBSplineOrder );
   // modify evaluateIndex at the boundaries using mirror boundary conditions
-  apply_mirror_boundary_conditions_2d(evaluate_index, coefficients_image, image_function, GPUBSplineOrder);
+  apply_mirror_boundary_conditions_2d( evaluate_index, coefficients_image, image_function, GPUBSplineOrder );
 
   // define points_to_index
   ulong2 index_factor;
   uint   points_to_index[GPUMaxNumberInterpolationPoints][2];
-  for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
+  for( uint p = 0; p < GPUMaxNumberInterpolationPoints; p++ )
   {
     int    pp = p;
     ulong2 index_factor = (ulong2)(1, width);
@@ -802,22 +661,21 @@ float bspline_evaluate_at_continuous_index_2d(const float2 index,
   uint  coefficient_index[2];
 
   // Step through each point in the N-dimensional interpolation cube.
-  for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
+  for( uint p = 0; p < GPUMaxNumberInterpolationPoints; p++ )
   {
     float w = 1.0;
-    for(unsigned int n = 0; n < 2; n++)
+    for( uint n = 0; n < 2; n++ )
     {
       uint indx = points_to_index[p][n];
       w *= weights[n][indx];
       coefficient_index[n] = evaluate_index[n][indx];
     }
-    uint gidx = mad24(coefficients_image->size.x, coefficient_index[1], coefficient_index[0]);
+    uint gidx = mad24( coefficients_image->size.x, coefficient_index[1], coefficient_index[0] );
     interpolated += w * (float)(coefficients[gidx]);
   }
 
   return interpolated;
 }
-
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -836,16 +694,16 @@ float bspline_evaluate_at_continuous_index_3d(const float3 index,
   ulong width = (ulong)(GPUBSplineOrder + 1);
 
   // compute the interpolation indexes
-  determine_region_of_support_3d(evaluate_index, index, GPUBSplineOrder);
+  determine_region_of_support_3d( evaluate_index, index, GPUBSplineOrder );
   // determine weights
-  set_interpolation_weights_3d(index, evaluate_index, weights, GPUBSplineOrder);
+  set_interpolation_weights_3d( index, evaluate_index, weights, GPUBSplineOrder );
   // modify evaluateIndex at the boundaries using mirror boundary conditions
-  apply_mirror_boundary_conditions_3d(evaluate_index, coefficients_image, image_function, GPUBSplineOrder);
+  apply_mirror_boundary_conditions_3d( evaluate_index, coefficients_image, image_function, GPUBSplineOrder );
 
   // define points_to_index
   ulong3 index_factor;
   uint   points_to_index[GPUMaxNumberInterpolationPoints][3];
-  for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
+  for( uint p = 0; p < GPUMaxNumberInterpolationPoints; p++ )
   {
     int    pp = p;
     ulong3 index_factor = (ulong3)(1, width, width * width);
@@ -862,23 +720,23 @@ float bspline_evaluate_at_continuous_index_3d(const float3 index,
   uint  coefficient_index[3];
 
   // Step through each point in the N-dimensional interpolation cube.
-  for(unsigned int p = 0; p < GPUMaxNumberInterpolationPoints; p++)
+  for( uint p = 0; p < GPUMaxNumberInterpolationPoints; p++ )
   {
     float w = 1.0;
-    for(unsigned int n = 0; n < 3; n++)
+    for( uint n = 0; n < 3; n++ )
     {
       uint indx = points_to_index[p][n];
       w *= weights[n][indx];
       coefficient_index[n] = evaluate_index[n][indx];
     }
-    uint gidx =
-      mad24(coefficients_image->size.x, mad24(coefficient_index[2],
-                                              coefficients_image->size.y,
-                                              coefficient_index[1]), coefficient_index[0]);
+    uint gidx
+      = mad24( coefficients_image->size.x,
+          mad24( coefficient_index[2], coefficients_image->size.y, coefficient_index[1] ),
+          coefficient_index[0] );
     interpolated += w * (float)(coefficients[gidx]);
   }
 
   return interpolated;
 }
-
 #endif // DIM_3
+
