@@ -115,7 +115,7 @@ void set_interpolation_weights_1d(const float index,
   // For speed improvements we could make each case a separate function and use
   // function pointers to reference the correct weight order.
   // Left as is for now for readability.
-  float w, w2, w4, t, t0, t1;
+  float w, w2, w4, t, t0, t1, t2;
 
   // create float x from float, makes it easy to use
   float x = index;
@@ -318,7 +318,7 @@ void set_interpolation_weights_3d(const float3 index,
   // For speed improvements we could make each case a separate function and use
   // function pointers to reference the correct weight order.
   // Left as is for now for readability.
-  float w, w2, w4, t, t0, t1;
+  float w, w2, w4, t, t0, t1, t2;
 
   // create float x[3] from float3, makes it easy to use in loops
   float x[3];
