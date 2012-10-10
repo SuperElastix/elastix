@@ -67,7 +67,12 @@ void set_weights( const float index, const long startindex,
     const float uu  = u * u;
     const float uuu = uu * u;
 
-    weights[ i + 0 ] = (  8.0f - 12.0f * u +  6.0f * uu - uuu ) / 6.0f;
+//    weights[ i     ] = ( mad( -12.0f, u,  8.0f ) + mad(  6.0f, uu, -uuu ) ) / 6.0f;
+//    weights[ i + 1 ] = ( mad(  21.0f, u, -5.0f ) - mad( 15.0f, uu, -3.0f * uuu ) ) / 6.0f;
+//    weights[ i + 2 ] = ( mad( -12.0f, u,  4.0f ) + mad( 12.0f, uu, -3.0f * uuu ) ) / 6.0f;
+//    weights[ i + 3 ] = ( mad(   3.0f, u, -1.0f ) - mad(  3.0f, uu, -uuu ) ) / 6.0f;
+
+    weights[ i     ] = (  8.0f - 12.0f * u +  6.0f * uu - uuu ) / 6.0f;
     weights[ i + 1 ] = ( -5.0f + 21.0f * u - 15.0f * uu + 3.0f * uuu ) / 6.0f;
     weights[ i + 2 ] = (  4.0f - 12.0f * u + 12.0f * uu - 3.0f * uuu ) / 6.0f;
     weights[ i + 3 ] = ( -1.0f +  3.0f * u -  3.0f * uu + uuu ) / 6.0f;
@@ -75,18 +80,18 @@ void set_weights( const float index, const long startindex,
   else if( GPUBSplineTransformOrder == 0 )
   {
     if ( u < 0.5f ) weights[ i + 0 ] = 1.0f;
-    else weights[ i + 0 ] = 0.5f;
+    else weights[ i ] = 0.5f;
   }
   else if( GPUBSplineTransformOrder == 1 )
   {
-    weights[ i + 0 ] = 1.0f - u;
+    weights[ i     ] = 1.0f - u;
     weights[ i + 1 ] = u - 1.0f;
   }
   else if( GPUBSplineTransformOrder == 2 )
   {
     const float uu = u * u;
 
-    weights[ i + 0 ] = ( 9.0f  - 12.0f * u + 4.0f * uu ) / 8.0f;
+    weights[ i     ] = ( 9.0f  - 12.0f * u + 4.0f * uu ) / 8.0f;
     weights[ i + 1 ] =  -0.25f +  2.0f * u - uu;
     weights[ i + 2 ] = ( 1.0f  -  4.0f * u + 4.0f * uu ) / 8.0f;
   }
@@ -165,8 +170,7 @@ long evaluate_1d( const float index, float *weights )
 
   for( uint k = 0; k < GPUBSplineTransformNumberOfWeights; k++ )
   {
-    weights[k] = 1.0;
-    weights[k] *= weights1D[ offset_to_index_table[k] ];
+    weights[k] = weights1D[ offset_to_index_table[k] ];
   }
 
   // return start index
@@ -205,8 +209,7 @@ long2 evaluate_2d( const float2 index, float *weights )
 
   for( uint k = 0; k < GPUBSplineTransformNumberOfWeights; k++ )
   {
-    weights[k] = 1.0;
-    weights[k] *= weights1D[0][offset_to_index_table[k][0]];
+    weights[k]  = weights1D[0][offset_to_index_table[k][0]];
     weights[k] *= weights1D[1][offset_to_index_table[k][1]];
   }
 
@@ -256,8 +259,7 @@ long3 evaluate_3d( const float3 index, float *weights )
 
   for( uint k = 0; k < GPUBSplineTransformNumberOfWeights; k++ )
   {
-    weights[k] = 1.0;
-    weights[k] *= weights1D[0][offset_to_index_table[k][0]];
+    weights[k]  = weights1D[0][offset_to_index_table[k][0]];
     weights[k] *= weights1D[1][offset_to_index_table[k][1]];
     weights[k] *= weights1D[2][offset_to_index_table[k][2]];
   }
@@ -293,14 +295,15 @@ float bspline_transform_point_1d(const float point,
 
   // multiply weight with coefficient
   ulong counter = 0;
+  float c, w;
   for( uint i = (uint)(support_index); i < support_region; i++ )
   {
     if( i < coefficients_image->size )
     {
       uint gidx = i;
-
-      float c = coefficients[gidx];
-      tpoint = mad( c, weights[counter], tpoint );
+      c = coefficients[gidx];
+      w = weights[ counter ];
+      tpoint = mad( c, w, tpoint );
 
       ++counter;
     }
@@ -341,6 +344,7 @@ float2 bspline_transform_point_2d(const float2 point,
 
   // multiply weight with coefficient
   ulong counter = 0;
+  float c0, c1, w;
   for( uint j = (uint)(support_index.y); j < support_region.y; j++ )
   {
     for( uint i = (uint)(support_index.x); i < support_region.x; i++ )
@@ -349,11 +353,12 @@ float2 bspline_transform_point_2d(const float2 point,
       {
         uint gidx = mad24( coefficients_image0->size.x, j, i );
 
-        float c0 = coefficients0[gidx];
-        float c1 = coefficients1[gidx];
+        c0 = coefficients0[gidx];
+        c1 = coefficients1[gidx];
+        w = weights[ counter ];
 
-        tpoint.x = mad( c0, weights[counter], tpoint.x );
-        tpoint.y = mad( c1, weights[counter], tpoint.y );
+        tpoint.x = mad( c0, w, tpoint.x );
+        tpoint.y = mad( c1, w, tpoint.y );
 
         ++counter;
       }
@@ -398,6 +403,7 @@ float3 bspline_transform_point_3d(const float3 point,
 
   // multiply weight with coefficient
   ulong counter = 0;
+  float c0, c1, c2, w;
   for( uint k = (uint)(support_index.z); k < support_region.z; k++ )
   {
     for( uint j = (uint)(support_index.y); j < support_region.y; j++ )
@@ -409,13 +415,14 @@ float3 bspline_transform_point_3d(const float3 point,
           uint gidx = mad24( coefficients_image0->size.x,
             mad24( k, coefficients_image0->size.y, j ), i );
 
-          float c0 = coefficients0[gidx];
-          float c1 = coefficients1[gidx];
-          float c2 = coefficients2[gidx];
+          c0 = coefficients0[gidx];
+          c1 = coefficients1[gidx];
+          c2 = coefficients2[gidx];
+          w = weights[ counter ];
 
-          tpoint.x = mad( c0, weights[counter], tpoint.x );
-          tpoint.y = mad( c1, weights[counter], tpoint.y );
-          tpoint.z = mad( c2, weights[counter], tpoint.z );
+          tpoint.x = mad( c0, w, tpoint.x );
+          tpoint.y = mad( c1, w, tpoint.y );
+          tpoint.z = mad( c2, w, tpoint.z );
 
           ++counter;
         }
