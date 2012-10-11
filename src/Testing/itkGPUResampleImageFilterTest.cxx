@@ -84,7 +84,7 @@ double ComputeRMSE( const ImageType *cpuImage, const ImageType *gpuImage )
 
   double rmse = 0.0;
 
-  for ( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
+  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
   {
     double err = static_cast< double >( cit.Get() ) - static_cast< double >( git.Get() );
     rmse += err * err;
@@ -102,13 +102,13 @@ void PrintTransform( typename TransformType::Pointer & transform )
   const CompositeTransformType *compositeTransform =
     dynamic_cast< const CompositeTransformType * >( transform.GetPointer() );
 
-  if ( compositeTransform )
+  if( compositeTransform )
   {
     std::cout << " [";
-    for ( std::size_t i = 0; i < compositeTransform->GetNumberOfTransforms(); i++ )
+    for( std::size_t i = 0; i < compositeTransform->GetNumberOfTransforms(); i++ )
     {
       std::cout << compositeTransform->GetNthTransform( i )->GetNameOfClass();
-      if ( i != compositeTransform->GetNumberOfTransforms() - 1 )
+      if( i != compositeTransform->GetNumberOfTransforms() - 1 )
       {
         std::cout << ", ";
       }
@@ -133,7 +133,7 @@ ComputeCenterOfTheImage( const typename InputImageType::ConstPointer & image )
 
   typedef itk::ContinuousIndex< double, InputImageType::ImageDimension > ContinuousIndexType;
   ContinuousIndexType centerAsContInd;
-  for ( std::size_t i = 0; i < Dimension; i++ )
+  for( std::size_t i = 0; i < Dimension; i++ )
   {
     centerAsContInd[i] =
       static_cast< double >( index[i] )
@@ -160,19 +160,19 @@ void DefineInterpolator( typename InterpolatorType::Pointer & interpolator,
   typedef itk::BSplineInterpolateImageFunction<
       InputImageType, ScalarType, CoordRepType > BSplineInterpolatorType;
 
-  if ( interpolatorName == "NearestNeighbor" )
+  if( interpolatorName == "NearestNeighbor" )
   {
     typename NearestNeighborInterpolatorType::Pointer tmpInterpolator =
       NearestNeighborInterpolatorType::New();
     interpolator = tmpInterpolator;
   }
-  else if ( interpolatorName == "Linear" )
+  else if( interpolatorName == "Linear" )
   {
     typename LinearInterpolatorType::Pointer tmpInterpolator =
       LinearInterpolatorType::New();
     interpolator = tmpInterpolator;
   }
-  else if ( interpolatorName == "BSpline" )
+  else if( interpolatorName == "BSpline" )
   {
     typename BSplineInterpolatorType::Pointer tmpInterpolator =
       BSplineInterpolatorType::New();
@@ -190,7 +190,7 @@ void DefineAffineParameters( typename AffineTransformType::ParametersType & para
   // Setup parameters
   parameters.SetSize( Dimension * Dimension + Dimension );
   unsigned int par = 0;
-  if ( Dimension == 2 )
+  if( Dimension == 2 )
   {
     const double matrix[] =
     {
@@ -199,12 +199,12 @@ void DefineAffineParameters( typename AffineTransformType::ParametersType & para
       0.0, 0.0, // translation
     };
 
-    for ( std::size_t i = 0; i < 6; i++ )
+    for( std::size_t i = 0; i < 6; i++ )
     {
       parameters[par++] = matrix[i];
     }
   }
-  else if ( Dimension == 3 )
+  else if( Dimension == 3 )
   {
     const double matrix[] =
     {
@@ -214,7 +214,7 @@ void DefineAffineParameters( typename AffineTransformType::ParametersType & para
       -3.02, 1.3, -0.045   // translation
     };
 
-    for ( std::size_t i = 0; i < 12; i++ )
+    for( std::size_t i = 0; i < 12; i++ )
     {
       parameters[par++] = matrix[i];
     }
@@ -230,7 +230,7 @@ void DefineTranslationParameters( const std::size_t transformIndex,
 
   // Setup parameters
   parameters.SetSize( Dimension );
-  for ( std::size_t i = 0; i < Dimension; i++ )
+  for( std::size_t i = 0; i < Dimension; i++ )
   {
     parameters[i] = (double)i * (double)transformIndex + (double)transformIndex;
   }
@@ -254,14 +254,14 @@ void DefineBSplineParameters( const std::size_t transformIndex,
   infile.open( parametersFileName.c_str() );
 
   // Skip number of elements to make unique coefficients per each transformIndex
-  for ( std::size_t n = 0; n < transformIndex; n++ )
+  for( std::size_t n = 0; n < transformIndex; n++ )
   {
     double parValue;
     infile >> parValue;
   }
 
   // Read it
-  for ( std::size_t n = 0; n < numberOfNodes * Dimension; n++ )
+  for( std::size_t n = 0; n < numberOfNodes * Dimension; n++ )
   {
     double parValue;
     infile >> parValue;
@@ -287,23 +287,23 @@ void DefineEulerParameters( const std::size_t transformIndex,
   const double angle = (double)transformIndex * -0.05;
 
   std::size_t par = 0;
-  if ( Dimension == 2 )
+  if( Dimension == 2 )
   {
     // See implementation of Rigid2DTransform::SetParameters()
     parameters[0] = angle;
     ++par;
   }
-  else if ( Dimension == 3 )
+  else if( Dimension == 3 )
   {
     // See implementation of Rigid3DTransform::SetParameters()
-    for ( std::size_t i = 0; i < 3; i++ )
+    for( std::size_t i = 0; i < 3; i++ )
     {
       parameters[par] = angle;
       ++par;
     }
   }
 
-  for ( std::size_t i = 0; i < Dimension; i++ )
+  for( std::size_t i = 0; i < Dimension; i++ )
   {
     parameters[i + par] = (double)i * (double)transformIndex + (double)transformIndex;
   }
@@ -325,16 +325,16 @@ void DefineSimilarityParameters( const std::size_t transformIndex,
   const double scale = (double)transformIndex * 0.05 + 1.0;
   const double angle = (double)transformIndex * -0.05;
 
-  if ( Dimension == 2 )
+  if( Dimension == 2 )
   {
     // See implementation of Similarity2DTransform::SetParameters()
     parameters[0] = scale;
     parameters[1] = angle;
   }
-  else if ( Dimension == 3 )
+  else if( Dimension == 3 )
   {
     // See implementation of Similarity3DTransform::SetParameters()
-    for ( std::size_t i = 0; i < Dimension; i++ )
+    for( std::size_t i = 0; i < Dimension; i++ )
     {
       parameters[i] = angle;
     }
@@ -342,7 +342,7 @@ void DefineSimilarityParameters( const std::size_t transformIndex,
   }
 
   // Translation
-  for ( std::size_t i = 0; i < Dimension - 1; i++ )
+  for( std::size_t i = 0; i < Dimension - 1; i++ )
   {
     parameters[i + Dimension] = -1.0 * ( (double)i * (double)transformIndex + (double)transformIndex );
   }
@@ -373,9 +373,9 @@ void SetTransform( const std::size_t transformIndex,
                    std::vector< typename BSplineTransformType::ParametersType > & bsplineParameters,
                    const std::string & parametersFileName )
 {
-  if ( transformName == "Affine" )
+  if( transformName == "Affine" )
   {
-    if ( advancedTransform.IsNull() )
+    if( advancedTransform.IsNull() )
     {
       // Create Affine transform
       typename AffineTransformType::Pointer affineTransform =
@@ -401,9 +401,9 @@ void SetTransform( const std::size_t transformIndex,
       affineTransform->SetParameters( parameters );
     }
   }
-  else if ( transformName == "Translation" )
+  else if( transformName == "Translation" )
   {
-    if ( advancedTransform.IsNull() )
+    if( advancedTransform.IsNull() )
     {
       // Create Translation transform
       typename TranslationTransformType::Pointer translationTransform =
@@ -431,7 +431,7 @@ void SetTransform( const std::size_t transformIndex,
       translationTransform->SetParameters( parameters );
     }
   }
-  else if ( transformName == "BSpline" )
+  else if( transformName == "BSpline" )
   {
     const unsigned int Dimension = image->GetImageDimension();
     const typename InputImageType::SpacingType inputSpacing   = image->GetSpacing();
@@ -446,12 +446,12 @@ void SetTransform( const std::size_t transformIndex,
 
     typedef typename BSplineTransformType::PhysicalDimensionsType PhysicalDimensionsType;
     PhysicalDimensionsType gridSpacing;
-    for ( unsigned int d = 0; d < Dimension; d++ )
+    for( unsigned int d = 0; d < Dimension; d++ )
     {
       gridSpacing[d] = inputSpacing[d] * ( inputSize[d] - 1.0 );
     }
 
-    if ( advancedTransform.IsNull() )
+    if( advancedTransform.IsNull() )
     {
       // Create BSpline transform
       typename BSplineTransformType::Pointer bsplineTransform =
@@ -505,13 +505,13 @@ void SetTransform( const std::size_t transformIndex,
       bsplineTransform->SetParameters( bsplineParameters[indexAt] );
     }
   }
-  else if ( transformName == "Euler" )
+  else if( transformName == "Euler" )
   {
     // Compute center
     const typename InputImageType::PointType center =
       ComputeCenterOfTheImage< InputImageType >( image );
 
-    if ( advancedTransform.IsNull() )
+    if( advancedTransform.IsNull() )
     {
       // Create Euler transform
       typename EulerTransformType::Pointer eulerTransform =
@@ -545,13 +545,13 @@ void SetTransform( const std::size_t transformIndex,
       eulerTransform->SetParameters( parameters );
     }
   }
-  else if ( transformName == "Similarity" )
+  else if( transformName == "Similarity" )
   {
     // Compute center
     const typename InputImageType::PointType center =
       ComputeCenterOfTheImage< InputImageType >( image );
 
-    if ( advancedTransform.IsNull() )
+    if( advancedTransform.IsNull() )
     {
       // Create Similarity transform
       typename SimilarityTransformType::Pointer similarityTransform =
@@ -603,7 +603,7 @@ void CopyTransform( const typename TransformType::Pointer & transformFrom,
   typename AffineTransformType::Pointer affine =
     dynamic_cast< AffineTransformType * >( transformFrom.GetPointer() );
 
-  if ( affine )
+  if( affine )
   {
     // Create Affine transform
     typename AffineTransformType::Pointer affineTransform =
@@ -620,7 +620,7 @@ void CopyTransform( const typename TransformType::Pointer & transformFrom,
   typename TranslationTransformType::Pointer translation =
     dynamic_cast< TranslationTransformType * >( transformFrom.GetPointer() );
 
-  if ( translation )
+  if( translation )
   {
     // Create Translation transform
     typename TranslationTransformType::Pointer translationTransform =
@@ -637,7 +637,7 @@ void CopyTransform( const typename TransformType::Pointer & transformFrom,
   typename BSplineTransformType::Pointer bspline =
     dynamic_cast< BSplineTransformType * >( transformFrom.GetPointer() );
 
-  if ( bspline )
+  if( bspline )
   {
     // Create BSpline transform
     typename BSplineTransformType::Pointer bsplineTransform =
@@ -670,7 +670,7 @@ void CopyTransform( const typename TransformType::Pointer & transformFrom,
   typename EulerTransformType::Pointer euler =
     dynamic_cast< EulerTransformType * >( transformFrom.GetPointer() );
 
-  if ( euler )
+  if( euler )
   {
     // Create Euler transform
     typename EulerTransformType::Pointer eulerTransform =
@@ -687,7 +687,7 @@ void CopyTransform( const typename TransformType::Pointer & transformFrom,
   typename SimilarityTransformType::Pointer similarity =
     dynamic_cast< SimilarityTransformType * >( transformFrom.GetPointer() );
 
-  if ( similarity )
+  if( similarity )
   {
     // Create Similarity transform
     typename SimilarityTransformType::Pointer similarityTransform =
@@ -712,12 +712,12 @@ void CopyTransform(
   typename AdvancedCombinationTransformType::Pointer & advancedTransform,
   typename AdvancedCombinationTransformType::CurrentTransformPointer & current )
 {
-  if ( current.IsNotNull() )
+  if( current.IsNotNull() )
   {
     AdvancedAffineTransformType *affine =
       dynamic_cast< AdvancedAffineTransformType * >( current.GetPointer() );
 
-    if ( affine )
+    if( affine )
     {
       typename AdvancedAffineTransformType::Pointer affineTransform =
         AdvancedAffineTransformType::New();
@@ -729,7 +729,7 @@ void CopyTransform(
       AdvancedBSplineTransformType *bspline =
         dynamic_cast< AdvancedBSplineTransformType * >( current.GetPointer() );
 
-      if ( bspline )
+      if( bspline )
       {
         typename AdvancedBSplineTransformType::Pointer bsplineTransform =
           AdvancedBSplineTransformType::New();
@@ -775,7 +775,7 @@ void CopyTransform(
 int main( int argc, char *argv[] )
 {
   // Check for GPU
-  if ( !itk::IsGPUAvailable() )
+  if( !itk::IsGPUAvailable() )
   {
     std::cerr << "ERROR: OpenCL-enabled GPU is not present." << std::endl;
     return EXIT_FAILURE;
@@ -792,11 +792,11 @@ int main( int argc, char *argv[] )
 
   itk::CommandLineArgumentParser::ReturnValue validateArguments = parser->CheckForRequiredArguments();
 
-  if ( validateArguments == itk::CommandLineArgumentParser::FAILED )
+  if( validateArguments == itk::CommandLineArgumentParser::FAILED )
   {
     return EXIT_FAILURE;
   }
-  else if ( validateArguments == itk::CommandLineArgumentParser::HELPREQUESTED )
+  else if( validateArguments == itk::CommandLineArgumentParser::HELPREQUESTED )
   {
     return EXIT_SUCCESS;
   }
@@ -816,7 +816,7 @@ int main( int argc, char *argv[] )
   std::string interpolator = "NearestNeighbor";
   parser->GetCommandLineArgument( "-i", interpolator );
 
-  if ( interpolator != "NearestNeighbor"
+  if( interpolator != "NearestNeighbor"
        && interpolator != "Linear"
        && interpolator != "BSpline" )
   {
@@ -831,17 +831,17 @@ int main( int argc, char *argv[] )
   parser->GetCommandLineArgument( "-t", transforms );
 
   // check that use combo transform provided when used multiple transforms
-  if ( transforms.size() > 1 && !useComboTransform )
+  if( transforms.size() > 1 && !useComboTransform )
   {
     std::cerr << "ERROR: for multiple transforms option \"-c\" should provided." << std::endl;
     return EXIT_FAILURE;
   }
 
   // check for supported transforms
-  for ( std::size_t i = 0; i < transforms.size(); i++ )
+  for( std::size_t i = 0; i < transforms.size(); i++ )
   {
     const std::string transformName = transforms[i];
-    if ( transformName != "Affine"
+    if( transformName != "Affine"
          && transformName != "Translation"
          && transformName != "BSpline"
          && transformName != "Euler"
@@ -856,12 +856,12 @@ int main( int argc, char *argv[] )
 
   unsigned int runTimes = 1;
   std::string  parametersFileName = "";
-  for ( std::size_t i = 0; i < transforms.size(); i++ )
+  for( std::size_t i = 0; i < transforms.size(); i++ )
   {
-    if ( transforms[i] == "BSpline" )
+    if( transforms[i] == "BSpline" )
     {
       const bool retp = parser->GetCommandLineArgument( "-p", parametersFileName );
-      if ( !retp )
+      if( !retp )
       {
         std::cerr << "ERROR: You should specify parameters file \"-p\" for the B-spline transform." << std::endl;
         return EXIT_FAILURE;
@@ -947,7 +947,7 @@ int main( int argc, char *argv[] )
   {
     cpuReader->Update();
   }
-  catch ( itk::ExceptionObject & e )
+  catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: Caught ITK exception during cpuReader->Update(): " << e << std::endl;
     return EXIT_FAILURE;
@@ -970,15 +970,15 @@ int main( int argc, char *argv[] )
   OutputImageType::PointType     outputOrigin;
   OutputImageType::DirectionType outputDirection;
   OutputImageType::SizeType      outputSize;
-  for ( std::size_t i = 0; i < Dimension; i++ )
+  for( std::size_t i = 0; i < Dimension; i++ )
   {
     double tmp = randomNum->GetUniformVariate( 0.9, 1.1 );
     outputSpacing[i] = inputSpacing[i] * tmp;
 
-    tmp = randomNum->GetUniformVariate( 0.9, 1.1 );
-    outputOrigin[i] = inputOrigin[i] * tmp;
+    tmp = randomNum->GetUniformVariate( -10.0, 10.0 );
+    outputOrigin[i] = inputOrigin[i] + tmp;
 
-    for ( unsigned int j = 0; j < Dimension; j++ )
+    for( unsigned int j = 0; j < Dimension; j++ )
     {
       //tmp = randomNum->GetUniformVariate( 0.9 * inputOrigin[ i ], 1.1 *
       // inputOrigin[ i ] );
@@ -997,7 +997,7 @@ int main( int argc, char *argv[] )
   cpuFilter->SetOutputStartIndex( inputRegion.GetIndex() );
 
   // Construct, select and setup transform
-  if ( !useComboTransform )
+  if( !useComboTransform )
   {
     AdvancedCombinationTransformType::Pointer dummy;
     SetTransform<
@@ -1019,9 +1019,9 @@ int main( int argc, char *argv[] )
     initialTransform = tmpTransform;
     cpuTransform = tmpTransform;
 
-    for ( std::size_t i = 0; i < transforms.size(); i++ )
+    for( std::size_t i = 0; i < transforms.size(); i++ )
     {
-      if ( i == 0 )
+      if( i == 0 )
       {
         SetTransform<
           // ITK Transforms
@@ -1066,7 +1066,7 @@ int main( int argc, char *argv[] )
   itk::TimeProbe cputimer;
   cputimer.Start();
 
-  for ( std::size_t i = 0; i < runTimes; i++ )
+  for( std::size_t i = 0; i < runTimes; i++ )
   {
     cpuFilter->SetInput( cpuReader->GetOutput() );
     cpuFilter->SetTransform( cpuTransform );
@@ -1075,14 +1075,14 @@ int main( int argc, char *argv[] )
     {
       cpuFilter->Update();
     }
-    catch ( itk::ExceptionObject & e )
+    catch( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: Caught ITK exception during cpuFilter->Update(): " << e << std::endl;
       return EXIT_FAILURE;
     }
 
     // Modify the filter, only not the last iteration
-    if ( i != runTimes - 1 )
+    if( i != runTimes - 1 )
     {
       cpuFilter->Modified();
     }
@@ -1102,7 +1102,7 @@ int main( int argc, char *argv[] )
   {
     cpuWriter->Update();
   }
-  catch ( itk::ExceptionObject & e )
+  catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: Caught ITK exception during cpuWriter->Update(): " << e << std::endl;
     return EXIT_FAILURE;
@@ -1145,7 +1145,7 @@ int main( int argc, char *argv[] )
   {
     gpuFilter = FilterType::New();
   }
-  catch ( itk::ExceptionObject & e )
+  catch( itk::ExceptionObject & e )
   {
     std::cerr << "Caught ITK exception during gpuFilter::New(): " << e << std::endl;
     return EXIT_FAILURE;
@@ -1168,13 +1168,13 @@ int main( int argc, char *argv[] )
   {
     gpuReader->Update(); // needed?
   }
-  catch ( itk::ExceptionObject & e )
+  catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: Caught ITK exception during cpuReader->Update(): " << e << std::endl;
     return EXIT_FAILURE;
   }
 
-  if ( !useComboTransform )
+  if( !useComboTransform )
   {
     CopyTransform< TransformType, AffineTransformType, TranslationTransformType,
                    BSplineTransformType, EulerTransformType, SimilarityTransformType >
@@ -1185,7 +1185,7 @@ int main( int argc, char *argv[] )
     // Get CPU AdvancedCombinationTransform
     AdvancedCombinationTransformType *CPUAdvancedCombinationTransform =
       dynamic_cast< AdvancedCombinationTransformType * >( cpuTransform.GetPointer() );
-    if ( CPUAdvancedCombinationTransform )
+    if( CPUAdvancedCombinationTransform )
     {
       AdvancedTransformType::Pointer            currentTransform;
       AdvancedCombinationTransformType::Pointer initialTransform;
@@ -1194,9 +1194,9 @@ int main( int argc, char *argv[] )
       initialTransform = tmpTransform;
       gpuTransform = tmpTransform;
 
-      for ( std::size_t i = 0; i < transforms.size(); i++ )
+      for( std::size_t i = 0; i < transforms.size(); i++ )
       {
-        if ( i == 0 )
+        if( i == 0 )
         {
           AdvancedCombinationTransformType::CurrentTransformPointer currentTransformCPU =
             CPUAdvancedCombinationTransform->GetCurrentTransform();
@@ -1246,7 +1246,7 @@ int main( int argc, char *argv[] )
   // Time the filter, run on the GPU
   itk::TimeProbe gputimer;
   gputimer.Start();
-  for ( std::size_t i = 0; i < runTimes; i++ )
+  for( std::size_t i = 0; i < runTimes; i++ )
   {
     try
     {
@@ -1254,7 +1254,7 @@ int main( int argc, char *argv[] )
       gpuFilter->SetTransform( gpuTransform );
       gpuFilter->SetInterpolator( gpuInterpolator );
     }
-    catch ( itk::ExceptionObject & e )
+    catch( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: " << e << std::endl;
       return EXIT_FAILURE;
@@ -1264,7 +1264,7 @@ int main( int argc, char *argv[] )
     {
       gpuFilter->Update();
     }
-    catch ( itk::ExceptionObject & e )
+    catch( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: " << e << std::endl;
       return EXIT_FAILURE;
@@ -1277,7 +1277,7 @@ int main( int argc, char *argv[] )
     // crashes!
 
     // Modify the filter, only not the last iteration
-    if ( i != runTimes - 1 )
+    if( i != runTimes - 1 )
     {
       gpuFilter->Modified();
     }
@@ -1299,7 +1299,7 @@ int main( int argc, char *argv[] )
   {
     gpuWriter->Update();
   }
-  catch ( itk::ExceptionObject & e )
+  catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: " << e << std::endl;
     return EXIT_FAILURE;
@@ -1310,9 +1310,11 @@ int main( int argc, char *argv[] )
   std::cout << " " << rmse << std::endl;
 
   // Check
-  if ( rmse > rmseError )
+  if( rmse > rmseError )
   {
-    std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
+    std::cerr << "ERROR: the RMSE between the CPU and GPU results is "
+      << rmse << ", which is larger than the expected "
+      << rmseError << std::endl;
     return EXIT_FAILURE;
   }
 
