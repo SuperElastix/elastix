@@ -22,11 +22,6 @@
 #include <omp.h>
 #endif
 
-//#ifdef ELASTIX_USE_EIGEN
-//#include <Eigen/Dense>
-//#include <Eigen/Core>
-//#endif
-
 
 namespace itk
 {
@@ -663,7 +658,6 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
         fixedImageValue, movingImageValue,
         imageJacobian, nzji,
         measure, derivative );
-        //this->m_ThreaderDerivatives[ threadID ] );
 
     } // end if sampleOk
 
