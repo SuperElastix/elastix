@@ -39,8 +39,9 @@ typedef struct {
 
 //------------------------------------------------------------------------------
 #ifdef DIM_1
-bool interpolator_is_inside_buffer_1d(const float index,
-                                      __constant GPUImageFunction1D *image_function)
+bool interpolator_is_inside_buffer_1d(
+  const float index,
+  __constant GPUImageFunction1D *image_function )
 {
   if( !(index >= image_function->start_continuous_index
         && index < image_function->end_continuous_index) )
@@ -55,8 +56,9 @@ bool interpolator_is_inside_buffer_1d(const float index,
 
 //------------------------------------------------------------------------------
 #ifdef DIM_2
-bool interpolator_is_inside_buffer_2d(const float2 index,
-                                      __constant GPUImageFunction2D *image_function)
+bool interpolator_is_inside_buffer_2d(
+  const float2 index,
+  __constant GPUImageFunction2D *image_function )
 {
   if( !(index.x >= image_function->start_continuous_index.x
         && index.x < image_function->end_continuous_index.x) )
@@ -76,8 +78,9 @@ bool interpolator_is_inside_buffer_2d(const float2 index,
 
 //------------------------------------------------------------------------------
 #ifdef DIM_3
-bool interpolator_is_inside_buffer_3d(const float3 index,
-                                      __constant GPUImageFunction3D *image_function)
+bool interpolator_is_inside_buffer_3d(
+  const float3 index,
+  __constant GPUImageFunction3D *image_function )
 {
   if( !(index.x >= image_function->start_continuous_index.x
         && index.x < image_function->end_continuous_index.x) )
@@ -103,30 +106,36 @@ bool interpolator_is_inside_buffer_3d(const float3 index,
 //------------------------------------------------------------------------------
 // OpenCL 1D implementation of
 // itkImageFunction::ConvertContinuousIndexToNearestIndex()
-uint convert_continuous_index_to_nearest_index_1d(const float cindex)
+#ifdef DIM_1
+uint convert_continuous_index_to_nearest_index_1d( const float cindex )
 {
-  return round(cindex);
+  return round( cindex );
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
 // OpenCL 2D implementation of
 // itkImageFunction::ConvertContinuousIndexToNearestIndex()
-uint2 convert_continuous_index_to_nearest_index_2d(const float2 cindex)
+#ifdef DIM_2
+uint2 convert_continuous_index_to_nearest_index_2d( const float2 cindex )
 {
   uint2 index;
-  index.x = round(cindex.x);
-  index.y = round(cindex.y);
+  index.x = round( cindex.x );
+  index.y = round( cindex.y );
   return index;
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
 // OpenCL 3D implementation of
 // itkImageFunction::ConvertContinuousIndexToNearestIndex()
-uint3 convert_continuous_index_to_nearest_index_3d(const float3 cindex)
+#ifdef DIM_3
+uint3 convert_continuous_index_to_nearest_index_3d( const float3 cindex )
 {
   uint3 index;
-  index.x = round(cindex.x);
-  index.y = round(cindex.y);
-  index.z = round(cindex.z);
+  index.x = round( cindex.x );
+  index.y = round( cindex.y );
+  index.z = round( cindex.z );
   return index;
 }
+#endif // DIM_3
