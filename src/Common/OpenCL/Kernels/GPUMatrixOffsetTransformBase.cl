@@ -14,6 +14,8 @@
 
 // OpenCL implementation of itk::MatrixOffsetTransformBase
 
+#define _ELASTIX_USE_OPENCL_MAD 0
+
 // Definition of GPUMatrixOffsetTransformBase 1D/2D/3D
 #ifdef DIM_1
 typedef struct {
@@ -41,26 +43,38 @@ typedef struct {
 
 //------------------------------------------------------------------------------
 #ifdef DIM_1
-float matrix_offset_transform_point_1d(const float point,
-                                       __constant GPUMatrixOffsetTransformBase1D *transform_base)
+float matrix_offset_transform_point_1d(
+  const float point,
+  __constant GPUMatrixOffsetTransformBase1D *transform_base )
 {
   float tpoint;
 
+#if _ELASTIX_USE_OPENCL_MAD
+  tpoint = mad( transform_base->matrix, point, transform_base->offset );
+#else
   tpoint =  transform_base->matrix * point;
   tpoint += transform_base->offset;
+#endif
 
   return tpoint;
 }
-
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
 #ifdef DIM_2
-float2 matrix_offset_transform_point_2d(const float2 point,
-                                        __constant GPUMatrixOffsetTransformBase2D *transform_base)
+float2 matrix_offset_transform_point_2d(
+  const float2 point,
+  __constant GPUMatrixOffsetTransformBase2D *transform_base )
 {
   float2 tpoint;
 
+#if _ELASTIX_USE_OPENCL_MAD
+  tpoint.x = mad( transform_base->matrix.s0, point.x,
+    mad( transform_base->matrix.s1, point.y, transform_base->offset.x );
+
+  tpoint.y = mad( transform_base->matrix.s2, point.x,
+    mad( transform_base->matrix.s3, point.y, transform_base->offset.y );
+#else
   tpoint.x =  transform_base->matrix.s0 * point.x;
   tpoint.x += transform_base->matrix.s1 * point.y;
 
@@ -68,19 +82,32 @@ float2 matrix_offset_transform_point_2d(const float2 point,
   tpoint.y += transform_base->matrix.s3 * point.y;
 
   tpoint += transform_base->offset;
+#endif
 
   return tpoint;
 }
-
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
 #ifdef DIM_3
-float3 matrix_offset_transform_point_3d(const float3 point,
-                                        __constant GPUMatrixOffsetTransformBase3D *transform_base)
+float3 matrix_offset_transform_point_3d(
+  const float3 point,
+  __constant GPUMatrixOffsetTransformBase3D *transform_base )
 {
   float3 tpoint;
+#if _ELASTIX_USE_OPENCL_MAD
+  tpoint.x = mad( transform_base->matrix.s0, point.x,
+    mad( transform_base->matrix.s1, point.y,
+    mad( transform_base->matrix.s2, point.z, transform_base->offset.x ) ) );
 
+  tpoint.y = mad( transform_base->matrix.s3, point.x,
+    mad( transform_base->matrix.s4, point.y,
+    mad( transform_base->matrix.s5, point.z, transform_base->offset.y ) ) );
+
+  tpoint.z = mad( transform_base->matrix.s6, point.x,
+    mad( transform_base->matrix.s7, point.y,
+    mad( transform_base->matrix.s8, point.z, transform_base->offset.z ) ) );
+#else
   tpoint.x =  transform_base->matrix.s0 * point.x;
   tpoint.x += transform_base->matrix.s1 * point.y;
   tpoint.x += transform_base->matrix.s2 * point.z;
@@ -94,8 +121,9 @@ float3 matrix_offset_transform_point_3d(const float3 point,
   tpoint.z += transform_base->matrix.s8 * point.z;
 
   tpoint += transform_base->offset.xyz;
+#endif
 
   return tpoint;
 }
-
 #endif // DIM_3
+
