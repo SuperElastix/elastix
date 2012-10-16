@@ -128,6 +128,8 @@ void AffineStackTransform<TElastix>::InitializeTransform()
 
   bool centerGivenAsIndex = true;
   bool centerGivenAsPoint = true;
+	SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
+		GetFixedImage()->GetLargestPossibleRegion().GetSize();
   for ( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
     /** Initialize. */
@@ -151,15 +153,36 @@ void AffineStackTransform<TElastix>::InitializeTransform()
     }
   } // end loop over SpaceDimension
 
-  
-  /** Set the translation to zero */ 
+	/** Check if user wants automatic transform initialization; false by default.
+   * If an initial transform is given, automatic transform initialization is
+   * not possible.
+   */
+  bool automaticTransformInitialization = false;
+  bool tmpBool = false;
+  this->m_Configuration->ReadParameter( tmpBool,
+    "AutomaticTransformInitialization", 0 );
+  if ( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
+  {
+    automaticTransformInitialization = true;
+  }
 
+  /* Set the center of the image to the default center if no center was given */
+  bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
+  if ( !centerGiven  )
+  {
+		for(unsigned int k = 0; k < centerOfRotationPoint.Size(); k++)
+		{
+			centerOfRotationPoint[ k ] = (fixedImageSize[ k ]-1.0f)/2.0f;
+		}
+  }
+
+	/** Set the center of rotation if it was not entered by the user. */
+	this->m_AffineDummySubTransform->SetCenter( centerOfRotationPoint );
+
+  /** Set the translation to zero */ 
   ReducedDimensionOutputVectorType noTranslation;
   noTranslation.Fill(0.0);
   this->m_AffineDummySubTransform->SetTranslation( noTranslation );
-
-  /** Set the center of rotation if it was entered by the user. */
-  this->m_AffineDummySubTransform->SetCenter( centerOfRotationPoint );
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
   this->m_AffineStackTransform->SetAllSubTransforms( this->m_AffineDummySubTransform );
@@ -192,7 +215,7 @@ void AffineStackTransform<TElastix>
       "StackSpacing", this->GetComponentLabel(), 0, 0 );
 
   ReducedDimensionInputPointType centerOfRotationPoint;
-  centerOfRotationPoint.Fill( 0.0 );
+  //centerOfRotationPoint.Fill( 0.0 );
   bool pointRead = false;
   bool indexRead = false;
 
@@ -216,6 +239,7 @@ void AffineStackTransform<TElastix>
     xl::xout["error"] << "ERROR: No center of rotation is specified in the "
       << "transform parameter file" << std::endl;
     itkExceptionMacro( << "Transform parameter file is corrupt.")
+			std::cout << "transform parameterfile was corrupt, no cor was set" << std::endl;
   }
 
   this->InitializeAffineTransform();
@@ -232,7 +256,7 @@ void AffineStackTransform<TElastix>
   this->m_AffineStackTransform->SetAllSubTransforms( this->m_AffineDummySubTransform );
 
   /** Call the ReadFromFile from the TransformBase. */
-  this->Superclass2::ReadFromFile();
+	this->Superclass2::ReadFromFile();
 
 } // end ReadFromFile()
 
