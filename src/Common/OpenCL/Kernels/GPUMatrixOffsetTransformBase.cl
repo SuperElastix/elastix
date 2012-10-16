@@ -14,7 +14,7 @@
 
 // OpenCL implementation of itk::MatrixOffsetTransformBase
 
-#define _ELASTIX_USE_OPENCL_MAD 0
+#define _ELASTIX_USE_OPENCL_OPTIMIZATIONS 1
 
 // Definition of GPUMatrixOffsetTransformBase 1D/2D/3D
 #ifdef DIM_1
@@ -49,7 +49,7 @@ float matrix_offset_transform_point_1d(
 {
   float tpoint;
 
-#if _ELASTIX_USE_OPENCL_MAD
+#if _ELASTIX_USE_OPENCL_OPTIMIZATIONS
   tpoint = mad( transform_base->matrix, point, transform_base->offset );
 #else
   tpoint =  transform_base->matrix * point;
@@ -66,15 +66,17 @@ float2 matrix_offset_transform_point_2d(
   const float2 point,
   __constant GPUMatrixOffsetTransformBase2D *transform_base )
 {
+#if _ELASTIX_USE_OPENCL_OPTIMIZATIONS
+  float2 tpoint = transform_base->offset;
+
+  float2 rowx = transform_base->matrix.s01;
+  float2 rowy = transform_base->matrix.s23;
+
+  tpoint.x += dot( rowx, point );
+  tpoint.y += dot( rowy, point );
+#else
   float2 tpoint;
 
-#if _ELASTIX_USE_OPENCL_MAD
-  tpoint.x = mad( transform_base->matrix.s0, point.x,
-    mad( transform_base->matrix.s1, point.y, transform_base->offset.x );
-
-  tpoint.y = mad( transform_base->matrix.s2, point.x,
-    mad( transform_base->matrix.s3, point.y, transform_base->offset.y );
-#else
   tpoint.x =  transform_base->matrix.s0 * point.x;
   tpoint.x += transform_base->matrix.s1 * point.y;
 
@@ -94,36 +96,38 @@ float3 matrix_offset_transform_point_3d(
   const float3 point,
   __constant GPUMatrixOffsetTransformBase3D *transform_base )
 {
-  float3 tpoint;
-#if _ELASTIX_USE_OPENCL_MAD
-  tpoint.x = mad( transform_base->matrix.s0, point.x,
-    mad( transform_base->matrix.s1, point.y,
-    mad( transform_base->matrix.s2, point.z, transform_base->offset.x ) ) );
+#if _ELASTIX_USE_OPENCL_OPTIMIZATIONS
+  float3 tpoint = transform_base->offset.xyz;
 
-  tpoint.y = mad( transform_base->matrix.s3, point.x,
-    mad( transform_base->matrix.s4, point.y,
-    mad( transform_base->matrix.s5, point.z, transform_base->offset.y ) ) );
+  float3 rowx = transform_base->matrix.s012;
+  float3 rowy = transform_base->matrix.s345;
+  float3 rowz = transform_base->matrix.s678;
 
-  tpoint.z = mad( transform_base->matrix.s6, point.x,
-    mad( transform_base->matrix.s7, point.y,
-    mad( transform_base->matrix.s8, point.z, transform_base->offset.z ) ) );
-#else
-  tpoint.x =  transform_base->matrix.s0 * point.x;
-  tpoint.x += transform_base->matrix.s1 * point.y;
-  tpoint.x += transform_base->matrix.s2 * point.z;
-
-  tpoint.y =  transform_base->matrix.s3 * point.x;
-  tpoint.y += transform_base->matrix.s4 * point.y;
-  tpoint.y += transform_base->matrix.s5 * point.z;
-
-  tpoint.z =  transform_base->matrix.s6 * point.x;
-  tpoint.z += transform_base->matrix.s7 * point.y;
-  tpoint.z += transform_base->matrix.s8 * point.z;
-
-  tpoint += transform_base->offset.xyz;
-#endif
+  tpoint.x += dot( rowx, point );
+  tpoint.y += dot( rowy, point );
+  tpoint.z += dot( rowz, point );
 
   return tpoint;
+#else
+  float3 tpoint;
+
+  tpoint.x = transform_base->matrix.s0 * point.x
+           + transform_base->matrix.s1 * point.y
+           + transform_base->matrix.s2 * point.z
+           + transform_base->offset.x;
+
+  tpoint.y = transform_base->matrix.s3 * point.x
+           + transform_base->matrix.s4 * point.y
+           + transform_base->matrix.s5 * point.z
+           + transform_base->offset.y;
+
+  tpoint.z = transform_base->matrix.s6 * point.x
+           + transform_base->matrix.s7 * point.y
+           + transform_base->matrix.s8 * point.z
+           + transform_base->offset.z;
+
+  return tpoint;
+#endif
 }
 #endif // DIM_3
 

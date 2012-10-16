@@ -44,13 +44,14 @@ typedef struct {
 } GPUImageBase3D;
 
 //------------------------------------------------------------------------------
-void set_image_base_1d(GPUImageBase1D *image,
-                       const float spacing,
-                       const float origin,
-                       const uint size,
-                       const float direction,
-                       const float index_to_physical_point,
-                       const float physical_point_to_index)
+#ifdef DIM_1
+void set_image_base_1d( GPUImageBase1D *image,
+  const float spacing,
+  const float origin,
+  const uint size,
+  const float direction,
+  const float index_to_physical_point,
+  const float physical_point_to_index )
 {
   image->spacing   = spacing;
   image->origin    = origin;
@@ -59,15 +60,17 @@ void set_image_base_1d(GPUImageBase1D *image,
   image->index_to_physical_point = index_to_physical_point;
   image->physical_point_to_index = physical_point_to_index;
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
-void set_image_base_2d(GPUImageBase2D *image,
-                       const float2 spacing,
-                       const float2 origin,
-                       const uint2 size,
-                       const float4 direction,
-                       const float4 index_to_physical_point,
-                       const float4 physical_point_to_index)
+#ifdef DIM_2
+void set_image_base_2d( GPUImageBase2D *image,
+  const float2 spacing,
+  const float2 origin,
+  const uint2 size,
+  const float4 direction,
+  const float4 index_to_physical_point,
+  const float4 physical_point_to_index )
 {
   image->spacing   = spacing;
   image->origin    = origin;
@@ -76,15 +79,17 @@ void set_image_base_2d(GPUImageBase2D *image,
   image->index_to_physical_point = index_to_physical_point;
   image->physical_point_to_index = physical_point_to_index;
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
-void set_image_base_3d(GPUImageBase3D *image,
-                       const float3 spacing,
-                       const float3 origin,
-                       const uint3 size,
-                       const float16 direction,
-                       const float16 index_to_physical_point,
-                       const float16 physical_point_to_index)
+#ifdef DIM_3
+void set_image_base_3d( GPUImageBase3D *image,
+  const float3 spacing,
+  const float3 origin,
+  const uint3 size,
+  const float16 direction,
+  const float16 index_to_physical_point,
+  const float16 physical_point_to_index )
 {
   image->spacing   = spacing;
   image->origin    = origin;
@@ -93,349 +98,390 @@ void set_image_base_3d(GPUImageBase3D *image,
   image->index_to_physical_point = index_to_physical_point;
   image->physical_point_to_index = physical_point_to_index;
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 // OpenCL 1D implementation of
 // itkImageBase::ComputeIndexToPhysicalPointMatrices()
-void compute_index_to_physical_point_matrices_1d(GPUImageBase1D *image)
+#ifdef DIM_1
+void compute_index_to_physical_point_matrices_1d( GPUImageBase1D *image )
 {
   image->index_to_physical_point = image->direction * image->spacing;
   image->physical_point_to_index = 1.0f / image->index_to_physical_point;
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
 // OpenCL 2D implementation of
 // itkImageBase::ComputeIndexToPhysicalPointMatrices()
-void compute_index_to_physical_point_matrices_2d(GPUImageBase2D *image)
+#ifdef DIM_2
+void compute_index_to_physical_point_matrices_2d( GPUImageBase2D *image )
 {
   // not implemented
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
 // OpenCL 3D implementation of
 // itkImageBase::ComputeIndexToPhysicalPointMatrices()
-void compute_index_to_physical_point_matrices_3d(GPUImageBase3D *image)
+#ifdef DIM_3
+void compute_index_to_physical_point_matrices_3d( GPUImageBase3D *image )
 {
   // not implemented
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 // OpenCL 1D implementation of
 // itkImageBase::SetSpacing(const SpacingType &spacing)
-void set_spacing_1d(const float spacing, GPUImageBase1D *image)
+#ifdef DIM_1
+void set_spacing_1d( const float spacing, GPUImageBase1D *image )
 {
-  if(image->spacing != spacing)
+  if( image->spacing != spacing )
   {
     image->spacing = spacing;
-    compute_index_to_physical_point_matrices_1d(image);
+    compute_index_to_physical_point_matrices_1d( image );
   }
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
 // OpenCL 2D implementation of
 // itkImageBase::SetSpacing(const SpacingType &spacing)
-void set_spacing_2d(const float2 spacing, GPUImageBase2D *image)
+#ifdef DIM_2
+void set_spacing_2d( const float2 spacing, GPUImageBase2D *image )
 {
-  const int2 is_not_equal = isnotequal(spacing, image->spacing);
+  const int2 is_not_equal = isnotequal( spacing, image->spacing );
 
-  if( any(is_not_equal) )
+  if( any( is_not_equal ) )
   {
     image->spacing = spacing;
-    compute_index_to_physical_point_matrices_2d(image);
+    compute_index_to_physical_point_matrices_2d( image );
   }
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
 // OpenCL 3D implementation of
 // itkImageBase::SetSpacing(const SpacingType &spacing)
-void set_spacing_3d(const float3 spacing, GPUImageBase3D *image)
+#ifdef DIM_3
+void set_spacing_3d( const float3 spacing, GPUImageBase3D *image )
 {
-  const int3 isNotEqual = isnotequal(spacing, image->spacing);
+  const int3 isNotEqual = isnotequal( spacing, image->spacing );
 
   if( any(isNotEqual) )
   {
     image->spacing = spacing;
-    compute_index_to_physical_point_matrices_3d(image);
+    compute_index_to_physical_point_matrices_3d( image );
   }
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 // OpenCL 1D implementation of
 // itkImageBase::SetDirection(const DirectionType direction)
-void set_direction_1d(const float direction, GPUImageBase1D *image)
+#ifdef DIM_1
+void set_direction_1d( const float direction, GPUImageBase1D *image )
 {
-  if(image->direction != direction)
+  if( image->direction != direction )
   {
     image->direction = direction;
-    compute_index_to_physical_point_matrices_1d(image);
+    compute_index_to_physical_point_matrices_1d( image );
   }
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
 // OpenCL 2D implementation of
 // itkImageBase::SetDirection(const DirectionType direction)
-void set_direction_2d(const float3 direction, GPUImageBase2D *image)
+#ifdef DIM_2
+void set_direction_2d( const float3 direction, GPUImageBase2D *image )
 {
-  const int3 is_not_equal = isnotequal(direction, image->direction.xyz);
+  const int3 is_not_equal = isnotequal( direction, image->direction.xyz );
 
-  if( any(is_not_equal) )
+  if( any( is_not_equal ) )
   {
     image->direction.xyz = direction;
-    compute_index_to_physical_point_matrices_2d(image);
+    compute_index_to_physical_point_matrices_2d( image );
   }
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
 // OpenCL 3D implementation of
 // itkImageBase::SetDirection(const DirectionType direction)
-void set_direction_3d(const float16 direction, GPUImageBase3D *image)
+#ifdef DIM_3
+void set_direction_3d( const float16 direction, GPUImageBase3D *image )
 {
-  const int16 is_not_equal = isnotequal(direction, image->direction);
+  const int16 is_not_equal = isnotequal( direction, image->direction );
 
-  if( any(is_not_equal) )
+  if( any( is_not_equal ) )
   {
     image->direction = direction;
-    compute_index_to_physical_point_matrices_3d(image);
+    compute_index_to_physical_point_matrices_3d( image );
   }
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 // OpenCL 1D implementation of
 // itkImageRegion::IsInside(const ContinuousIndex< TCoordRepType,
 // VImageDimension > &index)
-bool is_continuous_index_inside_1d(const float index, const uint size)
+#ifdef DIM_1
+bool is_continuous_index_inside_1d( const float index, const uint size )
 {
-  int round_up;
-
-  round_up = round_half_integer_up(index);
-  if(round_up < 0)
-  {
-    return false;
-  }
+  int rounded;
+  rounded = round( index );
+  if( rounded < 0 ) return false;
 
   float bound;
-  bound = (float)size - 0.5f;
-  if( !(index <= bound) )
-  {
-    return false;
-  }
+  bound = (float)( size ) - 0.5f;
+  if( index > bound ) return false;
 
   return true;
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
 // OpenCL 2D implementation of
 // itkImageRegion::IsInside(const ContinuousIndex< TCoordRepType,
 // VImageDimension > &index)
-bool is_continuous_index_inside_2d(const float2 index, const uint2 size)
+#ifdef DIM_2
+bool is_continuous_index_inside_2d( const float2 index, const uint2 size )
 {
-  int2 round_up;
-
-  round_up.x = round_half_integer_up(index.x);
-  round_up.y = round_half_integer_up(index.y);
-  if(round_up.x < 0 || round_up.y < 0)
-  {
-    return false;
-  }
+  int2 rounded;
+  rounded.x = round( index.x );
+  rounded.y = round( index.y );
+  if( rounded.x < 0 || rounded.y < 0 ) return false;
 
   float2 bound;
-  bound.x = (float)size.x - 0.5f;
-  bound.y = (float)size.y - 0.5f;
-  if( !(index.x <= bound.x) || !(index.y <= bound.y) )
-  {
-    return false;
-  }
+  bound.x = (float)( size.x ) - 0.5f;
+  bound.y = (float)( size.y ) - 0.5f;
+  if( index.x > bound.x || index.y > bound.y ) return false;
 
   return true;
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
 // OpenCL 3D implementation of
 // itkImageRegion::IsInside(const ContinuousIndex< TCoordRepType,
 // VImageDimension > &index)
-bool is_continuous_index_inside_3d(const float3 index, const uint3 size)
+#ifdef DIM_3
+bool is_continuous_index_inside_3d( const float3 index, const uint3 size )
 {
-  int3 round_up;
+  int3 rounded;
+  rounded.x = round( index.x );
+  rounded.y = round( index.y );
+  rounded.z = round( index.z );
 
-  round_up.x = round_half_integer_up(index.x);
-  round_up.y = round_half_integer_up(index.y);
-  round_up.z = round_half_integer_up(index.z);
-
-  if(round_up.x < 0)
-  {
-    return false;
-  }
-  if(round_up.y < 0)
-  {
-    return false;
-  }
-  if(round_up.z < 0)
-  {
-    return false;
-  }
+  if( rounded.x < 0 ) return false;
+  if( rounded.y < 0 ) return false;
+  if( rounded.z < 0 ) return false;
 
   float3 bound;
-  bound.x = (float)size.x - 0.5f;
-  bound.y = (float)size.y - 0.5f;
-  bound.z = (float)size.z - 0.5f;
+  bound.x = (float)( size.x ) - 0.5f;
+  bound.y = (float)( size.y ) - 0.5f;
+  bound.z = (float)( size.z ) - 0.5f;
 
-  if( !(index.x <= bound.x) )
-  {
-    return false;
-  }
-  if( !(index.y <= bound.y) )
-  {
-    return false;
-  }
-  if( !(index.z <= bound.z) )
-  {
-    return false;
-  }
+  if( index.x > bound.x ) return false;
+  if( index.y > bound.y ) return false;
+  if( index.z > bound.z ) return false;
 
   return true;
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 // OpenCL 1D implementation of
 // itkImageBase::TransformIndexToPhysicalPoint()
-float transform_index_to_physical_point_1d(const uint index,
-                                           __global const GPUImageBase1D *image)
+#ifdef DIM_1
+float transform_index_to_physical_point_1d(
+  const uint index,
+  __global const GPUImageBase1D *image )
 {
   float point = image->origin;
 
   point = image->index_to_physical_point * index;
   return point;
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
 // OpenCL 2D implementation of
 // itkImageBase::TransformIndexToPhysicalPoint()
-float2 transform_index_to_physical_point_2d(const uint2 index,
-                                            __global const GPUImageBase2D *image)
+#ifdef DIM_2
+float2 transform_index_to_physical_point_2d(
+  const uint2 index,
+  __global const GPUImageBase2D *image )
 {
+  float2 i2pp_x = image->index_to_physical_point.s01;
+  float2 i2pp_y = image->index_to_physical_point.s23;
+
   float2 point = image->origin;
+  point.x += dot( i2pp_x, convert_float2( index ) );
+  point.y += dot( i2pp_y, convert_float2( index ) );
 
-  point.x += image->index_to_physical_point.s0 * index.x;
-  point.x += image->index_to_physical_point.s1 * index.y;
+  //point.x += image->index_to_physical_point.s0 * index.x;
+  //point.x += image->index_to_physical_point.s1 * index.y;
 
-  point.y += image->index_to_physical_point.s2 * index.x;
-  point.y += image->index_to_physical_point.s3 * index.y;
+  //point.y += image->index_to_physical_point.s2 * index.x;
+  //point.y += image->index_to_physical_point.s3 * index.y;
 
   return point;
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
 // OpenCL 3D implementation of
 // itkImageBase::TransformIndexToPhysicalPoint()
-float3 transform_index_to_physical_point_3d(const uint3 index,
-                                            __constant GPUImageBase3D *image)
+#ifdef DIM_3
+float3 transform_index_to_physical_point_3d(
+  const uint3 index,
+  __constant GPUImageBase3D *image )
 {
+  float3 i2pp_x = image->index_to_physical_point.s012;
+  float3 i2pp_y = image->index_to_physical_point.s345;
+  float3 i2pp_z = image->index_to_physical_point.s678;
+
   float3 point = image->origin;
+  point.x += dot( i2pp_x, convert_float3( index ) );
+  point.y += dot( i2pp_y, convert_float3( index ) );
+  point.z += dot( i2pp_z, convert_float3( index ) );
 
-  point.x += image->index_to_physical_point.s0 * index.x;
-  point.x += image->index_to_physical_point.s1 * index.y;
-  point.x += image->index_to_physical_point.s2 * index.z;
+  //point.x += image->index_to_physical_point.s0 * index.x;
+  //point.x += image->index_to_physical_point.s1 * index.y;
+  //point.x += image->index_to_physical_point.s2 * index.z;
 
-  point.y += image->index_to_physical_point.s3 * index.x;
-  point.y += image->index_to_physical_point.s4 * index.y;
-  point.y += image->index_to_physical_point.s5 * index.z;
+  //point.y += image->index_to_physical_point.s3 * index.x;
+  //point.y += image->index_to_physical_point.s4 * index.y;
+  //point.y += image->index_to_physical_point.s5 * index.z;
 
-  point.z += image->index_to_physical_point.s6 * index.x;
-  point.z += image->index_to_physical_point.s7 * index.y;
-  point.z += image->index_to_physical_point.s8 * index.z;
+  //point.z += image->index_to_physical_point.s6 * index.x;
+  //point.z += image->index_to_physical_point.s7 * index.y;
+  //point.z += image->index_to_physical_point.s8 * index.z;
 
   return point;
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 // OpenCL 1D implementation of
 // itkImageBase::TransformPhysicalPointToContinuousIndex()
-bool transform_physical_point_to_continuous_index_1d(const float point, float *index,
-                                                     __global const GPUImageBase1D *image)
+#ifdef DIM_1
+bool transform_physical_point_to_continuous_index_1d(
+  const float point, float *index,
+  __global const GPUImageBase1D *image )
 {
   float cvector = point - image->origin;
   float cvector1;
 
   cvector1 = image->physical_point_to_index * cvector;
   *index = cvector1;
-  return is_continuous_index_inside_1d(cvector1, image->size);
+  return is_continuous_index_inside_1d( cvector1, image->size );
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
 // OpenCL 2D implementation of
 // itkImageBase::TransformPhysicalPointToContinuousIndex()
-bool transform_physical_point_to_continuous_index_2d(const float2 point, float2 *index,
-                                                     __global const GPUImageBase2D *image)
+#ifdef DIM_2
+bool transform_physical_point_to_continuous_index_2d(
+  const float2 point, float2 *index,
+  __global const GPUImageBase2D *image )
 {
+  float2 pp2i_x = image->physical_point_to_index.s01;
+  float2 pp2i_y = image->physical_point_to_index.s23;
+
   float2 cvector = point - image->origin;
+
   float2 cvector1;
+  cvector1.x = dot( pp2i_x, cvector );
+  cvector1.y = dot( pp2i_y, cvector );
 
-  cvector1.x =  image->physical_point_to_index.s0 * cvector.x;
-  cvector1.x += image->physical_point_to_index.s1 * cvector.y;
+  //cvector1.x =  image->physical_point_to_index.s0 * cvector.x;
+  //cvector1.x += image->physical_point_to_index.s1 * cvector.y;
 
-  cvector1.y =  image->physical_point_to_index.s2 * cvector.x;
-  cvector1.y += image->physical_point_to_index.s3 * cvector.y;
+  //cvector1.y =  image->physical_point_to_index.s2 * cvector.x;
+  //cvector1.y += image->physical_point_to_index.s3 * cvector.y;
 
   *index = cvector1;
-  return is_continuous_index_inside_2d(cvector1, image->size);
+  return is_continuous_index_inside_2d( cvector1, image->size );
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
 // OpenCL 3D implementation of
 // itkImageBase::TransformPhysicalPointToContinuousIndex()
-bool transform_physical_point_to_continuous_index_3d(const float3 point, float3 *index,
-                                                     __constant GPUImageBase3D *image)
+#ifdef DIM_3
+bool transform_physical_point_to_continuous_index_3d(
+  const float3 point, float3 *index,
+  __constant GPUImageBase3D *image )
 {
+  float3 pp2i_x = image->physical_point_to_index.s012;
+  float3 pp2i_y = image->physical_point_to_index.s345;
+  float3 pp2i_z = image->physical_point_to_index.s678;
+
   float3 cvector = point - image->origin;
+
   float3 cvector1;
+  cvector1.x = dot( pp2i_x, cvector );
+  cvector1.y = dot( pp2i_y, cvector );
+  cvector1.z = dot( pp2i_z, cvector );
 
-  cvector1.x =  image->physical_point_to_index.s0 * cvector.x;
-  cvector1.x += image->physical_point_to_index.s1 * cvector.y;
-  cvector1.x += image->physical_point_to_index.s2 * cvector.z;
+  //cvector1.x =  image->physical_point_to_index.s0 * cvector.x;
+  //cvector1.x += image->physical_point_to_index.s1 * cvector.y;
+  //cvector1.x += image->physical_point_to_index.s2 * cvector.z;
 
-  cvector1.y =  image->physical_point_to_index.s3 * cvector.x;
-  cvector1.y += image->physical_point_to_index.s4 * cvector.y;
-  cvector1.y += image->physical_point_to_index.s5 * cvector.z;
+  //cvector1.y =  image->physical_point_to_index.s3 * cvector.x;
+  //cvector1.y += image->physical_point_to_index.s4 * cvector.y;
+  //cvector1.y += image->physical_point_to_index.s5 * cvector.z;
 
-  cvector1.z =  image->physical_point_to_index.s6 * cvector.x;
-  cvector1.z += image->physical_point_to_index.s7 * cvector.y;
-  cvector1.z += image->physical_point_to_index.s8 * cvector.z;
+  //cvector1.z =  image->physical_point_to_index.s6 * cvector.x;
+  //cvector1.z += image->physical_point_to_index.s7 * cvector.y;
+  //cvector1.z += image->physical_point_to_index.s8 * cvector.z;
 
   *index = cvector1;
-  return is_continuous_index_inside_3d(cvector1, image->size);
+  return is_continuous_index_inside_3d( cvector1, image->size );
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 // OpenCL 1D implementation (long index, float return value) version of
 // itkImage::GetPixel()
-float get_pixel_1d(const long index,
-                   __global const INPIXELTYPE *in,
-                   __global const GPUImageBase1D *image)
+#ifdef DIM_1
+float get_pixel_1d( const long index,
+  __global const INPIXELTYPE *in, __global const GPUImageBase1D *image )
 {
-  float value = (float)(in[index]);
+  float value = (float)( in[index] );
   return value;
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
 // OpenCL 2D implementation (long index, float return value) version of
 // itkImage::GetPixel()
-float get_pixel_2d(const long2 index,
-                   __global const INPIXELTYPE *in,
-                   __global const GPUImageBase2D *image)
+#ifdef DIM_2
+float get_pixel_2d( const long2 index,
+  __global const INPIXELTYPE *in, __global const GPUImageBase2D *image )
 {
-  uint  gidx = mad24(image->size.x, index.y, index.x);
-  float value = (float)(in[gidx]);
+  uint  gidx = mad24( image->size.x, index.y, index.x );
+  float value = (float)( in[gidx] );
   return value;
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
 // OpenCL 3D implementation (long index, float return value) version of
 // itkImage::GetPixel()
-float get_pixel_3d(const long3 index,
-                   __global const INPIXELTYPE *in,
-                   __constant GPUImageBase3D *image)
+#ifdef DIM_3
+float get_pixel_3d( const long3 index,
+  __global const INPIXELTYPE *in, __constant GPUImageBase3D *image )
 {
-  uint  gidx = mad24(image->size.x, mad24(index.z, image->size.y, index.y), index.x);
-  float value = (float)(in[gidx]);
+  uint  gidx = mad24( image->size.x,
+    mad24( index.z, image->size.y, index.y ), index.x );
+  float value = (float)( in[gidx] );
   return value;
 }
+#endif // DIM_3
+

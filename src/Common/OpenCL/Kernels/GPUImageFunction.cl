@@ -51,7 +51,6 @@ bool interpolator_is_inside_buffer_1d(
 
   return true;
 }
-
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -73,7 +72,6 @@ bool interpolator_is_inside_buffer_2d(
 
   return true;
 }
-
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -100,7 +98,6 @@ bool interpolator_is_inside_buffer_3d(
 
   return true;
 }
-
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
@@ -133,9 +130,13 @@ uint2 convert_continuous_index_to_nearest_index_2d( const float2 cindex )
 uint3 convert_continuous_index_to_nearest_index_3d( const float3 cindex )
 {
   uint3 index;
+  //index.x = (uint)( cindex.x + 0.499999f );
+  //index.y = (uint)( cindex.y + 0.499999f );
+  //index.z = (uint)( cindex.z + 0.499999f );
   index.x = round( cindex.x );
   index.y = round( cindex.y );
   index.z = round( cindex.z );
   return index;
 }
 #endif // DIM_3
+

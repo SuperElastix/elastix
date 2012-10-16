@@ -15,6 +15,7 @@
 // OpenCL implementation of itk::NearestNeighborInterpolateImageFunction
 
 //------------------------------------------------------------------------------
+#ifdef DIM_1
 float bspline_evaluate_at_continuous_index_1d(const float index,
                                               __global const INPIXELTYPE *in,
                                               __constant GPUImageBase1D *in_image,
@@ -24,8 +25,10 @@ float bspline_evaluate_at_continuous_index_1d(const float index,
 {
   return 0.0f;
 }
+#endif // DIM_1
 
 //------------------------------------------------------------------------------
+#ifdef DIM_2
 float bspline_evaluate_at_continuous_index_2d(const float2 index,
                                               __global const INPIXELTYPE *in,
                                               __constant GPUImageBase2D *in_image,
@@ -35,8 +38,10 @@ float bspline_evaluate_at_continuous_index_2d(const float2 index,
 {
   return 0.0f;
 }
+#endif // DIM_2
 
 //------------------------------------------------------------------------------
+#ifdef DIM_3
 float bspline_evaluate_at_continuous_index_3d(const float3 index,
                                               __global const INPIXELTYPE *in,
                                               __constant GPUImageBase3D *in_image,
@@ -46,6 +51,7 @@ float bspline_evaluate_at_continuous_index_3d(const float3 index,
 {
   return 0.0f;
 }
+#endif // DIM_3
 
 //------------------------------------------------------------------------------
 #ifdef DIM_1
@@ -57,7 +63,7 @@ float evaluate_at_continuous_index_1d(
 {
   uint         nindex = convert_continuous_index_to_nearest_index_1d( index );
   uint gidx = nindex;
-  float        image_value = (float)(in[gidx]);
+  float        image_value = (float)( in[gidx] );
 
   return image_value;
 }
@@ -73,7 +79,7 @@ float evaluate_at_continuous_index_2d(
 {
   uint2 nindex = convert_continuous_index_to_nearest_index_2d( index );
   uint  gidx = mad24( image->size.x, nindex.y, nindex.x );
-  float image_value = (float)(in[gidx]);
+  float image_value = (float)( in[gidx] );
 
   return image_value;
 }
@@ -81,14 +87,16 @@ float evaluate_at_continuous_index_2d(
 
 //------------------------------------------------------------------------------
 #ifdef DIM_3
-float evaluate_at_continuous_index_3d(const float3 index,
-                                      __global const INPIXELTYPE *in,
-                                      __constant GPUImageBase3D *image,
-                                      __constant GPUImageFunction3D *image_function)
+float evaluate_at_continuous_index_3d(
+  const float3 index,
+  __global const INPIXELTYPE *in,
+  __constant GPUImageBase3D *image,
+  __constant GPUImageFunction3D *image_function )
 {
   uint3       nindex = convert_continuous_index_to_nearest_index_3d( index );
   uint gidx = mad24( image->size.x, mad24( nindex.z, image->size.y, nindex.y ), nindex.x );
-  float       image_value = (float)(in[gidx]);
+  float       image_value = (float)( in[gidx] );
+  //return (float)( in[gidx] );
 
   return image_value;
 }
