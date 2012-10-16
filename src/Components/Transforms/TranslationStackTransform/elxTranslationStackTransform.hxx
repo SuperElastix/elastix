@@ -30,7 +30,7 @@ TranslationStackTransform<TElastix>
 ::TranslationStackTransform()
 {
 
-    xl::xout << "Constructor" << std::endl;
+    xl::xout["error"] << "Constructor" << std::endl;
 
 } // end Constructor
 
