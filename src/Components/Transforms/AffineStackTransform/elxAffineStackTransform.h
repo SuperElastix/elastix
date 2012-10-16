@@ -175,6 +175,7 @@ namespace elastix
 
   /** Other typedef's */
   typedef typename FixedImageType::SizeType SizeType;
+	typedef typename FixedImageType::SpacingType SpacingType;
 
    /** Execute stuff before anything else is done:*/
 

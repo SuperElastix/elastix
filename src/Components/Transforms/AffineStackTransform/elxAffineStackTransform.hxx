@@ -130,6 +130,9 @@ void AffineStackTransform<TElastix>::InitializeTransform()
   bool centerGivenAsPoint = true;
 	SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
 		GetFixedImage()->GetLargestPossibleRegion().GetSize();
+	SpacingType spacing = this->m_Registration->GetAsITKBaseType()->
+		GetFixedImage()->GetSpacing();
+
   for ( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
     /** Initialize. */
@@ -166,15 +169,19 @@ void AffineStackTransform<TElastix>::InitializeTransform()
     automaticTransformInitialization = true;
   }
 
-  /* Set the center of the image to the default center if no center was given */
+  /** Set the center of rotation to the center of the image if no center was given */
   bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
   if ( !centerGiven  )
   {
 		for(unsigned int k = 0; k < centerOfRotationPoint.Size(); k++)
 		{
-			centerOfRotationPoint[ k ] = (fixedImageSize[ k ]-1.0f)/2.0f;
+			centerOfRotationPoint[ k ] = spacing[ k ]*(fixedImageSize[ k ]-1.0f)/2.0f;
 		}
   }
+
+	elxout << "center of rotation: " << centerOfRotationPoint << std::endl;
+	elxout << "spacing: " << spacing << std::endl;
+	elxout << "size: " << fixedImageSize << std::endl;
 
 	/** Set the center of rotation if it was not entered by the user. */
 	this->m_AffineDummySubTransform->SetCenter( centerOfRotationPoint );
@@ -215,7 +222,7 @@ void AffineStackTransform<TElastix>
       "StackSpacing", this->GetComponentLabel(), 0, 0 );
 
   ReducedDimensionInputPointType centerOfRotationPoint;
-  //centerOfRotationPoint.Fill( 0.0 );
+  centerOfRotationPoint.Fill( 0.0 );
   bool pointRead = false;
   bool indexRead = false;
 
@@ -239,7 +246,6 @@ void AffineStackTransform<TElastix>
     xl::xout["error"] << "ERROR: No center of rotation is specified in the "
       << "transform parameter file" << std::endl;
     itkExceptionMacro( << "Transform parameter file is corrupt.")
-			std::cout << "transform parameterfile was corrupt, no cor was set" << std::endl;
   }
 
   this->InitializeAffineTransform();
@@ -250,7 +256,6 @@ void AffineStackTransform<TElastix>
   this->m_AffineStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
   this->m_AffineStackTransform->SetStackOrigin( this->m_StackOrigin );
   this->m_AffineStackTransform->SetStackSpacing( this->m_StackSpacing );
-
 
   /** Set stack subtransforms. */
   this->m_AffineStackTransform->SetAllSubTransforms( this->m_AffineDummySubTransform );
@@ -316,7 +321,6 @@ void AffineStackTransform<TElastix>
 
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();
- // const NumberOfParametersType N = 366;
   ScalesType newscales( N );
 
   /** Check if automatic scales estimation is desired. */
@@ -328,6 +332,7 @@ void AffineStackTransform<TElastix>
   {
     elxout << "Scales are estimated automatically." << std::endl;
     this->AutomaticScalesEstimationStackTransform( newscales );
+		elxout << "finished setting scales" << std::endl;
   }
   else
   {
