@@ -121,6 +121,7 @@ namespace elastix
       itkGetStaticConstMacro( SpaceDimension ) ,       
       itkGetStaticConstMacro( SpaceDimension ) >              AffineTransformType;
    typedef typename AffineTransformType::Pointer             AffineTransformPointer;
+	 typedef typename AffineTransformType::InputPointType		InputPointType;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
    typedef itk::AdvancedMatrixOffsetTransformBase<
@@ -164,7 +165,7 @@ namespace elastix
       itkGetStaticConstMacro( ReducedSpaceDimension ) >         ReducedDimensionRegionType;
   typedef typename ReducedDimensionImageType::PointType         ReducedDimensionPointType;
   typedef typename ReducedDimensionImageType::SizeType          ReducedDimensionSizeType;
-  typedef typename ReducedDimensionRegionType::IndexType        ReducedDimensionIndexType;
+  typedef typename ReducedDimensionRegionType::IndexType        ReducedDimensionIndexType; 
   typedef typename ReducedDimensionImageType::SpacingType       ReducedDimensionSpacingType;
   typedef typename ReducedDimensionImageType::DirectionType     ReducedDimensionDirectionType;
   typedef typename ReducedDimensionImageType::PointType         ReducedDimensionOriginType;
@@ -173,10 +174,17 @@ namespace elastix
   /** For scales setting in the optimizer */
   typedef typename Superclass2::ScalesType                ScalesType;
 
-  /** Other typedef's */
-  typedef typename FixedImageType::SizeType SizeType;
-	typedef typename FixedImageType::SpacingType SpacingType;
+	/** Other typedef's. */
+	typedef typename FixedImageType::IndexType              IndexType;
+	typedef typename FixedImageType::SizeType               SizeType;
+	typedef typename FixedImageType::PointType              PointType;
+	typedef typename FixedImageType::SpacingType            SpacingType;
+	typedef typename FixedImageType::RegionType             RegionType;
+	typedef typename FixedImageType::DirectionType          DirectionType;
+  typedef typename itk::ContinuousIndex< CoordRepType, ReducedSpaceDimension > ReducedDimensionContinuousIndexType;
+	typedef typename itk::ContinuousIndex< CoordRepType, SpaceDimension > ContinuousIndexType;
 
+	
    /** Execute stuff before anything else is done:*/
 
   virtual int BeforeAll( void );
