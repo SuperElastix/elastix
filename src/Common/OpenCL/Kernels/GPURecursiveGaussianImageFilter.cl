@@ -22,14 +22,14 @@ void filter_data_array(BUFFPIXELTYPE *outs,
                        const float4 BN, const float4 BM)
 {
   /**
-  * Causal direction pass
-  */
+   * Causal direction pass
+   */
   // this value is assumed to exist from the border to infinity.
   const BUFFPIXELTYPE outV1 = data[0];
 
   /**
-  * Initialize borders
-  */
+   * Initialize borders
+   */
   scratch[0] = (outV1   * N.x +   outV1 * N.y + outV1   * N.z + outV1 * N.w);
   scratch[1] = (data[1] * N.x +   outV1 * N.y + outV1   * N.z + outV1 * N.w);
   scratch[2] = (data[2] * N.x + data[1] * N.y + outV1   * N.z + outV1 * N.w);
@@ -42,27 +42,33 @@ void filter_data_array(BUFFPIXELTYPE *outs,
   scratch[3] -= (scratch[2] * D.x  + scratch[1] * D.y  + scratch[0] * D.z  + outV1 * BN.w);
 
   /**
-  * Recursively filter the rest
-  */
-  for(unsigned int i = 4; i < ln; i++)
+   * Recursively filter the rest
+   */
+  float4 data_small, scratch_small;
+  for( unsigned int i = 4; i < ln; i++ )
   {
-    scratch[i]  = (data[i]        * N.x + data[i - 1]    * N.y + data[i - 2]    * N.z + data[i - 3]    * N.w);
-    scratch[i] -= (scratch[i - 1] * D.x + scratch[i - 2] * D.y + scratch[i - 3] * D.z + scratch[i - 4] * D.w);
+    data_small    = (float4)( data[i], data[i-1], data[i-2], data[i-3] );
+    scratch_small = (float4)( scratch[i-1], scratch[i-2], scratch[i-3], scratch[i-4] );
+    scratch[i]  = dot( data_small, N );
+    scratch[i] -= dot( scratch_small, D );
+
+    //scratch[i]  = (data[i]        * N.x + data[i - 1]    * N.y + data[i - 2]    * N.z + data[i - 3]    * N.w);
+    //scratch[i] -= (scratch[i - 1] * D.x + scratch[i - 2] * D.y + scratch[i - 3] * D.z + scratch[i - 4] * D.w);
   }
 
   /**
-  * Store the causal result
-  */
-  for(unsigned int i = 0; i < ln; i++)
+   * Store the causal result
+   */
+  for( unsigned int i = 0; i < ln; i++ )
   {
-    outs[i] = scratch[i];
+    outs[ i ] = scratch[ i ];
   }
 
   /**
-  * AntiCausal direction pass
-  */
+   * AntiCausal direction pass
+   */
   // this value is assumed to exist from the border to infinity.
-  const BUFFPIXELTYPE outV2 = data[ln - 1];
+  const BUFFPIXELTYPE outV2 = data[ ln - 1 ];
 
   /**
   * Initialize borders
@@ -79,20 +85,26 @@ void filter_data_array(BUFFPIXELTYPE *outs,
   scratch[ln - 4] -= (scratch[ln - 3] * D.x  + scratch[ln - 2] * D.y  + scratch[ln - 1] * D.z  + outV2 * BM.w);
 
   /**
-  * Recursively filter the rest
-  */
-  for(unsigned int i = ln - 4; i > 0; i--)
+   * Recursively filter the rest
+   */
+  float4 data_small, scratch_small;
+  for( unsigned int i = ln - 4; i > 0; i-- )
   {
-    scratch[i - 1] = (data[i]     * M.x + data[i + 1]    * M.y + data[i + 2]    * M.z + data[i + 3]    * M.w);
-    scratch[i - 1] -= (scratch[i] * D.x + scratch[i + 1] * D.y + scratch[i + 2] * D.z + scratch[i + 3] * D.w);
+    data_small    = (float4)( data[i], data[i+1], data[i+2], data[i+3] );
+    scratch_small = (float4)( scratch[i], scratch[i+1], scratch[i+2], scratch[i+3] );
+    scratch[i - 1]  = dot( data_small, M );
+    scratch[i - 1] -= dot( scratch_small, D );
+
+    //scratch[i - 1] = (data[i]     * M.x + data[i + 1]    * M.y + data[i + 2]    * M.z + data[i + 3]    * M.w);
+    //scratch[i - 1] -= (scratch[i] * D.x + scratch[i + 1] * D.y + scratch[i + 2] * D.z + scratch[i + 3] * D.w);
   }
 
   /**
   * Roll the antiCausal part into the output
   */
-  for(unsigned int i = 0; i < ln; i++)
+  for( unsigned int i = 0; i < ln; i++ )
   {
-    outs[i] += scratch[i];
+    outs[ i ] += scratch[ i ];
   }
 }
 
@@ -103,7 +115,7 @@ uint get_image_offset(const uint gix,
                       const uint giz,
                       const uint width, const uint height)
 {
-  uint gidx = mad24(width, mad24(giz, height, giy), gix);
+  uint gidx = mad24( width, mad24( giz, height, giy ), gix );
 
   return gidx;
 }
@@ -287,5 +299,5 @@ __kernel void RecursiveGaussianImageFilter(__global const INPIXELTYPE *in,
     }
   }
 }
-
 #endif
+

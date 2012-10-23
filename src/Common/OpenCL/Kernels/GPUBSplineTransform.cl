@@ -434,4 +434,3 @@ float3 bspline_transform_point_3d(const float3 point,
   return tpoint;
 }
 #endif // DIM_3
-

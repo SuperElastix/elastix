@@ -114,7 +114,7 @@ bool data_to_coefficients_1d(BUFFPIXELTYPE *scratch,
   for( uint k = 0; k < number_of_poles; k++ )
   {
     // Note for cubic splines lambda = 6
-    c0 = c0 * (1.0 - spline_poles[k]) * (1.0 - 1.0 / spline_poles[k]);
+    c0 *= (1.0 - spline_poles[k]) * (1.0 - 1.0 / spline_poles[k]);
   }
 
   // apply the gain

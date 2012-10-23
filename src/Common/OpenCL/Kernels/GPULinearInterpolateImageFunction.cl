@@ -75,7 +75,6 @@ float evaluate_at_continuous_index_1d(const float index,
   const float val1 = get_pixel_1d(basei, in, image);
   return ( mad(distance, (val1 - val0), val0) );
 }
-
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -151,7 +150,6 @@ float evaluate_at_continuous_index_2d(const float2 index,
   const float valx1 = mad(distance0, (val11 - val01), val01);
   return ( mad(distance1, (valx1 - valx0), valx0) );
 }
-
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -380,5 +378,4 @@ float evaluate_at_continuous_index_3d(const float3 index,
     }
   }
 }
-
 #endif // DIM_3

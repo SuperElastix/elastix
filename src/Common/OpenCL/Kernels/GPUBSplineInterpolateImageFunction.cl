@@ -739,4 +739,3 @@ float bspline_evaluate_at_continuous_index_3d(const float3 index,
   return interpolated;
 }
 #endif // DIM_3
-

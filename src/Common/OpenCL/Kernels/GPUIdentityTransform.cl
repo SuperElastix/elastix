@@ -20,7 +20,6 @@ float identity_transform_point_1d(const float point)
 {
   return point;
 }
-
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -29,7 +28,6 @@ float2 identity_transform_point_2d(const float2 point)
 {
   return point;
 }
-
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -38,5 +36,4 @@ float3 identity_transform_point_3d(const float3 point)
 {
   return point;
 }
-
 #endif // DIM_3

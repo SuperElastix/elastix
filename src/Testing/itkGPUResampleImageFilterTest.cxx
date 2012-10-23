@@ -51,6 +51,7 @@
 
 // Other include files
 #include <iomanip> // setprecision, etc.
+#include <sstream>
 
 //------------------------------------------------------------------------------
 // GetHelpString
@@ -322,8 +323,8 @@ void DefineSimilarityParameters( const std::size_t transformIndex,
   parameters.SetSize( SimilarityTransformType::ParametersDimension );
 
   // Scale, Angle
-  const double scale = (double)transformIndex * 0.05 + 1.0;
-  const double angle = (double)transformIndex * -0.05;
+  const double scale = ( (double)transformIndex + 1.0 ) * 0.05 + 1.0;
+  const double angle = (double)transformIndex * -0.06;
 
   if( Dimension == 2 )
   {
@@ -970,13 +971,17 @@ int main( int argc, char *argv[] )
   OutputImageType::PointType     outputOrigin;
   OutputImageType::DirectionType outputDirection;
   OutputImageType::SizeType      outputSize;
+  std::stringstream s; s << std::setprecision( 4 ) << std::setiosflags( std::ios_base::fixed );
+  double tmp1, tmp2;
   for( std::size_t i = 0; i < Dimension; i++ )
   {
-    double tmp = randomNum->GetUniformVariate( 0.9, 1.1 );
-    outputSpacing[i] = inputSpacing[i] * tmp;
+    tmp1 = randomNum->GetUniformVariate( 0.9, 1.1 );
+    tmp2 = inputSpacing[ i ] * tmp1;
+    s << tmp2; s >> outputSpacing[ i ]; s.clear();
 
-    tmp = randomNum->GetUniformVariate( -10.0, 10.0 );
-    outputOrigin[i] = inputOrigin[i] + tmp;
+    tmp1 = randomNum->GetUniformVariate( -10.0, 10.0 );
+    tmp2 = inputOrigin[i] + tmp1;
+    s << tmp2; s >> outputOrigin[ i ]; s.clear();
 
     for( unsigned int j = 0; j < Dimension; j++ )
     {
@@ -985,8 +990,8 @@ int main( int argc, char *argv[] )
       outputDirection[i][j] = inputDirection[i][j];        // * tmp;
     }
 
-    tmp = randomNum->GetUniformVariate( 0.9, 1.1 );
-    outputSize[i] = itk::Math::Round< SizeValueType >( inputSize[i] * tmp );
+    tmp1 = randomNum->GetUniformVariate( 0.9, 1.1 );
+    outputSize[i] = itk::Math::Round< SizeValueType >( inputSize[i] * tmp1 );
   }
 
   cpuFilter->SetDefaultPixelValue( -1.0 );

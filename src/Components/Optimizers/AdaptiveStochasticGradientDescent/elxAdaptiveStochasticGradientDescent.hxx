@@ -19,7 +19,7 @@
 #include <iomanip>
 #include <string>
 #include <vector>
-#include <strstream>
+#include <sstream>
 #include <algorithm>
 #include <utility>
 #include "vnl/vnl_math.h"
