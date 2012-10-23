@@ -443,7 +443,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     itkDebugMacro( "Transform is Advanced" );
   }
 
-} // end CheckForBSplineTransform()
+} // end CheckForAdvancedTransform()
 
 
 /**
