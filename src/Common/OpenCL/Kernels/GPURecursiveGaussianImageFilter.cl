@@ -12,14 +12,16 @@
 
 ======================================================================*/
 
+#define _ELASTIX_USE_OPENCL_OPTIMIZATIONS 0
+
 //------------------------------------------------------------------------------
 // Exact copy of FilterDataArray from RecursiveSeparableImageFilter
-void filter_data_array(BUFFPIXELTYPE *outs,
-                       const BUFFPIXELTYPE *data,
-                       BUFFPIXELTYPE *scratch,
-                       const unsigned int ln,
-                       const float4 N, const float4 D, const float4 M,
-                       const float4 BN, const float4 BM)
+void filter_data_array( BUFFPIXELTYPE *outs,
+  const BUFFPIXELTYPE *data,
+  BUFFPIXELTYPE *scratch,
+  const unsigned int ln,
+  const float4 N, const float4 D, const float4 M,
+  const float4 BN, const float4 BM )
 {
   /**
    * Causal direction pass
@@ -47,13 +49,15 @@ void filter_data_array(BUFFPIXELTYPE *outs,
   float4 data_small, scratch_small;
   for( unsigned int i = 4; i < ln; i++ )
   {
+#if _ELASTIX_USE_OPENCL_OPTIMIZATIONS
     data_small    = (float4)( data[i], data[i-1], data[i-2], data[i-3] );
     scratch_small = (float4)( scratch[i-1], scratch[i-2], scratch[i-3], scratch[i-4] );
     scratch[i]  = dot( data_small, N );
     scratch[i] -= dot( scratch_small, D );
-
-    //scratch[i]  = (data[i]        * N.x + data[i - 1]    * N.y + data[i - 2]    * N.z + data[i - 3]    * N.w);
-    //scratch[i] -= (scratch[i - 1] * D.x + scratch[i - 2] * D.y + scratch[i - 3] * D.z + scratch[i - 4] * D.w);
+#else
+    scratch[i]  = data[i]        * N.x + data[i - 1]    * N.y + data[i - 2]    * N.z + data[i - 3]    * N.w;
+    scratch[i] -= scratch[i - 1] * D.x + scratch[i - 2] * D.y + scratch[i - 3] * D.z + scratch[i - 4] * D.w;
+#endif
   }
 
   /**
@@ -87,16 +91,17 @@ void filter_data_array(BUFFPIXELTYPE *outs,
   /**
    * Recursively filter the rest
    */
-  float4 data_small, scratch_small;
   for( unsigned int i = ln - 4; i > 0; i-- )
   {
+#if _ELASTIX_USE_OPENCL_OPTIMIZATIONS
     data_small    = (float4)( data[i], data[i+1], data[i+2], data[i+3] );
     scratch_small = (float4)( scratch[i], scratch[i+1], scratch[i+2], scratch[i+3] );
     scratch[i - 1]  = dot( data_small, M );
     scratch[i - 1] -= dot( scratch_small, D );
-
-    //scratch[i - 1] = (data[i]     * M.x + data[i + 1]    * M.y + data[i + 2]    * M.z + data[i + 3]    * M.w);
-    //scratch[i - 1] -= (scratch[i] * D.x + scratch[i + 1] * D.y + scratch[i + 2] * D.z + scratch[i + 3] * D.w);
+#else
+    scratch[i - 1] = data[i]     * M.x + data[i + 1]    * M.y + data[i + 2]    * M.z + data[i + 3]    * M.w;
+    scratch[i - 1] -= scratch[i] * D.x + scratch[i + 1] * D.y + scratch[i + 2] * D.z + scratch[i + 3] * D.w;
+#endif
   }
 
   /**
