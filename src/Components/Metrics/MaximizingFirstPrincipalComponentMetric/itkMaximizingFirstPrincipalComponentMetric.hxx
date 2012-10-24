@@ -296,13 +296,15 @@ namespace itk
 
 		/** The last elements of the sample container can be removed, so the pixelIndex is divided by
 		the number of samples in the last dimension */
-		pixelIndex /= realNumLastDimPositions;
+		//pixelIndex /= realNumLastDimPositions;
 
 		/** Check if enough samples were valid. */
 		this->CheckNumberOfSamples(
 			NumberOfSamples, this->m_NumberOfPixelsCounted );
 
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
+
+
 		
 		if(this->m_RandomScaleIntensity)
 		{
@@ -535,9 +537,10 @@ namespace itk
 		/** Check if enough samples were valid. */
 		this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 		
-		pixelIndex /= realNumLastDimPositions;
+		//pixelIndex /= realNumLastDimPositions;
 
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
+
 
 		if(this->m_RandomScaleIntensity)
 		{
@@ -631,14 +634,14 @@ namespace itk
 		DerivativeType dMTdmu;
 		dMTdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
 
-		unsigned int NumSamplesUsed;
+		//unsigned int NumSamplesUsed;
 		unsigned int startSamplesOK;
 
+		//NumSamplesUsed = SamplesOK.size()/realNumLastDimPositions;
 		startSamplesOK = 0;
-		NumSamplesUsed = SamplesOK.size()/realNumLastDimPositions;
 
   	/** Second loop over fixed image samples. */ 
-		for ( pixelIndex = 0; pixelIndex < NumSamplesUsed; ++pixelIndex )
+		for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
     {
 			/** Read fixed coordinates. */
 			FixedImagePointType fixedPoint = SamplesOK[ startSamplesOK ];
