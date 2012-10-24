@@ -16,6 +16,7 @@
 #define _itkStackTransform_txx
 
 #include "itkStackTransform.h"
+#include <fstream>
 
 namespace itk
 {
@@ -163,6 +164,7 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   /** Fill output Jacobian. */
   jac.set_size( InputSpaceDimension, nzji.size() );
   jac.Fill( 0.0 );
+
   for ( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
   {
     for ( unsigned int n = 0; n < nzji.size(); ++n )
@@ -176,6 +178,7 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   {
     nzji[ i ] += subt * this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
   }
+
 
 } // end GetJacobian()
 
