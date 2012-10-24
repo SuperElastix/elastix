@@ -21,6 +21,6 @@ elastix_run_3DCT_lung.NC.euler.ASGD.001 2097417170
 elastix_run_3DCT_lung.NC.translation.ASGD.001 1177112993
 elastix_run_3DCT_lung.NMI.bspline.ASGD.001 2569180289
 elastix_run_3DCT_lung.SSD.bspline.ASGD.001 1101798446
-elastix_run_3DCT_lung.SSD.bspline.ASGD.002 4114607001
-elastix_run_3DCT_lung.SSD.bspline.ASGD.003 287821973
+elastix_run_3DCT_lung.SSD.bspline.ASGD.002 1802662650
+elastix_run_3DCT_lung.SSD.bspline.ASGD.003 1235744770
 elastix_run_example 2439022164
