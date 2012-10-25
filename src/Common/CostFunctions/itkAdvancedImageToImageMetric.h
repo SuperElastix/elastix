@@ -364,8 +364,9 @@ protected:
   void LaunchGetValueAndDerivativeThreaderCallback( void ) const;
 
   /** Variables for multi-threading. */
-  bool                  m_UseMetricSingleThreaded;
-  bool                  m_UseMultiThread;
+  bool m_UseMetricSingleThreaded;
+  bool m_UseMultiThread;
+  bool m_UseOpenMP;
 
   struct MultiThreaderParameterType
   {

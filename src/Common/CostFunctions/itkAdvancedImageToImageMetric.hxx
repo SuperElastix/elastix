@@ -81,6 +81,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_ThreaderNumberOfPixelsCounted.resize( 0 );
 
   this->m_UseMetricSingleThreaded = true;
+  this->m_UseOpenMP = false;
 
   /** Initialise the m_ThreaderMetricParameters */
   this->m_ThreaderMetricParameters.m_Metric = this;

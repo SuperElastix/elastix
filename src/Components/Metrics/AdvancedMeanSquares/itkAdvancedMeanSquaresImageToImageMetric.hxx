@@ -45,9 +45,6 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   this->m_SelfHessianSmoothingSigma = 1.0;
   this->m_NumberOfSamplesForSelfHessian = 100000;
 
-  /** Threading related variables. */
-  this->m_UseOpenMP = false;
-
 } // end Constructor
 
 

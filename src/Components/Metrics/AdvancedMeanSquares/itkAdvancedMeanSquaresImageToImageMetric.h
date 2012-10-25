@@ -248,8 +248,6 @@ private:
   double          m_SelfHessianNoiseRange;
   unsigned int    m_NumberOfSamplesForSelfHessian;
 
-  bool m_UseOpenMP;
-
   struct MultiThreaderComputeDerivativeType
   {
     typename DerivativeType::iterator derivativeIterator;
