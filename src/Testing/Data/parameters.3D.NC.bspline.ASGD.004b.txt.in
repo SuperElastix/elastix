@@ -8,11 +8,11 @@
 
 // ********** Components
 
-(Registration "MultiResolutionRegistration")
+(Registration "MultiMetricMultiResolutionRegistration")
 (FixedImagePyramid "FixedRecursiveImagePyramid")
 (MovingImagePyramid "MovingRecursiveImagePyramid")
-(Interpolator "LinearInterpolator")
-(Metric "AdvancedMeanSquares")
+(Interpolator "BSplineInterpolator")
+(Metric "AdvancedNormalizedCorrelation" "TransformRigidityPenalty")
 (Optimizer "AdaptiveStochasticGradientDescent")
 (ResampleInterpolator "FinalBSplineInterpolator")
 (Resampler "DefaultResampler")
@@ -36,7 +36,9 @@
 // ********** Optimizer
 
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 100)
+// Keep low to allow for fast testing. Not recommended values!
+(MaximumNumberOfIterations 25)
+(NumberOfSamplesForExactGradient 10000)
 
 // For fast testing:
 (NumberOfJacobianMeasurements 2500 5000 10000)
@@ -48,6 +50,22 @@
 // ********** Metric
 
 // Just using the default values for the NC metric
+
+(Metric0Weight 1)
+(Metric1Weight 0.1 0.0001 0.00001)
+
+// Rigidity computed on sub-domain specified with an image
+(LinearityConditionWeight 100.0)
+(OrthonormalityConditionWeight 1.0)
+(PropernessConditionWeight 2.0)
+(UseLinearityCondition "true")
+(UseOrthonormalityCondition "true")
+(UsePropernessCondition "true")
+(DilateRigidityImages "false" "false" "false")
+(DilationRadiusMultiplier 2.0)
+(FixedRigidityImageName "")
+(MovingRigidityImageName "@TestDataDir@/3DCT_lung_followup_segmentation.mha")
+
 
 
 // ********** Several

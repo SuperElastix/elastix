@@ -151,7 +151,9 @@ int main( int argc, char **argv )
 
   if( numberOfDifferentPixels > 0 )
   {
-    std::cerr << "There are " << numberOfDifferentPixels << " different pixels!" << std::endl;
+    std::cerr << "There are " << numberOfDifferentPixels
+      << " pixels with difference larger than "
+      << allowedTolerance << "!" << std::endl;
 
     // Create name for diff image
     std::string diffImageFileName =

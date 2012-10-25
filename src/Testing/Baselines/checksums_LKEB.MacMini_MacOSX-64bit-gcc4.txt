@@ -13,13 +13,14 @@ elastix_run_3DCT_lung.NC.bspline.ASGD.001d 1163384104
 elastix_run_3DCT_lung.NC.bspline.ASGD.002 2625973342
 elastix_run_3DCT_lung.NC.bspline.ASGD.003 764617185
 elastix_run_3DCT_lung.NC.bspline.ASGD.004 1105012332
+elastix_run_3DCT_lung.NC.bspline.ASGD.004b 1962338082
 elastix_run_3DCT_lung.NC.bspline.QN.001 42142811
 elastix_run_3DCT_lung.NC.bspline.SGD.001 3261928545
 elastix_run_3DCT_lung.NC.euler.ASGD.001 2097417170
 elastix_run_3DCT_lung.NC.translation.ASGD.001 1177112993
 elastix_run_3DCT_lung.NMI.bspline.ASGD.001 2212129645
 elastix_run_3DCT_lung.SSD.bspline.ASGD.001 1101798446
-elastix_run_3DCT_lung.SSD.bspline.ASGD.002 4114607001
-elastix_run_3DCT_lung.SSD.bspline.ASGD.003 287821973
+elastix_run_3DCT_lung.SSD.bspline.ASGD.002 1802662650
+elastix_run_3DCT_lung.SSD.bspline.ASGD.003 1235744770
 elastix_run_3DCT_lung.example 3450505444
 elastix_run_example 985119556

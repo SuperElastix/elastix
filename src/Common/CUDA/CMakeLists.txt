@@ -1,4 +1,15 @@
+# In order to build elastix with CUDA support we have to enable the following line.
+#
+# It is a workaround around a problem with the nvcc compiler complaining that the
+# command line is to long. By default all ITK include path are also propagated to
+# the nvcc compiler. These are really a lot of paths, especially with the modular
+# setup in ITK4. In addition, these include paths are not needed, since the CUDA
+# kernels do not use anything from the ITK.
+# Therefore, we reset the include directories to nothing for this directory:
+SET_DIRECTORY_PROPERTIES( PROPERTIES INCLUDE_DIRECTORIES "" )
 
+# Create a CUDA library containing the CUDA resampler.
+#
 # The compiler flag -ftemplate-depth-50 is by default propagated to the CUDA compiler.
 # This, however, generates a compiler warning. We temporarily remove the flag, and add
 # it again after CUDA_ADD_LIBRARY.
@@ -7,6 +18,7 @@ string( REGEX REPLACE "-ftemplate-depth-50" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAG
 CUDA_ADD_LIBRARY( elastix_cuda cudaResampleImageFilter.cu cudaResampleImageFilter.cuh )
 set( CMAKE_CXX_FLAGS ${remember_flags} )
 
+# CUDA include directories are needed
 CUDA_INCLUDE_DIRECTORIES( ${CUDA_SDK_ROOT_DIR}/C/common/inc )
 
 # Add some additional options to the nvcc compiler

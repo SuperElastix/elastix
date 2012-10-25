@@ -19,9 +19,11 @@
 #include "itkApproximateSignedDistanceMapImageFilter.h"
 #include "itkGradientImageFilter.h"
 #include "itkVectorCastImageFilter.h"
-// Used only to solve a bug in the distance map algorithm
-#include "itkMultiplyImageFilter.h"
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
+#include "itkBinaryThresholdImageFilter.h"
+#include "itkAddImageFilter.h"
+#include "itkMaskImageFilter.h"
+#include "itkConstantPadImageFilter.h"
 
 namespace itk
 {
@@ -160,35 +162,6 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     this->m_LabelsInterpolator->SetInputImage( this->m_Labels );
     // Restore settings
     this->SetFixedParameters( para );
-
-    typedef itk::Image< double, itkGetStaticConstMacro( SpaceDimension ) >                          ImageDoubleType;
-    typedef itk::ApproximateSignedDistanceMapImageFilter<ImageLabelType, ImageDoubleType>           DistFilterType;
-    typedef itk::SmoothingRecursiveGaussianImageFilter<ImageDoubleType, ImageDoubleType>            SmoothFilterType;
-    typedef itk::GradientImageFilter<ImageDoubleType, double, double>                               GradFilterType;
-    typedef itk::MultiplyImageFilter<ImageLabelType, ImageLabelType, ImageLabelType>                MultiplyFilterType;
-    typedef itk::VectorCastImageFilter<typename GradFilterType::OutputImageType, ImageVectorType>   CastVectorType;
-
-    typename MultiplyFilterType::Pointer multFilter = MultiplyFilterType::New();
-    multFilter->SetInput( this->m_Labels );
-    multFilter->SetConstant( 2 );
-
-    typename DistFilterType::Pointer distFilter = DistFilterType::New();
-    distFilter->SetInsideValue(2);
-    distFilter->SetOutsideValue(0);
-    distFilter->SetInput( multFilter->GetOutput() );
-
-    typename SmoothFilterType::Pointer smoothFilter = SmoothFilterType::New();
-    smoothFilter->SetInput( distFilter->GetOutput() );
-    smoothFilter->SetSigma( 4.0 );
-
-    typename GradFilterType::Pointer gradFilter = GradFilterType::New();
-    gradFilter->SetInput( smoothFilter->GetOutput() );
-
-    typename CastVectorType::Pointer castFilter = CastVectorType::New();
-    castFilter->SetInput( gradFilter->GetOutput() );
-    castFilter->Update();
-
-    this->m_LabelsNormals = castFilter->GetOutput();
   }
 }
 
@@ -353,6 +326,87 @@ void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
 ::UpdateLocalBases()
 {
+  typedef itk::Image< double, itkGetStaticConstMacro( SpaceDimension ) >                        ImageDoubleType;
+  typedef itk::ConstantPadImageFilter<ImageLabelType, ImageLabelType>                           PadFilterType;
+  typedef itk::ApproximateSignedDistanceMapImageFilter<ImageLabelType, ImageDoubleType>         DistFilterType;
+  typedef itk::SmoothingRecursiveGaussianImageFilter<ImageDoubleType, ImageDoubleType>          SmoothFilterType;
+  typedef itk::GradientImageFilter<ImageDoubleType, double, double>                             GradFilterType;
+  typedef itk::VectorCastImageFilter<typename GradFilterType::OutputImageType, ImageVectorType> CastVectorType;
+  typedef itk::BinaryThresholdImageFilter<ImageLabelType, ImageLabelType>                       LabelExtractorType;
+  typedef itk::AddImageFilter<ImageVectorType, ImageVectorType, ImageVectorType>                AddVectorImageType;
+  typedef itk::MaskImageFilter<ImageVectorType, ImageLabelType, ImageVectorType>                MaskVectorImageType;
+  typedef typename ImageLabelType::PointType                                                    PointType;
+  typedef typename ImageLabelType::RegionType                                                   RegionType;
+  typedef typename ImageLabelType::SpacingType                                                  SpacingType;
+
+  PointType transOrig = GetGridOrigin();
+  PointType transEnd;
+  for (unsigned i = 0; i < NDimensions; ++i)
+    transEnd[i] = transOrig[i] + (GetGridRegion().GetSize()[i] - GetGridRegion().GetIndex()[i]) * GetGridSpacing()[i];
+
+  PointType   labelOrig = this->m_Labels->GetOrigin();
+  RegionType  labelReg = this->m_Labels->GetLargestPossibleRegion();
+  SpacingType labelSpac = this->m_Labels->GetSpacing();
+  PointType   labelEnd;
+  for (unsigned i = 0; i < NDimensions; ++i)
+    labelEnd[i] = labelOrig[i] + (labelReg.GetSize()[i] - labelReg.GetIndex()[i]) * labelSpac[i];
+
+  typename ImageLabelType::SizeType lowerExtend;
+  for (unsigned i = 0; i < NDimensions; ++i)
+    lowerExtend[i] = std::ceil((labelOrig[i] - transOrig[i]) / labelSpac[i]);
+
+  typename ImageLabelType::SizeType upperExtend;
+  for (unsigned i = 0; i < NDimensions; ++i)
+    upperExtend[i] = std::ceil((transEnd[i] - labelEnd[i])) / labelSpac[i];
+
+  typename PadFilterType::Pointer padFilter = PadFilterType::New();
+  padFilter->SetInput( this->m_Labels );
+  padFilter->SetPadLowerBound( lowerExtend );
+  padFilter->SetPadUpperBound( upperExtend );
+  padFilter->SetConstant( 0 );
+
+  for (int l = 0; l < this->m_NbLabels; ++l)
+  {
+    typename LabelExtractorType::Pointer labelExtractor = LabelExtractorType::New();
+    labelExtractor->SetInput( padFilter->GetOutput() );
+    labelExtractor->SetLowerThreshold(l);
+    labelExtractor->SetUpperThreshold(l);
+    labelExtractor->SetInsideValue(1);
+    labelExtractor->SetOutsideValue(0);
+
+    typename DistFilterType::Pointer distFilter = DistFilterType::New();
+    distFilter->SetInsideValue(1);
+    distFilter->SetOutsideValue(0);
+    distFilter->SetInput( labelExtractor->GetOutput() );
+
+    typename SmoothFilterType::Pointer smoothFilter = SmoothFilterType::New();
+    smoothFilter->SetInput( distFilter->GetOutput() );
+    smoothFilter->SetSigma( 4. );
+
+    typename GradFilterType::Pointer gradFilter = GradFilterType::New();
+    gradFilter->SetInput( smoothFilter->GetOutput() );
+
+    typename CastVectorType::Pointer castFilter = CastVectorType::New();
+    castFilter->SetInput( gradFilter->GetOutput() );
+
+    typename MaskVectorImageType::Pointer maskFilter = MaskVectorImageType::New();
+    maskFilter->SetInput( castFilter->GetOutput() );
+    maskFilter->SetMaskImage(labelExtractor->GetOutput() );
+    maskFilter->SetOutsideValue( itk::NumericTraits<VectorType>::ZeroValue() );
+    maskFilter->Update();
+
+    if (l == 0)
+      this->m_LabelsNormals = maskFilter->GetOutput();
+    else
+    {
+      typename AddVectorImageType::Pointer addFilter = AddVectorImageType::New();
+      addFilter->SetInput1(this->m_LabelsNormals);
+      addFilter->SetInput2(maskFilter->GetOutput());
+      addFilter->Update();
+      this->m_LabelsNormals = addFilter->GetOutput();
+    }
+  }
+
   m_LocalBases = ImageBaseType::New();
   m_LocalBases->SetRegions(GetGridRegion());
   m_LocalBases->SetSpacing(GetGridSpacing());

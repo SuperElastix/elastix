@@ -369,16 +369,20 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     /** Get the corresponding indices in the fixed and moving RigidityImage's.
      * NOTE: Floating point index results are truncated to integers.
      */
-    if ( this->m_UseFixedRigidityImage )
+    if( this->m_UseFixedRigidityImage )
     {
       isInFixedImage = this->m_FixedRigidityImageDilated
         ->TransformPhysicalPointToIndex( point, index1 );
+        // Should actually use inverted initial transform?
+        //->TransformPhysicalPointToIndex(
+        //this->Transform->GetInitialTransform()->TransformPoint( point ), index1 );
     }
-    if ( this->m_UseMovingRigidityImage )
+    if( this->m_UseMovingRigidityImage )
     {
       isInMovingImage = this->m_MovingRigidityImageDilated
         ->TransformPhysicalPointToIndex(
-        this->m_Transform->TransformPoint( point ), index2 );
+        //this->m_Transform->TransformPoint( point ), index2 );
+        this->m_BSplineTransform->TransformPoint( point ), index2 );
     }
 
     /** Get the values at those positions. */
@@ -703,6 +707,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         ++itA[ i ];++itB[ i ];
         if ( ImageDimension == 3 ) ++itC[ i ];
       }
+      ++it_RCI;
     } // end while
   } // end if do orthonormality
 
@@ -718,6 +723,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     itA[ i ].GoToBegin(); itB[ i ].GoToBegin();
     if ( ImageDimension == 3 ) itC[ i ].GoToBegin();
   }
+  it_RCI.GoToBegin();
 
   if ( this->m_CalculatePropernessCondition )
   {
@@ -768,6 +774,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         ++itA[ i ];++itB[ i ];
         if ( ImageDimension == 3 ) ++itC[ i ];
       }
+      ++it_RCI;
 
     } // end while
   } // end if do properness
@@ -814,6 +821,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itF[ i ];++itH[ i ];++itI[ i ];
         }
       }
+      ++it_RCI;
 
     } // end while
   } // end if do properness
@@ -1397,6 +1405,8 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itOCp[ i ][ j ];
         }
       }
+      ++it_RCI;
+
     } // end while
   } // end if do orthonormality
 
@@ -1638,6 +1648,8 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itPCp[ i ][ j ];
         }
       }
+      ++it_RCI;
+
     } // end while
   } // end if do properness
 
@@ -1719,6 +1731,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itLCp[ i ][ j ];
         }
       }
+      ++it_RCI;
 
     } // end while
   } // end if do linearity
