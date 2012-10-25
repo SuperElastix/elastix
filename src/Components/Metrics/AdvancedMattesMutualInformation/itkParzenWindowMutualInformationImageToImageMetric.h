@@ -183,9 +183,9 @@ protected:
   typedef typename Superclass::JointPDFType                       JointPDFType;
   typedef typename Superclass::JointPDFDerivativesType            JointPDFDerivativesType;
   typedef typename Superclass::IncrementalMarginalPDFType         IncrementalMarginalPDFType;
-  //typedef typename Superclass::CompensatedSumType                 CompensatedSumType;
-  //typedef typename Superclass::JointPDFCompensatedSumType         JointPDFCompensatedSumType;
-  //typedef typename Superclass::JointPDFCompensatedSumPointer      JointPDFCompensatedSumPointer;
+  typedef typename Superclass::CompensatedSumType                 CompensatedSumType;
+  typedef typename Superclass::JointPDFCompensatedSumType         JointPDFCompensatedSumType;
+  typedef typename Superclass::JointPDFCompensatedSumPointer      JointPDFCompensatedSumPointer;
   typedef typename Superclass::JointPDFIndexType                  JointPDFIndexType;
   typedef typename Superclass::JointPDFRegionType                 JointPDFRegionType;
   typedef typename Superclass::JointPDFSizeType                   JointPDFSizeType;
@@ -225,7 +225,8 @@ protected:
    *
    * This is really only here for experimental purposes.
    */
-  virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters,
+  virtual void GetValueAndFiniteDifferenceDerivative(
+    const ParametersType& parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
   /** Compute terms to implement preconditioning as proposed by Tustison et al. */
@@ -247,8 +248,8 @@ protected:
 
   // tmp testing
   //typedef Array<CompensatedSumType> CompensatedSumDerivativeType;
-  //typedef std::vector<CompensatedSumType> CompensatedSumDerivativeType;
-  //mutable std::vector<CompensatedSumDerivativeType> m_ThreaderCompensatedSumDerivatives;
+  typedef std::vector<CompensatedSumType> CompensatedSumDerivativeType;
+  mutable std::vector<CompensatedSumDerivativeType> m_ThreaderCompensatedSumDerivatives;
 
   /** Initialize threading related parameters. */
   virtual void InitializeThreadingParameters( void ) const;
@@ -292,12 +293,12 @@ private:
     const DerivativeType & imageJacobian,
     const NonZeroJacobianIndicesType & nzji,
     DerivativeType & derivative ) const;
-  //void UpdateDerivativeLowMemory(
-  //  const RealType & fixedImageValue,
-  //  const RealType & movingImageValue,
-  //  const DerivativeType & imageJacobian,
-  //  const NonZeroJacobianIndicesType & nzji,
-  //  CompensatedSumDerivativeType & derivative ) const;
+  void UpdateDerivativeLowMemory(
+    const RealType & fixedImageValue,
+    const RealType & movingImageValue,
+    const DerivativeType & imageJacobian,
+    const NonZeroJacobianIndicesType & nzji,
+    CompensatedSumDerivativeType & derivative ) const;
 
   /** Helper function to compute m_PRatioArray in case of low memory consumption. */
   void ComputeValueAndPRatioArray( double & MI ) const;
@@ -305,7 +306,8 @@ private:
   struct MultiThreaderComputeDerivativeType
   {
     typename DerivativeType::iterator derivativeIterator;
-    typename std::vector< DerivativeType >::iterator  m_ThreaderDerivativesIterator;
+    //typename std::vector< DerivativeType >::iterator  m_ThreaderDerivativesIterator;
+    typename std::vector< CompensatedSumDerivativeType >::iterator  m_ThreaderDerivativesIterator;
     unsigned int numberOfParameters;
     double normal_sum;
   };
