@@ -450,14 +450,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
-    //this->m_ThreaderJointPDFs[ i ] = JointPDFType::New();
-    //this->m_ThreaderJointPDFs[ i ]->SetRegions( jointPDFRegion );
-    //this->m_ThreaderJointPDFs[ i ]->Allocate();
-    //this->m_ThreaderJointPDFs[ i ]->FillBuffer( 0.0 );
-
-    this->m_ThreaderJointPDFs[ i ] = JointPDFCompensatedSumType::New();
+    this->m_ThreaderJointPDFs[ i ] = JointPDFType::New();
     this->m_ThreaderJointPDFs[ i ]->SetRegions( jointPDFRegion );
     this->m_ThreaderJointPDFs[ i ]->Allocate();
+    this->m_ThreaderJointPDFs[ i ]->FillBuffer( 0.0 );
   }
 
 } // end InitializeThreadingParameters()
@@ -536,11 +532,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   const RealType & movingImageValue,
   const DerivativeType * imageJacobian,
   const NonZeroJacobianIndicesType * nzji,
-  //JointPDFType * jointPDF ) const
-  JointPDFCompensatedSumType * jointPDF ) const
+  JointPDFType * jointPDF ) const
 {
-  //typedef ImageSliceIteratorWithIndex< JointPDFType >  PDFIteratorType;
-  typedef ImageSliceIteratorWithIndex< JointPDFCompensatedSumType >  PDFIteratorType;
+  typedef ImageSliceIteratorWithIndex< JointPDFType >  PDFIteratorType;
 
   /** Determine Parzen window arguments (see eq. 6 of Mattes paper [2]). */
   const double fixedImageParzenWindowTerm
@@ -740,15 +734,13 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   unsigned int marginalIndex = 0;
   while( !linearIter.IsAtEnd() )
   {
-    CompensatedSumType sum; sum.ResetToZero();
-    //PDFValueType sum = 0.0;
+    PDFValueType sum = 0.0;
     while( !linearIter.IsAtEndOfLine() )
     {
       sum += linearIter.Get();
       ++linearIter;
     }
-    //marginalPDF[ marginalIndex ] = sum;
-    marginalPDF[ marginalIndex ] = sum.GetSum();
+    marginalPDF[ marginalIndex ] = sum;
     linearIter.NextLine();
     ++marginalIndex;
   }
@@ -1014,10 +1006,6 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   this->m_NumberOfPixelsCounted = 0;
   this->m_Alpha = 0.0;
 
-  JointPDFCompensatedSumPointer jointPDFCompensatedSum = JointPDFCompensatedSumType::New();
-  jointPDFCompensatedSum ->SetRegions( this->m_JointPDF->GetBufferedRegion() );
-  jointPDFCompensatedSum ->Allocate();
-
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
    *   this->GetImageSampler()->Update();
@@ -1080,23 +1068,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Compute this sample's contribution to the joint distributions. */
       this->UpdateJointPDFAndDerivatives(
-        //fixedImageValue, movingImageValue, 0, 0, this->m_JointPDF.GetPointer() );
-        fixedImageValue, movingImageValue, 0, 0, jointPDFCompensatedSum.GetPointer() );
+        fixedImageValue, movingImageValue, 0, 0, this->m_JointPDF.GetPointer() );
     }
 
   } // end iterating over fixed image spatial sample container for loop
-
-  /** Copy jointPDFCompensatedSum to m_JointPDF. */
-  typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
-  typedef ImageRegionIterator<JointPDFCompensatedSumType> JointPDFCompensatedSumIteratorType;
-  JointPDFIteratorType it1( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
-  JointPDFCompensatedSumIteratorType it2( jointPDFCompensatedSum, this->m_JointPDF->GetBufferedRegion() );
-  it1.GoToBegin(); it2.GoToBegin();
-  while ( !it1.IsAtEnd() )
-  {
-    it1.Value() = it2.Value().GetSum();
-    ++it1; ++it2;
-  }
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
@@ -1258,33 +1233,26 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   /** Accumulate joint histogram. */
   // could be multi-threaded too, by each thread updating only a part of the JointPDF.
   typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
-  typedef ImageRegionIterator<JointPDFCompensatedSumType> JointPDFCompensatedSumIteratorType;
   JointPDFIteratorType it( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
   it.GoToBegin();
-  //std::vector<JointPDFIteratorType> itT( this->m_NumberOfThreads );
-  std::vector<JointPDFCompensatedSumIteratorType> itT( this->m_NumberOfThreads );
+  std::vector<JointPDFIteratorType> itT( this->m_NumberOfThreads );
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
-    //itT[ i ] = JointPDFIteratorType(
-    itT[ i ] = JointPDFCompensatedSumIteratorType(
+    itT[ i ] = JointPDFIteratorType(
       this->m_ThreaderJointPDFs[ i ], this->m_JointPDF->GetBufferedRegion() );
     itT[ i ].GoToBegin();
   }
 
-  CompensatedSumType sum;
-  //PDFValueType sum;
+  PDFValueType sum;
   while ( !it.IsAtEnd() )
   {
-    sum.ResetToZero();
-    //sum = NumericTraits<PDFValueType>::Zero;
+    sum = NumericTraits<PDFValueType>::Zero;
     for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
     {
-      //sum += itT[ i ].Value();
-      sum += itT[ i ].Value().GetSum();
+      sum += itT[ i ].Value();
       ++itT[ i ];
     }
-    it.Set( sum.GetSum() );
-    //it.Set( sum );
+    it.Set( sum );
     ++it;
   }
 
@@ -1350,10 +1318,6 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   this->m_JointPDFDerivatives->FillBuffer( 0.0 );
   this->m_Alpha = 0.0;
   this->m_NumberOfPixelsCounted = 0;
-
-  JointPDFCompensatedSumPointer jointPDFCompensatedSum = JointPDFCompensatedSumType::New();
-  jointPDFCompensatedSum ->SetRegions( this->m_JointPDF->GetBufferedRegion() );
-  jointPDFCompensatedSum ->Allocate();
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
@@ -1431,23 +1395,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Update the joint pdf and the joint pdf derivatives. */
       this->UpdateJointPDFAndDerivatives(
-        //fixedImageValue, movingImageValue, &imageJacobian, &nzji, this->m_JointPDF.GetPointer() );
-        fixedImageValue, movingImageValue, &imageJacobian, &nzji, jointPDFCompensatedSum.GetPointer() );
+        fixedImageValue, movingImageValue, &imageJacobian, &nzji, this->m_JointPDF.GetPointer() );
 
     } //end if-block check sampleOk
   } // end iterating over fixed image spatial sample container for loop
-
-  /** Copy jointPDFCompensatedSum to m_JointPDF. */
-  typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
-  typedef ImageRegionIterator<JointPDFCompensatedSumType> JointPDFCompensatedSumIteratorType;
-  JointPDFIteratorType it1( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
-  JointPDFCompensatedSumIteratorType it2( jointPDFCompensatedSum, this->m_JointPDF->GetBufferedRegion() );
-  it1.GoToBegin(); it2.GoToBegin();
-  while ( !it1.IsAtEnd() )
-  {
-    it1.Value() = it2.Value().GetSum();
-    ++it1; ++it2;
-  }
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(

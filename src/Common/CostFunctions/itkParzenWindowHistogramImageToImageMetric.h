@@ -18,7 +18,6 @@
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkBSplineKernelFunction.h"
 
-#include "itkCompensatedSummation.h" // testing it
 
 namespace itk
 {
@@ -252,9 +251,6 @@ protected:
   typedef typename JointPDFType::Pointer          JointPDFPointer;
   typedef Image<PDFDerivativeValueType,3>         JointPDFDerivativesType;
   typedef Image<PDFValueType,2>                   IncrementalMarginalPDFType;
-  typedef CompensatedSummation<PDFValueType>      CompensatedSumType;
-  typedef Image<CompensatedSumType,2>             JointPDFCompensatedSumType;
-  typedef typename JointPDFCompensatedSumType::Pointer  JointPDFCompensatedSumPointer;
   typedef JointPDFType::IndexType                 JointPDFIndexType;
   typedef JointPDFType::RegionType                JointPDFRegionType;
   typedef JointPDFType::SizeType                  JointPDFSizeType;
@@ -301,8 +297,7 @@ protected:
   typename KernelFunctionType::Pointer m_DerivativeMovingKernel;
 
   /** Threading related parameters. */
-  //mutable std::vector<JointPDFPointer>  m_ThreaderJointPDFs;
-  mutable std::vector<JointPDFCompensatedSumPointer>  m_ThreaderJointPDFs;
+  mutable std::vector<JointPDFPointer>  m_ThreaderJointPDFs;
 
   struct ParzenWindowHistogramMultiThreaderParameterType
   {
@@ -344,8 +339,7 @@ protected:
     const RealType & movingImageValue,
     const DerivativeType * imageJacobian,
     const NonZeroJacobianIndicesType * nzji,
-    //JointPDFType * jointPDF ) const;
-    JointPDFCompensatedSumType * jointPDF ) const;
+    JointPDFType * jointPDF ) const;
 
   /** Update the joint PDF and the incremental pdfs.
    * The input is a pixel pair (fixed, moving, moving mask) and
