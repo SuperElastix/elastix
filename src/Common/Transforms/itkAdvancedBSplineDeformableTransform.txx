@@ -148,6 +148,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
   this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
+  this->m_PointToIndexMatrixIsDiagonal = true;
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     for ( unsigned int j = 0; j < SpaceDimension; ++j )
@@ -156,6 +157,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
         = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
       this->m_PointToIndexMatrixTransposed2[ i ][ j ]
         = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
+      if( i != j && this->m_PointToIndexMatrix[ i ][ j ] != 0.0 )
+      {
+        this->m_PointToIndexMatrixIsDiagonal = false;
+      }
     }
   }
 
@@ -404,7 +409,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
   /** Initialize */
-  const unsigned int nnzji = this->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
   if ( (jacobian.cols() != nnzji) || (jacobian.rows() != SpaceDimension) )
   {
     jacobian.SetSize( SpaceDimension, nnzji );
@@ -417,7 +422,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     /** Return some dummy */
     nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
-    for (unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    for ( NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
     {
       nonZeroJacobianIndices[i] = i;
     }
@@ -695,7 +700,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       jsj[ i ].Fill( 0.0 );
     }
     nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
-    for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    for ( NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
     {
       nonZeroJacobianIndices[ i ] = i;
     }
@@ -800,7 +805,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       jsj[ i ].Fill( 0.0 );
     }
     nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
-    for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    for ( NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
     {
       nonZeroJacobianIndices[ i ] = i;
     }
@@ -945,7 +950,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       }
     }
     nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
-    for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    for ( NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
     {
       nonZeroJacobianIndices[ i ] = i;
     }
@@ -1041,6 +1046,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
+  return GetJacobianOfSpatialHessian_opt( ipp, sh, jsh, nonZeroJacobianIndices );
+
   typedef typename WeightsType::ValueType WeightsValueType;
 
   // Can only compute Jacobian if parameters are set via
@@ -1074,7 +1081,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       sh[ i ].Fill( 0.0 );
     }
     nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
-    for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    for ( NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
     {
       nonZeroJacobianIndices[ i ] = i;
     }
@@ -1214,6 +1221,211 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
 
 } // end GetJacobianOfSpatialHessian()
+
+/**
+ * ********************* GetJacobianOfSpatialHessian ****************************
+ */
+
+template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+void
+AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
+::GetJacobianOfSpatialHessian_opt(
+  const InputPointType & ipp,
+  SpatialHessianType & sh,
+  JacobianOfSpatialHessianType & jsh,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  typedef typename WeightsType::ValueType WeightsValueType;
+
+  // Can only compute Jacobian if parameters are set via
+  // SetParameters or SetParametersByValue
+  if( this->m_InputParametersPointer == NULL )
+  {
+    itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
+  }
+
+  jsh.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
+  /** Convert the physical point to a continuous index, which
+   * is needed for the 'Evaluate()' functions below.
+   */
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and identity sj and zero jsj.
+  if( !this->InsideValidRegion( cindex ) )
+  {
+    for( unsigned int i = 0; i < jsh.size(); ++i )
+    {
+      for( unsigned int j = 0; j < jsh[ i ].Size(); ++j )
+      {
+        jsh[ i ][ j ].Fill( 0.0 );
+      }
+    }
+    for( unsigned int i = 0; i < sh.Size(); ++i )
+    {
+      sh[ i ].Fill( 0.0 );
+    }
+    nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+    for( NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    {
+      nonZeroJacobianIndices[ i ] = i;
+    }
+    return;
+  }
+
+  /** Compute the number of affected B-spline parameters. */
+
+  /** Allocate memory on the stack: */
+  typedef typename WeightsType::ValueType WeightsValueType;
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  WeightsValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
+
+  /** Array for CoefficientImage values */
+  WeightsValueType coeffArray[ numberOfWeights * SpaceDimension ];
+  WeightsType coeffs( coeffArray, numberOfWeights * SpaceDimension, false );
+
+  IndexType supportIndex;
+  this->m_SODerivativeWeightsFunctions[ 0 ][ 0 ]->ComputeStartIndex(
+    cindex, supportIndex );
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  /** Copy values from coefficient image to linear coeffs array. */
+  typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
+  for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {
+    // Does not work since only support region needed
+    //memcpy( coeffArray + dim * numberOfWeights,
+    //  this->m_CoefficientImage[ dim ]->GetBufferPointer(),
+    //    numberOfWeights * sizeof( WeightsValueType ) );
+    ImageRegionConstIterator<ImageType> itCoef(
+      this->m_CoefficientImage[ dim ], supportRegion );
+
+    for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+    {
+      (*itCoeffsLinear) = itCoef.Value();
+      ++itCoeffsLinear;
+      ++itCoef;
+    }
+  }
+
+  /** On the stack instead of heap is faster. */
+  const unsigned int d = SpaceDimension * ( SpaceDimension + 1 ) / 2;
+  double weightVector[ d * numberOfWeights ];
+
+  /** For all derivative directions, compute the derivatives of the
+   * spatial Hessian to the transformation parameters mu:
+   * d/dmu of d^2T / dx_i dx_j
+   * Make use of the fact that the Hessian is symmetrical, so do not compute
+   * both i,j and j,i for i != j.
+   */
+  unsigned int count = 0;
+  typename WeightsType::const_iterator itWeights;
+  typename WeightsType::const_iterator itCoeffs;
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    for( unsigned int j = 0; j <= i; ++j )
+    {
+      /** Compute the derivative weights. */
+      this->m_SODerivativeWeightsFunctions[ i ][ j ]
+        ->Evaluate( cindex, supportIndex, weights );
+
+      /** Remember the weights. */
+      memcpy( weightVector + count * numberOfWeights,
+        weights.data_block(), numberOfWeights * sizeof( double ) );
+      count++;
+
+      /** Reset coeffs iterator */
+      itCoeffs = coeffs.begin();
+
+      /** Compute the spatial Hessian sh:
+       *    d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights.
+       */
+      for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+      {
+        /** Reset weights iterator. */
+        itWeights = weights.begin();
+
+        /** Compute the sum for this dimension. */
+        double sum = 0.0;
+        for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+        {
+          sum += (*itCoeffs) * (*itWeights);
+          ++itWeights;
+          ++itCoeffs;
+        }
+
+        /** Update the spatial Hessian sh. The Hessian is symmetrical. */
+        sh[ dim ]( i, j ) = sum;
+        if (j<i)
+        {
+          sh[ dim ]( j, i ) = sum;
+        }
+      }
+
+    } // end for j
+  } // end for i
+
+  /** Compute the Jacobian of the spatial Hessian jsh:
+   *    d/dmu d^2T_{dim} / dx_i dx_j = weights.
+   */
+  SpatialHessianType * basepointer = &jsh[ 0 ];
+  SpatialJacobianType matrix;
+  vnl_matrix_fixed<double,SpaceDimension,SpaceDimension> matrix2;
+  for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+  {
+    unsigned int count = 0;
+    for( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      for( unsigned int j = 0; j <= i; ++j )
+      {
+        const double tmp = *( weightVector + count * numberOfWeights + mu );
+        matrix[ i ][ j ] = tmp;
+        if ( i != j ) matrix[ j ][ i ] = tmp;
+        ++count;
+      }
+    }
+
+    /** Take into account grid spacing and direction matrix. */
+    if( !this->m_PointToIndexMatrixIsDiagonal )
+    {
+      matrix = this->m_PointToIndexMatrixTransposed2
+        * ( matrix * this->m_PointToIndexMatrix2 );
+    }
+    else
+    {
+      for( unsigned int i = 0; i < SpaceDimension; ++i )
+      {
+        for( unsigned int j = 0; j < SpaceDimension; ++j )
+        {
+          matrix[ i ][ j ] *= this->m_PointToIndexMatrixTransposed2[ i ][ i ]
+            * this->m_PointToIndexMatrixTransposed2[ j ][ j ];
+        }
+      }
+    }
+
+    /** Copy to the correct location. */
+    for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      (*(basepointer + mu + dim * numberOfWeights))[ dim ] = matrix;
+    }
+  }
+
+  /** Take into account grid spacing and direction matrix. */
+  for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {
+    sh[ dim ] = this->m_PointToIndexMatrixTransposed2
+      * ( sh[ dim ] * this->m_PointToIndexMatrix2 );
+  }
+
+  /** Compute the nonzero Jacobian indices. */
+  this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
+
+} // end GetJacobianOfSpatialHessian_opt()
 
 
 /**

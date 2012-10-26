@@ -300,6 +300,7 @@ protected:
   DirectionType       m_PointToIndexMatrixTransposed;
   SpatialJacobianType m_PointToIndexMatrixTransposed2;
   DirectionType       m_IndexToPoint;
+  bool m_PointToIndexMatrixIsDiagonal;
 
   RegionType          m_ValidRegion;
 

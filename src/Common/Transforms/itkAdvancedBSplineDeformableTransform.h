@@ -192,7 +192,7 @@ public:
   typedef typename Superclass::GridOffsetType   GridOffsetType;
 
   /** This method specifies the region over which the grid resides. */
-  virtual void SetGridRegion( const RegionType& region );
+  virtual void SetGridRegion( const RegionType & region );
 
   /** Transform points by a B-spline deformable transformation. */
   OutputPointType TransformPoint( const InputPointType & point ) const;
@@ -280,6 +280,11 @@ public:
    * spatial Hessian of the transformation.
    */
   virtual void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp,
+    SpatialHessianType & sh,
+    JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+  virtual void GetJacobianOfSpatialHessian_opt(
     const InputPointType & ipp,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,

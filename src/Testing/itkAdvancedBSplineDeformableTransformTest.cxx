@@ -64,6 +64,7 @@ int main( int argc, char *argv[] )
   typedef TransformType::JacobianOfSpatialJacobianType  JacobianOfSpatialJacobianType;
   typedef TransformType::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
   typedef TransformType::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
+  typedef TransformType::NumberOfParametersType         NumberOfParametersType;
   typedef TransformType::InputPointType                 InputPointType;
   typedef TransformType::OutputPointType                OutputPointType;
   typedef TransformType::ParametersType                 ParametersType;
@@ -143,7 +144,7 @@ int main( int argc, char *argv[] )
   transformITK->SetParameters( parameters );
 
   /** Get the number of nonzero Jacobian indices. */
-  unsigned long nonzji = transform->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nonzji = transform->GetNumberOfNonZeroJacobianIndices();
 
   /** Declare variables. */
   InputPointType inputPoint;
@@ -214,14 +215,16 @@ int main( int argc, char *argv[] )
    *
    */
 
+  clock_t startClock, endClock, clockITK;
+
   /** Time the implementation of the spatial Jacobian. */
-  clock_t startClock = clock();
+  startClock = clock();
   for ( unsigned int i = 0; i < N; ++i )
   {
     transform->GetSpatialJacobian( inputPoint, spatialJacobian );
   }
-  clock_t endClock = clock();
-  clock_t clockITK = endClock - startClock;
+  endClock = clock();
+  clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Jacobian is: "
     << clockITK / 1000.0 << " s." << std::endl;
 
@@ -274,7 +277,7 @@ int main( int argc, char *argv[] )
   }
   endClock = clock();
   clockITK = endClock - startClock;
-  std::cerr << "The elapsed time for the spatial Jacobian (2 func) is: "
+  std::cerr << "The elapsed time for the (Jacobian of the) spatial Jacobian (2 func) is: "
     << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Jacobian and its Jacobian. */
@@ -286,7 +289,7 @@ int main( int argc, char *argv[] )
   }
   endClock = clock();
   clockITK = endClock - startClock;
-  std::cerr << "The elapsed time for the spatial Jacobian (1 func) is: "
+  std::cerr << "The elapsed time for the (Jacobian of the) spatial Jacobian (1 func) is: "
     << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Hessian. */
@@ -299,19 +302,19 @@ int main( int argc, char *argv[] )
   }
   endClock = clock();
   clockITK = endClock - startClock;
-  std::cerr << "The elapsed time for the spatial Hessian (2 func) is: "
+  std::cerr << "The elapsed time for the (Jacobian of the) spatial Hessian (2 func) is: "
     << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the Jacobian of the spatial Hessian. */
   startClock = clock();
   for ( unsigned int i = 0; i < N; ++i )
   {
-    transform->GetJacobianOfSpatialHessian( inputPoint,
+    transform->GetJacobianOfSpatialHessian_opt( inputPoint,
       spatialHessian, jacobianOfSpatialHessian, nzji );
   }
   endClock = clock();
   clockITK = endClock - startClock;
-  std::cerr << "The elapsed time for the spatial Hessian (1 func) is: "
+  std::cerr << "The elapsed time for the (Jacobian of the) spatial Hessian (1 func) is: "
     << clockITK / 1000.0 << " s." << std::endl;
 
   /** Additional checks. */
@@ -359,6 +362,42 @@ int main( int argc, char *argv[] )
   if ( vcl_sqrt( jacDiff ) > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline GetJacobian() returning incorrect result." << std::endl;
+    return 1;
+  }
+
+  // Check
+  SpatialHessianType spatialHessian1, spatialHessian2;
+  JacobianOfSpatialHessianType jacobianOfSpatialHessian1, jacobianOfSpatialHessian2;
+  NonZeroJacobianIndicesType nzji1, nzji2;
+  transform->GetJacobianOfSpatialHessian( inputPoint,
+    spatialHessian1, jacobianOfSpatialHessian1, nzji1 );
+  transform->GetJacobianOfSpatialHessian_opt( inputPoint,
+    spatialHessian2, jacobianOfSpatialHessian2, nzji2 );
+  double shDiff = 0.0;
+  for( unsigned int i = 0; i < Dimension; i++ ) {
+    for( unsigned int j = 0; j < Dimension; j++ ) {
+      for( unsigned int k = 0; k < Dimension; k++ ) {
+        shDiff += vnl_math_sqr( spatialHessian1[i][j][k] - spatialHessian2[i][j][k] );
+      } } }
+  double jshDiff = 0.0;
+  for( unsigned int mu = 0; mu < nzji.size(); mu++ ) {
+    for( unsigned int i = 0; i < Dimension; i++ ) {
+      for( unsigned int j = 0; j < Dimension; j++ ) {
+        for( unsigned int k = 0; k < Dimension; k++ ) {
+          jshDiff += vnl_math_sqr( jacobianOfSpatialHessian1[mu][i][j][k] - jacobianOfSpatialHessian2[mu][i][j][k] );
+        } } } }
+  if ( vcl_sqrt( shDiff ) > 1e-8 )
+  {
+    std::cerr << "ERROR: Advanced B-spline GetJacobianOfSpatialHessian_opt() "
+      << "returning incorrect spatial Hessian result: MSD = "
+      << vcl_sqrt( shDiff ) << std::endl;
+    return 1;
+  }
+  if ( vcl_sqrt( jshDiff ) > 1e-8 )
+  {
+    std::cerr << "ERROR: Advanced B-spline GetJacobianOfSpatialHessian_opt() "
+      << "returning incorrect Jacobian of spatial Hessian result: MSD = "
+      << vcl_sqrt( jshDiff ) << std::endl;
     return 1;
   }
 

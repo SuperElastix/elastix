@@ -584,10 +584,13 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   os << indent << "GridRegion: " << this->m_GridRegion << std::endl;
   os << indent << "GridOrigin: " << this->m_GridOrigin << std::endl;
   os << indent << "GridSpacing: " << this->m_GridSpacing << std::endl;
-  os << indent << "GridDirection: " << this->m_GridDirection << std::endl;
+  os << indent << "GridDirection:\n" << this->m_GridDirection << std::endl;
   os << indent << "GridOffsetTable: " << this->m_GridOffsetTable << std::endl;
-  os << indent << "IndexToPoint: " << this->m_IndexToPoint << std::endl;
-  os << indent << "PointToIndex: " << this->m_PointToIndexMatrix << std::endl;
+  os << indent << "IndexToPoint:\n" << this->m_IndexToPoint << std::endl;
+  os << indent << "PointToIndex:\n" << this->m_PointToIndexMatrix << std::endl;
+  os << indent << "PointToIndex2:\n" << this->m_PointToIndexMatrix2 << std::endl;
+  os << indent << "PointToIndexTransposed:\n" << this->m_PointToIndexMatrixTransposed << std::endl;
+  os << indent << "PointToIndexTransposed2:\n" << this->m_PointToIndexMatrixTransposed2 << std::endl;
 
   os << indent << "CoefficientImage: [ ";
   for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
