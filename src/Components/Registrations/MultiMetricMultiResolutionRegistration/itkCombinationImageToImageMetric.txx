@@ -862,8 +862,23 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   /** Initialize some threading related parameters. */
   this->InitializeThreadingParameters();
 
+  /** Decide whether or not to use multi-threading.
+   * If the global maximum number of threads is smaller than the number
+   * of metrics, then setting the number of threads to the number of
+   * threads will result in a bug: all metrics after the max will not be
+   * run. For now we decide to run this metric single-threadly in that case.
+   *
+   * Actually we should sum the number of threads of each metric and check that
+   * it does not surpass the global maximum. But for now we don't.
+   */
+  bool useMultiThread = this->m_UseMultiThread;
+  if( MultiThreader::GetGlobalMaximumNumberOfThreads() < this->m_NumberOfMetrics )
+  {
+    useMultiThread = false;
+  }
+
   /** Compute all metric values and derivatives, single-threadedly. */
-  if( !this->m_UseMultiThread )
+  if( !useMultiThread )
   {
     for( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
     {
