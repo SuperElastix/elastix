@@ -84,7 +84,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_UseOpenMP = false;
 
   /** Initialise the m_ThreaderMetricParameters */
-  this->m_ThreaderMetricParameters.m_Metric = this;
+  this->m_ThreaderMetricParameters.st_Metric = this;
 
   this->m_FillDerivativesTimings.clear();//tmp
 
@@ -888,7 +888,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   MultiThreaderParameterType * temp
     = static_cast<MultiThreaderParameterType * >( infoStruct->UserData );
 
-  temp->m_Metric->ThreadedGetValueAndDerivative( threadID );
+  temp->st_Metric->ThreadedGetValueAndDerivative( threadID );
 
   return ITK_THREAD_RETURN_VALUE;
 
@@ -915,6 +915,47 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   local_threader->SingleMethodExecute();
 
 } // end LaunchGetValueAndDerivativeThreaderCallback()
+
+
+/**
+ *********** AccumulateDerivativesThreaderCallback *************
+ */
+
+template < class TFixedImage, class TMovingImage >
+ITK_THREAD_RETURN_TYPE
+AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+::AccumulateDerivativesThreaderCallback( void * arg )
+{
+  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
+  ThreadIdType threadID = infoStruct->ThreadID;
+  ThreadIdType nrOfThreads = infoStruct->NumberOfThreads;
+
+  MultiThreaderParameterType * temp
+    = static_cast<MultiThreaderParameterType * >( infoStruct->UserData );
+
+  const unsigned int numPar = temp->st_Metric->GetNumberOfParameters();
+  const unsigned int subSize = static_cast<unsigned int>(
+    vcl_ceil( static_cast<double>( numPar )
+    / static_cast<double>( nrOfThreads ) ) );
+  const unsigned int jmin = threadID * subSize;
+  unsigned int jmax = ( threadID + 1 ) * subSize;
+  jmax = ( jmax > numPar ) ? numPar : jmax;
+
+  for( unsigned int j = jmin; j < jmax; ++j )
+  {
+    DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
+    for( ThreadIdType i = 0; i < nrOfThreads; ++i )
+    {
+      //tmp += temp->s_ThreaderDerivativesIterator[ i ][ j ];
+      tmp += temp->st_Metric->m_ThreaderDerivatives[ i ][ j ];
+    }
+    //temp->s_DerivativeIterator[ j ] = tmp / temp->st_NormalizationFactor;
+    temp->st_DerivativePointer[ j ] = tmp / temp->st_NormalizationFactor;
+  }
+
+  return ITK_THREAD_RETURN_VALUE;
+
+} // end AccumulateDerivativesThreaderCallback()
 
 
 /**

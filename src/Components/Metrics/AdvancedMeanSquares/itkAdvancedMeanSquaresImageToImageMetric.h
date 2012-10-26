@@ -248,17 +248,6 @@ private:
   double          m_SelfHessianNoiseRange;
   unsigned int    m_NumberOfSamplesForSelfHessian;
 
-  struct MultiThreaderComputeDerivativeType
-  {
-    typename DerivativeType::iterator derivativeIterator;
-    typename std::vector< DerivativeType >::iterator  m_ThreaderDerivativesIterator;
-    unsigned int numberOfParameters;
-    double normal_sum;
-  };
-
-  /** ComputeDerivatives threader callback function */
-  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
-
 }; // end class AdvancedMeanSquaresImageToImageMetric
 
 } // end namespace itk

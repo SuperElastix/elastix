@@ -690,8 +690,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** The normalization factor. */
-  double normal_sum = this->m_NormalizationFactor /
-    static_cast<double>( this->m_NumberOfPixelsCounted );
+  DerivativeValueType normal_sum = this->m_NormalizationFactor /
+    static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
 
   /** Accumulate values. */
   value = NumericTraits<MeasureType>::Zero;
@@ -716,18 +716,14 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   // compute multi-threadedly with itk threads
   else if( !this->m_UseOpenMP )
   {
-    MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
-    temp->normal_sum = normal_sum;
-    temp->m_ThreaderDerivativesIterator = this->m_ThreaderDerivatives.begin();
-    temp->derivativeIterator = derivative.begin();
-    temp->numberOfParameters = this->GetNumberOfParameters();
+    this->m_ThreaderMetricParameters.st_DerivativePointer   = derivative.begin();
+    this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
     typename ThreaderType::Pointer local_threader = ThreaderType::New();
     local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
+    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback,
+      const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
     local_threader->SingleMethodExecute();
-
-    delete temp;
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp
@@ -750,44 +746,6 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 #endif
 
 } // end AfterThreadedGetValueAndDerivative()
-
-
-/**
- *********** AccumulateDerivativesThreaderCallback *************
- */
-
-template <class TFixedImage, class TMovingImage>
-ITK_THREAD_RETURN_TYPE
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-::AccumulateDerivativesThreaderCallback( void * arg )
-{
-  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType threadID = infoStruct->ThreadID;
-  ThreadIdType nrOfThreads = infoStruct->NumberOfThreads;
-
-  MultiThreaderComputeDerivativeType * temp
-    = static_cast<MultiThreaderComputeDerivativeType * >( infoStruct->UserData );
-
-  const unsigned int subSize = static_cast<unsigned int>(
-    vcl_ceil( static_cast<double>( temp->numberOfParameters )
-    / static_cast<double>( nrOfThreads ) ) );
-  const unsigned int jmin = threadID * subSize;
-  unsigned int jmax = ( threadID + 1 ) * subSize;
-  jmax = ( jmax > temp->numberOfParameters ) ? temp->numberOfParameters : jmax;
-
-  for( unsigned int j = jmin; j < jmax; ++j )
-  {
-    DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
-    for( ThreadIdType i = 0; i < nrOfThreads; ++i )
-    {
-      tmp += temp->m_ThreaderDerivativesIterator[ i ][ j ];
-    }
-    temp->derivativeIterator[ j ] = tmp * temp->normal_sum;
-  }
-
-  return ITK_THREAD_RETURN_VALUE;
-
-} // end AccumulateDerivativesThreaderCallback()
 
 
 /**

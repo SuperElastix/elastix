@@ -178,17 +178,6 @@ private:
 
   unsigned int m_NumberOfSamplesForSelfHessian;
 
-  struct MultiThreaderAccumulateDerivativesType
-  {
-    typename DerivativeType::iterator s_DerivativeIterator;
-    typename std::vector< DerivativeType >::iterator  s_ThreaderDerivativesIterator;
-    NumberOfParametersType  s_NumberOfParameters;
-    DerivativeValueType     s_NormalizationFactor;
-  };
-
-  /** ComputeDerivatives threader callback function */
-  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
-
 }; // end class TransformBendingEnergyPenaltyTerm
 
 

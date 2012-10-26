@@ -640,58 +640,17 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   // compute multi-threadedly with itk threads
   else
   {
-    MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
-    temp->m_ThreaderDerivativesIterator = this->m_ThreaderDerivatives.begin();
-    temp->derivativeIterator = derivative.begin();
-    temp->numberOfParameters = this->GetNumberOfParameters();
+    this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+    this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0;
 
     typename ThreaderType::Pointer local_threader = ThreaderType::New();
     local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
+    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback,
+      const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
     local_threader->SingleMethodExecute();
-
-    delete temp;
   }
 
 } // end AfterThreadedComputeDerivativeLowMemory()
-
-
-/**
- *********** AccumulateDerivativesThreaderCallback *************
- */
-
-template <class TFixedImage, class TMovingImage>
-ITK_THREAD_RETURN_TYPE
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-::AccumulateDerivativesThreaderCallback( void * arg )
-{
-  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType threadID = infoStruct->ThreadID;
-  ThreadIdType nrOfThreads = infoStruct->NumberOfThreads;
-
-  MultiThreaderComputeDerivativeType * temp
-    = static_cast<MultiThreaderComputeDerivativeType * >( infoStruct->UserData );
-
-  const unsigned int subSize = static_cast<unsigned int>(
-    vcl_ceil( static_cast<double>( temp->numberOfParameters )
-    / static_cast<double>( nrOfThreads ) ) );
-  const unsigned int jmin = threadID * subSize;
-  unsigned int jmax = ( threadID + 1 ) * subSize;
-  jmax = ( jmax > temp->numberOfParameters ) ? temp->numberOfParameters : jmax;
-
-  for( unsigned int j = jmin; j < jmax; ++j )
-  {
-    DerivativeValueType sum = NumericTraits<DerivativeValueType>::Zero;
-    for( ThreadIdType i = 0; i < nrOfThreads; ++i )
-    {
-      sum += temp->m_ThreaderDerivativesIterator[ i ][ j ];
-    }
-    temp->derivativeIterator[ j ] = sum;
-  }
-
-  return ITK_THREAD_RETURN_VALUE;
-
-} // end AccumulateDerivativesThreaderCallback()
 
 
 /**

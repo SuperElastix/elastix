@@ -289,17 +289,6 @@ private:
   /** Helper function to compute m_PRatioArray in case of low memory consumption. */
   void ComputeValueAndPRatioArray( double & MI ) const;
 
-  struct MultiThreaderComputeDerivativeType
-  {
-    typename DerivativeType::iterator derivativeIterator;
-    typename std::vector< DerivativeType >::iterator  m_ThreaderDerivativesIterator;
-    unsigned int numberOfParameters;
-    double normal_sum;
-  };
-
-  /** ComputeDerivatives threader callback function */
-  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
-
 }; // end class ParzenWindowMutualInformationImageToImageMetric
 
 } // end namespace itk

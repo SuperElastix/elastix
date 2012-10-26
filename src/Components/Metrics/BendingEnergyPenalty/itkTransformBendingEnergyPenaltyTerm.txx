@@ -626,18 +626,15 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   // compute multi-threadedly with itk threads
   else if( !this->m_UseOpenMP )
   {
-    MultiThreaderAccumulateDerivativesType * temp = new  MultiThreaderAccumulateDerivativesType;
-    temp->s_ThreaderDerivativesIterator = this->m_ThreaderDerivatives.begin();
-    temp->s_DerivativeIterator = derivative.begin();
-    temp->s_NumberOfParameters = this->GetNumberOfParameters();
-    temp->s_NormalizationFactor = static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
+    this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+    this->m_ThreaderMetricParameters.st_NormalizationFactor
+      = static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
 
     typename ThreaderType::Pointer local_threader = ThreaderType::New();
     local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
+    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback,
+      const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
     local_threader->SingleMethodExecute();
-
-    delete temp;
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp
@@ -661,44 +658,6 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 #endif
 
 } // end AfterThreadedGetValueAndDerivative()
-
-
-/**
- *********** AccumulateDerivativesThreaderCallback *************
- */
-
-template <class TFixedImage, class TScalarType>
-ITK_THREAD_RETURN_TYPE
-TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
-::AccumulateDerivativesThreaderCallback( void * arg )
-{
-  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType threadID = infoStruct->ThreadID;
-  ThreadIdType nrOfThreads = infoStruct->NumberOfThreads;
-
-  MultiThreaderAccumulateDerivativesType * temp
-    = static_cast<MultiThreaderAccumulateDerivativesType * >( infoStruct->UserData );
-
-  const unsigned int subSize = static_cast<unsigned int>(
-    vcl_ceil( static_cast<double>( temp->s_NumberOfParameters )
-    / static_cast<double>( nrOfThreads ) ) );
-  const unsigned int jmin = threadID * subSize;
-  unsigned int jmax = ( threadID + 1 ) * subSize;
-  jmax = ( jmax > temp->s_NumberOfParameters ) ? temp->s_NumberOfParameters : jmax;
-
-  for( unsigned int j = jmin; j < jmax; ++j )
-  {
-    DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
-    for( ThreadIdType i = 0; i < nrOfThreads; ++i )
-    {
-      tmp += temp->s_ThreaderDerivativesIterator[ i ][ j ];
-    }
-    temp->s_DerivativeIterator[ j ] = tmp / temp->s_NormalizationFactor;
-  }
-
-  return ITK_THREAD_RETURN_VALUE;
-
-} // end AccumulateDerivativesThreaderCallback()
 
 
 /**

@@ -364,6 +364,9 @@ protected:
   /** Launch MultiThread GetValueAndDerivative */
   void LaunchGetValueAndDerivativeThreaderCallback( void ) const;
 
+  /** AccumulateDerivatives threader callback function. */
+  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
+
   /** Variables for multi-threading. */
   bool m_UseMetricSingleThreaded;
   bool m_UseMultiThread;
@@ -371,9 +374,13 @@ protected:
 
   struct MultiThreaderParameterType
   {
-    AdvancedImageToImageMetric * m_Metric;
+    // To give the threads access to all members.
+    AdvancedImageToImageMetric * st_Metric;
+    // Used for accumulating derivatives
+    DerivativeValueType * st_DerivativePointer;
+    DerivativeValueType   st_NormalizationFactor;
   };
-  MultiThreaderParameterType  m_ThreaderMetricParameters; // is this re-used?
+  mutable MultiThreaderParameterType  m_ThreaderMetricParameters; // is this re-used?
 
   /** Most metrics will perform multi-threading by letting
    * each thread compute a part of the value and derivative.
