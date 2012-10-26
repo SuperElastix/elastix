@@ -155,6 +155,7 @@ public:
     ScalarType,
     FixedImageDimension,
     MovingImageDimension >                                AdvancedTransformType;
+  typedef typename AdvancedTransformType::NumberOfParametersType  NumberOfParametersType;
 
   /** Typedef's for the B-spline transform. */
   typedef AdvancedCombinationTransform<

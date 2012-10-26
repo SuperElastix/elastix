@@ -321,7 +321,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputeDerivativeLowMemorySingleThreaded( DerivativeType & derivative ) const
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
-  const unsigned int nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
   DerivativeType imageJacobian( nzji.size() );
   //TransformJacobianType jacobian( FixedImageDimension, nnzji );
@@ -471,7 +471,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::ThreadedComputeDerivativeLowMemory( ThreadIdType threadId )
 {
     /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
-  const unsigned int nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
   DerivativeType imageJacobian( nzji.size() );
   //TransformJacobianType jacobian( FixedImageDimension, nnzji );
