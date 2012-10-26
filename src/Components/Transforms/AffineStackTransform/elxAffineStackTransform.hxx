@@ -129,16 +129,17 @@ void AffineStackTransform<TElastix>
   this->GetConfiguration()->ReadParameter( this->m_StackSpacing,
       "StackSpacing", this->GetComponentLabel(), 0, 0 );
 
-  ReducedDimensionInputPointType centerOfRotationPoint;
-  centerOfRotationPoint.Fill( 0.0 );
+  ReducedDimensionInputPointType RDcenterOfRotationPoint;
+  RDcenterOfRotationPoint.Fill( 0.0 );
   bool pointRead = false;
   bool indexRead = false;
+
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
    */
-  pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
+  pointRead = this->ReadCenterOfRotationPoint( RDcenterOfRotationPoint );
 
   /** If this did not succeed, probably a transform parameter file
    * is trying to be read that was generated using an older elastix
@@ -146,7 +147,7 @@ void AffineStackTransform<TElastix>
    */
   if ( !pointRead )
   {
-    indexRead = this->ReadCenterOfRotationIndex( centerOfRotationPoint );
+    indexRead = this->ReadCenterOfRotationIndex( RDcenterOfRotationPoint );
   }
 
   if ( !pointRead && !indexRead )
@@ -155,10 +156,14 @@ void AffineStackTransform<TElastix>
       << "transform parameter file" << std::endl;
     itkExceptionMacro( << "Transform parameter file is corrupt.")
   }
+		elxout << "readfromfile debug 1" << std::endl;
+		elxout << "corp: " << RDcenterOfRotationPoint << std::endl;
 
- // this->InitializeAffineTransform();
+  this->InitializeAffineTransform();
 
-  this->m_AffineDummySubTransform->SetCenter( centerOfRotationPoint );
+  this->m_AffineDummySubTransform->SetCenter( RDcenterOfRotationPoint );
+		elxout << "readfromfile debug 2" << std::endl;
+
 
   /** Set stack transform parameters. */
   this->m_AffineStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
@@ -200,11 +205,11 @@ void AffineStackTransform<TElastix>
   /** Get the center of rotation point and write it to file. */
   ReducedDimensionInputPointType rotationPoint = this->m_AffineDummySubTransform->GetCenter();
   xout["transpar"] << "(CenterOfRotationPoint ";
-  for ( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
+  for ( unsigned int i = 0; i < ReducedSpaceDimension-1; i++ )
   {
       xout["transpar"] << rotationPoint[ i ] << " ";
   }
-  xout["transpar"] << rotationPoint[ SpaceDimension - 1 ] << ")" << std::endl;
+	xout["transpar"] << rotationPoint[ReducedSpaceDimension-1] << ")" << std::endl;
 
   /** Write the stack spacing, stack origin and number of sub transforms. */
   xout["transpar"] << "(StackSpacing " << this->m_AffineStackTransform->GetStackSpacing() << ")" << std::endl;
