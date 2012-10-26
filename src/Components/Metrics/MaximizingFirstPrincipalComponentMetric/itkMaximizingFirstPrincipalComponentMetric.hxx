@@ -303,8 +303,6 @@ namespace itk
 			NumberOfSamples, this->m_NumberOfPixelsCounted );
 
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
-
-
 		
 		if(this->m_RandomScaleIntensity)
 		{
@@ -320,7 +318,6 @@ namespace itk
 
 		}
 
-
 		/** Calculate mean of from columns */
 		vnl_vector< RealType > mean( A.cols() );
 		mean.fill( NumericTraits< double >::Zero );
@@ -331,7 +328,6 @@ namespace itk
 				mean(j) += A(i,j)/A.rows();
 			}
 		}
-
 
 		/** Subtract mean from columns */
 		MatrixType AMinusMean( A.rows(), A.cols() );
@@ -540,7 +536,6 @@ namespace itk
 		//pixelIndex /= realNumLastDimPositions;
 
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
-
 
 		if(this->m_RandomScaleIntensity)
 		{
