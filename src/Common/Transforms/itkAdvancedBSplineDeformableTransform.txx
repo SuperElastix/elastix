@@ -138,31 +138,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
       }
     }
 
-  DirectionType scale;
-  for( unsigned int i=0; i<SpaceDimension; i++)
-    {
-    scale[i][i] = this->m_GridSpacing[i];
-    }
-
-  this->m_IndexToPoint = this->m_GridDirection * scale;
-  this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
-  this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
-  this->m_PointToIndexMatrixIsDiagonal = true;
-  for ( unsigned int i = 0; i < SpaceDimension; ++i )
-  {
-    for ( unsigned int j = 0; j < SpaceDimension; ++j )
-    {
-      this->m_PointToIndexMatrix2[ i ][ j ]
-        = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
-      this->m_PointToIndexMatrixTransposed2[ i ][ j ]
-        = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
-      if( i != j && this->m_PointToIndexMatrix[ i ][ j ] != 0.0 )
-      {
-        this->m_PointToIndexMatrixIsDiagonal = false;
-      }
-    }
-  }
+
+  // needed, there seems to be double functionality compared to base constructor
+  this->UpdatePointIndexConversions();
 
   this->m_HasNonZeroSpatialHessian = true;
   this->m_HasNonZeroJacobianOfSpatialHessian = true;
@@ -1275,18 +1254,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     return;
   }
 
-  /** Compute the number of affected B-spline parameters. */
-
-  /** Allocate memory on the stack: */
-  typedef typename WeightsType::ValueType WeightsValueType;
-  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  WeightsValueType weightsArray[ numberOfWeights ];
-  WeightsType weights( weightsArray, numberOfWeights, false );
-
-  /** Array for CoefficientImage values */
-  WeightsValueType coeffArray[ numberOfWeights * SpaceDimension ];
-  WeightsType coeffs( coeffArray, numberOfWeights * SpaceDimension, false );
-
+  /** Get the support region. */
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunctions[ 0 ][ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
@@ -1294,14 +1262,21 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
 
+  /** Allocate weight on the stack. */
+  typedef typename WeightsType::ValueType WeightsValueType;
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  WeightsValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
+
+  /** Allocate coefficients on the stack. */
+  WeightsValueType coeffArray[ numberOfWeights * SpaceDimension ];
+  WeightsType coeffs( coeffArray, numberOfWeights * SpaceDimension, false );
+
   /** Copy values from coefficient image to linear coeffs array. */
+  // takes considerable amount of time : 27% of this function.
   typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
   for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
-    // Does not work since only support region needed
-    //memcpy( coeffArray + dim * numberOfWeights,
-    //  this->m_CoefficientImage[ dim ]->GetBufferPointer(),
-    //    numberOfWeights * sizeof( WeightsValueType ) );
     ImageRegionConstIterator<ImageType> itCoef(
       this->m_CoefficientImage[ dim ], supportRegion );
 
@@ -1361,21 +1336,24 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
         /** Update the spatial Hessian sh. The Hessian is symmetrical. */
         sh[ dim ]( i, j ) = sum;
-        if (j<i)
-        {
-          sh[ dim ]( j, i ) = sum;
-        }
+        if( j < i ) sh[ dim ]( j, i ) = sum;
       }
 
     } // end for j
   } // end for i
+
+  /** Take into account grid spacing and direction matrix. */
+  for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {
+    sh[ dim ] = this->m_PointToIndexMatrixTransposed2
+      * ( sh[ dim ] * this->m_PointToIndexMatrix2 );
+  }
 
   /** Compute the Jacobian of the spatial Hessian jsh:
    *    d/dmu d^2T_{dim} / dx_i dx_j = weights.
    */
   SpatialHessianType * basepointer = &jsh[ 0 ];
   SpatialJacobianType matrix;
-  vnl_matrix_fixed<double,SpaceDimension,SpaceDimension> matrix2;
   for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
   {
     unsigned int count = 0;
@@ -1385,7 +1363,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       {
         const double tmp = *( weightVector + count * numberOfWeights + mu );
         matrix[ i ][ j ] = tmp;
-        if ( i != j ) matrix[ j ][ i ] = tmp;
+        if( i != j ) matrix[ j ][ i ] = tmp;
         ++count;
       }
     }
@@ -1402,8 +1380,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       {
         for( unsigned int j = 0; j < SpaceDimension; ++j )
         {
-          matrix[ i ][ j ] *= this->m_PointToIndexMatrixTransposed2[ i ][ i ]
-            * this->m_PointToIndexMatrixTransposed2[ j ][ j ];
+          matrix[ i ][ j ] *= m_PointToIndexMatrixDiagonalProducts[ i + SpaceDimension * j ];
         }
       }
     }
@@ -1412,14 +1389,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       (*(basepointer + mu + dim * numberOfWeights))[ dim ] = matrix;
+      //jsh[ mu + dim * numberOfWeights ][ dim ] = matrix;
     }
-  }
-
-  /** Take into account grid spacing and direction matrix. */
-  for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-  {
-    sh[ dim ] = this->m_PointToIndexMatrixTransposed2
-      * ( sh[ dim ] * this->m_PointToIndexMatrix2 );
   }
 
   /** Compute the nonzero Jacobian indices. */

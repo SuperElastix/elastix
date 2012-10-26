@@ -93,26 +93,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
       }
     }
 
-  DirectionType scale;
-  for( unsigned int i=0; i<SpaceDimension; i++)
-    {
-    scale[i][i] = this->m_GridSpacing[i];
-    }
+  this->UpdatePointIndexConversions();
 
-  this->m_IndexToPoint = this->m_GridDirection * scale;
-  this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
-  this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
-  for ( unsigned int i = 0; i < SpaceDimension; ++i )
-  {
-    for ( unsigned int j = 0; j < SpaceDimension; ++j )
-    {
-      this->m_PointToIndexMatrix2[ i ][ j ]
-        = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
-      this->m_PointToIndexMatrixTransposed2[ i ][ j ]
-        = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
-    }
-  }
 
   this->m_UseMultiThread = false;//tmp
 }
@@ -154,6 +137,51 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 }
 
 
+// Set the grid spacing
+template<class TScalarType, unsigned int NDimensions>
+void
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
+::UpdatePointIndexConversions( void )
+{
+  DirectionType scale;
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    scale[ i ][ i ] = this->m_GridSpacing[ i ];
+  }
+
+  this->m_IndexToPoint = this->m_GridDirection * scale;
+  this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
+  this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
+  this->m_PointToIndexMatrixIsDiagonal = true;
+  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    for ( unsigned int j = 0; j < SpaceDimension; ++j )
+    {
+      this->m_PointToIndexMatrix2[ i ][ j ]
+        = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
+      this->m_PointToIndexMatrixTransposed2[ i ][ j ]
+        = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
+      if( i != j && this->m_PointToIndexMatrix[ i ][ j ] != 0.0 )
+      {
+        this->m_PointToIndexMatrixIsDiagonal = false;
+      }
+    }
+  }
+
+  this->m_PointToIndexMatrixDiagonal
+    = this->m_PointToIndexMatrixTransposed2.GetVnlMatrix().get_diagonal().data_block ();
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    for( unsigned int j = 0; j < SpaceDimension; ++j )
+    {
+      this->m_PointToIndexMatrixDiagonalProducts[ i + SpaceDimension * j ]
+        = this->m_PointToIndexMatrixDiagonal[ i ] * m_PointToIndexMatrixDiagonal[ j ];
+    }
+  }
+
+} // end UpdatePointIndexConversions()
+
+
 //
 template<class TScalarType, unsigned int NDimensions>
 void
@@ -187,25 +215,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
       //this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     }
 
-    DirectionType scale;
-    for( unsigned int i=0; i<SpaceDimension; i++)
-    {
-      scale[i][i] = this->m_GridSpacing[i];
-    }
-
-    this->m_IndexToPoint = this->m_GridDirection * scale;
-    this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
-    this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
-    for ( unsigned int i = 0; i < SpaceDimension; ++i )
-    {
-      for ( unsigned int j = 0; j < SpaceDimension; ++j )
-      {
-        this->m_PointToIndexMatrix2[ i ][ j ]
-          = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
-        this->m_PointToIndexMatrixTransposed2[ i ][ j ]
-          = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
-      }
-    }
+    this->UpdatePointIndexConversions();
 
     this->Modified();
   }
@@ -228,25 +238,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
       //this->m_JacobianImage[j]->SetDirection( this->m_GridDirection );
       }
 
-    DirectionType scale;
-    for( unsigned int i=0; i<SpaceDimension; i++)
-      {
-      scale[i][i] = this->m_GridSpacing[i];
-      }
-
-    this->m_IndexToPoint = this->m_GridDirection * scale;
-    this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
-    this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
-    for ( unsigned int i = 0; i < SpaceDimension; ++i )
-    {
-      for ( unsigned int j = 0; j < SpaceDimension; ++j )
-      {
-        this->m_PointToIndexMatrix2[ i ][ j ]
-          = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
-        this->m_PointToIndexMatrixTransposed2[ i ][ j ]
-          = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
-      }
-    }
+    this->UpdatePointIndexConversions();
 
     this->Modified();
   }
@@ -408,7 +400,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
       }
     }
 
-
   this->SetGridSpacing( spacing );
   this->SetGridDirection( direction );
   this->SetGridOrigin( origin );
@@ -425,7 +416,6 @@ void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::WrapAsImages( void )
 {
-
   /**
    * Wrap flat parameters array into SpaceDimension number of ITK images
    * NOTE: For efficiency, parameters are not copied locally. The parameters

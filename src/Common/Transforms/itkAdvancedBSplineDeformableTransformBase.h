@@ -276,6 +276,8 @@ protected:
   void TransformPointToContinuousGridIndex(
    const InputPointType & point, ContinuousIndexType & index ) const;
 
+  void UpdatePointIndexConversions( void );
+
   virtual void ComputeNonZeroJacobianIndices(
     NonZeroJacobianIndicesType & nonZeroJacobianIndices,
     const RegionType & supportRegion ) const = 0;
@@ -299,6 +301,8 @@ protected:
   SpatialJacobianType m_PointToIndexMatrix2;
   DirectionType       m_PointToIndexMatrixTransposed;
   SpatialJacobianType m_PointToIndexMatrixTransposed2;
+  FixedArray<ScalarType,NDimensions>  m_PointToIndexMatrixDiagonal;
+  FixedArray<ScalarType,NDimensions*NDimensions>      m_PointToIndexMatrixDiagonalProducts;
   DirectionType       m_IndexToPoint;
   bool m_PointToIndexMatrixIsDiagonal;
 

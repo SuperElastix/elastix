@@ -536,29 +536,24 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       {
         /** For the B-spline transform we know that only 1/FixedImageDimension
          * part of the JacobianOfSpatialHessian is non-zero.
+         *
+         * In addition we know that jsh[ mu + numParPerDim * k ][ k ] is the same for all k.
+         *
          */
 
         /** Compute the contribution to the metric derivative of this point. */
         const unsigned int numParPerDim
           = nonZeroJacobianIndices.size() / FixedImageDimension;
-        /*SpatialHessianType * basepointer1 = &jacobianOfSpatialHessian[ 0 ];
-        unsigned long * basepointer2 = &nonZeroJacobianIndices[ 0 ];
-        double * basepointer3 = &derivative[ 0 ];*/
         for( unsigned int mu = 0; mu < numParPerDim; ++mu )
         {
+          const InternalMatrixType & B
+            = jacobianOfSpatialHessian[ mu + numParPerDim * 0 ][ 0 ].GetVnlMatrix();
+
           for( unsigned int k = 0; k < FixedImageDimension; ++k )
           {
             /** This computes:
              * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
              */
-            /*const InternalMatrixType & B
-              = (*( basepointer1 + mu + numParPerDim * k ))[ k ].GetVnlMatrix();
-            const RealType matrixMean = element_product( A[ k ], B ).mean();
-            *( basepointer3 + (*( basepointer2 + mu + numParPerDim * k )) )
-              += 2.0 * matrixMean * Bsize;*/
-            const InternalMatrixType & B
-              = jacobianOfSpatialHessian[ mu + numParPerDim * k ][ k ].GetVnlMatrix();
-
             RealType matrixElementProduct = 0.0;
             typename InternalMatrixType::const_iterator itA = A[ k ].begin();
             typename InternalMatrixType::const_iterator itB = B.begin();
