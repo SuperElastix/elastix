@@ -83,6 +83,7 @@ public:
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename Superclass::TransformParametersType    TransformParametersType;
   typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
   typedef typename Superclass::InterpolatorType           InterpolatorType;
   typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
   typedef typename Superclass::RealType                   RealType;

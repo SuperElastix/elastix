@@ -632,7 +632,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 
     typename ThreaderType::Pointer local_threader = ThreaderType::New();
     local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback,
+    local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
       const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
     local_threader->SingleMethodExecute();
   }

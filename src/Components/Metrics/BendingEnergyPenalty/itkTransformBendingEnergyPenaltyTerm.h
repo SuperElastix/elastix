@@ -98,6 +98,8 @@ public:
   typedef typename Superclass::ImageSampleContainerType    ImageSampleContainerType;
   typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
   typedef typename Superclass::ScalarType                 ScalarType;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
   /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;

@@ -1380,7 +1380,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       {
         for( unsigned int j = 0; j < SpaceDimension; ++j )
         {
-          matrix[ i ][ j ] *= m_PointToIndexMatrixDiagonalProducts[ i + SpaceDimension * j ];
+          matrix[ i ][ j ] *= this->m_PointToIndexMatrixDiagonalProducts[ i + SpaceDimension * j ];
         }
       }
     }
