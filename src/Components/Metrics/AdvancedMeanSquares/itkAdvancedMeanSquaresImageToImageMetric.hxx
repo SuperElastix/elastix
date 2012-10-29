@@ -43,6 +43,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   /** SelfHessian related variables, experimental feature. */
   this->m_SelfHessianSmoothingSigma = 1.0;
+  this->m_SelfHessianNoiseRange = 1.0;
   this->m_NumberOfSamplesForSelfHessian = 100000;
 
 } // end Constructor
