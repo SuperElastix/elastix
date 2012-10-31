@@ -83,6 +83,7 @@ public:
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename Superclass::TransformParametersType    TransformParametersType;
   typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
   typedef typename Superclass::InterpolatorType           InterpolatorType;
   typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
   typedef typename Superclass::RealType                   RealType;
@@ -114,6 +115,8 @@ public:
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
