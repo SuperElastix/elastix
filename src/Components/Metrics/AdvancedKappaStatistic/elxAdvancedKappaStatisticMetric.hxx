@@ -108,4 +108,3 @@ AdvancedKappaStatisticMetric<TElastix>
 
 
 #endif // end #ifndef __elxAdvancedKappaStatisticMetric_HXX__
-

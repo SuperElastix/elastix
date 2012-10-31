@@ -1,5 +1,6 @@
 directory checksum
 elastix_run_3DCT_lung.example 2542495979
+elastix_run_3DCT_lung.Kappa.bspline.ASGD.001 563553510
 elastix_run_3DCT_lung.MI.bspline.ASGD.001 2534957552
 elastix_run_3DCT_lung.MI.bspline.SGD.001 3828492212
 elastix_run_3DCT_lung.MI.bspline.SGD.002 4023935609

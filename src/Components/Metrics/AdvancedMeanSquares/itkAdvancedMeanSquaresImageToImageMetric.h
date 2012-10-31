@@ -147,13 +147,6 @@ public:
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
-  /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
-
-  /** Gather the values and derivatives from all threads */
-  inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const;
-
   /** Experimental feature: compute SelfHessian */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
 
@@ -239,6 +232,13 @@ protected:
     const DerivativeType & imageJacobian,
     const NonZeroJacobianIndicesType & nzji,
     HessianType & H) const;
+
+  /** Get value and derivatives for each thread. */
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+
+  /** Gather the values and derivatives from all threads */
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const;
 
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented

@@ -260,24 +260,6 @@ public:
    */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
 
-  /** Multi-threaded metric computation. */
-
-  /** Contains calls from GetValueAndDerivative that are thread-unsafe,
-   * together with preparation for multi-threading.
-   */
-  virtual void BeforeThreadedGetValueAndDerivative(
-    const TransformParametersType & parameters ) const;
-
-  /** Multi-threaded version of GetValueAndDerivative(). */
-  virtual inline void ThreadedGetValueAndDerivative(
-    ThreadIdType threadID ){};
-
-  /** Finalize multi-threaded metric computation. */
-  virtual inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const {};
-
-  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
-
   /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
   itkSetMacro( UseMetricSingleThreaded, bool );
   itkGetConstReferenceMacro( UseMetricSingleThreaded, bool );
@@ -287,6 +269,15 @@ public:
   itkSetMacro( UseMultiThread, bool );
   itkGetConstReferenceMacro( UseMultiThread, bool );
   itkBooleanMacro( UseMultiThread );
+
+  /** Contains calls from GetValueAndDerivative that are thread-unsafe,
+   * together with preparation for multi-threading.
+   * Note that the only reason why this function is not protected, is
+   * because the ComboMetric needs to call it.
+   */
+  virtual void BeforeThreadedGetValueAndDerivative(
+    const TransformParametersType & parameters ) const;
+
 
   mutable std::vector<double> m_FillDerivativesTimings;//tmp
 
@@ -360,6 +351,19 @@ protected:
   FixedImageLimiterOutputType                        m_FixedImageMaxLimit;
   MovingImageLimiterOutputType                       m_MovingImageMinLimit;
   MovingImageLimiterOutputType                       m_MovingImageMaxLimit;
+
+  /** Multi-threaded metric computation. */
+
+  /** Multi-threaded version of GetValueAndDerivative(). */
+  virtual inline void ThreadedGetValueAndDerivative(
+    ThreadIdType threadID ){};
+
+  /** Finalize multi-threaded metric computation. */
+  virtual inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const {};
+
+  /** GetValueAndDerivative threader callback function. */
+  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
 
   /** Launch MultiThread GetValueAndDerivative */
   void LaunchGetValueAndDerivativeThreaderCallback( void ) const;

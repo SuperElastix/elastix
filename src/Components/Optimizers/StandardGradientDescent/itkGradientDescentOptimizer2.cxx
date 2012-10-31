@@ -49,6 +49,7 @@ namespace itk
     this->m_Value = 0.0;
     this->m_StopCondition = MaximumNumberOfIterations;
 
+    this->m_Threader = ThreaderType::New();
     this->m_NumberOfThreads = 1;
     this->m_UseMultiThread = false;
     this->m_UseOpenMP  = false;

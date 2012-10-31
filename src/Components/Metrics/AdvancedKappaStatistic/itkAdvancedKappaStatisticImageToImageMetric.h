@@ -12,7 +12,6 @@
 
 ======================================================================*/
 
-
 #ifndef __itkAdvancedKappaStatisticImageToImageMetric_h
 #define __itkAdvancedKappaStatisticImageToImageMetric_h
 
@@ -132,7 +131,11 @@ public:
     DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
+  virtual void GetValueAndDerivativeSingleThreaded(
+    const TransformParametersType & parameters,
+    MeasureType& Value, DerivativeType& Derivative ) const;
+  virtual void GetValueAndDerivative(
+    const TransformParametersType & parameters,
     MeasureType& Value, DerivativeType& Derivative ) const;
 
   /** Computes the moving gradient image dM/dx. */
@@ -182,15 +185,6 @@ protected:
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
-  /** Computes the inner product of transform Jacobian with moving image gradient.
-   * The results are stored in the imageJacobian, which is supposed
-   * to have the right size (same length as Jacobian's number of columns).
-   */
-  void EvaluateMovingImageAndTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian,
-    const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & innerProduct ) const;
-
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative().
    */
@@ -205,6 +199,22 @@ protected:
     DerivativeType & sum1,
     DerivativeType & sum2 ) const;
 
+  /** Initialize some multi-threading related parameters.
+   * Overrides function in AdvancedImageToImageMetric, because
+   * here we use other parameters.
+   */
+  virtual void InitializeThreadingParameters( void ) const;
+
+  /** Get value and derivatives for each thread. */
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+
+  /** Gather the values and derivatives from all threads */
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const;
+
+  /** AccumulateDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
+
 private:
   AdvancedKappaStatisticImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
@@ -213,6 +223,21 @@ private:
   RealType  m_ForegroundValue;
   RealType  m_Epsilon;
   bool      m_Complement;
+
+  /** Threading related parameters. */
+  mutable std::vector<std::size_t>    m_ThreaderAreaSum;
+  mutable std::vector<std::size_t>    m_ThreaderAreaIntersection;
+  mutable std::vector<DerivativeType> m_ThreaderDerivativeSum1;
+  mutable std::vector<DerivativeType> m_ThreaderDerivativeSum2;
+
+  struct MultiThreaderAccumulateDerivativeType
+  {
+    AdvancedKappaStatisticImageToImageMetric * st_Metric;
+
+    MeasureType           st_Coefficient1;
+    MeasureType           st_Coefficient2;
+    DerivativeValueType * st_DerivativePointer;
+  };
 
 }; // end class AdvancedKappaStatisticImageToImageMetric
 

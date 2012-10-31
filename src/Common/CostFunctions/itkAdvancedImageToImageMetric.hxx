@@ -946,10 +946,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
     for( ThreadIdType i = 0; i < nrOfThreads; ++i )
     {
-      //tmp += temp->s_ThreaderDerivativesIterator[ i ][ j ];
       tmp += temp->st_Metric->m_ThreaderDerivatives[ i ][ j ];
     }
-    //temp->s_DerivativeIterator[ j ] = tmp / temp->st_NormalizationFactor;
     temp->st_DerivativePointer[ j ] = tmp / temp->st_NormalizationFactor;
   }
 

@@ -729,22 +729,18 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   }
   else // multi-threaded
   {
-    MultiThreaderComputeDerivativeType * temp = new MultiThreaderComputeDerivativeType;
+    MultiThreaderAccumulateDerivativeType * temp = new MultiThreaderAccumulateDerivativeType;
 
-    temp->sf_N = sf / N;
-    temp->sm_N = sm / N;
-    temp->sfm_smm = sfm / smm;
-    temp->invDenom = 1.0 / denom;
-    temp->subtractMean = this->m_SubtractMean;
-    temp->derivativeIterator = derivative.begin();
-    temp->m_ThreaderDerivativeFIterator = this->m_ThreaderDerivativeF.begin();
-    temp->m_ThreaderDerivativeMIterator = this->m_ThreaderDerivativeM.begin();
-    temp->m_ThreaderDifferentialIterator = this->m_ThreaderDifferential.begin();
-    temp->numberOfParameters = this->GetNumberOfParameters();
+    temp->st_Metric = const_cast<Self *>( this );
+    temp->st_sf_N = sf / N;
+    temp->st_sm_N = sm / N;
+    temp->st_sfm_smm = sfm / smm;
+    temp->st_InvertedDenominator = 1.0 / denom;
+    temp->st_DerivativePointer = derivative.begin();
 
     typename ThreaderType::Pointer local_threader = ThreaderType::New();
     local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( ComputeDerivativesThreaderCallback, temp );
+    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
     local_threader->SingleMethodExecute();
 
     delete temp;
@@ -754,55 +750,56 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
 
 /**
- *********** ComputeDerivativesThreaderCallback *************
+ *********** AccumulateDerivativesThreaderCallback *************
  */
 
 template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_TYPE
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
-::ComputeDerivativesThreaderCallback( void * arg )
+::AccumulateDerivativesThreaderCallback( void * arg )
 {
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
   ThreadIdType threadId = infoStruct->ThreadID;
   ThreadIdType nrOfThreads = infoStruct->NumberOfThreads;
 
-  MultiThreaderComputeDerivativeType * temp
-    = static_cast<MultiThreaderComputeDerivativeType * >( infoStruct->UserData );
+  MultiThreaderAccumulateDerivativeType * temp
+    = static_cast<MultiThreaderAccumulateDerivativeType *>( infoStruct->UserData );
 
+  const unsigned int numPar = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize = static_cast<unsigned int>(
-    vcl_ceil( static_cast<double>( temp->numberOfParameters ) / static_cast<double>( nrOfThreads ) ) );
+    vcl_ceil( static_cast<double>( numPar ) / static_cast<double>( nrOfThreads ) ) );
 
   unsigned int jmin = threadId * subSize;
   unsigned int jmax = (threadId+1) * subSize;
-  jmax = ( jmax > temp->numberOfParameters ) ? temp->numberOfParameters : jmax;
+  jmax = ( jmax > numPar ) ? numPar : jmax;
 
   DerivativeValueType derivativeF, derivativeM, differential;
   for( unsigned int j = jmin; j < jmax; j++ )
   {
-    derivativeF = temp->m_ThreaderDerivativeFIterator [0][j];
-    derivativeM = temp->m_ThreaderDerivativeMIterator [0][j];
-    differential = temp->m_ThreaderDifferentialIterator[0][j];
+    derivativeF  = temp->st_Metric->m_ThreaderDerivativeF [ 0 ][ j ];
+    derivativeM  = temp->st_Metric->m_ThreaderDerivativeM [ 0 ][ j ];
+    differential = temp->st_Metric->m_ThreaderDifferential[ 0 ][ j ];
 
     for( ThreadIdType i = 1; i < nrOfThreads; i++ )
     {
-      derivativeF += temp->m_ThreaderDerivativeFIterator [i][j];
-      derivativeM += temp->m_ThreaderDerivativeMIterator [i][j];
-      differential+= temp->m_ThreaderDifferentialIterator[i][j];
+      derivativeF  += temp->st_Metric->m_ThreaderDerivativeF [ i ][ j ];
+      derivativeM  += temp->st_Metric->m_ThreaderDerivativeM [ i ][ j ];
+      differential += temp->st_Metric->m_ThreaderDifferential[ i ][ j ];
     }
 
-    if ( temp->subtractMean )
+    if( temp->st_Metric->m_SubtractMean )
     {
-      derivativeF -= temp->sf_N * differential;
-      derivativeM -= temp->sm_N * differential;
+      derivativeF -= temp->st_sf_N * differential;
+      derivativeM -= temp->st_sm_N * differential;
     }
 
-    temp->derivativeIterator[j] = ( derivativeF - temp->sfm_smm * derivativeM ) * temp->invDenom;
+    temp->st_DerivativePointer[ j ]
+      = ( derivativeF - temp->st_sfm_smm * derivativeM ) * temp->st_InvertedDenominator;
   }
 
   return ITK_THREAD_RETURN_VALUE;
 
-} // end ComputeDerivativesThreaderCallback()
+} // end AccumulateDerivativesThreaderCallback()
 
 
 } // end namespace itk

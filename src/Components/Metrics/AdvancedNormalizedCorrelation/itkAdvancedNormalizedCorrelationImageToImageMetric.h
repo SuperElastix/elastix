@@ -178,16 +178,6 @@ public:
     const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
-  /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
-
-  /** Gather the values and derivatives from all threads */
-  inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const;
-
-  /** ComputeDerivatives threader callback function */
-  static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );
-
   /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted
    * from the sample values in the cross-correlation formula and
    * typically results in narrower valleys in the cost function.
@@ -229,6 +219,22 @@ protected:
     DerivativeType & derivativeM,
     DerivativeType & differential ) const;
 
+  /** Initialize some multi-threading related parameters.
+   * Overrides function in AdvancedImageToImageMetric, because
+   * here we use other parameters.
+   */
+  virtual void InitializeThreadingParameters( void ) const;
+
+  /** Get value and derivatives for each thread. */
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+
+  /** Gather the values and derivatives from all threads */
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const;
+
+  /** AccumulateDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
+
 private:
   AdvancedNormalizedCorrelationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
@@ -248,29 +254,18 @@ private:
   mutable std::vector<DerivativeType> m_ThreaderDerivativeM;
   mutable std::vector<DerivativeType> m_ThreaderDifferential;
 
-  /** Initialize some multi-threading related parameters.
-   * Overrides function in AdvancedImageToImageMetric, because
-   * here we use other parameters.
-   */
-  virtual void InitializeThreadingParameters( void ) const;
-
   /** Helper struct that multi-threads the computation of
    * the metric derivative using ITK threads.
    */
-  struct MultiThreaderComputeDerivativeType
+  struct MultiThreaderAccumulateDerivativeType
   {
-    typename std::vector<DerivativeType>::iterator m_ThreaderDerivativeFIterator;
-    typename std::vector<DerivativeType>::iterator m_ThreaderDerivativeMIterator;
-    typename std::vector<DerivativeType>::iterator m_ThreaderDifferentialIterator;
-    typename DerivativeType::iterator derivativeIterator;
+    AdvancedNormalizedCorrelationImageToImageMetric * st_Metric;
 
-    AccumulateType sf_N;
-    AccumulateType sm_N;
-    AccumulateType sfm_smm;
-    RealType invDenom;
-
-    unsigned int numberOfParameters;
-    bool subtractMean;
+    AccumulateType  st_sf_N;
+    AccumulateType  st_sm_N;
+    AccumulateType  st_sfm_smm;
+    RealType        st_InvertedDenominator;
+    DerivativeValueType * st_DerivativePointer;
   };
 
 }; // end class AdvancedNormalizedCorrelationImageToImageMetric

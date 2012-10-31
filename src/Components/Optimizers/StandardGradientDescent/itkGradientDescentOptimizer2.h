@@ -124,7 +124,12 @@ namespace itk
     std::vector<double> m_AdvanceOneStepTimings; // tmp
 
     //void SetNumberOfThreads( ThreadIdType numberOfThreads );
-    itkSetMacro( NumberOfThreads, ThreadIdType );
+    //itkSetMacro( NumberOfThreads, ThreadIdType );
+    void SetNumberOfThreads( ThreadIdType numberOfThreads )
+    {
+      this->m_Threader->SetNumberOfThreads( numberOfThreads );
+      this->m_NumberOfThreads = this->m_Threader->GetNumberOfThreads();
+    }
     itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
     itkSetMacro( UseMultiThread, bool );
 
@@ -136,10 +141,16 @@ namespace itk
     virtual ~GradientDescentOptimizer2() {};
     void PrintSelf(std::ostream& os, Indent indent) const;
 
+    /** Typedefs for multi-threading. */
+    typedef itk::MultiThreader               ThreaderType;
+    typedef ThreaderType::ThreadInfoStruct   ThreadInfoType;
+
     // made protected so subclass can access
     DerivativeType                m_Gradient;
     double                        m_LearningRate;
     StopConditionType             m_StopCondition;
+
+    ThreaderType::Pointer         m_Threader;
 
   private:
     GradientDescentOptimizer2(const Self&); //purposely not implemented
@@ -152,10 +163,6 @@ namespace itk
     unsigned long                 m_CurrentIteration;
 
     // multi-threaded AdvanceOneStep:
-
-    /** Typedefs for multi-threading. */
-    typedef itk::MultiThreader               ThreaderType;
-    typedef ThreaderType::ThreadInfoStruct   ThreadInfoType;
 
     ThreadIdType m_NumberOfThreads;
     bool m_UseMultiThread;
