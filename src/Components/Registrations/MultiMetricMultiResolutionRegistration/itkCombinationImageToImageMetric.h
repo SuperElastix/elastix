@@ -441,10 +441,11 @@ private:
   /** For threading: store thread data. */
   struct MultiThreaderComboMetricsType
   {
-    std::vector<SingleValuedCostFunctionPointer>   m_MetricsIterator;
-    typename std::vector<MeasureType>::iterator    m_MetricValuesIterator;
-    typename std::vector<DerivativeType>::iterator m_MetricDerivativesIterator;
-    std::vector< std::size_t >                     m_MetricComputationTime;
+    std::vector<SingleValuedCostFunctionPointer>   st_MetricsIterator;
+    typename std::vector<MeasureType>::iterator    st_MetricValuesIterator;
+    typename std::vector<DerivativeType>::iterator st_MetricDerivativesIterator;
+    std::vector< std::size_t >                     st_MetricComputationTime;
+    ParametersType *                               st_Parameters;
   };
 
   struct MultiThreaderCombineDerivativeType

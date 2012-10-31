@@ -898,10 +898,11 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   {
     /** Setup struct with multi-threading information. */
     MultiThreaderComboMetricsType * temp_c = new MultiThreaderComboMetricsType;
-    temp_c->m_MetricsIterator = this->m_Metrics;
-    temp_c->m_MetricDerivativesIterator = this->m_MetricDerivatives.begin();
-    temp_c->m_MetricValuesIterator = this->m_MetricValues.begin();
-    temp_c->m_MetricComputationTime.resize( this->m_NumberOfMetrics, 0 );
+    temp_c->st_MetricsIterator = this->m_Metrics;
+    temp_c->st_MetricDerivativesIterator = this->m_MetricDerivatives.begin();
+    temp_c->st_MetricValuesIterator = this->m_MetricValues.begin();
+    temp_c->st_MetricComputationTime.resize( this->m_NumberOfMetrics, 0 );
+    temp_c->st_Parameters = const_cast<ParametersType *>( &parameters );
 
     /** GetValueAndDerivative */
     local_threader->SetNumberOfThreads( this->m_NumberOfMetrics );
@@ -911,7 +912,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     /** Store computation time. */
     for( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
     {
-      this->m_MetricComputationTime[ i ] = temp_c->m_MetricComputationTime[ i ];
+      this->m_MetricComputationTime[ i ] = temp_c->st_MetricComputationTime[ i ];
     }
 
     delete temp_c;
@@ -1024,16 +1025,14 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   MultiThreaderComboMetricsType * temp
     = static_cast<MultiThreaderComboMetricsType * >( infoStruct->UserData );
 
-  const ParametersType parameters ; // werkt dit ?
-
   typename tmr::Timer::Pointer timer = tmr::Timer::New();
   timer->StartTimer();
-  temp->m_MetricsIterator[ threadID ]->GetValueAndDerivative(
-    parameters,
-    temp->m_MetricValuesIterator[ threadID ],
-    temp->m_MetricDerivativesIterator[ threadID ] );
+  temp->st_MetricsIterator[ threadID ]->GetValueAndDerivative(
+    *temp->st_Parameters,
+    temp->st_MetricValuesIterator[ threadID ],
+    temp->st_MetricDerivativesIterator[ threadID ] );
   timer->StopTimer();
-  temp->m_MetricComputationTime[ threadID ]
+  temp->st_MetricComputationTime[ threadID ]
     = Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 );
 
   return ITK_THREAD_RETURN_VALUE;

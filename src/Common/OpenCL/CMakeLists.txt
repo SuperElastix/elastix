@@ -2,15 +2,15 @@
 project( elastix_opencl )
 
 # Define directory to OpenCL Debug kernels
-set(elastix_OPENCL_KERNELS_DEBUG_PATH
+set( elastix_OPENCL_KERNELS_DEBUG_PATH
   ${elastix_BINARY_DIR}
-CACHE INTERNAL "Path to itkOpenCLKernels.h")
+  CACHE INTERNAL "Path to itkOpenCLKernels.h" )
 
-set(elastix_OPENCL_KERNELS_DEBUG_DIR
+set( elastix_OPENCL_KERNELS_DEBUG_DIR
   ${elastix_OPENCL_KERNELS_DEBUG_PATH}/elastixOpenCLDebug
-CACHE INTERNAL "Directory to OpenCL debug kernels")
+  CACHE INTERNAL "Directory to OpenCL debug kernels" )
 
-file(MAKE_DIRECTORY ${elastix_OPENCL_KERNELS_DEBUG_DIR})
+file( MAKE_DIRECTORY ${elastix_OPENCL_KERNELS_DEBUG_DIR} )
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/ITKimprovements/itkOpenCLKernels.h.in
@@ -45,7 +45,7 @@ SET( OpenCL_Files
   ${OpenCL_FiltersFiles}
   ${OpenCL_KernelsFiles}
   ${OpenCL_KernelsFiles_SRC} )
-  
+
 # Create the openCL library
 add_library( elastix_opencl ${OpenCL_Files} )
 
@@ -56,3 +56,4 @@ target_link_libraries( elastix_opencl
 
 # Group in IDE's like Visual Studio
 set_property( TARGET elastix_opencl PROPERTY FOLDER "libraries" )
+
