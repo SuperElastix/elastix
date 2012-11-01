@@ -1,5 +1,20 @@
 PROJECT( ANN )
 
+# Compile time option to select wheter or not to accept self matches
+# during nearest neighbour search. The default is false for backward
+# compatibility.
+mark_as_advanced( ELASTIX_KNN_ALLOW_SELF_MATCH )
+set( ELASTIX_KNN_ALLOW_SELF_MATCH false
+  CACHE BOOL "Allow self matches during kNN search" )
+set( ANN_ALLOW_SELF_MATCH "ANNfalse" )
+if( ${ELASTIX_KNN_ALLOW_SELF_MATCH} )
+  set( ANN_ALLOW_SELF_MATCH "ANNtrue" )
+endif()
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ANN/ANN.h.in
+  ${elastix_BINARY_DIR}/ANN/ANN.h
+  @ONLY )
+
 # Include these directories to look for header files.
 INCLUDE_DIRECTORIES(
   ${ANN_SOURCE_DIR}/include
