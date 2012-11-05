@@ -93,8 +93,6 @@ void AffineStackTransform<TElastix>::BeforeRegistration( void )
   /** Initialize stack sub transforms. */
   this->m_AffineStackTransform->SetAllSubTransforms( this->m_AffineDummySubTransform );
 
-  /** Task 2 - Set the scales. */
-  this->SetScales();
 
   /** Task 3 - Give the registration an initial parameter-array. */
   ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
@@ -106,6 +104,9 @@ void AffineStackTransform<TElastix>::BeforeRegistration( void )
 
   /** Task 4 - Initialize the transform */
   this->InitializeTransform();
+
+	/** Task 2 - Set the scales. */
+	this->SetScales();
 
  } // end BeforeRegistration()
 
@@ -156,14 +157,11 @@ void AffineStackTransform<TElastix>
       << "transform parameter file" << std::endl;
     itkExceptionMacro( << "Transform parameter file is corrupt.")
   }
-		elxout << "readfromfile debug 1" << std::endl;
 		elxout << "corp: " << RDcenterOfRotationPoint << std::endl;
 
   this->InitializeAffineTransform();
 
   this->m_AffineDummySubTransform->SetCenter( RDcenterOfRotationPoint );
-		elxout << "readfromfile debug 2" << std::endl;
-
 
   /** Set stack transform parameters. */
   this->m_AffineStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
