@@ -104,6 +104,7 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType           ScalarType;
   typedef typename Superclass::ParametersType       ParametersType;
+  typedef typename Superclass::ParametersValueType  ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::InputVectorType      InputVectorType;
