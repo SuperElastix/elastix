@@ -142,6 +142,7 @@ int main( int argc, char *argv[] )
   }
   transform->SetParameters( parameters );
   transformITK->SetParameters( parameters );
+  transform->SetUseMultiThread( true );
 
   /** Get the number of nonzero Jacobian indices. */
   const NumberOfParametersType nonzji = transform->GetNumberOfNonZeroJacobianIndices();
@@ -161,6 +162,7 @@ int main( int argc, char *argv[] )
   jacobian.SetSize( Dimension, nonzji );
   jacobianOfSpatialJacobian.resize( nonzji );
   jacobianOfSpatialHessian.resize( nonzji );
+  jacobian.Fill( 0.0 );
 
   /**
    *
@@ -217,6 +219,30 @@ int main( int argc, char *argv[] )
 
   clock_t startClock, endClock, clockITK;
 
+  /** Time the implementation of the Jacobian. */
+  startClock = clock();
+  transform->SetUseMultiThread( false );
+  for( unsigned int i = 0; i < N*10; ++i )
+  {
+    transform->GetJacobian( inputPoint, jacobian, nzji );
+  }
+  endClock = clock();
+  clockITK = endClock - startClock;
+  std::cerr << "The elapsed time for the Jacobian is: "
+    << clockITK / 1000.0 << " s." << std::endl;
+
+  /** Time the implementation of the Jacobian. */
+  startClock = clock();
+  transform->SetUseMultiThread( true );
+  for( unsigned int i = 0; i < N*10; ++i )
+  {
+    transform->GetJacobian_opt( inputPoint, jacobian, nzji );
+  }
+  endClock = clock();
+  clockITK = endClock - startClock;
+  std::cerr << "The elapsed time for the Jacobian_opt is: "
+    << clockITK / 1000.0 << " s." << std::endl;
+
   /** Time the implementation of the spatial Jacobian. */
   startClock = clock();
   for ( unsigned int i = 0; i < N; ++i )
@@ -245,8 +271,6 @@ int main( int argc, char *argv[] )
   {
     transform->GetJacobianOfSpatialJacobian( inputPoint,
       jacobianOfSpatialJacobian, nzji );
-    //     transform->GetJacobianOfSpatialJacobian( inputPoint,
-    //       spatialJacobian, jacobianOfSpatialJacobian, nzji );
   }
   endClock = clock();
   clockITK = endClock - startClock;
@@ -259,8 +283,6 @@ int main( int argc, char *argv[] )
   {
     transform->GetJacobianOfSpatialHessian( inputPoint,
       jacobianOfSpatialHessian, nzji );
-//     transform->GetJacobianOfSpatialHessian( inputPoint,
-//       spatialHessian, jacobianOfSpatialHessian, nzji );
   }
   endClock = clock();
   clockITK = endClock - startClock;
@@ -343,9 +365,9 @@ int main( int argc, char *argv[] )
     return 1;
   }
 
-  JacobianType jacobianITK;
+  JacobianType jacobianITK; jacobianITK.Fill( 0.0 );
   transformITK->ComputeJacobianWithRespectToParameters( inputPoint, jacobianITK );
-  JacobianType jacobianElastix;
+  JacobianType jacobianElastix; jacobianElastix.SetSize( Dimension, nzji.size() ); jacobianElastix.Fill( 0.0 );
   transform->GetJacobian( inputPoint, jacobianElastix, nzji );
   // ITK4 B-spline is non-local and returns a full matrix. Cannot compute diff like this anymore:
   //JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianITK;
@@ -362,6 +384,19 @@ int main( int argc, char *argv[] )
   if ( vcl_sqrt( jacDiff ) > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline GetJacobian() returning incorrect result." << std::endl;
+    return 1;
+  }
+
+  // Check
+  JacobianType jacobian1, jacobian2;
+  jacobian1.SetSize( Dimension, nzji.size() ); jacobian2.SetSize( Dimension, nzji.size() );
+  jacobian1.Fill( 0.0 ); jacobian2.Fill( 0.0 );
+  transform->GetJacobian( inputPoint, jacobian1, nzji );
+  transform->GetJacobian_opt( inputPoint, jacobian2, nzji );
+  JacobianType jacobianDifferenceMatrix = jacobian1 - jacobian2;
+  if ( jacobianDifferenceMatrix.frobenius_norm () > 1e-10 )
+  {
+    std::cerr << "ERROR: Advanced B-spline GetJacobian_opt() returning incorrect result." << std::endl;
     return 1;
   }
 

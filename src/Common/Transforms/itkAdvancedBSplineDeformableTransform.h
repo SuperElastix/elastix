@@ -244,6 +244,10 @@ public:
     const InputPointType & ipp,
     JacobianType & j,
     NonZeroJacobianIndicesType & ) const;
+  virtual void GetJacobian_opt(
+    const InputPointType & ipp,
+    JacobianType & j,
+    NonZeroJacobianIndicesType & ) const;
 
   /** Compute the spatial Jacobian of the transformation. */
   virtual void GetSpatialJacobian(
