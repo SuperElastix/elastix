@@ -271,20 +271,9 @@ private:
 
 } // end namespace itk
 
-// \todo: copied the below from itk. does this just work like this?:
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_StackTransform(_, EXPORT, x, y) namespace itk { \
-  _(3(class EXPORT StackTransform< ITK_TEMPLATE_3 x >)) \
-  namespace Templates { typedef StackTransform< ITK_TEMPLATE_3 x > StackTransform##y; } \
-  }
-
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkStackTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkStackTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkStackTransform.txx"
 #endif
 
 #endif

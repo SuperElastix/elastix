@@ -292,18 +292,9 @@ BackTransform(const OutputCovariantVectorType &vect) const
 
 }  // namespace itk
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_AdvancedTranslationTransform(_, EXPORT, x, y) namespace itk { \
-  _(2(class EXPORT AdvancedTranslationTransform< ITK_TEMPLATE_2 x >)) \
-  namespace Templates { typedef AdvancedTranslationTransform< ITK_TEMPLATE_2 x > AdvancedTranslationTransform##y; } \
-  }
 
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkAdvancedTranslationTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkAdvancedTranslationTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkAdvancedTranslationTransform.txx"
 #endif
 
 #endif /* __itkAdvancedTranslationTransform_h */

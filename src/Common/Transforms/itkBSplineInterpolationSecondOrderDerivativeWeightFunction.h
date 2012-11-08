@@ -114,19 +114,9 @@ private:
 
 } // end namespace itk
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_BSplineInterpolationSecondOrderDerivativeWeightFunction(_, EXPORT, x, y) namespace itk { \
-  _(3(class EXPORT BSplineInterpolationSecondOrderDerivativeWeightFunction< ITK_TEMPLATE_3 x >)) \
-  namespace Templates { typedef BSplineInterpolationSecondOrderDerivativeWeightFunction< ITK_TEMPLATE_3 x > BSplineInterpolationSecondOrderDerivativeWeightFunction##y; } \
-  }
 
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkBSplineInterpolationSecondOrderDerivativeWeightFunction+-.h"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkBSplineInterpolationSecondOrderDerivativeWeightFunction.txx"
 #endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkBSplineInterpolationSecondOrderDerivativeWeightFunction.txx"
-#endif
-
 
 #endif

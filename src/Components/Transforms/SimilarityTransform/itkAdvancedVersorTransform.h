@@ -177,18 +177,9 @@ private:
 
 }  // namespace itk
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_AdvancedVersorTransform(_, EXPORT, x, y) namespace itk { \
-  _(1(class EXPORT AdvancedVersorTransform< ITK_TEMPLATE_1 x >)) \
-  namespace Templates { typedef AdvancedVersorTransform< ITK_TEMPLATE_1 x > AdvancedVersorTransform##y; } \
-  }
 
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkAdvancedVersorTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkAdvancedVersorTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkAdvancedVersorTransform.txx"
 #endif
 
 #endif /* __itkAdvancedVersorTransform_h */

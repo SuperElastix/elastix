@@ -178,19 +178,9 @@ private:
 
 }  // namespace itk
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_AffineDTI3DTransform(_, EXPORT, x, y) namespace itk { \
-  _(1(class EXPORT AffineDTI3DTransform< ITK_TEMPLATE_1 x >)) \
-  namespace Templates { typedef AffineDTI3DTransform< ITK_TEMPLATE_1 x > \
-                                            AffineDTI3DTransform##y; } \
-  }
 
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkAffineDTI3DTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkAffineDTI3DTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkAffineDTI3DTransform.txx"
 #endif
 
 #endif /* __itkAffineDTI3DTransform_h */

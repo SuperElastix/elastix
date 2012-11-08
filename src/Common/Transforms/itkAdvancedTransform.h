@@ -293,18 +293,9 @@ private:
 
 } // end namespace itk
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_AdvancedTransform(_, EXPORT, x, y) namespace itk { \
-  _(3(class EXPORT AdvancedTransform< ITK_TEMPLATE_3 x >)) \
-  namespace Templates { typedef AdvancedTransform< ITK_TEMPLATE_3 x > AdvancedTransform##y; } \
-  }
 
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkAdvancedTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkAdvancedTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkAdvancedTransform.txx"
 #endif
 
 #endif

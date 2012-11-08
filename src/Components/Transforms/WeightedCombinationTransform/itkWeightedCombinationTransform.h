@@ -237,20 +237,9 @@ private:
 
 } // end namespace itk
 
-// \todo: copied the below from itk. does this just work like this?:
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_WeightedCombination(_, EXPORT, x, y) namespace itk { \
-  _(3(class EXPORT WeightedCombinationTransform< ITK_TEMPLATE_3 x >)) \
-  namespace Templates { typedef WeigthedCombinationTransform< ITK_TEMPLATE_3 x > WeightedCombinationTransform##y; } \
-  }
-
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkWeightedCombinationTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkWeightedCombinationTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkWeightedCombinationTransform.txx"
 #endif
 
 #endif

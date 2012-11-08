@@ -324,18 +324,8 @@ BackTransform(const OutputCovariantVectorType &vect) const
 }  // namespace itk
 
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_AdvancedRigid2DTransform(_, EXPORT, x, y) namespace itk { \
-  _(1(class EXPORT AdvancedRigid2DTransform< ITK_TEMPLATE_1 x >)) \
-  namespace Templates { typedef AdvancedRigid2DTransform< ITK_TEMPLATE_1 x > AdvancedRigid2DTransform##y; } \
-  }
-
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkAdvancedRigid2DTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkAdvancedRigid2DTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkAdvancedRigid2DTransform.txx"
 #endif
 
 #endif /* __itkAdvancedRigid2DTransform_h */
