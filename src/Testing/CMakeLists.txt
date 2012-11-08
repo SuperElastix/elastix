@@ -228,6 +228,12 @@ macro( elx_add_run_test testbasename howtocompare baseline )
     endif()
   endif()
 
+  # Thread tests should use the original TransformParameters file as a baseline
+  string( FIND ${testbasename} "Threads" found )
+  if( NOT found EQUAL -1 )
+    string( REGEX REPLACE "(-Threads[0-9]+)" "" baselineTP ${baselineTP} )
+  endif()
+
   # Add the test
   add_test( NAME ${testname}_COMPARE_TP
     CONFIGURATIONS Release
@@ -660,6 +666,74 @@ elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.003.txt )
 
+# Test multi-threading effects for SSD
+elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001-Threads1
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -threads 1 )
+elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001-Threads2
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -threads 2 )
+elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001-Threads4
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -threads 4 )
+
+# Test multi-threading effects for NC
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a-Threads1
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -threads 1 )
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a-Threads2
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -threads 2 )
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a-Threads4
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -threads 4 )
+
+# Test multi-threading effects for MI
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads1
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -threads 1 )
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads2
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -threads 2 )
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads4
+  "CHECKSUM" "auto"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -threads 4 )
 
 
 ### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES
