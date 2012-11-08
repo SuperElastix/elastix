@@ -155,19 +155,9 @@ private:
 
 }  // namespace itk
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_AdvancedEuler3DTransform(_, EXPORT, x, y) namespace itk { \
-  _(1(class EXPORT AdvancedEuler3DTransform< ITK_TEMPLATE_1 x >)) \
-  namespace Templates { typedef AdvancedEuler3DTransform< ITK_TEMPLATE_1 x > \
-                                            AdvancedEuler3DTransform##y; } \
-  }
 
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkAdvancedEuler3DTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkAdvancedEuler3DTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkAdvancedEuler3DTransform.txx"
 #endif
 
 #endif /* __itkAdvancedEuler3DTransform_h */
