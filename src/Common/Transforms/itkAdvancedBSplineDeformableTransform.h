@@ -340,18 +340,8 @@ private:
 
 }  // namespace itk
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_AdvancedBSplineDeformableTransform(_, EXPORT, x, y) namespace itk { \
-  _(3(class EXPORT AdvancedBSplineDeformableTransform< ITK_TEMPLATE_3 x >)) \
-  namespace Templates { typedef AdvancedBSplineDeformableTransform< ITK_TEMPLATE_3 x > \
-                                                   AdvancedBSplineDeformableTransform##y; } \
-  }
 
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkAdvancedBSplineDeformableTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
+#ifndef ITK_MANUAL_INSTANTIATION
 # include "itkAdvancedBSplineDeformableTransform.txx"
 #endif
 
