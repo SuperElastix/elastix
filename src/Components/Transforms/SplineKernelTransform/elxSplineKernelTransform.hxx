@@ -357,7 +357,7 @@ SplineKernelTransform<TElastix>
       for ( unsigned int d = 0; d < SpaceDimension; ++d )
       {
         landmarkIndex[ d ] = static_cast<IndexValueType>(
-          vnl_math_rnd( landmarkPoint[ d ] ) );
+          itk::Math::Round<double>( landmarkPoint[ d ] ) );
       }
 
       /** Compute the input point in physical coordinates and replace the point. */

@@ -940,7 +940,7 @@ TransformBase<TElastix>
       for ( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
         inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-          vnl_math_rnd( fixedcindex[ i ] ) );
+          itk::Math::Round<double>( fixedcindex[ i ] ) );
       }
     }
   }
@@ -956,7 +956,7 @@ TransformBase<TElastix>
       for ( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
         inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-          vnl_math_rnd( point[ i ] ) );
+          itk::Math::Round<double>( point[ i ] ) );
       }
       /** Compute the input point in physical coordinates. */
       dummyImage->TransformIndexToPhysicalPoint(
@@ -977,7 +977,7 @@ TransformBase<TElastix>
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
       outputindexfixedvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-        vnl_math_rnd( fixedcindex[ i ] ) );
+        itk::Math::Round<double>( fixedcindex[ i ] ) );
     }
 
     if ( alsoMovingIndices )
@@ -988,7 +988,7 @@ TransformBase<TElastix>
       for ( unsigned int i = 0; i < MovingImageDimension; i++ )
       {
         outputindexmovingvec[ j ][ i ] = static_cast<MovingImageIndexValueType>(
-          vnl_math_rnd( movingcindex[ i ] ) );
+          itk::Math::Round<double>( movingcindex[ i ] ) );
       }
     }
 

@@ -107,7 +107,7 @@ TARGET_LINK_LIBRARIES( elxCore
 )
 
 #---------------------------------------------------------------------
-# Define the mevis dcm tiff lib to which we should link. 
+# Define the mevis dcm tiff lib to which we should link.
 SET( mevisdcmtifflib mevisdcmtiff )
 
 #---------------------------------------------------------------------

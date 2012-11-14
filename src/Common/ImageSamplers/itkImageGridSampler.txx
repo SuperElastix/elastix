@@ -255,7 +255,7 @@ ImageGridSampler< TInputImage >
   /** Compute the grid spacing. */
   const double indimd = static_cast<double>( InputImageDimension );
   int gridspacing = static_cast<int>( // no unsigned int version of rnd, max
-    vnl_math_rnd( vcl_pow( fraction, 1.0 / indimd ) ) );
+    Math::Round<double>( vcl_pow( fraction, 1.0 / indimd ) ) );
   gridspacing = vnl_math_max( 1, gridspacing );
 
   /** Set gridspacings for all dimensions

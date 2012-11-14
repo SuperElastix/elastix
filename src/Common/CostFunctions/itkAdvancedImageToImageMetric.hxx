@@ -496,7 +496,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
         MovingImageIndexType index;
         for ( unsigned int j = 0; j < MovingImageDimension; j++ )
         {
-          index[ j ] = static_cast<long>( vnl_math_rnd( cindex[ j ] ) );
+          index[ j ] = static_cast<long>( Math::Round<double>( cindex[ j ] ) );
         }
         (*gradient) = this->m_GradientImage->GetPixel( index );
       }
