@@ -170,16 +170,16 @@ SET( USE_ALL_COMPONENTS OFF CACHE BOOL "Compile all components" )
 #
 
 # Initialize the list of link libs.
-SET( AllComponentLibs "" CACHE INTERNAL "All component libraries for elastix/transformix"  )
+set( AllComponentLibs "" CACHE INTERNAL "All component libraries for elastix/transformix"  )
 
-FILE( GLOB_RECURSE ListOfComponents "*/CMakeLists.txt" )
+file( GLOB_RECURSE ListOfComponents "*/CMakeLists.txt" )
 
-FOREACH( component ${ListOfComponents} )
-  GET_FILENAME_COMPONENT( path_to_comp ${component} PATH )
+foreach( component ${ListOfComponents} )
+  get_filename_component( path_to_comp ${component} PATH )
   # Make the path relative to the elxComponents_SOURCE_DIR
-  STRING( REGEX REPLACE "${elxComponents_SOURCE_DIR}/" "" relative_path_to_comp ${path_to_comp} )
-  ADD_SUBDIRECTORY( ${relative_path_to_comp} )
-ENDFOREACH()
+  string( REGEX REPLACE "${elxComponents_SOURCE_DIR}/" "" relative_path_to_comp ${path_to_comp} )
+  add_subdirectory( ${relative_path_to_comp} )
+endforeach()
 
 
 #----------------------------------------------------------------------
@@ -187,45 +187,45 @@ ENDFOREACH()
 # These are components defined in external directories
 # outside elastix, defined by the user.
 
-FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
+foreach( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
 
-  MESSAGE( STATUS "Searching for user components in: ${userComponentDir}" )
-  FILE( GLOB_RECURSE listOfUserComponents "${userComponentDir}/CMakeLists.txt" )
+  message( STATUS "Searching for user components in: ${userComponentDir}" )
+  file( GLOB_RECURSE listOfUserComponents "${userComponentDir}/CMakeLists.txt" )
 
-  FOREACH( userComponent ${listOfUserComponents} )
+  foreach( userComponent ${listOfUserComponents} )
 
-    GET_FILENAME_COMPONENT( pathToComp ${userComponent} PATH )
+    get_filename_component( path_to_comp ${userComponent} PATH )
 
-    # read project name from cmakelists.txt
-    MESSAGE( STATUS "Reading: ${userComponent}" )
-
+    # Read project name from cmakelists.txt
     # Find the first line that has the following structure:
     # ADD_ELXCOMPONENT( projectname [....]
     # spaces before/after/inbetween are allowed.
     # ADD_ELXCOMPONENT does not have to be capitalized.
     # Commented lines (where the first nonwhite character is a #) are ignored.
-    FILE( STRINGS ${userComponent} addElxComponentLine LIMIT_COUNT 1 REGEX
+    file( STRINGS ${userComponent} addElxComponentLine LIMIT_COUNT 1 REGEX
       "^[ \t]*[Aa][Dd][Dd]_[Ee][Ll][Xx][Cc][Oo][Mm][Pp][Oo][Nn][Ee][Nn][Tt][ \t]*[(][ \t]*[^ #\t()]+" )
 
     # Extract the projectname.
-    STRING(REGEX REPLACE
+    string( REGEX REPLACE
       "^[ \t]*[Aa][Dd][Dd]_[Ee][Ll][Xx][Cc][Oo][Mm][Pp][Oo][Nn][Ee][Nn][Tt][ \t]*[(][ \t]*([^ #\t()]+).*"
       "\\1" componentName "${addElxComponentLine}")
 
-    IF( NOT "${componentName}" STREQUAL "" )
-      MESSAGE( STATUS "Found user component: ${componentName}" )
+    if( NOT "${componentName}" STREQUAL "" )
+      message( STATUS "Found user component: ${componentName}" )
 
       # For non-subdirectories, the binarydir should be specified.
       # We use the name of the component for that.
-      SET( binaryDir "${elastix_BINARY_DIR}/UserComponents/${componentName}" )
+      set( binaryDir "${elastix_BINARY_DIR}/UserComponents/${componentName}" )
 
-      # Add
-      ADD_SUBDIRECTORY( ${pathToComp} ${binaryDir} )
+      # Add. Make sure that the path relative to the ELASTIX_USER_COMPONENT_DIRS is set,
+      # so that the component ends up in the correct source group.
+      string( REGEX REPLACE "${ELASTIX_USER_COMPONENT_DIRS}/" "" relative_path_to_comp ${path_to_comp} )
+      add_subdirectory( ${path_to_comp} ${binaryDir} )
 
-    ELSE()
-      MESSAGE( STATUS "No user component definition found in: ${userComponent}" )
-    ENDIF()
+    else()
+      message( STATUS "No user component definition found in: ${userComponent}" )
+    endif()
 
-  ENDFOREACH()
-ENDFOREACH()
+  endforeach()
+endforeach()
 
