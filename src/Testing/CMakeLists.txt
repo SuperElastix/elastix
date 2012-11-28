@@ -387,7 +387,7 @@ if( ELASTIX_USE_OPENCL )
     -i   NearestNeighbor
     -t   BSpline
     -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
-    -rmse 0.2 )
+    -rmse 0.5 )
 
   elx_add_test( GPUResampleImageFilterTest "-LinearBSpline" "OpenCL"
     -in  ${TestDataDir}/3DCT_lung_baseline.mha
