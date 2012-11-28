@@ -144,7 +144,7 @@ if( WIN32 OR UNIX )
     unset( OPENCL_OPTIMIZATION_UNSAFE_MATH_OPTIMIZATIONS CACHE )
     unset( OPENCL_OPTIMIZATION_FINITE_MATH_ONLY CACHE )
     unset( OPENCL_OPTIMIZATION_FAST_RELAXED_MATH CACHE )
-    
+
     # Unset warnings
     unset( OPENCL_WARNINGS_DISABLE CACHE )
     unset( OPENCL_WARNINGS_AS_ERRORS CACHE )
@@ -206,6 +206,7 @@ if( WIN32 OR UNIX )
       find_path( OPENCL_INCLUDE_DIRS CL/cl.h
         HINTS
           $ENV{NVSDKCOMPUTE_ROOT}/OpenCL/common/inc
+          $ENV{CUDA_PATH_V5_0}
           $ENV{CUDA_PATH_V4_0}
           $ENV{CUDA_PATH_V3_2}
         PATH_SUFFIXES include
@@ -218,6 +219,7 @@ if( WIN32 OR UNIX )
           NAMES OpenCL
           HINTS
             $ENV{NVSDKCOMPUTE_ROOT}/OpenCL/common
+            $ENV{CUDA_PATH_V5_0}
             $ENV{CUDA_PATH_V4_0}
             $ENV{CUDA_PATH_V3_2}
           PATH_SUFFIXES lib/x64
@@ -227,6 +229,7 @@ if( WIN32 OR UNIX )
           NAMES OpenCL
           HINTS
             $ENV{NVSDKCOMPUTE_ROOT}/OpenCL/common
+            $ENV{CUDA_PATH_V5_0}
             $ENV{CUDA_PATH_V4_0}
             $ENV{CUDA_PATH_V3_2}
           PATH_SUFFIXES lib/Win32
