@@ -61,6 +61,7 @@ cl_int OpenCLEvent::GetStatus() const
     {
     return CL_INVALID_EVENT;
     }
+
   cl_int st, error;
   error = clGetEventInfo(m_Id, CL_EVENT_COMMAND_EXECUTION_STATUS,
                          sizeof( st ), &st, 0);
@@ -81,6 +82,7 @@ cl_command_type OpenCLEvent::GetCommandType() const
     {
     return 0;
     }
+
   cl_command_type type;
   cl_int          error = clGetEventInfo(m_Id, CL_EVENT_COMMAND_TYPE,
                                          sizeof( type ), &type, 0);
@@ -101,10 +103,6 @@ void OpenCLEvent::WaitForFinished()
     {
     cl_int error = clWaitForEvents(1, &m_Id);
     OpenCLCheckError(error, __FILE__, __LINE__, ITK_LOCATION);
-    //if (error != CL_SUCCESS) {
-    //    qWarning() << "OpenCLEventList::waitForFinished:"
-    //               << QCLContext::errorName(error);
-    //}
     }
 }
 
@@ -164,113 +162,6 @@ cl_ulong OpenCLEvent::GetFinishTime() const
   return time;
 }
 
-#ifndef QT_NO_DEBUG_STREAM
-
-//QDebug operator<<(QDebug dbg, const OpenCLEvent &event)
-//{
-//    cl_event id = event.eventId();
-//    if (!id) {
-//        dbg << "OpenCLEvent()";
-//        return dbg;
-//    }
-//    cl_command_type command = event.commandType();
-//    cl_int status = event.status();
-//    const char *commandName;
-//    switch (command) {
-//    case CL_COMMAND_NDRANGE_KERNEL:
-//        commandName = "clEnqueueNDRangeKernel"; break;
-//    case CL_COMMAND_TASK:
-//        commandName = "clEnqueueTask"; break;
-//    case CL_COMMAND_NATIVE_KERNEL:
-//        commandName = "clEnqueueNativeKernel"; break;
-//    case CL_COMMAND_READ_BUFFER:
-//        commandName = "clEnqueueReadBuffer"; break;
-//    case CL_COMMAND_WRITE_BUFFER:
-//        commandName = "clEnqueueWriteBuffer"; break;
-//    case CL_COMMAND_COPY_BUFFER:
-//        commandName = "clEnqueueCopyBuffer"; break;
-//    case CL_COMMAND_READ_IMAGE:
-//        commandName = "clEnqueueReadImage"; break;
-//    case CL_COMMAND_WRITE_IMAGE:
-//        commandName = "clEnqueueWriteImage"; break;
-//    case CL_COMMAND_COPY_IMAGE:
-//        commandName = "clEnqueueCopyImage"; break;
-//    case CL_COMMAND_COPY_IMAGE_TO_BUFFER:
-//        commandName = "clEnqueueCopyImageToBuffer"; break;
-//    case CL_COMMAND_COPY_BUFFER_TO_IMAGE:
-//        commandName = "clEnqueueCopyBufferToImage"; break;
-//    case CL_COMMAND_MAP_BUFFER:
-//        commandName = "clEnqueueMapBuffer"; break;
-//    case CL_COMMAND_MAP_IMAGE:
-//        commandName = "clEnqueueMapImage"; break;
-//    case CL_COMMAND_UNMAP_MEM_OBJECT:
-//        commandName = "clEnqueueUnmapMemObject"; break;
-//    case CL_COMMAND_MARKER:
-//        commandName = "clEnqueueMarker"; break;
-//    case CL_COMMAND_ACQUIRE_GL_OBJECTS:
-//        commandName = "clEnqueueAcquireGLObjects"; break;
-//    case CL_COMMAND_RELEASE_GL_OBJECTS:
-//        commandName = "clEnqueueReleaseGLObjects"; break;
-//    // OpenCL 1.1 event types.
-//    case CL_COMMAND_READ_BUFFER_RECT:
-//        commandName = "clEnqueueReadBufferRect"; break;
-//    case CL_COMMAND_WRITE_BUFFER_RECT:
-//        commandName = "clEnqueueWriteBufferRect"; break;
-//    case CL_COMMAND_COPY_BUFFER_RECT:
-//        commandName = "clEnqueueCopyBufferRect"; break;
-//    case CL_COMMAND_USER:
-//        commandName = "clCreateUserEvent"; break;
-//    default:
-//        commandName = "Unknown"; break;
-//    }
-//    const char *statusName;
-//    switch (status) {
-//    case CL_COMPLETE:   statusName = "finished"; break;
-//    case CL_RUNNING:    statusName = "running"; break;
-//    case CL_SUBMITTED:  statusName = "submitted"; break;
-//    case CL_QUEUED:     statusName = "queued"; break;
-//    default:            statusName = "Unknown"; break;
-//    }
-//    if (status != CL_COMPLETE) {
-//        // Command is not complete: no profiling information yet.
-//        dbg << "OpenCLEvent(id:" << reinterpret_cast<long>(id)
-//            << "request:" << commandName
-//            << "status:" << statusName
-//            << ")";
-//    } else {
-//        cl_ulong queueTime, runTime, finishTime;
-//        if (clGetEventProfilingInfo
-//                (id, CL_PROFILING_COMMAND_QUEUED,
-//                 sizeof(queueTime), &queueTime, 0) != CL_SUCCESS ||
-//            clGetEventProfilingInfo
-//                (id, CL_PROFILING_COMMAND_START,
-//                 sizeof(runTime), &runTime, 0) != CL_SUCCESS ||
-//            clGetEventProfilingInfo
-//                (id, CL_PROFILING_COMMAND_END,
-//                 sizeof(finishTime), &finishTime, 0) != CL_SUCCESS) {
-//            // Profiling information is not available, probably
-//            // because it was not enabled on the command queue.
-//            dbg << "OpenCLEvent(id:" << reinterpret_cast<long>(id)
-//                << "request:" << commandName
-//                << "status:" << statusName
-//                << ")";
-//        } else {
-//            // Include profiling information in the debug output.
-//            qreal fullDuration = (finishTime - queueTime) / 1000000.0f;
-//            qreal runDuration = (finishTime - runTime) / 1000000.0f;
-//            dbg << "OpenCLEvent(id:" << reinterpret_cast<long>(id)
-//                << "request:" << commandName
-//                << "status:" << statusName
-//                << "full-time:" << fullDuration
-//                << "ms running-time:" << runDuration
-//                << "ms)";
-//        }
-//    }
-//    return dbg;
-//}
-
-#endif // QT_NO_DEBUG_STREAM
-
 //------------------------------------------------------------------------------
 OpenCLEventList::OpenCLEventList(const OpenCLEvent & event)
 {
@@ -287,7 +178,7 @@ OpenCLEventList::OpenCLEventList(const OpenCLEvent & event)
 OpenCLEventList::OpenCLEventList(const OpenCLEventList & other):
   m_Events(other.m_Events)
 {
-  for ( int index = 0; index < m_Events.size(); ++index )
+  for ( std::size_t index = 0; index < m_Events.size(); ++index )
     {
     clRetainEvent(m_Events[index]);
     }
@@ -296,7 +187,7 @@ OpenCLEventList::OpenCLEventList(const OpenCLEventList & other):
 //------------------------------------------------------------------------------
 OpenCLEventList::~OpenCLEventList()
 {
-  for ( int index = 0; index < m_Events.size(); ++index )
+  for ( std::size_t index = 0; index < m_Events.size(); ++index )
     {
     clReleaseEvent(m_Events[index]);
     }
@@ -307,7 +198,7 @@ OpenCLEventList & OpenCLEventList::operator=(const OpenCLEventList & other)
 {
   if ( this != &other )
     {
-    for ( int index = 0; index < m_Events.size(); ++index )
+    for ( std::size_t index = 0; index < m_Events.size(); ++index )
       {
       clReleaseEvent(m_Events[index]);
       }
@@ -335,7 +226,7 @@ void OpenCLEventList::Append(const OpenCLEvent & event)
 //------------------------------------------------------------------------------
 void OpenCLEventList::Append(const OpenCLEventList & other)
 {
-  for ( int index = 0; index < other.m_Events.size(); ++index )
+  for ( std::size_t index = 0; index < other.m_Events.size(); ++index )
     {
     cl_event id = other.m_Events[index];
     clRetainEvent(id);
@@ -359,7 +250,7 @@ void OpenCLEventList::Remove(const OpenCLEvent & event)
 }
 
 //------------------------------------------------------------------------------
-OpenCLEvent OpenCLEventList::At(std::size_t index) const
+OpenCLEvent OpenCLEventList::Get(const std::size_t index) const
 {
   if ( index >= 0 && index < m_Events.size() )
     {
@@ -397,9 +288,5 @@ void OpenCLEventList::WaitForFinished()
     }
   cl_int error = clWaitForEvents( GetSize(), GetEventData() );
   OpenCLCheckError(error, __FILE__, __LINE__, ITK_LOCATION);
-  //if (error != CL_SUCCESS) {
-  //    qWarning() << "OpenCLEventList::waitForFinished:"
-  //               << QCLContext::errorName(error);
-  //}
 }
 } // namespace itk

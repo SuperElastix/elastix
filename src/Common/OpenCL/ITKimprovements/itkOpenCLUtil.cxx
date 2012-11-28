@@ -109,7 +109,7 @@ cl_device_id * OpenCLGetAvailableDevices(const cl_platform_id platform,
 //
 cl_device_id OpenCLGetMaxFlopsDev(cl_context cxGPUContext)
 {
-  std::size_t        szParmDataBytes;
+  std::size_t szParmDataBytes;
   cl_device_id *cdDevices;
 
   // get the list of GPU devices associated with context

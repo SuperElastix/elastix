@@ -19,6 +19,7 @@
 #define __itkOpenCLEvent_h
 
 #include "itkOpenCL.h"
+#include "itkOpenCLExtension.h"
 #include <vector>
 
 namespace itk
@@ -137,6 +138,143 @@ private:
   friend class OpenCLUserEvent;
 };
 
+/** Stream out operator for OpenCLEvent */
+template< class charT, class traits >
+inline
+std::basic_ostream< charT, traits > & operator<<(std::basic_ostream< charT, traits > & strm,
+                                                 const OpenCLEvent & event)
+{
+  const cl_event id = event.GetEventId();
+
+  if ( !id )
+    {
+    strm << "OpenCLEvent()";
+    return strm;
+    }
+
+  const cl_command_type command = event.GetCommandType();
+  const cl_int          status = event.GetStatus();
+
+  // Get command name, check for clGetEventInfo() specification
+  const char *commandName;
+  switch ( command )
+    {
+    case CL_COMMAND_NDRANGE_KERNEL:
+      commandName = "clEnqueueNDRangeKernel"; break;
+    case CL_COMMAND_TASK:
+      commandName = "clEnqueueTask"; break;
+    case CL_COMMAND_NATIVE_KERNEL:
+      commandName = "clEnqueueNativeKernel"; break;
+    case CL_COMMAND_READ_BUFFER:
+      commandName = "clEnqueueReadBuffer"; break;
+    case CL_COMMAND_WRITE_BUFFER:
+      commandName = "clEnqueueWriteBuffer"; break;
+    case CL_COMMAND_COPY_BUFFER:
+      commandName = "clEnqueueCopyBuffer"; break;
+    case CL_COMMAND_READ_IMAGE:
+      commandName = "clEnqueueReadImage"; break;
+    case CL_COMMAND_WRITE_IMAGE:
+      commandName = "clEnqueueWriteImage"; break;
+    case CL_COMMAND_COPY_IMAGE:
+      commandName = "clEnqueueCopyImage"; break;
+    case CL_COMMAND_COPY_IMAGE_TO_BUFFER:
+      commandName = "clEnqueueCopyImageToBuffer"; break;
+    case CL_COMMAND_COPY_BUFFER_TO_IMAGE:
+      commandName = "clEnqueueCopyBufferToImage"; break;
+    case CL_COMMAND_MAP_BUFFER:
+      commandName = "clEnqueueMapBuffer"; break;
+    case CL_COMMAND_MAP_IMAGE:
+      commandName = "clEnqueueMapImage"; break;
+    case CL_COMMAND_UNMAP_MEM_OBJECT:
+      commandName = "clEnqueueUnmapMemObject"; break;
+    case CL_COMMAND_MARKER:
+      commandName = "clEnqueueMarker"; break;
+    case CL_COMMAND_ACQUIRE_GL_OBJECTS:
+      commandName = "clEnqueueAcquireGLObjects"; break;
+    case CL_COMMAND_RELEASE_GL_OBJECTS:
+      commandName = "clEnqueueReleaseGLObjects"; break;
+    // OpenCL 1.1 event types.
+    case CL_COMMAND_READ_BUFFER_RECT:
+      commandName = "clEnqueueReadBufferRect"; break;
+    case CL_COMMAND_WRITE_BUFFER_RECT:
+      commandName = "clEnqueueWriteBufferRect"; break;
+    case CL_COMMAND_COPY_BUFFER_RECT:
+      commandName = "clEnqueueCopyBufferRect"; break;
+    case CL_COMMAND_USER:
+      commandName = "clCreateUserEvent"; break;
+    // OpenCL 1.2 event types.
+    case CL_COMMAND_BARRIER:
+      commandName = "clEnqueueBarrierWithWaitList"; break;
+    case CL_COMMAND_MIGRATE_MEM_OBJECTS:
+      commandName = "clEnqueueFillImage"; break;
+    case CL_COMMAND_FILL_BUFFER:
+      commandName = "clEnqueueFillBuffer"; break;
+    case CL_COMMAND_FILL_IMAGE:
+      commandName = "clEnqueueFillImage"; break;
+    default:
+      commandName = "Unknown"; break;
+    }
+
+  // Get command status
+  const char *statusName;
+  switch ( status )
+    {
+    case CL_COMPLETE:
+      statusName = "finished"; break;
+    case CL_RUNNING:
+      statusName = "running"; break;
+    case CL_SUBMITTED:
+      statusName = "submitted"; break;
+    case CL_QUEUED:
+      statusName = "queued"; break;
+    default:
+      statusName = "Unknown"; break;
+    }
+  if ( status != CL_COMPLETE )
+    {
+    // Command is not complete : no profiling information available yet.
+    strm << "OpenCLEvent(id:" << reinterpret_cast< long >( id )
+         << " command:" << commandName
+         << " status:" << statusName
+         << ")";
+    }
+  else
+    {
+    cl_ulong queueTime, runTime, finishTime;
+    if ( clGetEventProfilingInfo
+           (id, CL_PROFILING_COMMAND_QUEUED,
+           sizeof( queueTime ), &queueTime, 0) != CL_SUCCESS
+         || clGetEventProfilingInfo
+           (id, CL_PROFILING_COMMAND_START,
+           sizeof( runTime ), &runTime, 0) != CL_SUCCESS
+         || clGetEventProfilingInfo
+           (id, CL_PROFILING_COMMAND_END,
+           sizeof( finishTime ), &finishTime, 0) != CL_SUCCESS )
+      {
+      // Profiling information is not available, probably
+      // because it was not enabled on the command queue.
+      strm << "OpenCLEvent(id:" << reinterpret_cast< long >( id )
+           << " command:" << commandName
+           << " status:" << statusName
+           << ")";
+      }
+    else
+      {
+      // Include profiling information in the debug output.
+      const double fullDuration = ( finishTime - queueTime ) / 1000000.0f;
+      const double runDuration = ( finishTime - runTime ) / 1000000.0f;
+      strm << "OpenCLEvent(id:" << reinterpret_cast< long >( id )
+           << " command:" << commandName
+           << " status:" << statusName
+           << " full-time:" << fullDuration
+           << " ms running-time:" << runDuration
+           << "ms)";
+      }
+    }
+
+  return strm;
+}
+
 //------------------------------------------------------------------------------
 /** \class OpenCLEventList
  * \brief OpenCLEventList class represents a list of OpenCLEvent objects.
@@ -146,6 +284,8 @@ private:
 class ITKOpenCL_EXPORT OpenCLEventList
 {
 public:
+  typedef std::vector< cl_event > OpenCLEventListArrayType;
+
   /** Constructs an empty list of OpenCL events. */
   OpenCLEventList() {}
 
@@ -169,7 +309,7 @@ public:
   bool IsEmpty() const { return m_Events.empty(); }
 
   /** Returns the size of this event list.
-   * \sa IsEmpty(), At() */
+   * \sa IsEmpty(), Get() */
   std::size_t GetSize() const { return m_Events.size(); }
 
   /** Appends event to this list of OpenCL events if it is not null.
@@ -187,10 +327,10 @@ public:
   /** Returns the event at index in this event list, or a null OpenCLEvent
    * if index is out of range.
    * \sa GetSize(), Contains() */
-  OpenCLEvent At(std::size_t index) const;
+  OpenCLEvent Get(const std::size_t index) const;
 
   /** Returns true if this event list contains event; false otherwise.
-   * \sa At(), Remove() */
+   * \sa Get(), Remove() */
   bool Contains(const OpenCLEvent & event) const;
 
   /** Returns a const pointer to the raw OpenCL event data in this event list;
@@ -199,6 +339,10 @@ public:
    * an argument.
    * \sa GetSize() */
   const cl_event * GetEventData() const;
+
+  /** Returns a const reference to the array of OpenCL events.
+   * \sa GetSize() */
+  const OpenCLEventListArrayType & GetEventArray() const;
 
   /** Same as append event.
    * \sa Append() */
@@ -223,7 +367,7 @@ public:
   void WaitForFinished();
 
 private:
-  std::vector< cl_event > m_Events;
+  OpenCLEventListArrayType m_Events;
 };
 
 inline bool OpenCLEvent::operator==(const OpenCLEvent & other) const
@@ -239,6 +383,11 @@ inline bool OpenCLEvent::operator!=(const OpenCLEvent & other) const
 inline const cl_event * OpenCLEventList::GetEventData() const
 {
   return m_Events.empty() ? 0 : &m_Events[0];
+}
+
+inline const OpenCLEventList::OpenCLEventListArrayType & OpenCLEventList::GetEventArray() const
+{
+  return m_Events;
 }
 
 inline OpenCLEventList & OpenCLEventList::operator+=(const OpenCLEvent & event)
@@ -263,6 +412,37 @@ inline OpenCLEventList & OpenCLEventList::operator<<(const OpenCLEventList & oth
 {
   Append(other);
   return *this;
+}
+
+/** Stream out operator for OpenCLEventList */
+template< class charT, class traits >
+inline
+std::basic_ostream< charT, traits > & operator<<(std::basic_ostream< charT, traits > & strm,
+                                                 const OpenCLEventList & eventlist)
+{
+  if ( !eventlist.GetSize() )
+    {
+    strm << "OpenCLEventList()";
+    return strm;
+    }
+
+  OpenCLEventList::OpenCLEventListArrayType::const_iterator it;
+  const OpenCLEventList::OpenCLEventListArrayType &eventsArray = eventlist.GetEventArray();
+
+  std::size_t id = 0;
+  strm << "OpenCLEventList contains:" << std::endl;
+  for ( it = eventsArray.begin(); it < eventsArray.end(); it++ )
+    {
+    // const OpenCLEvent &event = *it;
+    // strm << "array id: " << id << " " << event << std::endl;
+
+    // Let's print only address, printing the OpenCLEvent
+    // could halt execution of the program
+    strm << "array id: " << id << " " << *it << std::endl;
+    ++id;
+    }
+
+  return strm;
 }
 } // end namespace itk
 

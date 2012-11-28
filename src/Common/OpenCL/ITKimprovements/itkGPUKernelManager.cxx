@@ -30,12 +30,12 @@ std::string GetOpenCLDebugFileName(const std::string & source)
 {
   // Create unique filename based on the source code
   const std::size_t sourceSize = source.size();
-  itksysMD5 *  md5 = itksysMD5_New();
+  itksysMD5 *       md5 = itksysMD5_New();
 
   itksysMD5_Initialize(md5);
   itksysMD5_Append(md5, (unsigned char *)source.c_str(), sourceSize);
   const std::size_t DigestSize = 32u;
-  char         Digest[DigestSize];
+  char              Digest[DigestSize];
   itksysMD5_FinalizeHex(md5, Digest);
   const std::string hex(Digest, DigestSize);
 
@@ -215,7 +215,7 @@ bool GPUKernelManager::LoadProgramFromFile(const char *filename, const char *pre
   inputFile.close();
 
   const std::string oclSource = sstream.str();
-  const std::size_t      oclSourceSize = oclSource.size();
+  const std::size_t oclSourceSize = oclSource.size();
 
   if ( oclSourceSize == 0 )
     {
@@ -226,7 +226,7 @@ bool GPUKernelManager::LoadProgramFromFile(const char *filename, const char *pre
   bool        created = false;
   std::string fileName(filename);
 
-#if defined( _DEBUG )
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   // To work with the Intel SDK for OpenCL* - Debugger plug-in, the OpenCL*
   // kernel code must exist in a text file separate from the code of the host.
   // Also the full path to the file has to be provided.
@@ -248,9 +248,7 @@ bool GPUKernelManager::LoadProgramFromFile(const char *filename, const char *pre
     itkWarningMacro(<< "For Debugging your OpenCL kernel use :"
                     << fileName << " , not original .cl file.");
     }
-#endif
 
-#ifdef _DEBUG
   std::cout << "Creating OpenCL program from : " << fileName << std::endl;
 #endif
 
@@ -279,7 +277,7 @@ bool GPUKernelManager::LoadProgramFromString(const char *source, const char *pre
     }
 
   const std::string oclSource = sstream.str();
-  const std::size_t      oclSourceSize = oclSource.size();
+  const std::size_t oclSourceSize = oclSource.size();
 
   if ( oclSourceSize == 0 )
     {
@@ -289,7 +287,7 @@ bool GPUKernelManager::LoadProgramFromString(const char *source, const char *pre
 
   bool created = false;
 
-#if defined( _DEBUG )
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   // To work with the Intel SDK for OpenCL* - Debugger plug-in, the OpenCL*
   // kernel code must exist in a text file separate from the code of the host.
   // Also the full path to the file has to be provided.
@@ -307,14 +305,12 @@ bool GPUKernelManager::LoadProgramFromString(const char *source, const char *pre
 
     itkWarningMacro(<< "For Debugging your OpenCL kernel use :" << fileName);
     }
-#endif
 
-#ifdef _DEBUG
   std::cout << "Creating OpenCL program from source." << std::endl;
 #endif
 
   // Create
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   created = CreateOpenCLProgram(fileName, oclSource, oclSourceSize);
 #else
   created = CreateOpenCLProgram(std::string(), oclSource, oclSourceSize);
@@ -334,7 +330,7 @@ bool GPUKernelManager::CreateOpenCLProgram(const std::string & filename,
 #endif
 
   cl_int error;
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   std::cout << "clCreateProgramWithSource" << "..." << std::endl;
 #endif
   const char *code = source.c_str();
@@ -353,7 +349,7 @@ bool GPUKernelManager::CreateOpenCLProgram(const std::string & filename,
   const bool  oclMathAndOptimizationEnabled =
     GetOpenCLMathAndOptimizationOptions(oclMathAndOptimization);
 
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   if ( filename.size() > 0 )
     {
     std::cout << "clBuildProgram '" << filename << "' ..." << std::endl;
@@ -448,7 +444,7 @@ int GPUKernelManager::CreateKernel(const char *kernelName)
   cl_int error;
 
   // create kernel
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   std::cout << "clCreateKernel" << "..." << std::endl;
 #endif
   cl_kernel newKernel = clCreateKernel(m_Program, kernelName, &error);
@@ -467,7 +463,7 @@ int GPUKernelManager::CreateKernel(const char *kernelName)
   m_KernelArgumentReady.push_back( std::vector< KernelArgumentList >() );
   cl_uint nArg;
 
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   std::cout << "clGetKernelInfo" << "..." << std::endl;
 #endif
 
@@ -503,7 +499,7 @@ cl_int GPUKernelManager::GetKernelWorkGroupInfo(const std::size_t kernelId,
       itkGenericExceptionMacro (<< "Unknown type of work goup information");
       break;
     }
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   std::cout << "clGetKernelWorkGroupInfo" << "..." << std::endl;
 #endif
   cl_int error = clGetKernelWorkGroupInfo(m_KernelContainer[kernelId], m_Manager->GetDeviceId(0),
@@ -516,35 +512,49 @@ cl_int GPUKernelManager::GetKernelWorkGroupInfo(const std::size_t kernelId,
 
 //------------------------------------------------------------------------------
 bool GPUKernelManager::SetKernelArg(const std::size_t kernelId,
-                                    const cl_uint argIdx, const std::size_t argSize,
+                                    const cl_uint argId, const std::size_t argSize,
                                     const void *argVal)
 {
   if ( kernelId >= m_KernelContainer.size() ) { return false; }
 
   cl_int error;
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   std::cout << "clSetKernelArg" << "..." << std::endl;
 #endif
-  error = clSetKernelArg(m_KernelContainer[kernelId], argIdx, argSize, argVal);
+  error = clSetKernelArg(m_KernelContainer[kernelId], argId, argSize, argVal);
+
+  if ( error != CL_SUCCESS )
+    {
+    itkWarningMacro("Setting kernel argument failed with GPUKernelManager::SetKernelArg("
+                    << kernelId << ", " << argId << ", " << argSize << ". " << argVal << ")");
+    }
+
   OpenCLCheckError(error, __FILE__, __LINE__, ITK_LOCATION);
 
-  m_KernelArgumentReady[kernelId][argIdx].m_IsReady = true;
-  m_KernelArgumentReady[kernelId][argIdx].m_GPUDataManager = (GPUDataManager::Pointer)NULL;
+  m_KernelArgumentReady[kernelId][argId].m_IsReady = true;
+  m_KernelArgumentReady[kernelId][argId].m_GPUDataManager = (GPUDataManager::Pointer)NULL;
 
   return true;
 }
 
 //------------------------------------------------------------------------------
 bool GPUKernelManager::SetKernelArgWithImage(const std::size_t kernelId, const cl_uint argId,
-                                             GPUDataManager::Pointer manager)
+                                             const GPUDataManager::Pointer manager)
 {
   if ( kernelId >= m_KernelContainer.size() ) { return false; }
 
   cl_int error;
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   std::cout << "clSetKernelArg" << "..." << std::endl;
 #endif
   error = clSetKernelArg( m_KernelContainer[kernelId], argId, sizeof( cl_mem ), manager->GetGPUBufferPointer() );
+
+  if ( error != CL_SUCCESS )
+    {
+    itkWarningMacro("Setting kernel argument failed with GPUKernelManager::SetKernelArgWithImage("
+                    << kernelId << ", " << argId << ", " << manager << ")");
+    }
+
   OpenCLCheckError(error, __FILE__, __LINE__, ITK_LOCATION);
 
   m_KernelArgumentReady[kernelId][argId].m_IsReady = true;
@@ -600,7 +610,7 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId)
 
   cl_event event;
 
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   std::cout << "clEnqueueNDRangeKernel[" << kernelId << "]..." << std::endl;
 #endif
 
@@ -640,6 +650,12 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId)
                                    d->global_work_offset.GetSizes(), d->global_work_size.GetSizes(),
                                    ( d->local_work_size.GetWidth() ? d->local_work_size.GetSizes() : 0 ),
                                    0, 0, &event);
+    }
+
+  if ( error != CL_SUCCESS )
+    {
+    itkWarningMacro("Launch kernel failed with GPUKernelManager::LaunchKernel("
+                    << kernelId << ")");
     }
 
   OpenCLCheckError(error, __FILE__, __LINE__, ITK_LOCATION);
@@ -684,7 +700,7 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId,
 
   cl_event event;
 
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   std::cout << "clEnqueueNDRangeKernel[" << kernelId << "]..." << std::endl;
 #endif
 
@@ -725,6 +741,12 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId,
                                    d->global_work_offset.GetSizes(), d->global_work_size.GetSizes(),
                                    ( d->local_work_size.GetWidth() ? d->local_work_size.GetSizes() : 0 ),
                                    after.GetSize(), after.GetEventData(), &event);
+    }
+
+  if ( error != CL_SUCCESS )
+    {
+    itkWarningMacro("Launch kernel failed with GPUKernelManager::LaunchKernel("
+                    << kernelId << ",\n" << after << ")");
     }
 
   OpenCLCheckError(error, __FILE__, __LINE__, ITK_LOCATION);

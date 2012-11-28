@@ -102,7 +102,7 @@ public:
   bool SetKernelArg(const std::size_t kernelId,
                     const cl_uint argId, const std::size_t argSize, const void *argVal);
 
-  bool SetKernelArgWithImage(const std::size_t kernelId, cl_uint argId, GPUDataManager::Pointer manager);
+  bool SetKernelArgWithImage(const std::size_t kernelId, cl_uint argId, const GPUDataManager::Pointer manager);
 
   void SetCurrentCommandQueue(const std::size_t queueid);
 

@@ -57,7 +57,7 @@ void GPUImageDataManager< ImageType >::UpdateCPUBuffer()
       {
       cl_int   errid;
       cl_event clEvent = NULL;
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
       std::cout << "clEnqueueReadBuffer GPU->CPU" << "..." << std::endl;
 #endif
 
@@ -110,7 +110,7 @@ void GPUImageDataManager< ImageType >::UpdateGPUBuffer()
       {
       cl_int   errid;
       cl_event clEvent = NULL;
-#ifdef _DEBUG
+#if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
       std::cout << "clEnqueueWriteBuffer CPU->GPU" << "..." << std::endl;
 #endif
 

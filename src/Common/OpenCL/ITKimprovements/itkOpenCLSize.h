@@ -126,7 +126,7 @@ public:
 
 private:
   cl_uint m_Dim;
-  std::size_t  m_Sizes[3];
+  std::size_t m_Sizes[3];
 };
 
 /** Operator ==
