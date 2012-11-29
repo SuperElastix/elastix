@@ -41,6 +41,7 @@ namespace itk
 				//m_NumEigenValues( 1 )
 				m_RandomScaleIntensity( false ),
 				m_RandomNumbersCreated( false )
+
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -57,7 +58,8 @@ namespace itk
     MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::Initialize(void) throw ( ExceptionObject )
   {
-    /** Initialize transform, interpolator, etc. */
+
+		/** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
 
     /** Retrieve slowest varying dimension and its size. */
@@ -294,16 +296,13 @@ namespace itk
 
 		}/** end first loop over image sample container */
 
-		/** The last elements of the sample container can be removed, so the pixelIndex is divided by
-		the number of samples in the last dimension */
-		//pixelIndex /= realNumLastDimPositions;
-
 		/** Check if enough samples were valid. */
 		this->CheckNumberOfSamples(
 			NumberOfSamples, this->m_NumberOfPixelsCounted );
 
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
-		
+
+	
 		if(this->m_RandomScaleIntensity)
 		{
 			vnl_vector<RealType> RandomScales(A.rows());
@@ -345,13 +344,12 @@ namespace itk
 
 		/** Compute covariance matrix K */
 		MatrixType K( (AMinusMean*AtMinusMean) );
+
 		K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
 
 		/** Compute first eigenvalue and eigenvector of the covariance matrix K */
 		vnl_symmetric_eigensystem< RealType > eig( K );
-
 		RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
-		//RealType e2 = eig.get_eigenvalue( K.cols() - 2 ); // Second highest eigenvalue of K
 
 		/** Compute sum of all eigenvalues = trace( K ) */
 		RealType trace = 0.0;
@@ -360,16 +358,7 @@ namespace itk
 			trace += K(i,i);
 		}
 
-		//if(m_NumEigenValues==1)
-		//{
-			measure = 100.0*(static_cast<RealType>(1.0) - e1/trace);
-		//}
-
-		//if(m_NumEigenValues==2)
-		//{
-		//	measure = 100.0*(static_cast<RealType>(1.0) - (e1+e2)/trace);
-		//}
-		
+		measure = 100.0*(static_cast<RealType>(1.0) - e1/trace);
 		
 		/** Return the measure value. */
 		return measure;
@@ -393,8 +382,9 @@ namespace itk
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
 	typedef vnl_matrix <RealType > MatrixType;
 	MatrixType dummyimageMatrix;
+
 	//dummyimageMatrix.fill( NumericTraits< double >::Zero);
-    this->GetValueAndDerivative( parameters, dummyvalue, derivative, dummyimageMatrix);
+    this->GetValueAndDerivative(parameters, dummyvalue, derivative, dummyimageMatrix);
 
   } // end GetDerivative
 
@@ -409,6 +399,7 @@ namespace itk
 	MeasureType& value, DerivativeType& derivative, vnl_matrix< RealType >& imageMatrix ) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
+		//elxout << "GetValueAndDerivative" << std::endl;
 
     /** Define derivative and Jacobian types. */
     typedef typename DerivativeType::ValueType        DerivativeValueType;
@@ -471,7 +462,7 @@ namespace itk
 			}
 		}
 
-
+		//elxout<< "start loop over sample container 1" << std::endl;
 		for ( fiter = fbegin; fiter != fend; ++fiter )
 		{
 			/** Read fixed coordinates. */
@@ -517,6 +508,7 @@ namespace itk
 				{ 
 					numSamplesOk++;
 					datablock( d, pixelIndex ) = movingImageValue;
+				
 				}// end if sampleOk
 
 			} // end loop over t 
@@ -533,8 +525,6 @@ namespace itk
 		/** Check if enough samples were valid. */
 		this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 		
-		//pixelIndex /= realNumLastDimPositions;
-
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
 		if(this->m_RandomScaleIntensity)
@@ -576,58 +566,51 @@ namespace itk
 		/** Transpose of the matrix with mean subtracted */
 		MatrixType AtMinusMean( AMinusMean.transpose() );
 
+
 		/** Compute covariance matrix K */
 		MatrixType K( (AMinusMean*AtMinusMean) );
+		
 		K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
 
 		/** Compute first eigenvalue and eigenvector of the covariance matrix K */
 		vnl_symmetric_eigensystem< RealType > eig( K );
 		RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
-		//RealType e2 = eig.get_eigenvalue( K.cols() - 2 ); // Second Highest eigenvalue of K
 		vnl_vector< RealType > FirstEigenvector = eig.get_eigenvector(K.cols()-1);
-		//vnl_vector< RealType > SecondEigenvector = eig.get_eigenvector(K.cols()-2);
 		vnl_vector< RealType > v1 = (AtMinusMean*FirstEigenvector).normalize(); // Highest eigenvector of A'*A
-		//vnl_vector< RealType > v2 = (AtMinusMean*SecondEigenvector).normalize(); // Highest eigenvector of A'*A
-
+		
 		/** Compute sum of all eigenvalues = trace( K ) */
 		double trace = 0.0;
 		for( int i = 0; i < K.rows(); i++ ) 
 		{
 			trace += K(i,i);
 		}
-	
+		
 		/** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
     DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-		std::vector<NonZeroJacobianIndicesType> nzjis (
-		realNumLastDimPositions, NonZeroJacobianIndicesType() );
+		std::vector<NonZeroJacobianIndicesType> nzjis ( realNumLastDimPositions, NonZeroJacobianIndicesType() );
 
 		/** Sub components of metric derivative */
 		vnl_vector< DerivativeValueType > meandAdmu( P ); // mean of a column of the derivative of A
     vnl_vector< DerivativeValueType > dKiidmu( P ); //Trace of derivative of covariance matrix
 		vnl_vector< DerivativeValueType > AtdAdmuii( P ); //Trace of AtMinusMean * dAdmu
 		vnl_vector< DerivativeValueType > v1Kv1dmu( P ); //v1 * derivative covariance matrix * v1
-		//vnl_vector< DerivativeValueType > v2Kv2dmu( P ); //v1 * derivative covariance matrix * v2
 		vnl_vector< DerivativeValueType > meanAtdAdmuii( P ); //mean of trace of AtMinusMean * dAdmu
+
 		DerivativeMatrixType dAdmu_v1( realNumLastDimPositions, P ); //dAdmu * v1 
-		//DerivativeMatrixType dAdmu_v2( realNumLastDimPositions, P ); //dAdmu * v2 
-		DerivativeMatrixType meandAdmu_v1( realNumLastDimPositions, P ); //meandAdmu * v1
-		//DerivativeMatrixType meandAdmu_v2( realNumLastDimPositions, P ); //meandAdmu * v2
-		
+		DerivativeMatrixType meandAdmu_v1( realNumLastDimPositions, P ); //meandAdmu * v
+
 		/** initialize */
 		dKiidmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
 		AtdAdmuii.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
 		dAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-		//dAdmu_v2.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
 		meandAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-		//meandAdmu_v2.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     v1Kv1dmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-		//v2Kv2dmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
 		meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
 		meanAtdAdmuii.fill( itk::NumericTraits< DerivativeValueType >::Zero );
 
 		DerivativeType dMTdmu;
-		dMTdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+		dMTdmu.fill( itk::NumericTraits<RealType>::Zero );
 
 		//unsigned int NumSamplesUsed;
 		unsigned int startSamplesOK;
@@ -641,6 +624,7 @@ namespace itk
 			/** Read fixed coordinates. */
 			FixedImagePointType fixedPoint = SamplesOK[ startSamplesOK ];
 			startSamplesOK++;
+
 			/** Transform sampled point to voxel coordinates. */
 			FixedImageContinuousIndexType voxelCoord;
 			this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
@@ -649,7 +633,7 @@ namespace itk
 			unsigned int numSamplesOk = 0;
 
         for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
-        {		                        
+        {	
 					/** Initialize some variables. */
 					RealType movingImageValue;
 					MovingImagePointType mappedPoint;
@@ -660,13 +644,11 @@ namespace itk
 
 					/** Transform sampled point back to world coordinates. */
 					this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-
 					this->TransformPoint( fixedPoint, mappedPoint );
-
 					this->EvaluateMovingImageValueAndDerivative(
 												mappedPoint, movingImageValue, &movingImageDerivative );
 
-					/** Get the TransformJacobian dT/dmu. */
+					/** Get the TransformJacobian dT/dmu */
 					this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
 
 					/** Compute the innerproduct (dM/dx)^T (dT/dmu). */
@@ -678,12 +660,13 @@ namespace itk
 
 					/** build metric derivative components */
 					for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
-					{
+					{				
 						dAdmu_v1[ d ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v1[ pixelIndex ];
-						//dAdmu_v2[ d ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v2[ pixelIndex ];
             meandAdmu[ nzjis[ d ][ p ] ] += dMTdmu[ p ]/realNumLastDimPositions;
-						AtdAdmuii[ nzjis[ d ][ p ] ] += AtMinusMean[ pixelIndex ][ d ]*dMTdmu[ p ];	
+						AtdAdmuii[ nzjis[ d ][ p ] ] += AtMinusMean[ pixelIndex ][ d ]*dMTdmu[ p ];							
 					}
+					
+
 				} // end loop over t
 
 				for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
@@ -691,11 +674,10 @@ namespace itk
 					for(unsigned int p = 0; p < P; ++p )
 					{
 						meandAdmu_v1[ d ][ p ] += meandAdmu[ p ]*v1[ pixelIndex ];
-						//meandAdmu_v2[ d ][ p ] += meandAdmu[ p ]*v2[ pixelIndex ];
 						meanAtdAdmuii[ p ] += AtMinusMean[ pixelIndex ][ d ]*meandAdmu[ p ];
 					}
 				}
-
+				
 
     } // end second for loop over sample container
 
@@ -704,27 +686,13 @@ namespace itk
 			/ ( static_cast < DerivativeValueType > (A.rows()) - 
 			static_cast < DerivativeValueType > (1.0) ); //normalize
 
-		//v2Kv2dmu = v2*AtMinusMean*( dAdmu_v2 - meandAdmu_v2 );
-		//v2Kv2dmu *= static_cast < DerivativeValueType > (2.0) 
-		//	/ ( static_cast < DerivativeValueType > (A.rows()) - 
-		//	static_cast < DerivativeValueType > (1.0) ); //normalize
-
 		dKiidmu = AtdAdmuii - meanAtdAdmuii;
 		dKiidmu *= static_cast < DerivativeValueType > (2.0) 
 			/ ( static_cast < DerivativeValueType > (A.rows()) - 
 			static_cast < DerivativeValueType >(1.0) ); //normalize
-		
-		//if(m_NumEigenValues==1)
-		//{
-			measure = 100.0*(static_cast<RealType>(1.0) - e1/trace);
-			derivative = 100.0*(( dKiidmu*e1 - v1Kv1dmu*trace )/(trace*trace));
-		//}
 
-	/*	if(m_NumEigenValues==2)
-		{
-			measure = 100.0*(static_cast<RealType>(1.0) - (e1+e2)/trace);
-			derivative = 100.0*(( dKiidmu*(e1+e2) - (v2Kv2dmu + v1Kv1dmu)*trace )/(trace*trace));
-		}*/
+		measure = 100.0*(static_cast<RealType>(1.0) - e1/trace);
+		derivative = 100.0*(( dKiidmu*e1 - v1Kv1dmu*trace )/(trace*trace));
 
 		//** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
@@ -794,6 +762,7 @@ namespace itk
         }
       }
     }
+
 
 	/** Return the measure value. */
 	value = measure;

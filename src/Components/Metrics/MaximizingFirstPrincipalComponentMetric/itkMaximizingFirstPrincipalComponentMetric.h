@@ -196,14 +196,15 @@ private:
 	vnl_vector<double> m_RandomVector;
 
 	bool m_RandomNumbersCreated;
-
+	
 
 }; // end class MaximizingFirstPrincipalComponentMetric
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMaximizingFirstPrincipalComponentMetric.hxx"
+#include "itkMaximizingFirstPrincipalComponentMetric_method2.hxx"
+//#include "trial.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h
