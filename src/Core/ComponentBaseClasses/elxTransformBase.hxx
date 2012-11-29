@@ -1576,7 +1576,7 @@ TransformBase<TElastix>
 template <class TElastix>
 void
 TransformBase<TElastix>
-::AutomaticScalesEstimationStackTransform( ScalesType & scales ) const
+::AutomaticScalesEstimationStackTransform( const unsigned int numSubTransforms, ScalesType & scales ) const
 {
   typedef typename FixedImageType::RegionType               FixedImageRegionType;
   typedef typename FixedImageType::IndexType                FixedImageIndexType;
@@ -1655,7 +1655,7 @@ TransformBase<TElastix>
 
   scales /= static_cast<double>( nrofsamples );
 
-  const unsigned int NumberOfScalesSubTransform = (FixedImageDimension)*(FixedImageDimension - 1);
+  const unsigned int NumberOfScalesSubTransform = N / numSubTransforms; //(FixedImageDimension)*(FixedImageDimension - 1);
 
   unsigned int i=0;
 

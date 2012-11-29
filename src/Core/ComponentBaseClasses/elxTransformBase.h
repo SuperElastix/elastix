@@ -312,7 +312,7 @@ protected:
    * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
    */
 
-  void AutomaticScalesEstimationStackTransform( ScalesType & scales ) const;
+  void AutomaticScalesEstimationStackTransform( const unsigned int numSubTransforms, ScalesType & scales ) const;
 
   /** Member variables. */
   ParametersType *      m_TransformParametersPointer;
