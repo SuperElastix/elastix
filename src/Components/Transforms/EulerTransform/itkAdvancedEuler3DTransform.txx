@@ -121,6 +121,51 @@ AdvancedEuler3DTransform<TScalarType>
   return this->m_Parameters;
 }
 
+// Get fixed parameters
+template<class TScalarType>
+void
+AdvancedEuler3DTransform<TScalarType>
+  ::SetFixedParameters( const ParametersType & fp )
+{
+  this->m_FixedParameters = fp;
+
+  // Copy superclass fixed parameter settings
+  AdvancedEuler3DTransform<TScalarType>::ParametersType superFixedParameters( fp.GetSize() - 1 );
+  for ( unsigned int i = 0; i < fp.GetSize() - 1; ++i )
+  {
+    superFixedParameters[ i ] = fp[ i ];
+  }
+  Superclass::SetFixedParameters( superFixedParameters );
+
+  // Set ComputeZYX option
+  this->SetComputeZYX( fp[ fp.GetSize() - 1 ] > 0.5 );
+}
+
+
+/** Get the Fixed Parameters. */
+template<class TScalarType>
+const typename AdvancedEuler3DTransform<TScalarType>::ParametersType &
+AdvancedEuler3DTransform<TScalarType>
+  ::GetFixedParameters(void) const
+{
+  Superclass::GetFixedParameters();
+
+  // Copy superclass fixed parameter settings
+  AdvancedEuler3DTransform<TScalarType>::ParametersType tempParameters( this->m_FixedParameters.GetSize() + 1 );
+  for ( unsigned int i = 0; i < this->m_FixedParameters.GetSize(); ++i )
+  {
+    tempParameters[ i ] = this->m_FixedParameters[ i ];
+  }
+  
+  // Append ComputeZYX parameter setting
+  tempParameters[ tempParameters.GetSize() - 1 ] = this->GetComputeZYX() ? 1.0 : 0.0; 
+
+  // Set member
+  this->m_FixedParameters = tempParameters;
+
+  return this->m_FixedParameters;
+}
+
 // Set Rotational Part
 template <class TScalarType>
 void

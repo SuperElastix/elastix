@@ -102,6 +102,12 @@ public:
   void SetParameters( const ParametersType & parameters );
   const ParametersType& GetParameters(void) const;
 
+  /** Set the fixed parameters and update internal transformation. */
+  virtual void SetFixedParameters( const ParametersType & );
+
+  /** Get the Fixed Parameters. */
+  virtual const ParametersType & GetFixedParameters( void ) const;
+
   /** Set the rotational part of the transform. */
   void SetRotation(ScalarType angleX,ScalarType angleY,ScalarType angleZ);
   itkGetConstMacro(AngleX, ScalarType);
