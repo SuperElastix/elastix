@@ -208,6 +208,9 @@ namespace elastix
   /** Function to write transform-parameters to a file. */
   virtual void WriteToFile( const ParametersType & param ) const;
 
+  /** Function to rotate center of rotation point using initial transformation. */
+  virtual void InitialTransformCenter( ReducedDimensionInputPointType & point );
+
 protected:
 
 

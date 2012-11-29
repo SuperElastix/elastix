@@ -16,9 +16,6 @@
 
 #include "elxEulerStackTransform.h"
 
-//#include "itkImageRegionExclusionConstIteratorWithIndex.h"
-//#include "vnl/vnl_math.h"
-
 namespace elastix
 {
 
@@ -86,18 +83,17 @@ void EulerStackTransform<TElastix>::BeforeRegistration( void )
   /** Initialize stack sub transforms. */
   this->m_EulerStackTransform->SetAllSubTransforms( this->m_EulerDummySubTransform );
 
-
-  /** Task 3 - Give the registration an initial parameter-array. */
+  /** Task 2 - Give the registration an initial parameter-array. */
   ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
   dummyInitialParameters.Fill( 0.0 );
 
   /** Put parameters in the registration. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters( dummyInitialParameters );
 
-  /** Task 4 - Initialize the transform */
+  /** Task 3 - Initialize the transform */
   this->InitializeTransform();
 
-	/** Task 2 - Set the scales. */
+	/** Task 4 - Set the scales. */
 	this->SetScales();
 
  } // end BeforeRegistration()
@@ -297,9 +293,8 @@ void EulerStackTransform<TElastix>::InitializeTransform()
 		}
 	}
 
-  /** FIX: there is an issue here when composing an initial transform. In that case
-           the center of rotation point should get transformed using the per time point
-           initial transform. */
+  /** Transform center of rotation point using initial transform if present. */
+  InitialTransformCenter( redDimCenterOfRotationPoint );
 
   /** Set the center of rotation point. */
   this->m_EulerDummySubTransform->SetCenter( redDimCenterOfRotationPoint );
@@ -318,6 +313,66 @@ void EulerStackTransform<TElastix>::InitializeTransform()
 
 
 } // end InitializeTransform()
+
+
+template <class TElastix>
+void EulerStackTransform<TElastix>
+::InitialTransformCenter( ReducedDimensionInputPointType & point )
+{
+  /** Apply the initial transform to the center of rotation, if
+   * composition is used to combine the initial transform with the
+   * the current (euler) transform.
+   */
+  if ( this->GetUseComposition()
+    && this->Superclass1::GetInitialTransform() != 0 )
+  {
+    /** Transform point to voxel coordinates. */
+    InputPointType      fullDimensionCenterPoint;
+    ContinuousIndexType fullDimensionCenterIndex;
+    for ( unsigned int i = 0; i < ReducedSpaceDimension; ++i )
+    {
+      fullDimensionCenterPoint[ i ] = point[ i ];
+    }
+    fullDimensionCenterPoint[ SpaceDimension - 1 ] = 0;
+    this->m_Registration->GetAsITKBaseType()->
+      GetFixedImage()->TransformPhysicalPointToContinuousIndex( fullDimensionCenterPoint, fullDimensionCenterIndex );
+
+    /** Get size of image and number of time points. */
+    const SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
+      GetFixedImage()->GetLargestPossibleRegion().GetSize();
+    const unsigned int numTimePoints = fixedImageSize[ SpaceDimension - 1 ];
+
+    /** Transform center of rotation point for each time point and
+     * compute average. */    
+    ReducedDimensionInputPointType averagePoint;
+    averagePoint.Fill( 0.0 );
+    for ( unsigned int t = 0; t < numTimePoints; ++t )
+    {
+      /** Set time point and transform back to point. */
+      fullDimensionCenterIndex[ SpaceDimension - 1 ] = t;
+      this->m_Registration->GetAsITKBaseType()->
+        GetFixedImage()->TransformContinuousIndexToPhysicalPoint( fullDimensionCenterIndex, fullDimensionCenterPoint );
+
+      /** Transform point using initial transform. */
+      InputPointType transformedCenterOfRotationPoint
+        = this->Superclass1::GetInitialTransform()->TransformPoint(
+        fullDimensionCenterPoint );
+
+      /** Add to averagePoint. */
+      for ( unsigned int d = 0; d < ReducedSpaceDimension; ++d )
+      {
+        averagePoint[ d ] += transformedCenterOfRotationPoint[ d ];
+      }
+    }
+    for ( unsigned int d = 0; d < ReducedSpaceDimension; ++d )
+    {
+      averagePoint[ d ] /= numTimePoints;
+    }
+
+    point = averagePoint;
+  }
+}
+
 
 /**
  * ************************* SetScales *********************
