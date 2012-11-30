@@ -109,7 +109,7 @@ cl_device_id * OpenCLGetAvailableDevices(const cl_platform_id platform,
 //
 cl_device_id OpenCLGetMaxFlopsDev(cl_context cxGPUContext)
 {
-  std::size_t szParmDataBytes;
+  std::size_t   szParmDataBytes;
   cl_device_id *cdDevices;
 
   // get the list of GPU devices associated with context
@@ -700,16 +700,16 @@ bool GetOpenCLMathAndOptimizationOptions(std::string & options)
   // OpenCL Options to Request or Suppress Warnings
 #ifdef OPENCL_WARNINGS_DISABLE
   if ( options.size() != 0 )
-  {
+    {
     options.append(" ");
-  }
+    }
   options.append("-w");
   anyOptionSet = true;
 #elif OPENCL_WARNINGS_AS_ERRORS
   if ( options.size() != 0 )
-  {
+    {
     options.append(" ");
-  }
+    }
   options.append("-Werror");
   anyOptionSet = true;
 #endif
@@ -717,18 +717,18 @@ bool GetOpenCLMathAndOptimizationOptions(std::string & options)
   // Options Controlling the OpenCL C Version
 #ifdef OPENCL_C_VERSION_1_1
   if ( options.size() != 0 )
-  {
+    {
     options.append(" ");
-  }
+    }
   // With the -cl-std=CL1.1 option will fail to compile the program for any
   // devices with CL_DEVICE_OPENCL_C_VERSION = OpenCL C 1.0.
   options.append("-cl-std=CL1.1");
   anyOptionSet = true;
 #elif OPENCL_C_VERSION_1_2
   if ( options.size() != 0 )
-  {
+    {
     options.append(" ");
-  }
+    }
   // With the -cl-std=CL1.2 option will fail to compile the program for any
   // devices with CL_DEVICE_OPENCL_C_VERSION = OpenCL C 1.0 or OpenCL C 1.1.
   options.append("-cl-std=CL1.2");

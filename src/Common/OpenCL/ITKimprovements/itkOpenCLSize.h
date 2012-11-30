@@ -125,7 +125,7 @@ public:
   OpenCLSize roundTo(const OpenCLSize & size) const;
 
 private:
-  cl_uint m_Dim;
+  cl_uint     m_Dim;
   std::size_t m_Sizes[3];
 };
 
