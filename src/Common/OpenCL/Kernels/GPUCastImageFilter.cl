@@ -14,7 +14,7 @@
 
 //------------------------------------------------------------------------------
 // Apple OpenCL 1.0 support function
-bool is_valid(const uint3 index, const uint3 size)
+bool is_valid_3d(const uint3 index, const uint3 size)
 {
   /* NOTE: More than three-level nested conditional statements (e.g.,
   if A && B && C..) invalidates command queue during kernel
@@ -78,7 +78,7 @@ __kernel void CastImageFilter(__global const INPIXELTYPE *in,
   uint3 index = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
   uint3 size = (uint3)(width, height, depth);
 
-  if( is_valid(index, size) )
+  if( is_valid_3d(index, size) )
   {
     uint gidx = mad24(size.x, mad24(index.z, size.y, index.y), index.x);
     out[gidx] = Functor(in[gidx]);

@@ -14,7 +14,7 @@
 
 //------------------------------------------------------------------------------
 // Apple OpenCL 1.0 support function
-bool is_valid(const uint3 index, const uint3 size)
+bool is_valid_3d(const uint3 index, const uint3 size)
 {
   /* NOTE: More than three-level nested conditional statements (e.g.,
   if A && B && C..) invalidates command queue during kernel
@@ -83,7 +83,7 @@ __kernel void ShrinkImageFilter(__global const INPIXELTYPE *in,
 {
   uint3 index_out = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
 
-  if( is_valid(index_out, image_size_out) )
+  if( is_valid_3d(index_out, image_size_out) )
   {
     uint3 index_in = mad24(index_out, shrinkfactors, offset);
     uint  gidx_in = mad24(image_size_in.x, mad24(index_in.z, image_size_in.y, index_in.y), index_in.x);
