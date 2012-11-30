@@ -46,6 +46,8 @@ template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionTyp
 GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
 ::GPUResampleImageFilter()
 {
+  itkDebugMacro(<< "GPUResampleImageFilter constructor called");
+
   this->m_PreKernelManager  = GPUKernelManager::New();
   this->m_LoopKernelManager = GPUKernelManager::New();
   this->m_PostKernelManager = GPUKernelManager::New();
@@ -129,6 +131,8 @@ GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
   {
     itkExceptionMacro( << "Kernel has not been loaded from string:\n" << resamplePreSource.str() );
   }
+
+  itkDebugMacro(<< "GPUResampleImageFilter constructor finished");
 }
 
 //------------------------------------------------------------------------------
@@ -202,6 +206,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     itkExceptionMacro( "Setting unsupported GPU interpolator to " << _arg );
   }
+
+  itkDebugMacro(<< "GPUResampleImageFilter::SetInterpolator() finished");
 }
 
 //------------------------------------------------------------------------------
@@ -330,12 +336,16 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     itkExceptionMacro( "Setting unsupported GPU transform to " << _arg );
   }
+
+  itkDebugMacro(<< "GPUResampleImageFilter::SetTransform() finished");
 }
 
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >::GPUGenerateData()
 {
+  itkDebugMacro(<< "GPUResampleImageFilter::GPUGenerateData() called");
+
   // Profiling
 #ifdef OPENCL_PROFILING
   itk::TimeProbe gputimer;
@@ -358,6 +368,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   }
 
   const typename GPUOutputImage::SizeType outSize = outPtr->GetLargestPossibleRegion().GetSize();
+  const unsigned int ImageDim = (unsigned int)TInputImage::ImageDimension;
 
   // Define parameters
   FilterParameters parameters;
@@ -378,7 +389,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   // Calculate delta
   float delta[3];
   CalculateDelta( inPtr, outPtr, &delta[0] );
-  for ( unsigned int i = 0; i < OutputImageType::ImageDimension; i++ )
+  for ( unsigned int i = 0; i < ImageDim; i++ )
   {
     parameters.delta.s[i] = delta[i];
   }
@@ -390,8 +401,6 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   //
   unsigned int imgSize[3];
   imgSize[0] = imgSize[1] = imgSize[2] = 1;
-
-  const unsigned int ImageDim = (unsigned int)TInputImage::ImageDimension;
   for ( unsigned int i = 0; i < ImageDim; i++ )
   {
     imgSize[i] = outSize[i];
@@ -408,6 +417,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
   //
   unsigned int requestedNumberOfSplits = 5;
+  if( ImageDim < 3 )
+    requestedNumberOfSplits = 1;
+
   typedef ImageRegionSplitter< TInputImage::ImageDimension > RegionSplitterType;
   typename RegionSplitterType::RegionType splitRegion;
   splitRegion.SetSize( outSize );
@@ -422,7 +434,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
     const typename RegionSplitterType::RegionType currentRegion = splitter->GetSplit( i, numberOfSplits, splitRegion );
     const typename RegionSplitterType::SizeType currentSize = currentRegion.GetSize();
     std::size_t cSize = 1, mSize = 1;
-    for ( unsigned int i = 0; i < 3; i++ )
+    for ( unsigned int i = 0; i < ImageDim; i++ )
     {
       cSize *= currentSize[i];
       mSize *= maxSize[i];
@@ -437,21 +449,29 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
   //std::cout<< "ImageSize: " << splitRegion.GetSize() << std::endl;
   //std::cout<< "MaxSize for requested number of splits("<<
-  // requestedNumberOfSplits <<"): " << maxSize << std::endl << std::endl;
+  //requestedNumberOfSplits <<"): " << maxSize << std::endl << std::endl;
 
   std::size_t sizeT = 1;
-  for ( unsigned int i = 0; i < 3; i++ )
+  for ( unsigned int i = 0; i < ImageDim; i++ )
   {
     sizeT *= maxSize[i];
   }
 
   // Create T
-  const unsigned int mem_size_T = sizeT * sizeof( cl_float3 );
+  unsigned int mem_size_T = 0;
+  switch ( ImageDim )
+  {
+  case 1: mem_size_T = sizeT * sizeof( cl_float ); break;
+  case 2: mem_size_T = sizeT * sizeof( cl_float2 ); break;
+  case 3: mem_size_T = sizeT * sizeof( cl_float3 ); break;
+  }
 
   this->m_TransformBuffer->Initialize();
   this->m_TransformBuffer->SetBufferFlag( CL_MEM_READ_WRITE );
   this->m_TransformBuffer->SetBufferSize( mem_size_T );
   this->m_TransformBuffer->Allocate();
+
+  //std::cout<<" mem_size_T = " << mem_size_T << std::endl;
 
   // arguments set up
   cl_uint argidx = 0;
@@ -539,6 +559,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
         m_PostKernelManager->SetKernelArg( m_FilterPostGPUKernelHandle,
                                            tsizePostIntex, sizeof( cl_uint ), (void *)&tsize1D );
+
+        global = OpenCLSize( global1D );
+        offset = OpenCLSize( offset1D );
       }
       break;
       case 2:
@@ -577,6 +600,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
         m_PostKernelManager->SetKernelArg( m_FilterPostGPUKernelHandle,
                                            tsizePostIntex, sizeof( cl_uint2 ), (void *)&tsize2D );
+
+        global = OpenCLSize( global2D[0], global2D[1] );
+        offset = OpenCLSize( offset2D[0], offset2D[1] );
       }
       break;
       case 3:
@@ -655,11 +681,17 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
     if ( eventList.GetSize() == 0 )
     {
+      itkDebugMacro(<< "Calling m_PreKernelManager->LaunchKernel("
+        << m_FilterPreGPUKernelHandle << ")");
+
       OpenCLEvent preEvent = m_PreKernelManager->LaunchKernel( m_FilterPreGPUKernelHandle );
       eventList.Append( preEvent );
     }
     else
     {
+      itkDebugMacro(<< "Calling m_PreKernelManager->LaunchKernel("
+        << m_FilterPreGPUKernelHandle << ",\n" << eventList << ")");
+
       OpenCLEvent preEvent = m_PreKernelManager->LaunchKernel( m_FilterPreGPUKernelHandle, eventList );
       eventList.Append( preEvent );
     }
@@ -692,6 +724,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                  comboIndex, sizeof( cl_uint ), (const void *)&withoutCombo );
             }
 
+            itkDebugMacro(<< "Calling m_LoopKernelManager->LaunchKernel("
+              << GetTransformHandle( IdentityTransform ) << ",\n" << eventList << ")");
+
             OpenCLEvent loopEvent =
               m_LoopKernelManager->LaunchKernel( GetTransformHandle( IdentityTransform ), eventList );
             eventList.Append( loopEvent );
@@ -708,6 +743,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
               m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
                                                  comboIndex, sizeof( cl_uint ), (const void *)&withoutCombo );
             }
+
+            itkDebugMacro(<< "Calling m_LoopKernelManager->LaunchKernel("
+              << GetTransformHandle( MatrixOffsetTransform ) << ",\n" << eventList << ")");
 
             OpenCLEvent loopEvent =
               m_LoopKernelManager->LaunchKernel( GetTransformHandle( MatrixOffsetTransform ), eventList );
@@ -726,6 +764,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                  comboIndex, sizeof( cl_uint ), (const void *)&withoutCombo );
             }
 
+            itkDebugMacro(<< "Calling m_LoopKernelManager->LaunchKernel("
+              << GetTransformHandle( TranslationTransform ) << ",\n" << eventList << ")");
+
             OpenCLEvent loopEvent =
               m_LoopKernelManager->LaunchKernel( GetTransformHandle( TranslationTransform ), eventList );
             eventList.Append( loopEvent );
@@ -743,6 +784,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                  comboIndex, sizeof( cl_uint ), (const void *)&withoutCombo );
             }
 
+            itkDebugMacro(<< "Calling m_LoopKernelManager->LaunchKernel("
+              << GetTransformHandle( BSplineTransform ) << ",\n" << eventList << ")");
+
             OpenCLEvent loopEvent =
               m_LoopKernelManager->LaunchKernel( GetTransformHandle( BSplineTransform ), eventList );
             eventList.Append( loopEvent );
@@ -758,35 +802,52 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
     {
       if ( HasTransform( IdentityTransform ) )
       {
+        itkDebugMacro(<< "Calling m_LoopKernelManager->LaunchKernel("
+          << GetTransformHandle( IdentityTransform ) << ",\n" << eventList << ")");
+
         OpenCLEvent loopEvent =
           m_LoopKernelManager->LaunchKernel( GetTransformHandle( IdentityTransform ), eventList );
         eventList.Append( loopEvent );
       }
       else if ( HasTransform( MatrixOffsetTransform ) )
       {
+        itkDebugMacro(<< "Calling m_LoopKernelManager->LaunchKernel("
+          << GetTransformHandle( MatrixOffsetTransform ) << ",\n" << eventList << ")");
+
         OpenCLEvent loopEvent =
           m_LoopKernelManager->LaunchKernel( GetTransformHandle( MatrixOffsetTransform ), eventList );
         eventList.Append( loopEvent );
       }
       else if ( HasTransform( TranslationTransform ) )
       {
+        itkDebugMacro(<< "Calling m_LoopKernelManager->LaunchKernel("
+          << GetTransformHandle( TranslationTransform ) << ",\n" << eventList << ")");
+
         OpenCLEvent loopEvent =
           m_LoopKernelManager->LaunchKernel( GetTransformHandle( TranslationTransform ), eventList );
         eventList.Append( loopEvent );
       }
       else if ( HasTransform( BSplineTransform ) )
       {
+        itkDebugMacro(<< "Calling m_LoopKernelManager->LaunchKernel("
+          << GetTransformHandle( BSplineTransform ) << ",\n" << eventList << ")");
+
         OpenCLEvent loopEvent =
           m_LoopKernelManager->LaunchKernel( GetTransformHandle( BSplineTransform ), eventList );
         eventList.Append( loopEvent );
       }
     }
 
+    itkDebugMacro(<< "Calling m_PostKernelManager->LaunchKernel("
+      << m_FilterPostGPUKernelHandle << ",\n" << eventList << ")");
+
     OpenCLEvent postEvent = m_PostKernelManager->LaunchKernel( m_FilterPostGPUKernelHandle, eventList );
     eventList.Append( postEvent );
   }
 
   eventList.WaitForFinished();
+
+  itkDebugMacro(<< "GPUResampleImageFilter::GPUGenerateData() finished");
 }
 
 //------------------------------------------------------------------------------
@@ -795,6 +856,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 ::SetArgumentsForPreKernelManager( const typename GPUOutputImage::Pointer & output,
                                    cl_uint & index )
 {
+  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPreKernelManager("<< index <<") called");
+
   cl_uint argidx = 0;
   itk::SetKernelWithITKImage< GPUOutputImage >( m_PreKernelManager,
                                                 m_FilterPreGPUKernelHandle,
@@ -809,6 +872,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   argidx++;
   m_PreKernelManager->SetKernelArgWithImage( m_FilterPreGPUKernelHandle, argidx++,
                                              this->m_Parameters );
+
+  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPreKernelManager() finished");
 }
 
 //------------------------------------------------------------------------------
@@ -820,6 +885,10 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                     cl_uint & comboIntex,
                                     cl_uint & transformIndex )
 {
+  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForLoopKernelManager("
+    << input->GetNameOfClass() << ", " << output->GetNameOfClass() << ", "
+    << tsizeLoopIntex << ", " << comboIntex << ", " << transformIndex << ") called");
+
   const cl_uint combo_default = 0;
 
   if ( HasTransform( IdentityTransform ) )
@@ -945,6 +1014,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
     m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_Parameters );
     transformIndex = argidx;
   }
+
+  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForLoopKernelManager() finished");
 }
 
 //------------------------------------------------------------------------------
@@ -954,6 +1025,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                              const cl_uint comboIndex,
                                              const cl_uint transformIndex )
 {
+  itkDebugMacro(<< "GPUResampleImageFilter::SetTransformArgumentsForLoopKernelManager(" 
+    << index << ", " << comboIndex << ", " << transformIndex << ") called");
+
   cl_uint argidx = transformIndex;
 
   if ( !m_TransformIsCombo )
@@ -1002,6 +1076,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
       itkExceptionMacro( << "Could not get GPU composite transform." );
     }
   }
+
+  itkDebugMacro(<< "GPUResampleImageFilter::SetTransformArgumentsForLoopKernelManager() finished");
 }
 
 //------------------------------------------------------------------------------
@@ -1009,6 +1085,9 @@ template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionTyp
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
 ::SetGPUCoefficients( const std::size_t index, const cl_uint transformindex )
 {
+  itkDebugMacro(<< "GPUResampleImageFilter::SetGPUCoefficients("
+    << index << ", " << transformindex << ") called");
+
   // Typedefs
   typedef GPUBSplineBaseTransform< TInterpolatorPrecisionType,
                                    InputImageDimension > GPUBSplineTransformType;
@@ -1067,6 +1146,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     itkExceptionMacro( << "Could not get coefficients from GPU BSpline transform." );
   }
+
+  itkDebugMacro(<< "GPUResampleImageFilter::SetGPUCoefficients() finished");
 }
 
 //------------------------------------------------------------------------------
@@ -1076,6 +1157,9 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                     const typename GPUOutputImage::Pointer & output,
                                     cl_uint & index )
 {
+  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPostKernelManager(" 
+    << input->GetNameOfClass() << ", " << output->GetNameOfClass() << ", " << index << ") called");
+
   cl_uint argidx = 0;
 
   // Set input image to the kernel
@@ -1128,6 +1212,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
       itkExceptionMacro( << "Could not get coefficients from GPU BSpline interpolator." );
     }
   }
+
+  itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPostKernelManager() finished");
 }
 
 //------------------------------------------------------------------------------
