@@ -298,7 +298,7 @@ bool is_continuous_index_inside_3d( const float3 index, const uint3 size )
 #ifdef DIM_1
 float transform_index_to_physical_point_1d(
   const uint index,
-  __global const GPUImageBase1D *image )
+  __constant const GPUImageBase1D *image )
 {
   float point = image->origin;
 
@@ -313,7 +313,7 @@ float transform_index_to_physical_point_1d(
 #ifdef DIM_2
 float2 transform_index_to_physical_point_2d(
   const uint2 index,
-  __global const GPUImageBase2D *image )
+  __constant const GPUImageBase2D *image )
 {
   float2 i2pp_x = image->index_to_physical_point.s01;
   float2 i2pp_y = image->index_to_physical_point.s23;
@@ -371,7 +371,7 @@ float3 transform_index_to_physical_point_3d(
 #ifdef DIM_1
 bool transform_physical_point_to_continuous_index_1d(
   const float point, float *index,
-  __global const GPUImageBase1D *image )
+  __constant const GPUImageBase1D *image )
 {
   float cvector = point - image->origin;
   float cvector1;
@@ -388,7 +388,7 @@ bool transform_physical_point_to_continuous_index_1d(
 #ifdef DIM_2
 bool transform_physical_point_to_continuous_index_2d(
   const float2 point, float2 *index,
-  __global const GPUImageBase2D *image )
+  __constant const GPUImageBase2D *image )
 {
   float2 pp2i_x = image->physical_point_to_index.s01;
   float2 pp2i_y = image->physical_point_to_index.s23;
@@ -451,7 +451,7 @@ bool transform_physical_point_to_continuous_index_3d(
 // itkImage::GetPixel()
 #ifdef DIM_1
 float get_pixel_1d( const long index,
-  __global const INPIXELTYPE *in, __global const GPUImageBase1D *image )
+  __global const INPIXELTYPE *in, __constant const GPUImageBase1D *image )
 {
   float value = (float)( in[index] );
   return value;
@@ -463,7 +463,7 @@ float get_pixel_1d( const long index,
 // itkImage::GetPixel()
 #ifdef DIM_2
 float get_pixel_2d( const long2 index,
-  __global const INPIXELTYPE *in, __global const GPUImageBase2D *image )
+  __global const INPIXELTYPE *in, __constant const GPUImageBase2D *image )
 {
   uint  gidx = mad24( image->size.x, index.y, index.x );
   float value = (float)( in[gidx] );
