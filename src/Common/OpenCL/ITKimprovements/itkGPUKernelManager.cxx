@@ -547,7 +547,24 @@ bool GPUKernelManager::SetKernelArgWithImage(const std::size_t kernelId, const c
 #if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
   std::cout << "clSetKernelArg" << "..." << std::endl;
 #endif
-  error = clSetKernelArg( m_KernelContainer[kernelId], argId, sizeof( cl_mem ), manager->GetGPUBufferPointer() );
+
+  if ( manager->GetBufferSize() > 0 )
+    {
+    error = clSetKernelArg( m_KernelContainer[kernelId], argId, sizeof( cl_mem ), manager->GetGPUBufferPointer() );
+    }
+  else
+    {
+    // Check and remove it for Intel SDK for OpenCL 2013
+#if defined( ITK_USE_INTEL_CPU_OPENCL )
+    // http://software.intel.com/en-us/forums/topic/281206
+    itkWarningMacro("Intel SDK for OpenCL 2012 does not support setting NULL buffers.");
+    return false;
+#endif
+    // According OpenCL 1.1 specification clSetKernelArg arg_value could be NULL
+    // object.
+    cl_mem null_buffer = NULL;
+    error = clSetKernelArg(m_KernelContainer[kernelId], argId, sizeof( cl_mem ), &null_buffer);
+    }
 
   if ( error != CL_SUCCESS )
     {
