@@ -343,7 +343,7 @@ void DefineSimilarityParameters( const std::size_t transformIndex,
   }
 
   // Translation
-  for( std::size_t i = 0; i < Dimension - 1; i++ )
+  for( std::size_t i = 0; i < Dimension; i++ )
   {
     parameters[i + Dimension] = -1.0 * ( (double)i * (double)transformIndex + (double)transformIndex );
   }
