@@ -308,13 +308,11 @@ namespace itk
 			}
 		}	
 
-		for( int i = 0; i < A.rows(); i++ )
+		for( int j = 0; j < A.cols(); j++)
 		{
-			for( int j = 0; j < A.cols(); j++)
-			{
-				std(j) = sqrt(std(j));
-			}
-		}	
+			std(j) = sqrt(std(j));
+		}
+
 
 		/** Subtract mean from columns */
 		MatrixType Azscore( A.rows(), A.cols() );
@@ -543,15 +541,11 @@ namespace itk
 			}
 		}	
 		
-		for( int i = 0; i < A.rows(); i++ )
+		for( int j = 0; j < A.cols(); j++)
 		{
-			for( int j = 0; j < A.cols(); j++)
-			{
-				std(j) = sqrt(std(j));
-			}
-		}	
+			std(j) = sqrt(std(j));
+		}
 		
-
 		/** Subtract mean from columns */
 		MatrixType Azscore( A.rows(), A.cols() );
 		Azscore.fill( NumericTraits< RealType >::Zero );
