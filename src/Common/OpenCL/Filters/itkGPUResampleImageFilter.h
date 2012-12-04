@@ -139,7 +139,7 @@ private:
   typename GPUDataManager::Pointer m_InputGPUImageBase;
   typename GPUDataManager::Pointer m_OutputGPUImageBase;
   typename GPUDataManager::Pointer m_Parameters;
-  typename GPUDataManager::Pointer m_TransformBuffer;
+  typename GPUDataManager::Pointer m_DeformationFieldBuffer;
 
   typedef std::pair< int, bool >                             TransformHandle;
   typedef std::map< GPUInputTransformType, TransformHandle > TransformsHandle;

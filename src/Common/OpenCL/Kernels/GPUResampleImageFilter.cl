@@ -82,9 +82,9 @@ OUTPIXELTYPE cast_pixel_with_bounds_checking(
 __kernel void ResampleImageFilterPre(
   /* output ImageBase information */
   __constant GPUImageBase1D *output_image,
-  /* */
-  __global float *tout,
-  uint tsize,
+  /* Deformation field buffer */
+  __global float *deformation_field,
+  uint dfsize,
   /* filter parameters */
   __constant FilterParameters *parameters)
 {
@@ -94,7 +94,7 @@ __kernel void ResampleImageFilterPre(
   // recalculate index
   uint index = global_id - global_offset;
 
-  if(is_valid_1d(index, tsize) && is_valid_1d(global_id, output_image->size))
+  if(is_valid_1d(index, dfsize) && is_valid_1d(global_id, output_image->size))
   {
     float point;
     if(parameters->transform_linear)
@@ -110,7 +110,7 @@ __kernel void ResampleImageFilterPre(
 
     // calculate gidx within buffer
     uint gidx = index;
-    tout[gidx] = point;
+    deformation_field[gidx] = point;
   }
 }
 #endif
@@ -124,9 +124,9 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
   __constant GPUImageBase1D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase1D *output_image,
-  /* */
-  __global float *tout,
-  uint tsize,
+  /* Deformation field buffer */
+  __global float *deformation_field,
+  uint dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters)
@@ -137,11 +137,11 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
   // recalculate index
   uint index = global_id - global_offset;
 
-  if(is_valid_1d(index, tsize) && is_valid_1d(global_id, output_image->size))
+  if(is_valid_1d(index, dfsize) && is_valid_1d(global_id, output_image->size))
   {
     // get point
     uint tidx = index;
-    float output_point = tout[tidx];
+    float output_point = deformation_field[tidx];
 
     // IdentityTransform is linear transform, execute linear call
     // \sa IdentityTransform::IsLinear()
@@ -150,7 +150,7 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -159,7 +159,7 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
       float continuous_index = input_index + index * parameters->delta.x;
 
       // roll it back
-      tout[tidx] = continuous_index;
+      deformation_field[tidx] = continuous_index;
     }
   }
 }
@@ -174,9 +174,9 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
   __constant GPUImageBase1D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase1D *output_image,
-  /* */
-  __global float *tout,
-  uint tsize,
+  /* Deformation field buffer */
+  __global float *deformation_field,
+  uint dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters,
@@ -189,11 +189,11 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
   // recalculate index
   uint index = global_id - global_offset;
 
-  if(is_valid_1d(index, tsize) && is_valid_1d(global_id, output_image->size))
+  if(is_valid_1d(index, dfsize) && is_valid_1d(global_id, output_image->size))
   {
     // get point
     uint tidx = index;
-    float output_point = tout[tidx];
+    float output_point = deformation_field[tidx];
 
     // MatrixOffsetTransformBase is linear transform, execute linear call
     // \sa MatrixOffsetTransformBase::IsLinear()
@@ -202,7 +202,7 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -211,7 +211,7 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
       float continuous_index = input_index + index * parameters->delta.x;
 
       // roll it back
-      tout[tidx] = continuous_index;
+      deformation_field[tidx] = continuous_index;
     }
   }
 }
@@ -226,9 +226,9 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
   __constant GPUImageBase1D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase1D *output_image,
-  /* */
-  __global float *tout,
-  uint tsize,
+  /* Deformation field buffer */
+  __global float *deformation_field,
+  uint dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters,
@@ -241,11 +241,11 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
   // recalculate index
   uint index = global_id - global_offset;
 
-  if(is_valid_1d(index, tsize) && is_valid_1d(global_id, output_image->size))
+  if(is_valid_1d(index, dfsize) && is_valid_1d(global_id, output_image->size))
   {
     // get point
     uint tidx = index;
-    float output_point = tout[tidx];
+    float output_point = deformation_field[tidx];
 
     // TranslationTransform is linear transform, execute linear call
     // \sa TranslationTransform::IsLinear()
@@ -254,7 +254,7 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -263,7 +263,7 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
       float continuous_index = input_index + index * parameters->delta.x;
 
       // roll it back
-      tout[tidx] = continuous_index;
+      deformation_field[tidx] = continuous_index;
     }
   }
 }
@@ -278,9 +278,9 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
   __constant GPUImageBase1D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase1D *output_image,
-  /* */
-  __global float *tout,
-  uint tsize,
+  /* Deformation field buffer */
+  __global float *deformation_field,
+  uint dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters,
@@ -294,11 +294,11 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
   // recalculate index
   uint index = global_id - global_offset;
 
-  if(is_valid_1d(index, tsize) && is_valid_1d(global_id, output_image->size))
+  if(is_valid_1d(index, dfsize) && is_valid_1d(global_id, output_image->size))
   {
     // get point
     uint tidx = index;
-    float output_point = tout[tidx];
+    float output_point = deformation_field[tidx];
 
     // BSplineBaseTransform is not linear transform, execute non linear call
     // \sa BSplineBaseTransform::IsLinear()
@@ -308,7 +308,7 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -316,7 +316,7 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
       transform_physical_point_to_continuous_index_1d(input_point, &input_index, input_image);
 
       // roll it back
-      tout[tidx] = input_index;
+      deformation_field[tidx] = input_index;
     }
   }
 }
@@ -328,8 +328,8 @@ void resample_1d_post(__global const INPIXELTYPE *in,
   __constant GPUImageBase1D *input_image,
   __global OUTPIXELTYPE *out,
   __constant GPUImageBase1D *output_image,
-  __global const float *tin,
-  const uint tsize,
+  __global const float *deformation_field,
+  const uint dfsize,
   const uint global_id,
   const uint index,
   __constant FilterParameters *parameters,
@@ -340,7 +340,7 @@ void resample_1d_post(__global const INPIXELTYPE *in,
   const uint tidx = index;
   const uint gidx = global_id;
 
-  const float continuous_index = tin[tidx];
+  const float continuous_index = deformation_field[tidx];
 
   // evaluate input at right position and copy to the output
   if(interpolator_is_inside_buffer_1d(continuous_index, image_function))
@@ -377,9 +377,9 @@ __kernel void ResampleImageFilterPost(
   /* output ImageBase information */
   __global OUTPIXELTYPE *out,
   __constant GPUImageBase1D *output_image,
-  /* */
-  __global const float *tin,
-  uint tsize,
+  /* Deformation field buffer */
+  __global const float *deformation_field,
+  uint dfsize,
   /* filter parameters */
   __constant FilterParameters *parameters,
   /* image function parameters */
@@ -391,10 +391,10 @@ __kernel void ResampleImageFilterPost(
   // recalculate index
   uint index = global_id - global_offset;
 
-  if(is_valid_1d(index, tsize) && is_valid_1d(global_id, output_image->size))
+  if(is_valid_1d(index, dfsize) && is_valid_1d(global_id, output_image->size))
   {
     // resample 1d post
-    resample_1d_post(in, input_image, out, output_image, tin, tsize,
+    resample_1d_post(in, input_image, out, output_image, deformation_field, dfsize,
       global_id, index, parameters, image_function, 0, 0);
   }
 }
@@ -407,9 +407,9 @@ __kernel void ResampleImageFilterPost_InterpolatorBSpline(
   /* output ImageBase information */
   __global OUTPIXELTYPE *out,
   __constant GPUImageBase1D *output_image,
-  /* */
-  __global const float *tin,
-  uint tsize,
+  /* Deformation field buffer */
+  __global const float *deformation_field,
+  uint dfsize,
   /* filter parameters */
   __constant FilterParameters *parameters,
   /* image function parameters */
@@ -424,10 +424,10 @@ __kernel void ResampleImageFilterPost_InterpolatorBSpline(
   // recalculate index
   uint index = global_id - global_offset;
 
-  if(is_valid_1d(index, tsize) && is_valid_1d(global_id, output_image->size))
+  if(is_valid_1d(index, dfsize) && is_valid_1d(global_id, output_image->size))
   {
     // resample 1d post
-    resample_1d_post(in, input_image, out, output_image, tin, tsize,
+    resample_1d_post(in, input_image, out, output_image, deformation_field, dfsize,
       global_id, index, parameters, image_function,
       interpolator_coefficients, interpolator_coefficients_image);
   }
@@ -439,9 +439,9 @@ __kernel void ResampleImageFilterPost_InterpolatorBSpline(
 __kernel void ResampleImageFilterPre(
   /* output ImageBase information */
   __constant GPUImageBase2D *output_image,
-  /* */
-  __global float2 *tout,
-  uint2 tsize,
+  /* Deformation field buffer */
+  __global float2 *deformation_field,
+  uint2 dfsize,
   /* filter parameters */
   __constant FilterParameters *parameters)
 {
@@ -451,7 +451,7 @@ __kernel void ResampleImageFilterPre(
   // recalculate index
   uint2 index = global_id - global_offset;
 
-  if(is_valid_2d(index, tsize) && is_valid_2d(global_id, output_image->size))
+  if(is_valid_2d(index, dfsize) && is_valid_2d(global_id, output_image->size))
   {
     float2 point;
     if(parameters->transform_linear)
@@ -466,8 +466,8 @@ __kernel void ResampleImageFilterPre(
     }
 
     // calculate gidx within buffer
-    uint gidx = mad24(tsize.x, index.y, index.x);
-    tout[gidx] = point;
+    uint gidx = mad24(dfsize.x, index.y, index.x);
+    deformation_field[gidx] = point;
   }
 }
 #endif
@@ -481,9 +481,9 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
   __constant GPUImageBase2D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase2D *output_image,
-  /* */
-  __global float2 *tout,
-  uint2 tsize,
+  /* Deformation field buffer */
+  __global float2 *deformation_field,
+  uint2 dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters)
@@ -494,11 +494,11 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
   // recalculate index
   uint2 index = global_id - global_offset;
 
-  if(is_valid_2d(index, tsize) && is_valid_2d(global_id, output_image->size))
+  if(is_valid_2d(index, dfsize) && is_valid_2d(global_id, output_image->size))
   {
     // get point
-    uint tidx = mad24(tsize.x, index.y, index.x);
-    float2 output_point = tout[tidx];
+    uint tidx = mad24(dfsize.x, index.y, index.x);
+    float2 output_point = deformation_field[tidx];
 
     // IdentityTransform is linear transform, execute linear call
     // \sa IdentityTransform::IsLinear()
@@ -507,7 +507,7 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -516,7 +516,7 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
       float2 continuous_index = input_index + index.x * parameters->delta.xy;
 
       // roll it back
-      tout[tidx] = continuous_index;
+      deformation_field[tidx] = continuous_index;
     }
   }
 }
@@ -531,9 +531,9 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
   __constant GPUImageBase2D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase2D *output_image,
-  /* */
-  __global float2 *tout,
-  uint2 tsize,
+  /* Deformation field buffer */
+  __global float2 *deformation_field,
+  uint2 dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters,
@@ -546,11 +546,11 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
   // recalculate index
   uint2 index = global_id - global_offset;
 
-  if(is_valid_2d(index, tsize) && is_valid_2d(global_id, output_image->size))
+  if(is_valid_2d(index, dfsize) && is_valid_2d(global_id, output_image->size))
   {
     // get point
-    uint tidx = mad24(tsize.x, index.y, index.x);
-    float2 output_point = tout[tidx];
+    uint tidx = mad24(dfsize.x, index.y, index.x);
+    float2 output_point = deformation_field[tidx];
 
     // MatrixOffsetTransformBase is linear transform, execute linear call
     // \sa MatrixOffsetTransformBase::IsLinear()
@@ -559,7 +559,7 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -568,7 +568,7 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
       float2 continuous_index = input_index + index.x * parameters->delta.xy;
 
       // roll it back
-      tout[tidx] = continuous_index;
+      deformation_field[tidx] = continuous_index;
     }
   }
 }
@@ -583,9 +583,9 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
   __constant GPUImageBase2D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase2D *output_image,
-  /* */
-  __global float2 *tout,
-  uint2 tsize,
+  /* Deformation field buffer */
+  __global float2 *deformation_field,
+  uint2 dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters,
@@ -598,11 +598,11 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
   // recalculate index
   uint2 index = global_id - global_offset;
 
-  if(is_valid_2d(index, tsize) && is_valid_2d(global_id, output_image->size))
+  if(is_valid_2d(index, dfsize) && is_valid_2d(global_id, output_image->size))
   {
     // get point
-    uint tidx = mad24(tsize.x, index.y, index.x);
-    float2 output_point = tout[tidx];
+    uint tidx = mad24(dfsize.x, index.y, index.x);
+    float2 output_point = deformation_field[tidx];
 
     // TranslationTransform is linear transform, execute linear call
     // \sa TranslationTransform::IsLinear()
@@ -611,7 +611,7 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -620,7 +620,7 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
       float2 continuous_index = input_index + index.x * parameters->delta.xy;
 
       // roll it back
-      tout[tidx] = continuous_index;
+      deformation_field[tidx] = continuous_index;
     }
   }
 }
@@ -635,9 +635,9 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
   __constant GPUImageBase2D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase2D *output_image,
-  /* */
-  __global float2 *tout,
-  uint2 tsize,
+  /* Deformation field buffer */
+  __global float2 *deformation_field,
+  uint2 dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters,
@@ -654,11 +654,11 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
   // recalculate index
   uint2 index = global_id - global_offset;
 
-  if(is_valid_2d(index, tsize) && is_valid_2d(global_id, output_image->size))
+  if(is_valid_2d(index, dfsize) && is_valid_2d(global_id, output_image->size))
   {
     // get point
-    uint tidx = mad24(tsize.x, index.y, index.x);
-    float2 output_point = tout[tidx];
+    uint tidx = mad24(dfsize.x, index.y, index.x);
+    float2 output_point = deformation_field[tidx];
 
     // BSplineBaseTransform is not linear transform, execute non linear call
     // \sa BSplineBaseTransform::IsLinear()
@@ -669,7 +669,7 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -677,7 +677,7 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
       transform_physical_point_to_continuous_index_2d(input_point, &input_index, input_image);
 
       // roll it back
-      tout[tidx] = input_index;
+      deformation_field[tidx] = input_index;
     }
   }
 }
@@ -689,8 +689,8 @@ void resample_2d_post(__global const INPIXELTYPE *in,
   __constant GPUImageBase2D *input_image,
   __global OUTPIXELTYPE *out,
   __constant GPUImageBase2D *output_image,
-  __global const float2 *tin,
-  const uint2 tsize,
+  __global const float2 *deformation_field,
+  const uint2 dfsize,
   const uint2 global_id,
   const uint2 index,
   __constant FilterParameters *parameters,
@@ -698,10 +698,10 @@ void resample_2d_post(__global const INPIXELTYPE *in,
   __global const INTERPOLATOR_PRECISION_TYPE *interpolator_coefficients,
   __constant GPUImageBase2D *interpolator_coefficients_image)
 {
-  const uint tidx = mad24(tsize.x, index.y, index.x);
+  const uint tidx = mad24(dfsize.x, index.y, index.x);
   const uint gidx = mad24(output_image->size.x, global_id.y, global_id.x);
 
-  const float2 continuous_index = tin[tidx];
+  const float2 continuous_index = deformation_field[tidx];
 
   // evaluate input at right position and copy to the output
   if(interpolator_is_inside_buffer_2d(continuous_index, image_function))
@@ -738,9 +738,9 @@ __kernel void ResampleImageFilterPost(
   /* output ImageBase information */
   __global OUTPIXELTYPE *out,
   __constant GPUImageBase2D *output_image,
-  /* */
-  __global const float2 *tin,
-  uint2 tsize,
+  /* Deformation field buffer */
+  __global const float2 *deformation_field,
+  uint2 dfsize,
   /* filter parameters */
   __constant FilterParameters *parameters,
   /* image function parameters */
@@ -752,10 +752,10 @@ __kernel void ResampleImageFilterPost(
   // recalculate index
   uint2 index = global_id - global_offset;
 
-  if(is_valid_2d(index, tsize) && is_valid_2d(global_id, output_image->size))
+  if(is_valid_2d(index, dfsize) && is_valid_2d(global_id, output_image->size))
   {
     // resample 2d post
-    resample_2d_post(in, input_image, out, output_image, tin, tsize,
+    resample_2d_post(in, input_image, out, output_image, deformation_field, dfsize,
       global_id, index, parameters, image_function, 0, 0);
   }
 }
@@ -768,9 +768,9 @@ __kernel void ResampleImageFilterPost_InterpolatorBSpline(
   /* output ImageBase information */
   __global OUTPIXELTYPE *out,
   __constant GPUImageBase2D *output_image,
-  /* */
-  __global const float2 *tin,
-  uint2 tsize,
+  /* Deformation field buffer */
+  __global const float2 *deformation_field,
+  uint2 dfsize,
   /* filter parameters */
   __constant FilterParameters *parameters,
   /* image function parameters */
@@ -785,10 +785,10 @@ __kernel void ResampleImageFilterPost_InterpolatorBSpline(
   // recalculate index
   uint2 index = global_id - global_offset;
 
-  if(is_valid_2d(index, tsize) && is_valid_2d(global_id, output_image->size))
+  if(is_valid_2d(index, dfsize) && is_valid_2d(global_id, output_image->size))
   {
     // resample 2d post
-    resample_2d_post(in, input_image, out, output_image, tin, tsize,
+    resample_2d_post(in, input_image, out, output_image, deformation_field, dfsize,
       global_id, index, parameters, image_function,
       interpolator_coefficients, interpolator_coefficients_image);
   }
@@ -800,9 +800,9 @@ __kernel void ResampleImageFilterPost_InterpolatorBSpline(
 __kernel void ResampleImageFilterPre(
   /* output ImageBase information */
   __constant GPUImageBase3D *output_image,
-  /* */
-  __global float3 *tout,
-  uint3 tsize,
+  /* Deformation field buffer */
+  __global float3 *deformation_field,
+  uint3 dfsize,
   /* filter parameters */
   __constant FilterParameters *parameters)
 {
@@ -812,7 +812,7 @@ __kernel void ResampleImageFilterPre(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid_3d(index, tsize) && is_valid_3d(global_id, output_image->size))
+  if(is_valid_3d(index, dfsize) && is_valid_3d(global_id, output_image->size))
   {
     float3 point;
     if(parameters->transform_linear)
@@ -827,8 +827,8 @@ __kernel void ResampleImageFilterPre(
     }
 
     // calculate gidx within buffer
-    uint gidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
-    tout[gidx] = point;
+    uint gidx = mad24(dfsize.x, mad24(index.z, dfsize.y, index.y), index.x);
+    deformation_field[gidx] = point;
   }
 }
 #endif
@@ -842,9 +842,9 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
   __constant GPUImageBase3D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase3D *output_image,
-  /* */
-  __global float3 *tout,
-  uint3 tsize,
+  /* Deformation field buffer */
+  __global float3 *deformation_field,
+  uint3 dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters)
@@ -855,11 +855,11 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid_3d(index, tsize) && is_valid_3d(global_id, output_image->size))
+  if(is_valid_3d(index, dfsize) && is_valid_3d(global_id, output_image->size))
   {
     // get point
-    uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
-    float3 output_point = tout[tidx];
+    uint tidx = mad24(dfsize.x, mad24(index.z, dfsize.y, index.y), index.x);
+    float3 output_point = deformation_field[tidx];
 
     // IdentityTransform is linear transform, execute linear call
     // \sa IdentityTransform::IsLinear()
@@ -868,7 +868,7 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -877,7 +877,7 @@ __kernel void ResampleImageFilterLoop_IdentityTransform(
       float3 continuous_index = input_index + index.x * parameters->delta;
 
       // roll it back
-      tout[tidx] = continuous_index;
+      deformation_field[tidx] = continuous_index;
     }
   }
 }
@@ -892,9 +892,9 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
   __constant GPUImageBase3D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase3D *output_image,
-  /* */
-  __global float3 *tout,
-  uint3 tsize,
+  /* Deformation field buffer */
+  __global float3 *deformation_field,
+  uint3 dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters,
@@ -907,11 +907,11 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid_3d(index, tsize) && is_valid_3d(global_id, output_image->size))
+  if(is_valid_3d(index, dfsize) && is_valid_3d(global_id, output_image->size))
   {
     // get point
-    uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
-    float3 output_point = tout[tidx];
+    uint tidx = mad24(dfsize.x, mad24(index.z, dfsize.y, index.y), index.x);
+    float3 output_point = deformation_field[tidx];
 
     // MatrixOffsetTransformBase is linear transform, execute linear call
     // \sa MatrixOffsetTransformBase::IsLinear()
@@ -920,7 +920,7 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -929,7 +929,7 @@ __kernel void ResampleImageFilterLoop_MatrixOffsetTransform(
       float3 continuous_index = input_index + index.x * parameters->delta;
 
       // roll it back
-      tout[tidx] = continuous_index;
+      deformation_field[tidx] = continuous_index;
     }
   }
 }
@@ -944,9 +944,9 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
   __constant GPUImageBase3D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase3D *output_image,
-  /* */
-  __global float3 *tout,
-  uint3 tsize,
+  /* Deformation field buffer */
+  __global float3 *deformation_field,
+  uint3 dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters,
@@ -959,11 +959,11 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid_3d(index, tsize) && is_valid_3d(global_id, output_image->size))
+  if(is_valid_3d(index, dfsize) && is_valid_3d(global_id, output_image->size))
   {
     // get point
-    uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
-    float3 output_point = tout[tidx];
+    uint tidx = mad24(dfsize.x, mad24(index.z, dfsize.y, index.y), index.x);
+    float3 output_point = deformation_field[tidx];
 
     // TranslationTransform is linear transform, execute linear call
     // \sa TranslationTransform::IsLinear()
@@ -972,7 +972,7 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -981,7 +981,7 @@ __kernel void ResampleImageFilterLoop_TranslationTransform(
       float3 continuous_index = input_index + index.x * parameters->delta;
 
       // roll it back
-      tout[tidx] = continuous_index;
+      deformation_field[tidx] = continuous_index;
     }
   }
 }
@@ -996,9 +996,9 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
   __constant GPUImageBase3D *input_image,
   /* output ImageBase information */
   __constant GPUImageBase3D *output_image,
-  /* */
-  __global float3 *tout,
-  uint3 tsize,
+  /* Deformation field buffer */
+  __global float3 *deformation_field,
+  uint3 dfsize,
   uint combo,
   /* filter parameters */
   __constant FilterParameters *parameters,
@@ -1018,11 +1018,11 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid_3d(index, tsize) && is_valid_3d(global_id, output_image->size))
+  if(is_valid_3d(index, dfsize) && is_valid_3d(global_id, output_image->size))
   {
     // get point
-    uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
-    float3 output_point = tout[tidx];
+    uint tidx = mad24(dfsize.x, mad24(index.z, dfsize.y, index.y), index.x);
+    float3 output_point = deformation_field[tidx];
 
     // BSplineBaseTransform is not linear transform, execute non linear call
     // \sa BSplineBaseTransform::IsLinear()
@@ -1034,7 +1034,7 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
     if(combo)
     {
       // roll it back
-      tout[tidx] = input_point;
+      deformation_field[tidx] = input_point;
     }
     else
     {
@@ -1042,7 +1042,7 @@ __kernel void ResampleImageFilterLoop_BSplineTransform(
       transform_physical_point_to_continuous_index_3d(input_point, &input_index, input_image);
 
       // roll it back
-      tout[tidx] = input_index;
+      deformation_field[tidx] = input_index;
     }
   }
 }
@@ -1054,8 +1054,8 @@ void resample_3d_post(__global const INPIXELTYPE *in,
   __constant GPUImageBase3D *input_image,
   __global OUTPIXELTYPE *out,
   __constant GPUImageBase3D *output_image,
-  __global const float3 *tin,
-  const uint3 tsize,
+  __global const float3 *deformation_field,
+  const uint3 dfsize,
   const uint3 global_id,
   const uint3 index,
   __constant FilterParameters *parameters,
@@ -1063,10 +1063,10 @@ void resample_3d_post(__global const INPIXELTYPE *in,
   __global const INTERPOLATOR_PRECISION_TYPE *interpolator_coefficients,
   __constant GPUImageBase3D *interpolator_coefficients_image)
 {
-  const uint tidx = mad24(tsize.x, mad24(index.z, tsize.y, index.y), index.x);
+  const uint tidx = mad24(dfsize.x, mad24(index.z, dfsize.y, index.y), index.x);
   const uint gidx = mad24(output_image->size.x, mad24(global_id.z, output_image->size.y, global_id.y), global_id.x);
 
-  const float3 continuous_index = tin[tidx];
+  const float3 continuous_index = deformation_field[tidx];
 
   // evaluate input at right position and copy to the output
   if(interpolator_is_inside_buffer_3d(continuous_index, image_function))
@@ -1103,9 +1103,9 @@ __kernel void ResampleImageFilterPost(
   /* output ImageBase information */
   __global OUTPIXELTYPE *out,
   __constant GPUImageBase3D *output_image,
-  /* */
-  __global const float3 *tin,
-  uint3 tsize,
+  /* Deformation field buffer */
+  __global const float3 *deformation_field,
+  uint3 dfsize,
   /* filter parameters */
   __constant FilterParameters *parameters,
   /* image function parameters */
@@ -1117,10 +1117,10 @@ __kernel void ResampleImageFilterPost(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid_3d(index, tsize) && is_valid_3d(global_id, output_image->size))
+  if(is_valid_3d(index, dfsize) && is_valid_3d(global_id, output_image->size))
   {
     // resample 3d post
-    resample_3d_post(in, input_image, out, output_image, tin, tsize,
+    resample_3d_post(in, input_image, out, output_image, deformation_field, dfsize,
       global_id, index, parameters, image_function, 0, 0);
   }
 }
@@ -1133,9 +1133,9 @@ __kernel void ResampleImageFilterPost_InterpolatorBSpline(
   /* output ImageBase information */
   __global OUTPIXELTYPE *out,
   __constant GPUImageBase3D *output_image,
-  /* */
-  __global const float3 *tin,
-  uint3 tsize,
+  /* Deformation field buffer */
+  __global const float3 *deformation_field,
+  uint3 dfsize,
   /* filter parameters */
   __constant FilterParameters *parameters,
   /* image function parameters */
@@ -1150,10 +1150,10 @@ __kernel void ResampleImageFilterPost_InterpolatorBSpline(
   // recalculate index
   uint3 index = global_id - global_offset;
 
-  if(is_valid_3d(index, tsize) && is_valid_3d(global_id, output_image->size))
+  if(is_valid_3d(index, dfsize) && is_valid_3d(global_id, output_image->size))
   {
     // resample 3d post
-    resample_3d_post(in, input_image, out, output_image, tin, tsize,
+    resample_3d_post(in, input_image, out, output_image, deformation_field, dfsize,
       global_id, index, parameters, image_function,
       interpolator_coefficients, interpolator_coefficients_image);
   }

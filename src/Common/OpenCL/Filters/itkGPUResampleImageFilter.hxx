@@ -61,7 +61,7 @@ GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
   this->m_Parameters->SetBufferSize( sizeof( FilterParameters ) );
   this->m_Parameters->Allocate();
 
-  m_TransformBuffer = GPUDataManager::New();
+  m_DeformationFieldBuffer = GPUDataManager::New();
 
   this->m_InterpolatorSourceLoadedIndex = 0;
   this->m_TransformSourceLoadedIndex = 0;
@@ -466,10 +466,10 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   case 3: mem_size_T = sizeT * sizeof( cl_float3 ); break;
   }
 
-  this->m_TransformBuffer->Initialize();
-  this->m_TransformBuffer->SetBufferFlag( CL_MEM_READ_WRITE );
-  this->m_TransformBuffer->SetBufferSize( mem_size_T );
-  this->m_TransformBuffer->Allocate();
+  this->m_DeformationFieldBuffer->Initialize();
+  this->m_DeformationFieldBuffer->SetBufferFlag( CL_MEM_READ_WRITE );
+  this->m_DeformationFieldBuffer->SetBufferSize( mem_size_T );
+  this->m_DeformationFieldBuffer->Allocate();
 
   //std::cout<<" mem_size_T = " << mem_size_T << std::endl;
 
@@ -867,7 +867,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                 true );
 
   m_PreKernelManager->SetKernelArgWithImage( m_FilterPreGPUKernelHandle, argidx++,
-                                             this->m_TransformBuffer );
+                                             this->m_DeformationFieldBuffer );
   index = argidx;
   argidx++;
   m_PreKernelManager->SetKernelArgWithImage( m_FilterPreGPUKernelHandle, argidx++,
@@ -912,7 +912,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                   m_OutputGPUImageBase,
                                                   true );
 
-    m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_TransformBuffer );
+    m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_DeformationFieldBuffer );
     tsizeLoopIntex = argidx;
     argidx++;
     comboIntex = argidx;
@@ -943,7 +943,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                   m_OutputGPUImageBase,
                                                   true );
 
-    m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_TransformBuffer );
+    m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_DeformationFieldBuffer );
     tsizeLoopIntex = argidx;
     argidx++;
     comboIntex = argidx;
@@ -974,7 +974,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                   m_OutputGPUImageBase,
                                                   true );
 
-    m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_TransformBuffer );
+    m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_DeformationFieldBuffer );
     tsizeLoopIntex = argidx;
     argidx++;
     comboIntex = argidx;
@@ -1005,7 +1005,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                   m_OutputGPUImageBase,
                                                   true );
 
-    m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_TransformBuffer );
+    m_LoopKernelManager->SetKernelArgWithImage( handleId, argidx++, this->m_DeformationFieldBuffer );
     tsizeLoopIntex = argidx;
     argidx++;
     comboIntex = argidx;
@@ -1176,7 +1176,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
                                                 output,
                                                 m_OutputGPUImageBase );
 
-  m_PostKernelManager->SetKernelArgWithImage( m_FilterPostGPUKernelHandle, argidx++, this->m_TransformBuffer );
+  m_PostKernelManager->SetKernelArgWithImage( m_FilterPostGPUKernelHandle, argidx++, this->m_DeformationFieldBuffer );
   index = argidx;
   argidx++;
   m_PostKernelManager->SetKernelArgWithImage( m_FilterPostGPUKernelHandle, argidx++, this->m_Parameters );
