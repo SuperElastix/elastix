@@ -312,7 +312,7 @@ namespace itk
 		{
 			for( int j = 0; j < A.cols(); j++)
 			{
-				std(j) += sqrt(std(j));
+				std(j) = sqrt(std(j));
 			}
 		}	
 
@@ -547,7 +547,7 @@ namespace itk
 		{
 			for( int j = 0; j < A.cols(); j++)
 			{
-				std(j) += sqrt(std(j));
+				std(j) = sqrt(std(j));
 			}
 		}	
 		
