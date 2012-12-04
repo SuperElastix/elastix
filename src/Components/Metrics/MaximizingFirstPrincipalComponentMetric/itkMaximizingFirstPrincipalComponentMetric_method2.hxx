@@ -304,7 +304,15 @@ namespace itk
 		{
 			for( int j = 0; j < A.cols(); j++)
 			{
-				std(j) += sqrt(pow((A(i,j)-mean(j)),2)/double((A.rows()-1.0)));;
+				std(j) += pow((A(i,j)-mean(j)),2)/double((A.rows()-1.0));
+			}
+		}	
+
+		for( int i = 0; i < A.rows(); i++ )
+		{
+			for( int j = 0; j < A.cols(); j++)
+			{
+				std(j) += sqrt(std(j));
 			}
 		}	
 
@@ -531,9 +539,18 @@ namespace itk
 		{
 			for( int j = 0; j < A.cols(); j++)
 			{
-				std(j) += sqrt(pow((A(i,j)-mean(j)),2)/double((A.rows()-1.0)));
+				std(j) += pow((A(i,j)-mean(j)),2)/double((A.rows()-1.0));
 			}
 		}	
+		
+		for( int i = 0; i < A.rows(); i++ )
+		{
+			for( int j = 0; j < A.cols(); j++)
+			{
+				std(j) += sqrt(std(j));
+			}
+		}	
+		
 
 		/** Subtract mean from columns */
 		MatrixType Azscore( A.rows(), A.cols() );
