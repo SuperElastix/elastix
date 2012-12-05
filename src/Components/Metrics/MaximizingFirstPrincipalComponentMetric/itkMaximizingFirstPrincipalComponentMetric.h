@@ -203,8 +203,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMaximizingFirstPrincipalComponentMetric_method2.hxx"
-//#include "trial.hxx"
+#include "itkMaximizingFirstPrincipalComponentMetric_method5.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h
