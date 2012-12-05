@@ -66,6 +66,13 @@ macro( elx_add_test name number group )
   # Add the test.
   add_test( NAME ${ELXTEST_TEST_NAME}
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/${ELXTEST_EXECUTABLE_NAME} ${ARGN} )
+
+  # GPU test should be run in serial, to avoid memory issues.
+  string( COMPARE EQUAL ${group} "OpenCL" isEqual )
+  if( ${isEqual} )
+    message( STATUS ${ELXTEST_TEST_NAME}" is run serial" )
+    set_tests_properties( ${ELXTEST_TEST_NAME} PROPERTIES RUN_SERIAL true )
+  endif()
 endmacro()
 
 #---------------------------------------------------------------------
