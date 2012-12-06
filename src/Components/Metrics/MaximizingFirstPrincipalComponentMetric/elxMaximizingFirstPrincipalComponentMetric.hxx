@@ -150,6 +150,18 @@ namespace elastix
 
   } // end BeforeEachResolution
 
+/**
+  * ***************** AfterEachIteration ***********************
+  */
+
+template <class TElastix>
+  void MaximizingFirstPrincipalComponentMetric<TElastix>
+  ::AfterEachIteration(void)
+  {
+     //elxout << "Wyke is gek " << this->m_firstEigenVector << std::endl;
+     //elxout << "Stefan is gekker " << this->m_eigenValues << std::endl;
+  }
+
 } // end namespace elastix
 
 

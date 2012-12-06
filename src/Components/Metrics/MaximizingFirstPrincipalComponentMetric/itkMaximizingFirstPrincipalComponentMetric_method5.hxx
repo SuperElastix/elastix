@@ -11,8 +11,9 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-#ifndef ITKMAXIMIZINGFIRSTPRINCIPALCOMPONENTMETRIC_METHOD5_HXX
-#define ITKMAXIMIZINGFIRSTPRINCIPALCOMPONENTMETRIC_METHOD5_HXX
+
+#ifndef __itkMaximizingFirstPrincipalComponentMetric_method5_hxx
+#define __itkMaximizingFirstPrincipalComponentMetric_method5_hxx
 
 #include "itkMaximizingFirstPrincipalComponentMetric.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
@@ -23,6 +24,8 @@
 #include <numeric>
 #include <fstream>
 #include <iostream>
+
+using namespace std;
 
 namespace itk
 {
@@ -37,9 +40,9 @@ namespace itk
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
-                //m_NumEigenValues( 1 )
-                //m_RandomScaleIntensity( false ),
-                m_RandomNumbersCreated( false )
+				//m_NumEigenValues( 1 )
+				//m_RandomScaleIntensity( false ),
+				m_RandomNumbersCreated( false )
 
   {
     this->SetUseImageSampler( true );
@@ -57,7 +60,7 @@ namespace itk
     ::Initialize(void) throw ( ExceptionObject )
   {
 
-        /** Initialize transform, interpolator, etc. */
+		/** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
 
     /** Retrieve slowest varying dimension and its size. */
@@ -151,7 +154,7 @@ namespace itk
     }
   } // end EvaluateTransformJacobianInnerProduct
 
-    /**
+ /**
  * ******************* GetValue *******************
  */
 
@@ -165,188 +168,208 @@ namespace itk
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
 
-        /** Initialize some variables */
-        this->m_NumberOfPixelsCounted = 0;
-        MeasureType measure = NumericTraits< MeasureType >::Zero;
+		/** Initialize some variables */
+		this->m_NumberOfPixelsCounted = 0;
+		MeasureType measure = NumericTraits< MeasureType >::Zero;
 
-        /** Update the imageSampler and get a handle to the sample container. */
-        this->GetImageSampler()->Update();
-        ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+		/** Update the imageSampler and get a handle to the sample container. */
+		this->GetImageSampler()->Update();
+		ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-        /** Create iterator over the sample container. */
-        typename ImageSampleContainerType::ConstIterator fiter;
-        typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-        typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+		/** Create iterator over the sample container. */
+		typename ImageSampleContainerType::ConstIterator fiter;
+		typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+		typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
-        /** Retrieve slowest varying dimension and its size. */
-        const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-        const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
-        const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
+		/** Retrieve slowest varying dimension and its size. */
+		const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
+		const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+		const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
 
-        typedef vnl_matrix< RealType > MatrixType;
+		typedef vnl_matrix< RealType > MatrixType;
 
-        /** Get real last dim samples. */
-        const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
+		/** Get real last dim samples. */
+		const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
 
-        /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-        unsigned int NumberOfSamples = sampleContainer->Size();
-        MatrixType datablock( NumberOfSamples, realNumLastDimPositions );
+		/** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
+		unsigned int NumberOfSamples = sampleContainer->Size();
+		MatrixType datablock( NumberOfSamples, realNumLastDimPositions ); 
 
-        /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
-        std::vector<int> lastDimPositions;
+		/** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
+		std::vector<int> lastDimPositions;
 
-        /** Determine random last dimension positions if needed. */
+		/** Determine random last dimension positions if needed. */
+		
+		if ( this->m_SampleLastDimensionRandomly )
+		{
+			SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
+		}
+		else
+		{
+			for ( unsigned int i = 0; i < lastDimSize; ++i )
+			{
+				lastDimPositions.push_back( i );
+			}
+		}
 
-        if ( this->m_SampleLastDimensionRandomly )
+		/** Initialize dummy loop variable */
+		unsigned int pixelIndex = 0;
+
+		std::vector < FixedImagePointType > SamplesOK;
+
+		/** Initialize image sample matrix . */
+		datablock.fill( itk::NumericTraits< RealType>::Zero );
+
+		for ( fiter = fbegin; fiter != fend; ++fiter )
+		{
+			/** Read fixed coordinates. */
+			FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+
+			/** Transform sampled point to voxel coordinates. */
+			FixedImageContinuousIndexType voxelCoord;
+			this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+			
+			unsigned int numSamplesOk = 0;
+
+			/** Loop over t */
+			for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
+			{
+				/** Initialize some variables. */
+				RealType movingImageValue;
+				MovingImagePointType mappedPoint;
+
+				/** Set fixed point's last dimension to lastDimPosition. */
+				voxelCoord[ lastDim ] = lastDimPositions[ d ];
+
+				/** Transform sampled point back to world coordinates. */
+				this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+
+				/** Transform point and check if it is inside the B-spline support region. */
+				bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+				/** Check if point is inside mask. */
+				if ( sampleOk )
+				{
+					sampleOk = this->IsInsideMovingMask( mappedPoint );
+				}
+
+				if ( sampleOk )
+				{
+					sampleOk = this->EvaluateMovingImageValueAndDerivative(
+						mappedPoint, movingImageValue, 0 );
+				}
+
+				if( sampleOk )
+				{ 
+					numSamplesOk++;
+					datablock( pixelIndex, d ) = movingImageValue;
+				}
+
+			} /** end loop over t */
+
+			if( numSamplesOk == realNumLastDimPositions )
+			{
+				pixelIndex++;
+				this->m_NumberOfPixelsCounted++;
+			}
+
+		}/** end first loop over image sample container */
+
+		/** Check if enough samples were valid. */
+		this->CheckNumberOfSamples(
+			NumberOfSamples, this->m_NumberOfPixelsCounted );
+
+		MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
+
+		/** Transpose of the matrix with mean subtracted */
+		//MatrixType At( A.transpose() );
+
+		/** Compute covariance matrix K */
+		//MatrixType K( At*A );
+
+		/** Calculate mean of from columns */
+		vnl_vector< double > mean( A.cols() );
+		mean.fill( NumericTraits< double >::Zero );
+		for( int i = 0; i < A.rows(); i++ )
+		{
+			for( int j = 0; j < A.cols(); j++)
+			{
+				mean(j) += A(i,j);
+			}
+		}	
+		mean /= double(A.rows());
+
+		/** Calculate standard deviation from columns */
+		vnl_vector< double > std( A.cols() );
+		std.fill( NumericTraits< double >::Zero );
+		for( int i = 0; i < A.rows(); i++ )
+		{
+			for( int j = 0; j < A.cols(); j++)
+			{
+				std(j) += pow((A(i,j)-mean(j)),2)/double((A.rows()-1.0));
+			}
+		}	
+
+		for( int j = 0; j < A.cols(); j++)
+		{
+			std(j) = sqrt(std(j));
+		}
+
+
+		/** Subtract mean from columns */
+		MatrixType Azscore( A.rows(), A.cols() );
+		Azscore.fill( NumericTraits< RealType >::Zero );
+		for (int i = 0; i < A.rows(); i++ )
+		{
+			for(int j = 0; j < A.cols(); j++)
+			{
+				Azscore(i,j) = (A(i,j)-mean(j))/std(j);
+			}
+		}
+
+		/** Transpose of the matrix with mean subtracted */
+		MatrixType Atzscore( Azscore.transpose() );
+
+		/** Compute covariance matrix K */
+		MatrixType K( (Atzscore*Azscore) );
+
+		K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+
+		/** Compute first eigenvalue and eigenvector of the covariance matrix K */
+		vnl_symmetric_eigensystem< RealType > eig( K );
+
+		RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
+
+		/** Compute sum of all eigenvalues = trace( K ) */
+		RealType trace = 0.0;
+		for( int i = 0; i < K.rows(); i++ ) 
+		{
+			trace += K(i,i);
+		}
+
+		measure = trace - e1;
+
+
+        vnl_vector<double> eigenValues;
+        eigenValues.set_size(K.cols());
+
+        eigenValues.fill(0.0);
+
+        for(unsigned int i = 0; i < K.cols(); i++)
         {
-            SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
+           eigenValues(i) = eig.get_eigenvalue( K.cols() - i+1 );
         }
-        else
-        {
-            for ( unsigned int i = 0; i < lastDimSize; ++i )
-            {
-                lastDimPositions.push_back( i );
-            }
-        }
+		
+        std::ofstream file1;
+        file1.open("eigenvalues.txt", ios::app);
+        file1 << eigenValues << std::endl;
 
-        /** Initialize dummy loop variable */
-        unsigned int pixelIndex = 0;
+        std::ofstream file2;
+        file2.open("firsteigenvector.txt", ios::app);
+        file2 << eig.get_eigenvector( K.cols() - 1 )<<std::endl;
 
-        std::vector < FixedImagePointType > SamplesOK;
-
-        /** Initialize image sample matrix . */
-        datablock.fill( itk::NumericTraits< RealType>::Zero );
-
-        for ( fiter = fbegin; fiter != fend; ++fiter )
-        {
-            /** Read fixed coordinates. */
-            FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
-
-            /** Transform sampled point to voxel coordinates. */
-            FixedImageContinuousIndexType voxelCoord;
-            this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
-
-            unsigned int numSamplesOk = 0;
-
-            /** Loop over t */
-            for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
-            {
-                /** Initialize some variables. */
-                RealType movingImageValue;
-                MovingImagePointType mappedPoint;
-
-                /** Set fixed point's last dimension to lastDimPosition. */
-                voxelCoord[ lastDim ] = lastDimPositions[ d ];
-
-                /** Transform sampled point back to world coordinates. */
-                this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-
-                /** Transform point and check if it is inside the B-spline support region. */
-                bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-
-                /** Check if point is inside mask. */
-                if ( sampleOk )
-                {
-                    sampleOk = this->IsInsideMovingMask( mappedPoint );
-                }
-
-                if ( sampleOk )
-                {
-                    sampleOk = this->EvaluateMovingImageValueAndDerivative(
-                        mappedPoint, movingImageValue, 0 );
-                }
-
-                if( sampleOk )
-                {
-                    numSamplesOk++;
-                    datablock( pixelIndex, d ) = movingImageValue;
-                }
-
-            } /** end loop over t */
-
-            if( numSamplesOk == realNumLastDimPositions )
-            {
-                pixelIndex++;
-                this->m_NumberOfPixelsCounted++;
-            }
-
-        }/** end first loop over image sample container */
-
-        /** Check if enough samples were valid. */
-        this->CheckNumberOfSamples(
-            NumberOfSamples, this->m_NumberOfPixelsCounted );
-
-        MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
-
-        /** Transpose of the matrix with mean subtracted */
-        //MatrixType At( A.transpose() );
-
-        /** Compute covariance matrix K */
-        //MatrixType K( At*A );
-
-        /** Calculate mean of from columns */
-        vnl_vector< double > mean( A.cols() );
-        mean.fill( NumericTraits< double >::Zero );
-        for( int i = 0; i < A.rows(); i++ )
-        {
-            for( int j = 0; j < A.cols(); j++)
-            {
-                mean(j) += A(i,j);
-            }
-        }
-        mean /= double(A.rows());
-
-        /** Calculate standard deviation from columns */
-        vnl_vector< double > std( A.cols() );
-        std.fill( NumericTraits< double >::Zero );
-        for( int i = 0; i < A.rows(); i++ )
-        {
-            for( int j = 0; j < A.cols(); j++)
-            {
-                std(j) += pow((A(i,j)-mean(j)),2)/double((A.rows()-1.0));
-            }
-        }
-
-        for( int j = 0; j < A.cols(); j++)
-        {
-            std(j) = sqrt(std(j));
-        }
-
-
-        /** Subtract mean from columns */
-        MatrixType Azscore( A.rows(), A.cols() );
-        Azscore.fill( NumericTraits< RealType >::Zero );
-        for (int i = 0; i < A.rows(); i++ )
-        {
-            for(int j = 0; j < A.cols(); j++)
-            {
-                Azscore(i,j) = (A(i,j)-mean(j))/std(j);
-            }
-        }
-
-        /** Transpose of the matrix with mean subtracted */
-        MatrixType Atzscore( Azscore.transpose() );
-
-        /** Compute covariance matrix K */
-        MatrixType K( (Atzscore*Azscore) );
-
-        K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
-
-        /** Compute first eigenvalue and eigenvector of the covariance matrix K */
-        vnl_symmetric_eigensystem< RealType > eig( K );
-        RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
-
-        /** Compute sum of all eigenvalues = trace( K ) */
-        RealType trace = 0.0;
-        for( int i = 0; i < K.rows(); i++ )
-        {
-            trace += K(i,i);
-        }
-
-        measure = trace-e1;
-
-        /** Return the measure value. */
-        return measure;
+		/** Return the measure value. */
+		return measure;
 
   } // end GetValue
 
@@ -358,17 +381,17 @@ namespace itk
     void
     MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & derivative ) const
+	DerivativeType & derivative ) const
   {
     /** When the derivative is calculated, all information for calculating
      * the metric value is available. It does not cost anything to calculate
      * the metric value now. Therefore, we have chosen to only implement the
      * GetValueAndDerivative(), supplying it with a dummy value variable. */
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
-    typedef vnl_matrix <RealType > MatrixType;
-    MatrixType dummyimageMatrix;
+	typedef vnl_matrix <RealType > MatrixType;
+	MatrixType dummyimageMatrix;
 
-    //dummyimageMatrix.fill( NumericTraits< double >::Zero);
+	//dummyimageMatrix.fill( NumericTraits< double >::Zero);
     this->GetValueAndDerivative(parameters, dummyvalue, derivative, dummyimageMatrix);
 
   } // end GetDerivative
@@ -377,11 +400,11 @@ namespace itk
  * ******************* GetValueAndDerivative *******************
  */
 
-    template <class TFixedImage, class TMovingImage>
+	template <class TFixedImage, class TMovingImage>
     void
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& value, DerivativeType& derivative, vnl_matrix< RealType >& imageMatrix ) const
+	MeasureType& value, DerivativeType& derivative, vnl_matrix< RealType >& imageMatrix ) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
@@ -390,284 +413,287 @@ namespace itk
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
     /** Initialize some variables */
-        const unsigned int P = this->GetNumberOfParameters();
-        this->m_NumberOfPixelsCounted = 0;
-        MeasureType measure = NumericTraits< MeasureType >::Zero;
-        derivative = DerivativeType( P );
-        derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+		const unsigned int P = this->GetNumberOfParameters();
+		this->m_NumberOfPixelsCounted = 0;
+		MeasureType measure = NumericTraits< MeasureType >::Zero;
+		derivative = DerivativeType( P );
+		derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
-        /** Make sure the transform parameters are up to date. */
-        this->SetTransformParameters( parameters );
+		/** Make sure the transform parameters are up to date. */
+		this->SetTransformParameters( parameters );
 
-        /** Update the imageSampler and get a handle to the sample container. */
-        this->GetImageSampler()->Update();
-        ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+		/** Update the imageSampler and get a handle to the sample container. */
+		this->GetImageSampler()->Update();
+		ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-        /** Create iterator over the sample container. */
-        typename ImageSampleContainerType::ConstIterator fiter;
-        typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-        typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+		/** Create iterator over the sample container. */
+		typename ImageSampleContainerType::ConstIterator fiter;
+		typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+		typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
-        /** Retrieve slowest varying dimension and its size. */
-        const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-        const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
-        const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
+		/** Retrieve slowest varying dimension and its size. */
+		const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
+		const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+		const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
 
-        typedef vnl_matrix< RealType >                  MatrixType;
-        typedef vnl_matrix< DerivativeValueType > DerivativeMatrixType;
+		typedef vnl_matrix< RealType >                  MatrixType;
+		typedef vnl_matrix< DerivativeValueType > DerivativeMatrixType;
 
-        std::vector< FixedImagePointType > SamplesOK;
+		std::vector< FixedImagePointType > SamplesOK;
 
-        /** Get real last dim samples. */
-        const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
+		/** Get real last dim samples. */
+		const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
 
-        /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-        unsigned int NumberOfSamples = sampleContainer->Size();
-        MatrixType datablock( NumberOfSamples, realNumLastDimPositions );
+		/** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
+		unsigned int NumberOfSamples = sampleContainer->Size();
+		MatrixType datablock( NumberOfSamples, realNumLastDimPositions ); 
 
-        /** Initialize dummy loop variables */
-        unsigned int pixelIndex = 0;
+		/** Initialize dummy loop variables */
+		unsigned int pixelIndex = 0;
 
-        /** Initialize image sample matrix . */
-        datablock.fill( itk::NumericTraits< double >::Zero );
+		/** Initialize image sample matrix . */
+		datablock.fill( itk::NumericTraits< double >::Zero );
 
-        /** Determine random last dimension positions if needed. */
-        /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
-        std::vector<int> lastDimPositions;
-        if ( this->m_SampleLastDimensionRandomly )
-        {
-            SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
-        }
-        else
-        {
-            for ( unsigned int i = 0; i < lastDimSize; ++i )
-            {
-                lastDimPositions.push_back( i );
-            }
-        }
+		/** Determine random last dimension positions if needed. */
+		/** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
+		std::vector<int> lastDimPositions;
+		if ( this->m_SampleLastDimensionRandomly )
+		{
+			SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
+		}
+		else
+		{
+			for ( unsigned int i = 0; i < lastDimSize; ++i )
+			{
+				lastDimPositions.push_back( i );
+			}
+		}
 
-        //elxout<< "start loop over sample container 1" << std::endl;
-        for ( fiter = fbegin; fiter != fend; ++fiter )
-        {
-            /** Read fixed coordinates. */
-            FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+		//elxout<< "start loop over sample container 1" << std::endl;
+		for ( fiter = fbegin; fiter != fend; ++fiter )
+		{
+			/** Read fixed coordinates. */
+			FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
-            /** Transform sampled point to voxel coordinates. */
-            FixedImageContinuousIndexType voxelCoord;
-            this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+			/** Transform sampled point to voxel coordinates. */
+			FixedImageContinuousIndexType voxelCoord;
+			this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
-            const unsigned int realNumLastDimPositions = lastDimPositions.size();
-            unsigned int numSamplesOk = 0;
+			const unsigned int realNumLastDimPositions = lastDimPositions.size();
+			unsigned int numSamplesOk = 0;
 
-            /** Loop over t */
-            for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
-            {
-                /** Initialize some variables. */
-                RealType movingImageValue;
-                MovingImagePointType mappedPoint;
-                MovingImageDerivativeType movingImageDerivative;
+			/** Loop over t */
+			for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
+			{
+				/** Initialize some variables. */
+				RealType movingImageValue;
+				MovingImagePointType mappedPoint;
+				MovingImageDerivativeType movingImageDerivative;
 
-                /** Set fixed point's last dimension to lastDimPosition. */
-                voxelCoord[ lastDim ] = lastDimPositions[ d ];
+				/** Set fixed point's last dimension to lastDimPosition. */
+				voxelCoord[ lastDim ] = lastDimPositions[ d ];
 
-                /** Transform sampled point back to world coordinates. */
-                this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+				/** Transform sampled point back to world coordinates. */
+				this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
 
-                /** Transform point and check if it is inside the B-spline support region. */
-                bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+				/** Transform point and check if it is inside the B-spline support region. */
+				bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
-                /** Check if point is inside mask. */
-                if( sampleOk )
-                {
-                    sampleOk = this->IsInsideMovingMask( mappedPoint );
-                }
+				/** Check if point is inside mask. */
+				if( sampleOk )
+				{
+					sampleOk = this->IsInsideMovingMask( mappedPoint );
+				}
 
-                if( sampleOk )
-                {
-                    sampleOk = this->EvaluateMovingImageValueAndDerivative(
-                    mappedPoint, movingImageValue, 0 );
-                }
+				if( sampleOk )
+				{
+					sampleOk = this->EvaluateMovingImageValueAndDerivative(
+					mappedPoint, movingImageValue, 0 );
+				}
 
-                if( sampleOk )
-                {
-                    numSamplesOk++;
-                    datablock( pixelIndex, d ) = movingImageValue;
+				if( sampleOk )
+				{ 
+					numSamplesOk++;
+					datablock( pixelIndex, d ) = movingImageValue;
+				
+				}// end if sampleOk
 
-                }// end if sampleOk
+			} // end loop over t 
 
-            } // end loop over t
+			if( numSamplesOk == realNumLastDimPositions )
+			{
+				SamplesOK.push_back(fixedPoint);
+				pixelIndex++;
+				this->m_NumberOfPixelsCounted++;
+			}
+			
+		}/** end first loop over image sample container */
 
-            if( numSamplesOk == realNumLastDimPositions )
-            {
-                SamplesOK.push_back(fixedPoint);
-                pixelIndex++;
-                this->m_NumberOfPixelsCounted++;
-            }
+		/** Check if enough samples were valid. */
+		this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+		
+		MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
 
-        }/** end first loop over image sample container */
+		/** Transpose of the matrix A*/
+		//MatrixType At( A.transpose() );
 
-        /** Check if enough samples were valid. */
-        this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+		/** Compute covariance matrix K */
+		//MatrixType K( (At*A) );
 
-        MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
+		/** Calculate mean of from columns */
+		vnl_vector< double > mean( A.cols() );
+		mean.fill( NumericTraits< double >::Zero );
+		for( int i = 0; i < A.rows(); i++ )
+		{
+			for( int j = 0; j < A.cols(); j++)
+			{
+				mean(j) += A(i,j);
+			}
+		}	
+		mean /= double(A.rows());
 
-        /** Transpose of the matrix A*/
-        //MatrixType At( A.transpose() );
+		/** Calculate standard deviation from columns */
+		vnl_vector< double > std( A.cols() );
+		std.fill( NumericTraits< double >::Zero );
+		for( int i = 0; i < A.rows(); i++ )
+		{
+			for( int j = 0; j < A.cols(); j++)
+			{
+				std(j) += pow((A(i,j)-mean(j)),2)/double((A.rows()-1.0));
+			}
+		}	
+		
+		for( int j = 0; j < A.cols(); j++)
+		{
+			std(j) = sqrt(std(j));
+		}
+		
+		/** Subtract mean from columns */
+		MatrixType Azscore( A.rows(), A.cols() );
+		Azscore.fill( NumericTraits< RealType >::Zero );
+		for (int i = 0; i < A.rows(); i++ )
+		{
+			for(int j = 0; j < A.cols(); j++)
+			{
+				Azscore(i,j) = (A(i,j)-mean(j))/std(j);
+			}
+		}
 
-        /** Compute covariance matrix K */
-        //MatrixType K( (At*A) );
+		/** Transpose of the matrix with mean subtracted */
+		MatrixType Atzscore( Azscore.transpose() );
 
-        /** Calculate mean of from columns */
-        vnl_vector< double > mean( A.cols() );
-        mean.fill( NumericTraits< double >::Zero );
-        for( int i = 0; i < A.rows(); i++ )
-        {
-            for( int j = 0; j < A.cols(); j++)
-            {
-                mean(j) += A(i,j);
-            }
-        }
-        mean /= double(A.rows());
+		/** Compute covariance matrix K */
+		MatrixType K( (Atzscore*Azscore) );		
 
-        /** Calculate standard deviation from columns */
-        vnl_vector< double > std( A.cols() );
-        std.fill( NumericTraits< double >::Zero );
-        for( int i = 0; i < A.rows(); i++ )
-        {
-            for( int j = 0; j < A.cols(); j++)
-            {
-                std(j) += pow((A(i,j)-mean(j)),2)/double((A.rows()-1.0));
-            }
-        }
+		K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
 
-        for( int j = 0; j < A.cols(); j++)
-        {
-            std(j) = sqrt(std(j));
-        }
+		/** Compute first eigenvalue and eigenvector of the covariance matrix K */
+		vnl_symmetric_eigensystem< RealType > eig( K );
+		RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
+		vnl_vector< RealType > FirstEigenvector = eig.get_eigenvector(K.cols()-1);
+		vnl_vector< RealType > v1 = FirstEigenvector.normalize(); // Highest eigenvector of A'*A
 
-        /** Subtract mean from columns */
-        MatrixType Azscore( A.rows(), A.cols() );
-        Azscore.fill( NumericTraits< RealType >::Zero );
-        for (int i = 0; i < A.rows(); i++ )
-        {
-            for(int j = 0; j < A.cols(); j++)
-            {
-                Azscore(i,j) = (A(i,j)-mean(j))/std(j);
-            }
-        }
+        //this->m_firstEigenVector = eig.get_eigenvector(K.cols()-1);
 
-        /** Transpose of the matrix with mean subtracted */
-        MatrixType Atzscore( Azscore.transpose() );
-
-        /** Compute covariance matrix K */
-        MatrixType K( (Atzscore*Azscore) );
-
-        K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
-
-        /** Compute first eigenvalue and eigenvector of the covariance matrix K */
-        vnl_symmetric_eigensystem< RealType > eig( K );
-        RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
-        vnl_vector< RealType > FirstEigenvector = eig.get_eigenvector(K.cols()-1);
-        vnl_vector< RealType > v1 = FirstEigenvector.normalize(); // Highest eigenvector of A'*A
-
-        /** Compute sum of all eigenvalues = trace( K ) */
-        double trace = 0.0;
-        for( int i = 0; i < K.rows(); i++ )
-        {
-            trace += K(i,i);
-        }
-
-        /** Create variables to store intermediate results in. */
+		
+		/** Compute sum of all eigenvalues = trace( K ) */
+		double trace = 0.0;
+		for( int i = 0; i < K.rows(); i++ ) 
+		{
+			trace += K(i,i);
+		}
+		
+		/** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
     DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-        std::vector<NonZeroJacobianIndicesType> nzjis ( realNumLastDimPositions, NonZeroJacobianIndicesType() );
+		std::vector<NonZeroJacobianIndicesType> nzjis ( realNumLastDimPositions, NonZeroJacobianIndicesType() );
 
-        /** Sub components of metric derivative */
+		/** Sub components of metric derivative */
     vnl_vector< DerivativeValueType > dKiidmu( P ); //Trace of derivative of covariance matrix
-        vnl_vector< DerivativeValueType > AtdAdmuii( P ); //Trace of AtMinusMean * dAdmu
-        vnl_vector< DerivativeValueType > v1Kv1dmu( P ); //v1 * derivative covariance matrix * v1
+		vnl_vector< DerivativeValueType > AtdAdmuii( P ); //Trace of AtMinusMean * dAdmu
+		vnl_vector< DerivativeValueType > v1Kv1dmu( P ); //v1 * derivative covariance matrix * v1
 
-        DerivativeMatrixType dAdmu_v1( pixelIndex, P ); //dAdmu * v1
+		DerivativeMatrixType dAdmu_v1( pixelIndex, P ); //dAdmu * v1 
 
-        /** initialize */
-        dKiidmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-        AtdAdmuii.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-        dAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+		/** initialize */
+		dKiidmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+		AtdAdmuii.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+		dAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     v1Kv1dmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
 
-        DerivativeType dMTdmu;
-        dMTdmu.fill( itk::NumericTraits<RealType>::Zero );
+		DerivativeType dMTdmu;
+		dMTdmu.fill( itk::NumericTraits<RealType>::Zero );
 
-        //unsigned int NumSamplesUsed;
-        unsigned int startSamplesOK;
+		//unsigned int NumSamplesUsed;
+		unsigned int startSamplesOK;
 
-        //NumSamplesUsed = SamplesOK.size()/realNumLastDimPositions;
-        startSamplesOK = 0;
+		//NumSamplesUsed = SamplesOK.size()/realNumLastDimPositions;
+		startSamplesOK = 0;
 
-    /** Second loop over fixed image samples. */
-        for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
+  	/** Second loop over fixed image samples. */ 
+		for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
     {
-            /** Read fixed coordinates. */
-            FixedImagePointType fixedPoint = SamplesOK[ startSamplesOK ];
-            startSamplesOK++;
+			/** Read fixed coordinates. */
+			FixedImagePointType fixedPoint = SamplesOK[ startSamplesOK ];
+			startSamplesOK++;
 
-            /** Transform sampled point to voxel coordinates. */
-            FixedImageContinuousIndexType voxelCoord;
-            this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+			/** Transform sampled point to voxel coordinates. */
+			FixedImageContinuousIndexType voxelCoord;
+			this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
-            const unsigned int realNumLastDimPositions = lastDimPositions.size();
-            unsigned int numSamplesOk = 0;
+			const unsigned int realNumLastDimPositions = lastDimPositions.size();
+			unsigned int numSamplesOk = 0;
 
       for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
-      {
-                /** Initialize some variables. */
-                RealType movingImageValue;
-                MovingImagePointType mappedPoint;
-                MovingImageDerivativeType movingImageDerivative;
+      {	
+				/** Initialize some variables. */
+				RealType movingImageValue;
+				MovingImagePointType mappedPoint;
+				MovingImageDerivativeType movingImageDerivative;
 
-                /** Set fixed point's last dimension to lastDimPosition. */
-                voxelCoord[ lastDim ] = lastDimPositions[ d ];
+				/** Set fixed point's last dimension to lastDimPosition. */
+				voxelCoord[ lastDim ] = lastDimPositions[ d ];
 
-                /** Transform sampled point back to world coordinates. */
-                this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-                this->TransformPoint( fixedPoint, mappedPoint );
-                this->EvaluateMovingImageValueAndDerivative(
-                                            mappedPoint, movingImageValue, &movingImageDerivative );
+				/** Transform sampled point back to world coordinates. */
+				this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+				this->TransformPoint( fixedPoint, mappedPoint );
+				this->EvaluateMovingImageValueAndDerivative(
+											mappedPoint, movingImageValue, &movingImageDerivative );
 
-                movingImageDerivative /= std(d);
-                /** Get the TransformJacobian dT/dmu */
-                this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
+				movingImageDerivative /= std(d);
+				/** Get the TransformJacobian dT/dmu */
+				this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
 
-                /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
-                this->EvaluateTransformJacobianInnerProduct(
+				/** Compute the innerproduct (dM/dx)^T (dT/dmu). */
+				this->EvaluateTransformJacobianInnerProduct(
                    jacobian, movingImageDerivative, imageJacobian );
 
         /** Store values. */
         dMTdmu = imageJacobian;
 
-                /** build metric derivative components */
-                for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
-                {
-                    dAdmu_v1[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v1[ d ];
-                    AtdAdmuii[ nzjis[ d ][ p ] ] += Atzscore[ d ][ pixelIndex ]*dMTdmu[ p ];
-                }
-            } // end loop over t
+				/** build metric derivative components */
+				for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
+				{
+					dAdmu_v1[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v1[ d ];
+					AtdAdmuii[ nzjis[ d ][ p ] ] += Atzscore[ d ][ pixelIndex ]*dMTdmu[ p ];
+				}
+			} // end loop over t
     } // end second for loop over sample container
 
-        v1Kv1dmu = v1*Atzscore*dAdmu_v1;
-        v1Kv1dmu *= static_cast < DerivativeValueType > (2.0)
-            / ( static_cast < DerivativeValueType > (A.rows()) -
-            static_cast < DerivativeValueType > (1.0) ); //normalize
+		v1Kv1dmu = v1*Atzscore*dAdmu_v1;
+		v1Kv1dmu *= static_cast < DerivativeValueType > (2.0) 
+			/ ( static_cast < DerivativeValueType > (A.rows()) - 
+			static_cast < DerivativeValueType > (1.0) ); //normalize
 
-        dKiidmu = AtdAdmuii;
-        dKiidmu *= static_cast < DerivativeValueType > (2.0)
-            / ( static_cast < DerivativeValueType > (A.rows()) -
-            static_cast < DerivativeValueType >(1.0) ); //normalize
+		dKiidmu = AtdAdmuii;
+		dKiidmu *= static_cast < DerivativeValueType > (2.0) 
+			/ ( static_cast < DerivativeValueType > (A.rows()) - 
+			static_cast < DerivativeValueType >(1.0) ); //normalize
 
-        measure = trace - e1;
-        derivative = dKiidmu - v1Kv1dmu;
+		measure = trace - e1;
+		derivative = dKiidmu - v1Kv1dmu;
 
-        //** Subtract mean from derivative elements. */
+		//** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
     {
       if ( ! this->m_TransformIsStackTransform )
@@ -737,11 +763,14 @@ namespace itk
     }
 
 
-    /** Return the measure value. */
-    value = measure;
+	/** Return the measure value. */
+	value = measure;
 
-    } // end GetValueAndDerivative()
+	} // end GetValueAndDerivative()
 
 } // end namespace itk
 
-#endif // ITKMAXIMIZINGFIRSTPRINCIPALCOMPONENTMETRIC_METHOD5_HXX
+#endif // end #ifndef _itkMaximizingFirstPrincipalComponentMetric_method5_hxx
+
+
+    

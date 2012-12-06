@@ -178,6 +178,7 @@ namespace elastix
     /** Sets up a timer to measure the initialisation time and
      * calls the Superclass' implementation.
      */
+
     virtual void Initialize(void) throw (itk::ExceptionObject);
 
     /**
@@ -186,6 +187,7 @@ namespace elastix
      * \li Set UseNormalization setting
      */
     virtual void BeforeEachResolution(void);
+    virtual void AfterEachIteration(void);
 
   protected:
 

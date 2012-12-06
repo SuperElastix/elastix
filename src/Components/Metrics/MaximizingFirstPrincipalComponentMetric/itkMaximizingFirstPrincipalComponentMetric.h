@@ -163,6 +163,9 @@ protected:
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian) const;
 
+  vnl_vector<double> m_firstEigenVector;
+  vnl_vector<double> m_eigenValues;
+
 private:
   MaximizingFirstPrincipalComponentMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
@@ -195,7 +198,7 @@ private:
 
 	vnl_vector<double> m_RandomVector;
 
-	bool m_RandomNumbersCreated;
+    bool m_RandomNumbersCreated;
 	
 
 }; // end class MaximizingFirstPrincipalComponentMetric
