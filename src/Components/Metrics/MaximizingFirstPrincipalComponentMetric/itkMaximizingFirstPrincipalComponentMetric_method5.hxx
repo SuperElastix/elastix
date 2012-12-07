@@ -357,16 +357,18 @@ namespace itk
 
         for(unsigned int i = 0; i < K.cols(); i++)
         {
-           eigenValues(i) = eig.get_eigenvalue( K.cols() - i+1 );
+           eigenValues(i) = eig.get_eigenvalue( i );
         }
+        this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1);
+        this->m_eigenValues = eigenValues;
 		
-        std::ofstream file1;
-        file1.open("eigenvalues.txt", ios::app);
-        file1 << eigenValues << std::endl;
+//        std::ofstream file1;
+//        file1.open("eigenvalues.txt", ios::app);
+//        file1 << eigenValues << std::endl;
 
-        std::ofstream file2;
-        file2.open("firsteigenvector.txt", ios::app);
-        file2 << eig.get_eigenvector( K.cols() - 1 )<<std::endl;
+//        std::ofstream file2;
+//        file2.open("firsteigenvector.txt", ios::app);
+//        file2 << eig.get_eigenvector( K.cols() - 1 ) << std::endl;
 
 		/** Return the measure value. */
 		return measure;

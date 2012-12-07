@@ -1599,11 +1599,17 @@ TransformBase<TElastix>
   FixedImageRegionType inputRegion = this->GetRegistration()->GetAsITKBaseType()->GetFixedImageRegion();
   SizeType size = inputRegion.GetSize();
 
-  /** Set size of last dimension to 1 */
-  size[ FixedImageDimension - 1 ] = 1;
 
   /** Set desired extraction region */
   FixedImageIndexType start = inputRegion.GetIndex();
+	start[ FixedImageDimension - 1 ] = size[ FixedImageDimension - 1 ] - 1;
+ 
+ /** Set size of last dimension to 1 */
+  size[ FixedImageDimension - 1 ] = 0;
+
+	elxout << "start region for scales: " << start << std::endl;
+	elxout << "size region for scales: " << size << std::endl;
+
   FixedImageRegionType desiredRegion;
   desiredRegion.SetSize( size );
   desiredRegion.SetIndex( start );
@@ -1666,8 +1672,6 @@ TransformBase<TElastix>
         scales ( i+j ) = scales( j );
      }
   }
-  
-  elxout << scales << std::endl;
 
 
 } // end AutomaticScalesEstimationStackTransform()

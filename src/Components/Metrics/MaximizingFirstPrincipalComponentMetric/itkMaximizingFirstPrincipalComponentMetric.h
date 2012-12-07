@@ -163,8 +163,8 @@ protected:
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian) const;
 
-  vnl_vector<double> m_firstEigenVector;
-  vnl_vector<double> m_eigenValues;
+  mutable vnl_vector<double> m_firstEigenVector;
+  mutable vnl_vector<double> m_eigenValues;
 
 private:
   MaximizingFirstPrincipalComponentMetric(const Self&); //purposely not implemented
