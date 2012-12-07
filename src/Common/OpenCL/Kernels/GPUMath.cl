@@ -11,9 +11,16 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
+//
+// \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+// Department of Radiology, Leiden, The Netherlands
+//
+// This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+//
+// \note This work was funded by the Netherlands Organisation for
+// Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+//
 // OpenCL implementation of itk::Math
-
 //------------------------------------------------------------------------------
 //template< typename TReturn, typename TInput >
 //inline TReturn RoundHalfIntegerToEven_base(TInput x)
@@ -34,9 +41,9 @@
 //------------------------------------------------------------------------------
 // OpenCL implementation of
 // itkMathDetail::RoundHalfIntegerToEven_32()
-int round_half_integer_to_even_32(float x)
+int round_half_integer_to_even_32( float x )
 {
-  if(x >= 0.0)
+  if ( x >= 0.0 )
   {
     x += 0.5f;
   }
@@ -45,13 +52,13 @@ int round_half_integer_to_even_32(float x)
     x -= 0.5f;
   }
 
-  const int r = (int)(x);
-  return ( x != (float)(r) ) ? r : (int)( 2 * (r / 2) );
+  const int r = (int)( x );
+  return ( x != (float)( r ) ) ? r : (int)( 2 * ( r / 2 ) );
 }
 
-int round_half_integer_up_32(float x)
+int round_half_integer_up_32( float x )
 {
-  return round_half_integer_to_even_32(2 * x + 0.5f) >> 1;
+  return round_half_integer_to_even_32( 2 * x + 0.5f ) >> 1;
 }
 
 //------------------------------------------------------------------------------
@@ -69,12 +76,12 @@ int round_half_integer_up_32(float x)
 // OpenCL implementation of
 // itkMathDetail::RoundHalfIntegerUp_base()
 //------------------------------------------------------------------------------
-int round_half_integer_up(const float v)
+int round_half_integer_up( const float v )
 {
   float x = v + 0.5;
   int   r = (int)x;
 
-  return (x >= 0.0) ?
+  return ( x >= 0.0 ) ?
          r :
-         ( x == (float)(r) ? r : r - (int)(1) );
+         ( x == (float)( r ) ? r : r - (int)( 1 ) );
 }

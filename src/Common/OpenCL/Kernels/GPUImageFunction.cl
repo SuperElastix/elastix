@@ -11,9 +11,16 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
+//
+// \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+// Department of Radiology, Leiden, The Netherlands
+//
+// This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+//
+// \note This work was funded by the Netherlands Organisation for
+// Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+//
 // OpenCL implementation of itk::ImageFunction
-
 //------------------------------------------------------------------------------
 // Definition of GPUFunction 1D/2D/3D
 typedef struct {
@@ -43,14 +50,15 @@ bool interpolator_is_inside_buffer_1d(
   const float index,
   __constant GPUImageFunction1D *image_function )
 {
-  if( !(index >= image_function->start_continuous_index
-        && index < image_function->end_continuous_index) )
+  if ( !( index >= image_function->start_continuous_index
+    && index < image_function->end_continuous_index ) )
   {
     return false;
   }
 
   return true;
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -59,19 +67,20 @@ bool interpolator_is_inside_buffer_2d(
   const float2 index,
   __constant GPUImageFunction2D *image_function )
 {
-  if( !(index.x >= image_function->start_continuous_index.x
-        && index.x < image_function->end_continuous_index.x) )
+  if ( !( index.x >= image_function->start_continuous_index.x
+    && index.x < image_function->end_continuous_index.x ) )
   {
     return false;
   }
-  if( !(index.y >= image_function->start_continuous_index.y
-        && index.y < image_function->end_continuous_index.y) )
+  if ( !( index.y >= image_function->start_continuous_index.y
+    && index.y < image_function->end_continuous_index.y ) )
   {
     return false;
   }
 
   return true;
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -80,24 +89,25 @@ bool interpolator_is_inside_buffer_3d(
   const float3 index,
   __constant GPUImageFunction3D *image_function )
 {
-  if( !(index.x >= image_function->start_continuous_index.x
-        && index.x < image_function->end_continuous_index.x) )
+  if ( !( index.x >= image_function->start_continuous_index.x
+    && index.x < image_function->end_continuous_index.x ) )
   {
     return false;
   }
-  if( !(index.y >= image_function->start_continuous_index.y
-        && index.y < image_function->end_continuous_index.y) )
+  if ( !( index.y >= image_function->start_continuous_index.y
+    && index.y < image_function->end_continuous_index.y ) )
   {
     return false;
   }
-  if( !(index.z >= image_function->start_continuous_index.z
-        && index.z < image_function->end_continuous_index.z) )
+  if ( !( index.z >= image_function->start_continuous_index.z
+    && index.z < image_function->end_continuous_index.z ) )
   {
     return false;
   }
 
   return true;
 }
+
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
@@ -108,6 +118,7 @@ uint convert_continuous_index_to_nearest_index_1d( const float cindex )
 {
   return round( cindex );
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -117,10 +128,12 @@ uint convert_continuous_index_to_nearest_index_1d( const float cindex )
 uint2 convert_continuous_index_to_nearest_index_2d( const float2 cindex )
 {
   uint2 index;
+
   index.x = round( cindex.x );
   index.y = round( cindex.y );
   return index;
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -130,6 +143,7 @@ uint2 convert_continuous_index_to_nearest_index_2d( const float2 cindex )
 uint3 convert_continuous_index_to_nearest_index_3d( const float3 cindex )
 {
   uint3 index;
+
   //index.x = (uint)( cindex.x + 0.499999f );
   //index.y = (uint)( cindex.y + 0.499999f );
   //index.z = (uint)( cindex.z + 0.499999f );
@@ -138,5 +152,5 @@ uint3 convert_continuous_index_to_nearest_index_3d( const float3 cindex )
   index.z = round( cindex.z );
   return index;
 }
-#endif // DIM_3
 
+#endif // DIM_3

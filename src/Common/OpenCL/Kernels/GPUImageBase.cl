@@ -11,9 +11,16 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
+//
+// \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+// Department of Radiology, Leiden, The Netherlands
+//
+// This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+//
+// \note This work was funded by the Netherlands Organisation for
+// Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+//
 // OpenCL implementation of itk::ImageBase
-
 //------------------------------------------------------------------------------
 // Definition of GPUImageBase 1D/2D/3D
 typedef struct {
@@ -44,63 +51,6 @@ typedef struct {
 } GPUImageBase3D;
 
 //------------------------------------------------------------------------------
-#ifdef DIM_1
-void set_image_base_1d( GPUImageBase1D *image,
-  const float spacing,
-  const float origin,
-  const uint size,
-  const float direction,
-  const float index_to_physical_point,
-  const float physical_point_to_index )
-{
-  image->spacing   = spacing;
-  image->origin    = origin;
-  image->size      = size;
-  image->direction = direction;
-  image->index_to_physical_point = index_to_physical_point;
-  image->physical_point_to_index = physical_point_to_index;
-}
-#endif // DIM_1
-
-//------------------------------------------------------------------------------
-#ifdef DIM_2
-void set_image_base_2d( GPUImageBase2D *image,
-  const float2 spacing,
-  const float2 origin,
-  const uint2 size,
-  const float4 direction,
-  const float4 index_to_physical_point,
-  const float4 physical_point_to_index )
-{
-  image->spacing   = spacing;
-  image->origin    = origin;
-  image->size      = size;
-  image->direction = direction;
-  image->index_to_physical_point = index_to_physical_point;
-  image->physical_point_to_index = physical_point_to_index;
-}
-#endif // DIM_2
-
-//------------------------------------------------------------------------------
-#ifdef DIM_3
-void set_image_base_3d( GPUImageBase3D *image,
-  const float3 spacing,
-  const float3 origin,
-  const uint3 size,
-  const float16 direction,
-  const float16 index_to_physical_point,
-  const float16 physical_point_to_index )
-{
-  image->spacing   = spacing;
-  image->origin    = origin;
-  image->size      = size;
-  image->direction = direction;
-  image->index_to_physical_point = index_to_physical_point;
-  image->physical_point_to_index = physical_point_to_index;
-}
-#endif // DIM_3
-
-//------------------------------------------------------------------------------
 // OpenCL 1D implementation of
 // itkImageBase::ComputeIndexToPhysicalPointMatrices()
 #ifdef DIM_1
@@ -109,6 +59,7 @@ void compute_index_to_physical_point_matrices_1d( GPUImageBase1D *image )
   image->index_to_physical_point = image->direction * image->spacing;
   image->physical_point_to_index = 1.0f / image->index_to_physical_point;
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -119,6 +70,7 @@ void compute_index_to_physical_point_matrices_2d( GPUImageBase2D *image )
 {
   // not implemented
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -129,6 +81,7 @@ void compute_index_to_physical_point_matrices_3d( GPUImageBase3D *image )
 {
   // not implemented
 }
+
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
@@ -137,12 +90,13 @@ void compute_index_to_physical_point_matrices_3d( GPUImageBase3D *image )
 #ifdef DIM_1
 void set_spacing_1d( const float spacing, GPUImageBase1D *image )
 {
-  if( image->spacing != spacing )
+  if ( image->spacing != spacing )
   {
     image->spacing = spacing;
     compute_index_to_physical_point_matrices_1d( image );
   }
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -153,12 +107,13 @@ void set_spacing_2d( const float2 spacing, GPUImageBase2D *image )
 {
   const int2 is_not_equal = isnotequal( spacing, image->spacing );
 
-  if( any( is_not_equal ) )
+  if ( any( is_not_equal ) )
   {
     image->spacing = spacing;
     compute_index_to_physical_point_matrices_2d( image );
   }
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -169,12 +124,13 @@ void set_spacing_3d( const float3 spacing, GPUImageBase3D *image )
 {
   const int3 isNotEqual = isnotequal( spacing, image->spacing );
 
-  if( any(isNotEqual) )
+  if ( any( isNotEqual ) )
   {
     image->spacing = spacing;
     compute_index_to_physical_point_matrices_3d( image );
   }
 }
+
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
@@ -183,12 +139,13 @@ void set_spacing_3d( const float3 spacing, GPUImageBase3D *image )
 #ifdef DIM_1
 void set_direction_1d( const float direction, GPUImageBase1D *image )
 {
-  if( image->direction != direction )
+  if ( image->direction != direction )
   {
     image->direction = direction;
     compute_index_to_physical_point_matrices_1d( image );
   }
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -199,12 +156,13 @@ void set_direction_2d( const float3 direction, GPUImageBase2D *image )
 {
   const int3 is_not_equal = isnotequal( direction, image->direction.xyz );
 
-  if( any( is_not_equal ) )
+  if ( any( is_not_equal ) )
   {
     image->direction.xyz = direction;
     compute_index_to_physical_point_matrices_2d( image );
   }
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -215,12 +173,13 @@ void set_direction_3d( const float16 direction, GPUImageBase3D *image )
 {
   const int16 is_not_equal = isnotequal( direction, image->direction );
 
-  if( any( is_not_equal ) )
+  if ( any( is_not_equal ) )
   {
     image->direction = direction;
     compute_index_to_physical_point_matrices_3d( image );
   }
 }
+
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
@@ -231,15 +190,17 @@ void set_direction_3d( const float16 direction, GPUImageBase3D *image )
 bool is_continuous_index_inside_1d( const float index, const uint size )
 {
   int rounded;
+
   rounded = round( index );
-  if( rounded < 0 ) return false;
+  if ( rounded < 0 ) { return false; }
 
   float bound;
   bound = (float)( size ) - 0.5f;
-  if( index > bound ) return false;
+  if ( index > bound ) { return false; }
 
   return true;
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -250,17 +211,19 @@ bool is_continuous_index_inside_1d( const float index, const uint size )
 bool is_continuous_index_inside_2d( const float2 index, const uint2 size )
 {
   int2 rounded;
+
   rounded.x = round( index.x );
   rounded.y = round( index.y );
-  if( rounded.x < 0 || rounded.y < 0 ) return false;
+  if ( rounded.x < 0 || rounded.y < 0 ) { return false; }
 
   float2 bound;
   bound.x = (float)( size.x ) - 0.5f;
   bound.y = (float)( size.y ) - 0.5f;
-  if( index.x > bound.x || index.y > bound.y ) return false;
+  if ( index.x > bound.x || index.y > bound.y ) { return false; }
 
   return true;
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -271,25 +234,27 @@ bool is_continuous_index_inside_2d( const float2 index, const uint2 size )
 bool is_continuous_index_inside_3d( const float3 index, const uint3 size )
 {
   int3 rounded;
+
   rounded.x = round( index.x );
   rounded.y = round( index.y );
   rounded.z = round( index.z );
 
-  if( rounded.x < 0 ) return false;
-  if( rounded.y < 0 ) return false;
-  if( rounded.z < 0 ) return false;
+  if ( rounded.x < 0 ) { return false; }
+  if ( rounded.y < 0 ) { return false; }
+  if ( rounded.z < 0 ) { return false; }
 
   float3 bound;
   bound.x = (float)( size.x ) - 0.5f;
   bound.y = (float)( size.y ) - 0.5f;
   bound.z = (float)( size.z ) - 0.5f;
 
-  if( index.x > bound.x ) return false;
-  if( index.y > bound.y ) return false;
-  if( index.z > bound.z ) return false;
+  if ( index.x > bound.x ) { return false; }
+  if ( index.y > bound.y ) { return false; }
+  if ( index.z > bound.z ) { return false; }
 
   return true;
 }
+
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
@@ -305,6 +270,7 @@ float transform_index_to_physical_point_1d(
   point = image->index_to_physical_point * index;
   return point;
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -319,6 +285,7 @@ float2 transform_index_to_physical_point_2d(
   float2 i2pp_y = image->index_to_physical_point.s23;
 
   float2 point = image->origin;
+
   point.x += dot( i2pp_x, convert_float2( index ) );
   point.y += dot( i2pp_y, convert_float2( index ) );
 
@@ -330,6 +297,7 @@ float2 transform_index_to_physical_point_2d(
 
   return point;
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -345,6 +313,7 @@ float3 transform_index_to_physical_point_3d(
   float3 i2pp_z = image->index_to_physical_point.s678;
 
   float3 point = image->origin;
+
   point.x += dot( i2pp_x, convert_float3( index ) );
   point.y += dot( i2pp_y, convert_float3( index ) );
   point.z += dot( i2pp_z, convert_float3( index ) );
@@ -363,6 +332,7 @@ float3 transform_index_to_physical_point_3d(
 
   return point;
 }
+
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
@@ -380,6 +350,7 @@ bool transform_physical_point_to_continuous_index_1d(
   *index = cvector1;
   return is_continuous_index_inside_1d( cvector1, image->size );
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -396,6 +367,7 @@ bool transform_physical_point_to_continuous_index_2d(
   float2 cvector = point - image->origin;
 
   float2 cvector1;
+
   cvector1.x = dot( pp2i_x, cvector );
   cvector1.y = dot( pp2i_y, cvector );
 
@@ -408,6 +380,7 @@ bool transform_physical_point_to_continuous_index_2d(
   *index = cvector1;
   return is_continuous_index_inside_2d( cvector1, image->size );
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -425,6 +398,7 @@ bool transform_physical_point_to_continuous_index_3d(
   float3 cvector = point - image->origin;
 
   float3 cvector1;
+
   cvector1.x = dot( pp2i_x, cvector );
   cvector1.y = dot( pp2i_y, cvector );
   cvector1.z = dot( pp2i_z, cvector );
@@ -444,6 +418,7 @@ bool transform_physical_point_to_continuous_index_3d(
   *index = cvector1;
   return is_continuous_index_inside_3d( cvector1, image->size );
 }
+
 #endif // DIM_3
 
 //------------------------------------------------------------------------------
@@ -454,8 +429,10 @@ float get_pixel_1d( const long index,
   __global const INPIXELTYPE *in, __constant const GPUImageBase1D *image )
 {
   float value = (float)( in[index] );
+
   return value;
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -467,8 +444,10 @@ float get_pixel_2d( const long2 index,
 {
   uint  gidx = mad24( image->size.x, index.y, index.x );
   float value = (float)( in[gidx] );
+
   return value;
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -478,10 +457,11 @@ float get_pixel_2d( const long2 index,
 float get_pixel_3d( const long3 index,
   __global const INPIXELTYPE *in, __constant GPUImageBase3D *image )
 {
-  uint  gidx = mad24( image->size.x,
+  uint gidx = mad24( image->size.x,
     mad24( index.z, image->size.y, index.y ), index.x );
   float value = (float)( in[gidx] );
+
   return value;
 }
-#endif // DIM_3
 
+#endif // DIM_3

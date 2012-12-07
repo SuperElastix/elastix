@@ -11,7 +11,15 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
+//
+// \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+// Department of Radiology, Leiden, The Netherlands
+//
+// This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+//
+// \note This work was funded by the Netherlands Organisation for
+// Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+//
 // OpenCL implementation of itk::MatrixOffsetTransformBase
 
 #define _ELASTIX_USE_OPENCL_OPTIMIZATIONS 1
@@ -36,7 +44,7 @@ typedef struct {
 #ifdef DIM_3
 typedef struct {
   float16 matrix;         // OpenCL does not have float9
-  float3  offset;
+  float3 offset;
   float16 inverse_matrix; // OpenCL does not have float9
 } GPUMatrixOffsetTransformBase3D;
 #endif // DIM_3
@@ -58,6 +66,7 @@ float matrix_offset_transform_point_1d(
 
   return tpoint;
 }
+
 #endif // DIM_1
 
 //------------------------------------------------------------------------------
@@ -88,6 +97,7 @@ float2 matrix_offset_transform_point_2d(
 
   return tpoint;
 }
+
 #endif // DIM_2
 
 //------------------------------------------------------------------------------
@@ -112,22 +122,22 @@ float3 matrix_offset_transform_point_3d(
   float3 tpoint;
 
   tpoint.x = transform_base->matrix.s0 * point.x
-           + transform_base->matrix.s1 * point.y
-           + transform_base->matrix.s2 * point.z
-           + transform_base->offset.x;
+    + transform_base->matrix.s1 * point.y
+    + transform_base->matrix.s2 * point.z
+    + transform_base->offset.x;
 
   tpoint.y = transform_base->matrix.s3 * point.x
-           + transform_base->matrix.s4 * point.y
-           + transform_base->matrix.s5 * point.z
-           + transform_base->offset.y;
+    + transform_base->matrix.s4 * point.y
+    + transform_base->matrix.s5 * point.z
+    + transform_base->offset.y;
 
   tpoint.z = transform_base->matrix.s6 * point.x
-           + transform_base->matrix.s7 * point.y
-           + transform_base->matrix.s8 * point.z
-           + transform_base->offset.z;
+    + transform_base->matrix.s7 * point.y
+    + transform_base->matrix.s8 * point.z
+    + transform_base->offset.z;
 
   return tpoint;
 #endif
 }
-#endif // DIM_3
 
+#endif // DIM_3

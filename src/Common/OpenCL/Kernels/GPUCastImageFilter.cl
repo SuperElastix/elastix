@@ -11,23 +11,31 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
+//
+// \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+// Department of Radiology, Leiden, The Netherlands
+//
+// This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+//
+// \note This work was funded by the Netherlands Organisation for
+// Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+//
 //------------------------------------------------------------------------------
 // Apple OpenCL 1.0 support function
-bool is_valid_3d(const uint3 index, const uint3 size)
+bool is_valid_3d( const uint3 index, const uint3 size )
 {
   /* NOTE: More than three-level nested conditional statements (e.g.,
   if A && B && C..) invalidates command queue during kernel
   execution on Apple OpenCL 1.0 (such Macbook Pro with NVIDIA 9600M
   GT). Therefore, we flattened conditional statements. */
-  if(index.x >= size.x){ return false; }
-  if(index.y >= size.y){ return false; }
-  if(index.z >= size.z){ return false; }
+  if ( index.x >= size.x ) { return false; }
+  if ( index.y >= size.y ) { return false; }
+  if ( index.z >= size.z ) { return false; }
   return true;
 }
 
 //------------------------------------------------------------------------------
-OUTPIXELTYPE Functor(const INPIXELTYPE in)
+OUTPIXELTYPE Functor( const INPIXELTYPE in )
 {
   // Cast it and return
   OUTPIXELTYPE out = (OUTPIXELTYPE)in;
@@ -37,15 +45,15 @@ OUTPIXELTYPE Functor(const INPIXELTYPE in)
 
 //------------------------------------------------------------------------------
 #ifdef DIM_1
-__kernel void CastImageFilter(__global const INPIXELTYPE *in,
-                              __global OUTPIXELTYPE *out,
-                              uint width)
+__kernel void CastImageFilter( __global const INPIXELTYPE *in,
+  __global OUTPIXELTYPE *out,
+  uint width )
 {
-  uint index = get_global_id(0);
+  uint index = get_global_id( 0 );
 
-  if(index < width)
+  if ( index < width )
   {
-    out[index] = Functor(in[index]);
+    out[index] = Functor( in[index] );
   }
 }
 
@@ -53,17 +61,17 @@ __kernel void CastImageFilter(__global const INPIXELTYPE *in,
 
 //------------------------------------------------------------------------------
 #ifdef DIM_2
-__kernel void CastImageFilter(__global const INPIXELTYPE *in,
-                              __global OUTPIXELTYPE *out,
-                              uint width, uint height)
+__kernel void CastImageFilter( __global const INPIXELTYPE *in,
+  __global OUTPIXELTYPE *out,
+  uint width, uint height )
 {
-  uint2 index = (uint2)( get_global_id(0), get_global_id(1) );
-  uint2 size = (uint2)(width, height);
+  uint2 index = (uint2)( get_global_id( 0 ), get_global_id( 1 ) );
+  uint2 size = (uint2)( width, height );
 
-  if(index.x < width && index.y < height)
+  if ( index.x < width && index.y < height )
   {
-    uint gidx = mad24(size.x, index.y, index.x);
-    out[gidx] = Functor(in[gidx]);
+    uint gidx = mad24( size.x, index.y, index.x );
+    out[gidx] = Functor( in[gidx] );
   }
 }
 
@@ -71,17 +79,17 @@ __kernel void CastImageFilter(__global const INPIXELTYPE *in,
 
 //------------------------------------------------------------------------------
 #ifdef DIM_3
-__kernel void CastImageFilter(__global const INPIXELTYPE *in,
-                              __global OUTPIXELTYPE *out,
-                              uint width, uint height, uint depth)
+__kernel void CastImageFilter( __global const INPIXELTYPE *in,
+  __global OUTPIXELTYPE *out,
+  uint width, uint height, uint depth )
 {
-  uint3 index = (uint3)( get_global_id(0), get_global_id(1), get_global_id(2) );
-  uint3 size = (uint3)(width, height, depth);
+  uint3 index = (uint3)( get_global_id( 0 ), get_global_id( 1 ), get_global_id( 2 ) );
+  uint3 size = (uint3)( width, height, depth );
 
-  if( is_valid_3d(index, size) )
+  if ( is_valid_3d( index, size ) )
   {
-    uint gidx = mad24(size.x, mad24(index.z, size.y, index.y), index.x);
-    out[gidx] = Functor(in[gidx]);
+    uint gidx = mad24( size.x, mad24( index.z, size.y, index.y ), index.x );
+    out[gidx] = Functor( in[gidx] );
   }
 }
 

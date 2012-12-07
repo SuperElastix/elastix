@@ -11,7 +11,15 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
+//
+// \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+// Department of Radiology, Leiden, The Netherlands
+//
+// This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+//
+// \note This work was funded by the Netherlands Organisation for
+// Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+//
 // OpenCL implementation of itk::TranslationTransformBase
 
 // Definition of GPUTranslationTransformBase 1D/2D/3D
@@ -35,8 +43,8 @@ typedef struct {
 
 //------------------------------------------------------------------------------
 #ifdef DIM_1
-float translation_transform_point_1d(const float point,
-                                     __constant GPUTranslationTransformBase1D *transform_base)
+float translation_transform_point_1d( const float point,
+  __constant GPUTranslationTransformBase1D *transform_base )
 {
   float tpoint = point + transform_base->offset;
   return tpoint;
@@ -46,8 +54,8 @@ float translation_transform_point_1d(const float point,
 
 //------------------------------------------------------------------------------
 #ifdef DIM_2
-float2 translation_transform_point_2d(const float2 point,
-                                      __constant GPUTranslationTransformBase2D *transform_base)
+float2 translation_transform_point_2d( const float2 point,
+  __constant GPUTranslationTransformBase2D *transform_base )
 {
   float2 tpoint = point + transform_base->offset;
   return tpoint;
@@ -57,8 +65,8 @@ float2 translation_transform_point_2d(const float2 point,
 
 //------------------------------------------------------------------------------
 #ifdef DIM_3
-float3 translation_transform_point_3d(const float3 point,
-                                      __constant GPUTranslationTransformBase3D *transform_base)
+float3 translation_transform_point_3d( const float3 point,
+  __constant GPUTranslationTransformBase3D *transform_base )
 {
   float3 tpoint = point + transform_base->offset;
   return tpoint;
