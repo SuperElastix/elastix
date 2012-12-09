@@ -39,8 +39,8 @@ namespace itk
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
 				//m_NumEigenValues( 1 )
-				m_RandomScaleIntensity( false ),
-				m_RandomNumbersCreated( false )
+                //m_RandomScaleIntensity( false ),
+                //m_RandomNumbersCreated( false )
 
   {
     this->SetUseImageSampler( true );
@@ -73,25 +73,25 @@ namespace itk
     }
 
 		/** Create random numbers for the random scales. */
-		if(this->m_RandomScaleIntensity)
-		{
-			if(!this->m_RandomNumbersCreated)
-			{
-				RealType randomnumber;
-				const double pi = 4.0*atan(1.0f);
-				this->m_RandomVector.set_size(lastDimSize);
-				for (unsigned int i = 0; i < this->m_RandomVector.size(); i++)
-				{
-					double U = rand()/float(RAND_MAX); double V = rand()/float(RAND_MAX);
-					double X = sqrt(-2*log(U))*cos(2*pi*V);
-					double Y = sqrt(-2*log(U))*sin(2*pi*V);
-					randomnumber = (Y*Y + 0.1)*(X/abs(X));
-					this->m_RandomVector[ i ] = randomnumber;
-				}
-				elxout << "Random scales are: " << this->m_RandomVector << std::endl;
-				m_RandomNumbersCreated = true;
-			}
-		}
+//		if(this->m_RandomScaleIntensity)
+//		{
+//			if(!this->m_RandomNumbersCreated)
+//			{
+//				RealType randomnumber;
+//				const double pi = 4.0*atan(1.0f);
+//				this->m_RandomVector.set_size(lastDimSize);
+//				for (unsigned int i = 0; i < this->m_RandomVector.size(); i++)
+//				{
+//					double U = rand()/float(RAND_MAX); double V = rand()/float(RAND_MAX);
+//					double X = sqrt(-2*log(U))*cos(2*pi*V);
+//					double Y = sqrt(-2*log(U))*sin(2*pi*V);
+//					randomnumber = (Y*Y + 0.1)*(X/abs(X));
+//					this->m_RandomVector[ i ] = randomnumber;
+//				}
+//				elxout << "Random scales are: " << this->m_RandomVector << std::endl;
+//				m_RandomNumbersCreated = true;
+//			}
+//		}
 		
 
   } // end Initialize
@@ -303,19 +303,19 @@ namespace itk
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
 	
-		if(this->m_RandomScaleIntensity)
-		{
-			vnl_vector<RealType> RandomScales(A.rows());
-			RandomScales = this->m_RandomVector;
-			for(unsigned int i = 0; i < A.rows(); i++)
-			{
-				for(unsigned int j = 0; j < A.cols(); j++)
-				{
-					A(i,j) *= RandomScales[ i ];
-				}
-			}
+//		if(this->m_RandomScaleIntensity)
+//		{
+//			vnl_vector<RealType> RandomScales(A.rows());
+//			RandomScales = this->m_RandomVector;
+//			for(unsigned int i = 0; i < A.rows(); i++)
+//			{
+//				for(unsigned int j = 0; j < A.cols(); j++)
+//				{
+//					A(i,j) *= RandomScales[ i ];
+//				}
+//			}
 
-		}
+//		}
 
 		/** Calculate mean of from columns */
 		vnl_vector< RealType > mean( A.cols() );
@@ -527,19 +527,19 @@ namespace itk
 		
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
-		if(this->m_RandomScaleIntensity)
-		{
-			vnl_vector<RealType> RandomScales(A.rows());
-			RandomScales = this->m_RandomVector;
-			for(unsigned int i = 0; i < A.rows(); i++)
-			{
-				for(unsigned int j = 0; j < A.cols(); j++)
-				{
-					A(i,j) *= RandomScales[ i ];
-				}
-			}
+//		if(this->m_RandomScaleIntensity)
+//		{
+//			vnl_vector<RealType> RandomScales(A.rows());
+//			RandomScales = this->m_RandomVector;
+//			for(unsigned int i = 0; i < A.rows(); i++)
+//			{
+//				for(unsigned int j = 0; j < A.cols(); j++)
+//				{
+//					A(i,j) *= RandomScales[ i ];
+//				}
+//			}
 
-		}
+//		}
 
 		/** Calculate mean of from columns */
 		vnl_vector< double > mean( A.cols() );

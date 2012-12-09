@@ -57,8 +57,9 @@ public:
   itkSetMacro( GridSize, FixedImageSizeType );
   itkSetMacro( TransformIsStackTransform, bool );
   //itkSetMacro( NumEigenValues, unsigned int );
-	itkSetMacro( RandomScaleIntensity, bool );
-	itkSetMacro( RandomNumbersCreated, bool );
+  //itkSetMacro( RandomScaleIntensity, bool );
+  //itkSetMacro( RandomNumbersCreated, bool );
+  itkSetMacro( Alpha, double);
 
   /** Get functions. */
   itkGetConstMacro( SampleLastDimensionRandomly, bool );
@@ -104,7 +105,7 @@ public:
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
   typedef typename
     Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
-  typedef typename
+ typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
@@ -178,6 +179,8 @@ private:
   unsigned int m_NumSamplesLastDimension;
   unsigned int m_NumAdditionalSamplesFixed;
   unsigned int m_ReducedDimensionIndex;
+
+  double m_Alpha;
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
   bool m_SubtractMean;

@@ -56,10 +56,14 @@ namespace elastix
 	//	this->GetComponentLabel(), level, 0);
 	//this->SetNumEigenValues( NumEigenValues );
 
-		bool RandomScaleIntensity = false;
-		this->GetConfiguration()->ReadParameter( RandomScaleIntensity,
-			"RandomScaleIntensity", this->GetComponentLabel(), 0, 0 );
-		this->SetRandomScaleIntensity( RandomScaleIntensity );
+     double alpha = 1.0;
+     this->GetConfiguration()->ReadParameter(alpha,"Alpha", this->GetComponentLabel(), 0, 0);
+     this->SetAlpha( alpha );
+
+//		bool RandomScaleIntensity = false;
+//		this->GetConfiguration()->ReadParameter( RandomScaleIntensity,
+//			"RandomScaleIntensity", this->GetComponentLabel(), 0, 0 );
+//		this->SetRandomScaleIntensity( RandomScaleIntensity );
 
     /** Get and set the random sampling in the last dimension. */
     bool useRandomSampling = false;

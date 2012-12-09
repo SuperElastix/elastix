@@ -42,7 +42,8 @@ namespace itk
         m_TransformIsStackTransform( false ),
 				//m_NumEigenValues( 1 )
 				//m_RandomScaleIntensity( false ),
-				m_RandomNumbersCreated( false )
+                //m_RandomNumbersCreated( false )
+        m_Alpha( 1.0 )
 
   {
     this->SetUseImageSampler( true );
@@ -347,7 +348,8 @@ namespace itk
 			trace += K(i,i);
 		}
 
-		measure = trace - e1;
+        double regularisationFirstEigenValue = this->m_Alpha;
+        measure = trace - regularisationFirstEigenValue*e1;
 
 
         vnl_vector<double> eigenValues;
@@ -594,9 +596,6 @@ namespace itk
 		RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
 		vnl_vector< RealType > FirstEigenvector = eig.get_eigenvector(K.cols()-1);
 		vnl_vector< RealType > v1 = FirstEigenvector.normalize(); // Highest eigenvector of A'*A
-
-        //this->m_firstEigenVector = eig.get_eigenvector(K.cols()-1);
-
 		
 		/** Compute sum of all eigenvalues = trace( K ) */
 		double trace = 0.0;
@@ -692,8 +691,9 @@ namespace itk
 			/ ( static_cast < DerivativeValueType > (A.rows()) - 
 			static_cast < DerivativeValueType >(1.0) ); //normalize
 
-		measure = trace - e1;
-		derivative = dKiidmu - v1Kv1dmu;
+        double regularisationFirstEigenValue = this->m_Alpha;
+        measure = trace - regularisationFirstEigenValue*e1;
+        derivative = dKiidmu - regularisationFirstEigenValue*v1Kv1dmu;
 
 		//** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
