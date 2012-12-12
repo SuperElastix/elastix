@@ -182,7 +182,6 @@ AffineLogTransform<TScalarType, Dimension>
 
     vnl_matrix< ScalarType > dA(d+1,d+1);
     vnl_matrix< ScalarType > A_bar(2*(d+1),2*(d+1));
-    //MatrixType B_bar;//(2*(d+1),2*(d+1));
     vnl_matrix< ScalarType > B_bar(2*(d+1),2*(d+1));
 
     dA.fill(0.0);
