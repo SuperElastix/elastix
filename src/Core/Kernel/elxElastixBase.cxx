@@ -159,6 +159,17 @@ int ElastixBase::BeforeAllBase( void )
     {
       folder.append( "/" );
       folder = itksys::SystemTools::ConvertToOutputPath( folder.c_str() );
+
+      /** Note that on Windows, in case the output folder contains a space,
+       * the path name is double quoted by ConvertToOutputPath, which is undesirable.
+       * So, we remove these quotes again.
+       */
+      if(  itksys::SystemTools::StringStartsWith( folder.c_str(), "\"" )
+        && itksys::SystemTools::StringEndsWith(   folder.c_str(), "\"" ) )
+      {
+        folder = folder.substr( 1, folder.length() - 2 );
+      }
+
       this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
     }
     elxout << "-out      " << check << std::endl;
