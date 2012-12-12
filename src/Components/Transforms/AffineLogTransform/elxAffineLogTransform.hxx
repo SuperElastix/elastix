@@ -235,32 +235,32 @@ AffineLogTransformElastix<TElastix>
 //   * - The user asked for AutomaticTransformInitialization
 //   */
       bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-//  if ( !centerGiven || automaticTransformInitialization )
-//  {
+  if ( !centerGiven || automaticTransformInitialization )
+  {
 
-//    /** Use the TransformInitializer to determine a center of
-//     * of rotation and an initial translation.
-//     */
-//    TransformInitializerPointer transformInitializer =
-//      TransformInitializerType::New();
-//    transformInitializer->SetFixedImage(
-//      this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
-//    transformInitializer->SetMovingImage(
-//      this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
-//    transformInitializer->SetTransform( this->m_AffineLogTransform );
+    /** Use the TransformInitializer to determine a center of
+     * of rotation and an initial translation.
+     */
+    TransformInitializerPointer transformInitializer =
+      TransformInitializerType::New();
+    transformInitializer->SetFixedImage(
+      this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
+    transformInitializer->SetMovingImage(
+      this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
+    transformInitializer->SetTransform( this->m_AffineLogTransform );
 
-//    /** Select the method of initialization. Default: "GeometricalCenter". */
-//    transformInitializer->GeometryOn();
-//    std::string method = "GeometricalCenter";
-//    this->m_Configuration->ReadParameter( method,
-//      "AutomaticTransformInitializationMethod", 0 );
-//    if ( method == "CenterOfGravity" )
-//    {
-//      transformInitializer->MomentsOn();
-//    }
+    /** Select the method of initialization. Default: "GeometricalCenter". */
+    transformInitializer->GeometryOn();
+    std::string method = "GeometricalCenter";
+    this->m_Configuration->ReadParameter( method,
+      "AutomaticTransformInitializationMethod", 0 );
+    if ( method == "CenterOfGravity" )
+    {
+      transformInitializer->MomentsOn();
+    }
 
-//    transformInitializer->InitializeTransform();
-//  }
+    transformInitializer->InitializeTransform();
+  }
 
   /** Set the translation to zero, if no AutomaticTransformInitialization
    * was desired.

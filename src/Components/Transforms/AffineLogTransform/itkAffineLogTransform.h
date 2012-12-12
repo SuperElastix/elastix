@@ -26,7 +26,7 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template < class TScalarType=double, unsigned int Dimension=3 >    // Data type for scalars (float or double)
+template < class TScalarType=double, unsigned int Dimension=2 >    // Data type for scalars (float or double)
 class AffineLogTransform:
      public AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >
 {
@@ -111,7 +111,7 @@ private:
 
   vnl_matrix<ScalarType> m_MatrixLogDomain;
   vnl_matrix<ScalarType> m_Matrix;
-  ScalarArrayType m_Offset;
+  OffsetType m_Offset;
 
 
 }; //class AffineLogTransform

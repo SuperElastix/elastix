@@ -1,7 +1,9 @@
 #ifndef ITKAFFINELOGTRANSFORM_TXX
 #define ITKAFFINELOGTRANSFORM_TXX
 
-//#include "/core/vnl/vnl_matrix_exp.h"
+
+#include "vnl/vnl_matrix_exp.h"
+
 
 namespace itk
 {
@@ -15,9 +17,11 @@ AffineLogTransform<TScalarType, Dimension>
   this->SetMatrix(matrix);
 
   OffsetType off;
-  off[0] = offset[0];
-  off[1] = offset[1];
-  off[2] = offset[2];
+  for(unsigned int i = 0; i < Dimension; i ++)
+  {
+	off[i] = offset[i];
+  }
+
   this->SetOffset(off);
 
   // this->ComputeMatrix?
@@ -47,13 +51,14 @@ AffineLogTransform<TScalarType, Dimension>
       }
   }
 
+  OffsetType off;
   for( unsigned int j = 0; j < d; j++)
   {
-      this->m_Offset[j] = exponentMatrix(d+1,j);
+      off[j] = exponentMatrix(d+1,j);
   }
 
   this->SetMatrix( this->m_Matrix );
-  this->SetOffset( this->m_Offset );
+  this->SetOffset( off );
     // Modified is always called since we just have a pointer to the
   // parameters and cannot know if the parameters have changed.
 
@@ -109,7 +114,7 @@ AffineLogTransform<TScalarType, Dimension>
 
     for(unsigned int j = 0; j < Dimension; j++)
     {
-        this->m_Parameters[k] = this->m_Offset(j);
+        this->m_Parameters[k] = this->m_Offset[j];
         k += 1;
     }
 
