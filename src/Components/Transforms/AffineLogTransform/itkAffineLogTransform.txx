@@ -55,6 +55,7 @@ AffineLogTransform<TScalarType, Dimension>
 
   unsigned int d = Dimension;
 
+  this->ComputeMatrixLogDomain();
   exponentMatrix = vnl_matrix_exp( this->m_MatrixLogDomain );
 
   for( unsigned int i = 0; i < d; i++)
@@ -65,20 +66,19 @@ AffineLogTransform<TScalarType, Dimension>
       }
   }
 
-  for( unsigned int j = 0; j < d; j++)
+  unsigned int blockoffset = d*d;
+  for( unsigned int i = 0; i < d; i++)
   {
-      this->m_Offset[j] = exponentMatrix(d+1,j);
+      this->m_Offset[i] = parameters[i+blockoffset];
   }
 
   this->SetMatrix( this->m_Matrix );
   this->SetOffset( this->m_Offset );
   
-    // Modified is always called since we just have a pointer to the
+  // Modified is always called since we just have a pointer to the
   // parameters and cannot know if the parameters have changed.
 
   this->Modified();
-
-
   itkDebugMacro(<<"After setting parameters ");
 }
 
@@ -90,7 +90,7 @@ AffineLogTransform<TScalarType, Dimension>
 {
     unsigned int d = Dimension;
     unsigned int j = 0;
-    vnl_matrix< ScalarType > matrix(d+1, d+1);
+    vnl_matrix< ScalarType > matrix(d,d);
 
     for(unsigned int k = 0; k < d; k++)
     {
@@ -99,12 +99,6 @@ AffineLogTransform<TScalarType, Dimension>
             matrix(k,l) = this->m_Parameters[j];
             j += 1;
         }
-    }
-
-    for( unsigned int l = 0; l < d; l++)
-    {
-        matrix(d+1,l) = this->m_Parameters[j];
-        j += 1;
     }
 
     this->m_MatrixLogDomain = matrix;
@@ -135,18 +129,14 @@ AffineLogTransform<TScalarType, Dimension>
     return this->m_Parameters;
 }
 
-// SetIdentity()
+// SetIdentity
 template <class TScalarType, unsigned int Dimension>
 void
 AffineLogTransform<TScalarType, Dimension>
 ::SetIdentity( void )
 {
-  //Superclass::SetIdentity();
-  for(unsigned int i = 0; i < this->m_Parameters.size(); i+=(Dimension+1) )
-  {
-      this->m_Parameters[i] = 1;
-  }
-
+  Superclass::SetIdentity();
+  this->m_Matrix.set_identity();
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -166,22 +156,21 @@ GetJacobian( const InputPointType & p,
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 
   const InputVectorType pp = p - this->GetCenter();
-  for(unsigned int dim = 0; dim < ParametersDimension; dim++ )
+  for(unsigned int dim=0; dim < d*d; dim++ )
   {
-    //const InputVectorType column = jsj[dim] * pp;
-    for (unsigned int i = 0; i < d; ++i)
+    const InputVectorType column = jsj[dim] * pp;
+    for (unsigned int i=0; i < d; ++i)
     {
-      j(i,dim) = pp[i];
+      j(i,dim) = column[i];
     }
   }
 
- const unsigned int blockOffset = d*d;
- for(unsigned int dim=0; dim < d; dim++ )
- {
+  // compute derivatives for the translation part
+  const unsigned int blockOffset = d*d;
+  for(unsigned int dim=0; dim < SpaceDimension; dim++ )
+  {
     j[ dim ][ blockOffset + dim ] = 1.0;
- }
-
-  nzji = this->m_NonZeroJacobianIndices;
+  }
 
 }
 
@@ -199,28 +188,28 @@ AffineLogTransform<TScalarType, Dimension>
 
     jsj.resize(ParametersDimension);
 
-    vnl_matrix< ScalarType > dA(d+1,d+1);
-    vnl_matrix< ScalarType > dummymatrix(d+1,d+1);
-    vnl_matrix< ScalarType > A_bar(2*(d+1),2*(d+1));
-    vnl_matrix< ScalarType > B_bar(2*(d+1),2*(d+1));
+    vnl_matrix< ScalarType > dA(d,d);
+    vnl_matrix< ScalarType > dummymatrix(d,d);
+    vnl_matrix< ScalarType > A_bar(2*d,2*d);
+    vnl_matrix< ScalarType > B_bar(2*d,2*d);
 
     dA.fill(itk::NumericTraits<ScalarType>::Zero);
     dummymatrix.fill(itk::NumericTraits<ScalarType>::Zero);
     A_bar.fill(itk::NumericTraits<ScalarType>::Zero);
 
     // Fill A_bar top left and bottom right with A
-    for(unsigned int k = 0; k < d+1; k++)
+    for(unsigned int k = 0; k < d; k++)
     {
-        for(unsigned int l = 0; l < d+1; l++)
+        for(unsigned int l = 0; l < d; l++)
         {
-            A_bar(k,l) = this->m_MatrixLogDomain(k-d-1,l-d-1);
+            A_bar(k,l) = this->m_MatrixLogDomain(k,l);
         }
     }
-    for(unsigned int k = d+1; k < 2*(d+1); k++)
+    for(unsigned int k = d; k < 2*d; k++)
     {
-        for(unsigned int l = d+1; l < 2*(d+1); l++)
+        for(unsigned int l = d; l < 2*d; l++)
         {
-            A_bar(k,l) = this->m_MatrixLogDomain(k-d-1,l-d-1);
+            A_bar(k,l) = this->m_MatrixLogDomain(k-d,l-d);
         }
     }
 
@@ -232,19 +221,19 @@ AffineLogTransform<TScalarType, Dimension>
         for(unsigned int j = 0; j < d; j++)
         {
             dA(i,j) = 1;
-            for(unsigned int k = 0; k < (d+1); k++)
+            for(unsigned int k = 0; k < d; k++)
             {
-                for(unsigned int l = (d+1); l < 2*(d+1); l++)
+                for(unsigned int l = d; l < 2*d; l++)
                 {
-                    A_bar(k,l) = dA(k,(l-d-1));
+                    A_bar(k,l) = dA(k,(l-d));
                 }
             }
             B_bar = vnl_matrix_exp( A_bar );
-            for(unsigned int k = 0; k < (d+1); k++)
+            for(unsigned int k = 0; k < d; k++)
             {
-                for(unsigned int l = d+1; l < 2*(d+1); l++)
+                for(unsigned int l = d; l < 2*d; l++)
                 {
-                    dummymatrix(k,(l-d-1)) = B_bar(k,l);
+                    dummymatrix(k,(l-d)) = B_bar(k,l);
                 }
             }
 			jsj[m] = dummymatrix;
@@ -252,31 +241,12 @@ AffineLogTransform<TScalarType, Dimension>
             m += 1;
         }
     }
-
-    //Translation derivatives
-    for(unsigned int j = 0; j < d; j++)
-    {
-        dA(d+1,j) = 1;
-        for(unsigned int k = 0; k < (d+1); k++)
-        {
-            for(unsigned int l = d+1; l < 2*(d+1); l++)
-            {
-                A_bar(k,l) = dA(k,(l-d-1));
-            }
-        }
-        B_bar = vnl_matrix_exp( A_bar );
-        
-        for(unsigned int k = 0; k < (d+1); k++)
-        {
-            for(unsigned int l = d+1; l < 2*(d+1); l++)
-            {
-                 dummymatrix(k,(l-d-1)) = B_bar(k,l);
-            }
-        }
-        jsj[m] = dummymatrix;
-        dA.fill(itk::NumericTraits<ScalarType>::Zero);
-        m += 1;
-    }
+    
+  /** Translation parameters: */
+  for ( unsigned int par = d*d; par < d+(d*d); ++par )
+  {
+    jsj[par].Fill(itk::NumericTraits<ScalarType>::Zero);
+  } 
 }
 
 
