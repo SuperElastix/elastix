@@ -118,6 +118,9 @@ private:
 
 
 }  // namespace itk
+#if ITK_TEMPLATE_EXPLICIT
+# include "Templates/itkAffineLogTransform+-.h"
+#endif
 
 #if ITK_TEMPLATE_TXX
 # include "itkAffineLogTransform.txx"

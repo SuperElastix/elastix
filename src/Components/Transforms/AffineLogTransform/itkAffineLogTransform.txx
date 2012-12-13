@@ -65,14 +65,14 @@ AffineLogTransform<TScalarType, Dimension>
       }
   }
 
-  OffsetType off;
   for( unsigned int j = 0; j < d; j++)
   {
-      off[j] = exponentMatrix(d+1,j);
+      this->m_Offset[j] = exponentMatrix(d+1,j);
   }
 
   this->SetMatrix( this->m_Matrix );
-  this->SetOffset( off );
+  this->SetOffset( this->m_Offset );
+  
     // Modified is always called since we just have a pointer to the
   // parameters and cannot know if the parameters have changed.
 
@@ -161,26 +161,25 @@ GetJacobian( const InputPointType & p,
     unsigned int d = Dimension;
     unsigned int ParametersDimension = d*(d+1);
   j.SetSize(d, ParametersDimension );
-  j.Fill(0.0);
+  j.Fill(itk::NumericTraits<ScalarType>::Zero);
 
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 
-  /** Compute dR/dmu * (p-c) */
   const InputVectorType pp = p - this->GetCenter();
-  for(unsigned int dim = 0; dim < d; dim++ )
+  for(unsigned int dim = 0; dim < ParametersDimension; dim++ )
   {
-    const InputVectorType column = jsj[dim] * pp;
+    //const InputVectorType column = jsj[dim] * pp;
     for (unsigned int i = 0; i < d; ++i)
     {
-      j(i,dim) = column[i];
+      j(i,dim) = pp[i];
     }
   }
 
-//  const unsigned int blockOffset = d*d;
-//  for(unsigned int dim=0; dim < d; dim++ )
-// {
-//    j[ dim ][ blockOffset + dim ] = 1.0;
-//  }
+ const unsigned int blockOffset = d*d;
+ for(unsigned int dim=0; dim < d; dim++ )
+ {
+    j[ dim ][ blockOffset + dim ] = 1.0;
+ }
 
   nzji = this->m_NonZeroJacobianIndices;
 
@@ -192,19 +191,22 @@ void
 AffineLogTransform<TScalarType, Dimension>
 ::PrecomputeJacobianOfSpatialJacobian( void )
 {
-    /** The Jacobian of spatial Jacobian is constant over inputspace, so is precomputed */
-    JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
     unsigned int d = Dimension;
     unsigned int ParametersDimension = d*(d+1);
+    
+    /** The Jacobian of spatial Jacobian is constant over inputspace, so is precomputed */
+    JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 
     jsj.resize(ParametersDimension);
 
     vnl_matrix< ScalarType > dA(d+1,d+1);
+    vnl_matrix< ScalarType > dummymatrix(d+1,d+1);
     vnl_matrix< ScalarType > A_bar(2*(d+1),2*(d+1));
     vnl_matrix< ScalarType > B_bar(2*(d+1),2*(d+1));
 
-    dA.fill(0.0);
-    A_bar.fill(0.0);
+    dA.fill(itk::NumericTraits<ScalarType>::Zero);
+    dummymatrix.fill(itk::NumericTraits<ScalarType>::Zero);
+    A_bar.fill(itk::NumericTraits<ScalarType>::Zero);
 
     // Fill A_bar top left and bottom right with A
     for(unsigned int k = 0; k < d+1; k++)
@@ -242,11 +244,11 @@ AffineLogTransform<TScalarType, Dimension>
             {
                 for(unsigned int l = d+1; l < 2*(d+1); l++)
                 {
-                    //jsj[m] = B_bar(k,l);
+                    dummymatrix(k,(l-d-1)) = B_bar(k,l);
                 }
             }
-
-            dA.fill(0.0);
+			jsj[m] = dummymatrix;
+            dA.fill(itk::NumericTraits<ScalarType>::Zero);
             m += 1;
         }
     }
@@ -263,8 +265,16 @@ AffineLogTransform<TScalarType, Dimension>
             }
         }
         B_bar = vnl_matrix_exp( A_bar );
-        jsj[m] = B_bar;
-        dA.fill(0.0);
+        
+        for(unsigned int k = 0; k < (d+1); k++)
+        {
+            for(unsigned int l = d+1; l < 2*(d+1); l++)
+            {
+                 dummymatrix(k,(l-d-1)) = B_bar(k,l);
+            }
+        }
+        jsj[m] = dummymatrix;
+        dA.fill(itk::NumericTraits<ScalarType>::Zero);
         m += 1;
     }
 }
