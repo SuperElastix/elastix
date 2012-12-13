@@ -28,6 +28,7 @@ namespace elastix
 template <class TElastix>
 AffineLogTransformElastix<TElastix>::AffineLogTransformElastix()
 {
+    elxout << "Constructor" << std::endl;
   this->m_AffineLogTransform = AffineLogTransformType::New();
   this->SetCurrentTransform( this->m_AffineLogTransform );
 
@@ -43,7 +44,7 @@ void
 AffineLogTransformElastix<TElastix>
 ::BeforeRegistration( void )
 {
-
+  elxout << "BeforeRegistration" << std::endl;
   /** Set center of rotation and initial translation. */
   this->InitializeTransform();
 
@@ -62,6 +63,7 @@ void
 AffineLogTransformElastix<TElastix>
 ::ReadFromFile( void )
 {
+      elxout << "ReadFromFile" << std::endl;
   /** Variables. */
   InputPointType centerOfRotationPoint;
   centerOfRotationPoint.Fill( 0.0 );
@@ -101,6 +103,7 @@ void
 AffineLogTransformElastix<TElastix>
 ::WriteToFile( const ParametersType & param ) const
 {
+      elxout << "WriteToFile" << std::endl;
   /** Call the WriteToFile from the TransformBase. */
   this->Superclass2::WriteToFile( param );
 
@@ -148,6 +151,7 @@ void
 AffineLogTransformElastix<TElastix>
 ::InitializeTransform( void )
 {
+      elxout << "InitializeTransform" << std::endl;
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_AffineLogTransform->SetIdentity();
 
@@ -315,6 +319,7 @@ void
 AffineLogTransformElastix<TElastix>
 ::SetScales( void )
 {
+      elxout << "SetScales" << std::endl;
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();
   ScalesType newscales( N );
@@ -368,6 +373,7 @@ bool
 AffineLogTransformElastix<TElastix>
 ::ReadCenterOfRotationPoint( InputPointType & rotationPoint ) const
 {
+      elxout << "ReadCenterOfRotationPoint" << std::endl;
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */

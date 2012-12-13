@@ -47,7 +47,7 @@ public:
   itkStaticConstMacro( SpaceDimension, unsigned int, Dimension);
   itkStaticConstMacro( OutputSpaceDimension, unsigned int, Dimension);
   itkStaticConstMacro( InputSpaceDimension, unsigned int, Dimension);
-	itkStaticConstMacro( ParametersDimension, unsigned int, (Dimension+1)*Dimension);
+  itkStaticConstMacro( ParametersDimension, unsigned int, (Dimension+1)*Dimension);
 
   typedef typename Superclass::ParametersType             ParametersType;
   typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
@@ -102,6 +102,7 @@ protected:
 
   /** Compute the components of the rotation matrix in the superclass. */
   void ComputeMatrixLogDomain( void );
+  void ComputeMatrixNormalDomain( void );
 
    /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void PrecomputeJacobianOfSpatialJacobian(void);
@@ -110,8 +111,9 @@ private:
   AffineLogTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  vnl_matrix<ScalarType> m_MatrixLogDomain;
-  vnl_matrix<ScalarType> m_Matrix;
+  MatrixType m_MatrixLogDomain;
+  MatrixType m_MatrixNormalDomain;
+  MatrixType m_Matrix;
   OffsetType m_Offset;
 
 

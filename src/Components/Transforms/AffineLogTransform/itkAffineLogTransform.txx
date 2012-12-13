@@ -28,9 +28,10 @@ AffineLogTransform<TScalarType, Dimension>
 ::AffineLogTransform():
   Superclass(ParametersDimension)
 {
-  this->m_Matrix.set_identity();
+  this->m_MatrixLogDomain.SetIdentity();
+  this->m_MatrixNormalDomain.SetIdentity();
+  this->m_Matrix.SetIdentity();
   this->m_Offset.Fill( itk::NumericTraits<ScalarType>::Zero );
-
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -47,9 +48,7 @@ AffineLogTransform<TScalarType, Dimension>
   {
 	off[i] = offset[i];
   }
-
   this->SetOffset(off);
-
   // this->ComputeMatrix?
   this->PrecomputeJacobianOfSpatialJacobian();
 }
@@ -61,30 +60,16 @@ AffineLogTransform<TScalarType, Dimension>
 ::SetParameters( const ParametersType & parameters )
 {
    itkDebugMacro( << "Setting parameters " << parameters );
-
-   vnl_matrix<ScalarType> exponentMatrix(this->m_MatrixLogDomain.rows(),
-                                         this->m_MatrixLogDomain.cols());
-
   unsigned int d = Dimension;
-
-  this->ComputeMatrixLogDomain();
-  exponentMatrix = vnl_matrix_exp( this->m_MatrixLogDomain );
-
-  for( unsigned int i = 0; i < d; i++)
-  {
-      for(unsigned int j = 0; j < d; j++)
-      {
-        this->m_Matrix(i,j) = exponentMatrix(i,j);
-      }
-  }
-
+  this->ComputeMatrixNormalDomain();
   unsigned int blockoffset = d*d;
   for( unsigned int i = 0; i < d; i++)
   {
       this->m_Offset[i] = parameters[i+blockoffset];
   }
+  std::cout << "parameters: " << parameters << std::endl;
 
-  this->SetMatrix( this->m_Matrix );
+  this->SetMatrix( this->m_MatrixNormalDomain );
   this->SetOffset( this->m_Offset );
   
   // Modified is always called since we just have a pointer to the
@@ -102,18 +87,41 @@ AffineLogTransform<TScalarType, Dimension>
 {
     unsigned int d = Dimension;
     unsigned int j = 0;
-    vnl_matrix< ScalarType > matrix(d,d);
+    MatrixType matrix;
 
     for(unsigned int k = 0; k < d; k++)
     {
         for(unsigned int l = 0; l < d; l++)
         {
-            matrix(k,l) = this->m_Parameters[j];
-            j += 1;
+            matrix(k,l) = this->m_Matrix(k,l);
         }
     }
 
     this->m_MatrixLogDomain = matrix;
+}
+
+// Compute the log domain matrix
+template <class TScalarType, unsigned int Dimension>
+void
+AffineLogTransform<TScalarType, Dimension>
+::ComputeMatrixNormalDomain( void )
+{
+    unsigned int d = Dimension;
+    unsigned int j = 0;
+    MatrixType exponentMatrix;
+
+    this->ComputeMatrixLogDomain();
+    exponentMatrix = vnl_matrix_exp( this->m_MatrixLogDomain.GetVnlMatrix() );
+
+    for( unsigned int i = 0; i < d; i++)
+    {
+        for(unsigned int j = 0; j < d; j++)
+        {
+          this->m_MatrixNormalDomain(i,j) = exponentMatrix(i,j);
+        }
+    }
+
+    this->m_MatrixNormalDomain = exponentMatrix;
 }
 
 // Get Parameters
@@ -127,17 +135,17 @@ AffineLogTransform<TScalarType, Dimension>
     {
         for(unsigned int j = 0; j < Dimension; j++)
         {
-            this->m_Parameters[k] = this->m_Matrix(i,j);
+            this->m_Parameters[k] = this->m_MatrixNormalDomain(i,j);
             k += 1;
         }
     }
 
     for(unsigned int j = 0; j < Dimension; j++)
     {
-        this->m_Parameters[k] = this->m_Offset[j];
+        this->m_Parameters[k] = this->GetTranslation()[j];
         k += 1;
     }
-
+    std::cout << "parameters: " << this->m_Parameters << std::endl;
     return this->m_Parameters;
 }
 
@@ -148,7 +156,7 @@ AffineLogTransform<TScalarType, Dimension>
 ::SetIdentity( void )
 {
   Superclass::SetIdentity();
-  this->m_Matrix.set_identity();
+  this->m_MatrixNormalDomain.SetIdentity();
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -179,10 +187,11 @@ GetJacobian( const InputPointType & p,
 
   // compute derivatives for the translation part
   const unsigned int blockOffset = d*d;
-  for(unsigned int dim=0; dim < SpaceDimension; dim++ )
+  for(unsigned int dim=0; dim < Dimension; dim++ )
   {
     j[ dim ][ blockOffset + dim ] = 1.0;
   }
+  std::cout << "point: " << pp << "\njacobian: " << j << std::endl;
 
 }
 
@@ -192,6 +201,7 @@ void
 AffineLogTransform<TScalarType, Dimension>
 ::PrecomputeJacobianOfSpatialJacobian( void )
 {
+    this->ComputeMatrixLogDomain();
     unsigned int d = Dimension;
     unsigned int ParametersDimension = d*(d+1);
     
@@ -253,12 +263,16 @@ AffineLogTransform<TScalarType, Dimension>
             m += 1;
         }
     }
-    
   /** Translation parameters: */
   for ( unsigned int par = d*d; par < d+(d*d); ++par )
   {
     jsj[par].Fill(itk::NumericTraits<ScalarType>::Zero);
   } 
+
+  for(unsigned int i = 0; i < jsj.size(); i++)
+  {
+      std::cout << jsj[i] << std::endl;
+  }
 }
 
 
