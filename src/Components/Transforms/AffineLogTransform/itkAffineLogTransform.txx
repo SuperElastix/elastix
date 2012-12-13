@@ -1,9 +1,23 @@
-#ifndef ITKAFFINELOGTRANSFORM_TXX
-#define ITKAFFINELOGTRANSFORM_TXX
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
+#ifndef __itkAffineLogTransform_txx
+#define __itkAffineLogTransform_txx
 
 
 #include "vnl/vnl_matrix_exp.h"
-
+#include "itkAffineLogTransform.h"
 
 namespace itk
 {
@@ -39,7 +53,7 @@ AffineLogTransform<TScalarType, Dimension>
    vnl_matrix<ScalarType> exponentMatrix(this->m_MatrixLogDomain.rows(),
                                          this->m_MatrixLogDomain.cols());
 
-   unsigned int d = Dimension;
+  unsigned int d = Dimension;
 
   exponentMatrix = vnl_matrix_exp( this->m_MatrixLogDomain );
 
@@ -228,7 +242,7 @@ AffineLogTransform<TScalarType, Dimension>
             {
                 for(unsigned int l = d+1; l < 2*(d+1); l++)
                 {
-                    jsj[m] = B_bar(k,l);
+                    //jsj[m] = B_bar(k,l);
                 }
             }
 
@@ -270,4 +284,4 @@ PrintSelf(std::ostream &os, Indent indent) const
 
 } // end namespace
 
-#endif // ITKAFFINELOGTRANSFORM_TXX
+#endif // itkAffineLogTransform_TXX

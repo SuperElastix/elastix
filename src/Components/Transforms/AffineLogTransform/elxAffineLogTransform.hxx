@@ -11,8 +11,9 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-#ifndef ELXAFFINELOGTRANSFORM_HXX
-#define ELXAFFINELOGTRANSFORM_HXX
+
+#ifndef __elxAffineLogTransform_hxx
+#define __elxAffineLogTransform_hxx
 
 #include "elxAffineLogTransform.h"
 #include "itkContinuousIndex.h"

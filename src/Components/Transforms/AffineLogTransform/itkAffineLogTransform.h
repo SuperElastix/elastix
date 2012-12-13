@@ -12,8 +12,8 @@
 
 ======================================================================*/
 
-#ifndef __itkAffineLogTransorm_H_
-#define __itkAffineLogTransform_H_
+#ifndef __itkAffineLogTransform_h
+#define __itkAffineLogTransform_h
 
 #include <iostream>
 #include "itkAdvancedMatrixOffsetTransformBase.h"
@@ -33,7 +33,7 @@ class AffineLogTransform:
 public:
   /** Standard class typedefs. */
   typedef AffineLogTransform                  Self;
-  typedef AdvancedMatrixOffsetTransformBase< TScalarType >   Superclass;
+  typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >   Superclass;
   typedef SmartPointer<Self>                Pointer;
   typedef SmartPointer<const Self>          ConstPointer;
 
