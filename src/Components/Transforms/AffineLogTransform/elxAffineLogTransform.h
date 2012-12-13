@@ -20,15 +20,14 @@
 #include "itkAffineLogTransform.h"
 #include "itkCenteredTransformInitializer.h"
 #include "elxIncludes.h"
-#include "itkAdvancedMatrixOffsetTransformBase.h"
 
 namespace elastix
 {
 
   /**
    * \class AffineLogTransformElastix
-   * \brief A transform based on the itk AffineLogTransform.
-   *
+   * \brief 
+	 *
    * This transform is an affine transformation, with a different parametrisation
    * than the usual one.
    *

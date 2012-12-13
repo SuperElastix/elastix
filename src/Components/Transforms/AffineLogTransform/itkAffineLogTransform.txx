@@ -25,6 +25,18 @@ namespace itk
 // Constructor with default arguments
 template <class TScalarType, unsigned int Dimension>
 AffineLogTransform<TScalarType, Dimension>
+::AffineLogTransform():
+  Superclass(ParametersDimension)
+{
+  this->m_Matrix.set_identity();
+  this->m_Offset.Fill( itk::NumericTraits<ScalarType>::Zero );
+
+  this->PrecomputeJacobianOfSpatialJacobian();
+}
+
+// Constructor with default arguments
+template <class TScalarType, unsigned int Dimension>
+AffineLogTransform<TScalarType, Dimension>
 ::AffineLogTransform(const MatrixType & matrix,
                    const OutputPointType & offset)
 {
