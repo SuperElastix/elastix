@@ -47,6 +47,7 @@ public:
   itkStaticConstMacro( SpaceDimension, unsigned int, Dimension);
   itkStaticConstMacro( OutputSpaceDimension, unsigned int, Dimension);
   itkStaticConstMacro( InputSpaceDimension, unsigned int, Dimension);
+	itkStaticConstMacro( ParametersDimension, unsigned int, (Dimension+1)*Dimension);
 
   typedef typename Superclass::ParametersType             ParametersType;
   typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
