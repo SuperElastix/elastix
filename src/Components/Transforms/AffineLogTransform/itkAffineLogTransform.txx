@@ -15,7 +15,6 @@
 #ifndef __itkAffineLogTransform_txx
 #define __itkAffineLogTransform_txx
 
-
 #include "vnl/vnl_matrix_exp.h"
 #include "itkMath.h"
 #include "itkAffineLogTransform.h"
@@ -30,7 +29,6 @@ AffineLogTransform<TScalarType, Dimension>
   Superclass(ParametersDimension)
 {
   this->m_MatrixLogDomain.Fill( itk::NumericTraits<ScalarType>::Zero );
-  this->m_Offset.Fill( itk::NumericTraits<ScalarType>::Zero );
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -49,6 +47,17 @@ AffineLogTransform<TScalarType, Dimension>
   }
   this->SetOffset(off);
 
+  this->PrecomputeJacobianOfSpatialJacobian();
+}
+
+// Constructor with arguments
+template <class TScalarType, unsigned int Dimension>
+AffineLogTransform<TScalarType, Dimension>
+::AffineLogTransform(unsigned int spaceDimension,
+                   unsigned int parametersDimension):
+  Superclass(spaceDimension, parametersDimension)
+{
+  this->m_MatrixLogDomain.Fill( itk::NumericTraits<ScalarType>::Zero );
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -73,7 +82,12 @@ AffineLogTransform<TScalarType, Dimension>
   }
 
   exponentMatrix = vnl_matrix_exp( this->m_MatrixLogDomain.GetVnlMatrix() );
+  //std::cout << "logmatrix in SetParameters(): " << this->m_MatrixLogDomain
+  //          << "\nparameters in SetParameters(): " << parameters
+  //          << "\n exp(parameters): " << exponentMatrix << std::endl;
+
   this->PrecomputeJacobianOfSpatialJacobian();
+
   this->SetVarMatrix( exponentMatrix );
 
   OutputVectorType off;
@@ -86,8 +100,6 @@ AffineLogTransform<TScalarType, Dimension>
 
   this->SetVarTranslation(off);
   this->ComputeOffset();
-
-  std::cout << "parameters: " << parameters << std::endl;
 
   // Modified is always called since we just have a pointer to the
   // parameters and cannot know if the parameters have changed.
@@ -118,7 +130,7 @@ AffineLogTransform<TScalarType, Dimension>
         this->m_Parameters[k] = this->GetTranslation()[j];
         k += 1;
     }
-    std::cout << "parameters: " << this->m_Parameters << std::endl;
+
     return this->m_Parameters;
 }
 
@@ -163,7 +175,9 @@ GetJacobian( const InputPointType & p,
   {
     j[ dim ][ blockOffset + dim ] = 1.0;
   }
-  //std::cout << "point: " << pp << "\njacobian: " << j << std::endl;
+  //std::cout << "point: " << pp << "\njacobian: " << j << "\nparameters: "
+     //       << this->m_Parameters <<"\nLogMatrix: "<< this->m_MatrixLogDomain << std::endl;
+  nzji = this->m_NonZeroJacobianIndices;
 
 }
 
@@ -239,11 +253,10 @@ AffineLogTransform<TScalarType, Dimension>
   {
     jsj[par].Fill(itk::NumericTraits<ScalarType>::Zero);
   } 
-
-  //for(unsigned int i = 0; i < jsj.size(); i++)
-  //{
-  //    std::cout << jsj[i] << std::endl;
-  //}
+ // for(unsigned int i = 0; i < jsj.size(); i++)
+ // {
+ //     std::cout << jsj[i] << std::endl;
+ // }
 }
 
 

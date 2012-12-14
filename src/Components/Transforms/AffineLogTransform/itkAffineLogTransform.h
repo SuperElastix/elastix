@@ -95,6 +95,9 @@ protected:
   AffineLogTransform();
   AffineLogTransform(const MatrixType & matrix,
                    const OutputPointType & offset);
+  AffineLogTransform(unsigned int outputSpaceDims,
+                   unsigned int paramsSpaceDims);
+
 
   ~AffineLogTransform(){};
 
@@ -108,7 +111,6 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   MatrixType m_MatrixLogDomain;
-  OffsetType m_Offset;
 
 
 }; //class AffineLogTransform
