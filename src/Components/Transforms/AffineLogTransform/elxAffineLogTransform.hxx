@@ -234,11 +234,11 @@ AffineLogTransformElastix<TElastix>
     automaticTransformInitialization = true;
   }
 
-//  /**
-//   * Run the itkTransformInitializer if:
-//   * - No center of rotation was given, or
-//   * - The user asked for AutomaticTransformInitialization
-//   */
+  /**
+   * Run the itkTransformInitializer if:
+   * - No center of rotation was given, or
+   * - The user asked for AutomaticTransformInitialization
+   */
       bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
   if ( !centerGiven || automaticTransformInitialization )
   {
@@ -287,6 +287,8 @@ AffineLogTransformElastix<TElastix>
         ->TransformIndexToPhysicalPoint(
         centerOfRotationIndex, centerOfRotationPoint );
     }
+    elxout << "cor: " << centerOfRotationPoint << std::endl;
+
     this->m_AffineLogTransform->SetCenter( centerOfRotationPoint );
   }
 

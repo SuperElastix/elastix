@@ -100,10 +100,6 @@ protected:
 
   void PrintSelf(std::ostream &os, Indent indent) const;
 
-  /** Compute the components of the rotation matrix in the superclass. */
-  void ComputeMatrixLogDomain( void );
-  void ComputeMatrixNormalDomain( void );
-
    /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void PrecomputeJacobianOfSpatialJacobian(void);
 
@@ -112,8 +108,6 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   MatrixType m_MatrixLogDomain;
-  MatrixType m_MatrixNormalDomain;
-  MatrixType m_Matrix;
   OffsetType m_Offset;
 
 
