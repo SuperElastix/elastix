@@ -329,11 +329,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
-
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
-
       /** Compute this pixel's contribution to the measure and derivatives. */
       this->UpdateValueAndDerivativeTerms(
         fixedImageValue, movingImageValue,
@@ -343,6 +341,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     } // end if sampleOk
 
   } // end for loop over the image sample container
+  //std::cout << "jacobian: " << jacobian << std::endl;
+
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(
@@ -357,6 +357,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   }
   measure *= normal_sum;
   derivative *= normal_sum;
+  std::cout << "derivative.magitude(): " << derivative.magnitude() << std::endl;
 
   /** The return value. */
   value = measure;
