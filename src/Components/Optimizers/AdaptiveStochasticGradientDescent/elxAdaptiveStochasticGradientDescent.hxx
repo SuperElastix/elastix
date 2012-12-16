@@ -500,8 +500,6 @@ AdaptiveStochasticGradientDescent<TElastix>
   elxout << "  Computing the Jacobian terms took "
     << timer2->PrintElapsedTimeDHMS()
     << std::endl;
-  elxout << "TrC: " << TrC << "\nTrCC: " << TrCC << "\nmaxJJ: " << maxJJ
-            << "\nmaxJCJ: " << maxJCJ << std::endl;
 
   /** Determine number of gradient measurements such that
    * E + 2\sqrt(Var) < K E
@@ -562,7 +560,6 @@ AdaptiveStochasticGradientDescent<TElastix>
   {
     sigma3 = vcl_sqrt( ee / TrC );
   }
-  elxout << "TrC: " << TrC << std::endl;
 
   const double alpha = 1.0;
   const double A = this->GetParam_A();
@@ -571,7 +568,6 @@ AdaptiveStochasticGradientDescent<TElastix>
   {
     a_max = A * delta / sigma1 / vcl_sqrt( maxJCJ );
   }
-  elxout << "a_max: " << std::endl;
 
   const double noisefactor = sigma1 * sigma1
     / ( sigma1 * sigma1 + sigma3 * sigma3 + 1e-14 );
@@ -1041,7 +1037,6 @@ AdaptiveStochasticGradientDescent<TElastix>
 
       /** Initialize jactjac by J_j^T J_j. */
       vnl_fastops::AtA( jactjac, jacj );
-      elxout << "jactjac: " << jactjac << "\njacj: " << jacj << std::endl;
       /** Remember nonzerojacobian indices. */
       prevjacind = jacind;
     } // end else
