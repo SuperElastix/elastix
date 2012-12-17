@@ -11,14 +11,14 @@
 # and defaults to Nightly.
 # NOTE that Model should directly follow the comma: no space allowed!
 #
-# Setup: Linux 64bit, Ubuntu 2.6.32-25-server
-# gcc 4.4.3
-# Debug mode, ITK 3.20.0, code coverage by gcov
+# Setup: Linux 64bit, Ubuntu 3.2.0-34-generic
+# gcc 4.6.3
+# Debug mode, ITK 4.x (git), code coverage by gcov
 # PC: LKEB (MS), goliath
 
 # Client maintainer: m.staring@lumc.nl
 set( CTEST_SITE "LKEB.goliath" )
-set( CTEST_BUILD_NAME "Linux-64bit-gcc4.4.3-Debug" )
+set( CTEST_BUILD_NAME "Linux-64bit-gcc4.6.3-Debug" )
 set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
 set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Debug )
