@@ -40,10 +40,9 @@ public:
   itkStaticConstMacro( InputImageDimension, unsigned int,
                        TInputImage::ImageDimension );
 
-  /** InputImageType typedef support. */
+  /** Superclass typedef support. */
   typedef typename Superclass::InputImageType InputImageType;
-
-  /** CoordRepType typedef support. */
+  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
   typedef typename Superclass::CoordRepType CoordRepType;
 
 protected:
@@ -64,3 +63,4 @@ private:
 #endif
 
 #endif /* __itkGPUInterpolateImageFunction_h */
+
