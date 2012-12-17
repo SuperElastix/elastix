@@ -90,8 +90,8 @@ void SetContinuousIndex(
   const TContinuousIndex & cindex,
   cl_float2 & oclindex )
 {
-  oclindex.s0 = cindex[0];
-  oclindex.s1 = cindex[1];
+  oclindex.s[0] = cindex[0];
+  oclindex.s[1] = cindex[1];
 }
 
 template< class TContinuousIndex >
