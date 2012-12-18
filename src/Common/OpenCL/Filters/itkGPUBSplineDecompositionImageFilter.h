@@ -23,34 +23,43 @@
 namespace itk
 {
 /** \class GPUBSplineDecompositionImageFilter
- * \brief Calculates the B-Spline coefficients of an image. Spline order may be from 0 to 5.
- *
- * This class defines N-Dimension B-Spline transformation.
- * It is based on:
- *    [1] M. Unser,
- *       "Splines: A Perfect Fit for Signal and Image Processing,"
- *        IEEE Signal Processing Magazine, vol. 16, no. 6, pp. 22-38,
- *        November 1999.
- *    [2] M. Unser, A. Aldroubi and M. Eden,
- *        "B-Spline Signal Processing: Part I--Theory,"
- *        IEEE Transactions on Signal Processing, vol. 41, no. 2, pp. 821-832,
- *        February 1993.
- *    [3] M. Unser, A. Aldroubi and M. Eden,
- *        "B-Spline Signal Processing: Part II--Efficient Design and Applications,"
- *        IEEE Transactions on Signal Processing, vol. 41, no. 2, pp. 834-848,
- *        February 1993.
- * And code obtained from bigwww.epfl.ch by Philippe Thevenaz
- *
- * Limitations:  Spline order must be between 0 and 5.
- *               Spline order must be set before setting the image.
- *               Uses mirror boundary conditions.
- *               Requires the same order of Spline for each dimension.
- *               Can only process LargestPossibleRegion
- *
- * \sa itkBSplineInterpolateImageFunction
- * \see BSplineDecompositionImageFilter
- * \ingroup ITK-GPUCommon
- */
+* \brief Calculates the B-Spline coefficients of an image. Spline order may be from 0 to 5.
+*
+* This class defines N-Dimension B-Spline transformation.
+* It is based on:
+*    [1] M. Unser,
+*       "Splines: A Perfect Fit for Signal and Image Processing,"
+*        IEEE Signal Processing Magazine, vol. 16, no. 6, pp. 22-38,
+*        November 1999.
+*    [2] M. Unser, A. Aldroubi and M. Eden,
+*        "B-Spline Signal Processing: Part I--Theory,"
+*        IEEE Transactions on Signal Processing, vol. 41, no. 2, pp. 821-832,
+*        February 1993.
+*    [3] M. Unser, A. Aldroubi and M. Eden,
+*        "B-Spline Signal Processing: Part II--Efficient Design and Applications,"
+*        IEEE Transactions on Signal Processing, vol. 41, no. 2, pp. 834-848,
+*        February 1993.
+* And code obtained from bigwww.epfl.ch by Philippe Thevenaz
+*
+* Limitations:  Spline order must be between 0 and 5.
+*               Spline order must be set before setting the image.
+*               Uses mirror boundary conditions.
+*               Requires the same order of Spline for each dimension.
+*               Can only process LargestPossibleRegion
+*
+* \sa itkBSplineInterpolateImageFunction
+* \see BSplineDecompositionImageFilter
+*
+* \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+* Department of Radiology, Leiden, The Netherlands
+*
+* This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+*
+* \note This work was funded by the Netherlands Organisation for
+* Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+*
+* \ingroup ITK-GPUCommon
+*/
 
 /** Create a helper GPU Kernel class for GPUBSplineDecompositionImageFilter */
 itkGPUKernelClassMacro( GPUBSplineDecompositionImageFilterKernel );
@@ -58,15 +67,15 @@ itkGPUKernelClassMacro( GPUBSplineDecompositionImageFilterKernel );
 template< class TInputImage, class TOutputImage >
 class ITK_EXPORT GPUBSplineDecompositionImageFilter :
   public GPUImageToImageFilter< TInputImage, TOutputImage,
-                                BSplineDecompositionImageFilter< TInputImage, TOutputImage > >
+  BSplineDecompositionImageFilter< TInputImage, TOutputImage > >
 {
 public:
   /** Standard ITK-stuff. */
   typedef GPUBSplineDecompositionImageFilter Self;
   typedef BSplineDecompositionImageFilter<
-      TInputImage, TOutputImage >                 CPUSuperclass;
+    TInputImage, TOutputImage >                 CPUSuperclass;
   typedef GPUImageToImageFilter<
-      TInputImage, TOutputImage, CPUSuperclass >  GPUSuperclass;
+    TInputImage, TOutputImage, CPUSuperclass >  GPUSuperclass;
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
 
@@ -90,9 +99,9 @@ public:
 
   /** ImageDimension constants */
   itkStaticConstMacro( InputImageDimension, unsigned int,
-                       TInputImage::ImageDimension );
+    TInputImage::ImageDimension );
   itkStaticConstMacro( OutputImageDimension, unsigned int,
-                       TOutputImage::ImageDimension );
+    TOutputImage::ImageDimension );
 
 protected:
   GPUBSplineDecompositionImageFilter();
@@ -142,32 +151,32 @@ private:
   GPUBSplineDecompositionImageFilterFactory( const Self & ); // purposely not implemented
   void operator=( const Self & );                            // purposely not implemented
 
-#define OverrideBSplineDecompositionImageFilterTypeMacro( ipt, opt, dm1, dm2, dm3 )                               \
-  {                                                                                                               \
-    typedef Image< ipt, dm1 > InputImageType1D;                                                                   \
-    typedef Image< opt, dm1 > OutputImageType1D;                                                                  \
-    this->RegisterOverride(                                                                                       \
-      typeid( BSplineDecompositionImageFilter< InputImageType1D, OutputImageType1D > ).name(),                    \
-      typeid( GPUBSplineDecompositionImageFilter< InputImageType1D, OutputImageType1D > ).name(),                 \
-      "GPU BSplineDecompositionImageFilter Override 1D",                                                          \
-      true,                                                                                                       \
-      CreateObjectFunction< GPUBSplineDecompositionImageFilter< InputImageType1D, OutputImageType1D > >::New() ); \
-    typedef Image< ipt, dm2 > InputImageType2D;                                                                   \
-    typedef Image< opt, dm2 > OutputImageType2D;                                                                  \
-    this->RegisterOverride(                                                                                       \
-      typeid( BSplineDecompositionImageFilter< InputImageType2D, OutputImageType2D > ).name(),                    \
-      typeid( GPUBSplineDecompositionImageFilter< InputImageType2D, OutputImageType2D > ).name(),                 \
-      "GPU BSplineDecompositionImageFilter Override 2D",                                                          \
-      true,                                                                                                       \
-      CreateObjectFunction< GPUBSplineDecompositionImageFilter< InputImageType2D, OutputImageType2D > >::New() ); \
-    typedef Image< ipt, dm3 > InputImageType3D;                                                                   \
-    typedef Image< opt, dm3 > OutputImageType3D;                                                                  \
-    this->RegisterOverride(                                                                                       \
-      typeid( BSplineDecompositionImageFilter< InputImageType3D, OutputImageType3D > ).name(),                    \
-      typeid( GPUBSplineDecompositionImageFilter< InputImageType3D, OutputImageType3D > ).name(),                 \
-      "GPU BSplineDecompositionImageFilter Override 3D",                                                          \
-      true,                                                                                                       \
-      CreateObjectFunction< GPUBSplineDecompositionImageFilter< InputImageType3D, OutputImageType3D > >::New() ); \
+#define OverrideBSplineDecompositionImageFilterTypeMacro( ipt, opt, dm1, dm2, dm3 )                           \
+  {                                                                                                           \
+  typedef Image< ipt, dm1 > InputImageType1D;                                                                 \
+  typedef Image< opt, dm1 > OutputImageType1D;                                                                \
+  this->RegisterOverride(                                                                                     \
+  typeid( BSplineDecompositionImageFilter< InputImageType1D, OutputImageType1D > ).name(),                    \
+  typeid( GPUBSplineDecompositionImageFilter< InputImageType1D, OutputImageType1D > ).name(),                 \
+  "GPU BSplineDecompositionImageFilter Override 1D",                                                          \
+  true,                                                                                                       \
+  CreateObjectFunction< GPUBSplineDecompositionImageFilter< InputImageType1D, OutputImageType1D > >::New() ); \
+  typedef Image< ipt, dm2 > InputImageType2D;                                                                 \
+  typedef Image< opt, dm2 > OutputImageType2D;                                                                \
+  this->RegisterOverride(                                                                                     \
+  typeid( BSplineDecompositionImageFilter< InputImageType2D, OutputImageType2D > ).name(),                    \
+  typeid( GPUBSplineDecompositionImageFilter< InputImageType2D, OutputImageType2D > ).name(),                 \
+  "GPU BSplineDecompositionImageFilter Override 2D",                                                          \
+  true,                                                                                                       \
+  CreateObjectFunction< GPUBSplineDecompositionImageFilter< InputImageType2D, OutputImageType2D > >::New() ); \
+  typedef Image< ipt, dm3 > InputImageType3D;                                                                 \
+  typedef Image< opt, dm3 > OutputImageType3D;                                                                \
+  this->RegisterOverride(                                                                                     \
+  typeid( BSplineDecompositionImageFilter< InputImageType3D, OutputImageType3D > ).name(),                    \
+  typeid( GPUBSplineDecompositionImageFilter< InputImageType3D, OutputImageType3D > ).name(),                 \
+  "GPU BSplineDecompositionImageFilter Override 3D",                                                          \
+  true,                                                                                                       \
+  CreateObjectFunction< GPUBSplineDecompositionImageFilter< InputImageType3D, OutputImageType3D > >::New() ); \
   }
 
   GPUBSplineDecompositionImageFilterFactory()

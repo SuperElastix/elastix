@@ -208,4 +208,3 @@ void GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentImageFilter >
 } // end namespace itk
 
 #endif /* __itkGPUInterpolateImageFunction_hxx */
-

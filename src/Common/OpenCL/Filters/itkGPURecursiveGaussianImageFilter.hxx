@@ -71,8 +71,11 @@ GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >
 
 //------------------------------------------------------------------------------
 template< class TInputImage, class TOutputImage >
-void GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >::GPUGenerateData()
+void GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >
+::GPUGenerateData()
 {
+  itkDebugMacro(<< "Calling GPURecursiveGaussianImageFilter::GPUGenerateData()");
+
   typedef typename GPUTraits< TInputImage >::Type  GPUInputImage;
   typedef typename GPUTraits< TOutputImage >::Type GPUOutputImage;
 
@@ -244,6 +247,8 @@ void GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >::GPUGenerateDa
                                               OpenCLSize( globalSize2D[0], globalSize2D[1] ) );
       break;
   }
+
+  itkDebugMacro(<< "GPURecursiveGaussianImageFilter::GPUGenerateData() finished");
 }
 
 //------------------------------------------------------------------------------

@@ -85,6 +85,8 @@ void
 GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
 ::GPUGenerateData( void )
 {
+  itkDebugMacro(<< "Calling GPUBSplineDecompositionImageFilter::GPUGenerateData()");
+
   typedef typename GPUTraits< TInputImage >::Type  GPUInputImage;
   typedef typename GPUTraits< TOutputImage >::Type GPUOutputImage;
 
@@ -237,6 +239,8 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
         break;
     }
   } // end loop over InputImageDimension
+
+  itkDebugMacro(<< "GPUBSplineDecompositionImageFilter::GPUGenerateData() finished");
 }   // end GPUGenerateData()
 
 /**

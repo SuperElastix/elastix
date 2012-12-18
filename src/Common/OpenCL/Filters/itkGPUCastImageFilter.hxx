@@ -56,7 +56,9 @@ GPUCastImageFilter< TInputImage, TOutputImage >
 template< class TInputImage, class TOutputImage >
 void GPUCastImageFilter< TInputImage, TOutputImage >::GPUGenerateData()
 {
+  itkDebugMacro(<< "Calling GPUCastImageFilter::GPUGenerateData()");
   GPUSuperclass::GPUGenerateData();
+  itkDebugMacro(<< "GPUCastImageFilter::GPUGenerateData() finished");
 }
 } // end of namespace itk
 

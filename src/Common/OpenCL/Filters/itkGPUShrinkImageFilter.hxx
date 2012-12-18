@@ -62,6 +62,8 @@ void
 GPUShrinkImageFilter< TInputImage, TOutputImage >
 ::GPUGenerateData( void )
 {
+  itkDebugMacro(<< "Calling GPUShrinkImageFilter::GPUGenerateData()");
+
   typedef typename GPUTraits< TInputImage >::Type  GPUInputImage;
   typedef typename GPUTraits< TOutputImage >::Type GPUOutputImage;
 
@@ -195,6 +197,8 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   // launch kernel
   OpenCLEvent event = this->m_GPUKernelManager->LaunchKernel( this->m_FilterGPUKernelHandle,
                                                               OpenCLSize( globalSize ), OpenCLSize( localSize ) );
+
+  itkDebugMacro(<< "GPUShrinkImageFilter::GPUGenerateData() finished");
 } // end GPUGenerateData()
 
 /**

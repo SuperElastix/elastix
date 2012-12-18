@@ -63,4 +63,3 @@ private:
 #endif
 
 #endif /* __itkGPUInterpolateImageFunction_h */
-

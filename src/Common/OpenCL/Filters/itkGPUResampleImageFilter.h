@@ -30,6 +30,14 @@
 namespace itk
 {
 /** \class GPUResampleImageFilter
+* \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+* Department of Radiology, Leiden, The Netherlands
+*
+* This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+*
+* \note This work was funded by the Netherlands Organisation for
+* Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+*
 * \ingroup ITK-GPUCommon
 */
 
@@ -65,6 +73,7 @@ public:
   typedef typename GPUTraits< TOutputImage >::Type GPUOutputImage;
   typedef typename CPUSuperclass::InterpolatorType InterpolatorType;
   typedef typename CPUSuperclass::TransformType    TransformType;
+  typedef typename CPUSuperclass::ExtrapolatorType ExtrapolatorType;
   typedef typename OutputImageType::IndexType      IndexType;
 
   /** Scheduler typedefs. */
@@ -77,6 +86,8 @@ public:
                        TOutputImage::ImageDimension );
 
   virtual void SetInterpolator( InterpolatorType *_arg );
+
+  virtual void SetExtrapolator( ExtrapolatorType *_arg );
 
   virtual void SetTransform( const TransformType *_arg );
 

@@ -46,6 +46,14 @@ namespace itk
 * This filter is implemented as a multithreaded filter.  It provides a
 * ThreadedGenerateData() method for its implementation.
 *
+* \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+* Department of Radiology, Leiden, The Netherlands
+*
+* This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+*
+* \note This work was funded by the Netherlands Organisation for
+* Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+*
 * \ingroup GeometricTransform Streamed
 * \ingroup ITKImageGrid
 *
