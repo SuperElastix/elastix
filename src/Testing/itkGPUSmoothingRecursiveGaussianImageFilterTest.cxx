@@ -13,7 +13,7 @@
 ======================================================================*/
 // GPU include files
 // used internally in smoothing filter
-#include "itkGPURecursiveGaussianImageFilter.h" 
+#include "itkGPURecursiveGaussianImageFilter.h"
 // used internally in smoothing filter
 #include "itkGPUCastImageFilter.h"
 #include "itkGPUExplicitSynchronization.h"
