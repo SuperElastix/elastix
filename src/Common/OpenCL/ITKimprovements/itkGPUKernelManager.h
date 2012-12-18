@@ -41,6 +41,13 @@ namespace itk
  * This class is responsible for managing the GPU kernel and
  * command queue.
  *
+ * \note This file was taken from ITK 4.1.0.
+ * It was modified by Denis P. Shamonin and Marius Staring.
+ * Division of Image Processing,
+ * Department of Radiology, Leiden, The Netherlands.
+ * Added functionality is described in the Insight Journal paper:
+ * http://hdl.handle.net/xxxx/yyy
+ *
  * \ingroup ITKGPUCommon
  */
 

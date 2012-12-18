@@ -18,6 +18,10 @@
 #ifndef __itkOpenCLKernels_h
 #define __itkOpenCLKernels_h
 
+/** \class OpenCLKernels Debug support file.
+ * \brief The directory for OpenCL debug kernel files.
+ * \ingroup ITKGPUCommon
+ */
 namespace itk
 {
   const char* const OpenCLKernelsDebugDirectory = "@elastix_OPENCL_KERNELS_DEBUG_DIR@";

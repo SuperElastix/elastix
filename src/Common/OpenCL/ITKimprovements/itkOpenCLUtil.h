@@ -36,6 +36,14 @@ namespace itk
  * 1D : 256
  * 2D : 16x16 = 256
  * 3D : 4x4x4 = 64
+ *
+ * \note This file was taken from ITK 4.1.0.
+ * It was modified by Denis P. Shamonin and Marius Staring.
+ * Division of Image Processing,
+ * Department of Radiology, Leiden, The Netherlands.
+ * Added functionality is described in the Insight Journal paper:
+ * http://hdl.handle.net/xxxx/yyy
+ *
  */
 int OpenCLGetLocalBlockSize(unsigned int ImageDim);
 

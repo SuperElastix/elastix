@@ -33,6 +33,13 @@ namespace itk
  * can be used with non-GPU itk filters as well. Memory transfer
  * between CPU and GPU is done automatically and implicitly.
  *
+ * \note This file was taken from ITK 4.1.0.
+ * It was modified by Denis P. Shamonin and Marius Staring.
+ * Division of Image Processing,
+ * Department of Radiology, Leiden, The Netherlands.
+ * Added functionality is described in the Insight Journal paper:
+ * http://hdl.handle.net/xxxx/yyy
+ *
  * \ingroup ITKGPUCommon
  */
 template< class TPixel, unsigned int VImageDimension = 2 >

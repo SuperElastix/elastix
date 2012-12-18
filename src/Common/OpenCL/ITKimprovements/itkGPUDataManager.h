@@ -37,6 +37,13 @@ namespace itk
  * we did not name it GPUImageBase. Rather, this class is a GPU-specific data manager
  * that provides functionalities for CPU-GPU data synchronization and grafting GPU data.
  *
+ * \note This file was taken from ITK 4.1.0.
+ * It was modified by Denis P. Shamonin and Marius Staring.
+ * Division of Image Processing,
+ * Department of Radiology, Leiden, The Netherlands.
+ * Added functionality is described in the Insight Journal paper:
+ * http://hdl.handle.net/xxxx/yyy
+ *
  * \ingroup ITKGPUCommon
  */
 class ITKOpenCL_EXPORT GPUDataManager:public Object //DataObject//

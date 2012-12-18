@@ -33,6 +33,13 @@ namespace itk
  * GPUGenerateData() is called. Otherwise, GenerateData() in the
  * parent class (i.e., ImageToImageFilter) will be called.
  *
+ * \note This file was taken from ITK 4.1.0.
+ * It was modified by Denis P. Shamonin and Marius Staring.
+ * Division of Image Processing,
+ * Department of Radiology, Leiden, The Netherlands.
+ * Added functionality is described in the Insight Journal paper:
+ * http://hdl.handle.net/xxxx/yyy
+ *
  * \ingroup ITKGPUCommon
  */
 template< class TInputImage, class TOutputImage, class TParentImageFilter =

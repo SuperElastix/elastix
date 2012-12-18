@@ -1,20 +1,16 @@
-/*=========================================================================
-*
-*  Copyright Insight Software Consortium
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*         http://www.apache.org/licenses/LICENSE-2.0.txt
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-*
-*=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __itkOpenCLWorkSize_h
 #define __itkOpenCLWorkSize_h
 
@@ -27,6 +23,14 @@ namespace itk
 {
 /** \class OpenCLSize
  * \brief OpenCLSize
+ *
+ * \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+ * Department of Radiology, Leiden, The Netherlands
+ *
+ * This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+ *
+ * \note This work was funded by the Netherlands Organisation for
+ *  Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  * \ingroup ITKGPUCommon
  */
@@ -111,18 +115,18 @@ public:
    * size and fits within the maximums defined by maxWorkItemSize
    * and maxItemsPerGroup.
    * This function is typically used to convert an arbitrary global
-   * work size on a QCLKernel into a compatible local work size. */
-  OpenCLSize toLocalWorkSize
+   * work size on a CLKernel into a compatible local work size. */
+  OpenCLSize ToLocalWorkSize
     (const OpenCLSize & maxWorkItemSize, const std::size_t maxItemsPerGroup) const;
 
   /** Returns the best-fit local work size that evenly divides this
    * work size and fits within the maximum work group size of \a device.
    * This function is typically used to convert an arbitrary global
-   * work size on a QCLKernel into a compatible local work size. */
-  //OpenCLSize toLocalWorkSize(const OpenCLDevice & device) const;
+   * work size on a CLKernel into a compatible local work size. */
+  //OpenCLSize ToLocalWorkSize(const OpenCLDevice & device) const;
 
   /** Returns the result of rounding this work size up to a multiple of size. */
-  OpenCLSize roundTo(const OpenCLSize & size) const;
+  OpenCLSize RoundTo(const OpenCLSize & size) const;
 
 private:
   cl_uint     m_Dim;
