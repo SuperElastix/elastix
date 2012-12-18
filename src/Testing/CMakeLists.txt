@@ -91,7 +91,7 @@ elseif( SITE STREQUAL "LKEB.PCMarius"
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2010.txt )
   set( knownChecksumSystem true )
 elseif( SITE STREQUAL "LKEB.goliath"
-    AND BUILDNAME STREQUAL "Linux-64bit-gcc4.4.3-Release" )
+    AND BUILDNAME STREQUAL "Linux-64bit-gcc4.6.3-Release" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
 elseif( SITE STREQUAL "LKEB.MacMini"
