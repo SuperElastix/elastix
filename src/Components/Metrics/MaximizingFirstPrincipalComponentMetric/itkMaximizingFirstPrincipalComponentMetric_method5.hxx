@@ -39,10 +39,8 @@ namespace itk
         m_SampleLastDimensionRandomly( false ),
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
-        m_TransformIsStackTransform( false ),
+        m_TransformIsStackTransform( true ),
 				//m_NumEigenValues( 1 )
-				//m_RandomScaleIntensity( false ),
-                //m_RandomNumbersCreated( false )
         m_Alpha( 1.0 )
 
   {
@@ -61,7 +59,7 @@ namespace itk
     ::Initialize(void) throw ( ExceptionObject )
   {
 
-		/** Initialize transform, interpolator, etc. */
+    /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
 
     /** Retrieve slowest varying dimension and its size. */
@@ -364,14 +362,6 @@ namespace itk
         this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1);
         this->m_eigenValues = eigenValues;
 		
-//        std::ofstream file1;
-//        file1.open("eigenvalues.txt", ios::app);
-//        file1 << eigenValues << std::endl;
-
-//        std::ofstream file2;
-//        file2.open("firsteigenvector.txt", ios::app);
-//        file2 << eig.get_eigenvector( K.cols() - 1 ) << std::endl;
-
 		/** Return the measure value. */
 		return measure;
 
@@ -392,11 +382,8 @@ namespace itk
      * the metric value now. Therefore, we have chosen to only implement the
      * GetValueAndDerivative(), supplying it with a dummy value variable. */
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
-	typedef vnl_matrix <RealType > MatrixType;
-	MatrixType dummyimageMatrix;
 
-	//dummyimageMatrix.fill( NumericTraits< double >::Zero);
-    this->GetValueAndDerivative(parameters, dummyvalue, derivative, dummyimageMatrix);
+    this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
   } // end GetDerivative
 
@@ -408,7 +395,7 @@ namespace itk
     void
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
-	MeasureType& value, DerivativeType& derivative, vnl_matrix< RealType >& imageMatrix ) const
+    MeasureType& value, DerivativeType& derivative ) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
@@ -695,7 +682,20 @@ namespace itk
         measure = trace - regularisationFirstEigenValue*e1;
         derivative = dKiidmu - regularisationFirstEigenValue*v1Kv1dmu;
 
-		//** Subtract mean from derivative elements. */
+
+        vnl_vector<double> eigenValues;
+        eigenValues.set_size(K.cols());
+
+        eigenValues.fill(0.0);
+
+        for(unsigned int i = 0; i < K.cols(); i++)
+        {
+           eigenValues(i) = eig.get_eigenvalue( i );
+        }
+        this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1);
+        this->m_eigenValues = eigenValues;
+
+    /** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
     {
       if ( ! this->m_TransformIsStackTransform )
@@ -767,8 +767,7 @@ namespace itk
 
 	/** Return the measure value. */
 	value = measure;
-
-	} // end GetValueAndDerivative()
+} // end GetValueAndDerivative()
 
 } // end namespace itk
 

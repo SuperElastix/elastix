@@ -38,10 +38,8 @@ namespace itk
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
-				//m_NumEigenValues( 1 )
-				//m_RandomScaleIntensity( false ),
-				m_RandomNumbersCreated( false )
-
+        m_Alpha( 1.0 ),
+        m_Zscore( true )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -344,7 +342,7 @@ namespace itk
 			trace += K(i,i);
 		}
 
-		measure = 100.0*(static_cast<RealType>(1.0) - e1/trace);
+        measure = (static_cast<RealType>(1.0) - e1/trace);
 		
 		/** Return the measure value. */
 		return measure;
@@ -366,11 +364,7 @@ namespace itk
      * the metric value now. Therefore, we have chosen to only implement the
      * GetValueAndDerivative(), supplying it with a dummy value variable. */
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
-	typedef vnl_matrix <RealType > MatrixType;
-	MatrixType dummyimageMatrix;
-
-	//dummyimageMatrix.fill( NumericTraits< double >::Zero);
-    this->GetValueAndDerivative(parameters, dummyvalue, derivative, dummyimageMatrix);
+    this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
   } // end GetDerivative
 
@@ -382,7 +376,7 @@ namespace itk
     void
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
-	MeasureType& value, DerivativeType& derivative, vnl_matrix< RealType >& imageMatrix ) const
+    MeasureType& value, DerivativeType& derivative) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
@@ -563,7 +557,7 @@ namespace itk
 		/** Compute covariance matrix K */
 		MatrixType K( (Atzscore*Azscore) );		
 
-		K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+        K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
 
 		/** Compute first eigenvalue and eigenvector of the covariance matrix K */
 		vnl_symmetric_eigensystem< RealType > eig( K );
@@ -665,8 +659,8 @@ namespace itk
 			/ ( static_cast < DerivativeValueType > (A.rows()) - 
 			static_cast < DerivativeValueType >(1.0) ); //normalize
 
-		measure = 100.0*(static_cast<RealType>(1.0) - e1/trace);
-		derivative = 100.0*(( dKiidmu*e1 - v1Kv1dmu*trace )/(trace*trace));
+        measure = (static_cast<RealType>(1.0) - e1/trace);
+        derivative = (( dKiidmu*e1 - v1Kv1dmu*trace )/(trace*trace));
 
 		//** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )

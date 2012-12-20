@@ -22,11 +22,8 @@ namespace itk
         m_SampleLastDimensionRandomly( false ),
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
-        m_TransformIsStackTransform( false ),
+        m_TransformIsStackTransform( false )
                 //m_NumEigenValues( 1 )
-                m_RandomScaleIntensity( false ),
-                m_RandomNumbersCreated( false )
-
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -331,11 +328,11 @@ namespace itk
         /** Compute covariance matrix K */
         MatrixType K( (AMinusMean*AtMinusMean) );
 
-        K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+        K /= ( static_cast< RealType > (A.cols()) - static_cast< RealType > (1.0) );
 
         /** Compute first eigenvalue and eigenvector of the covariance matrix K */
         vnl_symmetric_eigensystem< RealType > eig( K );
-        RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
+        RealType e1 = eig.get_eigenvalue( K.rows() - 1 ); // Highest eigenvalue of K
 
         /** Compute sum of all eigenvalues = trace( K ) */
         RealType trace = 0.0;
@@ -366,11 +363,9 @@ namespace itk
      * the metric value now. Therefore, we have chosen to only implement the
      * GetValueAndDerivative(), supplying it with a dummy value variable. */
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
-    typedef vnl_matrix <RealType > MatrixType;
-    MatrixType dummyimageMatrix;
 
     //dummyimageMatrix.fill( NumericTraits< double >::Zero);
-    this->GetValueAndDerivative(parameters, dummyvalue, derivative, dummyimageMatrix);
+    this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
   } // end GetDerivative
 
@@ -382,7 +377,7 @@ namespace itk
     void
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& value, DerivativeType& derivative, vnl_matrix< RealType >& imageMatrix ) const
+    MeasureType& value, DerivativeType& derivative) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
         //elxout << "GetValueAndDerivative" << std::endl;

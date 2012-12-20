@@ -362,8 +362,6 @@ namespace itk
         RealType e6 = eig.get_eigenvalue( K.cols() - 6 ); // Sixth Highest eigenvalue of K
         RealType e7 = eig.get_eigenvalue( K.cols() - 7 ); // Seventh Highest eigenvalue of K
 
-
-
         /** Compute sum of all eigenvalues = trace( K ) */
         RealType trace = 0.0;
         for( int i = 0; i < K.rows(); i++ )
@@ -371,7 +369,7 @@ namespace itk
             trace += K(i,i);
         }
 
-        measure = trace - (e1+e2+e3+e4+e5+e6);//+e7);
+       measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);//+e7);
 
 
         vnl_vector<double> eigenValues;
@@ -406,11 +404,9 @@ namespace itk
      * the metric value now. Therefore, we have chosen to only implement the
      * GetValueAndDerivative(), supplying it with a dummy value variable. */
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
-    typedef vnl_matrix <RealType > MatrixType;
-    MatrixType dummyimageMatrix;
 
     //dummyimageMatrix.fill( NumericTraits< double >::Zero);
-    this->GetValueAndDerivative(parameters, dummyvalue, derivative, dummyimageMatrix);
+    this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
   } // end GetDerivative
 
@@ -422,7 +418,7 @@ namespace itk
     void
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& value, DerivativeType& derivative, vnl_matrix< RealType >& imageMatrix ) const
+    MeasureType& value, DerivativeType& derivative) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
@@ -595,13 +591,13 @@ namespace itk
 
 
         /** Calculate mean of from columns */
-        vnl_vector< RealType > mean( A.cols() );
-        mean.fill( NumericTraits< double >::Zero );
+        vnl_vector< RealType > meancols( A.cols() );
+        meancols.fill( NumericTraits< double >::Zero );
         for( unsigned int i = 0; i < A.rows(); i++ )
         {
             for( unsigned int j = 0; j < A.cols(); j++)
             {
-                mean(j) += A(i,j)/A.rows();
+                meancols(j) += A(i,j)/A.rows();
             }
         }
 
@@ -612,7 +608,7 @@ namespace itk
         {
             for (unsigned int j = 0; j < A.cols(); j++)
             {
-                AMinusMean(i,j) = A(i,j)-mean(j);
+                AMinusMean(i,j) = A(i,j)-meancols(j);
             }
         }
 
@@ -664,6 +660,9 @@ namespace itk
         /** Sub components of metric derivative */
     vnl_vector< DerivativeValueType > dKiidmu( P ); //Trace of derivative of covariance matrix
     vnl_vector< DerivativeValueType > AtdAdmuii( P ); //Trace of AtMinusMean * dAdmu
+    vnl_vector< DerivativeValueType > meandAdmu( P ); // mean of a column of the derivative of A
+    vnl_vector< DerivativeValueType > meanAtdAdmuii( P ); //mean of trace of AtMinusMean * dAdmu
+
     vnl_vector< DerivativeValueType > v1Kv1dmu( P ); //v1 * derivative covariance matrix * v1
     vnl_vector< DerivativeValueType > v2Kv2dmu( P ); //v1 * derivative covariance matrix * v1
     vnl_vector< DerivativeValueType > v3Kv3dmu( P ); //v1 * derivative covariance matrix * v1
@@ -680,9 +679,19 @@ namespace itk
     DerivativeMatrixType dAdmu_v6( realNumLastDimPositions, P ); //dAdmu * v1
     DerivativeMatrixType dAdmu_v7( realNumLastDimPositions, P ); //dAdmu * v1
 
+    DerivativeMatrixType meandAdmu_v1( realNumLastDimPositions, P ); //meandAdmu * v
+    DerivativeMatrixType meandAdmu_v2( realNumLastDimPositions, P ); //meandAdmu * v
+    DerivativeMatrixType meandAdmu_v3( realNumLastDimPositions, P ); //meandAdmu * v
+    DerivativeMatrixType meandAdmu_v4( realNumLastDimPositions, P ); //meandAdmu * v
+    DerivativeMatrixType meandAdmu_v5( realNumLastDimPositions, P ); //meandAdmu * v
+    DerivativeMatrixType meandAdmu_v6( realNumLastDimPositions, P ); //meandAdmu * v
+    DerivativeMatrixType meandAdmu_v7( realNumLastDimPositions, P ); //meandAdmu * v
+
     /** initialize */
     dKiidmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     AtdAdmuii.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+    meanAtdAdmuii.fill( itk::NumericTraits< DerivativeValueType >::Zero );
 
     dAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     dAdmu_v2.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
@@ -699,6 +708,14 @@ namespace itk
     v5Kv5dmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     v6Kv6dmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     v7Kv7dmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+
+    meandAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu_v2.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu_v3.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu_v4.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu_v5.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu_v6.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu_v7.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
 
     DerivativeType dMTdmu;
     dMTdmu.fill( itk::NumericTraits<RealType>::Zero );
@@ -721,7 +738,6 @@ namespace itk
         this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
         const unsigned int realNumLastDimPositions = lastDimPositions.size();
-        unsigned int numSamplesOk = 0;
 
         for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
         {
@@ -738,11 +754,6 @@ namespace itk
             this->TransformPoint( fixedPoint, mappedPoint );
             this->EvaluateMovingImageValueAndDerivative(
                                         mappedPoint, movingImageValue, &movingImageDerivative );
-
-            if(this->m_Zscore)
-            {
-                movingImageDerivative /= std(d);
-            }
 
             /** Get the TransformJacobian dT/dmu */
             this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
@@ -765,50 +776,84 @@ namespace itk
                 dAdmu_v6[ d ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v6[ pixelIndex ];
                 dAdmu_v7[ d ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v7[ pixelIndex ];
 
+                meandAdmu[ nzjis[ d ][ p ] ] += dMTdmu[ p ]/realNumLastDimPositions;
                 AtdAdmuii[ nzjis[ d ][ p ] ] += AtMinusMean[ pixelIndex ][ d ]*dMTdmu[ p ];
             }
         } // end loop over t
+
+        for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
+        {
+            for(unsigned int p = 0; p < P; ++p )
+            {
+                meandAdmu_v1[ d ][ p ] += meandAdmu[ p ]*v1[ pixelIndex ];
+                meandAdmu_v2[ d ][ p ] += meandAdmu[ p ]*v2[ pixelIndex ];
+                meandAdmu_v3[ d ][ p ] += meandAdmu[ p ]*v3[ pixelIndex ];
+                meandAdmu_v4[ d ][ p ] += meandAdmu[ p ]*v4[ pixelIndex ];
+                meandAdmu_v5[ d ][ p ] += meandAdmu[ p ]*v5[ pixelIndex ];
+                meandAdmu_v6[ d ][ p ] += meandAdmu[ p ]*v6[ pixelIndex ];
+                meandAdmu_v7[ d ][ p ] += meandAdmu[ p ]*v7[ pixelIndex ];
+                meanAtdAdmuii[ p ] += AtMinusMean[ pixelIndex ][ d ]*meandAdmu[ p ];
+            }
+        }
     } // end second for loop over sample container
 
-        v1Kv1dmu = v1*AtMinusMean*dAdmu_v1;
+        v1Kv1dmu = v1*AtMinusMean*( dAdmu_v1 - meandAdmu_v1 );
         v1Kv1dmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType > (1.0) ); //normalize
-        v2Kv2dmu = v2*AtMinusMean*dAdmu_v2;
+        v2Kv2dmu = v2*AtMinusMean*( dAdmu_v2 - meandAdmu_v2 );
         v2Kv2dmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType > (1.0) ); //normalize
-        v3Kv3dmu = v3*AtMinusMean*dAdmu_v3;
+        v3Kv3dmu = v3*AtMinusMean*( dAdmu_v3 - meandAdmu_v3 );
         v3Kv3dmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType > (1.0) ); //normalize
-        v4Kv4dmu = v4*AtMinusMean*dAdmu_v4;
+        v4Kv4dmu = v4*AtMinusMean*( dAdmu_v4 - meandAdmu_v4 );
         v4Kv4dmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType > (1.0) ); //normalize
-        v5Kv5dmu = v5*AtMinusMean*dAdmu_v5;
+        v5Kv5dmu = v5*AtMinusMean*( dAdmu_v5 - meandAdmu_v5 );
         v5Kv5dmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType > (1.0) ); //normalize
-        v6Kv6dmu = v6*AtMinusMean*dAdmu_v6;
+        v6Kv6dmu = v6*AtMinusMean*( dAdmu_v6 - meandAdmu_v6 );
         v6Kv6dmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType > (1.0) ); //normalize
-        v7Kv7dmu = v7*AtMinusMean*dAdmu_v7;
+        v7Kv7dmu = v7*AtMinusMean*( dAdmu_v7 - meandAdmu_v7 );
         v7Kv7dmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType > (1.0) ); //normalize
 
 
-        dKiidmu = AtdAdmuii;
+        dKiidmu = AtdAdmuii - meanAtdAdmuii;
         dKiidmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType >(1.0) ); //normalize
 
         double regularisationFirstEigenValue = this->m_Alpha;
-        measure = trace - (e1+e2+e3+e4+e5+e6);//+e7);
-        derivative = dKiidmu -
-                (v1Kv1dmu+v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu);//+v7Kv7dmu);
+       // measure = trace - (e1+e2+e3+e4+e5+e6);//+e7);
+       // derivative = dKiidmu -
+       //         (v1Kv1dmu+v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu);//+v7Kv7dmu);
+
+        measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);//+e7);
+        derivative = dKiidmu - (this->m_Alpha*v1Kv1dmu+v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu);
+
+                //+v7Kv7dmu);
+
+        vnl_vector<double> eigenValues;
+        eigenValues.set_size(K.cols());
+
+        eigenValues.fill(0.0);
+
+        for(unsigned int i = 0; i < K.cols(); i++)
+        {
+           eigenValues(i) = eig.get_eigenvalue( i );
+        }
+        this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1);
+        this->m_eigenValues = eigenValues;
+
 
         //** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )

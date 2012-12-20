@@ -65,11 +65,6 @@ namespace elastix
      this->GetConfiguration()->ReadParameter(alpha,"Alpha", this->GetComponentLabel(), 0, 0);
      this->SetAlpha( alpha );
 
-//		bool RandomScaleIntensity = false;
-//		this->GetConfiguration()->ReadParameter( RandomScaleIntensity,
-//			"RandomScaleIntensity", this->GetComponentLabel(), 0, 0 );
-//		this->SetRandomScaleIntensity( RandomScaleIntensity );
-
     /** Get and set the random sampling in the last dimension. */
     bool useRandomSampling = false;
     this->GetConfiguration()->ReadParameter( useRandomSampling,
@@ -167,8 +162,8 @@ template <class TElastix>
   void MaximizingFirstPrincipalComponentMetric<TElastix>
   ::AfterEachIteration(void)
   {
-     elxout << "Wyke is gek " << this->m_firstEigenVector << std::endl;
-     elxout << "Stefan is gekker " << this->m_eigenValues << std::endl;
+     elxout << "firstEigenVector" << this->m_firstEigenVector << std::endl;
+     elxout << "eigenValues" << this->m_eigenValues << std::endl;
   }
 
 } // end namespace elastix

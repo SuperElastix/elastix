@@ -57,8 +57,6 @@ public:
   itkSetMacro( GridSize, FixedImageSizeType );
   itkSetMacro( TransformIsStackTransform, bool );
   //itkSetMacro( NumEigenValues, unsigned int );
-  //itkSetMacro( RandomScaleIntensity, bool );
-  //itkSetMacro( RandomNumbersCreated, bool );
   itkSetMacro( Alpha, double );
   itkSetMacro( Zscore, bool );
 
@@ -123,12 +121,12 @@ public:
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
   /** Get the derivatives of the match measure. */
-  virtual void GetDerivative( const TransformParametersType & parameters,
+  virtual void GetDerivative(const TransformParametersType & parameters,
 	  DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-	  MeasureType& Value, DerivativeType& Derivative, vnl_matrix<RealType>& imageMatrix ) const;
+  virtual void GetValueAndDerivative(const TransformParametersType& parameters,
+      MeasureType& Value, DerivativeType& Derivative) const;
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
@@ -199,10 +197,6 @@ private:
   /** Integer to indicate how many eigenvalues you want to use in the metric */
   //unsigned int m_NumEigenValues;
 
-	bool m_RandomScaleIntensity;
-
-	vnl_vector<double> m_RandomVector;
-
     bool m_RandomNumbersCreated;
 	
 
@@ -211,7 +205,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMaximizingFirstPrincipalComponentMetric_method6b.hxx"
+#include "itkMaximizingFirstPrincipalComponentMetric_method6.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h

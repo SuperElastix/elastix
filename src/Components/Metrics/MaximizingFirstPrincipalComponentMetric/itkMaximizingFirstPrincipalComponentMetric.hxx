@@ -38,10 +38,8 @@ namespace itk
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
-				//m_NumEigenValues( 1 )
-                //m_RandomScaleIntensity( false ),
-                //m_RandomNumbersCreated( false )
-
+        m_Zscore(true),
+        m_Alpha(1.0)
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -302,50 +300,76 @@ namespace itk
 
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
-	
-//		if(this->m_RandomScaleIntensity)
-//		{
-//			vnl_vector<RealType> RandomScales(A.rows());
-//			RandomScales = this->m_RandomVector;
-//			for(unsigned int i = 0; i < A.rows(); i++)
-//			{
-//				for(unsigned int j = 0; j < A.cols(); j++)
-//				{
-//					A(i,j) *= RandomScales[ i ];
-//				}
-//			}
+        /** Calculate mean of the rows */
+        vnl_vector< RealType > meanrows( A.rows() );
+        meanrows.fill( NumericTraits< double >::Zero );
+        for( unsigned int i = 0; i < A.rows(); i++ )
+        {
+            for( unsigned int j = 0; j < A.cols(); j++)
+            {
+                meanrows(i) += A(i,j);
+            }
+        }
+        meanrows /= double(A.cols());
 
-//		}
+        /** Calculate standard deviation of the rows */
+        vnl_vector< double > std( A.rows() );
+        std.fill( NumericTraits< double >::Zero );
+        for( int i = 0; i < A.rows(); i++ )
+        {
+            for( int j = 0; j < A.cols(); j++)
+            {
+                std(i) += pow((A(i,j)-meanrows(i)),2)/double((A.cols()-1.0));
+            }
+        }
 
-		/** Calculate mean of from columns */
-		vnl_vector< RealType > mean( A.cols() );
-		mean.fill( NumericTraits< double >::Zero );
-		for( unsigned int i = 0; i < A.rows(); i++ )
-		{
-			for( unsigned int j = 0; j < A.cols(); j++)
-			{
-				mean(j) += A(i,j)/A.rows();
-			}
-		}
+        for( int i = 0; i < A.rows(); i++)
+        {
+            std(i) = sqrt(std(i));
+        }
 
-		/** Subtract mean from columns */
-		MatrixType AMinusMean( A.rows(), A.cols() );
-		AMinusMean.fill( NumericTraits< RealType >::Zero );
-		for (unsigned int i = 0; i < A.rows(); i++ )
-		{
-			for (unsigned int j = 0; j < A.cols(); j++)
-			{
-				AMinusMean(i,j) = A(i,j)-mean(j);
-			}
-		}
+        if(this->m_Zscore)
+        {
+            /** Z-score A */
+            for (int i = 0; i < A.rows(); i++ )
+            {
+                for(int j = 0; j < A.cols(); j++)
+                {
+                    A(i,j) = (A(i,j)-meanrows(i))/std(i);
+                }
+            }
+        }
 
-		/** Transpose of the matrix with mean subtracted */
+        /** Calculate mean of from columns */
+        vnl_vector< RealType > mean( A.cols() );
+        mean.fill( NumericTraits< double >::Zero );
+        for( unsigned int i = 0; i < A.rows(); i++ )
+        {
+            for( unsigned int j = 0; j < A.cols(); j++)
+            {
+                mean(j) += A(i,j)/A.rows();
+            }
+        }
+
+        /** Subtract mean from columns */
+        MatrixType AMinusMean( A.rows(), A.cols() );
+        AMinusMean.fill( NumericTraits< RealType >::Zero );
+        for (unsigned int i = 0; i < A.rows(); i++ )
+        {
+            for (unsigned int j = 0; j < A.cols(); j++)
+            {
+                AMinusMean(i,j) = A(i,j)-mean(j);
+            }
+        }
+
+
+        /** Transpose of the matrix with mean subtracted */
 		MatrixType AtMinusMean( AMinusMean.transpose() );
 
 		/** Compute covariance matrix K */
 		MatrixType K( (AMinusMean*AtMinusMean) );
 
-		K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+        K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
 
 		/** Compute first eigenvalue and eigenvector of the covariance matrix K */
 		vnl_symmetric_eigensystem< RealType > eig( K );
@@ -358,7 +382,7 @@ namespace itk
 			trace += K(i,i);
 		}
 
-		measure = 100.0*(static_cast<RealType>(1.0) - e1/trace);
+        measure = (static_cast<RealType>(1.0) - e1/trace);
 		
 		/** Return the measure value. */
 		return measure;
@@ -380,11 +404,8 @@ namespace itk
      * the metric value now. Therefore, we have chosen to only implement the
      * GetValueAndDerivative(), supplying it with a dummy value variable. */
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
-	typedef vnl_matrix <RealType > MatrixType;
-	MatrixType dummyimageMatrix;
 
-	//dummyimageMatrix.fill( NumericTraits< double >::Zero);
-    this->GetValueAndDerivative(parameters, dummyvalue, derivative, dummyimageMatrix);
+    this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
   } // end GetDerivative
 
@@ -396,7 +417,7 @@ namespace itk
     void
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
-	MeasureType& value, DerivativeType& derivative, vnl_matrix< RealType >& imageMatrix ) const
+    MeasureType& value, DerivativeType& derivative) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 		//elxout << "GetValueAndDerivative" << std::endl;
@@ -527,19 +548,45 @@ namespace itk
 		
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
-//		if(this->m_RandomScaleIntensity)
-//		{
-//			vnl_vector<RealType> RandomScales(A.rows());
-//			RandomScales = this->m_RandomVector;
-//			for(unsigned int i = 0; i < A.rows(); i++)
-//			{
-//				for(unsigned int j = 0; j < A.cols(); j++)
-//				{
-//					A(i,j) *= RandomScales[ i ];
-//				}
-//			}
+        /** Calculate mean of the rows */
+        vnl_vector< RealType > meanrows( A.rows() );
+        meanrows.fill( NumericTraits< double >::Zero );
+        for( unsigned int i = 0; i < A.rows(); i++ )
+        {
+            for( unsigned int j = 0; j < A.cols(); j++)
+            {
+                meanrows(i) += A(i,j);
+            }
+        }
+        meanrows /= double(A.cols());
 
-//		}
+        /** Calculate standard deviation of the rows */
+        vnl_vector< double > std( A.rows() );
+        std.fill( NumericTraits< double >::Zero );
+        for( int i = 0; i < A.rows(); i++ )
+        {
+            for( int j = 0; j < A.cols(); j++)
+            {
+                std(i) += pow((A(i,j)-meanrows(i)),2)/double((A.cols()-1.0));
+            }
+        }
+
+        for( int i = 0; i < A.rows(); i++)
+        {
+            std(i) = sqrt(std(i));
+        }
+
+        if(this->m_Zscore)
+        {
+            /** Z-score A */
+            for (int i = 0; i < A.rows(); i++ )
+            {
+                for(int j = 0; j < A.cols(); j++)
+                {
+                    A(i,j) = (A(i,j)-meanrows(i))/std(i);
+                }
+            }
+        }
 
 		/** Calculate mean of from columns */
 		vnl_vector< double > mean( A.cols() );
@@ -570,7 +617,7 @@ namespace itk
 		/** Compute covariance matrix K */
 		MatrixType K( (AMinusMean*AtMinusMean) );
 		
-		K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+        K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
 
 		/** Compute first eigenvalue and eigenvector of the covariance matrix K */
 		vnl_symmetric_eigensystem< RealType > eig( K );
@@ -619,7 +666,7 @@ namespace itk
 		startSamplesOK = 0;
 
   	/** Second loop over fixed image samples. */ 
-		for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
+    for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
     {
 			/** Read fixed coordinates. */
 			FixedImagePointType fixedPoint = SamplesOK[ startSamplesOK ];
@@ -691,8 +738,8 @@ namespace itk
 			/ ( static_cast < DerivativeValueType > (A.rows()) - 
 			static_cast < DerivativeValueType >(1.0) ); //normalize
 
-		measure = 100.0*(static_cast<RealType>(1.0) - e1/trace);
-		derivative = 100.0*(( dKiidmu*e1 - v1Kv1dmu*trace )/(trace*trace));
+        measure = (static_cast<RealType>(1.0) - e1/trace);
+        derivative = (( dKiidmu*e1 - v1Kv1dmu*trace )/(trace*trace));
 
 		//** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )

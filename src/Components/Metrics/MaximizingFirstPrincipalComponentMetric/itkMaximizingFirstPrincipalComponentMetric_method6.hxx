@@ -328,7 +328,7 @@ namespace itk
 
         K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
 
-        /** Compute first eigenvalue and eigenvector of the covariance matrix K */
+         /** Compute first eigenvalue and eigenvector of the covariance matrix K */
         vnl_symmetric_eigensystem< RealType > eig( K );
 
         RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
@@ -339,8 +339,6 @@ namespace itk
         RealType e6 = eig.get_eigenvalue( K.cols() - 6 ); // Highest eigenvalue of K
         RealType e7 = eig.get_eigenvalue( K.cols() - 7 ); // Highest eigenvalue of K
 
-
-
         /** Compute sum of all eigenvalues = trace( K ) */
         RealType trace = 0.0;
         for( int i = 0; i < K.rows(); i++ )
@@ -348,8 +346,8 @@ namespace itk
             trace += K(i,i);
         }
 
-        measure = trace - (e1+e2+e3+e4+e5+e6+e7);
-
+        measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);
+        //measure = 1.0 - (e1+e2+e3+e4+e5+e6+e7)/trace;
 
         vnl_vector<double> eigenValues;
         eigenValues.set_size(K.cols());
@@ -360,7 +358,7 @@ namespace itk
         {
            eigenValues(i) = eig.get_eigenvalue( i );
         }
-        this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1);
+        this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1) ;
         this->m_eigenValues = eigenValues;
 
         /** Return the measure value. */
@@ -383,11 +381,7 @@ namespace itk
      * the metric value now. Therefore, we have chosen to only implement the
      * GetValueAndDerivative(), supplying it with a dummy value variable. */
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
-    typedef vnl_matrix <RealType > MatrixType;
-    MatrixType dummyimageMatrix;
-
-    //dummyimageMatrix.fill( NumericTraits< double >::Zero);
-    this->GetValueAndDerivative(parameters, dummyvalue, derivative, dummyimageMatrix);
+    this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
   } // end GetDerivative
 
@@ -399,7 +393,7 @@ namespace itk
     void
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& value, DerivativeType& derivative, vnl_matrix< RealType >& imageMatrix ) const
+    MeasureType& value, DerivativeType& derivative) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
@@ -608,6 +602,18 @@ namespace itk
             trace += K(i,i);
         }
 
+        vnl_vector<double> eigenValues;
+        eigenValues.set_size(K.cols());
+
+        eigenValues.fill(0.0);
+
+        for(unsigned int i = 0; i < K.cols(); i++)
+        {
+           eigenValues(i) = eig.get_eigenvalue( i );
+        }
+        this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1 );
+        this->m_eigenValues = eigenValues;
+
         /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
     DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
@@ -700,23 +706,22 @@ namespace itk
                 this->EvaluateTransformJacobianInnerProduct(
                    jacobian, movingImageDerivative, imageJacobian );
 
-        /** Store values. */
-        dMTdmu = imageJacobian;
+            /** Store values. */
+            dMTdmu = imageJacobian;
 
-                /** build metric derivative components */
-                for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
-                {
-                    dAdmu_v1[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v1[ d ];
-                    dAdmu_v2[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v2[ d ];
-                    dAdmu_v3[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v3[ d ];
-                    dAdmu_v4[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v4[ d ];
-                    dAdmu_v5[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v5[ d ];
-                    dAdmu_v6[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v6[ d ];
-                    dAdmu_v7[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v7[ d ];
-
-                    AtdAdmuii[ nzjis[ d ][ p ] ] += Atzscore[ d ][ pixelIndex ]*dMTdmu[ p ];
-                }
-            } // end loop over t
+            /** build metric derivative components */
+            for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
+            {
+                dAdmu_v1[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v1[ d ];
+                dAdmu_v2[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v2[ d ];
+                dAdmu_v3[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v3[ d ];
+                dAdmu_v4[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v4[ d ];
+                dAdmu_v5[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v5[ d ];
+                dAdmu_v6[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v6[ d ];
+                dAdmu_v7[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v7[ d ];
+                AtdAdmuii[ nzjis[ d ][ p ] ] += Atzscore[ d ][ pixelIndex ]*dMTdmu[ p ];
+            }
+        } // end loop over t
     } // end second for loop over sample container
 
         v1Kv1dmu = v1*Atzscore*dAdmu_v1;
@@ -748,16 +753,17 @@ namespace itk
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType > (1.0) ); //normalize
 
-
         dKiidmu = AtdAdmuii;
         dKiidmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType >(1.0) ); //normalize
 
-        double regularisationFirstEigenValue = this->m_Alpha;
-        measure = trace - (e1+e2+e3+e4+e5+e6);
-        derivative = dKiidmu -
-                (v1Kv1dmu+v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu+v7Kv7dmu);
+       double regularisationFirstEigenValue = this->m_Alpha;
+
+       measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);
+       derivative = dKiidmu -
+                (this->m_Alpha*v1Kv1dmu+v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu);
+
 
         //** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
@@ -836,7 +842,5 @@ namespace itk
 
 } // end namespace itk
 
-#endif // end #ifndef _itkMaximizingFirstPrincipalComponentMetric_method6_hxx
-
-
+#endif // end #ifndef _itkMaximizingFirstPrincipalComponentMetric_method6b_hxx
 
