@@ -164,6 +164,13 @@ protected:
     DerivativeType & imageJacobian) const;
 
   mutable vnl_vector<double> m_firstEigenVector;
+  mutable vnl_vector<double> m_secondEigenVector;
+  mutable vnl_vector<double> m_thirdEigenVector;
+  mutable vnl_vector<double> m_fourthEigenVector;
+  mutable vnl_vector<double> m_fifthEigenVector;
+  mutable vnl_vector<double> m_sixthEigenVector;
+  mutable vnl_vector<double> m_seventhEigenVector;
+
   mutable vnl_vector<double> m_eigenValues;
 
 private:

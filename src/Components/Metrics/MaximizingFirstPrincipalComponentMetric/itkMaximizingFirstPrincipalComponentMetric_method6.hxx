@@ -346,6 +346,9 @@ namespace itk
             trace += K(i,i);
         }
 
+				vnl_vector<RealType> v1(eig.get_eigenvector(K.cols()-1));
+
+        //measure = 1000*abs(v1(0))+trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);
         measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);
         //measure = 1.0 - (e1+e2+e3+e4+e5+e6+e7)/trace;
 
@@ -359,6 +362,13 @@ namespace itk
            eigenValues(i) = eig.get_eigenvalue( i );
         }
         this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1) ;
+        this->m_secondEigenVector = eig.get_eigenvector( K.cols() - 2) ;
+        this->m_thirdEigenVector = eig.get_eigenvector( K.cols() - 3) ;
+        this->m_fourthEigenVector = eig.get_eigenvector( K.cols() - 4) ;
+        this->m_fifthEigenVector = eig.get_eigenvector( K.cols() - 5) ;
+        this->m_sixthEigenVector = eig.get_eigenvector( K.cols() - 6) ;
+        this->m_seventhEigenVector = eig.get_eigenvector( K.cols() - 7) ;
+
         this->m_eigenValues = eigenValues;
 
         /** Return the measure value. */
@@ -612,6 +622,12 @@ namespace itk
            eigenValues(i) = eig.get_eigenvalue( i );
         }
         this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1 );
+        this->m_secondEigenVector = eig.get_eigenvector( K.cols() - 2) ;
+        this->m_thirdEigenVector = eig.get_eigenvector( K.cols() - 3) ;
+        this->m_fourthEigenVector = eig.get_eigenvector( K.cols() - 4) ;
+        this->m_fifthEigenVector = eig.get_eigenvector( K.cols() - 5) ;
+        this->m_sixthEigenVector = eig.get_eigenvector( K.cols() - 6) ;
+        this->m_seventhEigenVector = eig.get_eigenvector( K.cols() - 7) ;
         this->m_eigenValues = eigenValues;
 
         /** Create variables to store intermediate results in. */
@@ -623,20 +639,22 @@ namespace itk
     vnl_vector< DerivativeValueType > dKiidmu( P ); //Trace of derivative of covariance matrix
     vnl_vector< DerivativeValueType > AtdAdmuii( P ); //Trace of AtMinusMean * dAdmu
     vnl_vector< DerivativeValueType > v1Kv1dmu( P ); //v1 * derivative covariance matrix * v1
-    vnl_vector< DerivativeValueType > v2Kv2dmu( P ); //v1 * derivative covariance matrix * v1
-    vnl_vector< DerivativeValueType > v3Kv3dmu( P ); //v1 * derivative covariance matrix * v1
-    vnl_vector< DerivativeValueType > v4Kv4dmu( P ); //v1 * derivative covariance matrix * v1
-    vnl_vector< DerivativeValueType > v5Kv5dmu( P ); //v1 * derivative covariance matrix * v1
-    vnl_vector< DerivativeValueType > v6Kv6dmu( P ); //v1 * derivative covariance matrix * v1
-    vnl_vector< DerivativeValueType > v7Kv7dmu( P ); //v1 * derivative covariance matrix * v1
+    vnl_vector< DerivativeValueType > v2Kv2dmu( P ); //v1 * derivative covariance matrix * v2
+    vnl_vector< DerivativeValueType > v3Kv3dmu( P ); //v1 * derivative covariance matrix * v3
+    vnl_vector< DerivativeValueType > v4Kv4dmu( P ); //v1 * derivative covariance matrix * v4
+    vnl_vector< DerivativeValueType > v5Kv5dmu( P ); //v1 * derivative covariance matrix * v5
+    vnl_vector< DerivativeValueType > v6Kv6dmu( P ); //v1 * derivative covariance matrix * v6
+    vnl_vector< DerivativeValueType > v7Kv7dmu( P ); //v1 * derivative covariance matrix * v7
 
     DerivativeMatrixType dAdmu_v1( pixelIndex, P ); //dAdmu * v1
-    DerivativeMatrixType dAdmu_v2( pixelIndex, P ); //dAdmu * v1
-    DerivativeMatrixType dAdmu_v3( pixelIndex, P ); //dAdmu * v1
-    DerivativeMatrixType dAdmu_v4( pixelIndex, P ); //dAdmu * v1
-    DerivativeMatrixType dAdmu_v5( pixelIndex, P ); //dAdmu * v1
-    DerivativeMatrixType dAdmu_v6( pixelIndex, P ); //dAdmu * v1
-    DerivativeMatrixType dAdmu_v7( pixelIndex, P ); //dAdmu * v1
+    DerivativeMatrixType dAdmu_v2( pixelIndex, P ); //dAdmu * v2
+    DerivativeMatrixType dAdmu_v3( pixelIndex, P ); //dAdmu * v3
+    DerivativeMatrixType dAdmu_v4( pixelIndex, P ); //dAdmu * v4
+    DerivativeMatrixType dAdmu_v5( pixelIndex, P ); //dAdmu * v5
+    DerivativeMatrixType dAdmu_v6( pixelIndex, P ); //dAdmu * v6
+    DerivativeMatrixType dAdmu_v7( pixelIndex, P ); //dAdmu * v7
+
+    //DerivativeMatrixType dAdmu_v( A.cols()*pixelIndex, P );
 
     /** initialize */
     dKiidmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
@@ -649,6 +667,8 @@ namespace itk
     dAdmu_v5.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     dAdmu_v6.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     dAdmu_v7.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+
+    //dAdmu_v.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
 
     v1Kv1dmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     v2Kv2dmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
@@ -720,6 +740,12 @@ namespace itk
                 dAdmu_v6[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v6[ d ];
                 dAdmu_v7[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v7[ d ];
                 AtdAdmuii[ nzjis[ d ][ p ] ] += Atzscore[ d ][ pixelIndex ]*dMTdmu[ p ];
+			
+                //for(unsigned int s = 0; s < A.cols(); s++)
+                //{
+                //	dAdmu_v[ (s+1)*pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*eig.get_eigenvector( K.cols() - (s+1) );
+                //}
+								
             }
         } // end loop over t
     } // end second for loop over sample container
@@ -758,7 +784,40 @@ namespace itk
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType >(1.0) ); //normalize
 
-       double regularisationFirstEigenValue = this->m_Alpha;
+//        DerivativeMatrixType C(A.rows(), P);
+				
+//        C.Fill(0.0);
+//        for(unsigned int k = 1; k < C.rows(); k++ );
+//        {
+//            DerivativeMatrixType dAdmu_vi( dAdmu_v.extract(A.rows(),P,k*A.rows(),0) );
+//            C += v1*Atzscore*dAdmu_vi/(eig.get_eigenvalue(K.cols() - (k+1))-e1);
+//        }
+
+//        DerivativeMatrixType C_part2(A.rows(), P);
+//        unsigned int m = 0;
+//        for(unsigned int k = 1; k < C.rows(); k++ );
+//        {
+//            C_part2 += v1(m)*eig.get_eigenvector( K.cols() - (k+1) )*Atzscore*dAdmu_v1/(e1 - eig.get_eigenvalue( K.cols()-(k+1)) );
+//            m++;
+//        }
+
+//        C_part2 /= v1(0);
+//        C -= C_part2;
+
+//        vnl_vector<DerivativeValueType > dv1dmu(P);
+//        for(unsigned int s = 0; s < C.rows(); s++)
+//        {
+//            for(unsigned int p = 0; p < P; p++)
+//            {
+//                dv1dmu[ p ] += C[ s ][ p ];
+//            }
+//        }
+
+//        dv1dmu *= v1(0);
+
+       	double regularisationFirstEigenValue = this->m_Alpha;
+
+       //measure = abs(v1(0))*1000 + trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);
 
        measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);
        derivative = dKiidmu -

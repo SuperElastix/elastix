@@ -163,6 +163,12 @@ template <class TElastix>
   ::AfterEachIteration(void)
   {
      elxout << "firstEigenVector" << this->m_firstEigenVector << std::endl;
+     elxout << "secondEigenVector" << this->m_secondEigenVector << std::endl;
+     elxout << "thirdEigenVector" << this->m_thirdEigenVector << std::endl;
+     elxout << "fourthEigenVector" << this->m_fourthEigenVector << std::endl;
+     elxout << "fifthEigenVector" << this->m_fifthEigenVector << std::endl;
+     elxout << "sixthEigenVector" << this->m_sixthEigenVector << std::endl;
+     elxout << "seventhEigenVector" << this->m_seventhEigenVector << std::endl;
      elxout << "eigenValues" << this->m_eigenValues << std::endl;
   }
 
