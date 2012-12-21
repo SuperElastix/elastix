@@ -893,25 +893,26 @@ namespace itk
       }
     }
 
-		/** Compute norm of transform parameters per image */
-		unsigned int ind = 0;
-  	for ( unsigned int t = 0; t < this->GetNumberOfParameters(); ++t )
-  	{
-    	const unsigned int startc = (this->GetNumberOfParameters() / lastDimSize)*t;
-    	for ( unsigned int c = startc; c < startc + (this->GetNumberOfParameters() / lastDimSize); ++c )
-    	{
-         this->m_normdCdmu[ ind ] += pow(derivative[ c ],2);		
-				 ++ind;	 
-      }
+    /** Compute norm of transform parameters per image */
+    this->m_normdCdmu.set_size(lastDimSize);
+    this->m_normdCdmu.fill(0.0);
+    unsigned int ind = 0;
+    for ( unsigned int t = 0; t < lastDimSize; ++t )
+    {
+        const unsigned int startc = (this->GetNumberOfParameters() / lastDimSize)*t;
+        for ( unsigned int c = startc; c < startc + (this->GetNumberOfParameters() / lastDimSize); ++c )
+        {
+         this->m_normdCdmu[ ind ] += pow(derivative[ c ],2);
+        }
+        ++ind;
     }
 
+    for(unsigned int index = 0; index < this->m_normdCdmu.size(); index++)
+    {
+        this->m_normdCdmu[index] = sqrt(this->m_normdCdmu.get(index));
+    }
 
-		for(unsigned int index = 0; index < this->m_normdCdmu.size(); index++)
-		{
-				this->m_normdCdmu[index] = sqrt(this->m_normdCdmu.get(index));
-		}
-
-  	this->m_normdCdmu /= static_cast< double >( this->GetNumberOfParameters() / lastDimSize );
+    this->m_normdCdmu /= static_cast< double >( this->GetNumberOfParameters() / lastDimSize );
 
 
 
