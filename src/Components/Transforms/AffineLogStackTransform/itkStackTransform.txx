@@ -54,6 +54,8 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>::SetParameters( c
 
   // Set separate subtransform parameters
   const NumberOfParametersType numSubTransformParameters = this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
+  //this->SubtractMean(param);
+
   for ( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
   {
     // MS, \todo: the new itk::TransformParameters only have constructors taking 1 argument
@@ -79,18 +81,93 @@ const typename StackTransform<TScalarType,NInputDimensions,NOutputDimensions>::P
 StackTransform< TScalarType, NInputDimensions, NOutputDimensions >
 ::GetParameters ( void ) const
 {
-  this->m_Parameters.SetSize( this->GetNumberOfParameters() );
+//    ofstream file; ofstream file2;
+//    file.open("parameters.txt", ios::app);
+//    file2.open("initialparameters.txt", ios::app);
+//    this->m_Parameters.SetSize( this->GetNumberOfParameters() );
 
-  // Fill params with parameters of subtransforms
-  unsigned int i = 0;
+//    ParametersType dummyparams;
+//    ParametersType dummyidentityparams;
+//    dummyparams.SetSize(this->GetNumberOfParameters());
+//    dummyidentityparams.SetSize(this->GetNumberOfParameters());
+
+//    const NumberOfParametersType numSubTransformParameters = this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
+//    unsigned int lastDimSize = this->GetNumberOfParameters()/numSubTransformParameters;
+
+//    unsigned int i = 0;
+//    for ( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
+//    {
+//        const ParametersType & subparams = this->m_SubTransformContainer[ t ]->GetParameters();
+//        for ( unsigned int p = 0; p < this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters(); ++p, ++i )
+//        {
+//            dummyparams[ i ] = subparams[ p ];
+//        }
+//    }
+//    file2 << dummyparams << std::endl;
+
+//    unsigned int j = 0; unsigned int o=0;
+//    for ( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
+//    {
+//        ParametersType identitysubparams;
+//        identitysubparams.SetSize(this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters());
+//        vnl_matrix<double> identitymatrix(identitysubparams.size()/2,identitysubparams.size()/2);
+//        identitymatrix.set_identity();
+//        for(unsigned int s = 0; s < identitysubparams.size()/2;  s++)
+//        {
+//            for(unsigned int q = 0; q < identitysubparams.size()/2; q++)
+//            {
+//                identitysubparams[o] = identitymatrix(s,q);
+//                o++;
+//            }
+//        }
+//        for ( unsigned int p = 0; p < this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters(); ++p, ++i )
+//        {
+//            dummyidentityparams[ j ] = identitysubparams[ p ];
+//        }
+//    }
+//    //subtract mean from parameters
+//    const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / lastDimSize;
+//    ParametersType mean ( numParametersPerLastDimension );
+//    mean.Fill( 0.0 );
+
+//    /** Compute mean per control point. */
+//    for ( unsigned int t = 0; t < lastDimSize; ++t )
+//    {
+//        const unsigned int startc = numParametersPerLastDimension * t;
+//        for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+//        {
+//           const unsigned int index = c % numParametersPerLastDimension;
+//            mean[ index ] += dummyparams[ c ];
+//        }
+//    }
+//    mean /= static_cast< double >( lastDimSize );
+
+//    /** Update derivative per control point. */
+//    for ( unsigned int t = 0; t < lastDimSize; ++t )
+//    {
+//        const unsigned int startc = numParametersPerLastDimension * t;
+//        for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+//        {
+//           const unsigned int index = c % numParametersPerLastDimension;
+//           dummyparams[ c ] -= mean[ index ];
+//        }
+//    }
+
+//    dummyparams += dummyidentityparams;
+
+  //Fill params with parameters of subtransforms
+  unsigned int k = 0;
   for ( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
   {
     const ParametersType & subparams = this->m_SubTransformContainer[ t ]->GetParameters();
-    for ( unsigned int p = 0; p < this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters(); ++p, ++i )
+    for ( unsigned int p = 0; p < this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters(); ++p, ++k )
     {
-      this->m_Parameters[ i ] = subparams[ p ];
+      this->m_Parameters[ k ] = subparams[ p ];
     }
   }
+  //this->m_Parameters = dummyparams;
+
+  //file << this->m_Parameters << std::endl;
 
   return this->m_Parameters;
 } // end GetParameters
@@ -127,12 +204,12 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   {
     opp[ d ] = oppr[ d ];
   }
+
   opp[ ReducedOutputSpaceDimension ] = ipp[ ReducedInputSpaceDimension ];
 
   return opp;
 
 } // end TransformPoint
-
 
 /**
  * ********************* GetJacobian ****************************

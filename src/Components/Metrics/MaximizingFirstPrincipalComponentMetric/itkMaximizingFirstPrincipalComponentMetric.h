@@ -173,6 +173,8 @@ protected:
 
   mutable vnl_vector<double> m_eigenValues;
 
+	mutable vnl_vector<double> m_normdCdmu;
+
 private:
   MaximizingFirstPrincipalComponentMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

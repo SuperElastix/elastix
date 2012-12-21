@@ -170,6 +170,7 @@ template <class TElastix>
      elxout << "sixthEigenVector" << this->m_sixthEigenVector << std::endl;
      elxout << "seventhEigenVector" << this->m_seventhEigenVector << std::endl;
      elxout << "eigenValues" << this->m_eigenValues << std::endl;
+		 elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
   }
 
 } // end namespace elastix
