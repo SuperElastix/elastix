@@ -4,6 +4,6 @@ ADD_ELXCOMPONENT( MaximizingFirstPrincipalComponentMetric
  elxMaximizingFirstPrincipalComponentMetric.hxx
  elxMaximizingFirstPrincipalComponentMetric.cxx
  itkMaximizingFirstPrincipalComponentMetric.h
- itkMaximizingFirstPrincipalComponentMetric_method6.hxx
+ itkMaximizingFirstPrincipalComponentMetric_method5b.hxx
  )
 

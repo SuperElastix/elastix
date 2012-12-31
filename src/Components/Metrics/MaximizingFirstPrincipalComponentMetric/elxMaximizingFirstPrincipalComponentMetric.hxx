@@ -29,6 +29,7 @@ namespace elastix
     void MaximizingFirstPrincipalComponentMetric<TElastix>
       ::Initialize(void) throw (itk::ExceptionObject)
   {
+        elxout << "start initialize metric" << std::endl;
     TimerPointer timer = TimerType::New();
     timer->StartTimer();
     this->Superclass1::Initialize();
@@ -151,6 +152,7 @@ namespace elastix
         }
       }
     }
+    elxout << "end BeforeEachResolution" << std::endl;
 
   } // end BeforeEachResolution
 
@@ -162,15 +164,15 @@ template <class TElastix>
   void MaximizingFirstPrincipalComponentMetric<TElastix>
   ::AfterEachIteration(void)
   {
-     elxout << "firstEigenVector" << this->m_firstEigenVector << std::endl;
-     elxout << "secondEigenVector" << this->m_secondEigenVector << std::endl;
-     elxout << "thirdEigenVector" << this->m_thirdEigenVector << std::endl;
-     elxout << "fourthEigenVector" << this->m_fourthEigenVector << std::endl;
-     elxout << "fifthEigenVector" << this->m_fifthEigenVector << std::endl;
-     elxout << "sixthEigenVector" << this->m_sixthEigenVector << std::endl;
-     elxout << "seventhEigenVector" << this->m_seventhEigenVector << std::endl;
-     elxout << "eigenValues" << this->m_eigenValues << std::endl;
-		 elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
+    elxout << "firstEigenVector" << this->m_firstEigenVector << std::endl;
+    elxout << "secondEigenVector" << this->m_secondEigenVector << std::endl;
+    elxout << "thirdEigenVector" << this->m_thirdEigenVector << std::endl;
+    elxout << "fourthEigenVector" << this->m_fourthEigenVector << std::endl;
+    elxout << "fifthEigenVector" << this->m_fifthEigenVector << std::endl;
+    elxout << "sixthEigenVector" << this->m_sixthEigenVector << std::endl;
+    elxout << "seventhEigenVector" << this->m_seventhEigenVector << std::endl;
+    elxout << "eigenValues" << this->m_eigenValues << std::endl;
+    elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
   }
 
 } // end namespace elastix

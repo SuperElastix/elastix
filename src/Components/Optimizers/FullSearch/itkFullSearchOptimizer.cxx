@@ -240,7 +240,6 @@ namespace itk
       RangeType range = it.Value();
       m_CurrentPointInSearchSpace[ssdim] = range[0] +
         static_cast<double>( range[2] * m_CurrentIndexInSearchSpace[ssdim] );
-
       /** Update the array of parameters. */
       currentPosition[ it.Index() ] = m_CurrentPointInSearchSpace[ssdim] ;
       it++;
@@ -458,7 +457,7 @@ namespace itk
       /** go to next dimension in search space */
       it++;
     } // end for
-
+    std::cout << point << std::endl;
     return point;
 
   } // end IndexToPoint

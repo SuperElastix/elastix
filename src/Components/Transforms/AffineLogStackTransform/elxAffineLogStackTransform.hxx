@@ -38,9 +38,9 @@ AffineLogStackTransform<TElastix>
 */
 template <class TElastix>
 unsigned int AffineLogStackTransform<TElastix>
-::InitializeAffineTransform()
+::InitializeAffineLogTransform()
 {
-    elxout << "InitializeAffineTransform" << std::endl;
+    elxout << "InitializeAffineLogTransform" << std::endl;
 
     /** Initialize the m_AffineDummySubTransform */
     this->m_AffineLogDummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
@@ -65,7 +65,7 @@ int AffineLogStackTransform<TElastix>
   elxout << "BeforeAll" << std::endl;
 
   /** Initialize affine transform. */
-  return InitializeAffineTransform();
+  return InitializeAffineLogTransform();
 }
 
 /**
@@ -96,8 +96,6 @@ void AffineLogStackTransform<TElastix>::BeforeRegistration( void )
   /** Task 3 - Give the registration an initial parameter-array. */
   ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
   dummyInitialParameters.Fill( 0.0 );
-
-  elxout << "debug transform 3" << std::endl;
 
   /** Put parameters in the registration. */
   this->m_Registration->GetAsITKBaseType()
@@ -160,7 +158,7 @@ void AffineLogStackTransform<TElastix>
   }
         elxout << "corp: " << RDcenterOfRotationPoint << std::endl;
 
-  this->InitializeAffineTransform();
+  this->InitializeAffineLogTransform();
 
   this->m_AffineLogDummySubTransform->SetCenter( RDcenterOfRotationPoint );
 
@@ -594,8 +592,10 @@ bool AffineLogStackTransform<TElastix>
   dummyImage->TransformContinuousIndexToPhysicalPoint(
     RDcenterOfRotationIndex, rotationPoint );
 
-  /** Successfully read centerOfRotation as Index. */
+  /** Successfully read centerOfRotation       elxout << "I hope you don't print this" << std::endl;
+as Index. */
   return true;
+  elxout << "I hope you don't print this" << std::endl;
 
 } // end ReadCenterOfRotationIndex()
 

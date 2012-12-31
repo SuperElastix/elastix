@@ -173,7 +173,7 @@ protected:
 
   mutable vnl_vector<double> m_eigenValues;
 
-	mutable vnl_vector<double> m_normdCdmu;
+  mutable vnl_vector<double> m_normdCdmu;
 
 private:
   MaximizingFirstPrincipalComponentMetric(const Self&); //purposely not implemented
@@ -214,7 +214,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMaximizingFirstPrincipalComponentMetric_method6.hxx"
+#include "itkMaximizingFirstPrincipalComponentMetric_method5b.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h

@@ -41,7 +41,7 @@ namespace itk
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
         m_Alpha( 1.0 ),
-        m_Zscore( true )
+        m_Zscore( false )
 
   {
     this->SetUseImageSampler( true );
@@ -280,6 +280,7 @@ namespace itk
 
         MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
+        std::cout << "zscore?: " << this->m_Zscore << std::endl;
         if(this->m_Zscore)
         {
             /** Calculate mean of the rows */
@@ -762,6 +763,11 @@ namespace itk
             this->EvaluateTransformJacobianInnerProduct(
                    jacobian, movingImageDerivative, imageJacobian );
 
+            if(this->m_Zscore)
+            {
+                movingImageDerivative/=std(d);
+            }
+
             /** Store values. */
             dMTdmu = imageJacobian;
 
@@ -832,15 +838,8 @@ namespace itk
             / ( static_cast < DerivativeValueType > (A.rows()) -
             static_cast < DerivativeValueType >(1.0) ); //normalize
 
-        double regularisationFirstEigenValue = this->m_Alpha;
-       // measure = trace - (e1+e2+e3+e4+e5+e6);//+e7);
-       // derivative = dKiidmu -
-       //         (v1Kv1dmu+v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu);//+v7Kv7dmu);
-
         measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);//+e7);
         derivative = dKiidmu - (this->m_Alpha*v1Kv1dmu+v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu);
-
-                //+v7Kv7dmu);
 
         vnl_vector<double> eigenValues;
         eigenValues.set_size(K.cols());

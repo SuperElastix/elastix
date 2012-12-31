@@ -291,11 +291,14 @@ namespace itk
         }
 
         /** Z-score A */
-        for (int i = 0; i < A.rows(); i++ )
+        if(this->m_Zscore)
         {
-            for(int j = 0; j < A.cols(); j++)
+            for (int i = 0; i < A.rows(); i++ )
             {
-                A(i,j) = (A(i,j)-meanrows(i))/std(i);
+                for(int j = 0; j < A.cols(); j++)
+                {
+                    A(i,j) = (A(i,j)-meanrows(i))/std(i);
+                }
             }
         }
 
@@ -537,11 +540,14 @@ namespace itk
         }
 
         /** Z-score A */
-        for (int i = 0; i < A.rows(); i++ )
+        if(this->m_Zscore)
         {
-            for(int j = 0; j < A.cols(); j++)
+            for (int i = 0; i < A.rows(); i++ )
             {
-                A(i,j) = (A(i,j)-meanrows(i))/std(i);
+                for(int j = 0; j < A.cols(); j++)
+                {
+                    A(i,j) = (A(i,j)-meanrows(i))/std(i);
+                }
             }
         }
 
@@ -659,6 +665,11 @@ namespace itk
                     /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
                     this->EvaluateTransformJacobianInnerProduct(
                     jacobian, movingImageDerivative, imageJacobian );
+
+                    if(this->m_Zscore)
+                    {
+                        movingImageDerivative/=std(d);
+                    }
 
           /** Store values. */
           dMTdmu = imageJacobian;

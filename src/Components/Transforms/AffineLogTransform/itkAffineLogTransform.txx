@@ -82,9 +82,6 @@ AffineLogTransform<TScalarType, Dimension>
   }
 
   exponentMatrix = vnl_matrix_exp( this->m_MatrixLogDomain.GetVnlMatrix() );
-  //std::cout << "logmatrix in SetParameters(): " << this->m_MatrixLogDomain
-  //          << "\nparameters in SetParameters(): " << parameters
-  //          << "\n exp(parameters): " << exponentMatrix << std::endl;
 
   this->PrecomputeJacobianOfSpatialJacobian();
 
@@ -175,8 +172,7 @@ GetJacobian( const InputPointType & p,
   {
     j[ dim ][ blockOffset + dim ] = 1.0;
   }
-  //std::cout << "point: " << pp << "\njacobian: " << j << "\nparameters: "
-     //       << this->m_Parameters <<"\nLogMatrix: "<< this->m_MatrixLogDomain << std::endl;
+
   nzji = this->m_NonZeroJacobianIndices;
 
 }
@@ -253,10 +249,7 @@ AffineLogTransform<TScalarType, Dimension>
   {
     jsj[par].Fill(itk::NumericTraits<ScalarType>::Zero);
   } 
- // for(unsigned int i = 0; i < jsj.size(); i++)
- // {
- //     std::cout << jsj[i] << std::endl;
- // }
+
 }
 
 

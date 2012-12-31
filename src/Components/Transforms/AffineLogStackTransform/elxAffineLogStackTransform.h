@@ -204,7 +204,7 @@ private:
   double m_StackOrigin, m_StackSpacing;
 
   /** Initialize the affine transform. */
-  unsigned int InitializeAffineTransform();
+  unsigned int InitializeAffineLogTransform();
 
 }; // end class AffineStackTransform
 
