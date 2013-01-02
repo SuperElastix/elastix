@@ -362,7 +362,7 @@ namespace itk
         this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1);
         this->m_eigenValues = eigenValues;
 	
-		elxout << "parameter 4: " << parameters[4] << "\nparameter 5: " << parameters[5] << std::endl;
+        //elxout << "parameter 4: " << parameters[4] << "\nparameter 5: " << parameters[5] << std::endl;
 		
 		/** Return the measure value. */
 		return measure;

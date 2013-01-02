@@ -22,7 +22,9 @@ namespace itk
         m_SampleLastDimensionRandomly( false ),
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
-        m_TransformIsStackTransform( false )
+        m_TransformIsStackTransform( false ),
+        m_Zscore( true ),
+        m_Alpha(1.0)
                 //m_NumEigenValues( 1 )
   {
     this->SetUseImageSampler( true );
@@ -345,6 +347,7 @@ namespace itk
         }
 
         measure = trace - e1;
+       // measure = (static_cast<RealType>(1.0) - e1/trace);
 
         /** Return the measure value. */
         return measure;
@@ -381,15 +384,14 @@ namespace itk
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType& value, DerivativeType& derivative) const
-  {
-    itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
-        //elxout << "GetValueAndDerivative" << std::endl;
+    {
+        itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
-    /** Define derivative and Jacobian types. */
-    typedef typename DerivativeType::ValueType        DerivativeValueType;
-    typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
+        /** Define derivative and Jacobian types. */
+        typedef typename DerivativeType::ValueType        DerivativeValueType;
+        typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
-    /** Initialize some variables */
+        /** Initialize some variables */
         const unsigned int P = this->GetNumberOfParameters();
         this->m_NumberOfPixelsCounted = 0;
         MeasureType measure = NumericTraits< MeasureType >::Zero;
@@ -485,7 +487,7 @@ namespace itk
                 if( sampleOk )
                 {
                     sampleOk = this->EvaluateMovingImageValueAndDerivative(
-                    mappedPoint, movingImageValue, 0 );
+                                mappedPoint, movingImageValue, 0 );
                 }
 
                 if( sampleOk )
@@ -596,121 +598,120 @@ namespace itk
             trace += K(i,i);
         }
 
-        /** Create variables to store intermediate results in. */
+    /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
     DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-        std::vector<NonZeroJacobianIndicesType> nzjis ( realNumLastDimPositions, NonZeroJacobianIndicesType() );
+    std::vector<NonZeroJacobianIndicesType> nzjis ( realNumLastDimPositions, NonZeroJacobianIndicesType() );
 
-        /** Sub components of metric derivative */
-        vnl_vector< DerivativeValueType > meandAdmu( P ); // mean of a column of the derivative of A
+    /** Sub components of metric derivative */
+    vnl_vector< DerivativeValueType > meandAdmu( P ); // mean of a column of the derivative of A
     vnl_vector< DerivativeValueType > dKiidmu( P ); //Trace of derivative of covariance matrix
-        vnl_vector< DerivativeValueType > AtdAdmuii( P ); //Trace of AtMinusMean * dAdmu
-        vnl_vector< DerivativeValueType > v1Kv1dmu( P ); //v1 * derivative covariance matrix * v1
-        vnl_vector< DerivativeValueType > meanAtdAdmuii( P ); //mean of trace of AtMinusMean * dAdmu
+    vnl_vector< DerivativeValueType > AtdAdmuii( P ); //Trace of AtMinusMean * dAdmu
+    vnl_vector< DerivativeValueType > v1Kv1dmu( P ); //v1 * derivative covariance matrix * v1
+    vnl_vector< DerivativeValueType > meanAtdAdmuii( P ); //mean of trace of AtMinusMean * dAdmu
 
-        DerivativeMatrixType dAdmu_v1( realNumLastDimPositions, P ); //dAdmu * v1
-        DerivativeMatrixType meandAdmu_v1( realNumLastDimPositions, P ); //meandAdmu * v
+    DerivativeMatrixType dAdmu_v1( realNumLastDimPositions, P ); //dAdmu * v1
+    DerivativeMatrixType meandAdmu_v1( realNumLastDimPositions, P ); //meandAdmu * v
 
-        /** initialize */
-        dKiidmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-        AtdAdmuii.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-        dAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-        meandAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    /** initialize */
+    dKiidmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    AtdAdmuii.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    dAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu_v1.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     v1Kv1dmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-        meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-        meanAtdAdmuii.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+    meanAtdAdmuii.fill( itk::NumericTraits< DerivativeValueType >::Zero );
 
-        DerivativeType dMTdmu;
-        dMTdmu.fill( itk::NumericTraits<RealType>::Zero );
+    DerivativeType dMTdmu;
+    dMTdmu.fill( itk::NumericTraits<RealType>::Zero );
 
-        //unsigned int NumSamplesUsed;
-        unsigned int startSamplesOK;
+    unsigned int startSamplesOK;
 
-        //NumSamplesUsed = SamplesOK.size()/realNumLastDimPositions;
-        startSamplesOK = 0;
+    startSamplesOK = 0;
 
     /** Second loop over fixed image samples. */
-        for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
+    for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
     {
-            /** Read fixed coordinates. */
-            FixedImagePointType fixedPoint = SamplesOK[ startSamplesOK ];
-            startSamplesOK++;
+        /** Read fixed coordinates. */
+        FixedImagePointType fixedPoint = SamplesOK[ startSamplesOK ];
+        startSamplesOK++;
 
-            /** Transform sampled point to voxel coordinates. */
-            FixedImageContinuousIndexType voxelCoord;
-            this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+        /** Transform sampled point to voxel coordinates. */
+        FixedImageContinuousIndexType voxelCoord;
+        this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
-            const unsigned int realNumLastDimPositions = lastDimPositions.size();
-            unsigned int numSamplesOk = 0;
+        const unsigned int realNumLastDimPositions = lastDimPositions.size();
 
         for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
         {
-                    /** Initialize some variables. */
-                    RealType movingImageValue;
-                    MovingImagePointType mappedPoint;
-                    MovingImageDerivativeType movingImageDerivative;
+            /** Initialize some variables. */
+            RealType movingImageValue;
+            MovingImagePointType mappedPoint;
+            MovingImageDerivativeType movingImageDerivative;
 
-                    /** Set fixed point's last dimension to lastDimPosition. */
-                    voxelCoord[ lastDim ] = lastDimPositions[ d ];
+            /** Set fixed point's last dimension to lastDimPosition. */
+            voxelCoord[ lastDim ] = lastDimPositions[ d ];
 
-                    /** Transform sampled point back to world coordinates. */
-                    this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-                    this->TransformPoint( fixedPoint, mappedPoint );
-                    this->EvaluateMovingImageValueAndDerivative(
-                                                mappedPoint, movingImageValue, &movingImageDerivative );
+            /** Transform sampled point back to world coordinates. */
+            this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+            this->TransformPoint( fixedPoint, mappedPoint );
+            this->EvaluateMovingImageValueAndDerivative(
+                        mappedPoint, movingImageValue, &movingImageDerivative );
 
-                    /** Get the TransformJacobian dT/dmu */
-                    this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
+            /** Get the TransformJacobian dT/dmu */
+            this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
 
-                    /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
-                    this->EvaluateTransformJacobianInnerProduct(
-                    jacobian, movingImageDerivative, imageJacobian );
+            /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
+            this->EvaluateTransformJacobianInnerProduct(
+                        jacobian, movingImageDerivative, imageJacobian );
 
-                    if(this->m_Zscore)
-                    {
-                        movingImageDerivative/=std(d);
-                    }
+            if(this->m_Zscore)
+            {
+                movingImageDerivative/=std(d);
+            }
 
-          /** Store values. */
-          dMTdmu = imageJacobian;
+            /** Store values. */
+            dMTdmu = imageJacobian;
 
-                    /** build metric derivative components */
-                    for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
-                    {
-                        dAdmu_v1[ d ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v1[ pixelIndex ];
-            meandAdmu[ nzjis[ d ][ p ] ] += dMTdmu[ p ]/realNumLastDimPositions;
-                        AtdAdmuii[ nzjis[ d ][ p ] ] += AtMinusMean[ pixelIndex ][ d ]*dMTdmu[ p ];
-                    }
+            /** build metric derivative components */
+            for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
+            {
+                dAdmu_v1[ d ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v1[ pixelIndex ];
+                meandAdmu[ nzjis[ d ][ p ] ] += dMTdmu[ p ]/realNumLastDimPositions;
+                AtdAdmuii[ nzjis[ d ][ p ] ] += AtMinusMean[ pixelIndex ][ d ]*dMTdmu[ p ];
+            }
 
 
-                } // end loop over t
+        } // end loop over t
 
-                for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
-                {
-                    for(unsigned int p = 0; p < P; ++p )
-                    {
-                        meandAdmu_v1[ d ][ p ] += meandAdmu[ p ]*v1[ pixelIndex ];
-                        meanAtdAdmuii[ p ] += AtMinusMean[ pixelIndex ][ d ]*meandAdmu[ p ];
-                    }
-                }
+        for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
+        {
+            for(unsigned int p = 0; p < P; ++p )
+            {
+                meandAdmu_v1[ d ][ p ] += meandAdmu[ p ]*v1[ pixelIndex ];
+                meanAtdAdmuii[ p ] += AtMinusMean[ pixelIndex ][ d ]*meandAdmu[ p ];
+            }
+        }
 
 
     } // end second for loop over sample container
 
-        v1Kv1dmu = v1*AtMinusMean*( dAdmu_v1 - meandAdmu_v1 );
-        v1Kv1dmu *= static_cast < DerivativeValueType > (2.0)
+    v1Kv1dmu = v1*AtMinusMean*( dAdmu_v1 - meandAdmu_v1 );
+    v1Kv1dmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
-            static_cast < DerivativeValueType > (1.0) ); //normalize
+                static_cast < DerivativeValueType > (1.0) ); //normalize
 
-        dKiidmu = AtdAdmuii - meanAtdAdmuii;
-        dKiidmu *= static_cast < DerivativeValueType > (2.0)
+    dKiidmu = AtdAdmuii - meanAtdAdmuii;
+    dKiidmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
-            static_cast < DerivativeValueType >(1.0) ); //normalize
+                static_cast < DerivativeValueType >(1.0) ); //normalize
 
-        measure = trace - e1;
-        derivative = dKiidmu - v1Kv1dmu;
+    measure = trace - e1;
+    derivative = dKiidmu - v1Kv1dmu;
+   // measure = (static_cast<RealType>(1.0) - e1/trace);
+   // derivative = (( dKiidmu*e1 - v1Kv1dmu*trace )/(trace*trace));
 
-        //** Subtract mean from derivative elements. */
+    //** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
     {
       if ( ! this->m_TransformIsStackTransform )

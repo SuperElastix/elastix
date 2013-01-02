@@ -630,6 +630,7 @@ namespace itk
 											mappedPoint, movingImageValue, &movingImageDerivative );
 
 				movingImageDerivative /= std(d);
+
 				/** Get the TransformJacobian dT/dmu */
 				this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
 
