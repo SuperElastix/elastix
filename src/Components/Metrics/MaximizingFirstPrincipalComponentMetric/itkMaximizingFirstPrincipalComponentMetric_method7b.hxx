@@ -43,7 +43,7 @@ namespace itk
         m_TransformIsStackTransform( false ),
         m_Alpha( 1.0 ),
         m_Zscore( false ),
-				m_NumEigenValues( 6 )
+				m_NumEigenValues( 1 )
 
   {
     this->SetUseImageSampler( true );
@@ -493,6 +493,7 @@ namespace itk
         }
     }
 
+    //elxout<< "start loop over sample container 1" << std::endl;
     for ( fiter = fbegin; fiter != fend; ++fiter )
     {
         /** Read fixed coordinates. */
@@ -556,6 +557,7 @@ namespace itk
     this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
+
 
     /** Calculate mean of the rows */
     vnl_vector< RealType > meanrows( A.rows() );
@@ -644,6 +646,8 @@ namespace itk
 			sumEigenValuesUsed += eig.get_eigenvalue(K.cols() - i);
 		}
   
+		/** the matrix where all the eigenvectors are stored. The size of this matrix is N times NumEigenValues,
+		  * the eigenvector belonging to the largest eigenvalue is in the first column, etc. */
 		MatrixType eigenVectorMatrix( A.cols(), this->m_NumEigenValues );
 		for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
 		{
@@ -657,7 +661,7 @@ namespace itk
     for( int i = 0; i < K.rows(); i++ )
     {
         trace += K(i,i);
-    }		
+    }
 
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
@@ -669,8 +673,15 @@ namespace itk
     vnl_vector< DerivativeValueType > AtdAdmuii( P ); //Trace of AtMinusMean * dAdmu
     vnl_vector< DerivativeValueType > meandAdmu( P ); // mean of a column of the derivative of A
     vnl_vector< DerivativeValueType > meanAtdAdmuii( P ); //mean of trace of AtMinusMean * dAdmu
-    vnl_vector< DerivativeValueType > tracevKvdmu( P ); //trace of v' * derivative covariance matrix * v
 
+		/** The trace of vKvdmu is the sum of v_i*K*v_i/dmu where i runs from 1 to NumEigenValues. */
+    vnl_vector< DerivativeValueType > tracevKvdmu( P );
+
+		/** To prevent the construction of a 3D matrix a 2D matrix is allocated where every 'slice' is tiled
+		  * below each other. This means that dAdmu_v and meandAdmu_v are of size L*P times NumEigenValues,
+			* where L is the number of 'time'frames and P the number of transform parameters. dAdmu_v is 
+			* dAdmu (size L times N, N number of pixels) times v, where v is a matrix with in each column the 
+			* eigenvectors. For each parameter p the resulting matrix for dAdmu * v is tiled below each other. */
 		DerivativeMatrixType dAdmu_v( realNumLastDimPositions*P, this->m_NumEigenValues );
 		DerivativeMatrixType meandAdmu_v( realNumLastDimPositions*P, this->m_NumEigenValues );
 
@@ -686,7 +697,7 @@ namespace itk
 		dMTdmu.fill(itk::NumericTraits< DerivativeValueType >::Zero );
 
     unsigned int startSamplesOK;
-
+	
     startSamplesOK = 0;
 
     /** Second loop over fixed image samples. */
@@ -733,15 +744,19 @@ namespace itk
             dMTdmu = imageJacobian;
 
             /** build metric derivative components */
+						for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
+						{
+              meandAdmu[ nzjis[ d ][ p ] ] += dMTdmu[ p ]/realNumLastDimPositions;
+              AtdAdmuii[ nzjis[ d ][ p ] ] += AtMinusMean[ pixelIndex ][ d ]*dMTdmu[ p ];
+						}
+
 						for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
 						{
 							for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
 							{
-								dAdmu_v[ d + nzjis[ d ][ p ]*realNumLastDimPositions ][ k ] += 
-									dMTdmu[ p ]*eigenVectorMatrix[ pixelIndex ][ k ]; 
+								dAdmu_v[ d + nzjis[ d ][ p ]*realNumLastDimPositions ][ k ] += dMTdmu[ p ]*eigenVectorMatrix[ pixelIndex ][ k ]; 
 							}
 						}
-
         } // end loop over t
 				for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
 				{
@@ -844,7 +859,6 @@ namespace itk
         }
       }
     }
-
     /** Compute norm of transform parameters per image */
     this->m_normdCdmu.set_size(lastDimSize);
     this->m_normdCdmu.fill(0.0);
@@ -865,6 +879,8 @@ namespace itk
     }
 
     this->m_normdCdmu /= static_cast< double >( this->GetNumberOfParameters() / lastDimSize );
+
+
 
     /** Return the measure value. */
     value = measure;
