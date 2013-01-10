@@ -23,7 +23,7 @@ namespace itk
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
-        m_Zscore( true ),
+        m_Zscore( false ),
         m_Alpha(1.0)
                 //m_NumEigenValues( 1 )
   {
@@ -306,15 +306,16 @@ namespace itk
 
 
         /** Calculate mean of from columns */
-        vnl_vector< RealType > mean( A.cols() );
-        mean.fill( NumericTraits< double >::Zero );
+        vnl_vector< RealType > meancols( A.cols() );
+        meancols.fill( NumericTraits< double >::Zero );
         for( unsigned int i = 0; i < A.rows(); i++ )
         {
             for( unsigned int j = 0; j < A.cols(); j++)
             {
-                mean(j) += A(i,j)/A.rows();
+                meancols(j) += A(i,j);
             }
         }
+				meancols /= double(A.rows());
 
         /** Subtract mean from columns */
         MatrixType AMinusMean( A.rows(), A.cols() );
@@ -323,7 +324,7 @@ namespace itk
         {
             for (unsigned int j = 0; j < A.cols(); j++)
             {
-                AMinusMean(i,j) = A(i,j)-mean(j);
+                AMinusMean(i,j) = A(i,j)-meancols(j);
             }
         }
 
@@ -333,7 +334,7 @@ namespace itk
         /** Compute covariance matrix K */
         MatrixType K( (AMinusMean*AtMinusMean) );
 
-        K /= ( static_cast< RealType > (A.cols()) - static_cast< RealType > (1.0) );
+        K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
 
         /** Compute first eigenvalue and eigenvector of the covariance matrix K */
         vnl_symmetric_eigensystem< RealType > eig( K );
@@ -346,11 +347,10 @@ namespace itk
             trace += K(i,i);
         }
 
-        measure = trace - e1;
-       // measure = (static_cast<RealType>(1.0) - e1/trace);
+       measure = trace - e1;
 
         /** Return the measure value. */
-        return measure;
+       return measure;
 
   } // end GetValue
 
@@ -448,7 +448,6 @@ namespace itk
             }
         }
 
-        //elxout<< "start loop over sample container 1" << std::endl;
         for ( fiter = fbegin; fiter != fend; ++fiter )
         {
             /** Read fixed coordinates. */
@@ -508,95 +507,96 @@ namespace itk
 
         }/** end first loop over image sample container */
 
-        /** Check if enough samples were valid. */
-        this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    /** Check if enough samples were valid. */
+    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
-        MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
+    MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
-        /** Calculate mean of the rows */
-        vnl_vector< RealType > meanrows( A.rows() );
-        meanrows.fill( NumericTraits< double >::Zero );
-        for( unsigned int i = 0; i < A.rows(); i++ )
+    /** Calculate mean of the rows */
+    vnl_vector< RealType > meanrows( A.rows() );
+    meanrows.fill( NumericTraits< double >::Zero );
+    for( unsigned int i = 0; i < A.rows(); i++ )
+    {
+        for( unsigned int j = 0; j < A.cols(); j++)
         {
-            for( unsigned int j = 0; j < A.cols(); j++)
-            {
-                meanrows(i) += A(i,j);
-            }
+            meanrows(i) += A(i,j);
         }
-        meanrows /= double(A.cols());
+    }
+    meanrows /= double(A.cols());
 
-        /** Calculate standard deviation of the rows */
-        vnl_vector< double > std( A.rows() );
-        std.fill( NumericTraits< double >::Zero );
-        for( int i = 0; i < A.rows(); i++ )
+    /** Calculate standard deviation of the rows */
+    vnl_vector< double > std( A.rows() );
+    std.fill( NumericTraits< double >::Zero );
+    for( int i = 0; i < A.rows(); i++ )
+    {
+        for( int j = 0; j < A.cols(); j++)
         {
-            for( int j = 0; j < A.cols(); j++)
-            {
-                std(i) += pow((A(i,j)-meanrows(i)),2)/double((A.cols()-1.0));
-            }
+            std(i) += pow((A(i,j)-meanrows(i)),2)/double((A.cols()-1.0));
         }
+    }
 
-        for( int i = 0; i < A.rows(); i++)
-        {
-            std(i) = sqrt(std(i));
-        }
+    for( int i = 0; i < A.rows(); i++)
+    {
+        std(i) = sqrt(std(i));
+    }
 
-        /** Z-score A */
-        if(this->m_Zscore)
-        {
-            for (int i = 0; i < A.rows(); i++ )
-            {
-                for(int j = 0; j < A.cols(); j++)
-                {
-                    A(i,j) = (A(i,j)-meanrows(i))/std(i);
-                }
-            }
-        }
-
-
-        /** Calculate mean of from columns */
-        vnl_vector< double > mean( A.cols() );
-        mean.fill( NumericTraits< double >::Zero );
-        for( int i = 0; i < A.rows(); i++ )
-        {
-            for( int j = 0; j < A.cols(); j++)
-            {
-                mean(j) += A(i,j)/A.rows();
-            }
-        }
-
-        /** Subtract mean from columns */
-        MatrixType AMinusMean( A.rows(), A.cols() );
-        AMinusMean.fill( NumericTraits< RealType >::Zero );
+    /** Z-score A */
+    if(this->m_Zscore)
+    {
         for (int i = 0; i < A.rows(); i++ )
         {
             for(int j = 0; j < A.cols(); j++)
             {
-                AMinusMean(i,j) = A(i,j)-mean(j);
+                A(i,j) = (A(i,j)-meanrows(i))/std(i);
             }
         }
-
-        /** Transpose of the matrix with mean subtracted */
-        MatrixType AtMinusMean( AMinusMean.transpose() );
+    }
 
 
-        /** Compute covariance matrix K */
-        MatrixType K( (AMinusMean*AtMinusMean) );
-
-        K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
-
-        /** Compute first eigenvalue and eigenvector of the covariance matrix K */
-        vnl_symmetric_eigensystem< RealType > eig( K );
-        RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
-        vnl_vector< RealType > FirstEigenvector = eig.get_eigenvector(K.cols()-1);
-        vnl_vector< RealType > v1 = (AtMinusMean*FirstEigenvector).normalize(); // Highest eigenvector of A'*A
-
-        /** Compute sum of all eigenvalues = trace( K ) */
-        double trace = 0.0;
-        for( int i = 0; i < K.rows(); i++ )
+    /** Calculate mean of from columns */
+    vnl_vector< double > meancols( A.cols() );
+    meancols.fill( NumericTraits< double >::Zero );
+    for( int i = 0; i < A.rows(); i++ )
+    {
+        for( int j = 0; j < A.cols(); j++)
         {
-            trace += K(i,i);
+            meancols(j) += A(i,j);
         }
+    }
+		meancols /= double(A.rows());
+
+    /** Subtract mean from columns */
+    MatrixType AMinusMean( A.rows(), A.cols() );
+    AMinusMean.fill( NumericTraits< RealType >::Zero );
+    for (int i = 0; i < A.rows(); i++ )
+    {
+        for(int j = 0; j < A.cols(); j++)
+        {
+            AMinusMean(i,j) = A(i,j)-meancols(j);
+        }
+    }
+
+    /** Transpose of the matrix with mean subtracted */
+    MatrixType AtMinusMean( AMinusMean.transpose() );
+
+
+    /** Compute covariance matrix K */
+    MatrixType K( (AMinusMean*AtMinusMean) );
+
+    K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+
+    /** Compute first eigenvalue and eigenvector of the covariance matrix K */
+    vnl_symmetric_eigensystem< RealType > eig( K );
+    RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
+    vnl_vector< RealType > FirstEigenvector = eig.get_eigenvector(K.cols()-1);
+    vnl_vector< RealType > v1 = (AtMinusMean*FirstEigenvector).normalize(); // Highest eigenvector of A'*A
+
+    /** Compute sum of all eigenvalues = trace( K ) */
+    double trace = 0.0;
+    for( int i = 0; i < K.rows(); i++ )
+    {
+        trace += K(i,i);
+    }
 
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
@@ -708,8 +708,6 @@ namespace itk
 
     measure = trace - e1;
     derivative = dKiidmu - v1Kv1dmu;
-   // measure = (static_cast<RealType>(1.0) - e1/trace);
-   // derivative = (( dKiidmu*e1 - v1Kv1dmu*trace )/(trace*trace));
 
     //** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
