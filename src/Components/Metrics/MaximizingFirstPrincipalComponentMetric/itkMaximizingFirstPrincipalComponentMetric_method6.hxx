@@ -161,7 +161,7 @@ namespace itk
     ::GetValue( const TransformParametersType & parameters ) const
   {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
-    bool UseGetValueAndDerivative = true;
+    bool UseGetValueAndDerivative = false;
 
     if(UseGetValueAndDerivative)
     {
@@ -355,11 +355,7 @@ namespace itk
         trace += K(i,i);
     }
 
-    //vnl_vector<RealType> v1(eig.get_eigenvector(K.cols()-1));
-
-    //measure = 1000*abs(v1(0))+trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6);
     measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6+e7);
-    //measure = 1.0 - (e1+e2+e3+e4+e5+e6+e7)/trace;
 
     /** Return the measure value. */
     return measure;

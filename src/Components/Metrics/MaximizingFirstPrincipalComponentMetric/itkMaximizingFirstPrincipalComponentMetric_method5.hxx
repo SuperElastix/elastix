@@ -163,6 +163,19 @@ namespace itk
     ::GetValue( const TransformParametersType & parameters ) const
   {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
+    bool UseGetValueAndDerivative = true;
+
+    if(UseGetValueAndDerivative)
+    {
+        typedef typename DerivativeType::ValueType        DerivativeValueType;
+        const unsigned int P = this->GetNumberOfParameters();
+        MeasureType dummymeasure = NumericTraits< MeasureType >::Zero;
+        DerivativeType dummyderivative = DerivativeType( P );
+        dummyderivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+
+        this->GetValueAndDerivative( parameters, dummymeasure, dummyderivative );
+        return dummymeasure;
+    }
 
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -695,6 +708,12 @@ namespace itk
            eigenValues(i) = eig.get_eigenvalue( i );
         }
         this->m_firstEigenVector = eig.get_eigenvector( K.cols() - 1);
+        this->m_secondEigenVector = eig.get_eigenvector( K.cols() - 2);
+        this->m_thirdEigenVector = eig.get_eigenvector( K.cols() - 3);
+        this->m_fourthEigenVector = eig.get_eigenvector( K.cols() - 4);
+        this->m_fifthEigenVector = eig.get_eigenvector( K.cols() - 5);
+        this->m_sixthEigenVector = eig.get_eigenvector( K.cols() - 6);
+        this->m_seventhEigenVector = eig.get_eigenvector( K.cols() - 7);
         this->m_eigenValues = eigenValues;
 
     /** Subtract mean from derivative elements. */
@@ -765,6 +784,27 @@ namespace itk
         }
       }
     }
+
+    /** Compute norm of transform parameters per image */
+    this->m_normdCdmu.set_size(lastDimSize);
+    this->m_normdCdmu.fill(0.0);
+    unsigned int ind = 0;
+    for ( unsigned int t = 0; t < lastDimSize; ++t )
+    {
+        const unsigned int startc = (this->GetNumberOfParameters() / lastDimSize)*t;
+        for ( unsigned int c = startc; c < startc + (this->GetNumberOfParameters() / lastDimSize); ++c )
+        {
+         this->m_normdCdmu[ ind ] += pow(derivative[ c ],2);
+        }
+        ++ind;
+    }
+
+    for(unsigned int index = 0; index < this->m_normdCdmu.size(); index++)
+    {
+        this->m_normdCdmu[index] = sqrt(this->m_normdCdmu.get(index));
+    }
+
+    this->m_normdCdmu /= static_cast< double >( this->GetNumberOfParameters() / lastDimSize );
 
 
 	/** Return the measure value. */
