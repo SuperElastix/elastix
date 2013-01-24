@@ -24,8 +24,8 @@ namespace itk
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
         m_Zscore( false ),
-        m_Alpha(1.0)
-                //m_NumEigenValues( 1 )
+        m_Alpha(1.0),
+        m_NumEigenValues( 1 )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -315,7 +315,7 @@ namespace itk
                 meancols(j) += A(i,j);
             }
         }
-				meancols /= double(A.rows());
+        meancols /= double(A.rows());
 
         /** Subtract mean from columns */
         MatrixType AMinusMean( A.rows(), A.cols() );
@@ -658,17 +658,17 @@ namespace itk
             this->EvaluateMovingImageValueAndDerivative(
                         mappedPoint, movingImageValue, &movingImageDerivative );
 
+            if(this->m_Zscore)
+            {
+                movingImageDerivative/=std(d);
+            }
+
             /** Get the TransformJacobian dT/dmu */
             this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
 
             /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
             this->EvaluateTransformJacobianInnerProduct(
                         jacobian, movingImageDerivative, imageJacobian );
-
-            if(this->m_Zscore)
-            {
-                movingImageDerivative/=std(d);
-            }
 
             /** Store values. */
             dMTdmu = imageJacobian;

@@ -42,7 +42,11 @@ public:
   typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
   typedef typename FixedImageRegionType::SizeType         FixedImageSizeType;
 
-  /** Method for creation through the object factory. */
+  /** Method for creation through the obvnl_vector<double> eigenValues;
+    eigenValues.set_size(K.cols());
+
+    eigenValues.fill(0.0);
+ject factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
@@ -56,7 +60,7 @@ public:
   itkSetMacro( SubtractMean, bool );
   itkSetMacro( GridSize, FixedImageSizeType );
   itkSetMacro( TransformIsStackTransform, bool );
-  //itkSetMacro( NumEigenValues, unsigned int );
+  itkSetMacro( NumEigenValues, unsigned int );
   itkSetMacro( Alpha, double );
   itkSetMacro( Zscore, bool );
 
@@ -174,6 +178,7 @@ protected:
   mutable vnl_vector<double> m_eigenValues;
 
   mutable vnl_vector<double> m_normdCdmu;
+  mutable int m_NumberOfSamples;
 
 private:
   MaximizingFirstPrincipalComponentMetric(const Self&); //purposely not implemented
@@ -204,9 +209,7 @@ private:
   bool m_TransformIsStackTransform;
 
   /** Integer to indicate how many eigenvalues you want to use in the metric */
-  //unsigned int m_NumEigenValues;
-
-    bool m_RandomNumbersCreated;
+  unsigned int m_NumEigenValues;
 	
 
 }; // end class MaximizingFirstPrincipalComponentMetric
@@ -214,7 +217,8 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMaximizingFirstPrincipalComponentMetric_method6.hxx"
+//#include "itkSumOfPairwiseNormalizedCorrelationCoefficientsMetric.hxx"
+# include "itkMaximizingFirstPrincipalComponentMetric_method7.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h

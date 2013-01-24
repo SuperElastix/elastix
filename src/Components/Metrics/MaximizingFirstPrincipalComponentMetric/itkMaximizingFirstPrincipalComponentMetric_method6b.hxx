@@ -516,7 +516,6 @@ namespace itk
             /** Initialize some variables. */
             RealType movingImageValue;
             MovingImagePointType mappedPoint;
-            MovingImageDerivativeType movingImageDerivative;
 
             /** Set fixed point's last dimension to lastDimPosition. */
             voxelCoord[ lastDim ] = lastDimPositions[ d ];
@@ -778,17 +777,17 @@ namespace itk
             this->EvaluateMovingImageValueAndDerivative(
                                         mappedPoint, movingImageValue, &movingImageDerivative );
 
+            if(this->m_Zscore)
+            {
+                movingImageDerivative/=std(d);
+            }
+
             /** Get the TransformJacobian dT/dmu */
             this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
 
             /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
             this->EvaluateTransformJacobianInnerProduct(
                    jacobian, movingImageDerivative, imageJacobian );
-
-            if(this->m_Zscore)
-            {
-                movingImageDerivative/=std(d);
-            }
 
             /** Store values. */
             dMTdmu = imageJacobian;

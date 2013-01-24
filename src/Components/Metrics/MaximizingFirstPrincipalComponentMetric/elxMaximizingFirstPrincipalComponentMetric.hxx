@@ -52,10 +52,10 @@ namespace elastix
     unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-	//unsigned int NumEigenValues = 1;
-	//this->GetConfiguration()->ReadParameter( NumEigenValues, "NumEigenValues",
-	//	this->GetComponentLabel(), level, 0);
-	//this->SetNumEigenValues( NumEigenValues );
+    unsigned int NumEigenValues = 1;
+    this->GetConfiguration()->ReadParameter( NumEigenValues, "NumEigenValues",
+        this->GetComponentLabel(), level, 0);
+    this->SetNumEigenValues( NumEigenValues );
 \
      bool zscore = true;
      this->GetConfiguration()->ReadParameter(zscore,"Zscore", this->GetComponentLabel(), 0, 0);
@@ -173,6 +173,7 @@ template <class TElastix>
     elxout << "seventhEigenVector" << this->m_seventhEigenVector << std::endl;
     elxout << "eigenValues" << this->m_eigenValues << std::endl;
     elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
+    elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
   }
 
 } // end namespace elastix

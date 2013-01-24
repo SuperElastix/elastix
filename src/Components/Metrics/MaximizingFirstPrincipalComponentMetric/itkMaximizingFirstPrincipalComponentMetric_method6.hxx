@@ -40,6 +40,7 @@ namespace itk
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
+        m_Zscore( true ),
         m_Alpha( 1.0 )
 
   {
@@ -161,7 +162,7 @@ namespace itk
     ::GetValue( const TransformParametersType & parameters ) const
   {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
-    bool UseGetValueAndDerivative = false;
+    bool UseGetValueAndDerivative = true;
 
     if(UseGetValueAndDerivative)
     {
@@ -321,11 +322,24 @@ namespace itk
     /** Subtract mean from columns */
     MatrixType Azscore( A.rows(), A.cols() );
     Azscore.fill( NumericTraits< RealType >::Zero );
-    for (int i = 0; i < A.rows(); i++ )
+    if(this->m_Zscore)
     {
-        for(int j = 0; j < A.cols(); j++)
+        for (int i = 0; i < A.rows(); i++ )
         {
-            Azscore(i,j) = (A(i,j)-mean(j))/std(j);
+            for(int j = 0; j < A.cols(); j++)
+            {
+                Azscore(i,j) = (A(i,j)-mean(j))/std(j);
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < A.rows(); i++ )
+        {
+            for(int j = 0; j < A.cols(); j++)
+            {
+                Azscore(i,j) = A(i,j)-mean(j);
+            }
         }
     }
 
@@ -355,7 +369,7 @@ namespace itk
         trace += K(i,i);
     }
 
-    measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6+e7);
+    measure = trace - (e1+this->m_Alpha*e2+e3+e4+e5+e6+e7);
 
     /** Return the measure value. */
     return measure;
@@ -549,11 +563,24 @@ namespace itk
     /** Subtract mean from columns */
     MatrixType Azscore( A.rows(), A.cols() );
     Azscore.fill( NumericTraits< RealType >::Zero );
-    for (int i = 0; i < A.rows(); i++ )
+    if(this->m_Zscore)
     {
-        for(int j = 0; j < A.cols(); j++)
+        for (int i = 0; i < A.rows(); i++ )
         {
-            Azscore(i,j) = (A(i,j)-mean(j))/std(j);
+            for(int j = 0; j < A.cols(); j++)
+            {
+                Azscore(i,j) = (A(i,j)-mean(j))/std(j);
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < A.rows(); i++ )
+        {
+            for(int j = 0; j < A.cols(); j++)
+            {
+                Azscore(i,j) = A(i,j)-mean(j);
+            }
         }
     }
 
@@ -701,7 +728,10 @@ namespace itk
             this->EvaluateMovingImageValueAndDerivative(
                         mappedPoint, movingImageValue, &movingImageDerivative );
 
-            movingImageDerivative /= std(d);
+            if(this->m_Zscore)
+            {
+                movingImageDerivative /= std(d);
+            }
 
             /** Get the TransformJacobian dT/dmu */
             this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
@@ -723,13 +753,7 @@ namespace itk
                 dAdmu_v5[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v5[ d ];
                 dAdmu_v6[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v6[ d ];
                 dAdmu_v7[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v7[ d ];
-                AtdAdmuii[ nzjis[ d ][ p ] ] += Atzscore[ d ][ pixelIndex ]*dMTdmu[ p ];
-			
-                //for(unsigned int s = 0; s < A.cols(); s++)
-                //{
-                //	dAdmu_v[ (s+1)*pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*eig.get_eigenvector( K.cols() - (s+1) );
-                //}
-								
+                AtdAdmuii[ nzjis[ d ][ p ] ] += Atzscore[ d ][ pixelIndex ]*dMTdmu[ p ];								
             }
         } // end loop over t
     } // end second for loop over sample container
@@ -768,42 +792,9 @@ namespace itk
             / ( static_cast < DerivativeValueType > (A.rows()) -
                 static_cast < DerivativeValueType >(1.0) ); //normalize
 
-//        DerivativeMatrixType C(A.rows(), P);
-				
-//        C.Fill(0.0);
-//        for(unsigned int k = 1; k < C.rows(); k++ );
-//        {
-//            DerivativeMatrixType dAdmu_vi( dAdmu_v.extract(A.rows(),P,k*A.rows(),0) );
-//            C += v1*Atzscore*dAdmu_vi/(eig.get_eigenvalue(K.cols() - (k+1))-e1);
-//        }
-
-//        DerivativeMatrixType C_part2(A.rows(), P);
-//        unsigned int m = 0;
-//        for(unsigned int k = 1; k < C.rows(); k++ );
-//        {
-//            C_part2 += v1(m)*eig.get_eigenvector( K.cols() - (k+1) )*Atzscore*dAdmu_v1/(e1 - eig.get_eigenvalue( K.cols()-(k+1)) );
-//            m++;
-//        }
-
-//        C_part2 /= v1(0);
-//        C -= C_part2;
-
-//        vnl_vector<DerivativeValueType > dv1dmu(P);
-//        for(unsigned int s = 0; s < C.rows(); s++)
-//        {
-//            for(unsigned int p = 0; p < P; p++)
-//            {
-//                dv1dmu[ p ] += C[ s ][ p ];
-//            }
-//        }
-
-//        dv1dmu *= v1(0);
-
-       //measure = abs(v1(0))*1000 + trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6+e7);
-
-    measure = trace - (this->m_Alpha*e1+e2+e3+e4+e5+e6+e7);
+    measure = trace - (e1+this->m_Alpha*e2+e3+e4+e5+e6+e7);
     derivative = dKiidmu -
-                (this->m_Alpha*v1Kv1dmu+v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu+v7Kv7dmu);
+                (v1Kv1dmu+this->m_Alpha*v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu+v7Kv7dmu);
 
         //** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
@@ -887,6 +878,7 @@ namespace itk
         }
         ++ind;
     }
+
 
     for(unsigned int index = 0; index < this->m_normdCdmu.size(); index++)
     {

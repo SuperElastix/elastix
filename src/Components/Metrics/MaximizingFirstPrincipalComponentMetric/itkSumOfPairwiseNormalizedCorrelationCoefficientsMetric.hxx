@@ -1,19 +1,19 @@
-    /*======================================================================
+/*======================================================================
 
-  This file is part of the elastix software.
+This file is part of the elastix software.
 
-  Copyright (c) Erasmus MC, Rotterdam. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+Copyright (c) Erasmus MC, Rotterdam. All rights reserved.
+See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
+ This software is distributed WITHOUT ANY WARRANTY; without even
+ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
 
-#ifndef __itkmaximizingfirstprincipalcomponentmetric_method7_hxx
-#define __itkmaximizingfirstprincipalcomponentmetric_method7_hxx
+#ifndef ITKSUMOFPAIRWISENORMALIZEDCORRELATIONCOEFFICIENTSMETRIC_HXX
+#define ITKSUMOFPAIRWISENORMALIZEDCORRELATIONCOEFFICIENTSMETRIC_HXX
 #include "itkMaximizingFirstPrincipalComponentMetric.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "vnl/algo/vnl_matrix_update.h"
@@ -30,36 +30,36 @@
 namespace itk
 {
 /**
- * ******************* Constructor *******************
- */
+* ******************* Constructor *******************
+*/
 
-  template <class TFixedImage, class TMovingImage>
-    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
-      ::MaximizingFirstPrincipalComponentMetric():
-        m_SampleLastDimensionRandomly( false ),
-        m_NumSamplesLastDimension( 10 ),
-        m_SubtractMean( false ),
-        m_TransformIsStackTransform( false ),
-        m_NumEigenValues( 7 ),
-        m_Zscore( true )
+template <class TFixedImage, class TMovingImage>
+MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
+::MaximizingFirstPrincipalComponentMetric():
+    m_SampleLastDimensionRandomly( false ),
+    m_NumSamplesLastDimension( 10 ),
+    m_SubtractMean( false ),
+    m_TransformIsStackTransform( false ),
+    m_NumEigenValues( 7 ),
+    m_Zscore( true )
 
-  {
+{
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
     this->SetUseMovingImageLimiter( false );
-  } // end constructor
+} // end constructor
 
- /**
- * ******************* Initialize *******************
- */
+/**
+* ******************* Initialize *******************
+*/
 
-  template <class TFixedImage, class TMovingImage>
-    void
-    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
-    ::Initialize(void) throw ( ExceptionObject )
-  {
+template <class TFixedImage, class TMovingImage>
+void
+MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
+::Initialize(void) throw ( ExceptionObject )
+{
 
-		/** Initialize transform, interpolator, etc. */
+    /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
 
     /** Retrieve slowest varying dimension and its size. */
@@ -69,35 +69,35 @@ namespace itk
     /** Check num last samples. */
     if ( this->m_NumSamplesLastDimension > lastDimSize )
     {
-      this->m_NumSamplesLastDimension = lastDimSize;
+        this->m_NumSamplesLastDimension = lastDimSize;
     }
 
-  } // end Initialize
+} // end Initialize
 
 
 /**
- * ******************* PrintSelf *******************
- */
+* ******************* PrintSelf *******************
+*/
 
-  template < class TFixedImage, class TMovingImage>
-    void
-    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
-    ::PrintSelf(std::ostream& os, Indent indent) const
-  {
+template < class TFixedImage, class TMovingImage>
+void
+MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
+::PrintSelf(std::ostream& os, Indent indent) const
+{
     Superclass::PrintSelf( os, indent );
 
-  } // end PrintSelf
+} // end PrintSelf
 
 
 /**
- * ******************* SampleRandom *******************
- */
+* ******************* SampleRandom *******************
+*/
 
-  template < class TFixedImage, class TMovingImage>
-  void
-     MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
-    ::SampleRandom ( const int n, const int m, std::vector<int> & numbers ) const
-  {
+template < class TFixedImage, class TMovingImage>
+void
+MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
+::SampleRandom ( const int n, const int m, std::vector<int> & numbers ) const
+{
     /** Empty list of last dimension positions. */
     numbers.clear();
 
@@ -107,33 +107,33 @@ namespace itk
     /** Sample additional at fixed timepoint. */
     for ( unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i )
     {
-      numbers.push_back( this->m_ReducedDimensionIndex );
+        numbers.push_back( this->m_ReducedDimensionIndex );
     }
 
     /** Get n random samples. */
     for ( int i = 0; i < n; ++i )
     {
-      int randomNum = 0;
-      do
-      {
-        randomNum = static_cast<int>( randomGenerator->GetVariateWithClosedRange( m ) );
-      } while ( find( numbers.begin(), numbers.end(), randomNum ) != numbers.end() );
-      numbers.push_back( randomNum );
+        int randomNum = 0;
+        do
+        {
+            randomNum = static_cast<int>( randomGenerator->GetVariateWithClosedRange( m ) );
+        } while ( find( numbers.begin(), numbers.end(), randomNum ) != numbers.end() );
+        numbers.push_back( randomNum );
     }
-  } // end SampleRandom
+} // end SampleRandom
 
 /**
- * *************** EvaluateTransformJacobianInnerProduct ****************
- */
+* *************** EvaluateTransformJacobianInnerProduct ****************
+*/
 
-  template < class TFixedImage, class TMovingImage >
-    void
-    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
-    ::EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian,
-    const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian ) const
-  {
+template < class TFixedImage, class TMovingImage >
+void
+MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
+::EvaluateTransformJacobianInnerProduct(
+        const TransformJacobianType & jacobian,
+        const MovingImageDerivativeType & movingImageDerivative,
+        DerivativeType & imageJacobian ) const
+{
     typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
     typedef typename DerivativeType::iterator              DerivativeIteratorType;
     JacobianIteratorType jac = jacobian.begin();
@@ -141,41 +141,28 @@ namespace itk
     const unsigned int sizeImageJacobian = imageJacobian.GetSize();
     for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
     {
-      const double imDeriv = movingImageDerivative[ dim ];
-      DerivativeIteratorType imjac = imageJacobian.begin();
+        const double imDeriv = movingImageDerivative[ dim ];
+        DerivativeIteratorType imjac = imageJacobian.begin();
 
-      for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
-      {
-        (*imjac) += (*jac) * imDeriv;
-        ++imjac;
-        ++jac;
-      }
+        for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
+        {
+            (*imjac) += (*jac) * imDeriv;
+            ++imjac;
+            ++jac;
+        }
     }
-  } // end EvaluateTransformJacobianInnerProduct
+} // end EvaluateTransformJacobianInnerProduct
 
-    /**
- * ******************* GetValue *******************
- */
+/**
+* ******************* GetValue *******************
+*/
 
-  template <class TFixedImage, class TMovingImage>
-    typename MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>::MeasureType
-    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
-    ::GetValue( const TransformParametersType & parameters ) const
-  {
+template <class TFixedImage, class TMovingImage>
+typename MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>::MeasureType
+MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
+::GetValue( const TransformParametersType & parameters ) const
+{
     itkDebugMacro( "GetValue( " << parameters << " ) " );
-    bool UseGetValueAndDerivative = true;
-
-    if(UseGetValueAndDerivative)
-    {
-        typedef typename DerivativeType::ValueType        DerivativeValueType;
-        const unsigned int P = this->GetNumberOfParameters();
-        MeasureType dummymeasure = NumericTraits< MeasureType >::Zero;
-        DerivativeType dummyderivative = DerivativeType( P );
-        dummyderivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-
-        this->GetValueAndDerivative( parameters, dummymeasure, dummyderivative );
-        return dummymeasure;
-    }
 
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -341,68 +328,44 @@ namespace itk
 
     K /=  static_cast< RealType > ( A.rows() - static_cast< RealType > (1.0) );
 
-    /** Compute first eigenvalue and eigenvector of the covariance matrix K */
-    vnl_symmetric_eigensystem< RealType > eig( K );
-    vnl_vector<double> eigenValues;
-    eigenValues.set_size(K.cols());
 
-    eigenValues.fill(0.0);
-
-    for(unsigned int i = 0; i < K.cols(); i++)
-    {
-        eigenValues(i) = eig.get_eigenvalue( i );
-    }
-
-    /** Compute sum of all eigenvalues = trace( K ) */
-    double trace = 0.0;
-    for( int i = 0; i < K.rows(); i++ )
-    {
-        trace += K(i,i);
-    }
-
-    RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
-    {
-        sumEigenValuesUsed += eig.get_eigenvalue(K.cols() - i);
-    }
-
-    measure = trace - sumEigenValuesUsed;
+    measure = 1.0-(K.fro_norm()/double(realNumLastDimPositions));
 
     /** Return the measure value. */
     return measure;
 
- } // end GetValue
+} // end GetValue
 
 /**
- * ******************* GetDerivative *******************
- */
+* ******************* GetDerivative *******************
+*/
 
-  template < class TFixedImage, class TMovingImage>
-    void
-    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
-    ::GetDerivative( const TransformParametersType & parameters,
-	DerivativeType & derivative ) const
-  {
+template < class TFixedImage, class TMovingImage>
+void
+MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
+::GetDerivative( const TransformParametersType & parameters,
+                 DerivativeType & derivative ) const
+{
     /** When the derivative is calculated, all information for calculating
-     * the metric value is available. It does not cost anything to calculate
-     * the metric value now. Therefore, we have chosen to only implement the
-     * GetValueAndDerivative(), supplying it with a dummy value variable. */
+ * the metric value is available. It does not cost anything to calculate
+ * the metric value now. Therefore, we have chosen to only implement the
+ * GetValueAndDerivative(), supplying it with a dummy value variable. */
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
 
     this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
-  } // end GetDerivative
+} // end GetDerivative
 
 /**
- * ******************* GetValueAndDerivative *******************
- */
+* ******************* GetValueAndDerivative *******************
+*/
 
-	template <class TFixedImage, class TMovingImage>
-    void
-   MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
-    ::GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& value, DerivativeType& derivative ) const
-  {
+template <class TFixedImage, class TMovingImage>
+void
+MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
+::GetValueAndDerivative( const TransformParametersType & parameters,
+                         MeasureType& value, DerivativeType& derivative ) const
+{
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
     /** Define derivative and Jacobian types. */
     typedef typename DerivativeType::ValueType        DerivativeValueType;
@@ -525,7 +488,6 @@ namespace itk
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-    this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
 
     MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
 
@@ -592,6 +554,11 @@ namespace itk
 
     /** Compute first eigenvalue and eigenvector of the covariance matrix K */
     vnl_symmetric_eigensystem< RealType > eig( K );
+    vnl_vector<double> eigenValues;
+    eigenValues.set_size(K.cols());
+
+    eigenValues.fill(0.0);
+
 
     /** Compute sum of all eigenvalues = trace( K ) */
     double trace = 0.0;
@@ -606,14 +573,6 @@ namespace itk
         sumEigenValuesUsed += eig.get_eigenvalue(K.cols() - i);
     }
 
-    vnl_vector< RealType > eigenValues( K.rows() );
-    eigenValues.fill( 0.0 );
-    for(unsigned int i = 0; i < K.rows(); i++)
-    {
-        eigenValues[ i ] = eig.get_eigenvalue( i );
-    }
-    this->m_eigenValues = eigenValues;
-
     MatrixType eigenVectorMatrix( A.cols(), this->m_NumEigenValues );
     for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
     {
@@ -621,14 +580,6 @@ namespace itk
     }
 
     MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
-
-    this->m_firstEigenVector = eigenVectorMatrix.get_column( 0 );
-    this->m_secondEigenVector = eigenVectorMatrix.get_column( 1 );
-    this->m_thirdEigenVector = eigenVectorMatrix.get_column( 2 );
-    this->m_fourthEigenVector = eigenVectorMatrix.get_column( 3 );
-    this->m_fifthEigenVector = eigenVectorMatrix.get_column( 4 );
-    this->m_sixthEigenVector = eigenVectorMatrix.get_column( 5 );
-    this->m_seventhEigenVector = eigenVectorMatrix.get_column( 6 );
 
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
@@ -639,14 +590,14 @@ namespace itk
     DerivativeMatrixType meandAdmu( realNumLastDimPositions, P ); // mean of a column of the derivative of A
     vnl_vector< DerivativeValueType > tracevKvdmu( P );
 
-    DerivativeMatrixType vdAdmu( this->m_NumEigenValues, realNumLastDimPositions*P );
-    DerivativeMatrixType vmeandAdmu( this->m_NumEigenValues, realNumLastDimPositions*P );
+    DerivativeMatrixType dAdmu_v( A.rows()*P, this->m_NumEigenValues );
+    DerivativeMatrixType meandAdmu_v( A.rows()*P, this->m_NumEigenValues );
     vnl_vector< DerivativeValueType > dSigmainvdmu_part1( realNumLastDimPositions );
     DerivativeType dMTdmu;
 
     /** initialize */
-    vdAdmu.fill (0.0);
-    vmeandAdmu.fill(0.0);
+    dAdmu_v.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu_v.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     tracevKvdmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     dSigmainvdmu_part1.fill( itk::NumericTraits< DerivativeValueType >::Zero );
@@ -655,7 +606,7 @@ namespace itk
     vnl_vector<DerivativeValueType> meanvSinvdSinvdmuAtmmAmmv( P );
     meanvSinvdSinvdmuAtmmAmmv.fill(0.0);
 
-    MatrixType K2eigenVectorMatrix( eigenVectorMatrixTranspose*AtZscore*Amm );
+    MatrixType K2eigenVectorMatrix( Atmm*Amm*eigenVectorMatrix );
 
     unsigned int startSamplesOK;
     startSamplesOK = 0;
@@ -667,9 +618,7 @@ namespace itk
 
     dSigmainvdmu_part1 /= -double(A.rows()-1.0);
 
-    MatrixType eigenVectorMatrixTransposeAtZscore( eigenVectorMatrixTranspose*AtZscore );
-
-  	/** Second loop over fixed image samples. */ 
+    /** Second loop over fixed image samples. */
     for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
     {
         /** Read fixed coordinates. */
@@ -699,6 +648,8 @@ namespace itk
             this->EvaluateMovingImageValueAndDerivative(
                         mappedPoint, movingImageValue, &movingImageDerivative );
 
+            movingImageDerivative /= std(d);
+
             /** Get the TransformJacobian dT/dmu */
             this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
 
@@ -712,17 +663,16 @@ namespace itk
             /** build metric derivative components */
             for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
             {
-                meandAdmu[ d ][ nzjis[ d ][ p ] ] += (dMTdmu[ p ]/std[d])/A.rows();
+                meandAdmu[ d ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]/A.rows();
             }
 
             for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
             {
                 for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
                 {
-                    vdAdmu[ k ][ d + nzjis[ d ][ p ]*realNumLastDimPositions ] +=
-                            eigenVectorMatrixTransposeAtZscore[ k ][ pixelIndex ]*(dMTdmu[ p ]/std[ d ]);
-                    vSinvdSinvdmuAtmmAmmv[ nzjis[ d ][ p ] ] += K2eigenVectorMatrix[ k ][ d ]
-                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ pixelIndex ]*dMTdmu[ p ]*eigenVectorMatrix[ d ][ k ];
+                    dAdmu_v[ pixelIndex + nzjis[ d ][ p ]*A.rows() ][ k ] += dMTdmu[ p ]*eigenVectorMatrix[ d ][ k ];
+                    vSinvdSinvdmuAtmmAmmv[ nzjis[ d ][ p ] ] += eigenVectorMatrixTranspose[ k ][ d ]
+                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ pixelIndex ]*dMTdmu[ p ]*K2eigenVectorMatrix[ d ][ k ];
                 }
             }
         } // end loop over t
@@ -736,10 +686,9 @@ namespace itk
             {
                 for(unsigned int p = 0; p < P; ++p )
                 {
-                    vmeandAdmu[ k ][ d + realNumLastDimPositions*p ] += eigenVectorMatrixTransposeAtZscore[ k ][ i ]
-                            *meandAdmu[ d ][ p ];
-                    meanvSinvdSinvdmuAtmmAmmv[ p ] += K2eigenVectorMatrix[ k ][ d ]
-                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ i ]*meandAdmu[ d ][ p ]*eigenVectorMatrix[ d ][ k ];
+                    meandAdmu_v[ i + p*A.rows() ][ k ] += meandAdmu[ d ][ p ]*eigenVectorMatrix[ d ][ k ];
+                    meanvSinvdSinvdmuAtmmAmmv[ p ] += eigenVectorMatrixTranspose[ k ][ d ]
+                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ i ]*meandAdmu[ d ][ p ]*K2eigenVectorMatrix[ d ][ k ];
                 }
             }
         }
@@ -749,15 +698,15 @@ namespace itk
 
     for(unsigned int p = 0; p < P; p++)
     {
-         tracevKvdmu[ p ] = vnl_trace< DerivativeValueType > ((vdAdmu-vmeandAdmu).extract(this->m_NumEigenValues,
-                               realNumLastDimPositions,0,p*realNumLastDimPositions)*eigenVectorMatrix);
+        tracevKvdmu[ p ] = vnl_trace< DerivativeValueType >(eigenVectorMatrixTranspose*AtZscore*
+                                                            (dAdmu_v-meandAdmu_v).extract(A.rows(),this->m_NumEigenValues,p*A.rows(),0));
     }
 
     tracevKvdmu += vSinvdSinvdmuAtmmAmmv;
 
     tracevKvdmu *= static_cast < DerivativeValueType > (2.0)
-        / ( static_cast < DerivativeValueType > (A.rows()) -
-        static_cast < DerivativeValueType >(1.0) ); //normalize
+            / ( static_cast < DerivativeValueType > (A.rows()) -
+                static_cast < DerivativeValueType >(1.0) ); //normalize
 
     measure = trace - sumEigenValuesUsed;
     derivative = -tracevKvdmu;
@@ -765,103 +714,78 @@ namespace itk
     /** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
     {
-      if ( ! this->m_TransformIsStackTransform )
-      {
-        /** Update derivative per dimension.
-         * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
-         * per dimension xyz.
-         */
-        const unsigned int lastDimGridSize = this->m_GridSize[ lastDim ];
-        const unsigned int numParametersPerDimension
-          = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
-        const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
-        DerivativeType mean ( numControlPointsPerDimension );
-        for ( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
+        if ( ! this->m_TransformIsStackTransform )
         {
-          /** Compute mean per dimension. */
-          mean.Fill( 0.0 );
-          const unsigned int starti = numParametersPerDimension * d;
-          for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-          {
-            const unsigned int index = i % numControlPointsPerDimension;
-            mean[ index ] += derivative[ i ];
-          }
-          mean /= static_cast< double >( lastDimGridSize );
+            /** Update derivative per dimension.
+     * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
+     * per dimension xyz.
+     */
+            const unsigned int lastDimGridSize = this->m_GridSize[ lastDim ];
+            const unsigned int numParametersPerDimension
+                    = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+            const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
+            DerivativeType mean ( numControlPointsPerDimension );
+            for ( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
+            {
+                /** Compute mean per dimension. */
+                mean.Fill( 0.0 );
+                const unsigned int starti = numParametersPerDimension * d;
+                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+                {
+                    const unsigned int index = i % numControlPointsPerDimension;
+                    mean[ index ] += derivative[ i ];
+                }
+                mean /= static_cast< double >( lastDimGridSize );
 
-          /** Update derivative for every control point per dimension. */
-          for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-          {
-            const unsigned int index = i % numControlPointsPerDimension;
-            derivative[ i ] -= mean[ index ];
-          }
+                /** Update derivative for every control point per dimension. */
+                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+                {
+                    const unsigned int index = i % numControlPointsPerDimension;
+                    derivative[ i ] -= mean[ index ];
+                }
+            }
         }
-      }
-      else
-      {
-        /** Update derivative per dimension.
-         * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
-         * the number the time point index.
-         */
-        const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / lastDimSize;
-        DerivativeType mean ( numParametersPerLastDimension );
-        mean.Fill( 0.0 );
-
-        /** Compute mean per control point. */
-        for ( unsigned int t = 0; t < lastDimSize; ++t )
+        else
         {
-          const unsigned int startc = numParametersPerLastDimension * t;
-          for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
-          {
-            const unsigned int index = c % numParametersPerLastDimension;
-            mean[ index ] += derivative[ c ];
-          }
-        }
-        mean /= static_cast< double >( lastDimSize );
+            /** Update derivative per dimension.
+     * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
+     * the number the time point index.
+     */
+            const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / lastDimSize;
+            DerivativeType mean ( numParametersPerLastDimension );
+            mean.Fill( 0.0 );
 
-        /** Update derivative per control point. */
-        for ( unsigned int t = 0; t < lastDimSize; ++t )
-        {
-          const unsigned int startc = numParametersPerLastDimension * t;
-          for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
-          {
-            const unsigned int index = c % numParametersPerLastDimension;
-            derivative[ c ] -= mean[ index ];
-          }
+            /** Compute mean per control point. */
+            for ( unsigned int t = 0; t < lastDimSize; ++t )
+            {
+                const unsigned int startc = numParametersPerLastDimension * t;
+                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+                {
+                    const unsigned int index = c % numParametersPerLastDimension;
+                    mean[ index ] += derivative[ c ];
+                }
+            }
+            mean /= static_cast< double >( lastDimSize );
+
+            /** Update derivative per control point. */
+            for ( unsigned int t = 0; t < lastDimSize; ++t )
+            {
+                const unsigned int startc = numParametersPerLastDimension * t;
+                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+                {
+                    const unsigned int index = c % numParametersPerLastDimension;
+                    derivative[ c ] -= mean[ index ];
+                }
+            }
         }
-      }
     }
-
-    /** Compute norm of transform parameters per image */
-    this->m_normdCdmu.set_size(lastDimSize);
-    this->m_normdCdmu.fill(0.0);
-    unsigned int ind = 0;
-    for ( unsigned int t = 0; t < lastDimSize; ++t )
-    {
-        const unsigned int startc = (this->GetNumberOfParameters() / lastDimSize)*t;
-        for ( unsigned int c = startc; c < startc + (this->GetNumberOfParameters() / lastDimSize); ++c )
-        {
-         this->m_normdCdmu[ ind ] += pow(derivative[ c ],2);
-        }
-        ++ind;
-    }
-
-
-    for(unsigned int index = 0; index < this->m_normdCdmu.size(); index++)
-    {
-        this->m_normdCdmu[index] = sqrt(this->m_normdCdmu.get(index));
-    }
-
-    this->m_normdCdmu /= static_cast< double >( this->GetNumberOfParameters() / lastDimSize );
 
 
     /** Return the measure value. */
     value = measure;
 
-    } // end GetValueAndDerivative()
+} // end GetValueAndDerivative()
 
 } // end namespace itk
 
-#endif // end #ifndef _itkmaximizingfirstprincipalcomponentmetric_method7_hxx
-
-
-    
+#endif // ITKSUMOFPAIRWISENORMALIZEDCORRELATIONCOEFFICIENTSMETRIC_HXX

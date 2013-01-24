@@ -369,15 +369,15 @@ namespace itk
     /** Compute first eigenvalue and eigenvector of the covariance matrix K */
     vnl_symmetric_eigensystem< RealType > eig( K );
 
-		vnl_vector<double> eigenValues;
-		eigenValues.set_size(K.cols());
+    vnl_vector<double> eigenValues;
+    eigenValues.set_size(K.cols());
 
-		eigenValues.fill(0.0);
+    eigenValues.fill(0.0);
 
-		for(unsigned int i = 0; i < K.cols(); i++)
-		{
-			eigenValues(i) = eig.get_eigenvalue( i );
-		}
+    for(unsigned int i = 0; i < K.cols(); i++)
+    {
+        eigenValues(i) = eig.get_eigenvalue( i );
+    }
 
     /** Compute sum of all eigenvalues = trace( K ) */
     RealType trace = 0.0;
@@ -386,14 +386,14 @@ namespace itk
         trace += K(i,i);
     }
 
-		RealType sumEigenValuesUsed = itk::NumericTraits< DerivativeValueType >::Zero;
-		for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
-		{
-			sumEigenValuesUsed += eig.get_eigenvalue(K.cols() - i);
-		}
+    RealType sumEigenValuesUsed = itk::NumericTraits< DerivativeValueType >::Zero;
+    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
+    {
+        sumEigenValuesUsed += eig.get_eigenvalue(K.cols() - i);
+    }
 
-		measure = trace - sumEigenValuesUsed;
-  
+    measure = trace - sumEigenValuesUsed;
+
     /** Return the measure value. */
     return measure;
 
@@ -629,33 +629,33 @@ namespace itk
     MatrixType K( (AMinusMean*AtMinusMean) );
 
     K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
-		vnl_symmetric_eigensystem< RealType > eig( K );
-		vnl_vector<double> eigenValues;
-		eigenValues.set_size(K.cols());
+    vnl_symmetric_eigensystem< RealType > eig( K );
+    vnl_vector<double> eigenValues;
+    eigenValues.set_size(K.cols());
 
-		eigenValues.fill(0.0);
+    eigenValues.fill(0.0);
 
-		for(unsigned int i = 0; i < K.cols(); i++)
-		{
-			eigenValues(i) = eig.get_eigenvalue( i );
-		}
+    for(unsigned int i = 0; i < K.cols(); i++)
+    {
+        eigenValues(i) = eig.get_eigenvalue( i );
+    }
 
-		RealType sumEigenValuesUsed = itk::NumericTraits< DerivativeValueType >::Zero;
-		for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
-		{
-			sumEigenValuesUsed += eig.get_eigenvalue(K.cols() - i);
-		}
-  
-		/** the matrix where all the eigenvectors are stored. The size of this matrix is N times NumEigenValues,
-		  * the eigenvector belonging to the largest eigenvalue is in the first column, etc. */
-		MatrixType eigenVectorMatrix( A.cols(), this->m_NumEigenValues );
-		for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
-		{
-			eigenVectorMatrix.set_column(i-1, (AtMinusMean*(eig.get_eigenvector(K.cols() - i))).normalize() );
-		}
-		
-		MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
-   
+    RealType sumEigenValuesUsed = itk::NumericTraits< DerivativeValueType >::Zero;
+    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
+    {
+        sumEigenValuesUsed += eig.get_eigenvalue(K.cols() - i);
+    }
+
+    /** the matrix where all the eigenvectors are stored. The size of this matrix is N times NumEigenValues,
+          * the eigenvector belonging to the largest eigenvalue is in the first column, etc. */
+    MatrixType eigenVectorMatrix( A.cols(), this->m_NumEigenValues );
+    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
+    {
+        eigenVectorMatrix.set_column(i-1, (AtMinusMean*(eig.get_eigenvector(K.cols() - i))).normalize() );
+    }
+
+    MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
+
     /** Compute sum of all eigenvalues = trace( K ) */
     double trace = 0.0;
     for( int i = 0; i < K.rows(); i++ )
@@ -677,17 +677,17 @@ namespace itk
 		/** The trace of vKvdmu is the sum of v_i*K*v_i/dmu where i runs from 1 to NumEigenValues. */
     vnl_vector< DerivativeValueType > tracevKvdmu( P );
 
-		/** To prevent the construction of a 3D matrix a 2D matrix is allocated where every 'slice' is tiled
-		  * below each other. This means that dAdmu_v and meandAdmu_v are of size L*P times NumEigenValues,
-			* where L is the number of 'time'frames and P the number of transform parameters. dAdmu_v is 
-			* dAdmu (size L times N, N number of pixels) times v, where v is a matrix with in each column the 
-			* eigenvectors. For each parameter p the resulting matrix for dAdmu * v is tiled below each other. */
-		DerivativeMatrixType dAdmu_v( realNumLastDimPositions*P, this->m_NumEigenValues );
-		DerivativeMatrixType meandAdmu_v( realNumLastDimPositions*P, this->m_NumEigenValues );
+    /** To prevent the construction of a 3D matrix a 2D matrix is allocated where every 'slice' is tiled
+      * below each other. This means that dAdmu_v and meandAdmu_v are of size L*P times NumEigenValues,
+      * where L is the number of 'time'frames and P the number of transform parameters. dAdmu_v is
+      * dAdmu (size L times N, N number of pixels) times v, where v is a matrix with in each column the
+      * eigenvectors. For each parameter p the resulting matrix for dAdmu * v is tiled below each other. */
+    DerivativeMatrixType dAdmu_v( realNumLastDimPositions*P, this->m_NumEigenValues );
+    DerivativeMatrixType meandAdmu_v( realNumLastDimPositions*P, this->m_NumEigenValues );
 
     dKiidmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-		dAdmu_v.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-		meandAdmu_v.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    dAdmu_v.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    meandAdmu_v.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     AtdAdmuii.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
     meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     meanAtdAdmuii.fill( itk::NumericTraits< DerivativeValueType >::Zero );
@@ -744,31 +744,31 @@ namespace itk
             dMTdmu = imageJacobian;
 
             /** build metric derivative components */
-						for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
-						{
-              meandAdmu[ nzjis[ d ][ p ] ] += dMTdmu[ p ]/realNumLastDimPositions;
-              AtdAdmuii[ nzjis[ d ][ p ] ] += AtMinusMean[ pixelIndex ][ d ]*dMTdmu[ p ];
-						}
+            for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
+            {
+                meandAdmu[ nzjis[ d ][ p ] ] += dMTdmu[ p ]/realNumLastDimPositions;
+                AtdAdmuii[ nzjis[ d ][ p ] ] += AtMinusMean[ pixelIndex ][ d ]*dMTdmu[ p ];
+            }
 
-						for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
-						{
-							for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
-							{
-								dAdmu_v[ d + nzjis[ d ][ p ]*realNumLastDimPositions ][ k ] += dMTdmu[ p ]*eigenVectorMatrix[ pixelIndex ][ k ]; 
-							}
-						}
+            for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
+            {
+                for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
+                {
+                    dAdmu_v[ d + nzjis[ d ][ p ]*realNumLastDimPositions ][ k ] += dMTdmu[ p ]*eigenVectorMatrix[ pixelIndex ][ k ];
+                }
+            }
         } // end loop over t
-				for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
-				{
-					for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
-					{
-						for(unsigned int p = 0; p < P; ++p )
-						{
-							meanAtdAdmuii[ p ] += AtMinusMean[ pixelIndex ][ d ]*meandAdmu[ p ];
-							meandAdmu_v[ d + p*realNumLastDimPositions][ k ] += meandAdmu[ p ]*eigenVectorMatrix[ pixelIndex ][ k ]; 
-						}
-					}
-				}
+        for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
+        {
+            for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
+            {
+                for(unsigned int p = 0; p < P; ++p )
+                {
+                    meanAtdAdmuii[ p ] += AtMinusMean[ pixelIndex ][ d ]*meandAdmu[ p ];
+                    meandAdmu_v[ d + p*realNumLastDimPositions][ k ] += meandAdmu[ p ]*eigenVectorMatrix[ pixelIndex ][ k ];
+                }
+            }
+        }
 
     } // end second for loop over sample container
 
@@ -783,11 +783,11 @@ namespace itk
             / ( static_cast < DerivativeValueType > (A.rows()) -
                 static_cast < DerivativeValueType >(1.0) ); //normalize
 
-		tracevKvdmu *= static_cast < DerivativeValueType > (2.0)
-			/ ( static_cast < DerivativeValueType > (A.rows()) -
-			static_cast < DerivativeValueType >(1.0) ); //normalize
-	
-	  measure = trace - sumEigenValuesUsed;
+    tracevKvdmu *= static_cast < DerivativeValueType > (2.0)
+            / ( static_cast < DerivativeValueType > (A.rows()) -
+                static_cast < DerivativeValueType >(1.0) ); //normalize
+
+    measure = trace - sumEigenValuesUsed;
     derivative = dKiidmu - tracevKvdmu;
 	
 
