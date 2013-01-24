@@ -10,11 +10,11 @@ img {
     border: 0;
 }
 
-H1, H2, H3,  div, td, a, span, p, body {
+H1, H2, H3,  div, td, a, span, p, body, blockquote {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
-body, p, a {
+body, p, a, blockquote, td {
     font-size: 14px;
 }
 
