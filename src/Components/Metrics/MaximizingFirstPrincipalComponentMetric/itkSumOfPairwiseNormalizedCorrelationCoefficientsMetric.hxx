@@ -39,10 +39,7 @@ MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     m_SampleLastDimensionRandomly( false ),
     m_NumSamplesLastDimension( 10 ),
     m_SubtractMean( false ),
-    m_TransformIsStackTransform( false ),
-    m_NumEigenValues( 7 ),
-    m_Zscore( true )
-
+    m_TransformIsStackTransform( false )
 {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -328,7 +325,6 @@ MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
 
     K /=  static_cast< RealType > ( A.rows() - static_cast< RealType > (1.0) );
 
-
     measure = 1.0-(K.fro_norm()/double(realNumLastDimPositions));
 
     /** Return the measure value. */
@@ -552,35 +548,6 @@ MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
 
     K /= static_cast< RealType > ( A.rows()  - 1.0 );
 
-    /** Compute first eigenvalue and eigenvector of the covariance matrix K */
-    vnl_symmetric_eigensystem< RealType > eig( K );
-    vnl_vector<double> eigenValues;
-    eigenValues.set_size(K.cols());
-
-    eigenValues.fill(0.0);
-
-
-    /** Compute sum of all eigenvalues = trace( K ) */
-    double trace = 0.0;
-    for( int i = 0; i < K.rows(); i++ )
-    {
-        trace += K(i,i);
-    }
-
-    RealType sumEigenValuesUsed = itk::NumericTraits< DerivativeValueType >::Zero;
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
-    {
-        sumEigenValuesUsed += eig.get_eigenvalue(K.cols() - i);
-    }
-
-    MatrixType eigenVectorMatrix( A.cols(), this->m_NumEigenValues );
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
-    {
-        eigenVectorMatrix.set_column(i-1, (eig.get_eigenvector(K.cols() - i)).normalize() );
-    }
-
-    MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
-
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
     DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
@@ -588,29 +555,42 @@ MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
 
     /** Sub components of metric derivative */
     DerivativeMatrixType meandAdmu( realNumLastDimPositions, P ); // mean of a column of the derivative of A
-    vnl_vector< DerivativeValueType > tracevKvdmu( P );
+    DerivativeMatrixType dSigmainvdmu( realNumLastDimPositions, P );
+    DerivativeMatrixType meandSigmainvdmu( realNumLastDimPositions, P );
+    DerivativeMatrixType dSigmainvtdmu( realNumLastDimPositions, P );
+    DerivativeMatrixType meandSigmainvtdmu( realNumLastDimPositions, P );
 
-    DerivativeMatrixType dAdmu_v( A.rows()*P, this->m_NumEigenValues );
-    DerivativeMatrixType meandAdmu_v( A.rows()*P, this->m_NumEigenValues );
+    vnl_vector< DerivativeValueType > sumAtZscoredAzscoredmu( P );
+    vnl_vector< DerivativeValueType > sumAtZscoreAmmdSigmadmu( P );
+    vnl_vector< DerivativeValueType > sumdAtZscoredmuAzscore( P );
+    vnl_vector< DerivativeValueType > sumdSigmadmuAtmmAzscore( P );
+    vnl_vector< DerivativeValueType > meansumAtZscoredAzscoredmu( P );
+    vnl_vector< DerivativeValueType > meansumdAtZscoredmuAzscore( P );
     vnl_vector< DerivativeValueType > dSigmainvdmu_part1( realNumLastDimPositions );
+    
     DerivativeType dMTdmu;
 
     /** initialize */
-    dAdmu_v.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-    meandAdmu_v.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-    tracevKvdmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
-    meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    dSigmainvdmu_part1.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    vnl_vector<DerivativeValueType> vSinvdSinvdmuAtmmAmmv( P );
-    vSinvdSinvdmuAtmmAmmv.fill(0.0);
-    vnl_vector<DerivativeValueType> meanvSinvdSinvdmuAtmmAmmv( P );
-    meanvSinvdSinvdmuAtmmAmmv.fill(0.0);
-
-    MatrixType K2eigenVectorMatrix( Atmm*Amm*eigenVectorMatrix );
+    meandAdmu.fill( 0.0 );
+    dSigmainvdmu.fill( 0.0 );
+    dSigmainvtdmu.fill( 0.0 );
+    sumdSigmadmuAtmmAzscore.fill( 0.0 );
+    sumdAtZscoredmuAzscore.fill( 0.0 );
+    sumAtZscoredAzscoredmu.fill( 0.0 );
+    sumAtZscoreAmmdSigmadmu.fill( 0.0 );
+    meandSigmainvdmu.fill( 0.0 );
+    meansumAtZscoredAzscoredmu.fill( 0.0 );
+    meansumdAtZscoredmuAzscore.fill( 0.0 );
+    meandSigmainvtdmu.fill( 0.0 );
+    dSigmainvdmu_part1.fill( 0.0 );
 
     unsigned int startSamplesOK;
     startSamplesOK = 0;
 
+		ofstream file;
+		file.open("K.txt");
+		file << K << std::endl;
+		file.close();
     for(unsigned int d = 0; d < realNumLastDimPositions; d++)
     {
         dSigmainvdmu_part1[ d ] = pow(std[ d ],-3);
@@ -648,8 +628,6 @@ MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
             this->EvaluateMovingImageValueAndDerivative(
                         mappedPoint, movingImageValue, &movingImageDerivative );
 
-            movingImageDerivative /= std(d);
-
             /** Get the TransformJacobian dT/dmu */
             this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
 
@@ -663,18 +641,17 @@ MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
             /** build metric derivative components */
             for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
             {
-                meandAdmu[ d ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]/A.rows();
+                dSigmainvdmu[ d ][ nzjis[ d ][ p ] ] += dSigmainvdmu_part1[ d ]*Atmm[ d ][ pixelIndex ]*dMTdmu[ p ];
+                dSigmainvtdmu[ d ][ nzjis[ d ][ p ] ] += dSigmainvdmu_part1[ d ]*dMTdmu[ p ]*Amm[ pixelIndex ][ d ];
+                for(unsigned int l = 0; l < realNumLastDimPositions; l++)
+                {
+                    sumAtZscoredAzscoredmu[ nzjis[ d ][ p ] ] += K[ d ][ l ]*AtZscore[ l ][ pixelIndex ]*(dMTdmu[ p ]/std[ d ]);
+                    sumdAtZscoredmuAzscore[ nzjis[ d ][ p ] ] += K[ d ][ l ]*(dMTdmu[ p ]/std[ d ])*AZscore[ pixelIndex ][ l ];
+                }
+
+                meandAdmu[ d ][ nzjis[ d ][ p ] ] += (dMTdmu[ p ]/std[ d ])/A.rows();
             }
 
-            for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
-            {
-                for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
-                {
-                    dAdmu_v[ pixelIndex + nzjis[ d ][ p ]*A.rows() ][ k ] += dMTdmu[ p ]*eigenVectorMatrix[ d ][ k ];
-                    vSinvdSinvdmuAtmmAmmv[ nzjis[ d ][ p ] ] += eigenVectorMatrixTranspose[ k ][ d ]
-                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ pixelIndex ]*dMTdmu[ p ]*K2eigenVectorMatrix[ d ][ k ];
-                }
-            }
         } // end loop over t
     } // end second for loop over sample container
 
@@ -682,34 +659,51 @@ MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     {
         for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
         {
-            for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
+            for(unsigned int p = 0; p < P; ++p )
             {
-                for(unsigned int p = 0; p < P; ++p )
+                meandSigmainvdmu[ d ][ p ] += dSigmainvdmu_part1[ d ]*Atmm[ d ][ i ]*meandAdmu[ d ][ p ];
+                meandSigmainvtdmu[ d ][ p ] += dSigmainvdmu_part1[ d ]*meandAdmu[ d ][ p ]*Amm[ i ][ d ];
+                for(unsigned int l  = 0; l < realNumLastDimPositions; l++)
                 {
-                    meandAdmu_v[ i + p*A.rows() ][ k ] += meandAdmu[ d ][ p ]*eigenVectorMatrix[ d ][ k ];
-                    meanvSinvdSinvdmuAtmmAmmv[ p ] += eigenVectorMatrixTranspose[ k ][ d ]
-                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ i ]*meandAdmu[ d ][ p ]*K2eigenVectorMatrix[ d ][ k ];
+                    meansumAtZscoredAzscoredmu[ p ] += K[ d ][ l ]*AtZscore[ d ][ i ]*meandAdmu[ l ][ p ];
+                    meansumdAtZscoredmuAzscore[ p ] += K[ d ][ l ]*meandAdmu[ l ][ p ]*AZscore[ i ][ d ];
                 }
             }
         }
     }
 
-    vSinvdSinvdmuAtmmAmmv -= meanvSinvdSinvdmuAtmmAmmv;
+    dSigmainvdmu -= meandSigmainvdmu;
+    dSigmainvtdmu -= meandSigmainvtdmu;
+    sumdAtZscoredmuAzscore -= meansumdAtZscoredmuAzscore;
+    sumAtZscoredAzscoredmu -= meansumAtZscoredAzscoredmu;
 
-    for(unsigned int p = 0; p < P; p++)
+    MatrixType AtZscoreAmm( AtZscore*Amm );
+    MatrixType AtmmAZscore( Atmm*AZscore );
+
+    for(unsigned int l = 0; l < realNumLastDimPositions; l++)
     {
-        tracevKvdmu[ p ] = vnl_trace< DerivativeValueType >(eigenVectorMatrixTranspose*AtZscore*
-                                                            (dAdmu_v-meandAdmu_v).extract(A.rows(),this->m_NumEigenValues,p*A.rows(),0));
+        for(unsigned int d = 0; d < realNumLastDimPositions; d++)
+        {
+            for(unsigned int p = 0; p < P; p++)
+            {
+                sumAtZscoreAmmdSigmadmu[ p ] += K[ d ][ l ]*AtZscoreAmm[ l ][ d ]*dSigmainvdmu[ d ][ p ];
+                sumdSigmadmuAtmmAzscore[ p ] += K[ d ][ l ]*dSigmainvtdmu[ l ][ p ]*AtmmAZscore[ l ][ d ];
+            }
+        }
     }
 
-    tracevKvdmu += vSinvdSinvdmuAtmmAmmv;
+    vnl_vector< DerivativeValueType > sumKdabsKdmu( P );
 
-    tracevKvdmu *= static_cast < DerivativeValueType > (2.0)
+    sumKdabsKdmu = sumdSigmadmuAtmmAzscore + sumdAtZscoredmuAzscore +
+            sumAtZscoredAzscoredmu + sumAtZscoreAmmdSigmadmu;
+
+    sumKdabsKdmu *= static_cast < DerivativeValueType > (1.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
                 static_cast < DerivativeValueType >(1.0) ); //normalize
 
-    measure = trace - sumEigenValuesUsed;
-    derivative = -tracevKvdmu;
+    derivative = -sumKdabsKdmu/(K.fro_norm()*double(realNumLastDimPositions));
+
+    measure = 1.0-(K.fro_norm()/double(realNumLastDimPositions));
 
     /** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )

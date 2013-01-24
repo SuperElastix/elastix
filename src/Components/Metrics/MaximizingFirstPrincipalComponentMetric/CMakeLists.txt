@@ -4,7 +4,7 @@ ADD_ELXCOMPONENT( MaximizingFirstPrincipalComponentMetric
  elxMaximizingFirstPrincipalComponentMetric.hxx
  elxMaximizingFirstPrincipalComponentMetric.cxx
  itkMaximizingFirstPrincipalComponentMetric.h
-# itkSumOfPairwiseNormalizedCorrelationCoefficientsMetric.hxx
-  itkMaximizingFirstPrincipalComponentMetric_method7.hxx
+ itkSumOfPairwiseNormalizedCorrelationCoefficientsMetric.hxx
+ # itkMaximizingFirstPrincipalComponentMetric_method7.hxx
 )
 

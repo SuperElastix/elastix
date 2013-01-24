@@ -217,8 +217,8 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-//#include "itkSumOfPairwiseNormalizedCorrelationCoefficientsMetric.hxx"
-# include "itkMaximizingFirstPrincipalComponentMetric_method7.hxx"
+#include "itkSumOfPairwiseNormalizedCorrelationCoefficientsMetric.hxx"
+//# include "itkMaximizingFirstPrincipalComponentMetric_method7.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h
