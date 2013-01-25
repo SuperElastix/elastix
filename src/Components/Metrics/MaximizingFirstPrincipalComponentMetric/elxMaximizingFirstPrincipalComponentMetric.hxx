@@ -56,11 +56,10 @@ namespace elastix
     this->GetConfiguration()->ReadParameter( NumEigenValues, "NumEigenValues",
         this->GetComponentLabel(), level, 0);
     this->SetNumEigenValues( NumEigenValues );
-\
+
      bool zscore = true;
      this->GetConfiguration()->ReadParameter(zscore,"Zscore", this->GetComponentLabel(), 0, 0);
      this->SetZscore( zscore );
-
 
      double alpha = 1.0;
      this->GetConfiguration()->ReadParameter(alpha,"Alpha", this->GetComponentLabel(), 0, 0);

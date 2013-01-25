@@ -42,11 +42,7 @@ public:
   typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
   typedef typename FixedImageRegionType::SizeType         FixedImageSizeType;
 
-  /** Method for creation through the obvnl_vector<double> eigenValues;
-    eigenValues.set_size(K.cols());
-
-    eigenValues.fill(0.0);
-ject factory. */
+  /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
@@ -217,8 +213,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkSumOfPairwiseNormalizedCorrelationCoefficientsMetric.hxx"
-//# include "itkMaximizingFirstPrincipalComponentMetric_method7.hxx"
+#include "itkMaximizingFirstPrincipalComponentMetric_method7.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h

@@ -1,4 +1,4 @@
-    /*======================================================================
+/*======================================================================
 
   This file is part of the elastix software.
 
@@ -22,10 +22,6 @@
 #include "vnl/vnl_trace.h"
 #include "vnl/algo/vnl_symmetric_eigensystem.h"
 #include <numeric>
-#include <fstream>
-#include <iostream>
-#include <iomanip>
-
 
 namespace itk
 {
