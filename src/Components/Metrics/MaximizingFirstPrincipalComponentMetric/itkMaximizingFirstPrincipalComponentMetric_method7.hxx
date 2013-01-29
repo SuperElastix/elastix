@@ -287,9 +287,27 @@ namespace itk
 
     MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
 
+    /**************************************/
+    /******* test to try something ********/
+    /**************************************/
+//    vnl_vector< RealType > meanimage( A.rows() );
+//    meanimage.fill( NumericTraits< RealType >::Zero );
+//    for( unsigned int i = 0; i < A.rows(); i++ )
+//    {
+//        for( unsigned int j = 0; j < A.cols(); j++ )
+//        {
+//            meanimage(i) =+ A(i,j);
+//        }
+//    }
+//    meanimage /= A.cols();
+//    A.set_column(realNumLastDimPositions+1, meanimage);
+//  /**************************************/
+    /**************************************/
+    /**************************************/
+
     /** Calculate mean of from columns */
-    vnl_vector< double > mean( A.cols() );
-    mean.fill( NumericTraits< double >::Zero );
+    vnl_vector< RealType > mean( A.cols() );
+    mean.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < A.rows(); i++ )
     {
         for( int j = 0; j < A.cols(); j++)
@@ -297,11 +315,11 @@ namespace itk
             mean(j) += A(i,j);
         }
     }
-    mean /= double(A.rows());
+    mean /= RealType(A.rows());
 
     /** Calculate standard deviation from columns */
-    vnl_vector< double > std( A.cols() );
-    std.fill( NumericTraits< double >::Zero );
+    vnl_vector< RealType > std( A.cols() );
+    std.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < A.rows(); i++ )
     {
         for( int j = 0; j < A.cols(); j++)
@@ -309,13 +327,12 @@ namespace itk
             std(j) += pow((A(i,j)-mean(j)),2);
         }
     }
-    std /= double(A.rows() - 1.0);
+    std /= RealType(A.rows() - 1.0);
 
     for( int j = 0; j < A.cols(); j++)
     {
         std(j) = sqrt(std(j));
     }
-
 
     /** Subtract mean from columns */
     MatrixType AZscore( A.rows(), A.cols() );
@@ -339,10 +356,10 @@ namespace itk
 
     /** Compute first eigenvalue and eigenvector of the covariance matrix K */
     vnl_symmetric_eigensystem< RealType > eig( K );
-    vnl_vector<double> eigenValues;
+    vnl_vector< RealType > eigenValues;
     eigenValues.set_size(K.cols());
 
-    eigenValues.fill(0.0);
+    eigenValues.fill( itk::NumericTraits< RealType >::Zero );
 
     for(unsigned int i = 0; i < K.cols(); i++)
     {
@@ -350,7 +367,7 @@ namespace itk
     }
 
     /** Compute sum of all eigenvalues = trace( K ) */
-    double trace = 0.0;
+    RealType trace = itk::NumericTraits< RealType >::Zero;;
     for( int i = 0; i < K.rows(); i++ )
     {
         trace += K(i,i);
@@ -435,16 +452,17 @@ namespace itk
 
     /** Get real last dim samples. */
     const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
+    const unsigned int L = realNumLastDimPositions;
 
     /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
     unsigned int NumberOfSamples = sampleContainer->Size();
-    MatrixType datablock( NumberOfSamples, realNumLastDimPositions );
+    MatrixType datablock( NumberOfSamples, L );
 
     /** Initialize dummy loop variables */
     unsigned int pixelIndex = 0;
 
     /** Initialize image sample matrix . */
-    datablock.fill( itk::NumericTraits< double >::Zero );
+    datablock.fill( itk::NumericTraits< RealType >::Zero );
 
     /** Determine random last dimension positions if needed. */
     /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
@@ -470,11 +488,11 @@ namespace itk
         FixedImageContinuousIndexType voxelCoord;
         this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
-        const unsigned int realNumLastDimPositions = lastDimPositions.size();
+        const unsigned int L = lastDimPositions.size();
         unsigned int numSamplesOk = 0;
 
         /** Loop over t */
-        for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
+        for ( unsigned int d = 0; d < L; ++d )
         {
             /** Initialize some variables. */
             RealType movingImageValue;
@@ -496,6 +514,7 @@ namespace itk
             }
 
             if( sampleOk )
+
             {
                 sampleOk = this->EvaluateMovingImageValueAndDerivative(
                             mappedPoint, movingImageValue, 0 );
@@ -505,12 +524,11 @@ namespace itk
             {
                 numSamplesOk++;
                 datablock( pixelIndex, d ) = movingImageValue;
-
             }// end if sampleOk
 
         } // end loop over t
 
-        if( numSamplesOk == realNumLastDimPositions )
+        if( numSamplesOk == L )
         {
             SamplesOK.push_back(fixedPoint);
             pixelIndex++;
@@ -522,12 +540,31 @@ namespace itk
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
+    unsigned int N = pixelIndex;
 
-    MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
+    MatrixType A( datablock.extract( N, L ) );
+    /**************************************/
+    /******* test to try something ********/
+    /**************************************/
+
+//    vnl_vector< RealType > meanimage( A.rows() );
+//    meanimage.fill( NumericTraits< RealType >::Zero );
+//    for( unsigned int i = 0; i < A.rows(); i++ )
+//    {
+//        for( unsigned int j = 0; j < A.cols(); j++ )
+//        {
+//            meanimage(i) =+ A(i,j);
+//        }
+//    }
+//    meanimage /= A.cols();
+//    A.set_column(L+1, meanimage);
+    /**************************************/
+    /**************************************/
+    /**************************************/
 
     /** Calculate mean of from columns */
-    vnl_vector< double > mean( A.cols() );
-    mean.fill( NumericTraits< double >::Zero );
+    vnl_vector< RealType > mean( A.cols() );
+    mean.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < A.rows(); i++ )
     {
         for( int j = 0; j < A.cols(); j++)
@@ -535,11 +572,11 @@ namespace itk
             mean(j) += A(i,j);
         }
     }
-    mean /= double(A.rows());
+    mean /= RealType(A.rows());
 
     /** Calculate standard deviation from columns */
-    vnl_vector< double > std( A.cols() );
-    std.fill( NumericTraits< double >::Zero );
+    vnl_vector< RealType > std( A.cols() );
+    std.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < A.rows(); i++ )
     {
         for( int j = 0; j < A.cols(); j++)
@@ -547,7 +584,7 @@ namespace itk
             std(j) += pow((A(i,j)-mean(j)),2);
         }
     }
-    std /= double( A.rows() - 1.0 );
+    std /= RealType( A.rows() - 1.0 );
 
     for( int j = 0; j < A.cols(); j++)
     {
@@ -590,7 +627,7 @@ namespace itk
     vnl_symmetric_eigensystem< RealType > eig( K );
 
     /** Compute sum of all eigenvalues = trace( K ) */
-    double trace = 0.0;
+    RealType trace = itk::NumericTraits< RealType >::Zero;
     for( int i = 0; i < K.rows(); i++ )
     {
         trace += K(i,i);
@@ -628,44 +665,50 @@ namespace itk
 
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
+    DerivativeType dMTdmu;
     DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-    std::vector<NonZeroJacobianIndicesType> nzjis( realNumLastDimPositions, NonZeroJacobianIndicesType() );
+    std::vector<NonZeroJacobianIndicesType> nzjis( L, NonZeroJacobianIndicesType() );
 
     /** Sub components of metric derivative */
-    DerivativeMatrixType meandAdmu( realNumLastDimPositions, P ); // mean of a column of the derivative of A
     vnl_vector< DerivativeValueType > tracevKvdmu( P );
+    vnl_vector< DerivativeValueType > vSinvdSinvdmuAtmmAmmv( P );
+    vnl_vector< DerivativeValueType > meanvSinvdSinvdmuAtmmAmmv( P );
+    vnl_vector< DerivativeValueType > dSigmainvdmu_part1( L );
 
-    DerivativeMatrixType vdAdmu( this->m_NumEigenValues, realNumLastDimPositions*P );
-    DerivativeMatrixType vmeandAdmu( this->m_NumEigenValues, realNumLastDimPositions*P );
-    vnl_vector< DerivativeValueType > dSigmainvdmu_part1( realNumLastDimPositions );
-    DerivativeType dMTdmu;
+    DerivativeMatrixType meandAdmu( L, P ); // mean of a column of the derivative of A
+    DerivativeMatrixType vdAdmu( this->m_NumEigenValues, (L)*P );
+    DerivativeMatrixType vmeandAdmu( this->m_NumEigenValues, (L)*P );
 
     /** initialize */
-    vdAdmu.fill (0.0);
-    vmeandAdmu.fill(0.0);
-    tracevKvdmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
+    vdAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+    vmeandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+    tracevKvdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     dSigmainvdmu_part1.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    vnl_vector<DerivativeValueType> vSinvdSinvdmuAtmmAmmv( P );
-    vSinvdSinvdmuAtmmAmmv.fill(0.0);
-    vnl_vector<DerivativeValueType> meanvSinvdSinvdmuAtmmAmmv( P );
-    meanvSinvdSinvdmuAtmmAmmv.fill(0.0);
+    vSinvdSinvdmuAtmmAmmv.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+    meanvSinvdSinvdmuAtmmAmmv.fill( itk::NumericTraits< DerivativeValueType >::Zero );
 
     MatrixType K2eigenVectorMatrix( eigenVectorMatrixTranspose*AtZscore*Amm );
 
     unsigned int startSamplesOK;
     startSamplesOK = 0;
 
-    for(unsigned int d = 0; d < realNumLastDimPositions; d++)
+    for(unsigned int d = 0; d < L; d++)
     {
         dSigmainvdmu_part1[ d ] = pow(std[ d ],-3);
     }
 
-    dSigmainvdmu_part1 /= -double(A.rows()-1.0);
+    dSigmainvdmu_part1 /= -RealType(A.rows()-1.0);
 
     MatrixType eigenVectorMatrixTransposeAtZscore( eigenVectorMatrixTranspose*AtZscore );
 
-  	/** Second loop over fixed image samples. */ 
+//    std::vector<int> lastDimPositions2;
+//    for ( unsigned int i = 0; i < lastDimSize+1; ++i )
+//    {
+//        lastDimPositions2.push_back( i );
+//    }
+
+    /** Second loop over fixed image samples. */
     for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
     {
         /** Read fixed coordinates. */
@@ -708,17 +751,17 @@ namespace itk
             /** build metric derivative components */
             for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
             {
-                meandAdmu[ d ][ nzjis[ d ][ p ] ] += (dMTdmu[ p ]/std[d])/A.rows();
+                meandAdmu[ d ][ nzjis[ d ][ p ] ] += ( dMTdmu[ p ]/std[ d ] )/A.rows();
             }
 
-            for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
+            for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
             {
                 for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
                 {
-                    vdAdmu[ k ][ d + nzjis[ d ][ p ]*realNumLastDimPositions ] +=
-                            eigenVectorMatrixTransposeAtZscore[ k ][ pixelIndex ]*(dMTdmu[ p ]/std[ d ]);
-                    vSinvdSinvdmuAtmmAmmv[ nzjis[ d ][ p ] ] += K2eigenVectorMatrix[ k ][ d ]
-                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ pixelIndex ]*dMTdmu[ p ]*eigenVectorMatrix[ d ][ k ];
+                    vdAdmu[ z ][ d + nzjis[ d ][ p ]*(L) ] +=
+                            eigenVectorMatrixTransposeAtZscore[ z ][ pixelIndex ]*(dMTdmu[ p ]/std[ d ]);
+                    vSinvdSinvdmuAtmmAmmv[ nzjis[ d ][ p ] ] += K2eigenVectorMatrix[ z ][ d ]
+                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ pixelIndex ]*dMTdmu[ p ]*eigenVectorMatrix[ d ][ z ];
                 }
             }
         } // end loop over t
@@ -726,16 +769,16 @@ namespace itk
 
     for(unsigned int i = 0; i < A.rows(); i++)
     {
-        for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
+        for (unsigned int d = 0; d < L; ++d )
         {
-            for(unsigned int k = 0; k < this->m_NumEigenValues; k++)
+            for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
             {
                 for(unsigned int p = 0; p < P; ++p )
                 {
-                    vmeandAdmu[ k ][ d + realNumLastDimPositions*p ] += eigenVectorMatrixTransposeAtZscore[ k ][ i ]
+                    vmeandAdmu[ z ][ d + (L)*p ] += eigenVectorMatrixTransposeAtZscore[ z ][ i ]
                             *meandAdmu[ d ][ p ];
-                    meanvSinvdSinvdmuAtmmAmmv[ p ] += K2eigenVectorMatrix[ k ][ d ]
-                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ i ]*meandAdmu[ d ][ p ]*eigenVectorMatrix[ d ][ k ];
+                    meanvSinvdSinvdmuAtmmAmmv[ p ] += K2eigenVectorMatrix[ z ][ d ]
+                            *dSigmainvdmu_part1[ d ]*Atmm[ d ][ i ]*meandAdmu[ d ][ p ]*eigenVectorMatrix[ d ][ z ];
                 }
             }
         }
@@ -746,7 +789,7 @@ namespace itk
     for(unsigned int p = 0; p < P; p++)
     {
          tracevKvdmu[ p ] = vnl_trace< DerivativeValueType > ((vdAdmu-vmeandAdmu).extract(this->m_NumEigenValues,
-                               realNumLastDimPositions,0,p*realNumLastDimPositions)*eigenVectorMatrix);
+                               (L),0,p*(L))*eigenVectorMatrix);
     }
 
     tracevKvdmu += vSinvdSinvdmuAtmmAmmv;
@@ -782,7 +825,7 @@ namespace itk
             const unsigned int index = i % numControlPointsPerDimension;
             mean[ index ] += derivative[ i ];
           }
-          mean /= static_cast< double >( lastDimGridSize );
+          mean /= static_cast< RealType >( lastDimGridSize );
 
           /** Update derivative for every control point per dimension. */
           for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
@@ -812,7 +855,7 @@ namespace itk
             mean[ index ] += derivative[ c ];
           }
         }
-        mean /= static_cast< double >( lastDimSize );
+        mean /= static_cast< RealType >( lastDimSize );
 
         /** Update derivative per control point. */
         for ( unsigned int t = 0; t < lastDimSize; ++t )
@@ -847,7 +890,7 @@ namespace itk
         this->m_normdCdmu[index] = sqrt(this->m_normdCdmu.get(index));
     }
 
-    this->m_normdCdmu /= static_cast< double >( this->GetNumberOfParameters() / lastDimSize );
+    this->m_normdCdmu /= static_cast< RealType >( this->GetNumberOfParameters() / lastDimSize );
 
 
     /** Return the measure value. */
