@@ -20,6 +20,7 @@
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
+#include "itkSpatialObject.h"
 #include "itkImageMomentsCalculator.h"
 
 #include <iostream>
@@ -92,11 +93,18 @@ public:
                       TransformType::OutputSpaceDimension);
 
   /** Image Types to use in the initialization of the transform */
-  typedef   TFixedImage              FixedImageType;
-  typedef   TMovingImage             MovingImageType;
+  typedef TFixedImage              FixedImageType;
+  typedef TMovingImage             MovingImageType;
 
-  typedef   typename FixedImageType::ConstPointer   FixedImagePointer;
-  typedef   typename MovingImageType::ConstPointer  MovingImagePointer;
+  typedef typename FixedImageType::ConstPointer   FixedImagePointer;
+  typedef typename MovingImageType::ConstPointer  MovingImagePointer;
+
+  //typedef SpatialObject< InputSpaceDimension >        FixedImageMaskType;
+  //typedef SpatialObject< OutputSpaceDimension >       MovingImageMaskType;
+  typedef Image< unsigned char, InputSpaceDimension >   FixedImageMaskType;
+  typedef Image< unsigned char, OutputSpaceDimension >  MovingImageMaskType;
+  typedef typename FixedImageMaskType::ConstPointer   FixedImageMaskPointer;
+  typedef typename MovingImageMaskType::ConstPointer  MovingImageMaskPointer;
 
   /** Moment calculators */
   typedef ImageMomentsCalculator< FixedImageType >
@@ -128,6 +136,9 @@ public:
   /** Set the moving image used in the registration process */
   itkSetConstObjectMacro( MovingImage, MovingImageType );
 
+  /** Mask support. */
+  itkSetConstObjectMacro( FixedImageMask, FixedImageMaskType  );
+  itkSetConstObjectMacro( MovingImageMask, MovingImageMaskType );
 
   /** Initialize the transform using data from the images */
   virtual void InitializeTransform();
@@ -156,9 +167,10 @@ private:
 
   TransformPointer    m_Transform;
 
-  FixedImagePointer   m_FixedImage;
-
-  MovingImagePointer  m_MovingImage;
+  FixedImagePointer       m_FixedImage;
+  MovingImagePointer      m_MovingImage;
+  FixedImageMaskPointer   m_FixedImageMask;
+  MovingImageMaskPointer  m_MovingImageMask;
 
   bool                m_UseMoments;
   bool                m_UseOrigins;
