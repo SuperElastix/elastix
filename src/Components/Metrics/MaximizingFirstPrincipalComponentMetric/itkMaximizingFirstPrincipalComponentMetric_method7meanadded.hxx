@@ -308,7 +308,7 @@ namespace itk
 				meanimage(i) += A(i,j);
 			}			
 		}
-		meanimage /= A.cols();
+		meanimage /= G;
 		A.set_column(G, meanimage);
 		/**************************************/
 		/**************************************/
@@ -376,7 +376,7 @@ namespace itk
     }
 
     /** Compute sum of all eigenvalues = trace( K ) */
-    RealType trace = itk::NumericTraits< RealType >::Zero;;
+    RealType trace = itk::NumericTraits< RealType >::Zero;
     for( int i = 0; i < K.rows(); i++ )
     {
         trace += K(i,i);
@@ -573,7 +573,7 @@ namespace itk
             meanimage(i) += A(i,j);
         }			
     }
-    meanimage /= A.cols();
+    meanimage /= G;
     A.set_column(G, meanimage);
     /**************************************/
     /**************************************/
@@ -619,9 +619,8 @@ namespace itk
             AZscore(i,j) = (A(i,j)-mean(j))/std(j);
         }
     }
-		std::cout << "end zscore A" << std::endl;
 
-    MatrixType Amm( A.rows(), A.cols() );
+		MatrixType Amm( A.rows(), A.cols() );
     Amm.fill( NumericTraits< RealType >::Zero );
     for( unsigned int i = 0; i < A.rows(); i++)
     {
