@@ -37,7 +37,7 @@ namespace itk
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
         m_NumEigenValues( 7 ),
-        m_Zscore( true )
+        m_AddMeanImage( false )
 
   {
     this->SetUseImageSampler( true );
@@ -285,34 +285,44 @@ namespace itk
 		this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 		this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
 		unsigned int N = this->m_NumberOfPixelsCounted;
+		MatrixType A;
 
-		MatrixType A( N, G+1 );
-		A.fill( NumericTraits< RealType >::Zero );	
-		for(unsigned int i = 0; i < N; i++)
+		if(this->m_AddMeanImage)
 		{
-			for(unsigned int d = 0; d < G; d++)
+			A.set_size( N, G+1 );
+			A.fill( NumericTraits< RealType >::Zero );	
+			for(unsigned int i = 0; i < N; i++)
 			{
-				A(i,d) = datablock(i,d);
+				for(unsigned int d = 0; d < G; d++)
+				{
+					A(i,d) = datablock(i,d);
+				}
+			}
+
+			vnl_vector< RealType > meanimage( A.rows() );
+			meanimage.fill( NumericTraits< RealType >::Zero );
+			for( unsigned int i = 0; i < A.rows(); i++ )
+			{
+				for( unsigned int j = 0; j < A.cols(); j++ )
+				{
+					meanimage(i) += A(i,j);
+				}			
+			}
+			meanimage /= G;
+			A.set_column(G, meanimage);
+		}
+		else
+		{
+			A.set_size( N, G );
+			A.fill( NumericTraits< RealType >::Zero );	
+			for(unsigned int i = 0; i < N; i++)
+			{
+				for(unsigned int d = 0; d < G; d++)
+				{
+					A(i,d) = datablock(i,d);
+				}
 			}
 		}
-
-		/**************************************/
-		/***** Add mean image to matrix A *****/
-		/**************************************/
-		vnl_vector< RealType > meanimage( A.rows() );
-		meanimage.fill( NumericTraits< RealType >::Zero );
-		for( unsigned int i = 0; i < A.rows(); i++ )
-		{
-			for( unsigned int j = 0; j < A.cols(); j++ )
-			{
-				meanimage(i) += A(i,j);
-			}			
-		}
-		meanimage /= G;
-		A.set_column(G, meanimage);
-		/**************************************/
-		/**************************************/
-		/**************************************/
 
     /** Calculate mean of from columns */
     vnl_vector< RealType > mean( A.cols() );
@@ -550,34 +560,44 @@ namespace itk
     this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
     unsigned int N = this->m_NumberOfPixelsCounted;
+		MatrixType A;
 
-    MatrixType A( N, G+1 );
-		A.fill( NumericTraits< RealType >::Zero );	
-		for(unsigned int i = 0; i < N; i++)
+		if(this->m_AddMeanImage)
 		{
-			for(unsigned int d = 0; d < G; d++)
+			A.set_size( N, G+1 );
+			A.fill( NumericTraits< RealType >::Zero );	
+			for(unsigned int i = 0; i < N; i++)
 			{
-				A(i,d) = datablock(i,d);
+				for(unsigned int d = 0; d < G; d++)
+				{
+					A(i,d) = datablock(i,d);
+				}
+			}
+
+			vnl_vector< RealType > meanimage( A.rows() );
+			meanimage.fill( NumericTraits< RealType >::Zero );
+			for( unsigned int i = 0; i < A.rows(); i++ )
+			{
+				for( unsigned int j = 0; j < A.cols(); j++ )
+				{
+					meanimage(i) += A(i,j);
+				}			
+			}
+			meanimage /= G;
+			A.set_column(G, meanimage);
+		}
+		else
+		{
+			A.set_size( N, G );
+			A.fill( NumericTraits< RealType >::Zero );	
+			for(unsigned int i = 0; i < N; i++)
+			{
+				for(unsigned int d = 0; d < G; d++)
+				{
+					A(i,d) = datablock(i,d);
+				}
 			}
 		}
-
-    /**************************************/
-    /***** Add mean image to matrix A *****/
-    /**************************************/
-    vnl_vector< RealType > meanimage( A.rows() );
-    meanimage.fill( NumericTraits< RealType >::Zero );
-    for( unsigned int i = 0; i < A.rows(); i++ )
-    {
-        for( unsigned int j = 0; j < A.cols(); j++ )
-        {
-            meanimage(i) += A(i,j);
-        }			
-    }
-    meanimage /= G;
-    A.set_column(G, meanimage);
-    /**************************************/
-    /**************************************/
-    /**************************************/
 
     /** Calculate mean of from columns */
     vnl_vector< RealType > mean( A.cols() );
@@ -714,7 +734,7 @@ namespace itk
     unsigned int startSamplesOK;
     startSamplesOK = 0;
 
-    for(unsigned int d = 0; d < G+1; d++)
+    for(unsigned int d = 0; d < A.cols(); d++)
     {
         dSigmainvdmu_part1[ d ] = pow(std[ d ],-3);
     }
@@ -734,9 +754,9 @@ namespace itk
         FixedImageContinuousIndexType voxelCoord;
         this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
-        const unsigned int realNumLastDimPositions = lastDimPositions.size();
+        const unsigned int G = lastDimPositions.size();
 
-        for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
+        for ( unsigned int d = 0; d < G; ++d )
         {
             /** Initialize some variables. */
             RealType movingImageValue;
@@ -774,7 +794,7 @@ namespace itk
             {
                 for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
                 {
-                    vdAdmu[ z ][ d + nzjis[ d ][ p ]*(G+1) ] +=
+                    vdAdmu[ z ][ d + nzjis[ d ][ p ]*(A.cols()) ] +=
                             eigenVectorMatrixTransposeAtZscore[ z ][ pixelIndex ]*(dMTdmu[ p ]/std[ d ]);
                     vSinvdSinvdmuAtmmAmmv[ nzjis[ d ][ p ] ] += eigenVectorMatrixtK2[ z ][ d ]
 														*dSigmainvdmu_part1[ d ]*Atmm[ d ][ pixelIndex ]*dMTdmu[ p ]*eigenVectorMatrix[ d ][ z ]; 
@@ -784,24 +804,28 @@ namespace itk
         } // end loop over t
     } // end second for loop over sample container
 
-		for(unsigned int p = 0; p < P; p++)
+		if(this->m_AddMeanImage)
 		{
-			vnl_vector< DerivativeValueType > endcolumn( this->m_NumEigenValues );
-			endcolumn = eigenVectorMatrixTransposeAtZscore*(dmeanimagedmu/std[ G ]).get_column( p );
-			vdAdmu.set_column((p+1)*G, endcolumn);
-		}
-
-		for(unsigned int i = 0; i < A.rows(); i++)
-		{
-			for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
+			for(unsigned int p = 0; p < P; p++)
 			{
-				for(unsigned int p = 0; p < P; p++)
+				vnl_vector< DerivativeValueType > endcolumn( this->m_NumEigenValues );
+				endcolumn = eigenVectorMatrixTransposeAtZscore*(dmeanimagedmu/std[ G ]).get_column( p );
+				vdAdmu.set_column((p+1)*G, endcolumn);
+			}
+
+			for(unsigned int i = 0; i < A.rows(); i++)
+			{
+				for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
 				{
-					vSinvdSinvdmuAtmmAmmv[ p ] += eigenVectorMatrixtK2[ z ][ G ]
-					*dSigmainvdmu_part1[ G ]*Atmm[ G ][ i ]*dmeanimagedmu[ i ][ p ]*eigenVectorMatrix[ G ][ z ]; 
+					for(unsigned int p = 0; p < P; p++)
+					{
+						vSinvdSinvdmuAtmmAmmv[ p ] += eigenVectorMatrixtK2[ z ][ G ]
+						*dSigmainvdmu_part1[ G ]*Atmm[ G ][ i ]*dmeanimagedmu[ i ][ p ]*eigenVectorMatrix[ G ][ z ]; 
+					}
 				}
 			}
 		}
+		
 
 		//for(unsigned int i = 0; i < A.rows(); i++)
 		//{
@@ -837,7 +861,7 @@ namespace itk
     for(unsigned int p = 0; p < P; p++)
     {
          tracevKvdmu[ p ] = vnl_trace< DerivativeValueType > ((vdAdmu).extract(this->m_NumEigenValues,
-                               (G+1),0,p*(G+1))*eigenVectorMatrix);
+                               A.cols(),0,p*A.cols())*eigenVectorMatrix);
     }
 
     tracevKvdmu += vSinvdSinvdmuAtmmAmmv;

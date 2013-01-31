@@ -52,18 +52,14 @@ namespace elastix
     unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-    unsigned int NumEigenValues = 1;
+    unsigned int NumEigenValues = 7;
     this->GetConfiguration()->ReadParameter( NumEigenValues, "NumEigenValues",
         this->GetComponentLabel(), level, 0);
     this->SetNumEigenValues( NumEigenValues );
 
-     bool zscore = true;
-     this->GetConfiguration()->ReadParameter(zscore,"Zscore", this->GetComponentLabel(), 0, 0);
-     this->SetZscore( zscore );
-
-     double alpha = 1.0;
-     this->GetConfiguration()->ReadParameter(alpha,"Alpha", this->GetComponentLabel(), 0, 0);
-     this->SetAlpha( alpha );
+     bool addmeanimage = false;
+     this->GetConfiguration()->ReadParameter(addmeanimage,"AddMeanImage", this->GetComponentLabel(), level, 0);
+     this->SetAddMeanImage( addmeanimage );
 
     /** Get and set the random sampling in the last dimension. */
     bool useRandomSampling = false;

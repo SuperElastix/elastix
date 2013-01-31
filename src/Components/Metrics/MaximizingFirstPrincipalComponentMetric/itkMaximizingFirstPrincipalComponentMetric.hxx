@@ -382,8 +382,8 @@ namespace itk
 			trace += K(i,i);
 		}
 
-        measure = (static_cast<RealType>(1.0) - e1/trace);
-		
+    measure = (static_cast<RealType>(1.0) - e1/trace);
+
 		/** Return the measure value. */
 		return measure;
 
@@ -741,8 +741,6 @@ namespace itk
 
     measure = (static_cast<RealType>(1.0) - e1/trace);
     derivative = (( dKiidmu*e1 - v1Kv1dmu*trace )/(trace*trace));
-    std::cout << "dKiidmu[0]" << dKiidmu[0] << std::endl;
-    std::cout << "v1Kv1dmu[0]" << v1Kv1dmu[0] << std::endl;
 
 		//** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )

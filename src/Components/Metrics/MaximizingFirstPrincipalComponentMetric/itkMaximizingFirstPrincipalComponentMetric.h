@@ -57,8 +57,7 @@ public:
   itkSetMacro( GridSize, FixedImageSizeType );
   itkSetMacro( TransformIsStackTransform, bool );
   itkSetMacro( NumEigenValues, unsigned int );
-  itkSetMacro( Alpha, double );
-  itkSetMacro( Zscore, bool );
+  itkSetMacro( AddMeanImage, bool );
 
   /** Get functions. */
   itkGetConstMacro( SampleLastDimensionRandomly, bool );
@@ -189,8 +188,7 @@ private:
   unsigned int m_NumAdditionalSamplesFixed;
   unsigned int m_ReducedDimensionIndex;
 
-  double m_Alpha;
-  bool m_Zscore;
+  bool m_AddMeanImage;
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
   bool m_SubtractMean;
@@ -213,7 +211,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMaximizingFirstPrincipalComponentMetric_method7.hxx"
+#include "itkMaximizingFirstPrincipalComponentMetric_method7meanadded.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h
