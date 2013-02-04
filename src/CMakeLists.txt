@@ -26,7 +26,7 @@ IF( ELASTIX_USE_CUDA )
   MARK_AS_ADVANCED( CUDA_SDK_ROOT_DIR )
 ENDIF()
 
-#----------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Check for the SuiteSparse package
 # We need to do that here, because the link_directories should be set
 # before declaring any targets.
@@ -39,7 +39,7 @@ IF( USE_PreconditionedGradientDescent )
  ENDIF()
 ENDIF()
 
-#----------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Set single output directories for all executables and libraries.
 # This makes it easier to create an elxUseFile.cmake, that users can
 # include in their programs to borrow elastix functionality.
@@ -63,7 +63,7 @@ MARK_AS_ADVANCED( ELASTIX_USE_MEVISDICOMTIFF )
 OPTION( ELASTIX_USE_MEVISDICOMTIFF
   "Support MevisLab DicomTiff image format" OFF )
 
-#----------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Define cmake variable to define extra user component directories
 # These directories will be added to the list of include directories
 # and they will be searched for CMakeLists.txt files for further
@@ -74,7 +74,7 @@ MARK_AS_ADVANCED( ELASTIX_USER_COMPONENT_DIRS )
 SET( ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH
   "directories with user defined elastix components" )
 
-#-------------------------------------------------------------------------
+#---------------------------------------------------------------------
 # elastix depends on some ITK settings
 
 IF( NOT ITK_USE_REVIEW )
@@ -91,6 +91,17 @@ IF( CMAKE_MAKE_PROGRAM MATCHES ".?VCExpress.?" )
   SET( CMAKE_USE_FOLDERS OFF CACHE INTERNAL "Use folder view in IDE" )
 ENDIF()
 SET_PROPERTY( GLOBAL PROPERTY USE_FOLDERS ${CMAKE_USE_FOLDERS} )
+
+#---------------------------------------------------------------------
+# Set default build type to Release, if none was specified
+# Taken from ITK CMake list
+if( NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES )
+  message( STATUS "Setting build type to 'Release' as none was specified." )
+  set( CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE )
+  # Set the possible values of build type for cmake-gui
+  set_property( CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+    "Debug" "Release" "MinSizeRel" "RelWithDebInfo" )
+endif()
 
 #---------------------------------------------------------------------
 # Include directories
@@ -176,7 +187,7 @@ ADD_SUBDIRECTORY( Components )
 # components, definitions of macros etc.
 ADD_SUBDIRECTORY( Core )
 
-#--------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Configure the examples
 
 SET( ELASTIX_DOX_DIR  ${elastix_SOURCE_DIR}/../dox )
@@ -426,7 +437,7 @@ IF( ELASTIX_ENABLE_PACKAGER )
   INCLUDE( CPack )
 ENDIF()
 
-#----------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Make it easier to include elastix functionality in other programs.
 
 # Save library dependencies.
