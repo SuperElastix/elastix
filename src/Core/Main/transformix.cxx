@@ -178,6 +178,7 @@ int main( int argc, char **argv )
     << ".\n" << std::endl;
 
   /** Print where transformix was run. */
+  elxout << "which transformix:   " << argv[0] << std::endl;
   itksys::SystemInformation info;
   info.RunCPUCheck();
   info.RunOSCheck();

@@ -199,6 +199,7 @@ int main( int argc, char **argv )
     << ".\n" << std::endl;
 
   /** Print where elastix was run. */
+  elxout << "which elastix:   " << argv[0] << std::endl;
   itksys::SystemInformation info;
   info.RunCPUCheck();
   info.RunOSCheck();
