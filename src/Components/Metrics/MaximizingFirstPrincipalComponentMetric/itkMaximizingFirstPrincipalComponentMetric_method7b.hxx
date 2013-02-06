@@ -12,8 +12,8 @@
 
 ======================================================================*/
 
-#ifndef __itkMaximizingFirstPrincipalComponentMetric_method6b_hxx
-#define __itkMaximizingFirstPrincipalComponentMetric_method6b_hxx
+#ifndef _itkMaximizingFirstPrincipalComponentMetric_method7b_hxx
+#define _itkMaximizingFirstPrincipalComponentMetric_method7b_hxx
 
 #include "itkMaximizingFirstPrincipalComponentMetric.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
@@ -41,9 +41,8 @@ namespace itk
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
-        m_Alpha( 1.0 ),
-        m_Zscore( false ),
-				m_NumEigenValues( 1 )
+        m_Zscore( true ),
+        m_NumEigenValues( 1 )
 
   {
     this->SetUseImageSampler( true );
@@ -165,7 +164,7 @@ namespace itk
     ::GetValue( const TransformParametersType & parameters ) const
   {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
-    bool UseGetValueAndDerivative = false;
+    bool UseGetValueAndDerivative = true;
 
     if(UseGetValueAndDerivative)
     {
@@ -386,7 +385,7 @@ namespace itk
         trace += K(i,i);
     }
 
-    RealType sumEigenValuesUsed = itk::NumericTraits< DerivativeValueType >::Zero;
+    RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
     for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
     {
         sumEigenValuesUsed += eig.get_eigenvalue(K.cols() - i);
@@ -555,6 +554,7 @@ namespace itk
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+		this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
 
     MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
@@ -639,7 +639,8 @@ namespace itk
     {
         eigenValues(i) = eig.get_eigenvalue( i );
     }
-
+		this->m_eigenValues = eigenValues;
+    
     RealType sumEigenValuesUsed = itk::NumericTraits< DerivativeValueType >::Zero;
     for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
     {
@@ -655,6 +656,15 @@ namespace itk
     }
 
     MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
+		this->m_firstEigenVector = eigenVectorMatrix.get_column( 0 );
+    this->m_secondEigenVector = eigenVectorMatrix.get_column( 1 );
+    this->m_thirdEigenVector = eigenVectorMatrix.get_column( 2 );
+    this->m_fourthEigenVector = eigenVectorMatrix.get_column( 3 );
+    this->m_fifthEigenVector = eigenVectorMatrix.get_column( 4 );
+    this->m_sixthEigenVector = eigenVectorMatrix.get_column( 5 );
+    this->m_seventhEigenVector = eigenVectorMatrix.get_column( 6 );
+
+
 
     /** Compute sum of all eigenvalues = trace( K ) */
     double trace = 0.0;
@@ -889,4 +899,4 @@ namespace itk
 
 } // end namespace itk
 
-#endif // end #ifndef _itkMaximizingFirstPrincipalComponentMetric_method6b_hxx
+#endif // end #ifndef _itkMaximizingFirstPrincipalComponentMetric_method7b_hxx

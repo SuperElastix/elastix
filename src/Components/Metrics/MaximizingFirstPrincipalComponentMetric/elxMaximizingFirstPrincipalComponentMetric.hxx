@@ -67,6 +67,17 @@ namespace elastix
       "SampleLastDimensionRandomly", this->GetComponentLabel(), level, 0 );
     this->SetSampleLastDimensionRandomly( useRandomSampling );
 
+    bool zscore = true;
+    this->GetConfiguration()->ReadParameter( zscore,
+      "Zscore", this->GetComponentLabel(), 0, 0 );
+    this->SetZscore( zscore );
+
+    bool usederivativeofmean = false;
+    this->GetConfiguration()->ReadParameter( usederivativeofmean,
+      "UseDerivativeOfMean", this->GetComponentLabel(), 0, 0 );
+    this->SetZscore( usederivativeofmean );
+
+
     /** Get and set if we want to subtract the mean from the derivative. */
     bool subtractMean = false;
     this->GetConfiguration()->ReadParameter( subtractMean,
@@ -159,16 +170,16 @@ template <class TElastix>
   void MaximizingFirstPrincipalComponentMetric<TElastix>
   ::AfterEachIteration(void)
   {
-    elxout << "firstEigenVector" << this->m_firstEigenVector << std::endl;
-    elxout << "secondEigenVector" << this->m_secondEigenVector << std::endl;
-    elxout << "thirdEigenVector" << this->m_thirdEigenVector << std::endl;
-    elxout << "fourthEigenVector" << this->m_fourthEigenVector << std::endl;
-    elxout << "fifthEigenVector" << this->m_fifthEigenVector << std::endl;
-    elxout << "sixthEigenVector" << this->m_sixthEigenVector << std::endl;
-    elxout << "seventhEigenVector" << this->m_seventhEigenVector << std::endl;
-    elxout << "eigenValues" << this->m_eigenValues << std::endl;
-    elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
-    elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
+//      elxout << "firstEigenVector" << this->m_firstEigenVector << std::endl;
+//    elxout << "secondEigenVector" << this->m_secondEigenVector << std::endl;
+//    elxout << "thirdEigenVector" << this->m_thirdEigenVector << std::endl;
+//    elxout << "fourthEigenVector" << this->m_fourthEigenVector << std::endl;
+//    elxout << "fifthEigenVector" << this->m_fifthEigenVector << std::endl;
+//    elxout << "sixthEigenVector" << this->m_sixthEigenVector << std::endl;
+//    elxout << "seventhEigenVector" << this->m_seventhEigenVector << std::endl;
+      elxout << "eigenValues" << this->m_eigenValues << std::endl;
+      elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
+      elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
   }
 
 } // end namespace elastix

@@ -26,14 +26,8 @@ namespace elastix
 {
 
   /** \class MaximizingFirstPrincipalComponent
-   * \brief Compute the sum of variances over the slowest varying dimension in the moving image.
-   *
-   * For a description of this metric see the paper:\n
-   * <em>Nonrigid registration of dynamic medical imaging data using
-   * nD+t B-splines and a groupwise optimization approach</em>,
-   * C.T. Metz, S. Klein, M. Schaap, T. van Walsum and W.J. Niessen,
-   * Medical Image Analysis, in press.
-   *
+   * \brief
+   *   *
    * This metric is based on the AdvancedImageToImageMetric.
    * It is templated over the type of the fixed and moving images to be compared.
    *

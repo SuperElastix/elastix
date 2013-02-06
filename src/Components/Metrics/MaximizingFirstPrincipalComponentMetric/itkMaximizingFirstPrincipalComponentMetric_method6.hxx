@@ -39,9 +39,9 @@ namespace itk
         m_SampleLastDimensionRandomly( false ),
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
-        m_TransformIsStackTransform( false ),
-        m_Zscore( true ),
-        m_Alpha( 1.0 )
+        m_TransformIsStackTransform( false )
+       // m_Zscore( true ),
+       // m_Alpha( 1.0 )
 
   {
     this->SetUseImageSampler( true );
@@ -162,7 +162,7 @@ namespace itk
     ::GetValue( const TransformParametersType & parameters ) const
   {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
-    bool UseGetValueAndDerivative = true;
+    bool UseGetValueAndDerivative = false;
 
     if(UseGetValueAndDerivative)
     {
@@ -322,26 +322,14 @@ namespace itk
     /** Subtract mean from columns */
     MatrixType Azscore( A.rows(), A.cols() );
     Azscore.fill( NumericTraits< RealType >::Zero );
-    if(this->m_Zscore)
+	  for (int i = 0; i < A.rows(); i++ )
     {
-        for (int i = 0; i < A.rows(); i++ )
-        {
             for(int j = 0; j < A.cols(); j++)
             {
                 Azscore(i,j) = (A(i,j)-mean(j))/std(j);
             }
-        }
     }
-    else
-    {
-        for (int i = 0; i < A.rows(); i++ )
-        {
-            for(int j = 0; j < A.cols(); j++)
-            {
-                Azscore(i,j) = A(i,j)-mean(j);
-            }
-        }
-    }
+
 
     /** Transpose of the matrix with mean subtracted */
     MatrixType Atzscore( Azscore.transpose() );
@@ -369,7 +357,7 @@ namespace itk
         trace += K(i,i);
     }
 
-    measure = trace - (e1+this->m_Alpha*e2+e3+e4+e5+e6+e7);
+    measure = trace - (e1+e2+e3+e4+e5+e6+e7);
 
     /** Return the measure value. */
     return measure;
@@ -563,27 +551,14 @@ namespace itk
     /** Subtract mean from columns */
     MatrixType Azscore( A.rows(), A.cols() );
     Azscore.fill( NumericTraits< RealType >::Zero );
-    if(this->m_Zscore)
+  	for (int i = 0; i < A.rows(); i++ )
     {
-        for (int i = 0; i < A.rows(); i++ )
-        {
             for(int j = 0; j < A.cols(); j++)
             {
                 Azscore(i,j) = (A(i,j)-mean(j))/std(j);
             }
-        }
     }
-    else
-    {
-        for (int i = 0; i < A.rows(); i++ )
-        {
-            for(int j = 0; j < A.cols(); j++)
-            {
-                Azscore(i,j) = A(i,j)-mean(j);
-            }
-        }
-    }
-
+    
     /** Transpose of the matrix with mean subtracted */
     MatrixType Atzscore( Azscore.transpose() );
 
@@ -728,10 +703,7 @@ namespace itk
             this->EvaluateMovingImageValueAndDerivative(
                         mappedPoint, movingImageValue, &movingImageDerivative );
 
-            if(this->m_Zscore)
-            {
-                movingImageDerivative /= std(d);
-            }
+					  movingImageDerivative /= std(d);
 
             /** Get the TransformJacobian dT/dmu */
             this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
@@ -792,9 +764,9 @@ namespace itk
             / ( static_cast < DerivativeValueType > (A.rows()) -
                 static_cast < DerivativeValueType >(1.0) ); //normalize
 
-    measure = trace - (e1+this->m_Alpha*e2+e3+e4+e5+e6+e7);
+    measure = trace - (e1+e2+e3+e4+e5+e6+e7);
     derivative = dKiidmu -
-                (v1Kv1dmu+this->m_Alpha*v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu+v7Kv7dmu);
+                (v1Kv1dmu+v2Kv2dmu+v3Kv3dmu+v4Kv4dmu+v5Kv5dmu+v6Kv6dmu+v7Kv7dmu);
 
         //** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )

@@ -58,6 +58,9 @@ public:
   itkSetMacro( TransformIsStackTransform, bool );
   itkSetMacro( NumEigenValues, unsigned int );
   itkSetMacro( AddMeanImage, bool );
+  itkSetMacro( Zscore, bool );
+  itkSetMacro( UseDerivativeOfMean, bool );
+
 
   /** Get functions. */
   itkGetConstMacro( SampleLastDimensionRandomly, bool );
@@ -174,6 +177,9 @@ protected:
 
   mutable vnl_vector<double> m_normdCdmu;
   mutable int m_NumberOfSamples;
+  mutable vnl_vector<double> m_CorrelationMatrixrow1;
+  mutable vnl_vector<double> m_CorrelationMatrixrow2;
+
 
 private:
   MaximizingFirstPrincipalComponentMetric(const Self&); //purposely not implemented
@@ -204,6 +210,10 @@ private:
 
   /** Integer to indicate how many eigenvalues you want to use in the metric */
   unsigned int m_NumEigenValues;
+
+  bool m_UseDerivativeOfMean;
+
+  bool m_Zscore;
 	
 
 }; // end class MaximizingFirstPrincipalComponentMetric
@@ -211,7 +221,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMaximizingFirstPrincipalComponentMetric_method7meanadded.hxx"
+#include "itkMaximizingFirstPrincipalComponentMetric_method7.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h

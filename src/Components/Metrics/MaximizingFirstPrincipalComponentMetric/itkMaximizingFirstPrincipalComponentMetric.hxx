@@ -37,9 +37,7 @@ namespace itk
         m_SampleLastDimensionRandomly( false ),
         m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
-        m_TransformIsStackTransform( false ),
-        m_Zscore(false),
-        m_Alpha(1.0)
+        m_TransformIsStackTransform( false )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -69,28 +67,6 @@ namespace itk
     {
       this->m_NumSamplesLastDimension = lastDimSize;
     }
-
-		/** Create random numbers for the random scales. */
-//		if(this->m_RandomScaleIntensity)
-//		{
-//			if(!this->m_RandomNumbersCreated)
-//			{
-//				RealType randomnumber;
-//				const double pi = 4.0*atan(1.0f);
-//				this->m_RandomVector.set_size(lastDimSize);
-//				for (unsigned int i = 0; i < this->m_RandomVector.size(); i++)
-//				{
-//					double U = rand()/float(RAND_MAX); double V = rand()/float(RAND_MAX);
-//					double X = sqrt(-2*log(U))*cos(2*pi*V);
-//					double Y = sqrt(-2*log(U))*sin(2*pi*V);
-//					randomnumber = (Y*Y + 0.1)*(X/abs(X));
-//					this->m_RandomVector[ i ] = randomnumber;
-//				}
-//				elxout << "Random scales are: " << this->m_RandomVector << std::endl;
-//				m_RandomNumbersCreated = true;
-//			}
-//		}
-		
 
   } // end Initialize
 
@@ -300,45 +276,42 @@ namespace itk
 
 		MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
-        /** Calculate mean of the rows */
-        vnl_vector< RealType > meanrows( A.rows() );
-        meanrows.fill( NumericTraits< double >::Zero );
-        for( unsigned int i = 0; i < A.rows(); i++ )
-        {
-            for( unsigned int j = 0; j < A.cols(); j++)
-            {
-                meanrows(i) += A(i,j);
-            }
-        }
-        meanrows /= double(A.cols());
+//        /** Calculate mean of the rows */
+//        vnl_vector< RealType > meanrows( A.rows() );
+//        meanrows.fill( NumericTraits< double >::Zero );
+//        for( unsigned int i = 0; i < A.rows(); i++ )
+//        {
+//            for( unsigned int j = 0; j < A.cols(); j++)
+//            {
+//                meanrows(i) += A(i,j);
+//            }
+//        }
+//        meanrows /= double(A.cols());
 
-        /** Calculate standard deviation of the rows */
-        vnl_vector< double > std( A.rows() );
-        std.fill( NumericTraits< double >::Zero );
-        for( int i = 0; i < A.rows(); i++ )
-        {
-            for( int j = 0; j < A.cols(); j++)
-            {
-                std(i) += pow((A(i,j)-meanrows(i)),2)/double((A.cols()-1.0));
-            }
-        }
+//        /** Calculate standard deviation of the rows */
+//        vnl_vector< double > std( A.rows() );
+//        std.fill( NumericTraits< double >::Zero );
+//        for( int i = 0; i < A.rows(); i++ )
+//        {
+//            for( int j = 0; j < A.cols(); j++)
+//            {
+//                std(i) += pow((A(i,j)-meanrows(i)),2)/double((A.cols()-1.0));
+//            }
+//        }
 
-        for( int i = 0; i < A.rows(); i++)
-        {
-            std(i) = sqrt(std(i));
-        }
+//        for( int i = 0; i < A.rows(); i++)
+//        {
+//            std(i) = sqrt(std(i));
+//        }
 
-        /** Z-score A */
-        if(this->m_Zscore)
-        {
-            for (int i = 0; i < A.rows(); i++ )
-            {
-                for(int j = 0; j < A.cols(); j++)
-                {
-                    A(i,j) = (A(i,j)-meanrows(i))/std(i);
-                }
-            }
-        }
+//        /** Z-score A */
+//        for (int i = 0; i < A.rows(); i++ )
+//        {
+//            for(int j = 0; j < A.cols(); j++)
+//            {
+//               A(i,j) = (A(i,j)-meanrows(i))/std(i);
+//            }
+//        }
 
         /** Calculate mean of from columns */
         vnl_vector< RealType > mean( A.cols() );
@@ -351,40 +324,77 @@ namespace itk
             }
         }
 
-        /** Subtract mean from columns */
-        MatrixType AMinusMean( A.rows(), A.cols() );
-        AMinusMean.fill( NumericTraits< RealType >::Zero );
-        for (unsigned int i = 0; i < A.rows(); i++ )
+        /** Calculate standard deviation of the columns */
+        vnl_vector< double > std( A.cols() );
+        std.fill( NumericTraits< double >::Zero );
+        for( int i = 0; i < A.rows(); i++ )
         {
-            for (unsigned int j = 0; j < A.cols(); j++)
+            for( int j = 0; j < A.cols(); j++)
             {
-                AMinusMean(i,j) = A(i,j)-mean(j);
+                std(j) += pow((A(i,j)-mean(j)),2)/double((A.rows()-1.0));
             }
         }
 
+        for( int j = 0; j < A.cols(); j++)
+        {
+            std(j) = sqrt(std(j));
+        }
+
+        /** Z-score A */
+        for (int i = 0; i < A.rows(); i++ )
+        {
+            for(int j = 0; j < A.cols(); j++)
+            {
+                A(i,j) = (A(i,j)-mean(j))/std(j);
+            }
+        }
+
+//        /** Subtract mean from columns */
+//        MatrixType AMinusMean( A.rows(), A.cols() );
+//        AMinusMean.fill( NumericTraits< RealType >::Zero );
+//        for (unsigned int i = 0; i < A.rows(); i++ )
+//        {
+//            for (unsigned int j = 0; j < A.cols(); j++)
+//            {
+//                AMinusMean(i,j) = A(i,j)-mean(j);
+//            }
+//        }
+
 
         /** Transpose of the matrix with mean subtracted */
-		MatrixType AtMinusMean( AMinusMean.transpose() );
+        //MatrixType AtMinusMean( AMinusMean.transpose() );
+        //MatrixType At( A.transpose() );
 
-		/** Compute covariance matrix K */
-		MatrixType K( (AMinusMean*AtMinusMean) );
+        /** Compute covariance matrix K */
+        //MatrixType K( (AMinusMean*AtMinusMean) );
+        //MatrixType K( At*A );
+        vnl_vector< double > row1K( this->m_NumberOfPixelsCounted );
+        vnl_vector< double > row2K( this->m_NumberOfPixelsCounted );
+        std::cout << "size A: " << A.rows()  << ", " << A.cols()  << std::endl;
+        row1K = A.get_column(0)*A;
+        row2K = A.get_column(1)*A;
 
-        K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+        //K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+        row1K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+        row2K /= ( static_cast< RealType > (A.rows()) - static_cast< RealType > (1.0) );
+        this->m_CorrelationMatrixrow1 = row1K;
+        this->m_CorrelationMatrixrow2 = row2K;
 
 		/** Compute first eigenvalue and eigenvector of the covariance matrix K */
-		vnl_symmetric_eigensystem< RealType > eig( K );
-		RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
+        //vnl_symmetric_eigensystem< RealType > eig( K );
+        //RealType e1 = eig.get_eigenvalue( K.cols() - 1 ); // Highest eigenvalue of K
 
-		/** Compute sum of all eigenvalues = trace( K ) */
-		RealType trace = 0.0;
-		for( int i = 0; i < K.rows(); i++ ) 
-		{
-			trace += K(i,i);
-		}
+//		/** Compute sum of all eigenvalues = trace( K ) */
+//		RealType trace = 0.0;
+//		for( int i = 0; i < K.rows(); i++ )
+//		{
+//			trace += K(i,i);
+//		}
 
-    measure = (static_cast<RealType>(1.0) - e1/trace);
+//    measure = (static_cast<RealType>(1.0) - e1/trace);
 
 		/** Return the measure value. */
+        measure = 0;
 		return measure;
 
   } // end GetValue
@@ -559,33 +569,33 @@ namespace itk
     }
     meanrows /= double(A.cols());
 
-    /** Calculate standard deviation of the rows */
-    vnl_vector< double > std( A.rows() );
-    std.fill( NumericTraits< double >::Zero );
-    for( int i = 0; i < A.rows(); i++ )
-    {
-        for( int j = 0; j < A.cols(); j++)
-        {
-            std(i) += pow((A(i,j)-meanrows(i)),2)/double((A.cols()-1.0));
-        }
-    }
+//    /** Calculate standard deviation of the rows */
+//    vnl_vector< double > std( A.rows() );
+//    std.fill( NumericTraits< double >::Zero );
+//    for( int i = 0; i < A.rows(); i++ )
+//    {
+//        for( int j = 0; j < A.cols(); j++)
+//        {
+//            std(i) += pow((A(i,j)-meanrows(i)),2)/double((A.cols()-1.0));
+//        }
+//    }
 
-    for( int i = 0; i < A.rows(); i++)
-    {
-        std(i) = sqrt(std(i));
-    }
+//    for( int i = 0; i < A.rows(); i++)
+//    {
+//        std(i) = sqrt(std(i));
+//    }
 
-    /** Z-score A */
-    if(this->m_Zscore)
-    {
-        for (int i = 0; i < A.rows(); i++ )
-        {
-            for(int j = 0; j < A.cols(); j++)
-            {
-                A(i,j) = (A(i,j)-meanrows(i))/std(i);
-            }
-        }
-    }
+//    /** Z-score A */
+//    if(this->m_Zscore)
+//    {
+//        for (int i = 0; i < A.rows(); i++ )
+//        {
+//            for(int j = 0; j < A.cols(); j++)
+//            {
+//                A(i,j) = (A(i,j)-meanrows(i))/std(i);
+//            }
+//        }
+//    }
 
     /** Calculate mean of from columns */
     vnl_vector< double > mean( A.cols() );
@@ -698,10 +708,10 @@ namespace itk
             this->EvaluateTransformJacobianInnerProduct(
                         jacobian, movingImageDerivative, imageJacobian );
 
-            if(this->m_Zscore)
-            {
-                movingImageDerivative/=std(d);
-            }
+//            if(this->m_Zscore)
+//            {
+//                movingImageDerivative/=std(d);
+//            }
 
             /** Store values. */
             dMTdmu = imageJacobian;
