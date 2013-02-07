@@ -153,6 +153,19 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
 {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
+    bool UseGetValueAndDerivative = false;
+
+    if(UseGetValueAndDerivative)
+    {
+        typedef typename DerivativeType::ValueType        DerivativeValueType;
+        const unsigned int P = this->GetNumberOfParameters();
+        MeasureType dummymeasure = NumericTraits< MeasureType >::Zero;
+        DerivativeType dummyderivative = DerivativeType( P );
+        dummyderivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+
+        this->GetValueAndDerivative( parameters, dummymeasure, dummyderivative );
+        return dummymeasure;
+    }
 
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -542,6 +555,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     MatrixType K( AtZscore*AZscore );
 
     K /= static_cast< RealType > ( A.rows()  - 1.0 );
+    this->m_CorrelationMatrix = K;
 
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
@@ -552,15 +566,11 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     DerivativeMatrixType meandAdmu( realNumLastDimPositions, P ); // mean of a column of the derivative of A
     DerivativeMatrixType dSigmainvdmu( realNumLastDimPositions, P );
     DerivativeMatrixType meandSigmainvdmu( realNumLastDimPositions, P );
-    DerivativeMatrixType dSigmainvtdmu( realNumLastDimPositions, P );
-    DerivativeMatrixType meandSigmainvtdmu( realNumLastDimPositions, P );
 
     vnl_vector< DerivativeValueType > sumAtZscoredAzscoredmu( P );
     vnl_vector< DerivativeValueType > sumAtZscoreAmmdSigmadmu( P );
-    vnl_vector< DerivativeValueType > sumdAtZscoredmuAzscore( P );
     vnl_vector< DerivativeValueType > sumdSigmadmuAtmmAzscore( P );
     vnl_vector< DerivativeValueType > meansumAtZscoredAzscoredmu( P );
-    vnl_vector< DerivativeValueType > meansumdAtZscoredmuAzscore( P );
     vnl_vector< DerivativeValueType > dSigmainvdmu_part1( realNumLastDimPositions );
     
     DerivativeType dMTdmu;
@@ -568,15 +578,11 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     /** initialize */
     meandAdmu.fill( NumericTraits< DerivativeValueType >::Zero );
     dSigmainvdmu.fill( NumericTraits< DerivativeValueType >::Zero );
-    dSigmainvtdmu.fill( NumericTraits< DerivativeValueType >::Zero );
     sumdSigmadmuAtmmAzscore.fill( NumericTraits< DerivativeValueType >::Zero );
-    sumdAtZscoredmuAzscore.fill( NumericTraits< DerivativeValueType >::Zero );
     sumAtZscoredAzscoredmu.fill( NumericTraits< DerivativeValueType >::Zero );
     sumAtZscoreAmmdSigmadmu.fill( NumericTraits< DerivativeValueType >::Zero );
     meandSigmainvdmu.fill( NumericTraits< DerivativeValueType >::Zero );
     meansumAtZscoredAzscoredmu.fill( NumericTraits< DerivativeValueType >::Zero );
-    meansumdAtZscoredmuAzscore.fill( NumericTraits< DerivativeValueType >::Zero );
-    meandSigmainvtdmu.fill( NumericTraits< DerivativeValueType >::Zero );
     dSigmainvdmu_part1.fill( NumericTraits< DerivativeValueType >::Zero );
 
     unsigned int startSamplesOK;
@@ -588,6 +594,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     }
 
     dSigmainvdmu_part1 /= -DerivativeValueType(A.rows()-1.0);
+
+    MatrixType Z( K*AtZscore );
 
     /** Second loop over fixed image samples. */
     for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
@@ -632,17 +640,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
             /** build metric derivative components */
             for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
             {
+                sumAtZscoredAzscoredmu[ nzjis[ d ][ p ] ] += Z[ d ][ pixelIndex ]*(dMTdmu[ p ]/std[ d ]);
                 dSigmainvdmu[ d ][ nzjis[ d ][ p ] ] += dSigmainvdmu_part1[ d ]*Atmm[ d ][ pixelIndex ]*dMTdmu[ p ];
-                dSigmainvtdmu[ d ][ nzjis[ d ][ p ] ] += dSigmainvdmu_part1[ d ]*dMTdmu[ p ]*Amm[ pixelIndex ][ d ];
-                for(unsigned int l = 0; l < realNumLastDimPositions; l++)
-                {
-                    sumAtZscoredAzscoredmu[ nzjis[ d ][ p ] ] += K[ d ][ l ]*AtZscore[ l ][ pixelIndex ]*(dMTdmu[ p ]/std[ d ]);
-                    sumdAtZscoredmuAzscore[ nzjis[ d ][ p ] ] += K[ d ][ l ]*(dMTdmu[ p ]/std[ d ])*AZscore[ pixelIndex ][ l ];
-                }
-
                 meandAdmu[ d ][ nzjis[ d ][ p ] ] += (dMTdmu[ p ]/std[ d ])/A.rows();
             }
-
         } // end loop over t
     } // end second for loop over sample container
 
@@ -653,42 +654,29 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
             for(unsigned int p = 0; p < P; ++p )
             {
                 meandSigmainvdmu[ d ][ p ] += dSigmainvdmu_part1[ d ]*Atmm[ d ][ i ]*meandAdmu[ d ][ p ];
-                meandSigmainvtdmu[ d ][ p ] += dSigmainvdmu_part1[ d ]*meandAdmu[ d ][ p ]*Amm[ i ][ d ];
-                for(unsigned int l  = 0; l < realNumLastDimPositions; l++)
-                {
-                    meansumAtZscoredAzscoredmu[ p ] += K[ d ][ l ]*AtZscore[ d ][ i ]*meandAdmu[ l ][ p ];
-                    meansumdAtZscoredmuAzscore[ p ] += K[ d ][ l ]*meandAdmu[ l ][ p ]*AZscore[ i ][ d ];
-                }
+                meansumAtZscoredAzscoredmu[ p ] += Z[ d ][ i ]*meandAdmu[ d ][ p ];
             }
         }
     }
 
     dSigmainvdmu -= meandSigmainvdmu;
-    dSigmainvtdmu -= meandSigmainvtdmu;
-    sumdAtZscoredmuAzscore -= meansumdAtZscoredmuAzscore;
     sumAtZscoredAzscoredmu -= meansumAtZscoredAzscoredmu;
 
-    MatrixType AtZscoreAmm( AtZscore*Amm );
-    MatrixType AtmmAZscore( Atmm*AZscore );
+    MatrixType KAtZscoreAmm( K*AtZscore*Amm );
 
-    for(unsigned int l = 0; l < realNumLastDimPositions; l++)
+
+    for(unsigned int d = 0; d < realNumLastDimPositions; d++)
     {
-        for(unsigned int d = 0; d < realNumLastDimPositions; d++)
+        for(unsigned int p = 0; p < P; p++)
         {
-            for(unsigned int p = 0; p < P; p++)
-            {
-                sumAtZscoreAmmdSigmadmu[ p ] += K[ d ][ l ]*AtZscoreAmm[ l ][ d ]*dSigmainvdmu[ d ][ p ];
-                sumdSigmadmuAtmmAzscore[ p ] += K[ d ][ l ]*dSigmainvtdmu[ l ][ p ]*AtmmAZscore[ l ][ d ];
-            }
+            sumAtZscoreAmmdSigmadmu[ p ] += KAtZscoreAmm[ d ][ d ]*dSigmainvdmu[ d ][ p ];
         }
     }
 
     vnl_vector< DerivativeValueType > sumKdKdmu( P );
 
-    sumKdKdmu = sumdSigmadmuAtmmAzscore + sumdAtZscoredmuAzscore +
-            sumAtZscoredAzscoredmu + sumAtZscoreAmmdSigmadmu;
-
-    sumKdKdmu *= static_cast < DerivativeValueType > (1.0)
+    sumKdKdmu = sumAtZscoredAzscoredmu + sumAtZscoreAmmdSigmadmu;
+    sumKdKdmu *= static_cast < DerivativeValueType > (2.0)
             / ( static_cast < DerivativeValueType > (A.rows()) -
                 static_cast < DerivativeValueType >(1.0) ); //normalize
 

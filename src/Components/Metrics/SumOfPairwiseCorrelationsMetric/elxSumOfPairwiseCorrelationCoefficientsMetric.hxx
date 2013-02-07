@@ -152,6 +152,7 @@ template <class TElastix>
   {
     elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
     elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
+   // elxout << "correlationmatrix" << this->m_CorrelationMatrix << std::endl;
   }
 
 } // end namespace elastix

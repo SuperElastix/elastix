@@ -162,6 +162,7 @@ protected:
 
   mutable vnl_vector<double> m_normdCdmu;
   mutable int m_NumberOfSamples;
+  mutable vnl_matrix<double> m_CorrelationMatrix;
 
 private:
   SumOfPairwiseCorrelationCoefficientsMetric(const Self&); //purposely not implemented
