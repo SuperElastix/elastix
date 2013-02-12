@@ -55,6 +55,8 @@ ElastixBase::ElastixBase()
   this->m_FixedMaskFileNameContainer = FileNameContainerType::New();
   this->m_MovingMaskFileNameContainer = FileNameContainerType::New();
 
+  this->m_ResultImageContainer = DataObjectContainerType::New();
+
   /** Initialize initialTransform and final transform. */
   this->m_InitialTransform = 0;
   this->m_FinalTransform = 0;
@@ -115,11 +117,12 @@ int ElastixBase::BeforeAllBase( void )
    * so print an error if they are not present.
    * Print also some info (second boolean = true).
    */
+#ifndef _ELASTIX_BUILD_LIBRARY
   this->m_FixedImageFileNameContainer = this->GenerateFileNameContainer(
     "-f", returndummy, true, true );
   this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
     "-m", returndummy, true, true );
-
+#endif
   /** Read the fixed and moving mask filenames. These are not obliged options,
    * so do not print any errors if they are not present.
    * Do print some info (second boolean = true).

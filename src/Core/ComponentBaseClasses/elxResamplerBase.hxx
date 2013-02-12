@@ -217,6 +217,14 @@ ResamplerBase<TElastix>
    */
   this->ReleaseMemory();
 
+  /**
+   * Create the result image and put it in ResultImageContainer
+   * Only necessary when compiling library!
+   */
+#ifdef _ELASTIX_BUILD_LIBRARY 
+  this->CreateItkResultImage();
+#endif
+
   /** Writing result image. */
   if ( writeResultImage == "true" )
   {
@@ -304,7 +312,7 @@ ResamplerBase<TElastix>
 {
   /** Make sure the resampler is updated. */
   this->GetAsITKBaseType()->Modified();
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Add a progress observer to the resampler. */
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   if ( showProgress )
@@ -313,7 +321,7 @@ ResamplerBase<TElastix>
     progressObserver->SetStartString( "  Progress: " );
     progressObserver->SetEndString( "%" );
   }
-
+#endif
   /** Do the resampling. */
   try
   {
@@ -407,17 +415,126 @@ ResamplerBase<TElastix>
     /** Pass the exception to an higher level. */
     throw excp;
   }
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Disconnect from the resampler. */
   if( showProgress )
   {
     progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
   }
-
+#endif
 } // end WriteResultImage()
 
+/*
+ * ******************* CreateItkResultImage ********************
+ * \todo: avoid code duplication with WriteResultImage function
+ */
 
-/**
+template<class TElastix>
+void  
+ResamplerBase<TElastix>
+::CreateItkResultImage( )
+{
+  itk::DataObject::Pointer  resultImage;
+
+  /** Make sure the resampler is updated. */
+  this->GetAsITKBaseType()->Modified();
+
+#ifndef _ELASTIX_BUILD_LIBRARY
+  /** Add a progress observer to the resampler. */
+  typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
+  progressObserver->ConnectObserver( this->GetAsITKBaseType() );
+  progressObserver->SetStartString( "  Progress: " );
+  progressObserver->SetEndString( "%" );
+#endif
+
+  /** Do the resampling. */
+  try
+  {
+    this->GetAsITKBaseType()->Update();
+  }
+  catch( itk::ExceptionObject & excp )
+  {
+    /** Add information to the exception. */
+    excp.SetLocation( "ResamplerBase - WriteResultImage()" );
+    std::string err_str = excp.GetDescription();
+    err_str += "\nError occurred while resampling the image.\n";
+    excp.SetDescription( err_str );
+
+    /** Pass the exception to an higher level. */
+    throw excp;
+  }
+
+  /** Check if ResampleInterpolator is the RayCastResampleInterpolator */
+  typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType, 
+  CoordRepType > RayCastInterpolatorType;
+
+  const RayCastInterpolatorType * testptr = dynamic_cast<const 
+  RayCastInterpolatorType *>( this->GetAsITKBaseType()->GetInterpolator() );
+
+  /** If RayCastResampleInterpolator is used reset the Transform to 
+   * overrule default Resampler settings */
+
+  if (testptr)
+  {
+    this->GetAsITKBaseType()->SetTransform(   
+    (const_cast<RayCastInterpolatorType *>( testptr ))->GetTransform()   );
+  }
+
+  /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
+  std::string resultImagePixelType = "short";
+  this->m_Configuration->ReadParameter( resultImagePixelType,
+    "ResultImagePixelType", 0, false );
+  std::basic_string<char>::size_type pos = resultImagePixelType.find( " " );
+  const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
+  if ( pos != npos ) resultImagePixelType.replace( pos, 1, "_" );
+
+  /** Typedef's for writing the output image. */
+  typedef itk::ChangeInformationImageFilter<
+    OutputImageType >                             ChangeInfoFilterType;
+
+  /** Possibly change direction cosines to their original value, as specified
+   * in the tp-file, or by the fixed image. This is only necessary when
+   * the UseDirectionCosines flag was set to false.
+   */
+  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  DirectionType originalDirection;
+  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  infoChanger->SetOutputDirection( originalDirection );
+  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetInput( this->GetAsITKBaseType()->GetOutput() );
+
+  /** Casting of the image to the correct output itk::Image type
+   */
+  typedef itk::CastImageFilter< InputImageType , itk::Image< short , InputImageType::ImageDimension > > CastFilterShort;
+  typedef itk::CastImageFilter< InputImageType , itk::Image< unsigned short , InputImageType::ImageDimension > > CastFilterUShort;
+
+  
+  /** cast the image to the correct output image Type */
+  if( resultImagePixelType.compare("short") == 0 )
+  {
+      CastFilterShort::Pointer castFilter = CastFilterShort::New();   
+      castFilter->SetInput( infoChanger->GetOutput() );
+      castFilter->Update();
+      resultImage = castFilter->GetOutput();
+  }
+  else if( resultImagePixelType == "ushort" )
+  {
+      CastFilterUShort::Pointer castFilter = CastFilterUShort::New();   
+      castFilter->SetInput( infoChanger->GetOutput() );
+      castFilter->Update();
+      resultImage = castFilter->GetOutput();
+  }
+
+  //put image in container
+  this->m_Elastix->SetResultImage( resultImage );
+
+#ifndef _ELASTIX_BUILD_LIBRARY
+  /** Disconnect from the resampler. */
+  progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
+#endif
+} // end CreateItkResultImage()
+
+/*
  * ************************* ReadFromFile ***********************
  */
 

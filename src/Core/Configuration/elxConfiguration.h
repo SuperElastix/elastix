@@ -88,6 +88,8 @@ public:
    * itk::ParameterFileParser and passed to the itk::ParameterMapInterface.
    */
   virtual int Initialize( const CommandLineArgumentMapType & _arg );
+  virtual int Initialize( const CommandLineArgumentMapType & _arg ,
+	  ParameterFileParserType::ParameterMapType	& inputMap);
 
   /** True, if Initialize was successfully called. */
   virtual bool IsInitialized( void ) const; //to elxconfigurationbase

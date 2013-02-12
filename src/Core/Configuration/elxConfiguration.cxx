@@ -73,7 +73,9 @@ int
 Configuration
 ::BeforeAll( void )
 {
-  this->PrintParameterFile();
+#ifndef _ELASTIX_BUILD_LIBRARY
+	this->PrintParameterFile();
+#endif
   return 0;
 
 } // end BeforeAll()
@@ -162,6 +164,39 @@ Configuration
   /** Connect the parameter file reader to the interface. */
   this->m_ParameterMapInterface->SetParameterMap(
     this->m_ParameterFileParser->GetParameterMap() );
+
+  /** Silently check in the parameter file if error messages should be printed. */
+  this->m_ParameterMapInterface->SetPrintErrorMessages( false );
+  bool printErrorMessages = true;
+  this->ReadParameter( printErrorMessages, "PrintErrorMessages", 0, false );
+  this->m_ParameterMapInterface->SetPrintErrorMessages( printErrorMessages );
+
+  /** Set the initialized flag. */
+  this->m_IsInitialized = true;
+
+  /** Return a value.*/
+  return 0;
+
+} // end Initialize()
+
+int
+Configuration
+::Initialize
+( 
+	const CommandLineArgumentMapType & _arg	,
+	ParameterFileParserType::ParameterMapType & inputMap
+)
+{
+  /** The first part is getting the command line arguments and setting them
+   * in the configuration. From the command line arguments we find the name
+   * of the parameter text file. The second part is then to get and set the
+   * parameter in this configuration.
+   */
+
+  /** Store the command line arguments. */
+  this->m_CommandLineArgumentMap = _arg;
+
+  this->m_ParameterMapInterface->SetParameterMap( inputMap );
 
   /** Silently check in the parameter file if error messages should be printed. */
   this->m_ParameterMapInterface->SetPrintErrorMessages( false );

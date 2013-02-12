@@ -170,7 +170,7 @@ int main( int argc, char **argv )
     {
       /** Setup xout. */
       logFileName = outFolder + "elastix.log";
-      int returndummy2 = elx::xoutSetup( logFileName.c_str() );
+      int returndummy2 = elx::xoutSetup( logFileName.c_str() , true , true );
       if ( returndummy2 )
       {
         std::cerr << "ERROR while setting up xout." << std::endl;

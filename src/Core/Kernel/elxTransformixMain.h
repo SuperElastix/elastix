@@ -82,6 +82,9 @@ public:
   typedef Superclass::ComponentLoaderType         ComponentLoaderType;
   typedef Superclass::ComponentLoaderPointer      ComponentLoaderPointer;
 
+  /** Typedef that is used in the elastix dll version */
+  typedef Superclass::ParameterMapType            ParameterMapType;
+
   /** Overwrite Run() from base-class. */
   virtual int Run( void );
 

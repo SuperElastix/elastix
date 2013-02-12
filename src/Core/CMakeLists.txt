@@ -111,15 +111,26 @@ TARGET_LINK_LIBRARIES( elxCore
 SET( mevisdcmtifflib mevisdcmtiff )
 
 #---------------------------------------------------------------------
-# Create the elastix executable.
+# Create the elastix executable or library.
 
-ADD_EXECUTABLE( elastix
-  Main/elastix.cxx
-  Main/elastix.h
-  Kernel/elxElastixMain.cxx
-  Kernel/elxElastixMain.h
-  ${InstallFilesForExecutables}
-)
+IF( ELASTIX_BUILD_EXECUTABLE  )
+	ADD_EXECUTABLE( elastix
+	  Main/elastix.cxx
+	  Main/elastix.h
+	  Kernel/elxElastixMain.cxx
+	  Kernel/elxElastixMain.h
+	  ${InstallFilesForExecutables}
+	)
+ELSE()
+	ADD_LIBRARY( elastix SHARED
+	  Main/elastixlib.cxx
+	  Main/elastixlib.h
+	  Kernel/elxElastixMain.cxx
+	  Kernel/elxElastixMain.h
+	  ${InstallFilesForExecutables}
+	)
+ENDIF()
+
 
 #---------------------------------------------------------------------
 # Create the transformix executable.
@@ -164,9 +175,16 @@ TARGET_LINK_LIBRARIES( transformix
 # Define the install directory for elastix and transformix.
 
 IF( WIN32 )
-  INSTALL( TARGETS elastix transformix
-    RUNTIME DESTINATION . )
-    #COMPONENT core )
+  IF( ELASTIX_BUILD_EXECUTABLE )
+    INSTALL( TARGETS elastix transformix
+      RUNTIME DESTINATION . )
+      #COMPONENT core )
+  ELSE()
+    # TODO: why not install elastix.dll here?
+    INSTALL( TARGETS transformix
+      RUNTIME DESTINATION . )
+      #COMPONENT core )
+  ENDIF()
 ELSE()
   # Tell the executables where to find the required .so files.
   SET_TARGET_PROPERTIES(elastix transformix

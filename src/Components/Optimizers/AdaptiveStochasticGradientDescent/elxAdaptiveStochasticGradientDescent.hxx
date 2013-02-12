@@ -678,12 +678,13 @@ AdaptiveStochasticGradientDescent<TElastix>
 
     } // end for loop over metrics
   } // end if NewSamplesEveryIteration.
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Prepare for progress printing. */
   ProgressCommandPointer progressObserver = ProgressCommandType::New();
   progressObserver->SetUpdateFrequency(
     this->m_NumberOfGradientMeasurements, this->m_NumberOfGradientMeasurements );
   progressObserver->SetStartString( "  Progress: " );
+#endif
   elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
@@ -696,9 +697,10 @@ AdaptiveStochasticGradientDescent<TElastix>
   /** Compute gg for some random parameters. */
   for ( unsigned int i = 0 ; i < this->m_NumberOfGradientMeasurements; ++i )
   {
+#ifndef _ELASTIX_BUILD_LIBRARY
     /** Show progress 0-100% */
     progressObserver->UpdateAndPrintProgress( i );
-
+#endif
     /** Generate a perturbation, according to:
      *    \mu_i ~ N( \mu_0, perturbationsigma^2 I ).
      */
@@ -748,9 +750,9 @@ AdaptiveStochasticGradientDescent<TElastix>
     } // end else: no stochastic gradients
 
   } // end for loop over gradient measurements
-
+#ifdef _ELASTIX_BUILD_LIBARY
   progressObserver->PrintProgress( 1.0 );
-
+#endif
   /** Compute means. */
   exactgg /= this->m_NumberOfGradientMeasurements;
   diffgg /= this->m_NumberOfGradientMeasurements;
@@ -859,13 +861,13 @@ AdaptiveStochasticGradientDescent<TElastix>
   /** For temporary storage of J'J. */
   CovarianceMatrixType jactjac( sizejacind, sizejacind );
   jactjac.Fill( 0.0 );
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Prepare for progress printing. */
   ProgressCommandPointer progressObserver = ProgressCommandType::New();
   progressObserver->SetUpdateFrequency( nrofsamples * 2, 100 );
   progressObserver->SetStartString( "  Progress: " );
   elxout << "  Computing JacobianTerms ..." << std::endl;
-
+#endif
   /** Variables for the band cov matrix. */
   const unsigned int maxbandcovsize = m_MaxBandCovSize;
   const unsigned int nrOfBandStructureSamples = m_NumberOfBandStructureSamples;
@@ -978,8 +980,10 @@ AdaptiveStochasticGradientDescent<TElastix>
   if ( sizejacind > 1 ) jacind[ 1 ] = 0;
   for ( iter = begin; iter != end; ++iter )
   {
+#ifndef _ELASTIX_BUILD_LIBRARY 
     /** Print progress 0-50%. */
     progressObserver->UpdateAndPrintProgress( samplenr );
+#endif
     ++samplenr;
 
     /** Read fixed coordinates and get Jacobian J_j. */
@@ -1252,16 +1256,17 @@ AdaptiveStochasticGradientDescent<TElastix>
 
     /** Max_j [JCJ_j]. */
     maxJCJ = vnl_math_max( maxJCJ, JCJ_j );
-
+#ifndef _ELASTIX_BUILD_LIBRARY
     /** Show progress 50-100%. */
     progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
+#endif    
     ++samplenr;
 
   } // end loop over sample container
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Finalize progress information. */
   progressObserver->PrintProgress( 1.0 );
-
+#endif
 } // end ComputeJacobianTerms()
 
 

@@ -6,6 +6,16 @@ CMAKE_POLICY( SET CMP0012 NEW )
 PROJECT( elastix )
 
 #---------------------------------------------------------------------
+# generate executable, static library or dynamic library.
+MARK_AS_ADVANCED( ELASTIX_BUILD_EXECUTABLE )
+OPTION( ELASTIX_BUILD_EXECUTABLE "generate executable or library?" ON )
+
+IF( NOT ELASTIX_BUILD_EXECUTABLE )
+	ADD_DEFINITIONS( -D_ELASTIX_BUILD_LIBRARY )
+ENDIF()
+
+
+#---------------------------------------------------------------------
 # Find ITK.
 FIND_PACKAGE( ITK REQUIRED )
 IF( ITK_FOUND )

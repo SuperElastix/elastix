@@ -25,6 +25,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "itkParameterMapInterface.h"
 
 
 namespace elastix
@@ -46,7 +47,7 @@ namespace elastix
  * The method takes a logfile name as its input argument.
  * It returns 0 if everything went ok. 1 otherwise.
  */
-extern int xoutSetup( const char * logfilename );
+extern int xoutSetup( const char * logfilename , bool setupLogging , bool setupCout );
 
 /**
  * \class ElastixMain
@@ -139,6 +140,9 @@ public:
   typedef ComponentLoader                                 ComponentLoaderType;
   typedef ComponentLoaderType::Pointer                    ComponentLoaderPointer;
 
+  /** Typedef that is used in the elastix dll version */
+  typedef itk::ParameterFileParser::ParameterMapType      ParameterMapType;
+
   /** Set/Get functions for the description of the imagetype. */
   itkSetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
   itkSetMacro( MovingImagePixelType,  PixelTypeDescriptionType );
@@ -166,6 +170,13 @@ public:
   itkSetObjectMacro( MovingMaskContainer, DataObjectContainerType );
   itkGetObjectMacro( FixedMaskContainer, DataObjectContainerType );
   itkGetObjectMacro( MovingMaskContainer, DataObjectContainerType );
+  
+  /** Set/Get functions for the result images
+   * (if these are not used, elastix tries to read them from disk,
+   * according to the command line parameters).
+   */
+  itkSetObjectMacro( ResultImageContainer, DataObjectContainerType );
+  itkGetObjectMacro( ResultImageContainer,  DataObjectContainerType );
 
   /** Set/Get the configuration object. */
   itkSetObjectMacro( Configuration, ConfigurationType );
@@ -219,6 +230,8 @@ public:
    * The Configuration object will be initialized in this way.
    */
   virtual void EnterCommandLineArguments( ArgumentMapType & argmap );
+  virtual void EnterCommandLineArguments( ArgumentMapType & argmap ,
+					ParameterMapType  & inputMap);
 
   /** Start the registration
    * run() without command line parameters; it assumes that
@@ -226,12 +239,14 @@ public:
    * m_Configuration is initialised in a different way.
    */
   virtual int Run( void );
-
+  
   /** Start the registration
    * this version of 'run' first calls this->EnterCommandLineParameters(argc,argv)
    * and then calls run().
    */
   virtual int Run( ArgumentMapType & argmap );
+  virtual int Run( ArgumentMapType & argmap , 
+		      ParameterMapType &  inputMap );
 
   /** Set process priority, which is read from the command line arguments.
    * Syntax:
@@ -287,6 +302,7 @@ protected:
   DataObjectContainerPointer  m_MovingImageContainer;
   DataObjectContainerPointer  m_FixedMaskContainer;
   DataObjectContainerPointer  m_MovingMaskContainer;
+  DataObjectContainerPointer  m_ResultImageContainer;
 
   /** A transform that is the result of registration. */
   ObjectPointer m_FinalTransform;
