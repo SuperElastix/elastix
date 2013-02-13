@@ -512,14 +512,14 @@ ResamplerBase<TElastix>
   /** cast the image to the correct output image Type */
   if( resultImagePixelType.compare("short") == 0 )
   {
-      CastFilterShort::Pointer castFilter = CastFilterShort::New();   
+      typename CastFilterShort::Pointer castFilter = CastFilterShort::New();   
       castFilter->SetInput( infoChanger->GetOutput() );
       castFilter->Update();
       resultImage = castFilter->GetOutput();
   }
   else if( resultImagePixelType == "ushort" )
   {
-      CastFilterUShort::Pointer castFilter = CastFilterUShort::New();   
+      typename CastFilterUShort::Pointer castFilter = CastFilterUShort::New();   
       castFilter->SetInput( infoChanger->GetOutput() );
       castFilter->Update();
       resultImage = castFilter->GetOutput();
