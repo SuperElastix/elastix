@@ -35,7 +35,7 @@ namespace itk
  * Division of Image Processing,
  * Department of Radiology, Leiden, The Netherlands.
  * Added functionality is described in the Insight Journal paper:
- * http://hdl.handle.net/xxxx/yyy
+ * http://hdl.handle.net/10380/3393
  *
  * \ingroup   ITKGPUCommon
  */
