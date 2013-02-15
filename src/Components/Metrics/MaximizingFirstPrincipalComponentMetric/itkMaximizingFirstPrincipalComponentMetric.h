@@ -57,10 +57,9 @@ public:
   itkSetMacro( GridSize, FixedImageSizeType );
   itkSetMacro( TransformIsStackTransform, bool );
   itkSetMacro( NumEigenValues, unsigned int );
-  itkSetMacro( AddMeanImage, bool );
-  itkSetMacro( Zscore, bool );
+//  itkSetMacro( AddMeanImage, bool );
   itkSetMacro( UseDerivativeOfMean, bool );
-
+  itkSetMacro( VarNoise, double );
 
   /** Get functions. */
   itkGetConstMacro( SampleLastDimensionRandomly, bool );
@@ -177,9 +176,6 @@ protected:
 
   mutable vnl_vector<double> m_normdCdmu;
   mutable int m_NumberOfSamples;
-  mutable vnl_vector<double> m_CorrelationMatrixrow1;
-  mutable vnl_vector<double> m_CorrelationMatrixrow2;
-
 
 private:
   MaximizingFirstPrincipalComponentMetric(const Self&); //purposely not implemented
@@ -194,13 +190,12 @@ private:
   unsigned int m_NumAdditionalSamplesFixed;
   unsigned int m_ReducedDimensionIndex;
 
-  bool m_AddMeanImage;
+ // bool m_AddMeanImage;
+
+  double m_VarNoise;
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
   bool m_SubtractMean;
-
-  /** Initial metric value. */
-  float m_InitialMetricValue;
 
   /** GridSize of B-spline transform. */
   FixedImageSizeType m_GridSize;
@@ -211,10 +206,7 @@ private:
   /** Integer to indicate how many eigenvalues you want to use in the metric */
   unsigned int m_NumEigenValues;
 
-  bool m_UseDerivativeOfMean;
-
-  bool m_Zscore;
-	
+  bool m_UseDerivativeOfMean;	
 
 }; // end class MaximizingFirstPrincipalComponentMetric
 

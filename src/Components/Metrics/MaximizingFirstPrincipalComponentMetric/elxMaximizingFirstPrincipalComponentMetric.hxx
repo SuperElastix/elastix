@@ -57,9 +57,13 @@ namespace elastix
         this->GetComponentLabel(), level, 0);
     this->SetNumEigenValues( NumEigenValues );
 
-     bool addmeanimage = false;
-     this->GetConfiguration()->ReadParameter(addmeanimage,"AddMeanImage", this->GetComponentLabel(), level, 0);
-     this->SetAddMeanImage( addmeanimage );
+//     bool addmeanimage = false;
+//     this->GetConfiguration()->ReadParameter(addmeanimage,"AddMeanImage", this->GetComponentLabel(), level, 0);
+//     this->SetAddMeanImage( addmeanimage );
+
+     double varnoise = 1.0;
+     this->GetConfiguration()->ReadParameter( varnoise, "VarNoise", this->GetComponentLabel(), 0, 0 );
+     this->SetVarNoise( varnoise );
 
     /** Get and set the random sampling in the last dimension. */
     bool useRandomSampling = false;
@@ -67,16 +71,10 @@ namespace elastix
       "SampleLastDimensionRandomly", this->GetComponentLabel(), level, 0 );
     this->SetSampleLastDimensionRandomly( useRandomSampling );
 
-    bool zscore = true;
-    this->GetConfiguration()->ReadParameter( zscore,
-      "Zscore", this->GetComponentLabel(), 0, 0 );
-    this->SetZscore( zscore );
-
-    bool usederivativeofmean = false;
+    bool usederivativeofmean = true;
     this->GetConfiguration()->ReadParameter( usederivativeofmean,
       "UseDerivativeOfMean", this->GetComponentLabel(), 0, 0 );
-    this->SetZscore( usederivativeofmean );
-
+    this->SetUseDerivativeOfMean( usederivativeofmean );
 
     /** Get and set if we want to subtract the mean from the derivative. */
     bool subtractMean = false;

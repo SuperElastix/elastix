@@ -37,7 +37,8 @@ namespace itk
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
         m_NumEigenValues( 1 ),
-        m_UseDerivativeOfMean( false )
+        m_UseDerivativeOfMean( false ),
+        m_VarNoise( 1.0 )
 
   {
     this->SetUseImageSampler( true );
@@ -281,9 +282,9 @@ namespace itk
 
     }/** end first loop over image sample container */
 
+    elxout << "nr of samples counted: " << this->m_NumberOfPixelsCounted << std::endl;
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(
-                NumberOfSamples, this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples(NumberOfSamples, this->m_NumberOfPixelsCounted );
     unsigned int N = this->m_NumberOfPixelsCounted;
     const unsigned int G = realNumLastDimPositions;
 
@@ -302,41 +303,57 @@ namespace itk
     mean /= RealType(A.rows());
 
     /** Calculate standard deviation from columns */
-    vnl_vector< RealType > std( A.cols() );
-    std.fill( NumericTraits< RealType >::Zero );
+    vnl_vector< RealType > var( A.cols() );
+    var.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < A.rows(); i++ )
     {
         for( int j = 0; j < A.cols(); j++)
         {
-            std(j) += pow((A(i,j)-mean(j)),2);
+            var(j) += pow((A(i,j)-mean(j)),2);
         }
     }
-    std /= RealType(A.rows() - 1.0);
+    var -= this->m_VarNoise;
+    var /= RealType(A.rows() - 1.0);
 
+    MatrixType Sigmainv( A.cols(), A.cols() );
+    Sigmainv.fill( NumericTraits< RealType >::Zero );
     for( int j = 0; j < A.cols(); j++)
     {
-        std(j) = sqrt(std(j));
+        Sigmainv(j,j) = 1.0/sqrt(var(j));
     }
 
-    /** Subtract mean from columns */
-    MatrixType AZscore( A.rows(), A.cols() );
-    AZscore.fill( NumericTraits< RealType >::Zero );
+    MatrixType Amm( A.rows(), A.cols() );
+    Amm.fill( NumericTraits< RealType >::Zero );
 
     for (int i = 0; i < A.rows(); i++ )
     {
         for(int j = 0; j < A.cols(); j++)
         {
-            AZscore(i,j) = (A(i,j)-mean(j))/std(j);
+            Amm(i,j) = A(i,j)-mean(j);
         }
     }
 
+//    MatrixType AZscore( A.rows(), A.cols() );
+//    AZscore.fill( NumericTraits< RealType >::Zero );
+//    for (int i = 0; i < A.rows(); i++ )
+//    {
+//        for(int j = 0; j < A.cols(); j++)
+//        {
+//            AZscore(i,j) = (A(i,j)-mean(j))/std(j);
+//        }
+//    }
+
     /** Transpose of the matrix with mean subtracted */
-    MatrixType AtZscore( AZscore.transpose() );
+    //MatrixType AtZscore( AZscore.transpose() );
+    MatrixType Atmm( Amm.transpose() );
 
-    /** Compute covariance matrix K */
-    MatrixType K( (AtZscore*AZscore) );
+    /** Compute covariancematrix Cov */
+    MatrixType Cov( Atmm*Amm );
+    //MatrixType K( (AtZscore*AZscore) );
+    Cov /=  static_cast< RealType > ( A.rows() - static_cast< RealType > (1.0) );
 
-    K /=  static_cast< RealType > ( A.rows() - static_cast< RealType > (1.0) );
+    MatrixType K((Sigmainv.transpose())*Cov*Sigmainv);
+    //K /=  static_cast< RealType > ( A.rows() - static_cast< RealType > (1.0) );
 
     /** Compute first eigenvalue and eigenvector of the covariance matrix K */
     vnl_symmetric_eigensystem< RealType > eig( K );
@@ -490,7 +507,6 @@ namespace itk
 
             /** Transform point and check if it is inside the B-spline support region. */
             bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-
             /** Check if point is inside mask. */
             if( sampleOk )
             {
@@ -511,7 +527,7 @@ namespace itk
             }// end if sampleOk
 
         } // end loop over t
-
+       // elxout << numSamplesOk << std::endl;
         if( numSamplesOk == G )
         {
             SamplesOK.push_back(fixedPoint);
