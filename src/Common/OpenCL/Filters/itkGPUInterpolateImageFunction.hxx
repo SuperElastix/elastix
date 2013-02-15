@@ -157,7 +157,7 @@ GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentImageFilter >
       SetIndex< InputImageType >( this->m_EndIndex, imageFunction.end_index );
       SetContinuousIndex< ContinuousIndexType >( this->m_StartContinuousIndex,
         imageFunction.start_continuous_index );
-      SetContinuousIndex< ContinuousIndexType >( this->m_StartContinuousIndex,
+      SetContinuousIndex< ContinuousIndexType >( this->m_EndContinuousIndex,
         imageFunction.end_continuous_index );
       this->m_ParametersDataManager->SetCPUBufferPointer( &imageFunction );
     }
@@ -170,7 +170,7 @@ GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentImageFilter >
       SetIndex< InputImageType >( this->m_EndIndex, imageFunction.end_index );
       SetContinuousIndex< ContinuousIndexType >( this->m_StartContinuousIndex,
         imageFunction.start_continuous_index );
-      SetContinuousIndex< ContinuousIndexType >( this->m_StartContinuousIndex,
+      SetContinuousIndex< ContinuousIndexType >( this->m_EndContinuousIndex,
         imageFunction.end_continuous_index );
       this->m_ParametersDataManager->SetCPUBufferPointer( &imageFunction );
     }
@@ -183,7 +183,7 @@ GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentImageFilter >
       SetIndex< InputImageType >( this->m_EndIndex, imageFunction.end_index );
       SetContinuousIndex< ContinuousIndexType >( this->m_StartContinuousIndex,
         imageFunction.start_continuous_index );
-      SetContinuousIndex< ContinuousIndexType >( this->m_StartContinuousIndex,
+      SetContinuousIndex< ContinuousIndexType >( this->m_EndContinuousIndex,
         imageFunction.end_continuous_index );
       this->m_ParametersDataManager->SetCPUBufferPointer( &imageFunction );
     }
