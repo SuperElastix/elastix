@@ -74,20 +74,20 @@ std::string GetHelpString( void )
 } // end GetHelpString()
 
 //------------------------------------------------------------------------------
-// Helper function
-template< class ImageType >
-double ComputeRMSE( const ImageType *cpuImage, const ImageType *gpuImage )
+// Helper function to compute RMSE
+template<class TScalarType, class CPUImageType, class GPUImageType>
+TScalarType ComputeRMSE(const CPUImageType *cpuImage, const GPUImageType *gpuImage)
 {
-  itk::ImageRegionConstIterator< ImageType > cit(
+  itk::ImageRegionConstIterator<CPUImageType> cit(
     cpuImage, cpuImage->GetLargestPossibleRegion() );
-  itk::ImageRegionConstIterator< ImageType > git(
+  itk::ImageRegionConstIterator<GPUImageType> git(
     gpuImage, gpuImage->GetLargestPossibleRegion() );
 
-  double rmse = 0.0;
+  TScalarType rmse = 0.0;
 
-  for( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
+  for(cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git)
   {
-    double err = static_cast< double >( cit.Get() ) - static_cast< double >( git.Get() );
+    TScalarType err = static_cast<TScalarType>( cit.Get() ) - static_cast<TScalarType>( git.Get() );
     rmse += err * err;
   }
   rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
@@ -1288,7 +1288,7 @@ int main( int argc, char *argv[] )
     }
   }
   // GPU buffer has not been copied yet, so we have to make manual update
-  //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true );
+  //itk::GPUExplicitSync< FilterType, OutputImageType >( gpuFilter, false, false );
   gputimer.Stop();
 
   std::cout << "GPU " << cpuTransform->GetNameOfClass()
@@ -1311,7 +1311,8 @@ int main( int argc, char *argv[] )
   }
 
   // Compute RMSE
-  const double rmse = ComputeRMSE< OutputImageType >( cpuFilter->GetOutput(), gpuFilter->GetOutput() );
+  const double rmse = ComputeRMSE< double, OutputImageType, OutputImageType >
+    ( cpuFilter->GetOutput(), gpuFilter->GetOutput() );
   std::cout << " " << rmse << std::endl;
 
   // Check
