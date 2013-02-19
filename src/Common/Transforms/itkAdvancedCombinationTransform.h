@@ -105,6 +105,7 @@ public:
   /** Typedefs for the CurrentTransform. */
   typedef Superclass                                      CurrentTransformType;
   typedef typename CurrentTransformType::Pointer          CurrentTransformPointer;
+  typedef typename CurrentTransformType::ConstPointer     CurrentTransformConstPointer;
   typedef typename CurrentTransformType::InverseTransformBaseType
     CurrentTransformInverseTransformBaseType;
   typedef typename CurrentTransformType::InverseTransformBasePointer
@@ -120,6 +121,7 @@ public:
    */
   virtual void SetCurrentTransform( CurrentTransformType * _arg );
   itkGetObjectMacro( CurrentTransform, CurrentTransformType );
+  itkGetConstObjectMacro( CurrentTransform, CurrentTransformType );
 
   /** Control the way transforms are combined. */
   virtual void SetUseComposition( bool _arg );
