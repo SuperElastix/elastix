@@ -145,7 +145,7 @@ private:
   void operator=( const Self & );         // purposely not implemented
 
   GPUInterpolatorBase *m_InterpolatorBase;
-  GPUTransformBase *   m_TransformBase;
+  GPUTransformBase    *m_TransformBase;
 
   typename GPUDataManager::Pointer m_InputGPUImageBase;
   typename GPUDataManager::Pointer m_OutputGPUImageBase;
