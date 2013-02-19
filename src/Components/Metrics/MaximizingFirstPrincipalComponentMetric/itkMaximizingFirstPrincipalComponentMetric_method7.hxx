@@ -38,8 +38,7 @@ namespace itk
         m_TransformIsStackTransform( false ),
         m_NumEigenValues( 1 ),
         m_UseDerivativeOfMean( false ),
-        m_VarNoise( 1.0 )
-
+        m_StefansIdea( true )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -160,19 +159,19 @@ namespace itk
     ::GetValue( const TransformParametersType & parameters ) const
   {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
-//    bool UseGetValueAndDerivative = false;
+    bool UseGetValueAndDerivative = false;
 
-//    if(UseGetValueAndDerivative)
-//    {
-//        typedef typename DerivativeType::ValueType        DerivativeValueType;
-//        const unsigned int P = this->GetNumberOfParameters();
-//        MeasureType dummymeasure = NumericTraits< MeasureType >::Zero;
-//        DerivativeType dummyderivative = DerivativeType( P );
-//        dummyderivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+    if(UseGetValueAndDerivative)
+    {
+        typedef typename DerivativeType::ValueType DerivativeValueType;
+        const unsigned int P = this->GetNumberOfParameters();
+        MeasureType dummymeasure = NumericTraits< MeasureType >::Zero;
+        DerivativeType dummyderivative = DerivativeType( P );
+        dummyderivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
-//        this->GetValueAndDerivative( parameters, dummymeasure, dummyderivative );
-//        return dummymeasure;
-//    }
+        this->GetValueAndDerivative( parameters, dummymeasure, dummyderivative );
+        return dummymeasure;
+    }
 
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -282,7 +281,6 @@ namespace itk
 
     }/** end first loop over image sample container */
 
-    elxout << "nr of samples counted: " << this->m_NumberOfPixelsCounted << std::endl;
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(NumberOfSamples, this->m_NumberOfPixelsCounted );
     unsigned int N = this->m_NumberOfPixelsCounted;
@@ -303,72 +301,47 @@ namespace itk
     mean /= RealType(A.rows());
 
     /** Calculate standard deviation from columns */
-    vnl_vector< RealType > var( A.cols() );
-    var.fill( NumericTraits< RealType >::Zero );
+    vnl_vector< RealType > std( A.cols() );
+    std.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < A.rows(); i++ )
     {
         for( int j = 0; j < A.cols(); j++)
         {
-            var(j) += pow((A(i,j)-mean(j)),2);
+            std(j) += pow((A(i,j)-mean(j)),2);
         }
     }
-    var -= this->m_VarNoise;
-    var /= RealType(A.rows() - 1.0);
+    std /= RealType( A.rows() - 1.0 );
 
-    MatrixType Sigmainv( A.cols(), A.cols() );
-    Sigmainv.fill( NumericTraits< RealType >::Zero );
     for( int j = 0; j < A.cols(); j++)
     {
-        Sigmainv(j,j) = 1.0/sqrt(var(j));
+        std(j) = sqrt(std(j));
     }
 
-    MatrixType Amm( A.rows(), A.cols() );
-    Amm.fill( NumericTraits< RealType >::Zero );
+    /** Subtract mean from columns */
+    MatrixType AZscore( A.rows(), A.cols() );
+    AZscore.fill( NumericTraits< RealType >::Zero );
 
     for (int i = 0; i < A.rows(); i++ )
     {
         for(int j = 0; j < A.cols(); j++)
         {
-            Amm(i,j) = A(i,j)-mean(j);
+            AZscore(i,j) = (A(i,j)-mean(j))/std(j);
         }
     }
 
-//    MatrixType AZscore( A.rows(), A.cols() );
-//    AZscore.fill( NumericTraits< RealType >::Zero );
-//    for (int i = 0; i < A.rows(); i++ )
-//    {
-//        for(int j = 0; j < A.cols(); j++)
-//        {
-//            AZscore(i,j) = (A(i,j)-mean(j))/std(j);
-//        }
-//    }
-
     /** Transpose of the matrix with mean subtracted */
-    //MatrixType AtZscore( AZscore.transpose() );
-    MatrixType Atmm( Amm.transpose() );
+    MatrixType AtZscore( AZscore.transpose() );
 
-    /** Compute covariancematrix Cov */
-    MatrixType Cov( Atmm*Amm );
-    //MatrixType K( (AtZscore*AZscore) );
-    Cov /=  static_cast< RealType > ( A.rows() - static_cast< RealType > (1.0) );
+    /** Compute covariance matrix K */
+    MatrixType K( AtZscore*AZscore );
 
-    MatrixType K((Sigmainv.transpose())*Cov*Sigmainv);
-    //K /=  static_cast< RealType > ( A.rows() - static_cast< RealType > (1.0) );
+    K /= static_cast< RealType > ( A.rows()  - 1.0 );
 
     /** Compute first eigenvalue and eigenvector of the covariance matrix K */
     vnl_symmetric_eigensystem< RealType > eig( K );
-    vnl_vector< RealType > eigenValues;
-    eigenValues.set_size(K.cols());
-
-    eigenValues.fill( itk::NumericTraits< RealType >::Zero );
-
-    for(unsigned int i = 0; i < K.cols(); i++)
-    {
-        eigenValues(i) = eig.get_eigenvalue( i );
-    }
 
     /** Compute sum of all eigenvalues = trace( K ) */
-    RealType trace = itk::NumericTraits< RealType >::Zero;;
+    RealType trace = itk::NumericTraits< RealType >::Zero;
     for( int i = 0; i < K.rows(); i++ )
     {
         trace += K(i,i);
@@ -527,7 +500,6 @@ namespace itk
             }// end if sampleOk
 
         } // end loop over t
-       // elxout << numSamplesOk << std::endl;
         if( numSamplesOk == G )
         {
             SamplesOK.push_back(fixedPoint);
@@ -678,7 +650,7 @@ namespace itk
 
     for(unsigned int d = 0; d < G; d++)
     {
-        dSigmainvdmu_part1[ d ] = pow(std[ d ],-3);
+        dSigmainvdmu_part1[ d ] = pow(std[ d ],-3.0);
     }
 
     dSigmainvdmu_part1 /= -RealType(A.rows()-1.0);
@@ -765,7 +737,9 @@ namespace itk
                 }
             }
         }
+      vSinvdSinvdmuAtmmAmmv -= meanvSinvdSinvdmuAtmmAmmv;
     }
+
 
     for(unsigned int p = 0; p < P; p++)
     {

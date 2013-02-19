@@ -61,9 +61,9 @@ namespace elastix
 //     this->GetConfiguration()->ReadParameter(addmeanimage,"AddMeanImage", this->GetComponentLabel(), level, 0);
 //     this->SetAddMeanImage( addmeanimage );
 
-     double varnoise = 1.0;
-     this->GetConfiguration()->ReadParameter( varnoise, "VarNoise", this->GetComponentLabel(), 0, 0 );
-     this->SetVarNoise( varnoise );
+     bool stefansidea = true;
+     this->GetConfiguration()->ReadParameter( stefansidea, "StefansIdea", this->GetComponentLabel(), 0, 0 );
+     this->SetStefansIdea( stefansidea );
 
     /** Get and set the random sampling in the last dimension. */
     bool useRandomSampling = false;
@@ -178,6 +178,7 @@ template <class TElastix>
       elxout << "eigenValues" << this->m_eigenValues << std::endl;
       elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
       elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
+      elxout << "varNoise" << this->m_varNoise << std::endl;
   }
 
 } // end namespace elastix

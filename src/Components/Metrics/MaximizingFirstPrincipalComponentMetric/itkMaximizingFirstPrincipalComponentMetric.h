@@ -59,7 +59,7 @@ public:
   itkSetMacro( NumEigenValues, unsigned int );
 //  itkSetMacro( AddMeanImage, bool );
   itkSetMacro( UseDerivativeOfMean, bool );
-  itkSetMacro( VarNoise, double );
+  itkSetMacro( StefansIdea, bool );
 
   /** Get functions. */
   itkGetConstMacro( SampleLastDimensionRandomly, bool );
@@ -176,6 +176,7 @@ protected:
 
   mutable vnl_vector<double> m_normdCdmu;
   mutable int m_NumberOfSamples;
+  mutable double m_varNoise;
 
 private:
   MaximizingFirstPrincipalComponentMetric(const Self&); //purposely not implemented
@@ -192,7 +193,7 @@ private:
 
  // bool m_AddMeanImage;
 
-  double m_VarNoise;
+  bool m_StefansIdea;
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
   bool m_SubtractMean;
@@ -213,7 +214,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMaximizingFirstPrincipalComponentMetric_method7.hxx"
+#include "itkMaximizingFirstPrincipalComponentMetric_method8.hxx"
 #endif
 
 #endif // end #ifndef __itkMaximizingFirstPrincipalComponentMetric_h
