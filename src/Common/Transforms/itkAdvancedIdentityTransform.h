@@ -161,6 +161,14 @@ public:
    */
   virtual bool IsLinear() const { return true; }
 
+  /** Indicates the category transform.
+   *  e.g. an affine transform, or a local one, e.g. a deformation field.
+   */
+  virtual TransformCategoryType GetTransformCategory() const
+  {
+    return Self::Linear;
+  }
+
   /** Get the Fixed Parameters. */
   virtual const ParametersType& GetFixedParameters( void ) const
     {

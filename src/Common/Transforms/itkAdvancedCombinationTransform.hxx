@@ -153,6 +153,28 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
 
 
 /**
+ * ***************** GetTransformCategory **************************
+ */
+
+template <typename TScalarType, unsigned int NDimensions>
+typename AdvancedCombinationTransform<TScalarType, NDimensions>::TransformCategoryType
+AdvancedCombinationTransform<TScalarType, NDimensions>
+::GetTransformCategory() const
+{
+  // Check if all linear
+  const bool isLinearTransform = this->IsLinear();
+  if( isLinearTransform )
+  {
+    return Self::Linear;
+  }
+
+  // It is unclear how you would prefer to define the rest of them,
+  // lets just return Self::UnknownTransformCategory for now
+  return Self::UnknownTransformCategory;
+}
+
+
+/**
  * ***************** GetParameters **************************
  */
 

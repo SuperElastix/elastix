@@ -196,6 +196,12 @@ public:
    * Returns true when both initial and current transform are linear */
   virtual bool IsLinear( void ) const;
 
+  /** Special handling for combination transform. If all transforms
+   * are linear, then return category Linear. Otherwise if all
+   * transforms set to optimize are DisplacementFields, then
+   * return DisplacementField category. */
+  virtual TransformCategoryType GetTransformCategory() const;
+
   /** Whether the advanced transform has nonzero matrices. */
   virtual bool GetHasNonZeroSpatialHessian( void ) const;
   virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const;

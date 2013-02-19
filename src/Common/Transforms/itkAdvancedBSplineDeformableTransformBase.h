@@ -250,6 +250,14 @@ public:
    */
   virtual bool IsLinear( void ) const { return false; }
 
+  /** Indicates the category transform.
+   *  e.g. an affine transform, or a local one, e.g. a deformation field.
+   */
+  virtual TransformCategoryType GetTransformCategory() const
+  {
+    return Self::BSpline;
+  }
+
   virtual unsigned int GetNumberOfAffectedWeights( void ) const = 0;
 
   virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const = 0;
