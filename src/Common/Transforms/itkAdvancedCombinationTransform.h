@@ -92,6 +92,7 @@ public:
   typedef typename Superclass::InternalMatrixType             InternalMatrixType;
   typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
+  typedef typename TransformCategoryType                  TransformCategoryType;
 
   /** Typedefs for the InitialTransform. */
   typedef Superclass                                      InitialTransformType;

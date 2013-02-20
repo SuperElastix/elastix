@@ -79,11 +79,12 @@ public:
   typedef  TScalarType     ScalarType;
 
   /** Type of the input parameters. */
-  typedef  typename Superclass::ParametersType                ParametersType;
-  typedef typename Superclass::NumberOfParametersType         NumberOfParametersType;
+  typedef  typename Superclass::ParametersType ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  typedef typename TransformCategoryType TransformCategoryType;
 
   /** Type of the Jacobian matrix. */
-  typedef  typename Superclass::JacobianType                   JacobianType;
+  typedef  typename Superclass::JacobianType JacobianType;
 
   /** Standard vector type for this class. */
   typedef Vector<TScalarType,

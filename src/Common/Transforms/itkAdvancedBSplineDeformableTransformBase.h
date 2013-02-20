@@ -68,6 +68,7 @@ public:
     InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType
     OutputCovariantVectorType;
+  typedef typename TransformCategoryType              TransformCategoryType;
 
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
@@ -253,7 +254,7 @@ public:
   /** Indicates the category transform.
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
    */
-  virtual TransformCategoryType GetTransformCategory() const
+  virtual typename TransformCategoryType GetTransformCategory() const
   {
     return Self::BSpline;
   }
