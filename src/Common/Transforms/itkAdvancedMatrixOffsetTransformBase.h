@@ -129,7 +129,7 @@ public:
   typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
   typedef typename Superclass::InputPointType       InputPointType;
   typedef typename Superclass::OutputPointType      OutputPointType;
-  typedef typename TransformCategoryType            TransformCategoryType;
+  typedef typename Superclass::TransformCategoryType TransformCategoryType;
 
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
