@@ -39,7 +39,8 @@ namespace itk
         m_TransformIsStackTransform( false ),
         m_NumEigenValues( 6 ),
         m_UseDerivativeOfMean( true ),
-        m_StefansIdea( true )
+        m_StefansIdea( true ),
+        m_VarNoise( 1.0 )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -317,7 +318,7 @@ namespace itk
 
     /** Compute covariancematrix Cov */
     MatrixType Cov( Atmm*Amm );
-    Cov /=  static_cast< RealType > ( RealType(G) - 1.0 );
+    Cov /=  static_cast< RealType > ( RealType(N) - 1.0 );
 
     vnl_symmetric_eigensystem< RealType > eigcov( Cov );
 
@@ -325,7 +326,7 @@ namespace itk
 
     if(!this->m_StefansIdea)
     {
-        varNoise = 0.0;
+        varNoise = this->m_VarNoise;
     }
 
     /** Calculate standard deviation from columns */
@@ -349,7 +350,7 @@ namespace itk
         Cov(j,j) -= varNoise;
     }
 
-    MatrixType K((S.transpose())*Cov*S);
+    MatrixType K(S*Cov*S);
 
     /** Compute first eigenvalue and eigenvector of the covariance matrix K */
     vnl_symmetric_eigensystem< RealType > eig( K );
@@ -569,11 +570,11 @@ namespace itk
     vnl_symmetric_eigensystem< RealType > eigcov( Cov );
     vnl_vector< RealType > v_L = eigcov.get_eigenvector( 0 );
     RealType varNoise = 0.9999999*eigcov.get_eigenvalue( 0 );
-    this->m_varNoise = varNoise;
     if(!this->m_StefansIdea)
     {
-        varNoise = 0.0;
+        varNoise = this->m_VarNoise;
     }
+    elxout << "varNoise"<< varNoise << std::endl;
 
     /** Calculate standard deviation from columns */
     vnl_vector< RealType > var( G );
@@ -596,7 +597,7 @@ namespace itk
         Cov(j,j) -= varNoise;
     }
 
-    MatrixType K((S.transpose())*Cov*S);
+    MatrixType K(S*Cov*S);
 
     /** Compute first eigenvalue and eigenvector of the covariance matrix K */
     vnl_symmetric_eigensystem< RealType > eig( K );
@@ -652,7 +653,6 @@ namespace itk
     vnl_vector< DerivativeValueType > tracevSdvarNoisedmuSv( P );
     vnl_vector< DerivativeValueType > dSdmu_part1( G );
     vnl_vector< DerivativeValueType > dvarNoisedmu( P );
-    vnl_vector< DerivativeValueType > meantracevdSdmuCovSv( P );
 
     DerivativeMatrixType vSAtmmdAdmu( this->m_NumEigenValues, G*P );
     DerivativeMatrixType vAtmmdAdmu( this-> m_NumEigenValues, G*P );
@@ -674,11 +674,11 @@ namespace itk
     /** Components for derivative of mean */
     DerivativeMatrixType meandAdmu( G, P );
     DerivativeMatrixType meandSdmu( G, P );
-    DerivativeMatrixType v_LAtmmmeandAdmu( G, P);
-    DerivativeMatrixType vAtmmmeandAdmu( this->m_NumEigenValues, G*P);
+    DerivativeMatrixType v_LAtmmmeandAdmu( G, P );
+    DerivativeMatrixType vAtmmmeandAdmu( this->m_NumEigenValues, G*P );
     DerivativeMatrixType vSAtmmmeandAdmu( this->m_NumEigenValues, G*P );
     meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    v_LAtmmmeandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero);
+    v_LAtmmmeandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     vSAtmmmeandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     vAtmmmeandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     meandSdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
@@ -688,7 +688,7 @@ namespace itk
 
     for(unsigned int d = 0; d < G; d++)
     {
-        dSdmu_part1[ d ] = -pow(S[ d ][ d ], 3.0);
+        dSdmu_part1[ d ] = -pow( S[ d ][ d ], 3.0 );
     }
 
     DerivativeMatrixType vSAtmm( eigenVectorMatrixTranspose*S*Atmm );
@@ -740,7 +740,7 @@ namespace itk
             /** build metric derivative components */
             for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
             {
-                meandAdmu[ d ][ nzjis[ d ][ p ] ] += ( dMTdmu[ p ] )/double(N);
+                meandAdmu[ d ][ nzjis[ d ][ p ] ] += ( dMTdmu[ p ] )/double( N );
                 v_LAtmmdAdmu[ d ][ nzjis[ d ][ p ] ] += v_LAtmm[ pixelIndex ]*dMTdmu[ p ];
                 dSdmu[ d ][ nzjis[ d ][ p ] ] += Atmm[ d ][ pixelIndex ]*dSdmu_part1[ d ]*dMTdmu[ p ];
                 for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
@@ -765,16 +765,20 @@ namespace itk
                     for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
                     {
                         vSAtmmmeandAdmu[ z ][ d + G*p ] += vSAtmm[ z ][ i ]*meandAdmu[ d ][ p ];
-                     }
+                    }
                 }
             }
         }
-        tracevdSdmuCovSv -= meantracevdSdmuCovSv;
     }
 
     for(unsigned int p = 0; p < P; p++)
     {
         dvarNoisedmu[ p ] = dot_product((v_LAtmmdAdmu-v_LAtmmmeandAdmu).get_column(p),v_L);
+    }
+
+    if(!this->m_StefansIdea)
+    {
+        dvarNoisedmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     }
 
     for(unsigned int p = 0; p < P; p++)

@@ -76,6 +76,10 @@ namespace elastix
       "UseDerivativeOfMean", this->GetComponentLabel(), 0, 0 );
     this->SetUseDerivativeOfMean( usederivativeofmean );
 
+    double varnoise = 1.0;
+    this->GetConfiguration()->ReadParameter( varnoise, "VarNoise", this->GetComponentLabel(), level, 0 );
+    this->SetVarNoise( varnoise );
+
     /** Get and set if we want to subtract the mean from the derivative. */
     bool subtractMean = false;
     this->GetConfiguration()->ReadParameter( subtractMean,
@@ -178,7 +182,7 @@ template <class TElastix>
       elxout << "eigenValues" << this->m_eigenValues << std::endl;
       elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
       elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
-      elxout << "varNoise" << this->m_varNoise << std::endl;
+     // elxout << "varNoise" << this->m_VarNoise << std::endl;
   }
 
 } // end namespace elastix
