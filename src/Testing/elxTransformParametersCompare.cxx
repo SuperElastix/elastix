@@ -40,12 +40,14 @@ std::string GetHelpString( void )
     << "  -test      transform parameters file to test against baseline\n"
     << "  -base      baseline transform parameters filename\n"
     //<< "  [-t]       intensity difference threshold, default 0\n"
-    << "  [-a]       allowable tolerance (), default 1e-6";
+    << "  [-a]       allowable tolerance (), default 1e-6\n"
+    << "Computes (test - base) / base.";
   return ss.str();
 
 } // end GetHelpString()
 
-// This comparison works on all image types by reading images in a 6D double images. If images > 6 dimensions
+// This comparison works on all image types by reading images
+// in a 4D double images. If images > 4 dimensions
 // must be compared, change this variable.
 static const unsigned int ITK_TEST_DIMENSION_MAX = 4;
 
@@ -81,7 +83,7 @@ int main( int argc, char **argv )
   double allowedTolerance = 1e-6;
   parser->GetCommandLineArgument( "-a", allowedTolerance );
 
-  if ( allowedTolerance < 0 )
+  if( allowedTolerance < 0 )
   {
     std::cerr << "ERROR: the specified allowed tolerance (-a) should be non-negative!" << std::endl;
     return EXIT_FAILURE;
@@ -155,11 +157,13 @@ int main( int argc, char **argv )
 
   /** Now compare the two parameter vectors. */
   ScalarType diffNorm = itk::NumericTraits<ScalarType>::Zero;
+  ScalarType baselineNorm = itk::NumericTraits<ScalarType>::Zero;
   for ( unsigned int i = 0; i < numberOfParametersTest; i++ )
   {
+    baselineNorm += vnl_math_sqr( parametersBaseline[ i ] );
     diffNorm += vnl_math_sqr( parametersBaseline[ i ] - parametersTest[ i ] );
   }
-  diffNorm = vcl_sqrt( diffNorm );
+  diffNorm = vcl_sqrt( diffNorm ) / vcl_sqrt( baselineNorm );
 
   std::cerr << "The norm of the difference between baseline and test transform parameters was computed\n";
   std::cerr << "Computed difference: " << diffNorm << std::endl;
@@ -271,4 +275,3 @@ int main( int argc, char **argv )
   return EXIT_SUCCESS;
 
 } // end main
-
