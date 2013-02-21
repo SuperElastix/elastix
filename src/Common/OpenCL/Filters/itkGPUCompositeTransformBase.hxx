@@ -361,14 +361,6 @@ bool GPUCompositeTransformBase< TScalarType, NDimensions >
     return false;
   }
 }
-
-//------------------------------------------------------------------------------
-template< class TScalarType, unsigned int NDimensions >
-void GPUCompositeTransformBase< TScalarType, NDimensions >
-::PrintSelf( std::ostream & os, Indent indent ) const
-{
-  CPUSuperclass::PrintSelf( os, indent );
-}
 } // end namespace itk
 
 #endif /* __itkGPUCompositeTransformBase_hxx */

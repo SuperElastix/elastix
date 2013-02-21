@@ -76,7 +76,6 @@ public:
 protected:
   GPUCompositeTransformBase();
   virtual ~GPUCompositeTransformBase() {}
-  void PrintSelf( std::ostream & s, Indent indent ) const;
 
   virtual bool GetSourceCode( std::string & _source ) const;
 
