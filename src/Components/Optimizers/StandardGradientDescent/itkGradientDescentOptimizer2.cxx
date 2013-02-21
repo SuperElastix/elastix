@@ -128,7 +128,7 @@ namespace itk
 
     const unsigned int spaceDimension
       = this->GetScaledCostFunction()->GetNumberOfParameters();
-    this->m_Gradient = DerivativeType( spaceDimension );
+    this->m_Gradient = DerivativeType( spaceDimension ); // check this
 
     while( ! this->m_Stop )
     {
@@ -232,7 +232,7 @@ namespace itk
     // This old way creates a vector, fills it later, and copies it at the end
     //ParametersType newPosition( spaceDimension );
     // This new way gets a reference to a previously allocated vector and fills it
-    // This saves and allocation and a copy at every iteration
+    // This saves an allocation and a copy at every iteration
     ParametersType & newPosition = this->m_ScaledCurrentPosition;
 
     if( !this->m_UseMultiThread )

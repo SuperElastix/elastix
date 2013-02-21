@@ -146,21 +146,20 @@ namespace itk
     typedef ThreaderType::ThreadInfoStruct   ThreadInfoType;
 
     // made protected so subclass can access
+    double                        m_Value;
     DerivativeType                m_Gradient;
     double                        m_LearningRate;
     StopConditionType             m_StopCondition;
 
     ThreaderType::Pointer         m_Threader;
 
+    bool                          m_Stop;
+    unsigned long                 m_NumberOfIterations;
+    unsigned long                 m_CurrentIteration;
+
   private:
     GradientDescentOptimizer2(const Self&); //purposely not implemented
     void operator=(const Self&); //purposely not implemented
-
-    bool                          m_Stop;
-    double                        m_Value;
-
-    unsigned long                 m_NumberOfIterations;
-    unsigned long                 m_CurrentIteration;
 
     // multi-threaded AdvanceOneStep:
 
