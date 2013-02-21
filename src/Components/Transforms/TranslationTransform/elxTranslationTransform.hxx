@@ -104,6 +104,10 @@ namespace elastix
     this->m_Registration->GetAsITKBaseType()->
       SetInitialTransformParameters( this->GetParameters() );
 
+    /** Give feedback. */
+    // \todo: should perhaps also print fixed parameters
+    elxout << "Transform parameters are initialized as: "
+      << this->GetParameters() << std::endl;
 
   } // end InitializeTransform
 

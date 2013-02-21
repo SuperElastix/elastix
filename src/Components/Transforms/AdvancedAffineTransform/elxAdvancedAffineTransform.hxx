@@ -233,7 +233,6 @@ AdvancedAffineTransformElastix<TElastix>
   bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
   if ( !centerGiven || automaticTransformInitialization )
   {
-
     /** Use the TransformInitializer to determine a center of
      * of rotation and an initial translation.
      */
@@ -311,7 +310,8 @@ AdvancedAffineTransformElastix<TElastix>
 
   /** Give feedback. */
   // \todo: should perhaps also print fixed parameters
-  elxout << "Transform parameters are initialized as: " << this->GetParameters() << std::endl;
+  elxout << "Transform parameters are initialized as: "
+    << this->GetParameters() << std::endl;
 
 } // end InitializeTransform()
 
