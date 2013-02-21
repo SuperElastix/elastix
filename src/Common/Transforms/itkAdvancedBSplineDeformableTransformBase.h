@@ -254,7 +254,7 @@ public:
   /** Indicates the category transform.
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
    */
-  virtual typename TransformCategoryType GetTransformCategory() const
+  virtual TransformCategoryType GetTransformCategory( void ) const
   {
     return Self::BSpline;
   }
