@@ -31,6 +31,9 @@ namespace itk
 class ITK_EXPORT GPUTransformBase
 {
 public:
+  /** Standard class typedefs. */
+  typedef GPUTransformBase Self;
+
   /** Run-time type information (and related methods). */
   virtual const char * GetNameOfClass() const { return "GPUTransformBase"; }
 
@@ -54,7 +57,12 @@ protected:
   virtual ~GPUTransformBase() {}
 
   GPUDataManager::Pointer m_ParametersDataManager;
+
+private:
+  GPUTransformBase( const Self & other ); // purposely not implemented
+  const Self & operator=( const Self & ); // purposely not implemented
 };
+
 } // end namespace itk
 
 #endif /* __itkGPUTransformBase_h */

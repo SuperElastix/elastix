@@ -15,20 +15,30 @@
 #define __itkGPUAdvancedCombinationTransform_h
 
 #include "itkAdvancedCombinationTransform.h"
-#include "itkGPUTransformBase.h"
+#include "itkGPUCompositeTransformBase.h"
 
 namespace itk
 {
 /** \class GPUAdvancedCombinationTransform
- */
+* \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+* Department of Radiology, Leiden, The Netherlands
+*
+* This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+*
+* \note This work was funded by the Netherlands Organisation for
+* Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+*
+*/
 template< class TScalarType = float, unsigned int NDimensions = 3,
           class TParentImageFilter = AdvancedCombinationTransform< TScalarType, NDimensions > >
-class GPUAdvancedCombinationTransform : public TParentImageFilter, public GPUTransformBase
+class GPUAdvancedCombinationTransform :
+  public TParentImageFilter, public GPUCompositeTransformBase< TScalarType, NDimensions >
 {
 public:
   /** Standard class typedefs. */
   typedef GPUAdvancedCombinationTransform Self;
-  typedef TParentImageFilter              Superclass;
+  typedef TParentImageFilter              CPUSuperclass;
+  typedef GPUCompositeTransformBase       GPUSuperclass;
   typedef SmartPointer< Self >            Pointer;
   typedef SmartPointer< const Self >      ConstPointer;
 
@@ -37,26 +47,37 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( GPUAdvancedCombinationTransform, TParentImageFilter );
 
-  /** Type of the scalar representing coordinate and vector elements. */
-  typedef typename Superclass::ScalarType ScalarType;
+  /** Sub transform type */
+  typedef typename GPUSuperclass::TransformType        GPUTransformType;
+  typedef typename GPUSuperclass::TransformTypePointer TransformTypePointer;
 
-  /** Dimension of the domain space. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, NDimensions );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, NDimensions );
+  /** Typedefs for the InitialTransform. */
+  typedef typename CPUSuperclass::InitialTransformType         InitialTransformType;
+  typedef typename CPUSuperclass::InitialTransformPointer      InitialTransformPointer;
+  typedef typename CPUSuperclass::InitialTransformConstPointer InitialTransformConstPointer;
+
+  /** Typedefs for the CurrentTransform. */
+  typedef typename CPUSuperclass::CurrentTransformType         CurrentTransformType;
+  typedef typename CPUSuperclass::CurrentTransformPointer      CurrentTransformPointer;
+  typedef typename CPUSuperclass::CurrentTransformConstPointer CurrentTransformConstPointer;
+
+  /** Get number of transforms in composite transform. */
+  virtual size_t GetNumberOfTransforms() const;
+
+  /** Get the Nth transform. */
+  virtual TransformTypePointer GetNthTransform( SizeValueType n );
+
+  /** Get the Nth transform, const version. */
+  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const;
 
 protected:
-  GPUAdvancedCombinationTransform();
+  GPUAdvancedCombinationTransform() {}
   virtual ~GPUAdvancedCombinationTransform() {}
   void PrintSelf( std::ostream & s, Indent indent ) const;
-
-  virtual bool GetSourceCode( std::string & _source ) const;
 
 private:
   GPUAdvancedCombinationTransform( const Self & other ); // purposely not implemented
   const Self & operator=( const Self & );                // purposely not implemented
-
-  std::vector< std::string > m_Sources;
-  bool                       m_SourcesLoaded;
 };
 
 /** \class GPUAdvancedCombinationTransformFactory
@@ -83,8 +104,8 @@ public:
   /** Register one factory of this type  */
   static void RegisterOneFactory( void )
   {
-    GPUAdvancedCombinationTransformFactory::Pointer factory
-      = GPUAdvancedCombinationTransformFactory::New();
+    GPUAdvancedCombinationTransformFactory::Pointer factory =
+      GPUAdvancedCombinationTransformFactory::New();
     ObjectFactoryBase::RegisterFactory( factory );
   }
 

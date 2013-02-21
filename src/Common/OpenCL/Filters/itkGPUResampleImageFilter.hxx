@@ -18,7 +18,8 @@
 #include "itkGPUKernelManagerHelperFunctions.h"
 #include "itkGPUMath.h"
 #include "itkGPUImageBase.h"
-#include "itkGPUCompositeTransform.h"
+#include "itkGPUCompositeTransformBase.h"
+#include "itkGPUBSplineBaseTransform.h"
 #include "itkGPUBSplineInterpolateImageFunction.h"
 
 #include "itkImageLinearIteratorWithIndex.h"
@@ -239,8 +240,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
     this->m_TransformBase = (GPUTransformBase *)transformBase;
 
     // Test for a GPU Combo transform
-    typedef GPUCompositeTransform< TInterpolatorPrecisionType,
-                                   InputImageDimension > CompositeTransformType;
+    typedef GPUCompositeTransformBase< TInterpolatorPrecisionType,
+                                       InputImageDimension > CompositeTransformType;
     const CompositeTransformType *compositeTransformBase =
       dynamic_cast< const CompositeTransformType * >( _arg );
 
@@ -713,8 +714,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
     if ( m_TransformIsCombo )
     {
-      typedef GPUCompositeTransform< TInterpolatorPrecisionType,
-                                     InputImageDimension > CompositeTransformType;
+      typedef GPUCompositeTransformBase< TInterpolatorPrecisionType,
+                                         InputImageDimension > CompositeTransformType;
       const CompositeTransformType *compositeTransform =
         dynamic_cast< const CompositeTransformType * >( m_TransformBase );
 
@@ -1064,8 +1065,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   }
   else
   {
-    typedef GPUCompositeTransform< TInterpolatorPrecisionType,
-                                   InputImageDimension > CompositeTransformType;
+    typedef GPUCompositeTransformBase< TInterpolatorPrecisionType,
+                                       InputImageDimension > CompositeTransformType;
     const CompositeTransformType *compositeTransform =
       dynamic_cast< const CompositeTransformType * >( m_TransformBase );
 
@@ -1106,6 +1107,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   // Typedefs
   typedef GPUBSplineBaseTransform< TInterpolatorPrecisionType,
                                    InputImageDimension > GPUBSplineTransformType;
+
   typedef typename GPUBSplineTransformType::GPUCoefficientImageType      GPUCoefficientImageType;
   typedef typename GPUBSplineTransformType::GPUCoefficientImageArray     GPUCoefficientImageArray;
   typedef typename GPUBSplineTransformType::GPUCoefficientImageBaseArray GPUCoefficientImageBaseArray;
@@ -1118,10 +1120,10 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 
   if ( m_TransformIsCombo )
   {
-    typedef GPUCompositeTransform< TInterpolatorPrecisionType,
-                                   InputImageDimension > CompositeTransformType;
-    const CompositeTransformType *compositeTransform =
-      dynamic_cast< const CompositeTransformType * >( m_TransformBase );
+    typedef GPUCompositeTransformBase< TInterpolatorPrecisionType,
+                                       InputImageDimension > CompositeTransformType;
+    CompositeTransformType *compositeTransform =
+      dynamic_cast< CompositeTransformType * >( m_TransformBase );
 
     if ( compositeTransform )
     {

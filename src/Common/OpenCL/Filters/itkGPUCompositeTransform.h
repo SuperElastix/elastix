@@ -15,7 +15,7 @@
 #define __itkGPUCompositeTransform_h
 
 #include "itkCompositeTransform.h"
-#include "itkGPUTransformBase.h"
+#include "itkGPUCompositeTransformBase.h"
 
 namespace itk
 {
@@ -31,12 +31,14 @@ namespace itk
 */
 template< class TScalarType = float, unsigned int NDimensions = 3,
           class TParentImageFilter = CompositeTransform< TScalarType, NDimensions > >
-class GPUCompositeTransform : public TParentImageFilter, public GPUTransformBase
+class GPUCompositeTransform :
+  public TParentImageFilter, public GPUCompositeTransformBase< TScalarType, NDimensions >
 {
 public:
   /** Standard class typedefs. */
   typedef GPUCompositeTransform      Self;
-  typedef TParentImageFilter         Superclass;
+  typedef TParentImageFilter         CPUSuperclass;
+  typedef GPUCompositeTransformBase  GPUSuperclass;
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
 
@@ -45,65 +47,28 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( GPUCompositeTransform, TParentImageFilter );
 
-  /** Type of the scalar representing coordinate and vector elements. */
-  typedef typename Superclass::ScalarType    ScalarType;
-  typedef typename Superclass::TransformType TransformType;
+  /** Sub transform type */
+  typedef typename GPUSuperclass::TransformType             GPUTransformType;
+  typedef typename GPUSuperclass::TransformTypePointer      TransformTypePointer;
+  typedef typename GPUSuperclass::TransformTypeConstPointer TransformTypeConstPointer;
 
-  /** Dimension of the domain space. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int, NDimensions );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int, NDimensions );
+  /** Get number of transforms in composite transform. */
+  virtual size_t GetNumberOfCPUTransforms() const;
 
-  /**  */
-  bool HasIdentityTransform() const;
+  /** Get the Nth transform. */
+  virtual TransformTypePointer GetNthTransform( SizeValueType n );
 
-  /**  */
-  bool HasMatrixOffsetTransform() const;
-
-  /**  */
-  bool HasTranslationTransform() const;
-
-  /**  */
-  bool HasBSplineTransform() const;
-
-  /**  */
-  bool IsIdentityTransform( const std::size_t index ) const;
-
-  /**  */
-  bool IsMatrixOffsetTransform( const std::size_t index ) const;
-
-  /**  */
-  bool IsTranslationTransform( const std::size_t index ) const;
-
-  /**  */
-  bool IsBSplineTransform( const std::size_t index ) const;
+  /** Get the Nth transform, const version. */
+  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const;
 
 protected:
-  GPUCompositeTransform();
+  GPUCompositeTransform() {}
   virtual ~GPUCompositeTransform() {}
   void PrintSelf( std::ostream & s, Indent indent ) const;
-
-  virtual bool GetSourceCode( std::string & _source ) const;
-
-  virtual GPUDataManager::Pointer GetParametersDataManager( const std::size_t index ) const;
 
 private:
   GPUCompositeTransform( const Self & other ); // purposely not implemented
   const Self & operator=( const Self & );      // purposely not implemented
-
-  bool IsIdentityTransform( const std::size_t index,
-                            const bool _loadSource, std::string & _source ) const;
-
-  bool IsMatrixOffsetTransform( const std::size_t index,
-                                const bool _loadSource, std::string & _source ) const;
-
-  bool IsTranslationTransform( const std::size_t index,
-                               const bool _loadSource, std::string & _source ) const;
-
-  bool IsBSplineTransform( const std::size_t index,
-                           const bool _loadSource, std::string & _source ) const;
-
-  std::vector< std::string > m_Sources;
-  bool                       m_SourcesLoaded;
 };
 
 /** \class GPUCompositeTransformFactory
