@@ -113,7 +113,8 @@ public:
     CurrentTransformInverseTransformBasePointer;
 
   /** Set/Get a pointer to the InitialTransform. */
-  virtual void SetInitialTransform( const InitialTransformType * _arg );
+  virtual void SetInitialTransform( InitialTransformType * _arg );
+  itkGetObjectMacro( InitialTransform, InitialTransformType );
   itkGetConstObjectMacro( InitialTransform, InitialTransformType );
 
   /** Set/Get a pointer to the CurrentTransform.
@@ -293,8 +294,8 @@ protected:
   virtual ~AdvancedCombinationTransform(){};
 
   /** Declaration of members. */
-  InitialTransformConstPointer  m_InitialTransform;
-  CurrentTransformPointer       m_CurrentTransform;
+  InitialTransformPointer m_InitialTransform;
+  CurrentTransformPointer m_CurrentTransform;
 
   /** Set the SelectedTransformPointFunction and the
    * SelectedGetJacobianFunction.
