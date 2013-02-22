@@ -158,8 +158,8 @@ public:
   typedef typename ImageType::Pointer                   ImagePointer;
 
   /** Get the array of coefficient images. */
-  virtual const ImagePointer * GetCoefficientImage( void ) const
-    { return this->m_CoefficientImage; }
+  virtual const ImagePointer * GetCoefficientImages( void ) const
+    { return this->m_CoefficientImages; }
 
   /** Set the array of coefficient images.
    *
@@ -169,10 +169,10 @@ public:
    * the buffered region of all the subsequent images are the same
    * as the first image. Note that no error checking is done.
    *
-   * Warning: use either the SetParameters() or SetCoefficientImage()
+   * Warning: use either the SetParameters() or SetCoefficientImages()
    * API. Mixing the two modes may results in unexpected results.
    */
-  virtual void SetCoefficientImage( ImagePointer images[] );
+  virtual void SetCoefficientImages( ImagePointer images[] );
 
   /** Typedefs for specifying the extend to the grid. */
   typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) > RegionType;
@@ -297,7 +297,7 @@ protected:
   /** Array of images representing the B-spline coefficients
    *  in each dimension.
    */
-  ImagePointer        m_CoefficientImage[ NDimensions ];
+  ImagePointer        m_CoefficientImages[ NDimensions ];
 
   /** Variables defining the coefficient grid extend. */
   RegionType          m_GridRegion;

@@ -91,7 +91,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     this->m_WrappedImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
     this->m_WrappedImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     this->m_WrappedImage[j]->SetDirection( this->m_GridDirection );
-    this->m_CoefficientImage[j] = NULL;
+    this->m_CoefficientImages[j] = NULL;
     }
 
   // Setup variables for computing interpolation
@@ -243,7 +243,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   InputPointType transformedPoint = point;
 
   /** Check if the coefficient image has been set. */
-  if ( !this->m_CoefficientImage[ 0 ] )
+  if ( !this->m_CoefficientImages[ 0 ] )
   {
     itkWarningMacro( << "B-spline coefficients have not been set" );
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
@@ -283,11 +283,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   IteratorType iterator[ SpaceDimension ];
   unsigned long counter = 0;
   const PixelType * basePointer
-    = this->m_CoefficientImage[ 0 ]->GetBufferPointer();
+    = this->m_CoefficientImages[ 0 ]->GetBufferPointer();
 
   for ( unsigned int j = 0; j < SpaceDimension; j++ )
   {
-    iterator[ j ] = IteratorType( this->m_CoefficientImage[ j ], supportRegion );
+    iterator[ j ] = IteratorType( this->m_CoefficientImages[ j ], supportRegion );
   }
 
   /** Loop over the support region. */
@@ -581,7 +581,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
        * image. Create an iterator over the weights vector.
        */
       ImageRegionConstIterator<ImageType> itCoef(
-        this->m_CoefficientImage[ dim ], supportRegion );
+        this->m_CoefficientImages[ dim ], supportRegion );
       typename WeightsType::const_iterator itWeights = weights.begin();
 
       /** Compute the sum for this dimension. */
@@ -663,7 +663,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
     ImageRegionConstIterator<ImageType> itCoef(
-      this->m_CoefficientImage[ dim ], supportRegion );
+      this->m_CoefficientImages[ dim ], supportRegion );
 
     for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
     {
@@ -917,7 +917,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
        * image. Create an iterator over the weights vector.
        */
       ImageRegionConstIterator<ImageType> itCoef(
-        this->m_CoefficientImage[ dim ], supportRegion );
+        this->m_CoefficientImages[ dim ], supportRegion );
       typename WeightsType::const_iterator itWeights = weights.begin();
 
       /** Compute the sum for this dimension. */
@@ -1172,7 +1172,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
     ImageRegionConstIterator<ImageType> itCoef(
-      this->m_CoefficientImage[ dim ], supportRegion );
+      this->m_CoefficientImages[ dim ], supportRegion );
 
     for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
     {
@@ -1360,7 +1360,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
     ImageRegionConstIterator<ImageType> itCoef(
-      this->m_CoefficientImage[ dim ], supportRegion );
+      this->m_CoefficientImages[ dim ], supportRegion );
 
     for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
     {
@@ -1498,7 +1498,7 @@ if( !this->m_UseMultiThread )
 
   /** Create an iterator over the coefficient image. */
   ImageRegionConstIterator< ImageType >
-    it( this->m_CoefficientImage[ 0 ], supportRegion );
+    it( this->m_CoefficientImages[ 0 ], supportRegion );
 
   /** Initialize some helper variables. */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
@@ -1509,7 +1509,7 @@ if( !this->m_UseMultiThread )
   /** For all control points in the support region, set which of the
    * indices in the parameter array are non-zero.
    */
-  const PixelType * basePointer = this->m_CoefficientImage[0]->GetBufferPointer();
+  const PixelType * basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
   while ( !it.IsAtEnd() )
   {

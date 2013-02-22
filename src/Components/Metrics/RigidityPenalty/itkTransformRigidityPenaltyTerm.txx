@@ -473,7 +473,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   std::vector< CoefficientImagePointer >  inputImages( ImageDimension );
   for ( unsigned int i = 0; i < ImageDimension; i++ )
   {
-    inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImage()[ i ];
+    inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImages()[ i ];
   }
 
   /** Get the B-spline coefficient image spacing. */
@@ -957,7 +957,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   std::vector< CoefficientImagePointer >  inputImages( ImageDimension );
   for ( unsigned int i = 0; i < ImageDimension; i++ )
   {
-    inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImage()[ i ];
+    inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImages()[ i ];
   }
 
   /** Get the B-spline coefficient image spacing. */

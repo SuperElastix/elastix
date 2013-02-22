@@ -115,7 +115,7 @@ class ITK_EXPORT MultiBSplineDeformableTransformWithNormal;
  *
  * \endverbatim
  *
- * Warning: use either the SetParameters() or SetCoefficientImage()
+ * Warning: use either the SetParameters() or SetCoefficientImages()
  * API. Mixing the two modes may results in unexpected results.
  *
  * The class is templated coordinate representation type (float or double),

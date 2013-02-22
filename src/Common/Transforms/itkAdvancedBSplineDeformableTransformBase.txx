@@ -56,7 +56,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     this->m_WrappedImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
     this->m_WrappedImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     this->m_WrappedImage[j]->SetDirection( this->m_GridDirection );
-    this->m_CoefficientImage[j] = NULL;
+    this->m_CoefficientImages[j] = NULL;
     }
 
   this->m_ValidRegion = this->m_GridRegion;
@@ -430,7 +430,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     this->m_WrappedImage[j]->GetPixelContainer()->
       SetImportPointer( dataPointer, numberOfPixels );
     dataPointer += numberOfPixels;
-    this->m_CoefficientImage[j] = this->m_WrappedImage[j];
+    this->m_CoefficientImages[j] = this->m_WrappedImage[j];
     }
 
   /**
@@ -494,7 +494,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
    */
   if (NULL == this->m_InputParametersPointer)
     {
-    itkExceptionMacro( <<"Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps SetCoefficientImage() has been called causing the NULL pointer." );
+    itkExceptionMacro( <<"Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps SetCoefficientImages() has been called causing the NULL pointer." );
     }
 
   return (*this->m_InputParametersPointer);
@@ -540,7 +540,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 template<class TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
-::SetCoefficientImage( ImagePointer images[] )
+::SetCoefficientImages( ImagePointer images[] )
 {
   if ( images[0] )
     {
@@ -552,7 +552,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
     for( unsigned int j = 0; j < SpaceDimension; j++ )
       {
-      this->m_CoefficientImage[j] = images[j];
+      this->m_CoefficientImages[j] = images[j];
       }
 
     // Clean up buffered parameters
@@ -585,9 +585,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   os << indent << "CoefficientImage: [ ";
   for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
   {
-    os << this->m_CoefficientImage[ j ].GetPointer() << ", ";
+    os << this->m_CoefficientImages[ j ].GetPointer() << ", ";
   }
-  os << this->m_CoefficientImage[ SpaceDimension - 1 ].GetPointer() << " ]" << std::endl;
+  os << this->m_CoefficientImages[ SpaceDimension - 1 ].GetPointer() << " ]" << std::endl;
 
   os << indent << "WrappedImage: [ ";
   for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
