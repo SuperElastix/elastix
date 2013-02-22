@@ -291,7 +291,7 @@ namespace itk
     MatrixType A( datablock.extract( N, G ) );
 
     /** Calculate mean of from columns */
-    vnl_vector< RealType > mean( A.cols() );
+    vnl_vector< RealType > mean( G );
     mean.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < N; i++ )
     {
@@ -302,7 +302,7 @@ namespace itk
     }
     mean /= RealType(N);
 
-    MatrixType Amm( A.rows(), A.cols() );
+    MatrixType Amm( N, G );
     Amm.fill( NumericTraits< RealType >::Zero );
 
     for (int i = 0; i < N; i++ )
@@ -328,8 +328,9 @@ namespace itk
     {
         varNoise = this->m_VarNoise;
     }
+    //elxout << "varNoise" << varNoise << std::endl;
 
-    /** Calculate standard deviation from columns */
+    /** Calculate variance of columns */
     vnl_vector< RealType > var( G );
     var.fill( NumericTraits< RealType >::Zero );
     for( int j = 0; j < G; j++)
@@ -539,7 +540,7 @@ namespace itk
     MatrixType A( datablock.extract( N, G ) );
 
     /** Calculate mean of from columns */
-    vnl_vector< RealType > mean( A.cols() );
+    vnl_vector< RealType > mean( G );
     mean.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < N; i++ )
     {
@@ -575,6 +576,7 @@ namespace itk
         varNoise = this->m_VarNoise;
     }
     elxout << "varNoise"<< varNoise << std::endl;
+    //this->m_CorrelationMatrix = A;
 
     /** Calculate standard deviation from columns */
     vnl_vector< RealType > var( G );
@@ -672,7 +674,7 @@ namespace itk
     dSdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
 
     /** Components for derivative of mean */
-    DerivativeMatrixType meandAdmu( G, P );
+    vnl_vector<DerivativeValueType> meandAdmu( P );
     DerivativeMatrixType meandSdmu( G, P );
     DerivativeMatrixType v_LAtmmmeandAdmu( G, P );
     DerivativeMatrixType vAtmmmeandAdmu( this->m_NumEigenValues, G*P );
@@ -740,7 +742,7 @@ namespace itk
             /** build metric derivative components */
             for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
             {
-                meandAdmu[ d ][ nzjis[ d ][ p ] ] += ( dMTdmu[ p ] )/double( N );
+                meandAdmu[ nzjis[ d ][ p ] ] += ( dMTdmu[ p ] )/double( N );
                 v_LAtmmdAdmu[ d ][ nzjis[ d ][ p ] ] += v_LAtmm[ pixelIndex ]*dMTdmu[ p ];
                 dSdmu[ d ][ nzjis[ d ][ p ] ] += Atmm[ d ][ pixelIndex ]*dSdmu_part1[ d ]*dMTdmu[ p ];
                 for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
@@ -759,12 +761,12 @@ namespace itk
             {
                 for(unsigned int p = 0; p < P; ++p )
                 {
-                    v_LAtmmmeandAdmu[ d ][ p ] += v_LAtmm[ i ]*meandAdmu[ d ][ p ];
-                    meandSdmu[ d ][ p ] += Atmm[ d ][ i ]*dSdmu_part1[ d ]*meandAdmu[ d ][ p ];
+                    v_LAtmmmeandAdmu[ d ][ p ] += v_LAtmm[ i ]*meandAdmu[ p ];
+                    meandSdmu[ d ][ p ] += Atmm[ d ][ i ]*dSdmu_part1[ d ]*meandAdmu[ p ];
 
                     for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
                     {
-                        vSAtmmmeandAdmu[ z ][ d + G*p ] += vSAtmm[ z ][ i ]*meandAdmu[ d ][ p ];
+                        vSAtmmmeandAdmu[ z ][ d + G*p ] += vSAtmm[ z ][ i ]*meandAdmu[ p ];
                     }
                 }
             }
@@ -802,11 +804,11 @@ namespace itk
 
 
 //    std::cout << "variance of noise: " << varNoise << std::endl;
-//    std::cout << "tracevSdCovdmuSv[0]: " << 2.0*tracevSdCovdmuSv[0]/(double(N)-1.0) <<
-//                 "\ntracevdSdmuCovSv[0]: " << 2.0*tracevdSdmuCovSv[0]/(double(N)-1.0) <<
-//                 "\n-tracevtSdvarNoisedmuSv[0]: " << 2.0*tracevSdvarNoisedmuSv[0]/(double(N)-1.0)  << std::endl;
+//    std::cout << "tracevSdCovdmuSv[6]: " << 2.0*tracevSdCovdmuSv[6]/(double(N)-1.0) <<
+//                 "\ntracevdSdmuCovSv[6]: " << 2.0*tracevdSdmuCovSv[6]/(double(N)-1.0) <<
+//                 "\n-tracevtSdvarNoisedmuSv[6]: " << 2.0*tracevSdvarNoisedmuSv[6]/(double(N)-1.0)  << std::endl;
 
-    tracevKvdmu = tracevdSdmuCovSv + tracevSdCovdmuSv - tracevSdvarNoisedmuSv;
+    tracevKvdmu = tracevdSdmuCovSv + tracevSdCovdmuSv + 1.5*tracevSdvarNoisedmuSv;
 
     tracevKvdmu *= (2.0/(DerivativeValueType(N) - 1.0)); //normalize
 
