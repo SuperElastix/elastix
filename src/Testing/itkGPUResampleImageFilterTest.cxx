@@ -15,6 +15,7 @@
 #include "itkGPUResampleImageFilter.h"
 #include "itkGPUExplicitSynchronization.h"
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
+#include "elxTestHelper.h"
 
 // ITK GPU transforms
 #include "itkGPUAffineTransform.h"
@@ -25,6 +26,11 @@
 
 // elastix GPU transforms
 #include "itkGPUAdvancedCombinationTransform.h"
+#include "itkGPUAdvancedMatrixOffsetTransformBase.h"
+#include "itkGPUAdvancedTranslationTransform.h"
+#include "itkGPUAdvancedBSplineDeformableTransform.h"
+#include "itkGPUAdvancedEuler3DTransform.h"
+#include "itkGPUAdvancedSimilarity3DTransform.h"
 
 // ITK GPU interpolate functions
 #include "itkGPUNearestNeighborInterpolateImageFunction.h"
@@ -37,17 +43,11 @@
 #include "itkImageFileWriter.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
+#include "itkOutputWindow.h"
 #include "itkTimeProbe.h"
 
 // elastix include files
 #include "itkCommandLineArgumentParser.h"
-
-// elastix transforms
-#include "itkAdvancedMatrixOffsetTransformBase.h"
-#include "itkAdvancedTranslationTransform.h"
-#include "itkAdvancedBSplineDeformableTransform.h"
-#include "itkAdvancedEuler3DTransform.h"
-#include "itkAdvancedSimilarity3DTransform.h"
 
 // Other include files
 #include <iomanip> // setprecision, etc.
@@ -72,27 +72,6 @@ std::string GetHelpString( void )
      << "  [-threads]    number of threads, default maximum\n";
   return ss.str();
 } // end GetHelpString()
-
-//------------------------------------------------------------------------------
-// Helper function to compute RMSE
-template< class TScalarType, class CPUImageType, class GPUImageType >
-TScalarType ComputeRMSE( const CPUImageType *cpuImage, const GPUImageType *gpuImage )
-{
-  itk::ImageRegionConstIterator< CPUImageType > cit(
-    cpuImage, cpuImage->GetLargestPossibleRegion() );
-  itk::ImageRegionConstIterator< GPUImageType > git(
-    gpuImage, gpuImage->GetLargestPossibleRegion() );
-
-  TScalarType rmse = 0.0;
-
-  for ( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
-  {
-    TScalarType err = static_cast< TScalarType >( cit.Get() ) - static_cast< TScalarType >( git.Get() );
-    rmse += err * err;
-  }
-  rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
-  return rmse;
-} // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
 template< class TransformType, class CompositeTransformType >
@@ -829,12 +808,13 @@ void CopyAdvancedCombinationTransform(
 // The following ITK transforms are supported:
 // itk::CompositeTransform
 // itk::AffineTransform
+// itk::TranslationTransform
 // itk::BSplineTransform
 // itk::Euler3DTransform
 // itk::Similarity3DTransform
-// itk::TranslationTransform
 //
 // The following elastix transforms are supported:
+// itk::AdvancedCombinationTransform
 // itk::AdvancedMatrixOffsetTransformBase
 // itk::AdvancedTranslationTransform
 // itk::AdvancedBSplineDeformableTransform
@@ -944,6 +924,9 @@ int main( int argc, char *argv[] )
   unsigned int maximumNumberOfThreads = itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
   parser->GetCommandLineArgument( "-threads", maximumNumberOfThreads );
   itk::MultiThreader::SetGlobalMaximumNumberOfThreads( maximumNumberOfThreads );
+
+  // Setup for debugging.
+  elastix::SetupForDebugging();
 
   const unsigned int splineOrderInterpolator = 3;
   std::cout << std::showpoint << std::setprecision( 4 );
@@ -1204,6 +1187,12 @@ int main( int argc, char *argv[] )
 
   // Advanced transforms factory registration
   itk::ObjectFactoryBase::RegisterFactory( itk::GPUAdvancedCombinationTransformFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUAdvancedMatrixOffsetTransformBaseFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUAdvancedTranslationTransformFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUAdvancedBSplineDeformableTransformFactory::New() );
+  //itk::ObjectFactoryBase::RegisterFactory(
+  // itk::GPUAdvancedEuler3DTransformFactory::New() );
+  itk::ObjectFactoryBase::RegisterFactory( itk::GPUAdvancedSimilarity3DTransformFactory::New() );
 
   // GPU part
   ReaderType::Pointer       gpuReader;
@@ -1217,6 +1206,7 @@ int main( int argc, char *argv[] )
   try
   {
     gpuFilter = FilterType::New();
+    elastix::ITKObjectEnableWarnings( gpuFilter.GetPointer() );
   }
   catch ( itk::ExceptionObject & e )
   {
@@ -1247,67 +1237,75 @@ int main( int argc, char *argv[] )
     return EXIT_FAILURE;
   }
 
-  if ( !useComboTransform )
+  try
   {
-    CopyTransform< TransformType, AffineTransformType, TranslationTransformType,
-                   BSplineTransformType, EulerTransformType, SimilarityTransformType >
-      ( cpuTransform, gpuTransform, bsplineParameters );
-  }
-  else
-  {
-    // Get CPU AdvancedCombinationTransform
-    const AdvancedCombinationTransformType *CPUAdvancedCombinationTransform =
-      dynamic_cast< const AdvancedCombinationTransformType * >( cpuTransform.GetPointer() );
-    if ( CPUAdvancedCombinationTransform )
+    if ( !useComboTransform )
     {
-      AdvancedTransformType::Pointer            currentTransform;
-      AdvancedCombinationTransformType::Pointer initialTransform;
-      AdvancedCombinationTransformType::Pointer tmpTransform =
-        AdvancedCombinationTransformType::New();
-      initialTransform = tmpTransform;
-      gpuTransform = tmpTransform;
-
-      for ( std::size_t i = 0; i < transforms.size(); i++ )
-      {
-        if ( i == 0 )
-        {
-          AdvancedCombinationTransformType::CurrentTransformConstPointer currentTransformCPU =
-            CPUAdvancedCombinationTransform->GetCurrentTransform();
-
-          CopyAdvancedCombinationTransform< AdvancedAffineTransformType, AdvancedTranslationTransformType,
-                                            AdvancedBSplineTransformType, AdvancedEulerTransformType,
-                                            AdvancedSimilarityTransformType, AdvancedCombinationTransformType >
-            ( initialTransform, currentTransformCPU );
-        }
-        else
-        {
-          AdvancedCombinationTransformType::Pointer initialNext =
-            AdvancedCombinationTransformType::New();
-
-          AdvancedCombinationTransformType::InitialTransformConstPointer initialTransformCPU =
-            CPUAdvancedCombinationTransform->GetInitialTransform();
-
-          const AdvancedCombinationTransformType *initialTransformCPUCasted =
-            dynamic_cast< const AdvancedCombinationTransformType * >( initialTransformCPU.GetPointer() );
-
-          AdvancedCombinationTransformType::CurrentTransformConstPointer currentTransformCPU =
-            initialTransformCPUCasted->GetCurrentTransform();
-
-          CopyAdvancedCombinationTransform< AdvancedAffineTransformType, AdvancedTranslationTransformType,
-                                            AdvancedBSplineTransformType, AdvancedEulerTransformType,
-                                            AdvancedSimilarityTransformType, AdvancedCombinationTransformType >
-            ( initialNext, currentTransformCPU );
-
-          initialTransform->SetInitialTransform( initialNext );
-          initialTransform = initialNext;
-        }
-      }
+      CopyTransform< TransformType, AffineTransformType, TranslationTransformType,
+        BSplineTransformType, EulerTransformType, SimilarityTransformType >
+        ( cpuTransform, gpuTransform, bsplineParameters );
     }
     else
     {
-      std::cerr << "ERROR: Unable to retrieve CPU AdvancedCombinationTransform." << std::endl;
-      return EXIT_FAILURE;
+      // Get CPU AdvancedCombinationTransform
+      const AdvancedCombinationTransformType *CPUAdvancedCombinationTransform =
+        dynamic_cast< const AdvancedCombinationTransformType * >( cpuTransform.GetPointer() );
+      if ( CPUAdvancedCombinationTransform )
+      {
+        AdvancedTransformType::Pointer            currentTransform;
+        AdvancedCombinationTransformType::Pointer initialTransform;
+        AdvancedCombinationTransformType::Pointer tmpTransform =
+          AdvancedCombinationTransformType::New();
+        initialTransform = tmpTransform;
+        gpuTransform = tmpTransform;
+
+        for ( std::size_t i = 0; i < transforms.size(); i++ )
+        {
+          if ( i == 0 )
+          {
+            AdvancedCombinationTransformType::CurrentTransformConstPointer currentTransformCPU =
+              CPUAdvancedCombinationTransform->GetCurrentTransform();
+
+            CopyAdvancedCombinationTransform< AdvancedAffineTransformType, AdvancedTranslationTransformType,
+              AdvancedBSplineTransformType, AdvancedEulerTransformType,
+              AdvancedSimilarityTransformType, AdvancedCombinationTransformType >
+              ( initialTransform, currentTransformCPU );
+          }
+          else
+          {
+            AdvancedCombinationTransformType::Pointer initialNext =
+              AdvancedCombinationTransformType::New();
+
+            AdvancedCombinationTransformType::InitialTransformConstPointer initialTransformCPU =
+              CPUAdvancedCombinationTransform->GetInitialTransform();
+
+            const AdvancedCombinationTransformType *initialTransformCPUCasted =
+              dynamic_cast< const AdvancedCombinationTransformType * >( initialTransformCPU.GetPointer() );
+
+            AdvancedCombinationTransformType::CurrentTransformConstPointer currentTransformCPU =
+              initialTransformCPUCasted->GetCurrentTransform();
+
+            CopyAdvancedCombinationTransform< AdvancedAffineTransformType, AdvancedTranslationTransformType,
+              AdvancedBSplineTransformType, AdvancedEulerTransformType,
+              AdvancedSimilarityTransformType, AdvancedCombinationTransformType >
+              ( initialNext, currentTransformCPU );
+
+            initialTransform->SetInitialTransform( initialNext );
+            initialTransform = initialNext;
+          }
+        }
+      }
+      else
+      {
+        std::cerr << "ERROR: Unable to retrieve CPU AdvancedCombinationTransform." << std::endl;
+        return EXIT_FAILURE;
+      }
     }
+  }
+  catch ( itk::ExceptionObject & e )
+  {
+    std::cerr << "ERROR: Caught ITK exception during copy transforms: " << e << std::endl;
+    return EXIT_FAILURE;
   }
 
   // Create GPU interpolator here
@@ -1377,7 +1375,7 @@ int main( int argc, char *argv[] )
   }
 
   // Compute RMSE
-  const double rmse = ComputeRMSE< double, OutputImageType, OutputImageType >
+  const double rmse = elastix::ComputeRMSE< double, OutputImageType, OutputImageType >
                         ( cpuFilter->GetOutput(), gpuFilter->GetOutput() );
   std::cout << " " << rmse << std::endl;
 
