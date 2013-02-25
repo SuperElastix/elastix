@@ -30,6 +30,10 @@ namespace itk
 * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
 *
 */
+
+/** Create a helper GPU Kernel class for GPUBSplineTransform */
+itkGPUKernelClassMacro( GPUBSplineTransformKernel );
+
 template< class TScalarType = float, unsigned int NDimensions = 3 >
 class ITK_EXPORT GPUBSplineBaseTransform : public GPUTransformBase
 {

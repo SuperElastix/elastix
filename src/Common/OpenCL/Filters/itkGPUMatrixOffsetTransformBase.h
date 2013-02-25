@@ -41,12 +41,12 @@ class ITK_EXPORT GPUMatrixOffsetTransformBase : public GPUTransformBase
 public:
   /** Standard typedefs   */
   typedef GPUMatrixOffsetTransformBase Self;
-  typedef GPUTransformBase             Superclass;
+  typedef GPUTransformBase             GPUSuperclass;
   typedef SmartPointer< Self >         Pointer;
   typedef SmartPointer< const Self >   ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUMatrixOffsetTransformBase, Superclass );
+  itkTypeMacro( GPUMatrixOffsetTransformBase, GPUSuperclass );
 
   /**  */
   virtual bool IsMatrixOffsetTransform() const { return true; }

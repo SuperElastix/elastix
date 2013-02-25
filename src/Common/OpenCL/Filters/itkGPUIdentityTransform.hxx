@@ -57,7 +57,7 @@ template< class TScalarType, unsigned int NDimensions, class TParentImageFilter 
 void GPUIdentityTransform< TScalarType, NDimensions, TParentImageFilter >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  Superclass::PrintSelf( os, indent );
+  CPUSuperclass::PrintSelf( os, indent );
 }
 } // end namespace itk
 

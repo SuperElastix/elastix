@@ -32,19 +32,19 @@ itkGPUKernelClassMacro( GPUTranslationTransformBaseKernel );
 *
 */
 template<
-  class TScalarType = float,   // Data type for scalars
+  class TScalarType = float, // Data type for scalars
   unsigned int NDimensions = 3 >
 class ITK_EXPORT GPUTranslationTransformBase : public GPUTransformBase
 {
 public:
   /** Standard typedefs   */
   typedef GPUTranslationTransformBase Self;
-  typedef GPUTransformBase            Superclass;
+  typedef GPUTransformBase            GPUSuperclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUTranslationTransformBase, Superclass );
+  itkTypeMacro( GPUTranslationTransformBase, GPUSuperclass );
 
   /**  */
   virtual bool IsTranslationTransform() const { return true; }

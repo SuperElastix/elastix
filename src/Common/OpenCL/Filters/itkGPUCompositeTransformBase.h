@@ -35,12 +35,12 @@ class ITK_EXPORT GPUCompositeTransformBase : public GPUTransformBase
 public:
   /** Standard class typedefs. */
   typedef GPUCompositeTransformBase  Self;
-  typedef GPUTransformBase           Superclass;
+  typedef GPUTransformBase           GPUSuperclass;
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GPUCompositeTransformBase, Superclass );
+  itkTypeMacro( GPUCompositeTransformBase, GPUSuperclass );
 
   /** Sub transform type */
   typedef TScalarType                                        ScalarType;

@@ -82,7 +82,7 @@ template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder
 void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
 ::SetCoefficientImages( const CoefficientImageArray & images )
 {
-  Superclass::SetCoefficientImages( images );
+  CPUSuperclass::SetCoefficientImages( images );
   CopyCoefficientImagesToGPU();
 }
 
@@ -91,7 +91,7 @@ template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder
 void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
 ::SetParameters( const ParametersType & parameters )
 {
-  Superclass::SetParameters( parameters );
+  CPUSuperclass::SetParameters( parameters );
   CopyCoefficientImagesToGPU();
 }
 
@@ -100,7 +100,7 @@ template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder
 void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
 ::CopyCoefficientImagesToGPU()
 {
-  typedef typename Superclass::ImageType                                                 CPUCoefficientImage;
+  typedef typename CPUSuperclass::ImageType                                              CPUCoefficientImage;
   typedef typename CPUCoefficientImage::PixelType                                        CPUCoefficientsImagePixelType;
   typedef GPUImage< CPUCoefficientsImagePixelType, CPUCoefficientImage::ImageDimension > GPUCoefficientsImageType;
 
@@ -129,9 +129,9 @@ void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFi
   typedef typename BSplineTransformType::CoefficientImageArray       CoefficientImageArray;
 
   // GPU Typedefs
-  typedef typename SuperSuperclass::GPUCoefficientImageType    GPUTransformCoefficientImageType;
-  typedef typename SuperSuperclass::GPUCoefficientImagePointer GPUTransformCoefficientImagePointer;
-  typedef typename SuperSuperclass::GPUDataManagerPointer      GPUDataManagerPointer;
+  typedef typename GPUSuperclass::GPUCoefficientImageType    GPUTransformCoefficientImageType;
+  typedef typename GPUSuperclass::GPUCoefficientImagePointer GPUTransformCoefficientImagePointer;
+  typedef typename GPUSuperclass::GPUDataManagerPointer      GPUDataManagerPointer;
 
   const CoefficientImageArray coefficientImageArray = this->GetCoefficientImages();
 
@@ -167,7 +167,7 @@ template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder
 void GPUBSplineTransform< TScalarType, NDimensions, VSplineOrder, TParentImageFilter >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  Superclass::PrintSelf( os, indent );
+  CPUSuperclass::PrintSelf( os, indent );
 }
 } // namespace
 

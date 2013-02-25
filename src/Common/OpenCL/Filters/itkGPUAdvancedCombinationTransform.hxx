@@ -33,7 +33,7 @@ size_t GPUAdvancedCombinationTransform< TScalarType, NDimensions, TParentImageFi
     if ( currentTransformCasted )
     {
       InitialTransformConstPointer initialTransform = currentTransformCasted->GetInitialTransform();
-      const CPUSuperclass *initialTransformCasted =
+      const CPUSuperclass *        initialTransformCasted =
         dynamic_cast< const CPUSuperclass * >( initialTransform.GetPointer() );
 
       if ( initialTransformCasted )
@@ -61,7 +61,7 @@ GPUAdvancedCombinationTransform< TScalarType, NDimensions, TParentImageFilter >
   if ( n > numTransforms - 1 )
   {
     itkExceptionMacro( << " The AdvancedCombinationTransform contains "
-      << numTransforms << " transforms. Unable to retrieve Nth transform with index " << n );
+                       << numTransforms << " transforms. Unable to retrieve Nth transform with index " << n );
   }
 
   TransformTypePointer    nthTransform;
@@ -82,7 +82,7 @@ GPUAdvancedCombinationTransform< TScalarType, NDimensions, TParentImageFilter >
     if ( currentTransformCasted )
     {
       InitialTransformPointer initialTransform = currentTransformCasted->GetInitialTransform();
-      CPUSuperclass *initialTransformCasted =
+      CPUSuperclass *         initialTransformCasted =
         dynamic_cast< CPUSuperclass * >( initialTransform.GetPointer() );
 
       if ( initialTransformCasted )
@@ -110,7 +110,7 @@ GPUAdvancedCombinationTransform< TScalarType, NDimensions, TParentImageFilter >
   if ( n > numTransforms - 1 )
   {
     itkExceptionMacro( << " The AdvancedCombinationTransform contains "
-      << numTransforms << " transforms. Unable to retrieve Nth transform with index " << n );
+                       << numTransforms << " transforms. Unable to retrieve Nth transform with index " << n );
   }
 
   TransformTypeConstPointer    nthTransform;
@@ -131,7 +131,7 @@ GPUAdvancedCombinationTransform< TScalarType, NDimensions, TParentImageFilter >
     if ( currentTransformCasted )
     {
       InitialTransformConstPointer initialTransform = currentTransformCasted->GetInitialTransform();
-      const CPUSuperclass *initialTransformCasted =
+      const CPUSuperclass *        initialTransformCasted =
         dynamic_cast< const CPUSuperclass * >( initialTransform.GetPointer() );
 
       if ( initialTransformCasted )

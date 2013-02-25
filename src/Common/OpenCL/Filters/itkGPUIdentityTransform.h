@@ -42,7 +42,8 @@ class GPUIdentityTransform : public TParentImageFilter, public GPUTransformBase
 public:
   /** Standard class typedefs. */
   typedef GPUIdentityTransform       Self;
-  typedef TParentImageFilter         Superclass;
+  typedef TParentImageFilter         CPUSuperclass;
+  typedef GPUTransformBase           GPUSuperclass;
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
 

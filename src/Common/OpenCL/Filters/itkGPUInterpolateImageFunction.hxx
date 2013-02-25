@@ -203,7 +203,7 @@ template< class TInputImage, class TCoordRep, class TParentImageFilter >
 void GPUInterpolateImageFunction< TInputImage, TCoordRep, TParentImageFilter >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  Superclass::PrintSelf( os, indent );
+  CPUSuperclass::PrintSelf( os, indent );
 }
 } // end namespace itk
 

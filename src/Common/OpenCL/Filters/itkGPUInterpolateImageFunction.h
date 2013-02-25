@@ -29,7 +29,8 @@ class ITK_EXPORT GPUInterpolateImageFunction :
 public:
   /** Standard class typedefs. */
   typedef GPUInterpolateImageFunction Self;
-  typedef TParentImageFilter          Superclass;
+  typedef TParentImageFilter          CPUSuperclass;
+  typedef GPUInterpolatorBase         GPUSuperclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
 
@@ -41,9 +42,9 @@ public:
                        TInputImage::ImageDimension );
 
   /** Superclass typedef support. */
-  typedef typename Superclass::InputImageType InputImageType;
-  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
-  typedef typename Superclass::CoordRepType CoordRepType;
+  typedef typename CPUSuperclass::InputImageType InputImageType;
+  typedef typename CPUSuperclass::ContinuousIndexType ContinuousIndexType;
+  typedef typename CPUSuperclass::CoordRepType CoordRepType;
 
 protected:
   GPUInterpolateImageFunction();

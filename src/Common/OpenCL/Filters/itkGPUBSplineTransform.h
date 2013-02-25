@@ -32,10 +32,6 @@ namespace itk
 * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
 *
 */
-
-/** Create a helper GPU Kernel class for GPUBSplineTransform */
-itkGPUKernelClassMacro( GPUBSplineTransformKernel );
-
 template< class TScalarType = float, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3,
           class TParentImageFilter = BSplineTransform< TScalarType, NDimensions, VSplineOrder > >
 class GPUBSplineTransform :
@@ -44,12 +40,12 @@ class GPUBSplineTransform :
 public:
   /** Standard class typedefs. */
   typedef GPUBSplineTransform                                 Self;
-  typedef TParentImageFilter                                  Superclass;
-  typedef GPUBSplineBaseTransform< TScalarType, NDimensions > SuperSuperclass;
+  typedef TParentImageFilter                                  CPUSuperclass;
+  typedef GPUBSplineBaseTransform< TScalarType, NDimensions > GPUSuperclass;
   typedef SmartPointer< Self >                                Pointer;
   typedef SmartPointer< const Self >                          ConstPointer;
-  typedef typename Superclass::ParametersType                 ParametersType;
-  typedef typename Superclass::CoefficientImageArray          CoefficientImageArray;
+  typedef typename CPUSuperclass::ParametersType              ParametersType;
+  typedef typename CPUSuperclass::CoefficientImageArray       CoefficientImageArray;
 
   itkNewMacro( Self );
 
