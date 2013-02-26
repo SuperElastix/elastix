@@ -15,19 +15,17 @@
 #ifndef __elxAdaptiveStochasticGradientDescent_h
 #define __elxAdaptiveStochasticGradientDescent_h
 
+#include "itkComputeJacobianTerms.h"
 #include "itkAdaptiveStochasticGradientDescentOptimizer.h"
-#include "itkImageGridSampler.h"
-#include "itkImageRandomCoordinateSampler.h"
 #include "elxIncludes.h"
 #include "elxProgressCommand.h"
 #include "itkAdvancedTransform.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
+
 namespace elastix
 {
-
-
-  /**
+ /**
   * \class AdaptiveStochasticGradientDescent
   * \brief A gradient descent optimizer with an adaptive gain.
   *
@@ -259,12 +257,15 @@ protected:
   /** Protected typedefs */
   typedef typename RegistrationType::FixedImageType   FixedImageType;
   typedef typename RegistrationType::MovingImageType  MovingImageType;
+
   typedef typename FixedImageType::RegionType         FixedImageRegionType;
   typedef typename FixedImageType::IndexType          FixedImageIndexType;
   typedef typename FixedImageType::PointType          FixedImagePointType;
   typedef typename RegistrationType::ITKBaseType      itkRegistrationType;
   typedef typename itkRegistrationType::TransformType TransformType;
   typedef typename TransformType::JacobianType        JacobianType;
+  typedef itk::ComputeJacobianTerms<
+    FixedImageType,TransformType >                    ComputeJacobianTermsType;
   typedef typename JacobianType::ValueType            JacobianValueType;
   struct SettingsType { double a, A, alpha, fmax, fmin, omega; };
   typedef typename std::vector<SettingsType>          SettingsVectorType;
@@ -343,23 +344,6 @@ protected:
   virtual void SampleGradients( const ParametersType & mu0,
     double perturbationSigma, double & gg, double & ee );
 
-  /** Returns a container of fixed image samples, sampled using a grid sampler
-   * The grid size is determined from the user entered number of Jacobian measurements,
-   * or a default value of 200 is used.
-   * The actual number of samples depends on the presence of masks, and
-   * the restriction that the grid spacing of the grid sampler must be integer.
-   * The samples input variable contains the sample container after execution.
-   * It does not have to be initialized/allocated before.
-   */
-  virtual void SampleFixedImageForJacobianTerms(
-    ImageSampleContainerPointer & sampleContainer );
-
-  /** Functions to compute the Jacobian terms needed for the automatic
-   * parameter estimation.
-   */
-  virtual void ComputeJacobianTerms( double & TrC, double & TrCC,
-    double & maxJJ, double & maxJCJ );
-
   /** Helper function, which calls GetScaledValueAndDerivative and does
    * some exception handling. Used by SampleGradients.
    */
@@ -374,10 +358,10 @@ protected:
 private:
 
   AdaptiveStochasticGradientDescent( const Self& );  // purposely not implemented
-  void operator=( const Self& );              // purposely not implemented
+  void operator=( const Self& );                     // purposely not implemented
 
-  bool m_AutomaticParameterEstimation;
-  double m_MaximumStepLength;
+  bool    m_AutomaticParameterEstimation;
+  double  m_MaximumStepLength;
 
   /** Private variables for the sampling attempts. */
   SizeValueType m_MaximumNumberOfSamplingAttempts;
