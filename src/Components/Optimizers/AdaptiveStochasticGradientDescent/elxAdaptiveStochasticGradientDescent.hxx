@@ -22,11 +22,6 @@
 #include <sstream>
 #include <algorithm>
 #include <utility>
-#include "vnl/vnl_math.h"
-#include "vnl/vnl_fastops.h"
-#include "vnl/vnl_diag_matrix.h"
-#include "vnl/vnl_sparse_matrix.h"
-#include "vnl/vnl_matlab_filewrite.h"
 #include "itkAdvancedImageToImageMetric.h"
 #include "elxTimer.h"
 
@@ -552,7 +547,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
-  ComputeJacobianTermsType::Pointer computeJacobianTerms = ComputeJacobianTermsType::New();
+  typename ComputeJacobianTermsType::Pointer computeJacobianTerms = ComputeJacobianTermsType::New();
   computeJacobianTerms->SetFixedImage( testPtr->GetFixedImage() );
   computeJacobianTerms->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
   computeJacobianTerms->SetFixedImageMask( testPtr->GetFixedImageMask() );
@@ -1002,3 +997,4 @@ AdaptiveStochasticGradientDescent<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxAdaptiveStochasticGradientDescent_hxx
+

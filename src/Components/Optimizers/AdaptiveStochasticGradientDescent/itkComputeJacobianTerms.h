@@ -62,7 +62,7 @@ public:
   typedef typename FixedImageMaskType::Pointer                            FixedImageMaskPointer;
   typedef typename FixedImageMaskType::ConstPointer                       FixedImageMaskConstPointer;
 
-  typedef typename ScaledSingleValuedNonLinearOptimizer                   ScaledSingleValuedNonLinearOptimizerType;
+  typedef ScaledSingleValuedNonLinearOptimizer                            ScaledSingleValuedNonLinearOptimizerType;
   typedef typename ScaledSingleValuedNonLinearOptimizerType
     ::ScaledCostFunctionPointer                                           ScaledCostFunctionPointer;
   typedef typename ScaledSingleValuedNonLinearOptimizerType::ScalesType   ScalesType;
