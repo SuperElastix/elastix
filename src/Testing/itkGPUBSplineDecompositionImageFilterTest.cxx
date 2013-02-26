@@ -15,6 +15,7 @@
 #include "itkGPUBSplineDecompositionImageFilter.h"
 #include "itkGPUExplicitSynchronization.h"
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
+#include "elxTestHelper.h"
 
 // ITK include files
 #include "itkImageFileReader.h"
@@ -23,26 +24,6 @@
 #include "itkTimeProbe.h"
 
 #include <iomanip> // setprecision, etc.
-
-// Helper function
-template< class ImageType >
-double ComputeRMSE( const ImageType *cpuImage, const ImageType *gpuImage )
-{
-  itk::ImageRegionConstIterator< ImageType > cit(
-    cpuImage, cpuImage->GetLargestPossibleRegion() );
-  itk::ImageRegionConstIterator< ImageType > git(
-    gpuImage, gpuImage->GetLargestPossibleRegion() );
-
-  double rmse = 0.0;
-
-  for ( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
-  {
-    double err = static_cast< double >( cit.Get() ) - static_cast< double >( git.Get() );
-    rmse += err * err;
-  }
-  rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
-  return rmse;
-} // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
 // This test compares the CPU with the GPU version of the
@@ -66,6 +47,9 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: OpenCL-enabled GPU is not present." << std::endl;
     return EXIT_FAILURE;
   }
+
+  // Setup for debugging.
+  elastix::SetupForDebugging();
 
   /** Get the command line arguments. */
   std::string        inputFileName = argv[1];
@@ -94,8 +78,8 @@ int main( int argc, char *argv[] )
   reader->Update();
 
   // Construct the filter
-  FilterType::Pointer filter = FilterType::New();
-  filter->SetSplineOrder( splineOrder );
+  FilterType::Pointer cpuFilter = FilterType::New();
+  cpuFilter->SetSplineOrder( splineOrder );
 
   std::cout << "Testing the BSplineDecompositionImageFilter, CPU vs GPU:\n";
   std::cout << "CPU/GPU splineOrder #threads time speedup RMSE\n";
@@ -105,27 +89,27 @@ int main( int argc, char *argv[] )
   cputimer.Start();
   for ( unsigned int i = 0; i < runTimes; i++ )
   {
-    filter->SetInput( reader->GetOutput() );
+    cpuFilter->SetInput( reader->GetOutput() );
     try
     {
-      filter->Update();
+      cpuFilter->Update();
     }
     catch ( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: " << e << std::endl;
       return EXIT_FAILURE;
     }
-    filter->Modified();
+    cpuFilter->Modified();
   }
   cputimer.Stop();
 
   std::cout << "CPU " << splineOrder
-            << " " << filter->GetNumberOfThreads()
+            << " " << cpuFilter->GetNumberOfThreads()
             << " " << cputimer.GetMean() / runTimes << std::endl;
 
   /** Write the CPU result. */
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( filter->GetOutput() );
+  writer->SetInput( cpuFilter->GetOutput() );
   writer->SetFileName( outputFileNameCPU.c_str() );
   try
   {
@@ -150,6 +134,7 @@ int main( int argc, char *argv[] )
   try
   {
     gpuFilter = FilterType::New();
+    elastix::ITKObjectEnableWarnings( gpuFilter.GetPointer() );
   }
   catch ( itk::ExceptionObject & e )
   {
@@ -211,7 +196,8 @@ int main( int argc, char *argv[] )
   }
 
   // Compute RMSE
-  const double rmse = ComputeRMSE< ImageType >( filter->GetOutput(), gpuFilter->GetOutput() );
+  const double rmse = elastix::ComputeRMSE< double, ImageType, ImageType >
+    ( cpuFilter->GetOutput(), gpuFilter->GetOutput() );
   std::cout << " " << rmse << std::endl;
 
   // Check

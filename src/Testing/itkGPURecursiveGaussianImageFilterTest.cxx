@@ -14,6 +14,7 @@
 // GPU include files
 #include "itkGPURecursiveGaussianImageFilter.h"
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
+#include "elxTestHelper.h"
 
 // ITK include files
 #include "itkImageFileReader.h"
@@ -22,26 +23,6 @@
 #include "itkTimeProbe.h"
 
 #include <iomanip> // setprecision, etc.
-
-// Helper function
-template< class ImageType >
-double ComputeRMSE( const ImageType *cpuImage, const ImageType *gpuImage )
-{
-  itk::ImageRegionConstIterator< ImageType > cit(
-    cpuImage, cpuImage->GetLargestPossibleRegion() );
-  itk::ImageRegionConstIterator< ImageType > git(
-    gpuImage, gpuImage->GetLargestPossibleRegion() );
-
-  double rmse = 0.0;
-
-  for ( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
-  {
-    double err = static_cast< double >( cit.Get() ) - static_cast< double >( git.Get() );
-    rmse += err * err;
-  }
-  rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
-  return rmse;
-} // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
 // This test compares the CPU with the GPU version of the
@@ -79,6 +60,9 @@ int main( int argc, char *argv[] )
     return EXIT_FAILURE;
   }
 
+  // Setup for debugging.
+  elastix::SetupForDebugging();
+
   // Some hard-coded testing options
   const std::string  inputFileName = argv[1];
   const std::string  outputFileNameCPU = argv[2];
@@ -107,7 +91,7 @@ int main( int argc, char *argv[] )
   itk::TimeProbe cputimer;
   itk::TimeProbe gputimer;
 
-  CPUFilterType::Pointer CPUFilter = CPUFilterType::New();
+  CPUFilterType::Pointer cpuFilter = CPUFilterType::New();
 
   // Test 1~n threads for CPU
   // Speed CPU vs GPU
@@ -118,11 +102,11 @@ int main( int argc, char *argv[] )
   {
     // Test CPU
     cputimer.Start();
-    CPUFilter->SetNumberOfThreads( nThreads );
-    CPUFilter->SetInput( reader->GetOutput() );
-    CPUFilter->SetSigma( sigma );
-    CPUFilter->SetDirection( direction );
-    CPUFilter->Update();
+    cpuFilter->SetNumberOfThreads( nThreads );
+    cpuFilter->SetInput( reader->GetOutput() );
+    cpuFilter->SetSigma( sigma );
+    cpuFilter->SetDirection( direction );
+    cpuFilter->Update();
     cputimer.Stop();
 
     std::cout << "CPU " << sigma << " " << direction << " " << nThreads
@@ -131,7 +115,7 @@ int main( int argc, char *argv[] )
 
   /** Write the CPU result. */
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( CPUFilter->GetOutput() );
+  writer->SetInput( cpuFilter->GetOutput() );
   writer->SetFileName( outputFileNameCPU.c_str() );
   try
   {
@@ -146,10 +130,11 @@ int main( int argc, char *argv[] )
   // Construct the filter
   // Use a try/catch, because construction of this filter will trigger
   // OpenCL compilation, which may fail.
-  GPUFilterType::Pointer GPUFilter;
+  GPUFilterType::Pointer gpuFilter;
   try
   {
-    GPUFilter = GPUFilterType::New();
+    gpuFilter = GPUFilterType::New();
+    elastix::ITKObjectEnableWarnings( gpuFilter.GetPointer() );
   }
   catch ( itk::ExceptionObject & e )
   {
@@ -159,10 +144,10 @@ int main( int argc, char *argv[] )
 
   // Test GPU
   gputimer.Start();
-  GPUFilter->SetInput( reader->GetOutput() );
-  GPUFilter->SetSigma( sigma );
-  GPUFilter->SetDirection( direction );
-  GPUFilter->Update();
+  gpuFilter->SetInput( reader->GetOutput() );
+  gpuFilter->SetSigma( sigma );
+  gpuFilter->SetDirection( direction );
+  gpuFilter->Update();
   gputimer.Stop();
 
   std::cout << "GPU " << sigma << " " << direction << " x "
@@ -171,7 +156,7 @@ int main( int argc, char *argv[] )
 
   /** Write the GPU result. */
   WriterType::Pointer gpuWriter = WriterType::New();
-  gpuWriter->SetInput( GPUFilter->GetOutput() );
+  gpuWriter->SetInput( gpuFilter->GetOutput() );
   gpuWriter->SetFileName( outputFileNameGPU.c_str() );
   try
   {
@@ -184,7 +169,8 @@ int main( int argc, char *argv[] )
   }
 
   // Compute RMSE
-  const double rmse = ComputeRMSE< OutputImageType >( CPUFilter->GetOutput(), GPUFilter->GetOutput() );
+  const double rmse = elastix::ComputeRMSE< double, OutputImageType, OutputImageType >
+    ( cpuFilter->GetOutput(), gpuFilter->GetOutput() );
   std::cout << " " << rmse << std::endl;
 
   // Check
@@ -201,12 +187,12 @@ int main( int argc, char *argv[] )
   for ( direction = 0; direction < ImageDimension; direction++ )
   {
     cputimer.Start();
-    CPUFilter->SetNumberOfThreads( maximumNumberOfThreads );
-    CPUFilter->SetInput( reader->GetOutput() );
-    CPUFilter->SetSigma( sigma );
-    CPUFilter->SetDirection( direction );
-    CPUFilter->Modified();
-    CPUFilter->Update();
+    cpuFilter->SetNumberOfThreads( maximumNumberOfThreads );
+    cpuFilter->SetInput( reader->GetOutput() );
+    cpuFilter->SetSigma( sigma );
+    cpuFilter->SetDirection( direction );
+    cpuFilter->Modified();
+    cpuFilter->Update();
     cputimer.Stop();
 
     std::cout << "CPU " << sigma << " " << direction << " " << maximumNumberOfThreads
@@ -214,18 +200,19 @@ int main( int argc, char *argv[] )
 
     // Test GPU
     gputimer.Start();
-    GPUFilter->SetInput( reader->GetOutput() );
-    GPUFilter->SetSigma( sigma );
-    GPUFilter->SetDirection( direction );
-    GPUFilter->Modified();
-    GPUFilter->Update();
+    gpuFilter->SetInput( reader->GetOutput() );
+    gpuFilter->SetSigma( sigma );
+    gpuFilter->SetDirection( direction );
+    gpuFilter->Modified();
+    gpuFilter->Update();
     gputimer.Stop();
 
     std::cout << "GPU " << sigma << " " << direction << " x "
               << gputimer.GetMean()
               << " " << cputimer.GetMean() / gputimer.GetMean();
 
-    double rmse = ComputeRMSE< OutputImageType >( CPUFilter->GetOutput(), GPUFilter->GetOutput() );
+    const double rmse = elastix::ComputeRMSE< double, OutputImageType, OutputImageType >
+      ( cpuFilter->GetOutput(), gpuFilter->GetOutput() );
     std::cout << " " << rmse << std::endl;
 
     // Check

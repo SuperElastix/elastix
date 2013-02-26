@@ -18,6 +18,7 @@
 #include "itkGPUCastImageFilter.h"
 #include "itkGPUExplicitSynchronization.h"
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
+#include "elxTestHelper.h"
 
 // ITK include files
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
@@ -27,26 +28,6 @@
 #include "itkTimeProbe.h"
 
 #include <iomanip> // setprecision, etc.
-
-// Helper function
-template< class ImageType >
-double ComputeRMSE( const ImageType *cpuImage, const ImageType *gpuImage )
-{
-  itk::ImageRegionConstIterator< ImageType > cit(
-    cpuImage, cpuImage->GetLargestPossibleRegion() );
-  itk::ImageRegionConstIterator< ImageType > git(
-    gpuImage, gpuImage->GetLargestPossibleRegion() );
-
-  double rmse = 0.0;
-
-  for ( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
-  {
-    double err = static_cast< double >( cit.Get() ) - static_cast< double >( git.Get() );
-    rmse += err * err;
-  }
-  rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
-  return rmse;
-} // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
 // This test compares the CPU with the GPU version of the
@@ -70,6 +51,9 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: OpenCL-enabled GPU is not present." << std::endl;
     return EXIT_FAILURE;
   }
+
+  // Setup for debugging.
+  elastix::SetupForDebugging();
 
   /** Get the command line arguments. */
   const std::string  inputFileName = argv[1];
@@ -167,6 +151,7 @@ int main( int argc, char *argv[] )
   try
   {
     gpuFilter = FilterType::New();
+    elastix::ITKObjectEnableWarnings( gpuFilter.GetPointer() );
   }
   catch ( itk::ExceptionObject & e )
   {
@@ -235,7 +220,8 @@ int main( int argc, char *argv[] )
   }
 
   // Compute RMSE
-  const double rmse = ComputeRMSE< OutputImageType >( filter->GetOutput(), gpuFilter->GetOutput() );
+  const double rmse = elastix::ComputeRMSE< double, OutputImageType, OutputImageType >
+    ( filter->GetOutput(), gpuFilter->GetOutput() );
   std::cout << " " << rmse << std::endl;
 
   // Check

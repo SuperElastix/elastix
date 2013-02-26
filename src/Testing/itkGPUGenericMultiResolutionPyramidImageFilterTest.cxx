@@ -21,6 +21,7 @@
 #include "itkGPUShrinkImageFilter.h"
 #include "itkGPUExplicitSynchronization.h"
 #include "itkOpenCLUtil.h" // IsGPUAvailable()
+#include "elxTestHelper.h"
 
 // ITK include files
 #include "itkImageFileReader.h"
@@ -30,26 +31,6 @@
 #include "itkTimeProbe.h"
 
 #include <iomanip> // setprecision, etc.
-
-// Helper function
-template< class ImageType >
-double ComputeRMSE( const ImageType *cpuImage, const ImageType *gpuImage )
-{
-  itk::ImageRegionConstIterator< ImageType > cit(
-    cpuImage, cpuImage->GetLargestPossibleRegion() );
-  itk::ImageRegionConstIterator< ImageType > git(
-    gpuImage, gpuImage->GetLargestPossibleRegion() );
-
-  double rmse = 0.0;
-
-  for ( cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git )
-  {
-    double err = static_cast< double >( cit.Get() ) - static_cast< double >( git.Get() );
-    rmse += err * err;
-  }
-  rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
-  return rmse;
-} // end ComputeRMSE()
 
 //------------------------------------------------------------------------------
 // This test compares the CPU with the GPU version of the
@@ -73,6 +54,9 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: OpenCL-enabled GPU is not present." << std::endl;
     return EXIT_FAILURE;
   }
+
+  // Setup for debugging.
+  elastix::SetupForDebugging();
 
   /** Get the command line arguments. */
   const std::string  inputFileName = argv[1];
@@ -107,7 +91,7 @@ int main( int argc, char *argv[] )
   reader->Update();
 
   // Construct the filter
-  FilterType::Pointer filter = FilterType::New();
+  FilterType::Pointer cpuFilter = FilterType::New();
 
   typedef FilterType::RescaleScheduleType   RescaleScheduleType;
   typedef FilterType::SmoothingScheduleType SmoothingScheduleType;
@@ -130,13 +114,13 @@ int main( int argc, char *argv[] )
     }
   }
 
-  filter->SetNumberOfLevels( numberOfLevels );
-  filter->SetRescaleSchedule( rescaleSchedule );
-  filter->SetSmoothingSchedule( smoothingSchedule );
-  filter->SetUseMultiResolutionRescaleSchedule( useMultiResolutionRescaleSchedule );
-  filter->SetUseMultiResolutionSmoothingSchedule( useMultiResolutionSmoothingSchedule );
-  filter->SetUseShrinkImageFilter( useShrinkImageFilter );
-  filter->SetComputeOnlyForCurrentLevel( computeOnlyForCurrentLevel );
+  cpuFilter->SetNumberOfLevels( numberOfLevels );
+  cpuFilter->SetRescaleSchedule( rescaleSchedule );
+  cpuFilter->SetSmoothingSchedule( smoothingSchedule );
+  cpuFilter->SetUseMultiResolutionRescaleSchedule( useMultiResolutionRescaleSchedule );
+  cpuFilter->SetUseMultiResolutionSmoothingSchedule( useMultiResolutionSmoothingSchedule );
+  cpuFilter->SetUseShrinkImageFilter( useShrinkImageFilter );
+  cpuFilter->SetComputeOnlyForCurrentLevel( computeOnlyForCurrentLevel );
 
   std::cout << "RescaleSchedule:\n" << rescaleSchedule << "\n";
   std::cout << "SmoothingSchedule:\n" << smoothingSchedule << "\n";
@@ -149,29 +133,29 @@ int main( int argc, char *argv[] )
   cputimer.Start();
   for ( unsigned int i = 0; i < runTimes; i++ )
   {
-    filter->SetInput( reader->GetOutput() );
+    cpuFilter->SetInput( reader->GetOutput() );
 
     if ( !computeOnlyForCurrentLevel )
     {
       try
       {
-        filter->Update();
+        cpuFilter->Update();
       }
       catch ( itk::ExceptionObject & e )
       {
         std::cerr << "ERROR: " << e << std::endl;
         return EXIT_FAILURE;
       }
-      filter->Modified();
+      cpuFilter->Modified();
     }
     else
     {
-      for ( unsigned int j = 0; j < filter->GetNumberOfLevels(); j++ )
+      for ( unsigned int j = 0; j < cpuFilter->GetNumberOfLevels(); j++ )
       {
-        filter->SetCurrentLevel( j );
+        cpuFilter->SetCurrentLevel( j );
         try
         {
-          filter->Update();
+          cpuFilter->Update();
         }
         catch ( itk::ExceptionObject & e )
         {
@@ -181,7 +165,7 @@ int main( int argc, char *argv[] )
         // Modify the filter, only not the last iteration
         if ( i != runTimes - 1 )
         {
-          filter->Modified();
+          cpuFilter->Modified();
         }
       }
     }
@@ -189,12 +173,12 @@ int main( int argc, char *argv[] )
   cputimer.Stop();
 
   std::cout << "CPU "
-            << filter->GetNumberOfThreads()
+            << cpuFilter->GetNumberOfThreads()
             << " " << cputimer.GetMean() / runTimes << std::endl;
 
   /** Write the CPU result. */
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( filter->GetOutput( numberOfLevels - 1 ) );
+  writer->SetInput( cpuFilter->GetOutput( numberOfLevels - 1 ) );
   writer->SetFileName( outputFileNameCPU.c_str() );
   try
   {
@@ -230,6 +214,7 @@ int main( int argc, char *argv[] )
   try
   {
     gpuFilter = FilterType::New();
+    elastix::ITKObjectEnableWarnings( gpuFilter.GetPointer() );
   }
   catch ( itk::ExceptionObject & e )
   {
@@ -327,8 +312,8 @@ int main( int argc, char *argv[] )
   }
 
   // Compute RMSE
-  const double rmse = ComputeRMSE< OutputImageType >(
-    filter->GetOutput( numberOfLevels - 1 ), gpuFilter->GetOutput( numberOfLevels - 1 ) );
+  const double rmse = elastix::ComputeRMSE< double, OutputImageType, OutputImageType >
+    ( cpuFilter->GetOutput( numberOfLevels - 1 ), gpuFilter->GetOutput( numberOfLevels - 1 ) );
   std::cout << " " << rmse << std::endl;
 
   // Check
