@@ -295,6 +295,7 @@ elx_add_test( BSplineSODerivativeKernelFunctionTest "" "Common" )
 elx_add_test( BSplineInterpolationWeightFunctionTest "" "Common" )
 elx_add_test( BSplineInterpolationDerivativeWeightFunctionTest "" "Common" )
 elx_add_test( BSplineInterpolationSODerivativeWeightFunctionTest "" "Common" )
+elx_add_test( CompareCompositeTransformsTest "" "Common" )
 elx_add_test( MevisDicomTiffImageIOTest "" "Common" )
 elx_add_test( ThinPlateSplineTransformPerformanceTest "" "Common"
   ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt

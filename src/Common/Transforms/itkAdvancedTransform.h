@@ -121,6 +121,11 @@ public:
   typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
 
+  /** Transform typedefs for the from Superclass. */
+  typedef typename Superclass                       TransformType;
+  typedef typename TransformType::Pointer           TransformTypePointer;
+  typedef typename TransformType::ConstPointer      TransformTypeConstPointer;
+
   /** Types for the (Spatial)Jacobian/Hessian.
    * Using an itk::FixedArray instead of an std::vector gives a performance
    * gain for the SpatialHessianType.

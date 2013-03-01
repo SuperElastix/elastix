@@ -99,6 +99,130 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
 
 
 /**
+ * ***************** GetNumberOfTransforms **************************
+ */
+
+template <typename TScalarType, unsigned int NDimensions>
+SizeValueType
+AdvancedCombinationTransform<TScalarType, NDimensions>
+::GetNumberOfTransforms( void ) const
+{
+  SizeValueType num = 0;
+  CurrentTransformConstPointer currentTransform = GetCurrentTransform();
+
+  if( currentTransform.IsNotNull() )
+  {
+    InitialTransformConstPointer initialTransform = GetInitialTransform();
+    if( initialTransform.IsNotNull() )
+    {
+      const Self *initialTransformCasted =
+        dynamic_cast< const Self * >( initialTransform.GetPointer() );
+      if ( initialTransformCasted )
+      {
+        num += initialTransformCasted->GetNumberOfTransforms() + 1;
+      }
+    }
+    else
+    {
+      num++;
+    }
+  }
+
+  return num;
+} // end GetNumberOfTransforms()
+
+
+/**
+ * ***************** GetNthTransform **************************
+ */
+
+template < typename TScalarType, unsigned int NDimensions >
+typename AdvancedCombinationTransform<TScalarType, NDimensions>::TransformTypePointer
+AdvancedCombinationTransform<TScalarType, NDimensions>
+::GetNthTransform( SizeValueType n )
+{
+  const SizeValueType numTransforms = GetNumberOfTransforms();
+  if ( n > numTransforms - 1 )
+  {
+    itkExceptionMacro( << "The AdvancedCombinationTransform contains "
+      << numTransforms << " transforms. Unable to retrieve Nth current transform with index " << n );
+  }
+
+  TransformTypePointer    nthTransform;
+  CurrentTransformPointer currentTransform = GetCurrentTransform();
+
+  if( currentTransform.IsNotNull() )
+  {
+    if ( n == 0 )
+    {
+      nthTransform = currentTransform;
+    }
+    else
+    {
+      InitialTransformPointer initialTransform = GetInitialTransform();
+      if( initialTransform.IsNotNull() )
+      {
+        Self *initialTransformCasted =
+          dynamic_cast< Self * >( initialTransform.GetPointer() );
+        if ( initialTransformCasted )
+        {
+          const SizeValueType id = n - 1;
+          nthTransform = initialTransformCasted->GetNthTransform(id);
+        }
+      }
+    }
+  }
+
+  return nthTransform;
+} // end GetNthTransform()
+
+
+/**
+ * ***************** GetNthTransform const ********************
+ */
+
+template < typename TScalarType, unsigned int NDimensions >
+typename AdvancedCombinationTransform<TScalarType, NDimensions>::TransformTypeConstPointer
+AdvancedCombinationTransform<TScalarType, NDimensions>
+::GetNthTransform( SizeValueType n ) const
+{
+  const SizeValueType numTransforms = GetNumberOfTransforms();
+  if ( n > numTransforms - 1 )
+  {
+    itkExceptionMacro( << "The AdvancedCombinationTransform contains "
+      << numTransforms << " transforms. Unable to retrieve Nth current transform with index " << n );
+  }
+
+  TransformTypeConstPointer    nthTransform;
+  CurrentTransformConstPointer currentTransform = GetCurrentTransform();
+
+  if( currentTransform.IsNotNull() )
+  {
+    if ( n == 0 )
+    {
+      nthTransform = currentTransform;
+    }
+    else
+    {
+      InitialTransformConstPointer initialTransform = GetInitialTransform();
+      if( initialTransform.IsNotNull() )
+      {
+        const Self *initialTransformCasted =
+          dynamic_cast< const Self * >( initialTransform.GetPointer() );
+        if ( initialTransformCasted )
+        {
+          const SizeValueType id = n - 1;
+          nthTransform = initialTransformCasted->GetNthTransform(id);
+        }
+      }
+    }
+  }
+
+  return nthTransform;
+} // end GetNthTransform() const
+
+
+/**
  * ***************** GetNumberOfNonZeroJacobianIndices **************************
  */
 

@@ -94,6 +94,11 @@ public:
   typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
   typedef typename Superclass::TransformCategoryType      TransformCategoryType;
 
+  /** Transform typedefs for the from Superclass. */
+  typedef typename Superclass::TransformType              TransformType;
+  typedef typename TransformType::Pointer                 TransformTypePointer;
+  typedef typename TransformType::ConstPointer            TransformTypeConstPointer;
+
   /** Typedefs for the InitialTransform. */
   typedef Superclass                                      InitialTransformType;
   typedef typename InitialTransformType::Pointer          InitialTransformPointer;
@@ -125,6 +130,21 @@ public:
   itkGetObjectMacro( CurrentTransform, CurrentTransformType );
   itkGetConstObjectMacro( CurrentTransform, CurrentTransformType );
 
+  /** Return the number of sub-transforms. */
+  virtual SizeValueType GetNumberOfTransforms( void ) const;
+
+  /** Get the Nth current transform.
+    * Similar interface to the ITK4 MultiTransform::GetNthTransform( SizeValueType n )
+    * \warning The bounds checking is performed.
+    */
+  virtual TransformTypePointer GetNthTransform( SizeValueType n );
+
+  /** Get the Nth current transform, const version.
+    * Similar interface to the ITK4 MultiTransform::GetNthTransform( SizeValueType n )
+    * \warning The bounds checking is performed.
+    */
+  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const;
+
   /** Control the way transforms are combined. */
   virtual void SetUseComposition( bool _arg );
   itkGetConstMacro( UseComposition, bool );
@@ -146,7 +166,7 @@ public:
       << "TransformVector(const InputVectorType &) is not implemented "
       << "for AdvancedCombinationTransform" );
   }
-  virtual OutputVnlVectorType       TransformVector( const InputVnlVectorType & ) const
+  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
   {
     itkExceptionMacro(
       << "TransformVector(const InputVnlVectorType &) is not implemented "
