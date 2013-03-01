@@ -82,7 +82,9 @@ public:
   //
   // Allocate CPU and GPU memory space
   //
-  void Allocate();
+  virtual void Allocate();
+
+  void AllocateGPU();
 
   virtual void Initialize();
 
@@ -195,6 +197,8 @@ public:
 protected:
   GPUImage();
   virtual ~GPUImage() {}
+
+  virtual void PrintSelf(std::ostream & os, Indent indent) const;
 
 private:
 

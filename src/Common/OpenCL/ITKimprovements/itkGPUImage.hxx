@@ -42,9 +42,19 @@ void GPUImage< TPixel, VImageDimension >::Allocate()
 
   if ( !m_Graft )
     {
+    AllocateGPU(); // allocate GPU memory
+    }
+}
+
+//------------------------------------------------------------------------------
+template< class TPixel, unsigned int VImageDimension >
+void GPUImage< TPixel, VImageDimension >::AllocateGPU()
+{
+  if ( !m_Graft )
+  {
     // allocate GPU memory
     this->ComputeOffsetTable();
-    unsigned long numPixel = this->GetOffsetTable()[VImageDimension];
+    const unsigned long numPixel = this->GetOffsetTable()[VImageDimension];
     m_DataManager->SetBufferSize(sizeof( TPixel ) * numPixel);
     m_DataManager->SetImagePointer(this);
     m_DataManager->SetCPUBufferPointer( Superclass::GetBufferPointer() );
@@ -52,7 +62,7 @@ void GPUImage< TPixel, VImageDimension >::Allocate()
 
     /* prevent unnecessary copy from CPU to GPU at the beginning */
     m_DataManager->SetTimeStamp( this->GetTimeStamp() );
-    }
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -250,6 +260,16 @@ GPUImage< TPixel, VImageDimension >::Graft(const DataObject *data)
       }
     }
 }
+
+//------------------------------------------------------------------------------
+template< class TPixel, unsigned int VImageDimension >
+void GPUImage<TPixel, VImageDimension>
+::PrintSelf( std::ostream & os, Indent indent ) const
+{
+  Superclass::PrintSelf( os, indent );
+  m_DataManager->PrintSelf( os, indent );
+}
+
 } // namespace itk
 
 #endif
