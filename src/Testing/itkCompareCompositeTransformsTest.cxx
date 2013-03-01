@@ -29,9 +29,7 @@
 int main( int argc, char *argv[] )
 {
   const unsigned int Dimension = 3;
-
   typedef float ScalarType;
-  const unsigned int expectedNumberOfTransforms = 3;
 
   // ITK transform typedefs
   typedef itk::Transform< ScalarType, Dimension, Dimension > TransformType;
@@ -70,7 +68,7 @@ int main( int argc, char *argv[] )
   composite->AddTransform( translation );
   composite->AddTransform( bspline );
 
-  if ( composite->GetNumberOfTransforms() != expectedNumberOfTransforms )
+  if ( composite->GetNumberOfTransforms() != 3 )
   {
     std::cerr << "Error in getting number of transforms from itk::CompositeTransform." << std::endl;
     return EXIT_FAILURE;
