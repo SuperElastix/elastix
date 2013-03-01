@@ -123,8 +123,8 @@ public:
 
   /** Transform typedefs for the from Superclass. */
   typedef Transform< TScalarType,
-                              NInputDimensions,
-                              NOutputDimensions >   TransformType;
+    NInputDimensions,
+    NOutputDimensions >                             TransformType;
   typedef typename TransformType::Pointer           TransformTypePointer;
   typedef typename TransformType::ConstPointer      TransformTypeConstPointer;
 
