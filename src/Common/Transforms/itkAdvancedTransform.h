@@ -122,7 +122,9 @@ public:
   typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
 
   /** Transform typedefs for the from Superclass. */
-  typedef typename Superclass                       TransformType;
+  typedef Transform< TScalarType,
+                              NInputDimensions,
+                              NOutputDimensions >   TransformType;
   typedef typename TransformType::Pointer           TransformTypePointer;
   typedef typename TransformType::ConstPointer      TransformTypeConstPointer;
 
