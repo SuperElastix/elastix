@@ -35,24 +35,53 @@ void GPUExplicitSync( typename ImageToImageFilterType::Pointer & filter,
                       const bool filterUpdate = true,
                       const bool releaseGPUMemory = false )
 {
-  if ( filterUpdate )
+  if( filter.IsNotNull() )
   {
-    filter->Update();
-  }
+    if ( filterUpdate )
+    {
+      filter->Update();
+    }
 
-  typedef typename OutputImageType::PixelType                               OutputImagePixelType;
-  typedef GPUImage< OutputImagePixelType, OutputImageType::ImageDimension > GPUOutputImageType;
-  GPUOutputImageType *GPUOutput = dynamic_cast< GPUOutputImageType * >( filter->GetOutput() );
-  if ( GPUOutput )
-  {
-    GPUOutput->UpdateBuffers();
-  }
+    typedef typename OutputImageType::PixelType                               OutputImagePixelType;
+    typedef GPUImage< OutputImagePixelType, OutputImageType::ImageDimension > GPUOutputImageType;
+    GPUOutputImageType *GPUOutput = dynamic_cast< GPUOutputImageType * >( filter->GetOutput() );
+    if ( GPUOutput )
+    {
+      GPUOutput->UpdateBuffers();
+    }
 
-  if ( releaseGPUMemory )
+    if ( releaseGPUMemory )
+    {
+      GPUOutput->GetGPUDataManager()->Initialize();
+    }
+  }
+  else
   {
-    GPUOutput->GetGPUDataManager()->Initialize();
+    itkGenericExceptionMacro( << "The filter pointer is null." );
   }
 }
+
+//------------------------------------------------------------------------------
+// GPUImage explicit synchronization helper function
+template< class ImageType >
+void GPUImageSyncPixelContainer( typename ImageType::Pointer & image )
+{
+  if( image.IsNotNull() )
+  {
+    typedef typename ImageType::PixelType ImagePixelType;
+    typedef GPUImage< ImagePixelType, ImageType::ImageDimension > GPUImageType;
+    GPUImageType *gpuImage = dynamic_cast< GPUImageType * >( image.GetPointer() );
+    if ( gpuImage )
+    {
+      gpuImage->AllocateGPU();
+    }
+  }
+  else
+  {
+    itkGenericExceptionMacro( << "The image pointer is null." );
+  }
+}
+
 }
 
 #endif /* __itkGPUExplicitSynchronization_h */
