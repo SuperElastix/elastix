@@ -470,7 +470,7 @@ if( ELASTIX_USE_OPENCL )
           ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_GPU.mha
      -i   NearestNeighbor
      -t   Affine
-     -c -rmse 1.5 )
+     -c -rmse 2.1 )
 
    elx_add_test( GPUResampleImageFilterTest "-NearestComboBSpline" "OpenCL"
      -in  ${TestDataDir}/3DCT_lung_baseline.mha
