@@ -30,7 +30,7 @@ namespace itk
 *
 */
 template< class TScalarType = float, unsigned int NDimensions = 3,
-          class TParentImageFilter = AffineTransform< TScalarType, NDimensions > >
+          class TParentImageFilter = AdvancedMatrixOffsetTransformBase< TScalarType, NDimensions, NDimensions > >
 class GPUAdvancedMatrixOffsetTransformBase :
   public TParentImageFilter,
   public GPUMatrixOffsetTransformBase< TScalarType, NDimensions, NDimensions >

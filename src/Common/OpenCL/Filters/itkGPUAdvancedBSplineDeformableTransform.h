@@ -35,7 +35,7 @@ namespace itk
 template< class TScalarType = float, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3,
           class TParentImageFilter = AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder > >
 class GPUAdvancedBSplineDeformableTransform :
-  public TParentImageFilter, public GPUBSplineBaseTransform< TScalarType, NDimensions >
+  public TParentImageFilter, public GPUBSplineBaseTransform< TScalarType, NDimensions, VSplineOrder >
 {
 public:
   /** Standard class typedefs. */
@@ -60,21 +60,16 @@ public:
   void SetCoefficientImages( ImagePointer images[] );
 
 protected:
-  GPUAdvancedBSplineDeformableTransform();
+  GPUAdvancedBSplineDeformableTransform() {}
   virtual ~GPUAdvancedBSplineDeformableTransform() {}
 
   void PrintSelf( std::ostream & s, Indent indent ) const;
-
-  virtual bool GetSourceCode( std::string & _source ) const;
 
   void CopyCoefficientImagesToGPU();
 
 private:
   GPUAdvancedBSplineDeformableTransform( const Self & other ); // purposely not implemented
   const Self & operator=( const Self & );                      // purposely not implemented
-
-  std::vector< std::string > m_Sources;
-  bool                       m_SourcesLoaded;
 };
 
 /** \class GPUAdvancedBSplineDeformableTransformFactory

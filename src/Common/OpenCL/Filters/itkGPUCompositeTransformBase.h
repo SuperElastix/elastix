@@ -53,7 +53,7 @@ public:
   itkStaticConstMacro( OutputSpaceDimension, unsigned int, NDimensions );
 
   /** Get number of transforms in composite transform. */
-  virtual size_t GetNumberOfTransforms() const = 0;
+  virtual SizeValueType GetNumberOfTransforms() const = 0;
 
   /** Get the Nth transform. */
   virtual TransformTypePointer GetNthTransform( SizeValueType n ) = 0;

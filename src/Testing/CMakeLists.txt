@@ -470,7 +470,7 @@ if( ELASTIX_USE_OPENCL )
           ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_GPU.mha
      -i   NearestNeighbor
      -t   Affine
-     -c -rmse 0.8 )
+     -c -rmse 1.5 )
 
    elx_add_test( GPUResampleImageFilterTest "-NearestComboBSpline" "OpenCL"
      -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -479,7 +479,7 @@ if( ELASTIX_USE_OPENCL )
      -i   NearestNeighbor
      -t   BSpline
      -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
-     -c -rmse 0.8 )
+     -c -rmse 0.0 )
 
    elx_add_test( GPUResampleImageFilterTest "-NearestComboAffineBSpline" "OpenCL"
      -in  ${TestDataDir}/3DCT_lung_baseline.mha
@@ -488,7 +488,7 @@ if( ELASTIX_USE_OPENCL )
      -i   NearestNeighbor
      -t   Affine BSpline
      -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
-     -c -rmse 0.8 )
+     -c -rmse 0.3 )
 
 endif()
 

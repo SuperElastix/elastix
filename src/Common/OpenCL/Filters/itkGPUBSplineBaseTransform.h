@@ -34,7 +34,8 @@ namespace itk
 /** Create a helper GPU Kernel class for GPUBSplineTransform */
 itkGPUKernelClassMacro( GPUBSplineTransformKernel );
 
-template< class TScalarType = float, unsigned int NDimensions = 3 >
+template< class TScalarType = float, unsigned int NDimensions = 3,
+          unsigned int VSplineOrder = 3>
 class ITK_EXPORT GPUBSplineBaseTransform : public GPUTransformBase
 {
 public:
@@ -43,6 +44,12 @@ public:
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( GPUBSplineBaseTransform, GPUTransformBase );
+
+  /** Dimension of the domain space. */
+  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
+
+  /** The BSpline order. */
+  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   typedef GPUImage< TScalarType, NDimensions >      GPUCoefficientImageType;
   typedef typename GPUCoefficientImageType::Pointer GPUCoefficientImagePointer;
@@ -67,8 +74,10 @@ public:
   }
 
 protected:
-  GPUBSplineBaseTransform() {}
+  GPUBSplineBaseTransform();
   virtual ~GPUBSplineBaseTransform() {}
+
+  virtual bool GetSourceCode( std::string & _source ) const;
 
   GPUCoefficientImageArray     m_GPUBSplineTransformCoefficientImages;
   GPUCoefficientImageBaseArray m_GPUBSplineTransformCoefficientImagesBase;
@@ -76,7 +85,14 @@ protected:
 private:
   GPUBSplineBaseTransform( const Self & other ); // purposely not implemented
   const Self & operator=( const Self & );        // purposely not implemented
+
+  std::vector< std::string > m_Sources;
+  bool                       m_SourcesLoaded;
 };
 } // end namespace itk
+
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkGPUBSplineBaseTransform.hxx"
+#endif
 
 #endif /* __itkGPUBSplineBaseTransform_h */

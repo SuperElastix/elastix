@@ -53,23 +53,27 @@ public:
   typedef typename GPUSuperclass::TransformTypeConstPointer TransformTypeConstPointer;
 
   /** Get number of transforms in composite transform. */
-  virtual size_t GetNumberOfCPUTransforms() const;
+  virtual SizeValueType GetNumberOfTransforms() const;
+  { return CPUSuperclass::GetNumberOfTransforms(); }
 
   /** Get the Nth transform. */
-  virtual TransformTypePointer GetNthTransform( SizeValueType n );
+  virtual TransformTypePointer GetNthTransform( SizeValueType n )
+  { return CPUSuperclass::GetNthTransform( n ); }
 
   /** Get the Nth transform, const version. */
-  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const;
+  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const
+  { return CPUSuperclass::GetNthTransform( n ); }
 
 protected:
   GPUCompositeTransform() {}
   virtual ~GPUCompositeTransform() {}
-  void PrintSelf( std::ostream & s, Indent indent ) const;
+  void PrintSelf( std::ostream & s, Indent indent ) const
+  { CPUSuperclass::PrintSelf( s, indent ); }
 
 private:
   GPUCompositeTransform( const Self & other ); // purposely not implemented
   const Self & operator=( const Self & );      // purposely not implemented
-};
+}
 
 /** \class GPUCompositeTransformFactory
 * \brief Object Factory implementation for GPUCompositeTransform
@@ -101,8 +105,8 @@ public:
   }
 
 private:
-  GPUCompositeTransformFactory( const Self & ); // purposely not implemented
-  void operator=( const Self & );               // purposely not implemented
+  GPUCompositeTransformFactory( const Self & );   // purposely not implemented
+  void operator=( const Self & );                 // purposely not implemented
 
 #define OverrideCompositeTransformTypeMacro( st, dm )                   \
   {                                                                     \
@@ -130,9 +134,5 @@ private:
   }
 };
 } // end namespace itk
-
-#ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUCompositeTransform.hxx"
-#endif
 
 #endif /* __itkGPUCompositeTransform_h */

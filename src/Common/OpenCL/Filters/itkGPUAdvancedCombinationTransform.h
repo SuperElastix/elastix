@@ -36,8 +36,10 @@ class GPUAdvancedCombinationTransform :
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUAdvancedCombinationTransform                       Self;
-  typedef TParentImageFilter                                    CPUSuperclass;
+  typedef GPUAdvancedCombinationTransform Self;
+  typedef TParentImageFilter              CPUSuperclass;
+  typedef AdvancedTransform< TScalarType,
+                             NDimensions, NDimensions >         CPUSuperSuperclass;
   typedef GPUCompositeTransformBase< TScalarType, NDimensions > GPUSuperclass;
   typedef SmartPointer< Self >                                  Pointer;
   typedef SmartPointer< const Self >                            ConstPointer;
@@ -52,29 +54,23 @@ public:
   typedef typename GPUSuperclass::TransformTypePointer      TransformTypePointer;
   typedef typename GPUSuperclass::TransformTypeConstPointer TransformTypeConstPointer;
 
-  /** Typedefs for the InitialTransform. */
-  typedef typename CPUSuperclass::InitialTransformType         InitialTransformType;
-  typedef typename CPUSuperclass::InitialTransformPointer      InitialTransformPointer;
-  typedef typename CPUSuperclass::InitialTransformConstPointer InitialTransformConstPointer;
-
-  /** Typedefs for the CurrentTransform. */
-  typedef typename CPUSuperclass::CurrentTransformType         CurrentTransformType;
-  typedef typename CPUSuperclass::CurrentTransformPointer      CurrentTransformPointer;
-  typedef typename CPUSuperclass::CurrentTransformConstPointer CurrentTransformConstPointer;
-
   /** Get number of transforms in composite transform. */
-  virtual size_t GetNumberOfTransforms() const;
+  virtual SizeValueType GetNumberOfTransforms() const
+  { return CPUSuperclass::GetNumberOfTransforms(); }
 
   /** Get the Nth transform. */
-  virtual TransformTypePointer GetNthTransform( SizeValueType n );
+  virtual TransformTypePointer GetNthTransform( SizeValueType n )
+  { return CPUSuperclass::GetNthTransform( n ); }
 
   /** Get the Nth transform, const version. */
-  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const;
+  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const
+  { return CPUSuperclass::GetNthTransform( n ); }
 
 protected:
   GPUAdvancedCombinationTransform() {}
   virtual ~GPUAdvancedCombinationTransform() {}
-  void PrintSelf( std::ostream & s, Indent indent ) const;
+  void PrintSelf( std::ostream & s, Indent indent ) const
+  { CPUSuperclass::PrintSelf( s, indent ); }
 
 private:
   GPUAdvancedCombinationTransform( const Self & other ); // purposely not implemented
@@ -140,9 +136,5 @@ private:
   }
 };
 } // end namespace itk
-
-#ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGPUAdvancedCombinationTransform.hxx"
-#endif
 
 #endif /* __itkGPUAdvancedCombinationTransform_h */

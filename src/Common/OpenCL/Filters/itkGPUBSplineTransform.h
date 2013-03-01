@@ -35,7 +35,7 @@ namespace itk
 template< class TScalarType = float, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3,
           class TParentImageFilter = BSplineTransform< TScalarType, NDimensions, VSplineOrder > >
 class GPUBSplineTransform :
-  public TParentImageFilter, public GPUBSplineBaseTransform< TScalarType, NDimensions >
+  public TParentImageFilter, public GPUBSplineBaseTransform< TScalarType, NDimensions, VSplineOrder >
 {
 public:
   /** Standard class typedefs. */
@@ -59,21 +59,16 @@ public:
   void SetCoefficientImages( const CoefficientImageArray & images );
 
 protected:
-  GPUBSplineTransform();
+  GPUBSplineTransform() {}
   virtual ~GPUBSplineTransform() {}
 
   void PrintSelf( std::ostream & s, Indent indent ) const;
-
-  virtual bool GetSourceCode( std::string & _source ) const;
 
   void CopyCoefficientImagesToGPU();
 
 private:
   GPUBSplineTransform( const Self & other ); // purposely not implemented
   const Self & operator=( const Self & );    // purposely not implemented
-
-  std::vector< std::string > m_Sources;
-  bool                       m_SourcesLoaded;
 };
 
 /** \class GPUBSplineTransformFactory
