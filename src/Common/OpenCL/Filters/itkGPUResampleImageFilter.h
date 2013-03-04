@@ -109,7 +109,7 @@ protected:
 
   void SetArgumentsForPreKernelManager(
     const typename GPUOutputImage::Pointer & output,
-    cl_uint & index );
+    cl_uint & index, const cl_int transform_linear );
 
   void SetArgumentsForLoopKernelManager(
     const typename GPUInputImage::Pointer & input,

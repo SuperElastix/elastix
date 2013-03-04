@@ -896,7 +896,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   //m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle, index, sizeof( cl_uint3 ), (void *)&dummyNull );
 
   argidx++;
-  m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle, index, sizeof( cl_int ), (void *)&transform_linear );
+  m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle, index, sizeof( cl_int ), &transform_linear );
 
   //m_PreKernelManager->SetKernelArgWithImage( m_FilterPreGPUKernelHandle, argidx++,
                                              //this->m_Parameters transform_linear);
