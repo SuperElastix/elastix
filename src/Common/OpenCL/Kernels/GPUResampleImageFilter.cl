@@ -96,7 +96,7 @@ __kernel void ResampleImageFilterPre(
   __global float *deformation_field,
   uint dfsize,
   /* filter parameters */
-  __constant FilterParameters *parameters )
+  int transform_linear )
 {
   uint global_id = get_global_id( 0 );
   uint global_offset = get_global_offset( 0 );
@@ -107,7 +107,7 @@ __kernel void ResampleImageFilterPre(
   if ( is_valid_1d( index, dfsize ) && is_valid_1d( global_id, output_image->size ) )
   {
     float point;
-    if ( parameters->transform_linear )
+    if ( transform_linear )
     {
       // compute continuous index for the first index
       uint first_index = 0;
@@ -460,7 +460,7 @@ __kernel void ResampleImageFilterPre(
   __global float2 *deformation_field,
   uint2 dfsize,
   /* filter parameters */
-  __constant FilterParameters *parameters )
+  int transform_linear )
 {
   uint2 global_id = (uint2)( get_global_id( 0 ), get_global_id( 1 ) );
   uint2 global_offset = (uint2)( get_global_offset( 0 ), get_global_offset( 1 ) );
@@ -471,7 +471,7 @@ __kernel void ResampleImageFilterPre(
   if ( is_valid_2d( index, dfsize ) && is_valid_2d( global_id, output_image->size ) )
   {
     float2 point;
-    if ( parameters->transform_linear )
+    if ( transform_linear )
     {
       // compute continuous index for the first index
       uint2 first_index = (uint2)( 0, global_id.y );
