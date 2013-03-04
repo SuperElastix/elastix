@@ -493,7 +493,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   cl_uint argidx = 0;
 
   cl_uint dtsizePreIntex = 0;
-  SetArgumentsForPreKernelManager( outPtr, dtsizePreIntex );
+  SetArgumentsForPreKernelManager( outPtr, dtsizePreIntex, parameters.transform_linear );
 
   // Set arguments for loop kernel
   cl_uint dfsizeLoopIntex = 0, comboIndex = 0, transformIndex = 0;
@@ -871,7 +871,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
 template< class TInputImage, class TOutputImage, class TInterpolatorPrecisionType >
 void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
 ::SetArgumentsForPreKernelManager( const typename GPUOutputImage::Pointer & output,
-                                   cl_uint & index )
+                                   cl_uint & index, const cl_int transform_linear )
 {
   itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPreKernelManager("<< index <<") called");
 
@@ -896,8 +896,10 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   //m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle, index, sizeof( cl_uint3 ), (void *)&dummyNull );
 
   argidx++;
-  m_PreKernelManager->SetKernelArgWithImage( m_FilterPreGPUKernelHandle, argidx++,
-                                             this->m_Parameters );
+  m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle, index, sizeof( cl_int ), (void *)&transform_linear );
+
+  //m_PreKernelManager->SetKernelArgWithImage( m_FilterPreGPUKernelHandle, argidx++,
+                                             //this->m_Parameters transform_linear);
 
   itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPreKernelManager() finished");
 }

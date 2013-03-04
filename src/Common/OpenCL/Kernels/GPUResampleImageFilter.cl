@@ -828,7 +828,7 @@ __kernel void ResampleImageFilterPre(
   __global float3 *deformation_field,
   uint3 dfsize,
   /* filter parameters */
-  __constant FilterParameters *parameters )
+  cl_int transform_linear )
 {
   uint3 global_id = (uint3)( get_global_id( 0 ), get_global_id( 1 ), get_global_id( 2 ) );
   uint3 global_offset = (uint3)( get_global_offset( 0 ), get_global_offset( 1 ), get_global_offset( 2 ) );
@@ -839,7 +839,7 @@ __kernel void ResampleImageFilterPre(
   if ( is_valid_3d( index, dfsize ) && is_valid_3d( global_id, output_image->size ) )
   {
     float3 point;
-    if ( parameters->transform_linear )
+    if ( transform_linear )
     {
       // compute continuous index for the first index
       uint3 first_index = (uint3)( 0, global_id.y, global_id.z );
