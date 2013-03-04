@@ -621,7 +621,12 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId)
 
   if ( !CheckArgumentReady(kernelId) )
     {
-    itkWarningMacro("GPU kernel arguments are not completely assigned");
+    // it is a bit ugly way to retrieve kernel name, but fast and work, remove it later
+    char name[128];
+    size_t size = 0;
+    cl_kernel kernel = m_KernelContainer[kernelId];
+    clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, 128, name, NULL);
+    itkWarningMacro("GPU kernel arguments are not completely assigned for the kernel '" << name << "'");
     return OpenCLEvent();
     }
 
@@ -671,7 +676,12 @@ OpenCLEvent GPUKernelManager::LaunchKernel(const std::size_t kernelId)
 
   if ( error != CL_SUCCESS )
     {
-    itkWarningMacro("Launch kernel failed with GPUKernelManager::LaunchKernel("
+    // it is a bit ugly way to retrieve kernel name, but fast and work, remove it later
+    char name[128];
+    size_t size = 0;
+    cl_kernel kernel = m_KernelContainer[kernelId];
+    clGetKernelInfo(kernel, CL_KERNEL_FUNCTION_NAME, 128, name, NULL);
+    itkWarningMacro("Launch kernel '" << name << "' failed with GPUKernelManager::LaunchKernel("
                     << kernelId << ")");
     }
 
