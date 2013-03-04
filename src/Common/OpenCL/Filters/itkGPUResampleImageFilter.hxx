@@ -886,22 +886,13 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   m_PreKernelManager->SetKernelArgWithImage( m_FilterPreGPUKernelHandle, argidx++,
                                              this->m_DeformationFieldBuffer );
   index = argidx;
-
-  //// dummy null
-  //cl_uint3 dummyNull;
-  //for(unsigned int i=0; i<4; i++)
-  //{
-  //  dummyNull.s[i] = 0;
-  //}
-  //m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle, index, sizeof( cl_uint3 ), (void *)&dummyNull );
-
   argidx++;
-  m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle, index, sizeof( cl_int ), &transform_linear );
-
   //m_PreKernelManager->SetKernelArgWithImage( m_FilterPreGPUKernelHandle, argidx++,
-                                             //this->m_Parameters transform_linear);
+  //  this->m_Parameters );
+  m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle, argidx++, sizeof( cl_int ), &transform_linear );
 
   itkDebugMacro(<< "GPUResampleImageFilter::SetArgumentsForPreKernelManager() finished");
+
 }
 
 //------------------------------------------------------------------------------
