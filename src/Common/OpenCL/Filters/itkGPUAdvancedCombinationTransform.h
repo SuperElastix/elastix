@@ -36,10 +36,8 @@ class GPUAdvancedCombinationTransform :
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUAdvancedCombinationTransform Self;
-  typedef TParentImageFilter              CPUSuperclass;
-  typedef AdvancedTransform< TScalarType,
-                             NDimensions, NDimensions >         CPUSuperSuperclass;
+  typedef GPUAdvancedCombinationTransform                       Self;
+  typedef TParentImageFilter                                    CPUSuperclass;
   typedef GPUCompositeTransformBase< TScalarType, NDimensions > GPUSuperclass;
   typedef SmartPointer< Self >                                  Pointer;
   typedef SmartPointer< const Self >                            ConstPointer;

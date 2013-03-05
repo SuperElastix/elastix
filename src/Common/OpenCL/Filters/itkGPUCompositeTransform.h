@@ -36,11 +36,11 @@ class GPUCompositeTransform :
 {
 public:
   /** Standard class typedefs. */
-  typedef GPUCompositeTransform      Self;
-  typedef TParentImageFilter         CPUSuperclass;
-  typedef GPUCompositeTransformBase  GPUSuperclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef GPUCompositeTransform                                 Self;
+  typedef TParentImageFilter                                    CPUSuperclass;
+  typedef GPUCompositeTransformBase< TScalarType, NDimensions > GPUSuperclass;
+  typedef SmartPointer< Self >                                  Pointer;
+  typedef SmartPointer< const Self >                            ConstPointer;
 
   itkNewMacro( Self );
 
