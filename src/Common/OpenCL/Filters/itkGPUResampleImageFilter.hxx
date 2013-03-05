@@ -407,6 +407,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   {
     parameters.delta.s[i] = delta[i];
   }
+  parameters.delta.s[3] = 0.0f;
 
   this->m_Parameters->SetCPUBufferPointer( &parameters );
   this->m_Parameters->SetGPUDirtyFlag( true );
