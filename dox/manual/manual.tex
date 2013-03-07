@@ -976,7 +976,7 @@ registration has found the same correspondence as the ground truth.
 \item Inspect the deformation field by looking at the determinant of
 the Jacobian of $\vTmx$. Values smaller than 1 indicate local
 compression, values larger than 1 indicate local expansion, and 1
-means volume preservation. If this value deviates substantially
+means volume preservation. The measure is quantitative: a value of 1.1 means a 10\% increase in volume. If this value deviates substantially
 from 1, you may be worried (but maybe not if this is what you
 expect for your application). In case it is negative you have
 ``foldings'' in your transformation, and you definitely should be
