@@ -56,10 +56,7 @@ public:
   virtual SizeValueType GetNumberOfTransforms() const = 0;
 
   /** Get the Nth transform. */
-  virtual TransformTypePointer GetNthTransform( SizeValueType n ) = 0;
-
-  /** Get the Nth transform, const version. */
-  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const = 0;
+  virtual const TransformTypePointer GetNthTransform( SizeValueType n ) const = 0;
 
   /**  */
   virtual bool HasIdentityTransform() const;

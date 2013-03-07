@@ -57,11 +57,7 @@ public:
   { return CPUSuperclass::GetNumberOfTransforms(); }
 
   /** Get the Nth transform. */
-  virtual TransformTypePointer GetNthTransform( SizeValueType n )
-  { return CPUSuperclass::GetNthTransform( n ); }
-
-  /** Get the Nth transform, const version. */
-  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const
+  virtual const TransformTypePointer GetNthTransform( SizeValueType n ) const
   { return CPUSuperclass::GetNthTransform( n ); }
 
 protected:
