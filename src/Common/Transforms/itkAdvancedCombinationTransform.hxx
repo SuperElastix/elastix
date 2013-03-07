@@ -137,52 +137,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
  */
 
 template < typename TScalarType, unsigned int NDimensions >
-typename AdvancedCombinationTransform<TScalarType, NDimensions>::TransformTypePointer
-AdvancedCombinationTransform<TScalarType, NDimensions>
-::GetNthTransform( SizeValueType n )
-{
-  const SizeValueType numTransforms = GetNumberOfTransforms();
-  if ( n > numTransforms - 1 )
-  {
-    itkExceptionMacro( << "The AdvancedCombinationTransform contains "
-      << numTransforms << " transforms. Unable to retrieve Nth current transform with index " << n );
-  }
-
-  TransformTypePointer    nthTransform;
-  CurrentTransformPointer currentTransform = GetCurrentTransform();
-
-  if( currentTransform.IsNotNull() )
-  {
-    if ( n == 0 )
-    {
-      nthTransform = currentTransform;
-    }
-    else
-    {
-      InitialTransformPointer initialTransform = GetInitialTransform();
-      if( initialTransform.IsNotNull() )
-      {
-        Self *initialTransformCasted =
-          dynamic_cast< Self * >( initialTransform.GetPointer() );
-        if ( initialTransformCasted )
-        {
-          const SizeValueType id = n - 1;
-          nthTransform = initialTransformCasted->GetNthTransform(id);
-        }
-      }
-    }
-  }
-
-  return nthTransform;
-} // end GetNthTransform()
-
-
-/**
- * ***************** GetNthTransform const ********************
- */
-
-template < typename TScalarType, unsigned int NDimensions >
-typename AdvancedCombinationTransform<TScalarType, NDimensions>::TransformTypeConstPointer
+const typename AdvancedCombinationTransform<TScalarType, NDimensions>::TransformTypePointer
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetNthTransform( SizeValueType n ) const
 {
@@ -193,18 +148,24 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
       << numTransforms << " transforms. Unable to retrieve Nth current transform with index " << n );
   }
 
-  TransformTypeConstPointer    nthTransform;
-  CurrentTransformConstPointer currentTransform = GetCurrentTransform();
+  TransformTypePointer nthTransform;
+  const CurrentTransformConstPointer currentTransform = GetCurrentTransform();
 
   if( currentTransform.IsNotNull() )
   {
     if ( n == 0 )
     {
-      nthTransform = currentTransform;
+      // Perform const_cast, we don't like it, but there is no other option
+      // with current ITK4 itk::MultiTransform::GetNthTransform() const desing
+      const TransformType *currentTransformCasted =
+        dynamic_cast< const TransformType * >( currentTransform.GetPointer() );
+      TransformType *currentTransformConstCasted =
+        const_cast< TransformType * >( currentTransformCasted );
+      nthTransform = currentTransformConstCasted;
     }
     else
     {
-      InitialTransformConstPointer initialTransform = GetInitialTransform();
+      const InitialTransformConstPointer initialTransform = GetInitialTransform();
       if( initialTransform.IsNotNull() )
       {
         const Self *initialTransformCasted =
@@ -219,7 +180,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   }
 
   return nthTransform;
-} // end GetNthTransform() const
+} // end GetNthTransform()
 
 
 /**

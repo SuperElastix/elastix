@@ -134,16 +134,10 @@ public:
   virtual SizeValueType GetNumberOfTransforms( void ) const;
 
   /** Get the Nth current transform.
-    * Similar interface to the ITK4 MultiTransform::GetNthTransform( SizeValueType n )
+    * Exact interface to the ITK4 MultiTransform::GetNthTransform( SizeValueType n )
     * \warning The bounds checking is performed.
     */
-  virtual TransformTypePointer GetNthTransform( SizeValueType n );
-
-  /** Get the Nth current transform, const version.
-    * Similar interface to the ITK4 MultiTransform::GetNthTransform( SizeValueType n )
-    * \warning The bounds checking is performed.
-    */
-  virtual TransformTypeConstPointer GetNthTransform( SizeValueType n ) const;
+  virtual const TransformTypePointer GetNthTransform( SizeValueType n ) const;
 
   /** Control the way transforms are combined. */
   virtual void SetUseComposition( bool _arg );
