@@ -291,7 +291,7 @@ namespace itk
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(NumberOfSamples, this->m_NumberOfPixelsCounted );
     unsigned int N = this->m_NumberOfPixelsCounted;
-		this->m_NumberOfSamples = N;
+    this->m_NumberOfSamples = N;
     const unsigned int G = realNumLastDimPositions;
     MatrixType A( datablock.extract( N, G ) );
 
@@ -321,26 +321,26 @@ namespace itk
     /** Transpose of the matrix with mean subtracted */
     MatrixType Atmm( Amm.transpose() );
 
-    /** Compute covariancematrix Cov */
-    MatrixType Cov( Atmm*Amm );
-    Cov /=  static_cast< RealType > ( RealType(N) - 1.0 );
+    /** Compute covariancematrix C */
+    MatrixType C( Atmm*Amm );
+    C /=  static_cast< RealType > ( RealType(N) - 1.0 );
 
-    vnl_symmetric_eigensystem< RealType > eigcov( Cov );
+    vnl_symmetric_eigensystem< RealType > eigc( C );
 
-    RealType varNoise = 0.9999999*eigcov.get_eigenvalue(0);
+    RealType varNoise = 0.9999999*eigc.get_eigenvalue(0);
 
     if(!this->m_DeNoise)
     {
         varNoise = this->m_VarNoise;
     }
-    std::cout << "varNoise: " << varNoise << std::endl;
+    //std::cout << "varNoise: " << varNoise << std::endl;
 
     /** Calculate variance of columns */
     vnl_vector< RealType > var( G );
     var.fill( NumericTraits< RealType >::Zero );
     for( int j = 0; j < G; j++)
     {
-        var(j) = Cov(j,j);
+        var(j) = C(j,j);
     }
     var -= varNoise;
 
@@ -353,20 +353,15 @@ namespace itk
 
     for(int j = 0; j < G; j++)
     {
-        Cov(j,j) -= varNoise;
+        C(j,j) -= varNoise;
     }
 
-    MatrixType K(S*Cov*S);
 
-    /** Compute first eigenvalue and eigenvector of the covariance matrix K */
+    /** Compute correlation matrix K */
+    MatrixType K(S*C*S);
+
+    /** Compute first eigenvalue and eigenvector of K */
     vnl_symmetric_eigensystem< RealType > eig( K );
-    vnl_vector< RealType > eigenValues(G);
-
-    eigenValues.fill( itk::NumericTraits< RealType >::Zero );
-    for(unsigned int i = 0; i < G; i++)
-    {
-        eigenValues(i) = eig.get_eigenvalue( i );
-    }
 
     /** Compute sum of all eigenvalues = trace( K ) */
     RealType trace = itk::NumericTraits< RealType >::Zero;
@@ -375,8 +370,10 @@ namespace itk
         trace += K(i,i);
     }
 
+    const unsigned int L = this->m_NumEigenValues;
+
     RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
+    for(unsigned int i = 1; i < L+1; i++)
     {
         sumEigenValuesUsed += eig.get_eigenvalue(G - i);
     }
@@ -569,52 +566,44 @@ namespace itk
 
     MatrixType Atmm( Amm.transpose() );
 
-    /** Compute covariancematrix Cov */
-    MatrixType Cov( Atmm*Amm );
-    Cov /=  static_cast< RealType > ( RealType(N) - 1.0 );
+    /** Compute covariancematrix C */
+    MatrixType C( Atmm*Amm );
+    C /=  static_cast< RealType > ( RealType(N) - 1.0 );
 
-    vnl_symmetric_eigensystem< RealType > eigcov( Cov );
-    vnl_vector< RealType > v_L = eigcov.get_eigenvector( 0 );
-    RealType varNoise = 0.9999999*eigcov.get_eigenvalue( 0 );
+    vnl_symmetric_eigensystem< RealType > eigc( C );
+    vnl_vector< RealType > v_G = eigc.get_eigenvector( 0 );
+    RealType varNoise = 0.9999999*eigc.get_eigenvalue( 0 );
     if(!this->m_DeNoise)
     {
         varNoise = this->m_VarNoise;
     }
-    std::cout << "varNoise: " << varNoise << std::endl;
 
     /** Calculate standard deviation from columns */
     vnl_vector< RealType > var( G );
     var.fill( NumericTraits< RealType >::Zero );
     for( int j = 0; j < G; j++)
     {
-        var(j) = Cov(j,j);
+        var(j) = C(j,j);
     }
     var -= varNoise;
 
-    MatrixType S( G, G );
+    vnl_diag_matrix< RealType > S( G );
     S.fill( NumericTraits< RealType >::Zero );
     for( int j = 0; j < G; j++)
     {
         S(j,j) = 1.0/sqrt(var(j));
     }
 
-    MatrixType C( Cov );
     for(int j = 0; j < G; j++)
     {
-        Cov(j,j) -= varNoise;
+        C(j,j) -= varNoise;
     }
 
-    MatrixType K(S*Cov*S);
+    /** Compute correlation matrix K */
+    MatrixType K(S*C*S);
 
-    /** Compute first eigenvalue and eigenvector of the covariance matrix K */
+    /** Compute first eigenvalue and eigenvector of K */
     vnl_symmetric_eigensystem< RealType > eig( K );
-
-    vnl_vector< RealType > eigenValues( G );
-    eigenValues.fill( NumericTraits< RealType >::Zero );
-    for(unsigned int i = 0; i < G; i++)
-    {
-        eigenValues(i) = eig.get_eigenvalue( i );
-    }
 
     /** Compute sum of all eigenvalues = trace( K ) */
     RealType trace = itk::NumericTraits< RealType >::Zero;
@@ -623,29 +612,21 @@ namespace itk
         trace += K(i,i);
     }
 
+    const unsigned int L = this->m_NumEigenValues;
+
     RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
+    for(unsigned int i = 1; i < L+1; i++)
     {
         sumEigenValuesUsed += eig.get_eigenvalue(G - i);
     }
 
-    this->m_eigenValues = eigenValues;
-
-    MatrixType eigenVectorMatrix( G, this->m_NumEigenValues );
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
+    MatrixType eigenVectorMatrix( G, L );
+    for(unsigned int i = 1; i < L+1; i++)
     {
         eigenVectorMatrix.set_column(i-1, (eig.get_eigenvector(G - i)).normalize() );
     }
 
     MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
-
-    this->m_firstEigenVector = eigenVectorMatrix.get_column( 0 );
-    this->m_secondEigenVector = eigenVectorMatrix.get_column( 1 );
-    this->m_thirdEigenVector = eigenVectorMatrix.get_column( 2 );
-    this->m_fourthEigenVector = eigenVectorMatrix.get_column( 3 );
-    this->m_fifthEigenVector = eigenVectorMatrix.get_column( 4 );
-    this->m_sixthEigenVector = eigenVectorMatrix.get_column( 5 );
-    this->m_seventhEigenVector = eigenVectorMatrix.get_column( 6 );
 
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
@@ -655,23 +636,23 @@ namespace itk
 
     /** Sub components of metric derivative */
     vnl_vector< DerivativeValueType > tracevKvdmu( P );
-    vnl_vector< DerivativeValueType > tracevdSdmuCovSv( P );
-    vnl_vector< DerivativeValueType > tracevSdCovdmuSv( P );
+    vnl_vector< DerivativeValueType > tracevdSdmuCSv( P );
+    vnl_vector< DerivativeValueType > tracevSdCdmuSv( P );
     vnl_vector< DerivativeValueType > tracevSdvarNoisedmuSv( P );
     vnl_vector< DerivativeValueType > dSdmu_part1( G );
     vnl_vector< DerivativeValueType > dvarNoisedmu( P );
 
-    DerivativeMatrixType vSAtmmdAdmu( this->m_NumEigenValues, G*P );
-    DerivativeMatrixType vAtmmdAdmu( this-> m_NumEigenValues, G*P );
+    DerivativeMatrixType vSAtmmdAdmu( L, G*P );
+    DerivativeMatrixType vAtmmdAdmu( L, G*P );
     DerivativeMatrixType dSdmu( G, P );
-    DerivativeMatrixType v_LAtmmdAdmu( G, P );
+    DerivativeMatrixType v_GAtmmdAdmu( G, P );
 
     /** initialize */
     vSAtmmdAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     tracevKvdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    v_LAtmmdAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    tracevdSdmuCovSv.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    tracevSdCovdmuSv.fill( itk::NumericTraits< DerivativeValueType>::Zero);
+    v_GAtmmdAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+    tracevdSdmuCSv.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+    tracevSdCdmuSv.fill( itk::NumericTraits< DerivativeValueType>::Zero);
     tracevSdvarNoisedmuSv.fill( itk::NumericTraits< DerivativeValueType >::Zero);
     dvarNoisedmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     vAtmmdAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
@@ -681,11 +662,11 @@ namespace itk
     /** Components for derivative of mean */
     vnl_vector<DerivativeValueType> meandAdmu( P );
     DerivativeMatrixType meandSdmu( G, P );
-    DerivativeMatrixType v_LAtmmmeandAdmu( G, P );
-    DerivativeMatrixType vAtmmmeandAdmu( this->m_NumEigenValues, G*P );
-    DerivativeMatrixType vSAtmmmeandAdmu( this->m_NumEigenValues, G*P );
+    DerivativeMatrixType v_GAtmmmeandAdmu( G, P );
+    DerivativeMatrixType vAtmmmeandAdmu( L, G*P );
+    DerivativeMatrixType vSAtmmmeandAdmu( L, G*P );
     meandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    v_LAtmmmeandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+    v_GAtmmmeandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     vSAtmmmeandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     vAtmmmeandAdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
     meandSdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
@@ -695,14 +676,14 @@ namespace itk
 
     for(unsigned int d = 0; d < G; d++)
     {
-        dSdmu_part1[ d ] = -pow( S[ d ][ d ], 3.0 );
+        dSdmu_part1[ d ] = -pow( S( d, d ), 3.0 );
     }
 
     DerivativeMatrixType vSAtmm( eigenVectorMatrixTranspose*S*Atmm );
-    DerivativeMatrixType CovSv( Cov*S*eigenVectorMatrix );
+    DerivativeMatrixType CSv( C*S*eigenVectorMatrix );
     DerivativeMatrixType Sv( S*eigenVectorMatrix );
     DerivativeMatrixType vS( eigenVectorMatrixTranspose*S );
-    vnl_vector<DerivativeValueType> v_LAtmm( v_L*Atmm );
+    vnl_vector<DerivativeValueType> v_GAtmm( v_G*Atmm );
 
     /** Second loop over fixed image samples. */
     for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
@@ -748,9 +729,9 @@ namespace itk
             for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
             {
                 meandAdmu[ nzjis[ d ][ p ] ] += ( dMTdmu[ p ] )/double( N );
-                v_LAtmmdAdmu[ d ][ nzjis[ d ][ p ] ] += v_LAtmm[ pixelIndex ]*dMTdmu[ p ];
+                v_GAtmmdAdmu[ d ][ nzjis[ d ][ p ] ] += v_GAtmm[ pixelIndex ]*dMTdmu[ p ];
                 dSdmu[ d ][ nzjis[ d ][ p ] ] += Atmm[ d ][ pixelIndex ]*dSdmu_part1[ d ]*dMTdmu[ p ];
-                for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
+                for(unsigned int z = 0; z < L; z++)
                 {
                     vSAtmmdAdmu[ z ][ d + nzjis[ d ][ p ]*G ] += vSAtmm[ z ][ pixelIndex ]*dMTdmu[ p ];
                 }
@@ -766,9 +747,9 @@ namespace itk
             {
                 for(unsigned int p = 0; p < P; ++p )
                 {
-                    v_LAtmmmeandAdmu[ d ][ p ] += v_LAtmm[ i ]*meandAdmu[ p ];
+                    v_GAtmmmeandAdmu[ d ][ p ] += v_GAtmm[ i ]*meandAdmu[ p ];
                     meandSdmu[ d ][ p ] += Atmm[ d ][ i ]*dSdmu_part1[ d ]*meandAdmu[ p ];
-                    for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
+                    for(unsigned int z = 0; z < L; z++)
                     {
                         vSAtmmmeandAdmu[ z ][ d + G*p ] += vSAtmm[ z ][ i ]*meandAdmu[ p ];
                     }
@@ -779,7 +760,7 @@ namespace itk
 
     for(unsigned int p = 0; p < P; p++)
     {
-        dvarNoisedmu[ p ] = dot_product((v_LAtmmdAdmu-v_LAtmmmeandAdmu).get_column(p),v_L);
+        dvarNoisedmu[ p ] = dot_product((v_GAtmmdAdmu-v_GAtmmmeandAdmu).get_column(p),v_G);
     }
 
     if(!this->m_DeNoise)
@@ -789,22 +770,22 @@ namespace itk
 
     for(unsigned int p = 0; p < P; p++)
     {
-        DerivativeMatrixType diagonaldvarNoisedmu(G,G); diagonaldvarNoisedmu.fill(0.0);
-        DerivativeMatrixType diagonaldSdmu(G,G); diagonaldSdmu.fill(0.0);
+        vnl_diag_matrix< DerivativeValueType > diagonaldvarNoisedmu( G ); diagonaldvarNoisedmu.fill(0.0);
+        vnl_diag_matrix< DerivativeValueType > diagonaldSdmu( G ); diagonaldSdmu.fill(0.0);
         for(unsigned int d = 0; d < G; d++)
         {
-            diagonaldvarNoisedmu[ d ][ d ] = dSdmu_part1[ d ]*dvarNoisedmu[ p ];
-            diagonaldSdmu[ d ][ d ] = (dSdmu - meandSdmu).get_column(p)[ d ] - diagonaldvarNoisedmu[ d ][ d ];
+            diagonaldvarNoisedmu( d, d ) = dSdmu_part1[ d ]*dvarNoisedmu[ p ];
+            diagonaldSdmu( d, d ) = (dSdmu - meandSdmu).get_column(p)[ d ] - diagonaldvarNoisedmu( d, d );
         }
-        DerivativeMatrixType vSdCovdmuSv = ((vSAtmmdAdmu - vSAtmmmeandAdmu).extract(this->m_NumEigenValues, G,0,p*G))*Sv;
+        DerivativeMatrixType vSdCdmuSv = ((vSAtmmdAdmu - vSAtmmmeandAdmu).extract(L, G,0,p*G))*Sv;
         DerivativeMatrixType vSdvarNoisedmuSv = (vS*dvarNoisedmu[ p ]*Sv);
 
-        tracevSdCovdmuSv[ p ] = vnl_trace< DerivativeValueType > (vSdCovdmuSv);
+        tracevSdCdmuSv[ p ] = vnl_trace< DerivativeValueType > (vSdCdmuSv);
         tracevSdvarNoisedmuSv[ p ] = vnl_trace< DerivativeValueType > (vSdvarNoisedmuSv );
-        tracevdSdmuCovSv[ p ] = vnl_trace< DerivativeValueType>( eigenVectorMatrixTranspose*diagonaldSdmu*CovSv );
+        tracevdSdmuCSv[ p ] = vnl_trace< DerivativeValueType>( eigenVectorMatrixTranspose*diagonaldSdmu*CSv );
     }
 
-    tracevKvdmu = tracevdSdmuCovSv + tracevSdCovdmuSv - tracevSdvarNoisedmuSv;
+    tracevKvdmu = tracevdSdmuCSv + tracevSdCdmuSv - tracevSdvarNoisedmuSv;
     tracevKvdmu *= (2.0/(DerivativeValueType(N) - 1.0)); //normalize
 
     measure = trace - sumEigenValuesUsed;

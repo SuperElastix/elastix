@@ -18,7 +18,6 @@
 
 #include "elxPCAMetric.h"
 
-
 namespace elastix
 {
 
@@ -169,8 +168,8 @@ template <class TElastix>
   void PCAMetric<TElastix>
   ::AfterEachIteration(void)
   {
-     elxout << "eigenValues" << this->m_eigenValues << std::endl;
-     elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
+     //elxout << "eigenValues" << this->m_eigenValues << std::endl;
+     //elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
   }
 
 } // end namespace elastix
