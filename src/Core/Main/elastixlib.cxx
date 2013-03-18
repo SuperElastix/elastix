@@ -12,13 +12,14 @@
 
 ======================================================================*/
 
+// \todo: cxx's don't need ifdefs?
 #ifndef __elastixlib_cxx
 #define __elastixlib_cxx
 
 #include "elastixlib.h"
 
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
-  #include "itkUseMevisDicomTiff.h"
+#include "itkUseMevisDicomTiff.h"
 #endif
 
 #include "elxElastixMain.h"
@@ -35,302 +36,316 @@
 
 namespace elastix
 {
-	using namespace itk;
+  using namespace itk;//remove
 
-/*
- *	Constructor
+/**
+ * ******************* Constructor ***********************
  */
+
 ELASTIX::ELASTIX()
 {
-	this->m_ResultImage = 0;
+  this->m_ResultImage = 0;
 }
+
+
+/**
+ * ******************* Destructor ***********************
+ */
 
 ELASTIX::~ELASTIX()
 {
-	this->m_ResultImage = 0;
+  this->m_ResultImage = 0;
 }
+
+
+/**
+ * ******************* GetResultImage ***********************
+ */
 
 ELASTIX::ImagePointer
-ELASTIX::GetResultImage()
+ELASTIX::GetResultImage( void )
 {
-	return( m_ResultImage );
+  return this->m_ResultImage;
 }
 
-int 
-ELASTIX::RegisterImages
-( 
-	ImagePointer		fixedImage	,
-	ImagePointer		movingImage	,
-	ParameterMapType	&parameterMap	,
-	std::string		outputPath	,
-	bool			performLogging	,
-	bool			performCout	,
-	ImagePointer		fixedMask 	,
-	ImagePointer		movingMask	
-)
+
+/**
+ * ******************* RegisterImages ***********************
+ */
+
+int
+ELASTIX::RegisterImages(
+  ImagePointer fixedImage,
+  ImagePointer movingImage,
+  ParameterMapType & parameterMap,
+  std::string outputPath,
+  bool performLogging,
+  bool performCout,
+  ImagePointer fixedMask,
+  ImagePointer movingMask )
 {
-	/** Some typedef's. */
-	typedef elx::ElastixMain                            ElastixMainType;
-	typedef ElastixMainType::Pointer                    ElastixMainPointer;
-	typedef std::vector<ElastixMainPointer>             ElastixMainVectorType;
-	typedef ElastixMainType::ObjectPointer              ObjectPointer;
-	typedef ElastixMainType::DataObjectContainerType    DataObjectContainerType;
-	typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
-	typedef ElastixMainType::FlatDirectionCosinesType   FlatDirectionCosinesType;
+  /** Some typedef's. */
+  typedef elx::ElastixMain                            ElastixMainType;
+  typedef ElastixMainType::Pointer                    ElastixMainPointer;
+  typedef std::vector<ElastixMainPointer>             ElastixMainVectorType;
+  typedef ElastixMainType::ObjectPointer              ObjectPointer;
+  typedef ElastixMainType::DataObjectContainerType    DataObjectContainerType;
+  typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
+  typedef ElastixMainType::FlatDirectionCosinesType   FlatDirectionCosinesType;
 
-	typedef ElastixMainType::ArgumentMapType            ArgumentMapType;
-	typedef ArgumentMapType::value_type                 ArgumentMapEntryType;
+  typedef ElastixMainType::ArgumentMapType            ArgumentMapType;
+  typedef ArgumentMapType::value_type                 ArgumentMapEntryType;
 
-	typedef std::pair< std::string, std::string >       ArgPairType;
-	typedef std::queue< ArgPairType >                   ParameterFileListType;
-	typedef ParameterFileListType::value_type           ParameterFileListEntryType;
-	
-	typedef ParameterFileParser::ParameterMapType		ParameterMapType;
+  typedef std::pair< std::string, std::string >       ArgPairType;
+  typedef std::queue< ArgPairType >                   ParameterFileListType;
+  typedef ParameterFileListType::value_type           ParameterFileListEntryType;
 
-	tmr::Timer::Pointer timer;
+  typedef ParameterFileParser::ParameterMapType       ParameterMapType;
 
-	/** Some declarations and initialisations. */
-	ElastixMainVectorType elastices;
+  tmr::Timer::Pointer timer;
 
-	ObjectPointer transform = 0;
-	DataObjectContainerPointer fixedImageContainer = 0;
-	DataObjectContainerPointer movingImageContainer = 0;
-	DataObjectContainerPointer fixedMaskContainer = 0;
-	DataObjectContainerPointer movingMaskContainer = 0;
-	DataObjectContainerPointer ResultImageContainer = 0;
-	FlatDirectionCosinesType  fixedImageOriginalDirection;
-	int returndummy = 0;
-	unsigned long nrOfParameterFiles = 0;
-	ArgumentMapType argMap;
-	ParameterFileListType parameterFileList;
-	std::string outFolder = "";
-	std::string logFileName = "";
-	unsigned short i;
-	std::string key;
-	std::string value;
+  /** Some declarations and initialisations. */
+  ElastixMainVectorType elastices;
 
-	/*
-	 * Setup the argumentMap for output path */
-	if( !outputPath.empty() )
-	{
-		/** Put command line parameters into parameterFileList. */
-		key = "-out" ;
-		value = outputPath ;
+  ObjectPointer transform = 0;
+  DataObjectContainerPointer fixedImageContainer = 0;
+  DataObjectContainerPointer movingImageContainer = 0;
+  DataObjectContainerPointer fixedMaskContainer = 0;
+  DataObjectContainerPointer movingMaskContainer = 0;
+  DataObjectContainerPointer ResultImageContainer = 0;
+  FlatDirectionCosinesType  fixedImageOriginalDirection;
+  int returndummy = 0;
+  unsigned long nrOfParameterFiles = 0;
+  ArgumentMapType argMap;
+  ParameterFileListType parameterFileList;
+  std::string outFolder = "";
+  std::string logFileName = "";
+  unsigned short i;
+  std::string key;
+  std::string value;
 
-		/** Make sure that last character of the output folder equals a '/'. */
-		if ( value.find_last_of( "/" ) != value.size() - 1 )
-		{
-			value.append( "/" );
-		}
-	}
-	else
-	{
-		/** Put command line parameters into parameterFileList. */
-		//there must be an "-out", thiss is checked later in code!!
-		key = "-out" ;
-		value = "output_path_not_set";
-	}
-		
-	/** Save this information. */
-	outFolder = value;
+  /** Setup the argumentMap for output path. */
+  if( !outputPath.empty() )
+  {
+    /** Put command line parameters into parameterFileList. */
+    key = "-out" ;
+    value = outputPath ;
 
-	/** Attempt to save the arguments in the ArgumentMap. */
-	if ( argMap.count( key.c_str() ) == 0 )
-	{
-		argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
-	}
-	else if( performCout )
-	{
-		/** Duplicate arguments. */
-		std::cerr << "WARNING!" << std::endl;
-		std::cerr << "Argument "<< key.c_str() << "is only required once." << std::endl;
-		std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
-	}
+    /** Make sure that last character of the output folder equals a '/'. */
+    if( value.find_last_of( "/" ) != value.size() - 1 )
+    {
+      value.append( "/" );
+    }
+  }
+  else
+  {
+    /** Put command line parameters into parameterFileList. */
+    //there must be an "-out", thiss is checked later in code!!
+    key = "-out" ;
+    value = "output_path_not_set";
+  }
 
-	if( performLogging )
-	{
-		/** Check if the output directory exists. */
-		bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
-		if( !outFolderExists )
-		{
-			if( performCout )
-			{
-				std::cerr << "ERROR: the output directory does not exist." << std::endl;
-				std::cerr << "You are responsible for creating it." << std::endl;
-			}
-			return( -2 );
-		}
-		else
-		{	
-			/** Setup xout. */
-			if( performLogging )
-			{
-				logFileName = outFolder + "elastix.log";
-			}
-		}
-	}
+  /** Save this information. */
+  outFolder = value;
 
-	/** The argv0 argument, required for finding the component.dll/so's. */
-	argMap.insert( ArgumentMapEntryType( "-argv0" , "elastix" )  );
+  /** Attempt to save the arguments in the ArgumentMap. */
+  if( argMap.count( key.c_str() ) == 0 )
+  {
+    argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
+  }
+  else if( performCout )
+  {
+    /** Duplicate arguments. */
+    std::cerr << "WARNING!" << std::endl;
+    std::cerr << "Argument "<< key.c_str() << "is only required once." << std::endl;
+    std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
+  }
 
-	//Set nrOfParameterFiles to 1
-	nrOfParameterFiles = 1;
+  if( performLogging )
+  {
+    /** Check if the output directory exists. */
+    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
+    if( !outFolderExists )
+    {
+      if( performCout )
+      {
+        std::cerr << "ERROR: the output directory does not exist." << std::endl;
+        std::cerr << "You are responsible for creating it." << std::endl;
+      }
+      return -2;
+    }
+    else
+    {
+      /** Setup xout. */
+      if( performLogging )
+      {
+        logFileName = outFolder + "elastix.log";
+      }
+    }
+  }
 
-	/** Setup xout. */
-	returndummy = elx::xoutSetup( logFileName.c_str() , performLogging , performCout );
-	if ( returndummy && performCout )
-	{
-		if( performCout )
-		{
-			std::cerr << "ERROR while setting up xout." << std::endl;
-		}
-		return( returndummy );
-	}
+  /** The argv0 argument, required for finding the component.dll/so's. */
+  argMap.insert( ArgumentMapEntryType( "-argv0" , "elastix" )  );
 
-	elxout << std::endl;
+  //Set nrOfParameterFiles to 1
+  nrOfParameterFiles = 1;
 
-	/** Declare a timer, start it and print the start time. */
-	tmr::Timer::Pointer totaltimer = tmr::Timer::New();
-	totaltimer->StartTimer();
-	elxout << "elastix is started at " << totaltimer->PrintStartTime()
-	<< ".\n" << std::endl;
+  /** Setup xout. */
+  returndummy = elx::xoutSetup( logFileName.c_str() , performLogging , performCout );
+  if( returndummy && performCout )
+  {
+    if( performCout )
+    {
+      std::cerr << "ERROR while setting up xout." << std::endl;
+    }
+    return returndummy;
+  }
+  elxout << std::endl;
 
-	/************************************************************************
-	 *									*
-	 *	Generate containers with input images				*
-	 *									*
-	 ************************************************************************/
-	
-	/* Allocate and store images in containers */
-	fixedImageContainer = DataObjectContainerType::New();
-	movingImageContainer = DataObjectContainerType::New();
-	fixedImageContainer->CreateElementAt( 0 ) = fixedImage;
-	movingImageContainer->CreateElementAt( 0 ) = movingImage;
+  /** Declare a timer, start it and print the start time. */
+  tmr::Timer::Pointer totaltimer = tmr::Timer::New();
+  totaltimer->StartTimer();
+  elxout << "elastix is started at " << totaltimer->PrintStartTime()
+    << ".\n" << std::endl;
 
-	/* Allocate and store masks in containers if available*/
-	if( fixedMask )
-	{
-		fixedMaskContainer = DataObjectContainerType::New();
-		fixedMaskContainer->CreateElementAt( 0 ) = fixedMask; 
-	}
-	if( movingMask )
-	{
-		movingMaskContainer = DataObjectContainerType::New();
-		movingMaskContainer->CreateElementAt( 0 ) = movingMask; 
-	}
+  /************************************************************************
+   *                                              *
+   *  Generate containers with input images       *
+   *                                              *
+   ************************************************************************/
 
-	//todo original direction cosin, problem is that Image type is unknown at this in elastixlic.cxx
-	//for now in elaxElastixTemplate (Run()) direction cosines are taken from fixed image
-	
+  /* Allocate and store images in containers */
+  fixedImageContainer = DataObjectContainerType::New();
+  movingImageContainer = DataObjectContainerType::New();
+  fixedImageContainer->CreateElementAt( 0 ) = fixedImage;
+  movingImageContainer->CreateElementAt( 0 ) = movingImage;
 
-	/************************************************************************
-	 * 									*
-	 *		START REGISTRATION					*
-	 *	Do the (possibly multiple) registration(s).			*
-	 *									*
-	 ************************************************************************/
+  /* Allocate and store masks in containers if available*/
+  if( fixedMask )
+  {
+    fixedMaskContainer = DataObjectContainerType::New();
+    fixedMaskContainer->CreateElementAt( 0 ) = fixedMask;
+  }
+  if( movingMask )
+  {
+    movingMaskContainer = DataObjectContainerType::New();
+    movingMaskContainer->CreateElementAt( 0 ) = movingMask;
+  }
 
-	for( i = 0; i < nrOfParameterFiles; i++ )
-	{
-		/** Create another instance of ElastixMain. */
-		elastices.push_back( ElastixMainType::New() );
+  //todo original direction cosin, problem is that Image type is unknown at this in elastixlic.cxx
+  //for now in elaxElastixTemplate (Run()) direction cosines are taken from fixed image
 
-		/** Set stuff we get from a former registration. */
-		elastices[ i ]->SetInitialTransform( transform );
-		elastices[ i ]->SetFixedImageContainer( fixedImageContainer );
-		elastices[ i ]->SetMovingImageContainer( movingImageContainer );
-		elastices[ i ]->SetFixedMaskContainer( fixedMaskContainer );
-		elastices[ i ]->SetMovingMaskContainer( movingMaskContainer );
-		elastices[ i ]->SetResultImageContainer( ResultImageContainer );
-		elastices[ i ]->SetOriginalFixedImageDirectionFlat( fixedImageOriginalDirection );
 
-		/** Set the current elastix-level. */
-		elastices[ i ]->SetElastixLevel( i );
-		elastices[ i ]->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
+  /************************************************************************
+   *                                                  *
+   *    START REGISTRATION                            *
+   *  Do the (possibly multiple) registration(s).     *
+   *                                                  *
+   ************************************************************************/
 
-		/** Delete the previous ParameterFileName. */
-		if ( argMap.count( "-p" ) )
-		{
-			argMap.erase( "-p" );
-		}
-		
-		/** Declare a timer, start it and print the start time. */
-		timer = tmr::Timer::New();
-		timer->StartTimer();
-		elxout << "Current time: " << timer->PrintStartTime() << "." << std::endl;
-			
-		/** Start registration. */
-		returndummy = elastices[ i ]->Run( argMap		, 
-						   static_cast< ParameterMapType >( parameterMap ) );
- 
-		/** Check for errors. */
-		if ( returndummy != 0 )
-		{
-			xl::xout["error"] << "Errors occurred!" << std::endl;
-			return( returndummy );
-		}
+  for( i = 0; i < nrOfParameterFiles; i++ )
+  {
+    /** Create another instance of ElastixMain. */
+    elastices.push_back( ElastixMainType::New() );
 
-		/** Get the transform, the fixedImage and the movingImage
-		 * in order to put it in the (possibly) next registration.
-		 */
-		transform            = elastices[ i ]->GetFinalTransform();
-		fixedImageContainer  = elastices[ i ]->GetFixedImageContainer();
-		movingImageContainer = elastices[ i ]->GetMovingImageContainer();
-		fixedMaskContainer   = elastices[ i ]->GetFixedMaskContainer();
-		movingMaskContainer  = elastices[ i ]->GetMovingMaskContainer();
-		ResultImageContainer = elastices[ i ]->GetResultImageContainer(); 
-		fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
+    /** Set stuff we get from a former registration. */
+    elastices[ i ]->SetInitialTransform( transform );
+    elastices[ i ]->SetFixedImageContainer( fixedImageContainer );
+    elastices[ i ]->SetMovingImageContainer( movingImageContainer );
+    elastices[ i ]->SetFixedMaskContainer( fixedMaskContainer );
+    elastices[ i ]->SetMovingMaskContainer( movingMaskContainer );
+    elastices[ i ]->SetResultImageContainer( ResultImageContainer );
+    elastices[ i ]->SetOriginalFixedImageDirectionFlat( fixedImageOriginalDirection );
 
-		/** Stop timer and print it. */
-		timer->StopTimer();
-		elxout << "\nCurrent time: " << timer->PrintStopTime() << "." << std::endl;
-		elxout << "Time used for running elastix with this parameter file: "
-		<< timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
-	
-		/** Try to release some memory. */
-		elastices[ i ] = 0;
+    /** Set the current elastix-level. */
+    elastices[ i ]->SetElastixLevel( i );
+    elastices[ i ]->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
 
-	} // end loop over registrations
-	
-	elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
-	/** Stop totaltimer and print it. */
-	totaltimer->StopTimer();
-	elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
-	
-	/************************************************************************
-	 *									*
-	 *	Cleanup everything						*
-	 *									*
-	 ************************************************************************/
-	
-	/*
-	 *	Make sure all the components that are defined in a Module (.DLL/.so)
-	 *	are deleted before the modules are closed.
-	 */
-	for( i = 0; i < nrOfParameterFiles; i++ )
-	{
-		elastices[ i ] = 0;
-	}
+    /** Delete the previous ParameterFileName. */
+    if( argMap.count( "-p" ) )
+    {
+      argMap.erase( "-p" );
+    }
 
-	/* Set result image for output */
-	m_ResultImage = ResultImageContainer->ElementAt( 0 );
-	
-	transform = 0;
-	fixedImageContainer = 0;
-	movingImageContainer = 0;
-	fixedMaskContainer = 0;
-	movingMaskContainer = 0;
-	ResultImageContainer = 0;
+    /** Declare a timer, start it and print the start time. */
+    timer = tmr::Timer::New();
+    timer->StartTimer();
+    elxout << "Current time: " << timer->PrintStartTime() << "." << std::endl;
 
-	/** Close the modules. */
-	ElastixMainType::UnloadComponents();
+    /** Start registration. */
+    returndummy = elastices[ i ]->Run( argMap,
+      static_cast< ParameterMapType >( parameterMap ) );
 
-	/** Exit and return the error code. */
-	return( 0 );
+    /** Check for errors. */
+    if( returndummy != 0 )
+    {
+      xl::xout["error"] << "Errors occurred!" << std::endl;
+      return returndummy;
+    }
 
-} // end main
+    /** Get the transform, the fixedImage and the movingImage
+     * in order to put it in the (possibly) next registration.
+     */
+    transform            = elastices[ i ]->GetFinalTransform();
+    fixedImageContainer  = elastices[ i ]->GetFixedImageContainer();
+    movingImageContainer = elastices[ i ]->GetMovingImageContainer();
+    fixedMaskContainer   = elastices[ i ]->GetFixedMaskContainer();
+    movingMaskContainer  = elastices[ i ]->GetMovingMaskContainer();
+    ResultImageContainer = elastices[ i ]->GetResultImageContainer();
+    fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
 
-}//namespace elastix
+    /** Stop timer and print it. */
+    timer->StopTimer();
+    elxout << "\nCurrent time: " << timer->PrintStopTime() << "." << std::endl;
+    elxout << "Time used for running elastix with this parameter file: "
+      << timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+
+    /** Try to release some memory. */
+    elastices[ i ] = 0;
+
+  } // end loop over registrations
+
+  elxout << "-------------------------------------------------------------------------"
+    << "\n" << std::endl;
+
+  /** Stop totaltimer and print it. */
+  totaltimer->StopTimer();
+  elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS()
+    << ".\n" << std::endl;
+
+  /************************************************************************
+   *                                *
+   *  Cleanup everything            *
+   *                                *
+   ************************************************************************/
+
+  /*
+   *  Make sure all the components that are defined in a Module (.DLL/.so)
+   *  are deleted before the modules are closed.
+   */
+  for( i = 0; i < nrOfParameterFiles; i++ )
+  {
+    elastices[ i ] = 0;
+  }
+
+  /* Set result image for output */
+  this->m_ResultImage = ResultImageContainer->ElementAt( 0 );
+
+  transform = 0;
+  fixedImageContainer = 0;
+  movingImageContainer = 0;
+  fixedMaskContainer = 0;
+  movingMaskContainer = 0;
+  ResultImageContainer = 0;
+
+  /** Close the modules. */
+  ElastixMainType::UnloadComponents();
+
+  /** Exit and return the error code. */
+  return 0;
+
+} // end RegisterImages()
+
+}// end namespace elastix
 
 #endif // end #ifndef __elastixlib_cxx
-
