@@ -163,10 +163,16 @@ int main( int argc, char **argv )
     baselineNorm += vnl_math_sqr( parametersBaseline[ i ] );
     diffNorm += vnl_math_sqr( parametersBaseline[ i ] - parametersTest[ i ] );
   }
-  diffNorm = vcl_sqrt( diffNorm ) / vcl_sqrt( baselineNorm );
+  const ScalarType diffNormNormalized = vcl_sqrt( diffNorm ) / vcl_sqrt( baselineNorm );
 
-  std::cerr << "The norm of the difference between baseline and test transform parameters was computed\n";
-  std::cerr << "Computed difference: " << diffNorm << std::endl;
+  std::cerr << "The norm of the difference between baseline and test "
+    << "transform parameters was computed, using\n"
+    << "    || baseline - test ||\n"
+    << "    ---------------------\n"
+    << "       || baseline ||\n";
+  std::cerr << "Computed difference: "
+    << vcl_sqrt( diffNorm ) << " / " << vcl_sqrt( baselineNorm ) << " = "
+    << diffNormNormalized << std::endl;
   std::cerr << "Allowed  difference: " << allowedTolerance << std::endl;
 
   /** Check if this is a B-spline transform.
@@ -175,7 +181,7 @@ int main( int argc, char **argv )
    */
   std::string transformName = "";
   config->ReadParameter( transformName, "Transform", 0, true, dummyErrorMessage );
-  if( diffNorm > 1e-18 && transformName == "BSplineTransform" )
+  if( diffNormNormalized > 1e-18 && transformName == "BSplineTransform" )
   {
     /** Get the true dimension. */
     unsigned int dimension = 2;
@@ -230,7 +236,7 @@ int main( int argc, char **argv )
     const unsigned int numberParPerDim = numberOfParametersTest / dimension;
     while( !it.IsAtEnd() )
     {
-      ScalarType diffNorm = itk::NumericTraits<ScalarType>::Zero;
+      diffNorm = itk::NumericTraits<ScalarType>::Zero;
       for ( unsigned int i = 0; i < dimension; i++ )
       {
         unsigned int j = index + i * numberParPerDim;
@@ -266,7 +272,7 @@ int main( int argc, char **argv )
   }
 
   /** Return. */
-  if( diffNorm > allowedTolerance )
+  if( diffNormNormalized > allowedTolerance )
   {
     std::cerr << "ERROR: The difference is larger than acceptable!" << std::endl;
     return EXIT_FAILURE;
