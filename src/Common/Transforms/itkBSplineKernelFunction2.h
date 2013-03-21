@@ -174,7 +174,7 @@ private:
     WeightArrayType & weights ) const
   {
     weights[ 0 ] = 1.0 - u;
-    weights[ 1 ] = u - 1.0;
+    weights[ 1 ] = u;
   }
 
   /** Second order spline. */

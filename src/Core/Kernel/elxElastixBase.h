@@ -77,6 +77,7 @@
 namespace elastix
 {
 
+
 /**
  * \class ElastixBase
  * \brief This class creates an interface for elastix.
@@ -239,6 +240,10 @@ public:
   elxSetObjectMacro( FixedMaskContainer, DataObjectContainerType );
   elxSetObjectMacro( MovingMaskContainer, DataObjectContainerType );
 
+  /** Set/Get the result image container. */
+  elxGetObjectMacro( ResultImageContainer, DataObjectContainerType );
+  elxSetObjectMacro( ResultImageContainer, DataObjectContainerType );
+
   /** Set/Get The Image FileName containers.
    * Normally, these are filled in the BeforeAllBase function.
    */
@@ -274,6 +279,7 @@ public:
   elxGetNumberOfMacro( MovingMask );
   elxGetNumberOfMacro( FixedMaskFileName );
   elxGetNumberOfMacro( MovingMaskFileName );
+  elxGetNumberOfMacro( ResultImage );
 
   /** Set/Get the initial transform
    * The type is ObjectType, but the pointer should actually point
@@ -420,10 +426,62 @@ protected:
 
     } // end static method GenerateImageContainer
 
+    static DataObjectContainerPointer GenerateImageContainer( DataObjectPointer image )
+    {
+	/*
+	 *	Allocate image container pointer
+	 */
+	DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
+
+	/*
+	 *	Store image in image container (for now only one image in container!)
+	 */
+	imageContainer->CreateElementAt( 0 ) = image;
+		
+	/*
+	 *	Return the pointer to the new image container
+	 */
+	return imageContainer;
+
+    } // end static method overloaded GenerateImageContainer
+
+
     MultipleImageLoader(){};
     ~MultipleImageLoader(){};
 
   }; // end class MultipleImageLoader
+  
+  class MultipleDataObjectFiller
+  {
+  public:
+    	static DataObjectContainerPointer GenerateImageContainer
+	( 
+		DataObjectPointer image 
+	)
+	{
+		unsigned int j = 0; //container with only one image for now!!!!
+	    
+		/*
+		 *	Allocate image container pointer
+		 */
+		DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
+
+		/*
+		 *	Store image in image container
+		 */
+		imageContainer->CreateElementAt(j) = image;
+		
+		/*
+		 *	Return the pointer to the new image container
+		 */
+		return imageContainer;
+
+	} // end static method MultipleImageFiller
+
+	MultipleDataObjectFiller(){};
+	~MultipleDataObjectFiller(){};
+
+  }; // end class MultipleDataObjectFiller
 
 private:
 
@@ -453,6 +511,9 @@ private:
   DataObjectContainerPointer m_MovingImageContainer;
   DataObjectContainerPointer m_FixedMaskContainer;
   DataObjectContainerPointer m_MovingMaskContainer;
+
+  /** The result image container. These are stored as pointers to itk::DataObject. */
+  DataObjectContainerPointer m_ResultImageContainer;
 
   /** The image and mask FileNameContainers. */
   FileNameContainerPointer    m_FixedImageFileNameContainer;

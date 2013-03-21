@@ -14,13 +14,11 @@
 
 #include "elxProgressCommand.h"
 #include "xoutmain.h"
-#include "vnl/vnl_math.h"
+#include "itkMath.h" // itk::Math::Round
 
 
 namespace elastix
 {
-
-
   /**
    * ******************* Constructor ***********************
    */
@@ -177,7 +175,7 @@ namespace elastix
     ::PrintProgress( const float & progress ) const
   {
     /** Print the progress to the screen. */
-    int progressInt = vnl_math_rnd( 100 * progress );
+    const int progressInt = itk::Math::Round<float>( 100 * progress );
     xl::xout["coutonly"]
       << "\r"
       << this->m_StartString
@@ -217,4 +215,3 @@ namespace elastix
 
 
 } // end namespace itk
-

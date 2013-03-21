@@ -144,6 +144,9 @@ public:
   typedef typename FixedImageType::Pointer                          FixedImagePointer;
   typedef typename MovingImageType::Pointer                         MovingImagePointer;
 
+  /** Result image */
+  typedef itk::DataObject                                           ResultImageType;
+
   /** For using the Dimensions. */
   itkStaticConstMacro( Dimension,       unsigned int, FixedImageType::ImageDimension );
   itkStaticConstMacro( FixedDimension,  unsigned int, FixedImageType::ImageDimension );
@@ -242,11 +245,23 @@ public:
   }
   virtual MovingMaskType * GetMovingMask( unsigned int idx ) const;
 
+  /** Get pointers to the result image. They are obtained from the
+   * ResultImageContainer and casted to the appropriate type.
+   */
+  virtual ResultImageType * GetResultImage( void ) const
+  {
+    return this->GetResultImage( 0 );
+  }
+  virtual ResultImageType * GetResultImage( unsigned int idx ) const;
+
+  virtual int SetResultImage( DataObjectPointer result_image );
+
   /** Main functions:
    * Run() for registration, and ApplyTransform() for just
    * applying a transform to an image.
    */
   virtual int Run( void );
+
   virtual int ApplyTransform( void );
 
   /** The Callback functions. */

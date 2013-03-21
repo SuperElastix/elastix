@@ -82,7 +82,7 @@ ImageMaskSpatialObject2< TDimension >
   for(unsigned int i=0; i<TDimension; i++)
   {
     //index[i] = static_cast<int>( p[i] ); // changed by stefan
-    index[i] = static_cast<int>( vnl_math_rnd( p[i] ) );
+    index[i] = static_cast<int>( Math::Round<double>( p[i] ) );
   }
 
   const bool insideBuffer =

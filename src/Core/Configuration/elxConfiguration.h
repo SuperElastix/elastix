@@ -88,6 +88,8 @@ public:
    * itk::ParameterFileParser and passed to the itk::ParameterMapInterface.
    */
   virtual int Initialize( const CommandLineArgumentMapType & _arg );
+  virtual int Initialize( const CommandLineArgumentMapType & _arg ,
+	  ParameterFileParserType::ParameterMapType	& inputMap);
 
   /** True, if Initialize was successfully called. */
   virtual bool IsInitialized( void ) const; //to elxconfigurationbase
@@ -227,7 +229,7 @@ public:
   protected:
 
     Configuration();
-    virtual ~Configuration() {}
+    virtual ~Configuration() {};
 
     /** Print the parameter file to the log file. Called by BeforeAll().
      * This function is not really generic. It's just added because it needs to be

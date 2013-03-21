@@ -6,6 +6,15 @@ cmake_policy( SET CMP0012 NEW )
 project( elastix )
 
 #---------------------------------------------------------------------
+# generate executable, static library or dynamic library.
+mark_as_advanced( ELASTIX_BUILD_EXECUTABLE )
+option( ELASTIX_BUILD_EXECUTABLE "generate executable or library?" ON )
+
+if( NOT ELASTIX_BUILD_EXECUTABLE )
+  add_definitions( -D_ELASTIX_BUILD_LIBRARY )
+endif()
+
+#---------------------------------------------------------------------
 # Find ITK.
 find_package( ITK REQUIRED )
 include( ${ITK_USE_FILE} )
@@ -47,7 +56,7 @@ if( ELASTIX_USE_OPENCL )
   include( elastixOpenCL )
 endif()
 
-#----------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Find Eigen
 mark_as_advanced( ELASTIX_USE_EIGEN )
 option( ELASTIX_USE_EIGEN "Use Eigen library" OFF )
@@ -83,7 +92,7 @@ if( USE_PreconditionedGradientDescent )
  endif()
 endif()
 
-#----------------------------------------------------------------------
+#---------------------------------------------------------------------
 # set single output directories for all executables and libraries.
 # This makes it easier to create an elxUseFile.cmake, that users can
 # include in their programs to borrow elastix functionality.
@@ -107,7 +116,7 @@ mark_as_advanced( ELASTIX_USE_MEVISDICOMTIFF )
 option( ELASTIX_USE_MEVISDICOMTIFF
   "Support MevisLab DicomTiff image format" OFF )
 
-#----------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Define cmake variable to define extra user component directories
 # These directories will be added to the list of include directories
 # and they will be searched for CMakeLists.txt files for further
@@ -118,7 +127,7 @@ mark_as_advanced( ELASTIX_USER_COMPONENT_DIRS )
 set( ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH
   "directories with user defined elastix components" )
 
-#-------------------------------------------------------------------------
+#---------------------------------------------------------------------
 # elastix depends on some ITK settings
 
 if( NOT ITK_USE_REVIEW )
@@ -137,7 +146,18 @@ endif()
 set_property( GLOBAL PROPERTY USE_FOLDERS ${CMAKE_USE_FOLDERS} )
 
 #---------------------------------------------------------------------
-# include directories
+# Set default build type to Release, if none was specified
+# Taken from ITK CMake list
+if( NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES )
+  message( STATUS "Setting build type to 'Release' as none was specified." )
+  set( CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE )
+  # Set the possible values of build type for cmake-gui
+  set_property( CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+    "Debug" "Release" "MinSizeRel" "RelWithDebInfo" )
+endif()
+
+#---------------------------------------------------------------------
+# Include directories
 
 set( elxCommon_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Common
@@ -191,6 +211,7 @@ set( elxINCLUDE_DIRECTORIES
 )
 
 include_directories( ${elxINCLUDE_DIRECTORIES} )
+
 # include the OpenCL directories
 # The key-word BEFORE is important here, because the elastix distribution
 # contains some files with the same name as in the ITK distribution.
@@ -235,7 +256,7 @@ add_subdirectory( Components )
 # components, definitions of macros etc.
 add_subdirectory( Core )
 
-#--------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Configure the examples
 
 set( ELASTIX_DOX_DIR  ${elastix_SOURCE_DIR}/../dox )
@@ -485,7 +506,7 @@ if( ELASTIX_ENABLE_PACKAGER )
   include( CPack )
 endif()
 
-#----------------------------------------------------------------------
+#---------------------------------------------------------------------
 # Make it easier to include elastix functionality in other programs.
 
 # Save library dependencies.

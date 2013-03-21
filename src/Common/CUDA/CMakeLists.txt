@@ -116,7 +116,12 @@ ELSE( WIN32 )
   GET_FILENAME_COMPONENT( cudartlibtoinstall ${cudartlib} REALPATH )
 
   # Get libcudart.so.3, since that is the linked name appearantly
-  FILE( GLOB cudartlibrenamed ${cudartlib}.? )
+  # Since CUDA 5 it will be libcudart.so.5.0
+  file( GLOB cudartlibrenamed ${cudartlib}.? )
+  list( LENGTH cudartlibrenamed cudartliblistlength )
+  if( ${cudartliblistlength} EQUAL 0 )
+    file( GLOB cudartlibrenamed ${cudartlib}.?.? )
+  endif()
   GET_FILENAME_COMPONENT( cudartlibrenamed ${cudartlibrenamed} NAME )
 
 ENDIF( WIN32 )

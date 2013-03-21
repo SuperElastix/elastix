@@ -81,7 +81,7 @@ ElastixTemplate<TFixedImage, TMovingImage>
 
   return 0;
 
-} // end SetFixedImage()
+} // end GetFixedImage()
 
 
 /**
@@ -143,6 +143,37 @@ ElastixTemplate<TFixedImage, TMovingImage>
 
 } // end SetMovingMask()
 
+/**
+ * ********************** GetResultImage *************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+typename ElastixTemplate<TFixedImage, TMovingImage>::ResultImageType *
+ElastixTemplate<TFixedImage, TMovingImage>
+::GetResultImage( unsigned int idx ) const
+{
+  if ( idx < this->GetNumberOfResultImages() )
+  {
+    return dynamic_cast< ResultImageType *>(
+      this->GetResultImageContainer()->ElementAt(idx).GetPointer() );
+  }
+
+  return 0;
+
+} // end GetResultImage()
+
+/**
+ * ********************** SetResultImage *************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+int ElastixTemplate<TFixedImage, TMovingImage>
+::SetResultImage( DataObjectPointer result_image )
+{
+	this->SetResultImageContainer( MultipleDataObjectFiller::GenerateImageContainer( result_image ) ); 
+  return 0;
+} // end SetResultImage()
+
 
 /**
  * **************************** Run *****************************
@@ -197,6 +228,19 @@ int ElastixTemplate<TFixedImage, TMovingImage>
       this->GetFixedImageFileNameContainer(), "Fixed Image", useDirCos, &fixDirCos )  );
     this->SetOriginalFixedImageDirection( fixDirCos );
   }
+  else
+  {
+	/** 
+	 *  images are set in elastixlib.cxx 
+	 *  just set direction cosines
+	 *  in case images are imported for executable it doesnt matter
+	 *  because the InfoChanger has changed these images
+	 */
+	FixedImageType *fixedIm = this->GetFixedImage( 0 );
+	fixDirCos = fixedIm->GetDirection();
+	this->SetOriginalFixedImageDirection( fixDirCos );
+  }
+
   if ( this->GetMovingImage() == 0 )
   {
     this->SetMovingImageContainer(
@@ -273,7 +317,6 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   return 0;
 
 } // end Run()
-
 
 /**
  * ************************ ApplyTransform **********************
@@ -551,9 +594,16 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 
   /** Print the current resolution. */
   elxout << "\nResolution: " << level << std::endl;
-
-  this->OpenIterationInfoFile();
-
+  
+  /** Create a TransformParameter-file for the current resolution. */
+  bool writeIterationInfo = true;
+  this->GetConfiguration()->ReadParameter( writeIterationInfo,
+    "WriteIterationInfo", 0, false );
+  if ( writeIterationInfo )
+  {
+	  this->OpenIterationInfoFile();
+  }
+	
   /** Call all the BeforeEachResolution() functions. */
   this->BeforeEachResolutionBase();
   CallInEachComponent( &BaseComponentType::BeforeEachResolutionBase );
@@ -726,15 +776,21 @@ void ElastixTemplate<TFixedImage, TMovingImage>
   elxout << std::endl;
 
   /** Create the final TransformParameters filename. */
-  std::ostringstream makeFileName("");
-  makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
-    << "TransformParameters."
-    << this->GetConfiguration()->GetElastixLevel()
-    << ".txt";
-  std::string FileName = makeFileName.str();
+  bool writeFinalTansformParameters = true;
+  this->GetConfiguration()->ReadParameter( writeFinalTansformParameters,
+    "WriteFinalTransformParameters", 0, false );
+  if( writeFinalTansformParameters )
+  {
+     std::ostringstream makeFileName("");
+     makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
+        << "TransformParameters."
+        << this->GetConfiguration()->GetElastixLevel()
+        << ".txt";
+     std::string FileName = makeFileName.str();
 
-  /** Create a final TransformParameterFile. */
-  this->CreateTransformParameterFile( FileName, true );
+     /** Create a final TransformParameterFile. */
+     this->CreateTransformParameterFile( FileName, true );
+  }
 
   /** Call all the AfterRegistration() functions. */
   this->AfterRegistrationBase();

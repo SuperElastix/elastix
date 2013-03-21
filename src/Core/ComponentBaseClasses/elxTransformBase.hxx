@@ -940,7 +940,7 @@ TransformBase<TElastix>
       for ( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
         inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-          vnl_math_rnd( fixedcindex[ i ] ) );
+          itk::Math::Round<double>( fixedcindex[ i ] ) );
       }
     }
   }
@@ -956,7 +956,7 @@ TransformBase<TElastix>
       for ( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
         inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-          vnl_math_rnd( point[ i ] ) );
+          itk::Math::Round<double>( point[ i ] ) );
       }
       /** Compute the input point in physical coordinates. */
       dummyImage->TransformIndexToPhysicalPoint(
@@ -977,7 +977,7 @@ TransformBase<TElastix>
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
       outputindexfixedvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-        vnl_math_rnd( fixedcindex[ i ] ) );
+        itk::Math::Round<double>( fixedcindex[ i ] ) );
     }
 
     if ( alsoMovingIndices )
@@ -988,7 +988,7 @@ TransformBase<TElastix>
       for ( unsigned int i = 0; i < MovingImageDimension; i++ )
       {
         outputindexmovingvec[ j ][ i ] = static_cast<MovingImageIndexValueType>(
-          vnl_math_rnd( movingcindex[ i ] ) );
+          itk::Math::Round<double>( movingcindex[ i ] ) );
       }
     }
 
@@ -1196,13 +1196,13 @@ void TransformBase<TElastix>
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( defGenerator->GetOutput() );
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Track the progress of the generation of the deformation field. */
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   progressObserver->ConnectObserver( defGenerator );
   progressObserver->SetStartString( "  Progress: " );
   progressObserver->SetEndString( "%" );
-
+#endif
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
@@ -1300,13 +1300,13 @@ TransformBase<TElastix>
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( jacGenerator->GetOutput() );
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Track the progress of the generation of the deformation field. */
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   progressObserver->ConnectObserver( jacGenerator );
   progressObserver->SetStartString( "  Progress: " );
   progressObserver->SetEndString( "%" );
-
+#endif
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
@@ -1403,13 +1403,13 @@ TransformBase<TElastix>
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( jacGenerator->GetOutput() );
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Track the progress of the generation of the deformation field. */
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   progressObserver->ConnectObserver( jacGenerator );
   progressObserver->SetStartString( "  Progress: " );
   progressObserver->SetEndString( "%" );
-
+#endif
     /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );

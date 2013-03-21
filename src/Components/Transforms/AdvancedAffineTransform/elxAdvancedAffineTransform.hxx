@@ -233,7 +233,6 @@ AdvancedAffineTransformElastix<TElastix>
   bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
   if ( !centerGiven || automaticTransformInitialization )
   {
-
     /** Use the TransformInitializer to determine a center of
      * of rotation and an initial translation.
      */
@@ -243,6 +242,13 @@ AdvancedAffineTransformElastix<TElastix>
       this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
     transformInitializer->SetMovingImage(
       this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
+    transformInitializer->SetFixedImageMask(
+      this->m_Elastix->GetFixedMask() );
+    // Note that setting the mask like this:
+    //  this->m_Registration->GetAsITKBaseType()->GetMetric()->GetFixedImageMask() );
+    // does not work since it is not yet initialized at this point in the metric.
+    transformInitializer->SetMovingImageMask(
+      this->m_Elastix->GetMovingMask() );
     transformInitializer->SetTransform( this->m_AffineTransform );
 
     /** Select the method of initialization. Default: "GeometricalCenter". */
@@ -301,6 +307,11 @@ AdvancedAffineTransformElastix<TElastix>
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()->
     SetInitialTransformParameters( this->GetParameters() );
+
+  /** Give feedback. */
+  // \todo: should perhaps also print fixed parameters
+  elxout << "Transform parameters are initialized as: "
+    << this->GetParameters() << std::endl;
 
 } // end InitializeTransform()
 

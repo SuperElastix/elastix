@@ -55,7 +55,7 @@ std::ofstream   g_LogFileStream;
  * class!!
  */
 
-int xoutSetup( const char * logfilename )
+int xoutSetup( const char * logfilename , bool setupLogging , bool setupCout)
 {
   /** The namespace of xout. */
   using namespace xl;
@@ -63,17 +63,26 @@ int xoutSetup( const char * logfilename )
   int returndummy = 0;
   set_xout( &g_xout );
 
-  /** Open the logfile for writing. */
-  g_LogFileStream.open( logfilename );
-  if ( !g_LogFileStream.is_open() )
+  if( setupLogging )
   {
-    std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
-    return 1;
+	/** Open the logfile for writing. */
+	  g_LogFileStream.open( logfilename );
+	  if ( !g_LogFileStream.is_open() )
+	  {
+	    std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
+	    return 1;
+	}
   }
-
+  
   /** Set std::cout and the logfile as outputs of xout. */
-  returndummy |= xout.AddOutput("log", &g_LogFileStream);
-  returndummy |= xout.AddOutput("cout", &std::cout);
+  if( setupLogging )
+  {
+	returndummy |= xout.AddOutput("log", &g_LogFileStream);
+  }
+  if( setupCout )
+  {
+	returndummy |= xout.AddOutput("cout", &std::cout);
+  }
 
   /** Set outputs of LogOnly and CoutOnly. */
   returndummy |= g_LogOnlyXout.AddOutput( "log", &g_LogFileStream );
@@ -127,6 +136,11 @@ ElastixMain::ElastixMain()
   this->m_FixedImageContainer = 0;
   this->m_MovingImageContainer = 0;
 
+  this->m_FixedMaskContainer = 0;
+  this->m_MovingMaskContainer = 0;
+
+  this->m_ResultImageContainer = 0;
+
   this->m_FinalTransform = 0;
   this->m_InitialTransform = 0;
 
@@ -168,6 +182,25 @@ void ElastixMain
   }
 
 } // end EnterCommandLineParameters()
+
+void ElastixMain
+::EnterCommandLineArguments
+( 
+	ArgumentMapType & argmap	,
+	ParameterMapType	& inputMap
+)
+{
+  /** Initialize the configuration object with the
+   * command line parameters entered by the user.
+   */
+  int dummy = this->m_Configuration->Initialize( argmap , inputMap );
+  if ( dummy )
+  {
+    xout["error"] << "ERROR: Something went wrong during initialisation of the configuration object." << std::endl;
+  }
+
+} // end EnterCommandLineParameters()
+
 
 
 /**
@@ -264,6 +297,7 @@ int ElastixMain::Run( void )
   this->GetElastixBase()->SetMovingImageContainer( this->GetMovingImageContainer() );
   this->GetElastixBase()->SetFixedMaskContainer( this->GetFixedMaskContainer() );
   this->GetElastixBase()->SetMovingMaskContainer( this->GetMovingMaskContainer() );
+  this->GetElastixBase()->SetResultImageContainer( this->GetResultImageContainer() );
 
   /** Set the initial transform, if it happens to be there. */
   this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
@@ -307,6 +341,7 @@ int ElastixMain::Run( void )
   this->SetMovingImageContainer( this->GetElastixBase()->GetMovingImageContainer() );
   this->SetFixedMaskContainer(  this->GetElastixBase()->GetFixedMaskContainer() );
   this->SetMovingMaskContainer( this->GetElastixBase()->GetMovingMaskContainer() );
+  this->SetResultImageContainer( this->GetElastixBase()->GetResultImageContainer() );
 
   /** Store the original fixed image direction cosines (relevant in case the
    * UseDirectionCosines parameter was set to false. */
@@ -318,7 +353,6 @@ int ElastixMain::Run( void )
 
 } // end Run()
 
-
 /**
  * **************************** Run *****************************
  *
@@ -328,6 +362,18 @@ int ElastixMain::Run( void )
 int ElastixMain::Run( ArgumentMapType & argmap )
 {
   this->EnterCommandLineArguments( argmap );
+  return this->Run();
+
+} // end Run()
+
+int ElastixMain::Run
+( 
+	ArgumentMapType & argmap			,
+	ParameterMapType	& inputMap
+)
+{
+
+  this->EnterCommandLineArguments( argmap  , inputMap);
   return this->Run();
 
 } // end Run()
@@ -604,6 +650,8 @@ void ElastixMain::UnloadComponents( void )
     s_ComponentLoader->UnloadComponents();
   }
 
+  s_ComponentLoader = 0;
+
 } // end UnloadComponents()
 
 
@@ -831,7 +879,6 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
 {
   return this->m_OriginalFixedImageDirection;
 } // end GetOriginalFixedImageDirectionFlat()
-
 
 /**
  * ******************** GetImageInformationFromFile ********************

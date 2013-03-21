@@ -111,15 +111,24 @@ target_link_libraries( elxCore
 set( mevisdcmtifflib mevisdcmtiff )
 
 #---------------------------------------------------------------------
-# Create the elastix executable.
-
-add_executable( elastix
-  Main/elastix.cxx
-  Main/elastix.h
-  Kernel/elxElastixMain.cxx
-  Kernel/elxElastixMain.h
-  ${InstallFilesForExecutables}
-)
+# Create the elastix executable or library.
+if( ELASTIX_BUILD_EXECUTABLE )
+	add_executable( elastix
+	  Main/elastix.cxx
+	  Main/elastix.h
+	  Kernel/elxElastixMain.cxx
+	  Kernel/elxElastixMain.h
+	  ${InstallFilesForExecutables}
+	)
+else()
+  add_library( elastix SHARED
+	  Main/elastixlib.cxx
+	  Main/elastixlib.h
+	  Kernel/elxElastixMain.cxx
+	  Kernel/elxElastixMain.h
+	  ${InstallFilesForExecutables}
+	)
+endif()
 
 #---------------------------------------------------------------------
 # Create the transformix executable.
@@ -161,7 +170,7 @@ target_link_libraries( transformix
 )
 
 if( MSVC )
-  # NOTE: that linker /INCREMENTAL:NO flag makes it impossible to use 
+  # NOTE: that linker /INCREMENTAL:NO flag makes it impossible to use
   # Debug breakpoints in Visual Studio 10.0. It is probably the Visual Studio 10.0 bug.
   # Or you have to recompile ITK with the same flag in Debug as well.
   # Or it has something to do with building it with IncrediBuild where this flag is not welcome for PDB files.
@@ -175,12 +184,19 @@ endif()
 # Define the install directory for elastix and transformix.
 
 if( WIN32 )
-  install( TARGETS elastix transformix
-    RUNTIME DESTINATION . )
-    #COMPONENT core )
+  if( ELASTIX_BUILD_EXECUTABLE )
+    install( TARGETS elastix transformix
+      RUNTIME DESTINATION . )
+      #COMPONENT core )
+  else()
+    # TODO: why not install elastix.dll here?
+    install( TARGETS transformix
+      RUNTIME DESTINATION . )
+      #COMPONENT core )
+  endif()
 else()
   # Tell the executables where to find the required .so files.
-  set_target_properties(elastix transformix
+  set_target_properties( elastix transformix
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
   # Put executables in bin and libraries in lib.
   install( TARGETS elastix transformix

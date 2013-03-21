@@ -112,6 +112,16 @@ int main( int argc, char **argv )
         if( last != '/' && last != '\\' ) value.append( "/" );
         value = itksys::SystemTools::ConvertToOutputPath( value.c_str() );
 
+        /** Note that on Windows, in case the output folder contains a space,
+         * the path name is double quoted by ConvertToOutputPath, which is undesirable.
+         * So, we remove these quotes again.
+         */
+        if(  itksys::SystemTools::StringStartsWith( value.c_str(), "\"" )
+          && itksys::SystemTools::StringEndsWith(   value.c_str(), "\"" ) )
+        {
+          value = value.substr( 1, value.length() - 2 );
+        }
+
         /** Save this information. */
         outFolderPresent = true;
         outFolder = value;
@@ -160,7 +170,7 @@ int main( int argc, char **argv )
     {
       /** Setup xout. */
       logFileName = outFolder + "elastix.log";
-      int returndummy2 = elx::xoutSetup( logFileName.c_str() );
+      int returndummy2 = elx::xoutSetup( logFileName.c_str() , true , true );
       if ( returndummy2 )
       {
         std::cerr << "ERROR while setting up xout." << std::endl;
@@ -189,6 +199,7 @@ int main( int argc, char **argv )
     << ".\n" << std::endl;
 
   /** Print where elastix was run. */
+  elxout << "which elastix:   " << argv[0] << std::endl;
   itksys::SystemInformation info;
   info.RunCPUCheck();
   info.RunOSCheck();

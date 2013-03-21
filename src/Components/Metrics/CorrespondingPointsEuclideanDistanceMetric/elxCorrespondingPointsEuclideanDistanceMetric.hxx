@@ -198,7 +198,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>
       pointSet->GetPoint( j, &point );
       for ( unsigned int d = 0; d < FixedImageDimension; ++d )
       {
-        index[ d ] = static_cast<IndexValueType>( vnl_math_rnd( point[ d ] ) );
+        index[ d ] = static_cast<IndexValueType>( itk::Math::Round<double>( point[ d ] ) );
       }
 
       /** Compute the input point in physical coordinates. */

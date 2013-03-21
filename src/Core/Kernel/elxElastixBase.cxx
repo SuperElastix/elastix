@@ -55,6 +55,8 @@ ElastixBase::ElastixBase()
   this->m_FixedMaskFileNameContainer = FileNameContainerType::New();
   this->m_MovingMaskFileNameContainer = FileNameContainerType::New();
 
+  this->m_ResultImageContainer = DataObjectContainerType::New();
+
   /** Initialize initialTransform and final transform. */
   this->m_InitialTransform = 0;
   this->m_FinalTransform = 0;
@@ -115,11 +117,12 @@ int ElastixBase::BeforeAllBase( void )
    * so print an error if they are not present.
    * Print also some info (second boolean = true).
    */
+#ifndef _ELASTIX_BUILD_LIBRARY
   this->m_FixedImageFileNameContainer = this->GenerateFileNameContainer(
     "-f", returndummy, true, true );
   this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
     "-m", returndummy, true, true );
-
+#endif
   /** Read the fixed and moving mask filenames. These are not obliged options,
    * so do not print any errors if they are not present.
    * Do print some info (second boolean = true).
@@ -159,6 +162,17 @@ int ElastixBase::BeforeAllBase( void )
     {
       folder.append( "/" );
       folder = itksys::SystemTools::ConvertToOutputPath( folder.c_str() );
+
+      /** Note that on Windows, in case the output folder contains a space,
+       * the path name is double quoted by ConvertToOutputPath, which is undesirable.
+       * So, we remove these quotes again.
+       */
+      if(  itksys::SystemTools::StringStartsWith( folder.c_str(), "\"" )
+        && itksys::SystemTools::StringEndsWith(   folder.c_str(), "\"" ) )
+      {
+        folder = folder.substr( 1, folder.length() - 2 );
+      }
+
       this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
     }
     elxout << "-out      " << check << std::endl;
