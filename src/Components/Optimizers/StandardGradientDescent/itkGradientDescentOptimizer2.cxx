@@ -50,7 +50,6 @@ namespace itk
     this->m_StopCondition = MaximumNumberOfIterations;
 
     this->m_Threader = ThreaderType::New();
-    this->m_NumberOfThreads = 1;
     this->m_UseMultiThread = false;
     this->m_UseOpenMP  = false;
     this->m_UseEigen = false;
@@ -253,7 +252,7 @@ namespace itk
       const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
       /** Update the new position. */
-      const int nthreads = static_cast<int>( this->m_NumberOfThreads );
+      const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfThreads() );
       omp_set_num_threads( nthreads );
       #pragma omp parallel for
       for( int j = 0; j < spaceDimension; j++ )
@@ -291,7 +290,7 @@ namespace itk
       Eigen::Map<ParametersTypeEigen> gradientE( this->m_Gradient.data_block(), spaceDimension );
 
       /** Update the new position. */
-      const int nthreads = this->m_NumberOfThreads;
+      const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfThreads() );
       omp_set_num_threads( nthreads );
       #pragma omp parallel for
       for( int i = 0; i < nthreads; i += 1 )
@@ -316,7 +315,7 @@ namespace itk
 
       /** Call multi-threaded AdvanceOneStep(). */
       ThreaderType::Pointer local_threader = ThreaderType::New();
-      local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+      local_threader->SetNumberOfThreads( this->m_Threader->GetNumberOfThreads() );
       local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
       local_threader->SingleMethodExecute();
 
@@ -363,7 +362,7 @@ void GradientDescentOptimizer2
     = this->GetScaledCostFunction()->GetNumberOfParameters();
   const unsigned int subSize = static_cast<unsigned int>(
     vcl_ceil( static_cast<double>( spaceDimension )
-    / static_cast<double>( this->m_NumberOfThreads ) ) );
+    / static_cast<double>( this->m_Threader->GetNumberOfThreads() ) ) );
   const unsigned int jmin = threadId * subSize;
   unsigned int jmax = ( threadId + 1 ) * subSize;
   jmax = ( jmax > spaceDimension ) ? spaceDimension : jmax ;

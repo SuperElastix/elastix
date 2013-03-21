@@ -123,14 +123,12 @@ namespace itk
 
     std::vector<double> m_AdvanceOneStepTimings; // tmp
 
-    //void SetNumberOfThreads( ThreadIdType numberOfThreads );
-    //itkSetMacro( NumberOfThreads, ThreadIdType );
+    /** Set the number of threads. */
     void SetNumberOfThreads( ThreadIdType numberOfThreads )
     {
       this->m_Threader->SetNumberOfThreads( numberOfThreads );
-      this->m_NumberOfThreads = this->m_Threader->GetNumberOfThreads();
     }
-    itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
+    //itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
     itkSetMacro( UseMultiThread, bool );
 
     itkSetMacro( UseOpenMP, bool );
@@ -162,8 +160,6 @@ namespace itk
     void operator=(const Self&); //purposely not implemented
 
     // multi-threaded AdvanceOneStep:
-
-    ThreadIdType m_NumberOfThreads;
     bool m_UseMultiThread;
     struct MultiThreaderParameterType
     {
