@@ -590,8 +590,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
       / static_cast<double>( this->m_NumberOfThreads ) ) );
 
-  const unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
+  unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
   pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
 
   /** Create iterator over the sample container. */
