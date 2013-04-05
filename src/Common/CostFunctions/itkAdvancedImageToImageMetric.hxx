@@ -20,7 +20,6 @@
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 
-#include "elxTimer.h"//tmp
 
 namespace itk
 {
@@ -83,10 +82,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_UseMetricSingleThreaded = true;
   this->m_UseOpenMP = false;
 
-  /** Initialise the m_ThreaderMetricParameters */
+  /** Initialise the m_ThreaderMetricParameters. */
   this->m_ThreaderMetricParameters.st_Metric = this;
-
-  this->m_FillDerivativesTimings.clear();//tmp
 
 } // end Constructor
 
@@ -141,11 +138,6 @@ void
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::InitializeThreadingParameters( void ) const
 {
-  // tmp: time this:
-  typedef tmr::Timer TimerType; typedef typename TimerType::Pointer  TimerPointer;
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
-
   /** Resize and initialize the threading related parameters. */
   this->m_ThreaderValues.resize(
     this->m_NumberOfThreads, NumericTraits<MeasureType>::Zero );
@@ -167,11 +159,6 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     ::memset( derivativePointer, 0, sizeof( DerivativeValueType ) * this->GetNumberOfParameters() );
 #endif
   }
-
-  // end timer and store
-  timer->StopTimer();
-  this->m_FillDerivativesTimings.push_back( timer->GetElapsedClockSec() * 1000.0 );
-
 } // end InitializeThreadingParameters()
 
 
@@ -572,8 +559,6 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
       testPtr_combo->GetCurrentTransform() );
     BSplineOrder3TransformType * testPtr_3b = dynamic_cast<BSplineOrder3TransformType *>(
       testPtr_combo->GetCurrentTransform() );
-    //BSplineTransformType * testPtr = dynamic_cast<BSplineOrder3TransformType *>(
-    //  (testPtr_combo->GetCurrentTransform()) );
     if ( testPtr_1b || testPtr_2b || testPtr_3b )
     {
       transformIsBSpline = true;
@@ -588,8 +573,6 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
 /**
  * ******************* EvaluateMovingImageValueAndDerivative ******************
- *
- * Compute image value and possibly derivative at a transformed point
  */
 
 template < class TFixedImage, class TMovingImage >
@@ -614,17 +597,12 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
         /** Compute moving image value and gradient using the B-spline kernel. */
         this->m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
           cindex, movingImageValue, *gradient );
-        //(*gradient)
-        //  = this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
       }
       else if( this->m_InterpolatorIsBSplineFloat && !this->GetComputeGradient() )
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         this->m_BSplineInterpolatorFloat->EvaluateValueAndDerivativeAtContinuousIndex(
           cindex, movingImageValue, *gradient );
-        /** Computed moving image gradient using derivative B-spline kernel. */
-        //(*gradient)
-        //  = this->m_BSplineInterpolatorFloat->EvaluateDerivativeAtContinuousIndex( cindex );
       }
       else if( this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient() )
       {
@@ -698,9 +676,6 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     //       [ j ... j 0 ... 0 0 ... 0 ]
     // jac = [ 0 ... 0 j ... j.0 ... 0 ]
     //       [ 0 ... 0 0 ... 0.j ... j ]
-    //JacobianIteratorType jac = jacobian.begin();
-    //DerivativeIteratorType imjac = imageJacobian.begin();
-
     const unsigned int sizeImageJacobian = imageJacobian.GetSize();
     const unsigned int numberOfParametersPerDimension = sizeImageJacobian / FixedImageDimension;
     unsigned int counter = 0;
@@ -710,13 +685,9 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
       for ( unsigned int mu = 0; mu < numberOfParametersPerDimension; mu++ )
       {
         imageJacobian( counter )
-          = jacobian( dim, counter ) * imDeriv; // is correct, pointers more efficient?
-        //(*imjac) = (*jac) * imDeriv;
-        //++imjac;
-        //++jac;
+          = jacobian( dim, counter ) * imDeriv;
         ++counter;
       }
-      //jac += numberOfParametersPerDimension;
     }
   }
   else
@@ -847,26 +818,13 @@ void
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const
 {
-  /** In this function do all stuff that cannot be multi-threaded.
-   * Meant for use in the combo-metric. So, I did not think about general usage yet.
-   */
+  /** In this function do all stuff that cannot be multi-threaded. */
   if ( this->m_UseMetricSingleThreaded )
   {
-    //typename tmr::Timer::Pointer timer = tmr::Timer::New();
-    //timer->StartTimer();
     this->SetTransformParameters( parameters );
-    //timer->StopTimer();
-    //std::cout << "  SetTransformParameters took: "
-    //  << Math::Round<std::size_t, double>( timer->GetElapsedClockSec() * 1000.0 )
-    //  << " ms. " << std::endl;
     if ( this->m_UseImageSampler )
     {
-      //timer->StartTimer();
       this->GetImageSampler()->Update();
-      //timer->StopTimer();
-      //std::cout << "  GetImageSampler()->Update() took: "
-      //  << Math::Round<std::size_t, double>( timer->GetElapsedClockSec() * 1000.0 )
-      //  << " ms. " << std::endl;
     }
   }
 
@@ -1059,6 +1017,4 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
 } // end namespace itk
 
-
 #endif // end #ifndef _itkAdvancedImageToImageMetric_hxx
-

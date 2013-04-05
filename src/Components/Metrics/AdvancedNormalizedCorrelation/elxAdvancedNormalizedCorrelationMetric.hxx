@@ -21,7 +21,6 @@
 namespace elastix
 {
 
-
   /**
    * ***************** BeforeEachResolution ***********************
    */
@@ -59,7 +58,7 @@ namespace elastix
         << movingImageDerivativeScales << std::endl;
     }
 
-  } // end BeforeEachResolution
+  } // end BeforeEachResolution()
 
 
   /**
@@ -77,11 +76,9 @@ namespace elastix
     elxout << "Initialization of AdvancedNormalizedCorrelation metric took: "
       << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-  } // end Initialize
+  } // end Initialize()
 
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxAdvancedNormalizedCorrelationMetric_HXX__
-

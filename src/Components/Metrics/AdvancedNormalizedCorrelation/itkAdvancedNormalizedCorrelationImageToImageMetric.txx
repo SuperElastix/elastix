@@ -67,11 +67,6 @@ void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::InitializeThreadingParameters( void ) const
 {
-  // tmp: time this:
-  typedef tmr::Timer          TimerType; typedef TimerType::Pointer  TimerPointer;
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
-
   /** Resize and initialize the threading related parameters. */
   this->m_ThreaderNumberOfPixelsCounted.resize(
     this->m_NumberOfThreads, NumericTraits<SizeValueType>::Zero );
@@ -96,10 +91,6 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     this->m_ThreaderDifferential[ i ].SetSize( this->GetNumberOfParameters() );
     this->m_ThreaderDifferential[ i ].Fill( NumericTraits<DerivativeValueType>::Zero );
   }
-
-  // end timer and store
-  timer->StopTimer();
-  this->m_FillDerivativesTimings.push_back( timer->GetElapsedClockSec() * 1000.0 );
 
 } // end InitializeThreadingParameters()
 
@@ -804,6 +795,5 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
 
 } // end namespace itk
-
 
 #endif // end #ifndef _itkAdvancedNormalizedCorrelationImageToImageMetric_txx

@@ -151,17 +151,13 @@ namespace elastix
      */
     virtual void BeforeEachResolution(void);
 
-    virtual void AfterEachResolution(void);
-
   protected:
-
     /** The constructor. */
     AdvancedMeanSquaresMetric(){};
     /** The destructor. */
     virtual ~AdvancedMeanSquaresMetric() {}
 
   private:
-
     /** The private constructor. */
     AdvancedMeanSquaresMetric( const Self& ); // purposely not implemented
     /** The private copy constructor. */
@@ -178,4 +174,3 @@ namespace elastix
 #endif
 
 #endif // end #ifndef __elxAdvancedMeanSquaresMetric_H__
-

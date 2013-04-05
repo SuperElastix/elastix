@@ -53,11 +53,6 @@ void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 ::InitializeThreadingParameters( void ) const
 {
-  // tmp: time this:
-  typedef tmr::Timer          TimerType; typedef TimerType::Pointer  TimerPointer;
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
-
   /** Resize and initialize the threading related parameters. */
   this->m_ThreaderNumberOfPixelsCounted.resize(
     this->m_NumberOfThreads, NumericTraits<SizeValueType>::Zero );
@@ -74,10 +69,6 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
     this->m_ThreaderDerivativeSum2[ i ].SetSize( this->GetNumberOfParameters() );
     this->m_ThreaderDerivativeSum2[ i ].Fill( NumericTraits<DerivativeValueType>::Zero );
   }
-
-  // end timer and store
-  timer->StopTimer();
-  this->m_FillDerivativesTimings.push_back( timer->GetElapsedClockSec() * 1000.0 );
 
 } // end InitializeThreadingParameters()
 

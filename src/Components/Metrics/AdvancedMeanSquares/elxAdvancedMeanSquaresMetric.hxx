@@ -96,8 +96,7 @@ namespace elastix
         << movingImageDerivativeScales << std::endl;
     }
 
-    this->m_FillDerivativesTimings.clear();//tmp
-
+    /** Select the use of an OpenMP implementation for GetValueAndDerivative. */
     bool useOpenMP = false;
     std::string tmp = this->m_Configuration->GetCommandLineArgument( "-useOpenMP_SSD" );
     if ( tmp == "true" )
@@ -105,26 +104,9 @@ namespace elastix
       this->SetUseOpenMP( true );
     }
 
-  } // end BeforeEachResolution
-
-
-    template <class TElastix>
-    void AdvancedMeanSquaresMetric<TElastix>
-    ::AfterEachResolution(void)
-  {
-    //tmp
-    double average = 0;
-    for ( std::size_t i = 0; i < this->m_FillDerivativesTimings.size(); ++i )
-    {
-      average += this->m_FillDerivativesTimings[ i ];
-    }
-    elxout << "\n  FillDerivatives, average time: "
-      << average / this->m_FillDerivativesTimings.size()
-      << " ms.\n" << std::endl;
-  }
+  } // end BeforeEachResolution()
 
 } // end namespace elastix
 
 
 #endif // end #ifndef __elxAdvancedMeanSquaresMetric_HXX__
-

@@ -26,7 +26,6 @@
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
 #include "vnl/vnl_sparse_matrix.h"
-#include "elxTimer.h" // temp? for timing stuff
 
 // Needed for checking for B-spline for faster implementation
 #include "itkAdvancedBSplineDeformableTransform.h"
@@ -179,6 +178,7 @@ public:
 
   /** Public methods ********************/
 
+  /** Set the transform, of advanced type. */
   virtual void SetTransform( AdvancedTransformType * arg )
   {
     this->Superclass::SetTransform( arg );
@@ -188,6 +188,8 @@ public:
       this->Modified();
     }
   }
+
+  /** Get the advanced transform. */
   const AdvancedTransformType * GetTransform( void ) const
   {
     return this->m_AdvancedTransform.GetPointer();
@@ -265,7 +267,8 @@ public:
   itkGetConstReferenceMacro( UseMetricSingleThreaded, bool );
   itkBooleanMacro( UseMetricSingleThreaded );
 
-  // \todo: maybe these can be united
+  /** Select the use of multi-threading*/
+  // \todo: maybe these can be united, check base class.
   itkSetMacro( UseMultiThread, bool );
   itkGetConstReferenceMacro( UseMultiThread, bool );
   itkBooleanMacro( UseMultiThread );
@@ -277,9 +280,6 @@ public:
    */
   virtual void BeforeThreadedGetValueAndDerivative(
     const TransformParametersType & parameters ) const;
-
-
-  mutable std::vector<double> m_FillDerivativesTimings;//tmp
 
 protected:
   /** Constructor. */
@@ -320,8 +320,9 @@ protected:
 
   /** Protected Variables **************/
 
-  /** Variables for ImageSampler support. m_ImageSampler is mutable, because it is
-   * changed in the GetValue(), etc, which are const functions. */
+  /** Variables for ImageSampler support. m_ImageSampler is mutable,
+   * because it is changed in the GetValue(), etc, which are const functions.
+   */
   mutable ImageSamplerPointer   m_ImageSampler;
 
   /** Variables for image derivative computation. */
@@ -427,10 +428,10 @@ protected:
   /** Compute the image value (and possibly derivative) at a transformed point.
    * Checks if the point lies within the moving image buffer (bool return).
    * If no gradient is wanted, set the gradient argument to 0.
-   * If a BSplineInterpolationFunction is used, this class obtain
-   * image derivatives from the B-spline interpolator. Otherwise,
-   * image derivatives are computed using nearest neighbor interpolation
-   * of a precomputed (central difference) gradient image.
+   * If a BSplineInterpolationFunction or AdvacnedLinearInterpolationFunction
+   * is used, this class obtains image derivatives from the B-spline or linear
+   * interpolator. Otherwise, image derivatives are computed using nearest
+   * neighbor interpolation of a precomputed (central difference) gradient image.
    */
   virtual bool EvaluateMovingImageValueAndDerivative(
     const MovingImagePointType & mappedPoint,
