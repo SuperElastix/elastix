@@ -74,7 +74,7 @@ Configuration
 ::BeforeAll( void )
 {
 #ifndef _ELASTIX_BUILD_LIBRARY
-	this->PrintParameterFile();
+  this->PrintParameterFile();
 #endif
   return 0;
 
@@ -179,13 +179,15 @@ Configuration
 
 } // end Initialize()
 
+
+/**
+ * ********************** Initialize ****************************
+ */
+
 int
 Configuration
-::Initialize
-( 
-	const CommandLineArgumentMapType & _arg	,
-	ParameterFileParserType::ParameterMapType & inputMap
-)
+::Initialize( const CommandLineArgumentMapType & _arg,
+  ParameterFileParserType::ParameterMapType & inputMap )
 {
   /** The first part is getting the command line arguments and setting them
    * in the configuration. From the command line arguments we find the name

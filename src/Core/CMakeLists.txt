@@ -113,22 +113,22 @@ SET( mevisdcmtifflib mevisdcmtiff )
 #---------------------------------------------------------------------
 # Create the elastix executable or library.
 
-IF( ELASTIX_BUILD_EXECUTABLE  )
-	ADD_EXECUTABLE( elastix
-	  Main/elastix.cxx
-	  Main/elastix.h
-	  Kernel/elxElastixMain.cxx
-	  Kernel/elxElastixMain.h
-	  ${InstallFilesForExecutables}
-	)
+IF( ELASTIX_BUILD_EXECUTABLE )
+  ADD_EXECUTABLE( elastix
+    Main/elastix.cxx
+    Main/elastix.h
+    Kernel/elxElastixMain.cxx
+    Kernel/elxElastixMain.h
+    ${InstallFilesForExecutables}
+  )
 ELSE()
-	ADD_LIBRARY( elastix SHARED
-	  Main/elastixlib.cxx
-	  Main/elastixlib.h
-	  Kernel/elxElastixMain.cxx
-	  Kernel/elxElastixMain.h
-	  ${InstallFilesForExecutables}
-	)
+  ADD_LIBRARY( elastix SHARED
+    Main/elastixlib.cxx
+    Main/elastixlib.h
+    Kernel/elxElastixMain.cxx
+    Kernel/elxElastixMain.h
+    ${InstallFilesForExecutables}
+  )
 ENDIF()
 
 
@@ -187,7 +187,7 @@ IF( WIN32 )
   ENDIF()
 ELSE()
   # Tell the executables where to find the required .so files.
-  SET_TARGET_PROPERTIES(elastix transformix
+  SET_TARGET_PROPERTIES( elastix transformix
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
   # Put executables in bin and libraries in lib.
   INSTALL( TARGETS elastix transformix

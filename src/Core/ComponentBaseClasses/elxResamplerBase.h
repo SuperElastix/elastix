@@ -162,8 +162,8 @@ public:
   /** Function to write the result output image to a file. */
   virtual void WriteResultImage( const char * filename, const bool & showProgress = true );
 
-   /** Function to create the result image in the format of an itk::Image. */
-    virtual void CreateItkResultImage( );
+  /** Function to create the result image in the format of an itk::Image. */
+  virtual void CreateItkResultImage( void );
 
 protected:
 

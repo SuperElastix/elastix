@@ -143,6 +143,7 @@ ElastixTemplate<TFixedImage, TMovingImage>
 
 } // end SetMovingMask()
 
+
 /**
  * ********************** GetResultImage *************************
  */
@@ -152,7 +153,7 @@ typename ElastixTemplate<TFixedImage, TMovingImage>::ResultImageType *
 ElastixTemplate<TFixedImage, TMovingImage>
 ::GetResultImage( unsigned int idx ) const
 {
-  if ( idx < this->GetNumberOfResultImages() )
+  if( idx < this->GetNumberOfResultImages() )
   {
     return dynamic_cast< ResultImageType *>(
       this->GetResultImageContainer()->ElementAt(idx).GetPointer() );
@@ -162,6 +163,7 @@ ElastixTemplate<TFixedImage, TMovingImage>
 
 } // end GetResultImage()
 
+
 /**
  * ********************** SetResultImage *************************
  */
@@ -170,7 +172,8 @@ template <class TFixedImage, class TMovingImage>
 int ElastixTemplate<TFixedImage, TMovingImage>
 ::SetResultImage( DataObjectPointer result_image )
 {
-	this->SetResultImageContainer( MultipleDataObjectFiller::GenerateImageContainer( result_image ) ); 
+  this->SetResultImageContainer(
+    MultipleDataObjectFiller::GenerateImageContainer( result_image ) );
   return 0;
 } // end SetResultImage()
 
@@ -221,7 +224,7 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   /** Read images and masks, if not set already. */
   const bool useDirCos = this->GetUseDirectionCosines();
   FixedImageDirectionType fixDirCos;
-  if ( this->GetFixedImage() == 0 )
+  if( this->GetFixedImage() == 0 )
   {
     this->SetFixedImageContainer(
       FixedImageLoaderType::GenerateImageContainer(
@@ -230,18 +233,18 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   }
   else
   {
-	/** 
-	 *  images are set in elastixlib.cxx 
-	 *  just set direction cosines
-	 *  in case images are imported for executable it doesnt matter
-	 *  because the InfoChanger has changed these images
-	 */
-	FixedImageType *fixedIm = this->GetFixedImage( 0 );
-	fixDirCos = fixedIm->GetDirection();
-	this->SetOriginalFixedImageDirection( fixDirCos );
+    /**
+     *  images are set in elastixlib.cxx
+     *  just set direction cosines
+     *  in case images are imported for executable it doesnt matter
+     *  because the InfoChanger has changed these images.
+     */
+    FixedImageType * fixedIm = this->GetFixedImage( 0 );
+    fixDirCos = fixedIm->GetDirection();
+    this->SetOriginalFixedImageDirection( fixDirCos );
   }
 
-  if ( this->GetMovingImage() == 0 )
+  if( this->GetMovingImage() == 0 )
   {
     this->SetMovingImageContainer(
       MovingImageLoaderType::GenerateImageContainer(
@@ -317,6 +320,7 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   return 0;
 
 } // end Run()
+
 
 /**
  * ************************ ApplyTransform **********************
@@ -594,16 +598,16 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 
   /** Print the current resolution. */
   elxout << "\nResolution: " << level << std::endl;
-  
+
   /** Create a TransformParameter-file for the current resolution. */
   bool writeIterationInfo = true;
   this->GetConfiguration()->ReadParameter( writeIterationInfo,
     "WriteIterationInfo", 0, false );
-  if ( writeIterationInfo )
+  if( writeIterationInfo )
   {
-	  this->OpenIterationInfoFile();
+    this->OpenIterationInfoFile();
   }
-	
+
   /** Call all the BeforeEachResolution() functions. */
   this->BeforeEachResolutionBase();
   CallInEachComponent( &BaseComponentType::BeforeEachResolutionBase );
@@ -781,15 +785,15 @@ void ElastixTemplate<TFixedImage, TMovingImage>
     "WriteFinalTransformParameters", 0, false );
   if( writeFinalTansformParameters )
   {
-     std::ostringstream makeFileName("");
-     makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
-        << "TransformParameters."
-        << this->GetConfiguration()->GetElastixLevel()
-        << ".txt";
-     std::string FileName = makeFileName.str();
+    std::ostringstream makeFileName( "" );
+    makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
+      << "TransformParameters."
+      << this->GetConfiguration()->GetElastixLevel()
+      << ".txt";
+    std::string FileName = makeFileName.str();
 
-     /** Create a final TransformParameterFile. */
-     this->CreateTransformParameterFile( FileName, true );
+    /** Create a final TransformParameterFile. */
+    this->CreateTransformParameterFile( FileName, true );
   }
 
   /** Call all the AfterRegistration() functions. */

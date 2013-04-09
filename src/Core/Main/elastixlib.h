@@ -28,11 +28,11 @@
 #define ELX_COMPILE_LIB 1
 
 #if (defined(_WIN32) || defined(WIN32) )
-# ifdef ELX_COMPILE_LIB
-#  define ELASTIXLIB_API __declspec(dllexport)
-# else
-#  define ELASTIXLIB_API __declspec(dllimport)
-# endif
+#ifdef ELX_COMPILE_LIB
+#define ELASTIXLIB_API __declspec(dllexport)
+#else
+#define ELASTIXLIB_API __declspec(dllimport)
+#endif
 #else
 /* unix needs nothing */
 #define ELX_EXPORT
@@ -58,13 +58,13 @@ public:
   typedef std::vector< std::string >                    ParameterValuesType;
   typedef std::map< std::string, ParameterValuesType >  ParameterMapType;
 
-  /*
+  /**
    *  Constructor and destructor
    */
   ELASTIX::ELASTIX();
   ELASTIX::~ELASTIX();
 
-  /*
+  /**
    *  The image registration interface functionality
    *  Note:
    *    - itk::Image::PixelType must be the same as specified in ParameterMap
@@ -90,15 +90,15 @@ public:
    *      (e.g. #define ELASTIX_NO_ERROR 0)
    */
   int RegisterImages( ImagePointer fixedImage,
-          ImagePointer movingImage,
-          ParameterMapType & parameterMap,
-          std::string   outputPath,
-          bool performLogging,
-          bool performCout,
-          ImagePointer fixedMask = 0,
-          ImagePointer movingMask = 0 );
+    ImagePointer movingImage,
+    ParameterMapType & parameterMap,
+    std::string   outputPath,
+    bool performLogging,
+    bool performCout,
+    ImagePointer fixedMask = 0,
+    ImagePointer movingMask = 0 );
 
-  /*
+  /**
    *  Getter for result image
    */
   ImagePointer GetResultImage( void );

@@ -980,7 +980,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   if ( sizejacind > 1 ) jacind[ 1 ] = 0;
   for ( iter = begin; iter != end; ++iter )
   {
-#ifndef _ELASTIX_BUILD_LIBRARY 
+#ifndef _ELASTIX_BUILD_LIBRARY
     /** Print progress 0-50%. */
     progressObserver->UpdateAndPrintProgress( samplenr );
 #endif
@@ -1259,7 +1259,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 #ifndef _ELASTIX_BUILD_LIBRARY
     /** Show progress 50-100%. */
     progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
-#endif    
+#endif
     ++samplenr;
 
   } // end loop over sample container

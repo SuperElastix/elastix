@@ -55,7 +55,7 @@ std::ofstream   g_LogFileStream;
  * class!!
  */
 
-int xoutSetup( const char * logfilename , bool setupLogging , bool setupCout)
+int xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
 {
   /** The namespace of xout. */
   using namespace xl;
@@ -65,23 +65,23 @@ int xoutSetup( const char * logfilename , bool setupLogging , bool setupCout)
 
   if( setupLogging )
   {
-	/** Open the logfile for writing. */
-	  g_LogFileStream.open( logfilename );
-	  if ( !g_LogFileStream.is_open() )
-	  {
-	    std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
-	    return 1;
-	}
+    /** Open the logfile for writing. */
+    g_LogFileStream.open( logfilename );
+    if( !g_LogFileStream.is_open() )
+    {
+      std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
+      return 1;
+    }
   }
-  
+
   /** Set std::cout and the logfile as outputs of xout. */
   if( setupLogging )
   {
-	returndummy |= xout.AddOutput("log", &g_LogFileStream);
+    returndummy |= xout.AddOutput( "log", &g_LogFileStream );
   }
   if( setupCout )
   {
-	returndummy |= xout.AddOutput("cout", &std::cout);
+    returndummy |= xout.AddOutput( "cout", &std::cout );
   }
 
   /** Set outputs of LogOnly and CoutOnly. */
@@ -183,24 +183,25 @@ void ElastixMain
 
 } // end EnterCommandLineParameters()
 
+
+/**
+ * *************** EnterCommandLineArguments *******************
+ */
+
 void ElastixMain
-::EnterCommandLineArguments
-( 
-	ArgumentMapType & argmap	,
-	ParameterMapType	& inputMap
-)
+::EnterCommandLineArguments( ArgumentMapType & argmap,
+  ParameterMapType & inputMap )
 {
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
    */
   int dummy = this->m_Configuration->Initialize( argmap , inputMap );
-  if ( dummy )
+  if( dummy )
   {
     xout["error"] << "ERROR: Something went wrong during initialisation of the configuration object." << std::endl;
   }
 
-} // end EnterCommandLineParameters()
-
+} // end EnterCommandLineArguments()
 
 
 /**
@@ -353,39 +354,38 @@ int ElastixMain::Run( void )
 
 } // end Run()
 
+
 /**
  * **************************** Run *****************************
- *
- * Calls EnterCommandLineParameters and then Run().
  */
 
 int ElastixMain::Run( ArgumentMapType & argmap )
 {
   this->EnterCommandLineArguments( argmap );
   return this->Run();
-
-} // end Run()
-
-int ElastixMain::Run
-( 
-	ArgumentMapType & argmap			,
-	ParameterMapType	& inputMap
-)
-{
-
-  this->EnterCommandLineArguments( argmap  , inputMap);
-  return this->Run();
-
 } // end Run()
 
 
 /**
-* ************************** InitDBIndex ***********************
-*
-* Checks if the configuration object has been initialized,
-* determines the requested ImageTypes, and sets the m_DBIndex
-* to the corresponding value (by asking the elx::ComponentDatabase).
-*/
+ * **************************** Run *****************************
+ */
+
+int ElastixMain
+::Run( ArgumentMapType & argmap,
+  ParameterMapType & inputMap )
+{
+  this->EnterCommandLineArguments( argmap, inputMap );
+  return this->Run();
+} // end Run()
+
+
+/**
+ * ************************** InitDBIndex ***********************
+ *
+ * Checks if the configuration object has been initialized,
+ * determines the requested ImageTypes, and sets the m_DBIndex
+ * to the corresponding value (by asking the elx::ComponentDatabase).
+ */
 
 int ElastixMain::InitDBIndex( void )
 {
@@ -879,6 +879,7 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
 {
   return this->m_OriginalFixedImageDirection;
 } // end GetOriginalFixedImageDirectionFlat()
+
 
 /**
  * ******************** GetImageInformationFromFile ********************

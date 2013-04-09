@@ -236,4 +236,3 @@ int TransformixMain::InitDBIndex( void )
 } // end InitDBIndex()
 
 } // end namespace elastix
-
