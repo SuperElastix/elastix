@@ -40,6 +40,8 @@
 #include "itkIdentityTransform.h"
 #include "vnl/vnl_math.h"
 #include <vector>
+#include <algorithm> // std::copy
+
 
 namespace itk
 {
@@ -514,7 +516,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   for( unsigned int d = 0; d < SpaceDimension; ++d )
   {
     unsigned long offset = d * SpaceDimension * numberOfWeights + d * numberOfWeights;
-    memcpy( jacobianPointer + offset, weightsArray, numberOfWeights * sizeof( ParametersValueType ) );
+    std::copy( weightsArray, weightsArray + numberOfWeights, jacobianPointer + offset );
   }
 
   /** Compute the nonzero Jacobian indices.
@@ -795,8 +797,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, supportIndex, weights );
 
     /** Remember the weights. */
-    memcpy( weightVector + i * numberOfWeights,
-      weights.data_block(), numberOfWeights * sizeof( double ) );
+    std::copy( weights.data_block(), weights.data_block() + numberOfWeights,
+      weightVector + i * numberOfWeights );
 
   } // end for i
 
@@ -905,8 +907,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
      * weights at once for all dimensions */
 
     /** Remember the weights. */
-    memcpy( weightVector + i * numberOfWeights,
-      weights.data_block(), numberOfWeights * sizeof( double ) );
+    std::copy( weights.data_block(), weights.data_block() + numberOfWeights,
+      weightVector + i * numberOfWeights );
 
     /** Compute the spatial Jacobian sj:
      *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
@@ -1202,8 +1204,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         ->Evaluate( cindex, supportIndex, weights );
 
       /** Remember the weights. */
-      memcpy( weightVector + count * numberOfWeights,
-        weights.data_block(), numberOfWeights * sizeof( double ) );
+      std::copy( weights.data_block(), weights.data_block() + numberOfWeights,
+        weightVector + count * numberOfWeights );
       count++;
 
       /** Reset coeffs iterator */
@@ -1392,8 +1394,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         ->Evaluate( cindex, supportIndex, weights );
 
       /** Remember the weights. */
-      memcpy( weightVector + count * numberOfWeights,
-        weights.data_block(), numberOfWeights * sizeof( double ) );
+      std::copy( weights.data_block(), weights.data_block() + numberOfWeights,
+        weightVector + count * numberOfWeights );
       count++;
 
       /** Reset coeffs iterator */
