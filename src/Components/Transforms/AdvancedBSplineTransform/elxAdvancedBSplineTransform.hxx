@@ -171,21 +171,6 @@ void AdvancedBSplineTransform<TElastix>
   /** Precompute the B-spline grid regions. */
   this->PreComputeGridInformation();
 
-  /** Temporary?: Use the multi-threaded version or not. */
-  bool useMultiThread = false;
-  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-oj" ); // oj: optimized jacobians
-  if ( tmp == "true" )
-  {
-    this->m_BSplineTransform->SetUseMultiThread( true );
-    //std::string tmp2 = this->m_Configuration->GetCommandLineArgument( "-threads" );
-    //unsigned int nrOfThreads = atoi( tmp2.c_str() );
-    //if ( tmp2 != "" )
-    //{
-    //  this->SetNumberOfThreads( nrOfThreads );
-    //}
-  }
-  else this->m_BSplineTransform->SetUseMultiThread( false );
-
 } // end BeforeRegistration()
 
 

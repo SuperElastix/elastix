@@ -96,8 +96,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   this->UpdatePointIndexConversions();
 
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
-
-  this->m_UseMultiThread = false;//tmp
 }
 
 

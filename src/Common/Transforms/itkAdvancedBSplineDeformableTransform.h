@@ -245,10 +245,6 @@ public:
     const InputPointType & ipp,
     JacobianType & j,
     NonZeroJacobianIndicesType & ) const;
-  virtual void GetJacobian_opt(
-    const InputPointType & ipp,
-    JacobianType & j,
-    NonZeroJacobianIndicesType & ) const;
 
   /** Compute the spatial Jacobian of the transformation. */
   virtual void GetSpatialJacobian(
@@ -285,11 +281,6 @@ public:
    * spatial Hessian of the transformation.
    */
   virtual void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
-  virtual void GetJacobianOfSpatialHessian_opt(
     const InputPointType & ipp,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
