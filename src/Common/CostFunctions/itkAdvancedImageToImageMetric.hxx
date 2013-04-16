@@ -148,16 +148,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   /** Initialize the derivatives. */
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
-    // only resizes when different size, is good:
     this->m_ThreaderDerivatives[ i ].SetSize( this->GetNumberOfParameters() );
-#if 1 //#ifdef FillDerivatives
-    // Does not use memcopy, probably slow:
     this->m_ThreaderDerivatives[ i ].Fill( 0 );
-    // measured to be 3ms on PCMarius for 300k parameters, while total iter took 25 ms
-#else
-    DerivativeValueType * derivativePointer = this->m_ThreaderDerivatives[ i ].data_block();
-    ::memset( derivativePointer, 0, sizeof( DerivativeValueType ) * this->GetNumberOfParameters() );
-#endif
   }
 } // end InitializeThreadingParameters()
 
