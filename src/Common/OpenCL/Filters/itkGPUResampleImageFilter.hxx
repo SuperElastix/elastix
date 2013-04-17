@@ -24,7 +24,8 @@
 
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkTimeProbe.h"
-#include "itkImageRegionSplitter.h"
+#include "itkImageRegionSplitterSlowDimension.h"
+
 
 namespace
 {
@@ -437,27 +438,31 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
   if( ImageDim < 3 )
     requestedNumberOfSplits = 1;
 
-  typedef ImageRegionSplitter< TInputImage::ImageDimension > RegionSplitterType;
-  typename RegionSplitterType::RegionType splitRegion;
+  typedef ImageRegionSplitterSlowDimension RegionSplitterType;
+  typedef ImageRegion<ImageDim> RegionType;
+  typedef typename RegionType::SizeType SizeType;
+  RegionType splitRegion;
   splitRegion.SetSize( outSize );
-  typename RegionSplitterType::Pointer splitter = RegionSplitterType::New();
-  const unsigned int numberOfSplits = splitter->GetNumberOfSplits( splitRegion, requestedNumberOfSplits );
+  RegionSplitterType::Pointer splitter = RegionSplitterType::New();
+  const unsigned int numberOfSplits
+    = splitter->GetNumberOfSplits( splitRegion, requestedNumberOfSplits );
 
   // maxSize
-  typename RegionSplitterType::SizeType maxSize;
+  SizeType maxSize;
   maxSize.Fill( 0 );
-  for ( unsigned int i = 0; i < numberOfSplits; i++ )
+  for( unsigned int i = 0; i < numberOfSplits; i++ )
   {
-    const typename RegionSplitterType::RegionType currentRegion = splitter->GetSplit( i, numberOfSplits, splitRegion );
-    const typename RegionSplitterType::SizeType currentSize = currentRegion.GetSize();
+    RegionType currentRegion = splitRegion;
+    splitter->GetSplit( i, numberOfSplits, currentRegion );
+    const SizeType currentSize = currentRegion.GetSize();
     std::size_t cSize = 1, mSize = 1;
-    for ( unsigned int i = 0; i < ImageDim; i++ )
+    for( unsigned int i = 0; i < ImageDim; i++ )
     {
       cSize *= currentSize[i];
       mSize *= maxSize[i];
     }
 
-    if ( cSize > mSize )
+    if( cSize > mSize )
     {
       maxSize = currentSize;
     }
@@ -537,8 +542,8 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
         piece < numDivisions && !this->GetAbortGenerateData();
         piece++ )
   {
-    const typename RegionSplitterType::RegionType currentRegion =
-      splitter->GetSplit( piece, numDivisions, splitRegion );
+    RegionType currentRegion = splitRegion;
+    splitter->GetSplit( piece, numDivisions, currentRegion );
 
     // define and set dfsize, global and offset
     switch ( ImageDim )
@@ -550,31 +555,31 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
         offset1D = currentRegion.GetIndex( 0 );
 
         // set dfsize argument
-        m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle,
+        this->m_PreKernelManager->SetKernelArg( this->m_FilterPreGPUKernelHandle,
                                           dtsizePreIntex, sizeof( cl_uint ), (void *)&dfsize1D );
 
         if ( HasTransform( IdentityTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint ), (void *)&dfsize1D );
         }
         if ( HasTransform( MatrixOffsetTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint ), (void *)&dfsize1D );
         }
         if ( HasTransform( TranslationTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint ), (void *)&dfsize1D );
         }
         if ( HasTransform( BSplineTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( BSplineTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( BSplineTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint ), (void *)&dfsize1D );
         }
 
-        m_PostKernelManager->SetKernelArg( m_FilterPostGPUKernelHandle,
+        this->m_PostKernelManager->SetKernelArg( this->m_FilterPostGPUKernelHandle,
                                            dfsizePostIntex, sizeof( cl_uint ), (void *)&dfsize1D );
 
         global = OpenCLSize( global1D );
@@ -591,31 +596,31 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
         }
 
         // set dfsize argument
-        m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle,
+        this->m_PreKernelManager->SetKernelArg( this->m_FilterPreGPUKernelHandle,
                                           dtsizePreIntex, sizeof( cl_uint2 ), (void *)&dfsize2D );
 
         if ( HasTransform( IdentityTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint2 ), (void *)&dfsize2D );
         }
         if ( HasTransform( MatrixOffsetTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint2 ), (void *)&dfsize2D );
         }
         if ( HasTransform( TranslationTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint2 ), (void *)&dfsize2D );
         }
         if ( HasTransform( BSplineTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( BSplineTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( BSplineTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint2 ), (void *)&dfsize2D );
         }
 
-        m_PostKernelManager->SetKernelArg( m_FilterPostGPUKernelHandle,
+        this->m_PostKernelManager->SetKernelArg( this->m_FilterPostGPUKernelHandle,
                                            dfsizePostIntex, sizeof( cl_uint2 ), (void *)&dfsize2D );
 
         global = OpenCLSize( global2D[0], global2D[1] );
@@ -633,31 +638,31 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
         dfsize3D.s[3] = 0;
 
         // set dfsize argument
-        m_PreKernelManager->SetKernelArg( m_FilterPreGPUKernelHandle,
+        this->m_PreKernelManager->SetKernelArg( this->m_FilterPreGPUKernelHandle,
                                           dtsizePreIntex, sizeof( cl_uint3 ), (void *)&dfsize3D );
 
         if ( HasTransform( IdentityTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint3 ), (void *)&dfsize3D );
         }
         if ( HasTransform( MatrixOffsetTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint3 ), (void *)&dfsize3D );
         }
         if ( HasTransform( TranslationTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( TranslationTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint3 ), (void *)&dfsize3D );
         }
         if ( HasTransform( BSplineTransform ) )
         {
-          m_LoopKernelManager->SetKernelArg( GetTransformHandle( BSplineTransform ),
+          this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( BSplineTransform ),
                                              dfsizeLoopIntex, sizeof( cl_uint3 ), (void *)&dfsize3D );
         }
 
-        m_PostKernelManager->SetKernelArg( m_FilterPostGPUKernelHandle,
+        this->m_PostKernelManager->SetKernelArg( this->m_FilterPostGPUKernelHandle,
                                            dfsizePostIntex, sizeof( cl_uint3 ), (void *)&dfsize3D );
 
         global = OpenCLSize( global3D[0], global3D[1], global3D[2] );
@@ -666,60 +671,60 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
       break;
     }
 
-    m_PreKernelManager->SetGlobalWorkSize( 0, global );
-    m_PreKernelManager->SetGlobalWorkOffset( 0, offset );
+    this->m_PreKernelManager->SetGlobalWorkSize( 0, global );
+    this->m_PreKernelManager->SetGlobalWorkOffset( 0, offset );
 
     if ( HasTransform( IdentityTransform ) )
     {
       const int kernelId = GetTransformHandle( IdentityTransform );
-      m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
-      m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
+      this->m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
+      this->m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
     }
     if ( HasTransform( MatrixOffsetTransform ) )
     {
       const int kernelId = GetTransformHandle( MatrixOffsetTransform );
-      m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
-      m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
+      this->m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
+      this->m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
     }
     if ( HasTransform( TranslationTransform ) )
     {
       const int kernelId = GetTransformHandle( TranslationTransform );
-      m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
-      m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
+      this->m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
+      this->m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
     }
     if ( HasTransform( BSplineTransform ) )
     {
       const int kernelId = GetTransformHandle( BSplineTransform );
-      m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
-      m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
+      this->m_LoopKernelManager->SetGlobalWorkSize( kernelId, global );
+      this->m_LoopKernelManager->SetGlobalWorkOffset( kernelId, offset );
     }
 
-    m_PostKernelManager->SetGlobalWorkSize( 0, global );
-    m_PostKernelManager->SetGlobalWorkOffset( 0, offset );
+    this->m_PostKernelManager->SetGlobalWorkSize( 0, global );
+    this->m_PostKernelManager->SetGlobalWorkOffset( 0, offset );
 
     if ( eventList.GetSize() == 0 )
     {
       itkDebugMacro(<< "Calling m_PreKernelManager->LaunchKernel("
-        << m_FilterPreGPUKernelHandle << ")");
+        << this->m_FilterPreGPUKernelHandle << ")");
 
-      OpenCLEvent preEvent = m_PreKernelManager->LaunchKernel( m_FilterPreGPUKernelHandle );
+      OpenCLEvent preEvent = this->m_PreKernelManager->LaunchKernel( this->m_FilterPreGPUKernelHandle );
       eventList.Append( preEvent );
     }
     else
     {
       itkDebugMacro(<< "Calling m_PreKernelManager->LaunchKernel("
-        << m_FilterPreGPUKernelHandle << ",\n" << eventList << ")");
+        << this->m_FilterPreGPUKernelHandle << ",\n" << eventList << ")");
 
-      OpenCLEvent preEvent = m_PreKernelManager->LaunchKernel( m_FilterPreGPUKernelHandle, eventList );
+      OpenCLEvent preEvent = this->m_PreKernelManager->LaunchKernel( this->m_FilterPreGPUKernelHandle, eventList );
       eventList.Append( preEvent );
     }
 
-    if ( m_TransformIsCombo )
+    if ( this->m_TransformIsCombo )
     {
       typedef GPUCompositeTransformBase< TInterpolatorPrecisionType,
                                          InputImageDimension > CompositeTransformType;
       const CompositeTransformType *compositeTransform =
-        dynamic_cast< const CompositeTransformType * >( m_TransformBase );
+        dynamic_cast< const CompositeTransformType * >( this->m_TransformBase );
 
       const cl_uint withCombo = 1;
       const cl_uint withoutCombo = 0;
@@ -733,12 +738,12 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
           {
             if ( i != 0 )
             {
-              m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
+              this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
                                                  comboIndex, sizeof( cl_uint ), (const void *)&withCombo );
             }
             else
             {
-              m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
+              this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( IdentityTransform ),
                                                  comboIndex, sizeof( cl_uint ), (const void *)&withoutCombo );
             }
 
@@ -746,19 +751,19 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
               << GetTransformHandle( IdentityTransform ) << ",\n" << eventList << ")");
 
             OpenCLEvent loopEvent =
-              m_LoopKernelManager->LaunchKernel( GetTransformHandle( IdentityTransform ), eventList );
+              this->m_LoopKernelManager->LaunchKernel( GetTransformHandle( IdentityTransform ), eventList );
             eventList.Append( loopEvent );
           }
           else if ( compositeTransform->IsMatrixOffsetTransform( i ) )
           {
             if ( i != 0 )
             {
-              m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
+              this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
                                                  comboIndex, sizeof( cl_uint ), (const void *)&withCombo );
             }
             else
             {
-              m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
+              this->m_LoopKernelManager->SetKernelArg( GetTransformHandle( MatrixOffsetTransform ),
                                                  comboIndex, sizeof( cl_uint ), (const void *)&withoutCombo );
             }
 
@@ -766,7 +771,7 @@ void GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionTy
               << GetTransformHandle( MatrixOffsetTransform ) << ",\n" << eventList << ")");
 
             OpenCLEvent loopEvent =
-              m_LoopKernelManager->LaunchKernel( GetTransformHandle( MatrixOffsetTransform ), eventList );
+              this->m_LoopKernelManager->LaunchKernel( GetTransformHandle( MatrixOffsetTransform ), eventList );
             eventList.Append( loopEvent );
           }
           else if ( compositeTransform->IsTranslationTransform( i ) )
