@@ -38,7 +38,7 @@ ENDIF()
 # Dashboard settings
 SET( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=C:/wpackages/ITK-4.3.1/build64VC90
+ITK_DIR:PATH=C:/wpackages/ITK-git/build64VC90
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
