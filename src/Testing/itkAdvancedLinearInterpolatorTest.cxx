@@ -71,28 +71,29 @@ public:
 template<unsigned int Dimension>
 bool TestInterpolators( void )
 {
-  typedef itk::Image< short, Dimension >    InputImageType;
-  typedef typename InputImageType::SizeType    SizeType;
-  typedef typename InputImageType::SpacingType SpacingType;
-  typedef typename InputImageType::PointType   OriginType;
-  typedef typename InputImageType::RegionType  RegionType;
-  typedef typename RegionType::IndexType       IndexType;
+  typedef itk::Image< short, Dimension >            InputImageType;
+  typedef typename InputImageType::SizeType         SizeType;
+  typedef typename InputImageType::SpacingType      SpacingType;
+  typedef typename InputImageType::PointType        OriginType;
+  typedef typename InputImageType::RegionType       RegionType;
+  typedef typename RegionType::IndexType            IndexType;
+  typedef typename InputImageType::DirectionType    DirectionType;
   typedef double CoordRepType;
   typedef double CoefficientType;
 
   typedef itk::LinearInterpolateImageFunction<
-    InputImageType, CoordRepType > LinearInterpolatorType;
+    InputImageType, CoordRepType >                  LinearInterpolatorType;
   typedef itk::AdvancedLinearInterpolateImageFunction<
-    InputImageType, CoordRepType > AdvancedLinearInterpolatorType;
+    InputImageType, CoordRepType >                  AdvancedLinearInterpolatorType;
   typedef itk::BSplineInterpolateImageFunction<
     InputImageType, CoordRepType, CoefficientType > BSplineInterpolatorType;
-  typedef typename LinearInterpolatorType::ContinuousIndexType ContinuousIndexType;
-  typedef typename AdvancedLinearInterpolatorType::CovariantVectorType CovariantVectorType;
-  typedef typename AdvancedLinearInterpolatorType::OutputType  OutputType; // double scalar
+  typedef typename LinearInterpolatorType::ContinuousIndexType          ContinuousIndexType;
+  typedef typename AdvancedLinearInterpolatorType::CovariantVectorType  CovariantVectorType;
+  typedef typename AdvancedLinearInterpolatorType::OutputType           OutputType; // double scalar
 
-  typedef itk::ImageRegionIterator< InputImageType > IteratorType;
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomNumberGeneratorType;
-  typedef itk::ImageFileWriter< InputImageType > WriterType;
+  typedef itk::ImageRegionIterator< InputImageType >              IteratorType;
+  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator  RandomNumberGeneratorType;
+  typedef itk::ImageFileWriter< InputImageType >                  WriterType;
 
   RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
 
@@ -105,10 +106,25 @@ bool TestInterpolators( void )
     origin[ i ] = randomNum->GetUniformVariate( -1, 0 );
   }
   RegionType region; region.SetSize( size );
+  /** Make sure to test for non-identity direction cosines. */
+  DirectionType direction; direction.Fill( 0.0 );
+  if( Dimension == 2 )
+  {
+    direction[ 0 ][ 1 ] = -1.0;
+    direction[ 1 ][ 0 ] =  1.0;
+  }
+  else if( Dimension == 3 )
+  {
+    direction[ 0 ][ 2 ] = -1.0;
+    direction[ 1 ][ 1 ] =  1.0;
+    direction[ 2 ][ 0 ] =  1.0;
+  }
+
   typename InputImageType::Pointer image = InputImageType::New();
   image->SetRegions( region );
   image->SetOrigin( origin );
   image->SetSpacing( spacing );
+  image->SetDirection( direction );
   image->Allocate();
   // loop over image and fill with random values
   IteratorType it( image, image->GetLargestPossibleRegion() );
@@ -176,8 +192,8 @@ bool TestInterpolators( void )
       }
     }
   }
-  OutputType valueLin, valueLinA, valueBSpline;
-  CovariantVectorType derivLinA, derivBSpline;
+  OutputType valueLin, valueLinA, valueBSpline, valueBSpline2;
+  CovariantVectorType derivLinA, derivBSpline, derivBSpline2;
   for( unsigned int i = 0; i < count; i++ )
   {
     ContinuousIndexType cindex( &darray1[i][0] );
@@ -186,22 +202,36 @@ bool TestInterpolators( void )
     linearA->EvaluateValueAndDerivativeAtContinuousIndex( cindex, valueLinA, derivLinA );
     valueBSpline = bspline->EvaluateAtContinuousIndex( cindex );
     derivBSpline = bspline->EvaluateDerivativeAtContinuousIndex( cindex );
+    bspline->EvaluateValueAndDerivativeAtContinuousIndex( cindex, valueBSpline2, derivBSpline2 );
 
     std::cout << "cindex: " << cindex << std::endl;
-    std::cout << "linear:   " << valueLin     << "   ---" << std::endl;
-    std::cout << "linearA:  " << valueLinA    << "   " << derivLinA << std::endl;
-    std::cout << "B-spline: " << valueBSpline << "   " << derivBSpline << "\n" << std::endl;
+    std::cout << "linear:   " << valueLin      << "   ---" << std::endl;
+    std::cout << "linearA:  " << valueLinA     << "   " << derivLinA     << std::endl;
+    std::cout << "B-spline: " << valueBSpline  << "   " << derivBSpline  << std::endl;
+    std::cout << "B-spline: " << valueBSpline2 << "   " << derivBSpline2 << "\n" << std::endl;
 
-    if ( vnl_math_abs( valueLinA - valueBSpline ) > 1.0e-3 )
+    if( vnl_math_abs( valueLinA - valueBSpline ) > 1.0e-3 )
     {
       std::cerr << "ERROR: there is a difference in the interpolated value, "
         << "between the linear and the 1st-order B-spline interpolator." << std::endl;
       return false;
     }
-    if ( ( derivLinA - derivBSpline ).GetVnlVector().magnitude() > 1.0e-3 )
+    if( vnl_math_abs( valueBSpline - valueBSpline2 ) > 1.0e-3 )
+    {
+      std::cerr << "ERROR: there is a difference in the interpolated value, "
+        << "within the 1st-order B-spline interpolator (inconsistency)." << std::endl;
+      return false;
+    }
+    if( ( derivLinA - derivBSpline ).GetVnlVector().magnitude() > 1.0e-3 )
     {
       std::cerr << "ERROR: there is a difference in the interpolated gradient, "
         << "between the linear and the 1st-order B-spline interpolator." << std::endl;
+      return false;
+    }
+    if( ( derivBSpline - derivBSpline2 ).GetVnlVector().magnitude() > 1.0e-3 )
+    {
+      std::cerr << "ERROR: there is a difference in the interpolated gradient, "
+        << "within the 1st-order B-spline interpolator (inconsistency)." << std::endl;
       return false;
     }
   }

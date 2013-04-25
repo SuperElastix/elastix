@@ -26,17 +26,18 @@ namespace itk
 {
 
 /**
- * Constructor
+ * ***************** Constructor ***********************
  */
+
 template< class TInputImage, class TCoordRep >
 AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
 ::AdvancedLinearInterpolateImageFunction()
 {}
 
-//template< class TInputImage, class TCoordRep >
-//AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
-//::~AdvancedLinearInterpolateImageFunction()
-//{}
+
+/**
+ * ***************** EvaluateDerivativeAtContinuousIndex ***********************
+ */
 
 //template< class TInputImage, class TCoordRep >
 //typename AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
@@ -71,18 +72,10 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
 //
 //} // end EvaluateDerivativeAtContinuousIndex()
 
-//
-//template< class TInputImage, class TCoordRep >
-//typename AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
-//::CovariantVectorType
-//AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
-//::EvaluateDerivativeAtContinuousIndex(
-//  const ContinuousIndexType & x ) const
-//{
-//  CovariantVectorType derivative;
-//  return derivative;
-//} // end EvaluateDerivativeAtContinuousIndex()
 
+/**
+ * ***************** EvaluateValueAndDerivativeOptimized ***********************
+ */
 
 template< class TInputImage, class TCoordRep >
 void
@@ -100,15 +93,15 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
   /** Create a possibly mirrored version of x. */
   ContinuousIndexType xm = x;
   double deriv_sign[ ImageDimension ];
-  for ( unsigned int dim = 0; dim < ImageDimension; dim++ )
+  for( unsigned int dim = 0; dim < ImageDimension; dim++ )
   {
     deriv_sign[dim] = 1.0 / spacing[dim];
-    if ( x[dim] < this->m_StartIndex[dim] )
+    if( x[dim] < this->m_StartIndex[dim] )
     {
       xm[dim] = 2.0 * this->m_StartIndex[dim] - x[dim];
       deriv_sign[dim] *= -1.0;
     }
-    if ( x[dim] > this->m_EndIndex[dim] )
+    if( x[dim] > this->m_EndIndex[dim] )
     {
       xm[dim] = 2.0 * this->m_EndIndex[dim] - x[dim];
       deriv_sign[dim] *= -1.0;
@@ -123,7 +116,7 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
   IndexType baseIndex;
   double dist[ ImageDimension ];
   double dinv[ ImageDimension ];
-  for ( unsigned int dim = 0; dim < ImageDimension; dim++ )
+  for( unsigned int dim = 0; dim < ImageDimension; dim++ )
   {
     baseIndex[ dim ] = Math::Floor< IndexValueType >( xm[dim] );
 
@@ -151,8 +144,17 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
   deriv[0] = deriv_sign[0] * ( dinv[1] * ( val10 - val00 ) + dist[1] * ( val11 - val01 ) );
   deriv[1] = deriv_sign[1] * ( dinv[0] * ( val01 - val00 ) + dist[0] * ( val11 - val10 ) );
 
-} // end EvaluateValueAndDerivativeAtContinuousIndex()
+  /** Take direction cosines into account. */
+  CovariantVectorType orientedDerivative;
+  inputImage->TransformLocalVectorToPhysicalVector( deriv, orientedDerivative );
+  deriv = orientedDerivative;
 
+} // end EvaluateValueAndDerivativeOptimized()
+
+
+/**
+ * ***************** EvaluateValueAndDerivativeOptimized ***********************
+ */
 
 template< class TInputImage, class TCoordRep >
 void
@@ -170,15 +172,15 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
   /** Create a possibly mirrored version of x. */
   ContinuousIndexType xm = x;
   double deriv_sign[ ImageDimension ];
-  for ( unsigned int dim = 0; dim < ImageDimension; dim++ )
+  for( unsigned int dim = 0; dim < ImageDimension; dim++ )
   {
     deriv_sign[dim] = 1.0 / spacing[dim];
-    if ( x[dim] < this->m_StartIndex[dim] )
+    if( x[dim] < this->m_StartIndex[dim] )
     {
       xm[dim] = 2.0 * this->m_StartIndex[dim] - x[dim];
       deriv_sign[dim] *= -1.0;
     }
-    if ( x[dim] > this->m_EndIndex[dim] )
+    if( x[dim] > this->m_EndIndex[dim] )
     {
       xm[dim] = 2.0 * this->m_EndIndex[dim] - x[dim];
       deriv_sign[dim] *= -1.0;
@@ -193,7 +195,7 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
   IndexType baseIndex;
   double dist[ ImageDimension ];
   double dinv[ ImageDimension ];
-  for ( unsigned int dim = 0; dim < ImageDimension; dim++ )
+  for( unsigned int dim = 0; dim < ImageDimension; dim++ )
   {
     baseIndex[ dim ] = Math::Floor< IndexValueType >( xm[dim] );
 
@@ -249,7 +251,12 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
     + dist[0] * dist[1] * ( val111 - val110 )
     );
 
-} // end EvaluateValueAndDerivativeAtContinuousIndex()
+  /** Take direction cosines into account. */
+  CovariantVectorType orientedDerivative;
+  inputImage->TransformLocalVectorToPhysicalVector( deriv, orientedDerivative );
+  deriv = orientedDerivative;
+
+} // end EvaluateValueAndDerivativeOptimized()
 
 } // end namespace itk
 
