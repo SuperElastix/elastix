@@ -16,8 +16,8 @@
 #define _itkAdvancedImageToImageMetric_hxx
 
 #include "itkAdvancedImageToImageMetric.h"
-#include "itkImageRegionConstIterator.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
+#include "itkImageRegionConstIterator.h" // used for extrema computation
+#include "itkImageRegionConstIteratorWithIndex.h" // used for extrema computation
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 
 
@@ -579,10 +579,10 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   MovingImageContinuousIndexType cindex;
   this->m_Interpolator->ConvertPointToContinuousIndex( mappedPoint, cindex );
   bool sampleOk = this->m_Interpolator->IsInsideBuffer( cindex );
-  if ( sampleOk )
+  if( sampleOk )
   {
     /** Compute value and possibly derivative. */
-    if ( gradient )
+    if( gradient )
     {
       if( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
       {
@@ -618,15 +618,15 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
          */
         movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
         MovingImageIndexType index;
-        for ( unsigned int j = 0; j < MovingImageDimension; j++ )
+        for( unsigned int j = 0; j < MovingImageDimension; j++ )
         {
           index[ j ] = static_cast<long>( Math::Round<double>( cindex[ j ] ) );
         }
         (*gradient) = this->m_GradientImage->GetPixel( index );
       }
-      if ( this->m_UseMovingImageDerivativeScales )
+      if( this->m_UseMovingImageDerivativeScales )
       {
-        for ( unsigned int i = 0; i < MovingImageDimension; ++i )
+        for( unsigned int i = 0; i < MovingImageDimension; ++i )
         {
           (*gradient)[ i ] *= this->m_MovingImageDerivativeScales[ i ];
         }
@@ -671,10 +671,10 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     const unsigned int sizeImageJacobian = imageJacobian.GetSize();
     const unsigned int numberOfParametersPerDimension = sizeImageJacobian / FixedImageDimension;
     unsigned int counter = 0;
-    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+    for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
     {
       const double imDeriv = movingImageDerivative[ dim ];
-      for ( unsigned int mu = 0; mu < numberOfParametersPerDimension; mu++ )
+      for( unsigned int mu = 0; mu < numberOfParametersPerDimension; mu++ )
       {
         imageJacobian( counter )
           = jacobian( dim, counter ) * imDeriv;
@@ -689,12 +689,12 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     imageJacobian.Fill( 0.0 );
     const unsigned int sizeImageJacobian = imageJacobian.GetSize();
 
-    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+    for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
     {
       const double imDeriv = movingImageDerivative[ dim ];
       DerivativeIteratorType imjac = imageJacobian.begin();
 
-      for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
+      for( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
       {
         (*imjac) += (*jac) * imDeriv;
         ++imjac;

@@ -18,9 +18,8 @@
 #include "itkParzenWindowHistogramImageToImageMetric.h"
 
 #include "itkBSplineDerivativeKernelFunction.h"
-#include "itkImageRegionIterator.h"
 #include "itkImageLinearIteratorWithIndex.h"
-#include "itkImageSliceIteratorWithIndex.h"
+#include "itkImageScanlineIterator.h"
 #include "vnl/vnl_math.h"
 
 
@@ -132,7 +131,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   /** If the user plans to use a finite difference derivative,
    * allocate some memory for the perturbed alpha variables.
    */
-  if ( this->GetUseDerivative() && this->GetUseFiniteDifferenceDerivative() )
+  if( this->GetUseDerivative() && this->GetUseFiniteDifferenceDerivative() )
   {
     this->m_PerturbedAlphaRight.SetSize( this->GetNumberOfParameters() );
     this->m_PerturbedAlphaLeft.SetSize( this->GetNumberOfParameters() );
@@ -241,7 +240,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   this->m_JointPDF->SetRegions( jointPDFRegion );
   this->m_JointPDF->Allocate();
 
-  if ( this->GetUseDerivative() )
+  if( this->GetUseDerivative() )
   {
     /** For the derivatives of the joint PDF define a region starting from {0,0,0}
      * with size {GetNumberOfParameters(),m_NumberOfMovingHistogramBins,
@@ -323,7 +322,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
       else
       {
         /** De-allocate large amount of memory for the m_JointPDFDerivatives. */
-        if ( !this->m_JointPDFDerivatives.IsNull() )
+        // \todo Should not be allocated in the first place
+        if( !this->m_JointPDFDerivatives.IsNull() )
         {
           jointPDFDerivativesSize.Fill( 0 );
           jointPDFDerivativesRegion.SetSize( jointPDFDerivativesSize );
@@ -512,7 +512,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   const KernelFunctionType * kernel, ParzenValueContainerType & parzenValues ) const
 {
   const unsigned int max_i = parzenValues.GetSize();
-  for ( unsigned int i = 0 ; i < max_i; ++i, ++parzenWindowIndex )
+  for( unsigned int i = 0 ; i < max_i; ++i, ++parzenWindowIndex )
   {
     parzenValues[ i ] = kernel->Evaluate(
       static_cast<double>( parzenWindowIndex ) - parzenWindowTerm );
@@ -534,7 +534,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   const NonZeroJacobianIndicesType * nzji,
   JointPDFType * jointPDF ) const
 {
-  typedef ImageSliceIteratorWithIndex< JointPDFType >  PDFIteratorType;
+  typedef ImageScanlineIterator< JointPDFType >  PDFIteratorType;
 
   /** Determine Parzen window arguments (see eq. 6 of Mattes paper [2]). */
   const double fixedImageParzenWindowTerm
@@ -564,16 +564,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   JointPDFIndexType pdfWindowIndex;
   pdfWindowIndex[ 0 ] = movingImageParzenWindowIndex;
   pdfWindowIndex[ 1 ] = fixedImageParzenWindowIndex;
-  /** Make a local copy of the support region. */
-  //this->m_JointPDFWindow.SetIndex( pdfWindowIndex ); // not thread-safe
+  /** For thread-safety, make a local copy of the support region,
+   * and use that one. Because each thread will modify it.
+   */
   JointPDFRegionType jointPDFWindow = this->m_JointPDFWindow;
   jointPDFWindow.SetIndex( pdfWindowIndex );
-
-  //PDFIteratorType it( this->m_JointPDF, this->m_JointPDFWindow ); // not thread-safe
   PDFIteratorType it( jointPDF, jointPDFWindow );
-  it.GoToBegin();
-  it.SetFirstDirection( 0 );
-  it.SetSecondDirection( 1 );
 
   if( !imageJacobian )
   {
@@ -603,11 +599,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     /** Loop over the Parzen window region and increment the values
     * Also update the pdf derivatives.
     */
-    for ( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
+    for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
     {
       const double fv = fixedParzenValues[ f ];
       const double fv_et = fv / et;
-      for ( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
+      for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
       {
         it.Value() += static_cast<PDFValueType>( fv * movingParzenValues[ m ] );
         this->UpdateJointPDFDerivatives(
@@ -639,11 +635,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     ( pdfIndex[0] * this->m_JointPDFDerivatives->GetOffsetTable()[1] ) +
     ( pdfIndex[1] * this->m_JointPDFDerivatives->GetOffsetTable()[2] );
 
-  if ( nzji.size() == this->GetNumberOfParameters() )
+  if( nzji.size() == this->GetNumberOfParameters() )
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjac = imageJacobian.begin();
-    for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
+    for( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
     {
       *(derivPtr) -= static_cast<PDFDerivativeValueType>( (*imjac) * factor );
       ++derivPtr;
@@ -653,7 +649,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   else
   {
     /** Loop only over the non-zero Jacobians. */
-    for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
+    for( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
     {
       const unsigned int mu = nzji[ i ];
       PDFDerivativeValueType * ptr = derivPtr + mu;
@@ -673,18 +669,18 @@ void
 ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 ::NormalizeJointPDF( JointPDFType * pdf, const double & factor ) const
 {
-  typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
+  typedef ImageScanlineIterator<JointPDFType> JointPDFIteratorType;
   JointPDFIteratorType it( pdf, pdf->GetBufferedRegion() );
-  it.GoToBegin();
   const PDFValueType castfac = static_cast<PDFValueType>( factor );
-  //CompensatedSumType tmp; tmp.ResetToZero();
-  while ( !it.IsAtEnd() )
+  while( !it.IsAtEnd() )
   {
-    //tmp += it.Value();
-    it.Value() *= castfac;
-    ++it;
+    while( !it.IsAtEndOfLine() )
+    {
+      it.Value() *= castfac;
+      ++it;
+    }
+    it.NextLine();
   }
-  //m_TemporaryNormalizedSumJointPDF.push_back( tmp.GetSum() );
 
 } // end NormalizeJointPDF()
 
@@ -698,14 +694,17 @@ void
 ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 ::NormalizeJointPDFDerivatives( JointPDFDerivativesType * pdf, const double & factor ) const
 {
-  typedef ImageRegionIterator<JointPDFDerivativesType> JointPDFDerivativesIteratorType;
+  typedef ImageScanlineIterator<JointPDFDerivativesType> JointPDFDerivativesIteratorType;
   JointPDFDerivativesIteratorType it( pdf, pdf->GetBufferedRegion() );
-  it.GoToBegin();
   const PDFValueType castfac = static_cast<PDFValueType>( factor );
-  while ( !it.IsAtEnd() )
+  while( !it.IsAtEnd() )
   {
-    it.Value() *= castfac;
-    ++it;
+    while( !it.IsAtEndOfLine() )
+    {
+      it.Value() *= castfac;
+      ++it;
+    }
+    it.NextLine();
   }
 
 } // end NormalizeJointPDFDerivatives()
@@ -1233,28 +1232,34 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Accumulate joint histogram. */
   // could be multi-threaded too, by each thread updating only a part of the JointPDF.
-  typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
+  typedef ImageScanlineIterator<JointPDFType> JointPDFIteratorType;
   JointPDFIteratorType it( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
-  it.GoToBegin();
   std::vector<JointPDFIteratorType> itT( this->m_NumberOfThreads );
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     itT[ i ] = JointPDFIteratorType(
       this->m_ThreaderJointPDFs[ i ], this->m_JointPDF->GetBufferedRegion() );
-    itT[ i ].GoToBegin();
   }
 
   PDFValueType sum;
-  while ( !it.IsAtEnd() )
+  while( !it.IsAtEnd() )
   {
-    sum = NumericTraits<PDFValueType>::Zero;
+    while( !it.IsAtEndOfLine() )
+    {
+      sum = NumericTraits<PDFValueType>::Zero;
+      for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+      {
+        sum += itT[ i ].Value();
+        ++itT[ i ];
+      }
+      it.Set( sum );
+      ++it;
+    }
+    it.NextLine();
     for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
     {
-      sum += itT[ i ].Value();
-      ++itT[ i ];
+      itT[ i ].NextLine();
     }
-    it.Set( sum );
-    ++it;
   }
 
 } // end AfterThreadedComputePDFs()

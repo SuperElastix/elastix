@@ -501,7 +501,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
    * - Now you can call GetValueAndDerivative multi-threaded.
    */
   this->BeforeThreadedGetValueAndDerivative( parameters );
-  
+
   /** Initialize some threading related parameters. */
   this->InitializeThreadingParameters();
 
@@ -797,3 +797,4 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 } // end namespace itk
 
 #endif // end #ifndef _itkAdvancedNormalizedCorrelationImageToImageMetric_txx
+

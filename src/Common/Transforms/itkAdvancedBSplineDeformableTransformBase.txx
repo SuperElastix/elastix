@@ -17,9 +17,6 @@
 
 #include "itkAdvancedBSplineDeformableTransformBase.h"
 #include "itkContinuousIndex.h"
-#include "itkImageRegionIterator.h"
-#include "itkImageRegionConstIterator.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkIdentityTransform.h"
 #include "vnl/vnl_math.h"
 
@@ -210,7 +207,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       this->m_WrappedImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
-      //this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     }
 
     this->UpdatePointIndexConversions();
@@ -233,7 +229,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
       this->m_WrappedImage[j]->SetDirection( this->m_GridDirection );
-      //this->m_JacobianImage[j]->SetDirection( this->m_GridDirection );
       }
 
     this->UpdatePointIndexConversions();
@@ -258,7 +253,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
       this->m_WrappedImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
-      //this->m_JacobianImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
       }
 
     this->Modified();
@@ -324,7 +318,6 @@ void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::SetFixedParameters( const ParametersType & passedParameters )
 {
-
   ParametersType parameters( NDimensions * (3 + NDimensions) );
 
   // check if the number of parameters match the
@@ -430,22 +423,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     dataPointer += numberOfPixels;
     this->m_CoefficientImages[j] = this->m_WrappedImage[j];
     }
-
-  /**
-   * Allocate memory for Jacobian and wrap into SpaceDimension number
-   * of ITK images
-   */
-//   this->m_Jacobian.set_size( SpaceDimension, this->GetNumberOfParameters() );
-//   this->m_Jacobian.Fill( NumericTraits<JacobianPixelType>::Zero );
-//   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
-//   JacobianPixelType * jacobianDataPointer = this->m_Jacobian.data_block();
-//
-//   for ( unsigned int j = 0; j < SpaceDimension; j++ )
-//     {
-//     m_JacobianImage[j]->GetPixelContainer()->
-//       SetImportPointer( jacobianDataPointer, numberOfPixels );
-//     jacobianDataPointer += this->GetNumberOfParameters() + numberOfPixels;
-//     }
 }
 
 
@@ -455,7 +432,6 @@ void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::SetParametersByValue( const ParametersType & parameters )
 {
-
   // check if the number of parameters match the
   // expected number of parameters
   if ( parameters.Size() != this->GetNumberOfParameters() )
@@ -492,7 +468,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
    */
   if (NULL == this->m_InputParametersPointer)
     {
-    itkExceptionMacro( <<"Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps SetCoefficientImages() has been called causing the NULL pointer." );
+    itkExceptionMacro( << "Cannot GetParameters() because m_InputParametersPointer is NULL."
+      << " Perhaps SetCoefficientImages() has been called causing the NULL pointer." );
     }
 
   return (*this->m_InputParametersPointer);

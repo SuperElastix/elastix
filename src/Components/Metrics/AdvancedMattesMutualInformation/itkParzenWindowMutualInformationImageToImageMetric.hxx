@@ -18,6 +18,7 @@
 #include "itkParzenWindowMutualInformationImageToImageMetric.h"
 
 #include "itkImageLinearConstIteratorWithIndex.h"
+#include "itkImageScanlineConstIterator.h"
 #include "vnl/vnl_math.h"
 #include "itkMatrix.h"
 #include "vnl/vnl_inverse.h"
@@ -709,14 +710,11 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputeValueAndPRatioArray( double & MI ) const
 {
   /** Setup iterators. */
-  typedef ImageLinearConstIteratorWithIndex<
-    JointPDFType >                                 JointPDFIteratorType;
-  typedef typename MarginalPDFType::const_iterator MarginalPDFIteratorType;
+  typedef ImageScanlineConstIterator< JointPDFType >  JointPDFIteratorType;
+  typedef typename MarginalPDFType::const_iterator    MarginalPDFIteratorType;
 
   JointPDFIteratorType jointPDFit(
     this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
-  jointPDFit.SetDirection( 0 );
-  jointPDFit.GoToBegin();
   MarginalPDFIteratorType fixedPDFit = this->m_FixedImageMarginalPDF.begin();
   const MarginalPDFIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
   MarginalPDFIteratorType movingPDFit;
@@ -730,31 +728,30 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   PDFValueType sum = 0.0;
   unsigned int fixedIndex = 0;
   unsigned int movingIndex = 0;
-  while ( fixedPDFit != fixedPDFend )
+  while( fixedPDFit != fixedPDFend )
   {
     const double fixedPDFValue = *fixedPDFit;
     double logFixedPDFValue = 0.0;
-    if ( fixedPDFValue > 1e-16 )
+    if( fixedPDFValue > 1e-16 )
     {
       logFixedPDFValue = vcl_log( fixedPDFValue );
     }
     movingPDFit = movingPDFbegin;
     movingIndex = 0;
 
-    while ( movingPDFit != movingPDFend )
+    while( movingPDFit != movingPDFend )
     {
       const PDFValueType movingPDFValue = *movingPDFit;
-      const PDFValueType jointPDFValue = jointPDFit.Get();
+      const PDFValueType jointPDFValue = jointPDFit.Value();
 
       /** Check for non-zero bin contribution. */
-      if ( jointPDFValue > 1e-16 &&  movingPDFValue > 1e-16 )
+      if( jointPDFValue > 1e-16 && movingPDFValue > 1e-16 )
       {
         const PDFValueType pRatio = vcl_log( jointPDFValue / movingPDFValue );
-        // BETTER with ITERATORS TOO
         this->m_PRatioArray[ fixedIndex ][ movingIndex ] = static_cast<PRatioType>(
           this->m_Alpha * pRatio );
 
-        if ( fixedPDFValue > 1e-16 )
+        if( fixedPDFValue > 1e-16 )
         {
           sum += jointPDFValue * ( pRatio - logFixedPDFValue );
         }

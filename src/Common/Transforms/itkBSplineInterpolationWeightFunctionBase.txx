@@ -53,7 +53,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
 
   /** Initialize the number of weights. */
   this->m_NumberOfWeights = 1;
-  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     this->m_NumberOfWeights *= this->m_SupportSize[ i ];
   }
@@ -85,10 +85,10 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   this->m_OffsetToIndexTable.set_size( this->m_NumberOfWeights,
     SpaceDimension );
   unsigned long counter = 0;
-  while ( !it.IsAtEnd() )
+  while( !it.IsAtEnd() )
   {
     IndexType ind = it.GetIndex();
-    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    for( unsigned int i = 0; i < SpaceDimension; ++i )
     {
       this->m_OffsetToIndexTable[ counter ][ i ] = ind[ i ];
     }
@@ -139,7 +139,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep,VSpaceDimension, VSplineOrder>
   IndexType & startIndex ) const
 {
   /** Find the starting index of the support region. */
-  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     startIndex[ i ] = static_cast<typename IndexType::IndexValueType>(
       vcl_floor( cindex[ i ]
@@ -196,11 +196,11 @@ BSplineInterpolationWeightFunctionBase<TCoordRep,VSpaceDimension, VSplineOrder>
   this->Compute1DWeights( cindex, startIndex, weights1D );
 
   /** Compute the vector of weights. */
-  for ( unsigned int k = 0; k < this->m_NumberOfWeights; k++ )
+  for( unsigned int k = 0; k < this->m_NumberOfWeights; k++ )
   {
     double tmp1 = 1.0;
     const unsigned long * tmp2 = this->m_OffsetToIndexTable[ k ];
-    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    for( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       tmp1 *= weights1D[ j ][ tmp2[ j ] ];
     }
