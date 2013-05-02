@@ -17,6 +17,8 @@
 
 #include "itkCyclicBSplineDeformableTransform.h"
 #include "itkContinuousIndex.h"
+#include "itkImageRegionIterator.h"
+
 
 namespace itk {
 
