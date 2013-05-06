@@ -175,23 +175,17 @@ TARGET_LINK_LIBRARIES( transformix
 # Define the install directory for elastix and transformix.
 
 IF( WIN32 )
-  IF( ELASTIX_BUILD_EXECUTABLE )
-    INSTALL( TARGETS elastix transformix
-      RUNTIME DESTINATION . )
-      #COMPONENT core )
-  ELSE()
-    # TODO: why not install elastix.dll here?
-    INSTALL( TARGETS transformix
-      RUNTIME DESTINATION . )
-      #COMPONENT core )
-  ENDIF()
+  INSTALL( TARGETS elastix transformix
+    RUNTIME DESTINATION . )
+    #COMPONENT core )
 ELSE()
   # Tell the executables where to find the required .so files.
   SET_TARGET_PROPERTIES( elastix transformix
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
   # Put executables in bin and libraries in lib.
   INSTALL( TARGETS elastix transformix
-    RUNTIME DESTINATION bin )
+    RUNTIME DESTINATION bin 
+    LIBRARY DESTINATION bin)
     #COMPONENT core )
 ENDIF()
 
