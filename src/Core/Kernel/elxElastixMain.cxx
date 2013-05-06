@@ -404,6 +404,7 @@ int ElastixMain::InitDBIndex( void )
     /** FixedImageDimension. */
     if ( this->m_FixedImageDimension == 0 )
     {
+#ifndef _ELASTIX_BUILD_LIBRARY
       /** Read it from the fixed image header. */
       std::string fixedImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-f" );
@@ -420,7 +421,6 @@ int ElastixMain::InitDBIndex( void )
         xout["error"] << err << std::endl;
         return 1;
       }
-
 
       /** Try to read it from the parameter file.
        * This only serves as a check; elastix versions prior to 4.6 read the dimension
@@ -444,6 +444,10 @@ int ElastixMain::InitDBIndex( void )
           return 1;
         }
       }
+#else
+      this->m_Configuration->ReadParameter( this->m_FixedImageDimension, 
+        "FixedImageDimension", 0, false );
+#endif
 
       /** Just a sanity check, probably not needed. */
       if ( this->m_FixedImageDimension == 0 )
@@ -466,6 +470,7 @@ int ElastixMain::InitDBIndex( void )
     /** MovingImageDimension. */
     if ( this->m_MovingImageDimension == 0 )
     {
+#ifndef _ELASTIX_BUILD_LIBRARY
       /** Read it from the moving image header. */
       std::string movingImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-m" );
@@ -505,6 +510,11 @@ int ElastixMain::InitDBIndex( void )
           return 1;
         }
       }
+
+#else
+      this->m_Configuration->ReadParameter( this->m_MovingImageDimension, 
+        "FixedImageDimension", 0, false );
+#endif
 
       /** Just a sanity check, probably not needed. */
       if ( this->m_MovingImageDimension == 0 )
