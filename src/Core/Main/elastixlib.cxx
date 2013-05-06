@@ -36,7 +36,6 @@
 
 namespace elastix
 {
-  using namespace itk;//remove
 
 /**
  * ******************* Constructor ***********************
@@ -100,7 +99,7 @@ ELASTIX::RegisterImages(
   typedef std::queue< ArgPairType >                   ParameterFileListType;
   typedef ParameterFileListType::value_type           ParameterFileListEntryType;
 
-  typedef ParameterFileParser::ParameterMapType       ParameterMapType;
+  //typedef ParameterFileParser::ParameterMapType       ParameterMapType;
 
   tmr::Timer::Pointer timer;
 
@@ -140,7 +139,7 @@ ELASTIX::RegisterImages(
   else
   {
     /** Put command line parameters into parameterFileList. */
-    //there must be an "-out", thiss is checked later in code!!
+    //there must be an "-out", this is checked later in code!!
     key = "-out" ;
     value = "output_path_not_set";
   }
@@ -274,7 +273,7 @@ ELASTIX::RegisterImages(
 
     /** Start registration. */
     returndummy = elastices[ i ]->Run( argMap,
-      static_cast< ParameterMapType >( parameterMap ) );
+      parameterMap );
 
     /** Check for errors. */
     if( returndummy != 0 )

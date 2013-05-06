@@ -19,7 +19,7 @@
  *  Includes
  */
 #include <itkDataObject.h>
-
+#include "itkParameterFileParser.h"
 /********************************************************************************
  *                    *
  *      Dll export    *
@@ -35,7 +35,7 @@
 #endif
 #else
 /* unix needs nothing */
-#define ELX_EXPORT
+#define ELASTIXLIB_API __attribute__ ((visibility ("default")))
 #endif
 
 /********************************************************************************
@@ -56,13 +56,13 @@ public:
 
   //typedefs for parameter map
   typedef std::vector< std::string >                    ParameterValuesType;
-  typedef std::map< std::string, ParameterValuesType >  ParameterMapType;
+  typedef itk::ParameterFileParser::ParameterMapType         ParameterMapType;
 
   /**
    *  Constructor and destructor
    */
-  ELASTIX::ELASTIX();
-  ELASTIX::~ELASTIX();
+  ELASTIX();
+  ~ELASTIX();
 
   /**
    *  The image registration interface functionality
