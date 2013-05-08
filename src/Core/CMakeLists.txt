@@ -121,15 +121,25 @@ IF( ELASTIX_BUILD_EXECUTABLE )
     Kernel/elxElastixMain.h
     ${InstallFilesForExecutables}
   )
-ELSE()
-  ADD_LIBRARY( elastix SHARED
-    Main/elastixlib.cxx
-    Main/elastixlib.h
-    Kernel/elxElastixMain.cxx
-    Kernel/elxElastixMain.h
-    ${InstallFilesForExecutables}
-  )
-ENDIF()
+ELSE(ELASTIX_BUILD_EXECUTABLE)
+  IF( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_LIBRARY( elastix SHARED
+      Main/elastixlib.cxx
+      Main/elastixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ELSE(ELASTIX_BUILD_SHARED_LIBS)
+    ADD_LIBRARY( elastix STATIC
+      Main/elastixlib.cxx
+      Main/elastixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ENDIF(ELASTIX_BUILD_SHARED_LIBS)
+ENDIF(ELASTIX_BUILD_EXECUTABLE)
 
 
 #---------------------------------------------------------------------
@@ -185,7 +195,8 @@ ELSE()
   # Put executables in bin and libraries in lib.
   INSTALL( TARGETS elastix transformix
     RUNTIME DESTINATION bin 
-    LIBRARY DESTINATION bin)
+    LIBRARY DESTINATION bin
+    ARCHIVE DESTINATION bin)
     #COMPONENT core )
 ENDIF()
 
