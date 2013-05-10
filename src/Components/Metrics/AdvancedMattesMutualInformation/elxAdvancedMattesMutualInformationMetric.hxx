@@ -165,8 +165,25 @@ namespace elastix
         << movingImageDerivativeScales << std::endl;
     }
 
+    //tmp
+    this->m_AccumulateDerivativesTimings.resize(0);
+
   } // end BeforeEachResolution()
 
+  //tmp
+  template <class TElastix>
+    void AdvancedMattesMutualInformationMetric<TElastix>
+    ::AfterEachResolution( void )
+  {
+    double average = 0.0;
+    for ( std::size_t i = 0; i < this->m_AccumulateDerivativesTimings.size(); ++i )
+    {
+      average += this->m_AccumulateDerivativesTimings[ i ];
+    }
+    elxout << "\nAccumulateDerivativesTimings (average): "
+      << average / this->m_AccumulateDerivativesTimings.size()
+      << " ms\n" << std::endl;
+  }
 
   /**
    * ***************** AfterEachIteration ***********************

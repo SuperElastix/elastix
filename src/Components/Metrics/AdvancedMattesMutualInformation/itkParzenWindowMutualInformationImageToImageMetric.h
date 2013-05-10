@@ -157,6 +157,7 @@ public:
   mutable double m_ComputePDFsTimings;
   mutable double m_HistogramLoopsTimings;
   mutable double m_FinalLoopTimings;
+  mutable std::vector<double> m_AccumulateDerivativesTimings;
 
 protected:
 

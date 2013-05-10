@@ -202,6 +202,9 @@ namespace elastix
      * \li Set the fixed/moving limiter. */
     virtual void BeforeEachResolution( void );
 
+    //tmp
+    virtual void AfterEachResolution( void );
+
     /** Update the CurrenIteration. This is only important
      * if a finite difference derivative estimation is used
      * (selected by the experimental parameter FiniteDifferenceDerivative)  */

@@ -45,6 +45,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** Initialise the m_ParzenWindowHistogramThreaderParameters */
   this->m_ParzenWindowMutualInformationThreaderParameters.m_Metric = this;
 
+  // tmp
+  this->m_AccumulateDerivativesTimings.resize(0);
+
 } // end constructor
 
 
@@ -609,6 +612,11 @@ void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::AfterThreadedComputeDerivativeLowMemory( DerivativeType & derivative ) const
 {
+  typedef tmr::Timer          TimerType;
+  typedef TimerType::Pointer  TimerPointer;
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
+
   /** Accumulate derivatives. */
   // compute single-threadedly
   if( !this->m_UseMultiThread )
@@ -651,6 +659,12 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
     local_threader->SingleMethodExecute();
   }
+
+  timer->StopTimer();
+  /*elxout << "AdvanceOneStep() took: "
+  << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
+  << " ms." << std::endl;*/
+  this->m_AccumulateDerivativesTimings.push_back( timer->GetElapsedClockSec() * 1000 );
 
 } // end AfterThreadedComputeDerivativeLowMemory()
 
