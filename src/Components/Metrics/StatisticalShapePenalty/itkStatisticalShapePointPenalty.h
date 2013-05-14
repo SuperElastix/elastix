@@ -18,6 +18,7 @@
 #define __itkStatisticalShapePointPenalty_h
 
 #include "itkSingleValuedPointSetToPointSetMetric.h"
+
 #include "itkPoint.h"
 #include "itkPointSet.h"
 #include "itkImage.h"
@@ -74,6 +75,7 @@ public:
   typedef typename Superclass::TransformPointer           TransformPointer;
   typedef typename Superclass::TransformParametersType    TransformParametersType;
   typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
@@ -88,6 +90,7 @@ public:
 
   typedef typename Superclass::InputPointType             InputPointType;
   typedef typename Superclass::OutputPointType            OutputPointType;
+
   typedef typename OutputPointType::CoordRepType          CoordRepType;
   typedef vnl_vector<CoordRepType>               VnlVectorType;
   typedef vnl_matrix<CoordRepType>               VnlMatrixType;
@@ -95,9 +98,9 @@ public:
   //typedef itk::Array<VnlVectorType *> ProposalDerivativeType;
   typedef typename std::vector< VnlVectorType *> ProposalDerivativeType;
   //typedef typename vnl_vector<VnlVectorType *> ProposalDerivativeType; //Cannot be linked
-  typedef typename vnl_svd_economy<CoordRepType> PCACovarianceType;
+  typedef vnl_svd_economy<CoordRepType> PCACovarianceType;
 
-void Initialize( void ) throw ( ExceptionObject );
+  void Initialize( void ) throw ( ExceptionObject );
 
   /**  Get the value for single valued optimizers. */
   MeasureType GetValue( const TransformParametersType & parameters ) const;
@@ -204,7 +207,7 @@ private:
    
   void CalculateCutOffValue( MeasureType & value) const;
 
-  void CalculateCutOffDerivative(DerivativeType::element_type & derivativeElement , const MeasureType & value) const;
+  void CalculateCutOffDerivative( typename DerivativeType::element_type & derivativeElement , const MeasureType & value ) const;
      
 	  //vnl_matrix<double> m_invCovariance;
   //std::string m_EigenVectorsName;  

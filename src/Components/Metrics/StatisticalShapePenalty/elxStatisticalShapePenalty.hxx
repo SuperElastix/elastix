@@ -65,7 +65,7 @@ StatisticalShapePenalty<TElastix>
 {
   //elxout << "Stat PH BeforeRegistration " << std::endl;
    /** Get and set NormalizedShapeModel. Default TRUE. */
-  bool normalizedShapeModel = TRUE;
+  bool normalizedShapeModel = true;
   this->GetConfiguration()->ReadParameter( normalizedShapeModel, "NormalizedShapeModel", 0,0);
   this->SetNormalizedShapeModel( normalizedShapeModel );
   //elxout << "NormalizedShapeModel: " << this->GetNormalizedShapeModel() << std::endl;
@@ -110,23 +110,23 @@ StatisticalShapePenalty<TElastix>
   /** Check. */
   if ( normalizedShapeModel )
   {
-    if ( nrOfFixedPoints*FixedPointSetDimension != meanVector->size()-FixedPointSetDimension-1 )
+    if ( nrOfFixedPoints*Self::FixedPointSetDimension != meanVector->size()-Self::FixedPointSetDimension-1 )
     {
       itkExceptionMacro( << "ERROR: the number of elements in the meanVector (" << meanVector->size()
         << ") does not match the number of points of the fixed pointset ("
         << nrOfFixedPoints << ") times the point dimensionality (" <<
-        FixedPointSetDimension << ") plus a Centroid of dimension " <<
-        FixedPointSetDimension << " plus a size element");
+        Self::FixedPointSetDimension << ") plus a Centroid of dimension " <<
+        Self::FixedPointSetDimension << " plus a size element");
     }
   } 
   else
   {
-    if ( nrOfFixedPoints*FixedPointSetDimension != meanVector->size())
+    if ( nrOfFixedPoints*Self::FixedPointSetDimension != meanVector->size())
     {
       itkExceptionMacro( << "ERROR: the number of elements in the meanVector (" << meanVector->size()
         << ") does not match the number of points of the fixed pointset ("
         << nrOfFixedPoints << ") times the point dimensionality (" <<
-        FixedPointSetDimension << ")");
+        Self::FixedPointSetDimension << ")");
     }
   }
 
@@ -210,7 +210,7 @@ StatisticalShapePenalty<TElastix>
 
   if(this->GetShrinkageIntensity()!=shrinkageIntensity)
   {
-    this->SetShrinkageIntensityNeedsUpdate( TRUE );
+    this->SetShrinkageIntensityNeedsUpdate( true );
   }
   this->SetShrinkageIntensity( shrinkageIntensity );
 
@@ -221,7 +221,7 @@ StatisticalShapePenalty<TElastix>
 
   if(this->GetBaseVariance()!=baseVariance)
   {
-    this->SetBaseVarianceNeedsUpdate( TRUE );
+    this->SetBaseVarianceNeedsUpdate( true );
   }
   this->SetBaseVariance( baseVariance );
 
@@ -232,7 +232,7 @@ StatisticalShapePenalty<TElastix>
 
   if(this->GetCentroidXVariance()!=centroidXVariance)
   {
-    this->SetVariancesNeedsUpdate( TRUE );
+    this->SetVariancesNeedsUpdate( true );
   }
   this->SetCentroidXVariance( centroidXVariance );
 
@@ -243,7 +243,7 @@ StatisticalShapePenalty<TElastix>
 
   if(this->GetCentroidYVariance()!=centroidYVariance)
   {
-    this->SetVariancesNeedsUpdate( TRUE );
+    this->SetVariancesNeedsUpdate( true );
   }
   this->SetCentroidYVariance( centroidYVariance );
 
@@ -254,7 +254,7 @@ StatisticalShapePenalty<TElastix>
 
   if(this->GetCentroidZVariance()!=centroidZVariance)
   {
-    this->SetVariancesNeedsUpdate( TRUE );
+    this->SetVariancesNeedsUpdate( true );
   }
   this->SetCentroidZVariance( centroidZVariance );
 
@@ -265,7 +265,7 @@ StatisticalShapePenalty<TElastix>
 
   if(this->GetSizeVariance()!=sizeVariance)
   {
-    this->SetVariancesNeedsUpdate( TRUE );
+    this->SetVariancesNeedsUpdate( true );
   }
   this->SetSizeVariance( sizeVariance );
 
