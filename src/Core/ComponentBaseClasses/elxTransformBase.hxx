@@ -750,6 +750,208 @@ void TransformBase<TElastix>
 
 } // end WriteToFile()
 
+/**
+ * ******************* CreateTransformParametersMap ******************************
+ */
+
+template <class TElastix>
+void TransformBase<TElastix>
+::CreateTransformParametersMap( const ParametersType & param , ParameterMapType *paramsMap ) const
+{
+  std::string			parameterName;
+  std::vector< std::string >	parameterValues;
+  char				tmpValue[ 265 ];
+   
+  /** Write the name of this transform. */
+  parameterName = "Transform";
+  parameterValues.push_back( this->elxGetClassName() );
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear(); 
+  
+  /** Get the number of parameters of this transform. */
+  unsigned int nrP = param.GetSize();
+
+  /** Write the number of parameters of this transform. */
+  parameterName = "NumberOfParameters";
+  sprintf( tmpValue , "%d" , nrP );
+  parameterValues.push_back( tmpValue );
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+  /** Write the parameters of this transform. */
+  if ( this->m_ReadWriteTransformParameters )
+  {
+    /** In this case, write in a normal way to the parameter file. */
+    parameterName = "TransformParameters";
+    for ( unsigned int i = 0; i < nrP; i++ )
+    {
+      sprintf( tmpValue , "%.10lf" , param[ i ] );
+      parameterValues.push_back( tmpValue );
+    }
+    ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+    parameterValues.clear();
+  }
+
+  /** Write the name of the parameters-file of the initial transform. */
+  if ( this->GetInitialTransform() )
+  {
+    parameterName = "InitialTransformParametersFileName";   
+    parameterValues.push_back( (dynamic_cast<const Self *>( this->GetInitialTransform() ))->GetTransformParametersFileName() ); 
+    ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+    parameterValues.clear();
+  }
+  else
+  {
+    parameterName = "InitialTransformParametersFileName";   
+    parameterValues.push_back( "NoInitialTransform" ); 
+    ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+    parameterValues.clear();
+  }
+
+  /** Write the way Transforms are combined. */
+  std::string combinationMethod = "Compose";
+  const CombinationTransformType * dummyComboTransform
+    = dynamic_cast< const CombinationTransformType * >( this );
+  if ( dummyComboTransform )
+  {
+    if ( dummyComboTransform->GetUseComposition() )
+    {
+      combinationMethod = "Compose";
+    }
+  }
+
+  parameterName = "HowToCombineTransforms";   
+  parameterValues.push_back( combinationMethod ); 
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+  
+  /** Write image specific things. */
+// xout["transpar"] << std::endl << "// Image specific" << std::endl;
+
+  /** Write image dimensions. */
+  unsigned int FixDim = FixedImageDimension;
+  unsigned int MovDim = MovingImageDimension;
+  parameterName = "FixedImageDimension";   
+  sprintf( tmpValue , "%d" , FixDim );
+  parameterValues.push_back( tmpValue ); 
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+   parameterName = "MovingImageDimension";   
+  sprintf( tmpValue , "%d" , MovDim );
+  parameterValues.push_back( tmpValue ); 
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+ 
+  /** Write image pixel types. */
+  std::string fixpix = "float";
+  std::string movpix = "float";
+  this->m_Configuration->ReadParameter( fixpix, "FixedInternalImagePixelType", 0 );
+  this->m_Configuration->ReadParameter( movpix, "MovingInternalImagePixelType", 0 );
+  parameterName = "FixedInternalImagePixelType";   
+  parameterValues.push_back( fixpix ); 
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+  parameterName = "MovingInternalImagePixelType";   
+  parameterValues.push_back( movpix ); 
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+  /** Get the Size, Spacing and Origin of the fixed image. */
+  typedef typename FixedImageType::SizeType                 FixedImageSizeType;
+  typedef typename FixedImageType::IndexType                FixedImageIndexType;
+  typedef typename FixedImageType::SpacingType              FixedImageSpacingType;
+  typedef typename FixedImageType::PointType                FixedImageOriginType;
+  typedef typename FixedImageType::DirectionType            FixedImageDirectionType;
+  FixedImageSizeType size =
+    this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  FixedImageIndexType index =
+    this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
+  FixedImageSpacingType spacing =
+    this->m_Elastix->GetFixedImage()->GetSpacing();
+  FixedImageOriginType origin =
+    this->m_Elastix->GetFixedImage()->GetOrigin();
+  /** The following line would be logically: */
+  //FixedImageDirectionType direction =
+  //  this->m_Elastix->GetFixedImage()->GetDirection();
+  /** But to support the UseDirectionCosines option, we should do it like this: */
+  FixedImageDirectionType direction;
+  this->GetElastix()->GetOriginalFixedImageDirection( direction );
+
+  /** Write image Size. */
+  parameterName = "Size";    
+  for ( unsigned int i = 0; i < FixedImageDimension ; i++ )
+  {
+	  sprintf( tmpValue , "%d" , size[ i ] );
+	  parameterValues.push_back( tmpValue );    
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+  /** Write image Index. */
+  parameterName = "Index";    
+  for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+  {
+    sprintf( tmpValue , "%d" , index[ i ] );
+    parameterValues.push_back( tmpValue ); 
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+  /** Set the precision of cout to 2, because Spacing and
+   * Origin must have at least one digit precision.
+   */
+//  xout["transpar"] << std::setprecision(10);
+
+  /** Write image Spacing. */
+  parameterName = "Spacing";
+  for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+  {
+     sprintf( tmpValue , "%.10lf" , spacing[ i ] );
+     parameterValues.push_back( tmpValue );
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+  /** Write image Origin. */
+  parameterName = "Origin";
+  for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+  {
+     sprintf( tmpValue , "%.10lf" , origin[ i ] );
+     parameterValues.push_back( tmpValue );
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+  /** Write direction cosines. */
+  parameterName = "Direction";
+  for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+  {
+    for ( unsigned int j = 0; j < FixedImageDimension; j++ )
+    {
+      sprintf( tmpValue , "%.10lf" , direction( j, i ) );
+      parameterValues.push_back( tmpValue );
+    }
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+  /** Set the precision back to default value. */
+//  xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
+
+  /** Write whether the direction cosines should be taken into account.
+   * This parameter is written from elastix 4.203.
+   */
+  std::string useDirectionCosinesBool = "false";
+  if ( this->GetElastix()->GetUseDirectionCosines() )
+  {
+    useDirectionCosinesBool = "true";
+  }
+  parameterName = "UseDirectionCosines";
+  parameterValues.push_back( useDirectionCosinesBool ); 
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+} // end CreateTransformParametersMap()
 
 /**
  * ******************* TransformPoints **************************

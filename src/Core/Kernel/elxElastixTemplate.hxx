@@ -60,6 +60,7 @@ ElastixTemplate<TFixedImage, TMovingImage>
 
   /** Initialize CurrentTransformParameterFileName. */
   this->m_CurrentTransformParameterFileName = "";
+  this->m_TransformParametersMap.clear(); 
 
 } // end Constructor
 
@@ -461,8 +462,11 @@ int ElastixTemplate<TFixedImage, TMovingImage>
      * Actually we could loop over all resamplers.
      * But for now, there seems to be no use yet for that.
      */
+#ifndef _ELASTIX_BUILD_LIBRARY   
     this->GetElxResamplerBase()->WriteResultImage( makeFileName.str().c_str() );
-
+#else  
+    this->GetElxResamplerBase()->CreateItkResultImage();
+#endif
     /** Print the elapsed time for the resampling. */
     timer->StopTimer();
     elxout << std::setprecision( 2 );
@@ -523,13 +527,13 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   returndummy |= this->GetElxResampleInterpolatorBase()->BeforeAllTransformix();
   returndummy |= this->GetElxResamplerBase()->BeforeAllTransformix();
   returndummy |= this->GetElxTransformBase()->BeforeAllTransformix();
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** The GetConfiguration also has a BeforeAllTransformix,
    * It print the Transform Parameter file to the log file. That's
    * why we call it after the other components.
    */
   returndummy |= this->GetConfiguration()->BeforeAllTransformix();
-
+#endif
   /** Return a value. */
   return returndummy;
 
@@ -795,6 +799,10 @@ void ElastixTemplate<TFixedImage, TMovingImage>
     /** Create a final TransformParameterFile. */
     this->CreateTransformParameterFile( FileName, true );
   }
+#ifdef _ELASTIX_BUILD_LIBRARY 
+  /** Get the transform parameters. */
+  this->CreateTransformParametersMap( );//only relevant for dll!
+#endif
 
   /** Call all the AfterRegistration() functions. */
   this->AfterRegistrationBase();
@@ -886,6 +894,33 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 
 } // end CreateTransformParameterFile()
 
+/**
+ * ************** GetTransformParametersMap *****************
+ */
+
+template <class TFixedImage, class TMovingImage>
+itk::ParameterMapInterface::ParameterMapType //somehow using typedef ParameterMapType does not compile!
+ElastixTemplate<TFixedImage, TMovingImage>::
+GetTransformParametersMap( void )
+{
+	return( this->m_TransformParametersMap );
+} // end GetTransformParametersMap
+
+/**
+ * ************** CreateTransformParametersMap ******************
+ *
+ * Setup the transform parameter map, which will
+ * contain the final transform parameters.
+ */
+
+template <class TFixedImage, class TMovingImage>
+void ElastixTemplate<TFixedImage, TMovingImage>
+::CreateTransformParametersMap( )
+{
+	this->GetElxTransformBase()->CreateTransformParametersMap( this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition() , &this->m_TransformParametersMap );
+	this->GetElxResampleInterpolatorBase()->CreateTransformParametersMap( &this->m_TransformParametersMap );
+	this->GetElxResamplerBase()->CreateTransformParametersMap( &this->m_TransformParametersMap );
+} // end CreateTransformParametersMap()
 
 /**
  * ****************** CallInEachComponent ***********************

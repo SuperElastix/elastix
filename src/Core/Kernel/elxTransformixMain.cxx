@@ -113,6 +113,8 @@ int TransformixMain::Run( void )
   /** Save the image container. */
   this->SetMovingImageContainer(
     this->GetElastixBase()->GetMovingImageContainer() );
+ this->SetResultImageContainer(
+    this->GetElastixBase()->GetResultImageContainer() );
 
   return errorCode;
 
@@ -132,6 +134,16 @@ int TransformixMain::Run( ArgumentMapType & argmap )
 
 } // end Run()
 
+int TransformixMain::Run
+( 
+	ArgumentMapType & argmap ,
+	ParameterMapType	& inputMap 
+)
+{
+  this->EnterCommandLineArguments( argmap , inputMap );
+  return this->Run();
+
+} // end Run()
 
 /**
  * ********************* SetInputImage **************************

@@ -145,6 +145,7 @@ ENDIF(ELASTIX_BUILD_EXECUTABLE)
 #---------------------------------------------------------------------
 # Create the transformix executable.
 
+IF( ELASTIX_BUILD_EXECUTABLE )
 ADD_EXECUTABLE( transformix
   Main/transformix.cxx
   Main/transformix.h
@@ -154,6 +155,17 @@ ADD_EXECUTABLE( transformix
   Kernel/elxTransformixMain.h
   ${InstallFilesForExecutables}
 )
+ELSE()
+	ADD_LIBRARY( transformix SHARED
+	  Main/transformixlib.cxx
+	  Main/transformixlib.h
+	  Kernel/elxElastixMain.cxx
+	  Kernel/elxElastixMain.h
+	  Kernel/elxTransformixMain.cxx
+	  Kernel/elxTransformixMain.h
+	  ${InstallFilesForExecutables}
+	)
+ENDIF()
 
 #---------------------------------------------------------------------
 # Link elastix against other libraries.

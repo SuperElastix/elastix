@@ -44,6 +44,7 @@ namespace elastix
 ELASTIX::ELASTIX()
 {
   this->m_ResultImage = 0;
+  this->m_TransformParameters.clear(); 
 }
 
 
@@ -54,6 +55,7 @@ ELASTIX::ELASTIX()
 ELASTIX::~ELASTIX()
 {
   this->m_ResultImage = 0;
+  this->m_TransformParameters.clear();  
 }
 
 
@@ -67,6 +69,11 @@ ELASTIX::GetResultImage( void )
   return this->m_ResultImage;
 }
 
+ELASTIX::ParameterMapType
+ELASTIX::GetTransformParameterMap()
+{
+	return( this->m_TransformParameters );
+}
 
 /**
  * ******************* RegisterImages ***********************
@@ -298,6 +305,9 @@ ELASTIX::RegisterImages(
     elxout << "\nCurrent time: " << timer->PrintStopTime() << "." << std::endl;
     elxout << "Time used for running elastix with this parameter file: "
       << timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+
+    /** Get the transformation parameter map. */
+    m_TransformParameters = elastices[ i ]->GetTransformParametersMap(); 
 
     /** Try to release some memory. */
     elastices[ i ] = 0;

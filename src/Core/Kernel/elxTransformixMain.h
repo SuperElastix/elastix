@@ -90,6 +90,7 @@ public:
 
   /** Overwrite Run( argmap ) from superclass. Simply calls the superclass. */
   virtual int Run( ArgumentMapType & argmap );
+  virtual int Run( ArgumentMapType & argmap , ParameterMapType &  inputMap );
 
   /** Get and Set input- and outputImage. */
   virtual void SetInputImageContainer(

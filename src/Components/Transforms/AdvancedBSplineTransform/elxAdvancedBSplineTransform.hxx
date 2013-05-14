@@ -631,6 +631,116 @@ void AdvancedBSplineTransform<TElastix>
 
 
 /**
+ * ************************* CreateTransformParametersMap ************************
+ *
+ * creates the TransformParametersmap as a vector and if wanted
+ * also as a deformation field.
+ */
+
+template <class TElastix>
+void AdvancedBSplineTransform<TElastix>
+::CreateTransformParametersMap( const ParametersType & param , ParameterMapType *paramsMap ) const
+{
+  std::string			parameterName;
+  std::vector< std::string >	parameterValues;
+  char				tmpValue[ 265 ];
+	
+  /** Call the WriteToFile from the TransformBase. */
+  this->Superclass2::CreateTransformParametersMap( param , paramsMap );
+
+  /** Add some BSplineTransform specific lines. */
+//  xout["transpar"] << std::endl << "// BSplineTransform specific" << std::endl;
+
+  /** Get the GridSize, GridIndex, GridSpacing,
+   * GridOrigin, and GridDirection of this transform. */
+  SizeType size = this->m_BSplineTransform->GetGridRegion().GetSize();
+  IndexType index = this->m_BSplineTransform->GetGridRegion().GetIndex();
+  SpacingType spacing = this->m_BSplineTransform->GetGridSpacing();
+  OriginType origin = this->m_BSplineTransform->GetGridOrigin();
+  DirectionType direction = this->m_BSplineTransform->GetGridDirection();
+
+  /** Write the GridSize of this transform. */
+  parameterName = "GridSize";
+  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    sprintf( tmpValue , "%d" , size[ i ] );
+    parameterValues.push_back( tmpValue );
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear(); 
+ 
+  /** Write the GridIndex of this transform. */
+  parameterName = "GridIndex";
+  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    sprintf( tmpValue , "%d" , index[ i ] );
+    parameterValues.push_back( tmpValue );
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear(); 
+
+  /** Set the precision of cout to 2, because GridSpacing and
+   * GridOrigin must have at least one digit precision.
+   */
+//  xout["transpar"] << std::setprecision( 10 );
+
+  /** Write the GridSpacing of this transform. */
+  parameterName = "GridSpacing";
+  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    sprintf( tmpValue , "%.10lf" , spacing[ i ] );
+    parameterValues.push_back( tmpValue );
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();  
+
+  /** Write the GridOrigin of this transform. */
+  parameterName = "GridOrigin";
+  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    sprintf( tmpValue , "%.10lf" , origin[ i ] );
+    parameterValues.push_back( tmpValue );
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();  
+  
+  /** Write the GridDirection of this transform. */
+  parameterName = "GridDirection";
+  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    {
+      sprintf( tmpValue , "%.10lf" , direction(j,i) );
+      parameterValues.push_back( tmpValue );
+    }
+  }
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();  
+  
+  /** Write the spline order and periodicity of this transform. */
+  parameterName = "BSplineTransformSplineOrder";
+  sprintf( tmpValue , "%d" , m_SplineOrder );
+  parameterValues.push_back( tmpValue );
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+  parameterName = "UseCyclicTransform";
+  std::string m_CyclicString = "false";
+  if ( m_Cyclic )
+  {
+    m_CyclicString = "true";
+  }
+  parameterValues.push_back( m_CyclicString );
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear();
+
+  /** Set the precision back to default value. */
+//  xout["transpar"] << std::setprecision(
+//  this->m_Elastix->GetDefaultOutputPrecision() );
+
+} // end CreateTransformParametersMap()
+
+/**
  * *********************** SetOptimizerScales ***********************
  *
  * Set the optimizer scales of the edge coefficients to infinity.

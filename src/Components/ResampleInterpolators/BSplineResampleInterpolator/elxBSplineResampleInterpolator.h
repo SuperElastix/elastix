@@ -106,6 +106,9 @@ namespace elastix
     typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
 
+    /** Typedef that is used in the elastix dll version */
+    typedef typename Superclass2::ParameterMapType          ParameterMapType;
+
     /** Execute stuff before the actual registration:
     * \li Set the spline order.
     */
@@ -116,6 +119,9 @@ namespace elastix
 
     /** Function to write transform-parameters to a file. */
     virtual void WriteToFile( void ) const;
+
+    /** Function to create transform parameters map. */
+    virtual void CreateTransformParametersMap( ParameterMapType *paramsMap ) const;
 
   protected:
 

@@ -194,6 +194,9 @@ public:
   typedef typename ITKRegistrationType::OptimizerType OptimizerType;
   typedef typename OptimizerType::ScalesType          ScalesType;
 
+  /** Typedef that is used in the elastix dll version */
+  typedef typename ElastixType::ParameterMapType      ParameterMapType;
+
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )
   {
@@ -250,6 +253,9 @@ public:
   /** Function to read transform-parameters from a file. */
   virtual void ReadFromFile( void );
 
+  /** Function to create transform-parameters map. */
+  virtual void CreateTransformParametersMap( const ParametersType & param , ParameterMapType *paramsMap) const;
+  
   /** Function to write transform-parameters to a file. */
   virtual void WriteToFile( const ParametersType & param ) const;
 

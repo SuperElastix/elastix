@@ -267,7 +267,7 @@ int ElastixBase::BeforeAllTransformixBase( void )
   /** Check Command line options and print them to the logfile. */
   elxout << "Command line options from ElastixBase:" << std::endl;
   std::string check = "";
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Read the input image filenames. These are not obliged options,
    * so do not print an error if they are not present.
    * Print also some info (second boolean = true)
@@ -280,7 +280,7 @@ int ElastixBase::BeforeAllTransformixBase( void )
   {
     elxout << "-in       unspecified, so no input image specified" << std::endl;
   }
-
+#endif
   /** Check for appearance of "-out". */
   check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
   if ( check == "" )
@@ -311,11 +311,11 @@ int ElastixBase::BeforeAllTransformixBase( void )
   {
     elxout << "-threads  " << check << std::endl;
   }
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** Print "-tp". */
   check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
   elxout << "-tp       " << check << std::endl;
-
+#endif
   /** Check the very important UseDirectionCosines parameter. */
   this->m_UseDirectionCosines = false;
   bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines,

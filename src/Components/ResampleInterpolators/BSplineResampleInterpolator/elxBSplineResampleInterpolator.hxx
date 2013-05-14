@@ -92,6 +92,29 @@ BSplineResampleInterpolator<TElastix>
 } // end WriteToFile()
 
 
+/**
+ * ******************* CreateTransformParametersMap ******************************
+ */
+template <class TElastix>
+void
+BSplineResampleInterpolator<TElastix>
+::CreateTransformParametersMap( ParameterMapType *paramsMap ) const
+{
+   std::string			parameterName;
+   std::vector< std::string >	parameterValues;
+   char				tmpValue[ 265 ];
+	
+  /** Call CreateTransformParametersMap of the ResamplerBase. */
+  this->Superclass2::CreateTransformParametersMap( paramsMap );
+  /** The BSplineResampleInterpolator adds: */
+  /** Write the FinalBSplineInterpolationOrder. */
+  parameterName = "FinalBSplineInterpolationOrder";
+  sprintf( tmpValue , "%d" , this->GetSplineOrder() );
+  parameterValues.push_back( tmpValue );
+  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.clear(); 
+  
+} // end CreateTransformParametersMap()
 } // end namespace elastix
 
 #endif // end #ifndef __elxBSplineResampleInterpolator_hxx

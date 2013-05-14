@@ -103,12 +103,15 @@ public:
    */
   ImagePointer GetResultImage( void );
 
+  /** Get transformparametermap
+    */
+  ParameterMapType GetTransformParameterMap();
 private:
   /* the result images */
-  ImagePointer  m_ResultImage;
+  ImagePointer     m_ResultImage;
 
-  /* todo add transformation parameters to class to enable user to get these parameters */
-
+  /* final transformation*/
+  ParameterMapType m_TransformParameters;
 }; // end class ELASTIX
 
 }// end namespace elastix
