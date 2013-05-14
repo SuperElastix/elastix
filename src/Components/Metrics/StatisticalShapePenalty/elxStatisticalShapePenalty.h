@@ -10,11 +10,7 @@
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
-  If you use the StatisticalShapePenalty anywhere we would appreciate if you cite the following article:
-  F.F. Berendsen et al., Free-form image registration regularized by a statistical shape model: application to organ segmentation in cervical MR, Comput. Vis. Image Understand. (2013), http://dx.doi.org/10.1016/j.cviu.2012.12.006
-
 ======================================================================*/
-
 #ifndef __elxStatisticalShapePenalty_H__
 #define __elxStatisticalShapePenalty_H__
 
@@ -30,26 +26,35 @@ namespace elastix
 {
 using namespace itk;
 
-  /**
-   * \class StatisticalShapePenalty
-   * \brief An metric based on the itk::StatisticalShapePointPenalty.
-   *
-   * The parameters used in this class are:
-   * \parameter Metric: Select this metric as follows:\n
-   *    <tt>(Metric "StatisticalShapePenalty")</tt>
-   * \parameter ShrinkageIntensity: The mixing ratio ($\beta$) of the provided covariance matrix and an identity matrix. $\Sigma' = (1-\beta)\Sigma + \beta \sigma_0^2 I$ Can be defined for each resolution\n
-   *    example: <tt>(ShrinkageIntensity 0.2)</tt>
-   * \parameter BaseVariance: The width ($\sigma_0^2$) of the non-informative prior. Can be defined for each resolution\n
-   *    example: <tt>(BaseVariance 1000.0)</tt>
-   *
-   * \ingroup Metrics
-   *
-   */
+/**
+ * \class StatisticalShapePenalty
+ * \brief An metric based on the itk::StatisticalShapePointPenalty.
+ *
+ * The parameters used in this class are:
+ * \parameter Metric: Select this metric as follows:\n
+ *    <tt>(Metric "StatisticalShapePenalty")</tt>
+ * \parameter ShrinkageIntensity: The mixing ratio ($\beta$) of the provided
+ *   covariance matrix and an identity matrix.
+ *   $\Sigma' = (1-\beta)\Sigma + \beta \sigma_0^2 I$
+ *   Can be defined for each resolution\n
+ *    example: <tt>(ShrinkageIntensity 0.2)</tt>
+ * \parameter BaseVariance: The width ($\sigma_0^2$) of the non-informative prior.
+ *   Can be defined for each resolution\n
+ *    example: <tt>(BaseVariance 1000.0)</tt>
+ *
+ * \author F.F. Berendsen, Image Sciences Institute, UMC Utrecht, The Netherlands
+ * \note This work was funded by the projects Care4Me and Mediate.
+ * \note If you use the StatisticalShapePenalty anywhere we would appreciate if you cite the following article:\n
+ * F.F. Berendsen et al., Free-form image registration regularized by a statistical shape model:
+ * application to organ segmentation in cervical MR, Comput. Vis. Image Understand. (2013),
+ * http://dx.doi.org/10.1016/j.cviu.2012.12.006
+ *
+ * \ingroup Metrics
+ */
 
 template <class TElastix >
 class StatisticalShapePenalty
-  : public
-  StatisticalShapePointPenalty<
+  : public StatisticalShapePointPenalty<
     typename MetricBase<TElastix>::FixedPointSetType,
     typename MetricBase<TElastix>::MovingPointSetType >,
   public MetricBase<TElastix>
@@ -57,7 +62,7 @@ class StatisticalShapePenalty
 public:
 
   /** Standard ITK-stuff. */
-  typedef StatisticalShapePenalty    Self;
+  typedef StatisticalShapePenalty                       Self;
   typedef StatisticalShapePointPenalty<
     typename MetricBase<TElastix>::FixedPointSetType,
     typename MetricBase<TElastix>::MovingPointSetType > Superclass1;
@@ -116,7 +121,6 @@ public:
   typedef typename
     CombinationTransformType::InitialTransformType    InitialTransformType;
 
-
   /** Typedefs inherited from elastix. */
   typedef typename Superclass2::ElastixType               ElastixType;
   typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -128,8 +132,7 @@ public:
   typedef typename Superclass2::FixedImageType            FixedImageType;
   typedef typename Superclass2::MovingImageType           MovingImageType;
 
-
-	/** The fixed image dimension. */
+  /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );
 
@@ -186,17 +189,14 @@ private:
   /** The private constructor. */
   StatisticalShapePenalty( const Self& ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );              // purposely not implemented
+  void operator=( const Self& );          // purposely not implemented
 
 }; // end class StatisticalShapePenalty
 
-
 } // end namespace elastix
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxStatisticalShapePenalty.hxx"
 #endif
 
 #endif // end #ifndef __elxStatisticalShapePenalty_H__
-

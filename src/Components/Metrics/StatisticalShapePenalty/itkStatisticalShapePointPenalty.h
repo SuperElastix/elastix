@@ -10,9 +10,6 @@
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
-  If you use the StatisticalShapePenalty anywhere we would appreciate if you cite the following article:
-  F.F. Berendsen et al., Free-form image registration regularized by a statistical shape model: application to organ segmentation in cervical MR, Comput. Vis. Image Understand. (2013), http://dx.doi.org/10.1016/j.cviu.2012.12.006
-
 ======================================================================*/
 #ifndef __itkStatisticalShapePointPenalty_h
 #define __itkStatisticalShapePointPenalty_h
@@ -23,6 +20,7 @@
 #include "itkPointSet.h"
 #include "itkImage.h"
 #include "itkArray.h"
+#include <itkVariableSizeMatrix.h>
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_math.h>
@@ -32,32 +30,34 @@
 //#include <vnl/algo/vnl_svd.h>
 #include <vnl/algo/vnl_svd_economy.h>
 
-#include <itkVariableSizeMatrix.h>
-
 #include <vcl_iostream.h>
 #include <string>
 
 
-
 namespace itk
 {
-
 /** \class StatisticalShapePointPenalty
  * \brief Computes the Mahalanobis distance between the transformed shape and a mean shape.
  *  A model mean and covariance are required.
  *
+ * \author F.F. Berendsen, Image Sciences Institute, UMC Utrecht, The Netherlands
+ * \note This work was funded by the projects Care4Me and Mediate.
+ * \note If you use the StatisticalShapePenalty anywhere we would appreciate if you cite the following article:\n
+ * F.F. Berendsen et al., Free-form image registration regularized by a statistical shape model:
+ * application to organ segmentation in cervical MR, Comput. Vis. Image Understand. (2013),
+ * http://dx.doi.org/10.1016/j.cviu.2012.12.006
  *
  * \ingroup RegistrationMetrics
  */
 
 template < class TFixedPointSet, class TMovingPointSet >
 class ITK_EXPORT StatisticalShapePointPenalty :
-    public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
+  public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {
 public:
 
   /** Standard class typedefs. */
-  typedef StatisticalShapePointPenalty    Self;
+  typedef StatisticalShapePointPenalty              Self;
   typedef SingleValuedPointSetToPointSetMetric<
     TFixedPointSet, TMovingPointSet >               Superclass;
   typedef SmartPointer<Self>                        Pointer;
@@ -92,14 +92,14 @@ public:
   typedef typename Superclass::OutputPointType            OutputPointType;
 
   typedef typename OutputPointType::CoordRepType          CoordRepType;
-  typedef vnl_vector<CoordRepType>               VnlVectorType;
-  typedef vnl_matrix<CoordRepType>               VnlMatrixType;
-  //typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef vnl_vector<CoordRepType>                        VnlVectorType;
+  typedef vnl_matrix<CoordRepType>                        VnlMatrixType;
   //typedef itk::Array<VnlVectorType *> ProposalDerivativeType;
   typedef typename std::vector< VnlVectorType *> ProposalDerivativeType;
   //typedef typename vnl_vector<VnlVectorType *> ProposalDerivativeType; //Cannot be linked
   typedef vnl_svd_economy<CoordRepType> PCACovarianceType;
 
+  /** Initialization. */
   void Initialize( void ) throw ( ExceptionObject );
 
   /**  Get the value for single valued optimizers. */
@@ -113,22 +113,19 @@ public:
   void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType& Value, DerivativeType& Derivative ) const;
 
-  /** Set/Get if the distance should be squared. Default is true for computation speed */
-
   /** Set/Get the shrinkageIntensity parameter. */
-  itkSetClampMacro( ShrinkageIntensity, MeasureType,
-    0.0, 1.0 );
+  itkSetClampMacro( ShrinkageIntensity, MeasureType, 0.0, 1.0 );
   itkGetMacro( ShrinkageIntensity, MeasureType );
-  
-  itkSetMacro(ShrinkageIntensityNeedsUpdate, bool);
+
+  itkSetMacro( ShrinkageIntensityNeedsUpdate, bool );
   itkBooleanMacro( ShrinkageIntensityNeedsUpdate );
 
     /** Set/Get the BaseVariance parameter. */
   itkSetClampMacro( BaseVariance, MeasureType,
     -1.0, NumericTraits<MeasureType>::max() );
   itkGetMacro( BaseVariance, MeasureType );
- 
-  itkSetMacro(BaseVarianceNeedsUpdate, bool);
+
+  itkSetMacro( BaseVarianceNeedsUpdate, bool );
   itkBooleanMacro( BaseVarianceNeedsUpdate );
 
   itkSetClampMacro( CentroidXVariance, MeasureType,
@@ -147,7 +144,7 @@ public:
     -1.0, NumericTraits<MeasureType>::max() );
   itkGetMacro( SizeVariance, MeasureType );
 
-  itkSetMacro(VariancesNeedsUpdate, bool);
+  itkSetMacro( VariancesNeedsUpdate, bool );
   itkBooleanMacro( VariancesNeedsUpdate );
 
   itkSetClampMacro( CutOffValue, MeasureType,
@@ -158,69 +155,62 @@ public:
    NumericTraits<MeasureType>::NonpositiveMin(), NumericTraits<MeasureType>::max() );
   itkGetMacro( CutOffSharpness, MeasureType );
 
-  /** Set/Get the EigenVectorName parameter. */
-  //itkSetStringMacro(EigenVectorsName);
-  //itkGetStringMacro(EigenVectorsName);
-
-  /** Set/Get the EigenValuesName parameter. */
-  //itkSetStringMacro(EigenValuesName);
-  //itkGetStringMacro(EigenValuesName);
-  itkSetMacro(ShapeModelCalculation, int);
+  itkSetMacro( ShapeModelCalculation, int );
   itkGetConstReferenceMacro( ShapeModelCalculation, int );
 
-  itkSetMacro(NormalizedShapeModel, bool);
+  itkSetMacro( NormalizedShapeModel, bool );
   itkGetConstReferenceMacro( NormalizedShapeModel, bool );
   itkBooleanMacro( NormalizedShapeModel );
 
-  itkSetConstObjectMacro(EigenVectors,vnl_matrix<double>);
-  itkSetConstObjectMacro(EigenValues,vnl_vector<double>);
-  itkSetConstObjectMacro(MeanVector,vnl_vector<double>);
-  
-  itkSetConstObjectMacro(CovarianceMatrix,vnl_matrix<double>);
-  //void SetEigenVectors(vnl_matrix<double>*);
-  //void SetEigenValues(vnl_vector<double>*);
+  itkSetConstObjectMacro( EigenVectors, vnl_matrix<double> );
+  itkSetConstObjectMacro( EigenValues, vnl_vector<double> );
+  itkSetConstObjectMacro( MeanVector, vnl_vector<double> );
 
+  itkSetConstObjectMacro( CovarianceMatrix, vnl_matrix<double> );
 
 protected:
   StatisticalShapePointPenalty();
   virtual ~StatisticalShapePointPenalty();
 
   /** PrintSelf. */
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
 private:
-  StatisticalShapePointPenalty(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  StatisticalShapePointPenalty(const Self&);  // purposely not implemented
+  void operator=(const Self&);                // purposely not implemented
 
-  void FillProposalVector(const OutputPointType & fixedPoint, const unsigned int vertexindex) const;
-  void FillProposalDerivative(const OutputPointType & fixedPoint, const unsigned int vertexindex) const;
+  void FillProposalVector( const OutputPointType & fixedPoint,
+    const unsigned int vertexindex ) const;
+  void FillProposalDerivative( const OutputPointType & fixedPoint,
+    const unsigned int vertexindex ) const;
 
-  void UpdateCentroidAndAlignProposalVector(const unsigned int shapeLength) const;
-  void UpdateCentroidAndAlignProposalDerivative(const unsigned int shapeLength) const;
+  void UpdateCentroidAndAlignProposalVector(
+    const unsigned int shapeLength ) const;
+  void UpdateCentroidAndAlignProposalDerivative(
+    const unsigned int shapeLength ) const;
 
-  void UpdateL2(const unsigned int shapeLength) const;
-  void NormalizeProposalVector(const unsigned int shapeLength) const;
-  void UpdateL2AndNormalizeProposalDerivative(const unsigned int shapeLength) const;
+  void UpdateL2( const unsigned int shapeLength ) const;
+  void NormalizeProposalVector( const unsigned int shapeLength ) const;
+  void UpdateL2AndNormalizeProposalDerivative( const unsigned int shapeLength ) const;
 
-  void CalculateValue(MeasureType & value , VnlVectorType & differenceVector , VnlVectorType & centerrotated , VnlVectorType & eigrot) const;
-  void CalculateDerivative(DerivativeType & derivative , const MeasureType & value , const VnlVectorType & differenceVector , const VnlVectorType & centerrotated , const VnlVectorType & eigrot, const unsigned int shapeLength) const;
-   
-  void CalculateCutOffValue( MeasureType & value) const;
+  void CalculateValue( MeasureType & value, VnlVectorType & differenceVector,
+    VnlVectorType & centerrotated, VnlVectorType & eigrot ) const;
+  void CalculateDerivative( DerivativeType & derivative, const MeasureType & value,
+    const VnlVectorType & differenceVector, const VnlVectorType & centerrotated,
+    const VnlVectorType & eigrot, const unsigned int shapeLength ) const;
 
-  void CalculateCutOffDerivative( typename DerivativeType::element_type & derivativeElement , const MeasureType & value ) const;
-     
-	  //vnl_matrix<double> m_invCovariance;
-  //std::string m_EigenVectorsName;  
-  //std::string m_EigenValuesName;
+  void CalculateCutOffValue( MeasureType & value ) const;
 
-    //vnl_matrix<double> m_eigenvectors;
-    //vnl_vector<double> m_eigenvalues;
-    const VnlVectorType* m_MeanVector;
-    const VnlMatrixType* m_CovarianceMatrix;
-    const VnlMatrixType* m_EigenVectors;
-    const VnlVectorType* m_EigenValues;
+  void CalculateCutOffDerivative(
+    typename DerivativeType::element_type & derivativeElement,
+    const MeasureType & value ) const;
 
-    VnlMatrixType* m_InverseCovarianceMatrix;
+    const VnlVectorType * m_MeanVector;
+    const VnlMatrixType * m_CovarianceMatrix;
+    const VnlMatrixType * m_EigenVectors;
+    const VnlVectorType * m_EigenValues;
+
+    VnlMatrixType * m_InverseCovarianceMatrix;
 
     double m_CentroidXVariance;
     double m_CentroidXStd;
@@ -236,28 +226,20 @@ private:
     bool m_VariancesNeedsUpdate;
 
     VnlVectorType* m_EigenValuesRegularized;
-  
-    //mutable ProposalDerivativeType m_ProposalDerivative;
+
     mutable ProposalDerivativeType* m_ProposalDerivative;
-    //ProposalDerivativeType::Pointer m_ProposalDerivative;
-    //mutable PCACovarianceType* m_PCACovariance;
     unsigned int m_ProposalLength;
     bool m_NormalizedShapeModel;
     int m_ShapeModelCalculation;
     double m_ShrinkageIntensity;
     double m_BaseVariance;
     double m_BaseStd;
-    mutable VnlVectorType m_proposalvector;
-    mutable VnlVectorType m_meanvalues;
+    mutable VnlVectorType m_ProposalVector;
+    mutable VnlVectorType m_MeanValues;
 
     double m_CutOffValue;
     double m_CutOffSharpness;
-    /*
-    mutable VnlMatrixType m_eigenvectors;
-    mutable VnlVectorType m_eigenvalues;
-    mutable VnlVectorType m_proposalvector;
-    mutable VnlVectorType m_meanvalues;
-*/
+
 }; // end class StatisticalShapePointPenalty
 
 } // end namespace itk
