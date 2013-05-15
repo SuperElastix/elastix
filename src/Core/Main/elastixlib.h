@@ -60,7 +60,7 @@ public:
   typedef Image::Pointer    ImagePointer;
 
   //typedefs for parameter map
-  typedef itk::ParameterFileParser::ParameterValuesType	ParameterValuesType;
+  typedef itk::ParameterFileParser::ParameterValuesType ParameterValuesType;
   typedef itk::ParameterFileParser::ParameterMapType    ParameterMapType;
 
   /**

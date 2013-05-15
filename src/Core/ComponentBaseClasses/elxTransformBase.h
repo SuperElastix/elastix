@@ -256,7 +256,7 @@ public:
   /** Function to create transform-parameters map. */
   virtual void CreateTransformParametersMap(
     const ParametersType & param, ParameterMapType * paramsMap ) const;
-  
+
   /** Function to write transform-parameters to a file. */
   virtual void WriteToFile( const ParametersType & param ) const;
 

@@ -59,13 +59,13 @@ ResampleInterpolatorBase<TElastix>
  */
 
 template <class TElastix>
-void 
+void
 ResampleInterpolatorBase<TElastix>
 ::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
 {
    std::string parameterName;
    std::vector< std::string > parameterValues;
-   
+
   /** Write the name of this transform. */
   parameterName = "ResampleInterpolator";
   parameterValues.push_back( this->elxGetClassName() );

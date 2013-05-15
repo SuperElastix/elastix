@@ -311,8 +311,8 @@ protected:
 
   /** The initial transform. */
   ObjectPointer m_InitialTransform;
-  /** Transformation parameters map containing parameters that is the 
-   *  result of registration. 
+  /** Transformation parameters map containing parameters that is the
+   *  result of registration.
    */
   ParameterMapType m_TransformParametersMap;
 

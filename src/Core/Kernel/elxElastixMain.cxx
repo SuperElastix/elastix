@@ -143,7 +143,7 @@ ElastixMain::ElastixMain()
 
   this->m_FinalTransform = 0;
   this->m_InitialTransform = 0;
-  this->m_TransformParametersMap.clear(); 
+  this->m_TransformParametersMap.clear();
 
 } // end Constructor
 
@@ -338,7 +338,7 @@ int ElastixMain::Run( void )
   /** Return the final transform. */
   this->m_FinalTransform = this->GetElastixBase()->GetFinalTransform();
 
-  /** Get the transformation parameter map */ 
+  /** Get the transformation parameter map */
   this->m_TransformParametersMap = this->GetElastixBase()->GetTransformParametersMap();
 
   /** Store the images in ElastixMain. */
@@ -449,7 +449,7 @@ int ElastixMain::InitDBIndex( void )
         }
       }
 #else
-      this->m_Configuration->ReadParameter( this->m_FixedImageDimension, 
+      this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
         "FixedImageDimension", 0, false );
 #endif
 
@@ -516,7 +516,7 @@ int ElastixMain::InitDBIndex( void )
       }
 
 #else
-      this->m_Configuration->ReadParameter( this->m_MovingImageDimension, 
+      this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
         "FixedImageDimension", 0, false );
 #endif
 

@@ -70,8 +70,8 @@ TRANSFORMIX::GetResultImage( void )
  * ******************* TransformImage ***********************
  */
 
-int 
-TRANSFORMIX::TransformImage( 
+int
+TRANSFORMIX::TransformImage(
   ImagePointer inputImage,
   ParameterMapType & parameterMap,
   std::string outputPath,
@@ -92,17 +92,17 @@ TRANSFORMIX::TransformImage(
 
   DataObjectContainerPointer movingImageContainer = 0;
   DataObjectContainerPointer ResultImageContainer = 0;
-  
+
   /** Initialize. */
   int               returndummy = 0;
   ArgumentMapType   argMap;
   bool              outFolderPresent = false;
   std::string       outFolder = "";
   std::string       logFileName = "";
- 
+
   std::string key;
   std::string value;
-  
+
   if( !outputPath.empty() )
   {
     key = "-out";
@@ -111,7 +111,7 @@ TRANSFORMIX::TransformImage(
     /** Make sure that last character of the output folder equals a '/'. */
     if( value.find_last_of( "/" ) != value.size() -1  )
     {
-      value.append("/"); 
+      value.append("/");
     }
 
     outFolderPresent = true;
@@ -154,7 +154,7 @@ TRANSFORMIX::TransformImage(
       return( -2 );
     }
     else
-    { 
+    {
       /** Setup xout. */
       if( performLogging )
       {
@@ -195,10 +195,10 @@ TRANSFORMIX::TransformImage(
   movingImageContainer = DataObjectContainerType::New();
   movingImageContainer->CreateElementAt( 0 ) = inputImage;
   transformix->SetMovingImageContainer( movingImageContainer );
-  transformix->SetResultImageContainer( ResultImageContainer ); 
+  transformix->SetResultImageContainer( ResultImageContainer );
 
   /** Run transformix. */
-  returndummy = transformix->Run( argMap , parameterMap );
+  returndummy = transformix->Run( argMap, parameterMap );
 
   /** Check if transformix run without errors. */
   if ( returndummy != 0 )
@@ -208,8 +208,8 @@ TRANSFORMIX::TransformImage(
   }
 
   /** Get the result image */
-  ResultImageContainer = transformix->GetResultImageContainer(); 
-  
+  ResultImageContainer = transformix->GetResultImageContainer();
+
   /** Stop timer and print it. */
   totaltimer->StopTimer();
   elxout << "\nTransformix has finished at " <<
@@ -218,7 +218,7 @@ TRANSFORMIX::TransformImage(
     totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
   this->m_ResultImage = ResultImageContainer->ElementAt( 0 );
-  
+
   /** Clean up. */
   transformix = 0;
   TransformixMainType::UnloadComponents();

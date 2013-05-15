@@ -60,7 +60,7 @@ ElastixTemplate<TFixedImage, TMovingImage>
 
   /** Initialize CurrentTransformParameterFileName. */
   this->m_CurrentTransformParameterFileName = "";
-  this->m_TransformParametersMap.clear(); 
+  this->m_TransformParametersMap.clear();
 
 } // end Constructor
 
@@ -462,9 +462,9 @@ int ElastixTemplate<TFixedImage, TMovingImage>
      * Actually we could loop over all resamplers.
      * But for now, there seems to be no use yet for that.
      */
-#ifndef _ELASTIX_BUILD_LIBRARY   
+#ifndef _ELASTIX_BUILD_LIBRARY
     this->GetElxResamplerBase()->WriteResultImage( makeFileName.str().c_str() );
-#else  
+#else
     this->GetElxResamplerBase()->CreateItkResultImage();
 #endif
     /** Print the elapsed time for the resampling. */
@@ -800,7 +800,7 @@ void ElastixTemplate<TFixedImage, TMovingImage>
     this->CreateTransformParameterFile( FileName, true );
   }
 
-#ifdef _ELASTIX_BUILD_LIBRARY 
+#ifdef _ELASTIX_BUILD_LIBRARY
   /** Get the transform parameters. */
   this->CreateTransformParametersMap();//only relevant for dll!
 #endif

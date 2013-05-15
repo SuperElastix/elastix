@@ -699,46 +699,46 @@ ResamplerBase<TElastix>
   std::string parameterName;
   std::vector< std::string > parameterValues;
   char tmpValue[ 265 ];
-   
+
   /** Write the name of this transform. */
   parameterName = "Resampler";
   parameterValues.push_back( this->elxGetClassName() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear(); 
-  
+  parameterValues.clear();
+
  /** Write the DefaultPixelValue. */
   parameterName = "DefaultPixelValue";
   sprintf( tmpValue , "%lf" , this->GetAsITKBaseType()->GetDefaultPixelValue() );
   parameterValues.push_back( tmpValue );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
-  
+
   /** Write the output image format. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter(
     resultImageFormat, "ResultImageFormat", 0, false );
-  parameterName = "ResultImageFormat"; 
+  parameterName = "ResultImageFormat";
   parameterValues.push_back( resultImageFormat );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear(); 
-  
+  parameterValues.clear();
+
   /** Write output pixel type. */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter(
     resultImagePixelType, "ResultImagePixelType", 0, false );
-   parameterName = "ResultImagePixelType"; 
+   parameterName = "ResultImagePixelType";
   parameterValues.push_back( resultImagePixelType );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear(); 
+  parameterValues.clear();
 
   /** Write compression flag. */
   std::string doCompression = "false";
   this->m_Configuration->ReadParameter(
     doCompression, "CompressResultImage", 0, false );
-  parameterName = "CompressResultImage"; 
+  parameterName = "CompressResultImage";
   parameterValues.push_back( doCompression );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear(); 
+  parameterValues.clear();
 
 } // end CreateTransformParametersMap()
 
