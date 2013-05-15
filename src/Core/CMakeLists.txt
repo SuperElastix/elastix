@@ -146,25 +146,37 @@ ENDIF(ELASTIX_BUILD_EXECUTABLE)
 # Create the transformix executable.
 
 IF( ELASTIX_BUILD_EXECUTABLE )
-  ADD_EXECUTABLE( transformix
-    Main/transformix.cxx
-    Main/transformix.h
-    Kernel/elxElastixMain.cxx
-    Kernel/elxElastixMain.h
-    Kernel/elxTransformixMain.cxx
-    Kernel/elxTransformixMain.h
-    ${InstallFilesForExecutables}
-  )
+ADD_EXECUTABLE( transformix
+  Main/transformix.cxx
+  Main/transformix.h
+  Kernel/elxElastixMain.cxx
+  Kernel/elxElastixMain.h
+  Kernel/elxTransformixMain.cxx
+  Kernel/elxTransformixMain.h
+  ${InstallFilesForExecutables}
+)
 ELSE()
-  ADD_LIBRARY( transformix SHARED
-    Main/transformixlib.cxx
-    Main/transformixlib.h
-    Kernel/elxElastixMain.cxx
-    Kernel/elxElastixMain.h
-    Kernel/elxTransformixMain.cxx
-    Kernel/elxTransformixMain.h
-    ${InstallFilesForExecutables}
-  )
+  IF( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_LIBRARY( transformix SHARED
+      Main/transformixlib.cxx
+      Main/transformixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      Kernel/elxTransformixMain.cxx
+      Kernel/elxTransformixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ELSE( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_LIBRARY( transformix STATIC
+      Main/transformixlib.cxx
+      Main/transformixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      Kernel/elxTransformixMain.cxx
+      Kernel/elxTransformixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ENDIF( ELASTIX_BUILD_SHARED_LIBS )
 ENDIF()
 
 #---------------------------------------------------------------------
@@ -203,10 +215,8 @@ IF( WIN32 )
       #COMPONENT core )
   ELSE( ELASTIX_BUILD_EXECUTABLE )
     # transformix is not implemented as library yet
-    INSTALL( TARGETS transformix
-      RUNTIME DESTINATION . )
-    INSTALL( TARGETS elastix
-      RUNTIME DESTINATION .
+    INSTALL( TARGETS elastix transformix
+      RUNTIME DESTINATION . 
       ARCHIVE DESTINATION . )
   ENDIF( ELASTIX_BUILD_EXECUTABLE )
 ELSE( WIN32 )

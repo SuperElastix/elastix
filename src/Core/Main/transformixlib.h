@@ -18,23 +18,30 @@
  *  Includes
  */
 #include <itkDataObject.h>
+#include "itkParameterFileParser.h"
+
 
 /********************************************************************************
  *                    *
  *      Dll export    *
  *                    *
  ********************************************************************************/
-#define TRFX_COMPILE_LIB 1
-
-#if (defined(_WIN32) || defined(WIN32) ) 
-# ifdef TRFX_COMPILE_LIB
-#  define TRANSFORMIXLIB_API __declspec(dllexport)
-# else
-#  define TRANSFORMIXLIB_API __declspec(dllimport)
-# endif 
+#if (defined(_WIN32) || defined(WIN32) )
+#  ifdef _ELASTIX_BUILD_LIBRARY
+#    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
+#      define TRANSFORMIXLIB_API __declspec(dllexport)
+#    else
+#      define TRANSFORMIXLIB_API __declspec(dllimport)
+#    endif
+#  else
+#    define TRANSFORMIXLIB_API __declspec(dllexport)
+#  endif
 #else
-/* unix needs nothing */
-#define ELX_EXPORT 
+#  if __GNUC__ >= 4
+#    define TRANSFORMIXLIB_API __attribute__ ((visibility ("default")))
+#  else
+#    define TRANSFORMIXLIB_API
+#  endif
 #endif
 
 /********************************************************************************
@@ -53,12 +60,12 @@ public:
   typedef Image::Pointer    ImagePointer;
 
   //typedefs for parameter map
-  typedef std::vector< std::string >      ParameterValuesType;
-  typedef std::map< std::string, ParameterValuesType > ParameterMapType;
+  typedef itk::ParameterFileParser::ParameterValuesType	ParameterValuesType;
+  typedef itk::ParameterFileParser::ParameterMapType    ParameterMapType;
 
   /** Constructor and destructor. */
-  TRANSFORMIX::TRANSFORMIX();
-  TRANSFORMIX::~TRANSFORMIX();
+  TRANSFORMIX();
+  ~TRANSFORMIX();
 
   /** Return value: 0 is success in case not 0 an error occurred
    *    0 = success

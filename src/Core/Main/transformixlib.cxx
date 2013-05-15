@@ -198,7 +198,7 @@ TRANSFORMIX::TransformImage(
   transformix->SetResultImageContainer( ResultImageContainer ); 
 
   /** Run transformix. */
-  returndummy = transformix->Run( argMap , static_cast< ParameterMapType >( parameterMap ) );
+  returndummy = transformix->Run( argMap , parameterMap );
 
   /** Check if transformix run without errors. */
   if ( returndummy != 0 )

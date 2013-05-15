@@ -19,22 +19,28 @@
  */
 #include <itkDataObject.h>
 #include "itkParameterFileParser.h"
+
 /********************************************************************************
  *                    *
  *      Dll export    *
  *                    *
  ********************************************************************************/
-#define ELX_COMPILE_LIB 1
-
 #if (defined(_WIN32) || defined(WIN32) )
-#ifdef ELX_COMPILE_LIB
-#define ELASTIXLIB_API __declspec(dllexport)
+#  ifdef _ELASTIX_BUILD_LIBRARY
+#    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
+#      define ELASTIXLIB_API __declspec(dllexport)
+#    else
+#      define ELASTIXLIB_API __declspec(dllimport)
+#    endif
+#  else
+#    define ELASTIXLIB_API __declspec(dllexport)
+#  endif
 #else
-#define ELASTIXLIB_API __declspec(dllimport)
-#endif
-#else
-/* unix needs nothing */
-#define ELASTIXLIB_API __attribute__ ((visibility ("default")))
+#  if __GNUC__ >= 4
+#    define ELASTIXLIB_API __attribute__ ((visibility ("default")))
+#  else
+#    define ELASTIXLIB_API
+#  endif
 #endif
 
 /********************************************************************************
@@ -54,8 +60,8 @@ public:
   typedef Image::Pointer    ImagePointer;
 
   //typedefs for parameter map
-  typedef std::vector< std::string >                    ParameterValuesType;
-  typedef itk::ParameterFileParser::ParameterMapType         ParameterMapType;
+  typedef itk::ParameterFileParser::ParameterValuesType	ParameterValuesType;
+  typedef itk::ParameterFileParser::ParameterMapType    ParameterMapType;
 
   /**
    *  Constructor and destructor
