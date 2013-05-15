@@ -140,9 +140,9 @@ public:
   typedef ComponentLoader                                 ComponentLoaderType;
   typedef ComponentLoaderType::Pointer                    ComponentLoaderPointer;
 
-  /** Typedef that is used in the elastix dll version */
-  typedef itk::ParameterMapInterface::ParameterMapType      ParameterMapType;
- 
+  /** Typedef that is used in the elastix dll version. */
+  typedef itk::ParameterMapInterface::ParameterMapType    ParameterMapType;
+
   /** Set/Get functions for the description of the imagetype. */
   itkSetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
   itkSetMacro( MovingImagePixelType,  PixelTypeDescriptionType );
@@ -272,8 +272,9 @@ public:
       s_CDB = arg;
     }
   }
+
   /** GetTransformParametersMap */
-  virtual ParameterMapType GetTransformParametersMap(void);
+  virtual ParameterMapType GetTransformParametersMap( void ) const;
 
   static void UnloadComponents( void );
 
@@ -313,7 +314,7 @@ protected:
   /** Transformation parameters map containing parameters that is the 
    *  result of registration. 
    */
-  ParameterMapType	m_transformParametersMap;
+  ParameterMapType m_TransformParametersMap;
 
   FlatDirectionCosinesType     m_OriginalFixedImageDirection;
 

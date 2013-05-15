@@ -799,9 +799,10 @@ void ElastixTemplate<TFixedImage, TMovingImage>
     /** Create a final TransformParameterFile. */
     this->CreateTransformParameterFile( FileName, true );
   }
+
 #ifdef _ELASTIX_BUILD_LIBRARY 
   /** Get the transform parameters. */
-  this->CreateTransformParametersMap( );//only relevant for dll!
+  this->CreateTransformParametersMap();//only relevant for dll!
 #endif
 
   /** Call all the AfterRegistration() functions. */
@@ -894,6 +895,7 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 
 } // end CreateTransformParameterFile()
 
+
 /**
  * ************** GetTransformParametersMap *****************
  */
@@ -901,26 +903,30 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 template <class TFixedImage, class TMovingImage>
 itk::ParameterMapInterface::ParameterMapType //somehow using typedef ParameterMapType does not compile!
 ElastixTemplate<TFixedImage, TMovingImage>::
-GetTransformParametersMap( void )
+GetTransformParametersMap( void ) const
 {
-	return( this->m_TransformParametersMap );
-} // end GetTransformParametersMap
+  return this->m_TransformParametersMap;
+} // end GetTransformParametersMap()
+
 
 /**
  * ************** CreateTransformParametersMap ******************
- *
- * Setup the transform parameter map, which will
- * contain the final transform parameters.
  */
 
 template <class TFixedImage, class TMovingImage>
 void ElastixTemplate<TFixedImage, TMovingImage>
-::CreateTransformParametersMap( )
+::CreateTransformParametersMap( void )
 {
-	this->GetElxTransformBase()->CreateTransformParametersMap( this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition() , &this->m_TransformParametersMap );
-	this->GetElxResampleInterpolatorBase()->CreateTransformParametersMap( &this->m_TransformParametersMap );
-	this->GetElxResamplerBase()->CreateTransformParametersMap( &this->m_TransformParametersMap );
+  this->GetElxTransformBase()->CreateTransformParametersMap(
+    this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition(),
+    &this->m_TransformParametersMap );
+  this->GetElxResampleInterpolatorBase()->CreateTransformParametersMap(
+    &this->m_TransformParametersMap );
+  this->GetElxResamplerBase()->CreateTransformParametersMap(
+    &this->m_TransformParametersMap );
+
 } // end CreateTransformParametersMap()
+
 
 /**
  * ****************** CallInEachComponent ***********************

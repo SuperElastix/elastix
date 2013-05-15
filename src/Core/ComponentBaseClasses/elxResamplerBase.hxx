@@ -509,10 +509,10 @@ ResamplerBase<TElastix>
     itk::Image< short, InputImageType::ImageDimension > >           CastFilterShort;
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< unsigned short, InputImageType::ImageDimension > >  CastFilterUShort;
-  typedef itk::CastImageFilter< InputImageType , 
-    itk::Image< unsigned char , InputImageType::ImageDimension > >  CastFilterUChar;
-  typedef itk::CastImageFilter< InputImageType , 
-    itk::Image< float , InputImageType::ImageDimension > >          CastFilterFloat;
+  typedef itk::CastImageFilter< InputImageType,
+    itk::Image< unsigned char, InputImageType::ImageDimension > >   CastFilterUChar;
+  typedef itk::CastImageFilter< InputImageType,
+    itk::Image< float, InputImageType::ImageDimension > >           CastFilterFloat;
 
   /** cast the image to the correct output image Type */
   if( resultImagePixelType.compare( "short" ) == 0 )
@@ -694,23 +694,23 @@ ResamplerBase<TElastix>
 template <class TElastix>
 void
 ResamplerBase<TElastix>
-::CreateTransformParametersMap( ParameterMapType *paramsMap ) const
+::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
 {
-   std::string			parameterName;
-   std::vector< std::string >	parameterValues;
-   char				tmpValue[ 265 ];
+  std::string parameterName;
+  std::vector< std::string > parameterValues;
+  char tmpValue[ 265 ];
    
   /** Write the name of this transform. */
   parameterName = "Resampler";
   parameterValues.push_back( this->elxGetClassName() );
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear(); 
   
  /** Write the DefaultPixelValue. */
   parameterName = "DefaultPixelValue";
   sprintf( tmpValue , "%lf" , this->GetAsITKBaseType()->GetDefaultPixelValue() );
   parameterValues.push_back( tmpValue );
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
   
   /** Write the output image format. */
@@ -719,7 +719,7 @@ ResamplerBase<TElastix>
     resultImageFormat, "ResultImageFormat", 0, false );
   parameterName = "ResultImageFormat"; 
   parameterValues.push_back( resultImageFormat );
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear(); 
   
   /** Write output pixel type. */
@@ -728,7 +728,7 @@ ResamplerBase<TElastix>
     resultImagePixelType, "ResultImagePixelType", 0, false );
    parameterName = "ResultImagePixelType"; 
   parameterValues.push_back( resultImagePixelType );
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear(); 
 
   /** Write compression flag. */
@@ -737,12 +737,13 @@ ResamplerBase<TElastix>
     doCompression, "CompressResultImage", 0, false );
   parameterName = "CompressResultImage"; 
   parameterValues.push_back( doCompression );
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear(); 
 
 } // end CreateTransformParametersMap()
 
-/*
+
+/**
  * ******************* ReleaseMemory ********************
  */
 

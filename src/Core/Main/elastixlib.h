@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elastixlib_h
 #define __elastixlib_h
 
@@ -98,20 +97,19 @@ public:
     ImagePointer fixedMask = 0,
     ImagePointer movingMask = 0 );
 
-  /**
-   *  Getter for result image
-   */
+  /** Getter for result image. */
   ImagePointer GetResultImage( void );
 
-  /** Get transformparametermap
-    */
-  ParameterMapType GetTransformParameterMap();
+  /** Get transformparametermap */
+  ParameterMapType GetTransformParameterMap( void );
+
 private:
   /* the result images */
   ImagePointer     m_ResultImage;
 
-  /* final transformation*/
+  /* Final transformation*/
   ParameterMapType m_TransformParameters;
+
 }; // end class ELASTIX
 
 }// end namespace elastix

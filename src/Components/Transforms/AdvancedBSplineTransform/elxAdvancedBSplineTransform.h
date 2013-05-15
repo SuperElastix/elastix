@@ -224,7 +224,7 @@ public:
     ParametersType, ImageType >                           GridUpsamplerType;
   typedef typename GridUpsamplerType::Pointer             GridUpsamplerPointer;
 
-  /** Typedef that is used in the elastix dll version */
+  /** Typedef that is used in the elastix dll version. */
   typedef typename Superclass2::ParameterMapType          ParameterMapType;
 
   /** Execute stuff before anything else is done:
@@ -272,8 +272,12 @@ public:
   /** Function to write transform-parameters to a file. */
   virtual void WriteToFile( const ParametersType & param ) const;
 
-  /** Function to create transform-parameters map. */
-  virtual void CreateTransformParametersMap( const ParametersType & param , ParameterMapType *paramsMap ) const;
+  /** Function to create transform-parameters map.
+   * Creates the TransformParametersmap as a vector and if wanted
+   * also as a deformation field.
+   */
+  virtual void CreateTransformParametersMap(
+    const ParametersType & param, ParameterMapType * paramsMap ) const;
 
   /** Set the scales of the edge B-spline coefficients to zero. */
   virtual void SetOptimizerScales( const unsigned int edgeWidth );

@@ -203,8 +203,8 @@ public:
   typedef MovingImageType                                           InputImageType;
   typedef MovingImageType                                           OutputImageType;
 
-  /** Typedef that is used in the elastix dll version */
-  typedef itk::ParameterMapInterface::ParameterMapType				    ParameterMapType;
+  /** Typedef that is used in the elastix dll version. */
+  typedef itk::ParameterMapInterface::ParameterMapType              ParameterMapType;
 
   /** Functions to set/get pointers to the elastix components.
    * Get the components as pointers to elxBaseType.
@@ -320,11 +320,11 @@ protected:
     const bool ToLog );
 
   /** CreateTransformParametersMap. */
-  virtual void CreateTransformParametersMap( );
-  
+  virtual void CreateTransformParametersMap( void );
+
   /** GetTransformParametersMap. */
-  virtual ParameterMapType GetTransformParametersMap( void );
-  
+  virtual ParameterMapType GetTransformParametersMap( void ) const;
+
   /** Stores transformation parameters map. */
   ParameterMapType m_TransformParametersMap;
 

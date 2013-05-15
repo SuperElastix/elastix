@@ -143,7 +143,7 @@ ElastixMain::ElastixMain()
 
   this->m_FinalTransform = 0;
   this->m_InitialTransform = 0;
-  this->m_transformParametersMap.clear(); 
+  this->m_TransformParametersMap.clear(); 
 
 } // end Constructor
 
@@ -337,8 +337,9 @@ int ElastixMain::Run( void )
 
   /** Return the final transform. */
   this->m_FinalTransform = this->GetElastixBase()->GetFinalTransform();
-  /** Get the transformation parameter map */	
-  this->m_transformParametersMap = this->GetElastixBase()->GetTransformParametersMap();
+
+  /** Get the transformation parameter map */ 
+  this->m_TransformParametersMap = this->GetElastixBase()->GetTransformParametersMap();
 
   /** Store the images in ElastixMain. */
   this->SetFixedImageContainer(  this->GetElastixBase()->GetFixedImageContainer() );
@@ -893,15 +894,17 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
   return this->m_OriginalFixedImageDirection;
 } // end GetOriginalFixedImageDirectionFlat()
 
+
 /**
  * ******************** GetTransformParametersMap ********************
  */
 
 itk::ParameterMapInterface::ParameterMapType //using ParameterMapType does not compile, why?
-ElastixMain::GetTransformParametersMap( void ) 
+ElastixMain::GetTransformParametersMap( void ) const
 {
-  return this->m_transformParametersMap;
-}
+  return this->m_TransformParametersMap;
+} // end GetTransformParametersMap()
+
 
 /**
  * ******************** GetImageInformationFromFile ********************

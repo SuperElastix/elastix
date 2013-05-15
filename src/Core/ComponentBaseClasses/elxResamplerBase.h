@@ -106,7 +106,7 @@ public:
   typedef typename ITKBaseType::OriginPointType     OriginPointType;
   typedef typename ITKBaseType::PixelType           OutputPixelType;
 
-  /** Typedef that is used in the elastix dll version */
+  /** Typedef that is used in the elastix dll version. */
   typedef typename ElastixType::ParameterMapType ParameterMapType;
 
   /** Typedef for the ProgressCommand. */
@@ -163,7 +163,7 @@ public:
   virtual void WriteToFile( void ) const;
 
   /** Function to create transform-parameters map. */
-  virtual void CreateTransformParametersMap( ParameterMapType *paramsMap ) const;
+  virtual void CreateTransformParametersMap( ParameterMapType * paramsMap ) const;
 
   /** Function to write the result output image to a file. */
   virtual void WriteResultImage( const char * filename, const bool & showProgress = true );

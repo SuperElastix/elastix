@@ -167,7 +167,7 @@ public:
   typedef ComponentDatabaseType::IndexType    DBIndexType;
   typedef std::vector<double>                 FlatDirectionCosinesType;
 
-  /** Typedef that is used in the elastix dll version */
+  /** Typedef that is used in the elastix dll version. */
   typedef itk::ParameterMapInterface::ParameterMapType  ParameterMapType;
 
   /** The itk class that ElastixTemplate is expected to inherit from
@@ -341,13 +341,12 @@ public:
   virtual const FlatDirectionCosinesType &
     GetOriginalFixedImageDirectionFlat( void ) const;
 
-  /** Creates transformation parameters map
-   */
-  virtual void CreateTransformParametersMap( ) = 0;
-  
-  /** Gets transformation parameters map
-   */
-  virtual ParameterMapType GetTransformParametersMap( void ) = 0;
+  /** Creates transformation parameters map. */
+  virtual void CreateTransformParametersMap( void ) = 0;
+
+  /** Gets transformation parameters map. */
+  virtual ParameterMapType GetTransformParametersMap( void ) const = 0;
+
 protected:
 
   ElastixBase();

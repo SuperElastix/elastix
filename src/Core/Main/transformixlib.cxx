@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __transformixlib_CXX_
 #define __transformixlib_CXX_
 
@@ -36,38 +35,48 @@
 
 namespace transformix
 {
-
-/*
- *	Constructor
+/**
+ * ******************* Constructor ***********************
  */
+
 TRANSFORMIX::TRANSFORMIX()
 {
-	this->m_ResultImage = 0;
-}
+  this->m_ResultImage = 0;
+} // end Constructor
 
-/*
- *	Destructor
+
+/**
+ * ******************* Destructor ***********************
  */
+
 TRANSFORMIX::~TRANSFORMIX()
 {
-	this->m_ResultImage = 0;
-}
+  this->m_ResultImage = 0;
+} // end Destructor
+
+
+/**
+ * ******************* Destructor ***********************
+ */
 
 TRANSFORMIX::ImagePointer
-TRANSFORMIX::GetResultImage()
+TRANSFORMIX::GetResultImage( void )
 {
-	return( this->m_ResultImage );
+  return this->m_ResultImage;
 }
 
+
+/**
+ * ******************* TransformImage ***********************
+ */
+
 int 
-TRANSFORMIX::TransformImage
-( 
-	ImagePointer		inputImage	,
-	ParameterMapType	&parameterMap	,
-	std::string		outputPath	,
-	bool			performLogging	,
-	bool			performCout
-)
+TRANSFORMIX::TransformImage( 
+  ImagePointer inputImage,
+  ParameterMapType & parameterMap,
+  std::string outputPath,
+  bool performLogging,
+  bool performCout )
 {
   /** Some typedef's.*/
   typedef elx::TransformixMain                        TransformixMainType;
@@ -79,7 +88,7 @@ TRANSFORMIX::TransformImage
   typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
 
   /** Declare an instance of the Transformix class. */
-  TransformixMainPointer  transformix;
+  TransformixMainPointer transformix;
 
   DataObjectContainerPointer movingImageContainer = 0;
   DataObjectContainerPointer ResultImageContainer = 0;
@@ -96,30 +105,30 @@ TRANSFORMIX::TransformImage
   
   if( !outputPath.empty() )
   {
-	key = "-out";
-	value = outputPath;
-	
-	/** Make sure that last character of the output folder equals a '/'. */
-	if( value.find_last_of( "/" ) != value.size() -1  )
-	{
-		value.append("/"); 
-	}
-	
-	outFolderPresent = true;
+    key = "-out";
+    value = outputPath;
+
+    /** Make sure that last character of the output folder equals a '/'. */
+    if( value.find_last_of( "/" ) != value.size() -1  )
+    {
+      value.append("/"); 
+    }
+
+    outFolderPresent = true;
   }
   else
   {
-	/** Put command line parameters into parameterFileList. */
-	//there must be an "-out", thiss is checked later in code!!
-	key = "-out";
-	value = "output_path_not_set";
+    /** Put command line parameters into parameterFileList. */
+    //there must be an "-out", this is checked later in code!!
+    key = "-out";
+    value = "output_path_not_set";
   }
-  
+
   /** Save this information. */
   outFolder = value;
 
   /** Attempt to save the arguments in the ArgumentMap. */
-  if ( argMap.count( key ) == 0 )
+  if( argMap.count( key ) == 0 )
   {
     argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
   }
@@ -133,41 +142,40 @@ TRANSFORMIX::TransformImage
 
   if( performLogging )
   {
-	/** Check if the output directory exists. */
-	bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
-	if( !outFolderExists )
-	{
-		if( performCout )
-		{
-			std::cerr << "ERROR: the output directory does not exist." << std::endl;
-			std::cerr << "You are responsible for creating it." << std::endl;
-		}
-		return( -2 );
-	}
-	else
-	{	
-		/** Setup xout. */
-		if( performLogging )
-		{
-			logFileName = outFolder + "transformix.log";
-		}
-	}
+    /** Check if the output directory exists. */
+    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
+    if( !outFolderExists )
+    {
+      if( performCout )
+      {
+        std::cerr << "ERROR: the output directory does not exist." << std::endl;
+        std::cerr << "You are responsible for creating it." << std::endl;
+      }
+      return( -2 );
+    }
+    else
+    { 
+      /** Setup xout. */
+      if( performLogging )
+      {
+        logFileName = outFolder + "transformix.log";
+      }
+    }
   }
 
-	/** The argv0 argument, required for finding the component.dll/so's. */
-	argMap.insert( ArgumentMapEntryType( "-argv0", "transformix" )  );
+  /** The argv0 argument, required for finding the component.dll/so's. */
+  argMap.insert( ArgumentMapEntryType( "-argv0", "transformix" ) );
 
-	/** Setup xout. */
-        int returndummy2 = elx::xoutSetup( logFileName.c_str() , performLogging , performCout );
-	if ( returndummy2 && performCout )
-	{
-		if( performCout )
-		{
-			std::cerr << "ERROR while setting up xout." << std::endl;
-		}
-		return( returndummy2 );
-	}
-     
+  /** Setup xout. */
+  int returndummy2 = elx::xoutSetup( logFileName.c_str() , performLogging , performCout );
+  if( returndummy2 && performCout )
+  {
+    if( performCout )
+    {
+      std::cerr << "ERROR while setting up xout." << std::endl;
+    }
+    return( returndummy2 );
+  }
   elxout << std::endl;
 
   /** Declare a timer, start it and print the start time. */
@@ -209,7 +217,7 @@ TRANSFORMIX::TransformImage
   elxout << "Elapsed time: " <<
     totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
-  m_ResultImage = ResultImageContainer->ElementAt( 0 );
+  this->m_ResultImage = ResultImageContainer->ElementAt( 0 );
   
   /** Clean up. */
   transformix = 0;
@@ -218,9 +226,8 @@ TRANSFORMIX::TransformImage
   /** Exit and return the error code. */
   return returndummy;
 
-}
+} // end TransformImage()
 
-}//namespace transformix
+} // namespace transformix
 
 #endif // end #ifndef __transformixlib_CXX_
-

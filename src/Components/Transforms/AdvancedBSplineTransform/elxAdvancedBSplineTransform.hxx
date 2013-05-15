@@ -632,27 +632,26 @@ void AdvancedBSplineTransform<TElastix>
 
 /**
  * ************************* CreateTransformParametersMap ************************
- *
- * creates the TransformParametersmap as a vector and if wanted
- * also as a deformation field.
  */
 
 template <class TElastix>
 void AdvancedBSplineTransform<TElastix>
-::CreateTransformParametersMap( const ParametersType & param , ParameterMapType *paramsMap ) const
+::CreateTransformParametersMap(
+  const ParametersType & param,
+  ParameterMapType * paramsMap ) const
 {
-  std::string			parameterName;
-  std::vector< std::string >	parameterValues;
-  char				tmpValue[ 265 ];
-	
+  std::string parameterName;
+  std::vector< std::string > parameterValues;
+  char tmpValue[ 265 ];
+
   /** Call the WriteToFile from the TransformBase. */
-  this->Superclass2::CreateTransformParametersMap( param , paramsMap );
+  this->Superclass2::CreateTransformParametersMap( param, paramsMap );
 
   /** Add some BSplineTransform specific lines. */
-//  xout["transpar"] << std::endl << "// BSplineTransform specific" << std::endl;
 
   /** Get the GridSize, GridIndex, GridSpacing,
-   * GridOrigin, and GridDirection of this transform. */
+   * GridOrigin, and GridDirection of this transform.
+   */
   SizeType size = this->m_BSplineTransform->GetGridRegion().GetSize();
   IndexType index = this->m_BSplineTransform->GetGridRegion().GetIndex();
   SpacingType spacing = this->m_BSplineTransform->GetGridSpacing();
@@ -663,20 +662,20 @@ void AdvancedBSplineTransform<TElastix>
   parameterName = "GridSize";
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    sprintf( tmpValue , "%d" , size[ i ] );
+    sprintf( tmpValue, "%d", size[ i ] );
     parameterValues.push_back( tmpValue );
   }
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear(); 
  
   /** Write the GridIndex of this transform. */
   parameterName = "GridIndex";
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    sprintf( tmpValue , "%d" , index[ i ] );
+    sprintf( tmpValue, "%d", index[ i ] );
     parameterValues.push_back( tmpValue );
   }
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear(); 
 
   /** Set the precision of cout to 2, because GridSpacing and
@@ -691,7 +690,7 @@ void AdvancedBSplineTransform<TElastix>
     sprintf( tmpValue , "%.10lf" , spacing[ i ] );
     parameterValues.push_back( tmpValue );
   }
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();  
 
   /** Write the GridOrigin of this transform. */
@@ -701,7 +700,7 @@ void AdvancedBSplineTransform<TElastix>
     sprintf( tmpValue , "%.10lf" , origin[ i ] );
     parameterValues.push_back( tmpValue );
   }
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();  
   
   /** Write the GridDirection of this transform. */
@@ -714,24 +713,24 @@ void AdvancedBSplineTransform<TElastix>
       parameterValues.push_back( tmpValue );
     }
   }
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();  
   
   /** Write the spline order and periodicity of this transform. */
   parameterName = "BSplineTransformSplineOrder";
-  sprintf( tmpValue , "%d" , m_SplineOrder );
+  sprintf( tmpValue, "%d", m_SplineOrder );
   parameterValues.push_back( tmpValue );
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
   parameterName = "UseCyclicTransform";
-  std::string m_CyclicString = "false";
-  if ( m_Cyclic )
+  std::string cyclicString = "false";
+  if( this->m_Cyclic )
   {
-    m_CyclicString = "true";
+    cyclicString = "true";
   }
-  parameterValues.push_back( m_CyclicString );
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
+  parameterValues.push_back( cyclicString );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
   /** Set the precision back to default value. */
@@ -740,10 +739,9 @@ void AdvancedBSplineTransform<TElastix>
 
 } // end CreateTransformParametersMap()
 
+
 /**
  * *********************** SetOptimizerScales ***********************
- *
- * Set the optimizer scales of the edge coefficients to infinity.
  */
 
 template <class TElastix>
@@ -835,4 +833,3 @@ SetOptimizerScales( const unsigned int edgeWidth )
 
 
 #endif // end #ifndef __elxAdvancedBSplineTransform_hxx
-

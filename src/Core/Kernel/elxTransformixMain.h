@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxTransformixMain_H_
 #define __elxTransformixMain_H_
 
@@ -19,7 +18,6 @@
 
 namespace elastix
 {
-
 /**
  * \class TransformixMain
  * \brief A class with all functionality to configure transformix.
@@ -82,7 +80,7 @@ public:
   typedef Superclass::ComponentLoaderType         ComponentLoaderType;
   typedef Superclass::ComponentLoaderPointer      ComponentLoaderPointer;
 
-  /** Typedef that is used in the elastix dll version */
+  /** Typedef that is used in the elastix dll version. */
   typedef Superclass::ParameterMapType            ParameterMapType;
 
   /** Overwrite Run() from base-class. */
@@ -90,7 +88,7 @@ public:
 
   /** Overwrite Run( argmap ) from superclass. Simply calls the superclass. */
   virtual int Run( ArgumentMapType & argmap );
-  virtual int Run( ArgumentMapType & argmap , ParameterMapType &  inputMap );
+  virtual int Run( ArgumentMapType & argmap, ParameterMapType & inputMap );
 
   /** Get and Set input- and outputImage. */
   virtual void SetInputImageContainer(

@@ -53,6 +53,7 @@ ResampleInterpolatorBase<TElastix>
 
 } // end WriteToFile()
 
+
 /**
  * ******************* CreateTransformParametersMap ****************
  */
@@ -60,18 +61,20 @@ ResampleInterpolatorBase<TElastix>
 template <class TElastix>
 void 
 ResampleInterpolatorBase<TElastix>
-::CreateTransformParametersMap( ParameterMapType *paramsMap ) const
+::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
 {
-   std::string			parameterName;
-   std::vector< std::string >	parameterValues;
+   std::string parameterName;
+   std::vector< std::string > parameterValues;
    
   /** Write the name of this transform. */
   parameterName = "ResampleInterpolator";
   parameterValues.push_back( this->elxGetClassName() );
-  ( paramsMap)->insert(make_pair( parameterName, parameterValues )) ;
-  parameterValues.clear(); 
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
+
 } // end CreateTransformParametersMap()
+
+
 } // end namespace elastix
 
 #endif // end #ifndef __elxResampleInterpolatorBase_hxx
-

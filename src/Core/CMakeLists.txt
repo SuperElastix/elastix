@@ -146,25 +146,25 @@ ENDIF(ELASTIX_BUILD_EXECUTABLE)
 # Create the transformix executable.
 
 IF( ELASTIX_BUILD_EXECUTABLE )
-ADD_EXECUTABLE( transformix
-  Main/transformix.cxx
-  Main/transformix.h
-  Kernel/elxElastixMain.cxx
-  Kernel/elxElastixMain.h
-  Kernel/elxTransformixMain.cxx
-  Kernel/elxTransformixMain.h
-  ${InstallFilesForExecutables}
-)
+  ADD_EXECUTABLE( transformix
+    Main/transformix.cxx
+    Main/transformix.h
+    Kernel/elxElastixMain.cxx
+    Kernel/elxElastixMain.h
+    Kernel/elxTransformixMain.cxx
+    Kernel/elxTransformixMain.h
+    ${InstallFilesForExecutables}
+  )
 ELSE()
-	ADD_LIBRARY( transformix SHARED
-	  Main/transformixlib.cxx
-	  Main/transformixlib.h
-	  Kernel/elxElastixMain.cxx
-	  Kernel/elxElastixMain.h
-	  Kernel/elxTransformixMain.cxx
-	  Kernel/elxTransformixMain.h
-	  ${InstallFilesForExecutables}
-	)
+  ADD_LIBRARY( transformix SHARED
+    Main/transformixlib.cxx
+    Main/transformixlib.h
+    Kernel/elxElastixMain.cxx
+    Kernel/elxElastixMain.h
+    Kernel/elxTransformixMain.cxx
+    Kernel/elxTransformixMain.h
+    ${InstallFilesForExecutables}
+  )
 ENDIF()
 
 #---------------------------------------------------------------------
@@ -205,8 +205,8 @@ IF( WIN32 )
     # transformix is not implemented as library yet
     INSTALL( TARGETS transformix
       RUNTIME DESTINATION . )
-    INSTALL( TARGETS elastix 
-      RUNTIME DESTINATION . 
+    INSTALL( TARGETS elastix
+      RUNTIME DESTINATION .
       ARCHIVE DESTINATION . )
   ENDIF( ELASTIX_BUILD_EXECUTABLE )
 ELSE( WIN32 )
@@ -215,7 +215,7 @@ ELSE( WIN32 )
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
   # Put executables in bin and libraries in lib.
   INSTALL( TARGETS elastix transformix
-    RUNTIME DESTINATION bin 
+    RUNTIME DESTINATION bin
     LIBRARY DESTINATION bin
     ARCHIVE DESTINATION bin)
     #COMPONENT core )

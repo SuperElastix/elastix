@@ -11,19 +11,18 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __transformixlib_h
 #define __transformixlib_h
 
-/*
- *	Includes
+/**
+ *  Includes
  */
 #include <itkDataObject.h>
 
 /********************************************************************************
- *										*		
- *      Dll export								*
- *										*
+ *                    *
+ *      Dll export    *
+ *                    *
  ********************************************************************************/
 #define TRFX_COMPILE_LIB 1
 
@@ -39,9 +38,9 @@
 #endif
 
 /********************************************************************************
- *										*		
- *      Class definition							*
- *										*
+ *                          *
+ *      Class definition    *
+ *                          *
  ********************************************************************************/
 namespace transformix
 {
@@ -49,41 +48,37 @@ namespace transformix
 class TRANSFORMIXLIB_API TRANSFORMIX
 {
 public:
-	//typedefs for images
-	typedef itk::DataObject		Image;
-	typedef Image::Pointer		ImagePointer;
+  //typedefs for images
+  typedef itk::DataObject   Image;
+  typedef Image::Pointer    ImagePointer;
 
-	//typedefs for parameter map
-	typedef std::vector< std::string >			ParameterValuesType;
-	typedef std::map< std::string , ParameterValuesType >	ParameterMapType;
-	
-	/*
-	 *	Constructor and destructor
-	 */
-	TRANSFORMIX::TRANSFORMIX();
-	TRANSFORMIX::~TRANSFORMIX();
+  //typedefs for parameter map
+  typedef std::vector< std::string >      ParameterValuesType;
+  typedef std::map< std::string, ParameterValuesType > ParameterMapType;
 
-	/*
-	 *
-	 *	return value: 0 is success in case not 0 an error occurred
-	 *		0 = success
-	 *		1 = error
-	 *		-2 = output folder does not exist
-	 */
-	int TransformImage( ImagePointer	inputImage	,
-			    ParameterMapType	&parameterMap	,
-			    std::string		outputPath	,
-			    bool		performLogging	,
-			    bool		performCout );
-	/*
-	 *	Getter for result image
-	 */
-	ImagePointer GetResultImage();
+  /** Constructor and destructor. */
+  TRANSFORMIX::TRANSFORMIX();
+  TRANSFORMIX::~TRANSFORMIX();
+
+  /** Return value: 0 is success in case not 0 an error occurred
+   *    0 = success
+   *    1 = error
+   *   -2 = output folder does not exist
+   */
+  int TransformImage( ImagePointer inputImage,
+    ParameterMapType & parameterMap,
+    std::string outputPath,
+    bool performLogging,
+    bool performCout );
+
+  /** Getter for result image. */
+  ImagePointer GetResultImage( void );
+
 private:
-	ImagePointer	m_ResultImage;
-}; //end class TRANSFORMIX
+  ImagePointer  m_ResultImage;
 
-}//namespace transformix
+}; // end class TRANSFORMIX
+
+} // namespace transformix
 
 #endif // end #ifndef __transformixlib_h
-
