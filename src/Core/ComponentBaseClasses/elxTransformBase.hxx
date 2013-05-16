@@ -757,7 +757,9 @@ void TransformBase<TElastix>
 
 template <class TElastix>
 void TransformBase<TElastix>
-::CreateTransformParametersMap( const ParametersType & param, ParameterMapType * paramsMap ) const
+::CreateTransformParametersMap(
+  const ParametersType & param,
+  ParameterMapType * paramsMap ) const
 {
   std::string parameterName;
   std::vector< std::string > parameterValues;
