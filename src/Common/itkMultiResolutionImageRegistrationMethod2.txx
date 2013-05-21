@@ -67,8 +67,6 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
   this->m_NumberOfLevels = 1;
   this->m_CurrentLevel = 0;
 
-  //this->m_NumberOfThreadsPerMetric = 1;
-
   this->m_Stop = false;
 
   this->m_InitialTransformParameters = ParametersType(0);
@@ -125,7 +123,6 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
   this->m_Metric->SetTransform( this->m_Transform );
   this->m_Metric->SetInterpolator( this->m_Interpolator );
   this->m_Metric->SetFixedImageRegion( this->m_FixedImageRegionPyramid[ this->m_CurrentLevel ] );
-  //this->m_Metric->SetNumberOfThreadsPerMetric( this->m_NumberOfThreadsPerMetric );
   this->m_Metric->Initialize();
 
   // Setup the optimizer
