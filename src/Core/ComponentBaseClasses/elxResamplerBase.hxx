@@ -698,7 +698,7 @@ ResamplerBase<TElastix>
 {
   std::string parameterName;
   std::vector< std::string > parameterValues;
-  char tmpValue[ 265 ] = {};
+  char tmpValue[ 255 ] = {};
 
   /** Write the name of this transform. */
   parameterName = "Resampler";
