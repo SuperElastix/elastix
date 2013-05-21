@@ -20,7 +20,6 @@
 namespace tmr
 {
 
-
 /**
  * ********************* Constructor ****************************
  */
@@ -44,7 +43,7 @@ Timer::Timer()
 void Timer::StartTimer( void )
 {
   /** Get the current time.*/
-  this->m_StartTime = time( '\0' );
+  this->m_StartTime = time( NULL );
   this->m_StartClock = clock();
 
 #ifdef ELX_USE_CLOCK_GETTIME
@@ -64,7 +63,7 @@ int Timer::StopTimer( void )
   if ( this->m_StartTime == 0 ) return 1;
 
   /** Get the current time. */
-  this->m_StopTime = time( '\0' );
+  this->m_StopTime = time( NULL );
   this->m_StopClock = clock();
 
 #ifdef ELX_USE_CLOCK_GETTIME
@@ -239,3 +238,4 @@ const std::string & Timer::PrintElapsedClockSec( void )
 } // end namespace tmr
 
 #endif // end #ifndef __elxTimer_CXX_
+
