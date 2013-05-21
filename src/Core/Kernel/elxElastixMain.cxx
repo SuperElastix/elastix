@@ -55,7 +55,7 @@ std::ofstream   g_LogFileStream;
  * class!!
  */
 
-int xoutSetup( const char * logfilename , bool setupLogging , bool setupCout)
+int xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
 {
   /** The namespace of xout. */
   using namespace xl;
@@ -65,23 +65,23 @@ int xoutSetup( const char * logfilename , bool setupLogging , bool setupCout)
 
   if( setupLogging )
   {
-	/** Open the logfile for writing. */
-	  g_LogFileStream.open( logfilename );
-	  if ( !g_LogFileStream.is_open() )
-	  {
-	    std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
-	    return 1;
-	}
+    /** Open the logfile for writing. */
+    g_LogFileStream.open( logfilename );
+    if( !g_LogFileStream.is_open() )
+    {
+      std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
+      return 1;
+    }
   }
-  
+
   /** Set std::cout and the logfile as outputs of xout. */
   if( setupLogging )
   {
-	returndummy |= xout.AddOutput("log", &g_LogFileStream);
+    returndummy |= xout.AddOutput( "log", &g_LogFileStream );
   }
   if( setupCout )
   {
-	returndummy |= xout.AddOutput("cout", &std::cout);
+    returndummy |= xout.AddOutput( "cout", &std::cout );
   }
 
   /** Set outputs of LogOnly and CoutOnly. */
@@ -143,6 +143,7 @@ ElastixMain::ElastixMain()
 
   this->m_FinalTransform = 0;
   this->m_InitialTransform = 0;
+  this->m_TransformParametersMap.clear();
 
 } // end Constructor
 
@@ -183,24 +184,25 @@ void ElastixMain
 
 } // end EnterCommandLineParameters()
 
+
+/**
+ * *************** EnterCommandLineArguments *******************
+ */
+
 void ElastixMain
-::EnterCommandLineArguments
-( 
-	ArgumentMapType & argmap	,
-	ParameterMapType	& inputMap
-)
+::EnterCommandLineArguments( ArgumentMapType & argmap,
+  ParameterMapType & inputMap )
 {
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
    */
   int dummy = this->m_Configuration->Initialize( argmap , inputMap );
-  if ( dummy )
+  if( dummy )
   {
     xout["error"] << "ERROR: Something went wrong during initialisation of the configuration object." << std::endl;
   }
 
-} // end EnterCommandLineParameters()
-
+} // end EnterCommandLineArguments()
 
 
 /**
@@ -336,6 +338,9 @@ int ElastixMain::Run( void )
   /** Return the final transform. */
   this->m_FinalTransform = this->GetElastixBase()->GetFinalTransform();
 
+  /** Get the transformation parameter map */
+  this->m_TransformParametersMap = this->GetElastixBase()->GetTransformParametersMap();
+
   /** Store the images in ElastixMain. */
   this->SetFixedImageContainer(  this->GetElastixBase()->GetFixedImageContainer() );
   this->SetMovingImageContainer( this->GetElastixBase()->GetMovingImageContainer() );
@@ -353,39 +358,38 @@ int ElastixMain::Run( void )
 
 } // end Run()
 
+
 /**
  * **************************** Run *****************************
- *
- * Calls EnterCommandLineParameters and then Run().
  */
 
 int ElastixMain::Run( ArgumentMapType & argmap )
 {
   this->EnterCommandLineArguments( argmap );
   return this->Run();
-
-} // end Run()
-
-int ElastixMain::Run
-( 
-	ArgumentMapType & argmap			,
-	ParameterMapType	& inputMap
-)
-{
-
-  this->EnterCommandLineArguments( argmap  , inputMap);
-  return this->Run();
-
 } // end Run()
 
 
 /**
-* ************************** InitDBIndex ***********************
-*
-* Checks if the configuration object has been initialized,
-* determines the requested ImageTypes, and sets the m_DBIndex
-* to the corresponding value (by asking the elx::ComponentDatabase).
-*/
+ * **************************** Run *****************************
+ */
+
+int ElastixMain
+::Run( ArgumentMapType & argmap,
+  ParameterMapType & inputMap )
+{
+  this->EnterCommandLineArguments( argmap, inputMap );
+  return this->Run();
+} // end Run()
+
+
+/**
+ * ************************** InitDBIndex ***********************
+ *
+ * Checks if the configuration object has been initialized,
+ * determines the requested ImageTypes, and sets the m_DBIndex
+ * to the corresponding value (by asking the elx::ComponentDatabase).
+ */
 
 int ElastixMain::InitDBIndex( void )
 {
@@ -404,6 +408,7 @@ int ElastixMain::InitDBIndex( void )
     /** FixedImageDimension. */
     if ( this->m_FixedImageDimension == 0 )
     {
+#ifndef _ELASTIX_BUILD_LIBRARY
       /** Read it from the fixed image header. */
       std::string fixedImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-f" );
@@ -420,7 +425,6 @@ int ElastixMain::InitDBIndex( void )
         xout["error"] << err << std::endl;
         return 1;
       }
-
 
       /** Try to read it from the parameter file.
        * This only serves as a check; elastix versions prior to 4.6 read the dimension
@@ -444,6 +448,10 @@ int ElastixMain::InitDBIndex( void )
           return 1;
         }
       }
+#else
+      this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
+        "FixedImageDimension", 0, false );
+#endif
 
       /** Just a sanity check, probably not needed. */
       if ( this->m_FixedImageDimension == 0 )
@@ -466,6 +474,7 @@ int ElastixMain::InitDBIndex( void )
     /** MovingImageDimension. */
     if ( this->m_MovingImageDimension == 0 )
     {
+#ifndef _ELASTIX_BUILD_LIBRARY
       /** Read it from the moving image header. */
       std::string movingImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-m" );
@@ -505,6 +514,11 @@ int ElastixMain::InitDBIndex( void )
           return 1;
         }
       }
+
+#else
+      this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
+        "FixedImageDimension", 0, false );
+#endif
 
       /** Just a sanity check, probably not needed. */
       if ( this->m_MovingImageDimension == 0 )
@@ -879,6 +893,18 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
 {
   return this->m_OriginalFixedImageDirection;
 } // end GetOriginalFixedImageDirectionFlat()
+
+
+/**
+ * ******************** GetTransformParametersMap ********************
+ */
+
+itk::ParameterMapInterface::ParameterMapType //using ParameterMapType does not compile, why?
+ElastixMain::GetTransformParametersMap( void ) const
+{
+  return this->m_TransformParametersMap;
+} // end GetTransformParametersMap()
+
 
 /**
  * ******************** GetImageInformationFromFile ********************

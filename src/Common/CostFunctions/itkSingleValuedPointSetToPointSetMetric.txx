@@ -141,3 +141,4 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
 } // end namespace itk
 
 #endif // end #ifndef __itkSingleValuedPointSetToPointSetMetric_txx
+

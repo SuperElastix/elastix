@@ -47,7 +47,7 @@ namespace elastix
  * The method takes a logfile name as its input argument.
  * It returns 0 if everything went ok. 1 otherwise.
  */
-extern int xoutSetup( const char * logfilename , bool setupLogging , bool setupCout );
+extern int xoutSetup( const char * logfilename, bool setupLogging, bool setupCout );
 
 /**
  * \class ElastixMain
@@ -140,8 +140,8 @@ public:
   typedef ComponentLoader                                 ComponentLoaderType;
   typedef ComponentLoaderType::Pointer                    ComponentLoaderPointer;
 
-  /** Typedef that is used in the elastix dll version */
-  typedef itk::ParameterFileParser::ParameterMapType      ParameterMapType;
+  /** Typedef that is used in the elastix dll version. */
+  typedef itk::ParameterMapInterface::ParameterMapType    ParameterMapType;
 
   /** Set/Get functions for the description of the imagetype. */
   itkSetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
@@ -170,13 +170,13 @@ public:
   itkSetObjectMacro( MovingMaskContainer, DataObjectContainerType );
   itkGetObjectMacro( FixedMaskContainer, DataObjectContainerType );
   itkGetObjectMacro( MovingMaskContainer, DataObjectContainerType );
-  
+
   /** Set/Get functions for the result images
    * (if these are not used, elastix tries to read them from disk,
    * according to the command line parameters).
    */
   itkSetObjectMacro( ResultImageContainer, DataObjectContainerType );
-  itkGetObjectMacro( ResultImageContainer,  DataObjectContainerType );
+  itkGetObjectMacro( ResultImageContainer, DataObjectContainerType );
 
   /** Set/Get the configuration object. */
   itkSetObjectMacro( Configuration, ConfigurationType );
@@ -230,8 +230,8 @@ public:
    * The Configuration object will be initialized in this way.
    */
   virtual void EnterCommandLineArguments( ArgumentMapType & argmap );
-  virtual void EnterCommandLineArguments( ArgumentMapType & argmap ,
-					ParameterMapType  & inputMap);
+  virtual void EnterCommandLineArguments( ArgumentMapType & argmap,
+    ParameterMapType & inputMap );
 
   /** Start the registration
    * run() without command line parameters; it assumes that
@@ -239,14 +239,13 @@ public:
    * m_Configuration is initialised in a different way.
    */
   virtual int Run( void );
-  
+
   /** Start the registration
    * this version of 'run' first calls this->EnterCommandLineParameters(argc,argv)
    * and then calls run().
    */
   virtual int Run( ArgumentMapType & argmap );
-  virtual int Run( ArgumentMapType & argmap , 
-		      ParameterMapType &  inputMap );
+  virtual int Run( ArgumentMapType & argmap, ParameterMapType & inputMap );
 
   /** Set process priority, which is read from the command line arguments.
    * Syntax:
@@ -273,6 +272,9 @@ public:
       s_CDB = arg;
     }
   }
+
+  /** GetTransformParametersMap */
+  virtual ParameterMapType GetTransformParametersMap( void ) const;
 
   static void UnloadComponents( void );
 
@@ -309,6 +311,10 @@ protected:
 
   /** The initial transform. */
   ObjectPointer m_InitialTransform;
+  /** Transformation parameters map containing parameters that is the
+   *  result of registration.
+   */
+  ParameterMapType m_TransformParametersMap;
 
   FlatDirectionCosinesType     m_OriginalFixedImageDirection;
 

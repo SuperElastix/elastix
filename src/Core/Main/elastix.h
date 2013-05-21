@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elastix_h
 #define __elastix_h
 
@@ -42,4 +41,3 @@
   void PrintHelp(void);
 
 #endif
-

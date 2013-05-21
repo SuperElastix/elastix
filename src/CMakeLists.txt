@@ -10,9 +10,14 @@ project( elastix )
 mark_as_advanced( ELASTIX_BUILD_EXECUTABLE )
 option( ELASTIX_BUILD_EXECUTABLE "generate executable or library?" ON )
 
-if( NOT ELASTIX_BUILD_EXECUTABLE )
-  add_definitions( -D_ELASTIX_BUILD_LIBRARY )
-endif()
+IF( NOT ELASTIX_BUILD_EXECUTABLE )
+  ADD_DEFINITIONS( -D_ELASTIX_BUILD_LIBRARY )
+  MARK_AS_ADVANCED( ELASTIX_BUILD_SHARED_LIBS )
+  OPTION( ELASTIX_BUILD_SHARED_LIBS "build shared libraries?" ON )
+  IF( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_DEFINITIONS( -D_ELASTIX_BUILD_SHARED_LIBRARY )
+  ENDIF(ELASTIX_BUILD_SHARED_LIBS)
+ENDIF()
 
 #---------------------------------------------------------------------
 # Find ITK.

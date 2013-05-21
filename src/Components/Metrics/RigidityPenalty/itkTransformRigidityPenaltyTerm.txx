@@ -83,6 +83,8 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   /** We don't use an image sampler for this advanced metric. */
   this->SetUseImageSampler( false );
 
+  this->m_BSplineTransform = NULL;
+
 } // end Constructor
 
 
@@ -126,10 +128,10 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   /** Check if this transform is a B-spline transform. */
   typename BSplineTransformType::Pointer localBSplineTransform = 0;
   bool transformIsBSpline = this->CheckForBSplineTransform( localBSplineTransform );
-  if ( transformIsBSpline ) this->SetBSplineTransform( localBSplineTransform );
+  if( transformIsBSpline ) this->SetBSplineTransform( localBSplineTransform );
 
   /** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
-  if ( !transformIsBSpline )
+  if( !transformIsBSpline )
   {
     itkExceptionMacro( << "ERROR: this metric expects a B-spline transform." );
   }
@@ -373,9 +375,31 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     {
       isInFixedImage = this->m_FixedRigidityImageDilated
         ->TransformPhysicalPointToIndex( point, index1 );
-        // Should actually use inverted initial transform?
-        //->TransformPhysicalPointToIndex(
-        //this->Transform->GetInitialTransform()->TransformPoint( point ), index1 );
+      // \todo: Note that we should actually use the inverted initial transform
+      // here, a little bit like:
+      // isInFixedImage = this->m_FixedRigidityImageDilated
+      //   ->TransformPhysicalPointToIndex( this->Transform->GetInitialTransform()
+      //   ->GetInverse()->TransformPoint( point ), index1 );
+      // This is needed to compensate for the B-spline grid shift that has been
+      // performed earlier, which causes the B-spline grid region and thus the 
+      // m_RigidityCoefficientImage region to be different from the fixed (coefffient)
+      // image region.
+      //
+      // Since in general the inverse does not exist, alternative strategies may be:
+      // 1) Approximate the inverse of the initial transform using inverse deformation
+      //    field approximation filters available in the ITK
+      // 2) Instead op looping over m_RigidityCoefficientImage, we can loop over
+      //    m_FixedRigidityImageDilated, employ the normal forward initial transform,
+      //    and fill m_RigidityCoefficientImage this way. A downside is that holes may
+      //    be created in the m_RigidityCoefficientImage, although this has low
+      //    likelihood, since the resolution of m_RigidityCoefficientImage is much
+      //    lower than the fixed (rigidity) image. And we could check for these holes
+      //    afterwards.
+      // WARNING: So, currently the rigidity penalty term does not correctly support
+      // initial transforms, in case a fixed coefficient image is provided. It works
+      // correctly if only a moving coefficient image is provided.
+      // Perhaps we should remove the option to supply the fixed coefficient image,
+      // since the moving one should really be used.
     }
     if( this->m_UseMovingRigidityImage )
     {

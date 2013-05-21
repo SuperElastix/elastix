@@ -60,6 +60,7 @@ ElastixTemplate<TFixedImage, TMovingImage>
 
   /** Initialize CurrentTransformParameterFileName. */
   this->m_CurrentTransformParameterFileName = "";
+  this->m_TransformParametersMap.clear();
 
 } // end Constructor
 
@@ -143,6 +144,7 @@ ElastixTemplate<TFixedImage, TMovingImage>
 
 } // end SetMovingMask()
 
+
 /**
  * ********************** GetResultImage *************************
  */
@@ -152,7 +154,7 @@ typename ElastixTemplate<TFixedImage, TMovingImage>::ResultImageType *
 ElastixTemplate<TFixedImage, TMovingImage>
 ::GetResultImage( unsigned int idx ) const
 {
-  if ( idx < this->GetNumberOfResultImages() )
+  if( idx < this->GetNumberOfResultImages() )
   {
     return dynamic_cast< ResultImageType *>(
       this->GetResultImageContainer()->ElementAt(idx).GetPointer() );
@@ -162,6 +164,7 @@ ElastixTemplate<TFixedImage, TMovingImage>
 
 } // end GetResultImage()
 
+
 /**
  * ********************** SetResultImage *************************
  */
@@ -170,7 +173,8 @@ template <class TFixedImage, class TMovingImage>
 int ElastixTemplate<TFixedImage, TMovingImage>
 ::SetResultImage( DataObjectPointer result_image )
 {
-	this->SetResultImageContainer( MultipleDataObjectFiller::GenerateImageContainer( result_image ) ); 
+  this->SetResultImageContainer(
+    MultipleDataObjectFiller::GenerateImageContainer( result_image ) );
   return 0;
 } // end SetResultImage()
 
@@ -221,7 +225,7 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   /** Read images and masks, if not set already. */
   const bool useDirCos = this->GetUseDirectionCosines();
   FixedImageDirectionType fixDirCos;
-  if ( this->GetFixedImage() == 0 )
+  if( this->GetFixedImage() == 0 )
   {
     this->SetFixedImageContainer(
       FixedImageLoaderType::GenerateImageContainer(
@@ -230,18 +234,18 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   }
   else
   {
-	/** 
-	 *  images are set in elastixlib.cxx 
-	 *  just set direction cosines
-	 *  in case images are imported for executable it doesnt matter
-	 *  because the InfoChanger has changed these images
-	 */
-	FixedImageType *fixedIm = this->GetFixedImage( 0 );
-	fixDirCos = fixedIm->GetDirection();
-	this->SetOriginalFixedImageDirection( fixDirCos );
+    /**
+     *  images are set in elastixlib.cxx
+     *  just set direction cosines
+     *  in case images are imported for executable it doesnt matter
+     *  because the InfoChanger has changed these images.
+     */
+    FixedImageType * fixedIm = this->GetFixedImage( 0 );
+    fixDirCos = fixedIm->GetDirection();
+    this->SetOriginalFixedImageDirection( fixDirCos );
   }
 
-  if ( this->GetMovingImage() == 0 )
+  if( this->GetMovingImage() == 0 )
   {
     this->SetMovingImageContainer(
       MovingImageLoaderType::GenerateImageContainer(
@@ -317,6 +321,7 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   return 0;
 
 } // end Run()
+
 
 /**
  * ************************ ApplyTransform **********************
@@ -457,8 +462,11 @@ int ElastixTemplate<TFixedImage, TMovingImage>
      * Actually we could loop over all resamplers.
      * But for now, there seems to be no use yet for that.
      */
+#ifndef _ELASTIX_BUILD_LIBRARY
     this->GetElxResamplerBase()->WriteResultImage( makeFileName.str().c_str() );
-
+#else
+    this->GetElxResamplerBase()->CreateItkResultImage();
+#endif
     /** Print the elapsed time for the resampling. */
     timer->StopTimer();
     elxout << std::setprecision( 2 );
@@ -519,13 +527,13 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   returndummy |= this->GetElxResampleInterpolatorBase()->BeforeAllTransformix();
   returndummy |= this->GetElxResamplerBase()->BeforeAllTransformix();
   returndummy |= this->GetElxTransformBase()->BeforeAllTransformix();
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** The GetConfiguration also has a BeforeAllTransformix,
    * It print the Transform Parameter file to the log file. That's
    * why we call it after the other components.
    */
   returndummy |= this->GetConfiguration()->BeforeAllTransformix();
-
+#endif
   /** Return a value. */
   return returndummy;
 
@@ -594,16 +602,16 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 
   /** Print the current resolution. */
   elxout << "\nResolution: " << level << std::endl;
-  
+
   /** Create a TransformParameter-file for the current resolution. */
   bool writeIterationInfo = true;
   this->GetConfiguration()->ReadParameter( writeIterationInfo,
     "WriteIterationInfo", 0, false );
-  if ( writeIterationInfo )
+  if( writeIterationInfo )
   {
-	  this->OpenIterationInfoFile();
+    this->OpenIterationInfoFile();
   }
-	
+
   /** Call all the BeforeEachResolution() functions. */
   this->BeforeEachResolutionBase();
   CallInEachComponent( &BaseComponentType::BeforeEachResolutionBase );
@@ -781,16 +789,21 @@ void ElastixTemplate<TFixedImage, TMovingImage>
     "WriteFinalTransformParameters", 0, false );
   if( writeFinalTansformParameters )
   {
-     std::ostringstream makeFileName("");
-     makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
-        << "TransformParameters."
-        << this->GetConfiguration()->GetElastixLevel()
-        << ".txt";
-     std::string FileName = makeFileName.str();
+    std::ostringstream makeFileName( "" );
+    makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
+      << "TransformParameters."
+      << this->GetConfiguration()->GetElastixLevel()
+      << ".txt";
+    std::string FileName = makeFileName.str();
 
-     /** Create a final TransformParameterFile. */
-     this->CreateTransformParameterFile( FileName, true );
+    /** Create a final TransformParameterFile. */
+    this->CreateTransformParameterFile( FileName, true );
   }
+
+#ifdef _ELASTIX_BUILD_LIBRARY
+  /** Get the transform parameters. */
+  this->CreateTransformParametersMap();//only relevant for dll!
+#endif
 
   /** Call all the AfterRegistration() functions. */
   this->AfterRegistrationBase();
@@ -881,6 +894,38 @@ void ElastixTemplate<TFixedImage, TMovingImage>
   xout.RemoveTargetCell( "transpar" );
 
 } // end CreateTransformParameterFile()
+
+
+/**
+ * ************** GetTransformParametersMap *****************
+ */
+
+template <class TFixedImage, class TMovingImage>
+itk::ParameterMapInterface::ParameterMapType //somehow using typedef ParameterMapType does not compile!
+ElastixTemplate<TFixedImage, TMovingImage>::
+GetTransformParametersMap( void ) const
+{
+  return this->m_TransformParametersMap;
+} // end GetTransformParametersMap()
+
+
+/**
+ * ************** CreateTransformParametersMap ******************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void ElastixTemplate<TFixedImage, TMovingImage>
+::CreateTransformParametersMap( void )
+{
+  this->GetElxTransformBase()->CreateTransformParametersMap(
+    this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition(),
+    &this->m_TransformParametersMap );
+  this->GetElxResampleInterpolatorBase()->CreateTransformParametersMap(
+    &this->m_TransformParametersMap );
+  this->GetElxResamplerBase()->CreateTransformParametersMap(
+    &this->m_TransformParametersMap );
+
+} // end CreateTransformParametersMap()
 
 
 /**

@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elastixlib_h
 #define __elastixlib_h
 
@@ -19,23 +18,29 @@
  *  Includes
  */
 #include <itkDataObject.h>
+#include "itkParameterFileParser.h"
 
 /********************************************************************************
  *                    *
  *      Dll export    *
  *                    *
  ********************************************************************************/
-#define ELX_COMPILE_LIB 1
-
 #if (defined(_WIN32) || defined(WIN32) )
-# ifdef ELX_COMPILE_LIB
-#  define ELASTIXLIB_API __declspec(dllexport)
-# else
-#  define ELASTIXLIB_API __declspec(dllimport)
-# endif
+#  ifdef _ELASTIX_BUILD_LIBRARY
+#    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
+#      define ELASTIXLIB_API __declspec(dllexport)
+#    else
+#      define ELASTIXLIB_API __declspec(dllimport)
+#    endif
+#  else
+#    define ELASTIXLIB_API __declspec(dllexport)
+#  endif
 #else
-/* unix needs nothing */
-#define ELX_EXPORT
+#  if __GNUC__ >= 4
+#    define ELASTIXLIB_API __attribute__ ((visibility ("default")))
+#  else
+#    define ELASTIXLIB_API
+#  endif
 #endif
 
 /********************************************************************************
@@ -55,16 +60,16 @@ public:
   typedef Image::Pointer    ImagePointer;
 
   //typedefs for parameter map
-  typedef std::vector< std::string >                    ParameterValuesType;
-  typedef std::map< std::string, ParameterValuesType >  ParameterMapType;
+  typedef itk::ParameterFileParser::ParameterValuesType ParameterValuesType;
+  typedef itk::ParameterFileParser::ParameterMapType    ParameterMapType;
 
-  /*
+  /**
    *  Constructor and destructor
    */
-  ELASTIX::ELASTIX();
-  ELASTIX::~ELASTIX();
+  ELASTIX();
+  ~ELASTIX();
 
-  /*
+  /**
    *  The image registration interface functionality
    *  Note:
    *    - itk::Image::PixelType must be the same as specified in ParameterMap
@@ -90,24 +95,26 @@ public:
    *      (e.g. #define ELASTIX_NO_ERROR 0)
    */
   int RegisterImages( ImagePointer fixedImage,
-          ImagePointer movingImage,
-          ParameterMapType & parameterMap,
-          std::string   outputPath,
-          bool performLogging,
-          bool performCout,
-          ImagePointer fixedMask = 0,
-          ImagePointer movingMask = 0 );
+    ImagePointer movingImage,
+    ParameterMapType & parameterMap,
+    std::string   outputPath,
+    bool performLogging,
+    bool performCout,
+    ImagePointer fixedMask = 0,
+    ImagePointer movingMask = 0 );
 
-  /*
-   *  Getter for result image
-   */
+  /** Getter for result image. */
   ImagePointer GetResultImage( void );
+
+  /** Get transformparametermap */
+  ParameterMapType GetTransformParameterMap( void );
 
 private:
   /* the result images */
-  ImagePointer  m_ResultImage;
+  ImagePointer     m_ResultImage;
 
-  /* todo add transformation parameters to class to enable user to get these parameters */
+  /* Final transformation*/
+  ParameterMapType m_TransformParameters;
 
 }; // end class ELASTIX
 

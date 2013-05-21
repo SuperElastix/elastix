@@ -122,7 +122,7 @@ protected:
   double        m_ElapsedClockSec;
 
   /** GCC specific. We can use clock_gettime(). */
-#if defined( __GNUC__ ) && !defined( __APPLE__ )
+#if defined( __GNUC__ ) && !defined( __APPLE__ ) && !defined( _WIN32 )
 #define ELX_USE_CLOCK_GETTIME
   struct timespec m_StartClockMonotonic;
   struct timespec m_StopClockMonotonic;

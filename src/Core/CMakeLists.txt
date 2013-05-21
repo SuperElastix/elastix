@@ -112,36 +112,70 @@ set( mevisdcmtifflib mevisdcmtiff )
 
 #---------------------------------------------------------------------
 # Create the elastix executable or library.
-if( ELASTIX_BUILD_EXECUTABLE )
-	add_executable( elastix
-	  Main/elastix.cxx
-	  Main/elastix.h
-	  Kernel/elxElastixMain.cxx
-	  Kernel/elxElastixMain.h
-	  ${InstallFilesForExecutables}
-	)
-else()
-  add_library( elastix SHARED
-	  Main/elastixlib.cxx
-	  Main/elastixlib.h
-	  Kernel/elxElastixMain.cxx
-	  Kernel/elxElastixMain.h
-	  ${InstallFilesForExecutables}
-	)
-endif()
+IF( ELASTIX_BUILD_EXECUTABLE )
+  ADD_EXECUTABLE( elastix
+    Main/elastix.cxx
+    Main/elastix.h
+    Kernel/elxElastixMain.cxx
+    Kernel/elxElastixMain.h
+    ${InstallFilesForExecutables}
+  )
+ELSE(ELASTIX_BUILD_EXECUTABLE)
+  IF( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_LIBRARY( elastix SHARED
+      Main/elastixlib.cxx
+      Main/elastixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ELSE(ELASTIX_BUILD_SHARED_LIBS)
+    ADD_LIBRARY( elastix STATIC
+      Main/elastixlib.cxx
+      Main/elastixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ENDIF(ELASTIX_BUILD_SHARED_LIBS)
+ENDIF(ELASTIX_BUILD_EXECUTABLE)
 
 #---------------------------------------------------------------------
 # Create the transformix executable.
 
-add_executable( transformix
-  Main/transformix.cxx
-  Main/transformix.h
-  Kernel/elxElastixMain.cxx
-  Kernel/elxElastixMain.h
-  Kernel/elxTransformixMain.cxx
-  Kernel/elxTransformixMain.h
-  ${InstallFilesForExecutables}
-)
+IF( ELASTIX_BUILD_EXECUTABLE )
+  ADD_EXECUTABLE( transformix
+    Main/transformix.cxx
+    Main/transformix.h
+    Kernel/elxElastixMain.cxx
+    Kernel/elxElastixMain.h
+    Kernel/elxTransformixMain.cxx
+    Kernel/elxTransformixMain.h
+    ${InstallFilesForExecutables}
+  )
+ELSE()
+  IF( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_LIBRARY( transformix SHARED
+      Main/transformixlib.cxx
+      Main/transformixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      Kernel/elxTransformixMain.cxx
+      Kernel/elxTransformixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ELSE( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_LIBRARY( transformix STATIC
+      Main/transformixlib.cxx
+      Main/transformixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      Kernel/elxTransformixMain.cxx
+      Kernel/elxTransformixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ENDIF( ELASTIX_BUILD_SHARED_LIBS )
+ENDIF()
 
 #---------------------------------------------------------------------
 # Link elastix against other libraries.
@@ -188,21 +222,23 @@ if( WIN32 )
     install( TARGETS elastix transformix
       RUNTIME DESTINATION . )
       #COMPONENT core )
-  else()
-    # TODO: why not install elastix.dll here?
-    install( TARGETS transformix
-      RUNTIME DESTINATION . )
-      #COMPONENT core )
-  endif()
-else()
+  ELSE( ELASTIX_BUILD_EXECUTABLE )
+    # transformix is not implemented as library yet
+    INSTALL( TARGETS elastix transformix
+      RUNTIME DESTINATION .
+      ARCHIVE DESTINATION . )
+  ENDIF( ELASTIX_BUILD_EXECUTABLE )
+ELSE( WIN32 )
   # Tell the executables where to find the required .so files.
-  set_target_properties( elastix transformix
+  SET_TARGET_PROPERTIES( elastix transformix
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
   # Put executables in bin and libraries in lib.
   install( TARGETS elastix transformix
-    RUNTIME DESTINATION bin )
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION bin
+    ARCHIVE DESTINATION bin)
     #COMPONENT core )
-endif()
+ENDIF( WIN32 )
 
 #---------------------------------------------------------------------
 # The Core/Install directory contains a CMakeLists file for

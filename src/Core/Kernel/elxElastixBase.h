@@ -76,8 +76,6 @@
 
 namespace elastix
 {
-
-
 /**
  * \class ElastixBase
  * \brief This class creates an interface for elastix.
@@ -168,6 +166,9 @@ public:
   typedef ComponentDatabaseType::Pointer      ComponentDatabasePointer;
   typedef ComponentDatabaseType::IndexType    DBIndexType;
   typedef std::vector<double>                 FlatDirectionCosinesType;
+
+  /** Typedef that is used in the elastix dll version. */
+  typedef itk::ParameterMapInterface::ParameterMapType  ParameterMapType;
 
   /** The itk class that ElastixTemplate is expected to inherit from
    * Of course ElastixTemplate also inherits from this class (ElastixBase).
@@ -340,6 +341,12 @@ public:
   virtual const FlatDirectionCosinesType &
     GetOriginalFixedImageDirectionFlat( void ) const;
 
+  /** Creates transformation parameters map. */
+  virtual void CreateTransformParametersMap( void ) = 0;
+
+  /** Gets transformation parameters map. */
+  virtual ParameterMapType GetTransformParametersMap( void ) const = 0;
+
 protected:
 
   ElastixBase();
@@ -415,7 +422,7 @@ protected:
         imageContainer->CreateElementAt(i) = image.GetPointer();
 
         /** Store the original direction cosines */
-        if ( originalDirectionCosines )
+        if( originalDirectionCosines )
         {
           *originalDirectionCosines = imageReader->GetOutput()->GetDirection();
         }
@@ -426,61 +433,48 @@ protected:
 
     } // end static method GenerateImageContainer
 
+    /** Static method overloaded GenerateImageContainer. */
     static DataObjectContainerPointer GenerateImageContainer( DataObjectPointer image )
     {
-	/*
-	 *	Allocate image container pointer
-	 */
-	DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
+      /** Allocate image container pointer. */
+      DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
 
-	/*
-	 *	Store image in image container (for now only one image in container!)
-	 */
-	imageContainer->CreateElementAt( 0 ) = image;
-		
-	/*
-	 *	Return the pointer to the new image container
-	 */
-	return imageContainer;
+      /** Store image in image container (for now only one image in container!). */
+      imageContainer->CreateElementAt( 0 ) = image;
 
-    } // end static method overloaded GenerateImageContainer
+      /** Return the pointer to the new image container. */
+      return imageContainer;
 
+    } // GenerateImageContainer()
 
     MultipleImageLoader(){};
     ~MultipleImageLoader(){};
 
   }; // end class MultipleImageLoader
-  
+
   class MultipleDataObjectFiller
   {
   public:
-    	static DataObjectContainerPointer GenerateImageContainer
-	( 
-		DataObjectPointer image 
-	)
-	{
-		unsigned int j = 0; //container with only one image for now!!!!
-	    
-		/*
-		 *	Allocate image container pointer
-		 */
-		DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
 
-		/*
-		 *	Store image in image container
-		 */
-		imageContainer->CreateElementAt(j) = image;
-		
-		/*
-		 *	Return the pointer to the new image container
-		 */
-		return imageContainer;
+    /** GenerateImageContainer. */
+    static DataObjectContainerPointer GenerateImageContainer(
+      DataObjectPointer image )
+    {
+      unsigned int j = 0; //container with only one image for now
 
-	} // end static method MultipleImageFiller
+      /** Allocate image container pointer. */
+      DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
 
-	MultipleDataObjectFiller(){};
-	~MultipleDataObjectFiller(){};
+      /** Store image in image container. */
+      imageContainer->CreateElementAt(j) = image;
 
+      /** Return the pointer to the new image container. */
+      return imageContainer;
+    } // end GenerateImageContainer()
+
+    /** Constructor and destructor. */
+    MultipleDataObjectFiller(){};
+    ~MultipleDataObjectFiller(){};
   }; // end class MultipleDataObjectFiller
 
 private:

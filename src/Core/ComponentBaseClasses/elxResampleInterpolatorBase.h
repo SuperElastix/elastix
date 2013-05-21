@@ -63,6 +63,9 @@ namespace elastix
     typedef itk::InterpolateImageFunction<
       InputImageType, CoordRepType >                  ITKBaseType;
 
+    /** Typedef that is used in the elastix dll version. */
+    typedef typename ElastixType::ParameterMapType    ParameterMapType;
+
     /** Cast ti ITKBaseType. */
     virtual ITKBaseType * GetAsITKBaseType(void)
     {
@@ -85,6 +88,9 @@ namespace elastix
 
     /** Function to write transform-parameters to a file. */
     virtual void WriteToFile( void ) const;
+
+    /** Function to create transform-parameters map. */
+    virtual void CreateTransformParametersMap( ParameterMapType * paramsMap ) const;
 
   protected:
 

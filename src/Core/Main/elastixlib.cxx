@@ -36,7 +36,6 @@
 
 namespace elastix
 {
-  using namespace itk;//remove
 
 /**
  * ******************* Constructor ***********************
@@ -45,7 +44,8 @@ namespace elastix
 ELASTIX::ELASTIX()
 {
   this->m_ResultImage = 0;
-}
+  this->m_TransformParameters.clear();
+} // end Constructor
 
 
 /**
@@ -55,7 +55,8 @@ ELASTIX::ELASTIX()
 ELASTIX::~ELASTIX()
 {
   this->m_ResultImage = 0;
-}
+  this->m_TransformParameters.clear();
+} // end Destructor
 
 
 /**
@@ -66,7 +67,18 @@ ELASTIX::ImagePointer
 ELASTIX::GetResultImage( void )
 {
   return this->m_ResultImage;
-}
+} // end GetResultImage()
+
+
+/**
+ * ******************* GetTransformParameterMap ***********************
+ */
+
+ELASTIX::ParameterMapType
+ELASTIX::GetTransformParameterMap( void )
+{
+  return this->m_TransformParameters;
+} // end GetTransformParameterMap()
 
 
 /**
@@ -100,7 +112,7 @@ ELASTIX::RegisterImages(
   typedef std::queue< ArgPairType >                   ParameterFileListType;
   typedef ParameterFileListType::value_type           ParameterFileListEntryType;
 
-  typedef ParameterFileParser::ParameterMapType       ParameterMapType;
+  //typedef ParameterFileParser::ParameterMapType       ParameterMapType;
 
   tmr::Timer::Pointer timer;
 
@@ -140,7 +152,7 @@ ELASTIX::RegisterImages(
   else
   {
     /** Put command line parameters into parameterFileList. */
-    //there must be an "-out", thiss is checked later in code!!
+    //there must be an "-out", this is checked later in code!!
     key = "-out" ;
     value = "output_path_not_set";
   }
@@ -274,7 +286,7 @@ ELASTIX::RegisterImages(
 
     /** Start registration. */
     returndummy = elastices[ i ]->Run( argMap,
-      static_cast< ParameterMapType >( parameterMap ) );
+      parameterMap );
 
     /** Check for errors. */
     if( returndummy != 0 )
@@ -299,6 +311,9 @@ ELASTIX::RegisterImages(
     elxout << "\nCurrent time: " << timer->PrintStopTime() << "." << std::endl;
     elxout << "Time used for running elastix with this parameter file: "
       << timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+
+    /** Get the transformation parameter map. */
+    m_TransformParameters = elastices[ i ]->GetTransformParametersMap();
 
     /** Try to release some memory. */
     elastices[ i ] = 0;
