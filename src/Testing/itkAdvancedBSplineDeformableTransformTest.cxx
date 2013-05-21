@@ -229,18 +229,6 @@ int main( int argc, char *argv[] )
   std::cerr << "The elapsed time for the Jacobian is: "
     << clockITK / 1000.0 << " s." << std::endl;
 
-  /** Time the implementation of the Jacobian. *
-  startClock = clock();
-  transform->SetUseMultiThread( true );
-  for( unsigned int i = 0; i < N*10; ++i )
-  {
-    transform->GetJacobian_opt( inputPoint, jacobian, nzji );
-  }
-  endClock = clock();
-  clockITK = endClock - startClock;
-  std::cerr << "The elapsed time for the Jacobian_opt is: "
-    << clockITK / 1000.0 << " s." << std::endl;
-
   /** Time the implementation of the spatial Jacobian. */
   startClock = clock();
   for ( unsigned int i = 0; i < N; ++i )
@@ -323,18 +311,6 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the (Jacobian of the) spatial Hessian (2 func) is: "
-    << clockITK / 1000.0 << " s." << std::endl;
-
-  /** Time the implementation of the Jacobian of the spatial Hessian. *
-  startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
-  {
-    transform->GetJacobianOfSpatialHessian_opt( inputPoint,
-      spatialHessian, jacobianOfSpatialHessian, nzji );
-  }
-  endClock = clock();
-  clockITK = endClock - startClock;
-  std::cerr << "The elapsed time for the (Jacobian of the) spatial Hessian (1 func) is: "
     << clockITK / 1000.0 << " s." << std::endl;
 
   /** Additional checks. */

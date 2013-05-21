@@ -557,19 +557,19 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   os << indent << "PointToIndexTransposed:\n" << this->m_PointToIndexMatrixTransposed << std::endl;
   os << indent << "PointToIndexTransposed2:\n" << this->m_PointToIndexMatrixTransposed2 << std::endl;
 
-  os << indent << "CoefficientImage: [ ";
-  for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
+  os << indent << "CoefficientImage: [ " << this->m_CoefficientImages[ 0 ].GetPointer();
+  for( unsigned int j = 1; j < SpaceDimension; j++ )
   {
-    os << this->m_CoefficientImages[ j ].GetPointer() << ", ";
+    os << ", " << this->m_CoefficientImages[ j ].GetPointer();
   }
-  os << this->m_CoefficientImages[ SpaceDimension - 1 ].GetPointer() << " ]" << std::endl;
+  os << " ]" << std::endl;
 
-  os << indent << "WrappedImage: [ ";
-  for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
+  os << indent << "WrappedImage: [ " << this->m_WrappedImage[ 0 ].GetPointer();
+  for( unsigned int j = 1; j < SpaceDimension; j++ )
   {
-    os << this->m_WrappedImage[ j ].GetPointer() << ", ";
+    os << ", " << this->m_WrappedImage[ j ].GetPointer();
   }
-  os << this->m_WrappedImage[ SpaceDimension - 1 ].GetPointer() << " ]" << std::endl;
+  os << " ]" << std::endl;
 
   os << indent << "InputParametersPointer: "
      << this->m_InputParametersPointer << std::endl;
