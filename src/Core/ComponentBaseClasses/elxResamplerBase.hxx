@@ -698,7 +698,6 @@ ResamplerBase<TElastix>
 {
   std::string parameterName;
   std::vector< std::string > parameterValues;
-  char tmpValue[ 255 ] = {};
 
   /** Write the name of this transform. */
   parameterName = "Resampler";
@@ -708,8 +707,9 @@ ResamplerBase<TElastix>
 
   /** Write the DefaultPixelValue. */
   parameterName = "DefaultPixelValue";
-  sprintf( tmpValue , "%lf" , this->GetAsITKBaseType()->GetDefaultPixelValue() );
-  parameterValues.push_back( tmpValue );
+  std::ostringstream strDefaultPixelValue;
+  strDefaultPixelValue << this->GetAsITKBaseType()->GetDefaultPixelValue();
+  parameterValues.push_back( strDefaultPixelValue.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
