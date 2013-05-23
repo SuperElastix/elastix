@@ -761,9 +761,9 @@ void TransformBase<TElastix>
   const ParametersType & param,
   ParameterMapType * paramsMap ) const
 {
+  std::ostringstream tmpStream;
   std::string parameterName;
   std::vector< std::string > parameterValues;
-  char tmpValue[ 265 ];
 
   /** Write the name of this transform. */
   parameterName = "Transform";
@@ -776,8 +776,8 @@ void TransformBase<TElastix>
 
   /** Write the number of parameters of this transform. */
   parameterName = "NumberOfParameters";
-  sprintf( tmpValue, "%d", nrP );
-  parameterValues.push_back( tmpValue );
+  tmpStream.str(""); tmpStream << nrP;
+  parameterValues.push_back( tmpStream.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
@@ -788,8 +788,8 @@ void TransformBase<TElastix>
     parameterName = "TransformParameters";
     for ( unsigned int i = 0; i < nrP; i++ )
     {
-      sprintf( tmpValue , "%.10lf" , param[ i ] );
-      parameterValues.push_back( tmpValue );
+      tmpStream.str(""); tmpStream << param[ i ];
+      parameterValues.push_back( tmpStream.str() );
     }
     paramsMap->insert( make_pair( parameterName, parameterValues ) );
     parameterValues.clear();
@@ -816,9 +816,9 @@ void TransformBase<TElastix>
   std::string combinationMethod = "Compose";
   const CombinationTransformType * dummyComboTransform
     = dynamic_cast< const CombinationTransformType * >( this );
-  if ( dummyComboTransform )
+  if( dummyComboTransform )
   {
-    if ( dummyComboTransform->GetUseComposition() )
+    if( dummyComboTransform->GetUseComposition() )
     {
       combinationMethod = "Compose";
     }
@@ -833,17 +833,17 @@ void TransformBase<TElastix>
 // xout["transpar"] << std::endl << "// Image specific" << std::endl;
 
   /** Write image dimensions. */
-  unsigned int FixDim = FixedImageDimension;
-  unsigned int MovDim = MovingImageDimension;
+  const unsigned int fixDim = FixedImageDimension;
+  const unsigned int movDim = MovingImageDimension;
   parameterName = "FixedImageDimension";
-  sprintf( tmpValue, "%d", FixDim );
-  parameterValues.push_back( tmpValue );
+  tmpStream.str(""); tmpStream << fixDim;
+  parameterValues.push_back( tmpStream.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
   parameterName = "MovingImageDimension";
-  sprintf( tmpValue, "%d", MovDim );
-  parameterValues.push_back( tmpValue );
+  tmpStream.str(""); tmpStream << movDim;
+  parameterValues.push_back( tmpStream.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
@@ -888,8 +888,8 @@ void TransformBase<TElastix>
   parameterName = "Size";
   for ( unsigned int i = 0; i < FixedImageDimension ; i++ )
   {
-    sprintf( tmpValue, "%d", size[ i ] );
-    parameterValues.push_back( tmpValue );
+    tmpStream.str(""); tmpStream << size[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
@@ -898,8 +898,8 @@ void TransformBase<TElastix>
   parameterName = "Index";
   for ( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-    sprintf( tmpValue, "%d", index[ i ] );
-    parameterValues.push_back( tmpValue );
+    tmpStream.str(""); tmpStream << index[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
@@ -913,8 +913,8 @@ void TransformBase<TElastix>
   parameterName = "Spacing";
   for ( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-     sprintf( tmpValue , "%.10lf" , spacing[ i ] );
-     parameterValues.push_back( tmpValue );
+    tmpStream.str(""); tmpStream << spacing[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
@@ -923,8 +923,8 @@ void TransformBase<TElastix>
   parameterName = "Origin";
   for ( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-     sprintf( tmpValue , "%.10lf" , origin[ i ] );
-     parameterValues.push_back( tmpValue );
+    tmpStream.str(""); tmpStream << origin[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
@@ -935,8 +935,8 @@ void TransformBase<TElastix>
   {
     for ( unsigned int j = 0; j < FixedImageDimension; j++ )
     {
-      sprintf( tmpValue , "%.10lf" , direction( j, i ) );
-      parameterValues.push_back( tmpValue );
+      tmpStream.str(""); tmpStream << direction( j, i );
+      parameterValues.push_back( tmpStream.str() );
     }
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
@@ -1783,3 +1783,4 @@ TransformBase<TElastix>
 
 
 #endif // end #ifndef __elxTransformBase_hxx
+

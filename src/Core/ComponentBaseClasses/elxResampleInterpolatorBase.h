@@ -116,3 +116,4 @@ namespace elastix
 #endif
 
 #endif // end #ifndef __elxResampleInterpolatorBase_h
+

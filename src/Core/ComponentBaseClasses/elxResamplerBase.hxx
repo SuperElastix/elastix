@@ -806,3 +806,4 @@ void ResamplerBase<TElastix>
 
 
 #endif // end #ifndef __elxResamplerBase_hxx
+

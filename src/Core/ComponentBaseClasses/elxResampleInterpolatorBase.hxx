@@ -63,8 +63,8 @@ void
 ResampleInterpolatorBase<TElastix>
 ::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
 {
-   std::string parameterName;
-   std::vector< std::string > parameterValues;
+  std::string parameterName;
+  std::vector< std::string > parameterValues;
 
   /** Write the name of this transform. */
   parameterName = "ResampleInterpolator";
@@ -78,3 +78,4 @@ ResampleInterpolatorBase<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxResampleInterpolatorBase_hxx
+
