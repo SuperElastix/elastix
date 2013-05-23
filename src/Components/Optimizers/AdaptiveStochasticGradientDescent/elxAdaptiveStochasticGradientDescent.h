@@ -16,6 +16,7 @@
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdaptiveStochasticGradientDescentOptimizer.h"
+#include "itkComputeJacobianTerms.h"
 #include "elxProgressCommand.h"
 #include "itkAdvancedTransform.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
