@@ -14,9 +14,8 @@
 #ifndef __elxCUDAResampler_h
 #define __elxCUDAResampler_h
 
-
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkCUDAResampleImageFilter.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

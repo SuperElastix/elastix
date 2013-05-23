@@ -11,11 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMutualInformationHistogramMetric_H__
 #define __elxMutualInformationHistogramMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMutualInformationHistogramImageToImageMetric.h"
 
 #include "elxTimer.h"

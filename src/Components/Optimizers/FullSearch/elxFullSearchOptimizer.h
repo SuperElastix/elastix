@@ -11,17 +11,14 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-
 #ifndef __elxFullSearchOptimizer_h
 #define __elxFullSearchOptimizer_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkFullSearchOptimizer.h"
-#include "elxIncludes.h"
 #include <map>
 
 #include "itkNDImageBase.h"
-
 
 namespace elastix
 {

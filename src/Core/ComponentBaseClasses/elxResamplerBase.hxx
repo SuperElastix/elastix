@@ -16,6 +16,7 @@
 #define __elxResamplerBase_hxx
 
 #include "elxResamplerBase.h"
+
 #include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
 #include "itkAdvancedRayCastInterpolateImageFunction.h"

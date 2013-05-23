@@ -14,7 +14,7 @@
 #ifndef __elxGradientDifferenceMetric_H__
 #define __elxGradientDifferenceMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkGradientDifferenceImageToImageMetric2.h"
 
 #include "elxTimer.h"

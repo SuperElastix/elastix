@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxFixedSmoothingPyramid_h
 #define __elxFixedSmoothingPyramid_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiResolutionGaussianSmoothingPyramidImageFilter.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

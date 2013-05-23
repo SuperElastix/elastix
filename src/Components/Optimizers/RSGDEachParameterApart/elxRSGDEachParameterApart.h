@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxRSGDEachParameterApart_h
 #define __elxRSGDEachParameterApart_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkRSGDEachParameterApartOptimizer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

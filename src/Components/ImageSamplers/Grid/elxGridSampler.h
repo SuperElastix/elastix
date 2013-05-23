@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxGridSampler_h
 #define __elxGridSampler_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkImageGridSampler.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

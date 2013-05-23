@@ -11,6 +11,8 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
+#ifndef __elxIncludes_h
+#define __elxIncludes_h
 
 /**
  * Include this file in your new components.
@@ -29,15 +31,11 @@
  * etc...
  */
 
-#ifndef __elxIncludes_h
-#define __elxIncludes_h
-
+#include "elxMacro.h"
 #include "elxElastixTemplate.h"
 #include "elxSupportedImageTypes.h"
-#include "elxMacro.h"
 
 /** Writing to screen and logfiles etc. */
 #include "xoutmain.h"
 
 #endif //#ifndef __elxIncludes_h
-

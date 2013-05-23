@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxSimultaneousPerturbation_h
 #define __elxSimultaneousPerturbation_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkSPSAOptimizer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

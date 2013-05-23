@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMyStandardResampler_h
 #define __elxMyStandardResampler_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkResampleImageFilter.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

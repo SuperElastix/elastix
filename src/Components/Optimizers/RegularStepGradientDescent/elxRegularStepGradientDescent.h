@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxRegularStepGradientDescent_h
 #define __elxRegularStepGradientDescent_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkRegularStepGradientDescentOptimizer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

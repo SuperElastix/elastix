@@ -11,15 +11,14 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxRayCastResampleInterpolator_h
 #define __elxRayCastResampleInterpolator_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkAdvancedCombinationTransform.h"
 #include "itkAdvancedTransform.h"
 #include "../Transforms/EulerTransform/itkEulerTransform.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

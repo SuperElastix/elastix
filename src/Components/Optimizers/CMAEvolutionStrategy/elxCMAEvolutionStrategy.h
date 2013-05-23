@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxCMAEvolutionStrategy_h
 #define __elxCMAEvolutionStrategy_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkCMAEvolutionStrategyOptimizer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxFullSampler_h
 #define __elxFullSampler_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkImageFullSampler.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

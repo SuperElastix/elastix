@@ -11,13 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxSimilarityTransform_H__
 #define __elxSimilarityTransform_H__
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkSimilarityTransform.h"
 #include "itkCenteredTransformInitializer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

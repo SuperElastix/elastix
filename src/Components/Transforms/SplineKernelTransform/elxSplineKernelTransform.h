@@ -11,17 +11,16 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxSplineKernelTransform_H_
 #define __elxSplineKernelTransform_H_
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkKernelTransform2.h"
 #include "itkElasticBodySplineKernelTransform2.h"
 #include "itkElasticBodyReciprocalSplineKernelTransform2.h"
 #include "itkThinPlateSplineKernelTransform2.h"
 #include "itkThinPlateR2LogRSplineKernelTransform2.h"
 #include "itkVolumeSplineKernelTransform2.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

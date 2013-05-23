@@ -11,11 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxNormalizedGradientCorrelationMetric_H__
 #define __elxNormalizedGradientCorrelationMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkNormalizedGradientCorrelationImageToImageMetric.h"
 
 #include "elxTimer.h"

@@ -14,7 +14,7 @@
 #ifndef __elxTransformBendingEnergyPenaltyTerm_H__
 #define __elxTransformBendingEnergyPenaltyTerm_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkTransformBendingEnergyPenaltyTerm.h"
 
 #include "elxTimer.h"

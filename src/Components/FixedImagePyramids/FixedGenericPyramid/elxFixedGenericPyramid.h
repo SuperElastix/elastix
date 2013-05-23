@@ -14,8 +14,8 @@
 #ifndef __elxFixedGenericPyramid_h
 #define __elxFixedGenericPyramid_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkGenericMultiResolutionPyramidImageFilter.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMultiInputRandomCoordinateSampler_h
 #define __elxMultiInputRandomCoordinateSampler_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiInputImageRandomCoordinateSampler.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

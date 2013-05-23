@@ -11,11 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdvancedMattesMutualInformationMetric_H__
 #define __elxAdvancedMattesMutualInformationMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkParzenWindowMutualInformationImageToImageMetric.h"
 
 #include "elxTimer.h"

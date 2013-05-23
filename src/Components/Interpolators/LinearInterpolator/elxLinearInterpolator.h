@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxLinearInterpolator_h
 #define __elxLinearInterpolator_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkLinearInterpolateImageFunction.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

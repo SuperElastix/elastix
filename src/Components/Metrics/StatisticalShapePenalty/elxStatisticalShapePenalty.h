@@ -14,7 +14,7 @@
 #ifndef __elxStatisticalShapePenalty_H__
 #define __elxStatisticalShapePenalty_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkStatisticalShapePointPenalty.h"
 
 #include "elxTimer.h"

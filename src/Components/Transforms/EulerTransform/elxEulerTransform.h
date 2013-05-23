@@ -11,14 +11,13 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxEulerTransform_H__
 #define __elxEulerTransform_H__
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedCombinationTransform.h"
 #include "itkEulerTransform.h"
 #include "itkCenteredTransformInitializer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

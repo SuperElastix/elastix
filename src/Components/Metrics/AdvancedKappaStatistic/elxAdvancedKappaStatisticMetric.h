@@ -11,13 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdvancedKappaStatisticMetric_H__
 #define __elxAdvancedKappaStatisticMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedKappaStatisticImageToImageMetric.h"
-
 #include "elxTimer.h"
 
 namespace elastix

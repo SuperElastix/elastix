@@ -11,15 +11,13 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdvancedAffineTransform_H_
 #define __elxAdvancedAffineTransform_H_
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedMatrixOffsetTransformBase.h"
 #include "itkAdvancedCombinationTransform.h"
-
 #include "itkCenteredTransformInitializer2.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

@@ -14,6 +14,7 @@
 #ifndef __elxAdvancedBSplineTransform_h
 #define __elxAdvancedBSplineTransform_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedCombinationTransform.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
 
@@ -21,9 +22,6 @@
 #include "itkCyclicBSplineDeformableTransform.h"
 #include "itkCyclicGridScheduleComputer.h"
 #include "itkUpsampleBSplineParametersFilter.h"
-
-#include "elxIncludes.h"
-
 
 namespace elastix
 {

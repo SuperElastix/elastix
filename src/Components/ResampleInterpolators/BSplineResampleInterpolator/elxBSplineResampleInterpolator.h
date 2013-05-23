@@ -14,8 +14,8 @@
 #ifndef __elxBSplineResampleInterpolator_h
 #define __elxBSplineResampleInterpolator_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkBSplineInterpolateImageFunction.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {
