@@ -11,11 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxVarianceOverLastDimensionMetric_H__
 #define __elxVarianceOverLastDimensionMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkVarianceOverLastDimensionImageMetric.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "../Transforms/StackTransform/itkStackTransform.h"

@@ -14,15 +14,13 @@
 #ifndef __elxMultiBSplineTransformWithNormal_h
 #define __elxMultiBSplineTransformWithNormal_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedCombinationTransform.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkMultiBSplineDeformableTransformWithNormal.h"
 
 #include "itkGridScheduleComputer.h"
 #include "itkUpsampleBSplineParametersFilter.h"
-
-#include "elxIncludes.h"
-
 
 namespace elastix
 {

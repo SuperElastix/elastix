@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMovingRecursivePyramid_h
 #define __elxMovingRecursivePyramid_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkRecursiveMultiResolutionPyramidImageFilter.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

@@ -11,11 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdvancedMeanSquaresMetric_H__
 #define __elxAdvancedMeanSquaresMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
 
 #include "elxTimer.h"

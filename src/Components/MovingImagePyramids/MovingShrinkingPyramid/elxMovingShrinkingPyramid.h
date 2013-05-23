@@ -11,13 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMovingShrinkingPyramid_h
 #define __elxMovingShrinkingPyramid_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiResolutionShrinkPyramidImageFilter.h"
-#include "elxIncludes.h"
-
 
 namespace elastix
 {

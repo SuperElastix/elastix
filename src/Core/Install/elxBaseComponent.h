@@ -11,6 +11,8 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
+#ifndef __elxBaseComponent_h
+#define __elxBaseComponent_h
 
 /**
  * ******************* elxBaseComponent.h *************************
@@ -24,8 +26,6 @@
  * Some header files are included that most components need.
  */
 
-#ifndef __elxBaseComponent_h
-#define __elxBaseComponent_h
 
 /** Get rid of warnings about too long variable names. */
 #ifdef _MSC_VER
@@ -147,4 +147,3 @@ namespace elx = elastix;
 
 
 #endif // end #ifndef __elxBaseComponent_h
-

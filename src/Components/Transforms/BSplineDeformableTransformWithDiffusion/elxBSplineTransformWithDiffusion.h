@@ -11,13 +11,13 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxBSplineTransformWithDiffusion_H__
 #define __elxBSplineTransformWithDiffusion_H__
 
 /* For easy changing the BSplineOrder: */
 #define __VSplineOrder 3
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkAdvancedCombinationTransform.h"
 //#include "itkBSplineCombinationTransform.h"
@@ -25,8 +25,6 @@
 #include "itkBSplineUpsampleImageFilter.h"
 
 #include "itkImageRegionConstIterator.h"
-
-#include "elxIncludes.h"
 
 /** Include structure for the diffusion. */
 #include "itkDeformationFieldRegulizer.h"

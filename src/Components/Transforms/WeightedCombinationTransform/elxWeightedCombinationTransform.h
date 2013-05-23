@@ -11,13 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxWeightedCombinationTransform_H_
 #define __elxWeightedCombinationTransform_H_
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkWeightedCombinationTransform.h"
 #include "itkAdvancedCombinationTransform.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

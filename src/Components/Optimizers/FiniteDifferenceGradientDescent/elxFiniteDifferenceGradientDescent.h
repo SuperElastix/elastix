@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxFiniteDifferenceGradientDescent_h
 #define __elxFiniteDifferenceGradientDescent_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkFiniteDifferenceGradientDescentOptimizer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

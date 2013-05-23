@@ -640,9 +640,9 @@ void AdvancedBSplineTransform<TElastix>
   const ParametersType & param,
   ParameterMapType * paramsMap ) const
 {
+  std::ostringstream tmpStream;
   std::string parameterName;
   std::vector< std::string > parameterValues;
-  char tmpValue[ 265 ];
 
   /** Call the WriteToFile from the TransformBase. */
   this->Superclass2::CreateTransformParametersMap( param, paramsMap );
@@ -662,21 +662,21 @@ void AdvancedBSplineTransform<TElastix>
   parameterName = "GridSize";
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    sprintf( tmpValue, "%d", size[ i ] );
-    parameterValues.push_back( tmpValue );
+    tmpStream.str(""); tmpStream << size[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear(); 
- 
+  parameterValues.clear();
+
   /** Write the GridIndex of this transform. */
   parameterName = "GridIndex";
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    sprintf( tmpValue, "%d", index[ i ] );
-    parameterValues.push_back( tmpValue );
+    tmpStream.str(""); tmpStream << index[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear(); 
+  parameterValues.clear();
 
   /** Set the precision of cout to 2, because GridSpacing and
    * GridOrigin must have at least one digit precision.
@@ -687,39 +687,39 @@ void AdvancedBSplineTransform<TElastix>
   parameterName = "GridSpacing";
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    sprintf( tmpValue , "%.10lf" , spacing[ i ] );
-    parameterValues.push_back( tmpValue );
+    tmpStream.str(""); tmpStream << spacing[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear();  
+  parameterValues.clear();
 
   /** Write the GridOrigin of this transform. */
   parameterName = "GridOrigin";
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    sprintf( tmpValue , "%.10lf" , origin[ i ] );
-    parameterValues.push_back( tmpValue );
+    tmpStream.str(""); tmpStream << origin[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear();  
-  
+  parameterValues.clear();
+
   /** Write the GridDirection of this transform. */
   parameterName = "GridDirection";
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
     {
-      sprintf( tmpValue , "%.10lf" , direction(j,i) );
-      parameterValues.push_back( tmpValue );
+      tmpStream.str(""); tmpStream << direction( j, i );
+      parameterValues.push_back( tmpStream.str() );
     }
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear();  
-  
+  parameterValues.clear();
+
   /** Write the spline order and periodicity of this transform. */
   parameterName = "BSplineTransformSplineOrder";
-  sprintf( tmpValue, "%d", m_SplineOrder );
-  parameterValues.push_back( tmpValue );
+  tmpStream.str(""); tmpStream << this->m_SplineOrder;
+  parameterValues.push_back( tmpStream.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 

@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxReducedDimensionBSplineResampleInterpolator_h
 #define __elxReducedDimensionBSplineResampleInterpolator_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkReducedDimensionBSplineInterpolateImageFunction.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

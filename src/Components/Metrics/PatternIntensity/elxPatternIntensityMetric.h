@@ -11,11 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxPatternIntensityMetric_H__
 #define __elxPatternIntensityMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkPatternIntensityImageToImageMetric.h"
 
 #include "elxTimer.h"

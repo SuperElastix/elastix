@@ -16,6 +16,7 @@
 #define __elxResamplerBase_hxx
 
 #include "elxResamplerBase.h"
+
 #include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
@@ -698,7 +699,6 @@ ResamplerBase<TElastix>
 {
   std::string parameterName;
   std::vector< std::string > parameterValues;
-  char tmpValue[ 265 ] = {};
 
   /** Write the name of this transform. */
   parameterName = "Resampler";
@@ -708,8 +708,9 @@ ResamplerBase<TElastix>
 
   /** Write the DefaultPixelValue. */
   parameterName = "DefaultPixelValue";
-  sprintf( tmpValue , "%lf" , this->GetAsITKBaseType()->GetDefaultPixelValue() );
-  parameterValues.push_back( tmpValue );
+  std::ostringstream strDefaultPixelValue;
+  strDefaultPixelValue << this->GetAsITKBaseType()->GetDefaultPixelValue();
+  parameterValues.push_back( strDefaultPixelValue.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
@@ -805,3 +806,4 @@ void ResamplerBase<TElastix>
 
 
 #endif // end #ifndef __elxResamplerBase_hxx
+

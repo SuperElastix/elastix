@@ -11,11 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxCorrespondingPointsEuclideanDistanceMetric_H__
 #define __elxCorrespondingPointsEuclideanDistanceMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkCorrespondingPointsEuclideanDistancePointMetric.h"
 
 #include "elxTimer.h"

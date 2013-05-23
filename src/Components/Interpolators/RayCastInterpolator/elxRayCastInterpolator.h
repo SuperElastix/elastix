@@ -14,11 +14,11 @@
 #ifndef __elxRayCastInterpolator_h
 #define __elxRayCastInterpolator_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkAdvancedCombinationTransform.h"
 #include "itkAdvancedTransform.h"
 #include "../Transforms/EulerTransform/itkEulerTransform.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

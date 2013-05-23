@@ -14,6 +14,8 @@
 #ifndef __elxBSplineStackTransform_h
 #define __elxBSplineStackTransform_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
+
 /** Include itk transforms needed. */
 #include "itkAdvancedCombinationTransform.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
@@ -22,9 +24,6 @@
 /** Include grid schedule computer and upsample filter. */
 #include "itkGridScheduleComputer.h"
 #include "itkUpsampleBSplineParametersFilter.h"
-
-#include "elxIncludes.h"
-
 
 namespace elastix
 {

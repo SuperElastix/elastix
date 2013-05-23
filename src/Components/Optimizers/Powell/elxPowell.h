@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxPowell_h
 #define __elxPowell_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkPowellOptimizer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

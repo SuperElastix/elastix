@@ -11,11 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdvancedNormalizedCorrelationMetric_H__
 #define __elxAdvancedNormalizedCorrelationMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedNormalizedCorrelationImageToImageMetric.h"
 
 #include "elxTimer.h"

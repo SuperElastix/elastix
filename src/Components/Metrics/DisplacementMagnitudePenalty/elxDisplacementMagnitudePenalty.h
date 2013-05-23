@@ -14,7 +14,7 @@
 #ifndef __elxDisplacementMagnitudePenalty_H__
 #define __elxDisplacementMagnitudePenalty_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkDisplacementMagnitudePenaltyTerm.h"
 
 #include "elxTimer.h"

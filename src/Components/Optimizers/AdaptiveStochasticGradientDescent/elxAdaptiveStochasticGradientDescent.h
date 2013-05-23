@@ -11,13 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdaptiveStochasticGradientDescent_h
 #define __elxAdaptiveStochasticGradientDescent_h
 
-#include "itkComputeJacobianTerms.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdaptiveStochasticGradientDescentOptimizer.h"
-#include "elxIncludes.h"
 #include "elxProgressCommand.h"
 #include "itkAdvancedTransform.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"

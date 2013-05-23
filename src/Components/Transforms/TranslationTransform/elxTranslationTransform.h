@@ -11,13 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxTranslationTransform_H_
 #define __elxTranslationTransform_H_
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedTranslationTransform.h"
 #include "itkTranslationTransformInitializer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

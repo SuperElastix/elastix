@@ -11,12 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxConjugateGradientFRPR_h
 #define __elxConjugateGradientFRPR_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkFRPROptimizer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

@@ -11,13 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxConjugateGradient_h
 #define __elxConjugateGradient_h
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkGenericConjugateGradientOptimizer.h"
 #include "itkMoreThuenteLineSearchOptimizer.h"
-#include "elxIncludes.h"
 
 namespace elastix
 {

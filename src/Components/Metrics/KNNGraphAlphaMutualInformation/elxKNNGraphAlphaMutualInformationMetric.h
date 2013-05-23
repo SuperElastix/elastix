@@ -11,11 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxKNNGraphAlphaMutualInformationMetric_H__
 #define __elxKNNGraphAlphaMutualInformationMetric_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkKNNGraphAlphaMutualInformationImageToImageMetric.h"
 
 #include "elxTimer.h"

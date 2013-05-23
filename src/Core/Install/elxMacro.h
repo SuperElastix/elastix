@@ -11,10 +11,18 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMacro_h
 #define __elxMacro_h
 
+/** This include is only used to get rid of a MSVS compiler warning
+ * when using std::copy. The warning is like:
+ *   'conversion' conversion from 'type1' to 'type2', possible loss of data
+ * To solve it ITK recommends to include itkMacro.h before <algorithm> or
+ * any other stl header. In elastix we try to make sure that elxIncludes.h
+ * is included before anything else, which includes elxMacro.h, which now
+ * includes itkWin32Header.h.
+ */
+#include "itkWin32Header.h"
 
 /**
  * Macro for installing support new components
@@ -271,4 +279,3 @@ virtual const char * elxGetClassName( void ) const { return _name ; }
 
 
 #endif // end #ifndef __elxMacro_h
-

@@ -11,13 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMultiResolutionRegistration_H__
 #define __elxMultiResolutionRegistration_H__
 
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiResolutionImageRegistrationMethod2.h"
-
-#include "elxIncludes.h"
 
 namespace elastix
 {

@@ -202,3 +202,4 @@ private:
 #endif
 
 #endif // end #ifndef __elxResamplerBase_h
+

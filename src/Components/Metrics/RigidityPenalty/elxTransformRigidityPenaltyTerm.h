@@ -14,7 +14,7 @@
 #ifndef __elxTransformRigidityPenaltyTerm_H__
 #define __elxTransformRigidityPenaltyTerm_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkTransformRigidityPenaltyTerm.h"
 
 #include "elxTimer.h"
