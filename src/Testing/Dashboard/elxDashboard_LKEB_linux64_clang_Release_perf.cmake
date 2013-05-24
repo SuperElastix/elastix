@@ -40,7 +40,7 @@ ENDIF()
 SET( dashboard_cache "
 // Select the clang compiler
 CMAKE_C_COMPILER:FILEPATH=/usr/clang_3_3/bin/clang
-//CMAKE_C_FLAGS:STRING=-Wall -std=c99
+CMAKE_C_FLAGS:STRING=-Wall -std=c99
 CMAKE_C_FLAGS_DEBUG:STRING=-g
 CMAKE_C_FLAGS_MINSIZEREL:STRING=-Os -DNDEBUG
 // -O4 uses LTO, which does not seem to work on my machine
@@ -49,7 +49,7 @@ CMAKE_C_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=-O2 -g
 
 CMAKE_CXX_COMPILER:FILEPATH=/usr/clang_3_3/bin/clang++
-//CMAKE_CXX_FLAGS:STRING=-Wall
+CMAKE_CXX_FLAGS:STRING=-Wall -Wno-overloaded-virtual
 CMAKE_CXX_FLAGS_DEBUG:STRING=-g
 CMAKE_CXX_FLAGS_MINSIZEREL:STRING=-Os -DNDEBUG
 // -O4 uses LTO, which does not seem to work on my machine

@@ -227,7 +227,6 @@ namespace itk
     /** Get space dimension and allocate new position. */
     const unsigned int spaceDimension
       = this->GetScaledCostFunction()->GetNumberOfParameters();
-    const double learningRate = this->m_LearningRate;
     // This old way creates a vector, fills it later, and copies it at the end
     //ParametersType newPosition( spaceDimension );
     // This new way gets a reference to a previously allocated vector and fills it
@@ -266,6 +265,7 @@ namespace itk
     {
       /** Get a reference to the current position. */
       const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+      const double learningRate = this->m_LearningRate;
 
       /** Wrap itk::Arrays into Eigen jackets. */
       typedef Eigen::VectorXd ParametersTypeEigen;
@@ -282,6 +282,7 @@ namespace itk
     {
       /** Get a reference to the current position. */
       const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+      const double learningRate = this->m_LearningRate;
 
       /** Wrap itk::Arrays into Eigen jackets. */
       typedef Eigen::VectorXd ParametersTypeEigen;
