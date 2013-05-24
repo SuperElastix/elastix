@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __xoutcell_hxx
 #define __xoutcell_hxx
 
@@ -80,7 +79,6 @@ namespace xoutlibrary
     this->m_InternalBuffer.str( string("") );
 
   } // end WriteBufferedData
-
 
 
 } // end namespace xoutlibrary

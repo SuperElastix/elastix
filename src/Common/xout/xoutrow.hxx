@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __xoutrow_hxx
 #define __xoutrow_hxx
 

@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __xoutrow_h
 #define __xoutrow_h
 
@@ -22,7 +21,6 @@
 namespace xoutlibrary
 {
 using namespace std;
-
 
 /**
  * \class xoutrow

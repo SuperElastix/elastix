@@ -11,12 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __xoutmain_h
 #define __xoutmain_h
 
 /** Necessary includes for using xout. */
-
 #include "xoutbase.h"
 #include "xoutsimple.h"
 #include "xoutrow.h"
@@ -28,23 +26,15 @@ namespace xl = xoutlibrary;
 #define xout get_xout()
 
 /** Typedefs for the most common use of xout */
-
 namespace xoutlibrary
 {
-
   typedef xoutbase<char>    xoutbase_type;
   typedef xoutsimple<char>  xoutsimple_type;
   typedef xoutrow<char>     xoutrow_type;
   typedef xoutcell<char>    xoutcell_type;
 
-
-  extern "C"
-  {
-    xoutbase_type & get_xout(void);
-    void set_xout(xoutbase_type * arg);
-  }
-
-
+  xoutbase_type & get_xout( void );
+  void set_xout( xoutbase_type * arg );
 
 } // end namespace xoutlibrary
 

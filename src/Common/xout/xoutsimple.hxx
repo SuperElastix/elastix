@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __xoutsimple_hxx
 #define __xoutsimple_hxx
 
@@ -20,7 +19,6 @@
 namespace xoutlibrary
 {
   using namespace std;
-
 
   /**
    * ********************* Constructor ****************************
