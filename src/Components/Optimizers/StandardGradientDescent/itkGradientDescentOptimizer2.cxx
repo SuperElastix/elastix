@@ -255,7 +255,7 @@ namespace itk
       const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfThreads() );
       omp_set_num_threads( nthreads );
       #pragma omp parallel for
-      for( int j = 0; j < spaceDimension; j++ )
+      for( int j = 0; j < static_cast<int>( spaceDimension ); j++ )
       {
         newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
       }
@@ -290,6 +290,7 @@ namespace itk
       Eigen::Map<ParametersTypeEigen> gradientE( this->m_Gradient.data_block(), spaceDimension );
 
       /** Update the new position. */
+      const int spaceDim = static_cast<int>( spaceDimension );
       const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfThreads() );
       omp_set_num_threads( nthreads );
       #pragma omp parallel for
@@ -298,7 +299,7 @@ namespace itk
         int threadId = omp_get_thread_num();
         int chunk = ( spaceDimension + nthreads - 1 ) / nthreads;
         int jmin = threadId * chunk;
-        int jmax = (threadId + 1) * chunk < spaceDimension ? (threadId + 1) * chunk : spaceDimension;
+        int jmax = (threadId + 1) * chunk < spaceDim ? (threadId + 1) * chunk : spaceDim;
         int subSize = jmax - jmin;
 
         newPositionE.segment( jmin, subSize ) = currentPositionE.segment( jmin, subSize )

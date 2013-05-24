@@ -91,7 +91,6 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
   unsigned int iFilter;
   typedef typename FixedImageType::SizeType SizeType;
-  SizeType size = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
 
   /** Compute the gradient of the fixed images */
   this->m_CastFixedImageFilter->SetInput( this->m_FixedImage );

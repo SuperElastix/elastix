@@ -163,7 +163,6 @@ ImageRandomSamplerSparseMask< TInputImage >
   /** Get a handle to the full sampler output. */
   typename ImageSampleContainerType::Pointer allValidSamples
     = this->m_InternalFullSampler->GetOutput();
-  unsigned long numberOfValidSamples = allValidSamples->Size();
 
   /** Figure out which samples to process. */
   unsigned long chunkSize = this->GetNumberOfSamples() / this->GetNumberOfThreads();
@@ -185,7 +184,6 @@ ImageRandomSamplerSparseMask< TInputImage >
 
   /** Take random samples from the allValidSamples-container. */
   unsigned long sampleId = sampleStart;
-  unsigned long sampleIdThisThread = 0;
   for ( iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++ )
   {
     unsigned long randomIndex = static_cast<unsigned long>( this->m_RandomNumberList[ sampleId ] );

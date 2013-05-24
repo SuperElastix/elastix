@@ -420,7 +420,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   const int nthreads = static_cast<int>( this->m_NumberOfThreads );
   omp_set_num_threads( nthreads );
   #pragma omp parallel for
-  for( int i = 0; i < sampleContainer->Size(); ++i )
+  for( int i = 0; i < static_cast<int>( sampleContainer->Size() ); ++i )
   {
     const int threadId = omp_get_thread_num();
 
@@ -498,7 +498,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   value *= normal_sum;
 
   /** Accumulate derivatives. */
-  const unsigned int spaceDimension = this->GetNumberOfParameters();
+  const int spaceDimension = static_cast<int>( this->GetNumberOfParameters() );
   #pragma omp parallel for
   for( int j = 0; j < spaceDimension; ++j )
   {
@@ -733,7 +733,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   {
     const int nthreads = static_cast<int>( this->m_NumberOfThreads );
     omp_set_num_threads( nthreads );
-    const unsigned int spaceDimension = this->GetNumberOfParameters();
+    const int spaceDimension = static_cast<int>( this->GetNumberOfParameters() );
     #pragma omp parallel for
     for( int j = 0; j < spaceDimension; ++j )
     {

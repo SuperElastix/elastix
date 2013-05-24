@@ -644,7 +644,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     const DerivativeValueType numPix = static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
     const int nthreads = static_cast<int>( this->m_NumberOfThreads );
     omp_set_num_threads( nthreads );
-    const unsigned int spaceDimension = this->GetNumberOfParameters();
+    const int spaceDimension = static_cast<int>( this->GetNumberOfParameters() );
     #pragma omp parallel for
     for( int j = 0; j < spaceDimension; ++j )
     {

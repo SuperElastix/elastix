@@ -634,7 +634,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     DerivativeValueType sum;
     const int nthreads = static_cast<int>( this->m_NumberOfThreads );
     omp_set_num_threads( nthreads );
-    const unsigned int spaceDimension = this->GetNumberOfParameters();
+    const int spaceDimension = static_cast<int>( this->GetNumberOfParameters() );
     #pragma omp parallel for
     for( int j = 0; j < spaceDimension; ++j )
     {

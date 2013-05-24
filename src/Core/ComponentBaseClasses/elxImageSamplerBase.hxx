@@ -53,9 +53,8 @@ ImageSamplerBase<TElastix>
   }
 
   /** Temporary?: Use the multi-threaded version or not. */
-  bool useMultiThread = false;
-  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mts" ); // mts: multi-threaded samplers
-  if ( tmp == "true" )
+  std::string useMultiThread = this->m_Configuration->GetCommandLineArgument( "-mts" ); // mts: multi-threaded samplers
+  if( useMultiThread == "true" )
   {
     this->GetAsITKBaseType()->SetUseMultiThread( true );
   }
@@ -66,3 +65,4 @@ ImageSamplerBase<TElastix>
 } // end namespace elastix
 
 #endif //#ifndef __elxImageSamplerBase_hxx
+

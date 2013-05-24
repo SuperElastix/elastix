@@ -97,9 +97,8 @@ namespace elastix
     }
 
     /** Select the use of an OpenMP implementation for GetValueAndDerivative. */
-    bool useOpenMP = false;
-    std::string tmp = this->m_Configuration->GetCommandLineArgument( "-useOpenMP_SSD" );
-    if ( tmp == "true" )
+    std::string useOpenMP = this->m_Configuration->GetCommandLineArgument( "-useOpenMP_SSD" );
+    if( useOpenMP == "true" )
     {
       this->SetUseOpenMP( true );
     }
@@ -110,3 +109,4 @@ namespace elastix
 
 
 #endif // end #ifndef __elxAdvancedMeanSquaresMetric_HXX__
+

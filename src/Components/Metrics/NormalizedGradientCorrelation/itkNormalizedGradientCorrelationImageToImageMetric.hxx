@@ -63,7 +63,6 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
   unsigned int iFilter;
   typedef typename FixedImageType::SizeType SizeType;
-  SizeType size = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
 
   /** Compute the gradient of the fixed images */
   this->m_CastFixedImageFilter->SetInput( this->m_FixedImage );
@@ -130,7 +129,7 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf( os, indent );
-    os << indent << "DerivativeDelta: " << this->m_DerivativeDelta << std::endl;
+  os << indent << "DerivativeDelta: " << this->m_DerivativeDelta << std::endl;
 } // end PrintSelf()
 
 
@@ -502,3 +501,4 @@ MeasureType & value, DerivativeType & derivative ) const
 
 
 #endif
+

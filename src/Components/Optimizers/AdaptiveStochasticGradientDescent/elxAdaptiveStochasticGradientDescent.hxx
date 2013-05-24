@@ -563,7 +563,6 @@ AdaptiveStochasticGradientDescent<TElastix>
   bool useScales = this->GetUseScales();
   if( useScales )
   {
-     const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
      computeJacobianTerms->SetScales( this->m_ScaledCostFunction->GetScales() );
      computeJacobianTerms->SetUseScales( true );
   }

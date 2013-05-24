@@ -830,7 +830,7 @@ StatisticalShapePointPenalty<TFixedPointSet,TMovingPointSet>
     {
       const unsigned int shapeLength = this->m_ProposalLength - Self::FixedPointSetDimension - 1;
       typename VnlVectorType::iterator diffElementIt = differenceVector.begin();
-      for( int diffElementIndex = 0; diffElementIndex < shapeLength; ++diffElementIndex, ++diffElementIt )
+      for( unsigned int diffElementIndex = 0; diffElementIndex < shapeLength; ++diffElementIndex, ++diffElementIt )
       {
         *diffElementIt /= this->m_BaseStd;
       }
@@ -920,7 +920,7 @@ StatisticalShapePointPenalty<TFixedPointSet,TMovingPointSet>
           // first scale proposalDerivatives with their sigma's in order to evaluate
           // with the EigenValues and EigenVectors of the scaled CovarianceMatrix
           typename VnlVectorType::iterator propDerivElementIt = (*proposalDerivativeIt)->begin();
-          for( int propDerivElementIndex = 0; propDerivElementIndex < shapeLength;
+          for( unsigned int propDerivElementIndex = 0; propDerivElementIndex < shapeLength;
             ++propDerivElementIndex, ++propDerivElementIt )
           {
             (*propDerivElementIt) /= this->m_BaseStd;
