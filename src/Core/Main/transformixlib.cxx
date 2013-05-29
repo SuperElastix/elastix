@@ -11,6 +11,7 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
+
 #ifndef __transformixlib_CXX_
 #define __transformixlib_CXX_
 
@@ -56,7 +57,7 @@ TRANSFORMIX::~TRANSFORMIX()
 
 
 /**
- * ******************* Destructor ***********************
+ * ******************* GetResultImage ***********************
  */
 
 TRANSFORMIX::ImagePointer
@@ -165,6 +166,7 @@ TRANSFORMIX::TransformImage(
 
   /** The argv0 argument, required for finding the component.dll/so's. */
   argMap.insert( ArgumentMapEntryType( "-argv0", "transformix" ) );
+
 
   /** Setup xout. */
   int returndummy2 = elx::xoutSetup( logFileName.c_str() , performLogging , performCout );
