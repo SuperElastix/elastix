@@ -644,7 +644,7 @@ void AdvancedBSplineTransform<TElastix>
   std::string parameterName;
   std::vector< std::string > parameterValues;
 
-  /** Call the WriteToFile from the TransformBase. */
+  /** Call the CreateTransformParametersMap from the TransformBase. */
   this->Superclass2::CreateTransformParametersMap( param, paramsMap );
 
   /** Add some BSplineTransform specific lines. */
