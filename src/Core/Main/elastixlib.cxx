@@ -84,9 +84,8 @@ ELASTIX::GetTransformParameterMap( void )
 /**
  * ******************* RegisterImages ***********************
  */
-
 int
-ELASTIX::RegisterImages(
+  ELASTIX::RegisterImages(
   ImagePointer fixedImage,
   ImagePointer movingImage,
   ParameterMapType & parameterMap,
@@ -94,7 +93,30 @@ ELASTIX::RegisterImages(
   bool performLogging,
   bool performCout,
   ImagePointer fixedMask,
-  ImagePointer movingMask )
+  ImagePointer movingMask)
+{
+  std::vector< ParameterMapType >  parameterMaps(1);
+  parameterMaps[0] = parameterMap;
+  return this->RegisterImages(fixedImage,
+                              movingImage,
+                              parameterMaps,
+                              outputPath,
+                              performLogging,
+                              performCout,
+                              fixedMask,
+                              movingMask);
+}
+
+int
+ELASTIX::RegisterImages(
+  ImagePointer fixedImage,
+  ImagePointer movingImage,
+  std::vector< ParameterMapType >& parameterMaps,
+  std::string outputPath,
+  bool performLogging,
+  bool performCout,
+  ImagePointer fixedMask,
+  ImagePointer movingMask)
 {
   /** Some typedef's. */
   typedef elx::ElastixMain                            ElastixMainType;
@@ -127,7 +149,6 @@ ELASTIX::RegisterImages(
   DataObjectContainerPointer ResultImageContainer = 0;
   FlatDirectionCosinesType  fixedImageOriginalDirection;
   int returndummy = 0;
-  unsigned long nrOfParameterFiles = 0;
   ArgumentMapType argMap;
   ParameterFileListType parameterFileList;
   std::string outFolder = "";
@@ -135,6 +156,7 @@ ELASTIX::RegisterImages(
   unsigned short i;
   std::string key;
   std::string value;
+  unsigned long nrOfParameterFiles = parameterMaps.size();
 
   /** Setup the argumentMap for output path. */
   if( !outputPath.empty() )
@@ -199,8 +221,6 @@ ELASTIX::RegisterImages(
   /** The argv0 argument, required for finding the component.dll/so's. */
   argMap.insert( ArgumentMapEntryType( "-argv0" , "elastix" )  );
 
-  //Set nrOfParameterFiles to 1
-  nrOfParameterFiles = 1;
 
   /** Setup xout. */
   returndummy = elx::xoutSetup( logFileName.c_str() , performLogging , performCout );
@@ -279,14 +299,18 @@ ELASTIX::RegisterImages(
       argMap.erase( "-p" );
     }
 
+    /** Print a start message. */
+    elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
+    elxout << "Running elastix with parameter map " << i << std::endl;
+
+
     /** Declare a timer, start it and print the start time. */
     timer = tmr::Timer::New();
     timer->StartTimer();
     elxout << "Current time: " << timer->PrintStartTime() << "." << std::endl;
 
     /** Start registration. */
-    returndummy = elastices[ i ]->Run( argMap,
-      parameterMap );
+    returndummy = elastices[ i ]->Run( argMap, parameterMaps[i] );
 
     /** Check for errors. */
     if( returndummy != 0 )

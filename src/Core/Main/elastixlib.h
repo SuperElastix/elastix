@@ -96,12 +96,21 @@ public:
    */
   int RegisterImages( ImagePointer fixedImage,
     ImagePointer movingImage,
-    ParameterMapType & parameterMap,
+    ParameterMapType& parameterMap,
     std::string   outputPath,
     bool performLogging,
     bool performCout,
     ImagePointer fixedMask = 0,
-    ImagePointer movingMask = 0 );
+    ImagePointer movingMask = 0);
+
+  int RegisterImages( ImagePointer fixedImage,
+    ImagePointer movingImage,
+    std::vector< ParameterMapType >& parameterMaps,
+    std::string   outputPath,
+    bool performLogging,
+    bool performCout,
+    ImagePointer fixedMask = 0,
+    ImagePointer movingMask = 0);
 
   /** Getter for result image. */
   ImagePointer GetResultImage( void );
