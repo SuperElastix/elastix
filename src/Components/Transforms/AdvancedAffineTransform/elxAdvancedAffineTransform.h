@@ -126,6 +126,7 @@ namespace elastix
     /** Typedef's from the TransformBase class. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ParameterMapType          ParameterMapType;
     typedef typename Superclass2::ConfigurationType         ConfigurationType;
     typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
     typedef typename Superclass2::RegistrationType          RegistrationType;
@@ -196,6 +197,12 @@ namespace elastix
      * It writes the center of rotation to file and calls the superclass' implementation.
      */
     virtual void WriteToFile( const ParametersType & param ) const;
+
+    /** Function to create transform-parameters map.
+     * Creates the TransformParametersmap
+     */
+    virtual void CreateTransformParametersMap(
+      const ParametersType & param, ParameterMapType * paramsMap ) const;
 
   protected:
 
