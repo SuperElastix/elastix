@@ -223,8 +223,13 @@ ResamplerBase<TElastix>
    * Only necessary when compiling elastix as a library!
    */
 #ifdef _ELASTIX_BUILD_LIBRARY
-  this->CreateItkResultImage();
-#endif
+
+  if ( writeResultImage == "true" )
+  {
+    this->CreateItkResultImage();
+  }
+
+#else
 
   /** Writing result image. */
   if ( writeResultImage == "true" )
@@ -274,6 +279,8 @@ ResamplerBase<TElastix>
       << "Skipping applying final transform, no resulting output image generated."
       << std::endl;
   } // end if
+
+#endif
 
 } // end AfterRegistrationBase()
 

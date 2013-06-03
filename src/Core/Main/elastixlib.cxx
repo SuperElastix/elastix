@@ -146,7 +146,7 @@ ELASTIX::RegisterImages(
   DataObjectContainerPointer movingImageContainer = 0;
   DataObjectContainerPointer fixedMaskContainer = 0;
   DataObjectContainerPointer movingMaskContainer = 0;
-  DataObjectContainerPointer ResultImageContainer = 0;
+  DataObjectContainerPointer resultImageContainer = 0;
   FlatDirectionCosinesType  fixedImageOriginalDirection;
   int returndummy = 0;
   ArgumentMapType argMap;
@@ -264,7 +264,7 @@ ELASTIX::RegisterImages(
     movingMaskContainer->CreateElementAt( 0 ) = movingMask;
   }
 
-  //todo original direction cosin, problem is that Image type is unknown at this in elastixlic.cxx
+  //todo original direction cosin, problem is that Image type is unknown at this in elastixlib.cxx
   //for now in elaxElastixTemplate (Run()) direction cosines are taken from fixed image
 
 
@@ -286,7 +286,7 @@ ELASTIX::RegisterImages(
     elastices[ i ]->SetMovingImageContainer( movingImageContainer );
     elastices[ i ]->SetFixedMaskContainer( fixedMaskContainer );
     elastices[ i ]->SetMovingMaskContainer( movingMaskContainer );
-    elastices[ i ]->SetResultImageContainer( ResultImageContainer );
+    elastices[ i ]->SetResultImageContainer( resultImageContainer );
     elastices[ i ]->SetOriginalFixedImageDirectionFlat( fixedImageOriginalDirection );
 
     /** Set the current elastix-level. */
@@ -327,7 +327,7 @@ ELASTIX::RegisterImages(
     movingImageContainer = elastices[ i ]->GetMovingImageContainer();
     fixedMaskContainer   = elastices[ i ]->GetFixedMaskContainer();
     movingMaskContainer  = elastices[ i ]->GetMovingMaskContainer();
-    ResultImageContainer = elastices[ i ]->GetResultImageContainer();
+    resultImageContainer = elastices[ i ]->GetResultImageContainer();
     fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
 
     /** Stop timer and print it. */
@@ -368,14 +368,17 @@ ELASTIX::RegisterImages(
   }
 
   /* Set result image for output */
-  this->m_ResultImage = ResultImageContainer->ElementAt( 0 );
+  if ( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
+  {
+    this->m_ResultImage = resultImageContainer->ElementAt( 0 );
+  }
 
   transform = 0;
   fixedImageContainer = 0;
   movingImageContainer = 0;
   fixedMaskContainer = 0;
   movingMaskContainer = 0;
-  ResultImageContainer = 0;
+  resultImageContainer = 0;
 
   /** Close the modules. */
   ElastixMainType::UnloadComponents();
