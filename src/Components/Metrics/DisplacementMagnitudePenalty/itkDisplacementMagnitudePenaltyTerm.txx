@@ -163,8 +163,9 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
 
   /** Array that stores sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-  TransformJacobianType jacobian;
   const unsigned long nrNonZeroJacobianIndices = nzji.size();
+  TransformJacobianType jacobian( FixedImageDimension, nrNonZeroJacobianIndices );
+  jacobian.Fill( 0.0 );
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -220,13 +221,13 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
 
       /** Compute the contribution to the derivative; (T(x)-x)' dT/dmu
        * \todo FixedImageDimension should be MovingImageDimension  */
-      for ( unsigned int d = 0; d < FixedImageDimension; ++d )
+      for( unsigned int d = 0; d < FixedImageDimension; ++d )
       {
         const double vecd = vec[d];
-        for (unsigned int i = 0; i < nrNonZeroJacobianIndices; ++i )
+        for( unsigned int i = 0; i < nrNonZeroJacobianIndices; ++i )
         {
           const unsigned int mu = nzji[i];
-          derivative[mu] += vecd * jacobian(d,i);
+          derivative[mu] += vecd * jacobian( d, i );
         }
       }
     } // end if sampleOk
@@ -239,7 +240,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
 
   /** Update measure value and derivative. The factor 2 in the derivative
    * originates from the square in ||T(x)-x||^2 */
-  RealType normalizationConstant = vnl_math_max(
+  const RealType normalizationConstant = vnl_math_max(
     NumericTraits<RealType>::One,
     static_cast<RealType>( this->m_NumberOfPixelsCounted ) );
   measure /= normalizationConstant;

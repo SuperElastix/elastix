@@ -699,9 +699,9 @@ AdaptiveStochasticGradientDescent<TElastix>
    * for the exact gradients, and set the stochasticgradients flag to true.
    */
   bool stochasticgradients = false;
-  if ( this->GetNewSamplesEveryIteration() )
+  if( this->GetNewSamplesEveryIteration() )
   {
-    for ( unsigned int m = 0; m < M; ++m )
+    for( unsigned int m = 0; m < M; ++m )
     {
       /** Get the sampler. */
       ImageSamplerBasePointer sampler =
@@ -711,7 +711,7 @@ AdaptiveStochasticGradientDescent<TElastix>
       randomCoordinateSamplerVec[m] =
         dynamic_cast< ImageRandomCoordinateSamplerType * >( sampler.GetPointer() );
 
-      if ( randomSamplerVec[m].IsNotNull() )
+      if( randomSamplerVec[m].IsNotNull() )
       {
         /** At least one of the metric has a random sampler. */
         stochasticgradients |= true;
@@ -723,13 +723,13 @@ AdaptiveStochasticGradientDescent<TElastix>
          * has UseRandomSampleRegion==true.
          * \todo Extend ASGD to really take into account random region sampling.
          */
-        if ( randomCoordinateSamplerVec[ m ].IsNotNull() )
+        if( randomCoordinateSamplerVec[ m ].IsNotNull() )
         {
           useRandomSampleRegionVec[ m ]
-          = randomCoordinateSamplerVec[ m ]->GetUseRandomSampleRegion();
-          if ( useRandomSampleRegionVec[ m ] )
+            = randomCoordinateSamplerVec[ m ]->GetUseRandomSampleRegion();
+          if( useRandomSampleRegionVec[ m ] )
           {
-            if ( this->GetUseAdaptiveStepSizes() )
+            if( this->GetUseAdaptiveStepSizes() )
             {
               xl::xout["warning"]
                 << "WARNING: UseAdaptiveStepSizes is turned off, "
@@ -775,7 +775,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   double diffgg = 0.0;
 
   /** Compute gg for some random parameters. */
-  for ( unsigned int i = 0 ; i < this->m_NumberOfGradientMeasurements; ++i )
+  for( unsigned int i = 0 ; i < this->m_NumberOfGradientMeasurements; ++i )
   {
 #ifndef _ELASTIX_BUILD_LIBRARY
     /** Show progress 0-100% */
@@ -788,12 +788,12 @@ AdaptiveStochasticGradientDescent<TElastix>
     this->AddRandomPerturbation( perturbedMu0, perturbationSigma );
 
     /** Compute contribution to exactgg and diffgg. */
-    if ( stochasticgradients )
+    if( stochasticgradients )
     {
       /** Set grid sampler(s) and get exact derivative. */
-      for ( unsigned int m = 0; m < M; ++m )
+      for( unsigned int m = 0; m < M; ++m )
       {
-        if ( gridSamplerVec[ m ].IsNotNull() )
+        if( gridSamplerVec[ m ].IsNotNull() )
         {
           this->GetElastix()->GetElxMetricBase( m )
             ->SetAdvancedMetricImageSampler( gridSamplerVec[ m ] );
@@ -802,9 +802,9 @@ AdaptiveStochasticGradientDescent<TElastix>
       this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
 
       /** Set random sampler(s), select new spatial samples and get approximate derivative. */
-      for ( unsigned int m = 0; m < M; ++m )
+      for( unsigned int m = 0; m < M; ++m )
       {
-        if ( randomSamplerVec[ m ].IsNotNull() )
+        if( randomSamplerVec[ m ].IsNotNull() )
         {
           this->GetElastix()->GetElxMetricBase( m )->
             SetAdvancedMetricImageSampler( randomSamplerVec[ m ] );
@@ -846,9 +846,9 @@ AdaptiveStochasticGradientDescent<TElastix>
   ee = diffgg;
 
   /** Set back useRandomSampleRegion flag to what it was. */
-  for ( unsigned int m = 0; m < M; ++m )
+  for( unsigned int m = 0; m < M; ++m )
   {
-    if ( randomCoordinateSamplerVec[ m ].IsNotNull() )
+    if( randomCoordinateSamplerVec[ m ].IsNotNull() )
     {
       randomCoordinateSamplerVec[ m ]
         ->SetUseRandomSampleRegion( useRandomSampleRegionVec[ m ] );
