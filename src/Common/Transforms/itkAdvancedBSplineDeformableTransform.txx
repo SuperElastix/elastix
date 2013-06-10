@@ -390,8 +390,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   if( (jacobian.cols() != nnzji) || (jacobian.rows() != SpaceDimension) )
   {
     jacobian.SetSize( SpaceDimension, nnzji );
+    jacobian.Fill( 0.0 );
   }
-  //jacobian.Fill( 0.0 );
 
   /** NOTE: if the support region does not lie totally within the grid
    * we assume zero displacement and zero Jacobian.
