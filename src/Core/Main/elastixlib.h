@@ -62,6 +62,7 @@ public:
   //typedefs for parameter map
   typedef itk::ParameterFileParser::ParameterValuesType ParameterValuesType;
   typedef itk::ParameterFileParser::ParameterMapType    ParameterMapType;
+  typedef std::vector<itk::ParameterFileParser::ParameterMapType> ParameterMapListType;
 
   /**
    *  Constructor and destructor
@@ -115,15 +116,18 @@ public:
   /** Getter for result image. */
   ImagePointer GetResultImage( void );
 
-  /** Get transformparametermap */
+  /** Get transform parameters of last registration step. */
   ParameterMapType GetTransformParameterMap( void );
+
+  /** Get transform parameters of all registration steps. */
+  ParameterMapListType GetTransformParameterMapList( void );
 
 private:
   /* the result images */
   ImagePointer     m_ResultImage;
 
   /* Final transformation*/
-  ParameterMapType m_TransformParameters;
+  ParameterMapListType m_TransformParametersList;
 
 }; // end class ELASTIX
 

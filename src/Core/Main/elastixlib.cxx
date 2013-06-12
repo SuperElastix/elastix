@@ -41,10 +41,10 @@ namespace elastix
  * ******************* Constructor ***********************
  */
 
-ELASTIX::ELASTIX()
+ELASTIX::ELASTIX() :
+  m_ResultImage(0)
 {
-  this->m_ResultImage = 0;
-  this->m_TransformParameters.clear();
+
 } // end Constructor
 
 
@@ -55,7 +55,7 @@ ELASTIX::ELASTIX()
 ELASTIX::~ELASTIX()
 {
   this->m_ResultImage = 0;
-  this->m_TransformParameters.clear();
+  this->m_TransformParametersList.clear();
 } // end Destructor
 
 
@@ -77,8 +77,20 @@ ELASTIX::GetResultImage( void )
 ELASTIX::ParameterMapType
 ELASTIX::GetTransformParameterMap( void )
 {
-  return this->m_TransformParameters;
+  return this->m_TransformParametersList[this->m_TransformParametersList.size() - 1];
 } // end GetTransformParameterMap()
+
+
+
+/**
+ * ******************* GetTransformParameterMapList ***********************
+ */
+
+ELASTIX::ParameterMapListType
+ELASTIX::GetTransformParameterMapList( void )
+{
+  return this->m_TransformParametersList;
+} // end GetTransformParameterMapList()
 
 
 /**
@@ -134,7 +146,8 @@ ELASTIX::RegisterImages(
   typedef std::queue< ArgPairType >                   ParameterFileListType;
   typedef ParameterFileListType::value_type           ParameterFileListEntryType;
 
-  //typedef ParameterFileParser::ParameterMapType       ParameterMapType;
+  // Clear output transform parameters
+  this->m_TransformParametersList.clear();
 
   tmr::Timer::Pointer timer;
 
@@ -337,7 +350,7 @@ ELASTIX::RegisterImages(
       << timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
     /** Get the transformation parameter map. */
-    m_TransformParameters = elastices[ i ]->GetTransformParametersMap();
+    this->m_TransformParametersList.push_back(elastices[ i ]->GetTransformParametersMap());
 
     /** Try to release some memory. */
     elastices[ i ] = 0;
