@@ -90,6 +90,9 @@ public:
   virtual int Run( ArgumentMapType & argmap );
   virtual int Run( ArgumentMapType & argmap, ParameterMapType & inputMap );
 
+  /** Run version for using transformix as library. */
+  virtual int Run( ArgumentMapType & argmap, std::vector< ParameterMapType > & inputMaps );
+
   /** Get and Set input- and outputImage. */
   virtual void SetInputImageContainer(
     DataObjectContainerType * inputImageContainer );

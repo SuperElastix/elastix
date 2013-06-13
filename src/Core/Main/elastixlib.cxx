@@ -352,6 +352,15 @@ ELASTIX::RegisterImages(
     /** Get the transformation parameter map. */
     this->m_TransformParametersList.push_back(elastices[ i ]->GetTransformParametersMap());
 
+    /** Set initial transform to an index number instead of a parameter filename. */
+    if ( i > 0 )
+    {
+      std::stringstream toString;
+      toString << ( i - 1 );
+      this->m_TransformParametersList[ i ][ "InitialTransformParametersFileName" ][ 0 ] =
+        toString.str();
+    }
+
     /** Try to release some memory. */
     elastices[ i ] = 0;
 

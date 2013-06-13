@@ -74,7 +74,7 @@ TRANSFORMIX::GetResultImage( void )
 int
 TRANSFORMIX::TransformImage(
   ImagePointer inputImage,
-  ParameterMapType & parameterMap,
+  std::vector< ParameterMapType >& parameterMaps,
   std::string outputPath,
   bool performLogging,
   bool performCout )
@@ -92,7 +92,7 @@ TRANSFORMIX::TransformImage(
   TransformixMainPointer transformix;
 
   DataObjectContainerPointer movingImageContainer = 0;
-  DataObjectContainerPointer ResultImageContainer = 0;
+  DataObjectContainerPointer resultImageContainer = 0;
 
   /** Initialize. */
   int               returndummy = 0;
@@ -197,10 +197,10 @@ TRANSFORMIX::TransformImage(
   movingImageContainer = DataObjectContainerType::New();
   movingImageContainer->CreateElementAt( 0 ) = inputImage;
   transformix->SetMovingImageContainer( movingImageContainer );
-  transformix->SetResultImageContainer( ResultImageContainer );
+  transformix->SetResultImageContainer( resultImageContainer );
 
   /** Run transformix. */
-  returndummy = transformix->Run( argMap, parameterMap );
+  returndummy = transformix->Run( argMap, parameterMaps );
 
   /** Check if transformix run without errors. */
   if ( returndummy != 0 )
@@ -210,7 +210,7 @@ TRANSFORMIX::TransformImage(
   }
 
   /** Get the result image */
-  ResultImageContainer = transformix->GetResultImageContainer();
+  resultImageContainer = transformix->GetResultImageContainer();
 
   /** Stop timer and print it. */
   totaltimer->StopTimer();
@@ -219,7 +219,7 @@ TRANSFORMIX::TransformImage(
   elxout << "Elapsed time: " <<
     totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
-  this->m_ResultImage = ResultImageContainer->ElementAt( 0 );
+  this->m_ResultImage = resultImageContainer->ElementAt( 0 );
 
   /** Clean up. */
   transformix = 0;
@@ -227,6 +227,27 @@ TRANSFORMIX::TransformImage(
 
   /** Exit and return the error code. */
   return returndummy;
+
+} // end TransformImage()
+
+/**
+ * ******************* TransformImage ***********************
+ */
+
+int
+TRANSFORMIX::TransformImage(
+  ImagePointer inputImage,
+  ParameterMapType & parameterMap,
+  std::string outputPath,
+  bool performLogging,
+  bool performCout )
+{
+
+  // Transform single parameter map to a one-sized vector of parametermaps and call other
+  // transform method.
+  std::vector< ParameterMapType > parameterMaps;
+  parameterMaps.push_back( parameterMap );
+  return TransformImage( inputImage, parameterMaps, outputPath, performLogging, performCout );
 
 } // end TransformImage()
 

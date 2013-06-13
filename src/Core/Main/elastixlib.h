@@ -62,7 +62,7 @@ public:
   //typedefs for parameter map
   typedef itk::ParameterFileParser::ParameterValuesType ParameterValuesType;
   typedef itk::ParameterFileParser::ParameterMapType    ParameterMapType;
-  typedef std::vector<itk::ParameterFileParser::ParameterMapType> ParameterMapListType;
+  typedef std::vector< itk::ParameterFileParser::ParameterMapType > ParameterMapListType;
 
   /**
    *  Constructor and destructor

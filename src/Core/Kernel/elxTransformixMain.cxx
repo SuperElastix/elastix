@@ -54,11 +54,15 @@ int TransformixMain::Run( void )
   }
   catch ( itk::ExceptionObject & excp )
   {
-    /** We just print the exception and let the programm quit. */
+    /** We just print the exception and let the program quit. */
     xl::xout["error"] << excp << std::endl;
     errorCode = 1;
     return errorCode;
   }
+
+#ifdef _ELASTIX_BUILD_LIBRARY
+  this->GetElastixBase()->SetConfigurations( this->m_Configurations );
+#endif // #ifdef _ELASTIX_BUILD_LIBRARY
 
   /** Set some information in the ElastixBase. */
   this->GetElastixBase()->SetConfiguration( this->m_Configuration );
@@ -141,6 +145,19 @@ int TransformixMain::Run(
   ParameterMapType & inputMap )
 {
   this->EnterCommandLineArguments( argmap, inputMap );
+  return this->Run();
+} // end Run()
+
+
+/**
+ * **************************** Run *****************************
+ */
+
+int TransformixMain::Run(
+  ArgumentMapType & argmap,
+  std::vector< ParameterMapType > & inputMaps )
+{
+  this->EnterCommandLineArguments( argmap, inputMaps );
   return this->Run();
 } // end Run()
 

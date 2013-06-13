@@ -802,7 +802,7 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 
 #ifdef _ELASTIX_BUILD_LIBRARY
   /** Get the transform parameters. */
-  this->CreateTransformParametersMap();//only relevant for dll!
+  this->CreateTransformParametersMap(); // only relevant for dll!
 #endif
 
   /** Call all the AfterRegistration() functions. */
@@ -1183,6 +1183,29 @@ void ElastixTemplate<TFixedImage, TMovingImage>
   }
 
 } // end SetOriginalFixedImageDirection()
+
+
+/**
+ * ************** SetConfigurations *********************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void ElastixTemplate<TFixedImage, TMovingImage>
+::SetConfigurations(std::vector< ConfigurationPointer > & configurations ) {
+  this->m_Configurations = configurations;
+}
+
+
+/**
+ * ************** GetConfiguration *********************
+ */
+template <class TFixedImage, class TMovingImage>
+typename ElastixTemplate<TFixedImage, TMovingImage>::ConfigurationPointer
+ElastixTemplate<TFixedImage, TMovingImage>::GetConfiguration(
+  const size_t index) {
+  return this->m_Configurations[ index ];
+}
+
 
 } // end namespace elastix
 

@@ -206,6 +206,36 @@ void ElastixMain
 
 
 /**
+ * *************** EnterCommandLineArguments *******************
+ */
+
+void ElastixMain
+::EnterCommandLineArguments( ArgumentMapType & argmap,
+  std::vector< ParameterMapType > & inputMaps )
+{
+
+  this->m_Configurations.clear();
+  this->m_Configurations.resize( inputMaps.size() );
+
+  for ( size_t i = 0; i < inputMaps.size(); ++i )
+  {
+    /** Initialize the configuration object with the
+     * command line parameters entered by the user.
+     */
+    this->m_Configurations[ i ] = ConfigurationType::New();
+    int dummy = this->m_Configurations[ i ]->Initialize( argmap , inputMaps[ i ] );
+    if( dummy )
+    {
+      xout["error"] << "ERROR: Something went wrong during initialisation of configuration object " << i << "." << std::endl;
+    }
+  }
+
+  /** Copy last configuration object to m_Configuration. */
+  this->m_Configuration = this->m_Configurations[ inputMaps.size() - 1 ];
+} // end EnterCommandLineArguments()
+
+
+/**
  * **************************** Run *****************************
  *
  * Assuming EnterCommandLineParameters has already been invoked.
@@ -214,6 +244,7 @@ void ElastixMain
 
 int ElastixMain::Run( void )
 {
+
   /** Set process properties. */
   this->SetProcessPriority();
   this->SetMaximumNumberOfThreads();

@@ -347,6 +347,9 @@ public:
   /** Gets transformation parameters map. */
   virtual ParameterMapType GetTransformParametersMap( void ) const = 0;
 
+  /** Set configuration vector. Library only. */
+  virtual void SetConfigurations( std::vector< ConfigurationPointer > & configurations ) = 0;
+
 protected:
 
   ElastixBase();

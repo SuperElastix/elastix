@@ -62,6 +62,7 @@ public:
   //typedefs for parameter map
   typedef itk::ParameterFileParser::ParameterValuesType ParameterValuesType;
   typedef itk::ParameterFileParser::ParameterMapType    ParameterMapType;
+  typedef std::vector< itk::ParameterFileParser::ParameterMapType > ParameterMapListType;
 
   /** Constructor and destructor. */
   TRANSFORMIX();
@@ -74,6 +75,17 @@ public:
    */
   int TransformImage( ImagePointer inputImage,
     ParameterMapType & parameterMap,
+    std::string outputPath,
+    bool performLogging,
+    bool performCout );
+
+  /** Return value: 0 is success in case not 0 an error occurred
+   *    0 = success
+   *    1 = error
+   *   -2 = output folder does not exist
+   */
+  int TransformImage( ImagePointer inputImage,
+    std::vector< ParameterMapType >& parameterMaps,
     std::string outputPath,
     bool performLogging,
     bool performCout );

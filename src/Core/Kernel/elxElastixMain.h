@@ -232,6 +232,9 @@ public:
   virtual void EnterCommandLineArguments( ArgumentMapType & argmap );
   virtual void EnterCommandLineArguments( ArgumentMapType & argmap,
     ParameterMapType & inputMap );
+  // Version used when elastix is used as a library.
+  virtual void EnterCommandLineArguments( ArgumentMapType & argmap,
+    std::vector< ParameterMapType > & inputMaps );
 
   /** Start the registration
    * run() without command line parameters; it assumes that
@@ -290,6 +293,9 @@ protected:
 
   /** The configuration object, containing the parameters and command-line arguments. */
   ConfigurationPointer  m_Configuration;
+
+  /** A vector of configuration objects, needed when transformix is used as library. */
+  std::vector< ConfigurationPointer > m_Configurations;
 
   /** Description of the ImageTypes. */
   PixelTypeDescriptionType    m_FixedImagePixelType;

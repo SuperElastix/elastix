@@ -282,6 +282,16 @@ public:
   /** Get the name of the current transform parameter file. */
   itkGetStringMacro( CurrentTransformParameterFileName );
 
+  /** Set configuration vector. Library only. */
+  virtual void SetConfigurations( std::vector< ConfigurationPointer > & configurations );
+
+  /** Return configuration from vector of configurations. Library only. */
+  virtual ConfigurationPointer GetConfiguration( const size_t index );
+
+  virtual ConfigurationPointer GetConfiguration() {
+    return Superclass2::GetConfiguration();
+  }
+
   /** Get the original direction cosines of the fixed image. Returns
    * false if it failed to determine the orignal fixed image direction. In
    * that case the direction var is left unchanged. If no fixed image is
@@ -311,6 +321,9 @@ protected:
 
   /** Store the CurrentTransformParameterFileName. */
   std::string m_CurrentTransformParameterFileName;
+
+  /** A vector of configuration objects, needed when transformix is used as library. */
+  std::vector< ConfigurationPointer > m_Configurations;
 
   /** Count the number of iterations. */
   unsigned int m_IterationCounter;
@@ -363,7 +376,6 @@ private:
   void operator=( const Self& );  // purposely not implemented
 
   }; // end class ElastixTemplate
-
 
 } // end namespace elastix
 

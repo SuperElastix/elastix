@@ -453,6 +453,19 @@ void TransformBase<TElastix>
   /** Call the function ReadInitialTransformFromFile. */
   if ( fileName != "NoInitialTransform" )
   {
+
+#ifdef _ELASTIX_BUILD_LIBRARY
+
+    /** Get initial transform index number. */
+    std::istringstream to_size_t( fileName );
+    size_t index;
+    to_size_t >> index;
+
+    /** We can safely read the initial transform. */
+    this->ReadInitialTransformFromVector( index );
+
+#else
+
     /** Check if the initial transform of this transform parameter file
      * is not the same as this transform parameter file. Otherwise,
      * we will have an infinite loop.
@@ -470,6 +483,9 @@ void TransformBase<TElastix>
 
     /** We can safely read the initial transform. */
     this->ReadInitialTransformFromFile( fileName.c_str() );
+
+#endif
+
   }
 
   /** Task 3 - Read from the configuration file how to combine the
@@ -504,6 +520,49 @@ void TransformBase<TElastix>
     this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
 
 } // end ReadFromFile()
+
+
+template <class TElastix>
+void TransformBase<TElastix>
+::ReadInitialTransformFromVector( const size_t index ) {
+  /** Retrieve configuration object from internally stored vector of configuration objects. */
+  ConfigurationPointer configurationInitialTransform =
+    this->GetElastix()->GetConfiguration( index );
+ 
+  /** Read the InitialTransform name. */
+  ComponentDescriptionType initialTransformName = "AffineTransform";
+  configurationInitialTransform->ReadParameter(
+    initialTransformName, "Transform", 0 );
+
+  /** Create an InitialTransform. */
+  ObjectType::Pointer initialTransform;
+
+  PtrToCreator testcreator = 0;
+  testcreator = this->GetElastix()->GetComponentDatabase()
+    ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
+  initialTransform = testcreator ? testcreator() : NULL;
+
+  Self * elx_initialTransform = dynamic_cast< Self * >(
+    initialTransform.GetPointer() );
+
+  /** Call the ReadFromFile method of the initialTransform. */
+  if ( elx_initialTransform )
+  {
+    //elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
+    elx_initialTransform->SetElastix( this->GetElastix() );
+    elx_initialTransform->SetConfiguration( configurationInitialTransform );
+    elx_initialTransform->ReadFromFile();
+
+    /** Set initial transform. */
+    InitialTransformType * testPointer =
+      dynamic_cast<InitialTransformType* >( initialTransform.GetPointer() );
+    if ( testPointer )
+    {
+      this->SetInitialTransform( testPointer );
+    }
+
+  } // end if
+} // end ReadInitialTransformFromVector()
 
 
 /**
