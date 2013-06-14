@@ -1192,6 +1192,7 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 template <class TFixedImage, class TMovingImage>
 void ElastixTemplate<TFixedImage, TMovingImage>
 ::SetConfigurations(std::vector< ConfigurationPointer > & configurations ) {
+  this->m_Configurations.clear();
   this->m_Configurations = configurations;
 }
 
