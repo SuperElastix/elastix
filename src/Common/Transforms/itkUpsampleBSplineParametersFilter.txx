@@ -35,7 +35,14 @@ UpsampleBSplineParametersFilter<TArray,TImage>
 ::UpsampleBSplineParametersFilter()
 {
   this->m_BSplineOrder = 3;
-
+  
+  // Initialize grid settings.
+  this->m_CurrentGridOrigin.Fill(0.0);
+  this->m_CurrentGridSpacing.Fill(0.0);
+  this->m_CurrentGridDirection.Fill(0.0);
+  this->m_RequiredGridOrigin.Fill(0.0);
+  this->m_RequiredGridSpacing.Fill(0.0);
+  this->m_RequiredGridDirection.Fill(0.0);
 } // end Constructor()
 
 
