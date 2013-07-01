@@ -2320,7 +2320,8 @@ relatively large, though.
 It can be selected in \elastix\ using \small
 \begin{verbatim}
 (Metric "AnySimilarityMetric" "TransformBendingEnergyPenalty")
-(Metric0Weight 1.0) (Metric1Weight <weight>)
+(Metric0Weight 1.0)
+(Metric1Weight <weight>)
 \end{verbatim}
 \normalsize and has no further parameters.
 
@@ -2334,10 +2335,11 @@ $\mathcal{P}^{\mathrm{rigid}}(\vTm;I_M)$ described in
 (Metric "AnySimilarityMetric" "TransformRigidityPenalty")
 // normal similarity metric parameters
 ...
+// Weights
+(Metric0Weight 1.0)
+(Metric1Weight 0.1)
 
 // Rigidity penalty parameters:
-(RigidityPenaltyWeight 0.1)
-(LinearityConditionWeight 10.0)
 (OrthonormalityConditionWeight 1.0)
 (PropernessConditionWeight 100.0)
 (MovingRigidityImageName "movingRigidityImage.mhd")
@@ -3178,7 +3180,7 @@ third-party license.
 
 Elastix Copyright Notice:
 
-      Copyright (c) 2004-2012 University Medical Center Utrecht
+      Copyright (c) 2004-2013 University Medical Center Utrecht
       All rights reserved.
 
 
