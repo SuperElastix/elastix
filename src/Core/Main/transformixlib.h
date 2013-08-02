@@ -66,7 +66,7 @@ public:
 
   /** Constructor and destructor. */
   TRANSFORMIX();
-  ~TRANSFORMIX();
+  virtual ~TRANSFORMIX();
 
   /** Return value: 0 is success in case not 0 an error occurred
    *    0 = success

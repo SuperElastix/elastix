@@ -68,7 +68,7 @@ public:
    *  Constructor and destructor
    */
   ELASTIX();
-  ~ELASTIX();
+  virtual ~ELASTIX();
 
   /**
    *  The image registration interface functionality
