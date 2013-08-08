@@ -100,9 +100,9 @@ void
 BSplineResampleInterpolator<TElastix>
 ::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
 {
-   std::string parameterName;
-   std::vector< std::string > parameterValues;
-   char tmpValue[ 265 ];
+  std::string parameterName;
+  std::vector< std::string > parameterValues;
+  char tmpValue[ 256 ];
 
   /** Call CreateTransformParametersMap of the ResamplerBase. */
   this->Superclass2::CreateTransformParametersMap( paramsMap );
