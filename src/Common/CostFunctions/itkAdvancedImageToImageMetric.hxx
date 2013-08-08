@@ -69,6 +69,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_MovingImageMinLimit = NumericTraits< MovingImageLimiterOutputType >::Zero;
   this->m_MovingImageMaxLimit = NumericTraits< MovingImageLimiterOutputType >::One;
 
+  this->m_MovingImageDerivativeScales.Fill(1.0);
+
 } // end Constructor
 
 
