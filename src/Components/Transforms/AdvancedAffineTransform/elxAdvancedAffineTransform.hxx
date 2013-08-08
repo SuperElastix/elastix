@@ -148,7 +148,7 @@ AdvancedAffineTransformElastix<TElastix>
 {
   std::string parameterName;
   std::vector< std::string > parameterValues;
-  char tmpValue[ 265 ];
+  char tmpValue[ 256 ];
 
   /** Call the CreateTransformParametersMap from the TransformBase. */
   this->Superclass2::CreateTransformParametersMap( param, paramsMap );
