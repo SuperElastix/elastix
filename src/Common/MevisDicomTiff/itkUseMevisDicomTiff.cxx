@@ -19,12 +19,12 @@
 #include "itkMevisDicomTiffImageIOFactory.h"
 #include "itkObjectFactoryBase.h"
 
-/** Function that registers the Mevis DicomTiff IO factory. 
+/** Function that registers the Mevis DicomTiff IO factory.
  *  Call this in your program, before you load/write any images. */
 void RegisterMevisDicomTiff(void)
 {
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
-  itk::ObjectFactoryBase::RegisterFactory( itk::MevisDicomTiffImageIOFactory::New(), 
+  itk::ObjectFactoryBase::RegisterFactory( itk::MevisDicomTiffImageIOFactory::New(),
     itk::ObjectFactoryBase::INSERT_AT_FRONT );
 #endif
 }

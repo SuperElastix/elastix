@@ -20,7 +20,7 @@
 #pragma warning ( disable : 4786 )
 #endif
 
-/** Function that registers the Mevis DicomTiff IO factory. 
+/** Function that registers the Mevis DicomTiff IO factory.
  *  Call this in your program, before you load/write any images. */
 void RegisterMevisDicomTiff(void);
 
