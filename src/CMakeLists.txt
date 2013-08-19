@@ -6,17 +6,17 @@ CMAKE_POLICY( SET CMP0012 NEW )
 PROJECT( elastix )
 
 #---------------------------------------------------------------------
-# generate executable, static library or dynamic library.
+# Generate executable, static library or dynamic library.
 MARK_AS_ADVANCED( ELASTIX_BUILD_EXECUTABLE )
-OPTION( ELASTIX_BUILD_EXECUTABLE "generate executable or library?" ON )
+OPTION( ELASTIX_BUILD_EXECUTABLE "Generate executable or library?" ON )
 
 IF( NOT ELASTIX_BUILD_EXECUTABLE )
   ADD_DEFINITIONS( -D_ELASTIX_BUILD_LIBRARY )
   MARK_AS_ADVANCED( ELASTIX_BUILD_SHARED_LIBS )
-  OPTION( ELASTIX_BUILD_SHARED_LIBS "build shared libraries?" ON )
+  OPTION( ELASTIX_BUILD_SHARED_LIBS "Build shared libraries?" ON )
   IF( ELASTIX_BUILD_SHARED_LIBS )
     ADD_DEFINITIONS( -D_ELASTIX_BUILD_SHARED_LIBRARY )
-  ENDIF(ELASTIX_BUILD_SHARED_LIBS)
+  ENDIF()
 ENDIF()
 
 
@@ -92,8 +92,8 @@ SET( ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH
 #---------------------------------------------------------------------
 # elastix depends on some ITK settings
 
-IF( NOT ITK_USE_REVIEW )
-  message( SEND_ERROR "ITK_USE_REVIEW has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
+IF( NOT Module_ITKReview )
+  message( SEND_ERROR "Module_ITKReview has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
 ENDIF()
 
 #---------------------------------------------------------------------
@@ -469,5 +469,4 @@ SET( elxUSE_FILE ${elastix_BINARY_DIR}/UseElastix.cmake )
 # Create the use file.
 CONFIGURE_FILE( ${elastix_SOURCE_DIR}/UseElastix.cmake.in
  ${elxUSE_FILE} @ONLY )
-
 
