@@ -194,6 +194,7 @@ foreach( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
 
   foreach( userComponent ${listOfUserComponents} )
 
+    # Get the path name
     get_filename_component( path_to_comp ${userComponent} PATH )
 
     # Read project name from cmakelists.txt
@@ -210,9 +211,8 @@ foreach( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
       "^[ \t]*[Aa][Dd][Dd]_[Ee][Ll][Xx][Cc][Oo][Mm][Pp][Oo][Nn][Ee][Nn][Tt][ \t]*[(][ \t]*([^ #\t()]+).*"
       "\\1" componentName "${addElxComponentLine}")
 
+    # Process the current component
     if( NOT "${componentName}" STREQUAL "" )
-      message( STATUS "Found user component: ${componentName}" )
-
       # For non-subdirectories, the binarydir should be specified.
       # We use the name of the component for that.
       set( binaryDir "${elastix_BINARY_DIR}/UserComponents/${componentName}" )
@@ -222,6 +222,7 @@ foreach( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
       string( REGEX REPLACE "${ELASTIX_USER_COMPONENT_DIRS}/" "" relative_path_to_comp ${path_to_comp} )
       add_subdirectory( ${path_to_comp} ${binaryDir} )
 
+      message( STATUS "Found user component: ${relative_path_to_comp}" )
     else()
       message( STATUS "No user component definition found in: ${userComponent}" )
     endif()
