@@ -92,7 +92,7 @@ SET( ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH
 #---------------------------------------------------------------------
 # elastix depends on some ITK settings
 
-IF( NOT Module_ITKReview )
+IF( NOT ITKReview_LOADED )
   message( SEND_ERROR "Module_ITKReview has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
 ENDIF()
 
