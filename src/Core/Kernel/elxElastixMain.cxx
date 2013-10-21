@@ -172,6 +172,7 @@ ElastixMain::~ElastixMain()
 void ElastixMain
 ::EnterCommandLineArguments( ArgumentMapType & argmap )
 {
+
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
    */
@@ -213,7 +214,6 @@ void ElastixMain
 ::EnterCommandLineArguments( ArgumentMapType & argmap,
   std::vector< ParameterMapType > & inputMaps )
 {
-
   this->m_Configurations.clear();
   this->m_Configurations.resize( inputMaps.size() );
 
@@ -548,7 +548,7 @@ int ElastixMain::InitDBIndex( void )
 
 #else
       this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
-        "FixedImageDimension", 0, false );
+        "MovingImageDimension", 0, false );
 #endif
 
       /** Just a sanity check, probably not needed. */
@@ -930,7 +930,7 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
  * ******************** GetTransformParametersMap ********************
  */
 
-itk::ParameterMapInterface::ParameterMapType //using ParameterMapType does not compile, why?
+ElastixMain::ParameterMapType
 ElastixMain::GetTransformParametersMap( void ) const
 {
   return this->m_TransformParametersMap;

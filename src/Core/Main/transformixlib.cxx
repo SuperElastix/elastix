@@ -167,7 +167,6 @@ TRANSFORMIX::TransformImage(
   /** The argv0 argument, required for finding the component.dll/so's. */
   argMap.insert( ArgumentMapEntryType( "-argv0", "transformix" ) );
 
-
   /** Setup xout. */
   int returndummy2 = elx::xoutSetup( logFileName.c_str() , performLogging , performCout );
   if( returndummy2 && performCout )
@@ -192,16 +191,16 @@ TRANSFORMIX::TransformImage(
 
   /** Set transformix. */
   transformix = TransformixMainType::New();
-
+  
   /** Set stuff from input or needed for output */
   movingImageContainer = DataObjectContainerType::New();
   movingImageContainer->CreateElementAt( 0 ) = inputImage;
   transformix->SetMovingImageContainer( movingImageContainer );
   transformix->SetResultImageContainer( resultImageContainer );
-
+  
   /** Run transformix. */
   returndummy = transformix->Run( argMap, parameterMaps );
-
+  
   /** Check if transformix run without errors. */
   if ( returndummy != 0 )
   {
@@ -243,7 +242,7 @@ TRANSFORMIX::TransformImage(
   bool performCout )
 {
 
-  // Transform single parameter map to a one-sized vector of parametermaps and call other
+  // Transform single parameter map to a one-sized vector of parameter maps and call other
   // transform method.
   std::vector< ParameterMapType > parameterMaps;
   parameterMaps.push_back( parameterMap );
