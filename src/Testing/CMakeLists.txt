@@ -109,7 +109,7 @@ elseif( SITE STREQUAL "BIGR.cluster"
 endif()
 
 if( knownChecksumSystem )
-  message( STATUS "Checksum baseline file: "${checksumBaselineFile} )
+  message( STATUS "Checksum baseline file:" ${checksumBaselineFile} )
 endif()
 
 # Python script used for comparing elastix output with baseline strings
