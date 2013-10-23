@@ -210,14 +210,28 @@ void MultiBSplineTransformWithNormal<TElastix>
     this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
 
   /** Set up grid schedule computer with image info. */
-  this->m_GridScheduleComputer->SetImageOrigin(
-    this->GetElastix()->GetFixedImage()->GetOrigin() );
-  this->m_GridScheduleComputer->SetImageSpacing(
-    this->GetElastix()->GetFixedImage()->GetSpacing() );
-  this->m_GridScheduleComputer->SetImageDirection(
-    this->GetElastix()->GetFixedImage()->GetDirection() );
-  this->m_GridScheduleComputer->SetImageRegion(
-    this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
+  if (this->GetElastix()->GetFixedMask())
+  {
+    this->m_GridScheduleComputer->SetImageOrigin(
+        this->GetElastix()->GetFixedMask()->GetOrigin() );
+    this->m_GridScheduleComputer->SetImageSpacing(
+        this->GetElastix()->GetFixedMask()->GetSpacing() );
+    this->m_GridScheduleComputer->SetImageDirection(
+        this->GetElastix()->GetFixedMask()->GetDirection() );
+    this->m_GridScheduleComputer->SetImageRegion(
+        this->GetElastix()->GetFixedMask()->GetLargestPossibleRegion() );
+  }
+  else
+  {
+    this->m_GridScheduleComputer->SetImageOrigin(
+        this->GetElastix()->GetFixedImage()->GetOrigin() );
+    this->m_GridScheduleComputer->SetImageSpacing(
+        this->GetElastix()->GetFixedImage()->GetSpacing() );
+    this->m_GridScheduleComputer->SetImageDirection(
+        this->GetElastix()->GetFixedImage()->GetDirection() );
+    this->m_GridScheduleComputer->SetImageRegion(
+        this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
+  }
 
   /** Take the initial transform only into account, if composition is used. */
   if ( this->GetUseComposition() )
