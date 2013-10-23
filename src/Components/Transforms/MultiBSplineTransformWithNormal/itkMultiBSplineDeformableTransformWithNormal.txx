@@ -64,7 +64,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 ::GetNumberOfParameters(void) const
 {
   if (m_NbLabels > 0)
-    return (1 + 2 * m_NbLabels) * m_Trans[0]->GetNumberOfParametersPerDimension();
+    return (1 + (SpaceDimension - 1) * m_NbLabels) * m_Trans[0]->GetNumberOfParametersPerDimension();
   else
     return 0;
 }

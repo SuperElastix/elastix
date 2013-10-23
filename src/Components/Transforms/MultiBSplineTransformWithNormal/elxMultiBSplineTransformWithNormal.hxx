@@ -548,8 +548,8 @@ void MultiBSplineTransformWithNormal<TElastix>
       {
         upsampledParameters.SetElement( i, tmp[0] );
       }
-      upsampledParameters.SetElement( i + (2 * l - 1) * new_ParametersPerDimension, tmp[1] );
-      upsampledParameters.SetElement( i + 2 * l * new_ParametersPerDimension, tmp[2] );
+      for (unsigned int k = 0; k < (SpaceDimension - 1); k++)
+      upsampledParameters.SetElement( i + ((SpaceDimension - 1) * (l - 1) + 1 + k) * new_ParametersPerDimension, tmp[k + 1] );
     }
   }
 
