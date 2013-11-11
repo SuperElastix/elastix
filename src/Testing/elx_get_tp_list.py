@@ -32,7 +32,7 @@ def main():
       parser.error( "The option output directory (-o) should be given" )
 
     if not os.path.exists( options.outputDirectory ) :
-      print "The output directory %s does not exist. Create it before running" % options.outputDirectory
+      print( "The output directory ", options.outputDirectory," does not exist. Create it before running" )
 
     # Convert string -l to list
     dirList = options.directoryList.split( ' ' )
@@ -51,7 +51,7 @@ def main():
       dir_part = dir_part.replace( "elastix_run_", "", 1 )
       outputFileName = "TransformParameters_" + dir_part + ".txt"
       outputFileName = os.path.join( options.outputDirectory, outputFileName )
-      print outputFileName
+      print( outputFileName );
 
       # Copy the results as the new baselines
       shutil.copy( inputFileName, outputFileName )

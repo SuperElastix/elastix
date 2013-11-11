@@ -81,21 +81,21 @@ def main() :
       testChecksum = "not found";
 
     # Print result
-    print "The registration result checksum is: %s" % testChecksum
-    print "The baseline checksum is: %s" % baselineChecksum
+    print( "The registration result checksum is: ", testChecksum )
+    print( "The baseline checksum is: ", baselineChecksum )
 
     if baselineChecksum != testChecksum:
-      print "FAILURE: These values are NOT the same.\n"
+      print( "FAILURE: These values are NOT the same.\n" )
       if options.verbose:
-        print "Complete elastix.log file:\n"
+        print( "Complete elastix.log file:\n" )
         f.seek(0,0)
         for line in f:
-          print "%s" % line,
+          print( line )
       f.close();
       return 1
 
     f.close();
-    print "SUCCESS: These values are the same."
+    print( "SUCCESS: These values are the same." )
     return 0
 
 #-------------------------------------------------------------------------------

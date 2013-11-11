@@ -29,7 +29,7 @@ def main():
     # Add everything not processed
     dirList.extend( args );
 
-    print "directory checksum"
+    print( "directory checksum" )
     for directory in dirList:
       # Equivalent to: fileName = options.directory + "/" + "elastix.log"
       fileName = os.path.join( directory, "elastix.log" );
@@ -38,7 +38,7 @@ def main():
       try:
         f = open( fileName )
       except IOError as e:
-        print "%s No elastix.log found" % directory
+        print( directory, " No elastix.log found" )
         continue
 
       checksumFound = False;
@@ -52,9 +52,9 @@ def main():
         checksum = checksumline.split(': ')[1].rstrip( "\n" );
 
         # Print result
-        print "%s %s" % (directory, checksum)
+        print( directory, " ", checksum )
       else:
-        print "%s -" % directory
+        print( directory, " -" )
 
       f.close();
 

@@ -42,10 +42,10 @@ def main():
 
     # Sanity check
     if latestFile == "":
-      print "ERROR: no IterationInfo files found in '%s'" % options.directory
+      print( "ERROR: no IterationInfo files found in '", options.directory, "'" )
       return 1
 
-    print "The latest iteration file is '%s'" % latestFile
+    print( "The latest iteration file is '", latestFile, "'" )
 
     # Read last line of IterationInfo file
     fileName = options.directory + "/" + latestFile
@@ -56,8 +56,8 @@ def main():
 
     # Split the last line and the baseline
     lastLine = lastLine.rstrip( "\n" )
-    print "The final registration result has values:\n'%s'" % lastLine
-    print "The baseline values are:\n'%s'" % options.baseline
+    print( "The final registration result has values:\n'", lastLine, "'" )
+    print( "The baseline values are:\n'", options.baseline, "'" )
 
     lastLineValues = lastLine.replace('\t', ' ').replace('\n', ' ').replace('\r', ' ')
     lastLineValues = lastLineValues.split(' ')
@@ -76,12 +76,12 @@ def main():
         fValueLastLine = float( lastLineValues[ index ] )
 
         if fValueBaseline != fValueLastLine:
-            print "ERROR: These lines are NOT the same"
+            print( "ERROR: These lines are NOT the same" )
             return 1;
 
         index = index + 1
 
-    print "SUCCESS: These lines are the same"
+    print( "SUCCESS: These lines are the same" )
     return 0
 
 #-------------------------------------------------------------------------------
