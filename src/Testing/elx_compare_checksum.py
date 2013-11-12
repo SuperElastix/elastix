@@ -56,7 +56,7 @@ def main() :
         else :
           baselineChecksum = "not found";
       else :
-        print "ERROR: the checksum baseline file %s does not exist!" % options.baselineFile
+        print( "ERROR: the checksum baseline file ", options.baselineFile, " does not exist!" );
         return 1
     else :
       baselineChecksum = options.baseline;
