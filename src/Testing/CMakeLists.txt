@@ -114,8 +114,9 @@ endif()
 
 # Python script used for comparing elastix output with baseline results
 set( pythonfinalmetric ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
-set( pythonchecksum ${elastix_SOURCE_DIR}/Testing/elx_compare_checksum.py )
-set( pythonoverlap ${elastix_SOURCE_DIR}/Testing/elx_compare_overlap.py )
+set( pythonchecksum   ${elastix_SOURCE_DIR}/Testing/elx_compare_checksum.py )
+set( pythonoverlap    ${elastix_SOURCE_DIR}/Testing/elx_compare_overlap.py )
+set( pythonlandmarks  ${elastix_SOURCE_DIR}/Testing/elx_compare_landmarks.py )
 
 # Helper macro
 macro( list_count listvar value count )
@@ -175,6 +176,7 @@ macro( elx_add_run_test testbasename howtocompare baseline )
   list( FIND compareaslist "METRICVALUE" compare_metricvalue )
   list( FIND compareaslist "CHECKSUM"    compare_checksum )
   list( FIND compareaslist "OVERLAP"     compare_overlap )
+  list( FIND compareaslist "LANDMARKS"   compare_landmarks )
 
   # Compare elastix output image with baseline image
   if( NOT ${compare_image} EQUAL -1 )
@@ -233,6 +235,19 @@ macro( elx_add_run_test testbasename howtocompare baseline )
         COMMAND ${python_executable} ${pythonoverlap}
         -b ${baselineTP} -d ${output_dir} -m ${TestDataDir}/3DCT_lung_followup_mask.mha )
       set_tests_properties( ${testname}_COMPARE_OVERLAP
+        PROPERTIES DEPENDS  ${testname}_OUTPUT )
+    endif()
+  endif()
+
+  # Compare elastix output using landmark distance
+  if( NOT ${compare_landmarks} EQUAL -1 )
+    # Only run when python was found
+    if( python_executable )
+      add_test( NAME ${testname}_COMPARE_LANDMARKS
+        CONFIGURATIONS Release
+        COMMAND ${python_executable} ${pythonlandmarks}
+        -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt )
+      set_tests_properties( ${testname}_COMPARE_LANDMARKS
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif()
   endif()
@@ -325,7 +340,7 @@ elx_add_run_test( example
 
 # Run 3D registration with a 'common' parameter file:
 elx_add_run_test( 3DCT_lung.example
-  "IMAGE;OVERLAP" ${TestBaselineDir}/3DCT_lung.mha
+  "IMAGE;OVERLAP;LANDMARKS" ${TestBaselineDir}/3DCT_lung.mha
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -333,47 +348,41 @@ elx_add_run_test( 3DCT_lung.example
 
 # Test some transforms
 elx_add_run_test( 3DCT_lung.NC.translation.ASGD.001
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.translation.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.euler.ASGD.001
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.euler.ASGD.001.txt )
 
 # temporarily keep this test:
 elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001metric
-  "METRICVALUE;CHECKSUM;OVERLAP" "499 -0.935885 130.979467 6.349671 0.004575 x"
+  "METRICVALUE;CHECKSUM;OVERLAP;LANDMARKS" "499 -0.935885 130.979467 6.349671 0.004575 x"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
 
-#elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001checksum
-#  "CHECKSUM;OVERLAP" "auto"
-#  -f ${TestDataDir}/3DCT_lung_baseline.mha
-#  -m ${TestDataDir}/3DCT_lung_followup.mha
-#  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
-
 # Test some metrics
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.ASGD.001
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NMI.bspline.ASGD.001
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -381,7 +390,7 @@ elx_add_run_test( 3DCT_lung.NMI.bspline.ASGD.001
 
 # Test some combo metrics
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.002
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -fp ${TestDataDir}/3DCT_lung_baseline.txt
@@ -390,14 +399,14 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.002
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.003
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.003.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -407,7 +416,7 @@ configure_file(
   ${TestDataDir}/parameters.3D.NC.bspline.ASGD.004b.txt.in
   ${TestOutputDir}/parameters.3D.NC.bspline.ASGD.004b.txt @ONLY )
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004b
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -415,14 +424,14 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004b
 
 # Test some optimizers
 elx_add_run_test( 3DCT_lung.NC.bspline.SGD.001
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.QN.001
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -430,28 +439,28 @@ elx_add_run_test( 3DCT_lung.NC.bspline.QN.001
 
 # Test some samplers
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.002
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.003
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.003.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -fMask ${TestDataDir}/3DCT_lung_baseline_mask.mha
@@ -460,14 +469,14 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
 
 # Test some interpolators
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.002
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -478,28 +487,28 @@ elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
 ### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES
 # Checksums defined on windows 64 bit machine LKEB PC Marius
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001b
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001b.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001c
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001c.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
-  "CHECKSUM;OVERLAP" "auto"
+  "CHECKSUM;OVERLAP;LANDMARKS" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
