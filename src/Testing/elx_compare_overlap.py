@@ -93,7 +93,13 @@ def main():
   subprocess.call( [ "pxcastconvert", "-in", seg, "-out", seg_defb ], stdout=subprocess.PIPE );
 
   # Compute the overlap between baseline segmentation and deformed moving segmentation
-  outputAsString = subprocess.check_output( [ "pxcomputeoverlap", "-in", seg_defm, seg_defb ] ).decode("utf-8");
+  try :
+    # This will work from python 2.7 on
+    outputAsString = subprocess.check_output( [ "pxcomputeoverlap", "-in", seg_defm, seg_defb ] ).decode("utf-8");
+  except :
+    # Workaround for python 2.6 and lower. For MacMini specifically.
+    outputAsString = subprocess.Popen( [ "pxcomputeoverlap", "-in", seg_defm, seg_defb ], stdout=subprocess.PIPE ).communicate()[0].decode("utf-8");
+  #outputAsString = subprocess.check_output( [ "pxcomputeoverlap", "-in", seg_defm, seg_defb ] ).decode("utf-8");
   overlap = outputAsString[ outputAsString.find( "Overlap" ) : ].strip( "Overlap: " );
 
   # Report
