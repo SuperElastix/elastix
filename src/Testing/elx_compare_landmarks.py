@@ -32,8 +32,6 @@ def main():
   if options.btp == None :
     parser.error( "The option directory (-b) should be given" );
 
-  # Get the moving image mask
-
   # Get the transform parameters files
   tpFileName   = os.path.join( options.directory, "TransformParameters.0.txt" );
   tpFileName_b = options.btp;
@@ -42,6 +40,17 @@ def main():
   if not os.path.exists( tpFileName ) :
     print( "ERROR: the file " + tpFileName + " does not exist" );
     return 1;
+
+  # Below we use external programs. We have to make sure that python is able to find them.
+  # Under Windows we call this script using the Task Scheduler, which honours the system path.
+  # So, as long as transformix, etc is in the path all is fine.
+  # Under Linux we call this script using crontab, which only has a minimal environment, i.e.
+  # transformix is not in the path and can therefore not be found.
+  # To make sure it is found we add paths. To make sure this script also works for other machines,
+  # add the correct paths manually. Non-existing paths are automatically ignored.
+  _path = os.getenv('PATH') + os.pathsep + "/home/marius/install/bin";
+  #_path += os.pathsep + "your_path"; # Add your own path here
+  os.environ['PATH'] = _path;
 
   #
   # Transform the fixed image landmarks by the current result
