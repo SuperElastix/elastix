@@ -86,13 +86,16 @@ def main():
   f1.close(); f2.close();
 
   # Compute the distance between transformed landmarks
-  f1 = open( landmarks1, 'r' ); f2 = open( landmarks2, 'r' ); distance = 0.0;
+  f1 = open( landmarks1, 'r' ); f2 = open( landmarks2, 'r' );
+  meanDistance = 0.0; maxDistance = 0.0;
   for line1, line2 in zip( f1, f2 ) :
     floats1 = [ float(x) for x in line1.split() ];
     floats2 = [ float(x) for x in line2.split() ];
     diffSquared = [ (m - n) * (m - n) for m, n in zip( floats1, floats2 ) ];
-    distance = distance + math.sqrt( sum( diffSquared ) );
-  meandistance = distance / 100.0;
+    distance = math.sqrt( sum( diffSquared ) );
+    meanDistance = meanDistance + distance;
+    maxDistance = max( maxDistance, distance );
+  meanDistance = meanDistance / 100.0;
 
   # With numpy it would be:
   #l1 = numpy.loadtxt( landmarks1 );
@@ -100,8 +103,9 @@ def main():
   #meandistance = numpy.mean( numpy.sum( (l1-l2)**2, axis=-1)**0.5 );
 
   # Report
-  print( "The mean landmark distance between current and baseline is " + "{0:.3f}".format( meandistance ) + " mm" );
-  if meandistance < 1.0 :
+  print( "The mean landmark distance between current and baseline is " + "{0:.3f}".format( meanDistance ) + " mm" );
+  print( "The max  landmark distance between current and baseline is " + "{0:.3f}".format( maxDistance  ) + " mm" );
+  if meanDistance < 1.0 :
     print( "SUCCESS: mean landmark distance is lower than 1.0 mm" );
     return 0;
   else :
