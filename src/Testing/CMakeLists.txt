@@ -393,6 +393,13 @@ elx_add_run_test( 3DCT_lung.NMI.bspline.ASGD.001
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NMI.bspline.ASGD.001.txt )
 
+elx_add_run_test( 3DCT_lung.Kappa.bspline.ASGD.001
+  "CHECKSUM"
+  -f ${TestDataDir}/3DCT_lung_baseline_mask.mha
+  -m ${TestDataDir}/3DCT_lung_followup_mask.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.Kappa.bspline.ASGD.001.txt )
+
 # Test some combo metrics
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.002
   "CHECKSUM;OVERLAP;LANDMARKS"
