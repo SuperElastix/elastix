@@ -18,14 +18,13 @@
 
 # Client maintainer: m.staring@lumc.nl
 set( CTEST_SITE "LKEB.goliath" )
-set( CTEST_BUILD_NAME "Linux-clang3.3-Release-perf" )
+set( CTEST_BUILD_NAME "Linux-clang3.3-Release" )
 set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
 set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix-perf" )
+set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix" )
 set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_release_clang )
-set( dashboard_url "https://svn.bigr.nl/elastix/branches/performance_ITK4" )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
