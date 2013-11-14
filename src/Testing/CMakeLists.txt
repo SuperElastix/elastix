@@ -131,11 +131,21 @@ macro( list_count listvar value count )
 endmacro()
 
 # Main elastix_run add_test macro
-macro( elx_add_run_test testbasename howtocompare baseline )
+macro( elx_add_run_test testbasename howtocompare )
   # Create output directory
   set( testname elastix_run_${testbasename} )
   set( output_dir ${TestOutputDir}/${testname} )
   file( MAKE_DIRECTORY ${output_dir} )
+
+  # ${ARGN} may be the elastix command line arguments, but also
+  # an optional baseline value followed by those arguments.
+  set( baseline ${ARGV2} )
+  set( elastixargs ${ARGN} )
+  string( SUBSTRING ${baseline} 0 1 firstelement )
+  string( COMPARE EQUAL ${firstelement} "-" firstelementisdash )
+  if( NOT ${firstelementisdash} )
+    list( REMOVE_AT elastixargs 0 )
+  endif()
 
   # Number of -p's to deduce result.?.mhd
   list_count( "${ARGN}" "-p" countp )
@@ -146,8 +156,7 @@ macro( elx_add_run_test testbasename howtocompare baseline )
   add_test( NAME ${testname}_OUTPUT
     CONFIGURATIONS Release
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
-    ${ARGN}
-    -out ${output_dir} )
+    ${elastixargs} -out ${output_dir} )
   set_tests_properties( ${testname}_OUTPUT
     PROPERTIES TIMEOUT 600 )
 
@@ -168,6 +177,12 @@ macro( elx_add_run_test testbasename howtocompare baseline )
         set( baselineTP ${TestBaselineDir}/TransformParameters_${SITE}_${testbasename}.txt )
       endif()
     endif()
+  endif()
+
+  # Thread tests should use the original TransformParameters file as a baseline
+  string( FIND ${testbasename} "Threads" found )
+  if( NOT found EQUAL -1 )
+    string( REGEX REPLACE "(-Threads[0-9]+)" "" baselineTP ${baselineTP} )
   endif()
 
   # Check which tests have to be run
@@ -351,7 +366,7 @@ elx_add_run_test( 3DCT_lung.NC.euler.ASGD.001
   -p ${TestDataDir}/parameters.3D.NC.euler.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001
-  "METRICVALUE;CHECKSUM;OVERLAP;LANDMARKS" "499 -0.935885 130.979467 6.349671 0.004575 x"
+  "CHECKSUM;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
@@ -472,6 +487,74 @@ elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.003.txt )
 
+# Test multi-threading effects for SSD
+elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001-Threads1
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -threads 1 )
+elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001-Threads2
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -threads 2 )
+elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001-Threads4
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -threads 4 )
+
+# Test multi-threading effects for NC
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a-Threads1
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -threads 1 )
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a-Threads2
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -threads 2 )
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a-Threads4
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -threads 4 )
+
+# Test multi-threading effects for MI
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads1
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -threads 1 )
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads2
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -threads 2 )
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads4
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -threads 4 )
 
 
 ### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES

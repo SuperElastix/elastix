@@ -714,7 +714,7 @@ void ElastixTemplate<TFixedImage, TMovingImage>
   /** Time in this iteration. */
   this->m_IterationTimer->StopTimer();
   xout["iteration"]["Time[ms]"]
-    << static_cast<unsigned long>( this->m_IterationTimer->GetElapsedClockSec() *1000 );
+    << static_cast<unsigned long>( this->m_IterationTimer->GetElapsedClockSec() * 1000 );
 
   /** Write the iteration info of this iteration. */
   xout["iteration"].WriteBufferedData();
@@ -1191,7 +1191,8 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 
 template <class TFixedImage, class TMovingImage>
 void ElastixTemplate<TFixedImage, TMovingImage>
-::SetConfigurations(std::vector< ConfigurationPointer > & configurations ) {
+::SetConfigurations( std::vector< ConfigurationPointer > & configurations )
+{
   this->m_Configurations.clear();
   this->m_Configurations = configurations;
 }
@@ -1200,10 +1201,11 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 /**
  * ************** GetConfiguration *********************
  */
+
 template <class TFixedImage, class TMovingImage>
 typename ElastixTemplate<TFixedImage, TMovingImage>::ConfigurationPointer
-ElastixTemplate<TFixedImage, TMovingImage>::GetConfiguration(
-  const size_t index) {
+ElastixTemplate<TFixedImage, TMovingImage>::GetConfiguration( const size_t index )
+{
   return this->m_Configurations[ index ];
 }
 

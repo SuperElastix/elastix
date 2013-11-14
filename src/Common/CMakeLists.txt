@@ -23,6 +23,8 @@ ENDIF()
 SET( CommonFiles
   elxTimer.cxx
   elxTimer.h
+  itkAdvancedLinearInterpolateImageFunction.h
+  itkAdvancedLinearInterpolateImageFunction.hxx
   itkAdvancedRayCastInterpolateImageFunction.h
   itkAdvancedRayCastInterpolateImageFunction.txx
   itkGenericMultiResolutionPyramidImageFilter.h

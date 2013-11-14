@@ -178,7 +178,7 @@ ScaledSingleValuedNonLinearOptimizer
 ::SetScaledCurrentPosition( const ParametersType & parameters )
 {
   itkDebugMacro( "setting scaled current position to " << parameters );
-  this->m_ScaledCurrentPosition = parameters;
+  this->m_ScaledCurrentPosition = parameters;// slow copy
   this->Modified();
 
 } // end SetScaledCurrentPosition()

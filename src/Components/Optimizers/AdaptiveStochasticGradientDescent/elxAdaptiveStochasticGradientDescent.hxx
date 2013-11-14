@@ -11,24 +11,20 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdaptiveStochasticGradientDescent_hxx
 #define __elxAdaptiveStochasticGradientDescent_hxx
 
 #include "elxAdaptiveStochasticGradientDescent.h"
+
 #include <iomanip>
 #include <string>
 #include <vector>
 #include <sstream>
 #include <algorithm>
 #include <utility>
-#include "vnl/vnl_math.h"
-#include "vnl/vnl_fastops.h"
-#include "vnl/vnl_diag_matrix.h"
-#include "vnl/vnl_sparse_matrix.h"
-#include "vnl/vnl_matlab_filewrite.h"
 #include "itkAdvancedImageToImageMetric.h"
 #include "elxTimer.h"
+
 
 namespace elastix
 {
@@ -57,6 +53,9 @@ AdaptiveStochasticGradientDescent<TElastix>
   this->m_RandomGenerator = RandomGeneratorType::GetInstance();
   this->m_AdvancedTransform = 0;
 
+  this->m_UseNoiseCompensation = true;
+  this->m_OriginalButSigmoidToDefault = false;
+
 } // Constructor
 
 
@@ -82,6 +81,26 @@ AdaptiveStochasticGradientDescent<TElastix>
   xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
 
   this->m_SettingsVector.clear();
+
+  /** Temporary?: Use the multi-threaded version or not. Default true. */
+  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mto" ); // mto: multi-threaded optimizers
+  if( tmp == "true" || tmp == "" )
+  {
+    this->SetUseMultiThread( true );
+    std::string tmp2 = this->m_Configuration->GetCommandLineArgument( "-threads" );
+    unsigned int nrOfThreads = atoi( tmp2.c_str() );
+    if ( tmp2 != "" )
+    {
+      this->SetNumberOfThreads( nrOfThreads );
+    }
+  }
+  else this->SetUseMultiThread( false );
+
+  // Use eigen or openmp for multi-threading? Default false = use itk threads.
+  tmp = this->m_Configuration->GetCommandLineArgument( "-useEigen" );
+  if ( tmp == "true" ) this->SetUseEigen( true );
+  tmp = this->m_Configuration->GetCommandLineArgument( "-useOpenMP" );
+  if ( tmp == "true" ) this->SetUseOpenMP( true );
 
 } // end BeforeRegistration()
 
@@ -273,7 +292,15 @@ AdaptiveStochasticGradientDescent<TElastix>
   xl::xout["iteration"]["2:Metric"] << this->GetValue();
   xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
   xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate();
-  xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
+  bool asFastAsPossible = false;
+  if ( asFastAsPossible )
+  {
+    xl::xout["iteration"]["4:||Gradient||"] << "---";
+  }
+  else
+  {
+    xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
+  }
 
   /** Select new spatial samples for the computation of the metric. */
   if ( this->GetNewSamplesEveryIteration() )
@@ -466,8 +493,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 
 /**
  * ******************* AutomaticParameterEstimation **********************
- * Estimates some reasonable values for the parameters
- * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and SigmoidScale.
+ * Select different method to estimate some reasonable values for the parameters
  */
 
 template <class TElastix>
@@ -477,14 +503,57 @@ AdaptiveStochasticGradientDescent<TElastix>
 {
   /** Setup timers. */
   tmr::Timer::Pointer timer1 = tmr::Timer::New();
-  tmr::Timer::Pointer timer2 = tmr::Timer::New();
-  tmr::Timer::Pointer timer3 = tmr::Timer::New();
 
   /** Total time. */
   timer1->StartTimer();
   elxout << "Starting automatic parameter estimation for "
     << this->elxGetClassName()
     << " ..." << std::endl;
+
+  /** Decide which method is to be used. */
+  std::string asgdParameterEstimationMethod = "Original";
+  this->GetConfiguration()->ReadParameter( asgdParameterEstimationMethod,
+    "ASGDParameterEstimationMethod", this->GetComponentLabel(), 0, 0 );
+
+  /** Perform automatic optimizer parameter estimation by the desired method. */
+  if( asgdParameterEstimationMethod == "Original" )
+  {
+    /** Original ASGD estimation method. */
+    this->m_OriginalButSigmoidToDefault = false;
+    this->AutomaticParameterEstimationOriginal();
+  }
+  else if( asgdParameterEstimationMethod == "OriginalButSigmoidToDefault" )
+  {
+    /** Original ASGD estimation method, but keeping the sigmoid parameters fixed. */
+    this->m_OriginalButSigmoidToDefault = true;
+    this->AutomaticParameterEstimationOriginal();
+  }
+  else if( asgdParameterEstimationMethod == "DisplacementDistribution" )
+  {
+    /** Accelerated parameter estimation method. */
+    this->AutomaticParameterEstimationUsingDisplacementDistribution();
+  }
+
+  /** Print the elapsed time. */
+  timer1->StopTimer();
+  elxout << "Automatic parameter estimation took "
+    << timer1->PrintElapsedTimeDHMS()
+    << std::endl;
+
+} // end AutomaticParameterEstimation()
+
+
+/**
+ * ******************* AutomaticParameterEstimationOriginal **********************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::AutomaticParameterEstimationOriginal( void )
+{
+  tmr::Timer::Pointer timer2 = tmr::Timer::New();
+  tmr::Timer::Pointer timer3 = tmr::Timer::New();
 
   /** Get the user input. */
   const double delta = this->GetMaximumStepLength();
@@ -494,8 +563,50 @@ AdaptiveStochasticGradientDescent<TElastix>
   double TrCC = 0.0;
   double maxJJ = 0.0;
   double maxJCJ = 0.0;
+
+  /** Get current position to start the parameter estimation. */
+  this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
+    this->GetCurrentPosition() );
+
+  /** Cast to advanced metric type. */
+  typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
+  MetricType * testPtr = dynamic_cast<MetricType *>(
+    this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
+  if( !testPtr )
+  {
+    itkExceptionMacro( << "ERROR: AdaptiveStochasticGradientDescent expects "
+      << "the metric to be of type AdvancedImageToImageMetric!" );
+  }
+
+  /** Construct computeJacobianTerms to initialize the parameter estimation. */
+  typename ComputeJacobianTermsType::Pointer computeJacobianTerms = ComputeJacobianTermsType::New();
+  computeJacobianTerms->SetFixedImage( testPtr->GetFixedImage() );
+  computeJacobianTerms->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
+  computeJacobianTerms->SetFixedImageMask( testPtr->GetFixedImageMask() );
+  computeJacobianTerms->SetTransform(
+    this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+  computeJacobianTerms->SetMaxBandCovSize( this->m_MaxBandCovSize );
+  computeJacobianTerms->SetNumberOfBandStructureSamples(
+    this->m_NumberOfBandStructureSamples );
+  computeJacobianTerms->SetNumberOfJacobianMeasurements(
+    this->m_NumberOfJacobianMeasurements );
+
+  /** Check if use scales. */
+  bool useScales = this->GetUseScales();
+  if( useScales )
+  {
+    computeJacobianTerms->SetScales( this->m_ScaledCostFunction->GetScales() );
+    computeJacobianTerms->SetUseScales( true );
+  }
+  else
+  {
+    computeJacobianTerms->SetUseScales( false );
+  }
+
+  /** Compute the Jacobian terms. */
+  elxout << "  Computing JacobianTerms ..." << std::endl;
   timer2->StartTimer();
-  this->ComputeJacobianTerms( TrC, TrCC, maxJJ, maxJCJ );
+  computeJacobianTerms->ComputeParameters( TrC, TrCC, maxJJ, maxJCJ );
   timer2->StopTimer();
   elxout << "  Computing the Jacobian terms took "
     << timer2->PrintElapsedTimeDHMS()
@@ -510,10 +621,10 @@ AdaptiveStochasticGradientDescent<TElastix>
    * We enforce a minimum of 2.
    */
   timer3->StartTimer();
-  if ( this->m_NumberOfGradientMeasurements == 0 )
+  if( this->m_NumberOfGradientMeasurements == 0 )
   {
     const double K = 1.5;
-    if ( TrCC > 1e-14 && TrC > 1e-14 )
+    if( TrCC > 1e-14 && TrC > 1e-14 )
     {
       this->m_NumberOfGradientMeasurements = static_cast<unsigned int>(
         vcl_ceil( 8.0 * TrCC / TrC / TrC / (K-1) / (K-1) ) );
@@ -534,7 +645,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   double sigma4 = 0.0;
   double gg = 0.0;
   double ee = 0.0;
-  if ( maxJJ > 1e-14 )
+  if( maxJJ > 1e-14 )
   {
     sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
   }
@@ -552,11 +663,11 @@ AdaptiveStochasticGradientDescent<TElastix>
    * gg = 1/N sum_n g_n' g_n
    * sigma = gg / TrC
    */
-  if ( gg > 1e-14 && TrC > 1e-14 )
+  if( gg > 1e-14 && TrC > 1e-14 )
   {
     sigma1 = vcl_sqrt( gg / TrC );
   }
-  if ( ee > 1e-14 && TrC > 1e-14 )
+  if( ee > 1e-14 && TrC > 1e-14 )
   {
     sigma3 = vcl_sqrt( ee / TrC );
   }
@@ -564,7 +675,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   const double alpha = 1.0;
   const double A = this->GetParam_A();
   double a_max = 0.0;
-  if ( sigma1 > 1e-14 && maxJCJ > 1e-14 )
+  if( sigma1 > 1e-14 && maxJCJ > 1e-14 )
   {
     a_max = A * delta / sigma1 / vcl_sqrt( maxJCJ );
   }
@@ -580,27 +691,143 @@ AdaptiveStochasticGradientDescent<TElastix>
   /** Set parameters in superclass. */
   this->SetParam_a( a );
   this->SetParam_alpha( alpha );
-  this->SetSigmoidMax( fmax );
-  this->SetSigmoidMin( fmin );
-  this->SetSigmoidScale( omega );
 
-  /** Print the elapsed time. */
-  timer1->StopTimer();
-  elxout << "Automatic parameter estimation took "
-    << timer1->PrintElapsedTimeDHMS()
+  /** Set parameters for original method. */
+  if( !this->m_OriginalButSigmoidToDefault )
+  {
+    this->SetSigmoidMax( fmax );
+    this->SetSigmoidMin( fmin );
+    this->SetSigmoidScale( omega );
+  }
+} // end AutomaticParameterEstimationOriginal()
+
+
+/**
+ * *************** AutomaticParameterEstimationUsingDisplacementDistribution *****
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::AutomaticParameterEstimationUsingDisplacementDistribution( void )
+{
+  tmr::Timer::Pointer timer4 = tmr::Timer::New();
+  tmr::Timer::Pointer timer5 = tmr::Timer::New();
+
+  /** Get current position to start the parameter estimation. */
+  this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
+    this->GetCurrentPosition() );
+
+  /** Get the user input. */
+  const double delta = this->GetMaximumStepLength();
+  double maxJJ = 0;
+
+  /** Cast to advanced metric type. */
+  typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
+  MetricType * testPtr = dynamic_cast<MetricType *>(
+    this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
+  if( !testPtr )
+  {
+    itkExceptionMacro( << "ERROR: AdaptiveStochasticGradientDescent expects "
+      << "the metric to be of type AdvancedImageToImageMetric!" );
+  }
+
+  /** Construct computeJacobianTerms to initialize the parameter estimation. */
+  typename ComputeDisplacementDistributionType::Pointer
+    computeDisplacementDistribution = ComputeDisplacementDistributionType::New();
+  computeDisplacementDistribution->SetFixedImage( testPtr->GetFixedImage() );
+  computeDisplacementDistribution->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
+  computeDisplacementDistribution->SetFixedImageMask( testPtr->GetFixedImageMask() );
+  computeDisplacementDistribution->SetTransform(
+    this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+  computeDisplacementDistribution->SetCostFunction( this->m_CostFunction );
+  computeDisplacementDistribution->SetNumberOfJacobianMeasurements(
+    this->m_NumberOfJacobianMeasurements );
+
+  /** Check if use scales. */
+  if( this->GetUseScales() )
+  {
+    computeDisplacementDistribution->SetUseScales( true );
+    computeDisplacementDistribution->SetScales( this->m_ScaledCostFunction->GetScales() );
+    //this setting is not successful. Because copying the scales from ASGD to computeDisplacementDistribution is failed.
+  }
+  else
+  {
+    computeDisplacementDistribution->SetUseScales( false );
+  }
+
+  double jacg = 0.0;
+  std::string maximumDisplacementEstimationMethod = "2sigma";
+  this->GetConfiguration()->ReadParameter( maximumDisplacementEstimationMethod,
+    "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0 );
+
+  /** Compute the Jacobian terms. */
+  elxout << "  Computing displacement distribution ..." << std::endl;
+  timer4->StartTimer();
+  computeDisplacementDistribution->ComputeDistributionTerms(
+    this->GetScaledCurrentPosition(), jacg, maxJJ,
+    maximumDisplacementEstimationMethod );
+  timer4->StopTimer();
+  elxout << "  Computing the displacement distribution took "
+    << timer4->PrintElapsedTimeDHMS()
     << std::endl;
 
-} // end AutomaticParameterEstimation()
+  /** Initial of the variables. */
+  double a = 0.0;
+  const double A = this->GetParam_A();
+  const double alpha = 1.0;
+
+  this->m_UseNoiseCompensation = true;
+  this->GetConfiguration()->ReadParameter( this->m_UseNoiseCompensation,
+    "NoiseCompensation", this->GetComponentLabel(), 0, 0 );
+
+  /** Use noise Compensation factor or not. */
+  if( this->m_UseNoiseCompensation == true )
+  {
+    double sigma4 = 0.0;
+    double gg = 0.0;
+    double ee = 0.0;
+    double sigma4factor = 1.0;
+
+    /** Sample the grid and random sampler container to estimate the noise factor.*/
+    if( this->m_NumberOfGradientMeasurements == 0 )
+    {
+      this->m_NumberOfGradientMeasurements = vnl_math_max(
+        static_cast<SizeValueType>( 2 ),
+        this->m_NumberOfGradientMeasurements );
+      elxout << "  NumberOfGradientMeasurements to estimate sigma_i: "
+        << this->m_NumberOfGradientMeasurements << std::endl;
+    }
+    timer5->StartTimer();
+    if( maxJJ > 1e-14 )
+    {
+      sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
+    }
+    this ->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
+
+    double noisefactor = gg / ( gg + ee );
+    a =  delta * vcl_pow( A + 1.0, alpha ) / jacg * noisefactor;
+    timer5->StopTimer();
+    elxout << "  Compute the noise compensation took "
+      << timer5->PrintElapsedTimeDHMS()
+      << std::endl;
+  }
+  else
+  {
+    a = delta * vcl_pow( A + 1.0, alpha ) / jacg;
+  }
+
+  /** Set parameters in superclass. */
+  this->SetParam_a( a );
+  this->SetParam_alpha( alpha );
+
+} // end AutomaticParameterEstimationUsingDisplacementDistribution()
 
 
 /**
  * ******************** SampleGradients **********************
  */
 
-/** Measure some derivatives, exact and approximated. Returns
- * the squared magnitude of the gradient and approximation error.
- * Needed for the automatic parameter estimation.
- */
 template <class TElastix>
 void
 AdaptiveStochasticGradientDescent<TElastix>
@@ -621,9 +848,9 @@ AdaptiveStochasticGradientDescent<TElastix>
    * for the exact gradients, and set the stochasticgradients flag to true.
    */
   bool stochasticgradients = false;
-  if ( this->GetNewSamplesEveryIteration() )
+  if( this->GetNewSamplesEveryIteration() )
   {
-    for ( unsigned int m = 0; m < M; ++m )
+    for( unsigned int m = 0; m < M; ++m )
     {
       /** Get the sampler. */
       ImageSamplerBasePointer sampler =
@@ -633,7 +860,7 @@ AdaptiveStochasticGradientDescent<TElastix>
       randomCoordinateSamplerVec[m] =
         dynamic_cast< ImageRandomCoordinateSamplerType * >( sampler.GetPointer() );
 
-      if ( randomSamplerVec[m].IsNotNull() )
+      if( randomSamplerVec[m].IsNotNull() )
       {
         /** At least one of the metric has a random sampler. */
         stochasticgradients |= true;
@@ -645,13 +872,13 @@ AdaptiveStochasticGradientDescent<TElastix>
          * has UseRandomSampleRegion==true.
          * \todo Extend ASGD to really take into account random region sampling.
          */
-        if ( randomCoordinateSamplerVec[ m ].IsNotNull() )
+        if( randomCoordinateSamplerVec[ m ].IsNotNull() )
         {
           useRandomSampleRegionVec[ m ]
-          = randomCoordinateSamplerVec[ m ]->GetUseRandomSampleRegion();
-          if ( useRandomSampleRegionVec[ m ] )
+            = randomCoordinateSamplerVec[ m ]->GetUseRandomSampleRegion();
+          if( useRandomSampleRegionVec[ m ] )
           {
-            if ( this->GetUseAdaptiveStepSizes() )
+            if( this->GetUseAdaptiveStepSizes() )
             {
               xl::xout["warning"]
                 << "WARNING: UseAdaptiveStepSizes is turned off, "
@@ -678,6 +905,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 
     } // end for loop over metrics
   } // end if NewSamplesEveryIteration.
+
 #ifndef _ELASTIX_BUILD_LIBRARY
   /** Prepare for progress printing. */
   ProgressCommandPointer progressObserver = ProgressCommandType::New();
@@ -688,14 +916,16 @@ AdaptiveStochasticGradientDescent<TElastix>
   elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
-  DerivativeType approxgradient;
-  DerivativeType exactgradient;
+  const unsigned int P = this->GetElastix()->GetElxTransformBase()
+    ->GetAsITKBaseType()->GetNumberOfParameters();
+  DerivativeType approxgradient( P );
+  DerivativeType exactgradient( P );
   DerivativeType diffgradient;
   double exactgg = 0.0;
   double diffgg = 0.0;
 
   /** Compute gg for some random parameters. */
-  for ( unsigned int i = 0 ; i < this->m_NumberOfGradientMeasurements; ++i )
+  for( unsigned int i = 0 ; i < this->m_NumberOfGradientMeasurements; ++i )
   {
 #ifndef _ELASTIX_BUILD_LIBRARY
     /** Show progress 0-100% */
@@ -708,12 +938,12 @@ AdaptiveStochasticGradientDescent<TElastix>
     this->AddRandomPerturbation( perturbedMu0, perturbationSigma );
 
     /** Compute contribution to exactgg and diffgg. */
-    if ( stochasticgradients )
+    if( stochasticgradients )
     {
       /** Set grid sampler(s) and get exact derivative. */
-      for ( unsigned int m = 0; m < M; ++m )
+      for( unsigned int m = 0; m < M; ++m )
       {
-        if ( gridSamplerVec[ m ].IsNotNull() )
+        if( gridSamplerVec[ m ].IsNotNull() )
         {
           this->GetElastix()->GetElxMetricBase( m )
             ->SetAdvancedMetricImageSampler( gridSamplerVec[ m ] );
@@ -722,9 +952,9 @@ AdaptiveStochasticGradientDescent<TElastix>
       this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
 
       /** Set random sampler(s), select new spatial samples and get approximate derivative. */
-      for ( unsigned int m = 0; m < M; ++m )
+      for( unsigned int m = 0; m < M; ++m )
       {
-        if ( randomSamplerVec[ m ].IsNotNull() )
+        if( randomSamplerVec[ m ].IsNotNull() )
         {
           this->GetElastix()->GetElxMetricBase( m )->
             SetAdvancedMetricImageSampler( randomSamplerVec[ m ] );
@@ -766,9 +996,9 @@ AdaptiveStochasticGradientDescent<TElastix>
   ee = diffgg;
 
   /** Set back useRandomSampleRegion flag to what it was. */
-  for ( unsigned int m = 0; m < M; ++m )
+  for( unsigned int m = 0; m < M; ++m )
   {
-    if ( randomCoordinateSamplerVec[ m ].IsNotNull() )
+    if( randomCoordinateSamplerVec[ m ].IsNotNull() )
     {
       randomCoordinateSamplerVec[ m ]
         ->SetUseRandomSampleRegion( useRandomSampleRegionVec[ m ] );
@@ -776,546 +1006,6 @@ AdaptiveStochasticGradientDescent<TElastix>
   }
 
 } // end SampleGradients()
-
-
-/**
- * ******************** ComputeJacobianTerms **********************
- */
-
-template <class TElastix>
-void
-AdaptiveStochasticGradientDescent<TElastix>
-::ComputeJacobianTerms( double & TrC, double & TrCC,
-  double & maxJJ, double & maxJCJ )
-{
-  /** This function computes four terms needed for the automatic parameter
-   * estimation. The equation number refers to the IJCV paper.
-   * Term 1: TrC, which is the trace of the covariance matrix, needed in (34):
-   *    C = 1/n \sum_{i=1}^n J_i^T J_i    (25)
-   *    with n the number of samples, J_i the Jacobian of the i-th sample.
-   * Term 2: TrCC, which is the Frobenius norm of C, needed in (60):
-   *    ||C||_F^2 = trace( C^T C )
-   * To compute equations (47) and (54) we need the four sub-terms:
-   *    A: trace( J_j C J_j^T )  in (47)
-   *    B: || J_j C J_j^T ||_F   in (47)
-   *    C: || J_j ||_F^2         in (54)
-   *    D: || J_j J_j^T ||_F     in (54)
-   * Term 3: maxJJ, see (47)
-   * Term 4: maxJCJ, see (54)
-   */
-
-  typedef double                                      CovarianceValueType;
-  typedef itk::Array2D<CovarianceValueType>           CovarianceMatrixType;
-  typedef vnl_sparse_matrix<CovarianceValueType>      SparseCovarianceMatrixType;
-  typedef typename SparseCovarianceMatrixType::row    SparseRowType;
-  typedef typename SparseCovarianceMatrixType::pair_t SparseCovarianceElementType;
-  typedef itk::Array<SizeValueType>                   NonZeroJacobianIndicesExpandedType;
-  typedef vnl_diag_matrix<CovarianceValueType>        DiagCovarianceMatrixType;
-  typedef vnl_vector<CovarianceValueType>             JacobianColumnType;
-
-  /** Initialize. */
-  TrC = TrCC = maxJJ = maxJCJ = 0.0;
-
-  this->CheckForAdvancedTransform();
-
-  /** Get samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
-  this->SampleFixedImageForJacobianTerms( sampleContainer );
-  const SizeValueType nrofsamples = sampleContainer->Size();
-  const double n = static_cast<double>( nrofsamples );
-
-  /** Get the number of parameters. */
-  const unsigned int P = static_cast<unsigned int>(
-    this->GetScaledCurrentPosition().GetSize() );
-
-  /** Get transform and set current position. */
-  typename TransformType::Pointer transform = this->GetRegistration()
-    ->GetAsITKBaseType()->GetTransform();
-  transform->SetParameters( this->GetCurrentPosition() );
-  const unsigned int outdim = transform->GetOutputSpaceDimension();
-
-  /** Get scales vector */
-  const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
-
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator iter;
-  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-  unsigned int samplenr = 0;
-
-  /** Variables for nonzerojacobian indices and the Jacobian. */
-  const SizeValueType sizejacind
-    = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
-  JacobianType jacj( outdim, sizejacind );
-  jacj.Fill( 0.0 );
-  NonZeroJacobianIndicesType jacind( sizejacind );
-  jacind[ 0 ] = 0;
-  if ( sizejacind > 1 ) jacind[ 1 ] = 0;
-  NonZeroJacobianIndicesType prevjacind = jacind;
-
-  /** Initialize covariance matrix. Sparse, diagonal, and band form. */
-  SparseCovarianceMatrixType cov( P, P );
-  DiagCovarianceMatrixType diagcov( P, 0.0 );
-  CovarianceMatrixType bandcov;
-
-  /** For temporary storage of J'J. */
-  CovarianceMatrixType jactjac( sizejacind, sizejacind );
-  jactjac.Fill( 0.0 );
-#ifndef _ELASTIX_BUILD_LIBRARY
-  /** Prepare for progress printing. */
-  ProgressCommandPointer progressObserver = ProgressCommandType::New();
-  progressObserver->SetUpdateFrequency( nrofsamples * 2, 100 );
-  progressObserver->SetStartString( "  Progress: " );
-  elxout << "  Computing JacobianTerms ..." << std::endl;
-#endif
-  /** Variables for the band cov matrix. */
-  const unsigned int maxbandcovsize = m_MaxBandCovSize;
-  const unsigned int nrOfBandStructureSamples = m_NumberOfBandStructureSamples;
-
-  /** DifHist is a histogram of absolute parameterNrDifferences that
-   * occur in the nonzerojacobianindex vectors.
-   * DifHist2 is another way of storing the histogram, as a vector
-   * of pairs. pair.first = Frequency, pair.second = parameterNrDifference.
-   * This is useful for sorting.
-   */
-  typedef std::vector<unsigned int>             DifHistType;
-  typedef std::pair<unsigned int, unsigned int> FreqPairType;
-  typedef std::vector<FreqPairType>             DifHist2Type;
-  DifHistType difHist( P, 0 );
-  DifHist2Type difHist2;
-
-  /** Try to guess the band structure of the covariance matrix.
-   * A 'band' is a series of elements cov(p,q) with constant q-p.
-   * In the loop below, on a few positions in the image the Jacobian
-   * is computed. The nonzerojacobianindices are inspected to figure out
-   * which values of q-p occur often. This is done by making a histogram.
-   * The histogram is then sorted and the most occurring bands
-   * are determined. The covariance elements in these bands will not
-   * be stored in the sparse matrix structure 'cov', but in the band
-   * matrix 'bandcov', which is much faster.
-   * Only after the bandcov and cov have been filled (by looping over
-   * all Jacobian measurements in the sample container, the bandcov
-   * matrix is injected in the cov matrix, for easy further calculations,
-   * and the bandcov matrix is deleted.
-   */
-  unsigned int onezero = 0;
-  for ( unsigned int s = 0; s < nrOfBandStructureSamples; ++s )
-  {
-    /** Semi-randomly get some samples from the sample container. */
-    const unsigned int samplenr = ( s + 1 ) * nrofsamples
-      / ( nrOfBandStructureSamples + 2 + onezero );
-    onezero = 1 - onezero; // introduces semi-randomness
-
-    /** Read fixed coordinates and get Jacobian J_j. */
-    const FixedImagePointType & point
-      = sampleContainer->GetElement(samplenr).m_ImageCoordinates;
-    this->m_AdvancedTransform->GetJacobian( point, jacj, jacind );
-
-    /** Skip invalid Jacobians in the beginning, if any. */
-    if ( sizejacind > 1 )
-    {
-      if ( jacind[ 0 ] == jacind[ 1 ] )
-      {
-        continue;
-      }
-    }
-
-    /** Fill the histogram of parameter nr differences. */
-    for ( unsigned int i = 0; i < sizejacind; ++i )
-    {
-      const int jacindi = static_cast<int>( jacind[ i ] );
-      for ( unsigned int j = i; j < sizejacind; ++j )
-      {
-        const int jacindj = static_cast<int>( jacind[ j ] );
-        difHist[ static_cast<unsigned int>( vcl_abs( jacindj - jacindi ) ) ]++;
-      }
-    }
-  }
-
-  /** Copy the nonzero elements of the difHist to a vector pairs. */
-  for ( unsigned int p = 0; p < P; ++p )
-  {
-    const unsigned int freq = difHist[ p ];
-    if ( freq != 0 )
-    {
-      difHist2.push_back( FreqPairType( freq, p ) );
-    }
-  }
-  difHist.resize( 0 );
-
-  /** Compute the number of bands. */
-  elxout << "  Estimated band size covariance matrix: " << difHist2.size() << std::endl;
-  const unsigned int bandcovsize = vnl_math_min( maxbandcovsize,
-    static_cast<unsigned int>(difHist2.size()) );
-  elxout << "  Used band size covariance matrix: " << bandcovsize << std::endl;
-  /** Maps parameterNrDifference (q-p) to colnr in bandcov. */
-  std::vector<unsigned int> bandcovMap( P, bandcovsize );
-  /** Maps colnr in bandcov to parameterNrDifference (q-p). */
-  std::vector<unsigned int> bandcovMap2( bandcovsize, P );
-
-  /** Sort the difHist2 based on the frequencies. */
-  std::sort( difHist2.begin(), difHist2.end() );
-
-  /** Determine the bands that are expected to be most dominant. */
-  DifHist2Type::iterator difHist2It = difHist2.end();
-  for ( unsigned int b = 0; b < bandcovsize; ++b )
-  {
-    --difHist2It;
-    bandcovMap[ difHist2It->second ] = b;
-    bandcovMap2[ b ] = difHist2It->second;
-  }
-
-  /** Initialize band matrix. */
-  bandcov = CovarianceMatrixType( P, bandcovsize );
-  bandcov.Fill( 0.0 );
-
-  /**
-   *    TERM 1
-   *
-   * Loop over image and compute Jacobian.
-   * Compute C = 1/n \sum_i J_i^T J_i
-   * Possibly apply scaling afterwards.
-   */
-  jacind[ 0 ] = 0;
-  if ( sizejacind > 1 ) jacind[ 1 ] = 0;
-  for ( iter = begin; iter != end; ++iter )
-  {
-#ifndef _ELASTIX_BUILD_LIBRARY
-    /** Print progress 0-50%. */
-    progressObserver->UpdateAndPrintProgress( samplenr );
-#endif
-    ++samplenr;
-
-    /** Read fixed coordinates and get Jacobian J_j. */
-    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
-    this->m_AdvancedTransform->GetJacobian( point, jacj, jacind  );
-
-    /** Skip invalid Jacobians in the beginning, if any. */
-    if ( sizejacind > 1 )
-    {
-      if ( jacind[ 0 ] == jacind[ 1 ] )
-      {
-        continue;
-      }
-    }
-
-    if ( jacind == prevjacind )
-    {
-      /** Update sum of J_j^T J_j. */
-      vnl_fastops::inc_X_by_AtA( jactjac, jacj );
-    }
-    else
-    {
-      /** The following should only be done after the first sample. */
-      if ( iter != begin )
-      {
-        /** Update covariance matrix. */
-        for ( unsigned int pi = 0; pi < sizejacind; ++pi )
-        {
-          const unsigned int p = prevjacind[ pi ];
-
-          for ( unsigned int qi = 0; qi < sizejacind; ++qi )
-          {
-            const unsigned int q = prevjacind[ qi ];
-            /** Exploit symmetry: only fill upper triangular part. */
-            if ( q >= p )
-            {
-              const double tempval = jactjac( pi, qi ) / n;
-              if ( vcl_abs( tempval ) > 1e-14 )
-              {
-                const unsigned int bandindex = bandcovMap[ q - p ];
-                if ( bandindex < bandcovsize )
-                {
-                  bandcov( p, bandindex ) +=tempval;
-                }
-                else
-                {
-                  cov( p, q ) += tempval;
-                }
-              }
-            }
-          } // qi
-        } // pi
-      } // end if
-
-      /** Initialize jactjac by J_j^T J_j. */
-      vnl_fastops::AtA( jactjac, jacj );
-
-      /** Remember nonzerojacobian indices. */
-      prevjacind = jacind;
-    } // end else
-
-  } // end iter loop: end computation of covariance matrix
-
-  /** Update covariance matrix once again to include last jactjac updates
-   * \todo: a bit ugly that this loop is copied from above.
-   */
-  for ( unsigned int pi = 0; pi < sizejacind; ++pi )
-  {
-    const unsigned int p = prevjacind[ pi ];
-    for ( unsigned int qi = 0; qi < sizejacind; ++qi )
-    {
-      const unsigned int q = prevjacind[ qi ];
-      if ( q >= p )
-      {
-        const double tempval = jactjac( pi, qi ) / n;
-        if ( vcl_abs( tempval ) > 1e-14 )
-        {
-           const unsigned int bandindex  = bandcovMap[ q - p ];
-           if ( bandindex < bandcovsize )
-           {
-             bandcov( p, bandindex ) +=tempval;
-           }
-           else
-           {
-             cov( p, q ) += tempval;
-           }
-        }
-      }
-    } // qi
-  } // pi
-
-  /** Copy the bandmatrix into the sparse matrix and empty the bandcov matrix.
-   * \todo: perhaps work further with this bandmatrix instead.
-   */
-  for( unsigned int p = 0; p < P; ++p )
-  {
-    for ( unsigned int b = 0; b < bandcovsize; ++b )
-    {
-      const double tempval = bandcov( p, b );
-      if ( vcl_abs( tempval ) > 1e-14 )
-      {
-        const unsigned int q = p + bandcovMap2[ b ];
-        cov( p, q ) = tempval;
-      }
-    }
-  }
-  bandcov.set_size( 0, 0 );
-
-  /** Apply scales. */
-  if ( this->GetUseScales() )
-  {
-    for ( unsigned int p = 0; p < P; ++p )
-    {
-      cov.scale_row( p, 1.0 / scales[ p ] );
-    }
-    /**  \todo: this might be faster with get_row instead of the iterator */
-    cov.reset();
-    bool notfinished = cov.next();
-    while ( notfinished )
-    {
-      const int col = cov.getcolumn();
-      cov( cov.getrow(), col ) /= scales[ col ];
-      notfinished = cov.next();
-    }
-  }
-
-  /** Compute TrC = trace(C), and diagcov. */
-  for ( unsigned int p = 0; p < P; ++p )
-  {
-    if ( !cov.empty_row( p ) )
-    {
-      //avoid creation of element if the row is empty
-      CovarianceValueType & covpp = cov( p, p );
-      TrC += covpp;
-      diagcov[ p ] = covpp;
-    }
-  }
-
-  /**
-   *    TERM 2
-   *
-   * Compute TrCC = ||C||_F^2.
-   */
-  cov.reset();
-  bool notfinished2 = cov.next();
-  while ( notfinished2 )
-  {
-    TrCC += vnl_math_sqr( cov.value() );
-    notfinished2 = cov.next();
-  }
-
-  /** Symmetry: multiply by 2 and subtract sumsqr(diagcov). */
-  TrCC *= 2.0;
-  TrCC -= diagcov.diagonal().squared_magnitude();
-
-  /**
-   *    TERM 3 and 4
-   *
-   * Compute maxJJ and maxJCJ
-   * \li maxJJ = max_j [ ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F ]
-   * \li maxJCJ = max_j [ Tr( J_j C J_j^T ) + 2\sqrt{2} || J_j C J_j^T ||_F ]
-   */
-  maxJJ = 0.0;
-  maxJCJ = 0.0;
-  const double sqrt2 = vcl_sqrt( static_cast<double>( 2.0 ) );
-  JacobianType jacjjacj( outdim, outdim );
-  JacobianType jacjcov( outdim, sizejacind );
-  DiagCovarianceMatrixType diagcovsparse( sizejacind );
-  JacobianType jacjdiagcov( outdim, sizejacind );
-  JacobianType jacjdiagcovjacj( outdim, outdim );
-  JacobianType jacjcovjacj( outdim, outdim );
-  NonZeroJacobianIndicesExpandedType jacindExpanded( P );
-
-  samplenr = 0;
-  for ( iter = begin; iter != end; ++iter )
-  {
-    /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
-    this->m_AdvancedTransform->GetJacobian( point, jacj, jacind  );
-
-    /** Apply scales, if necessary. */
-    if ( this->GetUseScales() )
-    {
-      for ( unsigned int pi = 0; pi < sizejacind; ++pi )
-      {
-        const unsigned int p = jacind[ pi ];
-        jacj.scale_column( pi, 1.0 / scales[ p ] );
-      }
-    }
-
-    /** Compute 1st part of JJ: ||J_j||_F^2. */
-    double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
-
-    /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
-    vnl_fastops::ABt( jacjjacj, jacj, jacj );
-    JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
-
-    /** Max_j [JJ_j]. */
-    maxJJ = vnl_math_max( maxJJ, JJ_j );
-
-    /** Compute JCJ_j. */
-    double JCJ_j = 0.0;
-
-    /** J_j C = jacjC. */
-    jacjcov.Fill( 0.0 );
-
-    /** Store the nonzero Jacobian indices in a different format
-     * and create the sparse diagcov.
-     */
-    jacindExpanded.Fill( sizejacind );
-    for ( unsigned int pi = 0; pi < sizejacind; ++pi )
-    {
-      const unsigned int p = jacind[ pi ];
-      jacindExpanded[ p ] = pi;
-      diagcovsparse[ pi ] = diagcov[ p ];
-    }
-
-    /** We below calculate jacjC = J_j cov^T, but later we will correct
-     * for this using:
-     * J C J' = J (cov + cov' - diag(cov')) J'.
-     * (NB: cov now still contains only the upper triangular part of C)
-     */
-    for ( unsigned int pi = 0; pi < sizejacind; ++pi )
-    {
-      const unsigned int p = jacind[ pi ];
-      if ( !cov.empty_row( p ) )
-      {
-        SparseRowType & covrowp = cov.get_row( p );
-        typename SparseRowType::iterator covrowpit;
-
-        /** Loop over row p of the sparse cov matrix. */
-        for ( covrowpit = covrowp.begin(); covrowpit != covrowp.end(); ++covrowpit )
-        {
-          const unsigned int q = (*covrowpit).first;
-          const unsigned int qi = jacindExpanded[ q ];
-
-          if ( qi < sizejacind )
-          {
-            /** If found, update the jacjC matrix. */
-            const CovarianceValueType covElement = (*covrowpit).second;
-            for ( unsigned int dx = 0; dx < outdim; ++dx )
-            {
-              jacjcov[ dx ][ pi ] += jacj[ dx ][ qi ] * covElement;
-            } //dx
-          } // if qi < sizejacind
-        } // for covrow
-
-      } // if not empty row
-    } // pi
-
-    /** J_j C J_j^T  = jacjCjacj.
-     * But note that we actually compute J_j cov' J_j^T
-     */
-    vnl_fastops::ABt( jacjcovjacj, jacjcov, jacj );
-
-    /** jacjCjacj = jacjCjacj+ jacjCjacj' - jacjdiagcovjacj */
-    jacjdiagcov = jacj * diagcovsparse;
-    vnl_fastops::ABt( jacjdiagcovjacj, jacjdiagcov, jacj );
-    jacjcovjacj += jacjcovjacj.transpose();
-    jacjcovjacj -= jacjdiagcovjacj;
-
-    /** Compute 1st part of JCJ: Tr( J_j C J_j^T ). */
-    for ( unsigned int d = 0; d < outdim; ++d )
-    {
-      JCJ_j += jacjcovjacj[ d ][ d ];
-    }
-
-    /** Compute 2nd part of JCJ_j: 2 \sqrt{2} || J_j C J_j^T ||_F. */
-    JCJ_j += 2.0 * sqrt2 * jacjcovjacj.frobenius_norm();
-
-    /** Max_j [JCJ_j]. */
-    maxJCJ = vnl_math_max( maxJCJ, JCJ_j );
-#ifndef _ELASTIX_BUILD_LIBRARY
-    /** Show progress 50-100%. */
-    progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
-#endif
-    ++samplenr;
-
-  } // end loop over sample container
-#ifndef _ELASTIX_BUILD_LIBRARY
-  /** Finalize progress information. */
-  progressObserver->PrintProgress( 1.0 );
-#endif
-} // end ComputeJacobianTerms()
-
-
-/**
- * **************** SampleFixedImageForJacobianTerms *******************
- */
-
-template <class TElastix>
-void
-AdaptiveStochasticGradientDescent<TElastix>
-::SampleFixedImageForJacobianTerms(
-  ImageSampleContainerPointer & sampleContainer )
-{
-  typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
-  MetricType * testPtr = dynamic_cast<MetricType *>(
-    this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
-  if ( !testPtr )
-  {
-    itkExceptionMacro( << "ERROR: AdaptiveStochasticGradientDescent expects "
-      << "the metric to be of type AdvancedImageToImageMetric!" );
-  }
-
-  /** Set up grid sampler. */
-  ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
-  sampler->SetInput( testPtr->GetFixedImage() );
-  sampler->SetInputImageRegion( testPtr->GetFixedImageRegion() );
-  sampler->SetMask( testPtr->GetFixedImageMask() );
-
-  /** Determine grid spacing of sampler such that the desired
-   * NumberOfJacobianMeasurements is achieved approximately.
-   * Note that the actually obtained number of samples may be lower, due to masks.
-   * This is taken into account at the end of this function.
-   */
-  SizeValueType nrofsamples = this->m_NumberOfJacobianMeasurements;
-  sampler->SetNumberOfSamples( nrofsamples );
-
-  /** Get samples and check the actually obtained number of samples. */
-  sampler->Update();
-  sampleContainer = sampler->GetOutput();
-  nrofsamples = sampleContainer->Size();
-
-  if ( nrofsamples == 0 )
-  {
-    itkExceptionMacro(
-      << "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
-      << ") found to estimate the AdaptiveStochasticGradientDescent parameters." );
-  }
-
-} // end SampleFixedImageForJacobianTerms()
 
 
 /**
@@ -1454,8 +1144,6 @@ AdaptiveStochasticGradientDescent<TElastix>
 
 } // end AddRandomPerturbation()
 
-
 } // end namespace elastix
 
 #endif // end #ifndef __elxAdaptiveStochasticGradientDescent_hxx
-

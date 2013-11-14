@@ -286,12 +286,15 @@ GetJacobian( const InputPointType & p,
     JacobianType & j,
     NonZeroJacobianIndicesType & nzji ) const
 {
-  const double ca = vcl_cos(this->GetAngle() );
-  const double sa = vcl_sin(this->GetAngle() );
+  // Initialize the Jacobian. Resizing is only performed when needed.
+  // Filling with zeros is needed because the lower loops only visit
+  // the nonzero positions.
+  j.SetSize( OutputSpaceDimension, ParametersDimension );
+  j.Fill( 0.0 );
 
-  j.SetSize(OutputSpaceDimension, ParametersDimension );
-  j.Fill(0.0);
-
+  // Some helper variables
+  const double ca = vcl_cos( this->GetAngle() );
+  const double sa = vcl_sin( this->GetAngle() );
   const double cx = this->GetCenter()[0];
   const double cy = this->GetCenter()[1];
 
@@ -301,11 +304,12 @@ GetJacobian( const InputPointType & p,
 
   // compute derivatives for the translation part
   unsigned int blockOffset = 1;
-  for(unsigned int dim=0; dim < OutputSpaceDimension; dim++ )
-    {
+  for( unsigned int dim = 0; dim < OutputSpaceDimension; ++dim )
+  {
     j[ dim ][ blockOffset + dim ] = 1.0;
-    }
+  }
 
+  // Copy the constant nonZeroJacobianIndices
   nzji = this->m_NonZeroJacobianIndices;
 }
 

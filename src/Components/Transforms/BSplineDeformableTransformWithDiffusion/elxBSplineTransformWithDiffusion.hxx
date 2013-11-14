@@ -697,15 +697,15 @@ BSplineTransformWithDiffusion<TElastix>
     CoefficientUpsampleFunctionType;
   typedef itk::BSplineDecompositionImageFilter<ImageType,ImageType>
     DecompositionFilterType;
-  typedef itk::ImageRegionConstIterator<ImageType>   
+  typedef itk::ImageRegionConstIterator<ImageType>
     IteratorType;
 
   /** The current region/spacing settings of the grid. */
   RegionType gridregionLow = this->m_BSplineTransform->GetGridRegion();
-  SizeType gridsizeLow = gridregionLow.GetSize();
-  IndexType gridindexLow = gridregionLow.GetIndex();
-  SpacingType gridspacingLow = this->m_BSplineTransform->GetGridSpacing();
-  OriginType gridoriginLow = this->m_BSplineTransform->GetGridOrigin();
+  //SizeType gridsizeLow = gridregionLow.GetSize();
+  //IndexType gridindexLow = gridregionLow.GetIndex();
+  //SpacingType gridspacingLow = this->m_BSplineTransform->GetGridSpacing();
+  //OriginType gridoriginLow = this->m_BSplineTransform->GetGridOrigin();
 
   /** Get the fixed image. */
   typename FixedImageType::Pointer fixedimage;

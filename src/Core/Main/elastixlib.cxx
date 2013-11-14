@@ -77,7 +77,7 @@ ELASTIX::GetResultImage( void )
 ELASTIX::ParameterMapType
 ELASTIX::GetTransformParameterMap( void )
 {
-  return this->m_TransformParametersList[this->m_TransformParametersList.size() - 1];
+  return this->m_TransformParametersList[ this->m_TransformParametersList.size() - 1 ];
 } // end GetTransformParameterMap()
 
 
@@ -96,8 +96,8 @@ ELASTIX::GetTransformParameterMapList( void )
 /**
  * ******************* RegisterImages ***********************
  */
-int
-  ELASTIX::RegisterImages(
+
+int ELASTIX::RegisterImages(
   ImagePointer fixedImage,
   ImagePointer movingImage,
   ParameterMapType & parameterMap,
@@ -105,22 +105,25 @@ int
   bool performLogging,
   bool performCout,
   ImagePointer fixedMask,
-  ImagePointer movingMask)
+  ImagePointer movingMask )
 {
-  std::vector< ParameterMapType >  parameterMaps(1);
+  std::vector< ParameterMapType > parameterMaps(1);
   parameterMaps[0] = parameterMap;
-  return this->RegisterImages(fixedImage,
-                              movingImage,
-                              parameterMaps,
-                              outputPath,
-                              performLogging,
-                              performCout,
-                              fixedMask,
-                              movingMask);
-}
+  return this->RegisterImages(
+    fixedImage, movingImage,
+    parameterMaps,
+    outputPath,
+    performLogging, performCout,
+    fixedMask, movingMask );
 
-int
-ELASTIX::RegisterImages(
+} // end RegisterImages()
+
+
+/**
+ * ******************* RegisterImages ***********************
+ */
+
+int ELASTIX::RegisterImages(
   ImagePointer fixedImage,
   ImagePointer movingImage,
   std::vector< ParameterMapType >& parameterMaps,
@@ -128,7 +131,7 @@ ELASTIX::RegisterImages(
   bool performLogging,
   bool performCout,
   ImagePointer fixedMask,
-  ImagePointer movingMask)
+  ImagePointer movingMask )
 {
   /** Some typedef's. */
   typedef elx::ElastixMain                            ElastixMainType;
@@ -410,6 +413,7 @@ ELASTIX::RegisterImages(
 
 } // end RegisterImages()
 
-}// end namespace elastix
+} // end namespace elastix
 
 #endif // end #ifndef __elastixlib_cxx
+

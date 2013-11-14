@@ -77,6 +77,7 @@ public:
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename Superclass::TransformParametersType    TransformParametersType;
   typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
   typedef typename Superclass::InterpolatorType           InterpolatorType;
   typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
   typedef typename Superclass::RealType                   RealType;
@@ -97,6 +98,8 @@ public:
   typedef typename Superclass::ImageSampleContainerType    ImageSampleContainerType;
   typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
   typedef typename Superclass::ScalarType                 ScalarType;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
   /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
@@ -120,10 +123,22 @@ public:
     DerivativeType & derivative ) const;
 
   /** Get the penalty term value and derivative. */
+  virtual void GetValueAndDerivativeSingleThreaded(
+    const ParametersType & parameters,
+    MeasureType & value,
+    DerivativeType & derivative ) const;
+
   virtual void GetValueAndDerivative(
     const ParametersType & parameters,
     MeasureType & value,
     DerivativeType & derivative ) const;
+
+  /** Get value and derivatives for each thread. */
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+
+  /** Gather the values and derivatives from all threads */
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const;
 
   /** Experimental feature: compute SelfHessian */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;

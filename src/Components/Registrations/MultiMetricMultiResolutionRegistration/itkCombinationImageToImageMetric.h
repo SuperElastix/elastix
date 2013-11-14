@@ -18,6 +18,7 @@
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkSingleValuedPointSetToPointSetMetric.h"
 
+
 namespace itk
 {
 
@@ -106,7 +107,7 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
-  //typedef typename Superclass::DerivativeValueType        DerivativeValueType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
 
   /** Some typedefs for computing the SelfHessian */
@@ -157,6 +158,10 @@ public:
   typedef SingleValuedPointSetToPointSetMetric<
     FixedPointSetType, MovingPointSetType >               PointSetMetricType;
 
+  /** Typedefs for multi-threading. */
+  typedef typename Superclass::ThreaderType         ThreaderType;
+  typedef typename Superclass::ThreadInfoType       ThreadInfoType;
+
   /**
    * Get and set the metrics and their weights.
    **/
@@ -191,6 +196,9 @@ public:
   /** Set and Get the UseRelativeWeights variable. */
   itkSetMacro( UseRelativeWeights, bool );
   itkGetMacro( UseRelativeWeights, bool );
+
+  /** \todo: Temporary, should think about interface. */
+  itkSetMacro( UseMultiThread, bool );
 
   /** Select which metrics are used.
    * This is useful in case you want to compute a certain measure, but not
@@ -385,6 +393,15 @@ public:
    */
   virtual unsigned long GetMTime() const;
 
+  /** GetValueAndDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeComboThreaderCallback( void * arg );
+
+  /** CombineDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE CombineDerivativesThreaderCallback( void * arg );
+
+  /** Compute Derivatives Magnitude threader callback function */
+  static ITK_THREAD_RETURN_TYPE ComputeDerivativesMagnitudeThreaderCallback( void * arg );
+
 protected:
   CombinationImageToImageMetric();
   virtual ~CombinationImageToImageMetric() {};
@@ -409,6 +426,36 @@ protected:
 private:
   CombinationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
+
+  /** Initialize some multi-threading related parameters.
+   * Overrides function in AdvancedImageToImageMetric, because
+   * here we use other parameters.
+   */
+  virtual void InitializeThreadingParameters( void ) const;
+
+  /** Compute the current metric weight, given the user selected
+   * strategy and derivative magnitude.
+   */
+  double GetFinalMetricWeight( unsigned int pos ) const;
+
+  /** For threading: store thread data. */
+  struct MultiThreaderComboMetricsType
+  {
+    std::vector<SingleValuedCostFunctionPointer>   st_MetricsIterator;
+    typename std::vector<MeasureType>::iterator    st_MetricValuesIterator;
+    typename std::vector<DerivativeType>::iterator st_MetricDerivativesIterator;
+    std::vector< std::size_t >                     st_MetricComputationTime;
+    ParametersType *                               st_Parameters;
+  };
+
+  struct MultiThreaderCombineDerivativeType
+  {
+    Self * st_ThisComboMetric;
+    std::vector< double >   st_DerivativesSumOfSquares;
+    DerivativeValueType *   st_Derivative;
+  };
+
+  bool m_UseMultiThread;
 
 }; // end class CombinationImageToImageMetric
 

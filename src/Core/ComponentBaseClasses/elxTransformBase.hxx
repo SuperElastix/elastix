@@ -453,9 +453,7 @@ void TransformBase<TElastix>
   /** Call the function ReadInitialTransformFromFile. */
   if ( fileName != "NoInitialTransform" )
   {
-
 #ifdef _ELASTIX_BUILD_LIBRARY
-
     /** Get initial transform index number. */
     std::istringstream to_size_t( fileName );
     size_t index;
@@ -463,9 +461,7 @@ void TransformBase<TElastix>
 
     /** We can safely read the initial transform. */
     this->ReadInitialTransformFromVector( index );
-
 #else
-
     /** Check if the initial transform of this transform parameter file
      * is not the same as this transform parameter file. Otherwise,
      * we will have an infinite loop.
@@ -483,9 +479,7 @@ void TransformBase<TElastix>
 
     /** We can safely read the initial transform. */
     this->ReadInitialTransformFromFile( fileName.c_str() );
-
 #endif
-
   }
 
   /** Task 3 - Read from the configuration file how to combine the
@@ -522,13 +516,18 @@ void TransformBase<TElastix>
 } // end ReadFromFile()
 
 
+/**
+ * ******************* ReadInitialTransformFromVector *****************************
+ */
+
 template <class TElastix>
 void TransformBase<TElastix>
-::ReadInitialTransformFromVector( const size_t index ) {
+::ReadInitialTransformFromVector( const size_t index )
+{
   /** Retrieve configuration object from internally stored vector of configuration objects. */
-  ConfigurationPointer configurationInitialTransform =
-    this->GetElastix()->GetConfiguration( index );
- 
+  ConfigurationPointer configurationInitialTransform
+    = this->GetElastix()->GetConfiguration( index );
+
   /** Read the InitialTransform name. */
   ComponentDescriptionType initialTransformName = "AffineTransform";
   configurationInitialTransform->ReadParameter(

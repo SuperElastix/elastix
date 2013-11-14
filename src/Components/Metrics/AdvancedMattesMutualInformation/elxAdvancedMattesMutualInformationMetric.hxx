@@ -16,6 +16,7 @@
 #define __elxAdvancedMattesMutualInformationMetric_HXX__
 
 #include "elxAdvancedMattesMutualInformationMetric.h"
+
 #include "itkHardLimiterFunction.h"
 #include "itkExponentialLimiterFunction.h"
 #include <string>

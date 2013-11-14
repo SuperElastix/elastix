@@ -14,7 +14,10 @@
 #include "SplineKernelTransform/itkThinPlateSplineKernelTransform2.h"
 #include "itkTransformixInputPointFileReader.h"
 
-#include <ctime>
+// Report timings
+#include "itkTimeProbe.h"
+#include "itkTimeProbesCollectorBase.h"
+
 #include <fstream>
 #include <iomanip>
 
@@ -151,11 +154,13 @@ int main( int argc, char *argv[] )
 //   usedNumberOfLandmarks.push_back( realNumberOfLandmarks );
 
   std::cerr << "Matrix scalar type: "
-    << typeid( ScalarType ).name() << std::endl;
+    << typeid( ScalarType ).name() << "\n" << std::endl;
 
   // Loop over usedNumberOfLandmarks
   for ( std::size_t i = 0; i < usedNumberOfLandmarks.size(); i++ )
   {
+    itk::TimeProbesCollectorBase timeCollector;
+
     unsigned long numberOfLandmarks = usedNumberOfLandmarks[ i ];
     std::cerr << "----------------------------------------\n";
     std::cerr << "Number of specified landmarks: "
@@ -179,21 +184,19 @@ int main( int argc, char *argv[] )
     LMatrixType lMatrixInverse1, lMatrixInverse2; //, lMatrixInverse4;
 
     /** Task 1: compute L. */
-    clock_t startClock = clock();
+    timeCollector.Start( "ComputeL" );
     kernelTransform->SetSourceLandmarksPublic( usedLandmarks );
     kernelTransform->ComputeLPublic();
     LMatrixType lMatrix = kernelTransform->GetLMatrix();
-    std::cerr << "Computing L matrix took "
-      << clock() - startClock << " ms." << std::endl;
+    timeCollector.Stop( "ComputeL" );
 
     /** Task 2: Compute L inverse. */
     if ( numberOfLandmarks < maxTestedLandmarksForSVD )
     {
       // Method 1: Singular Value Decomposition
-      startClock = clock();
+      timeCollector.Start( "ComputeLInverseBySVD" );
       lMatrixInverse1 = vnl_svd<ScalarType>( lMatrix ).inverse();
-      std::cerr << "L matrix inversion (method 1, svd) took: "
-        << clock() - startClock << " ms." << std::endl;
+      timeCollector.Stop( "ComputeLInverseBySVD" );
     }
     else
     {
@@ -201,10 +204,9 @@ int main( int argc, char *argv[] )
     }
 
     // Method 2: QR Decomposition
-    startClock = clock();
+    timeCollector.Start( "ComputeLInverseByQR" );
     lMatrixInverse2 = vnl_qr<ScalarType>( lMatrix ).inverse();
-    std::cerr << "L matrix inversion (method 2,  qr) took: "
-      << clock() - startClock << " ms." << std::endl;
+    timeCollector.Stop( "ComputeLInverseByQR" );
 
     // Method 3: Cholesky decomposition
     // Cholesky decomposition does not work due to lMatrix not being positive definite.
@@ -292,7 +294,7 @@ int main( int argc, char *argv[] )
 
     // OLD way:
     PointType p; p[0] = 10.0; p[1] = 13.0; p[2] = 11.0;
-    startClock = clock();
+    timeCollector.Start( "ComputeJacobianOLD" );
     JacobianType jac1;
     jac1.SetSize( Dimension, numberOfLandmarks * Dimension );
     jac1.Fill( 0.0 );
@@ -327,20 +329,18 @@ int main( int argc, char *argv[] )
         jac1[ odim ][ lidx ] += lMatrixInverse2[ index ][ lidx ];
       }
     }
-    std::cerr << "\nJacobian computation (OLD) took: "
-      << clock() - startClock << " ms." << std::endl;
+    timeCollector.Stop( "ComputeJacobianOLD" );
 
     // NEW way:
 
     /** Reset source landmarks, otherwise L is not recomputed. */
     kernelTransform->SetSourceLandmarks( dummyLandmarks );
     kernelTransform->SetSourceLandmarks( usedLandmarks );
-    startClock = clock();
+    timeCollector.Start( "ComputeJacobianNEW" );
     JacobianType jac2;
     NonZeroJacobianIndicesType nzji;
     kernelTransform->GetJacobian( p, jac2, nzji );
-    std::cerr << "Jacobian computation (NEW) took: "
-      << clock() - startClock << " ms." << std::endl;
+    timeCollector.Stop( "ComputeJacobianNEW" );
 
     // diff
     double diff_jac = (jac1 - jac2).frobenius_norm();
@@ -350,6 +350,10 @@ int main( int argc, char *argv[] )
       std::cerr << "ERROR: Frobenius difference of Jacobian computation too big: " << diff_jac << std::endl;
       return 1;
     }
+
+    // Report timings
+    timeCollector.Report();
+    std::cout << std::endl;
 
   } // end loop
 

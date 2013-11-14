@@ -68,6 +68,7 @@ public:
     InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType
     OutputCovariantVectorType;
+  typedef typename Superclass::TransformCategoryType  TransformCategoryType;
 
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
@@ -157,8 +158,8 @@ public:
   typedef typename ImageType::Pointer                   ImagePointer;
 
   /** Get the array of coefficient images. */
-  virtual const ImagePointer * GetCoefficientImage( void ) const
-    { return this->m_CoefficientImage; }
+  virtual const ImagePointer * GetCoefficientImages( void ) const
+    { return this->m_CoefficientImages; }
 
   /** Set the array of coefficient images.
    *
@@ -168,10 +169,10 @@ public:
    * the buffered region of all the subsequent images are the same
    * as the first image. Note that no error checking is done.
    *
-   * Warning: use either the SetParameters() or SetCoefficientImage()
+   * Warning: use either the SetParameters() or SetCoefficientImages()
    * API. Mixing the two modes may results in unexpected results.
    */
-  virtual void SetCoefficientImage( ImagePointer images[] );
+  virtual void SetCoefficientImages( ImagePointer images[] );
 
   /** Typedefs for specifying the extend to the grid. */
   typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) > RegionType;
@@ -250,6 +251,14 @@ public:
    */
   virtual bool IsLinear( void ) const { return false; }
 
+  /** Indicates the category transform.
+   *  e.g. an affine transform, or a local one, e.g. a deformation field.
+   */
+  virtual TransformCategoryType GetTransformCategory( void ) const
+  {
+    return Self::BSpline;
+  }
+
   virtual unsigned int GetNumberOfAffectedWeights( void ) const = 0;
 
   virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const = 0;
@@ -273,6 +282,8 @@ protected:
   void TransformPointToContinuousGridIndex(
    const InputPointType & point, ContinuousIndexType & index ) const;
 
+  void UpdatePointIndexConversions( void );
+
   virtual void ComputeNonZeroJacobianIndices(
     NonZeroJacobianIndicesType & nonZeroJacobianIndices,
     const RegionType & supportRegion ) const = 0;
@@ -283,7 +294,7 @@ protected:
   /** Array of images representing the B-spline coefficients
    *  in each dimension.
    */
-  ImagePointer        m_CoefficientImage[ NDimensions ];
+  ImagePointer        m_CoefficientImages[ NDimensions ];
 
   /** Variables defining the coefficient grid extend. */
   RegionType          m_GridRegion;
@@ -296,7 +307,10 @@ protected:
   SpatialJacobianType m_PointToIndexMatrix2;
   DirectionType       m_PointToIndexMatrixTransposed;
   SpatialJacobianType m_PointToIndexMatrixTransposed2;
+  FixedArray<ScalarType,NDimensions>  m_PointToIndexMatrixDiagonal;
+  FixedArray<ScalarType,NDimensions*NDimensions>      m_PointToIndexMatrixDiagonalProducts;
   DirectionType       m_IndexToPoint;
+  bool m_PointToIndexMatrixIsDiagonal;
 
   RegionType          m_ValidRegion;
 

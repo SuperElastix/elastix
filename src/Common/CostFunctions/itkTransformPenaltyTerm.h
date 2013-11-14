@@ -91,6 +91,8 @@ public:
   typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
   typedef typename Superclass::ImageSampleContainerType    ImageSampleContainerType;
   typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
   /** Template parameters. FixedImageType has already been taken from superclass. */
   typedef TScalarType   ScalarType; // \todo: not really meaningful name.

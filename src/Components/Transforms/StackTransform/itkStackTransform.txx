@@ -42,7 +42,8 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 void
-StackTransform<TScalarType,NInputDimensions,NOutputDimensions>::SetParameters( const ParametersType & param )
+StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
+::SetParameters( const ParametersType & param )
 {
   // All subtransforms should be the same and should have the same number of parameters.
   // Here we check if the number of parameters is #subtransforms * #parameters per subtransform.
@@ -56,13 +57,11 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>::SetParameters( c
   for ( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
   {
     // MS, \todo: the new itk::TransformParameters only have constructors taking 1 argument
-    ParametersType subparams ( ParametersArrayType( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false ) );
-    //ParametersType subparams( numSubTransformParameters );
-    //unsigned int index = t * numSubTransformParameters;
-    //for ( unsigned int p = 0; p < numSubTransformParameters; ++p, ++index )
-    //{
-    //  subparams[ p ] = param[ index ];
-    //}
+    //ParametersType subparams ( ParametersArrayType( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false ) );
+    //ParametersType subparams ( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false );
+    // NTA, split the parameter by number of subparameters
+    const Array<double> subarray ( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false ) ;
+    ParametersType subparams( subarray );
     this->m_SubTransformContainer[ t ]->SetParametersByValue( subparams );
   }
 

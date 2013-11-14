@@ -138,7 +138,6 @@ typename PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>::MeasureTy
 PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputePIFixed( ) const
 {
-  unsigned int iDimension;
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   MeasureType diff = NumericTraits< MeasureType >::Zero;
 
@@ -148,16 +147,13 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   typename FixedImageType::SizeType neighborIterationSize;
   typename FixedImageType::PointType point;
 
-  for( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ )
+  iterationSize.Fill( 1 ); neighborIterationSize.Fill( 1 ); iterationStartIndex.Fill( 0 );
+  for( unsigned int i = 0; i < 2; ++i ) // Only 2D
   {
-    iterationSize[ iDimension ] -= static_cast<int>( 2 * this->m_NeighborhoodRadius );
-    iterationStartIndex[ iDimension ] = static_cast<int>( this->m_NeighborhoodRadius );
-    neighborIterationSize[ iDimension ] = static_cast<int>(2 * this->m_NeighborhoodRadius) + 1;
+    iterationSize[ i ] -= static_cast<int>( 2 * this->m_NeighborhoodRadius );
+    iterationStartIndex[ i ] = static_cast<int>( this->m_NeighborhoodRadius );
+    neighborIterationSize[ i ] = static_cast<int>(2 * this->m_NeighborhoodRadius) + 1;
   }
-
-  /** replace this by checking the size of the 3rd dimension of fixedimage */
-  iterationSize[ 2 ] = neighborIterationSize[ 2 ] = 1;
-  iterationStartIndex[ 2 ] = 0;
 
   typename FixedImageType::RegionType iterationRegion, neighboriterationRegion;
   iterationRegion.SetIndex( iterationStartIndex );
@@ -199,10 +195,10 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
     if ( sampleOK )
     {
       /** setup the neighborhood iterator */
-      for( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ )
+      neighborIndex.Fill( 0 );
+      for( unsigned int i = 0; i < 2; ++i ) // 2D only
       {
-        neighborIndex[ iDimension ] = currentIndex[ iDimension ] - this->m_NeighborhoodRadius;
-        neighborIndex[ 2 ] = 0; // 2D only
+        neighborIndex[ i ] = currentIndex[ i ] - this->m_NeighborhoodRadius;
       }
 
     neighboriterationRegion.SetIndex( neighborIndex );
@@ -235,57 +231,70 @@ typename PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>::MeasureTy
 PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputePIDiff( const TransformParametersType & parameters, float scalingfactor ) const
 {
-  unsigned int iDimension;
-  this->SetTransformParameters( parameters );
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+  //this->SetTransformParameters( parameters );
+
   this->m_TransformMovingImageFilter->Modified();
   this->m_MultiplyImageFilter->SetConstant( scalingfactor );
   this->m_DifferenceImageFilter->UpdateLargestPossibleRegion();
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   MeasureType diff = NumericTraits< MeasureType >::Zero;
 
-  typename FixedImageType::SizeType iterationSize = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
+  typename FixedImageType::SizeType iterationSize
+    = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
   typename FixedImageType::IndexType iterationStartIndex, currentIndex, neighborIndex;
   typename FixedImageType::SizeType neighborIterationSize;
   typename FixedImageType::PointType point;
 
-  for ( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ )
+  iterationSize.Fill( 1 ); neighborIterationSize.Fill( 1 ); iterationStartIndex.Fill( 0 );
+  for( unsigned int i = 0; i < 2; ++i ) // Only 2D
   {
-    iterationSize[iDimension] -= static_cast<int>( 2 * this->m_NeighborhoodRadius );
-    iterationStartIndex[iDimension] = static_cast<int>( this->m_NeighborhoodRadius );
-    neighborIterationSize[iDimension] = static_cast<int>( 2 * this->m_NeighborhoodRadius + 1 );
+    iterationSize[ i ] -= static_cast<int>( 2 * this->m_NeighborhoodRadius );
+    iterationStartIndex[ i ] = static_cast<int>( this->m_NeighborhoodRadius );
+    neighborIterationSize[ i ] = static_cast<int>( 2 * this->m_NeighborhoodRadius + 1 );
   }
-
-  /** 3rd Dimension is 1 */
-  iterationSize[ 2 ] = neighborIterationSize[ 2 ] = 1;
-  iterationStartIndex[ 2 ] = 0;
 
   typename FixedImageType::RegionType iterationRegion, neighboriterationRegion;
   iterationRegion.SetIndex( iterationStartIndex );
   iterationRegion.SetSize( iterationSize );
 
-  typedef itk::ImageRegionConstIteratorWithIndex< TransformedMovingImageType > DifferenceImageIteratorType;
-  DifferenceImageIteratorType differenceImageIt( this->m_DifferenceImageFilter->GetOutput(), iterationRegion );
+  typedef itk::ImageRegionConstIteratorWithIndex< TransformedMovingImageType >
+    DifferenceImageIteratorType;
+  DifferenceImageIteratorType differenceImageIt(
+    this->m_DifferenceImageFilter->GetOutput(), iterationRegion );
   differenceImageIt.GoToBegin();
 
   neighboriterationRegion.SetSize( neighborIterationSize );
 
   bool sampleOK = false;
-
-  if ( this->m_FixedImageMask.IsNull() )
+  if( this->m_FixedImageMask.IsNull() )
   {
     sampleOK = true;
   }
 
-  while ( !differenceImageIt.IsAtEnd() )
+  while( !differenceImageIt.IsAtEnd() )
   {
     /** Get current index */
     currentIndex = differenceImageIt.GetIndex();
     this->m_FixedImage->TransformIndexToPhysicalPoint( currentIndex, point );
 
     /** if fixedMask is given */
-    if ( !this->m_FixedImageMask.IsNull() )
+    if( !this->m_FixedImageMask.IsNull() )
     {
-      if ( this->m_FixedImageMask->IsInside( point ) )
+      if( this->m_FixedImageMask->IsInside( point ) )
       {
         sampleOK = true;
       }
@@ -295,23 +304,24 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
       }
     }
 
-    if ( sampleOK )
+    if( sampleOK )
     {
       /** setup the neighborhood iterator */
-      for ( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ )
+      neighborIndex.Fill( 0 );
+      for( unsigned int i = 0; i < 2; ++i ) // 2D only
       {
-        neighborIndex[ iDimension ] = currentIndex[ iDimension ] - this->m_NeighborhoodRadius;
-        neighborIndex[ 2 ] = 0; // 2D only
+        neighborIndex[ i ] = currentIndex[ i ] - this->m_NeighborhoodRadius;
       }
 
       neighboriterationRegion.SetIndex( neighborIndex );
-      DifferenceImageIteratorType neighborIt( this->m_DifferenceImageFilter->GetOutput(), neighboriterationRegion );
+      DifferenceImageIteratorType neighborIt(
+        this->m_DifferenceImageFilter->GetOutput(), neighboriterationRegion );
       neighborIt.GoToBegin();
 
-      while ( !neighborIt.IsAtEnd() )
+      while( !neighborIt.IsAtEnd() )
       {
         diff = differenceImageIt.Value() - neighborIt.Value();
-        measure += ( this->m_NoiseConstant )/( this->m_NoiseConstant + ( diff * diff ) );
+        measure += this->m_NoiseConstant / ( this->m_NoiseConstant + ( diff * diff ) );
         ++neighborIt;
       } // end while neighborIt
 
@@ -334,7 +344,22 @@ typename PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>::MeasureTy
 PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
 {
-  this->SetTransformParameters( parameters );
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+  //this->SetTransformParameters( parameters );
+
   this->m_TransformMovingImageFilter->Modified();
   this->m_DifferenceImageFilter->UpdateLargestPossibleRegion();
   MeasureType measure = 1e10;
@@ -344,7 +369,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   {
     float tmpfactor =  0.0;
     float factorstep =  ( this->m_NormalizationFactor * 10 - tmpfactor ) / 100;
-    float bestfactor = tmpfactor;
+    //float bestfactor = tmpfactor;
     MeasureType tmpMeasure = 1e10;
 
     while ( tmpfactor <=  this->m_NormalizationFactor * 1.0 )
@@ -355,7 +380,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
       if( tmpMeasure < currentMeasure )
       {
         currentMeasure = tmpMeasure;
-        bestfactor = tmpfactor;
+        //bestfactor = tmpfactor;
       }
 
       tmpfactor += factorstep;

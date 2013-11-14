@@ -33,8 +33,7 @@ namespace elastix
 
 template <class TElastix >
 class GradientDifferenceMetric:
-public
-itk::GradientDifferenceImageToImageMetric<
+public itk::GradientDifferenceImageToImageMetric<
   typename MetricBase<TElastix>::FixedImageType,
   typename MetricBase<TElastix>::MovingImageType >,
   public MetricBase<TElastix>
@@ -54,7 +53,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( GradientDifferenceMetric, GradientDifferenceImageToImageMetric );
+  itkTypeMacro( GradientDifferenceMetric, itk::GradientDifferenceImageToImageMetric );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n

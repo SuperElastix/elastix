@@ -11,154 +11,143 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef __VectorContainerSource_txx
-#define __VectorContainerSource_txx
+#ifndef __itkVectorContainerSource_txx
+#define __itkVectorContainerSource_txx
 
 #include "itkVectorContainerSource.h"
 
 namespace itk
 {
 
-  /**
-   * ******************* Constructor *******************
-   */
+/**
+ * ******************* Constructor *******************
+ */
 
-  template< class TOutputVectorContainer >
-    VectorContainerSource< TOutputVectorContainer >
-    ::VectorContainerSource()
+template< class TOutputVectorContainer >
+VectorContainerSource< TOutputVectorContainer >
+::VectorContainerSource()
+{
+  // Create the output. We use static_cast<> here because we know the default
+  // output must be of type TOutputVectorContainer
+  OutputVectorContainerPointer output
+    = static_cast< TOutputVectorContainer * >( this->MakeOutput(0).GetPointer() );
+
+  this->ProcessObject::SetNumberOfRequiredOutputs( 1 );
+  this->ProcessObject::SetNthOutput( 0, output.GetPointer() );
+
+  this->m_GenerateDataRegion = 0;
+  this->m_GenerateDataNumberOfRegions = 0;
+
+} // end Constructor
+
+
+/**
+ * ******************* MakeOutput *******************
+ */
+
+template< class TOutputVectorContainer >
+typename VectorContainerSource< TOutputVectorContainer >::DataObjectPointer
+VectorContainerSource< TOutputVectorContainer >
+::MakeOutput( unsigned int itkNotUsed( idx ) )
+{
+  return static_cast<DataObject*>( TOutputVectorContainer::New().GetPointer() );
+} // end MakeOutput()
+
+
+/**
+ * ******************* GetOutput *******************
+ */
+
+template< class TOutputVectorContainer >
+typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType *
+VectorContainerSource< TOutputVectorContainer >
+::GetOutput( void )
+{
+  if ( this->GetNumberOfOutputs() < 1 )
   {
-    // Create the output. We use static_cast<> here because we know the default
-    // output must be of type TOutputVectorContainer
-    OutputVectorContainerPointer output
-      = static_cast< TOutputVectorContainer * >( this->MakeOutput(0).GetPointer() );
+    return 0;
+  }
 
-    this->ProcessObject::SetNumberOfRequiredOutputs( 1 );
-    this->ProcessObject::SetNthOutput( 0, output.GetPointer() );
-
-    m_GenerateDataRegion = 0;
-    m_GenerateDataNumberOfRegions = 0;
-  } // end Constructor
+  return static_cast<OutputVectorContainerType *>(
+    this->ProcessObject::GetOutput(0) );
+} // end GetOutput()
 
 
-  /**
-   * ******************* MakeOutput *******************
-   */
+/**
+ * ******************* GetOutput *******************
+ */
 
-  template< class TOutputVectorContainer >
-    typename VectorContainerSource< TOutputVectorContainer >::DataObjectPointer
-    VectorContainerSource< TOutputVectorContainer >
-    ::MakeOutput( unsigned int itkNotUsed( idx ) )
+template< class TOutputVectorContainer >
+typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType *
+VectorContainerSource< TOutputVectorContainer >
+::GetOutput( unsigned int idx )
+{
+  return static_cast<OutputVectorContainerType *>(
+    this->ProcessObject::GetOutput( idx ) );
+} // end GetOutput()
+
+
+/**
+ * ******************* GraftOutput *******************
+ */
+
+template< class TOutputVectorContainer >
+void
+VectorContainerSource< TOutputVectorContainer >
+::GraftOutput( DataObject *graft )
+{
+  this->GraftNthOutput( 0, graft );
+} // end GraftOutput()
+
+
+/**
+ * ******************* GraftNthOutput *******************
+ */
+
+template< class TOutputVectorContainer >
+void
+VectorContainerSource< TOutputVectorContainer >
+::GraftNthOutput( unsigned int idx, DataObject *graft )
+{
+  /** Check idx. */
+  if ( idx >= this->GetNumberOfOutputs() )
   {
-    return static_cast<DataObject*>( TOutputVectorContainer::New().GetPointer() );
-  } // end MakeOutput
+    itkExceptionMacro( << "Requested to graft output " << idx
+      << " but this filter only has " << this->GetNumberOfOutputs() << " Outputs." );
+  }
 
-
-  /**
-   * ******************* GetOutput *******************
-   */
-
-  template< class TOutputVectorContainer >
-    typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType *
-    VectorContainerSource< TOutputVectorContainer >
-    ::GetOutput( void )
+  /** Check graft. */
+  if ( !graft )
   {
-    if ( this->GetNumberOfOutputs() < 1 )
-    {
-      return 0;
-    }
+    itkExceptionMacro( << "Requested to graft output that is a NULL pointer" );
+  }
 
-    return static_cast<OutputVectorContainerType *>(
-      this->ProcessObject::GetOutput(0) );
-  } // end GetOutput
+  /** Get a pointer to the output. */
+  DataObject * output = this->GetOutput( idx );
 
+  /** Call Graft on the vector container in order to
+  * copy meta-information, and containers. */
+  output->Graft( graft );
 
-  /**
-   * ******************* GetOutput *******************
-   */
-
-  template< class TOutputVectorContainer >
-    typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType *
-    VectorContainerSource< TOutputVectorContainer >
-    ::GetOutput( unsigned int idx )
-  {
-    return static_cast<OutputVectorContainerType *>(
-      this->ProcessObject::GetOutput( idx ) );
-  } // end GetOutput
+} // end GraftNthOutput()
 
 
-  /**
-   * ******************* GenerateInputRequestedRegion *******************
-   */
+/**
+ * ******************* PrintSelf *******************
+ */
 
-  template< class TOutputVectorContainer >
-    void
-    VectorContainerSource< TOutputVectorContainer >
-    ::GenerateInputRequestedRegion( void )
-  {
-    Superclass::GenerateInputRequestedRegion();
-  } // end GenerateInputRequestedRegion
+template< class TOutputVectorContainer >
+void
+VectorContainerSource< TOutputVectorContainer >
+::PrintSelf( std::ostream& os, Indent indent ) const
+{
+  Superclass::PrintSelf( os, indent );
 
-
-  /**
-   * ******************* GraftOutput *******************
-   */
-
-  template< class TOutputVectorContainer >
-    void
-    VectorContainerSource< TOutputVectorContainer >
-    ::GraftOutput( DataObject *graft )
-  {
-    this->GraftNthOutput( 0, graft );
-  } // end GraftOutput
-
-
-  /**
-   * ******************* GraftNthOutput *******************
-   */
-
-  template< class TOutputVectorContainer >
-    void
-    VectorContainerSource< TOutputVectorContainer >
-    ::GraftNthOutput( unsigned int idx, DataObject *graft )
-  {
-    /** Check idx. */
-    if ( idx >= this->GetNumberOfOutputs() )
-    {
-      itkExceptionMacro( << "Requested to graft output " << idx
-        << " but this filter only has " << this->GetNumberOfOutputs() << " Outputs." );
-    }
-
-    /** Check graft. */
-    if ( !graft )
-    {
-      itkExceptionMacro( << "Requested to graft output that is a NULL pointer" );
-    }
-
-    /** Get a pointer to the output. */
-    DataObject * output = this->GetOutput( idx );
-
-    /** Call Graft on the vector container in order to
-     * copy meta-information, and containers. */
-    output->Graft( graft );
-
-  } // end GraftNthOutput
-
-
-  /**
-   * ******************* PrintSelf *******************
-   */
-
-  template< class TOutputVectorContainer >
-    void
-    VectorContainerSource< TOutputVectorContainer >
-    ::PrintSelf( std::ostream& os, Indent indent ) const
-  {
-    Superclass::PrintSelf( os, indent );
-  } // end PrintSelf
+//   int m_GenerateDataRegion;
+//   int m_GenerateDataNumberOfRegions;
+} // end PrintSelf()
 
 
 } // end namespace itk
 
-#endif // end #ifndef __VectorContainerSource_txx
-
+#endif // end #ifndef __itkVectorContainerSource_txx

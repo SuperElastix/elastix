@@ -271,7 +271,8 @@ public:
     const char * transformParameterFileName );
 
   /** Function to read the initial transform parameters from the internally stored
-      configuration object. */
+   * configuration object.
+   */
   virtual void ReadInitialTransformFromVector( const size_t index );
 
   /** Function to transform coordinates from fixed to moving image. */

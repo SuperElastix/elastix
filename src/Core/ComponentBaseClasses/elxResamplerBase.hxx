@@ -56,7 +56,7 @@ ResamplerBase<TElastix>
    * that come from outside the original (moving) image.
    */
   double defaultPixelValue = itk::NumericTraits<double>::Zero;
-  bool found = this->m_Configuration->ReadParameter(
+  this->m_Configuration->ReadParameter(
     defaultPixelValue, "DefaultPixelValue", 0, false );
 
   /** Set the defaultPixelValue. */
@@ -224,7 +224,7 @@ ResamplerBase<TElastix>
    */
 #ifdef _ELASTIX_BUILD_LIBRARY
 
-  if ( writeResultImage == "true" )
+  if( writeResultImage == "true" )
   {
     this->CreateItkResultImage();
   }

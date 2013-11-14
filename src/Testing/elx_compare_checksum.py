@@ -89,8 +89,9 @@ def main() :
       if options.verbose:
         print( "Complete elastix.log file:\n" )
         f.seek(0,0)
-        for line in f:
-          print( line )
+        for line in f :
+          if "(TransformParameters" not in line : print "%s" % line,
+          else : print "(TransformParameters <values have been removed to avoid CDash trunctation> )"
       f.close();
       return 1
 

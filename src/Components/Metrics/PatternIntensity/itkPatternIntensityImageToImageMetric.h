@@ -205,3 +205,4 @@ private:
 #endif
 
 #endif // end #ifndef __itkPatternIntensityImageToImageMetric_h
+

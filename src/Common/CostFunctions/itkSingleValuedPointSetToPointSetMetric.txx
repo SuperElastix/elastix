@@ -38,6 +38,8 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
 
   this->m_NumberOfPointsCounted = 0;
 
+  this->m_UseMetricSingleThreaded = true;
+
 } // end Constructor
 
 
@@ -96,6 +98,24 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
   }
 
 } // end Initialize()
+
+
+/**
+ * *********************** BeforeThreadedGetValueAndDerivative ***********************
+ */
+
+template <class TFixedPointSet, class TMovingPointSet>
+void
+SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
+::BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const
+{
+  /** In this function do all stuff that cannot be multi-threaded. */
+  if ( this->m_UseMetricSingleThreaded )
+  {
+    this->SetTransformParameters( parameters );
+  }
+
+} // end BeforeThreadedGetValueAndDerivative()
 
 
 /**

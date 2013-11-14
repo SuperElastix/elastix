@@ -16,17 +16,16 @@
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdaptiveStochasticGradientDescentOptimizer.h"
-#include "itkImageGridSampler.h"
-#include "itkImageRandomCoordinateSampler.h"
+#include "itkComputeJacobianTerms.h"
+#include "itkComputeDisplacementDistribution.h"
 #include "elxProgressCommand.h"
 #include "itkAdvancedTransform.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
+
 namespace elastix
 {
-
-
-  /**
+ /**
   * \class AdaptiveStochasticGradientDescent
   * \brief A gradient descent optimizer with an adaptive gain.
   *
@@ -53,7 +52,13 @@ namespace elastix
   * "Adaptive stochastic gradient descent optimisation for image registration,"
   * International Journal of Computer Vision, vol. 81, no. 3, pp. 227-239, 2009.
   * http://dx.doi.org/10.1007/s11263-008-0168-y
-
+  *
+  * Acceleration in case of many transform parameters was proposed in the following paper:
+  *
+  * [3]  Y.Qiao, B.P.F. Lelieveldt, M.Staring
+  * "Fast automatic estimation of the optimization step size for nonrigid image registration,"
+  * SPIE Medical Imaging: Image Processing,February, 2014.
+  * http://elastix.isi.uu.nl/marius/publications/2014_c_SPIEMI.php
   *
   * The parameters used in this class are:
   * \parameter Optimizer: Select this optimizer as follows:\n
@@ -156,6 +161,22 @@ namespace elastix
   *   Default/recommended: 100000. This works in general. If the image is smaller, the number
   *   of samples is automatically reduced. In principle, the more the better, but the slower.
   *   The parameter has only influence when AutomaticParameterEstimation is used.
+  * \parameter ASGDParameterEstimationMethod: The ASGD parameter estimation method used
+  *   in this optimizer.
+  *   The parameter can be specified for each resolution.\n
+  *   example: <tt>(ASGDParameterEstimationMethod "Original")</tt>\n
+  *         or <tt>(ASGDParameterEstimationMethod "DisplacementDistribution")</tt>\n
+  *   Default: Original.
+  * \parameter MaximumDisplacementEstimationMethod: The suitable position selection method used only for
+  *   displacement distribution estimation method.
+  *   The parameter can be specified for each resolution.\n
+  *   example: <tt>(MaximumDisplacementEstimationMethod "2sigma")</tt>\n
+  *         or <tt>(MaximumDisplacementEstimationMethod "95percentile")</tt>\n
+  *   Default: 2sigma.
+  * \parameter NoiseCompensation: Selects whether or not to use noise compensation.
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(NoiseCompensation "true")</tt>\n
+  *   Default/recommended: true.
   *
   * \todo: this class contains a lot of functional code, which actually does not belong here.
   *
@@ -258,15 +279,21 @@ protected:
   /** Protected typedefs */
   typedef typename RegistrationType::FixedImageType   FixedImageType;
   typedef typename RegistrationType::MovingImageType  MovingImageType;
+
   typedef typename FixedImageType::RegionType         FixedImageRegionType;
   typedef typename FixedImageType::IndexType          FixedImageIndexType;
   typedef typename FixedImageType::PointType          FixedImagePointType;
   typedef typename RegistrationType::ITKBaseType      itkRegistrationType;
   typedef typename itkRegistrationType::TransformType TransformType;
   typedef typename TransformType::JacobianType        JacobianType;
+  typedef itk::ComputeJacobianTerms<
+    FixedImageType,TransformType >                    ComputeJacobianTermsType;
   typedef typename JacobianType::ValueType            JacobianValueType;
   struct SettingsType { double a, A, alpha, fmax, fmin, omega; };
   typedef typename std::vector<SettingsType>          SettingsVectorType;
+
+  typedef itk::ComputeDisplacementDistribution<
+    FixedImageType,TransformType >                    ComputeDisplacementDistributionType;
 
   /** Samplers: */
   typedef itk::ImageSamplerBase<FixedImageType>       ImageSamplerBaseType;
@@ -326,11 +353,22 @@ protected:
   /** Print the contents of the settings vector to elxout. */
   virtual void PrintSettingsVector( const SettingsVectorType & settings ) const;
 
-  /** Estimates some reasonable values for the parameters
+  /** Select different method to estimate some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and
    * SigmoidScale.
    */
   virtual void AutomaticParameterEstimation( void );
+
+  /** Original estimation method to get the reasonable values for the parameters
+   * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and
+   * SigmoidScale.
+   */
+  virtual void AutomaticParameterEstimationOriginal( void );
+
+  /** Estimates some reasonable values for the parameters using displacement distribution
+   * SP_a, SP_alpha (=1)
+   */
+  virtual void AutomaticParameterEstimationUsingDisplacementDistribution( void );
 
   /** Measure some derivatives, exact and approximated. Returns
    * the squared magnitude of the gradient and approximation error.
@@ -341,23 +379,6 @@ protected:
    */
   virtual void SampleGradients( const ParametersType & mu0,
     double perturbationSigma, double & gg, double & ee );
-
-  /** Returns a container of fixed image samples, sampled using a grid sampler
-   * The grid size is determined from the user entered number of Jacobian measurements,
-   * or a default value of 200 is used.
-   * The actual number of samples depends on the presence of masks, and
-   * the restriction that the grid spacing of the grid sampler must be integer.
-   * The samples input variable contains the sample container after execution.
-   * It does not have to be initialized/allocated before.
-   */
-  virtual void SampleFixedImageForJacobianTerms(
-    ImageSampleContainerPointer & sampleContainer );
-
-  /** Functions to compute the Jacobian terms needed for the automatic
-   * parameter estimation.
-   */
-  virtual void ComputeJacobianTerms( double & TrC, double & TrCC,
-    double & maxJJ, double & maxJCJ );
 
   /** Helper function, which calls GetScaledValueAndDerivative and does
    * some exception handling. Used by SampleGradients.
@@ -373,10 +394,10 @@ protected:
 private:
 
   AdaptiveStochasticGradientDescent( const Self& );  // purposely not implemented
-  void operator=( const Self& );              // purposely not implemented
+  void operator=( const Self& );                     // purposely not implemented
 
-  bool m_AutomaticParameterEstimation;
-  double m_MaximumStepLength;
+  bool    m_AutomaticParameterEstimation;
+  double  m_MaximumStepLength;
 
   /** Private variables for the sampling attempts. */
   SizeValueType m_MaximumNumberOfSamplingAttempts;
@@ -387,6 +408,10 @@ private:
   /** Private variables for band size estimation of covariance matrix. */
   SizeValueType m_MaxBandCovSize;
   SizeValueType m_NumberOfBandStructureSamples;
+
+  /** The flag of using noise compensation. */
+  bool m_UseNoiseCompensation;
+  bool m_OriginalButSigmoidToDefault;
 
 }; // end class AdaptiveStochasticGradientDescent
 

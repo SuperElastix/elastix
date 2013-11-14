@@ -92,6 +92,12 @@ public:
   typedef typename Superclass::InternalMatrixType             InternalMatrixType;
   typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
+  typedef typename Superclass::TransformCategoryType      TransformCategoryType;
+
+  /** Transform typedefs for the from Superclass. */
+  typedef typename Superclass::TransformType              TransformType;
+  typedef typename TransformType::Pointer                 TransformTypePointer;
+  typedef typename TransformType::ConstPointer            TransformTypeConstPointer;
 
   /** Typedefs for the InitialTransform. */
   typedef Superclass                                      InitialTransformType;
@@ -105,13 +111,15 @@ public:
   /** Typedefs for the CurrentTransform. */
   typedef Superclass                                      CurrentTransformType;
   typedef typename CurrentTransformType::Pointer          CurrentTransformPointer;
+  typedef typename CurrentTransformType::ConstPointer     CurrentTransformConstPointer;
   typedef typename CurrentTransformType::InverseTransformBaseType
     CurrentTransformInverseTransformBaseType;
   typedef typename CurrentTransformType::InverseTransformBasePointer
     CurrentTransformInverseTransformBasePointer;
 
   /** Set/Get a pointer to the InitialTransform. */
-  virtual void SetInitialTransform( const InitialTransformType * _arg );
+  virtual void SetInitialTransform( InitialTransformType * _arg );
+  itkGetObjectMacro( InitialTransform, InitialTransformType );
   itkGetConstObjectMacro( InitialTransform, InitialTransformType );
 
   /** Set/Get a pointer to the CurrentTransform.
@@ -120,6 +128,16 @@ public:
    */
   virtual void SetCurrentTransform( CurrentTransformType * _arg );
   itkGetObjectMacro( CurrentTransform, CurrentTransformType );
+  itkGetConstObjectMacro( CurrentTransform, CurrentTransformType );
+
+  /** Return the number of sub-transforms. */
+  virtual SizeValueType GetNumberOfTransforms( void ) const;
+
+  /** Get the Nth current transform.
+    * Exact interface to the ITK4 MultiTransform::GetNthTransform( SizeValueType n )
+    * \warning The bounds checking is performed.
+    */
+  virtual const TransformTypePointer GetNthTransform( SizeValueType n ) const;
 
   /** Control the way transforms are combined. */
   virtual void SetUseComposition( bool _arg );
@@ -142,7 +160,7 @@ public:
       << "TransformVector(const InputVectorType &) is not implemented "
       << "for AdvancedCombinationTransform" );
   }
-  virtual OutputVnlVectorType       TransformVector( const InputVnlVectorType & ) const
+  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
   {
     itkExceptionMacro(
       << "TransformVector(const InputVnlVectorType &) is not implemented "
@@ -193,6 +211,12 @@ public:
   /** Return whether the transform is linear (or actually: affine)
    * Returns true when both initial and current transform are linear */
   virtual bool IsLinear( void ) const;
+
+  /** Special handling for combination transform. If all transforms
+   * are linear, then return category Linear. Otherwise if all
+   * transforms set to optimize are DisplacementFields, then
+   * return DisplacementField category. */
+  virtual TransformCategoryType GetTransformCategory() const;
 
   /** Whether the advanced transform has nonzero matrices. */
   virtual bool GetHasNonZeroSpatialHessian( void ) const;
@@ -284,8 +308,8 @@ protected:
   virtual ~AdvancedCombinationTransform(){};
 
   /** Declaration of members. */
-  InitialTransformConstPointer  m_InitialTransform;
-  CurrentTransformPointer       m_CurrentTransform;
+  InitialTransformPointer m_InitialTransform;
+  CurrentTransformPointer m_CurrentTransform;
 
   /** Set the SelectedTransformPointFunction and the
    * SelectedGetJacobianFunction.

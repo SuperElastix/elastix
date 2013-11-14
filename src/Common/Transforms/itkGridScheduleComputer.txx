@@ -41,7 +41,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   this->m_GridRegions.clear();
   this->m_GridSpacingFactors.clear();
   this->m_UpsamplingFactor = 2.0;
-  
+
   this->m_ImageOrigin.Fill(0.0);
   this->m_ImageSpacing.Fill(1.0);
   this->m_ImageDirection.Fill(0.0);

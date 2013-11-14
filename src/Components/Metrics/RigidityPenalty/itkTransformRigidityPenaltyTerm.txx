@@ -497,7 +497,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   std::vector< CoefficientImagePointer >  inputImages( ImageDimension );
   for ( unsigned int i = 0; i < ImageDimension; i++ )
   {
-    inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImage()[ i ];
+    inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImages()[ i ];
   }
 
   /** Get the B-spline coefficient image spacing. */
@@ -913,6 +913,26 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
 
 /**
+ * *********************** BeforeThreadedGetValueAndDerivative ***********************
+ */
+
+template< class TFixedImage, class TScalarType >
+void
+TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
+::BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const
+{
+  /** In this function do all stuff that cannot be multi-threaded.
+   * Meant for use in the combo-metric. So, I did not think about general usage yet.
+   */
+  if ( this->m_UseMetricSingleThreaded )
+  {
+    this->m_BSplineTransform->SetParameters( parameters );
+  }
+
+} // end BeforeThreadedGetValueAndDerivative()
+
+
+/**
  * *********************** GetValueAndDerivative ****************
  */
 
@@ -936,10 +956,20 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   derivative = DerivativeType( this->GetNumberOfParameters() );
   derivative.Fill( NumericTraits< MeasureType >::Zero );
 
-  /** Set the parameters in the transform.
-   * In this function, also the B-spline coefficient images are created.
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
    */
-  this->m_BSplineTransform->SetParameters( parameters );
+  this->BeforeThreadedGetValueAndDerivative( parameters );
 
   /** Sanity check. */
   if ( ImageDimension != 2 && ImageDimension != 3 )
@@ -951,7 +981,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   std::vector< CoefficientImagePointer >  inputImages( ImageDimension );
   for ( unsigned int i = 0; i < ImageDimension; i++ )
   {
-    inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImage()[ i ];
+    inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImages()[ i ];
   }
 
   /** Get the B-spline coefficient image spacing. */

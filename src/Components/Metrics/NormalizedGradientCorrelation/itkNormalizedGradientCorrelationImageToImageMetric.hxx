@@ -63,7 +63,6 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
   unsigned int iFilter;
   typedef typename FixedImageType::SizeType SizeType;
-  SizeType size = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
 
   /** Compute the gradient of the fixed images */
   this->m_CastFixedImageFilter->SetInput( this->m_FixedImage );
@@ -130,7 +129,7 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf( os, indent );
-    os << indent << "DerivativeDelta: " << this->m_DerivativeDelta << std::endl;
+  os << indent << "DerivativeDelta: " << this->m_DerivativeDelta << std::endl;
 } // end PrintSelf()
 
 
@@ -403,8 +402,23 @@ typename NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImag
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
 {
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+  //this->SetTransformParameters( parameters );
+
   unsigned int iFilter;
-  this->SetTransformParameters( parameters );
   this->m_TransformMovingImageFilter->Modified();
   this->m_TransformMovingImageFilter->UpdateLargestPossibleRegion();
 
@@ -487,3 +501,4 @@ MeasureType & value, DerivativeType & derivative ) const
 
 
 #endif
+

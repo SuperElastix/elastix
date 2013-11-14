@@ -146,6 +146,8 @@ public:
     Iterator* operator-> ()   { return this; }
     Iterator& operator++ ()   { ++m_Pos; ++m_Iter; return *this; }
     Iterator operator++ (int) { Iterator temp(*this); ++m_Pos; ++m_Iter; return temp; }
+    Iterator operator+= (int j){ m_Pos+= j; m_Iter+=j; return *this; }
+    Iterator operator-= (int j){ m_Pos-= j; m_Iter-=j; return *this; }
     Iterator& operator-- ()   { --m_Pos; --m_Iter; return *this; }
     Iterator operator-- (int) { Iterator temp(*this); --m_Pos; --m_Iter; return temp; }
 
@@ -179,6 +181,8 @@ public:
     ConstIterator* operator-> ()   { return this; }
     ConstIterator& operator++ ()   { ++m_Pos; ++m_Iter; return *this; }
     ConstIterator operator++ (int) { ConstIterator temp(*this); ++m_Pos; ++m_Iter; return temp; }
+    ConstIterator operator+= (int j){ m_Pos+= j; m_Iter+=j; return *this; }
+    ConstIterator operator-= (int j){ m_Pos-= j; m_Iter-=j; return *this; }
     ConstIterator& operator-- ()   { --m_Pos; --m_Iter; return *this; }
     ConstIterator operator-- (int) { ConstIterator temp(*this); --m_Pos; --m_Iter; return temp; }
 

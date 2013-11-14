@@ -96,11 +96,16 @@ namespace elastix
         << movingImageDerivativeScales << std::endl;
     }
 
-  } // end BeforeEachResolution
+    /** Select the use of an OpenMP implementation for GetValueAndDerivative. */
+    std::string useOpenMP = this->m_Configuration->GetCommandLineArgument( "-useOpenMP_SSD" );
+    if( useOpenMP == "true" )
+    {
+      this->SetUseOpenMP( true );
+    }
 
+  } // end BeforeEachResolution()
 
 } // end namespace elastix
 
 
 #endif // end #ifndef __elxAdvancedMeanSquaresMetric_HXX__
-

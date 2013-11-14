@@ -17,9 +17,6 @@
 
 #include "itkAdvancedBSplineDeformableTransformBase.h"
 #include "itkContinuousIndex.h"
-#include "itkImageRegionIterator.h"
-#include "itkImageRegionConstIterator.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkIdentityTransform.h"
 #include "vnl/vnl_math.h"
 
@@ -56,20 +53,20 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     this->m_WrappedImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
     this->m_WrappedImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     this->m_WrappedImage[j]->SetDirection( this->m_GridDirection );
-    this->m_CoefficientImage[j] = NULL;
+    this->m_CoefficientImages[j] = NULL;
     }
 
   this->m_ValidRegion = this->m_GridRegion;
 
   // Initialize Jacobian images
-  for ( unsigned int j = 0; j < SpaceDimension; j++ )
-    {
-    this->m_JacobianImage[j] = ImageType::New();
-    this->m_JacobianImage[j]->SetRegions( this->m_GridRegion );
-    this->m_JacobianImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
-    this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
-    this->m_JacobianImage[j]->SetDirection( this->m_GridDirection );
-    }
+//   for ( unsigned int j = 0; j < SpaceDimension; j++ )
+//     {
+//     this->m_JacobianImage[j] = ImageType::New();
+//     this->m_JacobianImage[j]->SetRegions( this->m_GridRegion );
+//     this->m_JacobianImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
+//     this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
+//     this->m_JacobianImage[j]->SetDirection( this->m_GridDirection );
+//     }
 
   /** Fixed Parameters store the following information:
    *     Grid Size
@@ -93,26 +90,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
       }
     }
 
-  DirectionType scale;
-  for( unsigned int i=0; i<SpaceDimension; i++)
-    {
-    scale[i][i] = this->m_GridSpacing[i];
-    }
+  this->UpdatePointIndexConversions();
 
-  this->m_IndexToPoint = this->m_GridDirection * scale;
-  this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
-  this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
-  for ( unsigned int i = 0; i < SpaceDimension; ++i )
-  {
-    for ( unsigned int j = 0; j < SpaceDimension; ++j )
-    {
-      this->m_PointToIndexMatrix2[ i ][ j ]
-        = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
-      this->m_PointToIndexMatrixTransposed2[ i ][ j ]
-        = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
-    }
-  }
 }
 
 
@@ -133,8 +113,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
   // The number of parameters equal SpaceDimension * number of
   // of pixels in the grid region.
-  return ( static_cast<unsigned int>( SpaceDimension ) *
-           static_cast<unsigned int>( this->m_GridRegion.GetNumberOfPixels() ) );
+  return ( static_cast<NumberOfParametersType>( SpaceDimension ) *
+           static_cast<NumberOfParametersType>( this->m_GridRegion.GetNumberOfPixels() ) );
 
 }
 
@@ -147,9 +127,54 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 {
   // The number of parameters per dimension equal number of
   // of pixels in the grid region.
-  return ( static_cast<unsigned int>( this->m_GridRegion.GetNumberOfPixels() ) );
+  return ( static_cast<NumberOfParametersType>( this->m_GridRegion.GetNumberOfPixels() ) );
 
 }
+
+
+// Set the grid spacing
+template<class TScalarType, unsigned int NDimensions>
+void
+AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
+::UpdatePointIndexConversions( void )
+{
+  DirectionType scale;
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    scale[ i ][ i ] = this->m_GridSpacing[ i ];
+  }
+
+  this->m_IndexToPoint = this->m_GridDirection * scale;
+  this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
+  this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
+  this->m_PointToIndexMatrixIsDiagonal = true;
+  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    for ( unsigned int j = 0; j < SpaceDimension; ++j )
+    {
+      this->m_PointToIndexMatrix2[ i ][ j ]
+        = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
+      this->m_PointToIndexMatrixTransposed2[ i ][ j ]
+        = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
+      if( i != j && this->m_PointToIndexMatrix[ i ][ j ] != 0.0 )
+      {
+        this->m_PointToIndexMatrixIsDiagonal = false;
+      }
+    }
+  }
+
+  this->m_PointToIndexMatrixDiagonal
+    = this->m_PointToIndexMatrixTransposed2.GetVnlMatrix().get_diagonal().data_block ();
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    for( unsigned int j = 0; j < SpaceDimension; ++j )
+    {
+      this->m_PointToIndexMatrixDiagonalProducts[ i + SpaceDimension * j ]
+        = this->m_PointToIndexMatrixDiagonal[ i ] * m_PointToIndexMatrixDiagonal[ j ];
+    }
+  }
+
+} // end UpdatePointIndexConversions()
 
 
 //
@@ -182,28 +207,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       this->m_WrappedImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
-      this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     }
 
-    DirectionType scale;
-    for( unsigned int i=0; i<SpaceDimension; i++)
-    {
-      scale[i][i] = this->m_GridSpacing[i];
-    }
-
-    this->m_IndexToPoint = this->m_GridDirection * scale;
-    this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
-    this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
-    for ( unsigned int i = 0; i < SpaceDimension; ++i )
-    {
-      for ( unsigned int j = 0; j < SpaceDimension; ++j )
-      {
-        this->m_PointToIndexMatrix2[ i ][ j ]
-          = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
-        this->m_PointToIndexMatrixTransposed2[ i ][ j ]
-          = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
-      }
-    }
+    this->UpdatePointIndexConversions();
 
     this->Modified();
   }
@@ -223,28 +229,9 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
       this->m_WrappedImage[j]->SetDirection( this->m_GridDirection );
-      this->m_JacobianImage[j]->SetDirection( this->m_GridDirection );
       }
 
-    DirectionType scale;
-    for( unsigned int i=0; i<SpaceDimension; i++)
-      {
-      scale[i][i] = this->m_GridSpacing[i];
-      }
-
-    this->m_IndexToPoint = this->m_GridDirection * scale;
-    this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
-    this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
-    for ( unsigned int i = 0; i < SpaceDimension; ++i )
-    {
-      for ( unsigned int j = 0; j < SpaceDimension; ++j )
-      {
-        this->m_PointToIndexMatrix2[ i ][ j ]
-          = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
-        this->m_PointToIndexMatrixTransposed2[ i ][ j ]
-          = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
-      }
-    }
+    this->UpdatePointIndexConversions();
 
     this->Modified();
   }
@@ -266,7 +253,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
       this->m_WrappedImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
-      this->m_JacobianImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
       }
 
     this->Modified();
@@ -332,7 +318,6 @@ void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::SetFixedParameters( const ParametersType & passedParameters )
 {
-
   ParametersType parameters( NDimensions * (3 + NDimensions) );
 
   // check if the number of parameters match the
@@ -406,7 +391,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
       }
     }
 
-
   this->SetGridSpacing( spacing );
   this->SetGridDirection( direction );
   this->SetGridOrigin( origin );
@@ -423,7 +407,6 @@ void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::WrapAsImages( void )
 {
-
   /**
    * Wrap flat parameters array into SpaceDimension number of ITK images
    * NOTE: For efficiency, parameters are not copied locally. The parameters
@@ -438,24 +421,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     this->m_WrappedImage[j]->GetPixelContainer()->
       SetImportPointer( dataPointer, numberOfPixels );
     dataPointer += numberOfPixels;
-    this->m_CoefficientImage[j] = this->m_WrappedImage[j];
+    this->m_CoefficientImages[j] = this->m_WrappedImage[j];
     }
-
-  /**
-   * Allocate memory for Jacobian and wrap into SpaceDimension number
-   * of ITK images
-   */
-//   this->m_Jacobian.set_size( SpaceDimension, this->GetNumberOfParameters() );
-//   this->m_Jacobian.Fill( NumericTraits<JacobianPixelType>::Zero );
-  this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
-//   JacobianPixelType * jacobianDataPointer = this->m_Jacobian.data_block();
-//
-//   for ( unsigned int j = 0; j < SpaceDimension; j++ )
-//     {
-//     m_JacobianImage[j]->GetPixelContainer()->
-//       SetImportPointer( jacobianDataPointer, numberOfPixels );
-//     jacobianDataPointer += this->GetNumberOfParameters() + numberOfPixels;
-//     }
 }
 
 
@@ -465,7 +432,6 @@ void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::SetParametersByValue( const ParametersType & parameters )
 {
-
   // check if the number of parameters match the
   // expected number of parameters
   if ( parameters.Size() != this->GetNumberOfParameters() )
@@ -502,7 +468,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
    */
   if (NULL == this->m_InputParametersPointer)
     {
-    itkExceptionMacro( <<"Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps SetCoefficientImage() has been called causing the NULL pointer." );
+    itkExceptionMacro( << "Cannot GetParameters() because m_InputParametersPointer is NULL."
+      << " Perhaps SetCoefficientImages() has been called causing the NULL pointer." );
     }
 
   return (*this->m_InputParametersPointer);
@@ -548,7 +515,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 template<class TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
-::SetCoefficientImage( ImagePointer images[] )
+::SetCoefficientImages( ImagePointer images[] )
 {
   if ( images[0] )
     {
@@ -560,7 +527,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
     for( unsigned int j = 0; j < SpaceDimension; j++ )
       {
-      this->m_CoefficientImage[j] = images[j];
+      this->m_CoefficientImages[j] = images[j];
       }
 
     // Clean up buffered parameters
@@ -582,24 +549,27 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   os << indent << "GridRegion: " << this->m_GridRegion << std::endl;
   os << indent << "GridOrigin: " << this->m_GridOrigin << std::endl;
   os << indent << "GridSpacing: " << this->m_GridSpacing << std::endl;
-  os << indent << "GridDirection: " << this->m_GridDirection << std::endl;
+  os << indent << "GridDirection:\n" << this->m_GridDirection << std::endl;
   os << indent << "GridOffsetTable: " << this->m_GridOffsetTable << std::endl;
-  os << indent << "IndexToPoint: " << this->m_IndexToPoint << std::endl;
-  os << indent << "PointToIndex: " << this->m_PointToIndexMatrix << std::endl;
+  os << indent << "IndexToPoint:\n" << this->m_IndexToPoint << std::endl;
+  os << indent << "PointToIndex:\n" << this->m_PointToIndexMatrix << std::endl;
+  os << indent << "PointToIndex2:\n" << this->m_PointToIndexMatrix2 << std::endl;
+  os << indent << "PointToIndexTransposed:\n" << this->m_PointToIndexMatrixTransposed << std::endl;
+  os << indent << "PointToIndexTransposed2:\n" << this->m_PointToIndexMatrixTransposed2 << std::endl;
 
-  os << indent << "CoefficientImage: [ ";
-  for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
+  os << indent << "CoefficientImage: [ " << this->m_CoefficientImages[ 0 ].GetPointer();
+  for( unsigned int j = 1; j < SpaceDimension; j++ )
   {
-    os << this->m_CoefficientImage[ j ].GetPointer() << ", ";
+    os << ", " << this->m_CoefficientImages[ j ].GetPointer();
   }
-  os << this->m_CoefficientImage[ SpaceDimension - 1 ].GetPointer() << " ]" << std::endl;
+  os << " ]" << std::endl;
 
-  os << indent << "WrappedImage: [ ";
-  for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
+  os << indent << "WrappedImage: [ " << this->m_WrappedImage[ 0 ].GetPointer();
+  for( unsigned int j = 1; j < SpaceDimension; j++ )
   {
-    os << this->m_WrappedImage[ j ].GetPointer() << ", ";
+    os << ", " << this->m_WrappedImage[ j ].GetPointer();
   }
-  os << this->m_WrappedImage[ SpaceDimension - 1 ].GetPointer() << " ]" << std::endl;
+  os << " ]" << std::endl;
 
   os << indent << "InputParametersPointer: "
      << this->m_InputParametersPointer << std::endl;

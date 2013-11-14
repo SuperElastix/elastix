@@ -37,6 +37,7 @@ void GradientDifferenceMetric<TElastix>
 
 } // end Initialize()
 
+
 /**
  * ***************** BeforeRegistration ***********************
  */

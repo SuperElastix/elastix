@@ -11,16 +11,15 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-
 #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
 #define __itkAdvancedMeanSquaresImageToImageMetric_h
 
-#include "itkSmoothingRecursiveGaussianImageFilter.h"
-//#include "itkImageRandomCoordinateSampler.h"
-#include "itkImageGridSampler.h"
-#include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkAdvancedImageToImageMetric.h"
+
+#include "itkSmoothingRecursiveGaussianImageFilter.h" // needed for SelfHessian
+#include "itkImageGridSampler.h" // needed for SelfHessian
+#include "itkNearestNeighborInterpolateImageFunction.h" // needed for SelfHessian
+
 
 namespace itk
 {
@@ -52,7 +51,7 @@ namespace itk
 
 template < class TFixedImage, class TMovingImage >
 class AdvancedMeanSquaresImageToImageMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
 
@@ -84,6 +83,7 @@ public:
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename Superclass::TransformParametersType    TransformParametersType;
   typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
   typedef typename Superclass::InterpolatorType           InterpolatorType;
   typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
   typedef typename Superclass::RealType                   RealType;
@@ -98,6 +98,7 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
   typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
   typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
@@ -114,10 +115,10 @@ public:
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-
-  /** Some typedefs for computing the SelfHessian */
   typedef typename Superclass::HessianValueType           HessianValueType;
   typedef typename Superclass::HessianType                HessianType;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -134,9 +135,12 @@ public:
   virtual void GetDerivative( const TransformParametersType & parameters,
     DerivativeType & derivative ) const;
 
-  /** Get value and derivatives for multiple valued optimizers. */
+  /** Get value and derivative. */
+  void GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
+    MeasureType & value, DerivativeType & derivative ) const;
+
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const;
 
   /** Experimental feature: compute SelfHessian */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
@@ -169,9 +173,17 @@ public:
   itkSetMacro( UseNormalization, bool );
   itkGetConstMacro( UseNormalization, bool );
 
+  /** If the compiler supports OpenMP, this flag specifies whether 
+   * or not to use it. For this metric we have an OpenMP variant for
+   * GetValueAndDerivative(). It is also used at other places.
+   * Note that MS Visual Studio and gcc support OpenMP.
+   */
+  itkSetMacro( UseOpenMP, bool );
+
 protected:
   AdvancedMeanSquaresImageToImageMetric();
-  virtual ~AdvancedMeanSquaresImageToImageMetric() {};
+  virtual ~AdvancedMeanSquaresImageToImageMetric(){};
+
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
@@ -195,18 +207,9 @@ protected:
     FixedImageType, CoordinateRepresentationType>                 FixedImageInterpolatorType;
   typedef NearestNeighborInterpolateImageFunction<
     FixedImageType, CoordinateRepresentationType >                DummyFixedImageInterpolatorType;
-  //typedef ImageRandomCoordinateSampler<FixedImageType>            SelfHessianSamplerType;
   typedef ImageGridSampler<FixedImageType>                        SelfHessianSamplerType;
 
   double m_NormalizationFactor;
-
-  /** Computes the innerproduct of transform Jacobian with moving image gradient.
-   * The results are stored in imageJacobian, which is supposed
-   * to have the right size (same length as Jacobian's number of columns). */
-  void EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian,
-    const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const;
 
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative(). */
@@ -225,14 +228,21 @@ protected:
     const NonZeroJacobianIndicesType & nzji,
     HessianType & H) const;
 
+  /** Get value and derivatives for each thread. */
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+
+  /** Gather the values and derivatives from all threads */
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const;
+
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  bool m_UseNormalization;
-  double m_SelfHessianSmoothingSigma;
-  double m_SelfHessianNoiseRange;
-  unsigned int m_NumberOfSamplesForSelfHessian;
+  bool            m_UseNormalization;
+  double          m_SelfHessianSmoothingSigma;
+  double          m_SelfHessianNoiseRange;
+  unsigned int    m_NumberOfSamplesForSelfHessian;
 
 }; // end class AdvancedMeanSquaresImageToImageMetric
 
@@ -243,4 +253,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
-

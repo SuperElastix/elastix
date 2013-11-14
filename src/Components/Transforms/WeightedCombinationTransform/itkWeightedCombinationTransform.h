@@ -150,7 +150,7 @@ public:
   virtual NumberOfParametersType GetNumberOfParameters( void ) const
   {
     return this->m_TransformContainer.size();
-  };
+  }
 
   /** Set/get if the weights (parameters) should be normalized.
    * Default: false. */
@@ -162,7 +162,7 @@ public:
   {
     this->m_TransformContainer = transformContainer;
     this->Modified();
-  };
+  }
 
   /** Return the vector of sub-transforms by const reference.
    * So, if you want to add a sub-transform, you should do something

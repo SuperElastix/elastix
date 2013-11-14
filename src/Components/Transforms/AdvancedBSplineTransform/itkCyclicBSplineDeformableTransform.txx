@@ -17,6 +17,8 @@
 
 #include "itkCyclicBSplineDeformableTransform.h"
 #include "itkContinuousIndex.h"
+#include "itkImageRegionIterator.h"
+
 
 namespace itk {
 
@@ -155,7 +157,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   InputPointType transformedPoint = point;
 
   /** Check if the coefficient image has been set. */
-  if ( !this->m_CoefficientImage[ 0 ] )
+  if ( !this->m_CoefficientImages[ 0 ] )
   {
     itkWarningMacro( << "B-spline coefficients have not been set" );
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
@@ -191,7 +193,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(),
+  this->SplitRegion( this->m_CoefficientImages[ 0 ]->GetLargestPossibleRegion(),
     supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Zero output point elements. */
@@ -207,11 +209,11 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     IteratorType iterator[ SpaceDimension ];
 
     const PixelType * basePointer
-      = this->m_CoefficientImage[ 0 ]->GetBufferPointer();
+      = this->m_CoefficientImages[ 0 ]->GetBufferPointer();
 
     for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
     {
-      iterator[ j ] = IteratorType( this->m_CoefficientImage[ j ], supportRegions[ r ] );
+      iterator[ j ] = IteratorType( this->m_CoefficientImages[ j ], supportRegions[ r ] );
     }
 
     /** Loop over this support region. */
@@ -248,7 +250,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 {
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
-  const PixelType * basePointer = this->m_CoefficientImage[0]->GetBufferPointer();
+  const PixelType * basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
   /** Tranform from world coordinates to grid coordinates. */
   ContinuousIndexType cindex;
@@ -272,7 +274,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   supportRegion.SetIndex( supportIndex );
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(),
+  this->SplitRegion( this->m_CoefficientImages[ 0 ]->GetLargestPossibleRegion(),
     supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** For each dimension, copy the weight to the support region. */
@@ -280,7 +282,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   typedef ImageRegionIterator<JacobianImageType> IteratorType;
   for ( unsigned int r = 0; r < 2; ++r )
   {
-    IteratorType iterator = IteratorType( this->m_CoefficientImage[ 0 ], supportRegions[ r ] );
+    IteratorType iterator = IteratorType( this->m_CoefficientImages[ 0 ], supportRegions[ r ] );
 
     while ( ! iterator.IsAtEnd() )
     {
@@ -341,7 +343,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(),
+  this->SplitRegion( this->m_CoefficientImages[ 0 ]->GetLargestPossibleRegion(),
      supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   sj.Fill( 0.0 );
@@ -370,7 +372,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
                        * image. Create an iterator over the weights vector.
                        */
         ImageRegionConstIterator<ImageType> itCoef(
-          this->m_CoefficientImage[ dim ], supportRegions[ r ] );
+          this->m_CoefficientImages[ dim ], supportRegions[ r ] );
 
         while ( !itCoef.IsAtEnd() )
         {
@@ -412,7 +414,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(),
+  this->SplitRegion( this->m_CoefficientImages[ 0 ]->GetLargestPossibleRegion(),
     supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Initialize some helper variables. */
@@ -424,12 +426,12 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   for ( unsigned int r = 0; r < 2; ++r ) {
     /** Create iterator over the coefficient image (for current supportRegion). */
     ImageRegionConstIteratorWithIndex< ImageType >
-      iterator( this->m_CoefficientImage[ 0 ], supportRegions[ r ] );
+      iterator( this->m_CoefficientImages[ 0 ], supportRegions[ r ] );
 
     /** For all control points in the support region, set which of the
             * indices in the parameter array are non-zero.
             */
-    const PixelType * basePointer = this->m_CoefficientImage[ 0 ]->GetBufferPointer();
+    const PixelType * basePointer = this->m_CoefficientImages[ 0 ]->GetBufferPointer();
     while ( !iterator.IsAtEnd() )
     {
       /** Translate the index into a parameter number for the x-direction. */

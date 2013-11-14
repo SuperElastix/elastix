@@ -29,6 +29,7 @@ template< class TInputImage >
 ImageGridSampler< TInputImage >
 ::ImageGridSampler()
 {
+  this->m_SampleGridSpacing.Fill( 1 );
   this->m_RequestedNumberOfSamples = 0;
   this->m_SampleGridSpacing.Fill(static_cast<SampleGridSpacingValueType>(0.0));
 } // end Constructor

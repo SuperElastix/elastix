@@ -132,7 +132,7 @@ int main( int argc, char *argv[] )
 
   /** Test TransformPoint(). */
   startClock = clock();
-  OutputPointType opp = kernelTransform->TransformPoint( ipp );
+  kernelTransform->TransformPoint( ipp );
   std::cerr << "TransformPoint() computation took: "
     << clock() - startClock << " ms." << std::endl;
 

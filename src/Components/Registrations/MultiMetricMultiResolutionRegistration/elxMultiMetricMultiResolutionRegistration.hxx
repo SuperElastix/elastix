@@ -102,6 +102,14 @@ MultiMetricMultiResolutionRegistration<TElastix>
     xl::xout["iteration"][ makestring3.str().c_str() ] << std::showpoint << std::fixed;
   }
 
+  /** Temporary? Use the multi-threaded version or not. */
+  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mtcombo" );
+  if( tmp == "true" || tmp == "" )
+  {
+    this->GetCombinationMetric()->SetUseMultiThread( true );
+  }
+  else this->GetCombinationMetric()->SetUseMultiThread( false );
+
 } // end BeforeRegistration()
 
 

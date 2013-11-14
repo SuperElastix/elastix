@@ -308,4 +308,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkMultiResolutionImageRegistrationMethod2_h
-

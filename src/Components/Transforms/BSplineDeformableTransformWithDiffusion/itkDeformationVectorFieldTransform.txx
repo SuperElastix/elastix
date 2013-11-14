@@ -111,9 +111,9 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
   }
 
   /** Put it in the Superclass. */
-  this->SetCoefficientImage( this->m_Images );
+  this->SetCoefficientImages( this->m_Images );
 
-} // end SetCoefficientImage()
+} // end SetCoefficientVectorImage()
 
 
 /**
@@ -133,7 +133,7 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
     CoefficientImageType, CoefficientVectorImageType >      ScalarImageCombineType;
 
   /** Get a handle to the series of coefficient images. */
-  const CoefficientImagePointer * coefImage = this->GetCoefficientImage();
+  const CoefficientImagePointer * coefImage = this->GetCoefficientImages();
 
   /** Combine the coefficient images to a vector image. */
   typename ScalarImageCombineType::Pointer combiner = ScalarImageCombineType::New();
@@ -144,7 +144,7 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
   vecImage = combiner->GetOutput();
   vecImage->Update();
 
-} // end GetCoefficientImage()
+} // end GetCoefficientVectorImage()
 
 
 } // end namespace itk

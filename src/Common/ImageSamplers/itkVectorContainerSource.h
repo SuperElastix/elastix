@@ -11,9 +11,8 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef __VectorContainerSource_h
-#define __VectorContainerSource_h
+#ifndef __itkVectorContainerSource_h
+#define __itkVectorContainerSource_h
 
 #include "itkProcessObject.h"
 #include "itkDataObjectDecorator.h"
@@ -21,75 +20,70 @@
 
 namespace itk
 {
+/** \class VectorContainerSource
+ *
+ * \brief A base class for creating an ImageToVectorContainerFilter.
+ */
 
-  /** \class VectorContainerSource
-   *
-   * \brief A base class for creating an ImageToVectorContainerFilter.
-   */
+template < class TOutputVectorContainer >
+class VectorContainerSource
+  : public ProcessObject
+{
+public:
+  /** Standard ITK-stuff. */
+  typedef VectorContainerSource         Self;
+  typedef ProcessObject                 Superclass;
+  typedef SmartPointer<Self>            Pointer;
+  typedef SmartPointer<const Self>      ConstPointer;
 
-  template < class TOutputVectorContainer >
-  class VectorContainerSource :
-    public ProcessObject
-  {
-  public:
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
 
-    /** Standard ITK-stuff. */
-    typedef VectorContainerSource         Self;
-    typedef ProcessObject                 Superclass;
-    typedef SmartPointer<Self>            Pointer;
-    typedef SmartPointer<const Self>      ConstPointer;
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( VectorContainerSource, ProcessObject );
 
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+  /** Some convenient typedefs. */
+  typedef typename Superclass::DataObjectPointer        DataObjectPointer;
+  typedef TOutputVectorContainer                        OutputVectorContainerType;
+  typedef typename OutputVectorContainerType::Pointer   OutputVectorContainerPointer;
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( VectorContainerSource, ProcessObject );
+  /** Get the vector container output of this process object. */
+  OutputVectorContainerType * GetOutput( void );
 
-    /** Some convenient typedefs. */
-    typedef typename Superclass::DataObjectPointer        DataObjectPointer;
-    typedef TOutputVectorContainer                        OutputVectorContainerType;
-    typedef typename OutputVectorContainerType::Pointer   OutputVectorContainerPointer;
+  /** Get the vector container output of this process object. */
+  OutputVectorContainerType * GetOutput( unsigned int idx );
 
-    /** Get the vector container output of this process object. */
-    OutputVectorContainerType * GetOutput( void );
+  /** Graft the specified DataObject onto this ProcessObject's output. */
+  virtual void GraftOutput( DataObject *output );
 
-    /** Get the vector container output of this process object. */
-    OutputVectorContainerType * GetOutput( unsigned int idx );
+  /** Graft the specified DataObject onto this ProcessObject's output. */
+  virtual void GraftNthOutput( unsigned int idx, DataObject *output );
 
-    /** Graft the specified DataObject onto this ProcessObject's output. */
-    virtual void GraftOutput( DataObject *output );
+  /** Make a DataObject of the correct type to used as the specified output. */
+  virtual DataObjectPointer MakeOutput( unsigned int idx );
 
-    /** Graft the specified DataObject onto this ProcessObject's output. */
-    virtual void GraftNthOutput( unsigned int idx, DataObject *output );
+protected:
 
-    /** Make a DataObject of the correct type to used as the specified output. */
-    virtual DataObjectPointer MakeOutput( unsigned int idx );
+  /** The constructor. */
+  VectorContainerSource();
+  /** The destructor. */
+  virtual ~VectorContainerSource() {};
 
-  protected:
+  /** PrintSelf. */
+  void PrintSelf( std::ostream& os, Indent indent ) const;
 
-    /** The constructor. */
-    VectorContainerSource();
-    /** The destructor. */
-    virtual ~VectorContainerSource() {};
+private:
 
-    /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const;
+  /** The private constructor. */
+  VectorContainerSource( const Self& ); // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self& );        // purposely not implemented
 
-    /** GenerateInputRequestedRegion. */
-    void GenerateInputRequestedRegion( void );
+  /** Member variables. */
+  int m_GenerateDataRegion;
+  int m_GenerateDataNumberOfRegions;
 
-  private:
-
-    /** The private constructor. */
-    VectorContainerSource( const Self& ); // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );        // purposely not implemented
-
-    /** Member variables. */
-    int m_GenerateDataRegion;
-    int m_GenerateDataNumberOfRegions;
-
-  }; // end class VectorContainerSource
+}; // end class VectorContainerSource
 
 
 } // end namespace itk
@@ -98,5 +92,4 @@ namespace itk
 #include "itkVectorContainerSource.txx"
 #endif
 
-#endif // end #ifndef __VectorContainerSource_h
-
+#endif // end #ifndef __itkVectorContainerSource_h

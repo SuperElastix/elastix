@@ -129,6 +129,7 @@ public:
   typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
   typedef typename Superclass::InputPointType       InputPointType;
   typedef typename Superclass::OutputPointType      OutputPointType;
+  typedef typename Superclass::TransformCategoryType TransformCategoryType;
 
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
@@ -364,6 +365,14 @@ public:
   virtual bool IsLinear( void ) const
   {
     return true;
+  }
+
+  /** Indicates the category transform.
+   *  e.g. an affine transform, or a local one, e.g. a deformation field.
+   */
+  virtual TransformCategoryType GetTransformCategory() const
+  {
+    return Self::Linear;
   }
 
   /** Compute the Jacobian of the transformation. */

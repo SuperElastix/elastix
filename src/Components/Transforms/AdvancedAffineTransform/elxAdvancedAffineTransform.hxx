@@ -140,7 +140,7 @@ AdvancedAffineTransformElastix<TElastix>
  */
 
 template <class TElastix>
-void 
+void
 AdvancedAffineTransformElastix<TElastix>
 ::CreateTransformParametersMap(
   const ParametersType & param,
@@ -186,8 +186,6 @@ AdvancedAffineTransformElastix<TElastix>
 
   bool centerGivenAsIndex = true;
   bool centerGivenAsPoint = true;
-  SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
-    GetFixedImage()->GetLargestPossibleRegion().GetSize();
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Initialize. */

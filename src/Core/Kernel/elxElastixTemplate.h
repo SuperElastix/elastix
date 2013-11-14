@@ -288,7 +288,8 @@ public:
   /** Return configuration from vector of configurations. Library only. */
   virtual ConfigurationPointer GetConfiguration( const size_t index );
 
-  virtual ConfigurationPointer GetConfiguration() {
+  virtual ConfigurationPointer GetConfiguration()
+  {
     return Superclass2::GetConfiguration();
   }
 

@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __transformixlib_CXX_
 #define __transformixlib_CXX_
 
@@ -36,6 +35,7 @@
 
 namespace transformix
 {
+
 /**
  * ******************* Constructor ***********************
  */
@@ -64,7 +64,7 @@ TRANSFORMIX::ImagePointer
 TRANSFORMIX::GetResultImage( void )
 {
   return this->m_ResultImage;
-}
+} // end GetResultImage()
 
 
 /**
@@ -74,7 +74,7 @@ TRANSFORMIX::GetResultImage( void )
 int
 TRANSFORMIX::TransformImage(
   ImagePointer inputImage,
-  std::vector< ParameterMapType >& parameterMaps,
+  std::vector< ParameterMapType > & parameterMaps,
   std::string outputPath,
   bool performLogging,
   bool performCout )
@@ -229,6 +229,7 @@ TRANSFORMIX::TransformImage(
 
 } // end TransformImage()
 
+
 /**
  * ******************* TransformImage ***********************
  */
@@ -250,6 +251,8 @@ TRANSFORMIX::TransformImage(
 
 } // end TransformImage()
 
+
 } // namespace transformix
 
 #endif // end #ifndef __transformixlib_CXX_
+

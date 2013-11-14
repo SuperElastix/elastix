@@ -66,6 +66,7 @@ public:
   typedef typename Superclass::InputImagePixelType          InputImagePixelType;
   typedef typename Superclass::ImageSampleType              ImageSampleType;
   typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
   typedef typename Superclass::MaskType                     MaskType;
 
   /** The input image dimension. */
@@ -74,7 +75,7 @@ public:
 
   /** Other typdefs. */
   typedef typename Superclass::InputImageIndexType          InputImageIndexType;
-  typedef typename Superclass::InputImageSpacingType        InputImageSpacingType;
+  //typedef typename Superclass::InputImageSpacingType        InputImageSpacingType;
   typedef typename Superclass::InputImagePointType          InputImagePointType;
 
   /** Typedefs for support of user defined grid spacing for the spatial samples. */

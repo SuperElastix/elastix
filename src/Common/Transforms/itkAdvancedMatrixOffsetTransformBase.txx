@@ -572,29 +572,30 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   // subblocks of diagonal matrices, each one of them having
   // a constant value in the diagonal.
 
+  // Initialize the Jacobian. Resizing is only performed when needed.
+  // Filling with zeros is needed because the lower loops only visit
+  // the nonzero positions.
   j.SetSize( OutputSpaceDimension, ParametersDimension);
   j.Fill( 0.0 );
 
   const InputVectorType v = p - this->GetCenter();
 
   unsigned int blockOffset = 0;
-
-  for(unsigned int block=0; block < NInputDimensions; block++)
+  for( unsigned int block = 0; block < NInputDimensions; ++block )
   {
-    for(unsigned int dim=0; dim < NOutputDimensions; dim++ )
+    for( unsigned int dim = 0; dim < NOutputDimensions; ++dim )
     {
-      j( block , blockOffset + dim ) = v[dim];
+      j( block, blockOffset + dim ) = v[ dim ];
     }
-
     blockOffset += NInputDimensions;
-
   }
 
-  for(unsigned int dim=0; dim < NOutputDimensions; dim++ )
+  for( unsigned int dim = 0; dim < NOutputDimensions; ++dim )
   {
-    j( dim , blockOffset + dim ) = 1.0;
+    j( dim, blockOffset + dim ) = 1.0;
   }
 
+  // Copy the constant nonZeroJacobianIndices
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 
 } // end GetJacobian()

@@ -16,6 +16,10 @@
 
 #include "itkTransformBendingEnergyPenaltyTerm.h"
 
+#ifdef ELASTIX_USE_OPENMP
+#include <omp.h>
+#endif
+
 
 namespace itk
 {
@@ -35,7 +39,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 
   this->m_NumberOfSamplesForSelfHessian = 100000;
 
-} // end constructor
+} // end Constructor
 
 
 /**
@@ -58,11 +62,22 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     return static_cast<MeasureType>( measure );
   }
 
-  /** Make sure the transform parameters are up to date. */
-  this->SetTransformParameters( parameters );
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
 
-  /** Update the imageSampler and get a handle to the sample container. */
-  this->GetImageSampler()->Update();
+  /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   /** Create iterator over the sample container. */
@@ -138,13 +153,13 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 
 
 /**
- * ****************** GetValueAndDerivative *******************************
+ * ****************** GetValueAndDerivativeSingleThreaded *******************************
  */
 
 template< class TFixedImage, class TScalarType >
 void
 TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
-::GetValueAndDerivative(
+::GetValueAndDerivativeSingleThreaded(
   const ParametersType & parameters,
   MeasureType & value,
   DerivativeType & derivative ) const
@@ -158,8 +173,8 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   SpatialHessianType spatialHessian;
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;
   NonZeroJacobianIndicesType nonZeroJacobianIndices;
-  unsigned long numberOfNonZeroJacobianIndices = this->m_AdvancedTransform
-     ->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType numberOfNonZeroJacobianIndices
+    = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   jacobianOfSpatialHessian.resize( numberOfNonZeroJacobianIndices );
   nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
 
@@ -172,15 +187,26 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   }
   // TODO: This is only required once! and not every iteration.
 
-  /** Make sure the transform parameters are up to date. */
-  this->SetTransformParameters( parameters );
-
   /** Check if this transform is a B-spline transform. */
   typename BSplineTransformType::Pointer dummy = 0;
   bool transformIsBSpline = this->CheckForBSplineTransform( dummy );
 
-  /** Update the imageSampler and get a handle to the sample container. */
-  this->GetImageSampler()->Update();
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+  /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   /** Create iterator over the sample container. */
@@ -325,7 +351,315 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   /** The return value. */
   value = static_cast<MeasureType>( measure );
 
+} // end GetValueAndDerivativeSingleThreaded()
+
+
+/**
+ * ******************* GetValueAndDerivative *******************
+ */
+
+template <class TFixedImage, class TScalarType>
+void
+TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
+::GetValueAndDerivative(
+  const ParametersType & parameters,
+  MeasureType & value, DerivativeType & derivative ) const
+{
+  /** Option for now to still use the single threaded code. */
+  if( !this->m_UseMultiThread )
+  {
+    return this->GetValueAndDerivativeSingleThreaded(
+      parameters, value, derivative );
+  }
+
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+  /** Initialize some threading related parameters. */
+  this->InitializeThreadingParameters();
+
+  /** Launch multi-threading metric */
+  this->LaunchGetValueAndDerivativeThreaderCallback();
+
+  /** Gather the metric values and derivatives from all threads. */
+  this->AfterThreadedGetValueAndDerivative( value, derivative );
+
 } // end GetValueAndDerivative()
+
+
+/**
+ * ******************* ThreadedGetValueAndDerivative *******************
+ */
+
+template <class TFixedImage, class TScalarType>
+void
+TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
+::ThreadedGetValueAndDerivative( ThreadIdType threadId )
+{
+    /** Create and initialize some variables. */
+  SpatialHessianType spatialHessian;
+  JacobianOfSpatialHessianType jacobianOfSpatialHessian;
+  NonZeroJacobianIndicesType nonZeroJacobianIndices;
+  const NumberOfParametersType numberOfNonZeroJacobianIndices
+    = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  jacobianOfSpatialHessian.resize( numberOfNonZeroJacobianIndices );
+  nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
+
+  /** Check if the SpatialHessian is nonzero. */
+  if ( !this->m_AdvancedTransform->GetHasNonZeroSpatialHessian()
+    && !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
+  {
+    return;
+  }
+  // TODO: This is only required once! and not every iteration.
+
+  /** Check if this transform is a B-spline transform. */
+  typename BSplineTransformType::Pointer dummy = 0;
+  bool transformIsBSpline = this->CheckForBSplineTransform( dummy );
+
+  /** Get a handle to the pre-allocated derivative for the current thread.
+   * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
+   */
+  DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
+  derivative.Fill( NumericTraits<DerivativeValueType>::Zero ); // needed?
+
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  const unsigned long sampleContainerSize = sampleContainer->Size();
+
+  /** Get the samples for this thread. */
+  const unsigned long nrOfSamplesPerThreads
+    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
+      / static_cast<double>( this->m_NumberOfThreads ) ) );
+
+  unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
+  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
+  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->Begin();
+  fbegin += (int)pos_begin;
+  fend += (int)pos_end;
+
+  /** Create variables to store intermediate results. circumvent false sharing */
+  unsigned long numberOfPixelsCounted = 0;
+  MeasureType measure = NumericTraits<MeasureType>::Zero;
+
+  /** Loop over the fixed image to calculate the penalty term and its derivative. */
+  for( fiter = fbegin; fiter != fend; ++fiter )
+  {
+    /** Read fixed coordinates and initialize some variables. */
+    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    MovingImagePointType mappedPoint;
+
+    /** Although the mapped point is not needed to compute the penalty term,
+     * we compute in order to check if it maps inside the support region of
+     * the B-spline and if it maps inside the moving image mask.
+     */
+
+    /** Transform point and check if it is inside the B-spline support region. */
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+    /** Check if point is inside mask. */
+    if ( sampleOk )
+    {
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
+    }
+
+    if ( sampleOk )
+    {
+      numberOfPixelsCounted++;
+
+      /** Get the spatial Hessian of the transformation at the current point.
+       * This is needed to compute the bending energy.
+       */
+       this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
+         spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices );
+
+      /** Prepare some stuff for the computation of the metric (derivative). */
+      FixedArray< InternalMatrixType, FixedImageDimension > A;
+      for( unsigned int k = 0; k < FixedImageDimension; ++k )
+      {
+        A[ k ] = spatialHessian[ k ].GetVnlMatrix();
+      }
+
+      /** Compute the contribution to the metric value of this point. */
+      for( unsigned int k = 0; k < FixedImageDimension; ++k )
+      {
+        measure += vnl_math_sqr( A[ k ].frobenius_norm() );
+      }
+
+      /** Make a distinction between a B-spline transform and other transforms. */
+      if( !transformIsBSpline )
+      {
+        /** Compute the contribution to the metric derivative of this point. */
+        for( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
+        {
+          for( unsigned int k = 0; k < FixedImageDimension; ++k )
+          {
+            /** This computes:
+             * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
+             */
+            const InternalMatrixType & B
+              = jacobianOfSpatialHessian[ mu ][ k ].GetVnlMatrix();
+
+            RealType matrixElementProduct = 0.0;
+            typename InternalMatrixType::const_iterator itA = A[ k ].begin();
+            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itAend = A[ k ].end();
+            while( itA != itAend )
+            {
+              matrixElementProduct += (*itA) * (*itB);
+              ++itA;
+              ++itB;
+            }
+
+            derivative[ nonZeroJacobianIndices[ mu ] ]
+              += 2.0 * matrixElementProduct;
+          }
+        }
+      }
+      else
+      {
+        /** For the B-spline transform we know that only 1/FixedImageDimension
+         * part of the JacobianOfSpatialHessian is non-zero.
+         *
+         * In addition we know that jsh[ mu + numParPerDim * k ][ k ] is the same for all k.
+         */
+
+        /** Compute the contribution to the metric derivative of this point. */
+        const unsigned int numParPerDim
+          = nonZeroJacobianIndices.size() / FixedImageDimension;
+        for( unsigned int mu = 0; mu < numParPerDim; ++mu )
+        {
+          const InternalMatrixType & B
+            = jacobianOfSpatialHessian[ mu + numParPerDim * 0 ][ 0 ].GetVnlMatrix();
+
+          for( unsigned int k = 0; k < FixedImageDimension; ++k )
+          {
+            /** This computes:
+             * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
+             */
+            RealType matrixElementProduct = 0.0;
+            typename InternalMatrixType::const_iterator itA = A[ k ].begin();
+            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itAend = A[ k ].end();
+            while ( itA != itAend )
+            {
+              matrixElementProduct += (*itA) * (*itB);
+              ++itA;
+              ++itB;
+            }
+
+            derivative[ nonZeroJacobianIndices[ mu + numParPerDim * k ] ]
+              += 2.0 * matrixElementProduct;
+          }
+        }
+      } // end if B-spline
+    } // end if sampleOk
+  } // end for loop over the image sample container
+
+  /** Only update these variables at the end to prevent unnecessary "false sharing". */
+  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Value = measure;
+
+} // end ThreadedGetValueAndDerivative()
+
+
+/**
+ * ******************* AfterThreadedGetValueAndDerivative *******************
+ */
+
+template <class TFixedImage, class TScalarType>
+void
+TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
+::AfterThreadedGetValueAndDerivative(
+  MeasureType & value, DerivativeType & derivative ) const
+{
+  /** Accumulate the number of pixels. */
+  this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  {
+    this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
+  }
+
+  /** Check if enough samples were valid. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  this->CheckNumberOfSamples(
+    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+  /** Accumulate and normalize values. */
+  value = NumericTraits<MeasureType>::Zero;
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
+  }
+  value /= static_cast<RealType>( this->m_NumberOfPixelsCounted );
+
+  /** Accumulate derivatives. */
+  // it seems that multi-threaded adding is faster than single-threaded
+  // it seems that openmp is faster than itk threads
+  // compute single-threadedly
+  if( !this->m_UseMultiThread )
+  {
+    derivative = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_Derivative;
+    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+    {
+      derivative += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative;
+    }
+    derivative /= static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
+  }
+  // compute multi-threadedly with itk threads
+  else if( !this->m_UseOpenMP )
+  {
+    this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+    this->m_ThreaderMetricParameters.st_NormalizationFactor
+      = static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
+
+    typename ThreaderType::Pointer local_threader = ThreaderType::New();
+    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+    local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
+      const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
+    local_threader->SingleMethodExecute();
+  }
+#ifdef ELASTIX_USE_OPENMP
+  // compute multi-threadedly with openmp
+  else
+  {
+    const DerivativeValueType numPix = static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
+    const int nthreads = static_cast<int>( this->m_NumberOfThreads );
+    omp_set_num_threads( nthreads );
+    const int spaceDimension = static_cast<int>( this->GetNumberOfParameters() );
+    #pragma omp parallel for
+    for( int j = 0; j < spaceDimension; ++j )
+    {
+      DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
+      for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+      {
+        tmp += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
+      }
+      derivative[ j ] = tmp / numPix;
+    }
+  }
+#endif
+
+} // end AfterThreadedGetValueAndDerivative()
+
 
 /**
  * ******************* GetSelfHessian *******************
@@ -353,7 +687,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;
 
   /** Make sure the transform parameters are up to date. */
-  this->SetTransformParameters( parameters );
+  //this->SetTransformParameters( parameters );
 
   /** Prepare Hessian */
   H.set_size( this->GetNumberOfParameters(),
@@ -362,7 +696,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if ( !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
     //H.fill_diagonal(1.0);
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
     }
@@ -444,10 +778,11 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               ++itA;
               ++itB;
             }
+
           }
 
           /** Store at the right location in the H matrix.
-           * Only upper triangular part is stored */
+          * Only upper triangular part is stored */
 
           /** Update hessian element */
           if ( (matrixProduct > 1e-12) || (matrixProduct < 1e-12) )
@@ -471,6 +806,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               /** Add to existing value */
               (*rowIt).second += val;
             }
+
           }
 
         }
@@ -489,7 +825,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if ( this->m_NumberOfPixelsCounted > 0 )
   {
     const double normal_sum = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H.scale_row(i, normal_sum);
     }
@@ -497,7 +833,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   else
   {
     //H.fill_diagonal(1.0);
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
     }
@@ -509,4 +845,3 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 } // end namespace itk
 
 #endif // #ifndef __itkTransformBendingEnergyPenaltyTerm_txx
-

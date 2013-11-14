@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkAdvancedImageToImageMetric_h
 #define __itkAdvancedImageToImageMetric_h
 
@@ -21,10 +20,17 @@
 #include "itkGradientImageFilter.h"
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkReducedDimensionBSplineInterpolateImageFunction.h"
+#include "itkAdvancedLinearInterpolateImageFunction.h"
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
 #include "vnl/vnl_sparse_matrix.h"
+
+// Needed for checking for B-spline for faster implementation
+#include "itkAdvancedBSplineDeformableTransform.h"
+#include "itkAdvancedCombinationTransform.h"
+
+#include "itkMultiThreader.h"
 
 namespace itk
 {
@@ -147,14 +153,31 @@ public:
     ScalarType,
     FixedImageDimension,
     MovingImageDimension >                                AdvancedTransformType;
+  typedef typename AdvancedTransformType::NumberOfParametersType  NumberOfParametersType;
+
+  /** Typedef's for the B-spline transform. */
+  typedef AdvancedCombinationTransform<
+    ScalarType, FixedImageDimension >             CombinationTransformType;
+  typedef AdvancedBSplineDeformableTransform<
+    ScalarType, FixedImageDimension, 1 >          BSplineOrder1TransformType;
+  typedef AdvancedBSplineDeformableTransform<
+    ScalarType, FixedImageDimension, 2 >          BSplineOrder2TransformType;
+  typedef AdvancedBSplineDeformableTransform<
+    ScalarType, FixedImageDimension, 3 >          BSplineOrder3TransformType;
 
   /** Hessian type; for SelfHessian (experimental feature) */
   typedef typename DerivativeType::ValueType              HessianValueType;
   //typedef Array2D<HessianValueType>                       HessianType;
   typedef vnl_sparse_matrix<HessianValueType>             HessianType;
 
+
+  /** Typedefs for multi-threading. */
+  typedef itk::MultiThreader                        ThreaderType;
+  typedef typename ThreaderType::ThreadInfoStruct   ThreadInfoType;
+
   /** Public methods ********************/
 
+  /** Set the transform, of advanced type. */
   virtual void SetTransform( AdvancedTransformType * arg )
   {
     this->Superclass::SetTransform( arg );
@@ -164,6 +187,8 @@ public:
       this->Modified();
     }
   }
+
+  /** Get the advanced transform. */
   const AdvancedTransformType * GetTransform( void ) const
   {
     return this->m_AdvancedTransform.GetPointer();
@@ -174,7 +199,7 @@ public:
   virtual ImageSamplerType * GetImageSampler( void ) const
   {
     return this->m_ImageSampler.GetPointer();
-  };
+  }
 
   /** Inheriting classes can specify whether they use the image sampler functionality;
    * This method allows the user to inspect this setting. */
@@ -214,7 +239,8 @@ public:
    * are multiplied by the moving image derivative scales (elementwise)
    * You may use this to avoid deformations in the z-dimension, for example,
    * by setting the moving image derivative scales to (1,1,0).
-   * This is a rather experimental feature. In most cases you do not need it. */
+   * This is a rather experimental feature. In most cases you do not need it.
+   */
   itkSetMacro( UseMovingImageDerivativeScales, bool );
   itkGetConstMacro( UseMovingImageDerivativeScales, bool );
   itkSetMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
@@ -231,16 +257,38 @@ public:
   virtual void Initialize( void ) throw ( ExceptionObject );
 
   /** Experimental feature: compute SelfHessian.
-   * This base class just returns an identity matrix of the right size. */
+   * This base class just returns an identity matrix of the right size.
+   */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
 
-protected:
+  /** Set number of threads to use for computations. */
+  virtual void SetNumberOfThreads( ThreadIdType numberOfThreads );
 
+  /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
+  itkSetMacro( UseMetricSingleThreaded, bool );
+  itkGetConstReferenceMacro( UseMetricSingleThreaded, bool );
+  itkBooleanMacro( UseMetricSingleThreaded );
+
+  /** Select the use of multi-threading*/
+  // \todo: maybe these can be united, check base class.
+  itkSetMacro( UseMultiThread, bool );
+  itkGetConstReferenceMacro( UseMultiThread, bool );
+  itkBooleanMacro( UseMultiThread );
+
+  /** Contains calls from GetValueAndDerivative that are thread-unsafe,
+   * together with preparation for multi-threading.
+   * Note that the only reason why this function is not protected, is
+   * because the ComboMetric needs to call it.
+   */
+  virtual void BeforeThreadedGetValueAndDerivative(
+    const TransformParametersType & parameters ) const;
+
+protected:
   /** Constructor. */
   AdvancedImageToImageMetric();
 
   /** Destructor. */
-  virtual ~AdvancedImageToImageMetric() {};
+  virtual ~AdvancedImageToImageMetric();
 
   /** PrintSelf. */
   void PrintSelf( std::ostream& os, Indent indent ) const;
@@ -262,6 +310,8 @@ protected:
     MovingImageType, CoordinateRepresentationType, float>       BSplineInterpolatorFloatType;
   typedef ReducedDimensionBSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType, double>      ReducedBSplineInterpolatorType;
+  typedef AdvancedLinearInterpolateImageFunction<
+    MovingImageType, CoordinateRepresentationType>              LinearInterpolatorType;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef GradientImageFilter<
     MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
@@ -272,22 +322,26 @@ protected:
 
   /** Protected Variables **************/
 
-  /** Variables for ImageSampler support. m_ImageSampler is mutable, because it is
-   * changed in the GetValue(), etc, which are const functions. */
+  /** Variables for ImageSampler support. m_ImageSampler is mutable,
+   * because it is changed in the GetValue(), etc, which are const functions.
+   */
   mutable ImageSamplerPointer   m_ImageSampler;
 
   /** Variables for image derivative computation. */
   bool m_InterpolatorIsBSpline;
   bool m_InterpolatorIsBSplineFloat;
   bool m_InterpolatorIsReducedBSpline;
+  bool m_InterpolatorIsLinear;
   typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
   typename BSplineInterpolatorFloatType::Pointer        m_BSplineInterpolatorFloat;
   typename ReducedBSplineInterpolatorType::Pointer      m_ReducedBSplineInterpolator;
+  typename LinearInterpolatorType::Pointer              m_LinearInterpolator;
   typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
 
   /** Variables to store the AdvancedTransform. */
   bool m_TransformIsAdvanced;
-  typename AdvancedTransformType::Pointer           m_AdvancedTransform;
+  typename AdvancedTransformType::Pointer            m_AdvancedTransform;
+  bool m_TransformIsBSpline;
 
   /** Variables for the Limiters. */
   typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;
@@ -301,7 +355,72 @@ protected:
   MovingImageLimiterOutputType                       m_MovingImageMinLimit;
   MovingImageLimiterOutputType                       m_MovingImageMaxLimit;
 
+  /** Multi-threaded metric computation. */
+
+  /** Multi-threaded version of GetValueAndDerivative(). */
+  virtual inline void ThreadedGetValueAndDerivative(
+    ThreadIdType threadID ){};
+
+  /** Finalize multi-threaded metric computation. */
+  virtual inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const {};
+
+  /** GetValueAndDerivative threader callback function. */
+  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
+
+  /** Launch MultiThread GetValueAndDerivative */
+  void LaunchGetValueAndDerivativeThreaderCallback( void ) const;
+
+  /** AccumulateDerivatives threader callback function. */
+  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
+
+  /** Variables for multi-threading. */
+  bool m_UseMetricSingleThreaded;
+  bool m_UseMultiThread;
+  bool m_UseOpenMP;
+
+  /** Helper structs that multi-threads the computation of
+   * the metric derivative using ITK threads.
+   */
+  struct MultiThreaderParameterType
+  {
+    // To give the threads access to all members.
+    AdvancedImageToImageMetric * st_Metric;
+    // Used for accumulating derivatives
+    DerivativeValueType * st_DerivativePointer;
+    DerivativeValueType   st_NormalizationFactor;
+  };
+  mutable MultiThreaderParameterType  m_ThreaderMetricParameters;
+
+  /** Most metrics will perform multi-threading by letting
+   * each thread compute a part of the value and derivative.
+   *
+   * These parameters are initialized at every call of GetValueAndDerivative
+   * in the function InitializeThreadingParameters(). Since GetValueAndDerivative
+   * is const, also InitializeThreadingParameters should be const, and therefore
+   * these member variables are mutable.
+   */
+
+  // test per thread struct with padding and alignment
+  struct GetValueAndDerivativePerThreadStruct
+  {
+    SizeValueType         st_NumberOfPixelsCounted;
+    MeasureType           st_Value;
+    DerivativeType        st_Derivative;
+    TransformJacobianType st_TransformJacobian;
+  };
+  itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValueAndDerivativePerThreadStruct,
+    PaddedGetValueAndDerivativePerThreadStruct );
+  itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedGetValueAndDerivativePerThreadStruct,
+    AlignedGetValueAndDerivativePerThreadStruct );
+  mutable AlignedGetValueAndDerivativePerThreadStruct * m_GetValueAndDerivativePerThreadVariables;
+  mutable ThreadIdType m_GetValueAndDerivativePerThreadVariablesSize;
+
+  /** Initialize some multi-threading related parameters. */
+  virtual void InitializeThreadingParameters( void ) const;
+
   /** Protected methods ************** */
+
 
   /** Methods for image sampler support **********/
 
@@ -326,19 +445,32 @@ protected:
   /** Compute the image value (and possibly derivative) at a transformed point.
    * Checks if the point lies within the moving image buffer (bool return).
    * If no gradient is wanted, set the gradient argument to 0.
-   * If a BSplineInterpolationFunction is used, this class obtain
-   * image derivatives from the B-spline interpolator. Otherwise,
-   * image derivatives are computed using nearest neighbor interpolation
-   * of a precomputed (central difference) gradient image. */
+   * If a BSplineInterpolationFunction or AdvacnedLinearInterpolationFunction
+   * is used, this class obtains image derivatives from the B-spline or linear
+   * interpolator. Otherwise, image derivatives are computed using nearest
+   * neighbor interpolation of a precomputed (central difference) gradient image.
+   */
   virtual bool EvaluateMovingImageValueAndDerivative(
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
     MovingImageDerivativeType * gradient ) const;
 
+  /** Computes the inner product of transform Jacobian with moving image gradient.
+   * The results are stored in imageJacobian, which is supposed
+   * to have the right size (same length as Jacobian's number of columns).
+   */
+  virtual void EvaluateTransformJacobianInnerProduct(
+    const TransformJacobianType & jacobian,
+    const MovingImageDerivativeType & movingImageDerivative,
+    DerivativeType & imageJacobian ) const;
+
   /** Methods to support transforms with sparse Jacobians, like the BSplineTransform **********/
 
   /** Check if the transform is an AdvancedTransform. Called by Initialize. */
   virtual void CheckForAdvancedTransform( void );
+
+  /** Check if the transform is a B-spline. Called by Initialize. */
+  virtual void CheckForBSplineTransform( void );
 
   /** Transform a point from FixedImage domain to MovingImage domain.
    * This function also checks if mapped point is within support region of
@@ -410,4 +542,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkAdvancedImageToImageMetric_h
-

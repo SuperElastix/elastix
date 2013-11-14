@@ -39,7 +39,7 @@ namespace itk
 
     /** This function is not complete, but we don't use it anyway. */
 
-  } // end PrintSelf
+  } // end PrintSelf()
 
 
    /**

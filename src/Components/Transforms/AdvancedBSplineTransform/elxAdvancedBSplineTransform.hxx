@@ -432,8 +432,8 @@ void AdvancedBSplineTransform<TElastix>
   DirectionType currentGridDirection = this->m_BSplineTransform->GetGridDirection();
 
   /** The new required grid. */
-  OriginType    requiredGridOrigin;
-  SpacingType   requiredGridSpacing;
+  OriginType    requiredGridOrigin; requiredGridOrigin.Fill( 0.0 );
+  SpacingType   requiredGridSpacing; requiredGridSpacing.Fill( 1.0 );
   RegionType    requiredGridRegion;
   DirectionType requiredGridDirection;
   this->m_GridScheduleComputer->GetBSplineGrid( level,

@@ -16,6 +16,7 @@
 #define __itkGradientDescentOptimizer2_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
+#include "itkMultiThreader.h"
 
 namespace itk
 {
@@ -120,28 +121,58 @@ namespace itk
     /** Get current gradient. */
     itkGetConstReferenceMacro( Gradient, DerivativeType );
 
+    /** Set the number of threads. */
+    void SetNumberOfThreads( ThreadIdType numberOfThreads )
+    {
+      this->m_Threader->SetNumberOfThreads( numberOfThreads );
+    }
+    //itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
+    itkSetMacro( UseMultiThread, bool );
+
+    itkSetMacro( UseOpenMP, bool );
+    itkSetMacro( UseEigen, bool );
 
   protected:
     GradientDescentOptimizer2();
     virtual ~GradientDescentOptimizer2() {};
     void PrintSelf(std::ostream& os, Indent indent) const;
 
+    /** Typedefs for multi-threading. */
+    typedef itk::MultiThreader               ThreaderType;
+    typedef ThreaderType::ThreadInfoStruct   ThreadInfoType;
+
     // made protected so subclass can access
+    double                        m_Value;
     DerivativeType                m_Gradient;
     double                        m_LearningRate;
     StopConditionType             m_StopCondition;
+
+    ThreaderType::Pointer         m_Threader;
+
+    bool                          m_Stop;
+    unsigned long                 m_NumberOfIterations;
+    unsigned long                 m_CurrentIteration;
 
   private:
     GradientDescentOptimizer2(const Self&); //purposely not implemented
     void operator=(const Self&); //purposely not implemented
 
-    bool                          m_Stop;
-    double                        m_Value;
+    // multi-threaded AdvanceOneStep:
+    bool m_UseMultiThread;
+    struct MultiThreaderParameterType
+    {
+      ParametersType *  t_NewPosition;
+      Self *            t_Optimizer;
+    };
 
-    unsigned long                 m_NumberOfIterations;
-    unsigned long                 m_CurrentIteration;
+    bool m_UseOpenMP;
+    bool m_UseEigen;
 
+    /** The callback function. */
+    static ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg );
 
+    /** The threaded implementation of AdvanceOneStep(). */
+    inline void ThreadedAdvanceOneStep( ThreadIdType threadId, ParametersType & newPosition );
 
   };
 

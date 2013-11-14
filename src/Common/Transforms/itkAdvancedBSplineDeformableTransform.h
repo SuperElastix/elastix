@@ -115,7 +115,7 @@ class ITK_EXPORT MultiBSplineDeformableTransformWithNormal;
  *
  * \endverbatim
  *
- * Warning: use either the SetParameters() or SetCoefficientImage()
+ * Warning: use either the SetParameters() or SetCoefficientImages()
  * API. Mixing the two modes may results in unexpected results.
  *
  * The class is templated coordinate representation type (float or double),
@@ -152,6 +152,7 @@ public:
 
   /** Typedefs from Superclass. */
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::ParametersValueType    ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::ScalarType             ScalarType;
@@ -192,7 +193,7 @@ public:
   typedef typename Superclass::GridOffsetType   GridOffsetType;
 
   /** This method specifies the region over which the grid resides. */
-  virtual void SetGridRegion( const RegionType& region );
+  virtual void SetGridRegion( const RegionType & region );
 
   /** Transform points by a B-spline deformable transformation. */
   OutputPointType TransformPoint( const InputPointType & point ) const;

@@ -79,11 +79,12 @@ public:
   typedef  TScalarType     ScalarType;
 
   /** Type of the input parameters. */
-  typedef  typename Superclass::ParametersType                ParametersType;
-  typedef typename Superclass::NumberOfParametersType         NumberOfParametersType;
+  typedef typename Superclass::ParametersType ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  typedef typename Superclass::TransformCategoryType TransformCategoryType;
 
   /** Type of the Jacobian matrix. */
-  typedef  typename Superclass::JacobianType                   JacobianType;
+  typedef typename Superclass::JacobianType JacobianType;
 
   /** Standard vector type for this class. */
   typedef Vector<TScalarType,
@@ -160,6 +161,14 @@ public:
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
   virtual bool IsLinear() const { return true; }
+
+  /** Indicates the category transform.
+   *  e.g. an affine transform, or a local one, e.g. a deformation field.
+   */
+  virtual TransformCategoryType GetTransformCategory() const
+  {
+    return Self::Linear;
+  }
 
   /** Get the Fixed Parameters. */
   virtual const ParametersType& GetFixedParameters( void ) const

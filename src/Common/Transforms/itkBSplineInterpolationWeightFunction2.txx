@@ -59,7 +59,7 @@ BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>
     WeightArrayType weights;
     this->m_Kernel->Evaluate( x, weights );
 
-    for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
+    for( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
     {
       weights1D[ i ][ k ] = weights[ k ];
     }

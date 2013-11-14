@@ -317,6 +317,13 @@ void
 VectorDataContainer< TElementIdentifier , TElement >
 ::Squeeze(void)
 {
+  // By MS: experimental
+  // http://stackoverflow.com/questions/253157/how-to-downsize-stdvector
+  // Effective STL, by Scott Meyers, Item 17: Use the swap trick to trim excess capacity.
+  // vector<Person>(persons).swap(persons);
+  // After that, persons is "shrunk to fit".
+  // Note that swap does an explicit copy step
+  //VectorType(this).this->VectorType::swap( this );
 }
 
 } // end namespace itk

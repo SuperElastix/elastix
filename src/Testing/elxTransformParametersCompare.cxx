@@ -24,7 +24,8 @@
 #include "itkMath.h"
 #include "itksys/SystemTools.hxx"
 #include "itkImage.h"
-#include "itkImageRegionIterator.h"
+#include "itkImageRegionIteratorWithIndex.h"
+#include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
 
@@ -39,18 +40,38 @@ std::string GetHelpString( void )
     << "elxTransformParametersCompare" << std::endl
     << "  -test      transform parameters file to test against baseline\n"
     << "  -base      baseline transform parameters filename\n"
+    << "  [-mask]    mask image, only supported for the B-spline\n"
     //<< "  [-t]       intensity difference threshold, default 0\n"
-    << "  [-a]       allowable tolerance (), default 1e-6";
+    << "  [-a]       allowable tolerance (), default 1e-6\n"
+    << "Computes (test - base) / base.";
   return ss.str();
 
 } // end GetHelpString()
 
-// This comparison works on all image types by reading images in a 6D double images. If images > 6 dimensions
+// This comparison works on all image types by reading images
+// in a 4D double images. If images > 4 dimensions
 // must be compared, change this variable.
 static const unsigned int ITK_TEST_DIMENSION_MAX = 4;
 
 int main( int argc, char **argv )
 {
+  /** Typedefs. */
+  typedef itk::Image< float, ITK_TEST_DIMENSION_MAX >         CoefficientImageType;
+  typedef CoefficientImageType::RegionType                    RegionType;
+  typedef RegionType::SizeType                                SizeType;
+  typedef RegionType::IndexType                               IndexType;
+  typedef CoefficientImageType::SpacingType                   SpacingType;
+  typedef CoefficientImageType::PointType                     PointType;
+  typedef CoefficientImageType::PointType                     OriginType;
+  typedef CoefficientImageType::DirectionType                 DirectionType;
+  typedef itk::ImageRegionIteratorWithIndex<CoefficientImageType>      IteratorType;
+  typedef itk::ImageFileWriter<CoefficientImageType>          WriterType;
+
+  typedef itk::Image< unsigned char, ITK_TEST_DIMENSION_MAX > MaskImageType;
+  typedef itk::ImageFileReader<MaskImageType>                 MaskReaderType;
+  typedef itk::ImageRegionIteratorWithIndex<MaskImageType>    MaskIteratorType;
+
+  /** Create command line argument parser. */
   itk::CommandLineArgumentParser::Pointer parser = itk::CommandLineArgumentParser::New();
   parser->SetCommandLineArguments( argc, argv );
   parser->SetProgramHelpText( GetHelpString() );
@@ -75,13 +96,16 @@ int main( int argc, char **argv )
   std::string baselineFileName;
   parser->GetCommandLineArgument( "-base", baselineFileName );
 
+  std::string maskFileName;
+  parser->GetCommandLineArgument( "-mask", maskFileName );
+
   //double diffThreshold = 0.0;
   //parser->GetCommandLineArgument( "-t", diffThreshold );
 
   double allowedTolerance = 1e-6;
   parser->GetCommandLineArgument( "-a", allowedTolerance );
 
-  if ( allowedTolerance < 0 )
+  if( allowedTolerance < 0 )
   {
     std::cerr << "ERROR: the specified allowed tolerance (-a) should be non-negative!" << std::endl;
     return EXIT_FAILURE;
@@ -147,46 +171,42 @@ int main( int argc, char **argv )
   std::cerr << "Test transform parameters:     " << testFileName
     << " has " << numberOfParametersTest << " parameters." << std::endl;
 
-  if ( numberOfParametersBaseline != numberOfParametersTest )
+  if( numberOfParametersBaseline != numberOfParametersTest )
   {
     std::cerr << "ERROR: The number of transform parameters of the baseline and test do not match!" << std::endl;
     return EXIT_FAILURE;
   }
 
-  /** Now compare the two parameter vectors. */
+  /** Initialize variables. */
   ScalarType diffNorm = itk::NumericTraits<ScalarType>::Zero;
-  for ( unsigned int i = 0; i < numberOfParametersTest; i++ )
-  {
-    diffNorm += vnl_math_sqr( parametersBaseline[ i ] - parametersTest[ i ] );
-  }
-  diffNorm = vcl_sqrt( diffNorm );
-
-  std::cerr << "The norm of the difference between baseline and test transform parameters was computed\n";
-  std::cerr << "Computed difference: " << diffNorm << std::endl;
-  std::cerr << "Allowed  difference: " << allowedTolerance << std::endl;
+  ScalarType baselineNorm = itk::NumericTraits<ScalarType>::Zero;
+  ScalarType diffNormNormalized = itk::NumericTraits<ScalarType>::Zero;
 
   /** Check if this is a B-spline transform.
-   * If it is and if the difference is nonzero, we write a sort of coefficient
-   * difference image.
+   * If it is we write a sort of coefficient difference image.
+   * Only the B-spline transform has mask support.
    */
   std::string transformName = "";
   config->ReadParameter( transformName, "Transform", 0, true, dummyErrorMessage );
-  if( diffNorm > 1e-18 && transformName == "BSplineTransform" )
+  if( transformName != "BSplineTransform" )
   {
+    /** Now compare the two parameter vectors. */
+    for( unsigned int i = 0; i < numberOfParametersTest; i++ )
+    {
+      baselineNorm += vnl_math_sqr( parametersBaseline[ i ] );
+      diffNorm += vnl_math_sqr( parametersBaseline[ i ] - parametersTest[ i ] );
+    }
+    diffNormNormalized = vcl_sqrt( diffNorm ) / vcl_sqrt( baselineNorm );
+  }
+  else
+  {
+    /** This is a B-spline transform. Re-organize the parameters
+     * as a coefficient image.
+     */
+
     /** Get the true dimension. */
     unsigned int dimension = 2;
     config->ReadParameter( dimension, "FixedImageDimension", 0, true, dummyErrorMessage );
-
-    /** Typedefs. */
-    typedef itk::Image< float, ITK_TEST_DIMENSION_MAX >     CoefficientImageType;
-    typedef CoefficientImageType::RegionType                RegionType;
-    typedef RegionType::SizeType                            SizeType;
-    typedef RegionType::IndexType                           IndexType;
-    typedef CoefficientImageType::SpacingType               SpacingType;
-    typedef CoefficientImageType::PointType                 OriginType;
-    typedef CoefficientImageType::DirectionType             DirectionType;
-    typedef itk::ImageRegionIterator<CoefficientImageType>  IteratorType;
-    typedef itk::ImageFileWriter<CoefficientImageType>      WriterType;
 
     /** Get coefficient image information. */
     SizeType gridSize; gridSize.Fill( 1 );
@@ -194,13 +214,13 @@ int main( int argc, char **argv )
     SpacingType gridSpacing; gridSpacing.Fill( 1.0 );
     OriginType gridOrigin; gridOrigin.Fill( 0.0 );
     DirectionType gridDirection; gridDirection.SetIdentity();
-    for ( unsigned int i = 0; i < dimension; i++ )
+    for( unsigned int i = 0; i < dimension; i++ )
     {
       config->ReadParameter( gridSize[ i ], "GridSize", i, true, dummyErrorMessage );
       config->ReadParameter( gridIndex[ i ], "GridIndex", i, true, dummyErrorMessage );
       config->ReadParameter( gridSpacing[ i ], "GridSpacing", i, true, dummyErrorMessage );
       config->ReadParameter( gridOrigin[ i ], "GridOrigin", i, true, dummyErrorMessage );
-      for ( unsigned int j = 0; j < dimension; j++ )
+      for( unsigned int j = 0; j < dimension; j++ )
       {
         config->ReadParameter( gridDirection( j, i),
           "GridDirection", i * dimension + j, true, dummyErrorMessage );
@@ -216,53 +236,106 @@ int main( int argc, char **argv )
     coefImage->SetDirection( gridDirection );
     coefImage->Allocate();
 
+    /** Read the mask image, if given. */
+    MaskImageType::Pointer maskImage;
+    MaskIteratorType itM;
+    if( maskFileName != "" )
+    {
+      MaskReaderType::Pointer maskReader = MaskReaderType::New();
+      maskReader->SetFileName( maskFileName );
+      maskReader->Update();
+      maskImage = maskReader->GetOutput();
+
+      itM = MaskIteratorType( maskImage, maskImage->GetLargestPossibleRegion() );
+    }
+
     /** Fill the coefficient image with the difference of the B-spline
      * parameters. Since there are dimension number of differences,
      * we take the norm.
      */
     IteratorType it( coefImage, coefImage->GetLargestPossibleRegion() );
-    it.GoToBegin();
-    unsigned int index = 0;
+    unsigned int index = 0; float include = 0.0; bool isInside = false;
+    IndexType indexInCoefficientImage;
+    IndexType indexInMaskImage;
+    PointType physicalPoint;
     const unsigned int numberParPerDim = numberOfParametersTest / dimension;
     while( !it.IsAtEnd() )
     {
-      ScalarType diffNorm = itk::NumericTraits<ScalarType>::Zero;
-      for ( unsigned int i = 0; i < dimension; i++ )
+      /** Voxel content. */
+      ScalarType diffNormTmp = itk::NumericTraits<ScalarType>::Zero;
+      for( unsigned int i = 0; i < dimension; i++ )
       {
         unsigned int j = index + i * numberParPerDim;
-        diffNorm += vnl_math_sqr( parametersBaseline[ j ] - parametersTest[ j ] );
+        diffNormTmp += vnl_math_sqr( parametersBaseline[ j ] - parametersTest[ j ] );
       }
-      diffNorm = vcl_sqrt( diffNorm );
+      diffNormTmp = vcl_sqrt( diffNormTmp );
+      it.Set( diffNormTmp );
 
-      it.Set( diffNorm );
-      ++it; index++;
-    }
+      /** Compare. */
+      include = 1.0;
+      if( maskFileName != "" )
+      {
+        indexInCoefficientImage = it.GetIndex();
+        coefImage->TransformIndexToPhysicalPoint( indexInCoefficientImage, physicalPoint );
+        isInside = maskImage->TransformPhysicalPointToIndex( physicalPoint, indexInMaskImage );
+        itM.SetIndex( indexInMaskImage );
+        if( isInside && itM.Value() == 0 ) include = 0.0;
+      } // end mask
+
+      for( unsigned int i = 0; i < dimension; i++ )
+      {
+        unsigned int j = index + i * numberParPerDim;
+        baselineNorm += include * vnl_math_sqr( parametersBaseline[ j ] );
+        diffNorm += include * vnl_math_sqr( parametersBaseline[ j ] - parametersTest[ j ] );
+      }
+
+      /** Update iterators. */
+      ++it; ++index;
+      if( maskFileName != "" ) ++itM;
+    } // end while
+
+    /** Final normalized norm. */
+    diffNormNormalized = vcl_sqrt( diffNorm ) / vcl_sqrt( baselineNorm );
 
     /** Create name for difference image. */
     std::string diffImageFileName =
       itksys::SystemTools::GetFilenamePath( testFileName );
-    diffImageFileName += "/";
+    if( diffImageFileName != "" ) diffImageFileName += "/";
     diffImageFileName +=
       itksys::SystemTools::GetFilenameWithoutLastExtension( testFileName );
     diffImageFileName += "_DIFF_PAR.mha";
 
     /** Write the difference image. */
-    WriterType::Pointer writer = WriterType::New();
-    writer->SetFileName( diffImageFileName );
-    writer->SetInput( coefImage );
-    try
+    if( diffNormNormalized > 1e-10 )
     {
-      writer->Write();
+      WriterType::Pointer writer = WriterType::New();
+      writer->SetFileName( diffImageFileName );
+      writer->SetInput( coefImage );
+      try
+      {
+        writer->Write();
+      }
+      catch ( itk::ExceptionObject & err )
+      {
+        std::cerr << "Error during writing difference image: " << err << std::endl;
+        return EXIT_FAILURE;
+      }
     }
-    catch ( itk::ExceptionObject & err )
-    {
-      std::cerr << "Error during writing difference image: " << err << std::endl;
-      return EXIT_FAILURE;
-    }
-  }
+  } // end B-spline
+
+  /** Print result to screen. */
+  std::cerr << "The norm of the difference between baseline and test "
+    << "transform parameters was computed, using\n"
+    << "    || baseline - test ||\n"
+    << "    ---------------------\n"
+    << "       || baseline ||\n";
+  std::cerr << "Computed difference: "
+    << vcl_sqrt( diffNorm ) << " / " << vcl_sqrt( baselineNorm ) << " = "
+    << diffNormNormalized << std::endl;
+  std::cerr << "Allowed  difference: " << allowedTolerance << std::endl;
 
   /** Return. */
-  if( diffNorm > allowedTolerance )
+  if( diffNormNormalized > allowedTolerance )
   {
     std::cerr << "ERROR: The difference is larger than acceptable!" << std::endl;
     return EXIT_FAILURE;
@@ -271,4 +344,3 @@ int main( int argc, char **argv )
   return EXIT_SUCCESS;
 
 } // end main
-

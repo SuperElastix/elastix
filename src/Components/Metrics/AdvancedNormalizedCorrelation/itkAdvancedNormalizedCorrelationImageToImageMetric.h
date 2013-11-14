@@ -24,7 +24,7 @@ namespace itk
  * \brief Computes normalized correlation between two images, based on AdvancedImageToImageMetric...
  *
  * This metric computes the correlation between pixels in the fixed image
- * and pixels in the moving image. The spatial correspondance between
+ * and pixels in the moving image. The spatial correspondence between
  * fixed and moving image is established through a Transform. Pixel values are
  * taken from the fixed image, their positions are mapped to the moving
  * image and result in general in non-grid position on it. Values at these
@@ -50,27 +50,31 @@ namespace itk
  * where x a voxel in the fixed image f, m the moving image, u(x,p) the
  * deformation of x depending on the transform parameters p. sfm, sff and smm
  * is notation used in the source code. The derivative of NC to p equals:
- *
  * \f[
- *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} \frac{\partial m}{\partial x} \frac{\partial x}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} * \mathtt{gradient} * \mathtt{jacobian},
+ *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m}
+ *     \frac{\partial m}{\partial x} \frac{\partial x}{\partial p}
+ *     = \frac{\partial \mathrm{NC}}{\partial m} * \mathtt{gradient} * \mathtt{jacobian},
  * \f]
- *
  * where gradient is the derivative of the moving image m to x, and where Jacobian is the
  * derivative of the transformation to its parameters. gradient * Jacobian is called the differential.
  * This yields for the derivative:
  *
  * \f[
- *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\sum_x[ f(x) * \mathtt{differential} ] - ( \mathtt{sfm} / \mathtt{smm} ) * \sum_x[ m(x+u(x,p)) * \mathtt{differential} ]}{\sqrt{\mathtt{sff} * \mathtt{smm}}}
+ *   \frac{\partial \mathrm{NC}}{\partial p}
+ *     = \frac{\sum_x[ f(x) * \mathtt{differential} ] - ( \mathtt{sfm} / \mathtt{smm} )
+ *     * \sum_x[ m(x+u(x,p)) * \mathtt{differential} ]}{\sqrt{\mathtt{sff} * \mathtt{smm}}}
  * \f]
  *
  * This class has an option to subtract the sample mean from the sample values
  * in the cross correlation formula. This typically results in narrower valleys
- * in the cost fucntion NC. The default value is false. If SubtractMean is true,
+ * in the cost function NC. The default value is false. If SubtractMean is true,
  * the NC is defined as:
  *
  * \f[
- * \mathrm{NC} = \frac{\sum_x ( f(x) - \mathtt{Af} ) * ( m(x+u(x,p)) - \mathtt{Am})}{\sqrt{\sum_x (f(x) - \mathtt{Af})^2 * \sum_x (m(x+u(x,p)) - \mathtt{Am})^2}}
- *    = \frac{\mathtt{sfm} - \mathtt{sf} * \mathtt{sm} / N}{\sqrt{(\mathtt{sff} - \mathtt{sf} * \mathtt{sf} / N) * (\mathtt{smm} - \mathtt{sm} *\mathtt{sm} / N)}},
+ * \mathrm{NC} = \frac{\sum_x ( f(x) - \mathtt{Af} ) * ( m(x+u(x,p)) - \mathtt{Am})}
+ *     {\sqrt{\sum_x (f(x) - \mathtt{Af})^2 * \sum_x (m(x+u(x,p)) - \mathtt{Am})^2}}
+ *    = \frac{\mathtt{sfm} - \mathtt{sf} * \mathtt{sm} / N}
+ *   {\sqrt{(\mathtt{sff} - \mathtt{sf} * \mathtt{sf} / N) * (\mathtt{smm} - \mathtt{sm} *\mathtt{sm} / N)}},
  * \f]
  *
  * where Af and Am are the average of f and m, respectively.
@@ -79,9 +83,10 @@ namespace itk
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
+
 template < class TFixedImage, class TMovingImage >
 class AdvancedNormalizedCorrelationImageToImageMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
@@ -113,6 +118,7 @@ public:
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename Superclass::TransformParametersType    TransformParametersType;
   typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
   typedef typename Superclass::InterpolatorType           InterpolatorType;
   typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
   typedef typename Superclass::RealType                   RealType;
@@ -127,6 +133,7 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
   typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
   typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
@@ -143,6 +150,8 @@ public:
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -156,24 +165,32 @@ public:
   MeasureType GetValue( const TransformParametersType & parameters ) const;
 
   /** Get the derivatives of the match measure. */
-  void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & Derivative ) const;
+  void GetDerivative(
+    const TransformParametersType & parameters,
+    DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+  void GetValueAndDerivativeSingleThreaded(
+    const TransformParametersType & parameters,
+    MeasureType & value, DerivativeType & derivative ) const;
+
+  void GetValueAndDerivative(
+    const TransformParametersType & parameters,
+    MeasureType & value, DerivativeType & derivative ) const;
 
   /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted
    * from the sample values in the cross-correlation formula and
-   * typically results in narrower valleys in the cost fucntion.
-   * Default value is false. */
+   * typically results in narrower valleys in the cost function.
+   * Default value is false.
+   */
   itkSetMacro( SubtractMean, bool );
   itkGetConstReferenceMacro( SubtractMean, bool );
   itkBooleanMacro( SubtractMean );
 
 protected:
   AdvancedNormalizedCorrelationImageToImageMetric();
-  virtual ~AdvancedNormalizedCorrelationImageToImageMetric() {};
+  virtual ~AdvancedNormalizedCorrelationImageToImageMetric();
+
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
@@ -190,30 +207,75 @@ protected:
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
-  /** Computes the innerproduct of transform Jacobian with moving image gradient.
-   * The results are stored in imageJacobian, which is supposed
-   * to have the right size (same length as Jacobian's number of columns). */
-  void EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian,
-    const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const;
-
   /** Compute a pixel's contribution to the derivative terms;
-   * Called by GetValueAndDerivative(). */
+   * Called by GetValueAndDerivative().
+   */
   void UpdateDerivativeTerms(
-    const RealType fixedImageValue,
-    const RealType movingImageValue,
+    const RealType & fixedImageValue,
+    const RealType & movingImageValue,
     const DerivativeType & imageJacobian,
     const NonZeroJacobianIndicesType & nzji,
     DerivativeType & derivativeF,
     DerivativeType & derivativeM,
     DerivativeType & differential ) const;
 
+  /** Initialize some multi-threading related parameters.
+   * Overrides function in AdvancedImageToImageMetric, because
+   * here we use other parameters.
+   */
+  virtual void InitializeThreadingParameters( void ) const;
+
+  /** Get value and derivatives for each thread. */
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+
+  /** Gather the values and derivatives from all threads */
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const;
+
+  /** AccumulateDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
+
 private:
   AdvancedNormalizedCorrelationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  bool    m_SubtractMean;
+  mutable bool    m_SubtractMean;
+
+  typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
+
+  /** Helper structs that multi-threads the computation of
+   * the metric derivative using ITK threads.
+   */
+  struct MultiThreaderAccumulateDerivativeType
+  {
+    AdvancedNormalizedCorrelationImageToImageMetric * st_Metric;
+
+    AccumulateType  st_sf_N;
+    AccumulateType  st_sm_N;
+    AccumulateType  st_sfm_smm;
+    RealType        st_InvertedDenominator;
+    DerivativeValueType * st_DerivativePointer;
+  };
+
+  struct CorrelationGetValueAndDerivativePerThreadStruct
+  {
+    SizeValueType     st_NumberOfPixelsCounted;
+    AccumulateType    st_Sff;
+    AccumulateType    st_Smm;
+    AccumulateType    st_Sfm;
+    AccumulateType    st_Sf;
+    AccumulateType    st_Sm;
+    DerivativeType    st_DerivativeF;
+    DerivativeType    st_DerivativeM;
+    DerivativeType    st_Differential;
+    TransformJacobianType st_TransformJacobian;
+  };
+  itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, CorrelationGetValueAndDerivativePerThreadStruct,
+    PaddedCorrelationGetValueAndDerivativePerThreadStruct );
+  itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedCorrelationGetValueAndDerivativePerThreadStruct,
+    AlignedCorrelationGetValueAndDerivativePerThreadStruct );
+  mutable AlignedCorrelationGetValueAndDerivativePerThreadStruct * m_CorrelationGetValueAndDerivativePerThreadVariables;
+  mutable ThreadIdType m_CorrelationGetValueAndDerivativePerThreadVariablesSize;
 
 }; // end class AdvancedNormalizedCorrelationImageToImageMetric
 
@@ -224,4 +286,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h
-

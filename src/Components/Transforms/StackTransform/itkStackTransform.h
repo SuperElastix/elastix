@@ -63,6 +63,7 @@ public:
   typedef typename Superclass::ParametersType       ParametersType;
   typedef typename Superclass::NumberOfParametersType
                                                     NumberOfParametersType;
+  typedef typename Superclass::ParametersValueType  ParametersValueType;
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
   typedef typename Superclass::JacobianOfSpatialJacobianType
@@ -70,6 +71,8 @@ public:
   typedef typename Superclass::SpatialHessianType   SpatialHessianType;
   typedef typename Superclass::JacobianOfSpatialHessianType
                                                     JacobianOfSpatialHessianType;
+  typedef typename
+    Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
   typedef typename Superclass::InputPointType       InputPointType;
   typedef typename Superclass::InputVectorType      InputVectorType;
   typedef typename Superclass::OutputVectorType     OutputVectorType;
@@ -80,8 +83,8 @@ public:
   typedef typename Superclass::InputCovariantVectorType
                                                     InputCovariantVectorType;
   typedef typename Superclass::OutputPointType      OutputPointType;
-  typedef typename
-    Superclass::NonZeroJacobianIndicesType      NonZeroJacobianIndicesType;
+  typedef typename Superclass::OutputVectorPixelType OutputVectorPixelType;
+  typedef typename Superclass::InputVectorPixelType InputVectorPixelType;
 
   /** Sub transform types, having a reduced dimension. */
   typedef AdvancedTransform< TScalarType,

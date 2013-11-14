@@ -104,6 +104,7 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType           ScalarType;
   typedef typename Superclass::ParametersType       ParametersType;
+  typedef typename Superclass::ParametersValueType  ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::InputVectorType      InputVectorType;
@@ -119,6 +120,13 @@ public:
 
   typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
+
+  /** Transform typedefs for the from Superclass. */
+  typedef Transform< TScalarType,
+    NInputDimensions,
+    NOutputDimensions >                             TransformType;
+  typedef typename TransformType::Pointer           TransformTypePointer;
+  typedef typename TransformType::ConstPointer      TransformTypeConstPointer;
 
   /** Types for the (Spatial)Jacobian/Hessian.
    * Using an itk::FixedArray instead of an std::vector gives a performance
