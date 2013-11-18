@@ -32,7 +32,7 @@ def main():
       parser.error( "The option output directory (-o) should be given" )
 
     if not os.path.exists( options.outputDirectory ) :
-      print( "The output directory ", options.outputDirectory," does not exist. Create it before running" )
+      print( "The output directory ", options.outputDirectory, " does not exist. Create it before running" )
 
     # Convert string -l to list
     dirList = options.directoryList.split( ' ' )

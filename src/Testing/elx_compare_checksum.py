@@ -52,7 +52,7 @@ def main() :
         # Extract checksum
         tmp = checksumlineBaseline.split(' ');
         if len( tmp ) > 1 :
-          baselineChecksum = tmp[1].rstrip( "\n" );
+          baselineChecksum = tmp[1].rstrip( "\r\n" );
         else :
           baselineChecksum = "not found";
       else :
@@ -81,8 +81,8 @@ def main() :
       testChecksum = "not found";
 
     # Print result
-    print( "The registration result checksum is: ", testChecksum )
-    print( "The baseline checksum is: ", baselineChecksum )
+    print( "The registration result checksum is: " + testChecksum )
+    print( "The baseline checksum is: " + baselineChecksum )
 
     if baselineChecksum != testChecksum:
       print( "FAILURE: These values are NOT the same.\n" )
