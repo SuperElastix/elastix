@@ -85,17 +85,24 @@ def main():
     f2.write( line.strip().split(';')[4].strip().strip( "OutputPoint = [ " ).rstrip( " ]" ) + "\n" );
   f1.close(); f2.close();
 
-  # Compute the distance between transformed landmarks
+  # Compute the distance between all transformed landmarks
   f1 = open( landmarks1, 'r' ); f2 = open( landmarks2, 'r' );
-  meanDistance = 0.0; maxDistance = 0.0;
+  distances = [];
   for line1, line2 in zip( f1, f2 ) :
     floats1 = [ float(x) for x in line1.split() ];
     floats2 = [ float(x) for x in line2.split() ];
     diffSquared = [ (m - n) * (m - n) for m, n in zip( floats1, floats2 ) ];
     distance = math.sqrt( sum( diffSquared ) );
-    meanDistance = meanDistance + distance;
-    maxDistance = max( maxDistance, distance );
-  meanDistance = meanDistance / 100.0;
+    distances.append( distance );
+
+  # Compute some statistics on the distances
+  distances.sort();
+  minDistance  = "{0:.3f}".format( distances[ 0 ] );
+  Q1           = "{0:.3f}".format( distances[ int( len( distances ) * 1.0 / 4.0 ) ] );
+  medDistance  = "{0:.3f}".format( distances[ int( len( distances ) * 2.0 / 4.0 ) ] );
+  Q3           = "{0:.3f}".format( distances[ int( len( distances ) * 3.0 / 4.0 ) ] );
+  maxDistance  = "{0:.3f}".format( distances[ -1 ] );
+  meanDistance = "{0:.3f}".format( sum( distances ) / float( len( distances ) ) );
 
   # With numpy it would be:
   #l1 = numpy.loadtxt( landmarks1 );
@@ -103,9 +110,10 @@ def main():
   #meandistance = numpy.mean( numpy.sum( (l1-l2)**2, axis=-1)**0.5 );
 
   # Report
-  print( "The mean landmark distance between current and baseline is " + "{0:.3f}".format( meanDistance ) + " mm" );
-  print( "The max  landmark distance between current and baseline is " + "{0:.3f}".format( maxDistance  ) + " mm" );
-  if meanDistance < 1.0 :
+  print( "The landmark distance between current and baseline is:" );
+  print( "min   | Q1    | med   | Q3    | max   | mean" );
+  print( minDistance + " | " +  Q1 + " | " +  medDistance + " | " +  Q3 + " | " + maxDistance + " | " +  meanDistance  );
+  if float( meanDistance ) < 1.0 :
     print( "SUCCESS: mean landmark distance is lower than 1.0 mm" );
     return 0;
   else :
