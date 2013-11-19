@@ -38,7 +38,7 @@ def main():
       try:
         f = open( fileName )
       except IOError as e:
-        print( directory, " No elastix.log found" )
+        print( directory + " No elastix.log found" )
         continue
 
       checksumFound = False;
@@ -52,9 +52,9 @@ def main():
         checksum = checksumline.split(': ')[1].rstrip( "\n" );
 
         # Print result
-        print( directory, " ", checksum )
+        print( directory + " " + checksum );
       else:
-        print( directory, " -" )
+        print( directory + " -" );
 
       f.close();
 
