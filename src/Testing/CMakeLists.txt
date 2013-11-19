@@ -83,10 +83,6 @@ endmacro()
 #
 set( knownChecksumSystem false )
 if( SITE STREQUAL "LKEB.PCMarius"
-    AND BUILDNAME STREQUAL "Win7-64bit-VS2008" )
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2008.txt )
-  set( knownChecksumSystem true )
-elseif( SITE STREQUAL "LKEB.PCMarius"
     AND BUILDNAME STREQUAL "Win7-64bit-VS2010" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2010.txt )
   set( knownChecksumSystem true )
