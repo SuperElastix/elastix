@@ -113,11 +113,11 @@ def main():
   print( "The landmark distance between current and baseline is:" );
   print( "min   | Q1    | med   | Q3    | max   | mean" );
   print( minDistance + " | " +  Q1 + " | " +  medDistance + " | " +  Q3 + " | " + maxDistance + " | " +  meanDistance  );
-  if float( meanDistance ) < 1.0 :
-    print( "SUCCESS: mean landmark distance is lower than 1.0 mm" );
+  if float( Q3 ) < 0.5 :
+    print( "SUCCESS: third quartile landmark distance is lower than 0.5 mm" );
     return 0;
   else :
-    print( "FAILURE: mean landmark distance is higher than 1.0 mm" );
+    print( "FAILURE: third quartile landmark distance is higher than 0.5 mm" );
     return 1;
 
 #-------------------------------------------------------------------------------
