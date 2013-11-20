@@ -919,7 +919,10 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   }
 
   /** Compute the derivative magnitude, single-threadedly. */
-  if( !this->m_UseMultiThread )
+  // I get random segfaults on the linux or Mac systems when this is enabled.
+  // For now disable multi-threading and force single-threaded:
+  //if( !this->m_UseMultiThread )
+  if( true )
   {
     for( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
     {
@@ -966,7 +969,10 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   } // end of combine metrics
 
   /** Combine the metric derivatives, single-threadedly. */
-  if( !this->m_UseMultiThread )
+  // I get random segfaults on the linux or Mac systems when this is enabled.
+  // For now disable multi-threading and force single-threaded:
+  //if( !this->m_UseMultiThread )
+  if( true )
   {
     /** The first derivative. */
     if( this->m_UseMetric[ 0 ] )
