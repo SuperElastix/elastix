@@ -245,7 +245,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkStatisticalShapePointPenalty.txx"
+#include "itkStatisticalShapePointPenalty.hxx"
 #endif
 
 #endif

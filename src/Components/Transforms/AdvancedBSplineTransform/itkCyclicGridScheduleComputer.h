@@ -11,9 +11,8 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef __itkCyclicGridScheduleComputer_H__
-#define __itkCyclicGridScheduleComputer_H__
+#ifndef __itkCyclicGridScheduleComputer_h__
+#define __itkCyclicGridScheduleComputer_h__
 
 #include "itkImageBase.h"
 #include "itkTransform.h"
@@ -102,8 +101,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkCyclicGridScheduleComputer.txx"
+#include "itkCyclicGridScheduleComputer.hxx"
 #endif
 
-#endif // end #ifndef __itkCyclicGridScheduleComputer_H__
-
+#endif // end #ifndef __itkCyclicGridScheduleComputer_h__

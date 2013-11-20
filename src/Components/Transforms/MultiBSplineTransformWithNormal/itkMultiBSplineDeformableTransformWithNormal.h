@@ -477,7 +477,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiBSplineDeformableTransformWithNormal.txx"
+#include "itkMultiBSplineDeformableTransformWithNormal.hxx"
 #endif
 
 #endif // end __itkMultiBSplineDeformableTransformWithNormal_h

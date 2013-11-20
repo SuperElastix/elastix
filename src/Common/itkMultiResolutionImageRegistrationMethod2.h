@@ -33,7 +33,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkMultiResolutionImageRegistrationMethod2_h
 #define __itkMultiResolutionImageRegistrationMethod2_h
 
@@ -304,7 +303,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiResolutionImageRegistrationMethod2.txx"
+#include "itkMultiResolutionImageRegistrationMethod2.hxx"
 #endif
 
 #endif // end #ifndef __itkMultiResolutionImageRegistrationMethod2_h

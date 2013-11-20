@@ -377,8 +377,7 @@ private:
 #undef itkSetNumberOfMacro
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiInputImageToImageMetricBase.txx"
+#include "itkMultiInputImageToImageMetricBase.hxx"
 #endif
 
 #endif // end #ifndef __itkMultiInputImageToImageMetricBase_h
-

@@ -186,7 +186,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBSplineInterpolationWeightFunctionBase.txx"
+#include "itkBSplineInterpolationWeightFunctionBase.hxx"
 #endif
 
 #endif

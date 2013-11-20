@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __ImageFullSampler_h
 #define __ImageFullSampler_h
 
@@ -115,7 +114,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageFullSampler.txx"
+#include "itkImageFullSampler.hxx"
 #endif
 
 #endif // end #ifndef __ImageFullSampler_h

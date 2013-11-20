@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( MultiBSplineTransformWithNormal OFF
  elxMultiBSplineTransformWithNormal.hxx
  elxMultiBSplineTransformWithNormal.cxx
  itkMultiBSplineDeformableTransformWithNormal.h
- itkMultiBSplineDeformableTransformWithNormal.txx )
+ itkMultiBSplineDeformableTransformWithNormal.hxx )
 

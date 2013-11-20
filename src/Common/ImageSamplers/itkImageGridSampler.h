@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __ImageGridSampler_h
 #define __ImageGridSampler_h
 
@@ -158,7 +157,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageGridSampler.txx"
+#include "itkImageGridSampler.hxx"
 #endif
 
 #endif // end #ifndef __ImageGridSampler_h

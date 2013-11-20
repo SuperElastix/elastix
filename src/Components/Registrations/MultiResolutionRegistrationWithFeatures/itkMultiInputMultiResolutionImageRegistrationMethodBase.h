@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkMultiInputMultiResolutionImageRegistrationMethodBase_h
 #define __itkMultiInputMultiResolutionImageRegistrationMethodBase_h
 
@@ -285,8 +284,7 @@ private:
 #undef itkSimpleSetMacro
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiInputMultiResolutionImageRegistrationMethodBase.txx"
+#include "itkMultiInputMultiResolutionImageRegistrationMethodBase.hxx"
 #endif
 
 #endif // end #ifndef __itkMultiInputMultiResolutionImageRegistrationMethodBase_h
-

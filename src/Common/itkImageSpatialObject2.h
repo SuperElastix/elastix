@@ -30,7 +30,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkImageSpatialObject2_h
 #define __itkImageSpatialObject2_h
 
@@ -160,7 +159,7 @@ protected:
 } // end of namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageSpatialObject2.txx"
+#include "itkImageSpatialObject2.hxx"
 #endif
 
 #endif //__itkImageSpatialObject2_h

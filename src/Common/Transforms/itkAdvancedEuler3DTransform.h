@@ -157,7 +157,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedEuler3DTransform.txx"
+#include "itkAdvancedEuler3DTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedEuler3DTransform_h */

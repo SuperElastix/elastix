@@ -146,8 +146,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkDisplacementMagnitudePenaltyTerm.txx"
+#include "itkDisplacementMagnitudePenaltyTerm.hxx"
 #endif
 
 #endif // #ifndef __itkDisplacementMagnitudePenaltyTerm_h
-

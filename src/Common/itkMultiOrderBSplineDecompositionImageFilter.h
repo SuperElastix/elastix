@@ -30,7 +30,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkMultiOrderBSplineDecompositionImageFilter_h
 #define __itkMultiOrderBSplineDecompositionImageFilter_h
 
@@ -189,7 +188,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiOrderBSplineDecompositionImageFilter.txx"
+#include "itkMultiOrderBSplineDecompositionImageFilter.hxx"
 #endif
 
 #endif

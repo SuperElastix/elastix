@@ -108,7 +108,7 @@ protected:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkThinPlateR2LogRSplineKernelTransform2.txx"
+#include "itkThinPlateR2LogRSplineKernelTransform2.hxx"
 #endif
 
 #endif // __itkThinPlateR2LogRSplineKernelTransform2_h

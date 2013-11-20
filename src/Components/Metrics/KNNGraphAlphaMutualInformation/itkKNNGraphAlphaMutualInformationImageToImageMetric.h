@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
 #define __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
 
@@ -335,8 +334,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkKNNGraphAlphaMutualInformationImageToImageMetric.txx"
+#include "itkKNNGraphAlphaMutualInformationImageToImageMetric.hxx"
 #endif
 
 #endif // end #ifndef __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
-

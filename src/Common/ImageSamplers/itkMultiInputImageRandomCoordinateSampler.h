@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __MultiInputImageRandomCoordinateSampler_h
 #define __MultiInputImageRandomCoordinateSampler_h
 
@@ -149,8 +148,7 @@ namespace itk
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiInputImageRandomCoordinateSampler.txx"
+#include "itkMultiInputImageRandomCoordinateSampler.hxx"
 #endif
 
 #endif // end #ifndef __MultiInputImageRandomCoordinateSampler_h
-

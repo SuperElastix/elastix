@@ -1,7 +1,7 @@
 
 ADD_ELXCOMPONENT( DeformationFieldTransform
  itkDeformationFieldInterpolatingTransform.h
- itkDeformationFieldInterpolatingTransform.txx
+ itkDeformationFieldInterpolatingTransform.hxx
  elxDeformationFieldTransform.h
  elxDeformationFieldTransform.hxx
  elxDeformationFieldTransform.cxx )

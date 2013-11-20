@@ -198,7 +198,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedRayCastInterpolateImageFunction.txx"
+#include "itkAdvancedRayCastInterpolateImageFunction.hxx"
 #endif
 
 #endif

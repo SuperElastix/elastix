@@ -186,8 +186,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTransformBendingEnergyPenaltyTerm.txx"
+#include "itkTransformBendingEnergyPenaltyTerm.hxx"
 #endif
 
 #endif // #ifndef __itkTransformBendingEnergyPenaltyTerm_h
-

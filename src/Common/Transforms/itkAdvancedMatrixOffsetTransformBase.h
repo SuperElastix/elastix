@@ -28,7 +28,6 @@ PURPOSE. See the above copyright notices for more information.
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkAdvancedMatrixOffsetTransformBase_h
 #define __itkAdvancedMatrixOffsetTransformBase_h
 
@@ -529,7 +528,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedMatrixOffsetTransformBase.txx"
+#include "itkAdvancedMatrixOffsetTransformBase.hxx"
 #endif
 
 #endif /* __itkAdvancedMatrixOffsetTransformBase_h */

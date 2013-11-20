@@ -136,7 +136,7 @@ protected:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkElasticBodyReciprocalSplineKernelTransform2.txx"
+#include "itkElasticBodyReciprocalSplineKernelTransform2.hxx"
 #endif
 
 #endif // __itkElasticBodyReciprocalSplineKernelTransform2_h

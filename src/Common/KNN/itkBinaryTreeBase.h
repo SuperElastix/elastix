@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkBinaryTreeBase_h
 #define __itkBinaryTreeBase_h
 
@@ -91,10 +90,8 @@ namespace itk
 
 } // end namespace itk
 
-
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBinaryTreeBase.txx"
+#include "itkBinaryTreeBase.hxx"
 #endif
-
 
 #endif // end #ifndef __itkBinaryTreeBase_h

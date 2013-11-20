@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkAdvancedTranslationTransform_h
 #define __itkAdvancedTranslationTransform_h
 
@@ -301,7 +300,7 @@ BackTransform(const OutputCovariantVectorType &vect) const
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedTranslationTransform.txx"
+#include "itkAdvancedTranslationTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedTranslationTransform_h */

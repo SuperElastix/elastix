@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkAdvancedSimilarity2DTransform_h
 #define __itkAdvancedSimilarity2DTransform_h
 
@@ -230,7 +229,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedSimilarity2DTransform.txx"
+#include "itkAdvancedSimilarity2DTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedSimilarity2DTransform_h */

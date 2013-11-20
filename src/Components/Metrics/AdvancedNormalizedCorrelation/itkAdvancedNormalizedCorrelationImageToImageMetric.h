@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h
 #define __itkAdvancedNormalizedCorrelationImageToImageMetric_h
 
@@ -282,7 +281,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedNormalizedCorrelationImageToImageMetric.txx"
+#include "itkAdvancedNormalizedCorrelationImageToImageMetric.hxx"
 #endif
 
 #endif // end #ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h

@@ -108,7 +108,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVolumeSplineKernelTransform2.txx"
+#include "itkVolumeSplineKernelTransform2.hxx"
 #endif
 
 #endif // __itkVolumeSplineKernelTransform2_h

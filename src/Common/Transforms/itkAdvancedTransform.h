@@ -303,7 +303,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedTransform.txx"
+#include "itkAdvancedTransform.hxx"
 #endif
 
 #endif

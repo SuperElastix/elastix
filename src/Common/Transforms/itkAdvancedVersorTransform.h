@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkAdvancedVersorTransform_h
 #define __itkAdvancedVersorTransform_h
 
@@ -179,7 +178,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedVersorTransform.txx"
+#include "itkAdvancedVersorTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedVersorTransform_h */

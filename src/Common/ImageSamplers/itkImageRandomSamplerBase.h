@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __ImageRandomSamplerBase_h
 #define __ImageRandomSamplerBase_h
 
@@ -98,7 +97,7 @@ namespace itk
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageRandomSamplerBase.txx"
+#include "itkImageRandomSamplerBase.hxx"
 #endif
 
 #endif // end #ifndef __ImageRandomSamplerBase_h

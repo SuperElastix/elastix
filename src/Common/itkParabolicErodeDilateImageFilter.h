@@ -151,8 +151,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkParabolicErodeDilateImageFilter.txx"
+#include "itkParabolicErodeDilateImageFilter.hxx"
 #endif
-
 
 #endif

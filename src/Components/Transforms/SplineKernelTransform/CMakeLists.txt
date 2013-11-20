@@ -4,15 +4,15 @@ ADD_ELXCOMPONENT( SplineKernelTransform
  elxSplineKernelTransform.hxx
  elxSplineKernelTransform.cxx
  itkElasticBodyReciprocalSplineKernelTransform2.h
- itkElasticBodyReciprocalSplineKernelTransform2.txx
+ itkElasticBodyReciprocalSplineKernelTransform2.hxx
  itkElasticBodySplineKernelTransform2.h
- itkElasticBodySplineKernelTransform2.txx
+ itkElasticBodySplineKernelTransform2.hxx
  itkKernelTransform2.h
- itkKernelTransform2.txx
+ itkKernelTransform2.hxx
  itkThinPlateR2LogRSplineKernelTransform2.h
- itkThinPlateR2LogRSplineKernelTransform2.txx
+ itkThinPlateR2LogRSplineKernelTransform2.hxx
  itkThinPlateSplineKernelTransform2.h
- itkThinPlateSplineKernelTransform2.txx
+ itkThinPlateSplineKernelTransform2.hxx
  itkVolumeSplineKernelTransform2.h
- itkVolumeSplineKernelTransform2.txx )
+ itkVolumeSplineKernelTransform2.hxx )
 

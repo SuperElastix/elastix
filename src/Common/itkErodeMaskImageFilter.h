@@ -11,7 +11,6 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkErodeMaskImageFilter_h
 #define __itkErodeMaskImageFilter_h
 
@@ -145,7 +144,7 @@ namespace itk
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkErodeMaskImageFilter.txx"
+#include "itkErodeMaskImageFilter.hxx"
 #endif
 
 #endif

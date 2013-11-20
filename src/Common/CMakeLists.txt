@@ -26,19 +26,19 @@ SET( CommonFiles
   itkAdvancedLinearInterpolateImageFunction.h
   itkAdvancedLinearInterpolateImageFunction.hxx
   itkAdvancedRayCastInterpolateImageFunction.h
-  itkAdvancedRayCastInterpolateImageFunction.txx
+  itkAdvancedRayCastInterpolateImageFunction.hxx
   itkGenericMultiResolutionPyramidImageFilter.h
   itkGenericMultiResolutionPyramidImageFilter.hxx
   itkImageFileCastWriter.h
-  itkImageFileCastWriter.txx
+  itkImageFileCastWriter.hxx
   itkMeshFileReaderBase.h
-  itkMeshFileReaderBase.txx
+  itkMeshFileReaderBase.hxx
   itkMultiResolutionGaussianSmoothingPyramidImageFilter.h
-  itkMultiResolutionGaussianSmoothingPyramidImageFilter.txx
+  itkMultiResolutionGaussianSmoothingPyramidImageFilter.hxx
   itkMultiResolutionImageRegistrationMethod2.h
-  itkMultiResolutionImageRegistrationMethod2.txx
+  itkMultiResolutionImageRegistrationMethod2.hxx
   itkMultiResolutionShrinkPyramidImageFilter.h
-  itkMultiResolutionShrinkPyramidImageFilter.txx
+  itkMultiResolutionShrinkPyramidImageFilter.hxx
   itkNDImageBase.h
   itkNDImageTemplate.h
   itkNDImageTemplate.hxx
@@ -50,13 +50,13 @@ SET( CommonFiles
 
 SET( MaskFiles
   itkImageMaskSpatialObject2.h
-  itkImageMaskSpatialObject2.txx
+  itkImageMaskSpatialObject2.hxx
   itkImageSpatialObject2.h
-  itkImageSpatialObject2.txx
+  itkImageSpatialObject2.hxx
   itkErodeMaskImageFilter.h
-  itkErodeMaskImageFilter.txx
+  itkErodeMaskImageFilter.hxx
   itkParabolicErodeDilateImageFilter.h
-  itkParabolicErodeDilateImageFilter.txx
+  itkParabolicErodeDilateImageFilter.hxx
   itkParabolicErodeImageFilter.h
   itkParabolicMorphUtils.h
 )
@@ -69,55 +69,55 @@ SET( CostFunctionFiles
   CostFunctions/itkHardLimiterFunction.h
   CostFunctions/itkHardLimiterFunction.hxx
   CostFunctions/itkImageToImageMetricWithFeatures.h
-  CostFunctions/itkImageToImageMetricWithFeatures.txx
+  CostFunctions/itkImageToImageMetricWithFeatures.hxx
   CostFunctions/itkLimiterFunctionBase.h
   CostFunctions/itkMultiInputImageToImageMetricBase.h
-  CostFunctions/itkMultiInputImageToImageMetricBase.txx
+  CostFunctions/itkMultiInputImageToImageMetricBase.hxx
   CostFunctions/itkParzenWindowHistogramImageToImageMetric.h
   CostFunctions/itkParzenWindowHistogramImageToImageMetric.hxx
   CostFunctions/itkScaledSingleValuedCostFunction.cxx
   CostFunctions/itkScaledSingleValuedCostFunction.h
   CostFunctions/itkSingleValuedPointSetToPointSetMetric.h
-  CostFunctions/itkSingleValuedPointSetToPointSetMetric.txx
+  CostFunctions/itkSingleValuedPointSetToPointSetMetric.hxx
   CostFunctions/itkTransformPenaltyTerm.h
-  CostFunctions/itkTransformPenaltyTerm.txx
+  CostFunctions/itkTransformPenaltyTerm.hxx
 )
 
 SET( TransformFiles
   Transforms/itkAdvancedBSplineDeformableTransformBase.h
-  Transforms/itkAdvancedBSplineDeformableTransformBase.txx
+  Transforms/itkAdvancedBSplineDeformableTransformBase.hxx
   Transforms/itkAdvancedBSplineDeformableTransform.h
-  Transforms/itkAdvancedBSplineDeformableTransform.txx
+  Transforms/itkAdvancedBSplineDeformableTransform.hxx
   Transforms/itkAdvancedCombinationTransform.h
   Transforms/itkAdvancedCombinationTransform.hxx
   Transforms/itkAdvancedIdentityTransform.h
   Transforms/itkAdvancedMatrixOffsetTransformBase.h
-  Transforms/itkAdvancedMatrixOffsetTransformBase.txx
+  Transforms/itkAdvancedMatrixOffsetTransformBase.hxx
   Transforms/itkAdvancedRigid2DTransform.h
-  Transforms/itkAdvancedRigid2DTransform.txx
+  Transforms/itkAdvancedRigid2DTransform.hxx
   Transforms/itkAdvancedRigid3DTransform.h
-  Transforms/itkAdvancedRigid3DTransform.txx
+  Transforms/itkAdvancedRigid3DTransform.hxx
   Transforms/itkAdvancedTransform.h
-  Transforms/itkAdvancedTransform.txx
+  Transforms/itkAdvancedTransform.hxx
   Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
-  Transforms/itkBSplineInterpolationDerivativeWeightFunction.txx
+  Transforms/itkBSplineInterpolationDerivativeWeightFunction.hxx
   Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h
-  Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.txx
+  Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.hxx
   Transforms/itkBSplineInterpolationWeightFunction2.h
-  Transforms/itkBSplineInterpolationWeightFunction2.txx
+  Transforms/itkBSplineInterpolationWeightFunction2.hxx
   Transforms/itkBSplineInterpolationWeightFunctionBase.h
-  Transforms/itkBSplineInterpolationWeightFunctionBase.txx
+  Transforms/itkBSplineInterpolationWeightFunctionBase.hxx
   #Transforms/itkBSplineKernelFunction2.h
   #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
   Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
   Transforms/itkTransformToDeterminantOfSpatialJacobianSource.h
-  Transforms/itkTransformToDeterminantOfSpatialJacobianSource.txx
+  Transforms/itkTransformToDeterminantOfSpatialJacobianSource.hxx
   Transforms/itkTransformToSpatialJacobianSource.h
-  Transforms/itkTransformToSpatialJacobianSource.txx
+  Transforms/itkTransformToSpatialJacobianSource.hxx
   Transforms/itkGridScheduleComputer.h
-  Transforms/itkGridScheduleComputer.txx
+  Transforms/itkGridScheduleComputer.hxx
   Transforms/itkUpsampleBSplineParametersFilter.h
-  Transforms/itkUpsampleBSplineParametersFilter.txx
+  Transforms/itkUpsampleBSplineParametersFilter.hxx
 )
 
 SET( LineSearchOptimizersFiles
@@ -129,27 +129,27 @@ SET( LineSearchOptimizersFiles
 
 SET( ImageSamplersFiles
   ImageSamplers/itkImageFullSampler.h
-  ImageSamplers/itkImageFullSampler.txx
+  ImageSamplers/itkImageFullSampler.hxx
   ImageSamplers/itkImageGridSampler.h
-  ImageSamplers/itkImageGridSampler.txx
+  ImageSamplers/itkImageGridSampler.hxx
   ImageSamplers/itkImageRandomCoordinateSampler.h
-  ImageSamplers/itkImageRandomCoordinateSampler.txx
+  ImageSamplers/itkImageRandomCoordinateSampler.hxx
   ImageSamplers/itkImageRandomSampler.h
-  ImageSamplers/itkImageRandomSampler.txx
+  ImageSamplers/itkImageRandomSampler.hxx
   ImageSamplers/itkImageRandomSamplerBase.h
   ImageSamplers/itkImageRandomSamplerSparseMask.h
-  ImageSamplers/itkImageRandomSamplerSparseMask.txx
+  ImageSamplers/itkImageRandomSamplerSparseMask.hxx
   ImageSamplers/itkImageSample.h
   ImageSamplers/itkImageSamplerBase.h
-  ImageSamplers/itkImageSamplerBase.txx
+  ImageSamplers/itkImageSamplerBase.hxx
   ImageSamplers/itkImageToVectorContainerFilter.h
-  ImageSamplers/itkImageToVectorContainerFilter.txx
+  ImageSamplers/itkImageToVectorContainerFilter.hxx
   ImageSamplers/itkMultiInputImageRandomCoordinateSampler.h
-  ImageSamplers/itkMultiInputImageRandomCoordinateSampler.txx
+  ImageSamplers/itkMultiInputImageRandomCoordinateSampler.hxx
   ImageSamplers/itkVectorContainerSource.h
-  ImageSamplers/itkVectorContainerSource.txx
+  ImageSamplers/itkVectorContainerSource.hxx
   ImageSamplers/itkVectorDataContainer.h
-  ImageSamplers/itkVectorDataContainer.txx
+  ImageSamplers/itkVectorDataContainer.hxx
 )
 
 #---------------------------------------------------------------------

@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkANNFixedRadiusTreeSearch_h
 #define __itkANNFixedRadiusTreeSearch_h
 
@@ -97,11 +96,8 @@ namespace itk
 
 } // end namespace itk
 
-
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkANNFixedRadiusTreeSearch.txx"
+#include "itkANNFixedRadiusTreeSearch.hxx"
 #endif
 
-
 #endif // end #ifndef __itkANNFixedRadiusTreeSearch_h
-

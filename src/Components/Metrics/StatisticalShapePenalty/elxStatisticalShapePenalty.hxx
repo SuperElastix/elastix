@@ -75,7 +75,7 @@ StatisticalShapePenalty<TElastix>
     fixedName, fixedPointSet, fixedImage );
   this->SetFixedPointSet( fixedPointSet );
 
-  // itkCombinationImageToImageMetric.txx checks if metric base class is ImageMetricType or PointSetMetricType.
+  // itkCombinationImageToImageMetric.hxx checks if metric base class is ImageMetricType or PointSetMetricType.
   // This class is derived from SingleValuedPointSetToPointSetMetric which needs a moving pointset.
   this->SetMovingPointSet( fixedPointSet ); // TODO: make itkCombinationImageToImageMetric check for a base class metric that doesn't use an image or moving pointset.
 

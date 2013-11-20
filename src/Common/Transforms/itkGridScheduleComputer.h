@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkGridScheduleComputer_H__
 #define __itkGridScheduleComputer_H__
 
@@ -195,8 +194,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGridScheduleComputer.txx"
+#include "itkGridScheduleComputer.hxx"
 #endif
 
 #endif // end #ifndef __itkGridScheduleComputer_H__
-

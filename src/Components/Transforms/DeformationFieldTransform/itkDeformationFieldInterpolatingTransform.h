@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkDeformationFieldInterpolatingTransform_h
 #define __itkDeformationFieldInterpolatingTransform_h
 
@@ -229,8 +228,7 @@ namespace itk
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkDeformationFieldInterpolatingTransform.txx"
+#include "itkDeformationFieldInterpolatingTransform.hxx"
 #endif
 
 #endif /* __itkDeformationFieldInterpolatingTransform_h */
-

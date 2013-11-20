@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkUpsampleBSplineParametersFilter_h
 #define __itkUpsampleBSplineParametersFilter_h
 
@@ -131,7 +130,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-# include "itkUpsampleBSplineParametersFilter.txx"
+#include "itkUpsampleBSplineParametersFilter.hxx"
 #endif
 
 #endif // end #ifndef __itkUpsampleBSplineParametersFilter_h

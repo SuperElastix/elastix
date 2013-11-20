@@ -11,7 +11,6 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkCyclicBSplineDeformableTransform_h
 #define __itkCyclicBSplineDeformableTransform_h
 
@@ -163,7 +162,7 @@ private:
 }  // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkCyclicBSplineDeformableTransform.txx"
+#include "itkCyclicBSplineDeformableTransform.hxx"
 #endif
 
 #endif /* __itkCyclicBSplineDeformableTransform_h */

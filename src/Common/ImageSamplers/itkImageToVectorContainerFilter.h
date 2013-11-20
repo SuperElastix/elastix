@@ -186,7 +186,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageToVectorContainerFilter.txx"
+#include "itkImageToVectorContainerFilter.hxx"
 #endif
 
 #endif // end #ifndef __itkImageToVectorContainerFilter_h

@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkANNStandardTreeSearch_h
 #define __itkANNStandardTreeSearch_h
 
@@ -88,11 +87,8 @@ namespace itk
 
 } // end namespace itk
 
-
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkANNStandardTreeSearch.txx"
+#include "itkANNStandardTreeSearch.hxx"
 #endif
 
-
 #endif // end #ifndef __itkANNStandardTreeSearch_h
-

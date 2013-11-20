@@ -199,7 +199,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedRigid3DTransform.txx"
+#include "itkAdvancedRigid3DTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedRigid3DTransform_h */

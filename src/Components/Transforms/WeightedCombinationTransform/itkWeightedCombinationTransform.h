@@ -11,7 +11,6 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkWeightedCombinationTransform_h
 #define __itkWeightedCombinationTransform_h
 
@@ -239,8 +238,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkWeightedCombinationTransform.txx"
+#include "itkWeightedCombinationTransform.hxx"
 #endif
 
 #endif
-

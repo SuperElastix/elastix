@@ -333,7 +333,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedBSplineDeformableTransform.txx"
+#include "itkAdvancedBSplineDeformableTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedBSplineDeformableTransform_h */

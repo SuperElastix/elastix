@@ -27,7 +27,6 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkTransformToDeterminantOfSpatialJacobianSource_h
 #define __itkTransformToDeterminantOfSpatialJacobianSource_h
 
@@ -218,7 +217,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTransformToDeterminantOfSpatialJacobianSource.txx"
+#include "itkTransformToDeterminantOfSpatialJacobianSource.hxx"
 #endif
 
 #endif // end #ifndef __itkTransformToDeterminantOfSpatialJacobianSource_h

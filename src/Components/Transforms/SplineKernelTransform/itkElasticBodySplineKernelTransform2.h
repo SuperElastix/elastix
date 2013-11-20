@@ -138,7 +138,7 @@ protected:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkElasticBodySplineKernelTransform2.txx"
+#include "itkElasticBodySplineKernelTransform2.hxx"
 #endif
 
 #endif // __itkElasticBodySplineKernelTransform2_h

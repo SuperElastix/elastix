@@ -99,7 +99,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkCorrespondingPointsEuclideanDistancePointMetric.txx"
+#include "itkCorrespondingPointsEuclideanDistancePointMetric.hxx"
 #endif
 
 #endif

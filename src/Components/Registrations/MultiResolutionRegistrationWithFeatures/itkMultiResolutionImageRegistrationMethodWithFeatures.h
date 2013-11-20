@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkMultiResolutionImageRegistrationMethodWithFeatures_h
 #define __itkMultiResolutionImageRegistrationMethodWithFeatures_h
 
@@ -121,7 +120,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiResolutionImageRegistrationMethodWithFeatures.txx"
+#include "itkMultiResolutionImageRegistrationMethodWithFeatures.hxx"
 #endif
 
 #endif // end #ifndef __itkMultiResolutionImageRegistrationMethodWithFeatures_h

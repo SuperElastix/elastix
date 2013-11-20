@@ -11,9 +11,8 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef __itkDeformationVectorFieldTransform_H__
-#define __itkDeformationVectorFieldTransform_H__
+#ifndef __itkDeformationVectorFieldTransform_h__
+#define __itkDeformationVectorFieldTransform_h__
 
 #include "itkAdvancedBSplineDeformableTransform.h"
 
@@ -129,8 +128,7 @@ class DeformationVectorFieldTransform
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkDeformationVectorFieldTransform.txx"
+#include "itkDeformationVectorFieldTransform.hxx"
 #endif
 
-#endif // end #ifndef __itkDeformationVectorFieldTransform_H__
-
+#endif // end #ifndef __itkDeformationVectorFieldTransform_h__

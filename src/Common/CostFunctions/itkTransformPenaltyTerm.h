@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkTransformPenaltyTerm_h
 #define __itkTransformPenaltyTerm_h
 
@@ -157,8 +156,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkTransformPenaltyTerm.txx"
+#include "itkTransformPenaltyTerm.hxx"
 #endif
 
 #endif // #ifndef __itkTransformPenaltyTerm_h
-

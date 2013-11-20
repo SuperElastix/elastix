@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( CorrespondingPointsEuclideanDistanceMetric
  elxCorrespondingPointsEuclideanDistanceMetric.h
  elxCorrespondingPointsEuclideanDistanceMetric.hxx
  itkCorrespondingPointsEuclideanDistancePointMetric.h
- itkCorrespondingPointsEuclideanDistancePointMetric.txx )
+ itkCorrespondingPointsEuclideanDistancePointMetric.hxx )
 

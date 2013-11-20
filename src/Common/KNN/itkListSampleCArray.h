@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkListSampleCArray_h
 #define __itkListSampleCArray_h
 
@@ -150,10 +149,8 @@ namespace Statistics
 } // end namespace Statistics
 } // end namespace itk
 
-
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkListSampleCArray.txx"
+#include "itkListSampleCArray.hxx"
 #endif
-
 
 #endif // end #ifndef __itkListSampleCArray_h

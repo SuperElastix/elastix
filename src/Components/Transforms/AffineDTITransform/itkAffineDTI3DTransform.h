@@ -180,7 +180,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAffineDTI3DTransform.txx"
+#include "itkAffineDTI3DTransform.hxx"
 #endif
 
 #endif /* __itkAffineDTI3DTransform_h */

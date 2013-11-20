@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkAdvancedVersorRigid3DTransform_h
 #define __itkAdvancedVersorRigid3DTransform_h
 
@@ -142,7 +141,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedVersorRigid3DTransform.txx"
+#include "itkAdvancedVersorRigid3DTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedVersorRigid3DTransform_h */

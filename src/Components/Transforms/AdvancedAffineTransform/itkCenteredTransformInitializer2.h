@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkCenteredTransformInitializer2_h
 #define __itkCenteredTransformInitializer2_h
 
@@ -185,7 +184,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkCenteredTransformInitializer2.txx"
+#include "itkCenteredTransformInitializer2.hxx"
 #endif
 
 #endif /* __itkCenteredTransformInitializer2_h */

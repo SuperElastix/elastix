@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkAdvancedSimilarity3DTransform_h
 #define __itkAdvancedSimilarity3DTransform_h
 
@@ -160,7 +159,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedSimilarity3DTransform.txx"
+#include "itkAdvancedSimilarity3DTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedSimilarity3DTransform_h */

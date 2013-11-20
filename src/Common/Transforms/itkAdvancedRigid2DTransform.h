@@ -325,7 +325,7 @@ BackTransform(const OutputCovariantVectorType &vect) const
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedRigid2DTransform.txx"
+#include "itkAdvancedRigid2DTransform.hxx"
 #endif
 
 #endif /* __itkAdvancedRigid2DTransform_h */

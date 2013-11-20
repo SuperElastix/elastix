@@ -183,8 +183,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkSingleValuedPointSetToPointSetMetric.txx"
+#include "itkSingleValuedPointSetToPointSetMetric.hxx"
 #endif
 
 #endif
-

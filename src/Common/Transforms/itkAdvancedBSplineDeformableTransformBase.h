@@ -11,7 +11,6 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkAdvancedBSplineDeformableTransformBase_h
 #define __itkAdvancedBSplineDeformableTransformBase_h
 
@@ -357,7 +356,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedBSplineDeformableTransformBase.txx"
+#include "itkAdvancedBSplineDeformableTransformBase.hxx"
 #endif
 
 #endif /* __itkAdvancedBSplineDeformableTransformBase_h */

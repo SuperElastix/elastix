@@ -113,8 +113,7 @@ private:
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBSplineInterpolationDerivativeWeightFunction.txx"
+#include "itkBSplineInterpolationDerivativeWeightFunction.hxx"
 #endif
-
 
 #endif

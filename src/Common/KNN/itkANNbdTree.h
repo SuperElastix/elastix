@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkANNbdTree_h
 #define __itkANNbdTree_h
 
@@ -91,11 +90,8 @@ namespace itk
 
 } // end namespace itk
 
-
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkANNbdTree.txx"
+#include "itkANNbdTree.hxx"
 #endif
 
-
 #endif // end #ifndef __itkANNbdTree_h
-

@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkImageFileCastWriter_h
 #define __itkImageFileCastWriter_h
 
@@ -118,8 +117,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageFileCastWriter.txx"
+#include "itkImageFileCastWriter.hxx"
 #endif
 
 #endif // __itkImageFileCastWriter_h
-
