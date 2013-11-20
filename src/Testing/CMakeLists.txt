@@ -82,26 +82,35 @@ endmacro()
 # only work if run via the dashboard scripts.
 #
 set( knownChecksumSystem false )
+set( specializedTransformParameterSystem false )
 if( SITE STREQUAL "LKEB.PCMarius"
     AND BUILDNAME STREQUAL "Win7-64bit-VS2010" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2010.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "LKEB.goliath"
     AND BUILDNAME STREQUAL "Linux-64bit-gcc4.6.3-Release" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
+elseif( SITE STREQUAL "LKEB.goliath"
+    AND BUILDNAME STREQUAL "Linux-clang3.3-Release" )
+  set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "LKEB.MacMini"
     AND BUILDNAME STREQUAL "MacOSX-64bit-gcc4.2.1" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.MacMini_MacOSX-64bit-gcc4.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "BIGR.PCStefan"
     AND BUILDNAME STREQUAL "WinXP-32bit-VS2008" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.PCStefan_WinXP-32bit-VS2008.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "BIGR.cluster"
     AND BUILDNAME STREQUAL "Linux-64bit-gcc4.4.6" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.cluster_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
 endif()
 
 if( knownChecksumSystem )
@@ -164,7 +173,7 @@ macro( elx_add_run_test testbasename howtocompare )
   # Temporary hack to get some failing tests working
   # These three tests give different results on different platforms
   # They all seem to be using ASGD and B-splines and (N)MI
-  if( knownChecksumSystem )
+  if( specializedTransformParameterSystem )
     if( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
       if( ${testbasename} STREQUAL "3DCT_lung.MI.bspline.ASGD.001"
         OR ${testbasename} STREQUAL "3DCT_lung.NMI.bspline.ASGD.001" )
