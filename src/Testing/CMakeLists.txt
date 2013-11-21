@@ -337,7 +337,7 @@ elx_add_test( TimerTest )
 
 # Select machine dependend baseline image
 set( baselineImage ${TestBaselineDir}/example.mha )
-if( knownChecksumSystem )
+if( knownChecksumSystem OR specializedTransformParameterSystem )
   if( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
     set( baselineImage ${TestBaselineDir}/example_${SITE}.mha )
   endif()
