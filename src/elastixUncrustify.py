@@ -2,6 +2,7 @@ import sys
 import os
 import os.path
 import platform
+import shutil
 from optparse import OptionParser
 
 #-------------------------------------------------------------------------------
@@ -15,212 +16,204 @@ from optparse import OptionParser
 # option '-a'. Including and excluding files and directories could be also
 # indicated, see options.
 def main():
-    # usage, parse parameters
-    usage = "usage: %prog [options] arg"
-    parser = OptionParser( usage )
+  # usage, parse parameters
+  usage = "usage: %prog [options] arg"
+  parser = OptionParser( usage );
 
-    # option to debug and verbose
-    parser.add_option( "-d", "--debug", action="store_true", dest="debug",
-                       default=False, help="debug commands calls" )
-    parser.add_option( "-v", "--verbose", action="store_true",
-                       default=False, dest="verbose", help="verbose" )
-    parser.add_option( "-q", "--quiet", action="store_true",
-                       default=False, dest="quiet", help="quiet mode for uncrustify" )
+  # option to debug and verbose
+  parser.add_option( "-d", "--debug", action="store_true", dest="debug",
+    default=False, help="debug commands calls" );
+  parser.add_option( "-v", "--verbose", action="store_true",
+    default=False, dest="verbose", help="verbose" );
+  parser.add_option( "-q", "--quiet", action="store_true",
+    default=False, dest="quiet", help="quiet mode for uncrustify" );
 
-    # user defined uncrustify configuration file
-    parser.add_option( "-c", "--config", dest="config",
-                       type="string", help="uncrustify configuration file" )
+  # user defined uncrustify configuration file
+  parser.add_option( "-c", "--config", dest="config",
+    type="string", help="uncrustify configuration file" );
 
-    # options to control files. use -o output1 not -o c:\\temp
-    parser.add_option( "-o", "--output", dest="output_directory",
-                       default="_beautiful_code", help="relative uncrustify output directory" )
+  # options to control files. use -o output1 not -o c:\\temp
+  parser.add_option( "-o", "--output", dest="output_directory",
+    default="_beautiful_code", help="relative uncrustify output directory" );
 
-    # include regex, use syntax -i "value1 value2" NOT -i value1 value2
-    parser.add_option( "-i", "--include-regex", dest="include",
-                       type="string", help="include files matching regular expression" )
+  # include regex, use syntax -i "value1 value2" NOT -i value1 value2
+  parser.add_option( "-i", "--include-regex", dest="include",
+    type="string", help="include files matching regular expression" );
 
-    # exclude regex, use syntax -e "value1 value2" NOT -e value1 value2
-    parser.add_option( "-e", "--exclude-regex", dest="exclude",
-                       help="exclude files matching regular expression" )
+  # exclude regex, use syntax -e "value1 value2" NOT -e value1 value2
+  parser.add_option( "-e", "--exclude-regex", dest="exclude",
+    help="exclude files matching regular expression" );
 
-    # apply directly to the code, has to be confirmed
-    parser.add_option( "-a", "--apply", action="store_true", default=False,
-                       dest="apply", help="apply uncrustify directly to the svn files" )
+  # apply directly to the code, has to be confirmed
+  parser.add_option( "-a", "--apply", action="store_true", default=False,
+    dest="apply", help="apply uncrustify directly to the svn files" );
 
-    (options, args) = parser.parse_args();
+  (options, args) = parser.parse_args();
 
-    # check if option -a is given, and confirm
-    if options.apply == True:
-        answer = query_yes_no("WARNING: Do you want to apply Uncrustify directly to the code?")
-        if answer == False:
-            return 0
+  # check if option -a is given, and confirm
+  if options.apply == True :
+    answer = query_yes_no("WARNING: Do you want to apply Uncrustify directly to the code?")
+    if answer == False :
+      return 0
 
-    # get include and exclude options as lists
-    include_list = None
-    exclude_list = None
-    if options.include != None:
-        include_list = options.include.split(" ")
-    if options.exclude != None:
-        exclude_list = options.exclude.split(" ")
+  # get include and exclude options as lists
+  include_list = None; exclude_list = None;
+  if options.include != None :
+    include_list = options.include.split(" ");
+  if options.exclude != None :
+    exclude_list = options.exclude.split(" ");
 
-    # check for contradictory options
-    if options.include != None and options.exclude != None:
-        for include in include_list:
-            for exclude in exclude_list:
-                if include == exclude:
-                    print "ERROR: The contradictory options provided -i %s -e %s." % (include, exclude)
-                    return 1
+  # check for contradictory options
+  if options.include != None and options.exclude != None :
+    for include in include_list :
+      for exclude in exclude_list :
+        if include == exclude :
+          print( "ERROR: The contradictory options provided -i " + include + " -e " + exclude + "." );
+          return 1;
 
-    # support for other uncrustify configuration file
-    app_uncrustify_cfg_file_name = ""
-    if options.config == None:
-        app_uncrustify_cfg_file_name = "elastixUncrustify.cfg"
-    else:
-        app_uncrustify_cfg_file_name = options.config
-        print "WARNING: Using other uncrustify configuration file '%s'" % app_uncrustify_cfg_file_name
+  # support for other uncrustify configuration file
+  app_uncrustify_cfg_file_name = "";
+  if options.config == None :
+    app_uncrustify_cfg_file_name = "elastixUncrustify.cfg";
+  else :
+    app_uncrustify_cfg_file_name = options.config;
+    print( "WARNING: Using other uncrustify configuration file '" + app_uncrustify_cfg_file_name + "'" );
 
-    # uncrustify executable
-    uncrustify_exe_name = ""
+  # uncrustify executable
+  uncrustify_exe_name = "";
 
-    # get system type and define uncrustify executable
-    system_type = get_system_name()
-    if system_type.find("Linux") != -1:
-        uncrustify_exe_name = "uncrustify"
-    elif system_type.find("OSX") != -1:
-        uncrustify_exe_name = "uncrustify"
-    elif system_type.find("MSWin") != -1:
-        uncrustify_exe_name = "uncrustify.exe"
-    else:
-        print "ERROR: unable to detect system type."
-        return 1
+  # define uncrustify executable
+  uncrustify_exe_name = "uncrustify";
 
-    # list of valid C++ extensions and top directories
-    src_valid_cxx_extensions = set([".h", ".cpp", ".cxx", ".hxx", ".txx"]) # not .in.h
-    src_top_dirs = ["Common", "Components", "Core", "Testing"]
+  # list of valid C++ extensions and top directories
+  src_valid_cxx_extensions = set( [".h", ".cpp", ".cxx", ".hxx", ".txx"] ); # not .in.h
+  src_top_dirs = [ "Common", "Components", "Core", "Testing" ];
 
-    # current directory
-    current_dir = os.getcwd()
+  # current directory
+  current_dir = os.getcwd();
+  current_dir = current_dir.replace( "/cygdrive/c/", "C:/" ); # Cygwin support
+  current_dir = current_dir.replace( "/cygdrive/d/", "D:/" ); # Cygwin support
 
-    # check that uncrustify executable end configuration file exist
-    app_uncrustify_cfg_file = os.path.join(current_dir, app_uncrustify_cfg_file_name)
-    if os.access(app_uncrustify_cfg_file, os.F_OK) == False:
-        print "ERROR: The configuration file '%s' does not exist." % app_uncrustify_cfg_file_name
-        return 1
+  # check that uncrustify executable end configuration file exist
+  app_uncrustify_cfg_file = os.path.join( current_dir, app_uncrustify_cfg_file_name );
+  if not os.path.exists( app_uncrustify_cfg_file ) :
+    print( "ERROR: The configuration file '" + app_uncrustify_cfg_file + "' does not exist." );
+    return 1;
 
-    if which(uncrustify_exe_name) == None:
-        print "ERROR: The executable file '%s' does not exist in your PATH variable." % uncrustify_exe_name
-        return 1
+  if which( uncrustify_exe_name ) == None :
+    print( "ERROR: The executable file '" + uncrustify_exe_name + "' does not exist in your PATH variable." );
+    return 1;
 
-    # create files list for uncrustify and place it in the output directory
-    output_dir = os.path.join(current_dir, options.output_directory)
-    if options.apply == False:
-        create_dir(output_dir, options)
+  # create files list for uncrustify and place it in the output directory
+  output_dir = os.path.join( current_dir, options.output_directory );
+  if options.apply == False :
+    create_dir( output_dir, options );
 
-    # files list for uncrustify option -F:
-    # -F FILE: read files to process from FILE, one filename per line
-    app_uncrustify_files_list = "uncrustify_"
-    if options.include != None:
-        app_uncrustify_files_list = app_uncrustify_files_list + "_".join(include_list) + "_"
-    if options.exclude != None:
-        app_uncrustify_files_list = app_uncrustify_files_list + "_".join(exclude_list) + "_"
+  # files list for uncrustify option -F:
+  # -F FILE: read files to process from FILE, one filename per line
+  app_uncrustify_files_list = "uncrustify_";
+  if options.include != None :
+    app_uncrustify_files_list = app_uncrustify_files_list + "_".join(include_list) + "_";
+  if options.exclude != None :
+    app_uncrustify_files_list = app_uncrustify_files_list + "_".join(exclude_list) + "_"
 
-    app_uncrustify_files_list = app_uncrustify_files_list + "files.txt"
+  app_uncrustify_files_list = app_uncrustify_files_list + "files.txt";
 
-    if options.apply == True:
-        app_uncrustify_files_list = os.path.join(current_dir, app_uncrustify_files_list)
-    else:
-        app_uncrustify_files_list = os.path.join(output_dir, app_uncrustify_files_list)
+  if options.apply == True :
+    app_uncrustify_files_list = os.path.join( current_dir, app_uncrustify_files_list );
+  else:
+    app_uncrustify_files_list = os.path.join( output_dir, app_uncrustify_files_list );
 
-    # create files list, it has to be defined in uncrustify specific way
-    filelist = None
+  # create files list, it has to be defined in uncrustify specific way
+  filelist = None;
 
-    if options.debug == True:
-        print "DEBUG: Opening file %s" % app_uncrustify_files_list
-    else:
-        filelist = open(app_uncrustify_files_list, "w")
+  if options.debug == True :
+    print( "DEBUG: Opening file " + app_uncrustify_files_list );
+  else :
+    filelist = open( app_uncrustify_files_list, "w" );
 
-    for dir in src_top_dirs:
-        local_current_dir = os.path.join(current_dir, dir)
-        for root, dirs, files in os.walk(local_current_dir):
-            for f in files:
-                fullpath = os.path.join(root, f)
-                if file_valid(fullpath, include_list, exclude_list, src_valid_cxx_extensions):
-                    rfullpath = fullpath.replace(current_dir,'')
-                    rfullpath = rfullpath.lstrip('\\')
-                    if options.debug == True:
-                        print "DEBUG: %s" % rfullpath
-                    else:
-                        filelist.write(rfullpath)
-                        filelist.write('\n')
+  for dir in src_top_dirs :
+    local_current_dir = os.path.join( current_dir, dir );
+    for root, dirs, files in os.walk( local_current_dir ) :
+      for f in files :
+        fullpath = os.path.join( root, f );
+        if file_valid( fullpath, include_list, exclude_list, src_valid_cxx_extensions ) :
+          rfullpath = fullpath.replace( current_dir, '' );
+          rfullpath = rfullpath.lstrip( '\\' );
+          rfullpath = rfullpath.lstrip( '/' ); # Windows support
+          if options.debug == True :
+            print( "DEBUG: " + rfullpath );
+          else :
+            filelist.write( rfullpath );
+            filelist.write( '\n' );
 
-    if options.debug == True:
-        print "DEBUG: Closing file %s" % app_uncrustify_files_list
-    else:
-        filelist.close()
+  if options.debug == True :
+    print( "DEBUG: Closing file " + app_uncrustify_files_list );
+  else :
+    filelist.close();
 
-    # define uncrustify arguments
-    arg = "-c " + app_uncrustify_cfg_file
-    if options.apply == True:
-        arg = arg + " --no-backup"
-    else:
-        arg = arg + " --prefix=" + options.output_directory
-    arg = arg + " -F " + app_uncrustify_files_list
-    if options.quiet == True:
-        arg = arg + " -q"
+  # define uncrustify arguments
+  arg = "-c " + app_uncrustify_cfg_file;
+  if options.apply == True :
+    arg = arg + " --no-backup";
+  else :
+    arg = arg + " --prefix=" + options.output_directory;
+  arg = arg + " -F " + app_uncrustify_files_list;
+  if options.quiet == True :
+    arg = arg + " -q";
 
-    # execute uncrustify
-    call_program(uncrustify_exe_name, arg, options)
+  # execute uncrustify
+  call_program( uncrustify_exe_name, arg, options );
 
-    # delete filelist if option apply is used
-    if os.access(app_uncrustify_files_list, os.F_OK) == True and options.apply == True:
-        if options.debug == True:
-            print "DEBUG: Deleting file %s" % app_uncrustify_files_list
-        else:
-            os.remove(app_uncrustify_files_list)
+  # delete filelist if option apply is used
+  if os.access( app_uncrustify_files_list, os.F_OK ) == True and options.apply == True :
+    if options.debug == True :
+      print( "DEBUG: Deleting file " + app_uncrustify_files_list );
+    else :
+      os.remove( app_uncrustify_files_list );
 
-    # report
-    success_msg = "SUCCESS! Your code is beautiful!"
-    if options.apply == True:
-        print success_msg
-    else:
-        print "%s Look at '%s' directory." % (success_msg, options.output_directory)
-    return 0
+  # report
+  print( "SUCCESS! Your code is beautiful!" );
+  if not options.apply :
+    print( "Look at the directory " + options.output_directory );
+
+  return 0
 
 #-------------------------------------------------------------------------------
 # query_yes_no
-def query_yes_no(question, default="yes"):
-    """Ask a yes/no question via raw_input() and return their answer.
+def query_yes_no( question, default = "yes" ) :
 
-    "question" is a string that is presented to the user.
-    "default" is the presumed answer if the user just hits <Enter>.
-        It must be "yes" (the default), "no" or None (meaning
-        an answer is required of the user).
+  valid = { "yes":True, "y":True, "ye":True, "no":False,"n":False };
+  if default == None :
+    prompt = " [y/n] ";
+  elif default == "yes" :
+    prompt = " [Y/n] ";
+  elif default == "no" :
+    prompt = " [y/N] ";
+  else:
+    raise ValueError( "invalid default answer: '%s'" % default );
 
-    The "answer" return value is one of "yes" or "no".
-    """
-    valid = {"yes":True,"y":True,"ye":True,"no":False,"n":False}
-    if default == None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
+  while True :
+    sys.stdout.write( question + prompt );
 
-    while True:
-        sys.stdout.write(question + prompt)
-        choice = raw_input().lower()
-        if default is not None and choice == '':
-            return valid[default]
-        elif choice in valid:
-            return valid[choice]
-        else:
-            sys.stdout.write("Please respond with 'yes' or 'no' "\
-                             "(or 'y' or 'n').\n")
+    # First one works in python2, last one in python3
+    try :              choice = raw_input().lower();
+    except NameError : choice = input().lower();
+
+    if default is not None and choice == '' :
+      print("1")
+      return valid[default];
+    elif choice in valid :
+      print("2")
+      return valid[choice];
+    else :
+      print("3")
+      sys.stdout.write("Please respond with 'yes' or 'no' "\
+        "(or 'y' or 'n').\n");
 
 #-------------------------------------------------------------------------------
 # which
+# Can be replaced by shutil.which() after python 3.3.
 def which(program):
     import os
     def is_exe(fpath):
@@ -241,34 +234,14 @@ def which(program):
 #-------------------------------------------------------------------------------
 # create directory
 def create_dir(dir_name, options):
-    if os.access(dir_name, os.F_OK) == False:
-        cmd = "DEBUG: Creating directory '%s'" % dir_name
-        if options.debug == True:
-            print cmd
-        else:
-            if options.verbose == True:
-                print cmd
-            os.mkdir(dir_name)
-
-#-------------------------------------------------------------------------------
-# get_system_name
-def get_system_name():
-    # store the architecture string (heavy performance drain)
-    architecture = platform.architecture()[0]
-    if os.name == 'posix':
-        if platform.system() == 'Darwin':
-            s = 'OSX'
-        else:
-            if architecture == '64bit':
-                s = 'Linux64'
-            else:
-                s = 'Linux32'
+  if os.access( dir_name, os.F_OK ) == False :
+    cmd = "DEBUG: Creating directory '%s'" % dir_name
+    if options.debug == True:
+      print( cmd );
     else:
-        if architecture == '64bit':
-            s = 'MSWin64'
-        else:
-            s = 'MSWin32'
-    return s
+      if options.verbose == True:
+        print( cmd );
+      os.mkdir( dir_name );
 
 #-------------------------------------------------------------------------------
 # file_valid
@@ -295,20 +268,19 @@ def file_valid(file, include_list, exclude_list, elx_extensions):
 
 #-------------------------------------------------------------------------------
 # call_program
-def call_program(app_name, app_arg, options):
-    cmd = ""
-    if len(app_arg) > 0:
-        cmd = app_name + " " + app_arg
-    else:
-        cmd = app_name
+def call_program( app_name, app_arg, options ) :
 
-    if options.verbose and options.debug == False:
-        print "Calling %s" % cmd
+  cmd = app_name;
+  if len( app_arg ) > 0 :
+    cmd = cmd + " " + app_arg;
 
-    if options.debug == True:
-        print "DEBUG: Calling %s" % cmd
-    else:
-        os.system(cmd)
+  if options.verbose and options.debug == False :
+    print( "Calling " + cmd );
+
+  if options.debug == True :
+    print( "DEBUG: Calling " + cmd );
+  else :
+    os.system( cmd );
 
 #-------------------------------------------------------------------------------
 if __name__ == '__main__':
