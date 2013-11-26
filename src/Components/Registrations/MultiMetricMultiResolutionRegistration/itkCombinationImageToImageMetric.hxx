@@ -876,6 +876,10 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     useMultiThread = false;
   }
 
+  // For now we disable multi-threading of the combo metric, since the MacMini build
+  // segfaults with it. Have to investigate this issue later
+  useMultiThread = false; 
+
   /** Compute all metric values and derivatives, single-threadedly. */
   if( !useMultiThread )
   {
