@@ -42,6 +42,7 @@ def main():
 
   # exclude regex, use syntax -e "value1 value2" NOT -e value1 value2
   parser.add_option( "-e", "--exclude-regex", dest="exclude",
+    default = "Common/KNN/ann_1.1/ Common/CUDA/",
     help="exclude files matching regular expression" );
 
   # apply directly to the code, has to be confirmed
@@ -111,14 +112,7 @@ def main():
 
   # files list for uncrustify option -F:
   # -F FILE: read files to process from FILE, one filename per line
-  app_uncrustify_files_list = "uncrustify_";
-  if options.include != None :
-    app_uncrustify_files_list = app_uncrustify_files_list + "_".join(include_list) + "_";
-  if options.exclude != None :
-    app_uncrustify_files_list = app_uncrustify_files_list + "_".join(exclude_list) + "_"
-
-  app_uncrustify_files_list = app_uncrustify_files_list + "files.txt";
-
+  app_uncrustify_files_list = "uncrustify_files.txt";
   if options.apply == True :
     app_uncrustify_files_list = os.path.join( current_dir, app_uncrustify_files_list );
   else:
@@ -245,26 +239,26 @@ def create_dir(dir_name, options):
 
 #-------------------------------------------------------------------------------
 # file_valid
-def file_valid(file, include_list, exclude_list, elx_extensions):
-    # check exclude
-    if exclude_list != None:
-        for exclude in exclude_list:
-            if file.find(exclude) != -1:
-                return False
+def file_valid( file, include_list, exclude_list, elx_extensions ) :
+  # check exclude
+  if exclude_list != None :
+    for exclude in exclude_list :
+      if file.find( exclude ) != -1 :
+        return False;
 
-    # check within include
-    if include_list != None:
-        for include in include_list:
-            if file.find(include) != -1:
-                for extension in elx_extensions:
-                    if file.endswith(extension):
-                        return True
-    else:
-        for extension in elx_extensions:
-            if file.endswith(extension):
-                return True
+  # check within include
+  if include_list != None :
+    for include in include_list :
+      if file.find(include) != -1 :
+        for extension in elx_extensions :
+          if file.endswith(extension) :
+            return True;
+  else :
+    for extension in elx_extensions :
+      if file.endswith( extension ) :
+        return True;
 
-    return False
+  return False;
 
 #-------------------------------------------------------------------------------
 # call_program
