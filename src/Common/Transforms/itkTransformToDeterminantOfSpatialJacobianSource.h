@@ -68,7 +68,7 @@ namespace itk
  */
 template <class TOutputImage,
 class TTransformPrecisionType=double>
-class ITK_EXPORT TransformToDeterminantOfSpatialJacobianSource:
+class TransformToDeterminantOfSpatialJacobianSource:
     public ImageSource<TOutputImage>
 {
 public:

@@ -69,7 +69,7 @@ template <
   typename TElementIdentifier,
   typename TElement
   >
-class ITK_EXPORT VectorDataContainer:
+class VectorDataContainer:
   public DataObject,
   public std::vector<TElement>
 {

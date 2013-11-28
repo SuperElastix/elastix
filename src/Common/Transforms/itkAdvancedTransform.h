@@ -79,7 +79,7 @@ namespace itk
 template <class TScalarType,
   unsigned int NInputDimensions = 3,
   unsigned int NOutputDimensions = 3>
-class ITK_EXPORT AdvancedTransform
+class AdvancedTransform
   : public Transform< TScalarType, NInputDimensions, NOutputDimensions >
 {
 public:

@@ -38,7 +38,7 @@ namespace itk
  */
 
 template < class TFixedImage, class TMovingImage >
-class ITK_EXPORT PatternIntensityImageToImageMetric :
+class PatternIntensityImageToImageMetric :
 public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:

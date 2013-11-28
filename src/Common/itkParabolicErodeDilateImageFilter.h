@@ -45,7 +45,7 @@ namespace itk
 template <typename TInputImage,
     bool doDilate,
           typename TOutputImage= TInputImage >
-class ITK_EXPORT ParabolicErodeDilateImageFilter:
+class ParabolicErodeDilateImageFilter:
     public ImageToImageFilter<TInputImage,TOutputImage>
 {
 

@@ -32,7 +32,7 @@ namespace itk
  */
 
 template < class TFixedPointSet, class TMovingPointSet >
-class ITK_EXPORT CorrespondingPointsEuclideanDistancePointMetric :
+class CorrespondingPointsEuclideanDistancePointMetric :
     public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {
 public:

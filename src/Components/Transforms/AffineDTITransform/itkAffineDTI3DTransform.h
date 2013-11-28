@@ -72,7 +72,7 @@ namespace itk
  * \ingroup Transforms
  */
 template < class TScalarType=double >    // Data type for scalars (float or double)
-class ITK_EXPORT AffineDTI3DTransform :
+class AffineDTI3DTransform :
      public AdvancedMatrixOffsetTransformBase< TScalarType,3,3 >
 {
 public:

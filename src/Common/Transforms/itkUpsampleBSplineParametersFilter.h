@@ -33,7 +33,7 @@ namespace itk
  */
 
 template < class TArray, class TImage >
-class ITK_EXPORT UpsampleBSplineParametersFilter
+class UpsampleBSplineParametersFilter
   : public Object
 {
 public:

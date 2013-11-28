@@ -35,7 +35,7 @@ namespace itk
 template <
     class TScalarType = double,          // Data type for scalars
     unsigned int NDimensions = 3 >       // Number of dimensions
-class ITK_EXPORT AdvancedBSplineDeformableTransformBase
+class AdvancedBSplineDeformableTransformBase
   : public AdvancedTransform< TScalarType, NDimensions, NDimensions >
 {
 public:

@@ -39,7 +39,7 @@ namespace itk
 template < class TCoordRep = float,
   unsigned int VSpaceDimension = 2,
   unsigned int VSplineOrder = 3 >
-class ITK_EXPORT BSplineInterpolationDerivativeWeightFunction :
+class BSplineInterpolationDerivativeWeightFunction :
   public BSplineInterpolationWeightFunctionBase<
   TCoordRep, VSpaceDimension, VSplineOrder >
 {

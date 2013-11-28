@@ -36,7 +36,7 @@ template <
     class TScalarType = double,          // Data type for scalars
     unsigned int NDimensions = 3,        // Number of dimensions
     unsigned int VSplineOrder = 3 >      // Spline order
-class ITK_EXPORT MultiBSplineDeformableTransformWithNormal
+class MultiBSplineDeformableTransformWithNormal
   : public AdvancedTransform< TScalarType, NDimensions, NDimensions >
 {
 public:

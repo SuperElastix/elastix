@@ -37,7 +37,7 @@ namespace itk
  */
 template <class TScalarType = double,   // Data type for scalars (float or double)
           unsigned int NDimensions = 3>          // Number of dimensions
-class ITK_EXPORT ElasticBodyReciprocalSplineKernelTransform2 :
+class ElasticBodyReciprocalSplineKernelTransform2 :
           public KernelTransform2<  TScalarType, NDimensions>
 {
 public:

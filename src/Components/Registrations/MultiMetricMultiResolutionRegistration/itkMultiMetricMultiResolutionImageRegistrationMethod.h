@@ -77,7 +77,7 @@ namespace itk
  */
 
 template <typename TFixedImage, typename TMovingImage>
-class ITK_EXPORT MultiMetricMultiResolutionImageRegistrationMethod :
+class MultiMetricMultiResolutionImageRegistrationMethod :
   public MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>
 {
 public:

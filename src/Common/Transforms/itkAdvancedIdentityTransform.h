@@ -53,7 +53,7 @@ namespace itk
  */
 template <class TScalarType,
           unsigned int NDimensions=3>
-class ITK_EXPORT AdvancedIdentityTransform
+class AdvancedIdentityTransform
   : public AdvancedTransform<TScalarType,NDimensions,NDimensions>
 {
 public:

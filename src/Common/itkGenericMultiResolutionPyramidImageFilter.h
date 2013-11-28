@@ -102,7 +102,7 @@ namespace itk
  * \ingroup ITKRegistrationCommon
  */
 template <class TInputImage, class TOutputImage>
-class ITK_EXPORT GenericMultiResolutionPyramidImageFilter :
+class GenericMultiResolutionPyramidImageFilter :
   public MultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 {
 public:

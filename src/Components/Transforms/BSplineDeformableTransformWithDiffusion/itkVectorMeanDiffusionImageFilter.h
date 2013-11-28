@@ -42,7 +42,7 @@ namespace itk
  */
 
 template <class TInputImage, class TGrayValueImage >
-class ITK_EXPORT VectorMeanDiffusionImageFilter
+class VectorMeanDiffusionImageFilter
   : public ImageToImageFilter< TInputImage, TInputImage >
 {
 public:
