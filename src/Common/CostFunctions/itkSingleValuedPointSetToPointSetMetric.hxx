@@ -26,8 +26,8 @@ namespace itk
  * ******************* Constructor ***********************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
-SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
+template< class TFixedPointSet, class TMovingPointSet >
+SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
 ::SingleValuedPointSetToPointSetMetric()
 {
   this->m_FixedPointSet   = 0; // has to be provided by the user.
@@ -47,9 +47,9 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
  * ******************* SetTransformParameters ***********************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template< class TFixedPointSet, class TMovingPointSet >
 void
-SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
+SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
 ::SetTransformParameters( const ParametersType & parameters ) const
 {
   if( !this->m_Transform )
@@ -65,34 +65,34 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
  * ******************* Initialize ***********************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template< class TFixedPointSet, class TMovingPointSet >
 void
-SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
-::Initialize( void) throw ( ExceptionObject )
+SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
+::Initialize( void ) throw ( ExceptionObject )
 {
-  if ( !this->m_Transform )
+  if( !this->m_Transform )
   {
     itkExceptionMacro( << "Transform is not present" );
   }
 
-  if ( !this->m_MovingPointSet )
+  if( !this->m_MovingPointSet )
   {
     itkExceptionMacro( << "MovingPointSet is not present" );
   }
 
-  if ( !this->m_FixedPointSet )
+  if( !this->m_FixedPointSet )
   {
     itkExceptionMacro( << "FixedPointSet is not present" );
   }
 
   // If the PointSet is provided by a source, update the source.
-  if ( this->m_MovingPointSet->GetSource() )
+  if( this->m_MovingPointSet->GetSource() )
   {
     this->m_MovingPointSet->GetSource()->Update();
   }
 
   // If the point set is provided by a source, update the source.
-  if ( this->m_FixedPointSet->GetSource() )
+  if( this->m_FixedPointSet->GetSource() )
   {
     this->m_FixedPointSet->GetSource()->Update();
   }
@@ -104,13 +104,13 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
  * *********************** BeforeThreadedGetValueAndDerivative ***********************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template< class TFixedPointSet, class TMovingPointSet >
 void
-SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
+SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
 ::BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const
 {
   /** In this function do all stuff that cannot be multi-threaded. */
-  if ( this->m_UseMetricSingleThreaded )
+  if( this->m_UseMetricSingleThreaded )
   {
     this->SetTransformParameters( parameters );
   }
@@ -122,9 +122,9 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
  * ******************* PrintSelf ***********************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template< class TFixedPointSet, class TMovingPointSet >
 void
-SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
+SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );

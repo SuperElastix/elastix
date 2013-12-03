@@ -16,7 +16,6 @@
 
 #include "itkImageRandomSamplerBase.h"
 
-
 namespace itk
 {
 /** \class ImageRandomSampler
@@ -32,17 +31,17 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template < class TInputImage >
+template< class TInputImage >
 class ImageRandomSampler :
   public ImageRandomSamplerBase< TInputImage >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef ImageRandomSampler                     Self;
-  typedef ImageRandomSamplerBase< TInputImage >  Superclass;
-  typedef SmartPointer<Self>                     Pointer;
-  typedef SmartPointer<const Self>               ConstPointer;
+  typedef ImageRandomSampler                    Self;
+  typedef ImageRandomSamplerBase< TInputImage > Superclass;
+  typedef SmartPointer< Self >                  Pointer;
+  typedef SmartPointer< const Self >            ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -60,7 +59,7 @@ public:
   typedef typename Superclass::InputImageRegionType         InputImageRegionType;
   typedef typename Superclass::InputImagePixelType          InputImagePixelType;
   typedef typename Superclass::ImageSampleType              ImageSampleType;
-  typedef typename Superclass::ImageSampleValueType         ImageSampleValueType ;
+  typedef typename Superclass::ImageSampleValueType         ImageSampleValueType;
   typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
   typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
   typedef typename Superclass::MaskType                     MaskType;
@@ -71,15 +70,15 @@ public:
     Superclass::InputImageDimension );
 
   /** Other typedefs. */
-  typedef typename InputImageType::IndexType    InputImageIndexType;
-  typedef typename InputImageType::PointType    InputImagePointType;
+  typedef typename InputImageType::IndexType InputImageIndexType;
+  typedef typename InputImageType::PointType InputImagePointType;
 
 protected:
 
   /** The constructor. */
-  ImageRandomSampler() {};
+  ImageRandomSampler() {}
   /** The destructor. */
-  virtual ~ImageRandomSampler() {};
+  virtual ~ImageRandomSampler() {}
 
   /** Functions that do the work. */
   virtual void GenerateData( void );
@@ -91,12 +90,11 @@ protected:
 private:
 
   /** The private constructor. */
-  ImageRandomSampler( const Self& );        // purposely not implemented
+  ImageRandomSampler( const Self & );        // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );            // purposely not implemented
+  void operator=( const Self & );            // purposely not implemented
 
 };
-
 
 } // end namespace itk
 

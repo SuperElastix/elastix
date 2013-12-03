@@ -20,9 +20,8 @@
 namespace elastix
 {
 
-  //nothing
+//nothing
 
 } // end namespace elastix
 
 #endif // end #ifndef __elxFullSampler_hxx
-

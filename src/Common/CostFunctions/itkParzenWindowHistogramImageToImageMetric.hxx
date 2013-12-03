@@ -22,7 +22,6 @@
 #include "itkImageScanlineIterator.h"
 #include "vnl/vnl_math.h"
 
-
 namespace itk
 {
 
@@ -30,35 +29,35 @@ namespace itk
  * ********************* Constructor ****************************
  */
 
-template < class TFixedImage, class TMovingImage >
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ParzenWindowHistogramImageToImageMetric()
 {
-  this->m_NumberOfFixedHistogramBins = 32;
-  this->m_NumberOfMovingHistogramBins = 32;
-  this->m_JointPDF = 0;
-  this->m_JointPDFDerivatives = 0;
-  this->m_FixedImageNormalizedMin = 0.0;
-  this->m_MovingImageNormalizedMin = 0.0;
-  this->m_FixedImageBinSize = 0.0;
-  this->m_MovingImageBinSize = 0.0;
-  this->m_Alpha = 0.0;
-  this->m_FixedIncrementalMarginalPDFRight = 0;
+  this->m_NumberOfFixedHistogramBins        = 32;
+  this->m_NumberOfMovingHistogramBins       = 32;
+  this->m_JointPDF                          = 0;
+  this->m_JointPDFDerivatives               = 0;
+  this->m_FixedImageNormalizedMin           = 0.0;
+  this->m_MovingImageNormalizedMin          = 0.0;
+  this->m_FixedImageBinSize                 = 0.0;
+  this->m_MovingImageBinSize                = 0.0;
+  this->m_Alpha                             = 0.0;
+  this->m_FixedIncrementalMarginalPDFRight  = 0;
   this->m_MovingIncrementalMarginalPDFRight = 0;
-  this->m_FixedIncrementalMarginalPDFLeft = 0;
-  this->m_MovingIncrementalMarginalPDFLeft = 0;
+  this->m_FixedIncrementalMarginalPDFLeft   = 0;
+  this->m_MovingIncrementalMarginalPDFLeft  = 0;
 
-  this->m_FixedKernel = 0;
-  this->m_MovingKernel = 0;
-  this->m_DerivativeMovingKernel = 0;
-  this->m_FixedKernelBSplineOrder = 0;
-  this->m_MovingKernelBSplineOrder = 3;
-  this->m_FixedParzenTermToIndexOffset = 0.5;
+  this->m_FixedKernel                   = 0;
+  this->m_MovingKernel                  = 0;
+  this->m_DerivativeMovingKernel        = 0;
+  this->m_FixedKernelBSplineOrder       = 0;
+  this->m_MovingKernelBSplineOrder      = 3;
+  this->m_FixedParzenTermToIndexOffset  = 0.5;
   this->m_MovingParzenTermToIndexOffset = -1.0;
 
-  this->m_UseDerivative = false;
+  this->m_UseDerivative                 = false;
   this->m_UseFiniteDifferenceDerivative = false;
-  this->m_FiniteDifferencePerturbation = 1.0;
+  this->m_FiniteDifferencePerturbation  = 1.0;
 
   this->SetUseImageSampler( true );
   this->SetUseFixedImageLimiter( true );
@@ -70,7 +69,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   this->m_ParzenWindowHistogramThreaderParameters.m_Metric = this;
 
   // Multi-threading structs
-  this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables = NULL;
+  this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables     = NULL;
   this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor
@@ -80,8 +79,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* Destructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::~ParzenWindowHistogramImageToImageMetric()
 {
   delete[] this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
@@ -92,9 +91,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ********************* PrintSelf ******************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   /** Call the superclass' PrintSelf. */
@@ -102,13 +101,13 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Add debugging information. */
   os << indent << "NumberOfFixedHistogramBins: "
-    << this->m_NumberOfFixedHistogramBins << std::endl;
+     << this->m_NumberOfFixedHistogramBins << std::endl;
   os << indent << "NumberOfMovingHistogramBins: "
-    << this->m_NumberOfMovingHistogramBins << std::endl;
+     << this->m_NumberOfMovingHistogramBins << std::endl;
   os << indent << "FixedKernelBSplineOrder: "
-    << this->m_FixedKernelBSplineOrder << std::endl;
+     << this->m_FixedKernelBSplineOrder << std::endl;
   os << indent << "MovingKernelBSplineOrder: "
-    << this->m_MovingKernelBSplineOrder << std::endl;
+     << this->m_MovingKernelBSplineOrder << std::endl;
 
   /*double m_MovingImageNormalizedMin;
   double m_FixedImageNormalizedMin;
@@ -130,9 +129,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ********************* Initialize *****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::Initialize( void ) throw ( ExceptionObject )
 {
   /** Call the superclass to check that standard components are available. */
@@ -165,9 +164,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ****************** InitializeHistograms *****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeHistograms( void )
 {
   /* Compute binsize for the histogram.
@@ -186,21 +185,21 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
    */
   //int fixedPadding = 2;  // this will pad by 2 bins
   //int movingPadding = 2;  // this will pad by 2 bins
-  int fixedPadding = this->m_FixedKernelBSplineOrder / 2; // should be enough
+  int fixedPadding  = this->m_FixedKernelBSplineOrder / 2; // should be enough
   int movingPadding = this->m_MovingKernelBSplineOrder / 2;
 
   /** The ratio times the expected bin size will be added twice to the image range. */
   const double smallNumberRatio = 0.001;
-  const double smallNumberFixed = smallNumberRatio *
-    ( this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit ) /
-    static_cast<double>( this->m_NumberOfFixedHistogramBins - 2 * fixedPadding - 1 );
-  const double smallNumberMoving = smallNumberRatio *
-    ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit ) /
-    static_cast<double>( this->m_NumberOfFixedHistogramBins - 2 * movingPadding - 1 );
+  const double smallNumberFixed = smallNumberRatio
+    * ( this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit )
+    / static_cast< double >( this->m_NumberOfFixedHistogramBins - 2 * fixedPadding - 1 );
+  const double smallNumberMoving = smallNumberRatio
+    * ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit )
+    / static_cast< double >( this->m_NumberOfFixedHistogramBins - 2 * movingPadding - 1 );
 
   /** Compute binsizes. */
-  const double fixedHistogramWidth = static_cast<double>(
-    static_cast<OffsetValueType>( this->m_NumberOfFixedHistogramBins ) // requires cast to signed type!
+  const double fixedHistogramWidth = static_cast< double >(
+    static_cast< OffsetValueType >( this->m_NumberOfFixedHistogramBins ) // requires cast to signed type!
     - 2.0 * fixedPadding - 1.0 );
   this->m_FixedImageBinSize
     = ( this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit
@@ -209,10 +208,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   this->m_FixedImageBinSize = vnl_math_min( this->m_FixedImageBinSize, 1e+10 );
   this->m_FixedImageNormalizedMin
     = ( this->m_FixedImageMinLimit - smallNumberFixed )
-    / this->m_FixedImageBinSize - static_cast<double>( fixedPadding );
+    / this->m_FixedImageBinSize - static_cast< double >( fixedPadding );
 
-  const double movingHistogramWidth = static_cast<double>(
-    static_cast<OffsetValueType>( this->m_NumberOfMovingHistogramBins ) // requires cast to signed type!
+  const double movingHistogramWidth = static_cast< double >(
+    static_cast< OffsetValueType >( this->m_NumberOfMovingHistogramBins ) // requires cast to signed type!
     - 2.0 * movingPadding - 1.0 );
   this->m_MovingImageBinSize
     = ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit
@@ -221,7 +220,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   this->m_MovingImageBinSize = vnl_math_min( this->m_MovingImageBinSize, 1e+10 );
   this->m_MovingImageNormalizedMin
     = ( this->m_MovingImageMinLimit - smallNumberMoving )
-    / this->m_MovingImageBinSize - static_cast<double>( movingPadding );
+    / this->m_MovingImageBinSize - static_cast< double >( movingPadding );
 
   /** Allocate memory for the marginal PDF. */
   this->m_FixedImageMarginalPDF.SetSize( this->m_NumberOfFixedHistogramBins );
@@ -230,10 +229,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   /** Allocate memory for the joint PDF and joint PDF derivatives. */
 
   /** First set these ones to zero */
-  this->m_FixedIncrementalMarginalPDFRight = 0;
+  this->m_FixedIncrementalMarginalPDFRight  = 0;
   this->m_MovingIncrementalMarginalPDFRight = 0;
-  this->m_FixedIncrementalMarginalPDFLeft = 0;
-  this->m_MovingIncrementalMarginalPDFLeft = 0;
+  this->m_FixedIncrementalMarginalPDFLeft   = 0;
+  this->m_MovingIncrementalMarginalPDFLeft  = 0;
 
   /** For the joint PDF define a region starting from {0,0}
    * with size {this->m_NumberOfMovingHistogramBins, this->m_NumberOfFixedHistogramBins}
@@ -245,12 +244,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
    * the first dimension.
    */
   this->m_JointPDF = JointPDFType::New();
-  JointPDFRegionType            jointPDFRegion;
-  JointPDFIndexType             jointPDFIndex;
-  JointPDFSizeType              jointPDFSize;
+  JointPDFRegionType jointPDFRegion;
+  JointPDFIndexType  jointPDFIndex;
+  JointPDFSizeType   jointPDFSize;
   jointPDFIndex.Fill( 0 );
-  jointPDFSize[0] = this->m_NumberOfMovingHistogramBins;
-  jointPDFSize[1] = this->m_NumberOfFixedHistogramBins;
+  jointPDFSize[ 0 ] = this->m_NumberOfMovingHistogramBins;
+  jointPDFSize[ 1 ] = this->m_NumberOfFixedHistogramBins;
   jointPDFRegion.SetIndex( jointPDFIndex );
   jointPDFRegion.SetSize( jointPDFSize );
   this->m_JointPDF->SetRegions( jointPDFRegion );
@@ -271,9 +270,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     JointPDFDerivativesIndexType  jointPDFDerivativesIndex;
     JointPDFDerivativesSizeType   jointPDFDerivativesSize;
     jointPDFDerivativesIndex.Fill( 0 );
-    jointPDFDerivativesSize[0] = this->GetNumberOfParameters();
-    jointPDFDerivativesSize[1] = this->m_NumberOfMovingHistogramBins;
-    jointPDFDerivativesSize[2] = this->m_NumberOfFixedHistogramBins;
+    jointPDFDerivativesSize[ 0 ] = this->GetNumberOfParameters();
+    jointPDFDerivativesSize[ 1 ] = this->m_NumberOfMovingHistogramBins;
+    jointPDFDerivativesSize[ 2 ] = this->m_NumberOfFixedHistogramBins;
     jointPDFDerivativesRegion.SetIndex( jointPDFDerivativesIndex );
     jointPDFDerivativesRegion.SetSize( jointPDFDerivativesSize );
 
@@ -282,7 +281,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
       this->m_JointPDFDerivatives = 0;
 
       this->m_IncrementalJointPDFRight = JointPDFDerivativesType::New();
-      this->m_IncrementalJointPDFLeft = JointPDFDerivativesType::New();
+      this->m_IncrementalJointPDFLeft  = JointPDFDerivativesType::New();
       this->m_IncrementalJointPDFRight->SetRegions( jointPDFDerivativesRegion );
       this->m_IncrementalJointPDFLeft->SetRegions( jointPDFDerivativesRegion );
       this->m_IncrementalJointPDFRight->Allocate();
@@ -290,29 +289,29 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Also initialize the incremental marginal pdfs. */
       IncrementalMarginalPDFRegionType fixedIMPDFRegion;
-      IncrementalMarginalPDFIndexType fixedIMPDFIndex;
-      IncrementalMarginalPDFSizeType fixedIMPDFSize;
+      IncrementalMarginalPDFIndexType  fixedIMPDFIndex;
+      IncrementalMarginalPDFSizeType   fixedIMPDFSize;
 
       IncrementalMarginalPDFRegionType movingIMPDFRegion;
-      IncrementalMarginalPDFIndexType movingIMPDFIndex;
-      IncrementalMarginalPDFSizeType movingIMPDFSize;
+      IncrementalMarginalPDFIndexType  movingIMPDFIndex;
+      IncrementalMarginalPDFSizeType   movingIMPDFSize;
 
       fixedIMPDFIndex.Fill( 0 );
-      fixedIMPDFSize[0] = this->GetNumberOfParameters();
-      fixedIMPDFSize[1] = this->m_NumberOfFixedHistogramBins;
+      fixedIMPDFSize[ 0 ] = this->GetNumberOfParameters();
+      fixedIMPDFSize[ 1 ] = this->m_NumberOfFixedHistogramBins;
       fixedIMPDFRegion.SetSize( fixedIMPDFSize );
       fixedIMPDFRegion.SetIndex( fixedIMPDFIndex );
 
       movingIMPDFIndex.Fill( 0 );
-      movingIMPDFSize[0] = this->GetNumberOfParameters();
-      movingIMPDFSize[1] = this->m_NumberOfMovingHistogramBins;
+      movingIMPDFSize[ 0 ] = this->GetNumberOfParameters();
+      movingIMPDFSize[ 1 ] = this->m_NumberOfMovingHistogramBins;
       movingIMPDFRegion.SetSize( movingIMPDFSize );
       movingIMPDFRegion.SetIndex( movingIMPDFIndex );
 
-      this->m_FixedIncrementalMarginalPDFRight = IncrementalMarginalPDFType::New();
+      this->m_FixedIncrementalMarginalPDFRight  = IncrementalMarginalPDFType::New();
       this->m_MovingIncrementalMarginalPDFRight = IncrementalMarginalPDFType::New();
-      this->m_FixedIncrementalMarginalPDFLeft = IncrementalMarginalPDFType::New();
-      this->m_MovingIncrementalMarginalPDFLeft = IncrementalMarginalPDFType::New();
+      this->m_FixedIncrementalMarginalPDFLeft   = IncrementalMarginalPDFType::New();
+      this->m_MovingIncrementalMarginalPDFLeft  = IncrementalMarginalPDFType::New();
 
       this->m_FixedIncrementalMarginalPDFRight->SetRegions( fixedIMPDFRegion );
       this->m_MovingIncrementalMarginalPDFRight->SetRegions( movingIMPDFRegion );
@@ -326,10 +325,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     } // end if this->GetUseFiniteDifferenceDerivative()
     else
     {
-      if ( this->m_UseExplicitPDFDerivatives )
+      if( this->m_UseExplicitPDFDerivatives )
       {
         this->m_IncrementalJointPDFRight = 0;
-        this->m_IncrementalJointPDFLeft = 0;
+        this->m_IncrementalJointPDFLeft  = 0;
 
         this->m_JointPDFDerivatives = JointPDFDerivativesType::New();
         this->m_JointPDFDerivatives->SetRegions( jointPDFDerivativesRegion );
@@ -352,9 +351,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   }
   else
   {
-    this->m_JointPDFDerivatives = 0;
+    this->m_JointPDFDerivatives      = 0;
     this->m_IncrementalJointPDFRight = 0;
-    this->m_IncrementalJointPDFLeft = 0;
+    this->m_IncrementalJointPDFLeft  = 0;
   }
 
 } // end InitializeHistograms()
@@ -365,52 +364,52 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * Setup the kernels used for the Parzen windows.
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeKernels( void )
 {
-  switch ( this->m_FixedKernelBSplineOrder )
+  switch( this->m_FixedKernelBSplineOrder )
   {
-  case 0:
-    this->m_FixedKernel = BSplineKernelFunction<0>::New(); break;
-  case 1:
-    this->m_FixedKernel = BSplineKernelFunction<1>::New(); break;
-  case 2:
-    this->m_FixedKernel = BSplineKernelFunction<2>::New(); break;
-  case 3:
-    this->m_FixedKernel = BSplineKernelFunction<3>::New(); break;
-  default:
-    itkExceptionMacro(<< "The following FixedKernelBSplineOrder is not implemented: "\
-      << this->m_FixedKernelBSplineOrder );
+    case 0:
+      this->m_FixedKernel = BSplineKernelFunction< 0 >::New(); break;
+    case 1:
+      this->m_FixedKernel = BSplineKernelFunction< 1 >::New(); break;
+    case 2:
+      this->m_FixedKernel = BSplineKernelFunction< 2 >::New(); break;
+    case 3:
+      this->m_FixedKernel = BSplineKernelFunction< 3 >::New(); break;
+    default:
+      itkExceptionMacro( << "The following FixedKernelBSplineOrder is not implemented: " \
+                         << this->m_FixedKernelBSplineOrder );
   } // end switch FixedKernelBSplineOrder
 
-  switch ( this->m_MovingKernelBSplineOrder )
+  switch( this->m_MovingKernelBSplineOrder )
   {
-  case 0:
-    this->m_MovingKernel = BSplineKernelFunction<0>::New();
-    /** The derivative of a zero order B-spline makes no sense. Using the
-     * derivative of a first order gives a kind of finite difference idea
-     * Anyway, if you plan to call GetValueAndDerivative you should use
-     * a higher B-spline order.
-     */
-    this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction<1>::New();
-    break;
-  case 1:
-    this->m_MovingKernel = BSplineKernelFunction<1>::New();
-    this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction<1>::New();
-    break;
-  case 2:
-    this->m_MovingKernel = BSplineKernelFunction<2>::New();
-    this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction<2>::New();
-    break;
-  case 3:
-    this->m_MovingKernel = BSplineKernelFunction<3>::New();
-    this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction<3>::New();
-    break;
-  default:
-    itkExceptionMacro(<< "The following MovingKernelBSplineOrder is not implemented: "\
-      << this->m_MovingKernelBSplineOrder );
+    case 0:
+      this->m_MovingKernel = BSplineKernelFunction< 0 >::New();
+      /** The derivative of a zero order B-spline makes no sense. Using the
+       * derivative of a first order gives a kind of finite difference idea
+       * Anyway, if you plan to call GetValueAndDerivative you should use
+       * a higher B-spline order.
+       */
+      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction< 1 >::New();
+      break;
+    case 1:
+      this->m_MovingKernel           = BSplineKernelFunction< 1 >::New();
+      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction< 1 >::New();
+      break;
+    case 2:
+      this->m_MovingKernel           = BSplineKernelFunction< 2 >::New();
+      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction< 2 >::New();
+      break;
+    case 3:
+      this->m_MovingKernel           = BSplineKernelFunction< 3 >::New();
+      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction< 3 >::New();
+      break;
+    default:
+      itkExceptionMacro( << "The following MovingKernelBSplineOrder is not implemented: " \
+                         << this->m_MovingKernelBSplineOrder );
   } // end switch MovingKernelBSplineOrder
 
   /** The region of support of the Parzen window determines which bins
@@ -432,10 +431,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
    * ParzenIndex = vcl_floor( ParzenTerm + ParzenTermToIndexOffset )
    * where ParzenTermToIndexOffset = 1/2, 0, -1/2, or -1.
    */
-  this->m_FixedParzenTermToIndexOffset =
-    0.5 - static_cast<double>( this->m_FixedKernelBSplineOrder ) / 2.0;
-  this->m_MovingParzenTermToIndexOffset =
-    0.5 - static_cast<double>( this->m_MovingKernelBSplineOrder ) / 2.0;
+  this->m_FixedParzenTermToIndexOffset
+    = 0.5 - static_cast< double >( this->m_FixedKernelBSplineOrder ) / 2.0;
+  this->m_MovingParzenTermToIndexOffset
+    = 0.5 - static_cast< double >( this->m_MovingKernelBSplineOrder ) / 2.0;
 
 } // end InitializeKernels()
 
@@ -444,9 +443,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ********************* InitializeThreadingParameters ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
   /** Call superclass implementation. */
@@ -460,12 +459,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
    */
 
   /** Construct regions for the joint histograms. */
-  JointPDFRegionType            jointPDFRegion;
-  JointPDFIndexType             jointPDFIndex;
-  JointPDFSizeType              jointPDFSize;
+  JointPDFRegionType jointPDFRegion;
+  JointPDFIndexType  jointPDFIndex;
+  JointPDFSizeType   jointPDFSize;
   jointPDFIndex.Fill( 0 );
-  jointPDFSize[0] = this->m_NumberOfMovingHistogramBins;
-  jointPDFSize[1] = this->m_NumberOfFixedHistogramBins;
+  jointPDFSize[ 0 ] = this->m_NumberOfMovingHistogramBins;
+  jointPDFSize[ 1 ] = this->m_NumberOfFixedHistogramBins;
   jointPDFRegion.SetIndex( jointPDFIndex );
   jointPDFRegion.SetSize( jointPDFSize );
 
@@ -474,18 +473,19 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   {
     delete[] this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
     this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables
-      = new AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
+      = new AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct[
+      this->m_NumberOfThreads ];
     this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
   }
 
   /** Some initialization. */
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
-    this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
+    this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
 
     // Initialize the joint pdf
     JointPDFPointer & jointPDF = this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ i ].st_JointPDF;
-    if( jointPDF.IsNull() ){ jointPDF = JointPDFType::New(); }
+    if( jointPDF.IsNull() ) { jointPDF = JointPDFType::New(); }
     if( jointPDF->GetLargestPossibleRegion() != jointPDFRegion )
     {
       jointPDF->SetRegions( jointPDFRegion );
@@ -500,10 +500,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ******************** GetDerivative ***************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-::GetDerivative( const ParametersType& parameters, DerivativeType & derivative ) const
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
+::GetDerivative( const ParametersType & parameters, DerivativeType & derivative ) const
 {
   /** Call the combined version, since the additional computation of
    * the value does not take extra time.
@@ -518,13 +518,13 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ******************** GetValueAndDerivative ***************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-::GetValueAndDerivative( const ParametersType& parameters,
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
+::GetValueAndDerivative( const ParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
 {
-  if ( this->GetUseFiniteDifferenceDerivative() )
+  if( this->GetUseFiniteDifferenceDerivative() )
   {
     this->GetValueAndFiniteDifferenceDerivative( parameters, value, derivative );
   }
@@ -539,18 +539,18 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ********************** EvaluateParzenValues ***************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::EvaluateParzenValues(
   double parzenWindowTerm, OffsetValueType parzenWindowIndex,
   const KernelFunctionType * kernel, ParzenValueContainerType & parzenValues ) const
 {
   const unsigned int max_i = parzenValues.GetSize();
-  for( unsigned int i = 0 ; i < max_i; ++i, ++parzenWindowIndex )
+  for( unsigned int i = 0; i < max_i; ++i, ++parzenWindowIndex )
   {
     parzenValues[ i ] = kernel->Evaluate(
-      static_cast<double>( parzenWindowIndex ) - parzenWindowTerm );
+      static_cast< double >( parzenWindowIndex ) - parzenWindowTerm );
   }
 } // end EvaluateParzenValues()
 
@@ -559,9 +559,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ********************** UpdateJointPDFAndDerivatives ***************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::UpdateJointPDFAndDerivatives(
   const RealType & fixedImageValue,
   const RealType & movingImageValue,
@@ -569,7 +569,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   const NonZeroJacobianIndicesType * nzji,
   JointPDFType * jointPDF ) const
 {
-  typedef ImageScanlineIterator< JointPDFType >  PDFIteratorType;
+  typedef ImageScanlineIterator< JointPDFType > PDFIteratorType;
 
   /** Determine Parzen window arguments (see eq. 6 of Mattes paper [2]). */
   const double fixedImageParzenWindowTerm
@@ -578,11 +578,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     = movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
 
   /** The lowest bin numbers affected by this pixel: */
-  const OffsetValueType fixedImageParzenWindowIndex =
-    static_cast<OffsetValueType>( vcl_floor(
+  const OffsetValueType fixedImageParzenWindowIndex
+    = static_cast< OffsetValueType >( vcl_floor(
     fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
-  const OffsetValueType movingImageParzenWindowIndex =
-    static_cast<OffsetValueType>( vcl_floor(
+  const OffsetValueType movingImageParzenWindowIndex
+    = static_cast< OffsetValueType >( vcl_floor(
     movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
 
   /** The Parzen values. */
@@ -614,7 +614,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
       const double fv = fixedParzenValues[ f ];
       for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
       {
-        it.Value() += static_cast<PDFValueType>( fv * movingParzenValues[ m ] );
+        it.Value() += static_cast< PDFValueType >( fv * movingParzenValues[ m ] );
         ++it;
       }
       it.NextLine();
@@ -624,23 +624,23 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   {
     /** Compute the derivatives of the moving Parzen window. */
     ParzenValueContainerType derivativeMovingParzenValues(
-      this->m_JointPDFWindow.GetSize()[0] );
+    this->m_JointPDFWindow.GetSize()[ 0 ] );
     this->EvaluateParzenValues(
       movingImageParzenWindowTerm, movingImageParzenWindowIndex,
       this->m_DerivativeMovingKernel, derivativeMovingParzenValues );
 
-    const double et = static_cast<double>( this->m_MovingImageBinSize );
+    const double et = static_cast< double >( this->m_MovingImageBinSize );
 
     /** Loop over the Parzen window region and increment the values
     * Also update the pdf derivatives.
     */
     for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
     {
-      const double fv = fixedParzenValues[ f ];
+      const double fv    = fixedParzenValues[ f ];
       const double fv_et = fv / et;
       for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
       {
-        it.Value() += static_cast<PDFValueType>( fv * movingParzenValues[ m ] );
+        it.Value() += static_cast< PDFValueType >( fv * movingParzenValues[ m ] );
         this->UpdateJointPDFDerivatives(
           it.GetIndex(), fv_et * derivativeMovingParzenValues[ m ],
           *imageJacobian, *nzji );
@@ -657,18 +657,18 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * *************** UpdateJointPDFDerivatives ***************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::UpdateJointPDFDerivatives(
   const JointPDFIndexType & pdfIndex, double factor,
   const DerivativeType & imageJacobian,
   const NonZeroJacobianIndicesType & nzji ) const
 {
   /** Get the pointer to the element with index [0, pdfIndex[0], pdfIndex[1]]. */
-  PDFDerivativeValueType * derivPtr = this->m_JointPDFDerivatives->GetBufferPointer() +
-    ( pdfIndex[0] * this->m_JointPDFDerivatives->GetOffsetTable()[1] ) +
-    ( pdfIndex[1] * this->m_JointPDFDerivatives->GetOffsetTable()[2] );
+  PDFDerivativeValueType * derivPtr = this->m_JointPDFDerivatives->GetBufferPointer()
+    + ( pdfIndex[ 0 ] * this->m_JointPDFDerivatives->GetOffsetTable()[ 1 ] )
+    + ( pdfIndex[ 1 ] * this->m_JointPDFDerivatives->GetOffsetTable()[ 2 ] );
 
   if( nzji.size() == this->GetNumberOfParameters() )
   {
@@ -676,7 +676,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     typename DerivativeType::const_iterator imjac = imageJacobian.begin();
     for( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
     {
-      *(derivPtr) -= static_cast<PDFDerivativeValueType>( (*imjac) * factor );
+      *( derivPtr ) -= static_cast< PDFDerivativeValueType >( ( *imjac ) * factor );
       ++derivPtr;
       ++imjac;
     }
@@ -686,9 +686,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     /** Loop only over the non-zero Jacobians. */
     for( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
     {
-      const unsigned int mu = nzji[ i ];
+      const unsigned int       mu  = nzji[ i ];
       PDFDerivativeValueType * ptr = derivPtr + mu;
-      *(ptr) -= static_cast<PDFDerivativeValueType>( imageJacobian[ i ] * factor );
+      *( ptr ) -= static_cast< PDFDerivativeValueType >( imageJacobian[ i ] * factor );
     }
   }
 
@@ -699,14 +699,14 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * *********************** NormalizeJointPDF ***********************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::NormalizeJointPDF( JointPDFType * pdf, const double & factor ) const
 {
-  typedef ImageScanlineIterator<JointPDFType> JointPDFIteratorType;
+  typedef ImageScanlineIterator< JointPDFType > JointPDFIteratorType;
   JointPDFIteratorType it( pdf, pdf->GetBufferedRegion() );
-  const PDFValueType castfac = static_cast<PDFValueType>( factor );
+  const PDFValueType   castfac = static_cast< PDFValueType >( factor );
   while( !it.IsAtEnd() )
   {
     while( !it.IsAtEndOfLine() )
@@ -724,14 +724,14 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * *********************** NormalizeJointPDFDerivatives ***********************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::NormalizeJointPDFDerivatives( JointPDFDerivativesType * pdf, const double & factor ) const
 {
-  typedef ImageScanlineIterator<JointPDFDerivativesType> JointPDFDerivativesIteratorType;
+  typedef ImageScanlineIterator< JointPDFDerivativesType > JointPDFDerivativesIteratorType;
   JointPDFDerivativesIteratorType it( pdf, pdf->GetBufferedRegion() );
-  const PDFValueType castfac = static_cast<PDFValueType>( factor );
+  const PDFValueType              castfac = static_cast< PDFValueType >( factor );
   while( !it.IsAtEnd() )
   {
     while( !it.IsAtEndOfLine() )
@@ -752,17 +752,17 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * direction = 1: moving marginal pdf
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeMarginalPDF(
   const JointPDFType * itkNotUsed( jointPDF ),
   MarginalPDFType & marginalPDF, const unsigned int & direction ) const
 {
-  typedef ImageLinearIteratorWithIndex<JointPDFType> JointPDFLinearIterator;
+  typedef ImageLinearIteratorWithIndex< JointPDFType > JointPDFLinearIterator;
   // \todo: bug? shouldn't this be over the function argument jointPDF ?
   JointPDFLinearIterator linearIter(
-    this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
+  this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
   linearIter.SetDirection( direction );
   linearIter.GoToBegin();
   unsigned int marginalIndex = 0;
@@ -788,36 +788,36 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * to obtain the marginal pdfs. Used for finite differences.
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeIncrementalMarginalPDFs(
   const JointPDFDerivativesType * incrementalPDF,
   IncrementalMarginalPDFType * fixedIncrementalMarginalPDF,
   IncrementalMarginalPDFType * movingIncrementalMarginalPDF ) const
 {
-  typedef itk::ImageRegionConstIterator<JointPDFDerivativesType> IncIteratorType;
-  typedef itk::ImageLinearIteratorWithIndex<IncrementalMarginalPDFType>   IncMargIteratorType;
+  typedef itk::ImageRegionConstIterator< JointPDFDerivativesType >        IncIteratorType;
+  typedef itk::ImageLinearIteratorWithIndex< IncrementalMarginalPDFType > IncMargIteratorType;
 
-  fixedIncrementalMarginalPDF->FillBuffer( itk::NumericTraits<PDFValueType>::Zero );
-  movingIncrementalMarginalPDF->FillBuffer( itk::NumericTraits<PDFValueType>::Zero );
+  fixedIncrementalMarginalPDF->FillBuffer( itk::NumericTraits< PDFValueType >::Zero );
+  movingIncrementalMarginalPDF->FillBuffer( itk::NumericTraits< PDFValueType >::Zero );
 
-  IncIteratorType incit( incrementalPDF, incrementalPDF->GetLargestPossibleRegion() );
+  IncIteratorType     incit( incrementalPDF, incrementalPDF->GetLargestPossibleRegion() );
   IncMargIteratorType fixincit( fixedIncrementalMarginalPDF,
-    fixedIncrementalMarginalPDF->GetLargestPossibleRegion() );
+  fixedIncrementalMarginalPDF->GetLargestPossibleRegion() );
   IncMargIteratorType movincit( movingIncrementalMarginalPDF,
-    movingIncrementalMarginalPDF->GetLargestPossibleRegion() );
+  movingIncrementalMarginalPDF->GetLargestPossibleRegion() );
 
   incit.GoToBegin();
   fixincit.GoToBegin();
   movincit.GoToBegin();
 
   /** Loop over the incremental pdf and update the incremental marginal pdfs. */
-  for ( unsigned int f = 0; f < this->m_NumberOfFixedHistogramBins; ++f )
+  for( unsigned int f = 0; f < this->m_NumberOfFixedHistogramBins; ++f )
   {
-    for ( unsigned int m = 0; m < this->m_NumberOfMovingHistogramBins; ++m )
+    for( unsigned int m = 0; m < this->m_NumberOfMovingHistogramBins; ++m )
     {
-      for ( unsigned int p = 0; p < this->GetNumberOfParameters(); ++p )
+      for( unsigned int p = 0; p < this->GetNumberOfParameters(); ++p )
       {
         fixincit.Value() += incit.Get();
         movincit.Value() += incit.Get();
@@ -839,9 +839,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* UpdateJointPDFAndIncrementalPDFs *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::UpdateJointPDFAndIncrementalPDFs(
   RealType fixedImageValue, RealType movingImageValue, RealType movingMaskValue,
   const DerivativeType & movingImageValuesRight,
@@ -852,11 +852,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 {
   /** Pointers to the first pixels in the incremental joint pdfs. */
   PDFDerivativeValueType * incRightBasePtr = this->m_IncrementalJointPDFRight->GetBufferPointer();
-  PDFDerivativeValueType * incLeftBasePtr = this->m_IncrementalJointPDFLeft->GetBufferPointer();
+  PDFDerivativeValueType * incLeftBasePtr  = this->m_IncrementalJointPDFLeft->GetBufferPointer();
 
   /** The Parzen value containers. */
-  ParzenValueContainerType fixedParzenValues( this->m_JointPDFWindow.GetSize()[1] );
-  ParzenValueContainerType movingParzenValues( this->m_JointPDFWindow.GetSize()[0] );
+  ParzenValueContainerType fixedParzenValues( this->m_JointPDFWindow.GetSize()[ 1 ] );
+  ParzenValueContainerType movingParzenValues( this->m_JointPDFWindow.GetSize()[ 0 ] );
 
   /** Determine fixed image Parzen window arguments (see eq. 6 of Mattes paper [2]). */
   const double fixedImageParzenWindowTerm
@@ -864,7 +864,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
   /** The lowest bin numbers affected by this pixel: */
   const OffsetValueType fixedImageParzenWindowIndex
-    = static_cast<OffsetValueType>( vcl_floor(
+    = static_cast< OffsetValueType >( vcl_floor(
     fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
   this->EvaluateParzenValues(
     fixedImageParzenWindowTerm, fixedImageParzenWindowIndex,
@@ -873,19 +873,19 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   if( movingMaskValue > 1e-10 )
   {
     /** Determine moving image Parzen window arguments (see eq. 6 of Mattes paper [2]). */
-    const double movingImageParzenWindowTerm =
-      movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
-    const OffsetValueType movingImageParzenWindowIndex =
-      static_cast<OffsetValueType>( vcl_floor(
+    const double movingImageParzenWindowTerm
+      = movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
+    const OffsetValueType movingImageParzenWindowIndex
+      = static_cast< OffsetValueType >( vcl_floor(
       movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
     this->EvaluateParzenValues(
       movingImageParzenWindowTerm, movingImageParzenWindowIndex,
-      this->m_MovingKernel, movingParzenValues);
+      this->m_MovingKernel, movingParzenValues );
 
     /** Position the JointPDFWindow (set the start index). */
     JointPDFIndexType pdfIndex;
-    pdfIndex[0] = movingImageParzenWindowIndex;
-    pdfIndex[1] = fixedImageParzenWindowIndex;
+    pdfIndex[ 0 ] = movingImageParzenWindowIndex;
+    pdfIndex[ 1 ] = fixedImageParzenWindowIndex;
 
     /** Loop over the Parzen window region and do the following update:
      *
@@ -893,38 +893,38 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
      * m_IncrementalJointPDF<Right/Left>(k,M,F) -= movingMask * fixedParzen(F) * movingParzen(M);
      * for all k with nonzero Jacobian.
      */
-    for ( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
+    for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
     {
       const double fv_mask = fixedParzenValues[ f ] * movingMaskValue;
-      for ( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
+      for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
       {
-        const PDFValueType fv_mask_mv =
-          static_cast<PDFValueType>( fv_mask * movingParzenValues[ m ] );
+        const PDFValueType fv_mask_mv
+                                                = static_cast< PDFValueType >( fv_mask * movingParzenValues[ m ] );
         this->m_JointPDF->GetPixel( pdfIndex ) += fv_mask_mv;
 
-        unsigned long offset = static_cast<unsigned long>(
-          pdfIndex[ 0 ] * this->m_IncrementalJointPDFRight->GetOffsetTable()[ 1 ] +
-          pdfIndex[ 1 ] * this->m_IncrementalJointPDFRight->GetOffsetTable()[ 2 ] );
+        unsigned long offset = static_cast< unsigned long >(
+          pdfIndex[ 0 ] * this->m_IncrementalJointPDFRight->GetOffsetTable()[ 1 ]
+          + pdfIndex[ 1 ] * this->m_IncrementalJointPDFRight->GetOffsetTable()[ 2 ] );
 
         /** Get the pointer to the element with index [0, pdfIndex[0], pdfIndex[1]]. */
         PDFDerivativeValueType * incRightPtr = incRightBasePtr + offset;
-        PDFDerivativeValueType * incLeftPtr = incLeftBasePtr + offset;
+        PDFDerivativeValueType * incLeftPtr  = incLeftBasePtr + offset;
 
         /** Loop only over the non-zero Jacobians. */
-        for ( unsigned int i = 0; i < nzji.size(); ++i )
+        for( unsigned int i = 0; i < nzji.size(); ++i )
         {
-          const unsigned int mu = nzji[ i ];
+          const unsigned int       mu   = nzji[ i ];
           PDFDerivativeValueType * rPtr = incRightPtr + mu;
           PDFDerivativeValueType * lPtr = incLeftPtr + mu;
-          *(rPtr) -= fv_mask_mv;
-          *(lPtr) -= fv_mask_mv;
+          *( rPtr ) -= fv_mask_mv;
+          *( lPtr ) -= fv_mask_mv;
         } // end for i
 
-        ++(pdfIndex[ 0 ]);
+        ++( pdfIndex[ 0 ] );
       } // end for m
 
       pdfIndex[ 0 ] = movingImageParzenWindowIndex;
-      ++(pdfIndex[ 1 ]);
+      ++( pdfIndex[ 1 ] );
 
     } // end for f
 
@@ -942,22 +942,22 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   JointPDFDerivativesIndexType lindex;
   for( unsigned int i = 0; i < nzji.size(); ++i )
   {
-    const unsigned int mu = nzji[ i ];
-    const double maskr = movingMaskValuesRight[ i ];
-    const double maskl = movingMaskValuesLeft[ i ];
+    const unsigned int mu    = nzji[ i ];
+    const double       maskr = movingMaskValuesRight[ i ];
+    const double       maskl = movingMaskValuesLeft[ i ];
 
     if( maskr > 1e-10 )
     {
       /** Compute Parzen stuff; note: we reuse the movingParzenValues container. */
-      const double movr = movingImageValuesRight[i];
-      const double movParzenWindowTermRight =
-        movr / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
+      const double movr = movingImageValuesRight[ i ];
+      const double movParzenWindowTermRight
+        = movr / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
       const OffsetValueType movParzenWindowIndexRight
-        = static_cast<OffsetValueType>( vcl_floor(
+        = static_cast< OffsetValueType >( vcl_floor(
         movParzenWindowTermRight + this->m_MovingParzenTermToIndexOffset ) );
       this->EvaluateParzenValues(
         movParzenWindowTermRight, movParzenWindowIndexRight,
-        this->m_MovingKernel, movingParzenValues);
+        this->m_MovingKernel, movingParzenValues );
 
       /** Initialize index in IncrementalJointPDFRight. */
       rindex[ 0 ] = mu;
@@ -967,29 +967,28 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
       /** Loop over Parzen window and update IncrementalJointPDFRight. */
       for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
       {
-        const double fv_mask = fixedParzenValues[f] * maskr;
+        const double fv_mask = fixedParzenValues[ f ] * maskr;
         for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
         {
-          const PDFValueType fv_mask_mv =
-            static_cast<PDFValueType>( fv_mask * movingParzenValues[m] );
+          const PDFValueType fv_mask_mv = static_cast< PDFValueType >( fv_mask * movingParzenValues[ m ] );
           this->m_IncrementalJointPDFRight->GetPixel( rindex ) += fv_mask_mv;
-          ++(rindex[ 1 ]);
+          ++( rindex[ 1 ] );
         } // end for m
 
-        ++(rindex[ 2 ]);
+        ++( rindex[ 2 ] );
         rindex[ 1 ] = movParzenWindowIndexRight;
 
       } // end for f
-    } // end if maskr
+    }   // end if maskr
 
     if( maskl > 1e-10 )
     {
       /** Compute Parzen stuff; note: we reuse the movingParzenValues container. */
       const double movl = movingImageValuesLeft[ i ];
-      const double movParzenWindowTermLeft =
-        movl / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
+      const double movParzenWindowTermLeft
+        = movl / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
       const OffsetValueType movParzenWindowIndexLeft
-        = static_cast<OffsetValueType>( vcl_floor(
+        = static_cast< OffsetValueType >( vcl_floor(
         movParzenWindowTermLeft + this->m_MovingParzenTermToIndexOffset ) );
       this->EvaluateParzenValues(
         movParzenWindowTermLeft, movParzenWindowIndexLeft,
@@ -1001,26 +1000,25 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
       lindex[ 2 ] = fixedImageParzenWindowIndex;
 
       /** Loop over Parzen window and update IncrementalJointPDFLeft. */
-      for ( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
+      for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
       {
         const double fv_mask = fixedParzenValues[ f ] * maskl;
-        for ( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
+        for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
         {
-          const PDFValueType fv_mask_mv =
-            static_cast<PDFValueType>( fv_mask * movingParzenValues[ m ] );
+          const PDFValueType fv_mask_mv = static_cast< PDFValueType >( fv_mask * movingParzenValues[ m ] );
           this->m_IncrementalJointPDFLeft->GetPixel( lindex ) += fv_mask_mv;
-          ++(lindex[ 1 ]);
+          ++( lindex[ 1 ] );
         } // end for m
 
-        ++(lindex[ 2 ]);
+        ++( lindex[ 2 ] );
         lindex[ 1 ] = movParzenWindowIndexLeft;
 
       } // end for f
-    } // end if maskl
+    }   // end if maskl
 
     /** Update the perturbed alphas. */
-    this->m_PerturbedAlphaRight[mu] += ( maskr - movingMaskValue );
-    this->m_PerturbedAlphaLeft[mu] += ( maskl - movingMaskValue );
+    this->m_PerturbedAlphaRight[ mu ] += ( maskr - movingMaskValue );
+    this->m_PerturbedAlphaLeft[ mu ]  += ( maskl - movingMaskValue );
   } // end for i
 
 } // end UpdateJointPDFAndIncrementalPDFs()
@@ -1030,15 +1028,15 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ ComputePDFsSingleThreaded **************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputePDFsSingleThreaded( const ParametersType & parameters ) const
 {
   /** Initialize some variables. */
   this->m_JointPDF->FillBuffer( 0.0 );
   this->m_NumberOfPixelsCounted = 0;
-  this->m_Alpha = 0.0;
+  this->m_Alpha                 = 0.0;
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -1061,21 +1059,21 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over sample container and compute contribution of each sample to pdfs. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue;
-    MovingImagePointType mappedPoint;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    RealType                    movingImageValue;
+    MovingImagePointType        mappedPoint;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -1083,21 +1081,21 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     /** Compute the moving image value and check if the point is
     * inside the moving image buffer.
     */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, 0 );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+      RealType fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
+      fixedImageValue  = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
       movingImageValue = this->GetMovingImageLimiter()->Evaluate( movingImageValue );
 
       /** Compute this sample's contribution to the joint distributions. */
@@ -1111,7 +1109,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Compute alpha. */
-  this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+  this->m_Alpha = 1.0 / static_cast< double >( this->m_NumberOfPixelsCounted );
 
 } // end ComputePDFsSingleThreaded()
 
@@ -1120,9 +1118,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ ComputePDFs **************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputePDFs( const ParametersType & parameters ) const
 {
   /** Option for now to still use the single threaded code. */
@@ -1162,37 +1160,37 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* ThreadedComputePDFs *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ThreadedComputePDFs( ThreadIdType threadId )
 {
   /** Get a handle to the pre-allocated joint PDF for the current thread.
    * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
    */
   JointPDFPointer & jointPDF = this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ threadId ].st_JointPDF;
-  jointPDF->FillBuffer( NumericTraits<PDFValueType>::Zero ); // seems needed unfortunately
+  jointPDF->FillBuffer( NumericTraits< PDFValueType >::Zero ); // seems needed unfortunately
 
   /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const unsigned long sampleContainerSize = sampleContainer->Size();
+  ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
+  const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
-      / static_cast<double>( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( this->m_NumberOfThreads ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
-  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
   pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
-  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+  pos_end   = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
 
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->Begin();
-  fbegin += (int)pos_begin;
-  fend += (int)pos_end;
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->Begin();
+  fbegin                                                 += (int)pos_begin;
+  fend                                                   += (int)pos_end;
 
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
@@ -1201,9 +1199,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue;
-    MovingImagePointType mappedPoint;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    RealType                    movingImageValue;
+    MovingImagePointType        mappedPoint;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
@@ -1228,10 +1226,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
       numberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+      RealType fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
+      fixedImageValue  = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
       movingImageValue = this->GetMovingImageLimiter()->Evaluate( movingImageValue );
 
       /** Compute this sample's contribution to the joint distributions. */
@@ -1251,9 +1249,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* AfterThreadedComputePDFs *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputePDFs( void ) const
 {
   /** Accumulate the number of pixels. */
@@ -1271,13 +1269,13 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Compute alpha. */
-  this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+  this->m_Alpha = 1.0 / static_cast< double >( this->m_NumberOfPixelsCounted );
 
   /** Accumulate joint histogram. */
   // could be multi-threaded too, by each thread updating only a part of the JointPDF.
-  typedef ImageScanlineIterator<JointPDFType> JointPDFIteratorType;
-  JointPDFIteratorType it( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
-  std::vector<JointPDFIteratorType> itT( this->m_NumberOfThreads );
+  typedef ImageScanlineIterator< JointPDFType > JointPDFIteratorType;
+  JointPDFIteratorType                it( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
+  std::vector< JointPDFIteratorType > itT( this->m_NumberOfThreads );
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     itT[ i ] = JointPDFIteratorType(
@@ -1290,7 +1288,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   {
     while( !it.IsAtEndOfLine() )
     {
-      sum = NumericTraits<PDFValueType>::Zero;
+      sum = NumericTraits< PDFValueType >::Zero;
       for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
       {
         sum += itT[ i ].Value();
@@ -1313,16 +1311,16 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * **************** ComputePDFsThreaderCallback *******
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 ITK_THREAD_RETURN_TYPE
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputePDFsThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType threadId = infoStruct->ThreadID;
+  ThreadIdType     threadId   = infoStruct->ThreadID;
 
   ParzenWindowHistogramMultiThreaderParameterType * temp
-    = static_cast<ParzenWindowHistogramMultiThreaderParameterType * >( infoStruct->UserData );
+    = static_cast< ParzenWindowHistogramMultiThreaderParameterType * >( infoStruct->UserData );
 
   temp->m_Metric->ThreadedComputePDFs( threadId );
 
@@ -1335,9 +1333,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * *********************** LaunchComputePDFsThreaderCallback***************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::LaunchComputePDFsThreaderCallback( void ) const
 {
   /** Setup local threader. */
@@ -1345,8 +1343,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   typename ThreaderType::Pointer local_threader = ThreaderType::New();
   local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
   local_threader->SetSingleMethod( this->ComputePDFsThreaderCallback,
-    const_cast<void *>( static_cast<const void *>(
-    &this->m_ParzenWindowHistogramThreaderParameters ) ) );
+    const_cast< void * >( static_cast< const void * >(
+      &this->m_ParzenWindowHistogramThreaderParameters ) ) );
 
   /** Launch. */
   local_threader->SingleMethodExecute();
@@ -1358,21 +1356,21 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ ComputePDFsAndPDFDerivatives *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputePDFsAndPDFDerivatives( const ParametersType & parameters ) const
 {
   /** Initialize some variables. */
   this->m_JointPDF->FillBuffer( 0.0 );
   this->m_JointPDFDerivatives->FillBuffer( 0.0 );
-  this->m_Alpha = 0.0;
+  this->m_Alpha                 = 0.0;
   this->m_NumberOfPixelsCounted = 0;
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-  DerivativeType imageJacobian( nzji.size() );
-  TransformJacobianType jacobian;
+  DerivativeType             imageJacobian( nzji.size() );
+  TransformJacobianType      jacobian;
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -1395,22 +1393,22 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over sample container and compute contribution of each sample to pdfs. */
   for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue;
-    MovingImagePointType mappedPoint;
-    MovingImageDerivativeType movingImageDerivative;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    RealType                    movingImageValue;
+    MovingImagePointType        mappedPoint;
+    MovingImageDerivativeType   movingImageDerivative;
 
     /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -1418,21 +1416,21 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
      * the point is inside the moving image buffer.
      */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, &movingImageDerivative );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+      RealType fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
+      fixedImageValue  = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
       movingImageValue = this->GetMovingImageLimiter()->Evaluate(
         movingImageValue, movingImageDerivative );
 
@@ -1448,7 +1446,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
         fixedImageValue, movingImageValue, &imageJacobian, &nzji, this->m_JointPDF.GetPointer() );
 
     } //end if-block check sampleOk
-  } // end iterating over fixed image spatial sample container for loop
+  }   // end iterating over fixed image spatial sample container for loop
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(
@@ -1456,9 +1454,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Compute alpha. */
   this->m_Alpha = 0.0;
-  if ( this->m_NumberOfPixelsCounted > 0 )
+  if( this->m_NumberOfPixelsCounted > 0 )
   {
-    this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+    this->m_Alpha = 1.0 / static_cast< double >( this->m_NumberOfPixelsCounted );
   }
 
 } // end ComputePDFsAndPDFDerivatives()
@@ -1468,9 +1466,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ ComputePDFsAndIncrementalPDFs *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputePDFsAndIncrementalPDFs( const ParametersType & parameters ) const
 {
   /** Initialize some variables. */
@@ -1482,12 +1480,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   this->m_PerturbedAlphaLeft.Fill( 0.0 );
 
   this->m_NumberOfPixelsCounted = 0;
-  double sumOfMovingMaskValues = 0.0;
-  const double delta = this->GetFiniteDifferencePerturbation();
+  double       sumOfMovingMaskValues = 0.0;
+  const double delta                 = this->GetFiniteDifferencePerturbation();
 
   /** sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-  TransformJacobianType jacobian;
+  TransformJacobianType      jacobian;
 
   /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */
   DerivativeType movingImageValuesRight( nzji.size() );
@@ -1516,40 +1514,40 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over sample container and compute contribution of each sample to pdfs. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
 
     /** Transform point and check if it is inside the B-spline support region.
      * if not, skip this sample.
      */
     MovingImagePointType mappedPoint;
-    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+    bool                 sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       /** Get the fixed image value and make sure the value falls within the histogram range. */
-      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+      RealType fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
 
       /** Check if point is inside mask. */
       sampleOk = this->IsInsideMovingMask( mappedPoint );
-      RealType movingMaskValue =
-        static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
+      RealType movingMaskValue
+        = static_cast< RealType >( static_cast< unsigned char >( sampleOk ) );
 
       /** Compute the moving image value M(T(x)) and check if
       * the point is inside the moving image buffer.
       */
-      RealType movingImageValue = itk::NumericTraits<RealType>::Zero;
-      if ( sampleOk )
+      RealType movingImageValue = itk::NumericTraits< RealType >::Zero;
+      if( sampleOk )
       {
         sampleOk = this->EvaluateMovingImageValueAndDerivative(
           mappedPoint, movingImageValue, 0 );
-        if ( sampleOk )
+        if( sampleOk )
         {
           movingImageValue = this->GetMovingImageLimiter()->Evaluate( movingImageValue );
         }
@@ -1568,11 +1566,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
        * - if we would analytically compute the gradient the same choice is
        *   somehow made.
        */
-      if ( !sampleOk ) continue;
+      if( !sampleOk ) { continue; }
 
       /** Count how many samples were used. */
-      sumOfMovingMaskValues += movingMaskValue;
-      this->m_NumberOfPixelsCounted += static_cast<unsigned int>( sampleOk );
+      sumOfMovingMaskValues         += movingMaskValue;
+      this->m_NumberOfPixelsCounted += static_cast< unsigned int >( sampleOk );
 
       /** Get the TransformJacobian dT/dmu. We assume the transform is a linear
        * function of its parameters, so that we can evaluate T(x;\mu+delta_ek)
@@ -1584,29 +1582,29 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
       MovingImagePointType mappedPointLeft;
 
       /** Loop over all parameters to perturb (parameters with nonzero Jacobian). */
-      for ( unsigned int i = 0; i < nzji.size(); ++i )
+      for( unsigned int i = 0; i < nzji.size(); ++i )
       {
         /** Compute the transformed input point after perturbation. */
-        for ( unsigned int j = 0; j < MovingImageDimension; ++j )
+        for( unsigned int j = 0; j < MovingImageDimension; ++j )
         {
           const double delta_jac = delta * jacobian[ j ][ i ];
           mappedPointRight[ j ] = mappedPoint[ j ] + delta_jac;
-          mappedPointLeft[ j ] = mappedPoint[ j ] - delta_jac;
+          mappedPointLeft[ j ]  = mappedPoint[ j ] - delta_jac;
         }
 
         /** Compute the moving mask 'value' and moving image value at the right perturbed positions. */
         sampleOk = this->IsInsideMovingMask( mappedPointRight );
-        RealType movingMaskValueRight =
-          static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
-        if ( sampleOk )
+        RealType movingMaskValueRight
+          = static_cast< RealType >( static_cast< unsigned char >( sampleOk ) );
+        if( sampleOk )
         {
           RealType movingImageValueRight = 0.0;
           sampleOk = this->EvaluateMovingImageValueAndDerivative(
             mappedPointRight, movingImageValueRight, 0 );
-          if ( sampleOk )
+          if( sampleOk )
           {
-            movingImageValueRight =
-              this->GetMovingImageLimiter()->Evaluate( movingImageValueRight );
+            movingImageValueRight
+                                        = this->GetMovingImageLimiter()->Evaluate( movingImageValueRight );
             movingImageValuesRight[ i ] = movingImageValueRight;
           }
           else
@@ -1615,21 +1613,21 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
             movingMaskValueRight = 0.0;
           }
         }
-        movingMaskValuesRight[i] = movingMaskValueRight;
+        movingMaskValuesRight[ i ] = movingMaskValueRight;
 
         /** Compute the moving mask and moving image value at the left perturbed positions. */
         sampleOk = this->IsInsideMovingMask( mappedPointLeft );
-        RealType movingMaskValueLeft =
-          static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
-        if ( sampleOk )
+        RealType movingMaskValueLeft
+          = static_cast< RealType >( static_cast< unsigned char >( sampleOk ) );
+        if( sampleOk )
         {
           RealType movingImageValueLeft = 0.0;
           sampleOk = this->EvaluateMovingImageValueAndDerivative(
             mappedPointLeft, movingImageValueLeft, 0 );
-          if ( sampleOk )
+          if( sampleOk )
           {
-            movingImageValueLeft =
-              this->GetMovingImageLimiter()->Evaluate( movingImageValueLeft );
+            movingImageValueLeft
+                                       = this->GetMovingImageLimiter()->Evaluate( movingImageValueLeft );
             movingImageValuesLeft[ i ] = movingImageValueLeft;
           }
           else
@@ -1651,7 +1649,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
         movingMaskValuesRight, movingMaskValuesLeft, nzji );
 
     } //end if-block check sampleOk
-  } // end iterating over fixed image spatial sample container for loop
+  }   // end iterating over fixed image spatial sample container for loop
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(
@@ -1659,15 +1657,15 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Compute alpha and its perturbed versions. */
   this->m_Alpha = 0.0;
-  if ( sumOfMovingMaskValues > 1e-14 )
+  if( sumOfMovingMaskValues > 1e-14 )
   {
     this->m_Alpha = 1.0 / sumOfMovingMaskValues;
   }
-  for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+  for( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
   {
     this->m_PerturbedAlphaRight[ i ] += sumOfMovingMaskValues;
-    this->m_PerturbedAlphaLeft[ i ] += sumOfMovingMaskValues;
-    if ( this->m_PerturbedAlphaRight[i] > 1e-10 )
+    this->m_PerturbedAlphaLeft[ i ]  += sumOfMovingMaskValues;
+    if( this->m_PerturbedAlphaRight[ i ] > 1e-10 )
     {
       this->m_PerturbedAlphaRight[ i ] = 1.0 / this->m_PerturbedAlphaRight[ i ];
     }
@@ -1675,7 +1673,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     {
       this->m_PerturbedAlphaRight[ i ] = 0.0;
     }
-    if ( this->m_PerturbedAlphaLeft[ i ] > 1e-10 )
+    if( this->m_PerturbedAlphaLeft[ i ] > 1e-10 )
     {
       this->m_PerturbedAlphaLeft[ i ] = 1.0 / this->m_PerturbedAlphaLeft[ i ];
     }
@@ -1689,6 +1687,5 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
 
 } // end namespace itk
-
 
 #endif // end #ifndef _itkParzenWindowHistogramImageToImageMetric_HXX__

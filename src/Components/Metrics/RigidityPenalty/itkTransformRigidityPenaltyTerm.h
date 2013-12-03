@@ -31,7 +31,6 @@
 #include "itkBinaryBallStructuringElement.h"
 #include "itkImageRegionIterator.h"
 
-
 namespace itk
 {
 /**
@@ -65,17 +64,17 @@ namespace itk
  */
 
 template< class TFixedImage, class TScalarType >
-class TransformRigidityPenaltyTerm
-  : public TransformPenaltyTerm< TFixedImage, TScalarType >
+class TransformRigidityPenaltyTerm :
+  public TransformPenaltyTerm< TFixedImage, TScalarType >
 {
 public:
 
   /** Standard itk stuff. */
-  typedef TransformRigidityPenaltyTerm    Self;
+  typedef TransformRigidityPenaltyTerm Self;
   typedef TransformPenaltyTerm<
     TFixedImage, TScalarType >            Superclass;
-  typedef SmartPointer<Self>              Pointer;
-  typedef SmartPointer<const Self>        ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -85,49 +84,49 @@ public:
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
-  typedef typename Superclass::MovingImageType            MovingImageType;
-  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
-  typedef typename Superclass::MovingImagePointer         MovingImagePointer;
-  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
-  typedef typename Superclass::FixedImageType             FixedImageType;
-  typedef typename Superclass::FixedImagePointer          FixedImagePointer;
-  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename Superclass::TransformPointer           TransformPointer;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::TransformParametersType    TransformParametersType;
-  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
-  typedef typename Superclass::InterpolatorType           InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
-  typedef typename Superclass::RealType                   RealType;
-  typedef typename Superclass::GradientPixelType          GradientPixelType;
-  typedef typename Superclass::GradientImageType          GradientImageType;
-  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
-  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
-  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
-  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
-  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
-  typedef typename Superclass::MeasureType                MeasureType;
-  typedef typename Superclass::DerivativeType             DerivativeType;
-  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
-  typedef typename Superclass::ParametersType             ParametersType;
-  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
-  typedef typename Superclass::ImageSampleContainerType    ImageSampleContainerType;
-  typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
-  typedef typename Superclass::ScalarType                 ScalarType;
+  typedef typename Superclass::MovingImageType              MovingImageType;
+  typedef typename Superclass::MovingImagePixelType         MovingImagePixelType;
+  typedef typename Superclass::MovingImagePointer           MovingImagePointer;
+  typedef typename Superclass::MovingImageConstPointer      MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType               FixedImageType;
+  typedef typename Superclass::FixedImagePointer            FixedImagePointer;
+  typedef typename Superclass::FixedImageConstPointer       FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType         FixedImageRegionType;
+  typedef typename Superclass::TransformType                TransformType;
+  typedef typename Superclass::TransformPointer             TransformPointer;
+  typedef typename Superclass::InputPointType               InputPointType;
+  typedef typename Superclass::OutputPointType              OutputPointType;
+  typedef typename Superclass::TransformParametersType      TransformParametersType;
+  typedef typename Superclass::TransformJacobianType        TransformJacobianType;
+  typedef typename Superclass::InterpolatorType             InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer          InterpolatorPointer;
+  typedef typename Superclass::RealType                     RealType;
+  typedef typename Superclass::GradientPixelType            GradientPixelType;
+  typedef typename Superclass::GradientImageType            GradientImageType;
+  typedef typename Superclass::GradientImagePointer         GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType      GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer   GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType           FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer        FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType          MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer       MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                  MeasureType;
+  typedef typename Superclass::DerivativeType               DerivativeType;
+  typedef typename Superclass::DerivativeValueType          DerivativeValueType;
+  typedef typename Superclass::ParametersType               ParametersType;
+  typedef typename Superclass::FixedImagePixelType          FixedImagePixelType;
+  typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
+  typedef typename Superclass::ScalarType                   ScalarType;
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
@@ -140,40 +139,40 @@ public:
   /** Typedef's for B-spline transform. */
   typedef AdvancedBSplineDeformableTransform< ScalarType,
     FixedImageDimension, 3 >                            BSplineTransformType;
-  typedef typename BSplineTransformType::Pointer        BSplineTransformPointer;
-  typedef typename BSplineTransformType::SpacingType    GridSpacingType;
-  typedef typename BSplineTransformType::ImageType      CoefficientImageType;
-  typedef typename CoefficientImageType::Pointer        CoefficientImagePointer;
-  typedef typename CoefficientImageType::SpacingType    CoefficientImageSpacingType;
+  typedef typename BSplineTransformType::Pointer     BSplineTransformPointer;
+  typedef typename BSplineTransformType::SpacingType GridSpacingType;
+  typedef typename BSplineTransformType::ImageType   CoefficientImageType;
+  typedef typename CoefficientImageType::Pointer     CoefficientImagePointer;
+  typedef typename CoefficientImageType::SpacingType CoefficientImageSpacingType;
   typedef AdvancedCombinationTransform< ScalarType,
     FixedImageDimension >                               CombinationTransformType;
 
   /** Typedef support for neighborhoods, filters, etc. */
   typedef Neighborhood< ScalarType,
     itkGetStaticConstMacro( FixedImageDimension ) >     NeighborhoodType;
-  typedef typename NeighborhoodType::SizeType           NeighborhoodSizeType;
-  typedef ImageRegionIterator< CoefficientImageType >   CoefficientImageIteratorType;
+  typedef typename NeighborhoodType::SizeType         NeighborhoodSizeType;
+  typedef ImageRegionIterator< CoefficientImageType > CoefficientImageIteratorType;
   typedef NeighborhoodOperatorImageFilter<
     CoefficientImageType, CoefficientImageType >        NOIFType;
-  typedef NeighborhoodIterator<CoefficientImageType>    NeighborhoodIteratorType;
+  typedef NeighborhoodIterator< CoefficientImageType >  NeighborhoodIteratorType;
   typedef typename NeighborhoodIteratorType::RadiusType RadiusType;
 
   /** Typedef's for the construction of the rigidity image. */
-  typedef CoefficientImageType                          RigidityImageType;
-  typedef typename RigidityImageType::Pointer           RigidityImagePointer;
-  typedef typename RigidityImageType::PixelType         RigidityPixelType;
-  typedef typename RigidityImageType::RegionType        RigidityImageRegionType;
-  typedef typename RigidityImageType::IndexType         RigidityImageIndexType;
-  typedef typename RigidityImageType::PointType         RigidityImagePointType;
-  typedef ImageRegionIterator< RigidityImageType >      RigidityImageIteratorType;
+  typedef CoefficientImageType                     RigidityImageType;
+  typedef typename RigidityImageType::Pointer      RigidityImagePointer;
+  typedef typename RigidityImageType::PixelType    RigidityPixelType;
+  typedef typename RigidityImageType::RegionType   RigidityImageRegionType;
+  typedef typename RigidityImageType::IndexType    RigidityImageIndexType;
+  typedef typename RigidityImageType::PointType    RigidityImagePointType;
+  typedef ImageRegionIterator< RigidityImageType > RigidityImageIteratorType;
   typedef BinaryBallStructuringElement<
     RigidityPixelType,
     itkGetStaticConstMacro( FixedImageDimension ) >     StructuringElementType;
-  typedef typename StructuringElementType::RadiusType   SERadiusType;
+  typedef typename StructuringElementType::RadiusType SERadiusType;
   typedef GrayscaleDilateImageFilter<
     RigidityImageType, RigidityImageType,
     StructuringElementType >                            DilateFilterType;
-  typedef typename DilateFilterType::Pointer            DilateFilterPointer;
+  typedef typename DilateFilterType::Pointer DilateFilterPointer;
 
   /** Check stuff. */
   void CheckUseAndCalculationBooleans( void );
@@ -207,17 +206,17 @@ public:
 
   /** Set/Get the weight of the linearity condition part. */
   itkSetClampMacro( LinearityConditionWeight, ScalarType,
-    0.0, NumericTraits<ScalarType>::max() );
+    0.0, NumericTraits< ScalarType >::max() );
   itkGetMacro( LinearityConditionWeight, ScalarType );
 
   /** Set/Get the weight of the orthonormality condition part. */
   itkSetClampMacro( OrthonormalityConditionWeight, ScalarType,
-    0.0, NumericTraits<ScalarType>::max() );
+    0.0, NumericTraits< ScalarType >::max() );
   itkGetMacro( OrthonormalityConditionWeight, ScalarType );
 
   /** Set/Get the weight of the properness condition part. */
   itkSetClampMacro( PropernessConditionWeight, ScalarType,
-    0.0, NumericTraits<ScalarType>::max() );
+    0.0, NumericTraits< ScalarType >::max() );
   itkGetMacro( PropernessConditionWeight, ScalarType );
 
   /** Set the usage of the linearity condition part. */
@@ -270,7 +269,7 @@ public:
 
   /** Set the DilationRadiusMultiplier. */
   itkSetClampMacro( DilationRadiusMultiplier, CoordinateRepresentationType,
-    0.1, NumericTraits<CoordinateRepresentationType>::max() );
+    0.1, NumericTraits< CoordinateRepresentationType >::max() );
 
   /** Set the fixed coefficient image. */
   itkSetObjectMacro( FixedRigidityImage, RigidityImageType );
@@ -292,17 +291,17 @@ protected:
   /** The constructor. */
   TransformRigidityPenaltyTerm();
   /** The destructor. */
-  virtual ~TransformRigidityPenaltyTerm() {};
+  virtual ~TransformRigidityPenaltyTerm() {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
 private:
 
   /** The private constructor. */
-  TransformRigidityPenaltyTerm( const Self& ); // purposely not implemented
+  TransformRigidityPenaltyTerm( const Self & ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );            // purposely not implemented
+  void operator=( const Self & );            // purposely not implemented
 
   /** Internal function to dilate the rigidity images. */
   virtual void DilateRigidityImages( void );
@@ -317,7 +316,7 @@ private:
 
   /** Private function used for the filtering. It performs 1D separable filtering. */
   CoefficientImagePointer FilterSeparable( const CoefficientImageType *,
-    const std::vector< NeighborhoodType > &Operators ) const;
+    const std::vector< NeighborhoodType > & Operators ) const;
 
   /** Member variables. */
   BSplineTransformPointer m_BSplineTransform;
@@ -325,37 +324,36 @@ private:
   ScalarType              m_OrthonormalityConditionWeight;
   ScalarType              m_PropernessConditionWeight;
 
-  mutable MeasureType     m_RigidityPenaltyTermValue;
-  mutable MeasureType     m_LinearityConditionValue;
-  mutable MeasureType     m_OrthonormalityConditionValue;
-  mutable MeasureType     m_PropernessConditionValue;
-  mutable MeasureType     m_LinearityConditionGradientMagnitude;
-  mutable MeasureType     m_OrthonormalityConditionGradientMagnitude;
-  mutable MeasureType     m_PropernessConditionGradientMagnitude;
+  mutable MeasureType m_RigidityPenaltyTermValue;
+  mutable MeasureType m_LinearityConditionValue;
+  mutable MeasureType m_OrthonormalityConditionValue;
+  mutable MeasureType m_PropernessConditionValue;
+  mutable MeasureType m_LinearityConditionGradientMagnitude;
+  mutable MeasureType m_OrthonormalityConditionGradientMagnitude;
+  mutable MeasureType m_PropernessConditionGradientMagnitude;
 
-  bool                    m_UseLinearityCondition;
-  bool                    m_UseOrthonormalityCondition;
-  bool                    m_UsePropernessCondition;
-  bool                    m_CalculateLinearityCondition;
-  bool                    m_CalculateOrthonormalityCondition;
-  bool                    m_CalculatePropernessCondition;
+  bool m_UseLinearityCondition;
+  bool m_UseOrthonormalityCondition;
+  bool m_UsePropernessCondition;
+  bool m_CalculateLinearityCondition;
+  bool m_CalculateOrthonormalityCondition;
+  bool m_CalculatePropernessCondition;
 
   /** Rigidity image variables. */
-  CoordinateRepresentationType    m_DilationRadiusMultiplier;
-  bool                            m_DilateRigidityImages;
-  mutable bool                    m_RigidityCoefficientImageIsFilled;
-  RigidityImagePointer            m_FixedRigidityImage;
-  RigidityImagePointer            m_MovingRigidityImage;
-  RigidityImagePointer            m_RigidityCoefficientImage;
-  std::vector< DilateFilterPointer >  m_FixedRigidityImageDilation;
-  std::vector< DilateFilterPointer >  m_MovingRigidityImageDilation;
-  RigidityImagePointer            m_FixedRigidityImageDilated;
-  RigidityImagePointer            m_MovingRigidityImageDilated;
-  bool                            m_UseFixedRigidityImage;
-  bool                            m_UseMovingRigidityImage;
+  CoordinateRepresentationType       m_DilationRadiusMultiplier;
+  bool                               m_DilateRigidityImages;
+  mutable bool                       m_RigidityCoefficientImageIsFilled;
+  RigidityImagePointer               m_FixedRigidityImage;
+  RigidityImagePointer               m_MovingRigidityImage;
+  RigidityImagePointer               m_RigidityCoefficientImage;
+  std::vector< DilateFilterPointer > m_FixedRigidityImageDilation;
+  std::vector< DilateFilterPointer > m_MovingRigidityImageDilation;
+  RigidityImagePointer               m_FixedRigidityImageDilated;
+  RigidityImagePointer               m_MovingRigidityImageDilated;
+  bool                               m_UseFixedRigidityImage;
+  bool                               m_UseMovingRigidityImage;
 
 };
-
 
 } // end namespace itk
 

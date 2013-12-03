@@ -29,8 +29,8 @@ ScaledSingleValuedCostFunction
 ::ScaledSingleValuedCostFunction()
 {
   this->m_UnscaledCostFunction = 0;
-  this->m_UseScales = false;
-  this->m_NegateCostFunction = false;
+  this->m_UseScales            = false;
+  this->m_NegateCostFunction   = false;
 
 } // end Constructor
 
@@ -47,14 +47,14 @@ ScaledSingleValuedCostFunction
 
   /** This function also checks if the UnscaledCostFunction has been set */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
-  if ( parameters.GetSize() != numberOfParameters )
+  if( parameters.GetSize() != numberOfParameters )
   {
     itkExceptionMacro( << "Number of parameters is not like the unscaled cost function expects." );
   }
 
-  MeasureType returnvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType returnvalue = NumericTraits< MeasureType >::Zero;
 
-  if ( this->m_UseScales )
+  if( this->m_UseScales )
   {
     ParametersType scaledParameters = parameters;
     this->ConvertScaledToUnscaledParameters( scaledParameters );
@@ -65,7 +65,7 @@ ScaledSingleValuedCostFunction
     returnvalue = this->m_UnscaledCostFunction->GetValue( parameters );
   }
 
-  if ( this->GetNegateCostFunction() )
+  if( this->GetNegateCostFunction() )
   {
     return -returnvalue;
   }
@@ -87,19 +87,19 @@ ScaledSingleValuedCostFunction
 
   /** This function also checks if the UnscaledCostFunction has been set */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
-  if ( parameters.GetSize() != numberOfParameters )
+  if( parameters.GetSize() != numberOfParameters )
   {
     itkExceptionMacro( << "Number of parameters is not like the unscaled cost function expects." );
   }
 
-  if ( this->m_UseScales )
+  if( this->m_UseScales )
   {
     ParametersType scaledParameters = parameters;
     this->ConvertScaledToUnscaledParameters( scaledParameters );
     this->m_UnscaledCostFunction->GetDerivative( scaledParameters, derivative );
 
     const ScalesType & scales = this->GetScales();
-    for ( unsigned int i = 0; i < numberOfParameters; ++i )
+    for( unsigned int i = 0; i < numberOfParameters; ++i )
     {
       derivative[ i ] /= scales[ i ];
     }
@@ -109,7 +109,7 @@ ScaledSingleValuedCostFunction
     m_UnscaledCostFunction->GetDerivative( parameters, derivative );
   }
 
-  if ( this->GetNegateCostFunction() )
+  if( this->GetNegateCostFunction() )
   {
     derivative = -derivative;
   }
@@ -132,12 +132,12 @@ ScaledSingleValuedCostFunction
 
   /** This function also checks if the UnscaledCostFunction has been set */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
-  if ( parameters.GetSize() != numberOfParameters )
+  if( parameters.GetSize() != numberOfParameters )
   {
     itkExceptionMacro( << "Number of parameters is not like the unscaled cost function expects." );
   }
 
-  if ( this->m_UseScales )
+  if( this->m_UseScales )
   {
 
     ParametersType scaledParameters = parameters;
@@ -145,7 +145,7 @@ ScaledSingleValuedCostFunction
     this->m_UnscaledCostFunction->GetValueAndDerivative( scaledParameters, value, derivative );
 
     const ScalesType & scales = this->GetScales();
-    for ( unsigned int i = 0; i < numberOfParameters; ++i )
+    for( unsigned int i = 0; i < numberOfParameters; ++i )
     {
       derivative[ i ] /= scales[ i ];
     }
@@ -155,9 +155,9 @@ ScaledSingleValuedCostFunction
     this->m_UnscaledCostFunction->GetValueAndDerivative( parameters, value, derivative );
   }
 
-  if ( this->GetNegateCostFunction() )
+  if( this->GetNegateCostFunction() )
   {
-    value = -value;
+    value      = -value;
     derivative = -derivative;
   }
 
@@ -170,9 +170,9 @@ ScaledSingleValuedCostFunction
 
 unsigned int
 ScaledSingleValuedCostFunction
-::GetNumberOfParameters(void) const
+::GetNumberOfParameters( void ) const
 {
-  if ( this->m_UnscaledCostFunction.IsNull() )
+  if( this->m_UnscaledCostFunction.IsNull() )
   {
     itkExceptionMacro( << "UnscaledCostFunction has not been set!" );
   }
@@ -192,7 +192,7 @@ ScaledSingleValuedCostFunction
   itkDebugMacro( "setting scales to " << scales );
   this->m_Scales = scales;
   this->m_SquaredScales.SetSize( scales.GetSize() );
-  for ( unsigned int i = 0; i < scales.Size(); ++i )
+  for( unsigned int i = 0; i < scales.Size(); ++i )
   {
     this->m_SquaredScales[ i ] = vnl_math_sqr( scales[ i ] );
   }
@@ -212,7 +212,7 @@ ScaledSingleValuedCostFunction
   itkDebugMacro( "setting squared scales to " << squaredScales );
   this->m_SquaredScales = squaredScales;
   this->m_Scales.SetSize( squaredScales.GetSize() );
-  for ( unsigned int i = 0; i < squaredScales.Size(); ++i )
+  for( unsigned int i = 0; i < squaredScales.Size(); ++i )
   {
     this->m_Scales[ i ] = vcl_sqrt( squaredScales[ i ] );
   }
@@ -229,16 +229,16 @@ void
 ScaledSingleValuedCostFunction
 ::ConvertScaledToUnscaledParameters( ParametersType & parameters ) const
 {
-  if ( this->m_UseScales )
+  if( this->m_UseScales )
   {
     const unsigned int numberOfParameters = parameters.GetSize();
-    const ScalesType & scales = this->GetScales();
-    if ( scales.GetSize() != numberOfParameters )
+    const ScalesType & scales             = this->GetScales();
+    if( scales.GetSize() != numberOfParameters )
     {
       itkExceptionMacro( << "Number of scales is not correct." );
     }
 
-    for ( unsigned int i = 0; i < numberOfParameters; ++i )
+    for( unsigned int i = 0; i < numberOfParameters; ++i )
     {
       parameters[ i ] /= scales[ i ];
     }
@@ -256,16 +256,16 @@ void
 ScaledSingleValuedCostFunction
 ::ConvertUnscaledToScaledParameters( ParametersType & parameters ) const
 {
-  if ( this->m_UseScales )
+  if( this->m_UseScales )
   {
     const unsigned int numberOfParameters = parameters.GetSize();
-    const ScalesType & scales = this->GetScales();
-    if ( scales.GetSize() != numberOfParameters )
+    const ScalesType & scales             = this->GetScales();
+    if( scales.GetSize() != numberOfParameters )
     {
       itkExceptionMacro( << "Number of scales is not correct." );
     }
 
-    for ( unsigned int i = 0; i < numberOfParameters; ++i )
+    for( unsigned int i = 0; i < numberOfParameters; ++i )
     {
       parameters[ i ] *= scales[ i ];
     }
@@ -287,13 +287,13 @@ ScaledSingleValuedCostFunction
   Superclass::PrintSelf( os, indent );
 
   os << indent << "UseScales: "
-    << ( this->m_UseScales ? "true" : "false" ) << std::endl;
+     << ( this->m_UseScales ? "true" : "false" ) << std::endl;
   os << indent << "Scales: " << this->m_Scales << std::endl;
   os << indent << "SquaredScales: " << this->m_SquaredScales << std::endl;
   os << indent << "NegateCostFunction: "
-    << ( this->m_NegateCostFunction ? "true" : "false" ) << std::endl;
+     << ( this->m_NegateCostFunction ? "true" : "false" ) << std::endl;
   os << indent << "UnscaledCostFunction: "
-    << this->m_UnscaledCostFunction.GetPointer() << std::endl;
+     << this->m_UnscaledCostFunction.GetPointer() << std::endl;
 
 } // end PrintSelf()
 
@@ -301,4 +301,3 @@ ScaledSingleValuedCostFunction
 } //end namespace itk
 
 #endif // #ifndef __itkScaledSingleValuedCostFunction_cxx
-

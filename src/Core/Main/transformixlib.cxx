@@ -95,24 +95,24 @@ TRANSFORMIX::TransformImage(
   DataObjectContainerPointer resultImageContainer = 0;
 
   /** Initialize. */
-  int               returndummy = 0;
-  ArgumentMapType   argMap;
-  bool              outFolderPresent = false;
-  std::string       outFolder = "";
-  std::string       logFileName = "";
+  int             returndummy = 0;
+  ArgumentMapType argMap;
+  bool            outFolderPresent = false;
+  std::string     outFolder        = "";
+  std::string     logFileName      = "";
 
   std::string key;
   std::string value;
 
   if( !outputPath.empty() )
   {
-    key = "-out";
+    key   = "-out";
     value = outputPath;
 
     /** Make sure that last character of the output folder equals a '/'. */
-    if( value.find_last_of( "/" ) != value.size() -1  )
+    if( value.find_last_of( "/" ) != value.size() - 1  )
     {
-      value.append("/");
+      value.append( "/" );
     }
 
     outFolderPresent = true;
@@ -121,7 +121,7 @@ TRANSFORMIX::TransformImage(
   {
     /** Put command line parameters into parameterFileList. */
     //there must be an "-out", this is checked later in code!!
-    key = "-out";
+    key   = "-out";
     value = "output_path_not_set";
   }
 
@@ -137,7 +137,7 @@ TRANSFORMIX::TransformImage(
   {
     /** Duplicate arguments. */
     std::cerr << "WARNING!" << std::endl;
-    std::cerr << "Argument "<< key.c_str() << "is only required once." << std::endl;
+    std::cerr << "Argument " << key.c_str() << "is only required once." << std::endl;
     std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
   }
 
@@ -152,7 +152,7 @@ TRANSFORMIX::TransformImage(
         std::cerr << "ERROR: the output directory does not exist." << std::endl;
         std::cerr << "You are responsible for creating it." << std::endl;
       }
-      return( -2 );
+      return ( -2 );
     }
     else
     {
@@ -168,14 +168,14 @@ TRANSFORMIX::TransformImage(
   argMap.insert( ArgumentMapEntryType( "-argv0", "transformix" ) );
 
   /** Setup xout. */
-  int returndummy2 = elx::xoutSetup( logFileName.c_str() , performLogging , performCout );
+  int returndummy2 = elx::xoutSetup( logFileName.c_str(), performLogging, performCout );
   if( returndummy2 && performCout )
   {
     if( performCout )
     {
       std::cerr << "ERROR while setting up xout." << std::endl;
     }
-    return( returndummy2 );
+    return ( returndummy2 );
   }
   elxout << std::endl;
 
@@ -183,7 +183,7 @@ TRANSFORMIX::TransformImage(
   tmr::Timer::Pointer totaltimer = tmr::Timer::New();
   totaltimer->StartTimer();
   elxout << "transformix is started at " << totaltimer->PrintStartTime()
-    << ".\n" << std::endl;
+         << ".\n" << std::endl;
 
   /**
    * ********************* START TRANSFORMATION *******************
@@ -191,20 +191,20 @@ TRANSFORMIX::TransformImage(
 
   /** Set transformix. */
   transformix = TransformixMainType::New();
-  
+
   /** Set stuff from input or needed for output */
-  movingImageContainer = DataObjectContainerType::New();
+  movingImageContainer                       = DataObjectContainerType::New();
   movingImageContainer->CreateElementAt( 0 ) = inputImage;
   transformix->SetMovingImageContainer( movingImageContainer );
   transformix->SetResultImageContainer( resultImageContainer );
-  
+
   /** Run transformix. */
   returndummy = transformix->Run( argMap, parameterMaps );
-  
+
   /** Check if transformix run without errors. */
-  if ( returndummy != 0 )
+  if( returndummy != 0 )
   {
-    xl::xout["error"] << "Errors occurred" << std::endl;
+    xl::xout[ "error" ] << "Errors occurred" << std::endl;
     return returndummy;
   }
 
@@ -213,10 +213,10 @@ TRANSFORMIX::TransformImage(
 
   /** Stop timer and print it. */
   totaltimer->StopTimer();
-  elxout << "\nTransformix has finished at " <<
-    totaltimer->PrintStopTime() << "." << std::endl;
-  elxout << "Elapsed time: " <<
-    totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+  elxout << "\nTransformix has finished at "
+         << totaltimer->PrintStopTime() << "." << std::endl;
+  elxout << "Elapsed time: "
+         << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
   this->m_ResultImage = resultImageContainer->ElementAt( 0 );
 
@@ -255,4 +255,3 @@ TRANSFORMIX::TransformImage(
 } // namespace transformix
 
 #endif // end #ifndef __transformixlib_CXX_
-

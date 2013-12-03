@@ -12,7 +12,6 @@
 
 ======================================================================*/
 
-
 #ifndef __itkVarianceOverLastDimensionImageMetric_h
 #define __itkVarianceOverLastDimensionImageMetric_h
 
@@ -45,21 +44,21 @@ namespace itk
  * \ingroup Metrics
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 class VarianceOverLastDimensionImageMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef VarianceOverLastDimensionImageMetric    Self;
+  typedef VarianceOverLastDimensionImageMetric Self;
   typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >                   Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename FixedImageRegionType::SizeType         FixedImageSizeType;
+  typedef typename Superclass::FixedImageRegionType FixedImageRegionType;
+  typedef typename FixedImageRegionType::SizeType   FixedImageSizeType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -77,12 +76,12 @@ public:
   itkSetMacro( TransformIsStackTransform, bool );
 
   /** Get functions. */
-  itkGetConstMacro(SampleLastDimensionRandomly, bool);
-  itkGetConstMacro(NumSamplesLastDimension, int);
+  itkGetConstMacro( SampleLastDimensionRandomly, bool );
+  itkGetConstMacro( NumSamplesLastDimension, int );
 
   /** Typedefs from the superclass. */
   typedef typename
-    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+    Superclass::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
   typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
@@ -115,15 +114,15 @@ public:
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename
-    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+    Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType  FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType MovingImageLimiterType;
   typedef typename
-    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+    Superclass::FixedImageLimiterOutputType FixedImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+    Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
+    Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -142,33 +141,34 @@ public:
 
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const;
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation.   */
-  virtual void Initialize(void) throw ( ExceptionObject );
+  virtual void Initialize( void ) throw ( ExceptionObject );
 
 protected:
+
   VarianceOverLastDimensionImageMetric();
-  virtual ~VarianceOverLastDimensionImageMetric() {};
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  virtual ~VarianceOverLastDimensionImageMetric() {}
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
 
   /** Typedefs inherited from superclass */
-  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
+  typedef typename Superclass::FixedImageIndexType      FixedImageIndexType;
+  typedef typename Superclass::FixedImageIndexValueType FixedImageIndexValueType;
+  typedef typename Superclass::MovingImageIndexType     MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType      FixedImagePointType;
   typedef typename itk::ContinuousIndex< CoordinateRepresentationType, FixedImageDimension >
-                                                                  FixedImageContinuousIndexType;
-  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
-  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-  typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
+    FixedImageContinuousIndexType;
+  typedef typename Superclass::MovingImagePointType                MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType      MovingImageContinuousIndexType;
+  typedef typename Superclass::BSplineInterpolatorType             BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  typedef typename Superclass::MovingImageDerivativeType           MovingImageDerivativeType;
+  typedef typename Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
 
   /** Computes the innerproduct of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
@@ -176,17 +176,18 @@ protected:
   void EvaluateTransformJacobianInnerProduct(
     const TransformJacobianType & jacobian,
     const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const;
+    DerivativeType & imageJacobian ) const;
 
 private:
-  VarianceOverLastDimensionImageMetric(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  VarianceOverLastDimensionImageMetric( const Self & ); // purposely not implemented
+  void operator=( const Self & );                       // purposely not implemented
 
   /** Sample n random numbers from 0..m and add them to the vector. */
-  void SampleRandom (const int n, const int m, std::vector<int> & numbers) const;
+  void SampleRandom( const int n, const int m, std::vector< int > & numbers ) const;
 
   /** Variables to control random sampling in last dimension. */
-  bool m_SampleLastDimensionRandomly;
+  bool         m_SampleLastDimensionRandomly;
   unsigned int m_NumSamplesLastDimension;
   unsigned int m_NumAdditionalSamplesFixed;
   unsigned int m_ReducedDimensionIndex;

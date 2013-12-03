@@ -19,7 +19,6 @@
 #include "itkVectorDataContainer.h"
 #include "itkSpatialObject.h"
 
-
 namespace itk
 {
 /** \class ImageSamplerBase
@@ -35,7 +34,7 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template < class TInputImage >
+template< class TInputImage >
 class ImageSamplerBase :
   public ImageToVectorContainerFilter< TInputImage,
   VectorDataContainer< unsigned long, ImageSample< TInputImage > > >
@@ -43,14 +42,12 @@ class ImageSamplerBase :
 public:
 
   /** Standard ITK-stuff. */
-  typedef ImageSamplerBase                  Self;
+  typedef ImageSamplerBase Self;
   typedef ImageToVectorContainerFilter<
-    TInputImage,
-    VectorDataContainer<
-    unsigned long,
-    ImageSample< TInputImage > > >          Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+    TInputImage, VectorDataContainer<
+    unsigned long, ImageSample< TInputImage > > > Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -73,34 +70,33 @@ public:
     InputImageType::ImageDimension );
 
   /** Other typdefs. */
-  typedef ImageSample< InputImageType >               ImageSampleType;
-  typedef VectorDataContainer< unsigned long,
-    ImageSampleType >                                 ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
-  typedef typename InputImageType::SizeType           InputImageSizeType;
-  typedef typename InputImageType::IndexType          InputImageIndexType;
-  typedef typename InputImageType::PointType          InputImagePointType;
-  typedef typename InputImagePointType::ValueType     InputImagePointValueType;
-  typedef typename ImageSampleType::RealType          ImageSampleValueType;
-  typedef SpatialObject<
-    itkGetStaticConstMacro( InputImageDimension ) >   MaskType;
-  typedef typename MaskType::Pointer                  MaskPointer;
-  typedef typename MaskType::ConstPointer             MaskConstPointer;
-  typedef std::vector< MaskConstPointer >             MaskVectorType;
-  typedef std::vector< InputImageRegionType >         InputImageRegionVectorType;
+  typedef ImageSample< InputImageType >                         ImageSampleType;
+  typedef VectorDataContainer< unsigned long, ImageSampleType > ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer            ImageSampleContainerPointer;
+  typedef typename InputImageType::SizeType                     InputImageSizeType;
+  typedef typename InputImageType::IndexType                    InputImageIndexType;
+  typedef typename InputImageType::PointType                    InputImagePointType;
+  typedef typename InputImagePointType::ValueType               InputImagePointValueType;
+  typedef typename ImageSampleType::RealType                    ImageSampleValueType;
+  typedef SpatialObject< Self::InputImageDimension >            MaskType;
+  typedef typename MaskType::Pointer                            MaskPointer;
+  typedef typename MaskType::ConstPointer                       MaskConstPointer;
+  typedef std::vector< MaskConstPointer >                       MaskVectorType;
+  typedef std::vector< InputImageRegionType >                   InputImageRegionVectorType;
 
   /** ******************** Masks ******************** */
 
   /** Set the masks. */
-  virtual void SetMask( const MaskType *_arg, unsigned int pos );
+  virtual void SetMask( const MaskType * _arg, unsigned int pos );
 
   /** Set the first mask. NB: the first mask is used to
    * compute a bounding box in which samples are considered.
    */
-  virtual void SetMask( const MaskType *_arg )
+  virtual void SetMask( const MaskType * _arg )
   {
     this->SetMask( _arg, 0 );
   }
+
 
   /** Get the masks. */
   virtual const MaskType * GetMask( unsigned int pos ) const;
@@ -109,7 +105,8 @@ public:
   virtual const MaskType * GetMask( void ) const
   {
     return this->GetMask( 0 );
-  };
+  }
+
 
   /** Set the number of masks. */
   virtual void SetNumberOfMasks( const unsigned int _arg );
@@ -128,6 +125,7 @@ public:
     this->SetInputImageRegion( _arg, 0 );
   }
 
+
   /** Get the input image regions. */
   virtual const InputImageRegionType & GetInputImageRegion( unsigned int pos ) const;
 
@@ -135,7 +133,8 @@ public:
   virtual const InputImageRegionType & GetInputImageRegion( void ) const
   {
     return this->GetInputImageRegion( 0 );
-  };
+  }
+
 
   /** Set the number of input image regions. */
   virtual void SetNumberOfInputImageRegions( const unsigned int _arg );
@@ -157,6 +156,7 @@ public:
     return true;
   }
 
+
   /** Get a handle to the cropped InputImageregion. */
   itkGetConstReferenceMacro( CroppedInputImageRegion, InputImageRegionType );
 
@@ -172,10 +172,10 @@ protected:
   ImageSamplerBase();
 
   /** The destructor. */
-  virtual ~ImageSamplerBase() {};
+  virtual ~ImageSamplerBase() {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** GenerateInputRequestedRegion. */
   virtual void GenerateInputRequestedRegion( void );
@@ -196,11 +196,12 @@ protected:
 
   /** Multi-threaded function that does the work. */
   virtual void BeforeThreadedGenerateData( void );
+
   virtual void AfterThreadedGenerateData( void );
 
   /***/
-  unsigned long m_NumberOfSamples;
-  std::vector<ImageSampleContainerPointer>  m_ThreaderSampleContainer;
+  unsigned long                              m_NumberOfSamples;
+  std::vector< ImageSampleContainerPointer > m_ThreaderSampleContainer;
 
   //tmp?
   bool m_UseMultiThread;
@@ -208,23 +209,22 @@ protected:
 private:
 
   /** The private constructor. */
-  ImageSamplerBase( const Self& );          // purposely not implemented
+  ImageSamplerBase( const Self & );          // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );            // purposely not implemented
+  void operator=( const Self & );            // purposely not implemented
 
   /** Member variables. */
-  MaskConstPointer                  m_Mask;
-  MaskVectorType                    m_MaskVector;
-  unsigned int                      m_NumberOfMasks;
-  InputImageRegionType              m_InputImageRegion;
-  InputImageRegionVectorType        m_InputImageRegionVector;
-  unsigned int                      m_NumberOfInputImageRegions;
+  MaskConstPointer           m_Mask;
+  MaskVectorType             m_MaskVector;
+  unsigned int               m_NumberOfMasks;
+  InputImageRegionType       m_InputImageRegion;
+  InputImageRegionVectorType m_InputImageRegionVector;
+  unsigned int               m_NumberOfInputImageRegions;
 
-  InputImageRegionType              m_CroppedInputImageRegion;
-  InputImageRegionType              m_DummyInputImageRegion;
+  InputImageRegionType m_CroppedInputImageRegion;
+  InputImageRegionType m_DummyInputImageRegion;
 
 };
-
 
 } // end namespace itk
 

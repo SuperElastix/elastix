@@ -20,7 +20,6 @@
 #include <omp.h>
 #endif
 
-
 namespace itk
 {
 
@@ -53,13 +52,13 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 {
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  RealType measure = NumericTraits<RealType>::Zero;
+  RealType           measure = NumericTraits< RealType >::Zero;
   SpatialHessianType spatialHessian;
 
   /** Check if the SpatialHessian is nonzero. */
-  if ( !this->m_AdvancedTransform->GetHasNonZeroSpatialHessian() )
+  if( !this->m_AdvancedTransform->GetHasNonZeroSpatialHessian() )
   {
-    return static_cast<MeasureType>( measure );
+    return static_cast< MeasureType >( measure );
   }
 
   /** Call non-thread-safe stuff, such as:
@@ -83,25 +82,25 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over the fixed image samples to calculate the penalty term. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    MovingImagePointType mappedPoint;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    MovingImagePointType        mappedPoint;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
@@ -111,7 +110,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       this->m_AdvancedTransform->GetSpatialHessian( fixedPoint, spatialHessian );
 
       /** Compute the contribution of this point. */
-      for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+      for( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
         measure += vnl_math_sqr(
           spatialHessian[ k ].GetVnlMatrix().frobenius_norm() );
@@ -126,10 +125,10 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Update measure value. */
-  measure /= static_cast<RealType>( this->m_NumberOfPixelsCounted );
+  measure /= static_cast< RealType >( this->m_NumberOfPixelsCounted );
 
   /** Return the value. */
-  return static_cast<MeasureType>( measure );
+  return static_cast< MeasureType >( measure );
 
 } // end GetValue()
 
@@ -170,19 +169,19 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   derivative = DerivativeType( this->GetNumberOfParameters() );
   derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
-  SpatialHessianType spatialHessian;
+  SpatialHessianType           spatialHessian;
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;
-  NonZeroJacobianIndicesType nonZeroJacobianIndices;
+  NonZeroJacobianIndicesType   nonZeroJacobianIndices;
   const NumberOfParametersType numberOfNonZeroJacobianIndices
     = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   jacobianOfSpatialHessian.resize( numberOfNonZeroJacobianIndices );
   nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
 
   /** Check if the SpatialHessian is nonzero. */
-  if ( !this->m_AdvancedTransform->GetHasNonZeroSpatialHessian()
+  if( !this->m_AdvancedTransform->GetHasNonZeroSpatialHessian()
     && !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
-    value = static_cast<MeasureType>( measure );
+    value = static_cast< MeasureType >( measure );
     return;
   }
   // TODO: This is only required once! and not every iteration.
@@ -212,14 +211,14 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over the fixed image to calculate the penalty term and its derivative. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    MovingImagePointType mappedPoint;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    MovingImagePointType        mappedPoint;
 
     /** Although the mapped point is not needed to compute the penalty term,
      * we compute in order to check if it maps inside the support region of
@@ -230,12 +229,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
@@ -246,29 +245,29 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 //         spatialHessian );
 //       this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
 //         jacobianOfSpatialHessian, nonZeroJacobianIndices );
-       this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
-         spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices );
+      this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
+        spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices );
 
       /** Prepare some stuff for the computation of the metric (derivative). */
       FixedArray< InternalMatrixType, FixedImageDimension > A;
-      for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+      for( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
         A[ k ] = spatialHessian[ k ].GetVnlMatrix();
       }
 
       /** Compute the contribution to the metric value of this point. */
-      for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+      for( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
         measure += vnl_math_sqr( A[ k ].frobenius_norm() );
       }
 
       /** Make a distinction between a B-spline transform and other transforms. */
-      if ( !transformIsBSpline )
+      if( !transformIsBSpline )
       {
         /** Compute the contribution to the metric derivative of this point. */
-        for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
+        for( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
         {
-          for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+          for( unsigned int k = 0; k < FixedImageDimension; ++k )
           {
             /** This computes:
              * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
@@ -277,12 +276,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               = jacobianOfSpatialHessian[ mu ][ k ].GetVnlMatrix();
 
             RealType matrixProduct = 0.0;
-            typename InternalMatrixType::const_iterator itA = A[ k ].begin();
-            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itA    = A[ k ].begin();
+            typename InternalMatrixType::const_iterator itB    = B.begin();
             typename InternalMatrixType::const_iterator itAend = A[ k ].end();
-            while ( itA != itAend )
+            while( itA != itAend )
             {
-              matrixProduct += (*itA) * (*itB);
+              matrixProduct += ( *itA ) * ( *itB );
               ++itA;
               ++itB;
             }
@@ -304,9 +303,9 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
         /*SpatialHessianType * basepointer1 = &jacobianOfSpatialHessian[ 0 ];
         unsigned long * basepointer2 = &nonZeroJacobianIndices[ 0 ];
         double * basepointer3 = &derivative[ 0 ];*/
-        for ( unsigned int mu = 0; mu < numParPerDim; ++mu )
+        for( unsigned int mu = 0; mu < numParPerDim; ++mu )
         {
-          for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+          for( unsigned int k = 0; k < FixedImageDimension; ++k )
           {
             /** This computes:
              * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
@@ -320,12 +319,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               = jacobianOfSpatialHessian[ mu + numParPerDim * k ][ k ].GetVnlMatrix();
 
             RealType matrixElementProduct = 0.0;
-            typename InternalMatrixType::const_iterator itA = A[ k ].begin();
-            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itA    = A[ k ].begin();
+            typename InternalMatrixType::const_iterator itB    = B.begin();
             typename InternalMatrixType::const_iterator itAend = A[ k ].end();
-            while ( itA != itAend )
+            while( itA != itAend )
             {
-              matrixElementProduct += (*itA) * (*itB);
+              matrixElementProduct += ( *itA ) * ( *itB );
               ++itA;
               ++itB;
             }
@@ -345,11 +344,11 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Update measure value. */
-  measure /= static_cast<RealType>( this->m_NumberOfPixelsCounted );
-  derivative /= static_cast<RealType>( this->m_NumberOfPixelsCounted );
+  measure    /= static_cast< RealType >( this->m_NumberOfPixelsCounted );
+  derivative /= static_cast< RealType >( this->m_NumberOfPixelsCounted );
 
   /** The return value. */
-  value = static_cast<MeasureType>( measure );
+  value = static_cast< MeasureType >( measure );
 
 } // end GetValueAndDerivativeSingleThreaded()
 
@@ -358,7 +357,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TScalarType>
+template< class TFixedImage, class TScalarType >
 void
 TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 ::GetValueAndDerivative(
@@ -403,22 +402,22 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
  * ******************* ThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TScalarType>
+template< class TFixedImage, class TScalarType >
 void
 TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 ::ThreadedGetValueAndDerivative( ThreadIdType threadId )
 {
-    /** Create and initialize some variables. */
-  SpatialHessianType spatialHessian;
+  /** Create and initialize some variables. */
+  SpatialHessianType           spatialHessian;
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;
-  NonZeroJacobianIndicesType nonZeroJacobianIndices;
+  NonZeroJacobianIndicesType   nonZeroJacobianIndices;
   const NumberOfParametersType numberOfNonZeroJacobianIndices
     = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   jacobianOfSpatialHessian.resize( numberOfNonZeroJacobianIndices );
   nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
 
   /** Check if the SpatialHessian is nonzero. */
-  if ( !this->m_AdvancedTransform->GetHasNonZeroSpatialHessian()
+  if( !this->m_AdvancedTransform->GetHasNonZeroSpatialHessian()
     && !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
     return;
@@ -433,39 +432,39 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
    * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
    */
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
-  derivative.Fill( NumericTraits<DerivativeValueType>::Zero ); // needed?
+  derivative.Fill( NumericTraits< DerivativeValueType >::Zero ); // needed?
 
   /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const unsigned long sampleContainerSize = sampleContainer->Size();
+  ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
+  const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
-      / static_cast<double>( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( this->m_NumberOfThreads ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
-  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
   pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
-  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+  pos_end   = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
 
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->Begin();
-  fbegin += (int)pos_begin;
-  fend += (int)pos_end;
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->Begin();
+  fbegin                                                 += (int)pos_begin;
+  fend                                                   += (int)pos_end;
 
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType   measure               = NumericTraits< MeasureType >::Zero;
 
   /** Loop over the fixed image to calculate the penalty term and its derivative. */
   for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    MovingImagePointType mappedPoint;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    MovingImagePointType        mappedPoint;
 
     /** Although the mapped point is not needed to compute the penalty term,
      * we compute in order to check if it maps inside the support region of
@@ -476,20 +475,20 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       numberOfPixelsCounted++;
 
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.
        */
-       this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
-         spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices );
+      this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
+        spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices );
 
       /** Prepare some stuff for the computation of the metric (derivative). */
       FixedArray< InternalMatrixType, FixedImageDimension > A;
@@ -519,12 +518,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               = jacobianOfSpatialHessian[ mu ][ k ].GetVnlMatrix();
 
             RealType matrixElementProduct = 0.0;
-            typename InternalMatrixType::const_iterator itA = A[ k ].begin();
-            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itA    = A[ k ].begin();
+            typename InternalMatrixType::const_iterator itB    = B.begin();
             typename InternalMatrixType::const_iterator itAend = A[ k ].end();
             while( itA != itAend )
             {
-              matrixElementProduct += (*itA) * (*itB);
+              matrixElementProduct += ( *itA ) * ( *itB );
               ++itA;
               ++itB;
             }
@@ -556,12 +555,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
              * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
              */
             RealType matrixElementProduct = 0.0;
-            typename InternalMatrixType::const_iterator itA = A[ k ].begin();
-            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itA    = A[ k ].begin();
+            typename InternalMatrixType::const_iterator itB    = B.begin();
             typename InternalMatrixType::const_iterator itAend = A[ k ].end();
-            while ( itA != itAend )
+            while( itA != itAend )
             {
-              matrixElementProduct += (*itA) * (*itB);
+              matrixElementProduct += ( *itA ) * ( *itB );
               ++itA;
               ++itB;
             }
@@ -571,12 +570,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
           }
         }
       } // end if B-spline
-    } // end if sampleOk
-  } // end for loop over the image sample container
+    }   // end if sampleOk
+  }     // end for loop over the image sample container
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
   this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Value = measure;
+  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Value                 = measure;
 
 } // end ThreadedGetValueAndDerivative()
 
@@ -585,7 +584,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
  * ******************* AfterThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TScalarType>
+template< class TFixedImage, class TScalarType >
 void
 TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 ::AfterThreadedGetValueAndDerivative(
@@ -604,12 +603,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Accumulate and normalize values. */
-  value = NumericTraits<MeasureType>::Zero;
+  value = NumericTraits< MeasureType >::Zero;
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
   }
-  value /= static_cast<RealType>( this->m_NumberOfPixelsCounted );
+  value /= static_cast< RealType >( this->m_NumberOfPixelsCounted );
 
   /** Accumulate derivatives. */
   // it seems that multi-threaded adding is faster than single-threaded
@@ -622,33 +621,33 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     {
       derivative += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative;
     }
-    derivative /= static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
+    derivative /= static_cast< DerivativeValueType >( this->m_NumberOfPixelsCounted );
   }
   // compute multi-threadedly with itk threads
   else if( !this->m_UseOpenMP )
   {
     this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
     this->m_ThreaderMetricParameters.st_NormalizationFactor
-      = static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
+      = static_cast< DerivativeValueType >( this->m_NumberOfPixelsCounted );
 
     typename ThreaderType::Pointer local_threader = ThreaderType::New();
     local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
     local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
-      const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
+      const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
     local_threader->SingleMethodExecute();
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp
   else
   {
-    const DerivativeValueType numPix = static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
-    const int nthreads = static_cast<int>( this->m_NumberOfThreads );
+    const DerivativeValueType numPix   = static_cast< DerivativeValueType >( this->m_NumberOfPixelsCounted );
+    const int                 nthreads = static_cast< int >( this->m_NumberOfThreads );
     omp_set_num_threads( nthreads );
-    const int spaceDimension = static_cast<int>( this->GetNumberOfParameters() );
+    const int spaceDimension = static_cast< int >( this->GetNumberOfParameters() );
     #pragma omp parallel for
     for( int j = 0; j < spaceDimension; ++j )
     {
-      DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
+      DerivativeValueType tmp = NumericTraits< DerivativeValueType >::Zero;
       for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
       {
         tmp += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
@@ -665,25 +664,25 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
  * ******************* GetSelfHessian *******************
  */
 
-template <class TFixedImage, class TScalarType>
+template< class TFixedImage, class TScalarType >
 void
 TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 ::GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const
 {
-  itkDebugMacro("GetSelfHessian()");
+  itkDebugMacro( "GetSelfHessian()" );
 
   typedef typename DerivativeType::ValueType        DerivativeValueType;
   typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
-  typedef typename HessianType::row RowType;
-  typedef typename RowType::iterator RowIteratorType;
-  typedef typename HessianType::pair_t ElementType;
+  typedef typename HessianType::row                 RowType;
+  typedef typename RowType::iterator                RowIteratorType;
+  typedef typename HessianType::pair_t              ElementType;
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nonZeroJacobianIndices(
-    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;
 
   /** Make sure the transform parameters are up to date. */
@@ -693,12 +692,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   H.set_size( this->GetNumberOfParameters(),
     this->GetNumberOfParameters() );
   //H.Fill(0.0); //done by set_size for sparse matrix
-  if ( !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
+  if( !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
-      H(i,i) = 1.0;
+      H( i, i ) = 1.0;
     }
     return;
   }
@@ -717,14 +716,14 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over the fixed image to calculate the d/dmu dT/dxdx terms. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    MovingImagePointType mappedPoint;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    MovingImagePointType        mappedPoint;
 
     /** Although the mapped point is not needed to compute the penalty term,
      * we compute in order to check if it maps inside the support region of
@@ -735,12 +734,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
@@ -748,18 +747,18 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
         jacobianOfSpatialHessian, nonZeroJacobianIndices );
 
       /** Compute the contribution to the metric derivative of this point. */
-      for ( unsigned int muA = 0; muA < nonZeroJacobianIndices.size(); ++muA )
+      for( unsigned int muA = 0; muA < nonZeroJacobianIndices.size(); ++muA )
       {
-        const unsigned int nmA = nonZeroJacobianIndices[ muA ];
-        RowType & rowVector = H.get_row( nmA );
-        RowIteratorType rowIt = rowVector.begin();
+        const unsigned int nmA       = nonZeroJacobianIndices[ muA ];
+        RowType &          rowVector = H.get_row( nmA );
+        RowIteratorType    rowIt     = rowVector.begin();
 
-        for ( unsigned int muB = muA; muB < nonZeroJacobianIndices.size(); ++muB )
+        for( unsigned int muB = muA; muB < nonZeroJacobianIndices.size(); ++muB )
         {
           const unsigned int nmB = nonZeroJacobianIndices[ muB ];
 
           RealType matrixProduct = 0.0;
-          for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+          for( unsigned int k = 0; k < FixedImageDimension; ++k )
           {
             /** This computes:
              * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
@@ -769,12 +768,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
             const InternalMatrixType & B
               = jacobianOfSpatialHessian[ muB ][ k ].GetVnlMatrix();
 
-            typename InternalMatrixType::const_iterator itA = A.begin();
-            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itA    = A.begin();
+            typename InternalMatrixType::const_iterator itB    = B.begin();
             typename InternalMatrixType::const_iterator itAend = A.end();
-            while ( itA != itAend )
+            while( itA != itAend )
             {
-              matrixProduct += (*itA) * (*itB);
+              matrixProduct += ( *itA ) * ( *itB );
               ++itA;
               ++itB;
             }
@@ -785,7 +784,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
           * Only upper triangular part is stored */
 
           /** Update hessian element */
-          if ( (matrixProduct > 1e-12) || (matrixProduct < 1e-12) )
+          if( ( matrixProduct > 1e-12 ) || ( matrixProduct < 1e-12 ) )
           {
             /**
             * H( nmA, nmB ) += 2.0 * matrixProduct;
@@ -794,17 +793,18 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
             const double val = 2.0 * matrixProduct;
 
             /** Go to next element */
-            for (; (rowIt != rowVector.end()) && ((*rowIt).first < nmB); ++rowIt);
+            for(; ( rowIt != rowVector.end() ) && ( ( *rowIt ).first < nmB ); ++rowIt )
+            {}
 
-            if ((rowIt == rowVector.end()) || ((*rowIt).first != nmB))
+            if( ( rowIt == rowVector.end() ) || ( ( *rowIt ).first != nmB ) )
             {
               /** Add new column to the row and set iterator to that column. */
-              rowIt = rowVector.insert(rowIt, ElementType( nmB, val ) );
+              rowIt = rowVector.insert( rowIt, ElementType( nmB, val ) );
             }
             else
             {
               /** Add to existing value */
-              (*rowIt).second += val;
+              ( *rowIt ).second += val;
             }
 
           }
@@ -814,7 +814,6 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 
     } // end if sampleOk
 
-
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
@@ -822,20 +821,20 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Compute the measure value and derivative. */
-  if ( this->m_NumberOfPixelsCounted > 0 )
+  if( this->m_NumberOfPixelsCounted > 0 )
   {
-    const double normal_sum = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    const double normal_sum = 1.0 / static_cast< double >( this->m_NumberOfPixelsCounted );
+    for( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
-      H.scale_row(i, normal_sum);
+      H.scale_row( i, normal_sum );
     }
   }
   else
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
-      H(i,i) = 1.0;
+      H( i, i ) = 1.0;
     }
   }
 

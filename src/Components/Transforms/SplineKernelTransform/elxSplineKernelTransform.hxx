@@ -27,8 +27,8 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
-SplineKernelTransform<TElastix>
+template< class TElastix >
+SplineKernelTransform< TElastix >
 ::SplineKernelTransform()
 {
   this->SetKernelType( "unknown" );
@@ -39,9 +39,9 @@ SplineKernelTransform<TElastix>
  * ******************* SetKernelType ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 bool
-SplineKernelTransform<TElastix>
+SplineKernelTransform< TElastix >
 ::SetKernelType( const std::string & kernelType )
 {
   this->m_SplineKernelType = kernelType;
@@ -50,7 +50,7 @@ SplineKernelTransform<TElastix>
    * appropriate for 2D and the normal for 3D
    * \todo: understand why
    */
-  if ( SpaceDimension == 2 )
+  if( SpaceDimension == 2 )
   {
     /** only one variant for 2D possible: */
     this->m_KernelTransform = TPRKernelTransformType::New();
@@ -60,7 +60,7 @@ SplineKernelTransform<TElastix>
     /** 3D: choose between different spline types.
      * \todo: devise one for 4D
      */
-    if ( kernelType == "ThinPlateSpline" )
+    if( kernelType == "ThinPlateSpline" )
     {
       this->m_KernelTransform = TPKernelTransformType::New();
     }
@@ -68,15 +68,15 @@ SplineKernelTransform<TElastix>
 //     {
 //       this->m_KernelTransform = TPRKernelTransformType::New();
 //     }
-    else if ( kernelType == "VolumeSpline" )
+    else if( kernelType == "VolumeSpline" )
     {
       this->m_KernelTransform = VKernelTransformType::New();
     }
-    else if ( kernelType == "ElasticBodySpline" )
+    else if( kernelType == "ElasticBodySpline" )
     {
       this->m_KernelTransform = EBKernelTransformType::New();
     }
-    else if ( kernelType == "ElasticBodyReciprocalSpline" )
+    else if( kernelType == "ElasticBodyReciprocalSpline" )
     {
       this->m_KernelTransform = EBRKernelTransformType::New();
     }
@@ -98,9 +98,9 @@ SplineKernelTransform<TElastix>
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 int
-SplineKernelTransform<TElastix>
+SplineKernelTransform< TElastix >
 ::BeforeAll( void )
 {
   /** Check if -fp is given */
@@ -109,26 +109,26 @@ SplineKernelTransform<TElastix>
    */
   // fp used to be ipp, added in elastix 4.5
   std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
-  std::string fp = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
+  std::string fp  = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
 
   // Backwards compatibility stuff:
-  if ( !ipp.empty() )
+  if( !ipp.empty() )
   {
-    xl::xout["warning"]
+    xl::xout[ "warning" ]
       << "WARNING: -ipp is deprecated, use -fp instead."
       << std::endl;
     fp = ipp;
   }
 
   /** Is the fixed landmark file specified? */
-  if ( ipp.empty() && fp.empty() )
+  if( ipp.empty() && fp.empty() )
   {
-    xl::xout["error"]
+    xl::xout[ "error" ]
       << "ERROR: -fp should be given for "
       << this->elxGetClassName()
       << " in order to define the fixed image (source) landmarks."
       << std::endl;
-      return 1;
+    return 1;
   }
   else
   {
@@ -141,7 +141,7 @@ SplineKernelTransform<TElastix>
   std::string mp = this->GetConfiguration()->GetCommandLineArgument( "-mp" );
 
   /** Is the moving landmark file specified? */
-  if ( mp.empty() )
+  if( mp.empty() )
   {
     elxout << "-mp       " << "unspecified, assumed equal to -fp" << std::endl;
   }
@@ -159,9 +159,9 @@ SplineKernelTransform<TElastix>
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SplineKernelTransform<TElastix>
+SplineKernelTransform< TElastix >
 ::BeforeRegistration( void )
 {
   /** Determine type of spline. */
@@ -169,12 +169,12 @@ SplineKernelTransform<TElastix>
   this->GetConfiguration()->ReadParameter(
     kernelType, "SplineKernelType", this->GetComponentLabel(), 0, -1 );
   bool knownType = this->SetKernelType( kernelType );
-  if ( !knownType )
+  if( !knownType )
   {
-    xl::xout["error"] << "ERROR: The kernel type " << kernelType
-      << " is not supported." << std::endl;
+    xl::xout[ "error" ] << "ERROR: The kernel type " << kernelType
+                        << " is not supported." << std::endl;
     itkExceptionMacro( << "ERROR: unable to configure "
-      << this->GetComponentLabel() );
+                       << this->GetComponentLabel() );
   }
 
   /** Interpolating or approximating spline. */
@@ -184,7 +184,7 @@ SplineKernelTransform<TElastix>
   this->m_KernelTransform->SetStiffness( splineRelaxationFactor );
 
   /** Set the Poisson ratio; default = 0.3 = steel. */
-  if ( kernelType == "ElasticBodySpline" || kernelType == "ElastixBodyReciprocalSpline" )
+  if( kernelType == "ElasticBodySpline" || kernelType == "ElastixBodyReciprocalSpline" )
   {
     double poissonRatio = 0.3;
     this->GetConfiguration()->ReadParameter(
@@ -205,14 +205,14 @@ SplineKernelTransform<TElastix>
   bool movingLandmarksGiven = this->DetermineTargetLandmarks();
 
   /** Set all parameters to identity if no moving landmarks were given. */
-  if ( !movingLandmarksGiven )
+  if( !movingLandmarksGiven )
   {
     this->m_KernelTransform->SetIdentity();
   }
 
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()
-    ->SetInitialTransformParameters( this->GetParameters() );
+  ->SetInitialTransformParameters( this->GetParameters() );
 
   /** \todo: builtin some multiresolution in this transform. */
 
@@ -223,20 +223,23 @@ SplineKernelTransform<TElastix>
  * ************************* DetermineSourceLandmarks *********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SplineKernelTransform<TElastix>
+SplineKernelTransform< TElastix >
 ::DetermineSourceLandmarks( void )
 {
   /** Load the fixed image landmarks. */
   elxout << "Loading fixed image landmarks for "
-    << this->GetComponentLabel()
-    << ":" << this->elxGetClassName() << "." << std::endl;
+         << this->GetComponentLabel()
+         << ":" << this->elxGetClassName() << "." << std::endl;
 
   // fp used to be ipp
   std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
-  std::string fp = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
-  if ( fp.empty() ) fp = ipp; // backwards compatibility, added in elastix 4.5
+  std::string fp  = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
+  if( fp.empty() )
+  {
+    fp = ipp;                 // backwards compatibility, added in elastix 4.5
+  }
   PointSetPointer landmarkPointSet = 0;
   this->ReadLandmarkFile( fp, landmarkPointSet, true );
 
@@ -247,8 +250,8 @@ SplineKernelTransform<TElastix>
   this->m_KernelTransform->SetSourceLandmarks( landmarkPointSet );
   timer->StopTimer();
   elxout << "  Setting the fixed image landmarks took: "
-    << timer->PrintElapsedTimeDHMS()
-    << std::endl;
+         << timer->PrintElapsedTimeDHMS()
+         << std::endl;
 
 } // end DetermineSourceLandmarks()
 
@@ -257,22 +260,22 @@ SplineKernelTransform<TElastix>
  * ************************* DetermineTargetLandmarks *********************
  */
 
-template <class TElastix>
+template< class TElastix >
 bool
-SplineKernelTransform<TElastix>
+SplineKernelTransform< TElastix >
 ::DetermineTargetLandmarks( void )
 {
   /** The moving landmark file name. */
   std::string mp = this->GetConfiguration()->GetCommandLineArgument( "-mp" );
-  if ( mp.empty() )
+  if( mp.empty() )
   {
     return false;
   }
 
   /** Load the moving image landmarks. */
   elxout << "Loading moving image landmarks for "
-    << this->GetComponentLabel()
-    << ":" << this->elxGetClassName() << "." << std::endl;
+         << this->GetComponentLabel()
+         << ":" << this->elxGetClassName() << "." << std::endl;
 
   PointSetPointer landmarkPointSet = 0;
   this->ReadLandmarkFile( mp, landmarkPointSet, false );
@@ -284,8 +287,8 @@ SplineKernelTransform<TElastix>
   this->m_KernelTransform->SetTargetLandmarks( landmarkPointSet );
   timer->StopTimer();
   elxout << "  Setting the moving image landmarks took: "
-    << timer->PrintElapsedTimeDHMS()
-    << std::endl;
+         << timer->PrintElapsedTimeDHMS()
+         << std::endl;
 
   return true;
 
@@ -296,16 +299,16 @@ SplineKernelTransform<TElastix>
  * ************************* ReadLandmarkFile *********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SplineKernelTransform<TElastix>
+SplineKernelTransform< TElastix >
 ::ReadLandmarkFile( const std::string & filename,
   PointSetPointer & landmarkPointSet,
   const bool & landmarksInFixedImage )
 {
   /** Typedef's. */
-  typedef typename FixedImageType::IndexType            IndexType;
-  typedef typename IndexType::IndexValueType            IndexValueType;
+  typedef typename FixedImageType::IndexType IndexType;
+  typedef typename IndexType::IndexValueType IndexValueType;
   typedef itk::TransformixInputPointFileReader<
     PointSetType >                                      LandmarkReaderType;
 
@@ -316,15 +319,15 @@ SplineKernelTransform<TElastix>
   {
     landmarkReader->Update();
   }
-  catch ( itk::ExceptionObject & err )
+  catch( itk::ExceptionObject & err )
   {
-    xl::xout["error"] << "  Error while opening landmark file." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout[ "error" ] << "  Error while opening landmark file." << std::endl;
+    xl::xout[ "error" ] << err << std::endl;
     itkExceptionMacro( << "ERROR: unable to configure " << this->GetComponentLabel() );
   }
 
   /** Some user-feedback. */
-  if ( landmarkReader->GetPointsAreIndices() )
+  if( landmarkReader->GetPointsAreIndices() )
   {
     elxout << "  Landmarks are specified as image indices." << std::endl;
   }
@@ -340,28 +343,28 @@ SplineKernelTransform<TElastix>
 
   /** Convert from index to point if necessary */
   landmarkPointSet->DisconnectPipeline();
-  if ( landmarkReader->GetPointsAreIndices() )
+  if( landmarkReader->GetPointsAreIndices() )
   {
     /** Get handles to the fixed and moving images. */
-    typename FixedImageType::Pointer fixedImage = this->GetElastix()->GetFixedImage();
+    typename FixedImageType::Pointer fixedImage   = this->GetElastix()->GetFixedImage();
     typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
 
     InputPointType landmarkPoint; landmarkPoint.Fill( 0.0f );
-    IndexType landmarkIndex;
-    for ( unsigned int j = 0; j < nrofpoints; ++j )
+    IndexType      landmarkIndex;
+    for( unsigned int j = 0; j < nrofpoints; ++j )
     {
       /** The read point from the inputPointSet is actually an index
        * Cast to the proper type.
        */
       landmarkPointSet->GetPoint( j, &landmarkPoint );
-      for ( unsigned int d = 0; d < SpaceDimension; ++d )
+      for( unsigned int d = 0; d < SpaceDimension; ++d )
       {
-        landmarkIndex[ d ] = static_cast<IndexValueType>(
-          itk::Math::Round<double>( landmarkPoint[ d ] ) );
+        landmarkIndex[ d ] = static_cast< IndexValueType >(
+          itk::Math::Round< double >( landmarkPoint[ d ] ) );
       }
 
       /** Compute the input point in physical coordinates and replace the point. */
-      if ( landmarksInFixedImage )
+      if( landmarksInFixedImage )
       {
         fixedImage->TransformIndexToPhysicalPoint(
           landmarkIndex, landmarkPoint );
@@ -376,11 +379,11 @@ SplineKernelTransform<TElastix>
   }
 
   /** Apply initial transform if necessary, for fixed image landmarks only. */
-  if ( landmarksInFixedImage && this->GetUseComposition()
+  if( landmarksInFixedImage && this->GetUseComposition()
     && this->Superclass1::GetInitialTransform() != 0 )
   {
     InputPointType inputPoint; inputPoint.Fill( 0.0f );
-    for ( unsigned int j = 0; j < nrofpoints; ++j )
+    for( unsigned int j = 0; j < nrofpoints; ++j )
     {
       landmarkPointSet->GetPoint( j, &inputPoint );
       inputPoint = this->Superclass1::GetInitialTransform()
@@ -396,23 +399,23 @@ SplineKernelTransform<TElastix>
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SplineKernelTransform<TElastix>
+SplineKernelTransform< TElastix >
 ::ReadFromFile( void )
 {
   /** Read kernel type. */
   std::string kernelType = "unknown";
-  bool skret = this->GetConfiguration()->ReadParameter(
+  bool        skret      = this->GetConfiguration()->ReadParameter(
     kernelType, "SplineKernelType", 0 );
-  if ( skret )
+  if( skret )
   {
     this->SetKernelType( kernelType );
   }
   else
   {
-    xl::xout["error"] << "ERROR: the SplineKernelType is not given in the "
-      << "transform parameter file." << std::endl;
+    xl::xout[ "error" ] << "ERROR: the SplineKernelType is not given in the "
+                        << "transform parameter file." << std::endl;
     itkExceptionMacro( << "ERROR: unable to configure transform." );
   }
 
@@ -434,20 +437,20 @@ SplineKernelTransform<TElastix>
     numberOfParameters, "NumberOfParameters", 0 );
 
   /** Read source landmarks. */
-  std::vector<CoordRepType> fixedImageLandmarks(
-    numberOfParameters, itk::NumericTraits<CoordRepType>::Zero );
+  std::vector< CoordRepType > fixedImageLandmarks(
+  numberOfParameters, itk::NumericTraits< CoordRepType >::Zero );
   bool retfil = this->GetConfiguration()->ReadParameter(
     fixedImageLandmarks, "FixedImageLandmarks", 0, numberOfParameters - 1, true );
-  if ( ! retfil )
+  if( !retfil )
   {
-    xl::xout["error"] << "ERROR: the FixedImageLandmarks are not given in "
-      << "the transform parameter file." << std::endl;
+    xl::xout[ "error" ] << "ERROR: the FixedImageLandmarks are not given in "
+                        << "the transform parameter file." << std::endl;
     itkExceptionMacro( << "ERROR: unable to configure transform." );
   }
 
   /** Convert to fixedParameters type and set in transform. */
   ParametersType fixedParams( numberOfParameters );
-  for ( unsigned int i = 0; i < numberOfParameters; ++i )
+  for( unsigned int i = 0; i < numberOfParameters; ++i )
   {
     fixedParams[ i ] = fixedImageLandmarks[ i ];
   }
@@ -468,40 +471,39 @@ SplineKernelTransform<TElastix>
  * Save the kernel type and the source landmarks
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SplineKernelTransform<TElastix>
+SplineKernelTransform< TElastix >
 ::WriteToFile( const ParametersType & param ) const
 {
   /** Call the WriteToFile from the TransformBase. */
   this->Superclass2::WriteToFile( param );
 
   /** Add some SplineKernelTransform specific lines. */
-  xl::xout["transpar"] << std::endl << "// SplineKernelTransform specific" << std::endl;
+  xl::xout[ "transpar" ] << std::endl << "// SplineKernelTransform specific" << std::endl;
 
   /** Write the SplineKernelType of this transform. */
-  xl::xout["transpar"] << "(SplineKernelType \""
-    << this->m_SplineKernelType << "\")" << std::endl;
+  xl::xout[ "transpar" ] << "(SplineKernelType \""
+                         << this->m_SplineKernelType << "\")" << std::endl;
 
   /** Write the relaxation and Poisson ratio parameters. */
-  xl::xout["transpar"] << "(SplinePoissonRatio "
-    << this->m_KernelTransform->GetPoissonRatio() << ")" << std::endl;
-  xl::xout["transpar"] << "(SplineRelaxationFactor "
-    << this->m_KernelTransform->GetStiffness() << ")" << std::endl;
+  xl::xout[ "transpar" ] << "(SplinePoissonRatio "
+                         << this->m_KernelTransform->GetPoissonRatio() << ")" << std::endl;
+  xl::xout[ "transpar" ] << "(SplineRelaxationFactor "
+                         << this->m_KernelTransform->GetStiffness() << ")" << std::endl;
 
   /** Write the fixed image landmarks. */
   const ParametersType & fixedParams = this->m_KernelTransform->GetFixedParameters();
-  xl::xout["transpar"] << "(FixedImageLandmarks ";
-  for ( unsigned int i = 0; i < fixedParams.GetSize() - 1; ++i )
+  xl::xout[ "transpar" ] << "(FixedImageLandmarks ";
+  for( unsigned int i = 0; i < fixedParams.GetSize() - 1; ++i )
   {
-    xl::xout["transpar"] << fixedParams[i] << " ";
+    xl::xout[ "transpar" ] << fixedParams[ i ] << " ";
   }
-  xl::xout["transpar"] << fixedParams[ fixedParams.GetSize() - 1 ] << ")" << std::endl;
+  xl::xout[ "transpar" ] << fixedParams[ fixedParams.GetSize() - 1 ] << ")" << std::endl;
 
 } // end WriteToFile()
 
 
 } // end namespace elastix
-
 
 #endif // end #ifndef __elxSplineKernelTransform_HXX_

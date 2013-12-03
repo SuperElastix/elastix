@@ -19,13 +19,12 @@
 namespace itk
 {
 
-
 /**
  * ****************** Constructor *******************************
  */
 
-template<class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>
+template< class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
+BSplineInterpolationWeightFunction2< TCoordRep, VSpaceDimension, VSplineOrder >
 ::BSplineInterpolationWeightFunction2()
 {
   /** Initialize the interpolation kernel. */
@@ -38,18 +37,18 @@ BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>
  * ******************* Compute1DWeights *******************
  */
 
-template<class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template< class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
 void
-BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>
+BSplineInterpolationWeightFunction2< TCoordRep, VSpaceDimension, VSplineOrder >
 ::Compute1DWeights(
   const ContinuousIndexType & index,
   const IndexType & startIndex,
   OneDWeightsType & weights1D ) const
 {
   /** Compute the 1D weights. */
-  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    double x = index[ i ] - static_cast<double>( startIndex[ i ] );
+    double x = index[ i ] - static_cast< double >( startIndex[ i ] );
 
 //     for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
 //     {

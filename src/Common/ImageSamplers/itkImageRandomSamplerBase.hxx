@@ -55,9 +55,9 @@ ImageRandomSamplerBase< TInputImage >
   this->m_RandomNumberList.reserve( this->m_NumberOfSamples );
 
   /** Fill the list with random numbers. */
-  const double numPixels = static_cast<double>( this->GetCroppedInputImageRegion().GetNumberOfPixels() );
+  const double numPixels = static_cast< double >( this->GetCroppedInputImageRegion().GetNumberOfPixels() );
   localGenerator->GetVariateWithOpenRange( numPixels - 0.5 ); // dummy jump
-  for ( unsigned long i = 0; i < this->m_NumberOfSamples; i++ )
+  for( unsigned long i = 0; i < this->m_NumberOfSamples; i++ )
   {
     const double randomPosition
       = localGenerator->GetVariateWithOpenRange( numPixels - 0.5 );
@@ -78,10 +78,10 @@ ImageRandomSamplerBase< TInputImage >
 template< class TInputImage >
 void
 ImageRandomSamplerBase< TInputImage >
-::PrintSelf( std::ostream& os, Indent indent ) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
-  
+
   os << indent << "NumberOfSamples: " << this->m_NumberOfSamples << std::endl;
 
 } // end PrintSelf()

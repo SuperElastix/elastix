@@ -41,23 +41,23 @@ namespace itk
  * \ingroup IntensityImageFilters
  */
 
-template <class TInputImage, class TGrayValueImage >
-class VectorMeanDiffusionImageFilter
-  : public ImageToImageFilter< TInputImage, TInputImage >
+template< class TInputImage, class TGrayValueImage >
+class VectorMeanDiffusionImageFilter :
+  public ImageToImageFilter< TInputImage, TInputImage >
 {
 public:
 
   /** Convenient typedefs for simplifying declarations. */
-  typedef TInputImage         InputImageType;
-  typedef TGrayValueImage     GrayValueImageType;
-  typedef typename GrayValueImageType::Pointer    GrayValueImagePointer;
+  typedef TInputImage                          InputImageType;
+  typedef TGrayValueImage                      GrayValueImageType;
+  typedef typename GrayValueImageType::Pointer GrayValueImagePointer;
 
   /** Standard class typedefs. */
-  typedef VectorMeanDiffusionImageFilter      Self;
+  typedef VectorMeanDiffusionImageFilter Self;
   typedef ImageToImageFilter<
     InputImageType, InputImageType >          Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Extract dimension from input image. */
   itkStaticConstMacro( InputImageDimension, unsigned int,
@@ -70,23 +70,23 @@ public:
   itkTypeMacro( VectorMeanDiffusionImageFilter, ImageToImageFilter );
 
   /** Image typedef support. */
-  typedef typename InputImageType::PixelType        InputPixelType;
-  typedef typename InputPixelType::ValueType        ValueType;
+  typedef typename InputImageType::PixelType InputPixelType;
+  typedef typename InputPixelType::ValueType ValueType;
   //typedef typename NumericTraits<InputPixelType>::RealType    InputRealType;
-  typedef typename InputImageType::RegionType       InputImageRegionType;
-  typedef typename InputImageType::SizeType         InputSizeType;
-  typedef typename InputImageType::IndexType        IndexType;
+  typedef typename InputImageType::RegionType InputImageRegionType;
+  typedef typename InputImageType::SizeType   InputSizeType;
+  typedef typename InputImageType::IndexType  IndexType;
   typedef Vector< double,
     itkGetStaticConstMacro( InputImageDimension ) > VectorRealType;
   typedef Image< double,
     itkGetStaticConstMacro( InputImageDimension ) > DoubleImageType;
-  typedef typename DoubleImageType::Pointer         DoubleImagePointer;
-  typedef typename GrayValueImageType::PixelType    GrayValuePixelType;
+  typedef typename DoubleImageType::Pointer      DoubleImagePointer;
+  typedef typename GrayValueImageType::PixelType GrayValuePixelType;
 
   /** Typedef for the rescale intensity filter. */
   typedef RescaleIntensityImageFilter<
     GrayValueImageType, DoubleImageType >           RescaleImageFilterType;
-  typedef typename RescaleImageFilterType::Pointer  RescaleImageFilterPointer;
+  typedef typename RescaleImageFilterType::Pointer RescaleImageFilterPointer;
 
   /** Set the radius of the neighborhood used to compute the mean. */
   itkSetMacro( Radius, InputSizeType );
@@ -109,17 +109,19 @@ public:
 
   /** Set- and GetObjectMacro's for the GrayValueImage. */
   void SetGrayValueImage( GrayValueImageType * _arg );
+
   typename GrayValueImageType::Pointer GetGrayValueImage( void )
   {
     return this->m_GrayValueImage.GetPointer();
   }
+
 
 protected:
 
   VectorMeanDiffusionImageFilter();
   virtual ~VectorMeanDiffusionImageFilter() {}
 
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** MeanImageFilter can be implemented as a multithreaded filter.
    * Therefore, this implementation provides a ThreadedGenerateData()
@@ -136,18 +138,18 @@ protected:
 
 private:
 
-  VectorMeanDiffusionImageFilter( const Self& );  // purposely not implemented
-  void operator=( const Self& );                  // purposely not implemented
+  VectorMeanDiffusionImageFilter( const Self & );  // purposely not implemented
+  void operator=( const Self & );                  // purposely not implemented
 
   /** Declare member variables. */
-  InputSizeType   m_Radius;
-  unsigned int    m_NumberOfIterations;
+  InputSizeType m_Radius;
+  unsigned int  m_NumberOfIterations;
 
   /** Declare member images. */
-  GrayValueImagePointer    m_GrayValueImage;
-  DoubleImagePointer       m_Cx;
+  GrayValueImagePointer m_GrayValueImage;
+  DoubleImagePointer    m_Cx;
 
-  RescaleImageFilterPointer  m_RescaleFilter;
+  RescaleImageFilterPointer m_RescaleFilter;
 
   /** For calculating a feature image from the input m_GrayValueImage. */
   void FilterGrayValueImage( void );
@@ -161,4 +163,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkVectorMeanDiffusionImageFilter_H__
-

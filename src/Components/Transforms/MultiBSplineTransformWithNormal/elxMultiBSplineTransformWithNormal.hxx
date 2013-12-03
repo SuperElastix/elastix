@@ -26,24 +26,22 @@
 namespace elastix
 {
 
-
 /**
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
-MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+MultiBSplineTransformWithNormal< TElastix >
 ::MultiBSplineTransformWithNormal()
-{
-} // end Constructor()
-
+{} // end Constructor()
 
 /**
  * ************ InitializeBSplineTransform ***************
  */
 
-template <class TElastix>
-unsigned int MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+unsigned int
+MultiBSplineTransformWithNormal< TElastix >
 ::InitializeBSplineTransform( void )
 {
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
@@ -59,7 +57,7 @@ unsigned int MultiBSplineTransformWithNormal<TElastix>
   {
     this->m_MultiBSplineTransformWithNormal = MultiBSplineTransformWithNormalQuadraticType::New();
   }
-  else */if ( this->m_SplineOrder == 3)
+  else */if( this->m_SplineOrder == 3 )
   {
     this->m_MultiBSplineTransformWithNormal = MultiBSplineTransformWithNormalCubicType::New();
   }
@@ -81,8 +79,9 @@ unsigned int MultiBSplineTransformWithNormal<TElastix>
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
-int MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+int
+MultiBSplineTransformWithNormal< TElastix >
 ::BeforeAll( void )
 {
   /** Read spline order and periodicity setting from configuration file. */
@@ -91,17 +90,17 @@ int MultiBSplineTransformWithNormal<TElastix>
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
 
   this->m_LabelsPath = this->m_Configuration->GetCommandLineArgument( "-labels" );
-  if ( this->m_LabelsPath != "" )
+  if( this->m_LabelsPath != "" )
   {
-    typename itk::ImageFileReader<ImageLabelType>::Pointer reader
-      = itk::ImageFileReader<ImageLabelType>::New();
+    typename itk::ImageFileReader< ImageLabelType >::Pointer reader
+      = itk::ImageFileReader< ImageLabelType >::New();
     reader->SetFileName( this->m_LabelsPath );
     reader->Update();
     this->m_Labels = reader->GetOutput();
   }
   else
   {
-    xl::xout["error"]
+    xl::xout[ "error" ]
       << "ERROR: The MultiBSplineTransformWithNormal need a -labels command line option"
       << " that indicates where to find the sliding objects segmentation."
       << std::endl;
@@ -117,8 +116,9 @@ int MultiBSplineTransformWithNormal<TElastix>
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
-void MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+void
+MultiBSplineTransformWithNormal< TElastix >
 ::BeforeRegistration( void )
 {
   /** Set initial transform parameters to a 1x1x1 grid, with deformation (0,0,0).
@@ -132,11 +132,11 @@ void MultiBSplineTransformWithNormal<TElastix>
   /** Task 1 - Set the Grid. */
 
   /** Declarations. */
-  RegionType gridregion;
-  SizeType gridsize;
-  IndexType gridindex;
+  RegionType  gridregion;
+  SizeType    gridsize;
+  IndexType   gridindex;
   SpacingType gridspacing;
-  OriginType gridorigin;
+  OriginType  gridorigin;
 
   /** Fill everything with default values. */
   gridsize.Fill( 1 );
@@ -147,7 +147,7 @@ void MultiBSplineTransformWithNormal<TElastix>
   /** Set gridsize for large dimension to 4 to prevent errors when checking
      * on support region size.
      */
-  gridsize.SetElement( gridsize.GetSizeDimension()-1, 4 );
+  gridsize.SetElement( gridsize.GetSizeDimension() - 1, 4 );
 
   /** Set it all. */
   gridregion.SetIndex( gridindex );
@@ -162,7 +162,7 @@ void MultiBSplineTransformWithNormal<TElastix>
 
   /** Put parameters in the registration. */
   this->m_Registration->GetAsITKBaseType()
-    ->SetInitialTransformParameters( dummyInitialParameters );
+  ->SetInitialTransformParameters( dummyInitialParameters );
 
   /** Precompute the B-spline grid regions. */
   this->PreComputeGridInformation();
@@ -174,16 +174,17 @@ void MultiBSplineTransformWithNormal<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
-void MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+void
+MultiBSplineTransformWithNormal< TElastix >
 ::BeforeEachResolution( void )
 {
   /** What is the current resolution level? */
-  unsigned int level =
-    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+  unsigned int level
+    = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Define the grid. */
-  if ( level == 0 )
+  if( level == 0 )
   {
     this->InitializeTransform();
   }
@@ -196,45 +197,45 @@ void MultiBSplineTransformWithNormal<TElastix>
 } // end BeforeEachResolution()
 
 
-
 /**
  * ******************** PreComputeGridInformation ***********************
  */
 
-template <class TElastix>
-void MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+void
+MultiBSplineTransformWithNormal< TElastix >
 ::PreComputeGridInformation( void )
 {
   /** Get the total number of resolution levels. */
-  unsigned int nrOfResolutions =
-    this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
+  unsigned int nrOfResolutions
+    = this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
 
   /** Set up grid schedule computer with image info. */
-  if (this->GetElastix()->GetFixedMask())
+  if( this->GetElastix()->GetFixedMask() )
   {
     this->m_GridScheduleComputer->SetImageOrigin(
-        this->GetElastix()->GetFixedMask()->GetOrigin() );
+      this->GetElastix()->GetFixedMask()->GetOrigin() );
     this->m_GridScheduleComputer->SetImageSpacing(
-        this->GetElastix()->GetFixedMask()->GetSpacing() );
+      this->GetElastix()->GetFixedMask()->GetSpacing() );
     this->m_GridScheduleComputer->SetImageDirection(
-        this->GetElastix()->GetFixedMask()->GetDirection() );
+      this->GetElastix()->GetFixedMask()->GetDirection() );
     this->m_GridScheduleComputer->SetImageRegion(
-        this->GetElastix()->GetFixedMask()->GetLargestPossibleRegion() );
+      this->GetElastix()->GetFixedMask()->GetLargestPossibleRegion() );
   }
   else
   {
     this->m_GridScheduleComputer->SetImageOrigin(
-        this->GetElastix()->GetFixedImage()->GetOrigin() );
+      this->GetElastix()->GetFixedImage()->GetOrigin() );
     this->m_GridScheduleComputer->SetImageSpacing(
-        this->GetElastix()->GetFixedImage()->GetSpacing() );
+      this->GetElastix()->GetFixedImage()->GetSpacing() );
     this->m_GridScheduleComputer->SetImageDirection(
-        this->GetElastix()->GetFixedImage()->GetDirection() );
+      this->GetElastix()->GetFixedImage()->GetDirection() );
     this->m_GridScheduleComputer->SetImageRegion(
-        this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
+      this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
   }
 
   /** Take the initial transform only into account, if composition is used. */
-  if ( this->GetUseComposition() )
+  if( this->GetUseComposition() )
   {
     this->m_GridScheduleComputer->SetInitialTransform( this->Superclass1::GetInitialTransform() );
   }
@@ -254,27 +255,27 @@ void MultiBSplineTransformWithNormal<TElastix>
    */
 
   /** Determine which method is used. */
-  bool method1 = false;
-  unsigned int count1 = this->m_Configuration
+  bool         method1 = false;
+  unsigned int count1  = this->m_Configuration
     ->CountNumberOfParameterEntries( "FinalGridSpacingInVoxels" );
-  if ( count1 > 0 )
+  if( count1 > 0 )
   {
     method1 = true;
   }
 
-  bool method2 = false;
-  unsigned int count2 = this->m_Configuration
+  bool         method2 = false;
+  unsigned int count2  = this->m_Configuration
     ->CountNumberOfParameterEntries( "FinalGridSpacingInPhysicalUnits" );
-  if ( count2 > 0 )
+  if( count2 > 0 )
   {
     method2 = true;
   }
 
   /** Throw an exception if both methods are used. */
-  if ( count1 > 0 && count2 > 0 )
+  if( count1 > 0 && count2 > 0 )
   {
     itkExceptionMacro( << "ERROR: You can not specify both \"FinalGridSpacingInVoxels\""
-      " and \"FinalGridSpacingInPhysicalUnits\" in the parameter file." );
+        " and \"FinalGridSpacingInPhysicalUnits\" in the parameter file." );
   }
 
   /** Declare variables and set defaults. */
@@ -284,32 +285,32 @@ void MultiBSplineTransformWithNormal<TElastix>
   finalGridSpacingInPhysicalUnits.Fill( 8.0 );
 
   /** Method 1: Read the FinalGridSpacingInVoxels. */
-  if ( method1 )
+  if( method1 )
   {
-    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       this->m_Configuration->ReadParameter(
         finalGridSpacingInVoxels[ dim ], "FinalGridSpacingInVoxels",
-        this->GetComponentLabel(), dim , 0 );
+        this->GetComponentLabel(), dim, 0 );
     }
 
     /** Compute the grid spacing in physical units. */
-    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      finalGridSpacingInPhysicalUnits[ dim ] =
-        finalGridSpacingInVoxels[ dim ] *
-        this->GetElastix()->GetFixedImage()->GetSpacing()[ dim ];
+      finalGridSpacingInPhysicalUnits[ dim ]
+        = finalGridSpacingInVoxels[ dim ]
+        * this->GetElastix()->GetFixedImage()->GetSpacing()[ dim ];
     }
   }
 
   /** Method 2: Read the FinalGridSpacingInPhysicalUnits. */
-  if ( method2 )
+  if( method2 )
   {
-    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       this->m_Configuration->ReadParameter(
         finalGridSpacingInPhysicalUnits[ dim ], "FinalGridSpacingInPhysicalUnits",
-        this->GetComponentLabel(), dim , 0 );
+        this->GetComponentLabel(), dim, 0 );
     }
   }
 
@@ -323,15 +324,15 @@ void MultiBSplineTransformWithNormal<TElastix>
   count2 = this->m_Configuration
     ->CountNumberOfParameterEntries( "GridSpacingSchedule" );
   unsigned int entry_nr = 0;
-  if ( count2 == 0 )
+  if( count2 == 0 )
   {
     // keep the default schedule
   }
-  else if ( count2 == nrOfResolutions )
+  else if( count2 == nrOfResolutions )
   {
-    for ( unsigned int res = 0; res < nrOfResolutions; ++res )
+    for( unsigned int res = 0; res < nrOfResolutions; ++res )
     {
-      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+      for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         this->m_Configuration->ReadParameter( gridSchedule[ res ][ dim ],
           "GridSpacingSchedule", entry_nr, false );
@@ -339,11 +340,11 @@ void MultiBSplineTransformWithNormal<TElastix>
       ++entry_nr;
     }
   }
-  else if ( count2 == nrOfResolutions * SpaceDimension )
+  else if( count2 == nrOfResolutions * SpaceDimension )
   {
-    for ( unsigned int res = 0; res < nrOfResolutions; ++res )
+    for( unsigned int res = 0; res < nrOfResolutions; ++res )
     {
-      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+      for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         this->m_Configuration->ReadParameter( gridSchedule[ res ][ dim ],
           "GridSpacingSchedule", entry_nr, false );
@@ -353,7 +354,7 @@ void MultiBSplineTransformWithNormal<TElastix>
   }
   else
   {
-    xl::xout["error"]
+    xl::xout[ "error" ]
       << "ERROR: Invalid GridSpacingSchedule! The number of entries"
       << " behind the GridSpacingSchedule option should equal the"
       << " numberOfResolutions, or the numberOfResolutions * ImageDimension."
@@ -379,14 +380,15 @@ void MultiBSplineTransformWithNormal<TElastix>
  * the parameters to 0.
  */
 
-template <class TElastix>
-void MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+void
+MultiBSplineTransformWithNormal< TElastix >
 ::InitializeTransform( void )
 {
   /** Compute the B-spline grid region, origin, and spacing. */
-  RegionType gridRegion;
-  OriginType gridOrigin;
-  SpacingType gridSpacing;
+  RegionType    gridRegion;
+  OriginType    gridOrigin;
+  SpacingType   gridSpacing;
   DirectionType gridDirection;
   this->m_GridScheduleComputer->GetBSplineGrid( 0,
     gridRegion, gridSpacing, gridOrigin, gridDirection );
@@ -403,7 +405,7 @@ void MultiBSplineTransformWithNormal<TElastix>
   ParametersType initialParameters( this->GetNumberOfParameters() );
   initialParameters.Fill( 0.0 );
   this->m_Registration->GetAsITKBaseType()
-    ->SetInitialTransformParametersOfNextLevel( initialParameters );
+  ->SetInitialTransformParametersOfNextLevel( initialParameters );
 
 } // end InitializeTransform()
 
@@ -414,18 +416,19 @@ void MultiBSplineTransformWithNormal<TElastix>
  * Upsample the grid of control points.
  */
 
-template <class TElastix>
-void MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+void
+MultiBSplineTransformWithNormal< TElastix >
 ::IncreaseScale( void )
 {
   /** What is the current resolution level? */
-  unsigned int level =
-    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+  unsigned int level
+    = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** The current grid. */
-  OriginType  currentGridOrigin      = this->m_MultiBSplineTransformWithNormal->GetGridOrigin();
-  SpacingType currentGridSpacing     = this->m_MultiBSplineTransformWithNormal->GetGridSpacing();
-  RegionType  currentGridRegion      = this->m_MultiBSplineTransformWithNormal->GetGridRegion();
+  OriginType    currentGridOrigin    = this->m_MultiBSplineTransformWithNormal->GetGridOrigin();
+  SpacingType   currentGridSpacing   = this->m_MultiBSplineTransformWithNormal->GetGridSpacing();
+  RegionType    currentGridRegion    = this->m_MultiBSplineTransformWithNormal->GetGridRegion();
   DirectionType currentGridDirection = this->m_MultiBSplineTransformWithNormal->GetGridDirection();
 
   /** The new required grid. */
@@ -437,8 +440,8 @@ void MultiBSplineTransformWithNormal<TElastix>
     requiredGridRegion, requiredGridSpacing, requiredGridOrigin, requiredGridDirection );
 
   /** Get the latest transform parameters. */
-  ParametersType latestParameters =
-    this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
+  ParametersType latestParameters
+    = this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
 
   /** Setup the GridUpsampler. */
   /* FIXME : Need MultiGrid Upsampler or loop on grids */
@@ -451,17 +454,17 @@ void MultiBSplineTransformWithNormal<TElastix>
   this->m_GridUpsampler->SetRequiredGridRegion( requiredGridRegion );
   this->m_GridUpsampler->SetRequiredGridDirection( requiredGridDirection );
 
-  typedef itk::Vector<double, itkGetStaticConstMacro(SpaceDimension)>       VectorType;
-  typedef itk::Image<VectorType, itkGetStaticConstMacro(SpaceDimension)>    ImageVectorType;
-  typedef typename ImageVectorType::Pointer                                 ImageVectorPointer;
-  typedef typename ImageVectorType::PixelContainer                          VectorContainer;
+  typedef itk::Vector< double, itkGetStaticConstMacro( SpaceDimension ) >    VectorType;
+  typedef itk::Image< VectorType, itkGetStaticConstMacro( SpaceDimension ) > ImageVectorType;
+  typedef typename ImageVectorType::Pointer                                  ImageVectorPointer;
+  typedef typename ImageVectorType::PixelContainer                           VectorContainer;
 
-  typedef itk::Vector<VectorType, itkGetStaticConstMacro(SpaceDimension)>   BaseType;
-  typedef itk::Image<BaseType, itkGetStaticConstMacro(SpaceDimension)>      ImageBaseType;
-  typedef typename ImageBaseType::Pointer                                   ImageBasePointer;
-  typedef typename ImageBaseType::PixelContainer                            BaseContainer;
+  typedef itk::Vector< VectorType, itkGetStaticConstMacro( SpaceDimension ) > BaseType;
+  typedef itk::Image< BaseType, itkGetStaticConstMacro( SpaceDimension ) >    ImageBaseType;
+  typedef typename ImageBaseType::Pointer                                     ImageBasePointer;
+  typedef typename ImageBaseType::PixelContainer                              BaseContainer;
 
-  ImageBasePointer Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
+  ImageBasePointer      Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
   const BaseContainer & bases = *Bases->GetPixelContainer();
 
   unsigned ParametersPerDimension
@@ -469,12 +472,12 @@ void MultiBSplineTransformWithNormal<TElastix>
 
   ParametersType upsampledNormalParameters, tmpParameters;
   tmpParameters.SetSize( ParametersPerDimension * SpaceDimension );
-  for ( unsigned int i = 0; i < ParametersPerDimension; ++i )
+  for( unsigned int i = 0; i < ParametersPerDimension; ++i )
   {
-    VectorType tmp = latestParameters.GetElement( i ) * bases[i][0];
-    for ( unsigned int d = 0; d < SpaceDimension; ++d )
+    VectorType tmp = latestParameters.GetElement( i ) * bases[ i ][ 0 ];
+    for( unsigned int d = 0; d < SpaceDimension; ++d )
     {
-      tmpParameters.SetElement( i + d * ParametersPerDimension, tmp[d] );
+      tmpParameters.SetElement( i + d * ParametersPerDimension, tmp[ d ] );
     }
   }
   this->m_GridUpsampler->UpsampleParameters( tmpParameters, upsampledNormalParameters );
@@ -485,14 +488,14 @@ void MultiBSplineTransformWithNormal<TElastix>
   this->m_MultiBSplineTransformWithNormal->SetGridDirection( requiredGridDirection );
   this->m_MultiBSplineTransformWithNormal->UpdateLocalBases();
 
-  ImageBasePointer new_Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
+  ImageBasePointer      new_Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
   const BaseContainer & new_bases = *new_Bases->GetPixelContainer();
 
-  typedef itk::Image<unsigned char, itkGetStaticConstMacro(SpaceDimension)> ImageLabelType;
+  typedef itk::Image< unsigned char, itkGetStaticConstMacro( SpaceDimension ) > ImageLabelType;
   typename ImageLabelType::Pointer labels1 = this->m_MultiBSplineTransformWithNormal->GetLabels();
-  typename itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::Pointer filter
-    = itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::New();
-  filter->SetInterpolator( itk::NearestNeighborInterpolateImageFunction<ImageLabelType, double>::New() );
+  typename itk::ResampleImageFilter< ImageLabelType, ImageLabelType >::Pointer filter
+    = itk::ResampleImageFilter< ImageLabelType, ImageLabelType >::New();
+  filter->SetInterpolator( itk::NearestNeighborInterpolateImageFunction< ImageLabelType, double >::New() );
   filter->SetInput( labels1 );
   filter->SetOutputParametersFromImage( new_Bases );
   filter->Update();
@@ -503,73 +506,75 @@ void MultiBSplineTransformWithNormal<TElastix>
   unsigned new_ParametersPerDimension
     = this->m_MultiBSplineTransformWithNormal->GetNumberOfParametersPerDimension();
 
-  unsigned char NbLabels = this->m_MultiBSplineTransformWithNormal->GetNbLabels();
+  unsigned char  NbLabels = this->m_MultiBSplineTransformWithNormal->GetNbLabels();
   ParametersType upsampledParameters;
-  upsampledParameters.SetSize( (1 + (SpaceDimension - 1) * NbLabels) * new_ParametersPerDimension );
+  upsampledParameters.SetSize( ( 1 + ( SpaceDimension - 1 ) * NbLabels ) * new_ParametersPerDimension );
   upsampledParameters.Fill( 0.0 );
 
-  for ( unsigned int l = 1; l <= NbLabels; ++l )
+  for( unsigned int l = 1; l <= NbLabels; ++l )
   {
     ParametersType upsampledLabelParameters;
-    for ( unsigned int i = 0; i < ParametersPerDimension; ++i )
+    for( unsigned int i = 0; i < ParametersPerDimension; ++i )
     {
       VectorType tmp;
-      for ( unsigned int d = 0; d < SpaceDimension; ++d )
+      for( unsigned int d = 0; d < SpaceDimension; ++d )
       {
-        tmp[d] = 0;
+        tmp[ d ] = 0;
       }
 
-      for ( unsigned int d = 1; d < SpaceDimension; ++d )
+      for( unsigned int d = 1; d < SpaceDimension; ++d )
       {
-        tmp += bases[i][d] * latestParameters.GetElement(
-          i + ( (SpaceDimension - 1) * (l - 1) + d) * ParametersPerDimension );
+        tmp += bases[ i ][ d ] * latestParameters.GetElement(
+          i + ( ( SpaceDimension - 1 ) * ( l - 1 ) + d ) * ParametersPerDimension );
       }
 
-      for ( unsigned int d = 0; d < SpaceDimension; ++d )
+      for( unsigned int d = 0; d < SpaceDimension; ++d )
       {
-        tmpParameters.SetElement( i + d * ParametersPerDimension, tmp[d] );
+        tmpParameters.SetElement( i + d * ParametersPerDimension, tmp[ d ] );
       }
     }
     this->m_GridUpsampler->UpsampleParameters( tmpParameters, upsampledLabelParameters );
 
     // Redecompose N / U / V
-    for ( unsigned int i = 0; i < new_ParametersPerDimension; ++i )
+    for( unsigned int i = 0; i < new_ParametersPerDimension; ++i )
     {
       VectorType tmp;
-      for ( unsigned int d = 0; d < SpaceDimension; ++d )
+      for( unsigned int d = 0; d < SpaceDimension; ++d )
       {
-        tmp[d] = upsampledLabelParameters.GetElement( i + d * new_ParametersPerDimension );
+        tmp[ d ] = upsampledLabelParameters.GetElement( i + d * new_ParametersPerDimension );
       }
 
-      if ( static_cast<unsigned int>( labels[i] + 1 ) == l )
+      if( static_cast< unsigned int >( labels[ i ] + 1 ) == l )
       {
-        for ( unsigned int d = 0; d < SpaceDimension; ++d )
+        for( unsigned int d = 0; d < SpaceDimension; ++d )
         {
-          tmp[d] += upsampledNormalParameters.GetElement( i + d * new_ParametersPerDimension );
+          tmp[ d ] += upsampledNormalParameters.GetElement( i + d * new_ParametersPerDimension );
         }
       }
 
-      itk::Matrix<double, SpaceDimension, SpaceDimension> P;
-      for ( unsigned int a = 0; a < SpaceDimension; ++a )
+      itk::Matrix< double, SpaceDimension, SpaceDimension > P;
+      for( unsigned int a = 0; a < SpaceDimension; ++a )
       {
-        for ( unsigned int b = 0; b < SpaceDimension; ++b )
+        for( unsigned int b = 0; b < SpaceDimension; ++b )
         {
-          P[a][b] = new_bases[i][a][b];
+          P[ a ][ b ] = new_bases[ i ][ a ][ b ];
         }
       }
       tmp = P * tmp;
-      if ( static_cast<unsigned int>( labels[ i ] + 1 ) == l )
+      if( static_cast< unsigned int >( labels[ i ] + 1 ) == l )
       {
-        upsampledParameters.SetElement( i, tmp[0] );
+        upsampledParameters.SetElement( i, tmp[ 0 ] );
       }
-      for (unsigned int k = 0; k < (SpaceDimension - 1); k++)
-      upsampledParameters.SetElement( i + ((SpaceDimension - 1) * (l - 1) + 1 + k) * new_ParametersPerDimension, tmp[k + 1] );
+      for( unsigned int k = 0; k < ( SpaceDimension - 1 ); k++ )
+      {
+        upsampledParameters.SetElement( i + ( ( SpaceDimension - 1 ) * ( l - 1 ) + 1 + k ) * new_ParametersPerDimension, tmp[ k + 1 ] );
+      }
     }
   }
 
   /** Set the initial parameters for the next level. */
   this->m_Registration->GetAsITKBaseType()
-    ->SetInitialTransformParametersOfNextLevel( upsampledParameters );
+  ->SetInitialTransformParametersOfNextLevel( upsampledParameters );
 
   /** Set the parameters in the BsplineTransform. */
   this->m_MultiBSplineTransformWithNormal->SetParameters(
@@ -583,8 +588,9 @@ void MultiBSplineTransformWithNormal<TElastix>
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
-void MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+void
+MultiBSplineTransformWithNormal< TElastix >
 ::ReadFromFile( void )
 {
   /** Read spline order and periodicity settings and initialize BSplineTransform. */
@@ -596,11 +602,11 @@ void MultiBSplineTransformWithNormal<TElastix>
   /** Read and Set the Grid: this is a BSplineTransform specific task. */
 
   /** Declarations. */
-  RegionType  gridregion;
-  SizeType    gridsize;
-  IndexType   gridindex;
-  SpacingType gridspacing;
-  OriginType  gridorigin;
+  RegionType    gridregion;
+  SizeType      gridsize;
+  IndexType     gridindex;
+  SpacingType   gridspacing;
+  OriginType    gridorigin;
   DirectionType griddirection;
 
   /** Fill everything with default values. */
@@ -611,15 +617,15 @@ void MultiBSplineTransformWithNormal<TElastix>
   griddirection.SetIdentity();
 
   /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     this->m_Configuration->ReadParameter( gridsize[ i ], "GridSize", i );
     this->m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
     this->m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
     this->m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
-    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    for( unsigned int j = 0; j < SpaceDimension; j++ )
     {
-      this->m_Configuration->ReadParameter( griddirection( j, i),
+      this->m_Configuration->ReadParameter( griddirection( j, i ),
         "GridDirection", i * SpaceDimension + j );
     }
   }
@@ -635,10 +641,10 @@ void MultiBSplineTransformWithNormal<TElastix>
   /** Read the labels map */
   this->GetConfiguration()->ReadParameter( this->m_LabelsPath,
     "MultiBSplineTransformWithNormalLabels", this->GetComponentLabel(), 0, 0 );
-  if ( this->m_LabelsPath != "" )
+  if( this->m_LabelsPath != "" )
   {
-    typename itk::ImageFileReader<ImageLabelType>::Pointer reader
-      = itk::ImageFileReader<ImageLabelType>::New();
+    typename itk::ImageFileReader< ImageLabelType >::Pointer reader
+      = itk::ImageFileReader< ImageLabelType >::New();
     reader->SetFileName( this->m_LabelsPath );
     reader->Update();
     this->m_Labels = reader->GetOutput();
@@ -663,84 +669,84 @@ void MultiBSplineTransformWithNormal<TElastix>
  * also as a deformation field.
  */
 
-template <class TElastix>
-void MultiBSplineTransformWithNormal<TElastix>
+template< class TElastix >
+void
+MultiBSplineTransformWithNormal< TElastix >
 ::WriteToFile( const ParametersType & param ) const
 {
   /** Call the WriteToFile from the TransformBase. */
   this->Superclass2::WriteToFile( param );
 
   /** Add some BSplineTransform specific lines. */
-  xout["transpar"] << std::endl << "// MultiBSplineTransformWithNormal specific" << std::endl;
+  xout[ "transpar" ] << std::endl << "// MultiBSplineTransformWithNormal specific" << std::endl;
 
   /** Get the GridSize, GridIndex, GridSpacing,
    * GridOrigin, and GridDirection of this transform. */
-  SizeType size = this->m_MultiBSplineTransformWithNormal->GetGridRegion().GetSize();
-  IndexType index = this->m_MultiBSplineTransformWithNormal->GetGridRegion().GetIndex();
-  SpacingType spacing = this->m_MultiBSplineTransformWithNormal->GetGridSpacing();
-  OriginType origin = this->m_MultiBSplineTransformWithNormal->GetGridOrigin();
+  SizeType      size      = this->m_MultiBSplineTransformWithNormal->GetGridRegion().GetSize();
+  IndexType     index     = this->m_MultiBSplineTransformWithNormal->GetGridRegion().GetIndex();
+  SpacingType   spacing   = this->m_MultiBSplineTransformWithNormal->GetGridSpacing();
+  OriginType    origin    = this->m_MultiBSplineTransformWithNormal->GetGridOrigin();
   DirectionType direction = this->m_MultiBSplineTransformWithNormal->GetGridDirection();
 
   /** Write the GridSize of this transform. */
-  xout["transpar"] << "(GridSize ";
-  for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+  xout[ "transpar" ] << "(GridSize ";
+  for( unsigned int i = 0; i < SpaceDimension - 1; i++ )
   {
-    xout["transpar"] << size[ i ] << " ";
+    xout[ "transpar" ] << size[ i ] << " ";
   }
-  xout["transpar"] << size[ SpaceDimension - 1 ] << ")" << std::endl;
+  xout[ "transpar" ] << size[ SpaceDimension - 1 ] << ")" << std::endl;
 
   /** Write the GridIndex of this transform. */
-  xout["transpar"] << "(GridIndex ";
-  for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+  xout[ "transpar" ] << "(GridIndex ";
+  for( unsigned int i = 0; i < SpaceDimension - 1; i++ )
   {
-    xout["transpar"] << index[ i ] << " ";
+    xout[ "transpar" ] << index[ i ] << " ";
   }
-  xout["transpar"] << index[ SpaceDimension - 1 ] << ")" << std::endl;
+  xout[ "transpar" ] << index[ SpaceDimension - 1 ] << ")" << std::endl;
 
   /** Set the precision of cout to 2, because GridSpacing and
    * GridOrigin must have at least one digit precision.
    */
-  xout["transpar"] << std::setprecision( 10 );
+  xout[ "transpar" ] << std::setprecision( 10 );
 
   /** Write the GridSpacing of this transform. */
-  xout["transpar"] << "(GridSpacing ";
-  for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+  xout[ "transpar" ] << "(GridSpacing ";
+  for( unsigned int i = 0; i < SpaceDimension - 1; i++ )
   {
-    xout["transpar"] << spacing[ i ] << " ";
+    xout[ "transpar" ] << spacing[ i ] << " ";
   }
-  xout["transpar"] << spacing[ SpaceDimension - 1 ] << ")" << std::endl;
+  xout[ "transpar" ] << spacing[ SpaceDimension - 1 ] << ")" << std::endl;
 
   /** Write the GridOrigin of this transform. */
-  xout["transpar"] << "(GridOrigin ";
-  for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+  xout[ "transpar" ] << "(GridOrigin ";
+  for( unsigned int i = 0; i < SpaceDimension - 1; i++ )
   {
-    xout["transpar"] << origin[ i ] << " ";
+    xout[ "transpar" ] << origin[ i ] << " ";
   }
-  xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
+  xout[ "transpar" ] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
 
   /** Write the GridDirection of this transform. */
-  xout["transpar"] << "(GridDirection";
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  xout[ "transpar" ] << "(GridDirection";
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    for( unsigned int j = 0; j < SpaceDimension; j++ )
     {
-      xout["transpar"] << " " << direction(j,i);
+      xout[ "transpar" ] << " " << direction( j, i );
     }
   }
-  xout["transpar"] << ")" << std::endl;
+  xout[ "transpar" ] << ")" << std::endl;
 
   /** Write the spline order and periodicity of this transform. */
-  xout["transpar"] << "(BSplineTransformSplineOrder "
-    << this->m_SplineOrder << ")" << std::endl;
+  xout[ "transpar" ] << "(BSplineTransformSplineOrder "
+                     << this->m_SplineOrder << ")" << std::endl;
 
   /** Write the label map path of this transform. */
-  xout["transpar"] << "(MultiBSplineTransformWithNormalLabels \""
-    << itksys::SystemTools::CollapseFullPath( this->m_LabelsPath.c_str() )
-    << "\" )" << std::endl;
-
+  xout[ "transpar" ] << "(MultiBSplineTransformWithNormalLabels \""
+                     << itksys::SystemTools::CollapseFullPath( this->m_LabelsPath.c_str() )
+                     << "\" )" << std::endl;
 
   /** Set the precision back to default value. */
-  xout["transpar"] << std::setprecision(
+  xout[ "transpar" ] << std::setprecision(
     this->m_Elastix->GetDefaultOutputPrecision() );
 
 } // end WriteToFile()
@@ -752,27 +758,27 @@ void MultiBSplineTransformWithNormal<TElastix>
  * Set the optimizer scales of the edge coefficients to infinity.
  */
 
-template <class TElastix>
-void MultiBSplineTransformWithNormal<TElastix>::
-SetOptimizerScales( const unsigned int edgeWidth )
+template< class TElastix >
+void
+MultiBSplineTransformWithNormal< TElastix >::SetOptimizerScales( const unsigned int edgeWidth )
 {
   /** Some typedefs. */
-  typedef itk::ImageRegionExclusionConstIteratorWithIndex<ImageType> 
-                                                          IteratorType;
-  typedef typename RegistrationType::ITKBaseType          ITKRegistrationType;
-  typedef typename ITKRegistrationType::OptimizerType     OptimizerType;
-  typedef typename OptimizerType::ScalesType              ScalesType;
-  typedef typename ScalesType::ValueType                  ScalesValueType;
+  typedef itk::ImageRegionExclusionConstIteratorWithIndex< ImageType >
+    IteratorType;
+  typedef typename RegistrationType::ITKBaseType      ITKRegistrationType;
+  typedef typename ITKRegistrationType::OptimizerType OptimizerType;
+  typedef typename OptimizerType::ScalesType          ScalesType;
+  typedef typename ScalesType::ValueType              ScalesValueType;
 
   /** Define new scales. */
   const unsigned long numberOfParameters
     = this->m_MultiBSplineTransformWithNormal->GetNumberOfParameters();
   const unsigned long offset = numberOfParameters / SpaceDimension;
-  ScalesType newScales( numberOfParameters );
-  newScales.Fill( itk::NumericTraits<ScalesValueType>::One );
+  ScalesType          newScales( numberOfParameters );
+  newScales.Fill( itk::NumericTraits< ScalesValueType >::One );
   const ScalesValueType infScale = 10000.0;
 
-  if ( edgeWidth == 0 )
+  if( edgeWidth == 0 )
   {
     /** Just set the unit scales into the optimizer. */
     this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
@@ -780,24 +786,24 @@ SetOptimizerScales( const unsigned int edgeWidth )
   }
 
   /** Get the grid region information and create a fake coefficient image. */
-  RegionType gridregion = this->m_MultiBSplineTransformWithNormal->GetGridRegion();
-  SizeType gridsize = gridregion.GetSize();
-  IndexType gridindex = gridregion.GetIndex();
-  ImagePointer coeff = ImageType::New();
+  RegionType   gridregion = this->m_MultiBSplineTransformWithNormal->GetGridRegion();
+  SizeType     gridsize   = gridregion.GetSize();
+  IndexType    gridindex  = gridregion.GetIndex();
+  ImagePointer coeff      = ImageType::New();
   coeff->SetRegions( gridregion );
   coeff->Allocate();
 
   /** Determine inset region. (so, the region with active parameters). */
   RegionType insetgridregion;
-  SizeType insetgridsize;
-  IndexType insetgridindex;
-  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  SizeType   insetgridsize;
+  IndexType  insetgridindex;
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    insetgridsize[ i ] = static_cast<unsigned int>( vnl_math_max(
-      0, static_cast<int>( gridsize[ i ] - 2 * edgeWidth ) ) );
-    if ( insetgridsize[ i ] == 0 )
+    insetgridsize[ i ] = static_cast< unsigned int >( vnl_math_max(
+      0, static_cast< int >( gridsize[ i ] - 2 * edgeWidth ) ) );
+    if( insetgridsize[ i ] == 0 )
     {
-      xl::xout["error"]
+      xl::xout[ "error" ]
         << "ERROR: you specified a PassiveEdgeWidth of "
         << edgeWidth
         << ", while the total grid size in dimension "
@@ -819,13 +825,13 @@ SetOptimizerScales( const unsigned int edgeWidth )
   /** Set the scales to infinity that correspond to edge coefficients
    * This (hopefully) makes sure they are not optimized during registration.
    */
-  while ( !cIt.IsAtEnd() )
+  while( !cIt.IsAtEnd() )
   {
-    const IndexType & index = cIt.GetIndex();
+    const IndexType &   index      = cIt.GetIndex();
     const unsigned long baseOffset = coeff->ComputeOffset( index );
-    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    for( unsigned int i = 0; i < SpaceDimension; ++i )
     {
-      const unsigned int scalesIndex = static_cast<unsigned int>(
+      const unsigned int scalesIndex = static_cast< unsigned int >(
         baseOffset + i * offset );
       newScales[ scalesIndex ] = infScale;
     }
@@ -837,7 +843,7 @@ SetOptimizerScales( const unsigned int edgeWidth )
 
 } // end SetOptimizerScales()
 
-} // end namespace elastix
 
+} // end namespace elastix
 
 #endif // end #ifndef __elxMultiBSplineTransformWithNormal_hxx

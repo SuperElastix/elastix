@@ -116,38 +116,39 @@ namespace itk
  *
  * \ingroup PyramidImageFilter Multithreaded Streamed
  */
-template <
-  class TInputImage,
-  class TOutputImage
-  >
+template<
+class TInputImage,
+class TOutputImage
+>
 class MultiResolutionGaussianSmoothingPyramidImageFilter :
-    public MultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
+  public MultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef MultiResolutionGaussianSmoothingPyramidImageFilter  Self;
-  typedef MultiResolutionPyramidImageFilter<TInputImage,TOutputImage>  Superclass;
-  typedef SmartPointer<Self>  Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef MultiResolutionGaussianSmoothingPyramidImageFilter             Self;
+  typedef MultiResolutionPyramidImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef SmartPointer< Self >                                           Pointer;
+  typedef SmartPointer< const Self >                                     ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionGaussianSmoothingPyramidImageFilter, MultiResolutionPyramidImageFilter);
+  itkTypeMacro( MultiResolutionGaussianSmoothingPyramidImageFilter, MultiResolutionPyramidImageFilter );
 
   /** ImageDimension enumeration. */
-  itkStaticConstMacro(ImageDimension, unsigned int,
-                      TInputImage::ImageDimension);
-  itkStaticConstMacro(OutputImageDimension, unsigned int,
-                      TOutputImage::ImageDimension);
+  itkStaticConstMacro( ImageDimension, unsigned int,
+    TInputImage::ImageDimension );
+  itkStaticConstMacro( OutputImageDimension, unsigned int,
+    TOutputImage::ImageDimension );
 
   /** Inherit types from Superclass. */
-  typedef typename Superclass::ScheduleType ScheduleType;
-  typedef typename Superclass::InputImageType InputImageType;
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename Superclass::InputImagePointer InputImagePointer;
-  typedef typename Superclass::OutputImagePointer OutputImagePointer;
+  typedef typename Superclass::ScheduleType           ScheduleType;
+  typedef typename Superclass::InputImageType         InputImageType;
+  typedef typename Superclass::OutputImageType        OutputImageType;
+  typedef typename Superclass::InputImagePointer      InputImagePointer;
+  typedef typename Superclass::OutputImagePointer     OutputImagePointer;
   typedef typename Superclass::InputImageConstPointer InputImageConstPointer;
 
   /** Set a multi-resolution schedule.  The input schedule must have only
@@ -163,7 +164,7 @@ public:
    * only smoothed with the same standard deviation gaussian as used by
    * the superclass.
    */
-  void SetSchedule( const ScheduleType& schedule );
+  void SetSchedule( const ScheduleType & schedule );
 
   /** Set spacing etc. */
   virtual void GenerateOutputInformation();
@@ -172,7 +173,7 @@ public:
    * the requested region for the remaining output images.  The original
    * documentation of this method is below.  \sa
    * ProcessObject::GenerateOutputRequestedRegion(); */
-  virtual void GenerateOutputRequestedRegion(DataObject *output);
+  virtual void GenerateOutputRequestedRegion( DataObject * output );
 
   /** MultiResolutionGaussianSmoothingPyramidImageFilter requires a larger input requested
    * region than the output requested regions to accomdate the
@@ -183,24 +184,24 @@ public:
   virtual void GenerateInputRequestedRegion();
 
 protected:
+
   MultiResolutionGaussianSmoothingPyramidImageFilter();
-  ~MultiResolutionGaussianSmoothingPyramidImageFilter() {};
-  void PrintSelf(std::ostream&os, Indent indent) const;
+  ~MultiResolutionGaussianSmoothingPyramidImageFilter() {}
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Generate the output data. */
   void GenerateData();
 
   /** This filter by default generates the largest possible region,
    * because it uses internally a filter that does this. */
-  virtual void EnlargeOutputRequestedRegion(DataObject *output);
-
+  virtual void EnlargeOutputRequestedRegion( DataObject * output );
 
 private:
-  MultiResolutionGaussianSmoothingPyramidImageFilter(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  MultiResolutionGaussianSmoothingPyramidImageFilter( const Self & ); // purposely not implemented
+  void operator=( const Self & );                                     // purposely not implemented
 
 };
-
 
 } // namespace itk
 

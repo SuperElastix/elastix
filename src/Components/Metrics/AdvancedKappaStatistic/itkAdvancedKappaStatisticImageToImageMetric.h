@@ -49,18 +49,18 @@ namespace itk
  * \ingroup Metrics
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 class AdvancedKappaStatisticImageToImageMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef AdvancedKappaStatisticImageToImageMetric    Self;
+  typedef AdvancedKappaStatisticImageToImageMetric Self;
   typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >                   Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -70,7 +70,7 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename
-    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+    Superclass::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
   typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
@@ -106,17 +106,17 @@ public:
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename
-    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+    Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType  FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType MovingImageLimiterType;
   typedef typename
-    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+    Superclass::FixedImageLimiterOutputType FixedImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+    Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-  typedef typename Superclass::ThreaderType               ThreaderType;
-  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
+    Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  typedef typename Superclass::ThreaderType   ThreaderType;
+  typedef typename Superclass::ThreadInfoType ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -136,10 +136,11 @@ public:
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivativeSingleThreaded(
     const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const;
+
   virtual void GetValueAndDerivative(
     const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const;
 
   /** Computes the moving gradient image dM/dx. */
   virtual void ComputeGradient( void );
@@ -168,6 +169,7 @@ public:
   itkGetConstReferenceMacro( Epsilon, RealType );
 
 protected:
+
   AdvancedKappaStatisticImageToImageMetric();
   virtual ~AdvancedKappaStatisticImageToImageMetric();
 
@@ -177,16 +179,16 @@ protected:
   /** Protected Typedefs ******************/
 
   /** Typedefs inherited from superclass */
-  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
-  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
-  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-  typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
-  typedef typename Superclass::CentralDifferenceGradientFilterType  CentralDifferenceGradientFilterType;
-  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  typedef typename Superclass::FixedImageIndexType                 FixedImageIndexType;
+  typedef typename Superclass::FixedImageIndexValueType            FixedImageIndexValueType;
+  typedef typename Superclass::MovingImageIndexType                MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType                 FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType                MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType      MovingImageContinuousIndexType;
+  typedef typename Superclass::BSplineInterpolatorType             BSplineInterpolatorType;
+  typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
+  typedef typename Superclass::MovingImageDerivativeType           MovingImageDerivativeType;
+  typedef typename Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
 
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative().
@@ -219,13 +221,14 @@ protected:
   static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
 
 private:
-  AdvancedKappaStatisticImageToImageMetric(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
 
-  bool      m_UseForegroundValue;
-  RealType  m_ForegroundValue;
-  RealType  m_Epsilon;
-  bool      m_Complement;
+  AdvancedKappaStatisticImageToImageMetric( const Self & ); // purposely not implemented
+  void operator=( const Self & );                           // purposely not implemented
+
+  bool     m_UseForegroundValue;
+  RealType m_ForegroundValue;
+  RealType m_Epsilon;
+  bool     m_Complement;
 
   /** Threading related parameters. */
 
@@ -243,11 +246,11 @@ private:
 
   struct KappaGetValueAndDerivativePerThreadStruct
   {
-    SizeValueType     st_NumberOfPixelsCounted;
-    SizeValueType     st_AreaSum;
-    SizeValueType     st_AreaIntersection;
-    DerivativeType    st_DerivativeSum1;
-    DerivativeType    st_DerivativeSum2;
+    SizeValueType         st_NumberOfPixelsCounted;
+    SizeValueType         st_AreaSum;
+    SizeValueType         st_AreaIntersection;
+    DerivativeType        st_DerivativeSum1;
+    DerivativeType        st_DerivativeSum2;
     TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, KappaGetValueAndDerivativePerThreadStruct,
@@ -255,7 +258,7 @@ private:
   itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedKappaGetValueAndDerivativePerThreadStruct,
     AlignedKappaGetValueAndDerivativePerThreadStruct );
   mutable AlignedKappaGetValueAndDerivativePerThreadStruct * m_KappaGetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType m_KappaGetValueAndDerivativePerThreadVariablesSize;
+  mutable ThreadIdType                                       m_KappaGetValueAndDerivativePerThreadVariablesSize;
 
 };
 
@@ -266,4 +269,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkAdvancedKappaStatisticImageToImageMetric_h
-

@@ -28,15 +28,15 @@ namespace xl = xoutlibrary;
 /** Typedefs for the most common use of xout */
 namespace xoutlibrary
 {
-  typedef xoutbase<char>    xoutbase_type;
-  typedef xoutsimple<char>  xoutsimple_type;
-  typedef xoutrow<char>     xoutrow_type;
-  typedef xoutcell<char>    xoutcell_type;
+typedef xoutbase< char >   xoutbase_type;
+typedef xoutsimple< char > xoutsimple_type;
+typedef xoutrow< char >    xoutrow_type;
+typedef xoutcell< char >   xoutcell_type;
 
-  xoutbase_type & get_xout( void );
-  void set_xout( xoutbase_type * arg );
+xoutbase_type & get_xout( void );
+
+void set_xout( xoutbase_type * arg );
 
 } // end namespace xoutlibrary
 
 #endif // end #ifndef __xoutmain_h
-

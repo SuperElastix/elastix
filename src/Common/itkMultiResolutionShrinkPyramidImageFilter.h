@@ -16,7 +16,6 @@ PURPOSE. See the above copyright notices for more information.
 
 #include "itkMultiResolutionPyramidImageFilter.h"
 
-
 namespace itk
 {
 
@@ -32,19 +31,20 @@ namespace itk
  *
  * \ingroup PyramidImageFilter Multithreaded Streamed
  */
-template <
-  class TInputImage,
-  class TOutputImage
-  >
+template<
+class TInputImage,
+class TOutputImage
+>
 class MultiResolutionShrinkPyramidImageFilter :
-    public MultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
+  public MultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef MultiResolutionShrinkPyramidImageFilter             Self;
-  typedef MultiResolutionPyramidImageFilter<TInputImage,TOutputImage>  Superclass;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  typedef MultiResolutionShrinkPyramidImageFilter                        Self;
+  typedef MultiResolutionPyramidImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef SmartPointer< Self >                                           Pointer;
+  typedef SmartPointer< const Self >                                     ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -72,26 +72,27 @@ public:
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro(SameDimensionCheck,
-    (Concept::SameDimension<ImageDimension, OutputImageDimension>));
-  itkConceptMacro(OutputHasNumericTraitsCheck,
-    (Concept::HasNumericTraits<typename TOutputImage::PixelType>));
+  itkConceptMacro( SameDimensionCheck,
+    ( Concept::SameDimension< ImageDimension, OutputImageDimension > ) );
+  itkConceptMacro( OutputHasNumericTraitsCheck,
+    ( Concept::HasNumericTraits< typename TOutputImage::PixelType > ) );
   /** End concept checking */
 #endif
 
 protected:
-  MultiResolutionShrinkPyramidImageFilter() {};
-  ~MultiResolutionShrinkPyramidImageFilter() {};
+
+  MultiResolutionShrinkPyramidImageFilter() {}
+  ~MultiResolutionShrinkPyramidImageFilter() {}
 
   /** Generate the output data. */
   virtual void GenerateData( void );
 
 private:
-  MultiResolutionShrinkPyramidImageFilter(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  MultiResolutionShrinkPyramidImageFilter( const Self & ); // purposely not implemented
+  void operator=( const Self & );                          // purposely not implemented
 
 };
-
 
 } // namespace itk
 

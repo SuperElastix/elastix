@@ -31,7 +31,6 @@
 #include "elxTimer.h"
 
 /** Declare PrintHelp function.*/
-void PrintHelp(void);
+void PrintHelp( void );
 
 #endif // end #ifndef __transformix_h
-

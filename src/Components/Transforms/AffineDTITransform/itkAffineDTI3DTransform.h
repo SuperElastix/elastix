@@ -71,16 +71,18 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template < class TScalarType=double >    // Data type for scalars (float or double)
+template< class TScalarType = double >
+// Data type for scalars (float or double)
 class AffineDTI3DTransform :
-     public AdvancedMatrixOffsetTransformBase< TScalarType,3,3 >
+  public AdvancedMatrixOffsetTransformBase< TScalarType, 3, 3 >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef AffineDTI3DTransform                  Self;
-  typedef AdvancedMatrixOffsetTransformBase< TScalarType,3,3 >   Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef AffineDTI3DTransform                                   Self;
+  typedef AdvancedMatrixOffsetTransformBase< TScalarType, 3, 3 > Superclass;
+  typedef SmartPointer< Self >                                   Pointer;
+  typedef SmartPointer< const Self >                             ConstPointer;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
@@ -94,36 +96,36 @@ public:
   itkStaticConstMacro( OutputSpaceDimension, unsigned int, 3 );
   itkStaticConstMacro( ParametersDimension, unsigned int, 12 );
 
-  typedef typename Superclass::ParametersType             ParametersType;
-  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
-  typedef typename Superclass::JacobianType               JacobianType;
-  typedef typename Superclass::ScalarType                 ScalarType;
-  typedef typename Superclass::InputVectorType            InputVectorType;
-  typedef typename Superclass::OutputVectorType           OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::MatrixType                 MatrixType;
-  typedef typename Superclass::InverseMatrixType          InverseMatrixType;
-  typedef typename Superclass::CenterType                 CenterType;
-  typedef typename Superclass::TranslationType            TranslationType;
-  typedef typename Superclass::OffsetType                 OffsetType;
-  typedef typename Superclass::ScalarType                 AngleType;
+  typedef typename Superclass::ParametersType            ParametersType;
+  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
+  typedef typename Superclass::JacobianType              JacobianType;
+  typedef typename Superclass::ScalarType                ScalarType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::MatrixType                MatrixType;
+  typedef typename Superclass::InverseMatrixType         InverseMatrixType;
+  typedef typename Superclass::CenterType                CenterType;
+  typedef typename Superclass::TranslationType           TranslationType;
+  typedef typename Superclass::OffsetType                OffsetType;
+  typedef typename Superclass::ScalarType                AngleType;
 
   typedef typename Superclass
-    ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
-  typedef FixedArray< ScalarType >                  ScalarArrayType;
+  typedef FixedArray< ScalarType > ScalarArrayType;
 
   /** Set/Get the transformation from a container of parameters
    * This is typically used by optimizers.  There are 12 parameters.
@@ -131,7 +133,8 @@ public:
    * ~rotation, scale, skew, translation
    */
   void SetParameters( const ParametersType & parameters );
-  const ParametersType & GetParameters(void) const;
+
+  const ParametersType & GetParameters( void ) const;
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
@@ -139,18 +142,19 @@ public:
     JacobianType &,
     NonZeroJacobianIndicesType & ) const;
 
-  virtual void SetIdentity(void);
+  virtual void SetIdentity( void );
 
 protected:
+
   AffineDTI3DTransform();
-  AffineDTI3DTransform(const MatrixType & matrix,
-                   const OutputPointType & offset);
-  AffineDTI3DTransform(unsigned int outputSpaceDims,
-                   unsigned int paramsSpaceDims);
+  AffineDTI3DTransform( const MatrixType & matrix,
+    const OutputPointType & offset );
+  AffineDTI3DTransform( unsigned int outputSpaceDims,
+    unsigned int paramsSpaceDims );
 
-  ~AffineDTI3DTransform(){};
+  ~AffineDTI3DTransform(){}
 
-  void PrintSelf(std::ostream &os, Indent indent) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Set values of angles etc directly without recomputing other parameters. */
   void SetVarAngleScaleShear(
@@ -159,25 +163,25 @@ protected:
     ScalarArrayType scale );
 
   /** Compute the components of the rotation matrix in the superclass. */
-  void ComputeMatrix(void);
-  void ComputeMatrixParameters(void);
+  void ComputeMatrix( void );
 
-   /** Update the m_JacobianOfSpatialJacobian.  */
-  virtual void PrecomputeJacobianOfSpatialJacobian(void);
+  void ComputeMatrixParameters( void );
+
+  /** Update the m_JacobianOfSpatialJacobian.  */
+  virtual void PrecomputeJacobianOfSpatialJacobian( void );
 
 private:
-  AffineDTI3DTransform(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  AffineDTI3DTransform( const Self & ); // purposely not implemented
+  void operator=( const Self & );       // purposely not implemented
 
   ScalarArrayType m_Angle;
   ScalarArrayType m_Shear;
   ScalarArrayType m_Scale;
 
-}; //class AffineDTI3DTransform
-
+};
 
 }  // namespace itk
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkAffineDTI3DTransform.hxx"

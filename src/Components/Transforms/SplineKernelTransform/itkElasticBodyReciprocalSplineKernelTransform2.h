@@ -19,7 +19,6 @@
 
 #include "itkKernelTransform2.h"
 
-
 namespace itk
 {
 
@@ -35,19 +34,21 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template <class TScalarType = double,   // Data type for scalars (float or double)
-          unsigned int NDimensions = 3>          // Number of dimensions
+template< class TScalarType = double,   // Data type for scalars (float or double)
+unsigned int NDimensions    = 3 >
+// Number of dimensions
 class ElasticBodyReciprocalSplineKernelTransform2 :
-          public KernelTransform2<  TScalarType, NDimensions>
+  public KernelTransform2<  TScalarType, NDimensions >
 {
 public:
-  /** Standard class typedefs. */
-  typedef ElasticBodyReciprocalSplineKernelTransform2   Self;
-  typedef KernelTransform2<  TScalarType,
-                            NDimensions> Superclass;
 
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  /** Standard class typedefs. */
+  typedef ElasticBodyReciprocalSplineKernelTransform2 Self;
+  typedef KernelTransform2<  TScalarType,
+    NDimensions > Superclass;
+
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( ElasticBodyReciprocalSplineKernelTransform2, KernelTransform2 );
@@ -56,27 +57,29 @@ public:
   itkNewMacro( Self );
 
   /** Scalar type. */
-  typedef typename Superclass::ScalarType  ScalarType;
+  typedef typename Superclass::ScalarType ScalarType;
 
   /** Parameters type. */
-  typedef typename Superclass::ParametersType  ParametersType;
+  typedef typename Superclass::ParametersType ParametersType;
 
   /** Jacobian type. */
-  typedef typename Superclass::JacobianType  JacobianType;
+  typedef typename Superclass::JacobianType JacobianType;
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro(SpaceDimension, unsigned int,Superclass::SpaceDimension);
+  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass::SpaceDimension );
 
   /** Set alpha.  Alpha is related to Poisson's Ratio (\f$\nu\f$) as
    * \f$\alpha = 8 ( 1 - \nu ) - 1\f$
    */
   //itkSetMacro( Alpha, TScalarType ); Cant use the macro because the matrices must be recomputed
-  virtual void SetAlpha(TScalarType Alpha) {
-    this->m_Alpha=Alpha;
-    this->m_LMatrixComputed=false;
-    this->m_LInverseComputed=false;
-    this->m_WMatrixComputed=false;
+  virtual void SetAlpha( TScalarType Alpha )
+  {
+    this->m_Alpha            = Alpha;
+    this->m_LMatrixComputed  = false;
+    this->m_LInverseComputed = false;
+    this->m_WMatrixComputed  = false;
   }
+
 
   /** Get alpha */
   itkGetConstMacro( Alpha, TScalarType );
@@ -84,31 +87,33 @@ public:
   /** Convenience method */
   virtual void SetPoissonRatio( const TScalarType Nu )
   {
-    if ( Nu > -1.0 && Nu < 0.5 )
+    if( Nu > -1.0 && Nu < 0.5 )
     {
       this->SetAlpha( 8.0 * ( 1.0 - Nu ) - 1.0 );
     }
   }
+
 
   virtual const TScalarType GetPoissonRatio( void ) const
   {
     return 1.0 - ( this->m_Alpha + 1.0 ) / 8.0;
   }
 
+
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
-  typedef typename Superclass::InputPointType  InputPointType;
-  typedef typename Superclass::OutputPointType  OutputPointType;
-  typedef typename Superclass::InputVectorType InputVectorType;
-  typedef typename Superclass::OutputVectorType OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType InputCovariantVectorType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
 
-
 protected:
+
   ElasticBodyReciprocalSplineKernelTransform2();
-  virtual ~ElasticBodyReciprocalSplineKernelTransform2() {};
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  virtual ~ElasticBodyReciprocalSplineKernelTransform2() {}
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
@@ -122,14 +127,15 @@ protected:
    * \f$r(x) = \sqrt{ x_1^2 + x_2^2 + x_3^2 } \f$ and
    * \f$I\f$ is the identity matrix.
    */
-  void ComputeG(const InputVectorType& x, GMatrixType & GMatrix) const;
+  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const;
 
   /** alpha, Poisson's ratio */
   TScalarType m_Alpha;
 
-  private:
-  ElasticBodyReciprocalSplineKernelTransform2(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+private:
+
+  ElasticBodyReciprocalSplineKernelTransform2( const Self & ); // purposely not implemented
+  void operator=( const Self & );                              // purposely not implemented
 
 };
 

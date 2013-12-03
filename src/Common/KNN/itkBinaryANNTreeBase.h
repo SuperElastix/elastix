@@ -20,56 +20,55 @@
 namespace itk
 {
 
-  /**
-   * \class BinaryANNTreeBase
-   *
-   * \brief
-   *
-   *
-   * \ingroup ANNwrap
-   */
+/**
+ * \class BinaryANNTreeBase
+ *
+ * \brief
+ *
+ *
+ * \ingroup ANNwrap
+ */
 
-  template < class TListSample >
-  class BinaryANNTreeBase : public BinaryTreeBase< TListSample >
-  {
-  public:
+template< class TListSample >
+class BinaryANNTreeBase : public BinaryTreeBase< TListSample >
+{
+public:
 
-    /** Standard itk. */
-    typedef BinaryANNTreeBase             Self;
-    typedef BinaryTreeBase< TListSample > Superclass;
-    typedef SmartPointer< Self >          Pointer;
-    typedef SmartPointer< const Self >    ConstPointer;
+  /** Standard itk. */
+  typedef BinaryANNTreeBase             Self;
+  typedef BinaryTreeBase< TListSample > Superclass;
+  typedef SmartPointer< Self >          Pointer;
+  typedef SmartPointer< const Self >    ConstPointer;
 
-    /** ITK type info. */
-    itkTypeMacro( BinaryANNTreeBase, BinaryTreeBase );
+  /** ITK type info. */
+  itkTypeMacro( BinaryANNTreeBase, BinaryTreeBase );
 
-    /** Typedefs from Superclass. */
-    typedef typename Superclass::SampleType                 SampleType;
-    typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
-    typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
-    typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
+  /** Typedefs from Superclass. */
+  typedef typename Superclass::SampleType                 SampleType;
+  typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
+  typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
+  typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
 
-    /** Typedef */
-    typedef ANNpointSet       ANNPointSetType;
+  /** Typedef */
+  typedef ANNpointSet ANNPointSetType;
 
-    /** Get the ANN tree. */
-    virtual ANNPointSetType * GetANNTree( void ) const = 0;
+  /** Get the ANN tree. */
+  virtual ANNPointSetType * GetANNTree( void ) const = 0;
 
-  protected:
+protected:
 
-    /** Constructor. */
-    BinaryANNTreeBase();
+  /** Constructor. */
+  BinaryANNTreeBase();
 
-    /** Destructor. */
-    virtual ~BinaryANNTreeBase() {};
+  /** Destructor. */
+  virtual ~BinaryANNTreeBase() {}
 
-  private:
+private:
 
-    BinaryANNTreeBase( const Self& ); // purposely not implemented
-    void operator=( const Self& );    // purposely not implemented
+  BinaryANNTreeBase( const Self & );  // purposely not implemented
+  void operator=( const Self & );     // purposely not implemented
 
-  };
-
+};
 
 } // end namespace itk
 

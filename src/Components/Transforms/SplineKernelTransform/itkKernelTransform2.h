@@ -32,62 +32,62 @@ PURPOSE.  See the above copyright notices for more information.
 #include "vnl/algo/vnl_svd.h"
 #include "vnl/algo/vnl_qr.h"
 
-
 namespace itk
 {
 
- /** \class KernelTransform2
-  * Intended to be a base class for elastic body spline and thin plate spline.
-  * This is implemented in as straightforward a manner as possible from the
-  * IEEE TMI paper by Davis, Khotanzad, Flamig, and Harms, Vol. 16,
-  * No. 3 June 1997. Notation closely follows their paper, so if you have it
-  * in front of you, this code will make a lot more sense.
-  *
-  * KernelTransform2:
-  *  Provides support for defining source and target landmarks
-  *  Defines a number of data types used in the computations
-  *  Defines the mathematical framework used to compute all splines,
-  *    so that subclasses need only provide a kernel specific to
-  *    that spline
-  *
-  * This formulation allows the stiffness of the spline to
-  * be adjusted, allowing the spline to vary from interpolating the
-  * landmarks to approximating the landmarks.  This part of the
-  * formulation is based on the short paper by R. Sprengel, K. Rohr,
-  * H. Stiehl. "Thin-Plate Spline Approximation for Image
-  * Registration". In 18th International Conference of the IEEE
-  * Engineering in Medicine and Biology Society. 1996.
-  *
-  * This class was modified to support its use in the ITK registration framework
-  * by Rupert Brooks, McGill Centre for Intelligent Machines, Montreal, Canada
-  * March 2007.  See the Insight Journal Paper  by Brooks, R., Arbel, T.
-  * "Improvements to the itk::KernelTransform and its subclasses."
-  *
-  * Modified to include it in elastix:
-  * - style
-  * - make it inherit from AdvancedTransform
-  * - make it threadsafe, like was done in the itk as well.
-  * - Support for matrix inversion by QR decomposition, instead of SVD.
-  *   QR is much faster. Used in SetParameters() and SetFixedParameters().
-  * - Much faster Jacobian computation for some of the derived kernel transforms.
-  *
-  * \ingroup Transforms
-  *
-  */
+/** \class KernelTransform2
+ * Intended to be a base class for elastic body spline and thin plate spline.
+ * This is implemented in as straightforward a manner as possible from the
+ * IEEE TMI paper by Davis, Khotanzad, Flamig, and Harms, Vol. 16,
+ * No. 3 June 1997. Notation closely follows their paper, so if you have it
+ * in front of you, this code will make a lot more sense.
+ *
+ * KernelTransform2:
+ *  Provides support for defining source and target landmarks
+ *  Defines a number of data types used in the computations
+ *  Defines the mathematical framework used to compute all splines,
+ *    so that subclasses need only provide a kernel specific to
+ *    that spline
+ *
+ * This formulation allows the stiffness of the spline to
+ * be adjusted, allowing the spline to vary from interpolating the
+ * landmarks to approximating the landmarks.  This part of the
+ * formulation is based on the short paper by R. Sprengel, K. Rohr,
+ * H. Stiehl. "Thin-Plate Spline Approximation for Image
+ * Registration". In 18th International Conference of the IEEE
+ * Engineering in Medicine and Biology Society. 1996.
+ *
+ * This class was modified to support its use in the ITK registration framework
+ * by Rupert Brooks, McGill Centre for Intelligent Machines, Montreal, Canada
+ * March 2007.  See the Insight Journal Paper  by Brooks, R., Arbel, T.
+ * "Improvements to the itk::KernelTransform and its subclasses."
+ *
+ * Modified to include it in elastix:
+ * - style
+ * - make it inherit from AdvancedTransform
+ * - make it threadsafe, like was done in the itk as well.
+ * - Support for matrix inversion by QR decomposition, instead of SVD.
+ *   QR is much faster. Used in SetParameters() and SetFixedParameters().
+ * - Much faster Jacobian computation for some of the derived kernel transforms.
+ *
+ * \ingroup Transforms
+ *
+ */
 
-template <class TScalarType, // probably only float and double make sense here
-  unsigned int NDimensions>   // Number of dimensions
-class KernelTransform2
-  : public AdvancedTransform<TScalarType, NDimensions,NDimensions>
+template< class TScalarType, // probably only float and double make sense here
+unsigned int NDimensions >
+// Number of dimensions
+class KernelTransform2 :
+  public AdvancedTransform< TScalarType, NDimensions, NDimensions >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef KernelTransform2                  Self;
+  typedef KernelTransform2 Self;
   typedef AdvancedTransform<
     TScalarType, NDimensions, NDimensions > Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( KernelTransform2, AdvancedTransform );
@@ -99,54 +99,55 @@ public:
   itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
 
   /** Typedefs. */
-  typedef typename Superclass::ScalarType       ScalarType;
-  typedef typename Superclass::ParametersType   ParametersType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::JacobianType     JacobianType;
-  typedef typename Superclass::InputPointType   InputPointType;
-  typedef typename Superclass::OutputPointType  OutputPointType;
-  typedef typename Superclass::InputVectorType  InputVectorType;
-  typedef typename Superclass::OutputVectorType OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
+  typedef typename Superclass::ScalarType                ScalarType;
+  typedef typename Superclass::ParametersType            ParametersType;
+  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
+  typedef typename Superclass::JacobianType              JacobianType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
 
   /** AdvancedTransform typedefs. */
   typedef typename Superclass
-    ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
   /** PointList typedef. This type is used for maintaining lists of points,
    * specifically, the source and target landmark lists.
    */
   typedef DefaultStaticMeshTraits< TScalarType,
-    NDimensions, NDimensions, TScalarType, TScalarType>       PointSetTraitsType;
-  typedef PointSet<InputPointType, NDimensions,
-    PointSetTraitsType>                                       PointSetType;
+    NDimensions, NDimensions, TScalarType, TScalarType >       PointSetTraitsType;
+  typedef PointSet< InputPointType, NDimensions,
+    PointSetTraitsType >                                       PointSetType;
   typedef typename PointSetType::Pointer                      PointSetPointer;
   typedef typename PointSetType::PointsContainer              PointsContainer;
   typedef typename PointSetType::PointsContainerIterator      PointsIterator;
   typedef typename PointSetType::PointsContainerConstIterator PointsConstIterator;
 
   /** VectorSet typedef. */
-  typedef VectorContainer<unsigned long,InputVectorType>      VectorSetType;
-  typedef typename VectorSetType::Pointer                     VectorSetPointer;
+  typedef VectorContainer< unsigned long, InputVectorType > VectorSetType;
+  typedef typename VectorSetType::Pointer                   VectorSetPointer;
 
   /** 'I' (identity) matrix typedef. */
-  typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> IMatrixType;
+  typedef vnl_matrix_fixed< TScalarType, NDimensions, NDimensions > IMatrixType;
 
   /** Return the number of parameters that completely define the Transform. */
   virtual NumberOfParametersType GetNumberOfParameters( void ) const
   {
     return ( this->m_SourceLandmarks->GetNumberOfPoints() * SpaceDimension );
   }
+
 
   /** Get the source landmarks list, which we will denote \f$ p \f$. */
   itkGetObjectMacro( SourceLandmarks, PointSetType );
@@ -178,21 +179,26 @@ public:
   virtual OutputVectorType TransformVector( const InputVectorType & ) const
   {
     itkExceptionMacro(
-      << "TransformVector(const InputVectorType &) is not implemented "
-      << "for KernelTransform" );
+        << "TransformVector(const InputVectorType &) is not implemented "
+        << "for KernelTransform" );
   }
+
+
   virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
   {
     itkExceptionMacro(
-      << "TransformVector(const InputVnlVectorType &) is not implemented "
-      << "for KernelTransform" );
+        << "TransformVector(const InputVnlVectorType &) is not implemented "
+        << "for KernelTransform" );
   }
+
+
   virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
   {
     itkExceptionMacro(
-      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
-      << "for KernelTransform" );
+        << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
+        << "for KernelTransform" );
   }
+
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
@@ -238,11 +244,13 @@ public:
    */
   virtual void SetStiffness( double stiffness )
   {
-    this->m_Stiffness = stiffness > 0 ? stiffness : 0.0;
-    this->m_LMatrixComputed = false;
+    this->m_Stiffness        = stiffness > 0 ? stiffness : 0.0;
+    this->m_LMatrixComputed  = false;
     this->m_LInverseComputed = false;
-    this->m_WMatrixComputed = false;
+    this->m_WMatrixComputed  = false;
   }
+
+
   itkGetMacro( Stiffness, double );
 
   /** This method makes only sense for the ElasticBody splines.
@@ -251,7 +259,7 @@ public:
    * ElasticBodySplineKernelTransform and in the
    * ElasticBodyReciprocalSplineKernelTransform.
    */
-  virtual void SetAlpha( TScalarType itkNotUsed( Alpha ) ) {};
+  virtual void SetAlpha( TScalarType itkNotUsed( Alpha ) ) {}
   virtual TScalarType GetAlpha( void ) const { return -1.0; }
 
   /** This method makes only sense for the ElasticBody splines.
@@ -264,7 +272,8 @@ public:
   virtual const TScalarType GetPoissonRatio( void ) const
   {
     return this->m_PoissonRatio;
-  };
+  }
+
 
   /** Matrix inversion by SVD or QR decomposition. */
   itkSetMacro( MatrixInversionMethod, std::string );
@@ -276,17 +285,23 @@ public:
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
+
+
   virtual void GetSpatialHessian(
     const InputPointType & ipp, SpatialHessianType & sh ) const
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
+
+
   virtual void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
+
+
   virtual void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
@@ -294,12 +309,16 @@ public:
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
+
+
   virtual void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
+
+
   virtual void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
@@ -308,44 +327,47 @@ public:
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
 
+
 protected:
+
   KernelTransform2();
   virtual ~KernelTransform2();
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
 public:
+
   /** 'G' matrix typedef. */
-  typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> GMatrixType;
+  typedef vnl_matrix_fixed< TScalarType, NDimensions, NDimensions > GMatrixType;
 
   /** 'L' matrix typedef. */
-  typedef vnl_matrix<TScalarType> LMatrixType;
+  typedef vnl_matrix< TScalarType > LMatrixType;
 
   /** 'K' matrix typedef. */
-  typedef vnl_matrix<TScalarType> KMatrixType;
+  typedef vnl_matrix< TScalarType > KMatrixType;
 
   /** 'P' matrix typedef. */
-  typedef vnl_matrix<TScalarType> PMatrixType;
+  typedef vnl_matrix< TScalarType > PMatrixType;
 
   /** 'Y' matrix typedef. */
-  typedef vnl_matrix<TScalarType> YMatrixType;
+  typedef vnl_matrix< TScalarType > YMatrixType;
 
   /** 'W' matrix typedef. */
-  typedef vnl_matrix<TScalarType> WMatrixType;
+  typedef vnl_matrix< TScalarType > WMatrixType;
 
   /** 'D' matrix typedef. Deformation component */
-  typedef vnl_matrix<TScalarType> DMatrixType;
+  typedef vnl_matrix< TScalarType > DMatrixType;
 
   /** 'A' matrix typedef. Rotational part of the Affine component */
-  typedef vnl_matrix_fixed<TScalarType,NDimensions,NDimensions> AMatrixType;
+  typedef vnl_matrix_fixed< TScalarType, NDimensions, NDimensions > AMatrixType;
 
   /** 'B' matrix typedef. Translational part of the Affine component */
-  typedef vnl_vector_fixed<TScalarType,NDimensions> BMatrixType;
+  typedef vnl_vector_fixed< TScalarType, NDimensions > BMatrixType;
 
   /** Row matrix typedef. */
-  typedef vnl_matrix_fixed<TScalarType, 1, NDimensions> RowMatrixType;
+  typedef vnl_matrix_fixed< TScalarType, 1, NDimensions > RowMatrixType;
 
   /** Column matrix typedef. */
-  typedef vnl_matrix_fixed<TScalarType, NDimensions, 1> ColumnMatrixType;
+  typedef vnl_matrix_fixed< TScalarType, NDimensions, 1 > ColumnMatrixType;
 
   /** The list of source landmarks, denoted 'p'. */
   PointSetPointer m_SourceLandmarks;
@@ -463,11 +485,11 @@ protected:
    * turn calls ComputeWMatrix(). The L matrix is not changed however, and therefore
    * it is not needed to redo the decomposition.
    */
-  typedef vnl_svd< ScalarType >   SVDDecompositionType;
-  typedef vnl_qr< ScalarType >    QRDecompositionType;
+  typedef vnl_svd< ScalarType > SVDDecompositionType;
+  typedef vnl_qr< ScalarType >  QRDecompositionType;
 
-  SVDDecompositionType  * m_LMatrixDecompositionSVD;
-  QRDecompositionType   * m_LMatrixDecompositionQR;
+  SVDDecompositionType * m_LMatrixDecompositionSVD;
+  QRDecompositionType *  m_LMatrixDecompositionQR;
 
   /** Identity matrix. */
   IMatrixType m_I;
@@ -484,8 +506,9 @@ protected:
   bool m_FastComputationPossible;
 
 private:
-  KernelTransform2(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  KernelTransform2( const Self & ); // purposely not implemented
+  void operator=( const Self & );   // purposely not implemented
 
   TScalarType m_PoissonRatio;
 

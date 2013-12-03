@@ -16,7 +16,6 @@
 
 #include "itkKNNGraphAlphaMutualInformationImageToImageMetric.h"
 
-
 namespace itk
 {
 
@@ -24,22 +23,22 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TFixedImage, class TMovingImage>
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::KNNGraphAlphaMutualInformationImageToImageMetric()
 {
   this->SetComputeGradient( false ); // don't use the default gradient
   this->SetUseImageSampler( true );
-  this->m_Alpha = 0.99;
+  this->m_Alpha           = 0.99;
   this->m_AvoidDivisionBy = 1e-10;
 
-  this->m_BinaryKNNTreeFixed = 0;
+  this->m_BinaryKNNTreeFixed  = 0;
   this->m_BinaryKNNTreeMoving = 0;
-  this->m_BinaryKNNTreeJoint = 0;
+  this->m_BinaryKNNTreeJoint  = 0;
 
-  this->m_BinaryKNNTreeSearcherFixed = 0;
+  this->m_BinaryKNNTreeSearcherFixed  = 0;
   this->m_BinaryKNNTreeSearcherMoving = 0;
-  this->m_BinaryKNNTreeSearcherJoint = 0;
+  this->m_BinaryKNNTreeSearcherJoint  = 0;
 
 } // end Constructor()
 
@@ -48,9 +47,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ SetANNkDTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::SetANNkDTree( unsigned int bucketSize, std::string splittingRule )
 {
   this->SetANNkDTree( bucketSize, splittingRule, splittingRule, splittingRule );
@@ -62,9 +61,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ SetANNkDTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::SetANNkDTree( unsigned int bucketSize,
   std::string splittingRuleFixed,
   std::string splittingRuleMoving,
@@ -93,9 +92,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ SetANNbdTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::SetANNbdTree( unsigned int bucketSize,
   std::string splittingRule,
   std::string shrinkingRule )
@@ -111,9 +110,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ SetANNbdTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::SetANNbdTree( unsigned int bucketSize, std::string splittingRuleFixed,
   std::string splittingRuleMoving, std::string splittingRuleJoint,
   std::string shrinkingRuleFixed, std::string shrinkingRuleMoving,
@@ -146,9 +145,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ SetANNBruteForceTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::SetANNBruteForceTree( void )
 {
   this->m_BinaryKNNTreeFixed  = ANNBruteForceTreeType::New();
@@ -162,9 +161,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ SetANNStandardTreeSearch *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::SetANNStandardTreeSearch(
   unsigned int kNearestNeighbors,
   double errorBound )
@@ -195,9 +194,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ SetANNFixedRadiusTreeSearch *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::SetANNFixedRadiusTreeSearch(
   unsigned int kNearestNeighbors,
   double errorBound,
@@ -233,9 +232,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ SetANNPriorityTreeSearch *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::SetANNPriorityTreeSearch(
   unsigned int kNearestNeighbors,
   double errorBound )
@@ -266,22 +265,22 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ********************* Initialize *****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::Initialize( void ) throw ( ExceptionObject )
 {
   /** Call the superclass. */
   this->Superclass::Initialize();
 
   /** Check if the kNN trees are set. We only need to check the fixed tree. */
-  if ( !this->m_BinaryKNNTreeFixed )
+  if( !this->m_BinaryKNNTreeFixed )
   {
     itkExceptionMacro( << "ERROR: The kNN tree is not set. " );
   }
 
   /** Check if the kNN tree searchers are set. We only need to check the fixed searcher. */
-  if ( !this->m_BinaryKNNTreeSearcherFixed )
+  if( !this->m_BinaryKNNTreeSearcherFixed )
   {
     itkExceptionMacro( << "ERROR: The kNN tree searcher is not set. " );
   }
@@ -293,9 +292,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ GetValue *************************
  */
 
-template <class TFixedImage, class TMovingImage>
-typename KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+typename KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >::MeasureType
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValue( const TransformParametersType & parameters ) const
 {
   /** Initialize some variables. */
@@ -314,9 +313,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   ListSamplePointer listSampleJoint  = ListSampleType::New();
 
   /** Compute the three list samples. */
-  TransformJacobianContainerType dummyJacobianContainer;
+  TransformJacobianContainerType        dummyJacobianContainer;
   TransformJacobianIndicesContainerType dummyJacobianIndicesContainer;
-  SpatialDerivativeContainerType dummySpatialDerivativesContainer;
+  SpatialDerivativeContainerType        dummySpatialDerivativesContainer;
   this->ComputeListSampleValuesAndDerivativePlusJacobian(
     listSampleFixed, listSampleMoving, listSampleJoint,
     false, dummyJacobianContainer, dummyJacobianIndicesContainer,
@@ -347,11 +346,11 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Initialize tree searchers. */
   this->m_BinaryKNNTreeSearcherFixed
-    ->SetBinaryTree( this->m_BinaryKNNTreeFixed );
+  ->SetBinaryTree( this->m_BinaryKNNTreeFixed );
   this->m_BinaryKNNTreeSearcherMoving
-    ->SetBinaryTree( this->m_BinaryKNNTreeMoving );
+  ->SetBinaryTree( this->m_BinaryKNNTreeMoving );
   this->m_BinaryKNNTreeSearcherJoint
-    ->SetBinaryTree( this->m_BinaryKNNTreeJoint );
+  ->SetBinaryTree( this->m_BinaryKNNTreeJoint );
 
   /**
    * *************** Estimate the \alpha MI ******************
@@ -389,10 +388,10 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** Temporary variables. */
   typedef typename NumericTraits< MeasureType >::AccumulateType AccumulateType;
   MeasurementVectorType z_F, z_M, z_J;
-  IndexArrayType indices_F, indices_M, indices_J;
-  DistanceArrayType distances_F, distances_M, distances_J;
+  IndexArrayType        indices_F, indices_M, indices_J;
+  DistanceArrayType     distances_F, distances_M, distances_J;
 
-  MeasureType H, G;
+  MeasureType    H, G;
   AccumulateType sumG = NumericTraits< AccumulateType >::Zero;
 
   /** Get the size of the feature vectors. */
@@ -401,11 +400,11 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   unsigned int jointSize  = fixedSize + movingSize;
 
   /** Get the number of neighbours and \gamma. */
-  unsigned int k = this->m_BinaryKNNTreeSearcherFixed->GetKNearestNeighbors();
-  double twoGamma = jointSize * ( 1.0 - this->m_Alpha );
+  unsigned int k        = this->m_BinaryKNNTreeSearcherFixed->GetKNearestNeighbors();
+  double       twoGamma = jointSize * ( 1.0 - this->m_Alpha );
 
   /** Loop over all query points, i.e. all samples. */
-  for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  for( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
   {
     /** Get the i-th query point. */
     listSampleFixed->GetMeasurementVector(  i, z_F );
@@ -441,7 +440,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     AccumulateType Gamma_J = NumericTraits< AccumulateType >::Zero;
 
     /** Loop over the neighbours. */
-    for ( unsigned int p = 0; p < k; p++ )
+    for( unsigned int p = 0; p < k; p++ )
     {
       Gamma_F += vcl_sqrt( distances_F[ p ] );
       Gamma_M += vcl_sqrt( distances_M[ p ] );
@@ -450,10 +449,10 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
     /** Calculate the contribution of this query point. */
     H = vcl_sqrt( Gamma_F * Gamma_M );
-    if ( H > this->m_AvoidDivisionBy )
+    if( H > this->m_AvoidDivisionBy )
     {
       /** Compute some sums. */
-      G = Gamma_J / H;
+      G     = Gamma_J / H;
       sumG += vcl_pow( G, twoGamma );
     }
   } // end looping over all query points
@@ -463,11 +462,11 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
    */
 
   double n, number;
-  if ( sumG > this->m_AvoidDivisionBy )
+  if( sumG > this->m_AvoidDivisionBy )
   {
     /** Compute the measure. */
-    n = static_cast<double>( this->m_NumberOfPixelsCounted );
-    number = vcl_pow( n, this->m_Alpha );
+    n       = static_cast< double >( this->m_NumberOfPixelsCounted );
+    number  = vcl_pow( n, this->m_Alpha );
     measure = vcl_log( sumG / number ) / ( this->m_Alpha - 1.0 );
   }
 
@@ -481,9 +480,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ GetDerivative *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetDerivative(
   const TransformParametersType & parameters,
   DerivativeType & derivative ) const
@@ -503,9 +502,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ GetValueAndDerivative *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivative(
   const TransformParametersType & parameters,
   MeasureType & value,
@@ -541,9 +540,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   ListSamplePointer listSampleJoint  = ListSampleType::New();
 
   /** Compute the three list samples and the derivatives. */
-  TransformJacobianContainerType jacobianContainer;
+  TransformJacobianContainerType        jacobianContainer;
   TransformJacobianIndicesContainerType jacobianIndicesContainer;
-  SpatialDerivativeContainerType spatialDerivativesContainer;
+  SpatialDerivativeContainerType        spatialDerivativesContainer;
   this->ComputeListSampleValuesAndDerivativePlusJacobian(
     listSampleFixed, listSampleMoving, listSampleJoint,
     true, jacobianContainer, jacobianIndicesContainer, spatialDerivativesContainer );
@@ -572,11 +571,11 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Initialize tree searchers. */
   this->m_BinaryKNNTreeSearcherFixed
-    ->SetBinaryTree( this->m_BinaryKNNTreeFixed );
+  ->SetBinaryTree( this->m_BinaryKNNTreeFixed );
   this->m_BinaryKNNTreeSearcherMoving
-    ->SetBinaryTree( this->m_BinaryKNNTreeMoving );
+  ->SetBinaryTree( this->m_BinaryKNNTreeMoving );
   this->m_BinaryKNNTreeSearcherJoint
-    ->SetBinaryTree( this->m_BinaryKNNTreeJoint );
+  ->SetBinaryTree( this->m_BinaryKNNTreeJoint );
 
   /**
    * *************** Estimate the \alpha MI and its derivatives ******************
@@ -614,11 +613,11 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** Temporary variables. */
   typedef typename NumericTraits< MeasureType >::AccumulateType AccumulateType;
   MeasurementVectorType z_F, z_M, z_J, z_M_ip, z_J_ip, diff_M, diff_J;
-  IndexArrayType    indices_F,   indices_M,   indices_J;
-  DistanceArrayType distances_F, distances_M, distances_J;
-  MeasureType       distance_F,  distance_M,  distance_J;
+  IndexArrayType        indices_F,   indices_M,   indices_J;
+  DistanceArrayType     distances_F, distances_M, distances_J;
+  MeasureType           distance_F,  distance_M,  distance_J;
 
-  MeasureType H, G, Gpow;
+  MeasureType    H, G, Gpow;
   AccumulateType sumG = NumericTraits< AccumulateType >::Zero;
 
   DerivativeType contribution( this->GetNumberOfParameters() );
@@ -632,11 +631,11 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   unsigned int jointSize  = fixedSize + movingSize;
 
   /** Get the number of neighbours and \gamma. */
-  unsigned int k = this->m_BinaryKNNTreeSearcherFixed->GetKNearestNeighbors();
-  double twoGamma = jointSize * ( 1.0 - this->m_Alpha );
+  unsigned int k        = this->m_BinaryKNNTreeSearcherFixed->GetKNearestNeighbors();
+  double       twoGamma = jointSize * ( 1.0 - this->m_Alpha );
 
   /** Loop over all query points, i.e. all samples. */
-  for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  for( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
   {
     /** Get the i-th query point. */
     listSampleFixed->GetMeasurementVector(  i, z_F );
@@ -660,7 +659,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     dGamma_J.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Loop over the neighbours. */
-    for ( unsigned int p = 0; p < k; p++ )
+    for( unsigned int p = 0; p < k; p++ )
     {
       /** Get the neighbour point z_ip^M. */
       listSampleMoving->GetMeasurementVector( indices_M[ p ], z_M_ip );
@@ -682,9 +681,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Compute derivatives. */
       D2sparse_M = spatialDerivativesContainer[ indices_M[ p ] ]
-      * jacobianContainer[ indices_M[ p ] ];
+        * jacobianContainer[ indices_M[ p ] ];
       D2sparse_J = spatialDerivativesContainer[ indices_J[ p ] ]
-      * jacobianContainer[ indices_J[ p ] ];
+        * jacobianContainer[ indices_J[ p ] ];
 
       /** Update the dGamma's. */
       this->UpdateDerivativeOfGammas(
@@ -700,14 +699,14 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
     /** Compute contributions. */
     H = vcl_sqrt( Gamma_F * Gamma_M );
-    if ( H > this->m_AvoidDivisionBy )
+    if( H > this->m_AvoidDivisionBy )
     {
       /** Compute some sums. */
-      G = Gamma_J / H;
+      G     = Gamma_J / H;
       sumG += vcl_pow( G, twoGamma );
 
       /** Compute the contribution to the derivative. */
-      Gpow = vcl_pow( G, twoGamma - 1.0 );
+      Gpow          = vcl_pow( G, twoGamma - 1.0 );
       contribution += ( Gpow / H ) * ( dGamma_J - ( 0.5 * Gamma_J / Gamma_M ) * dGamma_M );
     }
 
@@ -719,15 +718,15 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Compute the value. */
   double n, number;
-  if ( sumG > this->m_AvoidDivisionBy )
+  if( sumG > this->m_AvoidDivisionBy )
   {
     /** Compute the measure. */
-    n = static_cast<double>( this->m_NumberOfPixelsCounted );
-    number = vcl_pow( n, this->m_Alpha );
+    n       = static_cast< double >( this->m_NumberOfPixelsCounted );
+    number  = vcl_pow( n, this->m_Alpha );
     measure = vcl_log( sumG / number ) / ( this->m_Alpha - 1.0 );
 
     /** Compute the derivative (-2.0 * d = -jointSize). */
-    derivative = ( static_cast<AccumulateType>( jointSize ) / sumG ) * contribution;
+    derivative = ( static_cast< AccumulateType >( jointSize ) / sumG ) * contribution;
   }
   value = -measure;
 
@@ -738,9 +737,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ ComputeListSampleValuesAndDerivativePlusJacobian *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeListSampleValuesAndDerivativePlusJacobian(
   const ListSamplePointer & listSampleFixed,
   const ListSamplePointer & listSampleMoving,
@@ -757,13 +756,13 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   spatialDerivativesContainer.resize( 0 );
 
   /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const unsigned long nrOfRequestedSamples = sampleContainer->Size();
+  ImageSampleContainerPointer sampleContainer      = this->GetImageSampler()->GetOutput();
+  const unsigned long         nrOfRequestedSamples = sampleContainer->Size();
 
   /** Create an iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Get the size of the feature vectors. */
   const unsigned int fixedSize  = this->GetNumberOfFixedImages();
@@ -786,26 +785,26 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   spatialDerivativesContainer.reserve( nrOfRequestedSamples );
 
   /** Create variables to store intermediate results. */
-  RealType movingImageValue;
-  MovingImagePointType mappedPoint;
-  double fixedFeatureValue = 0.0;
-  double movingFeatureValue = 0.0;
+  RealType                   movingImageValue;
+  MovingImagePointType       mappedPoint;
+  double                     fixedFeatureValue  = 0.0;
+  double                     movingFeatureValue = 0.0;
   NonZeroJacobianIndicesType nzji(
-    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
   TransformJacobianType jacobian;
 
   /** Loop over the fixed image samples to calculate the list samples. */
   unsigned int ii = 0;
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside all moving masks. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -815,9 +814,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
      * moving images buffers.
      */
     MovingImageDerivativeType movingImageDerivative;
-    if ( sampleOk )
+    if( sampleOk )
     {
-      if ( doDerivative )
+      if( doDerivative )
       {
         sampleOk = this->EvaluateMovingImageValueAndDerivative(
           mappedPoint, movingImageValue, &movingImageDerivative );
@@ -832,11 +831,11 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     /** This is a valid sample: in this if-statement the actual
      * addition to the list samples is done.
      */
-    if ( sampleOk )
+    if( sampleOk )
     {
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(
-        (*fiter).Value().m_ImageValue );
+      const RealType & fixedImageValue = static_cast< RealType >(
+        ( *fiter ).Value().m_ImageValue );
 
       /** Add the samples to the ListSampleCarrays. */
       listSampleFixed->SetMeasurement(  this->m_NumberOfPixelsCounted, 0,
@@ -849,7 +848,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
         this->GetNumberOfFixedImages(), movingImageValue );
 
       /** Get and set the values of the fixed feature images. */
-      for ( unsigned int j = 1; j < this->GetNumberOfFixedImages(); j++ )
+      for( unsigned int j = 1; j < this->GetNumberOfFixedImages(); j++ )
       {
         fixedFeatureValue = this->m_FixedImageInterpolatorVector[ j ]
           ->Evaluate( fixedPoint );
@@ -860,7 +859,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       }
 
       /** Get and set the values of the moving feature images. */
-      for ( unsigned int j = 1; j < this->GetNumberOfMovingImages(); j++ )
+      for( unsigned int j = 1; j < this->GetNumberOfMovingImages(); j++ )
       {
         movingFeatureValue = this->m_InterpolatorVector[ j ]
           ->Evaluate( mappedPoint );
@@ -878,7 +877,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
        * - the Jacobian of the transform: dT/dmu(x_i).
        * - the spatial derivative of all moving feature images: dz_q^m/dx(T(x_i)).
        */
-      if ( doDerivative )
+      if( doDerivative )
       {
         /** Get the TransformJacobian dT/dmu. */
         this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
@@ -887,14 +886,14 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
         /** Get the spatial derivative of the moving image. */
         SpatialDerivativeType spatialDerivatives(
-          this->GetNumberOfMovingImages(),
-          this->FixedImageDimension );
+        this->GetNumberOfMovingImages(),
+        this->FixedImageDimension );
         spatialDerivatives.set_row( 0, movingImageDerivative.GetDataPointer() );
 
         /** Get the spatial derivatives of the moving feature images. */
         SpatialDerivativeType movingFeatureImageDerivatives(
-          this->GetNumberOfMovingImages() - 1,
-          this->FixedImageDimension );
+        this->GetNumberOfMovingImages() - 1,
+        this->FixedImageDimension );
         this->EvaluateMovingFeatureImageDerivatives(
           mappedPoint, movingFeatureImageDerivatives );
         spatialDerivatives.update( movingFeatureImageDerivatives, 1, 0 );
@@ -929,9 +928,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ EvaluateMovingFeatureImageDerivatives *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::EvaluateMovingFeatureImageDerivatives(
   const MovingImagePointType & mappedPoint,
   SpatialDerivativeType & featureGradients ) const
@@ -947,20 +946,20 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
    *   pre-computed gradient images.
    * \todo: for now we only implement the first option.
    */
-  if ( this->m_InterpolatorsAreBSpline && !this->GetComputeGradient() )
+  if( this->m_InterpolatorsAreBSpline && !this->GetComputeGradient() )
   {
     /** Computed moving image gradient using derivative B-spline kernel. */
     MovingImageDerivativeType gradient;
-    for ( unsigned int i = 1; i < this->GetNumberOfMovingImages(); ++i )
+    for( unsigned int i = 1; i < this->GetNumberOfMovingImages(); ++i )
     {
       /** Compute the gradient at feature image i. */
       gradient = this->m_BSplineInterpolatorVector[ i ]
-      ->EvaluateDerivativeAtContinuousIndex( cindex );
+        ->EvaluateDerivativeAtContinuousIndex( cindex );
 
       /** Set the gradient into the Array2D. */
       featureGradients.set_row( i - 1, gradient.GetDataPointer() );
     } // end for-loop
-  } // end if
+  }   // end if
 //  else
 //  {
 //  /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
@@ -992,9 +991,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ UpdateDerivativeOfGammas *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::UpdateDerivativeOfGammas(
   const SpatialDerivativeType & D1sparse,
   const SpatialDerivativeType & D2sparse_M,
@@ -1010,10 +1009,10 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   DerivativeType & dGamma_J ) const
 {
   /** Make temporary copies of diff, since post_multiply changes diff. */
-  vnl_vector<double> tmpM1( diff_M );
-  vnl_vector<double> tmpM2( diff_M );
-  vnl_vector<double> tmpJ1( diff_J );
-  vnl_vector<double> tmpJ2( diff_J );
+  vnl_vector< double > tmpM1( diff_M );
+  vnl_vector< double > tmpM2( diff_M );
+  vnl_vector< double > tmpJ1( diff_J );
+  vnl_vector< double > tmpJ2( diff_J );
 
   /** Divide by the distance first, so that diff's are normalised.
    * Dividing at this place is much faster, since distance_? is a small
@@ -1025,46 +1024,46 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
    * stuff the metric value and derivative start to deviate after a couple
    * of iterations.
    */
-  if ( distance_M > this->m_AvoidDivisionBy )
+  if( distance_M > this->m_AvoidDivisionBy )
   {
     tmpM1 /= distance_M;
     tmpM2 /= distance_M;
   }
-  if ( distance_J > this->m_AvoidDivisionBy )
+  if( distance_J > this->m_AvoidDivisionBy )
   {
     tmpJ1 /= distance_J;
     tmpJ2 /= distance_J;
   }
 
   /** Compute sparse intermediary results. */
-  vnl_vector<double> tmp1sparse_M = tmpM1.post_multiply( D1sparse );
-  vnl_vector<double> tmp1sparse_J = tmpJ1.post_multiply( D1sparse );
-  vnl_vector<double> tmp2sparse_M = tmpM2.post_multiply( D2sparse_M );
-  vnl_vector<double> tmp2sparse_J = tmpJ2.post_multiply( D2sparse_J );
+  vnl_vector< double > tmp1sparse_M = tmpM1.post_multiply( D1sparse );
+  vnl_vector< double > tmp1sparse_J = tmpJ1.post_multiply( D1sparse );
+  vnl_vector< double > tmp2sparse_M = tmpM2.post_multiply( D2sparse_M );
+  vnl_vector< double > tmp2sparse_J = tmpJ2.post_multiply( D2sparse_J );
 
   /** Update dGamma_M. */
-  if ( distance_M > this->m_AvoidDivisionBy )
+  if( distance_M > this->m_AvoidDivisionBy )
   {
-    for ( unsigned int i = 0; i < D1indices.size(); ++i )
+    for( unsigned int i = 0; i < D1indices.size(); ++i )
     {
       dGamma_M[ D1indices[ i ] ] += tmp1sparse_M[ i ];
     }
 
-    for ( unsigned int i = 0; i < D2indices_M.size(); ++i )
+    for( unsigned int i = 0; i < D2indices_M.size(); ++i )
     {
       dGamma_M[ D2indices_M[ i ] ] -= tmp2sparse_M[ i ];
     }
   }
 
   /** Update dGamma_J. */
-  if ( distance_J > this->m_AvoidDivisionBy )
+  if( distance_J > this->m_AvoidDivisionBy )
   {
-    for ( unsigned int i = 0; i < D1indices.size(); ++i )
+    for( unsigned int i = 0; i < D1indices.size(); ++i )
     {
       dGamma_J[ D1indices[ i ] ] += tmp1sparse_J[ i ];
     }
 
-    for ( unsigned int i = 0; i < D2indices_J.size(); ++i )
+    for( unsigned int i = 0; i < D2indices_J.size(); ++i )
     {
       dGamma_J[ D2indices_J[ i ] ] -= tmp2sparse_J[ i ];
     }
@@ -1077,10 +1076,10 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************ PrintSelf *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-::PrintSelf( std::ostream& os, Indent indent ) const
+KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
@@ -1088,23 +1087,22 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   os << indent << "AvoidDivisionBy: " << this->m_AvoidDivisionBy << std::endl;
 
   os << indent << "BinaryKNNTreeFixed: "
-    << this->m_BinaryKNNTreeFixed.GetPointer() << std::endl;
+     << this->m_BinaryKNNTreeFixed.GetPointer() << std::endl;
   os << indent << "BinaryKNNTreeMoving: "
-    << this->m_BinaryKNNTreeMoving.GetPointer() << std::endl;
+     << this->m_BinaryKNNTreeMoving.GetPointer() << std::endl;
   os << indent << "BinaryKNNTreeJoint: "
-    << this->m_BinaryKNNTreeJoint.GetPointer() << std::endl;
+     << this->m_BinaryKNNTreeJoint.GetPointer() << std::endl;
 
   os << indent << "BinaryKNNTreeSearcherFixed: "
-    << this->m_BinaryKNNTreeSearcherFixed.GetPointer() << std::endl;
+     << this->m_BinaryKNNTreeSearcherFixed.GetPointer() << std::endl;
   os << indent << "BinaryKNNTreeSearcherMoving: "
-    << this->m_BinaryKNNTreeSearcherMoving.GetPointer() << std::endl;
+     << this->m_BinaryKNNTreeSearcherMoving.GetPointer() << std::endl;
   os << indent << "BinaryKNNTreeSearcherJoint: "
-    << this->m_BinaryKNNTreeSearcherJoint.GetPointer() << std::endl;
+     << this->m_BinaryKNNTreeSearcherJoint.GetPointer() << std::endl;
 
 } // end PrintSelf()
 
 
 } // end namespace itk
-
 
 #endif // end #ifndef _itkKNNGraphAlphaMutualInformationImageToImageMetric_hxx

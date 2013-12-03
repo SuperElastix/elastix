@@ -36,7 +36,6 @@
 /** Include for the spatial derivatives. */
 #include "itkArray2D.h"
 
-
 namespace itk
 {
 /**
@@ -67,18 +66,18 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
 
-template < class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 class KNNGraphAlphaMutualInformationImageToImageMetric :
-  public MultiInputImageToImageMetricBase< TFixedImage, TMovingImage>
+  public MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard itk. */
-  typedef KNNGraphAlphaMutualInformationImageToImageMetric  Self;
+  typedef KNNGraphAlphaMutualInformationImageToImageMetric Self;
   typedef MultiInputImageToImageMetricBase<
     TFixedImage, TMovingImage >                             Superclass;
-  typedef SmartPointer<Self>                                Pointer;
-  typedef SmartPointer<const Self>                          ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -89,7 +88,7 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename
-    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+    Superclass::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
   typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
@@ -123,22 +122,22 @@ public:
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename
-    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+    Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType  FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType MovingImageLimiterType;
   typedef typename
-    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+    Superclass::FixedImageLimiterOutputType FixedImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+    Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /** Typedef's for storing multiple inputs. */
-  typedef typename Superclass::FixedImageVectorType       FixedImageVectorType;
-  typedef typename Superclass::FixedImageMaskVectorType   FixedImageMaskVectorType;
-  typedef typename Superclass::FixedImageRegionVectorType FixedImageRegionVectorType;
-  typedef typename Superclass::MovingImageVectorType      MovingImageVectorType;
-  typedef typename Superclass::MovingImageMaskVectorType  MovingImageMaskVectorType;
-  typedef typename Superclass::InterpolatorVectorType     InterpolatorVectorType;
+  typedef typename Superclass::FixedImageVectorType             FixedImageVectorType;
+  typedef typename Superclass::FixedImageMaskVectorType         FixedImageMaskVectorType;
+  typedef typename Superclass::FixedImageRegionVectorType       FixedImageRegionVectorType;
+  typedef typename Superclass::MovingImageVectorType            MovingImageVectorType;
+  typedef typename Superclass::MovingImageMaskVectorType        MovingImageMaskVectorType;
+  typedef typename Superclass::InterpolatorVectorType           InterpolatorVectorType;
   typedef typename Superclass::FixedImageInterpolatorVectorType FixedImageInterpolatorVectorType;
 
   /** The fixed image dimension. */
@@ -146,31 +145,31 @@ public:
   itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
   /** Typedefs for the samples. */
-  typedef Array< double >                             MeasurementVectorType;
-  typedef typename MeasurementVectorType::ValueType   MeasurementVectorValueType;
+  typedef Array< double >                           MeasurementVectorType;
+  typedef typename MeasurementVectorType::ValueType MeasurementVectorValueType;
   typedef typename Statistics::ListSampleCArray<
     MeasurementVectorType, double >                   ListSampleType;
-  typedef typename ListSampleType::Pointer            ListSamplePointer;
+  typedef typename ListSampleType::Pointer ListSamplePointer;
 
   /** Typedefs for trees. */
-  typedef BinaryTreeBase< ListSampleType >            BinaryKNNTreeType;
-  typedef typename BinaryKNNTreeType::Pointer         BinaryKNNTreePointer;
-  typedef ANNkDTree< ListSampleType >                 ANNkDTreeType;
-  typedef ANNbdTree< ListSampleType >                 ANNbdTreeType;
-  typedef ANNBruteForceTree< ListSampleType >         ANNBruteForceTreeType;
+  typedef BinaryTreeBase< ListSampleType >    BinaryKNNTreeType;
+  typedef typename BinaryKNNTreeType::Pointer BinaryKNNTreePointer;
+  typedef ANNkDTree< ListSampleType >         ANNkDTreeType;
+  typedef ANNbdTree< ListSampleType >         ANNbdTreeType;
+  typedef ANNBruteForceTree< ListSampleType > ANNBruteForceTreeType;
 
   /** Typedefs for tree searchers. */
-  typedef BinaryTreeSearchBase< ListSampleType >      BinaryKNNTreeSearchType;
-  typedef typename BinaryKNNTreeSearchType::Pointer   BinaryKNNTreeSearchPointer;
-  typedef ANNStandardTreeSearch< ListSampleType >     ANNStandardTreeSearchType;
-  typedef ANNFixedRadiusTreeSearch< ListSampleType >  ANNFixedRadiusTreeSearchType;
-  typedef ANNPriorityTreeSearch< ListSampleType >     ANNPriorityTreeSearchType;
+  typedef BinaryTreeSearchBase< ListSampleType >     BinaryKNNTreeSearchType;
+  typedef typename BinaryKNNTreeSearchType::Pointer  BinaryKNNTreeSearchPointer;
+  typedef ANNStandardTreeSearch< ListSampleType >    ANNStandardTreeSearchType;
+  typedef ANNFixedRadiusTreeSearch< ListSampleType > ANNFixedRadiusTreeSearchType;
+  typedef ANNPriorityTreeSearch< ListSampleType >    ANNPriorityTreeSearchType;
 
-  typedef typename BinaryKNNTreeSearchType::IndexArrayType      IndexArrayType;
-  typedef typename BinaryKNNTreeSearchType::DistanceArrayType   DistanceArrayType;
+  typedef typename BinaryKNNTreeSearchType::IndexArrayType    IndexArrayType;
+  typedef typename BinaryKNNTreeSearchType::DistanceArrayType DistanceArrayType;
 
-  typedef typename DerivativeType::ValueType          DerivativeValueType;
-  typedef typename TransformJacobianType::ValueType   TransformJacobianValueType;
+  typedef typename DerivativeType::ValueType        DerivativeValueType;
+  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /**
    * *** Set trees: ***
@@ -230,7 +229,7 @@ public:
 
   /** Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const;
 
   /** Set alpha from alpha - mutual information. */
   itkSetClampMacro( Alpha, double, 0.0, 1.0 );
@@ -250,37 +249,38 @@ protected:
   KNNGraphAlphaMutualInformationImageToImageMetric();
 
   /** Destructor. */
-  virtual ~KNNGraphAlphaMutualInformationImageToImageMetric() {};
+  virtual ~KNNGraphAlphaMutualInformationImageToImageMetric() {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream& os, Indent indent ) const;
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Member variables. */
-  BinaryKNNTreePointer       m_BinaryKNNTreeFixed;
-  BinaryKNNTreePointer       m_BinaryKNNTreeMoving;
-  BinaryKNNTreePointer       m_BinaryKNNTreeJoint;
+  BinaryKNNTreePointer m_BinaryKNNTreeFixed;
+  BinaryKNNTreePointer m_BinaryKNNTreeMoving;
+  BinaryKNNTreePointer m_BinaryKNNTreeJoint;
 
   BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherFixed;
   BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherMoving;
   BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherJoint;
 
-  double   m_Alpha;
-  double   m_AvoidDivisionBy;
+  double m_Alpha;
+  double m_AvoidDivisionBy;
 
 private:
-  KNNGraphAlphaMutualInformationImageToImageMetric(const Self&);  // purposely not implemented
-  void operator=(const Self&);                                  // purposely not implemented
+
+  KNNGraphAlphaMutualInformationImageToImageMetric( const Self & ); // purposely not implemented
+  void operator=( const Self & );                                   // purposely not implemented
 
   /** Typedef's for the computation of the derivative. */
-  typedef typename Superclass::FixedImagePointType       FixedImagePointType;
-  typedef typename Superclass::MovingImagePointType      MovingImagePointType;
-  typedef typename Superclass::MovingImageDerivativeType MovingImageDerivativeType;
+  typedef typename Superclass::FixedImagePointType            FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType           MovingImagePointType;
+  typedef typename Superclass::MovingImageDerivativeType      MovingImageDerivativeType;
   typedef typename Superclass::MovingImageContinuousIndexType MovingImageContinuousIndexType;
-  typedef std::vector<TransformJacobianType>             TransformJacobianContainerType;
+  typedef std::vector< TransformJacobianType >                TransformJacobianContainerType;
   //typedef std::vector<ParameterIndexArrayType>           TransformJacobianIndicesContainerType;
-  typedef std::vector<NonZeroJacobianIndicesType>        TransformJacobianIndicesContainerType;
-  typedef Array2D<double>                                SpatialDerivativeType;
-  typedef std::vector<SpatialDerivativeType>             SpatialDerivativeContainerType;
+  typedef std::vector< NonZeroJacobianIndicesType > TransformJacobianIndicesContainerType;
+  typedef Array2D< double >                         SpatialDerivativeType;
+  typedef std::vector< SpatialDerivativeType >      SpatialDerivativeContainerType;
 
   /** This function takes the fixed image samples from the ImageSampler
    * and puts them in the listSampleFixed, together with the fixed feature
@@ -331,7 +331,7 @@ private:
     DerivativeType & dGamma_M,
     DerivativeType & dGamma_J ) const;
 
- };
+};
 
 } // end namespace itk
 

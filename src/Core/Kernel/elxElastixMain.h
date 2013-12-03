@@ -27,7 +27,6 @@
 
 #include "itkParameterMapInterface.h"
 
-
 namespace elastix
 {
 
@@ -95,10 +94,10 @@ class ElastixMain : public itk::Object
 public:
 
   /** Standard itk. */
-  typedef ElastixMain                    Self;
-  typedef itk::Object                    Superclass;
-  typedef itk::SmartPointer<Self>        Pointer;
-  typedef itk::SmartPointer<const Self>  ConstPointer;
+  typedef ElastixMain                     Self;
+  typedef itk::Object                     Superclass;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -115,15 +114,15 @@ public:
   typedef DataObjectType::Pointer DataObjectPointer;
 
   /** elastix components. */
-  typedef ElastixBase                                     ElastixBaseType;
-  typedef ElastixBase::ConfigurationType                  ConfigurationType;
-  typedef ConfigurationType::CommandLineArgumentMapType   ArgumentMapType;
-  typedef ConfigurationType::Pointer                      ConfigurationPointer;
-  typedef ElastixBase::ObjectContainerType                ObjectContainerType;
-  typedef ElastixBase::DataObjectContainerType            DataObjectContainerType;
-  typedef ElastixBase::ObjectContainerPointer             ObjectContainerPointer;
-  typedef ElastixBase::DataObjectContainerPointer         DataObjectContainerPointer;
-  typedef ElastixBase::FlatDirectionCosinesType           FlatDirectionCosinesType;
+  typedef ElastixBase                                   ElastixBaseType;
+  typedef ElastixBase::ConfigurationType                ConfigurationType;
+  typedef ConfigurationType::CommandLineArgumentMapType ArgumentMapType;
+  typedef ConfigurationType::Pointer                    ConfigurationPointer;
+  typedef ElastixBase::ObjectContainerType              ObjectContainerType;
+  typedef ElastixBase::DataObjectContainerType          DataObjectContainerType;
+  typedef ElastixBase::ObjectContainerPointer           ObjectContainerPointer;
+  typedef ElastixBase::DataObjectContainerPointer       DataObjectContainerPointer;
+  typedef ElastixBase::FlatDirectionCosinesType         FlatDirectionCosinesType;
 
   /** Typedefs for the database that holds pointers to New() functions.
    * Those functions are used to instantiate components, such as the metric etc.
@@ -137,11 +136,11 @@ public:
   typedef ComponentDatabaseType::IndexType                DBIndexType;
 
   /** Typedef for class that populates a ComponentDatabase. */
-  typedef ComponentLoader                                 ComponentLoaderType;
-  typedef ComponentLoaderType::Pointer                    ComponentLoaderPointer;
+  typedef ComponentLoader              ComponentLoaderType;
+  typedef ComponentLoaderType::Pointer ComponentLoaderPointer;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef itk::ParameterMapInterface::ParameterMapType    ParameterMapType;
+  typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
 
   /** Set/Get functions for the description of the imagetype. */
   itkSetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
@@ -211,15 +210,17 @@ public:
    * (d11 d21 d31 d21 d22 etc ) */
   virtual void SetOriginalFixedImageDirectionFlat(
     const FlatDirectionCosinesType & arg );
-  virtual const FlatDirectionCosinesType &
-    GetOriginalFixedImageDirectionFlat( void ) const;
+
+  virtual const FlatDirectionCosinesType & GetOriginalFixedImageDirectionFlat( void ) const;
 
   /** Get and Set the elastix level. */
   void SetElastixLevel( unsigned int level );
+
   unsigned int GetElastixLevel( void );
 
   /** Get and Set the total number of elastix levels. */
   void SetTotalNumberOfElastixLevels( unsigned int levels );
+
   unsigned int GetTotalNumberOfElastixLevels( void );
 
   /** Returns the Index that is used in elx::ComponentDatabase. */
@@ -230,8 +231,10 @@ public:
    * The Configuration object will be initialized in this way.
    */
   virtual void EnterCommandLineArguments( ArgumentMapType & argmap );
+
   virtual void EnterCommandLineArguments( ArgumentMapType & argmap,
     ParameterMapType & inputMap );
+
   // Version used when elastix is used as a library.
   virtual void EnterCommandLineArguments( ArgumentMapType & argmap,
     std::vector< ParameterMapType > & inputMaps );
@@ -248,6 +251,7 @@ public:
    * and then calls run().
    */
   virtual int Run( ArgumentMapType & argmap );
+
   virtual int Run( ArgumentMapType & argmap, ParameterMapType & inputMap );
 
   /** Set process priority, which is read from the command line arguments.
@@ -268,13 +272,15 @@ public:
     return s_CDB.GetPointer();
   }
 
+
   static void SetComponentDatabase( ComponentDatabase * arg )
   {
-    if ( s_CDB != arg )
+    if( s_CDB != arg )
     {
       s_CDB = arg;
     }
   }
+
 
   /** GetTransformParametersMap */
   virtual ParameterMapType GetTransformParametersMap( void ) const;
@@ -292,25 +298,25 @@ protected:
   ObjectPointer m_Elastix;
 
   /** The configuration object, containing the parameters and command-line arguments. */
-  ConfigurationPointer  m_Configuration;
+  ConfigurationPointer m_Configuration;
 
   /** A vector of configuration objects, needed when transformix is used as library. */
   std::vector< ConfigurationPointer > m_Configurations;
 
   /** Description of the ImageTypes. */
-  PixelTypeDescriptionType    m_FixedImagePixelType;
-  ImageDimensionType          m_FixedImageDimension;
-  PixelTypeDescriptionType    m_MovingImagePixelType;
-  ImageDimensionType          m_MovingImageDimension;
+  PixelTypeDescriptionType m_FixedImagePixelType;
+  ImageDimensionType       m_FixedImageDimension;
+  PixelTypeDescriptionType m_MovingImagePixelType;
+  ImageDimensionType       m_MovingImageDimension;
 
-  DBIndexType                 m_DBIndex;
+  DBIndexType m_DBIndex;
 
   /** The images and masks. */
-  DataObjectContainerPointer  m_FixedImageContainer;
-  DataObjectContainerPointer  m_MovingImageContainer;
-  DataObjectContainerPointer  m_FixedMaskContainer;
-  DataObjectContainerPointer  m_MovingMaskContainer;
-  DataObjectContainerPointer  m_ResultImageContainer;
+  DataObjectContainerPointer m_FixedImageContainer;
+  DataObjectContainerPointer m_MovingImageContainer;
+  DataObjectContainerPointer m_FixedMaskContainer;
+  DataObjectContainerPointer m_MovingMaskContainer;
+  DataObjectContainerPointer m_ResultImageContainer;
 
   /** A transform that is the result of registration. */
   ObjectPointer m_FinalTransform;
@@ -322,10 +328,10 @@ protected:
    */
   ParameterMapType m_TransformParametersMap;
 
-  FlatDirectionCosinesType     m_OriginalFixedImageDirection;
+  FlatDirectionCosinesType m_OriginalFixedImageDirection;
 
   static ComponentDatabasePointer s_CDB;
-  static ComponentLoaderPointer s_ComponentLoader;
+  static ComponentLoaderPointer   s_ComponentLoader;
   virtual int LoadComponents( void );
 
   /** InitDBIndex sets m_DBIndex by asking the ImageTypes
@@ -366,13 +372,11 @@ protected:
 
 private:
 
-  ElastixMain( const Self& );     // purposely not implemented
-  void operator=( const Self& );  // purposely not implemented
+  ElastixMain( const Self & );     // purposely not implemented
+  void operator=( const Self & );  // purposely not implemented
 
 };
 
-
 } // end namespace elastix
-
 
 #endif // end #ifndef __elxElastixMain_h

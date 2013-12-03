@@ -102,25 +102,25 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template < class TElastix >
-class BSplineStackTransform
-  : public
-  itk::AdvancedCombinationTransform<
-  typename elx::TransformBase<TElastix>::CoordRepType,
-  elx::TransformBase<TElastix>::FixedImageDimension > ,
+template< class TElastix >
+class BSplineStackTransform :
   public
-  TransformBase<TElastix>
+  itk::AdvancedCombinationTransform<
+  typename elx::TransformBase< TElastix >::CoordRepType,
+  elx::TransformBase< TElastix >::FixedImageDimension >,
+  public
+  TransformBase< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef BSplineStackTransform                         Self;
+  typedef BSplineStackTransform Self;
   typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
-    elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
-  typedef elx::TransformBase<TElastix>                  Superclass2;
-  typedef itk::SmartPointer<Self>                       Pointer;
-  typedef itk::SmartPointer<const Self>                 ConstPointer;
+    typename elx::TransformBase< TElastix >::CoordRepType,
+    elx::TransformBase< TElastix >::FixedImageDimension > Superclass1;
+  typedef elx::TransformBase< TElastix >  Superclass2;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -142,85 +142,85 @@ public:
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   typedef itk::AdvancedBSplineDeformableTransformBase<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ) >              BSplineTransformBaseType;
-  typedef typename BSplineTransformBaseType::Pointer        BSplineTransformBasePointer;
+  typedef typename BSplineTransformBaseType::Pointer BSplineTransformBasePointer;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
   typedef itk::AdvancedBSplineDeformableTransformBase<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( ReducedSpaceDimension ) >                  ReducedDimensionBSplineTransformBaseType;
-  typedef typename ReducedDimensionBSplineTransformBaseType::Pointer   ReducedDimensionBSplineTransformBasePointer;
+  typedef typename ReducedDimensionBSplineTransformBaseType::Pointer ReducedDimensionBSplineTransformBasePointer;
 
   /** Typedef for stack transform. */
   typedef itk::StackTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
     itkGetStaticConstMacro( SpaceDimension ) >            BSplineStackTransformType;
-  typedef typename BSplineStackTransformType::Pointer     BSplineStackTransformPointer;
+  typedef typename BSplineStackTransformType::Pointer BSplineStackTransformPointer;
 
   /** Typedef for supported BSplineTransform types. */
   typedef itk::AdvancedBSplineDeformableTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( ReducedSpaceDimension ),
     1 >                                                   BSplineTransformLinearType;
   typedef itk::AdvancedBSplineDeformableTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( ReducedSpaceDimension ),
     2 >                                                   BSplineTransformQuadraticType;
   typedef itk::AdvancedBSplineDeformableTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( ReducedSpaceDimension ),
     3 >                                                   BSplineTransformCubicType;
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass1::ParametersType            ParametersType;
-  typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
+  typedef typename Superclass1::ParametersType         ParametersType;
+  typedef typename Superclass1::NumberOfParametersType NumberOfParametersType;
 
   /** Typedef's specific for the BSplineTransform. */
-  typedef typename BSplineTransformBaseType::PixelType        PixelType;
-  typedef typename BSplineTransformBaseType::ImageType        ImageType;
-  typedef typename BSplineTransformBaseType::ImagePointer     ImagePointer;
-  typedef typename BSplineTransformBaseType::RegionType       RegionType;
-  typedef typename BSplineTransformBaseType::IndexType        IndexType;
-  typedef typename BSplineTransformBaseType::SizeType         SizeType;
-  typedef typename BSplineTransformBaseType::SpacingType      SpacingType;
-  typedef typename BSplineTransformBaseType::OriginType       OriginType;
-  typedef typename BSplineTransformBaseType::DirectionType    DirectionType;
+  typedef typename BSplineTransformBaseType::PixelType     PixelType;
+  typedef typename BSplineTransformBaseType::ImageType     ImageType;
+  typedef typename BSplineTransformBaseType::ImagePointer  ImagePointer;
+  typedef typename BSplineTransformBaseType::RegionType    RegionType;
+  typedef typename BSplineTransformBaseType::IndexType     IndexType;
+  typedef typename BSplineTransformBaseType::SizeType      SizeType;
+  typedef typename BSplineTransformBaseType::SpacingType   SpacingType;
+  typedef typename BSplineTransformBaseType::OriginType    OriginType;
+  typedef typename BSplineTransformBaseType::DirectionType DirectionType;
 
   /** Typedef's from TransformBase. */
-  typedef typename Superclass2::ElastixType               ElastixType;
-  typedef typename Superclass2::ElastixPointer            ElastixPointer;
-  typedef typename Superclass2::ConfigurationType         ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType          RegistrationType;
-  typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-  typedef typename Superclass2::CoordRepType              CoordRepType;
-  typedef typename Superclass2::FixedImageType            FixedImageType;
-  typedef typename Superclass2::MovingImageType           MovingImageType;
-  typedef typename Superclass2::ITKBaseType               ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
+  typedef typename Superclass2::ElastixType              ElastixType;
+  typedef typename Superclass2::ElastixPointer           ElastixPointer;
+  typedef typename Superclass2::ConfigurationType        ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer     ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType         RegistrationType;
+  typedef typename Superclass2::RegistrationPointer      RegistrationPointer;
+  typedef typename Superclass2::CoordRepType             CoordRepType;
+  typedef typename Superclass2::FixedImageType           FixedImageType;
+  typedef typename Superclass2::MovingImageType          MovingImageType;
+  typedef typename Superclass2::ITKBaseType              ITKBaseType;
+  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Reduced dimension image typedefs. */
   typedef itk::Image< PixelType,
-    itkGetStaticConstMacro( ReducedSpaceDimension )>         ReducedDimensionImageType;
+    itkGetStaticConstMacro( ReducedSpaceDimension ) >         ReducedDimensionImageType;
   typedef itk::ImageRegion<
     itkGetStaticConstMacro( ReducedSpaceDimension ) >        ReducedDimensionRegionType;
-  typedef typename ReducedDimensionRegionType::SizeType      ReducedDimensionSizeType;
-  typedef typename ReducedDimensionRegionType::IndexType     ReducedDimensionIndexType;
-  typedef typename ReducedDimensionImageType::SpacingType    ReducedDimensionSpacingType;
-  typedef typename ReducedDimensionImageType::DirectionType  ReducedDimensionDirectionType;
-  typedef typename ReducedDimensionImageType::PointType      ReducedDimensionOriginType;
+  typedef typename ReducedDimensionRegionType::SizeType     ReducedDimensionSizeType;
+  typedef typename ReducedDimensionRegionType::IndexType    ReducedDimensionIndexType;
+  typedef typename ReducedDimensionImageType::SpacingType   ReducedDimensionSpacingType;
+  typedef typename ReducedDimensionImageType::DirectionType ReducedDimensionDirectionType;
+  typedef typename ReducedDimensionImageType::PointType     ReducedDimensionOriginType;
 
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
   typedef itk::GridScheduleComputer<
     CoordRepType, ReducedSpaceDimension >                 GridScheduleComputerType;
-  typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
+  typedef typename GridScheduleComputerType::Pointer GridScheduleComputerPointer;
   typedef typename GridScheduleComputerType
-    ::VectorGridSpacingFactorType                         GridScheduleType;
+    ::VectorGridSpacingFactorType GridScheduleType;
   typedef itk::UpsampleBSplineParametersFilter<
     ParametersType, ReducedDimensionImageType >           GridUpsamplerType;
-  typedef typename GridUpsamplerType::Pointer             GridUpsamplerPointer;
+  typedef typename GridUpsamplerType::Pointer GridUpsamplerPointer;
 
   /** Execute stuff before anything else is done:
    * \li Initialize the right BSplineTransform.
@@ -288,30 +288,29 @@ protected:
 private:
 
   /** The private constructor and copy constructor. */
-  BSplineStackTransform( const Self& );  // purposely not implemented
-  void operator=( const Self& );         // purposely not implemented
+  BSplineStackTransform( const Self & );  // purposely not implemented
+  void operator=( const Self & );         // purposely not implemented
 
   /** The B-spline stack transform. */
-  BSplineStackTransformPointer  m_BSplineStackTransform;
+  BSplineStackTransformPointer m_BSplineStackTransform;
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
-  ReducedDimensionBSplineTransformBasePointer  m_BSplineDummySubTransform;
+  ReducedDimensionBSplineTransformBasePointer m_BSplineDummySubTransform;
 
   /** Grid schedule computer and grid upsampler. */
-  GridScheduleComputerPointer   m_GridScheduleComputer;
-  GridUpsamplerPointer          m_GridUpsampler;
+  GridScheduleComputerPointer m_GridScheduleComputer;
+  GridUpsamplerPointer        m_GridUpsampler;
 
   /** Variable to remember order of B-spline transform. */
   unsigned int m_SplineOrder;
 
   /** Stack variables. */
   unsigned int m_NumberOfSubTransforms;
-  double m_StackOrigin, m_StackSpacing;
+  double       m_StackOrigin, m_StackSpacing;
 
   /** Initialize the right B-spline transform based on the spline order. */
   unsigned int InitializeBSplineTransform();
 
 };
-
 
 } // end namespace elastix
 
@@ -320,4 +319,3 @@ private:
 #endif
 
 #endif // end #ifndef __elxBSplineStackTransform_h
-

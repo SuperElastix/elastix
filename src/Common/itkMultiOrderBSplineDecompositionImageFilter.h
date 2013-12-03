@@ -74,19 +74,20 @@ namespace itk
  * \ingroup SingleThreaded
  * \ingroup CannotBeStreamed
  */
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 class ITK_EXPORT MultiOrderBSplineDecompositionImageFilter :
-    public ImageToImageFilter<TInputImage,TOutputImage>
+  public         ImageToImageFilter< TInputImage, TOutputImage >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef MultiOrderBSplineDecompositionImageFilter     Self;
-  typedef ImageToImageFilter<TInputImage,TOutputImage>  Superclass;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  typedef MultiOrderBSplineDecompositionImageFilter       Self;
+  typedef ImageToImageFilter< TInputImage, TOutputImage > Superclass;
+  typedef SmartPointer< Self >                            Pointer;
+  typedef SmartPointer< const Self >                      ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiOrderBSplineDecompositionImageFilter, ImageToImageFilter);
+  itkTypeMacro( MultiOrderBSplineDecompositionImageFilter, ImageToImageFilter );
 
   /** New macro for creation of through a Smart Pointer */
   itkNewMacro( Self );
@@ -97,65 +98,70 @@ public:
   typedef typename Superclass::InputImageConstPointer InputImageConstPointer;
   typedef typename Superclass::OutputImagePointer     OutputImagePointer;
 
-  typedef typename itk::NumericTraits<typename TOutputImage::PixelType>::RealType CoeffType;
+  typedef typename itk::NumericTraits< typename TOutputImage::PixelType >::RealType CoeffType;
 
   /** Dimension underlying input image. */
-  itkStaticConstMacro(ImageDimension, unsigned int,TInputImage::ImageDimension);
-  itkStaticConstMacro(OutputImageDimension, unsigned int,
-                      TOutputImage::ImageDimension);
+  itkStaticConstMacro( ImageDimension, unsigned int, TInputImage::ImageDimension );
+  itkStaticConstMacro( OutputImageDimension, unsigned int,
+    TOutputImage::ImageDimension );
 
   /** Iterator typedef support */
-  typedef ImageLinearIteratorWithIndex<TOutputImage> OutputLinearIterator;
+  typedef ImageLinearIteratorWithIndex< TOutputImage > OutputLinearIterator;
 
   /** Get/Sets the Spline Order, supports 0th - 5th order splines. The default
    *  is a 3rd order spline. */
   void SetSplineOrder( unsigned int order );
+
   void SetSplineOrder( unsigned int dimension, unsigned int order );
+
   void GetSplineOrder( unsigned int dimension )
   {
     return m_SplineOrder[ dimension ];
   }
+
+
   //itkGetMacro( SplineOrder, unsigned int * );
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro(DimensionCheck,
-    (Concept::SameDimension<ImageDimension, OutputImageDimension>));
-  itkConceptMacro(InputConvertibleToOutputCheck,
-     (Concept::Convertible<typename TInputImage::PixelType,
-                           typename TOutputImage::PixelType>));
-  itkConceptMacro(DoubleConvertibleToOutputCheck,
-    (Concept::Convertible<double, typename TOutputImage::PixelType>));
+  itkConceptMacro( DimensionCheck,
+    ( Concept::SameDimension< ImageDimension, OutputImageDimension > ) );
+  itkConceptMacro( InputConvertibleToOutputCheck,
+    ( Concept::Convertible< typename TInputImage::PixelType,
+    typename TOutputImage::PixelType > ) );
+  itkConceptMacro( DoubleConvertibleToOutputCheck,
+    ( Concept::Convertible< double, typename TOutputImage::PixelType > ) );
   /** End concept checking */
 #endif
 
 protected:
-  MultiOrderBSplineDecompositionImageFilter();
-  virtual ~MultiOrderBSplineDecompositionImageFilter() {};
-  void PrintSelf(std::ostream& os, Indent indent) const;
 
-  void GenerateData( );
+  MultiOrderBSplineDecompositionImageFilter();
+  virtual ~MultiOrderBSplineDecompositionImageFilter() {}
+  void PrintSelf( std::ostream & os, Indent indent ) const;
+
+  void GenerateData();
 
   /** This filter requires all of the input image. */
   void GenerateInputRequestedRegion();
 
   /** This filter must produce all of its output at once. */
-  void EnlargeOutputRequestedRegion( DataObject *output );
+  void EnlargeOutputRequestedRegion( DataObject * output );
 
   /** These are needed by the smoothing spline routine. */
-  std::vector<CoeffType>           m_Scratch;       // temp storage for processing of Coefficients
-  typename TInputImage::SizeType   m_DataLength;  // Image size
+  std::vector< CoeffType > m_Scratch;             // temp storage for processing of Coefficients
+  typename TInputImage::SizeType m_DataLength;    // Image size
 
-  unsigned int              m_SplineOrder[ImageDimension]; // User specified spline order per dimension (3rd or cubic is the default)
-  double                    m_SplinePoles[3];              // Poles calculated for a given spline order
-  int                       m_NumberOfPoles;               // number of poles
-  double                    m_Tolerance;                   // Tolerance used for determining initial causal coefficient
-  unsigned int              m_IteratorDirection;           // Direction for iterator incrementing
-
+  unsigned int m_SplineOrder[ ImageDimension ];            // User specified spline order per dimension (3rd or cubic is the default)
+  double       m_SplinePoles[ 3 ];                         // Poles calculated for a given spline order
+  int          m_NumberOfPoles;                            // number of poles
+  double       m_Tolerance;                                // Tolerance used for determining initial causal coefficient
+  unsigned int m_IteratorDirection;                        // Direction for iterator incrementing
 
 private:
-  MultiOrderBSplineDecompositionImageFilter( const Self& ); //purposely not implemented
-  void operator=( const Self& ); //purposely not implemented
+
+  MultiOrderBSplineDecompositionImageFilter( const Self & ); //purposely not implemented
+  void operator=( const Self & );                            //purposely not implemented
 
   /** Determines the poles for dimension given the Spline Order. */
   virtual void SetPoles( unsigned int dimension );
@@ -168,10 +174,10 @@ private:
   void DataToCoefficientsND();
 
   /** Determines the first coefficient for the causal filtering of the data. */
-  virtual void SetInitialCausalCoefficient(double z);
+  virtual void SetInitialCausalCoefficient( double z );
 
   /** Determines the first coefficient for the anti-causal filtering of the data. */
-  virtual void SetInitialAntiCausalCoefficient(double z);
+  virtual void SetInitialAntiCausalCoefficient( double z );
 
   /** Used to initialize the Coefficients image before calculation. */
   void CopyImageToImage();
@@ -183,7 +189,6 @@ private:
   void CopyScratchToCoefficients( OutputLinearIterator & );
 
 };
-
 
 } // namespace itk
 

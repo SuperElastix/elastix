@@ -11,13 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkLimiterFunctionBase_h
 #define __itkLimiterFunctionBase_h
 
 #include "itkFunctionBase.h"
 #include "itkExceptionObject.h"
-
 
 namespace itk
 {
@@ -44,17 +42,17 @@ namespace itk
  * \ingroup Functions
  *
  */
-template < class TInput, unsigned int NDimension >
+template< class TInput, unsigned int NDimension >
 class LimiterFunctionBase :
-  public FunctionBase<TInput, typename NumericTraits<TInput>::RealType>
+  public FunctionBase< TInput, typename NumericTraits< TInput >::RealType >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef LimiterFunctionBase                     Self;
-  typedef FunctionBase< TInput,
-    typename NumericTraits< TInput >::RealType >  Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef LimiterFunctionBase                                                Self;
+  typedef FunctionBase< TInput, typename NumericTraits< TInput >::RealType > Superclass;
+  typedef SmartPointer< Self >                                               Pointer;
+  typedef SmartPointer< const Self >                                         ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( LimiterFunctionBase, FunctionBase );
@@ -62,19 +60,19 @@ public:
   itkStaticConstMacro( Dimension, unsigned int, NDimension );
 
   /** Superclass' typedefs */
-  typedef typename Superclass::InputType          InputType;
-  typedef typename Superclass::OutputType         OutputType;
+  typedef typename Superclass::InputType  InputType;
+  typedef typename Superclass::OutputType OutputType;
 
-  typedef OutputType                              DerivativeValueType;
+  typedef OutputType DerivativeValueType;
   typedef CovariantVector<
     DerivativeValueType,
-    itkGetStaticConstMacro(Dimension)>            DerivativeType;
+    itkGetStaticConstMacro( Dimension ) >            DerivativeType;
 
   /** Limit the input value. */
   virtual OutputType Evaluate( const InputType & input ) const = 0;
 
   /** Limit the input value and change the input function derivative accordingly */
-  virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative) const = 0;
+  virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const = 0;
 
   /** Set/Get the upper bound that the output should respect. Make sure it is higher
    * than the lower bound. */
@@ -97,28 +95,32 @@ public:
   itkGetConstMacro( LowerThreshold, InputType );
 
   /** Initialize the limiter */
-  virtual void Initialize( void ) throw (ExceptionObject) {};
+  virtual void Initialize( void ) throw ( ExceptionObject ) {}
 
 protected:
+
   LimiterFunctionBase()
   {
-    this->m_UpperBound =
-      itk::NumericTraits<OutputType>::One +
-      itk::NumericTraits<OutputType>::One;
-    this->m_LowerBound = itk::NumericTraits<OutputType>::Zero;
-    this->m_UpperThreshold = itk::NumericTraits<InputType>::One;
-    this->m_LowerThreshold = itk::NumericTraits<InputType>::One;
-  };
-  ~LimiterFunctionBase(){};
+    this->m_UpperBound
+      = itk::NumericTraits< OutputType >::One
+      + itk::NumericTraits< OutputType >::One;
+    this->m_LowerBound     = itk::NumericTraits< OutputType >::Zero;
+    this->m_UpperThreshold = itk::NumericTraits< InputType >::One;
+    this->m_LowerThreshold = itk::NumericTraits< InputType >::One;
+  }
+
+
+  ~LimiterFunctionBase(){}
 
   OutputType m_UpperBound;
   OutputType m_LowerBound;
-  InputType m_UpperThreshold;
-  InputType m_LowerThreshold;
+  InputType  m_UpperThreshold;
+  InputType  m_LowerThreshold;
 
 private:
-  LimiterFunctionBase(const Self& ); // purposely not implemented
-  void operator=(const Self& ); // purposely not implemented
+
+  LimiterFunctionBase( const Self & ); // purposely not implemented
+  void operator=( const Self & );      // purposely not implemented
 
 };
 

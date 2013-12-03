@@ -19,7 +19,6 @@
 #include "itkMevisDicomTiffImageIO.h"
 #include "itkVersion.h"
 
-
 namespace itk
 {
 
@@ -30,26 +29,28 @@ MevisDicomTiffImageIOFactory
     "itkMevisDicomTiffImageIO",
     "Mevis Dicom/TIFF Image IO",
     1,
-    CreateObjectFunction<MevisDicomTiffImageIO>::New() );
+    CreateObjectFunction< MevisDicomTiffImageIO >::New() );
 }
+
 
 MevisDicomTiffImageIOFactory
 ::~MevisDicomTiffImageIOFactory()
-{
-}
+{}
 
-const char*
+const char *
 MevisDicomTiffImageIOFactory
 ::GetITKSourceVersion( void ) const
 {
   return ITK_SOURCE_VERSION;
 }
 
-const char*
+
+const char *
 MevisDicomTiffImageIOFactory
 ::GetDescription( void ) const
 {
   return "Mevis Dicom/TIFF ImageIO Factory, allows the loading of Mevis images into insight";
 }
+
 
 } // end namespace itk

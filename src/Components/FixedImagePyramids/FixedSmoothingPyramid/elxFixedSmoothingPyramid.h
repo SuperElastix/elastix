@@ -20,87 +20,84 @@
 namespace elastix
 {
 
-  /**
-   * \class FixedSmoothingPyramid
-   * \brief A pyramid based on the itk::MultiResolutionGaussianSmoothingPyramidImageFilter.
-   *
-   * The parameters used in this class are:
-   * \parameter FixedImagePyramid: Select this pyramid as follows:\n
-   *    <tt>(FixedImagePyramid "FixedSmoothingImagePyramid")</tt>
-   *
-   * \ingroup ImagePyramids
+/**
+ * \class FixedSmoothingPyramid
+ * \brief A pyramid based on the itk::MultiResolutionGaussianSmoothingPyramidImageFilter.
+ *
+ * The parameters used in this class are:
+ * \parameter FixedImagePyramid: Select this pyramid as follows:\n
+ *    <tt>(FixedImagePyramid "FixedSmoothingImagePyramid")</tt>
+ *
+ * \ingroup ImagePyramids
+ */
+
+template< class TElastix >
+class FixedSmoothingPyramid :
+  public
+  itk::MultiResolutionGaussianSmoothingPyramidImageFilter<
+  typename FixedImagePyramidBase< TElastix >::InputImageType,
+  typename FixedImagePyramidBase< TElastix >::OutputImageType >,
+  public
+  FixedImagePyramidBase< TElastix >
+{
+public:
+
+  /** Standard ITK-stuff. */
+  typedef FixedSmoothingPyramid Self;
+  typedef itk::MultiResolutionGaussianSmoothingPyramidImageFilter<
+    typename FixedImagePyramidBase< TElastix >::InputImageType,
+    typename FixedImagePyramidBase< TElastix >::OutputImageType > Superclass1;
+  typedef FixedImagePyramidBase< TElastix > Superclass2;
+  typedef itk::SmartPointer< Self >         Pointer;
+  typedef itk::SmartPointer< const Self >   ConstPointer;
+
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
+
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( FixedSmoothingPyramid, itk::MultiResolutionGaussianSmoothingPyramidImageFilter );
+
+  /** Name of this class.
+   * Use this name in the parameter file to select this specific pyramid. \n
+   * example: <tt>(FixedImagePyramid "FixedSmoothingImagePyramid")</tt>\n
    */
+  elxClassNameMacro( "FixedSmoothingImagePyramid" );
 
-  template <class TElastix>
-    class FixedSmoothingPyramid :
-    public
-      itk::MultiResolutionGaussianSmoothingPyramidImageFilter<
-        typename FixedImagePyramidBase<TElastix>::InputImageType,
-        typename FixedImagePyramidBase<TElastix>::OutputImageType >,
-    public
-      FixedImagePyramidBase<TElastix>
-  {
-  public:
+  /** Get the ImageDimension. */
+  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
 
-    /** Standard ITK-stuff. */
-    typedef FixedSmoothingPyramid                                   Self;
-    typedef itk::MultiResolutionGaussianSmoothingPyramidImageFilter<
-        typename FixedImagePyramidBase<TElastix>::InputImageType,
-        typename FixedImagePyramidBase<TElastix>::OutputImageType > Superclass1;
-    typedef FixedImagePyramidBase<TElastix>                         Superclass2;
-    typedef itk::SmartPointer<Self>                                 Pointer;
-    typedef itk::SmartPointer<const Self>                           ConstPointer;
+  /** Typedefs inherited from the superclass. */
+  typedef typename Superclass1::InputImageType         InputImageType;
+  typedef typename Superclass1::OutputImageType        OutputImageType;
+  typedef typename Superclass1::InputImagePointer      InputImagePointer;
+  typedef typename Superclass1::OutputImagePointer     OutputImagePointer;
+  typedef typename Superclass1::InputImageConstPointer InputImageConstPointer;
+  typedef typename Superclass1::ScheduleType           ScheduleType;
 
-    /** Method for creation through the object factory. */
-    itkNewMacro(Self);
+  /** Typedefs inherited from Elastix. */
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( FixedSmoothingPyramid, itk::MultiResolutionGaussianSmoothingPyramidImageFilter );
+protected:
 
-    /** Name of this class.
-     * Use this name in the parameter file to select this specific pyramid. \n
-     * example: <tt>(FixedImagePyramid "FixedSmoothingImagePyramid")</tt>\n
-     */
-    elxClassNameMacro( "FixedSmoothingImagePyramid" );
+  /** The constructor. */
+  FixedSmoothingPyramid() {}
+  /** The destructor. */
+  virtual ~FixedSmoothingPyramid() {}
 
-    /** Get the ImageDimension. */
-    itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+private:
 
-    /** Typedefs inherited from the superclass. */
-    typedef typename Superclass1::InputImageType            InputImageType;
-    typedef typename Superclass1::OutputImageType           OutputImageType;
-    typedef typename Superclass1::InputImagePointer         InputImagePointer;
-    typedef typename Superclass1::OutputImagePointer        OutputImagePointer;
-    typedef typename Superclass1::InputImageConstPointer    InputImageConstPointer;
-    typedef typename Superclass1::ScheduleType              ScheduleType;
+  /** The private constructor. */
+  FixedSmoothingPyramid( const Self & );  // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self & );         // purposely not implemented
 
-    /** Typedefs inherited from Elastix. */
-    typedef typename Superclass2::ElastixType           ElastixType;
-    typedef typename Superclass2::ElastixPointer        ElastixPointer;
-    typedef typename Superclass2::ConfigurationType     ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType      RegistrationType;
-    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType           ITKBaseType;
-
-
-
-  protected:
-
-    /** The constructor. */
-    FixedSmoothingPyramid() {}
-    /** The destructor. */
-    virtual ~FixedSmoothingPyramid() {}
-
-  private:
-
-    /** The private constructor. */
-    FixedSmoothingPyramid( const Self& ); // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );        // purposely not implemented
-
-  };
-
+};
 
 } // end namespace elastix
 
@@ -109,4 +106,3 @@ namespace elastix
 #endif
 
 #endif // end #ifndef __elxFixedSmoothingPyramid_h
-

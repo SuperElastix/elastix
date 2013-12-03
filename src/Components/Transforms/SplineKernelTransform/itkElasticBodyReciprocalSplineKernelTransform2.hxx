@@ -22,28 +22,27 @@
 namespace itk
 {
 
-template <class TScalarType, unsigned int NDimensions>
-ElasticBodyReciprocalSplineKernelTransform2<TScalarType, NDimensions>::
-ElasticBodyReciprocalSplineKernelTransform2()
+template< class TScalarType, unsigned int NDimensions >
+ElasticBodyReciprocalSplineKernelTransform2< TScalarType, NDimensions >::ElasticBodyReciprocalSplineKernelTransform2()
 {
   this->m_Alpha = 8.0 * ( 1.0 - .25 ) - 1.0;
 }
 
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-ElasticBodyReciprocalSplineKernelTransform2<TScalarType, NDimensions>
-::ComputeG( const InputVectorType & x, GMatrixType & GMatrix) const
+ElasticBodyReciprocalSplineKernelTransform2< TScalarType, NDimensions >
+::ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const
 {
-  const TScalarType r       = x.GetNorm();
-  const TScalarType factor  =
-    ( r > 1e-8 ) ? ( -1.0 / r ): NumericTraits<TScalarType>::Zero;
-  const TScalarType radial  = this->m_Alpha * r;
-  for ( unsigned int i = 0; i < NDimensions; i++ )
+  const TScalarType r = x.GetNorm();
+  const TScalarType factor
+    = ( r > 1e-8 ) ? ( -1.0 / r ) : NumericTraits< TScalarType >::Zero;
+  const TScalarType radial = this->m_Alpha * r;
+  for( unsigned int i = 0; i < NDimensions; i++ )
   {
     const typename InputVectorType::ValueType xi = x[ i ] * factor;
     // G is symmetric
-    for ( unsigned int j = 0; j < i; j++ )
+    for( unsigned int j = 0; j < i; j++ )
     {
       const TScalarType value = xi * x[ j ];
       GMatrix[ i ][ j ] = value;
@@ -55,10 +54,10 @@ ElasticBodyReciprocalSplineKernelTransform2<TScalarType, NDimensions>
 } // end ComputeG()
 
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-ElasticBodyReciprocalSplineKernelTransform2<TScalarType, NDimensions>
-::PrintSelf( std::ostream& os, Indent indent ) const
+ElasticBodyReciprocalSplineKernelTransform2< TScalarType, NDimensions >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
   os << indent << "m_Alpha: " << this->m_Alpha << std::endl;

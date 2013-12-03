@@ -15,4 +15,3 @@
 #include "elxCorrespondingPointsEuclideanDistanceMetric.h"
 
 elxInstallMacro( CorrespondingPointsEuclideanDistanceMetric );
-

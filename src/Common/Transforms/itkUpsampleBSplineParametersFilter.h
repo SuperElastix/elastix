@@ -17,7 +17,6 @@
 #include "itkObject.h"
 #include "itkArray.h"
 
-
 namespace itk
 {
 
@@ -32,17 +31,17 @@ namespace itk
  *
  */
 
-template < class TArray, class TImage >
-class UpsampleBSplineParametersFilter
-  : public Object
+template< class TArray, class TImage >
+class UpsampleBSplineParametersFilter :
+  public Object
 {
 public:
 
   /** Standard class typedefs. */
-  typedef UpsampleBSplineParametersFilter   Self;
-  typedef Object                            Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef UpsampleBSplineParametersFilter Self;
+  typedef Object                          Superclass;
+  typedef SmartPointer< Self >            Pointer;
+  typedef SmartPointer< const Self >      ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -101,18 +100,18 @@ protected:
   UpsampleBSplineParametersFilter();
 
   /** Destructor. */
-  ~UpsampleBSplineParametersFilter() {};
+  ~UpsampleBSplineParametersFilter() {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream& os, Indent indent ) const;
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Function that checks if upsampling is required. */
   virtual bool DoUpsampling( void );
 
 private:
 
-  UpsampleBSplineParametersFilter( const Self& ); // purposely not implemented
-  void operator=( const Self & );                 // purposely not implemented
+  UpsampleBSplineParametersFilter( const Self & ); // purposely not implemented
+  void operator=( const Self & );                  // purposely not implemented
 
   /** Private member variables. */
   OriginType    m_CurrentGridOrigin;

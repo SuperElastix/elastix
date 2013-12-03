@@ -20,39 +20,40 @@
 namespace elastix
 {
 
-  /**
-   * \class LinearInterpolator
-   * \brief An interpolator based on the itk::AdvancedLinearInterpolateImageFunction.
-   *
-   * This interpolator interpolates images using linear interpolation.
-   * In principle, this is the same as using the BSplineInterpolator with
-   * the setting (BSplineInterpolationOrder 1). However, the LinearInterpolator
-   * is significantly faster.
-   *
-   * The parameters used in this class are:
-   * \parameter Interpolator: Select this interpolator as follows:\n
-   *    <tt>(Interpolator "LinearInterpolator")</tt>
-   *
-   * \ingroup Interpolators
-   */
+/**
+ * \class LinearInterpolator
+ * \brief An interpolator based on the itk::AdvancedLinearInterpolateImageFunction.
+ *
+ * This interpolator interpolates images using linear interpolation.
+ * In principle, this is the same as using the BSplineInterpolator with
+ * the setting (BSplineInterpolationOrder 1). However, the LinearInterpolator
+ * is significantly faster.
+ *
+ * The parameters used in this class are:
+ * \parameter Interpolator: Select this interpolator as follows:\n
+ *    <tt>(Interpolator "LinearInterpolator")</tt>
+ *
+ * \ingroup Interpolators
+ */
 
-template < class TElastix >
-class LinearInterpolator
-  : public itk::AdvancedLinearInterpolateImageFunction<
-    typename InterpolatorBase<TElastix>::InputImageType,
-    typename InterpolatorBase<TElastix>::CoordRepType >,
-  public InterpolatorBase<TElastix>
+template< class TElastix >
+class LinearInterpolator :
+  public itk::AdvancedLinearInterpolateImageFunction<
+  typename InterpolatorBase< TElastix >::InputImageType,
+  typename InterpolatorBase< TElastix >::CoordRepType >,
+  public InterpolatorBase< TElastix >
 {
 public:
+
   /** Standard ITK-stuff. */
-  typedef LinearInterpolator                    Self;
+  typedef LinearInterpolator Self;
   typedef itk::AdvancedLinearInterpolateImageFunction<
-    typename InterpolatorBase<TElastix>::InputImageType,
-    typename InterpolatorBase<TElastix>::CoordRepType >
-                                                Superclass1;
-  typedef InterpolatorBase<TElastix>            Superclass2;
-  typedef itk::SmartPointer<Self>               Pointer;
-  typedef itk::SmartPointer<const Self>         ConstPointer;
+    typename InterpolatorBase< TElastix >::InputImageType,
+    typename InterpolatorBase< TElastix >::CoordRepType >
+    Superclass1;
+  typedef InterpolatorBase< TElastix >    Superclass2;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -70,20 +71,20 @@ public:
   itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass1::OutputType                OutputType;
-  typedef typename Superclass1::InputImageType            InputImageType;
-  typedef typename Superclass1::IndexType                 IndexType;
-  typedef typename Superclass1::ContinuousIndexType       ContinuousIndexType;
-  typedef typename Superclass1::PointType                 PointType;
+  typedef typename Superclass1::OutputType          OutputType;
+  typedef typename Superclass1::InputImageType      InputImageType;
+  typedef typename Superclass1::IndexType           IndexType;
+  typedef typename Superclass1::ContinuousIndexType ContinuousIndexType;
+  typedef typename Superclass1::PointType           PointType;
 
   /** Typedefs inherited from Elastix. */
-  typedef typename Superclass2::ElastixType               ElastixType;
-  typedef typename Superclass2::ElastixPointer            ElastixPointer;
-  typedef typename Superclass2::ConfigurationType         ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType          RegistrationType;
-  typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType               ITKBaseType;
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
 protected:
 
@@ -95,12 +96,11 @@ protected:
 private:
 
   /** The private constructor. */
-  LinearInterpolator( const Self& );  // purposely not implemented
+  LinearInterpolator( const Self & );  // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );      // purposely not implemented
+  void operator=( const Self & );      // purposely not implemented
 
 };
-
 
 } // end namespace elastix
 

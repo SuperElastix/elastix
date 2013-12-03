@@ -33,18 +33,18 @@ namespace itk
  * \ingroup Transforms
  */
 
-template < typename TTransformScalarType, unsigned int VImageDimension >
-class CyclicGridScheduleComputer
-  : public GridScheduleComputer< TTransformScalarType, VImageDimension >
+template< typename TTransformScalarType, unsigned int VImageDimension >
+class CyclicGridScheduleComputer :
+  public GridScheduleComputer< TTransformScalarType, VImageDimension >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef CyclicGridScheduleComputer          Self;
+  typedef CyclicGridScheduleComputer Self;
   typedef GridScheduleComputer<
-      TTransformScalarType, VImageDimension>  Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+    TTransformScalarType, VImageDimension >  Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -56,7 +56,7 @@ public:
   itkStaticConstMacro( Dimension, unsigned int, VImageDimension );
 
   /** Typedef's. */
-  typedef TTransformScalarType                  TransformScalarType;
+  typedef TTransformScalarType TransformScalarType;
   typedef ImageBase<
     itkGetStaticConstMacro( Dimension ) >       ImageBaseType;
   typedef typename ImageBaseType::PointType     PointType;
@@ -77,8 +77,8 @@ public:
     TransformScalarType,
     itkGetStaticConstMacro( Dimension ),
     itkGetStaticConstMacro( Dimension ) >       TransformType;
-  typedef typename TransformType::Pointer       TransformPointer;
-  typedef typename TransformType::ConstPointer  TransformConstPointer;
+  typedef typename TransformType::Pointer      TransformPointer;
+  typedef typename TransformType::ConstPointer TransformConstPointer;
 
   /** Compute the B-spline grid. */
   virtual void ComputeBSplineGrid( void );
@@ -89,12 +89,12 @@ protected:
   CyclicGridScheduleComputer();
 
   /** The destructor. */
-  virtual ~CyclicGridScheduleComputer() {};
+  virtual ~CyclicGridScheduleComputer() {}
 
 private:
 
-  CyclicGridScheduleComputer( const Self& );  // purposely not implemented
-  void operator=( const Self& );        // purposely not implemented
+  CyclicGridScheduleComputer( const Self & ); // purposely not implemented
+  void operator=( const Self & );             // purposely not implemented
 
 };
 

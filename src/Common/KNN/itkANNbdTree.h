@@ -19,74 +19,74 @@
 namespace itk
 {
 
-  /**
-   * \class ANNbdTree
-   *
-   * \brief
-   *
-   *
-   * \ingroup ANNwrap
-   */
+/**
+ * \class ANNbdTree
+ *
+ * \brief
+ *
+ *
+ * \ingroup ANNwrap
+ */
 
-  template < class TListSample >
-  class ANNbdTree : public ANNkDTree< TListSample >
-  {
-  public:
+template< class TListSample >
+class ANNbdTree : public ANNkDTree< TListSample >
+{
+public:
 
-    /** Standard itk. */
-    typedef ANNbdTree                     Self;
-    typedef ANNkDTree< TListSample >      Superclass;
-    typedef SmartPointer< Self >          Pointer;
-    typedef SmartPointer< const Self >    ConstPointer;
+  /** Standard itk. */
+  typedef ANNbdTree                  Self;
+  typedef ANNkDTree< TListSample >   Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
-    /** New method for creating an object using a factory. */
-    itkNewMacro( Self );
+  /** New method for creating an object using a factory. */
+  itkNewMacro( Self );
 
-    /** ITK type info. */
-    itkTypeMacro( ANNbdTree, ANNkDTree );
+  /** ITK type info. */
+  itkTypeMacro( ANNbdTree, ANNkDTree );
 
-    /** Typedef's from Superclass. */
-    typedef typename Superclass::SampleType                 SampleType;
-    typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
-    typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
-    typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
-    typedef typename Superclass::ANNPointSetType            ANNPointSetType;
-    typedef typename Superclass::ANNkDTreeType              ANNkDTreeType;
-    typedef typename Superclass::SplittingRuleType          SplittingRuleType;
-    typedef typename Superclass::BucketSizeType             BucketSizeType;
+  /** Typedef's from Superclass. */
+  typedef typename Superclass::SampleType                 SampleType;
+  typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
+  typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
+  typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
+  typedef typename Superclass::ANNPointSetType            ANNPointSetType;
+  typedef typename Superclass::ANNkDTreeType              ANNkDTreeType;
+  typedef typename Superclass::SplittingRuleType          SplittingRuleType;
+  typedef typename Superclass::BucketSizeType             BucketSizeType;
 
-    typedef ANNshrinkRule      ShrinkingRuleType;
+  typedef ANNshrinkRule ShrinkingRuleType;
 
-    /** Set and get the shrinking rule: it defines ... */
-    itkSetMacro( ShrinkingRule, ShrinkingRuleType );
-    itkGetConstMacro( ShrinkingRule, ShrinkingRuleType );
-    void SetShrinkingRule( std::string rule );
-    std::string GetShrinkingRule( void );
+  /** Set and get the shrinking rule: it defines ... */
+  itkSetMacro( ShrinkingRule, ShrinkingRuleType );
+  itkGetConstMacro( ShrinkingRule, ShrinkingRuleType );
+  void SetShrinkingRule( std::string rule );
 
-    /** Generate the tree. */
-    virtual void GenerateTree( void );
+  std::string GetShrinkingRule( void );
 
-  protected:
+  /** Generate the tree. */
+  virtual void GenerateTree( void );
 
-    /** Constructor. */
-    ANNbdTree();
+protected:
 
-    /** Destructor. */
-    virtual ~ANNbdTree() {};
+  /** Constructor. */
+  ANNbdTree();
 
-    /** PrintSelf. */
-    virtual void PrintSelf( std::ostream& os, Indent indent ) const;
+  /** Destructor. */
+  virtual ~ANNbdTree() {}
 
-    /** Member variables. */
-    ShrinkingRuleType   m_ShrinkingRule;
+  /** PrintSelf. */
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
-  private:
+  /** Member variables. */
+  ShrinkingRuleType m_ShrinkingRule;
 
-    ANNbdTree( const Self& );       // purposely not implemented
-    void operator=( const Self& );  // purposely not implemented
+private:
 
-  };
+  ANNbdTree( const Self & );        // purposely not implemented
+  void operator=( const Self & );   // purposely not implemented
 
+};
 
 } // end namespace itk
 

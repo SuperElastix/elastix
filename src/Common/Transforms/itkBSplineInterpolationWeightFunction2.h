@@ -35,20 +35,21 @@ namespace itk
  *
  * \ingroup Functions ImageInterpolators
  */
-template < class TCoordRep = float,
-  unsigned int VSpaceDimension = 2,
-  unsigned int VSplineOrder = 3 >
+template< class TCoordRep    = float,
+unsigned int VSpaceDimension = 2,
+unsigned int VSplineOrder    = 3 >
 class BSplineInterpolationWeightFunction2 :
   public BSplineInterpolationWeightFunctionBase<
   TCoordRep, VSpaceDimension, VSplineOrder >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef BSplineInterpolationWeightFunction2        Self;
+  typedef BSplineInterpolationWeightFunction2 Self;
   typedef BSplineInterpolationWeightFunctionBase<
     TCoordRep, VSpaceDimension, VSplineOrder >      Superclass;
-  typedef SmartPointer<Self>                        Pointer;
-  typedef SmartPointer<const Self>                  ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** New macro for creation of through the object factory.*/
   itkNewMacro( Self );
@@ -64,23 +65,24 @@ public:
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   /** Typedefs from Superclass. */
-  typedef typename Superclass::WeightsType          WeightsType;
-  typedef typename Superclass::IndexType            IndexType;
-  typedef typename Superclass::SizeType             SizeType;
-  typedef typename Superclass::ContinuousIndexType  ContinuousIndexType;
+  typedef typename Superclass::WeightsType         WeightsType;
+  typedef typename Superclass::IndexType           IndexType;
+  typedef typename Superclass::SizeType            SizeType;
+  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
 
 protected:
+
   BSplineInterpolationWeightFunction2();
-  ~BSplineInterpolationWeightFunction2() {};
+  ~BSplineInterpolationWeightFunction2() {}
 
   /** Interpolation kernel types. */
   typedef typename Superclass::KernelType           KernelType;
   typedef typename Superclass::DerivativeKernelType DerivativeKernelType;
   typedef typename Superclass
-    ::SecondOrderDerivativeKernelType               SecondOrderDerivativeKernelType;
-  typedef typename Superclass::TableType            TableType;
-  typedef typename Superclass::OneDWeightsType      OneDWeightsType;
-  typedef typename Superclass::WeightArrayType  WeightArrayType;
+    ::SecondOrderDerivativeKernelType SecondOrderDerivativeKernelType;
+  typedef typename Superclass::TableType       TableType;
+  typedef typename Superclass::OneDWeightsType OneDWeightsType;
+  typedef typename Superclass::WeightArrayType WeightArrayType;
 
   /* Compute the 1D weights, which are:
    * [ \beta^3( x[i] - startIndex[i] ), \beta^3( x[i] - startIndex[i] - 1 ),
@@ -92,13 +94,13 @@ protected:
     OneDWeightsType & weights1D ) const;
 
 private:
-  BSplineInterpolationWeightFunction2(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  BSplineInterpolationWeightFunction2( const Self & ); // purposely not implemented
+  void operator=( const Self & );                      // purposely not implemented
 
 };
 
 } // end namespace itk
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkBSplineInterpolationWeightFunction2.hxx"

@@ -16,17 +16,15 @@
 
 #include "itkDeformationFieldInterpolatingTransform.h"
 
-
 namespace itk
 {
 
 // Constructor with default arguments
-template<class TScalarType, unsigned int NDimensions, class TComponentType>
-DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>::
-DeformationFieldInterpolatingTransform() :
-Superclass(OutputSpaceDimension)
+template< class TScalarType, unsigned int NDimensions, class TComponentType >
+DeformationFieldInterpolatingTransform< TScalarType, NDimensions,  TComponentType >::DeformationFieldInterpolatingTransform() :
+  Superclass( OutputSpaceDimension )
 {
-  this->m_DeformationField = 0;
+  this->m_DeformationField     = 0;
   this->m_ZeroDeformationField = DeformationFieldType::New();
   typename DeformationFieldType::SizeType dummySize;
   dummySize.Fill( 0 );
@@ -37,32 +35,30 @@ Superclass(OutputSpaceDimension)
 
 
 // Destructor
-template<class TScalarType, unsigned int NDimensions, class TComponentType>
-DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>::
+template< class TScalarType, unsigned int NDimensions, class TComponentType >
+DeformationFieldInterpolatingTransform< TScalarType, NDimensions,  TComponentType >::
 ~DeformationFieldInterpolatingTransform()
-{
-} // end Destructor
-
+{} // end Destructor
 
 // Transform a point
-template <class TScalarType, unsigned int NDimensions, class TComponentType>
-typename DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>::
+template< class TScalarType, unsigned int NDimensions, class TComponentType >
+typename DeformationFieldInterpolatingTransform< TScalarType, NDimensions,  TComponentType >::
 OutputPointType
-DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>
+DeformationFieldInterpolatingTransform< TScalarType, NDimensions,  TComponentType >
 ::TransformPoint( const InputPointType & point ) const
 {
   InputContinuousIndexType cindex;
   this->m_DeformationFieldInterpolator->ConvertPointToContinuousIndex(
     point, cindex );
 
-  if ( this->m_DeformationFieldInterpolator->IsInsideBuffer( cindex ) )
+  if( this->m_DeformationFieldInterpolator->IsInsideBuffer( cindex ) )
   {
     InterpolatorOutputType vec
       = this->m_DeformationFieldInterpolator->EvaluateAtContinuousIndex( cindex );
     OutputPointType outpoint;
-    for ( unsigned int i = 0; i < InputSpaceDimension; ++i )
+    for( unsigned int i = 0; i < InputSpaceDimension; ++i )
     {
-      outpoint[ i ] = point[ i ] + static_cast<ScalarType>( vec[ i ] );
+      outpoint[ i ] = point[ i ] + static_cast< ScalarType >( vec[ i ] );
     }
     return outpoint;
 
@@ -75,18 +71,18 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType
 
 
 // Set the deformation field
-template <class TScalarType, unsigned int NDimensions, class TComponentType>
+template< class TScalarType, unsigned int NDimensions, class TComponentType >
 void
-DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>
+DeformationFieldInterpolatingTransform< TScalarType, NDimensions,  TComponentType >
 ::SetDeformationField( DeformationFieldType * _arg )
 {
   itkDebugMacro( "setting DeformationField to " << _arg );
-  if ( this->m_DeformationField != _arg )
+  if( this->m_DeformationField != _arg )
   {
     this->m_DeformationField = _arg;
     this->Modified();
   }
-  if ( this->m_DeformationFieldInterpolator.IsNotNull() )
+  if( this->m_DeformationFieldInterpolator.IsNotNull() )
   {
     this->m_DeformationFieldInterpolator->SetInputImage(
       this->m_DeformationField );
@@ -95,31 +91,31 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType
 
 
 // Set the deformation field interpolator
-template <class TScalarType, unsigned int NDimensions, class TComponentType>
+template< class TScalarType, unsigned int NDimensions, class TComponentType >
 void
-DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>
+DeformationFieldInterpolatingTransform< TScalarType, NDimensions,  TComponentType >
 ::SetDeformationFieldInterpolator( DeformationFieldInterpolatorType * _arg )
 {
-  itkDebugMacro("setting DeformationFieldInterpolator to " << _arg );
-  if ( this->m_DeformationFieldInterpolator != _arg )
+  itkDebugMacro( "setting DeformationFieldInterpolator to " << _arg );
+  if( this->m_DeformationFieldInterpolator != _arg )
   {
     this->m_DeformationFieldInterpolator = _arg;
     this->Modified();
   }
-  if ( this->m_DeformationFieldInterpolator.IsNotNull() )
+  if( this->m_DeformationFieldInterpolator.IsNotNull() )
   {
     this->m_DeformationFieldInterpolator->SetInputImage(
       this->m_DeformationField );
   }
 }
 
+
 // Print self
-template<class TScalarType, unsigned int NDimensions, class TComponentType>
+template< class TScalarType, unsigned int NDimensions, class TComponentType >
 void
-DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>::
-PrintSelf(std::ostream &os, Indent indent) const
+DeformationFieldInterpolatingTransform< TScalarType, NDimensions,  TComponentType >::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  Superclass::PrintSelf(os,indent);
+  Superclass::PrintSelf( os, indent );
 
   os << indent << "DeformationField: " << this->m_DeformationField << std::endl;
   os << indent << "ZeroDeformationField: " << this->m_ZeroDeformationField << std::endl;
@@ -128,15 +124,14 @@ PrintSelf(std::ostream &os, Indent indent) const
 
 
 // Set the parameters for an Identity transform of this class
-template<class TScalarType, unsigned int NDimensions, class TComponentType>
+template< class TScalarType, unsigned int NDimensions, class TComponentType >
 void
-DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>::
-SetIdentity( void )
+DeformationFieldInterpolatingTransform< TScalarType, NDimensions,  TComponentType >::SetIdentity( void )
 {
-  if ( this->m_DeformationFieldInterpolator.IsNull() )
+  if( this->m_DeformationFieldInterpolator.IsNull() )
   {
-    this->m_DeformationFieldInterpolator =
-      DefaultDeformationFieldInterpolatorType::New();
+    this->m_DeformationFieldInterpolator
+      = DefaultDeformationFieldInterpolatorType::New();
   }
   this->SetDeformationField( this->m_ZeroDeformationField );
 

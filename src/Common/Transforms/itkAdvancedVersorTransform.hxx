@@ -19,40 +19,40 @@
 
 #include "itkAdvancedVersorTransform.h"
 
-
 namespace itk
 {
 
 /** Constructor with default arguments */
-template <class TScalarType>
-AdvancedVersorTransform<TScalarType>
-::AdvancedVersorTransform() : Superclass(ParametersDimension)
+template< class TScalarType >
+AdvancedVersorTransform< TScalarType >
+::AdvancedVersorTransform() : Superclass( ParametersDimension )
 {
   m_Versor.SetIdentity();
 }
 
+
 /** Constructor with default arguments */
-template<class TScalarType>
-AdvancedVersorTransform<TScalarType>::
-AdvancedVersorTransform(unsigned int parametersDimension) :
-  Superclass(parametersDimension)
+template< class TScalarType >
+AdvancedVersorTransform< TScalarType >::AdvancedVersorTransform( unsigned int parametersDimension ) :
+  Superclass( parametersDimension )
 {
   m_Versor.SetIdentity();
 }
 
+
 /** Constructor with default arguments */
-template<class TScalarType>
-AdvancedVersorTransform<TScalarType>::
-AdvancedVersorTransform(const MatrixType & matrix,
-                const OutputVectorType & offset) : Superclass(matrix, offset)
+template< class TScalarType >
+AdvancedVersorTransform< TScalarType >::AdvancedVersorTransform( const MatrixType & matrix,
+  const OutputVectorType & offset ) : Superclass( matrix, offset )
 {
   this->ComputeMatrixParameters();  // called in MatrixOffset baseclass
 }
 
+
 /** Set Parameters */
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedVersorTransform<TScalarType>
+AdvancedVersorTransform< TScalarType >
 ::SetParameters( const ParametersType & parameters )
 {
   itkDebugMacro( << "Setting parameters " << parameters );
@@ -60,14 +60,14 @@ AdvancedVersorTransform<TScalarType>
   // Transfer the versor part
   AxisType rightPart;
 
-  rightPart[0] = parameters[0];
-  rightPart[1] = parameters[1];
-  rightPart[2] = parameters[2];
+  rightPart[ 0 ] = parameters[ 0 ];
+  rightPart[ 1 ] = parameters[ 1 ];
+  rightPart[ 2 ] = parameters[ 2 ];
 
   // The versor will compute the scalar part.
   m_Versor.Set( rightPart );
 
-  itkDebugMacro( <<"Versor is now " << m_Versor );
+  itkDebugMacro( << "Versor is now " << m_Versor );
 
   this->ComputeMatrix();
 
@@ -75,26 +75,27 @@ AdvancedVersorTransform<TScalarType>
   // parameters and cannot know if the parameters have changed.
   this->Modified();
 
-  itkDebugMacro(<<"After setting parameters ");
+  itkDebugMacro( << "After setting parameters " );
 }
 
+
 /** Set Parameters */
-template <class TScalarType>
-const typename AdvancedVersorTransform<TScalarType>::ParametersType &
-AdvancedVersorTransform<TScalarType>
+template< class TScalarType >
+const typename AdvancedVersorTransform< TScalarType >::ParametersType
+& AdvancedVersorTransform< TScalarType >
 ::GetParameters( void ) const
 {
-  this->m_Parameters[0] = this->m_Versor.GetRight()[0];
-  this->m_Parameters[1] = this->m_Versor.GetRight()[1];
-  this->m_Parameters[2] = this->m_Versor.GetRight()[2];
+  this->m_Parameters[ 0 ] = this->m_Versor.GetRight()[ 0 ];
+  this->m_Parameters[ 1 ] = this->m_Versor.GetRight()[ 1 ];
+  this->m_Parameters[ 2 ] = this->m_Versor.GetRight()[ 2 ];
 
   return this->m_Parameters;
 }
 
 /** Set Rotational Part */
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedVersorTransform<TScalarType>
+AdvancedVersorTransform< TScalarType >
 ::SetRotation( const VersorType & versor )
 {
   m_Versor = versor;
@@ -104,21 +105,22 @@ AdvancedVersorTransform<TScalarType>
 
 
 /** Set Rotational Part */
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedVersorTransform<TScalarType>
-::SetRotation( const AxisType & axis, AngleType  angle )
+AdvancedVersorTransform< TScalarType >
+::SetRotation( const AxisType & axis, AngleType angle )
 {
   m_Versor.Set( axis, angle );
   this->ComputeMatrix();
   this->ComputeOffset();
 }
 
+
 /** Set Identity */
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedVersorTransform<TScalarType>
-::SetIdentity( )
+AdvancedVersorTransform< TScalarType >
+::SetIdentity()
 {
   Superclass::SetIdentity();
 
@@ -129,9 +131,9 @@ AdvancedVersorTransform<TScalarType>
 
 
 /** Compute the matrix */
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedVersorTransform<TScalarType>
+AdvancedVersorTransform< TScalarType >
 ::ComputeMatrix( void )
 {
 
@@ -151,36 +153,37 @@ AdvancedVersorTransform<TScalarType>
   const TScalarType zw = vz * vw;
 
   MatrixType newMatrix;
-  newMatrix[0][0] = 1.0 - 2.0 * ( yy + zz );
-  newMatrix[1][1] = 1.0 - 2.0 * ( xx + zz );
-  newMatrix[2][2] = 1.0 - 2.0 * ( xx + yy );
-  newMatrix[0][1] = 2.0 * ( xy - zw );
-  newMatrix[0][2] = 2.0 * ( xz + yw );
-  newMatrix[1][0] = 2.0 * ( xy + zw );
-  newMatrix[2][0] = 2.0 * ( xz - yw );
-  newMatrix[2][1] = 2.0 * ( yz + xw );
-  newMatrix[1][2] = 2.0 * ( yz - xw );
-  this->SetVarMatrix(newMatrix);
+  newMatrix[ 0 ][ 0 ] = 1.0 - 2.0 * ( yy + zz );
+  newMatrix[ 1 ][ 1 ] = 1.0 - 2.0 * ( xx + zz );
+  newMatrix[ 2 ][ 2 ] = 1.0 - 2.0 * ( xx + yy );
+  newMatrix[ 0 ][ 1 ] = 2.0 * ( xy - zw );
+  newMatrix[ 0 ][ 2 ] = 2.0 * ( xz + yw );
+  newMatrix[ 1 ][ 0 ] = 2.0 * ( xy + zw );
+  newMatrix[ 2 ][ 0 ] = 2.0 * ( xz - yw );
+  newMatrix[ 2 ][ 1 ] = 2.0 * ( yz + xw );
+  newMatrix[ 1 ][ 2 ] = 2.0 * ( yz - xw );
+  this->SetVarMatrix( newMatrix );
 }
 
+
 /** Compute the matrix */
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedVersorTransform<TScalarType>
+AdvancedVersorTransform< TScalarType >
 ::ComputeMatrixParameters( void )
 {
   m_Versor.Set( this->GetMatrix() );
 }
 
+
 /** Get the Jacobian */
-template<class TScalarType>
+template< class TScalarType >
 void
-AdvancedVersorTransform<TScalarType>::
-GetJacobian( const InputPointType & p,
-    JacobianType & j,
-    NonZeroJacobianIndicesType & nzji ) const
+AdvancedVersorTransform< TScalarType >::GetJacobian( const InputPointType & p,
+  JacobianType & j,
+  NonZeroJacobianIndicesType & nzji ) const
 {
-  typedef typename VersorType::ValueType  ValueType;
+  typedef typename VersorType::ValueType ValueType;
 
   // Initialize the Jacobian. Resizing is only performed when needed.
   // Filling with zeros is needed because the lower loops only visit
@@ -194,9 +197,9 @@ GetJacobian( const InputPointType & p,
   const ValueType vz = m_Versor.GetZ();
   const ValueType vw = m_Versor.GetW();
 
-  const double px = p[0] - this->GetCenter()[0];
-  const double py = p[1] - this->GetCenter()[1];
-  const double pz = p[2] - this->GetCenter()[2];
+  const double px = p[ 0 ] - this->GetCenter()[ 0 ];
+  const double py = p[ 1 ] - this->GetCenter()[ 1 ];
+  const double pz = p[ 2 ] - this->GetCenter()[ 2 ];
 
   const double vxx = vx * vx;
   const double vyy = vy * vy;
@@ -213,26 +216,26 @@ GetJacobian( const InputPointType & p,
   const double vzw = vz * vw;
 
   // compute Jacobian with respect to quaternion parameters
-  j[0][0] = 2.0 * (               (vyw+vxz)*py + (vzw-vxy)*pz)
-                         / vw;
-  j[1][0] = 2.0 * ((vyw-vxz)*px   -2*vxw   *py + (vxx-vww)*pz)
-                         / vw;
-  j[2][0] = 2.0 * ((vzw+vxy)*px + (vww-vxx)*py   -2*vxw   *pz)
-                         / vw;
+  j[ 0 ][ 0 ] = 2.0 * ( ( vyw + vxz ) * py + ( vzw - vxy ) * pz )
+    / vw;
+  j[ 1 ][ 0 ] = 2.0 * ( ( vyw - vxz ) * px   - 2 * vxw   * py + ( vxx - vww ) * pz )
+    / vw;
+  j[ 2 ][ 0 ] = 2.0 * ( ( vzw + vxy ) * px + ( vww - vxx ) * py   - 2 * vxw   * pz )
+    / vw;
 
-  j[0][1] = 2.0 * ( -2*vyw  *px + (vxw+vyz)*py + (vww-vyy)*pz)
-                         / vw;
-  j[1][1] = 2.0 * ((vxw-vyz)*px                + (vzw+vxy)*pz)
-                         / vw;
-  j[2][1] = 2.0 * ((vyy-vww)*px + (vzw-vxy)*py   -2*vyw   *pz)
-                         / vw;
+  j[ 0 ][ 1 ] = 2.0 * ( -2 * vyw  * px + ( vxw + vyz ) * py + ( vww - vyy ) * pz )
+    / vw;
+  j[ 1 ][ 1 ] = 2.0 * ( ( vxw - vyz ) * px                + ( vzw + vxy ) * pz )
+    / vw;
+  j[ 2 ][ 1 ] = 2.0 * ( ( vyy - vww ) * px + ( vzw - vxy ) * py   - 2 * vyw   * pz )
+    / vw;
 
-  j[0][2] = 2.0 * ( -2*vzw  *px + (vzz-vww)*py + (vxw-vyz)*pz)
-                         / vw;
-  j[1][2] = 2.0 * ((vww-vzz)*px   -2*vzw   *py + (vyw+vxz)*pz)
-                         / vw;
-  j[2][2] = 2.0 * ((vxw+vyz)*px + (vyw-vxz)*py               )
-                         / vw;
+  j[ 0 ][ 2 ] = 2.0 * ( -2 * vzw  * px + ( vzz - vww ) * py + ( vxw - vyz ) * pz )
+    / vw;
+  j[ 1 ][ 2 ] = 2.0 * ( ( vww - vzz ) * px   - 2 * vzw   * py + ( vyw + vxz ) * pz )
+    / vw;
+  j[ 2 ][ 2 ] = 2.0 * ( ( vxw + vyz ) * px + ( vyw - vxz ) * py )
+    / vw;
 
   // Copy the constant nonZeroJacobianIndices
   nzji = this->m_NonZeroJacobianIndices;
@@ -240,13 +243,12 @@ GetJacobian( const InputPointType & p,
 
 
 /** Print self */
-template<class TScalarType>
+template< class TScalarType >
 void
-AdvancedVersorTransform<TScalarType>::
-PrintSelf(std::ostream &os, Indent indent) const
+AdvancedVersorTransform< TScalarType >::PrintSelf( std::ostream & os, Indent indent ) const
 {
 
-  Superclass::PrintSelf(os,indent);
+  Superclass::PrintSelf( os, indent );
 
   os << indent << "Versor: " << m_Versor  << std::endl;
 }

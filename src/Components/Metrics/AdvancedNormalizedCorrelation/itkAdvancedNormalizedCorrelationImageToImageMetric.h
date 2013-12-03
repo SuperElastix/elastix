@@ -16,7 +16,6 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 
-
 namespace itk
 {
 /** \class AdvancedNormalizedCorrelationImageToImageMetric
@@ -83,18 +82,18 @@ namespace itk
  * \ingroup Metrics
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 class AdvancedNormalizedCorrelationImageToImageMetric :
   public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef AdvancedNormalizedCorrelationImageToImageMetric     Self;
+  typedef AdvancedNormalizedCorrelationImageToImageMetric Self;
   typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >                         Superclass;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -104,7 +103,7 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename
-    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+    Superclass::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
   typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
@@ -140,17 +139,17 @@ public:
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename
-    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+    Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType  FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType MovingImageLimiterType;
   typedef typename
-    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+    Superclass::FixedImageLimiterOutputType FixedImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+    Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-  typedef typename Superclass::ThreaderType               ThreaderType;
-  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
+    Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  typedef typename Superclass::ThreaderType   ThreaderType;
+  typedef typename Superclass::ThreadInfoType ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -187,24 +186,25 @@ public:
   itkBooleanMacro( SubtractMean );
 
 protected:
+
   AdvancedNormalizedCorrelationImageToImageMetric();
   virtual ~AdvancedNormalizedCorrelationImageToImageMetric();
 
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
 
   /** Typedefs inherited from superclass */
-  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
-  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
-  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-  typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
+  typedef typename Superclass::FixedImageIndexType                 FixedImageIndexType;
+  typedef typename Superclass::FixedImageIndexValueType            FixedImageIndexValueType;
+  typedef typename Superclass::MovingImageIndexType                MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType                 FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType                MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType      MovingImageContinuousIndexType;
+  typedef typename Superclass::BSplineInterpolatorType             BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  typedef typename Superclass::MovingImageDerivativeType           MovingImageDerivativeType;
+  typedef typename Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
 
   /** Compute a pixel's contribution to the derivative terms;
    * Called by GetValueAndDerivative().
@@ -235,12 +235,13 @@ protected:
   static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
 
 private:
-  AdvancedNormalizedCorrelationImageToImageMetric(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
 
-  mutable bool    m_SubtractMean;
+  AdvancedNormalizedCorrelationImageToImageMetric( const Self & ); // purposely not implemented
+  void operator=( const Self & );                                  // purposely not implemented
 
-  typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
+  mutable bool m_SubtractMean;
+
+  typedef typename NumericTraits< MeasureType >::AccumulateType AccumulateType;
 
   /** Helper structs that multi-threads the computation of
    * the metric derivative using ITK threads.
@@ -249,24 +250,24 @@ private:
   {
     AdvancedNormalizedCorrelationImageToImageMetric * st_Metric;
 
-    AccumulateType  st_sf_N;
-    AccumulateType  st_sm_N;
-    AccumulateType  st_sfm_smm;
-    RealType        st_InvertedDenominator;
+    AccumulateType        st_sf_N;
+    AccumulateType        st_sm_N;
+    AccumulateType        st_sfm_smm;
+    RealType              st_InvertedDenominator;
     DerivativeValueType * st_DerivativePointer;
   };
 
   struct CorrelationGetValueAndDerivativePerThreadStruct
   {
-    SizeValueType     st_NumberOfPixelsCounted;
-    AccumulateType    st_Sff;
-    AccumulateType    st_Smm;
-    AccumulateType    st_Sfm;
-    AccumulateType    st_Sf;
-    AccumulateType    st_Sm;
-    DerivativeType    st_DerivativeF;
-    DerivativeType    st_DerivativeM;
-    DerivativeType    st_Differential;
+    SizeValueType         st_NumberOfPixelsCounted;
+    AccumulateType        st_Sff;
+    AccumulateType        st_Smm;
+    AccumulateType        st_Sfm;
+    AccumulateType        st_Sf;
+    AccumulateType        st_Sm;
+    DerivativeType        st_DerivativeF;
+    DerivativeType        st_DerivativeM;
+    DerivativeType        st_Differential;
     TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, CorrelationGetValueAndDerivativePerThreadStruct,
@@ -274,7 +275,7 @@ private:
   itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedCorrelationGetValueAndDerivativePerThreadStruct,
     AlignedCorrelationGetValueAndDerivativePerThreadStruct );
   mutable AlignedCorrelationGetValueAndDerivativePerThreadStruct * m_CorrelationGetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType m_CorrelationGetValueAndDerivativePerThreadVariablesSize;
+  mutable ThreadIdType                                             m_CorrelationGetValueAndDerivativePerThreadVariablesSize;
 
 };
 

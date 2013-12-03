@@ -19,133 +19,129 @@
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
-
 namespace itk
 {
 
-  /** \class MultiInputImageRandomCoordinateSampler
-   *
-   * \brief Samples an image by randomly composing a set of physical coordinates
-   *
-   * This image sampler generates not only samples that correspond with
-   * pixel locations, but selects points in physical space.
-   *
-   * \ingroup ImageSamplers
+/** \class MultiInputImageRandomCoordinateSampler
+ *
+ * \brief Samples an image by randomly composing a set of physical coordinates
+ *
+ * This image sampler generates not only samples that correspond with
+ * pixel locations, but selects points in physical space.
+ *
+ * \ingroup ImageSamplers
+ */
+
+template< class TInputImage >
+class MultiInputImageRandomCoordinateSampler :
+  public ImageRandomSamplerBase< TInputImage >
+{
+public:
+
+  /** Standard ITK-stuff. */
+  typedef MultiInputImageRandomCoordinateSampler Self;
+  typedef ImageRandomSamplerBase< TInputImage >  Superclass;
+  typedef SmartPointer< Self >                   Pointer;
+  typedef SmartPointer< const Self >             ConstPointer;
+
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
+
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( MultiInputImageRandomCoordinateSampler, ImageRandomSamplerBase );
+
+  /** Typedefs inherited from the superclass. */
+  typedef typename Superclass::DataObjectPointer            DataObjectPointer;
+  typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
+  typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
+  typedef typename Superclass::InputImageType               InputImageType;
+  typedef typename Superclass::InputImagePointer            InputImagePointer;
+  typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
+  typedef typename Superclass::InputImageRegionType         InputImageRegionType;
+  typedef typename Superclass::InputImagePixelType          InputImagePixelType;
+  typedef typename Superclass::ImageSampleType              ImageSampleType;
+  typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::MaskType                     MaskType;
+  typedef typename Superclass::InputImageSizeType           InputImageSizeType;
+  typedef typename InputImageType::SpacingType              InputImageSpacingType;
+  typedef typename Superclass::InputImageIndexType          InputImageIndexType;
+  typedef typename Superclass::InputImagePointType          InputImagePointType;
+  typedef typename Superclass::InputImagePointValueType     InputImagePointValueType;
+  typedef typename Superclass::ImageSampleValueType         ImageSampleValueType;
+
+  /** The input image dimension. */
+  itkStaticConstMacro( InputImageDimension, unsigned int,
+    Superclass::InputImageDimension );
+
+  /** This image sampler samples the image on physical coordinates and thus
+   * needs an interpolator.
    */
+  typedef double                                                                  CoordRepType;
+  typedef InterpolateImageFunction< InputImageType, CoordRepType >                InterpolatorType;
+  typedef typename InterpolatorType::Pointer                                      InterpolatorPointer;
+  typedef BSplineInterpolateImageFunction< InputImageType, CoordRepType, double > DefaultInterpolatorType;
 
-  template < class TInputImage >
-  class MultiInputImageRandomCoordinateSampler :
-    public ImageRandomSamplerBase< TInputImage >
-  {
-  public:
+  /** The random number generator used to generate random coordinates. */
+  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
+  typedef typename RandomGeneratorType::Pointer                  RandomGeneratorPointer;
 
-    /** Standard ITK-stuff. */
-    typedef MultiInputImageRandomCoordinateSampler                Self;
-    typedef ImageRandomSamplerBase< TInputImage >       Superclass;
-    typedef SmartPointer<Self>                Pointer;
-    typedef SmartPointer<const Self>          ConstPointer;
+  /** Set/Get the interpolator. A 3rd order B-spline interpolator is used by default. */
+  itkSetObjectMacro( Interpolator, InterpolatorType );
+  itkGetObjectMacro( Interpolator, InterpolatorType );
 
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+  /** Set/Get the sample region size (in mm). Only needed when UseRandomSampleRegion==true;
+   * default: filled with ones.
+   */
+  itkSetMacro( SampleRegionSize, InputImageSpacingType );
+  itkGetConstReferenceMacro( SampleRegionSize, InputImageSpacingType );
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( MultiInputImageRandomCoordinateSampler, ImageRandomSamplerBase );
+  /** Set/Get whether to use randomly selected sample regions, or just the whole image
+   * Default: false. */
+  itkGetConstMacro( UseRandomSampleRegion, bool );
+  itkSetMacro( UseRandomSampleRegion, bool );
 
-    /** Typedefs inherited from the superclass. */
-    typedef typename Superclass::DataObjectPointer            DataObjectPointer;
-    typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
-    typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
-    typedef typename Superclass::InputImageType               InputImageType;
-    typedef typename Superclass::InputImagePointer            InputImagePointer;
-    typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
-    typedef typename Superclass::InputImageRegionType         InputImageRegionType;
-    typedef typename Superclass::InputImagePixelType          InputImagePixelType;
-    typedef typename Superclass::ImageSampleType              ImageSampleType;
-    typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
-    typedef typename Superclass::MaskType                     MaskType;
-    typedef typename Superclass::InputImageSizeType           InputImageSizeType;
-    typedef typename InputImageType::SpacingType              InputImageSpacingType;
-    typedef typename Superclass::InputImageIndexType          InputImageIndexType;
-    typedef typename Superclass::InputImagePointType          InputImagePointType;
-    typedef typename Superclass::InputImagePointValueType     InputImagePointValueType;
-    typedef typename Superclass::ImageSampleValueType         ImageSampleValueType;
+protected:
 
-    /** The input image dimension. */
-    itkStaticConstMacro( InputImageDimension, unsigned int,
-      Superclass::InputImageDimension );
+  typedef typename InterpolatorType::ContinuousIndexType InputImageContinuousIndexType;
 
-    /** This image sampler samples the image on physical coordinates and thus
-     * needs an interpolator.
-     */
-    typedef double                                              CoordRepType;
-    typedef InterpolateImageFunction<
-      InputImageType, CoordRepType >                            InterpolatorType;
-    typedef typename InterpolatorType::Pointer                  InterpolatorPointer;
-    typedef BSplineInterpolateImageFunction<
-      InputImageType, CoordRepType, double>                     DefaultInterpolatorType;
+  /** The constructor. */
+  MultiInputImageRandomCoordinateSampler();
 
-    /** The random number generator used to generate random coordinates. */
-    typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-    typedef typename RandomGeneratorType::Pointer   RandomGeneratorPointer;
+  /** The destructor. */
+  virtual ~MultiInputImageRandomCoordinateSampler() {}
 
-    /** Set/Get the interpolator. A 3rd order B-spline interpolator is used by default. */
-    itkSetObjectMacro( Interpolator, InterpolatorType );
-    itkGetObjectMacro( Interpolator, InterpolatorType );
+  /** PrintSelf. */
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
-    /** Set/Get the sample region size (in mm). Only needed when UseRandomSampleRegion==true;
-     * default: filled with ones.
-     */
-    itkSetMacro( SampleRegionSize, InputImageSpacingType );
-    itkGetConstReferenceMacro( SampleRegionSize, InputImageSpacingType );
+  /** Function that does the work. */
+  virtual void GenerateData( void );
 
-    /** Set/Get whether to use randomly selected sample regions, or just the whole image
-     * Default: false. */
-    itkGetConstMacro( UseRandomSampleRegion, bool );
-    itkSetMacro( UseRandomSampleRegion, bool );
+  /** Generate a point randomly in a bounding box.
+   * This method can be overwritten in subclasses if a different distribution is desired. */
+  virtual void GenerateRandomCoordinate(
+    const InputImageContinuousIndexType & smallestContIndex,
+    const InputImageContinuousIndexType & largestContIndex,
+    InputImageContinuousIndexType &       randomContIndex );
 
-  protected:
+  InterpolatorPointer    m_Interpolator;
+  RandomGeneratorPointer m_RandomGenerator;
+  InputImageSpacingType  m_SampleRegionSize;
 
-    typedef typename InterpolatorType::ContinuousIndexType   InputImageContinuousIndexType;
+  /** Generate the two corners of a sampling region. */
+  virtual void GenerateSampleRegion(
+    InputImageContinuousIndexType & smallestContIndex,
+    InputImageContinuousIndexType & largestContIndex );
 
-    /** The constructor. */
-    MultiInputImageRandomCoordinateSampler();
+private:
 
-    /** The destructor. */
-    virtual ~MultiInputImageRandomCoordinateSampler() {};
+  /** The private constructor. */
+  MultiInputImageRandomCoordinateSampler( const Self & );           // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self & );             // purposely not implemented
 
-    /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const;
+  bool m_UseRandomSampleRegion;
 
-    /** Function that does the work. */
-    virtual void GenerateData( void );
-
-    /** Generate a point randomly in a bounding box.
-     * This method can be overwritten in subclasses if a different distribution is desired. */
-    virtual void GenerateRandomCoordinate(
-      const InputImageContinuousIndexType & smallestContIndex,
-      const InputImageContinuousIndexType & largestContIndex,
-      InputImageContinuousIndexType &       randomContIndex);
-
-    InterpolatorPointer    m_Interpolator;
-    RandomGeneratorPointer m_RandomGenerator;
-    InputImageSpacingType                 m_SampleRegionSize;
-
-    /** Generate the two corners of a sampling region. */
-    virtual void GenerateSampleRegion(
-      InputImageContinuousIndexType & smallestContIndex,
-      InputImageContinuousIndexType & largestContIndex );
-
-  private:
-
-    /** The private constructor. */
-    MultiInputImageRandomCoordinateSampler( const Self& );          // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );            // purposely not implemented
-
-    bool          m_UseRandomSampleRegion;
-
-  };
-
+};
 
 } // end namespace itk
 

@@ -22,44 +22,44 @@
 namespace elastix
 {
 
-  /**
-   * \class TransformBendingEnergyPenalty
-   * \brief A penalty term based on the bending energy of a thin metal sheet.
-   *
-   *
-   * [1]: D. Rueckert, L. I. Sonoda, C. Hayes, D. L. G. Hill,
-   *      M. O. Leach, and D. J. Hawkes, "Nonrigid registration
-   *      using free-form deformations: Application to breast MR
-   *      images", IEEE Trans. Med. Imaging 18, 712-721, 1999.\n
-   * [2]: M. Staring and S. Klein,
-   *      "Itk::Transforms supporting spatial derivatives"",
-   *      Insight Journal, http://hdl.handle.net/10380/3215.
-   * The parameters used in this class are:
-   * \parameter Metric: Select this metric as follows:\n
-   *    <tt>(Metric "TransformBendingEnergyPenalty")</tt>
-   *
-   * \ingroup Metrics
-   *
-   */
+/**
+ * \class TransformBendingEnergyPenalty
+ * \brief A penalty term based on the bending energy of a thin metal sheet.
+ *
+ *
+ * [1]: D. Rueckert, L. I. Sonoda, C. Hayes, D. L. G. Hill,
+ *      M. O. Leach, and D. J. Hawkes, "Nonrigid registration
+ *      using free-form deformations: Application to breast MR
+ *      images", IEEE Trans. Med. Imaging 18, 712-721, 1999.\n
+ * [2]: M. Staring and S. Klein,
+ *      "Itk::Transforms supporting spatial derivatives"",
+ *      Insight Journal, http://hdl.handle.net/10380/3215.
+ * The parameters used in this class are:
+ * \parameter Metric: Select this metric as follows:\n
+ *    <tt>(Metric "TransformBendingEnergyPenalty")</tt>
+ *
+ * \ingroup Metrics
+ *
+ */
 
-template <class TElastix >
-class TransformBendingEnergyPenalty:
+template< class TElastix >
+class TransformBendingEnergyPenalty :
   public
   itk::TransformBendingEnergyPenaltyTerm<
-  typename MetricBase<TElastix>::FixedImageType,
+  typename MetricBase< TElastix >::FixedImageType,
   double >,
-  public MetricBase<TElastix>
+  public MetricBase< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef TransformBendingEnergyPenalty                 Self;
+  typedef TransformBendingEnergyPenalty Self;
   typedef itk::TransformBendingEnergyPenaltyTerm<
-    typename MetricBase<TElastix>::FixedImageType,
+    typename MetricBase< TElastix >::FixedImageType,
     double >                                            Superclass1;
-  typedef MetricBase<TElastix>                          Superclass2;
-  typedef itk::SmartPointer<Self>                       Pointer;
-  typedef itk::SmartPointer<const Self>                 ConstPointer;
+  typedef MetricBase< TElastix >          Superclass2;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -75,7 +75,7 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename
-    Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
+    Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass1::MovingImageType            MovingImageType;
   typedef typename Superclass1::MovingImagePixelType       MovingImagePixelType;
   typedef typename Superclass1::MovingImageConstPointer    MovingImageConstPointer;
@@ -109,13 +109,13 @@ public:
   typedef typename Superclass1::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass1::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename
-    Superclass1::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass1::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass1::MovingImageLimiterType     MovingImageLimiterType;
+    Superclass1::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass1::FixedImageLimiterType  FixedImageLimiterType;
+  typedef typename Superclass1::MovingImageLimiterType MovingImageLimiterType;
   typedef typename
-    Superclass1::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+    Superclass1::FixedImageLimiterOutputType FixedImageLimiterOutputType;
   typedef typename
-    Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+    Superclass1::MovingImageLimiterOutputType MovingImageLimiterOutputType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -126,23 +126,23 @@ public:
     MovingImageType::ImageDimension );
 
   /** Typedef's inherited from elastix. */
-  typedef typename Superclass2::ElastixType               ElastixType;
-  typedef typename Superclass2::ElastixPointer            ElastixPointer;
-  typedef typename Superclass2::ConfigurationType         ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType          RegistrationType;
-  typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType               ITKBaseType;
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Typedef for timer. */
-  typedef tmr::Timer          TimerType;
+  typedef tmr::Timer TimerType;
   /** Typedef for timer. */
-  typedef TimerType::Pointer  TimerPointer;
+  typedef TimerType::Pointer TimerPointer;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw (itk::ExceptionObject);
+  virtual void Initialize( void ) throw ( itk::ExceptionObject );
 
   /**
    * Do some things before each resolution:
@@ -153,7 +153,7 @@ public:
 protected:
 
   /** The constructor. */
-  TransformBendingEnergyPenalty(){};
+  TransformBendingEnergyPenalty(){}
 
   /** The destructor. */
   virtual ~TransformBendingEnergyPenalty() {}
@@ -161,19 +161,16 @@ protected:
 private:
 
   /** The private constructor. */
-  TransformBendingEnergyPenalty( const Self& ); // purposely not implemented
+  TransformBendingEnergyPenalty( const Self & ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );              // purposely not implemented
+  void operator=( const Self & );              // purposely not implemented
 
 };
 
-
 } // end namespace elastix
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxTransformBendingEnergyPenaltyTerm.hxx"
 #endif
 
 #endif // end #ifndef __elxTransformBendingEnergyPenaltyTerm_H__
-

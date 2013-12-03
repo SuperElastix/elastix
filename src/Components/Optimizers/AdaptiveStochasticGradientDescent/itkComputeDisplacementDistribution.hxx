@@ -27,14 +27,14 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-template<class TFixedImage, class TTransform >
-ComputeDisplacementDistribution< TFixedImage,TTransform >
+template< class TFixedImage, class TTransform >
+ComputeDisplacementDistribution< TFixedImage, TTransform >
 ::ComputeDisplacementDistribution()
 {
-  this->m_FixedImage = NULL;
-  this->m_FixedImageMask = NULL;
-  this->m_Transform = NULL;
-  this->m_FixedImageMask = NULL;
+  this->m_FixedImage                   = NULL;
+  this->m_FixedImageMask               = NULL;
+  this->m_Transform                    = NULL;
+  this->m_FixedImageMask               = NULL;
   this->m_NumberOfJacobianMeasurements = 0;
 
 } // end Constructor
@@ -44,11 +44,11 @@ ComputeDisplacementDistribution< TFixedImage,TTransform >
  * ************************* ComputeParameters ************************
  */
 
-template<class TFixedImage, class TTransform >
+template< class TFixedImage, class TTransform >
 void
-ComputeDisplacementDistribution< TFixedImage,TTransform >
-::ComputeDistributionTerms( const ParametersType & mu, 
-                           double & jacg, double & maxJJ, std::string methods )
+ComputeDisplacementDistribution< TFixedImage, TTransform >
+::ComputeDistributionTerms( const ParametersType & mu,
+  double & jacg, double & maxJJ, std::string methods )
 {
   /** This function computes four terms needed for the automatic parameter
     * estimation using voxel displacement distribution estimation method.
@@ -65,7 +65,7 @@ ComputeDisplacementDistribution< TFixedImage,TTransform >
   const SizeValueType nrofsamples = sampleContainer->Size();
 
   /** Get the number of parameters. */
-  const unsigned int P = static_cast<unsigned int>(
+  const unsigned int P = static_cast< unsigned int >(
     this->m_Transform->GetNumberOfParameters() );
 
   /** Get scales vector */
@@ -83,7 +83,7 @@ ComputeDisplacementDistribution< TFixedImage,TTransform >
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator iter;
   typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator end   = sampleContainer->End();
   unsigned int samplenr = 0;
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
@@ -93,7 +93,7 @@ ComputeDisplacementDistribution< TFixedImage,TTransform >
   jacj.Fill( 0.0 );
   NonZeroJacobianIndicesType jacind( sizejacind );
   jacind[ 0 ] = 0;
-  if ( sizejacind > 1 ) jacind[ 1 ] = 0;
+  if( sizejacind > 1 ) { jacind[ 1 ] = 0; }
 
   /**
    * Compute maxJJ and jac*gradient
@@ -101,15 +101,15 @@ ComputeDisplacementDistribution< TFixedImage,TTransform >
   DerivativeType Jgg( outdim );
   Jgg.Fill( 0.0 );
   std::vector< double > JGG_k;
-  double sum_jacg = 0.0;
-  const double sqrt2 = vcl_sqrt( static_cast<double>( 2.0 ) );
-  JacobianType jacjjacj( outdim, outdim );
+  double                sum_jacg = 0.0;
+  const double          sqrt2    = vcl_sqrt( static_cast< double >( 2.0 ) );
+  JacobianType          jacjjacj( outdim, outdim );
 
   samplenr = 0;
   for( iter = begin; iter != end; ++iter )
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    const FixedImagePointType & point = ( *iter ).Value().m_ImageCoordinates;
     this->m_Transform->GetJacobian( point, jacj, jacind  );
 
     /** Apply scales, if necessary. */
@@ -136,7 +136,7 @@ ComputeDisplacementDistribution< TFixedImage,TTransform >
     for( unsigned int i = 0; i < outdim; ++i )
     {
       double temp = 0.0;
-      for( unsigned int j = 0; j <sizejacind; ++j )
+      for( unsigned int j = 0; j < sizejacind; ++j )
       {
         int pj = jacind[ j ];
         temp += jacj( i, j ) * exactgradient( pj );
@@ -153,21 +153,21 @@ ComputeDisplacementDistribution< TFixedImage,TTransform >
   if( methods == "95percentile" )
   {
     /** Compute the 95% percentile of the distribution of JGG_k */
-    unsigned int d = static_cast<unsigned int>( nrofsamples * 0.95 );
+    unsigned int d = static_cast< unsigned int >( nrofsamples * 0.95 );
     std::sort( JGG_k.begin(), JGG_k.end() );
     jacg = ( JGG_k[ d - 1 ] + JGG_k[ d ] + JGG_k[ d + 1 ] ) / 3.0;
   }
   else if( methods == "2sigma" )
   {
     /** Compute the sigma of the distribution of JGG_k. */
-    double sigma = 0.0;
-    double mean_JGG = sum_jacg /samplenr;
-    for( unsigned int i=0; i < nrofsamples-1; ++i )
+    double sigma    = 0.0;
+    double mean_JGG = sum_jacg / samplenr;
+    for( unsigned int i = 0; i < nrofsamples - 1; ++i )
     {
-      sigma += vnl_math_sqr( JGG_k[i] - mean_JGG );
+      sigma += vnl_math_sqr( JGG_k[ i ] - mean_JGG );
     }
-    sigma /= ( nrofsamples - 1 );// unbiased estimation
-    jacg = mean_JGG + 2.0 * vcl_sqrt( sigma );
+    sigma /= ( nrofsamples - 1 ); // unbiased estimation
+    jacg   = mean_JGG + 2.0 * vcl_sqrt( sigma );
   }
 } // end ComputeDistributionTerms()
 
@@ -176,9 +176,9 @@ ComputeDisplacementDistribution< TFixedImage,TTransform >
  * ************************* SampleFixedImageForJacobianTerms ************************
  */
 
-template<class TFixedImage, class TTransform >
+template< class TFixedImage, class TTransform >
 void
-ComputeDisplacementDistribution< TFixedImage,TTransform >
+ComputeDisplacementDistribution< TFixedImage, TTransform >
 ::SampleFixedImageForJacobianTerms(
   ImageSampleContainerPointer & sampleContainer )
 {
@@ -199,13 +199,13 @@ ComputeDisplacementDistribution< TFixedImage,TTransform >
   /** Get samples and check the actually obtained number of samples. */
   sampler->Update();
   sampleContainer = sampler->GetOutput();
-  nrofsamples = sampleContainer->Size();
+  nrofsamples     = sampleContainer->Size();
 
   if( nrofsamples == 0 )
   {
     itkExceptionMacro(
-      << "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
-      << ") found to estimate the AdaptiveStochasticGradientDescent parameters." );
+        << "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
+        << ") found to estimate the AdaptiveStochasticGradientDescent parameters." );
   }
 
 } // end SampleFixedImageForJacobianTerms()

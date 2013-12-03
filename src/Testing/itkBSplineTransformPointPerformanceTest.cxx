@@ -27,32 +27,33 @@
 namespace itk
 {
 template< class TScalarType = double, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3 >
-class BSplineTransform_TEST
-  : public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
+class BSplineTransform_TEST :
+  public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef BSplineTransform_TEST                     Self;
+  typedef BSplineTransform_TEST Self;
   typedef AdvancedBSplineDeformableTransform<
     TScalarType, NDimensions, VSplineOrder >        Superclass;
-  typedef SmartPointer<Self>                        Pointer;
-  typedef SmartPointer<const Self>                  ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Some stuff that is needed to get this class functional. */
   itkNewMacro( Self );
   itkTypeMacro( BSplineTransform_TEST, AdvancedBSplineDeformableTransform );
   itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
-  typedef typename Superclass::InputPointType           InputPointType;
-  typedef typename Superclass::OutputPointType          OutputPointType;
-  typedef typename Superclass::IndexType                IndexType;
-  typedef typename Superclass::ContinuousIndexType      ContinuousIndexType;
-  typedef typename Superclass::WeightsFunctionType      WeightsFunctionType;
-  typedef typename Superclass::WeightsType              WeightsType;
-  typedef typename Superclass::ParameterIndexArrayType  ParameterIndexArrayType;
-  typedef typename Superclass::ImageType                ImageType;
-  typedef typename Superclass::RegionType               RegionType;
-  typedef typename Superclass::PixelType                PixelType;
-  typedef typename Superclass::ScalarType               ScalarType;
+  typedef typename Superclass::InputPointType          InputPointType;
+  typedef typename Superclass::OutputPointType         OutputPointType;
+  typedef typename Superclass::IndexType               IndexType;
+  typedef typename Superclass::ContinuousIndexType     ContinuousIndexType;
+  typedef typename Superclass::WeightsFunctionType     WeightsFunctionType;
+  typedef typename Superclass::WeightsType             WeightsType;
+  typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
+  typedef typename Superclass::ImageType               ImageType;
+  typedef typename Superclass::RegionType              RegionType;
+  typedef typename Superclass::PixelType               PixelType;
+  typedef typename Superclass::ScalarType              ScalarType;
 
   /** Transform points by a B-spline deformable transformation. */
   OutputPointType TransformPoint_OLD( const InputPointType & point ) const
@@ -60,13 +61,14 @@ public:
     const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
     typename WeightsType::ValueType weightsArray[ numberOfWeights ];
     typename ParameterIndexArrayType::ValueType indicesArray[ numberOfWeights ];
-    WeightsType weights( weightsArray, numberOfWeights, false );
+    WeightsType             weights( weightsArray, numberOfWeights, false );
     ParameterIndexArrayType indices( indicesArray, numberOfWeights, false );
 
     OutputPointType outputPoint;  bool inside;
     this->TransformPoint_OLD( point, outputPoint, weights, indices, inside );
     return outputPoint;
   } // end TransformPoint_OLD()
+
 
   void TransformPoint_OLD(
     const InputPointType & inputPoint,
@@ -79,10 +81,10 @@ public:
     InputPointType transformedPoint = inputPoint;
 
     /** Check if the coefficient image has been set. */
-    if ( !this->m_CoefficientImages[ 0 ] )
+    if( !this->m_CoefficientImages[ 0 ] )
     {
       itkWarningMacro( << "B-spline coefficients have not been set" );
-      for ( unsigned int j = 0; j < SpaceDimension; j++ )
+      for( unsigned int j = 0; j < SpaceDimension; j++ )
       {
         outputPoint[ j ] = transformedPoint[ j ];
       }
@@ -96,7 +98,7 @@ public:
     // NOTE: if the support region does not lie totally within the grid
     // we assume zero displacement and return the input point
     inside = this->InsideValidRegion( cindex );
-    if ( !inside )
+    if( !inside )
     {
       outputPoint = transformedPoint;
       return;
@@ -112,57 +114,61 @@ public:
     supportRegion.SetSize( this->m_SupportSize );
     supportRegion.SetIndex( supportIndex );
 
-    outputPoint.Fill( NumericTraits<ScalarType>::Zero );
+    outputPoint.Fill( NumericTraits< ScalarType >::Zero );
 
     /** Create iterators over the coefficient images. */
-    typedef ImageRegionConstIterator<ImageType> IteratorType;
-    IteratorType iterator[ SpaceDimension ];
-    unsigned long counter = 0;
+    typedef ImageRegionConstIterator< ImageType > IteratorType;
+    IteratorType      iterator[ SpaceDimension ];
+    unsigned long     counter = 0;
     const PixelType * basePointer
       = this->m_CoefficientImages[ 0 ]->GetBufferPointer();
 
-    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    for( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       iterator[ j ] = IteratorType( this->m_CoefficientImages[ j ], supportRegion );
     }
 
     /** Loop over the support region. */
-    while ( !iterator[ 0 ].IsAtEnd() )
+    while( !iterator[ 0 ].IsAtEnd() )
     {
       // populate the indices array
-      indices[ counter ] = &(iterator[ 0 ].Value()) - basePointer;
+      indices[ counter ] = &( iterator[ 0 ].Value() ) - basePointer;
 
       // multiply weigth with coefficient to compute displacement
-      for ( unsigned int j = 0; j < SpaceDimension; j++ )
+      for( unsigned int j = 0; j < SpaceDimension; j++ )
       {
-        outputPoint[ j ] += static_cast<ScalarType>(
+        outputPoint[ j ] += static_cast< ScalarType >(
           weights[ counter ] * iterator[ j ].Value() );
         ++iterator[ j ];
       }
-      ++ counter;
+      ++counter;
 
     } // end while
 
     // The output point is the start point + displacement.
-    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    for( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       outputPoint[ j ] += transformedPoint[ j ];
     }
 
   } // end TransformPoint_OLD()
 
-}; // end class BSplineTransform_TEST
+
+};
+
+// end class BSplineTransform_TEST
 } // end namespace itk
 
 //-------------------------------------------------------------------------------------
 
-int main( int argc, char *argv[] )
+int
+main( int argc, char * argv[] )
 {
   /** Some basic type definitions.
    * NOTE: don't change the dimension or the spline order, since the
    * hard-coded ground truth depends on this.
    */
-  const unsigned int Dimension = 3;
+  const unsigned int Dimension   = 3;
   const unsigned int SplineOrder = 3;
   typedef double CoordinateRepresentationType;
 
@@ -170,9 +176,9 @@ int main( int argc, char *argv[] )
    * Debug and Release mode.
    */
 #ifndef NDEBUG
-  unsigned int N = static_cast<unsigned int>( 1e3 );
+  unsigned int N = static_cast< unsigned int >( 1e3 );
 #else
-  unsigned int N = static_cast<unsigned int>( 1e5 );
+  unsigned int N = static_cast< unsigned int >( 1e5 );
 #endif
   std::cerr << "N = " << N << std::endl;
 
@@ -180,7 +186,7 @@ int main( int argc, char *argv[] )
   if( argc != 2 )
   {
     std::cerr << "ERROR: You should specify a text file with the B-spline "
-      << "transformation parameters." << std::endl;
+              << "transformation parameters." << std::endl;
     return 1;
   }
 
@@ -188,10 +194,10 @@ int main( int argc, char *argv[] )
   typedef itk::BSplineTransform_TEST<
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
 
-  typedef TransformType::NumberOfParametersType         NumberOfParametersType;
-  typedef TransformType::InputPointType                 InputPointType;
-  typedef TransformType::OutputPointType                OutputPointType;
-  typedef TransformType::ParametersType                 ParametersType;
+  typedef TransformType::NumberOfParametersType NumberOfParametersType;
+  typedef TransformType::InputPointType         InputPointType;
+  typedef TransformType::OutputPointType        OutputPointType;
+  typedef TransformType::ParametersType         ParametersType;
 
   typedef itk::Image< CoordinateRepresentationType,
     Dimension >                                         InputImageType;
@@ -236,7 +242,7 @@ int main( int argc, char *argv[] )
 
   /** Now read the parameters as defined in the file par.txt. */
   ParametersType parameters( transform->GetNumberOfParameters() );
-  std::ifstream input( argv[ 1 ] );
+  std::ifstream  input( argv[ 1 ] );
   if( input.is_open() )
   {
     for( unsigned int i = 0; i < parameters.GetSize(); ++i )
@@ -247,22 +253,22 @@ int main( int argc, char *argv[] )
   else
   {
     std::cerr << "ERROR: could not open the text file containing the "
-      << "parameter values." << std::endl;
+              << "parameter values." << std::endl;
     return 1;
   }
   transform->SetParameters( parameters );
 
   /** Declare variables. */
-  InputPointType inputPoint; inputPoint.Fill( 4.1 );
+  InputPointType  inputPoint; inputPoint.Fill( 4.1 );
   OutputPointType outputPoint; double sum = 0.0;
-  itk::TimeProbe timeProbeOLD, timeProbeNEW;
+  itk::TimeProbe  timeProbeOLD, timeProbeNEW;
 
   /** Time the TransformPoint with the old region iterator. */
   timeProbeOLD.Start();
   for( unsigned int i = 0; i < N; ++i )
   {
     outputPoint = transform->TransformPoint_OLD( inputPoint );
-    sum += outputPoint[0]; sum += outputPoint[1]; sum += outputPoint[2];
+    sum        += outputPoint[ 0 ]; sum += outputPoint[ 1 ]; sum += outputPoint[ 2 ];
   }
   timeProbeOLD.Stop();
   const double oldTime = timeProbeOLD.GetMean();
@@ -272,7 +278,7 @@ int main( int argc, char *argv[] )
   for( unsigned int i = 0; i < N; ++i )
   {
     outputPoint = transform->TransformPoint( inputPoint );
-    sum += outputPoint[0]; sum += outputPoint[1]; sum += outputPoint[2];
+    sum        += outputPoint[ 0 ]; sum += outputPoint[ 1 ]; sum += outputPoint[ 2 ];
   }
   timeProbeNEW.Stop();
   const double newTime = timeProbeNEW.GetMean();

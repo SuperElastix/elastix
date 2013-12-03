@@ -44,17 +44,17 @@
  *
  * These macros are undef'd at the end of this file
  */
-#define elxGetObjectMacro(_name,_type) \
-  virtual _type * Get##_name (void) const \
+#define elxGetObjectMacro( _name, _type ) \
+  virtual _type * Get##_name( void ) const \
   { \
-    return this->m_##_name .GetPointer(); \
+    return this->m_##_name.GetPointer(); \
   }
 //end elxGetObjectMacro
 
-#define elxSetObjectMacro(_name,_type) \
-  virtual void Set##_name (_type * _arg) \
+#define elxSetObjectMacro( _name, _type ) \
+  virtual void Set##_name( _type * _arg ) \
   { \
-    if ( this->m_##_name != _arg ) \
+    if( this->m_##_name != _arg ) \
     { \
       this->m_##_name = _arg; \
       this->GetAsITKBaseType()->Modified(); \
@@ -63,10 +63,10 @@
 //end elxSetObjectMacro
 
 /** defines for example: GetNumberOfMetrics() */
-#define elxGetNumberOfMacro(_name) \
-  virtual unsigned int GetNumberOf##_name##s(void) const \
+#define elxGetNumberOfMacro( _name ) \
+  virtual unsigned int GetNumberOf##_name##s( void ) const \
   { \
-    if ( this->Get##_name##Container() != 0 ) \
+    if( this->Get##_name##Container() != 0 ) \
     { \
       return this->Get##_name##Container()->Size(); \
     } \
@@ -141,45 +141,46 @@ class ElastixBase : public BaseComponent
 public:
 
   /** Standard typedefs etc. */
-  typedef ElastixBase       Self;
-  typedef BaseComponent     Superclass;
+  typedef ElastixBase   Self;
+  typedef BaseComponent Superclass;
 
   /** Typedefs used in this class. */
-  typedef Configuration                       ConfigurationType;
-  typedef ConfigurationType::Pointer          ConfigurationPointer;
-  typedef itk::Object                         ObjectType; //for the components
-  typedef ObjectType::Pointer                 ObjectPointer;
-  typedef itk::DataObject                     DataObjectType; //for the images
-  typedef DataObjectType::Pointer             DataObjectPointer;
+  typedef Configuration              ConfigurationType;
+  typedef ConfigurationType::Pointer ConfigurationPointer;
+  typedef itk::Object                ObjectType;          //for the components
+  typedef ObjectType::Pointer        ObjectPointer;
+  typedef itk::DataObject            DataObjectType;          //for the images
+  typedef DataObjectType::Pointer    DataObjectPointer;
   typedef itk::VectorContainer<
-    unsigned int, ObjectPointer>              ObjectContainerType;
-  typedef ObjectContainerType::Pointer        ObjectContainerPointer;
+    unsigned int, ObjectPointer >              ObjectContainerType;
+  typedef ObjectContainerType::Pointer ObjectContainerPointer;
   typedef itk::VectorContainer<
-    unsigned int, DataObjectPointer>          DataObjectContainerType;
-  typedef DataObjectContainerType::Pointer    DataObjectContainerPointer;
+    unsigned int, DataObjectPointer >          DataObjectContainerType;
+  typedef DataObjectContainerType::Pointer DataObjectContainerPointer;
   typedef itk::VectorContainer<
     unsigned int, std::string >               FileNameContainerType;
-  typedef FileNameContainerType::Pointer      FileNameContainerPointer;
+  typedef FileNameContainerType::Pointer FileNameContainerPointer;
 
   /** Other typedef's. */
-  typedef ComponentDatabase                   ComponentDatabaseType;
-  typedef ComponentDatabaseType::Pointer      ComponentDatabasePointer;
-  typedef ComponentDatabaseType::IndexType    DBIndexType;
-  typedef std::vector<double>                 FlatDirectionCosinesType;
+  typedef ComponentDatabase                ComponentDatabaseType;
+  typedef ComponentDatabaseType::Pointer   ComponentDatabasePointer;
+  typedef ComponentDatabaseType::IndexType DBIndexType;
+  typedef std::vector< double >            FlatDirectionCosinesType;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef itk::ParameterMapInterface::ParameterMapType  ParameterMapType;
+  typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
 
   /** The itk class that ElastixTemplate is expected to inherit from
    * Of course ElastixTemplate also inherits from this class (ElastixBase).
    */
-  typedef itk::Object      ITKBaseType;
+  typedef itk::Object ITKBaseType;
 
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )
   {
-    return dynamic_cast<ITKBaseType *>( this );
+    return dynamic_cast< ITKBaseType * >( this );
   }
+
 
   /** Set/Get the Configuration Object. */
   elxGetObjectMacro( Configuration, ConfigurationType );
@@ -187,10 +188,12 @@ public:
 
   /** Set the database index of the instantiated elastix object. */
   virtual void SetDBIndex( DBIndexType _arg );
+
   virtual DBIndexType GetDBIndex( void )
   {
     return this->m_DBIndex;
   }
+
 
   /** Functions to get/set the ComponentDatabase
    * The component database contains pointers to functions
@@ -318,6 +321,7 @@ public:
    * They install/uninstall the xout["iteration"] field.
    */
   virtual void BeforeRegistrationBase( void );
+
   virtual void AfterRegistrationBase( void );
 
   /** Get the default precision of xout.
@@ -329,6 +333,7 @@ public:
     return this->m_DefaultOutputPrecision;
   }
 
+
   /** Get whether direction cosines should be taken into account (true)
    * or ignored (false). This depends on the UseDirectionCosines
    * parameter. */
@@ -338,8 +343,8 @@ public:
    * (d11 d21 d31 d21 d22 etc ) */
   virtual void SetOriginalFixedImageDirectionFlat(
     const FlatDirectionCosinesType & arg );
-  virtual const FlatDirectionCosinesType &
-    GetOriginalFixedImageDirectionFlat( void ) const;
+
+  virtual const FlatDirectionCosinesType & GetOriginalFixedImageDirectionFlat( void ) const;
 
   /** Creates transformation parameters map. */
   virtual void CreateTransformParametersMap( void ) = 0;
@@ -353,13 +358,13 @@ public:
 protected:
 
   ElastixBase();
-  virtual ~ElastixBase() {};
+  virtual ~ElastixBase() {}
 
-  ConfigurationPointer      m_Configuration;
-  DBIndexType               m_DBIndex;
-  ComponentDatabasePointer  m_ComponentDatabase;
+  ConfigurationPointer     m_Configuration;
+  DBIndexType              m_DBIndex;
+  ComponentDatabasePointer m_ComponentDatabase;
 
-  FlatDirectionCosinesType     m_OriginalFixedImageDirection;
+  FlatDirectionCosinesType m_OriginalFixedImageDirection;
 
   /** Convenient mini class to load the files specified by a filename container
    * The function GenerateImageContainer can be used without instantiating an
@@ -373,17 +378,18 @@ protected:
    * cosines. Set it to false to force the direction cosines to identity.
    * The original direction cosines are returned separately.
    */
-  template < class TImage >
+  template< class TImage >
   class MultipleImageLoader
   {
-  public:
-    typedef TImage                                       ImageType;
-    typedef typename ImageType::Pointer                  ImagePointer;
-    typedef itk::ImageFileReader<ImageType>              ImageReaderType;
-    typedef typename ImageReaderType::Pointer            ImageReaderPointer;
-    typedef typename ImageType::DirectionType            DirectionType;
-    typedef itk::ChangeInformationImageFilter<ImageType> ChangeInfoFilterType;
-    typedef typename ChangeInfoFilterType::Pointer       ChangeInfoFilterPointer;
+public:
+
+    typedef TImage                                         ImageType;
+    typedef typename ImageType::Pointer                    ImagePointer;
+    typedef itk::ImageFileReader< ImageType >              ImageReaderType;
+    typedef typename ImageReaderType::Pointer              ImageReaderPointer;
+    typedef typename ImageType::DirectionType              DirectionType;
+    typedef itk::ChangeInformationImageFilter< ImageType > ChangeInfoFilterType;
+    typedef typename ChangeInfoFilterType::Pointer         ChangeInfoFilterPointer;
 
     static DataObjectContainerPointer GenerateImageContainer(
       FileNameContainerType * fileNameContainer, const std::string & imageDescription,
@@ -392,13 +398,13 @@ protected:
       DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
 
       /** Loop over all image filenames. */
-      for ( unsigned int i = 0; i < fileNameContainer->Size(); ++i )
+      for( unsigned int i = 0; i < fileNameContainer->Size(); ++i )
       {
         /** Setup reader. */
         ImageReaderPointer imageReader = ImageReaderType::New();
         imageReader->SetFileName( fileNameContainer->ElementAt( i ).c_str() );
         ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
-        DirectionType direction;
+        DirectionType           direction;
         direction.SetIdentity();
         infoChanger->SetOutputDirection( direction );
         infoChanger->SetChangeDirection( !useDirectionCosines );
@@ -422,7 +428,7 @@ protected:
 
         /** Store loaded image in the image container, as a DataObjectPointer. */
         ImagePointer image = infoChanger->GetOutput();
-        imageContainer->CreateElementAt(i) = image.GetPointer();
+        imageContainer->CreateElementAt( i ) = image.GetPointer();
 
         /** Store the original direction cosines */
         if( originalDirectionCosines )
@@ -435,6 +441,7 @@ protected:
       return imageContainer;
 
     } // end static method GenerateImageContainer
+
 
     /** Static method overloaded GenerateImageContainer. */
     static DataObjectContainerPointer GenerateImageContainer( DataObjectPointer image )
@@ -450,14 +457,15 @@ protected:
 
     } // GenerateImageContainer()
 
-    MultipleImageLoader(){};
-    ~MultipleImageLoader(){};
+
+    MultipleImageLoader(){}
+    ~MultipleImageLoader(){}
 
   };
 
   class MultipleDataObjectFiller
   {
-  public:
+public:
 
     /** GenerateImageContainer. */
     static DataObjectContainerPointer GenerateImageContainer(
@@ -469,23 +477,24 @@ protected:
       DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
 
       /** Store image in image container. */
-      imageContainer->CreateElementAt(j) = image;
+      imageContainer->CreateElementAt( j ) = image;
 
       /** Return the pointer to the new image container. */
       return imageContainer;
     } // end GenerateImageContainer()
 
+
     /** Constructor and destructor. */
-    MultipleDataObjectFiller(){};
-    ~MultipleDataObjectFiller(){};
+    MultipleDataObjectFiller(){}
+    ~MultipleDataObjectFiller(){}
   };
 
 private:
 
-  ElastixBase( const Self& );     // purposely not implemented
-  void operator=( const Self& );  // purposely not implemented
+  ElastixBase( const Self & );     // purposely not implemented
+  void operator=( const Self & );  // purposely not implemented
 
-  xl::xoutrow_type      m_IterationInfo;
+  xl::xoutrow_type m_IterationInfo;
 
   int m_DefaultOutputPrecision;
 
@@ -513,10 +522,10 @@ private:
   DataObjectContainerPointer m_ResultImageContainer;
 
   /** The image and mask FileNameContainers. */
-  FileNameContainerPointer    m_FixedImageFileNameContainer;
-  FileNameContainerPointer    m_MovingImageFileNameContainer;
-  FileNameContainerPointer    m_FixedMaskFileNameContainer;
-  FileNameContainerPointer    m_MovingMaskFileNameContainer;
+  FileNameContainerPointer m_FixedImageFileNameContainer;
+  FileNameContainerPointer m_MovingImageFileNameContainer;
+  FileNameContainerPointer m_FixedMaskFileNameContainer;
+  FileNameContainerPointer m_MovingMaskFileNameContainer;
 
   /** The initial and final transform. */
   ObjectPointer m_InitialTransform;
@@ -538,8 +547,7 @@ private:
     bool printerrors,
     bool printinfo ) const;
 
-}; 
-
+};
 
 } // end namespace elastix
 
@@ -548,4 +556,3 @@ private:
 #undef elxGetNumberOfMacro
 
 #endif // end #ifndef __elxElastixBase_h
-

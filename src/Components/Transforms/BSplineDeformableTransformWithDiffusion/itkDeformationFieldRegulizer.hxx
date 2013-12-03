@@ -17,7 +17,6 @@
 
 #include "itkDeformationFieldRegulizer.h"
 
-
 namespace itk
 {
 
@@ -25,13 +24,13 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TAnyITKTransform>
-DeformationFieldRegulizer<TAnyITKTransform>
+template< class TAnyITKTransform >
+DeformationFieldRegulizer< TAnyITKTransform >
 ::DeformationFieldRegulizer()
 {
   /** Initialize. */
   this->m_IntermediaryDeformationFieldTransform = 0;
-  this->m_Initialized = false;
+  this->m_Initialized                           = false;
 
 } // end Constructor
 
@@ -40,9 +39,9 @@ DeformationFieldRegulizer<TAnyITKTransform>
  * ********* InitializeIntermediaryDeformationField **************
  */
 
-template <class TAnyITKTransform>
+template< class TAnyITKTransform >
 void
-DeformationFieldRegulizer<TAnyITKTransform>
+DeformationFieldRegulizer< TAnyITKTransform >
 ::InitializeDeformationFields( void )
 {
   /** Initialize this->m_IntermediaryDeformationFieldTransform. */
@@ -57,7 +56,7 @@ DeformationFieldRegulizer<TAnyITKTransform>
   {
     intermediaryDeformationField->Allocate();
   }
-  catch ( itk::ExceptionObject & excp )
+  catch( itk::ExceptionObject & excp )
   {
     /** Add information to the exception and throw again. */
     excp.SetLocation( "DeformationFieldRegulizer - InitializeDeformationFields()" );
@@ -69,10 +68,10 @@ DeformationFieldRegulizer<TAnyITKTransform>
 
   /** Set everything to zero. */
   IteratorType it( intermediaryDeformationField,
-    intermediaryDeformationField->GetLargestPossibleRegion() );
+  intermediaryDeformationField->GetLargestPossibleRegion() );
   VectorPixelType vec;
-  vec.Fill( NumericTraits<ScalarType>::Zero );
-  while ( !it.IsAtEnd() )
+  vec.Fill( NumericTraits< ScalarType >::Zero );
+  while( !it.IsAtEnd() )
   {
     it.Set( vec );
     ++it;
@@ -80,7 +79,7 @@ DeformationFieldRegulizer<TAnyITKTransform>
 
   /** Set the deformation field in the transform. */
   this->m_IntermediaryDeformationFieldTransform
-    ->SetCoefficientVectorImage( intermediaryDeformationField );
+  ->SetCoefficientVectorImage( intermediaryDeformationField );
 
   /** Set to initialized. */
   this->m_Initialized = true;
@@ -92,18 +91,18 @@ DeformationFieldRegulizer<TAnyITKTransform>
  * *********************** TransformPoint ***********************
  */
 
-template <class TAnyITKTransform>
-typename DeformationFieldRegulizer<TAnyITKTransform>::OutputPointType
-DeformationFieldRegulizer<TAnyITKTransform>
+template< class TAnyITKTransform >
+typename DeformationFieldRegulizer< TAnyITKTransform >::OutputPointType
+DeformationFieldRegulizer< TAnyITKTransform >
 ::TransformPoint( const InputPointType & inputPoint ) const
 {
   /** Get the outputpoint of any ITK Transform and the deformation field. */
   OutputPointType oppAnyT, oppDF, opp;
   oppAnyT = this->Superclass::TransformPoint( inputPoint );
-  oppDF = this->m_IntermediaryDeformationFieldTransform->TransformPoint( inputPoint );
+  oppDF   = this->m_IntermediaryDeformationFieldTransform->TransformPoint( inputPoint );
 
   /** Add them: don't forget to subtract ipp. */
-  for ( unsigned int i = 0; i < OutputSpaceDimension; i++ )
+  for( unsigned int i = 0; i < OutputSpaceDimension; i++ )
   {
     opp[ i ] = oppAnyT[ i ] + oppDF[ i ] - inputPoint[ i ];
   }
@@ -118,23 +117,21 @@ DeformationFieldRegulizer<TAnyITKTransform>
  * ******** UpdateIntermediaryDeformationFieldTransform *********
  */
 
-template <class TAnyITKTransform>
+template< class TAnyITKTransform >
 void
-DeformationFieldRegulizer<TAnyITKTransform>
+DeformationFieldRegulizer< TAnyITKTransform >
 ::UpdateIntermediaryDeformationFieldTransform(
-  typename VectorImageType::Pointer  vecImage )
+  typename VectorImageType::Pointer vecImage )
 {
   /** Set the vecImage (which is allocated elsewhere) and put it in
    * IntermediaryDeformationFieldTransform (where it is copied and split up).
    */
   this->m_IntermediaryDeformationFieldTransform
-    ->SetCoefficientVectorImage( vecImage );
+  ->SetCoefficientVectorImage( vecImage );
 
 } // end UpdateIntermediaryDeformationFieldTransform()
 
 
 } // end namespace itk
 
-
 #endif // end #ifndef __itkDeformationFieldRegulizer_HXX__
-

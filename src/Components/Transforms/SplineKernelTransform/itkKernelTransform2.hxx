@@ -19,23 +19,21 @@ PURPOSE.  See the above copyright notices for more information.
 
 #include "itkKernelTransform2.h"
 
-
 namespace itk
 {
 
+/**
+ * ******************* Constructor *******************
+ */
 
- /**
-  * ******************* Constructor *******************
-  */
-
-template <class TScalarType, unsigned int NDimensions>
-KernelTransform2<TScalarType, NDimensions>
+template< class TScalarType, unsigned int NDimensions >
+KernelTransform2< TScalarType, NDimensions >
 ::KernelTransform2() : Superclass( NDimensions )
-    // the 0 is provided as
-    // a tentative number for initializing the Jacobian.
-    // The matrix can be resized at run time so this number
-    // here is irrelevant. The correct size of the Jacobian
-    // will be NDimension X NDimension.NumberOfLandMarks.
+  // the 0 is provided as
+  // a tentative number for initializing the Jacobian.
+  // The matrix can be resized at run time so this number
+  // here is irrelevant. The correct size of the Jacobian
+  // will be NDimension X NDimension.NumberOfLandMarks.
 {
   this->m_I.set_identity();
   this->m_SourceLandmarks = PointSetType::New();
@@ -43,20 +41,20 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_Displacements   = VectorSetType::New();
   this->m_WMatrixComputed = false;
 
-  this->m_LMatrixComputed = false;
-  this->m_LInverseComputed = false;
+  this->m_LMatrixComputed              = false;
+  this->m_LInverseComputed             = false;
   this->m_LMatrixDecompositionComputed = false;
 
   this->m_LMatrixDecompositionSVD = 0;
-  this->m_LMatrixDecompositionQR = 0;
+  this->m_LMatrixDecompositionQR  = 0;
 
-  this->m_Stiffness = 0.0;
+  this->m_Stiffness    = 0.0;
   this->m_PoissonRatio = 0.3;
 
-  this->m_MatrixInversionMethod = "SVD";
+  this->m_MatrixInversionMethod   = "SVD";
   this->m_FastComputationPossible = false;
 
-  this->m_HasNonZeroSpatialHessian = true;
+  this->m_HasNonZeroSpatialHessian           = true;
   this->m_HasNonZeroJacobianOfSpatialHessian = true;
 
 } // end constructor
@@ -66,8 +64,8 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* Destructor *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
-KernelTransform2<TScalarType, NDimensions>
+template< class TScalarType, unsigned int NDimensions >
+KernelTransform2< TScalarType, NDimensions >
 ::~KernelTransform2()
 {
   delete m_LMatrixDecompositionSVD;
@@ -80,22 +78,22 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* SetSourceLandmarks *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::SetSourceLandmarks( PointSetType * landmarks )
 {
   itkDebugMacro( << "setting SourceLandmarks to " << landmarks );
-  if ( this->m_SourceLandmarks != landmarks )
+  if( this->m_SourceLandmarks != landmarks )
   {
     this->m_SourceLandmarks = landmarks;
     //this->UpdateParameters(); // Not affected by source landmark change
     this->Modified();
 
     // these are invalidated when the source landmarks change
-    this->m_WMatrixComputed = false;
-    this->m_LMatrixComputed = false;
-    this->m_LInverseComputed = false;
+    this->m_WMatrixComputed              = false;
+    this->m_LMatrixComputed              = false;
+    this->m_LInverseComputed             = false;
     this->m_LMatrixDecompositionComputed = false;
 
     // you must recompute L and Linv - this does not require the targ landmarks
@@ -104,7 +102,7 @@ KernelTransform2<TScalarType, NDimensions>
     // Precompute the nonzerojacobianindices vector
     const NumberOfParametersType nrParams = this->GetNumberOfParameters();
     this->m_NonZeroJacobianIndices.resize( nrParams );
-    for ( unsigned int i = 0; i < nrParams; ++i )
+    for( unsigned int i = 0; i < nrParams; ++i )
     {
       this->m_NonZeroJacobianIndices[ i ] = i;
     }
@@ -117,13 +115,13 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* SetTargetLandmarks *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::SetTargetLandmarks( PointSetType * landmarks )
 {
   itkDebugMacro( "setting TargetLandmarks to " << landmarks );
-  if ( this->m_TargetLandmarks != landmarks )
+  if( this->m_TargetLandmarks != landmarks )
   {
     this->m_TargetLandmarks = landmarks;
 
@@ -141,9 +139,9 @@ KernelTransform2<TScalarType, NDimensions>
  * **************** ComputeG ***********************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeG( const InputVectorType &, GMatrixType & ) const
 {
   itkExceptionMacro( << "ComputeG() should be reimplemented in the subclass !!" );
@@ -154,9 +152,9 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* ComputeReflexiveG *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeReflexiveG( PointsIterator, GMatrixType & GMatrix ) const
 {
   GMatrix.fill( NumericTraits< TScalarType >::Zero );
@@ -172,23 +170,23 @@ KernelTransform2<TScalarType, NDimensions>
  * in transforms whose kernel produce diagonal G matrices.
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeDeformationContribution(
   const InputPointType & thisPoint, OutputPointType & opp ) const
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
 
   PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
-  GMatrixType Gmatrix;
+  GMatrixType    Gmatrix;
 
-  for ( unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++ )
+  for( unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++ )
   {
     this->ComputeG( thisPoint - sp->Value(), Gmatrix );
-    for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+    for( unsigned int dim = 0; dim < NDimensions; dim++ )
     {
-      for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+      for( unsigned int odim = 0; odim < NDimensions; odim++ )
       {
         opp[ odim ] += Gmatrix( dim, odim ) * this->m_DMatrix( dim, lnd );
       }
@@ -203,9 +201,9 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* ComputeD *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeD( void )
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
@@ -216,7 +214,7 @@ KernelTransform2<TScalarType, NDimensions>
 
   this->m_Displacements->Reserve( numberOfLandmarks );
   typename VectorSetType::Iterator vt = this->m_Displacements->Begin();
-  while ( sp != end )
+  while( sp != end )
   {
     vt->Value() = tp->Value() - sp->Value();
     vt++;
@@ -231,43 +229,43 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* ComputeWMatrix *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeWMatrix( void )
 {
   /** Compute L and Y. */
-  if ( !this->m_LMatrixComputed )
+  if( !this->m_LMatrixComputed )
   {
     this->ComputeL();
   }
   this->ComputeY();
 
   /** L matrix decomposition and solving for Y matrix. */
-  if ( this->m_MatrixInversionMethod == "SVD" )
+  if( this->m_MatrixInversionMethod == "SVD" )
   {
-    if ( !this->m_LMatrixDecompositionComputed )
+    if( !this->m_LMatrixDecompositionComputed )
     {
-      if ( this->m_LMatrixDecompositionSVD != 0 )
+      if( this->m_LMatrixDecompositionSVD != 0 )
       {
         delete this->m_LMatrixDecompositionSVD;
       }
-      this->m_LMatrixDecompositionSVD = new SVDDecompositionType( this->m_LMatrix, 1e-8 );
+      this->m_LMatrixDecompositionSVD      = new SVDDecompositionType( this->m_LMatrix, 1e-8 );
       this->m_LMatrixDecompositionComputed = true;
     }
     this->m_WMatrix = this->m_LMatrixDecompositionSVD->solve( this->m_YMatrix );
     //vnl_svd<TScalarType> svd( this->m_LMatrix, 1e-8 );
     //this->m_WMatrix = svd.solve( this->m_YMatrix );
   }
-  else if ( this->m_MatrixInversionMethod == "QR" )
+  else if( this->m_MatrixInversionMethod == "QR" )
   {
-    if ( !this->m_LMatrixDecompositionComputed )
+    if( !this->m_LMatrixDecompositionComputed )
     {
-      if ( this->m_LMatrixDecompositionQR != 0 )
+      if( this->m_LMatrixDecompositionQR != 0 )
       {
         delete this->m_LMatrixDecompositionQR;
       }
-      this->m_LMatrixDecompositionQR = new QRDecompositionType( this->m_LMatrix );
+      this->m_LMatrixDecompositionQR       = new QRDecompositionType( this->m_LMatrix );
       this->m_LMatrixDecompositionComputed = true;
     }
     this->m_WMatrix = this->m_LMatrixDecompositionQR->solve( this->m_YMatrix );
@@ -277,7 +275,7 @@ KernelTransform2<TScalarType, NDimensions>
   else
   {
     itkExceptionMacro( << "ERROR: invalid matrix inversion method ("
-      << this->m_MatrixInversionMethod << ")" );
+                       << this->m_MatrixInversionMethod << ")" );
   }
 
   /** Reorganize W. */
@@ -291,31 +289,31 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* ComputeLInverse *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeLInverse( void )
 {
-  if ( !this->m_LMatrixComputed )
+  if( !this->m_LMatrixComputed )
   {
     this->ComputeL();
   }
 
-  if ( this->m_MatrixInversionMethod == "SVD" )
+  if( this->m_MatrixInversionMethod == "SVD" )
   {
     //this->m_LMatrixInverse = vnl_matrix_inverse<TScalarType>( this->m_LMatrix );
-    this->m_LMatrixInverse = vnl_svd<TScalarType>( this->m_LMatrix ).inverse();
+    this->m_LMatrixInverse   = vnl_svd< TScalarType >( this->m_LMatrix ).inverse();
     this->m_LInverseComputed = true;
   }
-  else if ( this->m_MatrixInversionMethod == "QR" )
+  else if( this->m_MatrixInversionMethod == "QR" )
   {
-    this->m_LMatrixInverse = vnl_qr<TScalarType>( this->m_LMatrix ).inverse();
+    this->m_LMatrixInverse   = vnl_qr< TScalarType >( this->m_LMatrix ).inverse();
     this->m_LInverseComputed = true;
   }
   else
   {
     itkExceptionMacro( << "ERROR: invalid matrix inversion method ("
-      << this->m_MatrixInversionMethod << ")" );
+                       << this->m_MatrixInversionMethod << ")" );
     this->m_LInverseComputed = false;
   }
 
@@ -326,14 +324,14 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* ComputeL *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeL( void )
 {
-  const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
-  vnl_matrix<TScalarType> O2( NDimensions * ( NDimensions + 1 ),
-    NDimensions * ( NDimensions + 1 ), 0 );
+  const unsigned long       numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
+  vnl_matrix< TScalarType > O2( NDimensions * ( NDimensions + 1 ),
+  NDimensions * ( NDimensions + 1 ), 0 );
 
   this->ComputeP();
   this->ComputeK();
@@ -345,7 +343,7 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_LMatrix.update( this->m_PMatrix, 0, this->m_KMatrix.columns() );
   this->m_LMatrix.update( this->m_PMatrix.transpose(), this->m_KMatrix.rows(), 0 );
   this->m_LMatrix.update( O2, this->m_KMatrix.rows(), this->m_KMatrix.columns() );
-  this->m_LMatrixComputed = true;
+  this->m_LMatrixComputed              = true;
   this->m_LMatrixDecompositionComputed = false;
 
 } // end ComputeL()
@@ -355,13 +353,13 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* ComputeK *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeK( void )
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
-  GMatrixType G;
+  GMatrixType         G;
 
   this->m_KMatrix.set_size( NDimensions * numberOfLandmarks,
     NDimensions * numberOfLandmarks );
@@ -373,10 +371,10 @@ KernelTransform2<TScalarType, NDimensions>
   // K matrix is symmetric, so only evaluate the upper triangle and
   // store the values in both the upper and lower triangle
   unsigned int i = 0;
-  while ( p1 != end )
+  while( p1 != end )
   {
     PointsIterator p2 = p1; // start at the diagonal element
-    unsigned int j = i;
+    unsigned int   j  = i;
 
     // Compute the block diagonal element, i.e. kernel for pi->pi
     // Can ignore GMatrix, since p1 - p1 = 0
@@ -385,7 +383,7 @@ KernelTransform2<TScalarType, NDimensions>
     p2++; j++;
 
     // Compute the upper (and copy into lower) triangular part of K
-    while ( p2 != end )
+    while( p2 != end )
     {
       const InputVectorType s = p1.Value() - p2.Value();
       this->ComputeG( s, G );
@@ -404,24 +402,24 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* ComputeP *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeP( void )
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
-  IMatrixType I; I.set_identity();
-  IMatrixType temp;
-  InputPointType p; p.Fill( 0.0f );
+  IMatrixType         I; I.set_identity();
+  IMatrixType         temp;
+  InputPointType      p; p.Fill( 0.0f );
 
   this->m_PMatrix.set_size( NDimensions * numberOfLandmarks,
     NDimensions * ( NDimensions + 1 ) );
   this->m_PMatrix.fill( 0.0f );
 
-  for ( unsigned long i = 0; i < numberOfLandmarks; i++ )
+  for( unsigned long i = 0; i < numberOfLandmarks; i++ )
   {
     this->m_SourceLandmarks->GetPoint( i, &p );
-    for ( unsigned int j = 0; j < NDimensions; j++)
+    for( unsigned int j = 0; j < NDimensions; j++ )
     {
       temp = I * p[ j ];
       this->m_PMatrix.update( temp, i * NDimensions, j * NDimensions );
@@ -436,9 +434,9 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* ComputeY *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ComputeY( void )
 {
   /** In ComputeD() the displacements are computed. */
@@ -450,16 +448,16 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_YMatrix.set_size( NDimensions * ( numberOfLandmarks + NDimensions + 1 ), 1 );
   this->m_YMatrix.fill( 0.0 );
 
-  for ( unsigned long i = 0; i < numberOfLandmarks; i++ )
+  for( unsigned long i = 0; i < numberOfLandmarks; i++ )
   {
-    for ( unsigned int j = 0; j < NDimensions; j++ )
+    for( unsigned int j = 0; j < NDimensions; j++ )
     {
       this->m_YMatrix.put( i * NDimensions + j, 0, displacement.Value()[ j ] );
     }
     displacement++;
   }
 
-  for ( unsigned int i = 0; i < NDimensions * ( NDimensions + 1 ); i++ )
+  for( unsigned int i = 0; i < NDimensions * ( NDimensions + 1 ); i++ )
   {
     this->m_YMatrix.put( numberOfLandmarks * NDimensions + i, 0, 0 );
   }
@@ -471,9 +469,9 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* ReorganizeW *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::ReorganizeW( void )
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
@@ -482,31 +480,31 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_DMatrix.set_size( NDimensions, numberOfLandmarks );
   unsigned int ci = 0;
 
-  for ( unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++ )
+  for( unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++ )
   {
-    for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+    for( unsigned int dim = 0; dim < NDimensions; dim++ )
     {
       this->m_DMatrix( dim, lnd ) = this->m_WMatrix( ci++, 0 );
     }
   }
 
   // This matrix holds the rotational part of the Affine component
-  for ( unsigned int j = 0; j < NDimensions; j++ )
+  for( unsigned int j = 0; j < NDimensions; j++ )
   {
-    for ( unsigned int i = 0; i < NDimensions; i++ )
+    for( unsigned int i = 0; i < NDimensions; i++ )
     {
       this->m_AMatrix( i, j ) = this->m_WMatrix( ci++, 0 );
     }
   }
 
   // This vector holds the translational part of the Affine component
-  for ( unsigned int k = 0; k < NDimensions; k++ )
+  for( unsigned int k = 0; k < NDimensions; k++ )
   {
     this->m_BVector( k ) = this->m_WMatrix( ci++, 0 );
   }
 
   // release WMatrix memory by assigning a small one.
-  this->m_WMatrix = WMatrixType( 1, 1 );
+  this->m_WMatrix         = WMatrixType( 1, 1 );
   this->m_WMatrixComputed = true;
 
 } // end ReorganizeW()
@@ -516,26 +514,26 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* TransformPoint *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
-typename KernelTransform2<TScalarType, NDimensions>::OutputPointType
-KernelTransform2<TScalarType, NDimensions>
+template< class TScalarType, unsigned int NDimensions >
+typename KernelTransform2< TScalarType, NDimensions >::OutputPointType
+KernelTransform2< TScalarType, NDimensions >
 ::TransformPoint( const InputPointType & thisPoint ) const
 {
   OutputPointType opp;
-  opp.Fill( NumericTraits<typename OutputPointType::ValueType>::Zero );
+  opp.Fill( NumericTraits< typename OutputPointType::ValueType >::Zero );
   this->ComputeDeformationContribution( thisPoint, opp );
 
   // Add the rotational part of the Affine component
-  for ( unsigned int j = 0; j < NDimensions; j++ )
+  for( unsigned int j = 0; j < NDimensions; j++ )
   {
-    for ( unsigned int i = 0; i < NDimensions; i++ )
+    for( unsigned int i = 0; i < NDimensions; i++ )
     {
       opp[ i ] += this->m_AMatrix( i, j ) * thisPoint[ j ];
     }
   }
 
   // This vector holds the translational part of the Affine component
-  for ( unsigned int k = 0; k < NDimensions; k++ )
+  for( unsigned int k = 0; k < NDimensions; k++ )
   {
     opp[ k ] += this->m_BVector( k ) + thisPoint[ k ];
   }
@@ -552,9 +550,9 @@ KernelTransform2<TScalarType, NDimensions>
  * and target landmarks the same.
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::SetIdentity( void )
 {
   this->SetParameters( this->GetFixedParameters() );
@@ -571,24 +569,24 @@ KernelTransform2<TScalarType, NDimensions>
  * registration.
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::SetParameters( const ParametersType & parameters )
 {
-  this->m_Parameters = parameters;
+  this->m_Parameters                          = parameters;
   typename PointsContainer::Pointer landmarks = PointsContainer::New();
   const unsigned int numberOfLandmarks = parameters.Size() / NDimensions;
   landmarks->Reserve( numberOfLandmarks );
 
   PointsIterator itr = landmarks->Begin();
   PointsIterator end = landmarks->End();
-  InputPointType  landMark;
-  unsigned int pcounter = 0;
+  InputPointType landMark;
+  unsigned int   pcounter = 0;
 
-  while ( itr != end )
+  while( itr != end )
   {
-    for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+    for( unsigned int dim = 0; dim < NDimensions; dim++ )
     {
       landMark[ dim ] = parameters[ pcounter ];
       pcounter++;
@@ -618,9 +616,9 @@ KernelTransform2<TScalarType, NDimensions>
  * I/O mechanism to be supported.
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::SetFixedParameters( const ParametersType & parameters )
 {
   typename PointsContainer::Pointer landmarks = PointsContainer::New();
@@ -629,12 +627,12 @@ KernelTransform2<TScalarType, NDimensions>
 
   PointsIterator itr = landmarks->Begin();
   PointsIterator end = landmarks->End();
-  InputPointType  landMark;
-  unsigned int pcounter = 0;
+  InputPointType landMark;
+  unsigned int   pcounter = 0;
 
-  while ( itr != end )
+  while( itr != end )
   {
-    for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+    for( unsigned int dim = 0; dim < NDimensions; dim++ )
     {
       landMark[ dim ] = parameters[ pcounter ];
       pcounter++;
@@ -646,9 +644,9 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_SourceLandmarks->SetPoints( landmarks );
 
   // these are invalidated when the source lms change
-  this->m_WMatrixComputed = false;
-  this->m_LMatrixComputed = false;
-  this->m_LInverseComputed = false;
+  this->m_WMatrixComputed              = false;
+  this->m_LMatrixComputed              = false;
+  this->m_LInverseComputed             = false;
   this->m_LMatrixDecompositionComputed = false;
 
   // you must recompute L and Linv - this does not require the targ lms
@@ -661,22 +659,22 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* UpdateParameters *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::UpdateParameters( void )
 {
   this->m_Parameters = ParametersType(
     this->m_TargetLandmarks->GetNumberOfPoints() * NDimensions );
 
-  PointsIterator itr = this->m_TargetLandmarks->GetPoints()->Begin();
-  PointsIterator end = this->m_TargetLandmarks->GetPoints()->End();
-  unsigned int pcounter = 0;
+  PointsIterator itr      = this->m_TargetLandmarks->GetPoints()->Begin();
+  PointsIterator end      = this->m_TargetLandmarks->GetPoints()->End();
+  unsigned int   pcounter = 0;
 
-  while ( itr != end )
+  while( itr != end )
   {
     InputPointType landmark = itr.Value();
-    for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+    for( unsigned int dim = 0; dim < NDimensions; dim++ )
     {
       this->m_Parameters[ pcounter ] = landmark[ dim ];
       pcounter++;
@@ -691,34 +689,33 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* GetParameters *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
-const typename KernelTransform2<TScalarType, NDimensions>::ParametersType &
-KernelTransform2<TScalarType, NDimensions>
+template< class TScalarType, unsigned int NDimensions >
+const typename KernelTransform2< TScalarType, NDimensions >::ParametersType
+& KernelTransform2< TScalarType, NDimensions >
 ::GetParameters( void ) const
 {
   return this->m_Parameters;
 } // end GetParameters()
 
-
 /**
  * ******************* GetFixedParameters *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
-const typename KernelTransform2<TScalarType, NDimensions>::ParametersType &
-KernelTransform2<TScalarType, NDimensions>
+template< class TScalarType, unsigned int NDimensions >
+const typename KernelTransform2< TScalarType, NDimensions >::ParametersType
+& KernelTransform2< TScalarType, NDimensions >
 ::GetFixedParameters( void ) const
 {
   this->m_FixedParameters = ParametersType(
     this->m_SourceLandmarks->GetNumberOfPoints() * NDimensions );
-  PointsIterator itr = this->m_SourceLandmarks->GetPoints()->Begin();
-  PointsIterator end = this->m_SourceLandmarks->GetPoints()->End();
-  unsigned int pcounter = 0;
+  PointsIterator itr      = this->m_SourceLandmarks->GetPoints()->Begin();
+  PointsIterator end      = this->m_SourceLandmarks->GetPoints()->End();
+  unsigned int   pcounter = 0;
 
-  while ( itr != end )
+  while( itr != end )
   {
     InputPointType landmark = itr.Value();
-    for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+    for( unsigned int dim = 0; dim < NDimensions; dim++ )
     {
       this->m_FixedParameters[ pcounter ] = landmark[ dim ];
       pcounter++;
@@ -730,34 +727,33 @@ KernelTransform2<TScalarType, NDimensions>
 
 } // end GetFixedParameters()
 
-
 /**
  * ********************* GetJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
+KernelTransform2< TScalarType, NDimensions >
 ::GetJacobian( const InputPointType & p, JacobianType & jac,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
   jac.SetSize( NDimensions, numberOfLandmarks * NDimensions );
   jac.Fill( 0.0 );
-  GMatrixType Gmatrix, GMatrixSym; // dim x dim
+  GMatrixType    Gmatrix, GMatrixSym; // dim x dim
   PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
 
   // General route working for all kernels (but slow)
-  if ( !this->m_FastComputationPossible )
+  if( !this->m_FastComputationPossible )
   {
-    for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
+    for( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
     {
       this->ComputeG( p - sp->Value(), Gmatrix );
-      for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+      for( unsigned int dim = 0; dim < NDimensions; dim++ )
       {
-        for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+        for( unsigned int odim = 0; odim < NDimensions; odim++ )
         {
-          for ( unsigned int lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
+          for( unsigned int lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
           {
             jac[ odim ][ lidx ] += Gmatrix( dim, odim )
               * this->m_LMatrixInverse[ lnd * NDimensions + dim ][ lidx ];
@@ -767,45 +763,45 @@ KernelTransform2<TScalarType, NDimensions>
       ++sp;
     }
 
-    for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+    for( unsigned int odim = 0; odim < NDimensions; odim++ )
     {
-      for ( unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
+      for( unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
       {
-        for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+        for( unsigned int dim = 0; dim < NDimensions; dim++ )
         {
-          jac[ odim ][lidx] += p[ dim ]
+          jac[ odim ][ lidx ] += p[ dim ]
             * this->m_LMatrixInverse[ ( numberOfLandmarks + dim ) * NDimensions + odim ][ lidx ];
         }
         const unsigned long index = ( numberOfLandmarks + NDimensions ) * NDimensions + odim;
-        jac[ odim ][lidx] += this->m_LMatrixInverse[ index ][ lidx ];
+        jac[ odim ][ lidx ] += this->m_LMatrixInverse[ index ][ lidx ];
       }
     }
   } // if !this->m_FastComputationPossible
-  // Define n = the number of landmarks, d = dimension, Linv = inverse L matrix.
-  // For some of the kernel transform it is possible to use optimized paths:
-  //   - ThinPlateR2LogRSplineKernelTransform2
-  //   - ThinPlateSplineKernelTransform2
-  //   - VolumeSplineKernelTransform2
-  // These kernel transforms have the following properties, that can be exploited
-  // to increase Jacobian computation performance:
-  // A1) G is a d x d diagonal matrix, meaning it is sparse
-  // A2) G is diagonal, with identical values on the main diagonal,
-  //     i.e. G = G(0,0) * I_d, so it is fully defined by just 1 value G(0,0).
-  // A1 and A2 together reduce the memory access to G from d x d to 1.
-  //
-  // B1) Linv is an ( n x d + y )^2 block diagonal matrix:
-  //     it is very sparse, with 2/4 = 50%, resp. 3/9 = 33% non-zero values.
-  // B2) Linv is block diagonal, with identical values on the main diagonal
-  //     of each block, i.e. each block is fully defined by just 1 value.
-  // B1 and B2 together reduce the memory access to Linv also with a factor d x d.
-  //
-  // C) For all kernels, both Linv and G are symmetric.
-  //    Reduces memory access to Linv by a factor 2.
+    // Define n = the number of landmarks, d = dimension, Linv = inverse L matrix.
+    // For some of the kernel transform it is possible to use optimized paths:
+    //   - ThinPlateR2LogRSplineKernelTransform2
+    //   - ThinPlateSplineKernelTransform2
+    //   - VolumeSplineKernelTransform2
+    // These kernel transforms have the following properties, that can be exploited
+    // to increase Jacobian computation performance:
+    // A1) G is a d x d diagonal matrix, meaning it is sparse
+    // A2) G is diagonal, with identical values on the main diagonal,
+    //     i.e. G = G(0,0) * I_d, so it is fully defined by just 1 value G(0,0).
+    // A1 and A2 together reduce the memory access to G from d x d to 1.
+    //
+    // B1) Linv is an ( n x d + y )^2 block diagonal matrix:
+    //     it is very sparse, with 2/4 = 50%, resp. 3/9 = 33% non-zero values.
+    // B2) Linv is block diagonal, with identical values on the main diagonal
+    //     of each block, i.e. each block is fully defined by just 1 value.
+    // B1 and B2 together reduce the memory access to Linv also with a factor d x d.
+    //
+    // C) For all kernels, both Linv and G are symmetric.
+    //    Reduces memory access to Linv by a factor 2.
   else
   {
     // Precompute G's.
-    std::vector<ScalarType> gVector( numberOfLandmarks );
-    for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
+    std::vector< ScalarType > gVector( numberOfLandmarks );
+    for( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
     {
       // Property A: G = G(0,0) * I_d.
       this->ComputeG( p - sp->Value(), Gmatrix );
@@ -815,32 +811,32 @@ KernelTransform2<TScalarType, NDimensions>
 
     // Deformation part of the transform:
     sp = this->m_SourceLandmarks->GetPoints()->Begin();
-    for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
+    for( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
     {
       // Property A: G = G(0,0) * I_d.
       ScalarType g = gVector[ lnd ];
 
       // Property C: First process the diagonal only
       unsigned int lIdx = lnd * NDimensions;
-      ScalarType linv = this->m_LMatrixInverse[ lIdx ][ lIdx ];
+      ScalarType   linv = this->m_LMatrixInverse[ lIdx ][ lIdx ];
       // Property B: only access non-zero values
-      for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+      for( unsigned int dim = 0; dim < NDimensions; dim++ )
       {
         jac[ dim ][ lIdx + dim ] += g * linv;
       }
 
       // Property C: Then process right of diagonal
-      for ( unsigned int lidx = lnd + 1; lidx < numberOfLandmarks; lidx++ )
+      for( unsigned int lidx = lnd + 1; lidx < numberOfLandmarks; lidx++ )
       {
         // Property C: Get G value at mirrored position
         ScalarType gSym = gVector[ lidx ];
 
         // Property B: only access non-zero values
         unsigned int lIdx = lidx * NDimensions;
-        ScalarType linv = this->m_LMatrixInverse[ lnd * NDimensions ][ lIdx ];
+        ScalarType   linv = this->m_LMatrixInverse[ lnd * NDimensions ][ lIdx ];
 
         // Property B: only access non-zero values
-        for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+        for( unsigned int dim = 0; dim < NDimensions; dim++ )
         {
           jac[ dim ][ lIdx + dim ] += g * linv;
           // Property C: mirroring
@@ -853,14 +849,14 @@ KernelTransform2<TScalarType, NDimensions>
     }
 
     // Affine part of the transform:
-    for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+    for( unsigned int odim = 0; odim < NDimensions; odim++ )
     {
       const unsigned long index = ( numberOfLandmarks + NDimensions ) * NDimensions + odim;
 
-      for ( unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
+      for( unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
       {
         ScalarType tmp = 0.0;
-        for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+        for( unsigned int dim = 0; dim < NDimensions; dim++ )
         {
           unsigned int indtmp = ( numberOfLandmarks + dim ) * NDimensions + odim;
           tmp += p[ dim ] * this->m_LMatrixInverse[ indtmp ][ lidx ];
@@ -879,64 +875,64 @@ KernelTransform2<TScalarType, NDimensions>
  * ******************* PrintSelf *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-KernelTransform2<TScalarType, NDimensions>
-::PrintSelf( std::ostream& os, Indent indent ) const
+KernelTransform2< TScalarType, NDimensions >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
-  if ( this->m_SourceLandmarks )
+  if( this->m_SourceLandmarks )
   {
     os << indent << "SourceLandmarks: " << std::endl;
     this->m_SourceLandmarks->Print( os, indent.GetNextIndent() );
   }
-  if ( this->m_TargetLandmarks )
+  if( this->m_TargetLandmarks )
   {
     os << indent << "TargetLandmarks: " << std::endl;
     this->m_TargetLandmarks->Print( os, indent.GetNextIndent() );
   }
-  if ( this->m_Displacements )
+  if( this->m_Displacements )
   {
     os << indent << "Displacements: " << std::endl;
     this->m_Displacements->Print( os, indent.GetNextIndent() );
   }
 
   os << indent << "Stiffness: "
-    << this->m_Stiffness << std::endl;
+     << this->m_Stiffness << std::endl;
   os << indent << "FastComputationPossible: "
-    << this->m_FastComputationPossible << std::endl;
+     << this->m_FastComputationPossible << std::endl;
   os << indent << "PoissonRatio: "
-    << this->m_PoissonRatio << std::endl;
+     << this->m_PoissonRatio << std::endl;
   os << indent << "MatrixInversionMethod: "
-    << this->m_MatrixInversionMethod << std::endl;
+     << this->m_MatrixInversionMethod << std::endl;
 
   /** Just print the sizes of these matrices, not their contents. */
   os << indent << "LMatrix: " << this->m_LMatrix.rows()
-    << " x " << this->m_LMatrix.cols() << std::endl;
+     << " x " << this->m_LMatrix.cols() << std::endl;
   os << indent << "LMatrixInverse: " << this->m_LMatrixInverse.rows()
-    << " x " << this->m_LMatrixInverse.cols() << std::endl;
+     << " x " << this->m_LMatrixInverse.cols() << std::endl;
   os << indent << "KMatrix: " << this->m_KMatrix.rows()
-    << " x " << this->m_KMatrix.cols() << std::endl;
+     << " x " << this->m_KMatrix.cols() << std::endl;
   os << indent << "PMatrix: " << this->m_PMatrix.rows()
-    << " x " << this->m_PMatrix.cols() << std::endl;
+     << " x " << this->m_PMatrix.cols() << std::endl;
   os << indent << "YMatrix: " << this->m_YMatrix.rows()
-    << " x " << this->m_YMatrix.cols() << std::endl;
+     << " x " << this->m_YMatrix.cols() << std::endl;
   os << indent << "WMatrix: " << this->m_WMatrix.rows()
-    << " x " << this->m_WMatrix.cols() << std::endl;
+     << " x " << this->m_WMatrix.cols() << std::endl;
   os << indent << "DMatrix: " << this->m_DMatrix.rows()
-    << " x " << this->m_DMatrix.cols() << std::endl;
+     << " x " << this->m_DMatrix.cols() << std::endl;
   os << indent << "AMatrix: " << this->m_AMatrix.rows()
-    << " x " << this->m_AMatrix.cols() << std::endl;
+     << " x " << this->m_AMatrix.cols() << std::endl;
   os << indent << "BVector: " << this->m_BVector.size() << std::endl;
   os << indent << "WMatrixComputed: "
-    << this->m_WMatrixComputed << std::endl;
+     << this->m_WMatrixComputed << std::endl;
   os << indent << "LMatrixComputed: "
-    << this->m_LMatrixComputed << std::endl;
+     << this->m_LMatrixComputed << std::endl;
   os << indent << "LInverseComputed: "
-    << this->m_LInverseComputed << std::endl;
+     << this->m_LInverseComputed << std::endl;
   os << indent << "LMatrixDecompositionComputed: "
-    << this->m_LMatrixDecompositionComputed << std::endl;
+     << this->m_LMatrixDecompositionComputed << std::endl;
 
 } // end PrintSelf()
 

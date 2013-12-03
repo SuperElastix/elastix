@@ -29,9 +29,9 @@ namespace elastix
  * ******************* BeforeRegistrationBase *******************
  */
 
-template<class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::BeforeRegistrationBase( void )
 {
   /** Connect the components. */
@@ -55,13 +55,13 @@ ResamplerBase<TElastix>
   /** Set the DefaultPixelValue (for pixels in the resampled image
    * that come from outside the original (moving) image.
    */
-  double defaultPixelValue = itk::NumericTraits<double>::Zero;
+  double defaultPixelValue = itk::NumericTraits< double >::Zero;
   this->m_Configuration->ReadParameter(
     defaultPixelValue, "DefaultPixelValue", 0, false );
 
   /** Set the defaultPixelValue. */
   this->GetAsITKBaseType()->SetDefaultPixelValue(
-    static_cast<OutputPixelType>( defaultPixelValue ) );
+    static_cast< OutputPixelType >( defaultPixelValue ) );
 
 } // end BeforeRegistrationBase()
 
@@ -70,9 +70,9 @@ ResamplerBase<TElastix>
  * ******************* AfterEachResolutionBase ********************
  */
 
-template<class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::AfterEachResolutionBase( void )
 {
   /** Set the final transform parameters. */
@@ -87,7 +87,7 @@ ResamplerBase<TElastix>
     "WriteResultImageAfterEachResolution", "", level, 0, false );
 
   /** Writing result image. */
-  if ( writeResultImageThisResolution )
+  if( writeResultImageThisResolution )
   {
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
@@ -113,16 +113,16 @@ ResamplerBase<TElastix>
     }
     catch( itk::ExceptionObject & excp )
     {
-      xl::xout["error"] << "Exception caught: " << std::endl;
-      xl::xout["error"] << excp
-        << "Resuming elastix." << std::endl;
+      xl::xout[ "error" ] << "Exception caught: " << std::endl;
+      xl::xout[ "error" ] << excp
+                          << "Resuming elastix." << std::endl;
     }
 
     /** Print the elapsed time for the resampling. */
     timer->StopTimer();
     elxout << "  Applying transform took "
-      << static_cast<long>( timer->GetElapsedClockSec() )
-      << " s." << std::endl;
+           << static_cast< long >( timer->GetElapsedClockSec() )
+           << " s." << std::endl;
 
   } // end if
 
@@ -133,9 +133,9 @@ ResamplerBase<TElastix>
  * ******************* AfterEachIterationBase ********************
  */
 
-template<class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::AfterEachIterationBase( void )
 {
   /** Set the final transform parameters. */
@@ -153,7 +153,7 @@ ResamplerBase<TElastix>
     "WriteResultImageAfterEachIteration", "", level, 0, false );
 
   /** Writing result image. */
-  if ( writeResultImageThisIteration )
+  if( writeResultImageThisIteration )
   {
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
@@ -180,9 +180,9 @@ ResamplerBase<TElastix>
     }
     catch( itk::ExceptionObject & excp )
     {
-      xl::xout["error"] << "Exception caught: " << std::endl;
-      xl::xout["error"] << excp
-        << "Resuming elastix." << std::endl;
+      xl::xout[ "error" ] << "Exception caught: " << std::endl;
+      xl::xout[ "error" ] << excp
+                          << "Resuming elastix." << std::endl;
     }
 
     /** Print the elapsed time for the resampling. */
@@ -200,9 +200,9 @@ ResamplerBase<TElastix>
  * ******************* AfterRegistrationBase ********************
  */
 
-template<class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::AfterRegistrationBase( void )
 {
   /** Set the final transform parameters. */
@@ -232,12 +232,12 @@ ResamplerBase<TElastix>
 #else
 
   /** Writing result image. */
-  if ( writeResultImage == "true" )
+  if( writeResultImage == "true" )
   {
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
     this->m_Configuration->ReadParameter(
-      resultImageFormat, "ResultImageFormat", 0);
+      resultImageFormat, "ResultImageFormat", 0 );
     std::ostringstream makeFileName( "" );
     makeFileName
       << this->m_Configuration->GetCommandLineArgument( "-out" )
@@ -259,16 +259,16 @@ ResamplerBase<TElastix>
     }
     catch( itk::ExceptionObject & excp )
     {
-      xl::xout["error"] << "Exception caught: " << std::endl;
-      xl::xout["error"] << excp
-        << "Resuming elastix." << std::endl;
+      xl::xout[ "error" ] << "Exception caught: " << std::endl;
+      xl::xout[ "error" ] << excp
+                          << "Resuming elastix." << std::endl;
     }
 
     /** Print the elapsed time for the resampling. */
     timer->StopTimer();
     elxout << std::setprecision( 2 );
     elxout << "  Applying final transform took "
-      << timer->GetElapsedClockSec() << " s" << std::endl;
+           << timer->GetElapsedClockSec() << " s" << std::endl;
     elxout << std::setprecision(
       this->m_Elastix->GetDefaultOutputPrecision() );
   }
@@ -276,8 +276,8 @@ ResamplerBase<TElastix>
   {
     /** Do not apply the final transform. */
     elxout << std::endl
-      << "Skipping applying final transform, no resulting output image generated."
-      << std::endl;
+           << "Skipping applying final transform, no resulting output image generated."
+           << std::endl;
   } // end if
 
 #endif
@@ -289,22 +289,22 @@ ResamplerBase<TElastix>
  * *********************** SetComponents ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::SetComponents( void )
 {
   /** Set the transform, the interpolator and the inputImage
    * (which is the moving image).
    */
-  this->GetAsITKBaseType()->SetTransform( dynamic_cast<TransformType *>(
-    this->m_Elastix->GetElxTransformBase() ) );
+  this->GetAsITKBaseType()->SetTransform( dynamic_cast< TransformType * >(
+      this->m_Elastix->GetElxTransformBase() ) );
 
-  this->GetAsITKBaseType()->SetInterpolator( dynamic_cast<InterpolatorType *>(
-    this->m_Elastix->GetElxResampleInterpolatorBase() ) );
+  this->GetAsITKBaseType()->SetInterpolator( dynamic_cast< InterpolatorType * >(
+      this->m_Elastix->GetElxResampleInterpolatorBase() ) );
 
-  this->GetAsITKBaseType()->SetInput( dynamic_cast<InputImageType *>(
-    this->m_Elastix->GetMovingImage() ) );
+  this->GetAsITKBaseType()->SetInput( dynamic_cast< InputImageType * >(
+      this->m_Elastix->GetMovingImage() ) );
 
 } // end SetComponents()
 
@@ -313,9 +313,9 @@ ResamplerBase<TElastix>
  * ******************* WriteResultImage ********************
  */
 
-template<class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::WriteResultImage( const char * filename, const bool & showProgress )
 {
   /** Make sure the resampler is updated. */
@@ -323,7 +323,7 @@ ResamplerBase<TElastix>
 #ifndef _ELASTIX_BUILD_LIBRARY
   /** Add a progress observer to the resampler. */
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
-  if ( showProgress )
+  if( showProgress )
   {
     progressObserver->ConnectObserver( this->GetAsITKBaseType() );
     progressObserver->SetStartString( "  Progress: " );
@@ -350,26 +350,26 @@ ResamplerBase<TElastix>
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
   typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType,
     CoordRepType > RayCastInterpolatorType;
-  const RayCastInterpolatorType * testptr = dynamic_cast<const
-    RayCastInterpolatorType *>( this->GetAsITKBaseType()->GetInterpolator() );
+  const RayCastInterpolatorType * testptr = dynamic_cast< const
+    RayCastInterpolatorType * >( this->GetAsITKBaseType()->GetInterpolator() );
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings.
    */
 
-  if ( testptr )
+  if( testptr )
   {
     this->GetAsITKBaseType()->SetTransform(
-      (const_cast<RayCastInterpolatorType *>( testptr ))->GetTransform() );
+      ( const_cast< RayCastInterpolatorType * >( testptr ) )->GetTransform() );
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter( resultImagePixelType,
     "ResultImagePixelType", 0, false );
-  std::basic_string<char>::size_type pos = resultImagePixelType.find( " " );
-  const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
-  if ( pos != npos ) resultImagePixelType.replace( pos, 1, "_" );
+  std::basic_string< char >::size_type       pos  = resultImagePixelType.find( " " );
+  const std::basic_string< char >::size_type npos = std::basic_string< char >::npos;
+  if( pos != npos ) { resultImagePixelType.replace( pos, 1, "_" ); }
 
   /** Read from the parameter file if compression is desired. */
   bool doCompression = false;
@@ -388,7 +388,7 @@ ResamplerBase<TElastix>
    */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   DirectionType originalDirection;
-  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( this->GetAsITKBaseType()->GetOutput() );
@@ -403,10 +403,10 @@ ResamplerBase<TElastix>
   writer->SetUseCompression( doCompression );
 
   /** Do the writing. */
-  if ( showProgress )
+  if( showProgress )
   {
-    xl::xout["coutonly"] << std::flush;
-    xl::xout["coutonly"] << "\n  Writing image ..." << std::endl;
+    xl::xout[ "coutonly" ] << std::flush;
+    xl::xout[ "coutonly" ] << "\n  Writing image ..." << std::endl;
   }
   try
   {
@@ -438,9 +438,9 @@ ResamplerBase<TElastix>
  * \todo: avoid code duplication with WriteResultImage function
  */
 
-template<class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::CreateItkResultImage( void )
 {
   itk::DataObject::Pointer resultImage;
@@ -475,10 +475,10 @@ ResamplerBase<TElastix>
 
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator */
   typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType,
-  CoordRepType > RayCastInterpolatorType;
+    CoordRepType > RayCastInterpolatorType;
 
-  const RayCastInterpolatorType * testptr = dynamic_cast<const
-  RayCastInterpolatorType *>( this->GetAsITKBaseType()->GetInterpolator() );
+  const RayCastInterpolatorType * testptr = dynamic_cast< const
+    RayCastInterpolatorType * >( this->GetAsITKBaseType()->GetInterpolator() );
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings */
@@ -486,16 +486,16 @@ ResamplerBase<TElastix>
   if( testptr )
   {
     this->GetAsITKBaseType()->SetTransform(
-      (const_cast<RayCastInterpolatorType *>( testptr ))->GetTransform() );
+      ( const_cast< RayCastInterpolatorType * >( testptr ) )->GetTransform() );
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter( resultImagePixelType,
     "ResultImagePixelType", 0, false );
-  std::basic_string<char>::size_type pos = resultImagePixelType.find( " " );
-  const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
-  if( pos != npos ) resultImagePixelType.replace( pos, 1, "_" );
+  std::basic_string< char >::size_type       pos  = resultImagePixelType.find( " " );
+  const std::basic_string< char >::size_type npos = std::basic_string< char >::npos;
+  if( pos != npos ) { resultImagePixelType.replace( pos, 1, "_" ); }
 
   /** Typedef's for writing the output image. */
   typedef itk::ChangeInformationImageFilter<
@@ -507,7 +507,7 @@ ResamplerBase<TElastix>
    */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   DirectionType originalDirection;
-  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( this->GetAsITKBaseType()->GetOutput() );
@@ -566,9 +566,9 @@ ResamplerBase<TElastix>
  * ************************* ReadFromFile ***********************
  */
 
-template<class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::ReadFromFile( void )
 {
   /** Connect the components. */
@@ -581,7 +581,7 @@ ResamplerBase<TElastix>
   SizeType        size;
   DirectionType   direction;
   direction.SetIdentity();
-  for ( unsigned int i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; i++ )
   {
     /** No default size. Read size from the parameter file. */
     this->m_Configuration->ReadParameter( size[ i ], "Size", i );
@@ -599,7 +599,7 @@ ResamplerBase<TElastix>
     this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
 
     /** Read direction cosines. Default identity */
-    for ( unsigned int j = 0; j < ImageDimension; j++ )
+    for( unsigned int j = 0; j < ImageDimension; j++ )
     {
       this->m_Configuration->ReadParameter( direction( j, i ),
         "Direction", i * ImageDimension + j );
@@ -608,13 +608,13 @@ ResamplerBase<TElastix>
 
   /** Check for image size. */
   unsigned int sum = 0;
-  for ( unsigned int i = 0; i < ImageDimension; i++ )
+  for( unsigned int i = 0; i < ImageDimension; i++ )
   {
-    if ( size[ i ] == 0 ) sum++;
+    if( size[ i ] == 0 ) { sum++; }
   }
-  if ( sum > 0 )
+  if( sum > 0 )
   {
-    xl::xout["error"] << "ERROR: One or more image sizes are 0!" << std::endl;
+    xl::xout[ "error" ] << "ERROR: One or more image sizes are 0!" << std::endl;
     /** \todo quit program nicely. */
   }
 
@@ -628,7 +628,7 @@ ResamplerBase<TElastix>
    * should be used, set identity cosines, to simulate the
    * old ITK behavior.
    */
-  if ( ! this->GetElastix()->GetUseDirectionCosines() )
+  if( !this->GetElastix()->GetUseDirectionCosines() )
   {
     direction.SetIdentity();
   }
@@ -637,14 +637,14 @@ ResamplerBase<TElastix>
   /** Set the DefaultPixelValue (for pixels in the resampled image
    * that come from outside the original (moving) image.
    */
-  double defaultPixelValue = itk::NumericTraits<double>::Zero;
-  bool found = this->m_Configuration->ReadParameter( defaultPixelValue,
+  double defaultPixelValue = itk::NumericTraits< double >::Zero;
+  bool   found             = this->m_Configuration->ReadParameter( defaultPixelValue,
     "DefaultPixelValue", 0, false );
 
-  if ( found )
+  if( found )
   {
     this->GetAsITKBaseType()->SetDefaultPixelValue(
-      static_cast<OutputPixelType>( defaultPixelValue ) );
+      static_cast< OutputPixelType >( defaultPixelValue ) );
   }
 
 } // end ReadFromFile()
@@ -654,43 +654,43 @@ ResamplerBase<TElastix>
  * ******************* WriteToFile ******************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::WriteToFile( void ) const
 {
   /** Write resampler specific things. */
-  xl::xout["transpar"] << std::endl << "// Resampler specific" << std::endl;
+  xl::xout[ "transpar" ] << std::endl << "// Resampler specific" << std::endl;
 
   /** Write the name of the resampler. */
-  xl::xout["transpar"] << "(Resampler \""
-    << this->elxGetClassName() << "\")" << std::endl;
+  xl::xout[ "transpar" ] << "(Resampler \""
+                         << this->elxGetClassName() << "\")" << std::endl;
 
   /** Write the DefaultPixelValue. */
-  xl::xout["transpar"] << "(DefaultPixelValue "
-    << static_cast<double>( this->GetAsITKBaseType()->GetDefaultPixelValue() )
-    << ")" << std::endl;
+  xl::xout[ "transpar" ] << "(DefaultPixelValue "
+                         << static_cast< double >( this->GetAsITKBaseType()->GetDefaultPixelValue() )
+                         << ")" << std::endl;
 
   /** Write the output image format. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter(
     resultImageFormat, "ResultImageFormat", 0, false );
-  xl::xout["transpar"] << "(ResultImageFormat \""
-    << resultImageFormat << "\")" << std::endl;
+  xl::xout[ "transpar" ] << "(ResultImageFormat \""
+                         << resultImageFormat << "\")" << std::endl;
 
   /** Write output pixel type. */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter(
     resultImagePixelType, "ResultImagePixelType", 0, false );
-  xl::xout["transpar"] << "(ResultImagePixelType \""
-    << resultImagePixelType << "\")" << std::endl;
+  xl::xout[ "transpar" ] << "(ResultImagePixelType \""
+                         << resultImagePixelType << "\")" << std::endl;
 
   /** Write compression flag. */
   std::string doCompression = "false";
   this->m_Configuration->ReadParameter(
     doCompression, "CompressResultImage", 0, false );
-  xl::xout["transpar"] << "(CompressResultImage \""
-    << doCompression << "\")" << std::endl;
+  xl::xout[ "transpar" ] << "(CompressResultImage \""
+                         << doCompression << "\")" << std::endl;
 
 } // end WriteToFile()
 
@@ -699,12 +699,12 @@ ResamplerBase<TElastix>
  * ******************* CreateTransformParametersMap ******************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-ResamplerBase<TElastix>
+ResamplerBase< TElastix >
 ::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
 {
-  std::string parameterName;
+  std::string                parameterName;
   std::vector< std::string > parameterValues;
 
   /** Write the name of this transform. */
@@ -734,7 +734,7 @@ ResamplerBase<TElastix>
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter(
     resultImagePixelType, "ResultImagePixelType", 0, false );
-   parameterName = "ResultImagePixelType";
+  parameterName = "ResultImagePixelType";
   parameterValues.push_back( resultImagePixelType );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
@@ -755,8 +755,9 @@ ResamplerBase<TElastix>
  * ******************* ReleaseMemory ********************
  */
 
-template<class TElastix>
-void ResamplerBase<TElastix>
+template< class TElastix >
+void
+ResamplerBase< TElastix >
 ::ReleaseMemory( void )
 {
   /** Release some memory. Sometimes it is not possible to
@@ -765,21 +766,21 @@ void ResamplerBase<TElastix>
    */
 
   /** Release more memory, but only if this is the final elastix level. */
-  if ( this->GetConfiguration()->GetElastixLevel() + 1
+  if( this->GetConfiguration()->GetElastixLevel() + 1
     == this->GetConfiguration()->GetTotalNumberOfElastixLevels() )
   {
     /** Release fixed image memory. */
     const unsigned int nofi = this->GetElastix()->GetNumberOfFixedImages();
-    for ( unsigned int i = 0; i < nofi; ++i )
+    for( unsigned int i = 0; i < nofi; ++i )
     {
       this->GetElastix()->GetFixedImage( i )->ReleaseData();
     }
 
     /** Release fixed mask image memory. */
     const unsigned int nofm = this->GetElastix()->GetNumberOfFixedMasks();
-    for ( unsigned int i = 0; i < nofm; ++i )
+    for( unsigned int i = 0; i < nofm; ++i )
     {
-      if ( this->GetElastix()->GetFixedMask( i ) != 0 )
+      if( this->GetElastix()->GetFixedMask( i ) != 0 )
       {
         this->GetElastix()->GetFixedMask( i )->ReleaseData();
       }
@@ -787,9 +788,9 @@ void ResamplerBase<TElastix>
 
     /** Release moving mask image memory. */
     const unsigned int nomm = this->GetElastix()->GetNumberOfMovingMasks();
-    for ( unsigned int i = 0; i < nomm; ++i )
+    for( unsigned int i = 0; i < nomm; ++i )
     {
-      if ( this->GetElastix()->GetMovingMask( i ) != 0 )
+      if( this->GetElastix()->GetMovingMask( i ) != 0 )
       {
         this->GetElastix()->GetMovingMask( i )->ReleaseData();
       }
@@ -811,6 +812,4 @@ void ResamplerBase<TElastix>
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxResamplerBase_hxx
-

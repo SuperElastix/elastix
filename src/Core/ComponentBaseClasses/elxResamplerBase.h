@@ -66,13 +66,14 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template <class TElastix>
-class ResamplerBase : public BaseComponentSE<TElastix>
+template< class TElastix >
+class ResamplerBase : public BaseComponentSE< TElastix >
 {
 public:
+
   /** Standard ITK stuff. */
   typedef ResamplerBase               Self;
-  typedef BaseComponentSE<TElastix>   Superclass;
+  typedef BaseComponentSE< TElastix > Superclass;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( ResamplerBase, BaseComponentSE );
@@ -87,30 +88,30 @@ public:
 
   /** Typedef's from elastix.
   * NB: it is assumed that fixed and moving image dimension are equal!  */
-  typedef typename ElastixType::MovingImageType     InputImageType;
-  typedef typename ElastixType::MovingImageType     OutputImageType;
+  typedef typename ElastixType::MovingImageType InputImageType;
+  typedef typename ElastixType::MovingImageType OutputImageType;
   //typedef typename ElastixType::FixedImageType      OutputImageType;
-  typedef typename ElastixType::CoordRepType        CoordRepType;
+  typedef typename ElastixType::CoordRepType CoordRepType;
 
   /** Other typedef's. */
   typedef itk::ResampleImageFilter<
-    InputImageType, OutputImageType, CoordRepType>  ITKBaseType;
+    InputImageType, OutputImageType, CoordRepType >  ITKBaseType;
 
   /** Typedef's from ResampleImageFiler. */
-  typedef typename ITKBaseType::TransformType       TransformType;
-  typedef typename ITKBaseType::InterpolatorType    InterpolatorType;
-  typedef typename ITKBaseType::SizeType            SizeType;
-  typedef typename ITKBaseType::IndexType           IndexType;
-  typedef typename ITKBaseType::SpacingType         SpacingType;
-  typedef typename ITKBaseType::DirectionType       DirectionType;
-  typedef typename ITKBaseType::OriginPointType     OriginPointType;
-  typedef typename ITKBaseType::PixelType           OutputPixelType;
+  typedef typename ITKBaseType::TransformType    TransformType;
+  typedef typename ITKBaseType::InterpolatorType InterpolatorType;
+  typedef typename ITKBaseType::SizeType         SizeType;
+  typedef typename ITKBaseType::IndexType        IndexType;
+  typedef typename ITKBaseType::SpacingType      SpacingType;
+  typedef typename ITKBaseType::DirectionType    DirectionType;
+  typedef typename ITKBaseType::OriginPointType  OriginPointType;
+  typedef typename ITKBaseType::PixelType        OutputPixelType;
 
   /** Typedef that is used in the elastix dll version. */
   typedef typename ElastixType::ParameterMapType ParameterMapType;
 
   /** Typedef for the ProgressCommand. */
-  typedef elx::ProgressCommand          ProgressCommandType;
+  typedef elx::ProgressCommand ProgressCommandType;
 
   /** Get the ImageDimension. */
   itkStaticConstMacro( ImageDimension, unsigned int,
@@ -119,19 +120,21 @@ public:
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )
   {
-    return dynamic_cast<ITKBaseType *>( this );
+    return dynamic_cast< ITKBaseType * >( this );
   }
+
 
   /** Cast to ITKBaseType, to use in const functions. */
   virtual const ITKBaseType * GetAsITKBaseType( void ) const
   {
-    return dynamic_cast<const ITKBaseType *>( this );
+    return dynamic_cast< const ITKBaseType * >( this );
   }
+
 
   /** Execute stuff before the actual transformation:
    * \li nothing here
    */
-  virtual int BeforeAllTransformix( void ){ return 0;};
+  virtual int BeforeAllTransformix( void ){ return 0; }
 
   /** Execute stuff before the actual registration:
    * \li Set all components into the resampler, such as the transform
@@ -174,7 +177,7 @@ public:
 protected:
 
   /** The constructor. */
-  ResamplerBase(){};
+  ResamplerBase(){}
   /** The destructor. */
   virtual ~ResamplerBase() {}
 
@@ -184,22 +187,19 @@ protected:
 private:
 
   /** The private constructor. */
-  ResamplerBase(const Self&);   // purposely not implemented
+  ResamplerBase( const Self & );   // purposely not implemented
   /** The private copy constructor. */
-  void operator=(const Self&);  // purposely not implemented
+  void operator=( const Self & );  // purposely not implemented
 
   /** Release memory. */
   void ReleaseMemory( void );
 
 };
 
-
 } // end namespace elastix
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxResamplerBase.hxx"
 #endif
 
 #endif // end #ifndef __elxResamplerBase_h
-

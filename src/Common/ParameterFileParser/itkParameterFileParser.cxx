@@ -19,7 +19,6 @@ PURPOSE. See the above copyright notices for more information.
 #include <itksys/SystemTools.hxx>
 #include <itksys/RegularExpression.hxx>
 
-
 namespace itk
 {
 
@@ -43,7 +42,7 @@ ParameterFileParser
 ParameterFileParser
 ::~ParameterFileParser()
 {
-  if ( this->m_ParameterFile.is_open() )
+  if( this->m_ParameterFile.is_open() )
   {
     this->m_ParameterFile.close();
   }
@@ -76,7 +75,7 @@ ParameterFileParser
   this->BasicFileChecking();
 
   /** Open the parameter file for reading. */
-  if ( this->m_ParameterFile.is_open() )
+  if( this->m_ParameterFile.is_open() )
   {
     this->m_ParameterFile.clear();
     this->m_ParameterFile.close();
@@ -84,20 +83,20 @@ ParameterFileParser
   this->m_ParameterFile.open( this->m_ParameterFileName.c_str(), std::fstream::in );
 
   /** Check if it opened. */
-  if ( !this->m_ParameterFile.is_open() )
+  if( !this->m_ParameterFile.is_open() )
   {
     itkExceptionMacro( << "ERROR: could not open "
-      << this->m_ParameterFileName
-      << " for reading." );
+                       << this->m_ParameterFileName
+                       << " for reading." );
   }
 
   /** Clear the map. */
   this->m_ParameterMap.clear();
 
   /** Loop over the parameter file, line by line. */
-  std::string lineIn = "";
+  std::string lineIn  = "";
   std::string lineOut = "";
-  while ( this->m_ParameterFile.good() )
+  while( this->m_ParameterFile.good() )
   {
     /** Extract a line. */
     itksys::SystemTools::GetLineFromStream( this->m_ParameterFile, lineIn );
@@ -105,7 +104,7 @@ ParameterFileParser
     /** Check this line. */
     bool validLine = this->CheckLine( lineIn, lineOut );
 
-    if ( validLine )
+    if( validLine )
     {
       /** Get the parameter name from this line and store it. */
       this->GetParameterFromLine( lineIn, lineOut );
@@ -130,7 +129,7 @@ ParameterFileParser
 ::BasicFileChecking( void ) const
 {
   /** Check if the file name is given. */
-  if ( this->m_ParameterFileName == "" )
+  if( this->m_ParameterFileName == "" )
   {
     itkExceptionMacro( << "ERROR: FileName has not been set." );
   }
@@ -138,31 +137,31 @@ ParameterFileParser
   /** Basic error checking: existence. */
   bool exists = itksys::SystemTools::FileExists(
     this->m_ParameterFileName.c_str() );
-  if ( !exists )
+  if( !exists )
   {
     itkExceptionMacro( << "ERROR: the file "
-      << this->m_ParameterFileName
-      << " does not exist." );
+                       << this->m_ParameterFileName
+                       << " does not exist." );
   }
 
   /** Basic error checking: file or directory. */
   bool isDir = itksys::SystemTools::FileIsDirectory(
     this->m_ParameterFileName.c_str() );
-  if ( isDir )
+  if( isDir )
   {
     itkExceptionMacro( << "ERROR: the file "
-      << this->m_ParameterFileName
-      << " is a directory." );
+                       << this->m_ParameterFileName
+                       << " is a directory." );
   }
 
   /** Check the extension. */
   std::string ext = itksys::SystemTools::GetFilenameLastExtension(
     this->m_ParameterFileName );
-  if ( ext != ".txt" )
+  if( ext != ".txt" )
   {
     itkExceptionMacro( << "ERROR: the file "
-      << this->m_ParameterFileName
-      << " should be a text file (*.txt)." );
+                       << this->m_ParameterFileName
+                       << " should be a text file (*.txt)." );
   }
 
 } // end BasicFileChecking()
@@ -186,7 +185,7 @@ ParameterFileParser
   itksys::SystemTools::ReplaceString( lineOut, "\t", " " );
 
   itksys::RegularExpression commentPart( "//" );
-  if ( commentPart.find( lineOut ) )
+  if( commentPart.find( lineOut ) )
   {
     lineOut = lineOut.substr( 0, commentPart.start() );
   }
@@ -196,7 +195,7 @@ ParameterFileParser
   lineOut = leadingSpaces.match( 1 );
 
   itksys::RegularExpression trailingSpaces( "[ \t]+$" );
-  if ( trailingSpaces.find( lineOut ) )
+  if( trailingSpaces.find( lineOut ) )
   {
     lineOut = lineOut.substr( 0, trailingSpaces.start() );
   }
@@ -213,22 +212,22 @@ ParameterFileParser
 
   /** 1. Check for non-empty lines. */
   itksys::RegularExpression reNonEmptyLine( "[^ ]+" );
-  bool match1 = reNonEmptyLine.find( lineOut );
-  if ( !match1 )
+  bool                      match1 = reNonEmptyLine.find( lineOut );
+  if( !match1 )
   {
     return false;
   }
 
   /** 2. Check for comments. */
   itksys::RegularExpression reComment( "^//" );
-  bool match2 = reComment.find( lineOut );
-  if ( match2 )
+  bool                      match2 = reComment.find( lineOut );
+  if( match2 )
   {
     return false;
   }
 
   /** 3. Check if line is between brackets. */
-  if ( !itksys::SystemTools::StringStartsWith( lineOut.c_str(), "(" )
+  if( !itksys::SystemTools::StringStartsWith( lineOut.c_str(), "(" )
     || !itksys::SystemTools::StringEndsWith( lineOut.c_str(), ")" ) )
   {
     std::string hint = "Line is not between brackets: \"(...)\".";
@@ -240,8 +239,8 @@ ParameterFileParser
 
   /** 4. Check: the line should contain at least two words. */
   itksys::RegularExpression reTwoWords( "([ ]+)([^ ]+)" );
-  bool match4 = reTwoWords.find( lineOut );
-  if ( !match4 )
+  bool                      match4 = reTwoWords.find( lineOut );
+  if( !match4 )
   {
     std::string hint = "Line does not contain a parameter name and value.";
     this->ThrowException( lineIn, hint );
@@ -276,7 +275,7 @@ ParameterFileParser
    */
 
   /** 1) Split the line. */
-  std::vector<std::string> splittedLine;
+  std::vector< std::string > splittedLine;
   this->SplitLine( fullLine, line, splittedLine );
 
   /** 2) Get the parameter name. */
@@ -286,9 +285,9 @@ ParameterFileParser
 
   /** 3) Get the parameter values. */
   std::vector< std::string > parameterValues;
-  for ( unsigned int i = 0; i < splittedLine.size(); ++i )
+  for( unsigned int i = 0; i < splittedLine.size(); ++i )
   {
-    if ( splittedLine[ i ] != "" )
+    if( splittedLine[ i ] != "" )
     {
       parameterValues.push_back( splittedLine[ i ] );
     }
@@ -296,8 +295,8 @@ ParameterFileParser
 
   /** 4) Perform some checks on the parameter name. */
   itksys::RegularExpression reInvalidCharacters1( "[.,:;!@#$%^&-+|<>?]" );
-  bool match = reInvalidCharacters1.find( parameterName );
-  if ( match )
+  bool                      match = reInvalidCharacters1.find( parameterName );
+  if( match )
   {
     std::string hint = "The parameter \""
       + parameterName
@@ -307,20 +306,20 @@ ParameterFileParser
 
   /** 5) Perform checks on the parameter values. */
   itksys::RegularExpression reInvalidCharacters2( "[,;!@#$%&|<>?]" );
-  for ( unsigned int i = 0; i < parameterValues.size(); ++i )
+  for( unsigned int i = 0; i < parameterValues.size(); ++i )
   {
     /** For all entries some characters are not allowed. */
-    if ( reInvalidCharacters2.find( parameterValues[ i ] ) )
+    if( reInvalidCharacters2.find( parameterValues[ i ] ) )
     {
       std::string hint = "The parameter value \""
         + parameterValues[ i ]
-      + "\" contains invalid characters (,;!@#$%&|<>?).";
+        + "\" contains invalid characters (,;!@#$%&|<>?).";
       this->ThrowException( fullLine, hint );
     }
   }
 
   /** 6) Insert this combination in the parameter map. */
-  if ( this->m_ParameterMap.count( parameterName ) )
+  if( this->m_ParameterMap.count( parameterName ) )
   {
     std::string hint = "The parameter \""
       + parameterName
@@ -342,18 +341,18 @@ ParameterFileParser
 void
 ParameterFileParser
 ::SplitLine( const std::string & fullLine, const std::string & line,
-  std::vector<std::string> & splittedLine ) const
+  std::vector< std::string > & splittedLine ) const
 {
   splittedLine.clear();
   splittedLine.resize( 1 );
-  std::vector<itksys::String> splittedLine1;
+  std::vector< itksys::String > splittedLine1;
 
   /** Count the number of quotes in the line. If it is an odd value, the
    * line contains an error; strings should start and end with a quote, so
    * the total number of quotes is even.
    */
   std::size_t numQuotes = itksys::SystemTools::CountChar( line.c_str(), '"' );
-  if ( numQuotes % 2 == 1 )
+  if( numQuotes % 2 == 1 )
   {
     /** An invalid parameter line. */
     std::string hint = "This line has an odd number of quotes (\").";
@@ -362,23 +361,23 @@ ParameterFileParser
 
   /** Loop over the line. */
   std::string::const_iterator it;
-  unsigned int index = 0;
+  unsigned int                index = 0;
   numQuotes = 0;
-  for ( it = line.begin(); it < line.end(); it++ )
+  for( it = line.begin(); it < line.end(); it++ )
   {
-    if ( *it == '"' )
+    if( *it == '"' )
     {
       /** Start a new element. */
       splittedLine.push_back( "" );
       index++;
       numQuotes++;
     }
-    else if ( *it == ' ' )
+    else if( *it == ' ' )
     {
       /** Only start a new element if it is not a quote, otherwise just add
        * the space to the string.
        */
-      if ( numQuotes % 2 == 0 )
+      if( numQuotes % 2 == 0 )
       {
         splittedLine.push_back( "" );
         index++;
@@ -432,7 +431,7 @@ ParameterFileParser
   this->BasicFileChecking();
 
   /** Open the parameter file for reading. */
-  if ( this->m_ParameterFile.is_open() )
+  if( this->m_ParameterFile.is_open() )
   {
     this->m_ParameterFile.clear();
     this->m_ParameterFile.close();
@@ -440,17 +439,17 @@ ParameterFileParser
   this->m_ParameterFile.open( this->m_ParameterFileName.c_str(), std::fstream::in );
 
   /** Check if it opened. */
-  if ( !this->m_ParameterFile.is_open() )
+  if( !this->m_ParameterFile.is_open() )
   {
     itkExceptionMacro( << "ERROR: could not open "
-      << this->m_ParameterFileName
-      << " for reading." );
+                       << this->m_ParameterFileName
+                       << " for reading." );
   }
 
   /** Loop over the parameter file, line by line. */
   std::string line = "";
   std::string output;
-  while ( this->m_ParameterFile.good() )
+  while( this->m_ParameterFile.good() )
   {
     /** Extract a line. */
     itksys::SystemTools::GetLineFromStream( this->m_ParameterFile, line ); // \todo: returns bool

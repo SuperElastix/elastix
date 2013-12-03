@@ -15,4 +15,3 @@
 #include "elxCUDAResampler.h"
 
 elxInstallMacro( CUDAResampler );
-

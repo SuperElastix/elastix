@@ -20,25 +20,13 @@
 #include "itkAdvancedRigid2DTransform.h"
 #include "vnl/algo/vnl_svd.h"
 
-
 namespace itk
 {
 
 // Constructor with default arguments
-template<class TScalarType>
-AdvancedRigid2DTransform<TScalarType>::
-AdvancedRigid2DTransform():
-  Superclass(ParametersDimension)
-{
-  m_Angle = NumericTraits< TScalarType >::Zero;
-  this->PrecomputeJacobianOfSpatialJacobian();
-}
-
-// Constructor with arguments
-template<class TScalarType>
-AdvancedRigid2DTransform<TScalarType>::
-AdvancedRigid2DTransform(unsigned int parametersDimension):
-  Superclass(ParametersDimension)
+template< class TScalarType >
+AdvancedRigid2DTransform< TScalarType >::AdvancedRigid2DTransform() :
+  Superclass( ParametersDimension )
 {
   m_Angle = NumericTraits< TScalarType >::Zero;
   this->PrecomputeJacobianOfSpatialJacobian();
@@ -46,11 +34,20 @@ AdvancedRigid2DTransform(unsigned int parametersDimension):
 
 
 // Constructor with arguments
-template<class TScalarType>
-AdvancedRigid2DTransform<TScalarType>::
-AdvancedRigid2DTransform( unsigned int spaceDimension,
-                  unsigned int parametersDimension):
-  Superclass(parametersDimension)
+template< class TScalarType >
+AdvancedRigid2DTransform< TScalarType >::AdvancedRigid2DTransform( unsigned int parametersDimension ) :
+  Superclass( ParametersDimension )
+{
+  m_Angle = NumericTraits< TScalarType >::Zero;
+  this->PrecomputeJacobianOfSpatialJacobian();
+}
+
+
+// Constructor with arguments
+template< class TScalarType >
+AdvancedRigid2DTransform< TScalarType >::AdvancedRigid2DTransform( unsigned int spaceDimension,
+  unsigned int parametersDimension ) :
+  Superclass( parametersDimension )
 {
   m_Angle = NumericTraits< TScalarType >::Zero;
   this->PrecomputeJacobianOfSpatialJacobian();
@@ -58,42 +55,38 @@ AdvancedRigid2DTransform( unsigned int spaceDimension,
 
 
 // Destructor
-template<class TScalarType>
-AdvancedRigid2DTransform<TScalarType>::
+template< class TScalarType >
+AdvancedRigid2DTransform< TScalarType >::
 ~AdvancedRigid2DTransform()
-{
-}
-
+{}
 
 // Print self
-template<class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>::
-PrintSelf(std::ostream &os, Indent indent) const
+AdvancedRigid2DTransform< TScalarType >::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  Superclass::PrintSelf(os,indent);
+  Superclass::PrintSelf( os, indent );
   os << indent << "Angle       = " << m_Angle        << std::endl;
 }
 
 
 // Set the rotation matrix
-template<class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>::
-SetMatrix(const MatrixType & matrix )
+AdvancedRigid2DTransform< TScalarType >::SetMatrix( const MatrixType & matrix )
 {
-  itkDebugMacro("setting  m_Matrix  to " << matrix );
+  itkDebugMacro( "setting  m_Matrix  to " << matrix );
   // The matrix must be orthogonal otherwise it is not
   // representing a valid rotaion in 2D space
-  typename MatrixType::InternalMatrixType test =
-    matrix.GetVnlMatrix() * matrix.GetTranspose();
+  typename MatrixType::InternalMatrixType test
+    = matrix.GetVnlMatrix() * matrix.GetTranspose();
 
   const double tolerance = 1e-10;
   if( !test.is_identity( tolerance ) )
-    {
-    itk::ExceptionObject ex(__FILE__,__LINE__,"Attempt to set a Non-Orthogonal matrix",ITK_LOCATION);
+  {
+    itk::ExceptionObject ex( __FILE__, __LINE__, "Attempt to set a Non-Orthogonal matrix", ITK_LOCATION );
     throw ex;
-    }
+  }
 
   this->SetVarMatrix( matrix );
   this->ComputeOffset();
@@ -104,30 +97,30 @@ SetMatrix(const MatrixType & matrix )
 
 
 /** Compute the Angle from the Rotation Matrix */
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>
+AdvancedRigid2DTransform< TScalarType >
 ::ComputeMatrixParameters( void )
 {
   // Extract the orthogonal part of the matrix
   //
-  vnl_matrix<TScalarType> p(2, 2);
+  vnl_matrix< TScalarType > p( 2, 2 );
   p = this->GetMatrix().GetVnlMatrix();
-  vnl_svd<TScalarType> svd(p);
-  vnl_matrix<TScalarType> r(2, 2);
+  vnl_svd< TScalarType >    svd( p );
+  vnl_matrix< TScalarType > r( 2, 2 );
   r = svd.U() * svd.V().transpose();
 
-  m_Angle = vcl_acos(r[0][0]);
+  m_Angle = vcl_acos( r[ 0 ][ 0 ] );
 
-  if(r[1][0]<0.0)
-    {
+  if( r[ 1 ][ 0 ] < 0.0 )
+  {
     m_Angle = -m_Angle;
-    }
+  }
 
-  if(r[1][0]-sin(m_Angle) > 0.000001)
-    {
-    itkWarningMacro("Bad Rotation Matrix " << this->GetMatrix() );
-    }
+  if( r[ 1 ][ 0 ] - sin( m_Angle ) > 0.000001 )
+  {
+    itkWarningMacro( "Bad Rotation Matrix " << this->GetMatrix() );
+  }
 
   /** Update Jacobian of spatial Jacobian */
   this->PrecomputeJacobianOfSpatialJacobian();
@@ -135,23 +128,21 @@ AdvancedRigid2DTransform<TScalarType>
 
 
 // Compose with a translation
-template<class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>::
-Translate(const OffsetType &offset, bool)
+AdvancedRigid2DTransform< TScalarType >::Translate( const OffsetType & offset, bool )
 {
   OutputVectorType newOffset = this->GetOffset();
   newOffset += offset;
-  this->SetOffset(newOffset);
+  this->SetOffset( newOffset );
   this->ComputeTranslation();
 }
 
 
 // Create and return an inverse transformation
-template<class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>::
-CloneInverseTo( Pointer & result ) const
+AdvancedRigid2DTransform< TScalarType >::CloneInverseTo( Pointer & result ) const
 {
   result = New();
   result->SetCenter( this->GetCenter() );  // inverse have the same center
@@ -159,11 +150,11 @@ CloneInverseTo( Pointer & result ) const
   result->SetTranslation( -( this->GetInverseMatrix() * this->GetTranslation() ) );
 }
 
+
 // Create and return a clone of the transformation
-template<class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>::
-CloneTo( Pointer & result ) const
+AdvancedRigid2DTransform< TScalarType >::CloneTo( Pointer & result ) const
 {
   result = New();
   result->SetCenter( this->GetCenter() );
@@ -173,10 +164,9 @@ CloneTo( Pointer & result ) const
 
 
 // Reset the transform to an identity transform
-template<class TScalarType >
+template< class TScalarType >
 void
-AdvancedRigid2DTransform< TScalarType >::
-SetIdentity( void )
+AdvancedRigid2DTransform< TScalarType >::SetIdentity( void )
 {
   this->Superclass::SetIdentity();
   m_Angle = NumericTraits< TScalarType >::Zero;
@@ -184,11 +174,12 @@ SetIdentity( void )
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
+
 // Set the angle of rotation
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>
-::SetAngle(TScalarType angle)
+AdvancedRigid2DTransform< TScalarType >
+::SetAngle( TScalarType angle )
 {
   m_Angle = angle;
   this->ComputeMatrix();
@@ -198,51 +189,50 @@ AdvancedRigid2DTransform<TScalarType>
 
 
 // Set the angle of rotation
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>
-::SetAngleInDegrees(TScalarType angle)
+AdvancedRigid2DTransform< TScalarType >
+::SetAngleInDegrees( TScalarType angle )
 {
-  const TScalarType angleInRadians = angle * vcl_atan(1.0) / 45.0;
+  const TScalarType angleInRadians = angle * vcl_atan( 1.0 ) / 45.0;
   this->SetAngle( angleInRadians );
 }
 
+
 // Compute the matrix from the angle
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>
+AdvancedRigid2DTransform< TScalarType >
 ::ComputeMatrix( void )
 {
-  const double ca = vcl_cos(m_Angle );
-  const double sa = vcl_sin(m_Angle );
+  const double ca = vcl_cos( m_Angle );
+  const double sa = vcl_sin( m_Angle );
 
   MatrixType rotationMatrix;
-  rotationMatrix[0][0]= ca; rotationMatrix[0][1]=-sa;
-  rotationMatrix[1][0]= sa; rotationMatrix[1][1]= ca;
+  rotationMatrix[ 0 ][ 0 ] = ca; rotationMatrix[ 0 ][ 1 ] = -sa;
+  rotationMatrix[ 1 ][ 0 ] = sa; rotationMatrix[ 1 ][ 1 ] = ca;
 
   this->SetVarMatrix( rotationMatrix );
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
 
-
 // Set Parameters
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>::
-SetParameters( const ParametersType & parameters )
+AdvancedRigid2DTransform< TScalarType >::SetParameters( const ParametersType & parameters )
 {
   itkDebugMacro( << "Setting parameters " << parameters );
 
   // Set angle
-  this->SetVarAngle( parameters[0] );
+  this->SetVarAngle( parameters[ 0 ] );
 
   // Set translation
   OutputVectorType translation;
-  for(unsigned int i=0; i < OutputSpaceDimension; i++)
-    {
-    translation[i] = parameters[i+1];
-    }
+  for( unsigned int i = 0; i < OutputSpaceDimension; i++ )
+  {
+    translation[ i ] = parameters[ i + 1 ];
+  }
   this->SetVarTranslation( translation );
 
   // Update matrix and offset
@@ -253,38 +243,38 @@ SetParameters( const ParametersType & parameters )
   // parameters and cannot know if the parameters have changed.
   this->Modified();
 
-  itkDebugMacro(<<"After setting parameters ");
+  itkDebugMacro( << "After setting parameters " );
 }
 
+
 // Get Parameters
-template <class TScalarType>
-const typename AdvancedRigid2DTransform<TScalarType>::ParametersType &
-AdvancedRigid2DTransform<TScalarType>::
+template< class TScalarType >
+const typename AdvancedRigid2DTransform< TScalarType >::ParametersType
+& AdvancedRigid2DTransform< TScalarType >::
 GetParameters( void ) const
 {
-  itkDebugMacro( << "Getting parameters ");
+  itkDebugMacro( << "Getting parameters " );
 
   // Get the angle
-  this->m_Parameters[0] = this->GetAngle();
+  this->m_Parameters[ 0 ] = this->GetAngle();
 
   // Get the translation
-  for(unsigned int i=0; i < OutputSpaceDimension; i++)
-    {
-    this->m_Parameters[i+1] = this->GetTranslation()[i];
-    }
+  for( unsigned int i = 0; i < OutputSpaceDimension; i++ )
+  {
+    this->m_Parameters[ i + 1 ] = this->GetTranslation()[ i ];
+  }
 
-  itkDebugMacro(<<"After getting parameters " << this->m_Parameters );
+  itkDebugMacro( << "After getting parameters " << this->m_Parameters );
 
   return this->m_Parameters;
 }
 
 // Compute transformation Jacobian
-template<class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>::
-GetJacobian( const InputPointType & p,
-    JacobianType & j,
-    NonZeroJacobianIndicesType & nzji ) const
+AdvancedRigid2DTransform< TScalarType >::GetJacobian( const InputPointType & p,
+  JacobianType & j,
+  NonZeroJacobianIndicesType & nzji ) const
 {
   // Initialize the Jacobian. Resizing is only performed when needed.
   // Filling with zeros is needed because the lower loops only visit
@@ -295,12 +285,12 @@ GetJacobian( const InputPointType & p,
   // Some helper variables
   const double ca = vcl_cos( this->GetAngle() );
   const double sa = vcl_sin( this->GetAngle() );
-  const double cx = this->GetCenter()[0];
-  const double cy = this->GetCenter()[1];
+  const double cx = this->GetCenter()[ 0 ];
+  const double cy = this->GetCenter()[ 1 ];
 
   // derivatives with respect to the angle
-  j[0][0] = -sa * ( p[0] - cx ) - ca * ( p[1] - cy );
-  j[1][0] =  ca * ( p[0] - cx ) - sa * ( p[1] - cy );
+  j[ 0 ][ 0 ] = -sa * ( p[ 0 ] - cx ) - ca * ( p[ 1 ] - cy );
+  j[ 1 ][ 0 ] =  ca * ( p[ 0 ] - cx ) - sa * ( p[ 1 ] - cy );
 
   // compute derivatives for the translation part
   unsigned int blockOffset = 1;
@@ -315,26 +305,27 @@ GetJacobian( const InputPointType & p,
 
 
 // Precompute Jacobian of Spatial Jacobian
-template <class TScalarType>
+template< class TScalarType >
 void
-AdvancedRigid2DTransform<TScalarType>
+AdvancedRigid2DTransform< TScalarType >
 ::PrecomputeJacobianOfSpatialJacobian( void )
 {
   /** The Jacobian of spatial Jacobian remains constant, so is precomputed */
-  const double ca = vcl_cos(m_Angle );
-  const double sa = vcl_sin(m_Angle );
+  const double                    ca  = vcl_cos( m_Angle );
+  const double                    sa  = vcl_sin( m_Angle );
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
-  jsj.resize(ParametersDimension);
-  if ( ParametersDimension > 1 )
+  jsj.resize( ParametersDimension );
+  if( ParametersDimension > 1 )
   {
-    jsj[0](0,0) = -sa; jsj[0](0,1) = -ca;
-    jsj[0](1,0) =  ca; jsj[0](1,1) = -sa;
+    jsj[ 0 ]( 0, 0 ) = -sa; jsj[ 0 ]( 0, 1 ) = -ca;
+    jsj[ 0 ]( 1, 0 ) =  ca; jsj[ 0 ]( 1, 1 ) = -sa;
   }
-  for ( unsigned int par = 1; par < ParametersDimension; ++par )
+  for( unsigned int par = 1; par < ParametersDimension; ++par )
   {
-    jsj[par].Fill(0.0);
+    jsj[ par ].Fill( 0.0 );
   }
 }
+
 
 } // namespace
 

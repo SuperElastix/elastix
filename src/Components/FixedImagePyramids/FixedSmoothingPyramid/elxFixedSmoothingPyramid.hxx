@@ -18,10 +18,6 @@
 #include "elxFixedSmoothingPyramid.h"
 
 namespace elastix
-{
-
-
-} // end namespace elastix
+{} // end namespace elastix
 
 #endif //#ifndef __elxFixedSmoothingPyramid_hxx
-

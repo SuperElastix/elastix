@@ -38,12 +38,11 @@ PURPOSE. See the above copyright notices for more information.
 #include "itkBSplineInterpolationDerivativeWeightFunction.h"
 #include "itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h"
 
-
 namespace itk
 {
 
 // Forward declarations for friendship
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder >
 class MultiBSplineDeformableTransformWithNormal;
 
 /** \class AdvancedBSplineDeformableTransform
@@ -123,20 +122,22 @@ class MultiBSplineDeformableTransformWithNormal;
  *
  * \ingroup Transforms
  */
-template <
-    class TScalarType = double,          // Data type for scalars
-    unsigned int NDimensions = 3,        // Number of dimensions
-    unsigned int VSplineOrder = 3 >      // Spline order
-class AdvancedBSplineDeformableTransform
-  : public AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
+template<
+class TScalarType         = double,      // Data type for scalars
+unsigned int NDimensions  = 3,           // Number of dimensions
+unsigned int VSplineOrder = 3 >
+// Spline order
+class AdvancedBSplineDeformableTransform :
+  public AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef AdvancedBSplineDeformableTransform        Self;
+  typedef AdvancedBSplineDeformableTransform Self;
   typedef AdvancedBSplineDeformableTransformBase<
     TScalarType, NDimensions >                      Superclass;
-  typedef SmartPointer<Self>                        Pointer;
-  typedef SmartPointer<const Self>                  ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** New macro for creation of through the object factory. */
   itkNewMacro( Self );
@@ -168,29 +169,29 @@ public:
     OutputCovariantVectorType;
 
   typedef typename Superclass
-    ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename Superclass::PixelType        PixelType;
-  typedef typename Superclass::ImageType        ImageType;
-  typedef typename Superclass::ImagePointer     ImagePointer;
+  typedef typename Superclass::PixelType    PixelType;
+  typedef typename Superclass::ImageType    ImageType;
+  typedef typename Superclass::ImagePointer ImagePointer;
 
   /** Typedefs for specifying the extend to the grid. */
-  typedef typename Superclass::RegionType       RegionType;
+  typedef typename Superclass::RegionType RegionType;
 
-  typedef typename Superclass::IndexType        IndexType;
-  typedef typename Superclass::SizeType         SizeType;
-  typedef typename Superclass::SpacingType      SpacingType;
-  typedef typename Superclass::DirectionType    DirectionType;
-  typedef typename Superclass::OriginType       OriginType;
-  typedef typename Superclass::GridOffsetType   GridOffsetType;
+  typedef typename Superclass::IndexType      IndexType;
+  typedef typename Superclass::SizeType       SizeType;
+  typedef typename Superclass::SpacingType    SpacingType;
+  typedef typename Superclass::DirectionType  DirectionType;
+  typedef typename Superclass::OriginType     OriginType;
+  typedef typename Superclass::GridOffsetType GridOffsetType;
 
   /** This method specifies the region over which the grid resides. */
   virtual void SetGridRegion( const RegionType & region );
@@ -209,7 +210,7 @@ public:
     ScalarType,
     itkGetStaticConstMacro( SpaceDimension ),
     itkGetStaticConstMacro( SplineOrder ) >                 DerivativeWeightsFunctionType;
-  typedef typename DerivativeWeightsFunctionType::Pointer   DerivativeWeightsFunctionPointer;
+  typedef typename DerivativeWeightsFunctionType::Pointer DerivativeWeightsFunctionPointer;
   typedef BSplineInterpolationSecondOrderDerivativeWeightFunction<
     ScalarType,
     itkGetStaticConstMacro( SpaceDimension ),
@@ -217,7 +218,7 @@ public:
   typedef typename SODerivativeWeightsFunctionType::Pointer SODerivativeWeightsFunctionPointer;
 
   /** Parameter index array type. */
-  typedef typename Superclass::ParameterIndexArrayType  ParameterIndexArrayType;
+  typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
 
   /** Transform points by a B-spline deformable transformation.
    * On return, weights contains the interpolation weights used to compute the
@@ -238,6 +239,7 @@ public:
   {
     return this->m_WeightsFunction->GetNumberOfWeights();
   }
+
 
   unsigned int GetNumberOfAffectedWeights( void ) const;
 
@@ -290,8 +292,9 @@ public:
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
 protected:
+
   /** Print contents of an AdvancedBSplineDeformableTransform. */
-  virtual void PrintSelf( std::ostream &os, Indent indent ) const;
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
   AdvancedBSplineDeformableTransform();
   virtual ~AdvancedBSplineDeformableTransform();
@@ -315,23 +318,22 @@ protected:
    * For each direction we create a different weights function for thread-
    * safety.
    */
-  WeightsFunctionPointer                                            m_WeightsFunction;
-  std::vector< DerivativeWeightsFunctionPointer >                   m_DerivativeWeightsFunctions;
-  std::vector< std::vector< SODerivativeWeightsFunctionPointer > >  m_SODerivativeWeightsFunctions;
+  WeightsFunctionPointer                                           m_WeightsFunction;
+  std::vector< DerivativeWeightsFunctionPointer >                  m_DerivativeWeightsFunctions;
+  std::vector< std::vector< SODerivativeWeightsFunctionPointer > > m_SODerivativeWeightsFunctions;
 
 private:
-  AdvancedBSplineDeformableTransform(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
 
-  friend class MultiBSplineDeformableTransformWithNormal<ScalarType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SplineOrder ) >;
+  AdvancedBSplineDeformableTransform( const Self & ); // purposely not implemented
+  void operator=( const Self & );                     // purposely not implemented
 
-}; //class AdvancedBSplineDeformableTransform
+  friend class MultiBSplineDeformableTransformWithNormal< ScalarType,
+  itkGetStaticConstMacro( SpaceDimension ),
+  itkGetStaticConstMacro( SplineOrder ) >;
 
+};
 
 }  // namespace itk
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkAdvancedBSplineDeformableTransform.hxx"

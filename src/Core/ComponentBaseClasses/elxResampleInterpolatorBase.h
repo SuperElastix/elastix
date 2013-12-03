@@ -21,93 +21,93 @@
 #include "elxBaseComponentSE.h"
 #include "itkInterpolateImageFunction.h"
 
-
 namespace elastix
 {
 
-  /**
-   * \class ResampleInterpolatorBase
-   * \brief This class is the elastix base class for all ResampleInterpolators.
-   *
-   * This class contains all the common functionality for ResampleInterpolators.
-   *
-   * \ingroup ResampleInterpolators
-   * \ingroup ComponentBaseClasses
-   */
+/**
+ * \class ResampleInterpolatorBase
+ * \brief This class is the elastix base class for all ResampleInterpolators.
+ *
+ * This class contains all the common functionality for ResampleInterpolators.
+ *
+ * \ingroup ResampleInterpolators
+ * \ingroup ComponentBaseClasses
+ */
 
-  template <class TElastix>
-    class ResampleInterpolatorBase : public BaseComponentSE<TElastix>
+template< class TElastix >
+class ResampleInterpolatorBase : public BaseComponentSE< TElastix >
+{
+public:
+
+  /** Standard ITK stuff. */
+  typedef ResampleInterpolatorBase    Self;
+  typedef BaseComponentSE< TElastix > Superclass;
+
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( ResampleInterpolatorBase, BaseComponentSE );
+
+  /** Typedef's from superclass. */
+  typedef typename Superclass::ElastixType          ElastixType;
+  typedef typename Superclass::ElastixPointer       ElastixPointer;
+  typedef typename Superclass::ConfigurationType    ConfigurationType;
+  typedef typename Superclass::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass::RegistrationType     RegistrationType;
+  typedef typename Superclass::RegistrationPointer  RegistrationPointer;
+
+  /** Typedef's from elastix. */
+  typedef typename ElastixType::MovingImageType InputImageType;
+  typedef typename ElastixType::CoordRepType    CoordRepType;
+
+  /** Other typedef's. */
+  typedef itk::InterpolateImageFunction<
+    InputImageType, CoordRepType >                  ITKBaseType;
+
+  /** Typedef that is used in the elastix dll version. */
+  typedef typename ElastixType::ParameterMapType ParameterMapType;
+
+  /** Cast ti ITKBaseType. */
+  virtual ITKBaseType * GetAsITKBaseType( void )
   {
-  public:
+    return dynamic_cast< ITKBaseType * >( this );
+  }
 
-    /** Standard ITK stuff. */
-    typedef ResampleInterpolatorBase    Self;
-    typedef BaseComponentSE<TElastix>   Superclass;
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( ResampleInterpolatorBase, BaseComponentSE );
+  /** Cast to ITKBaseType, to use in const functions. */
+  virtual const ITKBaseType * GetAsITKBaseType( void ) const
+  {
+    return dynamic_cast< const ITKBaseType * >( this );
+  }
 
-    /** Typedef's from superclass. */
-    typedef typename Superclass::ElastixType          ElastixType;
-    typedef typename Superclass::ElastixPointer       ElastixPointer;
-    typedef typename Superclass::ConfigurationType    ConfigurationType;
-    typedef typename Superclass::ConfigurationPointer ConfigurationPointer;
-    typedef typename Superclass::RegistrationType     RegistrationType;
-    typedef typename Superclass::RegistrationPointer  RegistrationPointer;
 
-    /** Typedef's from elastix. */
-    typedef typename ElastixType::MovingImageType     InputImageType;
-    typedef typename ElastixType::CoordRepType        CoordRepType;
+  /** Execute stuff before the actual transformation:
+   * \li nothing here
+   */
+  virtual int BeforeAllTransformix( void ){ return 0; }
 
-    /** Other typedef's. */
-    typedef itk::InterpolateImageFunction<
-      InputImageType, CoordRepType >                  ITKBaseType;
+  /** Function to read transform-parameters from a file. */
+  virtual void ReadFromFile( void );
 
-    /** Typedef that is used in the elastix dll version. */
-    typedef typename ElastixType::ParameterMapType    ParameterMapType;
+  /** Function to write transform-parameters to a file. */
+  virtual void WriteToFile( void ) const;
 
-    /** Cast ti ITKBaseType. */
-    virtual ITKBaseType * GetAsITKBaseType(void)
-    {
-      return dynamic_cast<ITKBaseType *>(this);
-    }
+  /** Function to create transform-parameters map. */
+  virtual void CreateTransformParametersMap( ParameterMapType * paramsMap ) const;
 
-    /** Cast to ITKBaseType, to use in const functions. */
-    virtual const ITKBaseType * GetAsITKBaseType(void) const
-    {
-      return dynamic_cast<const ITKBaseType *>(this);
-    }
+protected:
 
-    /** Execute stuff before the actual transformation:
-     * \li nothing here
-     */
-    virtual int BeforeAllTransformix( void ){ return 0;};
+  /** The constructor. */
+  ResampleInterpolatorBase() {}
+  /** The destructor. */
+  virtual ~ResampleInterpolatorBase() {}
 
-    /** Function to read transform-parameters from a file. */
-    virtual void ReadFromFile( void );
+private:
 
-    /** Function to write transform-parameters to a file. */
-    virtual void WriteToFile( void ) const;
+  /** The private constructor. */
+  ResampleInterpolatorBase( const Self & );   // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self & );             // purposely not implemented
 
-    /** Function to create transform-parameters map. */
-    virtual void CreateTransformParametersMap( ParameterMapType * paramsMap ) const;
-
-  protected:
-
-    /** The constructor. */
-    ResampleInterpolatorBase() {}
-    /** The destructor. */
-    virtual ~ResampleInterpolatorBase() {}
-
-  private:
-
-    /** The private constructor. */
-    ResampleInterpolatorBase( const Self& );  // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );            // purposely not implemented
-
-  };
-
+};
 
 } //end namespace elastix
 
@@ -116,4 +116,3 @@ namespace elastix
 #endif
 
 #endif // end #ifndef __elxResampleInterpolatorBase_h
-

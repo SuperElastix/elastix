@@ -68,17 +68,18 @@ namespace itk
  * \sa ParzenWindowHistogramImageToImageMetric
  */
 
-template <class TFixedImage,class TMovingImage >
-class ParzenWindowMutualInformationImageToImageMetric
-  : public ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
+template< class TFixedImage, class TMovingImage >
+class ParzenWindowMutualInformationImageToImageMetric :
+  public ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef ParzenWindowMutualInformationImageToImageMetric             Self;
+  typedef ParzenWindowMutualInformationImageToImageMetric Self;
   typedef ParzenWindowHistogramImageToImageMetric<
     TFixedImage, TMovingImage >                                       Superclass;
-  typedef SmartPointer<Self>                                          Pointer;
-  typedef SmartPointer<const Self>                                    ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -90,7 +91,7 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename
-    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+    Superclass::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
   typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
@@ -126,17 +127,17 @@ public:
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename
-    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+    Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType  FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType MovingImageLimiterType;
   typedef typename
-    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+    Superclass::FixedImageLimiterOutputType FixedImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+    Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-  typedef typename Superclass::ThreaderType               ThreaderType;
-  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
+    Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  typedef typename Superclass::ThreaderType   ThreaderType;
+  typedef typename Superclass::ThreadInfoType ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -159,35 +160,35 @@ protected:
   ParzenWindowMutualInformationImageToImageMetric();
 
   /** The destructor. */
-  virtual ~ParzenWindowMutualInformationImageToImageMetric() {};
+  virtual ~ParzenWindowMutualInformationImageToImageMetric() {}
 
   /** Protected Typedefs ******************/
 
   /** Typedefs inherited from superclass */
-  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
-  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
-  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-  typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
+  typedef typename Superclass::FixedImageIndexType                 FixedImageIndexType;
+  typedef typename Superclass::FixedImageIndexValueType            FixedImageIndexValueType;
+  typedef typename Superclass::MovingImageIndexType                MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType                 FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType                MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType      MovingImageContinuousIndexType;
+  typedef typename Superclass::BSplineInterpolatorType             BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  typedef typename Superclass::PDFValueType                       PDFValueType;
-  typedef typename Superclass::PDFDerivativeValueType             PDFDerivativeValueType;
-  typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
-  typedef typename Superclass::JointPDFType                       JointPDFType;
-  typedef typename Superclass::JointPDFDerivativesType            JointPDFDerivativesType;
-  typedef typename Superclass::IncrementalMarginalPDFType         IncrementalMarginalPDFType;
-  typedef typename Superclass::JointPDFIndexType                  JointPDFIndexType;
-  typedef typename Superclass::JointPDFRegionType                 JointPDFRegionType;
-  typedef typename Superclass::JointPDFSizeType                   JointPDFSizeType;
-  typedef typename Superclass::JointPDFDerivativesIndexType       JointPDFDerivativesIndexType;
-  typedef typename Superclass::JointPDFDerivativesRegionType      JointPDFDerivativesRegionType;
-  typedef typename Superclass::JointPDFDerivativesSizeType        JointPDFDerivativesSizeType;
-  typedef typename Superclass::ParzenValueContainerType           ParzenValueContainerType;
-  typedef typename Superclass::KernelFunctionType                 KernelFunctionType;
-  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  typedef typename Superclass::MovingImageDerivativeType           MovingImageDerivativeType;
+  typedef typename Superclass::PDFValueType                        PDFValueType;
+  typedef typename Superclass::PDFDerivativeValueType              PDFDerivativeValueType;
+  typedef typename Superclass::MarginalPDFType                     MarginalPDFType;
+  typedef typename Superclass::JointPDFType                        JointPDFType;
+  typedef typename Superclass::JointPDFDerivativesType             JointPDFDerivativesType;
+  typedef typename Superclass::IncrementalMarginalPDFType          IncrementalMarginalPDFType;
+  typedef typename Superclass::JointPDFIndexType                   JointPDFIndexType;
+  typedef typename Superclass::JointPDFRegionType                  JointPDFRegionType;
+  typedef typename Superclass::JointPDFSizeType                    JointPDFSizeType;
+  typedef typename Superclass::JointPDFDerivativesIndexType        JointPDFDerivativesIndexType;
+  typedef typename Superclass::JointPDFDerivativesRegionType       JointPDFDerivativesRegionType;
+  typedef typename Superclass::JointPDFDerivativesSizeType         JointPDFDerivativesSizeType;
+  typedef typename Superclass::ParzenValueContainerType            ParzenValueContainerType;
+  typedef typename Superclass::KernelFunctionType                  KernelFunctionType;
+  typedef typename Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
 
   /**  Get the value and analytic derivative.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false.
@@ -237,7 +238,7 @@ protected:
   {
     Self * m_Metric;
   };
-  ParzenWindowMutualInformationMultiThreaderParameterType  m_ParzenWindowMutualInformationThreaderParameters;
+  ParzenWindowMutualInformationMultiThreaderParameterType m_ParzenWindowMutualInformationThreaderParameters;
 
   /** Multi-threaded versions of the ComputePDF function. */
   inline void ThreadedComputeDerivativeLowMemory( ThreadIdType threadId );
@@ -255,20 +256,21 @@ protected:
 private:
 
   /** The private constructor. */
-  ParzenWindowMutualInformationImageToImageMetric( const Self& ); // purposely not implemented
+  ParzenWindowMutualInformationImageToImageMetric( const Self & ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );                                  // purposely not implemented
+  void operator=( const Self & );                                  // purposely not implemented
 
   /** Helper array for storing the values of the JointPDF ratios. */
-  typedef double                      PRatioType;
-  typedef Array2D< PRatioType >       PRatioArrayType;
-  mutable PRatioArrayType             m_PRatioArray;
+  typedef double                PRatioType;
+  typedef Array2D< PRatioType > PRatioArrayType;
+  mutable PRatioArrayType m_PRatioArray;
 
   /** Setting */
-  bool  m_UseJacobianPreconditioning;
+  bool m_UseJacobianPreconditioning;
 
   /** Helper function to compute the derivative for the low memory variant. */
   void ComputeDerivativeLowMemorySingleThreaded( DerivativeType & derivative ) const;
+
   void ComputeDerivativeLowMemory( DerivativeType & derivative ) const;
 
   /** Helper function to update the derivative for the low memory variant. */

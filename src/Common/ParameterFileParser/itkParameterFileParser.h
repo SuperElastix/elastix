@@ -23,7 +23,6 @@ PURPOSE. See the above copyright notices for more information.
 #include <vector>
 #include <fstream>
 
-
 namespace itk
 {
 
@@ -78,10 +77,10 @@ class ParameterFileParser : public Object
 public:
 
   /** Standard ITK typedefs. */
-  typedef ParameterFileParser         Self;
-  typedef Object                      Superclass;
-  typedef SmartPointer< Self >        Pointer;
-  typedef SmartPointer< const Self >  ConstPointer;
+  typedef ParameterFileParser        Self;
+  typedef Object                     Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -90,7 +89,7 @@ public:
   itkTypeMacro( ParameterFileParser, Object );
 
   /** Typedefs. */
-  typedef std::vector< std::string >      ParameterValuesType;
+  typedef std::vector< std::string > ParameterValuesType;
   typedef std::map<
     std::string,
     ParameterValuesType >                 ParameterMapType;
@@ -111,12 +110,14 @@ public:
   std::string ReturnParameterFileAsString( void );
 
 protected:
+
   ParameterFileParser();
   virtual ~ParameterFileParser();
 
 private:
-  ParameterFileParser(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  ParameterFileParser( const Self & ); // purposely not implemented
+  void operator=( const Self & );      // purposely not implemented
 
   /** Performs the following checks:
    * - Is a filename is given
@@ -139,7 +140,7 @@ private:
 
   /** Splits a line in parameter name and values. */
   void SplitLine( const std::string & fullLine, const std::string & line,
-    std::vector<std::string> & splittedLine ) const;
+    std::vector< std::string > & splittedLine ) const;
 
   /** Uniform way to throw exceptions when the parameter file appears to be
    * invalid.
@@ -147,9 +148,9 @@ private:
   void ThrowException( const std::string & line, const std::string & hint ) const;
 
   /** Member variables. */
-  std::string       m_ParameterFileName;
-  std::ifstream     m_ParameterFile;
-  ParameterMapType  m_ParameterMap;
+  std::string      m_ParameterFileName;
+  std::ifstream    m_ParameterFile;
+  ParameterMapType m_ParameterMap;
 
 };
 

@@ -18,72 +18,71 @@
 #include "itkBinaryANNTreeBase.h"
 #include "ANN/ANN.h"
 
-
 namespace itk
 {
 
-  /**
-   * \class BinaryANNTreeSearchBase
-   *
-   * \brief
-   *
-   *
-   * \ingroup ANNwrap
-   */
+/**
+ * \class BinaryANNTreeSearchBase
+ *
+ * \brief
+ *
+ *
+ * \ingroup ANNwrap
+ */
 
-  template < class TListSample >
-  class BinaryANNTreeSearchBase :
-    public BinaryTreeSearchBase< TListSample >
-  {
-  public:
+template< class TListSample >
+class BinaryANNTreeSearchBase :
+  public BinaryTreeSearchBase< TListSample >
+{
+public:
 
-    /** Standard itk. */
-    typedef BinaryANNTreeSearchBase     Self;
-    typedef BinaryTreeSearchBase<
-      TListSample >                     Superclass;
-    typedef SmartPointer< Self >        Pointer;
-    typedef SmartPointer< const Self >  ConstPointer;
+  /** Standard itk. */
+  typedef BinaryANNTreeSearchBase Self;
+  typedef BinaryTreeSearchBase<
+    TListSample >                     Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
-    /** ITK type info. */
-    itkTypeMacro( BinaryANNTreeSearchBase, BinaryTreeSearchBase );
+  /** ITK type info. */
+  itkTypeMacro( BinaryANNTreeSearchBase, BinaryTreeSearchBase );
 
-    /** Typedefs from Superclass. */
-    typedef typename Superclass::ListSampleType         ListSampleType;
-    typedef typename Superclass::BinaryTreeType         BinaryTreeType;
-    typedef typename Superclass::BinaryTreePointer      BinaryTreePointer;
-    typedef typename Superclass::MeasurementVectorType  MeasurementVectorType;
-    typedef typename Superclass::IndexArrayType         IndexArrayType;
-    typedef typename Superclass::DistanceArrayType      DistanceArrayType;
+  /** Typedefs from Superclass. */
+  typedef typename Superclass::ListSampleType        ListSampleType;
+  typedef typename Superclass::BinaryTreeType        BinaryTreeType;
+  typedef typename Superclass::BinaryTreePointer     BinaryTreePointer;
+  typedef typename Superclass::MeasurementVectorType MeasurementVectorType;
+  typedef typename Superclass::IndexArrayType        IndexArrayType;
+  typedef typename Superclass::DistanceArrayType     DistanceArrayType;
 
-    /** Typedefs from ANN. */
-    typedef ANNpoint      ANNPointType;         // double *
-    typedef ANNidx        ANNIndexType;         // int
-    typedef ANNidxArray   ANNIndexArrayType;    // int *
-    typedef ANNdist       ANNDistanceType;      // double
-    typedef ANNdistArray  ANNDistanceArrayType; // double *
+  /** Typedefs from ANN. */
+  typedef ANNpoint     ANNPointType;            // double *
+  typedef ANNidx       ANNIndexType;            // int
+  typedef ANNidxArray  ANNIndexArrayType;       // int *
+  typedef ANNdist      ANNDistanceType;         // double
+  typedef ANNdistArray ANNDistanceArrayType;    // double *
 
-    /** An itk ANN tree. */
-    typedef BinaryANNTreeBase< ListSampleType >   BinaryANNTreeType;
+  /** An itk ANN tree. */
+  typedef BinaryANNTreeBase< ListSampleType > BinaryANNTreeType;
 
-    /** Set and get the binary tree. */
-    virtual void SetBinaryTree( BinaryTreeType * tree );
-    //const BinaryTreeType * GetBinaryTree( void ) const;
+  /** Set and get the binary tree. */
+  virtual void SetBinaryTree( BinaryTreeType * tree );
 
-  protected:
+  //const BinaryTreeType * GetBinaryTree( void ) const;
 
-    BinaryANNTreeSearchBase();
-    virtual ~BinaryANNTreeSearchBase();
+protected:
 
-    /** Member variables. */
-    typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType;
+  BinaryANNTreeSearchBase();
+  virtual ~BinaryANNTreeSearchBase();
 
-  private:
+  /** Member variables. */
+  typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType;
 
-    BinaryANNTreeSearchBase( const Self& ); // purposely not implemented
-    void operator=( const Self& );          // purposely not implemented
+private:
 
-  };
+  BinaryANNTreeSearchBase( const Self & );  // purposely not implemented
+  void operator=( const Self & );           // purposely not implemented
 
+};
 
 } // end namespace itk
 

@@ -57,16 +57,18 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template < class TScalarType=double >    // Data type for scalars (float or double)
+template< class TScalarType = double >
+// Data type for scalars (float or double)
 class ITK_EXPORT AdvancedSimilarity2DTransform :
-            public AdvancedRigid2DTransform< TScalarType >
+  public         AdvancedRigid2DTransform< TScalarType >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef AdvancedSimilarity2DTransform Self;
-  typedef AdvancedRigid2DTransform< TScalarType >   Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef AdvancedSimilarity2DTransform           Self;
+  typedef AdvancedRigid2DTransform< TScalarType > Superclass;
+  typedef SmartPointer< Self >                    Pointer;
+  typedef SmartPointer< const Self >              ConstPointer;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
@@ -75,56 +77,57 @@ public:
   itkTypeMacro( AdvancedSimilarity2DTransform, AdvancedRigid2DTransform );
 
   /** Dimension of parameters. */
-  itkStaticConstMacro(SpaceDimension,           unsigned int, 2);
-  itkStaticConstMacro(InputSpaceDimension,      unsigned int, 2);
-  itkStaticConstMacro(OutputSpaceDimension,     unsigned int, 2);
-  itkStaticConstMacro(ParametersDimension,      unsigned int, 4);
+  itkStaticConstMacro( SpaceDimension,           unsigned int, 2 );
+  itkStaticConstMacro( InputSpaceDimension,      unsigned int, 2 );
+  itkStaticConstMacro( OutputSpaceDimension,     unsigned int, 2 );
+  itkStaticConstMacro( ParametersDimension,      unsigned int, 4 );
 
   /** Scalar type. */
-  typedef typename Superclass::ScalarType  ScalarType;
-  typedef          TScalarType             ScaleType;
+  typedef typename Superclass::ScalarType ScalarType;
+  typedef          TScalarType            ScaleType;
 
   /** Parameters type. */
-  typedef typename Superclass::ParametersType  ParametersType;
+  typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
 
   /** Jacobian type. */
-  typedef typename Superclass::JacobianType  JacobianType;
+  typedef typename Superclass::JacobianType JacobianType;
 
   /** Offset type. */
-  typedef typename Superclass::OffsetType  OffsetType;
+  typedef typename Superclass::OffsetType OffsetType;
 
   /** Matrix type. */
   typedef typename Superclass::MatrixType MatrixType;
 
   /** Point type. */
-  typedef typename Superclass::InputPointType   InputPointType;
-  typedef typename Superclass::OutputPointType  OutputPointType;
+  typedef typename Superclass::InputPointType  InputPointType;
+  typedef typename Superclass::OutputPointType OutputPointType;
 
   /** Vector type. */
-  typedef typename Superclass::InputVectorType   InputVectorType;
-  typedef typename Superclass::OutputVectorType  OutputVectorType;
+  typedef typename Superclass::InputVectorType  InputVectorType;
+  typedef typename Superclass::OutputVectorType OutputVectorType;
 
   /** CovariantVector type. */
-  typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
 
   /** VnlVector type. */
-  typedef typename Superclass::InputVnlVectorType   InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
+  typedef typename Superclass::InputVnlVectorType  InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType OutputVnlVectorType;
 
   typedef typename Superclass
-    ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
   /** Set the Scale part of the transform. */
   void SetScale( ScaleType scale );
+
   itkGetConstReferenceMacro( Scale, ScaleType );
 
   /** Set the transformation from a container of parameters
@@ -191,42 +194,44 @@ public:
   virtual void SetMatrix( const MatrixType & matrix );
 
 protected:
+
   AdvancedSimilarity2DTransform();
   AdvancedSimilarity2DTransform( unsigned int spaceDimension,
-                         unsigned int parametersDimension);
+    unsigned int parametersDimension );
 
-  ~AdvancedSimilarity2DTransform(){};
-  void PrintSelf(std::ostream &os, Indent indent) const;
+  ~AdvancedSimilarity2DTransform(){}
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Compute matrix from angle and scale. This is used in Set methods
    * to update the underlying matrix whenever a transform parameter
    * is changed. */
-  virtual void ComputeMatrix(void);
+  virtual void ComputeMatrix( void );
 
   /** Compute the angle and scale from the matrix. This is used to compute
    * transform parameters from a given matrix. This is used in
    * MatrixOffsetTransformBase::Compose() and
    * MatrixOffsetTransformBase::GetInverse(). */
-  virtual void ComputeMatrixParameters(void);
+  virtual void ComputeMatrixParameters( void );
 
   /** Set the scale without updating underlying variables. */
   void SetVarScale( ScaleType scale )
-    { m_Scale = scale; }
+  { m_Scale = scale; }
 
   /** Update the m_JacobianOfSpatialJacobian.  */
-  virtual void PrecomputeJacobianOfSpatialJacobian(void);
+  virtual void PrecomputeJacobianOfSpatialJacobian( void );
 
 private:
-  AdvancedSimilarity2DTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
 
-  ScaleType     m_Scale;
+  AdvancedSimilarity2DTransform( const Self & ); //purposely not implemented
+  void operator=( const Self & );                //purposely not implemented
 
-}; //class AdvancedSimilarity2DTransform
+  ScaleType m_Scale;
 
+};
+
+//class AdvancedSimilarity2DTransform
 
 }  // namespace itk
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkAdvancedSimilarity2DTransform.hxx"

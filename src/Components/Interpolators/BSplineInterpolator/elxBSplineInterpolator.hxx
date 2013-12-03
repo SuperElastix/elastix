@@ -20,13 +20,13 @@
 namespace elastix
 {
 
-
 /**
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
-void BSplineInterpolator<TElastix>
+template< class TElastix >
+void
+BSplineInterpolator< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Get the current resolution level. */
@@ -39,13 +39,13 @@ void BSplineInterpolator<TElastix>
     "BSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
 
   /** Check. */
-  if ( splineOrder == 0 )
+  if( splineOrder == 0 )
   {
-    elx::xout["warning"] << "\nWARNING: the BSplineInterpolationOrder is set to 0.\n"
-      << "  It is not possible to take derivatives with this setting.\n"
-      << "  Make sure you use a derivative free optimizer,\n"
-      << "  or that you selected to use a gradient image in the metric.\n"
-      << std::endl;
+    elx::xout[ "warning" ] << "\nWARNING: the BSplineInterpolationOrder is set to 0.\n"
+                           << "  It is not possible to take derivatives with this setting.\n"
+                           << "  Make sure you use a derivative free optimizer,\n"
+                           << "  or that you selected to use a gradient image in the metric.\n"
+                           << std::endl;
   }
 
   /** Set the splineOrder. */
@@ -57,4 +57,3 @@ void BSplineInterpolator<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxBSplineInterpolator_hxx
-

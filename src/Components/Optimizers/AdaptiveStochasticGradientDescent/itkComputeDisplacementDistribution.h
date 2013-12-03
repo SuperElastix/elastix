@@ -36,16 +36,17 @@ namespace itk
  *
  */
 
-template<class TFixedImage, class TTransform >
+template< class TFixedImage, class TTransform >
 class ComputeDisplacementDistribution :
   public ScaledSingleValuedNonLinearOptimizer
 {
 public:
+
   /** Standard ITK.*/
-  typedef ComputeDisplacementDistribution                Self;
-  typedef ScaledSingleValuedNonLinearOptimizer           Superclass;
-  typedef SmartPointer<Self>                             Pointer;
-  typedef SmartPointer<const Self>                       ConstPointer;
+  typedef ComputeDisplacementDistribution      Self;
+  typedef ScaledSingleValuedNonLinearOptimizer Superclass;
+  typedef SmartPointer< Self >                 Pointer;
+  typedef SmartPointer< const Self >           ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -68,11 +69,10 @@ public:
    */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     TFixedImage::ImageDimension );
-  typedef SpatialObject< itkGetStaticConstMacro( FixedImageDimension ) >  FixedImageMaskType;
-  typedef typename FixedImageMaskType::Pointer                            FixedImageMaskPointer;
-  typedef typename FixedImageMaskType::ConstPointer                       FixedImageMaskConstPointer;
-  typedef typename TransformType::NonZeroJacobianIndicesType              NonZeroJacobianIndicesType;
-
+  typedef SpatialObject< itkGetStaticConstMacro( FixedImageDimension ) > FixedImageMaskType;
+  typedef typename FixedImageMaskType::Pointer                           FixedImageMaskPointer;
+  typedef typename FixedImageMaskType::ConstPointer                      FixedImageMaskConstPointer;
+  typedef typename TransformType::NonZeroJacobianIndicesType             NonZeroJacobianIndicesType;
 
   /** Set the fixed image. */
   itkSetConstObjectMacro( FixedImage, FixedImageType );
@@ -97,45 +97,47 @@ public:
     }
   }
 
+
   /** Get the region over which the metric will be computed. */
   itkGetConstReferenceMacro( FixedImageRegion, FixedImageRegionType );
 
-   /** The main functions that performs the computation. */
-  virtual void ComputeDistributionTerms( const ParametersType &mu,
+  /** The main functions that performs the computation. */
+  virtual void ComputeDistributionTerms( const ParametersType & mu,
     double & jacg, double & maxJJ, std::string method );
 
 protected:
+
   ComputeDisplacementDistribution();
-  virtual ~ComputeDisplacementDistribution() {};
+  virtual ~ComputeDisplacementDistribution() {}
 
-  typename FixedImageType::ConstPointer     m_FixedImage;
-  FixedImageRegionType                      m_FixedImageRegion;
-  FixedImageMaskConstPointer                m_FixedImageMask;
-  TransformPointer                          m_Transform;
-  ScaledSingleValuedCostFunction::Pointer   m_CostFunction;
-  SizeValueType                             m_NumberOfJacobianMeasurements;
+  typename FixedImageType::ConstPointer m_FixedImage;
+  FixedImageRegionType                    m_FixedImageRegion;
+  FixedImageMaskConstPointer              m_FixedImageMask;
+  TransformPointer                        m_Transform;
+  ScaledSingleValuedCostFunction::Pointer m_CostFunction;
+  SizeValueType                           m_NumberOfJacobianMeasurements;
 
-  typedef typename  FixedImageType::IndexType         FixedImageIndexType;
-  typedef typename  FixedImageType::PointType         FixedImagePointType;
-  typedef typename  TransformType::JacobianType       JacobianType;
-  typedef typename  JacobianType::ValueType           JacobianValueType;
+  typedef typename  FixedImageType::IndexType   FixedImageIndexType;
+  typedef typename  FixedImageType::PointType   FixedImagePointType;
+  typedef typename  TransformType::JacobianType JacobianType;
+  typedef typename  JacobianType::ValueType     JacobianValueType;
 
   /** Samplers. */
-  typedef ImageSamplerBase<FixedImageType>              ImageSamplerBaseType;
-  typedef typename ImageSamplerBaseType::Pointer        ImageSamplerBasePointer;
-  typedef ImageRandomSamplerBase<FixedImageType>        ImageRandomSamplerBaseType;
-  typedef typename ImageRandomSamplerBaseType::Pointer  ImageRandomSamplerBasePointer;
+  typedef ImageSamplerBase< FixedImageType >           ImageSamplerBaseType;
+  typedef typename ImageSamplerBaseType::Pointer       ImageSamplerBasePointer;
+  typedef ImageRandomSamplerBase< FixedImageType >     ImageRandomSamplerBaseType;
+  typedef typename ImageRandomSamplerBaseType::Pointer ImageRandomSamplerBasePointer;
 
-  typedef ImageGridSampler< FixedImageType >            ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer        ImageGridSamplerPointer;
+  typedef ImageGridSampler< FixedImageType >     ImageGridSamplerType;
+  typedef typename ImageGridSamplerType::Pointer ImageGridSamplerPointer;
   typedef typename ImageGridSamplerType
-    ::ImageSampleContainerType                          ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer    ImageSampleContainerPointer;
+    ::ImageSampleContainerType ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer ImageSampleContainerPointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
-  typedef JacobianType                                    TransformJacobianType;
-  typedef typename TransformType::ScalarType              CoordinateRepresentationType;
-  typedef typename TransformType::NumberOfParametersType  NumberOfParametersType;
+  typedef JacobianType                                   TransformJacobianType;
+  typedef typename TransformType::ScalarType             CoordinateRepresentationType;
+  typedef typename TransformType::NumberOfParametersType NumberOfParametersType;
 
   /** Sample the fixed image to compute the Jacobian terms. */
   // \todo: note that this is an exact copy of itk::ComputeJacobianTerms
@@ -144,8 +146,9 @@ protected:
     ImageSampleContainerPointer & sampleContainer );
 
 private:
-  ComputeDisplacementDistribution( const Self& ); // purposely not implemented
-  void operator=( const Self& );                  // purposely not implemented
+
+  ComputeDisplacementDistribution( const Self & ); // purposely not implemented
+  void operator=( const Self & );                  // purposely not implemented
 
 };
 

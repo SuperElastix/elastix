@@ -101,18 +101,19 @@ namespace itk
  * \ingroup PyramidImageFilter MultiThreaded Streamed
  * \ingroup ITKRegistrationCommon
  */
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 class GenericMultiResolutionPyramidImageFilter :
   public MultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef GenericMultiResolutionPyramidImageFilter      Self;
+  typedef GenericMultiResolutionPyramidImageFilter Self;
   typedef MultiResolutionPyramidImageFilter<
-    TInputImage,TOutputImage>                           Superclass;
-  typedef typename Superclass::Superclass               SuperSuperclass;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+    TInputImage, TOutputImage >                           Superclass;
+  typedef typename Superclass::Superclass SuperSuperclass;
+  typedef SmartPointer< Self >            Pointer;
+  typedef SmartPointer< const Self >      ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -128,23 +129,23 @@ public:
     TOutputImage::ImageDimension );
 
   /** Inherit types from Superclass. */
-  typedef typename Superclass::ScheduleType                  ScheduleType;
-  typedef typename Superclass::InputImageType                InputImageType;
-  typedef typename Superclass::OutputImageType               OutputImageType;
-  typedef typename Superclass::InputImagePointer             InputImagePointer;
-  typedef typename Superclass::OutputImagePointer            OutputImagePointer;
-  typedef typename Superclass::InputImageConstPointer        InputImageConstPointer;
-  typedef typename Superclass::InputImageType::SpacingType   SpacingType;
-  typedef typename InputImageType::PixelType                 PixelType;
-  typedef typename NumericTraits<PixelType>::ScalarRealType  ScalarRealType;
+  typedef typename Superclass::ScheduleType                   ScheduleType;
+  typedef typename Superclass::InputImageType                 InputImageType;
+  typedef typename Superclass::OutputImageType                OutputImageType;
+  typedef typename Superclass::InputImagePointer              InputImagePointer;
+  typedef typename Superclass::OutputImagePointer             OutputImagePointer;
+  typedef typename Superclass::InputImageConstPointer         InputImageConstPointer;
+  typedef typename Superclass::InputImageType::SpacingType    SpacingType;
+  typedef typename InputImageType::PixelType                  PixelType;
+  typedef typename NumericTraits< PixelType >::ScalarRealType ScalarRealType;
 
   /** SmoothingScheduleType typedef support. */
-  typedef Array2D<ScalarRealType> SmoothingScheduleType;
-  typedef ScheduleType            RescaleScheduleType;
+  typedef Array2D< ScalarRealType > SmoothingScheduleType;
+  typedef ScheduleType              RescaleScheduleType;
 
   /** Define the type for the sigma array. */
   typedef FixedArray< ScalarRealType,
-    itkGetStaticConstMacro(ImageDimension) > SigmaArrayType;
+    itkGetStaticConstMacro( ImageDimension ) > SigmaArrayType;
   typedef SigmaArrayType RescaleFactorArrayType;
 
   /** Set a multi-resolution schedule. The input schedule must have only
@@ -169,7 +170,8 @@ public:
   const RescaleScheduleType & GetRescaleSchedule( void ) const
   {
     return this->m_Schedule;
-  };
+  }
+
 
   /** Set a multi-resolution smoothing schedule. The input schedule must have only
    * ImageDimension number of columns and NumberOfLevels number of rows.
@@ -195,6 +197,7 @@ public:
 
   /** Set a control on whether a current level will be used. */
   virtual void SetComputeOnlyForCurrentLevel( const bool _arg );
+
   itkGetConstMacro( ComputeOnlyForCurrentLevel, bool );
   itkBooleanMacro( ComputeOnlyForCurrentLevel );
 
@@ -217,16 +220,17 @@ public:
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
-  itkConceptMacro(SameDimensionCheck,
-    (Concept::SameDimension<ImageDimension, OutputImageDimension>));
-  itkConceptMacro(OutputHasNumericTraitsCheck,
-    (Concept::HasNumericTraits<typename TOutputImage::PixelType>));
+  itkConceptMacro( SameDimensionCheck,
+    ( Concept::SameDimension< ImageDimension, OutputImageDimension > ) );
+  itkConceptMacro( OutputHasNumericTraitsCheck,
+    ( Concept::HasNumericTraits< typename TOutputImage::PixelType > ) );
   /** End concept checking */
 #endif
 
 protected:
+
   GenericMultiResolutionPyramidImageFilter();
-  ~GenericMultiResolutionPyramidImageFilter() {};
+  ~GenericMultiResolutionPyramidImageFilter() {}
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** GenericMultiResolutionPyramidImageFilter may produce images which are of
@@ -263,6 +267,7 @@ protected:
   bool m_SmoothingScheduleDefined;
 
 private:
+
   /** Initialize m_SmoothingSchedule to default values for backward compatibility. */
   void SetSmoothingScheduleToDefault( void );
 
@@ -294,8 +299,10 @@ private:
   bool IsCasterNeeded( void ) const;
 
 private:
-  GenericMultiResolutionPyramidImageFilter(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  GenericMultiResolutionPyramidImageFilter( const Self & ); // purposely not implemented
+  void operator=( const Self & );                           // purposely not implemented
+
 };
 
 } // namespace itk

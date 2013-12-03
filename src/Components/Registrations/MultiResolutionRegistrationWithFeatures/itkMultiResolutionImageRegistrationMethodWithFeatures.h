@@ -16,7 +16,6 @@
 
 #include "itkMultiInputMultiResolutionImageRegistrationMethodBase.h"
 
-
 namespace itk
 {
 
@@ -48,17 +47,18 @@ namespace itk
  * \ingroup RegistrationFilters
  */
 
-template <typename TFixedImage, typename TMovingImage>
+template< typename TFixedImage, typename TMovingImage >
 class MultiResolutionImageRegistrationMethodWithFeatures :
-  public MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>
+  public MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
 {
 public:
+
   /** Standard class typedefs. */
   typedef MultiResolutionImageRegistrationMethodWithFeatures Self;
   typedef MultiInputMultiResolutionImageRegistrationMethodBase<
-    TFixedImage, TMovingImage>                               Superclass;
-  typedef SmartPointer<Self>                                 Pointer;
-  typedef SmartPointer<const Self>                           ConstPointer;
+    TFixedImage, TMovingImage >                               Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -68,12 +68,12 @@ public:
     MultiInputMultiResolutionImageRegistrationMethodBase );
 
   /**  Superclass types */
-  typedef typename Superclass::FixedImageType           FixedImageType;
-  typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType     FixedImageRegionType;
-  typedef typename Superclass::FixedImageRegionPyramidType  FixedImageRegionPyramidType;
-  typedef typename Superclass::MovingImageType          MovingImageType;
-  typedef typename Superclass::MovingImageConstPointer  MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType              FixedImageType;
+  typedef typename Superclass::FixedImageConstPointer      FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType        FixedImageRegionType;
+  typedef typename Superclass::FixedImageRegionPyramidType FixedImageRegionPyramidType;
+  typedef typename Superclass::MovingImageType             MovingImageType;
+  typedef typename Superclass::MovingImageConstPointer     MovingImageConstPointer;
 
   typedef typename Superclass::MetricType               MetricType;
   typedef typename Superclass::MetricPointer            MetricPointer;
@@ -87,35 +87,35 @@ public:
   typedef typename Superclass::FixedImagePyramidPointer FixedImagePyramidPointer;
   typedef typename Superclass::MovingImagePyramidType   MovingImagePyramidType;
   typedef typename
-    Superclass::MovingImagePyramidPointer               MovingImagePyramidPointer;
+    Superclass::MovingImagePyramidPointer MovingImagePyramidPointer;
 
-  typedef typename Superclass::TransformOutputType      TransformOutputType;
-  typedef typename Superclass::TransformOutputPointer   TransformOutputPointer;
+  typedef typename Superclass::TransformOutputType    TransformOutputType;
+  typedef typename Superclass::TransformOutputPointer TransformOutputPointer;
   typedef typename
-    Superclass::TransformOutputConstPointer             TransformOutputConstPointer;
+    Superclass::TransformOutputConstPointer TransformOutputConstPointer;
 
-  typedef typename Superclass::ParametersType           ParametersType;
-  typedef typename Superclass::DataObjectPointer        DataObjectPointer;
+  typedef typename Superclass::ParametersType    ParametersType;
+  typedef typename Superclass::DataObjectPointer DataObjectPointer;
 
 protected:
 
   /** Constructor. */
-  MultiResolutionImageRegistrationMethodWithFeatures(){};
+  MultiResolutionImageRegistrationMethodWithFeatures(){}
 
   /** Destructor. */
-  virtual ~MultiResolutionImageRegistrationMethodWithFeatures() {};
+  virtual ~MultiResolutionImageRegistrationMethodWithFeatures() {}
 
   /** Function called by PreparePyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
-  virtual void CheckPyramids( void ) throw (ExceptionObject);
+  virtual void CheckPyramids( void ) throw ( ExceptionObject );
 
 private:
-  MultiResolutionImageRegistrationMethodWithFeatures(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  MultiResolutionImageRegistrationMethodWithFeatures( const Self & ); // purposely not implemented
+  void operator=( const Self & );                                     // purposely not implemented
 
 };
-
 
 } // end namespace itk
 

@@ -66,22 +66,23 @@ namespace itk
  *
  * \ingroup GeometricTransforms
  */
-template <class TOutputImage,
-class TTransformPrecisionType=double>
-class TransformToDeterminantOfSpatialJacobianSource:
-    public ImageSource<TOutputImage>
+template< class TOutputImage,
+class TTransformPrecisionType = double >
+class TransformToDeterminantOfSpatialJacobianSource :
+  public ImageSource< TOutputImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef TransformToDeterminantOfSpatialJacobianSource        Self;
-  typedef ImageSource<TOutputImage>               Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
 
-  typedef TOutputImage                            OutputImageType;
-  typedef typename OutputImageType::Pointer       OutputImagePointer;
-  typedef typename OutputImageType::ConstPointer  OutputImageConstPointer;
-  typedef typename OutputImageType::RegionType    OutputImageRegionType;
+  /** Standard class typedefs. */
+  typedef TransformToDeterminantOfSpatialJacobianSource Self;
+  typedef ImageSource< TOutputImage >                   Superclass;
+  typedef SmartPointer< Self >                          Pointer;
+  typedef SmartPointer< const Self >                    ConstPointer;
+
+  typedef TOutputImage                           OutputImageType;
+  typedef typename OutputImageType::Pointer      OutputImagePointer;
+  typedef typename OutputImageType::ConstPointer OutputImageConstPointer;
+  typedef typename OutputImageType::RegionType   OutputImageRegionType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -94,14 +95,14 @@ public:
     TOutputImage::ImageDimension );
 
   /** Typedefs for transform. */
-  typedef AdvancedTransform<TTransformPrecisionType,
+  typedef AdvancedTransform< TTransformPrecisionType,
     itkGetStaticConstMacro( ImageDimension ),
-    itkGetStaticConstMacro( ImageDimension )>     TransformType;
-  typedef typename TransformType::ConstPointer    TransformPointerType;
+    itkGetStaticConstMacro( ImageDimension ) >     TransformType;
+  typedef typename TransformType::ConstPointer        TransformPointerType;
   typedef typename TransformType::SpatialJacobianType SpatialJacobianType;
 
   /** Typedefs for output image. */
-  typedef typename OutputImageType::PixelType     PixelType;
+  typedef typename OutputImageType::PixelType PixelType;
   //typedef typename PixelType::ValueType           PixelValueType;
   typedef typename OutputImageType::RegionType    RegionType;
   typedef typename RegionType::SizeType           SizeType;
@@ -147,14 +148,14 @@ public:
 
   /** Set the output image spacing. */
   itkSetMacro( OutputSpacing, SpacingType );
-  virtual void SetOutputSpacing( const double* values );
+  virtual void SetOutputSpacing( const double * values );
 
   /** Get the output image spacing. */
   itkGetConstReferenceMacro( OutputSpacing, SpacingType );
 
   /** Set the output image origin. */
   itkSetMacro( OutputOrigin, OriginType );
-  virtual void SetOutputOrigin( const double* values);
+  virtual void SetOutputOrigin( const double * values );
 
   /** Get the output image origin. */
   itkGetConstReferenceMacro( OutputOrigin, OriginType );
@@ -177,10 +178,11 @@ public:
   unsigned long GetMTime( void ) const;
 
 protected:
-  TransformToDeterminantOfSpatialJacobianSource();
-  ~TransformToDeterminantOfSpatialJacobianSource() {};
 
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  TransformToDeterminantOfSpatialJacobianSource();
+  ~TransformToDeterminantOfSpatialJacobianSource() {}
+
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** TransformToDeterminantOfSpatialJacobianSource can be implemented as a multithreaded
    * filter.
@@ -193,7 +195,7 @@ protected:
    * transformation type.
    */
   void NonlinearThreadedGenerateData(
-    const OutputImageRegionType& outputRegionForThread,
+    const OutputImageRegionType & outputRegionForThread,
     ThreadIdType threadId );
 
   /** Faster implementation for resampling that works for with linear
@@ -202,15 +204,15 @@ protected:
 
 private:
 
-  TransformToDeterminantOfSpatialJacobianSource( const Self& ); // purposely not implemented
-  void operator=( const Self& ); // purposely not implemented
+  TransformToDeterminantOfSpatialJacobianSource( const Self & ); // purposely not implemented
+  void operator=( const Self & );                                // purposely not implemented
 
   /** Member variables. */
-  RegionType              m_OutputRegion;      // region of the output image
-  TransformPointerType    m_Transform;         // Coordinate transform to use
-  SpacingType             m_OutputSpacing;     // output image spacing
-  OriginType              m_OutputOrigin;      // output image origin
-  DirectionType           m_OutputDirection;   // output image direction cosines
+  RegionType           m_OutputRegion;         // region of the output image
+  TransformPointerType m_Transform;            // Coordinate transform to use
+  SpacingType          m_OutputSpacing;        // output image spacing
+  OriginType           m_OutputOrigin;         // output image origin
+  DirectionType        m_OutputDirection;      // output image direction cosines
 
 };
 

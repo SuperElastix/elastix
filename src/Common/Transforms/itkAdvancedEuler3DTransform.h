@@ -43,16 +43,18 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template < class TScalarType=double >    // Data type for scalars (float or double)
+template< class TScalarType = double >
+// Data type for scalars (float or double)
 class ITK_EXPORT AdvancedEuler3DTransform :
-            public AdvancedRigid3DTransform< TScalarType >
+  public         AdvancedRigid3DTransform< TScalarType >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef AdvancedEuler3DTransform                  Self;
-  typedef AdvancedRigid3DTransform< TScalarType >   Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef AdvancedEuler3DTransform                Self;
+  typedef AdvancedRigid3DTransform< TScalarType > Superclass;
+  typedef SmartPointer< Self >                    Pointer;
+  typedef SmartPointer< const Self >              ConstPointer;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
@@ -61,52 +63,54 @@ public:
   itkTypeMacro( AdvancedEuler3DTransform, AdvancedRigid3DTransform );
 
   /** Dimension of the space. */
-  itkStaticConstMacro(SpaceDimension, unsigned int, 3);
-  itkStaticConstMacro(InputSpaceDimension, unsigned int, 3);
-  itkStaticConstMacro(OutputSpaceDimension, unsigned int, 3);
-  itkStaticConstMacro(ParametersDimension, unsigned int, 6);
+  itkStaticConstMacro( SpaceDimension, unsigned int, 3 );
+  itkStaticConstMacro( InputSpaceDimension, unsigned int, 3 );
+  itkStaticConstMacro( OutputSpaceDimension, unsigned int, 3 );
+  itkStaticConstMacro( ParametersDimension, unsigned int, 6 );
 
-  typedef typename Superclass::ParametersType             ParametersType;
-  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
-  typedef typename Superclass::JacobianType               JacobianType;
-  typedef typename Superclass::ScalarType                 ScalarType;
-  typedef typename Superclass::InputVectorType            InputVectorType;
-  typedef typename Superclass::OutputVectorType           OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::MatrixType                 MatrixType;
-  typedef typename Superclass::InverseMatrixType          InverseMatrixType;
-  typedef typename Superclass::CenterType                 CenterType;
-  typedef typename Superclass::TranslationType            TranslationType;
-  typedef typename Superclass::OffsetType                 OffsetType;
-  typedef typename Superclass::ScalarType                 AngleType;
+  typedef typename Superclass::ParametersType            ParametersType;
+  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
+  typedef typename Superclass::JacobianType              JacobianType;
+  typedef typename Superclass::ScalarType                ScalarType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::MatrixType                MatrixType;
+  typedef typename Superclass::InverseMatrixType         InverseMatrixType;
+  typedef typename Superclass::CenterType                CenterType;
+  typedef typename Superclass::TranslationType           TranslationType;
+  typedef typename Superclass::OffsetType                OffsetType;
+  typedef typename Superclass::ScalarType                AngleType;
 
   typedef typename Superclass
-    ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
   /** Set/Get the transformation from a container of parameters
    * This is typically used by optimizers.  There are 6 parameters. The first
    * three represent the angles to rotate around the coordinate axis, and the
    * last three represents the offset. */
   void SetParameters( const ParametersType & parameters );
-  const ParametersType& GetParameters(void) const;
+
+  const ParametersType & GetParameters( void ) const;
 
   /** Set the rotational part of the transform. */
-  void SetRotation(ScalarType angleX,ScalarType angleY,ScalarType angleZ);
-  itkGetConstMacro(AngleX, ScalarType);
-  itkGetConstMacro(AngleY, ScalarType);
-  itkGetConstMacro(AngleZ, ScalarType);
+  void SetRotation( ScalarType angleX, ScalarType angleY, ScalarType angleZ );
+
+  itkGetConstMacro( AngleX, ScalarType );
+  itkGetConstMacro( AngleY, ScalarType );
+  itkGetConstMacro( AngleZ, ScalarType );
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
@@ -115,46 +119,48 @@ public:
     NonZeroJacobianIndicesType & ) const;
 
   /** Set/Get the order of the computation. Default ZXY */
-  itkSetMacro(ComputeZYX,bool);
-  itkGetConstMacro(ComputeZYX,bool);
+  itkSetMacro( ComputeZYX, bool );
+  itkGetConstMacro( ComputeZYX, bool );
 
-  virtual void SetIdentity(void);
-
+  virtual void SetIdentity( void );
 
 protected:
+
   AdvancedEuler3DTransform();
-  AdvancedEuler3DTransform(const MatrixType & matrix,
-                   const OutputPointType & offset);
-  AdvancedEuler3DTransform(unsigned int paramsSpaceDims);
+  AdvancedEuler3DTransform( const MatrixType & matrix,
+    const OutputPointType & offset );
+  AdvancedEuler3DTransform( unsigned int paramsSpaceDims );
 
-  ~AdvancedEuler3DTransform(){};
+  ~AdvancedEuler3DTransform(){}
 
-  void PrintSelf(std::ostream &os, Indent indent) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Set values of angles directly without recomputing other parameters. */
-  void SetVarRotation(ScalarType angleX, ScalarType angleY, ScalarType angleZ);
+  void SetVarRotation( ScalarType angleX, ScalarType angleY, ScalarType angleZ );
 
   /** Compute the components of the rotation matrix in the superclass. */
-  void ComputeMatrix(void);
-  void ComputeMatrixParameters(void);
+  void ComputeMatrix( void );
 
-   /** Update the m_JacobianOfSpatialJacobian.  */
-  virtual void PrecomputeJacobianOfSpatialJacobian(void);
+  void ComputeMatrixParameters( void );
+
+  /** Update the m_JacobianOfSpatialJacobian.  */
+  virtual void PrecomputeJacobianOfSpatialJacobian( void );
 
 private:
-  AdvancedEuler3DTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
 
-  ScalarType  m_AngleX;
-  ScalarType  m_AngleY;
-  ScalarType  m_AngleZ;
-  bool        m_ComputeZYX;
+  AdvancedEuler3DTransform( const Self & ); //purposely not implemented
+  void operator=( const Self & );           //purposely not implemented
 
-}; //class AdvancedEuler3DTransform
+  ScalarType m_AngleX;
+  ScalarType m_AngleY;
+  ScalarType m_AngleZ;
+  bool       m_ComputeZYX;
 
+};
+
+//class AdvancedEuler3DTransform
 
 }  // namespace itk
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkAdvancedEuler3DTransform.hxx"

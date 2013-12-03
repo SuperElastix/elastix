@@ -34,7 +34,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
   this->ProcessObject::SetNumberOfRequiredInputs( 1 );
 
   OutputVectorContainerPointer output
-    = dynamic_cast<OutputVectorContainerType*>( this->MakeOutput(0).GetPointer() );
+    = dynamic_cast< OutputVectorContainerType * >( this->MakeOutput( 0 ).GetPointer() );
 
   this->ProcessObject::SetNumberOfRequiredOutputs( 1 );
   this->ProcessObject::SetNthOutput( 0, output.GetPointer() );
@@ -63,7 +63,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 template< class TInputImage, class TOutputVectorContainer >
 void
 ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-::SetInput( unsigned int idx, const InputImageType *input )
+::SetInput( unsigned int idx, const InputImageType * input )
 {
   // process object is not const-correct, the const_cast
   // is required here.
@@ -79,7 +79,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 template< class TInputImage, class TOutputVectorContainer >
 void
 ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-::SetInput( const InputImageType *input )
+::SetInput( const InputImageType * input )
 {
   this->ProcessObject::SetNthInput( 0, const_cast< InputImageType * >( input ) );
 } // end SetInput()
@@ -90,42 +90,39 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
  */
 
 template< class TInputImage, class TOutputVectorContainer >
-const typename ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >::InputImageType *
-ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
+const typename ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >::InputImageType
+* ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 ::GetInput( void )
 {
   return dynamic_cast< const InputImageType * >(
     this->ProcessObject::GetInput( 0 ) );
 } // end GetInput()
 
-
 /**
  * ******************* GetInput *******************
  */
 
 template< class TInputImage, class TOutputVectorContainer >
-const typename ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >::InputImageType *
-ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
+const typename ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >::InputImageType
+* ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 ::GetInput( unsigned int idx )
 {
   return dynamic_cast< const InputImageType * >(
     this->ProcessObject::GetInput( idx ) );
 } // end GetInput()
 
-
 /**
  * ******************* GetOutput *******************
  */
 
 template< class TInputImage, class TOutputVectorContainer >
-typename ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >::OutputVectorContainerType *
-ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
+typename ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >::OutputVectorContainerType
+* ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 ::GetOutput( void )
 {
   return dynamic_cast< OutputVectorContainerType * >(
     this->ProcessObject::GetOutput( 0 ) );
 } // end GetOutput()
-
 
 /**
  * ******************* PrintSelf *******************
@@ -134,7 +131,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 template< class TInputImage, class TOutputVectorContainer >
 void
 ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-::PrintSelf( std::ostream& os, Indent indent ) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 } // end PrintSelf()
@@ -152,7 +149,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 {
   // Get the input pointer
   const InputImageType * inputPtr = this->GetInput();
-  const typename TInputImage::SizeType & requestedRegionSize 
+  const typename TInputImage::SizeType & requestedRegionSize
     = inputPtr->GetRequestedRegion().GetSize();
   // \todo: requested region -> this->GetCroppedInputImageRegion()
 
@@ -162,33 +159,33 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 
   // Initialize the splitRegion to the output requested region
   splitRegion = inputPtr->GetRequestedRegion();
-  splitIndex = splitRegion.GetIndex();
-  splitSize = splitRegion.GetSize();
+  splitIndex  = splitRegion.GetIndex();
+  splitSize   = splitRegion.GetSize();
 
   // split on the outermost dimension available
   splitAxis = inputPtr->GetImageDimension() - 1;
-  while ( requestedRegionSize[splitAxis] == 1 )
+  while( requestedRegionSize[ splitAxis ] == 1 )
   {
     --splitAxis;
-    if ( splitAxis < 0 )
-    { // cannot split
-      itkDebugMacro("  Cannot Split");
+    if( splitAxis < 0 )
+    {   // cannot split
+      itkDebugMacro( "  Cannot Split" );
       return 1;
     }
   }
 
   // determine the actual number of pieces that will be generated
   typename TInputImage::SizeType::SizeValueType range = requestedRegionSize[ splitAxis ];
-  unsigned int valuesPerThread = Math::Ceil<unsigned int>( range / (double) numberOfSplits );
-  unsigned int maxThreadIdUsed = Math::Ceil<unsigned int>( range / (double) valuesPerThread ) - 1;
+  unsigned int valuesPerThread = Math::Ceil< unsigned int >( range / (double)numberOfSplits );
+  unsigned int maxThreadIdUsed = Math::Ceil< unsigned int >( range / (double)valuesPerThread ) - 1;
 
   // Split the region
-  if ( threadId < maxThreadIdUsed )
+  if( threadId < maxThreadIdUsed )
   {
     splitIndex[ splitAxis ] += threadId * valuesPerThread;
-    splitSize[ splitAxis ] = valuesPerThread;
+    splitSize[ splitAxis ]   = valuesPerThread;
   }
-  if ( threadId == maxThreadIdUsed )
+  if( threadId == maxThreadIdUsed )
   {
     splitIndex[ splitAxis ] += threadId * valuesPerThread;
     // last thread needs to process the "rest" dimension being split
@@ -252,12 +249,12 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 {
   // The following code is equivalent to:
   // itkExceptionMacro("subclass should override this method!!!");
-  // The ExceptionMacro is not used because gcc warns that a 
+  // The ExceptionMacro is not used because gcc warns that a
   // 'noreturn' function does return
   std::ostringstream message;
   message << "itk::ERROR: " << this->GetNameOfClass()
-    << "(" << this << "): " << "Subclass should override this method!!!";
-  ExceptionObject e_(__FILE__, __LINE__, message.str().c_str(),ITK_LOCATION);
+          << "(" << this << "): " << "Subclass should override this method!!!";
+  ExceptionObject e_( __FILE__, __LINE__, message.str().c_str(), ITK_LOCATION );
   throw e_;
 
 } // end ThreadedGenerateData()
@@ -273,27 +270,27 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 template< class TInputImage, class TOutputVectorContainer >
 ITK_THREAD_RETURN_TYPE
 ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-::ThreaderCallback( void *arg )
+::ThreaderCallback( void * arg )
 {
-  ThreadStruct *str;
-  ThreadIdType threadId = ((MultiThreader::ThreadInfoStruct *)(arg))->ThreadID;
-  ThreadIdType threadCount = ((MultiThreader::ThreadInfoStruct *)(arg))->NumberOfThreads;
+  ThreadStruct * str;
+  ThreadIdType   threadId    = ( (MultiThreader::ThreadInfoStruct *)( arg ) )->ThreadID;
+  ThreadIdType   threadCount = ( (MultiThreader::ThreadInfoStruct *)( arg ) )->NumberOfThreads;
 
-  str = (ThreadStruct *)(((MultiThreader::ThreadInfoStruct *)(arg))->UserData);
+  str = (ThreadStruct *)( ( (MultiThreader::ThreadInfoStruct *)( arg ) )->UserData );
 
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
   typename TInputImage::RegionType splitRegion;
   unsigned int total = str->Filter->SplitRequestedRegion( threadId, threadCount, splitRegion );
 
-  if ( threadId < total )
+  if( threadId < total )
   {
     str->Filter->ThreadedGenerateData( splitRegion, threadId );
   }
   // else
   //   {
   //   otherwise don't use this thread. Sometimes the threads dont
-  //   break up very well and it is just as efficient to leave a 
+  //   break up very well and it is just as efficient to leave a
   //   few threads idle.
   //   }
 

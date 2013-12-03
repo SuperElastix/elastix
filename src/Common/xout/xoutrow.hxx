@@ -16,18 +16,16 @@
 
 #include "xoutrow.h"
 
-
 namespace xoutlibrary
 {
 using namespace std;
-
 
 /**
  * ********************* Constructor ****************************
  */
 
 template< class charT, class traits >
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::xoutrow()
 {
   //nothing
@@ -39,7 +37,7 @@ xoutrow<charT, traits>
  */
 
 template< class charT, class traits >
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::~xoutrow()
 {
   /** Call the function SetTargetCells, with as argument an empty
@@ -61,17 +59,17 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 void
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::WriteBufferedData( void )
 {
   /** Write the cell-data to the outputs, separated by tabs. */
-  XStreamMapIteratorType xit = this->m_XTargetCells.begin();
+  XStreamMapIteratorType xit   = this->m_XTargetCells.begin();
   XStreamMapIteratorType tmpIt = xit;
 
-  for ( ++tmpIt; tmpIt != this->m_XTargetCells.end(); ++xit, ++tmpIt )
+  for( ++tmpIt; tmpIt != this->m_XTargetCells.end(); ++xit, ++tmpIt )
   {
     /** Write a tab to the cell */
-    *(xit->second) << "\t" ;
+    *( xit->second ) << "\t";
 
     /** And send its contents to the outputs */
     xit->second->WriteBufferedData();
@@ -82,7 +80,7 @@ xoutrow<charT, traits>
   /** Go to the last cell and use it to send an enter to the outputs. */
   xit->second->WriteBufferedData();
   --xit;
-  *(xit->second) << "\n";
+  *( xit->second ) << "\n";
   xit->second->WriteBufferedData();
 
 } // end WriteBufferedData()
@@ -94,10 +92,10 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 int
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::AddTargetCell( const char * name )
 {
-  if ( this->m_CellMap.count( name ) == 0 )
+  if( this->m_CellMap.count( name ) == 0 )
   {
     /** A new cell (type xoutcell) is created. */
     XOutCellType * cell = new XOutCellType;
@@ -129,18 +127,18 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 int
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::RemoveTargetCell( const char * name )
 {
   int returndummy = 1;
 
-  if ( this->m_XTargetCells.count( name ) )
+  if( this->m_XTargetCells.count( name ) )
   {
     this->m_XTargetCells.erase( name );
     returndummy = 0;
   }
 
-  if ( this->m_CellMap.count( name ) )
+  if( this->m_CellMap.count( name ) )
   {
     delete this->m_CellMap[ name ];
     this->m_CellMap.erase( name );
@@ -158,7 +156,7 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 void
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::SetTargetCells( const XStreamMapType & cellmap )
 {
   /** Clean the this->m_CellMap (cells that are created using the
@@ -166,7 +164,7 @@ xoutrow<charT, traits>
    */
   XStreamMapIteratorType xit;
 
-  for ( xit = this->m_CellMap.begin(); xit != this->m_CellMap.end(); ++xit )
+  for( xit = this->m_CellMap.begin(); xit != this->m_CellMap.end(); ++xit )
   {
     delete xit->second;
   }
@@ -188,14 +186,14 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 int
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::AddOutput( const char * name, ostream_type * output )
 {
-  int returndummy = 0;
+  int                    returndummy = 0;
   XStreamMapIteratorType xit;
 
   /** Set the output in all cells. */
-  for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
   {
     returndummy |= xit->second->AddOutput( name, output );
   }
@@ -213,14 +211,14 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 int
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::AddOutput( const char * name, Superclass * output )
 {
-  int returndummy = 0;
+  int                    returndummy = 0;
   XStreamMapIteratorType xit;
 
   /** Set the output in all cells. */
-  for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
   {
     returndummy |= xit->second->AddOutput( name, output );
   }
@@ -238,14 +236,14 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 int
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::RemoveOutput( const char * name )
 {
-  int returndummy = 0;
+  int                    returndummy = 0;
   XStreamMapIteratorType xit;
 
   /** Set the output in all cells. */
-  for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
   {
     returndummy |= xit->second->RemoveOutput( name );
   }
@@ -263,13 +261,13 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 void
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::SetOutputs( const CStreamMapType & outputmap )
 {
   XStreamMapIteratorType xit;
 
   /** Set the output in all cells. */
-  for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
   {
     xit->second->SetOutputs( outputmap );
   }
@@ -286,13 +284,13 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 void
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::SetOutputs( const XStreamMapType & outputmap )
 {
   XStreamMapIteratorType xit;
 
   /** Set the output in all cells. */
-  for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
   {
     xit->second->SetOutputs( outputmap );
   }
@@ -309,7 +307,7 @@ xoutrow<charT, traits>
 
 template< class charT, class traits >
 void
-xoutrow<charT, traits>
+xoutrow< charT, traits >
 ::WriteHeaders( void )
 {
   /** Copy '*this'. */
@@ -321,7 +319,7 @@ xoutrow<charT, traits>
 
   /** Write the cell-names to the cells of the headerwriter. */
   XStreamMapIteratorType xit;
-  for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
   {
     /** Write the cell's name to each cell. */
     headerwriter[ xit->first.c_str() ] << xit->first;
@@ -338,8 +336,8 @@ xoutrow<charT, traits>
  */
 
 template< class charT, class traits >
-xoutbase<charT, traits> &
-xoutrow<charT, traits>
+xoutbase< charT, traits > &
+xoutrow< charT, traits >
 ::SelectXCell( const char * name )
 {
   std::string cellname( name );
@@ -347,7 +345,7 @@ xoutrow<charT, traits>
   /** Check if the name is "WriteHeaders". Then the method
    * this->WriteHeaders() is invoked.
    */
-  if ( cellname == "WriteHeaders" )
+  if( cellname == "WriteHeaders" )
   {
     this->WriteHeaders();
     return *this;
@@ -363,6 +361,4 @@ xoutrow<charT, traits>
 
 } // end namespace xoutlibrary
 
-
 #endif // end #ifndef __xoutrow_hxx
-

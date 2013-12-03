@@ -22,67 +22,67 @@
 namespace itk
 {
 
-  /**
-   * \class BinaryTreeSearchBase
-   *
-   * \brief
-   *
-   *
-   * \ingroup ANNwrap
-   */
+/**
+ * \class BinaryTreeSearchBase
+ *
+ * \brief
+ *
+ *
+ * \ingroup ANNwrap
+ */
 
-  template < class TListSample >
-  class BinaryTreeSearchBase : public Object
-  {
-  public:
+template< class TListSample >
+class BinaryTreeSearchBase : public Object
+{
+public:
 
-    /** Standard itk. */
-    typedef BinaryTreeSearchBase        Self;
-    typedef Object                      Superclass;
-    typedef SmartPointer< Self >        Pointer;
-    typedef SmartPointer< const Self >  ConstPointer;
+  /** Standard itk. */
+  typedef BinaryTreeSearchBase       Self;
+  typedef Object                     Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
-    /** ITK type info. */
-    itkTypeMacro( BinaryTreeSearchBase, Object );
+  /** ITK type info. */
+  itkTypeMacro( BinaryTreeSearchBase, Object );
 
-    /** Typedef's. */
-    typedef TListSample                 ListSampleType;
-    typedef BinaryTreeBase< ListSampleType > BinaryTreeType;
-    typedef typename BinaryTreeType::Pointer  BinaryTreePointer;
-    typedef typename BinaryTreeType::
-      MeasurementVectorType             MeasurementVectorType;
-    typedef Array< int >                IndexArrayType;
-    typedef Array< double >             DistanceArrayType;
+  /** Typedef's. */
+  typedef TListSample                      ListSampleType;
+  typedef BinaryTreeBase< ListSampleType > BinaryTreeType;
+  typedef typename BinaryTreeType::Pointer BinaryTreePointer;
+  typedef typename BinaryTreeType::
+    MeasurementVectorType MeasurementVectorType;
+  typedef Array< int >    IndexArrayType;
+  typedef Array< double > DistanceArrayType;
 
-    /** Set and get the binary tree. */
-    virtual void SetBinaryTree( BinaryTreeType * tree );
-    const BinaryTreeType * GetBinaryTree( void ) const;
+  /** Set and get the binary tree. */
+  virtual void SetBinaryTree( BinaryTreeType * tree );
 
-    /** Set and get the number of nearest neighbours k. */
-    itkSetMacro( KNearestNeighbors, unsigned int );
-    itkGetConstMacro( KNearestNeighbors, unsigned int );
+  const BinaryTreeType * GetBinaryTree( void ) const;
 
-    /** Search the nearest neighbours of a query point qp. */
-    virtual void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
-      DistanceArrayType & dists ) = 0;
+  /** Set and get the number of nearest neighbours k. */
+  itkSetMacro( KNearestNeighbors, unsigned int );
+  itkGetConstMacro( KNearestNeighbors, unsigned int );
 
-  protected:
+  /** Search the nearest neighbours of a query point qp. */
+  virtual void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
+    DistanceArrayType & dists ) = 0;
 
-    BinaryTreeSearchBase();
-    virtual ~BinaryTreeSearchBase();
+protected:
 
-    /** Member variables. */
-    BinaryTreePointer    m_BinaryTree;
-    unsigned int   m_KNearestNeighbors;
-    unsigned int   m_DataDimension;
+  BinaryTreeSearchBase();
+  virtual ~BinaryTreeSearchBase();
 
-  private:
+  /** Member variables. */
+  BinaryTreePointer m_BinaryTree;
+  unsigned int      m_KNearestNeighbors;
+  unsigned int      m_DataDimension;
 
-    BinaryTreeSearchBase( const Self& );  // purposely not implemented
-    void operator=( const Self& );        // purposely not implemented
+private:
 
-  };
+  BinaryTreeSearchBase( const Self & );   // purposely not implemented
+  void operator=( const Self & );         // purposely not implemented
 
+};
 
 } // end namespace itk
 

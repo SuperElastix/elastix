@@ -49,13 +49,13 @@ ImageRandomSamplerSparseMask< TInputImage >
   typename MaskType::ConstPointer mask = this->GetMask();
 
   /** Sanity check. */
-  if ( mask.IsNull() )
+  if( mask.IsNull() )
   {
     itkExceptionMacro( << "ERROR: do not call this function when no mask is supplied." );
   }
 
   /** Get handles to the input image and output sample container. */
-  InputImageConstPointer inputImage = this->GetInput();
+  InputImageConstPointer      inputImage      = this->GetInput();
   ImageSampleContainerPointer sampleContainer = this->GetOutput();
 
   /** Clear the container. */
@@ -71,17 +71,17 @@ ImageRandomSamplerSparseMask< TInputImage >
   {
     this->m_InternalFullSampler->Update();
   }
-  catch ( ExceptionObject & err )
+  catch( ExceptionObject & err )
   {
     std::string message = "ERROR: This ImageSampler internally uses the "
       "ImageFullSampler. Updating of this internal sampler raised the "
       "exception:\n";
     message += err.GetDescription();
 
-    std::string fullSamplerMessage = err.GetDescription();
-    std::string::size_type loc = fullSamplerMessage.find(
+    std::string            fullSamplerMessage = err.GetDescription();
+    std::string::size_type loc                = fullSamplerMessage.find(
       "ERROR: failed to allocate memory for the sample container", 0 );
-    if ( loc != std::string::npos && this->GetMask() == 0 )
+    if( loc != std::string::npos && this->GetMask() == 0 )
     {
       message += "\nYou are using the ImageRandomSamplerSparseMask sampler, "
         "but you did not set a mask. The internal ImageFullSampler therefore "
@@ -93,7 +93,7 @@ ImageRandomSamplerSparseMask< TInputImage >
   }
 
   /** If desired we exercise a multi-threaded version. */
-  if ( this->m_UseMultiThread )
+  if( this->m_UseMultiThread )
   {
     /** Calls ThreadedGenerateData(). */
     return Superclass::GenerateData();
@@ -105,7 +105,7 @@ ImageRandomSamplerSparseMask< TInputImage >
   unsigned long numberOfValidSamples = allValidSamples->Size();
 
   /** Take random samples from the allValidSamples-container. */
-  for ( unsigned int i = 0; i < this->GetNumberOfSamples(); ++i )
+  for( unsigned int i = 0; i < this->GetNumberOfSamples(); ++i )
   {
     unsigned long randomIndex
       = this->m_RandomGenerator->GetIntegerVariate( numberOfValidSamples - 1 );
@@ -133,7 +133,7 @@ ImageRandomSamplerSparseMask< TInputImage >
     = this->m_InternalFullSampler->GetOutput()->Size();
 
   /** Fill the list with random numbers. */
-  for ( unsigned int i = 0; i < this->GetNumberOfSamples(); ++i )
+  for( unsigned int i = 0; i < this->GetNumberOfSamples(); ++i )
   {
     unsigned long randomIndex
       = this->m_RandomGenerator->GetIntegerVariate( numberOfValidSamples - 1 );
@@ -143,7 +143,7 @@ ImageRandomSamplerSparseMask< TInputImage >
   /** Initialize variables needed for threads. */
   this->m_ThreaderSampleContainer.clear();
   this->m_ThreaderSampleContainer.resize( this->GetNumberOfThreads() );
-  for ( std::size_t i = 0; i < this->GetNumberOfThreads(); i++ )
+  for( std::size_t i = 0; i < this->GetNumberOfThreads(); i++ )
   {
     this->m_ThreaderSampleContainer[ i ] = ImageSampleContainerType::New();
   }
@@ -165,9 +165,9 @@ ImageRandomSamplerSparseMask< TInputImage >
     = this->m_InternalFullSampler->GetOutput();
 
   /** Figure out which samples to process. */
-  unsigned long chunkSize = this->GetNumberOfSamples() / this->GetNumberOfThreads();
+  unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfThreads();
   unsigned long sampleStart = threadId * chunkSize;
-  if ( threadId == this->GetNumberOfThreads() - 1 )
+  if( threadId == this->GetNumberOfThreads() - 1 )
   {
     chunkSize = this->GetNumberOfSamples()
       - ( ( this->GetNumberOfThreads() - 1 ) * chunkSize );
@@ -184,10 +184,10 @@ ImageRandomSamplerSparseMask< TInputImage >
 
   /** Take random samples from the allValidSamples-container. */
   unsigned long sampleId = sampleStart;
-  for ( iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++ )
+  for( iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++ )
   {
-    unsigned long randomIndex = static_cast<unsigned long>( this->m_RandomNumberList[ sampleId ] );
-    (*iter).Value() = allValidSamples->ElementAt( randomIndex );
+    unsigned long randomIndex = static_cast< unsigned long >( this->m_RandomNumberList[ sampleId ] );
+    ( *iter ).Value() = allValidSamples->ElementAt( randomIndex );
   }
 
 } // end ThreadedGenerateData()
@@ -200,7 +200,7 @@ ImageRandomSamplerSparseMask< TInputImage >
 template< class TInputImage >
 void
 ImageRandomSamplerSparseMask< TInputImage >
-::PrintSelf( std::ostream& os, Indent indent ) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
@@ -213,4 +213,3 @@ ImageRandomSamplerSparseMask< TInputImage >
 } // end namespace itk
 
 #endif // end #ifndef __ImageRandomSamplerSparseMask_txx
-

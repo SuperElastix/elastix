@@ -17,9 +17,6 @@
 
 #include "elxInterpolatorBase.h"
 
-
 //nothing
 
-
 #endif //#ifndef __elxInterpolatorBase_hxx
-

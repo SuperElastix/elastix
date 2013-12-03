@@ -22,13 +22,14 @@
 
 //-------------------------------------------------------------------------------------
 
-int main( int argc, char *argv[] )
+int
+main( int argc, char * argv[] )
 {
   /** Some basic type definitions.
    * NOTE: don't change the dimension or the spline order, since the
    * hard-coded ground truth depends on this.
    */
-  const unsigned int Dimension = 3;
+  const unsigned int Dimension   = 3;
   const unsigned int SplineOrder = 3;
   typedef float CoordinateRepresentationType;
   //const double distance = 1e-3; // the allowable distance
@@ -38,17 +39,17 @@ int main( int argc, char *argv[] )
    * Debug and Release mode.
    */
 #ifndef NDEBUG
-  unsigned int N = static_cast<unsigned int>( 1e3 );
+  unsigned int N = static_cast< unsigned int >( 1e3 );
 #else
-  unsigned int N = static_cast<unsigned int>( 0.5e5 );
+  unsigned int N = static_cast< unsigned int >( 0.5e5 );
 #endif
   std::cerr << "N = " << N << std::endl;
 
   /** Check. */
-  if ( argc != 2 )
+  if( argc != 2 )
   {
     std::cerr << "ERROR: You should specify a text file with the B-spline "
-      << "transformation parameters." << std::endl;
+              << "transformation parameters." << std::endl;
     return 1;
   }
 
@@ -56,18 +57,18 @@ int main( int argc, char *argv[] )
   typedef itk::AdvancedBSplineDeformableTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
   typedef itk::BSplineDeformableTransform<
-  //typedef itk::BSplineTransform<
+    //typedef itk::BSplineTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    ITKTransformType;
-  typedef TransformType::JacobianType                   JacobianType;
-  typedef TransformType::SpatialJacobianType            SpatialJacobianType;
-  typedef TransformType::SpatialHessianType             SpatialHessianType;
-  typedef TransformType::JacobianOfSpatialJacobianType  JacobianOfSpatialJacobianType;
-  typedef TransformType::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
-  typedef TransformType::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
-  typedef TransformType::NumberOfParametersType         NumberOfParametersType;
-  typedef TransformType::InputPointType                 InputPointType;
-  typedef TransformType::OutputPointType                OutputPointType;
-  typedef TransformType::ParametersType                 ParametersType;
+  typedef TransformType::JacobianType                  JacobianType;
+  typedef TransformType::SpatialJacobianType           SpatialJacobianType;
+  typedef TransformType::SpatialHessianType            SpatialHessianType;
+  typedef TransformType::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef TransformType::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef TransformType::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef TransformType::NumberOfParametersType        NumberOfParametersType;
+  typedef TransformType::InputPointType                InputPointType;
+  typedef TransformType::OutputPointType               OutputPointType;
+  typedef TransformType::ParametersType                ParametersType;
   typedef itk::Image< CoordinateRepresentationType,
     Dimension >                                         InputImageType;
   typedef InputImageType::RegionType    RegionType;
@@ -78,7 +79,7 @@ int main( int argc, char *argv[] )
   typedef InputImageType::DirectionType DirectionType;
 
   /** Create the transform. */
-  TransformType::Pointer transform = TransformType::New();
+  TransformType::Pointer    transform    = TransformType::New();
   ITKTransformType::Pointer transformITK = ITKTransformType::New();
 
   /** Setup the B-spline transform:
@@ -126,10 +127,10 @@ int main( int argc, char *argv[] )
 
   /** Now read the parameters as defined in the file par.txt. */
   ParametersType parameters( transform->GetNumberOfParameters() );
-  std::ifstream input( argv[ 1 ] );
-  if ( input.is_open() )
+  std::ifstream  input( argv[ 1 ] );
+  if( input.is_open() )
   {
-    for ( unsigned int i = 0; i < parameters.GetSize(); ++i )
+    for( unsigned int i = 0; i < parameters.GetSize(); ++i )
     {
       input >> parameters[ i ];
     }
@@ -137,7 +138,7 @@ int main( int argc, char *argv[] )
   else
   {
     std::cerr << "ERROR: could not open the text file containing the "
-      << "parameter values." << std::endl;
+              << "parameter values." << std::endl;
     return 1;
   }
   transform->SetParameters( parameters );
@@ -149,12 +150,12 @@ int main( int argc, char *argv[] )
   /** Declare variables. */
   InputPointType inputPoint;
   inputPoint.Fill( 4.1 );
-  JacobianType jacobian;
-  SpatialJacobianType spatialJacobian;
-  SpatialHessianType spatialHessian;
+  JacobianType                  jacobian;
+  SpatialJacobianType           spatialJacobian;
+  SpatialHessianType            spatialHessian;
   JacobianOfSpatialJacobianType jacobianOfSpatialJacobian;
-  JacobianOfSpatialHessianType jacobianOfSpatialHessian;
-  NonZeroJacobianIndicesType nzji;
+  JacobianOfSpatialHessianType  jacobianOfSpatialHessian;
+  NonZeroJacobianIndicesType    nzji;
 
   /** Resize some of the variables. */
   nzji.resize( nonzji );
@@ -220,40 +221,40 @@ int main( int argc, char *argv[] )
 
   /** Time the implementation of the Jacobian. */
   startClock = clock();
-  for( unsigned int i = 0; i < N*10; ++i )
+  for( unsigned int i = 0; i < N * 10; ++i )
   {
     transform->GetJacobian( inputPoint, jacobian, nzji );
   }
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the Jacobian is: "
-    << clockITK / 1000.0 << " s." << std::endl;
+            << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Jacobian. */
   startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     transform->GetSpatialJacobian( inputPoint, spatialJacobian );
   }
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Jacobian is: "
-    << clockITK / 1000.0 << " s." << std::endl;
+            << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Hessian. */
   startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     transform->GetSpatialHessian( inputPoint, spatialHessian );
   }
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Hessian is: "
-    << clockITK / 1000.0 << " s." << std::endl;
+            << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the Jacobian of the spatial Jacobian. */
   startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     transform->GetJacobianOfSpatialJacobian( inputPoint,
       jacobianOfSpatialJacobian, nzji );
@@ -261,11 +262,11 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the Jacobian of the spatial Jacobian is: "
-    << clockITK / 1000.0 << " s." << std::endl;
+            << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the Jacobian of the spatial Hessian. */
   startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     transform->GetJacobianOfSpatialHessian( inputPoint,
       jacobianOfSpatialHessian, nzji );
@@ -273,11 +274,11 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the Jacobian of the spatial Hessian is: "
-    << clockITK / 1000.0 << " s." << std::endl;
+            << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Jacobian and its Jacobian. */
   startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     transform->GetSpatialJacobian( inputPoint, spatialJacobian );
     transform->GetJacobianOfSpatialJacobian( inputPoint,
@@ -286,11 +287,11 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the (Jacobian of the) spatial Jacobian (2 func) is: "
-    << clockITK / 1000.0 << " s." << std::endl;
+            << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Jacobian and its Jacobian. */
   startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     transform->GetJacobianOfSpatialJacobian( inputPoint,
       spatialJacobian, jacobianOfSpatialJacobian, nzji );
@@ -298,11 +299,11 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the (Jacobian of the) spatial Jacobian (1 func) is: "
-    << clockITK / 1000.0 << " s." << std::endl;
+            << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Hessian. */
   startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     transform->GetSpatialHessian( inputPoint, spatialHessian );
     transform->GetJacobianOfSpatialHessian( inputPoint,
@@ -311,29 +312,29 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the (Jacobian of the) spatial Hessian (2 func) is: "
-    << clockITK / 1000.0 << " s." << std::endl;
+            << clockITK / 1000.0 << " s." << std::endl;
 
   /** Additional checks. */
-  if ( !transform->GetHasNonZeroSpatialHessian() )
+  if( !transform->GetHasNonZeroSpatialHessian() )
   {
     std::cerr << "ERROR: GetHasNonZeroSpatialHessian() should return true." << std::endl;
     return 1;
   }
-  if ( !transform->GetHasNonZeroJacobianOfSpatialHessian() )
+  if( !transform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
     std::cerr << "ERROR: GetHasNonZeroJacobianOfSpatialHessian() should return true." << std::endl;
     return 1;
   }
 
   /** These should return the same values as the original ITK functions. */
-  OutputPointType opp1 = transform->TransformPoint( inputPoint );
-  OutputPointType opp2 = transformITK->TransformPoint( inputPoint );
-  double differenceNorm = 0.0;
-  for ( unsigned int i = 0; i < Dimension; ++i )
+  OutputPointType opp1           = transform->TransformPoint( inputPoint );
+  OutputPointType opp2           = transformITK->TransformPoint( inputPoint );
+  double          differenceNorm = 0.0;
+  for( unsigned int i = 0; i < Dimension; ++i )
   {
     differenceNorm += ( opp1[ i ] - opp2[ i ] ) * ( opp1[ i ] - opp2[ i ] );
   }
-  if ( vcl_sqrt( differenceNorm ) > 1e-10 )
+  if( vcl_sqrt( differenceNorm ) > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline TransformPoint() returning incorrect result." << std::endl;
     return 1;
@@ -355,7 +356,7 @@ int main( int argc, char *argv[] )
     }
   }
   //if ( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
-  if ( vcl_sqrt( jacDiff ) > 1e-10 )
+  if( vcl_sqrt( jacDiff ) > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline GetJacobian() returning incorrect result." << std::endl;
     return 1;
@@ -410,13 +411,13 @@ int main( int argc, char *argv[] )
   //  return 1;
   //}
 
-  if ( ( transform->GetParameters() - transformITK->GetParameters() ).two_norm() > 1e-10 )
+  if( ( transform->GetParameters() - transformITK->GetParameters() ).two_norm() > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline GetParameters() returning incorrect result." << std::endl;
     return 1;
   }
 
-  if ( ( transform->GetFixedParameters() - transformITK->GetFixedParameters() ).two_norm() > 1e-10 )
+  if( ( transform->GetFixedParameters() - transformITK->GetFixedParameters() ).two_norm() > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline GetFixedParameters() returning incorrect result." << std::endl;
     return 1;

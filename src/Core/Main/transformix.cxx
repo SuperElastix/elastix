@@ -17,19 +17,19 @@
 
 #include "transformix.h"
 
-
-int main( int argc, char **argv )
+int
+main( int argc, char ** argv )
 {
   /** Check if "-help" or "--version" was asked for.*/
-  if ( argc == 1 )
+  if( argc == 1 )
   {
     std::cout << "Use \"transformix --help\" for information about transformix-usage." << std::endl;
     return 0;
   }
-  else if ( argc == 2 )
+  else if( argc == 2 )
   {
     std::string argument( argv[ 1 ] );
-    if ( argument == "-help" || argument == "--help" || argument == "-h" )
+    if( argument == "-help" || argument == "--help" || argument == "-h" )
     {
       PrintHelp();
       return 0;
@@ -38,7 +38,7 @@ int main( int argc, char **argv )
     {
       std::cout << std::fixed;
       std::cout << std::showpoint;
-      std::cout << std::setprecision(3);
+      std::cout << std::setprecision( 3 );
       std::cout << "transformix version: " << __ELASTIX_VERSION << std::endl;
       return 0;
     }
@@ -50,42 +50,42 @@ int main( int argc, char **argv )
   }
 
   /** Some typedef's.*/
-  typedef elx::TransformixMain                      TransformixMainType;
-  typedef TransformixMainType::Pointer              TransformixMainPointer;
-  typedef TransformixMainType::ArgumentMapType      ArgumentMapType;
-  typedef ArgumentMapType::value_type               ArgumentMapEntryType;
+  typedef elx::TransformixMain                 TransformixMainType;
+  typedef TransformixMainType::Pointer         TransformixMainPointer;
+  typedef TransformixMainType::ArgumentMapType ArgumentMapType;
+  typedef ArgumentMapType::value_type          ArgumentMapEntryType;
 
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();
 
   /** Declare an instance of the Transformix class. */
-  TransformixMainPointer  transformix;
+  TransformixMainPointer transformix;
 
   /** Initialize. */
-  int               returndummy = 0;
-  ArgumentMapType   argMap;
-  bool              outFolderPresent = false;
-  std::string       outFolder = "";
-  std::string       logFileName = "";
+  int             returndummy = 0;
+  ArgumentMapType argMap;
+  bool            outFolderPresent = false;
+  std::string     outFolder        = "";
+  std::string     logFileName      = "";
 
   /** Put command line parameters into parameterFileList. */
-  for ( unsigned int i = 1; static_cast<long>(i) < argc - 1; i += 2 )
+  for( unsigned int i = 1; static_cast< long >( i ) < argc - 1; i += 2 )
   {
     std::string key( argv[ i ] );
     std::string value( argv[ i + 1 ] );
 
-    if ( key == "-out" )
+    if( key == "-out" )
     {
       /** Make sure that last character of the output folder equals a '/' or '\'. */
       const char last = value[ value.size() - 1 ];
-      if( last != '/' && last != '\\' ) value.append( "/" );
+      if( last != '/' && last != '\\' ) { value.append( "/" ); }
       value = itksys::SystemTools::ConvertToOutputPath( value.c_str() );
 
       /** Note that on Windows, in case the output folder contains a space,
        * the path name is double quoted by ConvertToOutputPath, which is undesirable.
        * So, we remove these quotes again.
        */
-      if(  itksys::SystemTools::StringStartsWith( value.c_str(), "\"" )
+      if( itksys::SystemTools::StringStartsWith( value.c_str(), "\"" )
         && itksys::SystemTools::StringEndsWith(   value.c_str(), "\"" ) )
       {
         value = value.substr( 1, value.length() - 2 );
@@ -93,12 +93,12 @@ int main( int argc, char **argv )
 
       /** Save this information. */
       outFolderPresent = true;
-      outFolder = value;
+      outFolder        = value;
 
     } // end if key == "-out"
 
     /** Attempt to save the arguments in the ArgumentMap. */
-    if ( argMap.count( key ) == 0 )
+    if( argMap.count( key ) == 0 )
     {
       argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
     }
@@ -106,40 +106,40 @@ int main( int argc, char **argv )
     {
       /** Duplicate arguments. */
       std::cerr << "WARNING!" << std::endl;
-      std::cerr << "Argument "<< key.c_str() << "is only required once." << std::endl;
+      std::cerr << "Argument " << key.c_str() << "is only required once." << std::endl;
       std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
     }
 
   } // end for loop
 
   /** The argv0 argument, required for finding the component.dll/so's. */
-  argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] )  );
+  argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] ) );
 
   /** Check that the option "-tp" is given. */
-  if ( argMap.count( "-tp" ) == 0 )
+  if( argMap.count( "-tp" ) == 0 )
   {
     std::cerr << "ERROR: No CommandLine option \"-tp\" given!" << std::endl;
     returndummy |= -1;
   }
 
   /** Check that at least one of the following options is given. */
-  if ( argMap.count( "-in" ) == 0
+  if( argMap.count( "-in" ) == 0
     && argMap.count( "-ipp" ) == 0
     && argMap.count( "-def" ) == 0
     && argMap.count( "-jac" ) == 0
     && argMap.count( "-jacmat" ) == 0 )
   {
     std::cerr << "ERROR: At least one of the CommandLine options \"-in\", "
-      << "\"-def\", \"-jac\", or \"-jacmat\" should be given!" << std::endl;
+              << "\"-def\", \"-jac\", or \"-jacmat\" should be given!" << std::endl;
     returndummy |= -1;
   }
 
   /** Check if the -out option is given and setup xout. */
-  if ( outFolderPresent )
+  if( outFolderPresent )
   {
     /** Check if the output directory exists. */
     bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
-    if ( !outFolderExists )
+    if( !outFolderExists )
     {
       std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist." << std::endl;
       std::cerr << "You are responsible for creating it." << std::endl;
@@ -148,9 +148,9 @@ int main( int argc, char **argv )
     else
     {
       /** Setup xout. */
-      logFileName = argMap[ "-out" ] + "transformix.log" ;
+      logFileName = argMap[ "-out" ] + "transformix.log";
       int returndummy2 = elx::xoutSetup( logFileName.c_str(), true, true );
-      if ( returndummy2 )
+      if( returndummy2 )
       {
         std::cerr << "ERROR while setting up xout." << std::endl;
       }
@@ -164,7 +164,7 @@ int main( int argc, char **argv )
   }
 
   /** Stop if some fatal errors occurred. */
-  if ( returndummy )
+  if( returndummy )
   {
     return returndummy;
   }
@@ -175,22 +175,22 @@ int main( int argc, char **argv )
   tmr::Timer::Pointer totaltimer = tmr::Timer::New();
   totaltimer->StartTimer();
   elxout << "transformix is started at " << totaltimer->PrintStartTime()
-    << ".\n" << std::endl;
+         << ".\n" << std::endl;
 
   /** Print where transformix was run. */
-  elxout << "which transformix:   " << argv[0] << std::endl;
+  elxout << "which transformix:   " << argv[ 0 ] << std::endl;
   itksys::SystemInformation info;
   info.RunCPUCheck();
   info.RunOSCheck();
   info.RunMemoryCheck();
   elxout << "transformix runs at: " << info.GetHostname() << std::endl;
   elxout << "  " << info.GetOSName() << " "
-    << info.GetOSRelease() << ( info.Is64Bits() ? " (x64), " : ", " )
-    << info.GetOSVersion() << std::endl;
+         << info.GetOSRelease() << ( info.Is64Bits() ? " (x64), " : ", " )
+         << info.GetOSVersion() << std::endl;
   elxout << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and "
-    << info.GetNumberOfPhysicalCPU() << " cores @ "
-    << static_cast<unsigned int>( info.GetProcessorClockFrequency() )
-    << " MHz." << std::endl;
+         << info.GetNumberOfPhysicalCPU() << " cores @ "
+         << static_cast< unsigned int >( info.GetProcessorClockFrequency() )
+         << " MHz." << std::endl;
 
   /**
    * ********************* START TRANSFORMATION *******************
@@ -201,24 +201,24 @@ int main( int argc, char **argv )
 
   /** Print a start message. */
   elxout << "Running transformix with parameter file \""
-      << argMap[ "-tp" ] << "\".\n" << std::endl;
+         << argMap[ "-tp" ] << "\".\n" << std::endl;
 
   /** Run transformix. */
   returndummy = transformix->Run( argMap );
 
   /** Check if transformix run without errors. */
-  if ( returndummy != 0 )
+  if( returndummy != 0 )
   {
-    xl::xout["error"] << "Errors occurred" << std::endl;
+    xl::xout[ "error" ] << "Errors occurred" << std::endl;
     return returndummy;
   }
 
   /** Stop timer and print it. */
   totaltimer->StopTimer();
-  elxout << "\nTransformix has finished at " <<
-    totaltimer->PrintStopTime() << "." << std::endl;
-  elxout << "Elapsed time: " <<
-    totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+  elxout << "\nTransformix has finished at "
+         << totaltimer->PrintStopTime() << "." << std::endl;
+  elxout << "Elapsed time: "
+         << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
   /** Clean up. */
   transformix = 0;
@@ -234,7 +234,8 @@ int main( int argc, char **argv )
  * *********************** PrintHelp ****************************
  */
 
-void PrintHelp( void )
+void
+PrintHelp( void )
 {
   /** Print the version. */
   std::cout << std::fixed;
@@ -258,18 +259,18 @@ void PrintHelp( void )
   std::cout << "Optional extra commands:\n";
   std::cout << "  -in       input image to deform\n";
   std::cout << "  -def      file containing input-image points; the point are transformed\n"
-               "            according to the specified transform-parameter file\n";
+            << "            according to the specified transform-parameter file\n";
   std::cout << "            use \"-def all\" to transform all points from the input-image, which\n"
-               "            effectively generates a deformation field.\n";
+            << "            effectively generates a deformation field.\n";
   std::cout << "  -jac      use \"-jac all\" to generate an image with the determinant of the\n"
-               "            spatial Jacobian\n";
+            << "            spatial Jacobian\n";
   std::cout << "  -jacmat   use \"-jacmat all\" to generate an image with the spatial Jacobian\n"
-               "            matrix at each voxel\n";
+            << "            matrix at each voxel\n";
   std::cout << "  -priority set the process priority to high, abovenormal, normal (default),\n"
-               "            belownormal, or idle (Windows only option)\n";
+            << "            belownormal, or idle (Windows only option)\n";
   std::cout << "  -threads  set the maximum number of threads of transformix\n";
   std::cout << "\nAt least one of the options \"-in\", \"-def\", \"-jac\", or \"-jacmat\" should be given.\n"
-    << std::endl;
+            << std::endl;
 
   /** The parameter file. */
   std::cout << "The transform-parameter file must contain all the information "

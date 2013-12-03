@@ -16,7 +16,6 @@
 
 #include "itkTransformPenaltyTerm.h"
 
-
 namespace itk
 {
 
@@ -31,26 +30,26 @@ TransformPenaltyTerm< TFixedImage, TScalarType >
 {
   /** Check if this transform is a B-spline transform. */
   BSplineTransformType * testPtr1
-    = dynamic_cast<BSplineTransformType *>( this->m_AdvancedTransform.GetPointer() );
+    = dynamic_cast< BSplineTransformType * >( this->m_AdvancedTransform.GetPointer() );
   CombinationTransformType * testPtr2a
-    = dynamic_cast<CombinationTransformType *>( this->m_AdvancedTransform.GetPointer() );
+    = dynamic_cast< CombinationTransformType * >( this->m_AdvancedTransform.GetPointer() );
   bool transformIsBSpline = false;
-  if ( testPtr1 )
+  if( testPtr1 )
   {
     /** The transform is of type AdvancedBSplineDeformableTransform. */
     transformIsBSpline = true;
-    bspline = testPtr1;
+    bspline            = testPtr1;
   }
-  else if ( testPtr2a )
+  else if( testPtr2a )
   {
     /** The transform is of type AdvancedCombinationTransform. */
-    BSplineTransformType * testPtr2b = dynamic_cast<BSplineTransformType *>(
-      (testPtr2a->GetCurrentTransform()) );
-    if ( testPtr2b )
+    BSplineTransformType * testPtr2b = dynamic_cast< BSplineTransformType * >(
+      ( testPtr2a->GetCurrentTransform() ) );
+    if( testPtr2b )
     {
       /** The current transform is of type AdvancedBSplineDeformableTransform. */
       transformIsBSpline = true;
-      bspline = testPtr2b;
+      bspline            = testPtr2b;
     }
   }
 

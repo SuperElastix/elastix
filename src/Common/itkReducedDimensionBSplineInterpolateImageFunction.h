@@ -80,23 +80,23 @@ namespace itk
  *
  * \ingroup ImageFunctions
  */
-template <
-  class TImageType,
-  class TCoordRep = double,
-  class TCoefficientType = double >
+template<
+class TImageType,
+class TCoordRep        = double,
+class TCoefficientType = double >
 class ITK_EXPORT ReducedDimensionBSplineInterpolateImageFunction :
-    public InterpolateImageFunction<TImageType,TCoordRep>
+  public         InterpolateImageFunction< TImageType, TCoordRep >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef ReducedDimensionBSplineInterpolateImageFunction  Self;
-  typedef InterpolateImageFunction<TImageType,TCoordRep>   Superclass;
-  typedef SmartPointer<Self>                               Pointer;
-  typedef SmartPointer<const Self>                         ConstPointer;
+  typedef ReducedDimensionBSplineInterpolateImageFunction   Self;
+  typedef InterpolateImageFunction< TImageType, TCoordRep > Superclass;
+  typedef SmartPointer< Self >                              Pointer;
+  typedef SmartPointer< const Self >                        ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ReducedDimensionBSplineInterpolateImageFunction, InterpolateImageFunction);
-
+  itkTypeMacro( ReducedDimensionBSplineInterpolateImageFunction, InterpolateImageFunction );
 
   /** New macro for creation of through a Smart Pointer */
   itkNewMacro( Self );
@@ -108,7 +108,7 @@ public:
   typedef typename Superclass::InputImageType InputImageType;
 
   /** Dimension underlying input image. */
-  itkStaticConstMacro(ImageDimension, unsigned int,Superclass::ImageDimension);
+  itkStaticConstMacro( ImageDimension, unsigned int, Superclass::ImageDimension );
 
   /** Index typedef support. */
   typedef typename Superclass::IndexType IndexType;
@@ -120,17 +120,17 @@ public:
   typedef typename Superclass::PointType PointType;
 
   /** Iterator typedef support */
-  typedef ImageLinearIteratorWithIndex<TImageType> Iterator;
+  typedef ImageLinearIteratorWithIndex< TImageType > Iterator;
 
   /** Internal Coefficient typedef support */
   typedef TCoefficientType CoefficientDataType;
-  typedef Image<CoefficientDataType,
-                     itkGetStaticConstMacro(ImageDimension)
+  typedef Image< CoefficientDataType,
+    itkGetStaticConstMacro( ImageDimension )
     >                      CoefficientImageType;
 
   /** Define filter for calculating the BSpline coefficients */
-  typedef MultiOrderBSplineDecompositionImageFilter<TImageType, CoefficientImageType>
-  CoefficientFilter;
+  typedef MultiOrderBSplineDecompositionImageFilter< TImageType, CoefficientImageType >
+    CoefficientFilter;
 
   typedef typename CoefficientFilter::Pointer CoefficientFilterPointer;
 
@@ -146,30 +146,29 @@ public:
     const ContinuousIndexType & index ) const;
 
   /** Derivative typedef support */
-  typedef CovariantVector<OutputType,
-                          itkGetStaticConstMacro(ImageDimension)
+  typedef CovariantVector< OutputType,
+    itkGetStaticConstMacro( ImageDimension )
     > CovariantVectorType;
 
   CovariantVectorType EvaluateDerivative( const PointType & point ) const
-    {
+  {
     ContinuousIndexType index;
     this->GetInputImage()->TransformPhysicalPointToContinuousIndex( point, index );
     return ( this->EvaluateDerivativeAtContinuousIndex( index ) );
-    }
+  }
+
 
   CovariantVectorType EvaluateDerivativeAtContinuousIndex(
     const ContinuousIndexType & x ) const;
 
-
   /** Get/Sets the Spline Order, supports 0th - 5th order splines. The default
    *  is a 3rd order spline. */
-  void SetSplineOrder(unsigned int SplineOrder);
-  itkGetConstMacro(SplineOrder, int);
+  void SetSplineOrder( unsigned int SplineOrder );
 
+  itkGetConstMacro( SplineOrder, int );
 
   /** Set the input image.  This must be set by the user. */
-  virtual void SetInputImage(const TImageType * inputData);
-
+  virtual void SetInputImage( const TImageType * inputData );
 
   /** The UseImageDirection flag determines whether image derivatives are
    * computed with respect to the image grid or with respect to the physical
@@ -187,55 +186,55 @@ public:
   itkGetConstMacro( UseImageDirection, bool );
   itkBooleanMacro( UseImageDirection );
 
-
 protected:
+
   ReducedDimensionBSplineInterpolateImageFunction();
-  virtual ~ReducedDimensionBSplineInterpolateImageFunction() {};
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  virtual ~ReducedDimensionBSplineInterpolateImageFunction() {}
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   // These are needed by the smoothing spline routine.
-  std::vector<CoefficientDataType>    m_Scratch;        // temp storage for processing of Coefficients
-  typename TImageType::SizeType       m_DataLength;  // Image size
-  unsigned int                        m_SplineOrder; // User specified spline order (3rd or cubic is the default)
+  std::vector< CoefficientDataType > m_Scratch;      // temp storage for processing of Coefficients
+  typename TImageType::SizeType m_DataLength;        // Image size
+  unsigned int m_SplineOrder;                        // User specified spline order (3rd or cubic is the default)
 
-  typename CoefficientImageType::ConstPointer       m_Coefficients; // Spline coefficients
+  typename CoefficientImageType::ConstPointer m_Coefficients;       // Spline coefficients
 
 private:
-  ReducedDimensionBSplineInterpolateImageFunction( const Self& ); //purposely not implemented
-  void operator=( const Self& ); //purposely not implemented
+
+  ReducedDimensionBSplineInterpolateImageFunction( const Self & ); //purposely not implemented
+  void operator=( const Self & );                                  //purposely not implemented
 
   /** Determines the weights for interpolation of the value x */
   void SetInterpolationWeights( const ContinuousIndexType & x,
-                                const vnl_matrix<long> & EvaluateIndex,
-                                vnl_matrix<double> & weights,
-                                unsigned int splineOrder ) const;
+    const vnl_matrix< long > & EvaluateIndex,
+    vnl_matrix< double > & weights,
+    unsigned int splineOrder ) const;
 
   /** Determines the weights for the derivative portion of the value x */
   void SetDerivativeWeights( const ContinuousIndexType & x,
-                             const vnl_matrix<long> & EvaluateIndex,
-                             vnl_matrix<double> & weights,
-                             unsigned int splineOrder ) const;
+    const vnl_matrix< long > & EvaluateIndex,
+    vnl_matrix< double > & weights,
+    unsigned int splineOrder ) const;
 
   /** Precomputation for converting the 1D index of the interpolation neighborhood
     * to an N-dimensional index. */
-  void GeneratePointsToIndex(  );
+  void GeneratePointsToIndex();
 
   /** Determines the indicies to use give the splines region of support */
-  void DetermineRegionOfSupport( vnl_matrix<long> & evaluateIndex,
-                                 const ContinuousIndexType & x,
-                                 unsigned int splineOrder ) const;
+  void DetermineRegionOfSupport( vnl_matrix< long > & evaluateIndex,
+    const ContinuousIndexType & x,
+    unsigned int splineOrder ) const;
 
   /** Set the indicies in evaluateIndex at the boundaries based on mirror
     * boundary conditions. */
-  void ApplyMirrorBoundaryConditions(vnl_matrix<long> & evaluateIndex,
-                                     unsigned int splineOrder) const;
+  void ApplyMirrorBoundaryConditions( vnl_matrix< long > & evaluateIndex,
+    unsigned int splineOrder ) const;
 
+  Iterator                 m_CIterator;                    // Iterator for traversing spline coefficients.
+  unsigned long            m_MaxNumberInterpolationPoints; // number of neighborhood points used for interpolation
+  std::vector< IndexType > m_PointsToIndex;                // Preallocation of interpolation neighborhood indicies
 
-  Iterator                  m_CIterator;    // Iterator for traversing spline coefficients.
-  unsigned long             m_MaxNumberInterpolationPoints; // number of neighborhood points used for interpolation
-  std::vector<IndexType>    m_PointsToIndex;  // Preallocation of interpolation neighborhood indicies
-
-  CoefficientFilterPointer     m_CoefficientFilter;
+  CoefficientFilterPointer m_CoefficientFilter;
 
   // flag to take or not the image direction into account when computing the
   // derivatives.

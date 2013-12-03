@@ -26,7 +26,8 @@
 #include <iomanip>
 
 //-------------------------------------------------------------------------------------
-int main( int argc, char *argv[] )
+int
+main( int argc, char * argv[] )
 {
   const unsigned int Dimension = 3;
   typedef float ScalarType;
@@ -51,14 +52,14 @@ int main( int argc, char *argv[] )
     AdvancedBSplineTransformType;
 
   // Define ITK transforms
-  AffineTransformType::Pointer      affine = AffineTransformType::New();
+  AffineTransformType::Pointer      affine      = AffineTransformType::New();
   TranslationTransformType::Pointer translation = TranslationTransformType::New();
-  BSplineTransformType::Pointer     bspline = BSplineTransformType::New();
+  BSplineTransformType::Pointer     bspline     = BSplineTransformType::New();
 
   // Define ITK composite transform and test it
   CompositeTransformType::Pointer composite = CompositeTransformType::New();
 
-  if ( composite->GetNumberOfTransforms() != 0 )
+  if( composite->GetNumberOfTransforms() != 0 )
   {
     std::cerr << "Error in getting number of transforms from itk::CompositeTransform." << std::endl;
     return EXIT_FAILURE;
@@ -68,24 +69,24 @@ int main( int argc, char *argv[] )
   composite->AddTransform( translation );
   composite->AddTransform( bspline );
 
-  if ( composite->GetNumberOfTransforms() != 3 )
+  if( composite->GetNumberOfTransforms() != 3 )
   {
     std::cerr << "Error in getting number of transforms from itk::CompositeTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
   // Define elastix advanced composite transforms
-  AdvancedAffineTransformType::Pointer advancedAffine =
-    AdvancedAffineTransformType::New();
-  AdvancedTranslationTransformType::Pointer advancedTranslation =
-    AdvancedTranslationTransformType::New();
-  AdvancedBSplineTransformType::Pointer advancedBSpline =
-    AdvancedBSplineTransformType::New();
+  AdvancedAffineTransformType::Pointer advancedAffine
+    = AdvancedAffineTransformType::New();
+  AdvancedTranslationTransformType::Pointer advancedTranslation
+    = AdvancedTranslationTransformType::New();
+  AdvancedBSplineTransformType::Pointer advancedBSpline
+    = AdvancedBSplineTransformType::New();
 
   // Define elastix advanced composite transform and test it
-  AdvancedCombinationTransformType::Pointer advancedComposite =
-    AdvancedCombinationTransformType::New();
-  if ( advancedComposite->GetNumberOfTransforms() != 0 )
+  AdvancedCombinationTransformType::Pointer advancedComposite
+    = AdvancedCombinationTransformType::New();
+  if( advancedComposite->GetNumberOfTransforms() != 0 )
   {
     std::cerr << "Error in getting number of transforms from itk::AdvancedCombinationTransform." << std::endl;
     return EXIT_FAILURE;
@@ -93,132 +94,132 @@ int main( int argc, char *argv[] )
 
   advancedComposite->SetCurrentTransform( advancedAffine );
 
-  if ( advancedComposite->GetNumberOfTransforms() != 1 )
+  if( advancedComposite->GetNumberOfTransforms() != 1 )
   {
     std::cerr << "Error in getting number of transforms from itk::AdvancedCombinationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
   // Define the next one
-  AdvancedCombinationTransformType::Pointer advancedCompositeTranslation =
-    AdvancedCombinationTransformType::New();
+  AdvancedCombinationTransformType::Pointer advancedCompositeTranslation
+    = AdvancedCombinationTransformType::New();
   advancedCompositeTranslation->SetCurrentTransform( advancedTranslation );
   advancedComposite->SetInitialTransform( advancedCompositeTranslation );
 
-  if ( advancedCompositeTranslation->GetNumberOfTransforms() != 1 )
+  if( advancedCompositeTranslation->GetNumberOfTransforms() != 1 )
   {
     std::cerr << "Error in getting number of transforms from itk::AdvancedCombinationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  if ( advancedComposite->GetNumberOfTransforms() != 2 )
+  if( advancedComposite->GetNumberOfTransforms() != 2 )
   {
     std::cerr << "Error in getting number of transforms from itk::AdvancedCombinationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
   // Define the next one
-  AdvancedCombinationTransformType::Pointer advancedCompositeBSpline =
-    AdvancedCombinationTransformType::New();
+  AdvancedCombinationTransformType::Pointer advancedCompositeBSpline
+    = AdvancedCombinationTransformType::New();
   advancedCompositeBSpline->SetCurrentTransform( advancedBSpline );
   advancedCompositeTranslation->SetInitialTransform( advancedCompositeBSpline );
 
-  if ( advancedCompositeBSpline->GetNumberOfTransforms() != 1 )
+  if( advancedCompositeBSpline->GetNumberOfTransforms() != 1 )
   {
     std::cerr << "Error in getting number of transforms from itk::AdvancedCombinationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  if ( advancedCompositeTranslation->GetNumberOfTransforms() != 2 )
+  if( advancedCompositeTranslation->GetNumberOfTransforms() != 2 )
   {
     std::cerr << "Error in getting number of transforms from itk::AdvancedCombinationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  if ( advancedComposite->GetNumberOfTransforms() != 3 )
+  if( advancedComposite->GetNumberOfTransforms() != 3 )
   {
     std::cerr << "Error in getting number of transforms from itk::AdvancedCombinationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
   // Checks for GetNthTransform for itk::CompositeTransform
-  const AffineTransformType *isAffine =
-    dynamic_cast< const AffineTransformType * >
+  const AffineTransformType * isAffine
+    = dynamic_cast< const AffineTransformType * >
     ( composite->GetNthTransform( 0 ).GetPointer() );
-  if ( !isAffine )
+  if( !isAffine )
   {
     std::cerr << "Error expecting AffineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const TranslationTransformType *isTranslation =
-    dynamic_cast< const TranslationTransformType * >
+  const TranslationTransformType * isTranslation
+    = dynamic_cast< const TranslationTransformType * >
     ( composite->GetNthTransform( 1 ).GetPointer() );
-  if ( !isTranslation )
+  if( !isTranslation )
   {
     std::cerr << "Error expecting TranslationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const BSplineTransformType *isBSpline =
-    dynamic_cast< const BSplineTransformType * >
+  const BSplineTransformType * isBSpline
+    = dynamic_cast< const BSplineTransformType * >
     ( composite->GetNthTransform( 2 ).GetPointer() );
-  if ( !isBSpline )
+  if( !isBSpline )
   {
     std::cerr << "Error expecting BSplineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
   // Checks for GetNthTransform for itk::AdvancedCombinationTransform
-  const AdvancedAffineTransformType *isAdvancedAffine0 =
-    dynamic_cast< const AdvancedAffineTransformType * >
+  const AdvancedAffineTransformType * isAdvancedAffine0
+    = dynamic_cast< const AdvancedAffineTransformType * >
     ( advancedComposite->GetNthTransform( 0 ).GetPointer() );
-  if ( !isAdvancedAffine0 )
+  if( !isAdvancedAffine0 )
   {
     std::cerr << "Error expecting AdvancedAffineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedTranslationTransformType *isAdvancedTranslation0 =
-    dynamic_cast< const AdvancedTranslationTransformType * >
+  const AdvancedTranslationTransformType * isAdvancedTranslation0
+    = dynamic_cast< const AdvancedTranslationTransformType * >
     ( advancedComposite->GetNthTransform( 1 ).GetPointer() );
-  if ( !isAdvancedTranslation0 )
+  if( !isAdvancedTranslation0 )
   {
     std::cerr << "Error expecting AdvancedTranslationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedBSplineTransformType *isAdvancedBSpline0 =
-    dynamic_cast< const AdvancedBSplineTransformType * >
+  const AdvancedBSplineTransformType * isAdvancedBSpline0
+    = dynamic_cast< const AdvancedBSplineTransformType * >
     ( advancedComposite->GetNthTransform( 2 ).GetPointer() );
-  if ( !isAdvancedBSpline0 )
+  if( !isAdvancedBSpline0 )
   {
     std::cerr << "Error expecting AdvancedBSplineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedTranslationTransformType *isAdvancedTranslation1 =
-    dynamic_cast< const AdvancedTranslationTransformType * >
+  const AdvancedTranslationTransformType * isAdvancedTranslation1
+    = dynamic_cast< const AdvancedTranslationTransformType * >
     ( advancedCompositeTranslation->GetNthTransform( 0 ).GetPointer() );
-  if ( !isAdvancedTranslation1 )
+  if( !isAdvancedTranslation1 )
   {
     std::cerr << "Error expecting AdvancedTranslationTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedBSplineTransformType *isAdvancedBSpline1 =
-    dynamic_cast< const AdvancedBSplineTransformType * >
+  const AdvancedBSplineTransformType * isAdvancedBSpline1
+    = dynamic_cast< const AdvancedBSplineTransformType * >
     ( advancedCompositeTranslation->GetNthTransform( 1 ).GetPointer() );
-  if ( !isAdvancedBSpline1 )
+  if( !isAdvancedBSpline1 )
   {
     std::cerr << "Error expecting AdvancedBSplineTransform." << std::endl;
     return EXIT_FAILURE;
   }
 
-  const AdvancedBSplineTransformType *isAdvancedBSpline2 =
-    dynamic_cast< const AdvancedBSplineTransformType * >
+  const AdvancedBSplineTransformType * isAdvancedBSpline2
+    = dynamic_cast< const AdvancedBSplineTransformType * >
     ( advancedCompositeBSpline->GetNthTransform( 0 ).GetPointer() );
-  if ( !isAdvancedBSpline2 )
+  if( !isAdvancedBSpline2 )
   {
     std::cerr << "Error expecting AdvancedBSplineTransform." << std::endl;
     return EXIT_FAILURE;

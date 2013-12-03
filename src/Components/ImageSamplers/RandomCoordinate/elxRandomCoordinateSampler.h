@@ -70,24 +70,24 @@ namespace elastix
  * \ingroup ImageSamplers
  */
 
-template < class TElastix >
+template< class TElastix >
 class RandomCoordinateSampler :
   public
   itk::ImageRandomCoordinateSampler<
-  typename elx::ImageSamplerBase<TElastix>::InputImageType >,
+  typename elx::ImageSamplerBase< TElastix >::InputImageType >,
   public
-  elx::ImageSamplerBase<TElastix>
+  elx::ImageSamplerBase< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef RandomCoordinateSampler                  Self;
+  typedef RandomCoordinateSampler Self;
   typedef itk::ImageRandomCoordinateSampler<
-    typename elx::ImageSamplerBase<TElastix>::InputImageType >
-                                                   Superclass1;
-  typedef elx::ImageSamplerBase<TElastix>          Superclass2;
-  typedef itk::SmartPointer<Self>                  Pointer;
-  typedef itk::SmartPointer<const Self>            ConstPointer;
+    typename elx::ImageSamplerBase< TElastix >::InputImageType >
+    Superclass1;
+  typedef elx::ImageSamplerBase< TElastix > Superclass2;
+  typedef itk::SmartPointer< Self >         Pointer;
+  typedef itk::SmartPointer< const Self >   ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -122,21 +122,21 @@ public:
 
   /** This image sampler samples the image on physical coordinates and thus
    * needs an interpolator. */
-  typedef typename Superclass1::CoordRepType                 CoordRepType;
-  typedef typename Superclass1::InterpolatorType             InterpolatorType;
-  typedef typename Superclass1::DefaultInterpolatorType      DefaultInterpolatorType;
+  typedef typename Superclass1::CoordRepType            CoordRepType;
+  typedef typename Superclass1::InterpolatorType        InterpolatorType;
+  typedef typename Superclass1::DefaultInterpolatorType DefaultInterpolatorType;
 
   /** The input image dimension. */
   itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
 
   /** Typedefs inherited from Elastix. */
-  typedef typename Superclass2::ElastixType               ElastixType;
-  typedef typename Superclass2::ElastixPointer            ElastixPointer;
-  typedef typename Superclass2::ConfigurationType         ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType          RegistrationType;
-  typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType               ITKBaseType;
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Execute stuff before each resolution:
    * \li Set the number of samples.
@@ -155,12 +155,11 @@ protected:
 private:
 
   /** The private constructor. */
-  RandomCoordinateSampler( const Self& ); // purposely not implemented
+  RandomCoordinateSampler( const Self & ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );          // purposely not implemented
+  void operator=( const Self & );          // purposely not implemented
 
 };
-
 
 } // end namespace elastix
 

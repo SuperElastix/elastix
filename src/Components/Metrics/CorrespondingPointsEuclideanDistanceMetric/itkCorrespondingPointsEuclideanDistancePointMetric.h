@@ -31,18 +31,18 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
 
-template < class TFixedPointSet, class TMovingPointSet >
+template< class TFixedPointSet, class TMovingPointSet >
 class CorrespondingPointsEuclideanDistancePointMetric :
-    public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
+  public SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef CorrespondingPointsEuclideanDistancePointMetric    Self;
+  typedef CorrespondingPointsEuclideanDistancePointMetric Self;
   typedef SingleValuedPointSetToPointSetMetric<
     TFixedPointSet, TMovingPointSet >               Superclass;
-  typedef SmartPointer<Self>                        Pointer;
-  typedef SmartPointer<const Self>                  ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -52,10 +52,10 @@ public:
     SingleValuedPointSetToPointSetMetric );
 
   /** Types transferred from the base class */
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename Superclass::TransformPointer           TransformPointer;
-  typedef typename Superclass::TransformParametersType    TransformParametersType;
-  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::TransformType           TransformType;
+  typedef typename Superclass::TransformPointer        TransformPointer;
+  typedef typename Superclass::TransformParametersType TransformParametersType;
+  typedef typename Superclass::TransformJacobianType   TransformJacobianType;
 
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
@@ -65,13 +65,13 @@ public:
   typedef typename Superclass::FixedPointSetConstPointer  FixedPointSetConstPointer;
   typedef typename Superclass::MovingPointSetConstPointer MovingPointSetConstPointer;
 
-  typedef typename Superclass::PointIterator              PointIterator;
-  typedef typename Superclass::PointDataIterator          PointDataIterator;
+  typedef typename Superclass::PointIterator     PointIterator;
+  typedef typename Superclass::PointDataIterator PointDataIterator;
 
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename OutputPointType::CoordRepType          CoordRepType;
-  typedef vnl_vector<CoordRepType>                        VnlVectorType;
+  typedef typename Superclass::InputPointType    InputPointType;
+  typedef typename Superclass::OutputPointType   OutputPointType;
+  typedef typename OutputPointType::CoordRepType CoordRepType;
+  typedef vnl_vector< CoordRepType >             VnlVectorType;
 
   typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
@@ -84,15 +84,17 @@ public:
 
   /**  Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const;
 
 protected:
+
   CorrespondingPointsEuclideanDistancePointMetric();
-  virtual ~CorrespondingPointsEuclideanDistancePointMetric() {};
+  virtual ~CorrespondingPointsEuclideanDistancePointMetric() {}
 
 private:
-  CorrespondingPointsEuclideanDistancePointMetric(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  CorrespondingPointsEuclideanDistancePointMetric( const Self & ); // purposely not implemented
+  void operator=( const Self & );                                  // purposely not implemented
 
 };
 

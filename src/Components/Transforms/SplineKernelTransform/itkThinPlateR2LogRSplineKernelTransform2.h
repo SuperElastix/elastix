@@ -31,17 +31,19 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template <class TScalarType,         // Data type for scalars (float or double)
-          unsigned int NDimensions = 3>          // Number of dimensions
+template< class TScalarType,         // Data type for scalars (float or double)
+unsigned int NDimensions = 3 >
+// Number of dimensions
 class ThinPlateR2LogRSplineKernelTransform2 :
-                public KernelTransform2<   TScalarType, NDimensions>
+  public KernelTransform2<   TScalarType, NDimensions >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef ThinPlateR2LogRSplineKernelTransform2 Self;
-  typedef KernelTransform2<    TScalarType, NDimensions>   Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef ThinPlateR2LogRSplineKernelTransform2           Self;
+  typedef KernelTransform2<    TScalarType, NDimensions > Superclass;
+  typedef SmartPointer< Self >                            Pointer;
+  typedef SmartPointer< const Self >                      ConstPointer;
 
   /** New macro for creation of through a Smart Pointer */
   itkNewMacro( Self );
@@ -50,33 +52,35 @@ public:
   itkTypeMacro( ThinPlateR2LogRSplineKernelTransform2, KernelTransform2 );
 
   /** Scalar type. */
-  typedef typename Superclass::ScalarType  ScalarType;
+  typedef typename Superclass::ScalarType ScalarType;
 
   /** Parameters type. */
-  typedef typename Superclass::ParametersType  ParametersType;
+  typedef typename Superclass::ParametersType ParametersType;
 
   /** Jacobian Type */
-  typedef typename Superclass::JacobianType  JacobianType;
+  typedef typename Superclass::JacobianType JacobianType;
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro(SpaceDimension, unsigned int,Superclass::SpaceDimension);
+  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass::SpaceDimension );
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
-  typedef typename Superclass::InputPointType  InputPointType;
-  typedef typename Superclass::OutputPointType  OutputPointType;
-  typedef typename Superclass::InputVectorType InputVectorType;
-  typedef typename Superclass::OutputVectorType OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType InputCovariantVectorType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
-  typedef typename Superclass::PointsIterator PointsIterator;
-
+  typedef typename Superclass::PointsIterator            PointsIterator;
 
 protected:
+
   ThinPlateR2LogRSplineKernelTransform2()
   {
     this->m_FastComputationPossible = true;
-  };
+  }
+
+
   virtual ~ThinPlateR2LogRSplineKernelTransform2() {}
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
@@ -91,17 +95,17 @@ protected:
    * r(x) = Euclidean norm = sqrt[x1^2 + x2^2 + x3^2]
    * \f[ r(x) = \sqrt{ x_1^2 + x_2^2 + x_3^2 }  \f]
    * I = identity matrix. */
-  void ComputeG(const InputVectorType & x, GMatrixType & GMatrix) const;
-
+  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const;
 
   /** Compute the contribution of the landmarks weighted by the kernel funcion
       to the global deformation of the space  */
   virtual void ComputeDeformationContribution( const InputPointType & inputPoint,
-                                                     OutputPointType & result ) const;
+    OutputPointType & result ) const;
 
- private:
-  ThinPlateR2LogRSplineKernelTransform2(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+private:
+
+  ThinPlateR2LogRSplineKernelTransform2( const Self & ); // purposely not implemented
+  void operator=( const Self & );                        // purposely not implemented
 
 };
 

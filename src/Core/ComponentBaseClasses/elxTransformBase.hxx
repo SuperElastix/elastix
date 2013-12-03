@@ -34,7 +34,6 @@
 #include "itkMeshFileWriter.h"
 #include "itkTransformMeshFilter.h"
 
-
 namespace itk
 {
 
@@ -47,17 +46,17 @@ namespace itk
  *
  * \ingroup ITKSystemObjects
  */
-template<class T>
+template< class T >
 class PixelTypeChangeCommand : public Command
 {
 public:
 
   /** Standard class typedefs. */
   typedef PixelTypeChangeCommand    Self;
-  typedef itk::SmartPointer<Self>   Pointer;
+  typedef itk::SmartPointer< Self > Pointer;
 
   /** This is supposed to be an ImageFileWriter */
-  typedef T                         CallerType;
+  typedef T CallerType;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( PixelTypeChangeCommand, Command );
@@ -71,25 +70,29 @@ public:
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
     castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
+
+
   virtual void Execute( const Object * caller, const EventObject & )
   {
     CallerType * castcaller = const_cast< CallerType * >(
-      dynamic_cast< const CallerType * >( caller )  );
+      dynamic_cast< const CallerType * >( caller ) );
     castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
+
 protected:
+
   PixelTypeChangeCommand() {}
   virtual ~PixelTypeChangeCommand() {}
 
 private:
-  PixelTypeChangeCommand(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  PixelTypeChangeCommand( const Self & ); // purposely not implemented
+  void operator=( const Self & );         // purposely not implemented
 
 };
 
 } // end namespace itk
-
 
 namespace elastix
 {
@@ -98,12 +101,12 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
-TransformBase<TElastix>
+template< class TElastix >
+TransformBase< TElastix >
 ::TransformBase()
 {
   /** Initialize. */
-  this->m_TransformParametersPointer = 0;
+  this->m_TransformParametersPointer   = 0;
   this->m_ReadWriteTransformParameters = true;
 
 } // end Constructor()
@@ -113,12 +116,12 @@ TransformBase<TElastix>
  * ********************** Destructor ****************************
  */
 
-template <class TElastix>
-TransformBase<TElastix>
+template< class TElastix >
+TransformBase< TElastix >
 ::~TransformBase()
 {
   /** Delete. */
-  if ( this->m_TransformParametersPointer )
+  if( this->m_TransformParametersPointer )
   {
     delete this->m_TransformParametersPointer;
   }
@@ -130,9 +133,9 @@ TransformBase<TElastix>
  * ******************** BeforeAllBase ***************************
  */
 
-template <class TElastix>
+template< class TElastix >
 int
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::BeforeAllBase( void )
 {
   /** Check Command line options and print them to the logfile. */
@@ -141,7 +144,7 @@ TransformBase<TElastix>
 
   /** Check for appearance of "-t0". */
   check = this->m_Configuration->GetCommandLineArgument( "-t0" );
-  if ( check.empty() )
+  if( check.empty() )
   {
     elxout << "-t0       unspecified, so no initial transform used" << std::endl;
   }
@@ -160,8 +163,9 @@ TransformBase<TElastix>
  * ******************** BeforeAllTransformix ********************
  */
 
-template <class TElastix>
-int TransformBase<TElastix>
+template< class TElastix >
+int
+TransformBase< TElastix >
 ::BeforeAllTransformix( void )
 {
   /** Declare the return value and initialize it. */
@@ -172,17 +176,17 @@ int TransformBase<TElastix>
 
   /** Check for appearance of "-ipp". */
   check = this->m_Configuration->GetCommandLineArgument( "-ipp" );
-  if ( check != "" )
+  if( check != "" )
   {
     elxout << "-ipp      " << check << std::endl;
     // Deprecated since elastix 4.3
-    xl::xout["warning"] << "WARNING: \"-ipp\" is deprecated, use \"-def\" instead!"
-      << std::endl;
+    xl::xout[ "warning" ] << "WARNING: \"-ipp\" is deprecated, use \"-def\" instead!"
+                          << std::endl;
   }
 
   /** Check for appearance of "-def". */
   check = this->m_Configuration->GetCommandLineArgument( "-def" );
-  if ( check == "" )
+  if( check == "" )
   {
     elxout << "-def      unspecified, so no input points transformed" << std::endl;
   }
@@ -193,7 +197,7 @@ int TransformBase<TElastix>
 
   /** Check for appearance of "-jac". */
   check = this->m_Configuration->GetCommandLineArgument( "-jac" );
-  if ( check == "" )
+  if( check == "" )
   {
     elxout << "-jac      unspecified, so no det(dT/dx) computed" << std::endl;
   }
@@ -204,7 +208,7 @@ int TransformBase<TElastix>
 
   /** Check for appearance of "-jacmat". */
   check = this->m_Configuration->GetCommandLineArgument( "-jacmat" );
-  if ( check == "" )
+  if( check == "" )
   {
     elxout << "-jacmat   unspecified, so no dT/dx computed" << std::endl;
   }
@@ -223,9 +227,9 @@ int TransformBase<TElastix>
  * ******************* BeforeRegistrationBase *******************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::BeforeRegistrationBase( void )
 {
   /** Read from the configuration file how to combine the initial
@@ -236,11 +240,11 @@ TransformBase<TElastix>
     howToCombineTransforms, "HowToCombineTransforms", 0, false );
 
   /** Check if this is a CombinationTransform. */
-  CombinationTransformType * thisAsGrouper =
-    dynamic_cast< CombinationTransformType * >( this );
-  if ( thisAsGrouper )
+  CombinationTransformType * thisAsGrouper
+    = dynamic_cast< CombinationTransformType * >( this );
+  if( thisAsGrouper )
   {
-    if ( howToCombineTransforms == "Compose" )
+    if( howToCombineTransforms == "Compose" )
     {
       thisAsGrouper->SetUseComposition( true );
     }
@@ -255,11 +259,11 @@ TransformBase<TElastix>
    * No need to cast to InitialAdvancedTransformType, since InitialAdvancedTransformType
    * inherits from InitialTransformType.
    */
-  if ( this->m_Elastix->GetInitialTransform() )
+  if( this->m_Elastix->GetInitialTransform() )
   {
-    InitialTransformType * testPointer = dynamic_cast<InitialTransformType* >(
+    InitialTransformType * testPointer = dynamic_cast< InitialTransformType * >(
       this->m_Elastix->GetInitialTransform() );
-    if ( testPointer )
+    if( testPointer )
     {
       this->SetInitialTransform( testPointer );
     }
@@ -267,9 +271,9 @@ TransformBase<TElastix>
   else
   {
     std::string fileName =  this->m_Configuration->GetCommandLineArgument( "-t0" );
-    if ( !fileName.empty() )
+    if( !fileName.empty() )
     {
-      if ( itksys::SystemTools::FileExists( fileName.c_str() ) )
+      if( itksys::SystemTools::FileExists( fileName.c_str() ) )
       {
         this->ReadInitialTransformFromFile( fileName.c_str() );
       }
@@ -287,9 +291,9 @@ TransformBase<TElastix>
  * ******************* GetInitialTransform **********************
  */
 
-template <class TElastix>
-const typename TransformBase<TElastix>::InitialTransformType *
-TransformBase<TElastix>
+template< class TElastix >
+const typename TransformBase< TElastix >::InitialTransformType
+* TransformBase< TElastix >
 ::GetInitialTransform( void ) const
 {
   /** Cast to a(n Advanced)CombinationTransform. */
@@ -297,7 +301,7 @@ TransformBase<TElastix>
     = dynamic_cast< const CombinationTransformType * >( this );
 
   /** Set the initial transform. */
-  if ( thisAsGrouper )
+  if( thisAsGrouper )
   {
     return thisAsGrouper->GetInitialTransform();
   }
@@ -306,14 +310,13 @@ TransformBase<TElastix>
 
 } // end GetInitialTransform()
 
-
 /**
  * ******************* SetInitialTransform **********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::SetInitialTransform( InitialTransformType * _arg )
 {
   /** Cast to a(n Advanced)CombinationTransform. */
@@ -321,7 +324,7 @@ TransformBase<TElastix>
     = dynamic_cast< CombinationTransformType * >( this );
 
   /** Set initial transform. */
-  if ( thisAsGrouper )
+  if( thisAsGrouper )
   {
     thisAsGrouper->SetInitialTransform( _arg );
   }
@@ -335,8 +338,9 @@ TransformBase<TElastix>
  * ******************* SetFinalParameters ********************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::SetFinalParameters( void )
 {
   /** Make a local copy, since some transforms do not do this,
@@ -355,8 +359,9 @@ void TransformBase<TElastix>
  * ******************* AfterRegistrationBase ********************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::AfterRegistrationBase( void )
 {
   /** Set the final Parameters. */
@@ -369,8 +374,9 @@ void TransformBase<TElastix>
  * ******************* ReadFromFile *****************************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::ReadFromFile( void )
 {
   /** NOTE:
@@ -384,18 +390,18 @@ void TransformBase<TElastix>
   unsigned int numberOfParameters = 0;
   this->m_Configuration->ReadParameter( numberOfParameters, "NumberOfParameters", 0 );
 
-  if ( this->m_ReadWriteTransformParameters )
+  if( this->m_ReadWriteTransformParameters )
   {
     /** Get the TransformParameters pointer. */
-    if ( this->m_TransformParametersPointer )
+    if( this->m_TransformParametersPointer )
     {
       delete this->m_TransformParametersPointer;
     }
     this->m_TransformParametersPointer = new ParametersType( numberOfParameters );
 
     /** Read the TransformParameters. */
-    std::vector<ValueType> vecPar( numberOfParameters,
-      itk::NumericTraits<ValueType>::Zero );
+    std::vector< ValueType > vecPar( numberOfParameters,
+    itk::NumericTraits< ValueType >::Zero );
     this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
       0, numberOfParameters - 1, true );
 
@@ -407,17 +413,17 @@ void TransformBase<TElastix>
     const std::size_t numberOfParametersFound
       = this->m_Configuration->CountNumberOfParameterEntries( "TransformParameters" );
 
-    if ( numberOfParametersFound != numberOfParameters )
+    if( numberOfParametersFound != numberOfParameters )
     {
       std::ostringstream makeMessage( "" );
       makeMessage << "\nERROR: Invalid transform parameter file!\n"
-        << "The number of parameters in \"TransformParameters\" is "
-        << numberOfParametersFound
-        << ", which does not match the number specified in \"NumberOfParameters\" ("
-        << numberOfParameters << ").\n"
-        << "The transform parameters should be specified as:\n"
-        << "  (TransformParameters num num ... num)\n"
-        << "with " << numberOfParameters << " parameters." << std::endl;
+                  << "The number of parameters in \"TransformParameters\" is "
+                  << numberOfParametersFound
+                  << ", which does not match the number specified in \"NumberOfParameters\" ("
+                  << numberOfParameters << ").\n"
+                  << "The transform parameters should be specified as:\n"
+                  << "  (TransformParameters num num ... num)\n"
+                  << "with " << numberOfParameters << " parameters." << std::endl;
       itkExceptionMacro( << makeMessage.str().c_str() );
 
       /** Historical note:
@@ -433,13 +439,13 @@ void TransformBase<TElastix>
     }
 
     /** Copy to m_TransformParametersPointer. */
-    for ( unsigned int i = 0; i < numberOfParameters; i++ )
+    for( unsigned int i = 0; i < numberOfParameters; i++ )
     {
-      (*(this->m_TransformParametersPointer))[ i ] = vecPar[ i ];
+      ( *( this->m_TransformParametersPointer ) )[ i ] = vecPar[ i ];
     }
 
     /** Set the parameters into this transform. */
-    this->GetAsITKBaseType()->SetParameters( *(this->m_TransformParametersPointer) );
+    this->GetAsITKBaseType()->SetParameters( *( this->m_TransformParametersPointer ) );
 
   } // end if this->m_ReadWriteTransformParameters
 
@@ -451,12 +457,12 @@ void TransformBase<TElastix>
     "InitialTransformParametersFileName", 0 );
 
   /** Call the function ReadInitialTransformFromFile. */
-  if ( fileName != "NoInitialTransform" )
+  if( fileName != "NoInitialTransform" )
   {
 #ifdef _ELASTIX_BUILD_LIBRARY
     /** Get initial transform index number. */
     std::istringstream to_size_t( fileName );
-    size_t index;
+    size_t             index;
     to_size_t >> index;
 
     /** We can safely read the initial transform. */
@@ -470,11 +476,11 @@ void TransformBase<TElastix>
       fileName.c_str() );
     std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(
       this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
-    if ( fullFileName1 == fullFileName2 )
+    if( fullFileName1 == fullFileName2 )
     {
       itkExceptionMacro( << "ERROR: The InitialTransformParametersFileName "
-        << "is identical to the current TransformParameters filename! "
-        << "An infinite loop is not allowed." );
+                         << "is identical to the current TransformParameters filename! "
+                         << "An infinite loop is not allowed." );
     }
 
     /** We can safely read the initial transform. */
@@ -492,11 +498,11 @@ void TransformBase<TElastix>
   /** Convert 'this' to a pointer to a CombinationTransform and set how
    * to combine the current transform with the initial transform.
    */
-  CombinationTransformType * thisAsGrouper =
-    dynamic_cast< CombinationTransformType * >( this );
-  if ( thisAsGrouper )
+  CombinationTransformType * thisAsGrouper
+    = dynamic_cast< CombinationTransformType * >( this );
+  if( thisAsGrouper )
   {
-    if ( howToCombineTransforms == "Compose" )
+    if( howToCombineTransforms == "Compose" )
     {
       thisAsGrouper->SetUseComposition( true );
     }
@@ -520,8 +526,9 @@ void TransformBase<TElastix>
  * ******************* ReadInitialTransformFromVector *****************************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::ReadInitialTransformFromVector( const size_t index )
 {
   /** Retrieve configuration object from internally stored vector of configuration objects. */
@@ -545,7 +552,7 @@ void TransformBase<TElastix>
     initialTransform.GetPointer() );
 
   /** Call the ReadFromFile method of the initialTransform. */
-  if ( elx_initialTransform )
+  if( elx_initialTransform )
   {
     //elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
     elx_initialTransform->SetElastix( this->GetElastix() );
@@ -553,23 +560,24 @@ void TransformBase<TElastix>
     elx_initialTransform->ReadFromFile();
 
     /** Set initial transform. */
-    InitialTransformType * testPointer =
-      dynamic_cast<InitialTransformType* >( initialTransform.GetPointer() );
-    if ( testPointer )
+    InitialTransformType * testPointer
+      = dynamic_cast< InitialTransformType * >( initialTransform.GetPointer() );
+    if( testPointer )
     {
       this->SetInitialTransform( testPointer );
     }
 
   } // end if
-} // end ReadInitialTransformFromVector()
+}   // end ReadInitialTransformFromVector()
 
 
 /**
  * ******************* ReadInitialTransformFromFile *************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::ReadInitialTransformFromFile( const char * transformParametersFileName )
 {
   /** Create a new configuration, which will be initialized with
@@ -583,10 +591,10 @@ void TransformBase<TElastix>
 
   int initfailure = configurationInitialTransform->Initialize(
     argmapInitialTransform );
-  if ( initfailure != 0 )
+  if( initfailure != 0 )
   {
     itkGenericExceptionMacro( << "ERROR: Reading initial transform "
-      << "parameters failed: " << transformParametersFileName );
+                              << "parameters failed: " << transformParametersFileName );
   }
 
   /** Read the InitialTransform name. */
@@ -606,7 +614,7 @@ void TransformBase<TElastix>
     initialTransform.GetPointer() );
 
   /** Call the ReadFromFile method of the initialTransform. */
-  if ( elx_initialTransform )
+  if( elx_initialTransform )
   {
     //elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
     elx_initialTransform->SetElastix( this->GetElastix() );
@@ -614,9 +622,9 @@ void TransformBase<TElastix>
     elx_initialTransform->ReadFromFile();
 
     /** Set initial transform. */
-    InitialTransformType * testPointer =
-      dynamic_cast<InitialTransformType* >( initialTransform.GetPointer() );
-    if ( testPointer )
+    InitialTransformType * testPointer
+      = dynamic_cast< InitialTransformType * >( initialTransform.GetPointer() );
+    if( testPointer )
     {
       this->SetInitialTransform( testPointer );
     }
@@ -630,8 +638,9 @@ void TransformBase<TElastix>
  * ******************* WriteToFile ******************************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::WriteToFile( void ) const
 {
   /** Write the current set parameters to file. */
@@ -644,99 +653,100 @@ void TransformBase<TElastix>
  * ******************* WriteToFile ******************************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::WriteToFile( const ParametersType & param ) const
 {
   using namespace xl;
 
   /** Write the name of this transform. */
-  xout["transpar"] << "(Transform \""
-    << this->elxGetClassName() << "\")" << std::endl;
+  xout[ "transpar" ] << "(Transform \""
+                     << this->elxGetClassName() << "\")" << std::endl;
 
   /** Get the number of parameters of this transform. */
   unsigned int nrP = param.GetSize();
 
   /** Write the number of parameters of this transform. */
-  xout["transpar"] << "(NumberOfParameters "
-    << nrP << ")" << std::endl;
+  xout[ "transpar" ] << "(NumberOfParameters "
+                     << nrP << ")" << std::endl;
 
   /** Write the parameters of this transform. */
-  if ( this->m_ReadWriteTransformParameters )
+  if( this->m_ReadWriteTransformParameters )
   {
     /** In this case, write in a normal way to the parameter file. */
-    xout["transpar"] << "(TransformParameters ";
-    for ( unsigned int i = 0; i < nrP - 1; i++ )
+    xout[ "transpar" ] << "(TransformParameters ";
+    for( unsigned int i = 0; i < nrP - 1; i++ )
     {
-      xout["transpar"] << param[ i ] << " ";
+      xout[ "transpar" ] << param[ i ] << " ";
     }
-    xout["transpar"] << param[ nrP - 1 ] << ")" << std::endl;
+    xout[ "transpar" ] << param[ nrP - 1 ] << ")" << std::endl;
   }
 
   /** Write the name of the parameters-file of the initial transform. */
-  if ( this->GetInitialTransform() )
+  if( this->GetInitialTransform() )
   {
-    xout["transpar"] << "(InitialTransformParametersFileName \""
-      << (dynamic_cast<const Self *>( this->GetInitialTransform() ))
+    xout[ "transpar" ] << "(InitialTransformParametersFileName \""
+                       << ( dynamic_cast< const Self * >( this->GetInitialTransform() ) )
       ->GetTransformParametersFileName() << "\")" << std::endl;
   }
   else
   {
-    xout["transpar"]
+    xout[ "transpar" ]
       << "(InitialTransformParametersFileName \"NoInitialTransform\")"
       << std::endl;
   }
 
   /** Write the way Transforms are combined. */
-  std::string combinationMethod = "Compose";
+  std::string                      combinationMethod = "Compose";
   const CombinationTransformType * dummyComboTransform
     = dynamic_cast< const CombinationTransformType * >( this );
-  if ( dummyComboTransform )
+  if( dummyComboTransform )
   {
-    if ( dummyComboTransform->GetUseComposition() )
+    if( dummyComboTransform->GetUseComposition() )
     {
       combinationMethod = "Compose";
     }
   }
 
-  xout["transpar"] << "(HowToCombineTransforms \""
-    << combinationMethod << "\")" << std::endl;
+  xout[ "transpar" ] << "(HowToCombineTransforms \""
+                     << combinationMethod << "\")" << std::endl;
 
   /** Write image specific things. */
-  xout["transpar"] << std::endl << "// Image specific" << std::endl;
+  xout[ "transpar" ] << std::endl << "// Image specific" << std::endl;
 
   /** Write image dimensions. */
   unsigned int FixDim = FixedImageDimension;
   unsigned int MovDim = MovingImageDimension;
-  xout["transpar"] << "(FixedImageDimension "
-    << FixDim << ")" << std::endl;
-  xout["transpar"] << "(MovingImageDimension "
-    << MovDim << ")" << std::endl;
+  xout[ "transpar" ] << "(FixedImageDimension "
+                     << FixDim << ")" << std::endl;
+  xout[ "transpar" ] << "(MovingImageDimension "
+                     << MovDim << ")" << std::endl;
 
   /** Write image pixel types. */
   std::string fixpix = "float";
   std::string movpix = "float";
   this->m_Configuration->ReadParameter( fixpix, "FixedInternalImagePixelType", 0 );
   this->m_Configuration->ReadParameter( movpix, "MovingInternalImagePixelType", 0 );
-  xout["transpar"] << "(FixedInternalImagePixelType \""
-    << fixpix << "\")" << std::endl;
-  xout["transpar"] << "(MovingInternalImagePixelType \""
-    << movpix << "\")" << std::endl;
+  xout[ "transpar" ] << "(FixedInternalImagePixelType \""
+                     << fixpix << "\")" << std::endl;
+  xout[ "transpar" ] << "(MovingInternalImagePixelType \""
+                     << movpix << "\")" << std::endl;
 
   /** Get the Size, Spacing and Origin of the fixed image. */
-  typedef typename FixedImageType::SizeType                 FixedImageSizeType;
-  typedef typename FixedImageType::IndexType                FixedImageIndexType;
-  typedef typename FixedImageType::SpacingType              FixedImageSpacingType;
-  typedef typename FixedImageType::PointType                FixedImageOriginType;
-  typedef typename FixedImageType::DirectionType            FixedImageDirectionType;
-  FixedImageSizeType size =
-    this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-  FixedImageIndexType index =
-    this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
-  FixedImageSpacingType spacing =
-    this->m_Elastix->GetFixedImage()->GetSpacing();
-  FixedImageOriginType origin =
-    this->m_Elastix->GetFixedImage()->GetOrigin();
+  typedef typename FixedImageType::SizeType      FixedImageSizeType;
+  typedef typename FixedImageType::IndexType     FixedImageIndexType;
+  typedef typename FixedImageType::SpacingType   FixedImageSpacingType;
+  typedef typename FixedImageType::PointType     FixedImageOriginType;
+  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
+  FixedImageSizeType size
+    = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  FixedImageIndexType index
+    = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
+  FixedImageSpacingType spacing
+    = this->m_Elastix->GetFixedImage()->GetSpacing();
+  FixedImageOriginType origin
+    = this->m_Elastix->GetFixedImage()->GetOrigin();
   /** The following line would be logically: */
   //FixedImageDirectionType direction =
   //  this->m_Elastix->GetFixedImage()->GetDirection();
@@ -745,66 +755,66 @@ void TransformBase<TElastix>
   this->GetElastix()->GetOriginalFixedImageDirection( direction );
 
   /** Write image Size. */
-  xout["transpar"] << "(Size ";
-  for ( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
+  xout[ "transpar" ] << "(Size ";
+  for( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
   {
-    xout["transpar"] << size[ i ] << " ";
+    xout[ "transpar" ] << size[ i ] << " ";
   }
-  xout["transpar"] << size[ FixedImageDimension - 1 ] << ")" << std::endl;
+  xout[ "transpar" ] << size[ FixedImageDimension - 1 ] << ")" << std::endl;
 
   /** Write image Index. */
-  xout["transpar"] << "(Index ";
-  for ( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
+  xout[ "transpar" ] << "(Index ";
+  for( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
   {
-    xout["transpar"] << index[ i ] << " ";
+    xout[ "transpar" ] << index[ i ] << " ";
   }
-  xout["transpar"] << index[ FixedImageDimension - 1 ] << ")" << std::endl;
+  xout[ "transpar" ] << index[ FixedImageDimension - 1 ] << ")" << std::endl;
 
   /** Set the precision of cout to 10, because Spacing and
    * Origin must have at least one digit precision.
    */
-  xout["transpar"] << std::setprecision(10);
+  xout[ "transpar" ] << std::setprecision( 10 );
 
   /** Write image Spacing. */
-  xout["transpar"] << "(Spacing ";
-  for ( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
+  xout[ "transpar" ] << "(Spacing ";
+  for( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
   {
-    xout["transpar"] << spacing[ i ] << " ";
+    xout[ "transpar" ] << spacing[ i ] << " ";
   }
-  xout["transpar"] << spacing[ FixedImageDimension - 1 ] << ")" << std::endl;
+  xout[ "transpar" ] << spacing[ FixedImageDimension - 1 ] << ")" << std::endl;
 
   /** Write image Origin. */
-  xout["transpar"] << "(Origin ";
-  for ( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
+  xout[ "transpar" ] << "(Origin ";
+  for( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
   {
-    xout["transpar"] << origin[ i ] << " ";
+    xout[ "transpar" ] << origin[ i ] << " ";
   }
-  xout["transpar"] << origin[ FixedImageDimension - 1 ] << ")" << std::endl;
+  xout[ "transpar" ] << origin[ FixedImageDimension - 1 ] << ")" << std::endl;
 
   /** Write direction cosines. */
-  xout["transpar"] << "(Direction";
-  for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+  xout[ "transpar" ] << "(Direction";
+  for( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-    for ( unsigned int j = 0; j < FixedImageDimension; j++ )
+    for( unsigned int j = 0; j < FixedImageDimension; j++ )
     {
-      xout["transpar"] << " " << direction( j, i );
+      xout[ "transpar" ] << " " << direction( j, i );
     }
   }
-  xout["transpar"] << ")" << std::endl;
+  xout[ "transpar" ] << ")" << std::endl;
 
   /** Set the precision back to default value. */
-  xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
+  xout[ "transpar" ] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
 
   /** Write whether the direction cosines should be taken into account.
    * This parameter is written from elastix 4.203.
    */
   std::string useDirectionCosinesBool = "false";
-  if ( this->GetElastix()->GetUseDirectionCosines() )
+  if( this->GetElastix()->GetUseDirectionCosines() )
   {
     useDirectionCosinesBool = "true";
   }
-  xout["transpar"] << "(UseDirectionCosines \""
-    << useDirectionCosinesBool << "\")" << std::endl;
+  xout[ "transpar" ] << "(UseDirectionCosines \""
+                     << useDirectionCosinesBool << "\")" << std::endl;
 
 } // end WriteToFile()
 
@@ -813,14 +823,15 @@ void TransformBase<TElastix>
  * ******************* CreateTransformParametersMap ******************************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::CreateTransformParametersMap(
   const ParametersType & param,
   ParameterMapType * paramsMap ) const
 {
-  std::ostringstream tmpStream;
-  std::string parameterName;
+  std::ostringstream         tmpStream;
+  std::string                parameterName;
   std::vector< std::string > parameterValues;
 
   /** Write the name of this transform. */
@@ -834,19 +845,19 @@ void TransformBase<TElastix>
 
   /** Write the number of parameters of this transform. */
   parameterName = "NumberOfParameters";
-  tmpStream.str(""); tmpStream << nrP;
+  tmpStream.str( "" ); tmpStream << nrP;
   parameterValues.push_back( tmpStream.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
   /** Write the parameters of this transform. */
-  if ( this->m_ReadWriteTransformParameters )
+  if( this->m_ReadWriteTransformParameters )
   {
     /** In this case, write in a normal way to the parameter file. */
     parameterName = "TransformParameters";
-    for ( unsigned int i = 0; i < nrP; i++ )
+    for( unsigned int i = 0; i < nrP; i++ )
     {
-      tmpStream.str(""); tmpStream << param[ i ];
+      tmpStream.str( "" ); tmpStream << param[ i ];
       parameterValues.push_back( tmpStream.str() );
     }
     paramsMap->insert( make_pair( parameterName, parameterValues ) );
@@ -854,11 +865,11 @@ void TransformBase<TElastix>
   }
 
   /** Write the name of the parameters-file of the initial transform. */
-  if ( this->GetInitialTransform() )
+  if( this->GetInitialTransform() )
   {
     parameterName = "InitialTransformParametersFileName";
-    parameterValues.push_back( (dynamic_cast<const Self *>(
-      this->GetInitialTransform() ) )->GetTransformParametersFileName() );
+    parameterValues.push_back( ( dynamic_cast< const Self * >(
+        this->GetInitialTransform() ) )->GetTransformParametersFileName() );
     paramsMap->insert( make_pair( parameterName, parameterValues ) );
     parameterValues.clear();
   }
@@ -871,7 +882,7 @@ void TransformBase<TElastix>
   }
 
   /** Write the way Transforms are combined. */
-  std::string combinationMethod = "Compose";
+  std::string                      combinationMethod = "Compose";
   const CombinationTransformType * dummyComboTransform
     = dynamic_cast< const CombinationTransformType * >( this );
   if( dummyComboTransform )
@@ -894,13 +905,13 @@ void TransformBase<TElastix>
   const unsigned int fixDim = FixedImageDimension;
   const unsigned int movDim = MovingImageDimension;
   parameterName = "FixedImageDimension";
-  tmpStream.str(""); tmpStream << fixDim;
+  tmpStream.str( "" ); tmpStream << fixDim;
   parameterValues.push_back( tmpStream.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
   parameterName = "MovingImageDimension";
-  tmpStream.str(""); tmpStream << movDim;
+  tmpStream.str( "" ); tmpStream << movDim;
   parameterValues.push_back( tmpStream.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
@@ -922,19 +933,19 @@ void TransformBase<TElastix>
   parameterValues.clear();
 
   /** Get the Size, Spacing and Origin of the fixed image. */
-  typedef typename FixedImageType::SizeType                 FixedImageSizeType;
-  typedef typename FixedImageType::IndexType                FixedImageIndexType;
-  typedef typename FixedImageType::SpacingType              FixedImageSpacingType;
-  typedef typename FixedImageType::PointType                FixedImageOriginType;
-  typedef typename FixedImageType::DirectionType            FixedImageDirectionType;
-  FixedImageSizeType size =
-    this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-  FixedImageIndexType index =
-    this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
-  FixedImageSpacingType spacing =
-    this->m_Elastix->GetFixedImage()->GetSpacing();
-  FixedImageOriginType origin =
-    this->m_Elastix->GetFixedImage()->GetOrigin();
+  typedef typename FixedImageType::SizeType      FixedImageSizeType;
+  typedef typename FixedImageType::IndexType     FixedImageIndexType;
+  typedef typename FixedImageType::SpacingType   FixedImageSpacingType;
+  typedef typename FixedImageType::PointType     FixedImageOriginType;
+  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
+  FixedImageSizeType size
+    = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  FixedImageIndexType index
+    = this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
+  FixedImageSpacingType spacing
+    = this->m_Elastix->GetFixedImage()->GetSpacing();
+  FixedImageOriginType origin
+    = this->m_Elastix->GetFixedImage()->GetOrigin();
   /** The following line would be logically: */
   //FixedImageDirectionType direction =
   //  this->m_Elastix->GetFixedImage()->GetDirection();
@@ -944,9 +955,9 @@ void TransformBase<TElastix>
 
   /** Write image Size. */
   parameterName = "Size";
-  for ( unsigned int i = 0; i < FixedImageDimension ; i++ )
+  for( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-    tmpStream.str(""); tmpStream << size[ i ];
+    tmpStream.str( "" ); tmpStream << size[ i ];
     parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
@@ -954,9 +965,9 @@ void TransformBase<TElastix>
 
   /** Write image Index. */
   parameterName = "Index";
-  for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+  for( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-    tmpStream.str(""); tmpStream << index[ i ];
+    tmpStream.str( "" ); tmpStream << index[ i ];
     parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
@@ -969,9 +980,9 @@ void TransformBase<TElastix>
 
   /** Write image Spacing. */
   parameterName = "Spacing";
-  for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+  for( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-    tmpStream.str(""); tmpStream << spacing[ i ];
+    tmpStream.str( "" ); tmpStream << spacing[ i ];
     parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
@@ -979,9 +990,9 @@ void TransformBase<TElastix>
 
   /** Write image Origin. */
   parameterName = "Origin";
-  for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+  for( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-    tmpStream.str(""); tmpStream << origin[ i ];
+    tmpStream.str( "" ); tmpStream << origin[ i ];
     parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
@@ -989,11 +1000,11 @@ void TransformBase<TElastix>
 
   /** Write direction cosines. */
   parameterName = "Direction";
-  for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+  for( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-    for ( unsigned int j = 0; j < FixedImageDimension; j++ )
+    for( unsigned int j = 0; j < FixedImageDimension; j++ )
     {
-      tmpStream.str(""); tmpStream << direction( j, i );
+      tmpStream.str( "" ); tmpStream << direction( j, i );
       parameterValues.push_back( tmpStream.str() );
     }
   }
@@ -1007,7 +1018,7 @@ void TransformBase<TElastix>
    * This parameter is written from elastix 4.203.
    */
   std::string useDirectionCosinesBool = "false";
-  if ( this->GetElastix()->GetUseDirectionCosines() )
+  if( this->GetElastix()->GetUseDirectionCosines() )
   {
     useDirectionCosinesBool = "true";
   }
@@ -1027,53 +1038,56 @@ void TransformBase<TElastix>
  * coordinates.
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::TransformPoints( void ) const
 {
   /** If the optional command "-def" is given in the command
    * line arguments, then and only then we continue.
    */
   const std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
-  std::string def = this->GetConfiguration()->GetCommandLineArgument( "-def" );
+  std::string       def = this->GetConfiguration()->GetCommandLineArgument( "-def" );
 
   /** For backwards compatibility def = ipp. */
-  if ( def != "" && ipp != "" )
+  if( def != "" && ipp != "" )
   {
     itkExceptionMacro( << "ERROR: Can not use both \"-def\" and \"-ipp\"!\n"
-      << "  \"-ipp\" is deprecated, use only \"-def\".\n" );
+                       << "  \"-ipp\" is deprecated, use only \"-def\".\n" );
   }
-  else if ( def == "" && ipp != "" ) def = ipp;
+  else if( def == "" && ipp != "" )
+  {
+    def = ipp;
+  }
 
   /** If there is an input point-file? */
-  if ( def != "" && def != "all" )
+  if( def != "" && def != "all" )
   {
-    if ( itksys::SystemTools::StringEndsWith( def.c_str(), ".vtk" ) ||
-         itksys::SystemTools::StringEndsWith( def.c_str(), ".VTK" ) )
+    if( itksys::SystemTools::StringEndsWith( def.c_str(), ".vtk" )
+      || itksys::SystemTools::StringEndsWith( def.c_str(), ".VTK" ) )
     {
       elxout << "  The transform is evaluated on some points, "
-        << "specified in a VTK input point file." << std::endl;
-        this->TransformPointsSomePointsVTK( def );
+             << "specified in a VTK input point file." << std::endl;
+      this->TransformPointsSomePointsVTK( def );
     }
     else
     {
       elxout << "  The transform is evaluated on some points, "
-        << "specified in the input point file." << std::endl;
+             << "specified in the input point file." << std::endl;
       this->TransformPointsSomePoints( def );
     }
   }
-  else if ( def == "all" )
+  else if( def == "all" )
   {
     elxout << "  The transform is evaluated on all points. "
-      << "The result is a deformation field." << std::endl;
+           << "The result is a deformation field." << std::endl;
     this->TransformPointsAllPoints();
   }
   else
   {
     // just a message
     elxout << "  The command-line option \"-def\" is not used, "
-      << "so no points are transformed" << std::endl;
+           << "so no points are transformed" << std::endl;
   }
 
 } // end TransformPoints()
@@ -1092,9 +1106,9 @@ TransformBase<TElastix>
  * the input point. Save the results.
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::TransformPointsSomePoints( const std::string filename ) const
 {
   /** Typedef's. */
@@ -1106,20 +1120,20 @@ TransformBase<TElastix>
   typedef typename MovingImageType::IndexType           MovingImageIndexType;
   typedef typename MovingImageIndexType::IndexValueType MovingImageIndexValueType;
   typedef
-    itk::ContinuousIndex<double, FixedImageDimension>   FixedImageContinuousIndexType;
+    itk::ContinuousIndex< double, FixedImageDimension >   FixedImageContinuousIndexType;
   typedef
-    itk::ContinuousIndex<double, MovingImageDimension>  MovingImageContinuousIndexType;
-  typedef typename FixedImageType::DirectionType        FixedImageDirectionType;
+    itk::ContinuousIndex< double, MovingImageDimension >  MovingImageContinuousIndexType;
+  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
-  typedef bool                                          DummyIPPPixelType;
+  typedef bool DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<
     DummyIPPPixelType, FixedImageDimension,
-    FixedImageDimension, CoordRepType>                  MeshTraitsType;
+    FixedImageDimension, CoordRepType >                  MeshTraitsType;
   typedef itk::PointSet< DummyIPPPixelType,
-    FixedImageDimension, MeshTraitsType>                PointSetType;
+    FixedImageDimension, MeshTraitsType >                PointSetType;
   typedef itk::TransformixInputPointFileReader<
     PointSetType >                                      IPPReaderType;
-  typedef itk::Vector< float, FixedImageDimension >     DeformationVectorType;
+  typedef itk::Vector< float, FixedImageDimension > DeformationVectorType;
 
   /** Construct an ipp-file reader. */
   typename IPPReaderType::Pointer ippReader = IPPReaderType::New();
@@ -1131,14 +1145,14 @@ TransformBase<TElastix>
   {
     ippReader->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch( itk::ExceptionObject & err )
   {
-    xl::xout["error"] << "  Error while opening input point file." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout[ "error" ] << "  Error while opening input point file." << std::endl;
+    xl::xout[ "error" ] << err << std::endl;
   }
 
   /** Some user-feedback. */
-  if ( ippReader->GetPointsAreIndices() )
+  if( ippReader->GetPointsAreIndices() )
   {
     elxout << "  Input points are specified as image indices." << std::endl;
   }
@@ -1153,24 +1167,24 @@ TransformBase<TElastix>
   typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
 
   /** Create the storage classes. */
-  std::vector< FixedImageIndexType >    inputindexvec(  nrofpoints );
-  std::vector< InputPointType >         inputpointvec(  nrofpoints );
-  std::vector< OutputPointType >        outputpointvec( nrofpoints );
-  std::vector< FixedImageIndexType >    outputindexfixedvec( nrofpoints );
-  std::vector< MovingImageIndexType >   outputindexmovingvec( nrofpoints );
-  std::vector< DeformationVectorType >  deformationvec( nrofpoints );
+  std::vector< FixedImageIndexType >   inputindexvec(  nrofpoints );
+  std::vector< InputPointType >        inputpointvec(  nrofpoints );
+  std::vector< OutputPointType >       outputpointvec( nrofpoints );
+  std::vector< FixedImageIndexType >   outputindexfixedvec( nrofpoints );
+  std::vector< MovingImageIndexType >  outputindexmovingvec( nrofpoints );
+  std::vector< DeformationVectorType > deformationvec( nrofpoints );
 
   /** Make a temporary image with the right region info,
    * which we can use to convert between points and indices.
    * By taking the image from the resampler output, the UseDirectionCosines
    * parameter is automatically taken into account. */
   FixedImageRegionType region;
-  FixedImageOriginType origin =
-    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
-  FixedImageSpacingType spacing =
-    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
-  FixedImageDirectionType direction =
-    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection();
+  FixedImageOriginType origin
+    = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
+  FixedImageSpacingType spacing
+    = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
+  FixedImageDirectionType direction
+    = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection();
   region.SetIndex(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
   region.SetSize(
@@ -1183,21 +1197,21 @@ TransformBase<TElastix>
   dummyImage->SetDirection( direction );
 
   /** Temp vars */
-  FixedImageContinuousIndexType fixedcindex;
+  FixedImageContinuousIndexType  fixedcindex;
   MovingImageContinuousIndexType movingcindex;
 
   /** Also output moving image indices if a moving image was supplied. */
   bool alsoMovingIndices = false;
   typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
-  if ( movingImage.IsNotNull() )
+  if( movingImage.IsNotNull() )
   {
     alsoMovingIndices = true;
   }
 
   /** Read the input points, as index or as point. */
-  if ( !(ippReader->GetPointsAreIndices()) )
+  if( !( ippReader->GetPointsAreIndices() ) )
   {
-    for ( unsigned int j = 0; j < nrofpoints; j++ )
+    for( unsigned int j = 0; j < nrofpoints; j++ )
     {
       /** Compute index of nearest voxel in fixed image. */
       InputPointType point; point.Fill( 0.0f );
@@ -1205,26 +1219,26 @@ TransformBase<TElastix>
       inputpointvec[ j ] = point;
       dummyImage->TransformPhysicalPointToContinuousIndex(
         point, fixedcindex );
-      for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+      for( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
-        inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-          itk::Math::Round<double>( fixedcindex[ i ] ) );
+        inputindexvec[ j ][ i ] = static_cast< FixedImageIndexValueType >(
+          itk::Math::Round< double >( fixedcindex[ i ] ) );
       }
     }
   }
   else //so: inputasindex
   {
-    for ( unsigned int j = 0; j < nrofpoints; j++ )
+    for( unsigned int j = 0; j < nrofpoints; j++ )
     {
       /** The read point from the inutPointSet is actually an index
        * Cast to the proper type.
        */
       InputPointType point; point.Fill( 0.0f );
       inputPointSet->GetPoint( j, &point );
-      for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+      for( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
-        inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-          itk::Math::Round<double>( point[ i ] ) );
+        inputindexvec[ j ][ i ] = static_cast< FixedImageIndexValueType >(
+          itk::Math::Round< double >( point[ i ] ) );
       }
       /** Compute the input point in physical coordinates. */
       dummyImage->TransformIndexToPhysicalPoint(
@@ -1234,7 +1248,7 @@ TransformBase<TElastix>
 
   /** Apply the transform. */
   elxout << "  The input points are transformed." << std::endl;
-  for ( unsigned int j = 0; j < nrofpoints; j++ )
+  for( unsigned int j = 0; j < nrofpoints; j++ )
   {
     /** Call TransformPoint. */
     outputpointvec[ j ] = this->GetAsITKBaseType()->TransformPoint( inputpointvec[ j ] );
@@ -1242,21 +1256,21 @@ TransformBase<TElastix>
     /** Transform back to index in fixed image domain. */
     dummyImage->TransformPhysicalPointToContinuousIndex(
       outputpointvec[ j ], fixedcindex );
-    for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+    for( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
-      outputindexfixedvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-        itk::Math::Round<double>( fixedcindex[ i ] ) );
+      outputindexfixedvec[ j ][ i ] = static_cast< FixedImageIndexValueType >(
+        itk::Math::Round< double >( fixedcindex[ i ] ) );
     }
 
-    if ( alsoMovingIndices )
+    if( alsoMovingIndices )
     {
       /** Transform back to index in moving image domain. */
       movingImage->TransformPhysicalPointToContinuousIndex(
         outputpointvec[ j ], movingcindex );
-      for ( unsigned int i = 0; i < MovingImageDimension; i++ )
+      for( unsigned int i = 0; i < MovingImageDimension; i++ )
       {
-        outputindexmovingvec[ j ][ i ] = static_cast<MovingImageIndexValueType>(
-          itk::Math::Round<double>( movingcindex[ i ] ) );
+        outputindexmovingvec[ j ][ i ] = static_cast< MovingImageIndexValueType >(
+          itk::Math::Round< double >( movingcindex[ i ] ) );
       }
     }
 
@@ -1271,51 +1285,51 @@ TransformBase<TElastix>
   std::ofstream outputPointsFile( outputPointsFileName.c_str() );
   outputPointsFile << std::showpoint << std::fixed;
   elxout << "  The transformed points are saved in: "
-    <<  outputPointsFileName << std::endl;
+         <<  outputPointsFileName << std::endl;
 
   /** Print the results. */
-  for ( unsigned int j = 0; j < nrofpoints; j++ )
+  for( unsigned int j = 0; j < nrofpoints; j++ )
   {
     /** The input index. */
     outputPointsFile << "Point\t" << j << "\t; InputIndex = [ ";
-    for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+    for( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
       outputPointsFile << inputindexvec[ j ][ i ] << " ";
     }
 
     /** The input point. */
     outputPointsFile << "]\t; InputPoint = [ ";
-    for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+    for( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
       outputPointsFile << inputpointvec[ j ][ i ] << " ";
     }
 
     /** The output index in fixed image. */
     outputPointsFile << "]\t; OutputIndexFixed = [ ";
-    for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+    for( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
       outputPointsFile << outputindexfixedvec[ j ][ i ] << " ";
     }
 
     /** The output point. */
     outputPointsFile << "]\t; OutputPoint = [ ";
-    for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+    for( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
       outputPointsFile << outputpointvec[ j ][ i ] << " ";
     }
 
     /** The output point minus the input point. */
     outputPointsFile << "]\t; Deformation = [ ";
-    for ( unsigned int i = 0; i < MovingImageDimension; i++ )
+    for( unsigned int i = 0; i < MovingImageDimension; i++ )
     {
       outputPointsFile << deformationvec[ j ][ i ] << " ";
     }
 
-    if ( alsoMovingIndices )
+    if( alsoMovingIndices )
     {
       /** The output index in moving image. */
       outputPointsFile << "]\t; OutputIndexMoving = [ ";
-      for ( unsigned int i = 0; i < MovingImageDimension; i++ )
+      for( unsigned int i = 0; i < MovingImageDimension; i++ )
       {
         outputPointsFile << outputindexmovingvec[ j ][ i ] << " ";
       }
@@ -1338,22 +1352,22 @@ TransformBase<TElastix>
  * Computes the transformed points, save as outputpoints.vtk.
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::TransformPointsSomePointsVTK( const std::string filename ) const
 {
   /** Typedef's. \todo test DummyIPPPixelType=bool. */
-  typedef float                                         DummyIPPPixelType;
+  typedef float DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<
     DummyIPPPixelType, FixedImageDimension,
-    FixedImageDimension, CoordRepType>                  MeshTraitsType;
+    FixedImageDimension, CoordRepType >                  MeshTraitsType;
   typedef itk::Mesh<
     DummyIPPPixelType, FixedImageDimension, MeshTraitsType > MeshType;
-  typedef itk::MeshFileReader< MeshType >               MeshReaderType;
-  typedef itk::MeshFileWriter< MeshType >               MeshWriterType;
+  typedef itk::MeshFileReader< MeshType > MeshReaderType;
+  typedef itk::MeshFileWriter< MeshType > MeshWriterType;
   typedef itk::TransformMeshFilter<
-    MeshType, MeshType, CombinationTransformType>       TransformMeshFilterType;
+    MeshType, MeshType, CombinationTransformType >       TransformMeshFilterType;
 
   /** Read the input points. */
   typename MeshReaderType::Pointer meshReader = MeshReaderType::New();
@@ -1363,10 +1377,10 @@ TransformBase<TElastix>
   {
     meshReader->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch( itk::ExceptionObject & err )
   {
-    xl::xout["error"] << "  Error while opening input point file." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout[ "error" ] << "  Error while opening input point file." << std::endl;
+    xl::xout[ "error" ] << err << std::endl;
   }
 
   /** Some user-feedback. */
@@ -1378,16 +1392,16 @@ TransformBase<TElastix>
   elxout << "  The input points are transformed." << std::endl;
   typename TransformMeshFilterType::Pointer meshTransformer = TransformMeshFilterType::New();
   meshTransformer->SetTransform(
-    const_cast<CombinationTransformType *>( this->GetAsCombinationTransform() ) );
+    const_cast< CombinationTransformType * >( this->GetAsCombinationTransform() ) );
   meshTransformer->SetInput( meshReader->GetOutput() );
   try
   {
     meshTransformer->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch( itk::ExceptionObject & err )
   {
-    xl::xout["error"] << "  Error while transforming points." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout[ "error" ] << "  Error while transforming points." << std::endl;
+    xl::xout[ "error" ] << err << std::endl;
   }
 
   /** Create filename and file stream. */
@@ -1395,7 +1409,7 @@ TransformBase<TElastix>
     ->GetCommandLineArgument( "-out" );
   outputPointsFileName += "outputpoints.vtk";
   elxout << "  The transformed points are saved in: "
-    <<  outputPointsFileName << std::endl;
+         <<  outputPointsFileName << std::endl;
   typename MeshWriterType::Pointer meshWriter = MeshWriterType::New();
   meshWriter->SetFileName( outputPointsFileName.c_str() );
   meshWriter->SetInput( meshTransformer->GetOutput() );
@@ -1404,10 +1418,10 @@ TransformBase<TElastix>
   {
     meshWriter->Update();
   }
-  catch (itk::ExceptionObject & err)
+  catch( itk::ExceptionObject & err )
   {
-    xl::xout["error"] << "  Error while saving points." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout[ "error" ] << "  Error while saving points." << std::endl;
+    xl::xout[ "error" ] << err << std::endl;
   }
 
 } // end TransformPointsSomePointsVTK()
@@ -1421,13 +1435,14 @@ TransformBase<TElastix>
  * stored in an image of vectors (of floats).
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::TransformPointsAllPoints( void ) const
 {
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType         FixedImageRegionType;
-  typedef typename FixedImageType::DirectionType      FixedImageDirectionType;
+  typedef typename FixedImageType::RegionType    FixedImageRegionType;
+  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
   typedef itk::Vector<
     float, FixedImageDimension >                      VectorPixelType;
   typedef itk::Image<
@@ -1453,14 +1468,14 @@ void TransformBase<TElastix>
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
   defGenerator->SetOutputDirection(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection() );
-  defGenerator->SetTransform( const_cast<const ITKBaseType *>( this->GetAsITKBaseType() ) );
+  defGenerator->SetTransform( const_cast< const ITKBaseType * >( this->GetAsITKBaseType() ) );
 
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false. */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
-  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( defGenerator->GetOutput() );
@@ -1476,7 +1491,7 @@ void TransformBase<TElastix>
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
   std::ostringstream makeFileName( "" );
   makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-    << "deformationField." << resultImageFormat;
+               << "deformationField." << resultImageFormat;
 
   /** Write outputImage to disk. */
   typename DeformationFieldWriterType::Pointer defWriter
@@ -1509,42 +1524,42 @@ void TransformBase<TElastix>
  * ************** ComputeDeterminantOfSpatialJacobian **********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::ComputeDeterminantOfSpatialJacobian( void ) const
 {
   /** If the optional command "-jac" is given in the command line arguments,
    * then and only then we continue.
    */
   std::string jac = this->GetConfiguration()->GetCommandLineArgument( "-jac" );
-  if ( jac == "" )
+  if( jac == "" )
   {
     elxout << "  The command-line option \"-jac\" is not used, "
-      << "so no det(dT/dx) computed." << std::endl;
+           << "so no det(dT/dx) computed." << std::endl;
     return;
   }
-  else if ( jac != "all" )
+  else if( jac != "all" )
   {
     elxout << "  WARNING: The command-line option \"-jac\" should be used as \"-jac all\",\n"
-      << "    but is specified as \"-jac " << jac << "\"\n"
-      << "    Therefore det(dT/dx) is not computed." << std::endl;
+           << "    but is specified as \"-jac " << jac << "\"\n"
+           << "    Therefore det(dT/dx) is not computed." << std::endl;
     return;
   }
 
   /** Typedef's. */
-  typedef itk::Image<float, FixedImageDimension>      JacobianImageType;
+  typedef itk::Image< float, FixedImageDimension > JacobianImageType;
   typedef itk::TransformToDeterminantOfSpatialJacobianSource<
     JacobianImageType, CoordRepType >                 JacobianGeneratorType;
-  typedef itk::ImageFileWriter< JacobianImageType >   JacobianWriterType;
+  typedef itk::ImageFileWriter< JacobianImageType > JacobianWriterType;
   typedef itk::ChangeInformationImageFilter<
     JacobianImageType >                               ChangeInfoFilterType;
-  typedef typename FixedImageType::DirectionType      FixedImageDirectionType;
+  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
   /** Create an setup Jacobian generator. */
   typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
-  jacGenerator->SetTransform( const_cast<const ITKBaseType *>(
-    this->GetAsITKBaseType() ) );
+  jacGenerator->SetTransform( const_cast< const ITKBaseType * >(
+      this->GetAsITKBaseType() ) );
   jacGenerator->SetOutputSize(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
   jacGenerator->SetOutputSpacing(
@@ -1564,7 +1579,7 @@ TransformBase<TElastix>
    * the UseDirectionCosines flag was set to false. */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
-  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( jacGenerator->GetOutput() );
@@ -1580,7 +1595,7 @@ TransformBase<TElastix>
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
   std::ostringstream makeFileName( "" );
   makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-    << "spatialJacobian." << resultImageFormat;
+               << "spatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
   typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
@@ -1612,41 +1627,41 @@ TransformBase<TElastix>
  * ************** ComputeSpatialJacobian **********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::ComputeSpatialJacobian( void ) const
 {
   /** If the optional command "-jacmat" is given in the command line arguments,
    * then and only then we continue.
    */
   std::string jac = this->GetConfiguration()->GetCommandLineArgument( "-jacmat" );
-  if ( jac != "all" )
+  if( jac != "all" )
   {
     elxout << "  The command-line option \"-jacmat\" is not used, "
-      << "so no dT/dx computed." << std::endl;
+           << "so no dT/dx computed." << std::endl;
     return;
   }
 
   /** Typedef's. */
-  typedef float                                       SpatialJacobianComponentType;
-  typedef itk::Matrix<SpatialJacobianComponentType,
-    MovingImageDimension, FixedImageDimension>        OutputSpatialJacobianType;
-  typedef itk::Image<OutputSpatialJacobianType,
-    FixedImageDimension>                              JacobianImageType;
+  typedef float SpatialJacobianComponentType;
+  typedef itk::Matrix< SpatialJacobianComponentType,
+    MovingImageDimension, FixedImageDimension >        OutputSpatialJacobianType;
+  typedef itk::Image< OutputSpatialJacobianType,
+    FixedImageDimension >                              JacobianImageType;
   typedef itk::TransformToSpatialJacobianSource<
     JacobianImageType, CoordRepType >                 JacobianGeneratorType;
-  typedef itk::ImageFileWriter< JacobianImageType >   JacobianWriterType;
+  typedef itk::ImageFileWriter< JacobianImageType > JacobianWriterType;
   typedef itk::ChangeInformationImageFilter<
     JacobianImageType >                               ChangeInfoFilterType;
-  typedef typename FixedImageType::DirectionType      FixedImageDirectionType;
+  typedef typename FixedImageType::DirectionType FixedImageDirectionType;
   typedef itk::PixelTypeChangeCommand<
     JacobianWriterType >                              PixelTypeChangeCommandType;
 
   /** Create an setup Jacobian generator. */
   typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
-  jacGenerator->SetTransform( const_cast<const ITKBaseType *>(
-    this->GetAsITKBaseType() ) );
+  jacGenerator->SetTransform( const_cast< const ITKBaseType * >(
+      this->GetAsITKBaseType() ) );
   jacGenerator->SetOutputSize(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
   jacGenerator->SetOutputSpacing(
@@ -1667,7 +1682,7 @@ TransformBase<TElastix>
    */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
-  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( jacGenerator->GetOutput() );
@@ -1678,21 +1693,21 @@ TransformBase<TElastix>
   progressObserver->SetStartString( "  Progress: " );
   progressObserver->SetEndString( "%" );
 #endif
-    /** Create a name for the deformation field file. */
+  /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
   std::ostringstream makeFileName( "" );
   makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-    << "fullSpatialJacobian." << resultImageFormat;
+               << "fullSpatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
   typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
   jacWriter->SetInput( infoChanger->GetOutput() );
   jacWriter->SetFileName( makeFileName.str().c_str() );
   /** Hack to change the pixel type to vector. Not necessary for mhd. */
-  typename PixelTypeChangeCommandType::Pointer jacStartWriteCommand =
-    PixelTypeChangeCommandType::New();
-  if ( resultImageFormat != "mhd" )
+  typename PixelTypeChangeCommandType::Pointer jacStartWriteCommand
+    = PixelTypeChangeCommandType::New();
+  if( resultImageFormat != "mhd" )
   {
     jacWriter->AddObserver( itk::StartEvent(), jacStartWriteCommand );
   }
@@ -1722,16 +1737,17 @@ TransformBase<TElastix>
  * ************** SetTransformParametersFileName ****************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::SetTransformParametersFileName( const char * filename )
 {
   /** Copied from itkSetStringMacro. */
-  if ( filename && ( filename == this->m_TransformParametersFileName )  )
+  if( filename && ( filename == this->m_TransformParametersFileName ) )
   {
     return;
   }
-  if ( filename )
+  if( filename )
   {
     this->m_TransformParametersFileName = filename;
   }
@@ -1739,7 +1755,7 @@ void TransformBase<TElastix>
   {
     this->m_TransformParametersFileName = "";
   }
-  ObjectType * thisAsObject = dynamic_cast<ObjectType *>(this);
+  ObjectType * thisAsObject = dynamic_cast< ObjectType * >( this );
   thisAsObject->Modified();
 
 } // end SetTransformParametersFileName()
@@ -1749,15 +1765,16 @@ void TransformBase<TElastix>
  * ************** SetReadWriteTransformParameters ***************
  */
 
-template <class TElastix>
-void TransformBase<TElastix>
+template< class TElastix >
+void
+TransformBase< TElastix >
 ::SetReadWriteTransformParameters( const bool _arg )
 {
   /** Copied from itkSetMacro. */
-  if ( this->m_ReadWriteTransformParameters != _arg  )
+  if( this->m_ReadWriteTransformParameters != _arg  )
   {
     this->m_ReadWriteTransformParameters = _arg;
-    ObjectType * thisAsObject = dynamic_cast<ObjectType *>( this );
+    ObjectType * thisAsObject = dynamic_cast< ObjectType * >( this );
     thisAsObject->Modified();
   }
 
@@ -1768,22 +1785,22 @@ void TransformBase<TElastix>
  * ************** AutomaticScalesEstimation ***************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::AutomaticScalesEstimation( ScalesType & scales ) const
 {
-  typedef itk::ImageGridSampler< FixedImageType >     ImageSamplerType;
-  typedef typename ImageSamplerType::Pointer          ImageSamplerPointer;
+  typedef itk::ImageGridSampler< FixedImageType > ImageSamplerType;
+  typedef typename ImageSamplerType::Pointer      ImageSamplerPointer;
   typedef typename
-    ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
-  typedef typename ITKBaseType::JacobianType          JacobianType;
-  typedef typename ITKBaseType::NonZeroJacobianIndicesType  NonZeroJacobianIndicesType;
+    ImageSamplerType::ImageSampleContainerType ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer       ImageSampleContainerPointer;
+  typedef typename ITKBaseType::JacobianType               JacobianType;
+  typedef typename ITKBaseType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
-  const unsigned int outdim = MovingImageDimension;
-  const unsigned int N = thisITK->GetNumberOfParameters();
+  const unsigned int        outdim  = MovingImageDimension;
+  const unsigned int        N       = thisITK->GetNumberOfParameters();
   scales = ScalesType( N );
 
   /** Set up grid sampler. */
@@ -1801,7 +1818,7 @@ TransformBase<TElastix>
   sampler->Update();
   ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
   nrofsamples = sampleContainer->Size();
-  if ( nrofsamples == 0 )
+  if( nrofsamples == 0 )
   {
     /** \todo: should we demand a minimum number (~100) of voxels? */
     itkExceptionMacro( << "No valid voxels found to estimate the scales." );
@@ -1810,15 +1827,15 @@ TransformBase<TElastix>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator iter;
   typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator end   = sampleContainer->End();
 
   /** initialize */
   scales.Fill( 0.0 );
 
   /** Read fixed coordinates and get Jacobian. */
-  for ( iter = begin; iter != end; ++iter )
+  for( iter = begin; iter != end; ++iter )
   {
-    const InputPointType & point = (*iter).Value().m_ImageCoordinates;
+    const InputPointType & point = ( *iter ).Value().m_ImageCoordinates;
     //const JacobianType & jacobian = thisITK->GetJacobian( point );
     JacobianType jacobian; NonZeroJacobianIndicesType nzji;
     thisITK->GetJacobian( point, jacobian, nzji );
@@ -1828,17 +1845,15 @@ TransformBase<TElastix>
      */
     for( unsigned int d = 0; d < outdim; ++d )
     {
-      ScalesType jacd(jacobian[d], N, false);
+      ScalesType jacd( jacobian[ d ], N, false );
       scales += element_product( jacd, jacd );
     }
   }
-  scales /= static_cast<double>( nrofsamples );
+  scales /= static_cast< double >( nrofsamples );
 
 } // end AutomaticScalesEstimation()
 
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxTransformBase_hxx
-

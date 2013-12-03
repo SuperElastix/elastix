@@ -22,27 +22,26 @@
 namespace itk
 {
 
-template <class TScalarType, unsigned int NDimensions>
-ElasticBodySplineKernelTransform2<TScalarType, NDimensions>::
-ElasticBodySplineKernelTransform2()
+template< class TScalarType, unsigned int NDimensions >
+ElasticBodySplineKernelTransform2< TScalarType, NDimensions >::ElasticBodySplineKernelTransform2()
 {
   this->m_Alpha = 12.0 * ( 1.0 - .25 ) - 1.0;
 }
 
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-ElasticBodySplineKernelTransform2<TScalarType, NDimensions>
+ElasticBodySplineKernelTransform2< TScalarType, NDimensions >
 ::ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const
 {
-  const TScalarType r       = x.GetNorm();
-  const TScalarType factor  = -3.0 * r;
-  const TScalarType radial  = this->m_Alpha * r * r * r;
-  for ( unsigned int i = 0; i < NDimensions; i++ )
+  const TScalarType r      = x.GetNorm();
+  const TScalarType factor = -3.0 * r;
+  const TScalarType radial = this->m_Alpha * r * r * r;
+  for( unsigned int i = 0; i < NDimensions; i++ )
   {
     const typename InputVectorType::ValueType xi = x[ i ] * factor;
     // G is symmetric
-    for ( unsigned int j = 0; j < i; j++ )
+    for( unsigned int j = 0; j < i; j++ )
     {
       const TScalarType value = xi * x[ j ];
       GMatrix[ i ][ j ] = value;
@@ -54,10 +53,10 @@ ElasticBodySplineKernelTransform2<TScalarType, NDimensions>
 } // end ComputeG()
 
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-ElasticBodySplineKernelTransform2<TScalarType, NDimensions>
-::PrintSelf(std::ostream& os, Indent indent) const
+ElasticBodySplineKernelTransform2< TScalarType, NDimensions >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
   os << indent << "m_Alpha: " << this->m_Alpha << std::endl;

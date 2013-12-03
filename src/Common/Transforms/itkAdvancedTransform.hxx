@@ -36,16 +36,15 @@
 namespace itk
 {
 
-
 /**
  * ********************* Constructor ****************************
  */
 
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
+template< class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
 ::AdvancedTransform() : Superclass()
 {
-  this->m_HasNonZeroSpatialHessian = true;
+  this->m_HasNonZeroSpatialHessian           = true;
   this->m_HasNonZeroJacobianOfSpatialHessian = true;
 
 } // end Constructor
@@ -55,12 +54,12 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
  * ********************* Constructor ****************************
  */
 
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
+template< class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
 ::AdvancedTransform( NumberOfParametersType numberOfParameters ) :
   Superclass( numberOfParameters )
 {
-  this->m_HasNonZeroSpatialHessian = true;
+  this->m_HasNonZeroSpatialHessian           = true;
   this->m_HasNonZeroJacobianOfSpatialHessian = true;
 } // end Constructor
 
@@ -69,9 +68,9 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
  * ********************* GetNumberOfNonZeroJacobianIndices ****************************
  */
 
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-typename AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>::NumberOfParametersType
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
+template< class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+typename AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >::NumberOfParametersType
+AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
 ::GetNumberOfNonZeroJacobianIndices( void ) const
 {
   return this->GetNumberOfParameters();
@@ -80,6 +79,5 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 
 } // end namespace itk
-
 
 #endif

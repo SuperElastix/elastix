@@ -23,7 +23,6 @@ PURPOSE. See the above copyright notices for more information.
 
 #include <iostream>
 
-
 namespace itk
 {
 
@@ -71,10 +70,10 @@ class ParameterMapInterface : public Object
 public:
 
   /** Standard ITK typedefs. */
-  typedef ParameterMapInterface       Self;
-  typedef Object                      Superclass;
-  typedef SmartPointer< Self >        Pointer;
-  typedef SmartPointer< const Self >  ConstPointer;
+  typedef ParameterMapInterface      Self;
+  typedef Object                     Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -83,8 +82,8 @@ public:
   itkTypeMacro( ParameterMapInterface, Object );
 
   /** Typedefs. */
-  typedef ParameterFileParser::ParameterValuesType  ParameterValuesType;
-  typedef ParameterFileParser::ParameterMapType     ParameterMapType;
+  typedef ParameterFileParser::ParameterValuesType ParameterValuesType;
+  typedef ParameterFileParser::ParameterMapType    ParameterMapType;
 
   /** Set the parameter map. */
   void SetParameterMap( const ParameterMapType & parMap );
@@ -115,7 +114,7 @@ public:
    * 4) -> Throw exception: there is an error in the parameter file
    *
    */
-  template <class T>
+  template< class T >
   bool ReadParameter( T & parameterValue,
     const std::string & parameterName,
     const unsigned int entry_nr,
@@ -130,15 +129,15 @@ public:
       parameterName );
 
     /** Check if the requested parameter exists. */
-    if ( numberOfEntries == 0 )
+    if( numberOfEntries == 0 )
     {
       std::stringstream ss;
       ss << "WARNING: The parameter \"" << parameterName
-        << "\", requested at entry number " << entry_nr
-        << ", does not exist at all.\n"
-        << "  The default value \"" << parameterValue
-        << "\" is used instead." << std::endl;
-      if ( printThisErrorMessage && this->m_PrintErrorMessages )
+         << "\", requested at entry number " << entry_nr
+         << ", does not exist at all.\n"
+         << "  The default value \"" << parameterValue
+         << "\" is used instead." << std::endl;
+      if( printThisErrorMessage && this->m_PrintErrorMessages )
       {
         errorMessage = ss.str();
       }
@@ -150,14 +149,14 @@ public:
     const ParameterValuesType & vec = this->m_ParameterMap.find( parameterName )->second;
 
     /** Check if it exists at the requested entry number. */
-    if ( entry_nr >= numberOfEntries )
+    if( entry_nr >= numberOfEntries )
     {
       std::stringstream ss;
       ss << "WARNING: The parameter \"" << parameterName
-        << "\" does not exist at entry number " << entry_nr
-        << ".\n  The default value \"" << parameterValue
-        << "\" is used instead." << std::endl;
-      if ( printThisErrorMessage && this->m_PrintErrorMessages )
+         << "\" does not exist at entry number " << entry_nr
+         << ".\n  The default value \"" << parameterValue
+         << "\" is used instead." << std::endl;
+      if( printThisErrorMessage && this->m_PrintErrorMessages )
       {
         errorMessage = ss.str();
       }
@@ -168,15 +167,15 @@ public:
     bool castSuccesful = this->StringCast( vec[ entry_nr ], parameterValue );
 
     /** Check if the cast was successful. */
-    if ( !castSuccesful )
+    if( !castSuccesful )
     {
       std::stringstream ss;
       ss << "ERROR: Casting entry number " << entry_nr
-        << " for the parameter \"" << parameterName
-        << "\" failed!\n"
-        << "  You tried to cast \"" << vec[ entry_nr ]
-        << "\" from std::string to "
-        << typeid( parameterValue ).name() << std::endl;
+         << " for the parameter \"" << parameterName
+         << "\" failed!\n"
+         << "  You tried to cast \"" << vec[ entry_nr ]
+         << "\" from std::string to "
+         << typeid( parameterValue ).name() << std::endl;
 
       itkExceptionMacro( << ss.str() );
     }
@@ -184,6 +183,7 @@ public:
     return true;
 
   } // end ReadParameter()
+
 
   /** Boolean support. */
   bool ReadParameter( bool & parameterValue,
@@ -195,7 +195,7 @@ public:
   /** A shorter version of ReadParameter() that does not require the boolean
    * printThisErrorMessage. Instead the default value true is used.
    */
-  template <class T>
+  template< class T >
   bool ReadParameter( T & parameterValue,
     const std::string & parameterName,
     const unsigned int entry_nr,
@@ -205,12 +205,13 @@ public:
       true, errorMessage );
   }
 
+
   /** An extended version of ReadParameter() that takes prefixes and
    * default entry numbers (for convenience).
    * This function tries to read parameterName, but also prefix+parameterName.
    * Also, multiple entries are tried, entry_nr as well as default_entry_nr.
    */
-  template <class T>
+  template< class T >
   bool ReadParameter( T & parameterValue,
     const std::string & parameterName,
     const std::string & prefix,
@@ -220,14 +221,14 @@ public:
     std::string & errorMessage ) const
   {
     std::string fullname = prefix + parameterName;
-    bool found = false;
+    bool        found    = false;
 
     /** Silently try to read the parameter. */
     std::string dummyString = "";
-    if ( default_entry_nr >= 0 )
+    if( default_entry_nr >= 0 )
     {
       /** Try the default_entry_nr if the entry_nr is not found. */
-      unsigned int uintdefault = static_cast<unsigned int>( default_entry_nr );
+      unsigned int uintdefault = static_cast< unsigned int >( default_entry_nr );
       found |= this->ReadParameter( parameterValue, parameterName, uintdefault,
         false, dummyString );
       found |= this->ReadParameter( parameterValue, parameterName, entry_nr,
@@ -249,7 +250,7 @@ public:
     /** If we haven't found anything, give a warning that the default value
      * provided by the caller is used.
      */
-    if ( !found && printThisErrorMessage && this->m_PrintErrorMessages )
+    if( !found && printThisErrorMessage && this->m_PrintErrorMessages )
     {
       return this->ReadParameter( parameterValue, parameterName, entry_nr,
         true, errorMessage );
@@ -259,10 +260,11 @@ public:
 
   }
 
+
   /** A shorter version of the extended ReadParameter() that does not require
    * the boolean printThisErrorMessage. Instead the default value true is used.
    */
-  template <class T>
+  template< class T >
   bool ReadParameter( T & parameterValue,
     const std::string & parameterName,
     const std::string & prefix,
@@ -274,8 +276,9 @@ public:
       entry_nr, default_entry_nr, true, errorMessage );
   }
 
+
   /** An extended version that reads all parameters in a range at once. */
-  template <class T>
+  template< class T >
   bool ReadParameter(
     std::vector< T > & parameterValues,
     const std::string & parameterName,
@@ -292,15 +295,15 @@ public:
       parameterName );
 
     /** Check if the requested parameter exists. */
-    if ( numberOfEntries == 0 )
+    if( numberOfEntries == 0 )
     {
       std::stringstream ss;
       ss << "WARNING: The parameter \"" << parameterName
-        << "\", requested between entry numbers " << entry_nr_start
-        << " and " << entry_nr_end
-        << ", does not exist at all.\n"
-        << "  The default values are used instead." << std::endl;
-      if ( printThisErrorMessage && this->m_PrintErrorMessages )
+         << "\", requested between entry numbers " << entry_nr_start
+         << " and " << entry_nr_end
+         << ", does not exist at all.\n"
+         << "  The default values are used instead." << std::endl;
+      if( printThisErrorMessage && this->m_PrintErrorMessages )
       {
         errorMessage = ss.str();
       }
@@ -308,26 +311,26 @@ public:
     }
 
     /** Check. */
-    if ( entry_nr_start > entry_nr_end )
+    if( entry_nr_start > entry_nr_end )
     {
       std::stringstream ss;
       ss << "WARNING: The entry number start (" << entry_nr_start
-        << ") should be smaller than entry number end (" << entry_nr_end
-        << "). It was requested for parameter \"" << parameterName
-        << "\"." << std::endl;
+         << ") should be smaller than entry number end (" << entry_nr_end
+         << "). It was requested for parameter \"" << parameterName
+         << "\"." << std::endl;
 
       /** Programming error: just throw an exception. */
       itkExceptionMacro( << ss.str() );
     }
 
     /** Check if it exists at the requested entry numbers. */
-    if ( entry_nr_end >= numberOfEntries )
+    if( entry_nr_end >= numberOfEntries )
     {
       std::stringstream ss;
       ss << "WARNING: The parameter \"" << parameterName
-        << "\" does not exist at entry number " << entry_nr_end
-        << ".\nThe default value \"" << itk::NumericTraits<T>::Zero
-        << "\" is used instead." << std::endl;
+         << "\" does not exist at entry number " << entry_nr_end
+         << ".\nThe default value \"" << itk::NumericTraits< T >::Zero
+         << "\" is used instead." << std::endl;
       itkExceptionMacro( << ss.str() );
     }
 
@@ -342,22 +345,22 @@ public:
 
     /** Get all parameters at once. */
     unsigned int j = 0;
-    for ( unsigned int i = entry_nr_start; i < entry_nr_end + 1; ++i )
+    for( unsigned int i = entry_nr_start; i < entry_nr_end + 1; ++i )
     {
       /** Cast the string to type T. */
       bool castSuccesful = this->StringCast( vec[ i ], parameterValues[ j ] );
       j++;
 
       /** Check if the cast was successful. */
-      if ( !castSuccesful )
+      if( !castSuccesful )
       {
         std::stringstream ss;
         ss << "ERROR: Casting entry number " << i
-          << " for the parameter \"" << parameterName
-          << "\" failed!\n"
-          << "  You tried to cast \"" << vec[ i ]
-          << "\" from std::string to "
-          << typeid( parameterValues[ 0 ] ).name() << std::endl;
+           << " for the parameter \"" << parameterName
+           << "\" failed!\n"
+           << "  You tried to cast \"" << vec[ i ]
+           << "\" from std::string to "
+           << typeid( parameterValues[ 0 ] ).name() << std::endl;
 
         itkExceptionMacro( << ss.str() );
       }
@@ -366,9 +369,10 @@ public:
     return true;
   }
 
+
   /** Provide a specialization for std::string, for efficiency. */
   bool ReadParameter(
-    std::vector<std::string> & parameterValues,
+    std::vector< std::string > & parameterValues,
     const std::string & parameterName,
     const unsigned int entry_nr_start,
     const unsigned int entry_nr_end,
@@ -376,42 +380,45 @@ public:
     std::string & errorMessage ) const;
 
 protected:
+
   ParameterMapInterface();
   virtual ~ParameterMapInterface();
 
 private:
-  ParameterMapInterface(const Self&); // purposely not implemented
-  void operator=(const Self&);        // purposely not implemented
+
+  ParameterMapInterface( const Self & ); // purposely not implemented
+  void operator=( const Self & );        // purposely not implemented
 
   /** Member variable to store the parameters. */
-  ParameterMapType  m_ParameterMap;
+  ParameterMapType m_ParameterMap;
 
-  bool              m_PrintErrorMessages;
+  bool m_PrintErrorMessages;
 
   /** A templated function to cast strings to a type T.
    * Returns true when casting was successful and false otherwise.
    * We make use of the casting functionality of string streams.
    */
-  template <class T>
+  template< class T >
   bool StringCast( const std::string & parameterValue, T & casted ) const
   {
     std::stringstream ss( parameterValue );
-    
-    /** For (unsigned) char we need a workaround, because ">>" casts it wrongly. 
+
+    /** For (unsigned) char we need a workaround, because ">>" casts it wrongly.
     * It takes the first digit and thinks it is a char. For example:
     * 84 becomes '8', which is asci number 56. So, as a workaround, we use
-    * the accumulate type, and then cast back to T.*/  
-    typename NumericTraits<T>::AccumulateType tempCasted;
+    * the accumulate type, and then cast back to T.*/
+    typename NumericTraits< T >::AccumulateType tempCasted;
     ss >> tempCasted;
-    casted = static_cast<T>( tempCasted );    
-    if ( ss.bad() || ss.fail() )
+    casted = static_cast< T >( tempCasted );
+    if( ss.bad() || ss.fail() )
     {
       return false;
     }
     return true;
 
   } // end StringCast()
- 
+
+
   /** Provide a specialization for std::string, since the general StringCast
    * (especially ss >> casted) will not work for strings containing spaces.
    */

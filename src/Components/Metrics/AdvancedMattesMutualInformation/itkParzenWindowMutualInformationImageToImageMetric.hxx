@@ -27,15 +27,14 @@
 #include <omp.h>
 #endif
 
-
 namespace itk
 {
 /**
  * ********************* Constructor ******************************
  */
 
-template < class TFixedImage, class TMovingImage >
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ParzenWindowMutualInformationImageToImageMetric()
 {
   this->m_UseJacobianPreconditioning = false;
@@ -50,9 +49,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ********************* InitializeHistograms ******************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeHistograms( void )
 {
   /** Call Superclass implementation. */
@@ -73,10 +72,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ************************** GetValue **************************
  */
 
-template < class TFixedImage, class TMovingImage >
-typename ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+typename ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::MeasureType
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValue( const ParametersType & parameters ) const
 {
   /** Construct the JointPDF and Alpha. */
@@ -92,29 +91,29 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** Compute the metric by double summation over histogram. */
 
   /** Setup iterators */
-  typedef ImageLinearConstIteratorWithIndex<JointPDFType> JointPDFIteratorType;
-  typedef typename MarginalPDFType::const_iterator        MarginalPDFIteratorType;
+  typedef ImageLinearConstIteratorWithIndex< JointPDFType > JointPDFIteratorType;
+  typedef typename MarginalPDFType::const_iterator          MarginalPDFIteratorType;
 
   JointPDFIteratorType jointPDFit(
-    this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
-  jointPDFit.SetDirection(0);
+  this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
+  jointPDFit.SetDirection( 0 );
   jointPDFit.GoToBegin();
-  MarginalPDFIteratorType fixedPDFit = this->m_FixedImageMarginalPDF.begin();
-  const MarginalPDFIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
-  MarginalPDFIteratorType movingPDFit = this->m_MovingImageMarginalPDF.begin();
+  MarginalPDFIteratorType       fixedPDFit   = this->m_FixedImageMarginalPDF.begin();
+  const MarginalPDFIteratorType fixedPDFend  = this->m_FixedImageMarginalPDF.end();
+  MarginalPDFIteratorType       movingPDFit  = this->m_MovingImageMarginalPDF.begin();
   const MarginalPDFIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
 
   /** Loop over histogram. */
   double MI = 0.0;
-  while ( fixedPDFit != fixedPDFend )
+  while( fixedPDFit != fixedPDFend )
   {
     const double fixedImagePDFValue = *fixedPDFit;
     movingPDFit = this->m_MovingImageMarginalPDF.begin();
-    while ( movingPDFit != movingPDFend )
+    while( movingPDFit != movingPDFend )
     {
       const double movingImagePDFValue = *movingPDFit;
-      const double fixPDFmovPDF = fixedImagePDFValue * movingImagePDFValue;
-      const double jointPDFValue = jointPDFit.Get();
+      const double fixPDFmovPDF        = fixedImagePDFValue * movingImagePDFValue;
+      const double jointPDFValue       = jointPDFit.Get();
 
       /** Check for non-zero bin contribution. */
       if( jointPDFValue > 1e-16 && fixPDFmovPDF > 1e-16 )
@@ -130,7 +129,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   }  // end while-loop over fixed index
 
-  return static_cast<MeasureType>( -1.0 * MI );
+  return static_cast< MeasureType >( -1.0 * MI );
 
 } // end GetValue()
 
@@ -139,16 +138,16 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************** GetValueAndAnalyticDerivative *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndAnalyticDerivative(
-  const ParametersType& parameters,
+  const ParametersType & parameters,
   MeasureType & value,
   DerivativeType & derivative ) const
 {
   /** Low memory variant. */
-  if ( !this->GetUseExplicitPDFDerivatives() )
+  if( !this->GetUseExplicitPDFDerivatives() )
   {
     this->GetValueAndAnalyticDerivativeLowMemory(
       parameters, value, derivative );
@@ -156,9 +155,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   }
 
   /** Initialize some variables. */
-  value = NumericTraits< MeasureType >::Zero;
+  value      = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits<double>::Zero );
+  derivative.Fill( NumericTraits< double >::Zero );
 
   /** Construct the JointPDF, JointPDFDerivatives, Alpha and its derivatives. */
   this->ComputePDFsAndPDFDerivatives( parameters );
@@ -176,54 +175,54 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   typedef ImageLinearConstIteratorWithIndex<
     JointPDFType >                                 JointPDFIteratorType;
   typedef ImageLinearConstIteratorWithIndex<
-    JointPDFDerivativesType>                       JointPDFDerivativesIteratorType;
+    JointPDFDerivativesType >                       JointPDFDerivativesIteratorType;
   typedef typename MarginalPDFType::const_iterator MarginalPDFIteratorType;
   typedef typename DerivativeType::iterator        DerivativeIteratorType;
   typedef typename DerivativeType::const_iterator  DerivativeConstIteratorType;
 
   JointPDFIteratorType jointPDFit(
-    this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
-  jointPDFit.SetDirection(0);
+  this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
+  jointPDFit.SetDirection( 0 );
   jointPDFit.GoToBegin();
   JointPDFDerivativesIteratorType jointPDFDerivativesit(
-    this->m_JointPDFDerivatives, this->m_JointPDFDerivatives->GetLargestPossibleRegion() );
-  jointPDFDerivativesit.SetDirection(0);
+  this->m_JointPDFDerivatives, this->m_JointPDFDerivatives->GetLargestPossibleRegion() );
+  jointPDFDerivativesit.SetDirection( 0 );
   jointPDFDerivativesit.GoToBegin();
-  MarginalPDFIteratorType fixedPDFit = this->m_FixedImageMarginalPDF.begin();
-  const MarginalPDFIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
-  MarginalPDFIteratorType movingPDFit = this->m_MovingImageMarginalPDF.begin();
+  MarginalPDFIteratorType       fixedPDFit   = this->m_FixedImageMarginalPDF.begin();
+  const MarginalPDFIteratorType fixedPDFend  = this->m_FixedImageMarginalPDF.end();
+  MarginalPDFIteratorType       movingPDFit  = this->m_MovingImageMarginalPDF.begin();
   const MarginalPDFIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
-  DerivativeIteratorType derivit = derivative.begin();
-  const DerivativeIteratorType derivbegin = derivative.begin();
-  const DerivativeIteratorType derivend = derivative.end();
+  DerivativeIteratorType        derivit      = derivative.begin();
+  const DerivativeIteratorType  derivbegin   = derivative.begin();
+  const DerivativeIteratorType  derivend     = derivative.end();
 
   /** Loop over the joint histogram. */
   double MI = 0.0;
-  while ( fixedPDFit != fixedPDFend )
+  while( fixedPDFit != fixedPDFend )
   {
     const double fixedImagePDFValue = *fixedPDFit;
     movingPDFit = this->m_MovingImageMarginalPDF.begin();
-    while ( movingPDFit != movingPDFend )
+    while( movingPDFit != movingPDFend )
     {
       const double movingImagePDFValue = *movingPDFit;
-      const double fixPDFmovPDF = fixedImagePDFValue * movingImagePDFValue;
-      const double jointPDFValue = jointPDFit.Get();
+      const double fixPDFmovPDF        = fixedImagePDFValue * movingImagePDFValue;
+      const double jointPDFValue       = jointPDFit.Get();
 
       /** Check for non-zero bin contribution. */
       if( jointPDFValue > 1e-16 && fixPDFmovPDF > 1e-16 )
       {
         derivit = derivbegin;
-        const double pRatio = vcl_log( jointPDFValue / fixPDFmovPDF );
+        const double pRatio      = vcl_log( jointPDFValue / fixPDFmovPDF );
         const double pRatioAlpha = this->m_Alpha * pRatio;
         MI += jointPDFValue * pRatio;
-        while ( derivit != derivend )
+        while( derivit != derivend )
         {
           /**  Ref: eq 23 of Thevenaz & Unser paper [3]. */
-          (*derivit) -= jointPDFDerivativesit.Get() * pRatioAlpha;
+          ( *derivit ) -= jointPDFDerivativesit.Get() * pRatioAlpha;
           ++derivit;
           ++jointPDFDerivativesit;
-        }  // end while-loop over parameters
-      }  // end if-block to check non-zero bin contribution
+        } // end while-loop over parameters
+      }   // end if-block to check non-zero bin contribution
 
       ++movingPDFit;
       ++jointPDFit;
@@ -234,7 +233,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     jointPDFit.NextLine();
   }  // end while-loop over fixed index
 
-  value = static_cast<MeasureType>( -1.0 * MI );
+  value = static_cast< MeasureType >( -1.0 * MI );
 
 } // end GetValueAndAnalyticDerivative()
 
@@ -243,9 +242,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************** GetValueAndAnalyticDerivativeLowMemory *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndAnalyticDerivativeLowMemory(
   const ParametersType & parameters,
   MeasureType & value,
@@ -273,7 +272,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
    */
   double MI = 0.0;
   this->ComputeValueAndPRatioArray( MI );
-  value = static_cast<MeasureType>( -1.0 * MI );
+  value = static_cast< MeasureType >( -1.0 * MI );
 
   /* Compute the derivative.
    * This function contains a second loop over the samples.
@@ -288,17 +287,17 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************** ComputeDerivativeLowMemorySingleThreaded *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeDerivativeLowMemorySingleThreaded( DerivativeType & derivative ) const
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
-  NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType imageJacobian( nzji.size() );
-  TransformJacobianType jacobian;
-  derivative.Fill( NumericTraits<double>::Zero );
+  NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
+  DerivativeType               imageJacobian( nzji.size() );
+  TransformJacobianType        jacobian;
+  derivative.Fill( NumericTraits< double >::Zero );
 
   /** Declare and allocate arrays for Jacobian preconditioning. */
   DerivativeType jacobianPreconditioner, preconditioningDivisor;
@@ -315,16 +314,16 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over sample container and compute contribution of each sample to pdfs. */
   for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and create some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue;
-    MovingImageDerivativeType movingImageDerivative;
-    MovingImagePointType mappedPoint;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    RealType                    movingImageValue;
+    MovingImageDerivativeType   movingImageDerivative;
+    MovingImagePointType        mappedPoint;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
@@ -347,7 +346,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     if( sampleOk )
     {
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+      RealType fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()
@@ -367,13 +366,13 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       {
         this->ComputeJacobianPreconditioner( jacobian, nzji,
           jacobianPreconditioner, preconditioningDivisor );
-        DerivativeValueType * imjacit = imageJacobian.begin();
+        DerivativeValueType * imjacit   = imageJacobian.begin();
         DerivativeValueType * jacprecit = jacobianPreconditioner.begin();
         for( unsigned int i = 0; i < nzji.size(); ++i )
         {
           while( imjacit != imageJacobian.end() )
           {
-            (*imjacit) *= (*jacprecit);
+            ( *imjacit ) *= ( *jacprecit );
             ++imjacit;
             ++jacprecit;
           }
@@ -385,7 +384,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
         fixedImageValue, movingImageValue, imageJacobian, nzji, derivative );
 
     } // end sampleOk
-  } // end loop over sample container
+  }   // end loop over sample container
 
   /** If desired, apply the technique introduced by Tustison */
   if( this->GetUseJacobianPreconditioning() )
@@ -399,7 +398,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     const double normalizationFactor = preconditioningDivisor.mean();
     while( derivit != derivative.end() )
     {
-      (*derivit) *= normalizationFactor / ( (*divisit) + 1e-14 );
+      ( *derivit ) *= normalizationFactor / ( ( *divisit ) + 1e-14 );
       ++derivit;
       ++divisit;
     }
@@ -412,9 +411,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************** ComputeDerivativeLowMemory *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeDerivativeLowMemory( DerivativeType & derivative ) const
 {
   /** Option for now to still use the single threaded code. */
@@ -436,15 +435,15 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* ThreadedComputeDerivativeLowMemory *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ThreadedComputeDerivativeLowMemory( ThreadIdType threadId )
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
-  NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType imageJacobian( nzji.size() );
+  NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
+  DerivativeType               imageJacobian( nzji.size() );
 
   /** Get a handle to a pre-allocated transform Jacobian. */
   TransformJacobianType & jacobian = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
@@ -453,7 +452,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
    * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
    */
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
-  derivative.Fill( NumericTraits<DerivativeValueType>::Zero ); // needed?
+  derivative.Fill( NumericTraits< DerivativeValueType >::Zero ); // needed?
 
   /** Declare and allocate arrays for Jacobian preconditioning. */
   DerivativeType jacobianPreconditioner, preconditioningDivisor;
@@ -465,34 +464,34 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   }
 
   /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const unsigned long sampleContainerSize = sampleContainer->Size();
+  ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
+  const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
-      / static_cast<double>( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( this->m_NumberOfThreads ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
-  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
   pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
-  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+  pos_end   = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
 
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->Begin();
-  fbegin += (int)pos_begin;
-  fend += (int)pos_end;
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->Begin();
+  fbegin                                                 += (int)pos_begin;
+  fend                                                   += (int)pos_end;
 
   /** Loop over sample container and compute contribution of each sample to pdfs. */
   for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and create some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue;
-    MovingImageDerivativeType movingImageDerivative;
-    MovingImagePointType mappedPoint;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    RealType                    movingImageValue;
+    MovingImageDerivativeType   movingImageDerivative;
+    MovingImagePointType        mappedPoint;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
@@ -515,7 +514,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     if( sampleOk )
     {
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+      RealType fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()
@@ -535,15 +534,17 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       {
         this->ComputeJacobianPreconditioner( jacobian, nzji,
           jacobianPreconditioner, preconditioningDivisor );
-        DerivativeValueType * imjacit = imageJacobian.begin();
+        DerivativeValueType * imjacit   = imageJacobian.begin();
         DerivativeValueType * jacprecit = jacobianPreconditioner.begin();
         for( unsigned int i = 0; i < nzji.size(); ++i )
+        {
           while( imjacit != imageJacobian.end() )
           {
-            (*imjacit) *= (*jacprecit);
+            ( *imjacit ) *= ( *jacprecit );
             ++imjacit;
             ++jacprecit;
           }
+        }
       }
 
       /** Compute this sample's contribution to the joint distributions. */
@@ -552,7 +553,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
         derivative );
 
     } // end sampleOk
-  } // end loop over sample container
+  }   // end loop over sample container
 
   /** If desired, apply the technique introduced by Tustison. */
   if( this->GetUseJacobianPreconditioning() )
@@ -567,7 +568,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     const double normalizationFactor = preconditioningDivisor.mean();
     while( derivit != derivative.end() )
     {
-      (*derivit) *= normalizationFactor / ( (*divisit) + 1e-14 );
+      ( *derivit ) *= normalizationFactor / ( ( *divisit ) + 1e-14 );
       ++derivit;
       ++divisit;
     }
@@ -580,9 +581,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* AfterThreadedComputeDerivativeLowMemory *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputeDerivativeLowMemory( DerivativeType & derivative ) const
 {
   /** Accumulate derivatives. */
@@ -599,7 +600,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   // compute multi-threadedly with openmp
   else if( false ) //this->m_UseOpenMP )
   {
-    const int spaceDimension = static_cast<int>( this->GetNumberOfParameters() );
+    const int spaceDimension = static_cast< int >( this->GetNumberOfParameters() );
 
     #pragma omp parallel for
     for( int j = 0; j < spaceDimension; ++j )
@@ -616,13 +617,13 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   // compute multi-threadedly with itk threads
   else
   {
-    this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+    this->m_ThreaderMetricParameters.st_DerivativePointer   = derivative.begin();
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0;
 
     typename ThreaderType::Pointer local_threader = ThreaderType::New();
     local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
     local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
-      const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
+      const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
     local_threader->SingleMethodExecute();
   }
 
@@ -633,16 +634,16 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * **************** ComputeDerivativeLowMemoryThreaderCallback *******
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 ITK_THREAD_RETURN_TYPE
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeDerivativeLowMemoryThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType threadId = infoStruct->ThreadID;
+  ThreadIdType     threadId   = infoStruct->ThreadID;
 
   ParzenWindowMutualInformationMultiThreaderParameterType * temp
-    = static_cast<ParzenWindowMutualInformationMultiThreaderParameterType * >( infoStruct->UserData );
+    = static_cast< ParzenWindowMutualInformationMultiThreaderParameterType * >( infoStruct->UserData );
 
   temp->m_Metric->ThreadedComputeDerivativeLowMemory( threadId );
 
@@ -655,9 +656,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * *********************** LaunchComputeDerivativeLowMemoryThreaderCallback***************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::LaunchComputeDerivativeLowMemoryThreaderCallback( void ) const
 {
   /** Setup local threader. */
@@ -665,8 +666,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   typename ThreaderType::Pointer local_threader = ThreaderType::New();
   local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
   local_threader->SetSingleMethod( this->ComputeDerivativeLowMemoryThreaderCallback,
-    const_cast<void *>( static_cast<const void *>(
-    &this->m_ParzenWindowMutualInformationThreaderParameters ) ) );
+    const_cast< void * >( static_cast< const void * >(
+      &this->m_ParzenWindowMutualInformationThreaderParameters ) ) );
 
   /** Launch. */
   local_threader->SingleMethodExecute();
@@ -678,34 +679,34 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* ComputeValueAndPRatioArray *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeValueAndPRatioArray( double & MI ) const
 {
   /** Setup iterators. */
-  typedef ImageScanlineConstIterator< JointPDFType >  JointPDFIteratorType;
-  typedef typename MarginalPDFType::const_iterator    MarginalPDFIteratorType;
+  typedef ImageScanlineConstIterator< JointPDFType > JointPDFIteratorType;
+  typedef typename MarginalPDFType::const_iterator   MarginalPDFIteratorType;
 
   JointPDFIteratorType jointPDFit(
-    this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
-  MarginalPDFIteratorType fixedPDFit = this->m_FixedImageMarginalPDF.begin();
+  this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
+  MarginalPDFIteratorType       fixedPDFit  = this->m_FixedImageMarginalPDF.begin();
   const MarginalPDFIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
-  MarginalPDFIteratorType movingPDFit;
+  MarginalPDFIteratorType       movingPDFit;
   const MarginalPDFIteratorType movingPDFbegin = this->m_MovingImageMarginalPDF.begin();
-  const MarginalPDFIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
+  const MarginalPDFIteratorType movingPDFend   = this->m_MovingImageMarginalPDF.end();
 
   /** Initialize */
-  this->m_PRatioArray.Fill( itk::NumericTraits<PRatioType>::Zero  );
+  this->m_PRatioArray.Fill( itk::NumericTraits< PRatioType >::Zero  );
 
   /** Loop over the joint histogram. */
-  PDFValueType sum = 0.0;
-  unsigned int fixedIndex = 0;
+  PDFValueType sum         = 0.0;
+  unsigned int fixedIndex  = 0;
   unsigned int movingIndex = 0;
   while( fixedPDFit != fixedPDFend )
   {
-    const double fixedPDFValue = *fixedPDFit;
-    double logFixedPDFValue = 0.0;
+    const double fixedPDFValue    = *fixedPDFit;
+    double       logFixedPDFValue = 0.0;
     if( fixedPDFValue > 1e-16 )
     {
       logFixedPDFValue = vcl_log( fixedPDFValue );
@@ -716,13 +717,13 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     while( movingPDFit != movingPDFend )
     {
       const PDFValueType movingPDFValue = *movingPDFit;
-      const PDFValueType jointPDFValue = jointPDFit.Value();
+      const PDFValueType jointPDFValue  = jointPDFit.Value();
 
       /** Check for non-zero bin contribution. */
       if( jointPDFValue > 1e-16 && movingPDFValue > 1e-16 )
       {
         const PDFValueType pRatio = vcl_log( jointPDFValue / movingPDFValue );
-        this->m_PRatioArray[ fixedIndex ][ movingIndex ] = static_cast<PRatioType>(
+        this->m_PRatioArray[ fixedIndex ][ movingIndex ] = static_cast< PRatioType >(
           this->m_Alpha * pRatio );
 
         if( fixedPDFValue > 1e-16 )
@@ -755,9 +756,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* UpdateDerivativeLowMemory *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::UpdateDerivativeLowMemory(
   const RealType & fixedImageValue,
   const RealType & movingImageValue,
@@ -780,17 +781,17 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** Determine the affected region. */
 
   /** Determine Parzen window arguments (see eq. 6 of Mattes paper [2]). */
-  const double fixedImageParzenWindowTerm =
-    fixedImageValue / this->m_FixedImageBinSize - this->m_FixedImageNormalizedMin;
-  const double movingImageParzenWindowTerm =
-    movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
+  const double fixedImageParzenWindowTerm
+    = fixedImageValue / this->m_FixedImageBinSize - this->m_FixedImageNormalizedMin;
+  const double movingImageParzenWindowTerm
+    = movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
 
   /** The lowest bin numbers affected by this pixel: */
   const int fixedParzenWindowIndex
-    = static_cast<int>( vcl_floor(
+    = static_cast< int >( vcl_floor(
     fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
   const int movingParzenWindowIndex
-    = static_cast<int>( vcl_floor(
+    = static_cast< int >( vcl_floor(
     movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
 
   /** The Parzen values. */
@@ -802,13 +803,13 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Compute the derivatives of the moving Parzen window. */
   ParzenValueContainerType derivativeMovingParzenValues(
-    this->m_JointPDFWindow.GetSize()[ 0 ] );
+  this->m_JointPDFWindow.GetSize()[ 0 ] );
   this->EvaluateParzenValues(
     movingImageParzenWindowTerm, movingParzenWindowIndex,
     this->m_DerivativeMovingKernel, derivativeMovingParzenValues );
 
   /** Get the moving image bin size. */
-  const double et = static_cast<double>( this->m_MovingImageBinSize );
+  const double et = static_cast< double >( this->m_MovingImageBinSize );
 
   /** Loop over the Parzen window region and increment sum. */
   PDFValueType sum = 0.0;
@@ -818,7 +819,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
     {
       sum += this->m_PRatioArray[ f + fixedParzenWindowIndex ][ m + movingParzenWindowIndex ]
-      * fv_et * derivativeMovingParzenValues[ m ];
+        * fv_et * derivativeMovingParzenValues[ m ];
     }
   }
 
@@ -828,7 +829,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     /** Loop over all Jacobians. */
     for( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
     {
-      derivative[ mu ] += static_cast<DerivativeValueType>(
+      derivative[ mu ] += static_cast< DerivativeValueType >(
         imageJacobian[ mu ] * sum );
     }
   }
@@ -838,7 +839,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     for( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
     {
       const unsigned int mu = nzji[ i ];
-      derivative[ mu ] += static_cast<DerivativeValueType>(
+      derivative[ mu ] += static_cast< DerivativeValueType >(
         imageJacobian[ i ] * sum );
     }
   }
@@ -850,18 +851,18 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************** GetValueAndFiniteDifferenceDerivative *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndFiniteDifferenceDerivative(
   const ParametersType & parameters,
   MeasureType & value,
   DerivativeType & derivative ) const
 {
   /** Initialize some variables. */
-  value = NumericTraits< MeasureType >::Zero;
+  value      = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits<double>::Zero );
+  derivative.Fill( NumericTraits< double >::Zero );
 
   /** Construct the JointPDF, JointPDFDerivatives, Alpha and its derivatives. */
   this->ComputePDFsAndIncrementalPDFs( parameters );
@@ -884,66 +885,66 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   typedef ImageLinearConstIteratorWithIndex<
     JointPDFType >                                 JointPDFIteratorType;
   typedef ImageLinearConstIteratorWithIndex<
-    JointPDFDerivativesType>                       IncrementalJointPDFIteratorType;
+    JointPDFDerivativesType >                       IncrementalJointPDFIteratorType;
   typedef typename MarginalPDFType::const_iterator MarginalPDFIteratorType;
   typedef ImageLinearConstIteratorWithIndex<
     IncrementalMarginalPDFType >                   IncrementalMarginalPDFIteratorType;
-  typedef typename DerivativeType::iterator        DerivativeIteratorType;
-  typedef typename DerivativeType::const_iterator  DerivativeConstIteratorType;
+  typedef typename DerivativeType::iterator       DerivativeIteratorType;
+  typedef typename DerivativeType::const_iterator DerivativeConstIteratorType;
 
   JointPDFIteratorType jointPDFit(
-    this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
+  this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
   jointPDFit.GoToBegin();
 
   IncrementalJointPDFIteratorType jointIncPDFRightit( this->m_IncrementalJointPDFRight,
-    this->m_IncrementalJointPDFRight->GetLargestPossibleRegion() );
+  this->m_IncrementalJointPDFRight->GetLargestPossibleRegion() );
   IncrementalJointPDFIteratorType jointIncPDFLeftit( this->m_IncrementalJointPDFLeft,
-    this->m_IncrementalJointPDFLeft->GetLargestPossibleRegion() );
+  this->m_IncrementalJointPDFLeft->GetLargestPossibleRegion() );
   jointIncPDFRightit.GoToBegin();
   jointIncPDFLeftit.GoToBegin();
 
-  MarginalPDFIteratorType fixedPDFit = this->m_FixedImageMarginalPDF.begin();
-  const MarginalPDFIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
-  MarginalPDFIteratorType movingPDFit = this->m_MovingImageMarginalPDF.begin();
+  MarginalPDFIteratorType       fixedPDFit   = this->m_FixedImageMarginalPDF.begin();
+  const MarginalPDFIteratorType fixedPDFend  = this->m_FixedImageMarginalPDF.end();
+  MarginalPDFIteratorType       movingPDFit  = this->m_MovingImageMarginalPDF.begin();
   const MarginalPDFIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
 
   IncrementalMarginalPDFIteratorType fixedIncPDFRightit(
-    this->m_FixedIncrementalMarginalPDFRight,
-    this->m_FixedIncrementalMarginalPDFRight->GetLargestPossibleRegion() );
+  this->m_FixedIncrementalMarginalPDFRight,
+  this->m_FixedIncrementalMarginalPDFRight->GetLargestPossibleRegion() );
   IncrementalMarginalPDFIteratorType movingIncPDFRightit(
-    this->m_MovingIncrementalMarginalPDFRight,
-    this->m_MovingIncrementalMarginalPDFRight->GetLargestPossibleRegion() );
+  this->m_MovingIncrementalMarginalPDFRight,
+  this->m_MovingIncrementalMarginalPDFRight->GetLargestPossibleRegion() );
   IncrementalMarginalPDFIteratorType fixedIncPDFLeftit(
-    this->m_FixedIncrementalMarginalPDFLeft,
-    this->m_FixedIncrementalMarginalPDFLeft->GetLargestPossibleRegion() );
+  this->m_FixedIncrementalMarginalPDFLeft,
+  this->m_FixedIncrementalMarginalPDFLeft->GetLargestPossibleRegion() );
   IncrementalMarginalPDFIteratorType movingIncPDFLeftit(
-    this->m_MovingIncrementalMarginalPDFLeft,
-    this->m_MovingIncrementalMarginalPDFLeft->GetLargestPossibleRegion() );
+  this->m_MovingIncrementalMarginalPDFLeft,
+  this->m_MovingIncrementalMarginalPDFLeft->GetLargestPossibleRegion() );
   fixedIncPDFRightit.GoToBegin();
   movingIncPDFRightit.GoToBegin();
   fixedIncPDFLeftit.GoToBegin();
   movingIncPDFLeftit.GoToBegin();
 
-  DerivativeIteratorType derivit = derivative.begin();
+  DerivativeIteratorType       derivit    = derivative.begin();
   const DerivativeIteratorType derivbegin = derivative.begin();
-  const DerivativeIteratorType derivend = derivative.end();
+  const DerivativeIteratorType derivend   = derivative.end();
 
-  DerivativeConstIteratorType perturbedAlphaRightit = this->m_PerturbedAlphaRight.begin();
+  DerivativeConstIteratorType       perturbedAlphaRightit    = this->m_PerturbedAlphaRight.begin();
   const DerivativeConstIteratorType perturbedAlphaRightbegin = this->m_PerturbedAlphaRight.begin();
-  DerivativeConstIteratorType perturbedAlphaLeftit = this->m_PerturbedAlphaLeft.begin();
-  const DerivativeConstIteratorType perturbedAlphaLeftbegin = this->m_PerturbedAlphaLeft.begin();
+  DerivativeConstIteratorType       perturbedAlphaLeftit     = this->m_PerturbedAlphaLeft.begin();
+  const DerivativeConstIteratorType perturbedAlphaLeftbegin  = this->m_PerturbedAlphaLeft.begin();
 
   double MI = 0.0;
-  while ( fixedPDFit != fixedPDFend )
+  while( fixedPDFit != fixedPDFend )
   {
     const double fixedPDFValue = *fixedPDFit;
 
-    while ( movingPDFit != movingPDFend )
+    while( movingPDFit != movingPDFend )
     {
       const double movingPDFValue = *movingPDFit;
-      const double jointPDFValue = jointPDFit.Get();
-      const double fixPDFmovPDFAlpha =
-        fixedPDFValue * movingPDFValue * this->m_Alpha;
+      const double jointPDFValue  = jointPDFit.Get();
+      const double fixPDFmovPDFAlpha
+        = fixedPDFValue * movingPDFValue * this->m_Alpha;
 
       /** Check for non-zero bin contribution and update the mutual information value. */
       if( jointPDFValue > 1e-16 && fixPDFmovPDFAlpha > 1e-16 )
@@ -952,10 +953,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       }
 
       /** Update the derivative. */
-      derivit = derivbegin;
+      derivit               = derivbegin;
       perturbedAlphaRightit = perturbedAlphaRightbegin;
-      perturbedAlphaLeftit = perturbedAlphaLeftbegin;
-      while ( derivit != derivend )
+      perturbedAlphaLeftit  = perturbedAlphaLeftbegin;
+      while( derivit != derivend )
       {
         /** Initialize. */
         double contrib = 0.0;
@@ -963,45 +964,45 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
         /** For clarity, get some values and give them a name.
          * \todo Does this cost a lot of computation time?
          */
-        const double jointIncPDFRightValue = jointIncPDFRightit.Get();
-        const double fixedIncPDFRightValue = fixedIncPDFRightit.Get();
-        const double movingIncPDFRightValue = movingIncPDFRightit.Get();
+        const double jointIncPDFRightValue    = jointIncPDFRightit.Get();
+        const double fixedIncPDFRightValue    = fixedIncPDFRightit.Get();
+        const double movingIncPDFRightValue   = movingIncPDFRightit.Get();
         const double perturbedAlphaRightValue = *perturbedAlphaRightit;
 
         /** Compute the contribution of the Right-perturbation to the derivative. */
-        const double perturbedJointPDFRightValue = jointIncPDFRightValue + jointPDFValue;
-        const double perturbedFixedPDFRightValue = fixedPDFValue + fixedIncPDFRightValue;
+        const double perturbedJointPDFRightValue  = jointIncPDFRightValue + jointPDFValue;
+        const double perturbedFixedPDFRightValue  = fixedPDFValue + fixedIncPDFRightValue;
         const double perturbedMovingPDFRightValue = movingPDFValue + movingIncPDFRightValue;
-        const double perturbedfixPDFmovPDFAlphaRight =
-          perturbedFixedPDFRightValue * perturbedMovingPDFRightValue * perturbedAlphaRightValue;
+        const double perturbedfixPDFmovPDFAlphaRight
+          = perturbedFixedPDFRightValue * perturbedMovingPDFRightValue * perturbedAlphaRightValue;
 
-        if ( perturbedJointPDFRightValue > 1e-16 && perturbedfixPDFmovPDFAlphaRight > 1e-16 )
+        if( perturbedJointPDFRightValue > 1e-16 && perturbedfixPDFmovPDFAlphaRight > 1e-16 )
         {
-          contrib += perturbedAlphaRightValue * perturbedJointPDFRightValue *
-            vcl_log( perturbedJointPDFRightValue / perturbedfixPDFmovPDFAlphaRight );
+          contrib += perturbedAlphaRightValue * perturbedJointPDFRightValue
+            * vcl_log( perturbedJointPDFRightValue / perturbedfixPDFmovPDFAlphaRight );
         }
 
         /** For clarity, get some values and give them a name. */
-        const double jointIncPDFLeftValue = jointIncPDFLeftit.Get();
-        const double fixedIncPDFLeftValue = fixedIncPDFLeftit.Get();
-        const double movingIncPDFLeftValue = movingIncPDFLeftit.Get();
+        const double jointIncPDFLeftValue    = jointIncPDFLeftit.Get();
+        const double fixedIncPDFLeftValue    = fixedIncPDFLeftit.Get();
+        const double movingIncPDFLeftValue   = movingIncPDFLeftit.Get();
         const double perturbedAlphaLeftValue = *perturbedAlphaLeftit;
 
         /** Compute the contribution of the Left-perturbation to the derivative. */
-        const double perturbedJointPDFLeftValue = jointIncPDFLeftValue + jointPDFValue;
-        const double perturbedFixedPDFLeftValue = fixedPDFValue + fixedIncPDFLeftValue;
+        const double perturbedJointPDFLeftValue  = jointIncPDFLeftValue + jointPDFValue;
+        const double perturbedFixedPDFLeftValue  = fixedPDFValue + fixedIncPDFLeftValue;
         const double perturbedMovingPDFLeftValue = movingPDFValue + movingIncPDFLeftValue;
-        const double perturbedfixPDFmovPDFAlphaLeft =
-          perturbedFixedPDFLeftValue * perturbedMovingPDFLeftValue * perturbedAlphaLeftValue;
+        const double perturbedfixPDFmovPDFAlphaLeft
+          = perturbedFixedPDFLeftValue * perturbedMovingPDFLeftValue * perturbedAlphaLeftValue;
 
-        if ( perturbedJointPDFLeftValue > 1e-16 && perturbedfixPDFmovPDFAlphaLeft > 1e-16 )
+        if( perturbedJointPDFLeftValue > 1e-16 && perturbedfixPDFmovPDFAlphaLeft > 1e-16 )
         {
-          contrib -= perturbedAlphaLeftValue * perturbedJointPDFLeftValue *
-            vcl_log( perturbedJointPDFLeftValue / perturbedfixPDFmovPDFAlphaLeft );
+          contrib -= perturbedAlphaLeftValue * perturbedJointPDFLeftValue
+            * vcl_log( perturbedJointPDFLeftValue / perturbedfixPDFmovPDFAlphaLeft );
         }
 
         /** Update the derivative component. */
-        (*derivit) += contrib;
+        ( *derivit ) += contrib;
 
         /** Move the iterators to the next parameter. */
         ++derivit;
@@ -1015,35 +1016,35 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
         ++movingIncPDFLeftit;
       }  // end while-loop over parameters
 
-      ++jointPDFit; // next moving bin
-      ++movingPDFit; // next moving bin
-      jointIncPDFRightit.NextLine(); // next moving bin
-      jointIncPDFLeftit.NextLine(); // next moving bin
+      ++jointPDFit;                         // next moving bin
+      ++movingPDFit;                        // next moving bin
+      jointIncPDFRightit.NextLine();        // next moving bin
+      jointIncPDFLeftit.NextLine();         // next moving bin
       fixedIncPDFRightit.GoToBeginOfLine(); // same fixed bin
-      fixedIncPDFLeftit.GoToBeginOfLine(); // same fixed bin
-      movingIncPDFRightit.NextLine(); // next moving bin
-      movingIncPDFLeftit.NextLine(); // next moving bin
+      fixedIncPDFLeftit.GoToBeginOfLine();  // same fixed bin
+      movingIncPDFRightit.NextLine();       // next moving bin
+      movingIncPDFLeftit.NextLine();        // next moving bin
 
     }  // end while-loop over moving index
 
-    jointPDFit.NextLine(); // next fixed bin
-    ++fixedPDFit; // next fixed bin
+    jointPDFit.NextLine();                                // next fixed bin
+    ++fixedPDFit;                                         // next fixed bin
     movingPDFit = this->m_MovingImageMarginalPDF.begin(); // first moving bin
-    fixedIncPDFRightit.NextLine(); // next fixed bin
-    fixedIncPDFLeftit.NextLine(); // next fixed bin
-    movingIncPDFRightit.GoToBegin(); // first moving bin
-    movingIncPDFLeftit.GoToBegin(); // first moving bin
+    fixedIncPDFRightit.NextLine();                        // next fixed bin
+    fixedIncPDFLeftit.NextLine();                         // next fixed bin
+    movingIncPDFRightit.GoToBegin();                      // first moving bin
+    movingIncPDFLeftit.GoToBegin();                       // first moving bin
 
   }  // end while-loop over fixed index
 
-  value = static_cast<MeasureType>( -1.0 * MI );
+  value = static_cast< MeasureType >( -1.0 * MI );
 
   /** Divide the derivative by -delta*2. */
-  const double delta2 = - 1.0 / ( this->GetFiniteDifferencePerturbation() * 2.0 );
+  const double delta2 = -1.0 / ( this->GetFiniteDifferencePerturbation() * 2.0 );
   derivit = derivative.begin();
-  while ( derivit != derivend )
+  while( derivit != derivend )
   {
-    (*derivit) *= delta2;
+    ( *derivit ) *= delta2;
     ++derivit;
   }
 
@@ -1054,18 +1055,18 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************** ComputeJacobianPreconditioner *******************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeJacobianPreconditioner(
   const TransformJacobianType & jac,
   const NonZeroJacobianIndicesType & nzji,
   DerivativeType & preconditioner,
   DerivativeType & divisor ) const
 {
-  typedef typename TransformJacobianType::ValueType  TransformJacobianValueType;
+  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
   const unsigned int M = nzji.size();
-  typedef Matrix<double, MovingImageDimension, MovingImageDimension> MatrixType;
+  typedef Matrix< double, MovingImageDimension, MovingImageDimension > MatrixType;
   MatrixType jacjact;
 
   /** Compute jac * jac' */
@@ -1073,12 +1074,12 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   {
     for( unsigned int dcol = drow; dcol < MovingImageDimension; ++dcol )
     {
-      const TransformJacobianValueType * jacit1 = jac[drow];
-      const TransformJacobianValueType * jacit2 = jac[dcol];
-      double sum = 0.0;
-      for (unsigned int mu = 0; mu < M; ++mu )
+      const TransformJacobianValueType * jacit1 = jac[ drow ];
+      const TransformJacobianValueType * jacit2 = jac[ dcol ];
+      double                             sum    = 0.0;
+      for( unsigned int mu = 0; mu < M; ++mu )
       {
-        sum += (*jacit1) * (*jacit2);
+        sum += ( *jacit1 ) * ( *jacit2 );
         ++jacit1;
         ++jacit2;
       }
@@ -1089,9 +1090,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Invert */
   const double addtodiag = 1e-10;
-  for (unsigned int drow = 0; drow < MovingImageDimension; ++drow)
+  for( unsigned int drow = 0; drow < MovingImageDimension; ++drow )
   {
-    jacjact(drow,drow) += addtodiag;
+    jacjact( drow, drow ) += addtodiag;
   }
   jacjact = vnl_inverse( jacjact.GetVnlMatrix() );
 
@@ -1100,20 +1101,20 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
    * implementation:
    * preconditioner = sum_dr sum_dc m(dr,dc) jac(dr,:) * jac(dc,:)
    */
-  preconditioner.Fill(0.0);
-  for (unsigned int drow = 0; drow < MovingImageDimension; ++drow)
+  preconditioner.Fill( 0.0 );
+  for( unsigned int drow = 0; drow < MovingImageDimension; ++drow )
   {
-    for (unsigned int dcol = drow; dcol < MovingImageDimension; ++dcol)
+    for( unsigned int dcol = drow; dcol < MovingImageDimension; ++dcol )
     {
-      DerivativeValueType * precondit = preconditioner.begin();
-      const TransformJacobianValueType * jacit1 = jac[drow];
-      const TransformJacobianValueType * jacit2 = jac[dcol];
+      DerivativeValueType *              precondit = preconditioner.begin();
+      const TransformJacobianValueType * jacit1    = jac[ drow ];
+      const TransformJacobianValueType * jacit2    = jac[ dcol ];
       /** count twice if off-diagonal */
       const double fac = drow == dcol ? 1.0 : 2.0;
-      const double m = fac * jacjact(drow, dcol);
-      for (unsigned int mu = 0; mu < M; ++mu )
+      const double m   = fac * jacjact( drow, dcol );
+      for( unsigned int mu = 0; mu < M; ++mu )
       {
-        *precondit += m* (*jacit1) * (*jacit2);
+        *precondit += m * ( *jacit1 ) * ( *jacit2 );
         ++precondit;
         ++jacit1;
         ++jacit2;
@@ -1123,14 +1124,14 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   }
 
   /** Update divisor = sum_samples diag(jac'*jac) */
-  DerivativeType temp(M);
-  temp.Fill(0.0);
+  DerivativeType temp( M );
+  temp.Fill( 0.0 );
   /** Compute this sample's contribution */
-  for (unsigned int drow = 0; drow < MovingImageDimension; ++drow)
+  for( unsigned int drow = 0; drow < MovingImageDimension; ++drow )
   {
-    DerivativeValueType * tempit = temp.begin();
-    const TransformJacobianValueType * jacit1 = jac[drow];
-    for (unsigned int mu = 0; mu < M; ++mu )
+    DerivativeValueType *              tempit = temp.begin();
+    const TransformJacobianValueType * jacit1 = jac[ drow ];
+    for( unsigned int mu = 0; mu < M; ++mu )
     {
       *tempit += vnl_math_sqr( *jacit1 );
       ++tempit;
@@ -1138,14 +1139,14 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     }
   }
   /** Update divisor */
-  for (unsigned int mu = 0; mu < M; ++mu )
+  for( unsigned int mu = 0; mu < M; ++mu )
   {
-    divisor[ nzji[mu] ] += temp[mu];
+    divisor[ nzji[ mu ] ] += temp[ mu ];
   }
 
 } // end ComputeJacobianPreconditioner()
 
-} // end namespace itk
 
+} // end namespace itk
 
 #endif // end #ifndef _itkParzenWindowMutualInformationImageToImageMetric_HXX__

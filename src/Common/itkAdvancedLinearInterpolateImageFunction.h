@@ -49,15 +49,16 @@ namespace itk
  * \endwiki
  */
 template< class TInputImage, class TCoordRep = double >
-class AdvancedLinearInterpolateImageFunction:
+class AdvancedLinearInterpolateImageFunction :
   public LinearInterpolateImageFunction< TInputImage, TCoordRep >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef AdvancedLinearInterpolateImageFunction             Self;
+  typedef AdvancedLinearInterpolateImageFunction                   Self;
   typedef LinearInterpolateImageFunction< TInputImage, TCoordRep > Superclass;
-  typedef SmartPointer< Self >                               Pointer;
-  typedef SmartPointer< const Self >                         ConstPointer;
+  typedef SmartPointer< Self >                                     Pointer;
+  typedef SmartPointer< const Self >                               ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedLinearInterpolateImageFunction, LinearInterpolateImageFunction );
@@ -69,7 +70,7 @@ public:
   typedef typename Superclass::OutputType OutputType;
 
   /** InputImageType typedef support. */
-  typedef typename Superclass::InputImageType InputImageType;
+  typedef typename Superclass::InputImageType  InputImageType;
   typedef typename InputImageType::SpacingType InputImageSpacingType;
 
   /** InputPixelType typedef support. */
@@ -82,15 +83,15 @@ public:
   itkStaticConstMacro( ImageDimension, unsigned int, Superclass::ImageDimension );
 
   /** Index typedef support. */
-  typedef typename Superclass::IndexType      IndexType;
+  typedef typename Superclass::IndexType IndexType;
 
   /** ContinuousIndex typedef support. */
-  typedef typename Superclass::ContinuousIndexType  ContinuousIndexType;
-  typedef typename ContinuousIndexType::ValueType   ContinuousIndexValueType;
+  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
+  typedef typename ContinuousIndexType::ValueType  ContinuousIndexValueType;
 
   /** Derivative typedef support */
   typedef CovariantVector< OutputType,
-    itkGetStaticConstMacro(ImageDimension) >        CovariantVectorType;
+    itkGetStaticConstMacro( ImageDimension ) >        CovariantVectorType;
 
   /** Method to compute the derivative. */
   CovariantVectorType EvaluateDerivativeAtContinuousIndex(
@@ -103,20 +104,24 @@ public:
     CovariantVectorType & deriv ) const
   {
     return this->EvaluateValueAndDerivativeOptimized(
-      Dispatch<ImageDimension>(), x, value, deriv );
+      Dispatch< ImageDimension >(), x, value, deriv );
   }
 
+
 protected:
+
   AdvancedLinearInterpolateImageFunction();
-  ~AdvancedLinearInterpolateImageFunction(){};
+  ~AdvancedLinearInterpolateImageFunction(){}
 
 private:
-  AdvancedLinearInterpolateImageFunction(const Self &); // purposely not implemented
-  void operator=(const Self &);                         // purposely not implemented
+
+  AdvancedLinearInterpolateImageFunction( const Self & ); // purposely not implemented
+  void operator=( const Self & );                         // purposely not implemented
 
   /** Helper struct to select the correct dimension. */
   struct DispatchBase {};
-  template< unsigned int > struct Dispatch: public DispatchBase {};
+  template< unsigned int >
+  struct Dispatch : public DispatchBase {};
 
   /** Method to compute both the value and the derivative. 2D specialization. */
   inline void EvaluateValueAndDerivativeOptimized(
@@ -142,6 +147,7 @@ private:
     return this->EvaluateValueAndDerivativeUnOptimized( x, value, deriv );
   }
 
+
   /** Method to compute both the value and the derivative. Generic. */
   inline void EvaluateValueAndDerivativeUnOptimized(
     const ContinuousIndexType & x,
@@ -149,18 +155,17 @@ private:
     CovariantVectorType & deriv ) const
   {
     itkExceptionMacro( << "ERROR: EvaluateValueAndDerivativeAtContinuousIndex() "
-      << "is not implemented for this dimension ("
-      << ImageDimension << ")." );
-  };
+                       << "is not implemented for this dimension ("
+                       << ImageDimension << ")." );
+  }
+
 
 };
 
 } // end namespace itk
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkAdvancedLinearInterpolateImageFunction.hxx"
 #endif
 
 #endif
-

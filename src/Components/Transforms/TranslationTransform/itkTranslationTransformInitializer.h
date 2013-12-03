@@ -53,17 +53,18 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template < class TTransform,
-           class TFixedImage,
-           class TMovingImage >
+template< class TTransform,
+class TFixedImage,
+class TMovingImage >
 class TranslationTransformInitializer : public Object
 {
 public:
+
   /** Standard class typedefs. */
-  typedef TranslationTransformInitializer  Self;
-  typedef Object                           Superclass;
-  typedef SmartPointer<Self>               Pointer;
-  typedef SmartPointer<const Self>         ConstPointer;
+  typedef TranslationTransformInitializer Self;
+  typedef Object                          Superclass;
+  typedef SmartPointer< Self >            Pointer;
+  typedef SmartPointer< const Self >      ConstPointer;
 
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
@@ -72,36 +73,36 @@ public:
   itkTypeMacro( TranslationTransformInitializer, Object );
 
   /** Type of the transform to initialize */
-  typedef TTransform                        TransformType;
-  typedef typename TransformType::Pointer   TransformPointer;
+  typedef TTransform                      TransformType;
+  typedef typename TransformType::Pointer TransformPointer;
 
   /** Dimension of parameters. */
-  itkStaticConstMacro(SpaceDimension, unsigned int, TransformType::SpaceDimension);
-  itkStaticConstMacro(InputSpaceDimension, unsigned int, TransformType::InputSpaceDimension);
-  itkStaticConstMacro(OutputSpaceDimension, unsigned int, TransformType::OutputSpaceDimension);
+  itkStaticConstMacro( SpaceDimension, unsigned int, TransformType::SpaceDimension );
+  itkStaticConstMacro( InputSpaceDimension, unsigned int, TransformType::InputSpaceDimension );
+  itkStaticConstMacro( OutputSpaceDimension, unsigned int, TransformType::OutputSpaceDimension );
 
   /** Image Types to use in the initialization of the transform */
-  typedef TFixedImage                                 FixedImageType;
-  typedef TMovingImage                                MovingImageType;
-  typedef typename FixedImageType::ConstPointer       FixedImagePointer;
-  typedef typename MovingImageType::ConstPointer      MovingImagePointer;
-  typedef Image< unsigned char, InputSpaceDimension > FixedMaskType;
+  typedef TFixedImage                                  FixedImageType;
+  typedef TMovingImage                                 MovingImageType;
+  typedef typename FixedImageType::ConstPointer        FixedImagePointer;
+  typedef typename MovingImageType::ConstPointer       MovingImagePointer;
+  typedef Image< unsigned char, InputSpaceDimension >  FixedMaskType;
   typedef Image< unsigned char, OutputSpaceDimension > MovingMaskType;
-  typedef typename FixedMaskType::ConstPointer        FixedMaskPointer;
-  typedef typename MovingMaskType::ConstPointer       MovingMaskPointer;
+  typedef typename FixedMaskType::ConstPointer         FixedMaskPointer;
+  typedef typename MovingMaskType::ConstPointer        MovingMaskPointer;
 
   /** Moment calculators */
-  typedef ImageMomentsCalculator< FixedImageType >   FixedImageCalculatorType;
-  typedef ImageMomentsCalculator< MovingImageType >  MovingImageCalculatorType;
+  typedef ImageMomentsCalculator< FixedImageType >  FixedImageCalculatorType;
+  typedef ImageMomentsCalculator< MovingImageType > MovingImageCalculatorType;
 
-  typedef typename FixedImageCalculatorType::Pointer    FixedImageCalculatorPointer;
-  typedef typename MovingImageCalculatorType::Pointer   MovingImageCalculatorPointer;
+  typedef typename FixedImageCalculatorType::Pointer  FixedImageCalculatorPointer;
+  typedef typename MovingImageCalculatorType::Pointer MovingImageCalculatorPointer;
 
   /** Point type. */
-  typedef typename TransformType::InputPointType   InputPointType;
+  typedef typename TransformType::InputPointType InputPointType;
 
   /** Vector type. */
-  typedef typename TransformType::OutputVectorType  OutputVectorType;
+  typedef typename TransformType::OutputVectorType OutputVectorType;
 
   /** Set the transform to be initialized */
   itkSetObjectMacro( Transform, TransformType );
@@ -131,30 +132,30 @@ public:
   itkGetConstObjectMacro( MovingCalculator, MovingImageCalculatorType );
 
 protected:
-  TranslationTransformInitializer();
-  ~TranslationTransformInitializer(){};
 
-  void PrintSelf(std::ostream &os, Indent indent) const;
+  TranslationTransformInitializer();
+  ~TranslationTransformInitializer(){}
+
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
 private:
-  TranslationTransformInitializer(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
 
-  TransformPointer    m_Transform;
-  FixedImagePointer   m_FixedImage;
-  MovingImagePointer  m_MovingImage;
-  FixedMaskPointer    m_FixedMask;
-  MovingMaskPointer   m_MovingMask;
-  bool                m_UseMoments;
+  TranslationTransformInitializer( const Self & ); // purposely not implemented
+  void operator=( const Self & );                  // purposely not implemented
 
-  FixedImageCalculatorPointer    m_FixedCalculator;
-  MovingImageCalculatorPointer   m_MovingCalculator;
+  TransformPointer   m_Transform;
+  FixedImagePointer  m_FixedImage;
+  MovingImagePointer m_MovingImage;
+  FixedMaskPointer   m_FixedMask;
+  MovingMaskPointer  m_MovingMask;
+  bool               m_UseMoments;
 
-}; //class TranslationTransformInitializer
+  FixedImageCalculatorPointer  m_FixedCalculator;
+  MovingImageCalculatorPointer m_MovingCalculator;
 
+};
 
 }  // namespace itk
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkTranslationTransformInitializer.hxx"

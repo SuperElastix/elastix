@@ -28,74 +28,77 @@ namespace itk
 StandardGradientDescentOptimizer
 ::StandardGradientDescentOptimizer()
 {
-    this->m_Param_a = 1.0;
-    this->m_Param_A = 1.0;
-    this->m_Param_alpha = 0.602;
+  this->m_Param_a     = 1.0;
+  this->m_Param_A     = 1.0;
+  this->m_Param_alpha = 0.602;
 
-    this->m_CurrentTime = 0.0;
-    this->m_InitialTime = 0.0;
+  this->m_CurrentTime = 0.0;
+  this->m_InitialTime = 0.0;
 
-  } // end Constructor
-
-
-  /**
-  * ********************** StartOptimization *********************
-  */
-
-  void StandardGradientDescentOptimizer::StartOptimization(void)
-  {
-    this->m_CurrentTime = this->m_InitialTime;
-    this->Superclass::StartOptimization();
-  } // end StartOptimization
+}   // end Constructor
 
 
-  /**
-  * ******************** AdvanceOneStep **************************
-  */
+/**
+* ********************** StartOptimization *********************
+*/
 
-  void
-    StandardGradientDescentOptimizer
-    ::AdvanceOneStep(void)
-  {
-
-    this->SetLearningRate( this->Compute_a( this->m_CurrentTime ) );
-
-    this->Superclass::AdvanceOneStep();
-
-    this->UpdateCurrentTime();
-
-  } // end AdvanceOneStep
+void
+StandardGradientDescentOptimizer::StartOptimization( void )
+{
+  this->m_CurrentTime = this->m_InitialTime;
+  this->Superclass::StartOptimization();
+}   // end StartOptimization
 
 
-  /**
-  * ************************** Compute_a *************************
-  *
-  * This function computes the parameter a at iteration/time k, as
-  * described by Spall.
-  */
+/**
+* ******************** AdvanceOneStep **************************
+*/
 
-  double StandardGradientDescentOptimizer
-    ::Compute_a(double k) const
-  {
-    return static_cast<double>(
-      this->m_Param_a / vcl_pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
+void
+StandardGradientDescentOptimizer
+::AdvanceOneStep( void )
+{
 
-  } // end Compute_a
+  this->SetLearningRate( this->Compute_a( this->m_CurrentTime ) );
+
+  this->Superclass::AdvanceOneStep();
+
+  this->UpdateCurrentTime();
+
+}   // end AdvanceOneStep
 
 
-  /**
-  * ************************** UpdateCurrentTime ********************
-  *
-  * This function computes the input for the Compute_a function.
-  */
+/**
+* ************************** Compute_a *************************
+*
+* This function computes the parameter a at iteration/time k, as
+* described by Spall.
+*/
 
-  void StandardGradientDescentOptimizer
-    ::UpdateCurrentTime( void )
-  {
-    /** Simply Robbins-Monro: time=iterationnr. */
-    this->m_CurrentTime += 1.0;
+double
+StandardGradientDescentOptimizer
+::Compute_a( double k ) const
+{
+  return static_cast< double >(
+    this->m_Param_a / vcl_pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
 
-  } // end UpdateCurrentTime
+}   // end Compute_a
+
+
+/**
+* ************************** UpdateCurrentTime ********************
+*
+* This function computes the input for the Compute_a function.
+*/
+
+void
+StandardGradientDescentOptimizer
+::UpdateCurrentTime( void )
+{
+  /** Simply Robbins-Monro: time=iterationnr. */
+  this->m_CurrentTime += 1.0;
+
+}   // end UpdateCurrentTime
 
 
 } // end namespace itk

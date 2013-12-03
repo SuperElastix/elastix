@@ -17,7 +17,6 @@
 
 #include "itkLimiterFunctionBase.h"
 
-
 namespace itk
 {
 
@@ -32,45 +31,48 @@ namespace itk
  * \sa LimiterFunctionBase, ExponentialLimiterFunction
  *
  */
-template < class TInput, unsigned int NDimension >
+template< class TInput, unsigned int NDimension >
 class HardLimiterFunction :
-  public LimiterFunctionBase<TInput, NDimension>
+  public LimiterFunctionBase< TInput, NDimension >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef HardLimiterFunction                     Self;
-  typedef LimiterFunctionBase<TInput, NDimension> Superclass;
-  typedef SmartPointer<Self> Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef HardLimiterFunction                       Self;
+  typedef LimiterFunctionBase< TInput, NDimension > Superclass;
+  typedef SmartPointer< Self >                      Pointer;
+  typedef SmartPointer< const Self >                ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(HardLimiterFunction, LimiterFunctionBase);
+  itkTypeMacro( HardLimiterFunction, LimiterFunctionBase );
 
   /** Define the New() function, for creation via the ObjectFactory */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Superclass' static consts */
   itkStaticConstMacro( Dimension, unsigned int, Superclass::Dimension );
 
   /** Superclass' typedefs */
-  typedef typename Superclass::InputType            InputType;
-  typedef typename Superclass::OutputType           OutputType;
-  typedef typename Superclass::DerivativeValueType  DerivativeValueType;
-  typedef typename Superclass::DerivativeType       DerivativeType;
+  typedef typename Superclass::InputType           InputType;
+  typedef typename Superclass::OutputType          OutputType;
+  typedef typename Superclass::DerivativeValueType DerivativeValueType;
+  typedef typename Superclass::DerivativeType      DerivativeType;
 
   /** Limit the input value */
   virtual OutputType Evaluate( const InputType & input ) const;
 
   /** Limit the input value and change the input function derivative accordingly */
-  virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative) const;
+  virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const;
 
 protected:
-  HardLimiterFunction(){};
-  ~HardLimiterFunction(){};
+
+  HardLimiterFunction(){}
+  ~HardLimiterFunction(){}
 
 private:
-  HardLimiterFunction(const Self& ); // purposely not implemented
-  void operator=(const Self& ); // purposely not implemented
+
+  HardLimiterFunction( const Self & ); // purposely not implemented
+  void operator=( const Self & );      // purposely not implemented
 
 };
 

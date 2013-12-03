@@ -16,7 +16,6 @@
 
 #include "elxTransformBendingEnergyPenaltyTerm.h"
 
-
 namespace elastix
 {
 
@@ -24,17 +23,18 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
-void TransformBendingEnergyPenalty<TElastix>
-::Initialize( void ) throw (itk::ExceptionObject)
+template< class TElastix >
+void
+TransformBendingEnergyPenalty< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
   this->Superclass1::Initialize();
   timer->StopTimer();
   elxout << "Initialization of TransformBendingEnergy penalty term took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
-    << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -43,13 +43,14 @@ void TransformBendingEnergyPenalty<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
-void TransformBendingEnergyPenalty<TElastix>
+template< class TElastix >
+void
+TransformBendingEnergyPenalty< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Get the current resolution level. */
-  unsigned int level =
-    ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level
+    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
   /** Set the number of samples used to compute the SelfHessian */
   unsigned int numberOfSamplesForSelfHessian = 100000;
@@ -62,6 +63,4 @@ void TransformBendingEnergyPenalty<TElastix>
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxTransformBendingEnergyPenaltyTerm_HXX__
-

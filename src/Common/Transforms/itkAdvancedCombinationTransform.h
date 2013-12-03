@@ -11,56 +11,55 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkAdvancedCombinationTransform_h
 #define __itkAdvancedCombinationTransform_h
 
 #include "itkAdvancedTransform.h"
 #include "itkExceptionObject.h"
 
-
 namespace itk
 {
 
-  /**
-   * \class AdvancedCombinationTransform
-   *
-   * \brief This class combines two transforms: an 'initial transform'
-   * with a 'current transform'.
-   *
-   * The CombinationTransform class combines an initial transform \f$T_0\f$ with a
-   * current transform \f$T_1\f$.
-   *
-   * Two methods of combining the transforms are supported:
-   * \li Addition: \f$T(x) = T_0(x) + T_1(x)\f$
-   * \li Composition: \f$T(x) = T_1( T_0(x) )\f$
-   *
-   * The TransformPoint(), the GetJacobian() and the GetInverse() methods
-   * depend on this setting.
-   *
-   * If the transform is used in a registration framework,
-   * the initial transform is assumed constant, and the current
-   * transform is assumed to be the transform that is optimised.
-   * So, the transform parameters of the CombinationTransform are the
-   * parameters of the CurrentTransform \f$T_1\f$.
-   *
-   * Note: It is mandatory to set a current transform. An initial transform
-   * is not mandatory.
-   *
-   * \ingroup Transforms
-   */
+/**
+ * \class AdvancedCombinationTransform
+ *
+ * \brief This class combines two transforms: an 'initial transform'
+ * with a 'current transform'.
+ *
+ * The CombinationTransform class combines an initial transform \f$T_0\f$ with a
+ * current transform \f$T_1\f$.
+ *
+ * Two methods of combining the transforms are supported:
+ * \li Addition: \f$T(x) = T_0(x) + T_1(x)\f$
+ * \li Composition: \f$T(x) = T_1( T_0(x) )\f$
+ *
+ * The TransformPoint(), the GetJacobian() and the GetInverse() methods
+ * depend on this setting.
+ *
+ * If the transform is used in a registration framework,
+ * the initial transform is assumed constant, and the current
+ * transform is assumed to be the transform that is optimised.
+ * So, the transform parameters of the CombinationTransform are the
+ * parameters of the CurrentTransform \f$T_1\f$.
+ *
+ * Note: It is mandatory to set a current transform. An initial transform
+ * is not mandatory.
+ *
+ * \ingroup Transforms
+ */
 
-template < typename TScalarType, unsigned int NDimensions = 3 >
+template< typename TScalarType, unsigned int NDimensions = 3 >
 class AdvancedCombinationTransform :
-  public AdvancedTransform<TScalarType, NDimensions, NDimensions>
+  public AdvancedTransform< TScalarType, NDimensions, NDimensions >
 {
 public:
+
   /** Standard itk. */
-  typedef AdvancedCombinationTransform        Self;
+  typedef AdvancedCombinationTransform Self;
   typedef AdvancedTransform< TScalarType,
     NDimensions, NDimensions >                Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** New method for creating an object using a factory. */
   itkNewMacro( Self );
@@ -72,46 +71,46 @@ public:
   itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
 
   /** Typedefs inherited from Superclass.*/
-  typedef typename Superclass::ScalarType                 ScalarType;
-  typedef typename Superclass::ParametersType             ParametersType;
-  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
-  typedef typename Superclass::JacobianType               JacobianType;
-  typedef typename Superclass::InputVectorType            InputVectorType;
-  typedef typename Superclass::OutputVectorType           OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType  JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
-  typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
-  typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
-  typedef typename Superclass::TransformCategoryType      TransformCategoryType;
+  typedef typename Superclass::ScalarType                    ScalarType;
+  typedef typename Superclass::ParametersType                ParametersType;
+  typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
+  typedef typename Superclass::JacobianType                  JacobianType;
+  typedef typename Superclass::InputVectorType               InputVectorType;
+  typedef typename Superclass::OutputVectorType              OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType      InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType     OutputCovariantVectorType;
+  typedef typename Superclass::InputVnlVectorType            InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType           OutputVnlVectorType;
+  typedef typename Superclass::InputPointType                InputPointType;
+  typedef typename Superclass::OutputPointType               OutputPointType;
+  typedef typename Superclass::NonZeroJacobianIndicesType    NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType           SpatialJacobianType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType            SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType            InternalMatrixType;
+  typedef typename Superclass::InverseTransformBaseType      InverseTransformBaseType;
+  typedef typename Superclass::InverseTransformBasePointer   InverseTransformBasePointer;
+  typedef typename Superclass::TransformCategoryType         TransformCategoryType;
 
   /** Transform typedefs for the from Superclass. */
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename TransformType::Pointer                 TransformTypePointer;
-  typedef typename TransformType::ConstPointer            TransformTypeConstPointer;
+  typedef typename Superclass::TransformType   TransformType;
+  typedef typename TransformType::Pointer      TransformTypePointer;
+  typedef typename TransformType::ConstPointer TransformTypeConstPointer;
 
   /** Typedefs for the InitialTransform. */
-  typedef Superclass                                      InitialTransformType;
-  typedef typename InitialTransformType::Pointer          InitialTransformPointer;
-  typedef typename InitialTransformType::ConstPointer     InitialTransformConstPointer;
+  typedef Superclass                                  InitialTransformType;
+  typedef typename InitialTransformType::Pointer      InitialTransformPointer;
+  typedef typename InitialTransformType::ConstPointer InitialTransformConstPointer;
   typedef typename InitialTransformType::InverseTransformBaseType
     InitialTransformInverseTransformBaseType;
   typedef typename InitialTransformType::InverseTransformBasePointer
     InitialTransformInverseTransformBasePointer;
 
   /** Typedefs for the CurrentTransform. */
-  typedef Superclass                                      CurrentTransformType;
-  typedef typename CurrentTransformType::Pointer          CurrentTransformPointer;
-  typedef typename CurrentTransformType::ConstPointer     CurrentTransformConstPointer;
+  typedef Superclass                                  CurrentTransformType;
+  typedef typename CurrentTransformType::Pointer      CurrentTransformPointer;
+  typedef typename CurrentTransformType::ConstPointer CurrentTransformConstPointer;
   typedef typename CurrentTransformType::InverseTransformBaseType
     CurrentTransformInverseTransformBaseType;
   typedef typename CurrentTransformType::InverseTransformBasePointer
@@ -119,6 +118,7 @@ public:
 
   /** Set/Get a pointer to the InitialTransform. */
   virtual void SetInitialTransform( InitialTransformType * _arg );
+
   itkGetObjectMacro( InitialTransform, InitialTransformType );
   itkGetConstObjectMacro( InitialTransform, InitialTransformType );
 
@@ -127,6 +127,7 @@ public:
    * TransformPoint(), GetJacobian(), SetParameters() etc.
    */
   virtual void SetCurrentTransform( CurrentTransformType * _arg );
+
   itkGetObjectMacro( CurrentTransform, CurrentTransformType );
   itkGetConstObjectMacro( CurrentTransform, CurrentTransformType );
 
@@ -141,10 +142,12 @@ public:
 
   /** Control the way transforms are combined. */
   virtual void SetUseComposition( bool _arg );
+
   itkGetConstMacro( UseComposition, bool );
 
   /** Control the way transforms are combined. */
   virtual void SetUseAddition( bool _arg );
+
   itkGetConstMacro( UseAddition, bool );
 
   /**  Method to transform a point. */
@@ -157,21 +160,26 @@ public:
   virtual OutputVectorType TransformVector( const InputVectorType & ) const
   {
     itkExceptionMacro(
-      << "TransformVector(const InputVectorType &) is not implemented "
-      << "for AdvancedCombinationTransform" );
+        << "TransformVector(const InputVectorType &) is not implemented "
+        << "for AdvancedCombinationTransform" );
   }
+
+
   virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
   {
     itkExceptionMacro(
-      << "TransformVector(const InputVnlVectorType &) is not implemented "
-      << "for AdvancedCombinationTransform" );
+        << "TransformVector(const InputVnlVectorType &) is not implemented "
+        << "for AdvancedCombinationTransform" );
   }
+
+
   virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
   {
     itkExceptionMacro(
-      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
-      << "for AdvancedCombinationTransform" );
+        << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
+        << "for AdvancedCombinationTransform" );
   }
+
 
   /** Return the number of parameters that completely define the CurrentTransform. */
   virtual NumberOfParametersType GetNumberOfParameters( void ) const;
@@ -206,7 +214,7 @@ public:
    * an inverse transform. An exception is thrown when no CurrentTransform
    * is set.
    */
-  virtual bool GetInverse( Self* inverse ) const;
+  virtual bool GetInverse( Self * inverse ) const;
 
   /** Return whether the transform is linear (or actually: affine)
    * Returns true when both initial and current transform are linear */
@@ -220,6 +228,7 @@ public:
 
   /** Whether the advanced transform has nonzero matrices. */
   virtual bool GetHasNonZeroSpatialHessian( void ) const;
+
   virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const;
 
   /** Compute the (sparse) Jacobian of the transformation. */
@@ -269,31 +278,31 @@ public:
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
   /** Typedefs for function pointers. */
-  typedef OutputPointType (Self::*TransformPointFunctionPointer)( const InputPointType & ) const;
-  typedef void (Self::*GetSparseJacobianFunctionPointer)(
+  typedef OutputPointType (Self::* TransformPointFunctionPointer)( const InputPointType & ) const;
+  typedef void (Self::*            GetSparseJacobianFunctionPointer)(
     const InputPointType &,
     JacobianType &,
     NonZeroJacobianIndicesType & ) const;
-  typedef void (Self::*GetSpatialJacobianFunctionPointer)(
+  typedef void (Self::* GetSpatialJacobianFunctionPointer)(
     const InputPointType &,
     SpatialJacobianType & ) const;
-  typedef void (Self::*GetSpatialHessianFunctionPointer)(
+  typedef void (Self::* GetSpatialHessianFunctionPointer)(
     const InputPointType &,
     SpatialHessianType & ) const;
-  typedef void (Self::*GetJacobianOfSpatialJacobianFunctionPointer)(
+  typedef void (Self::* GetJacobianOfSpatialJacobianFunctionPointer)(
     const InputPointType &,
     JacobianOfSpatialJacobianType &,
     NonZeroJacobianIndicesType & ) const;
-  typedef void (Self::*GetJacobianOfSpatialJacobianFunctionPointer2)(
+  typedef void (Self::* GetJacobianOfSpatialJacobianFunctionPointer2)(
     const InputPointType &,
     SpatialJacobianType &,
     JacobianOfSpatialJacobianType &,
     NonZeroJacobianIndicesType & ) const;
-  typedef void (Self::*GetJacobianOfSpatialHessianFunctionPointer)(
+  typedef void (Self::* GetJacobianOfSpatialHessianFunctionPointer)(
     const InputPointType &,
     JacobianOfSpatialHessianType &,
     NonZeroJacobianIndicesType & ) const;
-  typedef void (Self::*GetJacobianOfSpatialHessianFunctionPointer2)(
+  typedef void (Self::* GetJacobianOfSpatialHessianFunctionPointer2)(
     const InputPointType &,
     SpatialHessianType &,
     JacobianOfSpatialHessianType &,
@@ -305,7 +314,7 @@ protected:
   AdvancedCombinationTransform();
 
   /** Destructor. */
-  virtual ~AdvancedCombinationTransform(){};
+  virtual ~AdvancedCombinationTransform(){}
 
   /** Declaration of members. */
   InitialTransformPointer m_InitialTransform;
@@ -317,7 +326,7 @@ protected:
   virtual void UpdateCombinationMethod( void );
 
   /** Throw an exception. */
-  virtual void NoCurrentTransformSet( void ) const throw (ExceptionObject);
+  virtual void NoCurrentTransformSet( void ) const throw ( ExceptionObject );
 
   /**  A pointer to one of the following functions:
    * - TransformPointUseAddition,
@@ -336,13 +345,13 @@ protected:
   //GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
 
   /** More of these. */
-  GetSparseJacobianFunctionPointer    m_SelectedGetSparseJacobianFunction;
-  GetSpatialJacobianFunctionPointer   m_SelectedGetSpatialJacobianFunction;
-  GetSpatialHessianFunctionPointer    m_SelectedGetSpatialHessianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer   m_SelectedGetJacobianOfSpatialJacobianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer2  m_SelectedGetJacobianOfSpatialJacobianFunction2;
-  GetJacobianOfSpatialHessianFunctionPointer    m_SelectedGetJacobianOfSpatialHessianFunction;
-  GetJacobianOfSpatialHessianFunctionPointer2   m_SelectedGetJacobianOfSpatialHessianFunction2;
+  GetSparseJacobianFunctionPointer             m_SelectedGetSparseJacobianFunction;
+  GetSpatialJacobianFunctionPointer            m_SelectedGetSpatialJacobianFunction;
+  GetSpatialHessianFunctionPointer             m_SelectedGetSpatialHessianFunction;
+  GetJacobianOfSpatialJacobianFunctionPointer  m_SelectedGetJacobianOfSpatialJacobianFunction;
+  GetJacobianOfSpatialJacobianFunctionPointer2 m_SelectedGetJacobianOfSpatialJacobianFunction2;
+  GetJacobianOfSpatialHessianFunctionPointer   m_SelectedGetJacobianOfSpatialHessianFunction;
+  GetJacobianOfSpatialHessianFunctionPointer2  m_SelectedGetJacobianOfSpatialHessianFunction2;
 
   /** ************************************************
    * Methods to transform a point.
@@ -562,19 +571,15 @@ protected:
 
 private:
 
-  AdvancedCombinationTransform( const Self& );  // purposely not implemented
-  void operator=( const Self& );        // purposely not implemented
+  AdvancedCombinationTransform( const Self & ); // purposely not implemented
+  void operator=( const Self & );               // purposely not implemented
 
 };
 
-
 } // end namespace itk
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkAdvancedCombinationTransform.hxx"
 #endif
 
-
 #endif // end #ifndef __itkAdvancedCombinationTransform_h
-

@@ -30,17 +30,17 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template < class TInputImage >
+template< class TInputImage >
 class ImageRandomSamplerSparseMask :
   public ImageRandomSamplerBase< TInputImage >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef ImageRandomSamplerSparseMask                Self;
-  typedef ImageRandomSamplerBase< TInputImage >       Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef ImageRandomSamplerSparseMask          Self;
+  typedef ImageRandomSamplerBase< TInputImage > Superclass;
+  typedef SmartPointer< Self >                  Pointer;
+  typedef SmartPointer< const Self >            ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -67,22 +67,22 @@ public:
     Superclass::InputImageDimension );
 
   /** Other typdefs. */
-  typedef typename InputImageType::IndexType    InputImageIndexType;
-  typedef typename InputImageType::PointType    InputImagePointType;
+  typedef typename InputImageType::IndexType InputImageIndexType;
+  typedef typename InputImageType::PointType InputImagePointType;
 
   /** The random number generator used to generate random indices. */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-  typedef typename RandomGeneratorType::Pointer   RandomGeneratorPointer;
+  typedef typename RandomGeneratorType::Pointer                  RandomGeneratorPointer;
 
 protected:
 
-  typedef itk::ImageFullSampler<InputImageType>           InternalFullSamplerType;
-  typedef typename InternalFullSamplerType::Pointer   InternalFullSamplerPointer;
+  typedef itk::ImageFullSampler< InputImageType >   InternalFullSamplerType;
+  typedef typename InternalFullSamplerType::Pointer InternalFullSamplerPointer;
 
   /** The constructor. */
   ImageRandomSamplerSparseMask();
   /** The destructor. */
-  virtual ~ImageRandomSamplerSparseMask() {};
+  virtual ~ImageRandomSamplerSparseMask() {}
 
   /** PrintSelf. */
   void PrintSelf( std::ostream & os, Indent indent ) const;
@@ -92,22 +92,22 @@ protected:
 
   /** Multi-threaded functionality that does the work. */
   virtual void BeforeThreadedGenerateData( void );
+
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
     ThreadIdType threadId );
 
-  RandomGeneratorPointer      m_RandomGenerator;
-  InternalFullSamplerPointer  m_InternalFullSampler;
+  RandomGeneratorPointer     m_RandomGenerator;
+  InternalFullSamplerPointer m_InternalFullSampler;
 
 private:
 
   /** The private constructor. */
-  ImageRandomSamplerSparseMask( const Self& );  // purposely not implemented
+  ImageRandomSamplerSparseMask( const Self & );  // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );                // purposely not implemented
+  void operator=( const Self & );                // purposely not implemented
 
 };
-
 
 } // end namespace itk
 

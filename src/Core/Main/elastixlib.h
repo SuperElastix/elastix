@@ -25,19 +25,19 @@
  *      Dll export    *
  *                    *
  ********************************************************************************/
-#if (defined(_WIN32) || defined(WIN32) )
+#if ( defined( _WIN32 ) || defined( WIN32 ) )
 #  ifdef _ELASTIX_BUILD_LIBRARY
 #    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
-#      define ELASTIXLIB_API __declspec(dllexport)
+#      define ELASTIXLIB_API __declspec( dllexport )
 #    else
-#      define ELASTIXLIB_API __declspec(dllimport)
+#      define ELASTIXLIB_API __declspec( dllimport )
 #    endif
 #  else
-#    define ELASTIXLIB_API __declspec(dllexport)
+#    define ELASTIXLIB_API __declspec( dllexport )
 #  endif
 #else
 #  if __GNUC__ >= 4
-#    define ELASTIXLIB_API __attribute__ ((visibility ("default")))
+#    define ELASTIXLIB_API __attribute__ ( ( visibility( "default" ) ) )
 #  else
 #    define ELASTIXLIB_API
 #  endif
@@ -55,13 +55,14 @@ namespace elastix
 class ELASTIXLIB_API ELASTIX
 {
 public:
+
   //typedefs for images
-  typedef itk::DataObject   Image;
-  typedef Image::Pointer    ImagePointer;
+  typedef itk::DataObject Image;
+  typedef Image::Pointer  ImagePointer;
 
   //typedefs for parameter map
-  typedef itk::ParameterFileParser::ParameterValuesType ParameterValuesType;
-  typedef itk::ParameterFileParser::ParameterMapType    ParameterMapType;
+  typedef itk::ParameterFileParser::ParameterValuesType             ParameterValuesType;
+  typedef itk::ParameterFileParser::ParameterMapType                ParameterMapType;
   typedef std::vector< itk::ParameterFileParser::ParameterMapType > ParameterMapListType;
 
   /**
@@ -98,7 +99,7 @@ public:
   int RegisterImages( ImagePointer fixedImage,
     ImagePointer movingImage,
     ParameterMapType & parameterMap,
-    std::string   outputPath,
+    std::string outputPath,
     bool performLogging,
     bool performCout,
     ImagePointer fixedMask = 0,
@@ -106,8 +107,8 @@ public:
 
   int RegisterImages( ImagePointer fixedImage,
     ImagePointer movingImage,
-    std::vector< ParameterMapType >& parameterMaps,
-    std::string   outputPath,
+    std::vector< ParameterMapType > & parameterMaps,
+    std::string outputPath,
     bool performLogging,
     bool performCout,
     ImagePointer fixedMask = 0,
@@ -123,14 +124,17 @@ public:
   ParameterMapListType GetTransformParameterMapList( void );
 
 private:
+
   /* the result images */
-  ImagePointer     m_ResultImage;
+  ImagePointer m_ResultImage;
 
   /* Final transformation*/
   ParameterMapListType m_TransformParametersList;
 
-}; // end class ELASTIX
+};
 
-}// end namespace elastix
+// end class ELASTIX
+
+} // end namespace elastix
 
 #endif

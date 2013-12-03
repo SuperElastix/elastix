@@ -34,22 +34,22 @@ using namespace std;
  * \ingroup xout
  */
 
-template<class charT, class traits = char_traits<charT> >
-class xoutrow : public xoutbase<charT, traits>
+template< class charT, class traits = char_traits< charT > >
+class xoutrow : public xoutbase< charT, traits >
 {
 public:
 
-  typedef xoutrow                           Self;
-  typedef xoutbase<charT, traits>           Superclass;
+  typedef xoutrow                   Self;
+  typedef xoutbase< charT, traits > Superclass;
 
   /** Typedefs of Superclass */
-  typedef typename Superclass::traits_type    traits_type;
-  typedef typename Superclass::char_type      char_type;
-  typedef typename Superclass::int_type       int_type;
-  typedef typename Superclass::pos_type       pos_type;
-  typedef typename Superclass::off_type       off_type;
-  typedef typename Superclass::ostream_type   ostream_type;
-  typedef typename Superclass::ios_type       ios_type;
+  typedef typename Superclass::traits_type  traits_type;
+  typedef typename Superclass::char_type    char_type;
+  typedef typename Superclass::int_type     int_type;
+  typedef typename Superclass::pos_type     pos_type;
+  typedef typename Superclass::off_type     off_type;
+  typedef typename Superclass::ostream_type ostream_type;
+  typedef typename Superclass::ios_type     ios_type;
 
   typedef typename Superclass::CStreamMapType         CStreamMapType;
   typedef typename Superclass::XStreamMapType         XStreamMapType;
@@ -59,7 +59,7 @@ public:
   typedef typename Superclass::XStreamMapEntryType    XStreamMapEntryType;
 
   /** Extra typedefs */
-  typedef xoutcell<charT, traits> XOutCellType;
+  typedef xoutcell< charT, traits > XOutCellType;
 
   /** Constructor */
   xoutrow();
@@ -94,10 +94,13 @@ public:
    * set the outputs of the TargetCells as well.
    */
   virtual int AddOutput( const char * name, ostream_type * output );
+
   virtual int AddOutput( const char * name, Superclass * output );
+
   virtual int RemoveOutput( const char * name );
 
   virtual void SetOutputs( const CStreamMapType & outputmap );
+
   virtual void SetOutputs( const XStreamMapType & outputmap );
 
 protected:
@@ -112,10 +115,8 @@ protected:
 
 };
 
-
 } // end namespace xoutlibrary
 
 #include "xoutrow.hxx"
 
 #endif // end #ifndef __xoutrow_h
-

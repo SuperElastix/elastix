@@ -28,7 +28,6 @@
 
 #include "itkObjectFactory.h"
 
-
 namespace itk
 {
 
@@ -51,18 +50,19 @@ namespace itk
  * \ingroup Transforms
  *
  */
-template <class TScalarType,
-          unsigned int NDimensions=3>
-class AdvancedIdentityTransform
-  : public AdvancedTransform<TScalarType,NDimensions,NDimensions>
+template< class TScalarType,
+unsigned int NDimensions = 3 >
+class AdvancedIdentityTransform :
+  public AdvancedTransform< TScalarType, NDimensions, NDimensions >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef AdvancedIdentityTransform                         Self;
+  typedef AdvancedIdentityTransform Self;
   typedef AdvancedTransform<
-    TScalarType,NDimensions,NDimensions>                    Superclass;
-  typedef SmartPointer< Self >                              Pointer;
-  typedef SmartPointer< const Self >                        ConstPointer;
+    TScalarType, NDimensions, NDimensions >                    Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** New method for creating an object using a factory. */
   itkNewMacro( Self );
@@ -76,39 +76,39 @@ public:
   itkStaticConstMacro( ParametersDimension, unsigned int, 1 );
 
   /** Type of the input parameters. */
-  typedef  TScalarType     ScalarType;
+  typedef  TScalarType ScalarType;
 
   /** Type of the input parameters. */
-  typedef typename Superclass::ParametersType ParametersType;
+  typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::TransformCategoryType TransformCategoryType;
+  typedef typename Superclass::TransformCategoryType  TransformCategoryType;
 
   /** Type of the Jacobian matrix. */
   typedef typename Superclass::JacobianType JacobianType;
 
   /** Standard vector type for this class. */
-  typedef Vector<TScalarType,
-                itkGetStaticConstMacro(InputSpaceDimension)>  InputVectorType;
-  typedef Vector<TScalarType,
-                itkGetStaticConstMacro(OutputSpaceDimension)> OutputVectorType;
+  typedef Vector< TScalarType,
+    itkGetStaticConstMacro( InputSpaceDimension ) >  InputVectorType;
+  typedef Vector< TScalarType,
+    itkGetStaticConstMacro( OutputSpaceDimension ) > OutputVectorType;
 
   /** Standard covariant vector type for this class */
-  typedef CovariantVector<TScalarType,
-                          itkGetStaticConstMacro(InputSpaceDimension)>  InputCovariantVectorType;
-  typedef CovariantVector<TScalarType,
-                          itkGetStaticConstMacro(OutputSpaceDimension)> OutputCovariantVectorType;
+  typedef CovariantVector< TScalarType,
+    itkGetStaticConstMacro( InputSpaceDimension ) >  InputCovariantVectorType;
+  typedef CovariantVector< TScalarType,
+    itkGetStaticConstMacro( OutputSpaceDimension ) > OutputCovariantVectorType;
 
   /** Standard vnl_vector type for this class. */
-  typedef vnl_vector_fixed<TScalarType,
-                           itkGetStaticConstMacro(InputSpaceDimension)>  InputVnlVectorType;
-  typedef vnl_vector_fixed<TScalarType,
-                           itkGetStaticConstMacro(OutputSpaceDimension)> OutputVnlVectorType;
+  typedef vnl_vector_fixed< TScalarType,
+    itkGetStaticConstMacro( InputSpaceDimension ) >  InputVnlVectorType;
+  typedef vnl_vector_fixed< TScalarType,
+    itkGetStaticConstMacro( OutputSpaceDimension ) > OutputVnlVectorType;
 
   /** Standard coordinate point type for this class */
-  typedef Point<TScalarType,
-                itkGetStaticConstMacro(InputSpaceDimension)> InputPointType;
-  typedef Point<TScalarType,
-                itkGetStaticConstMacro(OutputSpaceDimension)> OutputPointType;
+  typedef Point< TScalarType,
+    itkGetStaticConstMacro( InputSpaceDimension ) > InputPointType;
+  typedef Point< TScalarType,
+    itkGetStaticConstMacro( OutputSpaceDimension ) > OutputPointType;
 
   /** Base inverse transform type. This type should not be changed to the
    * concrete inverse transform type or inheritance would be lost.*/
@@ -117,43 +117,44 @@ public:
 
   /** AdvancedTransform typedefs */
   typedef typename Superclass
-    ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
   /**  Method to transform a point. */
-  virtual OutputPointType TransformPoint( const InputPointType  &point ) const
-    { return point; }
+  virtual OutputPointType TransformPoint( const InputPointType  & point ) const
+  { return point; }
 
   /**  Method to transform a vector. */
-  virtual OutputVectorType TransformVector( const InputVectorType &vector ) const
-    { return vector; }
+  virtual OutputVectorType TransformVector( const InputVectorType & vector ) const
+  { return vector; }
 
   /**  Method to transform a vnl_vector. */
-  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType &vector ) const
-    { return vector; }
+  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & vector ) const
+  { return vector; }
 
   /**  Method to transform a CovariantVector. */
   virtual OutputCovariantVectorType TransformCovariantVector(
-    const InputCovariantVectorType &vector ) const
-    { return vector; }
+    const InputCovariantVectorType & vector ) const
+  { return vector; }
 
   /** Set the transformation to an Identity
    *
    * This is a NULL operation in the case of this particular transform.
      The method is provided only to comply with the interface of other transforms. */
-  void SetIdentity( void ) { }
+  void SetIdentity( void ) {}
 
   /** Return an inverse of the identity transform - another identity transform. */
   virtual InverseTransformBasePointer GetInverseTransform( void ) const
-    {
+  {
     return this->New().GetPointer();
-    }
+  }
+
 
   /** Indicates that this transform is linear. That is, given two
    * points P and Q, and scalar coefficients a and b, then
@@ -170,20 +171,23 @@ public:
     return Self::Linear;
   }
 
+
   /** Get the Fixed Parameters. */
-  virtual const ParametersType& GetFixedParameters( void ) const
-    {
+  virtual const ParametersType & GetFixedParameters( void ) const
+  {
     return this->m_FixedParameters;
-    }
+  }
+
 
   /** Set the fixed parameters and update internal transformation. */
   virtual void SetFixedParameters( const ParametersType & ) {}
 
   /** Get the Parameters. */
-  virtual const ParametersType& GetParameters( void ) const
-    {
+  virtual const ParametersType & GetParameters( void ) const
+  {
     return this->m_Parameters;
-    }
+  }
+
 
   /** Set the fixed parameters and update internal transformation. */
   virtual void SetParameters( const ParametersType & ) {}
@@ -194,9 +198,10 @@ public:
     JacobianType & j,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
   {
-    j = this->m_LocalJacobian;
+    j                      = this->m_LocalJacobian;
     nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
   }
+
 
   /** Compute the spatial Jacobian of the transformation. */
   virtual void GetSpatialJacobian(
@@ -206,6 +211,7 @@ public:
     sj = this->m_SpatialJacobian;
   }
 
+
   /** Compute the spatial Hessian of the transformation. */
   virtual void GetSpatialHessian(
     const InputPointType &,
@@ -214,15 +220,17 @@ public:
     sh = this->m_SpatialHessian;
   }
 
+
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
   virtual void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     JacobianOfSpatialJacobianType & jsj,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
   {
-    jsj = this->m_JacobianOfSpatialJacobian;
+    jsj                    = this->m_JacobianOfSpatialJacobian;
     nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
   }
+
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
   virtual void GetJacobianOfSpatialJacobian(
@@ -231,10 +239,11 @@ public:
     JacobianOfSpatialJacobianType & jsj,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
   {
-    sj = this->m_SpatialJacobian;
-    jsj = this->m_JacobianOfSpatialJacobian;
+    sj                     = this->m_SpatialJacobian;
+    jsj                    = this->m_JacobianOfSpatialJacobian;
     nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
   }
+
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
   virtual void GetJacobianOfSpatialHessian(
@@ -242,9 +251,10 @@ public:
     JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
   {
-    jsh = this->m_JacobianOfSpatialHessian;
+    jsh                    = this->m_JacobianOfSpatialHessian;
     nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
   }
+
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
@@ -255,14 +265,16 @@ public:
     JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
   {
-    sh = this->m_SpatialHessian;
-    jsh = this->m_JacobianOfSpatialHessian;
+    sh                     = this->m_SpatialHessian;
+    jsh                    = this->m_JacobianOfSpatialHessian;
     nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
   }
 
+
 protected:
-  AdvancedIdentityTransform()
-    : AdvancedTransform<TScalarType,NDimensions,NDimensions>( NDimensions )
+
+  AdvancedIdentityTransform() :
+    AdvancedTransform< TScalarType, NDimensions, NDimensions >( NDimensions )
   {
     // The Jacobian is constant, therefore it can be initialized in the constructor.
     this->m_LocalJacobian = JacobianType( NDimensions, 1 );
@@ -273,24 +285,27 @@ protected:
 
     /** Nonzero Jacobian indices, for GetJacobian. */
     this->m_NonZeroJacobianIndices.resize( ParametersDimension );
-    for ( unsigned int i = 0; i < ParametersDimension; ++i )
+    for( unsigned int i = 0; i < ParametersDimension; ++i )
     {
       this->m_NonZeroJacobianIndices[ i ] = i;
     }
 
     /** Set to correct size. The elements are automatically initialized to 0. */
-    this->m_HasNonZeroSpatialHessian = false;
+    this->m_HasNonZeroSpatialHessian           = false;
     this->m_HasNonZeroJacobianOfSpatialHessian = false;
     this->m_JacobianOfSpatialJacobian.resize( ParametersDimension );
     this->m_JacobianOfSpatialHessian.resize( ParametersDimension );
 
     /** m_SpatialHessian is automatically initialized with zeros. */
   }
+
+
   virtual ~AdvancedIdentityTransform() {}
 
 private:
-  AdvancedIdentityTransform(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  AdvancedIdentityTransform( const Self & ); // purposely not implemented
+  void operator=( const Self & );            // purposely not implemented
 
   JacobianType                  m_LocalJacobian;
   SpatialJacobianType           m_SpatialJacobian;
@@ -304,4 +319,3 @@ private:
 } // end namespace itk
 
 #endif
-

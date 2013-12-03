@@ -52,20 +52,20 @@ namespace itk
  * \sa SpatialObject CompositeSpatialObject
  */
 
-template < unsigned int TDimension = 3,
-           class TPixelType = unsigned char
+template< unsigned int TDimension = 3,
+class TPixelType                  = unsigned char
 >
-class ImageSpatialObject2
-  : public SpatialObject< TDimension >
+class ImageSpatialObject2 :
+  public SpatialObject< TDimension >
 {
 
 public:
 
-  typedef double ScalarType;
+  typedef double                                        ScalarType;
   typedef ImageSpatialObject2< TDimension, TPixelType > Self;
-  typedef SpatialObject< TDimension >                 Superclass;
-  typedef SmartPointer< Self >                        Pointer;
-  typedef SmartPointer< const Self >                  ConstPointer;
+  typedef SpatialObject< TDimension >                   Superclass;
+  typedef SmartPointer< Self >                          Pointer;
+  typedef SmartPointer< const Self >                    ConstPointer;
 
   typedef TPixelType                            PixelType;
   typedef Image< PixelType, TDimension >        ImageType;
@@ -76,13 +76,13 @@ public:
   typedef typename Superclass::TransformType    TransformType;
   typedef typename Superclass::PointType        PointType;
   typedef typename Superclass::BoundingBoxType  BoundingBoxType;
-  typedef InterpolateImageFunction<ImageType>   InterpolatorType;
+  typedef InterpolateImageFunction< ImageType > InterpolatorType;
 
-  typedef NearestNeighborInterpolateImageFunction<ImageType>
+  typedef NearestNeighborInterpolateImageFunction< ImageType >
     NNInterpolatorType;
 
-  typedef VectorContainer< unsigned long, PointType> PointContainerType;
-  typedef typename PointContainerType::Pointer PointContainerPointer;
+  typedef VectorContainer< unsigned long, PointType > PointContainerType;
+  typedef typename PointContainerType::Pointer        PointContainerPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -99,23 +99,22 @@ public:
   /** Return true if the object is evaluable at the requested point,
    *  and else otherwise. */
   bool IsEvaluableAt( const PointType & point,
-                      unsigned int depth=0, char *name=NULL) const;
+    unsigned int depth = 0, char * name = NULL ) const;
 
   /** Returns the value of the image at the requested point.
    *  If the point is not inside the object, then an exception is thrown.
    * \sa ExceptionObject */
   bool ValueAt( const PointType & point, double & value,
-                unsigned int depth=0, char *name=NULL) const;
-
+    unsigned int depth = 0, char * name = NULL ) const;
 
   /** Returns true if the point is inside, false otherwise. */
   bool IsInside( const PointType & point,
-                 unsigned int depth, char *name) const;
+    unsigned int depth, char * name ) const;
 
   /** Test whether a point is inside or outside the object
    *  For computational speed purposes, it is faster if the method does not
    *  check the name of the class and the current depth */
-  bool IsInside( const PointType & point) const;
+  bool IsInside( const PointType & point ) const;
 
   /** Compute the boundaries of the image spatial object. */
   bool ComputeLocalBoundingBox() const;
@@ -124,33 +123,36 @@ public:
   unsigned long GetMTime( void ) const;
 
   /** Set the slice position */
-  void SetSlicePosition(unsigned int dimension, int position);
+  void SetSlicePosition( unsigned int dimension, int position );
 
   /** Get the slice position */
-  int GetSlicePosition(unsigned int dimension)
-  {return m_SlicePosition[dimension];}
+  int GetSlicePosition( unsigned int dimension )
+  { return m_SlicePosition[ dimension ]; }
 
-  const char* GetPixelType()
-    {
+  const char * GetPixelType()
+  {
     return m_PixelType.c_str();
-    }
+  }
+
 
   /** Set/Get the interpolator */
-  void SetInterpolator(InterpolatorType * interpolator);
-  itkGetObjectMacro(Interpolator,InterpolatorType);
+  void SetInterpolator( InterpolatorType * interpolator );
+
+  itkGetObjectMacro( Interpolator, InterpolatorType );
 
 protected:
-  ImageSpatialObject2(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  ImageSpatialObject2( const Self & ); // purposely not implemented
+  void operator=( const Self & );      // purposely not implemented
 
   ImagePointer m_Image;
 
   ImageSpatialObject2();
   virtual ~ImageSpatialObject2();
 
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
-  int* m_SlicePosition;
+  int *       m_SlicePosition;
   std::string m_PixelType;
 
   typename InterpolatorType::Pointer m_Interpolator;

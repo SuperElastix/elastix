@@ -30,21 +30,23 @@
  * ******************* GetHelpString *******************
  */
 
-std::string GetHelpString( void )
+std::string
+GetHelpString( void )
 {
   std::stringstream ss;
   ss << "Usage:" << std::endl
-    << "elxInvertTransform" << std::endl
-    << "  -tp    transform parameters file to be inverted\n"
-    << "  -out   output inverted transform parameters filename\n"
-    << "  -m     moving image file name\n"
-    << "Currently only 3D, {Euler, Affine} supported.";
+     << "elxInvertTransform" << std::endl
+     << "  -tp    transform parameters file to be inverted\n"
+     << "  -out   output inverted transform parameters filename\n"
+     << "  -m     moving image file name\n"
+     << "Currently only 3D, {Euler, Affine} supported.";
   return ss.str();
 
 } // end GetHelpString()
 
 
-int main( int argc, char * argv[] )
+int
+main( int argc, char * argv[] )
 {
   /** Read the command line arguments. */
   itk::CommandLineArgumentParser::Pointer clParser = itk::CommandLineArgumentParser::New();
@@ -77,24 +79,24 @@ int main( int argc, char * argv[] )
 
   /** Typedef's. */
   //const unsigned int Dimension = 2;
-  const unsigned int  Dimension = 3;
-  typedef float       PrecisionType;
+  const unsigned int Dimension = 3;
+  typedef float PrecisionType;
   std::string dummyErrorMessage = "";
 
   typedef itk::Transform<
     PrecisionType, Dimension, Dimension >               BaseTransformType;
-  typedef itk::Euler3DTransform< PrecisionType >        RigidTransformType;
+  typedef itk::Euler3DTransform< PrecisionType > RigidTransformType;
   typedef itk::AffineTransform<
-  PrecisionType, Dimension >                            AffineTransformType;
-  typedef BaseTransformType::ParametersType             ParametersType;
-  typedef BaseTransformType::ScalarType                 ScalarType;
-  typedef RigidTransformType::CenterType                CenterType;
-  typedef BaseTransformType::OutputPointType            OutputPointType;
+    PrecisionType, Dimension >                            AffineTransformType;
+  typedef BaseTransformType::ParametersType  ParametersType;
+  typedef BaseTransformType::ScalarType      ScalarType;
+  typedef RigidTransformType::CenterType     CenterType;
+  typedef BaseTransformType::OutputPointType OutputPointType;
 
   /** Interface to the original transform parameters file. */
-  typedef itk::ParameterFileParser    ParserType;
-  typedef itk::ParameterMapInterface  InterfaceType;
-  ParserType::Pointer parser = ParserType::New();
+  typedef itk::ParameterFileParser   ParserType;
+  typedef itk::ParameterMapInterface InterfaceType;
+  ParserType::Pointer    parser = ParserType::New();
   InterfaceType::Pointer config = InterfaceType::New();
   parser->SetParameterFileName( inputTransformParametersName );
   parser->ReadParameterFile();
@@ -103,10 +105,10 @@ int main( int argc, char * argv[] )
   /** Check no initial transform. */
   std::string initialTransform = "";
   config->ReadParameter( initialTransform, "InitialTransformParametersFileName", 0, dummyErrorMessage );
-  if ( initialTransform != "NoInitialTransform" )
+  if( initialTransform != "NoInitialTransform" )
   {
     std::cerr << "ERROR: currently only a single non-concatenated transform is supported!\n"
-      << "  The parameter \"InitialTransformParametersFileName\" should read \"NoInitialTransform\"." << std::endl;
+              << "  The parameter \"InitialTransformParametersFileName\" should read \"NoInitialTransform\"." << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -118,8 +120,8 @@ int main( int argc, char * argv[] )
    */
 
   /** Create a testReader. */
-  typedef itk::Image< short, Dimension >                DummyImageType;
-  typedef itk::ImageFileReader< DummyImageType >        ReaderType;
+  typedef itk::Image< short, Dimension >         DummyImageType;
+  typedef itk::ImageFileReader< DummyImageType > ReaderType;
   ReaderType::Pointer testReader = ReaderType::New();
   testReader->SetFileName( movingImageFileName.c_str() );
 
@@ -128,7 +130,7 @@ int main( int argc, char * argv[] )
   {
     testReader->GenerateOutputInformation();
   }
-  catch ( itk::ExceptionObject & e )
+  catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: Caught ITK exception: " << e << std::endl;
     return EXIT_FAILURE;
@@ -146,21 +148,21 @@ int main( int argc, char * argv[] )
   config->ReadParameter( numberOfParameters, "NumberOfParameters", 0, dummyErrorMessage );
 
   /** Read the TransformParameters as a vector. */
-  std::vector<ScalarType> vecPar( numberOfParameters,
-    itk::NumericTraits<ScalarType>::Zero );
+  std::vector< ScalarType > vecPar( numberOfParameters,
+  itk::NumericTraits< ScalarType >::Zero );
   config->ReadParameter( vecPar, "TransformParameters",
     0, numberOfParameters - 1, true, dummyErrorMessage );
 
   /** Convert to ParametersType. */
   ParametersType transformParameters( numberOfParameters );
-  for ( unsigned int i = 0; i < numberOfParameters; i++ )
+  for( unsigned int i = 0; i < numberOfParameters; i++ )
   {
     transformParameters[ i ] = vecPar[ i ];
   }
 
   /** Get center of rotation. */
   CenterType centerOfRotation;
-  for ( unsigned int i = 0; i < Dimension; i++ )
+  for( unsigned int i = 0; i < Dimension; i++ )
   {
     config->ReadParameter( centerOfRotation[ i ],
       "CenterOfRotationPoint", i, dummyErrorMessage );
@@ -168,11 +170,11 @@ int main( int argc, char * argv[] )
 
   /** Set up the transform. */
   ParametersType transformParametersInv( numberOfParameters );
-  CenterType centerOfRotationInv;
+  CenterType     centerOfRotationInv;
 
   std::string transformType = "";
   config->ReadParameter( transformType, "Transform", 0, dummyErrorMessage );
-  if ( transformType == "EulerTransform" )
+  if( transformType == "EulerTransform" )
   {
     RigidTransformType::Pointer rigidTransform = RigidTransformType::New();
     rigidTransform->SetCenter( centerOfRotation );
@@ -184,9 +186,9 @@ int main( int argc, char * argv[] )
     rigidTransform->GetInverse( inverseRigidTransform );
 
     transformParametersInv = inverseRigidTransform->GetParameters();
-    centerOfRotationInv = inverseRigidTransform->GetCenter();
+    centerOfRotationInv    = inverseRigidTransform->GetCenter();
   }
-  else if ( transformType == "AffineTransform" )
+  else if( transformType == "AffineTransform" )
   {
     AffineTransformType::Pointer affineTransform = AffineTransformType::New();
     affineTransform->SetCenter( centerOfRotation );
@@ -198,13 +200,13 @@ int main( int argc, char * argv[] )
     affineTransform->GetInverse( inverseAffineTransform );
 
     transformParametersInv = inverseAffineTransform->GetParameters();
-    centerOfRotationInv = inverseAffineTransform->GetCenter();
+    centerOfRotationInv    = inverseAffineTransform->GetCenter();
   }
   else
   {
     std::cerr << "ERROR: Transforms of the type "
-      << transformType
-      << " are not supported." << std::endl;
+              << transformType
+              << " are not supported." << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -237,15 +239,15 @@ int main( int argc, char * argv[] )
 
   /** Write the name of this transform. */
   outputTPFile << "(Transform \""
-    << transformType << "\")" << std::endl;
+               << transformType << "\")" << std::endl;
 
   /** Write the number of parameters of this transform. */
   outputTPFile << "(NumberOfParameters "
-    << numberOfParameters << ")" << std::endl;
+               << numberOfParameters << ")" << std::endl;
 
   /** In this case, write in a normal way to the parameter file. */
   outputTPFile << "(TransformParameters ";
-  for ( unsigned int i = 0; i < numberOfParameters - 1; i++ )
+  for( unsigned int i = 0; i < numberOfParameters - 1; i++ )
   {
     outputTPFile << transformParametersInv[ i ] << " ";
   }
@@ -256,28 +258,28 @@ int main( int argc, char * argv[] )
 
   /** Write the way Transforms are combined. */
   outputTPFile << "(HowToCombineTransforms \""
-    << combinationMethod << "\")" << std::endl;
+               << combinationMethod << "\")" << std::endl;
 
   /** Write image specific things. */
   outputTPFile << std::endl << "// Image specific" << std::endl;
 
   /** Write image dimensions. */
   outputTPFile << "(FixedImageDimension "
-    << FixDim << ")" << std::endl;
+               << FixDim << ")" << std::endl;
   outputTPFile << "(MovingImageDimension "
-    << MovDim << ")" << std::endl;
+               << MovDim << ")" << std::endl;
 
   /** Write image pixel types. */
   outputTPFile << "(FixedInternalImagePixelType \""
-    << fixpix << "\")" << std::endl;
+               << fixpix << "\")" << std::endl;
   outputTPFile << "(MovingInternalImagePixelType \""
-    << movpix << "\")" << std::endl;
+               << movpix << "\")" << std::endl;
 
   /** Get the Size, Spacing and Origin of the moving image. */
 
   /** Write image Size. */
   outputTPFile << "(Size ";
-  for ( unsigned int i = 0; i < MovDim - 1; i++ )
+  for( unsigned int i = 0; i < MovDim - 1; i++ )
   {
     outputTPFile << imageIOBase->GetDimensions( i ) << " ";
   }
@@ -285,7 +287,7 @@ int main( int argc, char * argv[] )
 
   /** Write image Index. */
   outputTPFile << "(Index";
-  for ( unsigned int i = 0; i < MovDim; i++ )
+  for( unsigned int i = 0; i < MovDim; i++ )
   {
     outputTPFile << " 0";
   }
@@ -294,11 +296,11 @@ int main( int argc, char * argv[] )
   /** Set the precision of cout to 10, because Spacing and
    * Origin must have at least one digit precision.
    */
-  outputTPFile << std::setprecision(10);
+  outputTPFile << std::setprecision( 10 );
 
   /** Write image Spacing. */
   outputTPFile << "(Spacing ";
-  for ( unsigned int i = 0; i < MovDim - 1; i++ )
+  for( unsigned int i = 0; i < MovDim - 1; i++ )
   {
     outputTPFile << imageIOBase->GetSpacing( i ) << " ";
   }
@@ -306,7 +308,7 @@ int main( int argc, char * argv[] )
 
   /** Write image Origin. */
   outputTPFile << "(Origin ";
-  for ( unsigned int i = 0; i < MovDim - 1; i++ )
+  for( unsigned int i = 0; i < MovDim - 1; i++ )
   {
     outputTPFile << imageIOBase->GetOrigin( i ) << " ";
   }
@@ -314,11 +316,11 @@ int main( int argc, char * argv[] )
 
   /** Write direction cosines. */
   outputTPFile << "(Direction";
-  for ( unsigned int i = 0; i < MovDim; i++ )
+  for( unsigned int i = 0; i < MovDim; i++ )
   {
-    for ( unsigned int j = 0; j < MovDim; j++ )
+    for( unsigned int j = 0; j < MovDim; j++ )
     {
-      outputTPFile << " " << imageIOBase->GetDirection( j )[ i ];// or i j?
+      outputTPFile << " " << imageIOBase->GetDirection( j )[ i ]; // or i j?
     }
   }
   outputTPFile << ")" << std::endl;
@@ -330,7 +332,7 @@ int main( int argc, char * argv[] )
    * This parameter is written from elastix 4.203.
    */
   outputTPFile << "(UseDirectionCosines \""
-    << useDirectionCosines << "\")" << std::endl;
+               << useDirectionCosines << "\")" << std::endl;
 
   /** END elx::TransformBase::WriteToFile(). */
 
@@ -362,7 +364,7 @@ int main( int argc, char * argv[] )
   /** Write to file. */
   outputTPFile << "\n// " << transformType << " specific\n";
   outputTPFile << "(CenterOfRotationPoint";
-  for ( unsigned int i = 0; i < Dimension; i++ )
+  for( unsigned int i = 0; i < Dimension; i++ )
   {
     outputTPFile << " " << centerOfRotationInv[ i ];
   }
@@ -387,4 +389,3 @@ int main( int argc, char * argv[] )
   return EXIT_SUCCESS;
 
 } // end main()
-

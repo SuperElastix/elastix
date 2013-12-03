@@ -14,12 +14,13 @@
 #include "elxTimer.h"
 #include "vnl/vnl_math.h"
 
-int TestStartStop( void )
+int
+TestStartStop( void )
 {
   tmr::Timer::Pointer pTmr = tmr::Timer::New();
   pTmr->StartTimer();
 
-  if ( pTmr->StopTimer() != 0 )
+  if( pTmr->StopTimer() != 0 )
   {
     std::cerr << "StopTimer() failed.\n";
     return 1;
@@ -29,26 +30,27 @@ int TestStartStop( void )
 } // end TestStartStop()
 
 
-int TestZeroTimeOutput( void )
+int
+TestZeroTimeOutput( void )
 {
   tmr::Timer::Pointer pTmr = tmr::Timer::New();
 
   pTmr->StartTimer();
   pTmr->StopTimer();
 
-  if ( pTmr->GetElapsedTimeSec() != 0 )
+  if( pTmr->GetElapsedTimeSec() != 0 )
   {
     std::cerr << "GetElapsedTimeSec() != 0\n";
     return 1;
   }
 
-  if ( pTmr->PrintElapsedTimeSec() != "0" )
+  if( pTmr->PrintElapsedTimeSec() != "0" )
   {
     std::cerr << "PrintElapsedTimeSec() != 0\n";
     return 1;
   }
 
-  if ( pTmr->PrintElapsedTimeDHMS() != "0 Seconds" )
+  if( pTmr->PrintElapsedTimeDHMS() != "0 Seconds" )
   {
     std::cerr << "PrintElapsedTimeDHMS() failed.\n";
     return 1;
@@ -59,7 +61,8 @@ int TestZeroTimeOutput( void )
 } // end TestZeroTimeOutput()
 
 
-int main( int argc, char *argv[] )
+int
+main( int argc, char * argv[] )
 {
 #ifndef NDEBUG
   const double N = 1e8;
@@ -71,9 +74,9 @@ int main( int argc, char *argv[] )
   tmr::Timer::Pointer pTmr = tmr::Timer::New();
   pTmr->StartTimer();
   double dummy = 0.0;
-  for ( double i = 0; i < N; i++ )
+  for( double i = 0; i < N; i++ )
   {
-    dummy += vcl_sqrt( static_cast<double>( i ) );
+    dummy += vcl_sqrt( static_cast< double >( i ) );
   }
   pTmr->StopTimer();
 
@@ -89,13 +92,12 @@ int main( int argc, char *argv[] )
   /** Print formatted. */
   std::cerr << "Start time          : " << pTmr->PrintStartTime() << std::endl;
   std::cerr << "Stop time           : " << pTmr->PrintStopTime() << std::endl;
-  std::cerr << "Elapsed time (DHMS) : " << pTmr->PrintElapsedTimeDHMS () << std::endl;
-  std::cerr << "Elapsed time (Sec)  : " << pTmr->PrintElapsedTimeSec () << std::endl;
-  std::cerr << "Elapsed clock       : " << pTmr->PrintElapsedClock () << std::endl;
-  std::cerr << "Elapsed clock (Sec) : " << pTmr->PrintElapsedClockSec () << std::endl;
+  std::cerr << "Elapsed time (DHMS) : " << pTmr->PrintElapsedTimeDHMS() << std::endl;
+  std::cerr << "Elapsed time (Sec)  : " << pTmr->PrintElapsedTimeSec() << std::endl;
+  std::cerr << "Elapsed clock       : " << pTmr->PrintElapsedClock() << std::endl;
+  std::cerr << "Elapsed clock (Sec) : " << pTmr->PrintElapsedClockSec() << std::endl;
 
   /** Zero test. */
   return TestStartStop() || TestZeroTimeOutput();
 
 } // end main()
-

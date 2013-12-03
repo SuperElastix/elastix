@@ -43,17 +43,17 @@ namespace itk
  */
 
 template< class TFixedImage, class TScalarType >
-class TransformBendingEnergyPenaltyTerm
-  : public TransformPenaltyTerm< TFixedImage, TScalarType >
+class TransformBendingEnergyPenaltyTerm :
+  public TransformPenaltyTerm< TFixedImage, TScalarType >
 {
 public:
 
   /** Standard ITK stuff. */
-  typedef TransformBendingEnergyPenaltyTerm     Self;
+  typedef TransformBendingEnergyPenaltyTerm Self;
   typedef TransformPenaltyTerm<
     TFixedImage, TScalarType >                  Superclass;
-  typedef SmartPointer<Self>                    Pointer;
-  typedef SmartPointer<const Self>              ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -63,54 +63,54 @@ public:
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
-  typedef typename Superclass::MovingImageType            MovingImageType;
-  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
-  typedef typename Superclass::MovingImagePointer         MovingImagePointer;
-  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
-  typedef typename Superclass::FixedImageType             FixedImageType;
-  typedef typename Superclass::FixedImagePointer          FixedImagePointer;
-  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename Superclass::TransformPointer           TransformPointer;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::TransformParametersType    TransformParametersType;
-  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
-  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
-  typedef typename Superclass::InterpolatorType           InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
-  typedef typename Superclass::RealType                   RealType;
-  typedef typename Superclass::GradientPixelType          GradientPixelType;
-  typedef typename Superclass::GradientImageType          GradientImageType;
-  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
-  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
-  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
-  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
-  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
-  typedef typename Superclass::MeasureType                MeasureType;
-  typedef typename Superclass::DerivativeType             DerivativeType;
-  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
-  typedef typename Superclass::ParametersType             ParametersType;
-  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
-  typedef typename Superclass::ImageSampleContainerType    ImageSampleContainerType;
-  typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
-  typedef typename Superclass::ScalarType                 ScalarType;
-  typedef typename Superclass::ThreaderType               ThreaderType;
-  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
+  typedef typename Superclass::MovingImageType              MovingImageType;
+  typedef typename Superclass::MovingImagePixelType         MovingImagePixelType;
+  typedef typename Superclass::MovingImagePointer           MovingImagePointer;
+  typedef typename Superclass::MovingImageConstPointer      MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType               FixedImageType;
+  typedef typename Superclass::FixedImagePointer            FixedImagePointer;
+  typedef typename Superclass::FixedImageConstPointer       FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType         FixedImageRegionType;
+  typedef typename Superclass::TransformType                TransformType;
+  typedef typename Superclass::TransformPointer             TransformPointer;
+  typedef typename Superclass::InputPointType               InputPointType;
+  typedef typename Superclass::OutputPointType              OutputPointType;
+  typedef typename Superclass::TransformParametersType      TransformParametersType;
+  typedef typename Superclass::TransformJacobianType        TransformJacobianType;
+  typedef typename Superclass::NumberOfParametersType       NumberOfParametersType;
+  typedef typename Superclass::InterpolatorType             InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer          InterpolatorPointer;
+  typedef typename Superclass::RealType                     RealType;
+  typedef typename Superclass::GradientPixelType            GradientPixelType;
+  typedef typename Superclass::GradientImageType            GradientImageType;
+  typedef typename Superclass::GradientImagePointer         GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType      GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer   GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType           FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer        FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType          MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer       MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                  MeasureType;
+  typedef typename Superclass::DerivativeType               DerivativeType;
+  typedef typename Superclass::DerivativeValueType          DerivativeValueType;
+  typedef typename Superclass::ParametersType               ParametersType;
+  typedef typename Superclass::FixedImagePixelType          FixedImagePixelType;
+  typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
+  typedef typename Superclass::ScalarType                   ScalarType;
+  typedef typename Superclass::ThreaderType                 ThreaderType;
+  typedef typename Superclass::ThreadInfoType               ThreadInfoType;
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-  typedef typename Superclass::HessianValueType     HessianValueType;
-  typedef typename Superclass::HessianType          HessianType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass::HessianValueType   HessianValueType;
+  typedef typename Superclass::HessianType        HessianType;
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
@@ -150,38 +150,37 @@ public:
 protected:
 
   /** Typedefs for indices and points. */
-  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
-  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
-  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  typedef typename Superclass::FixedImageIndexType            FixedImageIndexType;
+  typedef typename Superclass::FixedImageIndexValueType       FixedImageIndexValueType;
+  typedef typename Superclass::MovingImageIndexType           MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType            FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType           MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType MovingImageContinuousIndexType;
+  typedef typename Superclass::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
 
   /** Typedefs for the B-spline transform. */
-  typedef typename Superclass::BSplineTransformType       BSplineTransformType;
-  typedef typename Superclass::CombinationTransformType   CombinationTransformType;
+  typedef typename Superclass::BSplineTransformType     BSplineTransformType;
+  typedef typename Superclass::CombinationTransformType CombinationTransformType;
 
   /** Typedefs for SelfHessian */
-  typedef ImageGridSampler<FixedImageType>                SelfHessianSamplerType;
+  typedef ImageGridSampler< FixedImageType > SelfHessianSamplerType;
 
   /** The constructor. */
   TransformBendingEnergyPenaltyTerm();
 
   /** The destructor. */
-  virtual ~TransformBendingEnergyPenaltyTerm() {};
+  virtual ~TransformBendingEnergyPenaltyTerm() {}
 
 private:
 
   /** The private constructor. */
-  TransformBendingEnergyPenaltyTerm( const Self& ); // purposely not implemented
+  TransformBendingEnergyPenaltyTerm( const Self & ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );                    // purposely not implemented
+  void operator=( const Self & );                    // purposely not implemented
 
   unsigned int m_NumberOfSamplesForSelfHessian;
 
 };
-
 
 } // end namespace itk
 

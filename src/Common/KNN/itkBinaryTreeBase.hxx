@@ -23,8 +23,8 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template < class TListSample >
-BinaryTreeBase<TListSample>
+template< class TListSample >
+BinaryTreeBase< TListSample >
 ::BinaryTreeBase()
 {
   this->m_Sample = 0;
@@ -35,12 +35,12 @@ BinaryTreeBase<TListSample>
  * ************************ GetNumberOfDataPoints *************************
  */
 
-template < class TListSample >
-typename BinaryTreeBase<TListSample>::TotalAbsoluteFrequencyType
-BinaryTreeBase<TListSample>
+template< class TListSample >
+typename BinaryTreeBase< TListSample >::TotalAbsoluteFrequencyType
+BinaryTreeBase< TListSample >
 ::GetNumberOfDataPoints( void ) const
 {
-  if ( this->m_Sample )
+  if( this->m_Sample )
   {
     return this->m_Sample->GetTotalFrequency();
   }
@@ -53,12 +53,12 @@ BinaryTreeBase<TListSample>
  * ************************ GetActualNumberOfDataPoints *************************
  */
 
-template < class TListSample >
-typename BinaryTreeBase<TListSample>::TotalAbsoluteFrequencyType
-BinaryTreeBase<TListSample>
+template< class TListSample >
+typename BinaryTreeBase< TListSample >::TotalAbsoluteFrequencyType
+BinaryTreeBase< TListSample >
 ::GetActualNumberOfDataPoints( void ) const
 {
-  if ( this->m_Sample )
+  if( this->m_Sample )
   {
     return this->m_Sample->GetActualSize();
   }
@@ -71,12 +71,12 @@ BinaryTreeBase<TListSample>
  * ************************ GetDataDimension *************************
  */
 
-template < class TListSample >
-typename BinaryTreeBase<TListSample>::MeasurementVectorSizeType
-BinaryTreeBase<TListSample>
+template< class TListSample >
+typename BinaryTreeBase< TListSample >::MeasurementVectorSizeType
+BinaryTreeBase< TListSample >
 ::GetDataDimension( void ) const
 {
-  if ( this->m_Sample )
+  if( this->m_Sample )
   {
     return this->m_Sample->GetMeasurementVectorSize();
   }
@@ -89,10 +89,10 @@ BinaryTreeBase<TListSample>
  * ****************** PrintSelf ******************
  */
 
-template < class TListSample >
+template< class TListSample >
 void
-BinaryTreeBase<TListSample>
-::PrintSelf( std::ostream& os, Indent indent ) const
+BinaryTreeBase< TListSample >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
@@ -102,6 +102,5 @@ BinaryTreeBase<TListSample>
 
 
 } // end namespace itk
-
 
 #endif // end #ifndef __itkBinaryTreeBase_hxx

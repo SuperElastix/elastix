@@ -21,7 +21,6 @@
 #include "itkResampleImageFilter.h"
 #include "itkImageRegionConstIterator.h"
 
-
 namespace itk
 {
 
@@ -30,18 +29,18 @@ namespace itk
  */
 
 template< class TArray, class TImage >
-UpsampleBSplineParametersFilter<TArray,TImage>
+UpsampleBSplineParametersFilter< TArray, TImage >
 ::UpsampleBSplineParametersFilter()
 {
   this->m_BSplineOrder = 3;
 
   // Initialize grid settings.
-  this->m_CurrentGridOrigin.Fill(0.0);
-  this->m_CurrentGridSpacing.Fill(0.0);
-  this->m_CurrentGridDirection.Fill(0.0);
-  this->m_RequiredGridOrigin.Fill(0.0);
-  this->m_RequiredGridSpacing.Fill(0.0);
-  this->m_RequiredGridDirection.Fill(0.0);
+  this->m_CurrentGridOrigin.Fill( 0.0 );
+  this->m_CurrentGridSpacing.Fill( 0.0 );
+  this->m_CurrentGridDirection.Fill( 0.0 );
+  this->m_RequiredGridOrigin.Fill( 0.0 );
+  this->m_RequiredGridSpacing.Fill( 0.0 );
+  this->m_RequiredGridDirection.Fill( 0.0 );
 } // end Constructor()
 
 
@@ -51,12 +50,12 @@ UpsampleBSplineParametersFilter<TArray,TImage>
 
 template< class TArray, class TImage >
 void
-UpsampleBSplineParametersFilter<TArray,TImage>
+UpsampleBSplineParametersFilter< TArray, TImage >
 ::UpsampleParameters( const ArrayType & parameters_in,
   ArrayType & parameters_out )
 {
   /** Determine if upsampling is required. */
-  if ( !this->DoUpsampling() )
+  if( !this->DoUpsampling() )
   {
     parameters_out = parameters_in;
     return;
@@ -69,15 +68,15 @@ UpsampleBSplineParametersFilter<TArray,TImage>
     ImageType, ValueType >                        CoefficientUpsampleFunctionType;
   typedef itk::BSplineDecompositionImageFilter<
     ImageType, ImageType >                        DecompositionFilterType;
-  typedef ImageRegionConstIterator< ImageType >   IteratorType;
+  typedef ImageRegionConstIterator< ImageType > IteratorType;
 
   /** Get the pointer to the data of the input parameters. */
   PixelType * inputDataPointer
-    = const_cast<PixelType *>( parameters_in.data_block() );
+    = const_cast< PixelType * >( parameters_in.data_block() );
 
   /** Get the number of parameters. */
-  const unsigned int currentNumberOfPixels =
-    this->m_CurrentGridRegion.GetNumberOfPixels();
+  const unsigned int currentNumberOfPixels
+    = this->m_CurrentGridRegion.GetNumberOfPixels();
 
   /** Create the new vector of output parameters, with the correct size. */
   parameters_out.SetSize(
@@ -94,11 +93,11 @@ UpsampleBSplineParametersFilter<TArray,TImage>
   unsigned int i = 0;
 
   /** Loop over dimension: each direction is upsampled separately. */
-  for ( unsigned int j = 0; j < Dimension; j++ )
+  for( unsigned int j = 0; j < Dimension; j++ )
   {
     /** Fill the coefficient image with parameter data. */
     coeffs_in->GetPixelContainer()
-      ->SetImportPointer( inputDataPointer, currentNumberOfPixels );
+    ->SetImportPointer( inputDataPointer, currentNumberOfPixels );
     inputDataPointer += currentNumberOfPixels;
 
     /* Set the coeficient image as the input of the upsampler filter.
@@ -155,7 +154,7 @@ UpsampleBSplineParametersFilter<TArray,TImage>
     /** Create an iterator over the new coefficient image. */
     IteratorType iterator( coeffs_out, this->m_RequiredGridRegion );
     iterator.GoToBegin();
-    while ( !iterator.IsAtEnd() )
+    while( !iterator.IsAtEnd() )
     {
       /** Copy the contents of coeffs_out in a ParametersType array. */
       parameters_out[ i ] = iterator.Get();
@@ -174,7 +173,7 @@ UpsampleBSplineParametersFilter<TArray,TImage>
 
 template< class TArray, class TImage >
 bool
-UpsampleBSplineParametersFilter<TArray,TImage>
+UpsampleBSplineParametersFilter< TArray, TImage >
 ::DoUpsampling( void )
 {
   bool ret = ( this->m_CurrentGridOrigin != this->m_RequiredGridOrigin );
@@ -193,8 +192,8 @@ UpsampleBSplineParametersFilter<TArray,TImage>
 
 template< class TArray, class TImage >
 void
-UpsampleBSplineParametersFilter<TArray,TImage>
-::PrintSelf( std::ostream& os, Indent indent ) const
+UpsampleBSplineParametersFilter< TArray, TImage >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   this->Superclass::PrintSelf( os, indent );
 

@@ -20,13 +20,12 @@
 namespace elastix
 {
 
-
 /**
  * ******************* Constructor ***********************
  */
 
-template <class TElastix>
-MultiMetricMultiResolutionRegistration<TElastix>
+template< class TElastix >
+MultiMetricMultiResolutionRegistration< TElastix >
 ::MultiMetricMultiResolutionRegistration()
 {
   this->m_ShowExactMetricValue = false;
@@ -37,9 +36,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MultiMetricMultiResolutionRegistration<TElastix>
+MultiMetricMultiResolutionRegistration< TElastix >
 ::BeforeRegistration( void )
 {
   /** Get the components from this->m_Elastix and set them. */
@@ -54,7 +53,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
   /** Set the FixedImageRegions to the buffered regions. */
 
   /** Make sure the fixed image is up to date. */
-  for ( unsigned int i = 0; i< this->GetElastix()->GetNumberOfFixedImages(); ++i )
+  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )
   {
     try
     {
@@ -72,34 +71,34 @@ MultiMetricMultiResolutionRegistration<TElastix>
     }
 
     /** Set the fixedImageRegion. */
-    this->SetFixedImageRegion( this->GetElastix()->GetFixedImage(i)->GetBufferedRegion(), i );
+    this->SetFixedImageRegion( this->GetElastix()->GetFixedImage( i )->GetBufferedRegion(), i );
   }
 
   /** Add the target cells "Metric<i>" and "||Gradient<i>||" to xout["iteration"]
    * and format as floats.
    */
   const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
-  unsigned int width = 0;
-  for ( unsigned int i = nrOfMetrics; i > 0; i /= 10 )
+  unsigned int       width       = 0;
+  for( unsigned int i = nrOfMetrics; i > 0; i /= 10 )
   {
     width++;
   }
-  for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+  for( unsigned int i = 0; i < nrOfMetrics; ++i )
   {
     std::ostringstream makestring1;
-    makestring1 << "2:Metric" << std::setfill('0') << std::setw(width) << i;
-    xout["iteration"].AddTargetCell( makestring1.str().c_str() );
-    xl::xout["iteration"][ makestring1.str().c_str() ] << std::showpoint << std::fixed;
+    makestring1 << "2:Metric" << std::setfill( '0' ) << std::setw( width ) << i;
+    xout[ "iteration" ].AddTargetCell( makestring1.str().c_str() );
+    xl::xout[ "iteration" ][ makestring1.str().c_str() ] << std::showpoint << std::fixed;
 
     std::ostringstream makestring2;
-    makestring2 << "4:||Gradient" << std::setfill('0') << std::setw(width) << i << "||";
-    xout["iteration"].AddTargetCell( makestring2.str().c_str() );
-    xl::xout["iteration"][ makestring2.str().c_str() ] << std::showpoint << std::fixed;
+    makestring2 << "4:||Gradient" << std::setfill( '0' ) << std::setw( width ) << i << "||";
+    xout[ "iteration" ].AddTargetCell( makestring2.str().c_str() );
+    xl::xout[ "iteration" ][ makestring2.str().c_str() ] << std::showpoint << std::fixed;
 
     std::ostringstream makestring3;
-    makestring3 << "Time" << std::setfill('0') << std::setw(width) << i << "[ms]";
-    xout["iteration"].AddTargetCell( makestring3.str().c_str() );
-    xl::xout["iteration"][ makestring3.str().c_str() ] << std::showpoint << std::fixed;
+    makestring3 << "Time" << std::setfill( '0' ) << std::setw( width ) << i << "[ms]";
+    xout[ "iteration" ].AddTargetCell( makestring3.str().c_str() );
+    xl::xout[ "iteration" ][ makestring3.str().c_str() ] << std::showpoint << std::fixed;
   }
 
   /** Temporary? Use the multi-threaded version or not. */
@@ -108,7 +107,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
   {
     this->GetCombinationMetric()->SetUseMultiThread( true );
   }
-  else this->GetCombinationMetric()->SetUseMultiThread( false );
+  else { this->GetCombinationMetric()->SetUseMultiThread( false ); }
 
 } // end BeforeRegistration()
 
@@ -117,43 +116,43 @@ MultiMetricMultiResolutionRegistration<TElastix>
  * ******************* AfterEachIteration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MultiMetricMultiResolutionRegistration<TElastix>
+MultiMetricMultiResolutionRegistration< TElastix >
 ::AfterEachIteration( void )
 {
   /** Print the submetric values and gradients to xout["iteration"]. */
   const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
-  unsigned int width = 0;
-  for ( unsigned int i = nrOfMetrics; i > 0; i /= 10 )
+  unsigned int       width       = 0;
+  for( unsigned int i = nrOfMetrics; i > 0; i /= 10 )
   {
     width++;
   }
-  for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+  for( unsigned int i = 0; i < nrOfMetrics; ++i )
   {
     std::ostringstream makestring1;
-    makestring1 << "2:Metric" << std::setfill('0') << std::setw(width) << i;
-    xl::xout["iteration"][ makestring1.str().c_str() ] <<
-      this->GetCombinationMetric()->GetMetricValue( i );
+    makestring1 << "2:Metric" << std::setfill( '0' ) << std::setw( width ) << i;
+    xl::xout[ "iteration" ][ makestring1.str().c_str() ]
+      << this->GetCombinationMetric()->GetMetricValue( i );
 
     std::ostringstream makestring2;
-    makestring2 << "4:||Gradient" << std::setfill('0') << std::setw(width) << i << "||";
-    xl::xout["iteration"][ makestring2.str().c_str() ] <<
-      this->GetCombinationMetric()->GetMetricDerivativeMagnitude( i );
+    makestring2 << "4:||Gradient" << std::setfill( '0' ) << std::setw( width ) << i << "||";
+    xl::xout[ "iteration" ][ makestring2.str().c_str() ]
+      << this->GetCombinationMetric()->GetMetricDerivativeMagnitude( i );
 
     std::ostringstream makestring3;
-    makestring3 << "Time" << std::setfill('0') << std::setw(width) << i << "[ms]";
-    xl::xout["iteration"][ makestring3.str().c_str() ] <<
-      this->GetCombinationMetric()->GetMetricComputationTime( i );
+    makestring3 << "Time" << std::setfill( '0' ) << std::setw( width ) << i << "[ms]";
+    xl::xout[ "iteration" ][ makestring3.str().c_str() ]
+      << this->GetCombinationMetric()->GetMetricComputationTime( i );
   }
 
-  if ( this->m_ShowExactMetricValue )
+  if( this->m_ShowExactMetricValue )
   {
     double currentExactMetricValue = 0.0;
 
-    for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+    for( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
-      if ( this->GetCombinationMetric()->GetUseMetric( i ) )
+      if( this->GetCombinationMetric()->GetUseMetric( i ) )
       {
         const double currentExactMetricValue_i = this->GetElastix()->
           GetElxMetricBase( i )->GetCurrentExactMetricValue();
@@ -164,7 +163,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
       }
     }
 
-    xl::xout["iteration"][ "ExactMetric" ] << currentExactMetricValue;
+    xl::xout[ "iteration" ][ "ExactMetric" ] << currentExactMetricValue;
   }
 
 } // end AfterEachIteration()
@@ -174,9 +173,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
  * ******************* BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MultiMetricMultiResolutionRegistration<TElastix>
+MultiMetricMultiResolutionRegistration< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Get the current resolution level. */
@@ -195,12 +194,12 @@ MultiMetricMultiResolutionRegistration<TElastix>
   this->GetCombinationMetric()->SetUseRelativeWeights( useRelativeWeights );
 
   /** Set the metric weights. The default metric weight is 1.0 / nrOfMetrics. */
-  if ( !useRelativeWeights )
+  if( !useRelativeWeights )
   {
-    double defaultWeight = 1.0 / static_cast<double>( nrOfMetrics );
-    for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
+    double defaultWeight = 1.0 / static_cast< double >( nrOfMetrics );
+    for( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
     {
-      double weight = defaultWeight;
+      double             weight = defaultWeight;
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "Weight";
       this->GetConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
@@ -212,10 +211,10 @@ MultiMetricMultiResolutionRegistration<TElastix>
     /** Set the relative metric weights.
      * The default relative metric weight is 1.0 / nrOfMetrics.
      */
-    double defaultRelativeWeight = 1.0 / static_cast<double>( nrOfMetrics );
-    for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
+    double defaultRelativeWeight = 1.0 / static_cast< double >( nrOfMetrics );
+    for( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
     {
-      double weight = defaultRelativeWeight;
+      double             weight = defaultRelativeWeight;
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "RelativeWeight";
       this->GetConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
@@ -224,9 +223,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
   }
 
   /** Set whether to use a specific metric. */
-  for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
+  for( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
   {
-    bool use = true;
+    bool               use = true;
     std::ostringstream makestring;
     makestring << "Metric" << metricnr << "Use";
     this->GetConfiguration()->ReadParameter( use, makestring.str(), "", level, 0, false );
@@ -239,23 +238,23 @@ MultiMetricMultiResolutionRegistration<TElastix>
 
   /** Show the exact metric in every iteration? */
   this->m_ShowExactMetricValue = false;
-  for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
+  for( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
   {
     this->m_ShowExactMetricValue |= this->GetElastix()->
       GetElxMetricBase( metricnr )->GetShowExactMetricValue();
   }
 
-  if ( this->m_ShowExactMetricValue )
+  if( this->m_ShowExactMetricValue )
   {
     /** Define the name of the ExactMetric column */
     std::string exactMetricColumn = "ExactMetric";
 
     /** Remove the ExactMetric-column, if it already existed. */
-    xl::xout["iteration"].RemoveTargetCell( exactMetricColumn.c_str() );
+    xl::xout[ "iteration" ].RemoveTargetCell( exactMetricColumn.c_str() );
 
     /** Create a new column in the iteration info table */
-    xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
-    xl::xout["iteration"][ exactMetricColumn.c_str() ]
+    xl::xout[ "iteration" ].AddTargetCell( exactMetricColumn.c_str() );
+    xl::xout[ "iteration" ][ exactMetricColumn.c_str() ]
       << std::showpoint << std::fixed;
   }
 
@@ -266,9 +265,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
  * *********************** SetComponents ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MultiMetricMultiResolutionRegistration<TElastix>
+MultiMetricMultiResolutionRegistration< TElastix >
 ::SetComponents( void )
 {
   /** Get the component from this->GetElastix() (as elx::...BaseType *),
@@ -276,53 +275,53 @@ MultiMetricMultiResolutionRegistration<TElastix>
    */
   const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
   this->GetCombinationMetric()->SetNumberOfMetrics( nrOfMetrics );
-  for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+  for( unsigned int i = 0; i < nrOfMetrics; ++i )
   {
     this->GetCombinationMetric()->SetMetric( this->GetElastix()->
       GetElxMetricBase( i )->GetAsITKBaseType(), i );
   }
 
-  for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )
+  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )
   {
     this->SetFixedImage( this->GetElastix()->GetFixedImage( i ), i );
   }
 
-  for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImages(); ++i )
+  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImages(); ++i )
   {
     this->SetMovingImage( this->GetElastix()->GetMovingImage( i ), i );
   }
 
-  for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImagePyramids(); ++i )
+  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImagePyramids(); ++i )
   {
     this->SetFixedImagePyramid( this->GetElastix()->
       GetElxFixedImagePyramidBase( i )->GetAsITKBaseType(), i );
   }
 
-  for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImagePyramids(); ++i )
+  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImagePyramids(); ++i )
   {
     this->SetMovingImagePyramid( this->GetElastix()->
       GetElxMovingImagePyramidBase( i )->GetAsITKBaseType(), i );
   }
 
-  for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfInterpolators(); ++i )
+  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfInterpolators(); ++i )
   {
     this->SetInterpolator( this->GetElastix()->
       GetElxInterpolatorBase( i )->GetAsITKBaseType(), i );
   }
 
-  this->SetOptimizer( dynamic_cast<OptimizerType*>(
-    this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
+  this->SetOptimizer( dynamic_cast< OptimizerType * >(
+      this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
 
   this->SetTransform( this->GetElastix()->
     GetElxTransformBase()->GetAsITKBaseType() );
 
   /** Samplers are not always needed: */
-  for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+  for( unsigned int i = 0; i < nrOfMetrics; ++i )
   {
-    if ( this->GetElastix()->GetElxMetricBase( i )->GetAdvancedMetricUseImageSampler() )
+    if( this->GetElastix()->GetElxMetricBase( i )->GetAdvancedMetricUseImageSampler() )
     {
       /** Try the i-th sampler for the i-th metric. */
-      if ( this->GetElastix()->GetElxImageSamplerBase( i ) )
+      if( this->GetElastix()->GetElxImageSamplerBase( i ) )
       {
         this->GetElastix()->GetElxMetricBase( i )->SetAdvancedMetricImageSampler(
           this->GetElastix()->GetElxImageSamplerBase( i )->GetAsITKBaseType() );
@@ -332,32 +331,32 @@ MultiMetricMultiResolutionRegistration<TElastix>
         /** When a different fixed image pyramid is used for each metric,
          * using one sampler for all metrics makes no sense.
          */
-        if ( this->GetElastix()->GetElxFixedImagePyramidBase( i ) )
+        if( this->GetElastix()->GetElxFixedImagePyramidBase( i ) )
         {
-          xl::xout["error"]
-          << "ERROR: An ImageSamper for metric "
+          xl::xout[ "error" ]
+            << "ERROR: An ImageSamper for metric "
             << i
             << " must be provided!" << std::endl;
           itkExceptionMacro( << "Not enough ImageSamplers provided!"
-            << "\nProvide an ImageSampler for metric " << i << ", like:"
-            << "\n  (ImageSampler \"Random\" ... \"Random\")" );
+                             << "\nProvide an ImageSampler for metric " << i << ", like:"
+                             << "\n  (ImageSampler \"Random\" ... \"Random\")" );
         }
 
         /** Try the zeroth image sampler for each metric. */
-        if ( this->GetElastix()->GetElxImageSamplerBase( 0 ) )
+        if( this->GetElastix()->GetElxImageSamplerBase( 0 ) )
         {
           this->GetElastix()->GetElxMetricBase( i )->SetAdvancedMetricImageSampler(
             this->GetElastix()->GetElxImageSamplerBase( 0 )->GetAsITKBaseType() );
         }
         else
         {
-          xl::xout["error"] << "ERROR: No ImageSampler has been specified." << std::endl;
+          xl::xout[ "error" ] << "ERROR: No ImageSampler has been specified." << std::endl;
           itkExceptionMacro( << "One of the metrics requires an ImageSampler, but it is not available!" );
         }
       }
 
     } // if sampler required by metric
-  } // for loop over metrics
+  }   // for loop over metrics
 
 } // end SetComponents()
 
@@ -366,9 +365,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
  * ************************* UpdateFixedMasks ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MultiMetricMultiResolutionRegistration<TElastix>
+MultiMetricMultiResolutionRegistration< TElastix >
 ::UpdateFixedMasks( unsigned int level )
 {
   /** some shortcuts */
@@ -398,9 +397,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
   timer->StartTimer();
 
   /** Now set the masks. */
-  if (  ( ( nrOfFixedImages == 1 ) || ( nrOfFixedMasks == 0 ) )
+  if( ( ( nrOfFixedImages == 1 ) || ( nrOfFixedMasks == 0 ) )
     && ( nrOfFixedMasks <= 1 )
-    && ( (nrOfFixedImagePyramids == 1) || !useMaskErosion || (nrOfFixedMasks == 0 ) )   )
+    && ( ( nrOfFixedImagePyramids == 1 ) || !useMaskErosion || ( nrOfFixedMasks == 0 ) ) )
   {
     /** 1 image || nomask, <=1 mask, 1 pyramid || noerosion || nomask:
      * --> we can use one mask for all metrics! (or no mask at all).
@@ -410,14 +409,14 @@ MultiMetricMultiResolutionRegistration<TElastix>
       this->GetFixedImagePyramid(), level );
     this->GetCombinationMetric()->SetFixedImageMask( fixedMask );
   }
-  else if ( ( nrOfFixedImages == 1 ) && ( nrOfFixedMasks == 1 ) )
+  else if( ( nrOfFixedImages == 1 ) && ( nrOfFixedMasks == 1 ) )
   {
     /** 1 image, 1 mask, erosion && multiple pyramids
      * Set a differently eroded mask in each metric. The eroded
      * masks are all based on the same mask image, but generated with
      * different pyramid settings.
      */
-    for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+    for( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
       FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
         this->GetElastix()->GetFixedMask(), useMaskErosion,
@@ -433,15 +432,15 @@ MultiMetricMultiResolutionRegistration<TElastix>
      * If more metrics than masks are present, the last metrics will not use a mask.
      * If less metrics than masks are present, the last masks will be ignored.
      */
-    for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+    for( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
       bool useMask_i = false; // default value in case of more metrics than masks
-      if ( i < nrOfFixedMasks )
+      if( i < nrOfFixedMasks )
       {
         useMask_i = useMaskErosionArray[ i ];
       }
       FixedImagePyramidPointer pyramid_i = this->GetFixedImagePyramid(); // default value in case of only 1 pyramid
-      if ( i < nrOfFixedImagePyramids )
+      if( i < nrOfFixedImagePyramids )
       {
         pyramid_i = this->GetFixedImagePyramid( i );
       }
@@ -454,8 +453,8 @@ MultiMetricMultiResolutionRegistration<TElastix>
   /** Stop timer and print the elapsed time. */
   timer->StopTimer();
   elxout << "Setting the fixed masks took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
-    << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << " ms." << std::endl;
 
 } // end UpdateFixedMasks()
 
@@ -464,9 +463,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
  * ************************* UpdateMovingMasks ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MultiMetricMultiResolutionRegistration<TElastix>
+MultiMetricMultiResolutionRegistration< TElastix >
 ::UpdateMovingMasks( unsigned int level )
 {
   /** Some shortcuts. */
@@ -496,9 +495,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
   timer->StartTimer();
 
   /** Now set the masks. */
-  if (  ( ( nrOfMovingImages == 1 ) || ( nrOfMovingMasks == 0 ) )
+  if( ( ( nrOfMovingImages == 1 ) || ( nrOfMovingMasks == 0 ) )
     && ( nrOfMovingMasks <= 1 )
-    && ( ( nrOfMovingImagePyramids == 1 ) || !useMaskErosion || ( nrOfMovingMasks == 0 ) )   )
+    && ( ( nrOfMovingImagePyramids == 1 ) || !useMaskErosion || ( nrOfMovingMasks == 0 ) ) )
   {
     /** 1 image || nomask, <=1 mask, 1 pyramid || noerosion || nomask:
      * --> we can use one mask for all metrics! (or no mask at all).
@@ -508,14 +507,14 @@ MultiMetricMultiResolutionRegistration<TElastix>
       this->GetMovingImagePyramid(), level );
     this->GetCombinationMetric()->SetMovingImageMask( movingMask );
   }
-  else if ( ( nrOfMovingImages == 1 ) && ( nrOfMovingMasks == 1 ) )
+  else if( ( nrOfMovingImages == 1 ) && ( nrOfMovingMasks == 1 ) )
   {
     /** 1 image, 1 mask, erosion && multiple pyramids
      * Set a differently eroded mask in each metric. The eroded
      * masks are all based on the same mask image, but generated with
      * different pyramid settings.
      */
-    for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+    for( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
       MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
         this->GetElastix()->GetMovingMask(), useMaskErosion,
@@ -531,15 +530,15 @@ MultiMetricMultiResolutionRegistration<TElastix>
      * If more metrics than masks are present, the last metrics will not use a mask.
      * If less metrics than masks are present, the last masks will be ignored.
      */
-    for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+    for( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
       bool useMask_i = false; // default value in case of more metrics than masks
-      if ( i < nrOfMovingMasks )
+      if( i < nrOfMovingMasks )
       {
         useMask_i = useMaskErosionArray[ i ];
       }
       MovingImagePyramidPointer pyramid_i = this->GetMovingImagePyramid(); // default value in case of only 1 pyramid
-      if ( i < nrOfMovingImagePyramids )
+      if( i < nrOfMovingImagePyramids )
       {
         pyramid_i = this->GetMovingImagePyramid( i );
       }
@@ -552,8 +551,8 @@ MultiMetricMultiResolutionRegistration<TElastix>
   /** Stop timer and print the elapsed time. */
   timer->StopTimer();
   elxout << "Setting the moving masks took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
-    << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << " ms." << std::endl;
 
 } // end UpdateMovingMasks()
 
@@ -561,4 +560,3 @@ MultiMetricMultiResolutionRegistration<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxMultiMetricMultiResolutionRegistration_HXX__
-

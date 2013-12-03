@@ -24,15 +24,15 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
-MetricBase<TElastix>
+template< class TElastix >
+MetricBase< TElastix >
 ::MetricBase()
 {
   /** Initialize. */
-  this->m_ShowExactMetricValue = false;
-  this->m_ExactMetricSampler = 0;
+  this->m_ShowExactMetricValue    = false;
+  this->m_ExactMetricSampler      = 0;
   this->m_CurrentExactMetricValue = 0.0;
-  this->m_ExactMetricSampleGridSpacing.Fill(1);
+  this->m_ExactMetricSampleGridSpacing.Fill( 1 );
 
 } // end Constructor
 
@@ -41,9 +41,9 @@ MetricBase<TElastix>
  * ******************* BeforeEachResolutionBase ******************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MetricBase<TElastix>
+MetricBase< TElastix >
 ::BeforeEachResolutionBase( void )
 {
   /** Get the current resolution level. */
@@ -57,38 +57,38 @@ MetricBase<TElastix>
   exactMetricColumn += this->GetComponentLabel();
 
   /** Remove the ExactMetric-column, if it already existed. */
-  xl::xout["iteration"].RemoveTargetCell( exactMetricColumn.c_str() );
+  xl::xout[ "iteration" ].RemoveTargetCell( exactMetricColumn.c_str() );
 
   /** Read the parameter file: Show the exact metric in every iteration? */
   bool showExactMetricValue = false;
   this->GetConfiguration()->ReadParameter( showExactMetricValue,
     "ShowExactMetricValue", this->GetComponentLabel(), level, 0 );
   this->m_ShowExactMetricValue = showExactMetricValue;
-  if ( showExactMetricValue )
+  if( showExactMetricValue )
   {
     /** Create a new column in the iteration info table */
-    xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
-    xl::xout["iteration"][ exactMetricColumn.c_str() ]
+    xl::xout[ "iteration" ].AddTargetCell( exactMetricColumn.c_str() );
+    xl::xout[ "iteration" ][ exactMetricColumn.c_str() ]
       << std::showpoint << std::fixed;
   }
 
   /** Read the sample grid spacing for computing the "exact" metric */
-  if ( showExactMetricValue )
+  if( showExactMetricValue )
   {
     typedef typename ExactMetricImageSamplerType::SampleGridSpacingValueType
       SampleGridSpacingValueType;
-    this->m_ExactMetricSampleGridSpacing.Fill(1);
+    this->m_ExactMetricSampleGridSpacing.Fill( 1 );
 
     /** Read the desired grid spacing of the samples. */
     unsigned int spacing_dim;
-    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+    for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
     {
-      spacing_dim = this->m_ExactMetricSampleGridSpacing[dim];
+      spacing_dim = this->m_ExactMetricSampleGridSpacing[ dim ];
       this->GetConfiguration()->ReadParameter(
         spacing_dim, "ExactMetricSampleGridSpacing",
         this->GetComponentLabel(), level * FixedImageDimension + dim, -1 );
-      this->m_ExactMetricSampleGridSpacing[dim] =
-        static_cast<SampleGridSpacingValueType>( spacing_dim );
+      this->m_ExactMetricSampleGridSpacing[ dim ]
+        = static_cast< SampleGridSpacingValueType >( spacing_dim );
     }
   }
 
@@ -97,7 +97,7 @@ MetricBase<TElastix>
     = dynamic_cast< AdvancedMetricType * >( this );
 
   /** For advanced metrics several other things can be set. */
-  if ( thisAsAdvanced != 0 )
+  if( thisAsAdvanced != 0 )
   {
     /** Should the metric check for enough samples? */
     bool checkNumberOfSamples = true;
@@ -110,7 +110,7 @@ MetricBase<TElastix>
       "RequiredRatioOfValidSamples", this->GetComponentLabel(), level, 0, false );
 
     /** Set it. */
-    if ( !checkNumberOfSamples )
+    if( !checkNumberOfSamples )
     {
       thisAsAdvanced->SetRequiredRatioOfValidSamples( 0.0 );
     }
@@ -124,14 +124,14 @@ MetricBase<TElastix>
     if( tmp == "true" || tmp == "" )
     {
       thisAsAdvanced->SetUseMultiThread( true );
-      std::string tmp2 = this->m_Configuration->GetCommandLineArgument( "-threads" );
+      std::string  tmp2        = this->m_Configuration->GetCommandLineArgument( "-threads" );
       unsigned int nrOfThreads = atoi( tmp2.c_str() );
       if( tmp2 != "" )
       {
         thisAsAdvanced->SetNumberOfThreads( nrOfThreads );
       }
     }
-    else thisAsAdvanced->SetUseMultiThread( false );
+    else { thisAsAdvanced->SetUseMultiThread( false ); }
 
   } // end Advanced metric
 
@@ -142,9 +142,9 @@ MetricBase<TElastix>
  * ******************* AfterEachIterationBase ******************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MetricBase<TElastix>
+MetricBase< TElastix >
 ::AfterEachIterationBase( void )
 {
   /** Show the metric value computed on all voxels, if the user wanted it. */
@@ -154,13 +154,13 @@ MetricBase<TElastix>
   exactMetricColumn += this->GetComponentLabel();
 
   this->m_CurrentExactMetricValue = 0.0;
-  if ( this->m_ShowExactMetricValue )
+  if( this->m_ShowExactMetricValue )
   {
     this->m_CurrentExactMetricValue = this->GetExactValue(
       this->GetElastix()->GetElxOptimizerBase()
-      ->GetAsITKBaseType()->GetCurrentPosition()  );
+      ->GetAsITKBaseType()->GetCurrentPosition() );
 
-    xl::xout["iteration"][ exactMetricColumn.c_str() ]
+    xl::xout[ "iteration" ][ exactMetricColumn.c_str() ]
       << this->m_CurrentExactMetricValue;
   }
 
@@ -171,12 +171,12 @@ MetricBase<TElastix>
  * ********************* SelectNewSamples ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MetricBase<TElastix>
+MetricBase< TElastix >
 ::SelectNewSamples( void )
 {
-  if ( this->GetAdvancedMetricImageSampler() )
+  if( this->GetAdvancedMetricImageSampler() )
   {
     /** Force the metric to base its computation on a new subset of image samples. */
     this->GetAdvancedMetricImageSampler()->SelectNewSamplesOnUpdate();
@@ -187,7 +187,7 @@ MetricBase<TElastix>
      * method is called for a metric without sampler support.
      * To avoid the warning, this method may be overridden by a subclass.
      */
-    xl::xout["warning"]
+    xl::xout[ "warning" ]
       << "WARNING: The NewSamplesEveryIteration option was set to \"true\", but "
       << this->GetComponentLabel()
       << " does not use a sampler."
@@ -201,10 +201,10 @@ MetricBase<TElastix>
  * ********************* GetExactValue ************************
  */
 
-template <class TElastix>
-typename MetricBase<TElastix>::MeasureType
-MetricBase<TElastix>
-::GetExactValue( const ParametersType& parameters )
+template< class TElastix >
+typename MetricBase< TElastix >::MeasureType
+MetricBase< TElastix >
+::GetExactValue( const ParametersType & parameters )
 {
   /** Get the current image sampler. */
   typename ImageSamplerBaseType::Pointer currentSampler
@@ -214,24 +214,24 @@ MetricBase<TElastix>
    * well throw an error, but the ShowExactMetricValue is not really
    * essential for good registration...
    */
-  if ( currentSampler.IsNull() )
+  if( currentSampler.IsNull() )
   {
-    return itk::NumericTraits<MeasureType>::Zero;
+    return itk::NumericTraits< MeasureType >::Zero;
   }
 
   /** Try to cast the current Sampler to a FullSampler. */
   ExactMetricImageSamplerType * testPointer
-    = dynamic_cast<ExactMetricImageSamplerType *>( currentSampler.GetPointer() );
-  if ( testPointer != 0 )
+    = dynamic_cast< ExactMetricImageSamplerType * >( currentSampler.GetPointer() );
+  if( testPointer != 0 )
   {
     /** GetValue gives us the exact value! */
-    return this->GetAsITKBaseType()->GetValue(parameters);
+    return this->GetAsITKBaseType()->GetValue( parameters );
   }
 
   /** We have to provide the metric a full (or actually 'grid') sampler,
    * calls its GetValue and set back its original sampler.
    */
-  if ( this->m_ExactMetricSampler.IsNull() )
+  if( this->m_ExactMetricSampler.IsNull() )
   {
     this->m_ExactMetricSampler = ExactMetricImageSamplerType::New();
   }
@@ -261,9 +261,9 @@ MetricBase<TElastix>
  * ******************* GetAdvancedMetricUseImageSampler ********************
  */
 
-template <class TElastix>
+template< class TElastix >
 bool
-MetricBase<TElastix>
+MetricBase< TElastix >
 ::GetAdvancedMetricUseImageSampler( void ) const
 {
   /** Cast this to AdvancedMetricType. */
@@ -271,7 +271,7 @@ MetricBase<TElastix>
     = dynamic_cast< const AdvancedMetricType * >( this );
 
   /** If no AdvancedMetricType, return false. */
-  if ( thisAsMetricWithSampler == 0 )
+  if( thisAsMetricWithSampler == 0 )
   {
     return false;
   }
@@ -285,8 +285,9 @@ MetricBase<TElastix>
  * ******************* SetAdvancedMetricImageSampler ********************
  */
 
-template <class TElastix>
-void MetricBase<TElastix>
+template< class TElastix >
+void
+MetricBase< TElastix >
 ::SetAdvancedMetricImageSampler( ImageSamplerBaseType * sampler )
 {
   /** Cast this to AdvancedMetricType. */
@@ -296,11 +297,11 @@ void MetricBase<TElastix>
   /** If no AdvancedMetricType, or if the MetricWithSampler does not
    * utilize the sampler, return.
    */
-  if ( thisAsMetricWithSampler == 0 )
+  if( thisAsMetricWithSampler == 0 )
   {
     return;
   }
-  if ( thisAsMetricWithSampler->GetUseImageSampler() == false )
+  if( thisAsMetricWithSampler->GetUseImageSampler() == false )
   {
     return;
   }
@@ -315,9 +316,9 @@ void MetricBase<TElastix>
  * ******************* GetAdvancedMetricImageSampler ********************
  */
 
-template <class TElastix>
-typename MetricBase<TElastix>::ImageSamplerBaseType *
-MetricBase<TElastix>
+template< class TElastix >
+typename MetricBase< TElastix >::ImageSamplerBaseType
+* MetricBase< TElastix >
 ::GetAdvancedMetricImageSampler( void ) const
 {
   /** Cast this to AdvancedMetricType. */
@@ -327,11 +328,11 @@ MetricBase<TElastix>
   /** If no AdvancedMetricType, or if the MetricWithSampler does not
    * utilize the sampler, return 0.
    */
-  if ( thisAsMetricWithSampler == 0 )
+  if( thisAsMetricWithSampler == 0 )
   {
     return 0;
   }
-  if ( thisAsMetricWithSampler->GetUseImageSampler() == false )
+  if( thisAsMetricWithSampler->GetUseImageSampler() == false )
   {
     return 0;
   }
@@ -340,7 +341,6 @@ MetricBase<TElastix>
   return thisAsMetricWithSampler->GetImageSampler();
 
 } // end GetAdvancedMetricImageSampler()
-
 
 } // end namespace elastix
 

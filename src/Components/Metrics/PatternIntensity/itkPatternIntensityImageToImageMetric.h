@@ -37,18 +37,18 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 class PatternIntensityImageToImageMetric :
-public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef PatternIntensityImageToImageMetric    Self;
+  typedef PatternIntensityImageToImageMetric Self;
   typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >                 Superclass;
-  typedef SmartPointer<Self>                    Pointer;
-  typedef SmartPointer<const Self>              ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -58,7 +58,7 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename
-      Superclass::CoordinateRepresentationType            CoordinateRepresentationType;
+    Superclass::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
   typedef typename Superclass::MovingImagePointer         MovingImagePointer;
@@ -94,17 +94,17 @@ public:
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename
-    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+    Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType  FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType MovingImageLimiterType;
   typedef typename
-    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+    Superclass::FixedImageLimiterOutputType FixedImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+    Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-  typedef typename itk::Optimizer                         OptimizerType;
-  typedef typename OptimizerType::ScalesType              ScalesType;
+    Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  typedef typename itk::Optimizer            OptimizerType;
+  typedef typename OptimizerType::ScalesType ScalesType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -113,11 +113,11 @@ public:
   typedef itk::Image< FixedImagePixelType,
     itkGetStaticConstMacro( FixedImageDimension ) >       TransformedMovingImageType;
   typedef typename itk::AdvancedCombinationTransform<
-    ScalarType, FixedImageDimension>                      CombinationTransformType;
-  typedef typename CombinationTransformType::Pointer      CombinationTransformPointer;
+    ScalarType, FixedImageDimension >                      CombinationTransformType;
+  typedef typename CombinationTransformType::Pointer CombinationTransformPointer;
   typedef typename itk::AdvancedRayCastInterpolateImageFunction<
     MovingImageType, ScalarType >                         RayCastInterpolatorType;
-  typedef typename RayCastInterpolatorType::Pointer       RayCastInterpolatorPointer;
+  typedef typename RayCastInterpolatorType::Pointer RayCastInterpolatorPointer;
   typedef itk::ResampleImageFilter<
     MovingImageType, TransformedMovingImageType >         TransformMovingImageFilterType;
   typedef typename TransformMovingImageFilterType::Pointer TransformMovingImageFilterPointer;
@@ -133,8 +133,8 @@ public:
   typedef itk::MultiplyImageFilter<
     TransformedMovingImageType,
     TransformedMovingImageType,
-    TransformedMovingImageType>         MultiplyImageFilterType;
-  typedef typename MultiplyImageFilterType::Pointer   MultiplyImageFilterPointer;
+    TransformedMovingImageType >         MultiplyImageFilterType;
+  typedef typename MultiplyImageFilterType::Pointer MultiplyImageFilterPointer;
 
   /** The moving image dimension. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
@@ -149,7 +149,7 @@ public:
 
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const;
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
@@ -159,47 +159,49 @@ public:
   virtual void Initialize( void ) throw ( ExceptionObject );
 
   /** Set/Get Scales  */
-  itkSetMacro( Scales , ScalesType );
+  itkSetMacro( Scales, ScalesType );
   itkGetConstReferenceMacro( Scales, ScalesType );
 
   /** Set/Get m_NoiseConstant  */
-  itkSetMacro( NoiseConstant , double );
+  itkSetMacro( NoiseConstant, double );
   itkGetConstReferenceMacro( NoiseConstant, double );
 
   /** Set/Get OptimizeNormalizationFactor  */
-  itkSetMacro( OptimizeNormalizationFactor , bool );
+  itkSetMacro( OptimizeNormalizationFactor, bool );
   itkGetConstReferenceMacro( OptimizeNormalizationFactor, bool );
 
 protected:
+
   PatternIntensityImageToImageMetric();
-  virtual ~PatternIntensityImageToImageMetric() {};
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  virtual ~PatternIntensityImageToImageMetric() {}
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Compute the pattern intensity fixed image*/
   MeasureType ComputePIFixed( void ) const;
 
   /** Compute the pattern intensity difference image. */
-  MeasureType ComputePIDiff( const TransformParametersType &parameters, float scalingfactor ) const;
+  MeasureType ComputePIDiff( const TransformParametersType & parameters, float scalingfactor ) const;
 
 private:
-  PatternIntensityImageToImageMetric(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
 
-  TransformMovingImageFilterPointer    m_TransformMovingImageFilter;
-  DifferenceImageFilterPointer         m_DifferenceImageFilter;
-  RescaleIntensityImageFilterPointer   m_RescaleImageFilter;
-  MultiplyImageFilterPointer           m_MultiplyImageFilter;
-  double                      m_NoiseConstant;
-  unsigned int                m_NeighborhoodRadius;
-  double                      m_DerivativeDelta;
-  double                      m_NormalizationFactor;
-  double                      m_Rescalingfactor;
-  bool                        m_OptimizeNormalizationFactor;
-  ScalesType                  m_Scales;
-  MeasureType                 m_FixedMeasure;
-  CombinationTransformPointer m_CombinationTransform;
+  PatternIntensityImageToImageMetric( const Self & ); // purposely not implemented
+  void operator=( const Self & );                     // purposely not implemented
 
-  }; // end class
+  TransformMovingImageFilterPointer  m_TransformMovingImageFilter;
+  DifferenceImageFilterPointer       m_DifferenceImageFilter;
+  RescaleIntensityImageFilterPointer m_RescaleImageFilter;
+  MultiplyImageFilterPointer         m_MultiplyImageFilter;
+  double                             m_NoiseConstant;
+  unsigned int                       m_NeighborhoodRadius;
+  double                             m_DerivativeDelta;
+  double                             m_NormalizationFactor;
+  double                             m_Rescalingfactor;
+  bool                               m_OptimizeNormalizationFactor;
+  ScalesType                         m_Scales;
+  MeasureType                        m_FixedMeasure;
+  CombinationTransformPointer        m_CombinationTransform;
+
+};
 
 } // end namespace itk
 
@@ -208,4 +210,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkPatternIntensityImageToImageMetric_h
-

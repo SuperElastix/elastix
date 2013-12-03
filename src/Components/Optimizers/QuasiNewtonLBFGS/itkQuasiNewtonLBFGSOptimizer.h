@@ -21,187 +21,188 @@
 
 namespace itk
 {
-  /** \class QuasiNewtonLBFGSOptimizer
-   * \brief ITK version of the lbfgs algorithm ...
+/** \class QuasiNewtonLBFGSOptimizer
+ * \brief ITK version of the lbfgs algorithm ...
+ *
+ * This class is an ITK version of the netlib lbfgs_ function.
+ * It gives exactly the same results, if used in combination
+ * with the itk::MoreThuenteLineSearchOptimizer.
+ *
+ * The optimizer solves the unconstrained minimization problem
+ *
+ *      \f[ \min F(x), \quad x = ( x_1,x_2,\ldots,x_N ), \f]
+ *
+ * using the limited memory BFGS method. The routine is especially
+ * effective on problems involving a large number of variables. In
+ * a typical iteration of this method an approximation \f$H_k\f$ to the
+ * inverse of the Hessian is obtained by applying \f$M\f$ BFGS updates to
+ * a diagonal matrix \f$H_0\f$, using information from the previous \f$M\f$ steps.
+ * The user specifies the number \f$M\f$ (Memory), which determines the amount of
+ * storage required by the routine.
+ *
+ * The algorithm is described in "On the limited memory BFGS method
+ * for large scale optimization", by D. Liu and J. Nocedal,
+ * Mathematical Programming B 45 (1989) 503-528.
+ *
+ * The steplength is determined at each iteration by means of a
+ * line search routine. The itk::MoreThuenteLineSearchOptimizer works well.
+ *
+ *
+ * \ingroup Numerics Optimizers
+ */
+
+class QuasiNewtonLBFGSOptimizer : public ScaledSingleValuedNonLinearOptimizer
+{
+public:
+
+  typedef QuasiNewtonLBFGSOptimizer            Self;
+  typedef ScaledSingleValuedNonLinearOptimizer Superclass;
+  typedef SmartPointer< Self >                 Pointer;
+  typedef SmartPointer< const Self >           ConstPointer;
+
+  itkNewMacro( Self );
+  itkTypeMacro( QuasiNewtonLBFGSOptimizer, ScaledSingleValuedNonLinearOptimizer );
+
+  typedef Superclass::ParametersType         ParametersType;
+  typedef Superclass::DerivativeType         DerivativeType;
+  typedef Superclass::CostFunctionType       CostFunctionType;
+  typedef Superclass::ScaledCostFunctionType ScaledCostFunctionType;
+  typedef Superclass::MeasureType            MeasureType;
+  typedef Superclass::ScalesType             ScalesType;
+
+  typedef Array< double >               RhoType;
+  typedef std::vector< ParametersType > SType;
+  typedef std::vector< DerivativeType > YType;
+  typedef Array< double >               DiagonalMatrixType;
+  typedef LineSearchOptimizer           LineSearchOptimizerType;
+
+  typedef LineSearchOptimizerType::Pointer LineSearchOptimizerPointer;
+
+  typedef enum {
+    MetricError,
+    LineSearchError,
+    MaximumNumberOfIterations,
+    InvalidDiagonalMatrix,
+    GradientMagnitudeTolerance,
+    ZeroStep,
+    Unknown
+  }                                   StopConditionType;
+
+  virtual void StartOptimization( void );
+
+  virtual void ResumeOptimization( void );
+
+  virtual void StopOptimization( void );
+
+  /** Get information about optimization process: */
+  itkGetConstMacro( CurrentIteration, unsigned long );
+  itkGetConstMacro( CurrentValue, MeasureType );
+  itkGetConstReferenceMacro( CurrentGradient, DerivativeType );
+  itkGetConstMacro( InLineSearch, bool );
+  itkGetConstReferenceMacro( StopCondition, StopConditionType );
+  itkGetConstMacro( CurrentStepLength, double );
+
+  /** Setting: the line search optimizer */
+  itkSetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
+  itkGetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
+
+  /** Setting: the maximum number of iterations */
+  itkGetConstMacro( MaximumNumberOfIterations, unsigned long );
+  itkSetClampMacro( MaximumNumberOfIterations, unsigned long,
+    1, NumericTraits< unsigned long >::max() );
+
+  /** Setting: the mininum gradient magnitude.
    *
-   * This class is an ITK version of the netlib lbfgs_ function.
-   * It gives exactly the same results, if used in combination
-   * with the itk::MoreThuenteLineSearchOptimizer.
-   *
-   * The optimizer solves the unconstrained minimization problem
-   *
-   *      \f[ \min F(x), \quad x = ( x_1,x_2,\ldots,x_N ), \f]
-   *
-   * using the limited memory BFGS method. The routine is especially
-   * effective on problems involving a large number of variables. In
-   * a typical iteration of this method an approximation \f$H_k\f$ to the
-   * inverse of the Hessian is obtained by applying \f$M\f$ BFGS updates to
-   * a diagonal matrix \f$H_0\f$, using information from the previous \f$M\f$ steps.
-   * The user specifies the number \f$M\f$ (Memory), which determines the amount of
-   * storage required by the routine.
-   *
-   * The algorithm is described in "On the limited memory BFGS method
-   * for large scale optimization", by D. Liu and J. Nocedal,
-   * Mathematical Programming B 45 (1989) 503-528.
-   *
-   * The steplength is determined at each iteration by means of a
-   * line search routine. The itk::MoreThuenteLineSearchOptimizer works well.
-   *
-   *
-   * \ingroup Numerics Optimizers
+   * The optimizer stops when:
+   * ||CurrentGradient|| < GradientMagnitudeTolerance * max(1, ||CurrentPosition||)
    */
+  itkGetConstMacro( GradientMagnitudeTolerance, double );
+  itkSetMacro( GradientMagnitudeTolerance, double );
 
-  class QuasiNewtonLBFGSOptimizer : public ScaledSingleValuedNonLinearOptimizer
-  {
-  public:
+  /** Setting: the memory. The number of iterations that are used
+   * to estimate the Hessian. 5 by default. 0 results in (normalised) gradient
+   * descent search directions */
+  itkSetClampMacro( Memory, unsigned int, 0, NumericTraits< unsigned int >::max() );
+  itkGetConstMacro( Memory, unsigned int );
 
-    typedef QuasiNewtonLBFGSOptimizer             Self;
-    typedef ScaledSingleValuedNonLinearOptimizer  Superclass;
-    typedef SmartPointer<Self>                    Pointer;
-    typedef SmartPointer<const Self>              ConstPointer;
+protected:
 
-    itkNewMacro(Self);
-    itkTypeMacro(QuasiNewtonLBFGSOptimizer, ScaledSingleValuedNonLinearOptimizer);
+  QuasiNewtonLBFGSOptimizer();
+  virtual ~QuasiNewtonLBFGSOptimizer(){}
 
-    typedef Superclass::ParametersType            ParametersType;
-    typedef Superclass::DerivativeType            DerivativeType;
-    typedef Superclass::CostFunctionType          CostFunctionType;
-    typedef Superclass::ScaledCostFunctionType    ScaledCostFunctionType;
-    typedef Superclass::MeasureType               MeasureType;
-    typedef Superclass::ScalesType                ScalesType;
+  // \todo: should be implemented
+  void PrintSelf( std::ostream & os, Indent indent ) const {}
 
-    typedef Array<double>                         RhoType;
-    typedef std::vector<ParametersType>           SType;
-    typedef std::vector<DerivativeType>           YType;
-    typedef Array<double>                         DiagonalMatrixType;
-    typedef LineSearchOptimizer                   LineSearchOptimizerType;
+  DerivativeType    m_CurrentGradient;
+  MeasureType       m_CurrentValue;
+  unsigned long     m_CurrentIteration;
+  StopConditionType m_StopCondition;
+  bool              m_Stop;
+  double            m_CurrentStepLength;
 
-    typedef LineSearchOptimizerType::Pointer      LineSearchOptimizerPointer;
+  /** Is true when the LineSearchOptimizer has been started. */
+  bool m_InLineSearch;
 
-    typedef enum {
-      MetricError,
-      LineSearchError,
-      MaximumNumberOfIterations,
-      InvalidDiagonalMatrix,
-      GradientMagnitudeTolerance,
-      ZeroStep,
-      Unknown }                                   StopConditionType;
+  RhoType m_Rho;
+  SType   m_S;
+  YType   m_Y;
 
-    virtual void StartOptimization(void);
-    virtual void ResumeOptimization(void);
-    virtual void StopOptimization(void);
+  unsigned int m_Point;
+  unsigned int m_PreviousPoint;
+  unsigned int m_Bound;
 
-    /** Get information about optimization process: */
-    itkGetConstMacro(CurrentIteration, unsigned long);
-    itkGetConstMacro(CurrentValue, MeasureType);
-    itkGetConstReferenceMacro(CurrentGradient, DerivativeType);
-    itkGetConstMacro(InLineSearch, bool);
-    itkGetConstReferenceMacro(StopCondition, StopConditionType);
-    itkGetConstMacro(CurrentStepLength, double);
+  itkSetMacro( InLineSearch, bool );
 
-    /** Setting: the line search optimizer */
-    itkSetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
-    itkGetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
+  /** Compute H0
+   *
+   * Override this method if not satisfied with the default choice.
+   */
+  virtual void ComputeDiagonalMatrix( DiagonalMatrixType & diag_H0 );
 
-    /** Setting: the maximum number of iterations */
-    itkGetConstMacro(MaximumNumberOfIterations, unsigned long);
-    itkSetClampMacro(MaximumNumberOfIterations, unsigned long,
-      1, NumericTraits<unsigned long>::max());
+  /** Compute -Hg
+   *
+   *     COMPUTE -H*G USING THE FORMULA GIVEN IN: Nocedal, J. 1980,
+   *     "Updating quasi-Newton matrices with limited storage",
+   *     Mathematics of Computation, Vol.24, No.151, pp. 773-782.
+   */
+  virtual void ComputeSearchDirection(
+    const DerivativeType & gradient,
+    ParametersType & searchDir );
 
-    /** Setting: the mininum gradient magnitude.
-     *
-     * The optimizer stops when:
-     * ||CurrentGradient|| < GradientMagnitudeTolerance * max(1, ||CurrentPosition||)
-     */
-    itkGetConstMacro(GradientMagnitudeTolerance, double);
-    itkSetMacro(GradientMagnitudeTolerance, double);
+  /** Perform a line search along the search direction. On calling, x, f, and g should
+   * contain the current position, the cost function value at this position, and
+   * the derivative. On return the step, x (new position), f (value at x), and g
+   * (derivative at x) are updated. */
+  virtual void LineSearch(
+    const ParametersType searchDir,
+    double & step,
+    ParametersType & x,
+    MeasureType & f,
+    DerivativeType & g );
 
-    /** Setting: the memory. The number of iterations that are used
-     * to estimate the Hessian. 5 by default. 0 results in (normalised) gradient
-     * descent search directions */
-    itkSetClampMacro(Memory,unsigned int,0,NumericTraits<unsigned int>::max());
-    itkGetConstMacro(Memory,unsigned int);
+  /** Store s = x_k - x_k-1 and y = g_k - g_k-1 in m_S and m_Y,
+   * and store 1/(ys) in m_Rho. */
+  virtual void StoreCurrentPoint(
+    const ParametersType & step,
+    const DerivativeType & grad_dif );
 
+  /** Check if convergence has occured;
+   * The firstLineSearchDone bool allows the implementation of TestConvergence to
+   * decide to skip a few convergence checks when no line search has performed yet
+   * (so, before the actual optimisation begins)  */
+  virtual bool TestConvergence( bool firstLineSearchDone );
 
-  protected:
-    QuasiNewtonLBFGSOptimizer();
-    virtual ~QuasiNewtonLBFGSOptimizer(){};
+private:
 
-    // \todo: should be implemented
-    void PrintSelf(std::ostream& os, Indent indent) const {};
+  QuasiNewtonLBFGSOptimizer( const Self & ); // purposely not implemented
+  void operator=( const Self & );            // purposely not implemented
 
-    DerivativeType                m_CurrentGradient;
-    MeasureType                   m_CurrentValue;
-    unsigned long                 m_CurrentIteration;
-    StopConditionType             m_StopCondition;
-    bool                          m_Stop;
-    double                        m_CurrentStepLength;
+  unsigned long              m_MaximumNumberOfIterations;
+  double                     m_GradientMagnitudeTolerance;
+  LineSearchOptimizerPointer m_LineSearchOptimizer;
+  unsigned int               m_Memory;
 
-    /** Is true when the LineSearchOptimizer has been started. */
-    bool                          m_InLineSearch;
-
-    RhoType                       m_Rho;
-    SType                         m_S;
-    YType                         m_Y;
-
-    unsigned int                  m_Point;
-    unsigned int                  m_PreviousPoint;
-    unsigned int                  m_Bound;
-
-    itkSetMacro(InLineSearch, bool);
-
-    /** Compute H0
-     *
-     * Override this method if not satisfied with the default choice.
-     */
-    virtual void ComputeDiagonalMatrix(DiagonalMatrixType & diag_H0);
-
-    /** Compute -Hg
-     *
-     *     COMPUTE -H*G USING THE FORMULA GIVEN IN: Nocedal, J. 1980,
-     *     "Updating quasi-Newton matrices with limited storage",
-     *     Mathematics of Computation, Vol.24, No.151, pp. 773-782.
-     */
-    virtual void ComputeSearchDirection(
-      const DerivativeType & gradient,
-      ParametersType & searchDir);
-
-    /** Perform a line search along the search direction. On calling, x, f, and g should
-     * contain the current position, the cost function value at this position, and
-     * the derivative. On return the step, x (new position), f (value at x), and g
-     * (derivative at x) are updated. */
-    virtual void LineSearch(
-      const ParametersType searchDir,
-      double & step,
-      ParametersType & x,
-      MeasureType & f,
-      DerivativeType & g );
-
-    /** Store s = x_k - x_k-1 and y = g_k - g_k-1 in m_S and m_Y,
-     * and store 1/(ys) in m_Rho. */
-    virtual void StoreCurrentPoint(
-      const ParametersType & step,
-      const DerivativeType & grad_dif);
-
-    /** Check if convergence has occured;
-     * The firstLineSearchDone bool allows the implementation of TestConvergence to
-     * decide to skip a few convergence checks when no line search has performed yet
-     * (so, before the actual optimisation begins)  */
-    virtual bool TestConvergence(bool firstLineSearchDone);
-
-  private:
-    QuasiNewtonLBFGSOptimizer(const Self&); // purposely not implemented
-    void operator=(const Self&); // purposely not implemented
-
-    unsigned long                 m_MaximumNumberOfIterations;
-    double                        m_GradientMagnitudeTolerance;
-    LineSearchOptimizerPointer    m_LineSearchOptimizer;
-    unsigned int                  m_Memory;
-
-
-  };
-
-
+};
 
 } // end namespace itk
 
@@ -306,7 +307,6 @@ namespace itk
 /*                                variables, */
 /*                IPRINT(2) = 3 : same as IPRINT(2)=2, plus gradient vector.*/
 
-
 /*    EPS     is a positive DOUBLE PRECISION variable that must be set by */
 /*            the user, and determines the accuracy with which the solution*/
 /*            is to be found. The subroutine terminates when */
@@ -363,7 +363,6 @@ namespace itk
 /*             IFLAG=-3  Improper input parameters for LBFGS (N or M are */
 /*                       not positive). */
 
-
 /*    ON THE DRIVER: */
 
 /*    The program that calls LBFGS must contain the declaration: */
@@ -403,12 +402,10 @@ namespace itk
 /*        for the machine being used, or unless the problem is extremely */
 /*        badly scaled (in which case the exponents should be increased).  */
 
-
 /*  MACHINE DEPENDENCIES */
 
 /*        The only variables that are machine-dependent are XTOL, */
 /*        STPMIN and STPMAX. */
-
 
 /*  GENERAL INFORMATION */
 
@@ -417,9 +414,6 @@ namespace itk
 /*    Input/Output  :  No input; diagnostic messages on unit MP and */
 /*                     error messages on unit LP. */
 
-
 /*    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
-
 #endif //#ifndef __itkQuasiNewtonLBFGSOptimizer_h
-

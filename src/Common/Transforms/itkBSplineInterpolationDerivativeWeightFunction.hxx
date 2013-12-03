@@ -23,15 +23,15 @@ namespace itk
  * ****************** Constructor *******************************
  */
 
-template<class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>
+template< class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
+BSplineInterpolationDerivativeWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
 ::BSplineInterpolationDerivativeWeightFunction()
 {
   /** Initialize members. */
   this->m_DerivativeDirection = 0;
 
   /** Initialize the interpolation kernels. */
-  this->m_Kernel = KernelType::New();
+  this->m_Kernel           = KernelType::New();
   this->m_DerivativeKernel = DerivativeKernelType::New();
 
 } // end Constructor
@@ -41,14 +41,14 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
  * ******************* SetDerivativeDirection *******************
  */
 
-template<class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template< class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
 void
-BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>
+BSplineInterpolationDerivativeWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
 ::SetDerivativeDirection( unsigned int dir )
 {
-  if ( dir != this->m_DerivativeDirection )
+  if( dir != this->m_DerivativeDirection )
   {
-    if ( dir < SpaceDimension )
+    if( dir < SpaceDimension )
     {
       this->m_DerivativeDirection = dir;
 
@@ -63,15 +63,15 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
  * ******************* PrintSelf *******************
  */
 
-template<class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template< class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
 void
-BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>
+BSplineInterpolationDerivativeWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   this->Superclass::PrintSelf( os, indent );
 
   os << indent << "DerivativeDirection: "
-    << this->m_DerivativeDirection << std::endl;
+     << this->m_DerivativeDirection << std::endl;
 
 } // end PrintSelf()
 
@@ -80,33 +80,33 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
  * ******************* Compute1DWeights *******************
  */
 
-template<class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template< class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
 void
-BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>
+BSplineInterpolationDerivativeWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
 ::Compute1DWeights(
   const ContinuousIndexType & cindex,
   const IndexType & startIndex,
   OneDWeightsType & weights1D ) const
 {
   /** Compute the 1D weights. */
-  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    double x = cindex[ i ] - static_cast<double>( startIndex[ i ] );
+    double x = cindex[ i ] - static_cast< double >( startIndex[ i ] );
 
-    if ( i != this->m_DerivativeDirection )
+    if( i != this->m_DerivativeDirection )
     {
-      for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
+      for( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
       {
         weights1D[ i ][ k ] = this->m_Kernel->Evaluate( x );
-        x -= 1.0;
+        x                  -= 1.0;
       }
     }
     else
     {
-      for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
+      for( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
       {
         weights1D[ i ][ k ] = this->m_DerivativeKernel->Evaluate( x );
-        x -= 1.0;
+        x                  -= 1.0;
       }
     }
   }

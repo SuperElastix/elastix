@@ -22,14 +22,13 @@
 namespace itk
 {
 
+/**
+ * ******************* Constructor *******************
+ */
 
- /**
-  * ******************* Constructor *******************
-  */
-
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-ThinPlateSplineKernelTransform2<TScalarType, NDimensions>
+ThinPlateSplineKernelTransform2< TScalarType, NDimensions >
 ::ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const
 {
   const TScalarType r = x.GetNorm();
@@ -43,21 +42,21 @@ ThinPlateSplineKernelTransform2<TScalarType, NDimensions>
  * ******************* ComputeDeformationContribution *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template< class TScalarType, unsigned int NDimensions >
 void
-ThinPlateSplineKernelTransform2<TScalarType, NDimensions>
+ThinPlateSplineKernelTransform2< TScalarType, NDimensions >
 ::ComputeDeformationContribution(
   const InputPointType & thisPoint, OutputPointType & opp ) const
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
-  PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
+  PointsIterator      sp                = this->m_SourceLandmarks->GetPoints()->Begin();
 
-  for ( unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++ )
+  for( unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++ )
   {
-    InputVectorType position = thisPoint - sp->Value();
-    const TScalarType r = position.GetNorm();
+    InputVectorType   position = thisPoint - sp->Value();
+    const TScalarType r        = position.GetNorm();
 
-    for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+    for( unsigned int odim = 0; odim < NDimensions; odim++ )
     {
       opp[ odim ] += r * this->m_DMatrix( odim, lnd );
     }

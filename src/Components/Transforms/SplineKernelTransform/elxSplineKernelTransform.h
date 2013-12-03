@@ -25,111 +25,111 @@
 namespace elastix
 {
 
-  /**
-   * \class SplineKernelTransform
-   * \brief A transform based on the itk::KernelTransform2.
-   *
-   * This transform is a nonrigid transformation, based on
-   * thin-plate-spline-like kernels.
-   *
-   * The ITK code for this class is largely based on code by
-   * Rupert Brooks. For elastix a few modifications were made
-   * (making the transform thread safe, and make it support the
-   * AdvancedTransform framework).
-   *
-   * This nonrigid transformation model allows the user to place control points
-   * at application-specific positions, unlike the BSplineTransform, which always
-   * uses a regular grid of control points.
-   *
-   * NB: in order to use this class for registration, the -fp command line
-   * argument is mandatory! It is used to place the fixed image landmarks.
-   *
-   * The parameters used in this class are:
-   * \parameter Transform: Select this transform as follows:\n
-   *    <tt>(%Transform "SplineKernelTransform")</tt>
-   * \parameter SplineKernelType: Select the deformation model, which must
-   * be one of { ThinPlateSpline, ThinPlateR2LogRSpline, VolumeSpline,
-   * ElasticBodySpline, ElasticBodyReciprocalSpline). In 2D this option is
-   * ignored and a ThinPlateSpline will always be used. \n
-   *   example: <tt>(SplineKernelType "ElasticBodySpline")</tt>\n
-   * Default: ThinPlateSpline. You cannot specify this parameter for each
-   * resolution differently.
-   * \parameter SplineRelaxationFactor: make the spline interpolating or
-   * approximating. A value of 0.0 gives an interpolating transform. Higher
-   * values result in approximating splines.\n
-   *   example: <tt>(SplineRelaxationFactor 0.01 )</tt>\n
-   * Default: 0.0. You cannot specify this parameter for each resolution differently.
-   * \parameter SplinePoissonRatio: Set the poisson ratio for the
-   * ElasticBodySpline and the ElastixBodyReciprocalSpline. For other
-   * SplineKernelTypes this parameters is ignored.\n
-   *   example: <tt>(SplinePoissonRatio 0.3 )</tt>\n
-   * Default: 0.3. You cannot specify this parameter for each resolution differently.\n
-   * Valid values are withing -1.0 and 0.5. 0.5 means incompressible.
-   * Negative values are a bit odd, but possible. See Wikipedia on PoissonRatio.
-   *
-   * \commandlinearg -fp: a file specifying a set of points that will serve
-   * as fixed image landmarks.\n
-   *   example: <tt>-fp fixedImagePoints.txt</tt> \n
-   *   The fixedImagePoints.txt file should be structured: first line should
-   * be "index" or "point", depending if the user supplies voxel indices or
-   * real world coordinates. The second line should be the number of points
-   * that should be transformed. The third and following lines give the
-   * indices or points. The same structure thus as used for transformix.\n
-   * \commandlinearg -mp: an optional file specifying a set of points that will serve
-   * as moving image landmarks, used to initialize the transformation.\n
-   *   example: <tt>-mp movingImagePoints.txt</tt> \n
-   *   The movingImagePoints.txt should be structured like the fixedImagePoints.txt.
-   *  The moving landmarks should be corresponding to the fixed landmarks.
-   *  If no file is provided, the transformation is initialized to be the identity,
-   *  i.e. the moving landmarks are chosen identical to the fixed landmarks.
-   *
-   * \transformparameter Transform: Select this transform as follows:\n
-   *    <tt>(%Transform "SplineKernelTransform")</tt>
-   * \transformparameter SplineKernelType: Select the deformation model,
-   * which must be one of { ThinPlateSpline, ThinPlateR2LogRSpline, VolumeSpline,
-   * ElasticBodySpline, ElasticBodyReciprocalSpline). In 2D this option is
-   * ignored and a ThinPlateSpline will always be used. \n
-   *   example: <tt>(SplineKernelType "ElasticBodySpline")</tt>\n   *
-   * \transformparameter SplineRelaxationFactor: make the spline interpolating
-   * or approximating. A value of 0.0 gives an interpolating transform.
-   * Higher values result in approximating splines.\n
-   *   example: <tt>(SplineRelaxationFactor 0.01 )</tt>\n   *
-   * \transformparameter SplinePoissonRatio: Set the Poisson ratio for the
-   * ElasticBodySpline and the ElastixBodyReciprocalSpline. For other
-   * SplineKernelTypes this parameters is ignored.\n
-   *   example: <tt>(SplinePoissonRatio 0.3 )</tt>\n
-   * Valid values are withing -1.0 and 0.5. 0.5 means incompressible.
-   * Negative values are a bit odd, but possible. See Wikipedia on PoissonRatio.
-   * \transformparameter FixedImageLandmarks: The landmark positions in the
-   * fixed image, in world coordinates. Positions written as x1 y1 [z1] x2 y2 [z2] etc.\n
-   *   example: <tt>(FixedImageLandmarks 10.0 11.0 12.0 4.0 4.0 4.0 6.0 6.0 6.0 )</tt>
-   *
-   * \ingroup Transforms
-   */
+/**
+ * \class SplineKernelTransform
+ * \brief A transform based on the itk::KernelTransform2.
+ *
+ * This transform is a nonrigid transformation, based on
+ * thin-plate-spline-like kernels.
+ *
+ * The ITK code for this class is largely based on code by
+ * Rupert Brooks. For elastix a few modifications were made
+ * (making the transform thread safe, and make it support the
+ * AdvancedTransform framework).
+ *
+ * This nonrigid transformation model allows the user to place control points
+ * at application-specific positions, unlike the BSplineTransform, which always
+ * uses a regular grid of control points.
+ *
+ * NB: in order to use this class for registration, the -fp command line
+ * argument is mandatory! It is used to place the fixed image landmarks.
+ *
+ * The parameters used in this class are:
+ * \parameter Transform: Select this transform as follows:\n
+ *    <tt>(%Transform "SplineKernelTransform")</tt>
+ * \parameter SplineKernelType: Select the deformation model, which must
+ * be one of { ThinPlateSpline, ThinPlateR2LogRSpline, VolumeSpline,
+ * ElasticBodySpline, ElasticBodyReciprocalSpline). In 2D this option is
+ * ignored and a ThinPlateSpline will always be used. \n
+ *   example: <tt>(SplineKernelType "ElasticBodySpline")</tt>\n
+ * Default: ThinPlateSpline. You cannot specify this parameter for each
+ * resolution differently.
+ * \parameter SplineRelaxationFactor: make the spline interpolating or
+ * approximating. A value of 0.0 gives an interpolating transform. Higher
+ * values result in approximating splines.\n
+ *   example: <tt>(SplineRelaxationFactor 0.01 )</tt>\n
+ * Default: 0.0. You cannot specify this parameter for each resolution differently.
+ * \parameter SplinePoissonRatio: Set the poisson ratio for the
+ * ElasticBodySpline and the ElastixBodyReciprocalSpline. For other
+ * SplineKernelTypes this parameters is ignored.\n
+ *   example: <tt>(SplinePoissonRatio 0.3 )</tt>\n
+ * Default: 0.3. You cannot specify this parameter for each resolution differently.\n
+ * Valid values are withing -1.0 and 0.5. 0.5 means incompressible.
+ * Negative values are a bit odd, but possible. See Wikipedia on PoissonRatio.
+ *
+ * \commandlinearg -fp: a file specifying a set of points that will serve
+ * as fixed image landmarks.\n
+ *   example: <tt>-fp fixedImagePoints.txt</tt> \n
+ *   The fixedImagePoints.txt file should be structured: first line should
+ * be "index" or "point", depending if the user supplies voxel indices or
+ * real world coordinates. The second line should be the number of points
+ * that should be transformed. The third and following lines give the
+ * indices or points. The same structure thus as used for transformix.\n
+ * \commandlinearg -mp: an optional file specifying a set of points that will serve
+ * as moving image landmarks, used to initialize the transformation.\n
+ *   example: <tt>-mp movingImagePoints.txt</tt> \n
+ *   The movingImagePoints.txt should be structured like the fixedImagePoints.txt.
+ *  The moving landmarks should be corresponding to the fixed landmarks.
+ *  If no file is provided, the transformation is initialized to be the identity,
+ *  i.e. the moving landmarks are chosen identical to the fixed landmarks.
+ *
+ * \transformparameter Transform: Select this transform as follows:\n
+ *    <tt>(%Transform "SplineKernelTransform")</tt>
+ * \transformparameter SplineKernelType: Select the deformation model,
+ * which must be one of { ThinPlateSpline, ThinPlateR2LogRSpline, VolumeSpline,
+ * ElasticBodySpline, ElasticBodyReciprocalSpline). In 2D this option is
+ * ignored and a ThinPlateSpline will always be used. \n
+ *   example: <tt>(SplineKernelType "ElasticBodySpline")</tt>\n   *
+ * \transformparameter SplineRelaxationFactor: make the spline interpolating
+ * or approximating. A value of 0.0 gives an interpolating transform.
+ * Higher values result in approximating splines.\n
+ *   example: <tt>(SplineRelaxationFactor 0.01 )</tt>\n   *
+ * \transformparameter SplinePoissonRatio: Set the Poisson ratio for the
+ * ElasticBodySpline and the ElastixBodyReciprocalSpline. For other
+ * SplineKernelTypes this parameters is ignored.\n
+ *   example: <tt>(SplinePoissonRatio 0.3 )</tt>\n
+ * Valid values are withing -1.0 and 0.5. 0.5 means incompressible.
+ * Negative values are a bit odd, but possible. See Wikipedia on PoissonRatio.
+ * \transformparameter FixedImageLandmarks: The landmark positions in the
+ * fixed image, in world coordinates. Positions written as x1 y1 [z1] x2 y2 [z2] etc.\n
+ *   example: <tt>(FixedImageLandmarks 10.0 11.0 12.0 4.0 4.0 4.0 6.0 6.0 6.0 )</tt>
+ *
+ * \ingroup Transforms
+ */
 
-template < class TElastix >
+template< class TElastix >
 class SplineKernelTransform : public itk::AdvancedCombinationTransform<
-  typename elx::TransformBase<TElastix>::CoordRepType,
-  elx::TransformBase<TElastix>::FixedImageDimension > ,
-  public elx::TransformBase<TElastix>
+  typename elx::TransformBase< TElastix >::CoordRepType,
+  elx::TransformBase< TElastix >::FixedImageDimension >,
+  public elx::TransformBase< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef SplineKernelTransform                           Self;
+  typedef SplineKernelTransform Self;
   typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
-    elx::TransformBase<TElastix>::FixedImageDimension >   Superclass1;
-  typedef elx::TransformBase<TElastix>                    Superclass2;
+    typename elx::TransformBase< TElastix >::CoordRepType,
+    elx::TransformBase< TElastix >::FixedImageDimension >   Superclass1;
+  typedef elx::TransformBase< TElastix > Superclass2;
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   typedef itk::KernelTransform2<
-    typename elx::TransformBase<TElastix>::CoordRepType,
-    elx::TransformBase<TElastix>::FixedImageDimension >   KernelTransformType;
-  typedef itk::SmartPointer<Self>                         Pointer;
-  typedef itk::SmartPointer<const Self>                   ConstPointer;
+    typename elx::TransformBase< TElastix >::CoordRepType,
+    elx::TransformBase< TElastix >::FixedImageDimension >   KernelTransformType;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -161,22 +161,22 @@ public:
   typedef typename Superclass1::OutputPointType           OutputPointType;
 
   /** Typedef's from the TransformBase class. */
-  typedef typename Superclass2::ElastixType               ElastixType;
-  typedef typename Superclass2::ElastixPointer            ElastixPointer;
-  typedef typename Superclass2::ConfigurationType         ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType          RegistrationType;
-  typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-  typedef typename Superclass2::CoordRepType              CoordRepType;
-  typedef typename Superclass2::FixedImageType            FixedImageType;
-  typedef typename Superclass2::MovingImageType           MovingImageType;
-  typedef typename Superclass2::ITKBaseType               ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
+  typedef typename Superclass2::ElastixType              ElastixType;
+  typedef typename Superclass2::ElastixPointer           ElastixPointer;
+  typedef typename Superclass2::ConfigurationType        ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer     ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType         RegistrationType;
+  typedef typename Superclass2::RegistrationPointer      RegistrationPointer;
+  typedef typename Superclass2::CoordRepType             CoordRepType;
+  typedef typename Superclass2::FixedImageType           FixedImageType;
+  typedef typename Superclass2::MovingImageType          MovingImageType;
+  typedef typename Superclass2::ITKBaseType              ITKBaseType;
+  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Extra typedefs */
-  typedef typename KernelTransformType::Pointer           KernelTransformPointer;
-  typedef typename KernelTransformType::PointSetType      PointSetType;
-  typedef typename PointSetType::Pointer                  PointSetPointer;
+  typedef typename KernelTransformType::Pointer      KernelTransformPointer;
+  typedef typename KernelTransformType::PointSetType PointSetType;
+  typedef typename PointSetType::Pointer             PointSetPointer;
 
   /** Execute stuff before everything else:
    * \li Check if -fp command line argument was given
@@ -203,18 +203,18 @@ protected:
   /** The constructor. */
   SplineKernelTransform();
   /** The destructor. */
-  virtual ~SplineKernelTransform() {};
+  virtual ~SplineKernelTransform() {}
 
   typedef itk::ThinPlateSplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   TPKernelTransformType;
+    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   TPKernelTransformType;
   typedef itk::ThinPlateR2LogRSplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   TPRKernelTransformType;
+    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   TPRKernelTransformType;
   typedef itk::VolumeSplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   VKernelTransformType;
+    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   VKernelTransformType;
   typedef itk::ElasticBodySplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   EBKernelTransformType;
+    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   EBKernelTransformType;
   typedef itk::ElasticBodyReciprocalSplineKernelTransform2<
-    CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   EBRKernelTransformType;
+    CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   EBRKernelTransformType;
 
   /** Create an instance of a kernel transform. Returns false if the
    * kernelType is unknown.
@@ -244,14 +244,13 @@ protected:
 private:
 
   /** The private constructor. */
-  SplineKernelTransform( const Self& ); // purposely not implemented
+  SplineKernelTransform( const Self & ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );              // purposely not implemented
+  void operator=( const Self & );              // purposely not implemented
 
   std::string m_SplineKernelType;
 
 };
-
 
 } // end namespace elastix
 

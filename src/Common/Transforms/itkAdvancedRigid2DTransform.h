@@ -54,16 +54,18 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template < class TScalarType=double >    // Data type for scalars (float or double)
+template< class TScalarType = double >
+// Data type for scalars (float or double)
 class AdvancedRigid2DTransform :
-        public AdvancedMatrixOffsetTransformBase< TScalarType, 2, 2> // Dimensions of input and output spaces
+  public AdvancedMatrixOffsetTransformBase< TScalarType, 2, 2 >      // Dimensions of input and output spaces
 {
 public:
+
   /** Standard class typedefs. */
   typedef AdvancedRigid2DTransform                               Self;
   typedef AdvancedMatrixOffsetTransformBase< TScalarType, 2, 2 > Superclass;
-  typedef SmartPointer<Self>                             Pointer;
-  typedef SmartPointer<const Self>                       ConstPointer;
+  typedef SmartPointer< Self >                                   Pointer;
+  typedef SmartPointer< const Self >                             ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedRigid2DTransform, AdvancedMatrixOffsetTransformBase );
@@ -72,19 +74,19 @@ public:
   itkNewMacro( Self );
 
   /** Dimension of the space. */
-  itkStaticConstMacro(InputSpaceDimension, unsigned int, 2);
-  itkStaticConstMacro(OutputSpaceDimension, unsigned int, 2);
-  itkStaticConstMacro(ParametersDimension, unsigned int, 3);
+  itkStaticConstMacro( InputSpaceDimension, unsigned int, 2 );
+  itkStaticConstMacro( OutputSpaceDimension, unsigned int, 2 );
+  itkStaticConstMacro( ParametersDimension, unsigned int, 3 );
 
   /** Scalar type. */
-  typedef typename Superclass::ScalarType  ScalarType;
+  typedef typename Superclass::ScalarType ScalarType;
 
   /** Parameters type. */
-  typedef typename Superclass::ParametersType  ParametersType;
+  typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
 
   /** Jacobian type. */
-  typedef typename Superclass::JacobianType  JacobianType;
+  typedef typename Superclass::JacobianType JacobianType;
 
   /// Standard matrix type for this class
   typedef typename Superclass::MatrixType MatrixType;
@@ -97,7 +99,7 @@ public:
   typedef typename Superclass::OutputVectorType OutputVectorType;
 
   /// Standard covariant vector type for this class
-  typedef typename Superclass::InputCovariantVectorType InputCovariantVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
 
   /// Standard vnl_vector type for this class
@@ -109,14 +111,14 @@ public:
   typedef typename Superclass::OutputPointType OutputPointType;
 
   typedef typename Superclass
-    ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
   /**
    * Set the rotation Matrix of a Rigid2D Transform
@@ -137,11 +139,10 @@ public:
    * retained for backward compatibility. Instead, use SetMatrix()
    * GetMatrix().
    */
-  virtual void SetRotationMatrix(const MatrixType &matrix)
-    { this->SetMatrix( matrix ); }
+  virtual void SetRotationMatrix( const MatrixType & matrix )
+  { this->SetMatrix( matrix ); }
   const MatrixType & GetRotationMatrix() const
-    { return this->GetMatrix(); }
-
+  { return this->GetMatrix(); }
 
   /**
    * Compose the transformation with a translation
@@ -150,7 +151,7 @@ public:
    * origin.  The translation is precomposed with self if pre is
    * true, and postcomposed otherwise.
    */
-  void Translate(const OffsetType &offset, bool pre=false);
+  void Translate( const OffsetType & offset, bool pre = false );
 
   /**
    * Back transform by an rigid transformation.
@@ -160,27 +161,30 @@ public:
    * an inverse transform and  then perform the transform using that
    * inverted transform.
    */
-  inline InputPointType      BackTransform(const OutputPointType  &point ) const;
-  inline InputVectorType     BackTransform(const OutputVectorType &vector) const;
-  inline InputVnlVectorType  BackTransform(const OutputVnlVectorType &vector) const;
+  inline InputPointType      BackTransform( const OutputPointType  & point ) const;
+
+  inline InputVectorType     BackTransform( const OutputVectorType & vector ) const;
+
+  inline InputVnlVectorType  BackTransform( const OutputVnlVectorType & vector ) const;
 
   inline InputCovariantVectorType BackTransform(
-                                     const OutputCovariantVectorType &vector) const;
+    const OutputCovariantVectorType & vector ) const;
 
   /** Set/Get the angle of rotation in radians */
-  void SetAngle(TScalarType angle);
+  void SetAngle( TScalarType angle );
+
   itkGetConstReferenceMacro( Angle, TScalarType );
 
   /** Set the angle of rotation in degrees. */
-  void SetAngleInDegrees(TScalarType angle);
+  void SetAngleInDegrees( TScalarType angle );
 
   /** Set/Get the angle of rotation in radians. These methods
    * are old and are retained for backward compatibility.
    * Instead, use SetAngle() and GetAngle(). */
-  void SetRotation(TScalarType angle)
-    { this->SetAngle(angle); }
+  void SetRotation( TScalarType angle )
+  { this->SetAngle( angle ); }
   virtual const TScalarType & GetRotation() const
-    { return m_Angle; }
+  { return m_Angle; }
 
   /** Set the transformation from a container of parameters
    * This is typically used by optimizers.
@@ -224,105 +228,105 @@ public:
   void CloneTo( Pointer & clone ) const;
 
   /** Reset the parameters to create and identity transform. */
-  virtual void SetIdentity(void);
-
+  virtual void SetIdentity( void );
 
 protected:
+
   AdvancedRigid2DTransform();
   AdvancedRigid2DTransform( unsigned int parametersDimension );
   AdvancedRigid2DTransform( unsigned int outputSpaceDimension, unsigned int parametersDimension );
 
- ~AdvancedRigid2DTransform();
+  ~AdvancedRigid2DTransform();
 
- /**
-   * Print contents of an AdvancedRigid2DTransform
-   */
-  void PrintSelf(std::ostream &os, Indent indent) const;
+  /**
+    * Print contents of an AdvancedRigid2DTransform
+    */
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Compute the matrix from angle. This is used in Set methods
    * to update the underlying matrix whenever a transform parameter
    * is changed.
    * Also update the m_JacobianOfSpatialJacobian. */
-  virtual void ComputeMatrix(void);
+  virtual void ComputeMatrix( void );
 
   /** Compute the angle from the matrix. This is used to compute
    * transform parameters from a given matrix. This is used in
    * AdvancedMatrixOffsetTransformBase::Compose() and
    * AdvancedMatrixOffsetTransformBase::GetInverse(). */
-  virtual void ComputeMatrixParameters(void);
+  virtual void ComputeMatrixParameters( void );
 
   /** Update angle without recomputation of other internal variables. */
   void SetVarAngle( TScalarType angle )
-    { m_Angle = angle; }
+  { m_Angle = angle; }
 
   /** Update the m_JacobianOfSpatialJacobian.  */
-  virtual void PrecomputeJacobianOfSpatialJacobian(void);
-
+  virtual void PrecomputeJacobianOfSpatialJacobian( void );
 
 private:
-  AdvancedRigid2DTransform(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
 
-  TScalarType         m_Angle;
+  AdvancedRigid2DTransform( const Self & ); // purposely not implemented
+  void operator=( const Self & );           // purposely not implemented
 
-}; //class AdvancedRigid2DTransform
+  TScalarType m_Angle;
 
+};
 
 // Back transform a point
-template<class TScalarType>
+template< class TScalarType >
 inline
-typename AdvancedRigid2DTransform<TScalarType>::InputPointType
-AdvancedRigid2DTransform<TScalarType>::
-BackTransform(const OutputPointType &point) const
+typename AdvancedRigid2DTransform< TScalarType >::InputPointType
+AdvancedRigid2DTransform< TScalarType >::BackTransform( const OutputPointType & point ) const
 {
   itkWarningMacro(
-    <<"BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() to generate an inverse transform and then perform the transform using that inverted transform."
+      << "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() to generate an inverse transform and then perform the transform using that inverted transform."
     );
-  return this->GetInverseMatrix() * (point - this->GetOffset());
+  return this->GetInverseMatrix() * ( point - this->GetOffset() );
 }
 
+
 // Back transform a vector
-template<class TScalarType>
+template< class TScalarType >
 inline
-typename AdvancedRigid2DTransform<TScalarType>::InputVectorType
-AdvancedRigid2DTransform<TScalarType>::
-BackTransform(const OutputVectorType &vect ) const
+typename AdvancedRigid2DTransform< TScalarType >::InputVectorType
+AdvancedRigid2DTransform< TScalarType >
+::BackTransform( const OutputVectorType & vect ) const
 {
   itkWarningMacro(
-    <<"BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() to generate an inverse transform and then perform the transform using that inverted transform."
+      << "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() to generate an inverse transform and then perform the transform using that inverted transform."
     );
   return this->GetInverseMatrix() * vect;
 }
 
+
 // Back transform a vnl_vector
-template<class TScalarType>
+template< class TScalarType >
 inline
-typename AdvancedRigid2DTransform<TScalarType>::InputVnlVectorType
-AdvancedRigid2DTransform<TScalarType>::
-BackTransform(const OutputVnlVectorType &vect ) const
+typename AdvancedRigid2DTransform< TScalarType >::InputVnlVectorType
+AdvancedRigid2DTransform< TScalarType >
+::BackTransform( const OutputVnlVectorType & vect ) const
 {
   itkWarningMacro(
-    <<"BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() to generate an inverse transform and then perform the transform using that inverted transform."
+      << "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() to generate an inverse transform and then perform the transform using that inverted transform."
     );
   return this->GetInverseMatrix() * vect;
 }
 
 
 // Back Transform a CovariantVector
-template<class TScalarType>
+template< class TScalarType >
 inline
-typename AdvancedRigid2DTransform<TScalarType>::InputCovariantVectorType
-AdvancedRigid2DTransform<TScalarType>::
-BackTransform(const OutputCovariantVectorType &vect) const
+typename AdvancedRigid2DTransform< TScalarType >::InputCovariantVectorType
+AdvancedRigid2DTransform< TScalarType >
+::BackTransform( const OutputCovariantVectorType & vect ) const
 {
   itkWarningMacro(
-    <<"BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() to generate an inverse transform and then perform the transform using that inverted transform."
+      << "BackTransform(): This method is slated to be removed from ITK.  Instead, please use GetInverse() to generate an inverse transform and then perform the transform using that inverted transform."
     );
   return this->GetMatrix() * vect;
 }
 
-}  // namespace itk
 
+}  // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkAdvancedRigid2DTransform.hxx"

@@ -22,7 +22,6 @@
 #include <omp.h>
 #endif
 
-
 namespace itk
 {
 
@@ -30,20 +29,20 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::AdvancedMeanSquaresImageToImageMetric()
 {
   this->SetUseImageSampler( true );
   this->SetUseFixedImageLimiter( false );
   this->SetUseMovingImageLimiter( false );
 
-  this->m_UseNormalization = false;
+  this->m_UseNormalization    = false;
   this->m_NormalizationFactor = 1.0;
 
   /** SelfHessian related variables, experimental feature. */
-  this->m_SelfHessianSmoothingSigma = 1.0;
-  this->m_SelfHessianNoiseRange = 1.0;
+  this->m_SelfHessianSmoothingSigma     = 1.0;
+  this->m_SelfHessianNoiseRange         = 1.0;
   this->m_NumberOfSamplesForSelfHessian = 100000;
 
   this->m_SelfHessianNoiseRange = 1.0;
@@ -55,15 +54,15 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ********************* Initialize ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::Initialize( void ) throw ( ExceptionObject )
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();
 
-  if ( this->GetUseNormalization() )
+  if( this->GetUseNormalization() )
   {
     /** Try to guess a normalization factor. */
     this->ComputeFixedImageExtrema(
@@ -74,8 +73,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       this->GetMovingImage(),
       this->GetMovingImage()->GetBufferedRegion() );
 
-    const double diff1 = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
-    const double diff2 = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
+    const double diff1   = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
+    const double diff2   = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
     const double maxdiff = vnl_math_max( diff1, diff2 );
 
     /** We guess that maxdiff/10 is the maximum average difference that will
@@ -83,7 +82,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
      * \todo We may involve the standard derivation of the image into this estimate.
      */
     this->m_NormalizationFactor = 1.0;
-    if ( maxdiff > 1e-10 )
+    if( maxdiff > 1e-10 )
     {
       this->m_NormalizationFactor = 100.0 / maxdiff / maxdiff;
     }
@@ -100,19 +99,19 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* PrintSelf *******************
  */
 
-template < class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-::PrintSelf( std::ostream& os, Indent indent ) const
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
   os << "UseNormalization: "
-    << this->m_UseNormalization << std::endl;
+     << this->m_UseNormalization << std::endl;
   os << "SelfHessianSmoothingSigma: "
-    << this->m_SelfHessianSmoothingSigma << std::endl;
+     << this->m_SelfHessianSmoothingSigma << std::endl;
   os << "NumberOfSamplesForSelfHessian: "
-    << this->m_NumberOfSamplesForSelfHessian << std::endl;
+     << this->m_NumberOfSamplesForSelfHessian << std::endl;
 
 } // end PrintSelf()
 
@@ -121,9 +120,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
-typename AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+typename AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >::MeasureType
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValue( const TransformParametersType & parameters ) const
 {
   itkDebugMacro( "GetValue( " << parameters << " ) " );
@@ -153,21 +152,21 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over the fixed image samples to calculate the mean squares. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue;
-    MovingImagePointType mappedPoint;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    RealType                    movingImageValue;
+    MovingImagePointType        mappedPoint;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -175,18 +174,18 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     /** Compute the moving image value and check if the point is
      * inside the moving image buffer.
      */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, 0 );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<double>( (*fiter).Value().m_ImageValue );
+      const RealType & fixedImageValue = static_cast< double >( ( *fiter ).Value().m_ImageValue );
 
       /** The difference squared. */
       const RealType diff = movingImageValue - fixedImageValue;
@@ -202,10 +201,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Update measure value. */
   double normal_sum = 0.0;
-  if ( this->m_NumberOfPixelsCounted > 0 )
+  if( this->m_NumberOfPixelsCounted > 0 )
   {
-    normal_sum = this->m_NormalizationFactor /
-      static_cast<double>( this->m_NumberOfPixelsCounted );
+    normal_sum = this->m_NormalizationFactor
+      / static_cast< double >( this->m_NumberOfPixelsCounted );
   }
   measure *= normal_sum;
 
@@ -219,9 +218,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetDerivative *******************
  */
 
-template < class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::GetDerivative(
   const TransformParametersType & parameters,
   DerivativeType & derivative ) const
@@ -241,9 +240,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetValueAndDerivativeSingleThreaded *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivativeSingleThreaded(
   const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
@@ -258,8 +257,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(
-    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-  DerivativeType imageJacobian( nzji.size() );
+  this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  DerivativeType        imageJacobian( nzji.size() );
   TransformJacobianType jacobian;
 
   /** Call non-thread-safe stuff, such as:
@@ -283,22 +282,22 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over the fixed image to calculate the mean squares. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue;
-    MovingImagePointType mappedPoint;
-    MovingImageDerivativeType movingImageDerivative;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    RealType                    movingImageValue;
+    MovingImagePointType        mappedPoint;
+    MovingImageDerivativeType   movingImageDerivative;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -306,19 +305,19 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
      * the point is inside the moving image buffer.
      */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, &movingImageDerivative );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue
-        = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+        = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
@@ -343,12 +342,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Compute the measure value and derivative. */
   double normal_sum = 0.0;
-  if ( this->m_NumberOfPixelsCounted > 0 )
+  if( this->m_NumberOfPixelsCounted > 0 )
   {
-    normal_sum = this->m_NormalizationFactor /
-      static_cast<double>( this->m_NumberOfPixelsCounted );
+    normal_sum = this->m_NormalizationFactor
+      / static_cast< double >( this->m_NumberOfPixelsCounted );
   }
-  measure *= normal_sum;
+  measure    *= normal_sum;
   derivative *= normal_sum;
 
   /** The return value. */
@@ -361,9 +360,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivative(
   const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
@@ -406,15 +405,15 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* ThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::ThreadedGetValueAndDerivative( ThreadIdType threadId )
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
-  NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType imageJacobian( nzji.size() );
+  NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
+  DerivativeType               imageJacobian( nzji.size() );
 
   /** Get a handle to a pre-allocated transform Jacobian. */
   TransformJacobianType & jacobian = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
@@ -423,42 +422,42 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
    * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
    */
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
-  derivative.Fill( NumericTraits<DerivativeValueType>::Zero ); // needed?
+  derivative.Fill( NumericTraits< DerivativeValueType >::Zero ); // needed?
 
   /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const unsigned long sampleContainerSize = sampleContainer->Size();
+  ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
+  const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
-      / static_cast<double>( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( this->m_NumberOfThreads ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
-  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
   pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
-  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+  pos_end   = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
 
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator threader_fiter;
   typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator threader_fend = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator threader_fend   = sampleContainer->Begin();
 
   threader_fbegin += (int)pos_begin;
-  threader_fend += (int)pos_end;
+  threader_fend   += (int)pos_end;
 
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType   measure               = NumericTraits< MeasureType >::Zero;
 
   /** Loop over the fixed image to calculate the mean squares. */
   for( threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue;
-    MovingImagePointType mappedPoint;
-    MovingImageDerivativeType movingImageDerivative;
+    const FixedImagePointType & fixedPoint = ( *threader_fiter ).Value().m_ImageCoordinates;
+    RealType                    movingImageValue;
+    MovingImagePointType        mappedPoint;
+    MovingImageDerivativeType   movingImageDerivative;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
@@ -484,7 +483,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue
-        = static_cast<RealType>( (*threader_fiter).Value().m_ImageValue );
+        = static_cast< RealType >( ( *threader_fiter ).Value().m_ImageValue );
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
@@ -505,7 +504,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
   this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Value = measure;
+  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Value                 = measure;
 
 } // end ThreadedGetValueAndDerivative()
 
@@ -514,9 +513,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* AfterThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
@@ -533,11 +532,11 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** The normalization factor. */
-  DerivativeValueType normal_sum = this->m_NormalizationFactor /
-    static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
+  DerivativeValueType normal_sum = this->m_NormalizationFactor
+    / static_cast< DerivativeValueType >( this->m_NumberOfPixelsCounted );
 
   /** Accumulate values. */
-  value = NumericTraits<MeasureType>::Zero;
+  value = NumericTraits< MeasureType >::Zero;
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
@@ -563,19 +562,19 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     typename ThreaderType::Pointer local_threader = ThreaderType::New();
     local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
     local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
-      const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
+      const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
     local_threader->SingleMethodExecute();
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp
   else
   {
-    const int spaceDimension = static_cast<int>( this->GetNumberOfParameters() );
+    const int spaceDimension = static_cast< int >( this->GetNumberOfParameters() );
 
     #pragma omp parallel for
     for( int j = 0; j < spaceDimension; ++j )
     {
-      DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
+      DerivativeValueType tmp = NumericTraits< DerivativeValueType >::Zero;
       for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
       {
         tmp += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
@@ -592,9 +591,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * *************** UpdateValueAndDerivativeTerms ***************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::UpdateValueAndDerivativeTerms(
   const RealType fixedImageValue,
   const RealType movingImageValue,
@@ -604,7 +603,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   DerivativeType & deriv ) const
 {
   /** The difference squared. */
-  const RealType diff = movingImageValue - fixedImageValue;
+  const RealType diff     = movingImageValue - fixedImageValue;
   const RealType diffdiff = diff * diff;
   measure += diffdiff;
 
@@ -614,10 +613,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
-    typename DerivativeType::iterator derivit = deriv.begin();
+    typename DerivativeType::iterator derivit       = deriv.begin();
     for( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
     {
-      (*derivit) += diff_2 * (*imjacit);
+      ( *derivit ) += diff_2 * ( *imjacit );
       ++imjacit;
       ++derivit;
     }
@@ -638,12 +637,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetSelfHessian *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const
 {
-  itkDebugMacro("GetSelfHessian()");
+  itkDebugMacro( "GetSelfHessian()" );
   typedef Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
 
   /** Initialize some variables. */
@@ -653,8 +652,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(
-    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-  DerivativeType imageJacobian( nzji.size() );
+  this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  DerivativeType        imageJacobian( nzji.size() );
   TransformJacobianType jacobian;
 
   /** Make sure the transform parameters are up to date. */
@@ -673,7 +672,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Set up interpolator for fixed image */
   typename FixedImageInterpolatorType::Pointer fixedInterpolator = FixedImageInterpolatorType::New();
-  if ( this->m_BSplineInterpolator.IsNotNull() )
+  if( this->m_BSplineInterpolator.IsNotNull() )
   {
     fixedInterpolator->SetSplineOrder( this->m_BSplineInterpolator->GetSplineOrder() );
   }
@@ -702,23 +701,23 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over the fixed image to calculate the mean squares. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    MovingImagePointType mappedPoint;
-    MovingImageDerivativeType movingImageDerivative;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+    MovingImagePointType        mappedPoint;
+    MovingImageDerivativeType   movingImageDerivative;
 
     /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. NB: we assume here that the
      * initial transformation is approximately ok.
      */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -726,12 +725,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     /** Check if point is inside moving image. NB: we assume here that the
      * initial transformation is approximately ok.
      */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->m_Interpolator->IsInsideBuffer( mappedPoint );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
@@ -741,9 +740,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
        * but is this the bottleneck?
        */
       movingImageDerivative = fixedInterpolator->EvaluateDerivative( fixedPoint );
-      for ( unsigned int d = 0; d < FixedImageDimension; ++d )
+      for( unsigned int d = 0; d < FixedImageDimension; ++d )
       {
-        movingImageDerivative[d] += randomGenerator->GetVariateWithClosedRange(
+        movingImageDerivative[ d ] += randomGenerator->GetVariateWithClosedRange(
           this->m_SelfHessianNoiseRange ) - this->m_SelfHessianNoiseRange / 2.0;
       }
 
@@ -766,21 +765,21 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Compute the measure value and derivative. */
-  if ( this->m_NumberOfPixelsCounted > 0 )
+  if( this->m_NumberOfPixelsCounted > 0 )
   {
-    const double normal_sum = 2.0 * this->m_NormalizationFactor /
-      static_cast<double>( this->m_NumberOfPixelsCounted );
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    const double normal_sum = 2.0 * this->m_NormalizationFactor
+      / static_cast< double >( this->m_NumberOfPixelsCounted );
+    for( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
-      H.scale_row(i, normal_sum);
+      H.scale_row( i, normal_sum );
     }
   }
   else
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
-      H(i,i) = 1.0;
+      H( i, i ) = 1.0;
     }
   }
 
@@ -791,16 +790,16 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * *************** UpdateSelfHessianTerms ***************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::UpdateSelfHessianTerms(
   const DerivativeType & imageJacobian,
   const NonZeroJacobianIndicesType & nzji,
   HessianType & H ) const
 {
-  typedef typename HessianType::row RowType;
-  typedef typename RowType::iterator RowIteratorType;
+  typedef typename HessianType::row    RowType;
+  typedef typename RowType::iterator   RowIteratorType;
   typedef typename HessianType::pair_t ElementType;
 
   // does not work for sparse matrix. \todo: distinguish between sparse and nonsparse
@@ -812,46 +811,47 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   //}
   //else
   //{
-    /** Only pick the nonzero Jacobians.
-    * Save only upper triangular part of the matrix */
-    const unsigned int imjacsize = imageJacobian.GetSize();
-    for ( unsigned int i = 0; i < imjacsize; ++i )
+  /** Only pick the nonzero Jacobians.
+  * Save only upper triangular part of the matrix */
+  const unsigned int imjacsize = imageJacobian.GetSize();
+  for( unsigned int i = 0; i < imjacsize; ++i )
+  {
+    const unsigned int row      = nzji[ i ];
+    const double       imjacrow = imageJacobian[ i ];
+
+    RowType &       rowVector = H.get_row( row );
+    RowIteratorType rowIt     = rowVector.begin();
+
+    for( unsigned int j = i; j < imjacsize; ++j )
     {
-      const unsigned int row = nzji[ i ];
-      const double imjacrow = imageJacobian[ i ];
-
-      RowType & rowVector = H.get_row( row );
-      RowIteratorType rowIt = rowVector.begin();
-
-      for ( unsigned int j = i; j < imjacsize; ++j )
+      const unsigned int col = nzji[ j ];
+      const double       val = imjacrow * imageJacobian[ j ];
+      if( ( val < 1e-14 ) && ( val > -1e-14 ) )
       {
-        const unsigned int col = nzji[ j ];
-        const double val = imjacrow * imageJacobian[ j ];
-        if ( ( val < 1e-14 ) && ( val > -1e-14 ) )
-        {
-          continue;
-        }
+        continue;
+      }
 
-        /** The following implements:
-         * H(row,col) += imjacrow * imageJacobian[ j ];
-         * But more efficient.
-         */
+      /** The following implements:
+       * H(row,col) += imjacrow * imageJacobian[ j ];
+       * But more efficient.
+       */
 
-        /** Go to next element */
-        for (; (rowIt != rowVector.end()) && ((*rowIt).first < col); ++rowIt );
+      /** Go to next element */
+      for(; ( rowIt != rowVector.end() ) && ( ( *rowIt ).first < col ); ++rowIt )
+      {}
 
-        if ( (rowIt == rowVector.end()) || ((*rowIt).first != col) )
-        {
-          /** Add new column to the row and set iterator to that column. */
-          rowIt = rowVector.insert( rowIt, ElementType( col, val ) );
-        }
-        else
-        {
-          /** Add to existing value */
-          (*rowIt).second += val;
-        }
+      if( ( rowIt == rowVector.end() ) || ( ( *rowIt ).first != col ) )
+      {
+        /** Add new column to the row and set iterator to that column. */
+        rowIt = rowVector.insert( rowIt, ElementType( col, val ) );
+      }
+      else
+      {
+        /** Add to existing value */
+        ( *rowIt ).second += val;
       }
     }
+  }
 
   //} // end else
 
@@ -859,6 +859,5 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
 
 } // end namespace itk
-
 
 #endif // end #ifndef _itkAdvancedMeanSquaresImageToImageMetric_hxx

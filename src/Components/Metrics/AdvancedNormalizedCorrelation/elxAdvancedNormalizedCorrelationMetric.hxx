@@ -17,66 +17,67 @@
 
 #include "elxAdvancedNormalizedCorrelationMetric.h"
 
-
 namespace elastix
 {
 
-  /**
-   * ***************** BeforeEachResolution ***********************
-   */
+/**
+ * ***************** BeforeEachResolution ***********************
+ */
 
-  template <class TElastix>
-    void AdvancedNormalizedCorrelationMetric<TElastix>
-    ::BeforeEachResolution(void)
+template< class TElastix >
+void
+AdvancedNormalizedCorrelationMetric< TElastix >
+::BeforeEachResolution( void )
+{
+  /** Get the current resolution level. */
+  unsigned int level
+    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+
+  /** Get and set SubtractMean. Default true. */
+  bool subtractMean = true;
+  this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean",
+    this->GetComponentLabel(), level, 0 );
+  this->SetSubtractMean( subtractMean );
+
+  /** Set moving image derivative scales. */
+  this->SetUseMovingImageDerivativeScales( false );
+  MovingImageDerivativeScalesType movingImageDerivativeScales;
+  movingImageDerivativeScales.Fill( 1.0 );
+  bool usescales = true;
+  for( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
-    /** Get the current resolution level. */
-    unsigned int level =
-      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-
-    /** Get and set SubtractMean. Default true. */
-    bool subtractMean = true;
-    this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean",
-      this->GetComponentLabel(), level, 0 );
-    this->SetSubtractMean( subtractMean );
-
-    /** Set moving image derivative scales. */
-    this->SetUseMovingImageDerivativeScales( false );
-    MovingImageDerivativeScalesType movingImageDerivativeScales;
-    movingImageDerivativeScales.Fill( 1.0 );
-    bool usescales = true;
-    for ( unsigned int i = 0; i < MovingImageDimension; ++i )
-    {
-      usescales &= this->GetConfiguration()->ReadParameter(
-        movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-        this->GetComponentLabel(), i, -1, false );
-    }
-    if ( usescales )
-    {
-      this->SetUseMovingImageDerivativeScales( true );
-      this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
-      elxout << "Multiplying moving image derivatives by: "
-        << movingImageDerivativeScales << std::endl;
-    }
-
-  } // end BeforeEachResolution()
-
-
-  /**
-   * ******************* Initialize ***********************
-   */
-
-  template <class TElastix>
-    void AdvancedNormalizedCorrelationMetric<TElastix>
-    ::Initialize(void) throw (itk::ExceptionObject)
+    usescales &= this->GetConfiguration()->ReadParameter(
+      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+      this->GetComponentLabel(), i, -1, false );
+  }
+  if( usescales )
   {
-    TimerPointer timer = TimerType::New();
-    timer->StartTimer();
-    this->Superclass1::Initialize();
-    timer->StopTimer();
-    elxout << "Initialization of AdvancedNormalizedCorrelation metric took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+    this->SetUseMovingImageDerivativeScales( true );
+    this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
+    elxout << "Multiplying moving image derivatives by: "
+           << movingImageDerivativeScales << std::endl;
+  }
 
-  } // end Initialize()
+}   // end BeforeEachResolution()
+
+
+/**
+ * ******************* Initialize ***********************
+ */
+
+template< class TElastix >
+void
+AdvancedNormalizedCorrelationMetric< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
+{
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
+  this->Superclass1::Initialize();
+  timer->StopTimer();
+  elxout << "Initialization of AdvancedNormalizedCorrelation metric took: "
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+
+}   // end Initialize()
 
 
 } // end namespace elastix

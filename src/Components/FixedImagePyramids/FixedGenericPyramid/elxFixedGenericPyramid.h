@@ -65,23 +65,23 @@ namespace elastix
  * \ingroup ImagePyramids
  */
 
-template <class TElastix>
+template< class TElastix >
 class FixedGenericPyramid :
   public itk::GenericMultiResolutionPyramidImageFilter<
-    typename FixedImagePyramidBase<TElastix>::InputImageType,
-    typename FixedImagePyramidBase<TElastix>::OutputImageType >,
-  public FixedImagePyramidBase<TElastix>
+  typename FixedImagePyramidBase< TElastix >::InputImageType,
+  typename FixedImagePyramidBase< TElastix >::OutputImageType >,
+  public FixedImagePyramidBase< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef FixedGenericPyramid                                     Self;
+  typedef FixedGenericPyramid Self;
   typedef itk::GenericMultiResolutionPyramidImageFilter<
-    typename FixedImagePyramidBase<TElastix>::InputImageType,
-    typename FixedImagePyramidBase<TElastix>::OutputImageType >   Superclass1;
-  typedef FixedImagePyramidBase<TElastix>                         Superclass2;
-  typedef itk::SmartPointer<Self>                                 Pointer;
-  typedef itk::SmartPointer<const Self>                           ConstPointer;
+    typename FixedImagePyramidBase< TElastix >::InputImageType,
+    typename FixedImagePyramidBase< TElastix >::OutputImageType >   Superclass1;
+  typedef FixedImagePyramidBase< TElastix > Superclass2;
+  typedef itk::SmartPointer< Self >         Pointer;
+  typedef itk::SmartPointer< const Self >   ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -99,23 +99,23 @@ public:
   itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass1::InputImageType            InputImageType;
-  typedef typename Superclass1::OutputImageType           OutputImageType;
-  typedef typename Superclass1::InputImagePointer         InputImagePointer;
-  typedef typename Superclass1::OutputImagePointer        OutputImagePointer;
-  typedef typename Superclass1::InputImageConstPointer    InputImageConstPointer;
-  typedef typename Superclass1::ScheduleType              ScheduleType;
-  typedef typename Superclass1::RescaleScheduleType       RescaleScheduleType;
-  typedef typename Superclass1::SmoothingScheduleType     SmoothingScheduleType;
+  typedef typename Superclass1::InputImageType         InputImageType;
+  typedef typename Superclass1::OutputImageType        OutputImageType;
+  typedef typename Superclass1::InputImagePointer      InputImagePointer;
+  typedef typename Superclass1::OutputImagePointer     OutputImagePointer;
+  typedef typename Superclass1::InputImageConstPointer InputImageConstPointer;
+  typedef typename Superclass1::ScheduleType           ScheduleType;
+  typedef typename Superclass1::RescaleScheduleType    RescaleScheduleType;
+  typedef typename Superclass1::SmoothingScheduleType  SmoothingScheduleType;
 
   /** Typedefs inherited from Elastix. */
-  typedef typename Superclass2::ElastixType           ElastixType;
-  typedef typename Superclass2::ElastixPointer        ElastixPointer;
-  typedef typename Superclass2::ConfigurationType     ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType      RegistrationType;
-  typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType           ITKBaseType;
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Method for setting the schedule. Override from FixedImagePyramidBase,
    * since we now have two schedules, rescaling and smoothing.
@@ -129,6 +129,7 @@ public:
   virtual void AfterEachResolution( void );
 
 protected:
+
   /** The constructor. */
   FixedGenericPyramid() {}
   /** The destructor. */
@@ -137,12 +138,11 @@ protected:
 private:
 
   /** The private constructor. */
-  FixedGenericPyramid( const Self& );   // purposely not implemented
+  FixedGenericPyramid( const Self & );   // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );        // purposely not implemented
+  void operator=( const Self & );        // purposely not implemented
 
 };
-
 
 } // end namespace elastix
 

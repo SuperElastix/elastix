@@ -32,17 +32,17 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template < class TInputImage >
+template< class TInputImage >
 class ImageRandomCoordinateSampler :
   public ImageRandomSamplerBase< TInputImage >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef ImageRandomCoordinateSampler                Self;
-  typedef ImageRandomSamplerBase< TInputImage >       Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef ImageRandomCoordinateSampler          Self;
+  typedef ImageRandomSamplerBase< TInputImage > Superclass;
+  typedef SmartPointer< Self >                  Pointer;
+  typedef SmartPointer< const Self >            ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -76,16 +76,16 @@ public:
 
   /** This image sampler samples the image on physical coordinates and thus
    * needs an interpolator. */
-  typedef double                                              CoordRepType;
+  typedef double CoordRepType;
   typedef InterpolateImageFunction<
     InputImageType, CoordRepType >                            InterpolatorType;
-  typedef typename InterpolatorType::Pointer                  InterpolatorPointer;
+  typedef typename InterpolatorType::Pointer InterpolatorPointer;
   typedef BSplineInterpolateImageFunction<
     InputImageType, CoordRepType, double >                    DefaultInterpolatorType;
 
   /** The random number generator used to generate random coordinates. */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-  typedef typename RandomGeneratorType::Pointer   RandomGeneratorPointer;
+  typedef typename RandomGeneratorType::Pointer                  RandomGeneratorPointer;
 
   /** Set/Get the interpolator. A 3rd order B-spline interpolator is used by default. */
   itkSetObjectMacro( Interpolator, InterpolatorType );
@@ -103,21 +103,22 @@ public:
 
 protected:
 
-  typedef typename InterpolatorType::ContinuousIndexType   InputImageContinuousIndexType;
+  typedef typename InterpolatorType::ContinuousIndexType InputImageContinuousIndexType;
 
   /** The constructor. */
   ImageRandomCoordinateSampler();
   /** The destructor. */
-  virtual ~ImageRandomCoordinateSampler() {};
+  virtual ~ImageRandomCoordinateSampler() {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Function that does the work. */
   virtual void GenerateData( void );
 
   /** Multi-threaded functionality that does the work. */
   virtual void BeforeThreadedGenerateData( void );
+
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
     ThreadIdType threadId );
@@ -126,11 +127,11 @@ protected:
   virtual void GenerateRandomCoordinate(
     const InputImageContinuousIndexType & smallestContIndex,
     const InputImageContinuousIndexType & largestContIndex,
-    InputImageContinuousIndexType &       randomContIndex);
+    InputImageContinuousIndexType &       randomContIndex );
 
   InterpolatorPointer    m_Interpolator;
   RandomGeneratorPointer m_RandomGenerator;
-  InputImageSpacingType                 m_SampleRegionSize;
+  InputImageSpacingType  m_SampleRegionSize;
 
   /** Generate the two corners of a sampling region, given the two corners
   * of an image. If UseRandomSampleRegion=false, the smallesPoint and largestPoint
@@ -146,14 +147,13 @@ protected:
 private:
 
   /** The private constructor. */
-  ImageRandomCoordinateSampler( const Self& );          // purposely not implemented
+  ImageRandomCoordinateSampler( const Self & );          // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );            // purposely not implemented
+  void operator=( const Self & );            // purposely not implemented
 
-  bool          m_UseRandomSampleRegion;
+  bool m_UseRandomSampleRegion;
 
 };
-
 
 } // end namespace itk
 

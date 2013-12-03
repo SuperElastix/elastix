@@ -21,7 +21,6 @@
 #include "itkObject.h"
 #include "itkMultiResolutionPyramidImageFilter.h"
 
-
 namespace elastix
 {
 
@@ -51,48 +50,50 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template <class TElastix>
-class FixedImagePyramidBase : public BaseComponentSE<TElastix>
+template< class TElastix >
+class FixedImagePyramidBase : public BaseComponentSE< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
   typedef FixedImagePyramidBase       Self;
-  typedef BaseComponentSE<TElastix>   Superclass;
+  typedef BaseComponentSE< TElastix > Superclass;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( FixedImagePyramidBase, BaseComponentSE );
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass::ElastixType            ElastixType;
-  typedef typename Superclass::ElastixPointer         ElastixPointer;
-  typedef typename Superclass::ConfigurationType      ConfigurationType;
-  typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
-  typedef typename Superclass::RegistrationType       RegistrationType;
-  typedef typename Superclass::RegistrationPointer    RegistrationPointer;
+  typedef typename Superclass::ElastixType          ElastixType;
+  typedef typename Superclass::ElastixPointer       ElastixPointer;
+  typedef typename Superclass::ConfigurationType    ConfigurationType;
+  typedef typename Superclass::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass::RegistrationType     RegistrationType;
+  typedef typename Superclass::RegistrationPointer  RegistrationPointer;
 
   /** Typedefs inherited from Elastix. */
-  typedef typename ElastixType::FixedImageType  InputImageType;
-  typedef typename ElastixType::FixedImageType  OutputImageType;
+  typedef typename ElastixType::FixedImageType InputImageType;
+  typedef typename ElastixType::FixedImageType OutputImageType;
 
   /** Other typedef's. */
   typedef itk::MultiResolutionPyramidImageFilter<
     InputImageType, OutputImageType >                 ITKBaseType;
 
   /** Typedef's from ITKBaseType. */
-  typedef typename ITKBaseType::ScheduleType          ScheduleType;
+  typedef typename ITKBaseType::ScheduleType ScheduleType;
 
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return dynamic_cast< ITKBaseType * >( this );
   }
+
 
   /** Cast to ITKBaseType, to use in const functions. */
   virtual const ITKBaseType * GetAsITKBaseType( void ) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return dynamic_cast< const ITKBaseType * >( this );
   }
+
 
   /** Execute stuff before the actual registration:
    * \li Set the schedule of the fixed image pyramid.
@@ -109,7 +110,7 @@ public:
 
   /** Method to write the pyramid image. */
   virtual void WritePyramidImage( const std::string & filename,
-    const unsigned int & level );// const;
+    const unsigned int & level ); // const;
 
 protected:
 
@@ -121,20 +122,16 @@ protected:
 private:
 
   /** The private constructor. */
-  FixedImagePyramidBase( const Self& ); // purposely not implemented
+  FixedImagePyramidBase( const Self & ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );        // purposely not implemented
+  void operator=( const Self & );        // purposely not implemented
 
 };
 
-
 } // end namespace elastix
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxFixedImagePyramidBase.hxx"
 #endif
 
-
 #endif // end #ifndef __elxFixedImagePyramidBase_h
-

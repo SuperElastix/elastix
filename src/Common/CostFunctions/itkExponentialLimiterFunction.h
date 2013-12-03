@@ -17,7 +17,6 @@
 
 #include "itkLimiterFunctionBase.h"
 
-
 namespace itk
 {
 
@@ -36,57 +35,58 @@ namespace itk
  * \sa LimiterFunctionBase, HardLimiterFunction
  *
  */
-template < class TInput, unsigned int NDimension >
+template< class TInput, unsigned int NDimension >
 class ExponentialLimiterFunction :
-  public LimiterFunctionBase<TInput, NDimension>
+  public LimiterFunctionBase< TInput, NDimension >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef ExponentialLimiterFunction                     Self;
-  typedef LimiterFunctionBase<TInput, NDimension> Superclass;
-  typedef SmartPointer<Self> Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef ExponentialLimiterFunction                Self;
+  typedef LimiterFunctionBase< TInput, NDimension > Superclass;
+  typedef SmartPointer< Self >                      Pointer;
+  typedef SmartPointer< const Self >                ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ExponentialLimiterFunction, LimiterFunctionBase);
+  itkTypeMacro( ExponentialLimiterFunction, LimiterFunctionBase );
 
   /** Define the New() function, for creation via the ObjectFactory */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Superclass' static consts */
   itkStaticConstMacro( Dimension, unsigned int, Superclass::Dimension );
 
-
   /** Superclass' typedefs */
-  typedef typename Superclass::InputType            InputType;
-  typedef typename Superclass::OutputType           OutputType;
-  typedef typename Superclass::DerivativeValueType  DerivativeValueType;
-  typedef typename Superclass::DerivativeType       DerivativeType;
+  typedef typename Superclass::InputType           InputType;
+  typedef typename Superclass::OutputType          OutputType;
+  typedef typename Superclass::DerivativeValueType DerivativeValueType;
+  typedef typename Superclass::DerivativeType      DerivativeType;
 
   /** Limit the input value */
   virtual OutputType Evaluate( const InputType & input ) const;
 
   /** Limit the input value and change the input function derivative accordingly */
-  virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative) const;
+  virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const;
 
   /** Initialize the limiter; calls the ComputeLimiterSettings() function */
-  virtual void Initialize(void) throw (ExceptionObject);
+  virtual void Initialize( void ) throw ( ExceptionObject );
 
 protected:
-  ExponentialLimiterFunction();
-  ~ExponentialLimiterFunction(){};
 
-  virtual void ComputeLimiterSettings(void);
+  ExponentialLimiterFunction();
+  ~ExponentialLimiterFunction(){}
+
+  virtual void ComputeLimiterSettings( void );
 
   double m_UTminUB;
   double m_UTminUBinv;
   double m_LTminLB;
   double m_LTminLBinv;
 
-
 private:
-  ExponentialLimiterFunction(const Self& ); // purposely not implemented
-  void operator=(const Self& ); // purposely not implemented
+
+  ExponentialLimiterFunction( const Self & ); // purposely not implemented
+  void operator=( const Self & );             // purposely not implemented
 
 };
 

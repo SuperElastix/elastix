@@ -22,217 +22,216 @@
 namespace elastix
 {
 
-  /**
-   * \class EulerTransformElastix
-   * \brief A transform based on the itk EulerTransforms.
-   *
-   * This transform is a rigid body transformation.
-   *
-   * The parameters used in this class are:
-   * \parameter Transform: Select this transform as follows:\n
-   *    <tt>(%Transform "EulerTransform")</tt>
-   * \parameter Scales: the scale factor between the rotations and translations,
-   *    used in the optimizer. \n
-   *    example: <tt>(Scales 200000.0)</tt> \n
-   *    example: <tt>(Scales 100000.0 60000.0 ... 80000.0)</tt> \n
-   *    If only one argument is given, that factor is used for the rotations.
-   *    If more than one argument is given, then the number of arguments should be
-   *    equal to the number of parameters: for each parameter its scale factor.
-   *    If this parameter option is not used, by default the rotations are scaled
-   *    by a factor of 100000.0. See also the AutomaticScalesEstimation parameter.
-   * \parameter AutomaticScalesEstimation: if this parameter is set to "true" the Scales
-   *    parameter is ignored and the scales are determined automatically. \n
-   *    example: <tt>( AutomaticScalesEstimation "true" ) </tt> \n
-   *    Default: "false" (for backwards compatibility). Recommended: "true".
-   * \parameter CenterOfRotation: an index around which the image is rotated. \n
-   *    example: <tt>(CenterOfRotation 128 128 90)</tt> \n
-   *    By default the CenterOfRotation is set to the geometric center of the image.
-   * \parameter AutomaticTransformInitialization: whether or not the initial translation
-   *    between images should be estimated as the distance between their centers.\n
-   *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
-   *    By default "false" is assumed. So, no initial translation.
-   * \parameter AutomaticTransformInitializationMethod: how to initialize this
-   *    transform. Should be one of {GeometricalCenter, CenterOfGravity}.\n
-   *    example: <tt>(AutomaticTransformInitializationMethod "CenterOfGravity")</tt> \n
-   *    By default "GeometricalCenter" is assumed.\n
-   *
-   * The transform parameters necessary for transformix, additionally defined by this class, are:
-   * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
-   *    example: <tt>(CenterOfRotation 128 128 90)</tt>\n
-   *    <b>depecrated!</b> From elastix version 3.402 this is changed to CenterOfRotationPoint!
-   * \transformparameter CenterOfRotationPoint: stores the center of rotation, expressed in world coordinates. \n
-   *    example: <tt>(CenterOfRotationPoint 10.555 6.666 12.345)</tt>
-   *
-   * \ingroup Transforms
+/**
+ * \class EulerTransformElastix
+ * \brief A transform based on the itk EulerTransforms.
+ *
+ * This transform is a rigid body transformation.
+ *
+ * The parameters used in this class are:
+ * \parameter Transform: Select this transform as follows:\n
+ *    <tt>(%Transform "EulerTransform")</tt>
+ * \parameter Scales: the scale factor between the rotations and translations,
+ *    used in the optimizer. \n
+ *    example: <tt>(Scales 200000.0)</tt> \n
+ *    example: <tt>(Scales 100000.0 60000.0 ... 80000.0)</tt> \n
+ *    If only one argument is given, that factor is used for the rotations.
+ *    If more than one argument is given, then the number of arguments should be
+ *    equal to the number of parameters: for each parameter its scale factor.
+ *    If this parameter option is not used, by default the rotations are scaled
+ *    by a factor of 100000.0. See also the AutomaticScalesEstimation parameter.
+ * \parameter AutomaticScalesEstimation: if this parameter is set to "true" the Scales
+ *    parameter is ignored and the scales are determined automatically. \n
+ *    example: <tt>( AutomaticScalesEstimation "true" ) </tt> \n
+ *    Default: "false" (for backwards compatibility). Recommended: "true".
+ * \parameter CenterOfRotation: an index around which the image is rotated. \n
+ *    example: <tt>(CenterOfRotation 128 128 90)</tt> \n
+ *    By default the CenterOfRotation is set to the geometric center of the image.
+ * \parameter AutomaticTransformInitialization: whether or not the initial translation
+ *    between images should be estimated as the distance between their centers.\n
+ *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
+ *    By default "false" is assumed. So, no initial translation.
+ * \parameter AutomaticTransformInitializationMethod: how to initialize this
+ *    transform. Should be one of {GeometricalCenter, CenterOfGravity}.\n
+ *    example: <tt>(AutomaticTransformInitializationMethod "CenterOfGravity")</tt> \n
+ *    By default "GeometricalCenter" is assumed.\n
+ *
+ * The transform parameters necessary for transformix, additionally defined by this class, are:
+ * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
+ *    example: <tt>(CenterOfRotation 128 128 90)</tt>\n
+ *    <b>depecrated!</b> From elastix version 3.402 this is changed to CenterOfRotationPoint!
+ * \transformparameter CenterOfRotationPoint: stores the center of rotation, expressed in world coordinates. \n
+ *    example: <tt>(CenterOfRotationPoint 10.555 6.666 12.345)</tt>
+ *
+ * \ingroup Transforms
+ */
+
+template< class TElastix >
+class EulerTransformElastix :
+  public itk::AdvancedCombinationTransform<
+  typename elx::TransformBase< TElastix >::CoordRepType,
+  elx::TransformBase< TElastix >::FixedImageDimension >,
+  public elx::TransformBase< TElastix >
+{
+public:
+
+  /** Standard ITK-stuff.*/
+  typedef EulerTransformElastix Self;
+
+  typedef itk::AdvancedCombinationTransform<
+    typename elx::TransformBase< TElastix >::CoordRepType,
+    elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
+
+  typedef elx::TransformBase< TElastix > Superclass2;
+
+  /** The ITK-class that provides most of the functionality, and
+   * that is set as the "CurrentTransform" in the CombinationTransform */
+  typedef itk::EulerTransform<
+    typename elx::TransformBase< TElastix >::CoordRepType,
+    elx::TransformBase< TElastix >::FixedImageDimension >     EulerTransformType;
+
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
+
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
+
+  /** Run-time type information (and related methods). */
+  //itkTypeMacro( EulerTransformElastix, EulerTransform );
+  itkTypeMacro( EulerTransformElastix, itk::AdvancedCombinationTransform );
+
+  /** Name of this class.
+   * Use this name in the parameter file to select this specific transform. \n
+   * example: <tt>(Transform "EulerTransform")</tt>\n
    */
+  elxClassNameMacro( "EulerTransform" );
 
-  template < class TElastix >
-    class EulerTransformElastix:
-      public itk::AdvancedCombinationTransform<
-        typename elx::TransformBase< TElastix >::CoordRepType,
-        elx::TransformBase< TElastix >::FixedImageDimension >,
-      public elx::TransformBase< TElastix >
-  {
-  public:
+  /** Dimension of the fixed image. */
+  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
 
-    /** Standard ITK-stuff.*/
-    typedef EulerTransformElastix                               Self;
+  /** Typedefs inherited from the superclass. */
 
-    typedef itk::AdvancedCombinationTransform<
-      typename elx::TransformBase< TElastix >::CoordRepType,
-      elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
+  /** These are both in Euler2D and Euler3D. */
+  typedef typename Superclass1::ScalarType             ScalarType;
+  typedef typename Superclass1::ParametersType         ParametersType;
+  typedef typename Superclass1::NumberOfParametersType NumberOfParametersType;
+  typedef typename Superclass1::JacobianType           JacobianType;
 
-    typedef elx::TransformBase< TElastix >                      Superclass2;
+  typedef typename Superclass1::InputPointType            InputPointType;
+  typedef typename Superclass1::OutputPointType           OutputPointType;
+  typedef typename Superclass1::InputVectorType           InputVectorType;
+  typedef typename Superclass1::OutputVectorType          OutputVectorType;
+  typedef typename Superclass1::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass1::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass1::InputVnlVectorType        InputVnlVectorType;
+  typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
 
-    /** The ITK-class that provides most of the functionality, and
-     * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef itk::EulerTransform<
-      typename elx::TransformBase< TElastix >::CoordRepType,
-      elx::TransformBase< TElastix >::FixedImageDimension >     EulerTransformType;
+  typedef typename EulerTransformType::Pointer    EulerTransformPointer;
+  typedef typename EulerTransformType::OffsetType OffsetType;
 
-    typedef itk::SmartPointer<Self>                             Pointer;
-    typedef itk::SmartPointer<const Self>                       ConstPointer;
+  /** Typedef's inherited from TransformBase. */
+  typedef typename Superclass2::ElastixType              ElastixType;
+  typedef typename Superclass2::ElastixPointer           ElastixPointer;
+  typedef typename Superclass2::ConfigurationType        ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer     ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType         RegistrationType;
+  typedef typename Superclass2::RegistrationPointer      RegistrationPointer;
+  typedef typename Superclass2::CoordRepType             CoordRepType;
+  typedef typename Superclass2::FixedImageType           FixedImageType;
+  typedef typename Superclass2::MovingImageType          MovingImageType;
+  typedef typename Superclass2::ITKBaseType              ITKBaseType;
+  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+  /** Other typedef's. */
+  typedef typename FixedImageType::IndexType     IndexType;
+  typedef typename IndexType::IndexValueType     IndexValueType;
+  typedef typename FixedImageType::SizeType      SizeType;
+  typedef typename FixedImageType::PointType     PointType;
+  typedef typename FixedImageType::SpacingType   SpacingType;
+  typedef typename FixedImageType::RegionType    RegionType;
+  typedef typename FixedImageType::DirectionType DirectionType;
 
-    /** Run-time type information (and related methods). */
-    //itkTypeMacro( EulerTransformElastix, EulerTransform );
-    itkTypeMacro( EulerTransformElastix, itk::AdvancedCombinationTransform );
+  typedef itk::CenteredTransformInitializer<
+    EulerTransformType, FixedImageType, MovingImageType >  TransformInitializerType;
+  typedef typename TransformInitializerType::Pointer TransformInitializerPointer;
 
-    /** Name of this class.
-     * Use this name in the parameter file to select this specific transform. \n
-     * example: <tt>(Transform "EulerTransform")</tt>\n
-     */
-    elxClassNameMacro( "EulerTransform" );
+  /** For scales setting in the optimizer */
+  typedef typename Superclass2::ScalesType ScalesType;
 
-    /** Dimension of the fixed image. */
-    itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
+  /** Execute stuff before the actual registration:
+   * \li Call InitializeTransform
+   * \li Set the scales.
+   */
+  virtual void BeforeRegistration( void );
 
-    /** Typedefs inherited from the superclass. */
+  /** Initialize Transform.
+   * \li Set all parameters to zero.
+   * \li Set center of rotation:
+   *  automatically initialized to the geometric center of the image, or
+   *   assigned a user entered voxel index, given by the parameter
+   *   (CenterOfRotation <index-x> <index-y> ...);
+   *   If an initial transform is present and HowToCombineTransforms is
+   *   set to "Compose", the initial transform is taken into account
+   *   while setting the center of rotation.
+   * \li Set initial translation:
+   *  the initial translation between fixed and moving image is guessed,
+   *  if the user has set (AutomaticTransformInitialization "true").
+   *
+   * It is not yet possible to enter an initial rotation angle.
+   */
+  virtual void InitializeTransform( void );
 
-    /** These are both in Euler2D and Euler3D. */
-    typedef typename Superclass1::ScalarType                  ScalarType;
-    typedef typename Superclass1::ParametersType              ParametersType;
-    typedef typename Superclass1::NumberOfParametersType      NumberOfParametersType;
-    typedef typename Superclass1::JacobianType                JacobianType;
+  /** Set the scales
+   * \li If AutomaticScalesEstimation is "true" estimate scales
+   * \li If scales are provided by the user use those,
+   * \li Otherwise use some default value
+   * This function is called by BeforeRegistration, after
+   * the InitializeTransform function is called
+   */
+  virtual void SetScales( void );
 
-    typedef typename Superclass1::InputPointType              InputPointType;
-    typedef typename Superclass1::OutputPointType             OutputPointType;
-    typedef typename Superclass1::InputVectorType             InputVectorType;
-    typedef typename Superclass1::OutputVectorType            OutputVectorType;
-    typedef typename Superclass1::InputCovariantVectorType    InputCovariantVectorType;
-    typedef typename Superclass1::OutputCovariantVectorType   OutputCovariantVectorType;
-    typedef typename Superclass1::InputVnlVectorType          InputVnlVectorType;
-    typedef typename Superclass1::OutputVnlVectorType         OutputVnlVectorType;
+  /** Function to read transform-parameters from a file.
+   *
+   * It reads the center of rotation and calls the superclass' implementation.
+   */
+  virtual void ReadFromFile( void );
 
-    typedef typename EulerTransformType::Pointer              EulerTransformPointer;
-    typedef typename EulerTransformType::OffsetType           OffsetType;
+  /** Function to write transform-parameters to a file.
+   * It writes the center of rotation to file and calls the superclass' implementation.
+   */
+  virtual void WriteToFile( const ParametersType & param ) const;
 
-    /** Typedef's inherited from TransformBase. */
-    typedef typename Superclass2::ElastixType               ElastixType;
-    typedef typename Superclass2::ElastixPointer            ElastixPointer;
-    typedef typename Superclass2::ConfigurationType         ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType          RegistrationType;
-    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-    typedef typename Superclass2::CoordRepType              CoordRepType;
-    typedef typename Superclass2::FixedImageType            FixedImageType;
-    typedef typename Superclass2::MovingImageType           MovingImageType;
-    typedef typename Superclass2::ITKBaseType               ITKBaseType;
-    typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
+protected:
 
-    /** Other typedef's. */
-    typedef typename FixedImageType::IndexType              IndexType;
-    typedef typename IndexType::IndexValueType              IndexValueType;
-    typedef typename FixedImageType::SizeType               SizeType;
-    typedef typename FixedImageType::PointType              PointType;
-    typedef typename FixedImageType::SpacingType            SpacingType;
-    typedef typename FixedImageType::RegionType             RegionType;
-    typedef typename FixedImageType::DirectionType          DirectionType;
+  /** The constructor. */
+  EulerTransformElastix();
+  /** The destructor. */
+  virtual ~EulerTransformElastix() {}
 
-    typedef itk::CenteredTransformInitializer<
-      EulerTransformType, FixedImageType, MovingImageType>  TransformInitializerType;
-    typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
+  /** Try to read the CenterOfRotation from the transform parameter file
+   * This is an index value, and, thus, converted to world coordinates.
+   * Transform parameter files generated by elastix version < 3.402
+   * saved the center of rotation in this way.
+   */
+  virtual bool ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const;
 
-    /** For scales setting in the optimizer */
-    typedef typename Superclass2::ScalesType                ScalesType;
+  /** Try to read the CenterOfRotationPoint from the transform parameter file
+   * The CenterOfRotationPoint is already in world coordinates.
+   * Transform parameter files generated by elastix version > 3.402
+   * save the center of rotation in this way.
+   */
+  virtual bool ReadCenterOfRotationPoint( InputPointType & rotationPoint ) const;
 
-    /** Execute stuff before the actual registration:
-     * \li Call InitializeTransform
-     * \li Set the scales.
-     */
-    virtual void BeforeRegistration(void);
+private:
 
-    /** Initialize Transform.
-     * \li Set all parameters to zero.
-     * \li Set center of rotation:
-     *  automatically initialized to the geometric center of the image, or
-     *   assigned a user entered voxel index, given by the parameter
-     *   (CenterOfRotation <index-x> <index-y> ...);
-     *   If an initial transform is present and HowToCombineTransforms is
-     *   set to "Compose", the initial transform is taken into account
-     *   while setting the center of rotation.
-     * \li Set initial translation:
-     *  the initial translation between fixed and moving image is guessed,
-     *  if the user has set (AutomaticTransformInitialization "true").
-     *
-     * It is not yet possible to enter an initial rotation angle.
-     */
-    virtual void InitializeTransform(void);
+  /** The private constructor. */
+  EulerTransformElastix( const Self & );  // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self & );         // purposely not implemented
 
-    /** Set the scales
-     * \li If AutomaticScalesEstimation is "true" estimate scales
-     * \li If scales are provided by the user use those,
-     * \li Otherwise use some default value
-     * This function is called by BeforeRegistration, after
-     * the InitializeTransform function is called
-     */
-    virtual void SetScales(void);
+  EulerTransformPointer m_EulerTransform;
 
-    /** Function to read transform-parameters from a file.
-     *
-     * It reads the center of rotation and calls the superclass' implementation.
-     */
-    virtual void ReadFromFile(void);
-
-    /** Function to write transform-parameters to a file.
-     * It writes the center of rotation to file and calls the superclass' implementation.
-     */
-    virtual void WriteToFile( const ParametersType & param ) const;
-
-  protected:
-
-    /** The constructor. */
-    EulerTransformElastix();
-    /** The destructor. */
-    virtual ~EulerTransformElastix() {};
-
-    /** Try to read the CenterOfRotation from the transform parameter file
-     * This is an index value, and, thus, converted to world coordinates.
-     * Transform parameter files generated by elastix version < 3.402
-     * saved the center of rotation in this way.
-     */
-    virtual bool ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const;
-
-    /** Try to read the CenterOfRotationPoint from the transform parameter file
-     * The CenterOfRotationPoint is already in world coordinates.
-     * Transform parameter files generated by elastix version > 3.402
-     * save the center of rotation in this way.
-     */
-    virtual bool ReadCenterOfRotationPoint( InputPointType & rotationPoint ) const;
-
-  private:
-
-    /** The private constructor. */
-    EulerTransformElastix( const Self& ); // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );        // purposely not implemented
-
-    EulerTransformPointer       m_EulerTransform;
-
-  };
-
+};
 
 } // end namespace elastix
 
@@ -241,4 +240,3 @@ namespace elastix
 #endif
 
 #endif // end #ifndef __elxEulerTransform_H__
-

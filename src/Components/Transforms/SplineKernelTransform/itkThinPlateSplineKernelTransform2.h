@@ -29,17 +29,19 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template <class TScalarType,         // Data type for scalars (float or double)
-          unsigned int NDimensions = 3>          // Number of dimensions
-class ThinPlateSplineKernelTransform2
-  : public KernelTransform2<TScalarType, NDimensions>
+template< class TScalarType,         // Data type for scalars (float or double)
+unsigned int NDimensions = 3 >
+// Number of dimensions
+class ThinPlateSplineKernelTransform2 :
+  public KernelTransform2< TScalarType, NDimensions >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef ThinPlateSplineKernelTransform2             Self;
-  typedef KernelTransform2<TScalarType, NDimensions>  Superclass;
-  typedef SmartPointer<Self>                          Pointer;
-  typedef SmartPointer<const Self>                    ConstPointer;
+  typedef ThinPlateSplineKernelTransform2              Self;
+  typedef KernelTransform2< TScalarType, NDimensions > Superclass;
+  typedef SmartPointer< Self >                         Pointer;
+  typedef SmartPointer< const Self >                   ConstPointer;
 
   /** New macro for creation of through a Smart Pointer */
   itkNewMacro( Self );
@@ -48,33 +50,36 @@ public:
   itkTypeMacro( ThinPlateSplineKernelTransform2, KernelTransform2 );
 
   /** Scalar type. */
-  typedef typename Superclass::ScalarType  ScalarType;
+  typedef typename Superclass::ScalarType ScalarType;
 
   /** Parameters type. */
-  typedef typename Superclass::ParametersType  ParametersType;
+  typedef typename Superclass::ParametersType ParametersType;
 
   /** Jacobian Type */
-  typedef typename Superclass::JacobianType  JacobianType;
+  typedef typename Superclass::JacobianType JacobianType;
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro( SpaceDimension, unsigned int,Superclass::SpaceDimension );
+  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass::SpaceDimension );
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited.
    */
-  typedef typename Superclass::InputPointType  InputPointType;
-  typedef typename Superclass::OutputPointType  OutputPointType;
-  typedef typename Superclass::InputVectorType InputVectorType;
-  typedef typename Superclass::OutputVectorType OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType InputCovariantVectorType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
-  typedef typename Superclass::PointsIterator PointsIterator;
+  typedef typename Superclass::PointsIterator            PointsIterator;
 
 protected:
+
   ThinPlateSplineKernelTransform2()
   {
     this->m_FastComputationPossible = true;
-  };
+  }
+
+
   virtual ~ThinPlateSplineKernelTransform2() {}
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
@@ -93,16 +98,16 @@ protected:
    */
   void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const;
 
-
   /** Compute the contribution of the landmarks weighted by the kernel function
    * to the global deformation of the space.
    */
   virtual void ComputeDeformationContribution(
     const InputPointType & inputPoint, OutputPointType & result ) const;
 
- private:
-  ThinPlateSplineKernelTransform2(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+private:
+
+  ThinPlateSplineKernelTransform2( const Self & ); // purposely not implemented
+  void operator=( const Self & );                  // purposely not implemented
 
 };
 

@@ -26,8 +26,8 @@ namespace itk
  * **************** Constructor ***************
  */
 
-template <class TOutputMesh>
-MeshFileReaderBase<TOutputMesh>
+template< class TOutputMesh >
+MeshFileReaderBase< TOutputMesh >
 ::MeshFileReaderBase()
 {
   this->m_FileName = "";
@@ -38,9 +38,9 @@ MeshFileReaderBase<TOutputMesh>
  * ***************GenerateOutputInformation ***********
  */
 
-template <class TOutputMesh>
+template< class TOutputMesh >
 void
-MeshFileReaderBase<TOutputMesh>
+MeshFileReaderBase< TOutputMesh >
 ::GenerateOutputInformation( void )
 {
   OutputMeshPointer output = this->GetOutput();
@@ -48,7 +48,7 @@ MeshFileReaderBase<TOutputMesh>
   itkDebugMacro( << "Reading file for GenerateOutputInformation(): " << this->m_FileName );
 
   /** Check to see if we can read the file given the name or prefix */
-  if ( this->m_FileName == "" )
+  if( this->m_FileName == "" )
   {
     throw MeshFileReaderException( __FILE__, __LINE__,
       "FileName must be specified", ITK_LOCATION );
@@ -74,19 +74,19 @@ MeshFileReaderBase<TOutputMesh>
  * *************TestFileExistanceAndReadability ***********
  */
 
-template <class TOutputMesh>
+template< class TOutputMesh >
 void
-MeshFileReaderBase<TOutputMesh>
+MeshFileReaderBase< TOutputMesh >
 ::TestFileExistanceAndReadability( void )
 {
   // Test if the file exists.
-  if( ! itksys::SystemTools::FileExists( this->m_FileName.c_str() ) )
+  if( !itksys::SystemTools::FileExists( this->m_FileName.c_str() ) )
   {
     MeshFileReaderException e( __FILE__, __LINE__ );
-    std::ostringstream msg;
-    msg <<"The file doesn't exists. "
-      << std::endl << "Filename = " << this->m_FileName
-      << std::endl;
+    std::ostringstream      msg;
+    msg << "The file doesn't exists. "
+        << std::endl << "Filename = " << this->m_FileName
+        << std::endl;
     e.SetDescription( msg.str().c_str() );
     throw e;
     return;
@@ -99,11 +99,11 @@ MeshFileReaderBase<TOutputMesh>
   {
     readTester.close();
     std::ostringstream msg;
-    msg <<"The file couldn't be opened for reading. "
-      << std::endl << "Filename: " << this->m_FileName
-      << std::endl;
+    msg << "The file couldn't be opened for reading. "
+        << std::endl << "Filename: " << this->m_FileName
+        << std::endl;
     MeshFileReaderException e( __FILE__, __LINE__,
-      msg.str().c_str(), ITK_LOCATION );
+    msg.str().c_str(), ITK_LOCATION );
     throw e;
     return;
 
@@ -117,12 +117,12 @@ MeshFileReaderBase<TOutputMesh>
  * **************EnlargeOutputRequestedRegion***********
  */
 
-template <class TOutputMesh>
+template< class TOutputMesh >
 void
-MeshFileReaderBase<TOutputMesh>
-::EnlargeOutputRequestedRegion( DataObject *output )
+MeshFileReaderBase< TOutputMesh >
+::EnlargeOutputRequestedRegion( DataObject * output )
 {
-  OutputMeshPointer out = dynamic_cast<OutputMeshType *>( output );
+  OutputMeshPointer out = dynamic_cast< OutputMeshType * >( output );
 
   if( out )
   {
@@ -138,6 +138,5 @@ MeshFileReaderBase<TOutputMesh>
 
 
 } // end namespace itk
-
 
 #endif

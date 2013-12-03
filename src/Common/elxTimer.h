@@ -66,11 +66,12 @@ namespace tmr
 class Timer : public itk::Object
 {
 public:
+
   /** Standard ITK-stuff.*/
-  typedef Timer                            Self;
-  typedef itk::Object                      Superclass;
-  typedef itk::SmartPointer<Self>          Pointer;
-  typedef itk::SmartPointer<const Self>    ConstPointer;
+  typedef Timer                           Self;
+  typedef itk::Object                     Superclass;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory.*/
   itkNewMacro( Self );
@@ -79,21 +80,28 @@ public:
   itkTypeMacro( Timer, itk::Object );
 
   /** My typedef's.*/
-  typedef std::vector<std::size_t>         TimeDHMSType;
+  typedef std::vector< std::size_t > TimeDHMSType;
 
   /** Member functions.*/
   void StartTimer( void );
+
   int StopTimer( void );
+
   int ElapsedClockAndTime( void );
 
   /** Formatted Output Functions
    * (return the time as a string, with comments)
    */
   const std::string & PrintStartTime( void );
+
   const std::string & PrintStopTime( void );
+
   const std::string & PrintElapsedTimeDHMS( void );
+
   const std::string & PrintElapsedTimeSec( void );
+
   const std::string & PrintElapsedClock( void );
+
   const std::string & PrintElapsedClockSec( void );
 
   /** Communication with outside world.*/
@@ -108,18 +116,18 @@ public:
 protected:
 
   Timer();
-  virtual ~Timer(){};
+  virtual ~Timer(){}
 
   /** Variables that store program arguments.*/
-  time_t        m_StartTime;
-  clock_t       m_StartClock;
-  time_t        m_StopTime;
-  clock_t       m_StopClock;
-  double        m_ElapsedTime;
-  clock_t       m_ElapsedClock;
-  TimeDHMSType  m_ElapsedTimeDHMS;
-  std::size_t   m_ElapsedTimeSec;
-  double        m_ElapsedClockSec;
+  time_t       m_StartTime;
+  clock_t      m_StartClock;
+  time_t       m_StopTime;
+  clock_t      m_StopClock;
+  double       m_ElapsedTime;
+  clock_t      m_ElapsedClock;
+  TimeDHMSType m_ElapsedTimeDHMS;
+  std::size_t  m_ElapsedTimeSec;
+  double       m_ElapsedClockSec;
 
   /** GCC specific. We can use clock_gettime(). */
 #if defined( __GNUC__ ) && !defined( __APPLE__ ) && !defined( _WIN32 )
@@ -138,13 +146,11 @@ protected:
 
 private:
 
-  Timer( const Self& );           // purposely not implemented
-  void operator=( const Self& );  // purposely not implemented
+  Timer( const Self & );           // purposely not implemented
+  void operator=( const Self & );  // purposely not implemented
 
 };
 
-
 } // end namespace tmr
-
 
 #endif // end #ifndef __elxTimer_H_

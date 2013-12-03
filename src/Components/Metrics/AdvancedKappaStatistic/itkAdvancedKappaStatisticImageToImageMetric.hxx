@@ -24,8 +24,8 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::AdvancedKappaStatisticImageToImageMetric()
 {
   this->SetComputeGradient( true );
@@ -34,12 +34,12 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   this->SetUseMovingImageLimiter( false );
 
   this->m_UseForegroundValue = true; // for backwards compatibility
-  this->m_ForegroundValue = 1.0;
-  this->m_Epsilon = 1e-3;
-  this->m_Complement = true;
+  this->m_ForegroundValue    = 1.0;
+  this->m_Epsilon            = 1e-3;
+  this->m_Complement         = true;
 
   // Multi-threading structs
-  this->m_KappaGetValueAndDerivativePerThreadVariables = NULL;
+  this->m_KappaGetValueAndDerivativePerThreadVariables     = NULL;
   this->m_KappaGetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor
@@ -49,8 +49,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* Destructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::~AdvancedKappaStatisticImageToImageMetric()
 {
   delete[] this->m_KappaGetValueAndDerivativePerThreadVariables;
@@ -61,9 +61,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* InitializeThreadingParameters *******************
  */
 
-template < class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
   /** Resize and initialize the threading related parameters.
@@ -78,18 +78,18 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   {
     delete[] this->m_KappaGetValueAndDerivativePerThreadVariables;
     this->m_KappaGetValueAndDerivativePerThreadVariables
-      = new AlignedKappaGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
+                                                             = new AlignedKappaGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
     this->m_KappaGetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
   }
 
   /** Some initialization. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
-  const SizeValueType zero = NumericTraits<SizeValueType>::Zero;
+  const SizeValueType          zero  = NumericTraits< SizeValueType >::Zero;
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = zero;
-    this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum = zero;
-    this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaIntersection = zero;
+    this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum               = zero;
+    this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaIntersection      = zero;
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeSum1.SetSize( this->GetNumberOfParameters() );
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeSum2.SetSize( this->GetNumberOfParameters() );
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_TransformJacobian.SetSize( FixedImageDimension, nnzji );
@@ -102,17 +102,17 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* PrintSelf *******************
  */
 
-template < class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
-::PrintSelf( std::ostream& os, Indent indent ) const
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
   os << indent << "UseForegroundValue: "
-    << ( this->m_UseForegroundValue ? "On" : "Off" ) << std::endl;
+     << ( this->m_UseForegroundValue ? "On" : "Off" ) << std::endl;
   os << indent << "Complement: "
-    << ( this->m_Complement ? "On" : "Off" ) << std::endl;
+     << ( this->m_Complement ? "On" : "Off" ) << std::endl;
   os << indent << "ForegroundValue: " << this->m_ForegroundValue << std::endl;
   os << indent << "Epsilon: " << this->m_Epsilon << std::endl;
 
@@ -123,9 +123,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
-typename AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+typename AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >::MeasureType
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValue( const TransformParametersType & parameters ) const
 {
   itkDebugMacro( "GetValue( " << parameters << " ) " );
@@ -155,26 +155,26 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Some variables. */
-  RealType movingImageValue;
+  RealType             movingImageValue;
   MovingImagePointType mappedPoint;
-  std::size_t fixedForegroundArea  = 0; // or unsigned long
-  std::size_t movingForegroundArea = 0;
-  std::size_t intersection         = 0;
+  std::size_t          fixedForegroundArea  = 0; // or unsigned long
+  std::size_t          movingForegroundArea = 0;
+  std::size_t          intersection         = 0;
 
   /** Loop over the fixed image samples to calculate the kappa statistic. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside moving mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -182,37 +182,37 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
     /** Compute the moving image value and check if the point is
      * inside the moving image buffer.
      */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, 0 );
     }
 
     /** Do the actual calculation of the metric value. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue
-        = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+        = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Update the intermediate values. */
-      if ( this->m_UseForegroundValue )
+      if( this->m_UseForegroundValue )
       {
-        const RealType diffFixed = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
+        const RealType diffFixed  = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
         const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
-        if ( diffFixed < this->m_Epsilon ){ fixedForegroundArea++; }
-        if ( diffMoving < this->m_Epsilon ){ movingForegroundArea++; }
-        if ( diffFixed < this->m_Epsilon
-          && diffMoving < this->m_Epsilon ){ intersection++; }
+        if( diffFixed < this->m_Epsilon ) { fixedForegroundArea++; }
+        if( diffMoving < this->m_Epsilon ) { movingForegroundArea++; }
+        if( diffFixed < this->m_Epsilon
+          && diffMoving < this->m_Epsilon ) { intersection++; }
       }
       else
       {
-        if ( fixedImageValue  > this->m_Epsilon ){ fixedForegroundArea++; }
-        if ( movingImageValue > this->m_Epsilon ){ movingForegroundArea++; }
-        if ( fixedImageValue  > this->m_Epsilon
-          && movingImageValue > this->m_Epsilon ){ intersection++; }
+        if( fixedImageValue  > this->m_Epsilon ) { fixedForegroundArea++; }
+        if( movingImageValue > this->m_Epsilon ) { movingForegroundArea++; }
+        if( fixedImageValue  > this->m_Epsilon
+          && movingImageValue > this->m_Epsilon ) { intersection++; }
       }
 
     } // end if samplOk
@@ -224,16 +224,16 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Compute the final metric value. */
   std::size_t areaSum = fixedForegroundArea + movingForegroundArea;
-  if ( areaSum == 0 )
+  if( areaSum == 0 )
   {
     measure = NumericTraits< MeasureType >::Zero;
   }
   else
   {
-    measure = 1.0 - 2.0 * static_cast<MeasureType>( intersection )
-      / static_cast<MeasureType>( areaSum );
+    measure = 1.0 - 2.0 * static_cast< MeasureType >( intersection )
+      / static_cast< MeasureType >( areaSum );
   }
-  if ( !this->m_Complement ) measure = 1.0 - measure;
+  if( !this->m_Complement ) { measure = 1.0 - measure; }
 
   /** Return the mean squares measure value. */
   return measure;
@@ -245,9 +245,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetDerivative *******************
  */
 
-template < class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::GetDerivative( const TransformParametersType & parameters,
   DerivativeType & derivative ) const
 {
@@ -266,9 +266,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetValueAndDerivativeSingleThreaded *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivativeSingleThreaded(
   const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
@@ -282,8 +282,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-  DerivativeType imageJacobian( nzji.size() );
-  TransformJacobianType jacobian;
+  DerivativeType             imageJacobian( nzji.size() );
+  TransformJacobianType      jacobian;
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -304,11 +304,11 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   /** Some variables. */
-  RealType movingImageValue;
+  RealType             movingImageValue;
   MovingImagePointType mappedPoint;
-  std::size_t fixedForegroundArea  = 0; // or unsigned long
-  std::size_t movingForegroundArea = 0;
-  std::size_t intersection         = 0;
+  std::size_t          fixedForegroundArea  = 0; // or unsigned long
+  std::size_t          movingForegroundArea = 0;
+  std::size_t          intersection         = 0;
 
   DerivativeType vecSum1( this->GetNumberOfParameters() );
   DerivativeType vecSum2( this->GetNumberOfParameters() );
@@ -318,19 +318,19 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Loop over the fixed image to calculate the kappa statistic. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside moving mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -339,20 +339,20 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
      * the point is inside the moving image buffer.
      */
     MovingImageDerivativeType movingImageDerivative;
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, &movingImageDerivative );
     }
 
     /** Do the actual calculation of the metric value. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue
-        = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+        = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
@@ -377,24 +377,24 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Compute the final metric value. */
-  std::size_t areaSum = fixedForegroundArea + movingForegroundArea;
-  const MeasureType intersectionFloat = static_cast<MeasureType>( intersection );
-  const MeasureType areaSumFloat = static_cast<MeasureType>( areaSum );
-  if ( areaSum > 0 )
+  std::size_t       areaSum           = fixedForegroundArea + movingForegroundArea;
+  const MeasureType intersectionFloat = static_cast< MeasureType >( intersection );
+  const MeasureType areaSumFloat      = static_cast< MeasureType >( areaSum );
+  if( areaSum > 0 )
   {
     measure = 1.0 - 2.0 * intersectionFloat / areaSumFloat;
   }
-  if ( !this->m_Complement ){ measure = 1.0 - measure; }
+  if( !this->m_Complement ) { measure = 1.0 - measure; }
   value = measure;
 
   /** Calculate the derivative. */
   MeasureType direction = -1.0;
-  if ( !this->m_Complement ) direction = 1.0;
+  if( !this->m_Complement ) { direction = 1.0; }
   const MeasureType areaSumFloatSquare = direction * areaSumFloat * areaSumFloat;
-  const MeasureType tmp1 = areaSumFloat / areaSumFloatSquare;
-  const MeasureType tmp2 = 2.0 * intersectionFloat / areaSumFloatSquare;
+  const MeasureType tmp1               = areaSumFloat / areaSumFloatSquare;
+  const MeasureType tmp2               = 2.0 * intersectionFloat / areaSumFloatSquare;
 
-  if ( areaSum > 0 )
+  if( areaSum > 0 )
   {
     derivative = tmp1 * vecSum1 - tmp2 * vecSum2;
   }
@@ -410,9 +410,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivative(
   const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
@@ -455,15 +455,15 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* ThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::ThreadedGetValueAndDerivative( ThreadIdType threadId )
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
-  NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType imageJacobian( nzji.size() );
+  NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
+  DerivativeType               imageJacobian( nzji.size() );
 
   /** Get a handle to a pre-allocated transform Jacobian. */
   TransformJacobianType & jacobian
@@ -474,49 +474,49 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
    */
   DerivativeType & vecSum1 = this->m_KappaGetValueAndDerivativePerThreadVariables[ threadId ].st_DerivativeSum1;
   DerivativeType & vecSum2 = this->m_KappaGetValueAndDerivativePerThreadVariables[ threadId ].st_DerivativeSum2;
-  vecSum1.Fill(  NumericTraits<DerivativeValueType>::Zero ); // seems needed unfortunately
-  vecSum2.Fill(  NumericTraits<DerivativeValueType>::Zero ); // seems needed unfortunately
+  vecSum1.Fill(  NumericTraits< DerivativeValueType >::Zero ); // seems needed unfortunately
+  vecSum2.Fill(  NumericTraits< DerivativeValueType >::Zero ); // seems needed unfortunately
 
   /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const unsigned long sampleContainerSize = sampleContainer->Size();
+  ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
+  const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
-      / static_cast<double>( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( this->m_NumberOfThreads ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
-  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
   pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
-  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+  pos_end   = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
 
   /** Some variables. */
-  RealType movingImageValue;
+  RealType             movingImageValue;
   MovingImagePointType mappedPoint;
-  std::size_t fixedForegroundArea  = 0; // or unsigned long
-  std::size_t movingForegroundArea = 0;
-  std::size_t intersection         = 0;
-  unsigned long numberOfPixelsCounted = 0;
+  std::size_t          fixedForegroundArea   = 0; // or unsigned long
+  std::size_t          movingForegroundArea  = 0;
+  std::size_t          intersection          = 0;
+  unsigned long        numberOfPixelsCounted = 0;
 
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->Begin();
-  fbegin += (int)pos_begin;
-  fend += (int)pos_end;
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->Begin();
+  fbegin                                                 += (int)pos_begin;
+  fend                                                   += (int)pos_end;
 
   /** Loop over the fixed image to calculate the kappa statistic. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates. */
-    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
 
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside moving mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -525,20 +525,20 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
      * the point is inside the moving image buffer.
      */
     MovingImageDerivativeType movingImageDerivative;
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, &movingImageDerivative );
     }
 
     /** Do the actual calculation of the metric value. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       numberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue
-        = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+        = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
@@ -560,8 +560,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
   this->m_KappaGetValueAndDerivativePerThreadVariables[ threadId ].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_KappaGetValueAndDerivativePerThreadVariables[ threadId ].st_AreaSum = fixedForegroundArea + movingForegroundArea;
-  this->m_KappaGetValueAndDerivativePerThreadVariables[ threadId ].st_AreaIntersection = intersection;
+  this->m_KappaGetValueAndDerivativePerThreadVariables[ threadId ].st_AreaSum               = fixedForegroundArea + movingForegroundArea;
+  this->m_KappaGetValueAndDerivativePerThreadVariables[ threadId ].st_AreaIntersection      = intersection;
 
 } // end GetValueAndDerivative()
 
@@ -570,9 +570,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* AfterThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
@@ -591,26 +591,26 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Accumulate values. */
-  MeasureType areaSum = NumericTraits<MeasureType>::Zero;
-  MeasureType intersection = NumericTraits<MeasureType>::Zero;
+  MeasureType areaSum      = NumericTraits< MeasureType >::Zero;
+  MeasureType intersection = NumericTraits< MeasureType >::Zero;
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     areaSum      += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum;
     intersection += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaIntersection;
   }
 
-  if ( areaSum == 0 ) return;
+  if( areaSum == 0 ) { return; }
 
   /** Compute the final metric value. */
   value = 1.0 - 2.0 * intersection / areaSum;
-  if( !this->m_Complement ){ value = 1.0 - value; }
+  if( !this->m_Complement ) { value = 1.0 - value; }
 
   /** Some intermediate values to calculate the derivative. */
   MeasureType direction = -1.0;
-  if( !this->m_Complement ) direction = 1.0;
+  if( !this->m_Complement ) { direction = 1.0; }
   const MeasureType areaSumSquare = direction * areaSum * areaSum;
-  const MeasureType tmp1 = direction / areaSum;
-  const MeasureType tmp2 = 2.0 * intersection / areaSumSquare;
+  const MeasureType tmp1          = direction / areaSum;
+  const MeasureType tmp2          = 2.0 * intersection / areaSumSquare;
 
   /** Accumulate intermediate values and calculate derivative. */
   if( !this->m_UseMultiThread ) // single-threaded
@@ -628,9 +628,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   {
     MultiThreaderAccumulateDerivativeType * temp = new MultiThreaderAccumulateDerivativeType;
 
-    temp->st_Metric = const_cast<Self *>( this );
-    temp->st_Coefficient1 = tmp1;
-    temp->st_Coefficient2 = tmp2;
+    temp->st_Metric            = const_cast< Self * >( this );
+    temp->st_Coefficient1      = tmp1;
+    temp->st_Coefficient2      = tmp2;
     temp->st_DerivativePointer = derivative.begin();
 
     typename ThreaderType::Pointer local_threader = ThreaderType::New();
@@ -648,30 +648,30 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  *********** AccumulateDerivativesThreaderCallback *************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 ITK_THREAD_RETURN_TYPE
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::AccumulateDerivativesThreaderCallback( void * arg )
 {
-  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType threadId = infoStruct->ThreadID;
-  ThreadIdType nrOfThreads = infoStruct->NumberOfThreads;
+  ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
+  ThreadIdType     threadId    = infoStruct->ThreadID;
+  ThreadIdType     nrOfThreads = infoStruct->NumberOfThreads;
 
   MultiThreaderAccumulateDerivativeType * temp
-    = static_cast<MultiThreaderAccumulateDerivativeType *>( infoStruct->UserData );
+    = static_cast< MultiThreaderAccumulateDerivativeType * >( infoStruct->UserData );
 
-  const unsigned int numPar = temp->st_Metric->GetNumberOfParameters();
-  const unsigned int subSize = static_cast<unsigned int>(
-    vcl_ceil( static_cast<double>( numPar ) / static_cast<double>( nrOfThreads ) ) );
+  const unsigned int numPar  = temp->st_Metric->GetNumberOfParameters();
+  const unsigned int subSize = static_cast< unsigned int >(
+    vcl_ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
 
   unsigned int jmin = threadId * subSize;
-  unsigned int jmax = (threadId+1) * subSize;
+  unsigned int jmax = ( threadId + 1 ) * subSize;
   jmax = ( jmax > numPar ) ? numPar : jmax;
 
   for( unsigned int j = jmin; j < jmax; j++ )
   {
-    DerivativeValueType sum1 = NumericTraits<DerivativeValueType>::Zero;
-    DerivativeValueType sum2 = NumericTraits<DerivativeValueType>::Zero;
+    DerivativeValueType sum1 = NumericTraits< DerivativeValueType >::Zero;
+    DerivativeValueType sum2 = NumericTraits< DerivativeValueType >::Zero;
     for( ThreadIdType i = 0; i < nrOfThreads; ++i )
     {
       sum1 += temp->st_Metric->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeSum1[ j ];
@@ -690,9 +690,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * *************** UpdateValueAndDerivativeTerms ***************************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::UpdateValueAndDerivativeTerms(
   const RealType & fixedImageValue,
   const RealType & movingImageValue,
@@ -706,37 +706,37 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 {
   /** Update the intermediate values. */
   bool usableFixedSample = false;
-  if ( this->m_UseForegroundValue )
+  if( this->m_UseForegroundValue )
   {
-    const RealType diffFixed = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
+    const RealType diffFixed  = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
     const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
-    if ( diffFixed < this->m_Epsilon ){ fixedForegroundArea++; usableFixedSample = true; }
-    if ( diffMoving < this->m_Epsilon ){ movingForegroundArea++; }
-    if ( diffFixed < this->m_Epsilon
-      && diffMoving < this->m_Epsilon ){ intersection++; }
+    if( diffFixed < this->m_Epsilon ) { fixedForegroundArea++; usableFixedSample = true; }
+    if( diffMoving < this->m_Epsilon ) { movingForegroundArea++; }
+    if( diffFixed < this->m_Epsilon
+      && diffMoving < this->m_Epsilon ) { intersection++; }
   }
   else
   {
-    if ( fixedImageValue  > this->m_Epsilon ){ fixedForegroundArea++; usableFixedSample = true; }
-    if ( movingImageValue > this->m_Epsilon ){ movingForegroundArea++; }
-    if ( fixedImageValue  > this->m_Epsilon
-      && movingImageValue > this->m_Epsilon ){ intersection++; }
+    if( fixedImageValue  > this->m_Epsilon ) { fixedForegroundArea++; usableFixedSample = true; }
+    if( movingImageValue > this->m_Epsilon ) { movingForegroundArea++; }
+    if( fixedImageValue  > this->m_Epsilon
+      && movingImageValue > this->m_Epsilon ) { intersection++; }
   }
 
   /** Calculate the contributions to the derivatives with respect to each parameter. */
-  if ( nzji.size() == this->GetNumberOfParameters() )
+  if( nzji.size() == this->GetNumberOfParameters() )
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
-    typename DerivativeType::iterator sum1it = sum1.begin();
-    typename DerivativeType::iterator sum2it = sum2.begin();
-    for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
+    typename DerivativeType::iterator sum1it        = sum1.begin();
+    typename DerivativeType::iterator sum2it        = sum2.begin();
+    for( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
     {
-      if ( usableFixedSample )
+      if( usableFixedSample )
       {
-        (*sum1it) += 2.0 * (*imjacit);
+        ( *sum1it ) += 2.0 * ( *imjacit );
       }
-      (*sum2it) += (*imjacit);
+      ( *sum2it ) += ( *imjacit );
 
       /** Increase iterators. */
       ++imjacit; ++sum1it; ++sum2it;
@@ -745,11 +745,11 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   else
   {
     /** Only pick the nonzero Jacobians. */
-    for ( unsigned int i = 0; i < nzji.size(); ++i )
+    for( unsigned int i = 0; i < nzji.size(); ++i )
     {
-      const unsigned int index = nzji[ i ];
+      const unsigned int        index = nzji[ i ];
       const DerivativeValueType imjac = imageJacobian[ i ];
-      if ( usableFixedSample )
+      if( usableFixedSample )
       {
         sum1[ index ] += 2.0 * imjac;
       }
@@ -767,9 +767,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
  * Overrides superclass implementation.
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeGradient( void )
 {
   /** Typedefs. */
@@ -783,7 +783,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Create and reset iterators. */
   GradientIteratorType git( tempGradientImage, tempGradientImage->GetBufferedRegion() );
-  MovingIteratorType mit( this->m_MovingImage, this->m_MovingImage->GetBufferedRegion() );
+  MovingIteratorType   mit( this->m_MovingImage, this->m_MovingImage->GetBufferedRegion() );
   git.GoToBegin();
   mit.GoToBegin();
 
@@ -799,13 +799,13 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   while( !mit.IsAtEnd() )
   {
     /** Get the current index. */
-    currIndex = mit.GetIndex();
+    currIndex  = mit.GetIndex();
     minusIndex = currIndex; plusIndex = currIndex;
     for( unsigned int i = 0; i < MovingImageDimension; i++ )
     {
       /** Check for being on the edge of the moving image. */
       if( currIndex[ i ] == movingIndex[ i ]
-        || currIndex[ i ] == static_cast<int>( movingIndex[ i ] + movingSize[ i ] - 1 ) )
+        || currIndex[ i ] == static_cast< int >( movingIndex[ i ] + movingSize[ i ] - 1 ) )
       {
         tempGradPixel[ i ] = 0.0;
       }
@@ -813,9 +813,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
       {
         /** Get the left, center and right values. */
         minusIndex[ i ] = currIndex[ i ] - 1;
-        plusIndex[ i ] = currIndex[ i ] + 1;
-        const RealType minusVal = static_cast<RealType>( this->m_MovingImage->GetPixel( minusIndex ) );
-        const RealType plusVal  = static_cast<RealType>( this->m_MovingImage->GetPixel( plusIndex ) );
+        plusIndex[ i ]  = currIndex[ i ] + 1;
+        const RealType minusVal  = static_cast< RealType >( this->m_MovingImage->GetPixel( minusIndex ) );
+        const RealType plusVal   = static_cast< RealType >( this->m_MovingImage->GetPixel( plusIndex ) );
         const RealType minusDiff = vnl_math_abs( minusVal - this->m_ForegroundValue );
         const RealType plusDiff  = vnl_math_abs(  plusVal - this->m_ForegroundValue );
 
@@ -851,6 +851,5 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 
 
 } // end namespace itk
-
 
 #endif // end #ifndef _itkAdvancedKappaStatisticImageToImageMetric_txx

@@ -21,31 +21,31 @@
 namespace elastix
 {
 
-  /*
-   * ***************** BeforeAll *****************
-   */
+/*
+ * ***************** BeforeAll *****************
+ */
 
-  template <class TElastix>
-  void
-  RayCastResampleInterpolator<TElastix>
-  ::InitializeRayCastInterpolator( void )
-  {
+template< class TElastix >
+void
+RayCastResampleInterpolator< TElastix >
+::InitializeRayCastInterpolator( void )
+{
 
   this->m_CombinationTransform = CombinationTransformType::New();
   this->m_CombinationTransform->SetUseComposition( true );
   typedef typename elastix::OptimizerBase<
-    TElastix>::ITKBaseType::ParametersType ParametersType;
+    TElastix >::ITKBaseType::ParametersType ParametersType;
 
   this->m_PreTransform = EulerTransformType::New();
-  unsigned int numberofparameters = this->m_PreTransform->GetNumberOfParameters();
+  unsigned int            numberofparameters = this->m_PreTransform->GetNumberOfParameters();
   TransformParametersType preParameters( numberofparameters );
   preParameters.Fill( 0.0 );
 
-  for ( unsigned int i = 0; i < numberofparameters; i++ )
+  for( unsigned int i = 0; i < numberofparameters; i++ )
   {
-      bool ret = this->GetConfiguration()->ReadParameter( preParameters[ i ],
-        "PreParameters", this->GetComponentLabel(), i, 0 );
-    if ( !ret )
+    bool ret = this->GetConfiguration()->ReadParameter( preParameters[ i ],
+      "PreParameters", this->GetComponentLabel(), i, 0 );
+    if( !ret )
     {
       std::cerr << " Error, not enough PreParameters are given" << std::endl;
     }
@@ -54,10 +54,10 @@ namespace elastix
   typename EulerTransformType::InputPointType centerofrotation;
   centerofrotation.Fill( 0.0 );
 
-  for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension() ; i++ )
+  for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension(); i++ )
   {
-      this->GetConfiguration()->ReadParameter( centerofrotation[ i ],
-        "CenterOfRotationPoint", this->GetComponentLabel(), i, 0 );
+    this->GetConfiguration()->ReadParameter( centerofrotation[ i ],
+      "CenterOfRotationPoint", this->GetComponentLabel(), i, 0 );
   }
 
   this->m_PreTransform->SetParameters( preParameters );
@@ -71,11 +71,11 @@ namespace elastix
   PointType focalPoint;
   focalPoint.Fill( 0.0 );
 
-  for ( unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension(); i++ )
+  for( unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension(); i++ )
   {
     bool ret = this->GetConfiguration()->ReadParameter( focalPoint[ i ],
-        "FocalPoint", this->GetComponentLabel(), i, 0 );
-    if ( !ret )
+      "FocalPoint", this->GetComponentLabel(), i, 0 );
+    if( !ret )
     {
       std::cerr << " Error, FocalPoint not assigned" << std::endl;
     }
@@ -91,105 +91,104 @@ namespace elastix
 } // end InitializeRayCastInterpolator()
 
 
-  /*
-   * ***************** BeforeAll *****************
-   */
+/*
+ * ***************** BeforeAll *****************
+ */
 
-  template <class TElastix>
-  int
-  RayCastResampleInterpolator<TElastix>
-  ::BeforeAll( void )
-  {
+template< class TElastix >
+int
+RayCastResampleInterpolator< TElastix >
+::BeforeAll( void )
+{
 
   // Check if 2D-3D
-  if ( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
+  if( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
   {
-      itkExceptionMacro( << "The RayCastInterpolator expects the fixed image to be 3D." );
-      return 1;
+    itkExceptionMacro( << "The RayCastInterpolator expects the fixed image to be 3D." );
+    return 1;
   }
-  if ( this->m_Elastix->GetMovingImage()->GetImageDimension() != 3 )
+  if( this->m_Elastix->GetMovingImage()->GetImageDimension() != 3 )
   {
-      itkExceptionMacro( << "The RayCastInterpolator expects the moving image to be 3D." );
-      return 1;
+    itkExceptionMacro( << "The RayCastInterpolator expects the moving image to be 3D." );
+    return 1;
   }
 
   return 0;
 
-  } // end BeforeAll()
+}   // end BeforeAll()
 
 
-  /*
-   * ***************** BeforeRegistration *****************
-   */
+/*
+ * ***************** BeforeRegistration *****************
+ */
 
-  template <class TElastix>
-  void
-  RayCastResampleInterpolator<TElastix>
-  ::BeforeRegistration( void )
-  {
+template< class TElastix >
+void
+RayCastResampleInterpolator< TElastix >
+::BeforeRegistration( void )
+{
 
   this->InitializeRayCastInterpolator();
 
-  } // end BeforeRegistration()
+}   // end BeforeRegistration()
 
 
-  /*
-   * ***************** ReadFromFile *****************
-   */
+/*
+ * ***************** ReadFromFile *****************
+ */
 
-  template <class TElastix>
-  void
-  RayCastResampleInterpolator<TElastix>
-  ::ReadFromFile( void )
-  {
+template< class TElastix >
+void
+RayCastResampleInterpolator< TElastix >
+::ReadFromFile( void )
+{
 
   /** Call ReadFromFile of the ResamplerBase. */
   this->Superclass2::ReadFromFile();
   this->InitializeRayCastInterpolator();
 
-  } // end ReadFromFile()
+}   // end ReadFromFile()
 
 
-  /**
-   * ******************* WriteToFile ******************************
-   */
+/**
+ * ******************* WriteToFile ******************************
+ */
 
-  template <class TElastix>
-  void
-  RayCastResampleInterpolator<TElastix>
-  ::WriteToFile( void ) const
-  {
+template< class TElastix >
+void
+RayCastResampleInterpolator< TElastix >
+::WriteToFile( void ) const
+{
 
   /** Call WriteToFile of the ResamplerBase. */
   this->Superclass2::WriteToFile();
 
   PointType focalpoint = this->GetFocalPoint();
 
-  xout["transpar"] << "(" << "FocalPoint ";
-  for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension() ; i++ )
+  xout[ "transpar" ] << "(" << "FocalPoint ";
+  for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension(); i++ )
   {
-      xout["transpar"] << focalpoint[i] << " ";
+    xout[ "transpar" ] << focalpoint[ i ] << " ";
   }
-  xout["transpar"] << ")" << std::endl;
+  xout[ "transpar" ] << ")" << std::endl;
 
-  typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ParametersType ParametersType;
+  typedef typename elastix::OptimizerBase< TElastix >::ITKBaseType::ParametersType ParametersType;
   TransformParametersType preParameters = this->m_PreTransform->GetParameters();
 
-  xout["transpar"] << "(" << "PreParameters ";
+  xout[ "transpar" ] << "(" << "PreParameters ";
 
   unsigned int numberofparameters = preParameters.GetSize();
   for( unsigned int i = 0; i < numberofparameters; i++ )
   {
-    xout["transpar"] << preParameters[i] << " ";
+    xout[ "transpar" ] << preParameters[ i ] << " ";
   }
-    xout["transpar"]<< ")" << std::endl;
+  xout[ "transpar" ] << ")" << std::endl;
 
   double threshold = this->GetThreshold();
-    xout["transpar"] << "(Threshold "
-    << threshold << ")" << std::endl;
+  xout[ "transpar" ] << "(Threshold "
+                     << threshold << ")" << std::endl;
 
-
-  } // end WriteToFile()
+}   // end WriteToFile()
 
 
 } // end namespace elastix

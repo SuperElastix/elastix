@@ -32,18 +32,18 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-StatisticalShapePenalty<TElastix>
-::Initialize( void ) throw (ExceptionObject)
+StatisticalShapePenalty< TElastix >
+::Initialize( void ) throw ( ExceptionObject )
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
   this->Superclass1::Initialize();
   timer->StopTimer();
   elxout << "Initialization of StatisticalShape metric took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
-    << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -52,24 +52,24 @@ StatisticalShapePenalty<TElastix>
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-StatisticalShapePenalty<TElastix>
+StatisticalShapePenalty< TElastix >
 ::BeforeRegistration( void )
 {
-   /** Get and set NormalizedShapeModel. Default TRUE. */
+  /** Get and set NormalizedShapeModel. Default TRUE. */
   bool normalizedShapeModel = true;
-  this->GetConfiguration()->ReadParameter( normalizedShapeModel, "NormalizedShapeModel", 0,0);
+  this->GetConfiguration()->ReadParameter( normalizedShapeModel, "NormalizedShapeModel", 0, 0 );
   this->SetNormalizedShapeModel( normalizedShapeModel );
 
-   /** Get and set NormalizedShapeModel. Default TRUE. */
+  /** Get and set NormalizedShapeModel. Default TRUE. */
   int shapeModelCalculation = 0;
-  this->GetConfiguration()->ReadParameter( shapeModelCalculation, "ShapeModelCalculation", 0,0);
+  this->GetConfiguration()->ReadParameter( shapeModelCalculation, "ShapeModelCalculation", 0, 0 );
   this->SetShapeModelCalculation( shapeModelCalculation );
 
   /** Read and set the fixed pointset. */
   std::string fixedName = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
-  typename PointSetType::Pointer fixedPointSet = 0;
+  typename PointSetType::Pointer fixedPointSet      = 0;
   const typename ImageType::ConstPointer fixedImage = this->GetElastix()->GetFixedImage();
   const unsigned int nrOfFixedPoints = this->ReadShape(
     fixedName, fixedPointSet, fixedImage );
@@ -80,20 +80,20 @@ StatisticalShapePenalty<TElastix>
   this->SetMovingPointSet( fixedPointSet ); // TODO: make itkCombinationImageToImageMetric check for a base class metric that doesn't use an image or moving pointset.
 
   /** Read meanVector filename. */
-  std::string meanVectorName = this->GetConfiguration()->GetCommandLineArgument( "-mean" );
-  vcl_ifstream datafile;
-  vnl_vector<double>* const meanVector = new vnl_vector<double>();
-  datafile.open(meanVectorName.c_str());
+  std::string                  meanVectorName = this->GetConfiguration()->GetCommandLineArgument( "-mean" );
+  vcl_ifstream                 datafile;
+  vnl_vector< double > * const meanVector = new vnl_vector< double >();
+  datafile.open( meanVectorName.c_str() );
   if( datafile.is_open() )
   {
-    meanVector->read_ascii(datafile);
+    meanVector->read_ascii( datafile );
     datafile.close();
     datafile.clear();
     elxout << " meanVector " << meanVectorName << " read" << std::endl;
   }
   else
   {
-    itkExceptionMacro( << "Unable to open meanVector file: " << meanVectorName);
+    itkExceptionMacro( << "Unable to open meanVector file: " << meanVectorName );
   }
   this->SetMeanVector( meanVector );
 
@@ -103,10 +103,10 @@ StatisticalShapePenalty<TElastix>
     if( nrOfFixedPoints * Self::FixedPointSetDimension != meanVector->size() - Self::FixedPointSetDimension - 1 )
     {
       itkExceptionMacro( << "ERROR: the number of elements in the meanVector (" << meanVector->size()
-        << ") does not match the number of points of the fixed pointset ("
-        << nrOfFixedPoints << ") times the point dimensionality (" <<
-        Self::FixedPointSetDimension << ") plus a Centroid of dimension " <<
-        Self::FixedPointSetDimension << " plus a size element");
+                         << ") does not match the number of points of the fixed pointset ("
+                         << nrOfFixedPoints << ") times the point dimensionality ("
+                         << Self::FixedPointSetDimension << ") plus a Centroid of dimension "
+                         << Self::FixedPointSetDimension << " plus a size element" );
     }
   }
   else
@@ -114,40 +114,40 @@ StatisticalShapePenalty<TElastix>
     if( nrOfFixedPoints * Self::FixedPointSetDimension != meanVector->size() )
     {
       itkExceptionMacro( << "ERROR: the number of elements in the meanVector (" << meanVector->size()
-        << ") does not match the number of points of the fixed pointset ("
-        << nrOfFixedPoints << ") times the point dimensionality (" <<
-        Self::FixedPointSetDimension << ")");
+                         << ") does not match the number of points of the fixed pointset ("
+                         << nrOfFixedPoints << ") times the point dimensionality ("
+                         << Self::FixedPointSetDimension << ")" );
     }
   }
 
   /** Read covariancematrix filename. */
   std::string covarianceMatrixName = this->GetConfiguration()->GetCommandLineArgument( "-covariance" );
 
-  vnl_matrix<double> * const covarianceMatrix = new vnl_matrix<double>();
+  vnl_matrix< double > * const covarianceMatrix = new vnl_matrix< double >();
 
-  datafile.open(covarianceMatrixName.c_str());
+  datafile.open( covarianceMatrixName.c_str() );
   if( datafile.is_open() )
   {
-    covarianceMatrix->read_ascii(datafile);
+    covarianceMatrix->read_ascii( datafile );
     datafile.close();
     datafile.clear();
     elxout << "covarianceMatrix " << covarianceMatrixName << " read" << std::endl;
   }
   else
   {
-    itkExceptionMacro( << "Unable to open covarianceMatrix file: " << covarianceMatrixName);
+    itkExceptionMacro( << "Unable to open covarianceMatrix file: " << covarianceMatrixName );
   }
   this->SetCovarianceMatrix( covarianceMatrix );
 
   /** Read eigenvectormatrix filename. */
   std::string eigenVectorsName = this->GetConfiguration()->GetCommandLineArgument( "-evectors" );
 
-  vnl_matrix<double>* const eigenVectors = new vnl_matrix<double>();
+  vnl_matrix< double > * const eigenVectors = new vnl_matrix< double >();
 
-  datafile.open(eigenVectorsName.c_str());
+  datafile.open( eigenVectorsName.c_str() );
   if( datafile.is_open() )
   {
-    eigenVectors->read_ascii(datafile);
+    eigenVectors->read_ascii( datafile );
     datafile.close();
     datafile.clear();
     elxout << "eigenvectormatrix " << eigenVectorsName << " read" << std::endl;
@@ -160,12 +160,12 @@ StatisticalShapePenalty<TElastix>
   this->SetEigenVectors( eigenVectors );
 
   /** Read eigenvaluevector filename. */
-  std::string eigenValuesName = this->GetConfiguration()->GetCommandLineArgument( "-evalues" );
-  vnl_vector<double>* const eigenValues = new vnl_vector<double>();
+  std::string                  eigenValuesName = this->GetConfiguration()->GetCommandLineArgument( "-evalues" );
+  vnl_vector< double > * const eigenValues     = new vnl_vector< double >();
   datafile.open( eigenValuesName.c_str() );
   if( datafile.is_open() )
   {
-    eigenValues->read_ascii(datafile);
+    eigenValues->read_ascii( datafile );
     datafile.close();
     datafile.clear();
     elxout << "eigenvaluevector " << eigenValuesName << " read" << std::endl;
@@ -174,7 +174,7 @@ StatisticalShapePenalty<TElastix>
   {
     //itkExceptionMacro( << "Unable to open EigenValues file: " << eigenValuesName);
   }
-  this->SetEigenValues(eigenValues);
+  this->SetEigenValues( eigenValues );
 
 } // end BeforeRegistration()
 
@@ -183,19 +183,19 @@ StatisticalShapePenalty<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-StatisticalShapePenalty<TElastix>
+StatisticalShapePenalty< TElastix >
 ::BeforeEachResolution( void )
 {
-    /** Get the current resolution level. */
+  /** Get the current resolution level. */
   unsigned int level
     = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Get and set ShrinkageIntensity. Default 0.5. */
   double shrinkageIntensity = 0.5;
   this->GetConfiguration()->ReadParameter( shrinkageIntensity, "ShrinkageIntensity",
-  this->GetComponentLabel(), level, 0 );
+    this->GetComponentLabel(), level, 0 );
 
   if( this->GetShrinkageIntensity() != shrinkageIntensity )
   {
@@ -277,23 +277,23 @@ StatisticalShapePenalty<TElastix>
  * ***************** ReadLandmarks ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 unsigned int
-StatisticalShapePenalty<TElastix>
+StatisticalShapePenalty< TElastix >
 ::ReadLandmarks(
   const std::string & landmarkFileName,
   typename PointSetType::Pointer & pointSet,
   const typename ImageType::ConstPointer image )
 {
   /** Typedefs. */
-  typedef typename ImageType::IndexType       IndexType;
-  typedef typename ImageType::IndexValueType  IndexValueType;
-  typedef typename ImageType::PointType       PointType;
+  typedef typename ImageType::IndexType      IndexType;
+  typedef typename ImageType::IndexValueType IndexValueType;
+  typedef typename ImageType::PointType      PointType;
   typedef itk::TransformixInputPointFileReader<
     PointSetType >                            PointSetReaderType;
 
   elxout << "Loading landmarks for " << this->GetComponentLabel()
-    << ":" << this->elxGetClassName() << "." << std::endl;
+         << ":" << this->elxGetClassName() << "." << std::endl;
 
   /** Read the landmarks. */
   typename PointSetReaderType::Pointer reader = PointSetReaderType::New();
@@ -305,8 +305,8 @@ StatisticalShapePenalty<TElastix>
   }
   catch( itk::ExceptionObject & err )
   {
-    xl::xout["error"] << "  Error while opening " << landmarkFileName << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout[ "error" ] << "  Error while opening " << landmarkFileName << std::endl;
+    xl::xout[ "error" ] << err << std::endl;
     itkExceptionMacro( << "ERROR: unable to configure " << this->GetComponentLabel() );
   }
 
@@ -339,7 +339,7 @@ StatisticalShapePenalty<TElastix>
       pointSet->GetPoint( j, &point );
       for( unsigned int d = 0; d < FixedImageDimension; ++d )
       {
-        index[ d ] = static_cast<IndexValueType>( vnl_math_rnd( point[ d ] ) );
+        index[ d ] = static_cast< IndexValueType >( vnl_math_rnd( point[ d ] ) );
       }
 
       /** Compute the input point in physical coordinates. */
@@ -347,7 +347,7 @@ StatisticalShapePenalty<TElastix>
       pointSet->SetPoint( j, point );
 
     } // end for all points
-  } // end for points are indices
+  }   // end for points are indices
 
   return nrofpoints;
 
@@ -365,22 +365,22 @@ StatisticalShapePenalty<TElastix>
  * Computes the transformed points, save as outputpoints.vtk.
  */
 
-template <class TElastix>
+template< class TElastix >
 unsigned int
-StatisticalShapePenalty<TElastix>
+StatisticalShapePenalty< TElastix >
 ::ReadShape(
   const std::string & ShapeFileName,
   typename PointSetType::Pointer & pointSet,
   const typename ImageType::ConstPointer image )
 {
   /** Typedef's. \todo test DummyIPPPixelType=bool. */
-  typedef double                                        DummyIPPPixelType;
+  typedef double DummyIPPPixelType;
   typedef DefaultStaticMeshTraits<
     DummyIPPPixelType, FixedImageDimension,
-    FixedImageDimension, CoordRepType>                  MeshTraitsType;
+    FixedImageDimension, CoordRepType >                  MeshTraitsType;
   typedef Mesh< DummyIPPPixelType,
     FixedImageDimension, MeshTraitsType >               MeshType;
-  typedef VTKPolyDataReader< MeshType >                 MeshReaderType;
+  typedef VTKPolyDataReader< MeshType > MeshReaderType;
 
   /** Read the input points. */
   typename MeshReaderType::Pointer meshReader = MeshReaderType::New();
@@ -392,8 +392,8 @@ StatisticalShapePenalty<TElastix>
   }
   catch( ExceptionObject & err )
   {
-    xl::xout["error"] << "  Error while opening input point file." << std::endl;
-    xl::xout["error"] << err << std::endl;
+    xl::xout[ "error" ] << "  Error while opening input point file." << std::endl;
+    xl::xout[ "error" ] << err << std::endl;
   }
 
   /** Some user-feedback. */
@@ -402,13 +402,13 @@ StatisticalShapePenalty<TElastix>
   elxout << "  Number of specified input points: " << nrofpoints << std::endl;
 
   typename MeshType::Pointer mesh = meshReader->GetOutput();
-  pointSet = PointSetType::New();
+  pointSet                        = PointSetType::New();
   pointSet->SetPoints( mesh->GetPoints() );
   return nrofpoints;
 
 } // end ReadShape()
 
-} // end namespace elastix
 
+} // end namespace elastix
 
 #endif // end #ifndef __elxStatisticalShapePenalty_HXX__

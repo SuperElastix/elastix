@@ -21,7 +21,6 @@
 #include "elxBaseComponentSE.h"
 #include "itkOptimizer.h"
 
-
 namespace elastix
 {
 
@@ -46,46 +45,48 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template <class TElastix>
-class OptimizerBase : public BaseComponentSE<TElastix>
+template< class TElastix >
+class OptimizerBase : public BaseComponentSE< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
   typedef OptimizerBase               Self;
-  typedef BaseComponentSE<TElastix>   Superclass;
+  typedef BaseComponentSE< TElastix > Superclass;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( OptimizerBase, BaseComponentSE );
 
   /** Typedefs inherited from Elastix. */
-  typedef typename Superclass::ElastixType            ElastixType;
-  typedef typename Superclass::ElastixPointer         ElastixPointer;
-  typedef typename Superclass::ConfigurationType      ConfigurationType;
-  typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
-  typedef typename Superclass::RegistrationType       RegistrationType;
-  typedef typename Superclass::RegistrationPointer    RegistrationPointer;
+  typedef typename Superclass::ElastixType          ElastixType;
+  typedef typename Superclass::ElastixPointer       ElastixPointer;
+  typedef typename Superclass::ConfigurationType    ConfigurationType;
+  typedef typename Superclass::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass::RegistrationType     RegistrationType;
+  typedef typename Superclass::RegistrationPointer  RegistrationPointer;
 
   /** ITKBaseType. */
-  typedef itk::Optimizer  ITKBaseType;
+  typedef itk::Optimizer ITKBaseType;
 
   /** Typedef needed for the SetCurrentPositionPublic function. */
-  typedef typename ITKBaseType::ParametersType        ParametersType;
+  typedef typename ITKBaseType::ParametersType ParametersType;
 
   /** Cast to ITKBaseType. */
-  virtual ITKBaseType * GetAsITKBaseType(void)
+  virtual ITKBaseType * GetAsITKBaseType( void )
   {
-    return dynamic_cast<ITKBaseType *>(this);
+    return dynamic_cast< ITKBaseType * >( this );
   }
+
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType * GetAsITKBaseType(void) const
+  virtual const ITKBaseType * GetAsITKBaseType( void ) const
   {
-    return dynamic_cast<const ITKBaseType *>(this);
+    return dynamic_cast< const ITKBaseType * >( this );
   }
 
+
   /** Add empty SetCurrentPositionPublic, so this function is known in every inherited class. */
-  virtual void SetCurrentPositionPublic( const ParametersType &param );
+  virtual void SetCurrentPositionPublic( const ParametersType & param );
 
   /** Execute stuff before each new pyramid resolution:
    * \li Find out if new samples are used every new iteration in this resolution.
@@ -100,8 +101,8 @@ public:
   /** Method that sets the scales defined by a sinus
    * scale[i] = amplitude^( sin(i/nrofparam*2pi*frequency) )
    */
-  virtual void SetSinusScales(double amplitude, double frequency,
-    unsigned long numberOfParameters);
+  virtual void SetSinusScales( double amplitude, double frequency,
+    unsigned long numberOfParameters );
 
 protected:
 
@@ -113,7 +114,7 @@ protected:
   /** Force the metric to base its computation on a new subset of image samples.
    * Not every metric may have implemented this.
    */
-  virtual void SelectNewSamples(void);
+  virtual void SelectNewSamples( void );
 
   /** Check whether the user asked to select new samples every iteration. */
   virtual bool GetNewSamplesEveryIteration( void ) const;
@@ -121,9 +122,9 @@ protected:
 private:
 
   /** The private constructor. */
-  OptimizerBase( const Self& );   // purposely not implemented
+  OptimizerBase( const Self & );   // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );  // purposely not implemented
+  void operator=( const Self & );  // purposely not implemented
 
   /** Member variable to store the user preference for using new
    * samples each iteration.
@@ -132,9 +133,7 @@ private:
 
 };
 
-
 } // end namespace elastix
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxOptimizerBase.hxx"

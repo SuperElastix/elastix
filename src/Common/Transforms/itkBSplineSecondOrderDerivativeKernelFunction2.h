@@ -20,7 +20,6 @@
 #include "itkKernelFunctionBase.h"
 #include "vnl/vnl_math.h"
 
-
 namespace itk
 {
 
@@ -39,14 +38,15 @@ namespace itk
  *
  * \ingroup Functions
  */
-template <unsigned int VSplineOrder = 3>
-class BSplineSecondOrderDerivativeKernelFunction2 : public KernelFunctionBase<double>
+template< unsigned int VSplineOrder = 3 >
+class BSplineSecondOrderDerivativeKernelFunction2 : public KernelFunctionBase< double >
 {
 public:
+
   /** Standard class typedefs. */
   typedef BSplineSecondOrderDerivativeKernelFunction2 Self;
-  typedef KernelFunctionBase<double>      Superclass;
-  typedef SmartPointer<Self>              Pointer;
+  typedef KernelFunctionBase< double >                Superclass;
+  typedef SmartPointer< Self >                        Pointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -63,29 +63,33 @@ public:
 //    return ( m_KernelFunction->Evaluate( u + 0.5 ) -
 //      m_KernelFunction->Evaluate( u - 0.5 ) );
 //    }
-  /** Evaluate the function. */
+/** Evaluate the function. */
   inline double Evaluate( const double & u ) const
   {
-    return this->Evaluate( Dispatch<VSplineOrder>(), u );
+    return this->Evaluate( Dispatch< VSplineOrder >(), u );
   }
 
-protected:
-  BSplineSecondOrderDerivativeKernelFunction2(){};
-  ~BSplineSecondOrderDerivativeKernelFunction2(){};
 
-  void PrintSelf(std::ostream& os, Indent indent) const
-    {
+protected:
+
+  BSplineSecondOrderDerivativeKernelFunction2(){}
+  ~BSplineSecondOrderDerivativeKernelFunction2(){}
+
+  void PrintSelf( std::ostream & os, Indent indent ) const
+  {
     Superclass::PrintSelf( os, indent );
     os << indent  << "Spline Order: " << SplineOrder << std::endl;
-    }
+  }
+
 
 private:
-  BSplineSecondOrderDerivativeKernelFunction2(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  BSplineSecondOrderDerivativeKernelFunction2( const Self & ); // purposely not implemented
+  void operator=( const Self & );                              // purposely not implemented
 
   /** Structures to control overloaded versions of Evaluate */
   struct DispatchBase {};
-  template<unsigned int>
+  template< unsigned int >
   struct Dispatch : DispatchBase {};
 
   /** Zeroth order spline. *
@@ -131,23 +135,23 @@ private:
   }*/
 
   /** Second order spline. */
-  inline double Evaluate ( const Dispatch<2>&, const double& u) const
+  inline double Evaluate( const Dispatch< 2 > &, const double & u ) const
   {
     double absValue = vnl_math_abs( u );
 
-    if ( absValue < 0.5 )
+    if( absValue < 0.5 )
     {
       return -2.0;
     }
-    else if ( absValue == 0.5 )
+    else if( absValue == 0.5 )
     {
       return -0.5;
     }
-    else if ( absValue < 1.5 )
+    else if( absValue < 1.5 )
     {
       return 1.0;
     }
-    else if ( absValue == 1.5 )
+    else if( absValue == 1.5 )
     {
       return 0.5;
     }
@@ -158,16 +162,17 @@ private:
 
   }
 
+
   /**  Third order spline. */
-  inline double Evaluate ( const Dispatch<3>&, const double& u) const
+  inline double Evaluate( const Dispatch< 3 > &, const double & u ) const
   {
     const double absValue = vnl_math_abs( u );
 
-    if ( absValue < 1.0 )
+    if( absValue < 1.0 )
     {
       return vnl_math_sgn0( u ) * ( 3.0 * u ) - 2.0;
     }
-    else if ( absValue < 2.0 )
+    else if( absValue < 2.0 )
     {
       return -vnl_math_sgn( u ) * u + 2.0;
     }
@@ -178,17 +183,18 @@ private:
 
   }
 
+
   /** Unimplemented spline order */
-  inline double Evaluate ( const DispatchBase&, const double&) const
+  inline double Evaluate( const DispatchBase &, const double & ) const
   {
-    itkExceptionMacro("Evaluate not implemented for spline\
-                      order " << SplineOrder);
+    itkExceptionMacro( "Evaluate not implemented for spline\
+                      order "                                                              << SplineOrder );
     return 0.0; // This is to avoid compiler warning about missing
     // return statement.  It should never be evaluated.
   }
 
-};
 
+};
 
 } // end namespace itk
 

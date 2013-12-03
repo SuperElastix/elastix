@@ -18,7 +18,6 @@
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkBSplineKernelFunction.h"
 
-
 namespace itk
 {
 /**
@@ -67,68 +66,64 @@ namespace itk
  * \ingroup Metrics
  */
 
-template <class TFixedImage,class TMovingImage >
-class ParzenWindowHistogramImageToImageMetric
-  : public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+template< class TFixedImage, class TMovingImage >
+class ParzenWindowHistogramImageToImageMetric :
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef ParzenWindowHistogramImageToImageMetric                     Self;
-  typedef AdvancedImageToImageMetric< TFixedImage, TMovingImage >     Superclass;
-  typedef SmartPointer<Self>                                          Pointer;
-  typedef SmartPointer<const Self>                                    ConstPointer;
+  typedef ParzenWindowHistogramImageToImageMetric                 Self;
+  typedef AdvancedImageToImageMetric< TFixedImage, TMovingImage > Superclass;
+  typedef SmartPointer< Self >                                    Pointer;
+  typedef SmartPointer< const Self >                              ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( ParzenWindowHistogramImageToImageMetric, AdvancedImageToImageMetric );
 
   /** Typedefs from the superclass. */
-  typedef typename
-    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
-  typedef typename Superclass::MovingImageType            MovingImageType;
-  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
-  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
-  typedef typename Superclass::FixedImageType             FixedImageType;
-  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename Superclass::TransformPointer           TransformPointer;
-  typedef typename Superclass::InputPointType             InputPointType;
-  typedef typename Superclass::OutputPointType            OutputPointType;
-  typedef typename Superclass::TransformParametersType    TransformParametersType;
-  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
-  typedef typename Superclass::InterpolatorType           InterpolatorType;
-  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
-  typedef typename Superclass::RealType                   RealType;
-  typedef typename Superclass::GradientPixelType          GradientPixelType;
-  typedef typename Superclass::GradientImageType          GradientImageType;
-  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
-  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
-  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
-  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
-  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
-  typedef typename Superclass::MeasureType                MeasureType;
-  typedef typename Superclass::DerivativeType             DerivativeType;
-  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
-  typedef typename Superclass::ParametersType             ParametersType;
-  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
-  typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
-  typedef typename Superclass::ImageSamplerType           ImageSamplerType;
-  typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
-  typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename
-    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
-  typedef typename
-    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
-  typedef typename
-    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-  typedef typename
-    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-  typedef typename Superclass::ThreaderType               ThreaderType;
-  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
+  typedef typename Superclass::CoordinateRepresentationType    CoordinateRepresentationType;
+  typedef typename Superclass::MovingImageType                 MovingImageType;
+  typedef typename Superclass::MovingImagePixelType            MovingImagePixelType;
+  typedef typename Superclass::MovingImageConstPointer         MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType                  FixedImageType;
+  typedef typename Superclass::FixedImageConstPointer          FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType            FixedImageRegionType;
+  typedef typename Superclass::TransformType                   TransformType;
+  typedef typename Superclass::TransformPointer                TransformPointer;
+  typedef typename Superclass::InputPointType                  InputPointType;
+  typedef typename Superclass::OutputPointType                 OutputPointType;
+  typedef typename Superclass::TransformParametersType         TransformParametersType;
+  typedef typename Superclass::TransformJacobianType           TransformJacobianType;
+  typedef typename Superclass::InterpolatorType                InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer             InterpolatorPointer;
+  typedef typename Superclass::RealType                        RealType;
+  typedef typename Superclass::GradientPixelType               GradientPixelType;
+  typedef typename Superclass::GradientImageType               GradientImageType;
+  typedef typename Superclass::GradientImagePointer            GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType         GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer      GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType              FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer           FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType             MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer          MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                     MeasureType;
+  typedef typename Superclass::DerivativeType                  DerivativeType;
+  typedef typename Superclass::DerivativeValueType             DerivativeValueType;
+  typedef typename Superclass::ParametersType                  ParametersType;
+  typedef typename Superclass::FixedImagePixelType             FixedImagePixelType;
+  typedef typename Superclass::MovingImageRegionType           MovingImageRegionType;
+  typedef typename Superclass::ImageSamplerType                ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer             ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType        ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer     ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType           FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType          MovingImageLimiterType;
+  typedef typename Superclass::FixedImageLimiterOutputType     FixedImageLimiterOutputType;
+  typedef typename Superclass::MovingImageLimiterOutputType    MovingImageLimiterOutputType;
+  typedef typename Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  typedef typename Superclass::ThreaderType                    ThreaderType;
+  typedef typename Superclass::ThreadInfoType                  ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -151,7 +146,7 @@ public:
    * as just computing the derivative.
    */
   void GetDerivative(
-    const ParametersType& parameters,
+    const ParametersType & parameters,
     DerivativeType & Derivative ) const;
 
   /**  Get the value and derivatives for single valued optimizers.
@@ -159,8 +154,8 @@ public:
    * this->GetValueAndFiniteDifferenceDerivative, depending on the bool
    * m_UseFiniteDifferenceDerivative.
    */
-  void GetValueAndDerivative( const ParametersType& parameters,
-    MeasureType& value, DerivativeType& derivative ) const;
+  void GetValueAndDerivative( const ParametersType & parameters,
+    MeasureType & value, DerivativeType & derivative ) const;
 
   /** Number of bins to use for the fixed image in the histogram.
    * Typical value is 32.  The minimum value is 4 due to the padding
@@ -169,8 +164,8 @@ public:
    * should at least be equal to four.
    */
   itkSetClampMacro( NumberOfFixedHistogramBins, unsigned long,
-    4, NumericTraits<unsigned long>::max() );
-  itkGetMacro( NumberOfFixedHistogramBins, unsigned long);
+    4, NumericTraits< unsigned long >::max() );
+  itkGetMacro( NumberOfFixedHistogramBins, unsigned long );
 
   /** Number of bins to use for the moving image in the histogram.
    * Typical value is 32.  The minimum value is 4 due to the padding
@@ -179,8 +174,8 @@ public:
    * should at least be equal to four.
    */
   itkSetClampMacro( NumberOfMovingHistogramBins, unsigned long,
-    4, NumericTraits<unsigned long>::max() );
-  itkGetMacro( NumberOfMovingHistogramBins, unsigned long);
+    4, NumericTraits< unsigned long >::max() );
+  itkGetMacro( NumberOfMovingHistogramBins, unsigned long );
 
   /** The B-spline order of the fixed Parzen window; default: 0 */
   itkSetClampMacro( FixedKernelBSplineOrder, unsigned int, 0, 3 );
@@ -217,6 +212,7 @@ public:
   itkGetConstMacro( FiniteDifferencePerturbation, double );
 
   //mutable std::vector<float> m_TemporaryNormalizedSumJointPDF;
+
 protected:
 
   /** The constructor. */
@@ -226,73 +222,73 @@ protected:
   virtual ~ParzenWindowHistogramImageToImageMetric();
 
   /** Print Self. */
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
 
   /** Typedefs inherited from superclass. */
-  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-  typedef typename FixedImageType::OffsetValueType                OffsetValueType;
-  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
-  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
-  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-  typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
-  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
+  typedef typename Superclass::FixedImageIndexType                 FixedImageIndexType;
+  typedef typename Superclass::FixedImageIndexValueType            FixedImageIndexValueType;
+  typedef typename FixedImageType::OffsetValueType                 OffsetValueType;
+  typedef typename Superclass::MovingImageIndexType                MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType                 FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType                MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType      MovingImageContinuousIndexType;
+  typedef typename Superclass::BSplineInterpolatorType             BSplineInterpolatorType;
+  typedef typename Superclass::MovingImageDerivativeType           MovingImageDerivativeType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  typedef typename Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
 
   /** Typedefs for the PDFs and PDF derivatives. */
-  typedef double                                  PDFValueType;
-  typedef float                                   PDFDerivativeValueType;
-  typedef Array<PDFValueType>                     MarginalPDFType;
-  typedef Image<PDFValueType,2>                   JointPDFType;
-  typedef typename JointPDFType::Pointer          JointPDFPointer;
-  typedef Image<PDFDerivativeValueType,3>         JointPDFDerivativesType;
-  typedef typename JointPDFDerivativesType::Pointer JointPDFDerivativesPointer;
-  typedef Image<PDFValueType,2>                   IncrementalMarginalPDFType;
-  typedef typename IncrementalMarginalPDFType::Pointer  IncrementalMarginalPDFPointer;
-  typedef JointPDFType::IndexType                 JointPDFIndexType;
-  typedef JointPDFType::RegionType                JointPDFRegionType;
-  typedef JointPDFType::SizeType                  JointPDFSizeType;
-  typedef JointPDFDerivativesType::IndexType      JointPDFDerivativesIndexType;
-  typedef JointPDFDerivativesType::RegionType     JointPDFDerivativesRegionType;
-  typedef JointPDFDerivativesType::SizeType       JointPDFDerivativesSizeType;
-  typedef IncrementalMarginalPDFType::IndexType   IncrementalMarginalPDFIndexType;
-  typedef IncrementalMarginalPDFType::RegionType  IncrementalMarginalPDFRegionType;
-  typedef IncrementalMarginalPDFType::SizeType    IncrementalMarginalPDFSizeType;
-  typedef Array<PDFValueType>                     ParzenValueContainerType;
+  typedef double                                       PDFValueType;
+  typedef float                                        PDFDerivativeValueType;
+  typedef Array< PDFValueType >                        MarginalPDFType;
+  typedef Image< PDFValueType, 2 >                     JointPDFType;
+  typedef typename JointPDFType::Pointer               JointPDFPointer;
+  typedef Image< PDFDerivativeValueType, 3 >           JointPDFDerivativesType;
+  typedef typename JointPDFDerivativesType::Pointer    JointPDFDerivativesPointer;
+  typedef Image< PDFValueType, 2 >                     IncrementalMarginalPDFType;
+  typedef typename IncrementalMarginalPDFType::Pointer IncrementalMarginalPDFPointer;
+  typedef JointPDFType::IndexType                      JointPDFIndexType;
+  typedef JointPDFType::RegionType                     JointPDFRegionType;
+  typedef JointPDFType::SizeType                       JointPDFSizeType;
+  typedef JointPDFDerivativesType::IndexType           JointPDFDerivativesIndexType;
+  typedef JointPDFDerivativesType::RegionType          JointPDFDerivativesRegionType;
+  typedef JointPDFDerivativesType::SizeType            JointPDFDerivativesSizeType;
+  typedef IncrementalMarginalPDFType::IndexType        IncrementalMarginalPDFIndexType;
+  typedef IncrementalMarginalPDFType::RegionType       IncrementalMarginalPDFRegionType;
+  typedef IncrementalMarginalPDFType::SizeType         IncrementalMarginalPDFSizeType;
+  typedef Array< PDFValueType >                        ParzenValueContainerType;
 
   /** Typedefs for Parzen kernel. */
-  typedef KernelFunctionBase<PDFValueType>        KernelFunctionType;
-  typedef typename KernelFunctionType::Pointer    KernelFunctionPointer;
+  typedef KernelFunctionBase< PDFValueType >   KernelFunctionType;
+  typedef typename KernelFunctionType::Pointer KernelFunctionPointer;
 
   /** Protected variables **************************** */
 
   /** Variables for Alpha (the normalization factor of the histogram). */
-  mutable double                                m_Alpha;
-  mutable DerivativeType                        m_PerturbedAlphaRight;
-  mutable DerivativeType                        m_PerturbedAlphaLeft;
+  mutable double         m_Alpha;
+  mutable DerivativeType m_PerturbedAlphaRight;
+  mutable DerivativeType m_PerturbedAlphaLeft;
 
   /** Variables for the pdfs (actually: histograms). */
-  mutable MarginalPDFType                       m_FixedImageMarginalPDF;
-  mutable MarginalPDFType                       m_MovingImageMarginalPDF;
-  JointPDFPointer                               m_JointPDF;
-  JointPDFDerivativesPointer  m_JointPDFDerivatives;
-  JointPDFDerivativesPointer  m_IncrementalJointPDFRight;
-  JointPDFDerivativesPointer  m_IncrementalJointPDFLeft;
-  IncrementalMarginalPDFPointer  m_FixedIncrementalMarginalPDFRight;
-  IncrementalMarginalPDFPointer  m_MovingIncrementalMarginalPDFRight;
-  IncrementalMarginalPDFPointer  m_FixedIncrementalMarginalPDFLeft;
-  IncrementalMarginalPDFPointer  m_MovingIncrementalMarginalPDFLeft;
-  mutable JointPDFRegionType                    m_JointPDFWindow;// no need for mutable anymore?
-  double m_MovingImageNormalizedMin;
-  double m_FixedImageNormalizedMin;
-  double m_FixedImageBinSize;
-  double m_MovingImageBinSize;
-  double m_FixedParzenTermToIndexOffset;
-  double m_MovingParzenTermToIndexOffset;
+  mutable MarginalPDFType       m_FixedImageMarginalPDF;
+  mutable MarginalPDFType       m_MovingImageMarginalPDF;
+  JointPDFPointer               m_JointPDF;
+  JointPDFDerivativesPointer    m_JointPDFDerivatives;
+  JointPDFDerivativesPointer    m_IncrementalJointPDFRight;
+  JointPDFDerivativesPointer    m_IncrementalJointPDFLeft;
+  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFRight;
+  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFRight;
+  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFLeft;
+  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFLeft;
+  mutable JointPDFRegionType    m_JointPDFWindow;                // no need for mutable anymore?
+  double                        m_MovingImageNormalizedMin;
+  double                        m_FixedImageNormalizedMin;
+  double                        m_FixedImageBinSize;
+  double                        m_MovingImageBinSize;
+  double                        m_FixedParzenTermToIndexOffset;
+  double                        m_MovingParzenTermToIndexOffset;
 
   /** Kernels for computing Parzen histograms and derivatives. */
   KernelFunctionPointer m_FixedKernel;
@@ -300,7 +296,7 @@ protected:
   KernelFunctionPointer m_DerivativeMovingKernel;
 
   /** Threading related parameters. */
-  mutable std::vector<JointPDFPointer>  m_ThreaderJointPDFs;
+  mutable std::vector< JointPDFPointer > m_ThreaderJointPDFs;
 
   /** Helper structs that multi-threads the computation of
    * the metric derivative using ITK threads.
@@ -309,19 +305,19 @@ protected:
   {
     Self * m_Metric;
   };
-  ParzenWindowHistogramMultiThreaderParameterType  m_ParzenWindowHistogramThreaderParameters;
+  ParzenWindowHistogramMultiThreaderParameterType m_ParzenWindowHistogramThreaderParameters;
 
   struct ParzenWindowHistogramGetValueAndDerivativePerThreadStruct
   {
-    SizeValueType         st_NumberOfPixelsCounted;
-    JointPDFPointer       st_JointPDF;
+    SizeValueType   st_NumberOfPixelsCounted;
+    JointPDFPointer st_JointPDF;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, ParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
     PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct );
   itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedParzenWindowHistogramGetValueAndDerivativePerThreadStruct,
     AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct );
   mutable AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct * m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
-  mutable ThreadIdType m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize;
+  mutable ThreadIdType                                                       m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize;
 
   /** Initialize threading related parameters. */
   virtual void InitializeThreadingParameters( void ) const;
@@ -457,10 +453,12 @@ protected:
    * not do this explicitly.
    */
   virtual void ComputePDFsSingleThreaded( const ParametersType & parameters ) const;
+
   virtual void ComputePDFs( const ParametersType & parameters ) const;
 
   /** Some initialization functions, called by Initialize. */
   virtual void InitializeHistograms( void );
+
   virtual void InitializeKernels( void );
 
   /** Get the value and analytic derivatives for single valued optimizers.
@@ -470,7 +468,7 @@ protected:
   virtual void GetValueAndAnalyticDerivative(
     const ParametersType & itkNotUsed( parameters ),
     MeasureType & itkNotUsed( value ),
-    DerivativeType & itkNotUsed( derivative ) ) const {};
+    DerivativeType & itkNotUsed( derivative ) ) const {}
 
   /** Get the value and finite difference derivatives for single valued optimizers.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == true
@@ -479,14 +477,14 @@ protected:
   virtual void GetValueAndFiniteDifferenceDerivative(
     const ParametersType & itkNotUsed( parameters ),
     MeasureType & itkNotUsed( value ),
-    DerivativeType & itkNotUsed( derivative ) ) const {};
+    DerivativeType & itkNotUsed( derivative ) ) const {}
 
 private:
 
   /** The private constructor. */
-  ParzenWindowHistogramImageToImageMetric( const Self& ); // purposely not implemented
+  ParzenWindowHistogramImageToImageMetric( const Self & ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );                          // purposely not implemented
+  void operator=( const Self & );                          // purposely not implemented
 
   /** Variables that can/should be accessed by their Set/Get functions. */
   unsigned long m_NumberOfFixedHistogramBins;

@@ -20,85 +20,84 @@
 namespace elastix
 {
 
-  /**
-   * \class MovingShrinkingPyramid
-   * \brief A pyramid based on the itk::MultiResolutionShrinkPyramidImageFilter.
-   *
-   * The parameters used in this class are:
-   * \parameter FixedImagePyramid: Select this pyramid as follows:\n
-   *    <tt>(MovingImagePyramid "MovingShrinkingImagePyramid")</tt>
-   *
-   * \ingroup ImagePyramids
+/**
+ * \class MovingShrinkingPyramid
+ * \brief A pyramid based on the itk::MultiResolutionShrinkPyramidImageFilter.
+ *
+ * The parameters used in this class are:
+ * \parameter FixedImagePyramid: Select this pyramid as follows:\n
+ *    <tt>(MovingImagePyramid "MovingShrinkingImagePyramid")</tt>
+ *
+ * \ingroup ImagePyramids
+ */
+
+template< class TElastix >
+class MovingShrinkingPyramid :
+  public
+  itk::MultiResolutionShrinkPyramidImageFilter<
+  typename MovingImagePyramidBase< TElastix >::InputImageType,
+  typename MovingImagePyramidBase< TElastix >::OutputImageType >,
+  public
+  MovingImagePyramidBase< TElastix >
+{
+public:
+
+  /** Standard ITK-stuff. */
+  typedef MovingShrinkingPyramid Self;
+  typedef itk::MultiResolutionShrinkPyramidImageFilter<
+    typename MovingImagePyramidBase< TElastix >::InputImageType,
+    typename MovingImagePyramidBase< TElastix >::OutputImageType > Superclass1;
+  typedef MovingImagePyramidBase< TElastix > Superclass2;
+  typedef itk::SmartPointer< Self >          Pointer;
+  typedef itk::SmartPointer< const Self >    ConstPointer;
+
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
+
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( MovingShrinkingPyramid, itk::MultiResolutionShrinkPyramidImageFilter );
+
+  /** Name of this class.
+   * Use this name in the parameter file to select this specific pyramid. \n
+   * example: <tt>(MovingImagePyramid "MovingShrinkingImagePyramid")</tt>\n
    */
+  elxClassNameMacro( "MovingShrinkingImagePyramid" );
 
-  template <class TElastix>
-    class MovingShrinkingPyramid :
-    public
-      itk::MultiResolutionShrinkPyramidImageFilter<
-        typename MovingImagePyramidBase<TElastix>::InputImageType,
-        typename MovingImagePyramidBase<TElastix>::OutputImageType >,
-    public
-      MovingImagePyramidBase<TElastix>
-  {
-  public:
+  /** Get the ImageDimension. */
+  itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
 
-    /** Standard ITK-stuff. */
-    typedef MovingShrinkingPyramid                                   Self;
-    typedef itk::MultiResolutionShrinkPyramidImageFilter<
-        typename MovingImagePyramidBase<TElastix>::InputImageType,
-        typename MovingImagePyramidBase<TElastix>::OutputImageType > Superclass1;
-    typedef MovingImagePyramidBase<TElastix>                         Superclass2;
-    typedef itk::SmartPointer<Self>                                  Pointer;
-    typedef itk::SmartPointer<const Self>                            ConstPointer;
+  /** Typedefs inherited from the superclass. */
+  typedef typename Superclass1::InputImageType         InputImageType;
+  typedef typename Superclass1::OutputImageType        OutputImageType;
+  typedef typename Superclass1::InputImagePointer      InputImagePointer;
+  typedef typename Superclass1::OutputImagePointer     OutputImagePointer;
+  typedef typename Superclass1::InputImageConstPointer InputImageConstPointer;
+  typedef typename Superclass1::ScheduleType           ScheduleType;
 
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+  /** Typedefs inherited from Elastix. */
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( MovingShrinkingPyramid, itk::MultiResolutionShrinkPyramidImageFilter );
+protected:
 
-    /** Name of this class.
-     * Use this name in the parameter file to select this specific pyramid. \n
-     * example: <tt>(MovingImagePyramid "MovingShrinkingImagePyramid")</tt>\n
-     */
-    elxClassNameMacro( "MovingShrinkingImagePyramid" );
+  /** The constructor. */
+  MovingShrinkingPyramid() {}
+  /** The destructor. */
+  virtual ~MovingShrinkingPyramid() {}
 
-    /** Get the ImageDimension. */
-    itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
+private:
 
-    /** Typedefs inherited from the superclass. */
-    typedef typename Superclass1::InputImageType            InputImageType;
-    typedef typename Superclass1::OutputImageType           OutputImageType;
-    typedef typename Superclass1::InputImagePointer         InputImagePointer;
-    typedef typename Superclass1::OutputImagePointer        OutputImagePointer;
-    typedef typename Superclass1::InputImageConstPointer    InputImageConstPointer;
-    typedef typename Superclass1::ScheduleType              ScheduleType;
+  /** The private constructor. */
+  MovingShrinkingPyramid( const Self & );  // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self & );         // purposely not implemented
 
-    /** Typedefs inherited from Elastix. */
-    typedef typename Superclass2::ElastixType           ElastixType;
-    typedef typename Superclass2::ElastixPointer        ElastixPointer;
-    typedef typename Superclass2::ConfigurationType     ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType      RegistrationType;
-    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType           ITKBaseType;
-
-  protected:
-
-    /** The constructor. */
-    MovingShrinkingPyramid() {}
-    /** The destructor. */
-    virtual ~MovingShrinkingPyramid() {}
-
-  private:
-
-    /** The private constructor. */
-    MovingShrinkingPyramid( const Self& ); // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );        // purposely not implemented
-
-  };
-
+};
 
 } // end namespace elastix
 
@@ -107,4 +106,3 @@ namespace elastix
 #endif
 
 #endif // end #ifndef __elxMovingShrinkingPyramid_h
-

@@ -29,17 +29,17 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template < class TInputImage >
+template< class TInputImage >
 class ImageFullSampler :
   public ImageSamplerBase< TInputImage >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef ImageFullSampler                  Self;
-  typedef ImageSamplerBase< TInputImage >   Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef ImageFullSampler                Self;
+  typedef ImageSamplerBase< TInputImage > Superclass;
+  typedef SmartPointer< Self >            Pointer;
+  typedef SmartPointer< const Self >      ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -66,8 +66,8 @@ public:
     Superclass::InputImageDimension );
 
   /** Other typdefs. */
-  typedef typename InputImageType::IndexType    InputImageIndexType;
-  typedef typename InputImageType::PointType    InputImagePointType;
+  typedef typename InputImageType::IndexType InputImageIndexType;
+  typedef typename InputImageType::PointType InputImagePointType;
 
   /** Selecting new samples makes no sense if nothing changed.
    * The same samples would be selected anyway.
@@ -75,7 +75,8 @@ public:
   virtual bool SelectNewSamplesOnUpdate( void )
   {
     return false;
-  };
+  }
+
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate(). */
   virtual bool SelectingNewSamplesOnUpdateSupported( void ) const
@@ -83,15 +84,16 @@ public:
     return false;
   }
 
+
 protected:
 
   /** The constructor. */
-  ImageFullSampler() {};
+  ImageFullSampler() {}
   /** The destructor. */
-  virtual ~ImageFullSampler() {};
+  virtual ~ImageFullSampler() {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Function that does the work. */
   virtual void GenerateData( void );
@@ -104,12 +106,11 @@ protected:
 private:
 
   /** The private constructor. */
-  ImageFullSampler( const Self& );          // purposely not implemented
+  ImageFullSampler( const Self & );          // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );            // purposely not implemented
+  void operator=( const Self & );            // purposely not implemented
 
 };
-
 
 } // end namespace itk
 

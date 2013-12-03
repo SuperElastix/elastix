@@ -28,71 +28,70 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-  template < class TInputImage >
-  class ImageRandomSamplerBase :
-    public ImageSamplerBase< TInputImage >
-  {
-  public:
+template< class TInputImage >
+class ImageRandomSamplerBase :
+  public ImageSamplerBase< TInputImage >
+{
+public:
 
-    /** Standard ITK-stuff. */
-    typedef ImageRandomSamplerBase            Self;
-    typedef ImageSamplerBase< TInputImage >   Superclass;
-    typedef SmartPointer<Self>                Pointer;
-    typedef SmartPointer<const Self>          ConstPointer;
+  /** Standard ITK-stuff. */
+  typedef ImageRandomSamplerBase          Self;
+  typedef ImageSamplerBase< TInputImage > Superclass;
+  typedef SmartPointer< Self >            Pointer;
+  typedef SmartPointer< const Self >      ConstPointer;
 
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( ImageRandomSamplerBase, ImageSamplerBase );
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( ImageRandomSamplerBase, ImageSamplerBase );
 
-    /** Typedefs inherited from the superclass. */
-    typedef typename Superclass::DataObjectPointer            DataObjectPointer;
-    typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
-    typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
-    typedef typename Superclass::InputImageType               InputImageType;
-    typedef typename Superclass::InputImagePointer            InputImagePointer;
-    typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
-    typedef typename Superclass::InputImageRegionType         InputImageRegionType;
-    typedef typename Superclass::InputImagePixelType          InputImagePixelType;
-    typedef typename Superclass::ImageSampleType              ImageSampleType;
-    typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
-    typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
-    typedef typename Superclass::MaskType                     MaskType;
+  /** Typedefs inherited from the superclass. */
+  typedef typename Superclass::DataObjectPointer            DataObjectPointer;
+  typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
+  typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
+  typedef typename Superclass::InputImageType               InputImageType;
+  typedef typename Superclass::InputImagePointer            InputImagePointer;
+  typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
+  typedef typename Superclass::InputImageRegionType         InputImageRegionType;
+  typedef typename Superclass::InputImagePixelType          InputImagePixelType;
+  typedef typename Superclass::ImageSampleType              ImageSampleType;
+  typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
+  typedef typename Superclass::MaskType                     MaskType;
 
-    /** The input image dimension. */
-    itkStaticConstMacro( InputImageDimension, unsigned int,
-      Superclass::InputImageDimension );
+  /** The input image dimension. */
+  itkStaticConstMacro( InputImageDimension, unsigned int,
+    Superclass::InputImageDimension );
 
-    /** Set the number of samples. */
-    itkSetClampMacro( NumberOfSamples, unsigned long, 1, NumericTraits<unsigned long>::max() );
+  /** Set the number of samples. */
+  itkSetClampMacro( NumberOfSamples, unsigned long, 1, NumericTraits< unsigned long >::max() );
 
-  protected:
+protected:
 
-    /** The constructor. */
-    ImageRandomSamplerBase();
+  /** The constructor. */
+  ImageRandomSamplerBase();
 
-    /** The destructor. */
-    virtual ~ImageRandomSamplerBase() {};
+  /** The destructor. */
+  virtual ~ImageRandomSamplerBase() {}
 
-    /** Multi-threaded function that does the work. */
-    virtual void BeforeThreadedGenerateData( void );
+  /** Multi-threaded function that does the work. */
+  virtual void BeforeThreadedGenerateData( void );
 
-    /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const;
+  /** PrintSelf. */
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
-    /** Member variable used when threading. */
-    std::vector<double>                       m_RandomNumberList;
+  /** Member variable used when threading. */
+  std::vector< double > m_RandomNumberList;
 
-  private:
+private:
 
-    /** The private constructor. */
-    ImageRandomSamplerBase( const Self& );    // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );            // purposely not implemented
+  /** The private constructor. */
+  ImageRandomSamplerBase( const Self & );     // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self & );             // purposely not implemented
 
-  };
-
+};
 
 } // end namespace itk
 

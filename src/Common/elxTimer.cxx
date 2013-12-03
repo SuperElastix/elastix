@@ -16,7 +16,6 @@
 
 #include "elxTimer.h"
 
-
 namespace tmr
 {
 
@@ -28,10 +27,10 @@ Timer::Timer()
 {
   /** Initialize.*/
   this->m_ElapsedTimeDHMS.resize( 4 );
-  this->m_StartTime = 0;
+  this->m_StartTime  = 0;
   this->m_StartClock = 0;
-  this->m_StopTime = 0;
-  this->m_StopClock = 0;
+  this->m_StopTime   = 0;
+  this->m_StopClock  = 0;
 
 } // end Constructor
 
@@ -40,10 +39,11 @@ Timer::Timer()
  * ********************** StartTimer ****************************
  */
 
-void Timer::StartTimer( void )
+void
+Timer::StartTimer( void )
 {
   /** Get the current time.*/
-  this->m_StartTime = time( NULL );
+  this->m_StartTime  = time( NULL );
   this->m_StartClock = clock();
 
 #ifdef ELX_USE_CLOCK_GETTIME
@@ -57,13 +57,14 @@ void Timer::StartTimer( void )
  * *********************** StopTimer ****************************
  */
 
-int Timer::StopTimer( void )
+int
+Timer::StopTimer( void )
 {
   /** Check if m_StartTime != 0. */
-  if ( this->m_StartTime == 0 ) return 1;
+  if( this->m_StartTime == 0 ) { return 1; }
 
   /** Get the current time. */
-  this->m_StopTime = time( NULL );
+  this->m_StopTime  = time( NULL );
   this->m_StopClock = clock();
 
 #ifdef ELX_USE_CLOCK_GETTIME
@@ -82,41 +83,42 @@ int Timer::StopTimer( void )
  * *********************** ElapsedClockAndTime **************************
  */
 
-int Timer::ElapsedClockAndTime( void )
+int
+Timer::ElapsedClockAndTime( void )
 {
   /** Check if if m_StopTime != 0. */
-  if ( this->m_StopTime == 0 ) return 1;
+  if( this->m_StopTime == 0 ) { return 1; }
 
   /** Calculate time difference = m_Elapsedtime. */
-  this->m_ElapsedTime = difftime( this->m_StopTime, this->m_StartTime );
+  this->m_ElapsedTime  = difftime( this->m_StopTime, this->m_StartTime );
   this->m_ElapsedClock = this->m_StopClock - this->m_StartClock;
 
   /** Fill m_ElapsedTimeSec. */
-  this->m_ElapsedTimeSec = static_cast<std::size_t>( this->m_ElapsedTime );
+  this->m_ElapsedTimeSec = static_cast< std::size_t >( this->m_ElapsedTime );
 
   /** Fill m_ElapsedClockSec. */
 #ifndef ELX_USE_CLOCK_GETTIME
-  this->m_ElapsedClockSec = static_cast<double>( this->m_ElapsedClock ) / CLOCKS_PER_SEC;
+  this->m_ElapsedClockSec = static_cast< double >( this->m_ElapsedClock ) / CLOCKS_PER_SEC;
 #else
-  this->m_ElapsedClockSec = ( this->m_StopClockMonotonic.tv_sec - this->m_StartClockMonotonic.tv_sec );
+  this->m_ElapsedClockSec  = ( this->m_StopClockMonotonic.tv_sec - this->m_StartClockMonotonic.tv_sec );
   this->m_ElapsedClockSec += ( this->m_StopClockMonotonic.tv_nsec - this->m_StartClockMonotonic.tv_nsec ) / 1.0e9;
 #endif
 
   /** Fill m_TimeDHMS. */
   const std::size_t secondsPerMinute = 60;
-  const std::size_t secondsPerHour = 60 * secondsPerMinute;
-  const std::size_t secondsPerDay = 24 * secondsPerHour;
+  const std::size_t secondsPerHour   = 60 * secondsPerMinute;
+  const std::size_t secondsPerDay    = 24 * secondsPerHour;
 
   std::size_t elapsedSeconds = this->m_ElapsedTimeSec;
   this->m_ElapsedTimeDHMS[ 0 ] = elapsedSeconds / secondsPerDay;
 
-  elapsedSeconds %= secondsPerDay;
+  elapsedSeconds              %= secondsPerDay;
   this->m_ElapsedTimeDHMS[ 1 ] = elapsedSeconds / secondsPerHour;
 
-  elapsedSeconds %= secondsPerHour;
+  elapsedSeconds              %= secondsPerHour;
   this->m_ElapsedTimeDHMS[ 2 ] = elapsedSeconds / secondsPerMinute;
 
-  elapsedSeconds %= secondsPerMinute;
+  elapsedSeconds              %= secondsPerMinute;
   this->m_ElapsedTimeDHMS[ 3 ] = elapsedSeconds;
 
   return 0;
@@ -128,10 +130,11 @@ int Timer::ElapsedClockAndTime( void )
  * ******************** PrintStartTime **************************
  */
 
-const std::string & Timer::PrintStartTime( void )
+const std::string &
+Timer::PrintStartTime( void )
 {
   /** Convert time to string. */
-  struct tm *sStartTime = localtime( &(this->m_StartTime) );
+  struct tm * sStartTime = localtime( &( this->m_StartTime ) );
   this->m_StartTimeString = asctime( sStartTime );
   this->m_StartTimeString.erase( this->m_StartTimeString.end() - 1 );
 
@@ -145,10 +148,11 @@ const std::string & Timer::PrintStartTime( void )
  * ******************** PrintStopTime **************************
  */
 
-const std::string & Timer::PrintStopTime( void )
+const std::string &
+Timer::PrintStopTime( void )
 {
   /** Convert time to string. */
-  struct tm *sStopTime = localtime( &(this->m_StopTime) );
+  struct tm * sStopTime = localtime( &( this->m_StopTime ) );
   this->m_StopTimeString = asctime( sStopTime );
   this->m_StopTimeString.erase( this->m_StopTimeString.end() - 1 );
 
@@ -162,19 +166,20 @@ const std::string & Timer::PrintStopTime( void )
  * ***************** PrintElapsedTimeDHMS ***********************
  */
 
-const std::string & Timer::PrintElapsedTimeDHMS( void )
+const std::string &
+Timer::PrintElapsedTimeDHMS( void )
 {
   /** Print m_ElapsedTime in Days, Hours, Minutes and Seconds. */
   std::ostringstream make_string( "" );
-  if ( this->m_ElapsedTimeDHMS[ 0 ] != 0 )
+  if( this->m_ElapsedTimeDHMS[ 0 ] != 0 )
   {
     make_string << this->m_ElapsedTimeDHMS[ 0 ] << " Days, ";
   }
-  if ( this->m_ElapsedTimeDHMS[ 1 ] != 0 )
+  if( this->m_ElapsedTimeDHMS[ 1 ] != 0 )
   {
     make_string << this->m_ElapsedTimeDHMS[ 1 ] << " Hours, ";
   }
-  if ( this->m_ElapsedTimeDHMS[ 2 ] != 0 )
+  if( this->m_ElapsedTimeDHMS[ 2 ] != 0 )
   {
     make_string << this->m_ElapsedTimeDHMS[ 2 ] << " Minutes, ";
   }
@@ -191,7 +196,8 @@ const std::string & Timer::PrintElapsedTimeDHMS( void )
  * ***************** PrintElapsedTimeSec ************************
  */
 
-const std::string & Timer::PrintElapsedTimeSec( void )
+const std::string &
+Timer::PrintElapsedTimeSec( void )
 {
   /** Print m_ElapsedTime in seconds. */
   std::ostringstream make_string( "" );
@@ -207,7 +213,8 @@ const std::string & Timer::PrintElapsedTimeSec( void )
  * ******************* PrintElapsedClock ************************
  */
 
-const std::string & Timer::PrintElapsedClock( void )
+const std::string &
+Timer::PrintElapsedClock( void )
 {
   /** Print m_ElapsedClock. */
   std::ostringstream make_string( "" );
@@ -223,7 +230,8 @@ const std::string & Timer::PrintElapsedClock( void )
  * ******************* PrintElapsedClockSec ************************
  */
 
-const std::string & Timer::PrintElapsedClockSec( void )
+const std::string &
+Timer::PrintElapsedClockSec( void )
 {
   /** Print m_ElapsedClockSec. */
   std::ostringstream make_string( "" );
@@ -238,4 +246,3 @@ const std::string & Timer::PrintElapsedClockSec( void )
 } // end namespace tmr
 
 #endif // end #ifndef __elxTimer_CXX_
-

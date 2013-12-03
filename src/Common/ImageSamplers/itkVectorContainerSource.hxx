@@ -30,12 +30,12 @@ VectorContainerSource< TOutputVectorContainer >
   // Create the output. We use static_cast<> here because we know the default
   // output must be of type TOutputVectorContainer
   OutputVectorContainerPointer output
-    = static_cast< TOutputVectorContainer * >( this->MakeOutput(0).GetPointer() );
+    = static_cast< TOutputVectorContainer * >( this->MakeOutput( 0 ).GetPointer() );
 
   this->ProcessObject::SetNumberOfRequiredOutputs( 1 );
   this->ProcessObject::SetNthOutput( 0, output.GetPointer() );
 
-  this->m_GenerateDataRegion = 0;
+  this->m_GenerateDataRegion          = 0;
   this->m_GenerateDataNumberOfRegions = 0;
 
 } // end Constructor
@@ -50,7 +50,7 @@ typename VectorContainerSource< TOutputVectorContainer >::DataObjectPointer
 VectorContainerSource< TOutputVectorContainer >
 ::MakeOutput( unsigned int itkNotUsed( idx ) )
 {
-  return static_cast<DataObject*>( TOutputVectorContainer::New().GetPointer() );
+  return static_cast< DataObject * >( TOutputVectorContainer::New().GetPointer() );
 } // end MakeOutput()
 
 
@@ -59,33 +59,31 @@ VectorContainerSource< TOutputVectorContainer >
  */
 
 template< class TOutputVectorContainer >
-typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType *
-VectorContainerSource< TOutputVectorContainer >
+typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType
+* VectorContainerSource< TOutputVectorContainer >
 ::GetOutput( void )
 {
-  if ( this->GetNumberOfOutputs() < 1 )
+  if( this->GetNumberOfOutputs() < 1 )
   {
     return 0;
   }
 
-  return static_cast<OutputVectorContainerType *>(
-    this->ProcessObject::GetOutput(0) );
+  return static_cast< OutputVectorContainerType * >(
+    this->ProcessObject::GetOutput( 0 ) );
 } // end GetOutput()
-
 
 /**
  * ******************* GetOutput *******************
  */
 
 template< class TOutputVectorContainer >
-typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType *
-VectorContainerSource< TOutputVectorContainer >
+typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType
+* VectorContainerSource< TOutputVectorContainer >
 ::GetOutput( unsigned int idx )
 {
-  return static_cast<OutputVectorContainerType *>(
+  return static_cast< OutputVectorContainerType * >(
     this->ProcessObject::GetOutput( idx ) );
 } // end GetOutput()
-
 
 /**
  * ******************* GraftOutput *******************
@@ -94,7 +92,7 @@ VectorContainerSource< TOutputVectorContainer >
 template< class TOutputVectorContainer >
 void
 VectorContainerSource< TOutputVectorContainer >
-::GraftOutput( DataObject *graft )
+::GraftOutput( DataObject * graft )
 {
   this->GraftNthOutput( 0, graft );
 } // end GraftOutput()
@@ -107,17 +105,17 @@ VectorContainerSource< TOutputVectorContainer >
 template< class TOutputVectorContainer >
 void
 VectorContainerSource< TOutputVectorContainer >
-::GraftNthOutput( unsigned int idx, DataObject *graft )
+::GraftNthOutput( unsigned int idx, DataObject * graft )
 {
   /** Check idx. */
-  if ( idx >= this->GetNumberOfOutputs() )
+  if( idx >= this->GetNumberOfOutputs() )
   {
     itkExceptionMacro( << "Requested to graft output " << idx
-      << " but this filter only has " << this->GetNumberOfOutputs() << " Outputs." );
+                       << " but this filter only has " << this->GetNumberOfOutputs() << " Outputs." );
   }
 
   /** Check graft. */
-  if ( !graft )
+  if( !graft )
   {
     itkExceptionMacro( << "Requested to graft output that is a NULL pointer" );
   }
@@ -139,7 +137,7 @@ VectorContainerSource< TOutputVectorContainer >
 template< class TOutputVectorContainer >
 void
 VectorContainerSource< TOutputVectorContainer >
-::PrintSelf( std::ostream& os, Indent indent ) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 

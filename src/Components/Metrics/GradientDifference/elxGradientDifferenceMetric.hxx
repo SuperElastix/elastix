@@ -16,7 +16,6 @@
 
 #include "elxGradientDifferenceMetric.h"
 
-
 namespace elastix
 {
 
@@ -24,16 +23,17 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
-void GradientDifferenceMetric<TElastix>
-::Initialize( void ) throw (itk::ExceptionObject)
+template< class TElastix >
+void
+GradientDifferenceMetric< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
   this->Superclass1::Initialize();
   timer->StopTimer();
   elxout << "Initialization of GradientDifference metric took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -42,18 +42,19 @@ void GradientDifferenceMetric<TElastix>
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
-void GradientDifferenceMetric<TElastix>
-::BeforeRegistration(void)
+template< class TElastix >
+void
+GradientDifferenceMetric< TElastix >
+::BeforeRegistration( void )
 {
 
-  if ( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
+  if( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
   {
     itkExceptionMacro( << "FixedImage must be 3D" );
   }
-  if ( this->m_Elastix->GetFixedImage()->GetImageDimension() == 3 )
+  if( this->m_Elastix->GetFixedImage()->GetImageDimension() == 3 )
   {
-    if ( this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize()[2] != 1 )
+    if( this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize()[ 2 ] != 1 )
     {
       itkExceptionMacro( << "Metric can only be used for 2D-3D registration. FixedImageSize[2] must be 1" );
     }
@@ -66,31 +67,31 @@ void GradientDifferenceMetric<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-GradientDifferenceMetric<TElastix>
+GradientDifferenceMetric< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Set moving image derivative scales. */
   this->SetUseMovingImageDerivativeScales( false );
   MovingImageDerivativeScalesType movingImageDerivativeScales;
-  bool usescales = true;
+  bool                            usescales = true;
 
-  for ( unsigned int i = 0; i < MovingImageDimension; ++i )
+  for( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
     usescales &= this->GetConfiguration()->ReadParameter(
-    movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-    this->GetComponentLabel(), i, -1, false );
+      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+      this->GetComponentLabel(), i, -1, false );
   }
-  if ( usescales )
+  if( usescales )
   {
     this->SetUseMovingImageDerivativeScales( true );
     this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
     elxout << "Multiplying moving image derivatives by: "
-      << movingImageDerivativeScales << std::endl;
+           << movingImageDerivativeScales << std::endl;
   }
 
-  typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType  ScalesType;
+  typedef typename elastix::OptimizerBase< TElastix >::ITKBaseType::ScalesType ScalesType;
   ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
   this->SetScales( scales );
 

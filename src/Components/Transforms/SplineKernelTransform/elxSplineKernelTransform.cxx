@@ -15,4 +15,3 @@
 #include "elxSplineKernelTransform.h"
 
 elxInstallMacro( SplineKernelTransform );
-

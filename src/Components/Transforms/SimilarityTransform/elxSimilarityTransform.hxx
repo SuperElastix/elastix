@@ -25,8 +25,8 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
-SimilarityTransformElastix<TElastix>
+template< class TElastix >
+SimilarityTransformElastix< TElastix >
 ::SimilarityTransformElastix()
 {
   this->m_SimilarityTransform = SimilarityTransformType::New();
@@ -39,9 +39,9 @@ SimilarityTransformElastix<TElastix>
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SimilarityTransformElastix<TElastix>
+SimilarityTransformElastix< TElastix >
 ::BeforeRegistration( void )
 {
   /** Task 1 - Set center of rotation and initial translation. */
@@ -57,9 +57,9 @@ SimilarityTransformElastix<TElastix>
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SimilarityTransformElastix<TElastix>
+SimilarityTransformElastix< TElastix >
 ::ReadFromFile( void )
 {
   /** Variables. */
@@ -78,15 +78,15 @@ SimilarityTransformElastix<TElastix>
    * is trying to be read that was generated using an older elastix
    * version. Try to read it as an index, and convert to point.
    */
-  if ( !pointRead )
+  if( !pointRead )
   {
     indexRead = this->ReadCenterOfRotationIndex( centerOfRotationPoint );
   }
 
-  if ( !pointRead && !indexRead )
+  if( !pointRead && !indexRead )
   {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the "
-      << "transform parameter file." << std::endl;
+    xl::xout[ "error" ] << "ERROR: No center of rotation is specified in the "
+                        << "transform parameter file." << std::endl;
     itkExceptionMacro( << "Transform parameter file is corrupt." )
   }
 
@@ -106,31 +106,31 @@ SimilarityTransformElastix<TElastix>
  * ************************* WriteToFile ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SimilarityTransformElastix<TElastix>
+SimilarityTransformElastix< TElastix >
 ::WriteToFile( const ParametersType & param ) const
 {
   /** Call the WriteToFile from the TransformBase. */
   this->Superclass2::WriteToFile( param );
 
   /** Write SimilarityTransform specific things. */
-  xout["transpar"] << std::endl << "// SimilarityTransform specific" << std::endl;
+  xout[ "transpar" ] << std::endl << "// SimilarityTransform specific" << std::endl;
 
   /** Set the precision of cout to 10. */
-  xout["transpar"] << std::setprecision( 10 );
+  xout[ "transpar" ] << std::setprecision( 10 );
 
   /** Get the center of rotation point and write it to file. */
   InputPointType rotationPoint = this->m_SimilarityTransform->GetCenter();
-  xout["transpar"] << "(CenterOfRotationPoint ";
-  for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+  xout[ "transpar" ] << "(CenterOfRotationPoint ";
+  for( unsigned int i = 0; i < SpaceDimension - 1; i++ )
   {
-    xout["transpar"] << rotationPoint[ i ] << " ";
+    xout[ "transpar" ] << rotationPoint[ i ] << " ";
   }
-  xout["transpar"] << rotationPoint[ SpaceDimension - 1 ] << ")" << std::endl;
+  xout[ "transpar" ] << rotationPoint[ SpaceDimension - 1 ] << ")" << std::endl;
 
   /** Set the precision back to default value. */
-  xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
+  xout[ "transpar" ] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
 
 } // end WriteToFile()
 
@@ -139,9 +139,9 @@ SimilarityTransformElastix<TElastix>
  * ************************* InitializeTransform *********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SimilarityTransformElastix<TElastix>
+SimilarityTransformElastix< TElastix >
 ::InitializeTransform( void )
 {
   /** Set the parameters to mimic the identity transform. */
@@ -150,11 +150,11 @@ SimilarityTransformElastix<TElastix>
   /** Try to read CenterOfRotationIndex from parameter file,
    * which is the rotationPoint, expressed in index-values.
    */
-  IndexType centerOfRotationIndex;
+  IndexType      centerOfRotationIndex;
   InputPointType centerOfRotationPoint;
-  bool centerGivenAsIndex = true;
-  bool centerGivenAsPoint = true;
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  bool           centerGivenAsIndex = true;
+  bool           centerGivenAsPoint = true;
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Initilialize. */
     centerOfRotationIndex[ i ] = 0;
@@ -163,14 +163,14 @@ SimilarityTransformElastix<TElastix>
     /** Check COR index: Returns zero when parameter was in the parameter file. */
     bool foundI = this->m_Configuration->ReadParameter(
       centerOfRotationIndex[ i ], "CenterOfRotation", i, false );
-    if ( !foundI )
+    if( !foundI )
     {
       centerGivenAsIndex &= false;
     }
     /** Check COR point: Returns zero when parameter was in the parameter file. */
     bool foundP = this->m_Configuration->ReadParameter(
       centerOfRotationPoint[ i ], "CenterOfRotationPoint", i, false );
-    if ( !foundP )
+    if( !foundP )
     {
       centerGivenAsPoint &= false;
     }
@@ -179,13 +179,13 @@ SimilarityTransformElastix<TElastix>
   /** Check if CenterOfRotation has index-values within image.*/
   bool CORIndexInImage = true;
   bool CORPointInImage = true;
-  if ( centerGivenAsIndex )
+  if( centerGivenAsIndex )
   {
     CORIndexInImage =  this->m_Registration->GetAsITKBaseType()
       ->GetFixedImage()->GetLargestPossibleRegion().IsInside(
       centerOfRotationIndex );
   }
-  if ( centerGivenAsPoint )
+  if( centerGivenAsPoint )
   {
     typedef itk::ContinuousIndex< double, SpaceDimension > ContinuousIndexType;
     ContinuousIndexType cindex;
@@ -194,17 +194,17 @@ SimilarityTransformElastix<TElastix>
   }
 
   /** Give a warning if necessary. */
-  if ( !CORIndexInImage && centerGivenAsIndex )
+  if( !CORIndexInImage && centerGivenAsIndex )
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not "
-      << "within image boundaries!" << std::endl;
+    xl::xout[ "warning" ] << "WARNING: Center of Rotation (index) is not "
+                          << "within image boundaries!" << std::endl;
   }
 
   /** Give a warning if necessary. */
-  if ( !CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex )
+  if( !CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex )
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not "
-      << "within image boundaries!" << std::endl;
+    xl::xout[ "warning" ] << "WARNING: Center of Rotation (point) is not "
+                          << "within image boundaries!" << std::endl;
   }
 
   /** Check if user wants automatic transform initialization; false by default.
@@ -212,10 +212,10 @@ SimilarityTransformElastix<TElastix>
    * not possible.
    */
   bool automaticTransformInitialization = false;
-  bool tmpBool = false;
+  bool tmpBool                          = false;
   this->m_Configuration->ReadParameter( tmpBool,
     "AutomaticTransformInitialization", 0 );
-  if ( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
+  if( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
   {
     automaticTransformInitialization = true;
   }
@@ -226,7 +226,7 @@ SimilarityTransformElastix<TElastix>
    * - The user asked for AutomaticTransformInitialization
    */
   bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-  if ( !centerGiven || automaticTransformInitialization )
+  if( !centerGiven || automaticTransformInitialization )
   {
     /** Use the TransformInitializer to determine a center of
      * of rotation and an initial translation.
@@ -244,7 +244,7 @@ SimilarityTransformElastix<TElastix>
     std::string method = "GeometricalCenter";
     this->m_Configuration->ReadParameter( method,
       "AutomaticTransformInitializationMethod", 0 );
-    if ( method == "CenterOfGravity" )
+    if( method == "CenterOfGravity" )
     {
       transformInitializer->MomentsOn();
     }
@@ -255,7 +255,7 @@ SimilarityTransformElastix<TElastix>
   /** Set the translation to zero, if no AutomaticTransformInitialization
    * was desired.
    */
-  if ( !automaticTransformInitialization )
+  if( !automaticTransformInitialization )
   {
     OutputVectorType noTranslation;
     noTranslation.Fill( 0.0 );
@@ -263,13 +263,13 @@ SimilarityTransformElastix<TElastix>
   }
 
   /** Set the center of rotation if it was entered by the user. */
-  if ( centerGiven )
+  if( centerGiven )
   {
-    if ( centerGivenAsIndex )
+    if( centerGivenAsIndex )
     {
       /** Convert from index-value to physical-point-value.*/
       this->m_Registration->GetAsITKBaseType()->GetFixedImage()
-        ->TransformIndexToPhysicalPoint(
+      ->TransformIndexToPhysicalPoint(
         centerOfRotationIndex, centerOfRotationPoint );
     }
     this->m_SimilarityTransform->SetCenter( centerOfRotationPoint );
@@ -279,7 +279,7 @@ SimilarityTransformElastix<TElastix>
    * composition is used to combine the initial transform with the
    * the current (euler) transform.
    */
-  if ( this->GetUseComposition()
+  if( this->GetUseComposition()
     && this->Superclass1::GetInitialTransform() != 0 )
   {
     InputPointType transformedCenterOfRotationPoint
@@ -291,12 +291,12 @@ SimilarityTransformElastix<TElastix>
 
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()->
-    SetInitialTransformParameters( this->GetParameters() );
+  SetInitialTransformParameters( this->GetParameters() );
 
   /** Give feedback. */
   // \todo: should perhaps also print fixed parameters
   elxout << "Transform parameters are initialized as: "
-    << this->GetParameters() << std::endl;
+         << this->GetParameters() << std::endl;
 
 } // end InitializeTransform()
 
@@ -305,14 +305,14 @@ SimilarityTransformElastix<TElastix>
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-SimilarityTransformElastix<TElastix>
+SimilarityTransformElastix< TElastix >
 ::SetScales( void )
 {
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();
-  ScalesType newscales( N );
+  ScalesType                   newscales( N );
   newscales.Fill( 1.0 );
 
   /** Check if automatic scales estimation is desired. */
@@ -320,7 +320,7 @@ SimilarityTransformElastix<TElastix>
   this->m_Configuration->ReadParameter( automaticScalesEstimation,
     "AutomaticScalesEstimation", 0 );
 
-  if ( automaticScalesEstimation )
+  if( automaticScalesEstimation )
   {
     elxout << "Scales are estimated automatically." << std::endl;
     this->AutomaticScalesEstimation( newscales );
@@ -336,19 +336,22 @@ SimilarityTransformElastix<TElastix>
      */
 
     /** Create the scales and set to default values. */
-    if ( SpaceDimension == 2 )
+    if( SpaceDimension == 2 )
     {
       newscales[ 0 ] = 10000.0;
       newscales[ 1 ] = 100000.0;
     }
-    else if ( SpaceDimension == 3 )
+    else if( SpaceDimension == 3 )
     {
       newscales[ 6 ] = 10000.0;
-      for ( unsigned int i = 0; i < 3; i++ ) newscales[ i ] = 100000.0;
+      for( unsigned int i = 0; i < 3; i++ )
+      {
+        newscales[ i ] = 100000.0;
+      }
     }
 
     /** Get the scales from the parameter file. */
-    for ( unsigned int i = 0; i < N; i++ )
+    for( unsigned int i = 0; i < N; i++ )
     {
       this->GetConfiguration()->ReadParameter( newscales[ i ],
         "Scales", this->GetComponentLabel(), i, -1 );
@@ -367,30 +370,30 @@ SimilarityTransformElastix<TElastix>
  * ******************** ReadCenterOfRotationIndex *********************
  */
 
-template <class TElastix>
+template< class TElastix >
 bool
-SimilarityTransformElastix<TElastix>
+SimilarityTransformElastix< TElastix >
 ::ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const
 {
   /** Try to read CenterOfRotationIndex from the transform parameter
    * file, which is the rotationPoint, expressed in index-values.
    */
   IndexType centerOfRotationIndex;
-  bool centerGivenAsIndex = true;
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  bool      centerGivenAsIndex = true;
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     centerOfRotationIndex[ i ] = 0;
 
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(
       centerOfRotationIndex[ i ], "CenterOfRotation", i, false );
-    if ( !found )
+    if( !found )
     {
       centerGivenAsIndex &= false;
     }
   }
 
-  if ( !centerGivenAsIndex )
+  if( !centerGivenAsIndex )
   {
     return false;
   }
@@ -405,7 +408,7 @@ SimilarityTransformElastix<TElastix>
   SizeType      size;
   DirectionType direction;
   direction.SetIdentity();
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Read size from the parameter file. Zero by default, which is illegal. */
     size[ i ] = 0;
@@ -424,7 +427,7 @@ SimilarityTransformElastix<TElastix>
     this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
 
     /** Read direction cosines. Default identity */
-    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    for( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       this->m_Configuration->ReadParameter( direction( j, i ),
         "Direction", i * SpaceDimension + j );
@@ -433,17 +436,17 @@ SimilarityTransformElastix<TElastix>
 
   /** Check for image size. */
   bool illegalSize = false;
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    if ( size[ i ] == 0 )
+    if( size[ i ] == 0 )
     {
       illegalSize = true;
     }
   }
 
-  if ( illegalSize )
+  if( illegalSize )
   {
-    xl::xout["error"] << "ERROR: One or more image sizes are 0!" << std::endl;
+    xl::xout[ "error" ] << "ERROR: One or more image sizes are 0!" << std::endl;
     return false;
   }
 
@@ -474,30 +477,30 @@ SimilarityTransformElastix<TElastix>
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template <class TElastix>
+template< class TElastix >
 bool
-SimilarityTransformElastix<TElastix>
+SimilarityTransformElastix< TElastix >
 ::ReadCenterOfRotationPoint( InputPointType & rotationPoint ) const
 {
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */
   InputPointType centerOfRotationPoint;
-  bool centerGivenAsPoint = true;
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  bool           centerGivenAsPoint = true;
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     centerOfRotationPoint[ i ] = 0;
 
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(
       centerOfRotationPoint[ i ], "CenterOfRotationPoint", i, false );
-    if ( !found )
+    if( !found )
     {
       centerGivenAsPoint &= false;
     }
   }
 
-  if ( !centerGivenAsPoint )
+  if( !centerGivenAsPoint )
   {
     return false;
   }
@@ -515,6 +518,4 @@ SimilarityTransformElastix<TElastix>
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxSimilarityTransform_HXX_
-

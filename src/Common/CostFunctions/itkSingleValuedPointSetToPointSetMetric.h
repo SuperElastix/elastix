@@ -24,7 +24,6 @@
 #include "itkSpatialObject.h"
 #include "itkPointSet.h"
 
-
 namespace itk
 {
 
@@ -42,17 +41,17 @@ namespace itk
  *
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
-class SingleValuedPointSetToPointSetMetric
-  : public SingleValuedCostFunction
+template< class TFixedPointSet, class TMovingPointSet >
+class SingleValuedPointSetToPointSetMetric :
+  public SingleValuedCostFunction
 {
 public:
 
   /** Standard class typedefs. */
-  typedef SingleValuedPointSetToPointSetMetric  Self;
-  typedef SingleValuedCostFunction              Superclass;
-  typedef SmartPointer<Self>                    Pointer;
-  typedef SmartPointer<const Self>              ConstPointer;
+  typedef SingleValuedPointSetToPointSetMetric Self;
+  typedef SingleValuedCostFunction             Superclass;
+  typedef SmartPointer< Self >                 Pointer;
+  typedef SmartPointer< const Self >           ConstPointer;
 
   /** Type used for representing point components  */
   typedef Superclass::ParametersValueType CoordinateRepresentationType;
@@ -61,12 +60,12 @@ public:
   itkTypeMacro( SingleValuedPointSetToPointSetMetric, SingleValuedCostFunction );
 
   /** Typedefs. */
-  typedef TFixedPointSet                             FixedPointSetType;
-  typedef typename FixedPointSetType::PixelType      FixedPointSetPixelType;
-  typedef typename FixedPointSetType::ConstPointer   FixedPointSetConstPointer;
-  typedef TMovingPointSet                            MovingPointSetType;
-  typedef typename MovingPointSetType::PixelType     MovingPointSetPixelType;
-  typedef typename MovingPointSetType::ConstPointer  MovingPointSetConstPointer;
+  typedef TFixedPointSet                                                FixedPointSetType;
+  typedef typename FixedPointSetType::PixelType                         FixedPointSetPixelType;
+  typedef typename FixedPointSetType::ConstPointer                      FixedPointSetConstPointer;
+  typedef TMovingPointSet                                               MovingPointSetType;
+  typedef typename MovingPointSetType::PixelType                        MovingPointSetPixelType;
+  typedef typename MovingPointSetType::ConstPointer                     MovingPointSetConstPointer;
   typedef typename FixedPointSetType::PointsContainer::ConstIterator    PointIterator;
   typedef typename FixedPointSetType::PointDataContainer::ConstIterator PointDataIterator;
 
@@ -80,26 +79,26 @@ public:
   typedef AdvancedTransform< CoordinateRepresentationType,
     itkGetStaticConstMacro( FixedPointSetDimension ),
     itkGetStaticConstMacro( MovingPointSetDimension ) > TransformType;
-  typedef typename TransformType::Pointer               TransformPointer;
-  typedef typename TransformType::InputPointType        InputPointType;
-  typedef typename TransformType::OutputPointType       OutputPointType;
-  typedef typename TransformType::ParametersType        TransformParametersType;
-  typedef typename TransformType::JacobianType          TransformJacobianType;
+  typedef typename TransformType::Pointer         TransformPointer;
+  typedef typename TransformType::InputPointType  InputPointType;
+  typedef typename TransformType::OutputPointType OutputPointType;
+  typedef typename TransformType::ParametersType  TransformParametersType;
+  typedef typename TransformType::JacobianType    TransformJacobianType;
 
   typedef SpatialObject<
-      itkGetStaticConstMacro( FixedPointSetDimension )> FixedImageMaskType;
-  typedef typename FixedImageMaskType::Pointer          FixedImageMaskPointer;
-  typedef typename FixedImageMaskType::ConstPointer     FixedImageMaskConstPointer;
+    itkGetStaticConstMacro( FixedPointSetDimension ) > FixedImageMaskType;
+  typedef typename FixedImageMaskType::Pointer      FixedImageMaskPointer;
+  typedef typename FixedImageMaskType::ConstPointer FixedImageMaskConstPointer;
   typedef SpatialObject<
-    itkGetStaticConstMacro( MovingPointSetDimension )>  MovingImageMaskType;
-  typedef typename MovingImageMaskType::Pointer         MovingImageMaskPointer;
-  typedef typename MovingImageMaskType::ConstPointer    MovingImageMaskConstPointer;
+    itkGetStaticConstMacro( MovingPointSetDimension ) >  MovingImageMaskType;
+  typedef typename MovingImageMaskType::Pointer      MovingImageMaskPointer;
+  typedef typename MovingImageMaskType::ConstPointer MovingImageMaskConstPointer;
 
   /**  Type of the measure. */
-  typedef Superclass::MeasureType                       MeasureType;
-  typedef Superclass::DerivativeType                    DerivativeType;
-  typedef typename DerivativeType::ValueType            DerivativeValueType;
-  typedef Superclass::ParametersType                    ParametersType;
+  typedef Superclass::MeasureType            MeasureType;
+  typedef Superclass::DerivativeType         DerivativeType;
+  typedef typename DerivativeType::ValueType DerivativeValueType;
+  typedef Superclass::ParametersType         ParametersType;
 
   /** Typedefs for support of sparse Jacobians and compact support of transformations. */
   typedef typename TransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
@@ -156,8 +155,9 @@ public:
   itkBooleanMacro( UseMetricSingleThreaded );
 
 protected:
+
   SingleValuedPointSetToPointSetMetric();
-  virtual ~SingleValuedPointSetToPointSetMetric() {};
+  virtual ~SingleValuedPointSetToPointSetMetric() {}
 
   /** PrintSelf. */
   void PrintSelf( std::ostream & os, Indent indent ) const;
@@ -169,14 +169,15 @@ protected:
   MovingImageMaskConstPointer m_MovingImageMask;
   mutable TransformPointer    m_Transform;
 
-  mutable unsigned int        m_NumberOfPointsCounted;
+  mutable unsigned int m_NumberOfPointsCounted;
 
   /** Variables for multi-threading. */
   bool m_UseMetricSingleThreaded;
 
 private:
-  SingleValuedPointSetToPointSetMetric(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
+
+  SingleValuedPointSetToPointSetMetric( const Self & ); // purposely not implemented
+  void operator=( const Self & );                       // purposely not implemented
 
 };
 

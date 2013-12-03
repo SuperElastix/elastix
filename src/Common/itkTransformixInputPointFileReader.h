@@ -38,15 +38,16 @@ namespace itk
  * should be read.
  **/
 
-template <class TOutputMesh>
-class TransformixInputPointFileReader : public MeshFileReaderBase<TOutputMesh>
+template< class TOutputMesh >
+class TransformixInputPointFileReader : public MeshFileReaderBase< TOutputMesh >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef TransformixInputPointFileReader        Self;
-  typedef MeshFileReaderBase<TOutputMesh>        Superclass;
-  typedef SmartPointer<Self>                     Pointer;
-  typedef SmartPointer<const Self>               ConstPointer;
+  typedef TransformixInputPointFileReader   Self;
+  typedef MeshFileReaderBase< TOutputMesh > Superclass;
+  typedef SmartPointer< Self >              Pointer;
+  typedef SmartPointer< const Self >        ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -83,6 +84,7 @@ public:
   virtual void GenerateOutputInformation( void );
 
 protected:
+
   TransformixInputPointFileReader();
   virtual ~TransformixInputPointFileReader();
 
@@ -90,15 +92,16 @@ protected:
   virtual void GenerateData( void );
 
   unsigned long m_NumberOfPoints;
-  bool m_PointsAreIndices;
+  bool          m_PointsAreIndices;
 
   std::ifstream m_Reader;
 
 private:
-  TransformixInputPointFileReader(const Self&); // purposely not implemented
-  void operator=(const Self&); // purposely not implemented
 
-}; // end class
+  TransformixInputPointFileReader( const Self & ); // purposely not implemented
+  void operator=( const Self & );                  // purposely not implemented
+
+};
 
 } // end namespace itk
 

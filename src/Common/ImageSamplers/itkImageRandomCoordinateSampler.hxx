@@ -18,7 +18,6 @@
 #include "itkImageRandomCoordinateSampler.h"
 #include "vnl/vnl_math.h"
 
-
 namespace itk
 {
 
@@ -56,7 +55,7 @@ ImageRandomCoordinateSampler< TInputImage >
 {
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
   typename MaskType::ConstPointer mask = this->GetMask();
-  if ( mask.IsNull() && this->m_UseMultiThread )
+  if( mask.IsNull() && this->m_UseMultiThread )
   {
     /** Calls ThreadedGenerateData(). */
     return Superclass::GenerateData();
@@ -65,7 +64,7 @@ ImageRandomCoordinateSampler< TInputImage >
   /** Get handles to the input image, output sample container, and interpolator. */
   InputImageConstPointer inputImage = this->GetInput();
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
-  typename InterpolatorType::Pointer interpolator = this->GetInterpolator();
+  typename InterpolatorType::Pointer interpolator            = this->GetInterpolator();
 
   /** Set up the interpolator. */
   interpolator->SetInputImage( inputImage ); // only once?
@@ -93,14 +92,14 @@ ImageRandomCoordinateSampler< TInputImage >
 
   InputImageContinuousIndexType sampleContIndex;
   /** Fill the sample container. */
-  if ( mask.IsNull() )
+  if( mask.IsNull() )
   {
     /** Start looping over the sample container. */
-    for ( iter = sampleContainer->Begin(); iter != end; ++iter )
+    for( iter = sampleContainer->Begin(); iter != end; ++iter )
     {
       /** Make a reference to the current sample in the container. */
-      InputImagePointType & samplePoint = (*iter).Value().m_ImageCoordinates;
-      ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
+      InputImagePointType &  samplePoint = ( *iter ).Value().m_ImageCoordinates;
+      ImageSampleValueType & sampleValue = ( *iter ).Value().m_ImageValue;
 
       /** Walk over the image until we find a valid point. */
       this->GenerateRandomCoordinate( smallestContIndex, largestContIndex, sampleContIndex );
@@ -109,59 +108,60 @@ ImageRandomCoordinateSampler< TInputImage >
       inputImage->TransformContinuousIndexToPhysicalPoint( sampleContIndex, samplePoint );
 
       /** Compute the value at the contindex. */
-      sampleValue = static_cast<ImageSampleValueType>(
+      sampleValue = static_cast< ImageSampleValueType >(
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  } // end if no mask
+  }   // end if no mask
   else
   {
     /** Update the mask. */
-    if ( mask->GetSource() )
+    if( mask->GetSource() )
     {
       mask->GetSource()->Update();
     }
     /** Set up some variable that are used to make sure we are not forever
      * walking around on this image, trying to look for valid samples. */
-    unsigned long numberOfSamplesTried = 0;
+    unsigned long numberOfSamplesTried        = 0;
     unsigned long maximumNumberOfSamplesToTry = 10 * this->GetNumberOfSamples();
 
     /** Start looping over the sample container */
-    for ( iter = sampleContainer->Begin(); iter != end; ++iter )
+    for( iter = sampleContainer->Begin(); iter != end; ++iter )
     {
       /** Make a reference to the current sample in the container. */
-      InputImagePointType & samplePoint = (*iter).Value().m_ImageCoordinates;
-      ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
+      InputImagePointType &  samplePoint = ( *iter ).Value().m_ImageCoordinates;
+      ImageSampleValueType & sampleValue = ( *iter ).Value().m_ImageValue;
 
       /** Walk over the image until we find a valid point */
       do
       {
         /** Check if we are not trying eternally to find a valid point. */
         ++numberOfSamplesTried;
-        if ( numberOfSamplesTried > maximumNumberOfSamplesToTry )
+        if( numberOfSamplesTried > maximumNumberOfSamplesToTry )
         {
           /** Squeeze the sample container to the size that is still valid. */
           typename ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
           typename ImageSampleContainerType::iterator stlend = sampleContainer->end();
-          stlnow += iter.Index();
+          stlnow                                            += iter.Index();
           sampleContainer->erase( stlnow, stlend );
           itkExceptionMacro( << "Could not find enough image samples within "
-            << "reasonable time. Probably the mask is too small" );
+                             << "reasonable time. Probably the mask is too small" );
         }
 
         /** Generate a point in the input image region. */
         this->GenerateRandomCoordinate( smallestContIndex, largestContIndex, sampleContIndex );
         inputImage->TransformContinuousIndexToPhysicalPoint( sampleContIndex, samplePoint );
 
-      } while ( !interpolator->IsInsideBuffer( sampleContIndex ) ||
-        !mask->IsInside( samplePoint ) );
+      }
+      while( !interpolator->IsInsideBuffer( sampleContIndex )
+        || !mask->IsInside( samplePoint ) );
 
       /** Compute the value at the point. */
-      sampleValue = static_cast<ImageSampleValueType>(
+      sampleValue = static_cast< ImageSampleValueType >(
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  } // end if mask
+  }   // end if mask
 
 } // end GenerateData()
 
@@ -184,7 +184,7 @@ ImageRandomCoordinateSampler< TInputImage >
   this->m_RandomNumberList.reserve( this->m_NumberOfSamples * InputImageDimension );
 
   /** Convert inputImageRegion to bounding box in physical space. */
-  InputImageSizeType unitSize; unitSize.Fill( 1 );
+  InputImageSizeType  unitSize; unitSize.Fill( 1 );
   InputImageIndexType smallestIndex
     = this->GetCroppedInputImageRegion().GetIndex();
   InputImageIndexType largestIndex
@@ -196,10 +196,10 @@ ImageRandomCoordinateSampler< TInputImage >
     smallestCIndex, largestCIndex );
 
   /** Fill the list with random numbers. */
-  for ( unsigned long i = 0; i < this->m_NumberOfSamples; i++ )
+  for( unsigned long i = 0; i < this->m_NumberOfSamples; i++ )
   {
     this->GenerateRandomCoordinate( smallestCIndex, largestCIndex, randomCIndex );
-    for ( unsigned int j = 0; j < InputImageDimension; ++j )
+    for( unsigned int j = 0; j < InputImageDimension; ++j )
     {
       this->m_RandomNumberList.push_back( randomCIndex[ j ] );
     }
@@ -208,7 +208,7 @@ ImageRandomCoordinateSampler< TInputImage >
   /** Initialize variables needed for threads. */
   this->m_ThreaderSampleContainer.clear();
   this->m_ThreaderSampleContainer.resize( this->GetNumberOfThreads() );
-  for ( std::size_t i = 0; i < this->GetNumberOfThreads(); i++ )
+  for( std::size_t i = 0; i < this->GetNumberOfThreads(); i++ )
   {
     this->m_ThreaderSampleContainer[ i ] = ImageSampleContainerType::New();
   }
@@ -227,7 +227,7 @@ ImageRandomCoordinateSampler< TInputImage >
 {
   /** Sanity check. */
   typename MaskType::ConstPointer mask = this->GetMask();
-  if ( mask.IsNotNull() )
+  if( mask.IsNotNull() )
   {
     itkExceptionMacro( << "ERROR: do not call this function when a mask is supplied." );
   }
@@ -236,9 +236,9 @@ ImageRandomCoordinateSampler< TInputImage >
   InputImageConstPointer inputImage = this->GetInput();
 
   /** Figure out which samples to process. */
-  unsigned long chunkSize = this->GetNumberOfSamples() / this->GetNumberOfThreads();
+  unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfThreads();
   unsigned long sampleStart = threadId * chunkSize * InputImageDimension;
-  if ( threadId == this->GetNumberOfThreads() - 1 )
+  if( threadId == this->GetNumberOfThreads() - 1 )
   {
     chunkSize = this->GetNumberOfSamples()
       - ( ( this->GetNumberOfThreads() - 1 ) * chunkSize );
@@ -255,24 +255,24 @@ ImageRandomCoordinateSampler< TInputImage >
 
   /** Fill the local sample container. */
   InputImageContinuousIndexType sampleCIndex;
-  unsigned long sampleId = sampleStart;
-  for ( iter = sampleContainerThisThread->Begin(); iter != end; ++iter )
+  unsigned long                 sampleId = sampleStart;
+  for( iter = sampleContainerThisThread->Begin(); iter != end; ++iter )
   {
     /** Create a random point out of InputImageDimension random numbers. */
-    for ( unsigned int j = 0; j < InputImageDimension; ++j, sampleId++ )
+    for( unsigned int j = 0; j < InputImageDimension; ++j, sampleId++ )
     {
       sampleCIndex[ j ] = this->m_RandomNumberList[ sampleId ];
     }
 
     /** Make a reference to the current sample in the container. */
-    InputImagePointType & samplePoint = (*iter).Value().m_ImageCoordinates;
-    ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
+    InputImagePointType &  samplePoint = ( *iter ).Value().m_ImageCoordinates;
+    ImageSampleValueType & sampleValue = ( *iter ).Value().m_ImageValue;
 
     /** Convert to point */
     inputImage->TransformContinuousIndexToPhysicalPoint( sampleCIndex, samplePoint );
 
     /** Compute the value at the contindex. */
-    sampleValue = static_cast<ImageSampleValueType>(
+    sampleValue = static_cast< ImageSampleValueType >(
       this->m_Interpolator->EvaluateAtContinuousIndex( sampleCIndex ) );
 
   } // end for loop
@@ -286,15 +286,15 @@ ImageRandomCoordinateSampler< TInputImage >
 
 template< class TInputImage >
 void
-ImageRandomCoordinateSampler< TInputImage >::
-GenerateRandomCoordinate(
+ImageRandomCoordinateSampler< TInputImage >
+::GenerateRandomCoordinate(
   const InputImageContinuousIndexType & smallestContIndex,
   const InputImageContinuousIndexType & largestContIndex,
   InputImageContinuousIndexType &       randomContIndex )
 {
-  for ( unsigned int i = 0; i < InputImageDimension; ++i )
+  for( unsigned int i = 0; i < InputImageDimension; ++i )
   {
-    randomContIndex[ i ] = static_cast<InputImagePointValueType>(
+    randomContIndex[ i ] = static_cast< InputImagePointValueType >(
       this->m_RandomGenerator->GetUniformVariate(
       smallestContIndex[ i ], largestContIndex[ i ] ) );
   }
@@ -307,35 +307,35 @@ GenerateRandomCoordinate(
 
 template< class TInputImage >
 void
-ImageRandomCoordinateSampler< TInputImage >::
-GenerateSampleRegion(
+ImageRandomCoordinateSampler< TInputImage >
+::GenerateSampleRegion(
   const InputImageContinuousIndexType & smallestImageContIndex,
   const InputImageContinuousIndexType & largestImageContIndex,
   InputImageContinuousIndexType & smallestContIndex,
   InputImageContinuousIndexType & largestContIndex )
 {
-  if ( !this->GetUseRandomSampleRegion() )
+  if( !this->GetUseRandomSampleRegion() )
   {
     smallestContIndex = smallestImageContIndex;
-    largestContIndex = largestImageContIndex;
+    largestContIndex  = largestImageContIndex;
     return;
   }
   /** Convert sampleRegionSize to continuous index space and
    * compute the maximum allowed value for the smallestContIndex,
    * such that a sampleregion of size SampleRegionSize still fits. */
-  typedef typename InputImageContinuousIndexType::VectorType   CIndexVectorType;
-  CIndexVectorType sampleRegionSize;
+  typedef typename InputImageContinuousIndexType::VectorType CIndexVectorType;
+  CIndexVectorType              sampleRegionSize;
   InputImageContinuousIndexType maxSmallestContIndex;
-  for (unsigned int i = 0; i < InputImageDimension; ++i)
+  for( unsigned int i = 0; i < InputImageDimension; ++i )
   {
-    sampleRegionSize[i] = this->GetSampleRegionSize()[i] /
-      this->GetInput()->GetSpacing()[i];
-    maxSmallestContIndex[i] = largestImageContIndex[i] - sampleRegionSize[i];
+    sampleRegionSize[ i ] = this->GetSampleRegionSize()[ i ]
+      / this->GetInput()->GetSpacing()[ i ];
+    maxSmallestContIndex[ i ] = largestImageContIndex[ i ] - sampleRegionSize[ i ];
     /** make sure it is larger than the lower bound */
-    maxSmallestContIndex[i] = vnl_math_max( maxSmallestContIndex[i], smallestImageContIndex[i] );
+    maxSmallestContIndex[ i ] = vnl_math_max( maxSmallestContIndex[ i ], smallestImageContIndex[ i ] );
   }
   this->GenerateRandomCoordinate( smallestImageContIndex, maxSmallestContIndex, smallestContIndex );
-  largestContIndex = smallestContIndex;
+  largestContIndex  = smallestContIndex;
   largestContIndex += sampleRegionSize;
 
 } // end GenerateSampleRegion()
@@ -348,7 +348,7 @@ GenerateSampleRegion(
 template< class TInputImage >
 void
 ImageRandomCoordinateSampler< TInputImage >
-::PrintSelf( std::ostream& os, Indent indent ) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
@@ -361,4 +361,3 @@ ImageRandomCoordinateSampler< TInputImage >
 } // end namespace itk
 
 #endif // end #ifndef __ImageRandomCoordinateSampler_txx
-

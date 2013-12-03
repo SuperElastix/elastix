@@ -28,20 +28,20 @@ namespace itk
 {
 
 //---------------------------------------------------------
-template <class TInputImage>
-ImageFileCastWriter<TInputImage>
+template< class TInputImage >
+ImageFileCastWriter< TInputImage >
 ::ImageFileCastWriter()
 {
-  this->m_Caster = 0;
+  this->m_Caster              = 0;
   this->m_OutputComponentType = this->GetDefaultOutputComponentType();
 }
 
 
 //---------------------------------------------------------
-template <class TInputImage>
+template< class TInputImage >
 std::string
-ImageFileCastWriter<TInputImage>
-::GetDefaultOutputComponentType(void) const
+ImageFileCastWriter< TInputImage >
+::GetDefaultOutputComponentType( void ) const
 {
   /** Make a dummy imageIO object, which has some handy functions */
   MetaImageIO::Pointer dummyImageIO = MetaImageIO::New();
@@ -49,7 +49,7 @@ ImageFileCastWriter<TInputImage>
   /** Set the pixeltype. */
   typedef typename InputImageType::InternalPixelType ScalarType;
   //dummyImageIO->SetPixelTypeInfo(typeid(ScalarType));
-  dummyImageIO->SetPixelTypeInfo( static_cast<const ScalarType *>(0) );
+  dummyImageIO->SetPixelTypeInfo( static_cast< const ScalarType * >( 0 ) );
 
   /** Get its description. */
   return dummyImageIO->GetComponentTypeAsString(
@@ -58,8 +58,8 @@ ImageFileCastWriter<TInputImage>
 
 
 //---------------------------------------------------------
-template <class TInputImage>
-ImageFileCastWriter<TInputImage>
+template< class TInputImage >
+ImageFileCastWriter< TInputImage >
 ::~ImageFileCastWriter()
 {
   this->m_Caster = 0;
@@ -67,9 +67,9 @@ ImageFileCastWriter<TInputImage>
 
 
 //---------------------------------------------------------
-template <class TInputImage>
+template< class TInputImage >
 void
-ImageFileCastWriter<TInputImage>
+ImageFileCastWriter< TInputImage >
 ::GenerateData( void )
 {
   const InputImageType * input = this->GetInput();
@@ -81,20 +81,20 @@ ImageFileCastWriter<TInputImage>
   typedef typename InputImageType::PixelType ScalarType;
 
   if( strcmp( input->GetNameOfClass(), "VectorImage" ) == 0 )
-    {
+  {
     typedef typename InputImageType::InternalPixelType VectorImageScalarType;
     //this->GetImageIO()->SetPixelTypeInfo( typeid(VectorImageScalarType) );
-    this->GetImageIO()->SetPixelTypeInfo( static_cast<const VectorImageScalarType *>(0) );
+    this->GetImageIO()->SetPixelTypeInfo( static_cast< const VectorImageScalarType * >( 0 ) );
 
     typedef typename InputImageType::AccessorFunctorType AccessorFunctorType;
-    this->GetImageIO()->SetNumberOfComponents( AccessorFunctorType::GetVectorLength(input) );
-    }
+    this->GetImageIO()->SetNumberOfComponents( AccessorFunctorType::GetVectorLength( input ) );
+  }
   else
-    {
+  {
     // Set the pixel and component type; the number of components.
     //this->GetImageIO()->SetPixelTypeInfo(typeid(ScalarType));
-    this->GetImageIO()->SetPixelTypeInfo( static_cast<const ScalarType *>(0) );
-    }
+    this->GetImageIO()->SetPixelTypeInfo( static_cast< const ScalarType * >( 0 ) );
+  }
 
   /** Setup the image IO for writing. */
   this->GetImageIO()->SetFileName( this->GetFileName() );
@@ -104,63 +104,63 @@ ImageFileCastWriter<TInputImage>
 
   /** Extract the data as a raw buffer pointer and possibly convert.
    * Converting is only possible if the number of components equals 1 */
-  if (
+  if(
     this->m_OutputComponentType !=
-      this->GetImageIO()->GetComponentTypeAsString( this->GetImageIO()->GetComponentType() )
+    this->GetImageIO()->GetComponentTypeAsString( this->GetImageIO()->GetComponentType() )
     && numberOfComponents == 1 )
   {
-    void * convertedDataBuffer = 0;
-    const DataObject * inputAsDataObject =
-      dynamic_cast< const DataObject * >( input );
+    void *             convertedDataBuffer = 0;
+    const DataObject * inputAsDataObject
+      = dynamic_cast< const DataObject * >( input );
 
     /** convert the scalar image to a scalar image with another componenttype
      * The imageIO's PixelType is also changed */
-    if ( this->m_OutputComponentType == "char" )
+    if( this->m_OutputComponentType == "char" )
     {
       char dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy );
     }
-    else if ( this->m_OutputComponentType == "unsigned_char" )
+    else if( this->m_OutputComponentType == "unsigned_char" )
     {
       unsigned char dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy );
     }
-    else if ( this->m_OutputComponentType == "short" )
+    else if( this->m_OutputComponentType == "short" )
     {
       short dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy    );
     }
-    else if ( this->m_OutputComponentType == "unsigned_short" )
+    else if( this->m_OutputComponentType == "unsigned_short" )
     {
       unsigned short dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy   );
     }
-    else if ( this->m_OutputComponentType == "int" )
+    else if( this->m_OutputComponentType == "int" )
     {
       int dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy   );
     }
-    else if ( this->m_OutputComponentType == "unsigned_int" )
+    else if( this->m_OutputComponentType == "unsigned_int" )
     {
       unsigned int dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy   );
     }
-    else if ( this->m_OutputComponentType == "long" )
+    else if( this->m_OutputComponentType == "long" )
     {
       long dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy   );
     }
-    else if ( this->m_OutputComponentType == "unsigned_long" )
+    else if( this->m_OutputComponentType == "unsigned_long" )
     {
       unsigned long dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy   );
     }
-    else if ( this->m_OutputComponentType == "float" )
+    else if( this->m_OutputComponentType == "float" )
     {
       float dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy   );
     }
-    else if ( this->m_OutputComponentType == "double" )
+    else if( this->m_OutputComponentType == "double" )
     {
       double dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy   );
@@ -175,12 +175,11 @@ ImageFileCastWriter<TInputImage>
   else
   {
     /** No casting needed or possible, just write */
-    const void* dataPtr = (const void*) input->GetBufferPointer();
-    this->GetImageIO()->Write(dataPtr);
+    const void * dataPtr = (const void *)input->GetBufferPointer();
+    this->GetImageIO()->Write( dataPtr );
   }
 
 }
-
 
 
 } // end namespace itk

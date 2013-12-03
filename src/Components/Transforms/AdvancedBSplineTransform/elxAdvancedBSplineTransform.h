@@ -99,25 +99,25 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template < class TElastix >
-class AdvancedBSplineTransform
-  : public
-  itk::AdvancedCombinationTransform<
-  typename elx::TransformBase<TElastix>::CoordRepType,
-  elx::TransformBase<TElastix>::FixedImageDimension > ,
+template< class TElastix >
+class AdvancedBSplineTransform :
   public
-  TransformBase<TElastix>
+  itk::AdvancedCombinationTransform<
+  typename elx::TransformBase< TElastix >::CoordRepType,
+  elx::TransformBase< TElastix >::FixedImageDimension >,
+  public
+  TransformBase< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef AdvancedBSplineTransform                Self;
+  typedef AdvancedBSplineTransform Self;
   typedef itk::AdvancedCombinationTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
-    elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
-  typedef elx::TransformBase<TElastix>            Superclass2;
-  typedef itk::SmartPointer<Self>                 Pointer;
-  typedef itk::SmartPointer<const Self>           ConstPointer;
+    typename elx::TransformBase< TElastix >::CoordRepType,
+    elx::TransformBase< TElastix >::FixedImageDimension > Superclass1;
+  typedef elx::TransformBase< TElastix >  Superclass2;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -138,33 +138,33 @@ public:
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   typedef itk::AdvancedBSplineDeformableTransformBase<
-    typename elx::TransformBase<TElastix>::CoordRepType,
-    itkGetStaticConstMacro( SpaceDimension )>             BSplineTransformBaseType;
-  typedef typename BSplineTransformBaseType::Pointer      BSplineTransformBasePointer;
+    typename elx::TransformBase< TElastix >::CoordRepType,
+    itkGetStaticConstMacro( SpaceDimension ) >             BSplineTransformBaseType;
+  typedef typename BSplineTransformBaseType::Pointer BSplineTransformBasePointer;
 
   /** Typedef for supported BSplineTransform types. */
   typedef itk::AdvancedBSplineDeformableTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
     1 >                                                   BSplineTransformLinearType;
   typedef itk::AdvancedBSplineDeformableTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
     2 >                                                   BSplineTransformQuadraticType;
   typedef itk::AdvancedBSplineDeformableTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
     3 >                                                   BSplineTransformCubicType;
   typedef itk::CyclicBSplineDeformableTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
     1 >                                                   CyclicBSplineTransformLinearType;
   typedef itk::CyclicBSplineDeformableTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
     2 >                                                   CyclicBSplineTransformQuadraticType;
   typedef itk::CyclicBSplineDeformableTransform<
-    typename elx::TransformBase<TElastix>::CoordRepType,
+    typename elx::TransformBase< TElastix >::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
     3 >                                                   CyclicBSplineTransformCubicType;
 
@@ -183,47 +183,47 @@ public:
   typedef typename Superclass1::OutputPointType           OutputPointType;
 
   /** Typedef's specific for the BSplineTransform. */
-  typedef typename BSplineTransformBaseType::PixelType        PixelType;
-  typedef typename BSplineTransformBaseType::ImageType        ImageType;
-  typedef typename BSplineTransformBaseType::ImagePointer     ImagePointer;
-  typedef typename BSplineTransformBaseType::RegionType       RegionType;
-  typedef typename BSplineTransformBaseType::IndexType        IndexType;
-  typedef typename BSplineTransformBaseType::SizeType         SizeType;
-  typedef typename BSplineTransformBaseType::SpacingType      SpacingType;
-  typedef typename BSplineTransformBaseType::OriginType       OriginType;
-  typedef typename BSplineTransformBaseType::DirectionType    DirectionType;
+  typedef typename BSplineTransformBaseType::PixelType     PixelType;
+  typedef typename BSplineTransformBaseType::ImageType     ImageType;
+  typedef typename BSplineTransformBaseType::ImagePointer  ImagePointer;
+  typedef typename BSplineTransformBaseType::RegionType    RegionType;
+  typedef typename BSplineTransformBaseType::IndexType     IndexType;
+  typedef typename BSplineTransformBaseType::SizeType      SizeType;
+  typedef typename BSplineTransformBaseType::SpacingType   SpacingType;
+  typedef typename BSplineTransformBaseType::OriginType    OriginType;
+  typedef typename BSplineTransformBaseType::DirectionType DirectionType;
   typedef typename
-    BSplineTransformBaseType::ContinuousIndexType             ContinuousIndexType;
+    BSplineTransformBaseType::ContinuousIndexType ContinuousIndexType;
   typedef typename
-    BSplineTransformBaseType::ParameterIndexArrayType         ParameterIndexArrayType;
+    BSplineTransformBaseType::ParameterIndexArrayType ParameterIndexArrayType;
 
   /** Typedef's from TransformBase. */
-  typedef typename Superclass2::ElastixType               ElastixType;
-  typedef typename Superclass2::ElastixPointer            ElastixPointer;
-  typedef typename Superclass2::ConfigurationType         ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType          RegistrationType;
-  typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-  typedef typename Superclass2::CoordRepType              CoordRepType;
-  typedef typename Superclass2::FixedImageType            FixedImageType;
-  typedef typename Superclass2::MovingImageType           MovingImageType;
-  typedef typename Superclass2::ITKBaseType               ITKBaseType;
-  typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
+  typedef typename Superclass2::ElastixType              ElastixType;
+  typedef typename Superclass2::ElastixPointer           ElastixPointer;
+  typedef typename Superclass2::ConfigurationType        ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer     ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType         RegistrationType;
+  typedef typename Superclass2::RegistrationPointer      RegistrationPointer;
+  typedef typename Superclass2::CoordRepType             CoordRepType;
+  typedef typename Superclass2::FixedImageType           FixedImageType;
+  typedef typename Superclass2::MovingImageType          MovingImageType;
+  typedef typename Superclass2::ITKBaseType              ITKBaseType;
+  typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
   typedef itk::GridScheduleComputer<
     CoordRepType, SpaceDimension >                        GridScheduleComputerType;
   typedef itk::CyclicGridScheduleComputer<
     CoordRepType, SpaceDimension >                        CyclicGridScheduleComputerType;
-  typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
+  typedef typename GridScheduleComputerType::Pointer GridScheduleComputerPointer;
   typedef typename GridScheduleComputerType
-    ::VectorGridSpacingFactorType                         GridScheduleType;
+    ::VectorGridSpacingFactorType GridScheduleType;
   typedef itk::UpsampleBSplineParametersFilter<
     ParametersType, ImageType >                           GridUpsamplerType;
-  typedef typename GridUpsamplerType::Pointer             GridUpsamplerPointer;
+  typedef typename GridUpsamplerType::Pointer GridUpsamplerPointer;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef typename Superclass2::ParameterMapType          ParameterMapType;
+  typedef typename Superclass2::ParameterMapType ParameterMapType;
 
   /** Execute stuff before anything else is done:
    * \li Initialize the right BSplineTransform.
@@ -294,24 +294,23 @@ protected:
 private:
 
   /** The private constructor. */
-  AdvancedBSplineTransform( const Self& );  // purposely not implemented
+  AdvancedBSplineTransform( const Self & );  // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );    // purposely not implemented
+  void operator=( const Self & );    // purposely not implemented
 
   /** Private variables. */
-  BSplineTransformBasePointer   m_BSplineTransform;
-  GridScheduleComputerPointer   m_GridScheduleComputer;
-  GridUpsamplerPointer          m_GridUpsampler;
+  BSplineTransformBasePointer m_BSplineTransform;
+  GridScheduleComputerPointer m_GridScheduleComputer;
+  GridUpsamplerPointer        m_GridUpsampler;
 
   /** Variables to remember order and periodicity of B-spline transform. */
   unsigned int m_SplineOrder;
-  bool m_Cyclic;
+  bool         m_Cyclic;
 
   /** Initialize the right B-spline transform based on the spline order and periodicity. */
   unsigned int InitializeBSplineTransform();
 
 };
-
 
 } // end namespace elastix
 
@@ -320,4 +319,3 @@ private:
 #endif
 
 #endif // end #ifndef __elxAdvancedBSplineTransform_h
-
