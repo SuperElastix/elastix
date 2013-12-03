@@ -188,9 +188,9 @@ protected:
   typedef typename ITKBaseType::ParametersType    ParametersType;
 
   /** The full sampler used by the GetExactValue method. */
-  typedef itk::ImageGridSampler<FixedImageType>   ExactMetricImageSamplerType;
-  typedef typename
-    ExactMetricImageSamplerType::SampleGridSpacingType  ExactMetricSampleGridSpacingType;
+  typedef itk::ImageGridSampler<FixedImageType>         ExactMetricImageSamplerType;
+  typedef typename ExactMetricImageSamplerType::Pointer ExactMetricImageSamplerPointer;
+  typedef typename ExactMetricImageSamplerType::SampleGridSpacingType  ExactMetricSampleGridSpacingType;
 
   /** The constructor. */
   MetricBase();
@@ -210,7 +210,7 @@ protected:
   /** \todo the method GetExactDerivative could as well be added here. */
 
   bool m_ShowExactMetricValue;
-  typename ExactMetricImageSamplerType::Pointer m_ExactMetricSampler;
+  ExactMetricImageSamplerPointer m_ExactMetricSampler;
   MeasureType m_CurrentExactMetricValue;
   ExactMetricSampleGridSpacingType m_ExactMetricSampleGridSpacing;
 

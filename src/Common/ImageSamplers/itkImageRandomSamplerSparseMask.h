@@ -72,10 +72,12 @@ public:
 
   /** The random number generator used to generate random indices. */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
+  typedef typename RandomGeneratorType::Pointer   RandomGeneratorPointer;
 
 protected:
 
   typedef itk::ImageFullSampler<InputImageType>           InternalFullSamplerType;
+  typedef typename InternalFullSamplerType::Pointer   InternalFullSamplerPointer;
 
   /** The constructor. */
   ImageRandomSamplerSparseMask();
@@ -94,8 +96,8 @@ protected:
     const InputImageRegionType & inputRegionForThread,
     ThreadIdType threadId );
 
-  typename RandomGeneratorType::Pointer     m_RandomGenerator;
-  typename InternalFullSamplerType::Pointer m_InternalFullSampler;
+  RandomGeneratorPointer      m_RandomGenerator;
+  InternalFullSamplerPointer  m_InternalFullSampler;
 
 private:
 

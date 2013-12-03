@@ -128,13 +128,13 @@ protected:
   ~BSplineInterpolationWeightFunctionBase() {};
 
   /** Interpolation kernel types. */
-  typedef BSplineKernelFunction2<
-    itkGetStaticConstMacro( SplineOrder ) >   KernelType;
-  typedef BSplineDerivativeKernelFunction<
-    itkGetStaticConstMacro( SplineOrder ) >   DerivativeKernelType;
-  typedef BSplineSecondOrderDerivativeKernelFunction2<
-    itkGetStaticConstMacro( SplineOrder ) >   SecondOrderDerivativeKernelType;
-  typedef typename KernelType::WeightArrayType WeightArrayType;
+  typedef BSplineKernelFunction2< Self::SplineOrder >             KernelType;
+  typedef typename KernelType::Pointer                            KernelPointer;
+  typedef BSplineDerivativeKernelFunction< Self::SplineOrder >    DerivativeKernelType;
+  typedef typename DerivativeKernelType::Pointer                  DerivativeKernelPointer;
+  typedef BSplineSecondOrderDerivativeKernelFunction2< Self::SplineOrder >   SecondOrderDerivativeKernelType;
+  typedef typename SecondOrderDerivativeKernelType::Pointer       SecondOrderDerivativeKernelPointer;
+  typedef typename KernelType::WeightArrayType                    WeightArrayType;
 
   /** Lookup table type. */
   typedef Array2D<unsigned long> TableType;

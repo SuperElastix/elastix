@@ -50,6 +50,7 @@ public:
   /** Convenient typedefs for simplifying declarations. */
   typedef TInputImage         InputImageType;
   typedef TGrayValueImage     GrayValueImageType;
+  typedef typename GrayValueImageType::Pointer    GrayValueImagePointer;
 
   /** Standard class typedefs. */
   typedef VectorMeanDiffusionImageFilter      Self;
@@ -79,11 +80,13 @@ public:
     itkGetStaticConstMacro( InputImageDimension ) > VectorRealType;
   typedef Image< double,
     itkGetStaticConstMacro( InputImageDimension ) > DoubleImageType;
+  typedef typename DoubleImageType::Pointer         DoubleImagePointer;
   typedef typename GrayValueImageType::PixelType    GrayValuePixelType;
 
   /** Typedef for the rescale intensity filter. */
   typedef RescaleIntensityImageFilter<
     GrayValueImageType, DoubleImageType >           RescaleImageFilterType;
+  typedef typename RescaleImageFilterType::Pointer  RescaleImageFilterPointer;
 
   /** Set the radius of the neighborhood used to compute the mean. */
   itkSetMacro( Radius, InputSizeType );
@@ -141,10 +144,10 @@ private:
   unsigned int    m_NumberOfIterations;
 
   /** Declare member images. */
-  typename GrayValueImageType::Pointer    m_GrayValueImage;
-  typename DoubleImageType::Pointer       m_Cx;
+  GrayValueImagePointer    m_GrayValueImage;
+  DoubleImagePointer       m_Cx;
 
-  typename RescaleImageFilterType::Pointer  m_RescaleFilter;
+  RescaleImageFilterPointer  m_RescaleFilter;
 
   /** For calculating a feature image from the input m_GrayValueImage. */
   void FilterGrayValueImage( void );

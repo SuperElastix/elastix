@@ -49,7 +49,7 @@ namespace elastix
   * Technical Report, 2005. http://hdl.handle.net/2052/74
   *
   * [2] S. Klein, J.P.W. Pluim, and M. Staring, M.A. Viergever,
-  * "Adaptive stochastic gradient descent optimisation for image registration,"
+  * "Adaptive stochastic gradient descent optimization for image registration,"
   * International Journal of Computer Vision, vol. 81, no. 3, pp. 227-239, 2009.
   * http://dx.doi.org/10.1007/s11263-008-0168-y
   *
@@ -90,7 +90,7 @@ namespace elastix
   *   step size mechanism is turned off, no matter the user setting.
   * \parameter MaximumStepLength: Also called \f$\delta\f$. This parameter can be considered as
   *   the maximum voxel displacement between two iterations. The larger this parameter, the
-  *   more agressive the optimization.
+  *   more aggressive the optimization.
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(MaximumStepLength 1.0)</tt>\n
   *   Default: mean voxel spacing of fixed and moving image. This seems to work well in general.
@@ -313,6 +313,7 @@ protected:
 
   /** Other protected typedefs */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
+  typedef typename RandomGeneratorType::Pointer       RandomGeneratorPointer;
   typedef ProgressCommand                             ProgressCommandType;
   typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
 
@@ -325,6 +326,7 @@ protected:
     CoordinateRepresentationType,
     itkGetStaticConstMacro(FixedImageDimension),
     itkGetStaticConstMacro(MovingImageDimension) >    AdvancedTransformType;
+  typedef typename AdvancedTransformType::Pointer     AdvancedTransformPointer;
   typedef typename
     AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
@@ -340,10 +342,10 @@ protected:
   SizeValueType m_NumberOfSamplesForExactGradient;
 
   /** The transform stored as AdvancedTransform */
-  typename AdvancedTransformType::Pointer           m_AdvancedTransform;
+  AdvancedTransformPointer           m_AdvancedTransform;
 
   /** RandomGenerator for AddRandomPerturbation. */
-  typename RandomGeneratorType::Pointer             m_RandomGenerator;
+  RandomGeneratorPointer             m_RandomGenerator;
 
   double m_SigmoidScaleFactor;
 

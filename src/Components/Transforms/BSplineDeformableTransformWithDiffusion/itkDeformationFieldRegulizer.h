@@ -73,6 +73,7 @@ namespace itk
     typedef DeformationVectorFieldTransform<
       ScalarType,
       itkGetStaticConstMacro( InputSpaceDimension ) >       IntermediaryDFTransformType;
+    typedef typename IntermediaryDFTransformType::Pointer   IntermediaryDFTransformPointer;
     typedef typename IntermediaryDFTransformType
       ::CoefficientVectorImageType                          VectorImageType;
     typedef typename VectorImageType::PixelType             VectorPixelType;
@@ -122,7 +123,7 @@ namespace itk
     void operator=( const Self& );            // purposely not implemented
 
     /** Declaration of members. */
-    typename IntermediaryDFTransformType::Pointer   m_IntermediaryDeformationFieldTransform;
+    IntermediaryDFTransformPointer   m_IntermediaryDeformationFieldTransform;
     bool    m_Initialized;
 
     /** Declarations of region things. */

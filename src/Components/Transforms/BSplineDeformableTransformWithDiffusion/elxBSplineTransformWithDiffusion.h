@@ -250,6 +250,7 @@ public:
   /** Other typedef's inherited from Superclass1. */
   typedef typename Superclass1::IntermediaryDFTransformType   IntermediaryDFTransformType;
   typedef typename Superclass1::VectorImageType               VectorImageType;
+  typedef typename VectorImageType::Pointer                   VectorImagePointer;
 
   /** References to the fixed and moving image types. */
   typedef typename ElastixType::FixedImageType            FixedImageELXType;
@@ -269,6 +270,7 @@ public:
   typedef itk::ImageRegionIterator<
     VectorImageType >                               VectorImageIteratorType;
   typedef FixedImageELXType                         GrayValueImageType;
+  typedef typename GrayValueImageType::Pointer      GrayValueImagePointer;
   typedef typename GrayValueImageType::PixelType    GrayValuePixelType;
   typedef itk::ImageRegionIterator<
     GrayValueImageType >                            GrayValueImageIteratorType;
@@ -277,16 +279,21 @@ public:
     GrayValueImageType >                            MaximumImageFilterType;
   typedef itk::VectorMeanDiffusionImageFilter<
     VectorImageType, GrayValueImageType >           DiffusionFilterType;
+  typedef typename DiffusionFilterType::Pointer     DiffusionFilterPointer;
   typedef typename VectorImageType::SizeType        RadiusType;
   typedef itk::ResampleImageFilter<
     MovingImageELXType, GrayValueImageType,
     CoordRepType >                                  ResamplerType1;
+  typedef typename ResamplerType1::Pointer          ResamplerPointer1;
   typedef itk::ResampleImageFilter<
     GrayValueImageType, GrayValueImageType,
     CoordRepType >                                  ResamplerType2;
+  typedef typename ResamplerType2::Pointer          ResamplerPointer2;
   typedef itk::BSplineInterpolateImageFunction<
     GrayValueImageType >                            InterpolatorType;
+  typedef typename InterpolatorType::Pointer        InterpolatorPointer;
   typedef itk::ImageFileReader< GrayValueImageType >     GrayValueImageReaderType;
+  typedef typename GrayValueImageReaderType::Pointer     GrayValueImageReaderPointer;
   typedef itk::ImageFileWriter< GrayValueImageType >     GrayValueImageWriterType;
   typedef itk::ImageFileWriter< VectorImageType >        DeformationFieldWriterType;
 
@@ -368,20 +375,20 @@ private:
   void operator=( const Self& );                // purposely not implemented
 
   /** Member variables for diffusion. */
-  typename DiffusionFilterType::Pointer   m_Diffusion;
-  typename VectorImageType::Pointer       m_DeformationField;
-  typename VectorImageType::Pointer       m_DiffusedField;
-  typename GrayValueImageType::Pointer    m_GrayValueImage1;
-  typename GrayValueImageType::Pointer    m_GrayValueImage2;
-  typename GrayValueImageType::Pointer    m_MovingSegmentationImage;
-  typename GrayValueImageType::Pointer    m_FixedSegmentationImage;
-  typename GrayValueImageReaderType::Pointer  m_MovingSegmentationReader;
-  typename GrayValueImageReaderType::Pointer  m_FixedSegmentationReader;
-  std::string                             m_MovingSegmentationFileName;
-  std::string                             m_FixedSegmentationFileName;
-  typename ResamplerType1::Pointer        m_Resampler1;
-  typename ResamplerType2::Pointer        m_Resampler2;
-  typename InterpolatorType::Pointer      m_Interpolator;
+  DiffusionFilterPointer   m_Diffusion;
+  VectorImagePointer       m_DeformationField;
+  VectorImagePointer       m_DiffusedField;
+  GrayValueImagePointer    m_GrayValueImage1;
+  GrayValueImagePointer    m_GrayValueImage2;
+  GrayValueImagePointer    m_MovingSegmentationImage;
+  GrayValueImagePointer    m_FixedSegmentationImage;
+  GrayValueImageReaderPointer  m_MovingSegmentationReader;
+  GrayValueImageReaderPointer  m_FixedSegmentationReader;
+  std::string              m_MovingSegmentationFileName;
+  std::string              m_FixedSegmentationFileName;
+  ResamplerPointer1        m_Resampler1;
+  ResamplerPointer2        m_Resampler2;
+  InterpolatorPointer      m_Interpolator;
   RegionType                              m_DeformationRegion;
   OriginType                              m_DeformationOrigin;
   SpacingType                             m_DeformationSpacing;

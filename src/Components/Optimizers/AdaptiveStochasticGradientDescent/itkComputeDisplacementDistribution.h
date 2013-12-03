@@ -57,6 +57,7 @@ public:
   /** typedef  */
   typedef TFixedImage                         FixedImageType;
   typedef TTransform                          TransformType;
+  typedef typename TransformType::Pointer     TransformPointer;
   typedef typename FixedImageType::RegionType FixedImageRegionType;
   typedef Superclass::ParametersType          ParametersType;
   typedef Superclass::DerivativeType          DerivativeType;
@@ -110,7 +111,7 @@ protected:
   typename FixedImageType::ConstPointer     m_FixedImage;
   FixedImageRegionType                      m_FixedImageRegion;
   FixedImageMaskConstPointer                m_FixedImageMask;
-  typename TransformType::Pointer           m_Transform;
+  TransformPointer                          m_Transform;
   ScaledSingleValuedCostFunction::Pointer   m_CostFunction;
   SizeValueType                             m_NumberOfJacobianMeasurements;
 

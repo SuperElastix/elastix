@@ -86,9 +86,11 @@ namespace itk
       itkGetStaticConstMacro(OutputSpaceDimension) >    DeformationFieldVectorType;
     typedef Image< DeformationFieldVectorType,
       itkGetStaticConstMacro(InputSpaceDimension) >     DeformationFieldType;
+    typedef typename DeformationFieldType::Pointer      DeformationFieldPointer;
 
     typedef VectorInterpolateImageFunction<
       DeformationFieldType, ScalarType >                DeformationFieldInterpolatorType;
+    typedef typename DeformationFieldInterpolatorType::Pointer      DeformationFieldInterpolatorPointer;
     typedef VectorNearestNeighborInterpolateImageFunction<
       DeformationFieldType, ScalarType >                DefaultDeformationFieldInterpolatorType;
 
@@ -213,9 +215,9 @@ namespace itk
     /** Print contents of an DeformationFieldInterpolatingTransform. */
     void PrintSelf(std::ostream &os, Indent indent) const;
 
-    typename DeformationFieldType::Pointer m_DeformationField;
-    typename DeformationFieldType::Pointer m_ZeroDeformationField;
-    typename DeformationFieldInterpolatorType::Pointer m_DeformationFieldInterpolator;
+    DeformationFieldPointer m_DeformationField;
+    DeformationFieldPointer m_ZeroDeformationField;
+    DeformationFieldInterpolatorPointer m_DeformationFieldInterpolator;
 
   private:
     DeformationFieldInterpolatingTransform(const Self&); // purposely not implemented

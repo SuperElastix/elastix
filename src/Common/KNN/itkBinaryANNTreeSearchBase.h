@@ -50,6 +50,7 @@ namespace itk
     /** Typedefs from Superclass. */
     typedef typename Superclass::ListSampleType         ListSampleType;
     typedef typename Superclass::BinaryTreeType         BinaryTreeType;
+    typedef typename Superclass::BinaryTreePointer      BinaryTreePointer;
     typedef typename Superclass::MeasurementVectorType  MeasurementVectorType;
     typedef typename Superclass::IndexArrayType         IndexArrayType;
     typedef typename Superclass::DistanceArrayType      DistanceArrayType;

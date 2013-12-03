@@ -80,11 +80,13 @@ namespace itk
     typedef double                                              CoordRepType;
     typedef InterpolateImageFunction<
       InputImageType, CoordRepType >                            InterpolatorType;
+    typedef typename InterpolatorType::Pointer                  InterpolatorPointer;
     typedef BSplineInterpolateImageFunction<
       InputImageType, CoordRepType, double>                     DefaultInterpolatorType;
 
     /** The random number generator used to generate random coordinates. */
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
+    typedef typename RandomGeneratorType::Pointer   RandomGeneratorPointer;
 
     /** Set/Get the interpolator. A 3rd order B-spline interpolator is used by default. */
     itkSetObjectMacro( Interpolator, InterpolatorType );
@@ -124,8 +126,8 @@ namespace itk
       const InputImageContinuousIndexType & largestContIndex,
       InputImageContinuousIndexType &       randomContIndex);
 
-    typename InterpolatorType::Pointer    m_Interpolator;
-    typename RandomGeneratorType::Pointer m_RandomGenerator;
+    InterpolatorPointer    m_Interpolator;
+    RandomGeneratorPointer m_RandomGenerator;
     InputImageSpacingType                 m_SampleRegionSize;
 
     /** Generate the two corners of a sampling region. */

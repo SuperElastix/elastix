@@ -140,12 +140,12 @@ public:
     ImageSamplerType::OutputVectorContainerPointer        ImageSampleContainerPointer;
 
   /** Typedefs for Limiter support. */
-  typedef LimiterFunctionBase<
-    RealType, FixedImageDimension>                        FixedImageLimiterType;
-  typedef typename FixedImageLimiterType::OutputType      FixedImageLimiterOutputType;
-  typedef LimiterFunctionBase<
-    RealType, MovingImageDimension>                       MovingImageLimiterType;
-  typedef typename MovingImageLimiterType::OutputType     MovingImageLimiterOutputType;
+  typedef LimiterFunctionBase< RealType, FixedImageDimension>   FixedImageLimiterType;
+  typedef typename FixedImageLimiterType::Pointer               FixedImageLimiterPointer;
+  typedef typename FixedImageLimiterType::OutputType            FixedImageLimiterOutputType;
+  typedef LimiterFunctionBase< RealType, MovingImageDimension>  MovingImageLimiterType;
+  typedef typename MovingImageLimiterType::Pointer              MovingImageLimiterPointer;
+  typedef typename MovingImageLimiterType::OutputType           MovingImageLimiterOutputType;
 
   /** Advanced transform. */
   typedef typename TransformType::ScalarType              ScalarType;
@@ -306,15 +306,20 @@ protected:
   /** Typedefs used for computing image derivatives. */
   typedef BSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType, double>      BSplineInterpolatorType;
+  typedef typename BSplineInterpolatorType::Pointer             BSplineInterpolatorPointer;
   typedef BSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType, float>       BSplineInterpolatorFloatType;
+  typedef typename BSplineInterpolatorFloatType::Pointer        BSplineInterpolatorFloatPointer;
   typedef ReducedDimensionBSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType, double>      ReducedBSplineInterpolatorType;
+  typedef typename ReducedBSplineInterpolatorType::Pointer      ReducedBSplineInterpolatorPointer;
   typedef AdvancedLinearInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType>              LinearInterpolatorType;
+  typedef typename LinearInterpolatorType::Pointer              LinearInterpolatorPointer;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef GradientImageFilter<
     MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
+  typedef typename CentralDifferenceGradientFilterType::Pointer CentralDifferenceGradientFilterPointer;
 
   /** Typedefs for support of sparse Jacobians and compact support of transformations. */
   typedef typename
@@ -332,11 +337,11 @@ protected:
   bool m_InterpolatorIsBSplineFloat;
   bool m_InterpolatorIsReducedBSpline;
   bool m_InterpolatorIsLinear;
-  typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
-  typename BSplineInterpolatorFloatType::Pointer        m_BSplineInterpolatorFloat;
-  typename ReducedBSplineInterpolatorType::Pointer      m_ReducedBSplineInterpolator;
-  typename LinearInterpolatorType::Pointer              m_LinearInterpolator;
-  typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
+  BSplineInterpolatorPointer             m_BSplineInterpolator;
+  BSplineInterpolatorFloatPointer        m_BSplineInterpolatorFloat;
+  ReducedBSplineInterpolatorPointer      m_ReducedBSplineInterpolator;
+  LinearInterpolatorPointer              m_LinearInterpolator;
+  CentralDifferenceGradientFilterPointer m_CentralDifferenceGradientFilter;
 
   /** Variables to store the AdvancedTransform. */
   bool m_TransformIsAdvanced;
@@ -344,8 +349,8 @@ protected:
   bool m_TransformIsBSpline;
 
   /** Variables for the Limiters. */
-  typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;
-  typename MovingImageLimiterType::Pointer           m_MovingImageLimiter;
+  FixedImageLimiterPointer                           m_FixedImageLimiter;
+  MovingImageLimiterPointer                          m_MovingImageLimiter;
   FixedImagePixelType                                m_FixedImageTrueMin;
   FixedImagePixelType                                m_FixedImageTrueMax;
   MovingImagePixelType                               m_MovingImageTrueMin;

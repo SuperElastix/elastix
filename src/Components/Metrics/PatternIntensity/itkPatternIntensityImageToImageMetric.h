@@ -120,18 +120,21 @@ public:
   typedef typename RayCastInterpolatorType::Pointer       RayCastInterpolatorPointer;
   typedef itk::ResampleImageFilter<
     MovingImageType, TransformedMovingImageType >         TransformMovingImageFilterType;
+  typedef typename TransformMovingImageFilterType::Pointer TransformMovingImageFilterPointer;
   typedef itk::RescaleIntensityImageFilter<
-    TransformedMovingImageType,TransformedMovingImageType >
-                              RescaleIntensityImageFilterType;
+    TransformedMovingImageType, TransformedMovingImageType > RescaleIntensityImageFilterType;
+  typedef typename RescaleIntensityImageFilterType::Pointer RescaleIntensityImageFilterPointer;
 
   typedef itk::SubtractImageFilter<
     FixedImageType,
     TransformedMovingImageType,
     TransformedMovingImageType >        DifferenceImageFilterType;
+  typedef typename DifferenceImageFilterType::Pointer DifferenceImageFilterPointer;
   typedef itk::MultiplyImageFilter<
     TransformedMovingImageType,
     TransformedMovingImageType,
     TransformedMovingImageType>         MultiplyImageFilterType;
+  typedef typename MultiplyImageFilterType::Pointer   MultiplyImageFilterPointer;
 
   /** The moving image dimension. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
@@ -182,10 +185,10 @@ private:
   PatternIntensityImageToImageMetric(const Self&); // purposely not implemented
   void operator=(const Self&); // purposely not implemented
 
-  typename TransformMovingImageFilterType::Pointer    m_TransformMovingImageFilter;
-  typename DifferenceImageFilterType::Pointer         m_DifferenceImageFilter;
-  typename RescaleIntensityImageFilterType::Pointer   m_RescaleImageFilter;
-  typename MultiplyImageFilterType::Pointer           m_MultiplyImageFilter;
+  TransformMovingImageFilterPointer    m_TransformMovingImageFilter;
+  DifferenceImageFilterPointer         m_DifferenceImageFilter;
+  RescaleIntensityImageFilterPointer   m_RescaleImageFilter;
+  MultiplyImageFilterPointer           m_MultiplyImageFilter;
   double                      m_NoiseConstant;
   unsigned int                m_NeighborhoodRadius;
   double                      m_DerivativeDelta;

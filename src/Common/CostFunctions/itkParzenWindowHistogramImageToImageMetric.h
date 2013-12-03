@@ -250,7 +250,9 @@ protected:
   typedef Image<PDFValueType,2>                   JointPDFType;
   typedef typename JointPDFType::Pointer          JointPDFPointer;
   typedef Image<PDFDerivativeValueType,3>         JointPDFDerivativesType;
+  typedef typename JointPDFDerivativesType::Pointer JointPDFDerivativesPointer;
   typedef Image<PDFValueType,2>                   IncrementalMarginalPDFType;
+  typedef typename IncrementalMarginalPDFType::Pointer  IncrementalMarginalPDFPointer;
   typedef JointPDFType::IndexType                 JointPDFIndexType;
   typedef JointPDFType::RegionType                JointPDFRegionType;
   typedef JointPDFType::SizeType                  JointPDFSizeType;
@@ -264,6 +266,7 @@ protected:
 
   /** Typedefs for Parzen kernel. */
   typedef KernelFunctionBase<PDFValueType>        KernelFunctionType;
+  typedef typename KernelFunctionType::Pointer    KernelFunctionPointer;
 
   /** Protected variables **************************** */
 
@@ -276,13 +279,13 @@ protected:
   mutable MarginalPDFType                       m_FixedImageMarginalPDF;
   mutable MarginalPDFType                       m_MovingImageMarginalPDF;
   JointPDFPointer                               m_JointPDF;
-  typename JointPDFDerivativesType::Pointer     m_JointPDFDerivatives;
-  typename JointPDFDerivativesType::Pointer     m_IncrementalJointPDFRight;
-  typename JointPDFDerivativesType::Pointer     m_IncrementalJointPDFLeft;
-  typename IncrementalMarginalPDFType::Pointer  m_FixedIncrementalMarginalPDFRight;
-  typename IncrementalMarginalPDFType::Pointer  m_MovingIncrementalMarginalPDFRight;
-  typename IncrementalMarginalPDFType::Pointer  m_FixedIncrementalMarginalPDFLeft;
-  typename IncrementalMarginalPDFType::Pointer  m_MovingIncrementalMarginalPDFLeft;
+  JointPDFDerivativesPointer  m_JointPDFDerivatives;
+  JointPDFDerivativesPointer  m_IncrementalJointPDFRight;
+  JointPDFDerivativesPointer  m_IncrementalJointPDFLeft;
+  IncrementalMarginalPDFPointer  m_FixedIncrementalMarginalPDFRight;
+  IncrementalMarginalPDFPointer  m_MovingIncrementalMarginalPDFRight;
+  IncrementalMarginalPDFPointer  m_FixedIncrementalMarginalPDFLeft;
+  IncrementalMarginalPDFPointer  m_MovingIncrementalMarginalPDFLeft;
   mutable JointPDFRegionType                    m_JointPDFWindow;// no need for mutable anymore?
   double m_MovingImageNormalizedMin;
   double m_FixedImageNormalizedMin;
@@ -292,9 +295,9 @@ protected:
   double m_MovingParzenTermToIndexOffset;
 
   /** Kernels for computing Parzen histograms and derivatives. */
-  typename KernelFunctionType::Pointer m_FixedKernel;
-  typename KernelFunctionType::Pointer m_MovingKernel;
-  typename KernelFunctionType::Pointer m_DerivativeMovingKernel;
+  KernelFunctionPointer m_FixedKernel;
+  KernelFunctionPointer m_MovingKernel;
+  KernelFunctionPointer m_DerivativeMovingKernel;
 
   /** Threading related parameters. */
   mutable std::vector<JointPDFPointer>  m_ThreaderJointPDFs;

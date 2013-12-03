@@ -51,6 +51,7 @@ public:
   /** typedef  */
   typedef TFixedImage                         FixedImageType;
   typedef TTransform                          TransformType;
+  typedef typename TransformType::Pointer     TransformPointer;
   typedef typename FixedImageType::RegionType FixedImageRegionType;
 
   /** Type for the mask of the fixed image. Only pixels that are "inside"
@@ -109,7 +110,7 @@ protected:
   typename FixedImageType::ConstPointer   m_FixedImage;
   FixedImageRegionType                    m_FixedImageRegion;
   FixedImageMaskConstPointer              m_FixedImageMask;
-  typename TransformType::Pointer         m_Transform;
+  TransformPointer                        m_Transform;
   ScalesType                              m_Scales;
   bool                                    m_UseScales;
 

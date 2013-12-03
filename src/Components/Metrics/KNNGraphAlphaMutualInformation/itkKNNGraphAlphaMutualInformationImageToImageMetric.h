@@ -154,12 +154,14 @@ public:
 
   /** Typedefs for trees. */
   typedef BinaryTreeBase< ListSampleType >            BinaryKNNTreeType;
+  typedef typename BinaryKNNTreeType::Pointer         BinaryKNNTreePointer;
   typedef ANNkDTree< ListSampleType >                 ANNkDTreeType;
   typedef ANNbdTree< ListSampleType >                 ANNbdTreeType;
   typedef ANNBruteForceTree< ListSampleType >         ANNBruteForceTreeType;
 
   /** Typedefs for tree searchers. */
   typedef BinaryTreeSearchBase< ListSampleType >      BinaryKNNTreeSearchType;
+  typedef typename BinaryKNNTreeSearchType::Pointer   BinaryKNNTreeSearchPointer;
   typedef ANNStandardTreeSearch< ListSampleType >     ANNStandardTreeSearchType;
   typedef ANNFixedRadiusTreeSearch< ListSampleType >  ANNFixedRadiusTreeSearchType;
   typedef ANNPriorityTreeSearch< ListSampleType >     ANNPriorityTreeSearchType;
@@ -254,13 +256,13 @@ protected:
   virtual void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Member variables. */
-  typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeFixed;
-  typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeMoving;
-  typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeJoint;
+  BinaryKNNTreePointer       m_BinaryKNNTreeFixed;
+  BinaryKNNTreePointer       m_BinaryKNNTreeMoving;
+  BinaryKNNTreePointer       m_BinaryKNNTreeJoint;
 
-  typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherFixed;
-  typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherMoving;
-  typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherJoint;
+  BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherFixed;
+  BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherMoving;
+  BinaryKNNTreeSearchPointer m_BinaryKNNTreeSearcherJoint;
 
   double   m_Alpha;
   double   m_AvoidDivisionBy;

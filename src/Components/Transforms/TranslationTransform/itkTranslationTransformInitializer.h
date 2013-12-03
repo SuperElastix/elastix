@@ -94,8 +94,8 @@ public:
   typedef ImageMomentsCalculator< FixedImageType >   FixedImageCalculatorType;
   typedef ImageMomentsCalculator< MovingImageType >  MovingImageCalculatorType;
 
-  typedef   typename FixedImageCalculatorType::Pointer    FixedImageCalculatorPointer;
-  typedef   typename MovingImageCalculatorType::Pointer   MovingImageCalculatorPointer;
+  typedef typename FixedImageCalculatorType::Pointer    FixedImageCalculatorPointer;
+  typedef typename MovingImageCalculatorType::Pointer   MovingImageCalculatorPointer;
 
   /** Point type. */
   typedef typename TransformType::InputPointType   InputPointType;

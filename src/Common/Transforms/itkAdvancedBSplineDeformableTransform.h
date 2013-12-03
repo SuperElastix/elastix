@@ -202,16 +202,19 @@ public:
   typedef BSplineInterpolationWeightFunction2< ScalarType,
     itkGetStaticConstMacro( SpaceDimension ),
     itkGetStaticConstMacro( SplineOrder ) >                 WeightsFunctionType;
+  typedef typename WeightsFunctionType::Pointer             WeightsFunctionPointer;
   typedef typename WeightsFunctionType::WeightsType         WeightsType;
   typedef typename WeightsFunctionType::ContinuousIndexType ContinuousIndexType;
   typedef BSplineInterpolationDerivativeWeightFunction<
     ScalarType,
     itkGetStaticConstMacro( SpaceDimension ),
     itkGetStaticConstMacro( SplineOrder ) >                 DerivativeWeightsFunctionType;
+  typedef typename DerivativeWeightsFunctionType::Pointer   DerivativeWeightsFunctionPointer;
   typedef BSplineInterpolationSecondOrderDerivativeWeightFunction<
     ScalarType,
     itkGetStaticConstMacro( SpaceDimension ),
     itkGetStaticConstMacro( SplineOrder ) >                 SODerivativeWeightsFunctionType;
+  typedef typename SODerivativeWeightsFunctionType::Pointer SODerivativeWeightsFunctionPointer;
 
   /** Parameter index array type. */
   typedef typename Superclass::ParameterIndexArrayType  ParameterIndexArrayType;
@@ -312,11 +315,9 @@ protected:
    * For each direction we create a different weights function for thread-
    * safety.
    */
-  typename WeightsFunctionType::Pointer                   m_WeightsFunction;
-  std::vector<
-    typename DerivativeWeightsFunctionType::Pointer >     m_DerivativeWeightsFunctions;
-  std::vector< std::vector<
-    typename SODerivativeWeightsFunctionType::Pointer > > m_SODerivativeWeightsFunctions;
+  WeightsFunctionPointer                                            m_WeightsFunction;
+  std::vector< DerivativeWeightsFunctionPointer >                   m_DerivativeWeightsFunctions;
+  std::vector< std::vector< SODerivativeWeightsFunctionPointer > >  m_SODerivativeWeightsFunctions;
 
 private:
   AdvancedBSplineDeformableTransform(const Self&); // purposely not implemented

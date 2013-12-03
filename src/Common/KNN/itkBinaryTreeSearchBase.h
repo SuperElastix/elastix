@@ -48,6 +48,7 @@ namespace itk
     /** Typedef's. */
     typedef TListSample                 ListSampleType;
     typedef BinaryTreeBase< ListSampleType > BinaryTreeType;
+    typedef typename BinaryTreeType::Pointer  BinaryTreePointer;
     typedef typename BinaryTreeType::
       MeasurementVectorType             MeasurementVectorType;
     typedef Array< int >                IndexArrayType;
@@ -71,7 +72,7 @@ namespace itk
     virtual ~BinaryTreeSearchBase();
 
     /** Member variables. */
-    typename BinaryTreeType::Pointer    m_BinaryTree;
+    BinaryTreePointer    m_BinaryTree;
     unsigned int   m_KNearestNeighbors;
     unsigned int   m_DataDimension;
 
