@@ -188,8 +188,8 @@ protected:
     MovedGradientImageType, MovedGradientImageType > MovedSobelFilter;
 
 private:
-  GradientDifferenceImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  GradientDifferenceImageToImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   /** The variance of the moving image gradients. */
   mutable MovedGradientPixelType m_Variance[FixedImageDimension];

@@ -151,7 +151,7 @@ namespace elastix
     unsigned long m_CurrentNumberOfSamplingAttempts;
     unsigned long m_PreviousErrorAtIteration;
 
-  }; // end class StandardGradientDescent
+  };
 
 
 } // end namespace elastix

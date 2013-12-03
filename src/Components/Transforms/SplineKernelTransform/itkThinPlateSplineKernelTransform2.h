@@ -101,8 +101,8 @@ protected:
     const InputPointType & inputPoint, OutputPointType & result ) const;
 
  private:
-  ThinPlateSplineKernelTransform2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  ThinPlateSplineKernelTransform2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 };
 

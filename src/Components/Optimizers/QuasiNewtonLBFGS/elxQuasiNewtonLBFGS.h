@@ -191,7 +191,7 @@ namespace elastix
     bool                        m_StopIfWolfeNotSatisfied;
     bool                        m_WolfeIsStopCondition;
 
-  }; // end class QuasiNewtonLBFGS
+  };
 
 
 } // end namespace elastix

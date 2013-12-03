@@ -423,8 +423,8 @@ protected:
   DerivativeType              m_NullDerivative;
 
 private:
-  CombinationImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  CombinationImageToImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   /** Initialize some multi-threading related parameters.
    * Overrides function in AdvancedImageToImageMetric, because
@@ -456,7 +456,7 @@ private:
 
   bool m_UseMultiThread;
 
-}; // end class CombinationImageToImageMetric
+};
 
 } // end namespace itk
 

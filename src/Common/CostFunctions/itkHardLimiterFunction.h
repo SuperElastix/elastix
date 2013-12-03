@@ -69,8 +69,8 @@ protected:
   ~HardLimiterFunction(){};
 
 private:
-  HardLimiterFunction(const Self& ); //purposely not implemented
-  void operator=(const Self& ); //purposely not implemented
+  HardLimiterFunction(const Self& ); // purposely not implemented
+  void operator=(const Self& ); // purposely not implemented
 
 };
 

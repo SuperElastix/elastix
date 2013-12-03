@@ -194,7 +194,7 @@ namespace elastix
     bool                        m_StopIfWolfeNotSatisfied;
     bool                        m_WolfeIsStopCondition;
 
-  }; // end class ConjugateGradient
+  };
 
 
 } // end namespace elastix

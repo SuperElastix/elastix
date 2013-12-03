@@ -224,10 +224,10 @@ protected:
   virtual void CheckForBSplineFeatureInterpolators( void );
 
 private:
-  ImageToImageMetricWithFeatures(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  ImageToImageMetricWithFeatures(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
-}; // end class ImageToImageMetricWithFeatures
+};
 
 } // end namespace itk
 

@@ -128,8 +128,8 @@ protected:
   TScalarType m_Alpha;
 
   private:
-  ElasticBodyReciprocalSplineKernelTransform2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  ElasticBodyReciprocalSplineKernelTransform2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 };
 

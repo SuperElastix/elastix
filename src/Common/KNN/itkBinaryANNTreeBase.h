@@ -68,7 +68,7 @@ namespace itk
     BinaryANNTreeBase( const Self& ); // purposely not implemented
     void operator=( const Self& );    // purposely not implemented
 
-  }; // end class BinaryANNTreeBase
+  };
 
 
 } // end namespace itk

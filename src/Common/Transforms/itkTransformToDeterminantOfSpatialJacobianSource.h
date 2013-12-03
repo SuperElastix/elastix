@@ -202,8 +202,8 @@ protected:
 
 private:
 
-  TransformToDeterminantOfSpatialJacobianSource( const Self& ); //purposely not implemented
-  void operator=( const Self& ); //purposely not implemented
+  TransformToDeterminantOfSpatialJacobianSource( const Self& ); // purposely not implemented
+  void operator=( const Self& ); // purposely not implemented
 
   /** Member variables. */
   RegionType              m_OutputRegion;      // region of the output image
@@ -212,7 +212,7 @@ private:
   OriginType              m_OutputOrigin;      // output image origin
   DirectionType           m_OutputDirection;   // output image direction cosines
 
-}; // end class TransformToDeterminantOfSpatialJacobianSource
+};
 
 } // end namespace itk
 

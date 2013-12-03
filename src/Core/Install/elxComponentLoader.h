@@ -79,7 +79,7 @@ namespace elastix
     ComponentLoader( const Self& ); // purposely not implemented
     void operator=( const Self& );  // purposely not implemented
 
-  }; // end class ComponentLoader
+  };
 
 } //end namespace elastix
 

@@ -453,7 +453,7 @@ protected:
     MultipleImageLoader(){};
     ~MultipleImageLoader(){};
 
-  }; // end class MultipleImageLoader
+  };
 
   class MultipleDataObjectFiller
   {
@@ -478,7 +478,7 @@ protected:
     /** Constructor and destructor. */
     MultipleDataObjectFiller(){};
     ~MultipleDataObjectFiller(){};
-  }; // end class MultipleDataObjectFiller
+  };
 
 private:
 
@@ -538,7 +538,7 @@ private:
     bool printerrors,
     bool printinfo ) const;
 
-};  // end class ElastixBase
+}; 
 
 
 } // end namespace elastix

@@ -190,8 +190,8 @@ namespace itk
     virtual bool TestConvergence(bool firstLineSearchDone);
 
   private:
-    QuasiNewtonLBFGSOptimizer(const Self&); //purposely not implemented
-    void operator=(const Self&); //purposely not implemented
+    QuasiNewtonLBFGSOptimizer(const Self&); // purposely not implemented
+    void operator=(const Self&); // purposely not implemented
 
     unsigned long                 m_MaximumNumberOfIterations;
     double                        m_GradientMagnitudeTolerance;
@@ -199,7 +199,7 @@ namespace itk
     unsigned int                  m_Memory;
 
 
-  }; // end class QuasiNewtonLBFGSOptimizer
+  };
 
 
 

@@ -110,7 +110,7 @@ protected:
 
   XStreamMapType m_CellMap;
 
-}; // end class xoutrow
+};
 
 
 } // end namespace xoutlibrary

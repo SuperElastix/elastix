@@ -145,7 +145,7 @@ namespace elastix
       SimultaneousPerturbation( const Self& );  // purposely not implemented
       void operator=( const Self& );              // purposely not implemented
 
-  }; // end class SimultaneousPerturbation
+  };
 
 
 } // end namespace elastix

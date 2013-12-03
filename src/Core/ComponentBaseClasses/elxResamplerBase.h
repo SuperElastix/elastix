@@ -191,7 +191,7 @@ private:
   /** Release memory. */
   void ReleaseMemory( void );
 
-}; // end class ResamplerBase
+};
 
 
 } // end namespace elastix

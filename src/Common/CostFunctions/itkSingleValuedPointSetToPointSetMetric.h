@@ -175,10 +175,10 @@ protected:
   bool m_UseMetricSingleThreaded;
 
 private:
-  SingleValuedPointSetToPointSetMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  SingleValuedPointSetToPointSetMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
-}; // end class SingleValuedPointSetToPointSetMetric
+};
 
 } // end namespace itk
 

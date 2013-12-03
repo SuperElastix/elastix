@@ -132,7 +132,7 @@ protected:
   TransformParametersType       m_PreParameters;
   CombinationTransformPointer   m_CombinationTransform;
 
-}; // end class RayCastInterpolator
+};
 
 
 } // end namespace elastix

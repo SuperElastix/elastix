@@ -232,7 +232,7 @@ private:
 
   bool m_NormalizeWeights;
 
-}; // end class WeightedCombinationTransform
+};
 
 } // end namespace itk
 

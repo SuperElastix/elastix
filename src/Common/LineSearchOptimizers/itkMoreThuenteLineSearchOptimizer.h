@@ -237,15 +237,15 @@ protected:
   bool m_SafeGuardedStepFailed;
 
 private:
-  MoreThuenteLineSearchOptimizer(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  MoreThuenteLineSearchOptimizer(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   unsigned long     m_MaximumNumberOfIterations;
   double            m_ValueTolerance;
   double            m_GradientTolerance;
   double            m_IntervalTolerance;
 
-}; // end class MoreThuenteLineSearchOptimizer
+};
 
 
 } // end namespace itk

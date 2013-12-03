@@ -211,8 +211,8 @@ namespace itk
     virtual void ProcessSearchSpaceChanges(void);
 
   private:
-    FullSearchOptimizer(const Self&); //purposely not implemented
-    void operator=(const Self&); //purposely not implemented
+    FullSearchOptimizer(const Self&); // purposely not implemented
+    void operator=(const Self&); // purposely not implemented
 
     unsigned long                 m_CurrentIteration;
 

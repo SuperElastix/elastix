@@ -413,7 +413,7 @@ private:
   bool m_UseNoiseCompensation;
   bool m_OriginalButSigmoidToDefault;
 
-}; // end class AdaptiveStochasticGradientDescent
+};
 
 
 } // end namespace elastix

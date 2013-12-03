@@ -289,8 +289,8 @@ protected:
   virtual ~AdvancedIdentityTransform() {}
 
 private:
-  AdvancedIdentityTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AdvancedIdentityTransform(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   JacobianType                  m_LocalJacobian;
   SpatialJacobianType           m_SpatialJacobian;
@@ -299,7 +299,7 @@ private:
   JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
   JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian;
 
-}; // end class AdvancedIdentityTransform
+};
 
 } // end namespace itk
 

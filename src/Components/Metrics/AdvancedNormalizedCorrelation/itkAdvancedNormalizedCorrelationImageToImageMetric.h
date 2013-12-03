@@ -235,8 +235,8 @@ protected:
   static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
 
 private:
-  AdvancedNormalizedCorrelationImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AdvancedNormalizedCorrelationImageToImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   mutable bool    m_SubtractMean;
 
@@ -276,7 +276,7 @@ private:
   mutable AlignedCorrelationGetValueAndDerivativePerThreadStruct * m_CorrelationGetValueAndDerivativePerThreadVariables;
   mutable ThreadIdType m_CorrelationGetValueAndDerivativePerThreadVariablesSize;
 
-}; // end class AdvancedNormalizedCorrelationImageToImageMetric
+};
 
 } // end namespace itk
 

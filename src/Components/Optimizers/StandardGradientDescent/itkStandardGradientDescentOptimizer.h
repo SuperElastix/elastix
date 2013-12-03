@@ -155,7 +155,7 @@ namespace itk
     /** Settings */
     double                        m_InitialTime;
 
-  }; // end class StandardGradientDescentOptimizer
+  };
 
 
 } // end namespace itk

@@ -140,8 +140,8 @@ public:
   itkGetObjectMacro(Interpolator,InterpolatorType);
 
 protected:
-  ImageSpatialObject2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  ImageSpatialObject2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   ImagePointer m_Image;
 

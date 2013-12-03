@@ -115,8 +115,8 @@ protected:
   virtual ~ParameterFileParser();
 
 private:
-  ParameterFileParser(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  ParameterFileParser(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   /** Performs the following checks:
    * - Is a filename is given
@@ -151,7 +151,7 @@ private:
   std::ifstream     m_ParameterFile;
   ParameterMapType  m_ParameterMap;
 
-}; // end class ParameterFileParser
+};
 
 } // end of namespace itk
 

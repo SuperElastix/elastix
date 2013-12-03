@@ -121,7 +121,7 @@ namespace elastix
     /** The private copy constructor. */
     void operator=( const Self& );            // purposely not implemented
 
-  }; // end class BSplineInterpolatorFloat
+  };
 
 
 } // end namespace elastix

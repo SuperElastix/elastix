@@ -236,15 +236,15 @@ protected:
     MeasureType & value, DerivativeType & derivative ) const;
 
 private:
-  AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AdvancedMeanSquaresImageToImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   bool            m_UseNormalization;
   double          m_SelfHessianSmoothingSigma;
   double          m_SelfHessianNoiseRange;
   unsigned int    m_NumberOfSamplesForSelfHessian;
 
-}; // end class AdvancedMeanSquaresImageToImageMetric
+};
 
 } // end namespace itk
 

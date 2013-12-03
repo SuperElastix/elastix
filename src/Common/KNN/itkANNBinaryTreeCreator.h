@@ -99,7 +99,7 @@ namespace itk
     /** Member variables. */
     static unsigned int    m_NumberOfANNBinaryTrees;
 
-  }; // end class ANNBinaryTreeCreator
+  };
 
 
 } // end namespace itk

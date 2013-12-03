@@ -133,7 +133,7 @@ private:
   TransformParametersType                   m_PreParameters;
   CombinationTransformPointer               m_CombinationTransform;
 
-}; // end class RayCastResampleInterpolator
+};
 
 
 } // end namespace elastix

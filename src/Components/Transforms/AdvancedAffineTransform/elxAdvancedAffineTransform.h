@@ -234,7 +234,7 @@ namespace elastix
 
     AffineTransformPointer m_AffineTransform;
 
-  }; // end class AdvancedAffineTransformElastix
+  };
 
 
 } // end namespace elastix

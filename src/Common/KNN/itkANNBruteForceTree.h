@@ -83,7 +83,7 @@ namespace itk
     ANNBruteForceTree( const Self& ); // purposely not implemented
     void operator=( const Self& );    // purposely not implemented
 
-  }; // end class ANNBruteForceTree
+  };
 
 
 } // end namespace itk

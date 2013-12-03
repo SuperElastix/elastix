@@ -141,7 +141,7 @@ namespace itk
     double                        m_SigmoidMin;
     double                        m_SigmoidScale;
 
-  }; // end class AdaptiveStochasticGradientDescentOptimizer
+  };
 
 
 } // end namespace itk

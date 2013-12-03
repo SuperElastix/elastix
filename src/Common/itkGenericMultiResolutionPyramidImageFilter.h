@@ -294,8 +294,8 @@ private:
   bool IsCasterNeeded( void ) const;
 
 private:
-  GenericMultiResolutionPyramidImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  GenericMultiResolutionPyramidImageFilter(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 };
 
 } // namespace itk

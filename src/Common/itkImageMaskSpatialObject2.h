@@ -107,8 +107,8 @@ public:
     IndexType & index, SizeType & size ) const;
 
 protected:
-  ImageMaskSpatialObject2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  ImageMaskSpatialObject2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   ImageMaskSpatialObject2();
   virtual ~ImageMaskSpatialObject2();

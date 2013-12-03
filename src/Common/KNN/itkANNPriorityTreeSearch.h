@@ -89,7 +89,7 @@ namespace itk
     ANNPriorityTreeSearch( const Self& ); // purposely not implemented
     void operator=( const Self& );        // purposely not implemented
 
-  }; // end class ANNPriorityTreeSearch
+  };
 
 
 } // end namespace itk

@@ -139,7 +139,7 @@ namespace itk
     unsigned int  m_ResolutionLevel;
     ScheduleType  m_Schedule;
 
-  }; // end class ErodeMaskImageFilter
+  };
 
 } // end namespace itk
 

@@ -42,9 +42,9 @@ namespace itk
       typedef AdvancedMatrixOffsetTransformBase<
         TScalarType, Dimension, Dimension >            SimilarityTransform_tmp;
 
-    }; // end class Dummy
+    };
 
-  }; // end class SimilarityGroup
+  };
 
 
   /**
@@ -66,9 +66,9 @@ namespace itk
       /** Typedef's.*/
       typedef AdvancedSimilarity2DTransform< TScalarType >      SimilarityTransform_tmp;
 
-    }; // end class Dummy
+    };
 
-  }; // end class SimilarityGroup<2>
+  };
 
 
   /**
@@ -90,9 +90,9 @@ namespace itk
       /** Typedef's.*/
       typedef AdvancedSimilarity3DTransform< TScalarType >                  SimilarityTransform_tmp;
 
-    }; // end class Dummy
+    };
 
-  }; // end class SimilarityGroup<3>
+  };
 
 
   /**
@@ -125,7 +125,7 @@ namespace itk
     typedef typename Similarity::template Dummy< ScalarType >   SimilarityDummy;
     typedef typename SimilarityDummy::SimilarityTransform_tmp   SimilarityTransform_tmp;
 
-  }; // end class SimilarityGroupTemplate
+  };
 
 
   /**
@@ -198,7 +198,7 @@ namespace itk
     SimilarityTransform( const Self& ); // purposely not implemented
     void operator=( const Self& ); // purposely not implemented
 
-  }; // end class SimilarityTransform
+  };
 
 
 } // end namespace itk

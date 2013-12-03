@@ -401,8 +401,8 @@ namespace itk
     virtual bool TestConvergence( bool firstCheck );
 
   private:
-    CMAEvolutionStrategyOptimizer(const Self&); //purposely not implemented
-    void operator=(const Self&); //purposely not implemented
+    CMAEvolutionStrategyOptimizer(const Self&); // purposely not implemented
+    void operator=(const Self&); // purposely not implemented
 
     /** Settings that are only inspected/changed by the associated get/set member functions. */
     unsigned long                 m_MaximumNumberOfIterations;
@@ -417,7 +417,7 @@ namespace itk
     double                        m_PositionToleranceMin;
     double                        m_ValueTolerance;
 
-  }; // end class CMAEvolutionStrategyOptimizer
+  };
 
 
 } // end namespace itk

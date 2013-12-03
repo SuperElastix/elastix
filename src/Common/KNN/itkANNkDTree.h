@@ -104,7 +104,7 @@ namespace itk
     ANNkDTree( const Self& );       // purposely not implemented
     void operator=( const Self& );  // purposely not implemented
 
-  }; // end class ANNkDTree
+  };
 
 
 } // end namespace itk

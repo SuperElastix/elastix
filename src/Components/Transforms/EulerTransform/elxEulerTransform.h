@@ -231,7 +231,7 @@ namespace elastix
 
     EulerTransformPointer       m_EulerTransform;
 
-  }; // end class EulerTransformElastix
+  };
 
 
 } // end namespace elastix

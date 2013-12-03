@@ -168,8 +168,8 @@ protected:
 
 private:
 
-  BSplineInterpolationWeightFunctionBase(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  BSplineInterpolationWeightFunctionBase(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   /** Function to initialize the support region. */
   void InitializeSupport( void );

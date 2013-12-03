@@ -204,7 +204,7 @@ namespace itk
     NDImageBase( const Self& );       // purposely not implemented
     void operator=( const Self& );  // purposely not implemented
 
-  }; // end class NDImageBase
+  };
 
 } // end namespace itk
 

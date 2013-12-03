@@ -402,7 +402,7 @@ private:
    */
   BSplineTransformPointer m_BSplineTransform;
 
-}; // end class BSplineTransformWithDiffusion
+};
 
 
 } // end namespace elastix

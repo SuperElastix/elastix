@@ -189,8 +189,8 @@ protected:
   void PrintSelf(std::ostream &os, Indent indent) const;
 
 private:
-  AdvancedRigid3DTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AdvancedRigid3DTransform(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 }; //class AdvancedRigid3DTransform
 

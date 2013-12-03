@@ -319,8 +319,8 @@ protected:
     typename SODerivativeWeightsFunctionType::Pointer > > m_SODerivativeWeightsFunctions;
 
 private:
-  AdvancedBSplineDeformableTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AdvancedBSplineDeformableTransform(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   friend class MultiBSplineDeformableTransformWithNormal<ScalarType,
     itkGetStaticConstMacro( SpaceDimension ),

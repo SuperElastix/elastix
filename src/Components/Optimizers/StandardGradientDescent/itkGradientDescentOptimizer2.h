@@ -154,8 +154,8 @@ namespace itk
     unsigned long                 m_CurrentIteration;
 
   private:
-    GradientDescentOptimizer2(const Self&); //purposely not implemented
-    void operator=(const Self&); //purposely not implemented
+    GradientDescentOptimizer2(const Self&); // purposely not implemented
+    void operator=(const Self&); // purposely not implemented
 
     // multi-threaded AdvanceOneStep:
     bool m_UseMultiThread;

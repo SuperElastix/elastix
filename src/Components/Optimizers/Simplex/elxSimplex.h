@@ -101,7 +101,7 @@ namespace elastix
     Simplex( const Self& );  // purposely not implemented
     void operator=( const Self& );              // purposely not implemented
 
-  }; // end class Simplex
+  };
 
 
 } // end namespace elastix

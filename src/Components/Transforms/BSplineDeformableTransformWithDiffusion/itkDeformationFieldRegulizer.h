@@ -130,7 +130,7 @@ namespace itk
     OriginType                              m_DeformationFieldOrigin;
     SpacingType                             m_DeformationFieldSpacing;
 
-  }; // end class DeformationFieldRegulizer
+  };
 
 
 } // end namespace itk

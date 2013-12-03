@@ -41,9 +41,9 @@ namespace itk
       /** Typedef's.*/
       typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >             AffineDTITransform_tmp;
 
-    }; // end class Dummy
+    };
 
-  }; // end class AffineDTIGroup
+  };
 
 
 
@@ -66,9 +66,9 @@ namespace itk
       /** Typedef's.*/
       typedef AffineDTI3DTransform< TScalarType >           AffineDTITransform_tmp;
 
-    }; // end class Dummy
+    };
 
-  }; // end class AffineDTIGroup<3>
+  };
 
 
   /**
@@ -102,7 +102,7 @@ namespace itk
     typedef typename AffineDTI::template Dummy< ScalarType >      AffineDTIDummy;
     typedef typename AffineDTIDummy::AffineDTITransform_tmp AffineDTITransform_tmp;
 
-  }; // end class AffineDTIGroupTemplate
+  };
 
 
   /**
@@ -175,7 +175,7 @@ namespace itk
     AffineDTITransform( const Self& ); // purposely not implemented
     void operator=( const Self& ); // purposely not implemented
 
-  }; // end class AffineDTITransform
+  };
 
 
 

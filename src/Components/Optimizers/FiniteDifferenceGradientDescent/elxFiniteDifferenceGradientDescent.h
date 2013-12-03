@@ -140,7 +140,7 @@ namespace elastix
       FiniteDifferenceGradientDescent( const Self& ); // purposely not implemented
       void operator=( const Self& );              // purposely not implemented
 
-  }; // end class FiniteDifferenceGradientDescent
+  };
 
 
 } // end namespace elastix

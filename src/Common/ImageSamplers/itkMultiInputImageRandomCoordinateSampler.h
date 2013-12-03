@@ -142,7 +142,7 @@ namespace itk
 
     bool          m_UseRandomSampleRegion;
 
-  }; // end class MultiInputImageRandomCoordinateSampler
+  };
 
 
 } // end namespace itk

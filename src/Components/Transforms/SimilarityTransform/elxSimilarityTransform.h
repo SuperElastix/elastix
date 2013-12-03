@@ -233,7 +233,7 @@ namespace elastix
 
     SimilarityTransformPointer        m_SimilarityTransform;
 
-  }; // end class SimilarityTransformElastix
+  };
 
 
 } // end namespace elastix

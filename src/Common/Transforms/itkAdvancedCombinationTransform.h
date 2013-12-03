@@ -565,7 +565,7 @@ private:
   AdvancedCombinationTransform( const Self& );  // purposely not implemented
   void operator=( const Self& );        // purposely not implemented
 
-}; // end class AdvancedCombinationTransform
+};
 
 
 } // end namespace itk

@@ -173,7 +173,7 @@ namespace itk
     double                        m_Param_alpha;
     double                        m_Param_gamma;
 
-  }; // end class FiniteDifferenceGradientDescentOptimizer
+  };
 
 
 } // end namespace itk

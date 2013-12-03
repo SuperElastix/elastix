@@ -376,7 +376,7 @@ private:
   ElastixTemplate( const Self& ); // purposely not implemented
   void operator=( const Self& );  // purposely not implemented
 
-  }; // end class ElastixTemplate
+  };
 
 } // end namespace elastix
 

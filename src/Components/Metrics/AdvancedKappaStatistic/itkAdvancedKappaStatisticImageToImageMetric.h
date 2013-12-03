@@ -219,8 +219,8 @@ protected:
   static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
 
 private:
-  AdvancedKappaStatisticImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AdvancedKappaStatisticImageToImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   bool      m_UseForegroundValue;
   RealType  m_ForegroundValue;
@@ -257,7 +257,7 @@ private:
   mutable AlignedKappaGetValueAndDerivativePerThreadStruct * m_KappaGetValueAndDerivativePerThreadVariables;
   mutable ThreadIdType m_KappaGetValueAndDerivativePerThreadVariablesSize;
 
-}; // end class AdvancedKappaStatisticImageToImageMetric
+};
 
 } // end namespace itk
 

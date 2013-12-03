@@ -111,8 +111,8 @@ protected:
 
 private:
 
-  UpsampleBSplineParametersFilter( const Self& ); //purposely not implemented
-  void operator=( const Self & );                 //purposely not implemented
+  UpsampleBSplineParametersFilter( const Self& ); // purposely not implemented
+  void operator=( const Self & );                 // purposely not implemented
 
   /** Private member variables. */
   OriginType    m_CurrentGridOrigin;
@@ -125,7 +125,7 @@ private:
   RegionType    m_RequiredGridRegion;
   unsigned int  m_BSplineOrder;
 
-}; // end class UpsampleBSplineParametersFilter
+};
 
 } // end namespace itk
 

@@ -247,7 +247,7 @@ namespace elastix
 
 
 
-  }; // end class AdvancedMattesMutualInformationMetric
+  };
 
 
 } // end namespace elastix

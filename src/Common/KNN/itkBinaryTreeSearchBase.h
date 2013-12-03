@@ -80,7 +80,7 @@ namespace itk
     BinaryTreeSearchBase( const Self& );  // purposely not implemented
     void operator=( const Self& );        // purposely not implemented
 
-  }; // end class BinaryTreeSearchBase
+  };
 
 
 } // end namespace itk

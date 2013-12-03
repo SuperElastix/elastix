@@ -240,7 +240,7 @@ private:
     double m_CutOffValue;
     double m_CutOffSharpness;
 
-}; // end class StatisticalShapePointPenalty
+};
 
 } // end namespace itk
 

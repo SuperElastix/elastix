@@ -130,7 +130,7 @@ private:
    */
   bool m_NewSamplesEveryIteration;
 
-}; // end class OptimizerBase
+};
 
 
 } // end namespace elastix

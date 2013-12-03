@@ -243,8 +243,8 @@ namespace itk
 
 
   private:
-    GenericConjugateGradientOptimizer(const Self&); //purposely not implemented
-    void operator=(const Self&); //purposely not implemented
+    GenericConjugateGradientOptimizer(const Self&); // purposely not implemented
+    void operator=(const Self&); // purposely not implemented
 
     unsigned long                 m_MaximumNumberOfIterations;
     double                        m_ValueTolerance;
@@ -253,7 +253,7 @@ namespace itk
 
     LineSearchOptimizerPointer    m_LineSearchOptimizer;
 
-  }; // end class GenericConjugateGradientOptimizer
+  };
 
 
 } // end namespace itk

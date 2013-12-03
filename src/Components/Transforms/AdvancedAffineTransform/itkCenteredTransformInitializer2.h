@@ -161,8 +161,8 @@ protected:
   itkGetObjectMacro( Transform, TransformType );
 
 private:
-  CenteredTransformInitializer2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  CenteredTransformInitializer2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   TransformPointer    m_Transform;
 

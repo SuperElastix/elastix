@@ -251,7 +251,7 @@ public:
     unsigned int                  m_ElastixLevel;
     unsigned int                  m_TotalNumberOfElastixLevels;
 
-  }; // end class Configuration
+  };
 
 
 } // end namespace elastix

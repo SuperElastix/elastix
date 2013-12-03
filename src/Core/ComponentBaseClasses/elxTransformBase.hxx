@@ -83,10 +83,10 @@ protected:
   virtual ~PixelTypeChangeCommand() {}
 
 private:
-  PixelTypeChangeCommand(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  PixelTypeChangeCommand(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
-}; // end class PixelTypeChangeCommand
+};
 
 } // end namespace itk
 

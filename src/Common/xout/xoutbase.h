@@ -190,10 +190,10 @@ namespace xoutlibrary
 
       } // end ToTargets
 
-    }; // end class Send
+    };
 
 
-  }; // end class xoutbase
+  };
 
 
 

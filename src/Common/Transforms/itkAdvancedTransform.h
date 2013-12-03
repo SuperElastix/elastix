@@ -297,7 +297,7 @@ private:
   AdvancedTransform(const Self&); // purposely not implemented
   void operator=(const Self&);    // purposely not implemented
 
-}; // end class AdvancedTransform
+};
 
 } // end namespace itk
 

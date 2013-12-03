@@ -484,8 +484,8 @@ protected:
   bool m_FastComputationPossible;
 
 private:
-  KernelTransform2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  KernelTransform2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   TScalarType m_PoissonRatio;
 

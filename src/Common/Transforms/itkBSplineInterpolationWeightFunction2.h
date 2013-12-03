@@ -92,8 +92,8 @@ protected:
     OneDWeightsType & weights1D ) const;
 
 private:
-  BSplineInterpolationWeightFunction2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  BSplineInterpolationWeightFunction2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 };
 

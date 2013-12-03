@@ -149,7 +149,7 @@ private:
   /** For calculating a feature image from the input m_GrayValueImage. */
   void FilterGrayValueImage( void );
 
-}; // end class VectorMeanDiffusionImageFilter
+};
 
 } // end namespace itk
 

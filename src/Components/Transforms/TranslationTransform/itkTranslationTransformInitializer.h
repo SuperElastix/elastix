@@ -137,8 +137,8 @@ protected:
   void PrintSelf(std::ostream &os, Indent indent) const;
 
 private:
-  TranslationTransformInitializer(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  TranslationTransformInitializer(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   TransformPointer    m_Transform;
   FixedImagePointer   m_FixedImage;

@@ -83,7 +83,7 @@ private:
   int m_GenerateDataRegion;
   int m_GenerateDataNumberOfRegions;
 
-}; // end class VectorContainerSource
+};
 
 
 } // end namespace itk

@@ -162,7 +162,7 @@ namespace itk
 
     double m_GradientMagnitude;
 
-  }; // end class RSGDEachParameterApartBaseOptimizer
+  };
 
 } // end namespace itk
 

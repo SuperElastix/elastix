@@ -196,8 +196,8 @@ protected:
 
 
 private:
-  MultiResolutionGaussianSmoothingPyramidImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  MultiResolutionGaussianSmoothingPyramidImageFilter(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 };
 

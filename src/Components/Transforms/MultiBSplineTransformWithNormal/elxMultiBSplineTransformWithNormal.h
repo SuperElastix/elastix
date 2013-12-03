@@ -273,7 +273,7 @@ private:
   /** Initialize the right BSplineTransfrom based on the spline order and periodicity. */
   unsigned int InitializeBSplineTransform();
 
-}; // end class AdvancedBSplineTransform
+};
 
 
 

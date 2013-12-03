@@ -153,7 +153,7 @@ private:
       << ImageDimension << ")." );
   };
 
-}; // end class AdvancedLinearInterpolateImageFunction
+};
 
 } // end namespace itk
 

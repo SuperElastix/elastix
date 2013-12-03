@@ -417,7 +417,7 @@ private:
    */
   bool StringCast( const std::string & parameterValue, std::string & casted ) const;
 
-}; // end class ParameterMapInterface
+};
 
 } // end of namespace itk
 

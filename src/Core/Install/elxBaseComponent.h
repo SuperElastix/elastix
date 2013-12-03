@@ -137,7 +137,7 @@ namespace elastix
 
     std::string m_ComponentLabel;
 
-  }; // end class BaseComponent
+  };
 
 
 } // end namespace elastix

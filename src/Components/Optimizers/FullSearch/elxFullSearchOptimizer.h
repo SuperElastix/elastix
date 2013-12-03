@@ -143,7 +143,7 @@ namespace elastix
     FullSearch( const Self& );      // purposely not implemented
     void operator=( const Self& );  // purposely not implemented
 
-  }; // end class FullSearch
+  };
 
 } // end namespace elastix
 

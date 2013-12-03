@@ -85,7 +85,7 @@ namespace itk
     /** Store the samples. */
     typename SampleType::Pointer        m_Sample;
 
-  }; // end class BinaryTreeBase
+  };
 
 
 } // end namespace itk

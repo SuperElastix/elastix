@@ -223,7 +223,7 @@ private:
   InputImageRegionType              m_CroppedInputImageRegion;
   InputImageRegionType              m_DummyInputImageRegion;
 
-}; // end class ImageSamplerBase
+};
 
 
 } // end namespace itk

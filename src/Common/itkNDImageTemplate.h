@@ -220,7 +220,7 @@ namespace itk
 
 
 
-  }; // end class NDImageTemplate
+  };
 
 
 } // end namespace itk

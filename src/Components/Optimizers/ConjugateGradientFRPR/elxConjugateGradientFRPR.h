@@ -208,7 +208,7 @@ namespace elastix
       const char * DeterminePhase(void) const;
 
 
-  }; // end class ConjugateGradientFRPR
+  };
 
 
 } // end namespace elastix

@@ -179,8 +179,8 @@ protected:
     DerivativeType & imageJacobian) const;
 
 private:
-  VarianceOverLastDimensionImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  VarianceOverLastDimensionImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   /** Sample n random numbers from 0..m and add them to the vector. */
   void SampleRandom (const int n, const int m, std::vector<int> & numbers) const;
@@ -203,7 +203,7 @@ private:
   /** Bool to indicate if the transform used is a stacktransform. Set by elx files. */
   bool m_TransformIsStackTransform;
 
-}; // end class VarianceOverLastDimensionImageMetric
+};
 
 } // end namespace itk
 

@@ -71,7 +71,7 @@ namespace xoutlibrary
     InternalBufferType m_InternalBuffer;
 
 
-  }; // end class xoutcell
+  };
 
 
 } // end namespace xoutlibrary

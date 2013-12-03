@@ -180,7 +180,7 @@ private:
 
   unsigned int m_NumberOfSamplesForSelfHessian;
 
-}; // end class TransformBendingEnergyPenaltyTerm
+};
 
 
 } // end namespace itk

@@ -288,8 +288,8 @@ protected:
   FixedImageRegionType m_NullFixedImageRegion;
 
 private:
-  MultiMetricMultiResolutionImageRegistrationMethod(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  MultiMetricMultiResolutionImageRegistrationMethod(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 }; // end class
 

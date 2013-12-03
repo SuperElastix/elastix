@@ -168,8 +168,8 @@ public:
       MovedGradientImageType, MovedGradientImageType >        MovedSobelFilter;
 
 private:
-  NormalizedGradientCorrelationImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  NormalizedGradientCorrelationImageToImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   ScalesType                    m_Scales;
   double                        m_DerivativeDelta;

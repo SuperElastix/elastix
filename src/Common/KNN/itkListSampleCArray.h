@@ -143,7 +143,7 @@ namespace Statistics
     /** Function to deallocate the memory of the data container. */
     void DeallocateInternalContainer( void );
 
-  }; // end class ListSampleCArray
+  };
 
 
 } // end namespace Statistics

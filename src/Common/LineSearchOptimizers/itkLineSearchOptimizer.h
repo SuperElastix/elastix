@@ -125,8 +125,8 @@ protected:
   double DirectionalDerivative( const DerivativeType & derivative ) const;
 
 private:
-  LineSearchOptimizer(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  LineSearchOptimizer(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   ParametersType      m_LineSearchDirection;
 
@@ -134,7 +134,7 @@ private:
   double              m_MaximumStepLength;
   double              m_InitialStepLengthEstimate;
 
-}; // end class LineSearchOptimizer
+};
 
 } // end namespace itk
 

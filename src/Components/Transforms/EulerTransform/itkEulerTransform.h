@@ -42,9 +42,9 @@ namespace itk
       /** Typedef's.*/
       typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >             EulerTransform_tmp;
 
-    }; // end class Dummy
+    };
 
-  }; // end class EulerGroup
+  };
 
 
   /**
@@ -66,9 +66,9 @@ namespace itk
       /** Typedef's.*/
       typedef AdvancedRigid2DTransform< TScalarType >     EulerTransform_tmp;
 
-    }; // end class Dummy
+    };
 
-  }; // end class EulerGroup<2>
+  };
 
 
   /**
@@ -90,9 +90,9 @@ namespace itk
       /** Typedef's.*/
       typedef AdvancedEuler3DTransform< TScalarType >           EulerTransform_tmp;
 
-    }; // end class Dummy
+    };
 
-  }; // end class EulerGroup<3>
+  };
 
 
   /**
@@ -126,7 +126,7 @@ namespace itk
     typedef typename Euler::template Dummy< ScalarType >      EulerDummy;
     typedef typename EulerDummy::EulerTransform_tmp EulerTransform_tmp;
 
-  }; // end class EulerGroupTemplate
+  };
 
 
   /**
@@ -234,7 +234,7 @@ namespace itk
     EulerTransform( const Self& ); // purposely not implemented
     void operator=( const Self& ); // purposely not implemented
 
-  }; // end class EulerTransform
+  };
 
 
 

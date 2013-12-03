@@ -146,7 +146,7 @@ namespace itk
     bool                                  m_UseScales;
     bool                                  m_NegateCostFunction;
 
-  }; // end class ScaledSingleValuedCostFunction
+  };
 
 } //end namespace itk
 

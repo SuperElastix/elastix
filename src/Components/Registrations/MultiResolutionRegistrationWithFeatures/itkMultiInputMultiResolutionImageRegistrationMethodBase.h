@@ -269,12 +269,12 @@ protected:
   FixedImageRegionType              m_NullFixedImageRegion;
 
 private:
-  MultiInputMultiResolutionImageRegistrationMethodBase(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  MultiInputMultiResolutionImageRegistrationMethodBase(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   MultiInputMetricPointer m_MultiInputMetric;
 
-}; // end class MultiInputMultiResolutionImageRegistrationMethodBase
+};
 
 
 } // end namespace itk

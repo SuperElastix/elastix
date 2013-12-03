@@ -260,8 +260,8 @@ protected:
 
 
 private:
-  AdvancedRigid2DTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AdvancedRigid2DTransform(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   TScalarType         m_Angle;
 

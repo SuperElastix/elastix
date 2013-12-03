@@ -354,7 +354,7 @@ private:
   bool                            m_UseFixedRigidityImage;
   bool                            m_UseMovingRigidityImage;
 
-}; // end class TransformRigidityPenaltyTerm
+};
 
 
 } // end namespace itk

@@ -117,8 +117,8 @@ protected:
   InputType m_LowerThreshold;
 
 private:
-  LimiterFunctionBase(const Self& ); //purposely not implemented
-  void operator=(const Self& ); //purposely not implemented
+  LimiterFunctionBase(const Self& ); // purposely not implemented
+  void operator=(const Self& ); // purposely not implemented
 
 };
 

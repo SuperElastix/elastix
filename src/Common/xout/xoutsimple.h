@@ -72,7 +72,7 @@ namespace xoutlibrary
     virtual const CStreamMapType & GetCOutputs(void);
     virtual const XStreamMapType & GetXOutputs(void);
 
-  }; // end class xoutsimple
+  };
 
 
 } // end namespace xoutlibrary

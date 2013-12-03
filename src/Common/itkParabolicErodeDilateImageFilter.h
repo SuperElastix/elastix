@@ -139,8 +139,8 @@ protected:
   bool m_UseImageSpacing;
 
 private:
-  ParabolicErodeDilateImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  ParabolicErodeDilateImageFilter(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
   RadiusType m_Scale;
   typename TInputImage::PixelType m_Extreme;
 

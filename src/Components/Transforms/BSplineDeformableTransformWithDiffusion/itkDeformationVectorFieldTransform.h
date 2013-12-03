@@ -122,7 +122,7 @@ class DeformationVectorFieldTransform
     /** Member variables. */
     CoefficientImagePointer m_Images[ SpaceDimension ];
 
-  }; // end class DeformationVectorFieldTransform
+  };
 
 } // end namespace itk
 

@@ -166,8 +166,8 @@ protected:
   virtual void PrecomputeJacobianOfSpatialJacobian(void);
 
 private:
-  AffineDTI3DTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AffineDTI3DTransform(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   ScalarArrayType m_Angle;
   ScalarArrayType m_Shear;

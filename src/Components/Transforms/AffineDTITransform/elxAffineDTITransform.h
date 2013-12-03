@@ -221,7 +221,7 @@ namespace elastix
 
     AffineDTITransformPointer       m_AffineDTITransform;
 
-  }; // end class AffineDTITransformElastix
+  };
 
 
 } // end namespace elastix

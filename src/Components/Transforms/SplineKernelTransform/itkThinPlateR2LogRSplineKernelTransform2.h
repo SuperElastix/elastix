@@ -100,8 +100,8 @@ protected:
                                                      OutputPointType & result ) const;
 
  private:
-  ThinPlateR2LogRSplineKernelTransform2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  ThinPlateR2LogRSplineKernelTransform2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 };
 

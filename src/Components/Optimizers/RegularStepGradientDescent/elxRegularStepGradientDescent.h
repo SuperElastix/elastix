@@ -126,7 +126,7 @@ namespace elastix
       RegularStepGradientDescent( const Self& );  // purposely not implemented
       void operator=( const Self& );              // purposely not implemented
 
-  }; // end class RegularStepGradientDescent
+  };
 
 
 } // end namespace elastix

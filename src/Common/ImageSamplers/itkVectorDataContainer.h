@@ -330,7 +330,7 @@ public:
    */
   void Initialize( void );
 
-}; // end class VectorDataContainer
+};
 
 } // end namespace itk
 

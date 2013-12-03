@@ -80,8 +80,8 @@ protected:
     }
 
 private:
-  BSplineSecondOrderDerivativeKernelFunction2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  BSplineSecondOrderDerivativeKernelFunction2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   /** Structures to control overloaded versions of Evaluate */
   struct DispatchBase {};

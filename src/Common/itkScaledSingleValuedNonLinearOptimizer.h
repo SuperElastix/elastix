@@ -185,7 +185,7 @@ namespace itk
     mutable ParametersType          m_UnscaledCurrentPosition;
     bool                            m_Maximize;
 
-  }; // end class ScaledSingleValuedNonLinearOptimizer
+  };
 
 
 } // end namespace itk

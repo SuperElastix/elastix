@@ -85,8 +85,8 @@ protected:
 
 
 private:
-  ExponentialLimiterFunction(const Self& ); //purposely not implemented
-  void operator=(const Self& ); //purposely not implemented
+  ExponentialLimiterFunction(const Self& ); // purposely not implemented
+  void operator=(const Self& ); // purposely not implemented
 
 };
 

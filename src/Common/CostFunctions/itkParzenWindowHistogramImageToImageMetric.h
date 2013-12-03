@@ -495,7 +495,7 @@ private:
   bool          m_UseFiniteDifferenceDerivative;
   double        m_FiniteDifferencePerturbation;
 
-}; // end class ParzenWindowHistogramImageToImageMetric
+};
 
 } // end namespace itk
 

@@ -154,7 +154,7 @@ namespace elastix
     /** Original direction cosines; stored to facilitate UseDirectionCosines option. */
     DirectionType           m_OriginalDeformationFieldDirection;
 
-  }; // end class DeformationFieldTransform
+  };
 
 
 } // end namespace elastix

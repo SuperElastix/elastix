@@ -82,7 +82,7 @@ namespace itk
     ANNStandardTreeSearch( const Self& ); // purposely not implemented
     void operator=( const Self& );        // purposely not implemented
 
-  }; // end class ANNStandardTreeSearch
+  };
 
 
 } // end namespace itk

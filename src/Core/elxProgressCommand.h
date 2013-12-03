@@ -163,7 +163,7 @@ private:
   unsigned long m_NumberOfVoxels;
   unsigned long m_NumberOfUpdates;
 
-}; // end class ProgressCommand
+};
 
 } // end namespace elastix
 

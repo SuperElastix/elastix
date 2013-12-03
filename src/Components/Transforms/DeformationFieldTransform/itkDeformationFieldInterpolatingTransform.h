@@ -218,8 +218,8 @@ namespace itk
     typename DeformationFieldInterpolatorType::Pointer m_DeformationFieldInterpolator;
 
   private:
-    DeformationFieldInterpolatingTransform(const Self&); //purposely not implemented
-    void operator=(const Self&); //purposely not implemented
+    DeformationFieldInterpolatingTransform(const Self&); // purposely not implemented
+    void operator=(const Self&); // purposely not implemented
 
   }; //class DeformationFieldInterpolatingTransform
 

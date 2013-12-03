@@ -76,7 +76,7 @@ namespace elastix
       return cdb->SetCreator( name, i, Self::Creator );
     }
 
-  }; // end class InstallFunctions
+  };
 
 
 } // end namespace elastix

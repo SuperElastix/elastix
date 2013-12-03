@@ -189,7 +189,7 @@ private:
   /** Declare member variables, needed internally. */
   float                 m_UpsamplingFactor;
 
-}; // end class GridScheduleComputer
+};
 
 } // end namespace itk
 

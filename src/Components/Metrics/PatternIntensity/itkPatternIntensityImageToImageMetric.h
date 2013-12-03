@@ -179,8 +179,8 @@ protected:
   MeasureType ComputePIDiff( const TransformParametersType &parameters, float scalingfactor ) const;
 
 private:
-  PatternIntensityImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  PatternIntensityImageToImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   typename TransformMovingImageFilterType::Pointer    m_TransformMovingImageFilter;
   typename DifferenceImageFilterType::Pointer         m_DifferenceImageFilter;

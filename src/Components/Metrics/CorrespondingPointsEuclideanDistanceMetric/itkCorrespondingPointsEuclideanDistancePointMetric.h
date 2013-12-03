@@ -91,10 +91,10 @@ protected:
   virtual ~CorrespondingPointsEuclideanDistancePointMetric() {};
 
 private:
-  CorrespondingPointsEuclideanDistancePointMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  CorrespondingPointsEuclideanDistancePointMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
-}; // end class CorrespondingPointsEuclideanDistancePointMetric
+};
 
 } // end namespace itk
 

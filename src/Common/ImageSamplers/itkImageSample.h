@@ -45,7 +45,7 @@ namespace itk
     /** Member variables. */
     PointType   m_ImageCoordinates;
     RealType    m_ImageValue;
-  }; // end class ImageSample
+  };
 
 
 } // end namespace itk

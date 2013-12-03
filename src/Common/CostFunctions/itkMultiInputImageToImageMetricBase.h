@@ -370,7 +370,7 @@ private:
   unsigned int  m_NumberOfInterpolators;
   unsigned int  m_NumberOfFixedImageInterpolators;
 
-}; // end class MultiInputImageToImageMetricBase
+};
 
 } // end namespace itk
 

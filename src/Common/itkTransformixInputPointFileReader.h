@@ -95,8 +95,8 @@ protected:
   std::ifstream m_Reader;
 
 private:
-  TransformixInputPointFileReader(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  TransformixInputPointFileReader(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 }; // end class
 

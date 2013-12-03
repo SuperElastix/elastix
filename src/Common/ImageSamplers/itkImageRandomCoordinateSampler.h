@@ -150,7 +150,7 @@ private:
 
   bool          m_UseRandomSampleRegion;
 
-}; // end class ImageRandomCoordinateSampler
+};
 
 
 } // end namespace itk

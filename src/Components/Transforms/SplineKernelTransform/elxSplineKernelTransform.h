@@ -250,7 +250,7 @@ private:
 
   std::string m_SplineKernelType;
 
-}; // end class SplineKernelTransform
+};
 
 
 } // end namespace elastix

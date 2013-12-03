@@ -107,8 +107,8 @@ protected:
   ProcessObject::Pointer m_Caster;
 
 private:
-  ImageFileCastWriter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  ImageFileCastWriter(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   std::string m_OutputComponentType;
 };

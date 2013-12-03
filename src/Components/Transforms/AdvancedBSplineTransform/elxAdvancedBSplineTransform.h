@@ -310,7 +310,7 @@ private:
   /** Initialize the right B-spline transform based on the spline order and periodicity. */
   unsigned int InitializeBSplineTransform();
 
-}; // end class AdvancedBSplineTransform
+};
 
 
 } // end namespace elastix

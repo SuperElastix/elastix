@@ -472,7 +472,7 @@ private:
   void DispatchParameters( const ParametersType & parameters );
   void PointToLabel( const InputPointType & p, int & l ) const;
 
-}; // end class MultiBSplineDeformableTransformWithNormal
+};
 
 } // end namespace itk
 

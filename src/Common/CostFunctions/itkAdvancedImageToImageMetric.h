@@ -520,8 +520,8 @@ protected:
   itkSetMacro( UseMovingImageLimiter, bool );
 
 private:
-  AdvancedImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AdvancedImageToImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   /** Private member variables. */
   bool    m_UseImageSampler;
@@ -533,7 +533,7 @@ private:
   bool    m_UseMovingImageDerivativeScales;
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
 
-}; // end class AdvancedImageToImageMetric
+};
 
 } // end namespace itk
 

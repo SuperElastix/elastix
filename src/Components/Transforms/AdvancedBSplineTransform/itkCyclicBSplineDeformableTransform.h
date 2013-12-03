@@ -153,8 +153,8 @@ protected:
     RegionType & outRegion2) const;
 
 private:
-  CyclicBSplineDeformableTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  CyclicBSplineDeformableTransform(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 }; //class CyclicBSplineDeformableTransform
 

@@ -328,7 +328,7 @@ private:
   /** Boolean to decide whether or not the transform parameters are written. */
   bool    m_ReadWriteTransformParameters;
 
-}; // end class TransformBase
+};
 
 
 } // end namespace elastix

@@ -181,7 +181,7 @@ namespace elastix
     void operator=( const Self& );              // purposely not implemented
 
 
-  }; // end class CMAEvolutionStrategy
+  };
 
 
 } // end namespace elastix

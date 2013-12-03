@@ -118,7 +118,7 @@ private:
   BaseComponentSE( const Self& );   // purposely not implemented
   void operator=( const Self& );    // purposely not implemented
 
-}; // end class BaseComponentSE
+};
 
 
 } //end namespace elastix

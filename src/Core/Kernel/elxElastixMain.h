@@ -369,7 +369,7 @@ private:
   ElastixMain( const Self& );     // purposely not implemented
   void operator=( const Self& );  // purposely not implemented
 
-}; // end class ElastixMain
+};
 
 
 } // end namespace elastix

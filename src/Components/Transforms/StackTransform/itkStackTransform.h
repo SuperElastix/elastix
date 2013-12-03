@@ -269,7 +269,7 @@ private:
   // Stack spacing and origin of last dimension
   TScalarType m_StackSpacing, m_StackOrigin;
 
-}; // end class StackTransform
+};
 
 } // end namespace itk
 

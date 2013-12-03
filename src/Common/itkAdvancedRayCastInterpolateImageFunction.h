@@ -189,8 +189,8 @@ protected:
 
 
 private:
-  AdvancedRayCastInterpolateImageFunction( const Self& ); //purposely not implemented
-  void operator=( const Self& ); //purposely not implemented
+  AdvancedRayCastInterpolateImageFunction( const Self& ); // purposely not implemented
+  void operator=( const Self& ); // purposely not implemented
 
 
 };

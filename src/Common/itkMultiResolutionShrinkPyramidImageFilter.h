@@ -87,8 +87,8 @@ protected:
   virtual void GenerateData( void );
 
 private:
-  MultiResolutionShrinkPyramidImageFilter(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  MultiResolutionShrinkPyramidImageFilter(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 };
 

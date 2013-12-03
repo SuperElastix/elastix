@@ -346,8 +346,8 @@ protected:
   void UpdateGridOffsetTable( void );
 
 private:
-  AdvancedBSplineDeformableTransformBase(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  AdvancedBSplineDeformableTransformBase(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
 }; //class AdvancedBSplineDeformableTransformBase
 

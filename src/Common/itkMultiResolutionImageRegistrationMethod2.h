@@ -273,8 +273,8 @@ protected:
   bool                             m_Stop;
 
 private:
-  MultiResolutionImageRegistrationMethod2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  MultiResolutionImageRegistrationMethod2(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   /** Member variables. */
   MetricPointer                    m_Metric;
@@ -296,7 +296,7 @@ private:
   unsigned long                    m_NumberOfLevels;
   unsigned long                    m_CurrentLevel;
 
-}; // end class MultiResolutionImageRegistrationMethod2
+};
 
 
 } // end namespace itk
