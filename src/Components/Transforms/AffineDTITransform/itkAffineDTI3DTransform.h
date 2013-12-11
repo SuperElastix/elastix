@@ -51,7 +51,7 @@ namespace itk
  *   Magnetic Resonance in Medicine, Volume 61, Issue 6, pages 1336 - 1349, 2009.
  *
  * The model is as follows:\n
- *   T(x) = R G S (x-c) + t\n
+ *   T(x) = R G S (x-c) + t + c\n
  * with:
  *   - R = Rx Ry Rz (rotation matrices)
  *   - G = Gx Gy Gz (shear matrices)

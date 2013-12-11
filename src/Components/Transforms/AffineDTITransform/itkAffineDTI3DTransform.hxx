@@ -248,7 +248,8 @@ AffineDTI3DTransform< TScalarType >
 // Set parameters
 template< class TScalarType >
 void
-AffineDTI3DTransform< TScalarType >::GetJacobian( const InputPointType & p,
+AffineDTI3DTransform< TScalarType >
+::GetJacobian( const InputPointType & p,
   JacobianType & j,
   NonZeroJacobianIndicesType & nzji ) const
 {
@@ -257,7 +258,6 @@ AffineDTI3DTransform< TScalarType >::GetJacobian( const InputPointType & p,
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 
   /** Compute dR/dmu * (p-c) */
-
   const InputVectorType pp = p - this->GetCenter();
   for( unsigned int dim = 0; dim < 9; dim++ )
   {
