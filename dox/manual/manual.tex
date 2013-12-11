@@ -620,11 +620,26 @@ when you need this transform.
 \begin{align}
 \vTmx &= \bm{A} (\vx - \bm{c}) + \bm{t} + \bm{c},
 \end{align}
-where the matrix $\bm{A}$ has no restrictions. This means that the image
-can be translated, rotated, scaled, and sheared. The parameter vector
-$\vmu$ is formed by the matrix elements $a_{ij}$ and the translation
-vector. In 2D, this gives a vector of length 6: $\vmu=(a_{11}, a_{12},
-a_{21}, a_{22}, t_x, t_y)^T$. In 3D, this gives a vector of length 12.
+where the matrix $\bm{A}$ has no restrictions. This means that the
+image can be translated, rotated, scaled, and sheared. The parameter
+vector $\vmu$ is formed by the matrix elements $a_{ij}$ and the
+translation vector. In 2D, this gives a vector of length 6:
+$\vmu=(a_{11}, a_{12}, a_{21}, a_{22}, t_x, t_y)^T$. In 3D, this
+gives a vector of length 12.
+
+We also have implemented another flavor of the affine
+transformation, with identical meaning, but using another
+parametrization. Instead of having $\vmu$ formed by the matrix
+elements + translation, it is formed by $d$ rotations, $d$ shear
+factors, $d$ scales, and $d$ translations. The definition reads:
+\begin{align}
+\vTmx &= \bm{R} \bm{G} \bm{S} (\vx - \bm{c}) + \bm{t} + \bm{c},
+\end{align}
+with $\bm{R}$, $\bm{G}$ and $\bm{S}$ the rotation, shear and scaling
+matrix, respectively. It can be selected using
+\texttt{AffineDTITransform}, as it was first made with DTI imaging
+in mind, although it can be used anywhere else as well. It is
+currently only implemented in 3D, and also has 12 parameters.
 
 \item[B-splines:] (\texttt{BSplineTransform}) For the category of non-rigid
     transformations, B-splines \citep{RueckertEA99} are often used as a
@@ -947,8 +962,9 @@ without any edges, just noise.
 
 \item Compute the overlap of segmented anatomical structures
 after registration. The better the overlap, the better the
-registration. To measure overlap, commonly the Dice similarity
-coefficient (DSC) is used:
+registration. Note that this requires you to (manually) segment
+structures in your data. To measure overlap, commonly the Dice
+similarity coefficient (DSC) is used:
 \begin{equation}
   \mathrm{DSC}(X,Y) = \frac{2 |X \cap Y|}{|X|+|Y|},
 \end{equation}
@@ -966,26 +982,31 @@ vessel structures. For large spherical objects though, an overlap
 $<0.9$ is in general not very good. What is good enough depends of
 course on your application.
 
-\item Compute the distance after registration between points that you know correspond.
-You can obtain corresponding points by manually clicking them in the
-fixed and the moving image. A less time-consuming option is the
-semi-automated approach of Murphy \etal\ \cite{Murphy08}, which is
-designed for finding corresponding points in the lung. Ideally, the
-registration has found the same correspondence as the ground truth.
+\item Compute the distance after registration between points that
+you know correspond. You can obtain corresponding points by manually
+clicking them in the fixed and the moving image. A less
+time-consuming option is the semi-automated approach of Murphy
+\etal\ \cite{Murphy08}, which is designed for finding corresponding
+points in the lung. Ideally, the registration has found the same
+correspondence as the ground truth.
 
 \item Inspect the deformation field by looking at the determinant of
 the Jacobian of $\vTmx$. Values smaller than 1 indicate local
 compression, values larger than 1 indicate local expansion, and 1
-means volume preservation. The measure is quantitative: a value of 1.1 means a 10\% increase in volume. If this value deviates substantially
-from 1, you may be worried (but maybe not if this is what you
-expect for your application). In case it is negative you have
-``foldings'' in your transformation, and you definitely should be
-worried.
+means volume preservation. The measure is quantitative: a value of
+1.1 means a 10\% increase in volume. If this value deviates
+substantially from 1, you may be worried (but maybe not if this is
+what you expect for your application). In case it is negative you
+have ``foldings'' in your transformation, and you definitely should
+be worried.
 
 \item Inspect the convergence, by computing for each iteration
 the exact metric value (and not an approximated value, when you do
 random sampling), and plot it. For example for the SSD measure,
 the lower the metric value, the better the registration.
+
+\item Do not use image similarity as a way to evaluate your
+registration. Torsten Rohlfing can explain why \cite{Rohlfing2012}.
 
 \end{itemize}
 
@@ -1001,8 +1022,8 @@ use an external viewer. Such a viewer does not come with the
 \elastix\ package, but is a stand-alone application, with dedicated
 functionality for visualization. We have listed a number of
 visualization tools in Table \ref{table:visualization}. All of them
-are freely available, sometimes even with open source. The list is
-not exhaustive.
+are freely available, sometimes even as open source. The list is not
+exhaustive.
 
 \begin{table}[h!]
 \begin{tabular*}{\textwidth}%
@@ -1050,7 +1071,7 @@ versions we decided to put the separate components of \elastix\ in
 separate libraries. This resulted in major version 3.0 in November
 2004. \elastix\ 3.0 was also the first version that was made
 publicly available on the \elastix\ website, around the same time.
-The continued development brings us today (\today) to version 4.6.
+The continued development brings us today (\today) to version 4.7.
 
 \begin{table}[h!]
 \begin{tabular}{l|l}
@@ -1098,7 +1119,7 @@ addition, and more.
     supported by \elastix;
 
 \item multi-platform (at least Windows, Linux and Mac OS), multi-compiler
-    (at least Visual C++ 2008, 2010, gcc 4.1.2, 4.2.1, 4.4.3), and supports
+    (at least Visual C++ 2008, 2010, gcc 4.x, clang 3.3+), and supports
     32 and 64 bit systems. The underlying ITK code builds on many more
     platforms, see \url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is
     highly portable to the platform of the user's choice;
@@ -1110,7 +1131,8 @@ thanks to human readable and editable parameter file;
 \item easy to use for large amounts of data, since \elastix\ can be
 called easily in a script;
 
-\item fast, thanks to stochastic subsampling, if desired;
+\item fast, thanks to stochastic subsampling, if desired, and thanks to
+multi-threading and code optimizations;
 
 \item relatively easy to extend, i.e. to add new components, so it is
 very suited for research also.
@@ -1152,17 +1174,20 @@ pre-compiled binaries.
 
 \subsection{Getting started the easy way}
 
-It is also possible to compile \elastix\ yourself, since the source code is
-freely available. In this section, we assume you use the Microsoft Visual C++
-2008 (or higher) compiler under Windows, and the GCC compiler under
-Linux/MacOS.
+It is also possible to compile \elastix\ yourself, since the source
+code is freely available. In this section, we assume you use the
+Microsoft Visual C++ 2008 (or higher) compiler under Windows, and
+the GCC compiler under Linux/MacOS.
 
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
 
-\item Download and compile the ITK version 4.2.0: \url{www.itk.org}. Make
+\item Download and compile the ITK version 4.5.0: \url{www.itk.org}. Make
     sure to set the following (advanced) CMake variable to \texttt{ON}:
-    \texttt{ITK\_USE\_REVIEW}.
+    \texttt{Module\_ITKReview}, and optionally \texttt{ITK\_USE\_64BITS\_IDS}
+    and \texttt{ITK\_LEGACY\_REMOVE}. For faster building of ITK
+    you can switch off \texttt{BUILD\_EXAMPLES} and
+    \texttt{BUILD\_TESTING}.
 
 \item Obtain the sources. There are three possibilities:
   \begin{enumerate}
@@ -1176,7 +1201,7 @@ svn co --username elastixguest --password elastixguest
 \end{verbatim}
       where XX\_X is the major version number (first 2 digits) and the
       minor version number (1 digit). So, for example, for version
-      4.6 this would be 04\_6.
+      4.7 this would be 04\_7.
   \item Use \texttt{subversion} to check out the latest development
       version. NB: this version might be unstable!
 \begin{verbatim}
@@ -1192,7 +1217,7 @@ svn co --username elastixguest --password elastixguest
         created. Click ``Configure'' and select the compiler that you
         use. Set the \texttt{CMAKE\_INSTALL\_PREFIX} to the directory
         where you want \elastix\ installed. Click ``Configure'' until
-        all cache values are no longer red, and click OK.
+        all cache values are no longer red, and click ``Generate''.
 
     \item Linux: run CMake from the folder where you want the binaries
         to be created, with as command line argument the folder in
@@ -1548,7 +1573,7 @@ discussed.
 Registration & \texttt{MultiResolutionRegistration} \\
 Metric       & \texttt{AdvancedMattesMutualInformation} \\
 Sampler      & \texttt{RandomCoordinate} \\
-Interpolator & \texttt{BSplineInterpolator} \\
+Interpolator & \texttt{LinearInterpolator} \\
 ResampleInterpolator & \texttt{FinalBSplineInterpolator} \\
 Resampler    & \texttt{DefaultResampler}\\
 Transform    & Depends on the application \\
@@ -1654,14 +1679,10 @@ value to try is $\approx1/3$ of the image size.
 
 \subsection{Interpolator}\label{sec:interpolatortuning}
 
-During the registration, use the \texttt{BSplineInterpolator} with
-first order interpolation:
-\begin{quote}
-\texttt{(BSplineInterpolationOrder 1)}
-\end{quote}
-We recommend this instead of the \texttt{LinearInterpolator},
-since the \texttt{BSplineInterpolator} has a dedicated function to
-compute the derivative of the moving image.
+During the registration, use the \texttt{LinearInterpolator}. In our
+current implementation it is much faster than the first order
+B-spline interpolator, even though they are theoretically the same
+thing.
 
 We recommend a higher quality third order B-spline interpolator for
 generating the resulting deformed moving image:
@@ -1888,9 +1909,30 @@ registration, even less iterations may suffice. A side benefit of
 using more iterations is that a wider range of \texttt{SP\_a} gives
 good results. Tuning \texttt{SP\_a} then becomes easier.
 
-A relatively new development is that of an adaptive stochastic
-gradient descent algorithm \cite{Klein09}, which does not require
-tuning $a$. This optimiser is covered in Chapter \ref{chp:advanced}.
+\begin{quote}
+Are you getting tired of the difficulty of tuning $a$?
+\end{quote}
+
+Start using the \texttt{AdaptiveStochasticGradientDescent}
+optimizer. This optimizer is very similar to the
+\texttt{StandardGradientDescent}, but estimates a proper initial
+value for \texttt{SP\_a} \emph{automatically}. See \cite{Klein09}
+for more details. In practice this optimizer works in many
+applications with its default settings. Only the number of
+iterations must be specified by the user:
+\begin{verbatim}
+(Optimizer "AdaptiveStochasticGradientDescent")
+(MaximumNumberOfIterations 500)
+\end{verbatim}
+There are some optional extra parameters, such as
+\texttt{SigmoidInitialTime} and \texttt{MaximumStepLength}, which
+are explained in the paper \citep{Klein09}. In addition to
+automatically computing the step size, this optimizer also
+implements an adaptive step size mechanism, which generally makes
+the optimization somewhat more robust. The only downside of this
+optimizer is that it is relatively time-consuming to estimate $a$ in
+case of a large degree of freedom (large size of $\vmu$), but we are
+addressing this issue \citep{Qiao2014}.
 
 \subsection{Image pyramids}\label{sec:pyramidtuning}
 
@@ -2075,13 +2117,14 @@ Therefore, memory efficiency will become more of an issue. \elastix\
 consumes $\approx$ 100 MB of memory for small images, for larger
 image pairs ($256^3$) and some common components, consumption can be
 about 1 - 1.5 GB. With very large images ($400^3$ and above) memory
-consumption can rise above the 2 GB limit of most Windows systems.
-What to do with large images?
+consumption can rise above 2 GB limit of older 32-bit Windows
+systems. Or perhaps you are using a laptop. Or perhaps you are using
+\elastix\ within another memory-consuming master program. What to do
+with large images?
 \begin{itemize}
-\item Buy yourself a brand new computer with a lot of memory. Make
-sure that this computer is 64 bit, otherwise you cannot address this
-much memory. Also make sure that your operating system supports 64
-bit.
+\item Buy yourself a brand new computer with a lot of memory.
+Nowadays both the computer and the operating system will be 64 bit,
+so that you can actually address this much memory.
 
 \item Images in \elastix\ are internally by default represented as a bunch of
 voxels of floating type. You can modify this to short images:
@@ -2094,17 +2137,16 @@ fixed and moving images, and their multi-resolution pyramids. This
 will come at the cost of a loss of precision, but may not be that
 harmful. This option is useful both for \elastix\ and \transformix.
 
-\item Change the interpolator that is used during registration. By default a B-spline
-interpolator is used, which stores a coefficient image internally in
-double type. You can also specify a float version:
+\item Change the interpolator that is used during registration. In case
+a B-spline interpolator is used, note that it stores a coefficient
+image internally in double type. You can also specify a float
+version:
 \begin{quote}
 \texttt{(Interpolator "BSplineInterpolatorFloat")}
 \end{quote}
 which saves you another bit of memory the size of a short image.
-This option is useful for \elastix\ only. To save even more
-memory, use the \texttt{LinearInterpolator}. This may change the
-results a little though, because of its different method to
-compute image derivatives.
+This option is useful for \elastix\ only. To save even more memory,
+use the \texttt{LinearInterpolator}.
 
 \item Change the interpolator that is used when resampling an image:
 \begin{quote}
@@ -2495,23 +2537,6 @@ file, in the parameter ``\texttt{TransformParameters}''. See Section
 \section{Optimisation methods}
 
 \begin{description}
-\item[AdaptiveStochasticGradientDescent] This optimizer is very similar to
-    the StandardGradientDescent, but implements an adaptive step size
-    mechanism and estimates a proper initial value for \texttt{SP\_a}. See
-    \cite{Klein09} for more details. In practice this optimizer works in
-    many applications with its default settings. Only the number of
-    iterations must be specified by the user:
-\begin{verbatim}
-(Optimizer "AdaptiveStochasticGradientDescent")
-(MaximumNumberOfIterations 500)
-(SigmoidInitialTime 4.0)
-(MaximumStepLength 1.0)
-\end{verbatim}
-The last two options are not mandatory. \texttt{SigmoidInitialTime}
-corresponds to $t_0$ in the article; its default value is 0. The
-\texttt{MaximumStepLength} corresponds to $\delta$ in the article; its
-default value equals the average voxel spacing of fixed and moving image.
-
 \item[Conjugate gradient]
 ---ConjugateGradientFRPR
 
@@ -2548,17 +2573,19 @@ default value equals the average voxel spacing of fixed and moving image.
 %- Advanced transformation, .....
 
 A large part of the \elastix\ code is based on the ITK
-\cite{ITKSoftwareGuideSecondEdition}. The use of the ITK implies that the
-low-level functionality (image classes, memory allocation etc.) is thoroughly
-tested. Naturally, all image formats supported by the ITK are supported by
-\elastix\ as well. The C++ source code can be compiled on multiple operating
-systems (Windows XP, Linux, Mac OS X), using various compilers (MS Visual
-Studio up to version 2010, GCC up to version 4.4.3), and supports both 32 and
-64 bit systems.
+\cite{ITKSoftwareGuideSecondEdition}. The use of the ITK implies
+that the low-level functionality (image classes, memory allocation
+etc.) is thoroughly tested. Naturally, all image formats supported
+by the ITK are supported by \elastix\ as well. The C++ source code
+can be compiled on multiple operating systems (Windows XP, Linux,
+Mac OS X), using various compilers (MS Visual Studio, GCC), and
+supports both 32 and 64 bit systems.
 
-In addition to the existing ITK image registration classes, \elastix\
-implements new functionality. The most important enhancements are listed in
-Table \ref{table:extras}.
+In addition to the existing ITK image registration classes,
+\elastix\ implements new functionality. The most important
+enhancements are listed in Table \ref{table:extras}. Note that from
+version 4 ITK also has transform concatenation and supports spatial
+derivatives (but not their derivatives to $\vmu$ again).
 
 \begin{table}[!h]
 \centering
@@ -2568,7 +2595,8 @@ Table \ref{table:extras}.
 \item A modular framework for sampling strategies. See for more details \cite{StaringKlein2010b}.
 
 \item Several new optimisers: Kiefer-Wolfowitz, Robbins-Monro, adaptive
-    stochastic gradient descent, evolutionary strategy. Complete rework of existing ITK optimisers, adding more user control and
+    stochastic gradient descent, evolutionary strategy. Complete rework
+    of existing ITK optimisers, adding more user control and
     better error handling: quasi-Newton, nonlinear conjugate gradient.
 
 \item Several new or more flexible cost functions: (normalised) mutual
@@ -2766,7 +2794,8 @@ output, save some results etc.
 
 In order to improve code readability and consistency, which has a
 positive influence on maintainability we have adopted a coding
-style. he\textvisiblespace pete
+style. A rough \texttt{uncrustify} configuration file is provided in
+\elastix\ since version 4.7.
 
 \begin{description}
 \item[White spacing] Good spacing improves code readability. Therefore,
@@ -2790,7 +2819,7 @@ make them (very) noticeable add the following in your \texttt{.vimrc}:
 \item Use spaces in functions, \texttt{for} loops, indices, etc. So,
 \begin{verbatim}
   FunctionName(.void.);
-  for.(.i.=.0;.i.<.10;.i++.)
+  for(.i.=.0;.i.<.10;.++i.)
   vector[.i.].=.3;
 \end{verbatim}
 \end{itemize}
@@ -2815,7 +2844,7 @@ ClassName<TTemplate1, TTemplate2>
 {
 ..//Function body
 ..this->OtherMemberFunction(.arguments.);
-..for.(.i.=.0;.i.<.10;.i++.)
+..for(.i.=.0;.i.<.10;.++i.)
 ..{
 ....x.+=.i.*.i;
 ..}
@@ -2870,8 +2899,6 @@ a capital. In the implementation refer to them using
 \begin{itemize}
 \item Use const wherever you can
 
-\item use vnl math functions instead of their std counterparts
-
 \item For floats don't use 0, but 0.0 to avoid possible bugs.
 
 \item Use the virtual keyword when overriding a virtual function in a derived
@@ -2880,20 +2907,20 @@ clear that a function overridden or meant to be overridden.
 
 \item Always use opening and closing brackets. Although it is not always needed for C++, do
 \begin{verbatim}
-  if.(.condition.)
+  if(.condition.)
   {
   ..valid = true;
   }
 \end{verbatim}
 instead of
 \begin{verbatim}
-  if.(.condition.)
+  if(.condition.)
   ..valid = true;
 \end{verbatim}
 Also for \texttt{for}-loops.
 \end{itemize}
 
-\item[Commenting] Code is mean to be read by others, or you in years time. So,
+\item[Commenting] Code is meant to be read by others, or by you in years time. So,
 
 \begin{itemize}
 \item Comment a lot
