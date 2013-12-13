@@ -23,7 +23,7 @@ set( mevisdcmtifflib mevisdcmtiff )
 
 
 #---------------------------------------------------------------------
-# Macro that simplifies the addition of tests
+# Macro that simplifies the addition of elastix tests
 #
 # Usage:
 # elx_add_test( <name_of_test> )
@@ -54,6 +54,32 @@ macro( elx_add_test name )
   # Add the test.
   add_test( NAME ${ELXTEST_TEST_NAME}
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/${ELXTEST_EXECUTABLE_NAME} ${ARGN} )
+endmacro()
+
+#---------------------------------------------------------------------
+# Macro that simplifies the addition of transformix tests
+#
+# Usage:
+# trx_add_test( <name_of_test> <transformix_commandline_arguments> )
+#
+# The macro runs transformix with the provided commandline arguments.
+#
+
+macro( trx_add_test name )
+  # Create output directory
+  set( testname transformix_run_${name} )
+  set( output_dir ${TestOutputDir}/${testname} )
+  file( MAKE_DIRECTORY ${output_dir} )
+  
+  # Define some helper variables.
+  set( TRXTEST_EXECUTABLE_NAME transformix )
+  set( TRXTEST_TEST_NAME ${name} )
+
+  # Group in IDE's like Visual Studio
+  set_property( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests" )
+
+  # Add the test.
+  add_test( NAME ${name} COMMAND ${EXECUTABLE_OUTPUT_PATH}/transformix ${ARGN} -out ${output_dir} )
 endmacro()
 
 #---------------------------------------------------------------------
@@ -310,6 +336,7 @@ add_test( NAME InvertTransformTest_COMPARE_TP
   -a 1e-3 )
 set_tests_properties( InvertTransformTest_COMPARE_TP
   PROPERTIES DEPENDS InvertTransformTest_OUTPUT )
+
 
 # Add other tests
 elx_add_test( AdvancedBSplineDeformableTransformTest
@@ -601,3 +628,7 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.txt )
 
+### TRANSFORMIX TESTING TO CHECK MEMORY PROBLEM
+trx_add_test( TransformixMemoryTest
+  -in ${TestDataDir}/3DCT_lung_baseline.mha
+  -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
