@@ -36,8 +36,9 @@ namespace itk
  * involved in the registration. Three modes of operation are possible:
  *
  * - Geometrical,
- * - Center of mass
- * - Origins
+ * - Center of mass,
+ * - Origins,
+ * - GeometryTop
  *
  * In the first mode, the geometrical center of the fixed image is passed as
  * initial center of rotation to the transform and the vector from the center
@@ -61,11 +62,17 @@ namespace itk
  * initial translation T and the geometrical center of the
  * moving image, translated by inv(T), is passed as initial center of rotation to the transform.
  *
+ * In the fourth mode, the world coordinates of the eight corner points of both
+ * images are determined. For both images, the minimum of the elements of world coordinates
+ * is taken and the initial translation is taken to be the vector pointing from the minimum
+ * coordinates of the fixed image to the minimum coordinates of the moving image. The
+ * rotation point is set to the center of the fixed image.
+ *
  * \ingroup Transforms
  */
-template< class TTransform,
-class TFixedImage,
-class TMovingImage >
+template < class TTransform,
+           class TFixedImage,
+           class TMovingImage >
 class CenteredTransformInitializer2 : public Object
 {
 public:
@@ -87,35 +94,34 @@ public:
   typedef typename TransformType::Pointer TransformPointer;
 
   /** Dimension of parameters. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int,
-    TransformType::InputSpaceDimension );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int,
-    TransformType::OutputSpaceDimension );
+  itkStaticConstMacro(InputSpaceDimension, unsigned int,
+                      TransformType::InputSpaceDimension);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int,
+                      TransformType::OutputSpaceDimension);
 
   /** Image Types to use in the initialization of the transform */
   typedef TFixedImage  FixedImageType;
   typedef TMovingImage MovingImageType;
 
-  typedef typename FixedImageType::ConstPointer  FixedImagePointer;
-  typedef typename MovingImageType::ConstPointer MovingImagePointer;
+  typedef typename FixedImageType::ConstPointer   FixedImagePointer;
+  typedef typename MovingImageType::ConstPointer  MovingImagePointer;
 
-  //typedef SpatialObject< InputSpaceDimension >        FixedImageMaskType;
-  //typedef SpatialObject< OutputSpaceDimension >       MovingImageMaskType;
-  typedef Image< unsigned char, InputSpaceDimension >  FixedImageMaskType;
-  typedef Image< unsigned char, OutputSpaceDimension > MovingImageMaskType;
-  typedef typename FixedImageMaskType::ConstPointer    FixedImageMaskPointer;
-  typedef typename MovingImageMaskType::ConstPointer   MovingImageMaskPointer;
+  typedef Image< unsigned char, InputSpaceDimension >   FixedImageMaskType;
+  typedef Image< unsigned char, OutputSpaceDimension >  MovingImageMaskType;
+  typedef typename FixedImageMaskType::ConstPointer   FixedImageMaskPointer;
+  typedef typename MovingImageMaskType::ConstPointer  MovingImageMaskPointer;
 
   /** Moment calculators */
   typedef ImageMomentsCalculator< FixedImageType >
-    FixedImageCalculatorType;
+                                                 FixedImageCalculatorType;
   typedef ImageMomentsCalculator< MovingImageType >
-    MovingImageCalculatorType;
+                                                 MovingImageCalculatorType;
 
   typedef typename FixedImageCalculatorType::Pointer
-    FixedImageCalculatorPointer;
+                                                 FixedImageCalculatorPointer;
   typedef typename MovingImageCalculatorType::Pointer
-    MovingImageCalculatorPointer;
+                                                 MovingImageCalculatorPointer;
+
 
   /** Offset type. */
   typedef typename TransformType::OffsetType OffsetType;
@@ -144,18 +150,18 @@ public:
 
   /** Select between using the geometrical center of the images or
       using the center of mass given by the image intensities. */
-  void GeometryOn() { m_UseMoments = false; m_UseOrigins = false; }
-  void MomentsOn()  { m_UseMoments = true; m_UseOrigins = false; }
-  void OriginsOn()  { m_UseMoments = false; m_UseOrigins = true; }
-
+  void GeometryOn()    { m_UseMoments = false; m_UseOrigins = false; m_UseTop = false; }
+  void MomentsOn()     { m_UseMoments = true; m_UseOrigins = false; m_UseTop = false; }
+  void OriginsOn()     { m_UseMoments = false; m_UseOrigins = true; m_UseTop = false; }
+  void GeometryTopOn() { m_UseMoments = false; m_UseOrigins = false; m_UseTop = true; }
+ 
   /** Get() access to the moments calculators */
   itkGetConstObjectMacro( FixedCalculator,  FixedImageCalculatorType  );
   itkGetConstObjectMacro( MovingCalculator, MovingImageCalculatorType );
 
 protected:
-
   CenteredTransformInitializer2();
-  ~CenteredTransformInitializer2(){}
+  ~CenteredTransformInitializer2() {}
 
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
@@ -175,6 +181,7 @@ private:
 
   bool m_UseMoments;
   bool m_UseOrigins;
+  bool m_UseTop;
 
   FixedImageCalculatorPointer  m_FixedCalculator;
   MovingImageCalculatorPointer m_MovingCalculator;
