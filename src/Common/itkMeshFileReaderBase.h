@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkMeshFileReaderBase_h
 #define __itkMeshFileReaderBase_h
 
@@ -30,15 +29,16 @@ namespace itk
  * a mesh or a pointset.
  */
 
-template <class TOutputMesh>
-class MeshFileReaderBase : public MeshSource<TOutputMesh>
+template< class TOutputMesh >
+class MeshFileReaderBase : public MeshSource< TOutputMesh >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef MeshFileReaderBase        Self;
-  typedef MeshSource<TOutputMesh>   Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef MeshFileReaderBase         Self;
+  typedef MeshSource< TOutputMesh >  Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -68,8 +68,9 @@ public:
   virtual void EnlargeOutputRequestedRegion( DataObject * output );
 
 protected:
+
   MeshFileReaderBase();
-  virtual ~MeshFileReaderBase(){};
+  virtual ~MeshFileReaderBase(){}
 
   /** Test whether the given filename exist and it is readable,
    * this is intended to be called before attempting to use
@@ -82,16 +83,16 @@ protected:
   std::string m_FileName;
 
 private:
-  MeshFileReaderBase(const Self&);  // purposely not implemented
-  void operator=(const Self&);      // purposely not implemented
 
-}; // end class
+  MeshFileReaderBase( const Self & );  // purposely not implemented
+  void operator=( const Self & );      // purposely not implemented
+
+};
 
 } // end namespace itk
 
-
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMeshFileReaderBase.txx"
+#include "itkMeshFileReaderBase.hxx"
 #endif
 
 #endif

@@ -11,92 +11,84 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef __VectorContainerSource_h
-#define __VectorContainerSource_h
+#ifndef __itkVectorContainerSource_h
+#define __itkVectorContainerSource_h
 
 #include "itkProcessObject.h"
 #include "itkDataObjectDecorator.h"
 
-
 namespace itk
 {
+/** \class VectorContainerSource
+ *
+ * \brief A base class for creating an ImageToVectorContainerFilter.
+ */
 
-  /** \class VectorContainerSource
-   *
-   * \brief A base class for creating an ImageToVectorContainerFilter.
-   */
+template< class TOutputVectorContainer >
+class VectorContainerSource :
+  public ProcessObject
+{
+public:
 
-  template < class TOutputVectorContainer >
-  class VectorContainerSource :
-    public ProcessObject
-  {
-  public:
+  /** Standard ITK-stuff. */
+  typedef VectorContainerSource      Self;
+  typedef ProcessObject              Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
-    /** Standard ITK-stuff. */
-    typedef VectorContainerSource         Self;
-    typedef ProcessObject                 Superclass;
-    typedef SmartPointer<Self>            Pointer;
-    typedef SmartPointer<const Self>      ConstPointer;
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
 
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( VectorContainerSource, ProcessObject );
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( VectorContainerSource, ProcessObject );
+  /** Some convenient typedefs. */
+  typedef typename Superclass::DataObjectPointer      DataObjectPointer;
+  typedef TOutputVectorContainer                      OutputVectorContainerType;
+  typedef typename OutputVectorContainerType::Pointer OutputVectorContainerPointer;
 
-    /** Some convenient typedefs. */
-    typedef typename Superclass::DataObjectPointer        DataObjectPointer;
-    typedef TOutputVectorContainer                        OutputVectorContainerType;
-    typedef typename OutputVectorContainerType::Pointer   OutputVectorContainerPointer;
+  /** Get the vector container output of this process object. */
+  OutputVectorContainerType * GetOutput( void );
 
-    /** Get the vector container output of this process object. */
-    OutputVectorContainerType * GetOutput( void );
+  /** Get the vector container output of this process object. */
+  OutputVectorContainerType * GetOutput( unsigned int idx );
 
-    /** Get the vector container output of this process object. */
-    OutputVectorContainerType * GetOutput( unsigned int idx );
+  /** Graft the specified DataObject onto this ProcessObject's output. */
+  virtual void GraftOutput( DataObject * output );
 
-    /** Graft the specified DataObject onto this ProcessObject's output. */
-    virtual void GraftOutput( DataObject *output );
+  /** Graft the specified DataObject onto this ProcessObject's output. */
+  virtual void GraftNthOutput( unsigned int idx, DataObject * output );
 
-    /** Graft the specified DataObject onto this ProcessObject's output. */
-    virtual void GraftNthOutput( unsigned int idx, DataObject *output );
+  /** Make a DataObject of the correct type to used as the specified output. */
+  virtual DataObjectPointer MakeOutput( unsigned int idx );
 
-    /** Make a DataObject of the correct type to used as the specified output. */
-    virtual DataObjectPointer MakeOutput( unsigned int idx );
+protected:
 
-  protected:
+  /** The constructor. */
+  VectorContainerSource();
+  /** The destructor. */
+  virtual ~VectorContainerSource() {}
 
-    /** The constructor. */
-    VectorContainerSource();
-    /** The destructor. */
-    virtual ~VectorContainerSource() {};
+  /** PrintSelf. */
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
-    /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const;
+private:
 
-    /** GenerateInputRequestedRegion. */
-    void GenerateInputRequestedRegion( void );
+  /** The private constructor. */
+  VectorContainerSource( const Self & ); // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self & );        // purposely not implemented
 
-  private:
+  /** Member variables. */
+  int m_GenerateDataRegion;
+  int m_GenerateDataNumberOfRegions;
 
-    /** The private constructor. */
-    VectorContainerSource( const Self& ); // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );        // purposely not implemented
-
-    /** Member variables. */
-    int m_GenerateDataRegion;
-    int m_GenerateDataNumberOfRegions;
-
-  }; // end class VectorContainerSource
-
+};
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVectorContainerSource.txx"
+#include "itkVectorContainerSource.hxx"
 #endif
 
-#endif // end #ifndef __VectorContainerSource_h
-
+#endif // end #ifndef __itkVectorContainerSource_h

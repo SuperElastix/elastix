@@ -11,16 +11,14 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-
 #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
 #define __itkAdvancedMeanSquaresImageToImageMetric_h
 
-#include "itkSmoothingRecursiveGaussianImageFilter.h"
-//#include "itkImageRandomCoordinateSampler.h"
-#include "itkImageGridSampler.h"
-#include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkAdvancedImageToImageMetric.h"
+
+#include "itkSmoothingRecursiveGaussianImageFilter.h"   // needed for SelfHessian
+#include "itkImageGridSampler.h"                        // needed for SelfHessian
+#include "itkNearestNeighborInterpolateImageFunction.h" // needed for SelfHessian
 
 namespace itk
 {
@@ -50,18 +48,18 @@ namespace itk
  * \ingroup Metrics
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 class AdvancedMeanSquaresImageToImageMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef AdvancedMeanSquaresImageToImageMetric   Self;
+  typedef AdvancedMeanSquaresImageToImageMetric Self;
   typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >                   Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -71,7 +69,7 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename
-    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+    Superclass::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
   typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
@@ -84,6 +82,7 @@ public:
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename Superclass::TransformParametersType    TransformParametersType;
   typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
   typedef typename Superclass::InterpolatorType           InterpolatorType;
   typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
   typedef typename Superclass::RealType                   RealType;
@@ -98,6 +97,7 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
   typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
   typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
@@ -105,19 +105,19 @@ public:
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename
-    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+    Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType  FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType MovingImageLimiterType;
   typedef typename
-    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+    Superclass::FixedImageLimiterOutputType FixedImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+    Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename
-    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-
-  /** Some typedefs for computing the SelfHessian */
-  typedef typename Superclass::HessianValueType           HessianValueType;
-  typedef typename Superclass::HessianType                HessianType;
+    Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
+  typedef typename Superclass::HessianValueType HessianValueType;
+  typedef typename Superclass::HessianType      HessianType;
+  typedef typename Superclass::ThreaderType     ThreaderType;
+  typedef typename Superclass::ThreadInfoType   ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -134,9 +134,12 @@ public:
   virtual void GetDerivative( const TransformParametersType & parameters,
     DerivativeType & derivative ) const;
 
-  /** Get value and derivatives for multiple valued optimizers. */
+  /** Get value and derivative. */
+  void GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
+    MeasureType & value, DerivativeType & derivative ) const;
+
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const;
 
   /** Experimental feature: compute SelfHessian */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
@@ -157,7 +160,7 @@ public:
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation
    * \li Estimate the normalization factor, if asked for.  */
-  virtual void Initialize(void) throw ( ExceptionObject );
+  virtual void Initialize( void ) throw ( ExceptionObject );
 
   /** Set/Get whether to normalize the mean squares measure.
    * This divides the MeanSquares by a factor (range/10)^2,
@@ -169,44 +172,44 @@ public:
   itkSetMacro( UseNormalization, bool );
   itkGetConstMacro( UseNormalization, bool );
 
+  /** If the compiler supports OpenMP, this flag specifies whether
+   * or not to use it. For this metric we have an OpenMP variant for
+   * GetValueAndDerivative(). It is also used at other places.
+   * Note that MS Visual Studio and gcc support OpenMP.
+   */
+  itkSetMacro( UseOpenMP, bool );
+
 protected:
+
   AdvancedMeanSquaresImageToImageMetric();
-  virtual ~AdvancedMeanSquaresImageToImageMetric() {};
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  virtual ~AdvancedMeanSquaresImageToImageMetric(){}
+
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
 
   /** Typedefs inherited from superclass */
-  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
-  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
-  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-  typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
+  typedef typename Superclass::FixedImageIndexType                 FixedImageIndexType;
+  typedef typename Superclass::FixedImageIndexValueType            FixedImageIndexValueType;
+  typedef typename Superclass::MovingImageIndexType                MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType                 FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType                MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType      MovingImageContinuousIndexType;
+  typedef typename Superclass::BSplineInterpolatorType             BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  typedef typename Superclass::MovingImageDerivativeType           MovingImageDerivativeType;
+  typedef typename Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
 
   /** Protected typedefs for SelfHessian */
   typedef SmoothingRecursiveGaussianImageFilter<
-    FixedImageType, FixedImageType>                               SmootherType;
+    FixedImageType, FixedImageType >                               SmootherType;
   typedef BSplineInterpolateImageFunction<
-    FixedImageType, CoordinateRepresentationType>                 FixedImageInterpolatorType;
+    FixedImageType, CoordinateRepresentationType >                 FixedImageInterpolatorType;
   typedef NearestNeighborInterpolateImageFunction<
     FixedImageType, CoordinateRepresentationType >                DummyFixedImageInterpolatorType;
-  //typedef ImageRandomCoordinateSampler<FixedImageType>            SelfHessianSamplerType;
-  typedef ImageGridSampler<FixedImageType>                        SelfHessianSamplerType;
+  typedef ImageGridSampler< FixedImageType > SelfHessianSamplerType;
 
   double m_NormalizationFactor;
-
-  /** Computes the innerproduct of transform Jacobian with moving image gradient.
-   * The results are stored in imageJacobian, which is supposed
-   * to have the right size (same length as Jacobian's number of columns). */
-  void EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian,
-    const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const;
 
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative(). */
@@ -223,18 +226,26 @@ protected:
   void UpdateSelfHessianTerms(
     const DerivativeType & imageJacobian,
     const NonZeroJacobianIndicesType & nzji,
-    HessianType & H) const;
+    HessianType & H ) const;
+
+  /** Get value and derivatives for each thread. */
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+
+  /** Gather the values and derivatives from all threads */
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const;
 
 private:
-  AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
 
-  bool m_UseNormalization;
-  double m_SelfHessianSmoothingSigma;
-  double m_SelfHessianNoiseRange;
+  AdvancedMeanSquaresImageToImageMetric( const Self & ); // purposely not implemented
+  void operator=( const Self & );                        // purposely not implemented
+
+  bool         m_UseNormalization;
+  double       m_SelfHessianSmoothingSigma;
+  double       m_SelfHessianNoiseRange;
   unsigned int m_NumberOfSamplesForSelfHessian;
 
-}; // end class AdvancedMeanSquaresImageToImageMetric
+};
 
 } // end namespace itk
 
@@ -243,4 +254,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
-

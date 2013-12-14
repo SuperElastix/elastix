@@ -20,4 +20,3 @@
 //nothing
 
 #endif // end #ifndef __elxLinearResampleInterpolator_hxx
-

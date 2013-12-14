@@ -11,7 +11,6 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkCyclicBSplineDeformableTransform_h
 #define __itkCyclicBSplineDeformableTransform_h
 
@@ -34,20 +33,22 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template <
-    class TScalarType = double,          // Data type for scalars
-    unsigned int NDimensions = 3,        // Number of dimensions
-    unsigned int VSplineOrder = 3 >      // Spline order
-class ITK_EXPORT CyclicBSplineDeformableTransform
-  : public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
+template<
+class TScalarType         = double,      // Data type for scalars
+unsigned int NDimensions  = 3,           // Number of dimensions
+unsigned int VSplineOrder = 3 >
+// Spline order
+class CyclicBSplineDeformableTransform :
+  public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef CyclicBSplineDeformableTransform          Self;
+  typedef CyclicBSplineDeformableTransform Self;
   typedef AdvancedBSplineDeformableTransform<
     TScalarType, NDimensions, VSplineOrder >          Superclass;
-  typedef SmartPointer<Self>                          Pointer;
-  typedef SmartPointer<const Self>                    ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** New macro for creation of through the object factory. */
   itkNewMacro( Self );
@@ -61,54 +62,54 @@ public:
   /** The B-spline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
-  typedef typename Superclass::JacobianType           JacobianType;
-  typedef typename Superclass::SpatialJacobianType    SpatialJacobianType;
+  typedef typename Superclass::JacobianType        JacobianType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
-    ::NonZeroJacobianIndicesType                      NonZeroJacobianIndicesType;
+    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                   JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType     SpatialHessianType;
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                    JacobianOfSpatialHessianType;
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType     InternalMatrixType;
   typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
 
   /** Parameters as SpaceDimension number of images. */
-  typedef typename ParametersType::ValueType          PixelType;
+  typedef typename ParametersType::ValueType PixelType;
   typedef Image< PixelType,
-    itkGetStaticConstMacro( SpaceDimension )>         ImageType;
-  typedef typename ImageType::Pointer                 ImagePointer;
+    itkGetStaticConstMacro( SpaceDimension ) >         ImageType;
+  typedef typename ImageType::Pointer ImagePointer;
 
-  typedef typename Superclass::RegionType       RegionType;
-  typedef typename RegionType::IndexType        IndexType;
-  typedef typename RegionType::SizeType         SizeType;
-  typedef typename ImageType::SpacingType       SpacingType;
-  typedef typename ImageType::DirectionType     DirectionType;
-  typedef typename ImageType::PointType         OriginType;
-  typedef typename RegionType::IndexType        GridOffsetType;
-  typedef typename Superclass::InputPointType   InputPointType;
-  typedef typename Superclass::OutputPointType  OutputPointType;
-  typedef typename Superclass::WeightsType      WeightsType;
+  typedef typename Superclass::RegionType      RegionType;
+  typedef typename RegionType::IndexType       IndexType;
+  typedef typename RegionType::SizeType        SizeType;
+  typedef typename ImageType::SpacingType      SpacingType;
+  typedef typename ImageType::DirectionType    DirectionType;
+  typedef typename ImageType::PointType        OriginType;
+  typedef typename RegionType::IndexType       GridOffsetType;
+  typedef typename Superclass::InputPointType  InputPointType;
+  typedef typename Superclass::OutputPointType OutputPointType;
+  typedef typename Superclass::WeightsType     WeightsType;
   typedef typename Superclass::
-            ParameterIndexArrayType             ParameterIndexArrayType;
+    ParameterIndexArrayType ParameterIndexArrayType;
   typedef typename Superclass::
-            ContinuousIndexType                 ContinuousIndexType;
-  typedef typename Superclass::ScalarType       ScalarType;
+    ContinuousIndexType ContinuousIndexType;
+  typedef typename Superclass::ScalarType ScalarType;
   typedef typename Superclass::
-            JacobianImageType                   JacobianImageType;
+    JacobianImageType JacobianImageType;
   typedef typename Superclass::
-            JacobianPixelType                   JacobianPixelType;
+    JacobianPixelType JacobianPixelType;
   typedef typename Superclass::
-            WeightsFunctionType                 WeightsFunctionType;
+    WeightsFunctionType WeightsFunctionType;
   typedef BSplineInterpolationWeightFunction2< ScalarType,
     itkGetStaticConstMacro( SpaceDimension ) - 1,
     itkGetStaticConstMacro( SplineOrder ) >     RedWeightsFunctionType;
   typedef typename RedWeightsFunctionType::
-                  ContinuousIndexType           RedContinuousIndexType;
+    ContinuousIndexType RedContinuousIndexType;
 
   /** This method specifies the region over which the grid resides. */
-  virtual void SetGridRegion( const RegionType& region );
+  virtual void SetGridRegion( const RegionType & region );
 
   /** Transform points by a B-spline deformable transformation.
    * On return, weights contains the interpolation weights used to compute the
@@ -136,6 +137,7 @@ public:
     SpatialJacobianType & sj ) const;
 
 protected:
+
   CyclicBSplineDeformableTransform();
   virtual ~CyclicBSplineDeformableTransform();
 
@@ -151,19 +153,19 @@ protected:
     const RegionType & imageRegion,
     const RegionType & inRegion,
     RegionType & outRegion1,
-    RegionType & outRegion2) const;
+    RegionType & outRegion2 ) const;
 
 private:
-  CyclicBSplineDeformableTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
 
-}; //class CyclicBSplineDeformableTransform
+  CyclicBSplineDeformableTransform( const Self & ); // purposely not implemented
+  void operator=( const Self & );                   // purposely not implemented
 
+};
 
 }  // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkCyclicBSplineDeformableTransform.txx"
+#include "itkCyclicBSplineDeformableTransform.hxx"
 #endif
 
 #endif /* __itkCyclicBSplineDeformableTransform_h */

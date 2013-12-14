@@ -4,6 +4,6 @@ ADD_ELXCOMPONENT( TransformRigidityPenalty
  elxTransformRigidityPenaltyTerm.hxx
  elxTransformRigidityPenaltyTerm.cxx
  itkTransformRigidityPenaltyTerm.h
- itkTransformRigidityPenaltyTerm.txx
+ itkTransformRigidityPenaltyTerm.hxx
 )
 

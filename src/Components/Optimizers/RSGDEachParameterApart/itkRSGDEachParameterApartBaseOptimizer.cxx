@@ -30,16 +30,16 @@ RSGDEachParameterApartBaseOptimizer
 ::RSGDEachParameterApartBaseOptimizer()
 {
 
-  itkDebugMacro("Constructor");
+  itkDebugMacro( "Constructor" );
 
-  m_MaximumStepLength = 1.0;
-  m_MinimumStepLength = 1e-3;
+  m_MaximumStepLength          = 1.0;
+  m_MinimumStepLength          = 1e-3;
   m_GradientMagnitudeTolerance = 1e-4;
-  m_NumberOfIterations = 100;
-  m_CurrentIteration   =   0;
-  m_Value = 0;
-  m_Maximize = false;
-  m_CostFunction = 0;
+  m_NumberOfIterations         = 100;
+  m_CurrentIteration           =   0;
+  m_Value                      = 0;
+  m_Maximize                   = false;
+  m_CostFunction               = 0;
 
   m_CurrentStepLengths.Fill( 0.0f );
   m_CurrentStepLength = 0;
@@ -53,7 +53,6 @@ RSGDEachParameterApartBaseOptimizer
 }
 
 
-
 /**
  * Start the optimization
  */
@@ -62,15 +61,15 @@ RSGDEachParameterApartBaseOptimizer
 ::StartOptimization( void )
 {
 
-  itkDebugMacro("StartOptimization");
+  itkDebugMacro( "StartOptimization" );
 
-  m_CurrentIteration          = 0;
+  m_CurrentIteration = 0;
 
-  const unsigned int spaceDimension =
-    m_CostFunction->GetNumberOfParameters();
+  const unsigned int spaceDimension
+    = m_CostFunction->GetNumberOfParameters();
 
-  m_Gradient = DerivativeType( spaceDimension );
-  m_PreviousGradient = DerivativeType( spaceDimension );
+  m_Gradient           = DerivativeType( spaceDimension );
+  m_PreviousGradient   = DerivativeType( spaceDimension );
   m_CurrentStepLengths = DerivativeType( spaceDimension );
   m_Gradient.Fill( 0.0f );
   m_PreviousGradient.Fill( 0.0f );
@@ -83,9 +82,6 @@ RSGDEachParameterApartBaseOptimizer
 }
 
 
-
-
-
 /**
  * Resume the optimization
  */
@@ -94,14 +90,14 @@ RSGDEachParameterApartBaseOptimizer
 ::ResumeOptimization( void )
 {
 
-  itkDebugMacro("ResumeOptimization");
+  itkDebugMacro( "ResumeOptimization" );
 
   m_Stop = false;
 
   this->InvokeEvent( StartEvent() );
 
   while( !m_Stop )
-    {
+  {
 
     /** inefficient:
     ParametersType currentPosition = this->GetCurrentPosition();
@@ -124,37 +120,32 @@ RSGDEachParameterApartBaseOptimizer
       m_CostFunction->GetValueAndDerivative(
         this->GetCurrentPosition(), m_Value, m_Gradient );
     }
-    catch( ExceptionObject& err)
+    catch( ExceptionObject & err )
     {
       m_StopCondition = MetricError;
       this->StopOptimization();
       throw err;
     }
 
-
     if( m_Stop )
-      {
+    {
       break;
-      }
+    }
 
     this->AdvanceOneStep();
 
     m_CurrentIteration++;
 
     if( m_CurrentIteration == m_NumberOfIterations )
-      {
+    {
       m_StopCondition = MaximumNumberOfIterations;
       this->StopOptimization();
       break;
-      }
-
     }
 
+  }
 
 }
-
-
-
 
 
 /**
@@ -165,13 +156,11 @@ RSGDEachParameterApartBaseOptimizer
 ::StopOptimization( void )
 {
 
-  itkDebugMacro("StopOptimization");
+  itkDebugMacro( "StopOptimization" );
 
   m_Stop = true;
   this->InvokeEvent( EndEvent() );
 }
-
-
 
 
 /**
@@ -182,64 +171,64 @@ RSGDEachParameterApartBaseOptimizer
 ::AdvanceOneStep( void )
 {
 
-  itkDebugMacro("AdvanceOneStep");
+  itkDebugMacro( "AdvanceOneStep" );
 
-  const unsigned int  spaceDimension =
-    m_CostFunction->GetNumberOfParameters();
+  const unsigned int spaceDimension
+    = m_CostFunction->GetNumberOfParameters();
 
   DerivativeType transformedGradient( spaceDimension );
   DerivativeType previousTransformedGradient( spaceDimension );
   ScalesType     scales = this->GetScales();
 
   // Make sure the scales have been set properly
-  if (scales.size() != spaceDimension)
-    {
-    itkExceptionMacro(<< "The size of Scales is "
-                      << scales.size()
-                      << ", but the NumberOfParameters for the CostFunction is "
-                      << spaceDimension
-                      << ".");
-    }
+  if( scales.size() != spaceDimension )
+  {
+    itkExceptionMacro( << "The size of Scales is "
+                       << scales.size()
+                       << ", but the NumberOfParameters for the CostFunction is "
+                       << spaceDimension
+                       << "." );
+  }
 
-  for(unsigned int i = 0;  i < spaceDimension; i++)
-    {
-    transformedGradient[i]  = m_Gradient[i] / scales[i];
-    previousTransformedGradient[i] =
-      m_PreviousGradient[i] / scales[i];
-    }
+  for( unsigned int i = 0; i < spaceDimension; i++ )
+  {
+    transformedGradient[ i ] = m_Gradient[ i ] / scales[ i ];
+    previousTransformedGradient[ i ]
+      = m_PreviousGradient[ i ] / scales[ i ];
+  }
 
   double magnitudeSquare = 0;
-  for(unsigned int dim=0; dim<spaceDimension; dim++)
-    {
-    const double weighted = transformedGradient[dim];
+  for( unsigned int dim = 0; dim < spaceDimension; dim++ )
+  {
+    const double weighted = transformedGradient[ dim ];
     magnitudeSquare += weighted * weighted;
-    }
+  }
 
   m_GradientMagnitude = vcl_sqrt( magnitudeSquare );
 
   if( m_GradientMagnitude < m_GradientMagnitudeTolerance )
-    {
+  {
     m_StopCondition = GradientMagnitudeTolerance;
     StopOptimization();
     return;
-    }
+  }
 
-  double sumOfCurrentStepLengths = 0.0;
+  double sumOfCurrentStepLengths  = 0.0;
   double biggestCurrentStepLength = 0.0;
-  for(unsigned int i=0; i<spaceDimension; i++)
+  for( unsigned int i = 0; i < spaceDimension; i++ )
   {
-    const bool signChange =
-      ( transformedGradient[i] * previousTransformedGradient[i] ) < 0 ;
+    const bool signChange
+      = ( transformedGradient[ i ] * previousTransformedGradient[ i ] ) < 0;
 
-    if (signChange)
+    if( signChange )
     {
-      m_CurrentStepLengths[i] /=2.0;
+      m_CurrentStepLengths[ i ] /= 2.0;
     }
 
-    const double currentStepLengths_i = m_CurrentStepLengths[i];
+    const double currentStepLengths_i = m_CurrentStepLengths[ i ];
 
     sumOfCurrentStepLengths += currentStepLengths_i;
-    if ( currentStepLengths_i > biggestCurrentStepLength )
+    if( currentStepLengths_i > biggestCurrentStepLength )
     {
       biggestCurrentStepLength = currentStepLengths_i;
     }
@@ -252,44 +241,43 @@ RSGDEachParameterApartBaseOptimizer
    * MinimumStepLength stop the optimization
    */
   if( biggestCurrentStepLength < m_MinimumStepLength )
-    {
+  {
     m_StopCondition = StepTooSmall;
     StopOptimization();
     return;
-    }
+  }
 
   double direction;
   if( this->m_Maximize )
-    {
-    direction = 1.0;
-    }
-  else
-    {
-    direction = -1.0;
-    }
-
-  DerivativeType factor = DerivativeType(spaceDimension);
-
-  for(unsigned int i=0; i<spaceDimension; i++)
   {
-    factor[i] = direction * m_CurrentStepLengths[i] / m_GradientMagnitude;
+    direction = 1.0;
+  }
+  else
+  {
+    direction = -1.0;
+  }
+
+  DerivativeType factor = DerivativeType( spaceDimension );
+
+  for( unsigned int i = 0; i < spaceDimension; i++ )
+  {
+    factor[ i ] = direction * m_CurrentStepLengths[ i ] / m_GradientMagnitude;
   }
 
   // This method StepAlongGradient() will
   // be overloaded in non-vector spaces
   this->StepAlongGradient( factor, transformedGradient );
 
-
-
   this->InvokeEvent( IterationEvent() );
 
 }
 
+
 void
 RSGDEachParameterApartBaseOptimizer
-::PrintSelf( std::ostream& os, Indent indent ) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  Superclass::PrintSelf(os,indent);
+  Superclass::PrintSelf( os, indent );
   os << indent << "MaximumStepLength: "
      << m_MaximumStepLength << std::endl;
   os << indent << "MinimumStepLength: "
@@ -304,16 +292,16 @@ RSGDEachParameterApartBaseOptimizer
      << m_Value << std::endl;
   os << indent << "Maximize: "
      << m_Maximize << std::endl;
-  if (m_CostFunction)
-    {
+  if( m_CostFunction )
+  {
     os << indent << "CostFunction: "
        << &m_CostFunction << std::endl;
-    }
+  }
   else
-    {
+  {
     os << indent << "CostFunction: "
        << "(None)" << std::endl;
-    }
+  }
   os << indent << "CurrentStepLength: "
      << m_CurrentStepLength << std::endl;
   os << indent << "StopCondition: "
@@ -321,6 +309,8 @@ RSGDEachParameterApartBaseOptimizer
   os << indent << "Gradient: "
      << m_Gradient << std::endl;
 }
+
+
 } // end namespace itk
 
 #endif

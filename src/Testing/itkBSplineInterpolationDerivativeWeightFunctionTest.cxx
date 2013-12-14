@@ -18,13 +18,14 @@
 
 //-------------------------------------------------------------------------------------
 
-int main( int argc, char *argv[] )
+int
+main( int argc, char * argv[] )
 {
   /** Some basic type definitions.
    * NOTE: don't change the dimension or the spline order, since the
    * hard-coded ground truth depends on this.
    */
-  const unsigned int Dimension = 2;
+  const unsigned int Dimension   = 2;
   const unsigned int SplineOrder = 3;
   typedef float CoordinateRepresentationType;
   const double distance = 1e-3; // the allowable distance
@@ -32,14 +33,14 @@ int main( int argc, char *argv[] )
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode.
    */
-  unsigned int N = static_cast<unsigned int>( 1e7 );
+  unsigned int N = static_cast< unsigned int >( 1e7 );
 
   /** Other typedefs. */
   typedef itk::BSplineInterpolationDerivativeWeightFunction<
     CoordinateRepresentationType,
     Dimension, SplineOrder >                DerivativeWeightFunctionType;
-  typedef DerivativeWeightFunctionType::ContinuousIndexType   ContinuousIndexType;
-  typedef DerivativeWeightFunctionType::WeightsType           WeightsType;
+  typedef DerivativeWeightFunctionType::ContinuousIndexType ContinuousIndexType;
+  typedef DerivativeWeightFunctionType::WeightsType         WeightsType;
 
   /**
    * *********** TESTING ***********************************************
@@ -111,17 +112,17 @@ int main( int argc, char *argv[] )
 
   /** Compute the distance between the two vectors. */
   double error = 0.0;
-  for ( unsigned int i = 0; i < foWeights.Size(); ++i )
+  for( unsigned int i = 0; i < foWeights.Size(); ++i )
   {
     error += vnl_math_sqr( foWeights[ i ] - trueFOWeights[ i ] );
   }
   error = vcl_sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
-  if ( error > distance )
+  if( error > distance )
   {
     std::cerr << "ERROR: the first order weights differs more than "
-      << distance << " from the truth." << std::endl;
+              << distance << " from the truth." << std::endl;
     return 1;
   }
   std::cerr << std::showpoint;
@@ -131,14 +132,14 @@ int main( int argc, char *argv[] )
 
   /** Time the fo implementation. */
   clock_t startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     foWeightFunction->Evaluate( cindex );
   }
   clock_t endClock = clock();
   clock_t clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the 1st order derivative is: "
-    << clockITK << std::endl;
+            << clockITK << std::endl;
 
   /**
    * *********** Function TESTING ****************************************
@@ -153,7 +154,7 @@ int main( int argc, char *argv[] )
   trueStartIndex[ 0 ] =  2;
   trueStartIndex[ 1 ] = -4;
   foWeightFunction->ComputeStartIndex( cindex, startIndex );
-  if ( startIndex != trueStartIndex )
+  if( startIndex != trueStartIndex )
   {
     std::cerr << "ERROR: wrong start index was computed." << std::endl;
     return 1;
@@ -161,15 +162,15 @@ int main( int argc, char *argv[] )
 
   DerivativeWeightFunctionType::SizeType trueSize;
   trueSize.Fill( SplineOrder + 1 );
-  if ( foWeightFunction->GetSupportSize() != trueSize )
+  if( foWeightFunction->GetSupportSize() != trueSize )
   {
     std::cerr << "ERROR: wrong support size was computed." << std::endl;
     return 1;
   }
 
-  if ( foWeightFunction->GetNumberOfWeights()
-    != static_cast<unsigned long>( vcl_pow(
-    static_cast<float>( SplineOrder + 1 ), 2.0f ) ) )
+  if( foWeightFunction->GetNumberOfWeights()
+    != static_cast< unsigned long >( vcl_pow(
+    static_cast< float >( SplineOrder + 1 ), 2.0f ) ) )
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;
     return 1;

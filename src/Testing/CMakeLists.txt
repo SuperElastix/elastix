@@ -9,7 +9,7 @@ set( TestOutputDir ${elastix_BINARY_DIR}/Testing )
 #---------------------------------------------------------------------
 # Python is used by some tests
 find_program( python_executable python
-  HINTS "C:/Program Files/Python2.7" )
+  HINTS "C:/Program Files/Python2.7" "C:/Program Files/python3.3" )
 if( NOT python_executable )
   message( WARNING "WARNING: python not found! Some test results can not be evaluated." )
 endif()
@@ -23,7 +23,7 @@ set( mevisdcmtifflib mevisdcmtiff )
 
 
 #---------------------------------------------------------------------
-# Macro that simplifies the addition of tests
+# Macro that simplifies the addition of elastix tests
 #
 # Usage:
 # elx_add_test( <name_of_test> )
@@ -57,6 +57,32 @@ macro( elx_add_test name )
 endmacro()
 
 #---------------------------------------------------------------------
+# Macro that simplifies the addition of transformix tests
+#
+# Usage:
+# trx_add_test( <name_of_test> <transformix_commandline_arguments> )
+#
+# The macro runs transformix with the provided commandline arguments.
+#
+
+macro( trx_add_test name )
+  # Create output directory
+  set( testname transformix_run_${name} )
+  set( output_dir ${TestOutputDir}/${testname} )
+  file( MAKE_DIRECTORY ${output_dir} )
+  
+  # Define some helper variables.
+  set( TRXTEST_EXECUTABLE_NAME transformix )
+  set( TRXTEST_TEST_NAME ${name} )
+
+  # Group in IDE's like Visual Studio
+  set_property( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests" )
+
+  # Add the test.
+  add_test( NAME ${name} COMMAND ${EXECUTABLE_OUTPUT_PATH}/transformix ${ARGN} -out ${output_dir} )
+endmacro()
+
+#---------------------------------------------------------------------
 # Macro's that simplifies the addition of tests that run elastix
 #
 # Usage:
@@ -82,39 +108,46 @@ endmacro()
 # only work if run via the dashboard scripts.
 #
 set( knownChecksumSystem false )
+set( specializedTransformParameterSystem false )
 if( SITE STREQUAL "LKEB.PCMarius"
-    AND BUILDNAME STREQUAL "Win7-64bit-VS2008" )
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2008.txt )
-  set( knownChecksumSystem true )
-elseif( SITE STREQUAL "LKEB.PCMarius"
     AND BUILDNAME STREQUAL "Win7-64bit-VS2010" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2010.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "LKEB.goliath"
     AND BUILDNAME STREQUAL "Linux-64bit-gcc4.6.3-Release" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
+elseif( SITE STREQUAL "LKEB.goliath"
+    AND BUILDNAME STREQUAL "Linux-clang3.3-Release" )
+  set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "LKEB.MacMini"
     AND BUILDNAME STREQUAL "MacOSX-64bit-gcc4.2.1" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.MacMini_MacOSX-64bit-gcc4.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "BIGR.PCStefan"
     AND BUILDNAME STREQUAL "WinXP-32bit-VS2008" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.PCStefan_WinXP-32bit-VS2008.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "BIGR.cluster"
     AND BUILDNAME STREQUAL "Linux-64bit-gcc4.4.6" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.cluster_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
+  set( specializedTransformParameterSystem true )
 endif()
 
 if( knownChecksumSystem )
   message( STATUS "Checksum baseline file:" ${checksumBaselineFile} )
 endif()
 
-# Python script used for comparing elastix output with baseline strings
+# Python script used for comparing elastix output with baseline results
 set( pythonfinalmetric ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
-set( pythonchecksum ${elastix_SOURCE_DIR}/Testing/elx_compare_checksum.py )
+set( pythonchecksum   ${elastix_SOURCE_DIR}/Testing/elx_compare_checksum.py )
+set( pythonoverlap    ${elastix_SOURCE_DIR}/Testing/elx_compare_overlap.py )
+set( pythonlandmarks  ${elastix_SOURCE_DIR}/Testing/elx_compare_landmarks.py )
 
 # Helper macro
 macro( list_count listvar value count )
@@ -129,11 +162,21 @@ macro( list_count listvar value count )
 endmacro()
 
 # Main elastix_run add_test macro
-macro( elx_add_run_test testbasename howtocompare baseline )
+macro( elx_add_run_test testbasename howtocompare )
   # Create output directory
   set( testname elastix_run_${testbasename} )
   set( output_dir ${TestOutputDir}/${testname} )
   file( MAKE_DIRECTORY ${output_dir} )
+
+  # ${ARGN} may be the elastix command line arguments, but also
+  # an optional baseline value followed by those arguments.
+  set( baseline ${ARGV2} )
+  set( elastixargs ${ARGN} )
+  string( SUBSTRING ${baseline} 0 1 firstelement )
+  string( COMPARE EQUAL ${firstelement} "-" firstelementisdash )
+  if( NOT ${firstelementisdash} )
+    list( REMOVE_AT elastixargs 0 )
+  endif()
 
   # Number of -p's to deduce result.?.mhd
   list_count( "${ARGN}" "-p" countp )
@@ -144,13 +187,44 @@ macro( elx_add_run_test testbasename howtocompare baseline )
   add_test( NAME ${testname}_OUTPUT
     CONFIGURATIONS Release
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
-    ${ARGN}
-    -out ${output_dir} )
+    ${elastixargs} -out ${output_dir} )
   set_tests_properties( ${testname}_OUTPUT
     PROPERTIES TIMEOUT 600 )
 
+  # To compare against a baseline TransformParameters file
+  # Baselines have been generated on LKEB, PCMarius, Win7, 64 bit, VS2008
+  set( baselineTP ${TestBaselineDir}/TransformParameters_${testbasename}.txt )
+  set( testTP ${output_dir}/TransformParameters.${countp}.txt )
+
+  # Temporary hack to get some failing tests working
+  # These three tests give different results on different platforms
+  # They all seem to be using ASGD and B-splines and (N)MI
+  if( specializedTransformParameterSystem )
+    if( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
+      if( ${testbasename} STREQUAL "3DCT_lung.MI.bspline.ASGD.001"
+        OR ${testbasename} STREQUAL "3DCT_lung.NMI.bspline.ASGD.001" )
+        set( baselineTP ${TestBaselineDir}/TransformParameters_${SITE}_${testbasename}.txt )
+      endif()
+    endif()
+  endif()
+
+  # Thread tests should use the original TransformParameters file as a baseline
+  string( FIND ${testbasename} "Threads" found )
+  if( NOT found EQUAL -1 )
+    string( REGEX REPLACE "(-Threads[0-9]+)" "" baselineTP ${baselineTP} )
+  endif()
+
+  # Check which tests have to be run
+  string( REGEX MATCHALL "[a-zA-Z]+;|[a-zA-Z]+$" compareaslist "${howtocompare}" )
+  list( FIND compareaslist "IMAGE"       compare_image )
+  list( FIND compareaslist "METRICVALUE" compare_metricvalue )
+  list( FIND compareaslist "PARAMETERS"  compare_tp )
+  list( FIND compareaslist "CHECKSUM"    compare_checksum )
+  list( FIND compareaslist "OVERLAP"     compare_overlap )
+  list( FIND compareaslist "LANDMARKS"   compare_landmarks )
+
   # Compare elastix output image with baseline image
-  if( ${howtocompare} STREQUAL "IMAGE" )
+  if( NOT ${compare_image} EQUAL -1 )
     add_test( NAME ${testname}_COMPARE_IM
       CONFIGURATIONS Release
       COMMAND elxImageCompare
@@ -159,8 +233,10 @@ macro( elx_add_run_test testbasename howtocompare baseline )
       -t 1.0 )
     set_tests_properties( ${testname}_COMPARE_IM
       PROPERTIES DEPENDS  ${testname}_OUTPUT )
+  endif()
+
   # Compare elastix output from IterationInfo with a baseline string
-  elseif( ${howtocompare} STREQUAL "METRICVALUE" )
+  if( NOT ${compare_metricvalue} EQUAL -1 )
     # Only run when python was found
     if( python_executable )
       # Add comparison test, checking the final metric value and more
@@ -171,56 +247,59 @@ macro( elx_add_run_test testbasename howtocompare baseline )
       set_tests_properties( ${testname}_COMPARE_METRIC
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif()
+  endif()
+
   # Compare elastix output using checksum
-  elseif( ${howtocompare} STREQUAL "CHECKSUM" )
+  if( NOT ${compare_checksum} EQUAL -1 )
     # Only run when python was found and if this is a known system
     if( python_executable AND knownChecksumSystem )
-      # Did the test provide auto or a fixed checksum ?
-      if( ${baseline} STREQUAL "auto" )
-        set( baselineOptionCommand "-f" )
-        set( baselineOptionValue ${checksumBaselineFile} )
-      else()
-        set( baselineOptionCommand "-b" )
-        set( baselineOptionValue ${baseline} )
-      endif()
       # Add comparison test, checking the registration checksum
       add_test( NAME ${testname}_COMPARE_CHECKSUM
         CONFIGURATIONS Release
         COMMAND ${python_executable} ${pythonchecksum}
-        ${baselineOptionCommand} ${baselineOptionValue} -d ${output_dir} -v )
+        -f ${checksumBaselineFile} -d ${output_dir} -v )
       set_tests_properties( ${testname}_COMPARE_CHECKSUM
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
-    endif() # end python found
-  endif() # end howtocompare
-
-  # Always compare against a baseline TransformParameters file
-  # Baselines have been generated on LKEB, PCMarius, Win7, 64 bit, VS2008
-  set( baselineTP ${TestBaselineDir}/TransformParameters_${testbasename}.txt )
-  set( testTP ${output_dir}/TransformParameters.${countp}.txt )
-
-  # Temporary hack to get some failing tests working
-  # These three tests give different results on different platforms
-  # They all seem to be using ASGD and B-splines and (N)MI
-  # Maybe the use of CompensatedSummation for MI may improve the results
-  if( knownChecksumSystem )
-    if ( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
-      if( ${testbasename} STREQUAL "3DCT_lung.MI.bspline.ASGD.001"
-        OR ${testbasename} STREQUAL "3DCT_lung.NMI.bspline.ASGD.001"
-        OR ( ${testbasename} STREQUAL "example" ) )
-        set( baselineTP ${TestBaselineDir}/TransformParameters_${SITE}_${testbasename}.txt )
-      endif()
     endif()
   endif()
 
-  # Add the test
-  add_test( NAME ${testname}_COMPARE_TP
-    CONFIGURATIONS Release
-    COMMAND elxTransformParametersCompare
-    -base ${baselineTP}
-    -test ${testTP}
-    -a 1e-3 )
-  set_tests_properties( ${testname}_COMPARE_TP
-    PROPERTIES DEPENDS  ${testname}_OUTPUT )
+  # Compare elastix output using segmentation overlap
+  if( NOT ${compare_overlap} EQUAL -1 )
+    # Only run when python was found
+    if( python_executable )
+      add_test( NAME ${testname}_COMPARE_OVERLAP
+        CONFIGURATIONS Release
+        COMMAND ${python_executable} ${pythonoverlap}
+        -b ${baselineTP} -d ${output_dir} -m ${TestDataDir}/3DCT_lung_followup_mask.mha )
+      set_tests_properties( ${testname}_COMPARE_OVERLAP
+        PROPERTIES DEPENDS  ${testname}_OUTPUT )
+    endif()
+  endif()
+
+  # Compare elastix output using landmark distance
+  if( NOT ${compare_landmarks} EQUAL -1 )
+    # Only run when python was found
+    if( python_executable )
+      add_test( NAME ${testname}_COMPARE_LANDMARKS
+        CONFIGURATIONS Release
+        COMMAND ${python_executable} ${pythonlandmarks}
+        -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt )
+      set_tests_properties( ${testname}_COMPARE_LANDMARKS
+        PROPERTIES DEPENDS  ${testname}_OUTPUT )
+    endif()
+  endif()
+
+  # Compare elastix output using transform parameters comparison
+  if( NOT ${compare_tp} EQUAL -1 )
+    add_test( NAME ${testname}_COMPARE_TP
+      CONFIGURATIONS Release
+      COMMAND elxTransformParametersCompare
+      -base ${baselineTP}
+      -test ${testTP}
+      -a 1e-3 )
+    set_tests_properties( ${testname}_COMPARE_TP
+      PROPERTIES DEPENDS  ${testname}_OUTPUT )
+  endif()
 endmacro()
 
 #---------------------------------------------------------------------
@@ -258,6 +337,7 @@ add_test( NAME InvertTransformTest_COMPARE_TP
 set_tests_properties( InvertTransformTest_COMPARE_TP
   PROPERTIES DEPENDS InvertTransformTest_OUTPUT )
 
+
 # Add other tests
 elx_add_test( AdvancedBSplineDeformableTransformTest
   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
@@ -277,21 +357,21 @@ elx_add_test( TimerTest )
 #---------------------------------------------------------------------
 # Add tests that run elastix
 
-# Run example
+# Run 2D brain example test
+#
+# This is just a consistency test over time, since the registration result
+# differs from machine to machine.
 
-# Temporary hack to get some failing tests working
-# These three tests give different results on different platforms
-# They all seem to be using ASGD and B-splines and (N)MI
-# Maybe the use of CompensatedSummation for MI may improve the results
+# Select machine dependend baseline image
 set( baselineImage ${TestBaselineDir}/example.mha )
-if( knownChecksumSystem )
-  if ( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
+if( knownChecksumSystem OR specializedTransformParameterSystem )
+  if( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
     set( baselineImage ${TestBaselineDir}/example_${SITE}.mha )
   endif()
 endif()
 
+# Run the 2D brain example registration
 elx_add_run_test( example
-#  "IMAGE" ${TestBaselineDir}/example.mha
   "IMAGE" ${baselineImage}
   -f ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
   -m ${ELASTIX_DOX_DIR}/exampleinput/moving.mhd
@@ -300,7 +380,7 @@ elx_add_run_test( example
 
 # Run 3D registration with a 'common' parameter file:
 elx_add_run_test( 3DCT_lung.example
-  "IMAGE" ${TestBaselineDir}/3DCT_lung.mha
+  "IMAGE;PARAMETERS;OVERLAP;LANDMARKS" ${TestBaselineDir}/3DCT_lung.mha
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -308,55 +388,55 @@ elx_add_run_test( 3DCT_lung.example
 
 # Test some transforms
 elx_add_run_test( 3DCT_lung.NC.translation.ASGD.001
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.translation.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.euler.ASGD.001
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.euler.ASGD.001.txt )
 
-# temporarily keep this test:
-elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001metric
-  "METRICVALUE" "499 -0.935885 130.979467 6.349671 0.004575 x"
-  -f ${TestDataDir}/3DCT_lung_baseline.mha
-  -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
-
-elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001checksum
-  "CHECKSUM" "auto"
+elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
 
 # Test some metrics
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.ASGD.001
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NMI.bspline.ASGD.001
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NMI.bspline.ASGD.001.txt )
 
+elx_add_run_test( 3DCT_lung.Kappa.bspline.ASGD.001
+  "CHECKSUM;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline_mask.mha
+  -m ${TestDataDir}/3DCT_lung_followup_mask.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.Kappa.bspline.ASGD.001.txt )
+
 # Test some combo metrics
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.002
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -fp ${TestDataDir}/3DCT_lung_baseline.txt
@@ -365,14 +445,14 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.002
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.003
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.003.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -382,7 +462,7 @@ configure_file(
   ${TestDataDir}/parameters.3D.NC.bspline.ASGD.004b.txt.in
   ${TestOutputDir}/parameters.3D.NC.bspline.ASGD.004b.txt @ONLY )
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004b
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -390,14 +470,14 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004b
 
 # Test some optimizers
 elx_add_run_test( 3DCT_lung.NC.bspline.SGD.001
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.QN.001
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -405,28 +485,28 @@ elx_add_run_test( 3DCT_lung.NC.bspline.QN.001
 
 # Test some samplers
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.002
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.003
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.003.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -fMask ${TestDataDir}/3DCT_lung_baseline_mask.mha
@@ -435,48 +515,120 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
 
 # Test some interpolators
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.002
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.003.txt )
 
+# Test multi-threading effects for SSD
+elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001-Threads1
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -threads 1 )
+elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001-Threads2
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -threads 2 )
+elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001-Threads4
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -threads 4 )
+
+# Test multi-threading effects for NC
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a-Threads1
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -threads 1 )
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a-Threads2
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -threads 2 )
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a-Threads4
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -threads 4 )
+
+# Test multi-threading effects for MI
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads1
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -threads 1 )
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads2
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -threads 2 )
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads4
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -threads 4 )
 
 
 ### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES
 # Checksums defined on windows 64 bit machine LKEB PC Marius
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001b
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001b.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001c
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001c.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
-  "CHECKSUM" "auto"
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.txt )
 
+### TRANSFORMIX TESTING TO CHECK MEMORY PROBLEM
+trx_add_test( TransformixMemoryTest
+  -in ${TestDataDir}/3DCT_lung_baseline_small.mha
+  -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )

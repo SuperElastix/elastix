@@ -30,7 +30,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkImageMaskSpatialObject2_h
 #define __itkImageMaskSpatialObject2_h
 
@@ -49,31 +48,31 @@ namespace itk
  *
  */
 
-template < unsigned int TDimension = 3 >
-class ImageMaskSpatialObject2
-  : public ImageSpatialObject2< TDimension, unsigned char >
+template< unsigned int TDimension = 3 >
+class ImageMaskSpatialObject2 :
+  public ImageSpatialObject2< TDimension, unsigned char >
 {
 
 public:
 
-  typedef ImageMaskSpatialObject2< TDimension >       Self;
-  typedef ImageSpatialObject2< TDimension >           Superclass;
-  typedef SmartPointer< Self >                        Pointer;
-  typedef SmartPointer< const Self >                  ConstPointer;
+  typedef ImageMaskSpatialObject2< TDimension > Self;
+  typedef ImageSpatialObject2< TDimension >     Superclass;
+  typedef SmartPointer< Self >                  Pointer;
+  typedef SmartPointer< const Self >            ConstPointer;
 
-  typedef typename Superclass::ScalarType             ScalarType;
-  typedef typename Superclass::PixelType              PixelType;
-  typedef typename Superclass::ImageType              ImageType;
-  typedef typename Superclass::ImagePointer           ImagePointer;
-  typedef typename Superclass::IndexType              IndexType;
-  typedef typename Superclass::SizeType               SizeType;
-  typedef typename Superclass::RegionType             RegionType;
-  typedef typename Superclass::TransformType          TransformType;
-  typedef typename Superclass::PointType              PointType;
-  typedef typename Superclass::BoundingBoxType        BoundingBoxType;
+  typedef typename Superclass::ScalarType      ScalarType;
+  typedef typename Superclass::PixelType       PixelType;
+  typedef typename Superclass::ImageType       ImageType;
+  typedef typename Superclass::ImagePointer    ImagePointer;
+  typedef typename Superclass::IndexType       IndexType;
+  typedef typename Superclass::SizeType        SizeType;
+  typedef typename Superclass::RegionType      RegionType;
+  typedef typename Superclass::TransformType   TransformType;
+  typedef typename Superclass::PointType       PointType;
+  typedef typename Superclass::BoundingBoxType BoundingBoxType;
 
   typedef itk::ImageSliceConstIteratorWithIndex< ImageType >
-                                                      SliceIteratorType;
+    SliceIteratorType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -83,12 +82,12 @@ public:
 
   /** Returns true if the point is inside, false otherwise. */
   bool IsInside( const PointType & point,
-                 unsigned int depth, char *name) const;
+    unsigned int depth, char * name ) const;
 
-   /** Test whether a point is inside or outside the object
-   *  For computational speed purposes, it is faster if the method does not
-   *  check the name of the class and the current depth */
-  virtual bool IsInside( const PointType & point) const;
+  /** Test whether a point is inside or outside the object
+  *  For computational speed purposes, it is faster if the method does not
+  *  check the name of the class and the current depth */
+  virtual bool IsInside( const PointType & point ) const;
 
   /** Compute axis aligned bounding box from the image mask. The bounding box
    * is returned as an image region. Each call to this function will recompute
@@ -108,21 +107,21 @@ public:
     IndexType & index, SizeType & size ) const;
 
 protected:
-  ImageMaskSpatialObject2(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+
+  ImageMaskSpatialObject2( const Self & ); // purposely not implemented
+  void operator=( const Self & );          // purposely not implemented
 
   ImageMaskSpatialObject2();
   virtual ~ImageMaskSpatialObject2();
 
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
 };
 
 } // end of namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageMaskSpatialObject2.txx"
+#include "itkImageMaskSpatialObject2.hxx"
 #endif
 
 #endif //__itkImageMaskSpatialObject2_h
-

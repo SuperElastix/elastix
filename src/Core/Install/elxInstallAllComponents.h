@@ -24,8 +24,8 @@
  * the InstallComponent functions implemented by the components. */
 #include "elxInstallComponentFunctionDeclarations.h"
 
-
-int InstallAllComponents( elx::ComponentDatabase * _cdb )
+int
+InstallAllComponents( elx::ComponentDatabase * _cdb )
 {
   int ret = 0;
 
@@ -38,5 +38,6 @@ int InstallAllComponents( elx::ComponentDatabase * _cdb )
   return ret;
 
 } // end InstallAllComponents
+
 
 #endif // #ifndef __elxInstallAllComponents_h

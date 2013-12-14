@@ -20,299 +20,301 @@
 namespace elastix
 {
 
-  /**
-   * ********************* Constructor ****************************
-   */
+/**
+ * ********************* Constructor ****************************
+ */
 
-  template <class TElastix>
-    WeightedCombinationTransformElastix<TElastix>
-    ::WeightedCombinationTransformElastix()
-  {
-    this->m_WeightedCombinationTransform =
-      WeightedCombinationTransformType::New();
-    this->SetCurrentTransform( this->m_WeightedCombinationTransform );
-  } // end Constructor
+template< class TElastix >
+WeightedCombinationTransformElastix< TElastix >
+::WeightedCombinationTransformElastix()
+{
+  this->m_WeightedCombinationTransform
+    = WeightedCombinationTransformType::New();
+  this->SetCurrentTransform( this->m_WeightedCombinationTransform );
+}   // end Constructor
 
 
-  /*
-   * ******************* BeforeRegistration ***********************
-   */
+/*
+ * ******************* BeforeRegistration ***********************
+ */
 
-  template <class TElastix>
-    void WeightedCombinationTransformElastix<TElastix>
-    ::BeforeRegistration(void)
-  {
-    /** Set the normalizedWeights parameter. It must be correct in order to set the scales properly.
-     * \todo: this parameter may change each resolution. */
-    bool normalizeWeights = false;
-    this->m_Configuration->ReadParameter( normalizeWeights,
+template< class TElastix >
+void
+WeightedCombinationTransformElastix< TElastix >
+::BeforeRegistration( void )
+{
+  /** Set the normalizedWeights parameter. It must be correct in order to set the scales properly.
+   * \todo: this parameter may change each resolution. */
+  bool normalizeWeights = false;
+  this->m_Configuration->ReadParameter( normalizeWeights,
     "NormalizeCombinationWeights", 0 );
-    this->m_WeightedCombinationTransform->SetNormalizeWeights( normalizeWeights );
+  this->m_WeightedCombinationTransform->SetNormalizeWeights( normalizeWeights );
 
-    /** Give initial parameters to this->m_Registration.*/
-    this->InitializeTransform();
+  /** Give initial parameters to this->m_Registration.*/
+  this->InitializeTransform();
 
-    /** Set the scales. */
-    this->SetScales();
+  /** Set the scales. */
+  this->SetScales();
 
-  } // end BeforeRegistration
+}   // end BeforeRegistration
 
 
-  /**
-   * ************************* InitializeTransform *********************
-   * Initialize transform to prepare it for registration.
-   */
+/**
+ * ************************* InitializeTransform *********************
+ * Initialize transform to prepare it for registration.
+ */
 
-  template <class TElastix>
-    void WeightedCombinationTransformElastix<TElastix>
-    ::InitializeTransform( void )
+template< class TElastix >
+void
+WeightedCombinationTransformElastix< TElastix >
+::InitializeTransform( void )
+{
+  /** Load subtransforms specified in parameter file. */
+  this->LoadSubTransforms();
+
+  /** Some helper variables */
+  const NumberOfParametersType N  = this->GetNumberOfParameters();
+  const double                 Nd = static_cast< double >( N );
+
+  /** Equal weights */
+  ParametersType parameters( N );
+  if( this->m_WeightedCombinationTransform->GetNormalizeWeights() )
   {
-    /** Load subtransforms specified in parameter file. */
-    this->LoadSubTransforms();
-
-    /** Some helper variables */
-    const NumberOfParametersType N = this->GetNumberOfParameters();
-    const double Nd = static_cast<double>(N);
-
-    /** Equal weights */
-    ParametersType parameters( N );
-    if ( this->m_WeightedCombinationTransform->GetNormalizeWeights() )
-    {
-      parameters.Fill( 1.0 / Nd );
-    }
-    else
-    {
-      parameters.Fill( 0.0 );
-    }
-    this->m_WeightedCombinationTransform->SetParameters( parameters );
-
-    /** Set the initial parameters in this->m_Registration.*/
-    this->m_Registration->GetAsITKBaseType()->
-      SetInitialTransformParameters( this->GetParameters() );
-
-  } // end InitializeTransform
-
-  /**
-   * ************************* ReadFromFile ************************
-   */
-
-  template <class TElastix>
-  void
-  WeightedCombinationTransformElastix<TElastix>
-  ::ReadFromFile( void )
+    parameters.Fill( 1.0 / Nd );
+  }
+  else
   {
-    /** Load subtransforms specified in transform parameter file. */
-    this->LoadSubTransforms();
+    parameters.Fill( 0.0 );
+  }
+  this->m_WeightedCombinationTransform->SetParameters( parameters );
 
-    /** Set the normalizeWeights option */
-    bool normalizeWeights = false;
-    this->m_Configuration->ReadParameter( normalizeWeights,
+  /** Set the initial parameters in this->m_Registration.*/
+  this->m_Registration->GetAsITKBaseType()->
+  SetInitialTransformParameters( this->GetParameters() );
+
+}   // end InitializeTransform
+
+
+/**
+ * ************************* ReadFromFile ************************
+ */
+
+template< class TElastix >
+void
+WeightedCombinationTransformElastix< TElastix >
+::ReadFromFile( void )
+{
+  /** Load subtransforms specified in transform parameter file. */
+  this->LoadSubTransforms();
+
+  /** Set the normalizeWeights option */
+  bool normalizeWeights = false;
+  this->m_Configuration->ReadParameter( normalizeWeights,
     "NormalizeCombinationWeights", 0 );
-    this->m_WeightedCombinationTransform->SetNormalizeWeights( normalizeWeights );
+  this->m_WeightedCombinationTransform->SetNormalizeWeights( normalizeWeights );
 
-    /** Call the ReadFromFile from the TransformBase to read in the parameters.  */
-    this->Superclass2::ReadFromFile();
+  /** Call the ReadFromFile from the TransformBase to read in the parameters.  */
+  this->Superclass2::ReadFromFile();
 
-  } // end ReadFromFile()
+}   // end ReadFromFile()
 
 
-  /**
-  * ************************* WriteToFile ************************
-  */
+/**
+* ************************* WriteToFile ************************
+*/
 
-  template <class TElastix>
-  void
-    WeightedCombinationTransformElastix<TElastix>
-    ::WriteToFile( const ParametersType & param ) const
+template< class TElastix >
+void
+WeightedCombinationTransformElastix< TElastix >
+::WriteToFile( const ParametersType & param ) const
+{
+  /** Call the WriteToFile from the TransformBase. */
+  this->Superclass2::WriteToFile( param );
+
+  /** Write WeightedCombinationTransform specific things. */
+  xout[ "transpar" ] << std::endl << "// WeightedCombinationTransform specific" << std::endl;
+
+  /** Write normalize-weights option */
+  std::string normalizeString = "false";
+  if( this->m_WeightedCombinationTransform->GetNormalizeWeights() )
   {
-    /** Call the WriteToFile from the TransformBase. */
-    this->Superclass2::WriteToFile( param );
+    normalizeString = "true";
+  }
+  xout[ "transpar" ] << "(NormalizeCombinationWeights \"" << normalizeString << "\" )" << std::endl;
 
-    /** Write WeightedCombinationTransform specific things. */
-    xout["transpar"] << std::endl << "// WeightedCombinationTransform specific" << std::endl;
-
-    /** Write normalize-weights option */
-    std::string normalizeString = "false";
-    if ( this->m_WeightedCombinationTransform->GetNormalizeWeights() )
-    {
-      normalizeString = "true";
-    }
-    xout["transpar"] << "(NormalizeCombinationWeights \"" << normalizeString << "\" )" << std::endl;
-
-    /** Write names of subtransforms */
-    xout["transpar"] << "(SubTransforms ";
-    for (unsigned int i = 0; i < this->m_SubTransformFileNames.size(); ++i )
-    {
-      xout["transpar"] << "\"" << this->m_SubTransformFileNames[i] << "\" ";
-    }
-    xout["transpar"] << ")" << std::endl;
-
-  } // end WriteToFile()
-
-
-  /**
-  * ************************* SetScales *********************
-  */
-
-  template <class TElastix>
-  void
-    WeightedCombinationTransformElastix<TElastix>
-    ::SetScales( void )
+  /** Write names of subtransforms */
+  xout[ "transpar" ] << "(SubTransforms ";
+  for( unsigned int i = 0; i < this->m_SubTransformFileNames.size(); ++i )
   {
-    /** Create the new scales. */
-    const NumberOfParametersType N = this->GetNumberOfParameters();
-    ScalesType newscales( N );
-    newscales.Fill( 1.0 );
+    xout[ "transpar" ] << "\"" << this->m_SubTransformFileNames[ i ] << "\" ";
+  }
+  xout[ "transpar" ] << ")" << std::endl;
 
-    /** Check if automatic scales estimation is desired. */
-    bool automaticScalesEstimation = false;
-    this->m_Configuration->ReadParameter( automaticScalesEstimation,
-      "AutomaticScalesEstimation", 0, false );
+}   // end WriteToFile()
 
-    if ( automaticScalesEstimation )
-    {
-      elxout << "Scales are estimated automatically." << std::endl;
-      this->AutomaticScalesEstimation( newscales );
-    }
-    else
-    {
-      const std::size_t count =
-        this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
 
-      if ( count == N )
-      {
-        /** Read the user-supplied values/ */
-        std::vector<double> newscalesvec(N);
-        this->m_Configuration->ReadParameter( newscalesvec, "Scales", 0, N-1, true );
-        for ( unsigned int i = 0; i < N; i++ )
-        {
-          newscales[i] = newscalesvec[i];
-        }
-      }
-      else if ( count != 0 )
-      {
-        /** In this case an error is made in the parameter-file.
-        * An error is thrown, because using erroneous scales in the optimizer
-        * can give unpredictable results.
-        */
-        itkExceptionMacro( << "ERROR: The Scales-option in the parameter-file"
-          << " has not been set properly." );
-      }
+/**
+* ************************* SetScales *********************
+*/
 
-    } // end else: no automaticScalesEstimation
+template< class TElastix >
+void
+WeightedCombinationTransformElastix< TElastix >
+::SetScales( void )
+{
+  /** Create the new scales. */
+  const NumberOfParametersType N = this->GetNumberOfParameters();
+  ScalesType                   newscales( N );
+  newscales.Fill( 1.0 );
 
-    elxout << "Scales for transform parameters are: " << newscales << std::endl;
+  /** Check if automatic scales estimation is desired. */
+  bool automaticScalesEstimation = false;
+  this->m_Configuration->ReadParameter( automaticScalesEstimation,
+    "AutomaticScalesEstimation", 0, false );
 
-    /** And set the scales into the optimizer. */
-    this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
-
-  } // end SetScales()
-
-  /**
-  * ************************* LoadSubTransforms *********************
-  */
-
-  template <class TElastix>
-  void
-    WeightedCombinationTransformElastix<TElastix>
-    ::LoadSubTransforms( void )
+  if( automaticScalesEstimation )
   {
-    /** Typedef's from ComponentDatabase. */
-    typedef typename Superclass2::ComponentDatabaseType                ComponentDatabaseType;
-    typedef typename Superclass2::ComponentDescriptionType             ComponentDescriptionType;
-    typedef typename Superclass2::PtrToCreator                         PtrToCreator;
-    typedef typename Superclass2::ObjectType                           ObjectType;
+    elxout << "Scales are estimated automatically." << std::endl;
+    this->AutomaticScalesEstimation( newscales );
+  }
+  else
+  {
+    const std::size_t count
+      = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
 
-    const std::size_t N =
-      this->m_Configuration->CountNumberOfParameterEntries( "SubTransforms" );
-
-    if ( N == 0)
+    if( count == N )
     {
-      itkExceptionMacro( << "ERROR: At least one SubTransform should be specified." );
+      /** Read the user-supplied values/ */
+      std::vector< double > newscalesvec( N );
+      this->m_Configuration->ReadParameter( newscalesvec, "Scales", 0, N - 1, true );
+      for( unsigned int i = 0; i < N; i++ )
+      {
+        newscales[ i ] = newscalesvec[ i ];
+      }
     }
-    else
+    else if( count != 0 )
     {
-      this->m_SubTransformFileNames.resize( N );
-      this->m_Configuration->ReadParameter( this->m_SubTransformFileNames,
-        "SubTransforms", 0, N-1, true );
+      /** In this case an error is made in the parameter-file.
+      * An error is thrown, because using erroneous scales in the optimizer
+      * can give unpredictable results.
+      */
+      itkExceptionMacro( << "ERROR: The Scales-option in the parameter-file"
+                         << " has not been set properly." );
     }
 
-    /** Create a vector of subTransform pointers and initialize to null pointers.
-     * \todo: make it a member variable if it appears to needed later */
-    TransformContainerType subTransforms( N, 0 );
+  }   // end else: no automaticScalesEstimation
 
-    /** Load each subTransform */
-    for ( unsigned int i = 0; i < N; ++i )
+  elxout << "Scales for transform parameters are: " << newscales << std::endl;
+
+  /** And set the scales into the optimizer. */
+  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+
+}   // end SetScales()
+
+
+/**
+* ************************* LoadSubTransforms *********************
+*/
+
+template< class TElastix >
+void
+WeightedCombinationTransformElastix< TElastix >
+::LoadSubTransforms( void )
+{
+  /** Typedef's from ComponentDatabase. */
+  typedef typename Superclass2::ComponentDatabaseType    ComponentDatabaseType;
+  typedef typename Superclass2::ComponentDescriptionType ComponentDescriptionType;
+  typedef typename Superclass2::PtrToCreator             PtrToCreator;
+  typedef typename Superclass2::ObjectType               ObjectType;
+
+  const std::size_t N
+    = this->m_Configuration->CountNumberOfParameterEntries( "SubTransforms" );
+
+  if( N == 0 )
+  {
+    itkExceptionMacro( << "ERROR: At least one SubTransform should be specified." );
+  }
+  else
+  {
+    this->m_SubTransformFileNames.resize( N );
+    this->m_Configuration->ReadParameter( this->m_SubTransformFileNames,
+      "SubTransforms", 0, N - 1, true );
+  }
+
+  /** Create a vector of subTransform pointers and initialize to null pointers.
+   * \todo: make it a member variable if it appears to needed later */
+  TransformContainerType subTransforms( N, 0 );
+
+  /** Load each subTransform */
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    /** \todo: large parts of these code were copied from the elx::TransformBase.
+     * Could we put some functionality in a function? */
+
+    /** Read the name of the subTransform */
+    const std::string & subTransformFileName = this->m_SubTransformFileNames[ i ];
+
+    /** Create a new configuration, which will be initialized with
+     * the subtransformFileName. */
+    ConfigurationPointer configurationSubTransform = ConfigurationType::New();
+
+    /** Create argmapInitialTransform. */
+    CommandLineArgumentMapType argmapSubTransform;
+    argmapSubTransform.insert( CommandLineEntryType(
+      "-tp", subTransformFileName ) );
+
+    int initfailure = configurationSubTransform->Initialize( argmapSubTransform );
+    if( initfailure != 0 )
     {
-      /** \todo: large parts of these code were copied from the elx::TransformBase.
-       * Could we put some functionality in a function? */
+      itkExceptionMacro( << "ERROR: Reading SubTransform "
+                         << "parameters failed: " << subTransformFileName );
+    }
 
-      /** Read the name of the subTransform */
-      const std::string & subTransformFileName = this->m_SubTransformFileNames[i];
+    /** Read the SubTransform name. */
+    ComponentDescriptionType subTransformName = "AffineTransform";
+    configurationSubTransform->ReadParameter(
+      subTransformName, "Transform", 0 );
 
-      /** Create a new configuration, which will be initialized with
-       * the subtransformFileName. */
-      ConfigurationPointer configurationSubTransform = ConfigurationType::New();
+    /** Create a SubTransform. */
+    typename ObjectType::Pointer subTransform;
+    PtrToCreator testcreator = 0;
+    testcreator = this->GetElastix()->GetComponentDatabase()
+      ->GetCreator( subTransformName, this->m_Elastix->GetDBIndex() );
+    subTransform = testcreator ? testcreator() : NULL;
 
-      /** Create argmapInitialTransform. */
-      CommandLineArgumentMapType argmapSubTransform;
-      argmapSubTransform.insert( CommandLineEntryType(
-        "-tp", subTransformFileName ) );
+    /** Cast to TransformBase */
+    Superclass2 * elx_subTransform = dynamic_cast< Superclass2 * >(
+      subTransform.GetPointer() );
 
-      int initfailure = configurationSubTransform->Initialize( argmapSubTransform );
-      if ( initfailure != 0 )
-      {
-        itkExceptionMacro( << "ERROR: Reading SubTransform "
-          << "parameters failed: " << subTransformFileName );
-      }
+    /** Call the ReadFromFile method of the elx_subTransform. */
+    if( elx_subTransform )
+    {
+      elx_subTransform->SetElastix( this->GetElastix() );
+      elx_subTransform->SetConfiguration( configurationSubTransform );
+      elx_subTransform->ReadFromFile();
 
-      /** Read the SubTransform name. */
-      ComponentDescriptionType subTransformName = "AffineTransform";
-      configurationSubTransform->ReadParameter(
-        subTransformName, "Transform", 0 );
+      /** Set in vector of subTransforms. */
+      SubTransformType * testPointer
+                         = dynamic_cast< SubTransformType * >( subTransform.GetPointer() );
+      subTransforms[ i ] = testPointer;
+    }
 
-      /** Create a SubTransform. */
-      typename ObjectType::Pointer subTransform;
-      PtrToCreator testcreator = 0;
-      testcreator = this->GetElastix()->GetComponentDatabase()
-        ->GetCreator( subTransformName, this->m_Elastix->GetDBIndex() );
-      subTransform = testcreator ? testcreator() : NULL;
+    /** Check if no errors occured: */
+    if( subTransforms[ i ].IsNull() )
+    {
+      xl::xout[ "error" ] << "ERROR: Error while trying to load the SubTransform "
+                          << subTransformFileName << std::endl;
+      itkExceptionMacro( << "ERROR: Loading SubTransforms failed!" );
+    }
 
-      /** Cast to TransformBase */
-      Superclass2 * elx_subTransform = dynamic_cast< Superclass2 * >(
-        subTransform.GetPointer() );
+  }    // end for loop over subTransforms
 
-      /** Call the ReadFromFile method of the elx_subTransform. */
-      if ( elx_subTransform )
-      {
-        elx_subTransform->SetElastix( this->GetElastix() );
-        elx_subTransform->SetConfiguration( configurationSubTransform );
-        elx_subTransform->ReadFromFile();
+  /** Set the subTransforms in the WeightedCombination object. */
+  this->m_WeightedCombinationTransform->SetTransformContainer( subTransforms );
 
-        /** Set in vector of subTransforms. */
-        SubTransformType * testPointer =
-          dynamic_cast<SubTransformType * >( subTransform.GetPointer() );
-        subTransforms[i] = testPointer;
-      }
-
-      /** Check if no errors occured: */
-      if ( subTransforms[i].IsNull() )
-      {
-        xl::xout["error"] << "ERROR: Error while trying to load the SubTransform "
-          << subTransformFileName << std::endl;
-        itkExceptionMacro( << "ERROR: Loading SubTransforms failed!" );
-      }
-
-    }  // end for loop over subTransforms
-
-    /** Set the subTransforms in the WeightedCombination object. */
-    this->m_WeightedCombinationTransform->SetTransformContainer( subTransforms );
-
-  } // end LoadSubTransforms()
+}   // end LoadSubTransforms()
 
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxWeightedCombinationTransform_HXX_
-

@@ -16,7 +16,6 @@
 
 #include "elxCUDAResampler.h"
 
-
 namespace elastix
 {
 
@@ -24,13 +23,13 @@ namespace elastix
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 int
-CUDAResampler<TElastix>
+CUDAResampler< TElastix >
 ::BeforeAll( void )
 {
   int res = Superclass1::CudaResampleImageFilterType::checkExecutionParameters();
-  if ( res != 0 )
+  if( res != 0 )
   {
     itkExceptionMacro( "ERROR: no valid CUDA devices found!" );
   }
@@ -45,9 +44,9 @@ CUDAResampler<TElastix>
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-CUDAResampler<TElastix>
+CUDAResampler< TElastix >
 ::BeforeRegistration( void )
 {
   /** Are we using a CUDA enabled GPU for resampling? */
@@ -69,9 +68,9 @@ CUDAResampler<TElastix>
  * ******************* ReadFromFile  ****************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-CUDAResampler<TElastix>
+CUDAResampler< TElastix >
 ::ReadFromFile( void )
 {
   /** Call ReadFromFile of the ResamplerBase. */
@@ -98,29 +97,29 @@ CUDAResampler<TElastix>
  * ************************* WriteToFile ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-CUDAResampler<TElastix>
+CUDAResampler< TElastix >
 ::WriteToFile( void ) const
 {
   /** Call the WriteToFile from the ResamplerBase. */
   this->Superclass2::WriteToFile();
 
   /** Add some CUDAResampler specific lines. */
-  xout["transpar"] << std::endl << "// CUDAResampler specific" << std::endl;
+  xout[ "transpar" ] << std::endl << "// CUDAResampler specific" << std::endl;
 
   /** Is CUDA used or not? */
   std::string useCUDA = "false";
-  if ( this->GetUseCuda() ) useCUDA = "true";
-  xout["transpar"] << "(UseCUDA \"" << useCUDA << "\")" << std::endl;
+  if( this->GetUseCuda() ) { useCUDA = "true"; }
+  xout[ "transpar" ] << "(UseCUDA \"" << useCUDA << "\")" << std::endl;
 
   /** Are we using the fast CUDA kernel for resampling,
    * or the accurate kernel? Default = accurate.
    */
   std::string useFastCUDAKernel = "false";
-  if ( this->GetUseFastCUDAKernel() ) useFastCUDAKernel = "true";
-  xout["transpar"] << "(UseFastCUDAKernel \""
-    << useFastCUDAKernel << "\")" << std::endl;
+  if( this->GetUseFastCUDAKernel() ) { useFastCUDAKernel = "true"; }
+  xout[ "transpar" ] << "(UseFastCUDAKernel \""
+                     << useFastCUDAKernel << "\")" << std::endl;
 
 } // end WriteToFile()
 
@@ -129,15 +128,15 @@ CUDAResampler<TElastix>
  * ************************* CheckForValidConfiguration ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-CUDAResampler<TElastix>
+CUDAResampler< TElastix >
 ::CheckForValidConfiguration( ValidTransformPointer & bSplineTransform )
 {
   this->Superclass1::CheckForValidConfiguration( bSplineTransform );
 
   elxout << this->Superclass1::GetWarningReport().GetWarningReportAsString()
-    << std::endl;
+         << std::endl;
 
 } // end CheckForValidConfiguration()
 

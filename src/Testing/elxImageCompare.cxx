@@ -29,20 +29,20 @@
 #include "itkImageSource.h" // This should not be necessary after ITK patch is merged
 #include "itkTestingComparisonImageFilter.h"
 
-
 /**
  * ******************* GetHelpString *******************
  */
 
-std::string GetHelpString( void )
+std::string
+GetHelpString( void )
 {
   std::stringstream ss;
   ss << "Usage:" << std::endl
-    << "elxImageCompare" << std::endl
-    << "  -test      image filename to test against baseline\n"
-    << "  -base      baseline image filename\n"
-    << "  [-t]       intensity difference threshold, default 0\n"
-    << "  [-a]       allowable tolerance (# voxels different), default 0";
+     << "elxImageCompare" << std::endl
+     << "  -test      image filename to test against baseline\n"
+     << "  -base      baseline image filename\n"
+     << "  [-t]       intensity difference threshold, default 0\n"
+     << "  [-a]       allowable tolerance (# voxels different), default 0";
   return ss.str();
 
 } // end GetHelpString()
@@ -52,7 +52,8 @@ std::string GetHelpString( void )
 // must be compared, change this variable.
 static const unsigned int ITK_TEST_DIMENSION_MAX = 4;
 
-int main( int argc, char **argv )
+int
+main( int argc, char ** argv )
 {
   itk::CommandLineArgumentParser::Pointer parser = itk::CommandLineArgumentParser::New();
   parser->SetCommandLineArguments( argc, argv );
@@ -85,8 +86,8 @@ int main( int argc, char **argv )
   parser->GetCommandLineArgument( "-a", allowedTolerance );
 
   // Read images
-  typedef itk::Image<double,ITK_TEST_DIMENSION_MAX>           ImageType;
-  typedef itk::ImageFileReader<ImageType>                     ReaderType;
+  typedef itk::Image< double, ITK_TEST_DIMENSION_MAX > ImageType;
+  typedef itk::ImageFileReader< ImageType >            ReaderType;
 
   // Read the baseline file
   ReaderType::Pointer baselineReader = ReaderType::New();
@@ -95,7 +96,7 @@ int main( int argc, char **argv )
   {
     baselineReader->Update();
   }
-  catch ( itk::ExceptionObject & err )
+  catch( itk::ExceptionObject & err )
   {
     std::cerr << "Error during reading baseline image: " << err << std::endl;
     return EXIT_FAILURE;
@@ -108,7 +109,7 @@ int main( int argc, char **argv )
   {
     testReader->Update();
   }
-  catch ( itk::ExceptionObject & err )
+  catch( itk::ExceptionObject & err )
   {
     std::cerr << "Error during reading test image: " << err << std::endl;
     return EXIT_FAILURE;
@@ -120,13 +121,13 @@ int main( int argc, char **argv )
   ImageType::SizeType testSize;
   testSize = testReader->GetOutput()->GetLargestPossibleRegion().GetSize();
 
-  if ( baselineSize != testSize )
+  if( baselineSize != testSize )
   {
     std::cerr << "The size of the Baseline image and Test image do not match!" << std::endl;
     std::cerr << "Baseline image: " << baselineImageFileName
-      << " has size " << baselineSize << std::endl;
+              << " has size " << baselineSize << std::endl;
     std::cerr << "Test image:     " << testImageFileName
-      << " has size " << testSize << std::endl;
+              << " has size " << testSize << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -140,7 +141,7 @@ int main( int argc, char **argv )
   {
     comparisonFilter->Update();
   }
-  catch ( itk::ExceptionObject & err )
+  catch( itk::ExceptionObject & err )
   {
     std::cerr << "Error during comparing image: " << err << std::endl;
     return EXIT_FAILURE;
@@ -152,19 +153,19 @@ int main( int argc, char **argv )
   if( numberOfDifferentPixels > 0 )
   {
     std::cerr << "There are " << numberOfDifferentPixels
-      << " pixels with difference larger than "
-      << allowedTolerance << "!" << std::endl;
+              << " pixels with difference larger than "
+              << allowedTolerance << "!" << std::endl;
 
     // Create name for diff image
-    std::string diffImageFileName =
-      itksys::SystemTools::GetFilenamePath( testImageFileName );
+    std::string diffImageFileName
+                       = itksys::SystemTools::GetFilenamePath( testImageFileName );
     diffImageFileName += "/";
-    diffImageFileName +=
-      itksys::SystemTools::GetFilenameWithoutLastExtension( testImageFileName );
+    diffImageFileName
+                      += itksys::SystemTools::GetFilenameWithoutLastExtension( testImageFileName );
     diffImageFileName += "_DIFF";
     diffImageFileName += itksys::SystemTools::GetFilenameLastExtension( testImageFileName );
 
-    typedef itk::ImageFileWriter<ImageType>                    WriterType;
+    typedef itk::ImageFileWriter< ImageType > WriterType;
     WriterType::Pointer writer = WriterType::New();
     writer->SetFileName( diffImageFileName );
     writer->SetInput( comparisonFilter->GetOutput() );
@@ -172,13 +173,13 @@ int main( int argc, char **argv )
     {
       writer->Write();
     }
-    catch ( itk::ExceptionObject & err )
+    catch( itk::ExceptionObject & err )
     {
       std::cerr << "Error during writing difference image: " << err << std::endl;
       return EXIT_FAILURE;
     }
 
-    if ( numberOfDifferentPixels > allowedTolerance )
+    if( numberOfDifferentPixels > allowedTolerance )
     {
       return EXIT_FAILURE;
     }

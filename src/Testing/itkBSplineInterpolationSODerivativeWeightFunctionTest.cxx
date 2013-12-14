@@ -18,13 +18,14 @@ PURPOSE. See the above copyright notices for more information.
 
 //-------------------------------------------------------------------------------------
 
-int main( int argc, char *argv[] )
+int
+main( int argc, char * argv[] )
 {
   /** Some basic type definitions.
    * NOTE: don't change the dimension or the spline order, since the
    * hard-coded ground truth depends on this.
    */
-  const unsigned int Dimension = 2;
+  const unsigned int Dimension   = 2;
   const unsigned int SplineOrder = 3;
   typedef float CoordinateRepresentationType;
   const double distance = 1e-3; // the allowable distance
@@ -32,14 +33,14 @@ int main( int argc, char *argv[] )
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode.
    */
-  unsigned int N = static_cast<unsigned int>( 1e6 );
+  unsigned int N = static_cast< unsigned int >( 1e6 );
 
   /** Other typedefs. */
   typedef itk::BSplineInterpolationSecondOrderDerivativeWeightFunction<
     CoordinateRepresentationType,
     Dimension, SplineOrder >                SODerivativeWeightFunctionType;
-  typedef SODerivativeWeightFunctionType::ContinuousIndexType   ContinuousIndexType;
-  typedef SODerivativeWeightFunctionType::WeightsType           WeightsType;
+  typedef SODerivativeWeightFunctionType::ContinuousIndexType ContinuousIndexType;
+  typedef SODerivativeWeightFunctionType::WeightsType         WeightsType;
 
   std::cerr << "TESTING:\n" << std::endl;
 
@@ -114,17 +115,17 @@ int main( int argc, char *argv[] )
 
   /** Compute the distance between the two vectors. */
   double error = 0.0;
-  for ( unsigned int i = 0; i < soWeights.Size(); ++i )
+  for( unsigned int i = 0; i < soWeights.Size(); ++i )
   {
     error += vnl_math_sqr( soWeights[ i ] - trueSOWeights[ i ] );
   }
   error = vcl_sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
-  if ( error > distance )
+  if( error > distance )
   {
     std::cerr << "ERROR: the first order weights differs more than "
-      << distance << " from the truth." << std::endl;
+              << distance << " from the truth." << std::endl;
     return 1;
   }
   std::cerr << std::showpoint;
@@ -134,14 +135,14 @@ int main( int argc, char *argv[] )
 
   /** Time the so implementation. */
   clock_t startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     soWeightFunction->Evaluate( cindex );
   }
   clock_t endClock = clock();
-  clock_t elapsed = endClock - startClock;
+  clock_t elapsed  = endClock - startClock;
   std::cerr << "The elapsed time for the 2nd order derivative (0,1) is: "
-    << elapsed << std::endl;
+            << elapsed << std::endl;
 
   /**
    * *********** TESTING 2 ************************************************
@@ -203,17 +204,17 @@ int main( int argc, char *argv[] )
 
   /** Compute the distance between the two vectors. */
   error = 0.0;
-  for ( unsigned int i = 0; i < soWeights.Size(); ++i )
+  for( unsigned int i = 0; i < soWeights.Size(); ++i )
   {
     error += vnl_math_sqr( soWeights[ i ] - trueSOWeights[ i ] );
   }
   error = vcl_sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
-  if ( error > distance )
+  if( error > distance )
   {
     std::cerr << "ERROR: the first order weights differs more than "
-      << distance << " from the truth." << std::endl;
+              << distance << " from the truth." << std::endl;
     return 1;
   }
   std::cerr << std::showpoint;
@@ -223,14 +224,14 @@ int main( int argc, char *argv[] )
 
   /** Time the so implementation. */
   startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     soWeightFunction->Evaluate( cindex );
   }
   endClock = clock();
-  elapsed = endClock - startClock;
+  elapsed  = endClock - startClock;
   std::cerr << "The elapsed time for the 2nd order derivative (0,0) is: "
-    << elapsed << std::endl;
+            << elapsed << std::endl;
 
   /**
    * *********** Function TESTING ****************************************
@@ -245,7 +246,7 @@ int main( int argc, char *argv[] )
   trueStartIndex[ 0 ] =  2;
   trueStartIndex[ 1 ] = -4;
   soWeightFunction->ComputeStartIndex( cindex, startIndex );
-  if ( startIndex != trueStartIndex )
+  if( startIndex != trueStartIndex )
   {
     std::cerr << "ERROR: wrong start index was computed." << std::endl;
     return 1;
@@ -253,15 +254,15 @@ int main( int argc, char *argv[] )
 
   SODerivativeWeightFunctionType::SizeType trueSize;
   trueSize.Fill( SplineOrder + 1 );
-  if ( soWeightFunction->GetSupportSize() != trueSize )
+  if( soWeightFunction->GetSupportSize() != trueSize )
   {
     std::cerr << "ERROR: wrong support size was computed." << std::endl;
     return 1;
   }
 
-  if ( soWeightFunction->GetNumberOfWeights()
-    != static_cast<unsigned long>( vcl_pow(
-    static_cast<float>( SplineOrder + 1 ), 2.0f ) ) )
+  if( soWeightFunction->GetNumberOfWeights()
+    != static_cast< unsigned long >( vcl_pow(
+    static_cast< float >( SplineOrder + 1 ), 2.0f ) ) )
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;
     return 1;

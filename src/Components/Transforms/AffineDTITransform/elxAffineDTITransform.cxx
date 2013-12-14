@@ -15,4 +15,3 @@
 #include "elxAffineDTITransform.h"
 
 elxInstallMacro( AffineDTITransformElastix );
-

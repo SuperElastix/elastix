@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __xoutsimple_hxx
 #define __xoutsimple_hxx
 
@@ -19,126 +18,121 @@
 
 namespace xoutlibrary
 {
-  using namespace std;
+using namespace std;
+
+/**
+ * ********************* Constructor ****************************
+ */
+
+template< class charT, class traits >
+xoutsimple< charT, traits >::xoutsimple()
+{
+  //nothing
+
+}   // end Constructor
 
 
-  /**
-   * ********************* Constructor ****************************
-   */
+/**
+ * ********************* Destructor *****************************
+ */
 
-  template< class charT, class traits >
-    xoutsimple<charT, traits>::xoutsimple()
-  {
-    //nothing
+template< class charT, class traits >
+xoutsimple< charT, traits >::~xoutsimple()
+{
+  //nothing
 
-  } // end Constructor
-
-
-  /**
-   * ********************* Destructor *****************************
-   */
-
-  template< class charT, class traits >
-    xoutsimple<charT, traits>::~xoutsimple()
-  {
-    //nothing
-
-  } // end Destructor
+}   // end Destructor
 
 
-  /**
-   * **************** AddOutput (ostream_type) ********************
-   */
+/**
+ * **************** AddOutput (ostream_type) ********************
+ */
 
-  template< class charT, class traits >
-    int xoutsimple<charT, traits>::
-    AddOutput( const char * name, ostream_type * output )
-  {
-    return this->AddTargetCell( name, output );
+template< class charT, class traits >
+int
+xoutsimple< charT, traits >::AddOutput( const char * name, ostream_type * output )
+{
+  return this->AddTargetCell( name, output );
 
-  } // end AddOutput
-
-
-  /**
-   * **************** AddOutput (xoutsimple) **********************
-   */
-
-  template< class charT, class traits >
-    int xoutsimple<charT, traits>::
-    AddOutput( const char * name, Superclass * output )
-  {
-    return this->AddTargetCell( name, output );
-
-  } // end AddOutput
+}   // end AddOutput
 
 
-  /**
-   * ***************** RemoveOutput *******************************
-   */
+/**
+ * **************** AddOutput (xoutsimple) **********************
+ */
 
-  template< class charT, class traits >
-    int xoutsimple<charT, traits>::
-    RemoveOutput( const char * name )
-  {
-    return this->RemoveTargetCell( name );
+template< class charT, class traits >
+int
+xoutsimple< charT, traits >::AddOutput( const char * name, Superclass * output )
+{
+  return this->AddTargetCell( name, output );
 
-  } // end RemoveOutput
-
-
-  /**
-   * **************** SetOutputs (ostream_types) ******************
-   */
-
-  template< class charT, class traits >
-    void xoutsimple<charT, traits>::
-    SetOutputs( const CStreamMapType & outputmap )
-  {
-    this->SetTargetCells( outputmap );
-
-  } // end SetOutputs
+}   // end AddOutput
 
 
-  /**
-   * **************** SetOutputs (xoutobjects) ********************
-   */
+/**
+ * ***************** RemoveOutput *******************************
+ */
 
-  template< class charT, class traits >
-    void xoutsimple<charT, traits>::
-    SetOutputs( const XStreamMapType & outputmap )
-  {
-    this->SetTargetCells( outputmap );
+template< class charT, class traits >
+int
+xoutsimple< charT, traits >::RemoveOutput( const char * name )
+{
+  return this->RemoveTargetCell( name );
 
-  } // end SetOutputs()
-
-
-  /**
-   * **************** GetOutputs (map of xoutobjects) *************
-   */
-
-  template< class charT, class traits >
-    const typename xoutsimple<charT, traits>::XStreamMapType &
-    xoutsimple<charT, traits>::GetXOutputs( void )
-  {
-    return this->m_XTargetCells;
-
-  } // end GetXOutputs()
+}   // end RemoveOutput
 
 
-  /**
-   * **************** GetOutputs (map of c-streams) ***************
-   */
+/**
+ * **************** SetOutputs (ostream_types) ******************
+ */
 
-  template< class charT, class traits >
-    const typename xoutsimple<charT, traits>::CStreamMapType &
-    xoutsimple<charT, traits>::GetCOutputs( void )
-  {
-    return this->m_CTargetCells;
+template< class charT, class traits >
+void
+xoutsimple< charT, traits >::SetOutputs( const CStreamMapType & outputmap )
+{
+  this->SetTargetCells( outputmap );
 
-  } // end GetCOutputs()
+}   // end SetOutputs
 
+
+/**
+ * **************** SetOutputs (xoutobjects) ********************
+ */
+
+template< class charT, class traits >
+void
+xoutsimple< charT, traits >::SetOutputs( const XStreamMapType & outputmap )
+{
+  this->SetTargetCells( outputmap );
+
+}   // end SetOutputs()
+
+
+/**
+ * **************** GetOutputs (map of xoutobjects) *************
+ */
+
+template< class charT, class traits >
+const typename xoutsimple< charT, traits >::XStreamMapType
+& xoutsimple< charT, traits >::GetXOutputs( void )
+{
+  return this->m_XTargetCells;
+
+}   // end GetXOutputs()
+
+/**
+ * **************** GetOutputs (map of c-streams) ***************
+ */
+
+template< class charT, class traits >
+const typename xoutsimple< charT, traits >::CStreamMapType
+& xoutsimple< charT, traits >::GetCOutputs( void )
+{
+  return this->m_CTargetCells;
+
+}   // end GetCOutputs()
 
 } // end namespace xoutlibrary
 
-
 #endif // end #ifndef __xoutsimple_hxx
-

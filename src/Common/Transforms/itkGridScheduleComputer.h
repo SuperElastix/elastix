@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkGridScheduleComputer_H__
 #define __itkGridScheduleComputer_H__
 
@@ -33,17 +32,17 @@ namespace itk
  * \ingroup Transforms
  */
 
-template < typename TTransformScalarType, unsigned int VImageDimension >
-class ITK_EXPORT GridScheduleComputer
-  : public Object
+template< typename TTransformScalarType, unsigned int VImageDimension >
+class GridScheduleComputer :
+  public Object
 {
 public:
 
   /** Standard class typedefs. */
-  typedef GridScheduleComputer                Self;
-  typedef Object                              Superclass;
-  typedef SmartPointer< Self >                Pointer;
-  typedef SmartPointer< const Self >          ConstPointer;
+  typedef GridScheduleComputer       Self;
+  typedef Object                     Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -55,7 +54,7 @@ public:
   itkStaticConstMacro( Dimension, unsigned int, VImageDimension );
 
   /** Typedef's. */
-  typedef TTransformScalarType                  TransformScalarType;
+  typedef TTransformScalarType TransformScalarType;
   typedef ImageBase<
     itkGetStaticConstMacro( Dimension ) >       ImageBaseType;
   typedef typename ImageBaseType::PointType     PointType;
@@ -77,8 +76,8 @@ public:
     TransformScalarType,
     itkGetStaticConstMacro( Dimension ),
     itkGetStaticConstMacro( Dimension ) >       TransformType;
-  typedef typename TransformType::Pointer       TransformPointer;
-  typedef typename TransformType::ConstPointer  TransformConstPointer;
+  typedef typename TransformType::Pointer      TransformPointer;
+  typedef typename TransformType::ConstPointer TransformConstPointer;
 
   /** Set the ImageOrigin. */
   itkSetMacro( ImageOrigin, OriginType );
@@ -147,18 +146,18 @@ protected:
   GridScheduleComputer();
 
   /** The destructor. */
-  virtual ~GridScheduleComputer() {};
+  virtual ~GridScheduleComputer() {}
 
   /** Declare member variables, needed for B-spline grid. */
-  VectorSpacingType     m_GridSpacings;
-  VectorOriginType      m_GridOrigins;
-  VectorDirectionType   m_GridDirections;
-  VectorRegionType      m_GridRegions;
-  TransformConstPointer m_InitialTransform;
+  VectorSpacingType           m_GridSpacings;
+  VectorOriginType            m_GridOrigins;
+  VectorDirectionType         m_GridDirections;
+  VectorRegionType            m_GridRegions;
+  TransformConstPointer       m_InitialTransform;
   VectorGridSpacingFactorType m_GridSpacingFactors;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Get number of levels. */
   itkGetConstMacro( NumberOfLevels, unsigned int );
@@ -172,31 +171,30 @@ protected:
 
 private:
 
-  GridScheduleComputer( const Self& );  // purposely not implemented
-  void operator=( const Self& );        // purposely not implemented
+  GridScheduleComputer( const Self & );  // purposely not implemented
+  void operator=( const Self & );        // purposely not implemented
 
   /** Declare member variables, needed in functions. */
-  OriginType            m_ImageOrigin;
-  SpacingType           m_ImageSpacing;
-  RegionType            m_ImageRegion;
-  DirectionType         m_ImageDirection;
-  unsigned int          m_BSplineOrder;
-  unsigned int          m_NumberOfLevels;
-  SpacingType           m_FinalGridSpacing;
+  OriginType    m_ImageOrigin;
+  SpacingType   m_ImageSpacing;
+  RegionType    m_ImageRegion;
+  DirectionType m_ImageDirection;
+  unsigned int  m_BSplineOrder;
+  unsigned int  m_NumberOfLevels;
+  SpacingType   m_FinalGridSpacing;
 
   /** Clamp the upsampling factor. */
-  itkSetClampMacro( UpsamplingFactor, float, 1.0, NumericTraits<float>::max() );
+  itkSetClampMacro( UpsamplingFactor, float, 1.0, NumericTraits< float >::max() );
 
   /** Declare member variables, needed internally. */
-  float                 m_UpsamplingFactor;
+  float m_UpsamplingFactor;
 
-}; // end class GridScheduleComputer
+};
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkGridScheduleComputer.txx"
+#include "itkGridScheduleComputer.hxx"
 #endif
 
 #endif // end #ifndef __itkGridScheduleComputer_H__
-

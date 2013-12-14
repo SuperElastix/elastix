@@ -20,4 +20,3 @@
 //nothing
 
 #endif // end #ifndef __elxNearestNeighborResampleInterpolator_hxx
-

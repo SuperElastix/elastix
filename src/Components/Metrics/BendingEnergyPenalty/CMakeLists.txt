@@ -4,6 +4,6 @@ ADD_ELXCOMPONENT( TransformBendingEnergyPenalty
  elxTransformBendingEnergyPenaltyTerm.hxx
  elxTransformBendingEnergyPenaltyTerm.cxx
  itkTransformBendingEnergyPenaltyTerm.h
- itkTransformBendingEnergyPenaltyTerm.txx
+ itkTransformBendingEnergyPenaltyTerm.hxx
 )
 

@@ -35,25 +35,25 @@ namespace elastix
  * \ingroup Resamplers
  */
 
-template < class TElastix >
+template< class TElastix >
 class CUDAResampler :
   public itk::itkCUDAResampleImageFilter<
-  typename ResamplerBase<TElastix>::InputImageType,
-  typename ResamplerBase<TElastix>::OutputImageType,
-  typename ResamplerBase<TElastix>::CoordRepType >,
-  public ResamplerBase<TElastix>
+  typename ResamplerBase< TElastix >::InputImageType,
+  typename ResamplerBase< TElastix >::OutputImageType,
+  typename ResamplerBase< TElastix >::CoordRepType >,
+  public ResamplerBase< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef CUDAResampler                                   Self;
+  typedef CUDAResampler Self;
   typedef itk::itkCUDAResampleImageFilter<
-    typename ResamplerBase<TElastix>::InputImageType,
-    typename ResamplerBase<TElastix>::OutputImageType,
-    typename ResamplerBase<TElastix>::CoordRepType >      Superclass1;
-  typedef ResamplerBase<TElastix>                         Superclass2;
-  typedef itk::SmartPointer<Self>                         Pointer;
-  typedef itk::SmartPointer<const Self>                   ConstPointer;
+    typename ResamplerBase< TElastix >::InputImageType,
+    typename ResamplerBase< TElastix >::OutputImageType,
+    typename ResamplerBase< TElastix >::CoordRepType >      Superclass1;
+  typedef ResamplerBase< TElastix >       Superclass2;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -68,35 +68,36 @@ public:
   elxClassNameMacro( "CUDAResampler" );
 
   /** Typedef's inherited from the superclass. */
-  typedef typename Superclass1::InputImageType            InputImageType;
-  typedef typename Superclass1::OutputImageType           OutputImageType;
-  typedef typename Superclass1::InputImagePointer         InputImagePointer;
-  typedef typename Superclass1::OutputImagePointer        OutputImagePointer;
-  typedef typename Superclass1::InputImageRegionType      InputImageRegionType;
-  typedef typename Superclass1::TransformType             TransformType;
-  typedef typename Superclass1::TransformPointerType      TransformPointerType;
-  typedef typename Superclass1::InterpolatorType          InterpolatorType;
-  typedef typename Superclass1::InterpolatorPointerType   InterpolatePointerType;
-  typedef typename Superclass1::SizeType                  SizeType;
-  typedef typename Superclass1::IndexType                 IndexType;
-  typedef typename Superclass1::PointType                 PointType;
-  typedef typename Superclass1::PixelType                 PixelType;
-  typedef typename Superclass1::OutputImageRegionType     OutputImageRegionType;
-  typedef typename Superclass1::SpacingType               SpacingType;
-  typedef typename Superclass1::OriginPointType           OriginPointType;
-  typedef typename Superclass1::ValidTransformPointer     ValidTransformPointer;
+  typedef typename Superclass1::InputImageType          InputImageType;
+  typedef typename Superclass1::OutputImageType         OutputImageType;
+  typedef typename Superclass1::InputImagePointer       InputImagePointer;
+  typedef typename Superclass1::OutputImagePointer      OutputImagePointer;
+  typedef typename Superclass1::InputImageRegionType    InputImageRegionType;
+  typedef typename Superclass1::TransformType           TransformType;
+  typedef typename Superclass1::TransformPointerType    TransformPointerType;
+  typedef typename Superclass1::InterpolatorType        InterpolatorType;
+  typedef typename Superclass1::InterpolatorPointerType InterpolatePointerType;
+  typedef typename Superclass1::SizeType                SizeType;
+  typedef typename Superclass1::IndexType               IndexType;
+  typedef typename Superclass1::PointType               PointType;
+  typedef typename Superclass1::PixelType               PixelType;
+  typedef typename Superclass1::OutputImageRegionType   OutputImageRegionType;
+  typedef typename Superclass1::SpacingType             SpacingType;
+  typedef typename Superclass1::OriginPointType         OriginPointType;
+  typedef typename Superclass1::ValidTransformPointer   ValidTransformPointer;
 
   /** Typedef's from the ResamplerBase. */
-  typedef typename Superclass2::ElastixType           ElastixType;
-  typedef typename Superclass2::ElastixPointer        ElastixPointer;
-  typedef typename Superclass2::ConfigurationType     ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType      RegistrationType;
-  typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType           ITKBaseType;
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /* . */
   virtual int BeforeAll( void );
+
   virtual void BeforeRegistration( void );
 
   /** Function to read parameters from a file. */
@@ -120,12 +121,13 @@ protected:
 private:
 
   /** The private constructor. */
-  CUDAResampler( const Self& );   // purposely not implemented
+  CUDAResampler( const Self & );   // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );  // purposely not implemented
+  void operator=( const Self & );  // purposely not implemented
 
-}; // end class CUDAResampler
+};
 
+// end class CUDAResampler
 
 } // end namespace elastix
 
@@ -134,4 +136,3 @@ private:
 #endif
 
 #endif // end #ifndef __elxCUDAResampler_h
-

@@ -20,29 +20,28 @@
 namespace elastix
 {
 
+/**
+* ******************* BeforeEachResolution ******************
+*/
 
-  /**
-  * ******************* BeforeEachResolution ******************
-  */
+template< class TElastix >
+void
+RandomSampler< TElastix >
+::BeforeEachResolution( void )
+{
+  const unsigned int level
+    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-  template <class TElastix>
-    void RandomSampler<TElastix>
-    ::BeforeEachResolution(void)
-  {
-    const unsigned int level =
-      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  /** Set the NumberOfSpatialSamples. */
+  unsigned long numberOfSpatialSamples = 5000;
+  this->GetConfiguration()->ReadParameter( numberOfSpatialSamples,
+    "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0 );
 
-    /** Set the NumberOfSpatialSamples. */
-    unsigned long numberOfSpatialSamples = 5000;
-    this->GetConfiguration()->ReadParameter( numberOfSpatialSamples,
-      "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0 );
+  this->SetNumberOfSamples( numberOfSpatialSamples );
 
-    this->SetNumberOfSamples( numberOfSpatialSamples );
-
-  } // end BeforeEachResolution
+}   // end BeforeEachResolution
 
 
 } // end namespace elastix
 
 #endif // end #ifndef __elxRandomSampler_hxx
-

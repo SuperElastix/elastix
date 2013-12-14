@@ -20,25 +20,24 @@
 #include <itkDataObject.h>
 #include "itkParameterFileParser.h"
 
-
 /********************************************************************************
  *                    *
  *      Dll export    *
  *                    *
  ********************************************************************************/
-#if (defined(_WIN32) || defined(WIN32) )
+#if ( defined( _WIN32 ) || defined( WIN32 ) )
 #  ifdef _ELASTIX_BUILD_LIBRARY
 #    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
-#      define TRANSFORMIXLIB_API __declspec(dllexport)
+#      define TRANSFORMIXLIB_API __declspec( dllexport )
 #    else
-#      define TRANSFORMIXLIB_API __declspec(dllimport)
+#      define TRANSFORMIXLIB_API __declspec( dllimport )
 #    endif
 #  else
-#    define TRANSFORMIXLIB_API __declspec(dllexport)
+#    define TRANSFORMIXLIB_API __declspec( dllexport )
 #  endif
 #else
 #  if __GNUC__ >= 4
-#    define TRANSFORMIXLIB_API __attribute__ ((visibility ("default")))
+#    define TRANSFORMIXLIB_API __attribute__ ( ( visibility( "default" ) ) )
 #  else
 #    define TRANSFORMIXLIB_API
 #  endif
@@ -55,13 +54,14 @@ namespace transformix
 class TRANSFORMIXLIB_API TRANSFORMIX
 {
 public:
+
   //typedefs for images
-  typedef itk::DataObject   Image;
-  typedef Image::Pointer    ImagePointer;
+  typedef itk::DataObject Image;
+  typedef Image::Pointer  ImagePointer;
 
   //typedefs for parameter map
-  typedef itk::ParameterFileParser::ParameterValuesType ParameterValuesType;
-  typedef itk::ParameterFileParser::ParameterMapType    ParameterMapType;
+  typedef itk::ParameterFileParser::ParameterValuesType             ParameterValuesType;
+  typedef itk::ParameterFileParser::ParameterMapType                ParameterMapType;
   typedef std::vector< itk::ParameterFileParser::ParameterMapType > ParameterMapListType;
 
   /** Constructor and destructor. */
@@ -85,7 +85,7 @@ public:
    *   -2 = output folder does not exist
    */
   int TransformImage( ImagePointer inputImage,
-    std::vector< ParameterMapType >& parameterMaps,
+    std::vector< ParameterMapType > & parameterMaps,
     std::string outputPath,
     bool performLogging,
     bool performCout );
@@ -94,9 +94,12 @@ public:
   ImagePointer GetResultImage( void );
 
 private:
-  ImagePointer  m_ResultImage;
 
-}; // end class TRANSFORMIX
+  ImagePointer m_ResultImage;
+
+};
+
+// end class TRANSFORMIX
 
 } // namespace transformix
 

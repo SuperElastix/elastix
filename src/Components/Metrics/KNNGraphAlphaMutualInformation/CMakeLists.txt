@@ -4,7 +4,7 @@ ADD_ELXCOMPONENT( KNNGraphAlphaMutualInformationMetric
  elxKNNGraphAlphaMutualInformationMetric.hxx
  elxKNNGraphAlphaMutualInformationMetric.cxx
  itkKNNGraphAlphaMutualInformationImageToImageMetric.h
- itkKNNGraphAlphaMutualInformationImageToImageMetric.txx
+ itkKNNGraphAlphaMutualInformationImageToImageMetric.hxx
 )
 
 IF( USE_KNNGraphAlphaMutualInformationMetric )

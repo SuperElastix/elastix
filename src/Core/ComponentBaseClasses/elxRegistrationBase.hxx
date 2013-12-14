@@ -16,7 +16,6 @@
 
 #include "elxRegistrationBase.h"
 
-
 namespace elastix
 {
 
@@ -24,9 +23,9 @@ namespace elastix
  * ********************* ReadMaskParameters ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 bool
-RegistrationBase<TElastix>
+RegistrationBase< TElastix >
 ::ReadMaskParameters( UseMaskErosionArrayType & useMaskErosionArray,
   const unsigned int nrOfMasks, const std::string & whichMask,
   const unsigned int level ) const
@@ -47,7 +46,7 @@ RegistrationBase<TElastix>
   whichErodeMaskOption += "Mask";
 
   /** Read the parameters. */
-  if ( nrOfMasks > 0 )
+  if( nrOfMasks > 0 )
   {
     /** Default values for all masks. Look for ErodeMask, or Erode<Fixed,Moving>Mask. */
     bool erosionOrNot = true;
@@ -55,7 +54,7 @@ RegistrationBase<TElastix>
       "ErodeMask", "", level, 0, false );
     this->GetConfiguration()->ReadParameter( erosionOrNot,
       whichErodeMaskOption.c_str(), "", level, 0 );
-    if ( erosionOrNot )
+    if( erosionOrNot )
     {
       /** fill with 'true's. */
       useMaskErosionArray.clear();
@@ -65,14 +64,14 @@ RegistrationBase<TElastix>
     /** Try to read an erode mask parameter given for a specified mask only:
      * (ErodeFixedMask0 "true" "false" ) for example.
      */
-    for ( unsigned int i = 0; i < nrOfMasks; ++i )
+    for( unsigned int i = 0; i < nrOfMasks; ++i )
     {
       std::ostringstream makestring;
       makestring << whichErodeMaskOption << i; // key for parameter file
-      bool erosionOrNot_i = erosionOrNot; // default value
+      bool erosionOrNot_i = erosionOrNot;      // default value
       this->GetConfiguration()->ReadParameter( erosionOrNot_i,
         makestring.str().c_str(), "", level, 0, false );
-      if ( erosionOrNot_i )
+      if( erosionOrNot_i )
       {
         useMaskErosionArray[ i ] = true;
       }
@@ -94,22 +93,22 @@ RegistrationBase<TElastix>
  * ******************* GenerateFixedMaskSpatialObject **********************
  */
 
-template <class TElastix>
-typename RegistrationBase<TElastix>::FixedMaskSpatialObjectPointer
-RegistrationBase<TElastix>
+template< class TElastix >
+typename RegistrationBase< TElastix >::FixedMaskSpatialObjectPointer
+RegistrationBase< TElastix >
 ::GenerateFixedMaskSpatialObject(
   const FixedMaskImageType * maskImage, bool useMaskErosion,
   const FixedImagePyramidType * pyramid, unsigned int level ) const
 {
   FixedMaskSpatialObjectPointer fixedMaskSpatialObject = 0;
-  if ( !maskImage )
+  if( !maskImage )
   {
     return fixedMaskSpatialObject;
   }
   fixedMaskSpatialObject = FixedMaskSpatialObjectType::New();
 
   /** Just convert to spatial object if no erosion is needed. */
-  if ( !useMaskErosion || !pyramid )
+  if( !useMaskErosion || !pyramid )
   {
     fixedMaskSpatialObject->SetImage( maskImage );
     return fixedMaskSpatialObject;
@@ -154,22 +153,22 @@ RegistrationBase<TElastix>
  * ******************* GenerateMovingMaskSpatialObject **********************
  */
 
-template <class TElastix>
-typename RegistrationBase<TElastix>::MovingMaskSpatialObjectPointer
-RegistrationBase<TElastix>
+template< class TElastix >
+typename RegistrationBase< TElastix >::MovingMaskSpatialObjectPointer
+RegistrationBase< TElastix >
 ::GenerateMovingMaskSpatialObject(
   const MovingMaskImageType * maskImage, bool useMaskErosion,
   const MovingImagePyramidType * pyramid, unsigned int level ) const
 {
   MovingMaskSpatialObjectPointer movingMaskSpatialObject = 0;
-  if ( !maskImage )
+  if( !maskImage )
   {
     return movingMaskSpatialObject;
   }
   movingMaskSpatialObject = MovingMaskSpatialObjectType::New();
 
   /** Just convert to spatial object if no erosion is needed. */
-  if ( !useMaskErosion || !pyramid )
+  if( !useMaskErosion || !pyramid )
   {
     movingMaskSpatialObject->SetImage( maskImage );
     return movingMaskSpatialObject;

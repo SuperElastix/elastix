@@ -17,7 +17,6 @@
 
 #include "elxAdvancedKappaStatisticMetric.h"
 
-
 namespace elastix
 {
 
@@ -25,18 +24,18 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-AdvancedKappaStatisticMetric<TElastix>
-::Initialize( void ) throw (itk::ExceptionObject)
+AdvancedKappaStatisticMetric< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
   this->Superclass1::Initialize();
   timer->StopTimer();
   elxout << "Initialization of AdvancedKappaStatistic metric took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
-    << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -45,9 +44,9 @@ AdvancedKappaStatisticMetric<TElastix>
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-AdvancedKappaStatisticMetric<TElastix>
+AdvancedKappaStatisticMetric< TElastix >
 ::BeforeRegistration( void )
 {
   /** Get and set taking the complement. */
@@ -78,27 +77,27 @@ AdvancedKappaStatisticMetric<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-AdvancedKappaStatisticMetric<TElastix>
+AdvancedKappaStatisticMetric< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Set moving image derivative scales. */
   this->SetUseMovingImageDerivativeScales( false );
   MovingImageDerivativeScalesType movingImageDerivativeScales;
-  bool usescales = true;
-  for ( unsigned int i = 0; i < MovingImageDimension; ++i )
+  bool                            usescales = true;
+  for( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
     usescales &= this->GetConfiguration()->ReadParameter(
       movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
       this->GetComponentLabel(), i, -1, false );
   }
-  if ( usescales )
+  if( usescales )
   {
     this->SetUseMovingImageDerivativeScales( true );
     this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
     elxout << "Multiplying moving image derivatives by: "
-      << movingImageDerivativeScales << std::endl;
+           << movingImageDerivativeScales << std::endl;
   }
 
 } // end BeforeEachResolution()
@@ -106,6 +105,4 @@ AdvancedKappaStatisticMetric<TElastix>
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxAdvancedKappaStatisticMetric_HXX__
-

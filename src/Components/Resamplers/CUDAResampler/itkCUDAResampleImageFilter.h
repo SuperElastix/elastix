@@ -36,17 +36,18 @@ namespace itk
  * \ingroup GeometricTransforms
  */
 
-template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType = float>
-class ITK_EXPORT itkCUDAResampleImageFilter:
-  public ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
+template< typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType = float >
+class ITK_EXPORT itkCUDAResampleImageFilter :
+  public         ResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef itkCUDAResampleImageFilter                          Self;
+  typedef itkCUDAResampleImageFilter Self;
   typedef ResampleImageFilter<
-    TInputImage,TOutputImage,TInterpolatorPrecisionType>      Superclass;
-  typedef SmartPointer<Self>                                  Pointer;
-  typedef SmartPointer<const Self>                            ConstPointer;
+    TInputImage, TOutputImage, TInterpolatorPrecisionType >      Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -55,35 +56,35 @@ public:
   itkTypeMacro( itkCUDAResampleImageFilter, ResampleImageFilter );
 
   /** Typedefs from Superclass. */
-  typedef typename Superclass::InputImageType           InputImageType;
-  typedef typename Superclass::OutputImageType          OutputImageType;
-  typedef typename Superclass::InputImagePointer        InputImagePointer;
-  typedef typename Superclass::InputImageConstPointer   InputImageConstPointer;
-  typedef typename Superclass::OutputImagePointer       OutputImagePointer;
-  typedef typename Superclass::InputImageRegionType     InputImageRegionType;
+  typedef typename Superclass::InputImageType         InputImageType;
+  typedef typename Superclass::OutputImageType        OutputImageType;
+  typedef typename Superclass::InputImagePointer      InputImagePointer;
+  typedef typename Superclass::InputImageConstPointer InputImageConstPointer;
+  typedef typename Superclass::OutputImagePointer     OutputImagePointer;
+  typedef typename Superclass::InputImageRegionType   InputImageRegionType;
 
-  typedef typename Superclass::TransformType            TransformType;
-  typedef typename Superclass::TransformPointerType     TransformPointerType;
-  typedef typename Superclass::InterpolatorType         InterpolatorType;
-  typedef typename Superclass::InterpolatorPointerType  InterpolatorPointerType;
+  typedef typename Superclass::TransformType           TransformType;
+  typedef typename Superclass::TransformPointerType    TransformPointerType;
+  typedef typename Superclass::InterpolatorType        InterpolatorType;
+  typedef typename Superclass::InterpolatorPointerType InterpolatorPointerType;
 
-  typedef typename Superclass::SizeType                 SizeType;
-  typedef typename Superclass::IndexType                IndexType;
-  typedef typename Superclass::PointType                PointType;
-  typedef typename Superclass::PixelType                PixelType;
-  typedef typename Superclass::InputPixelType           InputPixelType;
-  typedef typename Superclass::OutputImageRegionType    OutputImageRegionType;
-  typedef typename Superclass::SpacingType              SpacingType;
-  typedef typename Superclass::OriginPointType          OriginPointType;
-  typedef typename Superclass::DirectionType            DirectionType;
-  typedef typename Superclass::ImageBaseType            ImageBaseType;
+  typedef typename Superclass::SizeType              SizeType;
+  typedef typename Superclass::IndexType             IndexType;
+  typedef typename Superclass::PointType             PointType;
+  typedef typename Superclass::PixelType             PixelType;
+  typedef typename Superclass::InputPixelType        InputPixelType;
+  typedef typename Superclass::OutputImageRegionType OutputImageRegionType;
+  typedef typename Superclass::SpacingType           SpacingType;
+  typedef typename Superclass::OriginPointType       OriginPointType;
+  typedef typename Superclass::DirectionType         DirectionType;
+  typedef typename Superclass::ImageBaseType         ImageBaseType;
 
   /** Typedefs. */
   typedef AdvancedCombinationTransform<
     TInterpolatorPrecisionType, 3 >                     InternalComboTransformType;
   typedef AdvancedBSplineDeformableTransform<
     TInterpolatorPrecisionType, 3, 3 >                  InternalAdvancedBSplineTransformType;
-  typedef typename InternalAdvancedBSplineTransformType::Pointer ValidTransformPointer;
+  typedef typename InternalAdvancedBSplineTransformType::Pointer      ValidTransformPointer;
   typedef typename InternalAdvancedBSplineTransformType::ConstPointer ValidTransformConstPointer;
   typedef BSplineDeformableTransform<
     TInterpolatorPrecisionType, 3, 3 >                  InternalBSplineTransformType;
@@ -112,31 +113,39 @@ public:
   /** For reporting warnings. */
   class WarningReportType
   {
-  public:
-    std::vector<std::string>  m_Warnings;
+public:
+
+    std::vector< std::string > m_Warnings;
 
     void ResetWarningReport( void )
     {
       this->m_Warnings.resize( 0 );
     }
+
+
     std::string GetWarningReportAsString( void ) const
     {
       std::string warnings = "\n---------------------------------\n";
-      for ( std::size_t i = 0; i < this->m_Warnings.size(); i++ )
+      for( std::size_t i = 0; i < this->m_Warnings.size(); i++ )
       {
         warnings += "itkCUDAResampleImageFilter: " + this->m_Warnings[ i ];
         warnings += "\n---------------------------------\n";
       }
       return warnings;
     }
+
+
   };
+
   //itkGetConstReferenceMacro( WarningReport, WarningReportType );
   virtual const WarningReportType & GetWarningReport( void ) const
   {
     return this->m_WarningReport;
   }
 
+
 protected:
+
   itkCUDAResampleImageFilter();
   ~itkCUDAResampleImageFilter();
 
@@ -145,9 +154,9 @@ protected:
 private:
 
   /** Private members. */
-  bool      m_UseCuda;
-  bool      m_UseGPUToCastData;
-  bool      m_UseFastCUDAKernel;
+  bool m_UseCuda;
+  bool m_UseGPUToCastData;
+  bool m_UseFastCUDAKernel;
 
   CudaResampleImageFilterType m_CudaResampleImageFilter;
   WarningReportType           m_WarningReport;
@@ -166,15 +175,18 @@ private:
   /** Helper function to check for a valid direction cosines.
    * Currently, only GPU resampling using identity cosines is supported.
    */
-  bool CheckForValidDirectionCosines( ValidTransformPointer bSplineTransform ) ;//const;
+  bool CheckForValidDirectionCosines( ValidTransformPointer bSplineTransform ); //const;
+
   // NOTE: const can be added again in ITK4. It's due to GetInput() being not const-correct.
 
   /** Helper function to copy data. */
   void CopyParameters( ValidTransformPointer bSplineTransform );
 
-}; // end class itkCUDAResampleImageFilter
+};
 
-}; // end namespace itk
+// end class itkCUDAResampleImageFilter
+
+}  // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkCUDAResampleImageFilter.hxx"

@@ -14,7 +14,10 @@
 #include "SplineKernelTransform/itkThinPlateSplineKernelTransform2.h"
 #include "itkTransformixInputPointFileReader.h"
 
-#include <ctime>
+// Report timings
+#include "itkTimeProbe.h"
+#include "itkTimeProbesCollectorBase.h"
+
 #include <fstream>
 #include <iomanip>
 
@@ -28,43 +31,48 @@
 //-------------------------------------------------------------------------------------
 // Helper class to be able to access protected functions and variables.
 
-namespace itk {
+namespace itk
+{
 
-template <class TScalarType, unsigned int NDimensions>
-class KernelTransformPublic
-  : public ThinPlateSplineKernelTransform2<TScalarType, NDimensions>
+template< class TScalarType, unsigned int NDimensions >
+class KernelTransformPublic :
+  public ThinPlateSplineKernelTransform2< TScalarType, NDimensions >
 {
 public:
-  typedef KernelTransformPublic               Self;
+
+  typedef KernelTransformPublic Self;
   typedef ThinPlateSplineKernelTransform2<
     TScalarType, NDimensions >                Superclass;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
   itkTypeMacro( KernelTransformPublic, ThinPlateSplineKernelTransform2 );
   itkNewMacro( Self );
 
-  typedef typename Superclass::PointSetType   PointSetType;
-  typedef typename Superclass::LMatrixType    LMatrixType;
-  typedef typename Superclass::GMatrixType    GMatrixType;
-  typedef typename Superclass::InputVectorType  InputVectorType;
+  typedef typename Superclass::PointSetType    PointSetType;
+  typedef typename Superclass::LMatrixType     LMatrixType;
+  typedef typename Superclass::GMatrixType     GMatrixType;
+  typedef typename Superclass::InputVectorType InputVectorType;
 
   void SetSourceLandmarksPublic( PointSetType * landmarks )
   {
-    this->m_SourceLandmarks = landmarks;
-    this->m_WMatrixComputed = false;
-    this->m_LMatrixComputed = false;
+    this->m_SourceLandmarks  = landmarks;
+    this->m_WMatrixComputed  = false;
+    this->m_LMatrixComputed  = false;
     this->m_LInverseComputed = false;
   }
+
 
   void ComputeLPublic( void )
   {
     this->ComputeL();
   }
 
+
   LMatrixType GetLMatrix( void ) const
   {
     return this->m_LMatrix;
   }
+
 
   void ComputeGPublic( const InputVectorType & landmarkVector,
     GMatrixType & GMatrix ) const
@@ -72,44 +80,48 @@ public:
     this->ComputeG( landmarkVector, GMatrix );
   }
 
-}; // end helper class
+
+};
+
+// end helper class
 } // end namespace itk
 
 //-------------------------------------------------------------------------------------
 
 // Test matrix inversion performance
 // Test Jacobian computation performance
-int main( int argc, char *argv[] )
+int
+main( int argc, char * argv[] )
 {
   /** Some basic type definitions. */
   const unsigned int Dimension = 3;
   // ScalarType double needed for Cholesky. Double is used in elastix.
-  typedef double   ScalarType;
+  typedef double ScalarType;
   const unsigned long maxTestedLandmarksForSVD = 401;
-  const ScalarType tolerance = 1e-8; // for double
+  const ScalarType    tolerance                = 1e-8; // for double
 
   /** Check. */
-  if ( argc != 3 )
+  if( argc != 3 )
   {
     std::cerr << "ERROR: You should specify a text file with the thin plate spline "
-      << "source (fixed image) landmarks." << std::endl;
+              << "source (fixed image) landmarks." << std::endl;
     return 1;
   }
 
   /** Other typedefs. */
   typedef itk::KernelTransformPublic<
     ScalarType, Dimension >                             TransformType;
-  typedef TransformType::JacobianType                   JacobianType;
-  typedef TransformType::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
-  typedef TransformType::PointSetType                   PointSetType;
+  typedef TransformType::JacobianType               JacobianType;
+  typedef TransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef TransformType::PointSetType               PointSetType;
   typedef itk::TransformixInputPointFileReader<
     PointSetType >                                      IPPReaderType;
 
-  typedef PointSetType::PointsContainer                 PointsContainerType;
-  typedef PointsContainerType::Pointer                  PointsContainerPointer;
-  typedef PointSetType::PointType                       PointType;
-  typedef TransformType::LMatrixType                    LMatrixType;
-  typedef vnl_sparse_matrix<ScalarType>                 LSparseMatrixType;
+  typedef PointSetType::PointsContainer   PointsContainerType;
+  typedef PointsContainerType::Pointer    PointsContainerPointer;
+  typedef PointSetType::PointType         PointType;
+  typedef TransformType::LMatrixType      LMatrixType;
+  typedef vnl_sparse_matrix< ScalarType > LSparseMatrixType;
 
   PointSetType::Pointer dummyLandmarks = PointSetType::New();
 
@@ -124,7 +136,7 @@ int main( int argc, char *argv[] )
   {
     ippReader->Update();
   }
-  catch ( itk::ExceptionObject & excp )
+  catch( itk::ExceptionObject & excp )
   {
     std::cerr << "  Error while opening input point file." << std::endl;
     std::cerr << excp << std::endl;
@@ -132,10 +144,10 @@ int main( int argc, char *argv[] )
   }
 
   // Expect points, not indices.
-  if ( ippReader->GetPointsAreIndices() )
+  if( ippReader->GetPointsAreIndices() )
   {
     std::cerr << "ERROR: landmarks should be specified as points (not indices)"
-      << std::endl;
+              << std::endl;
     return 1;
   }
 
@@ -143,7 +155,7 @@ int main( int argc, char *argv[] )
   PointSetType::Pointer sourceLandmarks = ippReader->GetOutput();
   //const unsigned long realNumberOfLandmarks = ippReader->GetNumberOfPoints();
 
-  std::vector<unsigned long> usedNumberOfLandmarks;
+  std::vector< unsigned long > usedNumberOfLandmarks;
   usedNumberOfLandmarks.push_back( 100 );
   usedNumberOfLandmarks.push_back( 200 );
 //   usedNumberOfLandmarks.push_back( 500 );
@@ -151,22 +163,24 @@ int main( int argc, char *argv[] )
 //   usedNumberOfLandmarks.push_back( realNumberOfLandmarks );
 
   std::cerr << "Matrix scalar type: "
-    << typeid( ScalarType ).name() << std::endl;
+            << typeid( ScalarType ).name() << "\n" << std::endl;
 
   // Loop over usedNumberOfLandmarks
-  for ( std::size_t i = 0; i < usedNumberOfLandmarks.size(); i++ )
+  for( std::size_t i = 0; i < usedNumberOfLandmarks.size(); i++ )
   {
+    itk::TimeProbesCollectorBase timeCollector;
+
     unsigned long numberOfLandmarks = usedNumberOfLandmarks[ i ];
     std::cerr << "----------------------------------------\n";
     std::cerr << "Number of specified landmarks: "
-      << numberOfLandmarks << std::endl;
+              << numberOfLandmarks << std::endl;
 
     /** Get subset. */
     PointsContainerPointer usedLandmarkPoints = PointsContainerType::New();
-    PointSetType::Pointer usedLandmarks = PointSetType::New();
-    for ( unsigned long j = 0; j < numberOfLandmarks; j++ )
+    PointSetType::Pointer  usedLandmarks      = PointSetType::New();
+    for( unsigned long j = 0; j < numberOfLandmarks; j++ )
     {
-      PointType tmp = (*sourceLandmarks->GetPoints())[ j ];
+      PointType tmp = ( *sourceLandmarks->GetPoints() )[ j ];
       usedLandmarkPoints->push_back( tmp );
     }
     usedLandmarks->SetPoints( usedLandmarkPoints );
@@ -179,21 +193,19 @@ int main( int argc, char *argv[] )
     LMatrixType lMatrixInverse1, lMatrixInverse2; //, lMatrixInverse4;
 
     /** Task 1: compute L. */
-    clock_t startClock = clock();
+    timeCollector.Start( "ComputeL" );
     kernelTransform->SetSourceLandmarksPublic( usedLandmarks );
     kernelTransform->ComputeLPublic();
     LMatrixType lMatrix = kernelTransform->GetLMatrix();
-    std::cerr << "Computing L matrix took "
-      << clock() - startClock << " ms." << std::endl;
+    timeCollector.Stop( "ComputeL" );
 
     /** Task 2: Compute L inverse. */
-    if ( numberOfLandmarks < maxTestedLandmarksForSVD )
+    if( numberOfLandmarks < maxTestedLandmarksForSVD )
     {
       // Method 1: Singular Value Decomposition
-      startClock = clock();
-      lMatrixInverse1 = vnl_svd<ScalarType>( lMatrix ).inverse();
-      std::cerr << "L matrix inversion (method 1, svd) took: "
-        << clock() - startClock << " ms." << std::endl;
+      timeCollector.Start( "ComputeLInverseBySVD" );
+      lMatrixInverse1 = vnl_svd< ScalarType >( lMatrix ).inverse();
+      timeCollector.Stop( "ComputeLInverseBySVD" );
     }
     else
     {
@@ -201,10 +213,9 @@ int main( int argc, char *argv[] )
     }
 
     // Method 2: QR Decomposition
-    startClock = clock();
-    lMatrixInverse2 = vnl_qr<ScalarType>( lMatrix ).inverse();
-    std::cerr << "L matrix inversion (method 2,  qr) took: "
-      << clock() - startClock << " ms." << std::endl;
+    timeCollector.Start( "ComputeLInverseByQR" );
+    lMatrixInverse2 = vnl_qr< ScalarType >( lMatrix ).inverse();
+    timeCollector.Stop( "ComputeLInverseByQR" );
 
     // Method 3: Cholesky decomposition
     // Cholesky decomposition does not work due to lMatrix not being positive definite.
@@ -245,16 +256,16 @@ int main( int argc, char *argv[] )
 //       << clock() - startClock << " ms." << std::endl;
 
     /** Compute error compared to SVD. */
-    if ( numberOfLandmarks < maxTestedLandmarksForSVD )
+    if( numberOfLandmarks < maxTestedLandmarksForSVD )
     {
-      double diff_qr = (lMatrixInverse1 - lMatrixInverse2).frobenius_norm();
+      double diff_qr = ( lMatrixInverse1 - lMatrixInverse2 ).frobenius_norm();
       //double diff_lu = (lMatrixInverse1a - lMatrixInverse4).frobenius_norm();
 
       std::cerr << "Frobenius difference of method 2 with SVD: "
-        << diff_qr << std::endl;
+                << diff_qr << std::endl;
       //std::cerr << "Frobenius difference of method 4 with SVD: " << diff_lu << std::endl;
 
-      if ( diff_qr > tolerance )
+      if( diff_qr > tolerance )
       {
         std::cerr
           << "ERROR: Frobenius difference of matrix inversion methods too big: "
@@ -277,8 +288,8 @@ int main( int argc, char *argv[] )
     // Write L Matrix to Matlab file. For inspection of matrix appearance.
     std::ostringstream makeFileName( "" );
     makeFileName << argv[ 2 ]
-      << "/LMatrix_N"
-      << numberOfLandmarks << ".mat";
+                 << "/LMatrix_N"
+                 << numberOfLandmarks << ".mat";
     vnl_matlab_filewrite matlabWriter( makeFileName.str().c_str() );
     matlabWriter.write( lMatrix, "lMatrix" );
     matlabWriter.write( lMatrixInverse2, "lMatrixInverseQR" );
@@ -286,25 +297,25 @@ int main( int argc, char *argv[] )
     //
     // Test Jacobian computation performance
 
-    typedef vnl_matrix_fixed<ScalarType, Dimension, Dimension> GMatrixType;
+    typedef vnl_matrix_fixed< ScalarType, Dimension, Dimension > GMatrixType;
     GMatrixType Gmatrix; // dim x dim
-    typedef PointSetType::PointsContainerIterator      PointsIterator;
+    typedef PointSetType::PointsContainerIterator PointsIterator;
 
     // OLD way:
-    PointType p; p[0] = 10.0; p[1] = 13.0; p[2] = 11.0;
-    startClock = clock();
+    PointType p; p[ 0 ] = 10.0; p[ 1 ] = 13.0; p[ 2 ] = 11.0;
+    timeCollector.Start( "ComputeJacobianOLD" );
     JacobianType jac1;
     jac1.SetSize( Dimension, numberOfLandmarks * Dimension );
     jac1.Fill( 0.0 );
     PointsIterator sp = usedLandmarks->GetPoints()->Begin();
-    for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
+    for( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
     {
       kernelTransform->ComputeGPublic( p - sp->Value(), Gmatrix );
-      for ( unsigned int dim = 0; dim < Dimension; dim++ )
+      for( unsigned int dim = 0; dim < Dimension; dim++ )
       {
-        for ( unsigned int odim = 0; odim < Dimension; odim++ )
+        for( unsigned int odim = 0; odim < Dimension; odim++ )
         {
-          for ( unsigned int lidx = 0; lidx < numberOfLandmarks * Dimension; lidx++ )
+          for( unsigned int lidx = 0; lidx < numberOfLandmarks * Dimension; lidx++ )
           {
             jac1[ odim ][ lidx ] += Gmatrix( dim, odim )
               * lMatrixInverse2[ lnd * Dimension + dim ][ lidx ];
@@ -314,42 +325,44 @@ int main( int argc, char *argv[] )
       ++sp;
     }
 
-    for ( unsigned int odim = 0; odim < Dimension; odim++ )
+    for( unsigned int odim = 0; odim < Dimension; odim++ )
     {
-      for ( unsigned long lidx = 0; lidx < numberOfLandmarks * Dimension; lidx++ )
+      for( unsigned long lidx = 0; lidx < numberOfLandmarks * Dimension; lidx++ )
       {
-        for ( unsigned int dim = 0; dim < Dimension; dim++ )
+        for( unsigned int dim = 0; dim < Dimension; dim++ )
         {
           jac1[ odim ][ lidx ] += p[ dim ]
-          * lMatrixInverse2[ ( numberOfLandmarks + dim ) * Dimension + odim ][ lidx ];
+            * lMatrixInverse2[ ( numberOfLandmarks + dim ) * Dimension + odim ][ lidx ];
         }
         const unsigned long index = ( numberOfLandmarks + Dimension ) * Dimension + odim;
         jac1[ odim ][ lidx ] += lMatrixInverse2[ index ][ lidx ];
       }
     }
-    std::cerr << "\nJacobian computation (OLD) took: "
-      << clock() - startClock << " ms." << std::endl;
+    timeCollector.Stop( "ComputeJacobianOLD" );
 
     // NEW way:
 
     /** Reset source landmarks, otherwise L is not recomputed. */
     kernelTransform->SetSourceLandmarks( dummyLandmarks );
     kernelTransform->SetSourceLandmarks( usedLandmarks );
-    startClock = clock();
-    JacobianType jac2;
+    timeCollector.Start( "ComputeJacobianNEW" );
+    JacobianType               jac2;
     NonZeroJacobianIndicesType nzji;
     kernelTransform->GetJacobian( p, jac2, nzji );
-    std::cerr << "Jacobian computation (NEW) took: "
-      << clock() - startClock << " ms." << std::endl;
+    timeCollector.Stop( "ComputeJacobianNEW" );
 
     // diff
-    double diff_jac = (jac1 - jac2).frobenius_norm();
+    double diff_jac = ( jac1 - jac2 ).frobenius_norm();
     std::cerr << "Frobenius difference of jacs: " << diff_jac << std::endl;
-    if ( diff_jac > tolerance )
+    if( diff_jac > tolerance )
     {
       std::cerr << "ERROR: Frobenius difference of Jacobian computation too big: " << diff_jac << std::endl;
       return 1;
     }
+
+    // Report timings
+    timeCollector.Report();
+    std::cout << std::endl;
 
   } // end loop
 

@@ -18,48 +18,46 @@
 #include "elxBaseComponent.h"
 #include "itkObject.h"
 
-
 namespace elastix
 {
 
-  /**
-   * \class BaseComponentSE
-   *
-   * \brief The BaseComponentSE class is a base class for elastix
-   * components that provides some basic functionality.
-   *
-   * Most elastix component will not directly inherit from the
-   * elx::BaseComponent class but from this one, since it adds
-   * some methods that most methods need anyway, such as
-   * Set/GetElastix, Set/GetConfiguration.
-   *
-   * \sa BaseComponent
-   * \ingroup Install
-   */
+/**
+ * \class BaseComponentSE
+ *
+ * \brief The BaseComponentSE class is a base class for elastix
+ * components that provides some basic functionality.
+ *
+ * Most elastix component will not directly inherit from the
+ * elx::BaseComponent class but from this one, since it adds
+ * some methods that most methods need anyway, such as
+ * Set/GetElastix, Set/GetConfiguration.
+ *
+ * \sa BaseComponent
+ * \ingroup Install
+ */
 
-template <class TElastix>
+template< class TElastix >
 class BaseComponentSE : public BaseComponent
 {
 public:
 
   /** Standard stuff. */
-  typedef BaseComponentSE   Self;
-  typedef BaseComponent     Superclass;
+  typedef BaseComponentSE Self;
+  typedef BaseComponent   Superclass;
 
   /** Elastix typedef's. */
-  typedef TElastix          ElastixType;
-  //typedef typename ElastixType::Pointer   ElastixPointer;
-  typedef ElastixType*      ElastixPointer;
+  typedef TElastix                      ElastixType;
+  typedef typename ElastixType::Pointer ElastixPointer;
 
   /** ConfigurationType. */
-  typedef typename ElastixType::ConfigurationType     ConfigurationType;
-  typedef typename ElastixType::ConfigurationPointer  ConfigurationPointer;
+  typedef typename ElastixType::ConfigurationType    ConfigurationType;
+  typedef typename ElastixType::ConfigurationPointer ConfigurationPointer;
 
   /** RegistrationType; NB: this is the elx::RegistrationBase
    * not an itk::Object or something like that.
    */
-  typedef typename ElastixType::RegistrationBaseType  RegistrationType;
-  typedef RegistrationType *                          RegistrationPointer;
+  typedef typename ElastixType::RegistrationBaseType RegistrationType;
+  typedef RegistrationType *                         RegistrationPointer;
 
   /**
    * Get/Set functions for Elastix.
@@ -80,8 +78,9 @@ public:
    */
   virtual ElastixType * GetElastix( void ) const
   {
-    return this->m_Elastix; //.GetPointer();
+    return this->m_Elastix.GetPointer();
   }
+
 
   /** itkGetObjectMacro(Configuration, ConfigurationType);
    * The configuration object provides functionality to
@@ -91,6 +90,7 @@ public:
   {
     return this->m_Configuration.GetPointer();
   }
+
 
   /** Set the configuration. Added for transformix. */
   virtual void SetConfiguration( ConfigurationType * _arg );
@@ -105,29 +105,27 @@ public:
     return this->m_Registration;
   }
 
+
 protected:
 
   BaseComponentSE();
   virtual ~BaseComponentSE() {}
 
-  ElastixPointer        m_Elastix;
-  ConfigurationPointer  m_Configuration;
-  RegistrationPointer   m_Registration;
+  ElastixPointer       m_Elastix;
+  ConfigurationPointer m_Configuration;
+  RegistrationPointer  m_Registration;
 
 private:
 
-  BaseComponentSE( const Self& );   // purposely not implemented
-  void operator=( const Self& );    // purposely not implemented
+  BaseComponentSE( const Self & );   // purposely not implemented
+  void operator=( const Self & );    // purposely not implemented
 
-}; // end class BaseComponentSE
-
+};
 
 } //end namespace elastix
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxBaseComponentSE.hxx"
 #endif
 
 #endif // end #ifndef __elxBaseComponentSE_h
-

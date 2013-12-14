@@ -20,7 +20,6 @@ PURPOSE. See the above copyright notices for more information.
 namespace elastix
 {
 
-
 /**
  * ********************* Constructor ****************************
  */
@@ -28,12 +27,12 @@ namespace elastix
 Configuration::Configuration()
 {
   /** Initialize stuff. */
-  this->m_ParameterFileName = "";
-  this->m_ParameterFileParser = ParameterFileParserType::New();
+  this->m_ParameterFileName     = "";
+  this->m_ParameterFileParser   = ParameterFileParserType::New();
   this->m_ParameterMapInterface = ParameterMapInterfaceType::New();
 
-  this->m_IsInitialized = false;
-  this->m_ElastixLevel = 0;
+  this->m_IsInitialized              = false;
+  this->m_ElastixLevel               = 0;
   this->m_TotalNumberOfElastixLevels = 1;
 
 } // end Constructor()
@@ -51,16 +50,16 @@ Configuration
   std::string params = this->m_ParameterFileParser->ReturnParameterFileAsString();
 
   /** Separate clearly in log-file. */
-  xl::xout["logonly"] << std::endl << "=============== start of ParameterFile: "
-    << this->GetParameterFileName() << " ===============" << std::endl;
+  xl::xout[ "logonly" ] << std::endl << "=============== start of ParameterFile: "
+                        << this->GetParameterFileName() << " ===============" << std::endl;
 
   /** Write the parameter file. */
-  xl::xout["logonly"] << params;
+  xl::xout[ "logonly" ] << params;
   //std::cerr << params;
 
   /** Separate clearly in log-file. */
-  xl::xout["logonly"] << std::endl << "=============== end of ParameterFile: "
-    << this->GetParameterFileName() << " ===============\n" << std::endl;
+  xl::xout[ "logonly" ] << std::endl << "=============== end of ParameterFile: "
+                        << this->GetParameterFileName() << " ===============\n" << std::endl;
 
 } // end PrintParameterFile()
 
@@ -119,31 +118,31 @@ Configuration
    * NOTE: this implies that one can not use "-tp" for elastix and
    * "-p" for transformix.
    */
-  std::string p = this->GetCommandLineArgument( "-p" );
+  std::string p  = this->GetCommandLineArgument( "-p" );
   std::string tp = this->GetCommandLineArgument( "-tp" );
 
-  if ( p != "" && tp == "" )
+  if( p != "" && tp == "" )
   {
     /** elastix called Initialize(). */
     this->SetParameterFileName( p.c_str() );
   }
-  else if ( p == "" && tp != "" )
+  else if( p == "" && tp != "" )
   {
     /** transformix called Initialize(). */
     this->SetParameterFileName( tp.c_str() );
   }
-  else if ( p == "" && tp == "" )
+  else if( p == "" && tp == "" )
   {
-    xl::xout["error"] << "ERROR: No (Transform-)Parameter file has been entered" << std::endl;
-    xl::xout["error"] << "for elastix: command line option \"-p\"" << std::endl;
-    xl::xout["error"] << "for transformix: command line option \"-tp\"" << std::endl;
+    xl::xout[ "error" ] << "ERROR: No (Transform-)Parameter file has been entered" << std::endl;
+    xl::xout[ "error" ] << "for elastix: command line option \"-p\"" << std::endl;
+    xl::xout[ "error" ] << "for transformix: command line option \"-tp\"" << std::endl;
     return 1;
   }
   else
   {
     /** Both "p" and "tp" are used, which is prohibited. */
-    xl::xout["error"] << "ERROR: Both \"-p\" and \"-tp\" are used, "
-      << "which is prohibited." << std::endl;
+    xl::xout[ "error" ] << "ERROR: Both \"-p\" and \"-tp\" are used, "
+                        << "which is prohibited." << std::endl;
     return 1;
   }
 
@@ -151,13 +150,13 @@ Configuration
   this->m_ParameterFileParser->SetParameterFileName( this->m_ParameterFileName );
   try
   {
-    xl::xout["standard"] << "Reading the elastix parameters from file ...\n" << std::endl;
+    xl::xout[ "standard" ] << "Reading the elastix parameters from file ...\n" << std::endl;
     this->m_ParameterFileParser->ReadParameterFile();
   }
-  catch ( itk::ExceptionObject & excp )
+  catch( itk::ExceptionObject & excp )
   {
-    xl::xout["error"] << "ERROR: when reading the parameter file:\n"
-      << excp << std::endl;
+    xl::xout[ "error" ] << "ERROR: when reading the parameter file:\n"
+                        << excp << std::endl;
     return 1;
   }
 
@@ -237,7 +236,7 @@ Configuration
 ::GetCommandLineArgument( const std::string & key ) const
 {
   /** Check if the argument was given. If no return "". */
-  if ( this->m_CommandLineArgumentMap.count( key ) == 0 )
+  if( this->m_CommandLineArgumentMap.count( key ) == 0 )
   {
     return "";
   }
@@ -267,4 +266,3 @@ Configuration
 } // end namespace elastix
 
 #endif // end #ifndef __elxMyConfiguration_CXX__
-

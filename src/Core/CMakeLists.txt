@@ -1,29 +1,29 @@
 #---------------------------------------------------------------------
-PROJECT( elxCore )
+project( elxCore )
 
 #---------------------------------------------------------------------
 # Define lists of files in the subdirectories.
 
-SET( KernelFilesForExecutables
+set( KernelFilesForExecutables
   Kernel/elxElastixMain.cxx
   Kernel/elxElastixMain.h
   Kernel/elxTransformixMain.cxx
   Kernel/elxTransformixMain.h
 )
 
-SET( KernelFilesForComponents
+set( KernelFilesForComponents
   Kernel/elxElastixBase.cxx
   Kernel/elxElastixBase.h
   Kernel/elxElastixTemplate.h
   Kernel/elxElastixTemplate.hxx
 )
 
-SET( InstallFilesForExecutables
+set( InstallFilesForExecutables
   Install/elxComponentLoader.cxx
   Install/elxComponentLoader.h
 )
 
-SET( InstallFilesForComponents
+set( InstallFilesForComponents
   Install/elxComponentDatabase.cxx
   Install/elxComponentDatabase.h
   Install/elxBaseComponent.h
@@ -35,12 +35,12 @@ SET( InstallFilesForComponents
   Install/elxIncludes.h
 )
 
-SET( ConfigurationFiles
+set( ConfigurationFiles
   Configuration/elxConfiguration.cxx
   Configuration/elxConfiguration.h
 )
 
-SET( ComponentBaseClassFiles
+set( ComponentBaseClassFiles
   ComponentBaseClasses/elxFixedImagePyramidBase.h
   ComponentBaseClasses/elxImageSamplerBase.h
   ComponentBaseClasses/elxInterpolatorBase.h
@@ -63,7 +63,7 @@ SET( ComponentBaseClassFiles
   ComponentBaseClasses/elxTransformBase.hxx
 )
 
-SET( ProgressCommandFiles
+set( ProgressCommandFiles
   elxProgressCommand.cxx
   elxProgressCommand.h
 )
@@ -71,24 +71,24 @@ SET( ProgressCommandFiles
 #---------------------------------------------------------------------
 # Construct source groups for nice visualisation in Visual Studio.
 
-SOURCE_GROUP( "Install" FILES
+source_group( "Install" FILES
   ${InstallFilesForComponents}
   ${InstallFilesForExecutables}
 )
 
-SOURCE_GROUP( "Kernel" FILES
+source_group( "Kernel" FILES
   ${KernelFilesForComponents}
   ${KernelFilesForExecutables}
 )
 
-SOURCE_GROUP( "Configuration" FILES ${ConfigurationFiles} )
-SOURCE_GROUP( "ComponentBaseClasses" FILES ${ComponentBaseClassFiles} )
-SOURCE_GROUP( "ProgressCommand" FILES ${ProgressCommandFiles} )
+source_group( "Configuration" FILES ${ConfigurationFiles} )
+source_group( "ComponentBaseClasses" FILES ${ComponentBaseClassFiles} )
+source_group( "ProgressCommand" FILES ${ProgressCommandFiles} )
 
 #---------------------------------------------------------------------
 # Create the elxCore library.
 
-ADD_LIBRARY( elxCore
+add_library( elxCore
   ${KernelFilesForComponents}
   ${InstallFilesForComponents}
   ${ConfigurationFiles}
@@ -99,7 +99,7 @@ ADD_LIBRARY( elxCore
 #---------------------------------------------------------------------
 # Link against other libraries.
 
-TARGET_LINK_LIBRARIES( elxCore
+target_link_libraries( elxCore
   elxCommon
   xoutlib
   param # Needed for elxConfiguration
@@ -108,11 +108,10 @@ TARGET_LINK_LIBRARIES( elxCore
 
 #---------------------------------------------------------------------
 # Define the mevis dcm tiff lib to which we should link.
-SET( mevisdcmtifflib mevisdcmtiff )
+set( mevisdcmtifflib mevisdcmtiff )
 
 #---------------------------------------------------------------------
 # Create the elastix executable or library.
-
 IF( ELASTIX_BUILD_EXECUTABLE )
   ADD_EXECUTABLE( elastix
     Main/elastix.cxx
@@ -140,7 +139,6 @@ ELSE(ELASTIX_BUILD_EXECUTABLE)
     )
   ENDIF(ELASTIX_BUILD_SHARED_LIBS)
 ENDIF(ELASTIX_BUILD_EXECUTABLE)
-
 
 #---------------------------------------------------------------------
 # Create the transformix executable.
@@ -182,7 +180,7 @@ ENDIF()
 #---------------------------------------------------------------------
 # Link elastix against other libraries.
 
-TARGET_LINK_LIBRARIES( elastix
+target_link_libraries( elastix
   param
   xoutlib
   elxCommon
@@ -195,7 +193,7 @@ TARGET_LINK_LIBRARIES( elastix
 #---------------------------------------------------------------------
 # Link transformix against other libraries.
 
-TARGET_LINK_LIBRARIES( transformix
+target_link_libraries( transformix
   param
   xoutlib
   elxCommon
@@ -205,12 +203,23 @@ TARGET_LINK_LIBRARIES( transformix
   ${ITK_LIBRARIES}
 )
 
+if( MSVC )
+  # NOTE: that linker /INCREMENTAL:NO flag makes it impossible to use
+  # Debug breakpoints in Visual Studio 10.0. It is probably the Visual Studio 10.0 bug.
+  # Or you have to recompile ITK with the same flag in Debug as well.
+  # Or it has something to do with building it with IncrediBuild where this flag is not welcome for PDB files.
+  # Therefore we are going to set it only for Visual Studio 9.0 (2008)
+  if( MSVC90 OR MSVC91 )
+    set( CMAKE_EXE_LINKER_FLAGS_DEBUG "/INCREMENTAL:NO" )
+  endif()
+endif()
+
 #---------------------------------------------------------------------
 # Define the install directory for elastix and transformix.
 
-IF( WIN32 )
-  IF( ELASTIX_BUILD_EXECUTABLE )
-    INSTALL( TARGETS elastix transformix
+if( WIN32 )
+  if( ELASTIX_BUILD_EXECUTABLE )
+    install( TARGETS elastix transformix
       RUNTIME DESTINATION . )
       #COMPONENT core )
   ELSE( ELASTIX_BUILD_EXECUTABLE )
@@ -224,7 +233,7 @@ ELSE( WIN32 )
   SET_TARGET_PROPERTIES( elastix transformix
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
   # Put executables in bin and libraries in lib.
-  INSTALL( TARGETS elastix transformix
+  install( TARGETS elastix transformix
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION bin
     ARCHIVE DESTINATION bin)
@@ -235,5 +244,5 @@ ENDIF( WIN32 )
 # The Core/Install directory contains a CMakeLists file for
 # defining the elastix compilation types.
 
-ADD_SUBDIRECTORY( Install )
+add_subdirectory( Install )
 

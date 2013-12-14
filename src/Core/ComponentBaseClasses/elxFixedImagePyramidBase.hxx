@@ -24,9 +24,9 @@ namespace elastix
  * ******************* BeforeRegistrationBase *******************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-FixedImagePyramidBase<TElastix>
+FixedImagePyramidBase< TElastix >
 ::BeforeRegistrationBase( void )
 {
   /** Call SetFixedSchedule.*/
@@ -39,9 +39,9 @@ FixedImagePyramidBase<TElastix>
  * ******************* BeforeEachResolutionBase *******************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-FixedImagePyramidBase<TElastix>
+FixedImagePyramidBase< TElastix >
 ::BeforeEachResolutionBase( void )
 {
   /** What is the current resolution level? */
@@ -58,7 +58,7 @@ FixedImagePyramidBase<TElastix>
     "ResultImageFormat", 0, false );
 
   /** Writing result image. */
-  if ( writePyramidImage )
+  if( writePyramidImage )
   {
     /** Create a name for the final result. */
     std::ostringstream makeFileName( "" );
@@ -71,16 +71,16 @@ FixedImagePyramidBase<TElastix>
 
     /** Save the fixed pyramid image. */
     elxout << "Writing fixed pyramid image "
-      << this->GetComponentLabel()
-      << " from resolution " << level << "..." << std::endl;
+           << this->GetComponentLabel()
+           << " from resolution " << level << "..." << std::endl;
     try
     {
       this->WritePyramidImage( makeFileName.str(), level );
     }
     catch( itk::ExceptionObject & excp )
     {
-      xl::xout["error"] << "Exception caught: " << std::endl;
-      xl::xout["error"] << excp << "Resuming elastix." << std::endl;
+      xl::xout[ "error" ] << "Exception caught: " << std::endl;
+      xl::xout[ "error" ] << excp << "Resuming elastix." << std::endl;
     }
   } // end if
 
@@ -91,9 +91,9 @@ FixedImagePyramidBase<TElastix>
  * ********************** SetFixedSchedule **********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-FixedImagePyramidBase<TElastix>
+FixedImagePyramidBase< TElastix >
 ::SetFixedSchedule( void )
 {
   /** Get the ImageDimension. */
@@ -103,7 +103,7 @@ FixedImagePyramidBase<TElastix>
   unsigned int numberOfResolutions = 3;
   this->m_Configuration->ReadParameter( numberOfResolutions,
     "NumberOfResolutions", 0, true );
-  if ( numberOfResolutions == 0 ) numberOfResolutions = 1;
+  if( numberOfResolutions == 0 ) { numberOfResolutions = 1; }
 
   /** Create a default fixedSchedule. Set the numberOfLevels first. */
   this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
@@ -116,11 +116,11 @@ FixedImagePyramidBase<TElastix>
    * FixedImagePyramid<i>Schedule, for the i-th fixed image pyramid used.
    */
   bool found = true;
-  for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+  for( unsigned int i = 0; i < numberOfResolutions; i++ )
   {
-    for ( unsigned int j = 0; j < FixedImageDimension; j++ )
+    for( unsigned int j = 0; j < FixedImageDimension; j++ )
     {
-      bool ijfound = false;
+      bool               ijfound = false;
       const unsigned int entrynr = i * FixedImageDimension + j;
       ijfound |= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
         "ImagePyramidSchedule", entrynr, false );
@@ -133,12 +133,12 @@ FixedImagePyramidBase<TElastix>
       found &= ijfound;
 
     } // end for FixedImageDimension
-  } // end for numberOfResolutions
+  }   // end for numberOfResolutions
 
-  if ( !found && this->GetConfiguration()->GetPrintErrorMessages() )
+  if( !found && this->GetConfiguration()->GetPrintErrorMessages() )
   {
-    xl::xout["warning"] << "WARNING: the fixed pyramid schedule is not fully specified!\n";
-    xl::xout["warning"] << "  A default pyramid schedule is used." << std::endl;
+    xl::xout[ "warning" ] << "WARNING: the fixed pyramid schedule is not fully specified!\n";
+    xl::xout[ "warning" ] << "  A default pyramid schedule is used." << std::endl;
   }
   else
   {
@@ -153,19 +153,19 @@ FixedImagePyramidBase<TElastix>
  * ******************* WritePyramidImage ********************
  */
 
-template<class TElastix>
+template< class TElastix >
 void
-FixedImagePyramidBase<TElastix>
+FixedImagePyramidBase< TElastix >
 ::WritePyramidImage( const std::string & filename,
-  const unsigned int & level )// const
+  const unsigned int & level ) // const
 {
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter( resultImagePixelType,
     "ResultImagePixelType", 0, false );
-  std::basic_string<char>::size_type pos = resultImagePixelType.find( " " );
-  const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
-  if ( pos != npos ) resultImagePixelType.replace( pos, 1, "_" );
+  std::basic_string< char >::size_type       pos  = resultImagePixelType.find( " " );
+  const std::basic_string< char >::size_type npos = std::basic_string< char >::npos;
+  if( pos != npos ) { resultImagePixelType.replace( pos, 1, "_" ); }
 
   /** Read from the parameter file if compression is desired. */
   bool doCompression = false;
@@ -183,8 +183,8 @@ FixedImagePyramidBase<TElastix>
   writer->SetUseCompression( doCompression );
 
   /** Do the writing. */
-  xl::xout["coutonly"] << std::flush;
-  xl::xout["coutonly"] << "  Writing image ..." << std::endl;
+  xl::xout[ "coutonly" ] << std::flush;
+  xl::xout[ "coutonly" ] << "  Writing image ..." << std::endl;
   try
   {
     writer->Update();

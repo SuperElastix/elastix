@@ -19,6 +19,4 @@
 
 //nothing
 
-
 #endif //#ifndef __elxMovingSmoothingPyramid_hxx
-

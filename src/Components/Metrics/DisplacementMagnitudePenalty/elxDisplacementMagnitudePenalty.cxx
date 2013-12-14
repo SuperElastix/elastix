@@ -14,4 +14,3 @@
 #include "elxDisplacementMagnitudePenalty.h"
 
 elxInstallMacro( DisplacementMagnitudePenalty );
-

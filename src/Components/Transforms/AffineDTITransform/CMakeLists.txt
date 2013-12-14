@@ -4,6 +4,6 @@ ADD_ELXCOMPONENT( AffineDTITransformElastix OFF
  elxAffineDTITransform.hxx
  elxAffineDTITransform.cxx
  itkAffineDTI3DTransform.h
- itkAffineDTI3DTransform.txx
+ itkAffineDTI3DTransform.hxx
  itkAffineDTITransform.h )
 

@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( StatisticalShapePenalty OFF
  elxStatisticalShapePenalty.h
  elxStatisticalShapePenalty.hxx
  itkStatisticalShapePointPenalty.h
- itkStatisticalShapePointPenalty.txx )
+ itkStatisticalShapePointPenalty.hxx )
 

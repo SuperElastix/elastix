@@ -4,29 +4,29 @@ PROJECT( KNN )
 # Set the files, so that they are shown in the editor
 SET( KNN_Files
   itkListSampleCArray.h
-  itkListSampleCArray.txx
+  itkListSampleCArray.hxx
   itkANNBinaryTreeCreator.h
   itkANNBinaryTreeCreator.cxx
   itkBinaryTreeBase.h
-  itkBinaryTreeBase.txx
+  itkBinaryTreeBase.hxx
   itkBinaryANNTreeBase.h
-  itkBinaryANNTreeBase.txx
+  itkBinaryANNTreeBase.hxx
   itkANNkDTree.h
-  itkANNkDTree.txx
+  itkANNkDTree.hxx
   itkANNbdTree.h
-  itkANNbdTree.txx
+  itkANNbdTree.hxx
   itkANNBruteForceTree.h
-  itkANNBruteForceTree.txx
+  itkANNBruteForceTree.hxx
   itkBinaryTreeSearchBase.h
-  itkBinaryTreeSearchBase.txx
+  itkBinaryTreeSearchBase.hxx
   itkBinaryANNTreeSearchBase.h
-  itkBinaryANNTreeSearchBase.txx
+  itkBinaryANNTreeSearchBase.hxx
   itkANNStandardTreeSearch.h
-  itkANNStandardTreeSearch.txx
+  itkANNStandardTreeSearch.hxx
   itkANNFixedRadiusTreeSearch.h
-  itkANNFixedRadiusTreeSearch.txx
+  itkANNFixedRadiusTreeSearch.hxx
   itkANNPriorityTreeSearch.h
-  itkANNPriorityTreeSearch.txx
+  itkANNPriorityTreeSearch.hxx
 )
 
 # process the sub-directories

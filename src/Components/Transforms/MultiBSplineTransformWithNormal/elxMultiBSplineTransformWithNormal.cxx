@@ -14,4 +14,3 @@
 #include "elxMultiBSplineTransformWithNormal.h"
 
 elxInstallMacro( MultiBSplineTransformWithNormal );
-

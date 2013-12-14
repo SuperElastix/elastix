@@ -20,7 +20,6 @@ PURPOSE. See the above copyright notices for more information.
 #include "itkShrinkImageFilter.h"
 #include "itkCastImageFilter.h"
 
-
 namespace // anonymous namespace
 {
 
@@ -29,12 +28,13 @@ namespace // anonymous namespace
  * Helper function
  */
 
-template<class GenericMultiResolutionPyramidImageFilterType,
-class ImageToImageFilterType, typename OutputImageType>
-void Graft(
+template< class GenericMultiResolutionPyramidImageFilterType,
+class ImageToImageFilterType, typename OutputImageType >
+void
+Graft(
   typename GenericMultiResolutionPyramidImageFilterType::Pointer thisFilter,
-  typename ImageToImageFilterType::Pointer &filter,
-  OutputImageType *outImage, const unsigned int ilevel)
+  typename ImageToImageFilterType::Pointer & filter,
+  OutputImageType * outImage, const unsigned int ilevel )
 {
   filter->GraftOutput( outImage );
 
@@ -44,8 +44,8 @@ void Graft(
   thisFilter->GraftNthOutput( ilevel, filter->GetOutput() );
 } // end Graft()
 
-} // end namespace anonymous
 
+} // end namespace anonymous
 
 namespace itk
 {
@@ -54,18 +54,18 @@ namespace itk
  * ******************* Constructor ***********************
  */
 
-template <class TInputImage, class TOutputImage>
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+template< class TInputImage, class TOutputImage >
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::GenericMultiResolutionPyramidImageFilter()
 {
-  this->m_CurrentLevel = 0;
-  this->m_ComputeOnlyForCurrentLevel = false;
-  this->m_UseMultiResolutionRescaleSchedule = true;   // Default behavior of MultiResolutionPyramidImageFilter
+  this->m_CurrentLevel                        = 0;
+  this->m_ComputeOnlyForCurrentLevel          = false;
+  this->m_UseMultiResolutionRescaleSchedule   = true; // Default behavior of MultiResolutionPyramidImageFilter
   this->m_UseMultiResolutionSmoothingSchedule = true; // Default behavior of MultiResolutionPyramidImageFilter
 
   SmoothingScheduleType temp( this->GetNumberOfLevels(), ImageDimension );
   temp.Fill( 0 );
-  this->m_SmoothingSchedule = temp;
+  this->m_SmoothingSchedule        = temp;
   this->m_SmoothingScheduleDefined = false;
 
 } // end Constructor
@@ -75,18 +75,18 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* SetNumberOfLevels ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::SetNumberOfLevels( unsigned int num )
 {
-  if ( this->m_NumberOfLevels == num ) return;
+  if( this->m_NumberOfLevels == num ) { return; }
   Superclass::SetNumberOfLevels( num );
 
   /** Resize the smoothing schedule too. */
   SmoothingScheduleType temp( this->m_NumberOfLevels, ImageDimension );
   temp.Fill( 0.0 );
-  this->m_SmoothingSchedule = temp;
+  this->m_SmoothingSchedule        = temp;
   this->m_SmoothingScheduleDefined = false;
 
 } // end SetNumberOfLevels()
@@ -96,17 +96,17 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* SetCurrentLevel ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::SetCurrentLevel( unsigned int level )
 {
-  itkDebugMacro("setting CurrentLevel to " << level);
-  if ( this->m_CurrentLevel != level )
+  itkDebugMacro( "setting CurrentLevel to " << level );
+  if( this->m_CurrentLevel != level )
   {
     // clamp value to be less then number of levels
     this->m_CurrentLevel = level;
-    if ( this->m_CurrentLevel >= this->m_NumberOfLevels )
+    if( this->m_CurrentLevel >= this->m_NumberOfLevels )
     {
       this->m_CurrentLevel = this->m_NumberOfLevels - 1; // Safe this->m_NumberOfLevels always >= 1
     }
@@ -124,13 +124,13 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* SetComputeOnlyForCurrentLevel ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::SetComputeOnlyForCurrentLevel( const bool _arg )
 {
   itkDebugMacro( "setting ComputeOnlyForCurrentLevel to " << _arg );
-  if ( this->m_ComputeOnlyForCurrentLevel != _arg )
+  if( this->m_ComputeOnlyForCurrentLevel != _arg )
   {
     this->m_ComputeOnlyForCurrentLevel = _arg;
     this->ReleaseOutputs();
@@ -143,9 +143,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* SetSchedule ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::SetSchedule( const ScheduleType & schedule )
 {
   Superclass::SetSchedule( schedule );
@@ -157,7 +157,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
    */
   SmoothingScheduleType temp( this->GetNumberOfLevels(), ImageDimension );
   temp.Fill( 0 );
-  this->m_SmoothingSchedule = temp;
+  this->m_SmoothingSchedule        = temp;
   this->m_SmoothingScheduleDefined = false;
 
 } // end SetSchedule()
@@ -167,9 +167,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* SetRescaleSchedule ***********************
  */
 
-template<class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::SetRescaleSchedule( const RescaleScheduleType & schedule )
 {
   /** Here we would prefer to use m_RescaleSchedule.
@@ -185,41 +185,41 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* SetSmoothingSchedule ***********************
  */
 
-template<class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::SetSmoothingSchedule( const SmoothingScheduleType & schedule )
 {
-  if ( schedule == this->m_SmoothingSchedule )
+  if( schedule == this->m_SmoothingSchedule )
   {
     return;
   }
 
-  if ( schedule.rows() != this->m_NumberOfLevels
+  if( schedule.rows() != this->m_NumberOfLevels
     || schedule.columns() != ImageDimension )
   {
-    itkDebugMacro(<< "Smoothing schedule has wrong dimensions");
+    itkDebugMacro( << "Smoothing schedule has wrong dimensions" );
     return;
   }
 
-  for ( unsigned int level = 0; level < this->m_NumberOfLevels; level++ )
+  for( unsigned int level = 0; level < this->m_NumberOfLevels; level++ )
   {
-    for ( unsigned int dim = 0; dim < ImageDimension; dim++ )
+    for( unsigned int dim = 0; dim < ImageDimension; dim++ )
     {
-      this->m_SmoothingSchedule[level][dim] = schedule[level][dim];
+      this->m_SmoothingSchedule[ level ][ dim ] = schedule[ level ][ dim ];
 
       /** Similar to Superclass::SetSchedule, set smoothing schedule to
        * max( 0, min(schedule[level], schedule[level-1] ).
        */
-      if ( level > 0 )
+      if( level > 0 )
       {
-        this->m_SmoothingSchedule[level][dim] = vnl_math_min(
-          this->m_SmoothingSchedule[level][dim],
-          this->m_SmoothingSchedule[level - 1][dim] );
+        this->m_SmoothingSchedule[ level ][ dim ] = vnl_math_min(
+          this->m_SmoothingSchedule[ level ][ dim ],
+          this->m_SmoothingSchedule[ level - 1 ][ dim ] );
       }
-      if ( this->m_SmoothingSchedule[level][dim] < 0.0 )
+      if( this->m_SmoothingSchedule[ level ][ dim ] < 0.0 )
       {
-        this->m_SmoothingSchedule[level][dim] = 0.0;
+        this->m_SmoothingSchedule[ level ][ dim ] = 0.0;
       }
     }
   }
@@ -234,9 +234,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* GenerateData ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::GenerateData( void )
 {
   // Depending on user setting of the SetUseMultiResolutionRescaleSchedule() and
@@ -267,10 +267,10 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
   InputImageConstPointer input = this->GetInput();
 
   // Typedef for caster
-  typedef CastImageFilter<InputImageType, OutputImageType> CasterType;
+  typedef CastImageFilter< InputImageType, OutputImageType > CasterType;
 
   // Check if we have to do anything at all
-  if ( !this->m_UseMultiResolutionRescaleSchedule
+  if( !this->m_UseMultiResolutionRescaleSchedule
     && !this->m_UseMultiResolutionSmoothingSchedule )
   {
     // Create caster
@@ -282,17 +282,17 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
     {
       if( !this->m_ComputeOnlyForCurrentLevel )
       {
-        this->UpdateProgress( static_cast<float>( level ) /
-          static_cast<float>( this->m_NumberOfLevels ) );
+        this->UpdateProgress( static_cast< float >( level )
+          / static_cast< float >( this->m_NumberOfLevels ) );
       }
 
-      if ( this->ComputeForCurrentLevel( level ) )
+      if( this->ComputeForCurrentLevel( level ) )
       {
         OutputImagePointer outputPtr = this->GetOutput( level );
         outputPtr->SetBufferedRegion( input->GetLargestPossibleRegion() );
         outputPtr->Allocate();
 
-        Graft<Self, CasterType, OutputImageType>(
+        Graft< Self, CasterType, OutputImageType >(
           this, caster, outputPtr, level );
       }
     }
@@ -301,10 +301,10 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 
   // Create caster, smoother, resample, and shrinker filters
   typedef SmoothingRecursiveGaussianImageFilter<
-    InputImageType, OutputImageType>                            SmootherType;
-  typedef ImageToImageFilter<OutputImageType, OutputImageType>  ImageToImageType;
-  typedef ResampleImageFilter<OutputImageType, OutputImageType> ResampleShrinkerType;
-  typedef ShrinkImageFilter<OutputImageType, OutputImageType>   ShrinkerType;
+    InputImageType, OutputImageType >                            SmootherType;
+  typedef ImageToImageFilter< OutputImageType, OutputImageType >  ImageToImageType;
+  typedef ResampleImageFilter< OutputImageType, OutputImageType > ResampleShrinkerType;
+  typedef ShrinkImageFilter< OutputImageType, OutputImageType >   ShrinkerType;
 
   // First check if smoothing schedule has been set
   if( !this->m_SmoothingScheduleDefined )
@@ -340,9 +340,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 
   if( this->m_UseMultiResolutionRescaleSchedule )
   {
-    if ( this->GetUseShrinkImageFilter() )
+    if( this->GetUseShrinkImageFilter() )
     {
-      shrinker = ShrinkerType::New();
+      shrinker       = ShrinkerType::New();
       shrinkerFilter = shrinker.GetPointer();
     }
     else
@@ -368,19 +368,19 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
   }
 
   // Set the standard deviation and do the smoothing
-  unsigned int shrinkFactors[ImageDimension];
+  unsigned int   shrinkFactors[ ImageDimension ];
   SigmaArrayType sigmaArray; sigmaArray.Fill( 0 );
 
   for( unsigned int level = 0; level < this->m_NumberOfLevels; level++ )
   {
     if( !this->m_ComputeOnlyForCurrentLevel )
     {
-      this->UpdateProgress( static_cast<float>( level ) /
-        static_cast<float>( this->m_NumberOfLevels ) );
+      this->UpdateProgress( static_cast< float >( level )
+        / static_cast< float >( this->m_NumberOfLevels ) );
     }
 
     OutputImagePointer outputPtr;
-    if ( this->ComputeForCurrentLevel( level ) )
+    if( this->ComputeForCurrentLevel( level ) )
     {
       // Allocate memory for each output
       outputPtr = this->GetOutput( level );
@@ -398,7 +398,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
          * from MultiResolutionPyramidImageFilter and changing m_Schedule
          * to m_RescaleSchedule.
          */
-        shrinkFactors[dim] = this->m_Schedule[level][dim];
+        shrinkFactors[ dim ] = this->m_Schedule[ level ][ dim ];
       }
     }
 
@@ -408,16 +408,16 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
       smoother->SetSigmaArray( sigmaArray );
     }
 
-    if ( this->ComputeForCurrentLevel( level ) )
+    if( this->ComputeForCurrentLevel( level ) )
     {
       if( this->m_UseMultiResolutionRescaleSchedule )
       {
-        if ( !this->GetUseShrinkImageFilter() )
+        if( !this->GetUseShrinkImageFilter() )
         {
           typedef itk::IdentityTransform< double, OutputImageType::ImageDimension >
             IdentityTransformType;
-          typename IdentityTransformType::Pointer identityTransform =
-            IdentityTransformType::New();
+          typename IdentityTransformType::Pointer identityTransform
+            = IdentityTransformType::New();
           resampleShrinker->SetOutputParametersFromImage( outputPtr );
           resampleShrinker->SetTransform( identityTransform );
         }
@@ -436,7 +436,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
           shrinkerFilter->SetInput( smoother->GetOutput() );
         }
 
-        Graft<Self, ImageToImageType, OutputImageType>(
+        Graft< Self, ImageToImageType, OutputImageType >(
           this, shrinkerFilter, outputPtr, level );
       }
       else
@@ -444,12 +444,12 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
         // Swap input, if sigma array has been set to zeros we don't perform smoothing
         if( this->AreSigmasAllZeros( sigmaArray ) )
         {
-          Graft<Self, CasterType, OutputImageType>(
+          Graft< Self, CasterType, OutputImageType >(
             this, caster, outputPtr, level );
         }
         else
         {
-          Graft<Self, SmootherType, OutputImageType>(
+          Graft< Self, SmootherType, OutputImageType >(
             this, smoother, outputPtr, level );
         }
       }
@@ -463,9 +463,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* GenerateOutputInformation ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::GenerateOutputInformation( void )
 {
   if( this->m_UseMultiResolutionRescaleSchedule )
@@ -484,10 +484,10 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* GenerateOutputRequestedRegion ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
-::GenerateOutputRequestedRegion( DataObject *refOutput )
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
+::GenerateOutputRequestedRegion( DataObject * refOutput )
 {
   if( this->m_UseMultiResolutionRescaleSchedule )
   {
@@ -547,7 +547,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
   }
 
   // We have to set requestedRegion properly
-  for( unsigned int level = 0; level<this->m_NumberOfLevels; level++ )
+  for( unsigned int level = 0; level < this->m_NumberOfLevels; level++ )
   {
     this->GetOutput( level )->SetRequestedRegionToLargestPossibleRegion();
   }
@@ -559,9 +559,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* GenerateInputRequestedRegion ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::GenerateInputRequestedRegion( void )
 {
   if( this->m_UseMultiResolutionRescaleSchedule )
@@ -578,9 +578,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
     SuperSuperclass::GenerateInputRequestedRegion();
 
     // This filter needs all of the input, because it uses the the GausianRecursiveFilter.
-    InputImagePointer image = const_cast<InputImageType *>( this->GetInput() );
+    InputImagePointer image = const_cast< InputImageType * >( this->GetInput() );
 
-    if ( !image )
+    if( !image )
     {
       itkExceptionMacro( << "Input has not been set." );
     }
@@ -596,9 +596,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* ReleaseOutputs ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::ReleaseOutputs( void )
 {
   // release the memories if already has been allocated
@@ -616,13 +616,13 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* ComputeForCurrentLevel ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 bool
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::ComputeForCurrentLevel( const unsigned int level ) const
 {
-  if( !this->m_ComputeOnlyForCurrentLevel ||
-    (this->m_ComputeOnlyForCurrentLevel && level == this->m_CurrentLevel) )
+  if( !this->m_ComputeOnlyForCurrentLevel
+    || ( this->m_ComputeOnlyForCurrentLevel && level == this->m_CurrentLevel ) )
   {
     return true;
   }
@@ -637,9 +637,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* GetDefaultSigma ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 double
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::GetDefaultSigma( const unsigned int dim,
   const unsigned int * factors,
   const SpacingType & spacing ) const
@@ -650,8 +650,8 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
    * requires the variance, and has the option to ignore the image spacing.
    * That's why the formula looks maybe different at first sight.
    */
-  if( factors[dim] == 1 ) return 0.0;
-  return 0.5 * static_cast<double>( factors[dim] ) * spacing[dim];
+  if( factors[ dim ] == 1 ) { return 0.0; }
+  return 0.5 * static_cast< double >( factors[ dim ] ) * spacing[ dim ];
 
 } // end GetDefaultSigma()
 
@@ -660,26 +660,26 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* SetSmoothingScheduleToDefault ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::SetSmoothingScheduleToDefault( void )
 {
-  InputImageConstPointer input = this->GetInput();
-  const SpacingType & spacing = input->GetSpacing();
+  InputImageConstPointer input   = this->GetInput();
+  const SpacingType &    spacing = input->GetSpacing();
 
   // Resize the smoothing schedule
   SmoothingScheduleType temp( this->GetNumberOfLevels(), ImageDimension );
   temp.Fill( 0 );
   this->m_SmoothingSchedule = temp;
 
-  unsigned int factors[ImageDimension];
+  unsigned int factors[ ImageDimension ];
   for( unsigned int level = 0; level < this->m_NumberOfLevels; level++ )
   {
     for( unsigned int dim = 0; dim < ImageDimension; dim++ )
     {
-      factors[dim] = this->m_Schedule[level][dim];
-      this->m_SmoothingSchedule[level][dim] = this->GetDefaultSigma( dim, factors, spacing );
+      factors[ dim ]                            = this->m_Schedule[ level ][ dim ];
+      this->m_SmoothingSchedule[ level ][ dim ] = this->GetDefaultSigma( dim, factors, spacing );
     }
   }
 } // end SetSmoothingScheduleToDefault()
@@ -689,14 +689,14 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* GetSigma ***********************
  */
 
-template <class TInputImage, class TOutputImage>
-typename GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::SigmaArrayType
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+template< class TInputImage, class TOutputImage >
+typename GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >::SigmaArrayType
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::GetSigma( const unsigned int level, SigmaArrayType & sigmaArray ) const
 {
   for( unsigned int dim = 0; dim < ImageDimension; dim++ )
   {
-    sigmaArray[dim] = this->m_SmoothingSchedule[level][dim];
+    sigmaArray[ dim ] = this->m_SmoothingSchedule[ level ][ dim ];
   }
   return sigmaArray;
 
@@ -707,9 +707,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* AreSigmasAllZeros ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 bool
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::AreSigmasAllZeros( const SigmaArrayType & sigmaArray ) const
 {
   if( !this->m_UseMultiResolutionSmoothingSchedule )
@@ -717,10 +717,10 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
     return true;
   }
 
-  bool allZeros = ( sigmaArray[0] == 0.0 );
+  bool allZeros = ( sigmaArray[ 0 ] == 0.0 );
   for( unsigned int dim = 1; dim < ImageDimension; dim++ )
   {
-    if( sigmaArray[dim] == 0.0 )
+    if( sigmaArray[ dim ] == 0.0 )
     {
       allZeros |= true;
     }
@@ -740,9 +740,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  */
 // \todo : USE THIS FUNCTION!
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 bool
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::AreRescaleFactorsAllOnes( const RescaleFactorArrayType & rescaleFactorArray ) const
 {
   if( !this->m_UseMultiResolutionSmoothingSchedule )
@@ -750,10 +750,10 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
     return true;
   }
 
-  bool allOnes = ( rescaleFactorArray[0] == 1.0 );
+  bool allOnes = ( rescaleFactorArray[ 0 ] == 1.0 );
   for( unsigned int dim = 1; dim < ImageDimension; dim++ )
   {
-    if( rescaleFactorArray[dim] == 1.0 )
+    if( rescaleFactorArray[ dim ] == 1.0 )
     {
       allOnes |= true;
     }
@@ -772,14 +772,14 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* IsCasterNeeded ***********************
  */
 
-template <class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 bool
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::IsCasterNeeded( void ) const
 {
   // If for any level all sigma elements are zeros then we need caster in the
   // pipeline
-  bool need = false;
+  bool           need = false;
   SigmaArrayType sigmaArray;
   for( unsigned int level = 0; level < this->m_NumberOfLevels; level++ )
   {
@@ -798,23 +798,23 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
  * ******************* PrintSelf ***********************
  */
 
-template<class TInputImage, class TOutputImage>
+template< class TInputImage, class TOutputImage >
 void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
+GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
   os << indent << "CurrentLevel: "
-    << this->m_CurrentLevel << std::endl;
+     << this->m_CurrentLevel << std::endl;
   os << indent << "ComputeOnlyForCurrentLevel: "
-    << ( this->m_ComputeOnlyForCurrentLevel ? "true" : "false" ) << std::endl;
+     << ( this->m_ComputeOnlyForCurrentLevel ? "true" : "false" ) << std::endl;
   os << indent << "UseMultiResolutionRescaleSchedule: "
-    << ( this->m_UseMultiResolutionRescaleSchedule ? "true" : "false" ) << std::endl;
+     << ( this->m_UseMultiResolutionRescaleSchedule ? "true" : "false" ) << std::endl;
   os << indent << "UseMultiResolutionSmoothingSchedule: "
-    << ( this->m_UseMultiResolutionSmoothingSchedule ? "true" : "false" ) << std::endl;
+     << ( this->m_UseMultiResolutionSmoothingSchedule ? "true" : "false" ) << std::endl;
   os << indent << "SmoothingScheduleDefined: "
-    << ( this->m_SmoothingScheduleDefined ? "true" : "false" ) << std::endl;
+     << ( this->m_SmoothingScheduleDefined ? "true" : "false" ) << std::endl;
   os << indent << "Smoothing Schedule: ";
   if( this->m_SmoothingSchedule.size() == 0 )
   {
@@ -831,4 +831,3 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 } // end namespace itk
 
 #endif // end #ifndef __itkGenericMultiResolutionPyramidImageFilter_hxx
-

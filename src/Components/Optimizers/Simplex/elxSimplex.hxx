@@ -27,20 +27,20 @@ namespace elastix
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-Simplex<TElastix>
+Simplex< TElastix >
 ::BeforeRegistration( void )
 {
   /** Add the target cell "stepsize" to xout["iteration"].*/
-  xout["iteration"].AddTargetCell("2:Metric");
-  xout["iteration"].AddTargetCell("3:StepSize");
-  xout["iteration"].AddTargetCell("4:||Gradient||");
+  xout[ "iteration" ].AddTargetCell( "2:Metric" );
+  xout[ "iteration" ].AddTargetCell( "3:StepSize" );
+  xout[ "iteration" ].AddTargetCell( "4:||Gradient||" );
 
   /** Format the metric and stepsize as floats */
-  xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3:StepSize"] << std::showpoint << std::fixed;
-  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
+  xl::xout[ "iteration" ][ "2:Metric" ] << std::showpoint << std::fixed;
+  xl::xout[ "iteration" ][ "3:StepSize" ] << std::showpoint << std::fixed;
+  xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
 
 } // end BeforeRegistration()
 
@@ -49,12 +49,13 @@ Simplex<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
-void Simplex<TElastix>
+template< class TElastix >
+void
+Simplex< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Get the current resolution level.*/
-  unsigned int level = static_cast<unsigned int>(
+  unsigned int level = static_cast< unsigned int >(
     this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
 
   /** Set the value tolerance.*/
@@ -76,17 +77,17 @@ void Simplex<TElastix>
   this->SetAutomaticInitialSimplex( automaticinitialsimplex );
 
   /** If no automaticinitialsimplex, InitialSimplexDelta should be given.*/
-  if ( !automaticinitialsimplex )
+  if( !automaticinitialsimplex )
   {
     unsigned int numberofparameters
       = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
     ParametersType initialsimplexdelta( numberofparameters );
-    initialsimplexdelta.Fill(1);
+    initialsimplexdelta.Fill( 1 );
 
-    for ( unsigned int i = 0; i<numberofparameters; i++ )
+    for( unsigned int i = 0; i < numberofparameters; i++ )
     {
       this->m_Configuration->ReadParameter(
-        initialsimplexdelta[i], "InitialSimplexDelta", i );
+        initialsimplexdelta[ i ], "InitialSimplexDelta", i );
     }
 
     this->SetInitialSimplexDelta( initialsimplexdelta );
@@ -99,13 +100,13 @@ void Simplex<TElastix>
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-Simplex<TElastix>
+Simplex< TElastix >
 ::AfterEachIteration( void )
 {
   /** Print some information */
-  xl::xout["iteration"]["2:Metric"]   << this->GetCachedValue();
+  xl::xout[ "iteration" ][ "2:Metric" ] << this->GetCachedValue();
   //xl::xout["iteration"]["3:StepSize"] << this->GetStepLength();
 
 } // end AfterEachIteration()
@@ -115,9 +116,9 @@ Simplex<TElastix>
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-Simplex<TElastix>
+Simplex< TElastix >
 ::AfterEachResolution( void )
 {
   /**
@@ -136,9 +137,9 @@ Simplex<TElastix>
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-Simplex<TElastix>
+Simplex< TElastix >
 ::AfterRegistration( void )
 {
   /** Print the best metric value */
@@ -153,9 +154,9 @@ Simplex<TElastix>
  * ******************* SetInitialPosition ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-Simplex<TElastix>
+Simplex< TElastix >
 ::SetInitialPosition( const ParametersType & param )
 {
   /** Override the implementation in itkOptimizer.h, to
@@ -167,13 +168,13 @@ Simplex<TElastix>
   this->Superclass1::SetInitialPosition( param );
 
   /** Set the scales array to the same size if the size has been changed */
-  ScalesType scales = this->GetScales();
+  ScalesType   scales    = this->GetScales();
   unsigned int paramsize = param.Size();
 
-  if ( ( scales.Size() ) != paramsize )
+  if( ( scales.Size() ) != paramsize )
   {
     ScalesType newscales( paramsize );
-    newscales.Fill(1.0);
+    newscales.Fill( 1.0 );
     this->SetScales( newscales );
   }
 
