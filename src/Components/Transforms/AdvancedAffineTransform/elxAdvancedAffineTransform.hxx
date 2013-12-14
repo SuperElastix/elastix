@@ -293,6 +293,10 @@ AdvancedAffineTransformElastix< TElastix >
     {
       transformInitializer->OriginsOn();
     }
+    else if( method == "GeometryTop" )
+    {
+      transformInitializer->TopOn();
+    }
     transformInitializer->InitializeTransform();
   }
 
