@@ -630,5 +630,5 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
 
 ### TRANSFORMIX TESTING TO CHECK MEMORY PROBLEM
 trx_add_test( TransformixMemoryTest
-  -in ${TestDataDir}/3DCT_lung_baseline.mha
+  -in ${TestDataDir}/3DCT_lung_baseline_small.mha
   -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
