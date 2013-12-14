@@ -30,7 +30,7 @@
 #    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
 #      define ELASTIXLIB_API __declspec( dllexport )
 #    else
-#      define ELASTIXLIB_API __declspec( dllimport )
+#      define ELASTIXLIB_API __declspec( dllexport )
 #    endif
 #  else
 #    define ELASTIXLIB_API __declspec( dllexport )
@@ -131,9 +131,7 @@ private:
   /* Final transformation*/
   ParameterMapListType m_TransformParametersList;
 
-};
-
-// end class ELASTIX
+}; // end class ELASTIX
 
 } // end namespace elastix
 

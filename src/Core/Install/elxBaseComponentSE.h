@@ -46,9 +46,9 @@ public:
   typedef BaseComponent   Superclass;
 
   /** Elastix typedef's. */
-  typedef TElastix                      ElastixType;
-  typedef typename ElastixType::Pointer ElastixPointer;
-
+  typedef TElastix     ElastixType;
+  typedef ElastixType* ElastixPointer;
+  
   /** ConfigurationType. */
   typedef typename ElastixType::ConfigurationType    ConfigurationType;
   typedef typename ElastixType::ConfigurationPointer ConfigurationPointer;
@@ -78,7 +78,7 @@ public:
    */
   virtual ElastixType * GetElastix( void ) const
   {
-    return this->m_Elastix.GetPointer();
+    return this->m_Elastix;
   }
 
 

@@ -30,7 +30,7 @@
 #    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
 #      define TRANSFORMIXLIB_API __declspec( dllexport )
 #    else
-#      define TRANSFORMIXLIB_API __declspec( dllimport )
+#      define TRANSFORMIXLIB_API __declspec( dllexport )
 #    endif
 #  else
 #    define TRANSFORMIXLIB_API __declspec( dllexport )
