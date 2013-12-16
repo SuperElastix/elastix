@@ -47,7 +47,7 @@ BaseComponentSE< TElastix >::SetElastix( TElastix * _arg )
   {
     this->m_Elastix = _arg;
 
-    if( this->m_Elastix.IsNotNull() )
+    if( this->m_Elastix != 0 )
     {
       this->m_Configuration = this->m_Elastix->GetConfiguration();
       this->m_Registration  = dynamic_cast< RegistrationPointer >(
