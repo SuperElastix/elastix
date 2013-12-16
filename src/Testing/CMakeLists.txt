@@ -632,3 +632,5 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
 trx_add_test( TransformixMemoryTest
   -in ${TestDataDir}/3DCT_lung_baseline_small.mha
   -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
+
+set_tests_properties( TransformixMemoryTest PROPERTIES TIMEOUT 10000 )
