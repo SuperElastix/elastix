@@ -1,30 +1,7 @@
-elastix 4.6 compiles with ITK 4.2 compiled with the following non-default options:
+elastix 4.7 compiles with ITK 4.5 compiled with the following non-default options:
 
-ITK_USE_REVIEW                                        true
+Module_ITKReview                                        true
   If set to false, elastix does not compile, since we use some classes from the Review directory.
 
------------------------------------------------------------------------
-elastix 4.5 compiles with ITK 3.20 compiled with the following options:
 
-ITK_USE_OPTIMIZED_REGISTRATION_METHODS                false
-  Has probably no effect, since elastix implements its own versions of the metrics.
-
-ITK_USE_ORIENTED_IMAGE_DIRECTION                      true
-ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE                   true
-  elastix does use image direction cosines (orientation) when you set the option
-  (UseDirectionCosines "true") in your parameter file. By default the direction
-  cosines are internally set to the identity, for backward compatibility.
-  (UseDirectionCosines "true") is the recommended setting, but should be set explicitly.
-
-ITK_USE_REVIEW                                        true
-  If set to false, elastix does not compile, since we use some classes from the Review directory.
-
-ITK_USE_REVIEW_STATISTICS                             true
-  If set to false, elastix does not compile, since the KNN component depends
-  on the new statistics implementation of ITK.
-
-ITK_USE_CENTERED_PIXEL_COORDINATES_CONSISTENTLY       true
-  If you need consistency with elastix versions previous to elastix 4.2 set it to false.
-  However, it is conceptually better to set this option to true.
-
-
+Optionally use ITK_USE_64BITS_IDS and ITK_LEGACY_REMOVE.
