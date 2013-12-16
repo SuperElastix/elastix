@@ -191,17 +191,23 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
         {
           fixedCorners[ index ][ 0 ] = fixedRegion.GetIndex()[ 0 ] + x * fixedRegion.GetSize()[ 0 ];
           fixedCorners[ index ][ 1 ] = fixedRegion.GetIndex()[ 1 ] + y * fixedRegion.GetSize()[ 1 ];
-          fixedCorners[ index ][ 2 ] = fixedRegion.GetIndex()[ 2 ] + z * fixedRegion.GetSize()[ 2 ];
+          if (InputSpaceDimension > 2)
+          {
+            fixedCorners[ index ][ 2 ] = fixedRegion.GetIndex()[ 2 ] + z * fixedRegion.GetSize()[ 2 ];
+          }
           movingCorners[ index ][ 0 ] = movingRegion.GetIndex()[ 0 ] + x * movingRegion.GetSize()[ 0 ];
           movingCorners[ index ][ 1 ] = movingRegion.GetIndex()[ 1 ] + y * movingRegion.GetSize()[ 1 ];
-          movingCorners[ index ][ 2 ] = movingRegion.GetIndex()[ 2 ] + z * movingRegion.GetSize()[ 2 ];
+          if (InputSpaceDimension > 2)
+          {
+            movingCorners[ index ][ 2 ] = movingRegion.GetIndex()[ 2 ] + z * movingRegion.GetSize()[ 2 ];
+          }
         }
       }
     }
 
     // Transform eight corner points to world coordinates and determine min and max coordinate values.
     typename TransformType::InputPointType minWorldFixed, maxWorldFixed, minWorldMoving, maxWorldMoving;
-    for( std::size_t i = 0; i < 8; ++i )
+    for ( std::size_t i = 0; i < fixedCorners.size(); ++i )
     {
       typename TransformType::InputPointType worldFixed, worldMoving;
       this->m_FixedImage->TransformContinuousIndexToPhysicalPoint( fixedCorners[i], worldFixed );
