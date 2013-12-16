@@ -55,7 +55,7 @@ namespace elastix
  *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
  *    By default "false" is assumed. So, no initial translation.\n
  * \parameter AutomaticTransformInitializationMethod: how to initialize this
- *    transform. Should be one of {GeometricalCenter, CenterOfGravity, Origins}.\n
+ *    transform. Should be one of {GeometricalCenter, CenterOfGravity, Origins, GeometryTop}.\n
  *    example: <tt>(AutomaticTransformInitializationMethod "CenterOfGravity")</tt> \n
  *    By default "GeometricalCenter" is assumed.\n
  *

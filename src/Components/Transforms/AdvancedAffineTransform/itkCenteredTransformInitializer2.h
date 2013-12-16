@@ -66,7 +66,8 @@ namespace itk
  * images are determined. For both images, the minimum of the elements of world coordinates
  * is taken and the initial translation is taken to be the vector pointing from the minimum
  * coordinates of the fixed image to the minimum coordinates of the moving image. The
- * rotation point is set to the center of the fixed image.
+ * rotation point is set to the center of the fixed image. Note that this method does not make
+ * sense for 2D images, in that case the result will be equal to Geometrical method.
  *
  * \ingroup Transforms
  */
