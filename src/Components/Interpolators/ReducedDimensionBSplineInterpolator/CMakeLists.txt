@@ -1,6 +1,6 @@
 
-ADD_ELXCOMPONENT( ReducedDimensionBSplineInterpolator
- elxReducedDimensionBSplineInterpolator.h
- elxReducedDimensionBSplineInterpolator.hxx
- elxReducedDimensionBSplineInterpolator.cxx )
+ADD_ELXCOMPONENT( BSplineInterpolatorFast
+ elxBSplineInterpolatorFast.h
+ elxBSplineInterpolatorFast.hxx
+ elxBSplineInterpolatorFast.cxx )
 
