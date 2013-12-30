@@ -95,11 +95,13 @@ given in Chapter~\ref{chp:Tutorial}, including many recommendations
 based on the authors' experiences. More advanced registration topics
 are covered in Chapter \ref{chp:advanced}. The final chapter
 provides more details for those interested in the setup of the
-source code and gives information on how to implement your own
-additions to \elastix. In the Appendices \ref{chp:ExampleParam} and
-\ref{chp:ExampleTransformParam} example (transform) parameter files
-are given. Appendix \ref{chp:License} contains the software license
-and disclaimer under which \elastix\ is currently distributed.
+source code, gives information on how to implement your own
+additions to \elastix, and describes the use of \elastix\ as a
+library instead of a command line program. In the Appendices
+\ref{chp:ExampleParam} and \ref{chp:ExampleTransformParam} example
+(transform) parameter files are given. Appendix \ref{chp:License}
+contains the software license and disclaimer under which \elastix\
+is currently distributed.
 
 %Chapter~\ref{chp:develop} provides more details about the source code
 %and explains how to create extensions of \elastix.
@@ -153,7 +155,8 @@ thank the following people for proofreading (parts of) this manual
 when we constructed a first version: Josien Pluim, Keelin Murphy,
 Martijn van der Bom, Sascha M\"{u}nzing, Jeroen de Bresser, Bram van
 Ginneken, Kajo van der Marel, Adri\"{e}nne Mendrik (in no specific
-order).
+order). Over the years several users have contributed their work as
+new components in \elastix, see the website for a list.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1250,8 +1253,10 @@ ON.
 
 \section{How to call \elastix}\label{sec:elastix:call}
 
-\elastix\ is a command line program. This means that you have to
-open a command line interface (a DOS-box, a shell) and type in an
+\elastix\ is a command line program, although since version 4.7
+(January 2014) initial support for a library interface is available,
+see Section \ref{ssec:dev:library}. This means that you have to open
+a command line interface (a DOS-box, a shell) and type in an
 appropriate \elastix\ command. This also means that there is no
 graphical user interface. Help on using the program can be acquired
 as follows:
@@ -2710,7 +2715,24 @@ source tree. See Section \ref{sec:dev:newcomp} for more details about this.
 %\item ANN license!
 %\end{itemize}
 
-\section{Including \elastix\ code in your own program}
+\section{Using \elastix\ in your own software}
+
+There are (at least) three ways to use \elastix\ in your own
+software:
+\begin{enumerate}
+\item Compile the \elastix\ executable and directly call it with the
+appropriate arguments. This is the most easy way, and Matlab and
+MeVisLab code exists for that.
+
+\item Include the \elastix\ source code in your own project, see
+Section \ref{ssec:dev:include}.
+
+\item Compile \elastix\ as a library and link to it, see
+Section \ref{ssec:dev:library}. This functionality is available as
+of version 4.7 (January 2014).
+\end{enumerate}
+
+\subsection{Including \elastix\ code in your own software}\label{ssec:dev:include}
 
 You may find some \elastix\ classes useful to integrate in your own project.
 For example, if you are developing a new \elastix\ component and first would
@@ -2727,6 +2749,210 @@ such as elxCommon, to avoid recompiling code.
 
 An example of this can be found in the directory \texttt{dox/externalproject}
 of the elastix source distribution.
+
+\subsection{Using \elastix\ as a library}\label{ssec:dev:library}
+
+\subsubsection{Introduction}
+
+\elastix\ also offers the possibility to be used as dynamic or
+static linked library. This offers the possibility to integrate its
+functionality in your own software, without having to call the
+external \elastix\ executable. The latter namely has the downside
+that your software, which presumably already has the fixed and
+moving images in memory, has to store these images to disk.
+\elastix\ will then load them again (so they will be in memory
+twice), perform the registration, and write the result to disk. Your
+software then needs to load the result from the disk to memory. This
+approach obviously leads to an increase in memory use, decrease in
+performance due to the reading/writing overhead, and is just not
+very elegant. When using \elastix\ as a library your software only
+has to pass memory pointers to the library interface, so there is no
+need for reading/writing or in-memory image duplication. After
+registration \elastix\ will pass a pointer to the resulting image
+back to your program.
+
+Library functionality is still quite heavily under development, but
+the following basic functionality is already available:
+\begin{itemize}
+\item Registration of any pair of images using any combination of
+\elastix\ components.
+
+\item Usage of registration masks.
+
+\item Usage of multiple parameter files consecutively (similar to
+using the -p option of the \elastix\ executable multiple times).
+
+\item Using \transformix\ to transform an image.
+\end{itemize}
+
+\subsubsection{Building \elastix\ as a static or dynamic library}
+
+To build \elastix\ as a library you have to disable the
+\texttt{ELASTIX\_BUILD\_EXECUTABLE} option in CMake. With this
+option disabled a build project for a static library will be
+created. If you want to create a dynamic library (not very well
+tested), you have to enable the \texttt{ELASTIX\_BUILD\_SHARED\_LIBS}
+option.
+
+\subsubsection{Linking with the \elastix\ library}
+
+When building your own software project, you need to link \elastix\
+and provide the \elastix\ source directory as an include directory
+to your compiler. You can do this, for example, by adding the
+following code to your CMakeLists.txt file:
+\begin{quote}
+\begin{verbatim}
+set( ELASTIX_BUILD_DIR "" CACHE PATH "Path to elastix build folder" )
+set( ELASTIX_USE_FILE ${ELASTIX_BUILD_DIR}/UseElastix.cmake )
+
+if( EXISTS ${ELASTIX_USE_FILE} )
+  include( ${ELASTIX_USE_FILE} )
+  link_libraries( param )
+  link_libraries( elastix )
+  link_libraries( transformix )
+endif()
+\end{verbatim}
+\end{quote}
+
+This will add a parameter to CMake, \texttt{ELASTIX\_BUILD\_DIR},
+which needs to be provided by the user upon running CMake. You
+should provide the directory in which you have build the \elastix\
+sources (the directory having the \texttt{UseElastix.cmake} file).
+If you want to control better to which binaries you link \elastix,
+use the CMake \texttt{target\_link\_libraries} directive instead.
+
+\subsubsection{Preparing registration parameter settings}
+
+To be able to run \elastix, you need to prepare the parameter
+settings first. You can do this for example by reading them from
+file:
+\begin{quote}
+\begin{verbatim}
+#include "elastixlib.h"
+#include "itkParameterFileParser.h"
+typedef ELASTIX::ParameterMapType RegistrationParametersType;
+typedef itk::ParameterFileParser  ParserType;
+
+// Create parser for transform parameters text file.
+ParserType::Pointer file_parser = ParserType::New();
+
+// Try parsing transform parameters text file.
+file_parser->SetParameterFileName( "par_registration.txt" );
+try
+{
+  file_parser->ReadParameterFile();
+}
+catch( itk::ExceptionObject & e )
+{
+  std::cout << e.what() << std::endl;
+  // Do some error handling!
+}
+
+// Retrieve parameter settings as map.
+RegistrationParametersType parameters = file_parser->GetParameterMap();
+\end{verbatim}
+\end{quote}
+
+If you want to use multiple parameter files consecutively, load them
+one by one and add them to a vector:
+\begin{quote}
+\begin{verbatim}
+typedef std::vector<RegistrationParametersType> RegistrationParametersContainerType;
+\end{verbatim}
+\end{quote}
+Then use this vector in the code below instead of the single
+parameter map. You can also set up the parameter map in your C++
+code. Check the typedef of \texttt{ELASTIX::ParameterMapType} for
+the exact format.
+
+\subsubsection{Running \elastix}
+
+Once the parameter settings are loaded, run \elastix using, for
+example, the following code:
+\begin{quote}
+\begin{verbatim}
+ELASTIX* elastix = new ELASTIX();
+int error = 0;
+try
+{
+  error = elastix->RegisterImages(
+    static_cast<typename itk::DataObject::Pointer>( fixed_image.GetPointer() ),
+    static_cast<typename itk::DataObject::Pointer>( moving_image.GetPointer() ),
+    parameters,        // Parameter map read in previous code
+    output_directory,  // Directory where output is written, if enabled
+    write_log_file,    // Enable/disable writing of elastix.log
+    output_to_console, // Enable/disable output to console
+    0,                 // Provide fixed image mask (optional, 0 = no mask)
+    0                  // Provide moving image mask (optional, 0 = no mask)
+  );
+}
+catch( itk::ExceptionObject &err )
+{
+  // Do some error handling.
+}
+
+if( error == 0 )
+{
+  if( elastix ->GetResultImage().IsNotNull() )
+  {
+    // Typedef the ITKImageType first...
+    ITKImageType * output_image = static_cast<ITKImageType *>(
+      elastix->GetResultImage().GetPointer() );
+}
+else
+{
+  // Registration failure. Do some error handling.
+}
+
+// Get transform parameters of all registration steps.
+RegistrationParametersContainerType transform_parameters
+  = elastix->GetTransformParameterMapList();
+
+// Clean up memory.
+delete elastix;
+\end{verbatim}
+\end{quote}
+
+\subsubsection{Running transformix}
+
+Given the transformation parameters provided by the \texttt{ELASTIX}
+class, you can run \transformix:
+\begin{quote}
+\begin{verbatim}
+TRANSFORMIX* transformix = new TRANSFORMIX();
+int error = 0;
+try
+{
+  error = transformix->TransformImage(
+    static_cast<typename itk::DataObject::Pointer>( input_image_adapter.GetPointer() ),
+    transform_parameters, // Parameters resulting from elastix run
+    write_log_file,       // Enable/disable writing of transformix.log
+    output_to_console);   // Enable/disable output to console
+}
+catch( itk::ExceptionObject &err )
+{
+  // Do some error handling.
+}
+
+if( error == 0 )
+{
+  // Typedef the ITKImageType first...
+  ITKImageType * output_image = static_cast<ITKImageType *>(
+    transformix->GetResultImage().GetPointer() );
+}
+else
+{
+  // Do some error handling.
+}
+
+// Clean up memory.
+delete transformix;
+\end{verbatim}
+\end{quote}
+Alternatively, you can read the transformation parameters from file
+(for example, from \texttt{TransformParameters.0.txt}) using the
+parameter file parser in the same way as was shown for the
+registration parameters above.
 
 \section{Creating new components}\label{sec:dev:newcomp}
 
