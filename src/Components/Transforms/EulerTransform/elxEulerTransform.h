@@ -200,6 +200,12 @@ public:
    * It writes the center of rotation to file and calls the superclass' implementation.
    */
   virtual void WriteToFile( const ParametersType & param ) const;
+  
+  /** Function to create transform-parameters map. 
+   * Creates the TransformParametersmap
+   */
+  virtual void CreateTransformParametersMap(
+    const ParametersType & param, ParameterMapType * paramsMap ) const;
 
 protected:
 
