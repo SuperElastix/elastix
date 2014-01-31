@@ -80,6 +80,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Threading related variables. */
   this->m_UseMetricSingleThreaded = true;
+  this->m_UseMultiThread = false;
 
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP
