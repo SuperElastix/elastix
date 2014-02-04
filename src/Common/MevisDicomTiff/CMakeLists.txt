@@ -7,14 +7,13 @@ IF( ELASTIX_USE_MEVISDICOMTIFF )
     itkMevisDicomTiffImageIO.cxx
     itkMevisDicomTiffImageIOFactory.cxx
     itkUseMevisDicomTiff.cxx
-
+  )
 ELSE()
   # avoid dependencies, but compile the lib, so that customers of this 
   # lib can just call RegisterMevisDicomTiff without checking.
   ADD_LIBRARY( mevisdcmtiff
     itkUseMevisDicomTiff.cxx
   )
-
 ENDIF()
 
 TARGET_LINK_LIBRARIES( mevisdcmtiff ${ITK_LIBRARIES} )
