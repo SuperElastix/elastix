@@ -60,7 +60,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
   // ***TODO: Should we store coefficients in a variable or retrieve from filter?
   m_Coefficients = CoefficientImageType::New();
   this->SetSplineOrder( SplineOrder );
-  this->m_UseImageDirection = false;
+  this->m_UseImageDirection = true;
 }
 
 
