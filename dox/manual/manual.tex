@@ -142,6 +142,8 @@ for some common problems.
 
 \item When you are still stuck, do not hesitate to send an e-mail to the
     \elastix\ mailing list. In general, you will soon get an answer.
+    To subscribe visit
+    \url{http://lists.bigr.nl/mailman/listinfo/elastix}.
 \end{itemize}
 
 \section{Acknowledgements}
@@ -974,8 +976,8 @@ similarity coefficient (DSC) is used:
 where $X$ and $Y$ represent the binary label images, and $|\cdot|$
 denotes the number of voxels that equal 1. A higher DSC indicates a
 better correspondence. A value of 1 indicates perfect overlap, a
-value of 0 means no overlap at all. Also the Tannimoto (TC)
-coefficient is used often. It is related to the DSC by
+value of 0 means no overlap at all. Also the Tannimoto coefficient
+(TC) is used often. It is related to the DSC by
 $\mathrm{DSC}=2\mathrm{TC}/(\mathrm{TC}+1)$. See also
 \cite{Cru06:Generalized}. It is important to realise that the
 surface-volume ratio of the segmented structures influences the
@@ -1054,8 +1056,9 @@ VV & $\checkmark$ & $\checkmark\checkmark\checkmark$ &
 \url{http://www.creatis.insa-lyon.fr/rio/vv} The 4D Slicer, a fast
 and simple viewer. VV is more specifically designed for qualitative
 evaluation of image registration and deformation field
-visualization. A tutorial on the use of VV in combination with elastix
-can be found in Appendix \ref{chp:vvtutorial} of this manual.\\
+visualization. A tutorial on the use of VV in combination with
+\elastix\ can be found in Appendix \ref{chp:vvtutorial} of this
+manual. \\
 \end{tabular*}
 \caption{A number of visualization tools. The three marks for the
 platforms column denote Windows, Linux and Mac OSX support,
@@ -1085,7 +1088,9 @@ SVN repository & \url{https://svn.bigr.nl/elastix/trunkpublic} \\
 Dashboard      & \url{http://my.cdash.org/index.php?project=elastix} \\
 WIKI           & \url{http://elastix.isi.uu.nl/wiki.php} \\
 FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php} \\
-Mailing list   & \url{elastix@bigr.nl} (subscription via website) \\
+Mailing list subscription &
+\url{http://lists.bigr.nl/mailman/listinfo/elastix} \\
+Mailing list   & \url{elastix@bigr.nl}
 \end{tabular}
 \end{table}
 
@@ -1134,8 +1139,8 @@ thanks to human readable and editable parameter file;
 \item easy to use for large amounts of data, since \elastix\ can be
 called easily in a script;
 
-\item fast, thanks to stochastic subsampling, if desired, and thanks to
-multi-threading and code optimizations;
+\item fast, thanks to stochastic subsampling \cite{KleinEA07}, and thanks to
+multi-threading and code optimizations \cite{Shamonin2014};
 
 \item relatively easy to extend, i.e. to add new components, so it is
 very suited for research also.
@@ -1160,9 +1165,9 @@ pre-compiled binaries.
 
 \item Make sure your operating system can find the program:
     \begin{enumerate}
-    \item Windows XP: Go to the control panel, go to ``System'', go to
-    the tab ``Advanced'', click ``Environmental variables'', add \texttt{folder}
-    to the variable ``path''.
+    \item Windows 7: Go to the control panel, go to ``System'', go to
+    ``Advanced system settings'', click ``Environmental variables'',
+    add \texttt{folder} to the variable ``path''.
 
     \item Linux: Add the following lines to your \texttt{.bashrc} file:
        \begin{quote}
@@ -1254,12 +1259,12 @@ ON.
 \section{How to call \elastix}\label{sec:elastix:call}
 
 \elastix\ is a command line program, although since version 4.7
-(January 2014) initial support for a library interface is available,
-see Section \ref{ssec:dev:library}. This means that you have to open
-a command line interface (a DOS-box, a shell) and type in an
-appropriate \elastix\ command. This also means that there is no
-graphical user interface. Help on using the program can be acquired
-as follows:
+(February 2014) initial support for a library interface is
+available, see Section \ref{ssec:dev:library}. This means that you
+have to open a command line interface (a DOS-box, a shell) and type
+in an appropriate \elastix\ command. This also means that there is
+no graphical user interface. Help on using the program can be
+acquired as follows:
 \begin{quote}
 \texttt{elastix --help}
 \end{quote}
@@ -2729,7 +2734,7 @@ Section \ref{ssec:dev:include}.
 
 \item Compile \elastix\ as a library and link to it, see
 Section \ref{ssec:dev:library}. This functionality is available as
-of version 4.7 (January 2014).
+of version 4.7 (February 2014).
 \end{enumerate}
 
 \subsection{Including \elastix\ code in your own software}\label{ssec:dev:include}
