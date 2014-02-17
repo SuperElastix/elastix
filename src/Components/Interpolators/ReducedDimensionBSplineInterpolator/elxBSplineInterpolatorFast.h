@@ -70,7 +70,7 @@ namespace elastix
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n
-     * example: <tt>(Interpolator "ReducedDimensionBSplineInterpolator")</tt>\n
+     * example: <tt>(Interpolator "BSplineInterpolatorFast")</tt>\n
      */
     elxClassNameMacro( "BSplineInterpolatorFast" );
 
@@ -127,5 +127,5 @@ namespace elastix
 #include "elxBSplineInterpolatorFast.hxx"
 #endif
 
-#endif // end #ifndef __elxReducedDimensionBSplineInterpolator_h
+#endif // end #ifndef __elxBSplineInterpolatorFast_h
 
