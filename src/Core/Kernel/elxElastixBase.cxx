@@ -221,15 +221,15 @@ ElastixBase::BeforeAllBase( void )
   }
 
   /** Check the very important UseDirectionCosines parameter. */
-  this->m_UseDirectionCosines = false;
+  this->m_UseDirectionCosines = true;
   bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines,
     "UseDirectionCosines", 0 );
   if( !retudc )
   {
     xl::xout[ "warning" ]
-      << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
-      << "the UseDirectionCosines option to your parameter file! See\n"
-      << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n"
+      << "\nWARNING: The option \"UseDirectionCosines\" was not found in your parameter file.\n"
+      << "  From elastix 4.8 it defaults to true!\n"
+      << "This may change the behavior of your registrations considerably.\n"
       << std::endl;
   }
 
