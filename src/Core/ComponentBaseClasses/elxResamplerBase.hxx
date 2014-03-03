@@ -138,9 +138,6 @@ void
 ResamplerBase< TElastix >
 ::AfterEachIterationBase( void )
 {
-  /** Set the final transform parameters. */
-  this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
-
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
@@ -155,6 +152,9 @@ ResamplerBase< TElastix >
   /** Writing result image. */
   if( writeResultImageThisIteration )
   {
+    /** Set the final transform parameters. */
+    this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
+
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
     this->m_Configuration->ReadParameter( resultImageFormat,
