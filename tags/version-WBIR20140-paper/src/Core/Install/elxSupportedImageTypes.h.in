@@ -1,0 +1,63 @@
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
+#ifndef __elxSupportedImageTypes_h
+#define __elxSupportedImageTypes_h
+
+#include "elxMacro.h"
+
+#include "elxInstallFunctions.h"
+#include "elxComponentDatabase.h"
+#include "elxBaseComponent.h"
+#include "elxElastixTemplate.h"
+#include "itkImage.h"
+
+namespace elastix
+{
+
+  elxPrepareImageTypeSupportMacro();
+
+
+  /**
+   * ******************** SupportedImageTypes *********************
+   *
+   * Add here the combinations of ImageTypes that elastix should support.
+   *
+   * Syntax:
+   *
+   * elxSupportedImageTypeMacro( FixedImagePixelType,
+   *                             FixedImageDimension,
+   *                             MovingImagePixelType,
+   *                             MovingImageDimension,
+   *                             Index )
+   *
+   * Each combination of image types has as 'ID', the Index.
+   * Duplicate indices are not allowed. Index 0 is not allowed.
+   * The indices must form a "continuous series":
+   *    ( index_{i} - index_{i-1} == 1 ).
+   *
+   * The NrOfSupportedImageTypes must also be set to the right value.
+   *
+   * elastix, and all its components, must be recompiled after adding
+   * a line in this file.
+   */
+
+  // CMake will substitute the following line with
+  // user-defined image types:
+  @UserDefinedSupportedImageTypes@
+
+} // end namespace elastix
+
+#endif // end #ifndef __elxSupportedImageTypes_h
+

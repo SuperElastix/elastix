@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# convert to eps
+# the results are saved to reseps. these can be copied to the images
+# directory, to be used in latex
+
+mkdir -p temp
+mkdir -p reseps
+
+inim="im/fixed_t1.mhd"
+outmhd="temp/temp.mhd"
+outbmp="temp/temp.bmp"
+outeps="reseps/transformexample_fixed.eps"
+pxintensitywindowing -in $inim -out $outmhd -w 0 255
+pxcastconvert -in $outmhd -out $outbmp -opct unsigned_char
+convert $outbmp $outeps
+
+trans="orig tran rig aff bsp"
+
+for tt in $trans
+do
+  inim="res/$tt/resgrid.mhd"
+  outmhd="temp/temp.mhd"
+  outbmp="temp/temp.bmp"
+  outeps="reseps/transformexample_$tt.eps"
+  
+  pxintensitywindowing -in $inim -out $outmhd -w 0 255
+  pxcastconvert -in $outmhd -out $outbmp -opct unsigned_char
+  convert $outbmp $outeps
+
+done
+
+rm -r temp
+
+

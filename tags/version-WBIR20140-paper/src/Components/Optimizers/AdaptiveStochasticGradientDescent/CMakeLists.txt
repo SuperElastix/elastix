@@ -1,0 +1,14 @@
+
+
+ADD_ELXCOMPONENT( AdaptiveStochasticGradientDescent
+ elxAdaptiveStochasticGradientDescent.h
+ elxAdaptiveStochasticGradientDescent.hxx
+ elxAdaptiveStochasticGradientDescent.cxx
+ itkAdaptiveStochasticGradientDescentOptimizer.h
+ itkAdaptiveStochasticGradientDescentOptimizer.cxx
+ ../StandardGradientDescent/itkStandardGradientDescentOptimizer.cxx
+ ../StandardGradientDescent/itkGradientDescentOptimizer2.cxx
+)
+
+
+

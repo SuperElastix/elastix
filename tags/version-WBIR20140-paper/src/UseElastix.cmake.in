@@ -1,0 +1,35 @@
+#
+# To use elastix-code in your own program, add the following
+# cmake code to your CMakeLists file:
+#
+# SET( ELASTIX_BINARY_DIR "" CACHE PATH "Path to elastix binary folder" )
+# SET( ELASTIX_USE_FILE ${ELASTIX_BINARY_DIR}/UseElastix.cmake )
+# IF( EXISTS ${ELASTIX_USE_FILE} )
+#  MESSAGE( STATUS "Including Elastix settings.")
+#  INCLUDE( ${ELASTIX_USE_FILE} )
+# ENDIF()
+#
+
+# Set all necessary include directories for elastix
+SET( ELASTIX_INCLUDE_DIRECTORIES @elxINCLUDE_DIRECTORIES@ )
+INCLUDE_DIRECTORIES( ${ELASTIX_INCLUDE_DIRECTORIES} )
+
+# Set the directory that contains the elastix libraries,
+# such as elxCore, elxCommon, xoutlib etc.
+LINK_DIRECTORIES( "@LIBRARY_OUTPUT_PATH@" )
+
+# Read in the library dependencies
+INCLUDE( "@elxLIBRARY_DEPENDS_FILE@" )
+
+# Set some variables that the user might want to use
+SET( ELASTIX_USE_CUDA @ELASTIX_USE_CUDA@ )
+SET( ELASTIX_USE_MEVISDICOMTIFF @ELASTIX_USE_MEVISDICOMTIFF@ )
+SET( ELASTIX_DOX_DIR @ELASTIX_DOX_DIR@ )
+SET( ELASTIX_HELP_DIR @ELASTIX_HELP_DIR@ )
+SET( ELASTIX_VERSION @ELASTIX_VERSION@ )
+SET( ELASTIX_VERSION_MAJOR @ELASTIX_VERSION_MAJOR@ )
+SET( ELASTIX_VERSION_MINOR @ELASTIX_VERSION_MINOR@ )
+
+# The entire list of all components libraries.
+SET( ELASTIX_ALL_COMPONENT_LIBS @AllComponentLibs@ )
+

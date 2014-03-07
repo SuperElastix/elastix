@@ -1,0 +1,8 @@
+#!/bin/bash
+
+pxcreategridimage -out im/grid32.mhd -sz 256 256 -d 32
+
+pxunaryimageoperator -in im/grid32.mhd -out im/grid32.mhd -ops TIMES -arg 200
+
+pxgaussianimagefilter -in im/grid32.mhd -out im/grid32.mhd -std 0.5 0.5 -ord 0 0 
+

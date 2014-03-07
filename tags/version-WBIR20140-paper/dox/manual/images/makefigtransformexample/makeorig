@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# apply affine transform and add grid.
+#
+# save the result without grid also as new moving image
+
+transformix -in im/moving_pd.mhd -tp par/t0.txt -out res/orig
+
+pxcastconvert -in res/orig/result.mhd -out im/newmoving.mhd -z
+
+pxbinaryimageoperator -in im/newmoving.mhd im/grid32.mhd -out res/orig/resgrid.mhd -ops ABSDIFF 
+
+
+
+
+

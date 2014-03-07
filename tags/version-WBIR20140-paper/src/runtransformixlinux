@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# runtransformixlinux
+#
+# Script to run transformix on linux when the
+# libANNlib.so cannot be found.
+#
+# Usage:
+#
+#   runtransformixlinux ...
+#
+# with ... referring to all arguments you normally
+# would use for transformix.
+#
+
+
+# find transformix executable that is used
+whichtransformix=`which transformix`
+
+# extract the path to transformix
+#
+# ${string%substring}
+# strips shortest match of $substring from back of $string.
+transformixpath=${whichtransformix%/transformix}
+
+# add the path temporarily to the LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$transformixpath:$LD_LIBRARY_PATH
+
+# run transformix with the supplied command-line arguments
+transformix $*
+
+# after exitting this script, the LD_LIBRARY_PATH is
+# automatically as it was before running this script.
+
