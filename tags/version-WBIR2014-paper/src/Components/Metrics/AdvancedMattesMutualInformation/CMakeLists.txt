@@ -1,8 +1,0 @@
-
-ADD_ELXCOMPONENT( AdvancedMattesMutualInformationMetric
- elxAdvancedMattesMutualInformationMetric.h
- elxAdvancedMattesMutualInformationMetric.hxx
- elxAdvancedMattesMutualInformationMetric.cxx
- itkParzenWindowMutualInformationImageToImageMetric.h
- itkParzenWindowMutualInformationImageToImageMetric.hxx )
-

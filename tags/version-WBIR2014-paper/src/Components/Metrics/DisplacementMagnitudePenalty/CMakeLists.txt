@@ -1,9 +1,0 @@
-
-ADD_ELXCOMPONENT( DisplacementMagnitudePenalty OFF
- elxDisplacementMagnitudePenalty.h
- elxDisplacementMagnitudePenalty.hxx
- elxDisplacementMagnitudePenalty.cxx
- itkDisplacementMagnitudePenaltyTerm.h
- itkDisplacementMagnitudePenaltyTerm.txx
-)
-
