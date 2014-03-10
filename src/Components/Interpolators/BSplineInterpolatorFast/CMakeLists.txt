@@ -1,5 +1,5 @@
-ADD_ELXCOMPONENT( BSplineInterpolatorFast
- elxBSplineInterpolatorFast.h
- elxBSplineInterpolatorFast.hxx
- elxBSplineInterpolatorFast.cxx )
+ADD_ELXCOMPONENT( RecursiveBSplineInterpolator
+ elxRecursiveBSplineInterpolator.h
+ elxRecursiveBSplineInterpolator.hxx
+ elxRecursiveBSplineInterpolator.cxx )
 
