@@ -15,16 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-/*=========================================================================
- *
- *  Portions of this file are subject to the VTK Toolkit Version 3 copyright.
- *
- *  Copyright (c) Ken Martin, Will Schroeder, Bill Lorensen
- *
- *  For complete copyright, license and disclaimer of warranty information
- *  please refer to the NOTICE file at the top of the ITK source tree.
- *
- *=========================================================================*/
 #ifndef __itkAdvancedInterpolateImageFunction_h
 #define __itkAdvancedInterpolateImageFunction_h
 
@@ -37,6 +27,21 @@ template< class TInputImage, class TCoordRep = double >
 class ITK_EXPORT AdvancedInterpolateImageFunction:
         public InterpolateImageFunction< TInputImage,TCoordRep >
 {
+    /** \class AdvancedInterpolateImageFunction
+     * \brief Interpolate image function base class, with added methods.
+     *
+     * AdvancedInterpolateImageFunction is the advanced base for the
+     * RecursiveBSplineInterpolateImageFunction class. This class is templated over
+     * the input image type and the coordinate representation type
+     * (e.g. float or double ). This class inherits from the
+     * InterpolateImageFunction class.
+     *
+     * AdvancedInterpolateImageFunction
+     * \ingroup ImageFunctions ImageInterpolators
+     * \ingroup ITKImageFunction
+     *
+     */
+
 public:
     /** Standard class typedefs. */
     typedef AdvancedInterpolateImageFunction                Self;
@@ -44,18 +49,40 @@ public:
     typedef SmartPointer< Self >                              Pointer;
     typedef SmartPointer< const Self >                        ConstPointer;
 
+    /** Run-time type information (and related methods). */
     itkTypeMacro(AdvancedInterpolateImageFunction, InterpolateImageFunction);
 
+    /** OutputType typedef support. */
     typedef typename Superclass::OutputType OutputType;
-    typedef typename Superclass::InputImageType InputImageType;
-    itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
-    typedef typename Superclass::PointType PointType;
-    typedef typename Superclass::IndexType IndexType;
-    typedef typename Superclass::IndexValueType IndexValueType;
-    typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
-    typedef typename NumericTraits< typename TInputImage::PixelType >::RealType RealType;
     typedef CovariantVector< OutputType, itkGetStaticConstMacro(ImageDimension) >    CovariantVectorType;
 
+    /** InputImageType typedef support. */
+    typedef typename Superclass::InputImageType InputImageType;
+
+    /** Dimension underlying input image. */
+    itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
+
+    /** Point typedef support. */
+    typedef typename Superclass::PointType PointType;
+
+    /** Index typedef support. */
+    typedef typename Superclass::IndexType IndexType;
+    typedef typename Superclass::IndexValueType IndexValueType;
+
+    /** ContinuousIndex typedef support. */
+    typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
+
+    /** RealType typedef support. */
+    typedef typename NumericTraits< typename TInputImage::PixelType >::RealType RealType;
+
+    /** Interpolate the image at a point position
+     *
+     * Returns the interpolated image intensity at a
+     * specified point position. No bounds checking is done.
+     * The point is assume to lie within the image buffer.
+     *
+     * ImageFunction::IsInsideBuffer() can be used to check bounds before
+     * calling the method. */
     virtual OutputType Evaluate(const PointType & point) const
     {
       ContinuousIndexType index;
@@ -64,12 +91,36 @@ public:
       return ( this->EvaluateAtContinuousIndex(index) );
     }
 
+    /** Interpolate the image at a continuous index position
+     *
+     * Returns the interpolated image intensity at a
+     * specified index position. No bounds checking is done.
+     * The point is assume to lie within the image buffer.
+     *
+     * Subclasses must override this method.
+     *
+     * ImageFunction::IsInsideBuffer() can be used to check bounds before
+     * calling the method. */
     virtual OutputType Evaluate(const PointType & point, ThreadIdType threadID) const = 0;
+
+    /** Interpolate the image at an index position.
+     *
+     * Simply returns the image value at the
+     * specified index position. No bounds checking is done.
+     * The point is assume to lie within the image buffer.
+     *
+     * ImageFunction::IsInsideBuffer() can be used to check bounds before
+     * calling the method. */
     virtual OutputType EvaluateAtIndex(const IndexType & index) const
     {
       return ( static_cast< RealType >( this->GetInputImage()->GetPixel(index) ) );
     }
 
+    /** Interpolate the image at an index position.
+     *
+     * The virtual methods below are necessary for the recursiveBSplineInterpolateImageFunction class.
+     *
+     */
     virtual OutputType EvaluateAtContinuousIndex(const ContinuousIndexType & index) const = 0;
     virtual OutputType EvaluateAtContinuousIndex(const ContinuousIndexType & index, ThreadIdType threadID) const = 0;
 
@@ -80,7 +131,7 @@ public:
 
     virtual void EvaluateValueAndDerivative(const PointType & point, OutputType & value,CovariantVectorType & deriv) const = 0;
     virtual void EvaluateValueAndDerivative(const PointType & point, OutputType & value,CovariantVectorType & deriv,ThreadIdType threadID) const = 0;
-    //virtual void EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x, OutputType & value,CovariantVectorType & deriv) const = 0;
+    virtual void EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x, OutputType & value,CovariantVectorType & deriv) const = 0;
     virtual void EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x, OutputType & value,CovariantVectorType & deriv, ThreadIdType threadID) const = 0;
 
     virtual void SetNumberOfThreads(ThreadIdType numThreads)=0;
@@ -93,8 +144,8 @@ public:
 
 
 private:
-    AdvancedInterpolateImageFunction(const Self &);
-    void operator=(const Self &);
+    AdvancedInterpolateImageFunction(const Self &); //purposely not implemented
+    void operator=(const Self &);                   //purposely not implemented
 };
 } // namespace itk
 
