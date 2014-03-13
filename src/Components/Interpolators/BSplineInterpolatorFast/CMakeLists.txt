@@ -1,5 +1,0 @@
-ADD_ELXCOMPONENT( RecursiveBSplineInterpolator
- elxRecursiveBSplineInterpolator.h
- elxRecursiveBSplineInterpolator.hxx
- elxRecursiveBSplineInterpolator.cxx )
-
