@@ -21,8 +21,7 @@
 #include "itkGradientImageFilter.h"
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkReducedDimensionBSplineInterpolateImageFunction.h"
-#include "itkBSplineInterpolateImageFunctionWykeBase.h"
-//#include "itkReducedDimensionBSplineInterpolateImageFunctionWykeBase.h"
+#include "itkRecursiveBSplineInterpolateImageFunctionWrapper.h"
 #include "itkAdvancedLinearInterpolateImageFunction.h"
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
@@ -265,10 +264,8 @@ protected:
     MovingImageType, CoordinateRepresentationType, float>       BSplineInterpolatorFloatType;
   typedef ReducedDimensionBSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType, double>      ReducedBSplineInterpolatorType;
-  typedef BSplineInterpolateImageFunctionWykeBase<
-  MovingImageType, CoordinateRepresentationType, double>        BSplineInterpolatorFastType;
-  //typedef ReducedDimensionBSplineInterpolateImageFunctionWykeBase<
-  //MovingImageType, CoordinateRepresentationType, double>        ReducedDimensionBSplineInterpolatorFastType;
+  typedef RecursiveBSplineInterpolateImageFunctionWrapper<
+  MovingImageType, CoordinateRepresentationType, double>        RecursiveBSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef GradientImageFilter<
     MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
@@ -289,16 +286,14 @@ protected:
   bool m_InterpolatorIsBSpline;
   bool m_InterpolatorIsBSplineFloat;
   bool m_InterpolatorIsReducedBSpline;
-  bool m_InterpolatorIsBSplineFast;
+  bool m_InterpolatorIsRecursiveBSpline;
   bool m_InterpolatorIsLinear;
-  //bool m_InterpolatorIsReducedBSplineFast;
   typename LinearInterpolatorType::Pointer              m_LinearInterpolator;
-  typename BSplineInterpolatorFastType::Pointer         m_FastBSplineInterpolator;
+  typename RecursiveBSplineInterpolatorType::Pointer    m_RecursiveBSplineInterpolator;
   typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
   typename BSplineInterpolatorFloatType::Pointer        m_BSplineInterpolatorFloat;
   typename ReducedBSplineInterpolatorType::Pointer      m_ReducedBSplineInterpolator;
   typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
-  //typename ReducedDimensionBSplineInterpolatorFastType::Pointer m_ReducedBSplineInterpolatorFast;
 
   /** Variables to store the AdvancedTransform. */
   bool m_TransformIsAdvanced;

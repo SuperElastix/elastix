@@ -46,15 +46,13 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_BSplineInterpolator = 0;
   this->m_BSplineInterpolatorFloat = 0;
   this->m_ReducedBSplineInterpolator = 0;
-  this->m_FastBSplineInterpolator = 0;
+  this->m_RecursiveBSplineInterpolator = 0;
   this->m_LinearInterpolator = 0;
-  //this->m_ReducedDimensionBSplineInterpolatorFast = 0;
 
   this->m_InterpolatorIsBSpline = false;
   this->m_InterpolatorIsBSplineFloat = false;
   this->m_InterpolatorIsReducedBSpline = false;
-  this->m_InterpolatorIsBSplineFast = false;
-  //this->m_InterpolatorIsReducedBSplineFast = false;
+  this->m_InterpolatorIsRecursiveBSpline = false;
   this->m_CentralDifferenceGradientFilter = 0;
 
   this->m_AdvancedTransform = 0;
@@ -375,20 +373,20 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     itkDebugMacro( "Interpolator is not ReducedBSpline" );
   }
 
-  this->m_InterpolatorIsBSplineFast = false;
-  BSplineInterpolatorFastType * testPtr4 =
-    dynamic_cast<BSplineInterpolatorFastType *>( this->m_Interpolator.GetPointer() );
+  this->m_InterpolatorIsRecursiveBSpline = false;
+  RecursiveBSplineInterpolatorType * testPtr4 =
+    dynamic_cast<RecursiveBSplineInterpolatorType *>( this->m_Interpolator.GetPointer() );
 
   if ( testPtr4 )
   {
-    this->m_InterpolatorIsBSplineFast = true;
-    this->m_FastBSplineInterpolator = testPtr4;
-    itkDebugMacro( "Interpolator is BSplineFast" );
+    this->m_InterpolatorIsRecursiveBSpline = true;
+    this->m_RecursiveBSplineInterpolator = testPtr4;
+    itkDebugMacro( "Interpolator is RecursiveBSpline" );
   }
   else
   {
-    this->m_FastBSplineInterpolator = 0;
-    itkDebugMacro( "Interpolator is not BSplineFast" );
+    this->m_RecursiveBSplineInterpolator = 0;
+    itkDebugMacro( "Interpolator is not RecursiveBSpline" );
   }
 
   this->m_InterpolatorIsLinear = false;
@@ -404,21 +402,6 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     this->m_LinearInterpolator = 0;
   }
 
-//  this->m_ReducedDimensionInterpolatorIsBSplineFast = false;
-//  ReducedDimensionBSplineInterpolatorFastType * testPtr6 =
-//    dynamic_cast<ReducedDimensionBSplineInterpolatorFastType *>( this->m_Interpolator.GetPointer() );
-
-//  if ( testPtr6 )
-//  {
-//    this->m_InterpolatorIsReducedDimensionBSplineFast = true;
-//    this->m_ReducedDimensionFastBSplineInterpolatorFast = testPtr6;
-//    itkDebugMacro( "Interpolator is ReducedDimensionBSplineFast" );
-//  }
-//  else
-//  {
-//    this->m_ReducedDimensionBSplineInterpolatorFas = 0;
-//    itkDebugMacro( "Interpolator is not ReducedDimensionBSplineFast" );
-//  }
   /** Don't overwrite the gradient image if GetComputeGradient() == true.
    * Otherwise we can use a forward difference derivative, or the derivative
    * provided by the B-spline interpolator.
@@ -542,18 +525,12 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
           //this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
           //  cindex, movingImageValue, *gradient );
         }
-        else if( this->m_InterpolatorIsBSplineFast && !this->GetComputeGradient() )
+        else if( this->m_InterpolatorIsRecursiveBSpline && !this->GetComputeGradient() )
         {
           /** Compute moving image value and gradient using the linear interpolator. */
-          this->m_FastBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+          this->m_RecursiveBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
             cindex, movingImageValue, *gradient );
         }
-//        else if( this->m_ReducedDimensionInterpolatorIsBSplineFast && !this->GetComputeGradient() )
-//        {
-          /** Compute moving image value and gradient using the linear interpolator. */
-//          this->m_ReducedDimensionBSplineInterpolatorFast->EvaluateValueAndDerivativeAtContinuousIndex(
-//            cindex, movingImageValue, *gradient );
-//        }
         else if( this->m_InterpolatorIsLinear && !this->GetComputeGradient() )
         {
           /** Compute moving image value and gradient using the linear interpolator. */
