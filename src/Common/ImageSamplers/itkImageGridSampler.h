@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __ImageGridSampler_h
 #define __ImageGridSampler_h
 
@@ -37,17 +36,17 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template < class TInputImage >
-class ImageGridSampler
-  : public ImageSamplerBase< TInputImage >
+template< class TInputImage >
+class ImageGridSampler :
+  public ImageSamplerBase< TInputImage >
 {
 public:
 
   /** Standard ITK-stuff. */
   typedef ImageGridSampler                Self;
-  typedef ImageSamplerBase< TInputImage >   Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef ImageSamplerBase< TInputImage > Superclass;
+  typedef SmartPointer< Self >            Pointer;
+  typedef SmartPointer< const Self >      ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -66,6 +65,7 @@ public:
   typedef typename Superclass::InputImagePixelType          InputImagePixelType;
   typedef typename Superclass::ImageSampleType              ImageSampleType;
   typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
   typedef typename Superclass::MaskType                     MaskType;
 
   /** The input image dimension. */
@@ -73,9 +73,9 @@ public:
     Superclass::InputImageDimension );
 
   /** Other typdefs. */
-  typedef typename Superclass::InputImageIndexType          InputImageIndexType;
-  typedef typename Superclass::InputImageSpacingType        InputImageSpacingType;
-  typedef typename Superclass::InputImagePointType          InputImagePointType;
+  typedef typename Superclass::InputImageIndexType InputImageIndexType;
+  //typedef typename Superclass::InputImageSpacingType        InputImageSpacingType;
+  typedef typename Superclass::InputImagePointType InputImagePointType;
 
   /** Typedefs for support of user defined grid spacing for the spatial samples. */
   typedef typename InputImageType::OffsetType             SampleGridSpacingType;
@@ -90,6 +90,7 @@ public:
    * that the user-set sample grid spacing is never overruled.
    */
   void SetSampleGridSpacing( const SampleGridSpacingType & arg );
+
   itkGetConstReferenceMacro( SampleGridSpacing, SampleGridSpacingType );
 
   /** Define an isotropic SampleGridSpacing such that the desired number
@@ -113,10 +114,11 @@ public:
   /** Selecting new samples makes no sense if nothing changed. The same
    * samples would be selected anyway.
    */
-   virtual bool SelectNewSamplesOnUpdate( void )
+  virtual bool SelectNewSamplesOnUpdate( void )
   {
     return false;
-  };
+  }
+
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
   virtual bool SelectingNewSamplesOnUpdateSupported( void ) const
@@ -124,13 +126,14 @@ public:
     return false;
   }
 
+
 protected:
 
   /** The constructor. */
   ImageGridSampler();
 
   /** The destructor. */
-  virtual ~ImageGridSampler() {};
+  virtual ~ImageGridSampler() {}
 
   /** PrintSelf. */
   void PrintSelf( std::ostream & os, Indent indent ) const;
@@ -147,12 +150,11 @@ protected:
 private:
 
   /** The private constructor. */
-  ImageGridSampler( const Self& );    // purposely not implemented
+  ImageGridSampler( const Self & );    // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );      // purposely not implemented
+  void operator=( const Self & );      // purposely not implemented
 
-}; // end class ImageGridSampler
-
+};
 
 } // end namespace itk
 
