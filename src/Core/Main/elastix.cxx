@@ -289,7 +289,7 @@ int main( int argc, char **argv )
   /** Stop totaltimer and print it. */
   totaltimer->StopTimer();
   elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
-
+  elxout << "Total time elapsed precise: " << totaltimer->GetElapsedClockSec() << "s \n" << std::endl;
   /**
    * Make sure all the components that are defined in a Module (.DLL/.so)
    * are deleted before the modules are closed.
