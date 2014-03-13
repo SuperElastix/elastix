@@ -45,9 +45,16 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
   this->m_BSplineInterpolator = 0;
   this->m_BSplineInterpolatorFloat = 0;
+  this->m_ReducedBSplineInterpolator = 0;
+  this->m_FastBSplineInterpolator = 0;
+  this->m_LinearInterpolator = 0;
+  //this->m_ReducedDimensionBSplineInterpolatorFast = 0;
+
   this->m_InterpolatorIsBSpline = false;
   this->m_InterpolatorIsBSplineFloat = false;
   this->m_InterpolatorIsReducedBSpline = false;
+  this->m_InterpolatorIsBSplineFast = false;
+  //this->m_InterpolatorIsReducedBSplineFast = false;
   this->m_CentralDifferenceGradientFilter = 0;
 
   this->m_AdvancedTransform = 0;
@@ -360,6 +367,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     this->m_InterpolatorIsReducedBSpline = true;
     this->m_ReducedBSplineInterpolator = testPtr3;
     itkDebugMacro( "Interpolator is ReducedBSpline" );
+    std::cout << "Interpolator is ReducedBSpline" << std::endl;
   }
   else
   {
@@ -367,6 +375,50 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     itkDebugMacro( "Interpolator is not ReducedBSpline" );
   }
 
+  this->m_InterpolatorIsBSplineFast = false;
+  BSplineInterpolatorFastType * testPtr4 =
+    dynamic_cast<BSplineInterpolatorFastType *>( this->m_Interpolator.GetPointer() );
+
+  if ( testPtr4 )
+  {
+    this->m_InterpolatorIsBSplineFast = true;
+    this->m_FastBSplineInterpolator = testPtr4;
+    itkDebugMacro( "Interpolator is BSplineFast" );
+  }
+  else
+  {
+    this->m_FastBSplineInterpolator = 0;
+    itkDebugMacro( "Interpolator is not BSplineFast" );
+  }
+
+  this->m_InterpolatorIsLinear = false;
+  LinearInterpolatorType * testPtr5
+    = dynamic_cast< LinearInterpolatorType * >( this->m_Interpolator.GetPointer() );
+  if( testPtr5 )
+  {
+    this->m_InterpolatorIsLinear = true;
+    this->m_LinearInterpolator   = testPtr5;
+  }
+  else
+  {
+    this->m_LinearInterpolator = 0;
+  }
+
+//  this->m_ReducedDimensionInterpolatorIsBSplineFast = false;
+//  ReducedDimensionBSplineInterpolatorFastType * testPtr6 =
+//    dynamic_cast<ReducedDimensionBSplineInterpolatorFastType *>( this->m_Interpolator.GetPointer() );
+
+//  if ( testPtr6 )
+//  {
+//    this->m_InterpolatorIsReducedDimensionBSplineFast = true;
+//    this->m_ReducedDimensionFastBSplineInterpolatorFast = testPtr6;
+//    itkDebugMacro( "Interpolator is ReducedDimensionBSplineFast" );
+//  }
+//  else
+//  {
+//    this->m_ReducedDimensionBSplineInterpolatorFas = 0;
+//    itkDebugMacro( "Interpolator is not ReducedDimensionBSplineFast" );
+//  }
   /** Don't overwrite the gradient image if GetComputeGradient() == true.
    * Otherwise we can use a forward difference derivative, or the derivative
    * provided by the B-spline interpolator.
@@ -460,59 +512,84 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   RealType & movingImageValue,
   MovingImageDerivativeType * gradient ) const
 {
-  /** Check if mapped point inside image buffer. */
-  MovingImageContinuousIndexType cindex;
-  this->m_Interpolator->ConvertPointToContinuousIndex( mappedPoint, cindex );
-  bool sampleOk = this->m_Interpolator->IsInsideBuffer( cindex );
-  if ( sampleOk )
-  {
-    /** Compute value and possibly derivative. */
-    movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-    if ( gradient )
+    /** Check if mapped point inside image buffer. */
+    MovingImageContinuousIndexType cindex;
+    this->m_Interpolator->ConvertPointToContinuousIndex( mappedPoint, cindex );
+    bool sampleOk = this->m_Interpolator->IsInsideBuffer( cindex );
+
+    if( sampleOk )
     {
-      if ( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
+      /** Compute value and possibly derivative. */
+      if( gradient )
       {
-        /** Computed moving image gradient using derivative B-spline kernel. */
-        (*gradient)
-          = this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
-      }
-      else if ( this->m_InterpolatorIsBSplineFloat && !this->GetComputeGradient() )
-      {
-        /** Computed moving image gradient using derivative B-spline kernel. */
-        (*gradient)
-          = this->m_BSplineInterpolatorFloat->EvaluateDerivativeAtContinuousIndex( cindex );
-      }
-      else if ( this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient() )
-      {
-        /** Computed moving image gradient using derivative BSpline kernel. */
-        (*gradient)
-          = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
-      }
+        if( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
+        {
+          /** Compute moving image value and gradient using the B-spline kernel. */
+          this->m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+            cindex, movingImageValue, *gradient );
+        }
+        else if( this->m_InterpolatorIsBSplineFloat && !this->GetComputeGradient() )
+        {
+          /** Compute moving image value and gradient using the B-spline kernel. */
+          this->m_BSplineInterpolatorFloat->EvaluateValueAndDerivativeAtContinuousIndex(
+            cindex, movingImageValue, *gradient );
+        }
+        else if( this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient() )
+        {
+          /** Compute moving image value and gradient using the B-spline kernel. */
+          movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
+          ( *gradient ) = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+          //this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+          //  cindex, movingImageValue, *gradient );
+        }
+        else if( this->m_InterpolatorIsBSplineFast && !this->GetComputeGradient() )
+        {
+          /** Compute moving image value and gradient using the linear interpolator. */
+          this->m_FastBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+            cindex, movingImageValue, *gradient );
+        }
+//        else if( this->m_ReducedDimensionInterpolatorIsBSplineFast && !this->GetComputeGradient() )
+//        {
+          /** Compute moving image value and gradient using the linear interpolator. */
+//          this->m_ReducedDimensionBSplineInterpolatorFast->EvaluateValueAndDerivativeAtContinuousIndex(
+//            cindex, movingImageValue, *gradient );
+//        }
+        else if( this->m_InterpolatorIsLinear && !this->GetComputeGradient() )
+        {
+          /** Compute moving image value and gradient using the linear interpolator. */
+          this->m_LinearInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+            cindex, movingImageValue, *gradient );
+        }
+        else
+        {
+          /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
+           * It is assumed that the gradient image is computed.
+           */
+          movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
+          MovingImageIndexType index;
+          for( unsigned int j = 0; j < MovingImageDimension; j++ )
+          {
+            index[ j ] = static_cast< long >( Math::Round< double >( cindex[ j ] ) );
+          }
+          ( *gradient ) = this->m_GradientImage->GetPixel( index );
+        }
+        if( this->m_UseMovingImageDerivativeScales )
+        {
+          for( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            ( *gradient )[ i ] *= this->m_MovingImageDerivativeScales[ i ];
+          }
+        }
+      } // end if gradient
       else
       {
-        /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
-         * It is assumed that the gradient image is computed.
-         */
-        MovingImageIndexType index;
-        for ( unsigned int j = 0; j < MovingImageDimension; j++ )
-        {
-          index[ j ] = static_cast<long>( vnl_math_rnd( cindex[ j ] ) );
-        }
-        (*gradient) = this->m_GradientImage->GetPixel( index );
+        movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
       }
-      if ( this->m_UseMovingImageDerivativeScales )
-      {
-        for ( unsigned int i = 0; i < MovingImageDimension; ++i )
-        {
-          (*gradient)[ i ] *= this->m_MovingImageDerivativeScales[ i ];
-        }
-      }
-    } // end if gradient
-  } // end if sampleOk
+    } // end if sampleOk
 
-  return sampleOk;
+    return sampleOk;
 
-} // end EvaluateMovingImageValueAndDerivative()
+  } // end EvaluateMovingImageValueAndDerivative()
 
 
 /**
