@@ -76,20 +76,21 @@ namespace itk
  * \ingroup Transforms
  *
  */
-template <class TScalarType,
-  unsigned int NInputDimensions = 3,
-  unsigned int NOutputDimensions = 3>
-class ITK_EXPORT AdvancedTransform
-  : public Transform< TScalarType, NInputDimensions, NOutputDimensions >
+template< class TScalarType,
+unsigned int NInputDimensions  = 3,
+unsigned int NOutputDimensions = 3 >
+class AdvancedTransform :
+  public Transform< TScalarType, NInputDimensions, NOutputDimensions >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef AdvancedTransform           Self;
+  typedef AdvancedTransform Self;
   typedef Transform< TScalarType,
     NInputDimensions,
     NOutputDimensions >               Superclass;
-  typedef SmartPointer< Self >        Pointer;
-  typedef SmartPointer< const Self >  ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** New method for creating an object using a factory. */
   //itkNewMacro( Self );
@@ -102,39 +103,47 @@ public:
   itkStaticConstMacro( OutputSpaceDimension, unsigned int, NOutputDimensions );
 
   /** Typedefs from the Superclass. */
-  typedef typename Superclass::ScalarType           ScalarType;
-  typedef typename Superclass::ParametersType       ParametersType;
+  typedef typename Superclass::ScalarType             ScalarType;
+  typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::ParametersValueType    ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::JacobianType         JacobianType;
-  typedef typename Superclass::InputVectorType      InputVectorType;
-  typedef typename Superclass::OutputVectorType     OutputVectorType;
+  typedef typename Superclass::JacobianType           JacobianType;
+  typedef typename Superclass::InputVectorType        InputVectorType;
+  typedef typename Superclass::OutputVectorType       OutputVectorType;
   typedef typename Superclass
-    ::InputCovariantVectorType                      InputCovariantVectorType;
+    ::InputCovariantVectorType InputCovariantVectorType;
   typedef typename Superclass
-    ::OutputCovariantVectorType                     OutputCovariantVectorType;
-  typedef typename Superclass::InputVnlVectorType   InputVnlVectorType;
-  typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
-  typedef typename Superclass::InputPointType       InputPointType;
-  typedef typename Superclass::OutputPointType      OutputPointType;
+    ::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass::InputVnlVectorType  InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType OutputVnlVectorType;
+  typedef typename Superclass::InputPointType      InputPointType;
+  typedef typename Superclass::OutputPointType     OutputPointType;
 
   typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
+
+  /** Transform typedefs for the from Superclass. */
+  typedef Transform< TScalarType,
+    NInputDimensions,
+    NOutputDimensions >                             TransformType;
+  typedef typename TransformType::Pointer      TransformTypePointer;
+  typedef typename TransformType::ConstPointer TransformTypeConstPointer;
 
   /** Types for the (Spatial)Jacobian/Hessian.
    * Using an itk::FixedArray instead of an std::vector gives a performance
    * gain for the SpatialHessianType.
    */
-  typedef std::vector< unsigned long >              NonZeroJacobianIndicesType;
+  typedef std::vector< unsigned long > NonZeroJacobianIndicesType;
   typedef Matrix< ScalarType,
     OutputSpaceDimension, InputSpaceDimension >     SpatialJacobianType;
-  typedef std::vector< SpatialJacobianType >        JacobianOfSpatialJacobianType;
+  typedef std::vector< SpatialJacobianType > JacobianOfSpatialJacobianType;
   // \todo: think about the SpatialHessian type, should be a 3D native type
   typedef FixedArray<
     Matrix< ScalarType,
     InputSpaceDimension, InputSpaceDimension >,
     OutputSpaceDimension >                          SpatialHessianType;
-  typedef std::vector< SpatialHessianType >         JacobianOfSpatialHessianType;
-  typedef typename SpatialJacobianType::InternalMatrixType  InternalMatrixType;
+  typedef std::vector< SpatialHessianType >                JacobianOfSpatialHessianType;
+  typedef typename SpatialJacobianType::InternalMatrixType InternalMatrixType;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
   virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
@@ -210,11 +219,14 @@ public:
   {
     itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
   }
+
+
   virtual void ComputeJacobianWithRespectToPosition(
     const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const
   {
     itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
   }
+
 
   /** Compute the spatial Hessian of the transformation.
    *
@@ -277,34 +289,25 @@ public:
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
 
 protected:
+
   AdvancedTransform();
   AdvancedTransform( NumberOfParametersType numberOfParameters );
-  virtual ~AdvancedTransform() {};
+  virtual ~AdvancedTransform() {}
 
   bool m_HasNonZeroSpatialHessian;
   bool m_HasNonZeroJacobianOfSpatialHessian;
 
 private:
 
-  AdvancedTransform(const Self&); // purposely not implemented
-  void operator=(const Self&);    // purposely not implemented
+  AdvancedTransform( const Self & ); // purposely not implemented
+  void operator=( const Self & );    // purposely not implemented
 
-}; // end class AdvancedTransform
+};
 
 } // end namespace itk
 
-// Define instantiation macro for this template.
-#define ITK_TEMPLATE_AdvancedTransform(_, EXPORT, x, y) namespace itk { \
-  _(3(class EXPORT AdvancedTransform< ITK_TEMPLATE_3 x >)) \
-  namespace Templates { typedef AdvancedTransform< ITK_TEMPLATE_3 x > AdvancedTransform##y; } \
-  }
-
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkAdvancedTransform+-.h"
-#endif
-
-#if ITK_TEMPLATE_TXX
-# include "itkAdvancedTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkAdvancedTransform.hxx"
 #endif
 
 #endif

@@ -112,7 +112,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageRandomSamplerSparseMask.txx"
+#include "itkImageRandomSamplerSparseMask.hxx"
 #endif
 
 #endif // end #ifndef __ImageRandomSamplerSparseMask_h

@@ -23,23 +23,23 @@ namespace elastix
  * ******************* SetFixedSchedule ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-FixedGenericPyramid<TElastix>
+FixedGenericPyramid< TElastix >
 ::SetFixedSchedule( void )
 {
-   /** Get the ImageDimension. */
+  /** Get the ImageDimension. */
   const unsigned int FixedImageDimension = InputImageType::ImageDimension;
 
   /** Read numberOfResolutions. */
   unsigned int numberOfResolutions = 3;
   this->m_Configuration->ReadParameter( numberOfResolutions,
     "NumberOfResolutions", 0, true );
-  if ( numberOfResolutions == 0 ) numberOfResolutions = 1;
+  if( numberOfResolutions == 0 ) { numberOfResolutions = 1; }
 
   /** Create a default fixedSchedule. Set the numberOfLevels first. */
   this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
-  RescaleScheduleType rescaleSchedule = this->GetRescaleSchedule();
+  RescaleScheduleType   rescaleSchedule   = this->GetRescaleSchedule();
   SmoothingScheduleType smoothingSchedule = this->GetSmoothingSchedule();
 
   /** Set the schedule for rescaling.
@@ -50,11 +50,11 @@ FixedGenericPyramid<TElastix>
    * - FixedImagePyramidSchedule
    */
   bool foundRescale = true;
-  for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+  for( unsigned int i = 0; i < numberOfResolutions; i++ )
   {
-    for ( unsigned int j = 0; j < FixedImageDimension; j++ )
+    for( unsigned int j = 0; j < FixedImageDimension; j++ )
     {
-      bool ijfound = false;
+      bool               ijfound = false;
       const unsigned int entrynr = i * FixedImageDimension + j;
       ijfound |= this->m_Configuration->ReadParameter( rescaleSchedule[ i ][ j ],
         "ImagePyramidRescaleSchedule", entrynr, false );
@@ -69,12 +69,12 @@ FixedGenericPyramid<TElastix>
       foundRescale &= ijfound;
 
     } // end for FixedImageDimension
-  } // end for numberOfResolutions
+  }   // end for numberOfResolutions
 
-  if ( !foundRescale && this->GetConfiguration()->GetPrintErrorMessages() )
+  if( !foundRescale && this->GetConfiguration()->GetPrintErrorMessages() )
   {
-    xl::xout["warning"] << "WARNING: the fixed pyramid rescale schedule is not fully specified!\n";
-    xl::xout["warning"] << "  A default pyramid rescale schedule is used." << std::endl;
+    xl::xout[ "warning" ] << "WARNING: the fixed pyramid rescale schedule is not fully specified!\n";
+    xl::xout[ "warning" ] << "  A default pyramid rescale schedule is used." << std::endl;
   }
   else
   {
@@ -88,11 +88,11 @@ FixedGenericPyramid<TElastix>
    * - FixedImagePyramidSmoothingSchedule
    */
   bool foundSmoothing = true;
-  for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+  for( unsigned int i = 0; i < numberOfResolutions; i++ )
   {
-    for ( unsigned int j = 0; j < FixedImageDimension; j++ )
+    for( unsigned int j = 0; j < FixedImageDimension; j++ )
     {
-      bool ijfound = false;
+      bool               ijfound = false;
       const unsigned int entrynr = i * FixedImageDimension + j;
       ijfound |= this->m_Configuration->ReadParameter( smoothingSchedule[ i ][ j ],
         "ImagePyramidSmoothingSchedule", entrynr, false );
@@ -103,12 +103,12 @@ FixedGenericPyramid<TElastix>
       foundSmoothing &= ijfound;
 
     } // end for FixedImageDimension
-  } // end for numberOfResolutions
+  }   // end for numberOfResolutions
 
-  if ( !foundSmoothing && this->GetConfiguration()->GetPrintErrorMessages() )
+  if( !foundSmoothing && this->GetConfiguration()->GetPrintErrorMessages() )
   {
-    xl::xout["warning"] << "WARNING: the fixed pyramid smoothing schedule is not fully specified!\n";
-    xl::xout["warning"] << "  A default pyramid smoothing schedule is used." << std::endl;
+    xl::xout[ "warning" ] << "WARNING: the fixed pyramid smoothing schedule is not fully specified!\n";
+    xl::xout[ "warning" ] << "  A default pyramid smoothing schedule is used." << std::endl;
   }
   else
   {
@@ -137,7 +137,7 @@ FixedGenericPyramid<TElastix>
   /** Use or the resampler or the shrinker for rescaling within the pyramid. */
   bool useShrinkImageFilter = false;
   this->m_Configuration->ReadParameter( useShrinkImageFilter,
-        "ImagePyramidUseShrinkImageFilter", 0, false );
+    "ImagePyramidUseShrinkImageFilter", 0, false );
   this->SetUseShrinkImageFilter( useShrinkImageFilter );
 
   /** Decide whether or not to compute the pyramid images only for the current
@@ -156,9 +156,9 @@ FixedGenericPyramid<TElastix>
  * ******************* BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-FixedGenericPyramid<TElastix>
+FixedGenericPyramid< TElastix >
 ::BeforeEachResolution( void )
 {
   /** What is the current resolution level? */
@@ -172,9 +172,9 @@ FixedGenericPyramid<TElastix>
 } // end BeforeEachResolution()
 
 
-template <class TElastix>
+template< class TElastix >
 void
-FixedGenericPyramid<TElastix>
+FixedGenericPyramid< TElastix >
 ::AfterEachResolution( void )
 {
   //temp

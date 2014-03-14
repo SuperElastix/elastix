@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxTransformixMain_H_
 #define __elxTransformixMain_H_
 
@@ -19,7 +18,6 @@
 
 namespace elastix
 {
-
 /**
  * \class TransformixMain
  * \brief A class with all functionality to configure transformix.
@@ -38,10 +36,10 @@ class TransformixMain : public ElastixMain
 public:
 
   /** Standard itk. */
-  typedef TransformixMain                Self;
-  typedef ElastixMain                    Superclass;
-  typedef itk::SmartPointer<Self>        Pointer;
-  typedef itk::SmartPointer<const Self>  ConstPointer;
+  typedef TransformixMain                 Self;
+  typedef ElastixMain                     Superclass;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -52,35 +50,38 @@ public:
   /** Typedef's from Superclass. */
 
   /** typedef's from itk base Object. */
-  typedef Superclass::ObjectType          ObjectType;
-  typedef Superclass::ObjectPointer       ObjectPointer;
-  typedef Superclass::DataObjectType      DataObjectType;
-  typedef Superclass::DataObjectPointer   DataObjectPointer;
+  typedef Superclass::ObjectType        ObjectType;
+  typedef Superclass::ObjectPointer     ObjectPointer;
+  typedef Superclass::DataObjectType    DataObjectType;
+  typedef Superclass::DataObjectPointer DataObjectPointer;
 
   /** Elastix components. */
-  typedef Superclass::ElastixBaseType             ElastixBaseType;
-  typedef Superclass::ConfigurationType           ConfigurationType;
-  typedef Superclass::ArgumentMapType             ArgumentMapType;
-  typedef Superclass::ConfigurationPointer        ConfigurationPointer;
-  typedef Superclass::ObjectContainerType         ObjectContainerType;
-  typedef Superclass::DataObjectContainerType     DataObjectContainerType;
-  typedef Superclass::ObjectContainerPointer      ObjectContainerPointer;
-  typedef Superclass::DataObjectContainerPointer  DataObjectContainerPointer;
+  typedef Superclass::ElastixBaseType            ElastixBaseType;
+  typedef Superclass::ConfigurationType          ConfigurationType;
+  typedef Superclass::ArgumentMapType            ArgumentMapType;
+  typedef Superclass::ConfigurationPointer       ConfigurationPointer;
+  typedef Superclass::ObjectContainerType        ObjectContainerType;
+  typedef Superclass::DataObjectContainerType    DataObjectContainerType;
+  typedef Superclass::ObjectContainerPointer     ObjectContainerPointer;
+  typedef Superclass::DataObjectContainerPointer DataObjectContainerPointer;
 
   /** Typedefs for the database that holds pointers to New() functions.
    * Those functions are used to instantiate components, such as the metric etc.
    */
-  typedef Superclass::ComponentDatabaseType       ComponentDatabaseType;
-  typedef Superclass::ComponentDatabasePointer    ComponentDatabasePointer;
-  typedef Superclass::PtrToCreator                PtrToCreator;
-  typedef Superclass::ComponentDescriptionType    ComponentDescriptionType;
-  typedef Superclass::PixelTypeDescriptionType    PixelTypeDescriptionType;
-  typedef Superclass::ImageDimensionType          ImageDimensionType;
-  typedef Superclass::DBIndexType                 DBIndexType;
+  typedef Superclass::ComponentDatabaseType    ComponentDatabaseType;
+  typedef Superclass::ComponentDatabasePointer ComponentDatabasePointer;
+  typedef Superclass::PtrToCreator             PtrToCreator;
+  typedef Superclass::ComponentDescriptionType ComponentDescriptionType;
+  typedef Superclass::PixelTypeDescriptionType PixelTypeDescriptionType;
+  typedef Superclass::ImageDimensionType       ImageDimensionType;
+  typedef Superclass::DBIndexType              DBIndexType;
 
   /** Typedef for class that populates a ComponentDatabase. */
-  typedef Superclass::ComponentLoaderType         ComponentLoaderType;
-  typedef Superclass::ComponentLoaderPointer      ComponentLoaderPointer;
+  typedef Superclass::ComponentLoaderType    ComponentLoaderType;
+  typedef Superclass::ComponentLoaderPointer ComponentLoaderPointer;
+
+  /** Typedef that is used in the elastix dll version. */
+  typedef Superclass::ParameterMapType ParameterMapType;
 
   /** Overwrite Run() from base-class. */
   virtual int Run( void );
@@ -88,14 +89,19 @@ public:
   /** Overwrite Run( argmap ) from superclass. Simply calls the superclass. */
   virtual int Run( ArgumentMapType & argmap );
 
+  virtual int Run( ArgumentMapType & argmap, ParameterMapType & inputMap );
+
+  /** Run version for using transformix as library. */
+  virtual int Run( ArgumentMapType & argmap, std::vector< ParameterMapType > & inputMaps );
+
   /** Get and Set input- and outputImage. */
   virtual void SetInputImageContainer(
     DataObjectContainerType * inputImageContainer );
 
 protected:
 
-  TransformixMain(){};
-  virtual ~TransformixMain(){};
+  TransformixMain(){}
+  virtual ~TransformixMain(){}
 
   /** InitDBIndex sets m_DBIndex to the value obtained
    * from the ComponentDatabase.
@@ -104,13 +110,11 @@ protected:
 
 private:
 
-  TransformixMain( const Self& ); // purposely not implemented
-  void operator=( const Self& );  // purposely not implemented
+  TransformixMain( const Self & ); // purposely not implemented
+  void operator=( const Self & );  // purposely not implemented
 
-}; // end class TransformixMain
-
+};
 
 } // end namespace elastix
-
 
 #endif // end #ifndef __elxTransformixMain_h

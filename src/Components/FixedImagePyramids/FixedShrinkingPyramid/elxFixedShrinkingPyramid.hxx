@@ -18,10 +18,6 @@
 #include "elxFixedShrinkingPyramid.h"
 
 namespace elastix
-{
-
-
-} // end namespace elastix
+{} // end namespace elastix
 
 #endif //#ifndef __elxFixedShrinkingPyramid_hxx
-

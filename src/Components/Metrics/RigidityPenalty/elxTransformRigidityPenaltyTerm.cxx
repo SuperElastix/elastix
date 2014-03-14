@@ -14,4 +14,3 @@
 #include "elxTransformRigidityPenaltyTerm.h"
 
 elxInstallMacro( TransformRigidityPenalty );
-

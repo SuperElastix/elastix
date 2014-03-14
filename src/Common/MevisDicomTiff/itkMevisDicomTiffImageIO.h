@@ -29,10 +29,8 @@
 #include <fstream>
 #include <string>
 
-
 namespace itk
 {
-
 
 /** \class MevisDicomTiffImageIO
  *
@@ -111,67 +109,77 @@ class ITK_EXPORT MevisDicomTiffImageIO : public ImageIOBase
 {
 public:
 
-  typedef MevisDicomTiffImageIO         Self;
-  typedef ImageIOBase                   Superclass;
-  typedef SmartPointer<Self>            Pointer;
+  typedef MevisDicomTiffImageIO Self;
+  typedef ImageIOBase           Superclass;
+  typedef SmartPointer< Self >  Pointer;
 
-  itkNewMacro(Self);
-  itkTypeMacro(MevisDicomTiffImageIO, Superclass);
-  itkGetMacro(RescaleSlope, double);
-  itkGetMacro(RescaleIntercept, double);
-  itkGetMacro(GantryTilt, double);
+  itkNewMacro( Self );
+  itkTypeMacro( MevisDicomTiffImageIO, Superclass );
+  itkGetMacro( RescaleSlope, double );
+  itkGetMacro( RescaleIntercept, double );
+  itkGetMacro( GantryTilt, double );
 
-  virtual bool CanReadFile(const char*);
+  virtual bool CanReadFile( const char * );
+
   virtual void ReadImageInformation();
-  virtual void Read(void* buffer);
-  virtual bool CanWriteFile(const char*);
+
+  virtual void Read( void * buffer );
+
+  virtual bool CanWriteFile( const char * );
+
   virtual void WriteImageInformation();
-  virtual void Write(const void* buffer);
+
+  virtual void Write( const void * buffer );
+
   virtual bool CanStreamRead()
-    {
+  {
     return false;
-    }
+  }
+
 
   virtual bool CanStreamWrite()
-    {
+  {
     return false;
-    }
+  }
+
 
 protected:
+
   MevisDicomTiffImageIO();
   ~MevisDicomTiffImageIO();
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
 private:
-  MevisDicomTiffImageIO(const Self&);
-  void operator=(const Self&);
 
-  bool FindElement(const gdcm::DataSet ds, const gdcm::Tag tag, gdcm::DataElement &de,
-                        const bool breadthfirstsearch);
+  MevisDicomTiffImageIO( const Self & );
+  void operator=( const Self & );
+
+  bool FindElement( const gdcm::DataSet ds, const gdcm::Tag tag, gdcm::DataElement & de,
+    const bool breadthfirstsearch );
 
   // the following may include the pathname
-  std::string                           m_DcmFileName;
-  std::string                           m_TiffFileName;
+  std::string m_DcmFileName;
+  std::string m_TiffFileName;
 
-  TIFF *                                m_TIFFImage;
-  unsigned int                          m_TIFFDimension;
-  bool                                  m_IsOpen;
-  unsigned short                        m_Compression;
-  unsigned int                          m_BitsPerSample;
-  unsigned int                          m_Width;
-  unsigned int                          m_Length;
-  unsigned int                          m_Depth;
-  bool                                  m_IsTiled;
-  unsigned int                          m_TileWidth;
-  unsigned int                          m_TileLength;
-  unsigned int                          m_TileDepth;
-  unsigned short                        m_NumberOfTiles;
+  TIFF *         m_TIFFImage;
+  unsigned int   m_TIFFDimension;
+  bool           m_IsOpen;
+  unsigned short m_Compression;
+  unsigned int   m_BitsPerSample;
+  unsigned int   m_Width;
+  unsigned int   m_Length;
+  unsigned int   m_Depth;
+  bool           m_IsTiled;
+  unsigned int   m_TileWidth;
+  unsigned int   m_TileLength;
+  unsigned int   m_TileDepth;
+  unsigned short m_NumberOfTiles;
 
-  double                                m_RescaleSlope;
-  double                                m_RescaleIntercept;
-  double                                m_GantryTilt;
-  double                                m_EstimatedMinimum;
-  double                                m_EstimatedMaximum;
+  double m_RescaleSlope;
+  double m_RescaleIntercept;
+  double m_GantryTilt;
+  double m_EstimatedMinimum;
+  double m_EstimatedMaximum;
 
 };
 

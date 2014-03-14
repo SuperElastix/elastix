@@ -88,7 +88,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVectorContainerSource.txx"
+#include "itkVectorContainerSource.hxx"
 #endif
 
 #endif // end #ifndef __itkVectorContainerSource_h

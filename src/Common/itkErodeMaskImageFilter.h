@@ -148,7 +148,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkErodeMaskImageFilter.txx"
+#include "itkErodeMaskImageFilter.hxx"
 #endif
 
 #endif

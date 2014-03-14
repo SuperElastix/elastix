@@ -23,7 +23,6 @@
 #include "itkZeroFluxNeumannBoundaryCondition.h"
 #include "itkProgressReporter.h"
 
-
 namespace itk
 {
 
@@ -31,16 +30,16 @@ namespace itk
  * *********************** Constructor **************************
  */
 
-template < class TInputImage, class TGrayValueImage >
+template< class TInputImage, class TGrayValueImage >
 VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 ::VectorMeanDiffusionImageFilter()
 {
   /** Initialize things for the filter. */
   this->m_NumberOfIterations = 0;
   this->m_Radius.Fill( 1 );
-  this->m_RescaleFilter = 0;
+  this->m_RescaleFilter  = 0;
   this->m_GrayValueImage = 0;
-  this->m_Cx = 0;
+  this->m_Cx             = 0;
 
 } // end Constructor
 
@@ -49,20 +48,20 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
  * *************** GenerateInputRequestedRegion *****************
  */
 
-template < class TInputImage, class TGrayValueImage >
+template< class TInputImage, class TGrayValueImage >
 void
 VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
-::GenerateInputRequestedRegion() throw (InvalidRequestedRegionError)
+::GenerateInputRequestedRegion() throw ( InvalidRequestedRegionError )
 {
   // call the superclass' implementation of this method
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the input and output
-  typename Superclass::InputImagePointer inputPtr =
-    const_cast< TInputImage * >( this->GetInput() );
+  typename Superclass::InputImagePointer inputPtr
+                                                    = const_cast< TInputImage * >( this->GetInput() );
   typename Superclass::OutputImagePointer outputPtr = this->GetOutput();
 
-  if ( !inputPtr || !outputPtr )
+  if( !inputPtr || !outputPtr )
   {
     return;
   }
@@ -76,7 +75,7 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
   inputRequestedRegion.PadByRadius( this->m_Radius );
 
   // crop the input requested region at the input's largest possible region
-  if ( inputRequestedRegion.Crop(inputPtr->GetLargestPossibleRegion()) )
+  if( inputRequestedRegion.Crop( inputPtr->GetLargestPossibleRegion() ) )
   {
     inputPtr->SetRequestedRegion( inputRequestedRegion );
     return;
@@ -90,13 +89,13 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
     inputPtr->SetRequestedRegion( inputRequestedRegion );
 
     // build an exception
-    InvalidRequestedRegionError e(__FILE__, __LINE__);
-    std::ostringstream msg;
-    msg << static_cast<const char *>(this->GetNameOfClass())
-      << "::GenerateInputRequestedRegion()";
-    e.SetLocation(msg.str().c_str());
-    e.SetDescription("Requested region is (at least partially) outside the largest possible region.");
-    e.SetDataObject(inputPtr);
+    InvalidRequestedRegionError e( __FILE__, __LINE__ );
+    std::ostringstream          msg;
+    msg << static_cast< const char * >( this->GetNameOfClass() )
+        << "::GenerateInputRequestedRegion()";
+    e.SetLocation( msg.str().c_str() );
+    e.SetDescription( "Requested region is (at least partially) outside the largest possible region." );
+    e.SetDataObject( inputPtr );
     throw e;
   }
 
@@ -107,7 +106,7 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
  * ********************** GenerateData **************************
  */
 
-template < class TInputImage, class TGrayValueImage >
+template< class TInputImage, class TGrayValueImage >
 void
 VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 ::GenerateData( void )
@@ -125,24 +124,24 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
   this->FilterGrayValueImage();
 
   /** Declare things. */
-  unsigned int i, j;
-  ZeroFluxNeumannBoundaryCondition< InputImageType >      nbc;
-  ZeroFluxNeumannBoundaryCondition< DoubleImageType >     nbc2;
-  NeighborhoodIterator< InputImageType >                  nit;
-  NeighborhoodIterator< DoubleImageType >                 nit2;
-  VectorRealType sum;
+  unsigned int                                        i, j;
+  ZeroFluxNeumannBoundaryCondition< InputImageType >  nbc;
+  ZeroFluxNeumannBoundaryCondition< DoubleImageType > nbc2;
+  NeighborhoodIterator< InputImageType >              nit;
+  NeighborhoodIterator< DoubleImageType >             nit2;
+  VectorRealType                                      sum;
 
   /** Allocate output. */
-  typename InputImageType::ConstPointer input(  this->GetInput() );
+  typename InputImageType::ConstPointer input( this->GetInput() );
   typename InputImageType::Pointer      output( this->GetOutput() );
-  typename InputImageType::Pointer      outputtmp = InputImageType::New();
+  typename InputImageType::Pointer outputtmp = InputImageType::New();
   output->SetRegions( input->GetLargestPossibleRegion() );
 
   try
   {
     output->Allocate();
   }
-  catch ( itk::ExceptionObject & excp )
+  catch( itk::ExceptionObject & excp )
   {
     /** Add information to the exception and throw again. */
     excp.SetLocation( "VectorMeanDiffusionImageFilter - GenerateData()" );
@@ -161,7 +160,7 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
   {
     outputtmp->Allocate();
   }
-  catch ( itk::ExceptionObject & excp )
+  catch( itk::ExceptionObject & excp )
   {
     /** Add information to the exception and throw again. */
     excp.SetLocation( "VectorMeanDiffusionImageFilter - GenerateData()" );
@@ -175,13 +174,13 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
   //ProgressReporter progress( this, threadId, outputRegionForThread.GetNumberOfPixels() );
 
   /** Copy input to output. */
-  ImageRegionConstIterator< InputImageType >  in_it(
-    input, input->GetLargestPossibleRegion() );
-  ImageRegionIterator< InputImageType >       out_it(
-    output, input->GetLargestPossibleRegion() );
+  ImageRegionConstIterator< InputImageType > in_it(
+  input, input->GetLargestPossibleRegion() );
+  ImageRegionIterator< InputImageType > out_it(
+  output, input->GetLargestPossibleRegion() );
   in_it.GoToBegin();
   out_it.GoToBegin();
-  while ( !in_it.IsAtEnd() )
+  while( !in_it.IsAtEnd() )
   {
     out_it.Set( in_it.Get() );
     ++in_it;
@@ -200,15 +199,15 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
   nit2.OverrideBoundaryCondition( &nbc2 );
 
   /** Setup iterator over outputtmp. */
-  ImageRegionIterator< InputImageType >       oit(
-    outputtmp, input->GetLargestPossibleRegion() );
+  ImageRegionIterator< InputImageType > oit(
+  outputtmp, input->GetLargestPossibleRegion() );
 
   /** Initialize c and ci. */
-  double c = 0.0;
+  double c  = 0.0;
   double ci = 0.0;
 
   /** Loop over the number of iterations. */
-  for ( unsigned int k = 0; k < this->GetNumberOfIterations(); k++ )
+  for( unsigned int k = 0; k < this->GetNumberOfIterations(); k++ )
   {
     /** Reset the iterators. */
     nit.GoToBegin();
@@ -216,10 +215,10 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
     oit.GoToBegin();
 
     /** The actual work. */
-    while ( !nit.IsAtEnd() )
+    while( !nit.IsAtEnd() )
     {
       /** Speed up: do not filter locations where c(x) = 0. */
-      if ( nit2.GetCenterPixel() < 0.000001 )
+      if( nit2.GetCenterPixel() < 0.000001 )
       {
         /** Just copy input to output. */
         oit.Set( nit.GetCenterPixel() );
@@ -227,7 +226,7 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
       else
       {
         /** Initialize the sum to 0. */
-        for ( j = 0; j < InputImageDimension; j++ )
+        for( j = 0; j < InputImageDimension; j++ )
         {
           sum[ j ] = NumericTraits< double >::Zero;
         }
@@ -238,7 +237,7 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
         /** Calculate the weighted mean over the neighborhood.
          * mean = SUthis->m_i{ ci * x_i } / SUthis->m_i{ ci }
          */
-        for ( i = 0; i < neighborhoodSize; ++i )
+        for( i = 0; i < neighborhoodSize; ++i )
         {
           /** Get current pixel in this neighborhood. */
           InputPixelType pix = nit.GetPixel( i );
@@ -248,7 +247,7 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 
           /** Calculate SUthis->m_i{ ci } and SUthis->m_i{ ci * x_i }. */
           sumc += ci;
-          for ( j = 0; j < InputImageDimension; j++ )
+          for( j = 0; j < InputImageDimension; j++ )
           {
             sum[ j ] += ci * static_cast< double >( pix[ j ] );
           }
@@ -256,10 +255,10 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 
         /** Get the mean value by dividing by sumc. */
         InputPixelType mean;
-        for ( j = 0; j < InputImageDimension; j++ )
+        for( j = 0; j < InputImageDimension; j++ )
         {
-          if ( sumc < 0.00001 ) mean[ j ] = 0.0;
-          else mean[ j ] = static_cast< ValueType >( sum[ j ] / sumc );
+          if( sumc < 0.00001 ) { mean[ j ] = 0.0; }
+          else { mean[ j ] = static_cast< ValueType >( sum[ j ] / sumc ); }
         }
 
         /** Get c. */
@@ -282,11 +281,11 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
     } // end while
 
     /** Copy outputtmp to output. */
-    if ( this->GetNumberOfIterations() > 0 )
+    if( this->GetNumberOfIterations() > 0 )
     {
       out_it.GoToBegin();
       oit.GoToBegin();
-      while ( !out_it.IsAtEnd() )
+      while( !out_it.IsAtEnd() )
       {
         out_it.Set( oit.Get() );
         ++out_it;
@@ -303,10 +302,10 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
  * ********************* PrintSelf ******************************
  */
 
-template < class TInputImage, class TGrayValueImage >
+template< class TInputImage, class TGrayValueImage >
 void
 VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
-::PrintSelf( std::ostream& os, Indent indent) const
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
@@ -324,7 +323,7 @@ void
 VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 ::SetGrayValueImage( GrayValueImageType * _arg )
 {
-  if ( this->m_GrayValueImage != _arg )
+  if( this->m_GrayValueImage != _arg )
   {
     this->m_GrayValueImage = _arg;
   }
@@ -383,4 +382,3 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 } // end namespace itk
 
 #endif // end #ifndef _itkVectorMeanDiffusionImageFilter_HXX__
-

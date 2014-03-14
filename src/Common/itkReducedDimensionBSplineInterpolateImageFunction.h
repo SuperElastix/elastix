@@ -245,7 +245,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkReducedDimensionBSplineInterpolateImageFunction.txx"
+#include "itkReducedDimensionBSplineInterpolateImageFunction.hxx"
 #endif
 
 #endif

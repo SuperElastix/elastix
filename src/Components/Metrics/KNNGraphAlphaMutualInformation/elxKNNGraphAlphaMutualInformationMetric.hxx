@@ -21,7 +21,6 @@
 
 #include <string>
 
-
 namespace elastix
 {
 
@@ -29,18 +28,18 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-KNNGraphAlphaMutualInformationMetric<TElastix>
-::Initialize( void ) throw (itk::ExceptionObject)
+KNNGraphAlphaMutualInformationMetric< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
   this->Superclass1::Initialize();
   timer->StopTimer();
   elxout << "Initialization of KNNGraphAlphaMutualInformation metric took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
-    << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -49,8 +48,9 @@ KNNGraphAlphaMutualInformationMetric<TElastix>
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
-void KNNGraphAlphaMutualInformationMetric<TElastix>
+template< class TElastix >
+void
+KNNGraphAlphaMutualInformationMetric< TElastix >
 ::BeforeRegistration( void )
 {
   /** Get and set alpha, from alpha - MI. */
@@ -70,8 +70,9 @@ void KNNGraphAlphaMutualInformationMetric<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
-void KNNGraphAlphaMutualInformationMetric<TElastix>
+template< class TElastix >
+void
+KNNGraphAlphaMutualInformationMetric< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Get the current resolution level. */
@@ -85,17 +86,17 @@ void KNNGraphAlphaMutualInformationMetric<TElastix>
   this->m_Configuration->ReadParameter( treeType, "TreeType", 0 );
   this->m_Configuration->ReadParameter( treeType, "TreeType", level, true );
 
-  bool silentBS = false;
-  bool silentSplit = false;
+  bool silentBS     = false;
+  bool silentSplit  = false;
   bool silentShrink = false;
-  if ( treeType == "KDTree" )
+  if( treeType == "KDTree" )
   {
     silentShrink = true;
   }
-  else if ( treeType == "BruteForceTree" )
+  else if( treeType == "BruteForceTree" )
   {
-    silentBS = true;
-    silentSplit = true;
+    silentBS     = true;
+    silentSplit  = true;
     silentShrink = true;
   }
 
@@ -105,7 +106,7 @@ void KNNGraphAlphaMutualInformationMetric<TElastix>
   this->m_Configuration->ReadParameter( bucketSize, "BucketSize", level, true );
 
   /** Get the splitting rule for all trees. */
-  bool returnValue = false;
+  bool        returnValue   = false;
   std::string splittingRule = "ANN_KD_SL_MIDPT";
   returnValue = this->m_Configuration->ReadParameter(
     splittingRule, "SplittingRule", 0, silentSplit );
@@ -163,25 +164,25 @@ void KNNGraphAlphaMutualInformationMetric<TElastix>
     jointShrinkingRule, "JointShrinkingRule", level, true );
 
   /** Set the tree. */
-  if ( treeType == "KDTree" )
+  if( treeType == "KDTree" )
   {
     this->SetANNkDTree( bucketSize, fixedSplittingRule, movingSplittingRule,
       jointSplittingRule );
   }
-  else if ( treeType == "BDTree" )
+  else if( treeType == "BDTree" )
   {
     this->SetANNbdTree( bucketSize,
       fixedSplittingRule, movingSplittingRule, jointSplittingRule,
       fixedShrinkingRule, movingShrinkingRule, jointShrinkingRule );
   }
-  else if ( treeType == "BruteForceTree" )
+  else if( treeType == "BruteForceTree" )
   {
     this->SetANNBruteForceTree();
   }
   else
   {
     itkExceptionMacro( << "ERROR: there is no tree type \""
-      << treeType << "\" implemented." );
+                       << treeType << "\" implemented." );
   }
 
   /** Get the parameters for the search tree. */
@@ -192,7 +193,7 @@ void KNNGraphAlphaMutualInformationMetric<TElastix>
   this->m_Configuration->ReadParameter( treeSearchType, "TreeSearchType", level, true );
 
   bool silentSR = true;
-  if ( treeSearchType == "FixedRadius" )
+  if( treeSearchType == "FixedRadius" )
   {
     silentSR = false;
   }
@@ -217,23 +218,23 @@ void KNNGraphAlphaMutualInformationMetric<TElastix>
     "SquaredSearchRadius", level, true );
 
   /** Set the tree searcher. */
-  if ( treeSearchType == "Standard" )
+  if( treeSearchType == "Standard" )
   {
     this->SetANNStandardTreeSearch( kNearestNeighbours, errorBound );
   }
-  else if ( treeSearchType == "FixedRadius" )
+  else if( treeSearchType == "FixedRadius" )
   {
     this->SetANNFixedRadiusTreeSearch( kNearestNeighbours, errorBound,
       squaredSearchRadius );
   }
-  else if ( treeSearchType == "Priority" )
+  else if( treeSearchType == "Priority" )
   {
     this->SetANNPriorityTreeSearch( kNearestNeighbours, errorBound );
   }
   else
   {
     itkExceptionMacro( << "ERROR: there is no tree searcher type \""
-      << treeSearchType << "\" implemented." );
+                       << treeSearchType << "\" implemented." );
   }
 
 } // end BeforeEachResolution()
@@ -241,7 +242,4 @@ void KNNGraphAlphaMutualInformationMetric<TElastix>
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxKNNGraphAlphaMutualInformationMetric_HXX__
-
-

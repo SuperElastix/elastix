@@ -161,7 +161,7 @@ protected:
 } // end of namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageSpatialObject2.txx"
+#include "itkImageSpatialObject2.hxx"
 #endif
 
 #endif //__itkImageSpatialObject2_h

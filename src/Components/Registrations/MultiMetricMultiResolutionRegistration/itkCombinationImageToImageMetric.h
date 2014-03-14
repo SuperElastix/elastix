@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkCombinationImageToImageMetric_h
 #define __itkCombinationImageToImageMetric_h
 
@@ -52,17 +51,18 @@ namespace itk
  *
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 class CombinationImageToImageMetric :
   public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
+
   /** Standard class typedefs. */
-  typedef CombinationImageToImageMetric   Self;
+  typedef CombinationImageToImageMetric Self;
   typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >           Superclass;
-  typedef SmartPointer<Self>              Pointer;
-  typedef SmartPointer<const Self>        ConstPointer;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( CombinationImageToImageMetric, AdvancedImageToImageMetric );
@@ -78,11 +78,11 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
-  typedef typename Superclass::MovingImageType            MovingImageType;
-  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
+  typedef typename Superclass::MovingImageType              MovingImageType;
+  typedef typename Superclass::MovingImagePixelType         MovingImagePixelType;
   //typedef typename Superclass::MovingImagePointer         MovingImagePointer;
-  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
-  typedef typename Superclass::FixedImageType             FixedImageType;
+  typedef typename Superclass::MovingImageConstPointer MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType          FixedImageType;
   //typedef typename Superclass::FixedImagePointer          FixedImagePointer;
   typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
   typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
@@ -106,12 +106,12 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
-  //typedef typename Superclass::DerivativeValueType        DerivativeValueType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
 
   /** Some typedefs for computing the SelfHessian */
-  typedef typename Superclass::HessianValueType           HessianValueType;
-  typedef typename Superclass::HessianType                HessianType;
+  typedef typename Superclass::HessianValueType HessianValueType;
+  typedef typename Superclass::HessianType      HessianType;
 
   /**
   typedef typename Superclass::ImageSamplerType             ImageSamplerType;
@@ -127,35 +127,39 @@ public:
   */
 
   /** Typedefs for the metrics. */
-  typedef Superclass                                      ImageMetricType;
-  typedef typename ImageMetricType::Pointer               ImageMetricPointer;
-  typedef SingleValuedCostFunction                        SingleValuedCostFunctionType;
-  typedef typename SingleValuedCostFunctionType::Pointer  SingleValuedCostFunctionPointer;
+  typedef Superclass                                     ImageMetricType;
+  typedef typename ImageMetricType::Pointer              ImageMetricPointer;
+  typedef SingleValuedCostFunction                       SingleValuedCostFunctionType;
+  typedef typename SingleValuedCostFunctionType::Pointer SingleValuedCostFunctionPointer;
 
-  typedef typename FixedImageType::PixelType              FixedImagePixelType;
-  typedef typename MovingImageType::RegionType            MovingImageRegionType;
+  typedef typename FixedImageType::PixelType   FixedImagePixelType;
+  typedef typename MovingImageType::RegionType MovingImageRegionType;
   typedef FixedArray< double,
-    itkGetStaticConstMacro(MovingImageDimension) >        MovingImageDerivativeScalesType;
+    itkGetStaticConstMacro( MovingImageDimension ) >        MovingImageDerivativeScalesType;
 
   /** Typedef for the PointSetMetric. */
   typedef PointSet< CoordinateRepresentationType,
     TFixedImage::ImageDimension,
     DefaultStaticMeshTraits<
-      CoordinateRepresentationType,
-      TFixedImage::ImageDimension,
-      TFixedImage::ImageDimension,
-      CoordinateRepresentationType, CoordinateRepresentationType,
-      CoordinateRepresentationType > >                    FixedPointSetType;
+    CoordinateRepresentationType,
+    TFixedImage::ImageDimension,
+    TFixedImage::ImageDimension,
+    CoordinateRepresentationType, CoordinateRepresentationType,
+    CoordinateRepresentationType > >                    FixedPointSetType;
   typedef PointSet< CoordinateRepresentationType,
     TMovingImage::ImageDimension,
     DefaultStaticMeshTraits<
-      CoordinateRepresentationType,
-      TMovingImage::ImageDimension,
-      TMovingImage::ImageDimension,
-      CoordinateRepresentationType, CoordinateRepresentationType,
-      CoordinateRepresentationType > >                    MovingPointSetType;
+    CoordinateRepresentationType,
+    TMovingImage::ImageDimension,
+    TMovingImage::ImageDimension,
+    CoordinateRepresentationType, CoordinateRepresentationType,
+    CoordinateRepresentationType > >                    MovingPointSetType;
   typedef SingleValuedPointSetToPointSetMetric<
     FixedPointSetType, MovingPointSetType >               PointSetMetricType;
+
+  /** Typedefs for multi-threading. */
+  typedef typename Superclass::ThreaderType   ThreaderType;
+  typedef typename Superclass::ThreadInfoType ThreadInfoType;
 
   /**
    * Get and set the metrics and their weights.
@@ -191,6 +195,9 @@ public:
   /** Set and Get the UseRelativeWeights variable. */
   itkSetMacro( UseRelativeWeights, bool );
   itkGetMacro( UseRelativeWeights, bool );
+
+  /** \todo: Temporary, should think about interface. */
+  itkSetMacro( UseMultiThread, bool );
 
   /** Select which metrics are used.
    * This is useful in case you want to compute a certain measure, but not
@@ -245,10 +252,11 @@ public:
   virtual const TransformType * GetTransform( void ) const
   {
     return this->GetTransform( 0 );
-  };
+  }
+
 
   /** Pass the interpolator to all sub metrics. */
-  virtual void SetInterpolator( InterpolatorType *_arg );
+  virtual void SetInterpolator( InterpolatorType * _arg );
 
   /** Pass an interpolator to a specific metric */
   virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos );
@@ -261,14 +269,15 @@ public:
   /** Return Interpolator 0 */
   virtual const InterpolatorType * GetInterpolator( void ) const
   {
-    return this->GetInterpolator(0);
-  };
+    return this->GetInterpolator( 0 );
+  }
+
 
   /** Pass the fixed image to all sub metrics. */
-  virtual void SetFixedImage( const FixedImageType *_arg );
+  virtual void SetFixedImage( const FixedImageType * _arg );
 
   /** Pass a fixed image to a specific metric */
-  virtual void SetFixedImage( const FixedImageType *_arg, unsigned int pos );
+  virtual void SetFixedImage( const FixedImageType * _arg, unsigned int pos );
 
   /** Returns the fixedImage set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
@@ -278,14 +287,15 @@ public:
   /** Return FixedImage 0 */
   virtual const FixedImageType * GetFixedImage( void ) const
   {
-    return this->GetFixedImage(0);
-  };
+    return this->GetFixedImage( 0 );
+  }
+
 
   /** Pass the fixed image mask to all sub metrics. */
-  virtual void SetFixedImageMask( FixedImageMaskType *_arg );
+  virtual void SetFixedImageMask( FixedImageMaskType * _arg );
 
   /** Pass a fixed image mask to a specific metric */
-  virtual void SetFixedImageMask( FixedImageMaskType *_arg, unsigned int pos );
+  virtual void SetFixedImageMask( FixedImageMaskType * _arg, unsigned int pos );
 
   /** Returns the fixedImageMask set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
@@ -295,8 +305,9 @@ public:
   /** Return FixedImageMask 0 */
   virtual const FixedImageMaskType * GetFixedImageMask( void ) const
   {
-    return this->GetFixedImageMask(0);
-  };
+    return this->GetFixedImageMask( 0 );
+  }
+
 
   /** Pass the fixed image region to all sub metrics. */
   virtual void SetFixedImageRegion( const FixedImageRegionType _arg );
@@ -312,14 +323,15 @@ public:
   /** Return FixedImageRegion 0 */
   virtual const FixedImageRegionType & GetFixedImageRegion( void ) const
   {
-    return this->GetFixedImageRegion(0);
-  };
+    return this->GetFixedImageRegion( 0 );
+  }
+
 
   /** Pass the moving image to all sub metrics. */
-  virtual void SetMovingImage( const MovingImageType *_arg );
+  virtual void SetMovingImage( const MovingImageType * _arg );
 
   /** Pass a moving image to a specific metric */
-  virtual void SetMovingImage( const MovingImageType *_arg, unsigned int pos );
+  virtual void SetMovingImage( const MovingImageType * _arg, unsigned int pos );
 
   /** Returns the movingImage set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
@@ -329,14 +341,15 @@ public:
   /** Return MovingImage 0 */
   virtual const MovingImageType * GetMovingImage( void ) const
   {
-    return this->GetMovingImage(0);
-  };
+    return this->GetMovingImage( 0 );
+  }
+
 
   /** Pass the moving image mask to all sub metrics. */
-  virtual void SetMovingImageMask( MovingImageMaskType *_arg );
+  virtual void SetMovingImageMask( MovingImageMaskType * _arg );
 
   /** Pass a moving image mask to a specific metric */
-  virtual void SetMovingImageMask( MovingImageMaskType *_arg, unsigned int pos );
+  virtual void SetMovingImageMask( MovingImageMaskType * _arg, unsigned int pos );
 
   /** Returns the movingImageMask set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
@@ -346,8 +359,9 @@ public:
   /** Return MovingImageMask 0 */
   virtual const MovingImageMaskType * GetMovingImageMask( void ) const
   {
-    return this->GetMovingImageMask(0);
-  };
+    return this->GetMovingImageMask( 0 );
+  }
+
 
   /** Get the number of pixels considered in the computation. Return the sum
    * of pixels counted by all metrics.
@@ -385,38 +399,78 @@ public:
    */
   virtual unsigned long GetMTime() const;
 
+  /** GetValueAndDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeComboThreaderCallback( void * arg );
+
+  /** CombineDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE CombineDerivativesThreaderCallback( void * arg );
+
+  /** Compute Derivatives Magnitude threader callback function */
+  static ITK_THREAD_RETURN_TYPE ComputeDerivativesMagnitudeThreaderCallback( void * arg );
+
 protected:
+
   CombinationImageToImageMetric();
-  virtual ~CombinationImageToImageMetric() {};
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  virtual ~CombinationImageToImageMetric() {}
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Store the metrics and the corresponding weights. */
-  unsigned int                                      m_NumberOfMetrics;
-  std::vector< SingleValuedCostFunctionPointer >    m_Metrics;
-  std::vector< double >                             m_MetricWeights;
-  std::vector< double >                             m_MetricRelativeWeights;
-  bool                                              m_UseRelativeWeights;
-  std::vector< bool >                               m_UseMetric;
-  mutable std::vector< MeasureType >                m_MetricValues;
-  mutable std::vector< DerivativeType >             m_MetricDerivatives;
-  mutable std::vector< double >                     m_MetricDerivativesMagnitude;
-  mutable std::vector< std::size_t >                m_MetricComputationTime;
+  unsigned int                                   m_NumberOfMetrics;
+  std::vector< SingleValuedCostFunctionPointer > m_Metrics;
+  std::vector< double >                          m_MetricWeights;
+  std::vector< double >                          m_MetricRelativeWeights;
+  bool                                           m_UseRelativeWeights;
+  std::vector< bool >                            m_UseMetric;
+  mutable std::vector< MeasureType >             m_MetricValues;
+  mutable std::vector< DerivativeType >          m_MetricDerivatives;
+  mutable std::vector< double >                  m_MetricDerivativesMagnitude;
+  mutable std::vector< std::size_t >             m_MetricComputationTime;
 
   /** Dummy image region and derivatives. */
-  FixedImageRegionType        m_NullFixedImageRegion;
-  DerivativeType              m_NullDerivative;
+  FixedImageRegionType m_NullFixedImageRegion;
+  DerivativeType       m_NullDerivative;
 
 private:
-  CombinationImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
 
-}; // end class CombinationImageToImageMetric
+  CombinationImageToImageMetric( const Self & ); // purposely not implemented
+  void operator=( const Self & );                // purposely not implemented
+
+  /** Initialize some multi-threading related parameters.
+   * Overrides function in AdvancedImageToImageMetric, because
+   * here we use other parameters.
+   */
+  virtual void InitializeThreadingParameters( void ) const;
+
+  /** Compute the current metric weight, given the user selected
+   * strategy and derivative magnitude.
+   */
+  double GetFinalMetricWeight( unsigned int pos ) const;
+
+  /** For threading: store thread data. */
+  struct MultiThreaderComboMetricsType
+  {
+    std::vector< SingleValuedCostFunctionPointer > st_MetricsIterator;
+    typename std::vector< MeasureType >::iterator st_MetricValuesIterator;
+    typename std::vector< DerivativeType >::iterator st_MetricDerivativesIterator;
+    std::vector< std::size_t > st_MetricComputationTime;
+    ParametersType *           st_Parameters;
+  };
+
+  struct MultiThreaderCombineDerivativeType
+  {
+    Self *                st_ThisComboMetric;
+    std::vector< double > st_DerivativesSumOfSquares;
+    DerivativeValueType * st_Derivative;
+  };
+
+  bool m_UseMultiThread;
+
+};
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkCombinationImageToImageMetric.txx"
+#include "itkCombinationImageToImageMetric.hxx"
 #endif
 
 #endif // end #ifndef __itkCombinationImageToImageMetric_h
-

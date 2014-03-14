@@ -20,4 +20,3 @@
 //nothing
 
 #endif //#ifndef __elxFixedRecursivePyramid_hxx
-

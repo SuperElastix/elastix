@@ -17,7 +17,6 @@
 
 #include "elxPatternIntensityMetric.h"
 
-
 namespace elastix
 {
 
@@ -25,36 +24,38 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-PatternIntensityMetric<TElastix>
-::Initialize( void ) throw (itk::ExceptionObject)
+PatternIntensityMetric< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
   this->Superclass1::Initialize();
   timer->StopTimer();
   elxout << "Initialization of PatternIntensity metric took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
+
 
 /**
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
-void PatternIntensityMetric<TElastix>
-::BeforeRegistration(void)
+template< class TElastix >
+void
+PatternIntensityMetric< TElastix >
+::BeforeRegistration( void )
 {
 
-  if ( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
+  if( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
   {
     itkExceptionMacro( << "FixedImage must be 3D" );
   }
-  if ( this->m_Elastix->GetFixedImage()->GetImageDimension() == 3 )
+  if( this->m_Elastix->GetFixedImage()->GetImageDimension() == 3 )
   {
-    if ( this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize()[2] != 1 )
+    if( this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize()[ 2 ] != 1 )
     {
       itkExceptionMacro( << "Metric can only be used for 2D-3D registration. FixedImageSize[2] must be 1" );
     }
@@ -67,20 +68,20 @@ void PatternIntensityMetric<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-PatternIntensityMetric<TElastix>
-::BeforeEachResolution(void)
+PatternIntensityMetric< TElastix >
+::BeforeEachResolution( void )
 {
   /** Get the current resolution level.*/
-  unsigned int level =
-    ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level
+    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
   /** Set noise constant, */
   double sigma = 100;
   this->m_Configuration->ReadParameter( sigma,
     "Sigma", this->GetComponentLabel(), level, 0 );
-  this->SetNoiseConstant( sigma*sigma );
+  this->SetNoiseConstant( sigma * sigma );
 
   /** Set optimization of normalization factor. */
   bool optimizenormalizationfactor = false;
@@ -91,22 +92,22 @@ PatternIntensityMetric<TElastix>
   /** Set moving image derivative scales. */
   this->SetUseMovingImageDerivativeScales( false );
   MovingImageDerivativeScalesType movingImageDerivativeScales;
-  bool usescales = true;
-  for ( unsigned int i = 0; i < MovingImageDimension; ++i )
+  bool                            usescales = true;
+  for( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
     usescales &= this->GetConfiguration()->ReadParameter(
       movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-    this->GetComponentLabel(), i, -1, false );
+      this->GetComponentLabel(), i, -1, false );
   }
-  if ( usescales )
+  if( usescales )
   {
     this->SetUseMovingImageDerivativeScales( true );
     this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
     elxout << "Multiplying moving image derivatives by: "
-      << movingImageDerivativeScales << std::endl;
+           << movingImageDerivativeScales << std::endl;
   }
 
-  typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType ScalesType;
+  typedef typename elastix::OptimizerBase< TElastix >::ITKBaseType::ScalesType ScalesType;
   ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
   this->SetScales( scales );
 
@@ -116,4 +117,3 @@ PatternIntensityMetric<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxPatternIntensityMetric_HXX__
-

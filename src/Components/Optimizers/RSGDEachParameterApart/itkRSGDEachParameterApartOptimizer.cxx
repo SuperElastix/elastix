@@ -22,8 +22,6 @@
 namespace itk
 {
 
-
-
 /**
  * Advance one Step following the gradient direction
  * This method will be overrided in non-vector spaces
@@ -31,30 +29,28 @@ namespace itk
 void
 RSGDEachParameterApartOptimizer
 ::StepAlongGradient( const DerivativeType & factor,
-                     const DerivativeType & transformedGradient )
+  const DerivativeType & transformedGradient )
 {
 
-  itkDebugMacro(<<"factor = " << factor << "  transformedGradient= " << transformedGradient );
+  itkDebugMacro( << "factor = " << factor << "  transformedGradient= " << transformedGradient );
 
-  const unsigned int spaceDimension =
-    m_CostFunction->GetNumberOfParameters();
+  const unsigned int spaceDimension
+    = m_CostFunction->GetNumberOfParameters();
 
   ParametersType newPosition( spaceDimension );
   ParametersType currentPosition = this->GetCurrentPosition();
 
-  for(unsigned int j=0; j<spaceDimension; j++)
+  for( unsigned int j = 0; j < spaceDimension; j++ )
   {
     /** Each parameters has its own factor! */
-    newPosition[j] = currentPosition[j] + transformedGradient[j] * factor[j];
+    newPosition[ j ] = currentPosition[ j ] + transformedGradient[ j ] * factor[ j ];
   }
 
-
-  itkDebugMacro(<<"new position = " << newPosition );
+  itkDebugMacro( << "new position = " << newPosition );
 
   this->SetCurrentPosition( newPosition );
 
 }
-
 
 
 } // end namespace itk

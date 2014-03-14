@@ -18,17 +18,16 @@
 
 #include "itkChangeInformationImageFilter.h"
 
-
 namespace elastix
 {
 
- /**
-  * ******************* BeforeRegistration ***********************
-  */
+/**
+ * ******************* BeforeRegistration ***********************
+ */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformRigidityPenalty<TElastix>
+TransformRigidityPenalty< TElastix >
 ::BeforeRegistration( void )
 {
   /** Read the fixed rigidity image if desired. */
@@ -36,14 +35,14 @@ TransformRigidityPenalty<TElastix>
   this->GetConfiguration()->ReadParameter( fixedRigidityImageName,
     "FixedRigidityImageName", this->GetComponentLabel(), 0, -1, false );
 
-  typedef typename Superclass1::RigidityImageType              RigidityImageType;
-  typedef itk::ImageFileReader<RigidityImageType>              RigidityImageReaderType;
+  typedef typename Superclass1::RigidityImageType   RigidityImageType;
+  typedef itk::ImageFileReader< RigidityImageType > RigidityImageReaderType;
   typename RigidityImageReaderType::Pointer fixedRigidityReader;
-  typedef itk::ChangeInformationImageFilter<RigidityImageType> ChangeInfoFilterType;
-  typedef typename ChangeInfoFilterType::Pointer               ChangeInfoFilterPointer;
-  typedef typename RigidityImageType::DirectionType            DirectionType;
+  typedef itk::ChangeInformationImageFilter< RigidityImageType > ChangeInfoFilterType;
+  typedef typename ChangeInfoFilterType::Pointer                 ChangeInfoFilterPointer;
+  typedef typename RigidityImageType::DirectionType              DirectionType;
 
-  if ( fixedRigidityImageName != "" )
+  if( fixedRigidityImageName != "" )
   {
     /** Use the FixedRigidityImage. */
     this->SetUseFixedRigidityImage( true );
@@ -54,10 +53,10 @@ TransformRigidityPenalty<TElastix>
 
     /** Possibly overrule the direction cosines. */
     ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
-    DirectionType direction;
+    DirectionType           direction;
     direction.SetIdentity();
     infoChanger->SetOutputDirection( direction );
-    infoChanger->SetChangeDirection( ! this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
     infoChanger->SetInput( fixedRigidityReader->GetOutput() );
 
     /** Do the reading. */
@@ -90,7 +89,7 @@ TransformRigidityPenalty<TElastix>
     "MovingRigidityImageName", this->GetComponentLabel(), 0, -1, false );
 
   typename RigidityImageReaderType::Pointer movingRigidityReader;
-  if ( movingRigidityImageName != "" )
+  if( movingRigidityImageName != "" )
   {
     /** Use the movingRigidityImage. */
     this->SetUseMovingRigidityImage( true );
@@ -101,10 +100,10 @@ TransformRigidityPenalty<TElastix>
 
     /** Possibly overrule the direction cosines. */
     ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
-    DirectionType direction;
+    DirectionType           direction;
     direction.SetIdentity();
     infoChanger->SetOutputDirection( direction );
-    infoChanger->SetChangeDirection( ! this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
     infoChanger->SetInput( movingRigidityReader->GetOutput() );
 
     /** Do the reading. */
@@ -132,35 +131,35 @@ TransformRigidityPenalty<TElastix>
   }
 
   /** Important check: at least one rigidity image must be given. */
-  if ( fixedRigidityImageName == "" && movingRigidityImageName == "" )
+  if( fixedRigidityImageName == "" && movingRigidityImageName == "" )
   {
-    xl::xout["warning"] << "WARNING: FixedRigidityImageName and "
-      << "MovingRigidityImage are both not supplied.\n"
-      << "  The rigidity penalty term is evaluated on entire input "
-      << "transform domain." << std::endl;
+    xl::xout[ "warning" ] << "WARNING: FixedRigidityImageName and "
+                          << "MovingRigidityImage are both not supplied.\n"
+                          << "  The rigidity penalty term is evaluated on entire input "
+                          << "transform domain." << std::endl;
   }
 
   /** Add target cells to xout["iteration"]. */
-  xout["iteration"].AddTargetCell("Metric-LC");
-  xout["iteration"].AddTargetCell("Metric-OC");
-  xout["iteration"].AddTargetCell("Metric-PC");
-  xout["iteration"].AddTargetCell("||Gradient-LC||");
-  xout["iteration"].AddTargetCell("||Gradient-OC||");
-  xout["iteration"].AddTargetCell("||Gradient-PC||");
+  xout[ "iteration" ].AddTargetCell( "Metric-LC" );
+  xout[ "iteration" ].AddTargetCell( "Metric-OC" );
+  xout[ "iteration" ].AddTargetCell( "Metric-PC" );
+  xout[ "iteration" ].AddTargetCell( "||Gradient-LC||" );
+  xout[ "iteration" ].AddTargetCell( "||Gradient-OC||" );
+  xout[ "iteration" ].AddTargetCell( "||Gradient-PC||" );
 
   /** Format the metric as floats. */
-  xl::xout["iteration"]["Metric-LC"] << std::showpoint << std::fixed
-    << std::setprecision( 10 );
-  xl::xout["iteration"]["Metric-OC"] << std::showpoint << std::fixed
-    << std::setprecision( 10 );
-  xl::xout["iteration"]["Metric-PC"] << std::showpoint << std::fixed
-    << std::setprecision( 10 );
-  xl::xout["iteration"]["||Gradient-LC||"] << std::showpoint << std::fixed
-    << std::setprecision( 10 );
-  xl::xout["iteration"]["||Gradient-OC||"] << std::showpoint << std::fixed
-    << std::setprecision( 10 );
-  xl::xout["iteration"]["||Gradient-PC||"] << std::showpoint << std::fixed
-    << std::setprecision( 10 );
+  xl::xout[ "iteration" ][ "Metric-LC" ] << std::showpoint << std::fixed
+                                         << std::setprecision( 10 );
+  xl::xout[ "iteration" ][ "Metric-OC" ] << std::showpoint << std::fixed
+                                         << std::setprecision( 10 );
+  xl::xout[ "iteration" ][ "Metric-PC" ] << std::showpoint << std::fixed
+                                         << std::setprecision( 10 );
+  xl::xout[ "iteration" ][ "||Gradient-LC||" ] << std::showpoint << std::fixed
+                                               << std::setprecision( 10 );
+  xl::xout[ "iteration" ][ "||Gradient-OC||" ] << std::showpoint << std::fixed
+                                               << std::setprecision( 10 );
+  xl::xout[ "iteration" ][ "||Gradient-PC||" ] << std::showpoint << std::fixed
+                                               << std::setprecision( 10 );
 
 } // end BeforeRegistration()
 
@@ -169,10 +168,10 @@ TransformRigidityPenalty<TElastix>
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformRigidityPenalty<TElastix>
-::Initialize( void ) throw (itk::ExceptionObject)
+TransformRigidityPenalty< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
   /** Create and start a timer. */
   TimerPointer timer = TimerType::New();
@@ -187,8 +186,8 @@ TransformRigidityPenalty<TElastix>
   /** Stop and print the timer. */
   timer->StopTimer();
   elxout << "Initialization of TransformRigidityPenalty term took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
-    << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -197,9 +196,9 @@ TransformRigidityPenalty<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformRigidityPenalty<TElastix>
+TransformRigidityPenalty< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Get the current resolution level. */
@@ -279,31 +278,29 @@ TransformRigidityPenalty<TElastix>
  * ***************AfterEachIteration ****************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformRigidityPenalty<TElastix>
+TransformRigidityPenalty< TElastix >
 ::AfterEachIteration( void )
 {
   /** Print some information. */
-  xl::xout["iteration"]["Metric-LC"] <<
-    this->GetLinearityConditionValue();
-  xl::xout["iteration"]["Metric-OC"] <<
-    this->GetOrthonormalityConditionValue();
-  xl::xout["iteration"]["Metric-PC"] <<
-    this->GetPropernessConditionValue();
+  xl::xout[ "iteration" ][ "Metric-LC" ]
+    << this->GetLinearityConditionValue();
+  xl::xout[ "iteration" ][ "Metric-OC" ]
+    << this->GetOrthonormalityConditionValue();
+  xl::xout[ "iteration" ][ "Metric-PC" ]
+    << this->GetPropernessConditionValue();
 
-  xl::xout["iteration"]["||Gradient-LC||"] <<
-    this->GetLinearityConditionGradientMagnitude();
-  xl::xout["iteration"]["||Gradient-OC||"] <<
-    this->GetOrthonormalityConditionGradientMagnitude();
-  xl::xout["iteration"]["||Gradient-PC||"] <<
-    this->GetPropernessConditionGradientMagnitude();
+  xl::xout[ "iteration" ][ "||Gradient-LC||" ]
+    << this->GetLinearityConditionGradientMagnitude();
+  xl::xout[ "iteration" ][ "||Gradient-OC||" ]
+    << this->GetOrthonormalityConditionGradientMagnitude();
+  xl::xout[ "iteration" ][ "||Gradient-PC||" ]
+    << this->GetPropernessConditionGradientMagnitude();
 
 } // end AfterEachIteration()
 
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxTransformRigidityPenaltyTerm_HXX__
-

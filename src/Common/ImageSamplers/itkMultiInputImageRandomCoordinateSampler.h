@@ -146,7 +146,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMultiInputImageRandomCoordinateSampler.txx"
+#include "itkMultiInputImageRandomCoordinateSampler.hxx"
 #endif
 
 #endif // end #ifndef __MultiInputImageRandomCoordinateSampler_h

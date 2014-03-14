@@ -19,6 +19,4 @@
 
 //nothing
 
-
 #endif //#ifndef __elxMovingRecursivePyramid_hxx
-

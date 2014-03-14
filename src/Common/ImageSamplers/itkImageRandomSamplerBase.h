@@ -96,7 +96,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageRandomSamplerBase.txx"
+#include "itkImageRandomSamplerBase.hxx"
 #endif
 
 #endif // end #ifndef __ImageRandomSamplerBase_h

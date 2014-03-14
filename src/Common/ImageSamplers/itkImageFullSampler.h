@@ -115,7 +115,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageFullSampler.txx"
+#include "itkImageFullSampler.hxx"
 #endif
 
 #endif // end #ifndef __ImageFullSampler_h

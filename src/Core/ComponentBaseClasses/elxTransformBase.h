@@ -29,7 +29,7 @@
 
 namespace elastix
 {
-  //using namespace itk; //Not here, because a TransformBase class was added to ITK...
+//using namespace itk; //Not here, because a TransformBase class was added to ITK...
 
 /**
  * \class TransformBase
@@ -124,43 +124,43 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template <class TElastix>
-class TransformBase
-  : public BaseComponentSE<TElastix>
+template< class TElastix >
+class TransformBase :
+  public BaseComponentSE< TElastix >
 {
 public:
 
   /** Standard ITK stuff. */
-  typedef TransformBase                               Self;
-  typedef BaseComponentSE<TElastix>                   Superclass;
+  typedef TransformBase               Self;
+  typedef BaseComponentSE< TElastix > Superclass;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( TransformBase, BaseComponentSE );
 
   /** Typedef's from Superclass. */
-  typedef typename Superclass::ElastixType            ElastixType;
-  typedef typename Superclass::ElastixPointer         ElastixPointer;
-  typedef typename Superclass::ConfigurationType      ConfigurationType;
-  typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
+  typedef typename Superclass::ElastixType          ElastixType;
+  typedef typename Superclass::ElastixPointer       ElastixPointer;
+  typedef typename Superclass::ConfigurationType    ConfigurationType;
+  typedef typename Superclass::ConfigurationPointer ConfigurationPointer;
   typedef typename ConfigurationType
-    ::CommandLineArgumentMapType                      CommandLineArgumentMapType;
+    ::CommandLineArgumentMapType CommandLineArgumentMapType;
   typedef typename ConfigurationType
-    ::CommandLineEntryType                            CommandLineEntryType;
-  typedef typename Superclass::RegistrationType       RegistrationType;
-  typedef typename Superclass::RegistrationPointer    RegistrationPointer;
+    ::CommandLineEntryType CommandLineEntryType;
+  typedef typename Superclass::RegistrationType    RegistrationType;
+  typedef typename Superclass::RegistrationPointer RegistrationPointer;
 
   /** Elastix typedef's. */
-  typedef typename ElastixType::CoordRepType          CoordRepType;
-  typedef typename ElastixType::FixedImageType        FixedImageType;
-  typedef typename ElastixType::MovingImageType       MovingImageType;
+  typedef typename ElastixType::CoordRepType    CoordRepType;
+  typedef typename ElastixType::FixedImageType  FixedImageType;
+  typedef typename ElastixType::MovingImageType MovingImageType;
 
   /** Typedef's from ComponentDatabase. */
-  typedef ComponentDatabase                           ComponentDatabaseType;
-  typedef ComponentDatabaseType::ComponentDescriptionType   ComponentDescriptionType;
-  typedef ComponentDatabase::PtrToCreator             PtrToCreator;
+  typedef ComponentDatabase                               ComponentDatabaseType;
+  typedef ComponentDatabaseType::ComponentDescriptionType ComponentDescriptionType;
+  typedef ComponentDatabase::PtrToCreator                 PtrToCreator;
 
   /** Typedef for the ProgressCommand. */
-  typedef elx::ProgressCommand                        ProgressCommandType;
+  typedef elx::ProgressCommand ProgressCommandType;
 
   /** Get the dimension of the fixed image. */
   itkStaticConstMacro( FixedImageDimension,
@@ -171,52 +171,57 @@ public:
     unsigned int, MovingImageType::ImageDimension );
 
   /** Other typedef's. */
-  typedef itk::Object                                 ObjectType;
+  typedef itk::Object ObjectType;
   typedef itk::AdvancedTransform<
     CoordRepType,
     itkGetStaticConstMacro( FixedImageDimension ),
     itkGetStaticConstMacro( MovingImageDimension ) >  ITKBaseType;
-  typedef itk::AdvancedCombinationTransform<CoordRepType,
+  typedef itk::AdvancedCombinationTransform< CoordRepType,
     itkGetStaticConstMacro( FixedImageDimension ) >   CombinationTransformType;
   typedef typename
-    CombinationTransformType::InitialTransformType    InitialTransformType;
+    CombinationTransformType::InitialTransformType InitialTransformType;
 
   /** Typedef's from Transform. */
-  typedef typename ITKBaseType::ParametersType        ParametersType;
-  typedef typename ParametersType::ValueType          ValueType;
+  typedef typename ITKBaseType::ParametersType ParametersType;
+  typedef typename ParametersType::ValueType   ValueType;
 
   /** Typedef's for TransformPoint. */
-  typedef typename ITKBaseType::InputPointType        InputPointType;
-  typedef typename ITKBaseType::OutputPointType       OutputPointType;
+  typedef typename ITKBaseType::InputPointType  InputPointType;
+  typedef typename ITKBaseType::OutputPointType OutputPointType;
 
   /** Typedefs needed for AutomaticScalesEstimation function */
   typedef typename RegistrationType::ITKBaseType      ITKRegistrationType;
   typedef typename ITKRegistrationType::OptimizerType OptimizerType;
   typedef typename OptimizerType::ScalesType          ScalesType;
 
-  /** Typedefs needed for AutomaticScalesEstimationStackTransform function */
- // typedef typename FixedImageType::FixedImageRegionType FixedImageRegionType;
+  /** Typedef that is used in the elastix dll version. */
+  typedef typename ElastixType::ParameterMapType ParameterMapType;
 
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )
   {
-    return dynamic_cast<ITKBaseType *>( this );
+    return dynamic_cast< ITKBaseType * >( this );
   }
+
 
   /** Cast to ITKBaseType, to use in const functions. */
   virtual const ITKBaseType * GetAsITKBaseType( void ) const
   {
-    return dynamic_cast<const ITKBaseType *>( this );
+    return dynamic_cast< const ITKBaseType * >( this );
   }
 
-  virtual const CombinationTransformType * GetAsCombinationTransform(void) const
+
+  virtual const CombinationTransformType * GetAsCombinationTransform( void ) const
   {
-    return dynamic_cast<const CombinationTransformType * >( this );
+    return dynamic_cast< const CombinationTransformType * >( this );
   }
-  virtual CombinationTransformType * GetAsCombinationTransform(void)
+
+
+  virtual CombinationTransformType * GetAsCombinationTransform( void )
   {
-    return dynamic_cast<CombinationTransformType * >( this );
+    return dynamic_cast< CombinationTransformType * >( this );
   }
+
 
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.
@@ -253,6 +258,10 @@ public:
   /** Function to read transform-parameters from a file. */
   virtual void ReadFromFile( void );
 
+  /** Function to create transform-parameters map. */
+  virtual void CreateTransformParametersMap(
+    const ParametersType & param, ParameterMapType * paramsMap ) const;
+
   /** Function to write transform-parameters to a file. */
   virtual void WriteToFile( const ParametersType & param ) const;
 
@@ -265,6 +274,11 @@ public:
   /** Function to read the initial transform parameters from a file. */
   virtual void ReadInitialTransformFromFile(
     const char * transformParameterFileName );
+
+  /** Function to read the initial transform parameters from the internally stored
+   * configuration object.
+   */
+  virtual void ReadInitialTransformFromVector( const size_t index );
 
   /** Function to transform coordinates from fixed to moving image. */
   virtual void TransformPoints( void ) const;
@@ -315,25 +329,23 @@ protected:
   void AutomaticScalesEstimationStackTransform( const unsigned int numSubTransforms, ScalesType & scales ) const;
 
   /** Member variables. */
-  ParametersType *      m_TransformParametersPointer;
-  std::string           m_TransformParametersFileName;
-  ParametersType        m_FinalParameters;
+  ParametersType * m_TransformParametersPointer;
+  std::string      m_TransformParametersFileName;
+  ParametersType   m_FinalParameters;
 
 private:
 
   /** The private constructor. */
-  TransformBase( const Self& );   // purposely not implemented
+  TransformBase( const Self & );   // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );  // purposely not implemented
+  void operator=( const Self & );  // purposely not implemented
 
   /** Boolean to decide whether or not the transform parameters are written. */
-  bool    m_ReadWriteTransformParameters;
+  bool m_ReadWriteTransformParameters;
 
-}; // end class TransformBase
-
+};
 
 } // end namespace elastix
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxTransformBase.hxx"

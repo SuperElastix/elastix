@@ -348,7 +348,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVectorDataContainer.txx"
+#include "itkVectorDataContainer.hxx"
 #endif
 
 #endif // end __itkVectorDataContainer_h

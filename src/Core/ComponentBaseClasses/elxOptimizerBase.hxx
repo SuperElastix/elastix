@@ -19,7 +19,6 @@
 #include "itkSingleValuedNonLinearOptimizer.h"
 #include "itk_zlib.h"
 
-
 namespace elastix
 {
 
@@ -27,8 +26,8 @@ namespace elastix
  * ****************** Constructor ***********************************
  */
 
-template <class TElastix>
-OptimizerBase<TElastix>
+template< class TElastix >
+OptimizerBase< TElastix >
 ::OptimizerBase()
 {
   this->m_NewSamplesEveryIteration = false;
@@ -42,20 +41,20 @@ OptimizerBase<TElastix>
  * Add empty SetCurrentPositionPublic, so it is known everywhere.
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-OptimizerBase<TElastix>
+OptimizerBase< TElastix >
 ::SetCurrentPositionPublic( const ParametersType & /** param */ )
 {
-  xl::xout["error"] << "ERROR: This function should be overridden or just "
-    << "not used.\n";
-  xl::xout["error"] << "  Are you using BSplineTransformWithDiffusion in "
-    << "combination with another optimizer than the "
-    << "StandardGradientDescentOptimizer? Don't!" << std::endl;
+  xl::xout[ "error" ] << "ERROR: This function should be overridden or just "
+                      << "not used.\n";
+  xl::xout[ "error" ] << "  Are you using BSplineTransformWithDiffusion in "
+                      << "combination with another optimizer than the "
+                      << "StandardGradientDescentOptimizer? Don't!" << std::endl;
 
   /** Throw an exception if this function is not overridden. */
   itkExceptionMacro( << "ERROR: The SetCurrentPositionPublic method is not "
-    << "implemented in your optimizer" );
+                     << "implemented in your optimizer" );
 
 } // end SetCurrentPositionPublic()
 
@@ -64,9 +63,9 @@ OptimizerBase<TElastix>
  * ****************** BeforeEachResolutionBase **********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-OptimizerBase<TElastix>
+OptimizerBase< TElastix >
 ::BeforeEachResolutionBase( void )
 {
   /** Get the current resolution level. */
@@ -85,32 +84,32 @@ OptimizerBase<TElastix>
  * ****************** AfterRegistrationBase **********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-OptimizerBase<TElastix>
+OptimizerBase< TElastix >
 ::AfterRegistrationBase( void )
 {
   typedef typename ParametersType::ValueType ParametersValueType;
 
   /** Get the final parameters, round to six decimals. */
-  ParametersType finalTP = this->GetAsITKBaseType()->GetCurrentPosition();
-  const unsigned long N = finalTP.GetSize();
-  ParametersType roundedTP( N );
+  ParametersType      finalTP = this->GetAsITKBaseType()->GetCurrentPosition();
+  const unsigned long N       = finalTP.GetSize();
+  ParametersType      roundedTP( N );
   for( unsigned int i = 0; i < N; ++i )
   {
-    roundedTP[ i ] = itk::Math::Round<ParametersValueType>(
+    roundedTP[ i ] = itk::Math::Round< ParametersValueType >(
       finalTP[ i ] * 1.0e6 );
   }
 
   /** Compute the crc checksum using zlib crc32 function. */
   const unsigned char * crcInputData
-    = reinterpret_cast<const unsigned char *>( roundedTP.data_block() );
+    = reinterpret_cast< const unsigned char * >( roundedTP.data_block() );
   uLong crc = crc32( 0L, Z_NULL, 0 );
   crc = crc32( crc, crcInputData, N * sizeof( ParametersValueType ) );
 
   elxout << "\nRegistration result checksum: "
-    << crc
-    << std::endl;
+         << crc
+         << std::endl;
 
 } // end AfterRegistrationBase()
 
@@ -119,17 +118,17 @@ OptimizerBase<TElastix>
  * ****************** SelectNewSamples ****************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-OptimizerBase<TElastix>
+OptimizerBase< TElastix >
 ::SelectNewSamples( void )
 {
   /** Force the metric to base its computation on a new subset of image samples.
    * Not every metric may have implemented this.
    */
-  for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMetrics(); ++i )
+  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMetrics(); ++i )
   {
-    this->GetElastix()->GetElxMetricBase(i)->SelectNewSamples();
+    this->GetElastix()->GetElxMetricBase( i )->SelectNewSamples();
   }
 
 } // end SelectNewSamples()
@@ -139,9 +138,9 @@ OptimizerBase<TElastix>
  * ****************** GetNewSamplesEveryIteration ********************
  */
 
-template <class TElastix>
+template< class TElastix >
 bool
-OptimizerBase<TElastix>
+OptimizerBase< TElastix >
 ::GetNewSamplesEveryIteration( void ) const
 {
   /** itkGetConstMacro Without the itkDebugMacro. */
@@ -154,20 +153,20 @@ OptimizerBase<TElastix>
  * ****************** SetSinusScales ********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-OptimizerBase<TElastix>
+OptimizerBase< TElastix >
 ::SetSinusScales( double amplitude, double frequency,
   unsigned long numberOfParameters )
 {
   typedef typename ITKBaseType::ScalesType ScalesType;
 
-  const double nrofpar = static_cast<double>( numberOfParameters );
-  ScalesType scales( numberOfParameters );
+  const double nrofpar = static_cast< double >( numberOfParameters );
+  ScalesType   scales( numberOfParameters );
 
-  for ( unsigned long i = 0; i < numberOfParameters; ++i )
+  for( unsigned long i = 0; i < numberOfParameters; ++i )
   {
-    const double x = static_cast<double>( i ) / nrofpar * 2.0
+    const double x = static_cast< double >( i ) / nrofpar * 2.0
       * vnl_math::pi * frequency;
     scales[ i ] = vcl_pow( amplitude, vcl_sin( x ) );
   }

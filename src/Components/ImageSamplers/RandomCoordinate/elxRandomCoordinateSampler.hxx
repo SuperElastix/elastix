@@ -21,14 +21,13 @@
 namespace elastix
 {
 
-
 /**
  * ******************* BeforeEachResolution ******************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-RandomCoordinateSampler<TElastix>
+RandomCoordinateSampler< TElastix >
 ::BeforeEachResolution( void )
 {
   const unsigned int level
@@ -44,7 +43,7 @@ RandomCoordinateSampler<TElastix>
   unsigned int splineOrder = 1;
   this->GetConfiguration()->ReadParameter( splineOrder,
     "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
-  if ( splineOrder == 1 )
+  if( splineOrder == 1 )
   {
     typedef itk::LinearInterpolateImageFunction<
       InputImageType, CoordRepType >    LinearInterpolatorType;
@@ -67,7 +66,7 @@ RandomCoordinateSampler<TElastix>
   this->SetUseRandomSampleRegion( useRandomSampleRegion );
 
   /** Set the SampleRegionSize. */
-  if ( useRandomSampleRegion )
+  if( useRandomSampleRegion )
   {
     InputImageSpacingType sampleRegionSize;
     InputImageSpacingType fixedImageSpacing
@@ -79,18 +78,18 @@ RandomCoordinateSampler<TElastix>
      * sampleRegionSize[i] = min ( fixedImageSizeInMM[i], max_i ( fixedImageSizeInMM[i]/3 ) )
      */
     double maxthird = 0.0;
-    for ( unsigned int i = 0; i < InputImageDimension; ++i )
+    for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
-      sampleRegionSize[i] = ( fixedImageSize[i] - 1 ) * fixedImageSpacing[i];
-      maxthird = vnl_math_max( maxthird, sampleRegionSize[i] / 3.0 );
+      sampleRegionSize[ i ] = ( fixedImageSize[ i ] - 1 ) * fixedImageSpacing[ i ];
+      maxthird              = vnl_math_max( maxthird, sampleRegionSize[ i ] / 3.0 );
     }
-    for ( unsigned int i = 0; i < InputImageDimension; ++i )
+    for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
-      sampleRegionSize[i] = vnl_math_min( maxthird, sampleRegionSize[i] );
+      sampleRegionSize[ i ] = vnl_math_min( maxthird, sampleRegionSize[ i ] );
     }
 
     /** Read user's choice. */
-    for ( unsigned int i = 0; i < InputImageDimension; ++i )
+    for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
       this->GetConfiguration()->ReadParameter(
         sampleRegionSize[ i ], "SampleRegionSize",

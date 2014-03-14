@@ -16,7 +16,6 @@
 
 #include "elxDisplacementMagnitudePenalty.h"
 
-
 namespace elastix
 {
 
@@ -24,23 +23,22 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
-void DisplacementMagnitudePenalty<TElastix>
-::Initialize( void ) throw (itk::ExceptionObject)
+template< class TElastix >
+void
+DisplacementMagnitudePenalty< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
   this->Superclass1::Initialize();
   timer->StopTimer();
   elxout << "Initialization of DisplacementMagnitude penalty term took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
-    << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << " ms." << std::endl;
 
 } // end Initialize()
 
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxDisplacementMagnitudePenalty_HXX__
-

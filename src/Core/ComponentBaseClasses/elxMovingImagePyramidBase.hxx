@@ -25,9 +25,9 @@ namespace elastix
  * ******************* BeforeRegistrationBase *******************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MovingImagePyramidBase<TElastix>
+MovingImagePyramidBase< TElastix >
 ::BeforeRegistrationBase( void )
 {
   /** Call SetMovingSchedule.*/
@@ -40,9 +40,9 @@ MovingImagePyramidBase<TElastix>
  * ******************* BeforeEachResolutionBase *******************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MovingImagePyramidBase<TElastix>
+MovingImagePyramidBase< TElastix >
 ::BeforeEachResolutionBase( void )
 {
   /** What is the current resolution level? */
@@ -59,7 +59,7 @@ MovingImagePyramidBase<TElastix>
     "ResultImageFormat", 0, false );
 
   /** Writing result image. */
-  if ( writePyramidImage )
+  if( writePyramidImage )
   {
     /** Create a name for the final result. */
     std::ostringstream makeFileName( "" );
@@ -72,16 +72,16 @@ MovingImagePyramidBase<TElastix>
 
     /** Save the fixed pyramid image. */
     elxout << "Writing moving pyramid image "
-      << this->GetComponentLabel()
-      << " from resolution " << level << "..." << std::endl;
+           << this->GetComponentLabel()
+           << " from resolution " << level << "..." << std::endl;
     try
     {
       this->WritePyramidImage( makeFileName.str(), level );
     }
     catch( itk::ExceptionObject & excp )
     {
-      xl::xout["error"] << "Exception caught: " << std::endl;
-      xl::xout["error"] << excp << "Resuming elastix." << std::endl;
+      xl::xout[ "error" ] << "Exception caught: " << std::endl;
+      xl::xout[ "error" ] << excp << "Resuming elastix." << std::endl;
     }
   } // end if
 
@@ -92,9 +92,9 @@ MovingImagePyramidBase<TElastix>
  * ********************** SetMovingSchedule **********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-MovingImagePyramidBase<TElastix>
+MovingImagePyramidBase< TElastix >
 ::SetMovingSchedule( void )
 {
   /** Get the ImageDimension. */
@@ -104,9 +104,9 @@ MovingImagePyramidBase<TElastix>
   unsigned int numberOfResolutions = 0;
   this->m_Configuration->ReadParameter( numberOfResolutions,
     "NumberOfResolutions", 0, true );
-  if ( numberOfResolutions == 0 )
+  if( numberOfResolutions == 0 )
   {
-    xl::xout["error"] << "ERROR: NumberOfResolutions not specified!" << std::endl;
+    xl::xout[ "error" ] << "ERROR: NumberOfResolutions not specified!" << std::endl;
   }
   /** \todo quit program? Actually this check should be in the ::BeforeAll() method. */
 
@@ -121,11 +121,11 @@ MovingImagePyramidBase<TElastix>
    * MovingImagePyramid<i>Schedule, for the i-th moving image pyramid used.
    */
   bool found = true;
-  for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+  for( unsigned int i = 0; i < numberOfResolutions; i++ )
   {
-    for ( unsigned int j = 0; j < MovingImageDimension; j++ )
+    for( unsigned int j = 0; j < MovingImageDimension; j++ )
     {
-      bool ijfound = false;
+      bool               ijfound = false;
       const unsigned int entrynr = i * MovingImageDimension + j;
       ijfound |= this->m_Configuration->ReadParameter( movingSchedule[ i ][ j ],
         "ImagePyramidSchedule", entrynr, false );
@@ -138,12 +138,12 @@ MovingImagePyramidBase<TElastix>
       found &= ijfound;
 
     } // end for MovingImageDimension
-  } // end for numberOfResolutions
+  }   // end for numberOfResolutions
 
-  if ( !found && this->GetConfiguration()->GetPrintErrorMessages() )
+  if( !found && this->GetConfiguration()->GetPrintErrorMessages() )
   {
-    xl::xout["warning"] << "WARNING: the moving pyramid schedule is not fully specified!\n";
-    xl::xout["warning"] << "  A default pyramid schedule is used." << std::endl;
+    xl::xout[ "warning" ] << "WARNING: the moving pyramid schedule is not fully specified!\n";
+    xl::xout[ "warning" ] << "  A default pyramid schedule is used." << std::endl;
   }
   else
   {
@@ -158,9 +158,9 @@ MovingImagePyramidBase<TElastix>
  * ******************* WritePyramidImage ********************
  */
 
-template<class TElastix>
+template< class TElastix >
 void
-MovingImagePyramidBase<TElastix>
+MovingImagePyramidBase< TElastix >
 ::WritePyramidImage( const std::string & filename,
   const unsigned int & level ) //const
 {
@@ -168,9 +168,9 @@ MovingImagePyramidBase<TElastix>
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter( resultImagePixelType,
     "ResultImagePixelType", 0, false );
-  std::basic_string<char>::size_type pos = resultImagePixelType.find( " " );
-  const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
-  if ( pos != npos ) resultImagePixelType.replace( pos, 1, "_" );
+  std::basic_string< char >::size_type       pos  = resultImagePixelType.find( " " );
+  const std::basic_string< char >::size_type npos = std::basic_string< char >::npos;
+  if( pos != npos ) { resultImagePixelType.replace( pos, 1, "_" ); }
 
   /** Read from the parameter file if compression is desired. */
   bool doCompression = false;
@@ -188,8 +188,8 @@ MovingImagePyramidBase<TElastix>
   writer->SetUseCompression( doCompression );
 
   /** Do the writing. */
-  xl::xout["coutonly"] << std::flush;
-  xl::xout["coutonly"] << "  Writing image ..." << std::endl;
+  xl::xout[ "coutonly" ] << std::flush;
+  xl::xout[ "coutonly" ] << "  Writing image ..." << std::endl;
   try
   {
     writer->Update();
@@ -212,4 +212,3 @@ MovingImagePyramidBase<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxMovingImagePyramidBase_hxx
-

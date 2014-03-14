@@ -24,9 +24,9 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-ReducedDimensionBSplineResampleInterpolator<TElastix>
+ReducedDimensionBSplineResampleInterpolator< TElastix >
 ::BeforeRegistration( void )
 {
   /** ReducedDimensionBSplineResampleInterpolator specific. */
@@ -37,10 +37,10 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
   /** Read the desired splineOrder from the parameterFile. */
   bool oldstyle = this->m_Configuration->ReadParameter( splineOrder,
     "FinalReducedDimensionBSplineInterpolationOrder", 0, false );
-  if (oldstyle)
+  if( oldstyle )
   {
-    xout["warning"] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
-      << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
+    xout[ "warning" ] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
+                      << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
   }
   this->m_Configuration->ReadParameter( splineOrder,
     "FinalBSplineInterpolationOrder", 0 );
@@ -55,9 +55,9 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
  * ******************* ReadFromFile  ****************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-ReducedDimensionBSplineResampleInterpolator<TElastix>
+ReducedDimensionBSplineResampleInterpolator< TElastix >
 ::ReadFromFile( void )
 {
   /** Call ReadFromFile of the ResamplerBase. */
@@ -71,10 +71,10 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
   /** Read the desired splineOrder from the parameterFile. */
   bool oldstyle = this->m_Configuration->ReadParameter( splineOrder,
     "FinalReducedDimensionBSplineInterpolationOrder", 0, false );
-  if (oldstyle)
+  if( oldstyle )
   {
-    xout["warning"] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
-      << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
+    xout[ "warning" ] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
+                      << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
   }
   this->m_Configuration->ReadParameter( splineOrder,
     "FinalBSplineInterpolationOrder", 0 );
@@ -89,9 +89,9 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
  * ******************* WriteToFile ******************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-ReducedDimensionBSplineResampleInterpolator<TElastix>
+ReducedDimensionBSplineResampleInterpolator< TElastix >
 ::WriteToFile( void ) const
 {
   /** Call WriteToFile of the ResamplerBase. */
@@ -100,8 +100,8 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
   /** The ReducedDimensionBSplineResampleInterpolator adds: */
 
   /** Write the FinalBSplineInterpolationOrder. */
-  xout["transpar"] << "(FinalBSplineInterpolationOrder "
-    << this->GetSplineOrder() << ")" << std::endl;
+  xout[ "transpar" ] << "(FinalBSplineInterpolationOrder "
+                     << this->GetSplineOrder() << ")" << std::endl;
 
 } // end WriteToFile()
 
@@ -109,4 +109,3 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxReducedDimensionBSplineResampleInterpolator_hxx
-

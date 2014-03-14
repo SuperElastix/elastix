@@ -16,7 +16,6 @@ PURPOSE. See the above copyright notices for more information.
 
 #include "itkParameterMapInterface.h"
 
-
 namespace itk
 {
 
@@ -40,7 +39,7 @@ ParameterMapInterface
 ParameterMapInterface
 ::~ParameterMapInterface()
 {
-    // empty
+  // empty
 } // end Destructor()
 
 
@@ -52,7 +51,7 @@ void
 ParameterMapInterface
 ::SetParameterMap( const ParameterMapType & parMap )
 {
-  if ( !parMap.empty() )
+  if( !parMap.empty() )
   {
     this->m_ParameterMap = parMap;
   }
@@ -69,7 +68,7 @@ ParameterMapInterface
 ::CountNumberOfParameterEntries(
   const std::string & parameterName ) const
 {
-  if ( this->m_ParameterMap.count( parameterName ) )
+  if( this->m_ParameterMap.count( parameterName ) )
   {
     return this->m_ParameterMap.find( parameterName )->second.size();
   }
@@ -92,7 +91,7 @@ ParameterMapInterface
 {
   /** Translate the default boolean to string. */
   std::string parameterValueString;
-  if ( parameterValue )
+  if( parameterValue )
   {
     parameterValueString = "true";
   }
@@ -107,11 +106,11 @@ ParameterMapInterface
 
   /** Translate the read-in string to boolean. */
   parameterValue = false;
-  if ( parameterValueString == "true" )
+  if( parameterValueString == "true" )
   {
     parameterValue = true;
   }
-  else if ( parameterValueString == "false" )
+  else if( parameterValueString == "false" )
   {
     parameterValue = false;
   }
@@ -120,9 +119,9 @@ ParameterMapInterface
     /** Trying to read a string other than "true" or "false" as a boolean. */
     std::stringstream ss;
     ss << "ERROR: Entry number " << entry_nr
-      << " for the parameter \"" << parameterName
-      << "\" should be a boolean, i.e. either \"true\" or \"false\""
-      << ", but it reads \"" << parameterValueString << "\".";
+       << " for the parameter \"" << parameterName
+       << "\" should be a boolean, i.e. either \"true\" or \"false\""
+       << ", but it reads \"" << parameterValueString << "\".";
 
     itkExceptionMacro( << ss.str() );
   }
@@ -152,7 +151,7 @@ ParameterMapInterface
 bool
 ParameterMapInterface
 ::ReadParameter(
-  std::vector<std::string> & parameterValues,
+  std::vector< std::string > & parameterValues,
   const std::string & parameterName,
   const unsigned int entry_nr_start,
   const unsigned int entry_nr_end,
@@ -167,15 +166,15 @@ ParameterMapInterface
     parameterName );
 
   /** Check if the requested parameter exists. */
-  if ( numberOfEntries == 0 )
+  if( numberOfEntries == 0 )
   {
     std::stringstream ss;
     ss << "WARNING: The parameter \"" << parameterName
-      << "\", requested between entry numbers " << entry_nr_start
-      << " and " << entry_nr_end
-      << ", does not exist at all.\n"
-      << "  The default values are used instead." << std::endl;
-    if ( printThisErrorMessage && this->m_PrintErrorMessages )
+       << "\", requested between entry numbers " << entry_nr_start
+       << " and " << entry_nr_end
+       << ", does not exist at all.\n"
+       << "  The default values are used instead." << std::endl;
+    if( printThisErrorMessage && this->m_PrintErrorMessages )
     {
       errorMessage = ss.str();
     }
@@ -183,25 +182,25 @@ ParameterMapInterface
   }
 
   /** Check. */
-  if ( entry_nr_start > entry_nr_end )
+  if( entry_nr_start > entry_nr_end )
   {
     std::stringstream ss;
     ss << "WARNING: The entry number start (" << entry_nr_start
-      << ") should be smaller than entry number end (" << entry_nr_end
-      << "). It was requested for parameter \"" << parameterName
-      << "\"." << std::endl;
+       << ") should be smaller than entry number end (" << entry_nr_end
+       << "). It was requested for parameter \"" << parameterName
+       << "\"." << std::endl;
 
     /** Programming error: just throw an exception. */
     itkExceptionMacro( << ss.str() );
   }
 
   /** Check if it exists at the requested entry numbers. */
-  if ( entry_nr_end >= numberOfEntries )
+  if( entry_nr_end >= numberOfEntries )
   {
     std::stringstream ss;
     ss << "WARNING: The parameter \"" << parameterName
-      << "\" does not exist at entry number " << entry_nr_end
-      << ".\nThe default empty string \"\" is used instead." << std::endl;
+       << "\" does not exist at entry number " << entry_nr_end
+       << ".\nThe default empty string \"\" is used instead." << std::endl;
     itkExceptionMacro( << ss.str() );
   }
 
@@ -209,12 +208,13 @@ ParameterMapInterface
   const ParameterValuesType & vec = this->m_ParameterMap.find( parameterName )->second;
 
   /** Copy all parameters at once. */
-  std::vector<std::string>::const_iterator it = vec.begin();
+  std::vector< std::string >::const_iterator it = vec.begin();
   parameterValues.clear();
   parameterValues.assign( it + entry_nr_start, it + entry_nr_end + 1 );
 
   return true;
 }
+
 
 } // end namespace itk
 

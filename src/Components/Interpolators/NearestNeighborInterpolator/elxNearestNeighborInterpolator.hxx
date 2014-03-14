@@ -25,4 +25,3 @@ namespace elastix
 } // end namespace elastix
 
 #endif // end #ifndef __elxNearestNeighborInterpolator_hxx
-

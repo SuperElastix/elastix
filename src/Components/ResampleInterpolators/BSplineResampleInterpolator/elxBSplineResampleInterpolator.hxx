@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxBSplineResampleInterpolator_hxx
 #define __elxBSplineResampleInterpolator_hxx
 
@@ -20,13 +19,13 @@
 namespace elastix
 {
 
-/*
+/**
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-BSplineResampleInterpolator<TElastix>
+BSplineResampleInterpolator< TElastix >
 ::BeforeRegistration( void )
 {
   /** BSplineResampleInterpolator specific. */
@@ -44,13 +43,13 @@ BSplineResampleInterpolator<TElastix>
 } // end BeforeRegistration()
 
 
-/*
+/**
  * ******************* ReadFromFile  ****************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-BSplineResampleInterpolator<TElastix>
+BSplineResampleInterpolator< TElastix >
 ::ReadFromFile( void )
 {
   /** Call ReadFromFile of the ResamplerBase. */
@@ -75,9 +74,9 @@ BSplineResampleInterpolator<TElastix>
  * ******************* WriteToFile ******************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-BSplineResampleInterpolator<TElastix>
+BSplineResampleInterpolator< TElastix >
 ::WriteToFile( void ) const
 {
   /** Call WriteToFile of the ResamplerBase. */
@@ -86,13 +85,40 @@ BSplineResampleInterpolator<TElastix>
   /** The BSplineResampleInterpolator adds: */
 
   /** Write the FinalBSplineInterpolationOrder. */
-  xout["transpar"] << "(FinalBSplineInterpolationOrder "
-    << this->GetSplineOrder() << ")" << std::endl;
+  xout[ "transpar" ] << "(FinalBSplineInterpolationOrder "
+                     << this->GetSplineOrder() << ")" << std::endl;
 
 } // end WriteToFile()
+
+
+/**
+ * ******************* CreateTransformParametersMap ******************************
+ */
+
+template< class TElastix >
+void
+BSplineResampleInterpolator< TElastix >
+::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
+{
+  std::string                parameterName;
+  std::vector< std::string > parameterValues;
+  char                       tmpValue[ 256 ];
+
+  /** Call CreateTransformParametersMap of the ResamplerBase. */
+  this->Superclass2::CreateTransformParametersMap( paramsMap );
+
+  /** The BSplineResampleInterpolator adds: */
+
+  /** Write the FinalBSplineInterpolationOrder. */
+  parameterName = "FinalBSplineInterpolationOrder";
+  sprintf( tmpValue, "%d", this->GetSplineOrder() );
+  parameterValues.push_back( tmpValue );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
+
+} // end CreateTransformParametersMap()
 
 
 } // end namespace elastix
 
 #endif // end #ifndef __elxBSplineResampleInterpolator_hxx
-

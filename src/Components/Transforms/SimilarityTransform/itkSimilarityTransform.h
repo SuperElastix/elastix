@@ -22,186 +22,182 @@
 namespace itk
 {
 
-  /**
-   * \class SimilarityGroup
-   * \brief This class only contains a dummy class.
-   *
-   */
+/**
+ * \class SimilarityGroup
+ * \brief This class only contains a dummy class.
+ *
+ */
 
-  template< unsigned int Dimension >
-    class SimilarityGroup
+template< unsigned int Dimension >
+class SimilarityGroup
+{
+public:
+
+  template< class TScalarType >
+  class Dummy
   {
-  public:
+public:
 
-    template< class TScalarType >
-      class Dummy
-    {
-    public:
+    /** Typedef's.*/
+    typedef AdvancedMatrixOffsetTransformBase<
+      TScalarType, Dimension, Dimension >            SimilarityTransform_tmp;
 
-      /** Typedef's.*/
-      typedef AdvancedMatrixOffsetTransformBase<
-        TScalarType, Dimension, Dimension >            SimilarityTransform_tmp;
+  };
 
-    }; // end class Dummy
+};
 
-  }; // end class SimilarityGroup
+/**
+ * \class SimilarityGroup<2>
+ * \brief This class only contains a dummy class for the 2D case.
+ *
+ */
 
+template< >
+class SimilarityGroup< 2 >
+{
+public:
 
-  /**
-   * \class SimilarityGroup<2>
-   * \brief This class only contains a dummy class for the 2D case.
-   *
-   */
-
-  template<>
-    class SimilarityGroup<2>
+  template< class TScalarType >
+  class Dummy
   {
-  public:
+public:
 
-    template< class TScalarType >
-      class Dummy
-    {
-    public:
+    /** Typedef's.*/
+    typedef AdvancedSimilarity2DTransform< TScalarType > SimilarityTransform_tmp;
 
-      /** Typedef's.*/
-      typedef AdvancedSimilarity2DTransform< TScalarType >      SimilarityTransform_tmp;
+  };
 
-    }; // end class Dummy
+};
 
-  }; // end class SimilarityGroup<2>
+/**
+ * \class SimilarityGroup<3>
+ * \brief This class only contains a dummy class for the 3D case.
+ *
+ */
 
+template< >
+class SimilarityGroup< 3 >
+{
+public:
 
-  /**
-   * \class SimilarityGroup<3>
-   * \brief This class only contains a dummy class for the 3D case.
-   *
-   */
-
-  template<>
-    class SimilarityGroup<3>
+  template< class TScalarType >
+  class Dummy
   {
-  public:
+public:
 
-    template< class TScalarType >
-      class Dummy
-    {
-    public:
+    /** Typedef's.*/
+    typedef AdvancedSimilarity3DTransform< TScalarType > SimilarityTransform_tmp;
 
-      /** Typedef's.*/
-      typedef AdvancedSimilarity3DTransform< TScalarType >                  SimilarityTransform_tmp;
+  };
 
-    }; // end class Dummy
+};
 
-  }; // end class SimilarityGroup<3>
+/**
+ * \class SimilarityGroupTemplate
+ * \brief This class templates the SimilarityGroup over its dimension.
+ *
+ */
 
+template< class TScalarType, unsigned int Dimension >
+class SimilarityGroupTemplate
+{
+public:
 
-  /**
-   * \class SimilarityGroupTemplate
-   * \brief This class templates the SimilarityGroup over its dimension.
-   *
-   */
+  typedef SimilarityGroupTemplate Self;
+  typedef TScalarType             ScalarType;
+  itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
 
-  template< class TScalarType, unsigned int Dimension >
-    class SimilarityGroupTemplate
+  // This declaration of 'Similarity' does not work with the GCC compiler
+  //    typedef SimilarityGroup<  itkGetStaticConstMacro( SpaceDimension ) >        Similarity;
+  // The following trick works though:
+  template< unsigned int D >
+  class SimilarityGroupWrap
   {
-  public:
+public:
 
-    typedef SimilarityGroupTemplate Self;
-    typedef TScalarType ScalarType;
-    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
+    typedef SimilarityGroup< D > Similarity;
+  };
 
-    // This declaration of 'Similarity' does not work with the GCC compiler
-    //    typedef SimilarityGroup<  itkGetStaticConstMacro( SpaceDimension ) >        Similarity;
-    // The following trick works though:
-    template <unsigned int D>
-      class SimilarityGroupWrap
-    {
-    public:
-      typedef SimilarityGroup<D> Similarity;
-    };
-    typedef SimilarityGroupWrap<Dimension>                      SimilarityGroupWrapInstance;
-    typedef typename SimilarityGroupWrapInstance::Similarity    Similarity;
+  typedef SimilarityGroupWrap< Dimension >                 SimilarityGroupWrapInstance;
+  typedef typename SimilarityGroupWrapInstance::Similarity Similarity;
 
-    typedef typename Similarity::template Dummy< ScalarType >   SimilarityDummy;
-    typedef typename SimilarityDummy::SimilarityTransform_tmp   SimilarityTransform_tmp;
+  typedef typename Similarity::template Dummy< ScalarType > SimilarityDummy;
+  typedef typename SimilarityDummy::SimilarityTransform_tmp SimilarityTransform_tmp;
 
-  }; // end class SimilarityGroupTemplate
+};
 
+/**
+ * \class SimilarityTransform
+ * \brief This class combines the Similarity2DTransform with the Similarity3DTransform.
+ *
+ * This transform is a rigid body transformation, with a uniform scaling.
+ *
+ * \ingroup Transforms
+ */
 
-  /**
-   * \class SimilarityTransform
-   * \brief This class combines the Similarity2DTransform with the Similarity3DTransform.
-   *
-   * This transform is a rigid body transformation, with a uniform scaling.
-   *
-   * \ingroup Transforms
-   */
-
-  template< class TScalarType, unsigned int Dimension >
-    class SimilarityTransform:
+template< class TScalarType, unsigned int Dimension >
+class SimilarityTransform :
   public SimilarityGroupTemplate<
-    TScalarType, Dimension >::SimilarityTransform_tmp
-  {
-  public:
+  TScalarType, Dimension >::SimilarityTransform_tmp
+{
+public:
 
-    /** Standard ITK-stuff. */
-    typedef SimilarityTransform                 Self;
-    typedef typename SimilarityGroupTemplate<
-      TScalarType, Dimension >
-      ::SimilarityTransform_tmp                 Superclass;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+  /** Standard ITK-stuff. */
+  typedef SimilarityTransform Self;
+  typedef typename SimilarityGroupTemplate<
+    TScalarType, Dimension >
+    ::SimilarityTransform_tmp Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
 
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( SimilarityTransform, SimilarityGroupTemplate );
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( SimilarityTransform, SimilarityGroupTemplate );
 
-    /** Dimension of the domain space. */
-    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
+  /** Dimension of the domain space. */
+  itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
 
-    /** Typedefs inherited from the superclass. */
+  /** Typedefs inherited from the superclass. */
 
-    /** These are both in Similarity2D and Similarity3D. */
-    typedef typename Superclass::ScalarType                   ScalarType;
-    typedef typename Superclass::ParametersType               ParametersType;
-    typedef typename Superclass::NumberOfParametersType       NumberOfParametersType;
-    typedef typename Superclass::JacobianType                 JacobianType;
-    typedef typename Superclass::OffsetType                   OffsetType;
-    typedef typename Superclass::InputPointType               InputPointType;
-    typedef typename Superclass::OutputPointType              OutputPointType;
-    typedef typename Superclass::InputVectorType              InputVectorType;
-    typedef typename Superclass::OutputVectorType             OutputVectorType;
-    typedef typename Superclass::InputCovariantVectorType     InputCovariantVectorType;
-    typedef typename Superclass::OutputCovariantVectorType    OutputCovariantVectorType;
-    typedef typename Superclass::InputVnlVectorType           InputVnlVectorType;
-    typedef typename Superclass::OutputVnlVectorType          OutputVnlVectorType;
+  /** These are both in Similarity2D and Similarity3D. */
+  typedef typename Superclass::ScalarType                ScalarType;
+  typedef typename Superclass::ParametersType            ParametersType;
+  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
+  typedef typename Superclass::JacobianType              JacobianType;
+  typedef typename Superclass::OffsetType                OffsetType;
+  typedef typename Superclass::InputPointType            InputPointType;
+  typedef typename Superclass::OutputPointType           OutputPointType;
+  typedef typename Superclass::InputVectorType           InputVectorType;
+  typedef typename Superclass::OutputVectorType          OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass::InputVnlVectorType        InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType       OutputVnlVectorType;
 
-    typedef typename Superclass
-      ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
-    typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
-    typedef typename Superclass
-      ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-    typedef typename Superclass::SpatialHessianType   SpatialHessianType;
-    typedef typename Superclass
-      ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-    typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+  typedef typename Superclass
+    ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
+  typedef typename Superclass
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
+  typedef typename Superclass
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
-  protected:
+protected:
 
-    SimilarityTransform(){};
-    ~SimilarityTransform(){};
+  SimilarityTransform(){}
+  ~SimilarityTransform(){}
 
-  private:
+private:
 
-    SimilarityTransform( const Self& ); // purposely not implemented
-    void operator=( const Self& ); // purposely not implemented
+  SimilarityTransform( const Self & ); // purposely not implemented
+  void operator=( const Self & );      // purposely not implemented
 
-  }; // end class SimilarityTransform
-
+};
 
 } // end namespace itk
 
 #endif // end #ifndef __itkSimilarityTransform_H__
-

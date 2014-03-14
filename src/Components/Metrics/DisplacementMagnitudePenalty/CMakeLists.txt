@@ -4,6 +4,6 @@ ADD_ELXCOMPONENT( DisplacementMagnitudePenalty OFF
  elxDisplacementMagnitudePenalty.hxx
  elxDisplacementMagnitudePenalty.cxx
  itkDisplacementMagnitudePenaltyTerm.h
- itkDisplacementMagnitudePenaltyTerm.txx
+ itkDisplacementMagnitudePenaltyTerm.hxx
 )
 

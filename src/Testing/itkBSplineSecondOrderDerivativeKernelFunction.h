@@ -35,14 +35,15 @@ namespace itk
  *
  * \ingroup Functions
  */
-template <unsigned int VSplineOrder = 3>
-class ITK_EXPORT BSplineSecondOrderDerivativeKernelFunction : public KernelFunctionBase<double>
+template< unsigned int VSplineOrder = 3 >
+class ITK_EXPORT BSplineSecondOrderDerivativeKernelFunction : public KernelFunctionBase< double >
 {
 public:
+
   /** Standard class typedefs. */
   typedef BSplineSecondOrderDerivativeKernelFunction Self;
-  typedef KernelFunctionBase<double>      Superclass;
-  typedef SmartPointer<Self>              Pointer;
+  typedef KernelFunctionBase< double >               Superclass;
+  typedef SmartPointer< Self >                       Pointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -55,34 +56,38 @@ public:
 
   /** Evaluate the function. */
   inline double Evaluate( const double & u ) const
-    {
+  {
     return ( m_KernelFunction->Evaluate( u + 1.0 )
-      - 2.0 * m_KernelFunction->Evaluate( u )
-      + m_KernelFunction->Evaluate( u - 1.0 ) );
-    }
+           - 2.0 * m_KernelFunction->Evaluate( u )
+           + m_KernelFunction->Evaluate( u - 1.0 ) );
+  }
+
 
 protected:
 
-  typedef BSplineKernelFunction<itkGetStaticConstMacro(SplineOrder) - 2>
-      KernelType;
+  typedef BSplineKernelFunction< itkGetStaticConstMacro( SplineOrder ) - 2 >
+    KernelType;
 
   BSplineSecondOrderDerivativeKernelFunction()
-    {
+  {
     m_KernelFunction = KernelType::New();
-    }
+  }
 
-  ~BSplineSecondOrderDerivativeKernelFunction(){};
-  void PrintSelf(std::ostream& os, Indent indent) const
-    {
+
+  ~BSplineSecondOrderDerivativeKernelFunction(){}
+  void PrintSelf( std::ostream & os, Indent indent ) const
+  {
     Superclass::PrintSelf( os, indent );
     os << indent  << "Spline Order: " << SplineOrder << std::endl;
-    }
+  }
+
 
 private:
-  BSplineSecondOrderDerivativeKernelFunction(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
 
-  typename KernelType::Pointer  m_KernelFunction;
+  BSplineSecondOrderDerivativeKernelFunction( const Self & ); //purposely not implemented
+  void operator=( const Self & );                             //purposely not implemented
+
+  typename KernelType::Pointer m_KernelFunction;
 
 };
 

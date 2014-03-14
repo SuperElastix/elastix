@@ -10,7 +10,7 @@
 (FixedImagePyramid "FixedRecursiveImagePyramid")
 (MovingImagePyramid "MovingRecursiveImagePyramid")
 (Interpolator "NearestNeighborInterpolator")
-(Metric "AdvancedNormalizedCorrelation")
+(Metric "AdvancedMeanSquares")
 (Optimizer "AdaptiveStochasticGradientDescent")
 (ResampleInterpolator "FinalBSplineInterpolator")
 (Resampler "DefaultResampler")

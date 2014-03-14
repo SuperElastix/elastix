@@ -92,7 +92,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMeshFileReaderBase.txx"
+#include "itkMeshFileReaderBase.hxx"
 #endif
 
 #endif

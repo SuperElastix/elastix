@@ -158,7 +158,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageRandomCoordinateSampler.txx"
+#include "itkImageRandomCoordinateSampler.hxx"
 #endif
 
 #endif // end #ifndef __ImageRandomCoordinateSampler_h

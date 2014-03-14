@@ -19,7 +19,8 @@
 
 //-------------------------------------------------------------------------------------
 
-int main( int argc, char *argv[] )
+int
+main( int argc, char * argv[] )
 {
   /** Some basic type definitions.
    * NOTE: don't change the dimension or the spline order, since the
@@ -32,16 +33,16 @@ int main( int argc, char *argv[] )
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode.
    */
-  unsigned int N = static_cast<unsigned int>( 1e8 );
+  unsigned int N = static_cast< unsigned int >( 1e8 );
 
   /** Other typedefs. */
-  typedef itk::BSplineSecondOrderDerivativeKernelFunction<SplineOrder> BSplineSODerivativeKernelType;
-  typedef itk::BSplineSecondOrderDerivativeKernelFunction2<SplineOrder> BSplineSODerivativeKernelType2;
+  typedef itk::BSplineSecondOrderDerivativeKernelFunction< SplineOrder >  BSplineSODerivativeKernelType;
+  typedef itk::BSplineSecondOrderDerivativeKernelFunction2< SplineOrder > BSplineSODerivativeKernelType2;
 
   /** Create the kernel. */
   BSplineSODerivativeKernelType::Pointer dkernel = BSplineSODerivativeKernelType::New();
-  const unsigned int size_u = 15;
-  std::vector<double> u( size_u );
+  const unsigned int                     size_u  = 15;
+  std::vector< double >                  u( size_u );
   u[ 0 ] = -2.5;
   u[ 1 ] = -2.0;
   u[ 2 ] = -1.9;
@@ -51,42 +52,42 @@ int main( int argc, char *argv[] )
   u[ 6 ] = -0.5;
   u[ 7 ] = -0.1;
   u[ 8 ] =  0.0;
-  for ( unsigned int i = ( size_u + 3 ) / 2; i < size_u; ++i )
+  for( unsigned int i = ( size_u + 3 ) / 2; i < size_u; ++i )
   {
     u[ i ] = -u[ -i + size_u + 1 ];
   }
 
   /** Time the implementation. */
   clock_t startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     dkernel->Evaluate( u[ 3 ] );
   }
-  clock_t endClock = clock();
+  clock_t endClock  = clock();
   clock_t clockDiff = endClock - startClock;
   std::cerr << "The elapsed time for ITK implementation is: "
-    << clockDiff << std::endl;
+            << clockDiff << std::endl;
 
   /** Create the kernel. */
   BSplineSODerivativeKernelType2::Pointer dkernel2 = BSplineSODerivativeKernelType2::New();
 
   /** Time the implementation. */
   startClock = clock();
-  for ( unsigned int i = 0; i < N; ++i )
+  for( unsigned int i = 0; i < N; ++i )
   {
     dkernel2->Evaluate( u[ 3 ] );
   }
-  endClock = clock();
+  endClock  = clock();
   clockDiff = endClock - startClock;
   std::cerr << "The elapsed time for our implementation is: "
-    << clockDiff << std::endl;
+            << clockDiff << std::endl;
 
   /***************************************************************************/
 
-  for ( unsigned int i = 0; i < size_u; ++i )
+  for( unsigned int i = 0; i < size_u; ++i )
   {
     double diff = dkernel->Evaluate( u[ i ] ) - dkernel2->Evaluate( u[ i ] );
-    if ( diff > 1e-5 )
+    if( diff > 1e-5 )
     {
       std::cerr << "ERROR: our implementation differs from ITK." << std::endl;
       return 1;

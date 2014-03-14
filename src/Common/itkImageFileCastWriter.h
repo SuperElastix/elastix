@@ -119,7 +119,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageFileCastWriter.txx"
+#include "itkImageFileCastWriter.hxx"
 #endif
 
 #endif // __itkImageFileCastWriter_h
