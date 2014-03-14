@@ -31,8 +31,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkReducedDimensionBSplineInterpolateImageFunction_txx
-#define __itkReducedDimensionBSplineInterpolateImageFunction_txx
+#ifndef __itkReducedDimensionBSplineInterpolateImageFunction_hxx
+#define __itkReducedDimensionBSplineInterpolateImageFunction_hxx
 
 #include "itkReducedDimensionBSplineInterpolateImageFunction.h"
 #include "itkImageLinearIteratorWithIndex.h"
@@ -60,8 +60,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
   // ***TODO: Should we store coefficients in a variable or retrieve from filter?
   m_Coefficients = CoefficientImageType::New();
   this->SetSplineOrder( SplineOrder );
-//  this->m_UseImageDirection = false;
-  this->m_UseImageDirection = true;  //Should always be true! Otherwise registration will fail
+  this->m_UseImageDirection = true;
 }
 
 
