@@ -20,7 +20,8 @@
 
 // Supported transforms:
 #include "itkTransform.h"
-#include "itkEuler3DTransform.h"
+#include "itkEulerTransform.h"
+//#include "itkEuler3DTransform.h"
 #include "itkAffineTransform.h"
 
 #include <iostream>
@@ -84,10 +85,9 @@ main( int argc, char * argv[] )
   std::string dummyErrorMessage = "";
 
   typedef itk::Transform<
-    PrecisionType, Dimension, Dimension >               BaseTransformType;
-  typedef itk::Euler3DTransform< PrecisionType > RigidTransformType;
-  typedef itk::AffineTransform<
-    PrecisionType, Dimension >                            AffineTransformType;
+    PrecisionType, Dimension, Dimension >                   BaseTransformType;
+  typedef itk::EulerTransform< PrecisionType, Dimension >   RigidTransformType;
+  typedef itk::AffineTransform< PrecisionType, Dimension >  AffineTransformType;
   typedef BaseTransformType::ParametersType  ParametersType;
   typedef BaseTransformType::ScalarType      ScalarType;
   typedef RigidTransformType::CenterType     CenterType;
