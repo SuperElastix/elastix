@@ -112,6 +112,17 @@ main( int argc, char * argv[] )
     return EXIT_FAILURE;
   }
 
+  /** Check dimension. */
+  unsigned int dimF = 0;
+  config->ReadParameter( dimF, "FixedImageDimension", 0, dummyErrorMessage );
+  if( dimF != Dimension )
+  {
+    std::cerr << "ERROR: the program elxInvertTransform was compiled for images of dimension " << Dimension << ",\n"
+      << "  while the parameter \"FixedImageDimension\" reads " << dimF << ".\n"
+      << "  Recompile elxInvertTransform for Dimension = " << dimF << std::endl;
+    return EXIT_FAILURE;
+  }
+
   /**
    * *** TASK 1:
    * *** Read the moving image to determine the inverted fixed image domain.
@@ -174,39 +185,48 @@ main( int argc, char * argv[] )
 
   std::string transformType = "";
   config->ReadParameter( transformType, "Transform", 0, dummyErrorMessage );
-  if( transformType == "EulerTransform" )
+
+  try
   {
-    RigidTransformType::Pointer rigidTransform = RigidTransformType::New();
-    rigidTransform->SetCenter( centerOfRotation );
-    rigidTransform->SetParametersByValue( transformParameters );
-    OutputPointType mappedCenterOfRotation = rigidTransform->TransformPoint( centerOfRotation );
+    if( transformType == "EulerTransform" )
+    {
+      RigidTransformType::Pointer rigidTransform = RigidTransformType::New();
+      rigidTransform->SetCenter( centerOfRotation );
+      rigidTransform->SetParametersByValue( transformParameters );
+      OutputPointType mappedCenterOfRotation = rigidTransform->TransformPoint( centerOfRotation );
 
-    RigidTransformType::Pointer inverseRigidTransform = RigidTransformType::New();
-    inverseRigidTransform->SetCenter( mappedCenterOfRotation );
-    rigidTransform->GetInverse( inverseRigidTransform );
+      RigidTransformType::Pointer inverseRigidTransform = RigidTransformType::New();
+      inverseRigidTransform->SetCenter( mappedCenterOfRotation );
+      rigidTransform->GetInverse( inverseRigidTransform );
 
-    transformParametersInv = inverseRigidTransform->GetParameters();
-    centerOfRotationInv    = inverseRigidTransform->GetCenter();
+      transformParametersInv = inverseRigidTransform->GetParameters();
+      centerOfRotationInv    = inverseRigidTransform->GetCenter();
+    }
+    else if( transformType == "AffineTransform" )
+    {
+      AffineTransformType::Pointer affineTransform = AffineTransformType::New();
+      affineTransform->SetCenter( centerOfRotation );
+      affineTransform->SetParametersByValue( transformParameters );
+      OutputPointType mappedCenterOfRotation = affineTransform->TransformPoint( centerOfRotation );
+
+      AffineTransformType::Pointer inverseAffineTransform = AffineTransformType::New();
+      inverseAffineTransform->SetCenter( mappedCenterOfRotation );
+      affineTransform->GetInverse( inverseAffineTransform );
+
+      transformParametersInv = inverseAffineTransform->GetParameters();
+      centerOfRotationInv    = inverseAffineTransform->GetCenter();
+    }
+    else
+    {
+      std::cerr << "ERROR: Transforms of the type "
+        << transformType
+        << " are not supported." << std::endl;
+      return EXIT_FAILURE;
+    }
   }
-  else if( transformType == "AffineTransform" )
+  catch( itk::ExceptionObject & e )
   {
-    AffineTransformType::Pointer affineTransform = AffineTransformType::New();
-    affineTransform->SetCenter( centerOfRotation );
-    affineTransform->SetParametersByValue( transformParameters );
-    OutputPointType mappedCenterOfRotation = affineTransform->TransformPoint( centerOfRotation );
-
-    AffineTransformType::Pointer inverseAffineTransform = AffineTransformType::New();
-    inverseAffineTransform->SetCenter( mappedCenterOfRotation );
-    affineTransform->GetInverse( inverseAffineTransform );
-
-    transformParametersInv = inverseAffineTransform->GetParameters();
-    centerOfRotationInv    = inverseAffineTransform->GetCenter();
-  }
-  else
-  {
-    std::cerr << "ERROR: Transforms of the type "
-              << transformType
-              << " are not supported." << std::endl;
+    std::cerr << "ERROR: Caught ITK exception: " << e << std::endl;
     return EXIT_FAILURE;
   }
 
