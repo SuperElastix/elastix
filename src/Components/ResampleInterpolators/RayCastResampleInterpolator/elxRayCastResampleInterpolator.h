@@ -18,7 +18,7 @@
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkAdvancedCombinationTransform.h"
 #include "itkAdvancedTransform.h"
-#include "../Transforms/EulerTransform/itkEulerTransform.h"
+#include "itkEulerTransform.h"
 
 namespace elastix
 {
