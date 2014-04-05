@@ -110,6 +110,7 @@ SET( TransformFiles
   #Transforms/itkBSplineKernelFunction2.h
   #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
   Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
+  Transforms/itkEulerTransform.h
   Transforms/itkTransformToDeterminantOfSpatialJacobianSource.h
   Transforms/itkTransformToDeterminantOfSpatialJacobianSource.hxx
   Transforms/itkTransformToSpatialJacobianSource.h
