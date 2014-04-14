@@ -871,6 +871,8 @@ AdaptiveStochasticGradientDescent< TElastix >
          * Also, the AdaptiveStepSize mechanism is turned off when any of the samplers
          * has UseRandomSampleRegion==true.
          * \todo Extend ASGD to really take into account random region sampling.
+         * \todo This does not work for the MultiInputRandomCoordinateImageSampler,
+         * because it does not inherit from the RandomCoordinateImageSampler 
          */
         if( randomCoordinateSamplerVec[ m ].IsNotNull() )
         {
@@ -887,7 +889,9 @@ AdaptiveStochasticGradientDescent< TElastix >
               this->SetUseAdaptiveStepSizes( false );
             }
           }
-          randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
+          /** Do not turn it off yet, as it would go wrong if you multiple metrics are using
+           * all the same sampler. */
+          //randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
 
         } // end if random coordinate sampler
 
@@ -904,6 +908,16 @@ AdaptiveStochasticGradientDescent< TElastix >
       } // end if random sampler
 
     } // end for loop over metrics
+
+    /** Start a second loop over all metrics to turn off the random region sampling. */     
+    for( unsigned int m = 0; m < M; ++m )
+    {
+      if( randomCoordinateSamplerVec[ m ].IsNotNull() )
+      {
+        randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
+      }   
+    } // end loop over metrics
+
   }   // end if NewSamplesEveryIteration.
 
 #ifndef _ELASTIX_BUILD_LIBRARY
