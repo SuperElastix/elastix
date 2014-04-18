@@ -123,7 +123,6 @@ public:
   typedef typename MovingImageCalculatorType::Pointer
                                                  MovingImageCalculatorPointer;
 
-
   /** Offset type. */
   typedef typename TransformType::OffsetType OffsetType;
 
@@ -151,10 +150,20 @@ public:
 
   /** Select between using the geometrical center of the images or
       using the center of mass given by the image intensities. */
-  void GeometryOn()    { m_UseMoments = false; m_UseOrigins = false; m_UseTop = false; }
-  void MomentsOn()     { m_UseMoments = true; m_UseOrigins = false; m_UseTop = false; }
-  void OriginsOn()     { m_UseMoments = false; m_UseOrigins = true; m_UseTop = false; }
-  void GeometryTopOn() { m_UseMoments = false; m_UseOrigins = false; m_UseTop = true; }
+  void GeometryOn()
+    { m_UseMoments = false; m_UseOrigins = false; m_UseTop = false; m_UseTopSliceCenter = false;}
+
+  void MomentsOn()
+    { m_UseMoments = true;  m_UseOrigins = false; m_UseTop = false; m_UseTopSliceCenter = false;}
+
+  void OriginsOn()
+    { m_UseMoments = false; m_UseOrigins = true;  m_UseTop = false; m_UseTopSliceCenter = false;}
+
+  void GeometryTopOn()
+    { m_UseMoments = false; m_UseOrigins = false; m_UseTop = true;  m_UseTopSliceCenter = false;}
+
+  void GeometryTopSliceCenterOn()
+    { m_UseMoments = false; m_UseOrigins = false; m_UseTop = false; m_UseTopSliceCenter = true;}
  
   /** Get() access to the moments calculators */
   itkGetConstObjectMacro( FixedCalculator,  FixedImageCalculatorType  );
@@ -169,9 +178,18 @@ protected:
   itkGetObjectMacro( Transform, TransformType );
 
 private:
+  typedef std::vector< typename TransformType::InputPointType > WorldCornersType;
 
   CenteredTransformInitializer2( const Self & ); // purposely not implemented
   void operator=( const Self & );                // purposely not implemented
+
+  template< typename TCornerImage, typename TMaskImage>
+  WorldCornersType GetWorldCorners(
+      typename TCornerImage::ConstPointer image, typename TMaskImage::ConstPointer mask);
+
+  static bool MaxZCoordinate(
+      const typename TransformType::InputPointType& coordinate0, 
+      const typename TransformType::InputPointType& coordinate1); 
 
   TransformPointer m_Transform;
 
@@ -183,6 +201,7 @@ private:
   bool m_UseMoments;
   bool m_UseOrigins;
   bool m_UseTop;
+  bool m_UseTopSliceCenter;
 
   FixedImageCalculatorPointer  m_FixedCalculator;
   MovingImageCalculatorPointer m_MovingCalculator;

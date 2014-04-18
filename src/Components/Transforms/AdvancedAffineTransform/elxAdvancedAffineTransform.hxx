@@ -304,17 +304,51 @@ AdvancedAffineTransformElastix< TElastix >
 
       transformInitializer->GeometryTopOn();
     }
+    else if( method == "GeometryTopSliceCenter" )
+    {
+      if (SpaceDimension < 3)
+      {
+        /** Check if dimension is 3D or higher. **/
+        itkExceptionMacro( << "ERROR: The GeometryTopSliceCenter intialization method does not make sense for"
+                           << " 2D images. Use only for 3D or higher dimensional images." );
+      }
+
+      transformInitializer->GeometryTopSliceCenterOn();
+    }
+    else if( method == "GeometryTopSliceCenterOn" )
+    {
+      if (SpaceDimension < 3)
+      {
+        /** Check if dimension is 3D or higher. **/
+        itkExceptionMacro( << "ERROR: The GeometryCrown intialization method does not make sense for"
+          << " 2D images. Use only for 3D or higher dimensional images." );
+      }
+
+      transformInitializer->GeometryTopSliceCenterOn();
+    }
     transformInitializer->InitializeTransform();
+  }
+
+  OutputVectorType initialTranslation;
+  bool initialTranslationGiven = true;
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    initialTranslationGiven &= this->m_Configuration->ReadParameter(
+      initialTranslation[ i ], "InitialTranslation", i, false );
   }
 
   /** Set the translation to zero, if no AutomaticTransformInitialization
    * was desired.
    */
-  if( !automaticTransformInitialization )
+  if( !automaticTransformInitialization && !initialTranslationGiven)
   {
     OutputVectorType noTranslation;
     noTranslation.Fill( 0.0 );
     this->m_AffineTransform->SetTranslation( noTranslation );
+  }
+
+  if ( initialTranslationGiven ) {
+    this->m_AffineTransform->SetTranslation( initialTranslation );
   }
 
   /** Set the center of rotation if it was entered by the user. */

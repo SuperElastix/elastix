@@ -159,58 +159,21 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
     // When masks are used the geometrical tops (z-direction) of the bounding box
     // of the masks are used. Center of rotation point is set to the center of the fixed image.
     // Get fixed image (mask) information
-    typedef typename FixedImageType::RegionType FixedRegionType;
-    FixedRegionType fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
-    if ( this->m_FixedImageMask )
-    {
-      typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject
-        = FixedMaskSpatialObjectType::New();
-      fixedMaskAsSpatialObject->SetImage( this->m_FixedImageMask );
-      fixedRegion = fixedMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
-    }
 
-    // Get moving image (mask) information
-    typedef typename MovingImageType::RegionType MovingRegionType;
-    MovingRegionType movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
-    if ( this->m_MovingImageMask )
-    {
-      typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject
-        = MovingMaskSpatialObjectType::New();
-      movingMaskAsSpatialObject->SetImage( this->m_MovingImageMask );
-      movingRegion = movingMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
-    }
+    // Create eight corner points in world coordinates for both fixed and moving image.
+    WorldCornersType fixedCornersWorld  = 
+      this->GetWorldCorners<FixedImageType, FixedImageMaskType>( m_FixedImage, m_FixedImageMask );
 
-    // Create eight corner points in voxel coordinates for both fixed and moving image.
-    std::vector< ContinuousIndex< double, InputSpaceDimension > > fixedCorners( 8 );
-    std::vector< ContinuousIndex< double, InputSpaceDimension > > movingCorners( 8 );
-    for ( unsigned int z = 0, index = 0; z < 2; ++z )
-    {
-      for ( unsigned int y = 0; y < 2; ++y )
-      {
-        for ( unsigned int x = 0; x < 2; ++x, ++index )
-        {
-          fixedCorners[ index ][ 0 ] = fixedRegion.GetIndex()[ 0 ] + x * fixedRegion.GetSize()[ 0 ];
-          fixedCorners[ index ][ 1 ] = fixedRegion.GetIndex()[ 1 ] + y * fixedRegion.GetSize()[ 1 ];
-          if (InputSpaceDimension > 2) 
-          {
-            fixedCorners[ index ][ 2 ] = fixedRegion.GetIndex()[ 2 ] + z * fixedRegion.GetSize()[ 2 ];
-          }
-          movingCorners[ index ][ 0 ] = movingRegion.GetIndex()[ 0 ] + x * movingRegion.GetSize()[ 0 ];
-          movingCorners[ index ][ 1 ] = movingRegion.GetIndex()[ 1 ] + y * movingRegion.GetSize()[ 1 ];
-          if (InputSpaceDimension > 2) 
-          {
-            movingCorners[ index ][ 2 ] = movingRegion.GetIndex()[ 2 ] + z * movingRegion.GetSize()[ 2 ];
-          }
-        }
-      }
-    }
-    
-    // Transform eight corner points to world coordinates and determine min and max coordinate values.
+    WorldCornersType movingCornersWorld = 
+      this->GetWorldCorners<MovingImageType, MovingImageMaskType>( m_MovingImage, m_MovingImageMask );
+
     typename TransformType::InputPointType minWorldFixed, maxWorldFixed, minWorldMoving, maxWorldMoving;
-    for ( size_t i = 0; i < fixedCorners.size(); ++i ) {
+    // Transform eight corner points to world coordinates and determine min and max coordinate values.
+    for ( size_t i = 0; i < fixedCornersWorld.size(); ++i ) 
+    {
       typename TransformType::InputPointType worldFixed, worldMoving;
-      this->m_FixedImage->TransformContinuousIndexToPhysicalPoint( fixedCorners[i], worldFixed );
-      this->m_MovingImage->TransformContinuousIndexToPhysicalPoint( movingCorners[i], worldMoving );
+      worldFixed = fixedCornersWorld[i];
+      worldMoving = movingCornersWorld[i];
       if ( i == 0 )
       {
         minWorldFixed = worldFixed;
@@ -248,6 +211,37 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       rotationCenter[ i ]    = ( maxWorldFixed[ i ] + minWorldFixed[ i ] ) / 2.0;
       translationVector[ i ] = topCenterMoving[ i ] - topCenterFixed[ i ];
     }
+  }
+  else if ( m_UseTopSliceCenter )
+  {
+    // Get eight corner points in world coordinates.
+    WorldCornersType fixedCornersWorld  = 
+        this->GetWorldCorners<FixedImageType, FixedImageMaskType>( m_FixedImage, m_FixedImageMask );
+    WorldCornersType movingCornersWorld = 
+      this->GetWorldCorners<MovingImageType, MovingImageMaskType>( m_MovingImage, m_MovingImageMask );
+
+    // Sort corners based on their z coordinate.
+    std::sort(fixedCornersWorld.begin(),  fixedCornersWorld.end(), 
+        &CenteredTransformInitializer2::MaxZCoordinate);
+    std::sort(movingCornersWorld.begin(), movingCornersWorld.end(), 
+        &CenteredTransformInitializer2::MaxZCoordinate);
+
+    const double weights[4] = {0.25, 0.25, 0.25};
+    typename TransformType::InputPointType fixedTopCenter;
+    fixedTopCenter.SetToBarycentricCombination( &fixedCornersWorld[4], weights, 4 );
+
+    typename TransformType::InputPointType movingTopCenter;
+    movingTopCenter.SetToBarycentricCombination( &movingCornersWorld[4], weights, 4 );
+
+    typename TransformType::InputPointType fixedBottomCenter;
+    fixedBottomCenter.SetToBarycentricCombination( &fixedCornersWorld[0], weights, 4 );
+
+    typename TransformType::InputPointType movingBottomCenter;
+    movingBottomCenter.SetToBarycentricCombination( &movingCornersWorld[0], weights, 4 );
+
+    // Compute the difference between the centers
+    rotationCenter.SetToBarycentricCombination( fixedBottomCenter, fixedTopCenter, 0.5 );
+    translationVector = movingTopCenter - fixedTopCenter;
   }
   else
   {
@@ -310,9 +304,63 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
   // Set the initialization
   m_Transform->SetCenter( rotationCenter );
   m_Transform->SetTranslation( translationVector );
-
 }
 
+template< class TTransform, class TFixedImage, class TMovingImage >
+template< typename TCornerImage, typename TMaskImage>
+typename CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >::WorldCornersType
+CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
+::GetWorldCorners(typename TCornerImage::ConstPointer image, typename TMaskImage::ConstPointer mask)
+{
+  typedef typename TCornerImage::RegionType RegionType;
+  RegionType region;
+  if ( mask )
+  {
+    typedef ImageMaskSpatialObject< InputSpaceDimension >  MaskSpatialObjectType;
+    typename MaskSpatialObjectType::Pointer maskAsSpatialObject = MaskSpatialObjectType::New();
+    maskAsSpatialObject->SetImage( mask );
+    region = maskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+  } 
+  else 
+  {
+    region = image->GetLargestPossibleRegion();
+  }
+
+  std::vector< ContinuousIndex< double, InputSpaceDimension > > corners(8);
+  for ( unsigned int z = 0, index = 0; z < 2; ++z )
+  {
+    for ( unsigned int y = 0; y < 2; ++y )
+    {
+      for ( unsigned int x = 0; x < 2; ++x, ++index )
+      {
+        corners[ index ][ 0 ] = region.GetIndex()[ 0 ] + x * ( region.GetSize()[ 0 ] - 1);
+        corners[ index ][ 1 ] = region.GetIndex()[ 1 ] + y * ( region.GetSize()[ 1 ] - 1);
+        if (InputSpaceDimension > 2) 
+        {
+          corners[ index ][ 2 ] = region.GetIndex()[ 2 ] + z * ( region.GetSize()[ 2 ] - 1);
+        }
+      }
+    }
+  }
+
+  // Transform eight corner points to world coordinates.
+  WorldCornersType cornersWorld(corners.size());
+  for ( std::size_t i = 0; i < corners.size(); ++i ) 
+  {
+    image->TransformContinuousIndexToPhysicalPoint( corners[i], cornersWorld[i] );
+  }
+
+  return cornersWorld;
+}
+
+template< class TTransform, class TFixedImage, class TMovingImage >
+bool
+CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
+::MaxZCoordinate(const typename TransformType::InputPointType& coordinate0, 
+                 const typename TransformType::InputPointType& coordinate1)
+{
+  return coordinate0[2] < coordinate1[2];
+}
 
 template< class TTransform, class TFixedImage, class TMovingImage >
 void
