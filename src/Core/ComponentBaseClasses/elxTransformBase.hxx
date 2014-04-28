@@ -697,15 +697,16 @@ TransformBase< TElastix >
       << std::endl;
   }
 
-  /** Write the way Transforms are combined. */
+  /** Write the way Transforms are combined. 
+   *  Set it to the default "Compose" when no combination transform is used. */
   std::string                      combinationMethod = "Compose";
   const CombinationTransformType * dummyComboTransform
     = dynamic_cast< const CombinationTransformType * >( this );
   if( dummyComboTransform )
   {
-    if( dummyComboTransform->GetUseComposition() )
+    if( dummyComboTransform->GetUseAddition() )
     {
-      combinationMethod = "Compose";
+      combinationMethod = "Add";
     }
   }
 
