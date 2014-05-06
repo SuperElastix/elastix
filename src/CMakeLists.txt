@@ -25,9 +25,9 @@ find_package( ITK REQUIRED )
 include( ${ITK_USE_FILE} )
 
 #---------------------------------------------------------------------
-# Add the elastix source dir as an additional module path,
+# Add the CMake dir as an additional module path,
 # so that CMake is able to find the FindPackage modules.
-list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} )
+list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake )
 
 #---------------------------------------------------------------------
 # Find CUDA.
@@ -492,6 +492,6 @@ set( elxUSE_FILE ${elastix_BINARY_DIR}/UseElastix.cmake )
 #set( ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake )
 
 # Create the use file.
-configure_file( ${elastix_SOURCE_DIR}/UseElastix.cmake.in
+configure_file( ${elastix_SOURCE_DIR}/CMake/UseElastix.cmake.in
  ${elxUSE_FILE} @ONLY )
 
