@@ -17,6 +17,7 @@
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiResolutionImageRegistrationMethod2.h"
 
+
 namespace elastix
 {
 
@@ -136,11 +137,6 @@ protected:
   MultiResolutionRegistration(){}
   /** The destructor. */
   virtual ~MultiResolutionRegistration() {}
-
-  /** Typedef for timer.*/
-  typedef tmr::Timer TimerType;
-  /** Typedef for timer.*/
-  typedef TimerType::Pointer TimerPointer;
 
   /** Typedef's for mask support. */
   typedef typename Superclass2::MaskPixelType                  MaskPixelType;

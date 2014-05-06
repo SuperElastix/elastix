@@ -11,11 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMutualInformationHistogramMetric_HXX__
 #define __elxMutualInformationHistogramMetric_HXX__
 
 #include "elxMutualInformationHistogramMetric.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -27,7 +28,8 @@ namespace elastix
 template< class TElastix >
 MutualInformationHistogramMetric< TElastix >
 ::MutualInformationHistogramMetric()
-{}  // end Constructor
+{
+}  // end Constructor
 
 /**
  * ******************* Initialize ***********************
@@ -35,16 +37,17 @@ MutualInformationHistogramMetric< TElastix >
 
 template< class TElastix >
 void
-MutualInformationHistogramMetric< TElastix >::Initialize( void ) throw ( itk::ExceptionObject )
+MutualInformationHistogramMetric< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of MutualInformationHistogramMetric metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
-}   // end Initialize
+} // end Initialize()
 
 
 /**
@@ -53,12 +56,13 @@ MutualInformationHistogramMetric< TElastix >::Initialize( void ) throw ( itk::Ex
 
 template< class TElastix >
 void
-MutualInformationHistogramMetric< TElastix >::BeforeRegistration( void )
+MutualInformationHistogramMetric< TElastix >
+::BeforeRegistration( void )
 {
   /** This exception can be removed once this class is fully implemented. */
   itkExceptionMacro( << "ERROR: This class is not yet fully implemented." );
 
-}   // end BeforeRegistration
+} // end BeforeRegistration()
 
 
 /**
@@ -67,7 +71,8 @@ MutualInformationHistogramMetric< TElastix >::BeforeRegistration( void )
 
 template< class TElastix >
 void
-MutualInformationHistogramMetric< TElastix >::BeforeEachResolution( void )
+MutualInformationHistogramMetric< TElastix >
+::BeforeEachResolution( void )
 {
   /** \todo adapt SecondOrderRegularisationMetric.
    * Set alpha, which balances the similarity and deformation energy
@@ -96,7 +101,7 @@ MutualInformationHistogramMetric< TElastix >::BeforeEachResolution( void )
   //this->SetUpperBoundIncreaseFactor( ?? );
   //this->SetUsePaddingValue( ?? );
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix

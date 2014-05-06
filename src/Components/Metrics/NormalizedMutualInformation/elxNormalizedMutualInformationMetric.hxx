@@ -11,14 +11,16 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxNormalizedMutualInformationMetric_HXX__
 #define __elxNormalizedMutualInformationMetric_HXX__
 
 #include "elxNormalizedMutualInformationMetric.h"
+
 #include "itkHardLimiterFunction.h"
 #include "itkExponentialLimiterFunction.h"
+#include "itkTimeProbe.h"
 #include <string>
+
 
 namespace elastix
 {
@@ -32,14 +34,14 @@ void
 NormalizedMutualInformationMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of NormalizedMutualInformation metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
-}   // end Initialize
+} // end Initialize()
 
 
 /**
@@ -115,7 +117,7 @@ NormalizedMutualInformationMetric< TElastix >
            << movingImageDerivativeScales << std::endl;
   }
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix

@@ -11,13 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef __ImageToVectorContainerFilter_txx
-#define __ImageToVectorContainerFilter_txx
+#ifndef __ImageToVectorContainerFilter_hxx
+#define __ImageToVectorContainerFilter_hxx
 
 #include "itkImageToVectorContainerFilter.h"
 
-#include "elxTimer.h" // debugging
 #include "itkMath.h"
 
 namespace itk
@@ -301,4 +299,4 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageToVectorContainerFilter_txx
+#endif // end #ifndef __ImageToVectorContainerFilter_hxx

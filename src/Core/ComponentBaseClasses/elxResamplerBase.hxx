@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxResamplerBase_hxx
 #define __elxResamplerBase_hxx
 
@@ -20,7 +19,8 @@
 #include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
-#include "elxTimer.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -101,9 +101,8 @@ ResamplerBase< TElastix >
       << "." << resultImageFormat;
 
     /** Time the resampling. */
-    typedef tmr::Timer TimerType;
-    TimerType::Pointer timer = TimerType::New();
-    timer->StartTimer();
+    itk::TimeProbe timer;
+    timer.Start();
 
     /** Apply the final transform, and save the result. */
     elxout << "Applying transform this resolution ..." << std::endl;
@@ -119,10 +118,10 @@ ResamplerBase< TElastix >
     }
 
     /** Print the elapsed time for the resampling. */
-    timer->StopTimer();
+    timer.Stop();
     elxout << "  Applying transform took "
-           << static_cast< long >( timer->GetElapsedClockSec() )
-           << " s." << std::endl;
+           << this->ConvertSecondsToDHMS( timer.GetMean() )
+           << std::endl;
 
   } // end if
 
@@ -245,9 +244,8 @@ ResamplerBase< TElastix >
       << "." << resultImageFormat;
 
     /** Time the resampling. */
-    typedef tmr::Timer TimerType;
-    TimerType::Pointer timer = TimerType::New();
-    timer->StartTimer();
+    itk::TimeProbe timer;
+    timer.Start();
 
     /** Apply the final transform, and save the result,
      * by calling WriteResultImage.
@@ -260,15 +258,15 @@ ResamplerBase< TElastix >
     catch( itk::ExceptionObject & excp )
     {
       xl::xout[ "error" ] << "Exception caught: " << std::endl;
-      xl::xout[ "error" ] << excp
-                          << "Resuming elastix." << std::endl;
+      xl::xout[ "error" ] << excp << "Resuming elastix." << std::endl;
     }
 
     /** Print the elapsed time for the resampling. */
-    timer->StopTimer();
+    timer.Stop();
     elxout << std::setprecision( 2 );
     elxout << "  Applying final transform took "
-           << timer->GetElapsedClockSec() << " s" << std::endl;
+           << this->ConvertSecondsToDHMS( timer.GetMean() )
+           << std::endl;
     elxout << std::setprecision(
       this->m_Elastix->GetDefaultOutputPrecision() );
   }

@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxBaseComponentSE_h
 #define __elxBaseComponentSE_h
 

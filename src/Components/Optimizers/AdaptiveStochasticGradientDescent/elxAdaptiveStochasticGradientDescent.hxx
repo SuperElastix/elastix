@@ -23,7 +23,8 @@
 #include <algorithm>
 #include <utility>
 #include "itkAdvancedImageToImageMetric.h"
-#include "elxTimer.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -501,11 +502,9 @@ void
 AdaptiveStochasticGradientDescent< TElastix >
 ::AutomaticParameterEstimation( void )
 {
-  /** Setup timers. */
-  tmr::Timer::Pointer timer1 = tmr::Timer::New();
-
   /** Total time. */
-  timer1->StartTimer();
+  itk::TimeProbe timer1;
+  timer1.Start();
   elxout << "Starting automatic parameter estimation for "
          << this->elxGetClassName()
          << " ..." << std::endl;
@@ -535,9 +534,9 @@ AdaptiveStochasticGradientDescent< TElastix >
   }
 
   /** Print the elapsed time. */
-  timer1->StopTimer();
+  timer1.Stop();
   elxout << "Automatic parameter estimation took "
-         << timer1->PrintElapsedTimeDHMS()
+         << this->ConvertSecondsToDHMS( timer1.GetMean() )
          << std::endl;
 
 } // end AutomaticParameterEstimation()
@@ -552,8 +551,7 @@ void
 AdaptiveStochasticGradientDescent< TElastix >
 ::AutomaticParameterEstimationOriginal( void )
 {
-  tmr::Timer::Pointer timer2 = tmr::Timer::New();
-  tmr::Timer::Pointer timer3 = tmr::Timer::New();
+  itk::TimeProbe timer2, timer3;
 
   /** Get the user input. */
   const double delta = this->GetMaximumStepLength();
@@ -605,11 +603,11 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   /** Compute the Jacobian terms. */
   elxout << "  Computing JacobianTerms ..." << std::endl;
-  timer2->StartTimer();
+  timer2.Start();
   computeJacobianTerms->ComputeParameters( TrC, TrCC, maxJJ, maxJCJ );
-  timer2->StopTimer();
+  timer2.Stop();
   elxout << "  Computing the Jacobian terms took "
-         << timer2->PrintElapsedTimeDHMS()
+         << this->ConvertSecondsToDHMS( timer2.GetMean() )
          << std::endl;
 
   /** Determine number of gradient measurements such that
@@ -620,7 +618,7 @@ AdaptiveStochasticGradientDescent< TElastix >
    * K = 1.5
    * We enforce a minimum of 2.
    */
-  timer3->StartTimer();
+  timer3.Start();
   if( this->m_NumberOfGradientMeasurements == 0 )
   {
     const double K = 1.5;
@@ -651,9 +649,9 @@ AdaptiveStochasticGradientDescent< TElastix >
   }
   this->SampleGradients(
     this->GetScaledCurrentPosition(), sigma4, gg, ee );
-  timer3->StopTimer();
+  timer3.Stop();
   elxout << "  Sampling the gradients took "
-         << timer3->PrintElapsedTimeDHMS()
+         << this->ConvertSecondsToDHMS( timer3.GetMean() )
          << std::endl;
 
   /** Determine parameter settings. */
@@ -711,8 +709,7 @@ void
 AdaptiveStochasticGradientDescent< TElastix >
 ::AutomaticParameterEstimationUsingDisplacementDistribution( void )
 {
-  tmr::Timer::Pointer timer4 = tmr::Timer::New();
-  tmr::Timer::Pointer timer5 = tmr::Timer::New();
+  itk::TimeProbe timer4, timer5;
 
   /** Get current position to start the parameter estimation. */
   this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
@@ -763,13 +760,13 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   /** Compute the Jacobian terms. */
   elxout << "  Computing displacement distribution ..." << std::endl;
-  timer4->StartTimer();
+  timer4.Start();
   computeDisplacementDistribution->ComputeDistributionTerms(
     this->GetScaledCurrentPosition(), jacg, maxJJ,
     maximumDisplacementEstimationMethod );
-  timer4->StopTimer();
+  timer4.Stop();
   elxout << "  Computing the displacement distribution took "
-         << timer4->PrintElapsedTimeDHMS()
+         << this->ConvertSecondsToDHMS( timer4.GetMean() )
          << std::endl;
 
   /** Initial of the variables. */
@@ -798,7 +795,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       elxout << "  NumberOfGradientMeasurements to estimate sigma_i: "
              << this->m_NumberOfGradientMeasurements << std::endl;
     }
-    timer5->StartTimer();
+    timer5.Start();
     if( maxJJ > 1e-14 )
     {
       sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
@@ -807,9 +804,9 @@ AdaptiveStochasticGradientDescent< TElastix >
 
     double noisefactor = gg / ( gg + ee );
     a =  delta * vcl_pow( A + 1.0, alpha ) / jacg * noisefactor;
-    timer5->StopTimer();
+    timer5.Stop();
     elxout << "  Compute the noise compensation took "
-           << timer5->PrintElapsedTimeDHMS()
+           << this->ConvertSecondsToDHMS( timer5.GetMean() )
            << std::endl;
   }
   else

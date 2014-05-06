@@ -11,11 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdvancedNormalizedCorrelationMetric_HXX__
 #define __elxAdvancedNormalizedCorrelationMetric_HXX__
 
 #include "elxAdvancedNormalizedCorrelationMetric.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -58,7 +59,7 @@ AdvancedNormalizedCorrelationMetric< TElastix >
            << movingImageDerivativeScales << std::endl;
   }
 
-}   // end BeforeEachResolution()
+} // end BeforeEachResolution()
 
 
 /**
@@ -70,14 +71,14 @@ void
 AdvancedNormalizedCorrelationMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of AdvancedNormalizedCorrelation metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
-}   // end Initialize()
+} // end Initialize()
 
 
 } // end namespace elastix

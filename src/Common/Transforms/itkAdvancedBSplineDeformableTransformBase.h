@@ -55,7 +55,9 @@ public:
 
   /** Typedefs from Superclass. */
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::ParametersValueType    ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  typedef typename Superclass::DerivativeType         DerivativeType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::ScalarType             ScalarType;
   typedef typename Superclass::InputPointType         InputPointType;
@@ -78,7 +80,9 @@ public:
   typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
     ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass::InternalMatrixType           InternalMatrixType;
+  typedef typename Superclass::MovingImageGradientType      MovingImageGradientType;
+  typedef typename Superclass::MovingImageGradientValueType MovingImageGradientValueType;
 
   /** This method sets the parameters of the transform.
      * For a B-spline deformation transform, the parameters are the BSpline

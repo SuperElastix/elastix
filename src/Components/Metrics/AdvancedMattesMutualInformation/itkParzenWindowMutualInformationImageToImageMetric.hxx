@@ -445,9 +445,6 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
   DerivativeType               imageJacobian( nzji.size() );
 
-  /** Get a handle to a pre-allocated transform Jacobian. */
-  TransformJacobianType & jacobian = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
-
   /** Get a handle to the pre-allocated derivative for the current thread.
    * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
    */
@@ -522,16 +519,25 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       movingImageValue = this->GetMovingImageLimiter()
         ->Evaluate( movingImageValue, movingImageDerivative );
 
-      /** Get the transform Jacobian dT/dmu. */
+#if 0
+      /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
-      /** Compute the inner product (dM/dx)^T (dT/dmu). */
+      /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
+#else
+      /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+        fixedPoint, movingImageDerivative, imageJacobian, nzji );
+#endif
 
       /** If desired, apply the technique introduced by Tustison. */
+      TransformJacobianType jacobian;
       if( this->GetUseJacobianPreconditioning() )
       {
+        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+
         this->ComputeJacobianPreconditioner( jacobian, nzji,
           jacobianPreconditioner, preconditioningDivisor );
         DerivativeValueType * imjacit   = imageJacobian.begin();

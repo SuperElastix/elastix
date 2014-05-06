@@ -17,7 +17,6 @@
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkParzenWindowNormalizedMutualInformationImageToImageMetric.h"
 
-#include "elxTimer.h"
 
 namespace elastix
 {
@@ -162,11 +161,6 @@ public:
   typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
-  /** Typedef for timer. */
-  typedef tmr::Timer TimerType;
-  /** Typedef for timer. */
-  typedef TimerType::Pointer TimerPointer;
-
   /** Execute stuff before each new pyramid resolution:
    * \li Set the number of histogram bins.
    * \li Set the CheckNumberOfSamples option.
@@ -174,7 +168,7 @@ public:
    * \li Set the fixed/moving limiter. */
   virtual void BeforeEachResolution( void );
 
-  /** Set up a timer to measure the intialisation time and
+  /** Set up a timer to measure the initialization time and
    * call the Superclass' implementation. */
   virtual void Initialize( void ) throw ( itk::ExceptionObject );
 

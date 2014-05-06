@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdvancedMattesMutualInformationMetric_HXX__
 #define __elxAdvancedMattesMutualInformationMetric_HXX__
 
@@ -21,6 +20,8 @@
 #include "itkExponentialLimiterFunction.h"
 #include <string>
 #include "vnl/vnl_math.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -50,12 +51,12 @@ void
 AdvancedMattesMutualInformationMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of AdvancedMattesMutualInformation metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 }   // end Initialize()
 

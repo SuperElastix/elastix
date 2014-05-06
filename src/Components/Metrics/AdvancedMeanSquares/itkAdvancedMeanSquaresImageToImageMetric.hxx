@@ -257,7 +257,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(
-  this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
   DerivativeType        imageJacobian( nzji.size() );
   TransformJacobianType jacobian;
 
@@ -319,12 +319,19 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
+#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
+#else
+      /** Compute the inner product of the transform Jacobian and the moving image gradient. */
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+        fixedPoint, movingImageDerivative,
+        imageJacobian, nzji );
+#endif
 
       /** Compute this pixel's contribution to the measure and derivatives. */
       this->UpdateValueAndDerivativeTerms(
@@ -413,10 +420,10 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType               imageJacobian( nzji.size() );
+  DerivativeType               imageJacobian( nnzji );
 
   /** Get a handle to a pre-allocated transform Jacobian. */
-  TransformJacobianType & jacobian = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
+  //TransformJacobianType & jacobian = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
 
   /** Get a handle to the pre-allocated derivative for the current thread.
    * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
@@ -485,12 +492,18 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *threader_fiter ).Value().m_ImageValue );
 
+#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
+#else
+      /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+        fixedPoint, movingImageDerivative, imageJacobian, nzji );
+#endif
 
       /** Compute this pixel's contribution to the measure and derivatives. */
       this->UpdateValueAndDerivativeTerms(

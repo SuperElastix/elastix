@@ -251,7 +251,7 @@ private:
     SizeValueType         st_AreaIntersection;
     DerivativeType        st_DerivativeSum1;
     DerivativeType        st_DerivativeSum2;
-    TransformJacobianType st_TransformJacobian;
+    //TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, KappaGetValueAndDerivativePerThreadStruct,
     PaddedKappaGetValueAndDerivativePerThreadStruct );

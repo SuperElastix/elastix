@@ -11,12 +11,13 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMultiResolutionRegistration_HXX__
 #define __elxMultiResolutionRegistration_HXX__
 
 #include "elxMultiResolutionRegistration.h"
 #include "vnl/vnl_math.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -194,8 +195,8 @@ MultiResolutionRegistration< TElastix >
     oneOrNoMovingMasks, "Moving", level );
 
   /** Create and start timer, to time the whole fixed mask configuration procedure. */
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
 
   FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
     this->GetElastix()->GetFixedMask(), useFixedMaskErosion,
@@ -203,13 +204,14 @@ MultiResolutionRegistration< TElastix >
   this->GetMetric()->SetFixedImageMask( fixedMask );
 
   /** Stop timer and print the elapsed time. */
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Setting the fixed masks took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
-  /** start timer, to time the whole moving mask configuration procedure. */
-  timer->StartTimer();
+  /** Start timer, to time the whole moving mask configuration procedure. */
+  timer.Reset();
+  timer.Start();
 
   MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
     this->GetElastix()->GetMovingMask(), useMovingMaskErosion,
@@ -217,9 +219,9 @@ MultiResolutionRegistration< TElastix >
   this->GetMetric()->SetMovingImageMask( movingMask );
 
   /** Stop timer and print the elapsed time. */
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Setting the moving masks took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
 }   // end UpdateMasks

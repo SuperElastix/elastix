@@ -11,14 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxElastixMain_h
 #define __elxElastixMain_h
 
 #include "elxComponentDatabase.h"
 #include "elxComponentLoader.h"
 
-#include "elxBaseComponent.h"
 #include "elxElastixBase.h"
 #include "itkObject.h"
 
@@ -142,7 +140,7 @@ public:
   /** Typedef that is used in the elastix dll version. */
   typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
 
-  /** Set/Get functions for the description of the imagetype. */
+  /** Set/Get functions for the description of the image type. */
   itkSetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
   itkSetMacro( MovingImagePixelType,  PixelTypeDescriptionType );
   itkSetMacro( FixedImageDimension,   ImageDimensionType );
@@ -242,7 +240,7 @@ public:
   /** Start the registration
    * run() without command line parameters; it assumes that
    * EnterCommandLineParameters has been invoked already, or that
-   * m_Configuration is initialised in a different way.
+   * m_Configuration is initialized in a different way.
    */
   virtual int Run( void );
 
@@ -346,7 +344,7 @@ protected:
   virtual ObjectPointer CreateComponent( const ComponentDescriptionType & name );
 
   /** Create components. Reads from the configuration object (using the provided key)
-   * the names of the components to create and store their instantations in the
+   * the names of the components to create and store their instantiations in the
    * provided ObjectContainer.
    * The errorcode remains what it was if no error occurred. Otherwise it's set to 1.
    * The 'key' is the entry inspected in the parameter file

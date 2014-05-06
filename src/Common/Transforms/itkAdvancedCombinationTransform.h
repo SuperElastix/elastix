@@ -73,7 +73,9 @@ public:
   /** Typedefs inherited from Superclass.*/
   typedef typename Superclass::ScalarType                    ScalarType;
   typedef typename Superclass::ParametersType                ParametersType;
+  typedef typename Superclass::ParametersValueType           ParametersValueType;
   typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
+  typedef typename Superclass::DerivativeType                DerivativeType;
   typedef typename Superclass::JacobianType                  JacobianType;
   typedef typename Superclass::InputVectorType               InputVectorType;
   typedef typename Superclass::OutputVectorType              OutputVectorType;
@@ -92,6 +94,8 @@ public:
   typedef typename Superclass::InverseTransformBaseType      InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer   InverseTransformBasePointer;
   typedef typename Superclass::TransformCategoryType         TransformCategoryType;
+  typedef typename Superclass::MovingImageGradientType       MovingImageGradientType;
+  typedef typename Superclass::MovingImageGradientValueType  MovingImageGradientValueType;
 
   /** Transform typedefs for the from Superclass. */
   typedef typename Superclass::TransformType   TransformType;
@@ -237,6 +241,13 @@ public:
     JacobianType & j,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
+  /** Compute the inner product of the Jacobian with the moving image gradient. */
+  virtual void EvaluateJacobianWithImageGradientProduct(
+    const InputPointType & ipp,
+    const MovingImageGradientType & movingImageGradient,
+    DerivativeType & imageJacobian,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+
   /** Compute the spatial Jacobian of the transformation. */
   virtual void GetSpatialJacobian(
     const InputPointType & ipp,
@@ -282,6 +293,11 @@ public:
   typedef void (Self::*            GetSparseJacobianFunctionPointer)(
     const InputPointType &,
     JacobianType &,
+    NonZeroJacobianIndicesType & ) const;
+  typedef void (Self::* EvaluateJacobianWithImageGradientProductFunctionPointer)(
+    const InputPointType &,
+    const MovingImageGradientType &,
+    DerivativeType &,
     NonZeroJacobianIndicesType & ) const;
   typedef void (Self::* GetSpatialJacobianFunctionPointer)(
     const InputPointType &,
@@ -346,6 +362,7 @@ protected:
 
   /** More of these. */
   GetSparseJacobianFunctionPointer             m_SelectedGetSparseJacobianFunction;
+  EvaluateJacobianWithImageGradientProductFunctionPointer m_SelectedEvaluateJacobianWithImageGradientProductFunction;
   GetSpatialJacobianFunctionPointer            m_SelectedGetSpatialJacobianFunction;
   GetSpatialHessianFunctionPointer             m_SelectedGetSpatialHessianFunction;
   GetJacobianOfSpatialJacobianFunctionPointer  m_SelectedGetJacobianOfSpatialJacobianFunction;
@@ -403,6 +420,40 @@ protected:
   inline void GetJacobianNoCurrentTransform(
     const InputPointType &,
     JacobianType &,
+    NonZeroJacobianIndicesType & ) const;
+
+  /** ************************************************
+   * Methods to compute the inner product of the Jacobian with the moving image gradient.
+   */
+
+  /** ADDITION: \f$J(x) = J_1(x)\f$ */
+  inline void EvaluateJacobianWithImageGradientProductUseAddition(
+    const InputPointType &,
+    const MovingImageGradientType &,
+    DerivativeType &,
+    NonZeroJacobianIndicesType & ) const;
+
+  /** COMPOSITION: \f$J(x) = J_1( T_0(x) )\f$
+   * \warning: assumes that input and output point type are the same.
+   */
+  inline void EvaluateJacobianWithImageGradientProductUseComposition(
+    const InputPointType &,
+    const MovingImageGradientType &,
+    DerivativeType &,
+    NonZeroJacobianIndicesType & ) const;
+
+  /** CURRENT ONLY: \f$J(x) = J_1(x)\f$ */
+  inline void EvaluateJacobianWithImageGradientProductNoInitialTransform(
+    const InputPointType &,
+    const MovingImageGradientType &,
+    DerivativeType &,
+    NonZeroJacobianIndicesType & ) const;
+
+  /** NO CURRENT TRANSFORM SET: throw an exception. */
+  inline void EvaluateJacobianWithImageGradientProductNoCurrentTransform(
+    const InputPointType &,
+    const MovingImageGradientType &,
+    DerivativeType &,
     NonZeroJacobianIndicesType & ) const;
 
   /** ************************************************

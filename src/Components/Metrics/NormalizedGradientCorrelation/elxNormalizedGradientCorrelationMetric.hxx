@@ -15,6 +15,8 @@
 #define __elxNormalizedGradientCorrelationMetric_HXX__
 
 #include "elxNormalizedGradientCorrelationMetric.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -28,12 +30,12 @@ void
 NormalizedGradientCorrelationMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of NormalizedGradientCorrelation metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -47,7 +49,6 @@ void
 NormalizedGradientCorrelationMetric< TElastix >
 ::BeforeRegistration( void )
 {
-
   if( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
   {
     itkExceptionMacro( << "FixedImage must be 3D" );
@@ -60,7 +61,7 @@ NormalizedGradientCorrelationMetric< TElastix >
     }
   }
 
-} // end BeforeRegistration
+} // end BeforeRegistration()
 
 
 /**

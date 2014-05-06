@@ -11,14 +11,14 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxSplineKernelTransform_HXX_
 #define __elxSplineKernelTransform_HXX_
 
 #include "elxSplineKernelTransform.h"
 #include "itkTransformixInputPointFileReader.h"
 #include "vnl/vnl_math.h"
-#include "elxTimer.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -244,13 +244,13 @@ SplineKernelTransform< TElastix >
   this->ReadLandmarkFile( fp, landmarkPointSet, true );
 
   /** Set the fp as source landmarks. */
-  tmr::Timer::Pointer timer = tmr::Timer::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   elxout << "  Setting the fixed image landmarks (requiring large matrix inversion) ..." << std::endl;
   this->m_KernelTransform->SetSourceLandmarks( landmarkPointSet );
-  timer->StopTimer();
+  timer.Stop();
   elxout << "  Setting the fixed image landmarks took: "
-         << timer->PrintElapsedTimeDHMS()
+         << this->ConvertSecondsToDHMS( timer.GetMean() )
          << std::endl;
 
 } // end DetermineSourceLandmarks()
@@ -281,13 +281,13 @@ SplineKernelTransform< TElastix >
   this->ReadLandmarkFile( mp, landmarkPointSet, false );
 
   /** Set the mp as target landmarks. */
-  tmr::Timer::Pointer timer = tmr::Timer::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   elxout << "  Setting the moving image landmarks ..." << std::endl;
   this->m_KernelTransform->SetTargetLandmarks( landmarkPointSet );
-  timer->StopTimer();
+  timer.Stop();
   elxout << "  Setting the moving image landmarks took: "
-         << timer->PrintElapsedTimeDHMS()
+         << this->ConvertSecondsToDHMS( timer.GetMean() )
          << std::endl;
 
   return true;

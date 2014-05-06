@@ -12,10 +12,9 @@
 
 ======================================================================*/
 
-#ifndef __elastix_cxx
-#define __elastix_cxx
-
 #include "elastix.h"
+#include "elxElastixMain.h"
+
 
 int
 main( int argc, char ** argv )
@@ -68,7 +67,7 @@ main( int argc, char ** argv )
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();
 
-  /** Some declarations and initialisations. */
+  /** Some declarations and initializations. */
   ElastixMainVectorType elastices;
 
   ObjectPointer              transform            = 0;
@@ -194,10 +193,9 @@ main( int argc, char ** argv )
   elxout << std::endl;
 
   /** Declare a timer, start it and print the start time. */
-  tmr::Timer::Pointer totaltimer = tmr::Timer::New();
-  totaltimer->StartTimer();
-  elxout << "elastix is started at " << totaltimer->PrintStartTime()
-         << ".\n" << std::endl;
+  itk::TimeProbe totaltimer;
+  totaltimer.Start();
+  elxout << "elastix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
   /** Print where elastix was run. */
   elxout << "which elastix:   " << argv[ 0 ] << std::endl;
@@ -256,9 +254,9 @@ main( int argc, char ** argv )
            << ": \"" << argMap[ "-p" ] << "\".\n" << std::endl;
 
     /** Declare a timer, start it and print the start time. */
-    tmr::Timer::Pointer timer = tmr::Timer::New();
-    timer->StartTimer();
-    elxout << "Current time: " << timer->PrintStartTime() << "." << std::endl;
+    itk::TimeProbe timer;
+    timer.Start();
+    elxout << "Current time: " << GetCurrentDateAndTime() << "." << std::endl;
 
     /** Start registration. */
     returndummy = elastices[ i ]->Run( argMap );
@@ -285,10 +283,10 @@ main( int argc, char ** argv )
            << ": \"" << argMap[ "-p" ] << "\", has finished.\n" << std::endl;
 
     /** Stop timer and print it. */
-    timer->StopTimer();
-    elxout << "\nCurrent time: " << timer->PrintStopTime() << "." << std::endl;
-    elxout << "Time used for running elastix with this parameter file: "
-           << timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+    timer.Stop();
+    elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl;
+    elxout << "Time used for running elastix with this parameter file: \n  "
+      << timer.GetMean() << " " << timer.GetUnit() << " = " << ConvertSecondsToDHMS( timer.GetMean() ) << ".\n" << std::endl;
 
     /** Try to release some memory. */
     elastices[ i ] = 0;
@@ -298,8 +296,8 @@ main( int argc, char ** argv )
   elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
 
   /** Stop totaltimer and print it. */
-  totaltimer->StopTimer();
-  elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+  totaltimer.Stop();
+  elxout << "Total time elapsed: " << ConvertSecondsToDHMS( totaltimer.GetMean() ) << ".\n" << std::endl;
 
   /**
    * Make sure all the components that are defined in a Module (.DLL/.so)
@@ -365,7 +363,7 @@ PrintHelp( void )
 
   /** The parameter file.*/
   std::cout << "The parameter-file must contain all the information "
-    "necessary for elastix to runproperly. That includes which metric to "
+    "necessary for elastix to run properly. That includes which metric to "
     "use, which optimizer, which transform, etc. It must also contain "
     "information specific for the metric, optimizer, transform, etc. "
     "For a usable parameter-file, see the website.\n" << std::endl;
@@ -374,6 +372,3 @@ PrintHelp( void )
     "or mail elastix@bigr.nl." << std::endl;
 
 } // end PrintHelp()
-
-
-#endif // end #ifndef __elastix_cxx

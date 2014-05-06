@@ -437,6 +437,80 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 
 
 /**
+ * ********************* EvaluateJacobianAndImageGradientProduct ****************************
+ */
+
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
+::EvaluateJacobianWithImageGradientProduct(
+  const InputPointType & ipp,
+  const MovingImageGradientType & movingImageGradient,
+  DerivativeType & imageJacobian,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** Convert the physical point to a continuous index, which
+   * is needed for the 'Evaluate()' functions below.
+   */
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  /** Get sizes. */
+  const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nnzjiPerDimension = nnzji / SpaceDimension;
+
+  /** NOTE: if the support region does not lie totally within the grid
+   * we assume zero displacement and zero Jacobian.
+   */
+  if( !this->InsideValidRegion( cindex ) )
+  {
+    nonZeroJacobianIndices.resize( nnzji );
+    for( NumberOfParametersType i = 0; i < nnzji; ++i )
+    {
+      nonZeroJacobianIndices[ i ] = i;
+    }
+    imageJacobian.Fill(0.0);
+    return;
+  }
+
+  /** Compute the number of affected B-spline parameters.
+   * Allocate memory on the stack.
+   */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
+
+  /** Compute the B-spline derivative weights. */
+  IndexType supportIndex;
+  this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
+  this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );
+
+  /** Compute the inner product. */
+  NumberOfParametersType counter = 0;
+  for( unsigned int d = 0; d < SpaceDimension; ++d )
+  {
+    const MovingImageGradientValueType mig = movingImageGradient[ d ];
+    for( NumberOfParametersType i = 0; i < nnzjiPerDimension; ++i )
+    {
+      imageJacobian[ counter ] = weightsArray[ i ] * mig;
+      ++counter;
+    }
+  }
+
+  /** Setup support region needed for the nonZeroJacobianIndices. */
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  /** Compute the nonzero Jacobian indices.
+   * Takes a significant portion of the computation time of this function.
+   */
+  this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
+
+} // end EvaluateJacobianWithImageGradientProduct()
+
+
+/**
  * ********************* GetSpatialJacobian ****************************
  */
 

@@ -19,7 +19,6 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "../Transforms/StackTransform/itkStackTransform.h"
 
-#include "elxTimer.h"
 
 namespace elastix
 {
@@ -167,12 +166,7 @@ public:
   typedef itk::AdvancedBSplineDeformableTransformBase<
     ScalarType, FixedImageDimension - 1 >                   ReducedDimensionBSplineTransformBaseType;
 
-  /** Typedef for timer. */
-  typedef tmr::Timer TimerType;
-  /** Typedef for timer. */
-  typedef TimerType::Pointer TimerPointer;
-
-  /** Sets up a timer to measure the initialisation time and
+  /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
   virtual void Initialize( void ) throw ( itk::ExceptionObject );

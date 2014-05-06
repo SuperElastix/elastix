@@ -11,11 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMultiMetricMultiResolutionRegistration_HXX__
 #define __elxMultiMetricMultiResolutionRegistration_HXX__
 
 #include "elxMultiMetricMultiResolutionRegistration.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -393,8 +394,8 @@ MultiMetricMultiResolutionRegistration< TElastix >
     nrOfFixedMasks, "Fixed", level );
 
   /** Create and start timer, to time the whole mask configuration procedure. */
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
 
   /** Now set the masks. */
   if( ( ( nrOfFixedImages == 1 ) || ( nrOfFixedMasks == 0 ) )
@@ -451,9 +452,9 @@ MultiMetricMultiResolutionRegistration< TElastix >
   } // end else
 
   /** Stop timer and print the elapsed time. */
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Setting the fixed masks took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
 } // end UpdateFixedMasks()
@@ -491,8 +492,8 @@ MultiMetricMultiResolutionRegistration< TElastix >
     nrOfMovingMasks, "Moving", level );
 
   /** Create and start timer, to time the whole mask configuration procedure. */
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
 
   /** Now set the masks. */
   if( ( ( nrOfMovingImages == 1 ) || ( nrOfMovingMasks == 0 ) )
@@ -549,9 +550,9 @@ MultiMetricMultiResolutionRegistration< TElastix >
   } // end else
 
   /** Stop timer and print the elapsed time. */
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Setting the moving masks took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
 } // end UpdateMovingMasks()

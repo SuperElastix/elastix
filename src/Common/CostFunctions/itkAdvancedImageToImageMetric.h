@@ -405,7 +405,6 @@ protected:
     SizeValueType         st_NumberOfPixelsCounted;
     MeasureType           st_Value;
     DerivativeType        st_Derivative;
-    TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValueAndDerivativePerThreadStruct,
     PaddedGetValueAndDerivativePerThreadStruct );

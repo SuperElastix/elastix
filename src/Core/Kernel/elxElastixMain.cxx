@@ -156,8 +156,8 @@ ElastixMain::ComponentDatabasePointer ElastixMain::s_CDB             = 0;
 ElastixMain::ComponentLoaderPointer   ElastixMain::s_ComponentLoader = 0;
 
 /**
-* ********************** Destructor ****************************
-*/
+ * ********************** Destructor ****************************
+ */
 
 ElastixMain::~ElastixMain()
 {
@@ -180,7 +180,7 @@ ElastixMain
   int dummy = this->m_Configuration->Initialize( argmap );
   if( dummy )
   {
-    xout[ "error" ] << "ERROR: Something went wrong during initialisation "
+    xout[ "error" ] << "ERROR: Something went wrong during initialization "
                     << "of the configuration object." << std::endl;
   }
 
@@ -202,7 +202,7 @@ ElastixMain
   int dummy = this->m_Configuration->Initialize( argmap, inputMap );
   if( dummy )
   {
-    xout[ "error" ] << "ERROR: Something went wrong during initialisation of the configuration object." << std::endl;
+    xout[ "error" ] << "ERROR: Something went wrong during initialization of the configuration object." << std::endl;
   }
 
 } // end EnterCommandLineArguments()
@@ -229,7 +229,7 @@ ElastixMain
     int dummy = this->m_Configurations[ i ]->Initialize( argmap, inputMaps[ i ] );
     if( dummy )
     {
-      xout[ "error" ] << "ERROR: Something went wrong during initialisation of configuration object " << i << "." << std::endl;
+      xout[ "error" ] << "ERROR: Something went wrong during initialization of configuration object " << i << "." << std::endl;
     }
   }
 
@@ -242,7 +242,7 @@ ElastixMain
  * **************************** Run *****************************
  *
  * Assuming EnterCommandLineParameters has already been invoked.
- * or that m_Configuration is initialised in another way.
+ * or that m_Configuration is initialized in another way.
  */
 
 int

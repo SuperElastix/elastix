@@ -268,7 +268,7 @@ private:
     DerivativeType        st_DerivativeF;
     DerivativeType        st_DerivativeM;
     DerivativeType        st_Differential;
-    TransformJacobianType st_TransformJacobian;
+    //TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, CorrelationGetValueAndDerivativePerThreadStruct,
     PaddedCorrelationGetValueAndDerivativePerThreadStruct );

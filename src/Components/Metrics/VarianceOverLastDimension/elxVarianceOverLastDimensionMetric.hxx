@@ -11,11 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxVarianceOverLastDimensionMetric_HXX__
 #define __elxVarianceOverLastDimensionMetric_HXX__
 
 #include "elxVarianceOverLastDimensionMetric.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -29,14 +30,14 @@ void
 VarianceOverLastDimensionMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of VarianceOverLastDimensionMetric metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
-}   // end Initialize
+} // end Initialize()
 
 
 /**
@@ -70,7 +71,7 @@ VarianceOverLastDimensionMetric< TElastix >
     "NumSamplesLastDimension", this->GetComponentLabel(), level, 0 );
   this->SetNumSamplesLastDimension( numSamplesLastDimension );
 
-  /** Get and set the number of additional samples sampled at the fixed timepoint.  */
+  /** Get and set the number of additional samples sampled at the fixed time point.  */
   unsigned int numAdditionalSamplesFixed = 0;
   this->GetConfiguration()->ReadParameter( numAdditionalSamplesFixed,
     "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0 );
@@ -139,7 +140,7 @@ VarianceOverLastDimensionMetric< TElastix >
     }
   }
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix

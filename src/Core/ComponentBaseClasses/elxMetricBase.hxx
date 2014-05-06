@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMetricBase_hxx
 #define __elxMetricBase_hxx
 

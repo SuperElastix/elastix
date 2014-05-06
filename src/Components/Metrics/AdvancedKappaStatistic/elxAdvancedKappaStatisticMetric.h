@@ -16,7 +16,7 @@
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdvancedKappaStatisticImageToImageMetric.h"
-#include "elxTimer.h"
+
 
 namespace elastix
 {
@@ -136,12 +136,7 @@ public:
   typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
   typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
-  /** Typedef for timer. */
-  typedef tmr::Timer TimerType;
-  /** Typedef for timer. */
-  typedef TimerType::Pointer TimerPointer;
-
-  /** Sets up a timer to measure the initialisation time and
+  /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
   virtual void Initialize( void ) throw ( itk::ExceptionObject );

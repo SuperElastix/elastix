@@ -26,6 +26,7 @@ set( InstallFilesForExecutables
 set( InstallFilesForComponents
   Install/elxComponentDatabase.cxx
   Install/elxComponentDatabase.h
+  Install/elxBaseComponent.cxx
   Install/elxBaseComponent.h
   Install/elxBaseComponentSE.h
   Install/elxBaseComponentSE.hxx
@@ -146,7 +147,7 @@ ENDIF(ELASTIX_BUILD_EXECUTABLE)
 IF( ELASTIX_BUILD_EXECUTABLE )
   ADD_EXECUTABLE( transformix
     Main/transformix.cxx
-    Main/transformix.h
+    Main/elastix.h
     Kernel/elxElastixMain.cxx
     Kernel/elxElastixMain.h
     Kernel/elxTransformixMain.cxx

@@ -11,11 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxPatternIntensityMetric_HXX__
 #define __elxPatternIntensityMetric_HXX__
 
 #include "elxPatternIntensityMetric.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -29,12 +30,12 @@ void
 PatternIntensityMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of PatternIntensity metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -48,7 +49,6 @@ void
 PatternIntensityMetric< TElastix >
 ::BeforeRegistration( void )
 {
-
   if( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
   {
     itkExceptionMacro( << "FixedImage must be 3D" );
@@ -61,7 +61,7 @@ PatternIntensityMetric< TElastix >
     }
   }
 
-} // end BeforeRegistration
+} // end BeforeRegistration()
 
 
 /**

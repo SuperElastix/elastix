@@ -21,8 +21,6 @@ ENDIF()
 # Define lists of files in the subdirectories.
 
 SET( CommonFiles
-  elxTimer.cxx
-  elxTimer.h
   itkAdvancedLinearInterpolateImageFunction.h
   itkAdvancedLinearInterpolateImageFunction.hxx
   itkAdvancedRayCastInterpolateImageFunction.h

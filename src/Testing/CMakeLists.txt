@@ -70,7 +70,7 @@ macro( trx_add_test name )
   set( testname transformix_run_${name} )
   set( output_dir ${TestOutputDir}/${testname} )
   file( MAKE_DIRECTORY ${output_dir} )
-  
+
   # Define some helper variables.
   set( TRXTEST_EXECUTABLE_NAME transformix )
   set( TRXTEST_TEST_NAME ${name} )
@@ -352,7 +352,12 @@ elx_add_test( ThinPlateSplineTransformPerformanceTest
   ${elastix_BINARY_DIR}/Testing )
 elx_add_test( ThinPlateSplineTransformTest
   ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt )
-elx_add_test( TimerTest )
+elx_add_test( AdvanceOneStepParallellizationTest "" "Common" )
+elx_add_test( AccumulateDerivativesParallellizationTest "" "Common" )
+elx_add_test( BSplineTransformPointPerformanceTest "" "Common"
+  ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
+elx_add_test( BSplineJacobianGradientPerformanceTest "" "Common"
+  ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
 
 #---------------------------------------------------------------------
 # Add tests that run elastix

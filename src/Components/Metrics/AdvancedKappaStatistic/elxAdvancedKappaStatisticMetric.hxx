@@ -11,11 +11,13 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdvancedKappaStatisticMetric_HXX__
 #define __elxAdvancedKappaStatisticMetric_HXX__
 
 #include "elxAdvancedKappaStatisticMetric.h"
+
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -29,12 +31,12 @@ void
 AdvancedKappaStatisticMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of AdvancedKappaStatistic metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
 } // end Initialize()

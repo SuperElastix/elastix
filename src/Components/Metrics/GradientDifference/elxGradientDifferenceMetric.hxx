@@ -15,6 +15,8 @@
 #define __elxGradientDifferenceMetric_HXX__
 
 #include "elxGradientDifferenceMetric.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -28,12 +30,12 @@ void
 GradientDifferenceMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of GradientDifference metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 

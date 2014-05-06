@@ -16,7 +16,6 @@
 
 #include "itkUseMevisDicomTiff.h"
 
-#include "elxElastixMain.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -25,8 +24,9 @@
 #include "itkDataObject.h"
 #include <itksys/SystemTools.hxx>
 #include <itksys/SystemInformation.hxx>
+#include "itkTimeProbe.h"
+#include <time.h>
 
-#include "elxTimer.h"
 
 /** Declare PrintHelp function.
  *
@@ -39,5 +39,57 @@
  *    example: <tt>transformix --version</tt> \n
  */
 void PrintHelp( void );
+
+/** ConvertSecondsToDHMS
+ *
+ */
+std::string ConvertSecondsToDHMS( const double totalSeconds )
+{
+  /** Define days, hours, minutes. */
+  const std::size_t secondsPerMinute = 60;
+  const std::size_t secondsPerHour   = 60 * secondsPerMinute;
+  const std::size_t secondsPerDay    = 24 * secondsPerHour;
+
+  /** Convert total seconds. */
+  std::size_t iSeconds = static_cast<std::size_t>( totalSeconds );
+  const std::size_t days = iSeconds / secondsPerDay;
+
+  iSeconds %= secondsPerDay;
+  const std::size_t hours = iSeconds / secondsPerHour;
+
+  iSeconds %= secondsPerHour;
+  const std::size_t minutes = iSeconds / secondsPerMinute;
+
+  iSeconds %= secondsPerMinute;
+  const std::size_t seconds = iSeconds;
+
+  /** Create a string in days, hours, minutes and seconds. */
+  std::ostringstream make_string( "" );
+  if( days    != 0 ){ make_string << days    << " days, "; }
+  if( hours   != 0 ){ make_string << hours   << " h, "; }
+  if( minutes != 0 ){ make_string << minutes << " min, "; }
+  if( seconds != 0 ){ make_string << seconds << " s"; }
+
+  /** Return a value. */
+  return make_string.str();
+
+} // end ConvertSecondsToDHMS()
+
+
+/** Returns current date and time as a string. */
+std::string GetCurrentDateAndTime( void )
+{
+  // Obtain current time
+  time_t rawtime = time( NULL );
+  // Convert to local time
+  struct tm * timeinfo = localtime( &rawtime );
+  // Convert to human-readable format
+  std::string timeAsString = std::string( asctime( timeinfo ) );
+  // Erase newline character at end
+  timeAsString.erase( timeAsString.end() - 1 );
+  //timeAsString.pop_back() // c++11 feature
+
+  return timeAsString;
+} // end GetCurrentDateAndTime()
 
 #endif

@@ -187,13 +187,11 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** Some initialization. */
-  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative.SetSize( this->GetNumberOfParameters() );
-    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_TransformJacobian.SetSize( FixedImageDimension, nnzji );
   }
 
 } // end InitializeThreadingParameters()

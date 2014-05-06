@@ -11,11 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMultiResolutionRegistrationWithFeatures_HXX__
 #define __elxMultiResolutionRegistrationWithFeatures_HXX__
 
 #include "elxMultiResolutionRegistrationWithFeatures.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -246,8 +247,8 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     nrOfFixedImageMasks, "Fixed", level );
 
   /** Create and start timer, to time the whole mask configuration procedure. */
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
 
   /** Set the fixed image mask. Only one mask is assumed here. */
   FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
@@ -256,9 +257,9 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   this->GetMultiInputMetric()->SetFixedImageMask( fixedMask );
 
   /** Stop timer and print the elapsed time. */
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Setting the fixed masks took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
 }   // end UpdateFixedMasks()
@@ -289,8 +290,8 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     nrOfMovingImageMasks, "Moving", level );
 
   /** Create and start timer, to time the whole mask configuration procedure. */
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
 
   /** Set the moving image mask. Only one mask is assumed here. */
   MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
@@ -299,9 +300,9 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   this->GetMultiInputMetric()->SetMovingImageMask( movingMask );
 
   /** Stop timer and print the elapsed time. */
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Setting the moving masks took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
 }   // end UpdateMovingMasks()

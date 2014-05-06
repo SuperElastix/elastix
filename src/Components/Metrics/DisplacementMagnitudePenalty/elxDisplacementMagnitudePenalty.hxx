@@ -15,6 +15,8 @@
 #define __elxDisplacementMagnitudePenalty_HXX__
 
 #include "elxDisplacementMagnitudePenalty.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -28,13 +30,12 @@ void
 DisplacementMagnitudePenalty< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
-  elxout << "Initialization of DisplacementMagnitude penalty term took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
-         << " ms." << std::endl;
+  timer.Stop();
+  elxout << "Initialization of DisplacementMagnitude metric took: "
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 

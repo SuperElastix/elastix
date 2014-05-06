@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMetricBase_h
 #define __elxMetricBase_h
 
@@ -23,7 +22,6 @@
 #include "itkImageGridSampler.h"
 #include "itkPointSet.h"
 
-#include "elxTimer.h"
 
 namespace elastix
 {

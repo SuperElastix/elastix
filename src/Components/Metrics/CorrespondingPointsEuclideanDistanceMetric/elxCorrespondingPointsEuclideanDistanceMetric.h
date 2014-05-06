@@ -17,7 +17,6 @@
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkCorrespondingPointsEuclideanDistancePointMetric.h"
 
-#include "elxTimer.h"
 
 namespace elastix
 {
@@ -113,10 +112,6 @@ public:
    */
   typedef FixedPointSetType PointSetType;
   typedef FixedImageType    ImageType;
-
-  /** Typedef for timer. */
-  typedef tmr::Timer         TimerType;
-  typedef TimerType::Pointer TimerPointer;
 
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.

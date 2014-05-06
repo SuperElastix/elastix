@@ -83,7 +83,6 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** Some initialization. */
-  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   const AccumulateType         zero  = NumericTraits< AccumulateType >::Zero;
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
@@ -96,7 +95,6 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeF.SetSize( this->GetNumberOfParameters() );
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeM.SetSize( this->GetNumberOfParameters() );
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Differential.SetSize( this->GetNumberOfParameters() );
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_TransformJacobian.SetSize( FixedImageDimension, nnzji );
   }
 
 } // end InitializeThreadingParameters()
@@ -533,10 +531,6 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
   DerivativeType               imageJacobian( nzji.size() );
 
-  /** Get a handle to a pre-allocated transform Jacobian. */
-  TransformJacobianType & jacobian
-    = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
-
   /** Get handles to the pre-allocated derivatives for the current thread.
    * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
    */
@@ -612,12 +606,18 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *threader_fiter ).Value().m_ImageValue );
 
+#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
+#else
+      /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+        fixedPoint, movingImageDerivative, imageJacobian, nzji );
+#endif
 
       /** Update some sums needed to calculate the value of NC. */
       sff += fixedImageValue  * fixedImageValue;

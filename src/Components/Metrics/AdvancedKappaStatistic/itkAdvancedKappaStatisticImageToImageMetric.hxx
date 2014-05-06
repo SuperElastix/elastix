@@ -11,9 +11,8 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef _itkAdvancedKappaStatisticImageToImageMetric_txx
-#define _itkAdvancedKappaStatisticImageToImageMetric_txx
+#ifndef _itkAdvancedKappaStatisticImageToImageMetric_hxx
+#define _itkAdvancedKappaStatisticImageToImageMetric_hxx
 
 #include "itkAdvancedKappaStatisticImageToImageMetric.h"
 
@@ -83,7 +82,6 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** Some initialization. */
-  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   const SizeValueType          zero  = NumericTraits< SizeValueType >::Zero;
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
@@ -92,7 +90,6 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaIntersection      = zero;
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeSum1.SetSize( this->GetNumberOfParameters() );
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeSum2.SetSize( this->GetNumberOfParameters() );
-    this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_TransformJacobian.SetSize( FixedImageDimension, nnzji );
   }
 
 } // end InitializeThreadingParameters()
@@ -465,10 +462,6 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
   DerivativeType               imageJacobian( nzji.size() );
 
-  /** Get a handle to a pre-allocated transform Jacobian. */
-  TransformJacobianType & jacobian
-    = this->m_KappaGetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
-
   /** Get handles to the pre-allocated derivatives for the current thread.
    * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
    */
@@ -540,12 +533,20 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
+#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
+#else
+      /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+        fixedPoint, movingImageDerivative, imageJacobian, nzji );
+#endif
+
+
 
       /** Compute this pixel's contribution to the measure and derivatives. */
       this->UpdateValueAndDerivativeTerms(

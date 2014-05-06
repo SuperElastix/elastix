@@ -17,7 +17,6 @@
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkKNNGraphAlphaMutualInformationImageToImageMetric.h"
 
-#include "elxTimer.h"
 
 namespace elastix
 {
@@ -141,11 +140,6 @@ public:
   typedef FixedImageType  FixedFeatureImageType;
   typedef MovingImageType MovingFeatureImageType;
 
-  /** Typedef for timer. */
-  typedef tmr::Timer TimerType;
-  /** Typedef for timer. */
-  typedef TimerType::Pointer TimerPointer;
-
   /** Execute stuff before the registration:
    * \li Set the alpha from alpha - MI.
    * \li Set the number of fixed feature images.
@@ -159,17 +153,17 @@ public:
 
   /** Execute stuff before each new pyramid resolution:
    * \li Set the tree type.
-   * \li Set the bucket size, if appropiate.
-   * \li Set the splitting rule, if appropiate.
-   * \li Set the shrinking rule, if appropiate.
+   * \li Set the bucket size, if appropriate.
+   * \li Set the splitting rule, if appropriate.
+   * \li Set the shrinking rule, if appropriate.
    * \li Set the tree searcher type.
    * \li Set the k NearestNeighbours.
    * \li Set the error bound epsilon for ANN search.
-   * \li Set the squared search radius, if appropiate.
+   * \li Set the squared search radius, if appropriate.
    */
   virtual void BeforeEachResolution( void );
 
-  /** Sets up a timer to measure the intialisation time and
+  /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
   virtual void Initialize( void ) throw ( itk::ExceptionObject );

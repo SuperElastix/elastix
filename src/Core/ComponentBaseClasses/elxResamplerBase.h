@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxResamplerBase_h
 #define __elxResamplerBase_h
 
@@ -21,6 +20,7 @@
 #include "elxBaseComponentSE.h"
 #include "itkResampleImageFilter.h"
 #include "elxProgressCommand.h"
+
 
 namespace elastix
 {

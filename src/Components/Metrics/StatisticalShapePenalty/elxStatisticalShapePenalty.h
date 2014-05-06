@@ -17,7 +17,6 @@
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkStatisticalShapePointPenalty.h"
 
-#include "elxTimer.h"
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 #include <vcl_iostream.h>
@@ -145,10 +144,6 @@ public:
    */
   typedef FixedPointSetType PointSetType;
   typedef FixedImageType    ImageType;
-
-  /** Typedef for timer. */
-  typedef tmr::Timer         TimerType;
-  typedef TimerType::Pointer TimerPointer;
 
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.

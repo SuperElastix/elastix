@@ -11,14 +11,13 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxKNNGraphAlphaMutualInformationMetric_HXX__
 #define __elxKNNGraphAlphaMutualInformationMetric_HXX__
 
 #include "elxKNNGraphAlphaMutualInformationMetric.h"
 
 #include "itkBSplineInterpolateImageFunction.h"
-
+#include "itkTimeProbe.h"
 #include <string>
 
 namespace elastix
@@ -33,13 +32,12 @@ void
 KNNGraphAlphaMutualInformationMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of KNNGraphAlphaMutualInformation metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
-         << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 

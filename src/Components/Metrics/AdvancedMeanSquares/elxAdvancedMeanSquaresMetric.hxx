@@ -11,11 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAdvancedMeanSquaresMetric_HXX__
 #define __elxAdvancedMeanSquaresMetric_HXX__
 
 #include "elxAdvancedMeanSquaresMetric.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -29,14 +30,14 @@ void
 AdvancedMeanSquaresMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of AdvancedMeanSquares metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
-}   // end Initialize
+} // end Initialize()
 
 
 /**
@@ -104,7 +105,7 @@ AdvancedMeanSquaresMetric< TElastix >
     this->SetUseOpenMP( true );
   }
 
-}   // end BeforeEachResolution()
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix

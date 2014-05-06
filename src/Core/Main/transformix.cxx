@@ -12,10 +12,8 @@
 
 ======================================================================*/
 
-#ifndef __transformix_CXX_
-#define __transformix_CXX_
-
-#include "transformix.h"
+#include "elastix.h"
+#include "elxTransformixMain.h"
 
 int
 main( int argc, char ** argv )
@@ -172,10 +170,13 @@ main( int argc, char ** argv )
   elxout << std::endl;
 
   /** Declare a timer, start it and print the start time. */
-  tmr::Timer::Pointer totaltimer = tmr::Timer::New();
-  totaltimer->StartTimer();
-  elxout << "transformix is started at " << totaltimer->PrintStartTime()
-         << ".\n" << std::endl;
+  itk::TimeProbe totaltimer;
+  totaltimer.Start();
+  elxout << "transformix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
+  //tmr::Timer::Pointer totaltimer = tmr::Timer::New();
+  //totaltimer->StartTimer();
+  //elxout << "transformix is started at " << totaltimer->PrintStartTime()
+  //       << ".\n" << std::endl;
 
   /** Print where transformix was run. */
   elxout << "which transformix:   " << argv[ 0 ] << std::endl;
@@ -214,11 +215,9 @@ main( int argc, char ** argv )
   }
 
   /** Stop timer and print it. */
-  totaltimer->StopTimer();
-  elxout << "\nTransformix has finished at "
-         << totaltimer->PrintStopTime() << "." << std::endl;
-  elxout << "Elapsed time: "
-         << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+  totaltimer.Stop();
+  elxout << "\ntransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl;
+  elxout << "Elapsed time: " << ConvertSecondsToDHMS( totaltimer.GetMean() ) << ".\n" << std::endl;
 
   /** Clean up. */
   transformix = 0;
@@ -282,6 +281,3 @@ PrintHelp( void )
     "Check the website http://elastix.isi.uu.nl, or mail elastix@bigr.nl." << std::endl;
 
 } // end PrintHelp()
-
-
-#endif // end #ifndef __transformix_CXX_

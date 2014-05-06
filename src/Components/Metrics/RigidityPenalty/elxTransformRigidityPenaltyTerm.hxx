@@ -17,6 +17,8 @@
 #include "elxTransformRigidityPenaltyTerm.h"
 
 #include "itkChangeInformationImageFilter.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -173,21 +175,15 @@ void
 TransformRigidityPenalty< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  /** Create and start a timer. */
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
-
-  /** Initialize this class with the Superclass initializer. */
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
+  timer.Stop();
+  elxout << "Initialization of TransformRigidityPenalty metric took: "
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
   /** Check stuff. */
   this->CheckUseAndCalculationBooleans();
-
-  /** Stop and print the timer. */
-  timer->StopTimer();
-  elxout << "Initialization of TransformRigidityPenalty term took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
-         << " ms." << std::endl;
 
 } // end Initialize()
 
