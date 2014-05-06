@@ -1,19 +1,16 @@
-/*=========================================================================
+/*======================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkMultiResolutionShrinkPyramidImageFilter.txx,v $
-  Language:  C++
-  Date:      $Date: 2009-04-07 13:14:19 $
-  Version:   $Revision: 1.32 $
+  This file is part of the elastix software.
 
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
 
      This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
+     PURPOSE. See the above copyright notices for more information.
 
-=========================================================================*/
+======================================================================*/
 #ifndef __itkMultiResolutionShrinkPyramidImageFilter_hxx
 #define __itkMultiResolutionShrinkPyramidImageFilter_hxx
 
