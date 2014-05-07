@@ -352,11 +352,11 @@ elx_add_test( ThinPlateSplineTransformPerformanceTest
   ${elastix_BINARY_DIR}/Testing )
 elx_add_test( ThinPlateSplineTransformTest
   ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt )
-elx_add_test( AdvanceOneStepParallellizationTest "" "Common" )
-elx_add_test( AccumulateDerivativesParallellizationTest "" "Common" )
-elx_add_test( BSplineTransformPointPerformanceTest "" "Common"
+elx_add_test( AdvanceOneStepParallellizationTest )
+elx_add_test( AccumulateDerivativesParallellizationTest )
+elx_add_test( BSplineTransformPointPerformanceTest
   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
-elx_add_test( BSplineJacobianGradientPerformanceTest "" "Common"
+elx_add_test( BSplineJacobianGradientPerformanceTest
   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
 
 #---------------------------------------------------------------------
