@@ -27,11 +27,12 @@ template< class TTransform, class TFixedImage, class TMovingImage >
 CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
 ::CenteredTransformInitializer2()
 {
-  m_FixedCalculator  = FixedImageCalculatorType::New();
-  m_MovingCalculator = MovingImageCalculatorType::New();
-  m_UseMoments       = false;
-  m_UseOrigins       = false;
-  m_UseTop           = false;
+  m_FixedCalculator   = FixedImageCalculatorType::New();
+  m_MovingCalculator  = MovingImageCalculatorType::New();
+  m_UseMoments        = false;
+  m_UseOrigins        = false;
+  m_UseTop            = false;
+  m_UseTopSliceCenter = false;
 }
 
 
