@@ -330,6 +330,7 @@ AdvancedAffineTransformElastix< TElastix >
   }
 
   OutputVectorType initialTranslation;
+  initialTranslation.Fill( 0.0 );
   bool initialTranslationGiven = true;
   for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
