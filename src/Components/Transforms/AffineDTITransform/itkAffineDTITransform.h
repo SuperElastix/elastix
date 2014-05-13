@@ -15,6 +15,7 @@
 #ifndef __itkAffineDTITransform_H__
 #define __itkAffineDTITransform_H__
 
+#include "itkAffineDTI2DTransform.h"
 #include "itkAffineDTI3DTransform.h"
 #include "itkAdvancedMatrixOffsetTransformBase.h"
 
@@ -43,7 +44,28 @@ public:
   };
 
 };
+/**
+ * \class AffineDTIGroup<2>
+ * \brief This class only contains a dummy class for the 2D case.
+ *
+ */
 
+template< >
+class AffineDTIGroup< 2 >
+{
+public:
+
+  template< class TScalarType >
+  class Dummy
+  {
+public:
+
+    /** Typedef's.*/
+    typedef AffineDTI2DTransform< TScalarType > AffineDTITransform_tmp;
+
+  };
+
+};
 /**
  * \class AffineDTIGroup<3>
  * \brief This class only contains a dummy class for the 3D case.
@@ -103,10 +125,9 @@ public:
 
 /**
  * \class AffineDTITransform
- * \brief This class makes the AffineDTI3DTransform templated over the dimension.
+ * \brief This class combines the AffineDTI2DTransform with the AffineDTI3DTransform.
  *
  * This transform is an affine transform with MR-DTI specific parametrisation.
- * NB: no implementation for 2D yet!
  *
  * \ingroup Transforms
  */
@@ -136,6 +157,8 @@ public:
   itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
 
   /** Typedefs inherited from the superclass. */
+
+  /** These are both in AffineDTI2D and AffineDTI3D. */
   typedef typename Superclass::ScalarType                ScalarType;
   typedef typename Superclass::ParametersType            ParametersType;
   typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;

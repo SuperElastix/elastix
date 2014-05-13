@@ -44,9 +44,9 @@ void
 AffineDTITransformElastix< TElastix >
 ::BeforeRegistration( void )
 {
-  if( SpaceDimension != 3 )
+  if( SpaceDimension != 3 && SpaceDimension != 2)
   {
-    itkExceptionMacro( << "AffineDTI transform only works for 3D images!" );
+    itkExceptionMacro( << "AffineDTI transform only works for 2D or 3D images!" );
   }
 
   /** Set center of rotation and initial translation. */
@@ -305,6 +305,11 @@ AffineDTITransformElastix< TElastix >
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()
   ->SetInitialTransformParameters( this->GetParameters() );
+
+  /** Give feedback. */
+  // \todo: should perhaps also print fixed parameters
+  elxout << "Transform parameters are initialized as: "
+    << this->GetParameters() << std::endl;
 
 } // end InitializeTransform()
 
