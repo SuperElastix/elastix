@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkAffineDTITransform_H__
 #define __itkAffineDTITransform_H__
 
@@ -127,7 +126,7 @@ public:
  * \class AffineDTITransform
  * \brief This class combines the AffineDTI2DTransform with the AffineDTI3DTransform.
  *
- * This transform is an affine transform with MR-DTI specific parametrisation.
+ * This transform is an affine transform with MR-DTI specific parametrization.
  *
  * \ingroup Transforms
  */

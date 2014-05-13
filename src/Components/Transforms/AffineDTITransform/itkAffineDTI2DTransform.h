@@ -11,23 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-/*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkAffineDTI3DTransform.h,v $
-  Language:  C++
-  Date:      $Date: 2008-10-13 15:36:31 $
-  Version:   $Revision: 1.14 $
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
 #ifndef __itkAffineDTI2DTransform_h
 #define __itkAffineDTI2DTransform_h
 
@@ -64,8 +47,8 @@ namespace itk
  * to the B-matrix.
  *
  * The parameters are ordered as follows:
- * <tt>[ AngleX AngleY AngleZ ShearX ShearY ShearZ ScaleX ScaleY ScaleZ TranslationX TranslationY TranslationZ ]</tt>
- * <tt>in 2D case: [ Angle ShearX ShearY ScaleX ScaleY TranslationX TranslationY ]</tt>
+ * <tt>in 2D: [ Angle ShearX ShearY ScaleX ScaleY TranslationX TranslationY ]</tt>
+ * <tt>in 3D: [ AngleX AngleY AngleZ ShearX ShearY ShearZ ScaleX ScaleY ScaleZ TranslationX TranslationY TranslationZ ]</tt>
  *
  * The serialization of the fixed parameters is an array of 2 elements defining
  * the center of rotation.

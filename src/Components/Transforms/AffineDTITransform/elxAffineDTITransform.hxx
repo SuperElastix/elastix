@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxAffineDTITransform_HXX_
 #define __elxAffineDTITransform_HXX_
 
@@ -44,7 +43,7 @@ void
 AffineDTITransformElastix< TElastix >
 ::BeforeRegistration( void )
 {
-  if( SpaceDimension != 3 && SpaceDimension != 2)
+  if( SpaceDimension != 2 && SpaceDimension != 3 )
   {
     itkExceptionMacro( << "AffineDTI transform only works for 2D or 3D images!" );
   }

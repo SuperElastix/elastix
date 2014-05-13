@@ -11,23 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-/*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkAffineDTI3DTransform.txx,v $
-  Language:  C++
-  Date:      $Date: 2008-10-13 15:36:31 $
-  Version:   $Revision: 1.24 $
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
 #ifndef __itkAffineDTI2DTransform_hxx
 #define __itkAffineDTI2DTransform_hxx
 
@@ -256,7 +239,7 @@ AffineDTI2DTransform< TScalarType >
     return;
   }
 
-  /** The Jacobian of spatial Jacobian is constant over inputspace, so is precomputed */
+  /** The Jacobian of spatial Jacobian is constant over input space, so is precomputed */
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   jsj.resize( ParametersDimension );
 
@@ -332,7 +315,8 @@ AffineDTI2DTransform< TScalarType >
 // Print self
 template< class TScalarType >
 void
-AffineDTI2DTransform< TScalarType >::PrintSelf( std::ostream & os, Indent indent ) const
+AffineDTI2DTransform< TScalarType >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
