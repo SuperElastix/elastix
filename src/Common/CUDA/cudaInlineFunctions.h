@@ -108,29 +108,29 @@ inline void cudaMemset( T* dst, int value, size_t nof_elems )
 
 
 template <typename T, typename Q>
-inline cudaError_t cudaMemcpyToSymbol( T& dst, const Q& src,
+inline cudaError_t cudaMemcpyToSymbol( const T& dst, const Q& src,
   cudaMemcpyKind direction )
 {
-  cudaError err = ::cudaMemcpyToSymbol( dst, &src, sizeof(dst), 0, direction );
+  cudaError err = ::cudaMemcpyToSymbol( &dst, &src, sizeof(dst), 0, direction );
   cudaCheckMsg( "cudaMemcpyToSymbol failed!" );
   return err;
 }
 
 
 template <typename T>
-inline cudaError_t cudaBindTextureToArray( T& tex, cudaArray* array,
+inline cudaError_t cudaBindTextureToArray( const T& tex, cudaArray* array,
   const cudaChannelFormatDesc desc )
 {
-  cudaError_t err = ::cudaBindTextureToArray( tex, array, desc );
+  cudaError_t err = ::cudaBindTextureToArray( &tex, array, &desc );
   cudaCheckMsg( "cudaBindTextureToArray failed!" );
   return err;
 }
 
 
 template <typename T>
-inline cudaError_t cudaUnbindTexture( T& tex )
+inline cudaError_t cudaUnbindTexture( const T& tex )
 {
-  cudaError_t err = ::cudaUnbindTexture( tex );
+  cudaError_t err = ::cudaUnbindTexture( &tex );
   cudaCheckMsg( "cudaUnbindTexture failed!" );
   return err;
 }

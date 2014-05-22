@@ -485,7 +485,7 @@ TOutputImageType* cuda
 
     if ( !useGPU )
     {
-      size_t nof_elements = voxelsPerSlice * volumeExtent.depth;
+      const size_t nof_elements = voxelsPerSlice * volumeExtent.depth;
 
       /* Allocate memory on host, copy over data (and cast) and copy results to GPU. */
       TOutputImageType* tmp = new TOutputImageType[ nof_elements ];
@@ -518,7 +518,7 @@ TOutputImageType* cuda
 
     if ( !useGPU )
     {
-      size_t nof_elements = voxelsPerSlice * volumeExtent.depth;
+      const size_t nof_elements = voxelsPerSlice * volumeExtent.depth;
 
       /* Allocate memory on host, copy data from GPU and cast. */
       TInputImageType* tmp = new TInputImageType[ nof_elements ];
