@@ -57,7 +57,7 @@ ELASTIX_IMAGE_4D_PIXELTYPES:STRING=short
 OPENCL_INCLUDE_DIRS:PATH=/usr/local/cuda/include
 OPENCL_LIBRARIES:FILEPATH=/usr/lib/libOpenCL.so
 OPENCL_USE_PLATFORM_NVIDIA:BOOL=ON
-EIGEN3_INCLUDE_DIR:PATH=/home/marius/toolkits/eigen/eigen-3.0.5
+EIGEN3_INCLUDE_DIR:PATH=/home/marius/toolkits/eigen/eigen-3.2.1
 
 // Compile all elastix components;
 USE_ALL_COMPONENTS:BOOL=ON
