@@ -75,11 +75,12 @@ std::string BaseComponent::ConvertSecondsToDHMS( const double totalSeconds ) con
   const std::size_t seconds = iSeconds;
 
   /** Create a string in days, hours, minutes and seconds. */
+  bool nonzero = false;
   std::ostringstream make_string( "" );
-  if( days    != 0 ){ make_string << days    << " days, "; }
-  if( hours   != 0 ){ make_string << hours   << " h, "; }
-  if( minutes != 0 ){ make_string << minutes << " min, "; }
-  if( seconds != 0 ){ make_string << seconds << " s"; }
+  if( days    != 0            ){ make_string << days    << "d"; nonzero = true; }
+  if( hours   != 0 || nonzero ){ make_string << hours   << "h"; nonzero = true; }
+  if( minutes != 0 || nonzero ){ make_string << minutes << "m"; nonzero = true; }
+  make_string << seconds << "s";
 
   /** Return a value. */
   return make_string.str();
