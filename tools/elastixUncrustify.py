@@ -7,14 +7,21 @@ from optparse import OptionParser
 
 #-------------------------------------------------------------------------------
 # the main function
-# This python script applies Uncrustify (Code Beautifier) to the elastix code.
+#
+# This python script applies uncrustify (Code Beautifier) to the elastix code.
+#
 # Uncrustify web site: http://uncrustify.sourceforge.net/
-# Compile and add Uncrustify to your $PATH environment variable.
-# The configuration file for Uncrustify called elx_uncrustify.cfg.
-# Execute this script without any option to create preview directory
-# called '_beautiful_code'. To apply Uncrustify directly to the code use
+# Compile and add uncrustify to your $PATH environment variable.
+#
+# The configuration file for uncrustify is called elastixUncrustify.cfg.
+#
+# Execute this script without any option to create a preview directory
+# called '_beautiful_code'. To apply uncrustify directly to the code use
 # option '-a'. Including and excluding files and directories could be also
 # indicated, see options.
+#
+# The script should be executed from the src directory
+
 def main():
   # usage, parse parameters
   usage = "usage: %prog [options] arg"
@@ -72,35 +79,48 @@ def main():
           print( "ERROR: The contradictory options provided -i " + include + " -e " + exclude + "." );
           return 1;
 
-  # support for other uncrustify configuration file
-  app_uncrustify_cfg_file_name = "";
-  if options.config == None :
-    app_uncrustify_cfg_file_name = "elastixUncrustify.cfg";
-  else :
-    app_uncrustify_cfg_file_name = options.config;
-    print( "WARNING: Using other uncrustify configuration file '" + app_uncrustify_cfg_file_name + "'" );
-
-  # uncrustify executable
-  uncrustify_exe_name = "";
-
-  # define uncrustify executable
-  uncrustify_exe_name = "uncrustify";
-
   # list of valid C++ extensions and top directories
   src_valid_cxx_extensions = set( [".h", ".cpp", ".cxx", ".hxx", ".txx"] ); # not .in.h
   src_top_dirs = [ "Common", "Components", "Core", "Testing" ];
 
-  # current directory
+  # Define the current working directory and the directory containing this script
   current_dir = os.getcwd();
   current_dir = current_dir.replace( "/cygdrive/c/", "C:/" ); # Cygwin support
   current_dir = current_dir.replace( "/cygdrive/d/", "D:/" ); # Cygwin support
+  script_dir = os.path.dirname( os.path.realpath( __file__ ) );
+  script_dir = script_dir.replace( "/cygdrive/c/", "C:/" ); # Cygwin support
+  script_dir = script_dir.replace( "/cygdrive/d/", "D:/" ); # Cygwin support
 
-  # check that uncrustify executable end configuration file exist
-  app_uncrustify_cfg_file = os.path.join( current_dir, app_uncrustify_cfg_file_name );
-  if not os.path.exists( app_uncrustify_cfg_file ) :
-    print( "ERROR: The configuration file '" + app_uncrustify_cfg_file + "' does not exist." );
-    return 1;
+  # Find the uncrustify configuration file
+  #
+  if options.config == None :
+    # If no configuration file is given via the options, then we look for a default
+    # First we look in the directory of this script
+    app_uncrustify_cfg_file = os.path.join( script_dir, "elastixUncrustify.cfg" );
+    # If it doesn't exist we look in the current working directory
+    if not os.path.exists( app_uncrustify_cfg_file ) :
+      app_uncrustify_cfg_file = os.path.join( current_dir, "elastixUncrustify.cfg" );
+    # If it doesn't exist we throw an error
+    if not os.path.exists( app_uncrustify_cfg_file ) :
+      print( "ERROR: cannot find the configuration file elastixUncrustify.cfg" );
+      print( "  looked in: " + script_dir );
+      print( "  looked in: " + current_dir );
+      return 1;
+  else :
+    # Otherwise we use the user supplied configuration file
+    if not os.path.exists( options.config ) :
+      print( "ERROR: The configuration file '" + options.config + "' does not exist." );
+      return 1;
 
+    app_uncrustify_cfg_file = os.path.realpath( options.config );
+    app_uncrustify_cfg_file = app_uncrustify_cfg_file.replace( "/cygdrive/c/", "C:/" ); # Cygwin support
+    app_uncrustify_cfg_file = app_uncrustify_cfg_file.replace( "/cygdrive/d/", "D:/" ); # Cygwin support
+
+  if options.verbose == True :
+    print( "DEBUG: uncrustify configuration file: " + app_uncrustify_cfg_file );
+
+  # check that uncrustify executable exists
+  uncrustify_exe_name = "uncrustify";
   if which( uncrustify_exe_name ) == None :
     print( "ERROR: The executable file '" + uncrustify_exe_name + "' does not exist in your PATH variable." );
     return 1;
@@ -121,10 +141,9 @@ def main():
   # create files list, it has to be defined in uncrustify specific way
   filelist = None;
 
-  if options.debug == True :
+  if options.verbose == True :
     print( "DEBUG: Opening file " + app_uncrustify_files_list );
-  else :
-    filelist = open( app_uncrustify_files_list, "w" );
+  filelist = open( app_uncrustify_files_list, "w" );
 
   for dir in src_top_dirs :
     local_current_dir = os.path.join( current_dir, dir );
@@ -141,10 +160,9 @@ def main():
             filelist.write( rfullpath );
             filelist.write( '\n' );
 
-  if options.debug == True :
+  if options.verbose == True :
     print( "DEBUG: Closing file " + app_uncrustify_files_list );
-  else :
-    filelist.close();
+  filelist.close();
 
   # define uncrustify arguments
   arg = "-c " + app_uncrustify_cfg_file;
@@ -161,15 +179,14 @@ def main():
 
   # delete filelist if option apply is used
   if os.access( app_uncrustify_files_list, os.F_OK ) == True and options.apply == True :
-    if options.debug == True :
+    if options.verbose == True :
       print( "DEBUG: Deleting file " + app_uncrustify_files_list );
-    else :
-      os.remove( app_uncrustify_files_list );
+    os.remove( app_uncrustify_files_list );
 
   # report
   print( "SUCCESS! Your code is beautiful!" );
   if not options.apply :
-    print( "Look at the directory " + options.output_directory );
+    print( "Check the directory " + options.output_directory );
 
   return 0
 
