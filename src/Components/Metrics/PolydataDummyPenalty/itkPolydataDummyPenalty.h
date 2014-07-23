@@ -63,18 +63,19 @@ public:
   typedef typename Superclass::DerivativeType      DerivativeType;
   typedef typename Superclass::DerivativeValueType DerivativeValueType;
 
-  typedef typename Superclass::InputPointType InputPointType;
-
-  typedef typename OutputPointType::CoordRepType CoordRepType;
-  typedef vnl_vector< CoordRepType >             VnlVectorType;
-
-  typedef typename TransformType::InputPointType  FixedImagePointType;
-  typedef typename TransformType::OutputPointType MovingImagePointType;
-
   /** Typedefs. */
+  typedef typename Superclass::InputPointType         InputPointType;
+  typedef typename InputPointType::CoordRepType       CoordRepType;
+  typedef vnl_vector<CoordRepType>                    VnlVectorType;
+  typedef typename TransformType::InputPointType      FixedImagePointType;
+  typedef typename TransformType::OutputPointType     MovingImagePointType;
   typedef typename TransformType::SpatialJacobianType SpatialJacobianType;
+  typedef itk::Vector< typename TransformType::ScalarType, 
+                             FixedPointSetDimension > PointNormalType;
 
-  typedef itk::Vector< typename TransformType::ScalarType, FixedPointSetDimension > PointNormalType;
+  /** Constants for the pointset dimensions. */
+  itkStaticConstMacro( FixedPointSetDimension, unsigned int,
+  Superclass::FixedPointSetDimension );
 
   typedef unsigned char DummyMeshPixelType;
   typedef DefaultStaticMeshTraits< PointNormalType,
@@ -175,9 +176,6 @@ protected:
   /** Member variables. */
   mutable FixedMeshContainerConstPointer m_FixedMeshContainer;
   mutable MappedMeshContainerPointer     m_MappedMeshContainer;
-
-  CoordRepType m_KernelWidth;
-  CoordRepType m_CutOffDist;
 
 private:
 
