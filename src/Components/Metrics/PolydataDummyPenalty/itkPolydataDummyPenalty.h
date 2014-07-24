@@ -70,16 +70,17 @@ public:
   typedef typename TransformType::InputPointType      FixedImagePointType;
   typedef typename TransformType::OutputPointType     MovingImagePointType;
   typedef typename TransformType::SpatialJacobianType SpatialJacobianType;
-  typedef itk::Vector< typename TransformType::ScalarType, 
-                             FixedPointSetDimension > PointNormalType;
+
 
   /** Constants for the pointset dimensions. */
   itkStaticConstMacro( FixedPointSetDimension, unsigned int,
   Superclass::FixedPointSetDimension );
-
+  
+  typedef itk::Vector< typename TransformType::ScalarType, 
+    FixedPointSetDimension >                                          PointNormalType;
   typedef unsigned char DummyMeshPixelType;
   typedef DefaultStaticMeshTraits< PointNormalType,
-    FixedPointSetDimension, FixedPointSetDimension, CoordRepType >     MeshTraitsType;
+    FixedPointSetDimension, FixedPointSetDimension, CoordRepType >    MeshTraitsType;
   typedef typename Mesh< PointNormalType, FixedPointSetDimension,
     MeshTraitsType >                                                  FixedMeshType;
 
