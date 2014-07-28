@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit

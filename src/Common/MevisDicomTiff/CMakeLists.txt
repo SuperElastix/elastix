@@ -9,7 +9,7 @@ IF( ELASTIX_USE_MEVISDICOMTIFF )
     itkUseMevisDicomTiff.cxx
   )
 ELSE()
-  # avoid dependencies, but compile the lib, so that customers of this 
+  # avoid dependencies, but compile the lib, so that customers of this
   # lib can just call RegisterMevisDicomTiff without checking.
   ADD_LIBRARY( mevisdcmtiff
     itkUseMevisDicomTiff.cxx
