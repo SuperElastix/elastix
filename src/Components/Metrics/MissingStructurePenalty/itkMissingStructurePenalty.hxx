@@ -63,19 +63,19 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     itkExceptionMacro( << "FixedMeshContainer is not present" );
   }
 
-  const FixedMeshContainerType::ElementIdentifier numberOfMeshes = this->m_FixedMeshContainer->Size();
+  const FixedMeshContainerElementIdentifier numberOfMeshes = this->m_FixedMeshContainer->Size();
   this->m_MappedMeshContainer->Reserve( numberOfMeshes );
 
-  for( FixedMeshContainerType::ElementIdentifier meshId = 0; meshId < numberOfMeshes; ++meshId )
+  for( FixedMeshContainerElementIdentifier meshId = 0; meshId < numberOfMeshes; ++meshId )
   {
     FixedMeshConstPointer           fixedMesh      = this->m_FixedMeshContainer->ElementAt( meshId );
     MeshPointsContainerConstPointer fixedPoints    = fixedMesh->GetPoints();
     const unsigned int              numberOfPoints = fixedPoints->Size();
 
-    MeshPointsContainerType::Pointer mappedPoints =  MeshPointsContainerType::New();
+    typename MeshPointsContainerType::Pointer mappedPoints =  MeshPointsContainerType::New();
     mappedPoints->Reserve( numberOfPoints );
 
-    FixedMeshType::Pointer mappedMesh = FixedMeshType::New();
+    typename FixedMeshType::Pointer mappedMesh = FixedMeshType::New();
     mappedMesh->SetPoints( mappedPoints );
 
     // mappedMesh was constructed with a Cellscontainer and CellDatacontainer of size 0.
@@ -110,7 +110,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
   /** Initialize some variables */
   MeasureType value = NumericTraits< MeasureType >::Zero;
 
-  OutputPointType fixedPoint;
+  //OutputPointType fixedPoint;
   /** Get the current corresponding points. */
 
   /** Make sure the transform parameters are up to date. */
@@ -174,15 +174,17 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
   NonZeroJacobianIndicesType nzji( this->m_Transform->GetNumberOfNonZeroJacobianIndices() );
   TransformJacobianType      jacobian;
 
-  const FixedMeshContainerType::ElementIdentifier numberOfMeshes = this->m_FixedMeshContainer->Size();
+  const FixedMeshContainerElementIdentifier numberOfMeshes = this->m_FixedMeshContainer->Size();
 
-  FixedMeshType::PointType zeroPoint =  FixedMeshType::PointType::Point();
+  typedef typename FixedMeshType::PointType FixedMeshPointType;
+
+  FixedMeshPointType zeroPoint = typename FixedMeshPointType::Point();
   zeroPoint.Fill( 0.0 );
 
-  MeshPointsContainerType::Pointer pointCentroids = FixedMeshType::PointsContainer::New();
-  pointCentroids->resize( numberOfMeshes, FixedMeshType::PointType::Point( zeroPoint ) );
+  typename MeshPointsContainerType::Pointer pointCentroids = FixedMeshType::PointsContainer::New();
+  pointCentroids->resize( numberOfMeshes, typename FixedMeshPointType::Point( zeroPoint ) );
 
-  for( FixedMeshContainerType::ElementIdentifier meshId = 0; meshId < numberOfMeshes; ++meshId ) // loop over all meshes in container
+  for( FixedMeshContainerElementIdentifier meshId = 0; meshId < numberOfMeshes; ++meshId ) // loop over all meshes in container
   {
     const FixedMeshConstPointer           fixedMesh      = fixedMeshContainer->ElementAt( meshId );
     const MeshPointsContainerConstPointer fixedPoints    = fixedMesh->GetPoints();
@@ -191,10 +193,11 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     const FixedMeshPointer           mappedMesh   = this->m_MappedMeshContainer->ElementAt( meshId );
     const MeshPointsContainerPointer mappedPoints = mappedMesh->GetPoints();
 
-    FixedMeshType::PointType &              pointCentroid = pointCentroids->ElementAt( meshId );
-    FixedMeshType::PointsContainer::Pointer derivPoints   = FixedMeshType::PointsContainer::New();
+    typename FixedMeshType::PointType &              pointCentroid = pointCentroids->ElementAt( meshId );
+    typedef typename FixedMeshType::PointsContainer FixedMeshPointsContainerType;
+    typename FixedMeshType::PointsContainer::Pointer derivPoints   = FixedMeshPointsContainerType::New();
 
-    derivPoints->resize( numberOfPoints, FixedMeshType::PointType::Point( zeroPoint ) );
+    derivPoints->resize( numberOfPoints, typename FixedMeshPointType::Point( zeroPoint ) );
 
     MeshPointsContainerConstIteratorType fixedPointIt  = fixedPoints->Begin();
     MeshPointsContainerIteratorType      mappedPointIt = mappedPoints->Begin();
@@ -208,10 +211,10 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     }
     pointCentroid.GetVnlVector() /= numberOfPoints;
 
-    FixedMeshType::CellsContainerConstIterator cellBegin = fixedMesh->GetCells()->Begin();
-    FixedMeshType::CellsContainerConstIterator cellEnd   = fixedMesh->GetCells()->End();
+    typename FixedMeshType::CellsContainerConstIterator cellBegin = fixedMesh->GetCells()->Begin();
+    typename FixedMeshType::CellsContainerConstIterator cellEnd   = fixedMesh->GetCells()->End();
 
-    CellInterfaceType::PointIdIterator beginpointer;
+    typename CellInterfaceType::PointIdIterator beginpointer;
     float                              sumSignedVolume = 0.0;
     float                              sumAbsVolume    = 0.0;
 
@@ -227,10 +230,10 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
       {
         case 2:
         {
-          const FixedMeshType::PointIdentifier p1Id = *beginpointer;
+          const FixedMeshPointIdentifier p1Id = *beginpointer;
           ++beginpointer;
-          const VectorType                     p1   = mappedPoints->GetElement( p1Id ) - pointCentroid;
-          const FixedMeshType::PointIdentifier p2Id = *beginpointer;
+          const VectorType p1   = mappedPoints->GetElement( p1Id ) - pointCentroid;
+          const FixedMeshPointIdentifier p2Id = *beginpointer;
           ++beginpointer;
           const VectorType p2 = mappedPoints->GetElement( p2Id ) - pointCentroid;
 
@@ -249,13 +252,13 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
         break;
         case 3:
         {
-          const FixedMeshType::PointIdentifier p1Id = *beginpointer;
+          const FixedMeshPointIdentifier p1Id = *beginpointer;
           ++beginpointer;
-          const VectorType                     p1   = mappedPoints->GetElement( p1Id ) - pointCentroid;
-          const FixedMeshType::PointIdentifier p2Id = *beginpointer;
+          const VectorType p1   = mappedPoints->GetElement( p1Id ) - pointCentroid;
+          const FixedMeshPointIdentifier p2Id = *beginpointer;
           ++beginpointer;
-          const VectorType                     p2   = mappedPoints->GetElement( p2Id ) - pointCentroid;
-          const FixedMeshType::PointIdentifier p3Id = *beginpointer;
+          const VectorType p2   = mappedPoints->GetElement( p2Id ) - pointCentroid;
+          const FixedMeshPointIdentifier p3Id = *beginpointer;
           ++beginpointer;
           const VectorType p3 = mappedPoints->GetElement( p3Id ) - pointCentroid;
 
@@ -283,10 +286,10 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
         break;
         case 4:
         {
-          const VectorType::const_pointer p1 = mappedPoints->GetElement( *beginpointer++ ).GetDataPointer();
-          const VectorType::const_pointer p2 = mappedPoints->GetElement( *beginpointer++ ).GetDataPointer();
-          const VectorType::const_pointer p3 = mappedPoints->GetElement( *beginpointer++ ).GetDataPointer();
-          const VectorType::const_pointer p4 = mappedPoints->GetElement( *beginpointer++ ).GetDataPointer();
+          const VectorConstPointer p1 = mappedPoints->GetElement( *beginpointer++ ).GetDataPointer();
+          const VectorConstPointer p2 = mappedPoints->GetElement( *beginpointer++ ).GetDataPointer();
+          const VectorConstPointer p3 = mappedPoints->GetElement( *beginpointer++ ).GetDataPointer();
+          const VectorConstPointer p4 = mappedPoints->GetElement( *beginpointer++ ).GetDataPointer();
           signedVolume = vnl_determinant( p1, p2, p3, p4 );
         }
         break;
@@ -344,10 +347,10 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
 {
   //SubVectorType subVector = SubVectorType::Vector();
 
-  VectorType::ConstIterator    fullVectorIt  = fullVector.Begin();
-  VectorType::ConstIterator    fullVectorEnd = fullVector.End();
-  SubVectorType::Iterator      subVectorIt   = subVector.Begin();
-  SubVectorType::ConstIterator subVectorEnd  = subVector.End();
+  typename VectorType::ConstIterator    fullVectorIt  = fullVector.Begin();
+  typename VectorType::ConstIterator    fullVectorEnd = fullVector.End();
+  typename SubVectorType::Iterator      subVectorIt   = subVector.Begin();
+  typename SubVectorType::ConstIterator subVectorEnd  = subVector.End();
   unsigned int                 fullIndex     = 0;
   for( subVectorIt, fullIndex; subVectorIt != subVectorEnd; ++fullVectorIt, ++subVectorIt, ++fullIndex )
   {

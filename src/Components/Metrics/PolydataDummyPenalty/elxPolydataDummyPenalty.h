@@ -79,8 +79,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( PolydataDummyPenalty,
-    itk::MeshPenalty );
+  itkTypeMacro( PolydataDummyPenalty, itk::MeshPenalty );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
@@ -90,13 +89,19 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename Superclass1::FixedMeshType         FixedMeshType;
+  typedef typename Superclass1::FixedMeshPointer      FixedMeshPointer;
   typedef typename Superclass1::FixedMeshConstPointer FixedMeshConstPointer;
 
   typedef typename Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass1::FixedPointSetType            FixedPointSetType;
   typedef typename Superclass1::FixedPointSetConstPointer    FixedPointSetConstPointer;
+  typedef typename Superclass1::FixedMeshContainerType       FixedMeshContainerType;
+  typedef typename Superclass1::FixedMeshContainerPointer    FixedMeshContainerPointer;
+  typedef typename Superclass1::MappedMeshContainerType      MappedMeshContainerType;
+  typedef typename Superclass1::MappedMeshContainerPointer   MappedMeshContainerPointer;
   typedef typename Superclass1::MovingPointSetType           MovingPointSetType;
   typedef typename Superclass1::MovingPointSetConstPointer   MovingPointSetConstPointer;
+  typedef typename Superclass1::CellInterfaceType            CellInterfaceType;
 
   //  typedef typename Superclass1::FixedImageRegionType       FixedImageRegionType;
   typedef typename Superclass1::TransformType           TransformType;
@@ -143,27 +148,29 @@ public:
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );
+  itkStaticConstMacro( MovingImageDimension, unsigned int,
+    MovingImageType::ImageDimension );
 
   /** Assuming fixed and moving pointsets are of equal type, which implicitly
-  * assumes that the fixed and moving image are of the same type.
-  */
+   * assumes that the fixed and moving image are of the same type.
+   */
   typedef FixedPointSetType       PointSetType;
-  typedef typename FixedMeshType  MeshType;
-  typedef typename FixedImageType ImageType;
+  typedef FixedMeshType  MeshType;
+  typedef FixedImageType ImageType;
 
   /** Typedef for timer. */
   //typedef tmr::Timer          TimerType;
   //typedef TimerType::Pointer  TimerPointer;
 
   /** Sets up a timer to measure the initialization time and calls the
-  * Superclass' implementation.
-  */
+   * Superclass' implementation.
+   */
   virtual void Initialize( void ) throw ( itk::ExceptionObject );
 
   /**
-  * Do some things before registration:
-  * \li Load and set the pointsets.
-  */
+   * Do some things before registration:
+   * \li Load and set the pointsets.
+   */
   virtual int BeforeAllBase( void );
 
   virtual void BeforeRegistration( void );
@@ -176,8 +183,8 @@ public:
 
   /** Function to read the corresponding points. */
   unsigned int ReadMesh(
-  const std::string & meshFileName,
-  typename FixedMeshType::Pointer & mesh );
+    const std::string & meshFileName,
+    typename FixedMeshType::Pointer & mesh );
 
   void WriteResultMesh( const char * filename, MeshIdType meshId );
 

@@ -80,13 +80,19 @@ public:
 
   /** Typedefs from the superclass. */
   typedef typename Superclass1::FixedMeshType         FixedMeshType;
+  typedef typename Superclass1::FixedMeshPointer      FixedMeshPointer;
   typedef typename Superclass1::FixedMeshConstPointer FixedMeshConstPointer;
 
   typedef typename Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass1::FixedPointSetType            FixedPointSetType;
   typedef typename Superclass1::FixedPointSetConstPointer    FixedPointSetConstPointer;
+  typedef typename Superclass1::FixedMeshContainerType       FixedMeshContainerType;
+  typedef typename Superclass1::FixedMeshContainerPointer    FixedMeshContainerPointer;
+  typedef typename Superclass1::MappedMeshContainerType      MappedMeshContainerType;
+  typedef typename Superclass1::MappedMeshContainerPointer   MappedMeshContainerPointer;
   typedef typename Superclass1::MovingPointSetType           MovingPointSetType;
   typedef typename Superclass1::MovingPointSetConstPointer   MovingPointSetConstPointer;
+  typedef typename Superclass1::CellInterfaceType            CellInterfaceType;
 
   //  typedef typename Superclass1::FixedImageRegionType       FixedImageRegionType;
   typedef typename Superclass1::TransformType           TransformType;
@@ -129,13 +135,15 @@ public:
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );
+  itkStaticConstMacro( MovingImageDimension, unsigned int,
+    MovingImageType::ImageDimension );
 
   /** Assuming fixed and moving pointsets are of equal type, which implicitly
   * assumes that the fixed and moving image are of the same type.
   */
   typedef FixedPointSetType       PointSetType;
-  typedef typename FixedMeshType  MeshType;
-  typedef typename FixedImageType ImageType;
+  typedef FixedMeshType  MeshType;
+  typedef FixedImageType ImageType;
 
   /** Sets up a timer to measure the initialization time and calls the
   * Superclass' implementation.

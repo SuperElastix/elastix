@@ -119,7 +119,7 @@ MissingStructurePenalty< TElastix >
 
   elxout << "MissingStructurePenalty" << metricNumber << " BeforeRegistration " << std::endl;
 
-  typename FixedMeshContainerPointer meshPointerContainer = FixedMeshContainerType::New();
+  FixedMeshContainerPointer meshPointerContainer = FixedMeshContainerType::New();
   meshPointerContainer->Reserve( this->m_NumberOfMeshes );
   //meshPointerContainer->CreateIndex(this->m_NumberOfMeshes-1);
   unsigned int meshNumber;
@@ -354,18 +354,18 @@ MissingStructurePenalty< TElastix >
   if( tempSetPointData )
   {
     // temporarily set pointdata
-    mappedMesh->SetPointData( const_cast< MeshType::PointDataContainer * >( fixedMesh->GetPointData() ) );
+    mappedMesh->SetPointData( const_cast< typename MeshType::PointDataContainer * >( fixedMesh->GetPointData() ) );
   }
 
   if( tempSetCells )
   {
     // temporarily set cells
-    mappedMesh->SetCells( const_cast< MeshType::CellsContainer * >( fixedMesh->GetCells() ) );
+    mappedMesh->SetCells( const_cast< typename MeshType::CellsContainer * >( fixedMesh->GetCells() ) );
   }
   if( tempSetCellData )
   {
     // temporarily set celldata
-    mappedMesh->SetCellData( const_cast< MeshType::CellDataContainer * >( fixedMesh->GetCellData() ) );
+    mappedMesh->SetCellData( const_cast< typename MeshType::CellDataContainer * >( fixedMesh->GetCellData() ) );
   }
 
   mappedMesh->Modified();
@@ -571,8 +571,8 @@ the sequence of points to form a 2d connected polydata contour.
   /** Floris: make connected mesh (polygon) if data is 2d by assuming the sequence of points being connected**/
   if( FixedImageDimension == 2 )
   {
-    typedef MeshType::CellType::CellAutoPointer CellAutoPointer;
-    typedef itk::LineCell< MeshType::CellType > LineType;
+    typedef typename MeshType::CellType::CellAutoPointer CellAutoPointer;
+    typedef itk::LineCell< typename MeshType::CellType > LineType;
 
     for( int i = 0; i < nrofpoints; ++i )
     {
@@ -590,21 +590,21 @@ the sequence of points to form a 2d connected polydata contour.
 
   std::cout << "mesh->GetNumberOfCells()" << mesh->GetNumberOfCells() << std::endl;
   std::cout << "mesh->GetNumberOfPoints()" << mesh->GetNumberOfPoints() << std::endl;
-  MeshType::PointsContainer::ConstPointer points = mesh->GetPoints();
+  typename MeshType::PointsContainer::ConstPointer points = mesh->GetPoints();
 
-  MeshType::PointsContainerConstIterator pointsBegin = points->Begin();
-  MeshType::PointsContainerConstIterator pointsEnd   = points->End();
+  typename MeshType::PointsContainerConstIterator pointsBegin = points->Begin();
+  typename MeshType::PointsContainerConstIterator pointsEnd   = points->End();
   for( pointsBegin; pointsBegin != pointsEnd; ++pointsBegin )
   {
     std::cout << "point " << pointsBegin->Index() << ": " << pointsBegin->Value().GetVnlVector() << std::endl;
   }
 
-  typedef MeshType::CellsContainer::Iterator CellIterator;
+  typedef typename MeshType::CellsContainer::Iterator CellIterator;
   CellIterator cellIterator = mesh->GetCells()->Begin();
   CellIterator CellsEnd     = mesh->GetCells()->End();
 
-  CellInterfaceType::PointIdIterator beginpointer;
-  CellInterfaceType::PointIdIterator endpointer;
+  typename CellInterfaceType::PointIdIterator beginpointer;
+  typename CellInterfaceType::PointIdIterator endpointer;
 
   for( cellIterator; cellIterator != CellsEnd; ++cellIterator )
   {

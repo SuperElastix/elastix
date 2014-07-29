@@ -34,16 +34,16 @@ namespace itk
 
 template< class TFixedPointSet, class TMovingPointSet >
 class ITK_EXPORT MeshPenalty :
-  public         SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
+  public SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef MeshPenalty Self;
+  typedef MeshPenalty                 Self;
   typedef SingleValuedPointSetToPointSetMetric<
-    TFixedPointSet, TMovingPointSet >               Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+    TFixedPointSet, TMovingPointSet > Superclass;
+  typedef SmartPointer< Self >        Pointer;
+  typedef SmartPointer< const Self >  ConstPointer;
 
   /** Type used for representing point components  */
 
@@ -65,23 +65,25 @@ public:
 
   /** Typedefs. */
   typedef typename Superclass::InputPointType         InputPointType;
+  typedef typename Superclass::OutputPointType        OutputPointType;
   typedef typename InputPointType::CoordRepType       CoordRepType;
   typedef vnl_vector<CoordRepType>                    VnlVectorType;
   typedef typename TransformType::InputPointType      FixedImagePointType;
   typedef typename TransformType::OutputPointType     MovingImagePointType;
   typedef typename TransformType::SpatialJacobianType SpatialJacobianType;
 
+  typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /** Constants for the pointset dimensions. */
   itkStaticConstMacro( FixedPointSetDimension, unsigned int,
-  Superclass::FixedPointSetDimension );
-  
-  typedef itk::Vector< typename TransformType::ScalarType, 
+    Superclass::FixedPointSetDimension );
+
+  typedef Vector< typename TransformType::ScalarType,
     FixedPointSetDimension >                                          PointNormalType;
   typedef unsigned char DummyMeshPixelType;
   typedef DefaultStaticMeshTraits< PointNormalType,
     FixedPointSetDimension, FixedPointSetDimension, CoordRepType >    MeshTraitsType;
-  typedef typename Mesh< PointNormalType, FixedPointSetDimension,
+  typedef Mesh< PointNormalType, FixedPointSetDimension,
     MeshTraitsType >                                                  FixedMeshType;
 
   typedef typename FixedMeshType::ConstPointer             FixedMeshConstPointer;
@@ -104,16 +106,17 @@ public:
   typedef typename FixedMeshType::PointDataContainerIterator MeshPointDataContainerConstIteratorType;
   typedef typename MeshPointDataContainerType::Iterator      MeshPointDataContainerIteratorType;
 
-  typedef unsigned int                                                  MeshIdType;
-  typedef typename VectorContainer< MeshIdType, FixedMeshConstPointer > FixedMeshContainerType;
-  typedef typename FixedMeshContainerType::Pointer                      FixedMeshContainerPointer;
-  typedef typename FixedMeshContainerType::ConstPointer                 FixedMeshContainerConstPointer;
+  typedef unsigned int                                          MeshIdType;
+  typedef VectorContainer< MeshIdType, FixedMeshConstPointer >  FixedMeshContainerType;
+  typedef typename FixedMeshContainerType::Pointer              FixedMeshContainerPointer;
+  typedef typename FixedMeshContainerType::ConstPointer         FixedMeshContainerConstPointer;
+  typedef typename FixedMeshContainerType::ElementIdentifier    FixedMeshContainerElementIdentifier;
 
-  typedef typename VectorContainer< MeshIdType, FixedMeshPointer > MappedMeshContainerType;
-  typedef typename MappedMeshContainerType::Pointer                MappedMeshContainerPointer;
-  typedef typename MappedMeshContainerType::ConstPointer           MappedMeshContainerConstPointer;
+  typedef VectorContainer< MeshIdType, FixedMeshPointer >   MappedMeshContainerType;
+  typedef typename MappedMeshContainerType::Pointer         MappedMeshContainerPointer;
+  typedef typename MappedMeshContainerType::ConstPointer    MappedMeshContainerConstPointer;
 
-  typedef typename Array< DerivativeValueType > MeshPointsDerivativeValueType;
+  typedef Array< DerivativeValueType > MeshPointsDerivativeValueType;
 
   itkSetConstObjectMacro( FixedMeshContainer, FixedMeshContainerType );
   itkGetConstObjectMacro( FixedMeshContainer, FixedMeshContainerType );

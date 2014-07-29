@@ -62,10 +62,11 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
     itkExceptionMacro( << "FixedMeshContainer is not present" );
   }
 
-  const FixedMeshContainerType::ElementIdentifier numberOfMeshes = this->m_FixedMeshContainer->Size();
+  const FixedMeshContainerElementIdentifier numberOfMeshes
+    = this->m_FixedMeshContainer->Size();
   this->m_MappedMeshContainer->Reserve( numberOfMeshes );
 
-  for( FixedMeshContainerType::ElementIdentifier meshId = 0; meshId < numberOfMeshes; ++meshId )
+  for( FixedMeshContainerElementIdentifier meshId = 0; meshId < numberOfMeshes; ++meshId )
   {
     FixedMeshConstPointer fixedMesh = this->m_FixedMeshContainer->ElementAt( meshId );
     // If the mesh is provided by a source, update the source.
@@ -84,13 +85,13 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
     //  itkExceptionMacro( << "numberOfPoints does not match numberOfNormals" );
     //}
 
-    MeshPointsContainerType::Pointer mappedPoints =  MeshPointsContainerType::New();
+    typename MeshPointsContainerType::Pointer mappedPoints =  MeshPointsContainerType::New();
     mappedPoints->Reserve( numberOfPoints );
 
     //MeshPointDataContainerType::Pointer mappedPointNormals = MeshPointDataContainerType::New();
     //mappedPointNormals->Reserve(numberOfNormals);
 
-    FixedMeshType::Pointer mappedMesh = FixedMeshType::New();
+    typename FixedMeshType::Pointer mappedMesh = FixedMeshType::New();
     mappedMesh->SetPoints( mappedPoints );
 
     mappedMesh->SetPointData( NULL );
@@ -128,7 +129,7 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
   MeasureType value = NumericTraits< MeasureType >::Zero;
 
   //InputPointType movingPoint;
-  OutputPointType fixedPoint;
+  //OutputPointType fixedPoint;
   /** Get the current corresponding points. */
 
   /** Make sure the transform parameters are up to date. */
@@ -191,13 +192,13 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
   derivative = DerivativeType( this->GetNumberOfParameters() );
   derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
-  NonZeroJacobianIndicesType nzji( this->m_Transform->GetNumberOfNonZeroJacobianIndices() );
-  TransformJacobianType      jacobian;
+  //NonZeroJacobianIndicesType nzji( this->m_Transform->GetNumberOfNonZeroJacobianIndices() );
+  //TransformJacobianType      jacobian;
 
-  const FixedMeshContainerType::ElementIdentifier numberOfMeshes = this->m_FixedMeshContainer->Size();
+  const FixedMeshContainerElementIdentifier numberOfMeshes = this->m_FixedMeshContainer->Size();
 
   /* Loop over all meshes in this Metric*/
-  for( FixedMeshContainerType::ElementIdentifier meshId = 0; meshId < numberOfMeshes; ++meshId )
+  for( FixedMeshContainerElementIdentifier meshId = 0; meshId < numberOfMeshes; ++meshId )
   {
     const FixedMeshConstPointer           fixedMesh   = fixedMeshContainer->ElementAt( meshId );
     const MeshPointsContainerConstPointer fixedPoints = fixedMesh->GetPoints();
@@ -231,6 +232,7 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
   }   // End of loop over meshes
 
   // Since this is a dummy metric always return value = 0 and derivative = [0,...,0]
+
 } // end GetValueAndDerivative()
 
 
