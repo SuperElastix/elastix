@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------
-PROJECT( KNN )
+project( KNN )
 
 # Set the files, so that they are shown in the editor
-SET( KNN_Files
+set( KNN_Files
   itkListSampleCArray.h
   itkListSampleCArray.hxx
   itkANNBinaryTreeCreator.h
@@ -30,14 +30,14 @@ SET( KNN_Files
 )
 
 # process the sub-directories
-ADD_SUBDIRECTORY( ann_1.1 )
+add_subdirectory( ann_1.1 )
 
 # Create the KNN library
-ADD_LIBRARY( KNNlib ${KNN_Files} )
+add_library( KNNlib ${KNN_Files} )
 
 # Link it against the necessary libraries.
-TARGET_LINK_LIBRARIES( KNNlib ANNlib ${ITK_LIBRARIES} )
+target_link_libraries( KNNlib ANNlib ${ITK_LIBRARIES} )
 
 # Group in IDE's like Visual Studio
-SET_PROPERTY( TARGET KNNlib PROPERTY FOLDER "libraries" )
+set_property( TARGET KNNlib PROPERTY FOLDER "libraries" )
 

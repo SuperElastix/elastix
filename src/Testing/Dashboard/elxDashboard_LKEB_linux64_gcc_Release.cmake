@@ -28,15 +28,15 @@ set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_release )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-SET( dashboard_model Nightly )
-IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  SET( dashboard_model Experimental )
-ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  SET( dashboard_model Continuous )
-ENDIF()
+set( dashboard_model Nightly )
+if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  set( dashboard_model Experimental )
+elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  set( dashboard_model Continuous )
+endif()
 
 # Dashboard settings
-SET( dashboard_cache "
+set( dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=/usr/local/toolkits/ITK/git/bin_release
 

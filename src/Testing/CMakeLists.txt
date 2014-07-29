@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------
-Project( elxTesting )
+project( elxTesting )
 
 # Set some directories
 set( TestDataDir ${elastix_SOURCE_DIR}/Testing/Data )

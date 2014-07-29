@@ -10,14 +10,14 @@ project( elastix )
 mark_as_advanced( ELASTIX_BUILD_EXECUTABLE )
 option( ELASTIX_BUILD_EXECUTABLE "Generate executable or library?" ON )
 
-IF( NOT ELASTIX_BUILD_EXECUTABLE )
-  ADD_DEFINITIONS( -D_ELASTIX_BUILD_LIBRARY )
-  MARK_AS_ADVANCED( ELASTIX_BUILD_SHARED_LIBS )
-  OPTION( ELASTIX_BUILD_SHARED_LIBS "Build shared libraries?" ON )
-  IF( ELASTIX_BUILD_SHARED_LIBS )
-    ADD_DEFINITIONS( -D_ELASTIX_BUILD_SHARED_LIBRARY )
-  ENDIF()
-ENDIF()
+if( NOT ELASTIX_BUILD_EXECUTABLE )
+  add_definitions( -D_ELASTIX_BUILD_LIBRARY )
+  mark_as_advanced( ELASTIX_BUILD_SHARED_LIBS )
+  option( ELASTIX_BUILD_SHARED_LIBS "Build shared libraries?" ON )
+  if( ELASTIX_BUILD_SHARED_LIBS )
+    add_definitions( -D_ELASTIX_BUILD_SHARED_LIBRARY )
+  endif()
+endif()
 
 #---------------------------------------------------------------------
 # Find ITK.
@@ -205,7 +205,7 @@ if( MSVC )
   )
 
   # Increases address capacity
-  if ( WIN32 )
+  if( WIN32 )
     set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj" )
     set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /bigobj" )
     set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj" )
@@ -299,15 +299,15 @@ if( Doxygen_FOUND )
   set( ELASTIX_DOXYGEN_DIR ${ELASTIX_DOX_DIR}/doxygen )
 
   # Get the version number of doxygen
-  EXEC_PROGRAM( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELASTIX_DOXYGEN_VERSION )
+  exec_program( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELASTIX_DOXYGEN_VERSION )
 
   # Get date
   if( UNIX OR CYGWIN )
-    EXEC_PROGRAM( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )
+    exec_program( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )
   endif()
   if( WIN32 )
     if( NOT CYGWIN )
-      EXECUTE_PROCESS( COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
+      execute_process( COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
         OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATETEMP )
       string( REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP} )
     endif()
@@ -358,7 +358,7 @@ if( ELASTIX_ENABLE_PACKAGER )
 
   # Also install the copyright file, since when the user enables packaging
   # we assume that the package is meant to distribute.
-  INSTALL( FILES "${elastix_SOURCE_DIR}/CopyrightElastix.txt" DESTINATION . )
+  install( FILES "${elastix_SOURCE_DIR}/CopyrightElastix.txt" DESTINATION . )
 
   # We have split the elastix package into two components:
   # - the core: elastix and transformix
@@ -448,8 +448,8 @@ if( ELASTIX_ENABLE_PACKAGER )
 
     # Adding icons and images to make it look nice:
     # 1 A branding image that will be displayed inside the installer
-    # 2 The icon file (.ico) for the generated install program
-    # 3 The icon file (.ico) for the generated uninstall program
+    # 2 The icon file(.ico) for the generated install program
+    # 3 The icon file(.ico) for the generated uninstall program
     set( CPACK_PACKAGE_ICON
       "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_full_small.bmp" )
     set( CPACK_NSIS_MUI_ICON

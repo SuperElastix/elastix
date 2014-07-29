@@ -33,12 +33,12 @@ set(CTEST_UPDATE_COMMAND "C:/Program Files/Subversion/bin/svn.exe")
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-SET( dashboard_model Nightly )
-IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  SET( dashboard_model Experimental )
-ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  SET( dashboard_model Continuous )
-ENDIF()
+set( dashboard_model Nightly )
+if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  set( dashboard_model Experimental )
+elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  set( dashboard_model Continuous )
+endif()
 
 # name of output directory
 set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}" )
@@ -46,7 +46,7 @@ set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}"
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
 
-SET( dashboard_cache "
+set( dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=D:/tk/itk/4.5.0/bin
 

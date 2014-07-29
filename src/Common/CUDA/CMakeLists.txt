@@ -6,7 +6,7 @@
 # setup in ITK4. In addition, these include paths are not needed, since the CUDA
 # kernels do not use anything from the ITK.
 # Therefore, we reset the include directories to nothing for this directory:
-SET_DIRECTORY_PROPERTIES( PROPERTIES INCLUDE_DIRECTORIES "" )
+set_directory_properties( PROPERTIES INCLUDE_DIRECTORIES "" )
 
 # Create a CUDA library containing the CUDA resampler.
 #
@@ -22,10 +22,10 @@ set( CMAKE_CXX_FLAGS ${remember_flags} )
 CUDA_INCLUDE_DIRECTORIES( ${CUDA_SDK_ROOT_DIR}/C/common/inc )
 
 # Add some additional options to the nvcc compiler
-SET( CUDA_NVCC_FLAGS "--ptxas-options=-v;-use_fast_math;-gencode=arch=compute_11,code=\\\"sm_11,compute_11\\\";-gencode=arch=compute_13,code=\\\"sm_13,compute_13\\\";-gencode=arch=compute_20,code=\\\"sm_20,compute_20\\\"" CACHE STRING "Over original CUDA_NVCC_FLAGS" FORCE )
+set( CUDA_NVCC_FLAGS "--ptxas-options=-v;-use_fast_math;-gencode=arch=compute_11,code=\\\"sm_11,compute_11\\\";-gencode=arch=compute_13,code=\\\"sm_13,compute_13\\\";-gencode=arch=compute_20,code=\\\"sm_20,compute_20\\\"" CACHE STRING "Over original CUDA_NVCC_FLAGS" FORCE )
 
 # Group in IDE's like Visual Studio
-SET_PROPERTY( TARGET elastix_cuda PROPERTY FOLDER "libraries" )
+set_property( TARGET elastix_cuda PROPERTY FOLDER "libraries" )
 
 #---------------------------------------------------------------------
 #
@@ -37,12 +37,12 @@ SET_PROPERTY( TARGET elastix_cuda PROPERTY FOLDER "libraries" )
 # For linux the library name is stored in CUDA_CUDART_LIBRARY.
 # For Windows this variable contains the lib, while we need the dll.
 
-IF( WIN32 )
+if( WIN32 )
   # STEP 1: Try to determine if this is a 32 or 64 bit build
   #
   # Depend on CUDA_64_BIT_DEVICE_CODE, which checks
-  #   IF( CMAKE_SIZEOF_VOID_P EQUAL 8 ) -> 64 bit, otherwise 32
-  SET( systembuild64 ${CUDA_64_BIT_DEVICE_CODE} )
+  #   if( CMAKE_SIZEOF_VOID_P EQUAL 8 ) -> 64 bit, otherwise 32
+  set( systembuild64 ${CUDA_64_BIT_DEVICE_CODE} )
 
 
   # STEP 2: Get the full names of the cudart libraries
@@ -58,16 +58,16 @@ IF( WIN32 )
 
   # Find all files with cudart and the shared library
   # prefix&suffix in the name
-  FILE( GLOB_RECURSE cudartlibnames
+  file( GLOB_RECURSE cudartlibnames
     ${CUDA_TOOLKIT_ROOT_DIR}/*${CMAKE_SHARED_LIBRARY_PREFIX}cudart*${CMAKE_SHARED_LIBRARY_SUFFIX} )
   # On Windows also cudartemu files exist
-  FILE( GLOB_RECURSE cudartemulibnames
+  file( GLOB_RECURSE cudartemulibnames
     ${CUDA_TOOLKIT_ROOT_DIR}/*${CMAKE_SHARED_LIBRARY_PREFIX}cudartemu*${CMAKE_SHARED_LIBRARY_SUFFIX} )
   # Remove the cudartemu files from the list
-  LIST( LENGTH cudartemulibnames noemus )
-  IF( NOT ${noemus} EQUAL 0 )
-    LIST( REMOVE_ITEM cudartlibnames ${cudartemulibnames} )
-  ENDIF()
+  list( LENGTH cudartemulibnames noemus )
+  if( NOT ${noemus} EQUAL 0 )
+    list( REMOVE_ITEM cudartlibnames ${cudartemulibnames} )
+  endif()
 
 
   # STEP 3: Determine which lib we need to install
@@ -84,7 +84,7 @@ IF( WIN32 )
   # followed by /.
   foreach( cudartlib ${cudartlibnames} )
     # Get path relative to CUDA_TOOLKIT_ROOT_DIR
-    FILE( RELATIVE_PATH rel_path ${CUDA_TOOLKIT_ROOT_DIR} ${cudartlib} )
+    file( RELATIVE_PATH rel_path ${CUDA_TOOLKIT_ROOT_DIR} ${cudartlib} )
 
     # Get the fourth character
     string( SUBSTRING ${rel_path} 3 1 fourthcharacter )
@@ -92,17 +92,17 @@ IF( WIN32 )
     # For 64-bit builds assume:
     #   A) three characters followed by "64"
     #   B) ${systembuild64} is TRUE
-    IF( ${rel_path} MATCHES "...64" AND ${systembuild64} )
-      SET( cudartlibtoinstall ${cudartlib} )
+    if( ${rel_path} MATCHES "...64" AND ${systembuild64} )
+      set( cudartlibtoinstall ${cudartlib} )
     # For 32-bit builds assume:
     #   A) three characters followed by "/"
     #   B) ${systembuild64} is FALSE
-    ELSEIF( ${fourthcharacter} STREQUAL "/" AND NOT ${systembuild64} )
-      SET( cudartlibtoinstall ${cudartlib} )
-    ENDIF()
+    elseif( ${fourthcharacter} STREQUAL "/" AND NOT ${systembuild64} )
+      set( cudartlibtoinstall ${cudartlib} )
+    endif()
   endforeach()
 
-ELSE( WIN32 )
+else( WIN32 )
   # If not Windows, assume linux
   # Linux, however, uses symbolic links:
   #   libcudart.so -> libcudart.so.3 -> libcudart.so.3.1.9
@@ -110,10 +110,10 @@ ELSE( WIN32 )
   # the linker, however, seems to link against the middle name
 
   # Get libcudart.so
-  SET( cudartlib ${CUDA_CUDART_LIBRARY} )
+  set( cudartlib ${CUDA_CUDART_LIBRARY} )
 
   # Get libcudart.so.3.1.9 by resolving all symbolic links
-  GET_FILENAME_COMPONENT( cudartlibtoinstall ${cudartlib} REALPATH )
+  get_filename_component( cudartlibtoinstall ${cudartlib} REALPATH )
 
   # Get libcudart.so.3, since that is the linked name appearantly
   # Since CUDA 5 it will be libcudart.so.5.0
@@ -122,22 +122,22 @@ ELSE( WIN32 )
   if( ${cudartliblistlength} EQUAL 0 )
     file( GLOB cudartlibrenamed ${cudartlib}.?.? )
   endif()
-  GET_FILENAME_COMPONENT( cudartlibrenamed ${cudartlibrenamed} NAME )
+  get_filename_component( cudartlibrenamed ${cudartlibrenamed} NAME )
 
-ENDIF( WIN32 )
+endif()
 
 
 # STEP 4: Install the CUDA runtime library
 #
-IF( WIN32 )
-  INSTALL( FILES ${cudartlibtoinstall}
+if( WIN32 )
+  install( FILES ${cudartlibtoinstall}
     DESTINATION . )
     #COMPONENT libraries )
-ELSE()
-  INSTALL( FILES ${cudartlibtoinstall}
+else()
+  install( FILES ${cudartlibtoinstall}
     DESTINATION lib
     #COMPONENT libraries
     #NAMELINK_ONLY )
     RENAME ${cudartlibrenamed} )
-ENDIF()
+endif()
 

@@ -1,26 +1,26 @@
 #---------------------------------------------------------------------
-PROJECT( elxCommon )
+project( elxCommon )
 
 #---------------------------------------------------------------------
 # Sub-projects.
 
-ADD_SUBDIRECTORY( ParameterFileParser )
-ADD_SUBDIRECTORY( xout )
+add_subdirectory( ParameterFileParser )
+add_subdirectory( xout )
 
-IF( USE_KNNGraphAlphaMutualInformationMetric )
-  ADD_SUBDIRECTORY( KNN )
-ENDIF()
+if( USE_KNNGraphAlphaMutualInformationMetric )
+  add_subdirectory( KNN )
+endif()
 
-ADD_SUBDIRECTORY( MevisDicomTiff )
+add_subdirectory( MevisDicomTiff )
 
-IF( ELASTIX_USE_CUDA )
-  ADD_SUBDIRECTORY( CUDA )
-ENDIF()
+if( ELASTIX_USE_CUDA )
+  add_subdirectory( CUDA )
+endif()
 
 #---------------------------------------------------------------------
 # Define lists of files in the subdirectories.
 
-SET( CommonFiles
+set( CommonFiles
   itkAdvancedLinearInterpolateImageFunction.h
   itkAdvancedLinearInterpolateImageFunction.hxx
   itkAdvancedRayCastInterpolateImageFunction.h
@@ -46,7 +46,7 @@ SET( CommonFiles
   itkTransformixInputPointFileReader.hxx
 )
 
-SET( MaskFiles
+set( MaskFiles
   itkImageMaskSpatialObject2.h
   itkImageMaskSpatialObject2.hxx
   itkImageSpatialObject2.h
@@ -59,7 +59,7 @@ SET( MaskFiles
   itkParabolicMorphUtils.h
 )
 
-SET( CostFunctionFiles
+set( CostFunctionFiles
   CostFunctions/itkAdvancedImageToImageMetric.h
   CostFunctions/itkAdvancedImageToImageMetric.hxx
   CostFunctions/itkExponentialLimiterFunction.h
@@ -81,7 +81,7 @@ SET( CostFunctionFiles
   CostFunctions/itkTransformPenaltyTerm.hxx
 )
 
-SET( TransformFiles
+set( TransformFiles
   Transforms/itkAdvancedBSplineDeformableTransformBase.h
   Transforms/itkAdvancedBSplineDeformableTransformBase.hxx
   Transforms/itkAdvancedBSplineDeformableTransform.h
@@ -119,14 +119,14 @@ SET( TransformFiles
   Transforms/itkUpsampleBSplineParametersFilter.hxx
 )
 
-SET( LineSearchOptimizersFiles
+set( LineSearchOptimizersFiles
   LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.h
   LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.cxx
   LineSearchOptimizers/itkLineSearchOptimizer.h
   LineSearchOptimizers/itkLineSearchOptimizer.cxx
 )
 
-SET( ImageSamplersFiles
+set( ImageSamplersFiles
   ImageSamplers/itkImageFullSampler.h
   ImageSamplers/itkImageFullSampler.hxx
   ImageSamplers/itkImageGridSampler.h
@@ -154,16 +154,16 @@ SET( ImageSamplersFiles
 #---------------------------------------------------------------------
 # Construct source groups for nice visualisation in Visual Studio.
 
-SOURCE_GROUP( "Masks" FILES ${MaskFiles} )
-SOURCE_GROUP( "CostFunctions" FILES ${CostFunctionFiles} )
-SOURCE_GROUP( "Transforms" FILES ${TransformFiles} )
-SOURCE_GROUP( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
-SOURCE_GROUP( "ImageSamplers" FILES ${ImageSamplersFiles} )
+source_group( "Masks" FILES ${MaskFiles} )
+source_group( "CostFunctions" FILES ${CostFunctionFiles} )
+source_group( "Transforms" FILES ${TransformFiles} )
+source_group( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
+source_group( "ImageSamplers" FILES ${ImageSamplersFiles} )
 
 #---------------------------------------------------------------------
 # Create the elxCommon library.
 
-ADD_LIBRARY( elxCommon
+add_library( elxCommon
   ${MaskFiles}
   ${CommonFiles}
   ${CostFunctionFiles}
@@ -175,14 +175,14 @@ ADD_LIBRARY( elxCommon
 #---------------------------------------------------------------------
 # Link against other libraries.
 
-IF( UNIX AND NOT APPLE )
-  TARGET_LINK_LIBRARIES( elxCommon
+if( UNIX AND NOT APPLE )
+  target_link_libraries( elxCommon
     ${ITK_LIBRARIES}
     rt # Needed for elxTimer, clock_gettime()
   )
-ELSE()
-  TARGET_LINK_LIBRARIES( elxCommon
+else()
+  target_link_libraries( elxCommon
     ${ITK_LIBRARIES}
   )
-ENDIF()
+endif()
 

@@ -29,16 +29,16 @@ set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_VS2010 )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-SET( dashboard_model Nightly )
-IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  SET( dashboard_model Experimental )
-ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  SET( dashboard_model Continuous )
-ENDIF()
+set( dashboard_model Nightly )
+if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  set( dashboard_model Experimental )
+elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  set( dashboard_model Continuous )
+endif()
 
 # CUDA does not support MSVC 2010 compiler
 # nvcc fatal: nvcc cannot find a supported cl version. Only MSVC 8.0 and MSVC 9.0 are supported
-SET( dashboard_cache "
+set( dashboard_cache "
 // Which ITK to use:
 ITK_DIR:PATH=D:/toolkits/ITK/git/binVS2010
 
