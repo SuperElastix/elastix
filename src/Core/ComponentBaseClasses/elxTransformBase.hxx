@@ -1442,13 +1442,11 @@ TransformBase< TElastix >
 ::TransformPointsAllPoints( void ) const
 {
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType    FixedImageRegionType;
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
   typedef itk::Vector<
     float, FixedImageDimension >                      VectorPixelType;
   typedef itk::Image<
     VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
-  typedef typename DeformationFieldImageType::Pointer DeformationFieldImagePointer;
   typedef itk::TransformToDisplacementFieldFilter<
     DeformationFieldImageType, CoordRepType >         DeformationFieldGeneratorType;
   typedef itk::ChangeInformationImageFilter<

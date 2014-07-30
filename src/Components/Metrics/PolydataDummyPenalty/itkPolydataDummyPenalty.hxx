@@ -203,7 +203,7 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
     const FixedMeshConstPointer           fixedMesh   = fixedMeshContainer->ElementAt( meshId );
     const MeshPointsContainerConstPointer fixedPoints = fixedMesh->GetPoints();
     //const MeshPointDataContainerConstPointer fixedNormals =  fixedMesh->GetPointData();
-    const unsigned int numberOfPoints = fixedPoints->Size();
+    //const unsigned int numberOfPoints = fixedPoints->Size();
 
     const FixedMeshPointer           mappedMesh   = this->m_MappedMeshContainer->ElementAt( meshId );
     const MeshPointsContainerPointer mappedPoints = mappedMesh->GetPoints();
@@ -222,7 +222,7 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
     //MeshPointDataContainerIteratorType mappedPointDataIt = mappedNormals->Begin();
 
     /* Transform all points and their normals by current transformation*/
-    for( fixedPointIt; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++mappedPointIt ) //,++fixedPointDataIt,++mappedPointDataIt)
+    for( ; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++mappedPointIt ) //,++fixedPointDataIt,++mappedPointDataIt)
     {
       const OutputPointType mappedPoint = this->m_Transform->TransformPoint( fixedPointIt->Value() );
       mappedPointIt.Value() = mappedPoint;

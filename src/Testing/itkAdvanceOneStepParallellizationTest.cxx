@@ -113,11 +113,6 @@ public:
 #ifdef ELASTIX_USE_OPENMP
     else if( this->m_UseOpenMP && !this->m_UseEigen )
     {
-      /** Get a reference to the current position. *
-      const ParametersType & currentPosition = this->m_CurrentPosition;
-      const double learningRate = this->m_LearningRate;
-      const ParametersType & gradient = this->m_Gradient;
-
       /** Get a pointer to the current position. */
       const InternalScalarType * currentPosition = this->m_CurrentPosition.data_block();
       const InternalScalarType   learningRate    = this->m_LearningRate;

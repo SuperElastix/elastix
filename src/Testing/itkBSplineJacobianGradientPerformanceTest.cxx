@@ -56,7 +56,6 @@ main( int argc, char * argv[] )
 
   typedef TransformType::NumberOfParametersType NumberOfParametersType;
   typedef TransformType::InputPointType         InputPointType;
-  typedef TransformType::OutputPointType        OutputPointType;
   typedef TransformType::ParametersType         ParametersType;
   typedef TransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
   typedef TransformType::DerivativeType         DerivativeType;

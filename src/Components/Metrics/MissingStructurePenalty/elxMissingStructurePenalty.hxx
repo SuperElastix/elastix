@@ -130,15 +130,6 @@ MissingStructurePenalty< TElastix >
     fmeshArgument << ch << metricNumber;
     std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
     typename MeshType::Pointer fixedMesh = 0;
-    unsigned int nrOfFixedPoints;
-    if( itksys::SystemTools::GetFilenameLastExtension( fixedMeshName ) == ".txt" )
-    {
-      nrOfFixedPoints = this->ReadTransformixPoints( fixedMeshName, fixedMesh );
-    }
-    else
-    {
-      nrOfFixedPoints = this->ReadMesh( fixedMeshName, fixedMesh );
-    }
 
     meshPointerContainer->SetElement( meshNumber, dynamic_cast<  MeshType * >( fixedMesh.GetPointer() ) );
 
@@ -155,23 +146,6 @@ MissingStructurePenalty< TElastix >
   // TODO: make itkCombinationImageToImageMetric check for a base class metric that doesn't use an image or moving pointset.
 
 } // end BeforeRegistration()
-
-
-/**
- * ***************** BeforeEachResolution ***********************
- */
-
-template< class TElastix >
-void
-MissingStructurePenalty< TElastix >
-::BeforeEachResolution( void )
-{
-  elxout << "MissingStructurePenalty BeforeEachResolution " << std::endl;
-  /** Get the current resolution level. */
-  unsigned int level
-    = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
-
-} // end BeforeEachResolution()
 
 
 /**
@@ -433,7 +407,6 @@ the sequence of points to form a 2d connected polydata contour.
   typedef typename FixedImageType::IndexType            FixedImageIndexType;
   typedef typename FixedImageIndexType::IndexValueType  FixedImageIndexValueType;
   typedef typename MovingImageType::IndexType           MovingImageIndexType;
-  typedef typename MovingImageIndexType::IndexValueType MovingImageIndexValueType;
   typedef
     itk::ContinuousIndex< double, FixedImageDimension >   FixedImageContinuousIndexType;
   typedef

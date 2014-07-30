@@ -33,8 +33,6 @@ RayCastResampleInterpolator< TElastix >
 
   this->m_CombinationTransform = CombinationTransformType::New();
   this->m_CombinationTransform->SetUseComposition( true );
-  typedef typename elastix::OptimizerBase<
-    TElastix >::ITKBaseType::ParametersType ParametersType;
 
   this->m_PreTransform = EulerTransformType::New();
   unsigned int            numberofparameters = this->m_PreTransform->GetNumberOfParameters();
@@ -172,7 +170,6 @@ RayCastResampleInterpolator< TElastix >
   }
   xout[ "transpar" ] << ")" << std::endl;
 
-  typedef typename elastix::OptimizerBase< TElastix >::ITKBaseType::ParametersType ParametersType;
   TransformParametersType preParameters = this->m_PreTransform->GetParameters();
 
   xout[ "transpar" ] << "(" << "PreParameters ";

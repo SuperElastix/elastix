@@ -178,7 +178,6 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     JointPDFDerivativesType >                       JointPDFDerivativesIteratorType;
   typedef typename MarginalPDFType::const_iterator MarginalPDFIteratorType;
   typedef typename DerivativeType::iterator        DerivativeIteratorType;
-  typedef typename DerivativeType::const_iterator  DerivativeConstIteratorType;
 
   JointPDFIteratorType jointPDFit(
   this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );

@@ -671,8 +671,6 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 {
   itkDebugMacro( "GetSelfHessian()" );
 
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
-  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
   typedef typename HessianType::row                 RowType;
   typedef typename RowType::iterator                RowIteratorType;
   typedef typename HessianType::pair_t              ElementType;

@@ -90,7 +90,6 @@ GradientDifferenceImageToImageMetric< TFixedImage, TMovingImage >
   Superclass::Initialize();
 
   unsigned int iFilter;
-  typedef typename FixedImageType::SizeType SizeType;
 
   /** Compute the gradient of the fixed images */
   this->m_CastFixedImageFilter->SetInput( this->m_FixedImage );

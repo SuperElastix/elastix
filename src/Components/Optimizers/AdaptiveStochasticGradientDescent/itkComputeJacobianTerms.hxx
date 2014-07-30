@@ -73,10 +73,8 @@ ComputeJacobianTerms< TFixedImage, TTransform >
   typedef itk::Array2D< CovarianceValueType >      CovarianceMatrixType;
   typedef vnl_sparse_matrix< CovarianceValueType > SparseCovarianceMatrixType;
   typedef SparseCovarianceMatrixType::row          SparseRowType;
-  typedef SparseCovarianceMatrixType::pair_t       SparseCovarianceElementType;
   typedef itk::Array< SizeValueType >              NonZeroJacobianIndicesExpandedType;
   typedef vnl_diag_matrix< CovarianceValueType >   DiagCovarianceMatrixType;
-  typedef vnl_vector< CovarianceValueType >        JacobianColumnType;
 
   /** Initialize. */
   TrC = TrCC = maxJJ = maxJCJ = 0.0;

@@ -364,7 +364,6 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
 
   /** Define derivative and Jacobian types. */
   typedef typename DerivativeType::ValueType        DerivativeValueType;
-  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;

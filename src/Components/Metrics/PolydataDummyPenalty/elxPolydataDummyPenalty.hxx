@@ -60,19 +60,6 @@ PolydataDummyPenalty< TElastix >
   }
   if( count == 0 ) { return 0; }
 
-  //if ( count == 1 )
-  //{
-  //  /** Check for appearance of "-fmesh". */
-
-  //  check = this->m_Configuration->GetCommandLineArgument( fmeshArgument );
-  //  if ( check.empty() )
-  //  {
-  //  elxout << "-fmesh       " << check << std::endl;
-  //  m_NumberOfMeshes = 1;
-  //  return 0;
-  //  }
-  //}
-
   std::string componentLabel( this->GetComponentLabel() );
   std::string metricNumber = componentLabel.substr( 6, 2 ); // strip "Metric" keep number
 
@@ -115,7 +102,6 @@ void
 PolydataDummyPenalty< TElastix >
 ::BeforeRegistration( void )
 {
-
   std::string componentLabel( this->GetComponentLabel() );
   std::string metricNumber = componentLabel.substr( 6, 2 ); // strip "Metric" keep number
 
@@ -123,7 +109,6 @@ PolydataDummyPenalty< TElastix >
 
   FixedMeshContainerPointer meshPointerContainer = FixedMeshContainerType::New();
   meshPointerContainer->Reserve( this->m_NumberOfMeshes );
-  //meshPointerContainer->CreateIndex(this->m_NumberOfMeshes-1);
   unsigned int meshNumber;
   char         ch;
   for( meshNumber = 0, ch = 'A'; meshNumber < this->m_NumberOfMeshes; ++meshNumber, ++ch )
@@ -132,50 +117,12 @@ PolydataDummyPenalty< TElastix >
     fmeshArgument << ch << metricNumber;
     std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
     typename MeshType::Pointer fixedMesh = 0;
-    unsigned int nrOfFixedPoints;
-    if( itksys::SystemTools::GetFilenameLastExtension( fixedMeshName ) == ".txt" )
-    {
-      nrOfFixedPoints = this->ReadTransformixPoints( fixedMeshName, fixedMesh );
-    }
-    else
-    {
-      nrOfFixedPoints = this->ReadMesh( fixedMeshName, fixedMesh );
-    }
 
-    //ReadMesh(fixedMeshName,fixedMesh);
-    //this->SetFixedMesh(fixedMesh); //TODO floris
-    //meshPointerContainer->SetElement(meshNumber,const_cast<MeshType::ConstPointer>(fixedMesh));
-    //meshPointerContainer->SetElement(meshNumber,fixedMesh);
     meshPointerContainer->SetElement( meshNumber, dynamic_cast<  MeshType * >( fixedMesh.GetPointer() ) );
 
   }
 
   this->SetFixedMeshContainer( meshPointerContainer );
-
-  //test
-  //const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
-  //const char * componentLabel = this->GetComponentLabel();
-  //std::string componentLabel(this->GetComponentLabel());
-  //std::string metricNumber = componentLabel.substr(6,2); // strip "Metric" keep number
-  //elxout <<  << std::endl;
-
-  /** Read and set the fixed pointset. */
-  /* precrash
-  std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( "-fmesh" );
-  typename FixedMeshType::Pointer fixedMesh = 0;
-
-  //const typename ImageType::ConstPointer fixedImage = this->GetElastix()->GetFixedImage();
-  unsigned int nrOfFixedPoints;
-  if (itksys::SystemTools::GetFilenameLastExtension(fixedMeshName)==".txt")
-  {
-  nrOfFixedPoints = this->ReadTransformixPoints( fixedMeshName, fixedMesh);
-  }
-  else
-  {
-  nrOfFixedPoints = this->ReadMesh( fixedMeshName, fixedMesh );
-  }
-  this->SetFixedMesh( fixedMesh );
-  */
 
   typename PointSetType::Pointer dummyPointSet = PointSetType::New();
   this->SetFixedPointSet( dummyPointSet );  // FB: TODO solve hack
@@ -186,22 +133,6 @@ PolydataDummyPenalty< TElastix >
   // TODO: let itkCombinationImageToImageMetric check for a base class metric that doesn't use an image or moving pointset.
 
 } // end BeforeRegistration()
-
-
-/**
- * ***************** BeforeEachResolution ***********************
- */
-
-template< class TElastix >
-void
-PolydataDummyPenalty< TElastix >
-::BeforeEachResolution( void )
-{
-  /** Get the current resolution level. */
-  unsigned int level
-    = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
-
-} // end BeforeEachResolution()
 
 
 /**
@@ -367,41 +298,21 @@ PolydataDummyPenalty< TElastix >
 ::WriteResultMesh( const char * filename, MeshIdType meshId )
 {
   /** Typedef's for writing the output mesh. */
-  //typedef itk::VTKPolyDataWriter< MeshType >            MeshWriterType;
   typedef itk::MeshFileWriter< MeshType > MeshWriterType;
-  //typename MeshWriterType::Pointer meshWriter = MeshWriterType::New();
-  //precrash typedef itk::TransformMeshFilter<
-  //MeshType, MeshType, CombinationTransformType>       TransformMeshFilterType;
   /** Create writer. */
   typename MeshWriterType::Pointer meshWriter = MeshWriterType::New();
-
-  /** Setup the pipeline. */
-
-  //MeshType::Pointer outputMesh = MeshType::New();
-
-  //MeshType outputMesh(this->GetFixedMesh());
-  //MeshType::Pointer outputMesh = MeshType::Mesh(this->GetFixedMesh());
-  //MeshType::CellsContainerPointer outputCellsContainer(this->GetFixedMesh()->GetCells());
-  //MeshType::CellsContainerPointer outputCellsContainer = this->GetFixedMesh()->GetCells()->Clone();
-  //elxout << "outputCellsContainer " << outputCellsContainer << std::endl;
-  //MeshType::CellsContainerPointer outputCellsContainer = MeshType::CellsContainer::New();
-  //outputCellsContainer
 
   /** Set the points of the latest transformation. */
   const MappedMeshContainerPointer mappedMeshContainer = this->GetMappedMeshContainer();
   FixedMeshPointer                 mappedMesh          = mappedMeshContainer->ElementAt( meshId );
-  //MeshPointsContainerPointer mappedPoints = this->GetMappedPoints();
-  //outputMesh->SetPoints(mappedPoints);
 
-  /** Use pointer to the mesh data of fixedMesh; const_cast are assumed since outputMesh will only be used for writing the output*/
+  /** Use pointer to the mesh data of fixedMesh; const_cast are assumed since outputMesh
+   * will only be used for writing the output.
+   * */
   FixedMeshConstPointer fixedMesh        = this->GetFixedMeshContainer()->ElementAt( meshId );
   bool                  tempSetPointData = ( mappedMesh->GetPointData() == NULL );
   bool                  tempSetCells     = ( mappedMesh->GetCells() == NULL );
   bool                  tempSetCellData  = ( mappedMesh->GetCellData() == NULL );
-
-  //bool tempSetPointData = (mappedMesh->GetPointData()->Size()==0);
-  //bool tempSetCells = (mappedMesh->GetCells()->Size()==0);
-  //bool tempSetCellData = (mappedMesh->GetCellData()->Size()==0);
 
   if( tempSetPointData )
   {
@@ -420,46 +331,6 @@ PolydataDummyPenalty< TElastix >
   mappedMesh->Modified();
   mappedMesh->Update();
 
-  /*
-  const MeshType::CellsContainer *cells = outputMesh->GetCells();
-  if ( cells )
-  {
-  MeshType::CellsContainer::ConstIterator cellIterator = cells->Begin();
-  MeshType::CellsContainer::ConstIterator cellEnd = cells->End();
-
-  while ( cellIterator != cellEnd )
-  {
-  elxout << "cellIterator.Value()->GetType() " << cellIterator.Value()->GetType() << std::endl;
-  cellIterator++;
-  }
-  }
-  */
-  //outputMesh->SetCells(outputCellsContainer);
-  //MeshType::PointsContainer::Pointer outputpoints = this->GetMappedPoints();
-
-  //PointSetType::Pointer fixedPointSet = PointSetType::New();
-  //fixedPointSet->SetPoints(fixedMesh->GetPoints());
-
-  /** Apply the transform. */
-  /*elxout << "  The input points are transformed." << std::endl;
-  typename TransformMeshFilterType::Pointer meshTransformer = TransformMeshFilterType::New();
-  meshTransformer->SetTransform( const_cast<AdvancedTransformType *>( this->m_Transform.GetPointer() ));
-  meshTransformer->SetInput( this->GetFixedMesh() );
-  try
-  {
-  meshTransformer->Update();
-  }
-  catch (itk::ExceptionObject & err)
-  {
-  xl::xout["error"] << "  Error while transforming points." << std::endl;
-  xl::xout["error"] << err << std::endl;
-  }
-
-
-
-
-  meshWriter->SetInput(meshTransformer->GetOutput());
-  */
   meshWriter->SetInput( mappedMesh );
   meshWriter->SetFileName( filename );
 
@@ -517,7 +388,6 @@ PolydataDummyPenalty< TElastix >
   typedef typename FixedImageType::IndexType            FixedImageIndexType;
   typedef typename FixedImageIndexType::IndexValueType  FixedImageIndexValueType;
   typedef typename MovingImageType::IndexType           MovingImageIndexType;
-  typedef typename MovingImageIndexType::IndexValueType MovingImageIndexValueType;
   typedef
     itk::ContinuousIndex< double, FixedImageDimension >   FixedImageContinuousIndexType;
   typedef
@@ -567,18 +437,16 @@ PolydataDummyPenalty< TElastix >
 
   /** Create the storage classes. */
   std::vector< FixedImageIndexType > inputindexvec(  nrofpoints );
-  //MeshType::PointsContainerPointer inputpointvec = MeshType::PointsContainer
-  //inputpointvec->Reserve(nrofpoints);
   std::vector< InputPointType > inputpointvec(  nrofpoints );
-  //std::vector< OutputPointType >        outputpointvec( nrofpoints );
   std::vector< FixedImageIndexType >   outputindexfixedvec( nrofpoints );
   std::vector< MovingImageIndexType >  outputindexmovingvec( nrofpoints );
   std::vector< DeformationVectorType > deformationvec( nrofpoints );
 
   /** Make a temporary image with the right region info,
-  * which we can use to convert between points and indices.
-  * By taking the image from the resampler output, the UseDirectionCosines
-  * parameter is automatically taken into account. */
+   * which we can use to convert between points and indices.
+   * By taking the image from the resampler output, the UseDirectionCosines
+   * parameter is automatically taken into account.
+   */
   FixedImageRegionType region;
   FixedImageOriginType origin
     = this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
@@ -600,14 +468,6 @@ PolydataDummyPenalty< TElastix >
   /** Temp vars */
   FixedImageContinuousIndexType  fixedcindex;
   MovingImageContinuousIndexType movingcindex;
-
-  /** Also output moving image indices if a moving image was supplied. */
-  bool alsoMovingIndices = false;
-  typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
-  if( movingImage.IsNotNull() )
-  {
-    alsoMovingIndices = true;
-  }
 
   /** Read the input points, as index or as point. */
   if( !( ippReader->GetPointsAreIndices() ) )
@@ -647,8 +507,6 @@ PolydataDummyPenalty< TElastix >
     }
   }
   /** Floris: create a mesh containing the points**/
-
-  //MeshType::PointsContainer * meshpointset = dynamic_cast<MeshType::PointsContainer *>(inputpointvec);
   mesh = MeshType::New();
   mesh->SetPoints( inputPointSet->GetPoints() );
 
@@ -657,10 +515,7 @@ PolydataDummyPenalty< TElastix >
   {
     typedef typename MeshType::CellType::CellAutoPointer CellAutoPointer;
     typedef itk::LineCell< typename MeshType::CellType > LineType;
-    //mesh->SetCellsAllocationMethod(MeshType::CellsAllocatedAsStaticArray);
-    //MeshType::CellsContainerPointer meshCells = MeshType::CellsContainer::New();
 
-    //meshCells->Reserve(nrofpoints);
     for( int i = 0; i < nrofpoints; ++i )
     {
 
@@ -670,19 +525,8 @@ PolydataDummyPenalty< TElastix >
 
       line->SetPointId( 0, i ); // line between points 0 and 1
       line->SetPointId( 1, ( i + 1 ) % nrofpoints );
-      //std::cout << "Linked point: " << MeshIndex << " and " << MeshIndex - 1 << std::endl;
       mesh->SetCell( i, line );
-
-      //MeshType::CellType* newCell = meshCells->CreateElementAt(i);
-      //MeshType::CellType::PointIdentifierContainerType newCellIds =  MeshType::CellType::PointIdentifierContainerType((itk::Array<MeshType::PointIdentifier>::SizeValueType) FixedImageDimension);
-      //int celsize = newCellIds.GetSize();
-      //newCellIds[0] = i;
-      //newCellIds[1] = (i+1)%nrofpoints;
-      //newCell->SetPointIdsContainer(newCellIds);
-
     }
-
-    //mesh->SetCells(meshCells);
   }
 
   std::cout << "mesh->GetNumberOfCells()" << mesh->GetNumberOfCells() << std::endl;
@@ -691,7 +535,7 @@ PolydataDummyPenalty< TElastix >
 
   typename MeshType::PointsContainerConstIterator pointsBegin = points->Begin();
   typename MeshType::PointsContainerConstIterator pointsEnd   = points->End();
-  for( pointsBegin; pointsBegin != pointsEnd; ++pointsBegin )
+  for( ; pointsBegin != pointsEnd; ++pointsBegin )
   {
     std::cout << "point " << pointsBegin->Index() << ": " << pointsBegin->Value().GetVnlVector() << std::endl;
   }
@@ -703,13 +547,13 @@ PolydataDummyPenalty< TElastix >
   typename CellInterfaceType::PointIdIterator beginpointer;
   typename CellInterfaceType::PointIdIterator endpointer;
 
-  for( cellIterator; cellIterator != CellsEnd; ++cellIterator )
+  for( ; cellIterator != CellsEnd; ++cellIterator )
   {
     std::cout << "Cell Index: " << cellIterator->Index() << std::endl;
     beginpointer = cellIterator->Value()->PointIdsBegin();
     endpointer   = cellIterator->Value()->PointIdsEnd();
 
-    for( beginpointer; beginpointer != endpointer; ++beginpointer )
+    for( ; beginpointer != endpointer; ++beginpointer )
     {
       std::cout << "Id: " << *beginpointer << std::endl;
     }

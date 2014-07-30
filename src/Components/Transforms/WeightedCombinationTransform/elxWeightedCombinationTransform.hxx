@@ -222,7 +222,6 @@ WeightedCombinationTransformElastix< TElastix >
 ::LoadSubTransforms( void )
 {
   /** Typedef's from ComponentDatabase. */
-  typedef typename Superclass2::ComponentDatabaseType    ComponentDatabaseType;
   typedef typename Superclass2::ComponentDescriptionType ComponentDescriptionType;
   typedef typename Superclass2::PtrToCreator             PtrToCreator;
   typedef typename Superclass2::ObjectType               ObjectType;

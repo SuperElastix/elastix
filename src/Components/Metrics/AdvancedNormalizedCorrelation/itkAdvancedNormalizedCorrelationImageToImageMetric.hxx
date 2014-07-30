@@ -324,7 +324,6 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   itkDebugMacro( << "GetValueAndDerivative( " << parameters << " ) " );
 
   typedef typename DerivativeType::ValueType        DerivativeValueType;
-  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;

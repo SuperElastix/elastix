@@ -175,8 +175,6 @@ public:
 
   virtual void BeforeRegistration( void );
 
-  virtual void BeforeEachResolution( void );
-
   virtual void AfterEachIteration( void );
 
   virtual void AfterEachResolution( void );

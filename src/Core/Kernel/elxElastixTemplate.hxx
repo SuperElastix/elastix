@@ -1186,7 +1186,6 @@ bool
 ElastixTemplate< TFixedImage, TMovingImage >
 ::GetOriginalFixedImageDirection( FixedImageDirectionType & direction ) const
 {
-  typedef typename FixedImageLoaderType::ChangeInfoFilterType ChangerType;
   if( this->GetFixedImage() == 0 )
   {
     /** Try to read direction cosines from (transform-)parameter file. */

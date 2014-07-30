@@ -455,9 +455,6 @@ MultiBSplineTransformWithNormal< TElastix >
   this->m_GridUpsampler->SetRequiredGridDirection( requiredGridDirection );
 
   typedef itk::Vector< double, itkGetStaticConstMacro( SpaceDimension ) >    VectorType;
-  typedef itk::Image< VectorType, itkGetStaticConstMacro( SpaceDimension ) > ImageVectorType;
-  typedef typename ImageVectorType::Pointer                                  ImageVectorPointer;
-  typedef typename ImageVectorType::PixelContainer                           VectorContainer;
 
   typedef itk::Vector< VectorType, itkGetStaticConstMacro( SpaceDimension ) > BaseType;
   typedef itk::Image< BaseType, itkGetStaticConstMacro( SpaceDimension ) >    ImageBaseType;

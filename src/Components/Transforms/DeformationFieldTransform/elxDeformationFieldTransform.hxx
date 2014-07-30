@@ -166,7 +166,6 @@ DeformationFieldTransform< TElastix >
   this->Superclass2::WriteToFile( param );
 
   typedef itk::ChangeInformationImageFilter< DeformationFieldType > ChangeInfoFilterType;
-  typedef typename ChangeInfoFilterType::Pointer                    ChangeInfoFilterPointer;
 
   /** Add some DeformationFieldTransform specific lines. */
   xout[ "transpar" ] << std::endl << "// DeformationFieldTransform specific" << std::endl;

@@ -269,10 +269,6 @@ MultiResolutionGaussianSmoothingPyramidImageFilter< TInputImage, TOutputImage >
   unsigned int refLevel = refOutput->GetSourceOutputIndex();
 
   // compute baseIndex and baseSize
-  typedef typename OutputImageType::SizeType   SizeType;
-  typedef typename SizeType::SizeValueType     SizeValueType;
-  typedef typename OutputImageType::IndexType  IndexType;
-  typedef typename IndexType::IndexValueType   IndexValueType;
   typedef typename OutputImageType::RegionType RegionType;
 
   /** \todo: shouldn't this be a dynamic_cast? */

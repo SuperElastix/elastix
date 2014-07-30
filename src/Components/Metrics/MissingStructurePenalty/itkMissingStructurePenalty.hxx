@@ -203,7 +203,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     MeshPointsContainerIteratorType      mappedPointIt = mappedPoints->Begin();
     MeshPointsContainerConstIteratorType fixedPointEnd = fixedPoints->End();
 
-    for( fixedPointIt; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++mappedPointIt )
+    for( ; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++mappedPointIt )
     {
       const OutputPointType mappedPoint = this->m_Transform->TransformPoint( fixedPointIt->Value() );
       mappedPointIt.Value()         = mappedPoint;
@@ -220,7 +220,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
 
     const int eps = 0.00001;
 
-    for( cellBegin; cellBegin != cellEnd; ++cellBegin )
+    for( ; cellBegin != cellEnd; ++cellBegin )
     {
       beginpointer = cellBegin->Value()->PointIdsBegin();
       float signedVolume;  // = vnl_determinant(fullMatrix.GetVnlMatrix());
@@ -305,7 +305,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     fixedPointIt = fixedPoints->Begin();
     unsigned int pointIndex;
     /** Loop over points. */
-    for( fixedPointIt, pointIndex = 0; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++pointIndex )
+    for( pointIndex = 0; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++pointIndex )
     {
       /** Get the TransformJacobian dT/dmu. */
       this->m_Transform->GetJacobian( fixedPointIt.Value(), jacobian, nzji );
@@ -352,7 +352,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
   typename SubVectorType::Iterator      subVectorIt   = subVector.Begin();
   typename SubVectorType::ConstIterator subVectorEnd  = subVector.End();
   unsigned int                 fullIndex     = 0;
-  for( subVectorIt, fullIndex; subVectorIt != subVectorEnd; ++fullVectorIt, ++subVectorIt, ++fullIndex )
+  for( ; subVectorIt != subVectorEnd; ++fullVectorIt, ++subVectorIt, ++fullIndex )
   {
     if( fullIndex == leaveOutIndex )
     {
