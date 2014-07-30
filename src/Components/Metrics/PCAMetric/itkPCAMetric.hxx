@@ -33,13 +33,11 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
     PCAMetric<TFixedImage,TMovingImage>
       ::PCAMetric():
-        m_SampleLastDimensionRandomly( false ),
-        m_NumSamplesLastDimension( 10 ),
         m_SubtractMean( false ),
         m_TransformIsStackTransform( false ),
         m_NumEigenValues( 6 ),
-        m_UseDerivativeOfMean( true ),
-        m_DeNoise( true ),
+        m_UseDerivativeOfMean( false ),
+        m_DeNoise( false ),
         m_VarNoise( 0.0 )
   {
     this->SetUseImageSampler( true );
@@ -364,12 +362,13 @@ namespace itk
     vnl_symmetric_eigensystem< RealType > eig( K );
 
     /** Compute sum of all eigenvalues = trace( K ) */
-    RealType trace = itk::NumericTraits< RealType >::Zero;
-    for( int i = 0; i < G; i++ )
-    {
-        trace += K(i,i);
-    }
+//    RealType trace = itk::NumericTraits< RealType >::Zero;
+//    for( int i = 0; i < G; i++ )
+//    {
+//        trace += K(i,i);
+//    }
 
+//    RealType trace = vnl_trace( K );
     const unsigned int L = this->m_NumEigenValues;
 
     RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
@@ -378,7 +377,8 @@ namespace itk
         sumEigenValuesUsed += eig.get_eigenvalue(G - i);
     }
 
-    measure = trace - sumEigenValuesUsed;
+//    measure = trace - sumEigenValuesUsed;
+    measure = G - sumEigenValuesUsed;
 
     /** Return the measure value. */
     return measure;
@@ -605,12 +605,12 @@ namespace itk
     /** Compute first eigenvalue and eigenvector of K */
     vnl_symmetric_eigensystem< RealType > eig( K );
 
-    /** Compute sum of all eigenvalues = trace( K ) */
-    RealType trace = itk::NumericTraits< RealType >::Zero;
-    for( int i = 0; i < G; i++ )
-    {
-        trace += K(i,i);
-    }
+//    /** Compute sum of all eigenvalues = trace( K ) */
+//    RealType trace = itk::NumericTraits< RealType >::Zero;
+//    for( int i = 0; i < G; i++ )
+//    {
+//        trace += K(i,i);
+//    }
 
     const unsigned int L = this->m_NumEigenValues;
 
@@ -724,7 +724,6 @@ namespace itk
 
             /** Store values. */
             dMTdmu = imageJacobian;
-
             /** build metric derivative components */
             for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
             {
@@ -788,7 +787,8 @@ namespace itk
     tracevKvdmu = tracevdSdmuCSv + tracevSdCdmuSv - tracevSdvarNoisedmuSv;
     tracevKvdmu *= (2.0/(DerivativeValueType(N) - 1.0)); //normalize
 
-    measure = trace - sumEigenValuesUsed;
+    //measure = trace - sumEigenValuesUsed;
+    measure = G - sumEigenValuesUsed;
     derivative = -tracevKvdmu;
 
     /** Subtract mean from derivative elements. */
@@ -860,27 +860,27 @@ namespace itk
       }
     }
 
-    /** Compute norm of transform parameters per image */
-    this->m_normdCdmu.set_size(lastDimSize);
-    this->m_normdCdmu.fill(0.0);
-    unsigned int ind = 0;
-    for ( unsigned int t = 0; t < lastDimSize; ++t )
-    {
-        const unsigned int startc = (this->GetNumberOfParameters() / lastDimSize)*t;
-        for ( unsigned int c = startc; c < startc + (this->GetNumberOfParameters() / lastDimSize); ++c )
-        {
-         this->m_normdCdmu[ ind ] += pow(derivative[ c ],2);
-        }
-        ++ind;
-    }
+//    /** Compute norm of transform parameters per image */
+//    this->m_normdCdmu.set_size(lastDimSize);
+//    this->m_normdCdmu.fill(0.0);
+//    unsigned int ind = 0;
+//    for ( unsigned int t = 0; t < lastDimSize; ++t )
+//    {
+//        const unsigned int startc = (this->GetNumberOfParameters() / lastDimSize)*t;
+//        for ( unsigned int c = startc; c < startc + (this->GetNumberOfParameters() / lastDimSize); ++c )
+//        {
+//         this->m_normdCdmu[ ind ] += pow(derivative[ c ],2);
+//        }
+//        ++ind;
+//    }
 
 
-    for(unsigned int index = 0; index < this->m_normdCdmu.size(); index++)
-    {
-        this->m_normdCdmu[index] = sqrt(this->m_normdCdmu.get(index));
-    }
+//    for(unsigned int index = 0; index < this->m_normdCdmu.size(); index++)
+//    {
+//        this->m_normdCdmu[index] = sqrt(this->m_normdCdmu.get(index));
+//    }
 
-    this->m_normdCdmu /= static_cast< RealType >( this->GetNumberOfParameters() / lastDimSize );
+//    this->m_normdCdmu /= static_cast< RealType >( this->GetNumberOfParameters() / lastDimSize );
 
 
     /** Return the measure value. */

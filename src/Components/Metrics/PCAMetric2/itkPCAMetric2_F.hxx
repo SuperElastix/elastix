@@ -537,15 +537,7 @@ PCAMetric2<TFixedImage,TMovingImage>
     std::vector<NonZeroJacobianIndicesType> nzjis( G, NonZeroJacobianIndicesType() );
 
     /** Sub components of metric derivative */
-    vnl_vector< DerivativeValueType > tracevKvdmu( P );
-    vnl_vector< DerivativeValueType > tracevdSdmuCSv( P );
-    vnl_vector< DerivativeValueType > tracevSdCdmuSv( P );
     vnl_diag_matrix< DerivativeValueType > dSdmu_part1( G );
-
-    /** initialize */
-    tracevKvdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero);
-    tracevdSdmuCSv.fill( itk::NumericTraits< DerivativeValueType >::Zero);
-    tracevSdCdmuSv.fill( itk::NumericTraits< DerivativeValueType >::Zero);
 
     unsigned int startSamplesOK;
     startSamplesOK = 0;
@@ -607,21 +599,18 @@ PCAMetric2<TFixedImage,TMovingImage>
             {
                 for(unsigned int z = 0; z < G; z++)
                 {
-                    tracevSdCdmuSv[ nzjis[ d ][ p ] ] += z * vSAtmm[ z ][ pixelIndex ] * dMTdmu[ p ] * Sv[ d ][ z ];
-                    tracevdSdmuCSv[ nzjis[ d ][ p ] ] += z * vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * CSv[ d ][ z ];
+                    derivative[ nzjis[ d ][ p ] ] += z * (vSAtmm[ z ][ pixelIndex ] * dMTdmu[ p ] * Sv[ d ][ z ] +
+                                                          vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * CSv[ d ][ z ]);
                 }//end loop over eigenvalues
 
             }//end loop over non-zero jacobian indices
 
-        }//end loop over gradient images
+        }//end loop over last dimension
 
     }// end second for loop over sample container
 
-    tracevKvdmu = tracevdSdmuCSv + tracevSdCdmuSv;
-    tracevKvdmu *= (2.0/(DerivativeValueType(N) - 1.0)); //normalize
-
+    derivative *= (2.0/(DerivativeValueType(N) - 1.0)); //normalize
     measure = sumWeightedEigenValues;
-    derivative = tracevKvdmu;
 
     /** Subtract mean from derivative elements. */
     if( this->m_SubtractMean )

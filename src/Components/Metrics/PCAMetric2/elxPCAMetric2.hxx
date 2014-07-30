@@ -52,28 +52,11 @@ namespace elastix
     unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-    /** Get and set the random sampling in the last dimension. */
-    bool useRandomSampling = false;
-    this->GetConfiguration()->ReadParameter( useRandomSampling,
-      "SampleLastDimensionRandomly", this->GetComponentLabel(), level, 0 );
-    this->SetSampleLastDimensionRandomly( useRandomSampling );
-
-    bool usederivativeofmean = true;
-    this->GetConfiguration()->ReadParameter( usederivativeofmean,
-      "UseDerivativeOfMean", this->GetComponentLabel(), 0, 0 );
-    this->SetUseDerivativeOfMean( usederivativeofmean );
-
     /** Get and set if we want to subtract the mean from the derivative. */
     bool subtractMean = false;
     this->GetConfiguration()->ReadParameter( subtractMean,
       "SubtractMean", this->GetComponentLabel(), 0, 0 );
     this->SetSubtractMean( subtractMean );
-
-    /** Get and set the number of random samples for the last dimension. */
-    int numSamplesLastDimension = 10;
-    this->GetConfiguration()->ReadParameter( numSamplesLastDimension,
-      "NumSamplesLastDimension", this->GetComponentLabel(), level, 0 );
-    this->SetNumSamplesLastDimension( numSamplesLastDimension );
 
     /** Get and set the number of additional samples sampled at the fixed timepoint.  */
     unsigned int numAdditionalSamplesFixed = 0;
@@ -146,18 +129,6 @@ namespace elastix
     elxout << "end BeforeEachResolution" << std::endl;
 
   } // end BeforeEachResolution
-
-/**
-  * ***************** AfterEachIteration ***********************
-  */
-
-template <class TElastix>
-  void PCAMetric2<TElastix>
-  ::AfterEachIteration(void)
-  {
-     //elxout << "eigenValues" << this->m_eigenValues << std::endl;
-     //elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
-  }
 
 } // end namespace elastix
 

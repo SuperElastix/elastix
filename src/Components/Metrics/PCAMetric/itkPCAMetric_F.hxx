@@ -182,15 +182,6 @@ namespace itk
     unsigned int NumberOfSamples = sampleContainer->Size();
     MatrixType datablock( NumberOfSamples, G );
 
-    /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
-    std::vector<int> lastDimPositions;
-
-    /** Determine random last dimension positions if needed. */
-    for ( unsigned int i = 0; i < G; ++i )
-    {
-        lastDimPositions.push_back( i );
-    }
-
     /** Initialize dummy loop variable */
     unsigned int pixelIndex = 0;
 
@@ -216,7 +207,7 @@ namespace itk
             MovingImagePointType mappedPoint;
 
             /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ lastDim ] = lastDimPositions[ d ];
+            voxelCoord[ lastDim ] = d;
 
             /** Transform sampled point back to world coordinates. */
             this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
@@ -385,14 +376,6 @@ namespace itk
     /** Initialize image sample matrix . */
     datablock.fill( itk::NumericTraits< RealType >::Zero );
 
-    /** Determine random last dimension positions if needed. */
-    /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
-    std::vector<int> lastDimPositions;
-    for ( unsigned int i = 0; i < G; ++i )
-    {
-        lastDimPositions.push_back( i );
-    }
-
     for ( fiter = fbegin; fiter != fend; ++fiter )
     {
         /** Read fixed coordinates. */
@@ -412,7 +395,7 @@ namespace itk
             MovingImagePointType mappedPoint;
 
             /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ lastDim ] = lastDimPositions[ d ];
+            voxelCoord[ lastDim ] = d;
 
             /** Transform sampled point back to world coordinates. */
             this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
@@ -517,19 +500,10 @@ namespace itk
     std::vector<NonZeroJacobianIndicesType> nzjis( G, NonZeroJacobianIndicesType() );
 
     /** Sub components of metric derivative */
-    vnl_vector< DerivativeValueType > tracevKvdmu( P );
-    vnl_vector< DerivativeValueType > tracevdSdmuCSv( P );
-    vnl_vector< DerivativeValueType > tracevSdCdmuSv( P );
     vnl_diag_matrix< DerivativeValueType > dSdmu_part1( G );
 
     /** initialize */
-    tracevKvdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    tracevdSdmuCSv.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-    tracevSdCdmuSv.fill( itk::NumericTraits< DerivativeValueType>::Zero);
     dSdmu_part1.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-
-    unsigned int startSamplesOK;
-    startSamplesOK = 0;
 
     for(unsigned int d = 0; d < G; d++)
     {
@@ -547,8 +521,7 @@ namespace itk
     for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
     {
         /** Read fixed coordinates. */
-        FixedImagePointType fixedPoint = SamplesOK[ startSamplesOK ];
-        startSamplesOK++;
+        FixedImagePointType fixedPoint = SamplesOK[ pixelIndex ];
 
         /** Transform sampled point to voxel coordinates. */
         FixedImageContinuousIndexType voxelCoord;
@@ -562,7 +535,7 @@ namespace itk
             MovingImageDerivativeType movingImageDerivative;
 
             /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ lastDim ] = lastDimPositions[ d ];
+            voxelCoord[ lastDim ] = d;
 
             /** Transform sampled point back to world coordinates. */
             this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
@@ -585,18 +558,18 @@ namespace itk
             {
                 for(unsigned int z = 0; z < L; z++)
                 {
-                    tracevSdCdmuSv[ nzjis[ d ][ p ] ] += vSAtmm[ z ][ pixelIndex ] * dMTdmu[ p ] * Sv[ d ][ z ];
-                    tracevdSdmuCSv[ nzjis[ d ][ p ] ] += vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * CSv[ d ][ z ];
-                }
-            }
-        }//end loop over t
+                    derivative[ nzjis[ d ][ p ] ] += vSAtmm[ z ][ pixelIndex ] * dMTdmu[ p ] * Sv[ d ][ z ] +
+                            vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * CSv[ d ][ z ];
+                }//end loop over eigenvalues
+
+            }//end loop over non-zero jacobian indices
+
+        }//end loop over last dimension
+
     } // end second for loop over sample container
 
-    tracevKvdmu = tracevdSdmuCSv + tracevSdCdmuSv;
-    tracevKvdmu *= (2.0/(DerivativeValueType(N) - 1.0)); //normalize
-
+    derivative *= -(2.0/(DerivativeValueType(N) - 1.0)); //normalize
     measure = G - sumEigenValuesUsed;
-    derivative = -tracevKvdmu;
 
     /** Subtract mean from derivative elements. */
     if( this->m_SubtractMean )

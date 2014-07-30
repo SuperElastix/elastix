@@ -16,7 +16,7 @@
 #define __elxPCAMetric2_H__
 
 #include "elxIncludes.h"
-#include "itkPCAMetric2.h"
+#include "itkPCAMetric2_F.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "../Transforms/StackTransform/itkStackTransform.h"
 
@@ -181,7 +181,6 @@ namespace elastix
      * \li Set UseNormalization setting
      */
     virtual void BeforeEachResolution(void);
-    virtual void AfterEachIteration(void);
 
   protected:
 
