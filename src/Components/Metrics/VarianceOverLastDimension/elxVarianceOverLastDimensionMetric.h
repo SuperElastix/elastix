@@ -172,6 +172,12 @@ public:
   virtual void Initialize( void ) throw ( itk::ExceptionObject );
 
   /**
+   * Do some things before registration:
+   * \li check the direction cosines
+   */
+  virtual void BeforeRegistration( void );
+
+  /**
    * Do some things before each resolution:
    * \li Set CheckNumberOfSamples setting
    * \li Set UseNormalization setting
@@ -190,7 +196,7 @@ private:
   /** The private constructor. */
   VarianceOverLastDimensionMetric( const Self & );  // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );               // purposely not implemented
+  void operator=( const Self & );                   // purposely not implemented
 
 };
 

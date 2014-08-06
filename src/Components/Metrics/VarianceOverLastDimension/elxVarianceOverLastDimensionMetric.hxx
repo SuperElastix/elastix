@@ -41,6 +41,44 @@ VarianceOverLastDimensionMetric< TElastix >
 
 
 /**
+ * ***************** BeforeRegistration ***********************
+ */
+
+template< class TElastix >
+void
+VarianceOverLastDimensionMetric< TElastix >
+::BeforeRegistration( void )
+{
+  /** Check that the direction cosines are structured like
+   *       [ dc  dc  0 ]
+   *  dc = [ dc  dc  0 ]
+   *       [  0   0  1 ]
+   */
+  typedef typename FixedImageType::DirectionType DirectionType;
+  DirectionType dc = this->GetElastix()->GetFixedImage()->GetDirection();
+
+  bool dcValid = true;
+  for( unsigned int i = 0; i < FixedImageDimension - 1; ++i )
+  {
+    dcValid &= ( dc[ FixedImageDimension - 1 ][ i ] == 0 );
+    dcValid &= ( dc[ i ][ FixedImageDimension - 1 ] == 0 );
+  }
+  dcValid &= ( dc[ FixedImageDimension - 1][ FixedImageDimension - 1 ] == 1 );
+
+  if( !dcValid )
+  {
+    itkExceptionMacro( << "\nERROR: the direction cosines matrix of the fixed image is invalid!\n\n"
+      << "  The VarianceOverLastDimensionMetric expects the last dimension to represent\n"
+      << "  time and therefore requires a direction cosines matrix of the form:\n"
+      << "       [ . . 0 ]\n"
+      << "  dc = [ . . 0 ]\n"
+      << "       [ 0 0 1 ]" );
+  }
+
+} // end BeforeRegistration()
+
+
+/**
  * ***************** BeforeEachResolution ***********************
  */
 
