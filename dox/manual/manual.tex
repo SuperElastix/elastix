@@ -355,10 +355,10 @@ literature. Some common choices are described below. Between brackets
 the name of the metric in \elastix\ is given:
 
 \begin{description}
-\item[Sum of Squared Differences (SSD):] (\texttt{AdvancedMeanSquares})
-The SSD is defined as:
+\item[Mean Squared Difference (MSD):] (\texttt{AdvancedMeanSquares})
+The MSD is defined as:
 \begin{align}
-\mathrm{SSD}(\vmu;I_F,I_M) &= \frac{1}{|\Omega_F|}
+\mathrm{MSD}(\vmu;I_F,I_M) &= \frac{1}{|\Omega_F|}
 \sum\limits_{\vx_i \in \Omega_F} \left( I_F(\vx_i) -
 I_M(\vT_{\vmu}(\vx_i)) \right)^2,\label{eq:ssd}
 \end{align}
@@ -447,18 +447,18 @@ foreground value that defaults to 1.
 
 \end{description}
 
-The SSD measure is a measure that is only suited for two images with
+The MSD measure is a measure that is only suited for two images with
 an equal intensity distribution, i.e. for images from the same
 modality. NCC is less strict, it assumes a linear relation between
-the intensity values of the fixed and moving image, and can therefore
-be used more often. The MI measure is even more general: only a
-relation between the probability distributions of the intensities of
-the fixed and moving image is assumed. For MI it is well-known that
-it is suited not only for mono-modal, but also for multi-modal image
-pairs. This measure is often a good choice for image registration.
-The NMI measure is, just like MI, suitable for mono- and
-multi-modality registration. \cite{Stu99:NMI} seems to indicate
-better performance than MI in some cases. The KS measure is
+the intensity values of the fixed and moving image, and can
+therefore be used more often. The MI measure is even more general:
+only a relation between the probability distributions of the
+intensities of the fixed and moving image is assumed. For MI it is
+well-known that it is suited not only for mono-modal, but also for
+multi-modal image pairs. This measure is often a good choice for
+image registration. The NMI measure is, just like MI, suitable for
+mono- and multi-modality registration. \cite{Stu99:NMI} seems to
+indicate better performance than MI in some cases. The KS measure is
 specifically meant to register binary images (segmentations). It
 measures the ``overlap'' of the segmentations.
 
@@ -1007,8 +1007,8 @@ be worried.
 
 \item Inspect the convergence, by computing for each iteration
 the exact metric value (and not an approximated value, when you do
-random sampling), and plot it. For example for the SSD measure,
-the lower the metric value, the better the registration.
+random sampling), and plot it. For example for the MSD measure, the
+lower the metric value, the better the registration.
 
 \item Do not use image similarity as a way to evaluate your
 registration. Torsten Rohlfing can explain why \cite{Rohlfing2012}.
@@ -1878,7 +1878,7 @@ $a = 32000$ is too large.} \label{fig:stepsize}
 \end{figure}
 
 A good choice for $a$ is dependent on the cost function that is used
-for registration: the $a$ that will give you a good result for SSD
+for registration: the $a$ that will give you a good result for MSD
 is not the same as the one that gives a good result for MI. Finally,
 $a$ also depends on the amount of deformation that you expect
 between the fixed and the moving image. So again, recommendations
@@ -2010,15 +2010,15 @@ thereby neglecting the meaningful edges. The conic beam edge in
 ultrasound images is an example of such an artificial edge.
 
 \item when the image contains structures in the neighbourhood
-of your ROI that may influence the registration within your ROI. This
-is for example the case when matching lung data. Usually, you are
-interested in the lungs, and not if the rib cage is well aligned.
-However, the ribs are structures that for example in CT can have a
-strong influence on the similarity metric, especially if you use the
-SSD metric. In that case, the rib cage may be well aligned at the
-cost of vessels structures near the border of the lung with the rib
-cage. In this case it will help you if you use a dilated lung
-segmentation as a mask.
+of your ROI that may influence the registration within your ROI.
+This is for example the case when matching lung data. Usually, you
+are interested in the lungs, and not if the rib cage is well
+aligned. However, the ribs are structures that for example in CT can
+have a strong influence on the similarity metric, especially if you
+use the MSD metric. In that case, the rib cage may be well aligned
+at the cost of vessels structures near the border of the lung with
+the rib cage. In this case it will help you if you use a dilated
+lung segmentation as a mask.
 \end{itemize}
 
 Masks can be used both for the fixed and the moving image. A fixed
@@ -2201,7 +2201,7 @@ as:
 \end{align}
 with $\omega_i$ the weights. This way the same fixed and moving
 image is used for every sub-metric $\CC_i$. This way one can for
-example simultaneously optimise the SSD and MI during a
+example simultaneously optimise the MSD and MI during a
 registration.
 
 \elastix\ should be called like:
