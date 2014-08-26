@@ -218,7 +218,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     float                              sumSignedVolume = 0.0;
     float                              sumAbsVolume    = 0.0;
 
-    const int eps = 0.00001;
+    const float eps = 0.00001;
 
     for( ; cellBegin != cellEnd; ++cellBegin )
     {
