@@ -41,17 +41,17 @@ DistancePreservingRigidityPenalty< TElastix >
   this->GetConfiguration()->ReadParameter( segmentedImageName,
     "SegmentedImageName", this->GetComponentLabel(), 0, -1, false );
 
-  typedef typename Superclass1::SegmentedImageType   SegmentedImageType;
-  typedef itk::ImageFileReader< SegmentedImageType > SegmentedImageReaderType;
-  typename SegmentedImageReaderType::Pointer SegmentedImageReader;
+  typedef typename Superclass1::SegmentedImageType                SegmentedImageType;
+  typedef itk::ImageFileReader< SegmentedImageType >              SegmentedImageReaderType;
   typedef itk::ChangeInformationImageFilter< SegmentedImageType > ChangeInfoFilterType;
   typedef typename ChangeInfoFilterType::Pointer                  ChangeInfoFilterPointer;
   typedef typename SegmentedImageType::DirectionType              DirectionType;
+  typedef typename SegmentedImageType::SizeType::SizeValueType    SizeValueType;
 
   /** Create the reader and set the filename. */
-  SegmentedImageReader = SegmentedImageReaderType::New();
-  SegmentedImageReader->SetFileName( segmentedImageName.c_str() );
-  SegmentedImageReader->Update();
+  typename SegmentedImageReaderType::Pointer segmentedImageReader = SegmentedImageReaderType::New();
+  segmentedImageReader->SetFileName( segmentedImageName.c_str() );
+  segmentedImageReader->Update();
 
   /** Possibly overrule the direction cosines. */
   ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
@@ -59,7 +59,7 @@ DistancePreservingRigidityPenalty< TElastix >
   direction.SetIdentity();
   infoChanger->SetOutputDirection( direction );
   infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
-  infoChanger->SetInput( SegmentedImageReader->GetOutput() );
+  infoChanger->SetInput( segmentedImageReader->GetOutput() );
 
   /** Do the reading. */
   try
@@ -79,20 +79,31 @@ DistancePreservingRigidityPenalty< TElastix >
 
   this->SetSegmentedImage( infoChanger->GetOutput() );
 
+  /** Get information from the segmented image. */
   typename SegmentedImageType::SizeType segmentedImageSize       = this->GetSegmentedImage()->GetBufferedRegion().GetSize();
   typename SegmentedImageType::PointType segmentedImageOrigin    = this->GetSegmentedImage()->GetOrigin();
   typename SegmentedImageType::SpacingType segmentedImageSpacing = this->GetSegmentedImage()->GetSpacing();
 
-  /** Uniform sampling of the grid for the calculation of the rigidity penalty term */
-  GridSpacingType PenaltyGridSpacingInVoxels;
-
+  /** Get the grid sampling spacing for calculation of the rigidity penalty term. */
+  typename SegmentedImageType::SpacingType penaltyGridSpacingInVoxels;
   for( unsigned int dim = 0; dim < ImageDimension; ++dim )
   {
     this->m_Configuration->ReadParameter(
-      PenaltyGridSpacingInVoxels[ dim ], "PenaltyGridSpacingInVoxels",
+      penaltyGridSpacingInVoxels[ dim ], "PenaltyGridSpacingInVoxels",
       this->GetComponentLabel(), dim, 0 );
   }
 
+  /** Compute resampled spacing and size. */
+  typename SegmentedImageType::SpacingType resampledImageSpacing;
+  typename SegmentedImageType::SizeType resampledImageSize;
+  for( unsigned int dim = 0; dim < ImageDimension; ++dim )
+  {
+    resampledImageSpacing[ dim ] = segmentedImageSpacing[ dim ] * penaltyGridSpacingInVoxels[ dim ];
+    resampledImageSize[ dim ] = static_cast< SizeValueType >(
+      segmentedImageSize[ dim ] / penaltyGridSpacingInVoxels[ dim ] );
+  }
+
+  /** Create resampler, identity transform and linear interpolator. */
   typedef itk::ResampleImageFilter< SegmentedImageType, SegmentedImageType > ResampleFilterType;
   typename ResampleFilterType::Pointer resampler = ResampleFilterType::New();
 
@@ -100,28 +111,15 @@ DistancePreservingRigidityPenalty< TElastix >
   typename IdentityTransformType::Pointer identityTransform = IdentityTransformType::New();
   identityTransform->SetIdentity();
 
-  resampler->SetTransform( identityTransform );
-
   typedef itk::LinearInterpolateImageFunction< SegmentedImageType, double > LinearInterpolatorType;
   typename LinearInterpolatorType::Pointer linearInterpolator = LinearInterpolatorType::New();
+
+  /** Configure the resampler and run it. */
   resampler->SetInterpolator( linearInterpolator );
-
-  typename SegmentedImageType::SpacingType resampledSpacing;
-  resampledSpacing[ 0 ] = segmentedImageSpacing[ 0 ] * PenaltyGridSpacingInVoxels[ 0 ];
-  resampledSpacing[ 1 ] = segmentedImageSpacing[ 1 ] * PenaltyGridSpacingInVoxels[ 1 ];
-  resampledSpacing[ 2 ] = segmentedImageSpacing[ 2 ] * PenaltyGridSpacingInVoxels[ 2 ];
-
-  resampler->SetOutputSpacing( resampledSpacing );
+  resampler->SetTransform( identityTransform );
+  resampler->SetOutputSpacing( resampledImageSpacing );
   resampler->SetOutputOrigin( segmentedImageOrigin );
-
-  typedef typename SegmentedImageType::SizeType::SizeValueType SizeValueType;
-  typename SegmentedImageType::SizeType sampledSegmentedImageSize;
-
-  sampledSegmentedImageSize[ 0 ] = static_cast< SizeValueType >( segmentedImageSize[ 0 ] / PenaltyGridSpacingInVoxels[ 0 ] );
-  sampledSegmentedImageSize[ 1 ] = static_cast< SizeValueType >( segmentedImageSize[ 1 ] / PenaltyGridSpacingInVoxels[ 1 ] );
-  sampledSegmentedImageSize[ 2 ] = static_cast< SizeValueType >( segmentedImageSize[ 2 ] / PenaltyGridSpacingInVoxels[ 2 ] );
-
-  resampler->SetSize( sampledSegmentedImageSize );
+  resampler->SetSize( resampledImageSize );
   resampler->SetInput( this->GetSegmentedImage() );
   resampler->Update();
 

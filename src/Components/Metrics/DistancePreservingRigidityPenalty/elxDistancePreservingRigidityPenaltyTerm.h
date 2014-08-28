@@ -18,7 +18,7 @@
 #ifndef __elxDistancePreservingRigidityPenaltyTerm_H__
 #define __elxDistancePreservingRigidityPenaltyTerm_H__
 
-#include "elxIncludes.h"
+#include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkDistancePreservingRigidityPenaltyTerm.h"
 
 namespace elastix
@@ -178,11 +178,7 @@ private:
   /** The private copy constructor. */
   void operator=( const Self & );                    // purposely not implemented
 
-  SegmentedImagePyramidPointer m_SegmentedImagePyramid;
-
 };
-
-// end class DistancePreservingRigidityPenalty
 
 } // end namespace elastix
 
