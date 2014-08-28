@@ -126,10 +126,8 @@ public:
   typedef typename Superclass1::MovingImageLimiterType       MovingImageLimiterType;
   typedef typename Superclass1::FixedImageLimiterOutputType  FixedImageLimiterOutputType;
   typedef typename Superclass1::MovingImageLimiterOutputType MovingImageLimiterOutputType;
-
-  typedef typename Superclass1::CoefficientImageType CoefficientImageType;
-
-  typedef typename Superclass1::SegmentedImageType SegmentedImageType;
+  typedef typename Superclass1::CoefficientImageType         CoefficientImageType;
+  typedef typename Superclass1::SegmentedImageType           SegmentedImageType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
@@ -187,3 +185,4 @@ private:
 #endif
 
 #endif // end #ifndef __elxDistancePreservingRigidityPenaltyTerm_H__
+

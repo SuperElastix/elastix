@@ -86,7 +86,7 @@ DistancePreservingRigidityPenalty< TElastix >
 
   /** Get the grid sampling spacing for calculation of the rigidity penalty term. */
   typename SegmentedImageType::SpacingType penaltyGridSpacingInVoxels;
-  for( unsigned int dim = 0; dim < ImageDimension; ++dim )
+  for( unsigned int dim = 0; dim < FixedImageDimension; ++dim )
   {
     this->m_Configuration->ReadParameter(
       penaltyGridSpacingInVoxels[ dim ], "PenaltyGridSpacingInVoxels",
@@ -96,7 +96,7 @@ DistancePreservingRigidityPenalty< TElastix >
   /** Compute resampled spacing and size. */
   typename SegmentedImageType::SpacingType resampledImageSpacing;
   typename SegmentedImageType::SizeType resampledImageSize;
-  for( unsigned int dim = 0; dim < ImageDimension; ++dim )
+  for( unsigned int dim = 0; dim < FixedImageDimension; ++dim )
   {
     resampledImageSpacing[ dim ] = segmentedImageSpacing[ dim ] * penaltyGridSpacingInVoxels[ dim ];
     resampledImageSize[ dim ] = static_cast< SizeValueType >(
@@ -153,3 +153,4 @@ DistancePreservingRigidityPenalty< TElastix >
 } // end namespace elastix
 
 #endif // end #ifndef __elxDistancePreservingRigidityPenaltyTerm_HXX__
+

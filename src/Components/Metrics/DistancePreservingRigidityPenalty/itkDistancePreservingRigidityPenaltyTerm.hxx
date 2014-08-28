@@ -513,8 +513,8 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
   Superclass::PrintSelf( os, indent );
 
   /** Add debugging information. */
-  os << indent << "BSplineTransform: " << this->m_BSplineTransform << endl;
-  os << indent << "RigidityPenaltyTermValue: " << this->m_RigidityPenaltyTermValue << endl;
+  os << indent << "BSplineTransform: " << this->m_BSplineTransform << std::endl;
+  os << indent << "RigidityPenaltyTermValue: " << this->m_RigidityPenaltyTermValue << std::endl;
 
 } // end PrintSelf()
 
@@ -522,3 +522,4 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
 } // end namespace itk
 
 #endif // #ifndef __itkDistancePreservingRigidityPenaltyTerm_hxx
+
