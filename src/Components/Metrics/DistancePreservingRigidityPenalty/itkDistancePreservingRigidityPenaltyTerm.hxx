@@ -110,7 +110,6 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
   this->m_PenaltyGridImage = PenaltyGridImageType::New();
 
   typename SegmentedImageType::RegionType sampledSegmentedImageRegion       = this->m_SampledSegmentedImage->GetBufferedRegion();
-  typename SegmentedImageType::SizeType sampledSegmentedImageSize           = sampledSegmentedImageRegion.GetSize();
   typename SegmentedImageType::PointType sampledSegmentedImageOrigin        = this->m_SampledSegmentedImage->GetOrigin();
   typename SegmentedImageType::SpacingType sampledSegmentedImageSpacing     = this->m_SampledSegmentedImage->GetSpacing();
   typename SegmentedImageType::DirectionType sampledSegmentedImageDirection = this->m_SampledSegmentedImage->GetDirection();
@@ -120,12 +119,6 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
   this->m_PenaltyGridImage->SetOrigin( sampledSegmentedImageOrigin );
   this->m_PenaltyGridImage->SetDirection( sampledSegmentedImageDirection );
   this->m_PenaltyGridImage->Update();
-
-  typename SegmentedImageType::RegionType segmentedImageRegion       = this->m_SegmentedImage->GetBufferedRegion();
-  typename SegmentedImageType::SizeType segmentedImageSize           = segmentedImageRegion.GetSize();
-  typename SegmentedImageType::PointType segmentedImageOrigin        = this->m_SegmentedImage->GetOrigin();
-  typename SegmentedImageType::SpacingType segmentedImageSpacing     = this->m_SegmentedImage->GetSpacing();
-  typename SegmentedImageType::DirectionType segmentedImageDirection = this->m_SegmentedImage->GetDirection();
 
   /** compute number of knots in rigid regions */
   this->m_NumberOfRigidGrids = 0;
