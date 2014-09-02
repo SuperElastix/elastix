@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkParzenWindowHistogramImageToImageMetric_H__
 #define __itkParzenWindowHistogramImageToImageMetric_H__
 
@@ -210,8 +209,6 @@ public:
    */
   itkSetMacro( FiniteDifferencePerturbation, double );
   itkGetConstMacro( FiniteDifferencePerturbation, double );
-
-  //mutable std::vector<float> m_TemporaryNormalizedSumJointPDF;
 
 protected:
 
@@ -414,7 +411,7 @@ protected:
    * p = m_Alpha * m_JointPDF
    * dp/dmu = m_Alpha * m_JointPDFDerivatives
    * So, the JointPDF is more like a histogram than a true pdf...
-   * The histograms are left unnormalised since it may be faster to
+   * The histograms are left unnormalized since it may be faster to
    * not do this explicitly.
    */
   virtual void ComputePDFsAndPDFDerivatives( const ParametersType & parameters ) const;

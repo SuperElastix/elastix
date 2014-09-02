@@ -158,6 +158,12 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Check if the transform is a B-spline transform. */
   this->CheckForBSplineTransform();
 
+  /** Initialize some threading related parameters. */
+  if( this->m_UseMultiThread )
+  {
+    this->InitializeThreadingParameters();
+  }
+
 } // end Initialize()
 
 
@@ -173,16 +179,18 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
    * needed, which saves valuable re-allocation time.
-   * Filling the potentially large vectors is performed later, in each thread,
-   * which has performance benefits for larger vector sizes.
+   *
+   * This function is only to be called at the start of each resolution.
+   * Re-initialization of the potentially large vectors is performed after
+   * each iteration, in the accumulate functions, in a multi-threaded fashion.
+   * This has performance benefits for larger vector sizes.
    */
 
   /** Only resize the array of structs when needed. */
   if( this->m_GetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
   {
     delete[] this->m_GetValueAndDerivativePerThreadVariables;
-    this->m_GetValueAndDerivativePerThreadVariables
-                                                        = new AlignedGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
+    this->m_GetValueAndDerivativePerThreadVariables     = new AlignedGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
     this->m_GetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
   }
 
@@ -192,6 +200,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative.SetSize( this->GetNumberOfParameters() );
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
   }
 
 } // end InitializeThreadingParameters()
@@ -419,7 +428,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
    * or of type AdvancedLinearInterpolateImageFunction.
    * If so, we can make use of their EvaluateDerivatives methods.
    * Otherwise, we precompute the gradients using a central difference scheme,
-   * and do evaluate the gradient using nearest neighbour interpolation.
+   * and do evaluate the gradient using nearest neighbor interpolation.
    */
   this->m_InterpolatorIsBSpline = false;
   BSplineInterpolatorType * testPtr
@@ -527,10 +536,6 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
 /**
  * ****************** CheckForAdvancedTransform **********************
- * Check if the transform is of type AdvancedTransform.
- * If so, we can speed up derivative calculations by only inspecting
- * the parameters in the support region of a point.
- *
  */
 
 template< class TFixedImage, class TMovingImage >
@@ -929,13 +934,20 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   unsigned int       jmax = ( threadID + 1 ) * subSize;
   jmax = ( jmax > numPar ) ? numPar : jmax;
 
-  DerivativeValueType normalization = 1.0 / temp->st_NormalizationFactor;
+  /** This thread accumulates all sub-derivatives into a single one, for the
+   * range [ jmin, jmax [. Additionally, the sub-derivatives are reset.
+   */
+  const DerivativeValueType zero = NumericTraits< DerivativeValueType >::Zero;
+  const DerivativeValueType normalization = 1.0 / temp->st_NormalizationFactor;
   for( unsigned int j = jmin; j < jmax; ++j )
   {
-    DerivativeValueType tmp = NumericTraits< DerivativeValueType >::Zero;
+    DerivativeValueType tmp = zero;
     for( ThreadIdType i = 0; i < nrOfThreads; ++i )
     {
       tmp += temp->st_Metric->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
+
+      /** Reset this variable for the next iteration. */
+      temp->st_Metric->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ] = zero;
     }
     temp->st_DerivativePointer[ j ] = tmp * normalization;
   }

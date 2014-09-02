@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef _itkParzenWindowHistogramImageToImageMetric_HXX__
 #define _itkParzenWindowHistogramImageToImageMetric_HXX__
 
@@ -361,7 +360,6 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
 /**
  * ****************** InitializeKernels *****************************
- * Setup the kernels used for the Parzen windows.
  */
 
 template< class TFixedImage, class TMovingImage >
@@ -747,9 +745,6 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
 /**
  * ************************ ComputeMarginalPDF ***********************
- * Compute marginal pdf by summing over the joint pdf
- * direction = 0: fixed marginal pdf
- * direction = 1: moving marginal pdf
  */
 
 template< class TFixedImage, class TMovingImage >
@@ -761,8 +756,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 {
   typedef ImageLinearIteratorWithIndex< JointPDFType > JointPDFLinearIterator;
   // \todo: bug? shouldn't this be over the function argument jointPDF ?
-  JointPDFLinearIterator linearIter(
-  this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
+  JointPDFLinearIterator linearIter( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
   linearIter.SetDirection( direction );
   linearIter.GoToBegin();
   unsigned int marginalIndex = 0;
@@ -784,8 +778,6 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
 /**
  * ******************** ComputeIncrementalMarginalPDFs *******************
- * Compute incremental marginal pdfs. Integrates the incremental PDF
- * to obtain the marginal pdfs. Used for finite differences.
  */
 
 template< class TFixedImage, class TMovingImage >
@@ -1144,9 +1136,6 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
    */
   this->BeforeThreadedGetValueAndDerivative( parameters );
 
-  /** Initialize some threading related parameters. */
-  this->InitializeThreadingParameters();
-
   /** Launch multi-threading JointPDF computation. */
   this->LaunchComputePDFsThreaderCallback();
 
@@ -1166,10 +1155,11 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ThreadedComputePDFs( ThreadIdType threadId )
 {
   /** Get a handle to the pre-allocated joint PDF for the current thread.
-   * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
+   * The initialization is performed here, so that it is done multi-threadedly
+   * instead of sequentially in InitializeThreadingParameters().
    */
   JointPDFPointer & jointPDF = this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ threadId ].st_JointPDF;
-  jointPDF->FillBuffer( NumericTraits< PDFValueType >::Zero ); // seems needed unfortunately
+  jointPDF->FillBuffer( NumericTraits< PDFValueType >::Zero );
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
@@ -1261,6 +1251,9 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   {
     this->m_NumberOfPixelsCounted
       += this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
+
+    /** Reset this variable for the next iteration. */
+    this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */

@@ -386,9 +386,6 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
    */
   this->BeforeThreadedGetValueAndDerivative( parameters );
 
-  /** Initialize some threading related parameters. */
-  this->InitializeThreadingParameters();
-
   /** Launch multi-threading metric */
   this->LaunchGetValueAndDerivativeThreaderCallback();
 
@@ -429,10 +426,11 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   bool transformIsBSpline = this->CheckForBSplineTransform( dummy );
 
   /** Get a handle to the pre-allocated derivative for the current thread.
-   * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
+   * The initialization is performed at the beginning of each resolution in
+   * InitializeThreadingParameters(), and at the end of each iteration in
+   * AfterThreadedGetValueAndDerivative() and the accumulate functions.
    */
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero ); // needed?
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
@@ -595,6 +593,9 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
+
+    /** Reset this variable for the next iteration. */
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */
@@ -607,6 +608,9 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
+
+    /** Reset this variable for the next iteration. */
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value = NumericTraits< MeasureType >::Zero;
   }
   value /= static_cast< RealType >( this->m_NumberOfPixelsCounted );
 
@@ -804,14 +808,10 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               /** Add to existing value */
               ( *rowIt ).second += val;
             }
-
           }
-
         }
       }
-
     } // end if sampleOk
-
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */

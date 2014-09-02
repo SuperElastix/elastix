@@ -462,7 +462,10 @@ protected:
 
   /** Methods to support transforms with sparse Jacobians, like the BSplineTransform **********/
 
-  /** Check if the transform is an AdvancedTransform. Called by Initialize. */
+  /** Check if the transform is an AdvancedTransform. Called by Initialize.
+   * If so, we can speed up derivative calculations by only inspecting
+   * the parameters in the support region of a point.
+   */
   virtual void CheckForAdvancedTransform( void );
 
   /** Check if the transform is a B-spline. Called by Initialize. */

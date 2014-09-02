@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkAdvancedKappaStatisticImageToImageMetric_h
 #define __itkAdvancedKappaStatisticImageToImageMetric_h
 
@@ -23,7 +22,7 @@ namespace itk
 /** \class AdvancedKappaStatisticImageToImageMetric
  * \brief Computes similarity between two objects to be registered
  *
- * This Class is templated over the type of the fixed and moving
+ * This class is templated over the type of the fixed and moving
  * images to be compared.  The metric here is designed for matching
  * pixels in two images with the same exact value.  Only one value can
  * be considered (the default is 255) and can be specified with the
@@ -251,7 +250,6 @@ private:
     SizeValueType         st_AreaIntersection;
     DerivativeType        st_DerivativeSum1;
     DerivativeType        st_DerivativeSum2;
-    //TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, KappaGetValueAndDerivativePerThreadStruct,
     PaddedKappaGetValueAndDerivativePerThreadStruct );

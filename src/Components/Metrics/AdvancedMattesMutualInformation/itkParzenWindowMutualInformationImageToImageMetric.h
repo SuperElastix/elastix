@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __itkParzenWindowMutualInformationImageToImageMetric_H__
 #define __itkParzenWindowMutualInformationImageToImageMetric_H__
 
@@ -43,7 +42,7 @@ namespace itk
  * AdvancedImageToImageMetric, which means that:
  * \li It uses the ImageSampler-framework
  * \li It makes use of the compact support of B-splines, in case of B-spline transforms.
- * \li Image derivatives are computed using either the B-spline interpolator's implementation
+ * \li Image derivatives are computed using either the B-spline interpolator implementation
  * or by nearest neighbor interpolation of a precomputed central difference image.
  * \li A minimum number of samples that should map within the moving image (mask) can be specified.
  *

@@ -445,10 +445,11 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   DerivativeType               imageJacobian( nzji.size() );
 
   /** Get a handle to the pre-allocated derivative for the current thread.
-   * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
+   * The initialization is performed at the beginning of each resolution in
+   * InitializeThreadingParameters(), and at the end of each iteration in
+   * AfterThreadedGetValueAndDerivative() and the accumulate functions.
    */
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero ); // needed?
 
   /** Declare and allocate arrays for Jacobian preconditioning. */
   DerivativeType jacobianPreconditioner, preconditioningDivisor;
@@ -513,8 +514,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       RealType fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()
-        ->Evaluate( fixedImageValue );
+      fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
       movingImageValue = this->GetMovingImageLimiter()
         ->Evaluate( movingImageValue, movingImageDerivative );
 
@@ -563,7 +563,6 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   /** If desired, apply the technique introduced by Tustison. */
   if( this->GetUseJacobianPreconditioning() )
   {
-    //DerivativeValueType * derivit = derivative.begin();
     DerivativeValueType * derivit = derivative.begin();
     DerivativeValueType * divisit = preconditioningDivisor.begin();
 
