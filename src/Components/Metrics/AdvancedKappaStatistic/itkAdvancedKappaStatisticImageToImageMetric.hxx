@@ -639,10 +639,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
     temp->st_Coefficient2      = tmp2;
     temp->st_DerivativePointer = derivative.begin();
 
-    typename ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
-    local_threader->SingleMethodExecute();
+    this->m_Threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
+    this->m_Threader->SingleMethodExecute();
 
     delete temp;
   }

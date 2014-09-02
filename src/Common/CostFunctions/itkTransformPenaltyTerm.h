@@ -129,9 +129,6 @@ protected:
   /** The destructor. */
   virtual ~TransformPenaltyTerm() {}
 
-  /** PrintSelf. */
-  //void PrintSelf( std::ostream& os, Indent indent ) const;
-
   /** Typedef's for the B-spline transform. */
   typedef AdvancedBSplineDeformableTransform<
     ScalarType, FixedImageDimension, 3 >          BSplineTransformType;

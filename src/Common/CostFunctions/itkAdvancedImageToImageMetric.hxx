@@ -897,15 +897,12 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::LaunchGetValueAndDerivativeThreaderCallback( void ) const
 {
-  /** Setup local threader. */
-  // \todo: is a global threader better performance-wise? check
-  typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-  local_threader->SetSingleMethod( this->GetValueAndDerivativeThreaderCallback,
+  /** Setup threader. */
+  this->m_Threader->SetSingleMethod( this->GetValueAndDerivativeThreaderCallback,
     const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
 
   /** Launch. */
-  local_threader->SingleMethodExecute();
+  this->m_Threader->SingleMethodExecute();
 
 } // end LaunchGetValueAndDerivativeThreaderCallback()
 

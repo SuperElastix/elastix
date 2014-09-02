@@ -305,10 +305,8 @@ GradientDescentOptimizer2
     temp->t_Optimizer   = this;
 
     /** Call multi-threaded AdvanceOneStep(). */
-    ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_Threader->GetNumberOfThreads() );
-    local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
-    local_threader->SingleMethodExecute();
+    this->m_Threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
+    this->m_Threader->SingleMethodExecute();
 
     delete temp;
   }

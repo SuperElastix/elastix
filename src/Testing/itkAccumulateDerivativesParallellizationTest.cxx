@@ -109,11 +109,9 @@ public:
       this->m_ThreaderMetricParameters.st_DerivativePointer   = derivative.begin();
       this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-      ThreaderType::Pointer local_threader = ThreaderType::New();
-      local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-      local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
+      this->m_Threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
         const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
-      local_threader->SingleMethodExecute();
+      this->m_Threader->SingleMethodExecute();
     }
 #ifdef ELASTIX_USE_OPENMP
     // compute multi-threadedly with openmp

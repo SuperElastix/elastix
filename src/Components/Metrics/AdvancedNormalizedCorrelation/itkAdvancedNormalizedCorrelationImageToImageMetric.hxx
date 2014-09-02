@@ -764,10 +764,8 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     temp->st_InvertedDenominator = 1.0 / denom;
     temp->st_DerivativePointer   = derivative.begin();
 
-    typename ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
-    local_threader->SingleMethodExecute();
+    this->m_Threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
+    this->m_Threader->SingleMethodExecute();
 
     delete temp;
   }
