@@ -100,6 +100,12 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
       xm[ dim ]          = 2.0 * this->m_EndIndex[ dim ] - x[ dim ];
       deriv_sign[ dim ] *= -1.0;
     }
+
+    /** Separately deal with cases on the image edge. */
+    if( Math::FloatAlmostEqual( xm[ dim ], static_cast<ContinuousIndexValueType>( this->m_EndIndex[ dim ] ) ) )
+    {
+      xm[ dim ] -= 0.000001;
+    }
   }
   // if this is mirrored again outside the image domain, then too bad.
 
@@ -178,6 +184,12 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
     {
       xm[ dim ]          = 2.0 * this->m_EndIndex[ dim ] - x[ dim ];
       deriv_sign[ dim ] *= -1.0;
+    }
+
+    /** Separately deal with cases on the image edge. */
+    if( Math::FloatAlmostEqual( xm[ dim ], static_cast<ContinuousIndexValueType>( this->m_EndIndex[ dim ] ) ) )
+    {
+      xm[ dim ] -= 0.000001;
     }
   }
   // if this is mirrored again outside the image domain, then too bad.

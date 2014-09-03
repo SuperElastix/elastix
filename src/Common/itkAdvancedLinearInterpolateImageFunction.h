@@ -35,6 +35,17 @@ namespace itk
  * boundary condition, this class implements a mirroring boundary condition,
  * which mimics the BSplineInterpolateImageFunction.
  *
+ * Edge cases, i.e. points exactly on the right most edge of the image,
+ * need to be dealt with separately. In this implementation we subtract a
+ * small number from the continuous index and interpolate at that position.
+ * Alternatively, you would need to implement 7 different possibilities in
+ * 3D, e.g.:
+ *   x[0] is at end index           -> interpolate in x-y plane
+ *   x[0] and x[1] are at end index -> interpolate along z line
+ *   all are at end index           -> nearest neighbor interpolation
+ * We opt to subtract a small number from x, which is computationally efficient,
+ * gives cleaner code, and almost exactly the same interpolated value.
+ *
  * \sa VectorAdvancedLinearInterpolateImageFunction
  *
  * \ingroup ImageFunctions ImageInterpolators

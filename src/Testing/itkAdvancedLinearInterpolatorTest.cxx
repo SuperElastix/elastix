@@ -68,6 +68,7 @@ TestInterpolators( void )
     origin[ i ]  = randomNum->GetUniformVariate( -1, 0 );
   }
   RegionType region; region.SetSize( size );
+
   /** Make sure to test for non-identity direction cosines. */
   DirectionType direction; direction.Fill( 0.0 );
   if( Dimension == 2 )
@@ -155,6 +156,8 @@ TestInterpolators( void )
       }
     }
   }
+
+  /** Compare results. */
   OutputType          valueLin, valueLinA, valueBSpline, valueBSpline2;
   CovariantVectorType derivLinA, derivBSpline, derivBSpline2;
   for( unsigned int i = 0; i < count; i++ )
