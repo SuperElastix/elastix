@@ -1,0 +1,9 @@
+ADD_ELXCOMPONENT( RecursiveBSplineTransform
+ elxRecursiveBSplineTransform.h
+ elxRecursiveBSplineTransform.hxx
+ elxRecursiveBSplineTransform.cxx
+ itkCyclicBSplineDeformableTransform.h
+ itkCyclicBSplineDeformableTransform.hxx
+ itkCyclicGridScheduleComputer.h
+ itkCyclicGridScheduleComputer.hxx )
+

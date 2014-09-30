@@ -1,0 +1,7 @@
+ADD_ELXCOMPONENT( RecursiveBSplineStackTransform
+ elxRecursiveBSplineStackTransform.h
+ elxRecursiveBSplineStackTransform.hxx
+ elxRecursiveBSplineStackTransform.cxx
+ itkStackTransform.h
+ itkStackTransform.hxx )
+
