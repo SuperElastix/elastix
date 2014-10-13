@@ -29,8 +29,6 @@ template <class TElastix>
 AffineLogStackTransform<TElastix>
 ::AffineLogStackTransform()
 {
-     elxout << "Constructor" << std::endl;
-
 } // end Constructor
 
 /**
@@ -40,8 +38,6 @@ template <class TElastix>
 unsigned int AffineLogStackTransform<TElastix>
 ::InitializeAffineLogTransform()
 {
-    elxout << "InitializeAffineLogTransform" << std::endl;
-
     /** Initialize the m_AffineDummySubTransform */
     this->m_AffineLogDummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
 
@@ -62,8 +58,6 @@ template <class TElastix>
 int AffineLogStackTransform<TElastix>
 ::BeforeAll( void )
 {
-  elxout << "BeforeAll" << std::endl;
-
   /** Initialize affine transform. */
   return InitializeAffineLogTransform();
 }
@@ -75,8 +69,6 @@ int AffineLogStackTransform<TElastix>
 template <class TElastix>
 void AffineLogStackTransform<TElastix>::BeforeRegistration( void )
 {
-  elxout << "BeforeRegistration" << std::endl;
-
   /** Task 1 - Set the stack transform parameters. */
 
   /** Determine stack transform settings. Here they are based on the fixed image. */
@@ -118,9 +110,6 @@ template <class TElastix>
 void AffineLogStackTransform<TElastix>
 ::ReadFromFile( void )
 {
-
-  elxout << "ReadFromFile" << std::endl;
-
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
   this->GetConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
       "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0 );
@@ -156,7 +145,6 @@ void AffineLogStackTransform<TElastix>
       << "transform parameter file" << std::endl;
     itkExceptionMacro( << "Transform parameter file is corrupt.")
   }
-        elxout << "corp: " << RDcenterOfRotationPoint << std::endl;
 
   this->InitializeAffineLogTransform();
 
@@ -187,8 +175,6 @@ template <class TElastix>
 void AffineLogStackTransform<TElastix>
 ::WriteToFile( const ParametersType & param ) const
 {
-
-  elxout << "WriteToFile" << std::endl;
 
   /** Call the WriteToFile from the TransformBase. */
   this->Superclass2::WriteToFile( param );
@@ -226,8 +212,6 @@ void AffineLogStackTransform<TElastix>
 template <class TElastix>
 void AffineLogStackTransform<TElastix>::InitializeTransform()
 {
-   elxout << "InitializeTransform" << std::endl;
-
    /** Set all parameters to zero (no rotations, no translation). */
    this->m_AffineLogDummySubTransform->SetIdentity();
 
@@ -297,13 +281,9 @@ void AffineLogStackTransform<TElastix>::InitializeTransform()
         {
             centerOfRotationIndex[ k ] = (fixedImageSize[ k ]-1.0)/2.0;
         }
-        std::cout << "centerOfRotationIndex: " << centerOfRotationIndex << std::endl;
-
         /** Convert from continuous index to physical point */
         this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
             TransformContinuousIndexToPhysicalPoint( centerOfRotationIndex, TransformedCenterOfRotation );
-
-        std::cout << "TransformedcenterOfRotation: " << TransformedCenterOfRotation << std::endl;
 
         for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
         {
@@ -311,16 +291,12 @@ void AffineLogStackTransform<TElastix>::InitializeTransform()
         }
 
         this->m_AffineLogDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
-        elxout << "Center of rotation: " << RDTransformedCenterOfRotation << std::endl;
-        elxout << "center of rotation is transformed from: " << centerOfRotationIndex << "to :" <<
-            RDTransformedCenterOfRotation << std::endl;
     }
 
     /** Set the center of rotation if it was entered by the user. */
     if ( centerGivenAsPoint )
     {
         this->m_AffineLogDummySubTransform->SetCenter( RDcenterOfRotationPoint );
-        elxout << "Center of rotation point as entered by user: " << RDcenterOfRotationPoint << std::endl;
     }
     if( centerGivenAsIndex)
     {
@@ -332,8 +308,6 @@ void AffineLogStackTransform<TElastix>::InitializeTransform()
             RDTransformedCenterOfRotation[ k ] = TransformedCenterOfRotation[ k ];
         }
         this->m_AffineLogDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
-        elxout << "center of rotation, as entered by the user, is transformed from: " << centerOfRotationIndex << "to :" <<
-            RDTransformedCenterOfRotation << std::endl;
     }
 
   /** Set the translation to zero */
@@ -358,8 +332,6 @@ template <class TElastix>
 void AffineLogStackTransform<TElastix>
 ::SetScales( void )
 {
-    elxout << "SetScales" << std::endl;
-
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();
   ScalesType newscales( N );
@@ -592,11 +564,7 @@ bool AffineLogStackTransform<TElastix>
   dummyImage->TransformContinuousIndexToPhysicalPoint(
     RDcenterOfRotationIndex, rotationPoint );
 
-  /** Successfully read centerOfRotation       elxout << "I hope you don't print this" << std::endl;
-as Index. */
   return true;
-  elxout << "I hope you don't print this" << std::endl;
-
 } // end ReadCenterOfRotationIndex()
 
 

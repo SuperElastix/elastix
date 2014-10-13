@@ -18,7 +18,7 @@
 #include "elxIncludes.h"
 #include "itkSumOfPairwiseCorrelationCoefficientsMetricFast.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
-#include "../Transforms/StackTransform/itkStackTransform.h"
+#include "itkStackTransform.h"
 
 #include "elxTimer.h"
 

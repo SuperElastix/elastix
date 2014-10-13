@@ -126,7 +126,6 @@ namespace elastix
         }
       }
     }
-    elxout << "end BeforeEachResolution" << std::endl;
 
   } // end BeforeEachResolution
 

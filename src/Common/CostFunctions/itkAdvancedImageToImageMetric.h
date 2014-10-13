@@ -312,6 +312,7 @@ protected:
   typedef typename LinearInterpolatorType::Pointer              LinearInterpolatorPointer;
   typedef RecursiveBSplineInterpolateImageFunctionWrapper<
   MovingImageType, CoordinateRepresentationType, double>        RecursiveBSplineInterpolatorType;
+  typedef typename RecursiveBSplineInterpolatorType::Pointer    RecursiveBSplineInterpolatorPointer;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef GradientImageFilter<
     MovingImageType, RealType, RealType >                        CentralDifferenceGradientFilterType;
@@ -413,7 +414,7 @@ protected:
     TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValueAndDerivativePerThreadStruct,
-    PaddedGetValueAndDerivativePerThreadStruct );
+   PaddedGetValueAndDerivativePerThreadStruct );
   itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedGetValueAndDerivativePerThreadStruct,
     AlignedGetValueAndDerivativePerThreadStruct );
   mutable AlignedGetValueAndDerivativePerThreadStruct * m_GetValueAndDerivativePerThreadVariables;

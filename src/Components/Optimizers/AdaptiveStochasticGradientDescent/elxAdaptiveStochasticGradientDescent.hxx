@@ -557,6 +557,9 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   /** Get the user input. */
   const double delta = this->GetMaximumStepLength();
+  this->m_UseRandomSamplerForJacobianMeasurements = true;
+  this->GetConfiguration()->ReadParameter( this->m_UseRandomSamplerForJacobianMeasurements,
+    "UseRandomSamplerForJacobianMeasurements", this->GetComponentLabel(), 0, 0 );
 
   /** Compute the Jacobian terms. */
   double TrC    = 0.0;
@@ -590,6 +593,15 @@ AdaptiveStochasticGradientDescent< TElastix >
     this->m_NumberOfBandStructureSamples );
   computeJacobianTerms->SetNumberOfJacobianMeasurements(
     this->m_NumberOfJacobianMeasurements );
+
+  if(m_UseRandomSamplerForJacobianMeasurements)
+  {
+      computeJacobianTerms->SetUseRandomSamplerForJacobianMeasurements(true);
+  }
+  else
+  {
+      computeJacobianTerms->SetUseRandomSamplerForJacobianMeasurements(false);
+  }
 
   /** Check if use scales. */
   bool useScales = this->GetUseScales();
@@ -699,6 +711,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     this->SetSigmoidMin( fmin );
     this->SetSigmoidScale( omega );
   }
+
 } // end AutomaticParameterEstimationOriginal()
 
 
@@ -717,6 +730,10 @@ AdaptiveStochasticGradientDescent< TElastix >
   /** Get current position to start the parameter estimation. */
   this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
     this->GetCurrentPosition() );
+
+  this->m_UseRandomSamplerForJacobianMeasurements = true;
+  this->GetConfiguration()->ReadParameter( this->m_UseRandomSamplerForJacobianMeasurements,
+    "UseRandomSamplerForJacobianMeasurements", this->GetComponentLabel(), 0, 0 );
 
   /** Get the user input. */
   const double delta = this->GetMaximumStepLength();
@@ -743,6 +760,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   computeDisplacementDistribution->SetCostFunction( this->m_CostFunction );
   computeDisplacementDistribution->SetNumberOfJacobianMeasurements(
     this->m_NumberOfJacobianMeasurements );
+  computeDisplacementDistribution->SetUseRandomSamplerForJacobianMeasurements( this->m_UseRandomSamplerForJacobianMeasurements );
 
   /** Check if use scales. */
   if( this->GetUseScales() )
@@ -771,6 +789,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   elxout << "  Computing the displacement distribution took "
          << timer4->PrintElapsedTimeDHMS()
          << std::endl;
+
 
   /** Initial of the variables. */
   double       a     = 0.0;
@@ -811,15 +830,27 @@ AdaptiveStochasticGradientDescent< TElastix >
     elxout << "  Compute the noise compensation took "
            << timer5->PrintElapsedTimeDHMS()
            << std::endl;
+    elxout << "noisefactor: " << noisefactor << std::endl;
+    elxout << "sigma4: " << sigma4 << std::endl;
+    elxout << "a_max: " << delta * vcl_pow( A + 1.0, alpha ) / jacg << std::endl;
+    elxout << std::endl;
+    elxout << "delta: " << delta << std::endl;
+    elxout << "A: " << A << std::endl;
+    elxout << "alpha: " << alpha << std::endl;
+    elxout << "jacg: " << jacg << std::endl;
+
   }
   else
   {
     a = delta * vcl_pow( A + 1.0, alpha ) / jacg;
   }
 
+
+
   /** Set parameters in superclass. */
   this->SetParam_a( a );
   this->SetParam_alpha( alpha );
+
 
 } // end AutomaticParameterEstimationUsingDisplacementDistribution()
 

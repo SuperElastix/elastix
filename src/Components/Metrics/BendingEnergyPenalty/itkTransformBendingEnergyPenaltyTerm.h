@@ -21,7 +21,7 @@ namespace itk
 {
 
 /**
- * \class TransformBendingEnergyPenaltyTerm
+ * \class StackTransformBendingEnergyPenaltyTerm
  * \brief A cost function that calculates the bending energy
  * of a transformation.
  *

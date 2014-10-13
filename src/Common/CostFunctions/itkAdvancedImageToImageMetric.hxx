@@ -463,7 +463,6 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     this->m_InterpolatorIsReducedBSpline = true;
     this->m_ReducedBSplineInterpolator   = testPtr3;
     itkDebugMacro( "Interpolator is ReducedBSpline" );
-    std::cout << "Interpolator is ReducedBSpline" << std::endl;
   }
   else
   {

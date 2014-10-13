@@ -304,7 +304,7 @@ public:
         for(unsigned int n= 0; n <= dim; ++n)
         {
             derivativeAndValue[n] = 0.0;
-            derivativeAndValueNext[n] = 0.0; //TODO: check that this can be removed
+            //derivativeAndValueNext[n] = 0.0; //TODO: check that this can be removed
         }
 
         for (unsigned int k = 0; k <= splineOrder; k++)

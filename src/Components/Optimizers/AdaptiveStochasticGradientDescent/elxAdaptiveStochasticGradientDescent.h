@@ -409,6 +409,7 @@ private:
   SizeValueType m_CurrentNumberOfSamplingAttempts;
   SizeValueType m_PreviousErrorAtIteration;
   bool          m_AutomaticParameterEstimationDone;
+  bool          m_UseRandomSamplerForJacobianMeasurements;
 
   /** Private variables for band size estimation of covariance matrix. */
   SizeValueType m_MaxBandCovSize;

@@ -29,6 +29,8 @@ namespace itk
 template <class TFixedImage, class TMovingImage>
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 ::SumOfPairwiseCorrelationCoefficientsMetric():
+    m_SampleLastDimensionRandomly( false ),
+    m_NumSamplesLastDimension( 10 ),
     m_SubtractMean( false ),
     m_TransformIsStackTransform( false )
 {
@@ -53,6 +55,12 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     /** Retrieve slowest varying dimension and its size. */
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
     const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+
+    /** Check num last samples. */
+    if ( this->m_NumSamplesLastDimension > lastDimSize )
+    {
+        this->m_NumSamplesLastDimension = lastDimSize;
+    }
 
 } // end Initialize
 
@@ -145,6 +153,19 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
 {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
+    bool UseGetValueAndDerivative = false;
+
+    if(UseGetValueAndDerivative)
+    {
+        typedef typename DerivativeType::ValueType        DerivativeValueType;
+        const unsigned int P = this->GetNumberOfParameters();
+        MeasureType dummymeasure = NumericTraits< MeasureType >::Zero;
+        DerivativeType dummyderivative = DerivativeType( P );
+        dummyderivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+
+        this->GetValueAndDerivative( parameters, dummymeasure, dummyderivative );
+        return dummymeasure;
+    }
 
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -164,13 +185,34 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
     /** Retrieve slowest varying dimension and its size. */
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-    const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+    const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+    const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
 
     typedef vnl_matrix< RealType > MatrixType;
 
-     /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
+    /** Get real last dim samples. */
+    const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
+
+    /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
     unsigned int NumberOfSamples = sampleContainer->Size();
-    MatrixType datablock( NumberOfSamples, G );
+    MatrixType datablock( NumberOfSamples, realNumLastDimPositions );
+
+    /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
+    std::vector<int> lastDimPositions;
+
+    /** Determine random last dimension positions if needed. */
+
+    if ( this->m_SampleLastDimensionRandomly )
+    {
+        SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
+    }
+    else
+    {
+        for ( unsigned int i = 0; i < lastDimSize; ++i )
+        {
+            lastDimPositions.push_back( i );
+        }
+    }
 
     /** Initialize dummy loop variable */
     unsigned int pixelIndex = 0;
@@ -190,14 +232,14 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
         unsigned int numSamplesOk = 0;
 
         /** Loop over t */
-        for ( unsigned int d = 0; d < G; ++d )
+        for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
         {
             /** Initialize some variables. */
             RealType movingImageValue;
             MovingImagePointType mappedPoint;
 
             /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ lastDim ] = d;
+            voxelCoord[ lastDim ] = lastDimPositions[ d ];
 
             /** Transform sampled point back to world coordinates. */
             this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
@@ -225,7 +267,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
         } /** end loop over t */
 
-        if( numSamplesOk == G )
+        if( numSamplesOk == realNumLastDimPositions )
         {
             pixelIndex++;
             this->m_NumberOfPixelsCounted++;
@@ -237,7 +279,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     this->CheckNumberOfSamples(
                 NumberOfSamples, this->m_NumberOfPixelsCounted );
 
-    MatrixType A( datablock.extract( pixelIndex, G ) );
+    MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
 
     /** Calculate mean of from columns */
     vnl_vector< double > mean( A.cols() );
@@ -289,7 +331,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
     K /=  static_cast< RealType > ( A.rows() - static_cast< RealType > (1.0) );
 
-    measure = 1.0-(K.fro_norm()/double(G));
+    measure = 1.0-(K.fro_norm()/double(realNumLastDimPositions));
 
     /** Return the measure value. */
     return measure;
@@ -353,22 +395,41 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
     /** Retrieve slowest varying dimension and its size. */
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-    const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+    const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+    const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
 
     typedef vnl_matrix< RealType >                  MatrixType;
     typedef vnl_matrix< DerivativeValueType > DerivativeMatrixType;
 
     std::vector< FixedImagePointType > SamplesOK;
 
+    /** Get real last dim samples. */
+    const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
+
     /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
     unsigned int NumberOfSamples = sampleContainer->Size();
-    MatrixType datablock( NumberOfSamples, G );
+    MatrixType datablock( NumberOfSamples, realNumLastDimPositions );
 
     /** Initialize dummy loop variables */
     unsigned int pixelIndex = 0;
 
     /** Initialize image sample matrix . */
     datablock.fill( itk::NumericTraits< double >::Zero );
+
+    /** Determine random last dimension positions if needed. */
+    /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
+    std::vector<int> lastDimPositions;
+    if ( this->m_SampleLastDimensionRandomly )
+    {
+        SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
+    }
+    else
+    {
+        for ( unsigned int i = 0; i < lastDimSize; ++i )
+        {
+            lastDimPositions.push_back( i );
+        }
+    }
 
     for ( fiter = fbegin; fiter != fend; ++fiter )
     {
@@ -379,17 +440,18 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
         FixedImageContinuousIndexType voxelCoord;
         this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
+        const unsigned int realNumLastDimPositions = lastDimPositions.size();
         unsigned int numSamplesOk = 0;
 
         /** Loop over t */
-        for ( unsigned int d = 0; d < G; ++d )
+        for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
         {
             /** Initialize some variables. */
             RealType movingImageValue;
             MovingImagePointType mappedPoint;
 
             /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ lastDim ] = d;
+            voxelCoord[ lastDim ] = lastDimPositions[ d ];
 
             /** Transform sampled point back to world coordinates. */
             this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
@@ -418,7 +480,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
         } // end loop over t
 
-        if( numSamplesOk == G )
+        if( numSamplesOk == realNumLastDimPositions )
         {
             SamplesOK.push_back(fixedPoint);
             pixelIndex++;
@@ -429,8 +491,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
 
-    MatrixType A( datablock.extract( pixelIndex, G ) );
+    MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
 
     /** Calculate mean of from columns */
     vnl_vector< RealType > mean( A.cols() );
@@ -497,18 +560,18 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
     DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-    std::vector<NonZeroJacobianIndicesType> nzjis( G, NonZeroJacobianIndicesType() );
+    std::vector<NonZeroJacobianIndicesType> nzjis( realNumLastDimPositions, NonZeroJacobianIndicesType() );
 
     /** Sub components of metric derivative */
-    DerivativeMatrixType meandAdmu( G, P ); // mean of a column of the derivative of A
-    DerivativeMatrixType dSigmainvdmu( G, P );
-    DerivativeMatrixType meandSigmainvdmu( G, P );
+    DerivativeMatrixType meandAdmu( realNumLastDimPositions, P ); // mean of a column of the derivative of A
+    DerivativeMatrixType dSigmainvdmu( realNumLastDimPositions, P );
+    DerivativeMatrixType meandSigmainvdmu( realNumLastDimPositions, P );
 
     vnl_vector< DerivativeValueType > sumAtZscoredAzscoredmu( P );
     vnl_vector< DerivativeValueType > sumAtZscoreAmmdSigmadmu( P );
     vnl_vector< DerivativeValueType > sumdSigmadmuAtmmAzscore( P );
     vnl_vector< DerivativeValueType > meansumAtZscoredAzscoredmu( P );
-    vnl_vector< DerivativeValueType > dSigmainvdmu_part1( G );
+    vnl_vector< DerivativeValueType > dSigmainvdmu_part1( realNumLastDimPositions );
     
     DerivativeType dMTdmu;
 
@@ -525,7 +588,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     unsigned int startSamplesOK;
     startSamplesOK = 0;
 
-    for(unsigned int d = 0; d < G; d++)
+    for(unsigned int d = 0; d < realNumLastDimPositions; d++)
     {
         dSigmainvdmu_part1[ d ] = pow(std[ d ],-3);
     }
@@ -545,7 +608,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
         FixedImageContinuousIndexType voxelCoord;
         this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
-        for ( unsigned int d = 0; d < G; ++d )
+        const unsigned int realNumLastDimPositions = lastDimPositions.size();
+
+        for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
         {
             /** Initialize some variables. */
             RealType movingImageValue;
@@ -553,7 +618,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
             MovingImageDerivativeType movingImageDerivative;
 
             /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ lastDim ] = d;
+            voxelCoord[ lastDim ] = lastDimPositions[ d ];
 
             /** Transform sampled point back to world coordinates. */
             this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
@@ -584,7 +649,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
     for(unsigned int i = 0; i < A.rows(); i++)
     {
-        for (unsigned int d = 0; d < G; ++d )
+        for (unsigned int d = 0; d < realNumLastDimPositions; ++d )
         {
             for(unsigned int p = 0; p < P; ++p )
             {
@@ -600,7 +665,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     MatrixType KAtZscoreAmm( K*AtZscore*Amm );
 
 
-    for(unsigned int d = 0; d < G; d++)
+    for(unsigned int d = 0; d < realNumLastDimPositions; d++)
     {
         for(unsigned int p = 0; p < P; p++)
         {
@@ -615,9 +680,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
             / ( static_cast < DerivativeValueType > (A.rows()) -
                 static_cast < DerivativeValueType >(1.0) ); //normalize
 
-    derivative = -sumKdKdmu/(K.fro_norm()*RealType(G));
+    derivative = -sumKdKdmu/(K.fro_norm()*RealType(realNumLastDimPositions));
 
-    measure = RealType(1.0-(K.fro_norm()/RealType(G)));
+    measure = RealType(1.0-(K.fro_norm()/RealType(realNumLastDimPositions)));
 
     /** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
@@ -659,12 +724,12 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
      * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
      * the number the time point index.
      */
-            const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / G;
+            const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / lastDimSize;
             DerivativeType mean ( numParametersPerLastDimension );
             mean.Fill( 0.0 );
 
             /** Compute mean per control point. */
-            for ( unsigned int t = 0; t < G; ++t )
+            for ( unsigned int t = 0; t < lastDimSize; ++t )
             {
                 const unsigned int startc = numParametersPerLastDimension * t;
                 for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
@@ -673,10 +738,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
                     mean[ index ] += derivative[ c ];
                 }
             }
-            mean /= static_cast< double >( G );
+            mean /= static_cast< double >( lastDimSize );
 
             /** Update derivative per control point. */
-            for ( unsigned int t = 0; t < G; ++t )
+            for ( unsigned int t = 0; t < lastDimSize; ++t )
             {
                 const unsigned int startc = numParametersPerLastDimension * t;
                 for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
@@ -687,6 +752,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
             }
         }
     }
+
 
     /** Return the measure value. */
     value = measure;

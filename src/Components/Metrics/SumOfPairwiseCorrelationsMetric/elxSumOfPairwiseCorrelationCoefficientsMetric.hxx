@@ -150,8 +150,8 @@ template <class TElastix>
   void SumOfPairwiseCorrelationCoefficientsMetric<TElastix>
   ::AfterEachIteration(void)
   {
-    elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
-    elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
+//    elxout << "normdCdmuperRDimage" << this->m_normdCdmu << std::endl;
+//    elxout << "numberOfSamples" << this->m_NumberOfSamples << std::endl;
    // elxout << "correlationmatrix" << this->m_CorrelationMatrix << std::endl;
   }
 

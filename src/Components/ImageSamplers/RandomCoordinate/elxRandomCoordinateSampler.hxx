@@ -39,25 +39,29 @@ RandomCoordinateSampler< TElastix >
     "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfSamples( numberOfSpatialSamples );
 
-  /** Set up the fixed image interpolator and set the SplineOrder, default value = 1. */
-  unsigned int splineOrder = 1;
-  this->GetConfiguration()->ReadParameter( splineOrder,
-    "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
-  if( splineOrder == 1 )
-  {
-    typedef itk::LinearInterpolateImageFunction<
-      InputImageType, CoordRepType >    LinearInterpolatorType;
-    typename LinearInterpolatorType::Pointer fixedImageLinearInterpolator
-      = LinearInterpolatorType::New();
-    this->SetInterpolator( fixedImageLinearInterpolator );
-  }
-  else
-  {
-    typename DefaultInterpolatorType::Pointer fixedImageBSplineInterpolator
-      = DefaultInterpolatorType::New();
-    fixedImageBSplineInterpolator->SetSplineOrder( splineOrder );
-    this->SetInterpolator( fixedImageBSplineInterpolator );
-  }
+//  bool groupWise = false;
+ // if(this->GetConfiguration()->ReadParameter()(groupWise, "InterpolateRandomCoordinates", this->GetComponentLabel(),level,0))
+ // {
+      /** Set up the fixed image interpolator and set the SplineOrder, default value = 1. */
+      unsigned int splineOrder = 1;
+      this->GetConfiguration()->ReadParameter( splineOrder,
+        "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
+      if( splineOrder == 1 )
+      {
+        typedef itk::LinearInterpolateImageFunction<
+          InputImageType, CoordRepType >    LinearInterpolatorType;
+        typename LinearInterpolatorType::Pointer fixedImageLinearInterpolator
+          = LinearInterpolatorType::New();
+        this->SetInterpolator( fixedImageLinearInterpolator );
+      }
+      else
+      {
+        typename DefaultInterpolatorType::Pointer fixedImageBSplineInterpolator
+          = DefaultInterpolatorType::New();
+        fixedImageBSplineInterpolator->SetSplineOrder( splineOrder );
+        this->SetInterpolator( fixedImageBSplineInterpolator );
+      }
+//  }
 
   /** Set the UseRandomSampleRegion bool. */
   bool useRandomSampleRegion = false;

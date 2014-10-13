@@ -16,6 +16,8 @@
 #define __itkComputeJacobianTerms_h
 
 #include "itkImageGridSampler.h"
+#include "itkImageRandomCoordinateSampler.h"
+#include "itkImageRandomSampler.h"
 #include "itkImageRandomSamplerBase.h"
 #include "itkImageRandomCoordinateSampler.h"
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
@@ -86,6 +88,7 @@ public:
   itkSetMacro( MaxBandCovSize, unsigned int );
   itkSetMacro( NumberOfBandStructureSamples, unsigned int );
   itkSetMacro( NumberOfJacobianMeasurements, SizeValueType );
+  itkSetMacro( UseRandomSamplerForJacobianMeasurements,bool);
 
   /** Set the region over which the metric will be computed. */
   void SetFixedImageRegion( const FixedImageRegionType & region )
@@ -115,6 +118,7 @@ protected:
   TransformPointer           m_Transform;
   ScalesType                 m_Scales;
   bool                       m_UseScales;
+  bool                       m_UseRandomSamplerForJacobianMeasurements;
 
   unsigned int  m_MaxBandCovSize;
   unsigned int  m_NumberOfBandStructureSamples;
@@ -136,6 +140,12 @@ protected:
   typedef typename ImageGridSamplerType
     ::ImageSampleContainerType ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer ImageSampleContainerPointer;
+
+  typedef ImageRandomSampler< FixedImageType >     ImageRandomSamplerType;
+  typedef typename ImageRandomSamplerType::Pointer ImageRandomSamplerPointer;
+
+  typedef ImageRandomCoordinateSampler< FixedImageType >     ImageRandomCoordinateSamplerType;
+  typedef typename ImageRandomCoordinateSamplerType::Pointer ImageRandomCoordinateSamplerPointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   typedef JacobianType                                   TransformJacobianType;

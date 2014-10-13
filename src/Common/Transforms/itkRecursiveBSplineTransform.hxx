@@ -195,7 +195,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 
         this->Modified();
     }
-    std::cout << "Grid region set" << std::endl;
 }
 
 ////TransformPoint 1 argument

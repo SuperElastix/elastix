@@ -67,6 +67,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Get the number of parameters. */
   const unsigned int P = static_cast< unsigned int >(
     this->m_Transform->GetNumberOfParameters() );
+  elxout << "P: " << P << std::endl;
 
   /** Get scales vector */
   const ScalesType & scales = this->GetScales();
@@ -89,6 +90,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const SizeValueType sizejacind
     = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
+
   JacobianType jacj( outdim, sizejacind );
   jacj.Fill( 0.0 );
   NonZeroJacobianIndicesType jacind( sizejacind );
@@ -111,7 +113,6 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     /** Read fixed coordinates and get Jacobian. */
     const FixedImagePointType & point = ( *iter ).Value().m_ImageCoordinates;
     this->m_Transform->GetJacobian( point, jacj, jacind  );
-
     /** Apply scales, if necessary. */
     if( this->GetUseScales() )
     {
@@ -162,6 +163,9 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     /** Compute the sigma of the distribution of JGG_k. */
     double sigma    = 0.0;
     double mean_JGG = sum_jacg / samplenr;
+    elxout << "mean_JGG: " << mean_JGG << std::endl;
+    elxout << "sum_jacg: " << sum_jacg << std::endl;
+    elxout <<"samplenr: " << samplenr << std::endl;
     for( unsigned int i = 0; i < nrofsamples - 1; ++i )
     {
       sigma += vnl_math_sqr( JGG_k[ i ] - mean_JGG );
@@ -182,32 +186,67 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 ::SampleFixedImageForJacobianTerms(
   ImageSampleContainerPointer & sampleContainer )
 {
-  /** Set up grid sampler. */
-  ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
-  sampler->SetInput( this->m_FixedImage );
-  sampler->SetInputImageRegion( this->GetFixedImageRegion() );
-  sampler->SetMask( this->m_FixedImageMask );
+//    /** Set up sampler. */
+//    if(this->m_UseRandomSamplerForJacobianMeasurements)
+//    {
+//        ImageRandomCoordinateSamplerPointer sampler = ImageRandomCoordinateSamplerType::New();
+//        elxout << "ASGD is using a " << sampler->GetNameOfClass()<< " for computing the Jacobian terms." << std::endl;
 
-  /** Determine grid spacing of sampler such that the desired
+//        sampler->SetInput( this->m_FixedImage );
+//        sampler->SetInputImageRegion( this->GetFixedImageRegion() );
+//        sampler->SetMask( this->m_FixedImageMask );
+
+//        /** Determine grid spacing of sampler such that the desired
+//       * NumberOfJacobianMeasurements is achieved approximately.
+//       * Note that the actually obtained number of samples may be lower, due to masks.
+//       * This is taken into account at the end of this function.
+//       */
+//        SizeValueType nrofsamples = this->m_NumberOfJacobianMeasurements;
+//        sampler->SetNumberOfSamples( nrofsamples );
+
+//        /** Get samples and check the actually obtained number of samples. */
+//        sampler->Update();
+//        sampleContainer = sampler->GetOutput();
+//        nrofsamples     = sampleContainer->Size();
+
+//        if( nrofsamples == 0 )
+//        {
+//            itkExceptionMacro(
+//                        << "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
+//                        << ") found to estimate the AdaptiveStochasticGradientDescent parameters." );
+//        }
+//    }
+//    else
+//    {
+        /** Set up grid sampler. */
+        ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
+
+        elxout << "ASGD is using a " << sampler->GetNameOfClass()<< " for computing the Jacobian terms." << std::endl;
+
+        sampler->SetInput( this->m_FixedImage );
+        sampler->SetInputImageRegion( this->GetFixedImageRegion() );
+        sampler->SetMask( this->m_FixedImageMask );
+
+        /** Determine grid spacing of sampler such that the desired
    * NumberOfJacobianMeasurements is achieved approximately.
    * Note that the actually obtained number of samples may be lower, due to masks.
    * This is taken into account at the end of this function.
    */
-  SizeValueType nrofsamples = this->m_NumberOfJacobianMeasurements;
-  sampler->SetNumberOfSamples( nrofsamples );
+        SizeValueType nrofsamples = this->m_NumberOfJacobianMeasurements;
+        sampler->SetNumberOfSamples( nrofsamples );
 
-  /** Get samples and check the actually obtained number of samples. */
-  sampler->Update();
-  sampleContainer = sampler->GetOutput();
-  nrofsamples     = sampleContainer->Size();
+        /** Get samples and check the actually obtained number of samples. */
+        sampler->Update();
+        sampleContainer = sampler->GetOutput();
+        nrofsamples     = sampleContainer->Size();
 
-  if( nrofsamples == 0 )
-  {
-    itkExceptionMacro(
-        << "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
-        << ") found to estimate the AdaptiveStochasticGradientDescent parameters." );
-  }
-
+        if( nrofsamples == 0 )
+        {
+            itkExceptionMacro(
+                        << "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
+                        << ") found to estimate the AdaptiveStochasticGradientDescent parameters." );
+        }
+    //}
 } // end SampleFixedImageForJacobianTerms()
 
 

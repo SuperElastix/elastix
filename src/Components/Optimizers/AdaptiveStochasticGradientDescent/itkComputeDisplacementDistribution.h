@@ -17,6 +17,7 @@
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 
 #include "itkImageGridSampler.h"
+#include "itkImageRandomSampler.h"
 #include "itkImageRandomSamplerBase.h"
 #include "itkImageRandomCoordinateSampler.h"
 
@@ -87,6 +88,7 @@ public:
 
   /** Set some parameters. */
   itkSetMacro( NumberOfJacobianMeasurements, SizeValueType );
+  itkSetMacro( UseRandomSamplerForJacobianMeasurements, bool );
 
   /** Set the region over which the metric will be computed. */
   void SetFixedImageRegion( const FixedImageRegionType & region )
@@ -116,6 +118,8 @@ protected:
   TransformPointer                        m_Transform;
   ScaledSingleValuedCostFunction::Pointer m_CostFunction;
   SizeValueType                           m_NumberOfJacobianMeasurements;
+  bool                                    m_UseRandomSamplerForJacobianMeasurements;
+
 
   typedef typename  FixedImageType::IndexType   FixedImageIndexType;
   typedef typename  FixedImageType::PointType   FixedImagePointType;
@@ -133,6 +137,13 @@ protected:
   typedef typename ImageGridSamplerType
     ::ImageSampleContainerType ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer ImageSampleContainerPointer;
+
+  typedef ImageRandomSampler< FixedImageType >     ImageRandomSamplerType;
+  typedef typename ImageRandomSamplerType::Pointer ImageRandomSamplerPointer;
+
+  typedef ImageRandomCoordinateSampler< FixedImageType >     ImageRandomCoordinateSamplerType;
+  typedef typename ImageRandomCoordinateSamplerType::Pointer ImageRandomCoordinateSamplerPointer;
+
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   typedef JacobianType                                   TransformJacobianType;
