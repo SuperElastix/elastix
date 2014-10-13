@@ -1,36 +1,22 @@
-/*=========================================================================
- *
- *  Copyright Insight Software Consortium
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
-/*=========================================================================
- *
- *  Portions of this file are subject to the VTK Toolkit Version 3 copyright.
- *
- *  Copyright (c) Ken Martin, Will Schroeder, Bill Lorensen
- *
- *  For complete copyright, license and disclaimer of warranty information
- *  please refer to the NOTICE file at the top of the ITK source tree.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __itkRecursiveBSplineInterpolateImageFunction_h
 #define __itkRecursiveBSplineInterpolateImageFunction_h
 
-#include <vector>
-
 #include "itkAdvancedInterpolateImageFunction.h"
+
+#include <vector>
 #include "itkImageLinearIteratorWithIndex.h"
 #include "vnl/vnl_matrix.h"
 #include "itkBSplineDecompositionImageFilter.h"
@@ -40,12 +26,17 @@
 
 namespace itk
 {
+/** Declaration of inline class BSplineWeights */
+template< unsigned int SplineOrder, class TCoefficientType = double >
+class BSplineWeights; // MS: move to separate file?
+
+
 /** \class RecursiveBSplineInterpolateImageFunction
  * \brief Evaluates the B-Spline interpolation of an image recursively.  Spline order may be from 0 to 5.
  *
  * This class defines N-Dimension B-Spline transformation, but in a recursive manner, such that it is much
  * faster than the itk class BSplineInterpolateImageFunction. This class is also templated over the spline order.
- * Inline classes are defined to obtain the b-spline weights for the chosen spline order. For backward compatibility
+ * Inline classes are defined to obtain the B-spline weights for the chosen spline order. For backward compatibility
  * reasons a wrapper class was made, which is not templated over the spline order, called
  * RecursiveBSplineInterpolateImageFunctionWrapper.
  *
@@ -62,595 +53,624 @@ namespace itk
  *               Spline order must be set before setting the image.
  *               Uses mirror boundary conditions.
  *               Requires the same order of Spline for each dimension.
- *               Spline is determined in all dimensions, cannot selectively
+ *               Spline is determined in all dimensions, cannot selectively               <-- MS: do not understand this comment
  *                  pick dimension for calculating spline.
  */
-
-/** Declaration of inline class BSplineWeights */
-template <unsigned int splineOrder, class TCoefficientType = double> class BSplineWeights;
 
 template< class TImageType,
           class TCoordRep = double,
           class TCoefficientType = double,
-          unsigned int splineOrder = 3 >
-class ITK_EXPORT RecursiveBSplineInterpolateImageFunction:
-        public AdvancedInterpolateImageFunction< TImageType, TCoordRep >
+          unsigned int SplineOrder = 3 >
+class RecursiveBSplineInterpolateImageFunction :
+  public AdvancedInterpolateImageFunction< TImageType, TCoordRep >
 {
 public:
-    /** Standard class typedefs. */
-    typedef RecursiveBSplineInterpolateImageFunction                   Self;
-    typedef AdvancedInterpolateImageFunction< TImageType, TCoordRep > Superclass;
-    typedef SmartPointer< Self >                              Pointer;
-    typedef SmartPointer< const Self >                        ConstPointer;
+  /** Standard class typedefs. */
+  typedef RecursiveBSplineInterpolateImageFunction                  Self;
+  typedef AdvancedInterpolateImageFunction< TImageType, TCoordRep > Superclass;
+  typedef SmartPointer< Self >                                      Pointer;
+  typedef SmartPointer< const Self >                                ConstPointer;
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro(RecursiveBSplineInterpolateImageFunction, AdvancedInterpolateImageFunction);
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( RecursiveBSplineInterpolateImageFunction, AdvancedInterpolateImageFunction );
 
-    /** New macro for creation of through a Smart Pointer */
-    itkNewMacro(Self);
+  /** New macro for creation of through a Smart Pointer */
+  itkNewMacro( Self );
 
-    /** OutputType typedef support. */
-    typedef typename Superclass::OutputType OutputType;
+  /** OutputType typedef support. */
+  typedef typename Superclass::OutputType OutputType;
 
-    /** InputImageType typedef support. */
-    typedef typename Superclass::InputImageType InputImageType;
+  /** InputImageType typedef support. */
+  typedef typename Superclass::InputImageType InputImageType;
 
-    /** Dimension underlying input image. */
-    itkStaticConstMacro(ImageDimension, unsigned int, Superclass::ImageDimension);
+  /** Dimension underlying input image. */
+  itkStaticConstMacro( ImageDimension, unsigned int, Superclass::ImageDimension );
 
-    /** Index typedef support. */
-    typedef typename Superclass::IndexType IndexType;
+  /** Index typedef support. */
+  typedef typename Superclass::IndexType IndexType;
 
-    /** ContinuousIndex typedef support. */
-    typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
+  /** ContinuousIndex typedef support. */
+  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
 
-    /** PointType typedef support */
-    typedef typename Superclass::PointType PointType;
+  /** PointType typedef support */
+  typedef typename Superclass::PointType PointType;
 
-    /** Iterator typedef support */
-    typedef ImageLinearIteratorWithIndex< TImageType > Iterator;
+  /** Iterator typedef support */
+  typedef ImageLinearIteratorWithIndex< TImageType > Iterator;
 
-    /** Internal Coefficient typedef support */
-    typedef TCoefficientType CoefficientDataType;
-    typedef Image< CoefficientDataType, itkGetStaticConstMacro(ImageDimension) >   CoefficientImageType;
+  /** Internal Coefficient typedef support */
+  typedef TCoefficientType CoefficientDataType;
+  typedef Image< CoefficientDataType, itkGetStaticConstMacro(ImageDimension) >   CoefficientImageType;
 
-    /** Define filter for calculating the BSpline coefficients */
-    typedef BSplineDecompositionImageFilter< TImageType, CoefficientImageType > CoefficientFilter;
-    typedef typename CoefficientFilter::Pointer    CoefficientFilterPointer;
+  /** Define filter for calculating the BSpline coefficients */
+  typedef BSplineDecompositionImageFilter< TImageType, CoefficientImageType > CoefficientFilter;
+  typedef typename CoefficientFilter::Pointer    CoefficientFilterPointer;
 
-    /** Derivative typedef support */
-    //typedef CovariantVector< OutputType, itkGetStaticConstMacro(ImageDimension) >  CovariantVectorType;
-    typedef typename Superclass::CovariantVectorType CovariantVectorType;
+  /** Derivative typedef support */
+  //typedef CovariantVector< OutputType, itkGetStaticConstMacro(ImageDimension) >  CovariantVectorType;
+  typedef typename Superclass::CovariantVectorType CovariantVectorType;
 
-    /** Evaluate the function at a ContinuousIndex position.
-     *
-     * Returns the B-Spline interpolated image intensity at a
-     * specified point position. No bounds checking is done.
-     * The point is assume to lie within the image buffer.
-     *
-     * ImageFunction::IsInsideBuffer() can be used to check bounds before
-     * calling the method. */
-    OutputType Evaluate(const PointType & point) const
-    {
-        ContinuousIndexType index;
-        this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
-        return ( this->EvaluateAtContinuousIndex(index) );
-    }
+  /** Evaluate the function at a ContinuousIndex position.
+   *
+   * Returns the B-Spline interpolated image intensity at a
+   * specified point position. No bounds checking is done.
+   * The point is assume to lie within the image buffer.
+   *
+   * ImageFunction::IsInsideBuffer() can be used to check bounds before
+   * calling the method.
+   */
+  OutputType Evaluate( const PointType & point ) const // MS: move implementation to hxx file
+  {
+    ContinuousIndexType index;
+    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
+    return ( this->EvaluateAtContinuousIndex(index) );
+  }
 
-    OutputType Evaluate(const PointType & point,  ThreadIdType threadID) const
-    {
-        ContinuousIndexType index;
-        this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point,  index);        
-        return ( this->EvaluateAtContinuousIndex(index) );
-    }
+  // MS: Why did you create functions that have a threadID?
+  // They only use the non-threaded version.
+  // If you really need them for compatibility with the ITK, which I am not sure is needed,
+  // you can move this implementation to AdvancedInterpolateImageFunction
+  OutputType Evaluate( const PointType & point, ThreadIdType threadID ) const // MS: move implementation to hxx
+  {
+    ContinuousIndexType index;
+    this->GetInputImage()->TransformPhysicalPointToContinuousIndex( point,  index );
+    return this->EvaluateAtContinuousIndex( index );
+  }
 
-    OutputType EvaluateAtContinuousIndex(const ContinuousIndexType & index) const;
+  OutputType EvaluateAtContinuousIndex( const ContinuousIndexType & index ) const;
 
-    OutputType EvaluateAtContinuousIndex(const ContinuousIndexType & index, ThreadIdType threadID) const
-    {
-        return ( this->EvaluateAtContinuousIndex(index) );
-    }
+  // MS: delete, or move to AdvancedInterpolateImageFunction
+  OutputType EvaluateAtContinuousIndex( const ContinuousIndexType & index, ThreadIdType threadID ) const // MS: delete??
+  {
+    return ( this->EvaluateAtContinuousIndex(index) );
+  }
 
-    CovariantVectorType EvaluateDerivative(const PointType & point) const
-    {
-        ContinuousIndexType index;
-        this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
-        return ( this->EvaluateDerivativeAtContinuousIndex(index) );
-    }
+  CovariantVectorType EvaluateDerivative(const PointType & point) const // MS: move implementation to hxx
+  {
+    ContinuousIndexType index;
+    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
+    return ( this->EvaluateDerivativeAtContinuousIndex(index) );
+  }
 
-    CovariantVectorType EvaluateDerivative(const PointType & point, ThreadIdType threadID) const
-    {
-        ContinuousIndexType index;
-        this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
-        return ( this->EvaluateDerivativeAtContinuousIndex(index) );
-    }
+  // MS: delete, or move to AdvancedInterpolateImageFunction
+  CovariantVectorType EvaluateDerivative(const PointType & point, ThreadIdType threadID) const // MS: delete??
+  {
+    ContinuousIndexType index;
+    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
+    return ( this->EvaluateDerivativeAtContinuousIndex(index) );
+  }
 
-    CovariantVectorType EvaluateDerivativeAtContinuousIndex( const ContinuousIndexType & x) const;
+  CovariantVectorType EvaluateDerivativeAtContinuousIndex( const ContinuousIndexType & x ) const;
 
-    CovariantVectorType EvaluateDerivativeAtContinuousIndex( const ContinuousIndexType & x, ThreadIdType threadID) const
-    {
-        return ( this->EvaluateDerivativeAtContinuousIndex(x) );
-    }
+  // MS: delete, or move to AdvancedInterpolateImageFunction
+  CovariantVectorType EvaluateDerivativeAtContinuousIndex( const ContinuousIndexType & x, ThreadIdType threadID ) const // MS: delete??
+  {
+    return ( this->EvaluateDerivativeAtContinuousIndex(x) );
+  }
 
-    void EvaluateValueAndDerivative(const PointType & point,OutputType & value, CovariantVectorType & deriv) const
-    {
-        ContinuousIndexType index;
-        this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
-        this->EvaluateValueAndDerivativeAtContinuousIndex(index,value,deriv);
-    }
+  void EvaluateValueAndDerivative(const PointType & point, OutputType & value, CovariantVectorType & deriv ) const // MS: move implementation to hxx
+  {
+    ContinuousIndexType index;
+    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
+    this->EvaluateValueAndDerivativeAtContinuousIndex(index,value,deriv);
+  }
 
-    void EvaluateValueAndDerivative(const PointType & point, OutputType & value, CovariantVectorType & deriv, ThreadIdType threadID) const
-    {
-        ContinuousIndexType index;
-        this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point,index);
-        this->EvaluateValueAndDerivativeAtContinuousIndex(index, value, deriv);
-    }
+  // MS: delete, or move to AdvancedInterpolateImageFunction
+  void EvaluateValueAndDerivative(const PointType & point, OutputType & value, CovariantVectorType & deriv, ThreadIdType threadID ) const // MS: delete??
+  {
+    ContinuousIndexType index;
+    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point,index);
+    this->EvaluateValueAndDerivativeAtContinuousIndex(index, value, deriv);
+  }
 
-    void EvaluateValueAndDerivativeAtContinuousIndex( const ContinuousIndexType & x, OutputType & value, CovariantVectorType & deriv) const;
+  void EvaluateValueAndDerivativeAtContinuousIndex(
+    const ContinuousIndexType & x, OutputType & value, CovariantVectorType & deriv ) const;
 
-    void EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x, OutputType & value, CovariantVectorType & deriv, ThreadIdType threadID) const
-    {
-        this->EvaluateValueAndDerivativeAtContinuousIndex(x, value, deriv);
-    }
+  // MS: delete, or move to AdvancedInterpolateImageFunction
+  void EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x, OutputType & value, CovariantVectorType & deriv, ThreadIdType threadID) const // MS: delete??
+  {
+    this->EvaluateValueAndDerivativeAtContinuousIndex(x, value, deriv);
+  }
 
-    void SetNumberOfThreads(ThreadIdType numThreads);
-    itkGetConstMacro(NumberOfThreads, ThreadIdType);
+  // MS: delete, or move to AdvancedInterpolateImageFunction
+  void SetNumberOfThreads(ThreadIdType numThreads); // MS: delete??
+  itkGetConstMacro(NumberOfThreads, ThreadIdType); // MS: delete??
 
-    /** The UseImageDirection flag determines whether image derivatives are
-     * computed with respect to the image grid or with respect to the physical
-     * space. When this flag is ON the derivatives are computed with respect to
-     * the coodinate system of physical space. The difference is whether we take
-     * into account the image Direction or not. The flag ON will take into
-     * account the image direction and will result in an extra matrix
-     * multiplication compared to the amount of computation performed when the
-     * flag is OFF.
-     * The default value of this flag is On.
-     */
-    itkSetMacro(UseImageDirection, bool);
-    itkGetConstMacro(UseImageDirection, bool);
-    itkBooleanMacro(UseImageDirection);
+  // MS: delete, or move to AdvancedInterpolateImageFunction
+  /** The UseImageDirection flag determines whether image derivatives are
+   * computed with respect to the image grid or with respect to the physical
+   * space. When this flag is ON the derivatives are computed with respect to
+   * the coordinate system of physical space. The difference is whether we take
+   * into account the image Direction or not. The flag ON will take into
+   * account the image direction and will result in an extra matrix
+   * multiplication compared to the amount of computation performed when the
+   * flag is OFF.
+   * The default value of this flag is On.
+   */
+  itkSetMacro(UseImageDirection, bool);
+  itkGetConstMacro(UseImageDirection, bool);
+  itkBooleanMacro(UseImageDirection);
 
-    RecursiveBSplineInterpolateImageFunction();
-    ~RecursiveBSplineInterpolateImageFunction();
-
-    void SetInputImage(const TImageType *inputData);
+  /** Set the input image, also in the coefficient filter. */
+  void SetInputImage(const TImageType *inputData);
 
 protected:
-    void PrintSelf(std::ostream & os, Indent indent) const;
+  RecursiveBSplineInterpolateImageFunction();
+  ~RecursiveBSplineInterpolateImageFunction();
 
-    std::vector< CoefficientDataType >    m_Scratch;
-    typename TImageType::SizeType m_DataLength;
-    typename CoefficientImageType::ConstPointer m_Coefficients;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
+
+  std::vector< CoefficientDataType >          m_Scratch;
+  typename TImageType::SizeType               m_DataLength;
+  typename CoefficientImageType::ConstPointer m_Coefficients;
 
 private:
-    RecursiveBSplineInterpolateImageFunction(const Self &); //purposely not implemented
-    void operator=(const Self &); //purposely not implemented
+  RecursiveBSplineInterpolateImageFunction(const Self &); // purposely not implemented
+  void operator=(const Self &);                           // purposely not implemented
 
-    /** Determines the weights for interpolation of the value x */
-    void SetInterpolationWeights(const ContinuousIndexType & x, const vnl_matrix< long > & evaluateIndex, double weights[]) const;
+  /** Determines the weights for interpolation of the value x */
+  void SetInterpolationWeights( const ContinuousIndexType & x, const vnl_matrix< long > & evaluateIndex, double weights[] ) const;
 
-    /** Determines the weights for the derivative portion of the value x */
-    void SetDerivativeWeights(const ContinuousIndexType & x, const vnl_matrix< long > & evaluateIndex, double weights[]) const;
+  /** Determines the weights for the derivative portion of the value x */
+  void SetDerivativeWeights( const ContinuousIndexType & x, const vnl_matrix< long > & evaluateIndex, double weights[] ) const;
 
-    /** Determines the weights for the hessian portion of the value x */
-    //void SetHessianWeights(const ContinuousIndexType & x, const vnl_matrix< long > & evaluateIndex, double weights[]) const;
+  /** Determines the weights for the hessian portion of the value x */
+  //void SetHessianWeights(const ContinuousIndexType & x, const vnl_matrix< long > & evaluateIndex, double weights[]) const;
 
-    void SetThreads();
+  // MS: delete, or move to AdvancedInterpolateImageFunction
+  void SetThreads(); // MS: delete??
 
-    /** Determines the indices to use give the splines region of support */
-    void DetermineRegionOfSupport(vnl_matrix< long > & evaluateIndex,  const ContinuousIndexType & x) const;
+  /** Determines the indices to use give the splines region of support. */
+  void DetermineRegionOfSupport( vnl_matrix< long > & evaluateIndex,  const ContinuousIndexType & x ) const;
 
-    /** Set the indices in evaluateIndex at the boundaries based on mirror
-      * boundary conditions. */
-    void ApplyMirrorBoundaryConditions(vnl_matrix< long > & evaluateIndex) const;
+  /** Set the indices in evaluateIndex at the boundaries based on mirror
+   * boundary conditions.
+   */
+  void ApplyMirrorBoundaryConditions( vnl_matrix< long > & evaluateIndex ) const;
 
+  /** Maximum number of iterations points == (splineOrder+1)*ImageDimension */
+  unsigned long m_MaxNumberInterpolationPoints; // MS: do you use this variable??
+  // Or do you mean:
+  //itkStaticConstMacro( MaxNumberInterpolationPoints, unsigned int, (ImageDimension + 1) * SplineOrder );
 
-    /** Maximum number of iterations points == (splineOrder+1)*ImageDimension */
-    unsigned long m_MaxNumberInterpolationPoints;
+  CoefficientFilterPointer m_CoefficientFilter;
 
-    CoefficientFilterPointer m_CoefficientFilter;
+  // MS: delete, or move to AdvancedInterpolateImageFunction
+  /** flag to take or not the image direction into account when computing the
+   * derivatives.
+   */
+  bool m_UseImageDirection;
 
-    /** flag to take or not the image direction into account when computing the
-    * derivatives. */
-    bool m_UseImageDirection;
+  /** Member variable containing the table with step sizes to take in each dimension
+   * to obtain the correct index of the coefficient (vector alpha in the mentioned paper).
+   */
+  IndexType m_OffsetTable;
 
-    /** member variable containing the table with step sizes to take in each dimension
-      * to obtain the correct index of the coefficient (vector alpha in the metioned paper)*/
-    IndexType m_OffsetTable;
+  typename InputImageType::SpacingType m_Spacing;
+  InputImageType * m_inputImage;
 
-    typename InputImageType::SpacingType m_Spacing;
-    InputImageType * m_inputImage;
-
-    ThreadIdType          m_NumberOfThreads;
-    vnl_matrix< long > *  m_ThreadedEvaluateIndex;
-    vnl_matrix< double > *m_ThreadedWeights;
-    vnl_matrix< double > *m_ThreadedWeightsDerivative;
+  //MS: delete: ??
+  // These variables are not used by you as you simply refer to the non-threaded function
+  // So I think delete
+  ThreadIdType          m_NumberOfThreads;// MS: delete, or move to AdvancedInterpolateImageFunction
+  vnl_matrix< long > *  m_ThreadedEvaluateIndex;
+  vnl_matrix< double > *m_ThreadedWeights;
+  vnl_matrix< double > *m_ThreadedWeightsDerivative;
 };
 
 /** Recursive sampling functions, templated over image dimension.
-  * The sample function takes in the coefficient, the step vector kappa and the weights vector,
-  * containing the b-spline weights per dimension and per spline order index.
-  * The function is called in the method EvaluateAtContinuousIndex(x).
-  * The output is the interpolated value at x.
-  * The sampleValueAndDerivative function outputs both the inerpolated value at x as well as
-  * the derivative evaluated at x. */
-template <unsigned int dim, unsigned int splineOrder,class TCoordRep> class sampleFunction
+ * The sample function takes in the coefficient, the step vector kappa and the weights vector,
+ * containing the B-spline weights per dimension and per spline order index.
+ * The function is called in the method EvaluateAtContinuousIndex(x).
+ * The output is the interpolated value at x.
+ * The sampleValueAndDerivative function outputs both the interpolated value at x as well as
+ * the derivative evaluated at x.
+ */
+template< unsigned int Dimension, unsigned int SplineOrder, class TCoordRep >
+class SampleFunction
+{
+public :
+
+  /** briefly explain */
+  static inline TCoordRep SampleValue( const TCoordRep * source,
+    const long * steps,
+    const double * weights )
+  {
+    // MS: a bit more comments explaining the code, perhaps with references to the paper
+    const unsigned int helper = ( Dimension - 1 ) * ( SplineOrder + 1 );
+    TCoordRep value = 0.0;
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      const TCoordRep * a = source + steps[ k + helper ];
+      value += SampleFunction< Dimension - 1, SplineOrder, TCoordRep>::
+        SampleValue( a, steps, weights ) * weights[ k + helper ];
+    }
+    return value;
+  } // end SampleValue()
+
+
+  /** briefly explain */
+  static inline void SampleValueAndDerivative( TCoordRep derivativeAndValue[],
+    const TCoordRep * source,
+    const long * steps,
+    const double * weights,
+    const double * derivativeWeights )
+  {
+    /** derivativeAndValue length must be at least dim + 1. */
+    TCoordRep derivativeAndValueNext[ Dimension + 1 ];
+    const unsigned int helper = ( Dimension - 1 ) * ( SplineOrder + 1 );
+
+    // MS: a bit more comments explaining the code, perhaps with references to the paper
+    for( unsigned int n = 0; n <= Dimension; ++n )
+    {
+      derivativeAndValue[ n ] = 0.0;
+      //derivativeAndValueNext[ n ] = 0.0; // TODO: check that this can be removed
+    }
+
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      const TCoordRep * a = source + steps[ k + helper ];
+
+      SampleFunction< Dimension - 1, SplineOrder, TCoordRep >::
+        SampleValueAndDerivative( derivativeAndValueNext, a, steps, weights, derivativeWeights );
+      for( unsigned int n = 0; n < Dimension; ++n )
+      {
+        derivativeAndValue[ n ] += derivativeAndValueNext[ n ] * weights[ k + helper ];
+      }
+      derivativeAndValue[ Dimension ] += derivativeAndValueNext[ 0 ] * derivativeWeights[ k + helper ];
+    }
+
+  } // end SampleValueAndDerivative()
+
+  //    static inline void sampleHessian( TCoordRep derivativeAndValue[],
+  //                                      const TCoordRep * source,
+  //                                      const long * steps,
+  //                                      const double * weights,
+  //                                      const double * derivativeWeights,
+  //                                      const double * hessianWeights)
+  //    {
+  //        /** hessianAndDerivativeAndValue length must be at least 3*dim+1
+  //          */
+
+  //        for(unsigned int n= 0; n <= 2*dim; ++n)
+  //        {
+  //            hessian[n] = 0.0;
+  //        }
+
+  //        TCoordRep hessianNext[2*dim];
+
+  //        for (unsigned int k = 0; k <= splineOrder; k++)
+  //        {
+  //            const TCoordRep * a = source + steps[ k + (dim-1)*(splineOrder+1) ];
+
+  //            sampleFunction<dim-1, splineOrder, TCoordRep>::
+  //                    sampleHessian(hessianNext, a, steps, weights, derivativeWeights, hessianWeights);
+  //            for(unsigned int n = 0; n < dim; ++n)
+  //            {
+  //                hessian[n] += hessianNext[n]*weights[ k + (dim-1)*(splineOrder+1) ];
+
+  //            }
+  //            hessian[dim] += hessianNext[0]*
+  //                    hessianWeights[ k + (dim-1)*(splineOrder+1) ];
+  //        }
+
+
+  //    }
+}; // end class SampleFunction
+
+/** End cases of the sample functions. A pointer to the coefficients is returned. */
+template< unsigned int SplineOrder, class TCoordRep >
+class SampleFunction< 0, SplineOrder, TCoordRep >
 {
 public:
-    static inline TCoordRep sample( const TCoordRep * source,
-                                    const long * steps,
-                                    const double * weights)
-    {
-        TCoordRep value = 0.0;
-        for (unsigned int k = 0; k <= splineOrder; k++)
-        {
-            const TCoordRep * a = source + steps[ k + (dim-1)*(splineOrder+1) ];
-            value += sampleFunction<dim-1, splineOrder, TCoordRep>::
-                    sample( a, steps, weights ) * weights[ k + (dim-1)*(splineOrder+1) ];
-        }
-        return value;
-    }
+  static inline TCoordRep SampleValue(
+    const TCoordRep * source, const long * steps, const double * weights )
+  {
+    return (*source);
+  } // end SampleValue()
 
-    static inline void sampleValueAndDerivative( TCoordRep derivativeAndValue[],
-                                         const TCoordRep * source,
-                                         const long * steps,
-                                         const double * weights,
-                                         const double * derivativeWeights)
-    {
-        /** derivativeAndValue length must be at least dim+1
-          */
-        TCoordRep derivativeAndValueNext[dim+1];
-
-        for(unsigned int n= 0; n <= dim; ++n)
-        {
-            derivativeAndValue[n] = 0.0;
-            //derivativeAndValueNext[n] = 0.0; //TODO: check that this can be removed
-        }
-
-        for (unsigned int k = 0; k <= splineOrder; k++)
-        {
-            const TCoordRep * a = source + steps[ k + (dim-1)*(splineOrder+1) ];
-
-            sampleFunction<dim-1, splineOrder, TCoordRep>::
-                    sampleValueAndDerivative(derivativeAndValueNext, a, steps, weights, derivativeWeights);
-            for(unsigned int n = 0; n < dim; ++n)
-            {
-                derivativeAndValue[n] += derivativeAndValueNext[n]*weights[ k + (dim-1)*(splineOrder+1) ];
-            }
-            derivativeAndValue[dim] += derivativeAndValueNext[0]*
-                    derivativeWeights[ k + (dim-1)*(splineOrder+1) ];
-        }
-    }
-
-//    static inline void sampleHessian( TCoordRep derivativeAndValue[],
-//                                      const TCoordRep * source,
-//                                      const long * steps,
-//                                      const double * weights,
-//                                      const double * derivativeWeights,
-//                                      const double * hessianWeights)
-//    {
-//        /** hessianAndDerivativeAndValue length must be at least 3*dim+1
-//          */
-
-//        for(unsigned int n= 0; n <= 2*dim; ++n)
-//        {
-//            hessian[n] = 0.0;
-//        }
-
-//        TCoordRep hessianNext[2*dim];
-
-//        for (unsigned int k = 0; k <= splineOrder; k++)
-//        {
-//            const TCoordRep * a = source + steps[ k + (dim-1)*(splineOrder+1) ];
-
-//            sampleFunction<dim-1, splineOrder, TCoordRep>::
-//                    sampleHessian(hessianNext, a, steps, weights, derivativeWeights, hessianWeights);
-//            for(unsigned int n = 0; n < dim; ++n)
-//            {
-//                hessian[n] += hessianNext[n]*weights[ k + (dim-1)*(splineOrder+1) ];
-
-//            }
-//            hessian[dim] += hessianNext[0]*
-//                    hessianWeights[ k + (dim-1)*(splineOrder+1) ];
-//        }
-
-
-//    }
-};
-
- /** End cases of the sample functions. A poiner to the coefficients is returned. */
-template <unsigned int splineOrder, class TCoordRep> class sampleFunction<0, splineOrder,TCoordRep>
-{
-public:
-    static inline TCoordRep sample( const TCoordRep * source, const long * steps,
-                                    const double * weights)
-    {
-        return (*source);
-    }
-
-    static inline void sampleValueAndDerivative(TCoordRep derivativeAndValue[],
-                                                       const TCoordRep * source,
-                                                       const long * steps,
-                                                       const double * weights,
-                                                       const double * derivativeWeights)
-    {
-        derivativeAndValue[0] = *source;
-    }
-};
-
-/** The BSplineWeights classes, for each spline order.
-  * All classes contain a getWeights method and a getDerivativeWeights method.
-  * These methods are called by SetInterpolationWeights and
-  * and SetDerivativeWeights. */
-template < class TCoefficientType> class BSplineWeights<0, TCoefficientType>
-{
-    //bspline order 0 implementation: Nearest Neighbor interpolation
-public:
-    static inline void
-    getWeights( itk::Vector<double,1> &bsplweights,
-                const TCoefficientType & w )
-    {
-        bsplweights[0] = 1.0;
-    }
-
-    static inline void
-    getDerivativeWeights( itk::Vector<double,1> &bsplweightsD,
-                          const TCoefficientType & w)
-    {
-        bsplweightsD[0] = 0.0;
-        std::cerr << "Error: Cannot compute derivative of 0th order B-Spline"
-                  << std::endl;
-    }
-
-//    static inline void
-//    getHessianWeights( itk::Vector<double,1> &bsplweightsH, const TCoefficientType & w)
-//    {
-//        bsplweightsH[0] = 0.0;
-//        std::cerr << "Error: Cannot compute hessian of 0th order B-Spline"
-//                  << std::endl;
-
-//    }
-};
-
-template < class TCoefficientType> class BSplineWeights<1, TCoefficientType>
-{
-    //bspline order 1 implementation: Linear interpolation
-public:
-    static inline void
-    getWeights( itk::Vector<double,2> &bsplweights,
-                const TCoefficientType & w )
-    {
-        bsplweights[0] = 1.0 - w;
-        bsplweights[1] = w;
-    }
-
-    static inline void
-    getDerivativeWeights( itk::Vector<double,2> &bsplweightsD,
-                         const TCoefficientType & w)
-    {
-        bsplweightsD[0] = -1.0;
-        bsplweightsD[1] = 1.0;
-    }
-
-//    static inline void
-//    getHessianWeights( itk::Vector<double,2> &bsplweightsH,
-//                       const TCoefficientType & w)
-//    {
-//        bsplweightsH[0] = 0.0;
-//        bsplweightsH[1] = 0.0;
-//        std::cerr << "Error: Cannot compute hessian of 1st order B-Spline"
-//                  << std::endl;
-
-//    }
+  static inline void SampleValueAndDerivative(
+    TCoordRep derivativeAndValue[],
+    const TCoordRep * source,
+    const long * steps,
+    const double * weights,
+    const double * derivativeWeights)
+  {
+    derivativeAndValue[ 0 ] = *source;
+  } // end SampleValueAndDerivative()
 };
 
 
-template < class TCoefficientType> class BSplineWeights<2, TCoefficientType>
+// MS: move below to separate files?
+
+/** Specializations for the BSplineWeights classes, for each spline order.
+ * All classes contain a GetWeights method and a GetDerivativeWeights method.
+ * These methods are called by SetInterpolationWeights and
+ * and SetDerivativeWeights.
+ */
+
+// Specialization for B-spline order 0: Nearest Neighbor interpolation
+template< class TCoefficientType >
+class BSplineWeights< 0, TCoefficientType >
 {
-    //bspline order 2 implementation: Quadratic interpolation
 public:
-    static inline void
-    getWeights( itk::Vector<double,3> &bsplweights,
-                const TCoefficientType & w )
-    {
-        bsplweights[1] = 0.75 - w * w;
-        bsplweights[2] = 0.5 * ( w - bsplweights[1] + 1.0 );
-        bsplweights[0] = 1.0 - bsplweights[1]- bsplweights[2];
-    }
+  static inline void GetWeights( itk::Vector<double,1> & bsplineWeights,
+    const TCoefficientType & w )
+  {
+    bsplineWeights[ 0 ] = 1.0;
+  } // end GetWeights()
 
-    static inline void
-    getDerivativeWeights( itk::Vector<double,3> &bsplweightsD,
-                          const TCoefficientType & w )
-    {
-        TCoefficientType wr = 1.0 - w;
+  static inline void GetDerivativeWeights( itk::Vector<double,1> & bsplineWeightsD,
+    const TCoefficientType & w )
+  {
+    bsplineWeightsD[ 0 ] = 0.0;
+    // MS: throw exception instead of print error
+    std::cerr << "Error: Cannot compute derivative of 0th order B-Spline"
+      << std::endl;
+    // itkExceptionMacro( << "ERROR: Cannot compute derivative of 0th order B-spline" );
+  } // end GetDerivativeWeights()
 
-        bsplweightsD[0] = 0.0 - wr;
-        bsplweightsD[1] =  wr - w;
-        bsplweightsD[2] =  w;
-    }
+  //    static inline void
+  //    getHessianWeights( itk::Vector<double,1> &bsplweightsH, const TCoefficientType & w)
+  //    {
+  //        bsplweightsH[0] = 0.0;
+  //        std::cerr << "Error: Cannot compute hessian of 0th order B-Spline"
+  //                  << std::endl;
 
-//    static inline void
-//    getHessianWeights( itk::Vector<double,3> &bsplweightsH,
-//                       const TCoefficientType & w )
-//    {
-//        bsplweightsH[0] = 1.0; //To be implemented
-//        bsplweightsH[1] = -2.0; //To be implemented
-//        bsplweightsH[2] = 1.0; //To be implemented
-//    }
+  //    }
 };
 
-template < class TCoefficientType> class BSplineWeights<3, TCoefficientType>
+// Specialization for B-spline order 1: Linear interpolation
+template< class TCoefficientType >
+class BSplineWeights< 1, TCoefficientType >
 {
-    // bspline order 3 implementation: Cubic interpolation
 public:
-    static inline void
-    getWeights( itk::Vector<double,4> &bsplweights,
-                const TCoefficientType & w )
-    {
-        TCoefficientType sqr_w  = w * w;
+  static inline void GetWeights( itk::Vector<double,2> & bsplineWeights,
+    const TCoefficientType & w )
+  {
+    bsplineWeights[ 0 ] = 1.0 - w;
+    bsplineWeights[ 1 ] = w;
+  } // end GetWeights()
 
-        bsplweights[3] = (1.0 / 6.0) * sqr_w * w;
-        bsplweights[0] = (1.0 / 6.0) + 0.5 * w * ( w - 1.0 ) - bsplweights[3];
-        bsplweights[2] = w + bsplweights[0] - 2.0 * bsplweights[3];
-        bsplweights[1] = 1.0 - bsplweights[0] - bsplweights[2] - bsplweights[3];
-    }
+  static inline void GetDerivativeWeights( itk::Vector<double,2> & bsplineWeightsD,
+    const TCoefficientType & w )
+  {
+    bsplineWeightsD[ 0 ] = -1.0;
+    bsplineWeightsD[ 1 ] = 1.0;
+  } // end GetDerivativeWeights()
 
-    static inline void
-    getDerivativeWeights( itk::Vector<double,4> &bsplweightsD,
-                          const TCoefficientType & w )
-    {
-        TCoefficientType w1, w2, w3;
-        w2 = .75 - w * w;
-        w3 = 0.5 * ( w - w2 + 1.0 );
-        w1 = 1.0 - w2 - w3;
+  //    static inline void
+  //    getHessianWeights( itk::Vector<double,2> &bsplweightsH,
+  //                       const TCoefficientType & w)
+  //    {
+  //        bsplweightsH[0] = 0.0;
+  //        bsplweightsH[1] = 0.0;
+  //        std::cerr << "Error: Cannot compute hessian of 1st order B-Spline"
+  //                  << std::endl;
 
-        bsplweightsD[0] = 0.0 - w1;
-        bsplweightsD[1] = w1 - w2;
-        bsplweightsD[2] = w2 - w3;
-        bsplweightsD[3] = w3;
-
-    }
-
-//    static inline void
-//    getHessianWeights( itk::Vector<double,4> &bsplweightsH,
-//                       const TCoefficientType & w )
-//    {
-//        bsplweightsH[0] = 1.0-w; //To be implemented
-//        bsplweightsH[1] = 3.0*w-2.0; //To be implemented
-//        bsplweightsH[2] = 1.0-3*w; //To be implemented
-//        bsplweightsH[3] = w; //To be implemented
-//    }
+  //    }
 };
 
-
-template < class TCoefficientType> class BSplineWeights<4, TCoefficientType>
+// Specialization for B-spline order 2: Quadratic interpolation
+template< class TCoefficientType >
+class BSplineWeights< 2, TCoefficientType >
 {
-    // bspline order 4 implementation
 public:
-    static inline void
-    getWeights( itk::Vector<double,5> &bsplweights,
-                const TCoefficientType & w )
-    {
-        TCoefficientType w_sqr, t, t0, t1;
+  static inline void GetWeights( itk::Vector<double,3> & bsplineWeights,
+    const TCoefficientType & w )
+  {
+    bsplineWeights[ 1 ] = 0.75 - w * w;
+    bsplineWeights[ 2 ] = 0.5 * ( w - bsplineWeights[ 1 ] + 1.0 );
+    bsplineWeights[ 0 ] = 1.0 - bsplineWeights[ 1 ]- bsplineWeights[ 2 ];
+  } // end GetWeights()
 
-        w_sqr = w * w;
-        t = ( 1.0 / 6.0 ) * w_sqr;
-        bsplweights[0] = 0.5 - w;
-        bsplweights[0] *= bsplweights[0];
-        bsplweights[0] *= ( 1.0 / 24.0 ) * bsplweights[0];
+  static inline void GetDerivativeWeights( itk::Vector<double,3> & bsplineWeightsD,
+    const TCoefficientType & w )
+  {
+    TCoefficientType wr = 1.0 - w;
 
-        t0 = w * ( t - 11.0 / 24.0 );
-        t1 = 19.0 / 96.0 + w_sqr * ( 0.25 - t );
+    bsplineWeightsD[ 0 ] = 0.0 - wr;
+    bsplineWeightsD[ 1 ] = wr - w;
+    bsplineWeightsD[ 2 ] = w;
+  } // end GetDerivativeWeights()
 
-        bsplweights[1] = t1 + t0;
-        bsplweights[3] = t1 - t0;
-        bsplweights[4] = bsplweights[0] + t0 + 0.5 * w;
-        bsplweights[2] = 1.0 - bsplweights[0] - bsplweights[1] - bsplweights[3] - bsplweights[4];
-    }
-
-    static inline void
-    getDerivativeWeights( itk::Vector<double,5> &bsplweightsD,
-                          const TCoefficientType & w )
-    {
-        TCoefficientType w1, w2, w3, w4;
-        w4 = (1.0 / 6.0 ) * w * w * w;
-        w1 = (1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - w4;
-        w3 = w + w1 - 2.0 * w4;
-        w2 = 1.0 - w1 - w3 - w4;
-
-        bsplweightsD[0] = 0.0 - w1;
-        bsplweightsD[1] = w1 - w2;
-        bsplweightsD[2] = w2 - w3;
-        bsplweightsD[3] = w3 - w4;
-        bsplweightsD[4] = w4;
-    }
-
-//    static inline void
-//    getHessianWeights( itk::Vector<double,5> &bsplweightsH,
-//                       const TCoefficientType & w )
-//    {
-//        TCoefficientType w_sqr = w*w;
-
-//        bsplweightsH[0] = 1/2*w_sqr - 9/2*w + 81/8;
-//        bsplweightsH[1] = -1/2*(4*w_sqr - 18*w + 19);
-//        bsplweightsH[2] = 3*w_sqr - 5/4;
-//        bsplweightsH[3] = -1/2*(4*w_sqr + 18*w + 19);
-//        bsplweightsH[4] = 1/2*w_sqr + 9/2*w + 81/8;
-
-//    }
+  //    static inline void
+  //    getHessianWeights( itk::Vector<double,3> &bsplweightsH,
+  //                       const TCoefficientType & w )
+  //    {
+  //        bsplweightsH[0] = 1.0; //To be implemented
+  //        bsplweightsH[1] = -2.0; //To be implemented
+  //        bsplweightsH[2] = 1.0; //To be implemented
+  //    }
 };
 
-
-template < class TCoefficientType > class BSplineWeights<5, TCoefficientType >
+// Specialization for B-spline order 3: Cubic interpolation
+template< class TCoefficientType >
+class BSplineWeights< 3, TCoefficientType >
 {
-    // bspline order 5 implementation
 public:
-    static inline void
-    getWeights( itk::Vector<double,6> &bsplweights,
-                const TCoefficientType & w )
-    {
-        TCoefficientType w_sqr, w_qua, w2, t, t0, t1;
-        w_sqr = w * w;
-        bsplweights[5] = ( 1.0 / 120.0 ) * w * w_sqr * w_sqr;
+  static inline void GetWeights( itk::Vector<double,4> & bsplineWeights,
+    const TCoefficientType & w )
+  {
+    TCoefficientType sqr_w  = w * w;
 
-        w_sqr -= w;
-        w_qua = w_sqr * w_sqr;
-        w2 = w-0.5;
-        t = w_sqr * (w_sqr - 3.0 );
+    bsplineWeights[ 3 ] = (1.0 / 6.0) * sqr_w * w;
+    bsplineWeights[ 0 ] = (1.0 / 6.0) + 0.5 * w * ( w - 1.0 ) - bsplineWeights[3];
+    bsplineWeights[ 2 ] = w + bsplineWeights[0] - 2.0 * bsplineWeights[3];
+    bsplineWeights[ 1 ] = 1.0 - bsplineWeights[0] - bsplineWeights[2] - bsplineWeights[3];
+  } // end GetWeights()
 
-        bsplweights[0] = ( 1.0 / 24.0 ) * ( 1.0 / 5.0 + w_sqr + w_qua ) - bsplweights[5];
+  static inline void GetDerivativeWeights( itk::Vector<double,4> & bsplineWeightsD,
+    const TCoefficientType & w )
+  {
+    TCoefficientType w1, w2, w3;
+    w2 = .75 - w * w;
+    w3 = 0.5 * ( w - w2 + 1.0 );
+    w1 = 1.0 - w2 - w3;
 
-        t0 = (1.0 / 24.0 ) * ( w_sqr * (w_sqr - 5.0 ) + 46.0 / 5.0 );
-        t1 = ( -1.0 / 12.0 ) * w2 * ( t + 4.0 );
+    bsplineWeightsD[ 0 ] = 0.0 - w1;
+    bsplineWeightsD[ 1 ] = w1 - w2;
+    bsplineWeightsD[ 2 ] = w2 - w3;
+    bsplineWeightsD[ 3 ] = w3;
+  } // end GetDerivativeWeights()
 
-        bsplweights[2] = t0 + t1;
-        bsplweights[3] = t0 - t1;
-
-        t0 = ( 1.0 / 16.0 ) * ( 9.0 / 5.0 - t );
-        t1 = ( 1.0 / 24.0 ) * w2 * ( w_qua - w_sqr - 5.0 );
-
-        bsplweights[1] = t0 + t1;
-        bsplweights[4] = t0 - t1;
-    }
-
-    static inline void
-    getDerivativeWeights(itk::Vector<double,6> &bsplweightsD,
-                          const TCoefficientType & w )
-    {
-        TCoefficientType w_sqr, t, t0, t1, w1, w2, w3, w4, w5;
-
-        w_sqr = w * w;
-        t = (1.0 / 6.0 ) * w_sqr;
-        w1 = 0.5 - w;
-        w1 *= w1;
-        w1 *= ( 1.0 / 24.0 ) * w1;
-        t0 = w * ( t - 11.0 / 24.0 );
-        t1 = 19.0 / 96.0 + w_sqr * ( 0.25 - t );
-        w2 = t1 + t0;
-        w4 = t1 - t0;
-        w5 = w1 + t0 + 0.5 * w;
-        w3 = 1.0 - w1 - w2 - w4 - w5;
-
-        bsplweightsD[0] = 0.0 - w1;
-        bsplweightsD[1] = w1 - w2;
-        bsplweightsD[2] = w2 - w3;
-        bsplweightsD[3] = w3 - w4;
-        bsplweightsD[4] = w4 - w5;
-        bsplweightsD[5] = w5;
-    }
-
-//    static inline void
-//    getHessianWeights( itk::Vector<double,6> &bsplweightsH,
-//                       const TCoefficientType & w )
-//    {
-//        bsplweightsH[0] = 1; //To be implemented
-//        bsplweightsH[1] = 1; //To be implemented
-//        bsplweightsH[2] = 1; //To be implemented
-//        bsplweightsH[3] = 1; //To be implemented
-//        bsplweightsH[4] = 1; //To be implemented
-//        bsplweightsH[5] = 1; //To be implemented
-//    }
+  //    static inline void
+  //    getHessianWeights( itk::Vector<double,4> &bsplweightsH,
+  //                       const TCoefficientType & w )
+  //    {
+  //        bsplweightsH[0] = 1.0-w; //To be implemented
+  //        bsplweightsH[1] = 3.0*w-2.0; //To be implemented
+  //        bsplweightsH[2] = 1.0-3*w; //To be implemented
+  //        bsplweightsH[3] = w; //To be implemented
+  //    }
 };
+
+// Specialization for B-spline order 4
+template< class TCoefficientType >
+class BSplineWeights< 4, TCoefficientType >
+{
+public:
+  static inline void GetWeights( itk::Vector<double,5> & bsplineWeights,
+    const TCoefficientType & w )
+  {
+    TCoefficientType w_sqr, t, t0, t1;
+
+    w_sqr = w * w;
+    t = ( 1.0 / 6.0 ) * w_sqr;
+    bsplineWeights[0] = 0.5 - w;
+    bsplineWeights[0] *= bsplineWeights[0];
+    bsplineWeights[0] *= ( 1.0 / 24.0 ) * bsplineWeights[0];
+
+    t0 = w * ( t - 11.0 / 24.0 );
+    t1 = 19.0 / 96.0 + w_sqr * ( 0.25 - t );
+
+    bsplineWeights[1] = t1 + t0;
+    bsplineWeights[3] = t1 - t0;
+    bsplineWeights[4] = bsplineWeights[0] + t0 + 0.5 * w;
+    bsplineWeights[2] = 1.0 - bsplineWeights[0] - bsplineWeights[1] - bsplineWeights[3] - bsplineWeights[4];
+  } // end GetWeights()
+
+  static inline void GetDerivativeWeights( itk::Vector<double,5> & bsplineWeightsD,
+    const TCoefficientType & w )
+  {
+    TCoefficientType w1, w2, w3, w4;
+    w4 = (1.0 / 6.0 ) * w * w * w;
+    w1 = (1.0 / 6.0 ) + 0.5 * w * ( w - 1.0 ) - w4;
+    w3 = w + w1 - 2.0 * w4;
+    w2 = 1.0 - w1 - w3 - w4;
+
+    bsplineWeightsD[0] = 0.0 - w1;
+    bsplineWeightsD[1] = w1 - w2;
+    bsplineWeightsD[2] = w2 - w3;
+    bsplineWeightsD[3] = w3 - w4;
+    bsplineWeightsD[4] = w4;
+  } // end GetDerivativeWeights()
+
+  //    static inline void
+  //    getHessianWeights( itk::Vector<double,5> &bsplweightsH,
+  //                       const TCoefficientType & w )
+  //    {
+  //        TCoefficientType w_sqr = w*w;
+
+  //        bsplweightsH[0] = 1/2*w_sqr - 9/2*w + 81/8;
+  //        bsplweightsH[1] = -1/2*(4*w_sqr - 18*w + 19);
+  //        bsplweightsH[2] = 3*w_sqr - 5/4;
+  //        bsplweightsH[3] = -1/2*(4*w_sqr + 18*w + 19);
+  //        bsplweightsH[4] = 1/2*w_sqr + 9/2*w + 81/8;
+
+  //    }
+};
+
+// Specialization for B-spline order 5
+template< class TCoefficientType >
+class BSplineWeights< 5, TCoefficientType >
+{
+public:
+  static inline void GetWeights( itk::Vector<double,6> & bsplineWeights,
+    const TCoefficientType & w )
+  {
+    TCoefficientType w_sqr, w_qua, w2, t, t0, t1;
+    w_sqr = w * w;
+    bsplineWeights[5] = ( 1.0 / 120.0 ) * w * w_sqr * w_sqr;
+
+    w_sqr -= w;
+    w_qua = w_sqr * w_sqr;
+    w2 = w-0.5;
+    t = w_sqr * (w_sqr - 3.0 );
+
+    bsplineWeights[0] = ( 1.0 / 24.0 ) * ( 1.0 / 5.0 + w_sqr + w_qua ) - bsplineWeights[5];
+
+    t0 = (1.0 / 24.0 ) * ( w_sqr * (w_sqr - 5.0 ) + 46.0 / 5.0 );
+    t1 = ( -1.0 / 12.0 ) * w2 * ( t + 4.0 );
+
+    bsplineWeights[2] = t0 + t1;
+    bsplineWeights[3] = t0 - t1;
+
+    t0 = ( 1.0 / 16.0 ) * ( 9.0 / 5.0 - t );
+    t1 = ( 1.0 / 24.0 ) * w2 * ( w_qua - w_sqr - 5.0 );
+
+    bsplineWeights[1] = t0 + t1;
+    bsplineWeights[4] = t0 - t1;
+  } // end GetWeights()
+
+  static inline void GetDerivativeWeights( itk::Vector<double,6> & bsplineWeightsD,
+    const TCoefficientType & w )
+  {
+    TCoefficientType w_sqr, t, t0, t1, w1, w2, w3, w4, w5;
+
+    w_sqr = w * w;
+    t = (1.0 / 6.0 ) * w_sqr;
+    w1 = 0.5 - w;
+    w1 *= w1;
+    w1 *= ( 1.0 / 24.0 ) * w1;
+    t0 = w * ( t - 11.0 / 24.0 );
+    t1 = 19.0 / 96.0 + w_sqr * ( 0.25 - t );
+    w2 = t1 + t0;
+    w4 = t1 - t0;
+    w5 = w1 + t0 + 0.5 * w;
+    w3 = 1.0 - w1 - w2 - w4 - w5;
+
+    bsplineWeightsD[0] = 0.0 - w1;
+    bsplineWeightsD[1] = w1 - w2;
+    bsplineWeightsD[2] = w2 - w3;
+    bsplineWeightsD[3] = w3 - w4;
+    bsplineWeightsD[4] = w4 - w5;
+    bsplineWeightsD[5] = w5;
+  } // end GetDerivativeWeights()
+
+  //    static inline void
+  //    getHessianWeights( itk::Vector<double,6> &bsplweightsH,
+  //                       const TCoefficientType & w )
+  //    {
+  //        bsplweightsH[0] = 1; //To be implemented
+  //        bsplweightsH[1] = 1; //To be implemented
+  //        bsplweightsH[2] = 1; //To be implemented
+  //        bsplweightsH[3] = 1; //To be implemented
+  //        bsplweightsH[4] = 1; //To be implemented
+  //        bsplweightsH[5] = 1; //To be implemented
+  //    }
+};
+
 } // namespace itk
 
 

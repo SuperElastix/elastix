@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxRecursiveBSplineInterpolator_hxx
 #define __elxRecursiveBSplineInterpolator_hxx
 
@@ -38,7 +37,7 @@ void RecursiveBSplineInterpolator<TElastix>
     "BSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
 
   /** Check. */
-  if ( splineOrder == 0 )
+  if( splineOrder == 0 )
   {
     elx::xout["warning"] << "WARNING: the BSplineInterpolationOrder is set to 0.\n"
       << "         It is not possible to take derivatives with this setting.\n"
@@ -55,4 +54,3 @@ void RecursiveBSplineInterpolator<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxRecursiveBSplineInterpolator_hxx
-
