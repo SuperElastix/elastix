@@ -117,12 +117,9 @@ private:
 
 
 }  // namespace itk
-#if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkAffineLogTransform+-.h"
-#endif
 
-#if ITK_TEMPLATE_TXX
-# include "itkAffineLogTransform.txx"
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkAffineLogTransform.txx"
 #endif
 
 #endif /* __itkAffineLogTransform_h */
