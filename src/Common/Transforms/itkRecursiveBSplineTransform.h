@@ -153,6 +153,7 @@ public:
 
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
+  typedef FixedArray< TScalar, SpaceDimension > OutputPointType;
 
   /** TransformPoint recursive implementation. */
   static inline TScalar InterpolateTransformPoint(
@@ -168,6 +169,46 @@ public:
     }
     return coord;
   } // end InterpolateTransformPoint()
+
+#if 0
+  /** TransformPoint recursive implementation. */
+  typedef FixedArray< TScalar *, SpaceDimension > ScalarPointerVectorType;
+  static inline ScalarPointerVectorType InterpolateTransformPoint2(
+    ScalarPointerVectorType source, const long * steps, const double * weights,
+    ScalarPointerVectorType basePointers, Array<unsigned long> & indices, unsigned int & c )
+  {
+    OutputPointType opp; opp.Fill(0.0);
+    ScalarPointerVectorType a;
+    //for( unsigned int j = 0; j < SpaceDimension; ++j )
+    //TScalar coord = 0.0;
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      for( unsigned int j = 0; j < SpaceDimension; ++j )
+      {
+        a[ j ] = source[ j ] + steps[ k + HelperConstVariable ];
+      }
+      opp += RecursiveBSplineTransformImplementation< SpaceDimension - 1, SplineOrder, TScalar >::
+        InterpolateTransformPoint2( a, steps, weights, basePointers, indices, c ) * weights[ k + HelperConstVariable ];
+    }
+    return opp;
+  } // end InterpolateTransformPoint2()
+#endif
+
+  /** GetJacobian recursive implementation. */
+  static inline TScalar InterpolateGetJacobian(
+    const TScalar * source, const long * steps, const double * weights1D,
+    const TScalar *basePointer, Array<unsigned long> & indices, unsigned int & c )
+  {
+    TScalar product = 1.0;
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      const TScalar * a = source + steps[ k + HelperConstVariable ];
+      product *= RecursiveBSplineTransformImplementation< SpaceDimension - 1, SplineOrder, TScalar >::
+        InterpolateGetJacobian( a, steps, weights1D, basePointer, indices, c ) * weights1D[ k + HelperConstVariable ];
+    }
+    return product;
+  } // end InterpolateGetJacobian()
+
 
   /** SpatialJacobian recursive implementation. */
   static inline void InterpolateSpatialJacobian(
@@ -202,7 +243,11 @@ public:
 }; // end class
 
 
-/** End cases of the functions. A pointer to the coefficients is returned. */
+/**  ******************************************************************
+ * End cases of the functions.
+ * A pointer to the coefficients is returned.
+ */
+
 template< unsigned int SplineOrder, class TScalar >
 class RecursiveBSplineTransformImplementation< 0, SplineOrder, TScalar >
 {
@@ -221,6 +266,34 @@ public:
     ++c;
     return *source;
   } // end InterpolateTransformPoint()
+
+
+  /** TransformPoint recursive implementation. */
+  typedef FixedArray< TScalar *, 0 > ScalarPointerVectorType;
+  static inline ScalarPointerVectorType InterpolateTransformPoint2(
+    ScalarPointerVectorType source, const long * steps, const double * weights,
+    ScalarPointerVectorType basePointers, Array<unsigned long> & indices, unsigned int & c )
+  {
+    //indices[ c ] = source[ j ] - basePointers[ j ];
+    //++c;
+    return *source;
+  } // end InterpolateTransformPoint2()
+
+
+  /** GetJacobian recursive implementation. */
+  static inline TScalar InterpolateGetJacobian(
+    const TScalar * source,
+    const long * steps,
+    const double * weights1D,
+    const TScalar *basePointer,
+    Array<unsigned long> & indices,
+    unsigned int & c )
+  {
+    indices[ c ] = source - basePointer;
+    ++c;
+    return *source;
+  } // end InterpolateGetJacobian()
+
 
   /** SpatialJacobian recursive implementation. */
   static inline void InterpolateSpatialJacobian(

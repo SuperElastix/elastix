@@ -352,7 +352,6 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 ::GetNumberOfNonZeroJacobianIndices( void ) const
 {
   return this->m_WeightsFunction->GetNumberOfWeights() * SpaceDimension;
-
 } // end GetNumberOfNonZeroJacobianIndices()
 
 
