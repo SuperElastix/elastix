@@ -100,7 +100,7 @@ public:
 
   /** Internal Coefficient typedef support */
   typedef TCoefficientType CoefficientDataType;
-  typedef Image< CoefficientDataType, itkGetStaticConstMacro(ImageDimension) >   CoefficientImageType;
+  typedef Image< CoefficientDataType, itkGetStaticConstMacro( ImageDimension ) >   CoefficientImageType;
 
   /** Define filter for calculating the BSpline coefficients */
   typedef BSplineDecompositionImageFilter< TImageType, CoefficientImageType > CoefficientFilter;
@@ -119,84 +119,20 @@ public:
    * ImageFunction::IsInsideBuffer() can be used to check bounds before
    * calling the method.
    */
-  OutputType Evaluate( const PointType & point ) const // MS: move implementation to hxx file
-  {
-    ContinuousIndexType index;
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
-    return ( this->EvaluateAtContinuousIndex(index) );
-  }
-
-  // MS: Why did you create functions that have a threadID?
-  // They only use the non-threaded version.
-  // If you really need them for compatibility with the ITK, which I am not sure is needed,
-  // you can move this implementation to AdvancedInterpolateImageFunction
-  OutputType Evaluate( const PointType & point, ThreadIdType threadID ) const // MS: move implementation to hxx
-  {
-    ContinuousIndexType index;
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex( point,  index );
-    return this->EvaluateAtContinuousIndex( index );
-  }
+  OutputType Evaluate( const PointType & point ) const;
 
   OutputType EvaluateAtContinuousIndex( const ContinuousIndexType & index ) const;
 
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  OutputType EvaluateAtContinuousIndex( const ContinuousIndexType & index, ThreadIdType threadID ) const // MS: delete??
-  {
-    return ( this->EvaluateAtContinuousIndex(index) );
-  }
-
-  CovariantVectorType EvaluateDerivative(const PointType & point) const // MS: move implementation to hxx
-  {
-    ContinuousIndexType index;
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
-    return ( this->EvaluateDerivativeAtContinuousIndex(index) );
-  }
-
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  CovariantVectorType EvaluateDerivative(const PointType & point, ThreadIdType threadID) const // MS: delete??
-  {
-    ContinuousIndexType index;
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
-    return ( this->EvaluateDerivativeAtContinuousIndex(index) );
-  }
+  CovariantVectorType EvaluateDerivative( const PointType & point) const;
 
   CovariantVectorType EvaluateDerivativeAtContinuousIndex( const ContinuousIndexType & x ) const;
 
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  CovariantVectorType EvaluateDerivativeAtContinuousIndex( const ContinuousIndexType & x, ThreadIdType threadID ) const // MS: delete??
-  {
-    return ( this->EvaluateDerivativeAtContinuousIndex(x) );
-  }
-
-  void EvaluateValueAndDerivative(const PointType & point, OutputType & value, CovariantVectorType & deriv ) const // MS: move implementation to hxx
-  {
-    ContinuousIndexType index;
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
-    this->EvaluateValueAndDerivativeAtContinuousIndex(index,value,deriv);
-  }
-
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  void EvaluateValueAndDerivative(const PointType & point, OutputType & value, CovariantVectorType & deriv, ThreadIdType threadID ) const // MS: delete??
-  {
-    ContinuousIndexType index;
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point,index);
-    this->EvaluateValueAndDerivativeAtContinuousIndex(index, value, deriv);
-  }
+  void EvaluateValueAndDerivative(
+    const PointType & point, OutputType & value, CovariantVectorType & deriv ) const;
 
   void EvaluateValueAndDerivativeAtContinuousIndex(
     const ContinuousIndexType & x, OutputType & value, CovariantVectorType & deriv ) const;
 
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  void EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x, OutputType & value, CovariantVectorType & deriv, ThreadIdType threadID) const // MS: delete??
-  {
-    this->EvaluateValueAndDerivativeAtContinuousIndex(x, value, deriv);
-  }
-
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  void SetNumberOfThreads(ThreadIdType numThreads); // MS: delete??
-  itkGetConstMacro(NumberOfThreads, ThreadIdType); // MS: delete??
-
-  // MS: delete, or move to AdvancedInterpolateImageFunction
   /** The UseImageDirection flag determines whether image derivatives are
    * computed with respect to the image grid or with respect to the physical
    * space. When this flag is ON the derivatives are computed with respect to
@@ -207,16 +143,16 @@ public:
    * flag is OFF.
    * The default value of this flag is On.
    */
-  itkSetMacro(UseImageDirection, bool);
-  itkGetConstMacro(UseImageDirection, bool);
-  itkBooleanMacro(UseImageDirection);
+  itkSetMacro( UseImageDirection, bool );
+  itkGetConstMacro( UseImageDirection, bool );
+  itkBooleanMacro( UseImageDirection );
 
   /** Set the input image, also in the coefficient filter. */
-  void SetInputImage(const TImageType *inputData);
+  void SetInputImage( const TImageType * inputData );
 
 protected:
   RecursiveBSplineInterpolateImageFunction();
-  ~RecursiveBSplineInterpolateImageFunction();
+  ~RecursiveBSplineInterpolateImageFunction(){};
 
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
@@ -237,9 +173,6 @@ private:
   /** Determines the weights for the hessian portion of the value x */
   //void SetHessianWeights(const ContinuousIndexType & x, const vnl_matrix< long > & evaluateIndex, double weights[]) const;
 
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  void SetThreads(); // MS: delete??
-
   /** Determines the indices to use give the splines region of support. */
   void DetermineRegionOfSupport( vnl_matrix< long > & evaluateIndex,  const ContinuousIndexType & x ) const;
 
@@ -255,7 +188,6 @@ private:
 
   CoefficientFilterPointer m_CoefficientFilter;
 
-  // MS: delete, or move to AdvancedInterpolateImageFunction
   /** flag to take or not the image direction into account when computing the
    * derivatives.
    */
@@ -268,14 +200,6 @@ private:
 
   typename InputImageType::SpacingType m_Spacing;
   InputImageType * m_inputImage;
-
-  //MS: delete: ??
-  // These variables are not used by you as you simply refer to the non-threaded function
-  // So I think delete
-  ThreadIdType          m_NumberOfThreads;// MS: delete, or move to AdvancedInterpolateImageFunction
-  vnl_matrix< long > *  m_ThreadedEvaluateIndex;
-  vnl_matrix< double > *m_ThreadedWeights;
-  vnl_matrix< double > *m_ThreadedWeightsDerivative;
 };
 
 /** Recursive sampling functions, templated over image dimension.

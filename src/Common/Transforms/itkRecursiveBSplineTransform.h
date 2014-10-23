@@ -116,11 +116,11 @@ public:
   virtual void TransformPoint( const InputPointType & inputPoint, OutputPointType & outputPoint,
     WeightsType & weights, ParameterIndexArrayType & indices, bool & inside ) const;
 
-  /** Compute the Jacobian of the transformation. *
+  /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & nzji ) const;
 
   /** Compute the spatial Jacobian of the transformation. */
   virtual void GetSpatialJacobian(

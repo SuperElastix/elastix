@@ -15,13 +15,13 @@
 #define __itkRecursiveBSplineInterpolateImageFunction_hxx
 
 #include "itkRecursiveBSplineInterpolateImageFunction.h"
+
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageRegionIterator.h"
-
 #include "itkVector.h"
-
 #include "itkMatrix.h"
+
 
 namespace itk
 {
@@ -34,12 +34,7 @@ template< class TImageType, class TCoordRep, class TCoefficientType, unsigned in
 RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
 ::RecursiveBSplineInterpolateImageFunction()
 {
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  this->m_NumberOfThreads = 1; // MS: delete??
-  this->m_ThreadedEvaluateIndex = NULL; // MS: delete??
-  this->m_ThreadedWeights = NULL; // MS: delete??
-  this->m_ThreadedWeightsDerivative = NULL; // MS: delete??
-  this->m_UseImageDirection = true; // MS: delete??
+  this->m_UseImageDirection = true;
 
   /** Setup coefficient filter. */
   this->m_CoefficientFilter = CoefficientFilter::New();
@@ -48,48 +43,9 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
 
   if( SplineOrder > 5 )
   {
-    // SplineOrder not implemented yet.
-    ExceptionObject err(__FILE__, __LINE__);
-    err.SetLocation(ITK_LOCATION);
-    err.SetDescription("SplineOrder must be between 0 and 5. Requested spline order has not been implemented yet.");
-    throw err;
-
-    // MS: vervang hierboven door:
-    // itkExceptionMacro( << "SplineOrder must be between 0 and 5. Requested spline order has not been implemented yet." );
-    // check
+    itkExceptionMacro( << "SplineOrder must be between 0 and 5. Requested spline order has not been implemented yet." );
   }
-
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  this->SetThreads(); // MS: delete??
 } // end Constructor()
-
-
-/**
- * ******************* Destructor ***********************
- */
-
-template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int SplineOrder >
-RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
-::~RecursiveBSplineInterpolateImageFunction()
-{
-  // MS: delete, or move to AdvancedInterpolateImageFunction
-  // MS: delete all below??
-  if( this->m_ThreadedEvaluateIndex != NULL )
-  {
-    delete[] this->m_ThreadedEvaluateIndex;
-    this->m_ThreadedEvaluateIndex = NULL;
-  }
-  if( this->m_ThreadedWeights != NULL )
-  {
-    delete[] this->m_ThreadedWeights;
-    this->m_ThreadedWeights = NULL;
-  }
-  if( this->m_ThreadedWeightsDerivative != NULL )
-  {
-    delete[] this->m_ThreadedWeightsDerivative;
-    this->m_ThreadedWeightsDerivative = NULL;
-  }
-} // end Destructor()
 
 
 /**
@@ -105,8 +61,6 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
   os << indent << "Spline Order: " << SplineOrder << std::endl;
   os << indent << "UseImageDirection = "
     << ( this->m_UseImageDirection ? "On" : "Off" ) << std::endl;
-  os << indent << "NumberOfThreads: " << m_NumberOfThreads  << std::endl;
-
 } // end PrintSelf()
 
 
@@ -121,9 +75,9 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
 {
   if( inputData )
   {
-    Superclass::SetInputImage(inputData);
+    Superclass::SetInputImage( inputData );
 
-    this->m_CoefficientFilter->SetInput(inputData);
+    this->m_CoefficientFilter->SetInput( inputData );
     this->m_CoefficientFilter->Update();
     this->m_Coefficients = m_CoefficientFilter->GetOutput();
     this->m_DataLength = inputData->GetBufferedRegion().GetSize();
@@ -143,18 +97,48 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
 
 
 /**
- * ******************* SetNumberOfThreads ***********************
+ * ******************* Evaluate ***********************
  */
 
-// MS: delete, or move to AdvancedInterpolateImageFunction
+template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int SplineOrder >
+typename RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >::OutputType
+RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
+::Evaluate( const PointType & point ) const
+{
+  ContinuousIndexType cindex;
+  this->GetInputImage()->TransformPhysicalPointToContinuousIndex( point, cindex );
+  return this->EvaluateAtContinuousIndex( cindex );
+} // end Evaluate()
+
+
+/**
+ * ******************* EvaluateDerivative ***********************
+ */
+
+template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int SplineOrder >
+typename RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >::CovariantVectorType
+RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
+::EvaluateDerivative( const PointType & point ) const
+{
+  ContinuousIndexType cindex;
+  this->GetInputImage()->TransformPhysicalPointToContinuousIndex( point, cindex );
+  return this->EvaluateDerivativeAtContinuousIndex( cindex );
+} // end EvaluateDerivative()
+
+
+/**
+ * ******************* EvaluateValueAndDerivative ***********************
+ */
+
 template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int SplineOrder >
 void
 RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
-::SetNumberOfThreads(ThreadIdType numThreads)
+::EvaluateValueAndDerivative( const PointType & point, OutputType & value, CovariantVectorType & deriv ) const
 {
-  m_NumberOfThreads = numThreads;
-  this->SetThreads();
-} // end SetNumberOfThreads()
+  ContinuousIndexType cindex;
+  this->GetInputImage()->TransformPhysicalPointToContinuousIndex( point, cindex );
+  this->EvaluateValueAndDerivativeAtContinuousIndex( cindex, value, deriv );
+} // end EvaluateValueAndDerivative()
 
 
 /**
@@ -422,7 +406,7 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
 
 
 /**
- * ******************* Constructor ***********************
+ * ******************* SetHessianWeights ***********************
  */
 
 //template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int splineOrder >
@@ -447,40 +431,6 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
 //        weightsvec.Fill( 0.0 );
 //    }
 //}
-
-
-/**
- * ******************* SetThreads ***********************
- */
-
-// MS: delete?
-template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int SplineOrder >
-void
-RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
-::SetThreads( void )
-{
-  if ( m_ThreadedEvaluateIndex != NULL )
-  {
-    delete[] m_ThreadedEvaluateIndex;
-  }
-  m_ThreadedEvaluateIndex = new vnl_matrix< long >[m_NumberOfThreads];
-  if ( m_ThreadedWeights != NULL )
-  {
-    delete[] m_ThreadedWeights;
-  }
-  m_ThreadedWeights = new vnl_matrix< double >[m_NumberOfThreads];
-  if ( m_ThreadedWeightsDerivative != NULL )
-  {
-    delete[] m_ThreadedWeightsDerivative;
-  }
-  m_ThreadedWeightsDerivative = new vnl_matrix< double >[m_NumberOfThreads];
-  for ( unsigned int i = 0; i < m_NumberOfThreads; i++ )
-  {
-    m_ThreadedEvaluateIndex[i].set_size(ImageDimension, SplineOrder + 1);
-    m_ThreadedWeights[i].set_size(ImageDimension, SplineOrder + 1);
-    m_ThreadedWeightsDerivative[i].set_size(ImageDimension, SplineOrder + 1);
-  }
-} // end SetThreads()
 
 
 /**

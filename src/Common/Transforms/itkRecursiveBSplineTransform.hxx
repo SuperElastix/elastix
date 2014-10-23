@@ -31,14 +31,17 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 } // end Constructor()
 
 
-////TransformPoint 1 argument
+/**
+ * ********************* TransformPoint ****************************
+ */
+
 // MS: this is slightly different from AdvancedBSplineDeformableTransform
 // should we update that one and delete this one?
 template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 typename RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
 ::OutputPointType
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
-::TransformPoint(const InputPointType & point) const
+::TransformPoint( const InputPointType & point ) const
 {
   /** Allocate memory on the stack: */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
@@ -54,7 +57,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   this->TransformPoint( point, outputPoint, weights, indices, inside );
 
   return outputPoint;
-}
+} // end TransformPoint()
 
 
 /**
@@ -146,6 +149,19 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
     outputPoint[ j ] += transformedPoint[ j ];
   } // end for
 } // end TransformPoint()
+
+
+/**
+ * ********************* GetJacobian ****************************
+ */
+
+template< class TScalar, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
+::GetJacobian( const InputPointType & ipp, JacobianType & j, NonZeroJacobianIndicesType & nzji ) const
+{
+  Superclass::GetJacobian( ipp, j, nzji );
+} // end GetJacobian()
 
 
 /**

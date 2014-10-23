@@ -99,7 +99,7 @@ public :
    * ImageFunction::IsInsideBuffer() can be used to check bounds before
    * calling the method.
    */
-  virtual OutputType Evaluate( const PointType & point, ThreadIdType threadID ) const = 0; // MS: echt nodig, maak er een zonder threadID??
+  //virtual OutputType Evaluate( const PointType & point, ThreadIdType threadID ) const = 0; // MS: echt nodig, maak er een zonder threadID??
 
   /** Interpolate the image at an index position.
    *
@@ -119,26 +119,26 @@ public :
    * The virtual methods below are necessary for the recursiveBSplineInterpolateImageFunction class.
    */
   virtual OutputType EvaluateAtContinuousIndex(const ContinuousIndexType & index) const = 0;
-  virtual OutputType EvaluateAtContinuousIndex(const ContinuousIndexType & index, ThreadIdType threadID) const = 0; // nodig??
+  //virtual OutputType EvaluateAtContinuousIndex(const ContinuousIndexType & index, ThreadIdType threadID) const = 0; // nodig??
 
   virtual CovariantVectorType EvaluateDerivative(const PointType & point) const = 0;
-  virtual CovariantVectorType EvaluateDerivative(const PointType & point, ThreadIdType threadID) const = 0; // nodig??
+  //virtual CovariantVectorType EvaluateDerivative(const PointType & point, ThreadIdType threadID) const = 0; // nodig??
   virtual CovariantVectorType EvaluateDerivativeAtContinuousIndex(const ContinuousIndexType & x) const = 0;
-  virtual CovariantVectorType EvaluateDerivativeAtContinuousIndex(const ContinuousIndexType & x,ThreadIdType threadID) const = 0; // nodig??
+  //virtual CovariantVectorType EvaluateDerivativeAtContinuousIndex(const ContinuousIndexType & x,ThreadIdType threadID) const = 0; // nodig??
 
   virtual void EvaluateValueAndDerivative(const PointType & point, OutputType & value,CovariantVectorType & deriv) const = 0;
-  virtual void EvaluateValueAndDerivative(const PointType & point, OutputType & value,CovariantVectorType & deriv,ThreadIdType threadID) const = 0; // nodig??
+  //virtual void EvaluateValueAndDerivative(const PointType & point, OutputType & value,CovariantVectorType & deriv,ThreadIdType threadID) const = 0; // nodig??
   virtual void EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x, OutputType & value,CovariantVectorType & deriv) const = 0;
-  virtual void EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x, OutputType & value,CovariantVectorType & deriv, ThreadIdType threadID) const = 0; // nodig??
+  //virtual void EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x, OutputType & value,CovariantVectorType & deriv, ThreadIdType threadID) const = 0; // nodig??
 
-  virtual void SetNumberOfThreads(ThreadIdType numThreads)=0; // nodig??
+  //virtual void SetNumberOfThreads(ThreadIdType numThreads)=0; // nodig??
 
   AdvancedInterpolateImageFunction(){}
   ~AdvancedInterpolateImageFunction(){}
 
-  void PrintSelf(std::ostream & os, Indent indent) const // delete this function
+  void PrintSelf( std::ostream & os, Indent indent ) const // needed by the wrapper somehow
   {
-    Superclass::PrintSelf(os, indent);
+    Superclass::PrintSelf( os, indent );
   }
 
 private:
