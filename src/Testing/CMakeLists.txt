@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------
-Project( elxTesting )
+project( elxTesting )
 
 # Set some directories
 set( TestDataDir ${elastix_SOURCE_DIR}/Testing/Data )
@@ -70,7 +70,7 @@ macro( trx_add_test name )
   set( testname transformix_run_${name} )
   set( output_dir ${TestOutputDir}/${testname} )
   file( MAKE_DIRECTORY ${output_dir} )
-  
+
   # Define some helper variables.
   set( TRXTEST_EXECUTABLE_NAME transformix )
   set( TRXTEST_TEST_NAME ${name} )
@@ -340,7 +340,7 @@ set_tests_properties( InvertTransformTest_COMPARE_TP
 
 # Add other tests
 elx_add_test( AdvancedBSplineDeformableTransformTest
-  ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
+  ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt )
 elx_add_test( BSplineDerivativeKernelFunctionTest )
 elx_add_test( BSplineSODerivativeKernelFunctionTest )
 elx_add_test( BSplineInterpolationWeightFunctionTest )
@@ -348,11 +348,16 @@ elx_add_test( BSplineInterpolationDerivativeWeightFunctionTest )
 elx_add_test( BSplineInterpolationSODerivativeWeightFunctionTest )
 elx_add_test( MevisDicomTiffImageIOTest )
 elx_add_test( ThinPlateSplineTransformPerformanceTest
-  ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt
+  ${TestDataDir}/parameters_TPSTransformTest.txt
   ${elastix_BINARY_DIR}/Testing )
 elx_add_test( ThinPlateSplineTransformTest
-  ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt )
-elx_add_test( TimerTest )
+  ${TestDataDir}/parameters_TPSTransformTest.txt )
+elx_add_test( AdvanceOneStepParallellizationTest )
+elx_add_test( AccumulateDerivativesParallellizationTest )
+elx_add_test( BSplineTransformPointPerformanceTest
+  ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt )
+elx_add_test( BSplineJacobianGradientPerformanceTest
+  ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt )
 
 #---------------------------------------------------------------------
 # Add tests that run elastix
@@ -634,3 +639,4 @@ trx_add_test( TransformixMemoryTest
   -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
 
 set_tests_properties( TransformixMemoryTest PROPERTIES TIMEOUT 10000 )
+

@@ -121,7 +121,6 @@ main( int argc, char * argv[] )
   typedef PointsContainerType::Pointer    PointsContainerPointer;
   typedef PointSetType::PointType         PointType;
   typedef TransformType::LMatrixType      LMatrixType;
-  typedef vnl_sparse_matrix< ScalarType > LSparseMatrixType;
 
   PointSetType::Pointer dummyLandmarks = PointSetType::New();
 

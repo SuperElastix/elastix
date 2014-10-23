@@ -48,7 +48,6 @@ main( int argc, char * argv[] )
   typedef TransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
   typedef TransformType::PointSetType               PointSetType;
   typedef TransformType::InputPointType             InputPointType;
-  typedef TransformType::OutputPointType            OutputPointType;
 
   typedef itk::TransformixInputPointFileReader<
     PointSetType >                                      IPPReaderType;

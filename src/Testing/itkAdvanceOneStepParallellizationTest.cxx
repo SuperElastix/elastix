@@ -113,11 +113,6 @@ public:
 #ifdef ELASTIX_USE_OPENMP
     else if( this->m_UseOpenMP && !this->m_UseEigen )
     {
-      /** Get a reference to the current position. *
-      const ParametersType & currentPosition = this->m_CurrentPosition;
-      const double learningRate = this->m_LearningRate;
-      const ParametersType & gradient = this->m_Gradient;
-
       /** Get a pointer to the current position. */
       const InternalScalarType * currentPosition = this->m_CurrentPosition.data_block();
       const InternalScalarType   learningRate    = this->m_LearningRate;
@@ -159,10 +154,8 @@ public:
       temp->t_Optimizer   = this;
 
       /** Call multi-threaded AdvanceOneStep(). */
-      ThreaderType::Pointer local_threader = ThreaderType::New();
-      local_threader->SetNumberOfThreads( this->m_Threader->GetNumberOfThreads() );
-      local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
-      local_threader->SingleMethodExecute();
+      this->m_Threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
+      this->m_Threader->SingleMethodExecute();
 
       delete temp;
     }

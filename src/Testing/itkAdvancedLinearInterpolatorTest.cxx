@@ -24,55 +24,7 @@
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageFileWriter.h"
 #include "vnl/vnl_math.h"
-
-//-------------------------------------------------------------------------------------
-//timer helper class
-
-#if defined( _MSC_VER )
-  #define NOMINMAX // workaround a bug in windows.h
-  #define __OnWindows__
-  #include <windows.h>
-#else
-  #include <sys/time.h>
-  #define __CLOCK_OPTION__ CLOCK_MONOTONIC
-#endif
-
-class TimerHelper
-{
-public:
-
-#ifdef __OnWindows__
-  typedef LARGE_INTEGER TimeType;
-  void GetTheTime( TimeType & currentTime )
-  {
-    QueryPerformanceCounter( &currentTime );
-  }
-
-
-  double ComputeTimeDiff( const TimeType & start, const TimeType & end )
-  {
-    TimeType freq; QueryPerformanceFrequency( &freq );
-    return 1000.0 * ( end.QuadPart - start.QuadPart ) / static_cast< double >( freq.QuadPart );
-  }
-
-
-#else
-  typedef timespec TimeType;
-  void GetTheTime( TimeType & currentTime )
-  {
-    clock_gettime( __CLOCK_OPTION__, &currentTime );
-  }
-
-
-  double ComputeTimeDiff( const TimeType & start, const TimeType & end )
-  {
-    return ( end.tv_sec - start.tv_sec ) * 1.0e3
-           + ( end.tv_nsec - start.tv_nsec ) / 1.0e6;
-  }
-
-
-#endif
-};
+#include "itkTimeProbe.h"
 
 //-------------------------------------------------------------------------------------
 
@@ -116,6 +68,7 @@ TestInterpolators( void )
     origin[ i ]  = randomNum->GetUniformVariate( -1, 0 );
   }
   RegionType region; region.SetSize( size );
+
   /** Make sure to test for non-identity direction cosines. */
   DirectionType direction; direction.Fill( 0.0 );
   if( Dimension == 2 )
@@ -136,6 +89,7 @@ TestInterpolators( void )
   image->SetSpacing( spacing );
   image->SetDirection( direction );
   image->Allocate();
+
   // loop over image and fill with random values
   IteratorType it( image, image->GetLargestPossibleRegion() );
   it.GoToBegin();
@@ -202,6 +156,8 @@ TestInterpolators( void )
       }
     }
   }
+
+  /** Compare results. */
   OutputType          valueLin, valueLinA, valueBSpline, valueBSpline2;
   CovariantVectorType derivLinA, derivBSpline, derivBSpline2;
   for( unsigned int i = 0; i < count; i++ )
@@ -253,58 +209,57 @@ TestInterpolators( void )
   std::cout << "cindex: " << cindex << std::endl;
   OutputType            value; CovariantVectorType deriv;
   const unsigned int    runs = 1e5;
-  TimerHelper           timerHelper;
-  TimerHelper::TimeType start, end;
 
-  timerHelper.GetTheTime( start );
+  itk::TimeProbe timer;
+  timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     value = linear->EvaluateAtContinuousIndex( cindex );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "linear  (value) : "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 
-  timerHelper.GetTheTime( start );
+  timer.Reset(); timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     linearA->EvaluateValueAndDerivativeAtContinuousIndex( cindex, value, deriv );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "linearA (v&d)   : "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 
-  timerHelper.GetTheTime( start );
+  timer.Reset(); timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     value = bspline->EvaluateAtContinuousIndex( cindex );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "B-spline (value): "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 
-  timerHelper.GetTheTime( start );
+  timer.Reset(); timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     value = bspline->EvaluateAtContinuousIndex( cindex );
     deriv = bspline->EvaluateDerivativeAtContinuousIndex( cindex );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "B-spline (v+d)  : "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 
-  timerHelper.GetTheTime( start );
+  timer.Reset(); timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     bspline->EvaluateValueAndDerivativeAtContinuousIndex( cindex, value, deriv );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "B-spline (v&d)  : "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 #endif
 
