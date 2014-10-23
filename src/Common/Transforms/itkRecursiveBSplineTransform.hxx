@@ -135,7 +135,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   // Call recursive interpolate function
   // MS: I think that this can be made more efficient. Now the product of beta's are recomputed
   // for each dimension, while these are the same. Only mu = basepointer changes
-#if 1
+#if 0
   outputPoint.Fill( NumericTraits<TScalar>::Zero );
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
@@ -154,20 +154,22 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   } // end for
 #else
   outputPoint.Fill( NumericTraits<TScalar>::Zero );
-  typedef FixedArray< TScalar *, SpaceDimension > ScalarPointerVectorType;
-  ScalarPointerVectorType basePointers;
+  ScalarType opp[ SpaceDimension ];
+  ScalarType * basePointers[ SpaceDimension ];
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
+    opp[ j ] = 0.0;
     basePointers[ j ] = this->m_CoefficientImages[ j ]->GetBufferPointer();
   }
-  //const TScalar *basePointer = this->m_CoefficientImages[ j ]->GetBufferPointer();
-  unsigned int c = 0;
-  outputPoint = RecursiveBSplineTransformImplementation< SpaceDimension, SplineOrder, TScalar >
-    ::InterpolateTransformPoint2( basePointers, steps,
-      weightsPointer, basePointers, indices, c );
+  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
+    ::InterpolateTransformPoint( opp, basePointers, steps,
+      weightsPointer, basePointers );
 
   // The output point is the start point + displacement.
-  //outputPoint += transformedPoint;
+  for( unsigned int j = 0; j < SpaceDimension; ++j )
+  {
+    outputPoint[ j ] = opp[ j ] + transformedPoint[ j ];
+  }
 #endif
 } // end TransformPoint()
 
@@ -182,8 +184,9 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 ::GetJacobian( const InputPointType & ipp, JacobianType & jacobian,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  //Superclass::GetJacobian( ipp, j, nzji );
-
+#if 1
+  Superclass::GetJacobian( ipp, jacobian, nonZeroJacobianIndices );
+#else
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
@@ -299,7 +302,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
    * Takes a significant portion of the computation time of this function.
    */
   //this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
-
+#endif
 } // end GetJacobian()
 
 
