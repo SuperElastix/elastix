@@ -1,17 +1,16 @@
 /*======================================================================
 
-This file is part of the elastix software.
+  This file is part of the elastix software.
 
-Copyright (c) University Medical Center Utrecht. All rights reserved.
-See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-details.
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even
-the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE. See the above copyright notices for more information.
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -107,6 +106,7 @@ public:
   typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::ParametersValueType    ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  typedef typename Superclass::DerivativeType         DerivativeType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::InputVectorType        InputVectorType;
   typedef typename Superclass::OutputVectorType       OutputVectorType;
@@ -145,6 +145,14 @@ public:
   typedef std::vector< SpatialHessianType >                JacobianOfSpatialHessianType;
   typedef typename SpatialJacobianType::InternalMatrixType InternalMatrixType;
 
+  /** Typedef for the moving image gradient type.
+   * This type is defined by the B-spline interpolator as
+   * typedef CovariantVector< RealType, ImageDimension >
+   * As we cannot access this type we simply re-construct it to be identical.
+   */
+  typedef OutputCovariantVectorType                   MovingImageGradientType;
+  typedef typename MovingImageGradientType::ValueType MovingImageGradientValueType;
+
   /** Get the number of nonzero Jacobian indices. By default all. */
   virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
 
@@ -182,6 +190,15 @@ public:
     const InputPointType & ipp,
     JacobianType & j,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
+
+  /** Compute the inner product of the Jacobian with the moving image gradient.
+   * The Jacobian is (partially) constructed inside this function, but not returned.
+   */
+  virtual void EvaluateJacobianWithImageGradientProduct(
+    const InputPointType & ipp,
+    const MovingImageGradientType & movingImageGradient,
+    DerivativeType & imageJacobian,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
   /** Compute the spatial Jacobian of the transformation.
    *

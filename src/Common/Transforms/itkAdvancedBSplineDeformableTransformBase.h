@@ -1,14 +1,14 @@
 /*======================================================================
 
-This file is part of the elastix software.
+  This file is part of the elastix software.
 
-Copyright (c) University Medical Center Utrecht. All rights reserved.
-See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-details.
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even
-the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE. See the above copyright notices for more information.
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
 #ifndef __itkAdvancedBSplineDeformableTransformBase_h
@@ -55,7 +55,9 @@ public:
 
   /** Typedefs from Superclass. */
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::ParametersValueType    ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  typedef typename Superclass::DerivativeType         DerivativeType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::ScalarType             ScalarType;
   typedef typename Superclass::InputPointType         InputPointType;
@@ -78,7 +80,9 @@ public:
   typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
     ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass::InternalMatrixType           InternalMatrixType;
+  typedef typename Superclass::MovingImageGradientType      MovingImageGradientType;
+  typedef typename Superclass::MovingImageGradientValueType MovingImageGradientValueType;
 
   /** This method sets the parameters of the transform.
      * For a B-spline deformation transform, the parameters are the BSpline

@@ -19,7 +19,7 @@
 #include "itkBSplineResampleImageFunction.h"
 #include "itkBSplineDecompositionImageFilter.h"
 #include "itkResampleImageFilter.h"
-#include "itkImageRegionConstIterator.h"
+
 
 namespace itk
 {
@@ -57,7 +57,7 @@ UpsampleBSplineParametersFilter< TArray, TImage >
   /** Determine if upsampling is required. */
   if( !this->DoUpsampling() )
   {
-    parameters_out = parameters_in;
+    parameters_out = parameters_in; // \todo: hard copy, can be avoided
     return;
   }
 
@@ -68,19 +68,21 @@ UpsampleBSplineParametersFilter< TArray, TImage >
     ImageType, ValueType >                        CoefficientUpsampleFunctionType;
   typedef itk::BSplineDecompositionImageFilter<
     ImageType, ImageType >                        DecompositionFilterType;
-  typedef ImageRegionConstIterator< ImageType > IteratorType;
-
-  /** Get the pointer to the data of the input parameters. */
-  PixelType * inputDataPointer
-    = const_cast< PixelType * >( parameters_in.data_block() );
 
   /** Get the number of parameters. */
   const unsigned int currentNumberOfPixels
     = this->m_CurrentGridRegion.GetNumberOfPixels();
+  const unsigned int requiredNumberOfPixels
+    = this->m_RequiredGridRegion.GetNumberOfPixels();
 
   /** Create the new vector of output parameters, with the correct size. */
-  parameters_out.SetSize(
-    this->m_RequiredGridRegion.GetNumberOfPixels() * Dimension );
+  parameters_out.SetSize( requiredNumberOfPixels * Dimension );
+
+  /** Get the pointer to the data of the input parameters. */
+  PixelType * inputDataPointer
+    = const_cast< PixelType * >( parameters_in.data_block() );
+  PixelType * outputDataPointer
+    = const_cast< PixelType * >( parameters_out.data_block() );
 
   /** The input parameters are represented as a coefficient image. */
   ImagePointer coeffs_in = ImageType::New();
@@ -89,18 +91,15 @@ UpsampleBSplineParametersFilter< TArray, TImage >
   coeffs_in->SetDirection( this->m_CurrentGridDirection );
   coeffs_in->SetRegions( this->m_CurrentGridRegion );
 
-  /** Initialise iterator in the parameters_out. */
-  unsigned int i = 0;
-
   /** Loop over dimension: each direction is upsampled separately. */
   for( unsigned int j = 0; j < Dimension; j++ )
   {
     /** Fill the coefficient image with parameter data. */
-    coeffs_in->GetPixelContainer()
-    ->SetImportPointer( inputDataPointer, currentNumberOfPixels );
+    coeffs_in->GetPixelContainer()->SetImportPointer(
+      inputDataPointer, currentNumberOfPixels );
     inputDataPointer += currentNumberOfPixels;
 
-    /* Set the coeficient image as the input of the upsampler filter.
+    /** Set the coefficient image as the input of the upsampler filter.
      * The upsampler samples the deformation field at the locations
      * of the new control points, given the current coefficients
      * (note: it does not just interpolate the coefficient image,
@@ -108,8 +107,7 @@ UpsampleBSplineParametersFilter< TArray, TImage >
      * describe the resulting image are computed by the
      * decomposition filter.
      *
-     * This code is copied from the itk-example
-     * DeformableRegistration6.cxx .
+     * This code is derived from the itk-example DeformableRegistration6.cxx.
      */
     typename UpsampleFilterType::Pointer upsampler
       = UpsampleFilterType::New();
@@ -135,6 +133,9 @@ UpsampleBSplineParametersFilter< TArray, TImage >
     try
     {
       decompositionFilter->UpdateLargestPossibleRegion();
+      // \todo: the decomposition filter could be multi-threaded
+      // by deriving it from the RecursiveSeparableImageFilter,
+      // similar to the SmoothingRecursiveGaussianImageFilter.
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -149,18 +150,11 @@ UpsampleBSplineParametersFilter< TArray, TImage >
     }
 
     /** Get a pointer to the upsampled coefficient image. */
-    ImagePointer coeffs_out = decompositionFilter->GetOutput();
+    const PixelType * coeffs_out = decompositionFilter->GetOutput()->GetBufferPointer();
 
-    /** Create an iterator over the new coefficient image. */
-    IteratorType iterator( coeffs_out, this->m_RequiredGridRegion );
-    iterator.GoToBegin();
-    while( !iterator.IsAtEnd() )
-    {
-      /** Copy the contents of coeffs_out in a ParametersType array. */
-      parameters_out[ i ] = iterator.Get();
-      ++iterator;
-      ++i;
-    } // end while coeffs_out iterator loop
+    /** Copy the contents of coeffs_out in a ParametersType array. */
+    std::copy( coeffs_out, coeffs_out + requiredNumberOfPixels,
+      outputDataPointer + requiredNumberOfPixels * j );
 
   } // end for dimension loop
 
