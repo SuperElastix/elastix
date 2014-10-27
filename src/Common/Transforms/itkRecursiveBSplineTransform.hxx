@@ -133,9 +133,6 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   }
 
   // Call recursive interpolate function
-  // MS: I think that this can be made more efficient. Now the product of beta's are recomputed
-  // for each dimension, while these are the same. Only mu = basepointer changes
-#if 0
   outputPoint.Fill( NumericTraits<TScalar>::Zero );
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
@@ -152,7 +149,82 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
     // The output point is the start point + displacement.
     outputPoint[ j ] += transformedPoint[ j ];
   } // end for
-#else
+
+} // end TransformPoint()
+
+
+/**
+ * ********************* TransformPointVector ****************************
+ */
+
+template< typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
+::TransformPointVector(
+  const InputPointType & point,
+  OutputPointType & outputPoint,
+  WeightsType & weights1D,
+  ParameterIndexArrayType & indices,
+  bool & inside ) const
+{
+  inside = true;
+  InputPointType transformedPoint = point;
+
+  /** Check if the coefficient image has been set. */
+  if( !this->m_CoefficientImages[ 0 ] )
+  {
+    itkWarningMacro( << "B-spline coefficients have not been set" );
+    for( unsigned int j = 0; j < SpaceDimension; j++ )
+    {
+      outputPoint[ j ] = transformedPoint[ j ];
+    }
+    return;
+  }
+
+  /***/
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( point, cindex );
+
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and return the input point
+  inside = this->InsideValidRegion( cindex );
+  if( !inside )
+  {
+    outputPoint = transformedPoint;
+    return;
+  }
+
+  // Compute interpolation weighs and store them in weights
+  // MS: compare with AdvancedBSplineDeformableTransform
+  IndexType supportIndex;
+  this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
+
+  // Allocation of memory
+  long evaluateIndexData[ ( SplineOrder + 1 ) * SpaceDimension ];
+  long stepsData[ ( SplineOrder + 1 ) * SpaceDimension ];
+  vnl_matrix_ref<long> evaluateIndex( SpaceDimension, SplineOrder + 1, evaluateIndexData );
+  double * weightsPointer = &(weights1D[0]);
+  long * steps = &(stepsData[0]);
+
+  for( unsigned int ii = 0; ii < SpaceDimension; ++ii )
+  {
+    for( unsigned int jj = 0; jj <= SplineOrder; ++jj )
+    {
+      evaluateIndex[ ii ][ jj ] = supportIndex[ ii ] + jj;
+    }
+  }
+
+  IndexType offsetTable;
+  for( unsigned int n = 0; n < SpaceDimension; ++n )
+  {
+    offsetTable[ n ] = this->m_CoefficientImages[ 0 ]->GetOffsetTable()[ n ];
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * offsetTable[ n ];
+    }
+  }
+
+  // Call recursive interpolate function, vector version
   outputPoint.Fill( NumericTraits<TScalar>::Zero );
   ScalarType opp[ SpaceDimension ];
   ScalarType * basePointers[ SpaceDimension ];
@@ -170,8 +242,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   {
     outputPoint[ j ] = opp[ j ] + transformedPoint[ j ];
   }
-#endif
-} // end TransformPoint()
+
+} // end TransformPointVector()
 
 
 /**

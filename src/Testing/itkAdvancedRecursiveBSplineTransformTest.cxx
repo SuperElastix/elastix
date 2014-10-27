@@ -21,6 +21,7 @@
 
 #include "itkTimeProbe.h"
 #include "itkTimeProbesCollectorBase.h"
+#include "itkMersenneTwisterRandomVariateGenerator.h"
 #include <fstream>
 #include <iomanip>
 
@@ -74,6 +75,7 @@ main( int argc, char * argv[] )
   typedef TransformType::InputPointType                InputPointType;
   typedef TransformType::OutputPointType               OutputPointType;
   typedef TransformType::ParametersType                ParametersType;
+  typedef TransformType::ImagePointer     CoefficientImagePointer;
   typedef itk::Image< CoordinateRepresentationType,
     Dimension >                                         InputImageType;
   typedef InputImageType::RegionType    RegionType;
@@ -82,6 +84,7 @@ main( int argc, char * argv[] )
   typedef InputImageType::SpacingType   SpacingType;
   typedef InputImageType::PointType     OriginType;
   typedef InputImageType::DirectionType DirectionType;
+  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator MersenneTwisterType;
 
   /** Create the transforms. */
   ITKTransformType::Pointer transformITK = ITKTransformType::New();
@@ -213,21 +216,66 @@ main( int argc, char * argv[] )
    */
 
   itk::TimeProbesCollectorBase timeCollector;
+  OutputPointType opp;
+  TransformType::WeightsType				        weights;
+  RecursiveTransformType::WeightsType				weights2;
+  TransformType::ParameterIndexArrayType	  indices;
+  RecursiveTransformType::ParameterIndexArrayType	indices2;
+
+  const unsigned int dummyNum = vcl_pow( static_cast< double >( SplineOrder + 1 ),static_cast< double >( Dimension ) );
+  weights.SetSize( dummyNum );
+  indices.SetSize( dummyNum );
+  weights2.SetSize( dummyNum );
+  indices2.SetSize( dummyNum );
+  
+  bool isInside = true;
+
+  // Generate a list of random points
+  MersenneTwisterType::Pointer mersenneTwister = MersenneTwisterType::New();
+  mersenneTwister->Initialize( 140377 );
+  std::vector< InputPointType > pointList( N );
+  IndexType dummyIndex;
+  CoefficientImagePointer coefficientImage = transform->GetCoefficientImages()[0];
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    for( unsigned int j = 0; j < Dimension; ++j )
+    {
+      dummyIndex[ j ] = mersenneTwister->GetUniformVariate( 1, gridSize[ j ] - 2 );
+    }
+    coefficientImage->TransformIndexToPhysicalPoint( dummyIndex, pointList[ i ] );
+    //pointList[ i ][ j ] = ;
+  }
 
   /** Time the implementation of the TransformPoint. */
   timeCollector.Start( "TransformPoint elastix" );
   for( unsigned int i = 0; i < N; ++i )
   {
-    OutputPointType opp1 = transform->TransformPoint( inputPoint );
+    //OutputPointType opp1 = transform->TransformPoint( inputPoint );
+    transform->TransformPoint( pointList[ i ], opp, weights, indices, isInside );
+
+    if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
   }
   timeCollector.Stop( "TransformPoint elastix" );
 
   timeCollector.Start( "TransformPoint recursive" );
   for( unsigned int i = 0; i < N; ++i )
   {
-    OutputPointType opp2 = recursiveTransform->TransformPoint( inputPoint );
+    //OutputPointType opp2 = recursiveTransform->TransformPoint( inputPoint );
+    recursiveTransform->TransformPoint( pointList[ i ], opp, weights2, indices2, isInside );
+
+    if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
   }
   timeCollector.Stop( "TransformPoint recursive" );
+
+  timeCollector.Start( "TransformPoint recursive vector" );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    //OutputPointType opp3 = recursiveTransform->TransformPointVector( inputPoint );
+    recursiveTransform->TransformPointVector( pointList[ i ], opp, weights2, indices2, isInside );
+
+    if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
+  }
+  timeCollector.Stop( "TransformPoint recursive vector" );
 
   /** Time the implementation of the Jacobian. *
   timeCollector.Start( "Jacobian elastix" );
@@ -255,16 +303,41 @@ main( int argc, char * argv[] )
   /** These should return the same values as the original ITK functions. */
 
   /** TransformPoint. */
-  OutputPointType opp1           = transform->TransformPoint( inputPoint );
-  OutputPointType opp2           = recursiveTransform->TransformPoint( inputPoint );
-  double          differenceNorm = 0.0;
-  for( unsigned int i = 0; i < Dimension; ++i )
+  OutputPointType opp1, opp2, opp3;
+  double differenceNorm1 = 0.0;
+  double differenceNorm2 = 0.0;
+  double differenceNorm3 = 0.0;
+  for( unsigned int i = 0; i < N; ++i )
   {
-    differenceNorm += ( opp1[ i ] - opp2[ i ] ) * ( opp1[ i ] - opp2[ i ] );
+    transform->TransformPoint( pointList[ i ], opp1, weights, indices, isInside );
+    recursiveTransform->TransformPoint( pointList[ i ], opp2, weights, indices, isInside );
+    recursiveTransform->TransformPointVector( pointList[ i ], opp3, weights, indices, isInside );
+
+    // Difference of recursiveTransform->TransformPoint
+    for( unsigned int i = 0; i < Dimension; ++i )
+    {
+      differenceNorm1 += ( opp1[ i ] - opp2[ i ] ) * ( opp1[ i ] - opp2[ i ] );
+      differenceNorm2 += ( opp1[ i ] - opp3[ i ] ) * ( opp1[ i ] - opp3[ i ] );
+      differenceNorm3 += ( opp2[ i ] - opp3[ i ] ) * ( opp2[ i ] - opp3[ i ] );
+    }
+    differenceNorm1 = vcl_sqrt( differenceNorm1 );
+    differenceNorm2 = vcl_sqrt( differenceNorm2 );
+    differenceNorm3 = vcl_sqrt( differenceNorm3 );
   }
-  if( vcl_sqrt( differenceNorm ) > 1e-6 )
+  differenceNorm1 /= N;
+  differenceNorm2 /= N;
+  differenceNorm3 /= N;
+  std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm1 << std::endl;
+  std::cerr << "Recursive B-spline TransformPointVector() MSD with ITK: " << differenceNorm2 << std::endl;
+  std::cerr << "Recursive B-spline MSD with itself: " << differenceNorm3 << std::endl;
+  if( differenceNorm1 > 1e-5 )
   {
-    std::cerr << "ERROR: Advanced B-spline TransformPoint() returning incorrect result." << std::endl;
+    std::cerr << "ERROR: Recursive B-spline TransformPoint() returning incorrect result." << std::endl;
+    return EXIT_FAILURE;
+  }
+  if( differenceNorm2 > 1e-5 )
+  {
+    std::cerr << "ERROR: Recursive B-spline TransformPointVector() returning incorrect result." << std::endl;
     return EXIT_FAILURE;
   }
 
