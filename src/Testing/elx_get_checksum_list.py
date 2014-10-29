@@ -6,6 +6,13 @@ from optparse import OptionParser
 
 #-------------------------------------------------------------------------------
 # the main function
+# cd bin_VS2010
+# ctest -C Release
+# cd Testing
+# python ../../src/Testing/elx_get_checksum_list.py -l elastix_run*
+# cd ..
+# ctest -C Release -R COMPARE_CHECKSUM
+# svn commit -m "ENH: updating baselines after recent change X"
 def main():
     # usage, parse parameters
     usage = "usage: %prog [options] arg"
