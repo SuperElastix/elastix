@@ -44,7 +44,8 @@ main( int argc, char * argv[] )
    * Debug and Release mode.
    */
 #ifndef NDEBUG
-  unsigned int N = static_cast< unsigned int >( 1e3 );
+  //unsigned int N = static_cast< unsigned int >( 1e3 );
+  unsigned int N = static_cast< unsigned int >( 0 );
 #else
   unsigned int N = static_cast< unsigned int >( 1e6 );
 #endif
@@ -185,6 +186,9 @@ main( int argc, char * argv[] )
    *
    */
 
+  /** The transform point. */
+  recursiveTransform->TransformPoint( inputPoint );
+
   /** The Jacobian. *
   recursiveTransform->GetJacobian( inputPoint, jacobian, nzji );
 
@@ -243,7 +247,6 @@ main( int argc, char * argv[] )
       dummyIndex[ j ] = mersenneTwister->GetUniformVariate( 1, gridSize[ j ] - 2 );
     }
     coefficientImage->TransformIndexToPhysicalPoint( dummyIndex, pointList[ i ] );
-    //pointList[ i ][ j ] = ;
   }
 
   /** Time the implementation of the TransformPoint. */
@@ -313,7 +316,6 @@ main( int argc, char * argv[] )
     recursiveTransform->TransformPoint( pointList[ i ], opp2, weights, indices, isInside );
     recursiveTransform->TransformPointVector( pointList[ i ], opp3, weights, indices, isInside );
 
-    // Difference of recursiveTransform->TransformPoint
     for( unsigned int i = 0; i < Dimension; ++i )
     {
       differenceNorm1 += ( opp1[ i ] - opp2[ i ] ) * ( opp1[ i ] - opp2[ i ] );
@@ -324,9 +326,7 @@ main( int argc, char * argv[] )
     differenceNorm2 = vcl_sqrt( differenceNorm2 );
     differenceNorm3 = vcl_sqrt( differenceNorm3 );
   }
-  differenceNorm1 /= N;
-  differenceNorm2 /= N;
-  differenceNorm3 /= N;
+  differenceNorm1 /= N; differenceNorm2 /= N; differenceNorm3 /= N;
   std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm1 << std::endl;
   std::cerr << "Recursive B-spline TransformPointVector() MSD with ITK: " << differenceNorm2 << std::endl;
   std::cerr << "Recursive B-spline MSD with itself: " << differenceNorm3 << std::endl;
@@ -344,16 +344,20 @@ main( int argc, char * argv[] )
   /** Jacobian */
   //JacobianType jacobianITK; jacobianITK.Fill( 0.0 );
   //transformITK->ComputeJacobianWithRespectToParameters( inputPoint, jacobianITK );
-#if 0
+#if 1
   JacobianType jacobianElastix; jacobianElastix.SetSize( Dimension, nzji.size() ); jacobianElastix.Fill( 0.0 );
   transform->GetJacobian( inputPoint, jacobianElastix, nzji );
+  for( unsigned int i = 0; i < 64; ++i ){ std::cout << jacobianElastix[ 0 ][ i ] << " "; }
+  std::cout << "\n" << std::endl;
 
   JacobianType jacobianRecursive; jacobianRecursive.SetSize( Dimension, nzji.size() ); jacobianRecursive.Fill( 0.0 );
   recursiveTransform->GetJacobian( inputPoint, jacobianRecursive, nzji );
+  for( unsigned int i = 0; i < 64; ++i ){ std::cout << jacobianRecursive[ 0 ][ i ] << " "; }
+  std::cout << "\n" << std::endl;
 
   // 
   JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianRecursive;
-  if ( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
+  if( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
   {
     std::cerr << "ERROR: Recursive B-spline GetJacobian() returning incorrect result." << std::endl;
     return EXIT_FAILURE;

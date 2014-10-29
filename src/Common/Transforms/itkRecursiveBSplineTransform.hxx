@@ -256,7 +256,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 ::GetJacobian( const InputPointType & ipp, JacobianType & jacobian,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-#if 1
+#if 0
   Superclass::GetJacobian( ipp, jacobian, nonZeroJacobianIndices );
 #else
   /** Convert the physical point to a continuous index, which
@@ -306,8 +306,10 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   typename ParameterIndexArrayType::ValueType indicesArray[ numberOfIndices ];
   WeightsType             weights1D( weightsArray1D, numberOfWeights, false );
-  ParameterIndexArrayType indices( indicesArray, numberOfIndices, false );
   this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
+
+
+  ParameterIndexArrayType indices( indicesArray, numberOfIndices, false );
 
   // Allocation of memory, just copied from the transform point above, need to check
   long evaluateIndexData[ ( SplineOrder + 1 ) * SpaceDimension ];
@@ -320,14 +322,18 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   {
     for( unsigned int jj = 0; jj <= SplineOrder; ++jj )
     {
-      evaluateIndex[ ii ][ jj ] = supportIndex[ ii ] + jj;
+      //evaluateIndex[ ii ][ jj ] = supportIndex[ ii ] + jj;
+      evaluateIndex[ ii ][ jj ] = 0 + jj;
     }
   }
 
   IndexType offsetTable;
+  offsetTable[ 0 ] = 1;
+  offsetTable[ 1 ] = 4;
+  offsetTable[ 2 ] = 8;
   for( unsigned int n = 0; n < SpaceDimension; ++n )
   {
-    offsetTable[ n ] = this->m_CoefficientImages[ 0 ]->GetOffsetTable()[ n ];
+    //offsetTable[ n ] = this->m_CoefficientImages[ 0 ]->GetOffsetTable()[ n ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * offsetTable[ n ];
@@ -337,25 +343,39 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   // Call the recursive function, this is where the magic happens
   //outputPoint.Fill( NumericTraits<TScalar>::Zero );
   unsigned int ii = 0;
-  typename WeightsType::ValueType weightsArray[ numberOfIndices ];
-  for( unsigned int j = 0; j < SpaceDimension; ++j )
+  //typename WeightsType::ValueType jacobians[ numberOfIndices ]; // is correct type, double
+  ScalarType jacobians[ numberOfIndices ]; // is float?
+  for( unsigned int i = 0; i < numberOfIndices; ++i ){ jacobians[i] = 1.0; }
+
+  unsigned int nn = 0;
+  for( unsigned int n = 0; n < SpaceDimension; ++n )
   {
-    const TScalar *basePointer = this->m_CoefficientImages[ j ]->GetBufferPointer(); // not needed
-    unsigned int c = 0;
-    //weightsArray[ ii ] = 
-    RecursiveBSplineTransformImplementation< SpaceDimension, SplineOrder, TScalar >
-      ::InterpolateGetJacobian( basePointer, steps, weights1DPointer, basePointer, indices, c );
-    ii += 64;
-  } // end for
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      std::cout << weights1DPointer[nn] << " ";
+      nn++;
+    }
+    std::cout << std::endl;
+  }
+  std::cout << "\n" << std::endl;
+  
+
+  // initialization is done also in the recursion below
+  //const TScalar *basePointer = this->m_CoefficientImages[ j ]->GetBufferPointer(); // not needed
+  //unsigned int c = 0;
+  //weightsArray[ ii ] = 
+  RecursiveBSplineTransformImplementation< SpaceDimension, SplineOrder, TScalar >
+    ::InterpolateGetJacobian( jacobians, steps, weights1DPointer );
+    //::InterpolateGetJacobian( jacobians, weights1DPointer );
+  std::cout << "\n" << std::endl;
 
   /** Put at the right positions. */
   ParametersValueType * jacobianPointer = jacobian.data_block();
   for( unsigned int d = 0; d < SpaceDimension; ++d )
   {
     unsigned long offset = d * SpaceDimension * numberOfWeights + d * numberOfWeights;
-    std::copy( weightsArray, weightsArray + numberOfWeights, jacobianPointer + offset );
+    std::copy( jacobians, jacobians + numberOfWeights, jacobianPointer + offset );
   }
-
 
   /** Setup support region *
   RegionType supportRegion;
