@@ -7,6 +7,8 @@ import glob
 
 #-------------------------------------------------------------------------------
 # the main function
+# cd tools
+# python elxReplaceCopyrightNotice.py
 def main() :
 
   # The path to the source files relative to this script
