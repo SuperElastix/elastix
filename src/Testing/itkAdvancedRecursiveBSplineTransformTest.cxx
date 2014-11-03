@@ -45,7 +45,7 @@ main( int argc, char * argv[] )
    */
 #ifndef NDEBUG
   //unsigned int N = static_cast< unsigned int >( 1e3 );
-  unsigned int N = static_cast< unsigned int >( 0 );
+  unsigned int N = static_cast< unsigned int >( 1 );
 #else
   unsigned int N = static_cast< unsigned int >( 1e6 );
 #endif
@@ -171,7 +171,7 @@ main( int argc, char * argv[] )
   SpatialHessianType            spatialHessian;
   JacobianOfSpatialJacobianType jacobianOfSpatialJacobian;
   JacobianOfSpatialHessianType  jacobianOfSpatialHessian;
-  NonZeroJacobianIndicesType    nzji;
+  NonZeroJacobianIndicesType    nzji, nzjiElastix, nzjiRecursive;
 
   /** Resize some of the variables. */
   nzji.resize( nonzji );
@@ -253,8 +253,8 @@ main( int argc, char * argv[] )
   timeCollector.Start( "TransformPoint elastix" );
   for( unsigned int i = 0; i < N; ++i )
   {
-    //OutputPointType opp1 = transform->TransformPoint( inputPoint );
-    transform->TransformPoint( pointList[ i ], opp, weights, indices, isInside );
+    OutputPointType opp1 = transform->TransformPoint( pointList[ i ] );
+    //transform->TransformPoint( pointList[ i ], opp, weights, indices, isInside );
 
     if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
   }
@@ -263,8 +263,8 @@ main( int argc, char * argv[] )
   timeCollector.Start( "TransformPoint recursive" );
   for( unsigned int i = 0; i < N; ++i )
   {
-    //OutputPointType opp2 = recursiveTransform->TransformPoint( inputPoint );
-    recursiveTransform->TransformPoint( pointList[ i ], opp, weights2, indices2, isInside );
+    OutputPointType opp2 = recursiveTransform->TransformPointOld( pointList[ i ] );
+    //recursiveTransform->TransformPoint( pointList[ i ], opp, weights2, indices2, isInside );
 
     if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
   }
@@ -273,14 +273,14 @@ main( int argc, char * argv[] )
   timeCollector.Start( "TransformPoint recursive vector" );
   for( unsigned int i = 0; i < N; ++i )
   {
-    //OutputPointType opp3 = recursiveTransform->TransformPointVector( inputPoint );
-    recursiveTransform->TransformPointVector( pointList[ i ], opp, weights2, indices2, isInside );
+    OutputPointType opp3 = recursiveTransform->TransformPoint( pointList[ i ] );
+    //recursiveTransform->TransformPointVector( pointList[ i ], opp, weights2, indices2, isInside );
 
     if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
   }
   timeCollector.Stop( "TransformPoint recursive vector" );
 
-  /** Time the implementation of the Jacobian. *
+  /** Time the implementation of the Jacobian. */
   timeCollector.Start( "Jacobian elastix" );
   for( unsigned int i = 0; i < N; ++i )
   {
@@ -293,7 +293,7 @@ main( int argc, char * argv[] )
   {
     recursiveTransform->GetJacobian( inputPoint, jacobian, nzji );
   }
-  timeCollector.Stop( "Jacobian recursive" );*/
+  timeCollector.Stop( "Jacobian recursive" );
 
   timeCollector.Report();
 
@@ -312,9 +312,9 @@ main( int argc, char * argv[] )
   double differenceNorm3 = 0.0;
   for( unsigned int i = 0; i < N; ++i )
   {
-    transform->TransformPoint( pointList[ i ], opp1, weights, indices, isInside );
-    recursiveTransform->TransformPoint( pointList[ i ], opp2, weights, indices, isInside );
-    recursiveTransform->TransformPointVector( pointList[ i ], opp3, weights, indices, isInside );
+    opp1 = transform->TransformPoint( pointList[ i ] );
+    opp2 = recursiveTransform->TransformPointOld( pointList[ i ] );
+    opp3 = recursiveTransform->TransformPoint( pointList[ i ] );
 
     for( unsigned int i = 0; i < Dimension; ++i )
     {
@@ -327,42 +327,51 @@ main( int argc, char * argv[] )
     differenceNorm3 = vcl_sqrt( differenceNorm3 );
   }
   differenceNorm1 /= N; differenceNorm2 /= N; differenceNorm3 /= N;
-  std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm1 << std::endl;
-  std::cerr << "Recursive B-spline TransformPointVector() MSD with ITK: " << differenceNorm2 << std::endl;
+  std::cerr << "Recursive B-spline TransformPointOld() MSD with ITK: " << differenceNorm1 << std::endl;
+  std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm2 << std::endl;
   std::cerr << "Recursive B-spline MSD with itself: " << differenceNorm3 << std::endl;
   if( differenceNorm1 > 1e-5 )
   {
-    std::cerr << "ERROR: Recursive B-spline TransformPoint() returning incorrect result." << std::endl;
+    std::cerr << "ERROR: Recursive B-spline TransformPointOld() returning incorrect result." << std::endl;
     return EXIT_FAILURE;
   }
   if( differenceNorm2 > 1e-5 )
   {
-    std::cerr << "ERROR: Recursive B-spline TransformPointVector() returning incorrect result." << std::endl;
+    std::cerr << "ERROR: Recursive B-spline TransformPoint() returning incorrect result." << std::endl;
     return EXIT_FAILURE;
   }
 
   /** Jacobian */
   //JacobianType jacobianITK; jacobianITK.Fill( 0.0 );
   //transformITK->ComputeJacobianWithRespectToParameters( inputPoint, jacobianITK );
-#if 1
+
   JacobianType jacobianElastix; jacobianElastix.SetSize( Dimension, nzji.size() ); jacobianElastix.Fill( 0.0 );
-  transform->GetJacobian( inputPoint, jacobianElastix, nzji );
-  for( unsigned int i = 0; i < 64; ++i ){ std::cout << jacobianElastix[ 0 ][ i ] << " "; }
-  std::cout << "\n" << std::endl;
+  transform->GetJacobian( inputPoint, jacobianElastix, nzjiElastix );
 
   JacobianType jacobianRecursive; jacobianRecursive.SetSize( Dimension, nzji.size() ); jacobianRecursive.Fill( 0.0 );
-  recursiveTransform->GetJacobian( inputPoint, jacobianRecursive, nzji );
-  for( unsigned int i = 0; i < 64; ++i ){ std::cout << jacobianRecursive[ 0 ][ i ] << " "; }
-  std::cout << "\n" << std::endl;
+  recursiveTransform->GetJacobian( inputPoint, jacobianRecursive, nzjiRecursive );
 
-  // 
   JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianRecursive;
   if( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
   {
     std::cerr << "ERROR: Recursive B-spline GetJacobian() returning incorrect result." << std::endl;
     return EXIT_FAILURE;
   }
-#endif
+
+  /** NonZeroJacobianIndices. */
+  double nzjiDifference = 0.0;
+  for( unsigned int i = 0; i < nzjiElastix.size(); ++i )
+  {
+    nzjiDifference += ( nzjiElastix[i] - nzjiRecursive[i] ) * ( nzjiElastix[i] - nzjiRecursive[i] );
+  }
+  nzjiDifference = std::sqrt( nzjiDifference );
+  std::cerr << "The Recursive B-spline ComputeNonZeroJacobianIndices() difference is " << nzjiDifference << std::endl;
+  if( nzjiDifference > 1e-10 )
+  {
+    std::cerr << "ERROR: Recursive B-spline ComputeNonZeroJacobianIndices() returning incorrect result." << std::endl;
+    return EXIT_FAILURE;
+  }
+
   /** Exercise PrintSelf(). */
   //recursiveTransform->Print( std::cerr );
 

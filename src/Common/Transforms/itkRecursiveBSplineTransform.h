@@ -80,13 +80,14 @@ public:
   //typedef typename Superclass::CoefficientImageArray CoefficientImageArray;
 
   /** Typedefs for specifying the extend to the grid. */
-  typedef typename Superclass::RegionType RegionType;
+  typedef typename Superclass::RegionType     RegionType;
   typedef typename Superclass::IndexType      IndexType;
   typedef typename Superclass::SizeType       SizeType;
   typedef typename Superclass::SpacingType    SpacingType;
   typedef typename Superclass::DirectionType  DirectionType;
   typedef typename Superclass::OriginType     OriginType;
   typedef typename Superclass::GridOffsetType GridOffsetType;
+  typedef typename GridOffsetType::OffsetValueType  OffsetValueType;
 
   typedef typename Superclass::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
   typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
@@ -111,13 +112,18 @@ public:
   typedef itk::RecursiveBSplineInterpolationWeightFunction<
     TScalarType, NDimensions, VSplineOrder >                      RecursiveBSplineWeightFunctionType;
 
+  /** Compute point transformation. This one is commonly used.
+   * It calls RecursiveBSplineTransformImplementation2::InterpolateTransformPoint
+   * for a recursive implementation.
+   */
   virtual OutputPointType TransformPoint( const InputPointType & point ) const;
 
+  /** Compute point transformation. Calls the five-argument version, which uses
+   * RecursiveBSplineTransformImplementation::InterpolateTransformPoint
+   * for a less smart recursive implementation.
+   */
+  virtual OutputPointType TransformPointOld( const InputPointType & point ) const;
   virtual void TransformPoint( const InputPointType & inputPoint, OutputPointType & outputPoint,
-    WeightsType & weights, ParameterIndexArrayType & indices, bool & inside ) const;
-
-  // to replace TransformPoint when fully tested
-  virtual void TransformPointVector( const InputPointType & inputPoint, OutputPointType & outputPoint,
     WeightsType & weights, ParameterIndexArrayType & indices, bool & inside ) const;
 
   /** Compute the Jacobian of the transformation. */
@@ -140,6 +146,10 @@ protected:
   typedef typename Superclass::JacobianPixelType JacobianPixelType;
 
   typename RecursiveBSplineWeightFunctionType::Pointer m_RecursiveBSplineWeightFunction;
+
+  virtual void ComputeNonZeroJacobianIndices(
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices,
+    const RegionType & supportRegion ) const;
 
 private:
 
@@ -169,52 +179,22 @@ public:
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       const TScalar * tmp_mu = mu + steps[ k + HelperConstVariable ];
-      coord += RecursiveBSplineTransformImplementation< SpaceDimension - 1, SplineOrder, TScalar >::
-        InterpolateTransformPoint( tmp_mu, steps, weights1D, coefBasePointer, indices, c ) * weights1D[ k + HelperConstVariable ];
-    }
+      coord += RecursiveBSplineTransformImplementation< SpaceDimension - 1, SplineOrder, TScalar >
+        ::InterpolateTransformPoint( tmp_mu, steps, weights1D, coefBasePointer, indices, c ) * weights1D[ k + HelperConstVariable ];
+	}
     return coord;
   } // end InterpolateTransformPoint()
 
 
   /** GetJacobian recursive implementation. */
-  //static inline TScalar InterpolateGetJacobian(
   static inline void InterpolateGetJacobian(
-    //const?
-    TScalar * jacobians, const long * steps, const double * weights1D )
-    //TScalar * jacobians, const double * weights1D )
+    TScalar * & jacobians, const double * weights1D , double value )
   {
-    /*
-    TScalar * tmp_jac = jacobians;// + steps[ HelperConstVariable ];
-    RecursiveBSplineTransformImplementation< SpaceDimension - 1, SplineOrder, TScalar >::
-      InterpolateGetJacobian( jacobians, steps, weights1D );
-
-    for( unsigned int k = 0; k <= SplineOrder; ++k, ++tmp_jac )
-    {
-      double _beta = weights1D[ k + HelperConstVariable ];
-      *tmp_jac *= weights1D[ k + HelperConstVariable ];
-      //*tmp_jac *= _beta;
-    }*/
-
-    //TScalar product = 1.0;
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      //const?
-      //TScalar * tmp_jac = jacobians;// + k + HelperConstVariable;//steps[ k + HelperConstVariable ];
-      TScalar * tmp_jac = jacobians + steps[ k + HelperConstVariable ];
-      long _shift = tmp_jac - jacobians;
-      RecursiveBSplineTransformImplementation< SpaceDimension - 1, SplineOrder, TScalar >::
-        InterpolateGetJacobian( tmp_jac, steps, weights1D );
-        //InterpolateGetJacobian( tmp_jac, weights1D );
-      double _beta = weights1D[ k + HelperConstVariable ];
-      std::cout << _beta << " ";
-      //*tmp_jac = (*tmp_jac) * weights1D[ k + HelperConstVariable ];
-      *tmp_jac *= weights1D[ k + HelperConstVariable ];
-      //*jacobians *= weights1D[ k + HelperConstVariable ];
-      //tmp_jac++;
+      RecursiveBSplineTransformImplementation< SpaceDimension - 1, SplineOrder, TScalar >
+        ::InterpolateGetJacobian( jacobians, weights1D, value * weights1D[ k + HelperConstVariable ] );
     }
-    //++jacobians;
-    //return product;
-    //*/
   } // end InterpolateGetJacobian()
 
 
@@ -256,17 +236,22 @@ template< unsigned int OutputDimension, unsigned int SpaceDimension, unsigned in
 class RecursiveBSplineTransformImplementation2
 {
 public:
+
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
+
+  typedef itk::RecursiveBSplineInterpolationWeightFunction<
+    TScalar, OutputDimension, SplineOrder >            RecursiveBSplineWeightFunctionType;
+  itkStaticConstMacro( BSplineNumberOfIndices, unsigned int,
+    RecursiveBSplineWeightFunctionType::NumberOfIndices );
 
   typedef TScalar *  OutputPointType;
   typedef TScalar ** CoefficientPointerVectorType;
 
   /** TransformPoint recursive implementation. */
-  static inline void InterpolateTransformPoint(
+  static inline void TransformPoint(
     OutputPointType opp,
-    const CoefficientPointerVectorType mu, const long * steps, const double * weights1D,
-    const CoefficientPointerVectorType coefBasePointers )
+    const CoefficientPointerVectorType mu, const OffsetValueType * steps, const double * weights1D )
   {
     TScalar * tmp_mu[ OutputDimension ];
     TScalar tmp_opp[ OutputDimension ];
@@ -278,14 +263,65 @@ public:
         tmp_mu[ j ] = mu[ j ] + steps[ k + HelperConstVariable ];
       }
 
-      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >::
-        InterpolateTransformPoint( tmp_opp, tmp_mu, steps, weights1D, coefBasePointers );
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::TransformPoint( tmp_opp, tmp_mu, steps, weights1D );
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
         opp[ j ] += tmp_opp[ j ] * weights1D[ k + HelperConstVariable ];
       }
     }
-  } // end InterpolateTransformPoint()
+  } // end TransformPoint()
+
+
+  /** TransformPoint recursive implementation. */
+  static inline void TransformPoint2(
+    OutputPointType opp, const CoefficientPointerVectorType mu,
+    const OffsetValueType * bsplineOffsetTable,
+    const double * weights1D )
+  {
+    TScalar * tmp_mu[ OutputDimension ];
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      tmp_mu[ j ] = mu[ j ];
+    }
+
+    TScalar tmp_opp[ OutputDimension ];
+    OffsetValueType bot = bsplineOffsetTable[ SpaceDimension - 1 ];
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      for( unsigned int j = 0; j < OutputDimension; ++j )
+      {
+        tmp_opp[ j ] = 0.0;
+      }
+
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::TransformPoint2( tmp_opp, tmp_mu, bsplineOffsetTable, weights1D );
+      for( unsigned int j = 0; j < OutputDimension; ++j )
+      {
+        opp[ j ] += tmp_opp[ j ] * weights1D[ k + HelperConstVariable ];
+        tmp_mu[ j ] += bot;
+      }
+    }
+  } // end TransformPoint()
+
+
+  /** ComputeNonZeroJacobianIndices recursive implementation. */
+  static inline void RecursiveComputeNonZeroJacobianIndices(
+    unsigned long * nzji,
+    unsigned long parametersPerDim,
+    unsigned long currentIndex,
+    const OffsetValueType * gridOffsetTable,
+    unsigned int & c )
+  {
+    OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::RecursiveComputeNonZeroJacobianIndices( nzji, parametersPerDim, currentIndex, gridOffsetTable, c );
+      currentIndex += bot;
+    }
+  } // end RecursiveComputeNonZeroJacobianIndices()
+
 
 }; // end class
 
@@ -306,7 +342,7 @@ public:
     const long * steps,
     const double * weights1D,
     const TScalar *coefBasePointer,
-    Array<unsigned long> & indices,
+    Array<unsigned long> & indices,// nodig voor de jacobian, want dit is de nzji
     unsigned int & c )
   {
     indices[ c ] = mu - coefBasePointer;
@@ -316,12 +352,13 @@ public:
 
 
   /** GetJacobian recursive implementation. */
+  // outerdim template parameter nodig
   static inline void InterpolateGetJacobian(
-    TScalar * jacobians, const long * steps, const double * weights1D )
-    //TScalar * jacobians, const double * weights1D )
+    TScalar * & jacobians, const double * weights1D, double value )
   {
-    //*jacobians = 1.0;
-    return;
+    *jacobians = value;//*dm/dx
+	  //for( i = outerdim){ jacobians[64*i ] = value * dmdx[i]}
+  	++jacobians;
   } // end InterpolateGetJacobian()
 
 
@@ -344,21 +381,53 @@ class RecursiveBSplineTransformImplementation2< OutputDimension, 0, SplineOrder,
 {
 public:
 
+  typedef itk::RecursiveBSplineInterpolationWeightFunction<
+    TScalar, OutputDimension, SplineOrder >            RecursiveBSplineWeightFunctionType;
+  itkStaticConstMacro( BSplineNumberOfIndices, unsigned int,
+    RecursiveBSplineWeightFunctionType::NumberOfIndices );
+
   typedef TScalar *  OutputPointType;
   typedef TScalar ** CoefficientPointerVectorType;
 
   /** TransformPoint recursive implementation. */
-  static inline void InterpolateTransformPoint(
+  static inline void TransformPoint(
     OutputPointType opp,
-    const CoefficientPointerVectorType mu, const long * steps, const double * weights1D,
-    const CoefficientPointerVectorType coefBasePointers )
+    const CoefficientPointerVectorType mu, const OffsetValueType * steps, const double * weights1D )
   {
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {
       opp[ j ] = *(mu[ j ]);
     }
 
-  } // end InterpolateTransformPoint()
+  } // end TransformPoint()
+
+  /** TransformPoint recursive implementation. */
+  static inline void TransformPoint2(
+    OutputPointType opp, const CoefficientPointerVectorType mu,
+    const OffsetValueType * bsplineOffsetTable,
+    const double * weights1D )
+  {
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      opp[ j ] = *(mu[ j ]);
+    }
+  } // end TransformPoint()
+
+
+  /** ComputeNonZeroJacobianIndices recursive implementation. */
+  static inline void RecursiveComputeNonZeroJacobianIndices(
+    unsigned long * nzji,
+    unsigned long parametersPerDim,
+    unsigned long currentIndex,
+    const OffsetValueType * gridOffsetTable,
+    unsigned int & c )
+  {
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      nzji[ c + j * BSplineNumberOfIndices ] = currentIndex + j * parametersPerDim;
+    }
+    ++c;
+  } // end RecursiveComputeNonZeroJacobianIndices()
 
 }; // end class
 
