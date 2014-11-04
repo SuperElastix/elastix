@@ -82,44 +82,6 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   IndexType supportIndex;
   this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
 
-#if 0
-  // Allocation of memory
-  long evaluateIndexData[ ( SplineOrder + 1 ) * SpaceDimension ];
-  OffsetValueType stepsData[ ( SplineOrder + 1 ) * SpaceDimension ];
-  vnl_matrix_ref<long> evaluateIndex( SpaceDimension, SplineOrder + 1, evaluateIndexData );
-  double * weightsPointer = &(weights1D[0]);
-  OffsetValueType * steps = &(stepsData[0]);
-
-  for( unsigned int ii = 0; ii < SpaceDimension; ++ii )
-  {
-    for( unsigned int jj = 0; jj <= SplineOrder; ++jj )
-    {
-      evaluateIndex[ ii ][ jj ] = supportIndex[ ii ] + jj;
-    }
-  }
-
-  IndexType offsetTable;
-  for( unsigned int n = 0; n < SpaceDimension; ++n )
-  {
-    offsetTable[ n ] = this->m_CoefficientImages[ 0 ]->GetOffsetTable()[ n ];
-    for( unsigned int k = 0; k <= SplineOrder; ++k )
-    {
-      steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * offsetTable[ n ];
-    }
-  }
-
-  // Call recursive interpolate function, vector version
-  outputPoint.Fill( NumericTraits<TScalar>::Zero );
-  ScalarType displacement[ SpaceDimension ];
-  ScalarType * basePointers[ SpaceDimension ];
-  for( unsigned int j = 0; j < SpaceDimension; ++j )
-  {
-    displacement[ j ] = 0.0;
-    basePointers[ j ] = this->m_CoefficientImages[ j ]->GetBufferPointer();
-  }
-  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
-    ::TransformPoint( displacement, basePointers, steps, weightsPointer );
-#else
   /** Initialize (helper) variables. */
   const OffsetValueType * bsplineOffsetTable = this->m_CoefficientImages[ 0 ]->GetOffsetTable();
   OffsetValueType totalOffsetToSupportIndex = 0;
@@ -137,7 +99,6 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   // Call recursive interpolate function, vector version
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::TransformPoint2( displacement, mu, bsplineOffsetTable, weightsArray1D );
-#endif
 
   // The output point is the start point + displacement.
   for( unsigned int j = 0; j < SpaceDimension; ++j )
@@ -255,7 +216,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
     const TScalar *basePointer = this->m_CoefficientImages[ j ]->GetBufferPointer();
     unsigned int c = 0;
     outputPoint[ j ] = RecursiveBSplineTransformImplementation< SpaceDimension, SplineOrder, TScalar >
-      ::InterpolateTransformPoint( basePointer,
+      ::TransformPoint( basePointer,
       steps,
       weightsPointer,
       basePointer,
@@ -323,7 +284,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
    */
   ParametersValueType * jacobianPointer = jacobian.data_block();
   RecursiveBSplineTransformImplementation< SpaceDimension, SplineOrder, TScalar >
-    ::InterpolateGetJacobian( jacobianPointer, weightsArray1D, 1.0 );
+    ::GetJacobian( jacobianPointer, weightsArray1D, 1.0 );
 
   /** Copy the Jacobian values to the other dimensions. */
   jacobianPointer = jacobian.data_block();
@@ -462,7 +423,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     TScalar derivativeValue[ SpaceDimension + 1 ];
     const TScalar *basePointer = this->m_CoefficientImages[ j ]->GetBufferPointer();
     RecursiveBSplineTransformImplementation< SpaceDimension, SplineOrder, TScalar >
-      ::InterpolateSpatialJacobian( derivativeValue,
+      ::GetSpatialJacobian( derivativeValue,
       basePointer,
       steps,
       weightsPointer,
@@ -493,14 +454,8 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,
   const RegionType & supportRegion ) const
 {
-#if 0
-  Superclass::ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
-#else
-
   /** Initialize some helper variables. */
-  const unsigned long parametersPerDim
-    = this->GetNumberOfParametersPerDimension();
-
+  const unsigned long parametersPerDim = this->GetNumberOfParametersPerDimension();
   nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
   /** Compute total offset at start index. */
@@ -516,16 +471,13 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   unsigned int c = 0;
   unsigned long currentIndex = totalOffsetToSupportIndex;
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
-    ::RecursiveComputeNonZeroJacobianIndices( &nonZeroJacobianIndices[0],
-    parametersPerDim,
-    currentIndex, gridOffsetTable, c );
-  
-#endif
+    ::ComputeNonZeroJacobianIndices( &nonZeroJacobianIndices[0],
+    parametersPerDim, currentIndex, gridOffsetTable, c );
 
 } // end ComputeNonZeroJacobianIndices()
 
 
-}// namespace
+} // end namespace itk
 
 
 #endif
