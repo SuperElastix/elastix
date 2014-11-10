@@ -373,7 +373,7 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
   this->m_NumberOfPixelsCounted = 0;
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+  derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -445,7 +445,7 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
     }
 
     /** Initialize MT vector. */
-    std::fill( MT.begin(), MT.end(), itk::NumericTraits< RealType >::Zero );
+    std::fill( MT.begin(), MT.end(), itk::NumericTraits< RealType >::ZeroValue() );
 
     /** Transform sampled point to voxel coordinates. */
     FixedImageContinuousIndexType voxelCoord;
@@ -506,7 +506,7 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
       else
       {
         dMTdmu[ d ] = DerivativeType( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-        dMTdmu[ d ].Fill( itk::NumericTraits< DerivativeValueType >::Zero );
+        dMTdmu[ d ].Fill( itk::NumericTraits< DerivativeValueType >::ZeroValue() );
         nzjis[ d ] = NonZeroJacobianIndicesType( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices(), 0 );
       } // end if sampleOk
     }

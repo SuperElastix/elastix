@@ -96,7 +96,7 @@ ImageMaskSpatialObject2< TDimension >
   }
 
   const bool insideMask
-    = ( this->GetImage()->GetPixel( index ) != NumericTraits< PixelType >::Zero );
+    = ( this->GetImage()->GetPixel( index ) != NumericTraits< PixelType >::ZeroValue() );
 
   return insideMask;
 

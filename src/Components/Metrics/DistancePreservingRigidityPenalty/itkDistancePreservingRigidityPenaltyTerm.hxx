@@ -305,7 +305,7 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** Set output values to zero. */
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< MeasureType >::Zero );
+  derivative.Fill( NumericTraits< MeasureType >::ZeroValue() );
 
   this->m_BSplineTransform->SetParameters( parameters );
 

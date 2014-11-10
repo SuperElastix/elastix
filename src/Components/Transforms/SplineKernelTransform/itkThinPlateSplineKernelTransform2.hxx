@@ -49,7 +49,7 @@ ThinPlateSplineKernelTransform2< TScalarType, NDimensions >
 ::ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const
 {
   const TScalarType r = x.GetNorm();
-  GMatrix.fill( NumericTraits< TScalarType >::Zero );
+  GMatrix.fill( NumericTraits< TScalarType >::ZeroValue() );
   GMatrix.fill_diagonal( r );
 
 } // end ComputeG()

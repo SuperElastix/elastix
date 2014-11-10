@@ -184,7 +184,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
   /** Initialize some variables */
   value      = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< double >::Zero );
+  derivative.Fill( NumericTraits< double >::ZeroValue() );
 
   /** Construct the JointPDF, JointPDFDerivatives, and Alpha. */
   this->ComputePDFsAndPDFDerivatives( parameters );

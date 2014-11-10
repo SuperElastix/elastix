@@ -380,7 +380,7 @@ GradientDifferenceImageToImageMetric< TFixedImage, TMovingImage >
   for( iDimension = 0; iDimension < FixedImageDimension; iDimension++ )
   {
 
-    if( this->m_Variance[ iDimension ] == NumericTraits< MovedGradientPixelType >::Zero )
+    if( this->m_Variance[ iDimension ] == NumericTraits< MovedGradientPixelType >::ZeroValue() )
     {
       continue;
     }

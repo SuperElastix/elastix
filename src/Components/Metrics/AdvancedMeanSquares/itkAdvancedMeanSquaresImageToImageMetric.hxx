@@ -257,7 +257,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   this->m_NumberOfPixelsCounted = 0;
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+  derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(

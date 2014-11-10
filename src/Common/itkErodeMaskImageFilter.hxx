@@ -37,7 +37,7 @@ ErodeMaskImageFilter< TImage >
   this->m_ResolutionLevel = 0;
 
   ScheduleType defaultSchedule( 1, InputImageDimension );
-  defaultSchedule.Fill( NumericTraits< unsigned int >::One );
+  defaultSchedule.Fill( NumericTraits< unsigned int >::OneValue() );
   this->m_Schedule = defaultSchedule;
 
 } // end Constructor
@@ -84,8 +84,8 @@ ErodeMaskImageFilter< TImage >
   /** Threshold the data first. Every voxel with intensity >= 1 is used.
   // Not needed since IsInside of a mask checks for != 0.
   typename ThresholdFilterType::Pointer threshold = ThresholdFilterType::New();
-  threshold->ThresholdAbove(  itk::NumericTraits<InputPixelType>::One );
-  threshold->SetOutsideValue( itk::NumericTraits<InputPixelType>::One );
+  threshold->ThresholdAbove(  itk::NumericTraits<InputPixelType>::OneValue() );
+  threshold->SetOutsideValue( itk::NumericTraits<InputPixelType>::OneValue() );
   threshold->SetInput( this->GetInput() ); */
 
   /** Create and run the erosion filter. */

@@ -704,7 +704,7 @@ BSplineStackTransform< TElastix >::SetOptimizerScales( const unsigned int edgeWi
     = this->m_BSplineDummySubTransform->GetNumberOfParameters();
   const unsigned long offset = numberOfParameters / SpaceDimension;
   ScalesType          newScales( numberOfParameters );
-  newScales.Fill( itk::NumericTraits< ScalesValueType >::One );
+  newScales.Fill( itk::NumericTraits< ScalesValueType >::OneValue() );
   const ScalesValueType infScale = 10000.0;
 
   if( edgeWidth == 0 )

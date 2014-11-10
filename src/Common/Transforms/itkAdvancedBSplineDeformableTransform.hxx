@@ -266,7 +266,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
 
-  outputPoint.Fill( NumericTraits< ScalarType >::Zero );
+  outputPoint.Fill( NumericTraits< ScalarType >::ZeroValue() );
 
   /** Create iterators over the coefficient images. */
   typedef ImageScanlineConstIterator< ImageType > IteratorType;

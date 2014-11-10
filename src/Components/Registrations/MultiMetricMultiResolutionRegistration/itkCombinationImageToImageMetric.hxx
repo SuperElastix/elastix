@@ -770,7 +770,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
   /** Initialise. */
   DerivativeType tmpDerivative = DerivativeType( this->GetNumberOfParameters() );
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< MeasureType >::Zero );
+  derivative.Fill( NumericTraits< MeasureType >::ZeroValue() );
 
   /** Compute, store and combine all metric derivatives. */
   for( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
@@ -780,7 +780,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
     timer.Start();
 
     /** Compute ... */
-    tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
+    tmpDerivative.Fill( NumericTraits< MeasureType >::ZeroValue() );
     this->m_Metrics[ i ]->GetDerivative( parameters, tmpDerivative );
     timer.Stop();
 

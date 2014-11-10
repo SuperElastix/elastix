@@ -200,7 +200,7 @@ CyclicBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Zero output point elements. */
-  outputPoint.Fill( NumericTraits< ScalarType >::Zero );
+  outputPoint.Fill( NumericTraits< ScalarType >::ZeroValue() );
 
   unsigned long counter = 0;
   for( unsigned int r = 0; r < 2; ++r )

@@ -41,12 +41,12 @@ HardLimiterFunction< TInput, NDimension >
 {
   if( input > this->m_UpperBound )
   {
-    derivative.Fill( itk::NumericTraits< OutputType >::Zero );
+    derivative.Fill( itk::NumericTraits< OutputType >::ZeroValue() );
     return ( this->m_UpperBound );
   }
   if( input < this->m_LowerBound )
   {
-    derivative.Fill( itk::NumericTraits< OutputType >::Zero );
+    derivative.Fill( itk::NumericTraits< OutputType >::ZeroValue() );
     return ( this->m_LowerBound );
   }
   return ( static_cast< OutputType >( input ) );

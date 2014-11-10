@@ -956,7 +956,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** Set output values to zero. */
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< MeasureType >::Zero );
+  derivative.Fill( NumericTraits< MeasureType >::ZeroValue() );
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -2219,7 +2219,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 {
   /** Create an operator size and set it in the operator. */
   NeighborhoodSizeType r;
-  r.Fill( NumericTraits< unsigned int >::Zero );
+  r.Fill( NumericTraits< unsigned int >::ZeroValue() );
   r[ WhichDimension - 1 ] = 1;
   F.SetRadius( r );
 

@@ -174,7 +174,7 @@ void
 KernelTransform2< TScalarType, NDimensions >
 ::ComputeReflexiveG( PointsIterator, GMatrixType & GMatrix ) const
 {
-  GMatrix.fill( NumericTraits< TScalarType >::Zero );
+  GMatrix.fill( NumericTraits< TScalarType >::ZeroValue() );
   GMatrix.fill_diagonal( this->m_Stiffness );
 
 } // end ComputeReflexiveG()
@@ -537,7 +537,7 @@ KernelTransform2< TScalarType, NDimensions >
 ::TransformPoint( const InputPointType & thisPoint ) const
 {
   OutputPointType opp;
-  opp.Fill( NumericTraits< typename OutputPointType::ValueType >::Zero );
+  opp.Fill( NumericTraits< typename OutputPointType::ValueType >::ZeroValue() );
   this->ComputeDeformationContribution( thisPoint, opp );
 
   // Add the rotational part of the Affine component

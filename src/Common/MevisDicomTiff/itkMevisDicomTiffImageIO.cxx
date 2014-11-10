@@ -76,11 +76,11 @@ MevisDicomTiffImageIO
   m_TileLength( 0 ),
   m_TileDepth( 0 ),
   m_NumberOfTiles( 0 ),
-  m_RescaleSlope( NumericTraits< double >::One ),
-  m_RescaleIntercept( NumericTraits< double >::Zero ),
-  m_GantryTilt( NumericTraits< double >::Zero ),
-  m_EstimatedMinimum( NumericTraits< double >::Zero ),
-  m_EstimatedMaximum( NumericTraits< double >::Zero )
+  m_RescaleSlope( NumericTraits< double >::OneValue() ),
+  m_RescaleIntercept( NumericTraits< double >::ZeroValue() ),
+  m_GantryTilt( NumericTraits< double >::ZeroValue() ),
+  m_EstimatedMinimum( NumericTraits< double >::ZeroValue() ),
+  m_EstimatedMaximum( NumericTraits< double >::ZeroValue() )
 {
   //this->SetNumberOfDimensions(4);
   this->SetFileType( Binary );

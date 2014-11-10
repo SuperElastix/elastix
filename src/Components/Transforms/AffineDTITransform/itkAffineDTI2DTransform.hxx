@@ -29,9 +29,9 @@ AffineDTI2DTransform< TScalarType >
 ::AffineDTI2DTransform() :
   Superclass( ParametersDimension )
 {
-  this->m_Angle.Fill( itk::NumericTraits< ScalarType >::Zero );
-  this->m_Shear.Fill( itk::NumericTraits< ScalarType >::Zero );
-  this->m_Scale.Fill( itk::NumericTraits< ScalarType >::One );
+  this->m_Angle.Fill( itk::NumericTraits< ScalarType >::ZeroValue() );
+  this->m_Shear.Fill( itk::NumericTraits< ScalarType >::ZeroValue() );
+  this->m_Scale.Fill( itk::NumericTraits< ScalarType >::OneValue() );
 
   this->PrecomputeJacobianOfSpatialJacobian();
 }
@@ -63,9 +63,9 @@ AffineDTI2DTransform< TScalarType >
   unsigned int parametersDimension ) :
   Superclass( spaceDimension, parametersDimension )
 {
-  this->m_Angle.Fill( itk::NumericTraits< ScalarType >::Zero );
-  this->m_Shear.Fill( itk::NumericTraits< ScalarType >::Zero );
-  this->m_Scale.Fill( itk::NumericTraits< ScalarType >::One );
+  this->m_Angle.Fill( itk::NumericTraits< ScalarType >::ZeroValue() );
+  this->m_Shear.Fill( itk::NumericTraits< ScalarType >::ZeroValue() );
+  this->m_Scale.Fill( itk::NumericTraits< ScalarType >::OneValue() );
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -139,9 +139,9 @@ AffineDTI2DTransform< TScalarType >
 ::SetIdentity( void )
 {
   Superclass::SetIdentity();
-  this->m_Angle.Fill( itk::NumericTraits< ScalarType >::Zero );
-  this->m_Shear.Fill( itk::NumericTraits< ScalarType >::Zero );
-  this->m_Scale.Fill( itk::NumericTraits< ScalarType >::One );
+  this->m_Angle.Fill( itk::NumericTraits< ScalarType >::ZeroValue() );
+  this->m_Shear.Fill( itk::NumericTraits< ScalarType >::ZeroValue() );
+  this->m_Scale.Fill( itk::NumericTraits< ScalarType >::OneValue() );
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 

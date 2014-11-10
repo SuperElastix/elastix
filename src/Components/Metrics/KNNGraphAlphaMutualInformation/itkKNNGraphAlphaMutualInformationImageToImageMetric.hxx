@@ -517,7 +517,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   /** Initialize some variables. */
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+  derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -625,7 +625,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   AccumulateType sumG = NumericTraits< AccumulateType >::Zero;
 
   DerivativeType contribution( this->GetNumberOfParameters() );
-  contribution.Fill( NumericTraits< DerivativeValueType >::Zero );
+  contribution.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
   DerivativeType dGamma_M( this->GetNumberOfParameters() );
   DerivativeType dGamma_J( this->GetNumberOfParameters() );
 
@@ -659,8 +659,8 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     SpatialDerivativeType D1sparse, D2sparse_M, D2sparse_J;
     D1sparse = spatialDerivativesContainer[ i ] * jacobianContainer[ i ];
 
-    dGamma_M.Fill( NumericTraits< DerivativeValueType >::Zero );
-    dGamma_J.Fill( NumericTraits< DerivativeValueType >::Zero );
+    dGamma_M.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
+    dGamma_J.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
     /** Loop over the neighbours. */
     for( unsigned int p = 0; p < k; p++ )

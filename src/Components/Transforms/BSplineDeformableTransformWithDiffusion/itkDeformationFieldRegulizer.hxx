@@ -74,7 +74,7 @@ DeformationFieldRegulizer< TAnyITKTransform >
   IteratorType it( intermediaryDeformationField,
   intermediaryDeformationField->GetLargestPossibleRegion() );
   VectorPixelType vec;
-  vec.Fill( NumericTraits< ScalarType >::Zero );
+  vec.Fill( NumericTraits< ScalarType >::ZeroValue() );
   while( !it.IsAtEnd() )
   {
     it.Set( vec );

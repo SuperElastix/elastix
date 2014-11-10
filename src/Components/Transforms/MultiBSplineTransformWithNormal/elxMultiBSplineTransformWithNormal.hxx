@@ -776,7 +776,7 @@ MultiBSplineTransformWithNormal< TElastix >::SetOptimizerScales( const unsigned 
     = this->m_MultiBSplineTransformWithNormal->GetNumberOfParameters();
   const unsigned long offset = numberOfParameters / SpaceDimension;
   ScalesType          newScales( numberOfParameters );
-  newScales.Fill( itk::NumericTraits< ScalesValueType >::One );
+  newScales.Fill( itk::NumericTraits< ScalesValueType >::OneValue() );
   const ScalesValueType infScale = 10000.0;
 
   if( edgeWidth == 0 )

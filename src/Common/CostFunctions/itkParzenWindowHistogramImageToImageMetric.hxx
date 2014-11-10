@@ -795,8 +795,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   typedef itk::ImageRegionConstIterator< JointPDFDerivativesType >        IncIteratorType;
   typedef itk::ImageLinearIteratorWithIndex< IncrementalMarginalPDFType > IncMargIteratorType;
 
-  fixedIncrementalMarginalPDF->FillBuffer( itk::NumericTraits< PDFValueType >::Zero );
-  movingIncrementalMarginalPDF->FillBuffer( itk::NumericTraits< PDFValueType >::Zero );
+  fixedIncrementalMarginalPDF->FillBuffer( itk::NumericTraits< PDFValueType >::ZeroValue() );
+  movingIncrementalMarginalPDF->FillBuffer( itk::NumericTraits< PDFValueType >::ZeroValue() );
 
   IncIteratorType     incit( incrementalPDF, incrementalPDF->GetLargestPossibleRegion() );
   IncMargIteratorType fixincit( fixedIncrementalMarginalPDF,
@@ -1163,7 +1163,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
    * instead of sequentially in InitializeThreadingParameters().
    */
   JointPDFPointer & jointPDF = this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ threadId ].st_JointPDF;
-  jointPDF->FillBuffer( NumericTraits< PDFValueType >::Zero );
+  jointPDF->FillBuffer( NumericTraits< PDFValueType >::ZeroValue() );
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();

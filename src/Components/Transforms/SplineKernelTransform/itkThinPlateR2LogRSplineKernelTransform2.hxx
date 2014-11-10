@@ -44,7 +44,7 @@ void
 ThinPlateR2LogRSplineKernelTransform2< TScalarType, NDimensions >::ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const
 {
   const TScalarType r = x.GetNorm();
-  GMatrix.fill( NumericTraits< TScalarType >::Zero );
+  GMatrix.fill( NumericTraits< TScalarType >::ZeroValue() );
   const TScalarType          R2logR
     = ( r > 1e-8 ) ? r * r * vcl_log( r ) : NumericTraits< TScalarType >::Zero;
 
