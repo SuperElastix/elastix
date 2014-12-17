@@ -548,12 +548,11 @@ the sequence of points to form a 2d connected polydata contour.
     }
   }
   /** FB: create a mesh containing the points**/
-
-  //MeshType::PointsContainer * meshpointset = dynamic_cast<MeshType::PointsContainer *>(inputpointvec);
   mesh = MeshType::New();
   mesh->SetPoints( inputPointSet->GetPoints() );
+  //MeshType::PointsContainer * meshpointset = dynamic_cast<MeshType::PointsContainer *>(inputpointvec);
 
-  /** Floris: make connected mesh (polygon) if data is 2d by assuming the sequence of points being connected**/
+  /** FB: make connected mesh (polygon) for data that is 2d by assuming the sequence of points being connected**/
   if( FixedImageDimension == 2 )
   {
     typedef typename MeshType::CellType::CellAutoPointer CellAutoPointer;
@@ -570,36 +569,6 @@ the sequence of points to form a 2d connected polydata contour.
       line->SetPointId( 1, ( i + 1 ) % nrofpoints );
       //std::cout << "Linked point: " << MeshIndex << " and " << MeshIndex - 1 << std::endl;
       mesh->SetCell( i, line );
-    }
-  }
-
-  std::cout << "mesh->GetNumberOfCells()" << mesh->GetNumberOfCells() << std::endl;
-  std::cout << "mesh->GetNumberOfPoints()" << mesh->GetNumberOfPoints() << std::endl;
-  typename MeshType::PointsContainer::ConstPointer points = mesh->GetPoints();
-
-  typename MeshType::PointsContainerConstIterator pointsBegin = points->Begin();
-  typename MeshType::PointsContainerConstIterator pointsEnd   = points->End();
-  for( pointsBegin; pointsBegin != pointsEnd; ++pointsBegin )
-  {
-    std::cout << "point " << pointsBegin->Index() << ": " << pointsBegin->Value().GetVnlVector() << std::endl;
-  }
-
-  typedef typename MeshType::CellsContainer::Iterator CellIterator;
-  CellIterator cellIterator = mesh->GetCells()->Begin();
-  CellIterator CellsEnd     = mesh->GetCells()->End();
-
-  typename CellInterfaceType::PointIdIterator beginpointer;
-  typename CellInterfaceType::PointIdIterator endpointer;
-
-  for( cellIterator; cellIterator != CellsEnd; ++cellIterator )
-  {
-    std::cout << "Cell Index: " << cellIterator->Index() << std::endl;
-    beginpointer = cellIterator->Value()->PointIdsBegin();
-    endpointer   = cellIterator->Value()->PointIdsEnd();
-
-    for( beginpointer; beginpointer != endpointer; ++beginpointer )
-    {
-      std::cout << "Id: " << *beginpointer << std::endl;
     }
   }
   return nrofpoints;
