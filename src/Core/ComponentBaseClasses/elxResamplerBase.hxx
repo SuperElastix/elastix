@@ -520,6 +520,8 @@ ResamplerBase< TElastix >
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< unsigned char, InputImageType::ImageDimension > >   CastFilterUChar;
   typedef itk::CastImageFilter< InputImageType,
+    itk::Image< char, InputImageType::ImageDimension > >            CastFilterChar;
+  typedef itk::CastImageFilter< InputImageType,
     itk::Image< float, InputImageType::ImageDimension > >           CastFilterFloat;
 
   /** cast the image to the correct output image Type */
@@ -540,6 +542,13 @@ ResamplerBase< TElastix >
   else if( resultImagePixelType == "unsigned char" )
   {
     typename CastFilterUChar::Pointer castFilter = CastFilterUChar::New();
+    castFilter->SetInput( infoChanger->GetOutput() );
+    castFilter->Update();
+    resultImage = castFilter->GetOutput();
+  }
+  else if( resultImagePixelType == "char" )
+  {
+    typename CastFilterChar::Pointer castFilter = CastFilterChar::New();
     castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
