@@ -676,6 +676,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
         }
         ( *gradient ) = this->m_GradientImage->GetPixel( index );
       }
+
+      /** The moving image gradient is multiplied with its scales, when requested. */
       if( this->m_UseMovingImageDerivativeScales )
       {
         for( unsigned int i = 0; i < MovingImageDimension; ++i )
