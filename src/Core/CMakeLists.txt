@@ -121,7 +121,7 @@ if( ELASTIX_BUILD_EXECUTABLE )
     Kernel/elxElastixMain.h
     ${InstallFilesForExecutables}
   )
-else(ELASTIX_BUILD_EXECUTABLE)
+else()
   if( ELASTIX_BUILD_SHARED_LIBS )
     add_library( elastix SHARED
       Main/elastixlib.cxx
@@ -130,7 +130,7 @@ else(ELASTIX_BUILD_EXECUTABLE)
       Kernel/elxElastixMain.h
       ${InstallFilesForExecutables}
     )
-  else(ELASTIX_BUILD_SHARED_LIBS)
+  else()
     add_library( elastix STATIC
       Main/elastixlib.cxx
       Main/elastixlib.h
@@ -165,7 +165,7 @@ else()
       Kernel/elxTransformixMain.h
       ${InstallFilesForExecutables}
     )
-  else( ELASTIX_BUILD_SHARED_LIBS )
+  else()
     add_library( transformix STATIC
       Main/transformixlib.cxx
       Main/transformixlib.h
@@ -223,13 +223,13 @@ if( WIN32 )
     install( TARGETS elastix transformix
       RUNTIME DESTINATION . )
       #COMPONENT core )
-  else( ELASTIX_BUILD_EXECUTABLE )
+  else()
     # transformix is not implemented as library yet
     install( TARGETS elastix transformix
       RUNTIME DESTINATION .
       ARCHIVE DESTINATION . )
   endif()
-else( WIN32 )
+else()
   # Tell the executables where to find the required .so files.
   set_target_properties( elastix transformix
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
