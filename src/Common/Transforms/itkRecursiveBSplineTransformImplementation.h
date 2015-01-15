@@ -184,6 +184,18 @@ public:
   } // end TransformPoint()
 
 
+  /** GetJacobian recursive implementation. */
+  static inline void GetJacobian(
+    TScalar * & jacobians, const double * weights1D , double value )
+  {
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::GetJacobian( jacobians, weights1D, value * weights1D[ k + HelperConstVariable ] );
+    }
+  } // end GetJacobian()
+
+
   /** ComputeNonZeroJacobianIndices recursive implementation. */
   static inline void ComputeNonZeroJacobianIndices(
     unsigned long * nzji,
@@ -231,13 +243,11 @@ public:
 
 
   /** GetJacobian recursive implementation. */
-  // outerdim template parameter nodig
   static inline void GetJacobian(
     TScalar * & jacobians, const double * weights1D, double value )
   {
-    *jacobians = value;//*dm/dx
-	  //for( i = outerdim){ jacobians[64*i ] = value * dmdx[i]}
-  	++jacobians;
+    *jacobians = value;
+    ++jacobians;
   } // end GetJacobian()
 
 
@@ -297,6 +307,20 @@ public:
       opp[ j ] = *(mu[ j ]);
     }
   } // end TransformPoint()
+
+
+  /** GetJacobian recursive implementation. */
+  static inline void GetJacobian(
+    TScalar * & jacobians, const double * weights1D, double value )
+  {
+    unsigned long offset = 0;
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      offset = j * BSplineNumberOfIndices * ( OutputDimension + 1 );
+      *(jacobians + offset) = value; //* dmdx[i]
+    }
+    ++jacobians;
+  } // end GetJacobian()
 
 
   /** ComputeNonZeroJacobianIndices recursive implementation. */

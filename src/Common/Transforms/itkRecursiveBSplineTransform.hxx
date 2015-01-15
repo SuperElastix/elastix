@@ -278,6 +278,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   IndexType supportIndex;
   this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
 
+#if 1
   /** Recursively compute the first numberOfIndices entries of the Jacobian.
    * They are directly written in the Jacobian matrix memory block.
    * The pointer has changed after this function call.
@@ -293,6 +294,18 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     unsigned long offset = d * SpaceDimension * numberOfIndices + d * numberOfIndices;
     std::copy( jacobianPointer, jacobianPointer + numberOfIndices, jacobianPointer + offset );
   }
+#else
+  /** Recursively compute the first numberOfIndices entries of the Jacobian.
+   * They are directly written in the Jacobian matrix memory block.
+   * The pointer has changed after this function call.
+   *
+   * This version is actually a tiny bit slower than the above which uses
+   * a very efficient memcopy.
+   */
+  ParametersValueType * jacobianPointer = jacobian.data_block();
+  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
+    ::GetJacobian( jacobianPointer, weightsArray1D, 1.0 );
+#endif
 
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
