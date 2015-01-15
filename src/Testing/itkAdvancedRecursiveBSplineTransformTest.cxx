@@ -352,7 +352,9 @@ main( int argc, char * argv[] )
   recursiveTransform->GetJacobian( inputPoint, jacobianRecursive, nzjiRecursive );
 
   JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianRecursive;
-  if( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
+  double jacobianDifference = jacobianDifferenceMatrix.frobenius_norm();
+  std::cerr << "The Recursive B-spline GetJacobian() difference is " << jacobianDifference << std::endl;
+  if( jacobianDifference > 1e-10 )
   {
     std::cerr << "ERROR: Recursive B-spline GetJacobian() returning incorrect result." << std::endl;
     return EXIT_FAILURE;
@@ -373,7 +375,7 @@ main( int argc, char * argv[] )
   }
 
   /** Exercise PrintSelf(). */
-  //recursiveTransform->Print( std::cerr );
+  recursiveTransform->Print( std::cerr );
 
   /** Return a value. */
   return 0;
