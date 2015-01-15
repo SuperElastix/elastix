@@ -1,6 +1,6 @@
 (Transform "AffineTransform")
 (NumberOfParameters 12)
-(TransformParameters 0.964398 0.00727308 0.00824159 -0.0199649 0.948468 0.00732794 -0.00431705 -0.00325992 0.964282 4.09541 7.38696 -35.6552)
+(TransformParameters 0.964398 0.00727308 0.00824159 -0.0199649 0.948468 0.00732794 -0.00431705 -0.00325992 0.964282 3.70947 6.66325 -34.4232)
 (InitialTransformParametersFileName "NoInitialTransform")
 (HowToCombineTransforms "Compose")
 
@@ -17,7 +17,7 @@
 (UseDirectionCosines "true")
 
 // AffineTransform specific
-(CenterOfRotationPoint -80.0604 -51.1909 -1238.84)
+(CenterOfRotationPoint -75.965 -43.804 -1274.5)
 (ComputeZYX "true")
 
 // ResampleInterpolator specific

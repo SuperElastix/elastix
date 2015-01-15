@@ -197,10 +197,8 @@ main( int argc, char * argv[] )
       RigidTransformType::Pointer rigidTransform = RigidTransformType::New();
       rigidTransform->SetCenter( centerOfRotation );
       rigidTransform->SetParametersByValue( transformParameters );
-      OutputPointType mappedCenterOfRotation = rigidTransform->TransformPoint( centerOfRotation );
 
       RigidTransformType::Pointer inverseRigidTransform = RigidTransformType::New();
-      inverseRigidTransform->SetCenter( mappedCenterOfRotation );
       rigidTransform->GetInverse( inverseRigidTransform );
 
       transformParametersInv = inverseRigidTransform->GetParameters();
@@ -211,10 +209,8 @@ main( int argc, char * argv[] )
       AffineTransformType::Pointer affineTransform = AffineTransformType::New();
       affineTransform->SetCenter( centerOfRotation );
       affineTransform->SetParametersByValue( transformParameters );
-      OutputPointType mappedCenterOfRotation = affineTransform->TransformPoint( centerOfRotation );
 
       AffineTransformType::Pointer inverseAffineTransform = AffineTransformType::New();
-      inverseAffineTransform->SetCenter( mappedCenterOfRotation );
       affineTransform->GetInverse( inverseAffineTransform );
 
       transformParametersInv = inverseAffineTransform->GetParameters();
