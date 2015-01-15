@@ -50,7 +50,7 @@ namespace elastix
    *    each parameter. This should be used when registration is performed directly on the moving
    *    image, without using a fixed image. Possible values are "true" or "false".
    * \parameter NumEigenValues: number of eigenvalues used in the metric: 1 - e/sum(e), where sum(e)
-   *	is the sum of all eigenvalues and e is the sum of the first highest NumEigenValues eigenvalues.
+   *  is the sum of all eigenvalues and e is the sum of the first highest NumEigenValues eigenvalues.
    *
    * \ingroup RegistrationMetrics
    * \ingroup Metrics

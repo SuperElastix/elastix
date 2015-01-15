@@ -9,10 +9,10 @@ class LMOptimizer
 {
         public: //Interface
 
-		// Constructor
+    // Constructor
     LMOptimizer();
 
-		//Destructor
+    //Destructor
         ~LMOptimizer();
 
     //typedefs

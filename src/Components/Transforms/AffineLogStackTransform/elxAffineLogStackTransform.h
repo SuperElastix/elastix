@@ -72,7 +72,7 @@ namespace elastix
   typedef itk::AffineLogTransform< typename elx::TransformBase<TElastix>::CoordRepType,
             itkGetStaticConstMacro(SpaceDimension) >        AffineLogTransformType;
   typedef typename AffineLogTransformType::Pointer             AffineLogTransformPointer;
-  typedef typename AffineLogTransformType::InputPointType		InputPointType;
+  typedef typename AffineLogTransformType::InputPointType   InputPointType;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
    typedef itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordRepType,

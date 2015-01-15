@@ -490,7 +490,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     }/** end first loop over image sample container */
 
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
 
     MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );

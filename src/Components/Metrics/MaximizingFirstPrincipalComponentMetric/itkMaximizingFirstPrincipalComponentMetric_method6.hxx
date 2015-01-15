@@ -322,7 +322,7 @@ namespace itk
     /** Subtract mean from columns */
     MatrixType Azscore( A.rows(), A.cols() );
     Azscore.fill( NumericTraits< RealType >::Zero );
-	  for (int i = 0; i < A.rows(); i++ )
+    for (int i = 0; i < A.rows(); i++ )
     {
             for(int j = 0; j < A.cols(); j++)
             {
@@ -516,7 +516,7 @@ namespace itk
     }/** end first loop over image sample container */
 
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     MatrixType A( datablock.extract( pixelIndex, realNumLastDimPositions ) );
 
@@ -551,7 +551,7 @@ namespace itk
     /** Subtract mean from columns */
     MatrixType Azscore( A.rows(), A.cols() );
     Azscore.fill( NumericTraits< RealType >::Zero );
-  	for (int i = 0; i < A.rows(); i++ )
+    for (int i = 0; i < A.rows(); i++ )
     {
             for(int j = 0; j < A.cols(); j++)
             {
@@ -703,7 +703,7 @@ namespace itk
             this->EvaluateMovingImageValueAndDerivative(
                         mappedPoint, movingImageValue, &movingImageDerivative );
 
-					  movingImageDerivative /= std(d);
+            movingImageDerivative /= std(d);
 
             /** Get the TransformJacobian dT/dmu */
             this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
@@ -725,7 +725,7 @@ namespace itk
                 dAdmu_v5[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v5[ d ];
                 dAdmu_v6[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v6[ d ];
                 dAdmu_v7[ pixelIndex ][ nzjis[ d ][ p ] ] += dMTdmu[ p ]*v7[ d ];
-                AtdAdmuii[ nzjis[ d ][ p ] ] += Atzscore[ d ][ pixelIndex ]*dMTdmu[ p ];								
+                AtdAdmuii[ nzjis[ d ][ p ] ] += Atzscore[ d ][ pixelIndex ]*dMTdmu[ p ];                
             }
         } // end loop over t
     } // end second for loop over sample container

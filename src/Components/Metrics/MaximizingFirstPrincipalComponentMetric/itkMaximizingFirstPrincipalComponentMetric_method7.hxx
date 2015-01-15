@@ -55,7 +55,7 @@ namespace itk
     ::Initialize(void) throw ( ExceptionObject )
   {
 
-		/** Initialize transform, interpolator, etc. */
+    /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
 
     /** Retrieve slowest varying dimension and its size. */
@@ -368,7 +368,7 @@ namespace itk
     void
     MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetDerivative( const TransformParametersType & parameters,
-	DerivativeType & derivative ) const
+  DerivativeType & derivative ) const
   {
     /** When the derivative is calculated, all information for calculating
      * the metric value is available. It does not cost anything to calculate
@@ -384,7 +384,7 @@ namespace itk
  * ******************* GetValueAndDerivative *******************
  */
 
-	template <class TFixedImage, class TMovingImage>
+  template <class TFixedImage, class TMovingImage>
     void
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
@@ -510,7 +510,7 @@ namespace itk
     }/** end first loop over image sample container */
 
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
     unsigned int N = pixelIndex;
 

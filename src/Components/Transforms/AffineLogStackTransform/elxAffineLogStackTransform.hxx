@@ -491,11 +491,11 @@ bool AffineLogStackTransform<TElastix>
    * We put this in a dummy image, so that we can correctly
    * calculate the center of rotation in world coordinates.
    */
-  SpacingType   				spacing;
-  IndexType  						index;
-  PointType     				origin;
-  SizeType      				size;
-  DirectionType 				direction;
+  SpacingType           spacing;
+  IndexType             index;
+  PointType             origin;
+  SizeType              size;
+  DirectionType         direction;
   direction.SetIdentity();
 
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
@@ -547,11 +547,11 @@ bool AffineLogStackTransform<TElastix>
   typename DummyImageType::Pointer dummyImage = DummyImageType::New();
   ReducedDimensionRegionType rdregion;
 
-    ReducedDimensionSpacingType   					rdspacing;
+    ReducedDimensionSpacingType             rdspacing;
     ReducedDimensionIndexType     rdindex;
-    ReducedDimensionPointType     					rdorigin;
-    ReducedDimensionSizeType      					rdsize;
-    ReducedDimensionDirectionType 					rddirection;
+    ReducedDimensionPointType               rdorigin;
+    ReducedDimensionSizeType                rdsize;
+    ReducedDimensionDirectionType           rddirection;
 
   rdregion.SetIndex( rdindex );
   rdregion.SetSize( rdsize );

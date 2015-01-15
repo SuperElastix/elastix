@@ -43,7 +43,7 @@ AffineLogTransform<TScalarType, Dimension>
   OffsetType off;
   for(unsigned int i = 0; i < Dimension; i ++)
   {
-	off[i] = offset[i];
+  off[i] = offset[i];
   }
   this->SetOffset(off);
 

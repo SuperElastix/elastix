@@ -93,8 +93,8 @@ void EulerStackTransform<TElastix>::BeforeRegistration( void )
   /** Task 3 - Initialize the transform */
   this->InitializeTransform();
 
-	/** Task 4 - Set the scales. */
-	this->SetScales();
+  /** Task 4 - Set the scales. */
+  this->SetScales();
 
  } // end BeforeRegistration()
 
@@ -156,7 +156,7 @@ void EulerStackTransform<TElastix>
   this->m_EulerStackTransform->SetAllSubTransforms( this->m_EulerDummySubTransform );
 
   /** Call the ReadFromFile from the TransformBase. */
-	this->Superclass2::ReadFromFile();
+  this->Superclass2::ReadFromFile();
 
 } // end ReadFromFile()
 
@@ -189,7 +189,7 @@ void EulerStackTransform<TElastix>
   {
       xout["transpar"] << rotationPoint[ i ] << " ";
   }
-	xout["transpar"] << rotationPoint[ReducedSpaceDimension-1] << ")" << std::endl;
+  xout["transpar"] << rotationPoint[ReducedSpaceDimension-1] << ")" << std::endl;
 
   /** Write the stack spacing, stack origin and number of sub transforms. */
   xout["transpar"] << "(StackSpacing " << this->m_EulerStackTransform->GetStackSpacing() << ")" << std::endl;
@@ -216,15 +216,15 @@ void EulerStackTransform<TElastix>::InitializeTransform()
    * which is the rotationPoint, expressed in index-values.
    */
 
-	ContinuousIndexType centerOfRotationIndex;
-	InputPointType centerOfRotationPoint;
-	ReducedDimensionContinuousIndexType redDimCenterOfRotationIndex;
-	ReducedDimensionInputPointType redDimCenterOfRotationPoint;
+  ContinuousIndexType centerOfRotationIndex;
+  InputPointType centerOfRotationPoint;
+  ReducedDimensionContinuousIndexType redDimCenterOfRotationIndex;
+  ReducedDimensionInputPointType redDimCenterOfRotationPoint;
 
   bool centerGivenAsIndex = true;
   bool centerGivenAsPoint = true;
-	SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
-		GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
+    GetFixedImage()->GetLargestPossibleRegion().GetSize();
 
   /** Try to read center of rotation point (COP) from parameter file. */
   for ( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
@@ -232,8 +232,8 @@ void EulerStackTransform<TElastix>::InitializeTransform()
     /** Initialize. */
     centerOfRotationIndex[ i ] = 0;
     centerOfRotationPoint[ i ] = 0.0;
-		redDimCenterOfRotationIndex[ i ] = 0;
-		redDimCenterOfRotationPoint[ i ] = 0.0;
+    redDimCenterOfRotationIndex[ i ] = 0;
+    redDimCenterOfRotationPoint[ i ] = 0.0;
 
     /** Check COR index: Returns zero when parameter was in the parameter file. */
     const bool foundI = this->m_Configuration->ReadParameter(
@@ -253,45 +253,45 @@ void EulerStackTransform<TElastix>::InitializeTransform()
   } // end loop over SpaceDimension
 
   /** Determine the center of rotation as the center of the image if no center was given */
-	const bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-	if ( !centerGiven  )
-	{
-		/** Use center of image as default center of rotation */
-		for(unsigned int k = 0; k < SpaceDimension; k++)
-		{
-			centerOfRotationIndex[ k ] = (fixedImageSize[ k ] - 1.0f) / 2.0f;
-		}
-		
-		/** Convert from continuous index to physical point */
-		this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
-			TransformContinuousIndexToPhysicalPoint( centerOfRotationIndex, centerOfRotationPoint );
-
-		for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
-		{
-			redDimCenterOfRotationPoint[ k ] = redDimCenterOfRotationPoint[ k ];
-		}
-
-    /** FIX: why may the cop not work when using direction cosines? */
-		bool UseDirectionCosines = true;
-		this->m_Configuration->ReadParameter( UseDirectionCosines, "UseDirectionCosines", 0 );
-		if(!UseDirectionCosines)
-		{
-			elxout << "warning: a wrong center of rotation could have been set, " 
-				     << " please check the transform matrix in the header file" << std::endl;
-		}
-	}
-
-  /** Transform center of rotation point to physical point if given as index in parameter file. */
-	if( centerGivenAsIndex)
-	{
-		this->m_Registration->GetAsITKBaseType()->GetFixedImage()
-			  ->TransformContinuousIndexToPhysicalPoint(centerOfRotationIndex, centerOfRotationPoint );
+  const bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
+  if ( !centerGiven  )
+  {
+    /** Use center of image as default center of rotation */
+    for(unsigned int k = 0; k < SpaceDimension; k++)
+    {
+      centerOfRotationIndex[ k ] = (fixedImageSize[ k ] - 1.0f) / 2.0f;
+    }
+    
+    /** Convert from continuous index to physical point */
+    this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
+      TransformContinuousIndexToPhysicalPoint( centerOfRotationIndex, centerOfRotationPoint );
 
     for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
-		{
-			redDimCenterOfRotationPoint[ k ] = centerOfRotationPoint[ k ];
-		}
-	}
+    {
+      redDimCenterOfRotationPoint[ k ] = redDimCenterOfRotationPoint[ k ];
+    }
+
+    /** FIX: why may the cop not work when using direction cosines? */
+    bool UseDirectionCosines = true;
+    this->m_Configuration->ReadParameter( UseDirectionCosines, "UseDirectionCosines", 0 );
+    if(!UseDirectionCosines)
+    {
+      elxout << "warning: a wrong center of rotation could have been set, " 
+             << " please check the transform matrix in the header file" << std::endl;
+    }
+  }
+
+  /** Transform center of rotation point to physical point if given as index in parameter file. */
+  if( centerGivenAsIndex)
+  {
+    this->m_Registration->GetAsITKBaseType()->GetFixedImage()
+        ->TransformContinuousIndexToPhysicalPoint(centerOfRotationIndex, centerOfRotationPoint );
+
+    for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
+    {
+      redDimCenterOfRotationPoint[ k ] = centerOfRotationPoint[ k ];
+    }
+  }
 
   /** Transform center of rotation point using initial transform if present. */
   InitialTransformCenter( redDimCenterOfRotationPoint );
@@ -599,7 +599,7 @@ bool EulerStackTransform<TElastix>
   typename DummyImageType::Pointer dummyImage = DummyImageType::New();
   ReducedDimensionRegionType redDimRegion;
 
-	redDimRegion.SetIndex( index );
+  redDimRegion.SetIndex( index );
   redDimRegion.SetSize( size );
   dummyImage->SetRegions( redDimRegion );
   dummyImage->SetOrigin( origin );

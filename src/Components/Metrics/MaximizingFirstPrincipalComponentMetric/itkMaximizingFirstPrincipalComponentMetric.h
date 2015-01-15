@@ -124,7 +124,7 @@ public:
 
   /** Get the derivatives of the match measure. */
   virtual void GetDerivative(const TransformParametersType & parameters,
-	  DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivative(const TransformParametersType& parameters,
@@ -211,7 +211,7 @@ private:
   /** Integer to indicate how many eigenvalues you want to use in the metric */
   unsigned int m_NumEigenValues;
 
-  bool m_UseDerivativeOfMean;	
+  bool m_UseDerivativeOfMean; 
 
 }; // end class MaximizingFirstPrincipalComponentMetric
 

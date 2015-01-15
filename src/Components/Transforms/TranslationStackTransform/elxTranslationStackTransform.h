@@ -94,7 +94,7 @@ public:
    */
   typedef itk::AdvancedTranslationTransform < 
       typename elx::TransformBase < TElastix >::CoordRepType, 
-      itkGetStaticConstMacro( SpaceDimension ) > 	             TranslationTransformType;
+      itkGetStaticConstMacro( SpaceDimension ) >               TranslationTransformType;
   typedef typename TranslationTransformType::Pointer            TranslationTransformPointer;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */

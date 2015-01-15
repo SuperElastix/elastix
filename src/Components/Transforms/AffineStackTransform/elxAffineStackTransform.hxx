@@ -105,8 +105,8 @@ void AffineStackTransform<TElastix>::BeforeRegistration( void )
   /** Task 4 - Initialize the transform */
   this->InitializeTransform();
 
-	/** Task 2 - Set the scales. */
-	this->SetScales();
+  /** Task 2 - Set the scales. */
+  this->SetScales();
 
  } // end BeforeRegistration()
 
@@ -157,7 +157,7 @@ void AffineStackTransform<TElastix>
       << "transform parameter file" << std::endl;
     itkExceptionMacro( << "Transform parameter file is corrupt.")
   }
-		elxout << "corp: " << RDcenterOfRotationPoint << std::endl;
+    elxout << "corp: " << RDcenterOfRotationPoint << std::endl;
 
   this->InitializeAffineTransform();
 
@@ -172,7 +172,7 @@ void AffineStackTransform<TElastix>
   this->m_AffineStackTransform->SetAllSubTransforms( this->m_AffineDummySubTransform );
 
   /** Call the ReadFromFile from the TransformBase. */
-	this->Superclass2::ReadFromFile();
+  this->Superclass2::ReadFromFile();
 
 } // end ReadFromFile()
 
@@ -207,7 +207,7 @@ void AffineStackTransform<TElastix>
   {
       xout["transpar"] << rotationPoint[ i ] << " ";
   }
-	xout["transpar"] << rotationPoint[ReducedSpaceDimension-1] << ")" << std::endl;
+  xout["transpar"] << rotationPoint[ReducedSpaceDimension-1] << ")" << std::endl;
 
   /** Write the stack spacing, stack origin and number of sub transforms. */
   xout["transpar"] << "(StackSpacing " << this->m_AffineStackTransform->GetStackSpacing() << ")" << std::endl;
@@ -236,27 +236,27 @@ void AffineStackTransform<TElastix>::InitializeTransform()
    * which is the rotationPoint, expressed in index-values.
    */
 
-	ContinuousIndexType centerOfRotationIndex;
-	InputPointType centerOfRotationPoint;
-	ReducedDimensionContinuousIndexType RDcenterOfRotationIndex;
-	ReducedDimensionInputPointType RDcenterOfRotationPoint;
-	InputPointType TransformedCenterOfRotation;
-	ReducedDimensionInputPointType RDTransformedCenterOfRotation;
+  ContinuousIndexType centerOfRotationIndex;
+  InputPointType centerOfRotationPoint;
+  ReducedDimensionContinuousIndexType RDcenterOfRotationIndex;
+  ReducedDimensionInputPointType RDcenterOfRotationPoint;
+  InputPointType TransformedCenterOfRotation;
+  ReducedDimensionInputPointType RDTransformedCenterOfRotation;
 
   bool centerGivenAsIndex = true;
   bool centerGivenAsPoint = true;
-	SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
-		GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
+    GetFixedImage()->GetLargestPossibleRegion().GetSize();
 
   for ( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
     /** Initialize. */
     centerOfRotationIndex[ i ] = 0;
-		RDcenterOfRotationIndex[ i ] = 0;
-		RDcenterOfRotationPoint[ i ] = 0.0;
-		centerOfRotationPoint[ i ] = 0.0;
-		TransformedCenterOfRotation[ i ] = 0.0;
-		RDTransformedCenterOfRotation[ i ] = 0.0;
+    RDcenterOfRotationIndex[ i ] = 0;
+    RDcenterOfRotationPoint[ i ] = 0.0;
+    centerOfRotationPoint[ i ] = 0.0;
+    TransformedCenterOfRotation[ i ] = 0.0;
+    RDTransformedCenterOfRotation[ i ] = 0.0;
 
 
     /** Check COR index: Returns zero when parameter was in the parameter file. */
@@ -276,7 +276,7 @@ void AffineStackTransform<TElastix>::InitializeTransform()
     }
   } // end loop over SpaceDimension
 
-	/** Check if user wants automatic transform initialization; false by default.
+  /** Check if user wants automatic transform initialization; false by default.
    * If an initial transform is given, automatic transform initialization is
    * not possible.
    */
@@ -290,53 +290,53 @@ void AffineStackTransform<TElastix>::InitializeTransform()
   }
 
   /** Set the center of rotation to the center of the image if no center was given */
-	bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-	if ( !centerGiven  )
-	{
-		/** Use center of image as default center of rotation */
-		for(unsigned int k = 0; k < SpaceDimension; k++)
-		{
-			centerOfRotationIndex[ k ] = (fixedImageSize[ k ]-1.0)/2.0;
-		}
-		std::cout << "centerOfRotationIndex: " << centerOfRotationIndex << std::endl;
-		
-		/** Convert from continuous index to physical point */
-		this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
-			TransformContinuousIndexToPhysicalPoint( centerOfRotationIndex, TransformedCenterOfRotation );
+  bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
+  if ( !centerGiven  )
+  {
+    /** Use center of image as default center of rotation */
+    for(unsigned int k = 0; k < SpaceDimension; k++)
+    {
+      centerOfRotationIndex[ k ] = (fixedImageSize[ k ]-1.0)/2.0;
+    }
+    std::cout << "centerOfRotationIndex: " << centerOfRotationIndex << std::endl;
+    
+    /** Convert from continuous index to physical point */
+    this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
+      TransformContinuousIndexToPhysicalPoint( centerOfRotationIndex, TransformedCenterOfRotation );
 
-		std::cout << "TransformedcenterOfRotation: " << TransformedCenterOfRotation << std::endl;
+    std::cout << "TransformedcenterOfRotation: " << TransformedCenterOfRotation << std::endl;
 
-		for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
-		{
-			RDTransformedCenterOfRotation[ k ] = TransformedCenterOfRotation[ k ];
-		}
+    for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
+    {
+      RDTransformedCenterOfRotation[ k ] = TransformedCenterOfRotation[ k ];
+    }
 
-		this->m_AffineDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
-		elxout << "Center of rotation: " << RDTransformedCenterOfRotation << std::endl;
-		elxout << "center of rotation is transformed from: " << centerOfRotationIndex << "to :" <<
-			RDTransformedCenterOfRotation << std::endl;
-	}
+    this->m_AffineDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
+    elxout << "Center of rotation: " << RDTransformedCenterOfRotation << std::endl;
+    elxout << "center of rotation is transformed from: " << centerOfRotationIndex << "to :" <<
+      RDTransformedCenterOfRotation << std::endl;
+  }
 
-	/** Set the center of rotation if it was entered by the user. */
-	if ( centerGivenAsPoint )
-	{
-		this->m_AffineDummySubTransform->SetCenter( RDcenterOfRotationPoint );
-		elxout << "Center of rotation point as entered by user: " << RDcenterOfRotationPoint << std::endl;
-	}
-	if( centerGivenAsIndex)
-	{
-		this->m_Registration->GetAsITKBaseType()->GetFixedImage()
-			->TransformContinuousIndexToPhysicalPoint(
-			centerOfRotationIndex, TransformedCenterOfRotation );
-		for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
-		{
-			RDTransformedCenterOfRotation[ k ] = TransformedCenterOfRotation[ k ];
-		}
-		this->m_AffineDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
-		elxout << "center of rotation, as entered by the user, is transformed from: " << centerOfRotationIndex << "to :" <<
-			RDTransformedCenterOfRotation << std::endl;
-	}
-	
+  /** Set the center of rotation if it was entered by the user. */
+  if ( centerGivenAsPoint )
+  {
+    this->m_AffineDummySubTransform->SetCenter( RDcenterOfRotationPoint );
+    elxout << "Center of rotation point as entered by user: " << RDcenterOfRotationPoint << std::endl;
+  }
+  if( centerGivenAsIndex)
+  {
+    this->m_Registration->GetAsITKBaseType()->GetFixedImage()
+      ->TransformContinuousIndexToPhysicalPoint(
+      centerOfRotationIndex, TransformedCenterOfRotation );
+    for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
+    {
+      RDTransformedCenterOfRotation[ k ] = TransformedCenterOfRotation[ k ];
+    }
+    this->m_AffineDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
+    elxout << "center of rotation, as entered by the user, is transformed from: " << centerOfRotationIndex << "to :" <<
+      RDTransformedCenterOfRotation << std::endl;
+  }
+  
   /** Set the translation to zero */ 
   ReducedDimensionOutputVectorType noTranslation;
   noTranslation.Fill(0.0);
@@ -374,7 +374,7 @@ void AffineStackTransform<TElastix>
   {
     elxout << "Scales are estimated automatically." << std::endl;
     this->AutomaticScalesEstimationStackTransform( this->m_AffineStackTransform->GetNumberOfSubTransforms(), newscales );
-		elxout << "finished setting scales" << std::endl;
+    elxout << "finished setting scales" << std::endl;
   }
   else
   {
@@ -520,11 +520,11 @@ bool AffineStackTransform<TElastix>
    * We put this in a dummy image, so that we can correctly
    * calculate the center of rotation in world coordinates.
    */
-  SpacingType   				spacing;
-  IndexType  						index;
-  PointType     				origin;
-  SizeType      				size;
-  DirectionType 				direction;
+  SpacingType           spacing;
+  IndexType             index;
+  PointType             origin;
+  SizeType              size;
+  DirectionType         direction;
   direction.SetIdentity();
 
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
@@ -576,12 +576,12 @@ bool AffineStackTransform<TElastix>
   typename DummyImageType::Pointer dummyImage = DummyImageType::New();
   ReducedDimensionRegionType rdregion;
 
-	ReducedDimensionSpacingType   					rdspacing;
-	ReducedDimensionIndexType     rdindex;
-	ReducedDimensionPointType     					rdorigin;
-	ReducedDimensionSizeType      					rdsize;
-	ReducedDimensionDirectionType 					rddirection;
-	
+  ReducedDimensionSpacingType             rdspacing;
+  ReducedDimensionIndexType     rdindex;
+  ReducedDimensionPointType               rdorigin;
+  ReducedDimensionSizeType                rdsize;
+  ReducedDimensionDirectionType           rddirection;
+  
   rdregion.SetIndex( rdindex );
   rdregion.SetSize( rdsize );
   dummyImage->SetRegions( rdregion );

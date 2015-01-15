@@ -508,7 +508,7 @@ namespace itk
         }/** end first loop over image sample container */
 
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
@@ -563,7 +563,7 @@ namespace itk
             meancols(j) += A(i,j);
         }
     }
-		meancols /= double(A.rows());
+    meancols /= double(A.rows());
 
     /** Subtract mean from columns */
     MatrixType AMinusMean( A.rows(), A.cols() );

@@ -27,7 +27,7 @@ namespace elastix
   /**
    * \class AffineLogTransformElastix
    * \brief 
-	 *
+   *
    * This transform is an affine transformation, with a different parametrisation
    * than the usual one.
    *

@@ -451,7 +451,7 @@ PCAMetric3<TFixedImage,TMovingImage>
     }
 
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     unsigned int N = this->m_NumberOfPixelsCounted;
 
     MatrixType A( datablock.extract( N, G ) );

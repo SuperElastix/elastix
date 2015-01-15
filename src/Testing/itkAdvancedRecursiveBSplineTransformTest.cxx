@@ -221,10 +221,10 @@ main( int argc, char * argv[] )
 
   itk::TimeProbesCollectorBase timeCollector;
   OutputPointType opp;
-  TransformType::WeightsType				        weights;
-  RecursiveTransformType::WeightsType				weights2;
-  TransformType::ParameterIndexArrayType	  indices;
-  RecursiveTransformType::ParameterIndexArrayType	indices2;
+  TransformType::WeightsType                weights;
+  RecursiveTransformType::WeightsType       weights2;
+  TransformType::ParameterIndexArrayType    indices;
+  RecursiveTransformType::ParameterIndexArrayType indices2;
 
   const unsigned int dummyNum = vcl_pow( static_cast< double >( SplineOrder + 1 ),static_cast< double >( Dimension ) );
   weights.SetSize( dummyNum );

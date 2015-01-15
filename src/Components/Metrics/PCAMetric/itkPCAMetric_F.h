@@ -112,7 +112,7 @@ public:
 
   /** Get the derivatives of the match measure. */
   virtual void GetDerivative(const TransformParametersType & parameters,
-	  DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivative(const TransformParametersType& parameters,

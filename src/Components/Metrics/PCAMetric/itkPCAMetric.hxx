@@ -536,7 +536,7 @@ namespace itk
     this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
 
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     unsigned int N = pixelIndex;
 
     MatrixType A( datablock.extract( N, G ) );

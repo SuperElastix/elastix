@@ -82,7 +82,7 @@ class  RecursiveBSplineInterpolationWeightFunction :
 public BSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder> 
 {
 public:
-	
+  
   /** Standard class typedefs. */
   typedef RecursiveBSplineInterpolationWeightFunction Self;
   typedef FunctionBase< ContinuousIndex< TCoordRep, VSpaceDimension >,

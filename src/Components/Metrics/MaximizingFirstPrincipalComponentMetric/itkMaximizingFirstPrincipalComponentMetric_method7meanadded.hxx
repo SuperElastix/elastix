@@ -55,7 +55,7 @@ namespace itk
     ::Initialize(void) throw ( ExceptionObject )
   {
 
-		/** Initialize transform, interpolator, etc. */
+    /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
 
     /** Retrieve slowest varying dimension and its size. */
@@ -284,7 +284,7 @@ namespace itk
 
     }/** end first loop over image sample container */
 
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
     unsigned int N = this->m_NumberOfPixelsCounted;
 
@@ -416,7 +416,7 @@ namespace itk
     void
     MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetDerivative( const TransformParametersType & parameters,
-	DerivativeType & derivative ) const
+  DerivativeType & derivative ) const
   {
     /** When the derivative is calculated, all information for calculating
      * the metric value is available. It does not cost anything to calculate
@@ -432,7 +432,7 @@ namespace itk
  * ******************* GetValueAndDerivative *******************
  */
 
-	template <class TFixedImage, class TMovingImage>
+  template <class TFixedImage, class TMovingImage>
     void
    MaximizingFirstPrincipalComponentMetric<TFixedImage,TMovingImage>
     ::GetValueAndDerivative( const TransformParametersType & parameters,
@@ -560,7 +560,7 @@ namespace itk
     }/** end first loop over image sample container */
 
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
     unsigned int N = this->m_NumberOfPixelsCounted;
     MatrixType A; double alpha = double(G);
@@ -613,7 +613,7 @@ namespace itk
         }
     }
     mean /= RealType(A.rows());
-	
+  
     /** Calculate standard deviation from columns */
     vnl_vector< RealType > std( A.cols() );
     std.fill( NumericTraits< RealType >::Zero );
@@ -643,7 +643,7 @@ namespace itk
         }
     }
 
-		MatrixType Amm( A.rows(), A.cols() );
+    MatrixType Amm( A.rows(), A.cols() );
     Amm.fill( NumericTraits< RealType >::Zero );
     for( unsigned int i = 0; i < A.rows(); i++)
     {
@@ -666,7 +666,7 @@ namespace itk
     /** Compute first eigenvalue and eigenvector of the covariance matrix K */
     vnl_symmetric_eigensystem< RealType > eig( K );
     
-		/** Compute sum of all eigenvalues = trace( K ) */
+    /** Compute sum of all eigenvalues = trace( K ) */
     RealType trace = itk::NumericTraits< RealType >::Zero;
     for( int i = 0; i < K.rows(); i++ )
     {
@@ -831,10 +831,10 @@ namespace itk
 
     //for(unsigned int i = 0; i < A.rows(); i++)
     //{
-    //	for(unsigned int p = 0; p <P; p++)
-    //	{
-    //		meandmeanimagedmu[ p ] += dmeanimagedmu[ i ][ p ];
-    //	}
+    //  for(unsigned int p = 0; p <P; p++)
+    //  {
+    //    meandmeanimagedmu[ p ] += dmeanimagedmu[ i ][ p ];
+    //  }
     //}
     //meandmeanimagedmu /= A.rows();
 
@@ -857,7 +857,7 @@ namespace itk
     //        }
     //    }
     //}
-		
+    
     //vSinvdSinvdmuAtmmAmmv -= meanvSinvdSinvdmuAtmmAmmv;
 
     for(unsigned int p = 0; p < P; p++)

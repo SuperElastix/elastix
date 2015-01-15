@@ -120,7 +120,7 @@ public:
 
   /** Get the derivatives of the match measure. */
   virtual void GetDerivative(const TransformParametersType & parameters,
-	  DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivative(const TransformParametersType& parameters,
@@ -184,7 +184,7 @@ private:
   /** Bool to indicate if the transform used is a stacktransform. Set by elx files. */
   bool m_TransformIsStackTransform;
 
-  bool m_UseDerivativeOfMean;	
+  bool m_UseDerivativeOfMean; 
 
 }; // end class PCAMetric2
 

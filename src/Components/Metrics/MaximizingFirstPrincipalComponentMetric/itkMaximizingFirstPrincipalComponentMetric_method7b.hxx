@@ -460,7 +460,7 @@ namespace itk
     const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
 
     typedef vnl_matrix< RealType >                  MatrixType;
-    typedef vnl_matrix< DerivativeValueType >				DerivativeMatrixType;
+    typedef vnl_matrix< DerivativeValueType >       DerivativeMatrixType;
 
     std::vector< FixedImagePointType > SamplesOK;
 
@@ -553,8 +553,8 @@ namespace itk
     }/** end first loop over image sample container */
 
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-		this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+    this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
 
     MatrixType A( datablock.extract( realNumLastDimPositions, pixelIndex ) );
 
@@ -639,7 +639,7 @@ namespace itk
     {
         eigenValues(i) = eig.get_eigenvalue( i );
     }
-		this->m_eigenValues = eigenValues;
+    this->m_eigenValues = eigenValues;
     
     RealType sumEigenValuesUsed = itk::NumericTraits< DerivativeValueType >::Zero;
     for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
@@ -656,7 +656,7 @@ namespace itk
     }
 
     MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
-		this->m_firstEigenVector = eigenVectorMatrix.get_column( 0 );
+    this->m_firstEigenVector = eigenVectorMatrix.get_column( 0 );
     this->m_secondEigenVector = eigenVectorMatrix.get_column( 1 );
     this->m_thirdEigenVector = eigenVectorMatrix.get_column( 2 );
     this->m_fourthEigenVector = eigenVectorMatrix.get_column( 3 );
@@ -684,7 +684,7 @@ namespace itk
     vnl_vector< DerivativeValueType > meandAdmu( P ); // mean of a column of the derivative of A
     vnl_vector< DerivativeValueType > meanAtdAdmuii( P ); //mean of trace of AtMinusMean * dAdmu
 
-		/** The trace of vKvdmu is the sum of v_i*K*v_i/dmu where i runs from 1 to NumEigenValues. */
+    /** The trace of vKvdmu is the sum of v_i*K*v_i/dmu where i runs from 1 to NumEigenValues. */
     vnl_vector< DerivativeValueType > tracevKvdmu( P );
 
     /** To prevent the construction of a 3D matrix a 2D matrix is allocated where every 'slice' is tiled
@@ -704,10 +704,10 @@ namespace itk
     tracevKvdmu.fill ( itk::NumericTraits< DerivativeValueType >::Zero );
 
     DerivativeType dMTdmu;
-		dMTdmu.fill(itk::NumericTraits< DerivativeValueType >::Zero );
+    dMTdmu.fill(itk::NumericTraits< DerivativeValueType >::Zero );
 
     unsigned int startSamplesOK;
-	
+  
     startSamplesOK = 0;
 
     /** Second loop over fixed image samples. */
@@ -782,11 +782,11 @@ namespace itk
 
     } // end second for loop over sample container
 
-	 for(unsigned int p = 0; p < P; p++)
-	 {
-		 tracevKvdmu[ p ] = vnl_trace< DerivativeValueType >(eigenVectorMatrixTranspose*AtMinusMean*
-			 (dAdmu_v-meandAdmu_v).extract(realNumLastDimPositions,this->m_NumEigenValues,p*realNumLastDimPositions,0));
-	 }
+   for(unsigned int p = 0; p < P; p++)
+   {
+     tracevKvdmu[ p ] = vnl_trace< DerivativeValueType >(eigenVectorMatrixTranspose*AtMinusMean*
+       (dAdmu_v-meandAdmu_v).extract(realNumLastDimPositions,this->m_NumEigenValues,p*realNumLastDimPositions,0));
+   }
 
     dKiidmu = AtdAdmuii - meanAtdAdmuii;
     dKiidmu *= static_cast < DerivativeValueType > (2.0)
@@ -799,7 +799,7 @@ namespace itk
 
     measure = trace - sumEigenValuesUsed;
     derivative = dKiidmu - tracevKvdmu;
-	
+  
 
     //** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
