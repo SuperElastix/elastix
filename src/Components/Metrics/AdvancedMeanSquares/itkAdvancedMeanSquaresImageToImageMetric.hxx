@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef _itkAdvancedMeanSquaresImageToImageMetric_hxx
 #define _itkAdvancedMeanSquaresImageToImageMetric_hxx
 
@@ -253,11 +257,11 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   this->m_NumberOfPixelsCounted = 0;
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+  derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(
-  this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
   DerivativeType        imageJacobian( nzji.size() );
   TransformJacobianType jacobian;
 
@@ -319,11 +323,20 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
+#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
+#else
+      /** Compute the inner product of the transform Jacobian and the moving image gradient. */
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+        fixedPoint, movingImageDerivative,
+        imageJacobian, nzji );
+#endif
+
       /** Compute this pixel's contribution to the measure and derivatives. */
       this->UpdateValueAndDerivativeTerms(
         fixedImageValue, movingImageValue,
@@ -333,7 +346,6 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
     } // end if sampleOk
 
   } // end for loop over the image sample container
-
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(
@@ -388,9 +400,6 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
    */
   this->BeforeThreadedGetValueAndDerivative( parameters );
 
-  /** Initialize some threading related parameters. */
-  this->InitializeThreadingParameters();
-
   /** Launch multi-threading metric */
   this->LaunchGetValueAndDerivativeThreaderCallback();
 
@@ -412,16 +421,14 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType               imageJacobian( nzji.size() );
-
-  /** Get a handle to a pre-allocated transform Jacobian. */
-  TransformJacobianType & jacobian = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
+  DerivativeType               imageJacobian( nnzji );
 
   /** Get a handle to the pre-allocated derivative for the current thread.
-   * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
+   * The initialization is performed at the beginning of each resolution in
+   * InitializeThreadingParameters(), and at the end of each iteration in
+   * AfterThreadedGetValueAndDerivative() and the accumulate functions.
    */
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero ); // needed?
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
@@ -484,12 +491,18 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *threader_fiter ).Value().m_ImageValue );
 
+#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
+#else
+      /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+        fixedPoint, movingImageDerivative, imageJacobian, nzji );
+#endif
 
       /** Compute this pixel's contribution to the measure and derivatives. */
       this->UpdateValueAndDerivativeTerms(
@@ -523,6 +536,9 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
+
+    /** Reset this variable for the next iteration. */
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */
@@ -539,6 +555,9 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
+
+    /** Reset this variable for the next iteration. */
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value = NumericTraits< MeasureType >::Zero;
   }
   value *= normal_sum;
 
@@ -558,11 +577,9 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
     this->m_ThreaderMetricParameters.st_DerivativePointer   = derivative.begin();
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-    typename ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
+    this->m_Threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
       const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
-    local_threader->SingleMethodExecute();
+    this->m_Threader->SingleMethodExecute();
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp

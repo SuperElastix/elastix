@@ -1,20 +1,26 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxNormalizedGradientCorrelationMetric_HXX__
 #define __elxNormalizedGradientCorrelationMetric_HXX__
 
 #include "elxNormalizedGradientCorrelationMetric.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -28,12 +34,12 @@ void
 NormalizedGradientCorrelationMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of NormalizedGradientCorrelation metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -47,7 +53,6 @@ void
 NormalizedGradientCorrelationMetric< TElastix >
 ::BeforeRegistration( void )
 {
-
   if( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
   {
     itkExceptionMacro( << "FixedImage must be 3D" );
@@ -60,7 +65,7 @@ NormalizedGradientCorrelationMetric< TElastix >
     }
   }
 
-} // end BeforeRegistration
+} // end BeforeRegistration()
 
 
 /**

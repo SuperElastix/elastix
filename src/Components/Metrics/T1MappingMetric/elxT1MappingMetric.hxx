@@ -11,36 +11,36 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxT1MappingMetric_HXX__
-#define __elxT1MappingMetricc_HXX__
+#define __elxT1MappingMetric_HXX__
+
+#include "elxT1MappingMetric.h"
 
 #include <vector>
-#include "elxT1MappingMetric.h"
+#include "itkTimeProbe.h"
 
 
 namespace elastix
 {
 
-  /**
-   * ******************* Initialize ***********************
-   */
+/**
+ * ******************* Initialize ***********************
+ */
 
-  template <class TElastix>
-    void T1MappingMetric<TElastix>
-      ::Initialize(void) throw (itk::ExceptionObject)
-  {
-        this->m_iterationCounter = 0;
-        //this->m_Simage.set_size(1000,25);
-        //this->m_Simage.fill(0.0);
-        TimerPointer timer = TimerType::New();
-        timer->StartTimer();
-        this->Superclass1::Initialize();
-        timer->StopTimer();
-        elxout << "Initialization of T1Mapping metric took: "
-               << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+template <class TElastix>
+void T1MappingMetric<TElastix>
+::Initialize( void ) throw ( itk::ExceptionObject )
+{
+  this->m_iterationCounter = 0;
 
-  } // end Initialize
+  itk::TimeProbe timer;
+  timer.Start();
+  this->Superclass1::Initialize();
+  timer.Stop();
+  elxout << "Initialization of T1Mapping metric took: "
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+
+} // end Initialize()
 
 
   /**

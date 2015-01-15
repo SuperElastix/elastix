@@ -1,21 +1,24 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
-
-#ifndef __elastix_cxx
-#define __elastix_cxx
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 
 #include "elastix.h"
+#include "elxElastixMain.h"
+
 
 int
 main( int argc, char ** argv )
@@ -68,7 +71,7 @@ main( int argc, char ** argv )
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();
 
-  /** Some declarations and initialisations. */
+  /** Some declarations and initializations. */
   ElastixMainVectorType elastices;
 
   ObjectPointer              transform            = 0;
@@ -194,10 +197,9 @@ main( int argc, char ** argv )
   elxout << std::endl;
 
   /** Declare a timer, start it and print the start time. */
-  tmr::Timer::Pointer totaltimer = tmr::Timer::New();
-  totaltimer->StartTimer();
-  elxout << "elastix is started at " << totaltimer->PrintStartTime()
-         << ".\n" << std::endl;
+  itk::TimeProbe totaltimer;
+  totaltimer.Start();
+  elxout << "elastix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
   /** Print where elastix was run. */
   elxout << "which elastix:   " << argv[ 0 ] << std::endl;
@@ -256,9 +258,9 @@ main( int argc, char ** argv )
            << ": \"" << argMap[ "-p" ] << "\".\n" << std::endl;
 
     /** Declare a timer, start it and print the start time. */
-    tmr::Timer::Pointer timer = tmr::Timer::New();
-    timer->StartTimer();
-    elxout << "Current time: " << timer->PrintStartTime() << "." << std::endl;
+    itk::TimeProbe timer;
+    timer.Start();
+    elxout << "Current time: " << GetCurrentDateAndTime() << "." << std::endl;
 
     /** Start registration. */
     returndummy = elastices[ i ]->Run( argMap );
@@ -285,10 +287,10 @@ main( int argc, char ** argv )
            << ": \"" << argMap[ "-p" ] << "\", has finished.\n" << std::endl;
 
     /** Stop timer and print it. */
-    timer->StopTimer();
-    elxout << "\nCurrent time: " << timer->PrintStopTime() << "." << std::endl;
-    elxout << "Time used for running elastix with this parameter file: "
-           << timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+    timer.Stop();
+    elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl;
+    elxout << "Time used for running elastix with this parameter file: \n  "
+      << timer.GetMean() << " " << timer.GetUnit() << " = " << ConvertSecondsToDHMS( timer.GetMean() ) << ".\n" << std::endl;
 
     /** Try to release some memory. */
     elastices[ i ] = 0;
@@ -298,9 +300,9 @@ main( int argc, char ** argv )
   elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
 
   /** Stop totaltimer and print it. */
-  totaltimer->StopTimer();
-  elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
-  elxout << "Total time elapsed precise: " << totaltimer->GetElapsedClockSec() << "s \n" << std::endl;
+  totaltimer.Stop();
+  elxout << "Total time elapsed: " << ConvertSecondsToDHMS( totaltimer.GetMean() ) << ".\n" << std::endl;
+
   /**
    * Make sure all the components that are defined in a Module (.DLL/.so)
    * are deleted before the modules are closed.
@@ -365,7 +367,7 @@ PrintHelp( void )
 
   /** The parameter file.*/
   std::cout << "The parameter-file must contain all the information "
-    "necessary for elastix to runproperly. That includes which metric to "
+    "necessary for elastix to run properly. That includes which metric to "
     "use, which optimizer, which transform, etc. It must also contain "
     "information specific for the metric, optimizer, transform, etc. "
     "For a usable parameter-file, see the website.\n" << std::endl;
@@ -374,6 +376,3 @@ PrintHelp( void )
     "or mail elastix@bigr.nl." << std::endl;
 
 } // end PrintHelp()
-
-
-#endif // end #ifndef __elastix_cxx

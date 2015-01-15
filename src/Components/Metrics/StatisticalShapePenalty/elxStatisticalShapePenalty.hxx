@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxStatisticalShapePenalty_HXX__
 #define __elxStatisticalShapePenalty_HXX__
 
@@ -26,6 +30,7 @@
 
 #include <typeinfo>
 
+
 namespace elastix
 {
 /**
@@ -37,13 +42,12 @@ void
 StatisticalShapePenalty< TElastix >
 ::Initialize( void ) throw ( ExceptionObject )
 {
-  TimerPointer timer = TimerType::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   this->Superclass1::Initialize();
-  timer->StopTimer();
+  timer.Stop();
   elxout << "Initialization of StatisticalShape metric took: "
-         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
-         << " ms." << std::endl;
+    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -77,7 +81,8 @@ StatisticalShapePenalty< TElastix >
 
   // itkCombinationImageToImageMetric.hxx checks if metric base class is ImageMetricType or PointSetMetricType.
   // This class is derived from SingleValuedPointSetToPointSetMetric which needs a moving pointset.
-  this->SetMovingPointSet( fixedPointSet ); // TODO: make itkCombinationImageToImageMetric check for a base class metric that doesn't use an image or moving pointset.
+  this->SetMovingPointSet( fixedPointSet );
+  // TODO: make itkCombinationImageToImageMetric check for a base class metric that doesn't use an image or moving pointset.
 
   /** Read meanVector filename. */
   std::string                  meanVectorName = this->GetConfiguration()->GetCommandLineArgument( "-mean" );
@@ -120,7 +125,7 @@ StatisticalShapePenalty< TElastix >
     }
   }
 
-  /** Read covariancematrix filename. */
+  /** Read covariance matrix filename. */
   std::string covarianceMatrixName = this->GetConfiguration()->GetCommandLineArgument( "-covariance" );
 
   vnl_matrix< double > * const covarianceMatrix = new vnl_matrix< double >();
@@ -139,7 +144,7 @@ StatisticalShapePenalty< TElastix >
   }
   this->SetCovarianceMatrix( covarianceMatrix );
 
-  /** Read eigenvectormatrix filename. */
+  /** Read eigenvector matrix filename. */
   std::string eigenVectorsName = this->GetConfiguration()->GetCommandLineArgument( "-evectors" );
 
   vnl_matrix< double > * const eigenVectors = new vnl_matrix< double >();
@@ -159,7 +164,7 @@ StatisticalShapePenalty< TElastix >
   }
   this->SetEigenVectors( eigenVectors );
 
-  /** Read eigenvaluevector filename. */
+  /** Read eigenvalue vector filename. */
   std::string                  eigenValuesName = this->GetConfiguration()->GetCommandLineArgument( "-evalues" );
   vnl_vector< double > * const eigenValues     = new vnl_vector< double >();
   datafile.open( eigenValuesName.c_str() );

@@ -28,15 +28,15 @@ set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_release_clang )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-SET( dashboard_model Nightly )
-IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  SET( dashboard_model Experimental )
-ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  SET( dashboard_model Continuous )
-ENDIF()
+set( dashboard_model Nightly )
+if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  set( dashboard_model Experimental )
+elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  set( dashboard_model Continuous )
+endif()
 
 # Dashboard settings
-SET( dashboard_cache "
+set( dashboard_cache "
 // Select the clang compiler
 CMAKE_C_COMPILER:FILEPATH=/usr/clang_svn/bin/clang
 CMAKE_C_FLAGS:STRING=-Wall -std=c99
@@ -84,7 +84,7 @@ ELASTIX_IMAGE_4D_PIXELTYPES:STRING=short
 OPENCL_INCLUDE_DIRS:PATH=/usr/local/cuda/include
 OPENCL_LIBRARIES:FILEPATH=/usr/lib/libOpenCL.so
 OPENCL_USE_PLATFORM_NVIDIA:BOOL=ON
-EIGEN3_INCLUDE_DIR:PATH=/home/marius/toolkits/eigen/eigen-3.2.0-beta1
+EIGEN3_INCLUDE_DIR:PATH=/home/marius/toolkits/eigen/eigen-3.2.1
 
 // Compile all elastix components;
 USE_ALL_COMPONENTS:BOOL=ON

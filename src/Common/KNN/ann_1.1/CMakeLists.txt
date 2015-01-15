@@ -1,4 +1,4 @@
-PROJECT( ANN )
+project( ANN )
 
 # Compile time option to select wheter or not to accept self matches
 # during nearest neighbour search. The default is false for backward
@@ -16,13 +16,13 @@ configure_file(
   @ONLY )
 
 # Include these directories to look for header files.
-INCLUDE_DIRECTORIES(
+include_directories(
   ${ANN_SOURCE_DIR}/include
   ${ANN_SOURCE_DIR}/src
 )
 
 # Sources of non-templated classes.
-SET( ANN_SRCS
+set( ANN_SRCS
   src/ANN.cpp
   src/bd_fix_rad_search.cpp
   src/bd_pr_search.cpp
@@ -40,25 +40,25 @@ SET( ANN_SRCS
 )
 
 # Create the ANNlib library
-ADD_LIBRARY( ANNlib SHARED ${ANN_SRCS} )
+add_library( ANNlib SHARED ${ANN_SRCS} )
 
 # Necessary, because in windows dll_export is needed for creating the
 # dll, but dll_import for using it in a program.
-SET_TARGET_PROPERTIES( ANNlib PROPERTIES DEFINE_SYMBOL DLL_EXPORTS )
+set_target_properties( ANNlib PROPERTIES DEFINE_SYMBOL DLL_EXPORTS )
 
 # Group in IDE's like Visual Studio
-SET_PROPERTY( TARGET ANNlib PROPERTY FOLDER "libraries" )
+set_property( TARGET ANNlib PROPERTY FOLDER "libraries" )
 
 # Install
-IF( WIN32 )
-  INSTALL( TARGETS ANNlib
+if( WIN32 )
+  install( TARGETS ANNlib
     RUNTIME DESTINATION .
     LIBRARY DESTINATION . )
     #COMPONENT libraries )
-ELSE()
-  INSTALL( TARGETS ANNlib
+else()
+  install( TARGETS ANNlib
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib )
     #COMPONENT libraries )
-ENDIF()
+endif()
 

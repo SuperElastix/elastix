@@ -1,17 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
-
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxResamplerBase_hxx
 #define __elxResamplerBase_hxx
 
@@ -20,7 +23,8 @@
 #include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
-#include "elxTimer.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -101,9 +105,8 @@ ResamplerBase< TElastix >
       << "." << resultImageFormat;
 
     /** Time the resampling. */
-    typedef tmr::Timer TimerType;
-    TimerType::Pointer timer = TimerType::New();
-    timer->StartTimer();
+    itk::TimeProbe timer;
+    timer.Start();
 
     /** Apply the final transform, and save the result. */
     elxout << "Applying transform this resolution ..." << std::endl;
@@ -119,10 +122,10 @@ ResamplerBase< TElastix >
     }
 
     /** Print the elapsed time for the resampling. */
-    timer->StopTimer();
+    timer.Stop();
     elxout << "  Applying transform took "
-           << static_cast< long >( timer->GetElapsedClockSec() )
-           << " s." << std::endl;
+           << this->ConvertSecondsToDHMS( timer.GetMean() )
+           << std::endl;
 
   } // end if
 
@@ -245,9 +248,8 @@ ResamplerBase< TElastix >
       << "." << resultImageFormat;
 
     /** Time the resampling. */
-    typedef tmr::Timer TimerType;
-    TimerType::Pointer timer = TimerType::New();
-    timer->StartTimer();
+    itk::TimeProbe timer;
+    timer.Start();
 
     /** Apply the final transform, and save the result,
      * by calling WriteResultImage.
@@ -260,15 +262,15 @@ ResamplerBase< TElastix >
     catch( itk::ExceptionObject & excp )
     {
       xl::xout[ "error" ] << "Exception caught: " << std::endl;
-      xl::xout[ "error" ] << excp
-                          << "Resuming elastix." << std::endl;
+      xl::xout[ "error" ] << excp << "Resuming elastix." << std::endl;
     }
 
     /** Print the elapsed time for the resampling. */
-    timer->StopTimer();
+    timer.Stop();
     elxout << std::setprecision( 2 );
     elxout << "  Applying final transform took "
-           << timer->GetElapsedClockSec() << " s" << std::endl;
+           << this->ConvertSecondsToDHMS( timer.GetMean() )
+           << std::endl;
     elxout << std::setprecision(
       this->m_Elastix->GetDefaultOutputPrecision() );
   }

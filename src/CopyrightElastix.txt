@@ -18,7 +18,7 @@ details on this third-party license.
 
 Elastix Copyright Notice:
 
-      Copyright (c) 2004-2010 University Medical Center Utrecht
+      Copyright (c) 2004-2014 University Medical Center Utrecht
       All rights reserved.
 
 

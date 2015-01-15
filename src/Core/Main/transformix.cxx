@@ -1,21 +1,23 @@
-/*======================================================================
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
-
-#ifndef __transformix_CXX_
-#define __transformix_CXX_
-
-#include "transformix.h"
+#include "elastix.h"
+#include "elxTransformixMain.h"
 
 int
 main( int argc, char ** argv )
@@ -172,10 +174,13 @@ main( int argc, char ** argv )
   elxout << std::endl;
 
   /** Declare a timer, start it and print the start time. */
-  tmr::Timer::Pointer totaltimer = tmr::Timer::New();
-  totaltimer->StartTimer();
-  elxout << "transformix is started at " << totaltimer->PrintStartTime()
-         << ".\n" << std::endl;
+  itk::TimeProbe totaltimer;
+  totaltimer.Start();
+  elxout << "transformix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
+  //tmr::Timer::Pointer totaltimer = tmr::Timer::New();
+  //totaltimer->StartTimer();
+  //elxout << "transformix is started at " << totaltimer->PrintStartTime()
+  //       << ".\n" << std::endl;
 
   /** Print where transformix was run. */
   elxout << "which transformix:   " << argv[ 0 ] << std::endl;
@@ -214,11 +219,9 @@ main( int argc, char ** argv )
   }
 
   /** Stop timer and print it. */
-  totaltimer->StopTimer();
-  elxout << "\nTransformix has finished at "
-         << totaltimer->PrintStopTime() << "." << std::endl;
-  elxout << "Elapsed time: "
-         << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+  totaltimer.Stop();
+  elxout << "\ntransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl;
+  elxout << "Elapsed time: " << ConvertSecondsToDHMS( totaltimer.GetMean() ) << ".\n" << std::endl;
 
   /** Clean up. */
   transformix = 0;
@@ -282,6 +285,3 @@ PrintHelp( void )
     "Check the website http://elastix.isi.uu.nl, or mail elastix@bigr.nl." << std::endl;
 
 } // end PrintHelp()
-
-
-#endif // end #ifndef __transformix_CXX_

@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxMaximizingFirstPrincipalComponentMetric_H__
 #define __elxMaximizingFirstPrincipalComponentMetric_H__
 
@@ -20,7 +19,6 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkStackTransform.h"
 
-#include "elxTimer.h"
 
 namespace elastix
 {
@@ -164,15 +162,9 @@ namespace elastix
     typedef itk::AdvancedBSplineDeformableTransformBase<
       ScalarType, FixedImageDimension - 1 >                   ReducedDimensionBSplineTransformBaseType;
 
-    /** Typedef for timer. */
-    typedef tmr::Timer          TimerType;
-    /** Typedef for timer. */
-    typedef TimerType::Pointer  TimerPointer;
-
-    /** Sets up a timer to measure the initialisation time and
+    /** Sets up a timer to measure the initialization time and
      * calls the Superclass' implementation.
      */
-
     virtual void Initialize(void) throw (itk::ExceptionObject);
 
     /**
@@ -208,4 +200,3 @@ namespace elastix
 #endif
 
 #endif // end #ifndef __elxMaximizingFirstPrincipalComponentMetric_H__
-

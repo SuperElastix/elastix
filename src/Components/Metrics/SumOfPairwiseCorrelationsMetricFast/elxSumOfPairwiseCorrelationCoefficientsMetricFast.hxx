@@ -11,11 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxSumOfPairwiseCorrelationCoefficientsMetricFast_HXX__
 #define __elxSumOfPairwiseCorrelationCoefficientsMetricFast_HXX__
 
 #include "elxSumOfPairwiseCorrelationCoefficientsMetricFast.h"
+#include "itkTimeProbe.h"
 
 
 namespace elastix
@@ -29,15 +29,15 @@ namespace elastix
     void SumOfPairwiseCorrelationCoefficientsMetricFast<TElastix>
       ::Initialize(void) throw (itk::ExceptionObject)
   {
-        elxout << "start initialize metric" << std::endl;
-    TimerPointer timer = TimerType::New();
-    timer->StartTimer();
-    this->Superclass1::Initialize();
-    timer->StopTimer();
-    elxout << "Initialization of SumOfPairwiseCorrelationCoefficientsMetricFast metric took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-  } // end Initialize
+    itk::TimeProbe timer;
+    timer.Start();
+    this->Superclass1::Initialize();
+    timer.Stop();
+    elxout << "Initialization of SumOfPairwiseCorrelationCoefficientsMetricFast metric took: "
+      << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+
+  } // end Initialize()
 
 
   /**

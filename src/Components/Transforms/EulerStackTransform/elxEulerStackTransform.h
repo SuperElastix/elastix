@@ -14,12 +14,11 @@
 #ifndef __elxEulerStackTransform_h
 #define __elxEulerStackTransform_h
 
+#include "elxIncludes.h"
 /** Include itk transforms needed. */
 #include "itkAdvancedCombinationTransform.h"
 #include "itkStackTransform.h"
-#include "../EulerTransform/itkEulerTransform.h"
-
-#include "elxIncludes.h"
+#include "itkEulerTransform.h"
 
 
 namespace elastix

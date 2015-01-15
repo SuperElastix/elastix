@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) Erasmus MC University Medical Center Rotterdam.
-  All rights reserved.  See src/CopyrightElastix.txt or
-  http://elastix.isi.uu.nl/legal.php for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkCyclicBSplineDeformableTransform_hxx
 #define __itkCyclicBSplineDeformableTransform_hxx
 
@@ -196,7 +200,7 @@ CyclicBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Zero output point elements. */
-  outputPoint.Fill( NumericTraits< ScalarType >::Zero );
+  outputPoint.Fill( NumericTraits< ScalarType >::ZeroValue() );
 
   unsigned long counter = 0;
   for( unsigned int r = 0; r < 2; ++r )

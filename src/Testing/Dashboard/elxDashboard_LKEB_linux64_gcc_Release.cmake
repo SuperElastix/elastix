@@ -11,14 +11,14 @@
 # and defaults to Nightly.
 # NOTE that Model should directly follow the comma: no space allowed!
 #
-# Setup: Linux 64bit, Ubuntu 3.2.0-34-generic
-# gcc 4.6.3
+# Setup: Linux 64bit, Ubuntu 14.04 LTS, 3.13.0-24-generic
+# gcc 4.8.2
 # Release mode, ITK 4.x (git)
 # PC: LKEB (MS), goliath
 
 # Client maintainer: m.staring@lumc.nl
 set( CTEST_SITE "LKEB.goliath" )
-set( CTEST_BUILD_NAME "Linux-64bit-gcc4.6.3-Release" )
+set( CTEST_BUILD_NAME "Linux-64bit-gcc4.8.2-Release" )
 set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
 set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Release )
@@ -28,15 +28,15 @@ set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_release )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-SET( dashboard_model Nightly )
-IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  SET( dashboard_model Experimental )
-ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  SET( dashboard_model Continuous )
-ENDIF()
+set( dashboard_model Nightly )
+if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  set( dashboard_model Experimental )
+elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  set( dashboard_model Continuous )
+endif()
 
 # Dashboard settings
-SET( dashboard_cache "
+set( dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=/usr/local/toolkits/ITK/git/bin_release
 

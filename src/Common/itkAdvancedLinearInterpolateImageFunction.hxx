@@ -1,12 +1,12 @@
 /*=========================================================================
  *
- *  Copyright Insight Software Consortium
+ *  Copyright UMC Utrecht and contributors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -104,6 +104,12 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
       xm[ dim ]          = 2.0 * this->m_EndIndex[ dim ] - x[ dim ];
       deriv_sign[ dim ] *= -1.0;
     }
+
+    /** Separately deal with cases on the image edge. */
+    if( Math::FloatAlmostEqual( xm[ dim ], static_cast<ContinuousIndexValueType>( this->m_EndIndex[ dim ] ) ) )
+    {
+      xm[ dim ] -= 0.000001;
+    }
   }
   // if this is mirrored again outside the image domain, then too bad.
 
@@ -182,6 +188,12 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
     {
       xm[ dim ]          = 2.0 * this->m_EndIndex[ dim ] - x[ dim ];
       deriv_sign[ dim ] *= -1.0;
+    }
+
+    /** Separately deal with cases on the image edge. */
+    if( Math::FloatAlmostEqual( xm[ dim ], static_cast<ContinuousIndexValueType>( this->m_EndIndex[ dim ] ) ) )
+    {
+      xm[ dim ] -= 0.000001;
     }
   }
   // if this is mirrored again outside the image domain, then too bad.

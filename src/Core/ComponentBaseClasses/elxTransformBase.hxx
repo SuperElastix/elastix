@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxTransformBase_hxx
 #define __elxTransformBase_hxx
 
@@ -402,7 +406,7 @@ TransformBase< TElastix >
 
     /** Read the TransformParameters. */
     std::vector< ValueType > vecPar( numberOfParameters,
-    itk::NumericTraits< ValueType >::Zero );
+    itk::NumericTraits< ValueType >::ZeroValue() );
     this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
       0, numberOfParameters - 1, true );
 
@@ -698,15 +702,16 @@ TransformBase< TElastix >
       << std::endl;
   }
 
-  /** Write the way Transforms are combined. */
+  /** Write the way Transforms are combined. 
+   *  Set it to the default "Compose" when no combination transform is used. */
   std::string                      combinationMethod = "Compose";
   const CombinationTransformType * dummyComboTransform
     = dynamic_cast< const CombinationTransformType * >( this );
   if( dummyComboTransform )
   {
-    if( dummyComboTransform->GetUseComposition() )
+    if( dummyComboTransform->GetUseAddition() )
     {
-      combinationMethod = "Compose";
+      combinationMethod = "Add";
     }
   }
 
@@ -1442,13 +1447,11 @@ TransformBase< TElastix >
 ::TransformPointsAllPoints( void ) const
 {
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType    FixedImageRegionType;
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
   typedef itk::Vector<
     float, FixedImageDimension >                      VectorPixelType;
   typedef itk::Image<
     VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
-  typedef typename DeformationFieldImageType::Pointer DeformationFieldImagePointer;
   typedef itk::TransformToDisplacementFieldFilter<
     DeformationFieldImageType, CoordRepType >         DeformationFieldGeneratorType;
   typedef itk::ChangeInformationImageFilter<

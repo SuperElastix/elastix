@@ -27,15 +27,15 @@ set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-SET( dashboard_model Nightly )
-SET( CTEST_BUILD_FLAGS "-j3" ) # parallel build for makefiles
-SET( CTEST_TEST_ARGS PARALLEL_LEVEL 3 ) # parallel testing
+set( dashboard_model Nightly )
+set( CTEST_BUILD_FLAGS "-j3" ) # parallel build for makefiles
+set( CTEST_TEST_ARGS PARALLEL_LEVEL 3 ) # parallel testing
 
-IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  SET( dashboard_model Experimental )
-ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  SET( dashboard_model Continuous )
-ENDIF()
+if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  set( dashboard_model Experimental )
+elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  set( dashboard_model Continuous )
+endif()
 
 # Output directory
 set( CTEST_DASHBOARD_ROOT "/cm/shared/apps/elastix/nightly" )
@@ -47,7 +47,7 @@ set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/release )
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
 
-SET( dashboard_cache "
+set( dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=/cm/shared/apps/itk/4.5.0/release
 

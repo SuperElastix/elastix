@@ -115,7 +115,8 @@ if( SITE STREQUAL "LKEB.PCMarius"
   set( knownChecksumSystem true )
   set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "LKEB.goliath"
-    AND BUILDNAME STREQUAL "Linux-64bit-gcc4.6.3-Release" )
+    AND ( BUILDNAME STREQUAL "Linux-64bit-gcc4.8.2-Release"
+      OR BUILDNAME STREQUAL "Linux-64bit-gcc4.8.2-Release-perf" ) )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
   set( specializedTransformParameterSystem true )

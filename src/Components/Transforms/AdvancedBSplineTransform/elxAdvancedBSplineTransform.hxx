@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxAdvancedBSplineTransform_hxx
 #define __elxAdvancedBSplineTransform_hxx
 
@@ -18,6 +22,7 @@
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 #include "vnl/vnl_math.h"
+
 
 namespace elastix
 {
@@ -167,7 +172,7 @@ AdvancedBSplineTransform< TElastix >
 
   /** Put parameters in the registration. */
   this->m_Registration->GetAsITKBaseType()
-  ->SetInitialTransformParameters( dummyInitialParameters );
+    ->SetInitialTransformParameters( dummyInitialParameters );
 
   /** Precompute the B-spline grid regions. */
   this->PreComputeGridInformation();
@@ -185,8 +190,7 @@ AdvancedBSplineTransform< TElastix >
 ::BeforeEachResolution( void )
 {
   /** What is the current resolution level? */
-  unsigned int level
-    = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+  unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Define the grid. */
   if( level == 0 )
@@ -312,8 +316,7 @@ AdvancedBSplineTransform< TElastix >
   }
 
   /** Set up a default grid spacing schedule. */
-  this->m_GridScheduleComputer->SetDefaultSchedule(
-    nrOfResolutions, 2.0 );
+  this->m_GridScheduleComputer->SetDefaultSchedule( nrOfResolutions, 2.0 );
   GridScheduleType gridSchedule;
   this->m_GridScheduleComputer->GetSchedule( gridSchedule );
 
@@ -370,8 +373,7 @@ AdvancedBSplineTransform< TElastix >
   }
 
   /** Set the grid schedule and final grid spacing in the schedule computer. */
-  this->m_GridScheduleComputer->SetFinalGridSpacing(
-    finalGridSpacingInPhysicalUnits );
+  this->m_GridScheduleComputer->SetFinalGridSpacing( finalGridSpacingInPhysicalUnits );
   this->m_GridScheduleComputer->SetSchedule( gridSchedule );
 
   /** Compute the necessary information. */
@@ -382,9 +384,6 @@ AdvancedBSplineTransform< TElastix >
 
 /**
  * ******************** InitializeTransform ***********************
- *
- * Set the size of the initial control point grid and initialize
- * the parameters to 0.
  */
 
 template< class TElastix >
@@ -410,15 +409,13 @@ AdvancedBSplineTransform< TElastix >
   ParametersType initialParameters( this->GetNumberOfParameters() );
   initialParameters.Fill( 0.0 );
   this->m_Registration->GetAsITKBaseType()
-  ->SetInitialTransformParametersOfNextLevel( initialParameters );
+    ->SetInitialTransformParametersOfNextLevel( initialParameters );
 
 } // end InitializeTransform()
 
 
 /**
  * *********************** IncreaseScale ************************
- *
- * Upsample the grid of control points.
  */
 
 template< class TElastix >
@@ -427,8 +424,7 @@ AdvancedBSplineTransform< TElastix >
 ::IncreaseScale( void )
 {
   /** What is the current resolution level? */
-  unsigned int level
-    = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+  unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** The current grid. */
   OriginType    currentGridOrigin    = this->m_BSplineTransform->GetGridOrigin();
@@ -470,7 +466,7 @@ AdvancedBSplineTransform< TElastix >
 
   /** Set the initial parameters for the next level. */
   this->m_Registration->GetAsITKBaseType()
-  ->SetInitialTransformParametersOfNextLevel( upsampledParameters );
+    ->SetInitialTransformParametersOfNextLevel( upsampledParameters );
 
   /** Set the parameters in the BsplineTransform. */
   this->m_BSplineTransform->SetParameters(
@@ -490,13 +486,13 @@ AdvancedBSplineTransform< TElastix >
 ::ReadFromFile( void )
 {
   /** Read spline order and periodicity settings and initialize BSplineTransform. */
-  m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+  this->m_SplineOrder = 3;
+  this->GetConfiguration()->ReadParameter( this->m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0 );
-  m_Cyclic = false;
-  this->GetConfiguration()->ReadParameter( m_Cyclic,
+  this->m_Cyclic = false;
+  this->GetConfiguration()->ReadParameter( this->m_Cyclic,
     "UseCyclicTransform", this->GetComponentLabel(), 0, 0 );
-  InitializeBSplineTransform();
+  this->InitializeBSplineTransform();
 
   /** Read and Set the Grid: this is a BSplineTransform specific task. */
 
@@ -549,9 +545,6 @@ AdvancedBSplineTransform< TElastix >
 
 /**
  * ************************* WriteToFile ************************
- *
- * Saves the TransformParameters as a vector and if wanted
- * also as a deformation field.
  */
 
 template< class TElastix >
@@ -768,7 +761,7 @@ AdvancedBSplineTransform< TElastix >::SetOptimizerScales( const unsigned int edg
     = this->m_BSplineTransform->GetNumberOfParameters();
   const unsigned long offset = numberOfParameters / SpaceDimension;
   ScalesType          newScales( numberOfParameters );
-  newScales.Fill( itk::NumericTraits< ScalesValueType >::One );
+  newScales.Fill( itk::NumericTraits< ScalesValueType >::OneValue() );
   const ScalesValueType infScale = 10000.0;
 
   if( edgeWidth == 0 )

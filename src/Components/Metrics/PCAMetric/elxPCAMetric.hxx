@@ -1,4 +1,3 @@
-
 /*======================================================================
 
   This file is part of the elastix software.
@@ -12,11 +11,12 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxPCAMetric_HXX__
 #define __elxPCAMetric_HXX__
 
 #include "elxPCAMetric.h"
+#include "itkTimeProbe.h"
+
 
 namespace elastix
 {
@@ -29,15 +29,15 @@ namespace elastix
     void PCAMetric<TElastix>
       ::Initialize(void) throw (itk::ExceptionObject)
   {
-        elxout << "start initialize metric" << std::endl;
-    TimerPointer timer = TimerType::New();
-    timer->StartTimer();
-    this->Superclass1::Initialize();
-    timer->StopTimer();
-    elxout << "Initialization of PCAMetric metric took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-  } // end Initialize
+    itk::TimeProbe timer;
+    timer.Start();
+    this->Superclass1::Initialize();
+    timer.Stop();
+    elxout << "Initialization of PCAMetric metric took: "
+      << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+
+  } // end Initialize()
 
 
   /**

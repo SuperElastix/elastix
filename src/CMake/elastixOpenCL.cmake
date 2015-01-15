@@ -1,5 +1,5 @@
 # This file is a copy of the ITK4.2.0 CMake\itkOpenCL.cmake
-# We added support for .clh file (OpenCL header kernels)
+# We added support for .clh file(OpenCL header kernels)
 # TODO: This file has to be moved in CMake directory
 
 if( ELASTIX_USE_OPENCL )
