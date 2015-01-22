@@ -468,10 +468,11 @@ ElastixTemplate< TFixedImage, TMovingImage >
      * But for now, there seems to be no use yet for that.
      */
 #ifndef _ELASTIX_BUILD_LIBRARY
-    this->GetElxResamplerBase()->WriteResultImage( makeFileName.str().c_str() );
+    this->GetElxResamplerBase()->ResampleAndWriteResultImage( makeFileName.str().c_str() );
 #else
     this->GetElxResamplerBase()->CreateItkResultImage();
 #endif
+
     /** Print the elapsed time for the resampling. */
     timer.Stop();
     elxout << std::setprecision( 2 );

@@ -172,8 +172,12 @@ public:
   /** Function to create transform-parameters map. */
   virtual void CreateTransformParametersMap( ParameterMapType * paramsMap ) const;
 
+  /** Function to perform resample and write the result output image to a file. */
+  virtual void ResampleAndWriteResultImage( const char * filename, const bool & showProgress = true );
+
   /** Function to write the result output image to a file. */
-  virtual void WriteResultImage( const char * filename, const bool & showProgress = true );
+  virtual void WriteResultImage( OutputImageType *imageimage,
+    const char * filename, const bool & showProgress = true );
 
   /** Function to create the result image in the format of an itk::Image. */
   virtual void CreateItkResultImage( void );
@@ -181,12 +185,15 @@ public:
 protected:
 
   /** The constructor. */
-  ResamplerBase(){}
+  ResamplerBase();
   /** The destructor. */
   virtual ~ResamplerBase() {}
 
   /** Method that sets the transform, the interpolator and the inputImage. */
   virtual void SetComponents( void );
+
+  /** Variable that defines to print the progress or not. */
+  bool m_ShowProgress;
 
 private:
 

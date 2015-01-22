@@ -167,22 +167,12 @@ FixedGenericPyramid< TElastix >
 {
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+
   /** We let the pyramid filter know that we are in a next level.
    * Depending on a flag only at this point the output of the current level is computed,
    * or it was computed for all levels at once at initialization.
    */
   this->SetCurrentLevel( level );
-
-} // end BeforeEachResolution()
-
-
-template< class TElastix >
-void
-FixedGenericPyramid< TElastix >
-::AfterEachResolution( void )
-{
-  //temp
-  //Superclass1::Print( std::cout );
 
 } // end BeforeEachResolution()
 

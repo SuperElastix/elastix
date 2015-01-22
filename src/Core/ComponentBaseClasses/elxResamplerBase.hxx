@@ -30,6 +30,18 @@ namespace elastix
 {
 
 /**
+ * ******************* Constructor *******************
+ */
+
+template< class TElastix >
+ResamplerBase< TElastix >
+::ResamplerBase()
+{
+  this->m_ShowProgress = true;
+} // end Constructor
+
+
+/**
  * ******************* BeforeRegistrationBase *******************
  */
 
@@ -112,7 +124,7 @@ ResamplerBase< TElastix >
     elxout << "Applying transform this resolution ..." << std::endl;
     try
     {
-      this->WriteResultImage( makeFileName.str().c_str() );
+      this->ResampleAndWriteResultImage( makeFileName.str().c_str() );
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -170,16 +182,10 @@ ResamplerBase< TElastix >
       << ".It" << std::setfill( '0' ) << std::setw( 7 ) << iter
       << "." << resultImageFormat;
 
-    /** Time the resampling. */
-    //typedef tmr::Timer TimerType;
-    //TimerType::Pointer timer = TimerType::New();
-    //timer->StartTimer();
-
     /** Apply the final transform, and save the result. */
-    //elxout << "Applying transform this iteration ..." << std::endl;
     try
     {
-      this->WriteResultImage( makeFileName.str().c_str(), false );
+      this->ResampleAndWriteResultImage( makeFileName.str().c_str(), false );
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -187,12 +193,6 @@ ResamplerBase< TElastix >
       xl::xout[ "error" ] << excp
                           << "Resuming elastix." << std::endl;
     }
-
-    /** Print the elapsed time for the resampling. */
-    //timer->StopTimer();
-    //elxout << "  Applying transform took "
-    //  << static_cast<long>( timer->GetElapsedClockSec() )
-    //  << " s." << std::endl;
 
   } // end if
 
@@ -226,14 +226,11 @@ ResamplerBase< TElastix >
    * Only necessary when compiling elastix as a library!
    */
 #ifdef _ELASTIX_BUILD_LIBRARY
-
   if( writeResultImage == "true" )
   {
     this->CreateItkResultImage();
   }
-
 #else
-
   /** Writing result image. */
   if( writeResultImage == "true" )
   {
@@ -257,7 +254,7 @@ ResamplerBase< TElastix >
     elxout << "\nApplying final transform ..." << std::endl;
     try
     {
-      this->WriteResultImage( makeFileName.str().c_str() );
+      this->ResampleAndWriteResultImage( makeFileName.str().c_str(), this->m_ShowProgress );
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -281,7 +278,6 @@ ResamplerBase< TElastix >
            << "Skipping applying final transform, no resulting output image generated."
            << std::endl;
   } // end if
-
 #endif
 
 } // end AfterRegistrationBase()
@@ -312,18 +308,19 @@ ResamplerBase< TElastix >
 
 
 /**
- * ******************* WriteResultImage ********************
+ * ******************* ResampleAndWriteResultImage ********************
  */
 
 template< class TElastix >
 void
 ResamplerBase< TElastix >
-::WriteResultImage( const char * filename, const bool & showProgress )
+::ResampleAndWriteResultImage( const char * filename, const bool & showProgress )
 {
   /** Make sure the resampler is updated. */
   this->GetAsITKBaseType()->Modified();
-#ifndef _ELASTIX_BUILD_LIBRARY
+
   /** Add a progress observer to the resampler. */
+#ifndef _ELASTIX_BUILD_LIBRARY
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   if( showProgress )
   {
@@ -332,6 +329,7 @@ ResamplerBase< TElastix >
     progressObserver->SetEndString( "%" );
   }
 #endif
+
   /** Do the resampling. */
   try
   {
@@ -349,6 +347,30 @@ ResamplerBase< TElastix >
     throw excp;
   }
 
+  /** Perform the writing. */
+  this->WriteResultImage( this->GetAsITKBaseType()->GetOutput(), filename, showProgress );
+
+  /** Disconnect from the resampler. */
+#ifndef _ELASTIX_BUILD_LIBRARY
+  if( showProgress )
+  {
+    progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
+  }
+#endif
+
+} // end ResampleAndWriteResultImage()
+
+
+/**
+ * ******************* WriteResultImage ********************
+ */
+
+template< class TElastix >
+void
+ResamplerBase< TElastix >
+::WriteResultImage( OutputImageType *image,
+  const char * filename, const bool & showProgress )
+{
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
   typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType,
     CoordRepType > RayCastInterpolatorType;
@@ -393,7 +415,7 @@ ResamplerBase< TElastix >
   bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
-  infoChanger->SetInput( this->GetAsITKBaseType()->GetOutput() );
+  infoChanger->SetInput( image );
 
   /** Create writer. */
   WriterPointer writer = WriterType::New();
@@ -425,13 +447,6 @@ ResamplerBase< TElastix >
     /** Pass the exception to an higher level. */
     throw excp;
   }
-#ifndef _ELASTIX_BUILD_LIBRARY
-  /** Disconnect from the resampler. */
-  if( showProgress )
-  {
-    progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
-  }
-#endif
 } // end WriteResultImage()
 
 

@@ -1,0 +1,170 @@
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef __itkGPUCastImageFilterFactory_hxx
+#define __itkGPUCastImageFilterFactory_hxx
+
+#include "itkGPUCastImageFilterFactory.h"
+
+namespace itk
+{
+template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+void
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+::RegisterOneFactory()
+{
+  typedef GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions > GPUFilterFactoryType;
+  typename GPUFilterFactoryType::Pointer factory = GPUFilterFactoryType::New();
+  ObjectFactoryBase::RegisterFactory( factory );
+}
+
+
+//------------------------------------------------------------------------------
+template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+::GPUCastImageFilterFactory2()
+{
+  this->RegisterAll();
+}
+
+
+//------------------------------------------------------------------------------
+template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+void
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+::Register1D()
+{
+  // Define visitor and perform factory registration
+  typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 1 > visitor0;
+  visitor0( *this );
+
+  // Perform extra factory registration with float and double types
+  const bool inputHasFloat   = typelist::HasType< TTypeListIn, float >::Type;
+  const bool inputHasDouble  = typelist::HasType< TTypeListIn, double >::Type;
+  const bool outputHasFloat  = typelist::HasType< TTypeListOut, float >::Type;
+  const bool outputHasDouble = typelist::HasType< TTypeListOut, double >::Type;
+
+  if( !inputHasFloat || !outputHasFloat )
+  {
+    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
+    typelist::DualVisitDimension< FloatTypeList, FloatTypeList, 1 > visitor1;
+    visitor1( *this );
+  }
+
+  if( !inputHasFloat || !outputHasDouble )
+  {
+    typedef typelist::MakeTypeList< float >::Type  FloatTypeList;
+    typedef typelist::MakeTypeList< double >::Type DoubleTypeList;
+    typelist::DualVisitDimension< FloatTypeList, DoubleTypeList, 1 > visitor2;
+    visitor2( *this );
+  }
+
+  if( !inputHasDouble || !outputHasFloat )
+  {
+    typedef typelist::MakeTypeList< double >::Type DoubleTypeList;
+    typedef typelist::MakeTypeList< float >::Type  FloatTypeList;
+    typelist::DualVisitDimension< DoubleTypeList, FloatTypeList, 1 > visitor3;
+    visitor3( *this );
+  }
+}
+
+
+//------------------------------------------------------------------------------
+template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+void
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+::Register2D()
+{
+  // Define visitor and perform factory registration
+  typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 2 > visitor0;
+  visitor0( *this );
+
+  // Perform extra factory registration with float and double types
+  const bool inputHasFloat   = typelist::HasType< TTypeListIn, float >::Type;
+  const bool inputHasDouble  = typelist::HasType< TTypeListIn, double >::Type;
+  const bool outputHasFloat  = typelist::HasType< TTypeListOut, float >::Type;
+  const bool outputHasDouble = typelist::HasType< TTypeListOut, double >::Type;
+
+  if( !inputHasFloat || !outputHasFloat )
+  {
+    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
+    typelist::DualVisitDimension< FloatTypeList, FloatTypeList, 2 > visitor1;
+    visitor1( *this );
+  }
+
+  if( !inputHasFloat || !outputHasDouble )
+  {
+    typedef typelist::MakeTypeList< float >::Type  FloatTypeList;
+    typedef typelist::MakeTypeList< double >::Type DoubleTypeList;
+    typelist::DualVisitDimension< FloatTypeList, DoubleTypeList, 2 > visitor2;
+    visitor2( *this );
+  }
+
+  if( !inputHasDouble || !outputHasFloat )
+  {
+    typedef typelist::MakeTypeList< double >::Type DoubleTypeList;
+    typedef typelist::MakeTypeList< float >::Type  FloatTypeList;
+    typelist::DualVisitDimension< DoubleTypeList, FloatTypeList, 2 > visitor3;
+    visitor3( *this );
+  }
+}
+
+
+//------------------------------------------------------------------------------
+template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+void
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+::Register3D()
+{
+  // Define visitor and perform factory registration
+  typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 3 > visitor0;
+  visitor0( *this );
+
+  // Perform extra factory registration with float and double types
+  const bool inputHasFloat   = typelist::HasType< TTypeListIn, float >::Type;
+  const bool inputHasDouble  = typelist::HasType< TTypeListIn, double >::Type;
+  const bool outputHasFloat  = typelist::HasType< TTypeListOut, float >::Type;
+  const bool outputHasDouble = typelist::HasType< TTypeListOut, double >::Type;
+
+  if( !inputHasFloat || !outputHasFloat )
+  {
+    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
+    typelist::DualVisitDimension< FloatTypeList, FloatTypeList, 3 > visitor1;
+    visitor1( *this );
+  }
+
+  if( !inputHasFloat || !outputHasDouble )
+  {
+    typedef typelist::MakeTypeList< float >::Type  FloatTypeList;
+    typedef typelist::MakeTypeList< double >::Type DoubleTypeList;
+    typelist::DualVisitDimension< FloatTypeList, DoubleTypeList, 3 > visitor2;
+    visitor2( *this );
+  }
+
+  if( !inputHasDouble || !outputHasFloat )
+  {
+    typedef typelist::MakeTypeList< double >::Type DoubleTypeList;
+    typedef typelist::MakeTypeList< float >::Type  FloatTypeList;
+    typelist::DualVisitDimension< DoubleTypeList, FloatTypeList, 3 > visitor3;
+    visitor3( *this );
+  }
+}
+
+
+} // namespace itk
+
+#endif // end #ifndef __itkGPUCastImageFilterFactory_hxx

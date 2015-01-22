@@ -43,7 +43,7 @@ AdvancedMattesMutualInformationMetric< TElastix >
   this->m_Param_gamma      = 0.101;
   this->SetUseDerivative( true );
 
-}   // end Constructor()
+} // end Constructor()
 
 
 /**
@@ -62,7 +62,7 @@ AdvancedMattesMutualInformationMetric< TElastix >
   elxout << "Initialization of AdvancedMattesMutualInformation metric took: "
          << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
-}   // end Initialize()
+} // end Initialize()
 
 
 /**
@@ -173,7 +173,7 @@ AdvancedMattesMutualInformationMetric< TElastix >
            << movingImageDerivativeScales << std::endl;
   }
 
-}   // end BeforeEachResolution()
+} // end BeforeEachResolution()
 
 
 /**
@@ -191,14 +191,11 @@ AdvancedMattesMutualInformationMetric< TElastix >
     this->SetFiniteDifferencePerturbation(
       this->Compute_c( this->m_CurrentIteration ) );
   }
-}    // end AfterEachIteration()
+} // end AfterEachIteration()
 
 
 /**
  * ************************** Compute_c *************************
- *
- * This function computes the parameter a at iteration k, as
- * in the finite difference optimizer.
  */
 
 template< class TElastix >
@@ -209,7 +206,7 @@ AdvancedMattesMutualInformationMetric< TElastix >
   return static_cast< double >(
     this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
 
-}   // end Compute_c()
+} // end Compute_c()
 
 
 } // end namespace elastix

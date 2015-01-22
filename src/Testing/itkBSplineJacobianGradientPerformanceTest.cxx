@@ -62,9 +62,9 @@ main( int argc, char * argv[] )
   typedef TransformType::InputPointType         InputPointType;
   typedef TransformType::ParametersType         ParametersType;
   typedef TransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-  typedef TransformType::DerivativeType         DerivativeType;
-  typedef TransformType::JacobianType           JacobianType;
-  typedef TransformType::MovingImageGradientType  MovingImageGradientType;
+  typedef TransformType::DerivativeType             DerivativeType;
+  typedef TransformType::JacobianType               JacobianType;
+  typedef TransformType::MovingImageGradientType    MovingImageGradientType;
 
   typedef itk::Image< CoordinateRepresentationType,
     Dimension >                                         InputImageType;
@@ -128,14 +128,14 @@ main( int argc, char * argv[] )
   /** Declare variables. */
   InputPointType  inputPoint; inputPoint.Fill( 4.1 );
   MovingImageGradientType movingImageGradient;
-  movingImageGradient[0] = 29.43; movingImageGradient[0] = 18.21; movingImageGradient[0] = 1.7;
+  movingImageGradient[ 0 ] = 29.43; movingImageGradient[ 0 ] = 18.21; movingImageGradient[ 0 ] = 1.7;
   const NumberOfParametersType nnzji = transform->GetNumberOfNonZeroJacobianIndices();
-  JacobianType   jacobian( Dimension, nnzji );
-  DerivativeType imageJacobian_old( nnzji );
-  DerivativeType imageJacobian_new( nnzji );
-  NonZeroJacobianIndicesType nzji( nnzji );
-  itk::TimeProbe timeProbeOLD, timeProbeNEW;
-  double sum = 0.0;
+  JacobianType                 jacobian( Dimension, nnzji );
+  DerivativeType               imageJacobian_old( nnzji );
+  DerivativeType               imageJacobian_new( nnzji );
+  NonZeroJacobianIndicesType   nzji( nnzji );
+  itk::TimeProbe               timeProbeOLD, timeProbeNEW;
+  double                       sum = 0.0;
 
   /** Time the old way. */
   timeProbeOLD.Start();
@@ -157,7 +157,7 @@ main( int argc, char * argv[] )
       }
     }
 
-    sum += imageJacobian_old(0); // just to avoid compiler to optimize away
+    sum += imageJacobian_old( 0 ); // just to avoid compiler to optimize away
   }
   timeProbeOLD.Stop();
   const double oldTime = timeProbeOLD.GetMean();
@@ -171,7 +171,7 @@ main( int argc, char * argv[] )
       inputPoint, movingImageGradient,
       imageJacobian_new, nzji );
 
-    sum += imageJacobian_new(0); // just to avoid compiler to optimize away
+    sum += imageJacobian_new( 0 ); // just to avoid compiler to optimize away
   }
   timeProbeNEW.Stop();
   const double newTime = timeProbeNEW.GetMean();

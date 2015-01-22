@@ -29,6 +29,10 @@
 
 #include "itkParameterMapInterface.h"
 
+#ifdef ELASTIX_USE_OPENCL
+#include "itkOpenCLContext.h"
+#endif
+
 namespace elastix
 {
 

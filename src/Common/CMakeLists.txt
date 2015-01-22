@@ -17,6 +17,10 @@ if( ELASTIX_USE_CUDA )
   add_subdirectory( CUDA )
 endif()
 
+if( ELASTIX_USE_OPENCL )
+  add_subdirectory( OpenCL )
+endif()
+
 #---------------------------------------------------------------------
 # Define lists of files in the subdirectories.
 
@@ -44,6 +48,7 @@ set( CommonFiles
   itkScaledSingleValuedNonLinearOptimizer.h
   itkTransformixInputPointFileReader.h
   itkTransformixInputPointFileReader.hxx
+  TypeList.h
 )
 
 set( MaskFiles

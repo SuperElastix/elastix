@@ -21,6 +21,95 @@ if( ELASTIX_USE_MEVISDICOMTIFF )
 endif()
 set( mevisdcmtifflib mevisdcmtiff )
 
+#---------------------------------------------------------------------
+# Core macro for elx_add_opencl_test() and elx_add_test()
+macro( elx_add_test_core executable_name source_name test_name group )
+  if( NOT TARGET ${executable_name} )
+
+    # Create the test executable.
+    add_executable( ${executable_name} ${source_name}
+      itkCommandLineArgumentParser.cxx # some test use the CommandLineArgumentParser
+    )
+
+    # Link against other libraries.
+    target_link_libraries( ${executable_name}
+      param               # some test use the CommandLineArgumentParser
+      ${mevisdcmtifflib}  # is empty if not selected in CMake
+      ${ITK_LIBRARIES}
+    )
+
+    if( ELASTIX_USE_OPENCL )
+      include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
+      target_link_libraries( ${executable_name} elxOpenCL )
+    endif()
+
+    # Group in IDE's like Visual Studio
+    set_property( TARGET ${executable_name} PROPERTY FOLDER "tests/${group}" )
+  endif()
+
+  # Add the test.
+  add_test( NAME ${test_name}
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/${executable_name} ${ARGN} )
+
+  # GPU test should be run in serial, to avoid memory issues.
+  string( COMPARE EQUAL ${group} "OpenCL" isEqual )
+  if( ${isEqual} )
+    set_tests_properties( ${test_name} PROPERTIES RUN_SERIAL true )
+  endif()
+endmacro()
+
+#---------------------------------------------------------------------
+# Macro that simplifies the addition of elastix OpenCL tests
+#
+# Usage:
+# elx_add_opencl_test( <name_of_test> )
+#
+# We assume here that the name of the source which includes the main is:
+#   "itk"name_of_test".cxx".
+#
+
+macro( elx_add_opencl_test name number group kernels )
+  # Define some helper variables.
+  set( ELXTEST_EXECUTABLE_NAME itk${name} )
+  set( ELXTEST_SOURCE_NAME itk${name}.cxx itkTestHelper.h itkTestOutputWindow.cxx itkTestOutputWindow.h )
+  set( ELXTEST_TEST_NAME ${name}${number} )
+
+  # Count number of kernels provided
+  set( all_kernels ${kernels} )
+  list( LENGTH all_kernels ELXTEST_OPENCL_NUM_KERNELS )
+  if( ${ELXTEST_OPENCL_NUM_KERNELS} GREATER 0 )
+
+    # Kernels source variables
+    set( ELXTEST_OPEN_CL_KERNELS )
+    set( ELXTEST_OPEN_CL_KERNELS_SRC )
+
+    # If single kernel
+    if( ${ELXTEST_OPENCL_NUM_KERNELS} EQUAL 1 )
+      # Define OpenCL kernels
+      file( GLOB open_cl_kernel_path ${kernels} )
+      list( APPEND ELXTEST_OPEN_CL_KERNELS ${open_cl_kernel_path} )
+
+      source_group( "Kernels" FILES ${ELXTEST_OPEN_CL_KERNELS} )
+      write_opencl_kernels( "${ELXTEST_OPEN_CL_KERNELS}" ELXTEST_OPEN_CL_KERNELS_SRC "OpenCLTest generated kernels" OFF ${name} )
+    # Else if multiple kernels kernel
+    elseif( ${ELXTEST_OPENCL_NUM_KERNELS} GREATER 1 )
+      # Define OpenCL kernels
+      foreach( elem ${kernels} )
+        file( GLOB open_cl_kernel_path ${elem} )
+        list( APPEND ELXTEST_OPEN_CL_KERNELS ${open_cl_kernel_path} )
+      endforeach()
+
+      source_group( "Kernels" FILES ${ELXTEST_OPEN_CL_KERNELS} )
+      write_opencl_kernels( "${ELXTEST_OPEN_CL_KERNELS}" ELXTEST_OPEN_CL_KERNELS_SRC "OpenCLTest generated kernels" ON ${name} )
+    endif()
+
+    # Append to ELXTEST_SOURCE_NAME
+    list( APPEND ELXTEST_SOURCE_NAME ${ELXTEST_OPEN_CL_KERNELS} ${ELXTEST_OPEN_CL_KERNELS_SRC} itk${name}.h )
+  endif()
+
+  # Call core macro
+  elx_add_test_core( ${ELXTEST_EXECUTABLE_NAME} "${ELXTEST_SOURCE_NAME}" ${ELXTEST_TEST_NAME} ${group} ${ARGN} )
+endmacro()
 
 #---------------------------------------------------------------------
 # Macro that simplifies the addition of elastix tests
@@ -32,28 +121,14 @@ set( mevisdcmtifflib mevisdcmtiff )
 #   "itk"name_of_test".cxx".
 #
 
-macro( elx_add_test name )
+macro( elx_add_test name number group )
   # Define some helper variables.
   set( ELXTEST_EXECUTABLE_NAME itk${name} )
   set( ELXTEST_SOURCE_NAME itk${name}.cxx )
-  set( ELXTEST_TEST_NAME ${name} )
+  set( ELXTEST_TEST_NAME ${name}${number} )
 
-  # Create the test executable.
-  add_executable( ${ELXTEST_EXECUTABLE_NAME} ${ELXTEST_SOURCE_NAME} )
-
-  # Link against other libraries.
-  target_link_libraries( ${ELXTEST_EXECUTABLE_NAME}
-    elxCommon # needed for elxTimer
-    ${ITK_LIBRARIES}
-    ${mevisdcmtifflib}
-  )
-
-  # Group in IDE's like Visual Studio
-  set_property( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests" )
-
-  # Add the test.
-  add_test( NAME ${ELXTEST_TEST_NAME}
-    COMMAND ${EXECUTABLE_OUTPUT_PATH}/${ELXTEST_EXECUTABLE_NAME} ${ARGN} )
+  # Call core macro
+  elx_add_test_core( ${ELXTEST_EXECUTABLE_NAME} "${ELXTEST_SOURCE_NAME}" ${ELXTEST_TEST_NAME} ${group} ${ARGN} )
 endmacro()
 
 #---------------------------------------------------------------------
@@ -308,17 +383,17 @@ endmacro()
 # Create elxImageCompare
 add_executable( elxImageCompare elxImageCompare.cxx itkCommandLineArgumentParser.cxx )
 target_link_libraries( elxImageCompare ${ITK_LIBRARIES} )
-set_property( TARGET elxImageCompare PROPERTY FOLDER "tests" )
+set_property( TARGET elxImageCompare PROPERTY FOLDER "tests/Executable" )
 
 # Create elxTransformParametersCompare
 add_executable( elxTransformParametersCompare elxTransformParametersCompare.cxx itkCommandLineArgumentParser.cxx )
 target_link_libraries( elxTransformParametersCompare param ${ITK_LIBRARIES} )
-set_property( TARGET elxTransformParametersCompare PROPERTY FOLDER "tests" )
+set_property( TARGET elxTransformParametersCompare PROPERTY FOLDER "tests/Executable" )
 
 # Create elxInvertTransform
 add_executable( elxInvertTransform elxInvertTransform.cxx itkCommandLineArgumentParser.cxx )
 target_link_libraries( elxInvertTransform param ${ITK_LIBRARIES} )
-set_property( TARGET elxInvertTransform PROPERTY FOLDER "tests" )
+set_property( TARGET elxInvertTransform PROPERTY FOLDER "tests/Executable" )
 
 #---------------------------------------------------------------------
 # Add tests
@@ -338,27 +413,236 @@ add_test( NAME InvertTransformTest_COMPARE_TP
 set_tests_properties( InvertTransformTest_COMPARE_TP
   PROPERTIES DEPENDS InvertTransformTest_OUTPUT )
 
-
-# Add other tests
-elx_add_test( AdvancedBSplineDeformableTransformTest
+# Add tests that run specific registration components
+elx_add_test( AdvancedBSplineDeformableTransformTest "" "Common"
   ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt )
-elx_add_test( BSplineDerivativeKernelFunctionTest )
-elx_add_test( BSplineSODerivativeKernelFunctionTest )
-elx_add_test( BSplineInterpolationWeightFunctionTest )
-elx_add_test( BSplineInterpolationDerivativeWeightFunctionTest )
-elx_add_test( BSplineInterpolationSODerivativeWeightFunctionTest )
-elx_add_test( MevisDicomTiffImageIOTest )
-elx_add_test( ThinPlateSplineTransformPerformanceTest
+elx_add_test( AdvancedLinearInterpolatorTest "" "Common" )
+elx_add_test( BSplineDerivativeKernelFunctionTest "" "Common" )
+elx_add_test( BSplineSODerivativeKernelFunctionTest "" "Common" )
+elx_add_test( BSplineInterpolationWeightFunctionTest "" "Common" )
+elx_add_test( BSplineInterpolationDerivativeWeightFunctionTest "" "Common" )
+elx_add_test( BSplineInterpolationSODerivativeWeightFunctionTest "" "Common" )
+elx_add_test( CompareCompositeTransformsTest "" "Common" )
+elx_add_test( MevisDicomTiffImageIOTest "" "Common" )
+elx_add_test( ThinPlateSplineTransformPerformanceTest "" "Common"
   ${TestDataDir}/parameters_TPSTransformTest.txt
   ${elastix_BINARY_DIR}/Testing )
-elx_add_test( ThinPlateSplineTransformTest
+elx_add_test( ThinPlateSplineTransformTest "" "Common"
   ${TestDataDir}/parameters_TPSTransformTest.txt )
-elx_add_test( AdvanceOneStepParallellizationTest )
-elx_add_test( AccumulateDerivativesParallellizationTest )
-elx_add_test( BSplineTransformPointPerformanceTest
+elx_add_test( AdvanceOneStepParallellizationTest "" "Common" )
+elx_add_test( AccumulateDerivativesParallellizationTest "" "Common" )
+elx_add_test( BSplineTransformPointPerformanceTest "" "Common"
   ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt )
-elx_add_test( BSplineJacobianGradientPerformanceTest
+elx_add_test( BSplineJacobianGradientPerformanceTest "" "Common"
   ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt )
+
+# Add tests that run OpenCL
+if( ELASTIX_USE_OPENCL )
+  # OpenCL core tests
+  elx_add_opencl_test( OpenCLBufferTest "" "OpenCL core" "OpenCLBufferTest.cl" )
+  elx_add_opencl_test( OpenCLContextTest "" "OpenCL core" "" )
+  elx_add_opencl_test( OpenCLDeviceTest "" "OpenCL core" "" )
+  elx_add_opencl_test( OpenCLEventTest "" "OpenCL core" "OpenCLEventTest.cl" )
+  elx_add_opencl_test( OpenCLImageTest "" "OpenCL core" "OpenCLImageTest.cl" )
+  elx_add_opencl_test( OpenCLKernelManagerTest "" "OpenCL core" "" )
+  elx_add_opencl_test( OpenCLKernelTest "" "OpenCL core" "" )
+  elx_add_opencl_test( OpenCLKernelToImageBridgeTest "" "OpenCL core" "OpenCLKernelToImageBridgeTest.cl" )
+  elx_add_opencl_test( OpenCLPlatformTest "" "OpenCL core" "" )
+  elx_add_opencl_test( OpenCLProfilingTimeProbeTest "" "OpenCL core" "" )
+  elx_add_opencl_test( OpenCLSamplerTest "" "OpenCL core" "" )
+  elx_add_opencl_test( OpenCLSimpleTest "" "OpenCL core" "OpenCLSimpleTest1.cl;OpenCLSimpleTest2.cl" )
+  elx_add_opencl_test( OpenCLSizeTest "" "OpenCL core" "" )
+  elx_add_opencl_test( OpenCLStringUtilsTest "" "OpenCL core" "" )
+  elx_add_opencl_test( OpenCLVectorTest "" "OpenCL core" "OpenCLVectorTest.cl" )
+
+  # OpenCL filters tests
+  elx_add_opencl_test( GPUFactoriesTest "" "OpenCL" "" )
+
+  elx_add_opencl_test( GPUBSplineDecompositionImageFilterTest "" "OpenCL" ""
+    ${TestDataDir}/3DCT_lung_baseline.mha
+    ${TestOutputDir}/3DCT_lung_baseline_decomposition_CPU.mha
+    ${TestOutputDir}/3DCT_lung_baseline_decomposition_GPU.mha )
+
+  elx_add_opencl_test( GPUCastImageFilterTest "" "OpenCL" ""
+    ${TestDataDir}/3DCT_lung_baseline.mha
+    ${TestOutputDir}/3DCT_lung_baseline_cast_CPU.mha
+    ${TestOutputDir}/3DCT_lung_baseline_cast_GPU.mha )
+
+  elx_add_opencl_test( GPUShrinkImageFilterTest "" "OpenCL" ""
+    ${TestDataDir}/3DCT_lung_baseline.mha
+    ${TestOutputDir}/3DCT_lung_baseline_shrink_CPU.mha
+    ${TestOutputDir}/3DCT_lung_baseline_shrink_GPU.mha )
+
+  elx_add_opencl_test( GPURecursiveGaussianImageFilterTest "" "OpenCL" ""
+    ${TestDataDir}/3DCT_lung_baseline.mha
+    ${TestOutputDir}/3DCT_lung_baseline_recursive_CPU.mha
+    ${TestOutputDir}/3DCT_lung_baseline_recursive_GPU.mha )
+
+  elx_add_opencl_test( GPUSmoothingRecursiveGaussianImageFilterTest "" "OpenCL" ""
+    ${TestDataDir}/3DCT_lung_baseline.mha
+    ${TestOutputDir}/3DCT_lung_baseline_smooth_CPU.mha
+    ${TestOutputDir}/3DCT_lung_baseline_smooth_GPU.mha )
+
+  elx_add_opencl_test( GPUGenericMultiResolutionPyramidImageFilterTest "" "OpenCL" ""
+    ${TestDataDir}/3DCT_lung_baseline.mha
+    ${TestOutputDir}/3DCT_lung_baseline_generic_CPU.mha
+    ${TestOutputDir}/3DCT_lung_baseline_generic_GPU.mha )
+
+  # Affine transform tests
+  elx_add_opencl_test( GPUResampleImageFilterTest "-NearestAffine" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_affine_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_affine_GPU.mha
+    -i   NearestNeighbor
+    -t   Affine
+    -rmse 2.8 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-LinearAffine" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_affine_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_affine_GPU.mha
+    -i   Linear
+    -t   Affine
+    -rmse 1.0 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-BSplineAffine" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_affine_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_affine_GPU.mha
+    -i   BSpline
+    -t   Affine
+    -rmse 1.0 )
+
+  # Translation transform tests
+  elx_add_opencl_test( GPUResampleImageFilterTest "-NearestTranslation" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_translation_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_translation_GPU.mha
+    -i   NearestNeighbor
+    -t   Translation
+    -rmse 0.0 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-LinearTranslation" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_translation_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_translation_GPU.mha
+    -i   Linear
+    -t   Translation
+    -rmse 0.1 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-BSplineTranslation" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_translation_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_translation_GPU.mha
+    -i   BSpline
+    -t   Translation
+    -rmse 0.11 )
+
+  # BSpline transform tests
+  elx_add_opencl_test( GPUResampleImageFilterTest "-NearestBSpline" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_bspline_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_bspline_GPU.mha
+    -i   NearestNeighbor
+    -t   BSpline
+    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+    -rmse 0.5 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-LinearBSpline" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_bspline_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_bspline_GPU.mha
+    -i   Linear
+    -t   BSpline
+    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+    -rmse 0.03 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-BSplineBSpline" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_bspline_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_bspline_GPU.mha
+    -i   BSpline
+    -t   BSpline
+    -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+    -rmse 0.04 )
+
+  # Euler transform tests
+  elx_add_opencl_test( GPUResampleImageFilterTest "-NearestEuler" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_euler_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_euler_GPU.mha
+    -i   NearestNeighbor
+    -t   Euler
+    -rmse 0.0 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-LinearEuler" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_euler_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_euler_GPU.mha
+    -i   Linear
+    -t   Euler
+    -rmse 0.1 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-BSplineEuler" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_euler_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_euler_GPU.mha
+    -i   BSpline
+    -t   Euler
+    -rmse 0.11 )
+
+  # Similarity transform tests
+  elx_add_opencl_test( GPUResampleImageFilterTest "-NearestSimilarity" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_similarity_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_nearest_similarity_GPU.mha
+    -i   NearestNeighbor
+    -t   Similarity
+    -rmse 0.0 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-LinearSimilarity" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_linear_similarity_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_linear_similarity_GPU.mha
+    -i   Linear
+    -t   Similarity
+    -rmse 0.1 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-BSplineSimilarity" "OpenCL" ""
+    -in  ${TestDataDir}/3DCT_lung_baseline.mha
+    -out ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_similarity_CPU.mha
+         ${TestOutputDir}/3DCT_lung_baseline_resample_bspline_similarity_GPU.mha
+    -i   BSpline
+    -t   Similarity
+    -rmse 0.1 )
+
+  elx_add_opencl_test( GPUResampleImageFilterTest "-NearestComboAffine" "OpenCL" ""
+     -in  ${TestDataDir}/3DCT_lung_baseline.mha
+     -out ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_CPU.mha
+          ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_GPU.mha
+     -i   NearestNeighbor
+     -t   Affine
+     -c -rmse 2.8 )
+
+   elx_add_opencl_test( GPUResampleImageFilterTest "-NearestComboBSpline" "OpenCL" ""
+     -in  ${TestDataDir}/3DCT_lung_baseline.mha
+     -out ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_bspline_CPU.mha
+          ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_bspline_GPU.mha
+     -i   NearestNeighbor
+     -t   BSpline
+     -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+     -c -rmse 0.0 )
+
+   elx_add_opencl_test( GPUResampleImageFilterTest "-NearestComboAffineBSpline" "OpenCL" ""
+     -in  ${TestDataDir}/3DCT_lung_baseline.mha
+     -out ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_bspline_CPU.mha
+          ${TestOutputDir}/3DCT_lung_baseline_resample_combo_nearest_affine_bspline_GPU.mha
+     -i   NearestNeighbor
+     -t   Affine BSpline
+     -p   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt
+     -c -rmse 0.3 )
+
+endif()
 
 #---------------------------------------------------------------------
 # Add tests that run elastix

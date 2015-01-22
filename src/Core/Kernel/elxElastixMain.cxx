@@ -25,8 +25,13 @@
 #endif
 
 #include "elxElastixMain.h"
+
 #include "elxMacro.h"
 #include "itkMultiThreader.h"
+
+#ifdef ELASTIX_USE_OPENCL
+#include "itkOpenCLSetup.h"
+#endif
 
 namespace elastix
 {
@@ -277,6 +282,14 @@ ElastixMain::Run( void )
     errorCode = 1;
     return errorCode;
   }
+
+  /** Create OpenCL context and logger here. */
+#ifdef ELASTIX_USE_OPENCL
+  std::string errorMessage = "";
+  bool errorCreatingContext = itk::CreateOpenCLContext( errorMessage );
+  if( errorCreatingContext ){ elxout << errorMessage << std::endl; }
+  itk::CreateOpenCLLogger( "elastix", this->m_Configuration->GetCommandLineArgument( "-out" ) );
+#endif
 
   /** Set some information in the ElastixBase. */
   this->GetElastixBase()->SetConfiguration( this->m_Configuration );
