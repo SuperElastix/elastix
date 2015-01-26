@@ -202,8 +202,7 @@ macro( opencl_find_nvidia )
   # Find cl.h in NVidia OpenCL SDK
   find_path( OPENCL_NVIDIA_INCLUDE_DIR ${OPENCL_HEADER_NAME}
     HINTS
-      $ENV{CUDA_PATH_V6_5}
-      $ENV{CUDA_PATH_V6_0}
+      $ENV{CUDA_PATH}
     PATH_SUFFIXES include
     PATHS /usr/local/cuda
     NO_DEFAULT_PATH
@@ -216,8 +215,7 @@ macro( opencl_find_nvidia )
     find_library( OPENCL_NVIDIA_LIBRARY
       NAMES OpenCL
       HINTS
-        $ENV{CUDA_PATH_V6_5}
-        $ENV{CUDA_PATH_V6_0}
+        $ENV{CUDA_PATH}
       PATH_SUFFIXES lib/x64
       PATHS /usr/local/cuda/lib64
       NO_DEFAULT_PATH
@@ -226,8 +224,7 @@ macro( opencl_find_nvidia )
     find_library( OPENCL_NVIDIA_LIBRARY
       NAMES OpenCL
       HINTS
-        $ENV{CUDA_PATH_V6_5}
-        $ENV{CUDA_PATH_V6_0}
+        $ENV{CUDA_PATH}
       PATH_SUFFIXES lib/Win32
       PATHS /usr/local/cuda/lib
       NO_DEFAULT_PATH
