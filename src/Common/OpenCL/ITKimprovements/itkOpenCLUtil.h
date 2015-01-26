@@ -38,6 +38,7 @@
 #include <string.h>
 #include <iostream>
 #include <sstream>
+#include <typeinfo>
 
 namespace itk
 {
