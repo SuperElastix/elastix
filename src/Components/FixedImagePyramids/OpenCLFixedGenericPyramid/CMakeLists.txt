@@ -23,6 +23,7 @@ else()
   # If ELASTIX_USE_OPENCL is not selected, then the elxOpenCL
   # library is not created, and we cannot compile this component.
   set( USE_OpenCLFixedGenericPyramid OFF CACHE BOOL "Compile this component" FORCE )
+  mark_as_advanced( USE_OpenCLFixedGenericPyramid )
 
   # This is required to get the OpenCLFixedGenericPyramid out of the AllComponentLibs
   # list defined in Components/CMakeLists.txt.

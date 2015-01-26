@@ -23,6 +23,7 @@ else()
   # If ELASTIX_USE_CUDA is not selected, then the elastix_cuda
   # library is not created, and we cannot compile this component.
   set( USE_CUDAResampler OFF CACHE BOOL "Compile this component" FORCE )
+  mark_as_advanced( USE_CUDAResampler )
 
   # This is required to get the CUDAResampler out of the AllComponentLibs
   # list defined in Components/CMakeLists.txt.

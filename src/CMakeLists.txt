@@ -45,7 +45,6 @@ endif()
 
 #---------------------------------------------------------------------
 # Find OpenCL.
-mark_as_advanced( ELASTIX_USE_OPENCL )
 option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
 
 if( ELASTIX_USE_OPENCL )

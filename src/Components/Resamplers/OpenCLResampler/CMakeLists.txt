@@ -20,6 +20,7 @@ else()
   # If ELASTIX_USE_OPENCL is not selected, then the elxOpenCL
   # library is not created, and we cannot compile this component.
   set( USE_OpenCLResampler OFF CACHE BOOL "Compile this component" FORCE )
+  mark_as_advanced( USE_OpenCLResampler )
 
   # This is required to get the OpenCLResampler out of the AllComponentLibs
   # list defined in Components/CMakeLists.txt.
