@@ -190,7 +190,7 @@ public:
 
   /** GetJacobian recursive implementation. */
   static inline void GetJacobian(
-    TScalar * & jacobians, const double * weights1D , double value )
+    TScalar * & jacobians, const double * weights1D, double value )
   {
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
@@ -198,6 +198,19 @@ public:
         ::GetJacobian( jacobians, weights1D, value * weights1D[ k + HelperConstVariable ] );
     }
   } // end GetJacobian()
+
+
+  /** EvaluateJacobianWithImageGradientProduct recursive implementation. */
+  static inline void EvaluateJacobianWithImageGradientProduct(
+    TScalar * & imageJacobian, const double * movingImageGradient, const double * weights1D, double value )
+  {
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::EvaluateJacobianWithImageGradientProduct( imageJacobian, movingImageGradient, weights1D,
+          value * weights1D[ k + HelperConstVariable ] );
+    }
+  } // end EvaluateJacobianWithImageGradientProduct()
 
 
   /** ComputeNonZeroJacobianIndices recursive implementation. */
@@ -325,6 +338,18 @@ public:
     }
     ++jacobians;
   } // end GetJacobian()
+
+
+  /** EvaluateJacobianWithImageGradientProduct recursive implementation. */
+  static inline void EvaluateJacobianWithImageGradientProduct(
+    TScalar * & imageJacobian, const double * movingImageGradient, const double * weights1D, double value )
+  {
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      *(imageJacobian + j * BSplineNumberOfIndices) = value * movingImageGradient[ j ];
+    }
+    ++imageJacobian;
+  } // end EvaluateJacobianWithImageGradientProduct()
 
 
   /** ComputeNonZeroJacobianIndices recursive implementation. */

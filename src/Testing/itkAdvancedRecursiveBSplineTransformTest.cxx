@@ -162,7 +162,7 @@ main( int argc, char * argv[] )
   }
   transformITK->SetParameters( parameters );
   transform->SetParameters( parameters );
-  recursiveTransform->SetParameters( parameters );  
+  recursiveTransform->SetParameters( parameters );
 
   /** Get the number of nonzero Jacobian indices. */
   const NumberOfParametersType nonzji = transform->GetNumberOfNonZeroJacobianIndices();
@@ -299,6 +299,7 @@ main( int argc, char * argv[] )
   }
   timeCollector.Stop( "Jacobian recursive" );
 
+  /** Report. */
   timeCollector.Report();
 
   /**

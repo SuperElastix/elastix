@@ -323,6 +323,79 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 
 
 /**
+ * ********************* EvaluateJacobianAndImageGradientProduct ****************************
+ */
+
+template< class TScalar, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+  RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
+::EvaluateJacobianWithImageGradientProduct(
+  const InputPointType & ipp,
+  const MovingImageGradientType & movingImageGradient,
+  DerivativeType & imageJacobian,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** Convert the physical point to a continuous index, which
+   * is needed for the 'Evaluate()' functions below.
+   */
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  /** Initialize. */
+  const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
+
+  /** NOTE: if the support region does not lie totally within the grid
+   * we assume zero displacement and zero Jacobian.
+   */
+  if( !this->InsideValidRegion( cindex ) )
+  {
+    nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+    for( NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    {
+      nonZeroJacobianIndices[ i ] = i;
+    }
+    return;
+  }
+
+  /** Compute the interpolation weights. 
+   * In contrast to the normal B-spline weights function, the recursive version
+   * returns the individual weights instead of the multiplied ones.
+   */
+  const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
+  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+  typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
+  WeightsType weights1D( weightsArray1D, numberOfWeights, false );
+  IndexType supportIndex;
+  this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
+
+  /** Recursively compute the inner product of the Jacobian and the moving image gradient.
+   * The pointer has changed after this function call.
+   */
+  ParametersValueType migArray[ SpaceDimension ];
+  for( unsigned int j = 0; j < SpaceDimension; ++j )
+  {
+    migArray[ j ] = movingImageGradient[ j ];
+  }
+  //const ParametersValueType * movingImageGradientPointer = movingImageGradient.GetDataPointer();
+  ParametersValueType * imageJacobianPointer = imageJacobian.data_block();
+  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
+    //::EvaluateJacobianWithImageGradientProduct( imageJacobianPointer, movingImageGradientPointer, weightsArray1D, 1.0 );
+    ::EvaluateJacobianWithImageGradientProduct( imageJacobianPointer, migArray, weightsArray1D, 1.0 );
+
+  /** Setup support region needed for the nonZeroJacobianIndices. */
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  /** Compute the nonzero Jacobian indices.
+   * Takes a significant portion of the computation time of this function.
+   */
+  this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
+
+} // end EvaluateJacobianWithImageGradientProduct()
+
+
+/**
  * ********************* GetSpatialJacobian ****************************
  */
 

@@ -135,6 +135,15 @@ public:
     JacobianType & j,
     NonZeroJacobianIndicesType & nzji ) const;
 
+  /** Compute the inner product of the Jacobian with the moving image gradient.
+   * The Jacobian is (partially) constructed inside this function, but not returned.
+   */
+  virtual void EvaluateJacobianWithImageGradientProduct(
+    const InputPointType & ipp,
+    const MovingImageGradientType & movingImageGradient,
+    DerivativeType & imageJacobian,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+
   /** Compute the spatial Jacobian of the transformation. */
   virtual void GetSpatialJacobian(
     const InputPointType & ipp,
