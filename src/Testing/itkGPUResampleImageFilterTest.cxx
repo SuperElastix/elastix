@@ -667,7 +667,7 @@ main( int argc, char * argv[] )
 
   // Get command line arguments
   std::string inputFileName = "";
-  const bool  retin         = parser->GetCommandLineArgument( "-in", inputFileName );
+  parser->GetCommandLineArgument( "-in", inputFileName );
 
   std::vector< std::string > outputFileNames( 2, "" );
   parser->GetCommandLineArgument( "-out", outputFileNames );
