@@ -492,6 +492,8 @@ GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
       mem_size_DF = totalDFSize * sizeof( cl_float2 ); break;
     case 3:
       mem_size_DF = totalDFSize * sizeof( cl_float3 ); break;
+    default:
+      break;
   }
 
   this->m_DeformationFieldBuffer->Initialize();
@@ -611,6 +613,8 @@ GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
         global_work_offset = OpenCLSize( offset3D[ 0 ], offset3D[ 1 ], offset3D[ 2 ] );
       }
       break;
+      default:
+        break;
     }
 
     // Set global work size and offset for all kernels
