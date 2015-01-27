@@ -605,6 +605,13 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads4
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
   -threads 4 )
 
+elx_add_run_test( 3DCT_lung.NC.bspline_r.ASGD.001a
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline_r.ASGD.001a.txt )
+
 
 ### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES
 # Checksums defined on windows 64 bit machine LKEB PC Marius
