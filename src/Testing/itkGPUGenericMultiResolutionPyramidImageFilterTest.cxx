@@ -285,7 +285,6 @@ main( int argc, char * argv[] )
         std::cerr << "ERROR: " << e << std::endl;
         return EXIT_FAILURE;
       }
-      //itk::GPUExplicitSync< FilterType, OutputImageType >( gpuFilter, false, false );
       // Modify the filter, only not the last iteration
       if( i != runTimes - 1 )
       {
@@ -306,7 +305,6 @@ main( int argc, char * argv[] )
           std::cerr << "ERROR: " << e << std::endl;
           return EXIT_FAILURE;
         }
-        //itk::GPUExplicitSync< FilterType, OutputImageType >( gpuFilter, false, false );
         // Modify the filter, only not the last iteration
         if( i != runTimes - 1 )
         {

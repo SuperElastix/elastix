@@ -175,21 +175,12 @@ main( int argc, char * argv[] )
       std::cerr << "ERROR: " << e << std::endl;
       return EXIT_FAILURE;
     }
-    // Due to some bug in the ITK synchronization we now manually
-    // copy the result from GPU to CPU, without calling Update() again,
-    // and not clearing GPU memory afterwards.
-    //itk::GPUExplicitSync< FilterType, OutputImageType >( gpuFilter, false, false );
-    //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true ); //
-    // crashes!
-
     // Modify the filter, only not the last iteration
     if( i != runTimes - 1 )
     {
       gpuFilter->Modified();
     }
   }
-  // GPU buffer has not been copied yet, so we have to make manual update
-  //itk::GPUExplicitSync<FilterType, ImageType>( gpuFilter, false, true );
   gputimer.Stop();
 
   std::cout << "GPU x " << gputimer.GetMean() / runTimes
