@@ -122,7 +122,7 @@ OpenCLEventList::Remove( const OpenCLEvent & event )
 OpenCLEvent
 OpenCLEventList::Get( const std::size_t index ) const
 {
-  if( index >= 0 && index < this->m_Events.size() )
+  if( index < this->m_Events.size() )
   {
     cl_event id = this->m_Events[ index ];
     clRetainEvent( id );
