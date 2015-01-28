@@ -118,6 +118,11 @@ template< unsigned int OutputDimension, unsigned int SpaceDimension, unsigned in
 class RecursiveBSplineTransformImplementation2
 {
 public:
+  /** Typedef related to the coordinate representation type and the weights type.
+   * Usually double, but can be float as well. <Not tested very well for float>
+   */
+  typedef TScalar ScalarType;
+
   /** Helper constant variable. */
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
@@ -202,7 +207,7 @@ public:
 
   /** EvaluateJacobianWithImageGradientProduct recursive implementation. */
   static inline void EvaluateJacobianWithImageGradientProduct(
-    TScalar * & imageJacobian, const double * movingImageGradient, const double * weights1D, double value )
+    ScalarType * & imageJacobian, const ScalarType * movingImageGradient, const double * weights1D, double value )
   {
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
@@ -292,6 +297,11 @@ class RecursiveBSplineTransformImplementation2< OutputDimension, 0, SplineOrder,
 {
 public:
 
+  /** Typedef related to the coordinate representation type and the weights type.
+   * Usually double, but can be float as well. <Not tested very well for float>
+   */
+  typedef TScalar ScalarType;
+
   /** Typedef to know the number of indices at compile time. */
   typedef itk::RecursiveBSplineInterpolationWeightFunction<
     TScalar, OutputDimension, SplineOrder > RecursiveBSplineWeightFunctionType;
@@ -342,7 +352,7 @@ public:
 
   /** EvaluateJacobianWithImageGradientProduct recursive implementation. */
   static inline void EvaluateJacobianWithImageGradientProduct(
-    TScalar * & imageJacobian, const double * movingImageGradient, const double * weights1D, double value )
+    ScalarType * & imageJacobian, const ScalarType * movingImageGradient, const double * weights1D, double value )
   {
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {

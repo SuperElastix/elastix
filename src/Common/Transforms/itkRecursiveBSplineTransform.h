@@ -66,6 +66,7 @@ public:
   typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::ParametersValueType    ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  typedef typename Superclass::DerivativeType         DerivativeType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::InputVectorType        InputVectorType;
   typedef typename Superclass::OutputVectorType       OutputVectorType;
@@ -98,6 +99,8 @@ public:
   typedef typename Superclass::SpatialHessianType             SpatialHessianType;
   typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::MovingImageGradientType        MovingImageGradientType;
+  typedef typename Superclass::MovingImageGradientValueType   MovingImageGradientValueType;
 
   /** Interpolation weights function type. */
   typedef typename Superclass::WeightsFunctionType                WeightsFunctionType;
