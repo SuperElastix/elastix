@@ -48,7 +48,10 @@ def main():
   # transformix is not in the path and can therefore not be found.
   # To make sure it is found we add paths. To make sure this script also works for other machines,
   # add the correct paths manually. Non-existing paths are automatically ignored.
-  _path = os.getenv('PATH');
+  #
+  # Make sure the first path is the elastix binary directory from this build
+  _path = os.path.join( options.directory, "..", "..", "bin" ); # bin dir
+  _path += os.pathsep + os.getenv('PATH');
   _path += os.pathsep + "/home/marius/install/bin";     # goliath
   _path += os.pathsep + "/elastix-nightly/install/bin"; # MacMini
   #_path += os.pathsep + "your_path"; # Add your own path here
