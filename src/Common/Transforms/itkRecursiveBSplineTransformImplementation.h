@@ -37,19 +37,24 @@ template< unsigned int SpaceDimension, unsigned int SplineOrder, class TScalar >
 class RecursiveBSplineTransformImplementation
 {
 public:
+  /** Typedef related to the coordinate representation type and the weights type.
+   * Usually double, but can be float as well. <Not tested very well for float>
+   */
+  typedef TScalar ScalarType;
+
   /** Helper constant variable. */
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
   /** TransformPoint recursive implementation. */
-  static inline TScalar TransformPoint(
-    const TScalar * mu, const long * steps, const double * weights1D,
-    const TScalar * coefBasePointer, Array<unsigned long> & indices, unsigned int & c )
+  static inline ScalarType TransformPoint(
+    const ScalarType * mu, const long * steps, const double * weights1D,
+    const ScalarType * coefBasePointer, Array<unsigned long> & indices, unsigned int & c )
   {
-    TScalar coord = 0.0;
+    ScalarType coord = 0.0;
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      const TScalar * tmp_mu = mu + steps[ k + HelperConstVariable ];
+      const ScalarType * tmp_mu = mu + steps[ k + HelperConstVariable ];
       coord += RecursiveBSplineTransformImplementation< SpaceDimension - 1, SplineOrder, TScalar >
         ::TransformPoint( tmp_mu, steps, weights1D, coefBasePointer, indices, c ) * weights1D[ k + HelperConstVariable ];
     }
@@ -59,7 +64,7 @@ public:
 
   /** GetJacobian recursive implementation. */
   static inline void GetJacobian(
-    TScalar * & jacobians, const double * weights1D , double value )
+    ScalarType * & jacobians, const double * weights1D , double value )
   {
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
@@ -68,36 +73,6 @@ public:
     }
   } // end GetJacobian()
 
-
-  /** SpatialJacobian recursive implementation. */
-  static inline void GetSpatialJacobian(
-    TScalar derivativeAndValue[],
-    const TScalar * mu,
-    const long * steps,
-    const double * weights,
-    const double * derivativeWeights )
-  {
-    /** derivativeAndValue length must be at least dim + 1. */
-    TScalar derivativeAndValueNext[ SpaceDimension + 1 ];
-    for( unsigned int n = 0; n <= SpaceDimension; ++n )
-    {
-      derivativeAndValue[ n ] = 0.0;
-    }
-
-    for( unsigned int k = 0; k <= SplineOrder; ++k )
-    {
-      const TScalar * tmp_mu = mu + steps[ k + HelperConstVariable ];
-
-      RecursiveBSplineTransformImplementation< SpaceDimension - 1, SplineOrder, TScalar >
-        ::GetSpatialJacobian( derivativeAndValueNext, tmp_mu, steps, weights, derivativeWeights );
-      for( unsigned int n = 0; n < SpaceDimension; ++n )
-      {
-        derivativeAndValue[ n ] += derivativeAndValueNext[ n ] * weights[ k + HelperConstVariable ];
-      }
-      derivativeAndValue[ SpaceDimension ]
-        += derivativeAndValueNext[ 0 ] * derivativeWeights[ k + HelperConstVariable ];
-    }
-  } // end SpatialJacobian()
 
 }; // end class
 
@@ -133,16 +108,16 @@ public:
   itkStaticConstMacro( BSplineNumberOfIndices, unsigned int,
     RecursiveBSplineWeightFunctionType::NumberOfIndices );
 
-  typedef TScalar *  OutputPointType;
-  typedef TScalar ** CoefficientPointerVectorType;
+  typedef ScalarType *  OutputPointType;
+  typedef ScalarType ** CoefficientPointerVectorType;
 
   /** TransformPoint recursive implementation. */
   static inline void TransformPoint(
     OutputPointType opp,
     const CoefficientPointerVectorType mu, const OffsetValueType * steps, const double * weights1D )
   {
-    TScalar * tmp_mu[ OutputDimension ];
-    TScalar tmp_opp[ OutputDimension ];
+    ScalarType * tmp_mu[ OutputDimension ];
+    ScalarType tmp_opp[ OutputDimension ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       for( unsigned int j = 0; j < OutputDimension; ++j )
@@ -167,13 +142,13 @@ public:
     const OffsetValueType * gridOffsetTable,
     const double * weights1D )
   {
-    TScalar * tmp_mu[ OutputDimension ];
+    ScalarType * tmp_mu[ OutputDimension ];
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {
       tmp_mu[ j ] = mu[ j ];
     }
 
-    TScalar tmp_opp[ OutputDimension ];
+    ScalarType tmp_opp[ OutputDimension ];
     OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
@@ -195,7 +170,7 @@ public:
 
   /** GetJacobian recursive implementation. */
   static inline void GetJacobian(
-    TScalar * & jacobians, const double * weights1D, double value )
+    ScalarType * & jacobians, const double * weights1D, double value )
   {
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
@@ -207,7 +182,8 @@ public:
 
   /** EvaluateJacobianWithImageGradientProduct recursive implementation. */
   static inline void EvaluateJacobianWithImageGradientProduct(
-    ScalarType * & imageJacobian, const ScalarType * movingImageGradient, const double * weights1D, double value )
+    ScalarType * & imageJacobian, const ScalarType * movingImageGradient,
+    const double * weights1D, double value )
   {
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
@@ -236,6 +212,56 @@ public:
   } // end ComputeNonZeroJacobianIndices()
 
 
+  /** GetSpatialJacobian recursive implementation.
+   * As an (almost) free by-product this function delivers the displacement,
+   * i.e. the TransformPoint() function.
+   */
+  static inline void GetSpatialJacobian(
+    ScalarType * sj,// ook doubles
+    const CoefficientPointerVectorType mu,
+    const OffsetValueType * gridOffsetTable,
+    const double * weights1D,
+    const double * derivativeWeights1D )
+  {
+    /** Make a copy of the pointers to mu. The pointer will move later. */
+    ScalarType * tmp_mu[ OutputDimension ];
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      tmp_mu[ j ] = mu[ j ];
+    }
+
+    /** Create a temporary sj and initialize the original. */
+    ScalarType tmp_sj[ OutputDimension * SpaceDimension ];
+    for( unsigned int n = 0; n < OutputDimension * ( SpaceDimension + 1 ); ++n )
+     {
+       sj[ n ] = 0.0;
+     }
+
+    OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::GetSpatialJacobian( tmp_sj, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D );
+
+      for( unsigned int j = 0; j < OutputDimension; ++j )
+      {
+        // Multiply by the weights
+        for( unsigned int n = 0; n < SpaceDimension; ++n )
+        {
+          sj[ j + OutputDimension * n ]
+            += tmp_sj[ j + n * OutputDimension ] * weights1D[ k + HelperConstVariable ];
+        }
+        // Multiply by the derivative weights
+        sj[ j + OutputDimension * SpaceDimension ]
+          += tmp_sj[ j ] * derivativeWeights1D[ k + HelperConstVariable ];
+
+        // move to the next mu
+        tmp_mu[ j ] += bot;
+      }
+    }
+  } // end GetSpatialJacobian()
+
+
 }; // end class
 
 
@@ -249,9 +275,14 @@ class RecursiveBSplineTransformImplementation< 0, SplineOrder, TScalar >
 {
 public:
 
+  /** Typedef related to the coordinate representation type and the weights type.
+   * Usually double, but can be float as well. <Not tested very well for float>
+   */
+  typedef TScalar ScalarType;
+
   /** TransformPoint recursive implementation. */
   static inline TScalar TransformPoint(
-    const TScalar * mu,
+    const ScalarType * mu,
     const long * steps,
     const double * weights1D,
     const TScalar *coefBasePointer,
@@ -266,23 +297,12 @@ public:
 
   /** GetJacobian recursive implementation. */
   static inline void GetJacobian(
-    TScalar * & jacobians, const double * weights1D, double value )
+    ScalarType * & jacobians, const double * weights1D, double value )
   {
     *jacobians = value;
     ++jacobians;
   } // end GetJacobian()
 
-
-  /** SpatialJacobian recursive implementation. */
-  static inline void GetSpatialJacobian(
-    TScalar derivativeAndValue[],
-    const TScalar * mu,
-    const long * steps,
-    const double * weights,
-    const double * derivativeWeights )
-  {
-    derivativeAndValue[ 0 ] = *mu;
-  } // end GetSpatialJacobian()
 
 }; // end class
 
@@ -308,8 +328,8 @@ public:
   itkStaticConstMacro( BSplineNumberOfIndices, unsigned int,
     RecursiveBSplineWeightFunctionType::NumberOfIndices );
 
-  typedef TScalar *  OutputPointType;
-  typedef TScalar ** CoefficientPointerVectorType;
+  typedef ScalarType *  OutputPointType;
+  typedef ScalarType ** CoefficientPointerVectorType;
 
   /** TransformPoint recursive implementation. */
   static inline void TransformPoint(
@@ -338,13 +358,13 @@ public:
 
   /** GetJacobian recursive implementation. */
   static inline void GetJacobian(
-    TScalar * & jacobians, const double * weights1D, double value )
+    ScalarType * & jacobians, const double * weights1D, double value )
   {
     unsigned long offset = 0;
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {
       offset = j * BSplineNumberOfIndices * ( OutputDimension + 1 );
-      *(jacobians + offset) = value; //* dmdx[i]
+      *(jacobians + offset) = value;
     }
     ++jacobians;
   } // end GetJacobian()
@@ -376,6 +396,22 @@ public:
     }
     ++c;
   } // end ComputeNonZeroJacobianIndices()
+
+
+  /** GetSpatialJacobian recursive implementation. */
+  static inline void GetSpatialJacobian(
+    ScalarType * sj,
+    const CoefficientPointerVectorType mu,
+    const OffsetValueType * gridOffsetTable,
+    const double * weights1D,
+    const double * derivativeWeights1D )
+  {
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      sj[ j ] = *(mu[ j ]);
+    }
+  } // end GetSpatialJacobian()
+
 
 }; // end class
 

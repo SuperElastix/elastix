@@ -100,7 +100,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
     displacement[ j ] = 0.0;
     mu[ j ] = this->m_CoefficientImages[ j ]->GetBufferPointer() + totalOffsetToSupportIndex;
   }
-  // Call recursive interpolate function, vector version
+
+  /** Call recursive interpolate function, vector version. */
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::TransformPoint2( displacement, mu, bsplineOffsetTable, weightsArray1D );
 
@@ -271,7 +272,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     return;
   }
 
-  /** Compute the interpolation weights. 
+  /** Compute the interpolation weights.
    * In contrast to the normal B-spline weights function, the recursive version
    * returns the individual weights instead of the multiplied ones.
    */
@@ -357,7 +358,7 @@ void
     return;
   }
 
-  /** Compute the interpolation weights. 
+  /** Compute the interpolation weights.
    * In contrast to the normal B-spline weights function, the recursive version
    * returns the individual weights instead of the multiplied ones.
    */
@@ -420,116 +421,68 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     return;
   }
 
-  /** Compute the number of affected B-spline parameters. */
-  /** Allocate memory on the stack: */
-  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
-  WeightsType weights( weightsArray, numberOfWeights, false );
+  /***/
+  const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
+  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+  typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
+  WeightsType weights1D( weightsArray1D, numberOfWeights, false );
+  typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
+  WeightsType derivativeWeights1D( derivativeWeightsArray1D, numberOfWeights, false );
 
-  typename WeightsType::ValueType derivativeWeightsArray[ numberOfWeights ];
-  WeightsType derivativeWeights( derivativeWeightsArray, numberOfWeights, false );
+  double * weightsPointer = &(weights1D[0]);
+  double * derivativeWeightsPointer = &(derivativeWeights1D[0]);
 
+  /** Compute the interpolation weights.
+   * In contrast to the normal B-spline weights function, the recursive version
+   * returns the individual weights instead of the multiplied ones.
+   */
   IndexType supportIndex;
-  this->m_DerivativeWeightsFunctions[ 0 ]->ComputeStartIndex(
-    cindex, supportIndex );
-  RegionType supportRegion;
-  supportRegion.SetSize( this->m_SupportSize );
-  supportRegion.SetIndex( supportIndex );
+  this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
+  this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights1D, supportIndex );
 
-  //    /** Compute the spatial Jacobian sj:
-  //   *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights * PointToGridIndex.
-  //   */
-  //    typedef ImageScanlineConstIterator< ImageType > IteratorType;
-  //    sj.Fill( 0.0 );
-  //    for( unsigned int i = 0; i < SpaceDimension; ++i )
-  //    {
-  //        /** Compute the derivative weights. */
-  //        this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, supportIndex, weights );
-
-  //        /** Compute the spatial Jacobian sj:
-  //     *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
-  //     */
-  //        for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-  //        {
-  //            /** Create an iterator over the correct part of the coefficient
-  //       * image. Create an iterator over the weights vector.
-  //       */
-  //            IteratorType itCoef( this->m_CoefficientImages[ dim ], supportRegion );
-  //            typename WeightsType::const_iterator itWeights = weights.begin();
-
-  //            /** Compute the sum for this dimension. */
-  //            double sum = 0.0;
-  //            while( !itCoef.IsAtEnd() )
-  //            {
-  //                while( !itCoef.IsAtEndOfLine() )
-  //                {
-  //                    sum += itCoef.Value() * ( *itWeights );
-  //                    ++itWeights;
-  //                    ++itCoef;
-  //                }
-  //                itCoef.NextLine();
-  //            }
-
-  //            /** Update the spatial Jacobian sj. */
-  //            sj( dim, i ) += sum;
-
-  //        } // end for dim
-  //    }   // end for i
-
-  // Compute interpolation weighs and store them in weights
-  this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights, supportIndex );
-  this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights, supportIndex );
-
-  //Allocation of memory
-  // MS: The following is a copy from TransformPoint and candidate for refactoring
-  long evaluateIndexData[ ( SplineOrder + 1 ) * SpaceDimension ];
-  long stepsData[ ( SplineOrder + 1 ) * SpaceDimension ];
-  vnl_matrix_ref<long> evaluateIndex( SpaceDimension, SplineOrder + 1, evaluateIndexData );
-  double * weightsPointer = &(weights[0]);
-  double * derivativeWeightsPointer = &(derivativeWeights[0]);
-  long * steps = &(stepsData[0]);
-
-  for( unsigned int ii = 0; ii < SpaceDimension; ++ii )
-  {
-    for( unsigned int jj = 0; jj <= SplineOrder; ++jj )
-    {
-      evaluateIndex[ ii ][ jj ] = supportIndex[ ii ] + jj;
-    }
-  }
-
-  IndexType offsetTable;
-  for( unsigned int n = 0; n < SpaceDimension; ++n )
-  {
-    offsetTable[ n ] = this->m_CoefficientImages[ 0 ]->GetOffsetTable()[ n ];
-    for( unsigned int k = 0; k <= SplineOrder; ++k )
-    {
-      steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * offsetTable[ n ];
-    }
-  }
-
-  // Call recursive interpolate function
+  /** Compute the offset to the start index. */
+  const OffsetValueType * bsplineOffsetTable = this->m_CoefficientImages[ 0 ]->GetOffsetTable();
+  OffsetValueType totalOffsetToSupportIndex = 0;
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
-    TScalar derivativeValue[ SpaceDimension + 1 ];
-    const TScalar *basePointer = this->m_CoefficientImages[ j ]->GetBufferPointer();
-    RecursiveBSplineTransformImplementation< SpaceDimension, SplineOrder, TScalar >
-      ::GetSpatialJacobian( derivativeValue,
-      basePointer,
-      steps,
-      weightsPointer,
-      derivativeWeightsPointer );
+    totalOffsetToSupportIndex += supportIndex[ j ] * bsplineOffsetTable[ j ];
+  }
 
-    for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  /** Get handles to the mu's. */
+  ScalarType * mu[ SpaceDimension ];
+  for( unsigned int j = 0; j < SpaceDimension; ++j )
+  {
+    mu[ j ] = this->m_CoefficientImages[ j ]->GetBufferPointer() + totalOffsetToSupportIndex;
+  }
+
+  /** Recursively compute the spatial Jacobian. */
+  ScalarType spatialJacobian[ SpaceDimension * ( SpaceDimension + 1 ) ];
+  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
+    ::GetSpatialJacobian( spatialJacobian, mu, bsplineOffsetTable, weightsPointer, derivativeWeightsPointer );
+
+  /** Copy the correct elements to the spatial Jacobian.
+   * The first SpaceDimension elements are actually the displacement, i.e. the recursive
+   * function GetSpatialJacobian() has the TransformPoint as a free by-product.
+   */
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    for( unsigned int j = 0; j < SpaceDimension; ++j )
     {
-      sj( dim, j ) = derivativeValue[ dim + 1 ]; //First element of derivativeValue is the value, not the derivative.
+      sj( i, j ) = spatialJacobian[ i + ( j + 1 ) * SpaceDimension ];
     }
-
-    sj( j, j ) += 1.0;
-  } // end for
+  }
 
   /** Take into account grid spacing and direction cosines. */
   sj = sj * this->m_PointToIndexMatrix2;
 
+  /** Add the identity matrix, as this is a transformation, not displacement. */
+  for( unsigned int j = 0; j < SpaceDimension; ++j )
+  {
+    sj( j, j ) += 1.0;
+  }
+
+  // \todo check if we first need to do the matrix multiplication and then
+  // add the identity matrix, or vice versa.
 } // end GetSpatialJacobian()
 
 

@@ -299,6 +299,22 @@ main( int argc, char * argv[] )
   }
   timeCollector.Stop( "Jacobian recursive" );
 
+  /** Time the implementation of the spatial Jacobian. */
+  SpatialJacobianType sj, sjRecursive;
+  timeCollector.Start( "SpatialJacobian elastix" );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    transform->GetSpatialJacobian( inputPoint, sj );
+  }
+  timeCollector.Stop( "SpatialJacobian elastix" );
+
+  timeCollector.Start( "SpatialJacobian recursive vector" );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    recursiveTransform->GetSpatialJacobian( inputPoint, sjRecursive );
+  }
+  timeCollector.Stop( "SpatialJacobian recursive vector" );
+
   /** Report. */
   timeCollector.Report();
 
@@ -347,9 +363,6 @@ main( int argc, char * argv[] )
   }
 
   /** Jacobian */
-  //JacobianType jacobianITK; jacobianITK.Fill( 0.0 );
-  //transformITK->ComputeJacobianWithRespectToParameters( inputPoint, jacobianITK );
-
   JacobianType jacobianElastix; jacobianElastix.SetSize( Dimension, nzji.size() ); jacobianElastix.Fill( 0.0 );
   transform->GetJacobian( inputPoint, jacobianElastix, nzjiElastix );
 
@@ -376,6 +389,23 @@ main( int argc, char * argv[] )
   if( nzjiDifference > 1e-10 )
   {
     std::cerr << "ERROR: Recursive B-spline ComputeNonZeroJacobianIndices() returning incorrect result." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  /** Spatial Jacobian */
+  transform->GetSpatialJacobian( inputPoint, sj );
+  //std::cerr << sj << std::endl;
+
+  recursiveTransform->GetSpatialJacobian( inputPoint, sjRecursive );
+  //std::cerr << sjRecursive << std::endl;
+  //opp = transform->TransformPoint( inputPoint ) - inputPoint;
+
+  SpatialJacobianType sjDifferenceMatrix = sj - sjRecursive;
+  double sjDifference = sjDifferenceMatrix.GetVnlMatrix().frobenius_norm();
+  std::cerr << "The Recursive B-spline GetSpatialJacobian() difference is " << sjDifference << std::endl;
+  if( sjDifference > 1e-8 )
+  {
+    std::cerr << "ERROR: Recursive B-spline GetSpatialJacobian() returning incorrect result." << std::endl;
     return EXIT_FAILURE;
   }
 
