@@ -372,7 +372,8 @@ void
   /** Recursively compute the inner product of the Jacobian and the moving image gradient.
    * The pointer has changed after this function call.
    */
-  ParametersValueType migArray[ SpaceDimension ];
+  //ParametersValueType migArray[ SpaceDimension ];
+  double migArray[ SpaceDimension ];//InternalFloatType
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
     migArray[ j ] = movingImageGradient[ j ];
@@ -456,7 +457,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   }
 
   /** Recursively compute the spatial Jacobian. */
-  ScalarType spatialJacobian[ SpaceDimension * ( SpaceDimension + 1 ) ];
+  double spatialJacobian[ SpaceDimension * ( SpaceDimension + 1 ) ];//double
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetSpatialJacobian( spatialJacobian, mu, bsplineOffsetTable, weightsPointer, derivativeWeightsPointer );
 
