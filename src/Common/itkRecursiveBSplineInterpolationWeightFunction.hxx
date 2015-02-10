@@ -19,6 +19,7 @@
 #define __itkRecursiveBSplineInterpolationWeightFunction_hxx
 
 #include "itkRecursiveBSplineInterpolationWeightFunction.h"
+
 #include "itkImage.h"
 #include "itkMatrix.h"
 #include "itkMath.h"
@@ -26,116 +27,118 @@
 
 namespace itk
 {
-/** Constructor */
-template< typename TCoordRep, unsigned int VSpaceDimension,
-          unsigned int VSplineOrder >
+
+/**
+ * ********************* Constructor ****************************
+ */
+
+template< typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
 RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder > 
 ::RecursiveBSplineInterpolationWeightFunction()  
 {
-    // Initialize support region is a hypercube of length SplineOrder + 1
-    m_SupportSize.Fill(SplineOrder + 1);
+  // Initialize support region is a hypercube of length SplineOrder + 1
+  this->m_SupportSize.Fill( SplineOrder + 1 );
 
-    this->m_NumberOfWeights = 1;
-    for( unsigned int i = 0; i < SpaceDimension; ++i )
-    {
-        this->m_NumberOfWeights *= this->m_SupportSize[ i ];
-    }
+  this->m_NumberOfWeights = 1;
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    this->m_NumberOfWeights *= this->m_SupportSize[ i ];
+  }
 
-    // Initialize offset to index lookup table
-    typedef Image< char, SpaceDimension > CharImageType;
-    typename CharImageType::Pointer tempImage = CharImageType::New();
-    tempImage->SetRegions(m_SupportSize);
-    tempImage->Allocate();
-    tempImage->FillBuffer(0);
+  // Initialize the interpolation kernel
+  this->m_Kernel = KernelType::New();
+  this->m_DerivativeKernel = DerivativeKernelType::New();
 
+} // end Constructor
 
-    // Initialize the interpolation kernel
-    this->m_Kernel = KernelType::New();
-    this->m_DerivativeKernel = DerivativeKernelType::New();
-
-    /** Initialize members. */
-    this->m_DerivativeDirection = 0;
-}
 
 /**
- * Standard "PrintSelf" method
+ * ********************* PrintSelf ****************************
  */
-template< typename TCoordRep, unsigned int VSpaceDimension,
-          unsigned int VSplineOrder >
-void
-RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >//ok 
-::PrintSelf(
-        std::ostream & os,
-        Indent indent) const
-{
-    Superclass::PrintSelf(os, indent);
 
-    os << indent << "NumberOfWeights: " << m_NumberOfWeights << std::endl;
-    os << indent << "SupportSize: " << m_SupportSize << std::endl;
-}
-
-/** Compute weights for interpolation at continuous index position */
 template< typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
-typename RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, //ok 
-VSplineOrder >
-::WeightsType
-RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder > //ok 
-::Evaluate(
-        const ContinuousIndexType & index) const
+void
+RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
-    std::cout << "Evaluate" << std::endl;
-    std::cout << "Nr of weights: "  << this->m_NumberOfWeights << std::endl;
-    WeightsType weights(this->m_NumberOfWeights);
-    IndexType   startIndex;
+  Superclass::PrintSelf(os, indent);
 
-    this->Evaluate(index, weights, startIndex);
+  os << indent << "NumberOfWeights: " << m_NumberOfWeights << std::endl;
+  os << indent << "SupportSize: " << m_SupportSize << std::endl;
+} // end PrintSelf()
 
-    return weights;
-}
 
-/** Compute weights for interpolation at continuous index position */
+/**
+ * ********************* Evaluate ****************************
+ */
+
+template< typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
+typename RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >::WeightsType
+RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
+::Evaluate( const ContinuousIndexType & index ) const
+{
+  WeightsType weights( this->m_NumberOfWeights );
+  IndexType startIndex;
+
+  this->Evaluate( index, weights, startIndex );
+
+  return weights;
+} // end Evaluate()
+
+
+/**
+ * ********************* Evaluate ****************************
+ */
+
 template< typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
 void RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
 ::Evaluate(
-        const ContinuousIndexType & index,
-        WeightsType & weights,
-        IndexType & startIndex) const
+  const ContinuousIndexType & index,
+  WeightsType & weights,
+  IndexType & startIndex ) const
 {
-    unsigned int j, k;
-
-    // Find the starting index of the support region
-    k=0;
-    for ( j = 0; j < SpaceDimension; j++ )
+  // Find the starting index of the support region
+  unsigned int k = 0;
+  for( unsigned int j = 0; j < SpaceDimension; ++j )
+  {
+    startIndex[ j ] = Math::Floor< IndexValueType >( index[ j ] - static_cast< double >( SplineOrder - 1 ) / 2.0 );
+    double x = index[ j ] - static_cast< double >( startIndex[ j ] );
+    
+    for( unsigned int l = 0; l < SplineOrder + 1; ++l )
     {
-        startIndex[j] = Math::Floor< IndexValueType >(index[j] - static_cast< double >( SplineOrder - 1 ) / 2.0);
-        double x = index[j] - static_cast< double >( startIndex[j] );
-        for(unsigned int l = 0; l < SplineOrder+1; ++l)
-        {
-            weights[k] = m_Kernel->Evaluate(x);
-            x -= 1.0;
-            ++k;
-        }
+      weights[ k ] = this->m_Kernel->Evaluate( x );
+      x -= 1.0;
+      ++k;
     }
-} 
+  }
+} // end Evaluate()
+
+
+/**
+ * ********************* EvaluateDerivative ****************************
+ */
 
 template< typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
 void RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
 ::EvaluateDerivative(
-        const ContinuousIndexType & cindex,
-        WeightsType & derivativeWeights,
-        IndexType & startIndex) const
+  const ContinuousIndexType & cindex,
+  WeightsType & derivativeWeights,
+  IndexType & startIndex ) const
 {
-    unsigned int j = 0;
-    for( unsigned int i = 0; i < SpaceDimension; ++i )
+  unsigned int j = 0;
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    double x = cindex[ i ] - static_cast< double >( startIndex[ i ] );
+    for( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
     {
-      double x = cindex[ i ] - static_cast< double >( startIndex[ i ] );
-      for( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
-      {
-          derivativeWeights[ j ] = this->m_DerivativeKernel->Evaluate( x );
-          x-= 1.0;
-          ++j;
-      }
+      derivativeWeights[ j ] = this->m_DerivativeKernel->Evaluate( x );
+      x-= 1.0;
+      ++j;
     }
-}//end EvaluateDerivative
+  }
+} // end EvaluateDerivative()
+
+
 } // end namespace itk
+
 #endif

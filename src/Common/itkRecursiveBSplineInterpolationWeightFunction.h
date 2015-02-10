@@ -18,16 +18,15 @@
 #ifndef __itkRecursiveBSplineInterpolationWeightFunction_h
 #define __itkRecursiveBSplineInterpolationWeightFunction_h
 
-#include "itkFunctionBase.h"
-#include "itkContinuousIndex.h"
+#include "itkBSplineInterpolationWeightFunction.h"
+
 #include "itkBSplineKernelFunction.h"
-#include "itkArray.h"
-#include "itkArray2D.h"
-#include "itkBSplineInterpolationWeightFunction.h" 
+#include "itkBSplineDerivativeKernelFunction2.h"
+
 
 namespace itk
 {
-/** Recursive template to retrieve the number of Bspline indices at compile time. */
+/** Recursive template to retrieve the number of B-spline indices at compile time. */
 template< unsigned int SplineOrder, unsigned int Dimension >
 class GetConstNumberOfIndicesHack
 {
@@ -46,7 +45,7 @@ public:
   itkStaticConstMacro( Value, unsigned int, 1 );
 };
 
-/** Recursive template to retrieve the number of BSpline weights at compile time. */
+/** Recursive template to retrieve the number of B-spline weights at compile time. */
 template< unsigned int SplineOrder, unsigned int Dimension >
 class GetConstNumberOfWeightsHackRecursiveBSpline
 {
@@ -85,33 +84,31 @@ public:
   
   /** Standard class typedefs. */
   typedef RecursiveBSplineInterpolationWeightFunction Self;
-  typedef FunctionBase< ContinuousIndex< TCoordRep, VSpaceDimension >,
-                        Array< double > >                  Superclass;
-
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef BSplineInterpolationWeightFunction<
+    TCoordRep, VSpaceDimension, VSplineOrder >        Superclass;
+  typedef SmartPointer< Self >                        Pointer;
+  typedef SmartPointer< const Self >                  ConstPointer;
 
   /** New macro for creation of through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(RecursiveBSplineInterpolationWeightFunction, FunctionBase);
+  itkTypeMacro( RecursiveBSplineInterpolationWeightFunction, FunctionBase );
 
   /** Space dimension. */
-  itkStaticConstMacro(SpaceDimension, unsigned int, VSpaceDimension);
+  itkStaticConstMacro( SpaceDimension, unsigned int, VSpaceDimension );
 
   /** Spline order. */
-  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
+  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
-  /** OutputType typedef support. */
-  typedef Array< double > WeightsType;
+  /** Typedefs from superclass*/
+  typedef typename Superclass::WeightsType WeightsType;
+  typedef typename Superclass::IndexType IndexType;
+  typedef typename Superclass::SizeType SizeType;
+  typedef typename Superclass::ContinuousIndexType ContinuousIndexType;
+  //typedef typename Superclass::
 
-  /** Index and size typedef support. */
-  typedef Index< VSpaceDimension > IndexType;
-  typedef Size< VSpaceDimension >  SizeType;
-
-  /** ContinuousIndex typedef support. */
-  typedef ContinuousIndex< TCoordRep, VSpaceDimension > ContinuousIndexType;
+  /** Get number of hacks. */
   typedef GetConstNumberOfWeightsHackRecursiveBSpline<
   itkGetStaticConstMacro( SplineOrder ),
   itkGetStaticConstMacro( SpaceDimension ) > GetConstNumberOfWeightsHackRecursiveBSplineType;
@@ -127,10 +124,9 @@ public:
   /** Get number of indices. */
   itkGetConstMacro( NumberOfIndices, unsigned int );
 
-
   /** Evaluate the weights at specified ContinousIndex position.
    * Subclasses must provide this method. */
-  virtual WeightsType Evaluate(const ContinuousIndexType & index) const;
+  virtual WeightsType Evaluate( const ContinuousIndexType & index ) const;
 
   /** Evaluate the weights at specified ContinousIndex position.
    * The weights are returned in the user specified container.
@@ -140,13 +136,12 @@ public:
    * On return, startIndex contains the start index of the
    * support region over which the weights are defined.
    */
-  virtual void Evaluate(const ContinuousIndexType & index,
-                        WeightsType & weights, IndexType & startIndex) const;
-  void EvaluateDerivative(const ContinuousIndexType & index,
-                          WeightsType & weights, IndexType & startIndex) const;
-
-  /** Get support region size. */
-  itkGetConstMacro(SupportSize, SizeType);
+  virtual void Evaluate( const ContinuousIndexType & index,
+    WeightsType & weights, IndexType & startIndex ) const;
+  void EvaluateDerivative( const ContinuousIndexType & index,
+    WeightsType & weights, IndexType & startIndex ) const;
+//   void EvaluateSecondOrderDerivative( const ContinuousIndexType & index,
+//     WeightsType & weights, IndexType & startIndex ) const;
 
 protected:
   RecursiveBSplineInterpolationWeightFunction();
@@ -154,30 +149,17 @@ protected:
   void PrintSelf(std::ostream & os, Indent indent) const;
 
 private:
-  RecursiveBSplineInterpolationWeightFunction(const Self &); //purposely not implemented
-  void operator=(const Self &);                     //purposely not implemented
+  RecursiveBSplineInterpolationWeightFunction(const Self &); // purposely not implemented
+  void operator=(const Self &);                              // purposely not implemented
 
-  /** Number of weights. */
- unsigned int m_NumberOfWeights; 
-
- /** Number of indices. */
-  unsigned int m_NumberOfIndices; 
-
-  /** Size of support region. */
+  /** Private members; We unfortunatly cannot use those of the superclass. */
+  unsigned int m_NumberOfWeights;
+  unsigned int m_NumberOfIndices;
   SizeType m_SupportSize;
 
-  /** Lookup table type. */
-  typedef Array2D< unsigned int > TableType;
-
-  /** Table mapping linear offset to indices. */
-  TableType m_OffsetToIndexTable;
-
-  /** Member variables. */
-  unsigned int m_DerivativeDirection;
-
   /** Interpolation kernel type. */
-  typedef BSplineKernelFunction< itkGetStaticConstMacro(SplineOrder) > KernelType;
-  typedef BSplineDerivativeKernelFunction< itkGetStaticConstMacro(SplineOrder) > DerivativeKernelType;
+  typedef BSplineKernelFunction< itkGetStaticConstMacro( SplineOrder ) > KernelType;
+  typedef BSplineDerivativeKernelFunction< itkGetStaticConstMacro( SplineOrder ) > DerivativeKernelType;
 
   /** Interpolation kernel. */
   typename KernelType::Pointer m_Kernel;
