@@ -681,7 +681,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     {
       /** Compute the derivative weights. */
       this->m_SODerivativeWeightsFunctions[ i ][ j ]
-        ->Evaluate( cindex, supportIndex, weights );
+      ->Evaluate( cindex, supportIndex, weights );
 
       /** Create an iterator over the coeffs vector.  */
       typename WeightsType::const_iterator itCoeffs = coeffs.begin();

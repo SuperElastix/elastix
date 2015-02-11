@@ -105,6 +105,7 @@ target_link_libraries( elxCore
   xoutlib
   param # Needed for elxConfiguration
   #  ${ITK_LIBRARIES}
+  -lprofiler
 )
 
 #---------------------------------------------------------------------
@@ -189,6 +190,7 @@ target_link_libraries( elastix
   ${mevisdcmtifflib}
   ${AllComponentLibs}
   ${ITK_LIBRARIES}
+  -lprofiler
 )
 
 #---------------------------------------------------------------------
@@ -202,6 +204,7 @@ target_link_libraries( transformix
   ${mevisdcmtifflib}
   ${AllComponentLibs}
   ${ITK_LIBRARIES}
+  -lprofiler
 )
 
 if( MSVC )

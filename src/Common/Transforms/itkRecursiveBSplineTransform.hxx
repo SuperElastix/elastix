@@ -422,7 +422,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     return;
   }
 
-  /** Create storage for the B-spline interpolation weights. */
+  /***/
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
   const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
@@ -485,116 +485,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   // \todo check if we first need to do the matrix multiplication and then
   // add the identity matrix, or vice versa.
 } // end GetSpatialJacobian()
-
-
-
-/**
- * ********************* GetSpatialHessian ****************************
- */
-
-template< class TScalar, unsigned int NDimensions, unsigned int VSplineOrder >
-void
-RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
-::GetSpatialHessian(
-  const InputPointType & ipp,
-  SpatialHessianType & sh ) const
-{
-  /** Convert the physical point to a continuous index, which
-   * is needed for the evaluate functions below.
-   */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex( ipp, cindex );
-
-  // NOTE: if the support region does not lie totally within the grid
-  // we assume zero displacement and zero spatial Hessian
-  if( !this->InsideValidRegion( cindex ) )
-  {
-    for( unsigned int i = 0; i < sh.Size(); ++i )
-    {
-      sh[ i ].Fill( 0.0 );
-    }
-    return;
-  }
-
-  /** Create storage for the B-spline interpolation weights. */
-  const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
-  typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
-  WeightsType weights1D( weightsArray1D, numberOfWeights, false );
-  typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
-  WeightsType derivativeWeights1D( derivativeWeightsArray1D, numberOfWeights, false );
-  typename WeightsType::ValueType hessianWeightsArray1D[ numberOfWeights ];
-  WeightsType hessianWeights1D( hessianWeightsArray1D, numberOfWeights, false );
-
-  double * weightsPointer = &(weights1D[0]);
-  double * derivativeWeightsPointer = &(derivativeWeights1D[0]);
-  double * hessianWeightsPointer = &(hessianWeights1D[0]);
-
-  /** Compute the interpolation weights.
-   * In contrast to the normal B-spline weights function, the recursive version
-   * returns the individual weights instead of the multiplied ones.
-   */
-  IndexType supportIndex;
-  this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
-  this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights1D, supportIndex );
-  this->m_RecursiveBSplineWeightFunction->EvaluateSecondOrderDerivative( cindex, hessianWeights1D, supportIndex );
-
-  /** Compute the offset to the start index. */
-  const OffsetValueType * bsplineOffsetTable = this->m_CoefficientImages[ 0 ]->GetOffsetTable();
-  OffsetValueType totalOffsetToSupportIndex = 0;
-  for( unsigned int j = 0; j < SpaceDimension; ++j )
-  {
-    totalOffsetToSupportIndex += supportIndex[ j ] * bsplineOffsetTable[ j ];
-  }
-
-  /** Get handles to the mu's. */
-  ScalarType * mu[ SpaceDimension ];
-  for( unsigned int j = 0; j < SpaceDimension; ++j )
-  {
-    mu[ j ] = this->m_CoefficientImages[ j ]->GetBufferPointer() + totalOffsetToSupportIndex;
-  }
-
-  /** Recursively compute the spatial Jacobian. */
-  double spatialHessian[ SpaceDimension * ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2 ];
-  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
-    ::GetSpatialHessian( spatialHessian, mu, bsplineOffsetTable,
-    weightsPointer, derivativeWeightsPointer, hessianWeightsPointer );
-
-  /** Copy the correct elements to the spatial Hessian.
-   * The first SpaceDimension elements are actually the displacement, i.e. the recursive
-   * function GetSpatialHessian() has the TransformPoint as a free by-product.
-   * In addition, the spatial Jacobian is a by-product.
-   */
-  unsigned int k = 2 * SpaceDimension;
-  for( unsigned int i = 0; i < SpaceDimension; ++i )
-  {
-    for( unsigned int j = 0; j < ( i + 1 ) * SpaceDimension; ++j )
-    {
-      sh[ j % SpaceDimension ]( i, j / SpaceDimension ) = spatialHessian[ k + j ];
-    }
-    k += ( i + 2 ) * SpaceDimension;
-  }
-
-  /** Mirror, as only the lower triangle is now filled. */
-  for( unsigned int i = 0; i < SpaceDimension; ++i )
-  {
-    for( unsigned int j = 0; j < SpaceDimension - 1; ++j )
-    {
-      for( unsigned int k = 1; k < SpaceDimension; ++k )
-      {
-        sh[ i ]( j, k ) = sh[ i ]( k, j );
-      }
-    }
-  }
-
-  /** Take into account grid spacing and direction matrix */
-  for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-  {
-    sh[ dim ] = this->m_PointToIndexMatrixTransposed2
-      * ( sh[ dim ] * this->m_PointToIndexMatrix2 );
-  }
-
-} // end GetSpatialHessian()
 
 
 /**

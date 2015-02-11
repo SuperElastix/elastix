@@ -19,7 +19,8 @@
 #define __elxPCAMetric_H__
 
 #include "elxIncludes.h"
-#include "itkPCAMetric_F.h"
+#include "itkPCAMetric_F_multithreaded.h"
+//#include "itkPCAMetric_F.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkStackTransform.h"
 

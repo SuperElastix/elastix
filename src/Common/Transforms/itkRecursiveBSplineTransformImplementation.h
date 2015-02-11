@@ -252,7 +252,7 @@ public:
         ::GetSpatialJacobian( tmp_sj, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D );
 
       // Multiply by the weights
-      for( unsigned int n = 0; n < OutputDimension * SpaceDimension; ++n )
+      for( unsigned int n = 0; n < SpaceDimension * OutputDimension; ++n )
       {
         sj[ n ] += tmp_sj[ n ] * weights1D[ k + HelperConstVariable ];
       }
@@ -260,7 +260,7 @@ public:
       // Multiply by the derivative weights
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
-        sj[ OutputDimension * SpaceDimension + j ]
+        sj[ j + OutputDimension * SpaceDimension ]
           += tmp_sj[ j ] * derivativeWeights1D[ k + HelperConstVariable ];
 
         // move to the next mu
@@ -272,7 +272,7 @@ public:
 
   /** GetSpatialHessian recursive implementation.
    * As an (almost) free by-product this function delivers the displacement,
-   * i.e. the TransformPoint() function, as well as the SpatialJacobian.
+   * i.e. the TransformPoint() function, as well as the Jacobion
    */
   static inline void GetSpatialHessian(
     InternalFloatType * sh,
@@ -282,8 +282,7 @@ public:
     const double * derivativeWeights1D, // 1st derivative of B-spline
     const double * hessianWeights1D )   // 2nd derivative of B-spline
   {
-    const unsigned int helperDim1 = OutputDimension * SpaceDimension * ( SpaceDimension + 1 ) / 2;
-    const unsigned int helperDim2 = OutputDimension * ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2;
+    const unsigned int helperDim = OutputDimension * SpaceDimension * ( SpaceDimension + 1 ) / 2;
 
     /** Make a copy of the pointers to mu. The pointer will move later. */
     ScalarType * tmp_mu[ OutputDimension ];
@@ -293,8 +292,8 @@ public:
     }
 
     /** Create a temporary sh and initialize the original. */
-    InternalFloatType tmp_sh[ helperDim1 ];
-    for( unsigned int n = 0; n < helperDim2; ++n )
+    ScalarType tmp_sh[ helperDim ];
+    for( unsigned int n = 0; n < OutputDimension * ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2; ++n )
     {
       sh[ n ] = 0.0;
     }
@@ -305,18 +304,18 @@ public:
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
         ::GetSpatialHessian( tmp_sh, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D , hessianWeights1D );
 
-      // Multiply by the weights
-      for( unsigned int n = 0; n < helperDim1; ++n )
+      // Multiply by the weights  (value and 'old' part of gradient and Hessian)
+      for( unsigned int n = 0; n < helperDim; ++n )
       {
         sh[ n ] += tmp_sh[ n ] * weights1D[ k + HelperConstVariable ];
       }
 
-      // Multiply by the derivative weights
+      // Multiply by the derivative weights (new element of gradient and new part of Hessian, excluding diagonal)
       for( unsigned int n = 0; n < SpaceDimension; ++n )
       {
         for( unsigned int j = 0 ; j < OutputDimension; ++j )
         {
-          sh[ OutputDimension * n + helperDim1 + j ]
+          sh[ n * OutputDimension + j + helperDim ]
             += tmp_sh[ OutputDimension * n * ( n + 1 ) / 2 + j ] * derivativeWeights1D[ k + HelperConstVariable ];
         }
       }
@@ -324,7 +323,8 @@ public:
       // Multiply by the Hessian weights
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
-        sh[ helperDim2 - OutputDimension + j ]
+        // haakje op goede plek?
+        sh[ j + ( SpaceDimension + 1 ) * ( ( SpaceDimension + 2 ) / 2 - 1 ) * OutputDimension ]
           += tmp_sh[ j ] * hessianWeights1D[ k + HelperConstVariable ];
 
         // move to the next mu

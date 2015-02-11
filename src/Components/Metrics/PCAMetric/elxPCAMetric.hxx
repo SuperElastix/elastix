@@ -68,17 +68,17 @@ namespace elastix
     this->SetSubtractMean( subtractMean );
 
     /** Get and set the number of additional samples sampled at the fixed timepoint.  */
-    unsigned int numAdditionalSamplesFixed = 0;
-    this->GetConfiguration()->ReadParameter( numAdditionalSamplesFixed,
-      "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0 );
-    this->SetNumAdditionalSamplesFixed( numAdditionalSamplesFixed );
+//    unsigned int numAdditionalSamplesFixed = 0;
+//    this->GetConfiguration()->ReadParameter( numAdditionalSamplesFixed,
+//      "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0 );
+//    this->SetNumAdditionalSamplesFixed( numAdditionalSamplesFixed );
 
     /** Get and set the fixed timepoint number. */
-    unsigned int reducedDimensionIndex = 0;
-    this->GetConfiguration()->ReadParameter(
-        reducedDimensionIndex, "ReducedDimensionIndex",
-        this->GetComponentLabel(), 0, 0 );
-    this->SetReducedDimensionIndex( reducedDimensionIndex );
+//    unsigned int reducedDimensionIndex = 0;
+//    this->GetConfiguration()->ReadParameter(
+//        reducedDimensionIndex, "ReducedDimensionIndex",
+//        this->GetComponentLabel(), 0, 0 );
+//    this->SetReducedDimensionIndex( reducedDimensionIndex );
 
     /** Set moving image derivative scales. */
     this->SetUseMovingImageDerivativeScales( false );

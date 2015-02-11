@@ -1,3 +1,16 @@
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 /*=========================================================================
  *
  *  Copyright UMC Utrecht and contributors
@@ -15,12 +28,27 @@
  *  limitations under the License.
  *
  *=========================================================================*/
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    $RCSfile: itkBSplineSecondOrderDerivativeKernelFunction2.h,v $
+  Language:  C++
+  Date:      $Date: 2008-06-25 11:00:19 $
+  Version:   $Revision: 1.7 $
+
+  Copyright (c) Insight Software Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 #ifndef __itkBSplineSecondOrderDerivativeKernelFunction2_h
 #define __itkBSplineSecondOrderDerivativeKernelFunction2_h
 
 #include "itkKernelFunctionBase.h"
 #include "vnl/vnl_math.h"
-
 
 namespace itk
 {
@@ -59,17 +87,16 @@ public:
   /** Enum of for spline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
-  /** Evaluate the function. */
+//  /** Evaluate the function. */
+//  inline double Evaluate( const double & u ) const
+//    {
+//    return ( m_KernelFunction->Evaluate( u + 0.5 ) -
+//      m_KernelFunction->Evaluate( u - 0.5 ) );
+//    }
+/** Evaluate the function. */
   inline double Evaluate( const double & u ) const
   {
     return this->Evaluate( Dispatch< VSplineOrder >(), u );
-  }
-
-
-  /** Evaluate the function. */
-  inline void Evaluate( const double & u, double * weights ) const
-  {
-    this->Evaluate( Dispatch< VSplineOrder >(), u, weights );
   }
 
 
@@ -95,11 +122,47 @@ private:
   template< unsigned int >
   struct Dispatch : DispatchBase {};
 
-  /** Zeroth order spline. */
-  // Second order derivative not defined.
+  /** Zeroth order spline. *
+  inline double Evaluate (const Dispatch<0>&, const double & u) const
+  {
 
-  /** First order spline */
-  // Second order derivative not defined.
+    double absValue = vnl_math_abs( u );
+
+    if ( absValue  < 0.5 )
+    {
+      return 1.0;
+    }
+    else if ( absValue == 0.5 )
+    {
+      return 0.5;
+    }
+    else
+    {
+      return 0.0;
+    }
+
+  }*/
+
+  /** First order spline *
+  inline double Evaluate ( const Dispatch<1>&, const double& u) const
+  {
+
+    double absValue = vnl_math_abs( u );
+
+    if ( absValue < 1.0 )
+    {
+      return -vnl_math_sgn( u );
+    }
+    else if ( absValue == 1.0 )
+    {
+      return -vnl_math_sgn( u ) / 2.0;
+    }
+    else
+    {
+      return 0.0;
+    }
+
+  }*/
 
   /** Second order spline. */
   inline double Evaluate( const Dispatch< 2 > &, const double & u ) const
@@ -126,13 +189,7 @@ private:
     {
       return 0.0;
     }
-  }
 
-  inline void Evaluate( const Dispatch< 2 > &, const double & u, double * weights ) const
-  {
-    weights[ 0 ] = 1.0;
-    weights[ 1 ] = -2.0;
-    weights[ 2 ] = 1.0;
   }
 
 
@@ -153,27 +210,17 @@ private:
     {
       return 0.0;
     }
-  }
 
-  inline void Evaluate( const Dispatch< 3 > &, const double & u, double * weights ) const
-  {
-    weights[ 0 ] = -u + 2.0;
-    weights[ 1 ] = 3.0 * u - 5.0;
-    weights[ 2 ] = -3.0 * u + 4.0;
-    weights[ 3 ] = u - 1.0;
   }
 
 
   /** Unimplemented spline order */
   inline double Evaluate( const DispatchBase &, const double & ) const
   {
-    itkExceptionMacro( "Evaluate not implemented for spline order " << SplineOrder );
-    return 0.0;
-  }
-
-  inline void Evaluate( const DispatchBase &, const double &, double * ) const
-  {
-    itkExceptionMacro( "Evaluate not implemented for spline order " << SplineOrder );
+    itkExceptionMacro( "Evaluate not implemented for spline\
+                      order "                                                              << SplineOrder );
+    return 0.0; // This is to avoid compiler warning about missing
+    // return statement.  It should never be evaluated.
   }
 
 

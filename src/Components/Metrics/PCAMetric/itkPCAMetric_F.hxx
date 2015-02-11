@@ -495,7 +495,6 @@ namespace itk
 
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
-    DerivativeType dMTdmu;
     DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
     std::vector<NonZeroJacobianIndicesType> nzjis( G, NonZeroJacobianIndicesType() );
 
@@ -518,55 +517,64 @@ namespace itk
     DerivativeMatrixType vdSdmu_part1( eigenVectorMatrixTranspose*dSdmu_part1 );
 
     /** Second loop over fixed image samples. */
-    for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
+//#pragma omp parallel shared(vSAtmm, CSv, Sv, vdSdmu_part1, derivative, jacobian, imageJacobian, nzjis)
+{
+//    #pragma omp single nowait
     {
-        /** Read fixed coordinates. */
-        FixedImagePointType fixedPoint = SamplesOK[ pixelIndex ];
-
-        /** Transform sampled point to voxel coordinates. */
-        FixedImageContinuousIndexType voxelCoord;
-        this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
-
-        for ( unsigned int d = 0; d < G; ++d )
+        for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
+//        #pragma omp task
         {
-            /** Initialize some variables. */
-            RealType movingImageValue;
-            MovingImagePointType mappedPoint;
-            MovingImageDerivativeType movingImageDerivative;
+            /** Read fixed coordinates. */
+            FixedImagePointType fixedPoint = SamplesOK[ pixelIndex ];
 
-            /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ lastDim ] = d;
+            /** Transform sampled point to voxel coordinates. */
+            FixedImageContinuousIndexType voxelCoord;
+            this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
-            /** Transform sampled point back to world coordinates. */
-            this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-            this->TransformPoint( fixedPoint, mappedPoint );
-
-            this->EvaluateMovingImageValueAndDerivative(
-                        mappedPoint, movingImageValue, &movingImageDerivative );
-
-            /** Get the TransformJacobian dT/dmu */
-            this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
-
-            /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
-            this->EvaluateTransformJacobianInnerProduct(
-                        jacobian, movingImageDerivative, imageJacobian );
-
-            /** Store values. */
-            dMTdmu = imageJacobian;
-            /** build metric derivative components */
-            for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
+            for ( unsigned int d = 0; d < G; ++d )
             {
-                for(unsigned int z = 0; z < L; z++)
+                /** Initialize some variables. */
+                RealType movingImageValue;
+                MovingImagePointType mappedPoint;
+                MovingImageDerivativeType movingImageDerivative;
+
+
+                /** Set fixed point's last dimension to lastDimPosition. */
+                voxelCoord[ lastDim ] = d;
+
+                /** Transform sampled point back to world coordinates. */
+                this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+                this->TransformPoint( fixedPoint, mappedPoint );
+
+                this->EvaluateMovingImageValueAndDerivative(
+                            mappedPoint, movingImageValue, &movingImageDerivative );
+
+                /** Get the TransformJacobian dT/dmu */
+                this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
+
+                /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
+                this->EvaluateTransformJacobianInnerProduct(
+                            jacobian, movingImageDerivative, imageJacobian );
+
+                /** Store values. */
+                /* build metric derivative components */
+                for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
                 {
-                    derivative[ nzjis[ d ][ p ] ] += vSAtmm[ z ][ pixelIndex ] * dMTdmu[ p ] * Sv[ d ][ z ] +
-                            vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * CSv[ d ][ z ];
-                }//end loop over eigenvalues
+                    double temp = 0;
+                    for(unsigned int z = 0; z < L; z++)
+                    {
+                        temp += vSAtmm[ z ][ pixelIndex ] * imageJacobian[ p ] * Sv[ d ][ z ] +
+                                vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * imageJacobian[ p ] * CSv[ d ][ z ];
+                    }//end loop over eigenvalues
+//                    #pragma omp critical (derivative)
+                    derivative[ nzjis[ d ][ p ] ] += temp;
+                }//end loop over non-zero jacobian indices
 
-            }//end loop over non-zero jacobian indices
+            }//end loop over last dimension
 
-        }//end loop over last dimension
-
-    } // end second for loop over sample container
+        } // end second for loop over sample container
+    }
+}
 
     derivative *= -(2.0/(DerivativeValueType(N) - 1.0)); //normalize
     measure = G - sumEigenValuesUsed;

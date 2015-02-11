@@ -475,7 +475,7 @@ PCAMetric2<TFixedImage,TMovingImage>
 
     MatrixType A( datablock.extract( N, G ) );
 
-    /** Calculate mean of from columns */
+    /** Calculate mean of columns */
     vnl_vector< RealType > mean( G );
     mean.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < N; i++ )
@@ -487,7 +487,7 @@ PCAMetric2<TFixedImage,TMovingImage>
     }
     mean /= RealType(N);
 
-    /** Calculate standard deviation from columns */
+    /** Calculate standard deviation of columns */
     MatrixType Amm( N, G );
     Amm.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < N; i++ )
