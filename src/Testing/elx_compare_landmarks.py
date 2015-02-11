@@ -50,7 +50,8 @@ def main():
   # add the correct paths manually. Non-existing paths are automatically ignored.
   #
   # Make sure the first path is the elastix binary directory from this build
-  _path = os.path.join( options.directory, "..", "..", "bin" ); # bin dir
+  _path = os.path.join( options.directory, "..", "..", "bin" ); # bin dir on Linux
+  _path += os.pathsep + os.path.join( options.directory, "..", "..", "bin", "Release" ); # bin dir on Windows
   _path += os.pathsep + os.getenv('PATH');
   _path += os.pathsep + "/home/marius/install/bin";     # goliath
   _path += os.pathsep + "/elastix-nightly/install/bin"; # MacMini
