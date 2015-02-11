@@ -404,7 +404,6 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeImageSampler( void ) throw ( ExceptionObject )
 {
-    std::cout << "start intializing image sampler" << std::endl;
   if( this->GetUseImageSampler() )
   {
     /** Check if the ImageSampler is set. */
@@ -418,8 +417,6 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     this->m_ImageSampler->SetMask( this->m_FixedImageMask );
     this->m_ImageSampler->SetInputImageRegion( this->GetFixedImageRegion() );
   }
-  std::cout << "end intializing image sampler" << std::endl;
-
 
 } // end InitializeImageSampler()
 

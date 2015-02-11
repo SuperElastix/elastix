@@ -245,7 +245,7 @@ public :
     const double * derivativeWeights )
   {
     /** derivativeAndValue length must be at least dim + 1. */
-    TCoordRep derivativeAndValueNext[ Dimension + 1 ];
+    TCoordRep derivativeAndValueNext[ Dimension + 1 ]; // een te lang??
     const unsigned int helper = ( Dimension - 1 ) * ( SplineOrder + 1 );
 
     // MS: a bit more comments explaining the code, perhaps with references to the paper

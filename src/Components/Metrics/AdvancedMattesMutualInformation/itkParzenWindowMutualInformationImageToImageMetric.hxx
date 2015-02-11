@@ -627,6 +627,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   {
     this->m_ThreaderMetricParameters.st_DerivativePointer   = derivative.begin();
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0;
+
     this->m_Threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
       const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
     this->m_Threader->SingleMethodExecute();

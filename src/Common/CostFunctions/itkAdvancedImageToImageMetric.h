@@ -416,7 +416,6 @@ protected:
     MeasureType           st_Value;
     DerivativeType        st_Derivative;
   };
-
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValueAndDerivativePerThreadStruct,
    PaddedGetValueAndDerivativePerThreadStruct );
   itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedGetValueAndDerivativePerThreadStruct,
