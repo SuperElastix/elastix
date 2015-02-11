@@ -255,7 +255,7 @@ public:
   virtual void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & nzji ) const;
 
   /** Compute the inner product of the Jacobian with the moving image gradient.
    * The Jacobian is (partially) constructed inside this function, but not returned.

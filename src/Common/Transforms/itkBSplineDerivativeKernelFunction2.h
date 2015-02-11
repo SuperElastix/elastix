@@ -75,12 +75,6 @@ public:
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   /** Evaluate the function. */
-  //inline double Evaluate( const double & u ) const
-  //  {
-  //  return ( m_KernelFunction->Evaluate( u + 0.5 ) -
-  //    m_KernelFunction->Evaluate( u - 0.5 ) );
-  //  }
-  /** Evaluate the function. */
   inline double Evaluate( const double & u ) const
   {
     return this->Evaluate( Dispatch< VSplineOrder >(), u );
