@@ -75,15 +75,16 @@ public:
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   /** Evaluate the function. */
-  //inline double Evaluate( const double & u ) const
-  //  {
-  //  return ( m_KernelFunction->Evaluate( u + 0.5 ) -
-  //    m_KernelFunction->Evaluate( u - 0.5 ) );
-  //  }
-  /** Evaluate the function. */
   inline double Evaluate( const double & u ) const
   {
     return this->Evaluate( Dispatch< VSplineOrder >(), u );
+  }
+
+
+  /** Evaluate the function. */
+  inline void Evaluate( const double & u, double * weights ) const
+  {
+    return this->Evaluate( Dispatch< VSplineOrder >(), u, weights );
   }
 
 
@@ -101,8 +102,8 @@ protected:
 
 private:
 
-  BSplineDerivativeKernelFunction2( const Self & ); //purposely not implemented
-  void operator=( const Self & );                   //purposely not implemented
+  BSplineDerivativeKernelFunction2( const Self & ); // purposely not implemented
+  void operator=( const Self & );                   // purposely not implemented
 
   /** Structures to control overloaded versions of Evaluate */
   struct DispatchBase {};
@@ -110,25 +111,7 @@ private:
   struct Dispatch : DispatchBase {};
 
   /** Zeroth order spline. */
-  /**inline double Evaluate (const Dispatch<0>&, const double & u) const
-  {
-
-    double absValue = vnl_math_abs( u );
-
-    if ( absValue  < 0.5 )
-    {
-      return 1.0;
-    }
-    else if ( absValue == 0.5 )
-    {
-      return 0.5;
-    }
-    else
-    {
-      return 0.0;
-    }
-
-  }*/
+  // Derivative not defined.
 
   /** First order spline */
   inline double Evaluate( const Dispatch< 1 > &, const double & u ) const
@@ -148,7 +131,13 @@ private:
     {
       return 0.0;
     }
+  }
 
+  inline void Evaluate( const Dispatch< 1 > &, const double & u, double * weights ) const
+  {
+    // MS \todo: check
+    weights[ 0 ] = -1.0;
+    weights[ 1 ] =  1.0;
   }
 
 
@@ -169,7 +158,14 @@ private:
     {
       return 0.0;
     }
+  }
 
+  inline void Evaluate( const Dispatch< 2 > &, const double & u, double * weights ) const
+  {
+    // MS \todo: check
+    weights[ 0 ] =        u - 1.5;
+    weights[ 1 ] = -2.0 * u + 2.0;
+    weights[ 2 ] =        u - 0.5;
   }
 
 
@@ -209,17 +205,31 @@ private:
     {
       return 0.0;
     }
+  }
 
+  inline void Evaluate( const Dispatch< 3 > &, const double & u, double * weights ) const
+  {
+    const double uu = u * u;
+
+    weights[ 0 ] = -0.5 * uu + 2.0 * u - 2.0;
+    weights[ 1 ] =  1.5 * uu - 5.0 * u + 3.5;
+    weights[ 2 ] = -1.5 * uu + 4.0 * u - 2.0;
+    weights[ 3 ] =  0.5 * uu -       u + 0.5;
   }
 
 
   /** Unimplemented spline order */
   inline double Evaluate( const DispatchBase &, const double & ) const
   {
-    itkExceptionMacro( "Evaluate not implemented for spline\
-                      order "                                                              << SplineOrder );
-    return 0.0; // This is to avoid compiler warning about missing
-    // return statement.  It should never be evaluated.
+    itkExceptionMacro( "Evaluate not implemented for spline order " << SplineOrder );
+    return 0.0;
+  }
+
+
+  /** Unimplemented spline order */
+  inline void Evaluate( const DispatchBase &, const double &, double * ) const
+  {
+    itkExceptionMacro( "Evaluate not implemented for spline order " << SplineOrder );
   }
 
 
@@ -228,3 +238,4 @@ private:
 } // end namespace itk
 
 #endif
+

@@ -20,8 +20,9 @@
 
 #include "itkBSplineInterpolationWeightFunction.h"
 
-#include "itkBSplineKernelFunction.h"
+#include "itkBSplineKernelFunction2.h"
 #include "itkBSplineDerivativeKernelFunction2.h"
+#include "itkBSplineSecondOrderDerivativeKernelFunction2.h"
 
 
 namespace itk
@@ -138,10 +139,12 @@ public:
    */
   virtual void Evaluate( const ContinuousIndexType & index,
     WeightsType & weights, IndexType & startIndex ) const;
+
   void EvaluateDerivative( const ContinuousIndexType & index,
-    WeightsType & weights, IndexType & startIndex ) const;
-//   void EvaluateSecondOrderDerivative( const ContinuousIndexType & index,
-//     WeightsType & weights, IndexType & startIndex ) const;
+    WeightsType & weights, const IndexType & startIndex ) const;
+
+  void EvaluateSecondOrderDerivative( const ContinuousIndexType & index,
+    WeightsType & weights, const IndexType & startIndex ) const;
 
 protected:
   RecursiveBSplineInterpolationWeightFunction();
@@ -158,13 +161,17 @@ private:
   SizeType m_SupportSize;
 
   /** Interpolation kernel type. */
-  typedef BSplineKernelFunction< itkGetStaticConstMacro( SplineOrder ) > KernelType;
-  typedef BSplineDerivativeKernelFunction< itkGetStaticConstMacro( SplineOrder ) > DerivativeKernelType;
+  typedef BSplineKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > KernelType;
+  typedef BSplineDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > DerivativeKernelType;
+  typedef BSplineSecondOrderDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > SecondOrderDerivativeKernelType;
 
   /** Interpolation kernel. */
   typename KernelType::Pointer m_Kernel;
   typename DerivativeKernelType::Pointer m_DerivativeKernel;
+  typename SecondOrderDerivativeKernelType::Pointer m_SecondOrderDerivativeKernel;
+
 };
+
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

@@ -315,6 +315,22 @@ main( int argc, char * argv[] )
   }
   timeCollector.Stop( "SpatialJacobian recursive vector" );
 
+  /** Time the implementation of the spatial Hessian. */
+  SpatialHessianType sh, shRecursive;
+  timeCollector.Start( "SpatialHessian elastix" );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    transform->GetSpatialHessian( inputPoint, sh );
+  }
+  timeCollector.Stop( "SpatialHessian elastix" );
+
+  timeCollector.Start( "SpatialHessian recursive vector" );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    recursiveTransform->GetSpatialHessian( inputPoint, shRecursive );
+  }
+  timeCollector.Stop( "SpatialHessian recursive vector" );
+
   /** Report. */
   timeCollector.Report();
 
@@ -406,6 +422,25 @@ main( int argc, char * argv[] )
   if( sjDifference > 1e-8 )
   {
     std::cerr << "ERROR: Recursive B-spline GetSpatialJacobian() returning incorrect result." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  /** Spatial Hessian */
+  transform->GetSpatialHessian( inputPoint, sh );
+  //std::cerr << sh << std::endl;
+
+  recursiveTransform->GetSpatialHessian( inputPoint, shRecursive );
+  //std::cerr << shRecursive << std::endl;
+
+  double shDifference = 0.0;
+  for( unsigned int i = 0; i < Dimension; ++i )
+  {
+    shDifference += ( sh[ i ] - shRecursive[ i ] ).GetVnlMatrix().frobenius_norm();
+  }
+  std::cerr << "The Recursive B-spline GetSpatialHessian() difference is " << shDifference << std::endl;
+  if( shDifference > 1e-8 )
+  {
+    std::cerr << "ERROR: Recursive B-spline GetSpatialHessian() returning incorrect result." << std::endl;
     return EXIT_FAILURE;
   }
 

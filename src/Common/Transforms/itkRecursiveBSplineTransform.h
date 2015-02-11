@@ -152,6 +152,11 @@ public:
     const InputPointType & ipp,
     SpatialJacobianType & sj ) const;
 
+  /** Compute the spatial Hessian of the transformation. */
+  virtual void GetSpatialHessian(
+    const InputPointType & ipp,
+    SpatialHessianType & sh ) const;
+
 protected:
 
   RecursiveBSplineTransform();

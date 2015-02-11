@@ -170,7 +170,7 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
   this->DetermineRegionOfSupport( evaluateIndex, x );
 
   // Compute the B-spline weights
-  SetInterpolationWeights( x, evaluateIndex, weights );
+  this->SetInterpolationWeights( x, evaluateIndex, weights );
 
   // Modify evaluateIndex at the boundaries using mirror boundary conditions
   this->ApplyMirrorBoundaryConditions( evaluateIndex );

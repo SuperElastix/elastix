@@ -48,6 +48,7 @@ RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSpline
   // Initialize the interpolation kernel
   this->m_Kernel = KernelType::New();
   this->m_DerivativeKernel = DerivativeKernelType::New();
+  this->m_SecondOrderDerivativeKernel = SecondOrderDerivativeKernelType::New();
 
 } // end Constructor
 
@@ -91,26 +92,21 @@ RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSpline
  */
 
 template< typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
-void RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
+void
+RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
 ::Evaluate(
-  const ContinuousIndexType & index,
+  const ContinuousIndexType & cindex,
   WeightsType & weights,
   IndexType & startIndex ) const
 {
-  // Find the starting index of the support region
-  unsigned int k = 0;
-  for( unsigned int j = 0; j < SpaceDimension; ++j )
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    startIndex[ j ] = Math::Floor< IndexValueType >( index[ j ] - static_cast< double >( SplineOrder - 1 ) / 2.0 );
-    double x = index[ j ] - static_cast< double >( startIndex[ j ] );
-    
-    for( unsigned int l = 0; l < SplineOrder + 1; ++l )
-    {
-      weights[ k ] = this->m_Kernel->Evaluate( x );
-      x -= 1.0;
-      ++k;
-    }
+    startIndex[ i ] = Math::Floor< IndexValueType >( cindex[ i ] - static_cast< double >( SplineOrder - 1 ) / 2.0 );
+
+    double x = cindex[ i ] - static_cast< double >( startIndex[ i ] );
+    this->m_Kernel->Evaluate( x, &weights[ i * this->m_SupportSize[ i ] ] );
   }
+
 } // end Evaluate()
 
 
@@ -119,24 +115,39 @@ void RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VS
  */
 
 template< typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
-void RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
+void
+RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
 ::EvaluateDerivative(
   const ContinuousIndexType & cindex,
   WeightsType & derivativeWeights,
-  IndexType & startIndex ) const
+  const IndexType & startIndex ) const
 {
-  unsigned int j = 0;
   for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     double x = cindex[ i ] - static_cast< double >( startIndex[ i ] );
-    for( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
-    {
-      derivativeWeights[ j ] = this->m_DerivativeKernel->Evaluate( x );
-      x-= 1.0;
-      ++j;
-    }
+    this->m_DerivativeKernel->Evaluate( x, &derivativeWeights[ i * this->m_SupportSize[ i ] ] );
   }
 } // end EvaluateDerivative()
+
+
+/**
+ * ********************* EvaluateSecondOrderDerivative ****************************
+ */
+
+template< typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
+void
+RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
+::EvaluateSecondOrderDerivative(
+  const ContinuousIndexType & cindex,
+  WeightsType & hessianWeights,
+  const IndexType & startIndex ) const
+{
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    double x = cindex[ i ] - static_cast< double >( startIndex[ i ] );
+    this->m_SecondOrderDerivativeKernel->Evaluate( x, &hessianWeights[ i * this->m_SupportSize[ i ] ] );
+  }
+} // end EvaluateSecondOrderDerivative()
 
 
 } // end namespace itk
