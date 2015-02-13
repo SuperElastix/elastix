@@ -186,7 +186,7 @@ operator<<( std::basic_ostream< charT, traits > & strm,
   const std::list< std::string > extensions     = platform.GetExtensions();
   const std::size_t              extensionsSize = extensions.size();
   strm << indent << "Extensions(" << extensionsSize << "): ";
-  if( extensions.size() == 0 )
+  if( extensions.empty() )
   {
     strm << "none";
   }
