@@ -142,7 +142,7 @@ ComputeCenterOfTheImage( const typename InputImageType::ConstPointer & image )
 template< typename InterpolatorType >
 void
 DefineInterpolator( typename InterpolatorType::Pointer & interpolator,
-  const std::string interpolatorName,
+  const std::string &interpolatorName,
   const unsigned int splineOrderInterpolator )
 {
   // Interpolator typedefs
