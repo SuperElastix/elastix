@@ -107,7 +107,7 @@ OpenCLEventList::Remove( const OpenCLEvent & event )
 {
   OpenCLEventListArrayType::iterator it;
 
-  for( it = this->m_Events.begin(); it < this->m_Events.end(); it++ )
+  for( it = this->m_Events.begin(); it < this->m_Events.end(); ++it )
   {
     if( *it == event.GetEventId() )
     {
@@ -141,7 +141,7 @@ OpenCLEventList::Contains( const OpenCLEvent & event ) const
 {
   OpenCLEventListArrayType::const_iterator it;
 
-  for( it = this->m_Events.begin(); it < this->m_Events.end(); it++ )
+  for( it = this->m_Events.begin(); it < this->m_Events.end(); ++it )
   {
     if( *it == event.GetEventId() )
     {
