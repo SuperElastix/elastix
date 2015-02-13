@@ -447,7 +447,7 @@ WriteLog(
   const bool exceptionGPU,
   const unsigned int numThreads,
   const unsigned int runTimes,
-  const std::string filterName,
+  const std::string & filterName,
   const TimeProbe::TimeStampType cpuTime,
   const TimeProbe::TimeStampType gpuTime,
   const std::string & comments = "" )
