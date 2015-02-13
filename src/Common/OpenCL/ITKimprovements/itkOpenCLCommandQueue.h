@@ -56,7 +56,7 @@ public:
   typedef OpenCLCommandQueue Self;
 
   /** Constructs a null OpenCL command queue object. */
-  OpenCLCommandQueue() : m_Id( 0 ) {}
+  OpenCLCommandQueue() : m_Context( 0 ), m_Id( 0 ) {}
 
   /** Constructs an OpenCL command queue object based on the supplied
    * native OpenCL \a id, and associates it with \a context. This class
