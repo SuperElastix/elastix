@@ -151,7 +151,7 @@ operator<<( std::basic_ostream< charT, traits > & strm,
 
   std::size_t id = 0;
   strm << "OpenCLEventList contains:" << std::endl;
-  for( it = eventsArray.begin(); it < eventsArray.end(); it++ )
+  for( it = eventsArray.begin(); it < eventsArray.end(); ++it )
   {
     // const OpenCLEvent &event = *it;
     // strm << "array id: " << id << " " << event << std::endl;
