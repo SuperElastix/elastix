@@ -108,9 +108,8 @@ KNNGraphAlphaMutualInformationMetric< TElastix >
   this->m_Configuration->ReadParameter( bucketSize, "BucketSize", level, true );
 
   /** Get the splitting rule for all trees. */
-  bool        returnValue   = false;
   std::string splittingRule = "ANN_KD_SL_MIDPT";
-  returnValue = this->m_Configuration->ReadParameter(
+  bool returnValue = this->m_Configuration->ReadParameter(
     splittingRule, "SplittingRule", 0, silentSplit );
   this->m_Configuration->ReadParameter(
     splittingRule, "SplittingRule", level, true );
@@ -137,7 +136,6 @@ KNNGraphAlphaMutualInformationMetric< TElastix >
     jointSplittingRule, "JointSplittingRule", level, true );
 
   /** Get the shrinking rule for all trees. */
-  returnValue = false;
   std::string shrinkingRule = "ANN_BD_SIMPLE";
   returnValue = this->m_Configuration->ReadParameter(
     shrinkingRule, "ShrinkingRule", 0, silentShrink );

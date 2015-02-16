@@ -25,6 +25,18 @@ namespace elastix
 {
 
 /**
+ * ******************* Constructor *******************
+ */
+
+template< class TElastix >
+MissingStructurePenalty< TElastix >
+::MissingStructurePenalty()
+{
+  this->m_NumberOfMeshes = 0;
+}
+
+
+/**
  * ******************* Initialize ***********************
  */
 

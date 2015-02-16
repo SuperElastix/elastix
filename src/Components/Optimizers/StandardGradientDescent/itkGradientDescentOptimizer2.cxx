@@ -45,6 +45,7 @@ GradientDescentOptimizer2
 {
   itkDebugMacro( "Constructor" );
 
+  this->m_Stop               = false;
   this->m_LearningRate       = 1.0;
   this->m_NumberOfIterations = 100;
   this->m_CurrentIteration   = 0;

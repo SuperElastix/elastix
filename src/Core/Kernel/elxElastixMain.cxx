@@ -878,8 +878,7 @@ void
 ElastixMain::SetProcessPriority( void ) const
 {
   /** If wanted, set the priority of this process high or below normal. */
-  std::string processPriority = "";
-  processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
+  std::string processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
   if( processPriority == "high" )
   {
     #if defined( _WIN32 ) && !defined( __CYGWIN__ )
@@ -927,8 +926,7 @@ void
 ElastixMain::SetMaximumNumberOfThreads( void ) const
 {
   /** Get the number of threads from the command line. */
-  std::string maximumNumberOfThreadsString = "";
-  maximumNumberOfThreadsString
+  std::string maximumNumberOfThreadsString
     = this->m_Configuration->GetCommandLineArgument( "-threads" );
 
   /** If supplied, set the maximum number of threads. */

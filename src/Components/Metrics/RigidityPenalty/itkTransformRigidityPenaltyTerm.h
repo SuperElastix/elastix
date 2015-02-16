@@ -311,11 +311,11 @@ private:
   virtual void DilateRigidityImages( void );
 
   /** Private function used for the filtering. It creates 1D separable operators F. */
-  void Create1DOperator( NeighborhoodType & F, const std::string WhichF,
+  void Create1DOperator( NeighborhoodType & F, const std::string & whichF,
     const unsigned int WhichDimension, const CoefficientImageSpacingType & spacing ) const;
 
   /** Private function used for the filtering. It creates ND inseparable operators F. */
-  void CreateNDOperator( NeighborhoodType & F, const std::string WhichF,
+  void CreateNDOperator( NeighborhoodType & F, const std::string & whichF,
     const CoefficientImageSpacingType & spacing ) const;
 
   /** Private function used for the filtering. It performs 1D separable filtering. */

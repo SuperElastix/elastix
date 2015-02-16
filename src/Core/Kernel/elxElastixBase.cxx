@@ -152,7 +152,6 @@ ElastixBase::BeforeAllBase( void )
    * This check has already been performed in elastix.cxx,
    * Here we do it again. MS: WHY?
    */
-  check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
   if( check == "" )
   {
@@ -189,7 +188,6 @@ ElastixBase::BeforeAllBase( void )
   bool         loop = true;
   while( loop )
   {
-    check = "";
     std::ostringstream tempPname( "" );
     tempPname << "-p(" << i << ")";
     check = this->GetConfiguration()->GetCommandLineArgument( tempPname.str().c_str() );
@@ -200,7 +198,6 @@ ElastixBase::BeforeAllBase( void )
 
   /** Check for appearance of "-priority", if this is a Windows station. */
 #ifdef _WIN32
-  check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-priority" );
   if( check == "" )
   {
@@ -213,7 +210,6 @@ ElastixBase::BeforeAllBase( void )
 #endif
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
-  check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
   if( check == "" )
   {
@@ -273,7 +269,6 @@ ElastixBase::BeforeAllTransformixBase( void )
 
   /** Check Command line options and print them to the logfile. */
   elxout << "Command line options from ElastixBase:" << std::endl;
-  std::string check = "";
 #ifndef _ELASTIX_BUILD_LIBRARY
   /** Read the input image filenames. These are not obliged options,
    * so do not print an error if they are not present.
@@ -289,7 +284,7 @@ ElastixBase::BeforeAllTransformixBase( void )
   }
 #endif
   /** Check for appearance of "-out". */
-  check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
+  std::string check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
   if( check == "" )
   {
     xl::xout[ "error" ] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
@@ -308,7 +303,6 @@ ElastixBase::BeforeAllTransformixBase( void )
   }
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
-  check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
   if( check == "" )
   {
@@ -382,14 +376,12 @@ ElastixBase::GenerateFileNameContainer(
   bool printerrors, bool printinfo ) const
 {
   FileNameContainerPointer fileNameContainer = FileNameContainerType::New();
-  std::string              check             = "";
-  std::string              argused( "" );
 
   /** Try optionkey0. */
   std::ostringstream argusedss( "" );
   argusedss << optionkey << 0;
-  argused = argusedss.str();
-  check   = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
+  std::string argused = argusedss.str();
+  std::string check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
   if( check == "" )
   {
     /** Try optionkey. */

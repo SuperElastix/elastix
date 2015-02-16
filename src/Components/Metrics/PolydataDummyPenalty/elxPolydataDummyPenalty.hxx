@@ -24,6 +24,18 @@ namespace elastix
 {
 
 /**
+ * ******************* Constructor *******************
+ */
+
+template< class TElastix >
+PolydataDummyPenalty<TElastix>
+::PolydataDummyPenalty()
+{
+  this->m_NumberOfMeshes = 0;
+}
+
+
+/**
  * ******************* Initialize ***********************
  */
 

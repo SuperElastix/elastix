@@ -147,8 +147,7 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
   }
 
   /** Test if not by chance we are already converged */
-  bool convergence = false;
-  convergence = this->TestConvergence( false );
+  bool convergence = this->TestConvergence( false );
   if( convergence )
   {
     this->StopOptimization();
@@ -224,8 +223,7 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
       limitCount = 0;
     }
 
-    /** Test if convergence has occured in some other sense */
-    convergence = false;
+    /** Test if convergence has occurred in some other sense */
     convergence = this->TestConvergence( true );
     if( convergence )
     {

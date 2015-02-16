@@ -368,7 +368,7 @@ ParameterFileParser
   std::string::const_iterator it;
   unsigned int                index = 0;
   numQuotes = 0;
-  for( it = line.begin(); it < line.end(); it++ )
+  for( it = line.begin(); it < line.end(); ++it )
   {
     if( *it == '"' )
     {

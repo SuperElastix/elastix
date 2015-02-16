@@ -181,7 +181,7 @@ public:
 protected:
 
   /** The constructor. */
-  MissingStructurePenalty(){}
+  MissingStructurePenalty();
   /** The destructor. */
   virtual ~MissingStructurePenalty() {}
 

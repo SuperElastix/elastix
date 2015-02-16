@@ -36,6 +36,7 @@ RSGDEachParameterApartBaseOptimizer
 
   itkDebugMacro( "Constructor" );
 
+  m_Stop                       = false;
   m_MaximumStepLength          = 1.0;
   m_MinimumStepLength          = 1e-3;
   m_GradientMagnitudeTolerance = 1e-4;
