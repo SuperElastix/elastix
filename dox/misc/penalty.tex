@@ -465,12 +465,14 @@ which inherits from the \texttt{itk::ImageToImage\-Metric}. The
 \texttt{GetValue()}-method is implemented like:
 \begin{quote}
 \begin{verbatim}
-SpatialHessianType spatialHessian; for all samples
+SpatialHessianType spatialHessian;
+for all samples
   this->GetTransform()->GetSpatialHessian( sample, spatialHessian );
   for all k, l, m
     measure += spatialHessian[ k ][ l ][ m ]^2;
   end
-end measure /= this->m_NumberOfPixelsCounted;
+end
+measure /= this->m_NumberOfPixelsCounted;
 \end{verbatim}
 \end{quote}
 
@@ -483,8 +485,9 @@ For the \texttt{GetValueAndDerivative()} we have:
 which is implemented like:
 \begin{quote}
 \begin{verbatim}
-SpatialHessianType spatialHessian; JacobianOfSpatialHessianType
-jacobianOfSpatialHessian; for all samples
+SpatialHessianType spatialHessian;
+JacobianOfSpatialHessianType jacobianOfSpatialHessian;
+for all samples
   this->GetTransform()->GetSpatialHessian( sample, spatialHessian );
   this->GetTransform()->GetJacobianOfSpatialHessian( sample,
     jacobianOfSpatialHessian, nonZeroJacobianIndices );
@@ -493,7 +496,8 @@ jacobianOfSpatialHessian; for all samples
       * spatialHessian[ k ][ i ][ j ]
       * jacobianOfSpatialHessian[ mu ][ k ][ i ][ j ];
   end
-end derivative /= this->m_NumberOfPixelsCounted;
+end
+derivative /= this->m_NumberOfPixelsCounted;
 \end{verbatim}
 \end{quote}
 
