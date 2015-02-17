@@ -21,6 +21,12 @@ from optparse import OptionParser
 # indicated, see options.
 #
 # The script should be executed from the src directory
+#
+# \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+# Department of Radiology, Leiden, The Netherlands
+#
+# \note This work was funded by the Netherlands Organisation for
+# Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
 
 def main():
   # usage, parse parameters
