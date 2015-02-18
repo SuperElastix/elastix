@@ -19,7 +19,7 @@
 #define PCAMetric_ss_H_
 
 #include "elxIncludes.h"
-#include "itkPCAMetric_F_ss.h"
+#include "itkPCAMetric_ss_F_multithreaded.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkStackTransform.h"
 

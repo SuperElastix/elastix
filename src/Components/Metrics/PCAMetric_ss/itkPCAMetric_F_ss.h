@@ -51,8 +51,6 @@ public:
   itkTypeMacro( PCAMetric_ss, AdvancedImageToImageMetric );
 
   /** Set functions. */
-  itkSetMacro( NumAdditionalSamplesFixed, unsigned int );
-  itkSetMacro( ReducedDimensionIndex, unsigned int );
   itkSetMacro( GridSize, FixedImageSizeType );
   itkSetMacro( TransformIsStackTransform, bool );
   itkSetMacro( NumEigenValues, unsigned int );
@@ -162,10 +160,6 @@ private:
 
   /** Sample n random numbers from 0..m and add them to the vector. */
   void SampleRandom (const int n, const int m, std::vector<int> & numbers) const;
-
-  /** Variables to control random sampling in last dimension. */
-  unsigned int m_NumAdditionalSamplesFixed;
-  unsigned int m_ReducedDimensionIndex;
 
   /** GridSize of B-spline transform. */
   FixedImageSizeType m_GridSize;

@@ -582,10 +582,7 @@ PCAMetric_ss<TFixedImage,TMovingImage>
     } // end second for loop over sample container
 
     derivative *= -(2.0/(DerivativeValueType(N) - 1.0)); //normalize
-    measure = G - sumEigenValuesUsed;
-
-    /** Return the measure value. */
-    value = measure;
+    value = G - sumEigenValuesUsed;
 
 } // end GetValueAndDerivative()
 
