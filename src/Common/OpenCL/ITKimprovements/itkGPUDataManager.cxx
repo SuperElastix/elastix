@@ -103,8 +103,6 @@ GPUDataManager::Allocate()
     m_Context->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
     m_IsGPUBufferDirty = true;
   }
-
-  //this->UpdateGPUBuffer();
 }
 
 
@@ -263,35 +261,6 @@ GPUDataManager::Update()
 
 
 //------------------------------------------------------------------------------
-/**
-* NOTE: each device has a command queue. Therefore, changing command queue
-*       means change a compute device.
-*/
-//void GPUDataManager::SetCurrentCommandQueue(int queueid)
-//{
-//  if ( queueid >= 0 && queueid <
-// (int)m_ContextManager->GetNumberOfCommandQueues() )
-//    {
-//    this->UpdateCPUBuffer();
-//
-//    // Assumption: different command queue is assigned to different device
-//    m_CommandQueueId = queueid;
-//
-//    m_IsGPUBufferDirty = true;
-//    }
-//  else
-//    {
-//    itkWarningMacro("Not a valid command queue id");
-//    }
-//}
-
-//------------------------------------------------------------------------------
-//int GPUDataManager::GetCurrentCommandQueueId()
-//{
-//  return m_CommandQueueId;
-//}
-
-//------------------------------------------------------------------------------
 void
 GPUDataManager::Graft( const GPUDataManager * data )
 {
@@ -319,9 +288,6 @@ GPUDataManager::Graft( const GPUDataManager * data )
     m_GPUBuffer = data->m_GPUBuffer;
     m_CPUBuffer = data->m_CPUBuffer;
 
-    // m_Platform  = data->m_Platform;
-    // m_Context   = data->m_Context;
-
     m_IsCPUBufferDirty = data->m_IsCPUBufferDirty;
     m_IsGPUBufferDirty = data->m_IsGPUBufferDirty;
   }
@@ -332,11 +298,6 @@ GPUDataManager::Graft( const GPUDataManager * data )
 void
 GPUDataManager::Initialize()
 {
-  //if ( m_ContextManager->GetNumberOfCommandQueues() > 0 )
-  //  {
-  //  m_CommandQueueId = 0; // default command queue
-  //  }
-
   if( m_GPUBuffer )  // Release GPU memory if exists
   {
 #if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )

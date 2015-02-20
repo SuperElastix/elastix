@@ -55,17 +55,6 @@ GPUInPlaceImageFilter< TInputImage, TOutputImage, TParentImageFilter >
 ::ReleaseInputs()
 {
   CPUSuperclass::ReleaseInputs();
-  /*
-  if( this->GetGPUEnabled() )
-  {
-  // do something
-  std::cout << "ToDo: GPUInPlaceImageFilter::ReleaseInputs()" << std::endl;
-  }
-  else
-  {
-  CPUSuperclass::ReleaseInputs();
-  }
-  */
 }
 
 

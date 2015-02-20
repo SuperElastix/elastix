@@ -121,7 +121,6 @@ GPUImage< TPixel, VImageDimension >
 ::Modified( void ) const
 {
   Superclass::Modified();
-  //m_DataManager->SetGPUBufferDirty();
 }
 
 
@@ -164,10 +163,6 @@ TPixel &
 GPUImage< TPixel, VImageDimension >
 ::GetPixel( const IndexType & index )
 {
-  /* Original version - very conservative
-  m_DataManager->SetGPUBufferDirty();
-  return Superclass::GetPixel( index );
-  */
   m_DataManager->UpdateCPUBuffer();
   return Superclass::GetPixel( index );
 }
@@ -179,13 +174,8 @@ TPixel &
 GPUImage< TPixel, VImageDimension >
 ::operator[]( const IndexType & index )
 {
-  /* Original version - very conservative
-  m_DataManager->SetGPUBufferDirty();
-  return Superclass::operator[]( index );
-  */
   m_DataManager->UpdateCPUBuffer();
   return Superclass::operator[]( index );
-
 }
 
 
@@ -197,7 +187,6 @@ GPUImage< TPixel, VImageDimension >
 {
   m_DataManager->UpdateCPUBuffer();
   return Superclass::operator[]( index );
-
 }
 
 
@@ -251,14 +240,6 @@ TPixel *
 GPUImage< TPixel, VImageDimension >
 ::GetBufferPointer( void )
 {
-  /* Original version - very conservative
-   * Always set GPU dirty (even though pixel values are not modified)
-  m_DataManager->SetGPUBufferDirty();
-  return Superclass::GetBufferPointer();
-  */
-
-  /* less conservative version - if you modify pixel value using
-   * this pointer then you must set the image as modified manually!!! */
   m_DataManager->UpdateCPUBuffer();
   return Superclass::GetBufferPointer();
 }
@@ -286,8 +267,6 @@ GPUImage< TPixel, VImageDimension >
   typedef typename GPUImageDataSuperclass::Pointer             GPUImageDataSuperclassPointer;
 
   return static_cast< GPUImageDataSuperclassPointer >( m_DataManager.GetPointer() );
-
-  //return m_GPUManager.GetPointer();
 }
 
 

@@ -128,10 +128,6 @@ public:
 
   void Allocate();
 
-  //void SetCurrentCommandQueue(int queueid);
-
-  //int  GetCurrentCommandQueueId();
-
   /** Synchronize CPU and GPU buffers (using dirty flags) */
   bool Update();
 

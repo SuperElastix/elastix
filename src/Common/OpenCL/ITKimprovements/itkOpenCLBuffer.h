@@ -97,7 +97,7 @@ public:
    * \sa WriteAsync(), Read(), ReadAsync() */
   bool Write( const void * data, const std::size_t size, const std::size_t offset = 0 );
 
-  /* Asynchronous version of the Write() method.
+  /** Asynchronous version of the Write() method.
    * This function will queue the request and return immediately. Returns an
    * OpenCLEvent object that can be used to wait for the request to finish.
    * The request will not start until all of the events in \a event_list

@@ -90,8 +90,7 @@ GPUImageDataManager< ImageType >::UpdateCPUBuffer()
 #endif
 
       m_Context->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
-      //m_ContextManager->OpenCLProfile(clEvent, "clEnqueueReadBuffer
-      // GPU->CPU");
+      //m_ContextManager->OpenCLProfile(clEvent, "clEnqueueReadBuffer GPU->CPU");
 
       m_Image->Modified();
       this->SetTimeStamp( m_Image->GetTimeStamp() );
@@ -145,8 +144,7 @@ GPUImageDataManager< ImageType >::UpdateGPUBuffer()
         m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, NULL );
 #endif
       m_Context->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
-      //m_ContextManager->OpenCLProfile(clEvent, "clEnqueueWriteBuffer
-      // CPU->GPU");
+      //m_ContextManager->OpenCLProfile(clEvent, "clEnqueueWriteBuffer CPU->GPU");
 
       this->SetTimeStamp( cpu_time_stamp );
 

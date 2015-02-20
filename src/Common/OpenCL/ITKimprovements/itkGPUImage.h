@@ -147,7 +147,6 @@ public:
   NeighborhoodAccessorFunctorType GetNeighborhoodAccessor( void )
   {
     m_DataManager->SetGPUBufferDirty();
-    //return Superclass::GetNeighborhoodAccessor();
     return NeighborhoodAccessorFunctorType();
   }
 
@@ -156,7 +155,6 @@ public:
   const NeighborhoodAccessorFunctorType GetNeighborhoodAccessor( void ) const
   {
     m_DataManager->UpdateCPUBuffer();
-    //return Superclass::GetNeighborhoodAccessor();
     return NeighborhoodAccessorFunctorType();
   }
 
