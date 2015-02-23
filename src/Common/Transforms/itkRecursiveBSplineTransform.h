@@ -116,7 +116,7 @@ public:
   typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
 
   typedef itk::RecursiveBSplineInterpolationWeightFunction<
-    TScalarType, NDimensions, VSplineOrder >                      RecursiveBSplineWeightFunctionType;//TODO: get rid of this and use the kernels directly. 
+    TScalarType, NDimensions, VSplineOrder >                      RecursiveBSplineWeightFunctionType;//TODO: get rid of this and use the kernels directly.
 /** Interpolation kernel type. */
   typedef BSplineKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > KernelType;
   typedef BSplineDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > DerivativeKernelType;

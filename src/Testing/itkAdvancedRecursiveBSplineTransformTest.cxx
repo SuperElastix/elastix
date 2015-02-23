@@ -114,16 +114,16 @@ main( int argc, char * argv[] )
   int dimsInPar1;
   input >> dimsInPar1;
   if (dimsInPar1 != Dimension ) {
-	  std::cerr << "ERROR: The file containing the parameters specifies " << dimsInPar1 
-		      << " dimensions, while this test is compiled for " << Dimension 
+    std::cerr << "ERROR: The file containing the parameters specifies " << dimsInPar1
+          << " dimensions, while this test is compiled for " << Dimension
               << "dimensions." << std::endl;
-	  return 1;
+    return 1;
   }
 
   SizeType gridSize;
   for (unsigned int i = 0; i < Dimension ; ++i  ) {
-	  input >> gridSize[ i ] ;
-	  std::cerr << "Gridsize dimension " << i << " = " << gridSize[ i ]  << std::endl;
+    input >> gridSize[ i ] ;
+    std::cerr << "Gridsize dimension " << i << " = " << gridSize[ i ]  << std::endl;
   }
   //gridSize[ 0 ] = 44; gridSize[ 1 ] = 43; gridSize[ 2 ] = 35;
   //gridSize[ 0 ] = 68; gridSize[ 1 ] = 69; gridSize[ 2 ] = 64;
@@ -170,7 +170,7 @@ main( int argc, char * argv[] )
   /** Now read the parameters as defined in the file par.txt. */
   std::cerr << "Loading parameters from file 1";
   ParametersType parameters( transform->GetNumberOfParameters() );
-  
+
   for( unsigned int i = 0; i < parameters.GetSize(); ++i )
   {
     input >> parameters[ i ];
@@ -190,25 +190,25 @@ main( int argc, char * argv[] )
   int dimsInPar2;
   input2 >> dimsInPar2;
   if (dimsInPar2 != Dimension ) {
-	  std::cerr << "ERROR: The second file containing the parameters specifies " << dimsInPar2 
-		      << " dimensions, while this test is compiled for " << Dimension 
+    std::cerr << "ERROR: The second file containing the parameters specifies " << dimsInPar2
+          << " dimensions, while this test is compiled for " << Dimension
               << "dimensions." << std::endl;
-	  return 1;
+    return 1;
   }
 
   for (unsigned int i = 0; i < Dimension ; ++i  ) {
-	  int temp;
-	  input2 >> temp;
-	  if (temp != gridSize[ i ]  ) {
-		  std::cerr << "ERROR: The second file containing the parameters differs in gridsize from the first file." << std::endl;
-		  return 1;
-	  }
+    int temp;
+    input2 >> temp;
+    if (temp != gridSize[ i ]  ) {
+      std::cerr << "ERROR: The second file containing the parameters differs in gridsize from the first file." << std::endl;
+      return 1;
+    }
   }
   for( unsigned int i = 0; i < parameters2.GetSize(); ++i )
   {
     input2 >> parameters2[ i ];
   }
-#ifdef RECURSIVEVERSION3  
+#ifdef RECURSIVEVERSION3
   recursiveTransform->SetParameters( parameters2 );
 #else
   recursiveTransform->SetParameters( parameters );
@@ -286,7 +286,7 @@ main( int argc, char * argv[] )
   indices.SetSize( dummyNum );
   weights2.SetSize( dummyNum );
   indices2.SetSize( dummyNum );
-  
+
   bool isInside = true;
 
   // Generate a list of random points
@@ -414,7 +414,7 @@ main( int argc, char * argv[] )
     opp1 = transformedPointList1[i]; //transform->TransformPoint( pointList[ i ] );
     opp2 = transformedPointList2[i]; //recursiveTransform->TransformPointOld( pointList[ i ] );
     opp3 = transformedPointList3[i]; //recursiveTransform->TransformPoint( pointList[ i ] );
-	opp4 = transformedPointList4[i]; // recursiveTransform->TransformPoints
+  opp4 = transformedPointList4[i]; // recursiveTransform->TransformPoints
 
     for( unsigned int j = 0; j < Dimension; ++j )
     {
@@ -513,7 +513,7 @@ main( int argc, char * argv[] )
 
   /** Exercise PrintSelf(). */
   recursiveTransform->Print( std::cerr );
-  
+
   /** Return a value. */
   return 0;
 

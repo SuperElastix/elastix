@@ -519,9 +519,9 @@ public:
  * Compared to the RecursiveBSplineTransformImplementation class, this
  * class works as a vector operator, and is therefore also templated
  * over the OutputDimension.
- * Compared to RecursiveBSplineTransformImplementation2, the OutputDimension 
+ * Compared to RecursiveBSplineTransformImplementation2, the OutputDimension
  * coefficients in a voxel are now adjacent in memory instead of being individually referenced through mu.
- * 
+ *
  *
  * \ingroup ITKTransform
  */
@@ -561,9 +561,9 @@ public:
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
         tmp_opp[ j ] = 0.0;
-        
+
       }
-	  tmp_mu = mu + steps[ k + HelperConstVariable ];
+    tmp_mu = mu + steps[ k + HelperConstVariable ];
       RecursiveBSplineTransformImplementation3< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar , doPrefetch >
         ::TransformPoint( tmp_opp, tmp_mu, steps, weights1D );
       for( unsigned int j = 0; j < OutputDimension; ++j )
@@ -581,11 +581,11 @@ public:
     const double * weights1D )
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
-	  if ( doPrefetch && SpaceDimension==2 ) {
-		 _mm_prefetch( (const char *) mu , _MM_HINT_T0);//_MM_HINT_NTA
-		 _mm_prefetch( ((const char *) (mu))  + 64 , _MM_HINT_T0);// one cacheline ahead
-		 _mm_prefetch( ((const char *) (mu + OutputDimension*(SplineOrder+1)-1))   , _MM_HINT_T0); // last element needed.
-	  }
+    if ( doPrefetch && SpaceDimension==2 ) {
+     _mm_prefetch( (const char *) mu , _MM_HINT_T0);//_MM_HINT_NTA
+     _mm_prefetch( ((const char *) (mu))  + 64 , _MM_HINT_T0);// one cacheline ahead
+     _mm_prefetch( ((const char *) (mu + OutputDimension*(SplineOrder+1)-1))   , _MM_HINT_T0); // last element needed.
+    }
     ScalarType * tmp_mu;
     tmp_mu = mu;
 
@@ -600,11 +600,11 @@ public:
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       if (doPrefetch && (SpaceDimension==2)  && (k<SplineOrder)) { // with test for SplineOrder seems to have better performance (due to less unnececary caching). Branch seems to be predicted perfectly (does not seem to have a penalty)
-		  _mm_prefetch( (const char *) (tmp_mu+bot*OutputDimension) , _MM_HINT_T0); //_MM_HINT_NTA
-		  _mm_prefetch( ((const char *) (tmp_mu+bot*OutputDimension))  +64 , _MM_HINT_T0); // one cacheline ahead
-		  _mm_prefetch( ((const char *) (tmp_mu+bot*OutputDimension + OutputDimension*(SplineOrder+1)-1))   , _MM_HINT_T0); // last element needed.
-	  }
-	  RecursiveBSplineTransformImplementation3< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar, doPrefetch >
+      _mm_prefetch( (const char *) (tmp_mu+bot*OutputDimension) , _MM_HINT_T0); //_MM_HINT_NTA
+      _mm_prefetch( ((const char *) (tmp_mu+bot*OutputDimension))  +64 , _MM_HINT_T0); // one cacheline ahead
+      _mm_prefetch( ((const char *) (tmp_mu+bot*OutputDimension + OutputDimension*(SplineOrder+1)-1))   , _MM_HINT_T0); // last element needed.
+    }
+    RecursiveBSplineTransformImplementation3< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar, doPrefetch >
         ::TransformPoint2( tmp_opp, tmp_mu, gridOffsetTable, weights1D );
 
       // Multiply by the weights
@@ -676,12 +676,12 @@ public:
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     if ( SpaceDimension==2 ) {
-		// prefetch in dimension 2 since in the first dimension the points are next to each other in memory. 
-		// Prefetch as early as possible in this function
-		 _mm_prefetch( (const char *) mu , _MM_HINT_T0);//_MM_HINT_NTA
-		 _mm_prefetch( ((const char *) (mu))  + 64 , _MM_HINT_T0);
-	}
-	ScalarType * tmp_mu;
+    // prefetch in dimension 2 since in the first dimension the points are next to each other in memory.
+    // Prefetch as early as possible in this function
+     _mm_prefetch( (const char *) mu , _MM_HINT_T0);//_MM_HINT_NTA
+     _mm_prefetch( ((const char *) (mu))  + 64 , _MM_HINT_T0);
+  }
+  ScalarType * tmp_mu;
     tmp_mu = mu;
 
     /** Create a temporary sj and initialize the original. */
@@ -694,14 +694,14 @@ public:
     OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-	  if (doPrefetch && (SpaceDimension==2) && (k<SplineOrder)) {
-		  // prefetch in dimension 2 since in the first dimension the points are next to each other in memory. 
-		  // prefetch next line to allow sufficient time to actually fetch that data. 
-		  // assume that the k<SplineOrder test is either optimized away or perfectly predicted by the CPU's branch predictor (since loop length typically is <=4) 
-		  _mm_prefetch( (const char *) (tmp_mu+bot*OutputDimension) , _MM_HINT_T0); //_MM_HINT_NTA
-		  _mm_prefetch( ((const char *) (tmp_mu+bot*OutputDimension))  +64 , _MM_HINT_T0);
-	  }
-	  RecursiveBSplineTransformImplementation3< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar, doPrefetch >
+    if (doPrefetch && (SpaceDimension==2) && (k<SplineOrder)) {
+      // prefetch in dimension 2 since in the first dimension the points are next to each other in memory.
+      // prefetch next line to allow sufficient time to actually fetch that data.
+      // assume that the k<SplineOrder test is either optimized away or perfectly predicted by the CPU's branch predictor (since loop length typically is <=4)
+      _mm_prefetch( (const char *) (tmp_mu+bot*OutputDimension) , _MM_HINT_T0); //_MM_HINT_NTA
+      _mm_prefetch( ((const char *) (tmp_mu+bot*OutputDimension))  +64 , _MM_HINT_T0);
+    }
+    RecursiveBSplineTransformImplementation3< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar, doPrefetch >
         ::GetSpatialJacobian( tmp_sj, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D );
 
       // Multiply by the weights
@@ -736,11 +736,11 @@ public:
     const double * hessianWeights1D )   // 2nd derivative of B-spline
   {
    if ( SpaceDimension==2 ) {
-		// prefetch in dimension 2 since in the first dimension the points are next to each other in memory. 
-		// Prefetch as early as possible in this function
-		 _mm_prefetch( (const char *) mu , _MM_HINT_T0);//_MM_HINT_NTA
-		 _mm_prefetch( ((const char *) (mu))  + 64 , _MM_HINT_T0);
-	}
+    // prefetch in dimension 2 since in the first dimension the points are next to each other in memory.
+    // Prefetch as early as possible in this function
+     _mm_prefetch( (const char *) mu , _MM_HINT_T0);//_MM_HINT_NTA
+     _mm_prefetch( ((const char *) (mu))  + 64 , _MM_HINT_T0);
+  }
     const unsigned int helperDim1 = OutputDimension * SpaceDimension * ( SpaceDimension + 1 ) / 2;
     const unsigned int helperDim2 = OutputDimension * ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2;
 
@@ -759,13 +759,13 @@ public:
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       if (doPrefetch && (SpaceDimension==2) && (k<SplineOrder)) {
-		  // prefetch in dimension 2 since in the first dimension the points are next to each other in memory. 
-		  // prefetch next line to allow sufficient time to actually fetch that data. 
-		  // assume that the k<SplineOrder test is either optimized away or perfectly predicted by the CPU's branch predictor (since loop length typically is <=4) 
-		  _mm_prefetch( (const char *) (tmp_mu+bot*OutputDimension) , _MM_HINT_T0); //_MM_HINT_NTA
-		  _mm_prefetch( ((const char *) (tmp_mu+bot*OutputDimension))  +64 , _MM_HINT_T0);
-	  }
-	  RecursiveBSplineTransformImplementation3< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar, doPrefetch >
+      // prefetch in dimension 2 since in the first dimension the points are next to each other in memory.
+      // prefetch next line to allow sufficient time to actually fetch that data.
+      // assume that the k<SplineOrder test is either optimized away or perfectly predicted by the CPU's branch predictor (since loop length typically is <=4)
+      _mm_prefetch( (const char *) (tmp_mu+bot*OutputDimension) , _MM_HINT_T0); //_MM_HINT_NTA
+      _mm_prefetch( ((const char *) (tmp_mu+bot*OutputDimension))  +64 , _MM_HINT_T0);
+    }
+    RecursiveBSplineTransformImplementation3< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar, doPrefetch >
         ::GetSpatialHessian( tmp_sh, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D , hessianWeights1D );
 
       // Multiply by the weights
@@ -933,8 +933,8 @@ public:
  *  Contains heavy optimizations. IMPORTANT: assumes gridOffsetTable[0]==1
  *
  * NOTE this version demonstrates that it inconvenient to put all RecursiveBSplineTransformImplementation methods in a single class.
- * For some methods we don't do (/can do/want to do) optimizations, but now we still have to copy all code. 
- * Therefore, I (D Poot) think it actually would be better to split RecursiveBSplineTransformImplementation either per method or 
+ * For some methods we don't do (/can do/want to do) optimizations, but now we still have to copy all code.
+ * Therefore, I (D Poot) think it actually would be better to split RecursiveBSplineTransformImplementation either per method or
  * into groups of similar methods:
  *  - TransformPoint, GetSpatialJacobian, GetSpatialHessian
  *  - GetJacobian, ComputeNonZeroJacobianIndices, (EvaluateJacobianWithImageGradientProduct?)
@@ -979,9 +979,9 @@ public:
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
         tmp_opp[ j ] = 0.0;
-        
+
       }
-	  tmp_mu = mu + steps[ k + HelperConstVariable ];
+    tmp_mu = mu + steps[ k + HelperConstVariable ];
       RecursiveBSplineTransformImplementation3< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar, doPrefetch >
         ::TransformPoint( tmp_opp, tmp_mu, steps, weights1D );
       for( unsigned int j = 0; j < OutputDimension; ++j )
@@ -1000,26 +1000,26 @@ public:
   {
     typedef __m128d vT;
 
-	vT weights01 = _mm_loadu_pd( & weights1D[ 0 + HelperConstVariable ] );
-	vT weights23 = _mm_loadu_pd( & weights1D[ 2 + HelperConstVariable ] );
+  vT weights01 = _mm_loadu_pd( & weights1D[ 0 + HelperConstVariable ] );
+  vT weights23 = _mm_loadu_pd( & weights1D[ 2 + HelperConstVariable ] );
 
-	vT mu01 = _mm_loadu_pd( mu     );
-	vT mu23 = _mm_loadu_pd( mu + 2 );
-	vT mu45 = _mm_loadu_pd( mu + 4 );
-	vT mu67 = _mm_loadu_pd( mu + 6 );
-	vT mu89 = _mm_loadu_pd( mu + 8 );
-	vT muAB = _mm_loadu_pd( mu +10 );
+  vT mu01 = _mm_loadu_pd( mu     );
+  vT mu23 = _mm_loadu_pd( mu + 2 );
+  vT mu45 = _mm_loadu_pd( mu + 4 );
+  vT mu67 = _mm_loadu_pd( mu + 6 );
+  vT mu89 = _mm_loadu_pd( mu + 8 );
+  vT muAB = _mm_loadu_pd( mu +10 );
 
-	vT res20 = _mm_add_pd( _mm_mul_pd(weights01,mu23) , _mm_mul_pd(weights23,mu89) );
-	vT weights0 = _mm_unpacklo_pd(weights01, weights01);
-	vT weights1 = _mm_unpackhi_pd(weights01, weights01);
-	vT weights2 = _mm_unpacklo_pd(weights23, weights23);
-	vT weights3 = _mm_unpackhi_pd(weights23, weights23);
-	vT res01    = _mm_add_pd( _mm_mul_pd( weights0 , mu01), _mm_mul_pd( weights2, mu67 ) ); 
-	vT res12    = _mm_add_pd( _mm_mul_pd( weights1 , mu45), _mm_mul_pd( weights3, muAB ) );
-	res01 = _mm_add_pd( res01, _mm_shuffle_pd( res20, res12, _MM_SHUFFLE2(0, 1) ) );
-	_mm_storeu_pd( opp , res01);
-	opp[2] = _mm_cvtsd_f64( _mm_add_sd( res20, _mm_unpackhi_pd( res12, res12 ) ) );
+  vT res20 = _mm_add_pd( _mm_mul_pd(weights01,mu23) , _mm_mul_pd(weights23,mu89) );
+  vT weights0 = _mm_unpacklo_pd(weights01, weights01);
+  vT weights1 = _mm_unpackhi_pd(weights01, weights01);
+  vT weights2 = _mm_unpacklo_pd(weights23, weights23);
+  vT weights3 = _mm_unpackhi_pd(weights23, weights23);
+  vT res01    = _mm_add_pd( _mm_mul_pd( weights0 , mu01), _mm_mul_pd( weights2, mu67 ) );
+  vT res12    = _mm_add_pd( _mm_mul_pd( weights1 , mu45), _mm_mul_pd( weights3, muAB ) );
+  res01 = _mm_add_pd( res01, _mm_shuffle_pd( res20, res12, _MM_SHUFFLE2(0, 1) ) );
+  _mm_storeu_pd( opp , res01);
+  opp[2] = _mm_cvtsd_f64( _mm_add_sd( res20, _mm_unpackhi_pd( res12, res12 ) ) );
   } // end TransformPoint()
 
 
@@ -1080,41 +1080,41 @@ public:
   {
    typedef __m128d vT;
 
-	vT weights01 = _mm_loadu_pd( & weights1D[ 0 + HelperConstVariable ] );
-	vT weights23 = _mm_loadu_pd( & weights1D[ 2 + HelperConstVariable ] );
+  vT weights01 = _mm_loadu_pd( & weights1D[ 0 + HelperConstVariable ] );
+  vT weights23 = _mm_loadu_pd( & weights1D[ 2 + HelperConstVariable ] );
 
-	vT mu01 = _mm_loadu_pd( mu     );
-	vT mu23 = _mm_loadu_pd( mu + 2 );
-	vT mu45 = _mm_loadu_pd( mu + 4 );
-	vT mu67 = _mm_loadu_pd( mu + 6 );
-	vT mu89 = _mm_loadu_pd( mu + 8 );
-	vT muAB = _mm_loadu_pd( mu +10 );
+  vT mu01 = _mm_loadu_pd( mu     );
+  vT mu23 = _mm_loadu_pd( mu + 2 );
+  vT mu45 = _mm_loadu_pd( mu + 4 );
+  vT mu67 = _mm_loadu_pd( mu + 6 );
+  vT mu89 = _mm_loadu_pd( mu + 8 );
+  vT muAB = _mm_loadu_pd( mu +10 );
 
-	vT res20 = _mm_add_pd( _mm_mul_pd(weights01,mu23) , _mm_mul_pd(weights23,mu89) );
-	vT weights0 = _mm_unpacklo_pd(weights01, weights01);
-	vT weights1 = _mm_unpackhi_pd(weights01, weights01);
-	vT weights2 = _mm_unpacklo_pd(weights23, weights23);
-	vT weights3 = _mm_unpackhi_pd(weights23, weights23);
-	vT res01    = _mm_add_pd( _mm_mul_pd( weights0 , mu01), _mm_mul_pd( weights2, mu67 ) ); 
-	vT res12    = _mm_add_pd( _mm_mul_pd( weights1 , mu45), _mm_mul_pd( weights3, muAB ) );
-	res01 = _mm_add_pd( res01, _mm_shuffle_pd( res20, res12, _MM_SHUFFLE2(0, 1) ) );
-	_mm_storeu_pd( sj , res01);
-	
-	vT Dweights01 = _mm_loadu_pd( & derivativeWeights1D[ 0 + HelperConstVariable ] );
-	vT Dweights23 = _mm_loadu_pd( & derivativeWeights1D[ 2 + HelperConstVariable ] );
-	vT Dres20 = _mm_add_pd( _mm_mul_pd(Dweights01,mu23) , _mm_mul_pd(Dweights23,mu89) );
-	vT Dweights0 = _mm_unpacklo_pd(Dweights01, Dweights01);
-	vT Dweights1 = _mm_unpackhi_pd(Dweights01, Dweights01);
-	vT Dweights2 = _mm_unpacklo_pd(Dweights23, Dweights23);
-	vT Dweights3 = _mm_unpackhi_pd(Dweights23, Dweights23);
-	vT Dres01    = _mm_add_pd( _mm_mul_pd( Dweights0 , mu01), _mm_mul_pd( Dweights2, mu67 ) ); 
-	vT Dres12    = _mm_add_pd( _mm_mul_pd( Dweights1 , mu45), _mm_mul_pd( Dweights3, muAB ) );
+  vT res20 = _mm_add_pd( _mm_mul_pd(weights01,mu23) , _mm_mul_pd(weights23,mu89) );
+  vT weights0 = _mm_unpacklo_pd(weights01, weights01);
+  vT weights1 = _mm_unpackhi_pd(weights01, weights01);
+  vT weights2 = _mm_unpacklo_pd(weights23, weights23);
+  vT weights3 = _mm_unpackhi_pd(weights23, weights23);
+  vT res01    = _mm_add_pd( _mm_mul_pd( weights0 , mu01), _mm_mul_pd( weights2, mu67 ) );
+  vT res12    = _mm_add_pd( _mm_mul_pd( weights1 , mu45), _mm_mul_pd( weights3, muAB ) );
+  res01 = _mm_add_pd( res01, _mm_shuffle_pd( res20, res12, _MM_SHUFFLE2(0, 1) ) );
+  _mm_storeu_pd( sj , res01);
 
-	Dres12 = _mm_add_pd( Dres12, _mm_shuffle_pd( Dres01, Dres20, _MM_SHUFFLE2(0, 1) ) );
-	vT res2Dres0 = _mm_add_pd( _mm_unpacklo_pd( res20, Dres01), _mm_unpackhi_pd( res12, Dres20));
-	_mm_storeu_pd( sj + 2 , res2Dres0);
-	_mm_storeu_pd( sj + 4 , Dres12);
-	
+  vT Dweights01 = _mm_loadu_pd( & derivativeWeights1D[ 0 + HelperConstVariable ] );
+  vT Dweights23 = _mm_loadu_pd( & derivativeWeights1D[ 2 + HelperConstVariable ] );
+  vT Dres20 = _mm_add_pd( _mm_mul_pd(Dweights01,mu23) , _mm_mul_pd(Dweights23,mu89) );
+  vT Dweights0 = _mm_unpacklo_pd(Dweights01, Dweights01);
+  vT Dweights1 = _mm_unpackhi_pd(Dweights01, Dweights01);
+  vT Dweights2 = _mm_unpacklo_pd(Dweights23, Dweights23);
+  vT Dweights3 = _mm_unpackhi_pd(Dweights23, Dweights23);
+  vT Dres01    = _mm_add_pd( _mm_mul_pd( Dweights0 , mu01), _mm_mul_pd( Dweights2, mu67 ) );
+  vT Dres12    = _mm_add_pd( _mm_mul_pd( Dweights1 , mu45), _mm_mul_pd( Dweights3, muAB ) );
+
+  Dres12 = _mm_add_pd( Dres12, _mm_shuffle_pd( Dres01, Dres20, _MM_SHUFFLE2(0, 1) ) );
+  vT res2Dres0 = _mm_add_pd( _mm_unpacklo_pd( res20, Dres01), _mm_unpackhi_pd( res12, Dres20));
+  _mm_storeu_pd( sj + 2 , res2Dres0);
+  _mm_storeu_pd( sj + 4 , Dres12);
+
   } // end GetSpatialJacobian()
 
 
@@ -1132,56 +1132,56 @@ public:
   {
   typedef __m128d vT;
 
-	vT weights01 = _mm_loadu_pd( & weights1D[ 0 + HelperConstVariable ] );
-	vT weights23 = _mm_loadu_pd( & weights1D[ 2 + HelperConstVariable ] );
+  vT weights01 = _mm_loadu_pd( & weights1D[ 0 + HelperConstVariable ] );
+  vT weights23 = _mm_loadu_pd( & weights1D[ 2 + HelperConstVariable ] );
 
-	vT mu01 = _mm_loadu_pd( mu     );
-	vT mu23 = _mm_loadu_pd( mu + 2 );
-	vT mu45 = _mm_loadu_pd( mu + 4 );
-	vT mu67 = _mm_loadu_pd( mu + 6 );
-	vT mu89 = _mm_loadu_pd( mu + 8 );
-	vT muAB = _mm_loadu_pd( mu +10 );
+  vT mu01 = _mm_loadu_pd( mu     );
+  vT mu23 = _mm_loadu_pd( mu + 2 );
+  vT mu45 = _mm_loadu_pd( mu + 4 );
+  vT mu67 = _mm_loadu_pd( mu + 6 );
+  vT mu89 = _mm_loadu_pd( mu + 8 );
+  vT muAB = _mm_loadu_pd( mu +10 );
 
-	vT res20 = _mm_add_pd( _mm_mul_pd(weights01,mu23) , _mm_mul_pd(weights23,mu89) );
-	vT weights0 = _mm_unpacklo_pd(weights01, weights01);
-	vT weights1 = _mm_unpackhi_pd(weights01, weights01);
-	vT weights2 = _mm_unpacklo_pd(weights23, weights23);
-	vT weights3 = _mm_unpackhi_pd(weights23, weights23);
-	vT res01    = _mm_add_pd( _mm_mul_pd( weights0 , mu01), _mm_mul_pd( weights2, mu67 ) ); 
-	vT res12    = _mm_add_pd( _mm_mul_pd( weights1 , mu45), _mm_mul_pd( weights3, muAB ) );
-	res01 = _mm_add_pd( res01, _mm_shuffle_pd( res20, res12, _MM_SHUFFLE2(0, 1) ) );
-	_mm_storeu_pd( sh , res01);
-	
-	vT Dweights01 = _mm_loadu_pd( & derivativeWeights1D[ 0 + HelperConstVariable ] );
-	vT Dweights23 = _mm_loadu_pd( & derivativeWeights1D[ 2 + HelperConstVariable ] );
-	vT Dres20 = _mm_add_pd( _mm_mul_pd(Dweights01,mu23) , _mm_mul_pd(Dweights23,mu89) );
-	vT Dweights0 = _mm_unpacklo_pd(Dweights01, Dweights01);
-	vT Dweights1 = _mm_unpackhi_pd(Dweights01, Dweights01);
-	vT Dweights2 = _mm_unpacklo_pd(Dweights23, Dweights23);
-	vT Dweights3 = _mm_unpackhi_pd(Dweights23, Dweights23);
-	vT Dres01    = _mm_add_pd( _mm_mul_pd( Dweights0 , mu01), _mm_mul_pd( Dweights2, mu67 ) ); 
-	vT Dres12    = _mm_add_pd( _mm_mul_pd( Dweights1 , mu45), _mm_mul_pd( Dweights3, muAB ) );
+  vT res20 = _mm_add_pd( _mm_mul_pd(weights01,mu23) , _mm_mul_pd(weights23,mu89) );
+  vT weights0 = _mm_unpacklo_pd(weights01, weights01);
+  vT weights1 = _mm_unpackhi_pd(weights01, weights01);
+  vT weights2 = _mm_unpacklo_pd(weights23, weights23);
+  vT weights3 = _mm_unpackhi_pd(weights23, weights23);
+  vT res01    = _mm_add_pd( _mm_mul_pd( weights0 , mu01), _mm_mul_pd( weights2, mu67 ) );
+  vT res12    = _mm_add_pd( _mm_mul_pd( weights1 , mu45), _mm_mul_pd( weights3, muAB ) );
+  res01 = _mm_add_pd( res01, _mm_shuffle_pd( res20, res12, _MM_SHUFFLE2(0, 1) ) );
+  _mm_storeu_pd( sh , res01);
 
-	Dres12 = _mm_add_pd( Dres12, _mm_shuffle_pd( Dres01, Dres20, _MM_SHUFFLE2(0, 1) ) );
-	vT res2Dres0 = _mm_add_pd( _mm_unpacklo_pd( res20, Dres01), _mm_unpackhi_pd( res12, Dres20));
-	_mm_storeu_pd( sh + 2 , res2Dres0);
-	_mm_storeu_pd( sh + 4 , Dres12);
+  vT Dweights01 = _mm_loadu_pd( & derivativeWeights1D[ 0 + HelperConstVariable ] );
+  vT Dweights23 = _mm_loadu_pd( & derivativeWeights1D[ 2 + HelperConstVariable ] );
+  vT Dres20 = _mm_add_pd( _mm_mul_pd(Dweights01,mu23) , _mm_mul_pd(Dweights23,mu89) );
+  vT Dweights0 = _mm_unpacklo_pd(Dweights01, Dweights01);
+  vT Dweights1 = _mm_unpackhi_pd(Dweights01, Dweights01);
+  vT Dweights2 = _mm_unpacklo_pd(Dweights23, Dweights23);
+  vT Dweights3 = _mm_unpackhi_pd(Dweights23, Dweights23);
+  vT Dres01    = _mm_add_pd( _mm_mul_pd( Dweights0 , mu01), _mm_mul_pd( Dweights2, mu67 ) );
+  vT Dres12    = _mm_add_pd( _mm_mul_pd( Dweights1 , mu45), _mm_mul_pd( Dweights3, muAB ) );
 
-	vT Hweights01 = _mm_loadu_pd( & hessianWeights1D[ 0 + HelperConstVariable ] );
-	vT Hweights23 = _mm_loadu_pd( & hessianWeights1D[ 2 + HelperConstVariable ] );
-	vT Hres20 = _mm_add_pd( _mm_mul_pd(Hweights01,mu23) , _mm_mul_pd(Hweights23,mu89) );
-	vT Hweights0 = _mm_unpacklo_pd(Hweights01, Hweights01);
-	vT Hweights1 = _mm_unpackhi_pd(Hweights01, Hweights01);
-	vT Hweights2 = _mm_unpacklo_pd(Hweights23, Hweights23);
-	vT Hweights3 = _mm_unpackhi_pd(Hweights23, Hweights23);
-	vT Hres01    = _mm_add_pd( _mm_mul_pd( Hweights0 , mu01), _mm_mul_pd( Hweights2, mu67 ) ); 
-	vT Hres12    = _mm_add_pd( _mm_mul_pd( Hweights1 , mu45), _mm_mul_pd( Hweights3, muAB ) );
+  Dres12 = _mm_add_pd( Dres12, _mm_shuffle_pd( Dres01, Dres20, _MM_SHUFFLE2(0, 1) ) );
+  vT res2Dres0 = _mm_add_pd( _mm_unpacklo_pd( res20, Dres01), _mm_unpackhi_pd( res12, Dres20));
+  _mm_storeu_pd( sh + 2 , res2Dres0);
+  _mm_storeu_pd( sh + 4 , Dres12);
 
-	Hres01 = _mm_add_pd( Hres01, _mm_shuffle_pd( Hres20, Hres12, _MM_SHUFFLE2(0, 1) ) );
-	_mm_storeu_pd( sh + 6 , Hres01);
-	sh[8] = _mm_cvtsd_f64( _mm_add_sd( Hres20, _mm_unpackhi_pd( Hres12, Hres12 ) ) );
+  vT Hweights01 = _mm_loadu_pd( & hessianWeights1D[ 0 + HelperConstVariable ] );
+  vT Hweights23 = _mm_loadu_pd( & hessianWeights1D[ 2 + HelperConstVariable ] );
+  vT Hres20 = _mm_add_pd( _mm_mul_pd(Hweights01,mu23) , _mm_mul_pd(Hweights23,mu89) );
+  vT Hweights0 = _mm_unpacklo_pd(Hweights01, Hweights01);
+  vT Hweights1 = _mm_unpackhi_pd(Hweights01, Hweights01);
+  vT Hweights2 = _mm_unpacklo_pd(Hweights23, Hweights23);
+  vT Hweights3 = _mm_unpackhi_pd(Hweights23, Hweights23);
+  vT Hres01    = _mm_add_pd( _mm_mul_pd( Hweights0 , mu01), _mm_mul_pd( Hweights2, mu67 ) );
+  vT Hres12    = _mm_add_pd( _mm_mul_pd( Hweights1 , mu45), _mm_mul_pd( Hweights3, muAB ) );
 
-	
+  Hres01 = _mm_add_pd( Hres01, _mm_shuffle_pd( Hres20, Hres12, _MM_SHUFFLE2(0, 1) ) );
+  _mm_storeu_pd( sh + 6 , Hres01);
+  sh[8] = _mm_cvtsd_f64( _mm_add_sd( Hres20, _mm_unpackhi_pd( Hres12, Hres12 ) ) );
+
+
   } // end GetSpatialHessian()
 
 }; // end class
@@ -1198,7 +1198,7 @@ public:
  * Compared to the RecursiveBSplineTransformImplementation class, this
  * class works as a vector operator, and is therefore also templated
  * over the OutputDimension.
- * Compared to RecursiveBSplineTransformImplementation2, the OutputDimension 
+ * Compared to RecursiveBSplineTransformImplementation2, the OutputDimension
  * coefficients in a voxel are now adjacent in memory instead of being individually referenced through mu.
  * Compared to RecursiveBSplineTransformImplementation3, now a SSE optimized vector output is returned in TransformPoint (return by value).
  * SSE2 optimized vector functions are used to optimize efficiency.
@@ -1227,26 +1227,26 @@ public:
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     InputPointerType tmp_mu = mu;
-	/*InputPointerType tmp_prefetch_mu;
-	if (doPrefetch)
-		tmp_prefetch_mu = prefetch_mu;*/
+  /*InputPointerType tmp_prefetch_mu;
+  if (doPrefetch)
+    tmp_prefetch_mu = prefetch_mu;*/
 
     /** Create a temporary sj and initialize the original. */
-	OutputPointType opp(0.0);
-    
+  OutputPointType opp(0.0);
+
     OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-	  opp += RecursiveBSplineTransformImplementation4< OutputPointType, SpaceDimension - 1, SplineOrder, InputPointerType, doPrefetch >
-		::TransformPoint2( tmp_mu, gridOffsetTable, weights1D ) * weights1D[ k + HelperConstVariable ];
+    opp += RecursiveBSplineTransformImplementation4< OutputPointType, SpaceDimension - 1, SplineOrder, InputPointerType, doPrefetch >
+    ::TransformPoint2( tmp_mu, gridOffsetTable, weights1D ) * weights1D[ k + HelperConstVariable ];
         //::TransformPoint2( tmp_mu, gridOffsetTable, weights1D , tmp_prefetch_mu ) * weights1D[ k + HelperConstVariable ];
 
       // move to the next mu
       tmp_mu += bot;
-	  /*if (doPrefetch)
-		tmp_prefetch_mu +=bot;*/
+    /*if (doPrefetch)
+    tmp_prefetch_mu +=bot;*/
     }
-	return opp;
+  return opp;
   } // end TransformPoint()
 
 
@@ -1273,8 +1273,8 @@ public:
     const OffsetValueType * gridOffsetTable,
     const double * weights1D ) //, const InputPointerType prefetch_mu)
   {
-	 /*if (doPrefetch)
-		 _mm_prefetch( (const char *) prefetch_mu , _MM_HINT_T2 ) ;*/
+   /*if (doPrefetch)
+     _mm_prefetch( (const char *) prefetch_mu , _MM_HINT_T2 ) ;*/
      return *mu;
   } // end TransformPoint()
 
@@ -1291,8 +1291,8 @@ public:
  *  Contains heavy optimizations. IMPORTANT: assumes gridOffsetTable[0]==1
  *
  * NOTE this version demonstrates that it inconvenient to put all RecursiveBSplineTransformImplementation methods in a single class.
- * For some methods we don't do (/can do/want to do) optimizations, but now we still have to copy all code. 
- * Therefore, I (D Poot) think it actually would be better to split RecursiveBSplineTransformImplementation either per method or 
+ * For some methods we don't do (/can do/want to do) optimizations, but now we still have to copy all code.
+ * Therefore, I (D Poot) think it actually would be better to split RecursiveBSplineTransformImplementation either per method or
  * into groups of similar methods:
  *  - TransformPoint, GetSpatialJacobian, GetSpatialHessian
  *  - GetJacobian, ComputeNonZeroJacobianIndices, (EvaluateJacobianWithImageGradientProduct?)
@@ -1319,18 +1319,18 @@ public:
     const double * weights1D ) // , const InputPointerType prefetch_mu)
   {
     OutputPointType weights0( weights1D[ 0 + HelperConstVariable ] );
-	OutputPointType weights1( weights1D[ 1 + HelperConstVariable ] );
-	OutputPointType weights2( weights1D[ 2 + HelperConstVariable ] );
-	OutputPointType weights3( weights1D[ 3 + HelperConstVariable ] );
-	/*if (doPrefetch) {
-		 _mm_prefetch( ( (const char *) prefetch_mu ) + 0 * CACHE_LINE_SIZE, _MM_HINT_T2 ) ; // first byte used.
-		 _mm_prefetch( ( (const char *) prefetch_mu ) + 1 * CACHE_LINE_SIZE, _MM_HINT_T2 ) ;
-		 //if ( ( (const char *) prefetch_mu ) + 2 * CACHE_LINE_SIZE < lastByteUsed) // we need some compile time test to determine how many cache lines to prefetch.
-		 //_mm_prefetch( ( (const char *) prefetch_mu ) + 2 * CACHE_LINE_SIZE, _MM_HINT_T2 ) ;
-		 const char * lastByteUsed = ( (const char *) (prefetch_mu+4) ) - 1;
-		 _mm_prefetch( lastByteUsed, _MM_HINT_T2 ) ; // last byte used.
-	}*/
-	return ( (*(mu+0)) * weights0 + (*(mu+1)  * weights1)) + ( (*(mu+2)) * weights2 + (*(mu+3)  * weights3));
+  OutputPointType weights1( weights1D[ 1 + HelperConstVariable ] );
+  OutputPointType weights2( weights1D[ 2 + HelperConstVariable ] );
+  OutputPointType weights3( weights1D[ 3 + HelperConstVariable ] );
+  /*if (doPrefetch) {
+     _mm_prefetch( ( (const char *) prefetch_mu ) + 0 * CACHE_LINE_SIZE, _MM_HINT_T2 ) ; // first byte used.
+     _mm_prefetch( ( (const char *) prefetch_mu ) + 1 * CACHE_LINE_SIZE, _MM_HINT_T2 ) ;
+     //if ( ( (const char *) prefetch_mu ) + 2 * CACHE_LINE_SIZE < lastByteUsed) // we need some compile time test to determine how many cache lines to prefetch.
+     //_mm_prefetch( ( (const char *) prefetch_mu ) + 2 * CACHE_LINE_SIZE, _MM_HINT_T2 ) ;
+     const char * lastByteUsed = ( (const char *) (prefetch_mu+4) ) - 1;
+     _mm_prefetch( lastByteUsed, _MM_HINT_T2 ) ; // last byte used.
+  }*/
+  return ( (*(mu+0)) * weights0 + (*(mu+1)  * weights1)) + ( (*(mu+2)) * weights2 + (*(mu+3)  * weights3));
   } // end TransformPoint()
 
 
@@ -1361,28 +1361,28 @@ public:
     const double * weights1D )
   {
     typedef __m128d vT;
-	const double * mu = vecmu.getRawPointer();
+  const double * mu = vecmu.getRawPointer();
 
-	vT weights01 = _mm_loadu_pd( & weights1D[ 0 + HelperConstVariable ] );
-	vT weights23 = _mm_loadu_pd( & weights1D[ 2 + HelperConstVariable ] );
+  vT weights01 = _mm_loadu_pd( & weights1D[ 0 + HelperConstVariable ] );
+  vT weights23 = _mm_loadu_pd( & weights1D[ 2 + HelperConstVariable ] );
 
-	vT mu01 = _mm_loadu_pd( mu     );
-	vT mu23 = _mm_loadu_pd( mu + 2 );
-	vT mu45 = _mm_loadu_pd( mu + 4 );
-	vT mu67 = _mm_loadu_pd( mu + 6 );
-	vT mu89 = _mm_loadu_pd( mu + 8 );
-	vT muAB = _mm_loadu_pd( mu +10 );
+  vT mu01 = _mm_loadu_pd( mu     );
+  vT mu23 = _mm_loadu_pd( mu + 2 );
+  vT mu45 = _mm_loadu_pd( mu + 4 );
+  vT mu67 = _mm_loadu_pd( mu + 6 );
+  vT mu89 = _mm_loadu_pd( mu + 8 );
+  vT muAB = _mm_loadu_pd( mu +10 );
 
-	vT res20 = _mm_add_pd( _mm_mul_pd(weights01,mu23) , _mm_mul_pd(weights23,mu89) );
-	vT weights0 = _mm_unpacklo_pd(weights01, weights01);
-	vT weights1 = _mm_unpackhi_pd(weights01, weights01);
-	vT weights2 = _mm_unpacklo_pd(weights23, weights23);
-	vT weights3 = _mm_unpackhi_pd(weights23, weights23);
-	vT res01    = _mm_add_pd( _mm_mul_pd( weights0 , mu01), _mm_mul_pd( weights2, mu67 ) ); 
-	vT res12    = _mm_add_pd( _mm_mul_pd( weights1 , mu45), _mm_mul_pd( weights3, muAB ) );
-	res01 = _mm_add_pd( res01, _mm_shuffle_pd( res20, res12, _MM_SHUFFLE2(0, 1) ) );
-	vT res2 =  _mm_add_sd( res20, _mm_unpackhi_pd( res12, res12 ) ) ;
-	return vec< double, 3>( res01, res2 );
+  vT res20 = _mm_add_pd( _mm_mul_pd(weights01,mu23) , _mm_mul_pd(weights23,mu89) );
+  vT weights0 = _mm_unpacklo_pd(weights01, weights01);
+  vT weights1 = _mm_unpackhi_pd(weights01, weights01);
+  vT weights2 = _mm_unpacklo_pd(weights23, weights23);
+  vT weights3 = _mm_unpackhi_pd(weights23, weights23);
+  vT res01    = _mm_add_pd( _mm_mul_pd( weights0 , mu01), _mm_mul_pd( weights2, mu67 ) );
+  vT res12    = _mm_add_pd( _mm_mul_pd( weights1 , mu45), _mm_mul_pd( weights3, muAB ) );
+  res01 = _mm_add_pd( res01, _mm_shuffle_pd( res20, res12, _MM_SHUFFLE2(0, 1) ) );
+  vT res2 =  _mm_add_sd( res20, _mm_unpackhi_pd( res12, res12 ) ) ;
+  return vec< double, 3>( res01, res2 );
   } // end TransformPoint()
 
 
