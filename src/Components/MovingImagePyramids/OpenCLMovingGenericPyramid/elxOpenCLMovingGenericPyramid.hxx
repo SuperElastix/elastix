@@ -274,7 +274,7 @@ OpenCLMovingGenericPyramid< TElastix >
 } // end BeforeRegistration()
 
 
-/*
+/**
  * ******************* ReadFromFile  ****************************
  */
 

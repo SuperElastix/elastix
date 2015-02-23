@@ -36,11 +36,12 @@ namespace elastix
 {
 
 /**
-* ******************* Constructor ***********************
-*/
+ * ******************* Constructor ***********************
+ */
 
 template< class TElastix >
-OpenCLFixedGenericPyramid< TElastix >::OpenCLFixedGenericPyramid()
+OpenCLFixedGenericPyramid< TElastix >
+::OpenCLFixedGenericPyramid()
 {
   this->m_UseOpenCL = true;
 
@@ -78,7 +79,7 @@ OpenCLFixedGenericPyramid< TElastix >::OpenCLFixedGenericPyramid()
   {
     this->SwitchingToCPUAndReport( false );
   }
-}
+} // end Constructor
 
 
 /**
@@ -180,6 +181,7 @@ OpenCLFixedGenericPyramid< TElastix >
 /**
  * ******************* RegisterFactories ***********************
  */
+
 template< class TElastix >
 void
 OpenCLFixedGenericPyramid< TElastix >
@@ -234,12 +236,14 @@ OpenCLFixedGenericPyramid< TElastix >
   this->m_Factories.push_back( resampleFactory.GetPointer() );
   this->m_Factories.push_back( identityFactory.GetPointer() );
   this->m_Factories.push_back( linearFactory.GetPointer() );
-}
+
+} // end RegisterFactories()
 
 
 /**
  * ******************* UnregisterFactories ***********************
  */
+
 template< class TElastix >
 void
 OpenCLFixedGenericPyramid< TElastix >
@@ -251,7 +255,7 @@ OpenCLFixedGenericPyramid< TElastix >
     itk::ObjectFactoryBase::UnRegisterFactory( *it );
   }
   this->m_Factories.clear();
-}
+} // end UnregisterFactories()
 
 
 /**

@@ -121,9 +121,9 @@ private:
   void operator=( const Self & ); // purposely not implemented
 
   /** Register/Unregister factories. */
-  void RegisterFactories();
+  void RegisterFactories( void );
 
-  void UnregisterFactories();
+  void UnregisterFactories( void );
 
   /** Helper method to report switching to CPU mode. */
   void SwitchingToCPUAndReport( const bool configError );
