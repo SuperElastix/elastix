@@ -249,7 +249,7 @@ ResamplerBase< TElastix >
     timer.Start();
 
     /** Apply the final transform, and save the result,
-     * by calling WriteResultImage.
+     * by calling ResampleAndWriteResultImage.
      */
     elxout << "\nApplying final transform ..." << std::endl;
     try
