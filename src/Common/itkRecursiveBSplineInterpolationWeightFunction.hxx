@@ -33,8 +33,8 @@ namespace itk
  */
 
 template< typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder >
-RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder > 
-::RecursiveBSplineInterpolationWeightFunction()  
+RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSplineOrder >
+::RecursiveBSplineInterpolationWeightFunction()
 {
   // Initialize support region is a hypercube of length SplineOrder + 1
   this->m_SupportSize.Fill( SplineOrder + 1 );
@@ -99,14 +99,15 @@ RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSpline
   WeightsType & weights,
   IndexType & startIndex ) const
 {
-  WeightsType::ValueType * weightsPtr = &weights[0];
+  typename WeightsType::ValueType * weightsPtr = &weights[0];
   for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    startIndex[ i ] = Math::Floor< IndexValueType >( cindex[ i ] - static_cast< double >( SplineOrder - 1 ) / 2.0 );
+    startIndex[ i ] = Math::Floor< IndexValueType >(
+      cindex[ i ] - static_cast< double >( SplineOrder - 1 ) / 2.0 );
 
     double x = cindex[ i ] - static_cast< double >( startIndex[ i ] );
     this->m_Kernel->Evaluate( x, weightsPtr );
-	weightsPtr += (VSplineOrder+1);
+    weightsPtr += SplineOrder + 1;
   }
 
 } // end Evaluate()
@@ -155,3 +156,4 @@ RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSpline
 } // end namespace itk
 
 #endif
+
