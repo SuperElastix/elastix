@@ -140,6 +140,49 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 {
   if( fromTransform.IsNotNull() )
   {
+    // For Euler and Similarity transforms we have to use partial
+    // template specialization logic.
+    const unsigned int                                    InputDimension = SpaceDimension;
+    const TransformSpaceDimensionToType< SpaceDimension > idim           = {};
+
+    // Try Advanced Euler
+    bool eulerCopyResult = false;
+    switch( InputDimension )
+    {
+      case 2:
+        eulerCopyResult = CopyEuler2DTransform( fromTransform, toTransform, idim );
+        break;
+      case 3:
+        eulerCopyResult = CopyEuler3DTransform( fromTransform, toTransform, idim );
+        break;
+      default:
+        break;
+    }
+
+    if( eulerCopyResult )
+    {
+      return eulerCopyResult;
+    }
+
+    // Try Advanced Similarity
+    bool similarityCopyResult = false;
+    switch( InputDimension )
+    {
+      case 2:
+        similarityCopyResult = CopySimilarity2DTransform( fromTransform, toTransform, idim );
+        break;
+      case 3:
+        similarityCopyResult = CopySimilarity3DTransform( fromTransform, toTransform, idim );
+        break;
+      default:
+        break;
+    }
+
+    if( similarityCopyResult )
+    {
+      return similarityCopyResult;
+    }
+
     // Try Advanced Affine
     typedef AdvancedMatrixOffsetTransformBase< CPUScalarType, SpaceDimension, SpaceDimension >
       AdvancedAffineTransformType;
@@ -201,49 +244,6 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
     if( bsplineCopyResult )
     {
       return bsplineCopyResult;
-    }
-
-    // For Euler and Similarity transforms we have to use partial
-    // template specialization logic.
-    const unsigned int                                    InputDimension = SpaceDimension;
-    const TransformSpaceDimensionToType< SpaceDimension > idim           = {};
-
-    // Try Advanced Euler
-    bool eulerCopyResult = false;
-    switch( InputDimension )
-    {
-      case 2:
-        eulerCopyResult = CopyEuler2DTransform( fromTransform, toTransform, idim );
-        break;
-      case 3:
-        eulerCopyResult = CopyEuler3DTransform( fromTransform, toTransform, idim );
-        break;
-      default:
-        break;
-    }
-
-    if( eulerCopyResult )
-    {
-      return eulerCopyResult;
-    }
-
-    // Try Advanced Similarity
-    bool similarityCopyResult = false;
-    switch( InputDimension )
-    {
-      case 2:
-        similarityCopyResult = CopySimilarity2DTransform( fromTransform, toTransform, idim );
-        break;
-      case 3:
-        similarityCopyResult = CopySimilarity3DTransform( fromTransform, toTransform, idim );
-        break;
-      default:
-        break;
-    }
-
-    if( similarityCopyResult )
-    {
-      return similarityCopyResult;
     }
 
     return false;
