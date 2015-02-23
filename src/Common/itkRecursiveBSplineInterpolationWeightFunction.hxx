@@ -99,12 +99,14 @@ RecursiveBSplineInterpolationWeightFunction< TCoordRep, VSpaceDimension, VSpline
   WeightsType & weights,
   IndexType & startIndex ) const
 {
+  WeightsType::ValueType * weightsPtr = &weights[0];
   for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     startIndex[ i ] = Math::Floor< IndexValueType >( cindex[ i ] - static_cast< double >( SplineOrder - 1 ) / 2.0 );
 
     double x = cindex[ i ] - static_cast< double >( startIndex[ i ] );
-    this->m_Kernel->Evaluate( x, &weights[ i * this->m_SupportSize[ i ] ] );
+    this->m_Kernel->Evaluate( x, weightsPtr );
+	weightsPtr += (VSplineOrder+1);
   }
 
 } // end Evaluate()

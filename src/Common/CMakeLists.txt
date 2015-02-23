@@ -151,6 +151,15 @@ set( ImageSamplersFiles
   ImageSamplers/itkVectorDataContainer.hxx
 )
 
+set( SSEvecFiles
+  SSEvec/emm_vec.hxx
+  SSEvec/emm_vec_double2.hxx
+  SSEvec/emm_vec_double3.hxx
+  SSEvec/emm_vec_double4.hxx
+  SSEvec/emm_vec_double8.hxx
+  SSEvec/emm_vec_float4.hxx
+  SSEvec/emm_vec_float8.hxx
+)
 #---------------------------------------------------------------------
 # Construct source groups for nice visualisation in Visual Studio.
 
@@ -159,6 +168,7 @@ source_group( "CostFunctions" FILES ${CostFunctionFiles} )
 source_group( "Transforms" FILES ${TransformFiles} )
 source_group( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
 source_group( "ImageSamplers" FILES ${ImageSamplersFiles} )
+source_group( "SSEvec" FILES ${SSEvecFiles} )
 
 #---------------------------------------------------------------------
 # Create the elxCommon library.
@@ -170,6 +180,7 @@ add_library( elxCommon
   ${TransformFiles}
   ${LineSearchOptimizersFiles}
   ${ImageSamplersFiles}
+  ${SSEvecFiles}
 )
 
 #---------------------------------------------------------------------

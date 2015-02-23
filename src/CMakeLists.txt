@@ -158,6 +158,7 @@ set( elxCommon_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Common/Transforms
   ${elastix_SOURCE_DIR}/Common/xout
   ${elastix_SOURCE_DIR}/Common/MevisDicomTiff
+  ${elastix_SOURCE_DIR}/Common/SSEvec
 )
 
 set( elxCore_INCLUDE_DIRECTORIES

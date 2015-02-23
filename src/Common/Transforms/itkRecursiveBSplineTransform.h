@@ -116,7 +116,16 @@ public:
   typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
 
   typedef itk::RecursiveBSplineInterpolationWeightFunction<
-    TScalarType, NDimensions, VSplineOrder >                      RecursiveBSplineWeightFunctionType;
+    TScalarType, NDimensions, VSplineOrder >                      RecursiveBSplineWeightFunctionType;//TODO: get rid of this and use the kernels directly. 
+/** Interpolation kernel type. */
+  typedef BSplineKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > KernelType;
+  typedef BSplineDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > DerivativeKernelType;
+  typedef BSplineSecondOrderDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > SecondOrderDerivativeKernelType;
+
+  /** Interpolation kernel. */
+  typename KernelType::Pointer m_Kernel;
+  typename DerivativeKernelType::Pointer m_DerivativeKernel;
+  typename SecondOrderDerivativeKernelType::Pointer m_SecondOrderDerivativeKernel;
 
   /** Compute point transformation. This one is commonly used.
    * It calls RecursiveBSplineTransformImplementation2::InterpolateTransformPoint
@@ -131,6 +140,8 @@ public:
   virtual OutputPointType TransformPointOld( const InputPointType & point ) const;
   virtual void TransformPoint( const InputPointType & inputPoint, OutputPointType & outputPoint,
     WeightsType & weights, ParameterIndexArrayType & indices, bool & inside ) const;
+
+  virtual void TransformPoints( const std::vector< InputPointType >  & pointListIn, std::vector< OutputPointType >  & pointListOut  ) const;
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(

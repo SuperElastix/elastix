@@ -20,6 +20,19 @@
 
 #include "itkRecursiveBSplineTransform.h"
 
+//#define RECURSIVEVERSION3                    // use recusivebspline version 3. This uses an permuted parameter grid. 
+											   // Elastix standard = [spatial_dimensions   vector_dimension], where vector_dimension iterates over [x,y,z]
+											   // RecursiveVersion3 =[ vector dimension   spatial dimensions].
+											   // The advantage of this is much better memory locality as well as much more convenient optimization:
+//#define RECURSIVEVERSION3_OPTIMIZED_SSE2     // Enable a manually optimized SSE2 implementation of (currently 1) end case.
+											   // Can only be used if also RECURSIVEVERSION3 is defined.
+//#define RECURSIVEVERSION4                    // Test version for TransformPoints. Include SSE2 optimized small vector representations and return by value.
+											   // Requires RECURSIVEVERSION3.
+											   // Requires emm_vec from DPoot.
+								               // Can be combined with RECURSIVEVERSION3_OPTIMIZED_SSE2 for a specialized faster end case version.
+											   // NOTE: strangely enough, enabling 'whole program optimization' (configuration properties, c++, optimization) makes this version substantially (40%) slower. 
+//#define RECUSIVEBSPLINE_FORWARDTRANSFORMPOINT // if defined forwards the transformpoint to transformpoints to minimize code duplication. 
+												// (Currently horribly much slower; did not yet investigate why)
 
 namespace itk
 {
@@ -33,6 +46,9 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 ::RecursiveBSplineTransform() : Superclass()
 {
   this->m_RecursiveBSplineWeightFunction = RecursiveBSplineWeightFunctionType::New();
+  this->m_Kernel = KernelType::New();
+  this->m_DerivativeKernel = DerivativeKernelType::New();
+  this->m_SecondOrderDerivativeKernel = SecondOrderDerivativeKernelType::New();
 } // end Constructor()
 
 
@@ -46,13 +62,22 @@ typename RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
 ::TransformPoint( const InputPointType & point ) const
 {
-  /** Define some constants. */
+#ifdef RECUSIVEBSPLINE_FORWARDTRANSFORMPOINT
+	 std::vector< InputPointType > pointListIn( 1 );
+	 std::vector< OutputPointType > pointListOut( 1 );
+	 pointListIn[0] = point;
+	 this->TransformPoints( pointListIn, pointListOut );
+	 return pointListOut[0];
+
+#else
+	 // Or with duplicate code:
+	 /** Define some constants. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
   const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
 
   /** Initialize output point. */
   OutputPointType outputPoint;
-  outputPoint.Fill( NumericTraits<TScalar>::Zero );
+ // outputPoint.Fill( NumericTraits<TScalar>::Zero ); // not needed since it is always (re)initialized later.
 
   /** Allocate weights on the stack: */
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
@@ -78,6 +103,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   bool inside = this->InsideValidRegion( cindex );
   if( !inside )
   {
+	//std::cerr << "." ;
+	//this->num_outside_valid++;
     outputPoint = point;
     return outputPoint;
   }
@@ -94,17 +121,27 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
     totalOffsetToSupportIndex += supportIndex[ j ] * bsplineOffsetTable[ j ];
   }
   ScalarType displacement[ SpaceDimension ];
+
+#ifdef RECURSIVEVERSION3
+  ScalarType * mu;
+    //displacement[ j ] = 0.0;
+    mu = this->m_CoefficientImages[ 0 ]->GetBufferPointer() + totalOffsetToSupportIndex * SpaceDimension;
+
+  /** Call recursive interpolate function, vector version. */
+  RecursiveBSplineTransformImplementation3< SpaceDimension, SpaceDimension, SplineOrder, TScalar , true>
+    ::TransformPoint2( displacement, mu, bsplineOffsetTable, weightsArray1D );
+#else
   ScalarType * mu[ SpaceDimension ];
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
-    displacement[ j ] = 0.0;
+    //displacement[ j ] = 0.0;
     mu[ j ] = this->m_CoefficientImages[ j ]->GetBufferPointer() + totalOffsetToSupportIndex;
   }
 
   /** Call recursive interpolate function, vector version. */
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::TransformPoint2( displacement, mu, bsplineOffsetTable, weightsArray1D );
-
+#endif
   // The output point is the start point + displacement.
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
@@ -112,8 +149,150 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   }
 
   return outputPoint;
+#endif // end of select between call to transformPoints or duplicate code
+}
 
-} // end TransformPoint()
+template< typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder >
+void RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
+::TransformPoints( const std::vector< InputPointType >  & pointListIn, std::vector< OutputPointType >  & pointListOut  ) const
+{
+ typedef BSplineKernelFunction2< VSplineOrder > BSplineKernelType;
+	/** Define some constants. */
+  const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
+  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+  const unsigned int maxBlockSize = 64;
+  const double halfSupportSize = static_cast< double >( SplineOrder - 1 ) / 2.0 ;
+  if ( pointListIn.size()  != pointListOut.size() ) {
+	  std::cerr <<  "ERROR in TransformPoints: Number of input points is not equal to the number of output points. " << std::endl;
+	  return;
+  }
+  if( !this->m_CoefficientImages[ 0 ] )
+	  {
+		itkWarningMacro( << "B-spline coefficients have not been set" );
+		for(unsigned int i = 0 ; i < pointListIn.size() ; ++i ) {
+			pointListOut[i] = pointListIn[i]; // full copy, or would reference update be allowed?
+			//anyway, we dont want to reach this point. 
+		}
+		return;
+	  }
+  typename RegionType::SizeType reducedGridRegionSize   = this->m_GridRegion.GetSize();
+  for (unsigned int i = 0; i <  SpaceDimension; ++i ) {
+	  reducedGridRegionSize[i] -=  SplineOrder;
+
+  }
+  /** Allocate weights on the stack: */
+  typename WeightsType::ValueType weightsArray1D[ numberOfWeights * maxBlockSize];
+  //WeightsType weights1D( weightsArray1D, numberOfWeights, false );
+  double indexRemainder[ maxBlockSize * SpaceDimension];
+  OffsetValueType totalOffsetToSupportIndex[ maxBlockSize ];
+  bool isInside[ maxBlockSize ];
+
+  /** Initialize (helper) variables. */
+  const OffsetValueType * bsplineOffsetTable = this->m_CoefficientImages[ 0 ]->GetOffsetTable();
+  OffsetValueType initialOffsetToSupportIndex = 0 ;
+#ifdef RECURSIVEVERSION3
+  ScalarType * bufferPointer =  this->m_CoefficientImages[ 0 ]->GetBufferPointer() ;
+#endif
+
+  for (unsigned int pointIdxOuter = 0 ; pointIdxOuter <  pointListIn.size() ;  pointIdxOuter += maxBlockSize ) 
+  {
+	 
+	  unsigned int numInBlock =  pointListIn.size() - pointIdxOuter; // take minimum of number of points remaining and maxBlockSize.
+	  if ( maxBlockSize<numInBlock ) { numInBlock = maxBlockSize; } ;
+
+	  unsigned int computeWeightsIdx = 0;
+	  for (unsigned int blockIdx = 0 ; blockIdx < numInBlock; ++blockIdx ) {
+
+		  /** Convert to continuous index. */
+		  ContinuousIndexType cindex;
+		  this->TransformPointToContinuousGridIndex( pointListIn[ pointIdxOuter + blockIdx] , cindex );
+
+		  IndexType startIndex;
+		  bool insidePnt = true;
+		  OffsetValueType totalOffsetToSupportIndexPnt = initialOffsetToSupportIndex;
+		  for (unsigned int i = 0; i <  SpaceDimension; ++i ) {
+			 startIndex[ i ] = Math::Floor< IndexValueType >( cindex[ i ] - halfSupportSize );
+
+		     indexRemainder[ computeWeightsIdx  + i ] = cindex[ i ] - static_cast< double >( startIndex[ i ] );
+
+				// Next line assumes  this->m_GridRegion.GetIndex()  == 0.
+			    // If this cannot safely be assumed, the index should be subtracted from startIndex, and totalOffsetToSupportIndex should be initialized with the index (multiplied by the bsplineoffsettable). 
+			    // The next line Uses conversion to unsigned to test for negative values with only 1 test.
+			 insidePnt &= ( static_cast< unsigned int >(startIndex[ i ]) ) < reducedGridRegionSize[ i ] ; 
+			 totalOffsetToSupportIndexPnt += startIndex[ i ] * bsplineOffsetTable[ i ];
+		  }
+		  isInside[ blockIdx ] = insidePnt;
+		  if (insidePnt) { computeWeightsIdx += SpaceDimension; }; // hope that conditional is optimized away.
+		  totalOffsetToSupportIndex[ blockIdx ] = totalOffsetToSupportIndexPnt;
+	  } // split loop here, to break dependency chain and also because the rest should only be evaluated if isInside.
+
+	  // Separate loop to compute the weights. TODO: compute vectorized (SSE2 or AVX vectors; would be 2, respectively 4 times faster.)
+	  // Note that we only compute the weights of the inside points.
+	  // Also note that all dimensions are treated equally (as all dimensions of all points are merged in indexRemainder)
+	  typename WeightsType::ValueType * weightsPtr = &weightsArray1D[0]; 
+	  for (unsigned int i =0 ; i < computeWeightsIdx; ++i) {
+		  this->m_Kernel->Evaluate( indexRemainder[i] , weightsPtr );
+			weightsPtr += (VSplineOrder+1);
+	  }
+
+	  // Perform actual interpolation:
+	  weightsPtr = &weightsArray1D[0]; 
+	  for (unsigned int blockIdx = 0 ; blockIdx < numInBlock; ++blockIdx ) {
+		  if (isInside[ blockIdx ]) {
+
+	  
+#ifdef RECURSIVEVERSION4
+			  typedef vec<ScalarType, SpaceDimension> vecPointType;
+			  typedef vecptr< ScalarType * , SpaceDimension> vecPointerType;
+			  vecPointerType mu( bufferPointer + totalOffsetToSupportIndex[ blockIdx ] * SpaceDimension );
+			  //vecPointerType prefetch_mu( bufferPointer + totalOffsetToSupportIndex[ blockIdx +1 ] * SpaceDimension );
+			  vecPointType displacement = RecursiveBSplineTransformImplementation4< vecPointType, SpaceDimension, SplineOrder, vecPointerType , false >
+						::TransformPoint2( mu, bsplineOffsetTable, weightsPtr );//, prefetch_mu);
+			  displacement += vecPointType( & pointListIn[ pointIdxOuter + blockIdx ][0] );
+			  displacement.store( &pointListOut[ pointIdxOuter + blockIdx ][0] );
+
+#elif defined RECURSIVEVERSION3
+			  ScalarType displacement[ SpaceDimension ];
+			  ScalarType * mu = bufferPointer + totalOffsetToSupportIndex[ blockIdx ] * SpaceDimension;
+
+			  /** Call recursive interpolate function, vector version. */
+			  if (bsplineOffsetTable[SpaceDimension] > 100000) { // only if bspline coefficients are expected to get out of the cache do prefetching. 
+			    RecursiveBSplineTransformImplementation3< SpaceDimension, SpaceDimension, SplineOrder, TScalar , true >
+						::TransformPoint2( displacement, mu, bsplineOffsetTable, weightsPtr );
+			  } else {
+			    RecursiveBSplineTransformImplementation3< SpaceDimension, SpaceDimension, SplineOrder, TScalar , false >
+						::TransformPoint2( displacement, mu, bsplineOffsetTable, weightsPtr );
+			  }
+#else
+			  ScalarType displacement[ SpaceDimension ];
+			  ScalarType * mu[ SpaceDimension ];
+			  for( unsigned int j = 0; j < SpaceDimension; ++j )
+			  {
+				//displacement[ j ] = 0.0;
+				mu[ j ] = this->m_CoefficientImages[ j ]->GetBufferPointer() + totalOffsetToSupportIndex[ blockIdx ];
+			  }
+
+			  /** Call recursive interpolate function, vector version. */
+			  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
+				::TransformPoint2( displacement, mu, bsplineOffsetTable, weightsPtr );
+#endif
+#ifndef RECURSIVEVERSION4
+			  // The output point is the start point + displacement.
+			  for( unsigned int j = 0; j < SpaceDimension; ++j )
+			  {
+				pointListOut[ pointIdxOuter + blockIdx ][j] = displacement[j] + pointListIn[ pointIdxOuter + blockIdx ][j];
+			  }
+#endif
+			  weightsPtr += (VSplineOrder+1) * SpaceDimension; // TODO: this is number of weights, which is an already defined compile time constant. Find that name and use it.
+		  } else {
+			  // point is not inside 
+			  pointListOut[ pointIdxOuter + blockIdx ] = pointListIn[ pointIdxOuter + blockIdx ]; 
+		  }
+	  }
+	 
+  }
+   return;
+} // end TransformPoints()
 
 
 /**
@@ -210,7 +389,11 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
     offsetTable[ n ] = this->m_CoefficientImages[ 0 ]->GetOffsetTable()[ n ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * offsetTable[ n ];
+      steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * offsetTable[ n ]
+#ifdef RECURSIVEVERSION3  // when compiled with recursiveversion3, the parameter order is permuted; requiring multiplication of steps with SpaceDimension
+																						* SpaceDimension
+#endif
+																									      ;
     }
   }
 
@@ -218,7 +401,11 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
   outputPoint.Fill( NumericTraits<TScalar>::Zero );
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
+#ifdef RECURSIVEVERSION3 // when compiled with recursiveversion3, the parameter order is permuted; starting xyz all at CoefficientImage[0], but with offset j.
+	  const TScalar *basePointer = this->m_CoefficientImages[ 0 ]->GetBufferPointer() + j;
+#else
     const TScalar *basePointer = this->m_CoefficientImages[ j ]->GetBufferPointer();
+#endif
     unsigned int c = 0;
     outputPoint[ j ] = RecursiveBSplineTransformImplementation< SpaceDimension, SplineOrder, TScalar >
       ::TransformPoint( basePointer,
@@ -449,6 +636,16 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     totalOffsetToSupportIndex += supportIndex[ j ] * bsplineOffsetTable[ j ];
   }
 
+#ifdef RECURSIVEVERSION3
+  /** Get handles to the mu's. */
+  ScalarType * mu;
+  mu = this->m_CoefficientImages[ 0 ]->GetBufferPointer() + totalOffsetToSupportIndex * SpaceDimension;
+
+  /** Recursively compute the spatial Jacobian. */
+  double spatialJacobian[ SpaceDimension * ( SpaceDimension + 1 ) ];//double
+  RecursiveBSplineTransformImplementation3< SpaceDimension, SpaceDimension, SplineOrder, TScalar , true>
+    ::GetSpatialJacobian( spatialJacobian, mu, bsplineOffsetTable, weightsPointer, derivativeWeightsPointer );
+#else
   /** Get handles to the mu's. */
   ScalarType * mu[ SpaceDimension ];
   for( unsigned int j = 0; j < SpaceDimension; ++j )
@@ -460,7 +657,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   double spatialJacobian[ SpaceDimension * ( SpaceDimension + 1 ) ];//double
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetSpatialJacobian( spatialJacobian, mu, bsplineOffsetTable, weightsPointer, derivativeWeightsPointer );
-
+#endif
   /** Copy the correct elements to the spatial Jacobian.
    * The first SpaceDimension elements are actually the displacement, i.e. the recursive
    * function GetSpatialJacobian() has the TransformPoint as a free by-product.
@@ -546,7 +743,17 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   {
     totalOffsetToSupportIndex += supportIndex[ j ] * bsplineOffsetTable[ j ];
   }
+#ifdef RECURSIVEVERSION3
+  /** Get handles to the mu's. */
+  ScalarType * mu;
+  mu = this->m_CoefficientImages[ 0 ]->GetBufferPointer() + totalOffsetToSupportIndex * SpaceDimension;
 
+  /** Recursively compute the spatial Jacobian. */
+  double spatialHessian[ SpaceDimension * ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2 ];
+  RecursiveBSplineTransformImplementation3< SpaceDimension, SpaceDimension, SplineOrder, TScalar , true>
+    ::GetSpatialHessian( spatialHessian, mu, bsplineOffsetTable,
+    weightsPointer, derivativeWeightsPointer, hessianWeightsPointer );
+#else
   /** Get handles to the mu's. */
   ScalarType * mu[ SpaceDimension ];
   for( unsigned int j = 0; j < SpaceDimension; ++j )
@@ -559,7 +766,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetSpatialHessian( spatialHessian, mu, bsplineOffsetTable,
     weightsPointer, derivativeWeightsPointer, hessianWeightsPointer );
-
+#endif
   /** Copy the correct elements to the spatial Hessian.
    * The first SpaceDimension elements are actually the displacement, i.e. the recursive
    * function GetSpatialHessian() has the TransformPoint as a free by-product.

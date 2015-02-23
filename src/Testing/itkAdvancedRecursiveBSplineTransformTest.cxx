@@ -40,7 +40,7 @@ main( int argc, char * argv[] )
    */
   const unsigned int Dimension   = 3;
   const unsigned int SplineOrder = 3;
-  typedef float CoordinateRepresentationType;
+  typedef double CoordinateRepresentationType;
   //const double distance = 1e-3; // the allowable distance
   //const double allowedTimeDifference = 0.1; // 10% is considered within limits
 
@@ -49,16 +49,18 @@ main( int argc, char * argv[] )
    */
 #ifndef NDEBUG
   //unsigned int N = static_cast< unsigned int >( 1e3 );
-  unsigned int N = static_cast< unsigned int >( 1 );
+  unsigned int N = static_cast< unsigned int >( 1e3 );
+#elif REDUCEDTEST
+  unsigned int N = static_cast< unsigned int >( 1e5 );
 #else
   unsigned int N = static_cast< unsigned int >( 1e6 );
 #endif
   std::cerr << "N = " << N << std::endl;
 
   /** Check. */
-  if( argc != 2 )
+  if( argc != 3 )
   {
-    std::cerr << "ERROR: You should specify a text file with the B-spline "
+    std::cerr << "ERROR: You should specify two text files with the B-spline "
               << "transformation parameters." << std::endl;
     return 1;
   }
@@ -102,8 +104,29 @@ main( int argc, char * argv[] )
    * (GridSpacing 10.7832773148 11.2116431394 11.8648235177)
    * (GridOrigin -237.6759555555 -239.9488431747 -344.2315805162)
    */
+  std::ifstream  input( argv[ 1 ] );
+  if( !input.is_open() )
+  {
+    std::cerr << "ERROR: could not open the text file containing the "
+              << "parameter values." << std::endl;
+    return 1;
+  }
+  int dimsInPar1;
+  input >> dimsInPar1;
+  if (dimsInPar1 != Dimension ) {
+	  std::cerr << "ERROR: The file containing the parameters specifies " << dimsInPar1 
+		      << " dimensions, while this test is compiled for " << Dimension 
+              << "dimensions." << std::endl;
+	  return 1;
+  }
+
   SizeType gridSize;
-  gridSize[ 0 ] = 44; gridSize[ 1 ] = 43; gridSize[ 2 ] = 35;
+  for (unsigned int i = 0; i < Dimension ; ++i  ) {
+	  input >> gridSize[ i ] ;
+	  std::cerr << "Gridsize dimension " << i << " = " << gridSize[ i ]  << std::endl;
+  }
+  //gridSize[ 0 ] = 44; gridSize[ 1 ] = 43; gridSize[ 2 ] = 35;
+  //gridSize[ 0 ] = 68; gridSize[ 1 ] = 69; gridSize[ 2 ] = 64;
   IndexType gridIndex;
   gridIndex.Fill( 0 );
   RegionType gridRegion;
@@ -145,24 +168,52 @@ main( int argc, char * argv[] )
   //transformITK->SetFixedParameters( fixPar );
 
   /** Now read the parameters as defined in the file par.txt. */
+  std::cerr << "Loading parameters from file 1";
   ParametersType parameters( transform->GetNumberOfParameters() );
-  std::ifstream  input( argv[ 1 ] );
-  if( input.is_open() )
+  
+  for( unsigned int i = 0; i < parameters.GetSize(); ++i )
   {
-    for( unsigned int i = 0; i < parameters.GetSize(); ++i )
-    {
-      input >> parameters[ i ];
-    }
-  }
-  else
-  {
-    std::cerr << "ERROR: could not open the text file containing the "
-              << "parameter values." << std::endl;
-    return 1;
+    input >> parameters[ i ];
   }
   transformITK->SetParameters( parameters );
   transform->SetParameters( parameters );
+  std::cerr << ", from file 2 ";
+
+  ParametersType parameters2( transform->GetNumberOfParameters() );
+  std::ifstream  input2( argv[ 2 ] );
+  if( !input2.is_open() )
+  {
+    std::cerr << "ERROR: could not open the text file containing the "
+              << "parameter2 values." << std::endl;
+    return 1;
+  }
+  int dimsInPar2;
+  input2 >> dimsInPar2;
+  if (dimsInPar2 != Dimension ) {
+	  std::cerr << "ERROR: The second file containing the parameters specifies " << dimsInPar2 
+		      << " dimensions, while this test is compiled for " << Dimension 
+              << "dimensions." << std::endl;
+	  return 1;
+  }
+
+  for (unsigned int i = 0; i < Dimension ; ++i  ) {
+	  int temp;
+	  input2 >> temp;
+	  if (temp != gridSize[ i ]  ) {
+		  std::cerr << "ERROR: The second file containing the parameters differs in gridsize from the first file." << std::endl;
+		  return 1;
+	  }
+  }
+  for( unsigned int i = 0; i < parameters2.GetSize(); ++i )
+  {
+    input2 >> parameters2[ i ];
+  }
+#ifdef RECURSIVEVERSION3  
+  recursiveTransform->SetParameters( parameters2 );
+#else
   recursiveTransform->SetParameters( parameters );
+#endif
+  std::cerr <<  " - done"<< std::endl;
 
   /** Get the number of nonzero Jacobian indices. */
   const NumberOfParametersType nonzji = transform->GetNumberOfNonZeroJacobianIndices();
@@ -242,94 +293,104 @@ main( int argc, char * argv[] )
   MersenneTwisterType::Pointer mersenneTwister = MersenneTwisterType::New();
   mersenneTwister->Initialize( 140377 );
   std::vector< InputPointType > pointList( N );
+  std::vector< OutputPointType > transformedPointList1( N );
+  std::vector< OutputPointType > transformedPointList2( N );
+  std::vector< OutputPointType > transformedPointList3( N );
+  std::vector< OutputPointType > transformedPointList4( N );
+
   IndexType dummyIndex;
   CoefficientImagePointer coefficientImage = transform->GetCoefficientImages()[0];
   for( unsigned int i = 0; i < N; ++i )
   {
     for( unsigned int j = 0; j < Dimension; ++j )
     {
-      dummyIndex[ j ] = mersenneTwister->GetUniformVariate( 1, gridSize[ j ] - 2 );
+      dummyIndex[ j ] = mersenneTwister->GetUniformVariate( 2, gridSize[ j ] - 3 );
     }
     coefficientImage->TransformIndexToPhysicalPoint( dummyIndex, pointList[ i ] );
   }
 
   /** Time the implementation of the TransformPoint. */
-  timeCollector.Start( "TransformPoint elastix" );
+  timeCollector.Start( "TransformPoint elastix          " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    OutputPointType opp1 = transform->TransformPoint( pointList[ i ] );
+    transformedPointList1[i] = transform->TransformPoint( pointList[ i ] );
     //transform->TransformPoint( pointList[ i ], opp, weights, indices, isInside );
 
     if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
   }
-  timeCollector.Stop( "TransformPoint elastix" );
+  timeCollector.Stop(  "TransformPoint elastix          " );
 
-  timeCollector.Start( "TransformPoint recursive" );
+  timeCollector.Start( "TransformPoint recursive        " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    OutputPointType opp2 = recursiveTransform->TransformPointOld( pointList[ i ] );
+    transformedPointList2[i] = recursiveTransform->TransformPointOld( pointList[ i ] );
     //recursiveTransform->TransformPoint( pointList[ i ], opp, weights2, indices2, isInside );
 
     if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
   }
-  timeCollector.Stop( "TransformPoint recursive" );
+  timeCollector.Stop(  "TransformPoint recursive        " );
 
-  timeCollector.Start( "TransformPoint recursive vector" );
+  timeCollector.Start( "TransformPoint recursive vector " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    OutputPointType opp3 = recursiveTransform->TransformPoint( pointList[ i ] );
+    transformedPointList3[i] = recursiveTransform->TransformPoint( pointList[ i ] );
     //recursiveTransform->TransformPointVector( pointList[ i ], opp, weights2, indices2, isInside );
 
     if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
   }
-  timeCollector.Stop( "TransformPoint recursive vector" );
+  timeCollector.Stop(  "TransformPoint recursive vector " );
+
+  timeCollector.Start( "TransformPoints recursive vector" );
+    recursiveTransform->TransformPoints( pointList,  transformedPointList4);
+    //recursiveTransform->TransformPointVector( pointList[ i ], opp, weights2, indices2, isInside );
+  timeCollector.Stop(  "TransformPoints recursive vector" );
 
   /** Time the implementation of the Jacobian. */
-  timeCollector.Start( "Jacobian elastix" );
+  timeCollector.Start( "Jacobian elastix                " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    transform->GetJacobian( inputPoint, jacobian, nzji );
+    transform->GetJacobian( pointList[ i ] , jacobian, nzji );
   }
-  timeCollector.Stop( "Jacobian elastix" );
+  timeCollector.Stop(  "Jacobian elastix                " );
 
-  timeCollector.Start( "Jacobian recursive" );
+  timeCollector.Start( "Jacobian recursive              " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    recursiveTransform->GetJacobian( inputPoint, jacobian, nzji );
+    recursiveTransform->GetJacobian( pointList[ i ] , jacobian, nzji );
   }
-  timeCollector.Stop( "Jacobian recursive" );
+  timeCollector.Stop(  "Jacobian recursive              " );
 
   /** Time the implementation of the spatial Jacobian. */
   SpatialJacobianType sj, sjRecursive;
-  timeCollector.Start( "SpatialJacobian elastix" );
+  timeCollector.Start( "SpatialJacobian elastix         " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    transform->GetSpatialJacobian( inputPoint, sj );
+    transform->GetSpatialJacobian( pointList[ i ] , sj );
   }
-  timeCollector.Stop( "SpatialJacobian elastix" );
+  timeCollector.Stop(  "SpatialJacobian elastix         " );
 
   timeCollector.Start( "SpatialJacobian recursive vector" );
   for( unsigned int i = 0; i < N; ++i )
   {
-    recursiveTransform->GetSpatialJacobian( inputPoint, sjRecursive );
+    recursiveTransform->GetSpatialJacobian( pointList[ i ] , sjRecursive );
   }
-  timeCollector.Stop( "SpatialJacobian recursive vector" );
+  timeCollector.Stop(  "SpatialJacobian recursive vector" );
 
   /** Time the implementation of the spatial Hessian. */
   SpatialHessianType sh, shRecursive;
-  timeCollector.Start( "SpatialHessian elastix" );
+  timeCollector.Start( "SpatialHessian elastix          " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    transform->GetSpatialHessian( inputPoint, sh );
+    transform->GetSpatialHessian( pointList[ i ] , sh );
   }
-  timeCollector.Stop( "SpatialHessian elastix" );
+  timeCollector.Stop(  "SpatialHessian elastix          " );
 
-  timeCollector.Start( "SpatialHessian recursive vector" );
+  timeCollector.Start( "SpatialHessian recursive vector " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    recursiveTransform->GetSpatialHessian( inputPoint, shRecursive );
+    recursiveTransform->GetSpatialHessian( pointList[ i ] , shRecursive );
   }
-  timeCollector.Stop( "SpatialHessian recursive vector" );
+  timeCollector.Stop(  "SpatialHessian recursive vector " );
 
   /** Report. */
   timeCollector.Report();
@@ -343,30 +404,36 @@ main( int argc, char * argv[] )
   /** These should return the same values as the original ITK functions. */
 
   /** TransformPoint. */
-  OutputPointType opp1, opp2, opp3;
+  OutputPointType opp1, opp2, opp3, opp4;
   double differenceNorm1 = 0.0;
   double differenceNorm2 = 0.0;
   double differenceNorm3 = 0.0;
+  double differenceNorm4 = 0.0;
   for( unsigned int i = 0; i < N; ++i )
   {
-    opp1 = transform->TransformPoint( pointList[ i ] );
-    opp2 = recursiveTransform->TransformPointOld( pointList[ i ] );
-    opp3 = recursiveTransform->TransformPoint( pointList[ i ] );
+    opp1 = transformedPointList1[i]; //transform->TransformPoint( pointList[ i ] );
+    opp2 = transformedPointList2[i]; //recursiveTransform->TransformPointOld( pointList[ i ] );
+    opp3 = transformedPointList3[i]; //recursiveTransform->TransformPoint( pointList[ i ] );
+	opp4 = transformedPointList4[i]; // recursiveTransform->TransformPoints
 
-    for( unsigned int i = 0; i < Dimension; ++i )
+    for( unsigned int j = 0; j < Dimension; ++j )
     {
-      differenceNorm1 += ( opp1[ i ] - opp2[ i ] ) * ( opp1[ i ] - opp2[ i ] );
-      differenceNorm2 += ( opp1[ i ] - opp3[ i ] ) * ( opp1[ i ] - opp3[ i ] );
-      differenceNorm3 += ( opp2[ i ] - opp3[ i ] ) * ( opp2[ i ] - opp3[ i ] );
+      differenceNorm1 += ( opp1[ j ] - opp2[ j ] ) * ( opp1[ j ] - opp2[ j ] );
+      differenceNorm2 += ( opp1[ j ] - opp3[ j ] ) * ( opp1[ j ] - opp3[ j ] );
+      differenceNorm3 += ( opp2[ j ] - opp3[ j ] ) * ( opp2[ j ] - opp3[ j ] );
+      differenceNorm4 += ( opp3[ j ] - opp4[ j ] ) * ( opp3[ j ] - opp4[ j ] );
     }
-    differenceNorm1 = vcl_sqrt( differenceNorm1 );
-    differenceNorm2 = vcl_sqrt( differenceNorm2 );
-    differenceNorm3 = vcl_sqrt( differenceNorm3 );
   }
-  differenceNorm1 /= N; differenceNorm2 /= N; differenceNorm3 /= N;
+  differenceNorm1 = vcl_sqrt( differenceNorm1 );
+  differenceNorm2 = vcl_sqrt( differenceNorm2 );
+  differenceNorm3 = vcl_sqrt( differenceNorm3 );
+  differenceNorm4 = vcl_sqrt( differenceNorm4 );
+
+  differenceNorm1 /= N; differenceNorm2 /= N; differenceNorm3 /= N; differenceNorm4 /= N;
   std::cerr << "Recursive B-spline TransformPointOld() MSD with ITK: " << differenceNorm1 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm2 << std::endl;
-  std::cerr << "Recursive B-spline MSD with itself: " << differenceNorm3 << std::endl;
+  std::cerr << "Recursive B-spline TransformPoint() MSD with TransformPointOld(): " << differenceNorm3 << std::endl;
+  std::cerr << "Recursive B-spline TransformPoint() with TransformPoints(): " << differenceNorm4 << std::endl;
   if( differenceNorm1 > 1e-5 )
   {
     std::cerr << "ERROR: Recursive B-spline TransformPointOld() returning incorrect result." << std::endl;
@@ -446,7 +513,7 @@ main( int argc, char * argv[] )
 
   /** Exercise PrintSelf(). */
   recursiveTransform->Print( std::cerr );
-
+  
   /** Return a value. */
   return 0;
 

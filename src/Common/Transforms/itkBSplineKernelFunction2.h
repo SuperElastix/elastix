@@ -225,10 +225,15 @@ private:
     const double uu  = u * u;
     const double uuu = uu * u;
 
-    weights[ 0 ] = ( 8.0 - 12 * u + 6.0 * uu - uuu ) / 6.0;
+	static const double onesixth = 1.0/6.0; // use (numerically) slightly less accurate multiplication with 1/6 instead of division by 6 to substantially improve speed.
+    weights[ 0 ] = ( 8.0 - 12 * u + 6.0 * uu - uuu ) * onesixth;
+    weights[ 1 ] = ( -5.0 + 21.0 * u - 15.0 * uu + 3.0 * uuu ) * onesixth;
+    weights[ 2 ] = ( 4.0 - 12.0 * u + 12.0 * uu - 3.0 * uuu ) *onesixth;
+    weights[ 3 ] = ( -1.0 + 3.0 * u - 3.0 * uu + uuu ) *onesixth;
+/*/    weights[ 0 ] = ( 8.0 - 12 * u + 6.0 * uu - uuu ) / 6.0;
     weights[ 1 ] = ( -5.0 + 21.0 * u - 15.0 * uu + 3.0 * uuu ) / 6.0;
     weights[ 2 ] = ( 4.0 - 12.0 * u + 12.0 * uu - 3.0 * uuu ) / 6.0;
-    weights[ 3 ] = ( -1.0 + 3.0 * u - 3.0 * uu + uuu ) / 6.0;
+    weights[ 3 ] = ( -1.0 + 3.0 * u - 3.0 * uu + uuu ) / 6.0;  // */
   }
 
 
