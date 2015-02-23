@@ -177,10 +177,6 @@ main( int argc, char ** argv )
   itk::TimeProbe totaltimer;
   totaltimer.Start();
   elxout << "transformix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
-  //tmr::Timer::Pointer totaltimer = tmr::Timer::New();
-  //totaltimer->StartTimer();
-  //elxout << "transformix is started at " << totaltimer->PrintStartTime()
-  //       << ".\n" << std::endl;
 
   /** Print where transformix was run. */
   elxout << "which transformix:   " << argv[ 0 ] << std::endl;
@@ -221,7 +217,8 @@ main( int argc, char ** argv )
   /** Stop timer and print it. */
   totaltimer.Stop();
   elxout << "\ntransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl;
-  elxout << "Elapsed time: " << ConvertSecondsToDHMS( totaltimer.GetMean() ) << ".\n" << std::endl;
+  elxout << "Total time elapsed: " << totaltimer.GetMean() << " " << totaltimer.GetUnit()
+    << " = " << ConvertSecondsToDHMS( totaltimer.GetMean() ) << ".\n" << std::endl;
 
   /** Clean up. */
   transformix = 0;

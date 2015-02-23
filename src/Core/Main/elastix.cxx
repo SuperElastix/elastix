@@ -289,7 +289,7 @@ main( int argc, char ** argv )
     /** Stop timer and print it. */
     timer.Stop();
     elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl;
-    elxout << "Time used for running elastix with this parameter file: \n  "
+    elxout << "Time used for running elastix with this parameter file:\n  "
       << timer.GetMean() << " " << timer.GetUnit() << " = " << ConvertSecondsToDHMS( timer.GetMean() ) << ".\n" << std::endl;
 
     /** Try to release some memory. */
@@ -301,7 +301,8 @@ main( int argc, char ** argv )
 
   /** Stop totaltimer and print it. */
   totaltimer.Stop();
-  elxout << "Total time elapsed: " << ConvertSecondsToDHMS( totaltimer.GetMean() ) << ".\n" << std::endl;
+  elxout << "Total time elapsed: " << totaltimer.GetMean() << " " << totaltimer.GetUnit()
+    << " = " << ConvertSecondsToDHMS( totaltimer.GetMean() ) << ".\n" << std::endl;
 
   /**
    * Make sure all the components that are defined in a Module (.DLL/.so)

@@ -266,6 +266,7 @@ ResamplerBase< TElastix >
     timer.Stop();
     elxout << std::setprecision( 2 );
     elxout << "  Applying final transform took "
+           << timer.GetMean() << " " << timer.GetUnit() << " = "
            << this->ConvertSecondsToDHMS( timer.GetMean() )
            << std::endl;
     elxout << std::setprecision(
