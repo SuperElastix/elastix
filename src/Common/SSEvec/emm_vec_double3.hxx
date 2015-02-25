@@ -154,6 +154,11 @@ template <> inline void vec<double, 3>::operator/= (const double &v) {
   xmmd[0] = _mm_div_pd(xmmd[0], tmp);
   xmmd[1] = _mm_div_sd(xmmd[1], tmp);
 }
+template <> inline vec<double, 3> vec<double, 3>::operator= (const double &v) {
+  xmmd[1] = _mm_load_sd(&v);
+  xmmd[0] = _mm_unpacklo_pd(xmmd[1], xmmd[1]);
+  return vec<double, 3>(xmmd[0],xmmd[1]);
+}
 
 // repeat element
 template <> vec<double, 3> vec<double, 3>::rep (int idx) const  {

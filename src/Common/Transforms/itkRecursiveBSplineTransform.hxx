@@ -20,6 +20,15 @@
 
 #include "itkRecursiveBSplineTransform.h"
 
+#include "itkRecursiveBSplineTransformImplementation.h"
+#include "itkRecursiveBSplineTransformImplementation2.h"
+#include "itkRecursiveBSplineTransformImplementation3.h"
+#include "itkRecursiveBSplineImplementation.h"
+
+#ifdef RECURSIVEVERSION4
+#include "emm_vec.hxx"
+#endif
+
 //#define RECURSIVEVERSION3                    // use recusivebspline version 3. This uses an permuted parameter grid.
                          // Elastix standard = [spatial_dimensions   vector_dimension], where vector_dimension iterates over [x,y,z]
                          // RecursiveVersion3 =[ vector dimension   spatial dimensions].
@@ -246,8 +255,8 @@ void RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
         typedef vecptr< ScalarType * , SpaceDimension> vecPointerType;
         vecPointerType mu( bufferPointer + totalOffsetToSupportIndex[ blockIdx ] * SpaceDimension );
         //vecPointerType prefetch_mu( bufferPointer + totalOffsetToSupportIndex[ blockIdx +1 ] * SpaceDimension );
-        vecPointType displacement = RecursiveBSplineTransformImplementation4< vecPointType, SpaceDimension, SplineOrder, vecPointerType , false >
-            ::TransformPoint2( mu, bsplineOffsetTable, weightsPtr );//, prefetch_mu);
+        vecPointType displacement = RecursiveBSplineImplementation_GetSample< vecPointType, SpaceDimension, SplineOrder, vecPointerType >
+            ::GetSample( mu, bsplineOffsetTable, weightsPtr );
         displacement += vecPointType( & pointListIn[ pointIdxOuter + blockIdx ][0] );
         displacement.store( &pointListOut[ pointIdxOuter + blockIdx ][0] );
 
@@ -636,7 +645,17 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     totalOffsetToSupportIndex += supportIndex[ j ] * bsplineOffsetTable[ j ];
   }
 
-#ifdef RECURSIVEVERSION3
+#ifdef RECURSIVEVERSION4
+  typedef vec<ScalarType, SpaceDimension> vecPointType;
+  typedef vecptr< ScalarType * , SpaceDimension> vecPointerType;
+  vecPointerType mu( this->m_CoefficientImages[ 0 ]->GetBufferPointer() + totalOffsetToSupportIndex * SpaceDimension );
+  double spatialJacobian[ SpaceDimension * ( SpaceDimension + 1 ) ];
+  vecPointerType spatialJacobianV( &spatialJacobian[0] );
+  /** Recursively compute the spatial Jacobian. */
+  RecursiveBSplineImplementation_GetSpatialJacobian< vecPointerType, SpaceDimension, SplineOrder, vecPointerType >
+            ::GetSpatialJacobian( spatialJacobianV, mu, bsplineOffsetTable, weightsPointer, derivativeWeightsPointer  );
+
+#elif defined RECURSIVEVERSION3
   /** Get handles to the mu's. */
   ScalarType * mu;
   mu = this->m_CoefficientImages[ 0 ]->GetBufferPointer() + totalOffsetToSupportIndex * SpaceDimension;
@@ -658,6 +677,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetSpatialJacobian( spatialJacobian, mu, bsplineOffsetTable, weightsPointer, derivativeWeightsPointer );
 #endif
+
   /** Copy the correct elements to the spatial Jacobian.
    * The first SpaceDimension elements are actually the displacement, i.e. the recursive
    * function GetSpatialJacobian() has the TransformPoint as a free by-product.
@@ -681,6 +701,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 
   // \todo check if we first need to do the matrix multiplication and then
   // add the identity matrix, or vice versa.
+  // ANSWER: no, as in TransformPoint the untransformed point is added, while the displacement (and hence the jacobian of that) is evaluated on the cindex.
 } // end GetSpatialJacobian()
 
 

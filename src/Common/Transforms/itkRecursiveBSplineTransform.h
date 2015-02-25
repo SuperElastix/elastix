@@ -21,8 +21,6 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 
 #include "itkRecursiveBSplineInterpolationWeightFunction.h"
-#include "itkRecursiveBSplineTransformImplementation.h"
-
 
 namespace itk
 {
@@ -115,7 +113,7 @@ public:
   /** Parameter index array type. */
   typedef typename Superclass::ParameterIndexArrayType ParameterIndexArrayType;
 
-  typedef itk::RecursiveBSplineInterpolationWeightFunction<
+  typedef typename itk::RecursiveBSplineInterpolationWeightFunction<
     TScalarType, NDimensions, VSplineOrder >                      RecursiveBSplineWeightFunctionType;//TODO: get rid of this and use the kernels directly.
 /** Interpolation kernel type. */
   typedef BSplineKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > KernelType;

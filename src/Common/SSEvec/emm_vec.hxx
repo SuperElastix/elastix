@@ -221,6 +221,7 @@ template <typename T, int vlen> struct ALIGN_VEC vec {
   inline void operator+= (const T &v);
   inline void operator-= (const T &v);
   inline void operator/= (const T &v);
+  inline vec operator= (const T &v);
 
     // comparison to bitmask:
     inline vec operator> (const vec &v) const;
@@ -333,6 +334,11 @@ public:
   vec_store_helper( ptrT ptr_) : ptr(ptr_) {};
   inline void operator=(value_type newval) {
     newval.store( ptr );
+  }
+  template< typename otherT > inline void operator=(const otherT newval ) {
+    value_type temp(newval);
+    //temp = newval ;
+    temp.store( ptr );
   }
   inline void operator+=(value_type newval) {
     ( value_type( ptr ) + newval ).store( ptr );
