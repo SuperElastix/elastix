@@ -22,25 +22,25 @@ namespace itk
 {
 /** \class RecursiveBSplineImplementation
  *
- * \brief This set of helper classses contains the actual implementation of the
+ * \brief This set of helper classes contains the actual implementation of the
  * recursive B-spline transform
  *
  * Compared to the RecursiveBSplineTransformImplementation class, this
- * class is templated over the OutputType and input pointer type and the 
- * interpolated point is returned by value. 
- * This allows using efficient (SSE/AVX optimized) vector implementation for 
- * GetSample. Also this same version can now be used to sample scalar as 
- * well as vector images (of compile time known vector length, although with the 
- * right selection of types also dynamic vector lengths; but that will nececarily 
+ * class is templated over the OutputType and input pointer type and the
+ * interpolated point is returned by value.
+ * This allows using efficient (SSE/AVX optimized) vector implementation for
+ * GetSample. Also this same version can now be used to sample scalar as
+ * well as vector images (of compile time known vector length, although with the
+ * right selection of types also dynamic vector lengths; but that will nececarily
  * be less efficient.)
  *
  * ASSUMPTIONS:
  *   The optimized end cases (may) assume that gridOffsetTable[0] == 1 (element increment in InputPointerType)
- *  
+ *
  * STRUCTURE:
  *   each method has it's own class with only 1 method:
  *      RecursiveBSplineImplementation_(methodName)::(methodName)( ... )
- *   where '(methodName)' is one of the following:   
+ *   where '(methodName)' is one of the following:
  *      GetSample                  // old name: TransformPoint
  *      GetSpatialJacobian
  *      GetSpatialHessian
@@ -48,29 +48,29 @@ namespace itk
  *      ComputeNonZeroJacobianIndices
  *      MultiplyJacobianWithValue  // similar to old name, which I consider too specific: EvaluateJacobianWithImageGradientProduct
  *                                 // This is the adjoint of 'GetSample' :
- *                                 //    if you regard the sampling as matrix multiplication: GetSample(mu, ..) == Jacobian * mu 
+ *                                 //    if you regard the sampling as matrix multiplication: GetSample(mu, ..) == Jacobian * mu
  *                                 //    then MultiplyJacobianWithValue( jac, value, ...) == transpose(Jacobian) * value
  *   REASONS:
  *   - To allow easy addition of specialized end cases.
  *   - To keep the code of each method, including the end cases, together in the file.
  *   - To allow variations in template arguments.
- *   - The reason to put a static method in a class rather than using functions is that 
+ *   - The reason to put a static method in a class rather than using functions is that
  *     c++ does not allow partial specialization of function templates, which in this
- *     case makes it impossible to construct the end cases. 
- * 
+ *     case makes it impossible to construct the end cases.
+ *
  * Other remarks:
- *   - I (DPoot) have exerimented with prefetching. However, at this moment my conclusion is that that does not 
- *     really help when the images are large, and seriously hurts performance for small images. I think the main 
- *     reason is that the prefetching adds so many instructions that latency cannot be hided as efficiently. Also  
- *     the (effective) instruction throughput seriously reduces as without prefetching (and small images) already 
- *     the maximum throughput is almost reached. 
+ *   - I (DPoot) have exerimented with prefetching. However, at this moment my conclusion is that that does not
+ *     really help when the images are large, and seriously hurts performance for small images. I think the main
+ *     reason is that the prefetching adds so many instructions that latency cannot be hided as efficiently. Also
+ *     the (effective) instruction throughput seriously reduces as without prefetching (and small images) already
+ *     the maximum throughput is almost reached.
  *   - If you need to sample vector images, use an (SSE/AVX optimized) fixed-length vector class for OutputType and a compatible InputPointerType
  *     for example vec< type, vlen> with the accompagnying vecptr< type, vlen> as InputPointerType.
- * 
+ *
  * \ingroup ITKTransform
  */
 
-template< class OutputType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0=1>
+template< class OutputType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0 = 1 >
 class RecursiveBSplineImplementation_GetSample
 {
 public:
@@ -78,12 +78,11 @@ public:
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
-
   /** GetSample recursive implementation. */
   static inline OutputType GetSample(
     const InputPointerType mu,
     const OffsetValueType * gridOffsetTable,
-    const double * weights1D ) 
+    const double * weights1D )
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     InputPointerType tmp_mu = mu;
@@ -92,14 +91,15 @@ public:
       tmp_prefetch_mu = prefetch_mu;*/
 
     /** Create a temporary sj and initialize the original. */
-    OutputType opp(0.0);
+    OutputType opp( 0.0 );
 
-    const OffsetValueType bot = (SpaceDimension == 1 && gridOffsetTable0!=0 ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ] );
+    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
+      ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       opp += RecursiveBSplineImplementation_GetSample< OutputType, SpaceDimension - 1, SplineOrder, InputPointerType, gridOffsetTable0 >
-             ::GetSample( tmp_mu, gridOffsetTable, weights1D ) * weights1D[ k + HelperConstVariable ];
-        //::GetSample2( tmp_mu, gridOffsetTable, weights1D , tmp_prefetch_mu ) * weights1D[ k + HelperConstVariable ];
+        ::GetSample( tmp_mu, gridOffsetTable, weights1D ) * weights1D[ k + HelperConstVariable ];
+      //::GetSample2( tmp_mu, gridOffsetTable, weights1D , tmp_prefetch_mu ) * weights1D[ k + HelperConstVariable ];
 
       // move to the next mu
       tmp_mu += bot;
@@ -115,8 +115,9 @@ public:
  *
  * \brief Define the end case for SpaceDimension = 0.
  */
+
 template< class OutputType, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0 >
-class RecursiveBSplineImplementation_GetSample< OutputType, 0, SplineOrder, InputPointerType, gridOffsetTable0>
+class RecursiveBSplineImplementation_GetSample< OutputType, 0, SplineOrder, InputPointerType, gridOffsetTable0 >
 {
 public:
   /** GetSample recursive implementation. */
@@ -133,20 +134,20 @@ public:
 }; // end class
 
 
-
 /** \class RecursiveBSplineImplementation_GetSample
  *
- * \brief Define the end case for SpaceDimension = 1 for SplineOrder==3.
+ * \brief Define the specialized end case for SpaceDimension = 1 and SplineOrder == 3.
  */
-template<class OutputType, class InputPointerType, int gridOffsetTable0 > 
-class RecursiveBSplineImplementation_GetSample< OutputType, 1, 3,  InputPointerType, gridOffsetTable0 >
+
+template< class OutputType, class InputPointerType, int gridOffsetTable0 >
+class RecursiveBSplineImplementation_GetSample< OutputType, 1, 3, InputPointerType, gridOffsetTable0 >
 {
 public:
   /** Typedef related to the coordinate representation type and the weights type.
    * Usually double, but can be float as well. <Not tested very well for float>
    */
   static const unsigned int SpaceDimension = 1;
-  static const unsigned int SplineOrder =3;
+  static const unsigned int SplineOrder = 3;
   //static const unsigned int CACHE_LINE_SIZE = 64;
 
   /** Helper constant variable. */
@@ -171,8 +172,10 @@ public:
       const char * lastByteUsed = ( (const char *) (prefetch_mu+4) ) - 1;
       _mm_prefetch( lastByteUsed, _MM_HINT_T2 ) ; // last byte used.
     }*/
-    const OffsetValueType bot = (SpaceDimension == 1 && gridOffsetTable0 != 0 ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ] );
-    return ( (*(mu+0)) * weights0 + (*(mu+1*bot)  * weights1)) + ( (*(mu+2*bot)) * weights2 + (*(mu+3*bot)  * weights3));
+    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
+      ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
+    return ( (*(mu+0)) * weights0 + (*(mu + 1 * bot)  * weights1 ) )
+      + ( (*(mu + 2 * bot)) * weights2 + (*(mu + 3 * bot)  * weights3 ) );
   } // end GetSample()
 
 }; // end class
@@ -231,21 +234,21 @@ public:
 */
 
 
-
 /** \class RecursiveBSplineImplementation_GetSpatialJacobian
  *
  * \brief Define general case
  */
-template< class OutputPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0=1>
+
+template< class OutputPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0 = 1 >
 class RecursiveBSplineImplementation_GetSpatialJacobian
 {
 public:
   typedef typename std::iterator_traits< OutputPointerType >::value_type OutputValueType; //\todo: is this the proper use of std::iterator_traits? Preferably we use 'using std::iterator_traits', to allow custom template specializations.
   typedef OutputValueType * RecusiveOutputPointerType;
+
   /** Helper constant variable. */
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
-
 
   /** GetSpatialJacobian recursive implementation. */
   static inline void GetSpatialJacobian(
@@ -253,7 +256,7 @@ public:
     const InputPointerType mu,
     const OffsetValueType * gridOffsetTable,
     const double * weights1D,
-    const double * derivativeWeights1D ) 
+    const double * derivativeWeights1D )
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     InputPointerType tmp_mu = mu;
@@ -265,11 +268,12 @@ public:
       sj[ n ] = 0.0;
     }
 
-    const OffsetValueType bot = (SpaceDimension == 1 && gridOffsetTable0!=0 ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ] );
+    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
+      ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       RecursiveBSplineImplementation_GetSpatialJacobian< RecusiveOutputPointerType, SpaceDimension - 1, SplineOrder, InputPointerType, gridOffsetTable0 >
-             ::GetSpatialJacobian( tmp_sj, tmp_mu, gridOffsetTable, weights1D , derivativeWeights1D) ;
+        ::GetSpatialJacobian( tmp_sj, tmp_mu, gridOffsetTable, weights1D , derivativeWeights1D );
 
       // Multiply by the weights
       for( unsigned int n = 0; n < SpaceDimension; ++n )
@@ -291,8 +295,9 @@ public:
  *
  * \brief Define the end case for SpaceDimension = 0.
  */
+
 template< class OutputPointerType, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0 >
-class RecursiveBSplineImplementation_GetSpatialJacobian< OutputPointerType, 0, SplineOrder, InputPointerType, gridOffsetTable0>
+class RecursiveBSplineImplementation_GetSpatialJacobian< OutputPointerType, 0, SplineOrder, InputPointerType, gridOffsetTable0 >
 {
 public:
   /** GetSpatialJacobian recursive implementation. */
@@ -301,20 +306,20 @@ public:
     const InputPointerType mu,
     const OffsetValueType * gridOffsetTable,
     const double * weights1D,
-    const double * derivativeWeights1D ) 
+    const double * derivativeWeights1D )
   {
     *sj = *mu;
   } // end GetSpatialJacobian()
 }; // end class
 
 
-
 /** \class RecursiveBSplineImplementation_GetSpatialJacobian
  *
- * \brief Define the end case for SpaceDimension = 1 for SplineOrder==3.
+ * \brief Define the specialized end case for SpaceDimension = 1 and SplineOrder == 3.
  */
-template< class OutputPointerType, class InputPointerType, int gridOffsetTable0 > 
-class RecursiveBSplineImplementation_GetSpatialJacobian< OutputPointerType, 1, 3,  InputPointerType, gridOffsetTable0>
+
+template< class OutputPointerType, class InputPointerType, int gridOffsetTable0 >
+class RecursiveBSplineImplementation_GetSpatialJacobian< OutputPointerType, 1, 3,  InputPointerType, gridOffsetTable0 >
 {
 public:
   /** Typedef related to the coordinate representation type and the weights type.
@@ -322,7 +327,7 @@ public:
    */
   typedef typename std::iterator_traits< OutputPointerType >::value_type OutputValueType; //\todo: is this the proper use of std::iterator_traits? Preferably we use 'using std::iterator_traits', to allow custom template specializations.
   static const unsigned int SpaceDimension = 1;
-  static const unsigned int SplineOrder =3;
+  static const unsigned int SplineOrder = 3;
 
   /** Helper constant variable. */
   itkStaticConstMacro( HelperConstVariable, unsigned int,
@@ -334,18 +339,19 @@ public:
     const InputPointerType mu,
     const OffsetValueType * gridOffsetTable,
     const double * weights1D,
-    const double * derivativeWeights1D ) 
+    const double * derivativeWeights1D )
   {
-    const OffsetValueType bot = (SpaceDimension == 1 && gridOffsetTable0 != 0 ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ] );
+    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
+      ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
     OutputValueType mu0 = *mu;
-    OutputValueType mu1 = *(mu + 1*bot);
-    OutputValueType mu2 = *(mu + 2*bot);
-    OutputValueType mu3 = *(mu + 3*bot);
+    OutputValueType mu1 = *(mu + 1 * bot);
+    OutputValueType mu2 = *(mu + 2 * bot);
+    OutputValueType mu3 = *(mu + 3 * bot);
 
-    sj[0] = (mu0*weights1D[ 0 + HelperConstVariable ] + mu1*weights1D[ 1 + HelperConstVariable ]) + 
-            (mu2*weights1D[ 2 + HelperConstVariable ] + mu3*weights1D[ 3 + HelperConstVariable ]) ;
-    sj[1] = (mu0*derivativeWeights1D[ 0 + HelperConstVariable ] + mu1*derivativeWeights1D[ 1 + HelperConstVariable ]) + 
-            (mu2*derivativeWeights1D[ 2 + HelperConstVariable ] + mu3*derivativeWeights1D[ 3 + HelperConstVariable ]) ;
+    sj[ 0 ] = ( mu0 * weights1D[ 0 + HelperConstVariable ] + mu1 * weights1D[ 1 + HelperConstVariable ] )
+            + ( mu2 * weights1D[ 2 + HelperConstVariable ] + mu3 * weights1D[ 3 + HelperConstVariable ] );
+    sj[ 1 ] = ( mu0 * derivativeWeights1D[ 0 + HelperConstVariable ] + mu1 * derivativeWeights1D[ 1 + HelperConstVariable ] )
+            + ( mu2 * derivativeWeights1D[ 2 + HelperConstVariable ] + mu3 * derivativeWeights1D[ 3 + HelperConstVariable ] );
   } // end GetSpatialJacobian()
 
 }; // end class
@@ -355,16 +361,17 @@ public:
  *
  * \brief Define general case
  */
-template< class OutputPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0=1>
+
+template< class OutputPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0 = 1 >
 class RecursiveBSplineImplementation_GetSpatialHessian
 {
 public:
   typedef typename std::iterator_traits< OutputPointerType >::value_type OutputValueType; //\todo: is this the proper use of std::iterator_traits? Preferably we use 'using std::iterator_traits', to allow custom template specializations.
   typedef OutputValueType * RecusiveOutputPointerType;
+
   /** Helper constant variable. */
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
-
 
   /** GetSpatialHessian recursive implementation. */
   static inline void GetSpatialHessian(
@@ -388,11 +395,12 @@ public:
       sh[ n ] = 0.0;
     }
 
-    const OffsetValueType bot = (SpaceDimension == 1 && gridOffsetTable0!=0 ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ] );
+    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
+      ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       RecursiveBSplineImplementation_GetSpatialHessian< RecusiveOutputPointerType, SpaceDimension - 1, SplineOrder, InputPointerType, gridOffsetTable0 >
-             ::GetSpatialHessian( tmp_sh, tmp_mu, gridOffsetTable, weights1D , derivativeWeights1D, hessianWeights1D) ;
+        ::GetSpatialHessian( tmp_sh, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D, hessianWeights1D );
 
       // Multiply by the weights
       for( unsigned int n = 0; n < helperDim1; ++n )
@@ -400,7 +408,7 @@ public:
         sh[ n ] += tmp_sh[ n ] * weights1D[ k + HelperConstVariable ];
       }
 
-       // Multiply by the derivative weights
+      // Multiply by the derivative weights
       for( unsigned int n = 0; n < SpaceDimension; ++n )
       {
         sh[ n + helperDim1 ] += tmp_sh[ n * ( n + 1 ) / 2 ] * derivativeWeights1D[ k + HelperConstVariable ];
@@ -423,8 +431,9 @@ public:
  *
  * \brief Define the end case for SpaceDimension = 0.
  */
+
 template< class OutputPointerType, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0 >
-class RecursiveBSplineImplementation_GetSpatialHessian< OutputPointerType, 0, SplineOrder, InputPointerType, gridOffsetTable0>
+class RecursiveBSplineImplementation_GetSpatialHessian< OutputPointerType, 0, SplineOrder, InputPointerType, gridOffsetTable0 >
 {
 public:
   /** GetSpatialHessian recursive implementation. */
@@ -441,13 +450,13 @@ public:
 }; // end class
 
 
-
 /** \class RecursiveBSplineImplementation_GetSpatialHessian
  *
- * \brief Define the end case for SpaceDimension = 1 for SplineOrder==3 to improve speed for this common SplineOrder case.
+ * \brief Define the end case for SpaceDimension = 1 for SplineOrder == 3 to improve speed for this common SplineOrder case.
  */
-template< class OutputPointerType, class InputPointerType, int gridOffsetTable0 > 
-class RecursiveBSplineImplementation_GetSpatialHessian< OutputPointerType, 1, 3,  InputPointerType, gridOffsetTable0>
+
+template< class OutputPointerType, class InputPointerType, int gridOffsetTable0 >
+class RecursiveBSplineImplementation_GetSpatialHessian< OutputPointerType, 1, 3, InputPointerType, gridOffsetTable0 >
 {
 public:
   /** Typedef related to the coordinate representation type and the weights type.
@@ -455,7 +464,7 @@ public:
    */
   typedef typename std::iterator_traits< OutputPointerType >::value_type OutputValueType; //\todo: is this the proper use of std::iterator_traits? Preferably we use 'using std::iterator_traits', to allow custom template specializations.
   static const unsigned int SpaceDimension = 1;
-  static const unsigned int SplineOrder =3;
+  static const unsigned int SplineOrder = 3;
 
   /** Helper constant variable. */
   itkStaticConstMacro( HelperConstVariable, unsigned int,
@@ -473,96 +482,100 @@ public:
     const unsigned int helperDim1 = SpaceDimension * ( SpaceDimension + 1 ) / 2;  // == 1
     const unsigned int helperDim2 = ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2; //==3
 
-    const OffsetValueType bot = (SpaceDimension == 1 && gridOffsetTable0 != 0 ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ] );
+    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
+      ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
     OutputValueType mu0 = *mu;
     OutputValueType mu1 = *(mu + 1*bot);
     OutputValueType mu2 = *(mu + 2*bot);
     OutputValueType mu3 = *(mu + 3*bot);
 
-    sh[0] = (mu0*weights1D[ 0 + HelperConstVariable ] + mu1*weights1D[ 1 + HelperConstVariable ]) + 
-            (mu2*weights1D[ 2 + HelperConstVariable ] + mu3*weights1D[ 3 + HelperConstVariable ]) ;
-    sh[1] = (mu0*derivativeWeights1D[ 0 + HelperConstVariable ] + mu1*derivativeWeights1D[ 1 + HelperConstVariable ]) + 
-            (mu2*derivativeWeights1D[ 2 + HelperConstVariable ] + mu3*derivativeWeights1D[ 3 + HelperConstVariable ]) ;
-    sh[2] = (mu0*hessianWeights1D[ 0 + HelperConstVariable ] + mu1*hessianWeights1D[ 1 + HelperConstVariable ]) + 
-            (mu2*hessianWeights1D[ 2 + HelperConstVariable ] + mu3*hessianWeights1D[ 3 + HelperConstVariable ]) ;
+    sh[ 0 ] = ( mu0 * weights1D[ 0 + HelperConstVariable ] + mu1 * weights1D[ 1 + HelperConstVariable ] )
+            + ( mu2 * weights1D[ 2 + HelperConstVariable ] + mu3 * weights1D[ 3 + HelperConstVariable ] );
+    sh[ 1 ] = ( mu0 * derivativeWeights1D[ 0 + HelperConstVariable ] + mu1 * derivativeWeights1D[ 1 + HelperConstVariable ] )
+            + ( mu2 * derivativeWeights1D[ 2 + HelperConstVariable ] + mu3 * derivativeWeights1D[ 3 + HelperConstVariable ] );
+    sh[ 2 ] = ( mu0 * hessianWeights1D[ 0 + HelperConstVariable ] + mu1 * hessianWeights1D[ 1 + HelperConstVariable ] )
+            + ( mu2 * hessianWeights1D[ 2 + HelperConstVariable ] + mu3 * hessianWeights1D[ 3 + HelperConstVariable ] );
   } // end GetSpatialHessian()
 
 }; // end class
 
 
-/** \class RecursiveBSplineImplementation_getJacobian
+/** \class RecursiveBSplineImplementation_GetJacobian
  *
  * \brief Define general case
  */
-template< class OutputPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputValueType>
-class RecursiveBSplineImplementation_getJacobian
+
+template< class OutputPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputValueType >
+class RecursiveBSplineImplementation_GetJacobian
 {
 public:
   /** Helper constant variable. */
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
-
-  /** getJacobian recursive implementation. */
-  static inline void getJacobian(
+  /** GetJacobian recursive implementation. */
+  static inline void GetJacobian(
     OutputPointerType & jacobians,
     const double * weights1D,
-    InputValueType value) 
+    InputValueType value )
   {
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      RecursiveBSplineImplementation_getJacobian< OutputPointerType, SpaceDimension - 1, SplineOrder, InputValueType>
-             ::getJacobian( jacobians, weights1D , value * weights1D[ k + HelperConstVariable ] ) ;
+      RecursiveBSplineImplementation_GetJacobian< OutputPointerType, SpaceDimension - 1, SplineOrder, InputValueType >
+        ::GetJacobian( jacobians, weights1D, value * weights1D[ k + HelperConstVariable ] ) ;
     }
-  } // end getJacobian()
+  } // end GetJacobian()
 }; // end class
 
 
-/** \class RecursiveBSplineImplementation_getJacobian
+/** \class RecursiveBSplineImplementation_GetJacobian
  *
  * \brief Define the end case for SpaceDimension = 0.
  */
-template< class OutputPointerType, unsigned int SplineOrder, class InputValueType>
-class RecursiveBSplineImplementation_getJacobian< OutputPointerType, 0, SplineOrder, InputValueType>
+
+template< class OutputPointerType, unsigned int SplineOrder, class InputValueType >
+class RecursiveBSplineImplementation_GetJacobian< OutputPointerType, 0, SplineOrder, InputValueType >
 {
 public:
   /** getJacobian recursive implementation. */
-  static inline void getJacobian(
+  static inline void GetJacobian(
     OutputPointerType & jacobians,
     const double * weights1D,
-    InputValueType value) 
+    InputValueType value )
   {
     *jacobians = value;
     ++jacobians;
-  } // end getJacobian()
+  } // end GetJacobian()
 }; // end class
-
 
 
 /** \class RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices
  *
  * \brief Define general case
- * This class computes the nonzero jacobian indices (which also are the nonzero jacobian of SpatialJacobian and jacobian of SpatialHessian indices)
+ * This class computes the nonzero Jacobian indices (which also are the nonzero Jacobian of SpatialJacobian and Jacobian of SpatialHessian indices)
  * This class is almost never needed. Typically use MultiplyJacobianWithValue as that implicitly computes these indices.
  *
  * Special remark:
- *  if getJacobian is called with a vector OutputPointerType, ComputeNonZeroJacobianIndices should be called with 
+ *  if GetJacobian is called with a vector OutputPointerType, ComputeNonZeroJacobianIndices should be called with
  *  this vector dimension as first dimension.
  * e.g.:
- *    RecursiveBSplineImplementation_getJacobian< vecptr< double, vecLength> , SpatialDimension, SplineOrder, double>::getJacobian( jacobians, weights1D, value )
- *    // note the typical call has vecLength == SpatialDimension 
+ *    RecursiveBSplineImplementation_GetJacobian< vecptr< double, vecLength>, SpatialDimension, SplineOrder, double>
+ *      ::getJacobian( jacobians, weights1D, value )
+ *    // note the typical call has vecLength == SpatialDimension
  * has as matching call:
- *    expandedGridOffsetTable[SpatialDimension+1] 
+ *    expandedGridOffsetTable[SpatialDimension+1]
  *    expandedGridOffsetTable[0] = 1;
  *    for (i = 1; i < SpatialDimension+1; ++i ) {
  *       expandedGridOffsetTable[i] = gridOffsetTable[i-1]*vecLength;
  *    }
  *    temp_nzji = nzji;
- *    RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices< unsigned long * , SpatialDimension+1, SplineOrder>::ComputeNonZeroJacobianIndices(temp_nzji, currentIndex, &expandedGridOffsetTable[0] );
+ *    RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices< unsigned long *, SpatialDimension + 1, SplineOrder>
+ *      ::ComputeNonZeroJacobianIndices( temp_nzji, currentIndex, &expandedGridOffsetTable[0] );
  *
  * Note: the input argument nzji is incremented to the end.
  */
-template< class OutputPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, int gridOffsetTable0=1>
+
+template< class OutputPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, int gridOffsetTable0 = 1 >
 class RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices
 {
 public:
@@ -572,19 +585,19 @@ public:
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
-
   /** ComputeNonZeroJacobianIndices recursive implementation. */
   static inline void ComputeNonZeroJacobianIndices(
     OutputPointerType & nzji,
     indexType currentIndex,
-    const OffsetValueType * gridOffsetTable) 
+    const OffsetValueType * gridOffsetTable)
   {
-    const OffsetValueType bot = (SpaceDimension == 1 && gridOffsetTable0!=0 ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ] );
+    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
+      ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices< OutputPointerType, SpaceDimension - 1, SplineOrder, gridOffsetTable0 >
-             ::ComputeNonZeroJacobianIndices( nzji, currentIndex, gridOffsetTable) ;
+        ::ComputeNonZeroJacobianIndices( nzji, currentIndex, gridOffsetTable );
       currentIndex += bot;
     }
   } // end ComputeNonZeroJacobianIndices()
@@ -595,8 +608,9 @@ public:
  *
  * \brief Define the end case for SpaceDimension = 0.
  */
-template< class OutputPointerType, unsigned int SplineOrder, int gridOffsetTable0>
-class RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices< OutputPointerType, 0, SplineOrder, gridOffsetTable0>
+
+template< class OutputPointerType, unsigned int SplineOrder, int gridOffsetTable0 >
+class RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices< OutputPointerType, 0, SplineOrder, gridOffsetTable0 >
 {
 public:
   typedef typename std::iterator_traits< OutputPointerType >::value_type indexType;
@@ -605,7 +619,7 @@ public:
   static inline void ComputeNonZeroJacobianIndices(
     OutputPointerType & nzji,
     indexType currentIndex,
-    const OffsetValueType * gridOffsetTable) 
+    const OffsetValueType * gridOffsetTable )
   {
     *nzji = currentIndex;
     ++nzji;
@@ -613,26 +627,26 @@ public:
 }; // end class
 
 
-//MultiplyJacobianWithValue 
 /** \class RecursiveBSplineImplementation_MultiplyJacobianWithValue
  *
  * \brief Define general case
- * This class should almost always be prefered used over GetSpatialJacobian and ComputeNonZeroJacobianIndices.
- * 
+ * This class should almost always be preferred used over GetSpatialJacobian and ComputeNonZeroJacobianIndices.
+ *
  * INPUTS:
- *    gradCoefficients : idential type (and size) to mu input in the corresponding GetSample. 
- *                       The result of the multiplication with the jacobian is added to this vector.
- *    weight : scaling applied to multiplication (typically == 1.0) 
+ *    gradCoefficients : identical type (and size) to mu input in the corresponding GetSample.
+ *                       The result of the multiplication with the Jacobian is added to this vector.
+ *    weight : scaling applied to multiplication (typically == 1.0)
  *    gradValue : same type as output of GetSample. Typically contains the image gradient.
  *                You might want to add a reference in InputValueType (so that gradValue is passed by reference, rather than by value)
  *    gridOffsetTable & weights1D : identical to the ones used in GetSample.
  *
- * NOTE for programmers of this class: 
+ * NOTE for programmers of this class:
  *   Currently there is a difference in recursion between GetSample and MultiplyJacobianWithValue.
  *   This difference is not needed; in MultiplyJacobianWithValue we could multiply gradValue by weights1D[..] or, alternatively
  *   we could pass a 'weight' value also in GetSample. Currently do not know which recursion is more efficient.
  */
-template< class gradPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputValueType, int gridOffsetTable0=1>
+
+template< class gradPointerType, unsigned int SpaceDimension, unsigned int SplineOrder, class InputValueType, int gridOffsetTable0 = 1 >
 class RecursiveBSplineImplementation_MultiplyJacobianWithValue
 {
 public:
@@ -640,21 +654,21 @@ public:
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
-
   /** MultiplyJacobianWithValue recursive implementation. */
   static inline void MultiplyJacobianWithValue(
     gradPointerType gradCoefficients,
     double weight,
     const InputValueType gradValue,
     const OffsetValueType * gridOffsetTable,
-    const double * weights1D) 
+    const double * weights1D )
   {
-    const OffsetValueType bot = (SpaceDimension == 1 && gridOffsetTable0!=0 ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ] );
+    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
+      ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       RecursiveBSplineImplementation_MultiplyJacobianWithValue< gradPointerType, SpaceDimension - 1, SplineOrder, InputValueType, gridOffsetTable0 >
-             ::MultiplyJacobianWithValue( gradCoefficients, weight * weights1D[ k + HelperConstVariable ], gradValue , gridOffsetTable, weights1D) ;
+        ::MultiplyJacobianWithValue( gradCoefficients, weight * weights1D[ k + HelperConstVariable ], gradValue , gridOffsetTable, weights1D );
       gradCoefficients += bot;
     }
   } // end MultiplyJacobianWithValue()
@@ -665,8 +679,9 @@ public:
  *
  * \brief Define the end case for SpaceDimension = 0.
  */
-template< class gradPointerType, unsigned int SplineOrder, class InputValueType>
-class RecursiveBSplineImplementation_MultiplyJacobianWithValue< gradPointerType, 0, SplineOrder, InputValueType>
+
+template< class gradPointerType, unsigned int SplineOrder, class InputValueType >
+class RecursiveBSplineImplementation_MultiplyJacobianWithValue< gradPointerType, 0, SplineOrder, InputValueType >
 {
 public:
   /** MultiplyJacobianWithValue recursive implementation. */
@@ -675,9 +690,9 @@ public:
     double weight,
     const InputValueType gradValue,
     const OffsetValueType * gridOffsetTable,
-    const double * weights1D) 
+    const double * weights1D )
   {
-    *gradCoefficients += weight * gradValue; 
+    *gradCoefficients += weight * gradValue;
   } // end MultiplyJacobianWithValue()
 }; // end class
 

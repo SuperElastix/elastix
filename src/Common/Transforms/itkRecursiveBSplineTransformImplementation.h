@@ -60,7 +60,7 @@ public:
         ::TransformPoint( tmp_mu, steps, weights1D, coefBasePointer, indices, c ) * weights1D[ k + HelperConstVariable ];
     }
     return coord;
-  } // end InterpolateTransformPoint()
+  } // end TransformPoint()
 
 
   /** GetJacobian recursive implementation. */
@@ -118,7 +118,6 @@ public:
 
 
 }; // end class
-
 
 
 } // end namespace itk
