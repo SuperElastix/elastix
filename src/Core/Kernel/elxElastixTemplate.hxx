@@ -403,8 +403,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
   }
   timer.Stop();
   elxout << "  Transforming points done, it took "
-         << timer.GetMean()
-         << " s" << std::endl;
+    << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
 
   /** Call ComputeDeterminantOfSpatialJacobian.
    * Actually we could loop over all transforms.
@@ -424,8 +423,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
   }
   timer.Stop();
   elxout << "  Computing determinant of spatial Jacobian done, it took "
-         << timer.GetMean()
-         << " s" << std::endl;
+    << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
 
   /** Call ComputeSpatialJacobian.
    * Actually we could loop over all transforms.
@@ -445,8 +443,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
   }
   timer.Stop();
   elxout << "  Computing spatial Jacobian done, it took "
-         << timer.GetMean()
-         << " s" << std::endl;
+    << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
 
   /** Resample the image. */
   if( this->GetMovingImage() != 0 )
@@ -475,10 +472,8 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
     /** Print the elapsed time for the resampling. */
     timer.Stop();
-    elxout << std::setprecision( 2 );
     elxout << "  Resampling took "
-           << timer.GetMean() << " s" << std::endl;
-    elxout << std::setprecision( this->GetDefaultOutputPrecision() );
+      << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
   }
 
   /** Return a value. */
@@ -573,6 +568,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
   /** Add a column to iteration with timing information. */
   xout[ "iteration" ].AddTargetCell( "Time[ms]" );
+  xout[ "iteration" ][ "Time[ms]" ] << std::showpoint << std::fixed << std::setprecision( 1 );
 
   /** Print time for initializing. */
   this->m_Timer0.Stop();
@@ -669,7 +665,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
   elxout
     << "Time spent in resolution "
     << ( level )
-    << " (ITK initialisation and iterating): "
+    << " (ITK initialization and iterating): "
     << this->m_ResolutionTimer.GetMean()
     << " s.\n";
   elxout << std::setprecision( this->GetDefaultOutputPrecision() );
@@ -733,8 +729,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
   /** Time in this iteration. */
   this->m_IterationTimer.Stop();
-  xout[ "iteration" ][ "Time[ms]" ]
-    << static_cast< unsigned long >( this->m_IterationTimer.GetMean() * 1000 );
+  xout[ "iteration" ][ "Time[ms]" ] << this->m_IterationTimer.GetMean() * 1000.0;
 
   /** Write the iteration info of this iteration. */
   xout[ "iteration" ].WriteBufferedData();

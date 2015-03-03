@@ -217,8 +217,8 @@ main( int argc, char ** argv )
   /** Stop timer and print it. */
   totaltimer.Stop();
   elxout << "\ntransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl;
-  elxout << "Total time elapsed: " << totaltimer.GetMean() << " " << totaltimer.GetUnit()
-    << " = " << ConvertSecondsToDHMS( totaltimer.GetMean() ) << ".\n" << std::endl;
+  elxout << "Total time elapsed: "
+    << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
 
   /** Clean up. */
   transformix = 0;

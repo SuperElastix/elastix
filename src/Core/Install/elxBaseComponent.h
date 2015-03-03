@@ -38,6 +38,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <iomanip>      // std::setprecision
 
 /** The current elastix version. */
 #define __ELASTIX_VERSION 4.700
@@ -118,7 +119,7 @@ public:
   virtual const char * GetComponentLabel( void ) const;
 
   /** Convenience function to convert seconds to day, hour, minute, second format. */
-  std::string ConvertSecondsToDHMS( const double totalSeconds ) const;
+  std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision ) const;
 
 protected:
 
