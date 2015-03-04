@@ -18,6 +18,7 @@
 
 #include "elxBaseComponent.h"
 
+#include <cmath>
 
 namespace elastix
 {
