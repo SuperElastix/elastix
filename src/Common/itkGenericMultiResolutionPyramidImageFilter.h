@@ -19,6 +19,7 @@
 #define __itkGenericMultiResolutionPyramidImageFilter_h
 
 #include "itkMultiResolutionPyramidImageFilter.h"
+#include "itkSmoothingRecursiveGaussianImageFilter.h"
 
 namespace itk
 {
@@ -90,22 +91,29 @@ namespace itk
  * The N'th output correspond to the N'th level of the pyramid.
  *
  * The user can influence whether or not rescale schedule or smoothing schedule
- * will be used via SetUseMultiResolutionRescaleSchedule() and
- * SetUseMultiResolutionSmoothingSchedule() methods.
+ * will be used via SetRescaleScheduleToUnity() and
+ * SetSmoothingScheduleToZero() methods.
  *
  * The GenericMultiResolutionPyramidImageFilter provides direct control to
  * compute only single level of the pyramid via SetCurrentLevel() and
  * SetComputeOnlyForCurrentLevel() methods.
  *
+ * \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
+ * Department of Radiology, Leiden, The Netherlands
+ *
+ * This implementation was taken from elastix (http://elastix.isi.uu.nl/).
+ *
+ * \note This work was funded by the Netherlands Organisation for
+ * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
+ *
  * \sa SmoothingRecursiveGaussianImageFilter
  * \sa ResampleImageFilter
  * \sa ShrinkImageFilter
- * \sa CastImageFilter
  *
  * \ingroup PyramidImageFilter MultiThreaded Streamed
  * \ingroup ITKRegistrationCommon
  */
-template< class TInputImage, class TOutputImage >
+template< class TInputImage, class TOutputImage, class TPrecisionType = double >
 class GenericMultiResolutionPyramidImageFilter :
   public MultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 {
@@ -114,7 +122,7 @@ public:
   /** Standard class typedefs. */
   typedef GenericMultiResolutionPyramidImageFilter Self;
   typedef MultiResolutionPyramidImageFilter<
-    TInputImage, TOutputImage >                           Superclass;
+    TInputImage, TOutputImage >           Superclass;
   typedef typename Superclass::Superclass SuperSuperclass;
   typedef SmartPointer< Self >            Pointer;
   typedef SmartPointer< const Self >      ConstPointer;
@@ -156,7 +164,7 @@ public:
    * ImageDimension number of columns and NumberOfLevels number of rows. For
    * each dimension, the shrink factor must be non-increasing with respect to
    * subsequent levels. This function will clamp shrink factors to satisfy
-   * this condition.  All shrink factors less than one will also be clamped
+   * this condition. All shrink factors less than one will also be clamped
    * to the value of 1.
    */
   virtual void SetSchedule( const ScheduleType & schedule );
@@ -165,10 +173,13 @@ public:
    * ImageDimension number of columns and NumberOfLevels number of rows. For
    * each dimension, the shrink factor must be non-increasing with respect to
    * subsequent levels. This function will clamp shrink factors to satisfy
-   * this condition.  All shrink factors less than one will also be clamped
+   * this condition. All shrink factors less than one will also be clamped
    * to the value of 1.
    */
   virtual void SetRescaleSchedule( const RescaleScheduleType & schedule );
+
+  /** Set a multi-resolution rescale schedule with ones. */
+  virtual void SetRescaleScheduleToUnity( void );
 
   /** Get the multi-resolution rescale schedule. */
   const RescaleScheduleType & GetRescaleSchedule( void ) const
@@ -183,12 +194,16 @@ public:
    */
   virtual void SetSmoothingSchedule( const SmoothingScheduleType & schedule );
 
+  /** Set a multi-resolution rescale schedule with zeros. */
+  virtual void SetSmoothingScheduleToZero( void );
+
   /** Get the multi-resolution smoothing schedule. */
   itkGetConstReferenceMacro( SmoothingSchedule, SmoothingScheduleType );
 
   /** Set the number of multi-resolution levels. The matrices containing the
-   * schedule will be resized accordingly.  The schedules are populated with
-   * default values. */
+   * schedule will be resized accordingly. The schedules are populated with
+   * default values.
+   */
   virtual void SetNumberOfLevels( unsigned int num );
 
   /** Set the current multi-resolution levels. The current level is clamped to
@@ -205,23 +220,6 @@ public:
   itkGetConstMacro( ComputeOnlyForCurrentLevel, bool );
   itkBooleanMacro( ComputeOnlyForCurrentLevel );
 
-  /** Set a control on whether a multi-resolution rescale schedule will be used.
-   * If UseMultiResolutionRescaleSchedule has been set to false then all
-   * output images will have same dimension and properties as the input image.
-   * The shrink factors will not be applied. The default is true.
-   */
-  itkSetMacro( UseMultiResolutionRescaleSchedule, bool );
-  itkGetConstMacro( UseMultiResolutionRescaleSchedule, bool );
-  itkBooleanMacro( UseMultiResolutionRescaleSchedule );
-
-  /** Set a control on whether a multi-resolution smoothing schedule will be used.
-   * If UseMultiResolutionSmoothingSchedule has been set to false then all
-   * output images will not be blurred. The default is true.
-   */
-  itkSetMacro( UseMultiResolutionSmoothingSchedule, bool );
-  itkGetConstMacro( UseMultiResolutionSmoothingSchedule, bool );
-  itkBooleanMacro( UseMultiResolutionSmoothingSchedule );
-
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
   itkConceptMacro( SameDimensionCheck,
@@ -235,6 +233,8 @@ protected:
 
   GenericMultiResolutionPyramidImageFilter();
   ~GenericMultiResolutionPyramidImageFilter() {}
+
+  /** PrintSelf. */
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** GenericMultiResolutionPyramidImageFilter may produce images which are of
@@ -264,13 +264,51 @@ protected:
 
   SmoothingScheduleType m_SmoothingSchedule;
   unsigned int          m_CurrentLevel;
-
-  bool m_ComputeOnlyForCurrentLevel;
-  bool m_UseMultiResolutionRescaleSchedule;
-  bool m_UseMultiResolutionSmoothingSchedule;
-  bool m_SmoothingScheduleDefined;
+  bool                  m_ComputeOnlyForCurrentLevel;
+  bool                  m_SmoothingScheduleDefined;
 
 private:
+
+  /** Typedef for smoother. Smooth always happens first, then only from
+   * InputImageType to OutputImageType is possible.
+   */
+  typedef SmoothingRecursiveGaussianImageFilter<
+    InputImageType, OutputImageType > SmootherType;
+
+  /** Typedefs for shrinker or resample. If smoother has not been used, then
+   * we have to use InputImageType to OutputImageType,
+   * otherwise OutputImageType to OutputImageType.
+   */
+  typedef ImageToImageFilter< OutputImageType, OutputImageType >
+    ImageToImageFilterSameTypes;
+  typedef ImageToImageFilter< InputImageType, OutputImageType >
+    ImageToImageFilterDifferentTypes;
+
+  /** Smooth image at current level. Returns true if performed.
+   * This method does not perform execution.
+   */
+  bool SetupSmoother( const unsigned int level,
+    typename SmootherType::Pointer & smoother,
+    const InputImageConstPointer & input );
+
+  /** Shrink or Resample image at current level. Returns 1 or 2 if performed,
+   * 0 otherwise. This method does not perform execution.
+   */
+  int SetupShrinkerOrResampler( const unsigned int level,
+    typename SmootherType::Pointer & smoother,
+    const bool sameType,
+    const InputImageConstPointer & input,
+    const OutputImagePointer & outputPtr,
+    typename ImageToImageFilterSameTypes::Pointer & rescaleSameTypes,
+    typename ImageToImageFilterDifferentTypes::Pointer & rescaleDifferentTypes );
+
+  /** Defines Shrink or Resample filters. */
+  void DefineShrinkerOrResampler(
+    const bool sameType,
+    const RescaleFactorArrayType & shrinkFactors,
+    const OutputImagePointer & outputPtr,
+    typename ImageToImageFilterSameTypes::Pointer & rescaleSameTypes,
+    typename ImageToImageFilterDifferentTypes::Pointer & rescaleDifferentTypes );
 
   /** Initialize m_SmoothingSchedule to default values for backward compatibility. */
   void SetSmoothingScheduleToDefault( void );
@@ -281,26 +319,34 @@ private:
   bool ComputeForCurrentLevel( const unsigned int level ) const;
 
   /** Backward compatibility method to compute default sigma value. */
-  double GetDefaultSigma( const unsigned int dim,
+  double GetDefaultSigma( const unsigned int level,
+    const unsigned int dim,
     const unsigned int * factors,
     const SpacingType & spacing ) const;
 
   /** Get sigmas from m_SmoothingSchedule for the level. */
-  SigmaArrayType GetSigma( const unsigned int level,
+  void GetSigma( const unsigned int level,
     SigmaArrayType & sigmaArray ) const;
 
-  /** Returns true if all elements of sigmaArray are zeros, otherwise return false. */
+  /** Get shrink factors from m_Schedule for the level. */
+  void GetShrinkFactors( const unsigned int level,
+    RescaleFactorArrayType & shrinkFactors ) const;
+
+  /** Returns true if all elements of sigmaArray are zeros,
+   * otherwise return false.
+   */
   bool AreSigmasAllZeros( const SigmaArrayType & sigmaArray ) const;
 
-  /** Returns true if all elements of rescaleFactorArray are ones, otherwise return false. */
+  /** Returns true if all elements of rescaleFactorArray are ones,
+   * otherwise return false.
+   */
   bool AreRescaleFactorsAllOnes( const RescaleFactorArrayType & rescaleFactorArray ) const;
 
-  /** Returns true if caster will be used in the pipeline. This method check all
-   * levels of the smoothing schedule and returns true if one or more levels the
-   * sigma's are all zeros. Which means that we don't have to perform smoothing and
-   * simple cast operation could be used.
-   */
-  bool IsCasterNeeded( void ) const;
+  /** Returns true if smooth has been used in pipeline, otherwise return false. */
+  bool IsSmoothingUsed( void ) const;
+
+  /** Returns true if rescale has been used in pipeline, otherwise return false. */
+  bool IsRescaleUsed( void ) const;
 
 private:
 

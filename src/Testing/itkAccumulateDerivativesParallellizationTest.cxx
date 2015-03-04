@@ -79,11 +79,16 @@ public:
   // Constructor
   MetricTEMP()
   {
-    this->m_Threader         = ThreaderType::New();
-    this->m_NumberOfThreads  = this->m_Threader->GetNumberOfThreads();
-    this->m_UseOpenMP        = false;
-    this->m_UseMultiThreaded = false;
-    this->m_NormalSum        = 3.1415926;
+    this->m_ThreaderMetricParameters.st_Metric              = NULL;
+    this->m_ThreaderMetricParameters.st_DerivativePointer   = NULL;
+    this->m_ThreaderMetricParameters.st_NormalizationFactor = 0.0;
+
+    this->m_NumberOfParameters = 0;
+    this->m_Threader           = ThreaderType::New();
+    this->m_NumberOfThreads    = this->m_Threader->GetNumberOfThreads();
+    this->m_UseOpenMP          = false;
+    this->m_UseMultiThreaded   = false;
+    this->m_NormalSum          = 3.1415926;
 
 #ifdef ELASTIX_USE_OPENMP
     const int nthreads = static_cast< int >( this->m_NumberOfThreads );

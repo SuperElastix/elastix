@@ -70,14 +70,13 @@ EulerTransformElastix< TElastix >
   /** Variables. */
   InputPointType centerOfRotationPoint;
   centerOfRotationPoint.Fill( 0.0 );
-  bool pointRead = false;
   bool indexRead = false;
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
    */
-  pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
+  bool pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
 
   /** If this did not succeed, probably a transform parameter file
    * is trying to be read that was generated using an older elastix

@@ -89,13 +89,13 @@ main( int argc, char * argv[] )
   std::string dummyErrorMessage = "";
 
   typedef itk::Transform<
-    PrecisionType, Dimension, Dimension >                   BaseTransformType;
-  typedef itk::EulerTransform< PrecisionType, Dimension >   RigidTransformType;
-  typedef itk::AffineTransform< PrecisionType, Dimension >  AffineTransformType;
-  typedef BaseTransformType::ParametersType  ParametersType;
-  typedef BaseTransformType::ScalarType      ScalarType;
-  typedef RigidTransformType::CenterType     CenterType;
-  typedef BaseTransformType::OutputPointType OutputPointType;
+    PrecisionType, Dimension, Dimension >                  BaseTransformType;
+  typedef itk::EulerTransform< PrecisionType, Dimension >  RigidTransformType;
+  typedef itk::AffineTransform< PrecisionType, Dimension > AffineTransformType;
+  typedef BaseTransformType::ParametersType                ParametersType;
+  typedef BaseTransformType::ScalarType                    ScalarType;
+  typedef RigidTransformType::CenterType                   CenterType;
+  typedef BaseTransformType::OutputPointType               OutputPointType;
 
   /** Interface to the original transform parameters file. */
   typedef itk::ParameterFileParser   ParserType;
@@ -122,8 +122,8 @@ main( int argc, char * argv[] )
   if( dimF != Dimension )
   {
     std::cerr << "ERROR: the program elxInvertTransform was compiled for images of dimension " << Dimension << ",\n"
-      << "  while the parameter \"FixedImageDimension\" reads " << dimF << ".\n"
-      << "  Recompile elxInvertTransform for Dimension = " << dimF << std::endl;
+              << "  while the parameter \"FixedImageDimension\" reads " << dimF << ".\n"
+              << "  Recompile elxInvertTransform for Dimension = " << dimF << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -219,8 +219,8 @@ main( int argc, char * argv[] )
     else
     {
       std::cerr << "ERROR: Transforms of the type "
-        << transformType
-        << " are not supported." << std::endl;
+                << transformType
+                << " are not supported." << std::endl;
       return EXIT_FAILURE;
     }
   }

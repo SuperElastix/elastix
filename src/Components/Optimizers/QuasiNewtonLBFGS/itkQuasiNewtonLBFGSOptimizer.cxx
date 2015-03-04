@@ -133,8 +133,7 @@ QuasiNewtonLBFGSOptimizer::ResumeOptimization()
   }
 
   /** Test if the gradient was not zero already by chance */
-  bool convergence = false;
-  convergence = this->TestConvergence( false );
+  bool convergence = this->TestConvergence( false );
   if( convergence )
   {
     this->StopOptimization();
@@ -195,8 +194,7 @@ QuasiNewtonLBFGSOptimizer::ResumeOptimization()
       break;
     }
 
-    /** Test if convergence has occured */
-    convergence = false;
+    /** Test if convergence has occurred */
     convergence = this->TestConvergence( true );
     if( convergence )
     {

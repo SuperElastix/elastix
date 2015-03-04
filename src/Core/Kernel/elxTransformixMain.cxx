@@ -25,7 +25,12 @@
 #endif
 
 #include "elxTransformixMain.h"
+
 #include "elxMacro.h"
+
+#ifdef ELASTIX_USE_OPENCL
+#include "itkOpenCLSetup.h"
+#endif
 
 namespace elastix
 {
@@ -34,7 +39,7 @@ namespace elastix
  * **************************** Run *****************************
  *
  * Assuming EnterCommandLineParameters has already been invoked.
- * or that m_Configuration is initialised in another way.
+ * or that m_Configuration is initialized in another way.
  */
 
 int
@@ -64,6 +69,14 @@ TransformixMain::Run( void )
     errorCode = 1;
     return errorCode;
   }
+
+  /** Create OpenCL context and logger here. */
+#ifdef ELASTIX_USE_OPENCL
+  std::string errorMessage = "";
+  bool errorCreatingContext = itk::CreateOpenCLContext( errorMessage );
+  if( errorCreatingContext ){ elxout << errorMessage << std::endl; }
+  itk::CreateOpenCLLogger( "transformix", this->m_Configuration->GetCommandLineArgument( "-out" ) );
+#endif
 
 #ifdef _ELASTIX_BUILD_LIBRARY
   this->GetElastixBase()->SetConfigurations( this->m_Configurations );

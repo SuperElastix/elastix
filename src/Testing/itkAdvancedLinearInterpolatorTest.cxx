@@ -211,8 +211,8 @@ TestInterpolators( void )
   std::cout << std::endl;
   ContinuousIndexType cindex( &darray1[ 1 ][ 0 ] );
   std::cout << "cindex: " << cindex << std::endl;
-  OutputType            value; CovariantVectorType deriv;
-  const unsigned int    runs = 1e5;
+  OutputType         value; CovariantVectorType deriv;
+  const unsigned int runs = 1e5;
 
   itk::TimeProbe timer;
   timer.Start();

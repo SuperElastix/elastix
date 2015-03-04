@@ -21,6 +21,7 @@
 #include "itkUseMevisDicomTiff.h"
 
 #include <iostream>
+#include <iomanip>      // std::setprecision
 #include <string>
 #include <vector>
 #include <queue>
@@ -47,7 +48,7 @@ void PrintHelp( void );
 /** ConvertSecondsToDHMS
  *
  */
-std::string ConvertSecondsToDHMS( const double totalSeconds )
+std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 0 )
 {
   /** Define days, hours, minutes. */
   const std::size_t secondsPerMinute = 60;
@@ -67,13 +68,16 @@ std::string ConvertSecondsToDHMS( const double totalSeconds )
   iSeconds %= secondsPerMinute;
   const std::size_t seconds = iSeconds;
 
+  const double dSeconds = fmod( totalSeconds, 60.0 );
+
   /** Create a string in days, hours, minutes and seconds. */
   bool nonzero = false;
   std::ostringstream make_string( "" );
   if( days    != 0            ){ make_string << days    << "d"; nonzero = true; }
   if( hours   != 0 || nonzero ){ make_string << hours   << "h"; nonzero = true; }
   if( minutes != 0 || nonzero ){ make_string << minutes << "m"; nonzero = true; }
-  make_string << seconds << "s";
+  make_string << std::showpoint << std::fixed << std::setprecision( precision );
+  make_string << dSeconds << "s";
 
   /** Return a value. */
   return make_string.str();

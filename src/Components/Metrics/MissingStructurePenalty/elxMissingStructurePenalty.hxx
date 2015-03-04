@@ -25,6 +25,18 @@ namespace elastix
 {
 
 /**
+ * ******************* Constructor *******************
+ */
+
+template< class TElastix >
+MissingStructurePenalty< TElastix >
+::MissingStructurePenalty()
+{
+  this->m_NumberOfMeshes = 0;
+}
+
+
+/**
  * ******************* Initialize ***********************
  */
 
@@ -134,14 +146,14 @@ MissingStructurePenalty< TElastix >
     fmeshArgument << ch << metricNumber;
     std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
     typename MeshType::Pointer fixedMesh = 0;
-  if (itksys::SystemTools::GetFilenameLastExtension(fixedMeshName) == ".txt")
-  {
-    this->ReadTransformixPoints(fixedMeshName, fixedMesh);
-  }
-  else
-  {
-    this->ReadMesh(fixedMeshName, fixedMesh);
-  }
+    if (itksys::SystemTools::GetFilenameLastExtension(fixedMeshName) == ".txt")
+    {
+      this->ReadTransformixPoints(fixedMeshName, fixedMesh);
+    }
+    else
+    {
+      this->ReadMesh(fixedMeshName, fixedMesh);
+    }
 
     meshPointerContainer->SetElement( meshNumber, dynamic_cast<  MeshType * >( fixedMesh.GetPointer() ) );
 

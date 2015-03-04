@@ -198,7 +198,7 @@ public:
 protected:
 
   /** The constructor. */
-  PolydataDummyPenalty(){}
+  PolydataDummyPenalty();
   /** The destructor. */
   virtual ~PolydataDummyPenalty() {}
 

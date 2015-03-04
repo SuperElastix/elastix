@@ -86,7 +86,9 @@ public:
 
   OptimizerTEMP()
   {
-    this->m_Threader = ThreaderType::New();
+    this->m_NumberOfParameters = 0;
+    this->m_LearningRate       = 0.0;
+    this->m_Threader           = ThreaderType::New();
     this->m_Threader->SetNumberOfThreads( 8 );
     this->m_UseOpenMP        = false;
     this->m_UseEigen         = false;

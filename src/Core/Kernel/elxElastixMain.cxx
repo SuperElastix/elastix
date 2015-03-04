@@ -25,8 +25,13 @@
 #endif
 
 #include "elxElastixMain.h"
+
 #include "elxMacro.h"
 #include "itkMultiThreader.h"
+
+#ifdef ELASTIX_USE_OPENCL
+#include "itkOpenCLSetup.h"
+#endif
 
 namespace elastix
 {
@@ -277,6 +282,14 @@ ElastixMain::Run( void )
     errorCode = 1;
     return errorCode;
   }
+
+  /** Create OpenCL context and logger here. */
+#ifdef ELASTIX_USE_OPENCL
+  std::string errorMessage = "";
+  bool errorCreatingContext = itk::CreateOpenCLContext( errorMessage );
+  if( errorCreatingContext ){ elxout << errorMessage << std::endl; }
+  itk::CreateOpenCLLogger( "elastix", this->m_Configuration->GetCommandLineArgument( "-out" ) );
+#endif
 
   /** Set some information in the ElastixBase. */
   this->GetElastixBase()->SetConfiguration( this->m_Configuration );
@@ -865,8 +878,7 @@ void
 ElastixMain::SetProcessPriority( void ) const
 {
   /** If wanted, set the priority of this process high or below normal. */
-  std::string processPriority = "";
-  processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
+  std::string processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
   if( processPriority == "high" )
   {
     #if defined( _WIN32 ) && !defined( __CYGWIN__ )
@@ -914,8 +926,7 @@ void
 ElastixMain::SetMaximumNumberOfThreads( void ) const
 {
   /** Get the number of threads from the command line. */
-  std::string maximumNumberOfThreadsString = "";
-  maximumNumberOfThreadsString
+  std::string maximumNumberOfThreadsString
     = this->m_Configuration->GetCommandLineArgument( "-threads" );
 
   /** If supplied, set the maximum number of threads. */

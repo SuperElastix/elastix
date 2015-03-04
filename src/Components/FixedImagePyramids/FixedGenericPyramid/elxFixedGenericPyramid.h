@@ -129,9 +129,6 @@ public:
   /** Update the current resolution level. */
   virtual void BeforeEachResolution( void );
 
-  //tmp for debugging
-  virtual void AfterEachResolution( void );
-
 protected:
 
   /** The constructor. */

@@ -435,8 +435,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   this->ComputeMeanMovedGradient();
-  MeasureType currentMeasure = NumericTraits< MeasureType >::Zero;
-  currentMeasure = this->ComputeMeasure( parameters );
+  MeasureType currentMeasure = this->ComputeMeasure( parameters );
 
   return currentMeasure;
 

@@ -39,6 +39,7 @@ FiniteDifferenceGradientDescentOptimizer
 {
   itkDebugMacro( "Constructor" );
 
+  this->m_Stop               = false;
   this->m_NumberOfIterations = 100;
   this->m_CurrentIteration   = 0;
   this->m_Value              = 0.0;

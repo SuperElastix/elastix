@@ -2213,7 +2213,7 @@ void
 TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 ::Create1DOperator(
   NeighborhoodType & F,
-  const std::string WhichF,
+  const std::string & WhichF,
   const unsigned int WhichDimension,
   const CoefficientImageSpacingType & spacing  ) const
 {
@@ -2425,7 +2425,7 @@ void
 TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 ::CreateNDOperator(
   NeighborhoodType & F,
-  const std::string WhichF,
+  const std::string & WhichF,
   const CoefficientImageSpacingType & spacing ) const
 {
   /** Create an operator size and set it in the operator. */

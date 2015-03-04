@@ -1,3 +1,10 @@
+# This is the last release of elastix that CUDA is supported.
+# CUDA will be phased out in favor of OpenCL.
+# The OpenCL implementation in elastix is much more mature and supports
+# much more use cases.
+message( STATUS "\nCUDA will be removed from elastix in the next release!
+  OpenCL will be supported instead.\n" )
+
 # In order to build elastix with CUDA support we have to enable the following line.
 #
 # It is a workaround around a problem with the nvcc compiler complaining that the

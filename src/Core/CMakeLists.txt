@@ -191,6 +191,10 @@ target_link_libraries( elastix
   ${ITK_LIBRARIES}
 )
 
+if( ELASTIX_USE_OPENCL )
+  target_link_libraries( elastix elxOpenCL )
+endif()
+
 #---------------------------------------------------------------------
 # Link transformix against other libraries.
 
@@ -203,6 +207,10 @@ target_link_libraries( transformix
   ${AllComponentLibs}
   ${ITK_LIBRARIES}
 )
+
+if( ELASTIX_USE_OPENCL )
+  target_link_libraries( transformix elxOpenCL )
+endif()
 
 if( MSVC )
   # NOTE: that linker /INCREMENTAL:NO flag makes it impossible to use

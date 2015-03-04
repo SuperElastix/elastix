@@ -158,6 +158,7 @@ RSGDEachParameterApart< TElastix >
 
     case MetricError:
       stopcondition = "Error in metric";
+      break;
 
     default:
       stopcondition = "Unknown";
