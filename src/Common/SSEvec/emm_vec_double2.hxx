@@ -148,6 +148,11 @@ template <> inline void vec<double, 2>::operator/= (const double &v) {
   tmp = _mm_unpacklo_pd(tmp, tmp);
   xmmd[0] = _mm_div_pd(xmmd[0], tmp);
 }
+template <> inline vec<double, 2> vec<double, 2>::operator= (const double &v) {
+  __m128d tmp = _mm_load_sd(&v);
+  xmmd[0] = _mm_unpacklo_pd(tmp, tmp);
+  return vec<double, 2>(xmmd[0]);
+}
 
 //other members
 template<> inline void vec<double,2>::set( int idx, const double &value ) {

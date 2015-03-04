@@ -15,6 +15,8 @@
  * Create new        :  vec< data_type, vector_length >( pointer_to_datatype [, stride_in_#elements] )
  *                      vec< data_type, vector_length >( variable_of_datatype )
  * Type conversion (double <-> single) is available.
+ * Also (some) conversions between integer types is available. All these conversions use very fast
+ * conversions without range checking. 
  *
  * A few special member routines are provided as well.
  * - A (very unsafe) scale routine ( v = v * 2^i, with vec<integer_type, len> i)
@@ -72,6 +74,10 @@
   // Convert MS macros/definitions:
   typedef __int32 int32_t;
   typedef __int64 int64_t;
+  typedef unsigned __int32 uint32_t;
+  //typedef unsigned long uint32_t; // on Windows long is 32 bit. 
+  typedef unsigned __int64 uint64_t;
+  typedef unsigned long ulong;
   #ifdef _M_X64
     #define __x86_64__ _M_X64
   #endif
@@ -104,6 +110,7 @@
 template < typename T, int vlen > struct vec_support {
   enum {supported = false};
 };
+// declaration helper type that specifies which type uses which register type: 
 template < typename T > struct get_register_type {
   typedef __m128 xmmType;
 };
@@ -116,8 +123,21 @@ template <> struct get_register_type< int32_t >  {
 template <> struct get_register_type< int64_t >  {
   typedef __m128i xmmType;
 };
+template <> struct get_register_type< uint32_t >  {
+  typedef __m128i xmmType;
+};
+template <> struct get_register_type< uint64_t >  {
+  typedef __m128i xmmType;
+};
+template <> struct get_register_type< long >  {
+  typedef __m128i xmmType;
+};
+template <> struct get_register_type< ulong >  {
+  typedef __m128i xmmType;
+};
 #define xmmi xmm
 #define xmmd xmm
+
 // main vector definition.
 template <typename T, int vlen> struct ALIGN_VEC vec {
   typedef T value_type;
@@ -271,6 +291,27 @@ template<> struct vec_support<int64_t, 2> {
 template<> struct vec_support<int32_t, 4> {
   enum {supported = true };
 };
+template<> struct vec_support<uint32_t, 4> {
+  enum {supported = true };
+};
+template<> struct vec_support<long, 2> {
+  enum {supported = true };
+};
+template<> struct vec_support<long, 3> {
+  enum {supported = true };
+};
+template<> struct vec_support<long, 4> {
+  enum {supported = true };
+};
+template<> struct vec_support<ulong, 2> {
+  enum {supported = true };
+};
+template<> struct vec_support<ulong, 3> {
+  enum {supported = true };
+};
+template<> struct vec_support<ulong, 4> {
+  enum {supported = true };
+};
 
 // include the implementations for the different types and vector lengths:
 #include "emm_vec_double2.hxx"
@@ -282,6 +323,14 @@ template<> struct vec_support<int32_t, 4> {
 #include "emm_vec_int64_2.hxx"
 #include "emm_vec_int64_4.hxx"
 #include "emm_vec_int32_4.hxx"
+#include "emm_vec_uint32_4.hxx"
+#include "emm_vec_long_32_2.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
+#include "emm_vec_ulong_32_2.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
+#include "emm_vec_long_32_3.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
+#include "emm_vec_ulong_32_3.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
+#include "emm_vec_long_32_4.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
+#include "emm_vec_ulong_32_4.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
+
 // In each of these files, the implementation follows:
 //  - Load functions (incl. zero)
 //  - Store functions

@@ -403,6 +403,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     {
       nonZeroJacobianIndices[ i ] = i;
     }
+    // \todo: should jacobian not be filled with zero? (above only upond the first call the jacobian is filled)
     return;
   }
 

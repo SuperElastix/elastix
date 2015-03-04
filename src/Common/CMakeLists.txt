@@ -88,6 +88,8 @@ set( TransformFiles
   Transforms/itkAdvancedBSplineDeformableTransform.hxx
   Transforms/itkAdvancedCombinationTransform.h
   Transforms/itkAdvancedCombinationTransform.hxx
+  Transforms/itkAdvancedEuler3DTransform.h
+  Transforms/itkAdvancedEuler3DTransform.hxx
   Transforms/itkAdvancedIdentityTransform.h
   Transforms/itkAdvancedMatrixOffsetTransformBase.h
   Transforms/itkAdvancedMatrixOffsetTransformBase.hxx
@@ -95,8 +97,17 @@ set( TransformFiles
   Transforms/itkAdvancedRigid2DTransform.hxx
   Transforms/itkAdvancedRigid3DTransform.h
   Transforms/itkAdvancedRigid3DTransform.hxx
+  Transforms/itkAdvancedSimilarity2DTransform.h
+  Transforms/itkAdvancedSimilarity2DTransform.hxx
+  Transforms/itkAdvancedSimilarity3DTransform.h
+  Transforms/itkAdvancedSimilarity3DTransform.hxx
   Transforms/itkAdvancedTransform.h
   Transforms/itkAdvancedTransform.hxx
+  Transforms/itkAdvancedTranslationTransform.h
+  Transforms/itkAdvancedTranslationTransform.hxx
+  Transforms/itkAdvancedVersorTransform.h
+  Transforms/itkAdvancedVersorTransform.hxx
+  Transforms/itkBSplineDerivativeKernelFunction2.h
   Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
   Transforms/itkBSplineInterpolationDerivativeWeightFunction.hxx
   Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h
@@ -109,12 +120,22 @@ set( TransformFiles
   #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
   Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
   Transforms/itkEulerTransform.h
+  Transforms/itkGridScheduleComputer.h
+  Transforms/itkGridScheduleComputer.hxx
+  Transforms/itkRecursiveBSplineImplementation.h
+  Transforms/itkRecursiveBSplineTransform.hxx
+  Transforms/itkRecursiveBSplineTransform.h
+  Transforms/itkRecursiveBSplineTransformImplementation.h
+  #Transforms/itkRecursiveBSplineTransformImplementation2.h
+  #Transforms/itkRecursiveBSplineTransformImplementation3.h
+  Transforms/itkRecursivePermutedBSplineTransform.h
+  Transforms/itkRecursivePermutedBSplineTransform.hxx
+  Transforms/itkStackTransform.h
+  Transforms/itkStackTransform.hxx
   Transforms/itkTransformToDeterminantOfSpatialJacobianSource.h
   Transforms/itkTransformToDeterminantOfSpatialJacobianSource.hxx
   Transforms/itkTransformToSpatialJacobianSource.h
   Transforms/itkTransformToSpatialJacobianSource.hxx
-  Transforms/itkGridScheduleComputer.h
-  Transforms/itkGridScheduleComputer.hxx
   Transforms/itkUpsampleBSplineParametersFilter.h
   Transforms/itkUpsampleBSplineParametersFilter.hxx
 )
@@ -159,6 +180,13 @@ set( SSEvecFiles
   SSEvec/emm_vec_double8.hxx
   SSEvec/emm_vec_float4.hxx
   SSEvec/emm_vec_float8.hxx
+  SSEvec/emm_vec_uint32_4.hxx
+  SSEvec/emm_vec_long_32_2.hxx
+  SSEvec/emm_vec_long_32_3.hxx
+  SSEvec/emm_vec_long_32_4.hxx
+  SSEvec/emm_vec_ulong_32_2.hxx
+  SSEvec/emm_vec_ulong_32_3.hxx
+  SSEvec/emm_vec_ulong_32_4.hxx
 )
 #---------------------------------------------------------------------
 # Construct source groups for nice visualisation in Visual Studio.

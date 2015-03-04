@@ -19,6 +19,7 @@
 #include "itkBSplineDeformableTransform.h"         // original ITK
 #include "itkAdvancedBSplineDeformableTransform.h" // original elastix
 #include "itkRecursiveBSplineTransform.h"          // recursive version
+#include "itkRecursivePermutedBSplineTransform.h"          // recursive version with permuted parameter order (first xyz, then spatial dimensions)
 //#include "itkBSplineTransform.h" // new ITK4
 
 #include "itkGridScheduleComputer.h"
@@ -72,6 +73,8 @@ main( int argc, char * argv[] )
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
   typedef itk::RecursiveBSplineTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    RecursiveTransformType;
+  typedef itk::RecursivePermutedBSplineTransform<
+    CoordinateRepresentationType, Dimension, SplineOrder >    RecursivePermutedTransformType;
   typedef TransformType::JacobianType                  JacobianType;
   typedef TransformType::SpatialJacobianType           SpatialJacobianType;
   typedef TransformType::SpatialHessianType            SpatialHessianType;
@@ -97,6 +100,7 @@ main( int argc, char * argv[] )
   ITKTransformType::Pointer transformITK = ITKTransformType::New();
   TransformType::Pointer    transform    = TransformType::New();
   RecursiveTransformType::Pointer recursiveTransform    = RecursiveTransformType::New();
+  RecursivePermutedTransformType::Pointer recursivePermutedTransform    = RecursivePermutedTransformType::New();
 
   /** Setup the B-spline transform:
    * (GridSize 44 43 35)
@@ -158,6 +162,11 @@ main( int argc, char * argv[] )
   recursiveTransform->SetGridRegion( gridRegion );
   recursiveTransform->SetGridDirection( gridDirection );
 
+  
+  recursivePermutedTransform->SetGridOrigin( gridOrigin );
+  recursivePermutedTransform->SetGridSpacing( gridSpacing );
+  recursivePermutedTransform->SetGridRegion( gridRegion );
+  recursivePermutedTransform->SetGridDirection( gridDirection );
   //ParametersType fixPar( Dimension * ( 3 + Dimension ) );
   //fixPar[ 0 ] = gridSize[ 0 ]; fixPar[ 1 ] = gridSize[ 1 ]; fixPar[ 2 ] = gridSize[ 2 ];
   //fixPar[ 3 ] = gridOrigin[ 0 ]; fixPar[ 4 ] = gridOrigin[ 1 ]; fixPar[ 5 ] = gridOrigin[ 2 ];
@@ -208,11 +217,8 @@ main( int argc, char * argv[] )
   {
     input2 >> parameters2[ i ];
   }
-#ifdef RECURSIVEVERSION3
-  recursiveTransform->SetParameters( parameters2 );
-#else
+  recursivePermutedTransform->SetParameters( parameters2 );
   recursiveTransform->SetParameters( parameters );
-#endif
   std::cerr <<  " - done"<< std::endl;
 
   /** Get the number of nonzero Jacobian indices. */
@@ -243,6 +249,7 @@ main( int argc, char * argv[] )
 
   /** The transform point. */
   recursiveTransform->TransformPoint( inputPoint );
+  recursivePermutedTransform->TransformPoint( inputPoint );
 
   /** The Jacobian. *
   recursiveTransform->GetJacobian( inputPoint, jacobian, nzji );
@@ -297,6 +304,8 @@ main( int argc, char * argv[] )
   std::vector< OutputPointType > transformedPointList2( N );
   std::vector< OutputPointType > transformedPointList3( N );
   std::vector< OutputPointType > transformedPointList4( N );
+  std::vector< OutputPointType > transformedPointList5( N );
+  std::vector< OutputPointType > transformedPointList6( N );
 
   IndexType dummyIndex;
   CoefficientImagePointer coefficientImage = transform->GetCoefficientImages()[0];
@@ -344,6 +353,20 @@ main( int argc, char * argv[] )
     recursiveTransform->TransformPoints( pointList,  transformedPointList4);
     //recursiveTransform->TransformPointVector( pointList[ i ], opp, weights2, indices2, isInside );
   timeCollector.Stop(  "TransformPoints recursive vector" );
+
+
+  timeCollector.Start( "TransformPoint rec.Perm. vector " );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    transformedPointList5[i] = recursivePermutedTransform->TransformPoint( pointList[ i ] );
+
+    if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
+  }
+  timeCollector.Stop(  "TransformPoint rec.Perm. vector " );
+
+  timeCollector.Start( "TransformPoints rec.Perm. vector" );
+  recursivePermutedTransform->TransformPoints( pointList,  transformedPointList6);
+  timeCollector.Stop(  "TransformPoints rec.Perm. vector" );
 
   /** Time the implementation of the Jacobian. */
   timeCollector.Start( "Jacobian elastix                " );
@@ -404,17 +427,21 @@ main( int argc, char * argv[] )
   /** These should return the same values as the original ITK functions. */
 
   /** TransformPoint. */
-  OutputPointType opp1, opp2, opp3, opp4;
+  OutputPointType opp1, opp2, opp3, opp4, opp5, opp6;
   double differenceNorm1 = 0.0;
   double differenceNorm2 = 0.0;
   double differenceNorm3 = 0.0;
   double differenceNorm4 = 0.0;
+  double differenceNorm5 = 0.0;
+  double differenceNorm6 = 0.0;
   for( unsigned int i = 0; i < N; ++i )
   {
     opp1 = transformedPointList1[i]; //transform->TransformPoint( pointList[ i ] );
     opp2 = transformedPointList2[i]; //recursiveTransform->TransformPointOld( pointList[ i ] );
     opp3 = transformedPointList3[i]; //recursiveTransform->TransformPoint( pointList[ i ] );
-  opp4 = transformedPointList4[i]; // recursiveTransform->TransformPoints
+    opp4 = transformedPointList4[i]; // recursiveTransform->TransformPoints
+    opp5 = transformedPointList5[i]; // recursivePermutedTransform->TransformPoint( pointList[ i ] );
+    opp6 = transformedPointList6[i]; // recursivePermutedTransform->TransformPoints
 
     for( unsigned int j = 0; j < Dimension; ++j )
     {
@@ -422,18 +449,23 @@ main( int argc, char * argv[] )
       differenceNorm2 += ( opp1[ j ] - opp3[ j ] ) * ( opp1[ j ] - opp3[ j ] );
       differenceNorm3 += ( opp2[ j ] - opp3[ j ] ) * ( opp2[ j ] - opp3[ j ] );
       differenceNorm4 += ( opp3[ j ] - opp4[ j ] ) * ( opp3[ j ] - opp4[ j ] );
+      differenceNorm5 += ( opp3[ j ] - opp5[ j ] ) * ( opp3[ j ] - opp5[ j ] );
+      differenceNorm6 += ( opp3[ j ] - opp6[ j ] ) * ( opp3[ j ] - opp6[ j ] );
     }
   }
-  differenceNorm1 = vcl_sqrt( differenceNorm1 );
-  differenceNorm2 = vcl_sqrt( differenceNorm2 );
-  differenceNorm3 = vcl_sqrt( differenceNorm3 );
-  differenceNorm4 = vcl_sqrt( differenceNorm4 );
+  differenceNorm1 = vcl_sqrt( differenceNorm1 ) / N;
+  differenceNorm2 = vcl_sqrt( differenceNorm2 ) / N;
+  differenceNorm3 = vcl_sqrt( differenceNorm3 ) / N;
+  differenceNorm4 = vcl_sqrt( differenceNorm4 ) / N;
+  differenceNorm5 = vcl_sqrt( differenceNorm5 ) / N;
+  differenceNorm6 = vcl_sqrt( differenceNorm6 ) / N;
 
-  differenceNorm1 /= N; differenceNorm2 /= N; differenceNorm3 /= N; differenceNorm4 /= N;
   std::cerr << "Recursive B-spline TransformPointOld() MSD with ITK: " << differenceNorm1 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm2 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() MSD with TransformPointOld(): " << differenceNorm3 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() with TransformPoints(): " << differenceNorm4 << std::endl;
+  std::cerr << "Recursive B-spline TransformPoint() with Permuted TransformPoint(): " << differenceNorm5 << std::endl;
+  std::cerr << "Recursive B-spline TransformPoint() with Permuted TransformPoints(): " << differenceNorm6 << std::endl;
   if( differenceNorm1 > 1e-5 )
   {
     std::cerr << "ERROR: Recursive B-spline TransformPointOld() returning incorrect result." << std::endl;

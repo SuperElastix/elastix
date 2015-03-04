@@ -29,7 +29,7 @@
 #include "emm_vec.hxx"
 #endif
 
-//#define RECURSIVEVERSION3                    // use recusivebspline version 3. This uses an permuted parameter grid.
+//#define RECURSIVEVERSION3                    // use recursivebspline version 3. This uses an permuted parameter grid.
                          // Elastix standard = [spatial_dimensions   vector_dimension], where vector_dimension iterates over [x,y,z]
                          // RecursiveVersion3 =[ vector dimension   spatial dimensions].
                          // The advantage of this is much better memory locality as well as much more convenient optimization:
@@ -40,7 +40,7 @@
                          // Requires emm_vec from DPoot.
                                // Can be combined with RECURSIVEVERSION3_OPTIMIZED_SSE2 for a specialized faster end case version.
                          // NOTE: strangely enough, enabling 'whole program optimization' (configuration properties, c++, optimization) makes this version substantially (40%) slower.
-//#define RECUSIVEBSPLINE_FORWARDTRANSFORMPOINT // if defined forwards the transformpoint to transformpoints to minimize code duplication.
+//#define RECURSIVEBSPLINE_FORWARDTRANSFORMPOINT // if defined forwards the transformpoint to transformpoints to minimize code duplication.
                         // (Currently horribly much slower; did not yet investigate why)
 
 namespace itk
@@ -71,7 +71,7 @@ typename RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>
 ::TransformPoint( const InputPointType & point ) const
 {
-#ifdef RECUSIVEBSPLINE_FORWARDTRANSFORMPOINT
+#ifdef RECURSIVEBSPLINE_FORWARDTRANSFORMPOINT
    std::vector< InputPointType > pointListIn( 1 );
    std::vector< OutputPointType > pointListOut( 1 );
    pointListIn[0] = point;
