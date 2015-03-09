@@ -13,8 +13,8 @@
 #
 # Setup: linux 64bit
 # gcc 4.4.6 (Redhat Linux),
-# Release mode, ITK 4.1.0
-# PC: linux cluster2 at BIGR (SK).
+# Release mode, ITK 4.7.1
+# PC: linux cluster at BIGR (SK).
 
 # Client maintainer: s.klein@erasmusmc.nl
 set( CTEST_SITE "BIGR.cluster" )
@@ -49,7 +49,7 @@ set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/release )
 
 set( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=/cm/shared/apps/itk/4.5.0/release
+ITK_DIR:PATH=/cm/shared/apps/itk/4.7.1/release
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
