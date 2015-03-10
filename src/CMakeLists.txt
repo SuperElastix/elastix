@@ -397,7 +397,8 @@ if( ELASTIX_ENABLE_PACKAGER )
 
   # Also install the copyright file, since when the user enables packaging
   # we assume that the package is meant to distribute.
-  install( FILES "${elastix_SOURCE_DIR}/CopyrightElastix.txt" DESTINATION . )
+  install( FILES "${elastix_SOURCE_DIR}/LICENSE" DESTINATION . )
+  install( FILES "${elastix_SOURCE_DIR}/NOTICE" DESTINATION . )
 
   # We have split the elastix package into two components:
   # - the core: elastix and transformix
