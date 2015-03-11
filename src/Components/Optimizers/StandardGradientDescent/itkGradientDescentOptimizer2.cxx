@@ -54,8 +54,9 @@ GradientDescentOptimizer2
   this->m_UseMultiThread = false;
   this->m_UseOpenMP      = false;
   this->m_UseEigen       = false;
+  //this->m_Threader->SetUseThreadPool( true );
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -83,12 +84,12 @@ GradientDescentOptimizer2
      << this->m_Gradient;
   os << std::endl;
 
-}   // end PrintSelf
+} // end PrintSelf()
 
 
 /**
-* **************** Start the optimization ********************
-*/
+ * **************** StartOptimization ********************
+ */
 
 void
 GradientDescentOptimizer2
@@ -109,12 +110,12 @@ GradientDescentOptimizer2
   this->SetCurrentPosition( this->GetInitialPosition() );
 
   this->ResumeOptimization();
-}   // end StartOptimization
+} // end StartOptimization()
 
 
 /**
-* ************************ ResumeOptimization *************
-*/
+ * ************************ ResumeOptimization *************
+ */
 
 void
 GradientDescentOptimizer2
@@ -132,7 +133,6 @@ GradientDescentOptimizer2
 
   while( !this->m_Stop )
   {
-
     try
     {
       this->GetScaledValueAndDerivative(
@@ -166,9 +166,9 @@ GradientDescentOptimizer2
       break;
     }
 
-  }   // end while
+  } // end while
 
-}   // end ResumeOptimization()
+} // end ResumeOptimization()
 
 
 /**
@@ -186,12 +186,12 @@ GradientDescentOptimizer2
   /** Pass exception to caller. */
   throw err;
 
-}   // end MetricErrorResponse()
+} // end MetricErrorResponse()
 
 
 /**
-* ***************** Stop optimization ************************
-*/
+ * ***************** StopOptimization ************************
+ */
 
 void
 GradientDescentOptimizer2
@@ -201,12 +201,11 @@ GradientDescentOptimizer2
 
   this->m_Stop = true;
   this->InvokeEvent( EndEvent() );
-}   // end StopOptimization
+} // end StopOptimization()
 
 
 /**
  * ************ AdvanceOneStep ****************************
- * following the gradient direction
  */
 
 void
@@ -317,7 +316,7 @@ GradientDescentOptimizer2
 
   this->InvokeEvent( IterationEvent() );
 
-}   // end AdvanceOneStep()
+} // end AdvanceOneStep()
 
 
 /**

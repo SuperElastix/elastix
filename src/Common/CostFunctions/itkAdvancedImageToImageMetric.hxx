@@ -39,7 +39,7 @@ template< class TFixedImage, class TMovingImage >
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::AdvancedImageToImageMetric()
 {
-  /** don't use the default gradient image as implemented by ITK.
+  /** Don't use the default gradient image as implemented by ITK.
    * It uses a Gaussian derivative, which introduces extra smoothing,
    * which may not always be desired. Also, when the derivatives are
    * computed using Gaussian filtering, the gray-values should also be
@@ -84,6 +84,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Threading related variables. */
   this->m_UseMetricSingleThreaded = true;
+  this->m_Threader->SetUseThreadPool( false ); // setting to true makes elastix hang
+                                               // at a WaitForSingleMethodThread()
 
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP
