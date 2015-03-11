@@ -16,10 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef _itkGradientDescentOptimizer2_txx
-#define _itkGradientDescentOptimizer2_txx
-
 #include "itkGradientDescentOptimizer2.h"
+
 #include "itkCommand.h"
 #include "itkEventObject.h"
 #include "itkExceptionObject.h"
@@ -226,20 +224,21 @@ GradientDescentOptimizer2
 
   /** Advance one step. */
   // single-threadedly
-  if( !this->m_UseMultiThread || true )   // for now force single-threaded since it is fastest most of the times
+  if( true )
+  //if( !this->m_UseMultiThread || true )   // for now force single-threaded since it is fastest most of the times
   //if( !this->m_UseMultiThread && false ) // force multi-threaded
   {
     /** Get a reference to the current position. */
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
     /** Update the new position. */
-    for( unsigned int j = 0; j < spaceDimension; j++ )
+    for( unsigned int j = 0; j < spaceDimension; ++j )
     {
       newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
     }
   }
 #ifdef ELASTIX_USE_OPENMP
-  else if( this->m_UseOpenMP && !this->m_UseEigen )
+  else if( true )// this->m_UseOpenMP && !this->m_UseEigen )
   {
     /** Get a reference to the current position. */
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
@@ -247,7 +246,7 @@ GradientDescentOptimizer2
     /** Update the new position. */
     const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
     omp_set_num_threads( nthreads );
-      #pragma omp parallel for
+    #pragma omp parallel for
     for( int j = 0; j < static_cast< int >( spaceDimension ); j++ )
     {
       newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
@@ -288,7 +287,7 @@ GradientDescentOptimizer2
     const int spaceDim = static_cast< int >( spaceDimension );
     const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
     omp_set_num_threads( nthreads );
-      #pragma omp parallel for
+    #pragma omp parallel for
     for( int i = 0; i < nthreads; i += 1 )
     {
       int threadId = omp_get_thread_num();
@@ -376,5 +375,3 @@ GradientDescentOptimizer2
 
 
 } // end namespace itk
-
-#endif
