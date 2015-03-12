@@ -19,7 +19,10 @@
 #include "itkBSplineDeformableTransform.h"         // original ITK
 #include "itkAdvancedBSplineDeformableTransform.h" // original elastix
 #include "itkRecursiveBSplineTransform.h"          // recursive version
+//#define LINKINGERRORSFIXED
+#ifdef LINKINGERRORSFIXED
 #include "itkRecursivePermutedBSplineTransform.h"          // recursive version with permuted parameter order (first xyz, then spatial dimensions)
+#endif
 //#include "itkBSplineTransform.h" // new ITK4
 
 #include "itkGridScheduleComputer.h"
@@ -73,8 +76,10 @@ main( int argc, char * argv[] )
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
   typedef itk::RecursiveBSplineTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    RecursiveTransformType;
+#ifdef LINKINGERRORSFIXED
   typedef itk::RecursivePermutedBSplineTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    RecursivePermutedTransformType;
+#endif
   typedef TransformType::JacobianType                  JacobianType;
   typedef TransformType::SpatialJacobianType           SpatialJacobianType;
   typedef TransformType::SpatialHessianType            SpatialHessianType;
@@ -100,7 +105,9 @@ main( int argc, char * argv[] )
   ITKTransformType::Pointer transformITK = ITKTransformType::New();
   TransformType::Pointer    transform    = TransformType::New();
   RecursiveTransformType::Pointer recursiveTransform    = RecursiveTransformType::New();
+#ifdef LINKINGERRORSFIXED
   RecursivePermutedTransformType::Pointer recursivePermutedTransform    = RecursivePermutedTransformType::New();
+#endif
 
   /** Setup the B-spline transform:
    * (GridSize 44 43 35)
@@ -162,11 +169,12 @@ main( int argc, char * argv[] )
   recursiveTransform->SetGridRegion( gridRegion );
   recursiveTransform->SetGridDirection( gridDirection );
 
-  
+#ifdef LINKINGERRORSFIXED
   recursivePermutedTransform->SetGridOrigin( gridOrigin );
   recursivePermutedTransform->SetGridSpacing( gridSpacing );
   recursivePermutedTransform->SetGridRegion( gridRegion );
   recursivePermutedTransform->SetGridDirection( gridDirection );
+#endif
   //ParametersType fixPar( Dimension * ( 3 + Dimension ) );
   //fixPar[ 0 ] = gridSize[ 0 ]; fixPar[ 1 ] = gridSize[ 1 ]; fixPar[ 2 ] = gridSize[ 2 ];
   //fixPar[ 3 ] = gridOrigin[ 0 ]; fixPar[ 4 ] = gridOrigin[ 1 ]; fixPar[ 5 ] = gridOrigin[ 2 ];
@@ -217,7 +225,9 @@ main( int argc, char * argv[] )
   {
     input2 >> parameters2[ i ];
   }
+#ifdef LINKINGERRORSFIXED
   recursivePermutedTransform->SetParameters( parameters2 );
+#endif
   recursiveTransform->SetParameters( parameters );
   std::cerr <<  " - done"<< std::endl;
 
@@ -249,7 +259,9 @@ main( int argc, char * argv[] )
 
   /** The transform point. */
   recursiveTransform->TransformPoint( inputPoint );
+#ifdef LINKINGERRORSFIXED
   recursivePermutedTransform->TransformPoint( inputPoint );
+#endif
 
   /** The Jacobian. *
   recursiveTransform->GetJacobian( inputPoint, jacobian, nzji );
@@ -354,7 +366,7 @@ main( int argc, char * argv[] )
     //recursiveTransform->TransformPointVector( pointList[ i ], opp, weights2, indices2, isInside );
   timeCollector.Stop(  "TransformPoints recursive vector" );
 
-
+#ifdef LINKINGERRORSFIXED
   timeCollector.Start( "TransformPoint rec.Perm. vector " );
   for( unsigned int i = 0; i < N; ++i )
   {
@@ -367,6 +379,7 @@ main( int argc, char * argv[] )
   timeCollector.Start( "TransformPoints rec.Perm. vector" );
   recursivePermutedTransform->TransformPoints( pointList,  transformedPointList6);
   timeCollector.Stop(  "TransformPoints rec.Perm. vector" );
+#endif
 
   /** Time the implementation of the Jacobian. */
   timeCollector.Start( "Jacobian elastix                " );
@@ -464,8 +477,10 @@ main( int argc, char * argv[] )
   std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm2 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() MSD with TransformPointOld(): " << differenceNorm3 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() with TransformPoints(): " << differenceNorm4 << std::endl;
+#ifdef LINKINGERRORSFIXED
   std::cerr << "Recursive B-spline TransformPoint() with Permuted TransformPoint(): " << differenceNorm5 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() with Permuted TransformPoints(): " << differenceNorm6 << std::endl;
+#endif
   if( differenceNorm1 > 1e-5 )
   {
     std::cerr << "ERROR: Recursive B-spline TransformPointOld() returning incorrect result." << std::endl;
