@@ -8,13 +8,17 @@
 
 // load vector:
 template<>  vec<float, 8>::vec(const float *v) {
-      xmm[0] = _mm_loadu_ps(v );
-      xmm[1] = _mm_loadu_ps(v + 4);
+  xmm[0] = _mm_loadu_ps(v );
+  xmm[1] = _mm_loadu_ps(v + 4);
+}
+template<> template<typename int_t>  vec<float, 8>::vec(const float *v, int_t stride) {
+  xmm[0] = _mm_set_ps( v[3*stride], v[2*stride], v[1*stride], v[0*stride]);
+  xmm[1] = _mm_set_ps( v[7*stride], v[6*stride], v[5*stride], v[4*stride]);
 }
 template<>  vec<float, 8>::vec(const float v) {
-      xmm[0] = _mm_load_ss(&v );
-    xmm[0] = _mm_shuffle_ps(xmm[0],xmm[0],_MM_SHUFFLE(0, 0, 0, 0));
-    xmm[1] = xmm[0];
+  xmm[0] = _mm_load_ss(&v );
+  xmm[0] = _mm_shuffle_ps(xmm[0],xmm[0],_MM_SHUFFLE(0, 0, 0, 0));
+  xmm[1] = xmm[0];
 }
 
 //create as zero vector:
@@ -27,9 +31,24 @@ template <> void vec<float, 8>::store(float *v) {
   _mm_storeu_ps( (v    ), xmm[0]);
   _mm_storeu_ps( (v + 4), xmm[1]);
 }
-
-// Type conversion constructors; convert this file's type to different types :
-
+template<> template<typename int_t>  void vec<float, 8>::store(float *v, int_t stride) {
+  _mm_store_ss( (v           ), xmm[0]);
+    xmm[0] = _mm_shuffle_ps(xmm[0],xmm[0],_MM_SHUFFLE(0, 3, 2, 1));
+  _mm_store_ss( (v +   stride), xmm[0]);
+    xmm[0] = _mm_shuffle_ps(xmm[0],xmm[0],_MM_SHUFFLE(0, 3, 2, 1));
+  _mm_store_ss( (v + 2*stride), xmm[0]);
+    xmm[0] = _mm_shuffle_ps(xmm[0],xmm[0],_MM_SHUFFLE(0, 3, 2, 1));
+  _mm_store_ss( (v + 3*stride), xmm[0]);
+    xmm[0] = _mm_shuffle_ps(xmm[0],xmm[0],_MM_SHUFFLE(0, 3, 2, 1)); // leave in original state
+  _mm_store_ss( (v + 4*stride), xmm[1]);
+    xmm[1] = _mm_shuffle_ps(xmm[1],xmm[1],_MM_SHUFFLE(0, 3, 2, 1));
+  _mm_store_ss( (v + 5*stride), xmm[1]);
+    xmm[1] = _mm_shuffle_ps(xmm[1],xmm[1],_MM_SHUFFLE(0, 3, 2, 1));
+  _mm_store_ss( (v + 6*stride), xmm[1]);
+    xmm[1] = _mm_shuffle_ps(xmm[1],xmm[1],_MM_SHUFFLE(0, 3, 2, 1));
+  _mm_store_ss( (v + 7*stride), xmm[1]);
+    xmm[1] = _mm_shuffle_ps(xmm[1],xmm[1],_MM_SHUFFLE(0, 3, 2, 1)); // leave in original state
+}
 
 // Operators, Specialized versions (single precision, length 8):
 template <> vec<float, 8> vec<float, 8>::operator* (const vec<float,8> &v) const  {
@@ -105,6 +124,12 @@ template <> inline void vec<float, 8>::operator/= (const float &v) {
   tmp = _mm_shuffle_ps(tmp,tmp,_MM_SHUFFLE(0, 0, 0, 0));
   xmm[0] = _mm_div_ps(xmm[0], tmp);
   xmm[1] = _mm_div_ps(xmm[1], tmp);
+}
+template <> inline vec<float, 8> vec<float, 8>::operator= (const float &v) {
+  __m128 tmp = _mm_load_ss(&v);
+  xmm[0] = _mm_shuffle_ps(tmp,tmp,_MM_SHUFFLE(0, 0, 0, 0));
+  xmm[1] = xmm[0];
+  return vec<float, 8>( xmm[0] , xmm[1] );
 }
 
 

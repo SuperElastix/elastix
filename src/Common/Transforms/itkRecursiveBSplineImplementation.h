@@ -18,6 +18,16 @@
 #ifndef __itkRecursiveBSplineImplementation_h
 #define __itkRecursiveBSplineImplementation_h
 
+// temporary preprocessor directive to strongly request inlining.
+// This request is warranted as the functions benefit quite strongly from inlining 
+// and each function should be only called once with the same template arguments
+// by a wrapping function; so there is no space benefit of not inlining.
+#ifdef _MSC_VER
+  #define FORCEINLINE __forceinline
+#else
+  #define FORCEINLINE inline 
+#endif 
+
 namespace itk
 {
 /** \class RecursiveBSplineImplementation
@@ -88,7 +98,7 @@ public:
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
   /** GetSample recursive implementation. */
-  static inline OutputType GetSample(
+  static FORCEINLINE OutputType GetSample(
     const InputPointerType mu,
     const OffsetValueType * gridOffsetTable,
     const double * weights1D )
@@ -113,7 +123,8 @@ public:
       //::GetSample2( tmp_mu, gridOffsetTable, weights1D , tmp_prefetch_mu ) * weights1D[ k + HelperConstVariable ];
 
       // move to the next mu
-      tmp_mu += bot;
+      if (gridOffsetTable0!=USE_STEPS)
+        tmp_mu += bot;
       /*if (doPrefetch)
         tmp_prefetch_mu +=bot;*/
     }
@@ -132,7 +143,7 @@ class RecursiveBSplineImplementation_GetSample< OutputType, 0, SplineOrder, Inpu
 {
 public:
   /** GetSample recursive implementation. */
-  static inline OutputType GetSample(
+  static FORCEINLINE  OutputType GetSample(
     const InputPointerType mu,
     const OffsetValueType * gridOffsetTable,
     const double * weights1D ) //, const InputPointerType prefetch_mu)
@@ -166,7 +177,7 @@ public:
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
   /** GetSample recursive implementation. */
-  static inline OutputType GetSample(
+  static FORCEINLINE  OutputType GetSample(
     const InputPointerType mu,
     const OffsetValueType * gridOffsetTable,
     const double * weights1D ) // , const InputPointerType prefetch_mu)
@@ -305,7 +316,8 @@ public:
       sj[ SpaceDimension ] += tmp_sj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
       // move to the next mu
-      tmp_mu += bot;
+      if (gridOffsetTable0!=USE_STEPS) 
+        tmp_mu += bot;
     }
   } // end GetSpatialJacobian()
 }; // end class
@@ -440,7 +452,8 @@ public:
       sh[ helperDim2 - 1 ] += tmp_sh[ 0 ] * hessianWeights1D[ k + HelperConstVariable ];
 
       // move to the next mu
-      tmp_mu += bot;
+      if (gridOffsetTable0!=USE_STEPS) 
+        tmp_mu += bot;
     }
   } // end GetSpatialHessian()
 }; // end class
@@ -556,7 +569,7 @@ public:
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
   /** GetJacobian recursive implementation. */
-  static inline void GetJacobian(
+  static FORCEINLINE void GetJacobian(
     OutputPointerType & jacobians,
     const double * weights1D,
     InputValueType value )
@@ -580,7 +593,7 @@ class RecursiveBSplineImplementation_GetJacobian< OutputPointerType, 0, SplineOr
 {
 public:
   /** getJacobian recursive implementation. */
-  static inline void GetJacobian(
+  static FORCEINLINE void GetJacobian(
     OutputPointerType & jacobians,
     const double * weights1D,
     InputValueType value )
@@ -647,7 +660,8 @@ public:
         tmp_currentIndex = currentIndex + gridOffsetTable[k + HelperConstVariable];
       RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices< OutputPointerType, SpaceDimension - 1, SplineOrder, InputValueType, gridOffsetTable0 >
         ::ComputeNonZeroJacobianIndices( nzji, tmp_currentIndex , gridOffsetTable );
-      tmp_currentIndex  += bot;
+      if (gridOffsetTable0!=USE_STEPS) 
+        tmp_currentIndex  += bot;
     }
   } // end ComputeNonZeroJacobianIndices()
 }; // end class
@@ -704,7 +718,7 @@ public:
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
   /** MultiplyJacobianWithValue recursive implementation. */
-  static inline void MultiplyJacobianWithValue(
+  static FORCEINLINE void MultiplyJacobianWithValue(
     gradPointerType gradCoefficients,
     double weight,
     const InputValueType gradValue,
@@ -721,7 +735,8 @@ public:
         tmp_gradCoefficients = gradCoefficients + gridOffsetTable[k + HelperConstVariable];
       RecursiveBSplineImplementation_MultiplyJacobianWithValue< gradPointerType, SpaceDimension - 1, SplineOrder, InputValueType, gridOffsetTable0 >
         ::MultiplyJacobianWithValue( tmp_gradCoefficients, weight * weights1D[ k + HelperConstVariable ], gradValue , gridOffsetTable, weights1D );
-      tmp_gradCoefficients += bot;
+      if (gridOffsetTable0!=USE_STEPS) 
+        tmp_gradCoefficients += bot;
     }
   } // end MultiplyJacobianWithValue()
 }; // end class
@@ -737,7 +752,7 @@ class RecursiveBSplineImplementation_MultiplyJacobianWithValue< gradPointerType,
 {
 public:
   /** MultiplyJacobianWithValue recursive implementation. */
-  static inline void MultiplyJacobianWithValue(
+  static FORCEINLINE void MultiplyJacobianWithValue(
     gradPointerType gradCoefficients,
     double weight,
     const InputValueType gradValue,
@@ -749,5 +764,7 @@ public:
 }; // end class
 
 } // end namespace itk
+
+#undef FORCEINLINE // remove temporary preprocessor definition
 
 #endif /* __itkRecursiveBSplineImplementation_h */

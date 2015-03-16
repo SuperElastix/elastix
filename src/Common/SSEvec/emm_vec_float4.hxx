@@ -12,7 +12,7 @@ template<>  vec<float, 4>::vec(const float *v) {
       xmm[0] = _mm_loadu_ps(v );
 }
 template<> template<typename int_t>  vec<float, 4>::vec(const float *v, int_t stride) {
-      xmm[0] = _mm_set_ps( v[0], v[stride], v[2*stride], v[3*stride]);
+      xmm[0] = _mm_set_ps( v[3*stride], v[2*stride], v[1*stride], v[0*stride]);
 }
 template<>  vec<float, 4>::vec(const float v) {
       xmm[0] = _mm_load_ss(&v );
@@ -113,6 +113,11 @@ template <> inline void vec<float, 4>::operator/= (const float &v) {
   __m128 tmp = _mm_load_ss(&v);
   tmp = _mm_shuffle_ps(tmp,tmp,_MM_SHUFFLE(0, 0, 0, 0));
   xmm[0] = _mm_div_ps(xmm[0], tmp);
+}
+template <> inline vec<float, 4> vec<float, 4>::operator= (const float &v) {
+  __m128 tmp = _mm_load_ss(&v);
+  xmm[0] = _mm_shuffle_ps(tmp,tmp,_MM_SHUFFLE(0, 0, 0, 0));
+  return vec<float, 4>( xmm[0] );
 }
 
 // repeat element

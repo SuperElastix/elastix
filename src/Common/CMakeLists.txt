@@ -185,13 +185,22 @@ set( SSEvecFiles
   SSEvec/emm_vec_double8.hxx
   SSEvec/emm_vec_float4.hxx
   SSEvec/emm_vec_float8.hxx
+  SSEvec/emm_vec_int32_2.hxx
+  SSEvec/emm_vec_int32_3.hxx
+  SSEvec/emm_vec_int32_4.hxx
+  SSEvec/emm_vec_uint32_2.hxx
+  SSEvec/emm_vec_uint32_3.hxx
   SSEvec/emm_vec_uint32_4.hxx
-  SSEvec/emm_vec_long_32_2.hxx
-  SSEvec/emm_vec_long_32_3.hxx
-  SSEvec/emm_vec_long_32_4.hxx
-  SSEvec/emm_vec_ulong_32_2.hxx
-  SSEvec/emm_vec_ulong_32_3.hxx
-  SSEvec/emm_vec_ulong_32_4.hxx
+  SSEvec/emm_vec_int64_2.hxx
+  SSEvec/emm_vec_int64_3.hxx
+  SSEvec/emm_vec_int64_4.hxx
+  SSEvec/emm_vec_uint64_2.hxx
+  SSEvec/emm_vec_uint64_3.hxx
+  SSEvec/emm_vec_uint64_4.hxx
+  SSEvec/emm_vec_long.hxx
+  SSEvec/emm_vec_type_conversions2.hxx
+  SSEvec/emm_vec_type_conversions3.hxx
+  SSEvec/emm_vec_type_conversions4.hxx
 )
 #---------------------------------------------------------------------
 # Construct source groups for nice visualisation in Visual Studio.

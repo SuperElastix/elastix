@@ -151,7 +151,7 @@ template <> inline void vec<double, 3>::operator-= (const double &v) {
 template <> inline void vec<double, 3>::operator/= (const double &v) {
   __m128d tmp = _mm_load_sd(&v);
   __m128d tmp2 = _mm_unpacklo_pd(tmp, tmp);
-  xmmd[0] = _mm_div_pd(xmmd[0], tmp);
+  xmmd[0] = _mm_div_pd(xmmd[0], tmp2);
   xmmd[1] = _mm_div_sd(xmmd[1], tmp);
 }
 template <> inline vec<double, 3> vec<double, 3>::operator= (const double &v) {
@@ -202,13 +202,13 @@ inline double sum(const vec<double, 3> &v){
 #endif
 #ifdef INCLUDE_SSE4
 inline vec<double, 3> round(const vec<double, 3> &v){
-  return vec<double,3>(_mm_round_pd(v.xmmd[0], _MM_FROUND_TO_NEAREST_INT ), _mm_round_sd(v.xmmd[1], _MM_FROUND_TO_NEAREST_INT ));
+  return vec<double,3>(_mm_round_pd(v.xmmd[0], _MM_FROUND_TO_NEAREST_INT ), _mm_round_sd(v.xmmd[1], v.xmmd[1], _MM_FROUND_TO_NEAREST_INT ));
 }
 inline vec<double, 3> ceil(const vec<double, 3> &v){
-  return vec<double,3>(_mm_round_pd(v.xmmd[0], _MM_FROUND_TO_POS_INF ), _mm_round_sd(v.xmmd[1], _MM_FROUND_TO_POS_INF ));
+  return vec<double,3>(_mm_round_pd(v.xmmd[0], _MM_FROUND_TO_POS_INF ), _mm_round_sd(v.xmmd[1], v.xmmd[1], _MM_FROUND_TO_POS_INF ));
 }
 inline vec<double, 3> floor(const vec<double, 3> &v){
-  return vec<double,3>(_mm_round_pd(v.xmmd[0], _MM_FROUND_TO_NEG_INF ), _mm_round_sd(v.xmmd[1], _MM_FROUND_TO_NEG_INF ));
+  return vec<double,3>(_mm_round_pd(v.xmmd[0], _MM_FROUND_TO_NEG_INF ), _mm_round_sd(v.xmmd[1], v.xmmd[1], _MM_FROUND_TO_NEG_INF ));
 }
 
 #endif

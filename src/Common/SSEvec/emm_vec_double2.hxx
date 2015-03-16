@@ -9,11 +9,11 @@
 
 // load vector
 template<>  vec<double, 2>::vec(const double *v) {
-  if (__alignof(v) >= 16) {
-    xmmd[0] = _mm_load_pd(v );
-  } else {
+  //if (__alignof(v) >= 16) {
+  //  xmmd[0] = _mm_load_pd(v );
+  //} else {
     xmmd[0] = _mm_loadu_pd(v );
-  }
+  //}
 }
 template <> template<typename int_t>  vec<double, 2>::vec(const double *v, int_t stride) {
       xmmd[0] = _mm_load_sd(v );
@@ -43,14 +43,6 @@ template<> template<typename int_t>  void vec<double, 2>::store(double *v, int_t
   _mm_storeh_pd( (v +   stride), xmmd[0]);
 }
 
-
-// Type conversion constructors; convert this file's type to different types :
-#ifdef INCLUDE_SSE4
-template<> template<> inline vec<int64_t, 2>::vec(const vec<double, 2> &v) {
-  xmmi[0] = _mm_cvtpd_epi32(v.xmmd[0]);
-  xmmi[0] = _mm_cvtepi32_epi64(xmmi[0]);
-}
-#endif
 
 
 // Other members:
@@ -137,6 +129,7 @@ template <> inline void vec<double, 2>::operator+= (const double &v) {
   __m128d tmp = _mm_load_sd(&v);
   tmp = _mm_unpacklo_pd(tmp, tmp);
   xmmd[0] = _mm_add_pd(xmmd[0], tmp);
+//  xmmd[0] = _mm_add_pd( xmmd[0], _mm_set1_pd( v ) );
 }
 template <> inline void vec<double, 2>::operator-= (const double &v) {
   __m128d tmp = _mm_load_sd(&v);
@@ -149,8 +142,7 @@ template <> inline void vec<double, 2>::operator/= (const double &v) {
   xmmd[0] = _mm_div_pd(xmmd[0], tmp);
 }
 template <> inline vec<double, 2> vec<double, 2>::operator= (const double &v) {
-  __m128d tmp = _mm_load_sd(&v);
-  xmmd[0] = _mm_unpacklo_pd(tmp, tmp);
+  xmmd[0] = _mm_set1_pd( v );
   return vec<double, 2>(xmmd[0]);
 }
 

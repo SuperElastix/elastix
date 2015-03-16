@@ -50,61 +50,73 @@
 
 
 // includes we need to access the intrinsic functions:
-#include "emmintrin.h"
-#include "xmmintrin.h"
-#define INCLUDE_SSE3
+#ifdef __SSE3__
+  #define INCLUDE_SSE3
+#endif
 #ifdef __SSE4__
-  #pragma message("SSE4 compilation support detected, enabling SSE4 for vec.")
+  //#pragma message("SSE4 compilation support detected, enabling SSE4 for vec.")
   #define INCLUDE_SSE4
+  #ifndef INCLUDE_SSE3
+    #define INCLUDE_SSE3
+  #endif
 #else
-  #pragma message("No SSE4 support detected.")
+  //#pragma message("No SSE4 support detected.")
 #endif
 
 #ifdef INCLUDE_SSE4
-#pragma message("compiling vec with SSE4 support.")
-#include <smmintrin.h>
+#pragma message("compiling vec with up to SSE4.1 support.")
+#include <smmintrin.h>  // SSE41
+#elif defined INCLUDE_SSE3
+#pragma message("compiling vec with up to SSE3 support.")
+#include <pmmintrin.h>  // SSE3
 #else
-#pragma message("compiling vec without SSE4 support.")
+#pragma message("compiling vec with up to SSE2 support.")
+#include "emmintrin.h"  // SSE2
 #endif
 
+#include <stdint.h>
 // Some compiler specific definitions:
 #ifdef _MSC_VER
   // Compiling with MS Visual studio compiler:
   #include <intrin.h>
-  // Convert MS macros/definitions:
-  typedef __int32 int32_t;
-  typedef __int64 int64_t;
-  typedef unsigned __int32 uint32_t;
-  //typedef unsigned long uint32_t; // on Windows long is 32 bit. 
-  typedef unsigned __int64 uint64_t;
-  typedef unsigned long ulong;
+
   #ifdef _M_X64
     #define __x86_64__ _M_X64
   #endif
   #define ALIGN16 __declspec(align(16))
+  #define INCLUDE_LONG_VEC_SEPARATELY
+  #if _MSC_VER == 1500
+    #define BUGGY_MM_EXTRACT_EPI32
+    #pragma message("The MS visual studio 9 compiler (Compiler version 15.00) is known to sometimes store vec unaligned which causes segmentation faults.")
+  #endif
 #else // add check for compiling with gcc.
   // Compiling with gcc
-  #include <pmmintrin.h>
-  #include <stdint.h>
   #define ALIGN16 __attribute__ ((aligned (16)))
-//  #define _MM_FROUND_TO_NEAREST_INT 0x0
-//  #define _MM_FROUND_TO_NEG_INF 0x1
-//  #define _MM_FROUND_TO_POS_INF 0x2
 #endif
 
 #include <stdarg.h>
+#include <standard_templates.hxx>
 #ifdef MEX
 #include "mex.h"
-#define BAD mexErrMsgTxt("Currently unsupported");
-#define BADARG mexErrMsgTxt("Wrong argument supplied.");
+  #define BAD mexErrMsgTxt("Currently unsupported");
+  #define BADARG mexErrMsgTxt("Wrong argument supplied.");
+  #define ERRORMSG(arg) mexErrMsgTxt(arg)
+  #define WARNMSG(arg) mexWarnMsgTxt(arg)
+  #define DISPMSG(arg) mexPrintf(arg)
 #else
-#define BAD std::cerr << "ERROR: Currently unsupported." << std::endl;
-#define BADARG std::cerr << "ERROR: Wrong argument supplied." << std::endl;
+  #define BAD std::cerr << "ERROR: Currently unsupported." << std::endl;
+  #define BADARG std::cerr << "ERROR: Wrong argument supplied." << std::endl;
+  #define ERRORMSG(arg) std::cerr << arg << std::endl
+  #define WARNMSG(arg) std::cerr << arg << std::endl
+  #define DISPMSG(arg) std::cerr << arg << std::endl
 #endif
+
 #define ALIGN_VEC ALIGN16
 #define REGISTER_NUM_BYTES 16
 #include <iterator>
 //#include "lineReadWriters.hxx"
+
+
 
 // declaration of support info structure. (Fully) Specialize for all supported T and vlen.
 template < typename T, int vlen > struct vec_support {
@@ -129,16 +141,27 @@ template <> struct get_register_type< uint32_t >  {
 template <> struct get_register_type< uint64_t >  {
   typedef __m128i xmmType;
 };
-template <> struct get_register_type< long >  {
+template <typename T> struct getIntBaseType {
+  typedef BAD_TYPE Type;
+};
+template <> struct getIntBaseType< long > {
+  typedef IF< sizeof(long)==sizeof(int32_t) , int32_t, IF< sizeof(long)==sizeof(int64_t), int64_t , BAD_TYPE >::RET >::RET Type;
+};
+template <> struct getIntBaseType< unsigned long > {
+  typedef IF< sizeof(unsigned long)==sizeof(uint32_t) , uint32_t,  IF< sizeof(unsigned long)==sizeof(uint64_t), uint64_t , BAD_TYPE >::RET >::RET Type;
+};
+/*template <> struct get_register_type< long >  {
   typedef __m128i xmmType;
 };
 template <> struct get_register_type< ulong >  {
   typedef __m128i xmmType;
-};
+};*/
 #define xmmi xmm
 #define xmmd xmm
 
-// main vector definition.
+
+// ******  main vector definition ************************************************
+
 template <typename T, int vlen> struct ALIGN_VEC vec {
   typedef T value_type;
   enum {length = vlen};
@@ -148,50 +171,15 @@ template <typename T, int vlen> struct ALIGN_VEC vec {
 // Not interesting to users of 'vec'
 #include "emm_vec_internal.hxx"
 
-    /*const static int naturalLen() {
-        return (REGISTER_NUM_BYTES/sizeof(T));
-    }*/
 
-    // Externally callable constructors:
-  explicit vec (const T *v);
+  // Externally callable constructors:   (Guardpointer checked versions of these are defined in "emm_vec_internal.hxx")
+  explicit inline vec (const T *v);
   template <typename int_t> explicit vec (const T *v, int_t stride);
-    static vec loada( const T *v );
-#if defined(GUARDEDPOINTER_CPP) && defined(CHECKPOINTERBOUNDS)
-  explicit vec ( guard_pointer< const T * > v ) {
-    *(v+vlen-1); // perform bounds-check on last element of the vector
-    const T* vp( &(*v) ); // Check first element of vector and cast away the guardpointer and preserve a raw pointer to the current position.
-    vec tmp( vp );
-    xmm[0] = tmp.xmm[0];
-    if (vlen * sizeof(T)>1* REGISTER_NUM_BYTES) {
-    xmm[1] = tmp.xmm[1];
-    if (vlen * sizeof(T)>2* REGISTER_NUM_BYTES) {
-    xmm[2] = tmp.xmm[2];
-    if (vlen * sizeof(T)>3* REGISTER_NUM_BYTES) {
-    xmm[3] = tmp.xmm[3];
-    if (vlen * sizeof(T)>4* REGISTER_NUM_BYTES) {
-      BAD;
-    }}}}
-  }
-  template <typename int_t> explicit vec ( guard_pointer< const T * > v, int_t stride ) {
-    *(v+stride*(vlen-1)); // perform bounds-check on last element of the vector
-    const T* vp( &(*v) ); // Check first element of vector and cast away the guardpointer and preserve a raw pointer to the current position.
-    vec tmp( vp, stride );
-    xmm[0] = tmp.xmm[0];
-    if (vlen * sizeof(T)>1* REGISTER_NUM_BYTES) {
-    xmm[1] = tmp.xmm[1];
-    if (vlen * sizeof(T)>2* REGISTER_NUM_BYTES) {
-    xmm[2] = tmp.xmm[2];
-    if (vlen * sizeof(T)>3* REGISTER_NUM_BYTES) {
-    xmm[3] = tmp.xmm[3];
-    if (vlen * sizeof(T)>4* REGISTER_NUM_BYTES) {
-      BAD;
-    }}}}
-  }
-#endif
-//  vec (const T *v, int stride);
-  explicit vec (const T v);
-    static vec zero();
-  explicit vec () {}; //  default constructor, no initialization.
+  static inline vec loada( const T *v );
+
+  explicit inline vec (const T v);
+  static inline vec zero();
+  explicit vec () {}; //  default constructor, no initialization is performed so it contains garbage !!!.
 
 
   // reinterpret cast:
@@ -200,29 +188,17 @@ template <typename T, int vlen> struct ALIGN_VEC vec {
     return vec<ToType, vlen*(sizeof (T))/(sizeof (ToType)) >( xmm , (int) (vlen * (sizeof (T)) /REGISTER_NUM_BYTES));
   }
 
-    // Type conversion routine:
-  template <typename From, int vlenFrom> explicit vec(const vec<From, vlenFrom> &v);
+  // Type conversion routine:
+  template <typename From, int vlenFrom> explicit inline vec(const vec<From, vlenFrom> &v);
 
-    // Store to memory routines:
+  // Store to memory routines:   (Guardpointer checked versions of these are defined in "emm_vec_internal.hxx")
   inline void store( T *v);  // store unaligned.
-    typedef ALIGN16 T Ta;
+  typedef ALIGN16 T Ta;
   inline void storea( Ta * v); // store aligned.
   template <typename int_t> inline void store( T *v, int_t stride);
-#if defined(GUARDEDPOINTER_CPP) && defined(CHECKPOINTERBOUNDS)
-  inline void store( guard_pointer< T * > v ) {
-    *(v+vlen-1); // perform bounds-check on last element of the vector
-    T* vp( &(*v) ); // Check first element of vector and cast away the guardpointer and preserve a raw pointer to the current position.
-    store( vp );
-  }
-  template <typename int_t> inline void store( guard_pointer< T * > v, int_t stride ) {
-    *(v+stride*(vlen-1)); // perform bounds-check on last element of the vector
-    T* vp( &(*v) ); // Check first element of vector and cast away the guardpointer and preserve a raw pointer to the current position.
-    store( vp, stride );
-  }
-#endif
 
-  template <typename From, int vlenFrom> inline void scale_unsafe(const vec<From, vlenFrom> &v);
-
+  // Define the operators that we support:
+  // vector versions:
   inline vec operator* (const vec<T, vlen> &v) const;
   inline vec operator+ (const vec<T, vlen> &v) const;
   inline vec operator- (const vec<T, vlen> &v) const;
@@ -232,7 +208,7 @@ template <typename T, int vlen> struct ALIGN_VEC vec {
   inline void operator-= (const vec<T, vlen> &v);
   inline void operator/= (const vec<T, vlen> &v);
 
-  // scalar versions:
+  // vector with scalar versions:
   inline vec operator* (const T v) const;
   inline vec operator+ (const T &v) const;
   inline vec operator- (const T &v) const;
@@ -243,26 +219,28 @@ template <typename T, int vlen> struct ALIGN_VEC vec {
   inline void operator/= (const T &v);
   inline vec operator= (const T &v);
 
-    // comparison to bitmask:
-    inline vec operator> (const vec &v) const;
-    inline vec operator>= (const vec &v) const;
-    inline vec operator== (const vec &v) const;
-    inline vec operator<= (const vec &v) const;
-    inline vec operator< (const vec &v) const;
-    inline vec operator!= (const vec &v) const;
+  // comparison to bitmask:
+  inline vec operator> (const vec &v) const;
+  inline vec operator>= (const vec &v) const;
+  inline vec operator== (const vec &v) const;
+  inline vec operator<= (const vec &v) const;
+  inline vec operator< (const vec &v) const;
+  inline vec operator!= (const vec &v) const;
 
   // bit wise operators:
-    inline vec operator>> (const int shiftcount) const;
-    inline vec operator<< (const int shiftcount) const;
-    inline vec operator| (const vec<T, vlen> &v) const;
-    inline vec operator& (const vec<T, vlen> &v) const;
+  inline vec operator>> (const int shiftcount) const;
+  inline vec operator<< (const int shiftcount) const;
+  inline vec operator| (const vec<T, vlen> &v) const;
+  inline vec operator& (const vec<T, vlen> &v) const;
 
 
   // other operations:
   inline vec rep(int idx) const; // Replicate vec[idx]; use only for compile time constant idx.
   inline vec insert( const vec &v, const vec &mask );
-    inline void set( int idx, const T & value ); // set specific entry of the vector, use only for compile time constant idx.
-    inline static vec signmask();
+  inline void set( int idx, const T & value ); // set specific entry of the vector, use only for compile time constant idx.
+  inline static vec signmask();
+  template <typename From, int vlenFrom> inline void scale_unsafe(const vec<From, vlenFrom> &v);
+
 };
 
 // Unary minus:
@@ -288,32 +266,42 @@ template<> struct vec_support<float, 8> {
 template<> struct vec_support<int64_t, 2> {
   enum {supported = true };
 };
+template<> struct vec_support<uint64_t, 2> {
+  enum {supported = true };
+};
+template<> struct vec_support<int32_t, 2> {
+  enum {supported = true };
+};
+template<> struct vec_support<uint32_t, 2> {
+  enum {supported = true };
+};
+template<> struct vec_support<int32_t, 3> {
+  enum {supported = true };
+};
+template<> struct vec_support<uint32_t, 3> {
+  enum {supported = true };
+};
 template<> struct vec_support<int32_t, 4> {
   enum {supported = true };
 };
 template<> struct vec_support<uint32_t, 4> {
   enum {supported = true };
 };
-template<> struct vec_support<long, 2> {
-  enum {supported = true };
+#ifdef INCLUDE_LONG_VEC_SEPARATELY
+template<int vlen> struct vec_support<long, vlen> {
+  enum {supported = vec< typename getIntBaseType<long>::Type , vlen>::supported };
 };
-template<> struct vec_support<long, 3> {
-  enum {supported = true };
+template<int vlen> struct vec_support<unsigned long, vlen> {
+  enum {supported = vec< typename getIntBaseType<unsigned long>::Type , vlen>::supported };
 };
-template<> struct vec_support<long, 4> {
-  enum {supported = true };
-};
-template<> struct vec_support<ulong, 2> {
-  enum {supported = true };
-};
-template<> struct vec_support<ulong, 3> {
-  enum {supported = true };
-};
-template<> struct vec_support<ulong, 4> {
-  enum {supported = true };
-};
+#endif
 
-// include the implementations for the different types and vector lengths:
+// Include the implementations for the different types and vector lengths.
+// In each of these files, the implementation follows:
+//  - Load functions (incl. zero)
+//  - Store functions
+//  - Operators
+//  - Other functions (min/max ...)
 #include "emm_vec_double2.hxx"
 #include "emm_vec_double3.hxx"
 #include "emm_vec_double4.hxx"
@@ -321,29 +309,37 @@ template<> struct vec_support<ulong, 4> {
 #include "emm_vec_float4.hxx"
 #include "emm_vec_float8.hxx"
 #include "emm_vec_int64_2.hxx"
+#include "emm_vec_int64_3.hxx"
 #include "emm_vec_int64_4.hxx"
+#include "emm_vec_uint64_2.hxx"
+#include "emm_vec_uint64_3.hxx"
+#include "emm_vec_uint64_4.hxx"
+#include "emm_vec_int32_2.hxx"
+#include "emm_vec_int32_3.hxx"
 #include "emm_vec_int32_4.hxx"
+#include "emm_vec_uint32_2.hxx"
+#include "emm_vec_uint32_3.hxx"
 #include "emm_vec_uint32_4.hxx"
-#include "emm_vec_long_32_2.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
-#include "emm_vec_ulong_32_2.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
-#include "emm_vec_long_32_3.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
-#include "emm_vec_ulong_32_3.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
-#include "emm_vec_long_32_4.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
-#include "emm_vec_ulong_32_4.hxx" // todo: only include this one if long is 32 bits. If not include the version with appropriate number of bits. 
 
-// In each of these files, the implementation follows:
-//  - Load functions (incl. zero)
-//  - Store functions
-//  - Convert to different (vec) type
-//  - Operators
-//  - Other functions (min/max ...)
+#ifdef INCLUDE_LONG_VEC_SEPARATELY
+  #include "emm_vec_long.hxx"
+  #define VECLONGTYPE unsigned long
+  #include "emm_vec_long.hxx"
+#endif
+
+// Include type conversions (needs constructors of all types to be defined prior)
+#include "emm_vec_type_conversions2.hxx"
+#include "emm_vec_type_conversions3.hxx"
+#include "emm_vec_type_conversions4.hxx"
+
+
 
 
 // General functions:
 
 template <typename T, int vlen> vec<T, vlen> vec<T, vlen>::insert( const vec<T, vlen> &b, const vec<T, vlen> &mask ) {
   return andnot(mask, *this ) | (b & mask);
-}
+};
 
 template <typename T>
 inline void conditional_swap(T &a, T &b, const T condition){
@@ -373,6 +369,15 @@ template < typename T> inline T sum( T a) {
   return a;
 };
 
+
+// Test template
+template < typename T> struct IS_vec {
+	enum { TF = false };
+};
+template < typename T, int vlen > struct IS_vec< vec<T, vlen > > {
+	enum { TF  = vec_support<T, vlen>::supported };
+};
+
 template< typename base > class vec_store_helper {
 public:
   typedef typename base::value_type value_type;
@@ -381,25 +386,46 @@ private:
   ptrT ptr;
 public:
   vec_store_helper( ptrT ptr_) : ptr(ptr_) {};
-  inline void operator=(value_type newval) {
-    newval.store( ptr );
-  }
-  template< typename otherT > inline void operator=(const otherT newval ) {
-    value_type temp(newval);
-    //temp = newval ;
-    temp.store( ptr );
-  }
-  inline void operator+=(value_type newval) {
-    ( value_type( ptr ) + newval ).store( ptr );
-  }
+
   template< typename otherT > value_type operator*( otherT val ) const {
     return value_type( ptr ) * val;
   }
   template< typename otherT > value_type operator+( otherT val ) const {
     return value_type( ptr ) + val;
   }
+  template< typename otherT > value_type operator-( otherT val ) const {
+    return value_type( ptr ) - val;
+  }
+  template< typename otherT > value_type operator/( otherT val ) const {
+    return value_type( ptr ) / val;
+  }
+
+  inline void operator=(value_type newval) {
+    newval.store( ptr );
+  }
+  inline void operator=(const vec_store_helper<base> newval ) {
+	value_type temp( newval );
+	temp.store( ptr );
+  }
+/*  template< typename otherT > inline void operator=(const vec_store_helper<otherT> newval) {
+    value_type temp( newval );
+	temp.store( ptr );
+  }*/
+  template< typename otherT > inline void operator=(const otherT newval ) {
+    value_type temp( newval );
+    temp.store( ptr );
+  }
   template< typename otherT > inline void operator*=(otherT newval) {
     ( value_type( ptr ) * newval ).store( ptr );
+  }
+  inline void operator+=(value_type newval) {
+    ( value_type( ptr ) + newval ).store( ptr );
+  }
+  inline void operator-=(value_type newval) {
+    ( value_type( ptr ) - newval ).store( ptr );
+  }
+  inline void operator/=(value_type newval) {
+    ( value_type( ptr ) / newval ).store( ptr );
   }
   inline operator value_type() const {
     return value_type( ptr );
@@ -467,13 +493,13 @@ protected:
   typedef const char * conversionCharType;
 public:
   typedef typename iterator_traits< ptrT >::value_type  T;
-  typedef vecptr<ptrT, vlen> self;
+  typedef vecptr<ptrT, vlen> Self;
   typedef typename std::random_access_iterator_tag iterator_category;
   typedef ptrdiff_t difference_type;
   typedef vec< typename removeConst<T>::type , vlen> value_type;
   typedef ptrT  array_type;
-  typedef vec_store_helper<self> pointer;
-  typedef vec_store_helper<self> reference;
+  typedef vec_store_helper<Self> pointer;
+  typedef vec_store_helper<Self> reference;
   typedef difference_type distance_type;  // retained
 //  typedef lineType< ptrT , typename removeConst<T>::type > elementIteratorType;
 
@@ -494,28 +520,28 @@ public:
     return reference(ptr+index*vlen);
   };
 
-  inline self operator+(ptrdiff_t step) const {
-    return self( ptr+ step*vlen);
+  inline Self operator+(ptrdiff_t step) const {
+    return Self( ptr+ step*vlen);
   };
   inline void operator+=(ptrdiff_t step) {
     ptr+= step*vlen;
   };
-  inline self operator-(ptrdiff_t step) const {
-    return self( ptr-step*vlen);
+  inline Self operator-(ptrdiff_t step) const {
+    return Self( ptr-step*vlen);
   };
-    inline difference_type operator-( self other) const {
+    inline difference_type operator-( Self other) const {
         return (ptr - other.ptr)/vlen;
     }
-  inline self operator++() {
-    return self( ptr+=vlen);
+  inline Self operator++() {
+    return Self( ptr+=vlen);
   };
-  inline self operator--() {
-    return self( ptr-=vlen);
+  inline Self operator--() {
+    return Self( ptr-=vlen);
   };
-  inline bool operator>=( self other) {
+  inline bool operator>=( Self other) {
     return ptr>=other.ptr;
   };
-  inline bool operator<( self other) {
+  inline bool operator<( Self other) {
     return ptr<other.ptr;
   };
   ptrT getRawPointer() const {
@@ -531,44 +557,45 @@ public:
 
 template <typename ptrT, int vlen>  class vecptr_aligned :  public vecptr<ptrT, vlen >{
 public:
+  typedef vecptr< ptrT, vlen > Superclass;
   //typedef typename iterator_traits< ptrT >::value_type  T;
-  typedef vecptr_aligned<ptrT, vlen> self;
+  typedef vecptr_aligned<ptrT, vlen> Self;
   //typedef typename std::random_access_iterator_tag iterator_category;
   //typedef ptrdiff_t difference_type;
-  //typedef vec< typename removeConst<T>::type , vlen> value_type;
+  typedef  typename Superclass::value_type value_type;
   //typedef ptrT array_type;
-  typedef vec_store_helper_aligned<self> pointer;
-  typedef vec_store_helper_aligned<self> reference;
+  typedef vec_store_helper_aligned<Self> pointer;
+  typedef vec_store_helper_aligned<Self> reference;
   //typedef difference_type distance_type;  // retained
   //typedef lineType< ptrT , typename removeConst<T>::type > elementIteratorType;
 
-  vecptr_aligned( ptrT ptr_): vecptr(ptr_) {};
+  vecptr_aligned( ptrT ptr_): Superclass(ptr_) {};
   inline value_type operator*() const {
-    return value_type::loada(ptr);
+    return value_type::loada(this->ptr);
   };
   inline reference operator*()  {
-    return reference(ptr);
+    return reference(this->ptr);
   };
   inline value_type operator[](ptrdiff_t index) const {
-    return value_type::loada(ptr+index*vlen);
+    return value_type::loada( this->ptr + index*vlen );
   }
   inline reference operator[](ptrdiff_t index) {
-    return reference(ptr+index*vlen);
+    return reference( this->ptr + index*vlen );
   };
-  inline self operator+(ptrdiff_t step) const {
-    return self( ptr+ step*vlen);
+  inline Self operator+(ptrdiff_t step) const {
+    return Self( this->ptr+ step*vlen);
   };
   inline void operator+=(ptrdiff_t step) {
-    ptr+= step*vlen;
+    this->ptr+= step*vlen;
   };
-  inline self operator-(ptrdiff_t step) const {
-    return self( ptr-step*vlen);
+  inline Self operator-(ptrdiff_t step) const {
+    return Self( this->ptr - step*vlen);
   };
-  inline self operator++() {
-    return self( ptr+=vlen);
+  inline Self operator++() {
+    return Self( this->ptr += vlen);
   };
-  inline self operator--() {
-    return self( ptr-=vlen);
+  inline Self operator--() {
+    return Self( this->ptr -= vlen);
   };
 };
 
@@ -581,21 +608,44 @@ private:
   ptrdiff_t stepb;
 public:
   vec_step_store_helper( ptrT ptr_, ptrdiff_t stepb_) : ptr(ptr_) , stepb(stepb_) {};
+
+  template< typename otherT > value_type operator*( otherT val ) const {
+    return value_type( ptr , stepb) * val;
+  }
+  template< typename otherT > value_type operator+( otherT val ) const {
+    return value_type( ptr , stepb) + val;
+  }
+  template< typename otherT > value_type operator-( otherT val ) const {
+    return value_type( ptr , stepb) - val;
+  }
+  template< typename otherT > value_type operator/( otherT val ) const {
+    return value_type( ptr , stepb) / val;
+  }
+
   inline void operator=(value_type newval) {
     newval.store( ptr , stepb);
   }
-  inline void operator+=(value_type newval) {
-    ( value_type( ptr , stepb) + newval ).store( ptr , stepb);
+  inline void operator=(const vec_step_store_helper<base> newval ) {
+	value_type temp( newval );
+	temp.store( ptr , stepb);
   }
-  template< typename otherT > value_type operator*( otherT val) const {
-    return value_type( ptr, stepb ) * val;
-  }
-  template< typename otherT > value_type operator+( otherT val ) const {
-    return value_type( ptr , stepb ) + val;
+  template< typename otherT > inline void operator=(const otherT newval ) {
+    value_type temp( newval );
+    temp.store( ptr ,stepb );
   }
   template< typename otherT > inline void operator*=(otherT newval) {
-    ( value_type( ptr , stepb ) * newval ).store( ptr , stepb);
+    ( value_type( ptr , stepb) * newval ).store( ptr, stepb );
   }
+  inline void operator+=(value_type newval) {
+    ( value_type( ptr, stepb ) + newval ).store( ptr, stepb );
+  }
+  inline void operator-=(value_type newval) {
+    ( value_type( ptr, stepb ) - newval ).store( ptr , stepb);
+  }
+  inline void operator/=(value_type newval) {
+    ( value_type( ptr, stepb ) / newval ).store( ptr , stepb);
+  }
+  
   inline operator value_type() const {
     return value_type( ptr , stepb );
   };
@@ -647,13 +697,13 @@ private:
 public:
 
   typedef typename iterator_traits< ptrT >::value_type  T;
-  typedef vecptr_step<ptrT, vlen> self;
+  typedef vecptr_step<ptrT, vlen> Self;
   typedef typename std::random_access_iterator_tag iterator_category;
   typedef ptrdiff_t difference_type;
   typedef vec<typename removeConst<T>::type , vlen> value_type;
   typedef ptrT  array_type;
-  typedef vec_step_store_helper<self> pointer;
-  typedef vec_step_store_helper<self> reference;
+  typedef vec_step_store_helper<Self> pointer;
+  typedef vec_step_store_helper<Self> reference;
   typedef difference_type distance_type;  // retained
   typedef  ptrT  elementIteratorType;
 
@@ -674,20 +724,20 @@ public:
     return reference(ptr+index, stepb);
   };
 
-  inline self operator+(ptrdiff_t step) const {
-    return self( ptr+ step, stepb);
+  inline Self operator+(ptrdiff_t step) const {
+    return Self( ptr+ step, stepb);
   };
   inline void operator+=(ptrdiff_t step) {
     ptr += step;
   };
-  inline self operator-(ptrdiff_t step) const {
-    return self( ptr-step , stepb);
+  inline Self operator-(ptrdiff_t step) const {
+    return Self( ptr-step , stepb);
   };
-  inline self operator++() {
-    return self( ptr+=1 , stepb);
+  inline Self operator++() {
+    return Self( ptr+=1 , stepb);
   };
-  inline self operator--() {
-    return self( ptr-=1 , stepb);
+  inline Self operator--() {
+    return Self( ptr-=1 , stepb);
   };
   elementIteratorType elementIterator( int k ) {
     return  ptr+k*stepb ;
@@ -703,12 +753,12 @@ private:
 public:
 
   typedef typename iterator_traits< ptrT >::value_type  T;
-  typedef vecptr_step2<ptrT, vlen> self;
+  typedef vecptr_step2<ptrT, vlen> Self;
   typedef typename std::random_access_iterator_tag iterator_category;
   typedef ptrdiff_t difference_type;
   typedef vec<typename removeConst<T>::type , vlen> value_type;
   typedef ptrT  array_type;
-  typedef vec_step_store_helper<self> reference;
+  typedef vec_step_store_helper<Self> reference;
   typedef reference pointer;
   typedef difference_type distance_type;  // retained
 //  typedef lineType< ptrT , T> elementIteratorType;
@@ -732,20 +782,20 @@ public:
     return reference(ptr+stepa*index, stepb);
   };
 
-  inline self operator+(ptrdiff_t step) const {
-    return self( ptr+ stepa*step, stepb, stepa);
+  inline Self operator+(ptrdiff_t step) const {
+    return Self( ptr+ stepa*step, stepb, stepa);
   };
   inline void operator+=(ptrdiff_t step) {
     ptr += stepa*step;
   };
-  inline self operator-(ptrdiff_t step) const {
-    return self( ptr-stepa*step , stepb, stepa);
+  inline Self operator-(ptrdiff_t step) const {
+    return Self( ptr-stepa*step , stepb, stepa);
   };
-  inline self operator++() {
-    return self( ptr+=stepa , stepb, stepa);
+  inline Self operator++() {
+    return Self( ptr+=stepa , stepb, stepa);
   };
-  inline self operator--() {
-    return self( ptr-=stepa , stepb, stepa);
+  inline Self operator--() {
+    return Self( ptr-=stepa , stepb, stepa);
   };
 /*  elementIteratorType elementIterator( int k ) {
     return elementIteratorType( ptr+k*stepb, stepa );
@@ -764,12 +814,12 @@ private:
 public:
 
   typedef typename iterator_traits< ptrT >::value_type  T;
-  typedef vecTptr<ptrT, vlen> self;
+  typedef vecTptr<ptrT, vlen> Self;
   typedef typename std::random_access_iterator_tag iterator_category;
   typedef ptrdiff_t difference_type;
   typedef vec<typename removeConst<T>::type, vlen> value_type;
   typedef ptrT  array_type;
-  typedef vec_store_helper<self> reference;
+  typedef vec_store_helper<Self> reference;
   typedef reference pointer;
   typedef difference_type distance_type;  // retained
   typedef ptrT elementIteratorType;
@@ -791,20 +841,20 @@ public:
     return reference(ptr+index);
   };
 
-  inline self operator+(ptrdiff_t step) const {
-    return self( ptr+ step);
+  inline Self operator+(ptrdiff_t step) const {
+    return Self( ptr+ step);
   };
   inline void operator+=(ptrdiff_t step) {
     ptr+= step;
   };
-  inline self operator-(ptrdiff_t step) const {
-    return self( ptr-step);
+  inline Self operator-(ptrdiff_t step) const {
+    return Self( ptr-step);
   };
-  inline self operator++() {
-    return self( ptr++);
+  inline Self operator++() {
+    return Self( ptr++);
   };
-  inline self operator--() {
-    return self( ptr--);
+  inline Self operator--() {
+    return Self( ptr--);
   };
   elementIteratorType elementIterator( int k ) {
     return ptr+k;
