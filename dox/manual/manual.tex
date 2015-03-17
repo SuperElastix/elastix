@@ -2835,6 +2835,8 @@ file:
 \begin{verbatim}
 #include "elastixlib.h"
 #include "itkParameterFileParser.h"
+
+using namespace ELASTIX;
 typedef ELASTIX::ParameterMapType RegistrationParametersType;
 typedef itk::ParameterFileParser  ParserType;
 
@@ -2898,7 +2900,7 @@ catch( itk::ExceptionObject &err )
 
 if( error == 0 )
 {
-  if( elastix ->GetResultImage().IsNotNull() )
+  if( elastix->GetResultImage().IsNotNull() )
   {
     // Typedef the ITKImageType first...
     ITKImageType * output_image = static_cast<ITKImageType *>(
