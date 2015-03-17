@@ -25,3 +25,12 @@ template<> template<> inline vec<uint32_t, 2>::vec(const vec<int32_t, 2> &v) {
 template<> template<> inline vec<int32_t, 2>::vec(const vec<uint32_t, 2> &v) {
   xmm[0] = v.xmm[0];
 }
+
+// signed int64_t to unsigned int64_t:
+template<> template<> inline vec<uint64_t, 2>::vec(const vec<int64_t, 2> &v) {
+  xmm[0] = v.xmm[0];
+}
+// unsigned int64_t to signed int64_t:
+template<> template<> inline vec<int64_t, 2>::vec(const vec<uint64_t, 2> &v) {
+  xmm[0] = v.xmm[0];
+}
