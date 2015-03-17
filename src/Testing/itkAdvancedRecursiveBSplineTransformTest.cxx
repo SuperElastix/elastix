@@ -19,7 +19,7 @@
 #include "itkBSplineDeformableTransform.h"         // original ITK
 #include "itkAdvancedBSplineDeformableTransform.h" // original elastix
 #include "itkRecursiveBSplineTransform.h"          // recursive version
-#define LINKINGERRORSFIXED
+//#define LINKINGERRORSFIXED
 #ifdef LINKINGERRORSFIXED
 #include "itkRecursivePermutedBSplineTransform.h"          // recursive version with permuted parameter order (first xyz, then spatial dimensions)
 #endif
