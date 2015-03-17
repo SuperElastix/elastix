@@ -64,9 +64,13 @@ template <typename A> struct WARN {
 
 // Make a dummy/signaling type that should not be actually used. Allow casting of any type to BAD_TYPE.
 struct BAD_TYPE { 
-	template < typename anyType> BAD_TYPE( anyType dummy) {
-		mexErrMsgTxt("Don't create any objects of 'BAD_TYPE'.");
-	};
+  template < typename anyType> BAD_TYPE( anyType dummy) {
+#ifdef MEX
+    mexErrMsgTxt("Don't create any objects of 'BAD_TYPE'.");
+#else
+    std::cerr << "Don't create any objects of 'BAD_TYPE'." << std::endl;
+#endif
+  };
 }; 
 
 class empty_type { ; };

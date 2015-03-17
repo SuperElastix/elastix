@@ -64,14 +64,14 @@
 #endif
 
 #ifdef INCLUDE_SSE4
-#pragma message("compiling vec with up to SSE4.1 support.")
-#include <smmintrin.h>  // SSE41
+  #pragma message("compiling vec with up to SSE4.1 support.")
+  #include <smmintrin.h>  // SSE41
 #elif defined INCLUDE_SSE3
-#pragma message("compiling vec with up to SSE3 support.")
-#include <pmmintrin.h>  // SSE3
+  #pragma message("compiling vec with up to SSE3 support.")
+  #include <pmmintrin.h>  // SSE3
 #else
-#pragma message("compiling vec with up to SSE2 support.")
-#include "emmintrin.h"  // SSE2
+  #pragma message("compiling vec with up to SSE2 support.")
+  #include "emmintrin.h"  // SSE2
 #endif
 
 #include <stdint.h>
