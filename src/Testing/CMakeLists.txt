@@ -417,7 +417,7 @@ set_tests_properties( InvertTransformTest_COMPARE_TP
 elx_add_test( AdvancedBSplineDeformableTransformTest "" "Common"
   ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt )
 elx_add_test( AdvancedRecursiveBSplineTransformTest "" "Common"
-  ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt )
+  ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTestLrg.txt ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTestLrgP.txt)
 elx_add_test( AdvancedLinearInterpolatorTest "" "Common" )
 elx_add_test( BSplineDerivativeKernelFunctionTest "" "Common" )
 elx_add_test( BSplineSODerivativeKernelFunctionTest "" "Common" )
