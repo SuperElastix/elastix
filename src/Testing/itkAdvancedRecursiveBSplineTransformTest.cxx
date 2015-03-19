@@ -315,7 +315,6 @@ main( int argc, char * argv[] )
   std::vector< OutputPointType > transformedPointList1( N );
   std::vector< OutputPointType > transformedPointList2( N );
   std::vector< OutputPointType > transformedPointList3( N );
-  std::vector< OutputPointType > transformedPointList4( N );
   std::vector< OutputPointType > transformedPointList5( N );
   std::vector< OutputPointType > transformedPointList6( N );
 
@@ -355,16 +354,10 @@ main( int argc, char * argv[] )
   for( unsigned int i = 0; i < N; ++i )
   {
     transformedPointList3[i] = recursiveTransform->TransformPoint( pointList[ i ] );
-    //recursiveTransform->TransformPointVector( pointList[ i ], opp, weights2, indices2, isInside );
 
     if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
   }
   timeCollector.Stop(  "TransformPoint recursive vector " );
-
-  timeCollector.Start( "TransformPoints recursive vector" );
-    recursiveTransform->TransformPoints( pointList,  transformedPointList4);
-    //recursiveTransform->TransformPointVector( pointList[ i ], opp, weights2, indices2, isInside );
-  timeCollector.Stop(  "TransformPoints recursive vector" );
 
 #ifdef LINKINGERRORSFIXED
   timeCollector.Start( "TransformPoint rec.Perm. vector " );
@@ -444,7 +437,6 @@ main( int argc, char * argv[] )
   double differenceNorm1 = 0.0;
   double differenceNorm2 = 0.0;
   double differenceNorm3 = 0.0;
-  double differenceNorm4 = 0.0;
   double differenceNorm5 = 0.0;
   double differenceNorm6 = 0.0;
   for( unsigned int i = 0; i < N; ++i )
@@ -452,7 +444,6 @@ main( int argc, char * argv[] )
     opp1 = transformedPointList1[i]; //transform->TransformPoint( pointList[ i ] );
     opp2 = transformedPointList2[i]; //recursiveTransform->TransformPointOld( pointList[ i ] );
     opp3 = transformedPointList3[i]; //recursiveTransform->TransformPoint( pointList[ i ] );
-    opp4 = transformedPointList4[i]; // recursiveTransform->TransformPoints
     opp5 = transformedPointList5[i]; // recursivePermutedTransform->TransformPoint( pointList[ i ] );
     opp6 = transformedPointList6[i]; // recursivePermutedTransform->TransformPoints
 
@@ -461,7 +452,6 @@ main( int argc, char * argv[] )
       differenceNorm1 += ( opp1[ j ] - opp2[ j ] ) * ( opp1[ j ] - opp2[ j ] );
       differenceNorm2 += ( opp1[ j ] - opp3[ j ] ) * ( opp1[ j ] - opp3[ j ] );
       differenceNorm3 += ( opp2[ j ] - opp3[ j ] ) * ( opp2[ j ] - opp3[ j ] );
-      differenceNorm4 += ( opp3[ j ] - opp4[ j ] ) * ( opp3[ j ] - opp4[ j ] );
       differenceNorm5 += ( opp3[ j ] - opp5[ j ] ) * ( opp3[ j ] - opp5[ j ] );
       differenceNorm6 += ( opp3[ j ] - opp6[ j ] ) * ( opp3[ j ] - opp6[ j ] );
     }
@@ -469,14 +459,12 @@ main( int argc, char * argv[] )
   differenceNorm1 = vcl_sqrt( differenceNorm1 ) / N;
   differenceNorm2 = vcl_sqrt( differenceNorm2 ) / N;
   differenceNorm3 = vcl_sqrt( differenceNorm3 ) / N;
-  differenceNorm4 = vcl_sqrt( differenceNorm4 ) / N;
   differenceNorm5 = vcl_sqrt( differenceNorm5 ) / N;
   differenceNorm6 = vcl_sqrt( differenceNorm6 ) / N;
 
   std::cerr << "Recursive B-spline TransformPointOld() MSD with ITK: " << differenceNorm1 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm2 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() MSD with TransformPointOld(): " << differenceNorm3 << std::endl;
-  std::cerr << "Recursive B-spline TransformPoint() with TransformPoints(): " << differenceNorm4 << std::endl;
 #ifdef LINKINGERRORSFIXED
   std::cerr << "Recursive B-spline TransformPoint() with Permuted TransformPoint(): " << differenceNorm5 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() with Permuted TransformPoints(): " << differenceNorm6 << std::endl;

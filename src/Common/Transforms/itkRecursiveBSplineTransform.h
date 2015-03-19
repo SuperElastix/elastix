@@ -115,7 +115,8 @@ public:
 
   typedef typename itk::RecursiveBSplineInterpolationWeightFunction<
     TScalarType, NDimensions, VSplineOrder >                      RecursiveBSplineWeightFunctionType;//TODO: get rid of this and use the kernels directly.
-/** Interpolation kernel type. */
+  
+  /** Interpolation kernel type. */
   typedef BSplineKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > KernelType;
   typedef BSplineDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > DerivativeKernelType;
   typedef BSplineSecondOrderDerivativeKernelFunction2< itkGetStaticConstMacro( SplineOrder ) > SecondOrderDerivativeKernelType;
@@ -138,8 +139,6 @@ public:
   virtual OutputPointType TransformPointOld( const InputPointType & point ) const;
   virtual void TransformPoint( const InputPointType & inputPoint, OutputPointType & outputPoint,
     WeightsType & weights, ParameterIndexArrayType & indices, bool & inside ) const;
-
-  virtual void TransformPoints( const std::vector< InputPointType >  & pointListIn, std::vector< OutputPointType >  & pointListOut  ) const;
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
