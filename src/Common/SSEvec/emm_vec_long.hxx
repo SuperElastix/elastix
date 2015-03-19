@@ -12,6 +12,7 @@
 
 #ifndef VECLONGTYPE 
   #define VECLONGTYPE long
+  #define VECOTHERLONGTYPE unsigned long
 #endif
 
 // vec implementation for types that are not defined in terms of one of the fixed size data types. 
@@ -45,7 +46,8 @@ public:
   };
 
   // Type conversion routine:
-  template <typename From> explicit vec(const vec<From, vlen> &v) : vi( v.vi ) {};
+  explicit vec(const vec<VECOTHERLONGTYPE, vlen> &v) : vi( v.vi ) {};
+  template <typename From> explicit vec(const vec<From, vlen> &v) : vi( v ) {};
   
   inline void store( T * v) {
     vi.store( reinterpret_cast<baseIntType * >( v ) );
@@ -112,3 +114,4 @@ public:
 };
 
 #undef VECLONGTYPE 
+#undef VECOTHERLONGTYPE

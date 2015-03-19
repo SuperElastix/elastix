@@ -324,6 +324,7 @@ template<int vlen> struct vec_support<unsigned long, vlen> {
 #ifdef INCLUDE_LONG_VEC_SEPARATELY
   #include "emm_vec_long.hxx"
   #define VECLONGTYPE unsigned long
+  #define VECOTHERLONGTYPE long
   #include "emm_vec_long.hxx"
 #endif
 
