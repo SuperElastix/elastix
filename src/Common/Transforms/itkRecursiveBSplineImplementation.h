@@ -765,6 +765,82 @@ public:
 
 } // end namespace itk
 
+
+
+
+/** \class RecursiveBSplineImplementation_GetSpatialJacobian
+ *
+ * \brief Define general case
+ */
+
+template< class OutputPointerType, unsigned int SpaceDimension, unsigned int jsj_length, unsigned int SplineOrder, class InputPointerType >
+class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian
+{
+public:
+  typedef typename std::iterator_traits< InputPointerType >::value_type OutputValueType; //\todo: is this the proper use of std::iterator_traits? Preferably we use 'using std::iterator_traits', to allow custom template specializations.
+  typedef OutputValueType * RecursiveOutputPointerType;
+
+  /** Helper constant variable. */
+  itkStaticConstMacro( HelperConstVariable, unsigned int,
+    ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
+
+  /** GetSpatialJacobian recursive implementation. */
+  static inline void GetJacobianOfSpatialJacobian(
+    OutputPointerType jsj_out,
+    const InputPointerType jsj,
+    const double * weights1D,
+    const double * derivativeWeights1D )
+  {
+    /** Create a temporary jsj.*/
+    OutputValueType  tmp_jsj[ jsj_length + 1];
+
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      // Multiply by the weights
+      tmp_jsj[ 0 ] = jsj[ 0 ] * weights1D[ k + HelperConstVariable ];
+      // Multiply by the derivative weights
+      tmp_jsj[ 1 ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
+
+      for( unsigned int n = 1; n < jsj_length; ++n )
+      {
+        tmp_jsj[ n+1 ] += jsj[ n ] * weights1D[ k + HelperConstVariable ];
+      };
+
+      RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, SpaceDimension - 1, jsj_length +1 , SplineOrder, InputPointerType >
+        ::GetJacobianOfSpatialJacobian( jsj_out, &tmp_jsj[0], weights1D , derivativeWeights1D );
+
+    }
+  } // end GetSpatialJacobian()
+}; // end class
+
+
+/** \class RecursiveBSplineImplementation_GetSpatialJacobian
+ *
+ * \brief Define the end case for SpaceDimension = 0.
+ */
+
+template< class OutputPointerType, unsigned int jsj_length, unsigned int SplineOrder, class InputPointerType >
+class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, 0, jsj_length, SplineOrder, InputPointerType >
+{
+public:
+  /** GetSpatialJacobian recursive implementation. */
+  static inline void GetJacobianOfSpatialJacobian(
+    OutputPointerType & jsj_out,
+    const InputPointerType jsj,
+    const double * weights1D,
+    const double * derivativeWeights1D )
+  {
+    InputPointerType jsj_iterator = jsj;
+    for (int i = 0 ; i < jsj_length; ++i ){
+      *jsj_out = *jsj_iterator;
+      ++jsj_out; ++jsj_iterator; 
+    }
+  } // end GetSpatialJacobian()
+}; // end class
+
+
+
+
 #undef FORCEINLINE // remove temporary preprocessor definition
 
 #endif /* __itkRecursiveBSplineImplementation_h */

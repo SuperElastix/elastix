@@ -38,6 +38,9 @@ template<>  vec<double, 8>::vec(const double v) {
       xmmd[2] = xmmd[0];
       xmmd[3] = xmmd[0];
 }
+template<> vec<double, 8>  vec<double, 8>::loada( const double *v ) {
+  return vec<double,8>( _mm_load_pd(v ),_mm_load_pd(v + 2 ),_mm_load_pd(v + 4 ),_mm_load_pd(v + 6 ));
+}
 
 //create as zero vector:
 template <> vec<double, 8> vec<double, 8>::zero () {

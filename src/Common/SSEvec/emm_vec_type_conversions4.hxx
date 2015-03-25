@@ -25,6 +25,56 @@ template<> template<> inline vec<uint32_t, 4>::vec(const vec<int32_t, 4> &v) {
 template<> template<> inline vec<int32_t, 4>::vec(const vec<uint32_t, 4> &v) {
   xmm[0] = v.xmm[0];
 }
+// unsigned int32_t to unsigned int64_t:
+template<> template<> inline vec<uint64_t, 4>::vec(const vec<uint32_t, 4> &v) {
+  __m128i tmp = _mm_setzero_si128 ();
+  xmm[0] = _mm_unpacklo_epi32( v.xmm[0] ,tmp);
+  xmm[1] = _mm_unpackhi_epi32( v.xmm[0] ,tmp);
+}
+// unsigned int32_t to signed int64_t:
+template<> template<> inline vec<int64_t, 4>::vec(const vec<uint32_t, 4> &v) {
+  __m128i tmp = _mm_setzero_si128 ();
+  xmm[0] = _mm_unpacklo_epi32( v.xmm[0] ,tmp);
+  xmm[1] = _mm_unpackhi_epi32( v.xmm[0] ,tmp);
+}
+// int32_t to int64_t:
+template<> template<> inline vec<int64_t, 4>::vec(const vec<int32_t, 4> &v) {
+  __m128i tmp = _mm_srai_epi32( v.xmm[0] , 31);
+  xmm[0] = _mm_unpacklo_epi32( v.xmm[0] ,tmp);
+  xmm[1] = _mm_unpackhi_epi32( v.xmm[0] ,tmp);
+}
+// int32_t to unsigned int64_t:
+template<> template<> inline vec<uint64_t, 4>::vec(const vec<int32_t, 4> &v) {
+  __m128i tmp = _mm_srai_epi32( v.xmm[0] , 31);
+  xmm[0] = _mm_unpacklo_epi32( v.xmm[0] ,tmp);
+  xmm[1] = _mm_unpackhi_epi32( v.xmm[0] ,tmp);
+}
+
+// unsigned int64_t to unsigned int32_t:
+template<> template<> inline vec<uint32_t, 4>::vec(const vec<uint64_t, 4> &v) {
+  __m128i tmp0 = _mm_shuffle_epi32(  v.xmm[0] , _MM_SHUFFLE(3, 1, 2, 0));
+  __m128i tmp1 = _mm_shuffle_epi32(  v.xmm[1] , _MM_SHUFFLE(3, 1, 2, 0));
+  xmm[0] = _mm_unpacklo_epi64( tmp0, tmp1 );
+}
+// signed int64_t to unsigned int32_t:
+template<> template<> inline vec<uint32_t, 4>::vec(const vec<int64_t, 4> &v) {
+  __m128i tmp0 = _mm_shuffle_epi32(  v.xmm[0] , _MM_SHUFFLE(3, 1, 2, 0));
+  __m128i tmp1 = _mm_shuffle_epi32(  v.xmm[1] , _MM_SHUFFLE(3, 1, 2, 0));
+  xmm[0] = _mm_unpacklo_epi64( tmp0, tmp1 );
+}
+
+// unsigned int64_t to int32_t:
+template<> template<> inline vec<int32_t, 4>::vec(const vec<uint64_t, 4> &v) {
+  __m128i tmp0 = _mm_shuffle_epi32(  v.xmm[0] , _MM_SHUFFLE(3, 1, 2, 0));
+  __m128i tmp1 = _mm_shuffle_epi32(  v.xmm[1] , _MM_SHUFFLE(3, 1, 2, 0));
+  xmm[0] = _mm_unpacklo_epi64( tmp0, tmp1 );
+}
+// signed int64_t to int32_t:
+template<> template<> inline vec<int32_t, 4>::vec(const vec<int64_t, 4> &v) {
+  __m128i tmp0 = _mm_shuffle_epi32(  v.xmm[0] , _MM_SHUFFLE(3, 1, 2, 0));
+  __m128i tmp1 = _mm_shuffle_epi32(  v.xmm[1] , _MM_SHUFFLE(3, 1, 2, 0));
+  xmm[0] = _mm_unpacklo_epi64( tmp0, tmp1 );
+}
 
 // signed int64_t to unsigned int64_t:
 template<> template<> inline vec<uint64_t, 4>::vec(const vec<int64_t, 4> &v) {

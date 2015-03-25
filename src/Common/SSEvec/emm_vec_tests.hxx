@@ -258,4 +258,76 @@ template < typename T, int vlen, typename vecptrtype, typename lims = testLims<f
   };
 };
 
+template< typename T > T * align_pointer( T* in ) {
+  return (T *) ( (ptrdiff_t) ( ((char *) in) + REGISTER_NUM_BYTES-1) & (- (ptrdiff_t) REGISTER_NUM_BYTES) );
+}
+
+template < typename T1, typename T2, int vlen> struct test_vecLoadStore { 
+#define TESTEQ2( TESTNM )\
+  {bool didnotyetwarn = true;\
+  for ( int i = 0; i < 3*vlen; ++i ) {\
+  if ( (AR2[i]!=AR3[i]) ) { if (didnotyetwarn) {\
+	        WARNMSG( (std::string("Wrong value in test " #TESTNM " with conversion of " ) + typeid(vT1).name() + " to "  + typeid(vT2).name() ).c_str() );\
+        didnotyetwarn = false;}\
+    };\
+    AR2[i] = 123567;\
+    AR3[i] = 123567;\
+  };}
+  static void test() {
+    typedef vec< T1, vlen> vT1;
+    typedef vec< T2, vlen> vT2;
+    DISPMSG( (std::string("Testing conversion of ") + typeid(vT1).name() + " to " + typeid(vT2).name() + "\n").c_str() );
+
+    const int numel = 3*vlen + REGISTER_NUM_BYTES;
+    T1  AR1unaligned[ numel ];
+    T2  AR2unaligned[ numel ];
+    T2  AR3[ numel ];
+    T1 * AR1 = align_pointer<T1>( &AR1unaligned[0] );
+    T2 * AR2 = align_pointer<T2>( &AR2unaligned[0] );
+    for (int i = 0; i< 3 * vlen; ++i ) {
+      AR1[i] = i-5;
+      AR2[i] = 123567;
+      AR3[i] = 123567;
+    };
+
+    // Test normal load store:
+    for (int i = 0 ; i < vlen; ++i ) {
+      AR3[i] = AR1[i];
+    }
+    vT1 v1(AR1);
+    vT2 v2(v1); // type conversion
+    v2.store(AR2);
+    TESTEQ2( 1 );
+
+    // Test stepped load, normal store:
+    for (int i = 0 ; i < vlen; ++i ) {
+      AR3[i] = AR1[i*3];
+    }
+    v1 = vT1( AR1, 3 );
+    v2 = (vT2) v1; // type conversion
+    v2.store(AR2);
+    TESTEQ2( 2 );
+
+    // Test aligned load, stepped store:
+    for (int i = 0 ; i < vlen; ++i ) {
+      AR3[i*3] = AR1[i];
+    }
+    v1 = vT1::loada( AR1);
+    v2= (vT2) v1; // type conversion
+    v2.store(AR2,3);
+    TESTEQ2( 3 );
+
+    // Test stepped load, aligned store:
+    for (int i = 0 ; i < vlen; ++i ) {
+      AR3[i] = AR1[i*3];
+    }
+    v1 = vT1( AR1 , 3);
+    v2 = vT2(v1); // type conversion
+    v2.storea(AR2);
+    TESTEQ2( 4 );
+
+  };
+};
+
+
 #endif

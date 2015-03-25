@@ -21,6 +21,10 @@ template<> template<typename int_t>  vec<uint32_t, 2>::vec(const uint32_t *v, in
     //xmm[0] = _mm_unpacklo_ps(xmm[0],xmm[0]);
     //xmm[0] = _mm_unpacklo_ps(xmm[0],xmm[0]);
 }*/
+template<> vec<uint32_t, 2>  vec<uint32_t, 2>::loada( const uint32_t * v ) {
+  //return vec( v ); // can't do aligned more efficient. 
+  return vec<uint32_t,2>( _mm_load_si128( reinterpret_cast<const __m128i *>( v ) ) );
+}
 
 //create as zero vector:
 template <> vec<uint32_t, 2> vec<uint32_t, 2>::zero () {

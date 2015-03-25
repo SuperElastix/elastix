@@ -190,6 +190,9 @@ template <typename T, int vlen> struct ALIGN_VEC vec {
 
   // Type conversion routine:
   template <typename From, int vlenFrom> explicit inline vec(const vec<From, vlenFrom> &v);
+ /* template <typename From, int vlenFrom> inline vec operator=(const vec<From, vlenFrom> &v) {
+    return vec( v ); // use cast to do actual type conversion. 
+  };*/
 
   // Store to memory routines:   (Guardpointer checked versions of these are defined in "emm_vec_internal.hxx")
   inline void store( T *v);  // store unaligned.

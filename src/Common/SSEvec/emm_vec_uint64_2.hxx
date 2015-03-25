@@ -18,6 +18,10 @@ template<> template<typename int_t> vec<uint64_t, 2>::vec(const uint64_t * v, in
 template<>  vec<uint64_t, 2>::vec(const uint64_t v) {
   xmmi[0] = _mm_set_epi64x( v, v);
 }
+template<> vec<uint64_t, 2>  vec<uint64_t, 2>::loada( const uint64_t * v ) {
+  //return vec( v ); // can't do aligned more efficient. 
+  return vec<uint64_t,2>( _mm_load_si128( reinterpret_cast<const __m128i *>( v ) )   );
+}
 
 //create as zero vector:
 template <> vec<uint64_t, 2> vec<uint64_t, 2>::zero () {
