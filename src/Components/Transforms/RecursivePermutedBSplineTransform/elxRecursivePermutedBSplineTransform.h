@@ -131,7 +131,7 @@ public:
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
-   * example: <tt>(Transform "BSplineTransform")</tt>\n
+   * example: <tt>(Transform "RecursivePermutedBSplineTransform")</tt>\n
    */
   elxClassNameMacro( "RecursivePermutedBSplineTransform" );
 

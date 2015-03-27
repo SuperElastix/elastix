@@ -195,6 +195,7 @@ protected:
   virtual void ComputeNonZeroJacobianIndices(
     NonZeroJacobianIndicesType & nonZeroJacobianIndices,
     const IndexType & supportIndex ) const;
+
 private:
 
   RecursivePermutedBSplineTransform( const Self & ); // purposely not implemented

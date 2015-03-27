@@ -476,7 +476,7 @@ std::cerr << "display " << nonZeroJacobianIndices.size() << " nonzero indices ["
 
 template< class TScalar, unsigned int NDimensions, unsigned int VSplineOrder >
 void
-  RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
+RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
 ::EvaluateJacobianWithImageGradientProduct(
   const InputPointType & ipp,
   const MovingImageGradientType & movingImageGradient,
