@@ -60,6 +60,11 @@ namespace elastix
         this->GetComponentLabel(), level, 0);
     this->SetNumEigenValues( NumEigenValues );
 
+    unsigned int NumSingleSubjects = 1;
+    this->GetConfiguration()->ReadParameter( NumSingleSubjects, "NumSingleSubjects",
+        this->GetComponentLabel(), level, 0);
+    this->SetNumSingleSubjects( NumSingleSubjects );
+
     /** Set moving image derivative scales. */
     this->SetUseMovingImageDerivativeScales( false );
     MovingImageDerivativeScalesType movingImageDerivativeScales;

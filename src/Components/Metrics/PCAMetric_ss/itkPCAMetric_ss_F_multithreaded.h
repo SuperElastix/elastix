@@ -50,6 +50,7 @@ public:
   itkSetMacro( GridSize, FixedImageSizeType );
   itkSetMacro( TransformIsStackTransform, bool );
   itkSetMacro( NumEigenValues, unsigned int );
+  itkSetMacro( NumSingleSubjects, unsigned int );
 
   /** Typedefs from the superclass. */
   typedef typename
@@ -224,6 +225,7 @@ private:
 
   /** Integer to indicate how many eigenvalues you want to use in the metric */
   unsigned int m_NumEigenValues;
+  unsigned int m_NumSingleSubjects;
 
   /** Matrices, needed for derivative calculation */
   mutable std::vector< unsigned int > m_PixelStartIndex;

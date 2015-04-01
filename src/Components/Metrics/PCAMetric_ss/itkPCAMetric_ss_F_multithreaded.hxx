@@ -38,7 +38,8 @@ template <class TFixedImage, class TMovingImage>
 PCAMetric_ss<TFixedImage,TMovingImage>
 ::PCAMetric_ss():
     m_TransformIsStackTransform( false ),
-    m_NumEigenValues( 6 )
+    m_NumEigenValues( 6 ),
+    m_NumSingleSubjects( 1 )
 {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -248,7 +249,7 @@ PCAMetric_ss<TFixedImage,TMovingImage>
             this->EvaluateMovingImageValueAndDerivative( fixedPoint, movingImageValue, 0 );
 
             /** Transform point and check if it is inside the B-spline support region. */
-            if( d == (this->m_G-1) )
+            if( d > (this->m_G-this->m_NumSingleSubjects -1) )
             {
                 sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
@@ -264,12 +265,13 @@ PCAMetric_ss<TFixedImage,TMovingImage>
                     sampleOk = this->EvaluateMovingImageValueAndDerivative(
                                 mappedPoint, movingImageValue, 0 );
                 }
-            }
 
-            if( sampleOk )
-            {
-                numSamplesOk++;
-                datablock( pixelIndex, d ) = movingImageValue;
+
+                if( sampleOk )
+                {
+                    numSamplesOk++;
+                    datablock( pixelIndex, d ) = movingImageValue;
+                }
             }
 
         } /** end loop over t */
@@ -438,7 +440,7 @@ void PCAMetric_ss<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreade
             bool sampleOk = true;
             this->EvaluateMovingImageValueAndDerivative( fixedPoint, movingImageValue, 0 );
 
-            if( d == (this->m_G - 1) )
+            if( d > (this->m_G - this->m_NumSingleSubjects - 1) )
             {
                 sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
@@ -454,13 +456,13 @@ void PCAMetric_ss<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreade
                     sampleOk = this->EvaluateMovingImageValueAndDerivative(
                                 mappedPoint, movingImageValue, 0 );
                 }
-            }
 
-            if( sampleOk )
-            {
-                numSamplesOk++;
-                datablock( pixelIndex, d ) = movingImageValue;
-            }// end if sampleOk
+                if( sampleOk )
+                {
+                    numSamplesOk++;
+                    datablock( pixelIndex, d ) = movingImageValue;
+                }// end if sampleOk
+            }
 
         } // end loop over t
         if( numSamplesOk == this->m_G )
@@ -570,38 +572,111 @@ void PCAMetric_ss<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreade
         MovingImageDerivativeType movingImageDerivative;
 
         /** Set fixed point's last dimension to lastDimPosition. */
-        voxelCoord[ this->m_LastDimIndex ] = this->m_G-1;
-
-        /** Transform sampled point back to world coordinates. */
-        this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-
-        this->TransformPoint( fixedPoint, mappedPoint );
-
-        this->EvaluateMovingImageValueAndDerivative(
-                    mappedPoint, movingImageValue, &movingImageDerivative );
-
-        /** Get the TransformJacobian dT/dmu */
-        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis );
-
-        /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
-        this->EvaluateTransformJacobianInnerProduct(
-                    jacobian, movingImageDerivative, imageJacobian );
-
-        /** build metric derivative components */
-        for( unsigned int p = 0; p < nzjis.size(); ++p)
+        for( unsigned int d = (this->m_G-this->m_NumSingleSubjects); d < this->m_G; ++d)
         {
-            DerivativeValueType tmp = 0.0;
-            for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
+            voxelCoord[ this->m_LastDimIndex ] = d;
+
+            /** Transform sampled point back to world coordinates. */
+            this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+
+            this->TransformPoint( fixedPoint, mappedPoint );
+
+            this->EvaluateMovingImageValueAndDerivative(
+                        mappedPoint, movingImageValue, &movingImageDerivative );
+
+            /** Get the TransformJacobian dT/dmu */
+            this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis );
+
+            /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
+            this->EvaluateTransformJacobianInnerProduct(
+                        jacobian, movingImageDerivative, imageJacobian );
+
+            /** build metric derivative components */
+            for( unsigned int p = 0; p < nzjis.size(); ++p)
             {
-                tmp += this->m_vSAtmm[ z ][ pixelIndex ] * imageJacobian[ p ] * this->m_Sv[ this->m_G-1 ][ z ] +
-                        this->m_vdSdmu_part1[ z ][ this->m_G-1 ] * this->m_Atmm[ this->m_G-1 ][ pixelIndex ] * imageJacobian[ p ] * this->m_CSv[ this->m_G-1 ][ z ];
-            }//end loop over eigenvalues
-            derivative[ nzjis[ p ] ] += tmp;
-        }//end loop over non-zero jacobian indices
+                DerivativeValueType tmp = 0.0;
+                for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
+                {
+                    tmp += this->m_vSAtmm[ z ][ pixelIndex ] * imageJacobian[ p ] * this->m_Sv[ d ][ z ] +
+                            this->m_vdSdmu_part1[ z ][ d ] * this->m_Atmm[ d ][ pixelIndex ] * imageJacobian[ p ] * this->m_CSv[ d ][ z ];
+                }//end loop over eigenvalues
+                derivative[ nzjis[ p ] ] += tmp;
+            }//end loop over non-zero jacobian indices
+        }
 
     } // end second for loop over sample container
 
     derivative *= -(2.0/(DerivativeValueType(this->m_NumberOfPixelsCounted) - 1.0)); //normalize
+
+    /** Subtract mean from derivative elements. */
+    if( this->m_SubtractMean )
+    {
+        if( ! this->m_TransformIsStackTransform )
+        {
+            /** Update derivative per dimension.
+         * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
+         * per dimension xyz.
+         */
+            const unsigned int lastDimGridSize = this->m_GridSize[ this->m_LastDimIndex ];
+            const unsigned int numParametersPerDimension
+                    = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+            const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
+            DerivativeType mean ( numControlPointsPerDimension );
+            for ( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
+            {
+                /** Compute mean per dimension. */
+                mean.Fill( 0.0 );
+                const unsigned int starti = numParametersPerDimension * d;
+                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+                {
+                    const unsigned int index = i % numControlPointsPerDimension;
+                    mean[ index ] += derivative[ i ];
+                }
+                mean /= static_cast< RealType >( lastDimGridSize );
+
+                /** Update derivative for every control point per dimension. */
+                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+                {
+                    const unsigned int index = i % numControlPointsPerDimension;
+                    derivative[ i ] -= mean[ index ];
+                }
+            }
+        }
+        else
+        {
+            /** Update derivative per dimension.
+         * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
+         * the number the time point index.
+         */
+            const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / this->m_G;
+            DerivativeType mean ( numParametersPerLastDimension );
+            mean.Fill( 0.0 );
+
+            /** Compute mean per control point. */
+            for ( unsigned int t = 0; t < this->m_G; ++t )
+            {
+                const unsigned int startc = numParametersPerLastDimension * t;
+                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+                {
+                    const unsigned int index = c % numParametersPerLastDimension;
+                    mean[ index ] += derivative[ c ];
+                }
+            }
+            mean /= static_cast< RealType >( this->m_G );
+
+            /** Update derivative per control point. */
+            for ( unsigned int t = 0; t < this->m_G; ++t )
+            {
+                const unsigned int startc = numParametersPerLastDimension * t;
+                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+                {
+                    const unsigned int index = c % numParametersPerLastDimension;
+                    derivative[ c ] -= mean[ index ];
+                }
+            }
+        }
+    }
+
     value = this->m_G - sumEigenValuesUsed;
 
 } // end GetValueAndDerivativeSingleThreaded()
@@ -715,11 +790,11 @@ PCAMetric_ss< TFixedImage, TMovingImage >
             this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
 
             /** Transform point and check if it is inside the B-spline support region. */
-            /** Only for d == G-1 **/
+            /** Only for d > G-num_ss **/
             bool sampleOk = true;
             this->EvaluateMovingImageValueAndDerivative( fixedPoint, movingImageValue, 0 );
 
-            if( d == (this->m_G - 1) )
+            if( d > (this->m_G - this->m_NumSingleSubjects - 1) )
             {
                 sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
@@ -750,7 +825,6 @@ PCAMetric_ss< TFixedImage, TMovingImage >
         }
 
     }/** end first loop over image sample container */
-
     /** Only update these variables at the end to prevent unnecessary "false sharing". */
     this->m_PCAMetricssGetSamplesPerThreadVariables[ threadId ].st_NumberOfPixelsCounted = pixelIndex;
     this->m_PCAMetricssGetSamplesPerThreadVariables[ threadId ].st_DataBlock             = datablock.extract( pixelIndex, this->m_G );
@@ -937,38 +1011,40 @@ PCAMetric_ss< TFixedImage, TMovingImage >
         this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
         /** Set fixed point's last dimension to lastDimPosition. */
-        voxelCoord[ this->m_LastDimIndex ] = this->m_G-1;
-
-        /** Transform sampled point back to world coordinates. */
-        this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-        this->TransformPoint( fixedPoint, mappedPoint );
-
-        this->EvaluateMovingImageValueAndDerivative(
-                    mappedPoint, movingImageValue, &movingImageDerivative );
-
-        /** Get the TransformJacobian dT/dmu */
-        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis );
-
-        /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
-        this->EvaluateTransformJacobianInnerProduct(
-                    jacobian, movingImageDerivative, imageJacobian );
-
-        /** build metric derivative components */
-        for( unsigned int p = 0; p < nzjis.size(); ++p)
+        for( unsigned int d = (this->m_G - this->m_NumSingleSubjects); d < this->m_G; ++d)
         {
-            DerivativeValueType tmp = 0.0;
-            for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
+            voxelCoord[ this->m_LastDimIndex ] = d;
+
+            /** Transform sampled point back to world coordinates. */
+            this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+            this->TransformPoint( fixedPoint, mappedPoint );
+
+            this->EvaluateMovingImageValueAndDerivative(
+                        mappedPoint, movingImageValue, &movingImageDerivative );
+
+            /** Get the TransformJacobian dT/dmu */
+            this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis );
+
+            /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
+            this->EvaluateTransformJacobianInnerProduct(
+                        jacobian, movingImageDerivative, imageJacobian );
+
+            /** build metric derivative components */
+            for( unsigned int p = 0; p < nzjis.size(); ++p)
             {
-                tmp += this->m_vSAtmm[ z ][ pixelIndex ] * imageJacobian[ p ] * this->m_Sv[ this->m_G-1 ][ z ] +
-                        this->m_vdSdmu_part1[ z ][ this->m_G-1 ] * this->m_Atmm[ this->m_G-1 ][ pixelIndex ] * imageJacobian[ p ] * this->m_CSv[ this->m_G-1 ][ z ];
-            }//end loop over eigenvalues
-            derivative[ nzjis[ p ] ] += tmp;
-        }//end loop over non-zero jacobian indices
+                DerivativeValueType tmp = 0.0;
+                for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
+                {
+                    tmp += this->m_vSAtmm[ z ][ pixelIndex ] * imageJacobian[ p ] * this->m_Sv[ d ][ z ] +
+                            this->m_vdSdmu_part1[ z ][ d ] * this->m_Atmm[ d ][ pixelIndex ] * imageJacobian[ p ] * this->m_CSv[ d ][ z ];
+                }//end loop over eigenvalues
+                derivative[ nzjis[ p ] ] += tmp;
+            }//end loop over non-zero jacobian indices
+        }
 
         dummyindex++;
 
     } // end second for loop over sample container
-
 
 
 } // end ThreadedGetValueAndDerivative()
@@ -990,6 +1066,75 @@ PCAMetric_ss< TFixedImage, TMovingImage >
     }
 
     derivative *= -(2.0/(DerivativeValueType(this->m_NumberOfPixelsCounted) - 1.0)); //normalize
+
+    /** Subtract mean from derivative elements. */
+    if( this->m_SubtractMean )
+    {
+        if( ! this->m_TransformIsStackTransform )
+        {
+            /** Update derivative per dimension.
+         * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
+         * per dimension xyz.
+         */
+            const unsigned int lastDimGridSize = this->m_GridSize[ this->m_LastDimIndex ];
+            const unsigned int numParametersPerDimension
+                    = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+            const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
+            DerivativeType mean ( numControlPointsPerDimension );
+            for ( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
+            {
+                /** Compute mean per dimension. */
+                mean.Fill( 0.0 );
+                const unsigned int starti = numParametersPerDimension * d;
+                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+                {
+                    const unsigned int index = i % numControlPointsPerDimension;
+                    mean[ index ] += derivative[ i ];
+                }
+                mean /= static_cast< RealType >( lastDimGridSize );
+
+                /** Update derivative for every control point per dimension. */
+                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+                {
+                    const unsigned int index = i % numControlPointsPerDimension;
+                    derivative[ i ] -= mean[ index ];
+                }
+            }
+        }
+        else
+        {
+            /** Update derivative per dimension.
+         * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
+         * the number the time point index.
+         */
+            const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / this->m_G;
+            DerivativeType mean ( numParametersPerLastDimension );
+            mean.Fill( 0.0 );
+
+            /** Compute mean per control point. */
+            for ( unsigned int t = 0; t < this->m_G; ++t )
+            {
+                const unsigned int startc = numParametersPerLastDimension * t;
+                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+                {
+                    const unsigned int index = c % numParametersPerLastDimension;
+                    mean[ index ] += derivative[ c ];
+                }
+            }
+            mean /= static_cast< RealType >( this->m_G );
+
+            /** Update derivative per control point. */
+            for ( unsigned int t = 0; t < this->m_G; ++t )
+            {
+                const unsigned int startc = numParametersPerLastDimension * t;
+                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+                {
+                    const unsigned int index = c % numParametersPerLastDimension;
+                    derivative[ c ] -= mean[ index ];
+                }
+            }
+        }
+    }
 
 }// end AftherThreadedComputeDerivative()
 

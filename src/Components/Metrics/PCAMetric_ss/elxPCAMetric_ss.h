@@ -202,4 +202,4 @@ namespace elastix
 #include "elxPCAMetric_ss.hxx"
 #endif
 
-#endif // end #ifndef PCAMetric_ss_ss
+#endif // end #ifndef PCAMetric_ss
