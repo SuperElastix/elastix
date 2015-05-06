@@ -1,0 +1,3 @@
+#include "elxProbabilityAverageMutualInformationMetric.h"
+
+elxInstallMacro( ProbabilityAverageMutualInformationMetric );
