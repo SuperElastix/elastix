@@ -175,6 +175,7 @@ protected:
 
   typename RecursiveBSplineWeightFunctionType::Pointer m_RecursiveBSplineWeightFunction;
 
+  /** Compute the nonzero Jacobian indices. */
   virtual void ComputeNonZeroJacobianIndices(
     NonZeroJacobianIndicesType & nonZeroJacobianIndices,
     const RegionType & supportRegion ) const;

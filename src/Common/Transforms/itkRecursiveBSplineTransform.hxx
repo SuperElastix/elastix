@@ -21,7 +21,6 @@
 #include "itkRecursiveBSplineTransform.h"
 
 #include "itkRecursiveBSplineTransformImplementation.h"
-//#include "itkRecursiveBSplineTransformImplementation2.h"
 
 
 namespace itk

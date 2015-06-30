@@ -49,7 +49,10 @@ public:
   itkStaticConstMacro( HelperConstVariable, unsigned int,
     ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
 
-  /** TransformPoint recursive implementation. */
+  /** TransformPoint recursive implementation.
+   * This function is only used for evaluation. A faster version is provided by
+   * RecursiveBSplineTransformImplementation2::TransformPoint2
+   */
   static inline InternalFloatType TransformPoint(
     const ScalarType * mu, const long * steps, const double * weights1D,
     const ScalarType * coefBasePointer, Array<unsigned long> & indices, unsigned int & c )
