@@ -103,7 +103,7 @@ MultiMetricMultiResolutionRegistration< TElastix >
     std::ostringstream makestring3;
     makestring3 << "Time" << std::setfill( '0' ) << std::setw( width ) << i << "[ms]";
     xout[ "iteration" ].AddTargetCell( makestring3.str().c_str() );
-    xl::xout[ "iteration" ][ makestring3.str().c_str() ] << std::showpoint << std::fixed;
+    xl::xout[ "iteration" ][ makestring3.str().c_str() ] << std::showpoint << std::fixed << std::setprecision( 1 );
   }
 
   /** Temporary? Use the multi-threaded version or not. */

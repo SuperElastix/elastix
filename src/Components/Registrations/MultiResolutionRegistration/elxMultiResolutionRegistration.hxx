@@ -79,7 +79,7 @@ MultiResolutionRegistration< TElastix >
   /** Set the fixedImageRegion. */
   this->SetFixedImageRegion( this->GetElastix()->GetFixedImage()->GetBufferedRegion() );
 
-}   // end BeforeRegistration()
+} // end BeforeRegistration()
 
 
 /**
@@ -99,7 +99,7 @@ MultiResolutionRegistration< TElastix >
    */
   this->UpdateMasks( level );
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution()
 
 
 /**
@@ -159,7 +159,7 @@ MultiResolutionRegistration< TElastix >
     }
   }
 
-}   // end SetComponents
+} // end SetComponents()
 
 
 /**
@@ -228,7 +228,7 @@ MultiResolutionRegistration< TElastix >
          << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
-}   // end UpdateMasks
+} // end UpdateMasks()
 
 
 } // end namespace elastix
