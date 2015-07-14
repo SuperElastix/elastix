@@ -65,6 +65,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_TransformIsAdvanced            = false;
   this->m_TransformIsBSpline             = false;
   this->m_UseMovingImageDerivativeScales = false;
+  this->m_ScaleGradientWithRespectToMovingImageOrientation = false;
   this->m_MovingImageDerivativeScales.Fill( 1.0 );
 
   this->m_FixedImageLimiter     = 0;
@@ -682,11 +683,42 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
       /** The moving image gradient is multiplied with its scales, when requested. */
       if( this->m_UseMovingImageDerivativeScales )
       {
-        for( unsigned int i = 0; i < MovingImageDimension; ++i )
+        if( !this->m_ScaleGradientWithRespectToMovingImageOrientation )
         {
-          ( *gradient )[ i ] *= this->m_MovingImageDerivativeScales[ i ];
+          for( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            ( *gradient )[ i ] *= this->m_MovingImageDerivativeScales[ i ];
+          }
         }
-      }
+        else
+        {
+          /** Optionally, the scales are applied with respect to the moving image orientation.
+           * The above default option implicitly applies the scales with respect to the
+           * orientation of the fixed image. In some cases you may want to restrict moving image
+           * motion with respect to its own axes. This is achieved below by pre and post
+           * rotation by the direction cosines of the moving image.
+           * First the gradient is rotated backwards to a standardized axis.
+           */
+          typedef typename MovingImageType::DirectionType::InternalMatrixType InternalMatrixType;
+          const InternalMatrixType M = this->GetMovingImage()->GetDirection().GetVnlMatrix();
+          vnl_vector<double> rotated_gradient_vnl = M.transpose() * gradient->GetVnlVector();
+
+          /** Then scales are applied. */
+          for( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            rotated_gradient_vnl[ i ] *= this->m_MovingImageDerivativeScales[ i ];
+          }
+
+          /** The scaled gradient is then rotated forwards again. */
+          rotated_gradient_vnl = M * rotated_gradient_vnl;
+
+          /** Copy the vnl version back to the original. */
+          for( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            ( *gradient )[ i ] = rotated_gradient_vnl[ i ];
+          }
+        }
+      } // end if m_UseMovingImageDerivativeScales
     } // end if gradient
     else
     {

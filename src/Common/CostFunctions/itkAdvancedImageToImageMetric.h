@@ -232,13 +232,17 @@ public:
 
   /** You may specify a scaling vector for the moving image derivatives.
    * If the UseMovingImageDerivativeScales is true, the moving image derivatives
-   * are multiplied by the moving image derivative scales (elementwise)
+   * are multiplied by the moving image derivative scales (element-wise)
    * You may use this to avoid deformations in the z-dimension, for example,
    * by setting the moving image derivative scales to (1,1,0).
    * This is a rather experimental feature. In most cases you do not need it.
    */
   itkSetMacro( UseMovingImageDerivativeScales, bool );
   itkGetConstMacro( UseMovingImageDerivativeScales, bool );
+
+  itkSetMacro( ScaleGradientWithRespectToMovingImageOrientation, bool );
+  itkGetConstMacro( ScaleGradientWithRespectToMovingImageOrientation, bool );
+
   itkSetMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
   itkGetConstReferenceMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
 
@@ -528,13 +532,15 @@ private:
   void operator=( const Self & );             // purposely not implemented
 
   /** Private member variables. */
-  bool                            m_UseImageSampler;
-  double                          m_FixedLimitRangeRatio;
-  double                          m_MovingLimitRangeRatio;
-  bool                            m_UseFixedImageLimiter;
-  bool                            m_UseMovingImageLimiter;
-  double                          m_RequiredRatioOfValidSamples;
-  bool                            m_UseMovingImageDerivativeScales;
+  bool   m_UseImageSampler;
+  double m_FixedLimitRangeRatio;
+  double m_MovingLimitRangeRatio;
+  bool   m_UseFixedImageLimiter;
+  bool   m_UseMovingImageLimiter;
+  double m_RequiredRatioOfValidSamples;
+  bool   m_UseMovingImageDerivativeScales;
+  bool   m_ScaleGradientWithRespectToMovingImageOrientation;
+
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
 
 };
