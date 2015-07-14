@@ -37,7 +37,7 @@
 #
 # This script is rather nongeneric. It only works on stefan's computer :)
 # 
-# Prerequisites: install Dot, doxygen, svn, commandline winzip tools, cygwin or gitBash (to run this script), cmake, itk 
+# Prerequisites: install Dot, doxygen, svn, 7z, cygwin or gitBash (to run this script), cmake, itk 
 #
 
 arg="$1"
@@ -51,7 +51,9 @@ username="sklein"
 
 # Some base directories
 exportbasedirwin="d:/tk/elastix/exports/tagspublic"
-exportbasedirlinux64="m:/tk2/elastix/exports/tagspublic"
+#exportbasedirlinux64="m:/tk2/elastix/exports/tagspublic"
+# when running locally on linux64 bit machine:
+exportbasedirlinux64="/home/sklein/tk/elastix/exports/tagspublic"
 # when using rashindra's machine:
 exportbasedirlinux32="/home/stefan/tk/elastix/exports/tagspublic"
 # when using the biggrid
@@ -108,6 +110,7 @@ fi
 
 # zip linux64
 # todo: does not work anymore, since only access to linux64 via scp currently
+# run it locally on the linux system
 if [ "$arg" = "ziplinux64" ]
 then
   currentdir=`pwd`
@@ -139,6 +142,7 @@ then
 fi
 
 # zip win
+# assume this is done on a 64bit system
 if [ "$arg" = "zipwin" ]
 then
   currentdir=`pwd`
@@ -155,8 +159,9 @@ then
   cd ../help
 	helpzip="elastix_example_v$version.zip"
 	rm $exportdirwin/bin/$helpzip
-  # todo: change to use 7z.exe
-  wzzip -ex -a -r -P $exportdirwin/bin/$helpzip exampleinput example.bat
+  # changed to use 7z.exe
+  #wzzip -ex -a -r -P $exportdirwin/bin/$helpzip exampleinput example.bat
+  7z a $exportdirwin/bin/$helpzip exampleinput example.bat
   cd $currentdir
   exit
 fi
@@ -169,7 +174,8 @@ then
   mkdir -p $tempdir/download
   cp $exportdirwin/bin/*.zip $tempdir/download
   cp $exportdirwin/bin/*.exe $tempdir/download
-  cp $exportdirlinux64/release/*.tar.bz2 $tempdir/download
+  # do manually:
+#  cp $exportdirlinux64/release/*.tar.bz2 $tempdir/download
 #  cp $exportdirlinux32grid/release/*.tar.bz2 $tempdir/download
   cp $exportdirwin/dox/manual/manual.pdf $tempdir/download/elastix_manual_v$version.pdf
   cp -r $exportdirwin/help/html $tempdir/doxygen
@@ -183,7 +189,7 @@ then
   # copy the copyright message
   cp $exportdirwin/src/CopyrightElastix.txt $tempdir
 
-  # copy the linux32 binaries manually using winscp
+  # copy the linux32/64 binaries manually using winscp
   exit
 fi
 
