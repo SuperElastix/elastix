@@ -694,9 +694,9 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
         {
           /** Optionally, the scales are applied with respect to the moving image orientation.
            * The above default option implicitly applies the scales with respect to the
-           * orientation of the fixed image. In some cases you may want to restrict moving image
-           * motion with respect to its own axes. This is achieved below by pre and post
-           * rotation by the direction cosines of the moving image.
+           * orientation of the transformation axis. In some cases you may want to restrict
+           * moving image motion with respect to its own axes. This is achieved below by pre
+           * and post rotation by the direction cosines of the moving image.
            * First the gradient is rotated backwards to a standardized axis.
            */
           typedef typename MovingImageType::DirectionType::InternalMatrixType InternalMatrixType;
