@@ -8,10 +8,10 @@
 # <action> one of:
 #   exportwin
 #   exportlinux64
-#   exportlinux32 (only on rashindra's computer)
+#   exportlinux32 (obsolete)
 #   doxygen
 #   ziplinux64
-#   ziplinux32 (only on rashindra's computer)
+#   ziplinux32 (obsolete)
 #   zipwin
 #   collect
 #
@@ -22,29 +22,30 @@
 # 4. call this script with argument exportlinux64
 # 5. Run cmake on windows and linux.
 # 6. run make install on linux, make package, and make package_source
-# 7. compile and install on windows using vc2008.
+# 7. compile and install on windows using vc2012.
 # 8. create the manual on windows, using latex.
 # 9. call this script with argument doxygen
 # 10. call this script with argument zipwin
 # 11. call this script with argument ziplinux64
 # 12. call this script with argument collect
 # 13. log in on rashindra's computer, using ssh
-# 14. call this script with argument exportlinux32
+# 14. call this script with argument exportlinux32 (obsolete)
 # 15. run cmake, and make install
-# 16. call this script with argument ziplinux32
+# 16. call this script with argument ziplinux32 (osbolete)
 # 17. copy the resulting zip manually using winscp to $tempdir/downloads
 # 18. copy $tempdir to the website, using winscp.
 #
 # This script is rather nongeneric. It only works on stefan's computer :)
-#
+# 
+# Prerequisites: install Dot, doxygen, svn, commandline winzip tools, cygwin, cmake, itk 
 #
 
 arg="$1"
 
 # You have to set the following
-version="4.7"
-fullversion="4.7.0"
-tag="elastix_04_7"
+version="4.8"
+fullversion="4.8.0"
+tag="elastix_04_8"
 
 username="sklein"
 
@@ -60,7 +61,7 @@ exportdirlinux64="$exportbasedirlinux64/$tag"
 # when using the biggrid
 exportdirlinux32grid="$exportbasedirlinux32grid/$tag""linux32"
 svnurl="https://svn.bigr.nl/elastix"
-tempdir="d:/dox/elastixwebsite/$tag"
+tempdir="d:/tk/elastixwebsite/$tag"
 websitebase="http://elastix.isi.uu.nl"
 copyright="$exportdirwin/src/CopyrightElastix.txt"
 
@@ -106,6 +107,7 @@ then
 fi
 
 # zip linux64
+# todo: does not work anymore, since only access to linux64 via scp currently
 if [ "$arg" = "ziplinux64" ]
 then
   currentdir=`pwd`
@@ -146,13 +148,14 @@ then
 	cpack -C Release --config CPackConfig.cmake
 	cpack -C Release --config CPackSourceConfig.cmake
 	# rename zips to website convention
-	mv elastix-$fullversion-win32.zip elastix_windows32_v$version.zip
-	mv elastix-$fullversion-win32.exe elastix_windows32_v$version.exe
+	mv elastix-$fullversion-win64.zip elastix_windows64_v$version.zip
+	mv elastix-$fullversion-win64.exe elastix_windows64_v$version.exe
 	mv elastix-$fullversion-Source.zip elastix_sources_v$version.zip 
 	# create help zip
   cd ../help
 	helpzip="elastix_example_v$version.zip"
 	rm $exportdirwin/bin/$helpzip
+  # todo: change to use 7z.exe
   wzzip -ex -a -r -P $exportdirwin/bin/$helpzip exampleinput example.bat
   cd $currentdir
   exit
