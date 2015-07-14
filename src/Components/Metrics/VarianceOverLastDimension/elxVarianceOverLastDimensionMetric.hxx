@@ -126,24 +126,6 @@ VarianceOverLastDimensionMetric< TElastix >
     this->GetComponentLabel(), 0, 0 );
   this->SetReducedDimensionIndex( reducedDimensionIndex );
 
-  /** Set moving image derivative scales. */
-  this->SetUseMovingImageDerivativeScales( false );
-  MovingImageDerivativeScalesType movingImageDerivativeScales;
-  bool                            usescales = true;
-  for( unsigned int i = 0; i < MovingImageDimension; ++i )
-  {
-    usescales = usescales && this->GetConfiguration()->ReadParameter(
-      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-      this->GetComponentLabel(), i, -1, true );
-  }
-  if( usescales )
-  {
-    this->SetUseMovingImageDerivativeScales( true );
-    this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
-    elxout << "Multiplying moving image derivatives by: "
-           << movingImageDerivativeScales << std::endl;
-  }
-
   /** Check if this transform is a B-spline transform. */
   CombinationTransformType * testPtr1
     = dynamic_cast< CombinationTransformType * >( this->GetElastix()->GetElxTransformBase() );

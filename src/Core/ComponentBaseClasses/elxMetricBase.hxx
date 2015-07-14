@@ -122,6 +122,40 @@ MetricBase< TElastix >
       thisAsAdvanced->SetRequiredRatioOfValidSamples( ratio );
     }
 
+    /** Set moving image derivative scales. */
+    std::size_t usescales = this->GetConfiguration()
+      ->CountNumberOfParameterEntries( "MovingImageDerivativeScales" );
+    if( usescales == 0 )
+    {
+      thisAsAdvanced->SetUseMovingImageDerivativeScales( false );
+      thisAsAdvanced->SetScaleGradientWithRespectToMovingImageOrientation( false );
+    }
+    else
+    {
+      thisAsAdvanced->SetUseMovingImageDerivativeScales( true );
+
+      /** Read the scales from the parameter file. */
+      MovingImageDerivativeScalesType movingImageDerivativeScales;
+      for( unsigned int i = 0; i < MovingImageDimension; ++i )
+      {
+        this->GetConfiguration()->ReadParameter(
+          movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+          this->GetComponentLabel(), i, -1, false );
+      }
+
+      /** Set and report. */
+      thisAsAdvanced->SetMovingImageDerivativeScales( movingImageDerivativeScales );
+      elxout << "Multiplying moving image derivatives by: "
+        << movingImageDerivativeScales << std::endl;
+
+      /** Check if the scales are applied taking into account the moving image orientation. */
+      bool wrtMoving = false;
+      this->GetConfiguration()->ReadParameter(
+        wrtMoving, "ScaleGradientWithRespectToMovingImageOrientation",
+        this->GetComponentLabel(), level, false );
+      thisAsAdvanced->SetScaleGradientWithRespectToMovingImageOrientation( wrtMoving );
+    }
+
     /** Temporary?: Use the multi-threaded version or not. Default true. */
     std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mtm" ); // mtm: multi-threaded metrics
     if( tmp == "true" || tmp == "" )

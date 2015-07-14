@@ -101,6 +101,7 @@ public:
   typedef itk::SingleValuedCostFunction ITKBaseType;
   typedef itk::AdvancedImageToImageMetric<
     FixedImageType, MovingImageType >                 AdvancedMetricType;
+  typedef typename AdvancedMetricType::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
 
   /** Get the dimension of the fixed image. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );

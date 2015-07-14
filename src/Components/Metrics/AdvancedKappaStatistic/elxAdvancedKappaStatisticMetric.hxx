@@ -79,36 +79,6 @@ AdvancedKappaStatisticMetric< TElastix >
 } // end BeforeRegistration()
 
 
-/**
- * ***************** BeforeEachResolution ***********************
- */
-
-template< class TElastix >
-void
-AdvancedKappaStatisticMetric< TElastix >
-::BeforeEachResolution( void )
-{
-  /** Set moving image derivative scales. */
-  this->SetUseMovingImageDerivativeScales( false );
-  MovingImageDerivativeScalesType movingImageDerivativeScales;
-  bool                            usescales = true;
-  for( unsigned int i = 0; i < MovingImageDimension; ++i )
-  {
-    usescales &= this->GetConfiguration()->ReadParameter(
-      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-      this->GetComponentLabel(), i, -1, false );
-  }
-  if( usescales )
-  {
-    this->SetUseMovingImageDerivativeScales( true );
-    this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
-    elxout << "Multiplying moving image derivatives by: "
-           << movingImageDerivativeScales << std::endl;
-  }
-
-} // end BeforeEachResolution()
-
-
 } // end namespace elastix
 
 #endif // end #ifndef __elxAdvancedKappaStatisticMetric_HXX__

@@ -152,12 +152,6 @@ public:
    */
   virtual void BeforeRegistration( void );
 
-  /**
-   * Do some things before each resolution:
-   * \li Set the CheckNumberOfSamples setting
-   */
-  virtual void BeforeEachResolution( void );
-
 protected:
 
   /** The constructor. */

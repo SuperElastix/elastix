@@ -41,8 +41,6 @@ OptimizerBase< TElastix >
 
 /**
  * ****************** SetCurrentPositionPublic ************************
- *
- * Add empty SetCurrentPositionPublic, so it is known everywhere.
  */
 
 template< class TElastix >
