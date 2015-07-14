@@ -37,7 +37,7 @@
 #
 # This script is rather nongeneric. It only works on stefan's computer :)
 # 
-# Prerequisites: install Dot, doxygen, svn, commandline winzip tools, cygwin, cmake, itk 
+# Prerequisites: install Dot, doxygen, svn, commandline winzip tools, cygwin or gitBash (to run this script), cmake, itk 
 #
 
 arg="$1"
