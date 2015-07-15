@@ -35,7 +35,7 @@ namespace itk
 *
 * The gain \f$a(t_k)\f$ at each iteration \f$k\f$ is defined by:
 *
-*     \f[ a(t_k) =  a / (A + t_k + 1)^alpha \f].
+*     \f[ a(t_k) =  a / (A + t_k + 1)^\alpha \f].
 *
 * And the time \f$t_k\f$ is updated according to:
 *
