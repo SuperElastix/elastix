@@ -271,7 +271,7 @@ OpenCLResampler< TElastix >
 {
   // Are we using a OpenCL enabled GPU for resampling?
   this->m_UseOpenCL = true;
-  this->m_Configuration->ReadParameter( this->m_UseOpenCL, "OpenCLResamplerUseOpenCL", 0 );
+  this->m_Configuration->ReadParameter( this->m_UseOpenCL, "OpenCLResamplerUseOpenCL", 0, false );
 
 } // end BeforeRegistration()
 

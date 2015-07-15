@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __itkEulerTransform_H__
 #define __itkEulerTransform_H__
 

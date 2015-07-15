@@ -24,7 +24,7 @@
 #include "itkAdvancedMatrixOffsetTransformBase.h"
 #include "itkAdvancedTranslationTransform.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
-//#include "itkAdvancedEuler2DTransform.h"
+#include "itkAdvancedRigid2DTransform.h"
 #include "itkAdvancedEuler3DTransform.h"
 #include "itkAdvancedSimilarity2DTransform.h"
 #include "itkAdvancedSimilarity3DTransform.h"
@@ -33,7 +33,7 @@
 #include "itkGPUAdvancedMatrixOffsetTransformBase.h"
 #include "itkGPUAdvancedTranslationTransform.h"
 #include "itkGPUAdvancedBSplineDeformableTransform.h"
-//#include "itkGPUAdvancedEuler2DTransform.h"
+#include "itkGPUAdvancedEuler2DTransform.h"
 #include "itkGPUAdvancedEuler3DTransform.h"
 #include "itkGPUAdvancedSimilarity2DTransform.h"
 #include "itkGPUAdvancedSimilarity3DTransform.h"
@@ -150,10 +150,10 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
     switch( InputDimension )
     {
       case 2:
-        eulerCopyResult = CopyEuler2DTransform( fromTransform, toTransform, idim );
+        eulerCopyResult = this->CopyEuler2DTransform( fromTransform, toTransform, idim );
         break;
       case 3:
-        eulerCopyResult = CopyEuler3DTransform( fromTransform, toTransform, idim );
+        eulerCopyResult = this->CopyEuler3DTransform( fromTransform, toTransform, idim );
         break;
       default:
         break;
@@ -169,10 +169,10 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
     switch( InputDimension )
     {
       case 2:
-        similarityCopyResult = CopySimilarity2DTransform( fromTransform, toTransform, idim );
+        similarityCopyResult = this->CopySimilarity2DTransform( fromTransform, toTransform, idim );
         break;
       case 3:
-        similarityCopyResult = CopySimilarity3DTransform( fromTransform, toTransform, idim );
+        similarityCopyResult = this->CopySimilarity3DTransform( fromTransform, toTransform, idim );
         break;
       default:
         break;
@@ -206,7 +206,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
           GPUAdvancedAffineTransformType;
         affineTransform = GPUAdvancedAffineTransformType::New();
       }
-      CastCopyTransformParameters( fromTransform, affineTransform );
+      this->CastCopyTransformParameters( fromTransform, affineTransform );
       toTransform->SetCurrentTransform( affineTransform );
       return true;
     }
@@ -234,13 +234,13 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
           GPUAdvancedTranslationTransformType;
         translationTransform = GPUAdvancedTranslationTransformType::New();
       }
-      CastCopyTransformParameters( fromTransform, translationTransform );
+      this->CastCopyTransformParameters( fromTransform, translationTransform );
       toTransform->SetCurrentTransform( translationTransform );
       return true;
     }
 
     // For BSpline we have to check all possible spline orders
-    const bool bsplineCopyResult = CopyBSplineTransform( fromTransform, toTransform );
+    const bool bsplineCopyResult = this->CopyBSplineTransform( fromTransform, toTransform );
     if( bsplineCopyResult )
     {
       return bsplineCopyResult;
@@ -268,8 +268,8 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
   GPUParametersType fixedParametersTo, parametersTo;
 
-  CastCopyParameters( fixedParametersFrom, fixedParametersTo );
-  CastCopyParameters( parametersFrom, parametersTo );
+  this->CastCopyParameters( fixedParametersFrom, fixedParametersTo );
+  this->CastCopyParameters( parametersFrom, parametersTo );
 
   toTransform->SetFixedParameters( fixedParametersTo );
   toTransform->SetParameters( parametersTo );
@@ -349,7 +349,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
         GPUBSplineTransformType;
       bsplineTransform = GPUBSplineTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, bsplineTransform );
+    this->CastCopyTransformParameters( fromTransform, bsplineTransform );
     toTransform->SetCurrentTransform( bsplineTransform );
     return true;
   }
@@ -382,7 +382,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
           GPUBSplineTransformType;
         bsplineTransform = GPUBSplineTransformType::New();
       }
-      CastCopyTransformParameters( fromTransform, bsplineTransform );
+      this->CastCopyTransformParameters( fromTransform, bsplineTransform );
       toTransform->SetCurrentTransform( bsplineTransform );
       return true;
     }
@@ -415,7 +415,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
             GPUBSplineTransformType;
           bsplineTransform = GPUBSplineTransformType::New();
         }
-        CastCopyTransformParameters( fromTransform, bsplineTransform );
+        this->CastCopyTransformParameters( fromTransform, bsplineTransform );
         toTransform->SetCurrentTransform( bsplineTransform );
         return true;
       }
@@ -448,7 +448,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
               GPUBSplineTransformType;
             bsplineTransform = GPUBSplineTransformType::New();
           }
-          CastCopyTransformParameters( fromTransform, bsplineTransform );
+          this->CastCopyTransformParameters( fromTransform, bsplineTransform );
           toTransform->SetCurrentTransform( bsplineTransform );
           return true;
         }
@@ -469,30 +469,30 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
   GPUComboTransformPointer & toTransform,
   TransformSpaceDimensionToType< 2 > )
 {
-  //typedef AdvancedEuler2DTransform< ScalarType > CPUEulerTransformType;
-  //const typename CPUEulerTransformType::ConstPointer euler
-  //  = dynamic_cast< const CPUEulerTransformType * >( fromTransform.GetPointer() );
+  typedef AdvancedRigid2DTransform< CPUScalarType > CPUEulerTransformType;
+  const typename CPUEulerTransformType::ConstPointer euler
+    = dynamic_cast< const CPUEulerTransformType * >( fromTransform.GetPointer() );
 
-  //if( euler )
-  //{
-  //  // Create GPU Euler transform
-  //  typedef GPUAdvancedEuler3DTransform< ScalarType, CPUEulerTransformType >
-  //    GPUEulerTransformType;
-  //  typename GPUEulerTransformType::Pointer eulerTransform
-  //    = GPUEulerTransformType::New();
+  if( euler )
+  {
+    GPUAdvancedTransformPointer eulerTransform;
+    if( this->m_ExplicitMode )
+    {
+      // Create GPU Advanced Euler transform in explicit mode
+      typedef GPUAdvancedEuler2DTransform< GPUScalarType > GPUEulerTransformType;
+      eulerTransform = GPUEulerTransformType::New();
+    }
+    else
+    {
+      // Create GPU Advanced Euler transform in implicit mode
+      typedef AdvancedRigid2DTransform< GPUScalarType > GPUEulerTransformType;
+      eulerTransform = GPUEulerTransformType::New();
+    }
 
-  //  // Copy parameters
-  //  eulerTransform->SetFixedParameters( euler->GetFixedParameters() );
-  //  eulerTransform->SetParameters( euler->GetParameters() );
-
-  //  toTransform->SetCurrentTransform( eulerTransform );
-
-  //  return true;
-  //}
-  //else
-  //{
-  //  return false;
-  //}
+    this->CastCopyTransformParameters( fromTransform, eulerTransform );
+    toTransform->SetCurrentTransform( eulerTransform );
+    return true;
+  }
 
   return false;
 }
@@ -528,7 +528,8 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
         GPUEulerTransformType;
       eulerTransform = GPUEulerTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, eulerTransform );
+
+    this->CastCopyTransformParameters( fromTransform, eulerTransform );
     toTransform->SetCurrentTransform( eulerTransform );
     return true;
   }
@@ -567,7 +568,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
         GPUSimilarityTransformType;
       similarityTransform = GPUSimilarityTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, similarityTransform );
+    this->CastCopyTransformParameters( fromTransform, similarityTransform );
     toTransform->SetCurrentTransform( similarityTransform );
     return true;
   }
@@ -606,7 +607,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
         GPUSimilarityTransformType;
       similarityTransform = GPUSimilarityTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, similarityTransform );
+    this->CastCopyTransformParameters( fromTransform, similarityTransform );
     toTransform->SetCurrentTransform( similarityTransform );
     return true;
   }
