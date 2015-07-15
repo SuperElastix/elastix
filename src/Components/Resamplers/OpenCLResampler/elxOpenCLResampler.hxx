@@ -310,10 +310,10 @@ OpenCLResampler< TElastix >
   // Add some OpenCLResampler specific lines.
   xout[ "transpar" ] << std::endl << "// OpenCLResampler specific" << std::endl;
 
-  // Write UseOpenCLResampler.
+  // Write OpenCLResamplerUseOpenCL.
   std::string useOpenCL = "false";
   if( this->m_UseOpenCL ) { useOpenCL = "true"; }
-  xout[ "transpar" ] << "(UseOpenCLResampler \"" << useOpenCL << "\")" << std::endl;
+  xout[ "transpar" ] << "(OpenCLResamplerUseOpenCL \"" << useOpenCL << "\")" << std::endl;
 
 } // end WriteToFile()
 
