@@ -421,8 +421,8 @@ for the derivatives. Define $\bm{y} = \vT_0(\vxt)$.
 \vT_0(\vxt) + \vT_1(\vxt) - \vxt \right) = \D{}{\vmu} \D{}{\vx}
 \vT_1(\vxt), \\
 \D{}{\vmu} \D{\vTmu}{\vx}(\vxt) &= \D{}{\vmu} \D{}{\vx} \left(
-\vT_1(\vTx[0]) \right) = \D{}{\vmu} \D{}{\vx} \vT_1(\bm{y}) \cdot
-\D{}{\vx} \vT_1(\bm{y})\vT_0(\vxt).
+\vT_1(\vT_0(\vxt)) \right) = \D{}{\vmu} \D{}{\vx} \vT_1(\bm{y}) \cdot
+\D{}{\vx} \vT_0(\vxt).
 \intertext{SpatialHessian:}
 \Dd{\vTmu}{x_i}{x_j} &= \Dd{}{x_i}{x_j} \left( \vT_0(\vxt) +
 \vT_1(\vxt) \right) = \Dd{}{x_i}{x_j} \vT_0(\vxt) +
