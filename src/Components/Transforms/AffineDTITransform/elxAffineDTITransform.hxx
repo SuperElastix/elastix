@@ -285,7 +285,7 @@ AffineDTITransformElastix< TElastix >
     {
       /** Convert from index-value to physical-point-value. */
       this->m_Registration->GetAsITKBaseType()->GetFixedImage()
-      ->TransformIndexToPhysicalPoint(
+        ->TransformIndexToPhysicalPoint(
         centerOfRotationIndex, centerOfRotationPoint );
     }
     this->m_AffineDTITransform->SetCenter( centerOfRotationPoint );

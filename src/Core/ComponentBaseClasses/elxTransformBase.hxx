@@ -405,7 +405,7 @@ TransformBase< TElastix >
 
     /** Read the TransformParameters. */
     std::vector< ValueType > vecPar( numberOfParameters,
-    itk::NumericTraits< ValueType >::ZeroValue() );
+      itk::NumericTraits< ValueType >::ZeroValue() );
     this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
       0, numberOfParameters - 1, true );
 

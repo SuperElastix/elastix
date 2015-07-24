@@ -74,7 +74,17 @@ TransformixMain::Run( void )
 #ifdef ELASTIX_USE_OPENCL
   std::string errorMessage = "";
   bool errorCreatingContext = itk::CreateOpenCLContext( errorMessage );
-  if( errorCreatingContext ){ elxout << errorMessage << std::endl; }
+  if( errorCreatingContext )
+  {
+    /** Report and disable the GPU by releasing the context. */
+    elxout << errorMessage << std::endl;
+    elxout << "OpenCL processing is disabled." << std::endl;
+
+    itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
+    context->Release();
+  }
+
+  /** Create a log file. */
   itk::CreateOpenCLLogger( "transformix", this->m_Configuration->GetCommandLineArgument( "-out" ) );
 #endif
 
