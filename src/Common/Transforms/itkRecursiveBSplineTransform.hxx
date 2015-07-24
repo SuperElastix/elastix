@@ -662,7 +662,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   double * jsjPtr = &jacobianOfSpatialJacobian[ 0 ];
   double dummy[ 1 ] = { 1.0 };
 
-#if 1
+#if 0
   /** Recursively expand all weights (destroys dummy). */
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetJacobianOfSpatialJacobian( jsjPtr, weightsPointer, derivativeWeightsPointer, dummy );
