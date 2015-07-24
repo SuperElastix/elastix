@@ -768,7 +768,7 @@ public:
 
 
 
-/** \class RecursiveBSplineImplementation_GetSpatialJacobian
+/** \class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian
  *
  * \brief Define general case
  */
@@ -810,11 +810,11 @@ public:
         ::GetJacobianOfSpatialJacobian( jsj_out, &tmp_jsj[0], weights1D , derivativeWeights1D );
 
     }
-  } // end GetSpatialJacobian()
+  } // end GetJacobianOfSpatialJacobian()
 }; // end class
 
 
-/** \class RecursiveBSplineImplementation_GetSpatialJacobian
+/** \class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian
  *
  * \brief Define the end case for SpaceDimension = 0.
  */
@@ -835,10 +835,10 @@ public:
       *jsj_out = *jsj_iterator;
       ++jsj_out; ++jsj_iterator; 
     }
-  } // end GetSpatialJacobian()
+  } // end GetJacobianOfSpatialJacobian()
+
+
 }; // end class
-
-
 
 
 #undef FORCEINLINE // remove temporary preprocessor definition

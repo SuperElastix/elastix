@@ -239,7 +239,6 @@ void RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
 } // end TransformPoints()
 
 
-
 /**
  * ********************* TransformPoint ****************************
  */
@@ -792,7 +791,6 @@ RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrder >
 
   jsj.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
-
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and identity sj and zero jsj.
   if( !this->InsideValidRegion( cindex ) )
@@ -809,7 +807,6 @@ RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrder >
     }
     return;
   }
-
 
    /** Create storage for the B-spline interpolation weights. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
@@ -830,7 +827,7 @@ RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrder >
   this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
   this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights1D, supportIndex );
 
-  /** Allocate a vector of expanded weigths. On the stack instead of heap is faster. */
+  /** Allocate a vector of expanded weights. On the stack instead of heap is faster. */
   const unsigned int numberOfWeightsPerDimension = RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension,  SplineOrder>::numberOfPointsInSupportRegion ;
   double weightVector[ (SpaceDimension + 1) * numberOfWeightsPerDimension ];
 

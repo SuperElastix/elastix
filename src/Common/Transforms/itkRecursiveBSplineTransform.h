@@ -144,7 +144,7 @@ public:
   virtual void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & nzji ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
   /** Compute the inner product of the Jacobian with the moving image gradient.
    * The Jacobian is (partially) constructed inside this function, but not returned.
@@ -164,6 +164,21 @@ public:
   virtual void GetSpatialHessian(
     const InputPointType & ipp,
     SpatialHessianType & sh ) const;
+
+  /** Compute the Jacobian of the spatial Jacobian of the transformation. */
+  virtual void GetJacobianOfSpatialJacobian(
+    const InputPointType & ipp,
+    JacobianOfSpatialJacobianType & jsj,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+
+  /** Compute both the spatial Jacobian and the Jacobian of the
+   * spatial Jacobian of the transformation.
+   */
+  virtual void GetJacobianOfSpatialJacobian(
+    const InputPointType & ipp,
+    SpatialJacobianType & sj,
+    JacobianOfSpatialJacobianType & jsj,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
 protected:
 

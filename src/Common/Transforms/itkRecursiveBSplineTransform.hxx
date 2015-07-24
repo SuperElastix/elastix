@@ -379,10 +379,8 @@ void
   {
     migArray[ j ] = movingImageGradient[ j ];
   }
-  //const ParametersValueType * movingImageGradientPointer = movingImageGradient.GetDataPointer();
   ParametersValueType * imageJacobianPointer = imageJacobian.data_block();
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
-    //::EvaluateJacobianWithImageGradientProduct( imageJacobianPointer, movingImageGradientPointer, weightsArray1D, 1.0 );
     ::EvaluateJacobianWithImageGradientProduct( imageJacobianPointer, migArray, weightsArray1D, 1.0 );
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
@@ -593,6 +591,133 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   }
 
 } // end GetSpatialHessian()
+
+
+/**
+ * ********************* GetJacobianOfSpatialJacobian ****************************
+ */
+
+template< class TScalar, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
+::GetJacobianOfSpatialJacobian(
+  const InputPointType & ipp,
+  JacobianOfSpatialJacobianType & jsj,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  // Can only compute Jacobian if parameters are set via
+  // SetParameters or SetParametersByValue
+  if( this->m_InputParametersPointer == NULL )
+  {
+    itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
+  }
+
+  jsj.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
+  /** Convert the physical point to a continuous index, which
+   * is needed for the 'Evaluate()' functions below.
+   */
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and zero jsj.
+  if( !this->InsideValidRegion( cindex ) )
+  {
+    for( unsigned int i = 0; i < jsj.size(); ++i )
+    {
+      jsj[ i ].Fill( 0.0 );
+    }
+    nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+    for( NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    {
+      nonZeroJacobianIndices[ i ] = i;
+    }
+    return;
+  }
+
+  /** Create storage for the B-spline interpolation weights. */
+  const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
+  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+  typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
+  WeightsType weights1D( weightsArray1D, numberOfWeights, false );
+  typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
+  WeightsType derivativeWeights1D( derivativeWeightsArray1D, numberOfWeights, false );
+
+  double * weightsPointer = &(weights1D[0]);
+  double * derivativeWeightsPointer = &(derivativeWeights1D[0]);
+
+  /** Compute the interpolation weights.
+   * In contrast to the normal B-spline weights function, the recursive version
+   * returns the individual weights instead of the multiplied ones.
+   */
+  IndexType supportIndex;
+  this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
+  this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights1D, supportIndex );
+
+  /** Allocate memory for jsj. If you want also the Jacobian,
+   * numberOfIndices more elements are needed.
+   */
+  double jacobianOfSpatialJacobian[ SpaceDimension * numberOfIndices ];
+  double * jsjPtr = &jacobianOfSpatialJacobian[ 0 ];
+  double dummy[ 1 ] = { 1.0 };
+
+  /** Recursively expand all weights (destroys dummy). */
+  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
+    ::GetJacobianOfSpatialJacobian( jsjPtr, weightsPointer, derivativeWeightsPointer, dummy );
+
+  /** Compute the Jacobian of the spatial Jacobian jsj:
+   *    d/dmu dT_{dim} / dx_i = weights.
+   */
+  SpatialJacobianType * basepointer = &jsj[ 0 ];
+  for( unsigned int mu = 0; mu < numberOfIndices; ++mu )
+  {
+    for( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      const double tmp = jacobianOfSpatialJacobian[ i + mu * SpaceDimension ];
+      for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+      {
+        //jsj[ mu + dim * numberOfIndices ]( dim, i ) = tmp;
+        ( *( basepointer + mu + dim * numberOfIndices ) )( dim, i ) = tmp;
+      }
+    }
+  }
+
+#if 1
+  /** Take into account grid spacing and direction cosines. */
+  for( unsigned int i = 0; i < jsj.size(); ++i )
+  {
+    jsj[ i ] = jsj[ i ] * this->m_PointToIndexMatrix2;
+  }
+#endif
+
+  /** Setup support region needed for the nonZeroJacobianIndices. */
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  /** Compute the nonzero Jacobian indices. */
+  this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
+
+} // end GetJacobianOfSpatialJacobian()
+
+
+/**
+ * ********************* GetJacobianOfSpatialJacobian ****************************
+ */
+
+template< class TScalar, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
+::GetJacobianOfSpatialJacobian(
+  const InputPointType & ipp,
+  SpatialJacobianType & sj,
+  JacobianOfSpatialJacobianType & jsj,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  this->GetJacobianOfSpatialJacobian( ipp, jsj, nonZeroJacobianIndices );
+  this->GetSpatialJacobian( ipp, sj );
+} // end GetJacobianOfSpatialJacobian()
 
 
 /**

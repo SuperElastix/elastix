@@ -337,13 +337,17 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 }
 
 
+/**
+ * ********************* GetNumberOfAffectedWeights ****************************
+ */
+
 template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder >
 unsigned int
 AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 ::GetNumberOfAffectedWeights() const
 {
   return this->m_WeightsFunction->GetNumberOfWeights();
-}
+} // end GetNumberOfAffectedWeights()
 
 
 /**
@@ -814,7 +818,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     }
   }
 
-  /** Take into account grid spacing and direction cosines */
+  /** Take into account grid spacing and direction cosines. */
   for( unsigned int i = 0; i < jsj.size(); ++i )
   {
     jsj[ i ] = jsj[ i ] * this->m_PointToIndexMatrix2;
