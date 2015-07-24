@@ -151,6 +151,9 @@ main( int argc, char * argv[] )
   gridOrigin[ 2 ] = -344.2315805162;
   DirectionType gridDirection;
   gridDirection.SetIdentity();
+  gridDirection(0,1) = 0.02; gridDirection(0,2) = 0.06;
+  gridDirection(1,0) = 0.03; gridDirection(1,2) = 0.07;
+  gridDirection(2,0) = 0.09; gridDirection(2,1) = 0.01;
 
   transformITK->SetGridOrigin( gridOrigin );
   transformITK->SetGridSpacing( gridSpacing );
@@ -258,7 +261,9 @@ main( int argc, char * argv[] )
 
   /** The transform point. */
   recursiveTransform->TransformPoint( inputPoint );
+#ifdef NDEBUG
   recursivePermutedTransform->TransformPoint( inputPoint );
+#endif
 
   /** The Jacobian. *
   recursiveTransform->GetJacobian( inputPoint, jacobian, nzji );
@@ -356,6 +361,7 @@ main( int argc, char * argv[] )
   }
   timeCollector.Stop(  "TransformPoint recursive vector " );
 
+#ifdef NDEBUG
   timeCollector.Start( "TransformPoint rec.Perm. vector " );
   for( unsigned int i = 0; i < N; ++i )
   {
@@ -368,6 +374,7 @@ main( int argc, char * argv[] )
   timeCollector.Start( "TransformPoints rec.Perm. vector" );
   recursivePermutedTransform->TransformPoints( pointList, transformedPointList6 );
   timeCollector.Stop(  "TransformPoints rec.Perm. vector" );
+#endif
 
   /** Time the implementation of the Jacobian. */
   timeCollector.Start( "Jacobian elastix                " );
@@ -421,16 +428,16 @@ main( int argc, char * argv[] )
   timeCollector.Start( "JacobianSpatialJacobian elastix " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    transform->GetJacobianOfSpatialJacobian( pointList[ i ], sj, jsj, nzji );
+    transform->GetJacobianOfSpatialJacobian( pointList[ i ], jsj, nzji );
   }
   timeCollector.Stop(  "JacobianSpatialJacobian elastix " );
 
-  timeCollector.Start( "JacobianSpatialJacobian recv    " );
+  timeCollector.Start( "JacobianSpatialJacobian rec     " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    recursiveTransform->GetJacobianOfSpatialJacobian( pointList[ i ], sjRecursive, jsjRecursive, nzji );
+    recursiveTransform->GetJacobianOfSpatialJacobian( pointList[ i ], jsjRecursive, nzji );
   }
-  timeCollector.Stop(  "JacobianSpatialJacobian recv    " );
+  timeCollector.Stop(  "JacobianSpatialJacobian rec     " );
 
   /** Report. */
   timeCollector.Report();
@@ -564,11 +571,6 @@ main( int argc, char * argv[] )
   {
     std::cerr << "ERROR: Recursive B-spline GetJacobianOfSpatialJacobian() returning incorrect result." << std::endl;
     return EXIT_FAILURE;
-  }
-
-  for( unsigned int i = 0; i < 10; ++i )
-  {
-    std::cerr << jsjRecursive[ i ];
   }
 
   /** Exercise PrintSelf(). */

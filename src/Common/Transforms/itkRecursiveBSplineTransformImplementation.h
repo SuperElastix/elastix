@@ -410,6 +410,33 @@ public:
   } // end GetJacobianOfSpatialJacobian()
 
 
+  /** GetJacobianOfSpatialJacobian recursive implementation. */
+  static inline void GetJacobianOfSpatialJacobian(
+    InternalFloatType * & jsj_out,
+    const double * weights1D,
+    const double * derivativeWeights1D,
+    const double * directionCosines,
+    InternalFloatType * jsj )
+  {
+    /** Create a temporary jsj. Here, an additional element is needed for the Jacobian. */
+    InternalFloatType tmp_jsj[ OutputDimension - SpaceDimension + 2 ];
+
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      /** Initialize the temporary jsj. */
+      for( unsigned int n = 0; n < OutputDimension - SpaceDimension + 1; ++n )
+      {
+        tmp_jsj[ n ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
+      }
+      tmp_jsj[ OutputDimension - SpaceDimension + 1 ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
+
+      /** Recurse. */
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::GetJacobianOfSpatialJacobian( jsj_out, weights1D, derivativeWeights1D, directionCosines, tmp_jsj );
+    }
+  } // end GetJacobianOfSpatialJacobian()
+
+
 }; // end class
 
 
@@ -552,6 +579,31 @@ public:
     {
       //*jsj_out = jsj[ j + 1 ];// flipped order
       *jsj_out = jsj[ OutputDimension - j ];
+      ++jsj_out;
+    }
+  } // end GetJacobianOfSpatialJacobian()
+
+
+  /** GetJacobianOfSpatialJacobian recursive implementation. */
+  static inline void GetJacobianOfSpatialJacobian(
+    InternalFloatType * & jsj_out,
+    const double * weights1D,
+    const double * derivativeWeights1D,
+    const double * directionCosines,
+    InternalFloatType * jsj )
+  {
+    /** Copy the correct elements to the output.
+     * Note that the first element jsj[0] is the normal Jacobian. We ignore it for now.
+     * Also note that the received order is [dz, dy, dx] and that we return [dx, dy, dz].
+     */
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      //*jsj_out = jsj[ OutputDimension - j ] * directionCosines[ ( OutputDimension + 1 ) * j ]; // if diagonal only
+      *jsj_out = jsj[ OutputDimension ] * directionCosines[ j ];
+      for( unsigned int k = 1; k < OutputDimension; ++k )
+      {
+        *jsj_out += jsj[ OutputDimension - k ] * directionCosines[ k * OutputDimension + j ];
+      }
       ++jsj_out;
     }
   } // end GetJacobianOfSpatialJacobian()
