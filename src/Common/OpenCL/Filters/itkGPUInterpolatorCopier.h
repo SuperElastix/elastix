@@ -24,15 +24,25 @@
 namespace itk
 {
 /** \class GPUInterpolatorCopier
- * \brief A helper class which creates an GPU Interpolator which
- * is perfect copy of the CPU Interpolator.
+ * \brief A helper class which creates an GPU interpolator which
+ * is perfect copy of the CPU interpolator.
  *
  * This class is NOT a filter. Although it has an API similar to a filter, this class
  * is not intended to be used in a pipeline. Instead, the typical use will be like
  * it is illustrated in the following code:
  *
  * \code
- *  typedef itk::GPUInterpolatorCopier< InterpolatorType > CopierType;
+ *  struct OCLImageDims
+ *  {
+ *   itkStaticConstMacro( Support1D, bool, true );
+ *   itkStaticConstMacro( Support2D, bool, true );
+ *   itkStaticConstMacro( Support3D, bool, true );
+ *  };
+ *
+ *  typedef itk::Image< short, 3 > ImageType;
+ *  typedef typelist::MakeTypeList< short, float >::Type OCLImageTypes;
+ *  typedef itk::InterpolateImageFunction< ImageType, float > InterpolatorType;
+ *  typedef itk::GPUInterpolatorCopier< OCLImageTypes, OCLImageDims, InterpolatorType, float > CopierType;
  *  CopierType::Pointer copier = CopierType::New();
  *  copier->SetInputInterpolator(CPUInterpolator);
  *  copier->Update();
