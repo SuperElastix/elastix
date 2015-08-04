@@ -667,9 +667,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetJacobianOfSpatialJacobian( jsjPtr, weightsPointer, derivativeWeightsPointer, dummy );
 
-  /** Compute the Jacobian of the spatial Jacobian jsj:
-   *    d/dmu dT_{dim} / dx_i = weights.
-   */
+  /** Copy the Jacobian of the spatial Jacobian jsj to the correct location. */
   SpatialJacobianType * basepointer = &jsj[ 0 ];
   for( unsigned int mu = 0; mu < numberOfIndices; ++mu )
   {
@@ -693,7 +691,8 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   /** The following performs the multiplication with m_PointToIndexMatrix2 simultaneously
    * with the recursion. This is way faster.
    */
-  /** Recursively expand all weights (destroys dummy). */
+
+  /** Recursively expand all weights (destroys dummy), and multiply with dc. */
   const double * dc = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetJacobianOfSpatialJacobian( jsjPtr, weightsPointer, derivativeWeightsPointer, dc, dummy );

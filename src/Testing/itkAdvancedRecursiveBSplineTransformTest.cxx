@@ -335,29 +335,21 @@ main( int argc, char * argv[] )
   timeCollector.Start( "TransformPoint elastix          " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    transformedPointList1[i] = transform->TransformPoint( pointList[ i ] );
-    //transform->TransformPoint( pointList[ i ], opp, weights, indices, isInside );
-
-    if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
+    transformedPointList1[ i ] = transform->TransformPoint( pointList[ i ] );
   }
   timeCollector.Stop(  "TransformPoint elastix          " );
 
   timeCollector.Start( "TransformPoint recursive        " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    transformedPointList2[i] = recursiveTransform->TransformPointOld( pointList[ i ] );
-    //recursiveTransform->TransformPoint( pointList[ i ], opp, weights2, indices2, isInside );
-
-    if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
+    transformedPointList2[ i ] = recursiveTransform->TransformPointOld( pointList[ i ] );
   }
   timeCollector.Stop(  "TransformPoint recursive        " );
 
   timeCollector.Start( "TransformPoint recursive vector " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    transformedPointList3[i] = recursiveTransform->TransformPoint( pointList[ i ] );
-
-    if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
+    transformedPointList3[ i ] = recursiveTransform->TransformPoint( pointList[ i ] );
   }
   timeCollector.Stop(  "TransformPoint recursive vector " );
 
@@ -365,9 +357,7 @@ main( int argc, char * argv[] )
   timeCollector.Start( "TransformPoint rec.Perm. vector " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    transformedPointList5[i] = recursivePermutedTransform->TransformPoint( pointList[ i ] );
-
-    if( isInside == false ){ printf("error point is not in the image"); } // Just to make sure the previous is not optimized away
+    transformedPointList5[ i ] = recursivePermutedTransform->TransformPoint( pointList[ i ] );
   }
   timeCollector.Stop(  "TransformPoint rec.Perm. vector " );
 
@@ -459,11 +449,11 @@ main( int argc, char * argv[] )
   double differenceNorm6 = 0.0;
   for( unsigned int i = 0; i < N; ++i )
   {
-    opp1 = transformedPointList1[i]; //transform->TransformPoint( pointList[ i ] );
-    opp2 = transformedPointList2[i]; //recursiveTransform->TransformPointOld( pointList[ i ] );
-    opp3 = transformedPointList3[i]; //recursiveTransform->TransformPoint( pointList[ i ] );
-    opp5 = transformedPointList5[i]; // recursivePermutedTransform->TransformPoint( pointList[ i ] );
-    opp6 = transformedPointList6[i]; // recursivePermutedTransform->TransformPoints
+    opp1 = transformedPointList1[ i ]; // transform->TransformPoint();
+    opp2 = transformedPointList2[ i ]; // recursiveTransform->TransformPointOld();
+    opp3 = transformedPointList3[ i ]; // recursiveTransform->TransformPoint();
+    opp5 = transformedPointList5[ i ]; // recursivePermutedTransform->TransformPoint();
+    opp6 = transformedPointList6[ i ]; // recursivePermutedTransform->TransformPoints()
 
     for( unsigned int j = 0; j < Dimension; ++j )
     {
@@ -498,7 +488,7 @@ main( int argc, char * argv[] )
     return EXIT_FAILURE;
   }
 
-  /** Jacobian */
+  /** Jacobian. */
   JacobianType jacobianElastix; jacobianElastix.SetSize( Dimension, nzji.size() ); jacobianElastix.Fill( 0.0 );
   transform->GetJacobian( inputPoint, jacobianElastix, nzjiElastix );
 
@@ -528,7 +518,7 @@ main( int argc, char * argv[] )
     return EXIT_FAILURE;
   }
 
-  /** Spatial Jacobian */
+  /** Spatial Jacobian. */
   transform->GetSpatialJacobian( inputPoint, sj );
   recursiveTransform->GetSpatialJacobian( inputPoint, sjRecursive );
 
@@ -541,7 +531,7 @@ main( int argc, char * argv[] )
     return EXIT_FAILURE;
   }
 
-  /** Spatial Hessian */
+  /** Spatial Hessian. */
   transform->GetSpatialHessian( inputPoint, sh );
   recursiveTransform->GetSpatialHessian( inputPoint, shRecursive );
 
@@ -574,6 +564,7 @@ main( int argc, char * argv[] )
   }
 
   /** Exercise PrintSelf(). */
+  std::cerr << std::endl;
   recursiveTransform->Print( std::cerr );
 
   /** Return a value. */
