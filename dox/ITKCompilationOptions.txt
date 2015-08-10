@@ -1,4 +1,4 @@
-elastix 4.7 compiles with ITK 4.5 compiled with the following non-default options:
+elastix 4.8 compiles with ITK 4.7.2 compiled with the following non-default options:
 
 Module_ITKReview                                        true
   If set to false, elastix does not compile, since we use some classes from the Review directory.
