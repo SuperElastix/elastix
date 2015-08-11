@@ -1062,7 +1062,6 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
   }   // end for i
 
   /** Compute d/dmu d^2T_{dim} / dx_i dx_j = weights. */
-  SpatialHessianType * basepointer = &jsh[ 0 ];
   for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
   {
     SpatialJacobianType matrix;
@@ -1078,19 +1077,14 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
       }
     }
 
-    for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-    {
-      ( *( basepointer + mu + dim * numberOfWeights ) )[ dim ] = matrix;
-    }
-  }
+    /** Take into account grid spacing and direction matrix. */
+    matrix = this->m_PointToIndexMatrixTransposed2
+      * ( matrix * this->m_PointToIndexMatrix2 );
 
-  /** Take into account grid spacing and direction matrix */
-  for( unsigned int i = 0; i < jsh.size(); ++i )
-  {
+    /** Copy the matrix to the right locations. */
     for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      jsh[ i ][ dim ] = this->m_PointToIndexMatrixTransposed2
-        * ( jsh[ i ][ dim ] * this->m_PointToIndexMatrix2 );
+      jsh[ mu + dim * numberOfWeights ][ dim ] = matrix;
     }
   }
 
@@ -1210,7 +1204,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     {
       /** Compute the derivative weights. */
       this->m_SODerivativeWeightsFunctions[ i ][ j ]
-      ->Evaluate( cindex, supportIndex, weights );
+        ->Evaluate( cindex, supportIndex, weights );
 
       /** Remember the weights. */
       std::copy( weights.data_block(), weights.data_block() + numberOfWeights,
@@ -1255,7 +1249,6 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
   /** Compute the Jacobian of the spatial Hessian jsh:
    *    d/dmu d^2T_{dim} / dx_i dx_j = weights.
    */
-  SpatialHessianType * basepointer = &jsh[ 0 ];
   SpatialJacobianType  matrix;
   for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
   {
@@ -1288,11 +1281,10 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
       }
     }
 
-    /** Copy to the correct location. */
+    /** Copy the matrix to the right locations. */
     for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      ( *( basepointer + mu + dim * numberOfWeights ) )[ dim ] = matrix;
-      //jsh[ mu + dim * numberOfWeights ][ dim ] = matrix;
+      jsh[ mu + dim * numberOfWeights ][ dim ] = matrix;
     }
   }
 

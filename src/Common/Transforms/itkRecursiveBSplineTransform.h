@@ -180,6 +180,21 @@ public:
     JacobianOfSpatialJacobianType & jsj,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
+  /** Compute the Jacobian of the spatial Hessian of the transformation. */
+  virtual void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp,
+    JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+
+  /** Compute both the spatial Hessian and the Jacobian of the
+   * spatial Hessian of the transformation.
+   */
+  virtual void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp,
+    SpatialHessianType & sh,
+    JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+
 protected:
 
   RecursiveBSplineTransform();

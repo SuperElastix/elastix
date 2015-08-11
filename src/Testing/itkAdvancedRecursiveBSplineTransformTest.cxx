@@ -49,7 +49,7 @@ main( int argc, char * argv[] )
    * Debug and Release mode.
    */
 #ifndef NDEBUG
-  unsigned int N = static_cast< unsigned int >( 1 );
+  unsigned int N = static_cast< unsigned int >( 0 );
 #elif REDUCEDTEST
   unsigned int N = static_cast< unsigned int >( 1e5 );
 #else
@@ -261,7 +261,7 @@ main( int argc, char * argv[] )
 
   /** The transform point. */
   recursiveTransform->TransformPoint( inputPoint );
-#ifdef NDEBUG
+#ifdef NDEBUG // recursive permuted transform does not work in debug mode
   recursivePermutedTransform->TransformPoint( inputPoint );
 #endif
 
@@ -353,7 +353,7 @@ main( int argc, char * argv[] )
   }
   timeCollector.Stop(  "TransformPoint recursive vector " );
 
-#ifdef NDEBUG
+#ifdef NDEBUG // recursive permuted transform does not work in debug mode
   timeCollector.Start( "TransformPoint rec.Perm. vector " );
   for( unsigned int i = 0; i < N; ++i )
   {
@@ -429,6 +429,22 @@ main( int argc, char * argv[] )
   }
   timeCollector.Stop(  "JacobianSpatialJacobian rec     " );
 
+  /** Time the implementation of the Jacobian of the spatial Hessian. */
+  JacobianOfSpatialHessianType jsh, jshRecursive;
+  timeCollector.Start( "JacobianSpatialHessian elastix " );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    transform->GetJacobianOfSpatialHessian( pointList[ i ], jsh, nzji );
+  }
+  timeCollector.Stop(  "JacobianSpatialHessian elastix " );
+
+  timeCollector.Start( "JacobianSpatialHessian rec     " );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    recursiveTransform->GetJacobianOfSpatialHessian( pointList[ i ], jshRecursive, nzji );
+  }
+  timeCollector.Stop(  "JacobianSpatialHessian rec     " );
+
   /** Report. */
   timeCollector.Report();
 
@@ -452,30 +468,38 @@ main( int argc, char * argv[] )
     opp1 = transformedPointList1[ i ]; // transform->TransformPoint();
     opp2 = transformedPointList2[ i ]; // recursiveTransform->TransformPointOld();
     opp3 = transformedPointList3[ i ]; // recursiveTransform->TransformPoint();
+#ifdef NDEBUG // recursive permuted transform does not work in debug mode
     opp5 = transformedPointList5[ i ]; // recursivePermutedTransform->TransformPoint();
     opp6 = transformedPointList6[ i ]; // recursivePermutedTransform->TransformPoints()
+#endif
 
     for( unsigned int j = 0; j < Dimension; ++j )
     {
       differenceNorm1 += ( opp1[ j ] - opp2[ j ] ) * ( opp1[ j ] - opp2[ j ] );
       differenceNorm2 += ( opp1[ j ] - opp3[ j ] ) * ( opp1[ j ] - opp3[ j ] );
       differenceNorm3 += ( opp2[ j ] - opp3[ j ] ) * ( opp2[ j ] - opp3[ j ] );
+#ifdef NDEBUG // recursive permuted transform does not work in debug mode
       differenceNorm5 += ( opp3[ j ] - opp5[ j ] ) * ( opp3[ j ] - opp5[ j ] );
       differenceNorm6 += ( opp3[ j ] - opp6[ j ] ) * ( opp3[ j ] - opp6[ j ] );
+#endif
     }
   }
   differenceNorm1 = vcl_sqrt( differenceNorm1 ) / N;
   differenceNorm2 = vcl_sqrt( differenceNorm2 ) / N;
   differenceNorm3 = vcl_sqrt( differenceNorm3 ) / N;
+#ifdef NDEBUG // recursive permuted transform does not work in debug mode
   differenceNorm5 = vcl_sqrt( differenceNorm5 ) / N;
   differenceNorm6 = vcl_sqrt( differenceNorm6 ) / N;
+#endif
 
   std::cerr << "\n" << std::endl;
   std::cerr << "Recursive B-spline TransformPointOld() MSD with ITK: " << differenceNorm1 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm2 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() MSD with TransformPointOld(): " << differenceNorm3 << std::endl;
+#ifdef NDEBUG // recursive permuted transform does not work in debug mode
   std::cerr << "Recursive B-spline TransformPoint() with Permuted TransformPoint(): " << differenceNorm5 << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() with Permuted TransformPoints(): " << differenceNorm6 << std::endl;
+#endif
 
   if( differenceNorm1 > 1e-5 )
   {
@@ -560,6 +584,25 @@ main( int argc, char * argv[] )
   if( jsjDifference > 1e-8 )
   {
     std::cerr << "ERROR: Recursive B-spline GetJacobianOfSpatialJacobian() returning incorrect result." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  /** Jacobian of the spatial Hessian. */
+  transform->GetJacobianOfSpatialHessian( inputPoint, jsh, nzji );
+  recursiveTransform->GetJacobianOfSpatialHessian( inputPoint, jshRecursive, nzji );
+
+  double jshDifference = 0.0;
+  for( unsigned int i = 0; i < jsh.size(); ++i )
+  {
+    for( unsigned int j = 0; j < Dimension; ++j )
+    {
+      jshDifference += ( jsh[ i ][ j ] - jshRecursive[ i ][ j ] ).GetVnlMatrix().frobenius_norm();
+    }
+  }
+  std::cerr << "The Recursive B-spline GetJacobianOfSpatialHessian() difference is " << jshDifference << std::endl;
+  if( jshDifference > 1e-8 )
+  {
+    std::cerr << "ERROR: Recursive B-spline GetJacobianOfSpatialHessian() returning incorrect result." << std::endl;
     return EXIT_FAILURE;
   }
 

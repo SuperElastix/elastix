@@ -278,8 +278,8 @@ public:
     InternalFloatType * sj,
     const CoefficientPointerVectorType mu,
     const OffsetValueType * gridOffsetTable,
-    const double * weights1D,
-    const double * derivativeWeights1D )
+    const double * weights1D,            // normal B-spline weights
+    const double * derivativeWeights1D ) // 1st derivative of B-spline
   {
     /** Make a copy of the pointers to mu. The pointer will move later. */
     ScalarType * tmp_mu[ OutputDimension ];
@@ -353,7 +353,7 @@ public:
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
-        ::GetSpatialHessian( tmp_sh, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D , hessianWeights1D );
+        ::GetSpatialHessian( tmp_sh, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D, hessianWeights1D );
 
       // Multiply by the weights
       for( unsigned int n = 0; n < helperDim1; ++n )
@@ -387,21 +387,23 @@ public:
   /** GetJacobianOfSpatialJacobian recursive implementation. */
   static inline void GetJacobianOfSpatialJacobian(
     InternalFloatType * & jsj_out,
-    const double * weights1D,
-    const double * derivativeWeights1D,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
     InternalFloatType * jsj )
   {
+    const unsigned int helperDim = OutputDimension - SpaceDimension + 1;
+
     /** Create a temporary jsj. Here, an additional element is needed for the Jacobian. */
-    InternalFloatType tmp_jsj[ OutputDimension - SpaceDimension + 2 ];
+    InternalFloatType tmp_jsj[ helperDim + 1 ];
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       /** Initialize the temporary jsj. */
-      for( unsigned int n = 0; n < OutputDimension - SpaceDimension + 1; ++n )
+      for( unsigned int n = 0; n < helperDim; ++n )
       {
         tmp_jsj[ n ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
       }
-      tmp_jsj[ OutputDimension - SpaceDimension + 1 ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
+      tmp_jsj[ helperDim ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
       /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
@@ -413,22 +415,24 @@ public:
   /** GetJacobianOfSpatialJacobian recursive implementation. */
   static inline void GetJacobianOfSpatialJacobian(
     InternalFloatType * & jsj_out,
-    const double * weights1D,
-    const double * derivativeWeights1D,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
     const double * directionCosines,
     InternalFloatType * jsj )
   {
+    const unsigned int helperDim = OutputDimension - SpaceDimension + 1;
+
     /** Create a temporary jsj. Here, an additional element is needed for the Jacobian. */
-    InternalFloatType tmp_jsj[ OutputDimension - SpaceDimension + 2 ];
+    InternalFloatType tmp_jsj[ helperDim + 1 ];
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       /** Initialize the temporary jsj. */
-      for( unsigned int n = 0; n < OutputDimension - SpaceDimension + 1; ++n )
+      for( unsigned int n = 0; n < helperDim; ++n )
       {
         tmp_jsj[ n ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
       }
-      tmp_jsj[ OutputDimension - SpaceDimension + 1 ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
+      tmp_jsj[ helperDim ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
       /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
@@ -436,6 +440,51 @@ public:
     }
   } // end GetJacobianOfSpatialJacobian()
 
+
+  /** GetJacobianOfSpatialHessian recursive implementation. */
+  static inline void GetJacobianOfSpatialHessian(
+    InternalFloatType * & jsh_out,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
+    const double * hessianWeights1D,    // 2nd derivative of B-spline
+    InternalFloatType * jsh )
+  {
+    const unsigned int helperDim = OutputDimension - SpaceDimension;
+    const unsigned int helperDimW = ( helperDim + 1 ) * ( helperDim + 2 ) / 2;
+    const unsigned int helperDimDW =  helperDim + 1 < 3 ? helperDim + 1 : 3;
+
+    /** Create a temporary jsh. */
+    InternalFloatType tmp_jsh[ helperDimW + helperDimDW + 1 ];
+
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      /** Initialize the temporary jsh. */
+      for( unsigned int n = 0; n < helperDimW; ++n )
+      {
+        tmp_jsh[ n ] = jsh[ n ] * weights1D[ k + HelperConstVariable ];
+      }
+
+      // Initialize the derivative weights part
+      for( unsigned int n = 0, nn = 0; n < helperDimDW; ++n, ++nn )
+      {
+        if( n == 2 ) ++nn; // adhoc rule to skip multiplying dw with hw
+        tmp_jsh[ n + helperDimW ] = jsh[ nn ] * derivativeWeights1D[ k + HelperConstVariable ];
+      }
+
+// this works but does one too much:
+//       for( unsigned int n = 0; n < helperDim2; ++n )
+//       {
+//         tmp_jsh[ n + helperDim1 ] = jsh[ n ] * derivativeWeights1D[ k + HelperConstVariable ];
+//       }
+
+      // Initialize the Hessian weights part
+      tmp_jsh[ helperDimW + helperDimDW ] = jsh[ 0 ] * hessianWeights1D[ k + HelperConstVariable ];
+
+      /** Recurse. */
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::GetJacobianOfSpatialHessian( jsh_out, weights1D, derivativeWeights1D, hessianWeights1D, tmp_jsh );
+    }
+  } // end GetJacobianOfSpatialHessian()
 
 }; // end class
 
@@ -538,8 +587,8 @@ public:
     InternalFloatType * sj,
     const CoefficientPointerVectorType mu,
     const OffsetValueType * gridOffsetTable,
-    const double * weights1D,
-    const double * derivativeWeights1D )
+    const double * weights1D,            // normal B-spline weights
+    const double * derivativeWeights1D ) // 1st derivative of B-spline
   {
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {
@@ -553,9 +602,9 @@ public:
     InternalFloatType * sh,
     const CoefficientPointerVectorType mu,
     const OffsetValueType * gridOffsetTable,
-    const double * weights1D,
-    const double * derivativeWeights1D,
-    const double * hessianWeights1D )
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
+    const double * hessianWeights1D )   // 2nd derivative of B-spline
   {
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {
@@ -567,8 +616,8 @@ public:
   /** GetJacobianOfSpatialJacobian recursive implementation. */
   static inline void GetJacobianOfSpatialJacobian(
     InternalFloatType * & jsj_out,
-    const double * weights1D,
-    const double * derivativeWeights1D,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
     InternalFloatType * jsj )
   {
     /** Copy the correct elements to the output.
@@ -587,8 +636,8 @@ public:
   /** GetJacobianOfSpatialJacobian recursive implementation. */
   static inline void GetJacobianOfSpatialJacobian(
     InternalFloatType * & jsj_out,
-    const double * weights1D,
-    const double * derivativeWeights1D,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
     const double * directionCosines,
     InternalFloatType * jsj )
   {
@@ -607,6 +656,40 @@ public:
       ++jsj_out;
     }
   } // end GetJacobianOfSpatialJacobian()
+
+
+  /** GetJacobianOfSpatialHessian recursive implementation. */
+  static inline void GetJacobianOfSpatialHessian(
+    InternalFloatType * & jsh_out,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
+    const double * hessianWeights1D,    // 2nd derivative of B-spline
+    InternalFloatType * jsh )
+  {
+    /** Copy the correct elements to the output. */
+    // still need to generalize this:
+    if( OutputDimension == 3 )
+    {
+      *jsh_out = jsh[ 9 ]; ++jsh_out;
+      *jsh_out = jsh[ 8 ]; ++jsh_out;
+      *jsh_out = jsh[ 5 ]; ++jsh_out;
+      *jsh_out = jsh[ 7 ]; ++jsh_out;
+      *jsh_out = jsh[ 4 ]; ++jsh_out;
+      *jsh_out = jsh[ 2 ]; ++jsh_out;
+    }
+    else if( OutputDimension == 2 )
+    {
+      *jsh_out = jsh[ 5 ]; ++jsh_out;
+      *jsh_out = jsh[ 4 ]; ++jsh_out;
+      *jsh_out = jsh[ 2 ]; ++jsh_out;
+    }
+
+//     for( unsigned int j = 0; j < OutputDimension; ++j )
+//     {
+//       *jsj_out = jsj[ j + 1 ];// flipped order
+//       ++jsh_out;
+//     }
+  }
 
 
 }; // end class
