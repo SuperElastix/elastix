@@ -20,6 +20,7 @@
 
 #include "itkRecursiveBSplineInterpolationWeightFunction.h"
 
+
 namespace itk
 {
 
@@ -163,23 +164,31 @@ public:
   typedef ScalarType *  OutputPointType;
   typedef ScalarType ** CoefficientPointerVectorType;
 
-  /** TransformPoint recursive implementation. */
+  /** TransformPoint recursive implementation.
+   * This function is only used for evaluation. It needs pre-computed steps.
+   * TransformPoint2 computes them on-the-fly, and is overall faster.
+   */
   static inline void TransformPoint(
     OutputPointType opp,
     const CoefficientPointerVectorType mu, const OffsetValueType * steps, const double * weights1D )
   {
     ScalarType * tmp_mu[ OutputDimension ];
     ScalarType tmp_opp[ OutputDimension ];
+
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
+      /** Initialize the temporary opp and mu. */
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
         tmp_opp[ j ] = 0.0;
         tmp_mu[ j ] = mu[ j ] + steps[ k + HelperConstVariable ];
       }
 
+      /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
         ::TransformPoint( tmp_opp, tmp_mu, steps, weights1D );
+
+      /** Accumulate the weights. */
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
         opp[ j ] += tmp_opp[ j ] * weights1D[ k + HelperConstVariable ];
@@ -201,7 +210,7 @@ public:
       tmp_mu[ j ] = mu[ j ];
     }
 
-    /** Create a temporary sj and initialize the original. */
+    /** Create a temporary opp and initialize the original. */
     ScalarType tmp_opp[ OutputDimension ];
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {
@@ -211,10 +220,11 @@ public:
     OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
+      /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
         ::TransformPoint2( tmp_opp, tmp_mu, gridOffsetTable, weights1D );
 
-      // Multiply by the weights
+      /** Accumulate the weights. */
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
         opp[ j ] += tmp_opp[ j ] * weights1D[ k + HelperConstVariable ];
@@ -232,6 +242,7 @@ public:
   {
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
+      /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
         ::GetJacobian( jacobians, weights1D, value * weights1D[ k + HelperConstVariable ] );
     }
@@ -245,6 +256,7 @@ public:
   {
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
+      /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
         ::EvaluateJacobianWithImageGradientProduct( imageJacobian, movingImageGradient, weights1D,
           value * weights1D[ k + HelperConstVariable ] );
@@ -263,8 +275,10 @@ public:
     OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
+      /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
         ::ComputeNonZeroJacobianIndices( nzji, parametersPerDim, currentIndex, gridOffsetTable, c );
+
       currentIndex += bot;
     }
   } // end ComputeNonZeroJacobianIndices()
@@ -298,16 +312,17 @@ public:
     OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
+      /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
         ::GetSpatialJacobian( tmp_sj, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D );
 
-      // Multiply by the weights
+      /** Accumulate the weights part. */
       for( unsigned int n = 0; n < OutputDimension * SpaceDimension; ++n )
       {
         sj[ n ] += tmp_sj[ n ] * weights1D[ k + HelperConstVariable ];
       }
 
-      // Multiply by the derivative weights
+      /** Accumulate the derivative weights part. */
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
         sj[ OutputDimension * SpaceDimension + j ]
@@ -352,16 +367,17 @@ public:
     OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
+      /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
         ::GetSpatialHessian( tmp_sh, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D, hessianWeights1D );
 
-      // Multiply by the weights
+      /** Accumulate the weights part. */
       for( unsigned int n = 0; n < helperDim1; ++n )
       {
         sh[ n ] += tmp_sh[ n ] * weights1D[ k + HelperConstVariable ];
       }
 
-      // Multiply by the derivative weights
+      /** Accumulate the derivative weights part. */
       for( unsigned int n = 0; n < SpaceDimension; ++n )
       {
         for( unsigned int j = 0 ; j < OutputDimension; ++j )
@@ -371,7 +387,7 @@ public:
         }
       }
 
-      // Multiply by the Hessian weights
+      /** Accumulate the Hessian weights part. */
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
         sh[ helperDim2 - OutputDimension + j ]
@@ -398,11 +414,13 @@ public:
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      /** Initialize the temporary jsj. */
+      /** Initialize the weights part of the temporary jsj. */
       for( unsigned int n = 0; n < helperDim; ++n )
       {
         tmp_jsj[ n ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
       }
+
+      /** Initialize the derivative weights part. */
       tmp_jsj[ helperDim ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
       /** Recurse. */
@@ -427,11 +445,13 @@ public:
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      /** Initialize the temporary jsj. */
+      /** Initialize the weights part of the temporary jsj. */
       for( unsigned int n = 0; n < helperDim; ++n )
       {
         tmp_jsj[ n ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
       }
+
+      /** Initialize the derivative weights part. */
       tmp_jsj[ helperDim ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
       /** Recurse. */
@@ -449,8 +469,8 @@ public:
     const double * hessianWeights1D,    // 2nd derivative of B-spline
     InternalFloatType * jsh )
   {
-    const unsigned int helperDim = OutputDimension - SpaceDimension;
-    const unsigned int helperDimW = ( helperDim + 1 ) * ( helperDim + 2 ) / 2;
+    const unsigned int helperDim   = OutputDimension - SpaceDimension;
+    const unsigned int helperDimW  = ( helperDim + 1 ) * ( helperDim + 2 ) / 2;
     const unsigned int helperDimDW =  helperDim + 1 < 3 ? helperDim + 1 : 3;
 
     /** Create a temporary jsh. */
@@ -458,33 +478,86 @@ public:
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      /** Initialize the temporary jsh. */
+      /** Store some weights. */
+      const double  w = weights1D[ k + HelperConstVariable ];
+      const double dw = derivativeWeights1D[ k + HelperConstVariable ];
+      const double hw = hessianWeights1D[ k + HelperConstVariable ];
+
+      /** Initialize the weights part of the temporary jsh. */
       for( unsigned int n = 0; n < helperDimW; ++n )
       {
-        tmp_jsh[ n ] = jsh[ n ] * weights1D[ k + HelperConstVariable ];
+        //tmp_jsh[ n ] = jsh[ n ] * weights1D[ k + HelperConstVariable ];
+        tmp_jsh[ n ] = jsh[ n ] * w;
       }
 
-      // Initialize the derivative weights part
+      /** Initialize the derivative weights part. */
       for( unsigned int n = 0, nn = 0; n < helperDimDW; ++n, ++nn )
       {
         if( n == 2 ) ++nn; // adhoc rule to skip multiplying dw with hw
-        tmp_jsh[ n + helperDimW ] = jsh[ nn ] * derivativeWeights1D[ k + HelperConstVariable ];
+        //tmp_jsh[ n + helperDimW ] = jsh[ nn ] * derivativeWeights1D[ k + HelperConstVariable ];
+        tmp_jsh[ n + helperDimW ] = jsh[ nn ] * dw;
       }
 
-// this works but does one too much:
-//       for( unsigned int n = 0; n < helperDim2; ++n )
-//       {
-//         tmp_jsh[ n + helperDim1 ] = jsh[ n ] * derivativeWeights1D[ k + HelperConstVariable ];
-//       }
-
-      // Initialize the Hessian weights part
-      tmp_jsh[ helperDimW + helperDimDW ] = jsh[ 0 ] * hessianWeights1D[ k + HelperConstVariable ];
+      /** Initialize the Hessian weights part. */
+      //tmp_jsh[ helperDimW + helperDimDW ] = jsh[ 0 ] * hessianWeights1D[ k + HelperConstVariable ];
+      tmp_jsh[ helperDimW + helperDimDW ] = jsh[ 0 ] * hw;
 
       /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
         ::GetJacobianOfSpatialHessian( jsh_out, weights1D, derivativeWeights1D, hessianWeights1D, tmp_jsh );
     }
   } // end GetJacobianOfSpatialHessian()
+
+
+  /** GetJacobianOfSpatialHessian recursive implementation. */
+  static inline void GetJacobianOfSpatialHessian(
+    InternalFloatType * & jsh_out,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
+    const double * hessianWeights1D,    // 2nd derivative of B-spline
+    const double * directionCosines,
+    InternalFloatType * jsh )
+  {
+    const unsigned int helperDim   = OutputDimension - SpaceDimension;
+    const unsigned int helperDimW  = ( helperDim + 1 ) * ( helperDim + 2 ) / 2;
+    const unsigned int helperDimDW =  helperDim + 1 < 3 ? helperDim + 1 : 3;
+
+    /** Create a temporary jsh. */
+    InternalFloatType tmp_jsh[ helperDimW + helperDimDW + 1 ];
+
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      /** Store some weights. */
+      const double  w = weights1D[ k + HelperConstVariable ];
+      const double dw = derivativeWeights1D[ k + HelperConstVariable ];
+      const double hw = hessianWeights1D[ k + HelperConstVariable ];
+
+      /** Initialize the weights part of the temporary jsh. */
+      for( unsigned int n = 0; n < helperDimW; ++n )
+      {
+        //tmp_jsh[ n ] = jsh[ n ] * weights1D[ k + HelperConstVariable ];
+        tmp_jsh[ n ] = jsh[ n ] * w;
+      }
+
+      /** Initialize the derivative weights part. */
+      for( unsigned int n = 0, nn = 0; n < helperDimDW; ++n, ++nn )
+      {
+        if( n == 2 ) ++nn; // adhoc rule to skip multiplying dw with hw
+        //tmp_jsh[ n + helperDimW ] = jsh[ nn ] * derivativeWeights1D[ k + HelperConstVariable ];
+        tmp_jsh[ n + helperDimW ] = jsh[ nn ] * dw;
+      }
+
+      /** Initialize the Hessian weights part. */
+      //tmp_jsh[ helperDimW + helperDimDW ] = jsh[ 0 ] * hessianWeights1D[ k + HelperConstVariable ];
+      tmp_jsh[ helperDimW + helperDimDW ] = jsh[ 0 ] * hw;
+
+      /** Recurse. */
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::GetJacobianOfSpatialHessian( jsh_out, weights1D, derivativeWeights1D, hessianWeights1D, 
+          directionCosines, tmp_jsh );
+    }
+  } // end GetJacobianOfSpatialHessian()
+
 
 }; // end class
 
@@ -644,6 +717,7 @@ public:
     /** Copy the correct elements to the output.
      * Note that the first element jsj[0] is the normal Jacobian. We ignore it for now.
      * Also note that the received order is [dz, dy, dx] and that we return [dx, dy, dz].
+     * Below we use the fact that only one row of the jsj matrix is filled.
      */
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {
@@ -677,7 +751,7 @@ public:
       *jsh_out = jsh[ 4 ]; ++jsh_out;
       *jsh_out = jsh[ 2 ]; ++jsh_out;
     }
-    else if( OutputDimension == 2 )
+    else if( OutputDimension == 2 ) // not tested yet
     {
       *jsh_out = jsh[ 5 ]; ++jsh_out;
       *jsh_out = jsh[ 4 ]; ++jsh_out;
@@ -689,7 +763,86 @@ public:
 //       *jsj_out = jsj[ j + 1 ];// flipped order
 //       ++jsh_out;
 //     }
-  }
+  } // end GetJacobianOfSpatialHessian()
+
+
+  /** GetJacobianOfSpatialHessian recursive implementation. */
+  static inline void GetJacobianOfSpatialHessian(
+    InternalFloatType * & jsh_out,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
+    const double * hessianWeights1D,    // 2nd derivative of B-spline
+    const double * directionCosines,
+    InternalFloatType * jsh )
+  {
+    double jsh_tmp[ OutputDimension * OutputDimension ];
+    double matrixProduct1[ OutputDimension * OutputDimension ];
+    double matrixProduct2[ OutputDimension * OutputDimension ];
+
+    /** Copy the correct elements to the output. */
+    // still need to generalize this:
+    if( OutputDimension == 3 )
+    {
+      // create a full jsh matrix
+      jsh_tmp[ 0 ] = jsh[ 9 ];      jsh_tmp[ 1 ] = jsh[ 8 ];      jsh_tmp[ 2 ] = jsh[ 7 ];
+      jsh_tmp[ 3 ] = jsh_tmp[ 1 ];  jsh_tmp[ 4 ] = jsh[ 5 ];      jsh_tmp[ 5 ] = jsh[ 4 ];
+      jsh_tmp[ 6 ] = jsh_tmp[ 2 ];  jsh_tmp[ 7 ] = jsh_tmp[ 5 ];  jsh_tmp[ 8 ] = jsh[ 2 ];
+
+      // multiply At * H
+      for( unsigned int i = 0; i < OutputDimension; ++i ) // row
+      {
+        for( unsigned int j = 0; j < OutputDimension; ++j ) // column
+        {
+          double theSum = directionCosines[ i ] * jsh_tmp[ j ];
+          for( unsigned int k = 1; k < OutputDimension; ++k )
+          {
+            theSum += directionCosines[ k * OutputDimension + i ] * jsh_tmp[ k * OutputDimension + j ];
+          }
+          matrixProduct1[ i * OutputDimension + j ] = theSum;
+        }
+      }
+
+      // multiply matrixProduct * A
+      for( unsigned int i = 0; i < OutputDimension; ++i ) // row
+      {
+        for( unsigned int j = 0; j < OutputDimension; ++j ) // column
+        {
+          double theSum = matrixProduct1[ i * OutputDimension ] * directionCosines[ j ];
+          for( unsigned int k = 1; k < OutputDimension; ++k )
+          {
+            theSum += matrixProduct1[ i * OutputDimension + k ] * directionCosines[ k * OutputDimension + j ];
+          }
+          matrixProduct2[ i * OutputDimension + j ] = theSum;
+          //++jsh_out;
+        }
+      }
+
+      // Copy to output
+#if 0 // if only returning upper triangle.
+      *jsh_out = matrixProduct2[ 0 ]; ++jsh_out;
+      *jsh_out = matrixProduct2[ 3 ]; ++jsh_out;
+      *jsh_out = matrixProduct2[ 4 ]; ++jsh_out;
+      *jsh_out = matrixProduct2[ 6 ]; ++jsh_out;
+      *jsh_out = matrixProduct2[ 7 ]; ++jsh_out;
+      *jsh_out = matrixProduct2[ 8 ]; ++jsh_out;
+#else // if returning all, and writing directly to final output
+      for( unsigned int i = 0; i < OutputDimension * OutputDimension; ++i, ++jsh_out )
+      {
+        *jsh_out = matrixProduct2[ i ];
+      }
+
+      // Jump to the next matrix, skipping the zero matrices.
+      jsh_out += OutputDimension * OutputDimension * ( OutputDimension - 1 );
+#endif
+    }
+    else if( OutputDimension == 2 ) // not tested yet
+    {
+      *jsh_out = jsh[ 5 ]; ++jsh_out;
+      *jsh_out = jsh[ 4 ]; ++jsh_out;
+      *jsh_out = jsh[ 2 ]; ++jsh_out;
+    }
+
+  } // end GetJacobianOfSpatialHessian()
 
 
 }; // end class

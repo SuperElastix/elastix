@@ -823,14 +823,16 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   double * jshPtr = &jacobianOfSpatialHessian[ 0 ];
   double dummy[ 1 ] = { 1.0 };
 
+#if 0
   /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards). */
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetJacobianOfSpatialHessian( jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dummy );
 
   /** Copy the Jacobian of the spatial Hessian jsh to the correct location. */
-  unsigned int        count = 0;
+  unsigned int count = 0;
   for( unsigned int mu = 0; mu < numberOfIndices; ++mu )
   {
+    /** Create a matrix from the recursively computed elements. */
     SpatialJacobianType matrix;
     for( unsigned int i = 0; i < SpaceDimension; ++i )
     {
@@ -850,19 +852,62 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     // precompute the matrices Cii = A^T Eii A and Cij = A^T ( Eij + Eji ) A for all i <= j,
     // where Eij is the matrix with (i,j) entry 1 and all others 0.
     // Then A^T B A = sum_i sum_{j>=i} bij Cij.
+    if ( mu == 0 )
+    {
+      std::cerr << "p2im:\n" << this->m_PointToIndexMatrixTransposed2 << std::endl;
+      std::cerr << "jsh[0], H:\n" << matrix << std::endl;
+      std::cerr << "jsh[0], At * H:\n" << this->m_PointToIndexMatrixTransposed2 * matrix << std::endl;
+      std::cerr << "jsh[0], At * H * A:\n" << (this->m_PointToIndexMatrixTransposed2
+        * ( matrix * this->m_PointToIndexMatrix2 )) << std::endl;
+    }
+
     matrix = this->m_PointToIndexMatrixTransposed2
       * ( matrix * this->m_PointToIndexMatrix2 );
 
-    /** Copy the matrix to the right locations. */
-    // Also takes a considerable amount of time. 
-    // Perhaps in the end case copy immediately to the correct locations
-    // We could additionally assume that classes that use the result should know
-    // that the matrix is copied SpaceDimension times and here copy only once.
+    /** Copy the matrix to the right locations.
+     * As this takes a considerable amount of time, here we assume that classes
+     * using this result are aware that for a B-spline transformation there is
+     * repetition in the JacobianOfSpatialHessian. We therefore only copy the
+     * unique part. If this is not desired, you can switch the define.
+     */
+#if 1
+    jsh[ mu ][ 0 ] = matrix;
+#else
     for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       jsh[ mu + dim * numberOfIndices ][ dim ] = matrix;
     }
+#endif
   }
+
+#else
+  /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards).
+   * This version also performs pre- and post-multiplication with the matrices dc^T and dc, respectively.
+   * Other differences are that the complete matrix is returned, not just the upper triangle.
+   * And the results are directly written to the final jsh, avoiding an additional copy.
+   */
+  double * jshPtr2 = jsh[ 0 ][ 0 ].GetVnlMatrix().data_block();
+  const double * dc  = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
+  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
+    ::GetJacobianOfSpatialHessian( jshPtr2, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dc, dummy );
+
+  /** Copy the Jacobian of the spatial Hessian jsh to the correct location. *
+  unsigned int count = 0;
+  for( unsigned int mu = 0; mu < numberOfIndices; ++mu )
+  {
+    /** Create a matrix from the recursively computed elements. *
+    SpatialJacobianType matrix;
+    for( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      for( unsigned int j = 0; j <= i; ++j )
+      {
+        double tmp = jacobianOfSpatialHessian[ count ];
+        matrix[ i ][ j ] = tmp;
+        if( i != j ) { matrix[ j ][ i ] = tmp; }
+        ++count;
+      }
+    }*/
+#endif
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
   RegionType supportRegion;
@@ -909,7 +954,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
   /** Compute total offset at start index. */
-  IndexType startIndex = supportRegion.GetIndex();
+  const IndexType startIndex = supportRegion.GetIndex();
   const OffsetValueType * gridOffsetTable = this->m_CoefficientImages[ 0 ]->GetOffsetTable();
   OffsetValueType totalOffsetToSupportIndex = 0;
   for( unsigned int j = 0; j < SpaceDimension; ++j )
