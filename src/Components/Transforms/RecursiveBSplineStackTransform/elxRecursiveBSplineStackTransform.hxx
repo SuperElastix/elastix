@@ -151,15 +151,8 @@ RecursiveBSplineStackTransform< TElastix >
     /** Determine stack transform settings. Here they are based on the fixed image. */
     const SizeType imageSize = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
     this->m_NumberOfSubTransforms = imageSize[ SpaceDimension - 1 ];
-
-    /** Read spline order from configuration file. */
     this->m_StackSpacing          = this->GetElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
-    this->GetConfiguration()->ReadParameter( m_StackSpacing,
-                                             "StackSpacing", this->GetComponentLabel(), 0, 0, true );
-    /** Read spline order from configuration file. */
-    this->m_StackOrigin          = this->GetElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
-    this->GetConfiguration()->ReadParameter( m_StackOrigin,
-                                             "StackOrigin", this->GetComponentLabel(), 0, 0, true );
+    this->m_StackOrigin          = this->GetElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
 
     /** Set stack transform parameters. */
     this->m_RecursiveBSplineStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
