@@ -41,7 +41,7 @@
 #include <iomanip>      // std::setprecision
 
 /** The current elastix version. */
-#define __ELASTIX_VERSION 4.700
+#define __ELASTIX_VERSION 4.800
 
 /** All elastix components should be in namespace elastix. */
 namespace elastix
