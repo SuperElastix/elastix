@@ -340,13 +340,14 @@ public:
    * i.e. the TransformPoint() function, as well as the SpatialJacobian.
    *
    * Specifically, sh is the output argument. It should be allocated with a size
-   * OutputDimension * (SpaceDimension+1)*(SpaceDimension+2)/2.
+   * OutputDimension * ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2.
    * sh should point to allocated memory, but this function initializes sh.
    *
-   * Upon return sh contains the spatial hessian, spatial jacobian and transformpoint. With
+   * Upon return sh contains the spatial Hessian, spatial Jacobian and transformpoint. With
    * Hk = [ transformPoint     spatialJacobian'
    *        spatialJacobian    spatialHessian   ] .
-   * (Hk specifies all info of dimension (element) k (< OutputDimension) of the point and spatialJacobian is a vector of the derivative of this point with respect to the dimensions.)
+   * (Hk specifies all info of dimension (element) k (< OutputDimension) of the point
+   * and spatialJacobian is a vector of the derivative of this point with respect to the dimensions.)
    * The i,j (both < SpaceDimension) element of Hk is stored in:
    * i<=j : sh[ k +  OutputDimension * (i + j*(j+1)/2 ) ]
    * i>j  : sh[ k +  OutputDimension * (j + i*(i+1)/2 ) ]
@@ -485,7 +486,7 @@ public:
   {
     const unsigned int helperDim   = OutputDimension - SpaceDimension;
     const unsigned int helperDimW  = ( helperDim + 1 ) * ( helperDim + 2 ) / 2;
-    const unsigned int helperDimDW =  helperDim + 1;
+    const unsigned int helperDimDW = helperDim + 1;
 
     /** Create a temporary jsh. */
     InternalFloatType tmp_jsh[ helperDimW + helperDimDW + 1 ];
@@ -533,7 +534,7 @@ public:
   {
     const unsigned int helperDim   = OutputDimension - SpaceDimension;
     const unsigned int helperDimW  = ( helperDim + 1 ) * ( helperDim + 2 ) / 2;
-    const unsigned int helperDimDW =  helperDim + 1 < 3 ? helperDim + 1 : 3;
+    const unsigned int helperDimDW = helperDim + 1;
 
     /** Create a temporary jsh. */
     InternalFloatType tmp_jsh[ helperDimW + helperDimDW + 1 ];
@@ -553,9 +554,9 @@ public:
       }
 
       /** Initialize the derivative weights part. */
-      for( unsigned int n = 0, nn = 0; n < helperDimDW; ++n, ++nn )
+      for( unsigned int n = 0; n < helperDimDW; ++n )
       {
-        if( n == 2 ) ++nn; // adhoc rule to skip multiplying dw with hw
+        unsigned int nn = n * ( n + 1 ) / 2;
         //tmp_jsh[ n + helperDimW ] = jsh[ nn ] * derivativeWeights1D[ k + HelperConstVariable ];
         tmp_jsh[ n + helperDimW ] = jsh[ nn ] * dw;
       }
@@ -753,16 +754,36 @@ public:
     const double * hessianWeights1D,    // 2nd derivative of B-spline
     InternalFloatType * jsh )
   {
-    /** Copy the correct elements to the output. */
-	// Currently only upper triangle part. Note that the order of derivatives is swapped (last dimension first in jsh):
-	// i and j are the matrix indices into the outputted hessian matrix. (of which we only store the upper triangular part)
-	// Note that jsh contains the upper triangular part of a matrix of size (OutputDimension+1) x (OutputDimension+1)
-    for (int j = 0 ; j < OutputDimension ; ++j ) {
-      for (int i =0 ; i <= j ; ++i ) {
-        *jsh_out = jsh[ (OutputDimension-j) + (OutputDimension-i)*(OutputDimension-i+1)/2 ];
+    /** Copy the correct elements to the output.
+     * Currently only the upper triangle part. Note that the order of derivatives is swapped
+     * (last dimension first in jsh):
+     * i and j are the matrix indices into the outputted Hessian matrix (of which we only store the upper triangular part).
+     * Note that jsh contains the upper triangular part of a matrix of size (OutputDimension+1) x (OutputDimension+1)
+     */
+#if 0 // this is general
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      for( unsigned int i = 0 ; i <= j; ++i )
+      {
+        *jsh_out = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
         ++jsh_out;
       }
     }
+#else // this is much faster
+    if( OutputDimension == 3 )
+    {
+      jsh_out[ 0 ] = jsh[ 9 ];    jsh_out[ 1 ] = jsh[ 8 ];    jsh_out[ 2 ] = jsh[ 7 ];
+                                  jsh_out[ 3 ] = jsh[ 5 ];    jsh_out[ 4 ] = jsh[ 4 ];
+                                                              jsh_out[ 5 ] = jsh[ 2 ];
+    }
+    else if( OutputDimension == 2 )
+    {
+      jsh_out[ 0 ] = jsh[ 5 ];    jsh_out[ 1 ] = jsh[ 4 ];
+                                  jsh_out[ 2 ] = jsh[ 2 ];
+    }
+
+    jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
+#endif
   } // end GetJacobianOfSpatialHessian()
 
 
@@ -776,71 +797,64 @@ public:
     InternalFloatType * jsh )
   {
     double jsh_tmp[ OutputDimension * OutputDimension ];
-    double matrixProduct1[ OutputDimension * OutputDimension ];
-    double matrixProduct2[ OutputDimension * OutputDimension ];
+    double matrixProduct[ OutputDimension * OutputDimension ];
 
-    /** Copy the correct elements to the output. */
-    // still need to generalize this:
+    /** Copy the correct elements to the intermediate matrix.
+     * Note that in contrast to the other function, here we create the full matrix.
+     */
+#if 0 // this is general
+    for( unsigned int j = 0; j < OutputDimension; ++j )
+    {
+      for( unsigned int i = 0 ; i <= j; ++i )
+      {
+        jsh_tmp[ j * OutputDimension + i ] = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
+        if( i != j ) jsh_tmp[ i * OutputDimension + j ] = jsh_tmp[ j * OutputDimension + i ];
+      }
+    }
+#else // this is much faster
     if( OutputDimension == 3 )
     {
-      // create a full jsh matrix
-      jsh_tmp[ 0 ] = jsh[ 9 ];      jsh_tmp[ 1 ] = jsh[ 8 ];      jsh_tmp[ 2 ] = jsh[ 7 ];
-      jsh_tmp[ 3 ] = jsh_tmp[ 1 ];  jsh_tmp[ 4 ] = jsh[ 5 ];      jsh_tmp[ 5 ] = jsh[ 4 ];
-      jsh_tmp[ 6 ] = jsh_tmp[ 2 ];  jsh_tmp[ 7 ] = jsh_tmp[ 5 ];  jsh_tmp[ 8 ] = jsh[ 2 ];
-
-      // multiply At * H
-      for( unsigned int i = 0; i < OutputDimension; ++i ) // row
-      {
-        for( unsigned int j = 0; j < OutputDimension; ++j ) // column
-        {
-          double theSum = directionCosines[ i ] * jsh_tmp[ j ];
-          for( unsigned int k = 1; k < OutputDimension; ++k )
-          {
-            theSum += directionCosines[ k * OutputDimension + i ] * jsh_tmp[ k * OutputDimension + j ];
-          }
-          matrixProduct1[ i * OutputDimension + j ] = theSum;
-        }
-      }
-
-      // multiply matrixProduct * A
-      for( unsigned int i = 0; i < OutputDimension; ++i ) // row
-      {
-        for( unsigned int j = 0; j < OutputDimension; ++j ) // column
-        {
-          double theSum = matrixProduct1[ i * OutputDimension ] * directionCosines[ j ];
-          for( unsigned int k = 1; k < OutputDimension; ++k )
-          {
-            theSum += matrixProduct1[ i * OutputDimension + k ] * directionCosines[ k * OutputDimension + j ];
-          }
-          matrixProduct2[ i * OutputDimension + j ] = theSum;
-          //++jsh_out;
-        }
-      }
-
-      // Copy to output
-#if 0 // if only returning upper triangle.
-      *jsh_out = matrixProduct2[ 0 ]; ++jsh_out;
-      *jsh_out = matrixProduct2[ 3 ]; ++jsh_out;
-      *jsh_out = matrixProduct2[ 4 ]; ++jsh_out;
-      *jsh_out = matrixProduct2[ 6 ]; ++jsh_out;
-      *jsh_out = matrixProduct2[ 7 ]; ++jsh_out;
-      *jsh_out = matrixProduct2[ 8 ]; ++jsh_out;
-#else // if returning all, and writing directly to final output
-      for( unsigned int i = 0; i < OutputDimension * OutputDimension; ++i, ++jsh_out )
-      {
-        *jsh_out = matrixProduct2[ i ];
-      }
-
-      // Jump to the next matrix, skipping the zero matrices.
-      jsh_out += OutputDimension * OutputDimension * ( OutputDimension - 1 );
-#endif
+      jsh_tmp[ 0 ] = jsh[ 9 ];        jsh_tmp[ 1 ] = jsh[ 8 ];        jsh_tmp[ 2 ] = jsh[ 7 ];
+      jsh_tmp[ 3 ] = jsh_tmp[ 1 ];    jsh_tmp[ 4 ] = jsh[ 5 ];        jsh_tmp[ 5 ] = jsh[ 4 ];
+      jsh_tmp[ 6 ] = jsh_tmp[ 2 ];    jsh_tmp[ 7 ] = jsh_tmp[ 5 ];    jsh_tmp[ 8 ] = jsh[ 2 ];
     }
-    else if( OutputDimension == 2 ) // not tested yet
+    else if( OutputDimension == 2 )
     {
-      *jsh_out = jsh[ 5 ]; ++jsh_out;
-      *jsh_out = jsh[ 4 ]; ++jsh_out;
-      *jsh_out = jsh[ 2 ]; ++jsh_out;
+      jsh_tmp[ 0 ] = jsh[ 5 ];        jsh_tmp[ 1 ] = jsh[ 4 ];
+      jsh_tmp[ 2 ] = jsh_tmp[ 1 ];    jsh_tmp[ 3 ] = jsh[ 2 ];
     }
+#endif
+
+    // multiply directionCosines^t * H
+    for( unsigned int i = 0; i < OutputDimension; ++i ) // row
+    {
+      for( unsigned int j = 0; j < OutputDimension; ++j ) // column
+      {
+        double accum = directionCosines[ i ] * jsh_tmp[ j ];
+        for( unsigned int k = 1; k < OutputDimension; ++k )
+        {
+          accum += directionCosines[ k * OutputDimension + i ] * jsh_tmp[ k * OutputDimension + j ];
+        }
+        matrixProduct[ i * OutputDimension + j ] = accum;
+      }
+    }
+
+    // multiply matrixProduct * directionCosines
+    for( unsigned int i = 0; i < OutputDimension; ++i ) // row
+    {
+      for( unsigned int j = 0; j < OutputDimension; ++j ) // column
+      {
+        double accum = matrixProduct[ i * OutputDimension ] * directionCosines[ j ];
+        for( unsigned int k = 1; k < OutputDimension; ++k )
+        {
+          accum += matrixProduct[ i * OutputDimension + k ] * directionCosines[ k * OutputDimension + j ];
+        }
+        jsh_out[ i * OutputDimension + j ] = accum;
+      }
+    }
+
+    /** Jump to the next non-empty matrix, skipping the zero matrices. */
+    jsh_out += OutputDimension * OutputDimension * OutputDimension;
 
   } // end GetJacobianOfSpatialHessian()
 

@@ -812,6 +812,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights1D, supportIndex );
   this->m_RecursiveBSplineWeightFunction->EvaluateSecondOrderDerivative( cindex, hessianWeights1D, supportIndex );
 
+#if 0
   /** Allocate memory for jsh. If you want also the Jacobian of the spatial Jacobian and
    * the Jacobian, you need numberOfIndices * SpaceDimension plus numberOfIndices more elements.
    */
@@ -823,7 +824,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   double * jshPtr = &jacobianOfSpatialHessian[ 0 ];
   double dummy[ 1 ] = { 1.0 };
 
-#if 0
   /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards). */
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetJacobianOfSpatialHessian( jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dummy );
@@ -852,15 +852,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     // precompute the matrices Cii = A^T Eii A and Cij = A^T ( Eij + Eji ) A for all i <= j,
     // where Eij is the matrix with (i,j) entry 1 and all others 0.
     // Then A^T B A = sum_i sum_{j>=i} bij Cij.
-    if ( mu == 0 )
-    {
-      std::cerr << "p2im:\n" << this->m_PointToIndexMatrixTransposed2 << std::endl;
-      std::cerr << "jsh[0], H:\n" << matrix << std::endl;
-      std::cerr << "jsh[0], At * H:\n" << this->m_PointToIndexMatrixTransposed2 * matrix << std::endl;
-      std::cerr << "jsh[0], At * H * A:\n" << (this->m_PointToIndexMatrixTransposed2
-        * ( matrix * this->m_PointToIndexMatrix2 )) << std::endl;
-    }
-
     matrix = this->m_PointToIndexMatrixTransposed2
       * ( matrix * this->m_PointToIndexMatrix2 );
 
@@ -886,27 +877,11 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
    * Other differences are that the complete matrix is returned, not just the upper triangle.
    * And the results are directly written to the final jsh, avoiding an additional copy.
    */
-  double * jshPtr2 = jsh[ 0 ][ 0 ].GetVnlMatrix().data_block();
+  double * jshPtr = jsh[ 0 ][ 0 ].GetVnlMatrix().data_block();
   const double * dc  = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
+  double dummy[ 1 ] = { 1.0 };
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
-    ::GetJacobianOfSpatialHessian( jshPtr2, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dc, dummy );
-
-  /** Copy the Jacobian of the spatial Hessian jsh to the correct location. *
-  unsigned int count = 0;
-  for( unsigned int mu = 0; mu < numberOfIndices; ++mu )
-  {
-    /** Create a matrix from the recursively computed elements. *
-    SpatialJacobianType matrix;
-    for( unsigned int i = 0; i < SpaceDimension; ++i )
-    {
-      for( unsigned int j = 0; j <= i; ++j )
-      {
-        double tmp = jacobianOfSpatialHessian[ count ];
-        matrix[ i ][ j ] = tmp;
-        if( i != j ) { matrix[ j ][ i ] = tmp; }
-        ++count;
-      }
-    }*/
+    ::GetJacobianOfSpatialHessian( jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dc, dummy );
 #endif
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
