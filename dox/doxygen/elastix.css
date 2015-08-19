@@ -1,8 +1,9 @@
-H1 {
-    text-align: center;
+H1, H1.groupheader {
+    text-align: left;
     color: #CC0000;
 }
-H2, H3 {
+
+H2, H3, H2.groupheader, H3.groupheader {
     color: #CC0000;
 }
 
@@ -10,7 +11,7 @@ img {
     border: 0;
 }
 
-H1, H2, H3,  div, td, a, span, p, body, blockquote {
+H1, H2, H3,  div, td, a, span, p, body, blockquote, .title, .navpath li.navelem a {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
@@ -30,6 +31,37 @@ DIV.qindex {
     line-height: 120%;
 }
 
+DIV.header, DIV.summary, DIV.navpath {
+    background-color: #FFFBD7;
+    color: #CC0000;
+    border: none;
+    margin: 2px;
+} 
+.navpath li.navelem a {
+  color: #000000;
+}
+.navpath li.navelem a:hover
+{
+	color: #000000;
+}
+
+
+DIV.header, DIV.summary, DIV.navpath ul {
+  background-image:none;
+  border: none;
+  margin: 2px; 
+}
+
+DIV.summary
+{
+	float: right, bottom;
+	font-size: 8pt;
+	padding-right: 5px;
+  padding-top: 15px;
+	width: 50%;
+	text-align: right;
+}       
+
 A.qindex {
     text-decoration: none;
     font-weight: bold;
@@ -42,7 +74,7 @@ A.qindex:visited {
     color: #CC0000;
     padding: 2px;
 }
-A.qindex:hover {
+A.qindex:hover {/
     text-decoration: none;
     background-color: #EDCF88;
     padding: 2px;
@@ -62,6 +94,8 @@ A.qindexHL:hover {
     padding: 2px 6px;
 }
 A.qindexHL:visited { text-decoration: none; background-color: #CC0000; color: #ffffff }
+
+ 
 
 A.el {
     text-decoration: none;
@@ -149,6 +183,8 @@ SPAN.preprocessor  { color: #806020 }
 SPAN.stringliteral { color: #002080 }
 SPAN.charliteral   { color: #008080 }
 
+
+
 .mdTable {
     border: 0px solid #868686;
     background-color: #FFFBD7;
@@ -180,7 +216,10 @@ SPAN.charliteral   { color: #008080 }
     border-left: 1px none #E0E0E0;
     margin: 0px;
 }
-.memItemLeft {
+.memItemLeft, .memTemplItemLeft {
+    min-width: 30%;
+    max-width: 70%;
+    white-space: normal;
     padding: 1px 0px 0px 8px;
     margin: 4px;
     border-top-width: 1px;
@@ -199,7 +238,10 @@ SPAN.charliteral   { color: #008080 }
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 12px;
 }
-.memItemRight {
+.memItemRight, .memTemplItemRight {
+    min-width: 30%;
+    max-width: 70%;
+    white-space: normal;
     padding: 1px 8px 0px 8px;
     margin: 4px;
     border-top-width: 1px;
@@ -218,7 +260,38 @@ SPAN.charliteral   { color: #008080 }
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 13px;
 }
-.memitem {
+.memTemplParams {
+    white-space: normal;
+    padding: 1px 8px 0px 8px;
+    margin: 4px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-style: solid;
+    border-top-color: #E0E0E0;
+    border-right-color: #E0E0E0;
+    border-bottom-color:  #E0E0E0;
+    border-left-color: #E0E0E0;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;  
+    background-color: #FFFBD7;
+    color: #000000;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 13px;
+}
+
+.memproto {
+  background-color: #FFFBD7;
+  background-image: none;
+}
+
+.memtemplate {
+  color: #000000;
+}
+
+.memitem  {
     padding: 0px 8px 4px 8px;
     font-size: 14px;
     background-color: #FFFBD7;
@@ -246,6 +319,9 @@ a {
     color: #000000;
 }
 a:visited {
+    color: #000000;
+}
+a.el:visited {
     color: #000000;
 }
 
