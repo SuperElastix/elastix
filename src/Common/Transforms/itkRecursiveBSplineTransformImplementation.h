@@ -338,6 +338,20 @@ public:
   /** GetSpatialHessian recursive implementation.
    * As an (almost) free by-product this function delivers the displacement,
    * i.e. the TransformPoint() function, as well as the SpatialJacobian.
+   *
+   * Specifically, sh is the output argument. It should be allocated with a size
+   * OutputDimension * (SpaceDimension+1)*(SpaceDimension+2)/2.
+   * sh should point to allocated memory, but this function initializes sh.
+   *
+   * Upon return sh contains the spatial hessian, spatial jacobian and transformpoint. With
+   * Hk = [ transformPoint     spatialJacobian'
+   *        spatialJacobian    spatialHessian   ] .
+   * (Hk specifies all info of dimension (element) k (< OutputDimension) of the point and spatialJacobian is a vector of the derivative of this point with respect to the dimensions.)
+   * The i,j (both < SpaceDimension) element of Hk is stored in:
+   * i<=j : sh[ k +  OutputDimension * (i + j*(j+1)/2 ) ]
+   * i>j  : sh[ k +  OutputDimension * (j + i*(i+1)/2 ) ]
+   *
+   * Note that we store only one of the symmetric halves of Hk.
    */
   static inline void GetSpatialHessian(
     InternalFloatType * sh,
@@ -471,7 +485,7 @@ public:
   {
     const unsigned int helperDim   = OutputDimension - SpaceDimension;
     const unsigned int helperDimW  = ( helperDim + 1 ) * ( helperDim + 2 ) / 2;
-    const unsigned int helperDimDW =  helperDim + 1 < 3 ? helperDim + 1 : 3;
+    const unsigned int helperDimDW =  helperDim + 1;
 
     /** Create a temporary jsh. */
     InternalFloatType tmp_jsh[ helperDimW + helperDimDW + 1 ];
@@ -491,10 +505,9 @@ public:
       }
 
       /** Initialize the derivative weights part. */
-      for( unsigned int n = 0, nn = 0; n < helperDimDW; ++n, ++nn )
+      for( unsigned int n = 0; n < helperDimDW; ++n )
       {
-        if( n == 2 ) ++nn; // adhoc rule to skip multiplying dw with hw
-        //tmp_jsh[ n + helperDimW ] = jsh[ nn ] * derivativeWeights1D[ k + HelperConstVariable ];
+        unsigned int nn = n * ( n + 1 ) / 2;
         tmp_jsh[ n + helperDimW ] = jsh[ nn ] * dw;
       }
 
@@ -741,28 +754,15 @@ public:
     InternalFloatType * jsh )
   {
     /** Copy the correct elements to the output. */
-    // still need to generalize this:
-    if( OutputDimension == 3 )
-    {
-      *jsh_out = jsh[ 9 ]; ++jsh_out;
-      *jsh_out = jsh[ 8 ]; ++jsh_out;
-      *jsh_out = jsh[ 5 ]; ++jsh_out;
-      *jsh_out = jsh[ 7 ]; ++jsh_out;
-      *jsh_out = jsh[ 4 ]; ++jsh_out;
-      *jsh_out = jsh[ 2 ]; ++jsh_out;
+	// Currently only upper triangle part. Note that the order of derivatives is swapped (last dimension first in jsh):
+	// i and j are the matrix indices into the outputted hessian matrix. (of which we only store the upper triangular part)
+	// Note that jsh contains the upper triangular part of a matrix of size (OutputDimension+1) x (OutputDimension+1)
+    for (int j = 0 ; j < OutputDimension ; ++j ) {
+      for (int i =0 ; i <= j ; ++i ) {
+        *jsh_out = jsh[ (OutputDimension-j) + (OutputDimension-i)*(OutputDimension-i+1)/2 ];
+        ++jsh_out;
+      }
     }
-    else if( OutputDimension == 2 ) // not tested yet
-    {
-      *jsh_out = jsh[ 5 ]; ++jsh_out;
-      *jsh_out = jsh[ 4 ]; ++jsh_out;
-      *jsh_out = jsh[ 2 ]; ++jsh_out;
-    }
-
-//     for( unsigned int j = 0; j < OutputDimension; ++j )
-//     {
-//       *jsj_out = jsj[ j + 1 ];// flipped order
-//       ++jsh_out;
-//     }
   } // end GetJacobianOfSpatialHessian()
 
 
