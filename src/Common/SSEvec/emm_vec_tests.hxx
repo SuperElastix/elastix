@@ -2,9 +2,17 @@
 #define EMM_VEC_TESTS 
 
 #include <typeinfo>
-#include "emm_vec.hxx"
+#include "emm_vecptr.hxx"
 #include <string>
+#include <stdint.h> // defines standard (fixed width) types. 
 
+#ifdef MEX
+  #define DISPMSG(arg) mexPrintf(arg)
+  #define WARNMSG(arg) mexWarnMsgTxt(arg)
+#else
+  #define WARNMSG(arg) std::cerr << arg << std::endl
+  #define DISPMSG(arg) std::cerr << arg << std::endl
+#endif
 
 template <typename vecptrtype, typename T> struct wrapptr {
   static vecptrtype get( T * ptr , int numtests, int numel ) {
@@ -98,24 +106,24 @@ template < typename T, int vlen, typename vecptrtype, typename lims = testLims<f
   typedef vec<T, vlen> vecType;
 
   // first some internal macros:
-// Test if out1 and out2 have the same content:
+// Test if out1 and out2 have the same content; reinitialize out1:
 #define TESTEQ( OP , TESTNM)\
   {bool didnotyetwarn = true;\
   for ( int i = 0; i < numel; ++i ) {\
     if ( (out1[i] != out2[i])  && (didnotyetwarn) ) {\
-	WARNMSG( (std::string("Operator "  #OP  " has a difference in " #TESTNM " in ") + typeid(vecType).name() ).c_str() );\
+	    WARNMSG( (std::string("Operator "  #OP  " has a difference in " #TESTNM " in ") + typeid(vecType).name() ).c_str() );\
       didnotyetwarn = false;\
     };\
     out1[i] = 12376;\
-  };}
+  };} // end of TESTEQ macro
 
-// Define test macro for binary op
+// Define test macro for binary operator 'OP', ussing a scalar constant value CVAL
 #define TEST_BINARY_OP( OP , CVAL) \
   /* standard c reference run:*/\
   for ( int i = 0; i < numel; ++i ) {\
     out2[i] = in1[ i ] OP in2[ i ] ;\
   }\
-  /* vec OP vec */\
+  /* Test 1:  vec OP vec */\
   for ( int i = 0; i < numvecs; ++i ) {\
     vecType v1 = vIn1[ i ] ;\
     vecType v2(vIn2[ i ]) ;  /* use different constructors*/\
@@ -123,23 +131,23 @@ template < typename T, int vlen, typename vecptrtype, typename lims = testLims<f
     *(vOut1+i) = o1; \
   }\
   TESTEQ( #OP , 1 );\
-  /* vecptr OP vecptr */\
+  /* Test 2: vecptr OP vecptr */\
   for ( int i = 0; i < numvecs; ++i ) {\
     vOut1[i] = vIn1[ i ] OP vIn2[ i ] ;\
   }\
   \
   TESTEQ( #OP , 2);\
   {T c = CVAL;\
-  /* standard c reference run:*/\
+  /*         standard c reference run:*/\
   for ( int i = 0; i < numel; ++i ) {\
     out2[i] = in2[ i ] OP c;\
   }\
-  /* vecptr OP scalar */\
+  /* Test 4: vecptr OP scalar */\
   for ( int i = 0; i < numvecs; ++i ) {\
     vOut1[i] = vIn2[ i ] OP c;\
   }\
   TESTEQ( #OP , 4)\
-  /* vec OP scalar */\
+  /* Test 5: vec OP scalar */\
   for ( int i = 0; i < numvecs; ++i ) {\
     vecType v2( *(vIn2+ i) ) ;\
     vecType vo1 = v2 OP c;\
@@ -157,32 +165,32 @@ template < typename T, int vlen, typename vecptrtype, typename lims = testLims<f
 
 // Define macro for assignments operations
 #define TEST_ASGN_OP( OP , CVAL) \
-  /* initialize out1 and out2 and perform OP on out2*/\
+  /*          initialize out1 and out2 and perform OP on out2*/\
   for ( int i = 0; i < numel; ++i ) {\
     out1[i] = in1[ i ];\
 	out2[i] = in1[ i ];\
     out2[i] OP in2[ i ] ;\
   }\
-  /* perform OP on out1; vec_store_helper OP vec */\
+  /* Test 11: perform OP on out1; vec_store_helper OP vec */\
   for ( int i = 0; i < numvecs; ++i ) {\
     vecType v2(vIn2[ i ]) ;  \
     *(vOut1+i) OP v2; \
   }\
   TESTEQ( #OP , 11 );\
-  /* re-initialize out1*/\
+  /*          re-initialize out1*/\
   for ( int i = 0; i < numel; ++i ) {\
     out1[i] = in1[ i ];\
   }\
-  /* perform OP on out1; vec_store_helper OP vec_store_helper */\
+  /* Test 12: perform OP on out1; vec_store_helper OP vec_store_helper */\
   for ( int i = 0; i < numvecs; ++i ) {\
     vOut1[i] OP vIn2[ i ] ;\
   }\
   TESTEQ( #OP , 12);\
-  /* re-initialize out1*/\
+  /*          re-initialize out1*/\
   for ( int i = 0; i < numel; ++i ) {\
     out1[i] = in1[ i ];\
   }\
-  /* perform OP on out1; vec OP vec*/\
+  /* Test 13: perform OP on out1; vec OP vec*/\
   for ( int i = 0; i < numvecs; ++i ) {\
 	vecType v2(vIn2[ i ]) ;  \
 	vecType o1 = *(vOut1+ i) ;  \
@@ -190,7 +198,7 @@ template < typename T, int vlen, typename vecptrtype, typename lims = testLims<f
 	vOut1[i] = o1;\
   }\
   TESTEQ( #OP , 13);\
-  /* re-initialize out1 and out2 and perform OP on out2 with scalar 2nd argument*/\
+  /*          re-initialize out1 and out2 and perform OP on out2 with scalar 2nd argument*/\
   {T c = CVAL;\
   for ( int i = 0; i < numel; ++i ) {\
     out1[i] = in1[ i ];\
@@ -201,11 +209,11 @@ template < typename T, int vlen, typename vecptrtype, typename lims = testLims<f
     vOut1[i] OP c;\
   }\
   TESTEQ( #OP , 14)\
-  /* re-initialize out1*/\
+  /*          re-initialize out1*/\
   for ( int i = 0; i < numel; ++i ) {\
     out1[i] = in1[ i ];\
   }\
-  /* perform OP on out1; vec OP scalar*/\
+  /* Test 15: perform OP on out1; vec OP scalar*/\
   for ( int i = 0; i < numvecs; ++i ) {\
 	vecType o1 = *(vOut1+ i) ;  \
     o1 OP c ;\
@@ -263,6 +271,7 @@ template< typename T > T * align_pointer( T* in ) {
 }
 
 template < typename T1, typename T2, int vlen> struct test_vecLoadStore { 
+  // Macro to test if AR2 and AR3 are identical. 
 #define TESTEQ2( TESTNM )\
   {bool didnotyetwarn = true;\
   for ( int i = 0; i < 3*vlen; ++i ) {\
@@ -272,7 +281,7 @@ template < typename T1, typename T2, int vlen> struct test_vecLoadStore {
     };\
     AR2[i] = 123567;\
     AR3[i] = 123567;\
-  };}
+  };} // end of TESTEQ2 macro
   static void test() {
     typedef vec< T1, vlen> vT1;
     typedef vec< T2, vlen> vT2;
