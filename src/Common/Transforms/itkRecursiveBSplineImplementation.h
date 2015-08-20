@@ -786,7 +786,7 @@ public:
 
   /** GetSpatialJacobian recursive implementation. */
   static inline void GetJacobianOfSpatialJacobian(
-    OutputPointerType jsj_out,
+    OutputPointerType & jsj_out,
     const InputPointerType jsj,
     const double * weights1D,
     const double * derivativeWeights1D )
@@ -803,7 +803,7 @@ public:
 
       for( unsigned int n = 1; n < jsj_length; ++n )
       {
-        tmp_jsj[ n+1 ] += jsj[ n ] * weights1D[ k + HelperConstVariable ];
+        tmp_jsj[ n+1 ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
       };
 
       RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, SpaceDimension - 1, jsj_length +1 , SplineOrder, InputPointerType >
