@@ -350,7 +350,7 @@ public:
    * and spatialJacobian is a vector of the derivative of this point with respect to the dimensions.)
    * The i,j (both < SpaceDimension) element of Hk is stored in:
    * i<=j : sh[ k +  OutputDimension * (i + j*(j+1)/2 ) ]
-   * i>j  : sh[ k +  OutputDimension * (j + i*(i+1)/2 ) ]
+   * i>=j : sh[ k +  OutputDimension * (j + i*(i+1)/2 ) ]
    *
    * Note that we store only one of the symmetric halves of Hk.
    */
@@ -760,30 +760,30 @@ public:
      * i and j are the matrix indices into the outputted Hessian matrix (of which we only store the upper triangular part).
      * Note that jsh contains the upper triangular part of a matrix of size (OutputDimension+1) x (OutputDimension+1)
      */
-#if 0 // this is general
-    for( unsigned int j = 0; j < OutputDimension; ++j )
-    {
-      for( unsigned int i = 0 ; i <= j; ++i )
-      {
-        *jsh_out = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
-        ++jsh_out;
-      }
-    }
-#else // this is much faster
+	// First two optimized version (they also visualize a bit what happens)
+	//
     if( OutputDimension == 3 )
     {
-      jsh_out[ 0 ] = jsh[ 9 ];    jsh_out[ 1 ] = jsh[ 8 ];    jsh_out[ 2 ] = jsh[ 7 ];
-                                  jsh_out[ 3 ] = jsh[ 5 ];    jsh_out[ 4 ] = jsh[ 4 ];
+      jsh_out[ 0 ] = jsh[ 9 ];    jsh_out[ 1 ] = jsh[ 8 ];    jsh_out[ 3 ] = jsh[ 7 ];
+                                  jsh_out[ 2 ] = jsh[ 5 ];    jsh_out[ 4 ] = jsh[ 4 ];
                                                               jsh_out[ 5 ] = jsh[ 2 ];
+	  jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
     }
     else if( OutputDimension == 2 )
     {
       jsh_out[ 0 ] = jsh[ 5 ];    jsh_out[ 1 ] = jsh[ 4 ];
                                   jsh_out[ 2 ] = jsh[ 2 ];
+	  jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
     }
-
-    jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
-#endif
+    else // this is general (if a compiler sufficiently unrolls loops it should end up at the same as the above optimized cases. Unfortunately, compilers don't seem to be that smart)
+      for( unsigned int j = 0; j < OutputDimension; ++j )
+	  {
+        for( unsigned int i = 0 ; i <= j; ++i )
+		{
+          *jsh_out = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
+          ++jsh_out;
+		}
+      }
   } // end GetJacobianOfSpatialHessian()
 
 
@@ -802,16 +802,7 @@ public:
     /** Copy the correct elements to the intermediate matrix.
      * Note that in contrast to the other function, here we create the full matrix.
      */
-#if 0 // this is general
-    for( unsigned int j = 0; j < OutputDimension; ++j )
-    {
-      for( unsigned int i = 0 ; i <= j; ++i )
-      {
-        jsh_tmp[ j * OutputDimension + i ] = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
-        if( i != j ) jsh_tmp[ i * OutputDimension + j ] = jsh_tmp[ j * OutputDimension + i ];
-      }
-    }
-#else // this is much faster
+    // First two much faster manually unrolled cases (NOTE: compile time if condition)
     if( OutputDimension == 3 )
     {
       jsh_tmp[ 0 ] = jsh[ 9 ];        jsh_tmp[ 1 ] = jsh[ 8 ];        jsh_tmp[ 2 ] = jsh[ 7 ];
@@ -823,7 +814,16 @@ public:
       jsh_tmp[ 0 ] = jsh[ 5 ];        jsh_tmp[ 1 ] = jsh[ 4 ];
       jsh_tmp[ 2 ] = jsh_tmp[ 1 ];    jsh_tmp[ 3 ] = jsh[ 2 ];
     }
-#endif
+    else // this is general:
+      for( unsigned int j = 0; j < OutputDimension; ++j )
+      {
+        for( unsigned int i = 0 ; i <= j; ++i )
+    	{
+    	  jsh_tmp[ j * OutputDimension + i ] = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
+    	  if( i != j ) jsh_tmp[ i * OutputDimension + j ] = jsh_tmp[ j * OutputDimension + i ];
+    	}
+      }
+
 
     // multiply directionCosines^t * H
     for( unsigned int i = 0; i < OutputDimension; ++i ) // row
