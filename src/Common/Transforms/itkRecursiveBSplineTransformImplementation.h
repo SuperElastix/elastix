@@ -567,7 +567,7 @@ public:
 
       /** Recurse. */
       RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
-        ::GetJacobianOfSpatialHessian( jsh_out, weights1D, derivativeWeights1D, hessianWeights1D, 
+        ::GetJacobianOfSpatialHessian( jsh_out, weights1D, derivativeWeights1D, hessianWeights1D,
           directionCosines, tmp_jsh );
     }
   } // end GetJacobianOfSpatialHessian()
@@ -759,31 +759,34 @@ public:
      * (last dimension first in jsh):
      * i and j are the matrix indices into the outputted Hessian matrix (of which we only store the upper triangular part).
      * Note that jsh contains the upper triangular part of a matrix of size (OutputDimension+1) x (OutputDimension+1)
+     *
+     * For dimensions 2 and 3 optimized code (loop unrolling) is provided. Smart compilers may
+     * not need that.
      */
-	// First two optimized version (they also visualize a bit what happens)
-	//
     if( OutputDimension == 3 )
     {
       jsh_out[ 0 ] = jsh[ 9 ];    jsh_out[ 1 ] = jsh[ 8 ];    jsh_out[ 3 ] = jsh[ 7 ];
                                   jsh_out[ 2 ] = jsh[ 5 ];    jsh_out[ 4 ] = jsh[ 4 ];
                                                               jsh_out[ 5 ] = jsh[ 2 ];
-	  jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
+      jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
     }
     else if( OutputDimension == 2 )
     {
       jsh_out[ 0 ] = jsh[ 5 ];    jsh_out[ 1 ] = jsh[ 4 ];
                                   jsh_out[ 2 ] = jsh[ 2 ];
-	  jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
+      jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
     }
-    else // this is general (if a compiler sufficiently unrolls loops it should end up at the same as the above optimized cases. Unfortunately, compilers don't seem to be that smart)
+    else // the general case
+    {
       for( unsigned int j = 0; j < OutputDimension; ++j )
-	  {
+      {
         for( unsigned int i = 0 ; i <= j; ++i )
-		{
+        {
           *jsh_out = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
           ++jsh_out;
-		}
+        }
       }
+    }
   } // end GetJacobianOfSpatialHessian()
 
 
@@ -801,8 +804,10 @@ public:
 
     /** Copy the correct elements to the intermediate matrix.
      * Note that in contrast to the other function, here we create the full matrix.
+     *
+     * For dimensions 2 and 3 optimized code (loop unrolling) is provided. Smart compilers may
+     * not need that.
      */
-    // First two much faster manually unrolled cases (NOTE: compile time if condition)
     if( OutputDimension == 3 )
     {
       jsh_tmp[ 0 ] = jsh[ 9 ];        jsh_tmp[ 1 ] = jsh[ 8 ];        jsh_tmp[ 2 ] = jsh[ 7 ];
@@ -814,16 +819,17 @@ public:
       jsh_tmp[ 0 ] = jsh[ 5 ];        jsh_tmp[ 1 ] = jsh[ 4 ];
       jsh_tmp[ 2 ] = jsh_tmp[ 1 ];    jsh_tmp[ 3 ] = jsh[ 2 ];
     }
-    else // this is general:
+    else // the general case
+    {
       for( unsigned int j = 0; j < OutputDimension; ++j )
       {
         for( unsigned int i = 0 ; i <= j; ++i )
-    	{
-    	  jsh_tmp[ j * OutputDimension + i ] = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
-    	  if( i != j ) jsh_tmp[ i * OutputDimension + j ] = jsh_tmp[ j * OutputDimension + i ];
-    	}
+        {
+          jsh_tmp[ j * OutputDimension + i ] = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
+          if( i != j ) jsh_tmp[ i * OutputDimension + j ] = jsh_tmp[ j * OutputDimension + i ];
+        }
       }
-
+    }
 
     // multiply directionCosines^t * H
     for( unsigned int i = 0; i < OutputDimension; ++i ) // row

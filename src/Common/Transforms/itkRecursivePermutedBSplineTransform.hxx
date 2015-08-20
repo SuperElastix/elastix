@@ -335,8 +335,8 @@ RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
             ::GetSample( mu, bsplineOffsetTable, weightsPtr );
   displacement += vecPointType( & point[0] );
   displacement.store( &outputPoint[0] );
-  
-/*  
+
+/*
   outputPoint.Fill( NumericTraits<TScalar>::Zero );
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
@@ -441,8 +441,8 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
   ParametersValueType * jacobianPointer = jacobian.data_block();
   for( unsigned int i = 0; i < numberOfWeightsPerDimension; ++i )
   {
-    // create scaled identity matrix for each i. 
-    // Note that we assume that only this function writes to jacobian. 
+    // create scaled identity matrix for each i.
+    // Note that we assume that only this function writes to jacobian.
     // Hence any elements that we do not write to stay at the value that they are initialized with (= 0.0).
     for( unsigned int d = 0 ; d < SpaceDimension ; ++d ) {
       unsigned int index = (i * SpaceDimension + d)  +  (d * nnzji);  //(column) + (row)
@@ -934,7 +934,7 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,
   const IndexType & supportIndex  ) const
 {
-  // Make sure the size is correct: 
+  // Make sure the size is correct:
   nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
   // Compute the steps in index that are taken:
@@ -948,12 +948,12 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
   }
 
   // declare and set the vector types that the recursion uses
-  typedef unsigned long * nzjiPointerType; 
+  typedef unsigned long * nzjiPointerType;
   typedef vecptr< nzjiPointerType, SpaceDimension> nzjiVecPointerType;
   //nonZeroJacobianIndices[0] = 123456;
   nzjiVecPointerType temp_nzji( & (nonZeroJacobianIndices[0]) );
-  typedef vec< OffsetValueType, SpaceDimension> vecOffsetValueType; 
-  OffsetValueType totalOffsetToSupportIndexArray[SpaceDimension]; 
+  typedef vec< OffsetValueType, SpaceDimension> vecOffsetValueType;
+  OffsetValueType totalOffsetToSupportIndexArray[SpaceDimension];
   for (int i = 0; i < SpaceDimension+1; ++i ) {
     totalOffsetToSupportIndexArray[i] = totalOffsetToSupportIndex + i;
   }
