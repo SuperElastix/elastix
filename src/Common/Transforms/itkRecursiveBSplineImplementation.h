@@ -33,7 +33,7 @@ namespace itk
 /** \class RecursiveBSplineImplementation
  *
  * \brief This set of helper classes contains the actual implementation of the
- * recursive B-spline transform
+ * recursive B-spline transform and interpolator
  *
  * Compared to the RecursiveBSplineTransformImplementation class, this
  * class is templated over the OutputType and input pointer type and the
@@ -69,23 +69,23 @@ namespace itk
  *     case makes it impossible to construct the end cases.
  *
  * Other remarks:
- *   - I (DPoot) have exerimented with prefetching. However, at this moment my conclusion is that that does not
+ *   - I (DPoot) have experimented with pre-fetching. However, at this moment my conclusion is that that does not
  *     really help when the images are large, and seriously hurts performance for small images. I think the main
- *     reason is that the prefetching adds so many instructions that latency cannot be hided as efficiently. Also
- *     the (effective) instruction throughput seriously reduces as without prefetching (and small images) already
+ *     reason is that the pre-fetching adds so many instructions that latency cannot be hidden efficiently. Also
+ *     the (effective) instruction throughput seriously reduces as without pre-fetching (and small images) already
  *     the maximum throughput is almost reached.
  *   - If you need to sample vector images, use an (SSE/AVX optimized) fixed-length vector class for OutputType and a compatible InputPointerType
- *     for example vec< type, vlen> with the accompagnying vecptr< type, vlen> as InputPointerType.
+ *     for example vec< type, vlen> with the accompanying vecptr< type, vlen> as InputPointerType.
  *
  * \ingroup ITKTransform
  */
 
 #define USE_STEPS 2873462 // USE_STEPS is used as gridOffsetTable0 value. If set a 'steps' argument is assumed, instead of the 'gridOffsetTable' argument.
                           // Function overloading to accomplish this is not possible, since both have the same type. Hence we need a template argument
-                          // for differntiating this.
-                          // The main reason to reuse the 'gridOffsetTable0' argument is that this already changes the interpretation of the gridOffsetTable argument.
-                          // Use a large integer for USE_STEPS to make sure that if it (accidently) is interpreted as gridOffsetTable0 it will most likely cause
-                          // segfaults (usefull to diagnose the issue). Also it is extremely unlikely that a actual gridOffsetTable0 is such a large integer.
+                          // for differentiating this.
+                          // The main reason to reuse the 'gridOffsetTable0' argument is that this already changes the interpretation of the gridOffsetTable[ k + HelperConstVariable ]argument.
+                          // Use a large integer for USE_STEPS to make sure that if it (accidentally) is interpreted as gridOffsetTable0 it will most likely cause
+                          // segfaults (useful to diagnose the issue). Also it is extremely unlikely that a actual gridOffsetTable0 is such a large integer.
 
 
 
@@ -116,15 +116,16 @@ public:
       ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      if (gridOffsetTable0==USE_STEPS)
-        tmp_mu = mu + gridOffsetTable[k + HelperConstVariable];
+      if( gridOffsetTable0 == USE_STEPS )
+      {
+        tmp_mu = mu + gridOffsetTable[ k + HelperConstVariable ];
+      }
       opp += RecursiveBSplineImplementation_GetSample< OutputType, SpaceDimension - 1, SplineOrder, InputPointerType, gridOffsetTable0 >
         ::GetSample( tmp_mu, gridOffsetTable, weights1D ) * weights1D[ k + HelperConstVariable ];
-      //::GetSample2( tmp_mu, gridOffsetTable, weights1D , tmp_prefetch_mu ) * weights1D[ k + HelperConstVariable ];
+      //::GetSample2( tmp_mu, gridOffsetTable, weights1D, tmp_prefetch_mu ) * weights1D[ k + HelperConstVariable ];
 
       // move to the next mu
-      if (gridOffsetTable0!=USE_STEPS)
-        tmp_mu += bot;
+      if( gridOffsetTable0 != USE_STEPS ) tmp_mu += bot;
       /*if (doPrefetch)
         tmp_prefetch_mu +=bot;*/
     }
@@ -194,12 +195,15 @@ public:
       const char * lastByteUsed = ( (const char *) (prefetch_mu+4) ) - 1;
       _mm_prefetch( lastByteUsed, _MM_HINT_T2 ) ; // last byte used.
     }*/
-    if (gridOffsetTable0==USE_STEPS) {
+    if( gridOffsetTable0 == USE_STEPS )
+    {
       return (   (*(mu + gridOffsetTable[0 + HelperConstVariable])) * weights0
                + (*(mu + gridOffsetTable[1 + HelperConstVariable])) * weights1 )
             +(   (*(mu + gridOffsetTable[2 + HelperConstVariable])) * weights2
                + (*(mu + gridOffsetTable[3 + HelperConstVariable])) * weights3 ) ;
-    } else {
+    }
+    else
+    {
       const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
         ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
       return ( (*(mu+0)) * weights0 + (*(mu + 1 * bot))  * weights1  )
@@ -301,10 +305,12 @@ public:
       ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      if (gridOffsetTable0==USE_STEPS)
-        tmp_mu = mu + gridOffsetTable[k + HelperConstVariable];
+      if( gridOffsetTable0 == USE_STEPS )
+      {
+        tmp_mu = mu + gridOffsetTable[ k + HelperConstVariable ];
+      }
       RecursiveBSplineImplementation_GetSpatialJacobian< RecursiveOutputPointerType, SpaceDimension - 1, SplineOrder, InputPointerType, gridOffsetTable0 >
-        ::GetSpatialJacobian( tmp_sj, tmp_mu, gridOffsetTable, weights1D , derivativeWeights1D );
+        ::GetSpatialJacobian( tmp_sj, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D );
 
       // Multiply by the weights
       for( unsigned int n = 0; n < SpaceDimension; ++n )
@@ -316,8 +322,7 @@ public:
       sj[ SpaceDimension ] += tmp_sj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
       // move to the next mu
-      if (gridOffsetTable0!=USE_STEPS)
-        tmp_mu += bot;
+      if( gridOffsetTable0 != USE_STEPS ) tmp_mu += bot;
     }
   } // end GetSpatialJacobian()
 }; // end class
@@ -375,10 +380,10 @@ public:
   {
     const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
       ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
-    OutputValueType mu0 = *( gridOffsetTable0==USE_STEPS ? mu + gridOffsetTable[0 + HelperConstVariable] : mu + 0 * bot);
-    OutputValueType mu1 = *( gridOffsetTable0==USE_STEPS ? mu + gridOffsetTable[1 + HelperConstVariable] : mu + 1 * bot);
-    OutputValueType mu2 = *( gridOffsetTable0==USE_STEPS ? mu + gridOffsetTable[2 + HelperConstVariable] : mu + 2 * bot);
-    OutputValueType mu3 = *( gridOffsetTable0==USE_STEPS ? mu + gridOffsetTable[3 + HelperConstVariable] : mu + 3 * bot);
+    OutputValueType mu0 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 0 + HelperConstVariable ] : mu + 0 * bot);
+    OutputValueType mu1 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 1 + HelperConstVariable ] : mu + 1 * bot);
+    OutputValueType mu2 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 2 + HelperConstVariable ] : mu + 2 * bot);
+    OutputValueType mu3 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 3 + HelperConstVariable ] : mu + 3 * bot);
 
     sj[ 0 ] = ( mu0 * weights1D[ 0 + HelperConstVariable ] + mu1 * weights1D[ 1 + HelperConstVariable ] )
             + ( mu2 * weights1D[ 2 + HelperConstVariable ] + mu3 * weights1D[ 3 + HelperConstVariable ] );
@@ -431,8 +436,10 @@ public:
       ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      if (gridOffsetTable0==USE_STEPS)
+      if( gridOffsetTable0 == USE_STEPS )
+      {
         tmp_mu = mu + gridOffsetTable[k + HelperConstVariable];
+      }
       RecursiveBSplineImplementation_GetSpatialHessian< RecursiveOutputPointerType, SpaceDimension - 1, SplineOrder, InputPointerType, gridOffsetTable0 >
         ::GetSpatialHessian( tmp_sh, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D, hessianWeights1D );
 
@@ -452,8 +459,7 @@ public:
       sh[ helperDim2 - 1 ] += tmp_sh[ 0 ] * hessianWeights1D[ k + HelperConstVariable ];
 
       // move to the next mu
-      if (gridOffsetTable0!=USE_STEPS)
-        tmp_mu += bot;
+      if( gridOffsetTable0 != USE_STEPS ) tmp_mu += bot;
     }
   } // end GetSpatialHessian()
 }; // end class
@@ -516,10 +522,10 @@ public:
 
     const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
       ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
-    OutputValueType mu0 = *( gridOffsetTable0==USE_STEPS ? mu + gridOffsetTable[0 + HelperConstVariable] : mu + 0 * bot);
-    OutputValueType mu1 = *( gridOffsetTable0==USE_STEPS ? mu + gridOffsetTable[1 + HelperConstVariable] : mu + 1 * bot);
-    OutputValueType mu2 = *( gridOffsetTable0==USE_STEPS ? mu + gridOffsetTable[2 + HelperConstVariable] : mu + 2 * bot);
-    OutputValueType mu3 = *( gridOffsetTable0==USE_STEPS ? mu + gridOffsetTable[3 + HelperConstVariable] : mu + 3 * bot);
+    OutputValueType mu0 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 0 + HelperConstVariable ] : mu + 0 * bot);
+    OutputValueType mu1 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 1 + HelperConstVariable ] : mu + 1 * bot);
+    OutputValueType mu2 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 2 + HelperConstVariable ] : mu + 2 * bot);
+    OutputValueType mu3 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 3 + HelperConstVariable ] : mu + 3 * bot);
 
     sh[ 0 ] = ( mu0 * weights1D[ 0 + HelperConstVariable ] + mu1 * weights1D[ 1 + HelperConstVariable ] )
             + ( mu2 * weights1D[ 2 + HelperConstVariable ] + mu3 * weights1D[ 3 + HelperConstVariable ] );
@@ -543,8 +549,9 @@ public:
   /** Helper constant variable. */
   //itkStaticConstMacro( numberOfPointsInSupportRegion, unsigned int,
   //  ( SplineOrder + 1 ) * RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension-1, SplineOrder>::numberOfPointsInSupportRegion );
-  enum { numberOfPointsInSupportRegion = ( SplineOrder + 1 ) * RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension-1, SplineOrder>::numberOfPointsInSupportRegion };
+  enum { NumberOfPointsInSupportRegion = ( SplineOrder + 1 ) * RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension-1, SplineOrder>::NumberOfPointsInSupportRegion };
 }; // end class
+
 //End case:
 template<unsigned int SplineOrder>
 class RecursiveBSplineImplementation_numberOfPointsInSupportRegion< 0, SplineOrder >
@@ -552,7 +559,7 @@ class RecursiveBSplineImplementation_numberOfPointsInSupportRegion< 0, SplineOrd
   public:
   /** Helper constant variable. */
   // itkStaticConstMacro( numberOfPointsInSupportRegion, unsigned int, 1 );
-    enum { numberOfPointsInSupportRegion = 1 };
+    enum { NumberOfPointsInSupportRegion = 1 };
 };
 
 /** \class RecursiveBSplineImplementation_GetJacobian
@@ -656,12 +663,14 @@ public:
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      if (gridOffsetTable0==USE_STEPS)
-        tmp_currentIndex = currentIndex + gridOffsetTable[k + HelperConstVariable];
+      if( gridOffsetTable0 == USE_STEPS )
+      {
+        tmp_currentIndex = currentIndex + gridOffsetTable[ k + HelperConstVariable ];
+      }
       RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices< OutputPointerType, SpaceDimension - 1, SplineOrder, InputValueType, gridOffsetTable0 >
-        ::ComputeNonZeroJacobianIndices( nzji, tmp_currentIndex , gridOffsetTable );
-      if (gridOffsetTable0!=USE_STEPS)
-        tmp_currentIndex  += bot;
+        ::ComputeNonZeroJacobianIndices( nzji, tmp_currentIndex, gridOffsetTable );
+
+      if( gridOffsetTable0 != USE_STEPS ) tmp_currentIndex  += bot;
     }
   } // end ComputeNonZeroJacobianIndices()
 }; // end class
@@ -731,12 +740,14 @@ public:
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      if (gridOffsetTable0==USE_STEPS)
-        tmp_gradCoefficients = gradCoefficients + gridOffsetTable[k + HelperConstVariable];
+      if( gridOffsetTable0 == USE_STEPS )
+      {
+        tmp_gradCoefficients = gradCoefficients + gridOffsetTable[ k + HelperConstVariable ];
+      }
       RecursiveBSplineImplementation_MultiplyJacobianWithValue< gradPointerType, SpaceDimension - 1, SplineOrder, InputValueType, gridOffsetTable0 >
         ::MultiplyJacobianWithValue( tmp_gradCoefficients, weight * weights1D[ k + HelperConstVariable ], gradValue , gridOffsetTable, weights1D );
-      if (gridOffsetTable0!=USE_STEPS)
-        tmp_gradCoefficients += bot;
+
+      if( gridOffsetTable0 != USE_STEPS ) tmp_gradCoefficients += bot;
     }
   } // end MultiplyJacobianWithValue()
 }; // end class
@@ -773,7 +784,7 @@ public:
  * \brief Define general case
  */
 
-template< class OutputPointerType, unsigned int SpaceDimension, unsigned int jsj_length, unsigned int SplineOrder, class InputPointerType >
+template< class OutputPointerType, unsigned int SpaceDimension, unsigned int JSJLength, unsigned int SplineOrder, class InputPointerType >
 class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian
 {
 public:
@@ -792,7 +803,7 @@ public:
     const double * derivativeWeights1D )
   {
     /** Create a temporary jsj.*/
-    OutputValueType  tmp_jsj[ jsj_length + 1];
+    OutputValueType  tmp_jsj[ JSJLength + 1 ];
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
@@ -801,13 +812,13 @@ public:
       // Multiply by the derivative weights
       tmp_jsj[ 1 ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
-      for( unsigned int n = 1; n < jsj_length; ++n )
+      for( unsigned int n = 1; n < JSJLength; ++n )
       {
         tmp_jsj[ n+1 ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
       };
 
-      RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, SpaceDimension - 1, jsj_length +1 , SplineOrder, InputPointerType >
-        ::GetJacobianOfSpatialJacobian( jsj_out, &tmp_jsj[0], weights1D , derivativeWeights1D );
+      RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, SpaceDimension - 1, JSJLength + 1, SplineOrder, InputPointerType >
+        ::GetJacobianOfSpatialJacobian( jsj_out, &tmp_jsj[ 0 ], weights1D, derivativeWeights1D );
 
     }
   } // end GetJacobianOfSpatialJacobian()
@@ -819,8 +830,8 @@ public:
  * \brief Define the end case for SpaceDimension = 0.
  */
 
-template< class OutputPointerType, unsigned int jsj_length, unsigned int SplineOrder, class InputPointerType >
-class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, 0, jsj_length, SplineOrder, InputPointerType >
+template< class OutputPointerType, unsigned int JSJLength, unsigned int SplineOrder, class InputPointerType >
+class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, 0, JSJLength, SplineOrder, InputPointerType >
 {
 public:
   /** GetSpatialJacobian recursive implementation. */
@@ -831,7 +842,8 @@ public:
     const double * derivativeWeights1D )
   {
     InputPointerType jsj_iterator = jsj;
-    for (int i = 0 ; i < jsj_length; ++i ){
+    for( unsigned int i = 0 ; i < JSJLength; ++i )
+    {
       *jsj_out = *jsj_iterator;
       ++jsj_out; ++jsj_iterator;
     }

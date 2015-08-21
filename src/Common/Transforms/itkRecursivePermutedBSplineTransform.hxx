@@ -366,7 +366,8 @@ typename RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrd
 RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrder >
 ::GetNumberOfNonZeroJacobianIndices( void ) const
 {
-  return  RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension,  SplineOrder>::numberOfPointsInSupportRegion * SpaceDimension;
+  return RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension, SplineOrder>
+    ::NumberOfPointsInSupportRegion * SpaceDimension;
 } // end GetNumberOfNonZeroJacobianIndices()
 
 
@@ -430,11 +431,13 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
   /** Recursively compute the full weights array .
    * The pointer has changed after this function call.
    */
-  const unsigned int numberOfWeightsPerDimension = RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension,  SplineOrder>::numberOfPointsInSupportRegion ;
+  const unsigned int numberOfWeightsPerDimension
+    = RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension, SplineOrder >
+    ::NumberOfPointsInSupportRegion;
 
   typename WeightsType::ValueType fullWeightsArray[ numberOfWeightsPerDimension ];
-  typename WeightsType::ValueType  * fullWeightsArrayPtr = &fullWeightsArray[0];
-  RecursiveBSplineImplementation_GetJacobian< typename WeightsType::ValueType * , SpaceDimension,  SplineOrder, typename WeightsType::ValueType>
+  typename WeightsType::ValueType * fullWeightsArrayPtr = &fullWeightsArray[0];
+  RecursiveBSplineImplementation_GetJacobian< typename WeightsType::ValueType *, SpaceDimension, SplineOrder, typename WeightsType::ValueType >
     ::GetJacobian( fullWeightsArrayPtr, weightsArray1D, 1.0 );
 
   /** Put at the right positions in jacobian. */
@@ -828,8 +831,10 @@ RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrder >
   this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights1D, supportIndex );
 
   /** Allocate a vector of expanded weights. On the stack instead of heap is faster. */
-  const unsigned int numberOfWeightsPerDimension = RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension,  SplineOrder>::numberOfPointsInSupportRegion ;
-  double weightVector[ (SpaceDimension + 1) * numberOfWeightsPerDimension ];
+  const unsigned int numberOfWeightsPerDimension
+    = RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension, SplineOrder >
+    ::NumberOfPointsInSupportRegion ;
+  double weightVector[ ( SpaceDimension + 1 ) * numberOfWeightsPerDimension ];
 
   { /** limit scope. */
   double * weightVectorPtr = &weightVector[0];
@@ -837,7 +842,7 @@ RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrder >
   double jsjweights[1] = {1.0};
   /** Recursively expand all weights (destroys weightVectorPtr): */
   RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< double * , SpaceDimension, 1 , SplineOrder, double * >
-        ::GetJacobianOfSpatialJacobian( weightVectorPtr, &jsjweights[0], weightsPointer , derivativeWeightsPointer );
+        ::GetJacobianOfSpatialJacobian( weightVectorPtr, &jsjweights[0], weightsPointer, derivativeWeightsPointer );
   }
 
   /** Compute the Jacobian of the spatial Jacobian jsj:
