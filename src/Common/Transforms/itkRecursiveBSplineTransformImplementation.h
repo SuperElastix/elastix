@@ -573,6 +573,53 @@ public:
   } // end GetJacobianOfSpatialHessian()
 
 
+  /** GetJacobianOfSpatialHessianPrePostMultiply recursive implementation. */
+  static inline void GetJacobianOfSpatialHessianPrePostMultiply(
+    InternalFloatType * & jsh_out,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
+    const double * hessianWeights1D,    // 2nd derivative of B-spline
+    const double * precomputedMultipliers, // see http://math.stackexchange.com/questions/40398/matrix-multiplication-efficiency
+    InternalFloatType * jsh )
+  {
+    const unsigned int helperDim   = OutputDimension - SpaceDimension;
+    const unsigned int helperDimW  = ( helperDim + 1 ) * ( helperDim + 2 ) / 2;
+    const unsigned int helperDimDW = helperDim + 1;
+
+    /** Create a temporary jsh. */
+    InternalFloatType tmp_jsh[ helperDimW + helperDimDW + 1 ];
+
+    for( unsigned int k = 0; k <= SplineOrder; ++k )
+    {
+      /** Store some weights. */
+      const double  w = weights1D[ k + HelperConstVariable ];
+      const double dw = derivativeWeights1D[ k + HelperConstVariable ];
+      const double hw = hessianWeights1D[ k + HelperConstVariable ];
+
+      /** Initialize the weights part of the temporary jsh. */
+      for( unsigned int n = 0; n < helperDimW; ++n )
+      {
+        tmp_jsh[ n ] = jsh[ n ] * w;
+      }
+
+      /** Initialize the derivative weights part. */
+      for( unsigned int n = 0; n < helperDimDW; ++n )
+      {
+        unsigned int nn = n * ( n + 1 ) / 2;
+        tmp_jsh[ n + helperDimW ] = jsh[ nn ] * dw;
+      }
+
+      /** Initialize the Hessian weights part. */
+      tmp_jsh[ helperDimW + helperDimDW ] = jsh[ 0 ] * hw;
+
+      /** Recurse. */
+      RecursiveBSplineTransformImplementation2< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
+        ::GetJacobianOfSpatialHessianPrePostMultiply( jsh_out, weights1D, derivativeWeights1D, hessianWeights1D,
+        precomputedMultipliers, tmp_jsh );
+    }
+  } // end GetJacobianOfSpatialHessianPrePostMultiply()
+
+
 }; // end class
 
 
@@ -856,6 +903,89 @@ public:
           accum += matrixProduct[ i * OutputDimension + k ] * directionCosines[ k * OutputDimension + j ];
         }
         jsh_out[ i * OutputDimension + j ] = accum;
+      }
+    }
+
+    /** Jump to the next non-empty matrix, skipping the zero matrices. */
+    jsh_out += OutputDimension * OutputDimension * OutputDimension;
+
+  } // end GetJacobianOfSpatialHessian()
+
+
+  /** GetJacobianOfSpatialHessian recursive implementation. */
+  static inline void GetJacobianOfSpatialHessianPrePostMultiply(
+    InternalFloatType * & jsh_out,
+    const double * weights1D,           // normal B-spline weights
+    const double * derivativeWeights1D, // 1st derivative of B-spline
+    const double * hessianWeights1D,    // 2nd derivative of B-spline
+    const double * precomputedMultipliers,
+    InternalFloatType * jsh )
+  {
+    const unsigned int UpperTriangleDimension = OutputDimension * ( OutputDimension + 1 ) / 2;
+    double jsh_tmp1[ UpperTriangleDimension ];
+    double jsh_tmp2[ UpperTriangleDimension ];
+
+    /** Copy the correct elements to the intermediate upper-triangular matrix.
+     *
+     * For dimensions 2 and 3 optimized code (loop unrolling) is provided. Smart compilers may
+     * not need that.
+     */
+    if( OutputDimension == 3 )
+    {
+      jsh_tmp1[ 0 ] = jsh[ 9 ];   jsh_tmp1[ 1 ] = jsh[ 8 ];   jsh_tmp1[ 3 ] = jsh[ 7 ];
+                                  jsh_tmp1[ 2 ] = jsh[ 5 ];   jsh_tmp1[ 4 ] = jsh[ 4 ];
+                                                              jsh_tmp1[ 5 ] = jsh[ 2 ];
+    }
+    else if( OutputDimension == 2 )
+    {
+      jsh_tmp1[ 0 ] = jsh[ 5 ];   jsh_tmp1[ 1 ] = jsh[ 4 ];
+                                  jsh_tmp1[ 2 ] = jsh[ 2 ];
+    }
+    else // the general case
+    {
+      unsigned int index = 0;
+      for( unsigned int j = 0; j < OutputDimension; ++j )
+      {
+        for( unsigned int i = 0 ; i <= j; ++i, ++index )
+        {
+          jsh_tmp1[ index ] = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
+        }
+      }
+    }
+
+    /** Perform the multiplication jsh * precomputedMultipliers = dc' * jsh * dc. */
+    for( unsigned int i = 0; i < UpperTriangleDimension; ++i )
+    {
+      double accum = jsh_tmp1[ 0 ] * precomputedMultipliers[ i ];
+      for( unsigned int j = 1; j < UpperTriangleDimension; ++j )
+      {
+        accum += jsh_tmp1[ j ] * precomputedMultipliers[ j * UpperTriangleDimension + i ];
+      }
+      jsh_tmp2[ i ] = accum;
+    }
+
+    /** Copy to the output. Here we construct the full matrix. */
+    if( OutputDimension == 3 )
+    {
+      jsh_out[ 0 ] = jsh_tmp2[ 0 ];   jsh_out[ 1 ] = jsh_tmp2[ 1 ];   jsh_out[ 2 ] = jsh_tmp2[ 3 ];
+      jsh_out[ 3 ] = jsh_tmp2[ 1 ];   jsh_out[ 4 ] = jsh_tmp2[ 2 ];   jsh_out[ 5 ] = jsh_tmp2[ 4 ];
+      jsh_out[ 6 ] = jsh_tmp2[ 3 ];   jsh_out[ 7 ] = jsh_tmp2[ 4 ];   jsh_out[ 8 ] = jsh_tmp2[ 5 ];
+    }
+    else if( OutputDimension == 2 )
+    {
+      jsh_out[ 0 ] = jsh_tmp2[ 0 ];   jsh_out[ 1 ] = jsh_tmp2[ 1 ];
+      jsh_out[ 2 ] = jsh_tmp2[ 1 ];   jsh_out[ 3 ] = jsh_tmp2[ 2 ];
+    }
+    else // the general case
+    {
+      unsigned int index = 0;
+      for( unsigned int j = 0; j < OutputDimension; ++j )
+      {
+        for( unsigned int i = 0 ; i <= j; ++i, ++index )
+        {
+          jsh_out[ j + i * OutputDimension ] = jsh_tmp2[ index ];
+          if( i != j ) jsh_out[ i + j * OutputDimension ] = jsh_tmp2[ index ];
+        }
       }
     }
 

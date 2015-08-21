@@ -329,6 +329,11 @@ protected:
   DirectionType                                       m_IndexToPoint;
   bool                                                m_PointToIndexMatrixIsDiagonal;
 
+  // for the multiplier
+  itkStaticConstMacro( MultiplierDimension, unsigned int, OutputSpaceDimension * ( OutputSpaceDimension + 1 ) / 2 );
+  typedef Matrix< ScalarType, MultiplierDimension, MultiplierDimension >     MultiplierType;
+  MultiplierType m_Multipliers;
+
   RegionType m_ValidRegion;
 
   /** Variables defining the interpolation support region. */

@@ -852,26 +852,17 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     // precompute the matrices Cii = A^T Eii A and Cij = A^T ( Eij + Eji ) A for all i <= j,
     // where Eij is the matrix with (i,j) entry 1 and all others 0.
     // Then A^T B A = sum_i sum_{j>=i} bij Cij.
-    matrix = this->m_PointToIndexMatrixTransposed2
-      * ( matrix * this->m_PointToIndexMatrix2 );
+    matrix = this->m_PointToIndexMatrixTransposed2 * ( matrix * this->m_PointToIndexMatrix2 );
 
     /** Copy the matrix to the right locations.
      * As this takes a considerable amount of time, here we assume that classes
      * using this result are aware that for a B-spline transformation there is
      * repetition in the JacobianOfSpatialHessian. We therefore only copy the
-     * unique part. If this is not desired, you can switch the define.
+     * unique part.
      */
-#if 1
     jsh[ mu ][ 0 ] = matrix;
-#else
-    for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-    {
-      jsh[ mu + dim * numberOfIndices ][ dim ] = matrix;
-    }
-#endif
   }
-
-#else
+#elif 0
   /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards).
    * This version also performs pre- and post-multiplication with the matrices dc^T and dc, respectively.
    * Other differences are that the complete matrix is returned, not just the upper triangle.
@@ -882,6 +873,24 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   double dummy[ 1 ] = { 1.0 };
   RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetJacobianOfSpatialHessian( jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dc, dummy );
+#else
+  /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards).
+   * This version also performs pre- and post-multiplication with the matrices dc^T and dc, respectively.
+   * Other differences are that the complete matrix is returned, not just the upper triangle.
+   * And the results are directly written to the final jsh, avoiding an additional copy.
+   *
+   * We here also use a matrix multiplication trick, from
+   * http://math.stackexchange.com/questions/40398/matrix-multiplication-efficiency
+   * The following matrices are pre-computed in this->UpdatePointIndexConversions():
+   *   Cii = A^T Eii A and Cij = A^T ( Eij + Eji ) A for all i <= j,
+   * where Eij is the matrix with (i,j) entry 1 and all others 0.
+   * Then A^T B A = sum_i sum_{j>=i} bij Cij.
+   */
+  double * jshPtr = jsh[ 0 ][ 0 ].GetVnlMatrix().data_block();
+  const double * multipliers = this->m_Multipliers.GetVnlMatrix().data_block();
+  double dummy[ 1 ] = { 1.0 };
+  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
+    ::GetJacobianOfSpatialHessianPrePostMultiply( jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, multipliers, dummy );
 #endif
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
