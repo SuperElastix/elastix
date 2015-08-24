@@ -1005,7 +1005,7 @@ RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrder >
   this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights1D, supportIndex );
   this->m_RecursiveBSplineWeightFunction->EvaluateSecondOrderDerivative( cindex, hessianWeights1D, supportIndex );
 
-//#if 1
+#if 0
   /** Allocate memory for jsh. If you want also the Jacobian of the spatial Jacobian and
    * the Jacobian, you need numberOfIndices * SpaceDimension plus numberOfIndices more elements.
    */
@@ -1064,18 +1064,20 @@ RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrder >
 #endif
   }
 
-//#else
-//  /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards).
-//   * This version also performs pre- and post-multiplication with the matrices dc^T and dc, respectively.
-//   * Other differences are that the complete matrix is returned, not just the upper triangle.
-//   * And the results are directly written to the final jsh, avoiding an additional copy.
-//   */
-//  double * jshPtr = jsh[ 0 ][ 0 ].GetVnlMatrix().data_block();
-//  const double * dc  = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
-//  double dummy[ 1 ] = { 1.0 };
-//  RecursiveBSplineTransformImplementation2< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
-//    ::GetJacobianOfSpatialHessian( jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dc, dummy );
-//#endif
+#else
+  /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards).
+   * This version also performs pre- and post-multiplication with the matrices dc^T and dc, respectively.
+   * Other differences are that the complete matrix is returned, not just the upper triangle.
+   * And the results are directly written to the final jsh, avoiding an additional copy.
+   */
+  double * jshPtr = jsh[ 0 ][ 0 ].GetVnlMatrix().data_block();
+  const double * dc  = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
+  double dummy[ 1 ] = { 1.0 };
+
+  /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards). */
+  RecursiveBSplineImplementation_GetJacobianOfSpatialHessian< double *, SpaceDimension, 1, SplineOrder, double * >
+    ::GetJacobianOfSpatialHessian( jshPtr,  dummy, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dc);
+#endif
 
 //  /** Setup support region needed for the nonZeroJacobianIndices. */
 //  RegionType supportRegion;

@@ -956,6 +956,51 @@ public:
       }
 
   } // end GetJacobianOfSpatialHessian()
+
+
+  /** GetSpatialJacobianOfSpatialHessian recursive implementation. */
+  static inline void GetJacobianOfSpatialHessian(
+    OutputPointerType & jsh_out,
+    const InputPointerType jsh,
+    const double * weights1D,
+    const double * derivativeWeights1D,
+    const double * hessianWeights1D,
+    const double * directionCosines)
+  {
+      const unsigned int helperDim  = jsh_length * ( jsh_length + 1 ) / 2;
+
+      /** Create a temporary jsh. */
+      OutputValueType tmp_jsh[ helperDim + jsh_length + 1 ];
+
+      for( unsigned int k = 0; k <= SplineOrder; ++k )
+      {
+        /** Store some weights. */
+        const double  w = weights1D[ k + HelperConstVariable ];
+        const double dw = derivativeWeights1D[ k + HelperConstVariable ];
+        const double hw = hessianWeights1D[ k + HelperConstVariable ];
+
+        /** Initialize the weights part of the temporary jsh. */
+        for( unsigned int n = 0; n < helperDim; ++n )
+        {
+          tmp_jsh[ n ] = jsh[ n ] * w;
+        }
+
+        /** Initialize the derivative weights part. */
+        for( unsigned int n = 0; n < jsh_length; ++n )
+        {
+          unsigned int nn = n * ( n + 1 ) / 2;
+          tmp_jsh[ n + helperDim ] = jsh[ nn ] * dw;
+        }
+
+        /** Initialize the Hessian weights part. */
+        tmp_jsh[ helperDim + jsh_length ] = jsh[ 0 ] * hw;
+
+          /** Recurse. */
+          RecursiveBSplineImplementation_GetJacobianOfSpatialHessian< OutputPointerType, SpaceDimension - 1, jsh_length +1 , SplineOrder, InputPointerType >
+                  ::GetJacobianOfSpatialHessian( jsh_out, tmp_jsh, weights1D, derivativeWeights1D, hessianWeights1D, directionCosines );
+      }
+
+  } // end GetJacobianOfSpatialHessian()
 }; // end class
 
 
@@ -1007,6 +1052,82 @@ public:
             ++jsh_out;
           }
         }
+    } // end GetJacobianOfSpatialHessian()
+
+
+    /** GetJacobianOfSpatialHessian recursive implementation, multiply with direction cosines. */
+    static inline void GetJacobianOfSpatialHessian(
+      OutputPointerType & jsh_out,
+      const InputPointerType jsh,
+      const double * weights1D,
+      const double * derivativeWeights1D,
+      const double * hessianWeights1D,
+      const double * directionCosines)
+    {
+      const unsigned int OutputDimension = jsh_length - 1;
+      double jsh_tmp[ OutputDimension * OutputDimension ];
+      double matrixProduct[ OutputDimension * OutputDimension ];
+
+      /** Copy the correct elements to the intermediate matrix.
+       * Note that in contrast to the other function, here we create the full matrix.
+       *
+       * For dimensions 2 and 3 optimized code (loop unrolling) is provided. Smart compilers may
+       * not need that.
+       */
+      if( OutputDimension == 3 )
+      {
+        jsh_tmp[ 0 ] = jsh[ 9 ];        jsh_tmp[ 1 ] = jsh[ 8 ];        jsh_tmp[ 2 ] = jsh[ 7 ];
+        jsh_tmp[ 3 ] = jsh_tmp[ 1 ];    jsh_tmp[ 4 ] = jsh[ 5 ];        jsh_tmp[ 5 ] = jsh[ 4 ];
+        jsh_tmp[ 6 ] = jsh_tmp[ 2 ];    jsh_tmp[ 7 ] = jsh_tmp[ 5 ];    jsh_tmp[ 8 ] = jsh[ 2 ];
+      }
+      else if( OutputDimension == 2 )
+      {
+        jsh_tmp[ 0 ] = jsh[ 5 ];        jsh_tmp[ 1 ] = jsh[ 4 ];
+        jsh_tmp[ 2 ] = jsh_tmp[ 1 ];    jsh_tmp[ 3 ] = jsh[ 2 ];
+      }
+      else // the general case
+      {
+        for( unsigned int j = 0; j < OutputDimension; ++j )
+        {
+          for( unsigned int i = 0 ; i <= j; ++i )
+          {
+            jsh_tmp[ j * OutputDimension + i ] = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
+            if( i != j ) jsh_tmp[ i * OutputDimension + j ] = jsh_tmp[ j * OutputDimension + i ];
+          }
+        }
+      }
+
+      // multiply directionCosines^t * H
+      for( unsigned int i = 0; i < OutputDimension; ++i ) // row
+      {
+        for( unsigned int j = 0; j < OutputDimension; ++j ) // column
+        {
+          double accum = directionCosines[ i ] * jsh_tmp[ j ];
+          for( unsigned int k = 1; k < OutputDimension; ++k )
+          {
+            accum += directionCosines[ k * OutputDimension + i ] * jsh_tmp[ k * OutputDimension + j ];
+          }
+          matrixProduct[ i * OutputDimension + j ] = accum;
+        }
+      }
+
+      // multiply matrixProduct * directionCosines
+      for( unsigned int i = 0; i < OutputDimension; ++i ) // row
+      {
+        for( unsigned int j = 0; j < OutputDimension; ++j ) // column
+        {
+          double accum = matrixProduct[ i * OutputDimension ] * directionCosines[ j ];
+          for( unsigned int k = 1; k < OutputDimension; ++k )
+          {
+            accum += matrixProduct[ i * OutputDimension + k ] * directionCosines[ k * OutputDimension + j ];
+          }
+          jsh_out[ i * OutputDimension + j ] = accum;
+        }
+      }
+
+      /** Jump to the next non-empty matrix, skipping the zero matrices. */
+      jsh_out += OutputDimension * OutputDimension * OutputDimension;
+
     } // end GetJacobianOfSpatialHessian()
 
 

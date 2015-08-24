@@ -176,8 +176,8 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
   }
 
   SpatialJacobianType E, dummy;
-  double * dummyPointer = dummy.GetVnlMatrix().data_block();
-  double * multiplierPointer = this->m_Multipliers.GetVnlMatrix().data_block();
+  TScalarType * dummyPointer = dummy.GetVnlMatrix().data_block();
+  TScalarType * multiplierPointer = this->m_Multipliers.GetVnlMatrix().data_block();
   unsigned int multiplierRow = 0;
   for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
