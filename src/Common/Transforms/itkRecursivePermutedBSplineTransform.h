@@ -164,15 +164,21 @@ public:
     JacobianOfSpatialJacobianType & jsj,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
-  /** Compute both the spatial Jacobian and the Jacobian of the
-   * spatial Jacobian of the transformation.
-   */
-  virtual void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp,
-    SpatialJacobianType & sj,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+//  /** Compute both the spatial Jacobian and the Jacobian of the
+//   * spatial Jacobian of the transformation.
+//   */
+//  virtual void GetJacobianOfSpatialJacobian(
+//    const InputPointType & ipp,
+//    SpatialJacobianType & sj,
+//    JacobianOfSpatialJacobianType & jsj,
+//    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
+  /** Compute the Jacobian of the spatial Jacobian of the transformation. */
+  virtual void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp,
+    JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    
 protected:
   /** Interpolation kernel. */
   typename KernelType::Pointer m_Kernel;

@@ -931,6 +931,11 @@ PCAMetric_ss< TFixedImage, TMovingImage >
     NonZeroJacobianIndicesType nzjis( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
 
     unsigned int dummyindex = 0;
+//    elxout << "# timepoints: " << this->m_G << std::endl;
+//    elxout << "# num single subs: " << this->m_NumSingleSubjects << std::endl;
+//    elxout << "# transform params per image: " << this->GetNumberOfParameters() / this->m_G << std::endl;
+
+
     /** Second loop over fixed image samples. */
     for ( unsigned int pixelIndex = this->m_PixelStartIndex[ threadId ]; pixelIndex < (this->m_PixelStartIndex[ threadId ]+this->m_PCAMetricssGetSamplesPerThreadVariables[ threadId ].st_ApprovedSamples.size()); ++pixelIndex )
     {

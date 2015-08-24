@@ -775,16 +775,12 @@ public:
 }; // end class
 
 } // end namespace itk
-
-
-
-
 /** \class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian
  *
  * \brief Define general case
  */
 
-template< class OutputPointerType, unsigned int SpaceDimension, unsigned int JSJLength, unsigned int SplineOrder, class InputPointerType >
+template< class OutputPointerType, unsigned int SpaceDimension, unsigned int jsj_length, unsigned int SplineOrder, class InputPointerType >
 class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian
 {
 public:
@@ -803,25 +799,51 @@ public:
     const double * derivativeWeights1D )
   {
     /** Create a temporary jsj.*/
-    OutputValueType  tmp_jsj[ JSJLength + 1 ];
+    OutputValueType  tmp_jsj[ jsj_length + 1];
 
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      // Multiply by the weights
-      tmp_jsj[ 0 ] = jsj[ 0 ] * weights1D[ k + HelperConstVariable ];
-      // Multiply by the derivative weights
-      tmp_jsj[ 1 ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
-      for( unsigned int n = 1; n < JSJLength; ++n )
+      for( unsigned int n = 0; n < jsj_length; ++n )
       {
-        tmp_jsj[ n+1 ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
-      };
+        tmp_jsj[ n ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
+      }
 
-      RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, SpaceDimension - 1, JSJLength + 1, SplineOrder, InputPointerType >
-        ::GetJacobianOfSpatialJacobian( jsj_out, &tmp_jsj[ 0 ], weights1D, derivativeWeights1D );
+      tmp_jsj[ jsj_length ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
+      /** Recurse. */
+      RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, SpaceDimension - 1, jsj_length +1 , SplineOrder, InputPointerType >
+        ::GetJacobianOfSpatialJacobian( jsj_out, tmp_jsj, weights1D , derivativeWeights1D );
     }
   } // end GetJacobianOfSpatialJacobian()
+
+  /** GetJacobianOfSpatialJacobian recursive implementation with direction cosines. */
+  static inline void GetJacobianOfSpatialJacobian(
+    OutputPointerType & jsj_out,
+    const InputPointerType jsj,
+    const double * weights1D,
+    const double * derivativeWeights1D,
+    const double * directionCosines )
+  {
+      /** Create a temporary jsj.*/
+      OutputValueType  tmp_jsj[ jsj_length + 1];
+
+      for( unsigned int k = 0; k <= SplineOrder; ++k )
+      {
+
+        for( unsigned int n = 0; n < jsj_length; ++n )
+        {
+          tmp_jsj[ n ] = jsj[ n ] * weights1D[ k + HelperConstVariable ];
+        }
+
+        tmp_jsj[ jsj_length ] = jsj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
+
+        /** Recurse. */
+        RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, SpaceDimension - 1, jsj_length +1 , SplineOrder, InputPointerType >
+          ::GetJacobianOfSpatialJacobian( jsj_out, tmp_jsj, weights1D , derivativeWeights1D, directionCosines );
+      }
+  } // end GetJacobianOfSpatialJacobian()
+
 }; // end class
 
 
@@ -830,8 +852,8 @@ public:
  * \brief Define the end case for SpaceDimension = 0.
  */
 
-template< class OutputPointerType, unsigned int JSJLength, unsigned int SplineOrder, class InputPointerType >
-class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, 0, JSJLength, SplineOrder, InputPointerType >
+template< class OutputPointerType, unsigned int jsj_length, unsigned int SplineOrder, class InputPointerType >
+class RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< OutputPointerType, 0, jsj_length, SplineOrder, InputPointerType >
 {
 public:
   /** GetSpatialJacobian recursive implementation. */
@@ -841,13 +863,154 @@ public:
     const double * weights1D,
     const double * derivativeWeights1D )
   {
-    InputPointerType jsj_iterator = jsj;
-    for( unsigned int i = 0 ; i < JSJLength; ++i )
+    const unsigned int OutputDimension = jsj_length - 1;
+    for (int i = 0; i < OutputDimension; ++i )
     {
-      *jsj_out = *jsj_iterator;
-      ++jsj_out; ++jsj_iterator;
+        *jsj_out = jsj[ OutputDimension - i ];
+        ++jsj_out;
     }
   } // end GetJacobianOfSpatialJacobian()
+
+
+  static inline void GetJacobianOfSpatialJacobian(
+    OutputPointerType & jsj_out,
+    const InputPointerType jsj,
+    const double * weights1D,
+    const double * derivativeWeights1D,
+    const double * directionCosines)
+  {
+      /** Copy the correct elements to the output.
+       * Note that the first element jsj[0] is the normal Jacobian. We ignore it for now.
+       * Also note that the received order is [dz, dy, dx] and that we return [dx, dy, dz].
+       * Below we use the fact that only one row of the jsj matrix is filled.
+       */
+      const int OutputDimension = jsj_length - 1;
+      for( unsigned int j = 0; j < OutputDimension; ++j )
+      {
+        *jsj_out = jsj[ OutputDimension ] * directionCosines[ j ];
+        for( unsigned int k = 1; k < OutputDimension; ++k )
+        {
+          *jsj_out += jsj[ OutputDimension - k ] * directionCosines[ k * OutputDimension + j ];
+        }
+        ++jsj_out;
+      }
+  } // end GetJacobianOfSpatialJacobian()
+
+}; // end class
+
+/** \class RecursiveBSplineImplementation_GetJacobianOfSpatialHessian
+ *
+ * \brief Define general case
+ */
+
+template< class OutputPointerType, unsigned int SpaceDimension, unsigned int jsh_length, unsigned int SplineOrder, class InputPointerType >
+class RecursiveBSplineImplementation_GetJacobianOfSpatialHessian
+{
+public:
+  typedef typename std::iterator_traits< InputPointerType >::value_type OutputValueType; //\todo: is this the proper use of std::iterator_traits? Preferably we use 'using std::iterator_traits', to allow custom template specializations.
+  typedef OutputValueType * RecursiveOutputPointerType;
+
+  /** Helper constant variable. */
+  itkStaticConstMacro( HelperConstVariable, unsigned int,
+    ( SpaceDimension - 1 ) * ( SplineOrder + 1 ) );
+
+  /** GetSpatialJacobianOfSpatialHessian recursive implementation. */
+  static inline void GetJacobianOfSpatialHessian(
+    OutputPointerType & jsh_out,
+    const InputPointerType jsh,
+    const double * weights1D,
+    const double * derivativeWeights1D,
+    const double * hessianWeights1D)
+  {
+      const unsigned int helperDim  = jsh_length * ( jsh_length + 1 ) / 2;
+
+      /** Create a temporary jsh. */
+      OutputValueType tmp_jsh[ helperDim + jsh_length + 1 ];
+
+      for( unsigned int k = 0; k <= SplineOrder; ++k )
+      {
+        /** Store some weights. */
+        const double  w = weights1D[ k + HelperConstVariable ];
+        const double dw = derivativeWeights1D[ k + HelperConstVariable ];
+        const double hw = hessianWeights1D[ k + HelperConstVariable ];
+
+        /** Initialize the weights part of the temporary jsh. */
+        for( unsigned int n = 0; n < helperDim; ++n )
+        {
+          tmp_jsh[ n ] = jsh[ n ] * w;
+        }
+
+        /** Initialize the derivative weights part. */
+        for( unsigned int n = 0; n < jsh_length; ++n )
+        {
+          unsigned int nn = n * ( n + 1 ) / 2;
+          tmp_jsh[ n + helperDim ] = jsh[ nn ] * dw;
+        }
+
+        /** Initialize the Hessian weights part. */
+        tmp_jsh[ helperDim + jsh_length ] = jsh[ 0 ] * hw;
+
+          /** Recurse. */
+          RecursiveBSplineImplementation_GetJacobianOfSpatialHessian< OutputPointerType, SpaceDimension - 1, jsh_length +1 , SplineOrder, InputPointerType >
+                  ::GetJacobianOfSpatialHessian( jsh_out, tmp_jsh, weights1D, derivativeWeights1D, hessianWeights1D );
+      }
+
+  } // end GetJacobianOfSpatialHessian()
+}; // end class
+
+
+/** \class RecursiveBSplineImplementation_GetJacobianOfSpatialHessian
+ *
+ * \brief Define the end case for SpaceDimension = 0.
+ */
+
+template< class OutputPointerType, unsigned int jsh_length, unsigned int SplineOrder, class InputPointerType >
+class RecursiveBSplineImplementation_GetJacobianOfSpatialHessian< OutputPointerType, 0, jsh_length, SplineOrder, InputPointerType >
+{
+public:
+    /** GetJacobianOfSpatialHessian recursive implementation. */
+    static inline void GetJacobianOfSpatialHessian(
+      OutputPointerType & jsh_out,
+      const InputPointerType jsh,
+      const double * weights1D,
+      const double * derivativeWeights1D,
+      const double * hessianWeights1D)
+    {
+      /** Copy the correct elements to the output.
+       * Currently only the upper triangle part. Note that the order of derivatives is swapped
+       * (last dimension first in jsh):
+       * i and j are the matrix indices into the outputted Hessian matrix (of which we only store the upper triangular part).
+       * Note that jsh contains the upper triangular part of a matrix of size (OutputDimension+1) x (OutputDimension+1)
+       */
+      // First two optimized version (they also visualize a bit what happens)
+      //
+      const unsigned int OutputDimension = jsh_length - 1;
+      if( OutputDimension == 3 )
+      {
+        jsh_out[ 0 ] = jsh[ 9 ];    jsh_out[ 1 ] = jsh[ 8 ];    jsh_out[ 3 ] = jsh[ 7 ];
+                                    jsh_out[ 2 ] = jsh[ 5 ];    jsh_out[ 4 ] = jsh[ 4 ];
+                                                                jsh_out[ 5 ] = jsh[ 2 ];
+        jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
+      }
+      else if( OutputDimension == 2 )
+      {
+        jsh_out[ 0 ] = jsh[ 5 ];    jsh_out[ 1 ] = jsh[ 4 ];
+                                    jsh_out[ 2 ] = jsh[ 2 ];
+        jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
+      }
+      else // this is general (if a compiler sufficiently unrolls loops it should end up at the same as the above optimized cases. Unfortunately, compilers don't seem to be that smart)
+        for( unsigned int j = 0; j < OutputDimension; ++j )
+        {
+          for( unsigned int i = 0 ; i <= j; ++i )
+          {
+            *jsh_out = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
+            ++jsh_out;
+          }
+        }
+    } // end GetJacobianOfSpatialHessian()
+
+
+}; // end class
 
 
 }; // end class
