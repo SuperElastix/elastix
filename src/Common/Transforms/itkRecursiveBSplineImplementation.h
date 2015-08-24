@@ -1012,10 +1012,6 @@ public:
 
 }; // end class
 
-
-}; // end class
-
-
 #undef FORCEINLINE // remove temporary preprocessor definition
 
 #endif /* __itkRecursiveBSplineImplementation_h */

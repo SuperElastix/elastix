@@ -831,30 +831,13 @@ RecursivePermutedBSplineTransform< TScalarType, NDimensions, VSplineOrder >
   this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
   this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights1D, supportIndex );
 
-<<<<<<< .mine
   /** Allocate a vector of expanded weigths. On the stack instead of heap is faster. */
   double jacobianOfSpatialJacobian[ SpaceDimension * numberOfIndices ];
   double * jsjPtr = &jacobianOfSpatialJacobian[0];
   double dummy[ 1 ] = { 1.0 };
-=======
-  /** Allocate a vector of expanded weights. On the stack instead of heap is faster. */
-  const unsigned int numberOfWeightsPerDimension
-    = RecursiveBSplineImplementation_numberOfPointsInSupportRegion< SpaceDimension, SplineOrder >
-    ::NumberOfPointsInSupportRegion ;
-  double weightVector[ ( SpaceDimension + 1 ) * numberOfWeightsPerDimension ];
->>>>>>> .r5094
 
 #if 0
   /** Recursively expand all weights (destroys weightVectorPtr): */
-<<<<<<< .mine
-  RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< double *, SpaceDimension, 1, SplineOrder, double * >
-        ::GetJacobianOfSpatialJacobian( jsjPtr, dummy, weightsPointer, derivativeWeightsPointer );
-=======
-  RecursiveBSplineImplementation_GetJacobianOfSpatialJacobian< double * , SpaceDimension, 1 , SplineOrder, double * >
-        ::GetJacobianOfSpatialJacobian( weightVectorPtr, &jsjweights[0], weightsPointer, derivativeWeightsPointer );
-  }
->>>>>>> .r5094
-
   /** Compute the Jacobian of the spatial Jacobian jsj:
    *    d/dmu dT_{dim} / dx_i = weights.
    */

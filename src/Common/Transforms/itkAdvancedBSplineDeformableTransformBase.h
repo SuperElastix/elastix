@@ -330,7 +330,7 @@ protected:
   bool                                                m_PointToIndexMatrixIsDiagonal;
 
   // for the multiplier
-  itkStaticConstMacro( MultiplierDimension, unsigned int, OutputSpaceDimension * ( OutputSpaceDimension + 1 ) / 2 );
+  itkStaticConstMacro( MultiplierDimension, unsigned int, SpaceDimension * ( SpaceDimension + 1 ) / 2 );
   typedef Matrix< ScalarType, MultiplierDimension, MultiplierDimension >     MultiplierType;
   MultiplierType m_Multipliers;
 
