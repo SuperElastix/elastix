@@ -22,20 +22,20 @@
 
 namespace itk
 {
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::RegisterOneFactory()
 {
-  typedef GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions > GPUFilterFactoryType;
+  typedef GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions > GPUFilterFactoryType;
   typename GPUFilterFactoryType::Pointer factory = GPUFilterFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
-GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::GPUBSplineDecompositionImageFilterFactory2()
 {
   this->RegisterAll();
@@ -43,9 +43,9 @@ GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -55,9 +55,9 @@ GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -67,9 +67,9 @@ GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration

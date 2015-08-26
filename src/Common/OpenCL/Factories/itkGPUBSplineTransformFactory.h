@@ -33,13 +33,13 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimentions >
-class GPUBSplineTransformFactory2 : public GPUObjectFactoryBase< NDimentions >
+template< typename NDimensions >
+class GPUBSplineTransformFactory2 : public GPUObjectFactoryBase< NDimensions >
 {
 public:
 
   typedef GPUBSplineTransformFactory2         Self;
-  typedef GPUObjectFactoryBase< NDimentions > Superclass;
+  typedef GPUObjectFactoryBase< NDimensions > Superclass;
   typedef SmartPointer< Self >                Pointer;
   typedef SmartPointer< const Self >          ConstPointer;
 

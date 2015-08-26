@@ -60,7 +60,7 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimentions,
+template< typename TTypeList, typename NDimensions,
 typename TCompositeTransform, typename TOutputTransformPrecisionType >
 class GPUCompositeTransformCopier : public Object
 {
@@ -97,7 +97,7 @@ public:
   typedef typename GPUCompositeTransformType::Pointer GPUCompositeTransformPointer;
 
   /** Type definitions for the transform copier. */
-  typedef GPUTransformCopier< TTypeList, NDimentions, CPUTransformType, GPUScalarType >
+  typedef GPUTransformCopier< TTypeList, NDimensions, CPUTransformType, GPUScalarType >
     GPUTransformCopierType;
   typedef typename GPUTransformCopierType::Pointer             GPUTransformCopierPointer;
   typedef typename GPUTransformCopierType::GPUTransformPointer GPUOutputTransformPointer;

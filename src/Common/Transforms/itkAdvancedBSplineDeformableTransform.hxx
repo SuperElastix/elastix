@@ -86,7 +86,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
   // Make sure the parameters pointer is not NULL after construction.
   this->m_InputParametersPointer = &( this->m_InternalParametersBuffer );
 
-  // Initialize coeffient images
+  // Initialize coefficient images
   for( unsigned int j = 0; j < SpaceDimension; j++ )
   {
     this->m_WrappedImage[ j ] = ImageType::New();
@@ -288,7 +288,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
       // populate the indices array
       indices[ counter ] = &( iterator[ 0 ].Value() ) - basePointer;
 
-      // multiply weigth with coefficient to compute displacement
+      // multiply weight with coefficient to compute displacement
       for( unsigned int j = 0; j < SpaceDimension; j++ )
       {
         outputPoint[ j ] += static_cast< ScalarType >(
@@ -414,7 +414,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
 
-  /** Compute the derivative weights. */
+  /** Compute the weights. */
   IndexType supportIndex;
   this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
   this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );

@@ -23,8 +23,8 @@
 namespace itk
 {
 //------------------------------------------------------------------------------
-template<  typename TTypeList, typename NDimentions, typename TCompositeTransform, typename TOutputTransformPrecisionType >
-GPUCompositeTransformCopier< TTypeList, NDimentions, TCompositeTransform, TOutputTransformPrecisionType >
+template<  typename TTypeList, typename NDimensions, typename TCompositeTransform, typename TOutputTransformPrecisionType >
+GPUCompositeTransformCopier< TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType >
 ::GPUCompositeTransformCopier()
 {
   this->m_InputTransform        = NULL;
@@ -36,9 +36,9 @@ GPUCompositeTransformCopier< TTypeList, NDimentions, TCompositeTransform, TOutpu
 
 
 //------------------------------------------------------------------------------
-template<  typename TTypeList, typename NDimentions, typename TCompositeTransform, typename TOutputTransformPrecisionType >
+template<  typename TTypeList, typename NDimensions, typename TCompositeTransform, typename TOutputTransformPrecisionType >
 void
-GPUCompositeTransformCopier< TTypeList, NDimentions, TCompositeTransform, TOutputTransformPrecisionType >
+GPUCompositeTransformCopier< TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType >
 ::Update( void )
 {
   if( !this->m_InputTransform )
@@ -82,9 +82,9 @@ GPUCompositeTransformCopier< TTypeList, NDimentions, TCompositeTransform, TOutpu
 
 
 //------------------------------------------------------------------------------
-template<  typename TTypeList, typename NDimentions, typename TCompositeTransform, typename TOutputTransformPrecisionType >
+template<  typename TTypeList, typename NDimensions, typename TCompositeTransform, typename TOutputTransformPrecisionType >
 void
-GPUCompositeTransformCopier< TTypeList, NDimentions, TCompositeTransform, TOutputTransformPrecisionType >
+GPUCompositeTransformCopier< TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );

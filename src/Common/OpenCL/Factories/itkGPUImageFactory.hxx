@@ -22,29 +22,29 @@
 
 namespace itk
 {
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPUImageFactory2< TTypeList, NDimentions >
+GPUImageFactory2< TTypeList, NDimensions >
 ::RegisterOneFactory()
 {
-  typedef GPUImageFactory2< TTypeList, NDimentions > GPUImageFactoryType;
+  typedef GPUImageFactory2< TTypeList, NDimensions > GPUImageFactoryType;
   typename GPUImageFactoryType::Pointer factory = GPUImageFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
-GPUImageFactory2< TTypeList, NDimentions >::GPUImageFactory2()
+template< typename TTypeList, typename NDimensions >
+GPUImageFactory2< TTypeList, NDimensions >::GPUImageFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPUImageFactory2< TTypeList, NDimentions >
+GPUImageFactory2< TTypeList, NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -63,9 +63,9 @@ GPUImageFactory2< TTypeList, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPUImageFactory2< TTypeList, NDimentions >
+GPUImageFactory2< TTypeList, NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -84,9 +84,9 @@ GPUImageFactory2< TTypeList, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPUImageFactory2< TTypeList, NDimentions >
+GPUImageFactory2< TTypeList, NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration

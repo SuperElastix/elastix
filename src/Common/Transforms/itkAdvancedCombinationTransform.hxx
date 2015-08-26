@@ -159,7 +159,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
     if( n == 0 )
     {
       // Perform const_cast, we don't like it, but there is no other option
-      // with current ITK4 itk::MultiTransform::GetNthTransform() const desing
+      // with current ITK4 itk::MultiTransform::GetNthTransform() const design
       const TransformType * currentTransformCasted
         = dynamic_cast< const TransformType * >( currentTransform.GetPointer() );
       TransformType * currentTransformConstCasted

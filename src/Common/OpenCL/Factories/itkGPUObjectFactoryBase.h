@@ -36,7 +36,7 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename NDimentions >
+template< typename NDimensions >
 class GPUObjectFactoryBase : public ObjectFactoryBase
 {
 public:
@@ -53,9 +53,9 @@ public:
   itkTypeMacro( GPUObjectFactoryBase, ObjectFactoryBase );
 
   /** Supported dimensions. */
-  itkStaticConstMacro( Support1D, bool, NDimentions::Support1D );
-  itkStaticConstMacro( Support2D, bool, NDimentions::Support2D );
-  itkStaticConstMacro( Support3D, bool, NDimentions::Support3D );
+  itkStaticConstMacro( Support1D, bool, NDimensions::Support1D );
+  itkStaticConstMacro( Support2D, bool, NDimensions::Support2D );
+  itkStaticConstMacro( Support3D, bool, NDimensions::Support3D );
 
   /** Main register method. This method is usually called by the derived
    * class in the constructor or after UnRegisterAllFactories() was called. */

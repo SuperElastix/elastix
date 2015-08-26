@@ -140,7 +140,7 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 ::UpdatePointIndexConversions( void )
 {
   DirectionType scale;
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     scale[ i ][ i ] = this->m_GridSpacing[ i ];
   }
@@ -423,8 +423,8 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 
   for( unsigned int j = 0; j < SpaceDimension; j++ )
   {
-    this->m_WrappedImage[ j ]->GetPixelContainer()->
-    SetImportPointer( dataPointer, numberOfPixels );
+    this->m_WrappedImage[ j ]->GetPixelContainer()
+      ->SetImportPointer( dataPointer, numberOfPixels );
     dataPointer                   += numberOfPixels;
     this->m_CoefficientImages[ j ] = this->m_WrappedImage[ j ];
   }

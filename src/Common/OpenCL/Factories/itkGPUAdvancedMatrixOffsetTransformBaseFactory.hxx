@@ -22,28 +22,28 @@
 
 namespace itk
 {
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimentions >::RegisterOneFactory()
+GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >::RegisterOneFactory()
 {
-  typedef GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimentions > GPUTransformFactoryType;
+  typedef GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions > GPUTransformFactoryType;
   typename GPUTransformFactoryType::Pointer factory = GPUTransformFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimentions >::GPUAdvancedMatrixOffsetTransformBaseFactory2()
+template< typename NDimensions >
+GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >::GPUAdvancedMatrixOffsetTransformBaseFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimentions >
+GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -53,9 +53,9 @@ GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimentions >
+GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -65,9 +65,9 @@ GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimentions >
+GPUAdvancedMatrixOffsetTransformBaseFactory2< NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration

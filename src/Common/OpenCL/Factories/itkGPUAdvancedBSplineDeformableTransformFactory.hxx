@@ -22,28 +22,28 @@
 
 namespace itk
 {
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedBSplineDeformableTransformFactory2< NDimentions >::RegisterOneFactory()
+GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >::RegisterOneFactory()
 {
-  typedef GPUAdvancedBSplineDeformableTransformFactory2< NDimentions > GPUTransformFactoryType;
+  typedef GPUAdvancedBSplineDeformableTransformFactory2< NDimensions > GPUTransformFactoryType;
   typename GPUTransformFactoryType::Pointer factory = GPUTransformFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
-GPUAdvancedBSplineDeformableTransformFactory2< NDimentions >::GPUAdvancedBSplineDeformableTransformFactory2()
+template< typename NDimensions >
+GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >::GPUAdvancedBSplineDeformableTransformFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedBSplineDeformableTransformFactory2< NDimentions >
+GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -53,9 +53,9 @@ GPUAdvancedBSplineDeformableTransformFactory2< NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedBSplineDeformableTransformFactory2< NDimentions >
+GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -65,9 +65,9 @@ GPUAdvancedBSplineDeformableTransformFactory2< NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedBSplineDeformableTransformFactory2< NDimentions >
+GPUAdvancedBSplineDeformableTransformFactory2< NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration

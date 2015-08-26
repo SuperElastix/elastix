@@ -22,20 +22,20 @@
 
 namespace itk
 {
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::RegisterOneFactory()
 {
-  typedef GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions > GPUFilterFactoryType;
+  typedef GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions > GPUFilterFactoryType;
   typename GPUFilterFactoryType::Pointer factory = GPUFilterFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
-GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::GPUCastImageFilterFactory2()
 {
   this->RegisterAll();
@@ -43,9 +43,9 @@ GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -84,9 +84,9 @@ GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -125,9 +125,9 @@ GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPUCastImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration

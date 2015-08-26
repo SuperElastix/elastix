@@ -61,7 +61,7 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimentions,
+template< typename TTypeList, typename NDimensions,
 typename TInterpolator, typename TOutputCoordRep >
 class GPUInterpolatorCopier : public Object
 {

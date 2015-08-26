@@ -44,8 +44,8 @@
 namespace itk
 {
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::GPUTransformCopier()
 {
   this->m_InputTransform        = NULL;
@@ -56,9 +56,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 void
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::Update( void )
 {
   if( !this->m_InputTransform )
@@ -90,9 +90,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 bool
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CopyTransform(
   const CPUTransformConstPointer & fromTransform,
   GPUTransformPointer & toTransform )
@@ -208,9 +208,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 void
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CastCopyTransformParameters(
   const CPUTransformConstPointer & fromTransform,
   GPUTransformPointer & toTransform )
@@ -231,9 +231,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 void
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CastCopyParameters( const CPUParametersType & from, GPUParametersType & to )
 {
   if( from.GetSize() == 0 )
@@ -251,9 +251,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 bool
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CopyBSplineTransform(
   const CPUTransformConstPointer & fromTransform,
   GPUTransformPointer & toTransform )
@@ -273,7 +273,7 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
   // We also have to register GPUImageFactory because
   // GPUBSplineTransform using m_Coefficients as ITK images
   // inside the implementation, therefore we define GPUImageFactory pointer
-  typedef itk::GPUImageFactory2< TTypeList, NDimentions > GPUImageFactoryType;
+  typedef itk::GPUImageFactory2< TTypeList, NDimensions > GPUImageFactoryType;
   typedef typename GPUImageFactoryType::Pointer           GPUImageFactoryPointer;
 
   // Try BSpline Order 3 first
@@ -415,9 +415,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 bool
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CopyEuler2DTransform(
   const CPUTransformConstPointer & fromTransform,
   GPUTransformPointer & toTransform,
@@ -454,9 +454,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 bool
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CopyEuler3DTransform(
   const CPUTransformConstPointer & fromTransform,
   GPUTransformPointer & toTransform,
@@ -493,9 +493,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 bool
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CopySimilarity2DTransform(
   const CPUTransformConstPointer & fromTransform,
   GPUTransformPointer & toTransform,
@@ -532,9 +532,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 bool
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CopySimilarity3DTransform(
   const CPUTransformConstPointer & fromTransform,
   GPUTransformPointer & toTransform,
@@ -571,9 +571,9 @@ GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisio
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
 void
-GPUTransformCopier< TTypeList, NDimentions, TTransform, TOutputTransformPrecisionType >
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );

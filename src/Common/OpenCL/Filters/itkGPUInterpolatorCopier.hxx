@@ -36,8 +36,8 @@
 namespace itk
 {
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TInterpolator, typename TOutputCoordRep >
-GPUInterpolatorCopier< TTypeList, NDimentions, TInterpolator, TOutputCoordRep >
+template< typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep >
+GPUInterpolatorCopier< TTypeList, NDimensions, TInterpolator, TOutputCoordRep >
 ::GPUInterpolatorCopier()
 {
   this->m_InputInterpolator     = NULL;
@@ -49,9 +49,9 @@ GPUInterpolatorCopier< TTypeList, NDimentions, TInterpolator, TOutputCoordRep >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TInterpolator, typename TOutputCoordRep >
+template< typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep >
 void
-GPUInterpolatorCopier< TTypeList, NDimentions, TInterpolator, TOutputCoordRep >
+GPUInterpolatorCopier< TTypeList, NDimensions, TInterpolator, TOutputCoordRep >
 ::Update( void )
 {
   if( !this->m_InputInterpolator )
@@ -134,7 +134,7 @@ GPUInterpolatorCopier< TTypeList, NDimentions, TInterpolator, TOutputCoordRep >
       {
         // Register image factory because BSplineInterpolateImageFunction
         // using m_Coefficients as ITK images inside the implementation
-        typedef itk::GPUImageFactory2< TTypeList, NDimentions > GPUImageFactoryType;
+        typedef itk::GPUImageFactory2< TTypeList, NDimensions > GPUImageFactoryType;
         typedef typename GPUImageFactoryType::Pointer           GPUImageFactoryPointer;
         GPUImageFactoryPointer imageFactory = GPUImageFactoryType::New();
         itk::ObjectFactoryBase::RegisterFactory( imageFactory );
@@ -173,9 +173,9 @@ GPUInterpolatorCopier< TTypeList, NDimentions, TInterpolator, TOutputCoordRep >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TInterpolator, typename TOutputCoordRep >
+template< typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep >
 void
-GPUInterpolatorCopier< TTypeList, NDimentions, TInterpolator, TOutputCoordRep >
+GPUInterpolatorCopier< TTypeList, NDimensions, TInterpolator, TOutputCoordRep >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );

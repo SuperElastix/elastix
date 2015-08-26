@@ -22,12 +22,12 @@
 
 namespace itk
 {
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::RegisterOneFactory()
 {
-  typedef GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions > GPUInterpolateFactoryType;
+  typedef GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions > GPUInterpolateFactoryType;
   typename GPUInterpolateFactoryType::Pointer factory = GPUInterpolateFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
@@ -35,8 +35,8 @@ GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions >
 
 //------------------------------------------------------------------------------
 
-template< typename TTypeList, typename NDimentions >
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+template< typename TTypeList, typename NDimensions >
+GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::GPUNearestNeighborInterpolateImageFunctionFactory2()
 {
   this->RegisterAll();
@@ -44,9 +44,9 @@ GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -65,9 +65,9 @@ GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -86,9 +86,9 @@ GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+GPUNearestNeighborInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration

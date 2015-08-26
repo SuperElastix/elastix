@@ -58,7 +58,7 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimentions,
+template< typename TTypeList, typename NDimensions,
 typename TTransform, typename TOutputTransformPrecisionType >
 class GPUTransformCopier : public Object
 {
