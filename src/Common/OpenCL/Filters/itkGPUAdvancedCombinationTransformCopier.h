@@ -59,7 +59,7 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimentions,
+template< typename TTypeList, typename NDimensions,
 typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 class GPUAdvancedCombinationTransformCopier : public Object
 {
@@ -85,8 +85,15 @@ public:
 
   /** CPU combo transform class typedefs. */
   typedef typename CPUComboTransformType::ConstPointer                 CPUComboTransformConstPointer;
+  typedef typename CPUComboTransformType::CurrentTransformType         CPUCurrentTransformType;
+  typedef typename CPUComboTransformType::CurrentTransformPointer      CPUCurrentTransformPointer;
   typedef typename CPUComboTransformType::CurrentTransformConstPointer CPUCurrentTransformConstPointer;
+  typedef typename CPUComboTransformType::InitialTransformType         CPUInitialTransformType;
+  typedef typename CPUComboTransformType::InitialTransformPointer      CPUInitialTransformPointer;
   typedef typename CPUComboTransformType::InitialTransformConstPointer CPUInitialTransformConstPointer;
+  typedef typename CPUComboTransformType::TransformType                TransformType;             // itk::Transform
+  typedef typename CPUComboTransformType::TransformTypePointer         TransformTypePointer;      // itk::Transform
+  typedef typename CPUComboTransformType::TransformTypeConstPointer    TransformTypeConstPointer; // itk::Transform
   typedef typename CPUComboTransformType::ScalarType                   CPUScalarType;
 
   /** CPU advanced transform class typedefs. */
@@ -140,7 +147,7 @@ protected:
   virtual void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
 
   /** Method to copy the transforms parameters. */
-  bool CopyTransform(
+  bool CopyToCurrentTransform(
     const CPUCurrentTransformConstPointer & fromTransform,
     GPUComboTransformPointer & toTransform );
 

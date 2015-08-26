@@ -44,8 +44,8 @@
 namespace itk
 {
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::GPUAdvancedCombinationTransformCopier()
 {
   this->m_InputTransform        = NULL;
@@ -56,85 +56,66 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 void
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::Update( void )
 {
   if( !this->m_InputTransform )
   {
-    itkExceptionMacro( << "Input AdvancedCombinationTransform has not been connected" );
+    itkExceptionMacro( << "ERROR: m_InputTransform not set" );
     return;
   }
 
   // Update only if the input AdvancedCombinationTransform has been modified
   const ModifiedTimeType t = this->m_InputTransform->GetMTime();
+  if( t <= this->m_InternalTransformTime ) return; // No need to update
 
-  if( t == this->m_InternalTransformTime )
+  // Cache the timestamp
+  this->m_InternalTransformTime = t;
+
+  // Allocate the output GPU combo transform
+  GPUComboTransformPointer comboTransformGPU = GPUComboTransformType::New();
+  this->m_Output = comboTransformGPU;
+
+  // Initialize the current transforms
+  CPUCurrentTransformConstPointer currentTransformCPU;
+  GPUComboTransformPointer currentTransformGPU = comboTransformGPU;
+
+  // Loop over all sub-transforms
+  const SizeValueType numberOfTransforms = this->m_InputTransform->GetNumberOfTransforms();
+  for( SizeValueType i = 0; i < numberOfTransforms; ++i )
   {
-    return; // No need to update
-  }
-  else if( t > this->m_InternalTransformTime )
-  {
-    // Cache the timestamp
-    this->m_InternalTransformTime = t;
+    // Get the current CPU transform of type itk::Transform
+    TransformTypeConstPointer itkCurrentTransform = this->m_InputTransform->GetNthTransform( i );
 
-    // Allocate the transform
-    GPUComboTransformPointer currentTransform;
-    GPUComboTransformPointer initialTransform;
+    // Cast to advanced transform type, no checking needed
+    currentTransformCPU = dynamic_cast< const CPUCurrentTransformType * >( itkCurrentTransform.GetPointer() );
 
-    GPUComboTransformPointer tmpTransform = GPUComboTransformType::New();
-    initialTransform = tmpTransform;
-    this->m_Output   = tmpTransform;
-
-    // Copy transforms
-    const SizeValueType numberOfTransforms = this->m_InputTransform->GetNumberOfTransforms();
-    for( SizeValueType i = 0; i < numberOfTransforms; ++i )
+    // Copy the current CPU transform to the current GPU transform
+    const bool copySucceeded = this->CopyToCurrentTransform( currentTransformCPU, currentTransformGPU );
+    if( !copySucceeded )
     {
-      if( i == 0 )
-      {
-        CPUCurrentTransformConstPointer currentTransformCPU = this->m_InputTransform->GetCurrentTransform();
-        const bool                      copyResult          = this->CopyTransform( currentTransformCPU, initialTransform );
-        if( !copyResult )
-        {
-          itkExceptionMacro( << "GPUAdvancedCombinationTransformCopier was unable to copy transform from: "
-                             << this->m_InputTransform );
-        }
-      }
-      else
-      {
-        // Get the CPU initial transform from the input
-        CPUInitialTransformConstPointer initialTransformCPU = this->m_InputTransform->GetInitialTransform();
-
-        // From the initial get the current transform
-        const CPUComboTransformType * initialTransformCPUCasted
-          = dynamic_cast< const CPUComboTransformType * >( initialTransformCPU.GetPointer() );
-        CPUCurrentTransformConstPointer currentTransformCPU = initialTransformCPUCasted->GetCurrentTransform();
-
-        // Copy the current transform to the initial next
-        GPUComboTransformPointer initialNext = GPUComboTransformType::New();
-
-        const bool copyResult = this->CopyTransform( currentTransformCPU, initialNext );
-        if( !copyResult )
-        {
-          itkExceptionMacro( << "GPUAdvancedCombinationTransformCopier was unable to copy transform from: "
-                             << this->m_InputTransform );
-        }
-
-        // Assign the initial next to the initial transform
-        initialTransform->SetInitialTransform( initialNext );
-        initialTransform = initialNext;
-      }
+      itkExceptionMacro( << "ERROR: GPUAdvancedCombinationTransformCopier was unable to copy transform from: "
+        << this->m_InputTransform );
     }
+
+    // skip next step when last transform
+    if( i == numberOfTransforms - 1 ) continue;
+
+    // Reset the GPU combo transform
+    GPUComboTransformPointer initialNext = GPUComboTransformType::New();
+    currentTransformGPU->SetInitialTransform( initialNext );
+    currentTransformGPU = initialNext;
   }
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 bool
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
-::CopyTransform(
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+::CopyToCurrentTransform(
   const CPUCurrentTransformConstPointer & fromTransform,
   GPUComboTransformPointer & toTransform )
 {
@@ -254,17 +235,15 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 void
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::CastCopyTransformParameters(
   const CPUCurrentTransformConstPointer & fromTransform,
   GPUAdvancedTransformPointer & toTransform )
 {
-  const CPUParametersType & fixedParametersFrom
-    = fromTransform->GetFixedParameters();
-  const CPUParametersType & parametersFrom
-    = fromTransform->GetParameters();
+  const CPUParametersType & fixedParametersFrom = fromTransform->GetFixedParameters();
+  const CPUParametersType & parametersFrom = fromTransform->GetParameters();
 
   GPUParametersType fixedParametersTo, parametersTo;
 
@@ -277,18 +256,14 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 void
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::CastCopyParameters( const CPUParametersType & from, GPUParametersType & to )
 {
-  if( from.GetSize() == 0 )
-  {
-    return;
-  }
+  if( from.GetSize() == 0 ) return;
 
   to.SetSize( from.GetSize() );
-
   for( SizeValueType i = 0; i < from.GetSize(); ++i )
   {
     to[ i ] = static_cast< GPUScalarType >( from[ i ] );
@@ -297,9 +272,9 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 bool
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::CopyBSplineTransform(
   const CPUCurrentTransformConstPointer & fromTransform,
   GPUComboTransformPointer & toTransform )
@@ -319,7 +294,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
   // We also have to register GPUImageFactory because
   // GPUAdvancedBSplineDeformableTransform using m_Coefficients as ITK images
   // inside the implementation, therefore we define GPUImageFactory pointer
-  typedef itk::GPUImageFactory2< TTypeList, NDimentions > GPUImageFactoryType;
+  typedef itk::GPUImageFactory2< TTypeList, NDimensions > GPUImageFactoryType;
   typedef typename GPUImageFactoryType::Pointer           GPUImageFactoryPointer;
 
   // Try BSpline Order 3 first
@@ -461,9 +436,9 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 bool
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::CopyEuler2DTransform(
   const CPUCurrentTransformConstPointer & fromTransform,
   GPUComboTransformPointer & toTransform,
@@ -499,9 +474,9 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 bool
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::CopyEuler3DTransform(
   const CPUCurrentTransformConstPointer & fromTransform,
   GPUComboTransformPointer & toTransform,
@@ -539,9 +514,9 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 bool
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::CopySimilarity2DTransform(
   const CPUCurrentTransformConstPointer & fromTransform,
   GPUComboTransformPointer & toTransform,
@@ -578,9 +553,9 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 bool
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::CopySimilarity3DTransform(
   const CPUCurrentTransformConstPointer & fromTransform,
   GPUComboTransformPointer & toTransform,
@@ -617,9 +592,9 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinat
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 void
-GPUAdvancedCombinationTransformCopier< TTypeList, NDimentions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
