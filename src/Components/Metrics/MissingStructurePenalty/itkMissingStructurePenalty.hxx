@@ -302,7 +302,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
       }
 
       sumSignedVolume +=  signedVolume;
-      sumAbsVolume    += abs( signedVolume );
+      sumAbsVolume    += std::abs( signedVolume );
     }
 
     /** Create iterators. */
