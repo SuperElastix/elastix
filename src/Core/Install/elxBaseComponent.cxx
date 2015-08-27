@@ -77,9 +77,8 @@ std::string BaseComponent::ConvertSecondsToDHMS(
   iSeconds %= secondsPerHour;
   const std::size_t minutes = iSeconds / secondsPerMinute;
 
-  iSeconds %= secondsPerMinute;
-  const std::size_t seconds = iSeconds;
-
+  //iSeconds %= secondsPerMinute;
+  //const std::size_t seconds = iSeconds;
   const double dSeconds = fmod( totalSeconds, 60.0 );
 
   /** Create a string in days, hours, minutes and seconds. */
