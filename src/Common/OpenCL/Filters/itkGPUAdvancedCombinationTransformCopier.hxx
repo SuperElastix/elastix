@@ -87,7 +87,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinat
   for( SizeValueType i = 0; i < numberOfTransforms; ++i )
   {
     // Get the current CPU transform of type itk::Transform
-    TransformTypeConstPointer itkCurrentTransform = this->m_InputTransform->GetNthTransform( i );
+    TransformTypePointer itkCurrentTransform = this->m_InputTransform->GetNthTransform( i );
 
     // Cast to advanced transform type, no checking needed
     currentTransformCPU = dynamic_cast< const CPUCurrentTransformType * >( itkCurrentTransform.GetPointer() );
