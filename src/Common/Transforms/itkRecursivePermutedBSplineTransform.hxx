@@ -108,7 +108,6 @@ RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
   IndexType supportIndex;
   this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
 
-
   /** Initialize (helper) variables. */
   const OffsetValueType * bsplineOffsetTable = this->m_CoefficientImages[ 0 ]->GetOffsetTable();
   OffsetValueType totalOffsetToSupportIndex = 0;

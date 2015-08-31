@@ -120,12 +120,16 @@ public:
       {
         tmp_mu = mu + gridOffsetTable[ k + HelperConstVariable ];
       }
+
       opp += RecursiveBSplineImplementation_GetSample< OutputType, SpaceDimension - 1, SplineOrder, InputPointerType, gridOffsetTable0 >
         ::GetSample( tmp_mu, gridOffsetTable, weights1D ) * weights1D[ k + HelperConstVariable ];
       //::GetSample2( tmp_mu, gridOffsetTable, weights1D, tmp_prefetch_mu ) * weights1D[ k + HelperConstVariable ];
 
       // move to the next mu
-      if( gridOffsetTable0 != USE_STEPS ) tmp_mu += bot;
+      if( gridOffsetTable0 != USE_STEPS )
+      {
+          tmp_mu += bot;
+      }
       /*if (doPrefetch)
         tmp_prefetch_mu +=bot;*/
     }
@@ -419,6 +423,7 @@ public:
     const double * derivativeWeights1D, // 1st derivative of B-spline
     const double * hessianWeights1D )   // 2nd derivative of B-spline
   {
+      //std::cout << SpaceDimension << std::endl;
     const unsigned int helperDim1 = SpaceDimension * ( SpaceDimension + 1 ) / 2;
     const unsigned int helperDim2 = ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2;
 
@@ -520,8 +525,7 @@ public:
     const unsigned int helperDim1 = SpaceDimension * ( SpaceDimension + 1 ) / 2;  // == 1
     const unsigned int helperDim2 = ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2; //==3
 
-    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0
-      ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
+    const OffsetValueType bot = SpaceDimension == 1 && gridOffsetTable0 != 0 ? gridOffsetTable0 : gridOffsetTable[ SpaceDimension - 1 ];
     OutputValueType mu0 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 0 + HelperConstVariable ] : mu + 0 * bot);
     OutputValueType mu1 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 1 + HelperConstVariable ] : mu + 1 * bot);
     OutputValueType mu2 = *( gridOffsetTable0 == USE_STEPS ? mu + gridOffsetTable[ 2 + HelperConstVariable ] : mu + 2 * bot);

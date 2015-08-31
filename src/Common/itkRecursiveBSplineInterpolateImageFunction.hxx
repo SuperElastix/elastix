@@ -19,13 +19,14 @@
 #define __itkRecursiveBSplineInterpolateImageFunction_hxx
 
 #include "itkRecursiveBSplineInterpolateImageFunction.h"
+#include "itkRecursiveBSplineImplementation.h"
 
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageRegionIterator.h"
 #include "itkVector.h"
 #include "itkMatrix.h"
-
+//#include "emm_vec.hxx"
 
 namespace itk
 {
@@ -49,6 +50,12 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
   {
     itkExceptionMacro( << "SplineOrder must be between 0 and 5. Requested spline order has not been implemented yet." );
   }
+
+  this->m_RecursiveBSplineWeightFunction = RecursiveBSplineWeightFunctionType::New();
+  this->m_Kernel = KernelType::New();
+  this->m_DerivativeKernel = DerivativeKernelType::New();
+  this->m_SecondOrderDerivativeKernel = SecondOrderDerivativeKernelType::New();
+
 } // end Constructor()
 
 
@@ -157,25 +164,28 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
 ::EvaluateAtContinuousIndex( const ContinuousIndexType & x ) const
 {
   // Allocate memory on the stack
+    /** Define some constants. */
+   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
+
   // MS: use MaxNumberInterpolationPoints??
   //of: const unsigned int helper = ( SplineOrder + 1 ) * ImageDimension;
   long evaluateIndexData[(SplineOrder+1)*ImageDimension];
   long stepsData[(SplineOrder+1)*ImageDimension];
-  double weightsData[(SplineOrder+1)*ImageDimension];
   vnl_matrix_ref<long> evaluateIndex(ImageDimension,SplineOrder+1,evaluateIndexData);
-  double * weights = &(weightsData[0]);
   long * steps = &(stepsData[0]);
+
+  typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
+  WeightsType weights1D( weightsArray1D, numberOfWeights, false );
+  typename WeightsType::ValueType * weightsPtr = &weights1D[0];
+
+  IndexType supportIndex;
+  this->m_RecursiveBSplineWeightFunction->Evaluate( x, weights1D, supportIndex );
 
   // Compute the interpolation indexes
   this->DetermineRegionOfSupport( evaluateIndex, x );
 
-  // Compute the B-spline weights
-  this->SetInterpolationWeights( x, evaluateIndex, weights );
-
   // Modify evaluateIndex at the boundaries using mirror boundary conditions
   this->ApplyMirrorBoundaryConditions( evaluateIndex );
-
-  OutputType interpolated = 0.0;
 
   // MS: should we store steps in a member variable for later use?
   //Calculate steps for image pointer
@@ -187,9 +197,9 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
     }
   }
 
-  //Call recursive sampling function
-  interpolated = SampleFunction< ImageDimension, SplineOrder, TCoordRep >
-    ::SampleValue( this->m_Coefficients->GetBufferPointer(), steps, weights );
+  TCoefficientType * coefficientPointer = const_cast< TCoefficientType* >( this->m_Coefficients->GetBufferPointer() );
+  OutputType interpolated = RecursiveBSplineImplementation_GetSample< OutputType, ImageDimension, SplineOrder, OutputType*, USE_STEPS >
+                ::GetSample(coefficientPointer, steps, weightsPtr );
 
   return interpolated;
 } // end EvaluateAtContinuousIndex()
@@ -211,27 +221,29 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
   // Allocate memory on the stack
   long evaluateIndexData[(SplineOrder+1)*ImageDimension];
   long stepsData[(SplineOrder+1)*ImageDimension];
-  double weightsData[(SplineOrder+1)*ImageDimension];
-  double derivativeWeightsData[(SplineOrder+1)*ImageDimension];
 
   vnl_matrix_ref<long> evaluateIndex( ImageDimension, SplineOrder + 1, evaluateIndexData );
-  double * weights = &(weightsData[0]);
-  double * derivativeWeights = &(derivativeWeightsData[0]);
   long * steps = &(stepsData[0]);
+
+  /** Create storage for the B-spline interpolation weights. */
+  const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
+  WeightsType weights1D( weightsArray1D, numberOfWeights, false );
+  typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
+  WeightsType derivativeWeights1D( derivativeWeightsArray1D, numberOfWeights, false );
+
+  double * weightsPointer = &(weights1D[0]);
+  double * derivativeWeightsPointer = &(derivativeWeights1D[0]);
 
   // Compute the interpolation indexes
   this->DetermineRegionOfSupport( evaluateIndex, x );
 
-  // Compute the B-spline weights
-  this->SetInterpolationWeights( x, evaluateIndex, weights );
-
-  // Compute the B-spline derivative weights
-  this->SetDerivativeWeights( x, evaluateIndex, derivativeWeights );
+  IndexType supportIndex;
+  this->m_RecursiveBSplineWeightFunction->Evaluate( x, weights1D, supportIndex );
+  this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( x, derivativeWeights1D, supportIndex );
 
   // Modify EvaluateIndex at the boundaries using mirror boundary conditions
   this->ApplyMirrorBoundaryConditions( evaluateIndex );
-
-  const InputImageType *inputImage = this->GetInputImage();
 
   // Calculate steps for coefficients pointer
   for( unsigned int n = 0; n < ImageDimension; ++n )
@@ -243,13 +255,13 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
   }
 
   // Call recursive sampling function
-  TCoordRep derivativeValue[ ImageDimension + 1 ];
-  SampleFunction< ImageDimension, SplineOrder, TCoordRep >
-    ::SampleValueAndDerivative( derivativeValue,
-    this->m_Coefficients->GetBufferPointer(),
-    steps,
-    weights,
-    derivativeWeights );
+  OutputType derivativeValue[ ImageDimension + 1 ];
+
+  /** Recursively compute the spatial Jacobian. */
+  TCoefficientType * coefficientPointer = const_cast< TCoefficientType* >( this->m_Coefficients->GetBufferPointer() );
+  RecursiveBSplineImplementation_GetSpatialJacobian< OutputType*, ImageDimension, SplineOrder, OutputType*, USE_STEPS >
+            ::GetSpatialJacobian( &derivativeValue[0], coefficientPointer, steps, weightsPointer, derivativeWeightsPointer  );
+
 
   // Extract the interpolated value and the derivative from the derivativeValue
   // vector. Element 0 contains the value, element 1 to ImageDimension+1 contains
@@ -261,6 +273,7 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
 
   /** Assign value and derivative. */
   value = derivativeValue[ 0 ];
+  const InputImageType *inputImage = this->GetInputImage();
   if( this->m_UseImageDirection )
   {
     CovariantVectorType orientedDerivative;
@@ -285,128 +298,229 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
   // EvaluateValueAndDerivativeAtContinuousIndex and then ignore the value
   // Would the performance penalty be large?
 
+    OutputType value;
+    CovariantVectorType derivative;
+    this->EvaluateValueAndDerivativeAtContinuousIndex( x, value, derivative );
+
   // MS: use MaxNumberInterpolationPoints??
   // Allocate memory on the stack
-  long evaluateIndexData[(SplineOrder+1)*ImageDimension];
-  long stepsData[(SplineOrder+1)*ImageDimension];
-  double weightsData[(SplineOrder+1)*ImageDimension];
-  double derivativeWeightsData[(SplineOrder+1)*ImageDimension];
+//  long evaluateIndexData[(SplineOrder+1)*ImageDimension];
+//  long stepsData[(SplineOrder+1)*ImageDimension];
+//  double weightsData[(SplineOrder+1)*ImageDimension];
+//  double derivativeWeightsData[(SplineOrder+1)*ImageDimension];
 
-  vnl_matrix_ref<long> evaluateIndex( ImageDimension, SplineOrder + 1, evaluateIndexData );
-  double * weights = &(weightsData[0]);
-  double * derivativeWeights = &(derivativeWeightsData[0]);
-  long * steps = &(stepsData[0]);
+//  vnl_matrix_ref<long> evaluateIndex( ImageDimension, SplineOrder + 1, evaluateIndexData );
+//  double * weights = &(weightsData[0]);
+//  double * derivativeWeights = &(derivativeWeightsData[0]);
+//  long * steps = &(stepsData[0]);
 
-  // Compute the interpolation indexes
-  this->DetermineRegionOfSupport( evaluateIndex, x );
+//  // Compute the interpolation indexes
+//  this->DetermineRegionOfSupport( evaluateIndex, x );
 
-  // Compute the B-spline weights
-  this->SetInterpolationWeights( x, evaluateIndex, weights );
+//  // Compute the B-spline weights
+//  this->SetInterpolationWeights( x, evaluateIndex, weights );
 
-  // Compute the B-spline derivative weights
-  this->SetDerivativeWeights( x, evaluateIndex, derivativeWeights );
+//  // Compute the B-spline derivative weights
+//  this->SetDerivativeWeights( x, evaluateIndex, derivativeWeights );
 
-  // Modify EvaluateIndex at the boundaries using mirror boundary conditions
-  this->ApplyMirrorBoundaryConditions( evaluateIndex );
+//  // Modify EvaluateIndex at the boundaries using mirror boundary conditions
+//  this->ApplyMirrorBoundaryConditions( evaluateIndex );
 
-  const InputImageType *inputImage = this->GetInputImage();
+//  const InputImageType *inputImage = this->GetInputImage();
 
-  //Calculate steps for coefficients pointer
-  for( unsigned int n = 0; n < ImageDimension; ++n )
-  {
-    for( unsigned int k = 0; k <= SplineOrder; ++k )
-    {
-      steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * m_OffsetTable[ n ];
-    }
-  }
+//  //Calculate steps for coefficients pointer
+//  for( unsigned int n = 0; n < ImageDimension; ++n )
+//  {
+//    for( unsigned int k = 0; k <= SplineOrder; ++k )
+//    {
+//      steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * m_OffsetTable[ n ];
+//    }
+//  }
 
-  // Call recursive sampling function. Since the value is computed almost for
-  // free, both value and derivative are calculated.
-  TCoordRep derivativeValue[ ImageDimension + 1 ];
-  SampleFunction< ImageDimension, SplineOrder, TCoordRep >
-    ::SampleValueAndDerivative( derivativeValue,
-    this->m_Coefficients->GetBufferPointer(),
-    steps,
-    weights,
-    derivativeWeights );
+//  // Call recursive sampling function. Since the value is computed almost for
+//  // free, both value and derivative are calculated.
+//  TCoordRep derivativeValue[ ImageDimension + 1 ];
+//  SampleFunction< ImageDimension, SplineOrder, TCoordRep >
+//    ::SampleValueAndDerivative( derivativeValue,
+//    this->m_Coefficients->GetBufferPointer(),
+//    steps,
+//    weights,
+//    derivativeWeights );
 
-  CovariantVectorType derivative;
+//  CovariantVectorType derivative;
 
-  // Extract the interpolated value and the derivative from the derivativeValue
-  // vector. Element 0 contains the value, element 1 to ImageDimension+1 contains
-  // the derivative in each dimension.
-  for( unsigned int n = 0; n < ImageDimension; ++n )
-  {
-    derivative[ n ] = derivativeValue[ n + 1 ] / this->m_Spacing[ n ];
-  }
+//  // Extract the interpolated value and the derivative from the derivativeValue
+//  // vector. Element 0 contains the value, element 1 to ImageDimension+1 contains
+//  // the derivative in each dimension.
+//  for( unsigned int n = 0; n < ImageDimension; ++n )
+//  {
+//    derivative[ n ] = derivativeValue[ n + 1 ] / this->m_Spacing[ n ];
+//  }
 
-  if( this->m_UseImageDirection )
-  {
-    CovariantVectorType orientedDerivative;
-    inputImage->TransformLocalVectorToPhysicalVector( derivative, orientedDerivative );
-    return orientedDerivative;
-  }
+//  if( this->m_UseImageDirection )
+//  {
+//    CovariantVectorType orientedDerivative;
+//    inputImage->TransformLocalVectorToPhysicalVector( derivative, orientedDerivative );
+//    return orientedDerivative;
+//  }
 
   return derivative;
 } // end EvaluateDerivativeAtContinuousIndex()
 
-
 /**
- * ******************* SetInterpolationWeights ***********************
+ * ******************* EvaluateValueAndDerivativeAndHessianAtContinuousIndex ***********************
  */
 
 template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int SplineOrder >
 void
 RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
-::SetInterpolationWeights(
+::EvaluateValueAndDerivativeAndHessianAtContinuousIndex(
   const ContinuousIndexType & x,
-  const vnl_matrix< long > & evaluateIndex,
-  double * weights ) const
+  OutputType & value,
+  CovariantVectorType & derivative,
+  MatrixType & sh) const
 {
-  Vector< double, SplineOrder + 1 > weightsvec;
-  const int idx = Math::Floor<int>( SplineOrder / 2.0 );
+  // MS: use MaxNumberInterpolationPoints??
+  // Allocate memory on the stack
+  long evaluateIndexData[(SplineOrder+1)*ImageDimension];
+  long stepsData[(SplineOrder+1)*ImageDimension];
 
+  vnl_matrix_ref<long> evaluateIndex( ImageDimension, SplineOrder + 1, evaluateIndexData );
+  long * steps = &(stepsData[0]);
+
+  /** Create storage for the B-spline interpolation weights. */
+  const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
+  WeightsType weights1D( weightsArray1D, numberOfWeights, false );
+  typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
+  WeightsType derivativeWeights1D( derivativeWeightsArray1D, numberOfWeights, false );
+  typename WeightsType::ValueType hessianWeightsArray1D[ numberOfWeights ];
+  WeightsType hessianWeights1D( hessianWeightsArray1D, numberOfWeights, false);
+
+  double * weightsPointer = &(weights1D[0]);
+  double * derivativeWeightsPointer = &(derivativeWeights1D[0]);
+  double * hessianWeightsPointer = &(hessianWeights1D[0]);
+
+  // Compute the interpolation indexes
+  this->DetermineRegionOfSupport( evaluateIndex, x );
+
+  IndexType supportIndex;
+  this->m_RecursiveBSplineWeightFunction->Evaluate( x, weights1D, supportIndex );
+  this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( x, derivativeWeights1D, supportIndex );
+  this->m_RecursiveBSplineWeightFunction->EvaluateSecondOrderDerivative(x, hessianWeights1D, supportIndex );
+
+  // Modify EvaluateIndex at the boundaries using mirror boundary conditions
+  this->ApplyMirrorBoundaryConditions( evaluateIndex );
+
+  // Calculate steps for coefficients pointer
   for( unsigned int n = 0; n < ImageDimension; ++n )
   {
-    weightsvec.Fill( 0.0 );
-
-    double w = x[ n ] - (double)evaluateIndex[ n ][ idx ];
-    BSplineWeights< SplineOrder, TCoefficientType >::GetWeights( weightsvec, w );
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
-      weights[ ( SplineOrder + 1 ) * n + k ] = weightsvec[ k ];
+      steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * this->m_OffsetTable[ n ];
     }
   }
-} // end SetInterpolationWeights()
+
+  // Call recursive sampling function
+  OutputType hessian[ ImageDimension * ( ImageDimension + 1 ) * ( ImageDimension + 2 ) / 2 ];
+
+  /** Recursively compute the spatial Jacobian. */
+  TCoefficientType * coefficientPointer = const_cast< TCoefficientType* >( this->m_Coefficients->GetBufferPointer() );
+  RecursiveBSplineImplementation_GetSpatialHessian< OutputType*, ImageDimension, SplineOrder, OutputType*, USE_STEPS >
+            ::GetSpatialHessian( &hessian[0], coefficientPointer, steps, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer );
+
+  /** Copy the correct elements to the spatial Hessian.
+ * The first SpaceDimension elements are actually the displacement, i.e. the recursive
+ * function GetSpatialHessian() has the TransformPoint as a free by-product.
+ * In addition, the spatial Jacobian is a by-product.
+ */
+
+//  unsigned int k = 2 * ImageDimension;
+//  for( unsigned int i = 0; i < ImageDimension; ++i )
+//  {
+//      for( unsigned int j = 0; j < ( i + 1 ) * ImageDimension; ++j )
+//      {
+//          sh[ i ][ j / ImageDimension ] = hessian[ k + j ];
+//      }
+//      k += ( i + 2 ) * ImageDimension;
+//  }
+
+//  /** Mirror, as only the lower triangle is now filled. */
+//  for( unsigned int j = 0; j < ImageDimension - 1; ++j )
+//  {
+//      for( unsigned int k = 1; k < ImageDimension; ++k )
+//      {
+//          sh[ j ][ k ] = sh[ k ][ j ];
+//      }
+//  }
+
+//  const InputImageType *inputImage = this->GetInputImage();
+//  if( this->m_UseImageDirection )
+//  {
+//    MatrixType orientedHessian;
+//    inputImage->TransformLocalVectorToPhysicalVector( hessian, orientedHessian );
+//    sh = orientedHessian;
+//  }
+
+} // end EvaluateValueAndDerivativeAndHessianAtContinuousIndex()
+
+
+/**
+  * ******************* SetInterpolationWeights ***********************
+  */
+
+//template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int SplineOrder >
+//void
+//RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
+//::SetInterpolationWeights(
+//  const ContinuousIndexType & x,
+//  const vnl_matrix< long > & evaluateIndex,
+//  double * weights ) const
+//{
+//  Vector< double, SplineOrder + 1 > weightsvec;
+//  const int idx = Math::Floor<int>( SplineOrder / 2.0 );
+
+//  for( unsigned int n = 0; n < ImageDimension; ++n )
+//  {
+//    weightsvec.Fill( 0.0 );
+
+//    double w = x[ n ] - (double)evaluateIndex[ n ][ idx ];
+//    BSplineWeights< SplineOrder, TCoefficientType >::GetWeights( weightsvec, w );
+//    for( unsigned int k = 0; k <= SplineOrder; ++k )
+//    {
+//      weights[ ( SplineOrder + 1 ) * n + k ] = weightsvec[ k ];
+//    }
+//  }
+//} // end SetInterpolationWeights()
 
 
 /**
  * ******************* SetDerivativeWeights ***********************
  */
 
-template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int SplineOrder >
-void
-RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
-::SetDerivativeWeights(
-  const ContinuousIndexType & x,
-  const vnl_matrix< long > & evaluateIndex,
-  double * weights ) const
-{
-  Vector< double, SplineOrder + 1 > weightsvec;
-  const int idx = Math::Floor<int>( ( SplineOrder + 1 ) / 2.0 );
+//template< class TImageType, class TCoordRep, class TCoefficientType, unsigned int SplineOrder >
+//void
+//RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType, SplineOrder >
+//::SetDerivativeWeights(
+//  const ContinuousIndexType & x,
+//  const vnl_matrix< long > & evaluateIndex,
+//  double * weights ) const
+//{
+//  Vector< double, SplineOrder + 1 > weightsvec;
+//  const int idx = Math::Floor<int>( ( SplineOrder + 1 ) / 2.0 );
 
-  for( unsigned int n = 0; n < ImageDimension; ++n )
-  {
-    weightsvec.Fill( 0.0 );
-    const double w = x[ n ] - (double)evaluateIndex[ n ][ idx ] + 0.5;
-    BSplineWeights< SplineOrder, TCoefficientType >::GetDerivativeWeights( weightsvec, w );
+//  for( unsigned int n = 0; n < ImageDimension; ++n )
+//  {
+//    weightsvec.Fill( 0.0 );
+//    const double w = x[ n ] - (double)evaluateIndex[ n ][ idx ] + 0.5;
+//    BSplineWeights< SplineOrder, TCoefficientType >::GetDerivativeWeights( weightsvec, w );
 
-    for( unsigned int k = 0; k <= SplineOrder; ++k )
-    {
-      weights[ ( SplineOrder + 1 ) * n + k ] = weightsvec[ k ];
-    }
-  }
-} // end SetDerivativeWeights()
+//    for( unsigned int k = 0; k <= SplineOrder; ++k )
+//    {
+//      weights[ ( SplineOrder + 1 ) * n + k ] = weightsvec[ k ];
+//    }
+//  }
+//} // end SetDerivativeWeights()
 
 
 /**
