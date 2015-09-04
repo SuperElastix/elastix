@@ -35,10 +35,6 @@
 
 namespace itk
 {
-/** Declaration of inline class BSplineWeights */
-template< unsigned int SplineOrder, class TCoefficientType = double >
-class BSplineWeights; // MS: move to separate file?
-
 
 /** \class RecursiveBSplineInterpolateImageFunction
  * \brief Evaluates the B-Spline interpolation of an image recursively.  Spline order may be from 0 to 5.
@@ -154,6 +150,11 @@ public:
 
   CovariantVectorType EvaluateDerivativeAtContinuousIndex( const ContinuousIndexType & x ) const;
 
+  MatrixType EvaluateHessian( const PointType & point ) const;
+
+  MatrixType EvaluateHessianAtContinuousIndex( const ContinuousIndexType & index ) const;
+
+
   void EvaluateValueAndDerivative(
     const PointType & point, OutputType & value, CovariantVectorType & deriv ) const;
 
@@ -162,6 +163,9 @@ public:
 
   void EvaluateValueAndDerivativeAndHessianAtContinuousIndex(
     const ContinuousIndexType & x, OutputType & value, CovariantVectorType & derivative, MatrixType & hessian) const;
+
+  void EvaluateValueAndDerivativeAndHessian(
+    const PointType & point, OutputType & value, CovariantVectorType & deriv, MatrixType & hessian) const;
 
   /** The UseImageDirection flag determines whether image derivatives are
    * computed with respect to the image grid or with respect to the physical

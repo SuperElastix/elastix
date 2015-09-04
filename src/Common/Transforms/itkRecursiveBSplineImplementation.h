@@ -51,15 +51,17 @@ namespace itk
  *   each method has it's own class with only 1 method:
  *      RecursiveBSplineImplementation_(methodName)::(methodName)( ... )
  *   where '(methodName)' is one of the following:
- *      GetSample                  // old name: TransformPoint
+ *      GetSample                    // old name: TransformPoint
  *      GetSpatialJacobian
  *      GetSpatialHessian
- *      GetJacobian                // Note that it is almost always more efficient to use MultiplyJacobianWithValue.
+ *      GetJacobian                  // Note that it is almost always more efficient to use MultiplyJacobianWithValue.
+ *      GetJacobianOfSpatialJacobian // TODO: A MultiplyWithJacobianOfSpatialJacobian should be implemented for more efficiency
+ *      GetJacobianOfSpaialHessian   // TODO: A MultiplyWithJacobianOfSpatialHessian should be implemented for more efficiency
  *      ComputeNonZeroJacobianIndices
- *      MultiplyJacobianWithValue  // similar to old name, which I consider too specific: EvaluateJacobianWithImageGradientProduct
- *                                 // This is the adjoint of 'GetSample' :
- *                                 //    if you regard the sampling as matrix multiplication: GetSample(mu, ..) == Jacobian * mu
- *                                 //    then MultiplyJacobianWithValue( jac, value, ...) == transpose(Jacobian) * value
+ *      MultiplyJacobianWithValue    // similar to old name, which I consider too specific: EvaluateJacobianWithImageGradientProduct
+ *                                   // This is the adjoint of 'GetSample' :
+ *                                   //    if you regard the sampling as matrix multiplication: GetSample(mu, ..) == Jacobian * mu
+ *                                   //    then MultiplyJacobianWithValue( jac, value, ...) == transpose(Jacobian) * value
  *   REASONS:
  *   - To allow easy addition of specialized end cases.
  *   - To keep the code of each method, including the end cases, together in the file.
@@ -161,6 +163,7 @@ public:
 }; // end class
 
 
+#if 0
 /** \class RecursiveBSplineImplementation_GetSample
  *
  * \brief Define the specialized end case for SpaceDimension = 1 and SplineOrder == 3.
@@ -216,6 +219,7 @@ public:
   } // end GetSample()
 
 }; // end class
+#endif
 
 /*  Surprisingly, the very specialized case below is a bit slower than the version above.
 
@@ -326,9 +330,15 @@ public:
       sj[ SpaceDimension ] += tmp_sj[ 0 ] * derivativeWeights1D[ k + HelperConstVariable ];
 
       // move to the next mu
-      if( gridOffsetTable0 != USE_STEPS ) tmp_mu += bot;
-    }
+      if( gridOffsetTable0 != USE_STEPS )
+      {
+          tmp_mu += bot;
+      }
+
+    }// end loop over k
+
   } // end GetSpatialJacobian()
+
 }; // end class
 
 
@@ -347,13 +357,14 @@ public:
     const InputPointerType mu,
     const OffsetValueType * gridOffsetTable,
     const double * weights1D,
-    const double * derivativeWeights1D )
+    const double * derivativeWeights1D)
   {
     *sj = *mu;
   } // end GetSpatialJacobian()
 }; // end class
 
 
+#if 0
 /** \class RecursiveBSplineImplementation_GetSpatialJacobian
  *
  * \brief Define the specialized end case for SpaceDimension = 1 and SplineOrder == 3.
@@ -396,7 +407,7 @@ public:
   } // end GetSpatialJacobian()
 
 }; // end class
-
+#endif
 
 /** \class RecursiveBSplineImplementation_GetSpatialHessian
  *
@@ -423,7 +434,7 @@ public:
     const double * derivativeWeights1D, // 1st derivative of B-spline
     const double * hessianWeights1D )   // 2nd derivative of B-spline
   {
-      //std::cout << SpaceDimension << std::endl;
+
     const unsigned int helperDim1 = SpaceDimension * ( SpaceDimension + 1 ) / 2;
     const unsigned int helperDim2 = ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2;
 
@@ -431,8 +442,8 @@ public:
     InputPointerType tmp_mu = mu;
 
     /** Create a temporary sh and initialize the original. */
-    OutputValueType  tmp_sh[ helperDim1 ];
-    for( unsigned int n = 0; n < helperDim2 ; ++n )
+    OutputValueType tmp_sh[ helperDim1 ];
+    for( unsigned int n = 0; n < helperDim2; ++n )
     {
       sh[ n ] = 0.0;
     }
@@ -445,6 +456,7 @@ public:
       {
         tmp_mu = mu + gridOffsetTable[k + HelperConstVariable];
       }
+
       RecursiveBSplineImplementation_GetSpatialHessian< RecursiveOutputPointerType, SpaceDimension - 1, SplineOrder, InputPointerType, gridOffsetTable0 >
         ::GetSpatialHessian( tmp_sh, tmp_mu, gridOffsetTable, weights1D, derivativeWeights1D, hessianWeights1D );
 
@@ -464,9 +476,15 @@ public:
       sh[ helperDim2 - 1 ] += tmp_sh[ 0 ] * hessianWeights1D[ k + HelperConstVariable ];
 
       // move to the next mu
-      if( gridOffsetTable0 != USE_STEPS ) tmp_mu += bot;
-    }
+      if( gridOffsetTable0 != USE_STEPS )
+      {
+          tmp_mu += bot;
+      }
+
+    }// end loop over k
+
   } // end GetSpatialHessian()
+
 }; // end class
 
 
@@ -474,7 +492,6 @@ public:
  *
  * \brief Define the end case for SpaceDimension = 0.
  */
-
 template< class OutputPointerType, unsigned int SplineOrder, class InputPointerType, int gridOffsetTable0 >
 class RecursiveBSplineImplementation_GetSpatialHessian< OutputPointerType, 0, SplineOrder, InputPointerType, gridOffsetTable0 >
 {
@@ -490,9 +507,10 @@ public:
   {
     *sh = *mu;
   } // end GetSpatialHessian()
+
 }; // end class
 
-
+#if 0
 /** \class RecursiveBSplineImplementation_GetSpatialHessian
  *
  * \brief Define the end case for SpaceDimension = 1 for SplineOrder == 3 to improve speed for this common SplineOrder case.
@@ -540,7 +558,7 @@ public:
   } // end GetSpatialHessian()
 
 }; // end class
-
+#endif
 
 /** \class RecursiveBSplineImplementation_numberOfPointsInSupportRegion
  *
@@ -674,9 +692,15 @@ public:
       RecursiveBSplineImplementation_ComputeNonZeroJacobianIndices< OutputPointerType, SpaceDimension - 1, SplineOrder, InputValueType, gridOffsetTable0 >
         ::ComputeNonZeroJacobianIndices( nzji, tmp_currentIndex, gridOffsetTable );
 
-      if( gridOffsetTable0 != USE_STEPS ) tmp_currentIndex  += bot;
-    }
+      if( gridOffsetTable0 != USE_STEPS )
+      {
+          tmp_currentIndex  += bot;
+      }
+
+    }//end loop over k
+
   } // end ComputeNonZeroJacobianIndices()
+
 }; // end class
 
 
@@ -751,9 +775,15 @@ public:
       RecursiveBSplineImplementation_MultiplyJacobianWithValue< gradPointerType, SpaceDimension - 1, SplineOrder, InputValueType, gridOffsetTable0 >
         ::MultiplyJacobianWithValue( tmp_gradCoefficients, weight * weights1D[ k + HelperConstVariable ], gradValue , gridOffsetTable, weights1D );
 
-      if( gridOffsetTable0 != USE_STEPS ) tmp_gradCoefficients += bot;
-    }
+      if( gridOffsetTable0 != USE_STEPS )
+      {
+          tmp_gradCoefficients += bot;
+      }
+
+    }//end loop over k
+
   } // end MultiplyJacobianWithValue()
+
 }; // end class
 
 
@@ -776,6 +806,7 @@ public:
   {
     *gradCoefficients += weight * gradValue;
   } // end MultiplyJacobianWithValue()
+
 }; // end class
 
 } // end namespace itk
@@ -868,7 +899,7 @@ public:
     const double * derivativeWeights1D )
   {
     const unsigned int OutputDimension = jsj_length - 1;
-    for (int i = 0; i < OutputDimension; ++i )
+    for ( int i = 0; i < OutputDimension; ++i )
     {
         *jsj_out = jsj[ OutputDimension - i ];
         ++jsj_out;
@@ -1047,7 +1078,9 @@ public:
                                     jsh_out[ 2 ] = jsh[ 2 ];
         jsh_out += OutputDimension * ( OutputDimension + 1 ) / 2;
       }
-      else // this is general (if a compiler sufficiently unrolls loops it should end up at the same as the above optimized cases. Unfortunately, compilers don't seem to be that smart)
+      else
+      {
+        // this is general (if a compiler sufficiently unrolls loops it should end up at the same as the above optimized cases. Unfortunately, compilers don't seem to be that smart)
         for( unsigned int j = 0; j < OutputDimension; ++j )
         {
           for( unsigned int i = 0 ; i <= j; ++i )
@@ -1056,6 +1089,7 @@ public:
             ++jsh_out;
           }
         }
+      }
     } // end GetJacobianOfSpatialHessian()
 
 
@@ -1096,7 +1130,10 @@ public:
           for( unsigned int i = 0 ; i <= j; ++i )
           {
             jsh_tmp[ j * OutputDimension + i ] = jsh[ ( OutputDimension - j ) + ( OutputDimension - i ) * ( OutputDimension - i + 1 ) / 2 ];
-            if( i != j ) jsh_tmp[ i * OutputDimension + j ] = jsh_tmp[ j * OutputDimension + i ];
+            if( i != j )
+            {
+              jsh_tmp[ i * OutputDimension + j ] = jsh_tmp[ j * OutputDimension + i ];
+            }
           }
         }
       }

@@ -68,7 +68,7 @@ RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
    // Or with duplicate code:
    /** Define some constants. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+  //const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
 
   /** Initialize output point. */
   OutputPointType outputPoint;
@@ -98,8 +98,6 @@ RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
   bool inside = this->InsideValidRegion( cindex );
   if( !inside )
   {
-  //std::cerr << "." ;
-  //this->num_outside_valid++;
     outputPoint = point;
     return outputPoint;
   }
@@ -115,7 +113,6 @@ RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
   {
     totalOffsetToSupportIndex += supportIndex[ j ] * bsplineOffsetTable[ j ];
   }
-  //ScalarType displacement[ SpaceDimension ];
 
   ScalarType* parameterPointer = const_cast< PixelType * >( ( this->m_InputParametersPointer->data_block() ) );
   typename WeightsType::ValueType * weightsPtr = & weights1D[0];
@@ -174,13 +171,16 @@ void RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
 
   for (unsigned int pointIdxOuter = 0 ; pointIdxOuter <  pointListIn.size() ;  pointIdxOuter += maxBlockSize )
   {
-
     unsigned int numInBlock =  pointListIn.size() - pointIdxOuter; // take minimum of number of points remaining and maxBlockSize.
-    if ( maxBlockSize<numInBlock ) { numInBlock = maxBlockSize; } ;
+
+    if ( maxBlockSize<numInBlock )
+    {
+        numInBlock = maxBlockSize;
+    }
 
     unsigned int computeWeightsIdx = 0;
-    for (unsigned int blockIdx = 0 ; blockIdx < numInBlock; ++blockIdx ) {
-
+    for (unsigned int blockIdx = 0 ; blockIdx < numInBlock; ++blockIdx )
+    {
       /** Convert to continuous index. */
       ContinuousIndexType cindex;
       this->TransformPointToContinuousGridIndex( pointListIn[ pointIdxOuter + blockIdx] , cindex );
@@ -188,7 +188,9 @@ void RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
       IndexType startIndex;
       bool insidePnt = true;
       OffsetValueType totalOffsetToSupportIndexPnt = initialOffsetToSupportIndex;
-      for (unsigned int i = 0; i <  SpaceDimension; ++i ) {
+
+      for (unsigned int i = 0; i <  SpaceDimension; ++i )
+      {
        startIndex[ i ] = Math::Floor< IndexValueType >( cindex[ i ] - halfSupportSize );
 
          indexRemainder[ computeWeightsIdx  + i ] = cindex[ i ] - static_cast< double >( startIndex[ i ] );
@@ -199,8 +201,14 @@ void RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
        insidePnt &= ( static_cast< unsigned int >(startIndex[ i ]) ) < reducedGridRegionSize[ i ] ;
        totalOffsetToSupportIndexPnt += startIndex[ i ] * bsplineOffsetTable[ i ];
       }
+
       isInside[ blockIdx ] = insidePnt;
-      if (insidePnt) { computeWeightsIdx += SpaceDimension; }; // hope that conditional is optimized away.
+
+      if (insidePnt)
+      {
+          computeWeightsIdx += SpaceDimension;
+      } // hope that conditional is optimized away.
+
       totalOffsetToSupportIndex[ blockIdx ] = totalOffsetToSupportIndexPnt;
     } // split loop here, to break dependency chain and also because the rest should only be evaluated if isInside.
 
@@ -208,15 +216,18 @@ void RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
     // Note that we only compute the weights of the inside points.
     // Also note that all dimensions are treated equally (as all dimensions of all points are merged in indexRemainder)
     typename WeightsType::ValueType * weightsPtr = &weightsArray1D[0];
-    for (unsigned int i =0 ; i < computeWeightsIdx; ++i) {
+    for (unsigned int i =0 ; i < computeWeightsIdx; ++i)
+    {
       this->m_Kernel->Evaluate( indexRemainder[i] , weightsPtr );
       weightsPtr += (VSplineOrder+1);
     }
 
     // Perform actual interpolation:
     weightsPtr = &weightsArray1D[0];
-    for (unsigned int blockIdx = 0 ; blockIdx < numInBlock; ++blockIdx ) {
-      if (isInside[ blockIdx ]) {
+    for (unsigned int blockIdx = 0 ; blockIdx < numInBlock; ++blockIdx )
+    {
+      if (isInside[ blockIdx ])
+      {
         typedef vec<ScalarType, SpaceDimension> vecPointType;
         typedef vecptr< ScalarType * , SpaceDimension> vecPointerType;
         vecPointerType mu( bufferPointer + totalOffsetToSupportIndex[ blockIdx ] * SpaceDimension );
@@ -227,7 +238,9 @@ void RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
         displacement.store( &pointListOut[ pointIdxOuter + blockIdx ][0] );
 
         weightsPtr += (VSplineOrder+1) * SpaceDimension; // TODO: this is number of weights, which is an already defined compile time constant. Find that name and use it.
-      } else {
+      }
+      else
+      {
         // point is not inside
         pointListOut[ pointIdxOuter + blockIdx ] = pointListIn[ pointIdxOuter + blockIdx ];
       }
@@ -279,42 +292,11 @@ RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
     return;
   }
 
-  // Compute interpolation weighs and store them in weights
-  // MS: compare with AdvancedBSplineDeformableTransform
   IndexType supportIndex;
   this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights, supportIndex );
-  /*{typename WeightsType::ValueType * weightsPtr = & weights[0];
-  for (unsigned int i =0 ; i < computeWeightsIdx; ++i) {
-    this->m_Kernel->Evaluate( cindex[i] , weightsPtr );
-    weightsPtr += (VSplineOrder+1);
-  }}*/
   typename WeightsType::ValueType * weightsPtr = & weights[0];
- /* // Allocation of memory
-  long evaluateIndexData[ ( SplineOrder + 1 ) * SpaceDimension ];
-  long stepsData[ ( SplineOrder + 1 ) * SpaceDimension ];
-  vnl_matrix_ref<long> evaluateIndex( SpaceDimension, SplineOrder + 1, evaluateIndexData );
-  double * weightsPointer = &(weights[0]);
-  long * steps = &(stepsData[0]);
 
-  for( unsigned int ii = 0; ii < SpaceDimension; ++ii )
-  {
-    for( unsigned int jj = 0; jj <= SplineOrder; ++jj )
-    {
-      evaluateIndex[ ii ][ jj ] = supportIndex[ ii ] + jj;
-    }
-  }
-
-  IndexType offsetTable;
-  for( unsigned int n = 0; n < SpaceDimension; ++n )
-  {
-    offsetTable[ n ] = this->m_CoefficientImages[ 0 ]->GetOffsetTable()[ n ];
-    for( unsigned int k = 0; k <= SplineOrder; ++k )
-    {
-      steps[ ( SplineOrder + 1 ) * n + k ] = evaluateIndex[ n ][ k ] * offsetTable[ n ] * SpaceDimension;
-    }
-  }*/
-
-/** Initialize (helper) variables. */
+  /** Initialize (helper) variables. */
   const OffsetValueType * bsplineOffsetTable = this->m_CoefficientImages[ 0 ]->GetOffsetTable();
   OffsetValueType totalOffsetToSupportIndex = 0;
   for( unsigned int j = 0; j < SpaceDimension; ++j )
@@ -322,36 +304,17 @@ RecursivePermutedBSplineTransform<TScalar, NDimensions, VSplineOrder>
     totalOffsetToSupportIndex += supportIndex[ j ] * bsplineOffsetTable[ j ];
   }
 
-  //ScalarType displacement[ SpaceDimension ];
-
   ScalarType* parameterPointer = const_cast< PixelType * >( ( this->m_InputParametersPointer->data_block() ) );
 
   typedef vec<ScalarType, SpaceDimension> vecPointType;
   typedef vecptr< ScalarType * , SpaceDimension> vecPointerType;
   vecPointerType mu( parameterPointer + totalOffsetToSupportIndex * SpaceDimension );
-  // Call recursive interpolate function
+
+  //Call recursive interpolate function
   vecPointType displacement = RecursiveBSplineImplementation_GetSample< vecPointType, SpaceDimension, SplineOrder, vecPointerType >
             ::GetSample( mu, bsplineOffsetTable, weightsPtr );
   displacement += vecPointType( & point[0] );
   displacement.store( &outputPoint[0] );
-
-/*
-  outputPoint.Fill( NumericTraits<TScalar>::Zero );
-  for( unsigned int j = 0; j < SpaceDimension; ++j )
-  {
-    const TScalar *basePointer = const_cast< PixelType * >( ( this->m_InputParametersPointer->data_block() ) );
-    unsigned int c = 0;
-    outputPoint[ j ] = RecursiveBSplineTransformImplementation< SpaceDimension, SplineOrder, TScalar >
-      ::TransformPoint( basePointer,
-      steps,
-      weightsPointer,
-      basePointer,
-      indices,
-      c );
-
-    // The output point is the start point + displacement.
-    outputPoint[ j ] += transformedPoint[ j ];
-  } // end for*/
 
 } // end TransformPoint()
 
@@ -421,7 +384,7 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
    * returns the individual weights instead of the multiplied ones.
    */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+  //const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   IndexType supportIndex;
@@ -446,27 +409,21 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
     // create scaled identity matrix for each i.
     // Note that we assume that only this function writes to jacobian.
     // Hence any elements that we do not write to stay at the value that they are initialized with (= 0.0).
-    for( unsigned int d = 0 ; d < SpaceDimension ; ++d ) {
+    for( unsigned int d = 0 ; d < SpaceDimension ; ++d )
+    {
       unsigned int index = (i * SpaceDimension + d)  +  (d * nnzji);  //(column) + (row)
       jacobianPointer[index] = fullWeightsArray[i];
-      //jacobianPointer += SpaceDimension;
     }
   }
-  //std::cerr << "Jacobian ( " << jacobian.rows()  << ", " << jacobian.cols() <<" ) " << jacobian << std::endl; // debug output.
+
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
    */
-  for (int i = 0 ; i < nonZeroJacobianIndices.size() ; ++i ) {
+  for (int i = 0 ; i < nonZeroJacobianIndices.size() ; ++i )
+  {
     nonZeroJacobianIndices[i]  = i;
   }
   this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportIndex );
-  /*std::cerr << "Jacobian ( " << jacobian.rows()  << ", " << jacobian.cols() <<" ) " << jacobian << std::endl; // debug output.
-std::cerr << "display " << nonZeroJacobianIndices.size() << " nonzero indices [";
- for (int i = 0 ; i < nonZeroJacobianIndices.size() ; ++i ) {
-   std::cerr << nonZeroJacobianIndices[i] << " " ;
- }
- std::cerr << "]" << std::endl; // debug output.*/
-
 
 } // end GetJacobian()
 
@@ -492,7 +449,7 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
   /** Initialize. */
-  const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
+  //const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
 
   /** NOTE: if the support region does not lie totally within the grid
    * we assume zero displacement and zero Jacobian.
@@ -512,17 +469,16 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
    * returns the individual weights instead of the multiplied ones.
    */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+  //const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   IndexType supportIndex;
   this->m_RecursiveBSplineWeightFunction->Evaluate( cindex, weights1D, supportIndex );
 
-  //std::cerr << "EvaluateJacobianWithImageGradientProduct in " << ipp << " cindex: " << cindex << " supportIndex" << supportIndex << " Nr of weights " << numberOfWeights << std::endl; // debug output.
  /** Recursively compute the inner product of the Jacobian and the moving image gradient.
    * The pointer has changed after this function call.
    */
-  //ParametersValueType migArray[ SpaceDimension ];
   double migArray[ SpaceDimension ];//InternalFloatType
   for( unsigned int j = 0; j < SpaceDimension; ++j )
   {
@@ -531,23 +487,17 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
   typedef vec< double, SpaceDimension > imgGradType;
   imgGradType mig( &migArray[0] );
 
-  //const ParametersValueType * movingImageGradientPointer = movingImageGradient.GetDataPointer();
   ParametersValueType * imageJacobianPointer = imageJacobian.data_block();
   typedef vecptr< ParametersValueType *, SpaceDimension> imageJacobianVecPointerType;
   imageJacobianVecPointerType  imageJacobianVecPointer( imageJacobianPointer );
   RecursiveBSplineImplementation_GetJacobian< imageJacobianVecPointerType, SpaceDimension, SplineOrder, imgGradType >
     ::GetJacobian( imageJacobianVecPointer, weightsArray1D, mig );
-  //std::cerr << "Jacobian mul " << imageJacobian << std::endl; // debug output.
 
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
    */
   this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportIndex );
- /*std::cerr << "display " << nonZeroJacobianIndices.size() << " nonzero indices [";
- for (int i = 0 ; i < nonZeroJacobianIndices.size() ; ++i ) {
-   std::cerr << nonZeroJacobianIndices[i] << " " ;
- }
- std::cerr << "]" << std::endl; // debug output.*/
+
 } // end EvaluateJacobianWithImageGradientProduct()
 
 
@@ -578,7 +528,7 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
 
   /** Create storage for the B-spline interpolation weights. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+//  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
@@ -671,7 +621,7 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
 
   /** Create storage for the B-spline interpolation weights. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
+//  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
@@ -706,6 +656,7 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
   vecPointerType mu( parameterPointer + totalOffsetToSupportIndex * SpaceDimension );
   double spatialHessian[ SpaceDimension * ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2 ];
   vecPointerType spatialHessianV( &spatialHessian[0] );
+
   /** Recursively compute the spatial Jacobian. */
   RecursiveBSplineImplementation_GetSpatialHessian< vecPointerType, SpaceDimension, SplineOrder, vecPointerType >
             ::GetSpatialHessian( spatialHessianV, mu, bsplineOffsetTable, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer );
@@ -1125,7 +1076,6 @@ RecursivePermutedBSplineTransform< TScalar, NDimensions, VSplineOrder >
   // declare and set the vector types that the recursion uses
   typedef unsigned long * nzjiPointerType;
   typedef vecptr< nzjiPointerType, SpaceDimension> nzjiVecPointerType;
-  //nonZeroJacobianIndices[0] = 123456;
   nzjiVecPointerType temp_nzji( & (nonZeroJacobianIndices[0]) );
   typedef vec< OffsetValueType, SpaceDimension> vecOffsetValueType;
   OffsetValueType totalOffsetToSupportIndexArray[SpaceDimension];
