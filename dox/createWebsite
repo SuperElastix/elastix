@@ -187,7 +187,8 @@ then
   date '+%d-%m-%Y' > $tempdir/download/latestreleasedate.txt
 
   # copy the copyright message
-  cp $exportdirwin/src/CopyrightElastix.txt $tempdir
+  cp $exportdirwin/src/LICENSE $tempdir
+  cp $exportdirwin/src/NOTICE $tempdir
 
   # copy the linux32/64 binaries manually using winscp
   exit
