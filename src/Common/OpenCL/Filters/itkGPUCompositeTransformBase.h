@@ -24,7 +24,7 @@
 namespace itk
 {
 /** \class GPUCompositeTransformBaseBase
- * \brief Base class for all GPUcomposite transforms.
+ * \brief Base class for all GPU composite transforms.
  *
  * \author Denis P. Shamonin and Marius Staring. Division of Image Processing,
  * Department of Radiology, Leiden, The Netherlands

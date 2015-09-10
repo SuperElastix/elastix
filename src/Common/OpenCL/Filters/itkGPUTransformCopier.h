@@ -23,8 +23,8 @@
 namespace itk
 {
 /** \class GPUTransformCopier
- * \brief A helper class which creates an GPU Transform which
- * is perfect copy of the CPU Transform.
+ * \brief A helper class which creates an GPU transform which
+ * is perfect copy of the CPU transform.
  *
  * This class is NOT a filter. Although it has an API similar to a filter, this class
  * is not intended to be used in a pipeline. Instead, the typical use will be like

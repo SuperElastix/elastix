@@ -24,8 +24,8 @@
 namespace itk
 {
 /** \class GPUCompositeTransformCopier
- * \brief A helper class which creates an GPU Composite Transform which
- * is perfect copy of the CPU Composite Transform.
+ * \brief A helper class which creates an GPU composite transform which
+ * is perfect copy of the CPU composite transform.
  *
  * This class is NOT a filter. Although it has an API similar to a filter, this class
  * is not intended to be used in a pipeline. Instead, the typical use will be like
