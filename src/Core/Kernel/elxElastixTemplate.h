@@ -99,12 +99,13 @@ namespace elastix
  * Voxel spacing and image origin are always taken into account, regardless
  * the setting of this parameter.\n
  *    example: <tt>(UseDirectionCosines "true")</tt>\n
- * Default: false. Recommended: true. The default value is false for
- * backward compatibility reasons. This parameter was introduced in
- * elastix 4.3. Setting it to false means that you choose to ignore important
- * information from the image, which relates voxel coordinates to world coordinates.
- * Ignoring it may easily lead to left/right swaps for example, which could
- * skrew up a (medical) analysis.
+ * Default: true. Recommended: true. This parameter was introduced in
+ * elastix 4.3, with a default value of false for backward compabitility.
+ *  From elastix 4.8 the default value has been changed to true. Setting it
+ *  to false means that you choose to ignore important information from the
+ *  image, which relates voxel coordinates to world coordinates. Ignoring it
+ *  may easily lead to left/right swaps for example, which could skrew up a
+ *  (medical) analysis.
  *
  * \ingroup Kernel
  */
