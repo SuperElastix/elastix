@@ -36,8 +36,6 @@ elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
   set( dashboard_model Continuous )
 endif()
 
-# CUDA does not support MSVC 2010 compiler
-# nvcc fatal: nvcc cannot find a supported cl version. Only MSVC 8.0 and MSVC 9.0 are supported
 set( dashboard_cache "
 // Which ITK to use:
 ITK_DIR:PATH=D:/toolkits/ITK/git/binVS2010
@@ -45,7 +43,6 @@ ITK_DIR:PATH=D:/toolkits/ITK/git/binVS2010
 // Some elastix settings, defining the configuration:
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
-ELASTIX_USE_CUDA:BOOL=OFF
 ELASTIX_USE_EIGEN:BOOL=OFF
 ELASTIX_USE_OPENCL:BOOL=OFF
 ELASTIX_USE_MEVISDICOMTIFF:BOOL=OFF

@@ -36,20 +36,6 @@ include( ${ITK_USE_FILE} )
 list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake )
 
 #---------------------------------------------------------------------
-# Find CUDA.
-mark_as_advanced( ELASTIX_USE_CUDA )
-option( ELASTIX_USE_CUDA "Use CUDA enabled GPU" OFF )
-
-if( ELASTIX_USE_CUDA )
-  find_package( CUDA REQUIRED )
-
-  mark_as_advanced( CUDA_BUILD_CUBIN )
-  mark_as_advanced( CUDA_BUILD_EMULATION )
-  mark_as_advanced( CUDA_VERBOSE_BUILD )
-  mark_as_advanced( CUDA_SDK_ROOT_DIR )
-endif()
-
-#---------------------------------------------------------------------
 # Find OpenCL.
 option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
 
@@ -177,7 +163,6 @@ endif()
 set( elxCommon_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Common
   ${elastix_SOURCE_DIR}/Common/CostFunctions
-  ${elastix_SOURCE_DIR}/Common/CUDA
   ${elastix_SOURCE_DIR}/Common/ImageSamplers
   ${elastix_SOURCE_DIR}/Common/KNN
   ${elastix_SOURCE_DIR}/Common/KNN/ann_1.1/include
@@ -409,7 +394,7 @@ if( ELASTIX_ENABLE_PACKAGER )
 
   # We have split the elastix package into two components:
   # - the core: elastix and transformix
-  # - the libraries: ANNlib and cudart when ELASTIX_USE_CUDA ON
+  # - the libraries: ANNlib
   # NOTE: Currently does not work for nsis. A bug related to this
   # seems to be fixed in the upcoming CMake 2.8.3
   # Therefore, disable component support for now.

@@ -13,10 +13,6 @@ endif()
 
 add_subdirectory( MevisDicomTiff )
 
-if( ELASTIX_USE_CUDA )
-  add_subdirectory( CUDA )
-endif()
-
 if( ELASTIX_USE_OPENCL )
   add_subdirectory( OpenCL )
 endif()
