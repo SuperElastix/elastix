@@ -121,6 +121,8 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType             ScalarType;
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::FixedParametersType    FixedParametersType;
+
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::InputVectorType        InputVectorType;
@@ -312,10 +314,10 @@ public:
   const ParametersType & GetParameters( void ) const;
 
   /** Set the fixed parameters and update internal transformation. */
-  virtual void SetFixedParameters( const ParametersType & );
+  virtual void SetFixedParameters( const FixedParametersType & );
 
   /** Get the Fixed Parameters. */
-  virtual const ParametersType & GetFixedParameters( void ) const;
+  virtual const FixedParametersType & GetFixedParameters( void ) const;
 
   /** Compose with another AdvancedMatrixOffsetTransformBase
    *
@@ -545,7 +547,7 @@ private:
   mutable TimeStamp m_InverseMatrixMTime;
 
   /** Used by the GetJacobian() function which returns the
-   * jacobian as an output variable. */
+   * Jacobian as an output variable. */
   mutable NonZeroJacobianIndicesType m_NonZeroJacobianIndicesTemp;
 
 };

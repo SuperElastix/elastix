@@ -80,7 +80,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinat
 
   // Initialize the current transforms
   CPUCurrentTransformConstPointer currentTransformCPU;
-  GPUComboTransformPointer currentTransformGPU = comboTransformGPU;
+  GPUComboTransformPointer        currentTransformGPU = comboTransformGPU;
 
   // Loop over all sub-transforms
   const SizeValueType numberOfTransforms = this->m_InputTransform->GetNumberOfTransforms();
@@ -97,11 +97,11 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinat
     if( !copySucceeded )
     {
       itkExceptionMacro( << "ERROR: GPUAdvancedCombinationTransformCopier was unable to copy transform from: "
-        << this->m_InputTransform );
+                         << this->m_InputTransform );
     }
 
     // skip next step when last transform
-    if( i == numberOfTransforms - 1 ) continue;
+    if( i == numberOfTransforms - 1 ){ continue; }
 
     // Reset the GPU combo transform
     GPUComboTransformPointer initialNext = GPUComboTransformType::New();
@@ -242,12 +242,13 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinat
   const CPUCurrentTransformConstPointer & fromTransform,
   GPUAdvancedTransformPointer & toTransform )
 {
-  const CPUParametersType & fixedParametersFrom = fromTransform->GetFixedParameters();
+  const CPUFixedParametersType & fixedParametersFrom = fromTransform->GetFixedParameters();
   const CPUParametersType & parametersFrom = fromTransform->GetParameters();
 
-  GPUParametersType fixedParametersTo, parametersTo;
+  GPUFixedParametersType fixedParametersTo;
+  GPUParametersType      parametersTo;
 
-  this->CastCopyParameters( fixedParametersFrom, fixedParametersTo );
+  this->CastCopyFixedParameters( fixedParametersFrom, fixedParametersTo );
   this->CastCopyParameters( parametersFrom, parametersTo );
 
   toTransform->SetFixedParameters( fixedParametersTo );
@@ -261,7 +262,23 @@ void
 GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::CastCopyParameters( const CPUParametersType & from, GPUParametersType & to )
 {
-  if( from.GetSize() == 0 ) return;
+  if( from.GetSize() == 0 ) { return; }
+
+  to.SetSize( from.GetSize() );
+  for( SizeValueType i = 0; i < from.GetSize(); ++i )
+  {
+    to[ i ] = static_cast< GPUScalarType >( from[ i ] );
+  }
+}
+
+
+//------------------------------------------------------------------------------
+template< typename TTypeList, typename NDimensions, typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
+void
+GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
+::CastCopyFixedParameters( const CPUFixedParametersType & from, GPUFixedParametersType & to )
+{
+  if( from.GetSize() == 0 ){ return; }
 
   to.SetSize( from.GetSize() );
   for( SizeValueType i = 0; i < from.GetSize(); ++i )

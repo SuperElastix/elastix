@@ -79,6 +79,7 @@ public:
 
   /** Standard parameters container. */
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::FixedParametersType    FixedParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::TransformCategoryType  TransformCategoryType;
 
@@ -241,13 +242,13 @@ public:
   /** Set the fixed parameters and update internal transformation.
    * The Translation Transform does not require fixed parameters,
    * therefore the implementation of this method is a null operation. */
-  virtual void SetFixedParameters( const ParametersType & )
+  virtual void SetFixedParameters( const FixedParametersType & )
   { /* purposely blank */ }
 
   /** Get the Fixed Parameters. The AdvancedTranslationTransform does not
     * require Fixed parameters, therefore this method returns an
     * parameters array of size zero. */
-  virtual const ParametersType & GetFixedParameters( void ) const
+  virtual const FixedParametersType & GetFixedParameters( void ) const
   {
     this->m_FixedParameters.SetSize( 0 );
     return this->m_FixedParameters;

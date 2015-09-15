@@ -321,9 +321,9 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 template< class TScalarType, unsigned int NDimensions >
 void
 AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
-::SetFixedParameters( const ParametersType & passedParameters )
+::SetFixedParameters( const FixedParametersType & passedParameters )
 {
-  ParametersType parameters( NDimensions * ( 3 + NDimensions ) );
+  FixedParametersType parameters( NDimensions * ( 3 + NDimensions ) );
 
   // check if the number of parameters match the
   // expected number of parameters
@@ -485,7 +485,7 @@ typename AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 template< class TScalarType, unsigned int NDimensions >
 const
 typename AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
-::ParametersType
+::FixedParametersType
 & AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 ::GetFixedParameters( void ) const
 {

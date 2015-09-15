@@ -292,7 +292,7 @@ const typename AdvancedCombinationTransform< TScalarType, NDimensions >::Paramet
  */
 
 template< typename TScalarType, unsigned int NDimensions >
-const typename AdvancedCombinationTransform< TScalarType, NDimensions >::ParametersType
+const typename AdvancedCombinationTransform< TScalarType, NDimensions >::FixedParametersType
 & AdvancedCombinationTransform< TScalarType, NDimensions >
 ::GetFixedParameters( void ) const
 {
@@ -343,7 +343,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 template< typename TScalarType, unsigned int NDimensions >
 void
 AdvancedCombinationTransform< TScalarType, NDimensions >
-::SetFixedParameters( const ParametersType & param )
+::SetFixedParameters( const FixedParametersType & param )
 {
   /** Set the parameters in the m_CurrentTransform. */
   if( this->m_CurrentTransform.IsNotNull() )

@@ -99,7 +99,8 @@ public:
   /** CPU advanced transform class typedefs. */
   typedef AdvancedTransform< CPUScalarType, SpaceDimension, SpaceDimension >
     CPUAdvancedTransformType;
-  typedef typename CPUAdvancedTransformType::ParametersType CPUParametersType;
+  typedef typename CPUAdvancedTransformType::ParametersType      CPUParametersType;
+  typedef typename CPUAdvancedTransformType::FixedParametersType CPUFixedParametersType;
 
   /** GPU combo transform class typedefs. */
   typedef TOutputTransformPrecisionType GPUScalarType;
@@ -110,8 +111,9 @@ public:
   /** GPU advanced transform class typedefs. */
   typedef AdvancedTransform< GPUScalarType, SpaceDimension, SpaceDimension >
     GPUAdvancedTransformType;
-  typedef typename GPUAdvancedTransformType::Pointer        GPUAdvancedTransformPointer;
-  typedef typename GPUAdvancedTransformType::ParametersType GPUParametersType;
+  typedef typename GPUAdvancedTransformType::Pointer             GPUAdvancedTransformPointer;
+  typedef typename GPUAdvancedTransformType::ParametersType      GPUParametersType;
+  typedef typename GPUAdvancedTransformType::FixedParametersType GPUFixedParametersType;
 
   /** Get/Set the input transform. */
   itkSetConstObjectMacro( InputTransform, CPUComboTransformType );
@@ -156,19 +158,15 @@ protected:
     const CPUCurrentTransformConstPointer & fromTransform,
     GPUAdvancedTransformPointer & toTransform );
 
-  /**  */
-  //void CopyParameters(
-  //  const CPUCurrentTransformConstPointer & fromTransform,
-  //  GPUAdvancedTransformPointer & toTransform )
-  //{
-  //  toTransform->SetFixedParameters( fromTransform->GetFixedParameters() );
-  //  toTransform->SetParameters( fromTransform->GetParameters() );
-  //}
-
   /** Method to copy the parameters. */
   void CastCopyParameters(
     const CPUParametersType & from,
     GPUParametersType & to );
+
+  /** Method to copy the fixed parameters. */
+  void CastCopyFixedParameters(
+    const CPUFixedParametersType & from,
+    GPUFixedParametersType & to );
 
 private:
 

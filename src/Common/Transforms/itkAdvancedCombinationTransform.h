@@ -77,6 +77,7 @@ public:
   /** Typedefs inherited from Superclass.*/
   typedef typename Superclass::ScalarType                    ScalarType;
   typedef typename Superclass::ParametersType                ParametersType;
+  typedef typename Superclass::FixedParametersType           FixedParametersType;
   typedef typename Superclass::ParametersValueType           ParametersValueType;
   typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
   typedef typename Superclass::DerivativeType                DerivativeType;
@@ -199,7 +200,7 @@ public:
   virtual const ParametersType & GetParameters( void ) const;
 
   /** Get the fixed parameters from the CurrentTransform. */
-  virtual const ParametersType & GetFixedParameters( void ) const;
+  virtual const FixedParametersType & GetFixedParameters( void ) const;
 
   /** Set the transformation parameters in the CurrentTransform. */
   virtual void SetParameters( const ParametersType & param );
@@ -210,7 +211,7 @@ public:
   virtual void SetParametersByValue( const ParametersType & param );
 
   /** Set the fixed parameters in the CurrentTransform. */
-  virtual void SetFixedParameters( const ParametersType & fixedParam );
+  virtual void SetFixedParameters( const FixedParametersType & fixedParam );
 
   /** Return the inverse \f$T^{-1}\f$ of the transform.
    *  This is only possible when:

@@ -77,10 +77,11 @@ public:
   itkTypeMacro( GPUTransformCopier, Object );
 
   /** Type CPU definitions for the transform. */
-  typedef TTransform                                CPUTransformType;
-  typedef typename CPUTransformType::ConstPointer   CPUTransformConstPointer;
-  typedef typename CPUTransformType::ParametersType CPUParametersType;
-  typedef typename CPUTransformType::ScalarType     CPUScalarType;
+  typedef TTransform                                     CPUTransformType;
+  typedef typename CPUTransformType::ConstPointer        CPUTransformConstPointer;
+  typedef typename CPUTransformType::ParametersType      CPUParametersType;
+  typedef typename CPUTransformType::FixedParametersType CPUFixedParametersType;
+  typedef typename CPUTransformType::ScalarType          CPUScalarType;
 
   /** Dimension of the domain space. */
   itkStaticConstMacro( InputSpaceDimension, unsigned int, CPUTransformType::InputSpaceDimension );
@@ -90,8 +91,9 @@ public:
   typedef TOutputTransformPrecisionType GPUScalarType;
   typedef Transform< GPUScalarType, InputSpaceDimension, OutputSpaceDimension >
     GPUTransformType;
-  typedef typename GPUTransformType::Pointer        GPUTransformPointer;
-  typedef typename GPUTransformType::ParametersType GPUParametersType;
+  typedef typename GPUTransformType::Pointer             GPUTransformPointer;
+  typedef typename GPUTransformType::ParametersType      GPUParametersType;
+  typedef typename GPUTransformType::FixedParametersType GPUFixedParametersType;
 
   /** Get/Set the input transform. */
   itkSetConstObjectMacro( InputTransform, CPUTransformType );
@@ -140,6 +142,11 @@ protected:
   void CastCopyParameters(
     const CPUParametersType & from,
     GPUParametersType & to );
+
+  /** Method to copy the fixed parameters. */
+  void CastCopyFixedParameters(
+    const CPUFixedParametersType & from,
+    GPUFixedParametersType & to );
 
 private:
 

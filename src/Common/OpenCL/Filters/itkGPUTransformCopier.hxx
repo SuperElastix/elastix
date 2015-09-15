@@ -120,7 +120,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
         GPUAffineTransformType;
       affineTransform = GPUAffineTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, affineTransform );
+    this->CastCopyTransformParameters( fromTransform, affineTransform );
     toTransform = affineTransform;
     return true;
   }
@@ -148,13 +148,13 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
         GPUTranslationTransformType;
       translationTransform = GPUTranslationTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, translationTransform );
+    this->CastCopyTransformParameters( fromTransform, translationTransform );
     toTransform = translationTransform;
     return true;
   }
 
   // For BSpline we have to check all possible spline orders
-  const bool bsplineCopyResult = CopyBSplineTransform( fromTransform, toTransform );
+  const bool bsplineCopyResult = this->CopyBSplineTransform( fromTransform, toTransform );
   if( bsplineCopyResult )
   {
     return bsplineCopyResult;
@@ -170,10 +170,10 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
   switch( InputDimension )
   {
     case 2:
-      eulerCopyResult = CopyEuler2DTransform( fromTransform, toTransform, idim );
+      eulerCopyResult = this->CopyEuler2DTransform( fromTransform, toTransform, idim );
       break;
     case 3:
-      eulerCopyResult = CopyEuler3DTransform( fromTransform, toTransform, idim );
+      eulerCopyResult = this->CopyEuler3DTransform( fromTransform, toTransform, idim );
       break;
     default:
       break;
@@ -189,10 +189,10 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
   switch( InputDimension )
   {
     case 2:
-      similarityCopyResult = CopySimilarity2DTransform( fromTransform, toTransform, idim );
+      similarityCopyResult = this->CopySimilarity2DTransform( fromTransform, toTransform, idim );
       break;
     case 3:
-      similarityCopyResult = CopySimilarity3DTransform( fromTransform, toTransform, idim );
+      similarityCopyResult = this->CopySimilarity3DTransform( fromTransform, toTransform, idim );
       break;
     default:
       break;
@@ -215,15 +215,16 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
   const CPUTransformConstPointer & fromTransform,
   GPUTransformPointer & toTransform )
 {
-  const CPUParametersType & fixedParametersFrom
+  const CPUFixedParametersType & fixedParametersFrom
     = fromTransform->GetFixedParameters();
   const CPUParametersType & parametersFrom
     = fromTransform->GetParameters();
 
-  GPUParametersType fixedParametersTo, parametersTo;
+  GPUFixedParametersType fixedParametersTo;
+  GPUParametersType parametersTo;
 
-  CastCopyParameters( fixedParametersFrom, fixedParametersTo );
-  CastCopyParameters( parametersFrom, parametersTo );
+  this->CastCopyFixedParameters( fixedParametersFrom, fixedParametersTo );
+  this->CastCopyParameters( parametersFrom, parametersTo );
 
   toTransform->SetFixedParameters( fixedParametersTo );
   toTransform->SetParameters( parametersTo );
@@ -236,13 +237,24 @@ void
 GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CastCopyParameters( const CPUParametersType & from, GPUParametersType & to )
 {
-  if( from.GetSize() == 0 )
-  {
-    return;
-  }
+  if( from.GetSize() == 0 ){ return; }
 
   to.SetSize( from.GetSize() );
+  for( SizeValueType i = 0; i < from.GetSize(); ++i )
+  {
+    to[ i ] = static_cast< GPUScalarType >( from[ i ] );
+  }
+}
 
+
+//------------------------------------------------------------------------------
+template< typename TTypeList, typename NDimensions, typename TTransform, typename TOutputTransformPrecisionType >
+void
+GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
+::CastCopyFixedParameters( const CPUFixedParametersType & from, GPUFixedParametersType & to )
+{
+  if( from.GetSize() == 0 ){ return; }
+  to.SetSize( from.GetSize() );
   for( SizeValueType i = 0; i < from.GetSize(); ++i )
   {
     to[ i ] = static_cast< GPUScalarType >( from[ i ] );
@@ -303,7 +315,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
         GPUBSplineTransformType;
       bsplineTransform = GPUBSplineTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, bsplineTransform );
+    this->CastCopyTransformParameters( fromTransform, bsplineTransform );
     toTransform = bsplineTransform;
     return true;
   }
@@ -336,7 +348,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
           GPUBSplineTransformType;
         bsplineTransform = GPUBSplineTransformType::New();
       }
-      CastCopyTransformParameters( fromTransform, bsplineTransform );
+      this->CastCopyTransformParameters( fromTransform, bsplineTransform );
       toTransform = bsplineTransform;
       return true;
     }
@@ -369,7 +381,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
             GPUBSplineTransformType;
           bsplineTransform = GPUBSplineTransformType::New();
         }
-        CastCopyTransformParameters( fromTransform, bsplineTransform );
+        this->CastCopyTransformParameters( fromTransform, bsplineTransform );
         toTransform = bsplineTransform;
         return true;
       }
@@ -402,7 +414,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
               GPUBSplineTransformType;
             bsplineTransform = GPUBSplineTransformType::New();
           }
-          CastCopyTransformParameters( fromTransform, bsplineTransform );
+          this->CastCopyTransformParameters( fromTransform, bsplineTransform );
           toTransform = bsplineTransform;
           return true;
         }
@@ -444,7 +456,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
         GPUEulerTransformType;
       eulerTransform = GPUEulerTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, eulerTransform );
+    this->CastCopyTransformParameters( fromTransform, eulerTransform );
     toTransform = eulerTransform;
     return true;
   }
@@ -483,7 +495,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
         GPUEulerTransformType;
       eulerTransform = GPUEulerTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, eulerTransform );
+    this->CastCopyTransformParameters( fromTransform, eulerTransform );
     toTransform = eulerTransform;
     return true;
   }
@@ -522,7 +534,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
         GPUSimilarityTransformType;
       similarityTransform = GPUSimilarityTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, similarityTransform );
+    this->CastCopyTransformParameters( fromTransform, similarityTransform );
     toTransform = similarityTransform;
     return true;
   }
@@ -561,7 +573,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
         GPUSimilarityTransformType;
       similarityTransform = GPUSimilarityTransformType::New();
     }
-    CastCopyTransformParameters( fromTransform, similarityTransform );
+    this->CastCopyTransformParameters( fromTransform, similarityTransform );
     toTransform = similarityTransform;
     return true;
   }
