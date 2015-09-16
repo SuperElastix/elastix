@@ -655,8 +655,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-        ( *gradient )
-          = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+        ( *gradient ) = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
         //this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
         //  cindex, movingImageValue, *gradient );
       }
