@@ -193,12 +193,12 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
 ::EvaluateAtContinuousIndex( const ContinuousIndexType & x ) const
 {
   // Allocate memory on the stack
-    /** Define some constants. */
-   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
+  /** Define some constants. */
+  const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
   long evaluateIndexData[ numberOfWeights ];
-  long stepsData[ numberOfWeights ];
+  OffsetValueType stepsData[ numberOfWeights ];
   vnl_matrix_ref<long> evaluateIndex(ImageDimension,SplineOrder+1,evaluateIndexData);
-  long * steps = &(stepsData[0]);
+  OffsetValueType * steps = &(stepsData[0]);
 
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
@@ -245,10 +245,10 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
 {
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
   long evaluateIndexData[ numberOfWeights ];
-  long stepsData[ numberOfWeights ];
+  OffsetValueType stepsData[ numberOfWeights ];
 
   vnl_matrix_ref<long> evaluateIndex( ImageDimension, SplineOrder + 1, evaluateIndexData );
-  long * steps = &(stepsData[0]);
+  OffsetValueType * steps = &(stepsData[0]);
 
   /** Create storage for the B-spline interpolation weights. */
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
