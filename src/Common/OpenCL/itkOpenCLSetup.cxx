@@ -52,7 +52,10 @@ CreateOpenCLContext( std::string & errorMessage )
     if( !context->GetDefaultDevice().HasDouble() )
     {
       errorMessage = "ERROR: OpenCL device: " + context->GetDefaultDevice().GetName()
-        + ", does not support 'double' computations. Consider updating it.";
+        + ", does not support 'double' computations.\n"
+        + "OpenCL processing in elastix is disabled, since 'double' support is currently required. "
+        + "Processing will be performed on the CPU instead.\n"
+        + "You may consider upgrading your graphical card (hardware).";
       return true;
     }
   }
