@@ -879,8 +879,8 @@ namespace itk
     {
         const double nrOfSamplesPerThreads = static_cast< double >( this->m_NumSamplesLastDimension ) / static_cast< double >( this->m_NumberOfThreads )  ;
         
-        unsigned long pos_begin = round(nrOfSamplesPerThreads * threadId);
-        unsigned long pos_end   = round(nrOfSamplesPerThreads * ( threadId + 1 ));
+        unsigned long pos_begin = Math::Round< unsigned long >( nrOfSamplesPerThreads * threadId );
+        unsigned long pos_end   = Math::Round< unsigned long >( nrOfSamplesPerThreads * ( threadId + 1 ) );
         
         ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
         
@@ -1150,8 +1150,8 @@ namespace itk
     {
         const double nrOfSamplesPerThreads = static_cast< double >( this->m_NumSamplesLastDimension ) / static_cast< double >( this->m_NumberOfThreads )  ;
         
-        unsigned long pos_begin = round(nrOfSamplesPerThreads * threadId);
-        unsigned long pos_end   = round(nrOfSamplesPerThreads * ( threadId + 1 ));
+        unsigned long pos_begin = Math::Round< unsigned long >( nrOfSamplesPerThreads * threadId );
+        unsigned long pos_end   = Math::Round< unsigned long >( nrOfSamplesPerThreads * ( threadId + 1 ) );
         
         ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
         
@@ -1433,8 +1433,8 @@ namespace itk
     {
         const double nrOfSamplesPerThreads = static_cast< double >( this->m_NumSamplesLastDimension ) / static_cast< double >( this->m_NumberOfThreads )  ;
         
-        unsigned long pos_begin = round(nrOfSamplesPerThreads * threadId);
-        unsigned long pos_end   = round(nrOfSamplesPerThreads * ( threadId + 1 ));
+        unsigned long pos_begin = Math::Round< unsigned long >( nrOfSamplesPerThreads * threadId );
+        unsigned long pos_end   = Math::Round< unsigned long >( nrOfSamplesPerThreads * ( threadId + 1 ) );
         
         DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
         
