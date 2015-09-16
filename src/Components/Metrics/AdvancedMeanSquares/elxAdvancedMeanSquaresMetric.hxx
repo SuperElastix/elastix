@@ -83,25 +83,6 @@ AdvancedMeanSquaresMetric< TElastix >
     "SelfHessianNoiseRange", this->GetComponentLabel(), level, 0 );
   this->SetSelfHessianNoiseRange( selfHessianNoiseRange );
 
-  /** Set moving image derivative scales. */
-  this->SetUseMovingImageDerivativeScales( false );
-  MovingImageDerivativeScalesType movingImageDerivativeScales;
-  movingImageDerivativeScales.Fill( 1.0 );
-  bool usescales = true;
-  for( unsigned int i = 0; i < MovingImageDimension; ++i )
-  {
-    usescales &= this->GetConfiguration()->ReadParameter(
-      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-      this->GetComponentLabel(), i, -1, false );
-  }
-  if( usescales )
-  {
-    this->SetUseMovingImageDerivativeScales( true );
-    this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
-    elxout << "Multiplying moving image derivatives by: "
-           << movingImageDerivativeScales << std::endl;
-  }
-
   /** Select the use of an OpenMP implementation for GetValueAndDerivative. */
   std::string useOpenMP = this->m_Configuration->GetCommandLineArgument( "-useOpenMP_SSD" );
   if( useOpenMP == "true" )

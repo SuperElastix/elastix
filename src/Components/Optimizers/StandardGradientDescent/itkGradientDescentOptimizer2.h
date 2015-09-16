@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __itkGradientDescentOptimizer2_h
 #define __itkGradientDescentOptimizer2_h
 
@@ -96,7 +95,7 @@ public:
   * \sa StopOptimization. */
   virtual void ResumeOptimization( void );
 
-  /** Stop optimisation and pass on exception. */
+  /** Stop optimization and pass on exception. */
   virtual void MetricErrorResponse( ExceptionObject & err );
 
   /** Stop optimization.

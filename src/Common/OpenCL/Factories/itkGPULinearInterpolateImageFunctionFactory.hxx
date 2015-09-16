@@ -22,20 +22,20 @@
 
 namespace itk
 {
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::RegisterOneFactory()
 {
-  typedef GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimentions > GPUInterpolateFactoryType;
+  typedef GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimensions > GPUInterpolateFactoryType;
   typename GPUInterpolateFactoryType::Pointer factory = GPUInterpolateFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
-GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+template< typename TTypeList, typename NDimensions >
+GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::GPULinearInterpolateImageFunctionFactory2()
 {
   this->RegisterAll();
@@ -43,9 +43,9 @@ GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -64,9 +64,9 @@ GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -85,9 +85,9 @@ GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 void
-GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimentions >
+GPULinearInterpolateImageFunctionFactory2< TTypeList, NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration

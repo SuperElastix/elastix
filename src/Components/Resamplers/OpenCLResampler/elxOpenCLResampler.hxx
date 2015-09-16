@@ -271,7 +271,7 @@ OpenCLResampler< TElastix >
 {
   // Are we using a OpenCL enabled GPU for resampling?
   this->m_UseOpenCL = true;
-  this->m_Configuration->ReadParameter( this->m_UseOpenCL, "OpenCLResamplerUseOpenCL", 0 );
+  this->m_Configuration->ReadParameter( this->m_UseOpenCL, "OpenCLResamplerUseOpenCL", 0, false );
 
 } // end BeforeRegistration()
 
@@ -310,10 +310,10 @@ OpenCLResampler< TElastix >
   // Add some OpenCLResampler specific lines.
   xout[ "transpar" ] << std::endl << "// OpenCLResampler specific" << std::endl;
 
-  // Write UseOpenCLResampler.
+  // Write OpenCLResamplerUseOpenCL.
   std::string useOpenCL = "false";
   if( this->m_UseOpenCL ) { useOpenCL = "true"; }
-  xout[ "transpar" ] << "(UseOpenCLResampler \"" << useOpenCL << "\")" << std::endl;
+  xout[ "transpar" ] << "(OpenCLResamplerUseOpenCL \"" << useOpenCL << "\")" << std::endl;
 
 } // end WriteToFile()
 

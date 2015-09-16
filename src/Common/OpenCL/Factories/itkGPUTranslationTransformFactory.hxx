@@ -22,28 +22,28 @@
 
 namespace itk
 {
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUTranslationTransformFactory2< NDimentions >::RegisterOneFactory()
+GPUTranslationTransformFactory2< NDimensions >::RegisterOneFactory()
 {
-  typedef GPUTranslationTransformFactory2< NDimentions > GPUTransformFactoryType;
+  typedef GPUTranslationTransformFactory2< NDimensions > GPUTransformFactoryType;
   typename GPUTransformFactoryType::Pointer factory = GPUTransformFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
-GPUTranslationTransformFactory2< NDimentions >::GPUTranslationTransformFactory2()
+template< typename NDimensions >
+GPUTranslationTransformFactory2< NDimensions >::GPUTranslationTransformFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUTranslationTransformFactory2< NDimentions >
+GPUTranslationTransformFactory2< NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -53,9 +53,9 @@ GPUTranslationTransformFactory2< NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUTranslationTransformFactory2< NDimentions >
+GPUTranslationTransformFactory2< NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -65,9 +65,9 @@ GPUTranslationTransformFactory2< NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUTranslationTransformFactory2< NDimentions >
+GPUTranslationTransformFactory2< NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration

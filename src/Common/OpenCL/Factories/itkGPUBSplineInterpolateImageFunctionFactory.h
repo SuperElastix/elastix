@@ -33,14 +33,14 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename TTypeList, typename NDimentions >
+template< typename TTypeList, typename NDimensions >
 class GPUBSplineInterpolateImageFunctionFactory2 :
-  public GPUObjectFactoryBase< NDimentions >
+  public GPUObjectFactoryBase< NDimensions >
 {
 public:
 
   typedef GPUBSplineInterpolateImageFunctionFactory2 Self;
-  typedef GPUObjectFactoryBase< NDimentions >        Superclass;
+  typedef GPUObjectFactoryBase< NDimensions >        Superclass;
   typedef SmartPointer< Self >                       Pointer;
   typedef SmartPointer< const Self >                 ConstPointer;
 

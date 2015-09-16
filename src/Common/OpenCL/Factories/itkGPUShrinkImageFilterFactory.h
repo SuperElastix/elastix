@@ -33,14 +33,14 @@ namespace itk
  * Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
  *
  */
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 class GPUShrinkImageFilterFactory2 :
-  public GPUObjectFactoryBase< NDimentions >
+  public GPUObjectFactoryBase< NDimensions >
 {
 public:
 
   typedef GPUShrinkImageFilterFactory2        Self;
-  typedef GPUObjectFactoryBase< NDimentions > Superclass;
+  typedef GPUObjectFactoryBase< NDimensions > Superclass;
   typedef SmartPointer< Self >                Pointer;
   typedef SmartPointer< const Self >          ConstPointer;
 

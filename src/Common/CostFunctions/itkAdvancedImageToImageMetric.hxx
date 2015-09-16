@@ -39,7 +39,7 @@ template< class TFixedImage, class TMovingImage >
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::AdvancedImageToImageMetric()
 {
-  /** don't use the default gradient image as implemented by ITK.
+  /** Don't use the default gradient image as implemented by ITK.
    * It uses a Gaussian derivative, which introduces extra smoothing,
    * which may not always be desired. Also, when the derivatives are
    * computed using Gaussian filtering, the gray-values should also be
@@ -67,6 +67,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_TransformIsAdvanced            = false;
   this->m_TransformIsBSpline             = false;
   this->m_UseMovingImageDerivativeScales = false;
+  this->m_ScaleGradientWithRespectToMovingImageOrientation = false;
   this->m_MovingImageDerivativeScales.Fill( 1.0 );
 
   this->m_FixedImageLimiter     = 0;
@@ -86,6 +87,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Threading related variables. */
   this->m_UseMetricSingleThreaded = true;
+  this->m_Threader->SetUseThreadPool( false ); // setting to true makes elastix hang
+                                               // at a WaitForSingleMethodThread()
 
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP
@@ -645,78 +648,111 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   RealType & movingImageValue,
   MovingImageDerivativeType * gradient ) const
 {
-    /** Check if mapped point inside image buffer. */
-    MovingImageContinuousIndexType cindex;
-    this->m_Interpolator->ConvertPointToContinuousIndex( mappedPoint, cindex );
-    bool sampleOk = this->m_Interpolator->IsInsideBuffer( cindex );
+  /** Check if mapped point inside image buffer. */
+  MovingImageContinuousIndexType cindex;
+  this->m_Interpolator->ConvertPointToContinuousIndex( mappedPoint, cindex );
+  bool sampleOk = this->m_Interpolator->IsInsideBuffer( cindex );
 
-    if( sampleOk )
+  if( sampleOk )
+  {
+    /** Compute value and possibly derivative. */
+    if( gradient )
     {
-      /** Compute value and possibly derivative. */
-      if( gradient )
+      if( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
       {
-        if( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
+        /** Compute moving image value and gradient using the B-spline kernel. */
+        this->m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+          cindex, movingImageValue, *gradient );
+      }
+      else if( this->m_InterpolatorIsBSplineFloat && !this->GetComputeGradient() )
+      {
+        /** Compute moving image value and gradient using the B-spline kernel. */
+        this->m_BSplineInterpolatorFloat->EvaluateValueAndDerivativeAtContinuousIndex(
+          cindex, movingImageValue, *gradient );
+      }
+      else if( this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient() )
+      {
+        /** Compute moving image value and gradient using the B-spline kernel. */
+        movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
+        ( *gradient ) = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+        //this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+        //  cindex, movingImageValue, *gradient );
+      }
+      else if( this->m_InterpolatorIsRecursiveBSpline && !this->GetComputeGradient() )
+      {
+        /** Compute moving image value and gradient using the recursive B-spline interpolator. */
+        this->m_RecursiveBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+          cindex, movingImageValue, *gradient );
+      }
+      else if( this->m_InterpolatorIsLinear && !this->GetComputeGradient() )
+      {
+        /** Compute moving image value and gradient using the linear interpolator. */
+        this->m_LinearInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+          cindex, movingImageValue, *gradient );
+      }
+      else
+      {
+        /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
+         * It is assumed that the gradient image is computed.
+         */
+        movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
+        MovingImageIndexType index;
+        for( unsigned int j = 0; j < MovingImageDimension; j++ )
         {
-          /** Compute moving image value and gradient using the B-spline kernel. */
-          this->m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
-            cindex, movingImageValue, *gradient );
+          index[ j ] = static_cast< long >( Math::Round< double >( cindex[ j ] ) );
         }
-        else if( this->m_InterpolatorIsBSplineFloat && !this->GetComputeGradient() )
-        {
-          /** Compute moving image value and gradient using the B-spline kernel. */
-          this->m_BSplineInterpolatorFloat->EvaluateValueAndDerivativeAtContinuousIndex(
-            cindex, movingImageValue, *gradient );
-        }
-        else if( this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient() )
-        {
-          /** Compute moving image value and gradient using the B-spline kernel. */
-          movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-          ( *gradient ) = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
-          //this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
-          //  cindex, movingImageValue, *gradient );
-        }
-        else if( this->m_InterpolatorIsRecursiveBSpline && !this->GetComputeGradient() )
-        {
-          /** Compute moving image value and gradient using the linear interpolator. */
-          this->m_RecursiveBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
-            cindex, movingImageValue, *gradient );
-        }
-        else if( this->m_InterpolatorIsLinear && !this->GetComputeGradient() )
-        {
-          /** Compute moving image value and gradient using the linear interpolator. */
-          this->m_LinearInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
-            cindex, movingImageValue, *gradient );
-        }
-        else
-        {
-          /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
-           * It is assumed that the gradient image is computed.
-           */
-          movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-          MovingImageIndexType index;
-          for( unsigned int j = 0; j < MovingImageDimension; j++ )
-          {
-            index[ j ] = static_cast< long >( Math::Round< double >( cindex[ j ] ) );
-          }
-          ( *gradient ) = this->m_GradientImage->GetPixel( index );
-        }
-        if( this->m_UseMovingImageDerivativeScales )
+        ( *gradient ) = this->m_GradientImage->GetPixel( index );
+      }
+
+      /** The moving image gradient is multiplied with its scales, when requested. */
+      if( this->m_UseMovingImageDerivativeScales )
+      {
+        if( !this->m_ScaleGradientWithRespectToMovingImageOrientation )
         {
           for( unsigned int i = 0; i < MovingImageDimension; ++i )
           {
             ( *gradient )[ i ] *= this->m_MovingImageDerivativeScales[ i ];
           }
         }
-      } // end if gradient
-      else
-      {
-        movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-      }
-    } // end if sampleOk
+        else
+        {
+          /** Optionally, the scales are applied with respect to the moving image orientation.
+           * The above default option implicitly applies the scales with respect to the
+           * orientation of the transformation axis. In some cases you may want to restrict
+           * moving image motion with respect to its own axes. This is achieved below by pre
+           * and post rotation by the direction cosines of the moving image.
+           * First the gradient is rotated backwards to a standardized axis.
+           */
+          typedef typename MovingImageType::DirectionType::InternalMatrixType InternalMatrixType;
+          const InternalMatrixType M = this->GetMovingImage()->GetDirection().GetVnlMatrix();
+          vnl_vector<double> rotated_gradient_vnl = M.transpose() * gradient->GetVnlVector();
 
-    return sampleOk;
+          /** Then scales are applied. */
+          for( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            rotated_gradient_vnl[ i ] *= this->m_MovingImageDerivativeScales[ i ];
+          }
 
-  } // end EvaluateMovingImageValueAndDerivative()
+          /** The scaled gradient is then rotated forwards again. */
+          rotated_gradient_vnl = M * rotated_gradient_vnl;
+
+          /** Copy the vnl version back to the original. */
+          for( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            ( *gradient )[ i ] = rotated_gradient_vnl[ i ];
+          }
+        }
+      } // end if m_UseMovingImageDerivativeScales
+    } // end if gradient
+    else
+    {
+      movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
+    }
+  } // end if sampleOk
+
+  return sampleOk;
+
+} // end EvaluateMovingImageValueAndDerivative()
 
 
 /**

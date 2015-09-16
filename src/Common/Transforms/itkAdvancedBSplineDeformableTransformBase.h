@@ -59,6 +59,7 @@ public:
 
   /** Typedefs from Superclass. */
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::FixedParametersType    FixedParametersType;
   typedef typename Superclass::ParametersValueType    ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::DerivativeType         DerivativeType;
@@ -123,7 +124,7 @@ public:
    * This function was added to allow the transform to work with the
    * itkTransformReader/Writer I/O filters.
    */
-  void SetFixedParameters( const ParametersType & parameters );
+  void SetFixedParameters( const FixedParametersType & parameters );
 
   /** This method sets the parameters of the transform.
    * For a B-spline deformation transform, the parameters are the BSpline
@@ -157,7 +158,7 @@ public:
   virtual const ParametersType & GetParameters( void ) const;
 
   /** Get the Transformation Fixed Parameters. */
-  virtual const ParametersType & GetFixedParameters( void ) const;
+  virtual const FixedParametersType & GetFixedParameters( void ) const;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType PixelType;

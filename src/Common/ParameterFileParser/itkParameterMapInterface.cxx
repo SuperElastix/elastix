@@ -16,9 +16,6 @@
  *
  *=========================================================================*/
 
-#ifndef __itkParameterMapInterface_cxx
-#define __itkParameterMapInterface_cxx
-
 #include "itkParameterMapInterface.h"
 
 namespace itk
@@ -222,5 +219,3 @@ ParameterMapInterface
 
 
 } // end namespace itk
-
-#endif // end __itkParameterMapInterface_cxx

@@ -16,10 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef __itkAdaptiveStochasticGradientDescentOptimizer_cxx
-#define __itkAdaptiveStochasticGradientDescentOptimizer_cxx
-
 #include "itkAdaptiveStochasticGradientDescentOptimizer.h"
+
 #include "vnl/vnl_math.h"
 #include "itkSigmoidImageFilter.h"
 
@@ -43,8 +41,6 @@ AdaptiveStochasticGradientDescentOptimizer
 
 /**
  * ************************** UpdateCurrentTime ********************
- *
- * This function computes the input for the Compute_a function.
  */
 
 void
@@ -86,9 +82,7 @@ AdaptiveStochasticGradientDescentOptimizer
     this->m_CurrentTime += ( this->GetSigmoidMax() + this->GetSigmoidMin() ) / 2.0;
   }
 
-}   // end UpdateCurrentTime()
+} // end UpdateCurrentTime()
 
 
 } // end namespace itk
-
-#endif // end #ifndef __itkAdaptiveStochasticGradientDescentOptimizer_cxx

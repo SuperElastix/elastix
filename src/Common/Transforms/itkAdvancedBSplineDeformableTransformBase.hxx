@@ -140,7 +140,7 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 ::UpdatePointIndexConversions( void )
 {
   DirectionType scale;
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     scale[ i ][ i ] = this->m_GridSpacing[ i ];
   }
@@ -345,9 +345,9 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 template< class TScalarType, unsigned int NDimensions >
 void
 AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
-::SetFixedParameters( const ParametersType & passedParameters )
+::SetFixedParameters( const FixedParametersType & passedParameters )
 {
-  ParametersType parameters( NDimensions * ( 3 + NDimensions ) );
+  FixedParametersType parameters( NDimensions * ( 3 + NDimensions ) );
 
   // check if the number of parameters match the
   // expected number of parameters
@@ -447,8 +447,8 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 
   for( unsigned int j = 0; j < SpaceDimension; j++ )
   {
-    this->m_WrappedImage[ j ]->GetPixelContainer()->
-    SetImportPointer( dataPointer, numberOfPixels );
+    this->m_WrappedImage[ j ]->GetPixelContainer()
+      ->SetImportPointer( dataPointer, numberOfPixels );
     dataPointer                   += numberOfPixels;
     this->m_CoefficientImages[ j ] = this->m_WrappedImage[ j ];
   }
@@ -509,7 +509,7 @@ typename AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 template< class TScalarType, unsigned int NDimensions >
 const
 typename AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
-::ParametersType
+::FixedParametersType
 & AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 ::GetFixedParameters( void ) const
 {

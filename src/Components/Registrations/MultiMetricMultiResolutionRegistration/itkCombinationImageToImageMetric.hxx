@@ -554,7 +554,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
  */
 
 template< class TFixedImage, class TMovingImage >
-std::size_t
+double
 CombinationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetMetricComputationTime( unsigned int pos ) const
 {
@@ -721,8 +721,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
 
     /** store ... */
     this->m_MetricValues[ i ] = tmpValue;
-    this->m_MetricComputationTime[ i ]
-      = Math::Round< std::size_t, double >( timer.GetMean() * 1000.0 );
+    this->m_MetricComputationTime[ i ] = timer.GetMean() * 1000.0;
 
     /** and combine. */
     if( this->m_UseMetric[ i ] )
@@ -787,8 +786,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
     /** store ... */
     this->m_MetricDerivatives[ i ]          = tmpDerivative;
     this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
-    this->m_MetricComputationTime[ i ]
-      = Math::Round< std::size_t, double >( timer.GetMean() * 1000.0 );
+    this->m_MetricComputationTime[ i ]      = timer.GetMean() * 1000.0;
 
     /** and combine. */
     if( this->m_UseMetric[ i ] )
@@ -892,8 +890,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
       timer.Stop();
 
       /** Store computation time. */
-      this->m_MetricComputationTime[ i ]
-        = Math::Round< std::size_t, double >( timer.GetMean() * 1000.0 );
+      this->m_MetricComputationTime[ i ] = timer.GetMean() * 1000.0;
     }
   }
   /** Compute all metric values and derivatives, multi-threadedly. */
@@ -1041,8 +1038,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
     temp->st_MetricValuesIterator[ threadID ],
     temp->st_MetricDerivativesIterator[ threadID ] );
   timer.Stop();
-  temp->st_MetricComputationTime[ threadID ]
-    = Math::Round< std::size_t, double >( timer.GetMean() * 1000.0 );
+  temp->st_MetricComputationTime[ threadID ] = timer.GetMean() * 1000.0;
 
   return ITK_THREAD_RETURN_VALUE;
 

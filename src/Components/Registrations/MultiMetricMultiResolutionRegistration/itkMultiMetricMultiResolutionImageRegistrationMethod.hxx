@@ -305,9 +305,8 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
         for( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
         {
           start[ dim ] = static_cast< IndexValueType >( vcl_ceil( startcindex[ dim ] ) );
-          size[ dim ]  = static_cast< SizeValueType >(
-            static_cast< SizeValueType >( vcl_floor( endcindex[ dim ] ) )
-            - start[ dim ] + 1 );
+          size[ dim ]  = vnl_math_max( NumericTraits< SizeValueType >::One, static_cast< SizeValueType >(
+            static_cast< SizeValueType >( vcl_floor( endcindex[ dim ] ) ) - start[ dim ] + 1 ) );
         }
 
         this->m_FixedImageRegionPyramids[ i ][ level ].SetSize( size );

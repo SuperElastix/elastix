@@ -22,28 +22,28 @@
 
 namespace itk
 {
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedCombinationTransformFactory2< NDimentions >::RegisterOneFactory()
+GPUAdvancedCombinationTransformFactory2< NDimensions >::RegisterOneFactory()
 {
-  typedef GPUAdvancedCombinationTransformFactory2< NDimentions > GPUTransformFactoryType;
+  typedef GPUAdvancedCombinationTransformFactory2< NDimensions > GPUTransformFactoryType;
   typename GPUTransformFactoryType::Pointer factory = GPUTransformFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
-GPUAdvancedCombinationTransformFactory2< NDimentions >::GPUAdvancedCombinationTransformFactory2()
+template< typename NDimensions >
+GPUAdvancedCombinationTransformFactory2< NDimensions >::GPUAdvancedCombinationTransformFactory2()
 {
   this->RegisterAll();
 }
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedCombinationTransformFactory2< NDimentions >
+GPUAdvancedCombinationTransformFactory2< NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -53,9 +53,9 @@ GPUAdvancedCombinationTransformFactory2< NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedCombinationTransformFactory2< NDimentions >
+GPUAdvancedCombinationTransformFactory2< NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -65,9 +65,9 @@ GPUAdvancedCombinationTransformFactory2< NDimentions >
 
 
 //------------------------------------------------------------------------------
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUAdvancedCombinationTransformFactory2< NDimentions >
+GPUAdvancedCombinationTransformFactory2< NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration

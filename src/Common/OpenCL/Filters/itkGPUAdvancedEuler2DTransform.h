@@ -18,7 +18,7 @@
 #ifndef __itkGPUAdvancedEuler2DTransform_h
 #define __itkGPUAdvancedEuler2DTransform_h
 
-#include "itkAdvancedEuler2DTransform.h"
+#include "itkAdvancedRigid2DTransform.h"
 #include "itkGPUMatrixOffsetTransformBase.h"
 
 namespace itk
@@ -35,7 +35,7 @@ namespace itk
  * \ingroup GPUCommon
  */
 template< typename TScalarType = float,
-typename TParentTransform      = AdvancedEuler2DTransform< TScalarType > >
+typename TParentTransform      = AdvancedRigid2DTransform< TScalarType > >
 class GPUAdvancedEuler2DTransform :
   public TParentTransform,
   public GPUMatrixOffsetTransformBase< TScalarType, 2, 2 >

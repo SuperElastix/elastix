@@ -39,7 +39,8 @@ namespace itk
  *  };
  *
  *  typedef typelist::MakeTypeList< short, float >::Type OCLImageTypes;
- *  typedef itk::GPUAdvancedCombinationTransformCopier< OCLImageTypes, OCLImageDims, CompositeTransformType, float > CopierType;
+ *  typedef itk::AdvancedCombinationTransform< float, 3 > TransformType;
+ *  typedef itk::GPUAdvancedCombinationTransformCopier< OCLImageTypes, OCLImageDims, TransformType, float > CopierType;
  *  CopierType::Pointer copier = CopierType::New();
  *  copier->SetInputTransform(CPUTransform);
  *  copier->Update();
@@ -58,7 +59,7 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimentions,
+template< typename TTypeList, typename NDimensions,
 typename TAdvancedCombinationTransform, typename TOutputTransformPrecisionType >
 class GPUAdvancedCombinationTransformCopier : public Object
 {
@@ -84,14 +85,22 @@ public:
 
   /** CPU combo transform class typedefs. */
   typedef typename CPUComboTransformType::ConstPointer                 CPUComboTransformConstPointer;
+  typedef typename CPUComboTransformType::CurrentTransformType         CPUCurrentTransformType;
+  typedef typename CPUComboTransformType::CurrentTransformPointer      CPUCurrentTransformPointer;
   typedef typename CPUComboTransformType::CurrentTransformConstPointer CPUCurrentTransformConstPointer;
+  typedef typename CPUComboTransformType::InitialTransformType         CPUInitialTransformType;
+  typedef typename CPUComboTransformType::InitialTransformPointer      CPUInitialTransformPointer;
   typedef typename CPUComboTransformType::InitialTransformConstPointer CPUInitialTransformConstPointer;
+  typedef typename CPUComboTransformType::TransformType                TransformType;             // itk::Transform
+  typedef typename CPUComboTransformType::TransformTypePointer         TransformTypePointer;      // itk::Transform
+  typedef typename CPUComboTransformType::TransformTypeConstPointer    TransformTypeConstPointer; // itk::Transform
   typedef typename CPUComboTransformType::ScalarType                   CPUScalarType;
 
   /** CPU advanced transform class typedefs. */
   typedef AdvancedTransform< CPUScalarType, SpaceDimension, SpaceDimension >
     CPUAdvancedTransformType;
-  typedef typename CPUAdvancedTransformType::ParametersType CPUParametersType;
+  typedef typename CPUAdvancedTransformType::ParametersType      CPUParametersType;
+  typedef typename CPUAdvancedTransformType::FixedParametersType CPUFixedParametersType;
 
   /** GPU combo transform class typedefs. */
   typedef TOutputTransformPrecisionType GPUScalarType;
@@ -102,8 +111,9 @@ public:
   /** GPU advanced transform class typedefs. */
   typedef AdvancedTransform< GPUScalarType, SpaceDimension, SpaceDimension >
     GPUAdvancedTransformType;
-  typedef typename GPUAdvancedTransformType::Pointer        GPUAdvancedTransformPointer;
-  typedef typename GPUAdvancedTransformType::ParametersType GPUParametersType;
+  typedef typename GPUAdvancedTransformType::Pointer             GPUAdvancedTransformPointer;
+  typedef typename GPUAdvancedTransformType::ParametersType      GPUParametersType;
+  typedef typename GPUAdvancedTransformType::FixedParametersType GPUFixedParametersType;
 
   /** Get/Set the input transform. */
   itkSetConstObjectMacro( InputTransform, CPUComboTransformType );
@@ -139,7 +149,7 @@ protected:
   virtual void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
 
   /** Method to copy the transforms parameters. */
-  bool CopyTransform(
+  bool CopyToCurrentTransform(
     const CPUCurrentTransformConstPointer & fromTransform,
     GPUComboTransformPointer & toTransform );
 
@@ -148,19 +158,15 @@ protected:
     const CPUCurrentTransformConstPointer & fromTransform,
     GPUAdvancedTransformPointer & toTransform );
 
-  /**  */
-  //void CopyParameters(
-  //  const CPUCurrentTransformConstPointer & fromTransform,
-  //  GPUAdvancedTransformPointer & toTransform )
-  //{
-  //  toTransform->SetFixedParameters( fromTransform->GetFixedParameters() );
-  //  toTransform->SetParameters( fromTransform->GetParameters() );
-  //}
-
   /** Method to copy the parameters. */
   void CastCopyParameters(
     const CPUParametersType & from,
     GPUParametersType & to );
+
+  /** Method to copy the fixed parameters. */
+  void CastCopyFixedParameters(
+    const CPUFixedParametersType & from,
+    GPUFixedParametersType & to );
 
 private:
 

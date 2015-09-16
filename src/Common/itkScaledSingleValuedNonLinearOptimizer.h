@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __ScaledSingleValuedNonLinearOptimizer_h
 #define __ScaledSingleValuedNonLinearOptimizer_h
 

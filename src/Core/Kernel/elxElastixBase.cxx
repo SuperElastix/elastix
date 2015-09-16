@@ -65,8 +65,9 @@ ElastixBase::ElastixBase()
   this->m_InitialTransform = 0;
   this->m_FinalTransform   = 0;
 
-  /** Ignore direction cosines by default, for backward compatability. */
-  this->m_UseDirectionCosines = false;
+  /** From Elastix 4.3 to 4.7: Ignore direction cosines by default, for
+   * backward compatability. From Elastix 4.8: set it to true by default.*/
+  this->m_UseDirectionCosines = true;
 
 } // end Constructor
 

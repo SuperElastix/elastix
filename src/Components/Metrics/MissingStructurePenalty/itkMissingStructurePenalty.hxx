@@ -302,7 +302,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
       }
 
       sumSignedVolume +=  signedVolume;
-      sumAbsVolume    += abs( signedVolume );
+      sumAbsVolume    += vcl_abs( signedVolume );
     }
 
     /** Create iterators. */

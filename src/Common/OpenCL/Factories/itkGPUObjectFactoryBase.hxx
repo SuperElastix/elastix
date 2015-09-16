@@ -23,9 +23,9 @@
 
 namespace itk
 {
-template< typename NDimentions >
+template< typename NDimensions >
 void
-GPUObjectFactoryBase< NDimentions >
+GPUObjectFactoryBase< NDimensions >
 ::RegisterAll()
 {
   OpenCLContext::Pointer context = OpenCLContext::GetInstance();

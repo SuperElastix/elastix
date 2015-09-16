@@ -16,10 +16,8 @@
  *
  *=========================================================================*/
 
-#ifndef _itkGradientDescentOptimizer2_txx
-#define _itkGradientDescentOptimizer2_txx
-
 #include "itkGradientDescentOptimizer2.h"
+
 #include "itkCommand.h"
 #include "itkEventObject.h"
 #include "itkExceptionObject.h"
@@ -56,8 +54,9 @@ GradientDescentOptimizer2
   this->m_UseMultiThread = false;
   this->m_UseOpenMP      = false;
   this->m_UseEigen       = false;
+  //this->m_Threader->SetUseThreadPool( true );
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -85,12 +84,12 @@ GradientDescentOptimizer2
      << this->m_Gradient;
   os << std::endl;
 
-}   // end PrintSelf
+} // end PrintSelf()
 
 
 /**
-* **************** Start the optimization ********************
-*/
+ * **************** StartOptimization ********************
+ */
 
 void
 GradientDescentOptimizer2
@@ -111,12 +110,12 @@ GradientDescentOptimizer2
   this->SetCurrentPosition( this->GetInitialPosition() );
 
   this->ResumeOptimization();
-}   // end StartOptimization
+} // end StartOptimization()
 
 
 /**
-* ************************ ResumeOptimization *************
-*/
+ * ************************ ResumeOptimization *************
+ */
 
 void
 GradientDescentOptimizer2
@@ -134,7 +133,6 @@ GradientDescentOptimizer2
 
   while( !this->m_Stop )
   {
-
     try
     {
       this->GetScaledValueAndDerivative(
@@ -168,9 +166,9 @@ GradientDescentOptimizer2
       break;
     }
 
-  }   // end while
+  } // end while
 
-}   // end ResumeOptimization()
+} // end ResumeOptimization()
 
 
 /**
@@ -188,12 +186,12 @@ GradientDescentOptimizer2
   /** Pass exception to caller. */
   throw err;
 
-}   // end MetricErrorResponse()
+} // end MetricErrorResponse()
 
 
 /**
-* ***************** Stop optimization ************************
-*/
+ * ***************** StopOptimization ************************
+ */
 
 void
 GradientDescentOptimizer2
@@ -203,12 +201,11 @@ GradientDescentOptimizer2
 
   this->m_Stop = true;
   this->InvokeEvent( EndEvent() );
-}   // end StopOptimization
+} // end StopOptimization()
 
 
 /**
  * ************ AdvanceOneStep ****************************
- * following the gradient direction
  */
 
 void
@@ -226,20 +223,21 @@ GradientDescentOptimizer2
 
   /** Advance one step. */
   // single-threadedly
-  if( !this->m_UseMultiThread || true )   // for now force single-threaded since it is fastest most of the times
+  if( true )
+  //if( !this->m_UseMultiThread || true )   // for now force single-threaded since it is fastest most of the times
   //if( !this->m_UseMultiThread && false ) // force multi-threaded
   {
     /** Get a reference to the current position. */
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
     /** Update the new position. */
-    for( unsigned int j = 0; j < spaceDimension; j++ )
+    for( unsigned int j = 0; j < spaceDimension; ++j )
     {
       newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
     }
   }
 #ifdef ELASTIX_USE_OPENMP
-  else if( this->m_UseOpenMP && !this->m_UseEigen )
+  else if( true )// this->m_UseOpenMP && !this->m_UseEigen )
   {
     /** Get a reference to the current position. */
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
@@ -247,7 +245,7 @@ GradientDescentOptimizer2
     /** Update the new position. */
     const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
     omp_set_num_threads( nthreads );
-      #pragma omp parallel for
+    #pragma omp parallel for
     for( int j = 0; j < static_cast< int >( spaceDimension ); j++ )
     {
       newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
@@ -288,7 +286,7 @@ GradientDescentOptimizer2
     const int spaceDim = static_cast< int >( spaceDimension );
     const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
     omp_set_num_threads( nthreads );
-      #pragma omp parallel for
+    #pragma omp parallel for
     for( int i = 0; i < nthreads; i += 1 )
     {
       int threadId = omp_get_thread_num();
@@ -318,7 +316,7 @@ GradientDescentOptimizer2
 
   this->InvokeEvent( IterationEvent() );
 
-}   // end AdvanceOneStep()
+} // end AdvanceOneStep()
 
 
 /**
@@ -376,5 +374,3 @@ GradientDescentOptimizer2
 
 
 } // end namespace itk
-
-#endif

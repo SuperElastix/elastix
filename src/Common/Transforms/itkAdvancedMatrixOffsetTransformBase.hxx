@@ -373,7 +373,7 @@ template< class TScalarType, unsigned int NInputDimensions,
 unsigned int NOutputDimensions >
 void
 AdvancedMatrixOffsetTransformBase< TScalarType, NInputDimensions, NOutputDimensions >
-::SetFixedParameters( const ParametersType & fp )
+::SetFixedParameters( const FixedParametersType & fp )
 {
   this->m_FixedParameters = fp;
   InputPointType c;
@@ -390,7 +390,7 @@ template< class TScalarType, unsigned int NInputDimensions,
 unsigned int NOutputDimensions >
 const typename AdvancedMatrixOffsetTransformBase< TScalarType,
 NInputDimensions,
-NOutputDimensions >::ParametersType
+NOutputDimensions >::FixedParametersType
 & AdvancedMatrixOffsetTransformBase< TScalarType, NInputDimensions, NOutputDimensions >
 ::GetFixedParameters( void ) const
 {

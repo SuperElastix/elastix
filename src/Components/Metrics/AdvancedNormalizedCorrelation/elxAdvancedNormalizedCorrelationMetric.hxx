@@ -44,25 +44,6 @@ AdvancedNormalizedCorrelationMetric< TElastix >
     this->GetComponentLabel(), level, 0 );
   this->SetSubtractMean( subtractMean );
 
-  /** Set moving image derivative scales. */
-  this->SetUseMovingImageDerivativeScales( false );
-  MovingImageDerivativeScalesType movingImageDerivativeScales;
-  movingImageDerivativeScales.Fill( 1.0 );
-  bool usescales = true;
-  for( unsigned int i = 0; i < MovingImageDimension; ++i )
-  {
-    usescales &= this->GetConfiguration()->ReadParameter(
-      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-      this->GetComponentLabel(), i, -1, false );
-  }
-  if( usescales )
-  {
-    this->SetUseMovingImageDerivativeScales( true );
-    this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
-    elxout << "Multiplying moving image derivatives by: "
-           << movingImageDerivativeScales << std::endl;
-  }
-
 } // end BeforeEachResolution()
 
 

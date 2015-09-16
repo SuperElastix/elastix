@@ -1,6 +1,12 @@
 #---------------------------------------------------------------------
 cmake_minimum_required( VERSION 2.8 )
 cmake_policy( SET CMP0012 NEW )
+if( POLICY CMP0033 )
+  # This policy was introduced in cmake 3, so we need to check for its
+  # existence. When the minimum cmake version above is upgraded to 3
+  # this if(POLICY) check can be removed.
+  cmake_policy( SET CMP0033 OLD )
+endif()
 
 #---------------------------------------------------------------------
 project( elastix )
@@ -28,20 +34,6 @@ include( ${ITK_USE_FILE} )
 # Add the CMake dir as an additional module path,
 # so that CMake is able to find the FindPackage modules.
 list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake )
-
-#---------------------------------------------------------------------
-# Find CUDA.
-mark_as_advanced( ELASTIX_USE_CUDA )
-option( ELASTIX_USE_CUDA "Use CUDA enabled GPU" OFF )
-
-if( ELASTIX_USE_CUDA )
-  find_package( CUDA REQUIRED )
-
-  mark_as_advanced( CUDA_BUILD_CUBIN )
-  mark_as_advanced( CUDA_BUILD_EMULATION )
-  mark_as_advanced( CUDA_VERBOSE_BUILD )
-  mark_as_advanced( CUDA_SDK_ROOT_DIR )
-endif()
 
 #---------------------------------------------------------------------
 # Find OpenCL.
@@ -171,7 +163,6 @@ endif()
 set( elxCommon_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Common
   ${elastix_SOURCE_DIR}/Common/CostFunctions
-  ${elastix_SOURCE_DIR}/Common/CUDA
   ${elastix_SOURCE_DIR}/Common/ImageSamplers
   ${elastix_SOURCE_DIR}/Common/KNN
   ${elastix_SOURCE_DIR}/Common/KNN/ann_1.1/include
@@ -271,6 +262,7 @@ add_subdirectory( Core )
 # Configure the examples
 
 set( ELASTIX_DOX_DIR  ${elastix_SOURCE_DIR}/../dox )
+set( ELASTIX_TOOLS_DIR  ${elastix_SOURCE_DIR}/../tools )
 set( ELASTIX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH
   "path to the doxygen generated help files and the examples" )
 
@@ -399,11 +391,11 @@ if( ELASTIX_ENABLE_PACKAGER )
   # Also install the copyright file, since when the user enables packaging
   # we assume that the package is meant to distribute.
   install( FILES "${elastix_SOURCE_DIR}/LICENSE" DESTINATION . )
-  install( FILES "${elastix_SOURCE_DIR}/NOTICE" DESTINATION . ) 
+  install( FILES "${elastix_SOURCE_DIR}/NOTICE" DESTINATION . )
 
   # We have split the elastix package into two components:
   # - the core: elastix and transformix
-  # - the libraries: ANNlib and cudart when ELASTIX_USE_CUDA ON
+  # - the libraries: ANNlib
   # NOTE: Currently does not work for nsis. A bug related to this
   # seems to be fixed in the upcoming CMake 2.8.3
   # Therefore, disable component support for now.
@@ -462,7 +454,7 @@ if( ELASTIX_ENABLE_PACKAGER )
   set( CPACK_SET_DESTDIR "OFF")
 
   # Make sure the directory structure is kept in the source zip
-  # and that also the dox directory is included.
+  # and that also the dox and tools directories are included.
   set( CPACK_SOURCE_INSTALLED_DIRECTORIES
     "${elastix_SOURCE_DIR};/src;${ELASTIX_DOX_DIR};/dox;${ELASTIX_TOOLS_DIR};/tools" )
 

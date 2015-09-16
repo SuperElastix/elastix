@@ -406,7 +406,7 @@ TransformBase< TElastix >
 
     /** Read the TransformParameters. */
     std::vector< ValueType > vecPar( numberOfParameters,
-    itk::NumericTraits< ValueType >::ZeroValue() );
+      itk::NumericTraits< ValueType >::ZeroValue() );
     this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
       0, numberOfParameters - 1, true );
 
@@ -1483,13 +1483,15 @@ TransformBase< TElastix >
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( defGenerator->GetOutput() );
-#ifndef _ELASTIX_BUILD_LIBRARY
+
   /** Track the progress of the generation of the deformation field. */
+#ifndef _ELASTIX_BUILD_LIBRARY
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   progressObserver->ConnectObserver( defGenerator );
   progressObserver->SetStartString( "  Progress: " );
   progressObserver->SetEndString( "%" );
 #endif
+
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );

@@ -23,8 +23,8 @@
 namespace itk
 {
 /** \class GPUTransformCopier
- * \brief A helper class which creates an GPU Transform which
- * is perfect copy of the CPU Transform.
+ * \brief A helper class which creates an GPU transform which
+ * is perfect copy of the CPU transform.
  *
  * This class is NOT a filter. Although it has an API similar to a filter, this class
  * is not intended to be used in a pipeline. Instead, the typical use will be like
@@ -58,7 +58,7 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimentions,
+template< typename TTypeList, typename NDimensions,
 typename TTransform, typename TOutputTransformPrecisionType >
 class GPUTransformCopier : public Object
 {
@@ -77,10 +77,11 @@ public:
   itkTypeMacro( GPUTransformCopier, Object );
 
   /** Type CPU definitions for the transform. */
-  typedef TTransform                                CPUTransformType;
-  typedef typename CPUTransformType::ConstPointer   CPUTransformConstPointer;
-  typedef typename CPUTransformType::ParametersType CPUParametersType;
-  typedef typename CPUTransformType::ScalarType     CPUScalarType;
+  typedef TTransform                                     CPUTransformType;
+  typedef typename CPUTransformType::ConstPointer        CPUTransformConstPointer;
+  typedef typename CPUTransformType::ParametersType      CPUParametersType;
+  typedef typename CPUTransformType::FixedParametersType CPUFixedParametersType;
+  typedef typename CPUTransformType::ScalarType          CPUScalarType;
 
   /** Dimension of the domain space. */
   itkStaticConstMacro( InputSpaceDimension, unsigned int, CPUTransformType::InputSpaceDimension );
@@ -90,8 +91,9 @@ public:
   typedef TOutputTransformPrecisionType GPUScalarType;
   typedef Transform< GPUScalarType, InputSpaceDimension, OutputSpaceDimension >
     GPUTransformType;
-  typedef typename GPUTransformType::Pointer        GPUTransformPointer;
-  typedef typename GPUTransformType::ParametersType GPUParametersType;
+  typedef typename GPUTransformType::Pointer             GPUTransformPointer;
+  typedef typename GPUTransformType::ParametersType      GPUParametersType;
+  typedef typename GPUTransformType::FixedParametersType GPUFixedParametersType;
 
   /** Get/Set the input transform. */
   itkSetConstObjectMacro( InputTransform, CPUTransformType );
@@ -140,6 +142,11 @@ protected:
   void CastCopyParameters(
     const CPUParametersType & from,
     GPUParametersType & to );
+
+  /** Method to copy the fixed parameters. */
+  void CastCopyFixedParameters(
+    const CPUFixedParametersType & from,
+    GPUFixedParametersType & to );
 
 private:
 

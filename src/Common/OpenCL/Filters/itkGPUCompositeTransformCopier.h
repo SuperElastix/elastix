@@ -24,8 +24,8 @@
 namespace itk
 {
 /** \class GPUCompositeTransformCopier
- * \brief A helper class which creates an GPU Composite Transform which
- * is perfect copy of the CPU Composite Transform.
+ * \brief A helper class which creates an GPU composite transform which
+ * is perfect copy of the CPU composite transform.
  *
  * This class is NOT a filter. Although it has an API similar to a filter, this class
  * is not intended to be used in a pipeline. Instead, the typical use will be like
@@ -40,7 +40,8 @@ namespace itk
  *  };
  *
  *  typedef typelist::MakeTypeList< short, float >::Type OCLImageTypes;
- *  typedef itk::GPUCompositeTransformCopier< OCLImageTypes, OCLImageDims, CompositeTransformType, float > CopierType;
+ *  typedef itk::CompositeTransform< float, 3 > TransformType;
+ *  typedef itk::GPUCompositeTransformCopier< OCLImageTypes, OCLImageDims, TransformType, float > CopierType;
  *  CopierType::Pointer copier = CopierType::New();
  *  copier->SetInputTransform(CPUTransform);
  *  copier->Update();
@@ -59,7 +60,7 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template< typename TTypeList, typename NDimentions,
+template< typename TTypeList, typename NDimensions,
 typename TCompositeTransform, typename TOutputTransformPrecisionType >
 class GPUCompositeTransformCopier : public Object
 {
@@ -96,7 +97,7 @@ public:
   typedef typename GPUCompositeTransformType::Pointer GPUCompositeTransformPointer;
 
   /** Type definitions for the transform copier. */
-  typedef GPUTransformCopier< TTypeList, NDimentions, CPUTransformType, GPUScalarType >
+  typedef GPUTransformCopier< TTypeList, NDimensions, CPUTransformType, GPUScalarType >
     GPUTransformCopierType;
   typedef typename GPUTransformCopierType::Pointer             GPUTransformCopierPointer;
   typedef typename GPUTransformCopierType::GPUTransformPointer GPUOutputTransformPointer;

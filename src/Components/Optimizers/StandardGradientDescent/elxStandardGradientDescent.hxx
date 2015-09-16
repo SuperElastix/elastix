@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __elxStandardGradientDescent_hxx
 #define __elxStandardGradientDescent_hxx
 

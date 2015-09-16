@@ -22,20 +22,20 @@
 
 namespace itk
 {
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::RegisterOneFactory()
 {
-  typedef GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions > GPUFilterFactoryType;
+  typedef GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions > GPUFilterFactoryType;
   typename GPUFilterFactoryType::Pointer factory = GPUFilterFactoryType::New();
   ObjectFactoryBase::RegisterFactory( factory );
 }
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
+GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::GPURecursiveGaussianImageFilterFactory2()
 {
   this->RegisterAll();
@@ -43,9 +43,9 @@ GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions 
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::Register1D()
 {
   // Define visitor and perform factory registration
@@ -66,9 +66,9 @@ GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions 
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::Register2D()
 {
   // Define visitor and perform factory registration
@@ -89,9 +89,9 @@ GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions 
 
 
 //------------------------------------------------------------------------------
-template< typename TTypeListIn, typename TTypeListOut, typename NDimentions >
+template< typename TTypeListIn, typename TTypeListOut, typename NDimensions >
 void
-GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimentions >
+GPURecursiveGaussianImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensions >
 ::Register3D()
 {
   // Define visitor and perform factory registration
