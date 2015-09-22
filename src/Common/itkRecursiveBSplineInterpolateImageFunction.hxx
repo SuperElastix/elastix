@@ -406,21 +406,19 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
   unsigned int k = 1;
   for(unsigned int i = 0; i < ImageDimension; ++i)
   {
-      for(unsigned int j = 0; j < ImageDimension; ++j)
-      {
-          if( i < j )
-          {
-            sh[ i ][ j ] = hessian[ ( i + 1 ) + ( j + 1 )*( j + 2 ) / 2 ]
-                    / this->m_Spacing[ i ];
-          }
-          else
-          {
-            sh[ i ][ j ] = hessian[ ( j + 1 ) + ( i + 1 )*( i + 2 ) / 2 ]
-                    / this->m_Spacing[ i ];
-          }
-      }
-      derivative[ i ] = hessian[ k ] / this->m_Spacing[ i ];
-      k += ( i + 2 );
+    for(unsigned int j = 0; j < ImageDimension; ++j)
+    {
+        if( i < j )
+        {
+          sh[ i ][ j ] = hessian[ ( i + 1 ) + ( j + 1 )*( j + 2 ) / 2 ];// / this->m_Spacing[ i ];
+        }
+        else
+        {
+          sh[ i ][ j ] = hessian[ ( j + 1 ) + ( i + 1 )*( i + 2 ) / 2 ];// / this->m_Spacing[ i ];
+        }
+    }
+    derivative[ i ] = hessian[ k ] / this->m_Spacing[ i ];
+    k += ( i + 2 );
   }
 
   const InputImageType *inputImage = this->GetInputImage();
@@ -431,7 +429,7 @@ RecursiveBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientTyp
     inputImage->TransformLocalVectorToPhysicalVector( derivative, orientedDerivative );
 
     derivative = orientedDerivative;
-    sh = orientedHessian;
+    //sh = orientedHessian;
   }
 
 } // end EvaluateValueAndDerivativeAndHessianAtContinuousIndex()
