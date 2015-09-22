@@ -874,6 +874,72 @@ AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType
 }
 
 template< typename TImageType, typename TCoordRep, typename TCoefficientType >
+typename
+AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType >
+::CovariantVectorType
+AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType >
+::EvaluateDerivativeAtContinuousIndexInternal(const ContinuousIndexType & x,
+                                              vnl_matrix< long > & evaluateIndex,
+                                              vnl_matrix< double > & weights,
+                                              vnl_matrix< double > & weightsDerivative
+                                              ) const
+{
+  this->DetermineRegionOfSupport( ( evaluateIndex ), x, m_SplineOrder );
+
+  SetInterpolationWeights(x, ( evaluateIndex ), ( weights ), m_SplineOrder);
+
+  SetDerivativeWeights(x,
+                       ( evaluateIndex ),
+                       ( weightsDerivative ),
+                       m_SplineOrder);
+
+  // Modify EvaluateIndex at the boundaries using mirror boundary conditions
+  this->ApplyMirrorBoundaryConditions( ( evaluateIndex ), m_SplineOrder );
+
+  const InputImageType *inputImage = this->GetInputImage();
+  const typename InputImageType::SpacingType & spacing = inputImage->GetSpacing();
+
+  // Calculate derivative
+  CovariantVectorType derivativeValue;
+  double              tempValue;
+  IndexType           coefficientIndex;
+  for ( unsigned int n = 0; n < ImageDimension; n++ )
+    {
+    derivativeValue[n] = 0.0;
+    for ( unsigned int p = 0; p < m_MaxNumberInterpolationPoints; p++ )
+      {
+      tempValue = 1.0;
+      for ( unsigned int n1 = 0; n1 < ImageDimension; n1++ )
+        {
+        unsigned int indx;
+        indx = m_PointsToIndex[p][n1];
+        coefficientIndex[n1] = ( evaluateIndex )[n1][indx];
+
+        if ( n1 == n )
+          {
+          tempValue *= ( weightsDerivative )[n1][indx];
+          }
+        else
+          {
+          tempValue *= ( weights )[n1][indx];
+          }
+        }
+      derivativeValue[n] += m_Coefficients->GetPixel(coefficientIndex) * tempValue;
+      }
+    derivativeValue[n] /= spacing[n];
+    }
+
+  if ( this->m_UseImageDirection )
+    {
+    CovariantVectorType orientedDerivative;
+    inputImage->TransformLocalVectorToPhysicalVector(derivativeValue, orientedDerivative);
+    return orientedDerivative;
+    }
+
+  return ( derivativeValue );
+}
+
+template< typename TImageType, typename TCoordRep, typename TCoefficientType >
 void
 AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType >
 ::EvaluateValueAndDerivativeAndHessianAtContinuousIndexInternal(const ContinuousIndexType & x,
@@ -1048,8 +1114,8 @@ AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType
     double       tmpV;
     double       w, w1, w2, w3, tmpW;
     IndexType    coefficientIndex;
-    value = 0.0;
     unsigned int p, n, n1;
+    MatrixType hessian;
     hessian.Fill(0.0);
 
     MatrixType IndexToPointMatrix = this->GetInputImage()->GetDirection();
@@ -1082,7 +1148,6 @@ AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType
 
     for ( n = 1; n < ImageDimension; n++ )
     {
-      derivativeValue[n] = 0.0;
       for(unsigned int i = n; i < ImageDimension; ++i)
       {
         for ( p = 0; p < m_MaxNumberInterpolationPoints; p++ )
