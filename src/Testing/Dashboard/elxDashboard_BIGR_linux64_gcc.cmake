@@ -49,7 +49,7 @@ set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/release )
 
 set( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=/cm/shared/apps/itk/4.7.1/release
+ITK_DIR:PATH=/cm/shared/apps/itk/4.8.0/release
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
