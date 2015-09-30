@@ -132,6 +132,12 @@ public:
    */
   virtual OutputPointType TransformPoint( const InputPointType & point ) const;
 
+  typedef ScalarType ** CoefficientPointerVectorType;
+  typedef ScalarType *  OutputPointType2;
+
+  OutputPointType TransformPointFunctionalRecursive( const InputPointType & point ) const;
+  void TransformPointFunctionalRecursiveFunction( OutputPointType2 displacement, const CoefficientPointerVectorType mu, const OffsetValueType * gridOffsetTable, const double * weights1D, unsigned int D ) const;
+
   /** Compute point transformation. Calls the five-argument version, which uses
    * RecursiveBSplineTransformImplementation::InterpolateTransformPoint
    * for a less smart recursive implementation.

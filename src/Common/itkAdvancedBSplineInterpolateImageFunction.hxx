@@ -1049,7 +1049,7 @@ AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType
                                 * w1;
         }
 
-        if( i != (n-1) && i != (n+1) )
+        if( i < n+1 )
         {
           hessian(n,n) += m_Coefficients->GetPixel(coefficientIndex)
                   * w2;
