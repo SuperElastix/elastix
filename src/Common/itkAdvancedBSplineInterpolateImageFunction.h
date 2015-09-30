@@ -286,8 +286,6 @@ public:
     CovariantVectorType & deriv,
     ThreadIdType threadId) const;
 
-  /////////////////////////////////////////////////////////////
-
   MatrixType EvaluateHessian(const PointType & point) const
   {
     ContinuousIndexType index;
@@ -403,8 +401,6 @@ public:
     CovariantVectorType & deriv,
     MatrixType & hessian,
     ThreadIdType threadId) const;
-
-  /////////////////////////////////////////////////////////////
 
   /** Get/Sets the Spline Order, supports 0th - 5th order splines. The default
    *  is a 3rd order spline. */
@@ -561,6 +557,7 @@ private:
   vnl_matrix< long > *  m_ThreadedEvaluateIndex;
   vnl_matrix< double > *m_ThreadedWeights;
   vnl_matrix< double > *m_ThreadedWeightsDerivative;
+  vnl_matrix< double > *m_ThreadedWeightsHessian;
 };
 } // namespace itk
 

@@ -379,6 +379,28 @@ AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType
 }
 
 template< typename TImageType, typename TCoordRep, typename TCoefficientType >
+typename
+AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType >
+::MatrixType
+AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType >
+::EvaluateHessianAtContinuousIndex(const ContinuousIndexType & x,
+                                      ThreadIdType threadId) const
+{
+  vnl_matrix< long > *  evaluateIndex =   &( m_ThreadedEvaluateIndex[threadId] );
+  vnl_matrix< double > *weights =       &( m_ThreadedWeights[threadId] );
+  vnl_matrix< double > *weightsDerivative =
+    &( m_ThreadedWeightsDerivative[threadId] );
+  vnl_matrix< double > *weightsHessian = &( m_ThreadedWeightsHessian[threadId] );
+
+  return this->EvaluateHessianAtContinuousIndexInternal(x,
+                                                           *evaluateIndex,
+                                                           *weights,
+                                                           *weightsDerivative,
+                                                           *weightsHessian);
+}
+
+
+template< typename TImageType, typename TCoordRep, typename TCoefficientType >
 void
 AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType >
 ::SetInterpolationWeights(const ContinuousIndexType & x,
@@ -1184,7 +1206,7 @@ AdvancedBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoefficientType
                           * w3;
           }
 
-          if( i != (n-1) && i != (n+1) )
+          if( i < n+1 )
           {
             hessian(n,n) += m_Coefficients->GetPixel(coefficientIndex)
                     * w2;
