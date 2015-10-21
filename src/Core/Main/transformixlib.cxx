@@ -21,7 +21,7 @@
 #include "transformixlib.h"
 
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
-  #include "itkUseMevisDicomTiff.h"
+#include "itkUseMevisDicomTiff.h"
 #endif
 
 #include "elxTransformixMain.h"
@@ -35,7 +35,8 @@
 #include <itksys/SystemTools.hxx>
 #include <itksys/SystemInformation.hxx>
 
-#include "elxTimer.h"
+#include "elastix.h" // for ConvertSecondsToDHMS and GetCurrentDateAndTime
+#include "itkTimeProbe.h"
 
 namespace transformix
 {
@@ -184,10 +185,9 @@ TRANSFORMIX::TransformImage(
   elxout << std::endl;
 
   /** Declare a timer, start it and print the start time. */
-  tmr::Timer::Pointer totaltimer = tmr::Timer::New();
-  totaltimer->StartTimer();
-  elxout << "transformix is started at " << totaltimer->PrintStartTime()
-         << ".\n" << std::endl;
+  itk::TimeProbe totaltimer;
+  totaltimer.Start();
+  elxout << "transformix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
   /**
    * ********************* START TRANSFORMATION *******************
@@ -216,11 +216,9 @@ TRANSFORMIX::TransformImage(
   resultImageContainer = transformix->GetResultImageContainer();
 
   /** Stop timer and print it. */
-  totaltimer->StopTimer();
-  elxout << "\nTransformix has finished at "
-         << totaltimer->PrintStopTime() << "." << std::endl;
-  elxout << "Elapsed time: "
-         << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+  totaltimer.Stop();
+  elxout << "\nTransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl;
+  elxout << "Elapsed time: " << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
 
   this->m_ResultImage = resultImageContainer->ElementAt( 0 );
 
@@ -246,13 +244,11 @@ TRANSFORMIX::TransformImage(
   bool performLogging,
   bool performCout )
 {
-
   // Transform single parameter map to a one-sized vector of parameter maps and call other
   // transform method.
   std::vector< ParameterMapType > parameterMaps;
   parameterMaps.push_back( parameterMap );
   return TransformImage( inputImage, parameterMaps, outputPath, performLogging, performCout );
-
 } // end TransformImage()
 
 

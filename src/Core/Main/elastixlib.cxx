@@ -36,7 +36,8 @@
 #include <itksys/SystemTools.hxx>
 #include <itksys/SystemInformation.hxx>
 
-#include "elxTimer.h"
+#include "elastix.h" // for ConvertSecondsToDHMS and GetCurrentDateAndTime
+#include "itkTimeProbe.h"
 
 namespace elastix
 {
@@ -47,7 +48,9 @@ namespace elastix
 
 ELASTIX::ELASTIX() :
   m_ResultImage( 0 )
-{} // end Constructor
+{
+} // end Constructor
+
 
 /**
  * ******************* Destructor ***********************
@@ -154,8 +157,6 @@ ELASTIX::RegisterImages(
   // Clear output transform parameters
   this->m_TransformParametersList.clear();
 
-  tmr::Timer::Pointer timer;
-
   /** Some declarations and initialisations. */
   ElastixMainVectorType elastices;
 
@@ -252,10 +253,9 @@ ELASTIX::RegisterImages(
   elxout << std::endl;
 
   /** Declare a timer, start it and print the start time. */
-  tmr::Timer::Pointer totaltimer = tmr::Timer::New();
-  totaltimer->StartTimer();
-  elxout << "elastix is started at " << totaltimer->PrintStartTime()
-         << ".\n" << std::endl;
+  itk::TimeProbe totaltimer;
+  totaltimer.Start();
+  elxout << "elastix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
 
   /************************************************************************
    *                                              *
@@ -320,9 +320,9 @@ ELASTIX::RegisterImages(
     elxout << "Running elastix with parameter map " << i << std::endl;
 
     /** Declare a timer, start it and print the start time. */
-    timer = tmr::Timer::New();
-    timer->StartTimer();
-    elxout << "Current time: " << timer->PrintStartTime() << "." << std::endl;
+    itk::TimeProbe timer;
+    timer.Start();
+    elxout << "Current time: " << GetCurrentDateAndTime() << "." << std::endl;
 
     /** Start registration. */
     returndummy = elastices[ i ]->Run( argMap, parameterMaps[ i ] );
@@ -346,10 +346,10 @@ ELASTIX::RegisterImages(
     fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
 
     /** Stop timer and print it. */
-    timer->StopTimer();
-    elxout << "\nCurrent time: " << timer->PrintStopTime() << "." << std::endl;
+    timer.Stop();
+    elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl;
     elxout << "Time used for running elastix with this parameter file: "
-           << timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
+           << ConvertSecondsToDHMS( timer.GetMean(), 1 ) << ".\n" << std::endl;
 
     /** Get the transformation parameter map. */
     this->m_TransformParametersList.push_back( elastices[ i ]->GetTransformParametersMap() );
@@ -372,9 +372,9 @@ ELASTIX::RegisterImages(
          << "\n" << std::endl;
 
   /** Stop totaltimer and print it. */
-  totaltimer->StopTimer();
-  elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS()
-         << ".\n" << std::endl;
+  totaltimer.Stop();
+  elxout << "Total time elapsed: "
+    << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
 
   /************************************************************************
    *                                *
