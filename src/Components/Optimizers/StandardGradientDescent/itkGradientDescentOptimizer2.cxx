@@ -53,7 +53,11 @@ GradientDescentOptimizer2
   this->m_Threader       = ThreaderType::New();
   this->m_UseMultiThread = false;
   this->m_UseOpenMP      = false;
+#ifdef ELASTIX_USE_OPENMP
+  this->m_UseOpenMP = true;
+#endif
   this->m_UseEigen       = false;
+
   //this->m_Threader->SetUseThreadPool( true );
 
 } // end Constructor
@@ -69,19 +73,13 @@ GradientDescentOptimizer2
 {
   this->Superclass::PrintSelf( os, indent );
 
-  os << indent << "LearningRate: "
-     << this->m_LearningRate << std::endl;
-  os << indent << "NumberOfIterations: "
-     << this->m_NumberOfIterations << std::endl;
-  os << indent << "CurrentIteration: "
-     << this->m_CurrentIteration;
-  os << indent << "Value: "
-     << this->m_Value;
-  os << indent << "StopCondition: "
-     << this->m_StopCondition;
+  os << indent << "LearningRate: " << this->m_LearningRate << std::endl;
+  os << indent << "NumberOfIterations: " << this->m_NumberOfIterations << std::endl;
+  os << indent << "CurrentIteration: " << this->m_CurrentIteration;
+  os << indent << "Value: " << this->m_Value;
+  os << indent << "StopCondition: " << this->m_StopCondition;
   os << std::endl;
-  os << indent << "Gradient: "
-     << this->m_Gradient;
+  os << indent << "Gradient: "<< this->m_Gradient;
   os << std::endl;
 
 } // end PrintSelf()
@@ -95,12 +93,10 @@ void
 GradientDescentOptimizer2
 ::StartOptimization( void )
 {
-  itkDebugMacro( "StartOptimization" );
-
   this->m_CurrentIteration = 0;
 
   /** Get the number of parameters; checks also if a cost function has been set at all.
-  * if not: an exception is thrown */
+   * if not: an exception is thrown */
   this->GetScaledCostFunction()->GetNumberOfParameters();
 
   /** Initialize the scaledCostFunction with the currently set scales */
@@ -215,43 +211,36 @@ GradientDescentOptimizer2
   itkDebugMacro( "AdvanceOneStep" );
 
   /** Get space dimension. */
-  const unsigned int spaceDimension
-    = this->GetScaledCostFunction()->GetNumberOfParameters();
+  const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
   /** Get a reference to the previously allocated newPosition. */
   ParametersType & newPosition = this->m_ScaledCurrentPosition;
 
   /** Advance one step. */
-  // single-threadedly
-  if( true )
-  //if( !this->m_UseMultiThread || true )   // for now force single-threaded since it is fastest most of the times
-  //if( !this->m_UseMultiThread && false ) // force multi-threaded
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+#ifndef ELASTIX_USE_OPENMP // If no OpenMP detected then use single-threaded code
+  /** Get a reference to the current position. */
+  const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
-    /** Update the new position. */
-    for( unsigned int j = 0; j < spaceDimension; ++j )
-    {
-      newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
-    }
+  /** Update the new position. */
+  for( unsigned int j = 0; j < spaceDimension; ++j )
+  {
+    newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
   }
-#ifdef ELASTIX_USE_OPENMP
-  else if( true )// this->m_UseOpenMP && !this->m_UseEigen )
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+#else // Otherwise use OpenMP
+  /** Get a reference to the current position. */
+  const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
-    /** Update the new position. */
-    const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
-    omp_set_num_threads( nthreads );
-    #pragma omp parallel for
-    for( int j = 0; j < static_cast< int >( spaceDimension ); j++ )
-    {
-      newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
-    }
+  /** Update the new position. */
+  const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfThreads() );
+  omp_set_num_threads( nthreads );
+  #pragma omp parallel for
+  for( int j = 0; j < static_cast<int>( spaceDimension ); j++ )
+  {
+    newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
   }
 #endif
+
+#if 0 // disable as it seems slower
 #ifdef ELASTIX_USE_EIGEN
   else if( !this->m_UseOpenMP && this->m_UseEigen )
   {
@@ -313,6 +302,7 @@ GradientDescentOptimizer2
 
     delete temp;
   }
+#endif
 
   this->InvokeEvent( IterationEvent() );
 

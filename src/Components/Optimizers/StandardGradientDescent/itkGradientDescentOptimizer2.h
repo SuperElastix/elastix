@@ -135,7 +135,6 @@ public:
 
   //itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
   itkSetMacro( UseMultiThread, bool );
-
   itkSetMacro( UseOpenMP, bool );
   itkSetMacro( UseEigen, bool );
 
