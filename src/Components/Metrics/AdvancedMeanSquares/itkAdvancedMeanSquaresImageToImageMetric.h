@@ -132,6 +132,8 @@ public:
     MovingImageType::ImageDimension );
 
   /** Get the value for single valued optimizers. */
+  virtual MeasureType GetValueSingleThreaded( const TransformParametersType & parameters ) const;
+
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
   /** Get the derivatives of the match measure. */
@@ -210,8 +212,8 @@ protected:
   typedef BSplineInterpolateImageFunction<
     FixedImageType, CoordinateRepresentationType >                 FixedImageInterpolatorType;
   typedef NearestNeighborInterpolateImageFunction<
-    FixedImageType, CoordinateRepresentationType >                DummyFixedImageInterpolatorType;
-  typedef ImageGridSampler< FixedImageType > SelfHessianSamplerType;
+    FixedImageType, CoordinateRepresentationType >                 DummyFixedImageInterpolatorType;
+  typedef ImageGridSampler< FixedImageType >                       SelfHessianSamplerType;
 
   double m_NormalizationFactor;
 
@@ -232,10 +234,16 @@ protected:
     const NonZeroJacobianIndicesType & nzji,
     HessianType & H ) const;
 
+  /** Get value for each thread. */
+  inline void ThreadedGetValue( ThreadIdType threadID );
+
+  /** Gather the values from all threads. */
+  inline void AfterThreadedGetValue( MeasureType & value ) const;
+
   /** Get value and derivatives for each thread. */
   inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
 
-  /** Gather the values and derivatives from all threads */
+  /** Gather the values and derivatives from all threads. */
   inline void AfterThreadedGetValueAndDerivative(
     MeasureType & value, DerivativeType & derivative ) const;
 

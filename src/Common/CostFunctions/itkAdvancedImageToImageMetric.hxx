@@ -102,6 +102,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_ThreaderMetricParameters.st_Metric = this;
 
   // Multi-threading structs
+  this->m_GetValuePerThreadVariables = NULL;
+  this->m_GetValuePerThreadVariablesSize = 0;
   this->m_GetValueAndDerivativePerThreadVariables     = NULL;
   this->m_GetValueAndDerivativePerThreadVariablesSize = 0;
 
@@ -116,6 +118,7 @@ template< class TFixedImage, class TMovingImage >
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::~AdvancedImageToImageMetric()
 {
+  delete[] this->m_GetValuePerThreadVariables;
   delete[] this->m_GetValueAndDerivativePerThreadVariables;
 } // end Destructor
 
@@ -194,6 +197,14 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
    */
 
   /** Only resize the array of structs when needed. */
+  if( this->m_GetValuePerThreadVariablesSize != this->m_NumberOfThreads )
+  {
+    delete[] this->m_GetValuePerThreadVariables;
+    this->m_GetValuePerThreadVariables = new AlignedGetValuePerThreadStruct[ this->m_NumberOfThreads ];
+    this->m_GetValuePerThreadVariablesSize = this->m_NumberOfThreads;
+  }
+
+  /** Only resize the array of structs when needed. */
   if( this->m_GetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
   {
     delete[] this->m_GetValueAndDerivativePerThreadVariables;
@@ -204,6 +215,9 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Some initialization. */
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
+    this->m_GetValuePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
+    this->m_GetValuePerThreadVariables[ i ].st_Value = NumericTraits< MeasureType >::Zero;
+
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative.SetSize( this->GetNumberOfParameters() );
@@ -903,6 +917,47 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   }
 
 } // end BeforeThreadedGetValueAndDerivative()
+
+
+/**
+ * **************** GetValueThreaderCallback *******
+ */
+
+template< class TFixedImage, class TMovingImage >
+ITK_THREAD_RETURN_TYPE
+AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+::GetValueThreaderCallback( void * arg )
+{
+  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
+  ThreadIdType     threadID   = infoStruct->ThreadID;
+
+  MultiThreaderParameterType * temp
+    = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
+
+  temp->st_Metric->ThreadedGetValue( threadID );
+
+  return ITK_THREAD_RETURN_VALUE;
+
+} // end GetValueThreaderCallback()
+
+
+/**
+ * *********************** LaunchGetValueThreaderCallback***************
+ */
+
+template< class TFixedImage, class TMovingImage >
+void
+AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+::LaunchGetValueThreaderCallback( void ) const
+{
+  /** Setup threader. */
+  this->m_Threader->SetSingleMethod( this->GetValueThreaderCallback,
+    const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
+
+  /** Launch. */
+  this->m_Threader->SingleMethodExecute();
+
+} // end LaunchGetValueThreaderCallback()
 
 
 /**

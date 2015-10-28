@@ -363,6 +363,18 @@ protected:
 
   /** Multi-threaded metric computation. */
 
+  /** Multi-threaded version of GetValue(). */
+  virtual inline void ThreadedGetValue( ThreadIdType threadID ){}
+
+  /** Finalize multi-threaded metric computation. */
+  virtual inline void AfterThreadedGetValue( MeasureType & value ) const {}
+
+  /** GetValue threader callback function. */
+  static ITK_THREAD_RETURN_TYPE GetValueThreaderCallback( void * arg );
+
+  /** Launch MultiThread GetValue. */
+  void LaunchGetValueThreaderCallback( void ) const;
+
   /** Multi-threaded version of GetValueAndDerivative(). */
   virtual inline void ThreadedGetValueAndDerivative(
     ThreadIdType threadID ){}
@@ -374,7 +386,7 @@ protected:
   /** GetValueAndDerivative threader callback function. */
   static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
 
-  /** Launch MultiThread GetValueAndDerivative */
+  /** Launch MultiThread GetValueAndDerivative. */
   void LaunchGetValueAndDerivativeThreaderCallback( void ) const;
 
   /** AccumulateDerivatives threader callback function. */
@@ -406,6 +418,19 @@ protected:
    * is const, also InitializeThreadingParameters should be const, and therefore
    * these member variables are mutable.
    */
+
+  // test per thread struct with padding and alignment
+  struct GetValuePerThreadStruct
+  {
+    SizeValueType         st_NumberOfPixelsCounted;
+    MeasureType           st_Value;
+  };
+  itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValuePerThreadStruct,
+    PaddedGetValuePerThreadStruct );
+  itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedGetValuePerThreadStruct,
+    AlignedGetValuePerThreadStruct );
+  mutable AlignedGetValuePerThreadStruct * m_GetValuePerThreadVariables;
+  mutable ThreadIdType                     m_GetValuePerThreadVariablesSize;
 
   // test per thread struct with padding and alignment
   struct GetValueAndDerivativePerThreadStruct
