@@ -53,17 +53,11 @@ public:
   itkTypeMacro( SumOfPairwiseCorrelationCoefficientsMetric, AdvancedImageToImageMetric );
 
   /** Set functions. */
-  itkSetMacro( SampleLastDimensionRandomly, bool );
-  itkSetMacro( NumSamplesLastDimension, unsigned int );
   itkSetMacro( NumAdditionalSamplesFixed, unsigned int );
   itkSetMacro( ReducedDimensionIndex, unsigned int );
   itkSetMacro( SubtractMean, bool );
   itkSetMacro( GridSize, FixedImageSizeType );
   itkSetMacro( TransformIsStackTransform, bool );
-
-  /** Get functions. */
-  itkGetConstMacro( SampleLastDimensionRandomly, bool );
-  itkGetConstMacro( NumSamplesLastDimension, int );
 
   /** Typedefs from the superclass. */
   typedef typename
@@ -164,10 +158,6 @@ protected:
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian) const;
 
-  mutable vnl_vector<double> m_normdCdmu;
-  mutable int m_NumberOfSamples;
-  mutable vnl_matrix<double> m_CorrelationMatrix;
-
 private:
   SumOfPairwiseCorrelationCoefficientsMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
@@ -176,8 +166,6 @@ private:
   void SampleRandom (const int n, const int m, std::vector<int> & numbers) const;
 
   /** Variables to control random sampling in last dimension. */
-  bool m_SampleLastDimensionRandomly;
-  unsigned int m_NumSamplesLastDimension;
   unsigned int m_NumAdditionalSamplesFixed;
   unsigned int m_ReducedDimensionIndex;
 

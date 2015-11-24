@@ -1,4 +1,3 @@
-
 ADD_ELXCOMPONENT( SumOfPairwiseCorrelationCoefficientsMetric
  elxSumOfPairwiseCorrelationCoefficientsMetric.h
  elxSumOfPairwiseCorrelationCoefficientsMetric.hxx

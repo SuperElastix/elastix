@@ -19,7 +19,7 @@
 #define __elxPCAMetric2_H__
 
 #include "elxIncludes.h"
-#include "itkPCAMetric2_F.h"
+#include "itkPCAMetric2.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkStackTransform.h"
 

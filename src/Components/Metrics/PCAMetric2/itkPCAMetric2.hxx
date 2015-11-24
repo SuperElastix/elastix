@@ -12,9 +12,10 @@
 
 ======================================================================*/
 
-#ifndef PCAMetric2_HXX
-#define PCAMetric2_HXX
-#include "itkPCAMetric2.h"
+#ifndef PCAMetric2_F_HXX
+#define PCAMetric2_F_HXX
+
+#include "itkPCAMetric2_F.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "vnl/algo/vnl_matrix_update.h"
 #include "itkImage.h"
@@ -33,11 +34,8 @@ namespace itk
 template <class TFixedImage, class TMovingImage>
 PCAMetric2<TFixedImage,TMovingImage>
 ::PCAMetric2():
-    m_SampleLastDimensionRandomly( false ),
-    m_NumSamplesLastDimension( 10 ),
     m_SubtractMean( false ),
-    m_TransformIsStackTransform( false ),
-    m_UseDerivativeOfMean( true )
+    m_TransformIsStackTransform( false )
 {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -59,13 +57,7 @@ PCAMetric2<TFixedImage,TMovingImage>
 
     /** Retrieve slowest varying dimension and its size. */
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-    const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
-
-    /** Check num last samples. */
-    if ( this->m_NumSamplesLastDimension > lastDimSize )
-    {
-        this->m_NumSamplesLastDimension = lastDimSize;
-    }
+    const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
 
 } // end Initialize
 
@@ -190,33 +182,21 @@ PCAMetric2<TFixedImage,TMovingImage>
 
     /** Retrieve slowest varying dimension and its size. */
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-    const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
-    const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
+    const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
 
     typedef vnl_matrix< RealType > MatrixType;
 
-    /** Get real last dim samples. */
-    const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
-
     /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
     unsigned int NumberOfSamples = sampleContainer->Size();
-    MatrixType datablock( NumberOfSamples, realNumLastDimPositions );
+    MatrixType datablock( NumberOfSamples, G);
 
     /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
     std::vector<int> lastDimPositions;
 
     /** Determine random last dimension positions if needed. */
-
-    if ( this->m_SampleLastDimensionRandomly )
+    for ( unsigned int i = 0; i < G; ++i )
     {
-        SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
-    }
-    else
-    {
-        for ( unsigned int i = 0; i < lastDimSize; ++i )
-        {
-            lastDimPositions.push_back( i );
-        }
+        lastDimPositions.push_back( i );
     }
 
     /** Initialize dummy loop variable */
@@ -237,7 +217,7 @@ PCAMetric2<TFixedImage,TMovingImage>
         unsigned int numSamplesOk = 0;
 
         /** Loop over t */
-        for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
+        for ( unsigned int d = 0; d < G; ++d )
         {
             /** Initialize some variables. */
             RealType movingImageValue;
@@ -272,7 +252,7 @@ PCAMetric2<TFixedImage,TMovingImage>
 
         } /** end loop over t */
 
-        if( numSamplesOk == realNumLastDimPositions )
+        if( numSamplesOk == G )
         {
             pixelIndex++;
             this->m_NumberOfPixelsCounted++;
@@ -283,8 +263,6 @@ PCAMetric2<TFixedImage,TMovingImage>
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(NumberOfSamples, this->m_NumberOfPixelsCounted );
     unsigned int N = this->m_NumberOfPixelsCounted;
-    this->m_NumberOfSamples = N;
-    const unsigned int G = realNumLastDimPositions;
     MatrixType A( datablock.extract( N, G ) );
 
     /** Calculate mean of from columns */
@@ -314,19 +292,11 @@ PCAMetric2<TFixedImage,TMovingImage>
     MatrixType C( Amm.transpose()*Amm );
     C /=  static_cast< RealType > ( RealType(N) - 1.0 );
 
-    /** Calculate variance of columns */
-    vnl_vector< RealType > var( G );
-    var.fill( NumericTraits< RealType >::Zero );
-    for( int j = 0; j < G; j++)
-    {
-        var(j) = C(j,j);
-    }
-
     MatrixType S( G, G );
     S.fill( NumericTraits< RealType >::Zero );
     for( int j = 0; j < G; j++)
     {
-        S(j,j) = 1.0/sqrt(var(j));
+        S(j,j) = 1.0/sqrt(C(j,j));
     }
 
     /** Compute correlation matrix K */
@@ -417,17 +387,12 @@ PCAMetric2<TFixedImage,TMovingImage>
 
     /** Retrieve slowest varying dimension and its size. */
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-    const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
-    const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
+    const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
 
     typedef vnl_matrix< RealType >                  MatrixType;
     typedef vnl_matrix< DerivativeValueType > DerivativeMatrixType;
 
     std::vector< FixedImagePointType > SamplesOK;
-
-    /** Get real last dim samples. */
-    const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
-    const unsigned int G = realNumLastDimPositions;
 
     /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
     unsigned int NumberOfSamples = sampleContainer->Size();
@@ -441,17 +406,12 @@ PCAMetric2<TFixedImage,TMovingImage>
 
     /** Determine random last dimension positions if needed. */
     /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
+    /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
     std::vector<int> lastDimPositions;
-    if ( this->m_SampleLastDimensionRandomly )
+
+    for ( unsigned int i = 0; i < G; ++i )
     {
-        SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
-    }
-    else
-    {
-        for ( unsigned int i = 0; i < lastDimSize; ++i )
-        {
-            lastDimPositions.push_back( i );
-        }
+        lastDimPositions.push_back( i );
     }
 
     for ( fiter = fbegin; fiter != fend; ++fiter )
@@ -463,7 +423,6 @@ PCAMetric2<TFixedImage,TMovingImage>
         FixedImageContinuousIndexType voxelCoord;
         this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
-        const unsigned int G = lastDimPositions.size();
         unsigned int numSamplesOk = 0;
 
         /** Loop over t */
@@ -508,17 +467,15 @@ PCAMetric2<TFixedImage,TMovingImage>
             pixelIndex++;
             this->m_NumberOfPixelsCounted++;
         }
-
-    }/** end first loop over image sample container */
-    this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
+    }
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-    unsigned int N = pixelIndex;
+    unsigned int N = this->m_NumberOfPixelsCounted;
 
     MatrixType A( datablock.extract( N, G ) );
 
-    /** Calculate mean of from columns */
+    /** Calculate mean of columns */
     vnl_vector< RealType > mean( G );
     mean.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < N; i++ )
@@ -530,7 +487,7 @@ PCAMetric2<TFixedImage,TMovingImage>
     }
     mean /= RealType(N);
 
-    /** Calculate standard deviation from columns */
+    /** Calculate standard deviation of columns */
     MatrixType Amm( N, G );
     Amm.fill( NumericTraits< RealType >::Zero );
     for( int i = 0; i < N; i++ )
@@ -541,25 +498,16 @@ PCAMetric2<TFixedImage,TMovingImage>
         }
     }
 
-    MatrixType Atmm( Amm.transpose() );
-
     /** Compute covariancematrix C */
+    MatrixType Atmm = Amm.transpose();
     MatrixType C( Atmm*Amm );
     C /=  static_cast< RealType > ( RealType(N) - 1.0 );
-
-    /** Calculate standard deviation from columns */
-    vnl_vector< RealType > var( G );
-    var.fill( NumericTraits< RealType >::Zero );
-    for( int j = 0; j < G; j++)
-    {
-        var(j) = C(j,j);
-    }
 
     vnl_diag_matrix< RealType > S( G );
     S.fill( NumericTraits< RealType >::Zero );
     for( int j = 0; j < G; j++)
     {
-        S(j,j) = 1.0/sqrt(var(j));
+        S(j,j) = 1.0/sqrt(C(j,j));
     }
 
     /** Compute correlation matrix K */
@@ -589,29 +537,7 @@ PCAMetric2<TFixedImage,TMovingImage>
     std::vector<NonZeroJacobianIndicesType> nzjis( G, NonZeroJacobianIndicesType() );
 
     /** Sub components of metric derivative */
-    vnl_vector< DerivativeValueType > tracevKvdmu( P );
-    vnl_vector< DerivativeValueType > tracevdSdmuCSv( P );
-    vnl_vector< DerivativeValueType > tracevSdCdmuSv( P );
     vnl_diag_matrix< DerivativeValueType > dSdmu_part1( G );
-
-    /** New variables for speed up **/
-    vnl_vector< DerivativeValueType > tracevSAtmmdAdmuSv( P );
-    vnl_vector< DerivativeValueType > tracevSAtmmmeandAdmuSv( P );
-    vnl_vector< DerivativeValueType > tracedSdmu ( P );
-    vnl_vector< DerivativeValueType > tracemeandSdmu ( P );
-
-    /** initialize */
-    tracevKvdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero);
-    tracevdSdmuCSv.fill( itk::NumericTraits< DerivativeValueType >::Zero);
-    tracevSdCdmuSv.fill( itk::NumericTraits< DerivativeValueType >::Zero);
-    tracevSAtmmdAdmuSv.fill( itk::NumericTraits< DerivativeValueType >::Zero);
-    tracedSdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero);
-
-    tracevSAtmmmeandAdmuSv.fill( itk::NumericTraits< DerivativeValueType >::Zero);
-    tracemeandSdmu.fill( itk::NumericTraits< DerivativeValueType >::Zero);
-
-    /** Components for derivative of mean */
-    vnl_vector<DerivativeValueType> meandAdmu( P );
 
     unsigned int startSamplesOK;
     startSamplesOK = 0;
@@ -671,52 +597,20 @@ PCAMetric2<TFixedImage,TMovingImage>
             /** build metric derivative components */
             for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
             {
-                meandAdmu[ nzjis[ d ][ p ] ] += dMTdmu[ p ];
-
                 for(unsigned int z = 0; z < G; z++)
                 {
-                    tracevSAtmmdAdmuSv[ nzjis[ d ][ p ] ] += z * vSAtmm[ z ][ pixelIndex ] * dMTdmu[ p ] * Sv[ d ][ z ];
-                    tracedSdmu[ nzjis[ d ][ p ] ] += z * vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * CSv[ d ][ z ];
+                    derivative[ nzjis[ d ][ p ] ] += z * (vSAtmm[ z ][ pixelIndex ] * dMTdmu[ p ] * Sv[ d ][ z ] +
+                                                          vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * CSv[ d ][ z ]);
                 }//end loop over eigenvalues
 
             }//end loop over non-zero jacobian indices
 
-        }//end loop over gradient images
+        }//end loop over last dimension
 
     }// end second for loop over sample container
 
-    meandAdmu /= double( N );
-
-    if(this->m_UseDerivativeOfMean)
-    {
-        for(unsigned int i = 0; i < N; i++)
-        {
-            for (unsigned int d = 0; d < G; ++d )
-            {
-                for(unsigned int p = 0; p < P; ++p )
-                {
-                    for(unsigned int z = 0; z < G; z++)
-                    {
-                        tracevSAtmmmeandAdmuSv[ p ] += z*vSAtmm[ z ][ i ] * meandAdmu[ p ] * Sv[ d ][ z ];
-                        tracemeandSdmu[ p ] += z*vdSdmu_part1[ z ][ d ] * Atmm[ d ][ i ] *
-                                meandAdmu[ p ] * CSv[ d ][ z ];
-                    }//end loop over eigenvalues
-
-                }//end loop over non-zero jacobian indices
-
-            }//end loop over gradient images
-
-        }// end second for loop over sample container
-    }
-
-    tracevSdCdmuSv = tracevSAtmmdAdmuSv - tracevSAtmmmeandAdmuSv;
-    tracevdSdmuCSv = tracedSdmu - tracemeandSdmu;
-
-    tracevKvdmu = tracevdSdmuCSv + tracevSdCdmuSv;
-    tracevKvdmu *= (2.0/(DerivativeValueType(N) - 1.0)); //normalize
-
+    derivative *= (2.0/(DerivativeValueType(N) - 1.0)); //normalize
     measure = sumWeightedEigenValues;
-    derivative = tracevKvdmu;
 
     /** Subtract mean from derivative elements. */
     if( this->m_SubtractMean )
@@ -758,12 +652,12 @@ PCAMetric2<TFixedImage,TMovingImage>
          * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
          * the number the time point index.
          */
-            const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / lastDimSize;
+            const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / G;
             DerivativeType mean ( numParametersPerLastDimension );
             mean.Fill( 0.0 );
 
             /** Compute mean per control point. */
-            for ( unsigned int t = 0; t < lastDimSize; ++t )
+            for ( unsigned int t = 0; t < G; ++t )
             {
                 const unsigned int startc = numParametersPerLastDimension * t;
                 for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
@@ -772,10 +666,10 @@ PCAMetric2<TFixedImage,TMovingImage>
                     mean[ index ] += derivative[ c ];
                 }
             }
-            mean /= static_cast< RealType >( lastDimSize );
+            mean /= static_cast< RealType >( G );
 
             /** Update derivative per control point. */
-            for ( unsigned int t = 0; t < lastDimSize; ++t )
+            for ( unsigned int t = 0; t < G; ++t )
             {
                 const unsigned int startc = numParametersPerLastDimension * t;
                 for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
@@ -794,4 +688,4 @@ PCAMetric2<TFixedImage,TMovingImage>
 
 } // end namespace itk
 
-#endif // ITKPCAMetric2_HXX
+#endif // ITKPCAMetric2_F_HXX

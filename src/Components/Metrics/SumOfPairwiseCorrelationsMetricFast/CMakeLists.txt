@@ -1,9 +1,0 @@
-
-ADD_ELXCOMPONENT( SumOfPairwiseCorrelationCoefficientsMetricFast
- elxSumOfPairwiseCorrelationCoefficientsMetricFast.h
- elxSumOfPairwiseCorrelationCoefficientsMetricFast.hxx
- elxSumOfPairwiseCorrelationCoefficientsMetricFast.cxx
- itkSumOfPairwiseCorrelationCoefficientsMetricFast.h
- itkSumOfPairwiseCorrelationCoefficientsMetricFast.hxx
-)
-
