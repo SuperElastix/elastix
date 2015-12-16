@@ -92,7 +92,7 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
   }
 
   /** Set the std::cout output of xout. */
-  if( setupCout && xout.GetXTargetCells().count( "log" ) == 0 )
+  if( setupCout && xout.GetXTargetCells().count( "cout" ) == 0 )
   {
     returndummy |= xout.AddOutput( "cout", &std::cout );
   }
