@@ -147,6 +147,10 @@ public:
 
   virtual const XStreamMapType & GetXOutputs( void );
 
+  virtual const CStreamMapType & GetCTargetCells( void );
+
+  virtual const XStreamMapType & GetXTargetCells( void );
+
 protected:
 
   /** Returns a target cell. */

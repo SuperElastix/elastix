@@ -355,6 +355,32 @@ const typename xoutbase< charT, traits >::CStreamMapType
 
 }   // end GetOutputs
 
+
+/**
+ * **************** GetCTargetCells *************
+ */
+
+template< class charT, class traits >
+const typename xoutbase< charT, traits >::CStreamMapType
+& xoutbase< charT, traits >::GetCTargetCells( void )
+{
+  return this->m_CTargetCells;
+
+} 
+
+
+/**
+ * **************** GetXTargetCells ***************
+ */
+
+template< class charT, class traits >
+const typename xoutbase< charT, traits >::XStreamMapType
+& xoutbase< charT, traits >::GetXTargetCells( void )
+{
+  return this->m_XTargetCells;
+}
+
+
 } // end namespace xoutlibrary
 
 #endif // end #ifndef __xoutbase_hxx
