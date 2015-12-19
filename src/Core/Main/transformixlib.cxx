@@ -35,7 +35,6 @@
 #include <itksys/SystemTools.hxx>
 #include <itksys/SystemInformation.hxx>
 
-#include "elastix.h" // for ConvertSecondsToDHMS and GetCurrentDateAndTime
 #include "itkTimeProbe.h"
 
 namespace transformix
@@ -251,6 +250,60 @@ TRANSFORMIX::TransformImage(
   return TransformImage( inputImage, parameterMaps, outputPath, performLogging, performCout );
 } // end TransformImage()
 
+/** ConvertSecondsToDHMS
+ *
+ */
+std::string TRANSFORMIX::ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision )
+{
+  /** Define days, hours, minutes. */
+  const std::size_t secondsPerMinute = 60;
+  const std::size_t secondsPerHour   = 60 * secondsPerMinute;
+  const std::size_t secondsPerDay    = 24 * secondsPerHour;
+
+  /** Convert total seconds. */
+  std::size_t iSeconds = static_cast<std::size_t>( totalSeconds );
+  const std::size_t days = iSeconds / secondsPerDay;
+
+  iSeconds %= secondsPerDay;
+  const std::size_t hours = iSeconds / secondsPerHour;
+
+  iSeconds %= secondsPerHour;
+  const std::size_t minutes = iSeconds / secondsPerMinute;
+
+  //iSeconds %= secondsPerMinute;
+  //const std::size_t seconds = iSeconds;
+  const double dSeconds = fmod( totalSeconds, 60.0 );
+
+  /** Create a string in days, hours, minutes and seconds. */
+  bool nonzero = false;
+  std::ostringstream make_string( "" );
+  if( days    != 0            ){ make_string << days    << "d"; nonzero = true; }
+  if( hours   != 0 || nonzero ){ make_string << hours   << "h"; nonzero = true; }
+  if( minutes != 0 || nonzero ){ make_string << minutes << "m"; nonzero = true; }
+  make_string << std::showpoint << std::fixed << std::setprecision( precision );
+  make_string << dSeconds << "s";
+
+  /** Return a value. */
+  return make_string.str();
+
+} // end ConvertSecondsToDHMS()
+
+
+/** Returns current date and time as a string. */
+std::string TRANSFORMIX::GetCurrentDateAndTime( void )
+{
+  // Obtain current time
+  time_t rawtime = time( NULL );
+  // Convert to local time
+  struct tm * timeinfo = localtime( &rawtime );
+  // Convert to human-readable format
+  std::string timeAsString = std::string( asctime( timeinfo ) );
+  // Erase newline character at end
+  timeAsString.erase( timeAsString.end() - 1 );
+  //timeAsString.pop_back() // c++11 feature
+
+  return timeAsString;
+} // end GetCurrentDateAndTime()
 
 } // namespace transformix
 

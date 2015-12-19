@@ -97,6 +97,9 @@ public:
   /** Getter for result image. */
   ImagePointer GetResultImage( void );
 
+  std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 0 );
+  std::string GetCurrentDateAndTime( void );
+
 private:
 
   ImagePointer m_ResultImage;

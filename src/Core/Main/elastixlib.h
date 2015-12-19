@@ -127,6 +127,9 @@ public:
   /** Get transform parameters of all registration steps. */
   ParameterMapListType GetTransformParameterMapList( void );
 
+  std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 0 );
+  std::string GetCurrentDateAndTime( void );
+
 private:
 
   /* the result images */
