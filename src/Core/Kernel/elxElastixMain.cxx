@@ -85,28 +85,15 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
       return 1;
     }
 
-    if( xout.GetXTargetCells().count( "log" ) == 0 )
-    {
-      returndummy |= xout.AddOutput( "log", &g_LogFileStream );
-    }
+    returndummy |= xout.AddOutput( "log", &g_LogFileStream );
   }
 
   /** Set the std::cout output of xout. */
-  if( setupCout && xout.GetXTargetCells().count( "cout" ) == 0 )
-  {
-    returndummy |= xout.AddOutput( "cout", &std::cout );
-  }
+  returndummy |= xout.AddOutput( "cout", &std::cout );
 
   /** Set outputs of LogOnly and CoutOnly. */
-  if( g_LogOnlyXout.GetCOutputs().empty() )
-  {
-    returndummy |= g_LogOnlyXout.AddOutput( "log", &g_LogFileStream );
-  }
-
-  if( g_CoutOnlyXout.GetCOutputs().empty() )
-  {
-    returndummy |= g_CoutOnlyXout.AddOutput( "cout", &std::cout );
-  }
+  returndummy |= g_LogOnlyXout.AddOutput( "log", &g_LogFileStream );
+  returndummy |= g_CoutOnlyXout.AddOutput( "cout", &std::cout );
 
   /** Copy the outputs to the warning-, error- and standard-xouts. */
   g_WarningXout.SetOutputs( xout.GetCOutputs() );
@@ -118,14 +105,11 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
   g_StandardXout.SetOutputs( xout.GetXOutputs() );
 
   /** Link the warning-, error- and standard-xouts to xout. */
-  if( xout.GetXTargetCells().empty() )
-  {
-    returndummy |= xout.AddTargetCell( "warning", &g_WarningXout );
-    returndummy |= xout.AddTargetCell( "error", &g_WarningXout );
-    returndummy |= xout.AddTargetCell( "standard", &g_WarningXout );
-    returndummy |= xout.AddTargetCell( "logonly", &g_WarningXout );
-    returndummy |= xout.AddTargetCell( "coutonly", &g_WarningXout );
-  }
+  returndummy |= xout.AddTargetCell( "warning", &g_WarningXout );
+  returndummy |= xout.AddTargetCell( "error", &g_WarningXout );
+  returndummy |= xout.AddTargetCell( "standard", &g_WarningXout );
+  returndummy |= xout.AddTargetCell( "logonly", &g_WarningXout );
+  returndummy |= xout.AddTargetCell( "coutonly", &g_WarningXout );
 
   /** Format the output. */
   xout[ "standard" ] << std::fixed;
@@ -135,6 +119,7 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
   return returndummy;
 
 } // end xoutSetup()
+
 
 
 /**
