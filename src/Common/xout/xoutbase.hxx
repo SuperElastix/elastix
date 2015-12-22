@@ -90,6 +90,7 @@ xoutbase< charT, traits >::WriteBufferedData( void )
 }   // end WriteBufferedData
 
 
+
 /**
  * **************** AddTargetCell (ostream_type) ****************
  */
@@ -100,13 +101,14 @@ xoutbase< charT, traits >::AddTargetCell( const char * name, ostream_type * cell
 {
   int returndummy = 1;
 
-  if( this->m_CTargetCells.count( name ) == 0 )
+  if( this->m_XTargetCells.count( name ) )
+  {
+    /** an X-cell with the same name already exists */
+    returndummy = 2;
+  }
+  else
   {
     this->m_CTargetCells.insert( CStreamMapEntryType( name, cell ) );
-  }
-  
-  if( this->m_CTargetCells.count( name ) > 0 )
-  {
     returndummy = 0;
   }
 
@@ -125,14 +127,14 @@ xoutbase< charT, traits >::AddTargetCell( const char * name, Self * cell )
 {
   int returndummy = 1;
 
-  if( this->m_XTargetCells.count( name ) == 0 )
+  if( this->m_CTargetCells.count( name ) )
+  {
+    /** a C-cell with the same name already exists */
+    returndummy = 2;
+  }
+  else
   {
     this->m_XTargetCells.insert( XStreamMapEntryType( name, cell ) );
-  }
-  
-
-  if( this->m_XTargetCells.count( name ) > 0 )
-  {
     returndummy = 0;
   }
 
@@ -203,13 +205,13 @@ xoutbase< charT, traits >::AddOutput( const char * name, ostream_type * output )
 {
   int returndummy = 1;
 
-  if( this->m_COutputs.count( name ) == 0 )
+  if( this->m_XOutputs.count( name ) )
+  {
+    returndummy = 2;
+  }
+  else
   {
     this->m_COutputs.insert( CStreamMapEntryType( name, output ) );
-  }
-
-  if( this->m_COutputs.count( name ) )
-  {
     returndummy = 0;
   }
 
@@ -228,19 +230,19 @@ xoutbase< charT, traits >::AddOutput( const char * name, Self * output )
 {
   int returndummy = 1;
 
-  if( this->m_XOutputs.count( name ) == 0 )
+  if( this->m_COutputs.count( name ) )
+  {
+    returndummy = 2;
+  }
+  else
   {
     this->m_XOutputs.insert( XStreamMapEntryType( name, output ) );
-  }
-  
-  if( this->m_XOutputs.count( name ) )
-  {
     returndummy = 0;
   }
 
   return returndummy;
 
-}   // end AddOutput
+} // end AddOutput
 
 
 /**
