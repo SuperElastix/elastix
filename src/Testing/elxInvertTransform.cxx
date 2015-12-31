@@ -340,7 +340,7 @@ main( int argc, char * argv[] )
   {
     for( unsigned int j = 0; j < MovDim; j++ )
     {
-      outputTPFile << " " << imageIOBase->GetDirection( j )[ i ]; // or i j?
+      outputTPFile << " " << imageIOBase->GetDirection( i )[ j ];
     }
   }
   outputTPFile << ")" << std::endl;
