@@ -77,6 +77,7 @@ def main():
   subprocess.call( [ "transformix", "-in", options.mseg, "-out", options.directory, "-tp", tpFileName ],
     stdout=subprocess.PIPE );
   subprocess.call( [ "pxcastconvert", "-in", seg, "-out", seg_defm ], stdout=subprocess.PIPE );
+  os.remove( seg );
 
   #
   # Deform the moving image segmentation by the baseline result
@@ -96,6 +97,7 @@ def main():
   subprocess.call( [ "transformix", "-in", options.mseg, "-out", options.directory, "-tp", tpFileName_b ],
     stdout=subprocess.PIPE );
   subprocess.call( [ "pxcastconvert", "-in", seg, "-out", seg_defb ], stdout=subprocess.PIPE );
+  os.remove( seg );
 
   # Compute the overlap between baseline segmentation and deformed moving segmentation
   try :
