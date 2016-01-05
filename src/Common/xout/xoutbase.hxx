@@ -90,7 +90,6 @@ xoutbase< charT, traits >::WriteBufferedData( void )
 }   // end WriteBufferedData
 
 
-
 /**
  * **************** AddTargetCell (ostream_type) ****************
  */
@@ -242,7 +241,7 @@ xoutbase< charT, traits >::AddOutput( const char * name, Self * output )
 
   return returndummy;
 
-} // end AddOutput
+}   // end AddOutput
 
 
 /**
@@ -343,32 +342,6 @@ const typename xoutbase< charT, traits >::CStreamMapType
   return this->m_COutputs;
 
 }   // end GetOutputs
-
-
-/**
- * **************** GetCTargetCells *************
- */
-
-template< class charT, class traits >
-const typename xoutbase< charT, traits >::CStreamMapType
-& xoutbase< charT, traits >::GetCTargetCells( void )
-{
-  return this->m_CTargetCells;
-
-} 
-
-
-/**
- * **************** GetXTargetCells ***************
- */
-
-template< class charT, class traits >
-const typename xoutbase< charT, traits >::XStreamMapType
-& xoutbase< charT, traits >::GetXTargetCells( void )
-{
-  return this->m_XTargetCells;
-}
-
 
 } // end namespace xoutlibrary
 

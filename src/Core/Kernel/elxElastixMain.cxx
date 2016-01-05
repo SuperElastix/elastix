@@ -38,8 +38,6 @@ namespace elastix
 
 using namespace xl;
 
-using namespace xl;
-
 /**
  * ******************* Global variables *************************
  *
@@ -50,13 +48,13 @@ using namespace xl;
 /** \todo move to ElastixMain class, as static vars? */
 
 /** xout TargetCells. */
-static xoutbase_type   g_xout;
-static xoutsimple_type g_WarningXout;
-static xoutsimple_type g_ErrorXout;
-static xoutsimple_type g_StandardXout;
-static xoutsimple_type g_CoutOnlyXout;
-static xoutsimple_type g_LogOnlyXout;
-static std::ofstream   g_LogFileStream;
+xoutbase_type   g_xout;
+xoutsimple_type g_WarningXout;
+xoutsimple_type g_ErrorXout;
+xoutsimple_type g_StandardXout;
+xoutsimple_type g_CoutOnlyXout;
+xoutsimple_type g_LogOnlyXout;
+std::ofstream   g_LogFileStream;
 
 /**
  * ********************* xoutSetup ******************************
@@ -74,7 +72,6 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
   int returndummy = 0;
   set_xout( &g_xout );
 
-  /** Set the logfile output of xout. */
   if( setupLogging )
   {
     /** Open the logfile for writing. */
@@ -84,12 +81,17 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
       std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
       return 1;
     }
-
-    returndummy |= xout.AddOutput( "log", &g_LogFileStream );
   }
 
-  /** Set the std::cout output of xout. */
-  returndummy |= xout.AddOutput( "cout", &std::cout );
+  /** Set std::cout and the logfile as outputs of xout. */
+  if( setupLogging )
+  {
+    returndummy |= xout.AddOutput( "log", &g_LogFileStream );
+  }
+  if( setupCout )
+  {
+    returndummy |= xout.AddOutput( "cout", &std::cout );
+  }
 
   /** Set outputs of LogOnly and CoutOnly. */
   returndummy |= g_LogOnlyXout.AddOutput( "log", &g_LogFileStream );
@@ -106,10 +108,10 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
 
   /** Link the warning-, error- and standard-xouts to xout. */
   returndummy |= xout.AddTargetCell( "warning", &g_WarningXout );
-  returndummy |= xout.AddTargetCell( "error", &g_WarningXout );
-  returndummy |= xout.AddTargetCell( "standard", &g_WarningXout );
-  returndummy |= xout.AddTargetCell( "logonly", &g_WarningXout );
-  returndummy |= xout.AddTargetCell( "coutonly", &g_WarningXout );
+  returndummy |= xout.AddTargetCell( "error", &g_ErrorXout );
+  returndummy |= xout.AddTargetCell( "standard", &g_StandardXout );
+  returndummy |= xout.AddTargetCell( "logonly", &g_LogOnlyXout );
+  returndummy |= xout.AddTargetCell( "coutonly", &g_CoutOnlyXout );
 
   /** Format the output. */
   xout[ "standard" ] << std::fixed;
