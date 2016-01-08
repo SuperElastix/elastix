@@ -255,7 +255,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 template< typename TFixedImage, typename TMovingImage >
 typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectPointer
 ElastixFilter< TFixedImage, TMovingImage >
-::GetTransformParameters( void )
+::GetTransformParameterObject( void )
 {
   // Make sure the transform parameters are up to date
   this->Update();

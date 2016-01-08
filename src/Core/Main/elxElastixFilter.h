@@ -74,7 +74,7 @@ public:
   void RemoveMovingMask( void );
 
   void SetParameterObject( ParameterObjectPointer parameterObject );
-  ParameterObjectPointer GetTransformParameters( void );
+  ParameterObjectPointer GetTransformParameterObject( void );
 
   itkSetMacro( FixedPointSetFileName, std::string );
   itkGetConstMacro( FixedPointSetFileName, std::string );
