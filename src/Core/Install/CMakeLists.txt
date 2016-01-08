@@ -32,6 +32,14 @@ set( supportedTypes "char" "unsigned char"
   "short" "unsigned short" "int" "unsigned int"
   "long" "unsigned long" "float" "double" )
 
+mark_as_advanced( USE_ALL_PIXELTYPES )
+option( USE_ALL_PIXELTYPES "Build all pixel types" OFF )
+if( ${USE_ALL_PIXELTYPES} )
+  set( ELASTIX_IMAGE_2D_PIXELTYPES ${supportedTypes} )
+  set( ELASTIX_IMAGE_3D_PIXELTYPES ${supportedTypes} )
+  set( ELASTIX_IMAGE_4D_PIXELTYPES ${supportedTypes} )
+endif()
+
 # Sanity check if > 0 number of dimensions are requested
 list( LENGTH ELASTIX_IMAGE_DIMENSIONS numDims )
 if( ${numDims} EQUAL 0 )
