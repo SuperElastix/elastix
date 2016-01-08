@@ -1,0 +1,151 @@
+#ifndef elxElastixFilter_h
+#define elxElastixFilter_h
+
+#include "itkImageSource.h"
+
+#include "elxElastixMain.h"
+#include "elxParameterObject.h"
+#include "elxPixelTypeName.h"
+
+/**
+ * Elastix registration library exposed as an ITK filter.
+ */
+
+namespace elastix {
+
+template< typename TFixedImage,
+          typename TMovingImage >
+class ElastixFilter : public itk::ImageSource< TFixedImage >
+{
+public:
+
+  typedef ElastixFilter                   Self;
+  typedef itk::SmartPointer< Self >       Pointer;
+  typedef itk::SmartPointer< const Self > ConstPointer;
+  itkNewMacro( Self );
+  itkTypeMacro( Self, itk::ImageSource );
+
+  typedef elastix::ElastixMain                                ElastixMainType;
+  typedef ElastixMainType::Pointer                            ElastixMainPointer;
+  typedef std::vector< ElastixMainPointer >                   ElastixMainVectorType;
+  typedef ElastixMainType::ObjectPointer                      ElastixMainObjectPointer;
+
+  typedef ElastixMainType::FlatDirectionCosinesType           FlatDirectionCosinesType;
+
+  typedef ElastixMainType::ArgumentMapType                    ArgumentMapType;
+  typedef ArgumentMapType::value_type                         ArgumentMapEntryType;
+
+  typedef itk::ProcessObject::DataObjectIdentifierType        DataObjectIdentifierType;
+  typedef itk::ProcessObject::DataObjectPointerArraySizeType  DataObjectPointerArraySizeType;
+  typedef itk::ProcessObject::NameArray                       InputNameArrayType;
+
+  typedef ElastixMainType::DataObjectContainerType            DataObjectContainerType;
+  typedef ElastixMainType::DataObjectContainerPointer         DataObjectContainerPointer;
+  typedef DataObjectContainerType::Iterator                   DataObjectContainerIterator;
+
+  typedef ParameterObject::ParameterMapVectorType             ParameterMapVectorType;
+  typedef ParameterObject::ParameterMapType                   ParameterMapType;
+  typedef ParameterObject::ParameterValueVectorType           ParameterValueVectorType;
+  typedef ParameterObject::Pointer                            ParameterObjectPointer;
+  typedef ParameterObject::ConstPointer                       ParameterObjectConstPointer;
+
+  typedef typename TFixedImage::Pointer                       FixedImagePointer;
+  typedef typename TMovingImage::Pointer                      MovingImagePointer;
+
+  itkStaticConstMacro( FixedImageDimension, unsigned int, TFixedImage::ImageDimension );
+  itkStaticConstMacro( MovingImageDimension, unsigned int, TMovingImage::ImageDimension );
+
+  void SetFixedImage( FixedImagePointer fixedImage );
+  void SetFixedImage( DataObjectContainerPointer fixedImages );
+  void AddFixedImage( FixedImagePointer fixedImage );
+
+  void SetMovingImage( MovingImagePointer movingImages );
+  void SetMovingImage( DataObjectContainerPointer movingImages );
+  void AddMovingImage( MovingImagePointer movingImage );
+
+  void SetFixedMask( FixedImagePointer fixedMask );
+  void SetFixedMask( DataObjectContainerPointer fixedMasks );
+  void AddFixedMask( FixedImagePointer fixedMask );
+  void RemoveFixedMask( void );
+
+  void SetMovingMask( MovingImagePointer movingMask );
+  void SetMovingMask( DataObjectContainerPointer movingMasks );
+  void AddMovingMask( MovingImagePointer movingMask );
+  void RemoveMovingMask( void );
+
+  void SetParameterObject( ParameterObjectPointer parameterObject );
+  ParameterObjectPointer GetTransformParameters( void );
+
+  itkSetMacro( FixedMeshFileName, std::string );
+  itkGetConstMacro( FixedMeshFileName, std::string );
+  void RemoveFixedMeshFileName( void ) { this->SetFixedMeshFileName( std::string() ); };
+
+  itkSetMacro( MovingMeshFileName, std::string );
+  itkGetConstMacro( MovingMeshFileName, std::string );
+  void RemoveMovingMeshFileName( void ) { this->SetMovingMeshFileName( std::string() ); };
+
+  itkSetMacro( OutputDirectory, std::string );
+  itkGetConstMacro( OutputDirectory, std::string );
+  void RemoveOutputDirectory() { this->m_OutputDirectory = std::string(); };
+
+  void SetLogFileName( std::string logFileName )
+  {
+    this->m_LogFileName = logFileName;
+    this->LogToFileOn();
+    this->Modified();
+  }
+
+  itkGetConstMacro( LogFileName, std::string );
+
+  void RemoveLogFileName( void ) { 
+    this->m_LogFileName = std::string();
+    this->LogToFileOff();
+  };
+  
+  itkSetMacro( LogToConsole, bool );
+  itkGetConstMacro( LogToConsole, bool );
+  itkBooleanMacro( LogToConsole );
+
+  itkSetMacro( LogToFile, bool );
+  itkGetConstMacro( LogToFile, bool );
+  itkBooleanMacro( LogToFile );
+
+  FixedImagePointer GetOutput( void );
+
+protected:
+
+  void GenerateData( void ) ITK_OVERRIDE;
+
+private:
+
+  ElastixFilter();
+
+  void AddInputAutoIncrementName( DataObjectIdentifierType key, itk::DataObject* input );
+
+  bool IsInputType( DataObjectIdentifierType inputType, DataObjectIdentifierType inputName );
+  void RemoveInputType( DataObjectIdentifierType inputName );
+
+  // TODO: When set to true, ReleaseDataFlag should also touch these containers
+  DataObjectContainerPointer m_FixedImageContainer;
+  DataObjectContainerPointer m_MovingImageContainer;
+  DataObjectContainerPointer m_FixedMaskContainer;
+  DataObjectContainerPointer m_MovingMaskContainer;
+
+  std::string m_FixedMeshFileName;
+  std::string m_MovingMeshFileName;
+
+  std::string m_OutputDirectory;
+  std::string m_LogFileName;
+
+  bool m_LogToConsole;
+  bool m_LogToFile;
+
+};
+
+} // namespace elx
+
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "elxElastixFilter.hxx"
+#endif
+
+#endif // elxElastixFilter_h

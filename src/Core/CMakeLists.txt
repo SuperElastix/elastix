@@ -124,6 +124,8 @@ if( ELASTIX_BUILD_EXECUTABLE )
 else()
   if( ELASTIX_BUILD_SHARED_LIBS )
     add_library( elastix SHARED
+      Main/elxParameterObject.cxx
+      Main/elxParameterObject.h
       Main/elastixlib.cxx
       Main/elastixlib.h
       Kernel/elxElastixMain.cxx
@@ -132,6 +134,8 @@ else()
     )
   else()
     add_library( elastix STATIC
+      Main/elxParameterObject.cxx
+      Main/elxParameterObject.h
       Main/elastixlib.cxx
       Main/elastixlib.h
       Kernel/elxElastixMain.cxx
@@ -157,6 +161,8 @@ if( ELASTIX_BUILD_EXECUTABLE )
 else()
   if( ELASTIX_BUILD_SHARED_LIBS )
     add_library( transformix SHARED
+      Main/elxParameterObject.cxx
+      Main/elxParameterObject.h
       Main/transformixlib.cxx
       Main/transformixlib.h
       Kernel/elxElastixMain.cxx
@@ -167,6 +173,8 @@ else()
     )
   else()
     add_library( transformix STATIC
+      Main/elxParameterObject.cxx
+      Main/elxParameterObject.h
       Main/transformixlib.cxx
       Main/transformixlib.h
       Kernel/elxElastixMain.cxx
