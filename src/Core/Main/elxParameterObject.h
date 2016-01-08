@@ -44,6 +44,7 @@ public:
   void ReadParameterFile( const ParameterFileNameVectorType parameterFileNameVector );
   void AddParameterFile( const ParameterFileNameType parameterFileName );
 
+  void WriteParameterFile( const ParameterMapType parameterMap, const ParameterFileNameType parameterFileName );
   void WriteParameterFile( const ParameterFileNameType parameterFileName );
   void WriteParameterFile( const ParameterFileNameVectorType parameterFileNameVector );
 
@@ -53,6 +54,16 @@ public:
   ParameterMapType GetParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 3u, const double finalGridSpacingInPhysicalUnits = 10.0 );
 
 private:
+
+  // C++11 has a to_string in the standard library, but it is unnecessary to 
+  // introduce a C++11 dependency for a simple number to string helper function
+  template < typename T > 
+  static std::string to_string( const T& n )
+  {
+    std::ostringstream stm;
+    stm << n;
+    return stm.str();
+  }
 
   ParameterMapVectorType  m_ParameterMapVector;
 

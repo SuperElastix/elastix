@@ -20,6 +20,7 @@ void
 ParameterObject
 ::SetParameterMap( const ParameterMapVectorType parameterMapVector )
 { 
+  this->Modified();
   this->m_ParameterMapVector = parameterMapVector; 
 }
 
@@ -27,6 +28,7 @@ void
 ParameterObject
 ::AddParameterMap( const ParameterMapType parameterMap )
 {
+  this->Modified();
   this->m_ParameterMapVector.push_back( parameterMap );
 }
 
@@ -60,7 +62,7 @@ ParameterObject
   ParameterFileParserPointer parameterFileParser = ParameterFileParserType::New();
   parameterFileParser->SetParameterFileName( parameterFileName );
   parameterFileParser->ReadParameterFile();
-  this->m_ParameterMapVector = ParameterMapVectorType( 1, parameterFileParser->GetParameterMap() );
+  this->SetParameterMap( ParameterMapVectorType( 1, parameterFileParser->GetParameterMap() ) );
 }
 
 void
@@ -97,52 +99,70 @@ ParameterObject
 
 void 
 ParameterObject
-::WriteParameterFile( const ParameterFileNameType parameterFileName )
+::WriteParameterFile( const ParameterMapType parameterMap, const ParameterFileNameType parameterFileName )
 {
-  if( this->m_ParameterMapVector.size() != 1 )
+  std::ofstream parameterFile;
+  parameterFile << std::fixed;
+  parameterFile.open( parameterFileName.c_str(), std::ofstream::out );
+  ParameterMapConstIterator parameterMapIterator = parameterMap.begin();
+  ParameterMapConstIterator parameterMapIteratorEnd = parameterMap.end();
+  while( parameterMapIterator != parameterMapIteratorEnd )
   {
-    itkExceptionMacro( "ParameterObject contains multiple parameter files. Please provide a vector of filenames." );
+    parameterFile << "(" << parameterMapIterator->first;
+
+    ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
+    for( unsigned int i = 0; i < parameterMapValueVector.size(); ++i )
+    {
+      std::stringstream stream( parameterMapValueVector[ i ] );
+      float number;
+      stream >> number;
+      if( stream.fail() || stream.bad() ) {
+         parameterFile << " \"" << parameterMapValueVector[ i ] << "\"";
+      }
+      else
+      {
+        parameterFile << " " << number;
+      }      
+    }
+      
+    parameterFile << ")" << std::endl;
+    parameterMapIterator++;
   }
 
-  this->WriteParameterFile( ParameterFileNameVectorType( 1, parameterFileName ) );
+  parameterFile.close();
+}
+
+void 
+ParameterObject
+::WriteParameterFile( const ParameterFileNameType parameterFileName )
+{
+  if( this->m_ParameterMapVector.size() == 0 )
+  {
+    itkExceptionMacro( "Error writing parameter map to disk: The parameter map is empty." );
+  }
+
+  if( this->m_ParameterMapVector.size() > 1 )
+  {
+    itkExceptionMacro( "Error writing to disk: The number of parameter maps (" << this->m_ParameterMapVector.size() << ")"
+                    << " does not match the number of provided filenames (1)." );
+  }
+
+  this->WriteParameterFile( this->m_ParameterMapVector[ 0 ], parameterFileName );
 }
 
 void 
 ParameterObject
 ::WriteParameterFile( const ParameterFileNameVectorType parameterFileNameVector )
 {
-  for( unsigned int i = 0; i < parameterFileNameVector.size(); ++i )
+  if( this->m_ParameterMapVector.size() != parameterFileNameVector.size() )
   {
-    ParameterFileNameType fileName = parameterFileNameVector[ i ];
-    std::ofstream parameterFile;
-    parameterFile << std::fixed;
-    parameterFile.open( fileName.c_str(), std::ofstream::out );
-    ParameterMapConstIterator parameterMapIterator = this->m_ParameterMapVector[ i ].begin();
-    ParameterMapConstIterator parameterMapIteratorEnd = this->m_ParameterMapVector[ i ].end();
-    while( parameterMapIterator != parameterMapIteratorEnd )
-    {
-      parameterFile << "(" << parameterMapIterator->first;
+    itkExceptionMacro( "Error writing to disk: The number of parameter maps (" << this->m_ParameterMapVector.size() << ")"
+                    << " does not match the number of provided filenames (" << parameterFileNameVector.size() << ")." );
+  }
 
-      ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
-      for( unsigned int i = 0; i < parameterMapValueVector.size(); ++i )
-      {
-        std::stringstream stream( parameterMapValueVector[ i ] );
-        float number;
-        stream >> number;
-        if( stream.fail() || stream.bad() ) {
-           parameterFile << " \"" << parameterMapValueVector[ i ] << "\"";
-        }
-        else
-        {
-          parameterFile << " " << number;
-        }      
-      }
-        
-      parameterFile << ")" << std::endl;
-      parameterMapIterator++;
-    }
-
-    parameterFile.close();
+  for( unsigned int i = 0; i < this->m_ParameterMapVector.size(); ++i )
+  {
+    this->WriteParameterFile( this->m_ParameterMapVector[ i ], parameterFileNameVector[ i ] );
   }
 }
 
@@ -166,20 +186,17 @@ ParameterObject
 { 
 
   // Parameters that depend on size and number of resolutions
-  ParameterMapType parameterMap                       = ParameterMapType();
+  ParameterMapType parameterMap                        = ParameterMapType();
 
   // Common Components
-  parameterMap[ "FixedImagePyramid" ]                 = ParameterValueVectorType( 1, "FixedSmoothingImagePyramid" );
-  parameterMap[ "MovingImagePyramid" ]                = ParameterValueVectorType( 1, "MovingSmoothingImagePyramid" );
-  parameterMap[ "Interpolator"]                       = ParameterValueVectorType( 1, "LinearInterpolator");
-  parameterMap[ "Optimizer" ]                         = ParameterValueVectorType( 1, "AdaptiveStochasticGradientDescent" );
-  parameterMap[ "Resampler"]                          = ParameterValueVectorType( 1, "DefaultResampler" );
-  parameterMap[ "ResampleInterpolator"]               = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
-  parameterMap[ "FinalBSplineInterpolationOrder" ]    = ParameterValueVectorType( 1, "3" );
-
-  std::ostringstream numberOfResolutionsToString;
-  numberOfResolutionsToString << numberOfResolutions;
-  parameterMap[ "NumberOfResolutions" ]               = ParameterValueVectorType( 1, numberOfResolutionsToString.str() );
+  parameterMap[ "FixedImagePyramid" ]                  = ParameterValueVectorType( 1, "FixedSmoothingImagePyramid" );
+  parameterMap[ "MovingImagePyramid" ]                 = ParameterValueVectorType( 1, "MovingSmoothingImagePyramid" );
+  parameterMap[ "Interpolator"]                        = ParameterValueVectorType( 1, "LinearInterpolator");
+  parameterMap[ "Optimizer" ]                          = ParameterValueVectorType( 1, "AdaptiveStochasticGradientDescent" );
+  parameterMap[ "Resampler"]                           = ParameterValueVectorType( 1, "DefaultResampler" );
+  parameterMap[ "ResampleInterpolator"]                = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
+  parameterMap[ "FinalBSplineInterpolationOrder" ]     = ParameterValueVectorType( 1, "3" );
+  parameterMap[ "NumberOfResolutions" ]                = ParameterValueVectorType( 1, to_string< unsigned int >( numberOfResolutions ) );
 
   // Image Sampler
   parameterMap[ "ImageSampler" ]                       = ParameterValueVectorType( 1, "RandomCoordinate" ); 
@@ -258,10 +275,7 @@ ParameterObject
     }
 
     parameterMap[ "GridSpacingSchedule" ] = gridSpacingSchedule;
-
-    std::ostringstream finalGridSpacingInPhysicalUnitsToString;
-    finalGridSpacingInPhysicalUnitsToString << finalGridSpacingInPhysicalUnits;
-    parameterMap[ "FinalGridSpacingInPhysicalUnits" ] = ParameterValueVectorType( 1, finalGridSpacingInPhysicalUnitsToString.str() );
+    parameterMap[ "FinalGridSpacingInPhysicalUnits" ] = ParameterValueVectorType( 1, to_string< double >( finalGridSpacingInPhysicalUnits ) );
   }
 
   return parameterMap;

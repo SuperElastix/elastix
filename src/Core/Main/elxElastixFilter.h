@@ -43,8 +43,8 @@ public:
   typedef ElastixMainType::DataObjectContainerPointer         DataObjectContainerPointer;
   typedef DataObjectContainerType::Iterator                   DataObjectContainerIterator;
 
-  typedef ParameterObject::ParameterMapVectorType             ParameterMapVectorType;
   typedef ParameterObject::ParameterMapType                   ParameterMapType;
+  typedef ParameterObject::ParameterMapVectorType             ParameterMapVectorType;
   typedef ParameterObject::ParameterValueVectorType           ParameterValueVectorType;
   typedef ParameterObject::Pointer                            ParameterObjectPointer;
   typedef ParameterObject::ConstPointer                       ParameterObjectConstPointer;
@@ -76,13 +76,13 @@ public:
   void SetParameterObject( ParameterObjectPointer parameterObject );
   ParameterObjectPointer GetTransformParameters( void );
 
-  itkSetMacro( FixedMeshFileName, std::string );
-  itkGetConstMacro( FixedMeshFileName, std::string );
-  void RemoveFixedMeshFileName( void ) { this->SetFixedMeshFileName( std::string() ); };
+  itkSetMacro( FixedPointSetFileName, std::string );
+  itkGetConstMacro( FixedPointSetFileName, std::string );
+  void RemoveFixedPointSetFileName( void ) { this->SetFixedPointSetFileName( std::string() ); };
 
-  itkSetMacro( MovingMeshFileName, std::string );
-  itkGetConstMacro( MovingMeshFileName, std::string );
-  void RemoveMovingMeshFileName( void ) { this->SetMovingMeshFileName( std::string() ); };
+  itkSetMacro( MovingPointSetFileName, std::string );
+  itkGetConstMacro( MovingPointSetFileName, std::string );
+  void RemoveMovingPointSetFileName( void ) { this->SetMovingPointSetFileName( std::string() ); };
 
   itkSetMacro( OutputDirectory, std::string );
   itkGetConstMacro( OutputDirectory, std::string );
@@ -131,8 +131,8 @@ private:
   DataObjectContainerPointer m_FixedMaskContainer;
   DataObjectContainerPointer m_MovingMaskContainer;
 
-  std::string m_FixedMeshFileName;
-  std::string m_MovingMeshFileName;
+  std::string m_FixedPointSetFileName;
+  std::string m_MovingPointSetFileName;
 
   std::string m_OutputDirectory;
   std::string m_LogFileName;
