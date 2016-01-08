@@ -25,6 +25,11 @@ if( NOT ELASTIX_IMAGE_4D_PIXELTYPES )
   set( ELASTIX_IMAGE_4D_PIXELTYPES "short" CACHE STRING "Specify 4D pixel types" )
 endif()
 
+mark_as_advanced( USE_ALL_PIXELTYPES )
+if( NOT USE_ALL_PIXELTYPES )
+ option( USE_ALL_PIXELTYPES "Build all pixel types" OFF )
+endif()
+
 # Define supported dimensions and types for sanity checks.
 # Gives protection against typo's.
 set( supportedDimensions 2 3 4 )
@@ -32,8 +37,6 @@ set( supportedTypes "char" "unsigned char"
   "short" "unsigned short" "int" "unsigned int"
   "long" "unsigned long" "float" "double" )
 
-mark_as_advanced( USE_ALL_PIXELTYPES )
-option( USE_ALL_PIXELTYPES "Build all pixel types" OFF )
 if( ${USE_ALL_PIXELTYPES} )
   set( ELASTIX_IMAGE_2D_PIXELTYPES ${supportedTypes} )
   set( ELASTIX_IMAGE_3D_PIXELTYPES ${supportedTypes} )
