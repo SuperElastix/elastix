@@ -185,7 +185,7 @@ ElastixFilter< TFixedImage, TMovingImage >
     unsigned int isError = 0;
     try
     {
-      unsigned int isError = elastix->Run( argumentMap, parameterMapVector[ i ] );
+      isError = elastix->Run( argumentMap, parameterMapVector[ i ] );
     }
     catch( itk::ExceptionObject &e )
     {
