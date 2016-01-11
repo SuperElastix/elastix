@@ -233,8 +233,8 @@ ElastixFilter< TFixedImage, TMovingImage >
   ElastixMainType::UnloadComponents();
 }
 
-// TODO: It should not be needed to overwrite the ProcessObject's GetOutput()
-// but upstream is not updated without it. TransformixFilter does not need this (!).
+// TODO: We should not have to overwrite the ProcessObject's GetOutput()
+// but upstream the filter is not updated without it. This is a bug.
 template< typename TFixedImage, typename TMovingImage >
 typename ElastixFilter< TFixedImage, TMovingImage >::FixedImagePointer
 ElastixFilter< TFixedImage, TMovingImage >
@@ -265,7 +265,7 @@ typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectPointer
 ElastixFilter< TFixedImage, TMovingImage >
 ::GetTransformParameterObject( void )
 {
-  // Make sure the transform parameters are up to date
+  // Make sure the transform parameters have been generated and/or are up to date
   this->Update();
 
   return static_cast< ParameterObject* >( itk::ProcessObject::GetOutput( "TransformParameterObject" ) );
@@ -509,7 +509,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     if ( !this->GetInput( idx ) )
     {
-      // Append number to name (e.g. '_2' to inputName for idx = 2)
+      // Append number to name (e.g. append '_2' to inputName for idx = 2)
       inputName += this->MakeNameFromInputIndex( idx );
       this->SetInput( inputName, input );
       return;
@@ -526,7 +526,7 @@ bool
 ElastixFilter< TFixedImage, TMovingImage >
 ::IsInputType( DataObjectIdentifierType inputType, DataObjectIdentifierType inputName )
 {
-  return std::strncmp( inputType.c_str(), inputName.c_str(), inputType.size() ) == 0;
+  return std::strncmp( inputType.c_str(), inputName.c_str(), std::min( inputType.size(), inputName.size() ) ) == 0;
 }
 
 template< typename TFixedImage, typename TMovingImage >

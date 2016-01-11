@@ -138,13 +138,13 @@ ParameterObject
 {
   if( this->m_ParameterMapVector.size() == 0 )
   {
-    itkExceptionMacro( "Error writing parameter map to disk: The parameter map is empty." );
+    itkExceptionMacro( "Error writing parameter map to disk: The parameter object is empty." );
   }
 
   if( this->m_ParameterMapVector.size() > 1 )
   {
     itkExceptionMacro( "Error writing to disk: The number of parameter maps (" << this->m_ParameterMapVector.size() << ")"
-                    << " does not match the number of provided filenames (1)." );
+                    << " does not match the number of provided filenames (1). Please provide a vector of filenames." );
   }
 
   this->WriteParameterFile( this->m_ParameterMapVector[ 0 ], parameterFileName );
@@ -207,7 +207,7 @@ ParameterObject
 
   // Optimizer
   parameterMap[ "NumberOfSamplesForExactGradient" ]    = ParameterValueVectorType( 1, "4096" );
-  parameterMap[ "DefaultPixelValue" ]                  = ParameterValueVectorType( 1, "0" );
+  parameterMap[ "DefaultPixelValue" ]                  = ParameterValueVectorType( 1, "0.0" );
   parameterMap[ "AutomaticParameterEstimation" ]       = ParameterValueVectorType( 1, "true" );
 
   // Output
@@ -221,7 +221,6 @@ ParameterObject
     parameterMap[ "transform" ]                        = ParameterValueVectorType( 1, "TranslationTransform" );
     parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
-    parameterMap[ "Interpolator"]                      = ParameterValueVectorType( 1, "LinearInterpolator");
     parameterMap[ "AutomaticTransformInitialization" ] = ParameterValueVectorType( 1, "true" );
     parameterMap[ "AutomaticTransformInitializationMethod" ] = ParameterValueVectorType( 1, "CenterOfGravity" );
   }
@@ -244,7 +243,7 @@ ParameterObject
     parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiMetricMultiResolutionRegistration" );
     parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "BSplineTransform" );
     parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
-    parameterMap[ "Metric" ]                            .push_back( "TransformBendingEnergyPenalty" );
+    parameterMap[ "Metric" ].push_back( "TransformBendingEnergyPenalty" );
     parameterMap[ "Metric0Weight" ]                    = ParameterValueVectorType( 1, "0.0001" );
     parameterMap[ "Metric1Weight" ]                    = ParameterValueVectorType( 1, "0.9999" );
     parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "512" );
@@ -269,7 +268,7 @@ ParameterObject
     ParameterValueVectorType gridSpacingSchedule = ParameterValueVectorType();
     for( unsigned int resolution = 0; resolution < numberOfResolutions; ++resolution )
     {
-      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( resolution ) ); 
+      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( pow( 2, resolution ) ) ); 
     }
 
     parameterMap[ "GridSpacingSchedule" ] = gridSpacingSchedule;
@@ -279,6 +278,6 @@ ParameterObject
   return parameterMap;
 }
 
-} // namespace elx
+} // namespace elastix
 
 #endif // elxParameterObject_cxx
