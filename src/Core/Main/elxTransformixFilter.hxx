@@ -214,7 +214,7 @@ TransformixFilter< TInputImage >
 template< typename TInputImage >
 typename TransformixFilter< TInputImage >::ParameterObjectPointer
 TransformixFilter< TInputImage >
-::GetTransformParameters( void )
+::GetTransformParameterObject( void )
 {
   return static_cast< ParameterObject* >( this->GetInput( "TransformParameterObject" ) );
 }

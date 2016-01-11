@@ -62,7 +62,7 @@ public:
   itkBooleanMacro( ComputeDeformationField );
 
   void SetTransformParameterObject( ParameterObjectPointer parameterObject );
-  ParameterObjectPointer GetTransformParameters( void );
+  ParameterObjectPointer GetTransformParameterObject( void );
 
   itkSetMacro( OutputDirectory, std::string );
   itkGetConstMacro( OutputDirectory, std::string );
