@@ -19,7 +19,7 @@ TransformixFilter< TInputImage >
   this->ComputeSpatialJacobianOff();
   this->ComputeDeterminantOfSpatialJacobianOff();
   this->ComputeDeformationFieldOff();
-  this->m_PointSetFileName = std::string();
+  this->m_InputPointSetFileName = std::string();
 
   this->m_OutputDirectory = std::string();
   this->m_LogFileName = std::string();
@@ -38,11 +38,11 @@ TransformixFilter< TInputImage >
       !this->GetComputeSpatialJacobian() &&
       !this->GetComputeDeterminantOfSpatialJacobian() &&
       !this->GetComputeDeformationField() &&
-      this->GetPointSetFileName().empty() )
+      this->GetInputPointSetFileName().empty() )
   {
     itkExceptionMacro( "Expected at least one of SetInputImage(\"path/to/image\"), ComputeSpatialJacobianOn(), "
                     << "ComputeDeterminantOfSpatialJacobianOn(), ComputeDeformationFieldOn() or "
-                    << "SetPointSetFileName(\"path/to/points\") or to bet set." );
+                    << "SetInputPointSetFileName(\"path/to/points\") or to bet set." );
   }
 
   // Check if an output directory is needed
@@ -50,7 +50,7 @@ TransformixFilter< TInputImage >
   if( ( this->GetComputeSpatialJacobian() ||
         this->GetComputeDeterminantOfSpatialJacobian() ||
         this->GetComputeDeformationField() ||
-        !this->GetPointSetFileName().empty() ||
+        !this->GetInputPointSetFileName().empty() ||
         this->GetLogToFile() ) &&
       this->GetOutputDirectory().empty() )
   {
@@ -62,7 +62,7 @@ TransformixFilter< TInputImage >
   if( ( this->GetComputeSpatialJacobian() ||
         this->GetComputeDeterminantOfSpatialJacobian() ||
         this->GetComputeDeformationField() ||
-        !this->GetPointSetFileName().empty() ||
+        !this->GetInputPointSetFileName().empty() ||
         this->GetLogToFile() ) &&
       !itksys::SystemTools::FileExists( this->GetOutputDirectory() ) )
   {
@@ -71,10 +71,10 @@ TransformixFilter< TInputImage >
 
   // Transformix uses "-def" for path to point sets AND as flag for writing deformation field
   // TODO: Change behaviour upstream: Split into seperate arguments
-  if( this->GetComputeDeformationField() && !this->GetPointSetFileName().empty() )
+  if( this->GetComputeDeformationField() && !this->GetInputPointSetFileName().empty() )
   {
     itkExceptionMacro( << "For backwards compatibility, only one of ComputeDeformationFieldOn() "
-                       << "or SetPointSetFileName() can be active at any one time." )
+                       << "or SetInputPointSetFileName() can be active at any one time." )
   }
 
   // Setup argument map which transformix uses internally ito figure out what needs to be done
@@ -108,9 +108,9 @@ TransformixFilter< TInputImage >
     argumentMap.insert( ArgumentMapEntryType( "-def" , "all" ) );
   }
 
-  if( !this->GetPointSetFileName().empty() )
+  if( !this->GetInputPointSetFileName().empty() )
   {
-    argumentMap.insert( ArgumentMapEntryType( "-def", this->GetPointSetFileName() ) );
+    argumentMap.insert( ArgumentMapEntryType( "-def", this->GetInputPointSetFileName() ) );
   }
 
   // Setup xout
@@ -162,9 +162,9 @@ TransformixFilter< TInputImage >
     // Transformix reads type information from parameter files. We set this information automatically and overwrite
     // user settings in case they are incorrect (in which case elastix will segfault or throw exception)
     transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );    
-    transformParameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, std::to_string( InputImageDimension ) ); 
+    transformParameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) ); 
     transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );    
-    transformParameterMapVector[ i ][ "MovingImageDimension" ] = ParameterValueVectorType( 1, std::to_string( InputImageDimension ) );
+    transformParameterMapVector[ i ][ "MovingImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
     transformParameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
   }
 

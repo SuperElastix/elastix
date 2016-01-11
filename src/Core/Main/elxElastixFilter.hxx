@@ -160,9 +160,9 @@ ElastixFilter< TFixedImage, TMovingImage >
     // Elastix reads type information from parameter files. We set this information automatically and overwrite
     // user settings in case they are incorrect (in which case elastix will segfault or throw exception when casting) 
     parameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
-    parameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, std::to_string( FixedImageDimension ) );
+    parameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( FixedImageDimension ) );
     parameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TMovingImage::PixelType >::ToString() );    
-    parameterMapVector[ i ][ "MovingImageDimension" ] = ParameterValueVectorType( 1, std::to_string( MovingImageDimension ) );
+    parameterMapVector[ i ][ "MovingImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( MovingImageDimension ) );
     parameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
 
     // Create another instance of ElastixMain 
@@ -250,6 +250,14 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::SetParameterObject( ParameterObjectPointer parameterObject )
 {
   this->SetInput( "ParameterObject", static_cast< itk::DataObject* >( parameterObject ) );
+}
+
+template< typename TFixedImage, typename TMovingImage >
+typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectPointer
+ElastixFilter< TFixedImage, TMovingImage >
+::GetParameterObject( void )
+{
+  return static_cast< ParameterObject* >( this->GetInput( "ParameterObject" ) );
 }
 
 template< typename TFixedImage, typename TMovingImage >

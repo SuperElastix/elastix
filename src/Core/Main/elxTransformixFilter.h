@@ -45,8 +45,9 @@ public:
 
   void SetInputImage( InputImagePointer inputImage );
 
-  void SetTransformParameterObject( ParameterObjectPointer parameterObject );
-  ParameterObjectPointer GetTransformParameters( void );
+  itkSetMacro( InputPointSetFileName, std::string );
+  itkGetConstMacro( InputPointSetFileName, std::string );
+  void RemoveInputPointSetFileName() { this->m_InputPointSetFileName = std::string(); };
 
   itkSetMacro( ComputeSpatialJacobian, bool );
   itkGetConstMacro( ComputeSpatialJacobian, bool );
@@ -60,9 +61,8 @@ public:
   itkGetConstMacro( ComputeDeformationField, bool );
   itkBooleanMacro( ComputeDeformationField );
 
-  itkSetMacro( PointSetFileName, std::string );
-  itkGetConstMacro( PointSetFileName, std::string );
-  void RemovePointSetFileName() { this->m_PointSetFileName = std::string(); };
+  void SetTransformParameterObject( ParameterObjectPointer parameterObject );
+  ParameterObjectPointer GetTransformParameters( void );
 
   itkSetMacro( OutputDirectory, std::string );
   itkGetConstMacro( OutputDirectory, std::string );
@@ -101,7 +101,7 @@ private:
   bool          m_ComputeSpatialJacobian;
   bool          m_ComputeDeterminantOfSpatialJacobian;
   bool          m_ComputeDeformationField;
-  std::string   m_PointSetFileName;
+  std::string   m_InputPointSetFileName;
 
   std::string   m_OutputDirectory;
   std::string   m_LogFileName;

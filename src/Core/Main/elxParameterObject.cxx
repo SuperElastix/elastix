@@ -196,7 +196,7 @@ ParameterObject
   parameterMap[ "Resampler"]                           = ParameterValueVectorType( 1, "DefaultResampler" );
   parameterMap[ "ResampleInterpolator"]                = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
   parameterMap[ "FinalBSplineInterpolationOrder" ]     = ParameterValueVectorType( 1, "3" );
-  parameterMap[ "NumberOfResolutions" ]                = ParameterValueVectorType( 1, to_string< unsigned int >( numberOfResolutions ) );
+  parameterMap[ "NumberOfResolutions" ]                = ParameterValueVectorType( 1, ToString( numberOfResolutions ) );
 
   // Image Sampler
   parameterMap[ "ImageSampler" ]                       = ParameterValueVectorType( 1, "RandomCoordinate" ); 
@@ -269,13 +269,11 @@ ParameterObject
     ParameterValueVectorType gridSpacingSchedule = ParameterValueVectorType();
     for( unsigned int resolution = 0; resolution < numberOfResolutions; ++resolution )
     {
-      std::ostringstream resolutionPowerToString;
-      resolutionPowerToString << pow( 2, resolution );
-      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), resolutionPowerToString.str() ); 
+      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( resolution ) ); 
     }
 
     parameterMap[ "GridSpacingSchedule" ] = gridSpacingSchedule;
-    parameterMap[ "FinalGridSpacingInPhysicalUnits" ] = ParameterValueVectorType( 1, to_string< double >( finalGridSpacingInPhysicalUnits ) );
+    parameterMap[ "FinalGridSpacingInPhysicalUnits" ] = ParameterValueVectorType( 1, ToString( finalGridSpacingInPhysicalUnits ) );
   }
 
   return parameterMap;

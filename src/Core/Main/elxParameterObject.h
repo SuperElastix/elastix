@@ -53,17 +53,17 @@ public:
   void AddParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 3u, const double finalGridSpacingInPhysicalUnits = 10.0 );
   ParameterMapType GetParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 3u, const double finalGridSpacingInPhysicalUnits = 10.0 );
 
-private:
-
-  // C++11 has a to_string in the standard library, but it is unnecessary to 
+  // C++11 has a to_string in the standard library, but it is undesirable to 
   // introduce a C++11 dependency for a simple number to string helper function
   template < typename T > 
-  static std::string to_string( const T& n )
+  static std::string ToString( const T& n )
   {
     std::ostringstream stm;
     stm << n;
     return stm.str();
   }
+
+private:
 
   ParameterMapVectorType  m_ParameterMapVector;
 
