@@ -1,37 +1,40 @@
-/*======================================================================
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef __itkPCAMetric_F_multithreaded_H__
+#define __itkPCAMetric_F_multithreaded_H__
 
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
-
-
-#ifndef __itkPCAMetric_F_multithreaded_h
-#define __itkPCAMetric_F_multithreaded_h
+#include "itkAdvancedImageToImageMetric.h"
 
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 #include "itkImageRandomCoordinateSampler.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
-#include "itkAdvancedImageToImageMetric.h"
 #include "itkExtractImageFilter.h"
 
 namespace itk
 {
-    template < class TFixedImage, class TMovingImage >
+template < class TFixedImage, class TMovingImage >
 class PCAMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
 
   /** Standard class typedefs. */
-  typedef PCAMetric   Self;
+  typedef PCAMetric                               Self;
   typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >                   Superclass;
   typedef SmartPointer<Self>                      Pointer;
@@ -119,7 +122,7 @@ public:
 
   /** Get the derivatives of the match measure. */
   virtual void GetDerivative(const TransformParametersType & parameters,
-	  DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivativeSingleThreaded(const TransformParametersType& parameters,
@@ -245,4 +248,4 @@ private:
 #include "itkPCAMetric_F_multithreaded.hxx"
 #endif
 
-#endif // end #ifndef __itkPCAMetric_F_multithreaded_h
+#endif // end #ifndef __itkPCAMetric_F_multithreaded_H__

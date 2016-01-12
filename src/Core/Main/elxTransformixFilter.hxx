@@ -1,18 +1,36 @@
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef elxTransformixFilter_hxx
 #define elxTransformixFilter_hxx
 
-namespace elastix {
+namespace elastix
+{
 
 template< typename TInputImage  >
 TransformixFilter< TInputImage >
 ::TransformixFilter( void )
 {
   this->AddRequiredInputName( "TransformParameterObject");
-  
+
   this->SetPrimaryInputName( "InputImage" );
   this->SetPrimaryOutputName( "ResultImage" );
 
-  // The filter must have an input image set for the ITK pipeline 
+  // The filter must have an input image set for the ITK pipeline
   // to be in a consistent state even if it is not used
   this->SetInputImage( TInputImage::New() );
 
@@ -23,7 +41,7 @@ TransformixFilter< TInputImage >
 
   this->m_OutputDirectory = std::string();
   this->m_LogFileName = std::string();
-  
+
   this->LogToConsoleOff();
   this->LogToFileOff();
 }
@@ -103,7 +121,7 @@ TransformixFilter< TInputImage >
     argumentMap.insert( ArgumentMapEntryType( "-jac", "all" ) );
   }
 
-  if( this->GetComputeDeformationField() ) 
+  if( this->GetComputeDeformationField() )
   {
     argumentMap.insert( ArgumentMapEntryType( "-def" , "all" ) );
   }
@@ -116,7 +134,7 @@ TransformixFilter< TInputImage >
   // Setup xout
   std::string logFileName;
   if( this->GetLogToFile() )
-  { 
+  {
     if( this->GetLogFileName().empty() )
     {
       logFileName = this->GetOutputDirectory() + "transformix.log";
@@ -161,9 +179,9 @@ TransformixFilter< TInputImage >
   {
     // Transformix reads type information from parameter files. We set this information automatically and overwrite
     // user settings in case they are incorrect (in which case elastix will segfault or throw exception)
-    transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );    
-    transformParameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) ); 
-    transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );    
+    transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
+    transformParameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
+    transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
     transformParameterMapVector[ i ][ "MovingImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
     transformParameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
   }

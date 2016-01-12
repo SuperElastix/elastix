@@ -1,3 +1,20 @@
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef elxParameterObject_cxx
 #define elxParameterObject_cxx
 
@@ -11,20 +28,20 @@ void
 ParameterObject
 ::SetParameterMap( const ParameterMapType parameterMap )
 {
-    ParameterMapVectorType parameterMapVector;
-    parameterMapVector.push_back( parameterMap );
-    this->SetParameterMap( parameterMapVector );
+  ParameterMapVectorType parameterMapVector;
+  parameterMapVector.push_back( parameterMap );
+  this->SetParameterMap( parameterMapVector );
 }
 
 void
 ParameterObject
 ::SetParameterMap( const ParameterMapVectorType parameterMapVector )
-{ 
+{
   this->Modified();
-  this->m_ParameterMapVector = parameterMapVector; 
+  this->m_ParameterMapVector = parameterMapVector;
 }
 
-void 
+void
 ParameterObject
 ::AddParameterMap( const ParameterMapType parameterMap )
 {
@@ -37,7 +54,7 @@ ParameterObject
 ::GetParameterMap( unsigned int index )
 {
   this->Modified();
-  return this->m_ParameterMapVector[ index ]; 
+  return this->m_ParameterMapVector[ index ];
 }
 
 ParameterObject::ParameterMapVectorType&
@@ -45,14 +62,14 @@ ParameterObject
 ::GetParameterMap( void )
 {
   this->Modified();
-  return this->m_ParameterMapVector; 
+  return this->m_ParameterMapVector;
 }
 
-const ParameterObject::ParameterMapVectorType& 
+const ParameterObject::ParameterMapVectorType&
 ParameterObject
 ::GetParameterMap( void ) const
 {
-  return this->m_ParameterMapVector; 
+  return this->m_ParameterMapVector;
 }
 
 void
@@ -97,7 +114,7 @@ ParameterObject
   this->m_ParameterMapVector.push_back( parameterFileParser->GetParameterMap() );
 }
 
-void 
+void
 ParameterObject
 ::WriteParameterFile( const ParameterMapType parameterMap, const ParameterFileNameType parameterFileName )
 {
@@ -122,9 +139,9 @@ ParameterObject
       else
       {
         parameterFile << " " << number;
-      }      
+      }
     }
-      
+
     parameterFile << ")" << std::endl;
     parameterMapIterator++;
   }
@@ -132,7 +149,7 @@ ParameterObject
   parameterFile.close();
 }
 
-void 
+void
 ParameterObject
 ::WriteParameterFile( const ParameterFileNameType parameterFileName )
 {
@@ -150,7 +167,7 @@ ParameterObject
   this->WriteParameterFile( this->m_ParameterMapVector[ 0 ], parameterFileName );
 }
 
-void 
+void
 ParameterObject
 ::WriteParameterFile( const ParameterFileNameVectorType parameterFileNameVector )
 {
@@ -169,7 +186,7 @@ ParameterObject
 void
 ParameterObject
 ::SetParameterMap( const std::string transformName, const unsigned int numberOfResolutions, const double finalGridSpacingInPhysicalUnits )
-{ 
+{
   this->m_ParameterMapVector = ParameterMapVectorType( 1, this->GetParameterMap( transformName, numberOfResolutions, finalGridSpacingInPhysicalUnits ) );
 }
 
@@ -183,8 +200,7 @@ ParameterObject
 ParameterObject::ParameterMapType
 ParameterObject
 ::GetParameterMap( const std::string transformName, const unsigned int numberOfResolutions, const double finalGridSpacingInPhysicalUnits )
-{ 
-
+{
   // Parameters that depend on size and number of resolutions
   ParameterMapType parameterMap                        = ParameterMapType();
 
@@ -199,7 +215,7 @@ ParameterObject
   parameterMap[ "NumberOfResolutions" ]                = ParameterValueVectorType( 1, ToString( numberOfResolutions ) );
 
   // Image Sampler
-  parameterMap[ "ImageSampler" ]                       = ParameterValueVectorType( 1, "RandomCoordinate" ); 
+  parameterMap[ "ImageSampler" ]                       = ParameterValueVectorType( 1, "RandomCoordinate" );
   parameterMap[ "NumberOfSpatialSamples"]              = ParameterValueVectorType( 1, "2048" );
   parameterMap[ "CheckNumberOfSamples" ]               = ParameterValueVectorType( 1, "true" );
   parameterMap[ "MaximumNumberOfSamplingAttempts" ]    = ParameterValueVectorType( 1, "8" );
@@ -262,13 +278,13 @@ ParameterObject
     itkExceptionMacro( "No default parameter map \"" << transformName << "\"." );
   }
 
-  // B-spline transform settings 
+  // B-spline transform settings
   if( transformName == "nonrigid" || transformName == "groupwise" )
   {
     ParameterValueVectorType gridSpacingSchedule = ParameterValueVectorType();
     for( unsigned int resolution = 0; resolution < numberOfResolutions; ++resolution )
     {
-      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( pow( 2, resolution ) ) ); 
+      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( pow( 2, resolution ) ) );
     }
 
     parameterMap[ "GridSpacingSchedule" ] = gridSpacingSchedule;

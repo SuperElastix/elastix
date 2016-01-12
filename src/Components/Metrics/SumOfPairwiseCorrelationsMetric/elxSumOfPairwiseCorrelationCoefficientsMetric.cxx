@@ -19,4 +19,3 @@
 #include "elxSumOfPairwiseCorrelationCoefficientsMetric.h"
 
 elxInstallMacro( SumOfPairwiseCorrelationCoefficientsMetric );
-

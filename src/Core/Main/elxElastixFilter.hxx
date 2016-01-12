@@ -1,7 +1,25 @@
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef elxElastixFilter_hxx
 #define elxElastixFilter_hxx
 
-namespace elastix {
+namespace elastix
+{
 
 template< typename TFixedImage, typename TMovingImage >
 ElastixFilter< TFixedImage, TMovingImage >
@@ -50,12 +68,12 @@ ElastixFilter< TFixedImage, TMovingImage >
 
   if( this->HasInput( "FixedMask" ) )
   {
-    fixedMaskContainer = DataObjectContainerType::New(); 
+    fixedMaskContainer = DataObjectContainerType::New();
   }
 
   if( this->HasInput( "MovingMask" ) )
   {
-    movingMaskContainer = DataObjectContainerType::New(); 
+    movingMaskContainer = DataObjectContainerType::New();
   }
 
   // Split inputs into separate containers
@@ -158,21 +176,21 @@ ElastixFilter< TFixedImage, TMovingImage >
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )
   {
     // Elastix reads type information from parameter files. We set this information automatically and overwrite
-    // user settings in case they are incorrect (in which case elastix will segfault or throw exception when casting) 
+    // user settings in case they are incorrect (in which case elastix will segfault or throw exception when casting)
     parameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
     parameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( FixedImageDimension ) );
-    parameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TMovingImage::PixelType >::ToString() );    
+    parameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TMovingImage::PixelType >::ToString() );
     parameterMapVector[ i ][ "MovingImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( MovingImageDimension ) );
     parameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
 
-    // Create another instance of ElastixMain 
+    // Create another instance of ElastixMain
     ElastixMainPointer elastix = ElastixMainType::New();
 
     // Set the current elastix-level
     elastix->SetElastixLevel( i );
     elastix->SetTotalNumberOfElastixLevels( parameterMapVector.size() );
 
-    // Set stuff we get from a previous registration 
+    // Set stuff we get from a previous registration
     elastix->SetInitialTransform( transform );
     elastix->SetFixedImageContainer( fixedImageContainer );
     elastix->SetMovingImageContainer( movingImageContainer );
@@ -295,10 +313,10 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Free references to fixed images that has already been set
   this->RemoveInputType( "FixedImage" );
 
-  // The ITK filter requires a "FixedImage" named input. The first image 
-  // will be named "FixedImage" while the rest of the images will 
-  // be appended to the input container suffixed with _1, _2, etc. 
-  // The common prefix allows us to read out only the fixed images 
+  // The ITK filter requires a "FixedImage" named input. The first image
+  // will be named "FixedImage" while the rest of the images will
+  // be appended to the input container suffixed with _1, _2, etc.
+  // The common prefix allows us to read out only the fixed images
   // for elastix fixed image container at a later stage
   DataObjectContainerIterator fixedImageIterator = fixedImages->Begin();
   this->SetInput( "FixedImage", fixedImageIterator->Value() );
@@ -350,10 +368,10 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Free references to fixed images that has already been set
   this->RemoveInputType( "MovingImage" );
 
-  // The ITK filter requires a "MovingImage" named input. The first image 
-  // will be named "MovingImage" while the rest of the images will 
-  // be appended to the input container suffixed with _1, _2, etc. 
-  // The common prefix allows us to read out only the moving images 
+  // The ITK filter requires a "MovingImage" named input. The first image
+  // will be named "MovingImage" while the rest of the images will
+  // be appended to the input container suffixed with _1, _2, etc.
+  // The common prefix allows us to read out only the moving images
   // for elastix moving image container at a later stage
   DataObjectContainerIterator movingImageIterator = movingImages->Begin();
   this->SetInput( "MovingImage", movingImageIterator->Value() );
@@ -407,9 +425,9 @@ ElastixFilter< TFixedImage, TMovingImage >
   this->RemoveInputType( "FixedMask" );
 
   // The first mask will be named "FixedMask" so that HasInput( "FixedMask" )
-  // can be used to check if masks are used. The rest of the images will 
-  // be appended to the input container suffixed with _1, _2, etc. 
-  // The common prefix allows us to read out only the fixed masks 
+  // can be used to check if masks are used. The rest of the images will
+  // be appended to the input container suffixed with _1, _2, etc.
+  // The common prefix allows us to read out only the fixed masks
   // for elastix fixed mask container at a later stage
   DataObjectContainerIterator fixedMaskIterator = fixedMasks->Begin();
   this->SetInput( "FixedMask", fixedMaskIterator->Value() );
@@ -464,9 +482,9 @@ ElastixFilter< TFixedImage, TMovingImage >
   this->RemoveInputType( "MovingMask" );
 
   // The first mask will be named "MovingMask" so that HasInput( "MovingMask" )
-  // can be used to check if masks are used. The rest of the images will 
-  // be appended to the input container suffixed with _1, _2, etc. 
-  // The common prefix allows us to read out only the moving mask 
+  // can be used to check if masks are used. The rest of the images will
+  // be appended to the input container suffixed with _1, _2, etc.
+  // The common prefix allows us to read out only the moving mask
   // for elastix moving mask container at a later stage
   DataObjectContainerIterator movingMaskIterator = movingMasks->Begin();
   this->SetInput( "MovingMask", movingMaskIterator->Value() );

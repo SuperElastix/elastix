@@ -1,20 +1,25 @@
-/*======================================================================
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef __PCAMetric_F_multithreaded_HXX__
+#define __PCAMetric_F_multithreaded_HXX__
 
-  This file is part of the elastix software.
-
-  Copyright (c) Erasmus MC, Rotterdam. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
-
-#ifndef PCAMETRIC_F_MULTITHREADED_HXX
-#define PCAMETRIC_F_MULTITHREADED_HXX
 #include "itkPCAMetric_F_multithreaded.h"
+
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "vnl/algo/vnl_matrix_update.h"
 #include "itkImage.h"
@@ -36,25 +41,24 @@ namespace itk
 
 template <class TFixedImage, class TMovingImage>
 PCAMetric<TFixedImage,TMovingImage>
-::PCAMetric():
-    m_SubtractMean( false ),
-    m_TransformIsStackTransform( false ),
-    m_NumEigenValues( 6 )
+::PCAMetric() :
+  m_SubtractMean( false ),
+  m_TransformIsStackTransform( false ),
+  m_NumEigenValues( 6 )
 {
-    this->SetUseImageSampler( true );
-    this->SetUseFixedImageLimiter( false );
-    this->SetUseMovingImageLimiter( false );
+  this->SetUseImageSampler( true );
+  this->SetUseFixedImageLimiter( false );
+  this->SetUseMovingImageLimiter( false );
 
 
-    // Multi-threading structs
-    this->m_PCAMetricGetSamplesPerThreadVariables     = NULL;
-    this->m_PCAMetricGetSamplesPerThreadVariablesSize = 0;
+  // Multi-threading structs
+  this->m_PCAMetricGetSamplesPerThreadVariables = NULL;
+  this->m_PCAMetricGetSamplesPerThreadVariablesSize = 0;
 
-    /** Initialize the m_ParzenWindowHistogramThreaderParameters. */
-    this->m_PCAMetricThreaderParameters.m_Metric = this;
-
-
+  /** Initialize the m_ParzenWindowHistogramThreaderParameters. */
+  this->m_PCAMetricThreaderParameters.m_Metric = this;
 } // end constructor
+
 
 /**
  * ******************* Destructor *******************
@@ -64,8 +68,9 @@ template< class TFixedImage, class TMovingImage >
 PCAMetric< TFixedImage, TMovingImage >
 ::~PCAMetric()
 {
-    delete[] this->m_PCAMetricGetSamplesPerThreadVariables;
+  delete[] this->m_PCAMetricGetSamplesPerThreadVariables;
 } // end Destructor
+
 
 /**
  * ******************* Initialize *******************
@@ -76,19 +81,18 @@ void
 PCAMetric<TFixedImage,TMovingImage>
 ::Initialize(void) throw ( ExceptionObject )
 {
+  /** Initialize transform, interpolator, etc. */
+  Superclass::Initialize();
 
-    /** Initialize transform, interpolator, etc. */
-    Superclass::Initialize();
+  /** Retrieve slowest varying dimension and its size. */
+  this->m_LastDimIndex = this->GetFixedImage()->GetImageDimension() - 1;
+  this->m_G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( m_LastDimIndex );
 
-    /** Retrieve slowest varying dimension and its size. */
-    this->m_LastDimIndex = this->GetFixedImage()->GetImageDimension() - 1;
-    this->m_G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( m_LastDimIndex );
-
-    if( this->m_NumEigenValues > this->m_G )
-    {
-        std::cerr << "ERROR: Number of eigenvalues is larger than number of images. Maximum number of eigenvalues equals: "
-                  << this->m_G << std::endl;
-    }
+  if( this->m_NumEigenValues > this->m_G )
+  {
+    std::cerr << "ERROR: Number of eigenvalues is larger than number of images. Maximum number of eigenvalues equals: "
+      << this->m_G << std::endl;
+  }
 } // end Initializes
 
 
@@ -98,10 +102,10 @@ PCAMetric<TFixedImage,TMovingImage>
 
 template < class TFixedImage, class TMovingImage>
 void
-PCAMetric<TFixedImage,TMovingImage>
-::PrintSelf(std::ostream& os, Indent indent) const
+PCAMetric<TFixedImage, TMovingImage>
+::PrintSelf( std::ostream& os, Indent indent ) const
 {
-    Superclass::PrintSelf( os, indent );
+  Superclass::PrintSelf( os, indent );
 
 } // end PrintSelf
 
@@ -114,30 +118,30 @@ void
 PCAMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
-    /** Resize and initialize the threading related parameters.
-   * The SetSize() functions do not resize the data when this is not
-   * needed, which saves valuable re-allocation time.
-   * Filling the potentially large vectors is performed later, in each thread,
-   * which has performance benefits for larger vector sizes.
-   */
+  /** Resize and initialize the threading related parameters.
+ * The SetSize() functions do not resize the data when this is not
+ * needed, which saves valuable re-allocation time.
+ * Filling the potentially large vectors is performed later, in each thread,
+ * which has performance benefits for larger vector sizes.
+ */
 
-    /** Only resize the array of structs when needed. */
-    if( this->m_PCAMetricGetSamplesPerThreadVariablesSize != this->m_NumberOfThreads )
-    {
-        delete[] this->m_PCAMetricGetSamplesPerThreadVariables;
-        this->m_PCAMetricGetSamplesPerThreadVariables
-                = new AlignedPCAMetricGetSamplesPerThreadStruct[ this->m_NumberOfThreads ];
-        this->m_PCAMetricGetSamplesPerThreadVariablesSize = this->m_NumberOfThreads;
-    }
+ /** Only resize the array of structs when needed. */
+  if( this->m_PCAMetricGetSamplesPerThreadVariablesSize != this->m_NumberOfThreads )
+  {
+    delete[] this->m_PCAMetricGetSamplesPerThreadVariables;
+    this->m_PCAMetricGetSamplesPerThreadVariables
+      = new AlignedPCAMetricGetSamplesPerThreadStruct[ this->m_NumberOfThreads ];
+    this->m_PCAMetricGetSamplesPerThreadVariablesSize = this->m_NumberOfThreads;
+  }
 
-    /** Some initialization. */
-    for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
-    {
-        this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
-        this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_Derivative.SetSize( this->GetNumberOfParameters() );
-    }
+  /** Some initialization. */
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
+    this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_Derivative.SetSize( this->GetNumberOfParameters() );
+  }
 
-    this->m_PixelStartIndex.resize( this->m_NumberOfThreads );
+  this->m_PixelStartIndex.resize( this->m_NumberOfThreads );
 
 } // end InitializeThreadingParameters()
 
@@ -148,190 +152,192 @@ PCAMetric< TFixedImage, TMovingImage >
 
 template < class TFixedImage, class TMovingImage >
 void
-PCAMetric<TFixedImage,TMovingImage>
+PCAMetric<TFixedImage, TMovingImage>
 ::EvaluateTransformJacobianInnerProduct(
-        const TransformJacobianType & jacobian,
-        const MovingImageDerivativeType & movingImageDerivative,
-        DerivativeType & imageJacobian ) const
+  const TransformJacobianType & jacobian,
+  const MovingImageDerivativeType & movingImageDerivative,
+  DerivativeType & imageJacobian ) const
 {
-    typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
-    typedef typename DerivativeType::iterator              DerivativeIteratorType;
-    JacobianIteratorType jac = jacobian.begin();
-    imageJacobian.Fill( 0.0 );
-    const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
-    {
-        const double imDeriv = movingImageDerivative[ dim ];
-        DerivativeIteratorType imjac = imageJacobian.begin();
+  typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
+  typedef typename DerivativeType::iterator              DerivativeIteratorType;
+  JacobianIteratorType jac = jacobian.begin();
+  imageJacobian.Fill( 0.0 );
+  const unsigned int sizeImageJacobian = imageJacobian.GetSize();
+  for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+  {
+    const double imDeriv = movingImageDerivative[ dim ];
+    DerivativeIteratorType imjac = imageJacobian.begin();
 
-        for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
-        {
-            (*imjac) += (*jac) * imDeriv;
-            ++imjac;
-            ++jac;
-        }
+    for( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
+    {
+      ( *imjac ) += ( *jac ) * imDeriv;
+      ++imjac;
+      ++jac;
     }
-} // end EvaluateTransformJacobianInnerProduct
+  }
+} // end EvaluateTransformJacobianInnerProduct()
+
 
 /**
  * ******************* GetValue *******************
  */
 
 template <class TFixedImage, class TMovingImage>
-typename PCAMetric<TFixedImage,TMovingImage>::MeasureType
-PCAMetric<TFixedImage,TMovingImage>
+typename PCAMetric<TFixedImage, TMovingImage>::MeasureType
+PCAMetric<TFixedImage, TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
 {
-    itkDebugMacro( "GetValue( " << parameters << " ) " );
+  itkDebugMacro( "GetValue( " << parameters << " ) " );
 
-    /** Call non-thread-safe stuff, such as:
-     *   this->SetTransformParameters( parameters );
-     *   this->GetImageSampler()->Update();
-     * Because of these calls GetValueAndDerivative itself is not thread-safe,
-     * so cannot be called multiple times simultaneously.
-     * This is however needed in the CombinationImageToImageMetric.
-     * In that case, you need to:
-     * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
-     * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
-     *   calling GetValueAndDerivative
-     * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
-     * - Now you can call GetValueAndDerivative multi-threaded.
-     */
-    this->BeforeThreadedGetValueAndDerivative( parameters );
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
 
-    /** Initialize some variables */
-    this->m_NumberOfPixelsCounted = 0;
-    MeasureType measure = NumericTraits< MeasureType >::Zero;
+  /** Initialize some variables */
+  this->m_NumberOfPixelsCounted = 0;
+  MeasureType measure = NumericTraits< MeasureType >::Zero;
 
-    /** Update the imageSampler and get a handle to the sample container. */
-    ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  /** Update the imageSampler and get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-    /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator fiter;
-    typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
-    /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-    unsigned int NumberOfSamples = sampleContainer->Size();
-    MatrixType datablock( NumberOfSamples, this->m_G );
+  /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
+  unsigned int NumberOfSamples = sampleContainer->Size();
+  MatrixType datablock( NumberOfSamples, this->m_G );
 
-    /** Initialize dummy loop variable */
-    unsigned int pixelIndex = 0;
+  /** Initialize dummy loop variable */
+  unsigned int pixelIndex = 0;
 
-    /** Initialize image sample matrix . */
-    datablock.fill( itk::NumericTraits< RealType>::Zero );
+  /** Initialize image sample matrix . */
+  datablock.fill( itk::NumericTraits< RealType>::Zero );
 
-    for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
+  {
+    /** Read fixed coordinates. */
+    FixedImagePointType fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+
+    /** Transform sampled point to voxel coordinates. */
+    FixedImageContinuousIndexType voxelCoord;
+    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+
+    unsigned int numSamplesOk = 0;
+
+    /** Loop over t */
+    for( unsigned int d = 0; d < this->m_G; ++d )
     {
-        /** Read fixed coordinates. */
-        FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
+      /** Initialize some variables. */
+      RealType movingImageValue;
+      MovingImagePointType mappedPoint;
 
-        /** Transform sampled point to voxel coordinates. */
-        FixedImageContinuousIndexType voxelCoord;
-        this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+      /** Set fixed point's last dimension to lastDimPosition. */
+      voxelCoord[ this->m_LastDimIndex ] = d;
 
-        unsigned int numSamplesOk = 0;
+      /** Transform sampled point back to world coordinates. */
+      this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
 
-        /** Loop over t */
-        for ( unsigned int d = 0; d < this->m_G; ++d )
-        {
-            /** Initialize some variables. */
-            RealType movingImageValue;
-            MovingImagePointType mappedPoint;
+      /** Transform point and check if it is inside the B-spline support region. */
+      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
-            /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ this->m_LastDimIndex ] = d;
+      /** Check if point is inside mask. */
+      if( sampleOk )
+      {
+        sampleOk = this->IsInsideMovingMask( mappedPoint );
+      }
 
-            /** Transform sampled point back to world coordinates. */
-            this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+      if( sampleOk )
+      {
+        sampleOk = this->EvaluateMovingImageValueAndDerivative(
+          mappedPoint, movingImageValue, 0 );
+      }
 
-            /** Transform point and check if it is inside the B-spline support region. */
-            bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+      if( sampleOk )
+      {
+        numSamplesOk++;
+        datablock( pixelIndex, d ) = movingImageValue;
+      }
 
-            /** Check if point is inside mask. */
-            if ( sampleOk )
-            {
-                sampleOk = this->IsInsideMovingMask( mappedPoint );
-            }
+    } /** end loop over t */
 
-            if ( sampleOk )
-            {
-                sampleOk = this->EvaluateMovingImageValueAndDerivative(
-                            mappedPoint, movingImageValue, 0 );
-            }
-
-            if( sampleOk )
-            {
-                numSamplesOk++;
-                datablock( pixelIndex, d ) = movingImageValue;
-            }
-
-        } /** end loop over t */
-
-        if( numSamplesOk == this->m_G )
-        {
-            pixelIndex++;
-            this->m_NumberOfPixelsCounted++;
-        }
-
-    }/** end first loop over image sample container */
-
-    /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(NumberOfSamples, this->m_NumberOfPixelsCounted );
-    MatrixType A( datablock.extract( this->m_NumberOfPixelsCounted, this->m_G ) );
-
-    /** Calculate mean of from columns */
-    vnl_vector< RealType > mean( this->m_G );
-    mean.fill( NumericTraits< RealType >::Zero );
-    for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+    if( numSamplesOk == this->m_G )
     {
-        for( int j = 0; j < this->m_G; j++)
-        {
-            mean(j) += A(i,j);
-        }
-    }
-    mean /= RealType(this->m_NumberOfPixelsCounted);
-
-    MatrixType Amm( this->m_NumberOfPixelsCounted, this->m_G );
-    Amm.fill( NumericTraits< RealType >::Zero );
-
-    for (int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
-    {
-        for(int j = 0; j < this->m_G; j++)
-        {
-            Amm(i,j) = A(i,j)-mean(j);
-        }
+      pixelIndex++;
+      this->m_NumberOfPixelsCounted++;
     }
 
-    /** Compute covariancematrix C */
-    MatrixType C( Amm.transpose()*Amm );
-    C /=  static_cast< RealType > ( RealType(this->m_NumberOfPixelsCounted) - 1.0 );
+  }/** end first loop over image sample container */
 
-    vnl_diag_matrix< RealType > S( this->m_G );
-    S.fill( NumericTraits< RealType >::Zero );
-    for( int j = 0; j < this->m_G; j++)
+  /** Check if enough samples were valid. */
+  this->CheckNumberOfSamples( NumberOfSamples, this->m_NumberOfPixelsCounted );
+  MatrixType A( datablock.extract( this->m_NumberOfPixelsCounted, this->m_G ) );
+
+  /** Calculate mean of from columns */
+  vnl_vector< RealType > mean( this->m_G );
+  mean.fill( NumericTraits< RealType >::Zero );
+  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  {
+    for( int j = 0; j < this->m_G; j++ )
     {
-        S(j,j) = 1.0/sqrt(C(j,j));
+      mean( j ) += A( i, j );
     }
+  }
+  mean /= RealType( this->m_NumberOfPixelsCounted );
 
-    /** Compute correlation matrix K */
-    MatrixType K(S*C*S);
+  MatrixType Amm( this->m_NumberOfPixelsCounted, this->m_G );
+  Amm.fill( NumericTraits< RealType >::Zero );
 
-    /** Compute first eigenvalue and eigenvector of K */
-    vnl_symmetric_eigensystem< RealType > eig( K );
-
-    RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
+  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  {
+    for( int j = 0; j < this->m_G; j++ )
     {
-        sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
+      Amm( i, j ) = A( i, j ) - mean( j );
     }
+  }
 
-    measure = this->m_G - sumEigenValuesUsed;
+  /** Compute covariancematrix C */
+  MatrixType C( Amm.transpose()*Amm );
+  C /= static_cast<RealType> ( RealType( this->m_NumberOfPixelsCounted ) - 1.0 );
 
-    /** Return the measure value. */
-    return measure;
+  vnl_diag_matrix< RealType > S( this->m_G );
+  S.fill( NumericTraits< RealType >::Zero );
+  for( int j = 0; j < this->m_G; j++ )
+  {
+    S( j, j ) = 1.0 / sqrt( C( j, j ) );
+  }
 
-} // end GetValue
+  /** Compute correlation matrix K */
+  MatrixType K( S*C*S );
+
+  /** Compute first eigenvalue and eigenvector of K */
+  vnl_symmetric_eigensystem< RealType > eig( K );
+
+  RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
+  for( unsigned int i = 1; i < this->m_NumEigenValues + 1; i++ )
+  {
+    sumEigenValuesUsed += eig.get_eigenvalue( this->m_G - i );
+  }
+
+  measure = this->m_G - sumEigenValuesUsed;
+
+  /** Return the measure value. */
+  return measure;
+
+} // end GetValue()
+
 
 /**
  * ******************* GetDerivative *******************
@@ -339,37 +345,359 @@ PCAMetric<TFixedImage,TMovingImage>
 
 template < class TFixedImage, class TMovingImage>
 void
-PCAMetric<TFixedImage,TMovingImage>
+PCAMetric<TFixedImage, TMovingImage>
 ::GetDerivative( const TransformParametersType & parameters,
-                 DerivativeType & derivative ) const
+  DerivativeType & derivative ) const
 {
-    /** When the derivative is calculated, all information for calculating
-     * the metric value is available. It does not cost anything to calculate
-     * the metric value now. Therefore, we have chosen to only implement the
-     * GetValueAndDerivative(), supplying it with a dummy value variable. */
-    MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
+  /** When the derivative is calculated, all information for calculating
+   * the metric value is available. It does not cost anything to calculate
+   * the metric value now. Therefore, we have chosen to only implement the
+   * GetValueAndDerivative(), supplying it with a dummy value variable. */
+  MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
 
-    this->GetValueAndDerivative(parameters, dummyvalue, derivative);
+  this->GetValueAndDerivative( parameters, dummyvalue, derivative );
 
-} // end GetDerivative
+} // end GetDerivative()
+
 
 /**
-     * ******************* GetValueAndDerivativeSingleThreaded *******************
-     */
+ * ******************* GetValueAndDerivativeSingleThreaded *******************
+ */
 
 template <class TFixedImage, class TMovingImage>
-void PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
-                                                                                MeasureType& value, DerivativeType& derivative ) const
+void
+PCAMetric<TFixedImage, TMovingImage>
+::GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
+  MeasureType& value, DerivativeType& derivative ) const
 {
-    itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
+  itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
 
-    /** Initialize some variables */
-    this->m_NumberOfPixelsCounted = 0;
-    MeasureType measure = NumericTraits< MeasureType >::Zero;
-    derivative = DerivativeType( this->GetNumberOfParameters() );
-    derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+  /** Initialize some variables */
+  this->m_NumberOfPixelsCounted = 0;
+  MeasureType measure = NumericTraits< MeasureType >::Zero;
+  derivative = DerivativeType( this->GetNumberOfParameters() );
+  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
-    /** Call non-thread-safe stuff, such as:
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+
+  std::vector< FixedImagePointType > SamplesOK;
+
+  /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
+  unsigned int NumberOfSamples = sampleContainer->Size();
+  MatrixType datablock( NumberOfSamples, this->m_G );
+
+  /** Initialize dummy loop variables */
+  unsigned int pixelIndex = 0;
+
+  /** Initialize image sample matrix . */
+  datablock.fill( itk::NumericTraits< RealType >::Zero );
+
+  for( fiter = fbegin; fiter != fend; ++fiter )
+  {
+    /** Read fixed coordinates. */
+    FixedImagePointType fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+
+    /** Transform sampled point to voxel coordinates. */
+    FixedImageContinuousIndexType voxelCoord;
+    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+
+    unsigned int numSamplesOk = 0;
+
+    /** Loop over t */
+    for( unsigned int d = 0; d < this->m_G; ++d )
+    {
+      /** Initialize some variables. */
+      RealType movingImageValue;
+      MovingImagePointType mappedPoint;
+
+      /** Set fixed point's last dimension to lastDimPosition. */
+      voxelCoord[ this->m_LastDimIndex ] = d;
+
+      /** Transform sampled point back to world coordinates. */
+      this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+
+      /** Transform point and check if it is inside the B-spline support region. */
+      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+      /** Check if point is inside mask. */
+      if( sampleOk )
+      {
+        sampleOk = this->IsInsideMovingMask( mappedPoint );
+      }
+
+      if( sampleOk )
+
+      {
+        sampleOk = this->EvaluateMovingImageValueAndDerivative(
+          mappedPoint, movingImageValue, 0 );
+      }
+
+      if( sampleOk )
+      {
+        numSamplesOk++;
+        datablock( pixelIndex, d ) = movingImageValue;
+      }// end if sampleOk
+
+    } // end loop over t
+    if( numSamplesOk == this->m_G )
+    {
+      SamplesOK.push_back( fixedPoint );
+      pixelIndex++;
+      this->m_NumberOfPixelsCounted++;
+    }
+
+  }/** end first loop over image sample container */
+
+  /** Check if enough samples were valid. */
+  this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+  MatrixType A( datablock.extract( this->m_NumberOfPixelsCounted, this->m_G ) );
+
+  /** Calculate mean of from columns */
+  vnl_vector< RealType > mean( this->m_G );
+  mean.fill( NumericTraits< RealType >::Zero );
+  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  {
+    for( int j = 0; j < this->m_G; j++ )
+    {
+      mean( j ) += A( i, j );
+    }
+  }
+  mean /= RealType( this->m_NumberOfPixelsCounted );
+
+  /** Calculate standard deviation from columns */
+  MatrixType Amm( this->m_NumberOfPixelsCounted, this->m_G );
+  Amm.fill( NumericTraits< RealType >::Zero );
+  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  {
+    for( int j = 0; j < this->m_G; j++ )
+    {
+      Amm( i, j ) = A( i, j ) - mean( j );
+    }
+  }
+
+  /** Compute covariancematrix C */
+  MatrixType Atmm = Amm.transpose();
+  MatrixType C( Atmm*Amm );
+  C /= static_cast<RealType> ( RealType( this->m_NumberOfPixelsCounted ) - 1.0 );
+
+  vnl_diag_matrix< RealType > S( this->m_G );
+  S.fill( NumericTraits< RealType >::Zero );
+  for( int j = 0; j < this->m_G; j++ )
+  {
+    S( j, j ) = 1.0 / sqrt( C( j, j ) );
+  }
+
+  MatrixType K( S*C*S );
+
+  /** Compute first eigenvalue and eigenvector of K */
+  vnl_symmetric_eigensystem< RealType > eig( K );
+
+  RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
+  for( unsigned int i = 1; i < this->m_NumEigenValues + 1; i++ )
+  {
+    sumEigenValuesUsed += eig.get_eigenvalue( this->m_G - i );
+  }
+
+  MatrixType eigenVectorMatrix( this->m_G, this->m_NumEigenValues );
+  for( unsigned int i = 1; i < this->m_NumEigenValues + 1; i++ )
+  {
+    eigenVectorMatrix.set_column( i - 1, ( eig.get_eigenvector( this->m_G - i ) ).normalize() );
+  }
+
+  MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
+
+  /** Create variables to store intermediate results in. */
+  TransformJacobianType jacobian;
+  DerivativeType dMTdmu;
+  DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  std::vector<NonZeroJacobianIndicesType> nzjis( this->m_G, NonZeroJacobianIndicesType() );
+
+  /** Sub components of metric derivative */
+  vnl_diag_matrix< DerivativeValueType > dSdmu_part1( this->m_G );
+
+  /** initialize */
+  dSdmu_part1.fill( itk::NumericTraits< DerivativeValueType >::Zero );
+
+  for( unsigned int d = 0; d < this->m_G; d++ )
+  {
+    double S_sqr = S( d, d ) * S( d, d );
+    double S_qub = S_sqr * S( d, d );
+    dSdmu_part1( d, d ) = -S_qub;
+  }
+
+  DerivativeMatrixType vSAtmm( eigenVectorMatrixTranspose*S*Atmm );
+  DerivativeMatrixType CSv( C*S*eigenVectorMatrix );
+  DerivativeMatrixType Sv( S*eigenVectorMatrix );
+  DerivativeMatrixType vdSdmu_part1( eigenVectorMatrixTranspose*dSdmu_part1 );
+
+  /** Second loop over fixed image samples. */
+  for( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
+  {
+    /** Read fixed coordinates. */
+    FixedImagePointType fixedPoint = SamplesOK[ pixelIndex ];
+
+    /** Transform sampled point to voxel coordinates. */
+    FixedImageContinuousIndexType voxelCoord;
+    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+
+    for( unsigned int d = 0; d < this->m_G; ++d )
+    {
+      /** Initialize some variables. */
+      RealType movingImageValue;
+      MovingImagePointType mappedPoint;
+      MovingImageDerivativeType movingImageDerivative;
+
+      /** Set fixed point's last dimension to lastDimPosition. */
+      voxelCoord[ this->m_LastDimIndex ] = d;
+
+      /** Transform sampled point back to world coordinates. */
+      this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+      this->TransformPoint( fixedPoint, mappedPoint );
+
+      this->EvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, &movingImageDerivative );
+
+      /** Get the TransformJacobian dT/dmu */
+      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
+
+      /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
+      this->EvaluateTransformJacobianInnerProduct(
+        jacobian, movingImageDerivative, imageJacobian );
+
+      /** Store values. */
+      dMTdmu = imageJacobian;
+      /** build metric derivative components */
+      for( unsigned int p = 0; p < nzjis[ d ].size(); ++p )
+      {
+        for( unsigned int z = 0; z < this->m_NumEigenValues; z++ )
+        {
+          derivative[ nzjis[ d ][ p ] ] += vSAtmm[ z ][ pixelIndex ] * dMTdmu[ p ] * Sv[ d ][ z ] +
+            vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * CSv[ d ][ z ];
+        }//end loop over eigenvalues
+
+      }//end loop over non-zero jacobian indices
+
+    }//end loop over last dimension
+
+  } // end second for loop over sample container
+
+  derivative *= -( 2.0 / ( DerivativeValueType( this->m_NumberOfPixelsCounted ) - 1.0 ) ); //normalize
+  measure = this->m_G - sumEigenValuesUsed;
+
+  /** Subtract mean from derivative elements. */
+  if( this->m_SubtractMean )
+  {
+    if( !this->m_TransformIsStackTransform )
+    {
+      /** Update derivative per dimension.
+   * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
+   * per dimension xyz.
+   */
+      const unsigned int lastDimGridSize = this->m_GridSize[ this->m_LastDimIndex ];
+      const unsigned int numParametersPerDimension
+        = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+      const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
+      DerivativeType mean( numControlPointsPerDimension );
+      for( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
+      {
+        /** Compute mean per dimension. */
+        mean.Fill( 0.0 );
+        const unsigned int starti = numParametersPerDimension * d;
+        for( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+        {
+          const unsigned int index = i % numControlPointsPerDimension;
+          mean[ index ] += derivative[ i ];
+        }
+        mean /= static_cast<RealType>( lastDimGridSize );
+
+        /** Update derivative for every control point per dimension. */
+        for( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+        {
+          const unsigned int index = i % numControlPointsPerDimension;
+          derivative[ i ] -= mean[ index ];
+        }
+      }
+    }
+    else
+    {
+      /** Update derivative per dimension.
+   * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
+   * the number the time point index.
+   */
+      const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / this->m_G;
+      DerivativeType mean( numParametersPerLastDimension );
+      mean.Fill( 0.0 );
+
+      /** Compute mean per control point. */
+      for( unsigned int t = 0; t < this->m_G; ++t )
+      {
+        const unsigned int startc = numParametersPerLastDimension * t;
+        for( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+        {
+          const unsigned int index = c % numParametersPerLastDimension;
+          mean[ index ] += derivative[ c ];
+        }
+      }
+      mean /= static_cast<RealType>( this->m_G );
+
+      /** Update derivative per control point. */
+      for( unsigned int t = 0; t < this->m_G; ++t )
+      {
+        const unsigned int startc = numParametersPerLastDimension * t;
+        for( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+        {
+          const unsigned int index = c % numParametersPerLastDimension;
+          derivative[ c ] -= mean[ index ];
+        }
+      }
+    }
+  }
+
+  /** Return the measure value. */
+  value = measure;
+
+} // end GetValueAndDerivativeSingleThreaded()
+
+
+/**
+ * ******************* GetValueAndDerivative *******************
+ */
+
+template< class TFixedImage, class TMovingImage >
+void
+PCAMetric< TFixedImage, TMovingImage >
+::GetValueAndDerivative(
+  const TransformParametersType & parameters,
+  MeasureType & value, DerivativeType & derivative ) const
+{
+  /** Option for now to still use the single threaded code. */
+  if( !this->m_UseMultiThread )
+  {
+    return this->GetValueAndDerivativeSingleThreaded(
+      parameters, value, derivative );
+  }
+
+  /** Call non-thread-safe stuff, such as:
      *   this->SetTransformParameters( parameters );
      *   this->GetImageSampler()->Update();
      * Because of these calls GetValueAndDerivative itself is not thread-safe,
@@ -382,343 +710,25 @@ void PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded( 
      * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
      * - Now you can call GetValueAndDerivative multi-threaded.
      */
-    this->BeforeThreadedGetValueAndDerivative( parameters );
-
-    ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-
-    /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator fiter;
-    typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
-    std::vector< FixedImagePointType > SamplesOK;
-
-    /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-    unsigned int NumberOfSamples = sampleContainer->Size();
-    MatrixType datablock( NumberOfSamples, this->m_G );
-
-    /** Initialize dummy loop variables */
-    unsigned int pixelIndex = 0;
-
-    /** Initialize image sample matrix . */
-    datablock.fill( itk::NumericTraits< RealType >::Zero );
-
-    for ( fiter = fbegin; fiter != fend; ++fiter )
-    {
-        /** Read fixed coordinates. */
-        FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
-
-        /** Transform sampled point to voxel coordinates. */
-        FixedImageContinuousIndexType voxelCoord;
-        this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
-
-        unsigned int numSamplesOk = 0;
-
-        /** Loop over t */
-        for ( unsigned int d = 0; d < this->m_G; ++d )
-        {
-            /** Initialize some variables. */
-            RealType movingImageValue;
-            MovingImagePointType mappedPoint;
-
-            /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[this->m_LastDimIndex] = d;
-
-            /** Transform sampled point back to world coordinates. */
-            this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-
-            /** Transform point and check if it is inside the B-spline support region. */
-            bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-            /** Check if point is inside mask. */
-            if( sampleOk )
-            {
-                sampleOk = this->IsInsideMovingMask( mappedPoint );
-            }
-
-            if( sampleOk )
-
-            {
-                sampleOk = this->EvaluateMovingImageValueAndDerivative(
-                            mappedPoint, movingImageValue, 0 );
-            }
-
-            if( sampleOk )
-            {
-                numSamplesOk++;
-                datablock( pixelIndex, d ) = movingImageValue;
-            }// end if sampleOk
-
-        } // end loop over t
-        if( numSamplesOk == this->m_G )
-        {
-            SamplesOK.push_back(fixedPoint);
-            pixelIndex++;
-            this->m_NumberOfPixelsCounted++;
-        }
-
-    }/** end first loop over image sample container */
-
-    /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(	sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-
-    MatrixType A( datablock.extract( this->m_NumberOfPixelsCounted, this->m_G ) );
-
-    /** Calculate mean of from columns */
-    vnl_vector< RealType > mean( this->m_G );
-    mean.fill( NumericTraits< RealType >::Zero );
-    for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
-    {
-        for( int j = 0; j < this->m_G; j++)
-        {
-            mean(j) += A(i,j);
-        }
-    }
-    mean /= RealType(this->m_NumberOfPixelsCounted);
-
-    /** Calculate standard deviation from columns */
-    MatrixType Amm( this->m_NumberOfPixelsCounted, this->m_G );
-    Amm.fill( NumericTraits< RealType >::Zero );
-    for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
-    {
-        for( int j = 0; j < this->m_G; j++)
-        {
-            Amm(i,j) = A(i,j)-mean(j);
-        }
-    }
-
-    /** Compute covariancematrix C */
-    MatrixType Atmm = Amm.transpose();
-    MatrixType C( Atmm*Amm );
-    C /=  static_cast< RealType > ( RealType(this->m_NumberOfPixelsCounted) - 1.0 );
-
-    vnl_diag_matrix< RealType > S( this->m_G );
-    S.fill( NumericTraits< RealType >::Zero );
-    for( int j = 0; j < this->m_G; j++)
-    {
-        S(j,j) = 1.0/sqrt(C(j,j));
-    }
-
-    MatrixType K(S*C*S);
-
-    /** Compute first eigenvalue and eigenvector of K */
-    vnl_symmetric_eigensystem< RealType > eig( K );
-
-    RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
-    {
-        sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
-    }
-
-    MatrixType eigenVectorMatrix( this->m_G, this->m_NumEigenValues );
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
-    {
-        eigenVectorMatrix.set_column(i-1, (eig.get_eigenvector(this->m_G - i)).normalize() );
-    }
-
-    MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
-
-    /** Create variables to store intermediate results in. */
-    TransformJacobianType jacobian;
-    DerivativeType dMTdmu;
-    DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-    std::vector<NonZeroJacobianIndicesType> nzjis( this->m_G, NonZeroJacobianIndicesType() );
-
-    /** Sub components of metric derivative */
-    vnl_diag_matrix< DerivativeValueType > dSdmu_part1( this->m_G );
-
-    /** initialize */
-    dSdmu_part1.fill( itk::NumericTraits< DerivativeValueType >::Zero );
-
-    for(unsigned int d = 0; d < this->m_G; d++)
-    {
-        double S_sqr = S(d,d) * S(d,d);
-        double S_qub = S_sqr * S(d,d);
-        dSdmu_part1(d, d) = -S_qub;
-    }
-
-    DerivativeMatrixType vSAtmm( eigenVectorMatrixTranspose*S*Atmm );
-    DerivativeMatrixType CSv( C*S*eigenVectorMatrix );
-    DerivativeMatrixType Sv( S*eigenVectorMatrix );
-    DerivativeMatrixType vdSdmu_part1( eigenVectorMatrixTranspose*dSdmu_part1 );
-
-    /** Second loop over fixed image samples. */
-    for ( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
-    {
-        /** Read fixed coordinates. */
-        FixedImagePointType fixedPoint = SamplesOK[ pixelIndex ];
-
-        /** Transform sampled point to voxel coordinates. */
-        FixedImageContinuousIndexType voxelCoord;
-        this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
-
-        for ( unsigned int d = 0; d < this->m_G; ++d )
-        {
-            /** Initialize some variables. */
-            RealType movingImageValue;
-            MovingImagePointType mappedPoint;
-            MovingImageDerivativeType movingImageDerivative;
-
-            /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ this->m_LastDimIndex ] = d;
-
-            /** Transform sampled point back to world coordinates. */
-            this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-            this->TransformPoint( fixedPoint, mappedPoint );
-
-            this->EvaluateMovingImageValueAndDerivative(
-                        mappedPoint, movingImageValue, &movingImageDerivative );
-
-            /** Get the TransformJacobian dT/dmu */
-            this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
-
-            /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
-            this->EvaluateTransformJacobianInnerProduct(
-                        jacobian, movingImageDerivative, imageJacobian );
-
-            /** Store values. */
-            dMTdmu = imageJacobian;
-            /** build metric derivative components */
-            for( unsigned int p = 0; p < nzjis[ d ].size(); ++p)
-            {
-                for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
-                {
-                    derivative[ nzjis[ d ][ p ] ] += vSAtmm[ z ][ pixelIndex ] * dMTdmu[ p ] * Sv[ d ][ z ] +
-                            vdSdmu_part1[ z ][ d ] * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * CSv[ d ][ z ];
-                }//end loop over eigenvalues
-
-            }//end loop over non-zero jacobian indices
-
-        }//end loop over last dimension
-
-    } // end second for loop over sample container
-
-    derivative *= -(2.0/(DerivativeValueType(this->m_NumberOfPixelsCounted) - 1.0)); //normalize
-    measure = this->m_G - sumEigenValuesUsed;
-
-    /** Subtract mean from derivative elements. */
-    if( this->m_SubtractMean )
-    {
-        if( ! this->m_TransformIsStackTransform )
-        {
-            /** Update derivative per dimension.
-         * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
-         * per dimension xyz.
-         */
-            const unsigned int lastDimGridSize = this->m_GridSize[ this->m_LastDimIndex ];
-            const unsigned int numParametersPerDimension
-                    = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
-            const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
-            DerivativeType mean ( numControlPointsPerDimension );
-            for ( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
-            {
-                /** Compute mean per dimension. */
-                mean.Fill( 0.0 );
-                const unsigned int starti = numParametersPerDimension * d;
-                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-                {
-                    const unsigned int index = i % numControlPointsPerDimension;
-                    mean[ index ] += derivative[ i ];
-                }
-                mean /= static_cast< RealType >( lastDimGridSize );
-
-                /** Update derivative for every control point per dimension. */
-                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-                {
-                    const unsigned int index = i % numControlPointsPerDimension;
-                    derivative[ i ] -= mean[ index ];
-                }
-            }
-        }
-        else
-        {
-            /** Update derivative per dimension.
-         * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
-         * the number the time point index.
-         */
-            const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / this->m_G;
-            DerivativeType mean ( numParametersPerLastDimension );
-            mean.Fill( 0.0 );
-
-            /** Compute mean per control point. */
-            for ( unsigned int t = 0; t < this->m_G; ++t )
-            {
-                const unsigned int startc = numParametersPerLastDimension * t;
-                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
-                {
-                    const unsigned int index = c % numParametersPerLastDimension;
-                    mean[ index ] += derivative[ c ];
-                }
-            }
-            mean /= static_cast< RealType >( this->m_G );
-
-            /** Update derivative per control point. */
-            for ( unsigned int t = 0; t < this->m_G; ++t )
-            {
-                const unsigned int startc = numParametersPerLastDimension * t;
-                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
-                {
-                    const unsigned int index = c % numParametersPerLastDimension;
-                    derivative[ c ] -= mean[ index ];
-                }
-            }
-        }
-    }
-
-    /** Return the measure value. */
-    value = measure;
-
-} // end GetValueAndDerivativeSingleThreaded()
-
-/**
-  * ******************* GetValueAndDerivative *******************
-  */
-
-template< class TFixedImage, class TMovingImage >
-void
-PCAMetric< TFixedImage, TMovingImage >
-::GetValueAndDerivative(
-        const TransformParametersType & parameters,
-        MeasureType & value, DerivativeType & derivative ) const
-{
-    /** Option for now to still use the single threaded code. */
-    if( !this->m_UseMultiThread )
-    {
-        return this->GetValueAndDerivativeSingleThreaded(
-                    parameters, value, derivative );
-    }
-
-    /** Call non-thread-safe stuff, such as:
-       *   this->SetTransformParameters( parameters );
-       *   this->GetImageSampler()->Update();
-       * Because of these calls GetValueAndDerivative itself is not thread-safe,
-       * so cannot be called multiple times simultaneously.
-       * This is however needed in the CombinationImageToImageMetric.
-       * In that case, you need to:
-       * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
-       * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
-       *   calling GetValueAndDerivative
-       * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
-       * - Now you can call GetValueAndDerivative multi-threaded.
-       */
-    this->BeforeThreadedGetValueAndDerivative( parameters );
+  this->BeforeThreadedGetValueAndDerivative( parameters );
 
 
-    this->InitializeThreadingParameters();
+  this->InitializeThreadingParameters();
 
-    /** Launch multi-threading GetSamples */
-    this->LaunchGetSamplesThreaderCallback();
+  /** Launch multi-threading GetSamples */
+  this->LaunchGetSamplesThreaderCallback();
 
-    /** Get the metric value contributions from all threads. */
-    this->AfterThreadedGetSamples( value );
+  /** Get the metric value contributions from all threads. */
+  this->AfterThreadedGetSamples( value );
 
-    /** Launch multi-threading ComputeDerivative */
-    this->LaunchComputeDerivativeThreaderCallback();
+  /** Launch multi-threading ComputeDerivative */
+  this->LaunchComputeDerivativeThreaderCallback();
 
-    /** Sum derivative contributions from all threads */
-    this->AfterThreadedComputeDerivative( derivative );
-
+  /** Sum derivative contributions from all threads */
+  this->AfterThreadedComputeDerivative( derivative );
 
 } // end GetValueAndDerivative()
+
 
 /**
  * ******************* ThreadedGetSamples *******************
@@ -729,90 +739,91 @@ void
 PCAMetric< TFixedImage, TMovingImage >
 ::ThreadedGetSamples( ThreadIdType threadId )
 {
-    /** Get a handle to the sample container. */
-    ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
-    const unsigned long         sampleContainerSize = sampleContainer->Size();
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  const unsigned long         sampleContainerSize = sampleContainer->Size();
 
-    /** Get the samples for this thread. */
-    const unsigned long nrOfSamplesPerThreads
-            = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
-                                                      / static_cast< double >( this->m_NumberOfThreads ) ) );
-    unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
-    unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
-    pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
-    pos_end   = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+  /** Get the samples for this thread. */
+  const unsigned long nrOfSamplesPerThreads
+    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
+      / static_cast<double>( this->m_NumberOfThreads ) ) );
+  unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
+  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
+  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
 
-    /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator threader_fiter;
-    typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator threader_fend   = sampleContainer->Begin();
-    threader_fbegin += (int)pos_begin;
-    threader_fend   += (int)pos_end;
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator threader_fiter;
+  typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator threader_fend = sampleContainer->Begin();
+  threader_fbegin += (int)pos_begin;
+  threader_fend += (int)pos_end;
 
-    std::vector< FixedImagePointType > SamplesOK;
-    MatrixType datablock( nrOfSamplesPerThreads, this->m_G );
+  std::vector< FixedImagePointType > SamplesOK;
+  MatrixType datablock( nrOfSamplesPerThreads, this->m_G );
 
-    unsigned int pixelIndex = 0;
-    for( threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter )
+  unsigned int pixelIndex = 0;
+  for( threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter )
+  {
+    /** Read fixed coordinates. */
+    FixedImagePointType fixedPoint = ( *threader_fiter ).Value().m_ImageCoordinates;
+
+    /** Transform sampled point to voxel coordinates. */
+    FixedImageContinuousIndexType voxelCoord;
+    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+
+    unsigned int numSamplesOk = 0;
+
+    /** Loop over t */
+    for( unsigned int d = 0; d < this->m_G; ++d )
     {
-        /** Read fixed coordinates. */
-        FixedImagePointType fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
+      /** Initialize some variables. */
+      RealType movingImageValue;
+      MovingImagePointType mappedPoint;
 
-        /** Transform sampled point to voxel coordinates. */
-        FixedImageContinuousIndexType voxelCoord;
-        this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+      /** Set fixed point's last dimension to lastDimPosition. */
+      voxelCoord[ this->m_LastDimIndex ] = d;
 
-        unsigned int numSamplesOk = 0;
+      /** Transform sampled point back to world coordinates. */
+      this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
 
-        /** Loop over t */
-        for ( unsigned int d = 0; d < this->m_G; ++d )
-        {
-            /** Initialize some variables. */
-            RealType movingImageValue;
-            MovingImagePointType mappedPoint;
+      /** Transform point and check if it is inside the B-spline support region. */
+      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+      /** Check if point is inside mask. */
+      if( sampleOk )
+      {
+        sampleOk = this->IsInsideMovingMask( mappedPoint );
+      }
 
-            /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ this->m_LastDimIndex ] = d;
+      if( sampleOk )
 
-            /** Transform sampled point back to world coordinates. */
-            this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+      {
+        sampleOk = this->EvaluateMovingImageValueAndDerivative(
+          mappedPoint, movingImageValue, 0 );
+      }
 
-            /** Transform point and check if it is inside the B-spline support region. */
-            bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-            /** Check if point is inside mask. */
-            if( sampleOk )
-            {
-                sampleOk = this->IsInsideMovingMask( mappedPoint );
-            }
+      if( sampleOk )
+      {
+        numSamplesOk++;
+        datablock( pixelIndex, d ) = movingImageValue;
+      }// end if sampleOk
 
-            if( sampleOk )
+    } // end loop over t
+    if( numSamplesOk == m_G )
+    {
+      SamplesOK.push_back( fixedPoint );
+      pixelIndex++;
+    }
 
-            {
-                sampleOk = this->EvaluateMovingImageValueAndDerivative(
-                            mappedPoint, movingImageValue, 0 );
-            }
+  }/** end first loop over image sample container */
 
-            if( sampleOk )
-            {
-                numSamplesOk++;
-                datablock( pixelIndex, d ) = movingImageValue;
-            }// end if sampleOk
-
-        } // end loop over t
-        if( numSamplesOk == m_G )
-        {
-            SamplesOK.push_back(fixedPoint);
-            pixelIndex++;
-        }
-
-    }/** end first loop over image sample container */
-
-    /** Only update these variables at the end to prevent unnecessary "false sharing". */
-    this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_NumberOfPixelsCounted = pixelIndex;
-    this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_DataBlock             = datablock.extract( pixelIndex, this->m_G );
-    this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_ApprovedSamples       = SamplesOK;
+  /** Only update these variables at the end to prevent unnecessary "false sharing". */
+  this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_NumberOfPixelsCounted = pixelIndex;
+  this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_DataBlock = datablock.extract( pixelIndex, this->m_G );
+  this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_ApprovedSamples = SamplesOK;
 
 } // end ThreadedGetSamples()
+
 
 /**
  * ******************* AfterThreadedGetSamples *******************
@@ -821,96 +832,96 @@ PCAMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 PCAMetric< TFixedImage, TMovingImage >
-::AfterThreadedGetSamples(MeasureType & value) const
+::AfterThreadedGetSamples( MeasureType & value ) const
 {
-    /** Accumulate the number of pixels. */
-    this->m_NumberOfPixelsCounted = this->m_PCAMetricGetSamplesPerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
-    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  /** Accumulate the number of pixels. */
+  this->m_NumberOfPixelsCounted = this->m_PCAMetricGetSamplesPerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  {
+    this->m_NumberOfPixelsCounted += this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_NumberOfPixelsCounted;
+  }
+
+  /** Check if enough samples were valid. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  this->CheckNumberOfSamples(
+    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+  MatrixType A( this->m_NumberOfPixelsCounted, this->m_G );
+  unsigned int row_start = 0;
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    A.update( this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_DataBlock, row_start, 0 );
+    this->m_PixelStartIndex[ i ] = row_start;
+    row_start += this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_DataBlock.rows();
+  }
+
+
+  /** Calculate mean of from columns */
+  vnl_vector< RealType > mean( this->m_G );
+  mean.fill( NumericTraits< RealType >::Zero );
+  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  {
+    for( int j = 0; j < this->m_G; j++ )
     {
-        this->m_NumberOfPixelsCounted += this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_NumberOfPixelsCounted;
+      mean( j ) += A( i, j );
     }
+  }
+  mean /= RealType( this->m_NumberOfPixelsCounted );
 
-    /** Check if enough samples were valid. */
-    ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-    this->CheckNumberOfSamples(
-                sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-
-    MatrixType A( this->m_NumberOfPixelsCounted, this->m_G );
-    unsigned int row_start = 0;
-    for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  /** Calculate standard deviation from columns */
+  MatrixType Amm( this->m_NumberOfPixelsCounted, this->m_G );
+  Amm.fill( NumericTraits< RealType >::Zero );
+  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  {
+    for( int j = 0; j < this->m_G; j++ )
     {
-        A.update(this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_DataBlock, row_start, 0);
-        this->m_PixelStartIndex[ i ] = row_start;
-        row_start += this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_DataBlock.rows();
+      Amm( i, j ) = A( i, j ) - mean( j );
     }
+  }
 
+  /** Compute covariancematrix C */
+  this->m_Atmm = Amm.transpose();
+  MatrixType C( this->m_Atmm*Amm );
+  C /= static_cast<RealType> ( RealType( this->m_NumberOfPixelsCounted ) - 1.0 );
 
-    /** Calculate mean of from columns */
-    vnl_vector< RealType > mean( this->m_G );
-    mean.fill( NumericTraits< RealType >::Zero );
-    for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
-    {
-        for( int j = 0; j < this->m_G; j++)
-        {
-            mean(j) += A(i,j);
-        }
-    }
-    mean /= RealType(this->m_NumberOfPixelsCounted);
+  vnl_diag_matrix< RealType > S( this->m_G );
+  S.fill( NumericTraits< RealType >::Zero );
+  for( int j = 0; j < this->m_G; j++ )
+  {
+    S( j, j ) = 1.0 / sqrt( C( j, j ) );
+  }
 
-    /** Calculate standard deviation from columns */
-    MatrixType Amm( this->m_NumberOfPixelsCounted, this->m_G );
-    Amm.fill( NumericTraits< RealType >::Zero );
-    for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
-    {
-        for( int j = 0; j < this->m_G; j++)
-        {
-            Amm(i,j) = A(i,j)-mean(j);
-        }
-    }
+  MatrixType K( S*C*S );
 
-    /** Compute covariancematrix C */
-    this->m_Atmm = Amm.transpose();
-    MatrixType C( this->m_Atmm*Amm );
-    C /=  static_cast< RealType > ( RealType(this->m_NumberOfPixelsCounted) - 1.0 );
+  /** Compute first eigenvalue and eigenvector of K */
+  vnl_symmetric_eigensystem< RealType > eig( K );
 
-    vnl_diag_matrix< RealType > S( this->m_G );
-    S.fill( NumericTraits< RealType >::Zero );
-    for( int j = 0; j < this->m_G; j++)
-    {
-        S(j,j) = 1.0/sqrt(C(j,j));
-    }
+  RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
+  MatrixType eigenVectorMatrix( this->m_G, this->m_NumEigenValues );
+  for( unsigned int i = 1; i < this->m_NumEigenValues + 1; i++ )
+  {
+    sumEigenValuesUsed += eig.get_eigenvalue( this->m_G - i );
+    eigenVectorMatrix.set_column( i - 1, ( eig.get_eigenvector( this->m_G - i ) ).normalize() );
+  }
 
-    MatrixType K(S*C*S);
+  value = this->m_G - sumEigenValuesUsed;
 
-    /** Compute first eigenvalue and eigenvector of K */
-    vnl_symmetric_eigensystem< RealType > eig( K );
+  MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
 
-    RealType sumEigenValuesUsed = itk::NumericTraits< RealType >::Zero;
-    MatrixType eigenVectorMatrix( this->m_G, this->m_NumEigenValues );
-    for(unsigned int i = 1; i < this->m_NumEigenValues+1; i++)
-    {
-        sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
-        eigenVectorMatrix.set_column(i-1, (eig.get_eigenvector(this->m_G - i)).normalize() );
-    }
+  /** Sub components of metric derivative */
+  vnl_diag_matrix< DerivativeValueType > dSdmu_part1( this->m_G );
 
-    value = this->m_G - sumEigenValuesUsed;
+  for( unsigned int d = 0; d < this->m_G; d++ )
+  {
+    double S_sqr = S( d, d ) * S( d, d );
+    double S_qub = S_sqr * S( d, d );
+    dSdmu_part1( d, d ) = -S_qub;
+  }
 
-    MatrixType eigenVectorMatrixTranspose( eigenVectorMatrix.transpose() );
-
-    /** Sub components of metric derivative */
-    vnl_diag_matrix< DerivativeValueType > dSdmu_part1( this->m_G );
-
-    for(unsigned int d = 0; d < this->m_G; d++)
-    {
-        double S_sqr = S(d,d) * S(d,d);
-        double S_qub = S_sqr * S(d,d);
-        dSdmu_part1(d, d) = -S_qub;
-    }
-
-    this->m_vSAtmm = eigenVectorMatrixTranspose*S*this->m_Atmm;
-    this->m_CSv = C*S*eigenVectorMatrix;
-    this->m_Sv = S*eigenVectorMatrix;
-    this->m_vdSdmu_part1 = eigenVectorMatrixTranspose*dSdmu_part1;
+  this->m_vSAtmm = eigenVectorMatrixTranspose*S*this->m_Atmm;
+  this->m_CSv = C*S*eigenVectorMatrix;
+  this->m_Sv = S*eigenVectorMatrix;
+  this->m_vdSdmu_part1 = eigenVectorMatrixTranspose*dSdmu_part1;
 
 } // end AfterThreadedGetSamples()
 
@@ -924,15 +935,15 @@ ITK_THREAD_RETURN_TYPE
 PCAMetric< TFixedImage, TMovingImage >
 ::GetSamplesThreaderCallback( void * arg )
 {
-    ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-    ThreadIdType     threadId   = infoStruct->ThreadID;
+  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>( arg );
+  ThreadIdType     threadId = infoStruct->ThreadID;
 
-    PCAMetricMultiThreaderParameterType * temp
-            = static_cast< PCAMetricMultiThreaderParameterType * >( infoStruct->UserData );
+  PCAMetricMultiThreaderParameterType * temp
+    = static_cast<PCAMetricMultiThreaderParameterType *>( infoStruct->UserData );
 
-    temp->m_Metric->ThreadedGetSamples( threadId );
+  temp->m_Metric->ThreadedGetSamples( threadId );
 
-    return ITK_THREAD_RETURN_VALUE;
+  return ITK_THREAD_RETURN_VALUE;
 
 } // GetSamplesThreaderCallback()
 
@@ -946,16 +957,16 @@ void
 PCAMetric< TFixedImage, TMovingImage >
 ::LaunchGetSamplesThreaderCallback( void ) const
 {
-    /** Setup local threader. */
-    // \todo: is a global threader better performance-wise? check
-    typename ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( this->GetSamplesThreaderCallback,
-                                     const_cast< void * >( static_cast< const void * >(
-                                                               &this->m_PCAMetricThreaderParameters ) ) );
+  /** Setup local threader. */
+  // \todo: is a global threader better performance-wise? check
+  typename ThreaderType::Pointer local_threader = ThreaderType::New();
+  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+  local_threader->SetSingleMethod( this->GetSamplesThreaderCallback,
+    const_cast<void *>( static_cast<const void *>(
+      &this->m_PCAMetricThreaderParameters ) ) );
 
-    /** Launch. */
-    local_threader->SingleMethodExecute();
+  /** Launch. */
+  local_threader->SingleMethodExecute();
 
 } // end LaunchGetSamplesThreaderCallback()
 
@@ -969,70 +980,69 @@ void
 PCAMetric< TFixedImage, TMovingImage >
 ::ThreadedComputeDerivative( ThreadIdType threadId )
 {
-    /** Create variables to store intermediate results in. */
-    DerivativeType & derivative = this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_Derivative;
-    derivative.Fill(0.0);
+  /** Create variables to store intermediate results in. */
+  DerivativeType & derivative = this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_Derivative;
+  derivative.Fill( 0.0 );
 
-    /** Initialize some variables. */
-    RealType movingImageValue;
-    MovingImagePointType mappedPoint;
-    MovingImageDerivativeType movingImageDerivative;
+  /** Initialize some variables. */
+  RealType movingImageValue;
+  MovingImagePointType mappedPoint;
+  MovingImageDerivativeType movingImageDerivative;
 
-    TransformJacobianType jacobian;
-    DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-    NonZeroJacobianIndicesType nzjis( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  TransformJacobianType jacobian;
+  DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  NonZeroJacobianIndicesType nzjis( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
 
-    unsigned int dummyindex = 0;
-    /** Second loop over fixed image samples. */
-    for ( unsigned int pixelIndex = this->m_PixelStartIndex[ threadId ]; pixelIndex < (this->m_PixelStartIndex[ threadId ]+this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_ApprovedSamples.size()); ++pixelIndex )
+  unsigned int dummyindex = 0;
+  /** Second loop over fixed image samples. */
+  for( unsigned int pixelIndex = this->m_PixelStartIndex[ threadId ];
+    pixelIndex < ( this->m_PixelStartIndex[ threadId ] + this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_ApprovedSamples.size() ); ++pixelIndex )
+  {
+    /** Read fixed coordinates. */
+    FixedImagePointType fixedPoint = this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_ApprovedSamples[ dummyindex ];
+
+    /** Transform sampled point to voxel coordinates. */
+    FixedImageContinuousIndexType voxelCoord;
+    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+
+    for( unsigned int d = 0; d < this->m_G; ++d )
     {
-        /** Read fixed coordinates. */
-        FixedImagePointType fixedPoint = this->m_PCAMetricGetSamplesPerThreadVariables[ threadId ].st_ApprovedSamples[ dummyindex ];
+      /** Set fixed point's last dimension to lastDimPosition. */
+      voxelCoord[ this->m_LastDimIndex ] = d;
 
-        /** Transform sampled point to voxel coordinates. */
-        FixedImageContinuousIndexType voxelCoord;
-        this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+      /** Transform sampled point back to world coordinates. */
+      this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
+      this->TransformPoint( fixedPoint, mappedPoint );
 
-        for ( unsigned int d = 0; d < this->m_G; ++d )
+      this->EvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, &movingImageDerivative );
+
+      /** Get the TransformJacobian dT/dmu */
+      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis );
+
+      /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
+      this->EvaluateTransformJacobianInnerProduct(
+        jacobian, movingImageDerivative, imageJacobian );
+
+      /** build metric derivative components */
+      for( unsigned int p = 0; p < nzjis.size(); ++p )
+      {
+        DerivativeValueType tmp = 0.0;
+        for( unsigned int z = 0; z < this->m_NumEigenValues; z++ )
         {
+          tmp += this->m_vSAtmm[ z ][ pixelIndex ] * imageJacobian[ p ] * this->m_Sv[ d ][ z ] +
+            this->m_vdSdmu_part1[ z ][ d ] * this->m_Atmm[ d ][ pixelIndex ] * imageJacobian[ p ] * this->m_CSv[ d ][ z ];
+        }//end loop over eigenvalues
+        derivative[ nzjis[ p ] ] += tmp;
+      }//end loop over non-zero jacobian indices
 
-            /** Set fixed point's last dimension to lastDimPosition. */
-            voxelCoord[ this->m_LastDimIndex ] = d;
+    }//end loop over last dimension
+    dummyindex++;
 
-            /** Transform sampled point back to world coordinates. */
-            this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-            this->TransformPoint( fixedPoint, mappedPoint );
-
-            this->EvaluateMovingImageValueAndDerivative(
-                        mappedPoint, movingImageValue, &movingImageDerivative );
-
-            /** Get the TransformJacobian dT/dmu */
-            this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis );
-
-            /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
-            this->EvaluateTransformJacobianInnerProduct(
-                        jacobian, movingImageDerivative, imageJacobian );
-
-            /** build metric derivative components */
-            for( unsigned int p = 0; p < nzjis.size(); ++p)
-            {
-                DerivativeValueType tmp = 0.0;
-                for(unsigned int z = 0; z < this->m_NumEigenValues; z++)
-                {
-                    tmp += this->m_vSAtmm[ z ][ pixelIndex ] * imageJacobian[ p ] * this->m_Sv[ d ][ z ] +
-                            this->m_vdSdmu_part1[ z ][ d ] * this->m_Atmm[ d ][ pixelIndex ] * imageJacobian[ p ] * this->m_CSv[ d ][ z ];
-                }//end loop over eigenvalues
-                derivative[ nzjis[ p ] ] += tmp;
-            }//end loop over non-zero jacobian indices
-
-        }//end loop over last dimension
-        dummyindex++;
-
-    } // end second for loop over sample container
-
-
+  } // end second for loop over sample container
 
 } // end ThreadedGetValueAndDerivative()
+
 
 /**
  * ******************* AfterThreadedComputeDerivative *******************
@@ -1042,85 +1052,86 @@ template< class TFixedImage, class TMovingImage >
 void
 PCAMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputeDerivative(
-        DerivativeType & derivative ) const
+  DerivativeType & derivative ) const
 {
-    derivative = this->m_PCAMetricGetSamplesPerThreadVariables[ 0 ].st_Derivative;
-    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  derivative = this->m_PCAMetricGetSamplesPerThreadVariables[ 0 ].st_Derivative;
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  {
+    derivative += this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_Derivative;
+  }
+
+  derivative *= -( 2.0 / ( DerivativeValueType( this->m_NumberOfPixelsCounted ) - 1.0 ) ); //normalize
+
+  /** Subtract mean from derivative elements. */
+  if( this->m_SubtractMean )
+  {
+    if( !this->m_TransformIsStackTransform )
     {
-        derivative += this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_Derivative;
+      /** Update derivative per dimension.
+   * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
+   * per dimension xyz.
+   */
+      const unsigned int lastDimGridSize = this->m_GridSize[ this->m_LastDimIndex ];
+      const unsigned int numParametersPerDimension
+        = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+      const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
+      DerivativeType mean( numControlPointsPerDimension );
+      for( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
+      {
+        /** Compute mean per dimension. */
+        mean.Fill( 0.0 );
+        const unsigned int starti = numParametersPerDimension * d;
+        for( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+        {
+          const unsigned int index = i % numControlPointsPerDimension;
+          mean[ index ] += derivative[ i ];
+        }
+        mean /= static_cast<RealType>( lastDimGridSize );
+
+        /** Update derivative for every control point per dimension. */
+        for( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+        {
+          const unsigned int index = i % numControlPointsPerDimension;
+          derivative[ i ] -= mean[ index ];
+        }
+      }
     }
-
-    derivative *= -(2.0/(DerivativeValueType(this->m_NumberOfPixelsCounted) - 1.0)); //normalize
-
-    /** Subtract mean from derivative elements. */
-    if( this->m_SubtractMean )
+    else
     {
-        if( ! this->m_TransformIsStackTransform )
+      /** Update derivative per dimension.
+   * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
+   * the number the time point index.
+   */
+      const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / this->m_G;
+      DerivativeType mean( numParametersPerLastDimension );
+      mean.Fill( 0.0 );
+
+      /** Compute mean per control point. */
+      for( unsigned int t = 0; t < this->m_G; ++t )
+      {
+        const unsigned int startc = numParametersPerLastDimension * t;
+        for( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
         {
-            /** Update derivative per dimension.
-         * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
-         * per dimension xyz.
-         */
-            const unsigned int lastDimGridSize = this->m_GridSize[ this->m_LastDimIndex ];
-            const unsigned int numParametersPerDimension
-                    = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
-            const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
-            DerivativeType mean ( numControlPointsPerDimension );
-            for ( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
-            {
-                /** Compute mean per dimension. */
-                mean.Fill( 0.0 );
-                const unsigned int starti = numParametersPerDimension * d;
-                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-                {
-                    const unsigned int index = i % numControlPointsPerDimension;
-                    mean[ index ] += derivative[ i ];
-                }
-                mean /= static_cast< RealType >( lastDimGridSize );
-
-                /** Update derivative for every control point per dimension. */
-                for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-                {
-                    const unsigned int index = i % numControlPointsPerDimension;
-                    derivative[ i ] -= mean[ index ];
-                }
-            }
+          const unsigned int index = c % numParametersPerLastDimension;
+          mean[ index ] += derivative[ c ];
         }
-        else
+      }
+      mean /= static_cast<RealType>( this->m_G );
+
+      /** Update derivative per control point. */
+      for( unsigned int t = 0; t < this->m_G; ++t )
+      {
+        const unsigned int startc = numParametersPerLastDimension * t;
+        for( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
         {
-            /** Update derivative per dimension.
-         * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
-         * the number the time point index.
-         */
-            const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / this->m_G;
-            DerivativeType mean ( numParametersPerLastDimension );
-            mean.Fill( 0.0 );
-
-            /** Compute mean per control point. */
-            for ( unsigned int t = 0; t < this->m_G; ++t )
-            {
-                const unsigned int startc = numParametersPerLastDimension * t;
-                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
-                {
-                    const unsigned int index = c % numParametersPerLastDimension;
-                    mean[ index ] += derivative[ c ];
-                }
-            }
-            mean /= static_cast< RealType >( this->m_G );
-
-            /** Update derivative per control point. */
-            for ( unsigned int t = 0; t < this->m_G; ++t )
-            {
-                const unsigned int startc = numParametersPerLastDimension * t;
-                for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
-                {
-                    const unsigned int index = c % numParametersPerLastDimension;
-                    derivative[ c ] -= mean[ index ];
-                }
-            }
+          const unsigned int index = c % numParametersPerLastDimension;
+          derivative[ c ] -= mean[ index ];
         }
+      }
     }
-}// end AftherThreadedComputeDerivative()
+  }
+} // end AftherThreadedComputeDerivative()
+
 
 /**
  * **************** ComputeDerivativeThreaderCallback *******
@@ -1131,17 +1142,18 @@ ITK_THREAD_RETURN_TYPE
 PCAMetric< TFixedImage, TMovingImage >
 ::ComputeDerivativeThreaderCallback( void * arg )
 {
-    ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-    ThreadIdType     threadId   = infoStruct->ThreadID;
+  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>( arg );
+  ThreadIdType     threadId = infoStruct->ThreadID;
 
-    PCAMetricMultiThreaderParameterType * temp
-            = static_cast< PCAMetricMultiThreaderParameterType * >( infoStruct->UserData );
+  PCAMetricMultiThreaderParameterType * temp
+    = static_cast<PCAMetricMultiThreaderParameterType *>( infoStruct->UserData );
 
-    temp->m_Metric->ThreadedComputeDerivative( threadId );
+  temp->m_Metric->ThreadedComputeDerivative( threadId );
 
-    return ITK_THREAD_RETURN_VALUE;
+  return ITK_THREAD_RETURN_VALUE;
 
 } // end omputeDerivativeThreaderCallback()
+
 
 /**
  * ************** LaunchComputeDerivativeThreaderCallback **********
@@ -1152,19 +1164,19 @@ void
 PCAMetric< TFixedImage, TMovingImage >
 ::LaunchComputeDerivativeThreaderCallback( void ) const
 {
-    /** Setup local threader. */
-    // \todo: is a global threader better performance-wise? check
-    typename ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( this->ComputeDerivativeThreaderCallback,
-                                     const_cast< void * >( static_cast< const void * >(
-                                                               &this->m_PCAMetricThreaderParameters ) ) );
+  /** Setup local threader. */
+  // \todo: is a global threader better performance-wise? check
+  typename ThreaderType::Pointer local_threader = ThreaderType::New();
+  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+  local_threader->SetSingleMethod( this->ComputeDerivativeThreaderCallback,
+    const_cast<void *>( static_cast<const void *>(
+      &this->m_PCAMetricThreaderParameters ) ) );
 
-    /** Launch. */
-    local_threader->SingleMethodExecute();
+  /** Launch. */
+  local_threader->SingleMethodExecute();
 
 } // end LaunchComputeDerivativeThreaderCallback()
 
 } // end namespace itk
 
-#endif // ITKPCAMETRIC_F_MULTITHREADED_HXX
+#endif // __PCAMetric_F_multithreaded_HXX__

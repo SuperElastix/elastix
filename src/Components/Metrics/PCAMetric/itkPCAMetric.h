@@ -15,24 +15,23 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
-
 #ifndef __itkPCAMetric_h
 #define __itkPCAMetric_h
+
+#include "itkAdvancedImageToImageMetric.h"
 
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 #include "itkImageRandomCoordinateSampler.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
-#include "itkAdvancedImageToImageMetric.h"
 #include "itkExtractImageFilter.h"
 
 using namespace std;
 
 namespace itk
 {
-    template < class TFixedImage, class TMovingImage >
+template < class TFixedImage, class TMovingImage >
 class PCAMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
 
@@ -209,7 +208,7 @@ private:
   /** Integer to indicate how many eigenvalues you want to use in the metric */
   unsigned int m_NumEigenValues;
 
-  bool m_UseDerivativeOfMean; 
+  bool m_UseDerivativeOfMean;
 
 }; // end class PCAMetric
 

@@ -15,24 +15,23 @@
  *  limitations under the License.
  *
  *=========================================================================*/
+#ifndef __itkSumOfPairwiseCorrelationCoefficientsMetric_H__
+#define __itkSumOfPairwiseCorrelationCoefficientsMetric_H__
 
-
-#ifndef __itkSumOfPairwiseCorrelationCoefficientsMetric_h
-#define __itkSumOfPairwiseCorrelationCoefficientsMetric_h
+#include "itkAdvancedImageToImageMetric.h"
 
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 #include "itkImageRandomCoordinateSampler.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
-#include "itkAdvancedImageToImageMetric.h"
 #include "itkExtractImageFilter.h"
 
 using namespace std;
 
 namespace itk
 {
-    template < class TFixedImage, class TMovingImage >
+template < class TFixedImage, class TMovingImage >
 class SumOfPairwiseCorrelationCoefficientsMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
@@ -186,4 +185,4 @@ private:
 #include "itkSumOfPairwiseCorrelationCoefficientsMetric.hxx"
 #endif
 
-#endif // end #ifndef __itkSumOfPairwiseCorrelationCoefficientsMetric_h
+#endif // end #ifndef __itkSumOfPairwiseCorrelationCoefficientsMetric_H__
