@@ -38,7 +38,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   this->m_FixedPointSetFileName = std::string();
   this->m_MovingPointSetFileName = std::string();
 
-  this->m_OutputDirectory = std::string();
+  this->m_OutputDirectory = ".";
   this->m_LogFileName = std::string();
 
   this->LogToConsoleOff();
@@ -66,16 +66,6 @@ ElastixFilter< TFixedImage, TMovingImage >
   ParameterMapVectorType      TransformParameterMapVector;
   FlatDirectionCosinesType    fixedImageOriginalDirection;
 
-  if( this->HasInput( "FixedMask" ) )
-  {
-    fixedMaskContainer = DataObjectContainerType::New();
-  }
-
-  if( this->HasInput( "MovingMask" ) )
-  {
-    movingMaskContainer = DataObjectContainerType::New();
-  }
-
   // Split inputs into separate containers
   InputNameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
@@ -94,12 +84,22 @@ ElastixFilter< TFixedImage, TMovingImage >
 
     if( this->IsInputType( "FixedMask", inputNames[ i ] ) )
     {
+      if( fixedMaskContainer.IsNull() )
+      {
+        fixedMaskContainer = DataObjectContainerType::New();
+      }
+
       fixedMaskContainer->push_back( this->GetInput( inputNames[ i ] ) );
       continue;
     }
 
-    if( this->IsInputType( "Movingmask", inputNames[ i ] ) )
+    if( this->IsInputType( "MovingMask", inputNames[ i ] ) )
     {
+      if( movingMaskContainer.IsNull() )
+      {
+          movingMaskContainer = DataObjectContainerType::New();
+      }
+
       movingMaskContainer->push_back( this->GetInput( inputNames[ i ] ) );
     }
   }
@@ -108,7 +108,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   if( this->GetOutputDirectory().empty() ) {
     if( this->GetLogToFile() )
     {
-      itkExceptionMacro( "LogToFileOn() requires an output directory to be specified. Use SetOutputDirectory().")
+      itkExceptionMacro( "LogToFileOn() requires an output directory to be specified.")
     }
 
     // There must be an "-out", this is checked later in the code
@@ -118,7 +118,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     if( !itksys::SystemTools::FileExists( this->GetOutputDirectory() ) )
     {
-      itkExceptionMacro( "Output directory \"" << this->GetOutputDirectory() << "\" does not exist." )
+       itkExceptionMacro( "Output directory " << this->GetOutputDirectory() << " does not exist." );
     }
 
     if( this->GetOutputDirectory().back() != '/' || this->GetOutputDirectory().back() != '\\' )
@@ -129,13 +129,13 @@ ElastixFilter< TFixedImage, TMovingImage >
     argumentMap.insert( ArgumentMapEntryType( "-out", this->GetOutputDirectory() ) );
   }
 
-  // Fixed mesh (optional)
+  // Fixed mesh
   if( !this->m_FixedPointSetFileName.empty() )
   {
     argumentMap.insert( ArgumentMapEntryType( "-fp", std::string( this->m_FixedPointSetFileName ) ) );
   }
 
-  // Moving mesh (optional)
+  // Moving mesh
   if( !this->m_MovingPointSetFileName.empty() )
   {
     argumentMap.insert( ArgumentMapEntryType( "-mp", std::string( this->m_MovingPointSetFileName ) ) );
@@ -175,8 +175,8 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Run the (possibly multiple) registration(s)
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )
   {
-    // Elastix reads type information from parameter files. We set this information automatically and overwrite
-    // user settings in case they are incorrect (in which case elastix will segfault or throw exception when casting)
+    // Elastix reads type information from parameter files. We set this information automatically and prefer to overwrite
+    // user settings since class templates are the groundtruth (in which case elastix will segfault or throw exception)
     parameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
     parameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( FixedImageDimension ) );
     parameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TMovingImage::PixelType >::ToString() );
@@ -334,7 +334,7 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::AddFixedImage( FixedImagePointer fixedImage )
 {
-  if( !this->HasInput( "FixedImage") )
+  if( this->GetInput( "FixedImage" ) == ITK_NULLPTR )
   {
     this->SetFixedImage( fixedImage );
   }
@@ -389,7 +389,7 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::AddMovingImage( MovingImagePointer movingImage )
 {
-  if( !this->HasInput( "MovingImage") )
+  if( this->GetInput( "MovingImage" ) == ITK_NULLPTR )
   {
     this->SetMovingImage( movingImage );
   }
@@ -423,16 +423,8 @@ ElastixFilter< TFixedImage, TMovingImage >
 
   // Free references to fixed images that has already been set
   this->RemoveInputType( "FixedMask" );
-
-  // The first mask will be named "FixedMask" so that HasInput( "FixedMask" )
-  // can be used to check if masks are used. The rest of the images will
-  // be appended to the input container suffixed with _1, _2, etc.
-  // The common prefix allows us to read out only the fixed masks
-  // for elastix fixed mask container at a later stage
+    
   DataObjectContainerIterator fixedMaskIterator = fixedMasks->Begin();
-  this->SetInput( "FixedMask", fixedMaskIterator->Value() );
-  ++fixedMaskIterator;
-
   while( fixedMaskIterator != fixedMasks->End() )
   {
     this->AddInputAutoIncrementName( "FixedMask", fixedMaskIterator->Value() );
@@ -481,15 +473,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Free references to moving masks that has already been set
   this->RemoveInputType( "MovingMask" );
 
-  // The first mask will be named "MovingMask" so that HasInput( "MovingMask" )
-  // can be used to check if masks are used. The rest of the images will
-  // be appended to the input container suffixed with _1, _2, etc.
-  // The common prefix allows us to read out only the moving mask
-  // for elastix moving mask container at a later stage
   DataObjectContainerIterator movingMaskIterator = movingMasks->Begin();
-  this->SetInput( "MovingMask", movingMaskIterator->Value() );
-  ++movingMaskIterator;
-
   while( movingMaskIterator != movingMasks->End() )
   {
     this->AddInputAutoIncrementName( "MovingMask", movingMaskIterator->Value() );

@@ -63,7 +63,6 @@ TransformixFilter< TInputImage >
                     << "SetInputPointSetFileName(\"path/to/points\") or to bet set." );
   }
 
-  // Check if an output directory is needed
   // TODO: Change behaviour upstream to have transformix save all outputs as data objects
   if( ( this->GetComputeSpatialJacobian() ||
         this->GetComputeDeterminantOfSpatialJacobian() ||
@@ -72,8 +71,7 @@ TransformixFilter< TInputImage >
         this->GetLogToFile() ) &&
       this->GetOutputDirectory().empty() )
   {
-    itkExceptionMacro( "The requested outputs require an output directory to be specified."
-                    << "Use SetOutputDirectory()." )
+    this->SetOutputDirectory( "." );
   }
 
   // Check if output directory exists

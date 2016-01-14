@@ -63,7 +63,7 @@ public:
   void SetInputImage( InputImagePointer inputImage );
 
   itkSetMacro( InputPointSetFileName, std::string );
-  itkGetConstMacro( InputPointSetFileName, std::string );
+  itkGetMacro( InputPointSetFileName, std::string );
   void RemoveInputPointSetFileName() { this->m_InputPointSetFileName = std::string(); };
 
   itkSetMacro( ComputeSpatialJacobian, bool );
@@ -115,10 +115,10 @@ private:
 
   TransformixFilter();
 
+  std::string   m_InputPointSetFileName;
   bool          m_ComputeSpatialJacobian;
   bool          m_ComputeDeterminantOfSpatialJacobian;
   bool          m_ComputeDeformationField;
-  std::string   m_InputPointSetFileName;
 
   std::string   m_OutputDirectory;
   std::string   m_LogFileName;
