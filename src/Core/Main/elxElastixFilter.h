@@ -53,13 +53,12 @@ public:
   typedef ElastixMainType::ArgumentMapType                    ArgumentMapType;
   typedef ArgumentMapType::value_type                         ArgumentMapEntryType;
 
-  typedef itk::ProcessObject::DataObjectIdentifierType        DataObjectIdentifierType;
-  typedef itk::ProcessObject::DataObjectPointerArraySizeType  DataObjectPointerArraySizeType;
-  typedef itk::ProcessObject::NameArray                       InputNameArrayType;
-
   typedef ElastixMainType::DataObjectContainerType            DataObjectContainerType;
   typedef ElastixMainType::DataObjectContainerPointer         DataObjectContainerPointer;
   typedef DataObjectContainerType::Iterator                   DataObjectContainerIterator;
+  typedef itk::ProcessObject::DataObjectIdentifierType        DataObjectIdentifierType;
+  typedef itk::ProcessObject::DataObjectPointerArraySizeType  DataObjectPointerArraySizeType;
+  typedef itk::ProcessObject::NameArray                       InputNameArrayType;
 
   typedef ParameterObject::ParameterMapType                   ParameterMapType;
   typedef ParameterObject::ParameterMapVectorType             ParameterMapVectorType;
@@ -140,10 +139,12 @@ private:
 
   ElastixFilter();
 
-  void AddInputAutoIncrementName( DataObjectIdentifierType key, itk::DataObject* input );
+  void AddInputAndAutoIncrementName( DataObjectIdentifierType key, itk::DataObject* input );
 
   bool IsInputType( DataObjectIdentifierType inputType, DataObjectIdentifierType inputName );
   void RemoveInputType( DataObjectIdentifierType inputName );
+
+  static void DeepCopy( FixedImagePointer inputImage, FixedImagePointer outputImage );
 
   // TODO: When set to true, ReleaseDataFlag should also touch these containers
   DataObjectContainerPointer m_FixedImageContainer;

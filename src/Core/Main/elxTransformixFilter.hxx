@@ -30,14 +30,10 @@ TransformixFilter< TInputImage >
   this->SetPrimaryInputName( "InputImage" );
   this->SetPrimaryOutputName( "ResultImage" );
 
-  // The filter must have an input image set for the ITK pipeline
-  // to be in a consistent state even if it is not used
-  this->SetInputImage( TInputImage::New() );
-
+  this->m_InputPointSetFileName = std::string();
   this->ComputeSpatialJacobianOff();
   this->ComputeDeterminantOfSpatialJacobianOff();
   this->ComputeDeformationFieldOff();
-  this->m_InputPointSetFileName = std::string();
 
   this->m_OutputDirectory = std::string();
   this->m_LogFileName = std::string();
@@ -52,11 +48,11 @@ TransformixFilter< TInputImage >
 ::GenerateData( void )
 {
   // Assert that at least one output has been requested
-  if( !this->HasInput( "InputImage" ) &&
+  if( this->GetInput( "InputImage" ) == ITK_NULLPTR &&
+      this->GetInputPointSetFileName().empty() &&
       !this->GetComputeSpatialJacobian() &&
       !this->GetComputeDeterminantOfSpatialJacobian() &&
-      !this->GetComputeDeformationField() &&
-      this->GetInputPointSetFileName().empty() )
+      !this->GetComputeDeformationField() )
   {
     itkExceptionMacro( "Expected at least one of SetInputImage(\"path/to/image\"), ComputeSpatialJacobianOn(), "
                     << "ComputeDeterminantOfSpatialJacobianOn(), ComputeDeformationFieldOn() or "

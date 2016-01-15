@@ -72,7 +72,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     if( this->IsInputType( "FixedImage", inputNames[ i ] ) )
     {
-      fixedImageContainer->push_back( this->GetInput( inputNames[ i ] ) );
+      // TODO: Elastix destroys the fixed image data object somewhere in the internal registration pipeline
+      FixedImagePointer FixedImageDeepCopy = TFixedImage::New();
+      this->DeepCopy( static_cast< TFixedImage* >( this->GetInput( inputNames[ i ] ) ), FixedImageDeepCopy );
+
+      fixedImageContainer->push_back( static_cast< itk::DataObject* >( FixedImageDeepCopy ) );
       continue;
     }
 
@@ -118,7 +122,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     if( !itksys::SystemTools::FileExists( this->GetOutputDirectory() ) )
     {
-       itkExceptionMacro( "Output directory " << this->GetOutputDirectory() << " does not exist." );
+       itkExceptionMacro( "Output directory \"" << this->GetOutputDirectory() << "\" does not exist." );
     }
 
     if( this->GetOutputDirectory().back() != '/' || this->GetOutputDirectory().back() != '\\' )
@@ -313,18 +317,18 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Free references to fixed images that has already been set
   this->RemoveInputType( "FixedImage" );
 
-  // The ITK filter requires a "FixedImage" named input. The first image
-  // will be named "FixedImage" while the rest of the images will
-  // be appended to the input container suffixed with _1, _2, etc.
-  // The common prefix allows us to read out only the fixed images
-  // for elastix fixed image container at a later stage
+  // The first image will be named "FixedImage" while the rest of
+  // the images will be appended to the input container suffixed 
+  // with _1, _2, etc. The common prefix allows us to read out only
+  // the fixed images for elastix fixed image container at a later
+  // stage while the ITK filter can find its required "FixedImage" input 
   DataObjectContainerIterator fixedImageIterator = fixedImages->Begin();
   this->SetInput( "FixedImage", fixedImageIterator->Value() );
   ++fixedImageIterator;
 
   while( fixedImageIterator != fixedImages->End() )
   {
-    this->AddInputAutoIncrementName( "FixedImage", fixedImageIterator->Value() );
+    this->AddInputAndAutoIncrementName( "FixedImage", fixedImageIterator->Value() );
     ++fixedImageIterator;
   }
 }
@@ -340,7 +344,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
   else
   {
-    this->AddInputAutoIncrementName( "FixedImage", static_cast< itk::DataObject* >( fixedImage ) );
+    this->AddInputAndAutoIncrementName( "FixedImage", static_cast< itk::DataObject* >( fixedImage ) );
   }
 }
 
@@ -368,18 +372,18 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Free references to fixed images that has already been set
   this->RemoveInputType( "MovingImage" );
 
-  // The ITK filter requires a "MovingImage" named input. The first image
-  // will be named "MovingImage" while the rest of the images will
-  // be appended to the input container suffixed with _1, _2, etc.
-  // The common prefix allows us to read out only the moving images
-  // for elastix moving image container at a later stage
+  // The first image will be named "MovingImage" while the rest of
+  // the images will be appended to the input container suffixed 
+  // with _1, _2, etc. The common prefix allows us to read out only
+  // the moving images for elastix moving image container at a later
+  // stage while the ITK filter can find its required "MovingImage" input 
   DataObjectContainerIterator movingImageIterator = movingImages->Begin();
   this->SetInput( "MovingImage", movingImageIterator->Value() );
   ++movingImageIterator;
 
   while( movingImageIterator != movingImages->End() )
   {
-    this->AddInputAutoIncrementName( "MovingImage", static_cast< itk::DataObject* >( movingImageIterator->Value() ) );
+    this->AddInputAndAutoIncrementName( "MovingImage", static_cast< itk::DataObject* >( movingImageIterator->Value() ) );
     ++movingImageIterator;
   }
 }
@@ -395,7 +399,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
   else
   {
-    this->AddInputAutoIncrementName( "MovingImage", static_cast< itk::DataObject* >( movingImage ) );
+    this->AddInputAndAutoIncrementName( "MovingImage", static_cast< itk::DataObject* >( movingImage ) );
   }
 }
 
@@ -423,11 +427,11 @@ ElastixFilter< TFixedImage, TMovingImage >
 
   // Free references to fixed images that has already been set
   this->RemoveInputType( "FixedMask" );
-    
+
   DataObjectContainerIterator fixedMaskIterator = fixedMasks->Begin();
   while( fixedMaskIterator != fixedMasks->End() )
   {
-    this->AddInputAutoIncrementName( "FixedMask", fixedMaskIterator->Value() );
+    this->AddInputAndAutoIncrementName( "FixedMask", fixedMaskIterator->Value() );
     ++fixedMaskIterator;
   }
 }
@@ -437,7 +441,7 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::AddFixedMask( FixedImagePointer fixedMask )
 {
-  this->AddInputAutoIncrementName( "FixedMask", static_cast< itk::DataObject* >( fixedMask ) );
+  this->AddInputAndAutoIncrementName( "FixedMask", static_cast< itk::DataObject* >( fixedMask ) );
 }
 
 template< typename TFixedImage, typename TMovingImage >
@@ -476,7 +480,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   DataObjectContainerIterator movingMaskIterator = movingMasks->Begin();
   while( movingMaskIterator != movingMasks->End() )
   {
-    this->AddInputAutoIncrementName( "MovingMask", movingMaskIterator->Value() );
+    this->AddInputAndAutoIncrementName( "MovingMask", movingMaskIterator->Value() );
     ++movingMaskIterator;
   }
 }
@@ -486,7 +490,7 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::AddMovingMask( MovingImagePointer movingMask )
 {
-  this->AddInputAutoIncrementName( "MovingMask", static_cast< itk::DataObject* >( movingMask ) );
+  this->AddInputAndAutoIncrementName( "MovingMask", static_cast< itk::DataObject* >( movingMask ) );
 }
 
 template< typename TFixedImage, typename TMovingImage >
@@ -505,7 +509,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 template< typename TFixedImage, typename TMovingImage >
 void
 ElastixFilter< TFixedImage, TMovingImage >
-::AddInputAutoIncrementName( DataObjectIdentifierType inputName, itk::DataObject* input )
+::AddInputAndAutoIncrementName( DataObjectIdentifierType inputName, itk::DataObject* input )
 {
   for ( unsigned idx = 0; idx < this->GetNumberOfIndexedInputs(); ++idx )
   {
@@ -545,6 +549,25 @@ ElastixFilter< TFixedImage, TMovingImage >
       this->RemoveInput( inputNames[ i ] );
     }
   }
+}
+
+template< typename TFixedImage, typename TMovingImage >
+void
+ElastixFilter< TFixedImage, TMovingImage >
+::DeepCopy( FixedImagePointer inputImage, FixedImagePointer outputImage )
+{
+    outputImage->SetRegions( inputImage->GetLargestPossibleRegion() );
+    outputImage->Allocate();
+
+    itk::ImageRegionConstIterator< TFixedImage > inputIterator( inputImage, inputImage->GetLargestPossibleRegion() );
+    itk::ImageRegionIterator< TFixedImage > outputIterator( outputImage, outputImage->GetLargestPossibleRegion());
+
+    while( !inputIterator.IsAtEnd() )
+    {
+        outputIterator.Set( inputIterator.Get() );
+        ++inputIterator;
+        ++outputIterator;
+    }
 }
 
 } // namespace elx
