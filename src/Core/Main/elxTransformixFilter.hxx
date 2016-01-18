@@ -169,6 +169,12 @@ TransformixFilter< TInputImage >
   ParameterObjectConstPointer transformParameterObject = static_cast< const ParameterObject* >( this->GetInput( "TransformParameterObject" ) );
   ParameterMapVectorType transformParameterMapVector = transformParameterObject->GetParameterMap();
 
+  // Assert user did not set empty parameter map
+  if( transformParameterMapVector.size() == 0 )
+  {
+    itkExceptionMacro( "Empty parameter map in parameter object." );
+  }
+  
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
     // Transformix reads type information from parameter files. We set this information automatically and overwrite

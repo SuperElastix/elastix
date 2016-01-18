@@ -170,7 +170,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 
   if( parameterMapVector.size() == 0 )
   {
-    itkExceptionMacro( "Parameter object contains an empty parameter map list." );
+    itkExceptionMacro( "Empty parameter map in parameter object." );
   }
 
   // Elastix must always write result image to guarantee that the ITK pipeline is in a consistent state
@@ -243,7 +243,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Save result image
   if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
   {
-    this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
+    this->SetOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }
 
   // Save parameter map
