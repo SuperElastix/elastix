@@ -147,19 +147,17 @@ TransformixFilter< TInputImage >
   // Instantiate transformix
   TransformixMainPointer transformix = TransformixMainType::New();
 
+  // An empty input image is set in the constructor because a primary input is 
+  // needed for the ITK pipeline to be in a consistent state. Instead,
+  // we assume that an input image is given if its size is non-empty.
+  // We have to cast the data object to an image in order to perform this check
   DataObjectContainerPointer inputImageContainer = 0;
   DataObjectContainerPointer resultImageContainer = 0;
-
-  // Normally we would use HasInput( "InputImage" ) to check if the input image
-  // is available. However, an empty input image is set in the constructor because
-  // a primary input is needed for the ITK pipeline to be in a consistent state.
-  // Here, we assume that an input image is given if its size is non-empty instead.
-  // We have to cast the data object to an image in order to perform this check
   typename TInputImage::Pointer inputImage = static_cast< TInputImage* >( this->GetInput( "InputImage" ) );
   typename TInputImage::RegionType region = inputImage->GetLargestPossibleRegion();
   typename TInputImage::SizeType size = region.GetSize();
   if( size[ 0 ] > 0 && size[ 1 ] > 0 ) {
-    DataObjectContainerPointer inputImageContainer = DataObjectContainerType::New();
+    inputImageContainer = DataObjectContainerType::New();
     inputImageContainer->CreateElementAt( 0 ) = this->GetInput("InputImage");
     transformix->SetInputImageContainer( inputImageContainer );
     transformix->SetResultImageContainer( resultImageContainer );
