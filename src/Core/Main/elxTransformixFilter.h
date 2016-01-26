@@ -115,6 +115,8 @@ private:
 
   TransformixFilter();
 
+  bool IsEmpty( InputImagePointer inputImage );
+
   std::string   m_InputPointSetFileName;
   bool          m_ComputeSpatialJacobian;
   bool          m_ComputeDeterminantOfSpatialJacobian;

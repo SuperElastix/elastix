@@ -125,7 +125,7 @@ ElastixFilter< TFixedImage, TMovingImage >
        itkExceptionMacro( "Output directory \"" << this->GetOutputDirectory() << "\" does not exist." );
     }
 
-    if( this->GetOutputDirectory().back() != '/' || this->GetOutputDirectory().back() != '\\' )
+    if( this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '/' || this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '\\' )
     {
       this->SetOutputDirectory( this->GetOutputDirectory() + "/" );
     }

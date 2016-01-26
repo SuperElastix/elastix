@@ -30,6 +30,8 @@ TransformixFilter< TInputImage >
   this->SetPrimaryInputName( "InputImage" );
   this->SetPrimaryOutputName( "ResultImage" );
 
+  this->SetInput( "InputImage", TInputImage::New() );
+
   this->m_InputPointSetFileName = std::string();
   this->ComputeSpatialJacobianOff();
   this->ComputeDeterminantOfSpatialJacobianOff();
@@ -48,7 +50,7 @@ TransformixFilter< TInputImage >
 ::GenerateData( void )
 {
   // Assert that at least one output has been requested
-  if( this->GetInput( "InputImage" ) == ITK_NULLPTR &&
+  if( this->IsEmpty( static_cast< TInputImage* >( this->GetInput( "InputImage" ) ) ) &&
       this->GetInputPointSetFileName().empty() &&
       !this->GetComputeSpatialJacobian() &&
       !this->GetComputeDeterminantOfSpatialJacobian() &&
@@ -135,6 +137,10 @@ TransformixFilter< TInputImage >
     }
     else
     {
+      if( this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '/' || this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '\\' )
+      {
+        this->SetOutputDirectory( this->GetOutputDirectory() + "/" );
+      }
       logFileName = this->GetOutputDirectory() + this->GetLogFileName();
     }
   }
@@ -147,16 +153,10 @@ TransformixFilter< TInputImage >
   // Instantiate transformix
   TransformixMainPointer transformix = TransformixMainType::New();
 
-  // An empty input image is set in the constructor because a primary input is 
-  // needed for the ITK pipeline to be in a consistent state. Instead,
-  // we assume that an input image is given if its size is non-empty.
-  // We have to cast the data object to an image in order to perform this check
+  // Setup transformix for warping input image if given
   DataObjectContainerPointer inputImageContainer = 0;
   DataObjectContainerPointer resultImageContainer = 0;
-  typename TInputImage::Pointer inputImage = static_cast< TInputImage* >( this->GetInput( "InputImage" ) );
-  typename TInputImage::RegionType region = inputImage->GetLargestPossibleRegion();
-  typename TInputImage::SizeType size = region.GetSize();
-  if( size[ 0 ] > 0 && size[ 1 ] > 0 ) {
+  if( !this->IsEmpty( static_cast< TInputImage* >( this->GetInput( "InputImage" ) ) ) ) {
     inputImageContainer = DataObjectContainerType::New();
     inputImageContainer->CreateElementAt( 0 ) = this->GetInput("InputImage");
     transformix->SetInputImageContainer( inputImageContainer );
@@ -233,6 +233,16 @@ TransformixFilter< TInputImage >
 ::GetTransformParameterObject( void )
 {
   return static_cast< ParameterObject* >( this->GetInput( "TransformParameterObject" ) );
+}
+
+template< typename TInputImage >
+bool
+TransformixFilter< TInputImage >
+::IsEmpty( InputImagePointer inputImage )
+{
+  typename TInputImage::RegionType region = inputImage->GetLargestPossibleRegion();
+  typename TInputImage::SizeType size = region.GetSize();
+  return size[ 0 ] == 0 && size[ 1 ] == 0;
 }
 
 } // namespace elx
