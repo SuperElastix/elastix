@@ -7,6 +7,20 @@ set( TestBaselineDir ${elastix_SOURCE_DIR}/Testing/Baselines )
 set( TestOutputDir ${elastix_BINARY_DIR}/Testing )
 
 #---------------------------------------------------------------------
+# configure the baseline files
+set( ELASTIX_DATA_DIR ${TestDataDir} )
+file( GLOB files ${TestBaselineDir}/*.in )
+foreach( tpfile ${files} )
+  # Get file name without directory
+  get_filename_component( tpfileout ${tpfile} NAME )
+  # Strip extension .in
+  string( REGEX REPLACE "\\.[^.]*$" "" tpfileout ${tpfileout})
+  # Replace the initial transform directory with the correct one
+  # The resulting file can be found in the binary directory / Testing
+  configure_file( ${tpfile} ${elastix_BINARY_DIR}/Testing/${tpfileout} @ONLY )
+endforeach()
+
+#---------------------------------------------------------------------
 # Python is used by some tests
 find_program( python_executable python
   HINTS "C:/Program Files/Python2.7" "C:/Program Files/python3.3" )
