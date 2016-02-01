@@ -283,7 +283,7 @@ macro( elx_add_run_test testbasename howtocompare )
 
   # To compare against a baseline TransformParameters file
   # Baselines have been generated on LKEB, PCMarius, Win7, 64 bit, VS2008
-  set( baselineTP ${TestBaselineDir}/TransformParameters_${testbasename}.txt )
+  set( baselineTP ${TestOutputDir}/TransformParameters_${testbasename}.txt )
   set( testTP ${output_dir}/TransformParameters.${countp}.txt )
 
   # Temporary hack to get some failing tests working
@@ -293,7 +293,7 @@ macro( elx_add_run_test testbasename howtocompare )
     if( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
       if( ${testbasename} STREQUAL "3DCT_lung.MI.bspline.ASGD.001"
         OR ${testbasename} STREQUAL "3DCT_lung.NMI.bspline.ASGD.001" )
-        set( baselineTP ${TestBaselineDir}/TransformParameters_${SITE}_${testbasename}.txt )
+        set( baselineTP ${TestOutputDir}/TransformParameters_${SITE}_${testbasename}.txt )
       endif()
     endif()
   endif()
