@@ -63,6 +63,11 @@ def main():
   landmarks1full = os.path.join( options.directory, "outputpoints_current.txt" );
   landmarks2full = os.path.join( options.directory, "outputpoints_baseline.txt" );
 
+  # Remove copies otherwise os.rename will not work on Windows:
+  # "On Windows, if dst already exists, OSError will be raised"
+  if( os.path.exists( landmarks1full ) ) : os.remove( landmarks1full );
+  if( os.path.exists( landmarks2full ) ) : os.remove( landmarks2full );
+
   #
   # Transform the fixed image landmarks by the current result
   #
