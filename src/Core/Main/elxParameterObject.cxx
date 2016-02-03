@@ -106,16 +106,6 @@ ParameterObject
 
 void
 ParameterObject
-::AddParameterFile( const ParameterFileNameType parameterFileName )
-{
-  ParameterFileParserPointer parameterFileParser = ParameterFileParserType::New();
-  parameterFileParser->SetParameterFileName( parameterFileName );
-  parameterFileParser->ReadParameterFile();
-  this->m_ParameterMapVector.push_back( parameterFileParser->GetParameterMap() );
-}
-
-void
-ParameterObject
 ::WriteParameterFile( const ParameterMapType parameterMap, const ParameterFileNameType parameterFileName )
 {
   std::ofstream parameterFile;

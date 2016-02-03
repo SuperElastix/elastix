@@ -6,24 +6,16 @@
 
 # User specified variables:
 mark_as_advanced( ELASTIX_IMAGE_DIMENSIONS )
-if( NOT ELASTIX_IMAGE_DIMENSIONS )
-  set( ELASTIX_IMAGE_DIMENSIONS 2 3 4 CACHE STRING "Specify image dimensions" )
-endif()
+set( ELASTIX_IMAGE_DIMENSIONS 2 3 4 CACHE STRING "Specify image dimensions" )
 
 mark_as_advanced( ELASTIX_IMAGE_2D_PIXELTYPES )
-if( NOT ELASTIX_IMAGE_2D_PIXELTYPES )
-  set( ELASTIX_IMAGE_2D_PIXELTYPES "float" CACHE STRING "Specify 2D pixel types" )
-endif()
+set( ELASTIX_IMAGE_2D_PIXELTYPES "float" CACHE STRING "Specify 2D pixel types" )
 
 mark_as_advanced( ELASTIX_IMAGE_3D_PIXELTYPES )
-if( NOT ELASTIX_IMAGE_3D_PIXELTYPES )
-  set( ELASTIX_IMAGE_3D_PIXELTYPES "short" "float" CACHE STRING "Specify 3D pixel types" )
-endif()
+set( ELASTIX_IMAGE_3D_PIXELTYPES "short" "float" CACHE STRING "Specify 3D pixel types" )
 
 mark_as_advanced( ELASTIX_IMAGE_4D_PIXELTYPES )
-if( NOT ELASTIX_IMAGE_4D_PIXELTYPES )
-  set( ELASTIX_IMAGE_4D_PIXELTYPES "short" CACHE STRING "Specify 4D pixel types" )
-endif()
+set( ELASTIX_IMAGE_4D_PIXELTYPES "short" CACHE STRING "Specify 4D pixel types" )
 
 mark_as_advanced( USE_ALL_PIXELTYPES )
 if( NOT USE_ALL_PIXELTYPES )
@@ -38,9 +30,9 @@ set( supportedTypes "char" "unsigned char"
   "long" "unsigned long" "float" "double" )
 
 if( ${USE_ALL_PIXELTYPES} )
-  set( ELASTIX_IMAGE_2D_PIXELTYPES ${supportedTypes} )
-  set( ELASTIX_IMAGE_3D_PIXELTYPES ${supportedTypes} )
-  set( ELASTIX_IMAGE_4D_PIXELTYPES ${supportedTypes} )
+  set( ELASTIX_IMAGE_2D_PIXELTYPES ${supportedTypes} CACHE STRING "Specify 2D pixel types" FORCE )
+  set( ELASTIX_IMAGE_3D_PIXELTYPES ${supportedTypes} CACHE STRING "Specify 3D pixel types" FORCE )
+  set( ELASTIX_IMAGE_4D_PIXELTYPES ${supportedTypes} CACHE STRING "Specify 4D pixel types" FORCE )
 endif()
 
 # Sanity check if > 0 number of dimensions are requested

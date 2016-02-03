@@ -61,7 +61,7 @@ TransformixFilter< TInputImage >
                     << "SetInputPointSetFileName(\"path/to/points\") or to bet set." );
   }
 
-  // TODO: Change behaviour upstream to have transformix save all outputs as data objects
+  // TODO: patch upstream transformix to save all outputs as data objects
   if( ( this->GetComputeSpatialJacobian() ||
         this->GetComputeDeterminantOfSpatialJacobian() ||
         this->GetComputeDeformationField() ||
@@ -84,7 +84,7 @@ TransformixFilter< TInputImage >
   }
 
   // Transformix uses "-def" for path to point sets AND as flag for writing deformation field
-  // TODO: Change behaviour upstream: Split into seperate arguments
+  // TODO: Patch upstream transformix to split this into seperate arguments
   if( this->GetComputeDeformationField() && !this->GetInputPointSetFileName().empty() )
   {
     itkExceptionMacro( << "For backwards compatibility, only one of ComputeDeformationFieldOn() "
@@ -158,7 +158,7 @@ TransformixFilter< TInputImage >
   DataObjectContainerPointer resultImageContainer = 0;
   if( !this->IsEmpty( static_cast< TInputImage* >( this->GetInput( "InputImage" ) ) ) ) {
     inputImageContainer = DataObjectContainerType::New();
-    inputImageContainer->CreateElementAt( 0 ) = this->GetInput("InputImage");
+    inputImageContainer->CreateElementAt( 0 ) = this->GetInput( "InputImage" );
     transformix->SetInputImageContainer( inputImageContainer );
     transformix->SetResultImageContainer( resultImageContainer );
   }
