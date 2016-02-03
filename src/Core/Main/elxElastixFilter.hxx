@@ -35,11 +35,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   this->m_FixedImageContainer = DataObjectContainerType::New();
   this->m_MovingImageContainer = DataObjectContainerType::New();
 
-  this->m_FixedPointSetFileName = std::string();
-  this->m_MovingPointSetFileName = std::string();
+  this->m_FixedPointSetFileName = "";
+  this->m_MovingPointSetFileName = "";
 
   this->m_OutputDirectory = ".";
-  this->m_LogFileName = std::string();
+  this->m_LogFileName = "";
 
   this->LogToConsoleOff();
   this->LogToFileOff();
@@ -63,7 +63,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   DataObjectContainerPointer  fixedMaskContainer   = 0;
   DataObjectContainerPointer  movingMaskContainer  = 0;
   DataObjectContainerPointer  resultImageContainer = 0;
-  ParameterMapVectorType      TransformParameterMapVector;
+  ParameterMapVectorType      transformParameterMapVector;
   FlatDirectionCosinesType    fixedImageOriginalDirection;
 
   // Split inputs into separate containers
@@ -108,14 +108,46 @@ ElastixFilter< TFixedImage, TMovingImage >
     }
   }
 
+  // Set ParameterMap
+  ParameterObjectConstPointer parameterObject = static_cast< const ParameterObject* >( this->GetInput( "ParameterObject" ) );
+  ParameterMapVectorType parameterMapVector = parameterObject->GetParameterMap();
+
+  if( parameterMapVector.size() == 0 )
+  {
+    itkExceptionMacro( "Empty parameter map in parameter object." );
+  }
+
+  // Elastix must always write result image to guarantee that the ITK pipeline is in a consistent state
+  parameterMapVector[ parameterMapVector.size()-1 ][ "WriteResultImage" ] = ParameterValueVectorType( 1, "true" );
+
   ArgumentMapType argumentMap;
+
+  // Initial transform
+  if( !this->m_InitialTransformParameterFileName.empty() )
+  {
+    argumentMap.insert( ArgumentMapEntryType( "-t0", this->m_InitialTransformParameterFileName ) );
+  }
+
+  // Fixed mesh
+  if( !this->m_FixedPointSetFileName.empty() )
+  {
+    argumentMap.insert( ArgumentMapEntryType( "-fp", this->m_FixedPointSetFileName ) );
+  }
+
+  // Moving mesh
+  if( !this->m_MovingPointSetFileName.empty() )
+  {
+    argumentMap.insert( ArgumentMapEntryType( "-mp", this->m_MovingPointSetFileName ) );
+  }
+
+  // Logging, disk I/O
   if( this->GetOutputDirectory().empty() ) {
     if( this->GetLogToFile() )
     {
       itkExceptionMacro( "LogToFileOn() requires an output directory to be specified.")
     }
 
-    // There must be an "-out", this is checked later in the code
+    // There must be an "-out" as this is checked later in the code
     argumentMap.insert( ArgumentMapEntryType( "-out", "output_path_not_set" ) );
   }
   else
@@ -131,18 +163,6 @@ ElastixFilter< TFixedImage, TMovingImage >
     }
 
     argumentMap.insert( ArgumentMapEntryType( "-out", this->GetOutputDirectory() ) );
-  }
-
-  // Fixed mesh
-  if( !this->m_FixedPointSetFileName.empty() )
-  {
-    argumentMap.insert( ArgumentMapEntryType( "-fp", std::string( this->m_FixedPointSetFileName ) ) );
-  }
-
-  // Moving mesh
-  if( !this->m_MovingPointSetFileName.empty() )
-  {
-    argumentMap.insert( ArgumentMapEntryType( "-mp", std::string( this->m_MovingPointSetFileName ) ) );
   }
 
   // Setup xout
@@ -163,18 +183,6 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     itkExceptionMacro( "Error while setting up xout" );
   }
-
-  // Get ParameterMap
-  ParameterObjectConstPointer parameterObject = static_cast< const ParameterObject* >( this->GetInput( "ParameterObject" ) );
-  ParameterMapVectorType parameterMapVector = parameterObject->GetParameterMap();
-
-  if( parameterMapVector.size() == 0 )
-  {
-    itkExceptionMacro( "Empty parameter map in parameter object." );
-  }
-
-  // Elastix must always write result image to guarantee that the ITK pipeline is in a consistent state
-  parameterMapVector[ parameterMapVector.size()-1 ][ "WriteResultImage" ] = ParameterValueVectorType( 1, "true" );
 
   // Run the (possibly multiple) registration(s)
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )
@@ -229,14 +237,14 @@ ElastixFilter< TFixedImage, TMovingImage >
     resultImageContainer        = elastix->GetResultImageContainer();
     fixedImageOriginalDirection = elastix->GetOriginalFixedImageDirectionFlat();
 
-    TransformParameterMapVector.push_back( elastix->GetTransformParametersMap() );
+    transformParameterMapVector.push_back( elastix->GetTransformParametersMap() );
 
     // Set initial transform to an index number instead of a parameter filename
     if( i > 0 )
     {
       std::stringstream index;
       index << ( i - 1 );
-      TransformParameterMapVector[ i ][ "InitialTransformParametersFileName" ][ 0 ] = index.str();
+      transformParameterMapVector[ i ][ "InitialTransformParametersFileName" ][ 0 ] = index.str();
     }
   } // End loop over registrations
 
@@ -247,22 +255,23 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
 
   // Save parameter map
-  ParameterObject::Pointer TransformParameterObject = ParameterObject::New();
-  TransformParameterObject->SetParameterMap( TransformParameterMapVector );
-  this->SetOutput( "TransformParameterObject", static_cast< itk::DataObject* >( TransformParameterObject ) );
+  ParameterObject::Pointer transformParameterObject = ParameterObject::New();
+  transformParameterObject->SetParameterMap( transformParameterMapVector );
+  this->SetOutput( "TransformParameterObject", static_cast< itk::DataObject* >( transformParameterObject ) );
 
   // Close the modules
   ElastixMainType::UnloadComponents();
 }
 
 // TODO: We should not have to overwrite the ProcessObject's GetOutput()
-// but upstream the filter is not updated without it. This is a bug.
+// but the upstream filter is not updated without it. This is a bug.
 template< typename TFixedImage, typename TMovingImage >
 typename ElastixFilter< TFixedImage, TMovingImage >::FixedImagePointer
 ElastixFilter< TFixedImage, TMovingImage >
 ::GetOutput( void )
 {
   this->Update();
+  
   return static_cast< TFixedImage* >( itk::ProcessObject::GetPrimaryOutput() );
 }
 

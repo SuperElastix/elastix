@@ -297,3 +297,33 @@ ParameterObject
 } // namespace elastix
 
 #endif // elxParameterObject_cxx
+
+// http://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file
+// TODO: Implement exception handling for parameter file reader/writer, rethrow itk exception
+// int main () {
+//   ifstream file;
+//   file.exceptions ( ifstream::failbit | ifstream::badbit );
+//   try {
+//     file.open ("test.txt");
+//     while (!file.eof()) file.get();
+//   }
+//   catch ( ifstream::failure e ) {
+//     cout << "Exception opening/reading file";
+//   }
+//   file.close();
+//   return 0;
+// }
+
+// int main () {
+//   ofstream file;
+//   file.exceptions ( ofstream::failbit | ofstream::badbit | ofstream::failure );
+//   try {
+//     file.open ("test.txt");
+//     while (!file.eof()) file.get();
+//   }
+//   catch (ifstream::failure e) {
+//     cout << "Exception opening/reading file";
+//   }
+//   file.close();
+//   return 0;
+// }

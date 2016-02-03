@@ -37,6 +37,7 @@ public:
   typedef std::string                                             ParameterKeyType;
   typedef std::string                                             ParameterValueType;
   typedef std::vector< ParameterValueType >                       ParameterValueVectorType;
+  typedef ParameterValueVectorType::iterator                      ParameterValueVectorIterator;
   typedef std::map< ParameterKeyType, ParameterValueVectorType >  ParameterMapType;
   typedef ParameterMapType::iterator                              ParameterMapIterator;
   typedef ParameterMapType::const_iterator                        ParameterMapConstIterator;

@@ -25,7 +25,7 @@ template< typename TInputImage  >
 TransformixFilter< TInputImage >
 ::TransformixFilter( void )
 {
-  this->AddRequiredInputName( "TransformParameterObject");
+  this->AddRequiredInputName( "TransformParameterObject" );
 
   this->SetPrimaryInputName( "InputImage" );
   this->SetPrimaryOutputName( "ResultImage" );

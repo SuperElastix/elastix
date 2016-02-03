@@ -31,8 +31,7 @@
 namespace elastix
 {
 
-template< typename TFixedImage,
-          typename TMovingImage >
+template< typename TFixedImage, typename TMovingImage >
 class ElastixFilter : public itk::ImageSource< TFixedImage >
 {
 public:
@@ -92,8 +91,13 @@ public:
 
   void SetParameterObject( ParameterObjectPointer parameterObject );
   ParameterObjectPointer GetParameterObject( void );
-
   ParameterObjectPointer GetTransformParameterObject( void );
+
+  // TODO: Elastix does not have the option to get initial transform directly,
+  // but internally reads the file from a path in the ArgumentMap
+  itkSetMacro( InitialTransformParameterFileName, std::string );
+  itkGetConstMacro( InitialTransformParameterFileName, std::string );
+  void RemoveInitialTransformParameterFileName( void ) { this->SetInitialTransformParameterFileName( std::string() ); };
 
   itkSetMacro( FixedPointSetFileName, std::string );
   itkGetConstMacro( FixedPointSetFileName, std::string );
@@ -111,7 +115,6 @@ public:
   {
     this->m_LogFileName = logFileName;
     this->LogToFileOn();
-    this->Modified();
   }
 
   itkGetConstMacro( LogFileName, std::string );
@@ -152,6 +155,7 @@ private:
   DataObjectContainerPointer m_FixedMaskContainer;
   DataObjectContainerPointer m_MovingMaskContainer;
 
+  std::string m_InitialTransformParameterFileName;
   std::string m_FixedPointSetFileName;
   std::string m_MovingPointSetFileName;
 
