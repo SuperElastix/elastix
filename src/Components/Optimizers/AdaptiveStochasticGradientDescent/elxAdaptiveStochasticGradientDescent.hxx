@@ -133,7 +133,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       << std::endl;
   }
 
-  /** Set/Get the initial time. Default: 0.0. Should be >=0. */
+  /** Set/Get the initial time. Default: 0.0. Should be >= 0. */
   double initialTime = 0.0;
   this->GetConfiguration()->ReadParameter( initialTime,
     "SigmoidInitialTime", this->GetComponentLabel(), level, 0 );
