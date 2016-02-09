@@ -18,7 +18,7 @@
 #ifndef elxElastixFilter_h
 #define elxElastixFilter_h
 
-#include "itkImageSource.h"
+#include "itkImageToImageFilter.h"
 
 #include "elxElastixMain.h"
 #include "elxParameterObject.h"
@@ -32,7 +32,7 @@ namespace elastix
 {
 
 template< typename TFixedImage, typename TMovingImage >
-class ElastixFilter : public itk::ImageSource< TFixedImage >
+class ElastixFilter : public itk::ImageToImageFilter< TFixedImage, TFixedImage >
 {
 public:
 
@@ -40,7 +40,7 @@ public:
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
   itkNewMacro( Self );
-  itkTypeMacro( Self, itk::ImageSource );
+  itkTypeMacro( Self, itk::ImageToImageFilter );
 
   typedef elastix::ElastixMain                                ElastixMainType;
   typedef ElastixMainType::Pointer                            ElastixMainPointer;
@@ -93,8 +93,7 @@ public:
   ParameterObjectPointer GetParameterObject( void );
   ParameterObjectPointer GetTransformParameterObject( void );
 
-  // TODO: Elastix does not have the option to get initial transform directly,
-  // but internally reads the file from a path in the ArgumentMap
+  // TODO: Pass transform object instead of reading from disk
   itkSetMacro( InitialTransformParameterFileName, std::string );
   itkGetConstMacro( InitialTransformParameterFileName, std::string );
   void RemoveInitialTransformParameterFileName( void ) { this->SetInitialTransformParameterFileName( std::string() ); };
@@ -132,6 +131,9 @@ public:
   itkGetConstMacro( LogToFile, bool );
   itkBooleanMacro( LogToFile );
 
+  using itk::ProcessObject::GetInput;
+
+  // TODO: We should not have to override GetOutput from superclass. This is a bug.
   FixedImagePointer GetOutput( void );
 
 protected:
@@ -147,7 +149,7 @@ private:
   bool IsInputType( DataObjectIdentifierType inputType, DataObjectIdentifierType inputName );
   void RemoveInputType( DataObjectIdentifierType inputName );
 
-  static void DeepCopy( FixedImagePointer inputImage, FixedImagePointer outputImage );
+  void VerifyInputInformation( void ) ITK_OVERRIDE;
 
   // TODO: When set to true, ReleaseDataFlag should also touch these containers
   DataObjectContainerPointer m_FixedImageContainer;

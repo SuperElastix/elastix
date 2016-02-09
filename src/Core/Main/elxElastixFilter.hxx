@@ -18,6 +18,8 @@
 #ifndef elxElastixFilter_hxx
 #define elxElastixFilter_hxx
 
+#include "itkImageDuplicator.h"
+
 namespace elastix
 {
 
@@ -27,7 +29,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 {
   this->AddRequiredInputName( "FixedImage" );
   this->AddRequiredInputName( "MovingImage" );
-  this->AddRequiredInputName( "ParameterObject");
+  this->AddRequiredInputName( "ParameterObject" );
 
   this->SetPrimaryInputName( "FixedImage" );
   this->SetPrimaryOutputName( "ResultImage" );
@@ -56,6 +58,12 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::GenerateData( void )
 {
+  // TODO: Fix elastix destroying fixed image during registration so we 
+  // don't need to deep copy every fixed image before every registration
+  typedef itk::ImageDuplicator< TFixedImage > DuplicatorType;
+  typedef typename DuplicatorType::Pointer DuplicatorPointer;
+  DuplicatorPointer duplicator = DuplicatorType::New();
+
   // Initialize variables here so they don't go out of scope between iterations of the main loop
   ElastixMainObjectPointer    transform            = 0;
   DataObjectContainerPointer  fixedImageContainer  = DataObjectContainerType::New();
@@ -67,16 +75,15 @@ ElastixFilter< TFixedImage, TMovingImage >
   FlatDirectionCosinesType    fixedImageOriginalDirection;
 
   // Split inputs into separate containers
-  InputNameArrayType inputNames = this->GetInputNames();
+  const InputNameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
   {
     if( this->IsInputType( "FixedImage", inputNames[ i ] ) )
-    {
-      // TODO: Elastix destroys the fixed image data object somewhere in the internal registration pipeline
-      FixedImagePointer FixedImageDeepCopy = TFixedImage::New();
-      this->DeepCopy( static_cast< TFixedImage* >( this->GetInput( inputNames[ i ] ) ), FixedImageDeepCopy );
+    { 
+      duplicator->SetInputImage( static_cast< TFixedImage* >( this->ProcessObject::GetInput( inputNames[ i ] ) ) );
+      duplicator->Update();
 
-      fixedImageContainer->push_back( static_cast< itk::DataObject* >( FixedImageDeepCopy ) );
+      fixedImageContainer->push_back( this->GetInput( inputNames[ i ] ) );
       continue;
     }
 
@@ -187,8 +194,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Run the (possibly multiple) registration(s)
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )
   {
-    // Elastix reads type information from parameter files. We set this information automatically and prefer to overwrite
-    // user settings since class templates are the groundtruth (in which case elastix will segfault or throw exception)
+    // Instantiated pixeltypes are the groundtruth
     parameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
     parameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( FixedImageDimension ) );
     parameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TMovingImage::PixelType >::ToString() );
@@ -227,8 +233,7 @@ ElastixFilter< TFixedImage, TMovingImage >
       itkExceptionMacro( << "Uncought errors occurred during registration." );
     }
 
-    // Get the transform, the fixedImage and the movingImage
-    // in order to put it in the next registration
+    // Get stuff in order to put it in the next registration
     transform                   = elastix->GetFinalTransform();
     fixedImageContainer         = elastix->GetFixedImageContainer();
     movingImageContainer        = elastix->GetMovingImageContainer();
@@ -251,7 +256,20 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Save result image
   if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
   {
-    this->SetOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
+    this->SetPrimaryOutput( resultImageContainer->ElementAt( 0 ) );
+  }
+  else
+  {
+    itkExceptionMacro( "Errors occured during registration: Result image not available." );
+  }
+
+  // Assert that result is not empty
+  FixedImagePointer resultImage = dynamic_cast< TFixedImage* >( this->GetPrimaryOutput() );
+  typename TFixedImage::RegionType region = resultImage->GetLargestPossibleRegion();
+  typename TFixedImage::SizeType size = region.GetSize();
+  if( size[ 0 ] == 0 && size[ 1 ] == 0 )
+  {
+    itkExceptionMacro( "Result image is empty (size: " << size << "." );
   }
 
   // Save parameter map
@@ -259,20 +277,12 @@ ElastixFilter< TFixedImage, TMovingImage >
   transformParameterObject->SetParameterMap( transformParameterMapVector );
   this->SetOutput( "TransformParameterObject", static_cast< itk::DataObject* >( transformParameterObject ) );
 
+  // Override user pixeltype settings
+  parameterObject->SetParameterMap( parameterMapVector);
+  this->SetParameterObject( parameterObject );
+  
   // Close the modules
   ElastixMainType::UnloadComponents();
-}
-
-// TODO: We should not have to overwrite the ProcessObject's GetOutput()
-// but the upstream filter is not updated without it. This is a bug.
-template< typename TFixedImage, typename TMovingImage >
-typename ElastixFilter< TFixedImage, TMovingImage >::FixedImagePointer
-ElastixFilter< TFixedImage, TMovingImage >
-::GetOutput( void )
-{
-  this->Update();
-  
-  return static_cast< TFixedImage* >( itk::ProcessObject::GetPrimaryOutput() );
 }
 
 template< typename TFixedImage, typename TMovingImage >
@@ -292,12 +302,34 @@ ElastixFilter< TFixedImage, TMovingImage >
 }
 
 template< typename TFixedImage, typename TMovingImage >
+typename ElastixFilter< TFixedImage, TMovingImage >::FixedImagePointer
+ElastixFilter< TFixedImage, TMovingImage >
+::GetOutput( void )
+{
+  try {
+    this->Update();
+  }
+  catch( itk::ExceptionObject &e )
+  {
+    itkExceptionMacro( "Errors occured during execution of ElastixFilter: " << e.what( ));
+  }
+
+  return static_cast< TFixedImage* >( itk::ProcessObject::GetOutput( "ResultImage" ) );
+}
+
+template< typename TFixedImage, typename TMovingImage >
 typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectPointer
 ElastixFilter< TFixedImage, TMovingImage >
 ::GetTransformParameterObject( void )
 {
   // Make sure the transform parameters have been generated and/or are up to date
-  this->Update();
+  try {
+    this->Update();
+  }
+  catch( itk::ExceptionObject &e )
+  {
+    itkExceptionMacro( "Errors occured during execution of ElastixFilter: " << e.what( ));
+  }
 
   return static_cast< ParameterObject* >( itk::ProcessObject::GetOutput( "TransformParameterObject" ) );
 }
@@ -563,20 +595,9 @@ ElastixFilter< TFixedImage, TMovingImage >
 template< typename TFixedImage, typename TMovingImage >
 void
 ElastixFilter< TFixedImage, TMovingImage >
-::DeepCopy( FixedImagePointer inputImage, FixedImagePointer outputImage )
+::VerifyInputInformation()
 {
-    outputImage->SetRegions( inputImage->GetLargestPossibleRegion() );
-    outputImage->Allocate();
-
-    itk::ImageRegionConstIterator< TFixedImage > inputIterator( inputImage, inputImage->GetLargestPossibleRegion() );
-    itk::ImageRegionIterator< TFixedImage > outputIterator( outputImage, outputImage->GetLargestPossibleRegion());
-
-    while( !inputIterator.IsAtEnd() )
-    {
-        outputIterator.Set( inputIterator.Get() );
-        ++inputIterator;
-        ++outputIterator;
-    }
+  // Override superclass and let elastix handle input verification
 }
 
 } // namespace elx
