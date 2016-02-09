@@ -31,7 +31,7 @@
 namespace elastix {
 
 template< typename TInputImage >
-class TransformixFilter : public itk::ImageSource< TInputImage >
+class TransformixFilter : public itk::ImageToImageFilter< TInputImage, TInputImage >
 {
 public:
 
@@ -39,7 +39,7 @@ public:
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
   itkNewMacro( Self );
-  itkTypeMacro( Self, itk::ImageSource );
+  itkTypeMacro( Self, itk::ImageToImageFilter );
 
   typedef elastix::TransformixMain                          TransformixMainType;
   typedef TransformixMainType::Pointer                      TransformixMainPointer;
@@ -61,6 +61,7 @@ public:
   itkStaticConstMacro( InputImageDimension, unsigned int, TInputImage::ImageDimension );
 
   void SetInputImage( InputImagePointer inputImage );
+  InputImagePointer GetInputImage( void );
 
   itkSetMacro( InputPointSetFileName, std::string );
   itkGetMacro( InputPointSetFileName, std::string );
@@ -106,6 +107,8 @@ public:
   itkSetMacro( LogToFile, bool );
   itkGetConstMacro( LogToFile, bool );
   itkBooleanMacro( LogToFile );
+
+  using itk::ProcessObject::GetInput;
 
 protected:
 
