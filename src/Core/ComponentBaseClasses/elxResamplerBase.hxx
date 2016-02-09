@@ -505,9 +505,6 @@ ResamplerBase< TElastix >
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter( resultImagePixelType,
     "ResultImagePixelType", 0, false );
-  std::basic_string< char >::size_type       pos  = resultImagePixelType.find( " " );
-  const std::basic_string< char >::size_type npos = std::basic_string< char >::npos;
-  if( pos != npos ) { resultImagePixelType.replace( pos, 1, "_" ); }
 
   /** Typedef's for writing the output image. */
   typedef itk::ChangeInformationImageFilter<
@@ -524,44 +521,100 @@ ResamplerBase< TElastix >
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( this->GetAsITKBaseType()->GetOutput() );
 
-  /** Casting of the image to the correct output itk::Image type. */
+  typedef itk::CastImageFilter< InputImageType,
+    itk::Image< char, InputImageType::ImageDimension > >            CastFilterChar;
+  typedef itk::CastImageFilter< InputImageType,
+    itk::Image< unsigned char, InputImageType::ImageDimension > >   CastFilterUChar;
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< short, InputImageType::ImageDimension > >           CastFilterShort;
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< unsigned short, InputImageType::ImageDimension > >  CastFilterUShort;
   typedef itk::CastImageFilter< InputImageType,
-    itk::Image< unsigned char, InputImageType::ImageDimension > >   CastFilterUChar;
+    itk::Image< int, InputImageType::ImageDimension > >             CastFilterInt;
+  typedef itk::CastImageFilter< InputImageType,
+    itk::Image< unsigned int, InputImageType::ImageDimension > >    CastFilterUInt;
+  typedef itk::CastImageFilter< InputImageType,
+    itk::Image< long, InputImageType::ImageDimension > >            CastFilterLong;
+  typedef itk::CastImageFilter< InputImageType,
+     itk::Image< unsigned long, InputImageType::ImageDimension > >  CastFilterULong;
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< float, InputImageType::ImageDimension > >           CastFilterFloat;
+  typedef itk::CastImageFilter< InputImageType,
+    itk::Image< double, InputImageType::ImageDimension > >          CastFilterDouble;
 
   /** cast the image to the correct output image Type */
-  if( resultImagePixelType.compare( "short" ) == 0 )
+  if( resultImagePixelType.compare( "char" ) == 0 ) {
+    typename CastFilterChar::Pointer castFilter = CastFilterChar::New();
+    castFilter->SetInput(infoChanger->GetOutput());
+    castFilter->Update();
+    resultImage = castFilter->GetOutput();
+  }
+  if( resultImagePixelType.compare( "unsigned char" ) == 0 ) {
+    typename CastFilterUChar::Pointer castFilter = CastFilterUChar::New();
+    castFilter->SetInput(infoChanger->GetOutput());
+    castFilter->Update();
+    resultImage = castFilter->GetOutput();
+  }
+  else if( resultImagePixelType.compare( "short" ) == 0 )
   {
     typename CastFilterShort::Pointer castFilter = CastFilterShort::New();
     castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
-  else if( resultImagePixelType == "ushort" ) // \todo: use compare()?
+  else if( resultImagePixelType.compare( "ushort" ) == 0 || resultImagePixelType.compare( "unsigned short"  ) ) // <-- ushort for backwards compatibility
   {
     typename CastFilterUShort::Pointer castFilter = CastFilterUShort::New();
     castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
-  else if( resultImagePixelType == "unsigned char" )
+  else if( resultImagePixelType.compare( "int" ) == 0 )
   {
-    typename CastFilterUChar::Pointer castFilter = CastFilterUChar::New();
+    typename CastFilterInt::Pointer castFilter = CastFilterInt::New();
     castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
-  else if( resultImagePixelType == "float" )
+  else if( resultImagePixelType.compare( "unsigned int" ) == 0 )
+  {
+    typename CastFilterUInt::Pointer castFilter = CastFilterUInt::New();
+    castFilter->SetInput( infoChanger->GetOutput() );
+    castFilter->Update();
+    resultImage = castFilter->GetOutput();
+  }
+  else if( resultImagePixelType.compare( "long" ) == 0 )
+  {
+    typename CastFilterLong::Pointer castFilter = CastFilterLong::New();
+    castFilter->SetInput( infoChanger->GetOutput() );
+    castFilter->Update();
+    resultImage = castFilter->GetOutput();
+  }
+  else if( resultImagePixelType.compare( "unsigned long" ) == 0 )
+  {
+    typename CastFilterULong::Pointer castFilter = CastFilterULong::New();
+    castFilter->SetInput( infoChanger->GetOutput() );
+    castFilter->Update();
+    resultImage = castFilter->GetOutput();
+  }
+  else if( resultImagePixelType.compare( "float" ) == 0 )
   {
     typename CastFilterFloat::Pointer castFilter = CastFilterFloat::New();
     castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
+  }
+  else if( resultImagePixelType.compare( "double" ) == 0 )
+  {
+    typename CastFilterDouble::Pointer castFilter = CastFilterDouble::New();
+    castFilter->SetInput( infoChanger->GetOutput() );
+    castFilter->Update();
+    resultImage = castFilter->GetOutput();
+  }
+
+  if( resultImage.IsNull() )
+  {
+    itkExceptionMacro( "Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned char\", \"short\", \"ushort\", \"unsigned_short\", \"int\", \"unsigned int\", \"long\", \"unsigned long\", \"float\" or \"double\" but was \"" << resultImagePixelType << "\"." );
   }
 
   //put image in container
