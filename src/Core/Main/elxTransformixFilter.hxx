@@ -201,6 +201,11 @@ TransformixFilter< TInputImage >
   if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
+
+    if( this->IsEmpty( static_cast< TInputImage* >( this->GetPrimaryOutput( ) ) ) )
+    {
+      itkExceptionMacro( "Result image is empty." );
+    }
   }
 
   // Override user settings  

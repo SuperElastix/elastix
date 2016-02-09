@@ -253,23 +253,20 @@ ElastixFilter< TFixedImage, TMovingImage >
     }
   } // End loop over registrations
 
+
   // Save result image
   if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
   {
     this->SetPrimaryOutput( resultImageContainer->ElementAt( 0 ) );
+
+    if( this->IsEmpty( static_cast< TFixedImage* >( this->GetPrimaryOutput( ) ) ) )
+    {
+      itkExceptionMacro( "Result image is empty (size: [0, 0])." );
+    }
   }
   else
   {
     itkExceptionMacro( "Errors occured during registration: Result image not available." );
-  }
-
-  // Assert that result is not empty
-  FixedImagePointer resultImage = static_cast< TFixedImage* >( this->GetPrimaryOutput() );
-  typename TFixedImage::RegionType region = resultImage->GetLargestPossibleRegion();
-  typename TFixedImage::SizeType size = region.GetSize();
-  if( size[ 0 ] == 0 && size[ 1 ] == 0 )
-  {
-    itkExceptionMacro( "Result image is empty (size: " << size << "." );
   }
 
   // Save parameter map
@@ -590,6 +587,16 @@ ElastixFilter< TFixedImage, TMovingImage >
       this->RemoveInput( inputNames[ i ] );
     }
   }
+}
+
+template< typename TFixedImage, typename TMovingImage >
+bool
+ElastixFilter< TFixedImage, TMovingImage >
+::IsEmpty( FixedImagePointer image )
+{
+  typename TFixedImage::RegionType region = image->GetLargestPossibleRegion();
+  typename TFixedImage::SizeType size = region.GetSize();
+  return size[ 0 ] == 0 && size[ 1 ] == 0;
 }
 
 template< typename TFixedImage, typename TMovingImage >

@@ -562,7 +562,7 @@ ResamplerBase< TElastix >
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
-  else if( resultImagePixelType.compare( "ushort" ) == 0 || resultImagePixelType.compare( "unsigned short"  ) ) // <-- ushort for backwards compatibility
+  else if( resultImagePixelType.compare( "ushort" ) == 0 || resultImagePixelType.compare( "unsigned short" ) == 0 ) // <-- ushort for backwards compatibility
   {
     typename CastFilterUShort::Pointer castFilter = CastFilterUShort::New();
     castFilter->SetInput( infoChanger->GetOutput() );
@@ -614,7 +614,7 @@ ResamplerBase< TElastix >
 
   if( resultImage.IsNull() )
   {
-    itkExceptionMacro( "Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned char\", \"short\", \"ushort\", \"unsigned_short\", \"int\", \"unsigned int\", \"long\", \"unsigned long\", \"float\" or \"double\" but was \"" << resultImagePixelType << "\"." );
+    itkExceptionMacro( "Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned char\", \"short\", \"ushort\", \"unsigned short\", \"int\", \"unsigned int\", \"long\", \"unsigned long\", \"float\" or \"double\" but was \"" << resultImagePixelType << "\"." );
   }
 
   //put image in container

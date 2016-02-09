@@ -148,6 +148,7 @@ private:
 
   bool IsInputType( DataObjectIdentifierType inputType, DataObjectIdentifierType inputName );
   void RemoveInputType( DataObjectIdentifierType inputName );
+  bool IsEmpty( FixedImagePointer image );
 
   void VerifyInputInformation( void ) ITK_OVERRIDE;
 
