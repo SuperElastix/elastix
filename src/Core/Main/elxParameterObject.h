@@ -60,7 +60,8 @@ public:
 
   void ReadParameterFile( const ParameterFileNameType parameterFileName );
   void ReadParameterFile( const ParameterFileNameVectorType parameterFileNameVector );
-
+  void AddParameterFile( const ParameterFileNameType parameterFileName );
+  
   void WriteParameterFile( const ParameterMapType parameterMap, const ParameterFileNameType parameterFileName );
   void WriteParameterFile( const ParameterFileNameType parameterFileName );
   void WriteParameterFile( const ParameterFileNameVectorType parameterFileNameVector );
