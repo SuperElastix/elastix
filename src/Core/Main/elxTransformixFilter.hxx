@@ -161,7 +161,7 @@ TransformixFilter< TInputImage >
   }
 
   // Get ParameterMap
-  ParameterObjectConstPointer transformParameterObject = static_cast< const ParameterObject* >( this->GetInput( "TransformParameterObject" ) );
+  ParameterObjectPointer transformParameterObject = static_cast< ParameterObject* >( this->GetInput( "TransformParameterObject" ) );
   ParameterMapVectorType transformParameterMapVector = transformParameterObject->GetParameterMap();
 
   // Assert user did not set empty parameter map
@@ -179,10 +179,6 @@ TransformixFilter< TInputImage >
     transformParameterMapVector[ i ][ "MovingImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
     transformParameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
   }
-
-  // Override user settings  
-  transformParameterObject->SetParameterMap( transformParameterMapVector );
-  this->SetTransformParameterObject( transformParameterObject );
 
   // Run transformix
   unsigned int isError = 0;
@@ -206,6 +202,10 @@ TransformixFilter< TInputImage >
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }
+
+  // Override user settings  
+  transformParameterObject->SetParameterMap( transformParameterMapVector );
+  this->SetTransformParameterObject( transformParameterObject );
 
   // Clean up
   TransformixMainType::UnloadComponents();

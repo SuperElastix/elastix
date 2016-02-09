@@ -116,7 +116,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
 
   // Set ParameterMap
-  ParameterObjectConstPointer parameterObject = static_cast< const ParameterObject* >( this->GetInput( "ParameterObject" ) );
+  ParameterObjectPointer parameterObject = static_cast< ParameterObject* >( this->GetInput( "ParameterObject" ) );
   ParameterMapVectorType parameterMapVector = parameterObject->GetParameterMap();
 
   if( parameterMapVector.size() == 0 )
@@ -264,7 +264,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
 
   // Assert that result is not empty
-  FixedImagePointer resultImage = dynamic_cast< TFixedImage* >( this->GetPrimaryOutput() );
+  FixedImagePointer resultImage = static_cast< TFixedImage* >( this->GetPrimaryOutput() );
   typename TFixedImage::RegionType region = resultImage->GetLargestPossibleRegion();
   typename TFixedImage::SizeType size = region.GetSize();
   if( size[ 0 ] == 0 && size[ 1 ] == 0 )
@@ -277,10 +277,10 @@ ElastixFilter< TFixedImage, TMovingImage >
   transformParameterObject->SetParameterMap( transformParameterMapVector );
   this->SetOutput( "TransformParameterObject", static_cast< itk::DataObject* >( transformParameterObject ) );
 
-  // Override user pixeltype settings
-  parameterObject->SetParameterMap( parameterMapVector);
+  // Save overriden pixel type settings
+  parameterObject->SetParameterMap( parameterMapVector );
   this->SetParameterObject( parameterObject );
-  
+
   // Close the modules
   ElastixMainType::UnloadComponents();
 }
