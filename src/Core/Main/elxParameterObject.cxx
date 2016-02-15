@@ -119,34 +119,55 @@ ParameterObject
 ::WriteParameterFile( const ParameterMapType parameterMap, const ParameterFileNameType parameterFileName )
 {
   std::ofstream parameterFile;
+  parameterFile.exceptions( ofstream::failbit | ofstream::badbit | ofstream::failure );
   parameterFile << std::fixed;
-  parameterFile.open( parameterFileName.c_str(), std::ofstream::out );
-  ParameterMapConstIterator parameterMapIterator = parameterMap.begin();
-  ParameterMapConstIterator parameterMapIteratorEnd = parameterMap.end();
-  while( parameterMapIterator != parameterMapIteratorEnd )
+
+  try
   {
-    parameterFile << "(" << parameterMapIterator->first;
-
-    ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
-    for( unsigned int i = 0; i < parameterMapValueVector.size(); ++i )
+    parameterFile.open( parameterFileName.c_str(), std::ofstream::out );
+  }
+  catch ( ofstream::failure e ) {
+    itkExceptionMacro( "Error opening parameter file: " << e );
+  }
+  
+  try
+  {
+    ParameterMapConstIterator parameterMapIterator = parameterMap.begin();
+    ParameterMapConstIterator parameterMapIteratorEnd = parameterMap.end();
+    while( parameterMapIterator != parameterMapIteratorEnd )
     {
-      std::stringstream stream( parameterMapValueVector[ i ] );
-      float number;
-      stream >> number;
-      if( stream.fail() || stream.bad() ) {
-         parameterFile << " \"" << parameterMapValueVector[ i ] << "\"";
-      }
-      else
-      {
-        parameterFile << " " << number;
-      }
-    }
+      parameterFile << "(" << parameterMapIterator->first;
 
-    parameterFile << ")" << std::endl;
-    parameterMapIterator++;
+      ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
+      for( unsigned int i = 0; i < parameterMapValueVector.size(); ++i )
+      {
+        std::stringstream stream( parameterMapValueVector[ i ] );
+        float number;
+        stream >> number;
+        if( stream.fail() || stream.bad() ) {
+           parameterFile << " \"" << parameterMapValueVector[ i ] << "\"";
+        }
+        else
+        {
+          parameterFile << " " << number;
+        }
+      }
+
+      parameterFile << ")" << std::endl;
+      parameterMapIterator++;
+    }
+  }
+  catch ( stringstream::failure e ) {
+    itkExceptionMacro( "Error writing to paramter file: " << e );
   }
 
-  parameterFile.close();
+  try
+  {
+    parameterFile.close();
+  }
+  catch ( ofstream::failure e ) {
+    itkExceptionMacro( "Error closing parameter file:" << e );
+  }
 }
 
 void
@@ -254,14 +275,14 @@ ParameterObject
     parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "512" );
   }
-  else if( transformName == "nonrigid" )
+  else if( transformName == "bspline" || transformName == "nonrigid" ) // <-- nonrigid for backwards compatibility
   {
     parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiMetricMultiResolutionRegistration" );
     parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "BSplineTransform" );
     parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "Metric" ].push_back( "TransformBendingEnergyPenalty" );
-    parameterMap[ "Metric0Weight" ]                    = ParameterValueVectorType( 1, "0.0001" );
-    parameterMap[ "Metric1Weight" ]                    = ParameterValueVectorType( 1, "0.9999" );
+    parameterMap[ "Metric0Weight" ]                    = ParameterValueVectorType( 1, "1.0" );
+    parameterMap[ "Metric1Weight" ]                    = ParameterValueVectorType( 1, "10000.0" );
     parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "512" );
   }
   else if( transformName == "groupwise" )

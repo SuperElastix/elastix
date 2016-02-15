@@ -58,11 +58,10 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::GenerateData( void )
 {
-  // TODO: Fix elastix destroying fixed image during registration so we 
-  // don't need to deep copy every fixed image before every registration
+  // TODO: Elastix destroys fixed image during registration so we 
+  // need to deep copy every fixed image before every registration :(
   typedef itk::ImageDuplicator< TFixedImage > DuplicatorType;
   typedef typename DuplicatorType::Pointer DuplicatorPointer;
-  DuplicatorPointer duplicator = DuplicatorType::New();
 
   // Initialize variables here so they don't go out of scope between iterations of the main loop
   ElastixMainObjectPointer    transform            = 0;
@@ -80,10 +79,10 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     if( this->IsInputType( "FixedImage", inputNames[ i ] ) )
     { 
+      DuplicatorPointer duplicator = DuplicatorType::New();
       duplicator->SetInputImage( static_cast< TFixedImage* >( this->ProcessObject::GetInput( inputNames[ i ] ) ) );
       duplicator->Update();
-
-      fixedImageContainer->push_back( this->GetInput( inputNames[ i ] ) );
+      fixedImageContainer->push_back( static_cast< itk::DataObject* >( duplicator->GetOutput() ) );
       continue;
     }
 
@@ -194,7 +193,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Run the (possibly multiple) registration(s)
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )
   {
-    // Instantiated pixeltypes are the groundtruth
+    // Instantiated template pixel types are groundtruth
     parameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
     parameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( FixedImageDimension ) );
     parameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TMovingImage::PixelType >::ToString() );
@@ -230,7 +229,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 
     if( isError != 0 )
     {
-      itkExceptionMacro( << "Uncought errors occurred during registration." );
+      itkExceptionMacro( << "Internal elastix error: See elastix log." );
     }
 
     // Get stuff in order to put it in the next registration
@@ -266,7 +265,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
   else
   {
-    itkExceptionMacro( "Errors occured during registration: Result image not available." );
+    itkExceptionMacro( "Errors occured during registration: Result not get result image." );
   }
 
   // Save parameter map
@@ -274,12 +273,9 @@ ElastixFilter< TFixedImage, TMovingImage >
   transformParameterObject->SetParameterMap( transformParameterMapVector );
   this->SetOutput( "TransformParameterObject", static_cast< itk::DataObject* >( transformParameterObject ) );
 
-  // Save overriden pixel type settings
+  // Override pixel types
   parameterObject->SetParameterMap( parameterMapVector );
   this->SetParameterObject( parameterObject );
-
-  // Close the modules
-  ElastixMainType::UnloadComponents();
 }
 
 template< typename TFixedImage, typename TMovingImage >

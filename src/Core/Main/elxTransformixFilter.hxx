@@ -173,6 +173,7 @@ TransformixFilter< TInputImage >
   // Instantiated pixel types are the groundtruth
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
+    // Instantiated template pixel types are groundtruth
     transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
     transformParameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
     transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
@@ -193,7 +194,7 @@ TransformixFilter< TInputImage >
 
   if( isError != 0 )
   {
-    itkExceptionMacro( "Uncought errors occured during registration." );
+    itkExceptionMacro( "Internal transformix error: See transformix log." );
   }
 
   // Save result image
@@ -204,16 +205,13 @@ TransformixFilter< TInputImage >
 
     if( this->IsEmpty( static_cast< TInputImage* >( this->GetPrimaryOutput( ) ) ) )
     {
-      itkExceptionMacro( "Result image is empty." );
+      itkExceptionMacro( "Result image is empty (size: [0, 0])." );
     }
   }
 
-  // Override user settings  
+  // Override pixel types
   transformParameterObject->SetParameterMap( transformParameterMapVector );
   this->SetTransformParameterObject( transformParameterObject );
-
-  // Clean up
-  TransformixMainType::UnloadComponents();
 }
 
 template< typename TInputImage >
