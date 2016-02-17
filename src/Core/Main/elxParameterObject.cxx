@@ -18,11 +18,15 @@
 #ifndef elxParameterObject_cxx
 #define elxParameterObject_cxx
 
-#include "itkFileTools.h"
-
 #include "elxParameterObject.h"
 
-namespace elastix {
+#include "itkFileTools.h"
+#include <fstream>
+#include <iostream>
+
+
+namespace elastix
+{
 
 void
 ParameterObject
@@ -119,17 +123,18 @@ ParameterObject
 ::WriteParameterFile( const ParameterMapType parameterMap, const ParameterFileNameType parameterFileName )
 {
   std::ofstream parameterFile;
-  parameterFile.exceptions( ofstream::failbit | ofstream::badbit | ofstream::failure );
+  parameterFile.exceptions( std::ofstream::failbit | std::ofstream::badbit );
   parameterFile << std::fixed;
 
   try
   {
     parameterFile.open( parameterFileName.c_str(), std::ofstream::out );
   }
-  catch ( ofstream::failure e ) {
-    itkExceptionMacro( "Error opening parameter file: " << e );
+  catch( std::ofstream::failure e )
+  {
+    itkExceptionMacro( "Error opening parameter file: " << e.what() );
   }
-  
+
   try
   {
     ParameterMapConstIterator parameterMapIterator = parameterMap.begin();
@@ -144,8 +149,9 @@ ParameterObject
         std::stringstream stream( parameterMapValueVector[ i ] );
         float number;
         stream >> number;
-        if( stream.fail() || stream.bad() ) {
-           parameterFile << " \"" << parameterMapValueVector[ i ] << "\"";
+        if( stream.fail() || stream.bad() )
+        {
+          parameterFile << " \"" << parameterMapValueVector[ i ] << "\"";
         }
         else
         {
@@ -157,16 +163,18 @@ ParameterObject
       parameterMapIterator++;
     }
   }
-  catch ( stringstream::failure e ) {
-    itkExceptionMacro( "Error writing to paramter file: " << e );
+  catch( std::stringstream::failure e )
+  {
+    itkExceptionMacro( "Error writing to paramter file: " << e.what() );
   }
 
   try
   {
     parameterFile.close();
   }
-  catch ( ofstream::failure e ) {
-    itkExceptionMacro( "Error closing parameter file:" << e );
+  catch( std::ofstream::failure e )
+  {
+    itkExceptionMacro( "Error closing parameter file:" << e.what() );
   }
 }
 
