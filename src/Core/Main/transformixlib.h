@@ -23,29 +23,8 @@
  */
 #include <itkDataObject.h>
 #include "itkParameterFileParser.h"
+#include "elxMacro.h"
 
-/********************************************************************************
- *                    *
- *      Dll export    *
- *                    *
- ********************************************************************************/
-#if ( defined( _WIN32 ) || defined( WIN32 ) )
-#  ifdef _ELASTIX_BUILD_LIBRARY
-#    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
-#      define TRANSFORMIXLIB_API __declspec( dllexport )
-#    else
-#      define TRANSFORMIXLIB_API __declspec( dllimport )
-#    endif
-#  else
-#    define TRANSFORMIXLIB_API __declspec( dllexport )
-#  endif
-#else
-#  if __GNUC__ >= 4
-#    define TRANSFORMIXLIB_API __attribute__ ( ( visibility( "default" ) ) )
-#  else
-#    define TRANSFORMIXLIB_API
-#  endif
-#endif
 
 /********************************************************************************
  *                          *
@@ -55,7 +34,7 @@
 namespace transformix
 {
 
-class TRANSFORMIXLIB_API TRANSFORMIX
+class ELASTIXLIB_API TRANSFORMIX
 {
 public:
 

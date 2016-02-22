@@ -23,29 +23,8 @@
  */
 #include <itkDataObject.h>
 #include "itkParameterFileParser.h"
+#include "elxMacro.h"
 
-/********************************************************************************
- *                    *
- *      Dll export    *
- *                    *
- ********************************************************************************/
-#if ( defined( _WIN32 ) || defined( WIN32 ) )
-#  ifdef _ELASTIX_BUILD_LIBRARY
-#    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
-#      define ELASTIXLIB_API __declspec( dllexport )
-#    else
-#      define ELASTIXLIB_API __declspec( dllimport )
-#    endif
-#  else
-#    define ELASTIXLIB_API __declspec( dllexport )
-#  endif
-#else
-#  if __GNUC__ >= 4
-#    define ELASTIXLIB_API __attribute__ ( ( visibility( "default" ) ) )
-#  else
-#    define ELASTIXLIB_API
-#  endif
-#endif
 
 /********************************************************************************
  *                          *

@@ -20,12 +20,14 @@
 
 #include "itkObjectFactory.h"
 #include "itkDataObject.h"
+#include "elxMacro.h"
 
 #include "itkParameterFileParser.h"
 
-namespace elastix {
+namespace elastix
+{
 
-class ParameterObject : public itk::DataObject
+class ELASTIXLIB_API ParameterObject : public itk::DataObject
 {
 public:
   typedef ParameterObject                 Self;
