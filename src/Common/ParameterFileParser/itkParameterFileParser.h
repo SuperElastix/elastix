@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __itkParameterFileParser_h
 #define __itkParameterFileParser_h
 

@@ -8,7 +8,7 @@ set( param_SRCS
 
 source_group( "Parser" FILES ${param_SRCS} )
 
-add_library( param ${param_SRCS} )
+add_library( param STATIC ${param_SRCS} )
 
 target_link_libraries( param ${ITK_LIBRARIES} )
 
