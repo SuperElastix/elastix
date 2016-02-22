@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __itkNDImageTemplate_h
 #define __itkNDImageTemplate_h
 
