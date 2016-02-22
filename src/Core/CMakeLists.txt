@@ -89,7 +89,7 @@ source_group( "ProgressCommand" FILES ${ProgressCommandFiles} )
 #---------------------------------------------------------------------
 # Create the elxCore library.
 
-add_library( elxCore
+add_library( elxCore STATIC
   ${KernelFilesForComponents}
   ${InstallFilesForComponents}
   ${ConfigurationFiles}
@@ -122,27 +122,17 @@ if( ELASTIX_BUILD_EXECUTABLE )
     ${InstallFilesForExecutables}
   )
 else()
-  if( ELASTIX_BUILD_SHARED_LIBS )
-    add_library( elastix SHARED
-      Main/elxParameterObject.cxx
-      Main/elxParameterObject.h
-      Main/elastixlib.cxx
-      Main/elastixlib.h
-      Kernel/elxElastixMain.cxx
-      Kernel/elxElastixMain.h
-      ${InstallFilesForExecutables}
-    )
-  else()
-    add_library( elastix STATIC
-      Main/elxParameterObject.cxx
-      Main/elxParameterObject.h
-      Main/elastixlib.cxx
-      Main/elastixlib.h
-      Kernel/elxElastixMain.cxx
-      Kernel/elxElastixMain.h
-      ${InstallFilesForExecutables}
-    )
-  endif()
+  # The library type (STATIC or SHARED) is determined by the parameter
+  # BUILD_SHARED_LIBS, which is determined by ELASTIX_BUILD_SHARED_LIBS.
+  add_library( elastix
+    Main/elxParameterObject.cxx
+    Main/elxParameterObject.h
+    Main/elastixlib.cxx
+    Main/elastixlib.h
+    Kernel/elxElastixMain.cxx
+    Kernel/elxElastixMain.h
+    ${InstallFilesForExecutables}
+  )
 endif()
 
 #---------------------------------------------------------------------
@@ -159,31 +149,19 @@ if( ELASTIX_BUILD_EXECUTABLE )
     ${InstallFilesForExecutables}
   )
 else()
-  if( ELASTIX_BUILD_SHARED_LIBS )
-    add_library( transformix SHARED
-      Main/elxParameterObject.cxx
-      Main/elxParameterObject.h
-      Main/transformixlib.cxx
-      Main/transformixlib.h
-      Kernel/elxElastixMain.cxx
-      Kernel/elxElastixMain.h
-      Kernel/elxTransformixMain.cxx
-      Kernel/elxTransformixMain.h
-      ${InstallFilesForExecutables}
-    )
-  else()
-    add_library( transformix STATIC
-      Main/elxParameterObject.cxx
-      Main/elxParameterObject.h
-      Main/transformixlib.cxx
-      Main/transformixlib.h
-      Kernel/elxElastixMain.cxx
-      Kernel/elxElastixMain.h
-      Kernel/elxTransformixMain.cxx
-      Kernel/elxTransformixMain.h
-      ${InstallFilesForExecutables}
-    )
-  endif()
+  # The library type (STATIC or SHARED) is determined by the parameter
+  # BUILD_SHARED_LIBS, which is determined by ELASTIX_BUILD_SHARED_LIBS.
+  add_library( transformix
+    Main/elxParameterObject.cxx
+    Main/elxParameterObject.h
+    Main/transformixlib.cxx
+    Main/transformixlib.h
+    Kernel/elxElastixMain.cxx
+    Kernel/elxElastixMain.h
+    Kernel/elxTransformixMain.cxx
+    Kernel/elxTransformixMain.h
+    ${InstallFilesForExecutables}
+  )
 endif()
 
 #---------------------------------------------------------------------
