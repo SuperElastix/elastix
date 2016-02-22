@@ -25,6 +25,16 @@ if( NOT ELASTIX_BUILD_EXECUTABLE )
   option( ELASTIX_BUILD_SHARED_LIBS "Build shared libraries?" OFF )
   if( ELASTIX_BUILD_SHARED_LIBS )
     add_definitions( -D_ELASTIX_BUILD_SHARED_LIBRARY )
+
+    # We need to make sure that also the ITK is compiled with shared
+    # libraries on. Related to flag (ITK_)BUILD_SHARED_LIBS. todo
+
+    # In order to compile a shared library, all static sub-libraries
+    # need to build position independend code.
+    # Otherwise an error similar to the following is raised:
+    #   relocation R_X86_64_32S against `.bss' can not be used when
+    #   making a shared object; recompile with -fPIC
+    set( CMAKE_POSITION_INDEPENDENT_CODE ON )
   endif()
 endif()
 
