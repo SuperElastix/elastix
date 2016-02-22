@@ -164,7 +164,7 @@ source_group( "ImageSamplers" FILES ${ImageSamplersFiles} )
 #---------------------------------------------------------------------
 # Create the elxCommon library.
 
-add_library( elxCommon
+add_library( elxCommon STATIC
   ${MaskFiles}
   ${CommonFiles}
   ${CostFunctionFiles}

@@ -40,7 +40,7 @@ set( ANN_SRCS
 )
 
 # Create the ANNlib library
-add_library( ANNlib SHARED ${ANN_SRCS} )
+add_library( ANNlib STATIC ${ANN_SRCS} )
 
 # Necessary, because in windows dll_export is needed for creating the
 # dll, but dll_import for using it in a program.
@@ -52,11 +52,13 @@ set_property( TARGET ANNlib PROPERTY FOLDER "libraries" )
 # Install
 if( WIN32 )
   install( TARGETS ANNlib
+    ARCHIVE DESTINATION .
     RUNTIME DESTINATION .
     LIBRARY DESTINATION . )
     #COMPONENT libraries )
 else()
   install( TARGETS ANNlib
+    ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib )
     #COMPONENT libraries )

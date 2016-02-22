@@ -18,7 +18,7 @@ set( xouthfiles
   xoutcell.h )
 
 # a lib defining the global variable xout.
-add_library( xoutlib xoutmain.cxx ${xouthxxfiles} ${xouthfiles} )
+add_library( xoutlib STATIC xoutmain.cxx ${xouthxxfiles} ${xouthfiles} )
 
 # Group in IDE's like Visual Studio
 set_property( TARGET xoutlib PROPERTY FOLDER "libraries" )

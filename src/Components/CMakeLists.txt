@@ -125,7 +125,7 @@ macro( ADD_ELXCOMPONENT name )
     set( filelist ${ARGN} )
     list( REMOVE_ITEM filelist "ON" "OFF" )
 
-    # Create project and library
+    # Create project and static library
     project( ${name} )
     add_library( ${name} STATIC ${filelist} )
     target_link_libraries( ${name} ${elxLinkLibs} )

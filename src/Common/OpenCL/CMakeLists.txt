@@ -53,7 +53,7 @@ set( OpenCL_Files
 )
 
 # Create the openCL library
-add_library( elxOpenCL ${OpenCL_Files} )
+add_library( elxOpenCL STATIC ${OpenCL_Files} )
 
 # Link it against the necessary libraries.
 target_link_libraries( elxOpenCL

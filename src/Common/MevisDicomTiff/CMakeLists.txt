@@ -3,7 +3,7 @@ project( MevisDicomTiff )
 
 if( ELASTIX_USE_MEVISDICOMTIFF )
   add_definitions( -D_ELASTIX_USE_MEVISDICOMTIFF )
-  add_library( mevisdcmtiff
+  add_library( mevisdcmtiff STATIC
     itkMevisDicomTiffImageIO.cxx
     itkMevisDicomTiffImageIOFactory.cxx
     itkUseMevisDicomTiff.cxx
@@ -11,7 +11,7 @@ if( ELASTIX_USE_MEVISDICOMTIFF )
 else()
   # avoid dependencies, but compile the lib, so that customers of this
   # lib can just call RegisterMevisDicomTiff without checking.
-  add_library( mevisdcmtiff
+  add_library( mevisdcmtiff STATIC
     itkUseMevisDicomTiff.cxx
   )
 endif()

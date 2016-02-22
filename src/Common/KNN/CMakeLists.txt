@@ -33,7 +33,7 @@ set( KNN_Files
 add_subdirectory( ann_1.1 )
 
 # Create the KNN library
-add_library( KNNlib ${KNN_Files} )
+add_library( KNNlib STATIC ${KNN_Files} )
 
 # Link it against the necessary libraries.
 target_link_libraries( KNNlib ANNlib ${ITK_LIBRARIES} )
