@@ -27,7 +27,11 @@
 namespace elastix
 {
 
-class ELASTIXLIB_API ParameterObject : public itk::DataObject
+// TODO: Why does the compiler not see ELASTIXLIB_API declspec in elxMacro.h?
+//   error: variable has incomplete type 'class ELASTIXLIB_API'
+// with class ELASTIXLIB_API ParameterObject : public itk::DataObject
+
+class ParameterObject : public itk::DataObject
 {
 public:
   typedef ParameterObject                 Self;

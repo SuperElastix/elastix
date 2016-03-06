@@ -71,6 +71,11 @@ public:
   itkStaticConstMacro( FixedImageDimension, unsigned int, TFixedImage::ImageDimension );
   itkStaticConstMacro( MovingImageDimension, unsigned int, TMovingImage::ImageDimension );
 
+  typedef itk::Image< unsigned char, FixedImageDimension >    FixedMaskType;
+  typedef typename FixedMaskType::Pointer                     FixedMaskPointer;
+  typedef itk::Image< unsigned char, MovingImageDimension >   MovingMaskType;
+  typedef typename MovingMaskType::Pointer                    MovingMaskPointer;
+
   void SetFixedImage( FixedImagePointer fixedImage );
   void SetFixedImage( DataObjectContainerPointer fixedImages );
   void AddFixedImage( FixedImagePointer fixedImage );
@@ -79,14 +84,14 @@ public:
   void SetMovingImage( DataObjectContainerPointer movingImages );
   void AddMovingImage( MovingImagePointer movingImage );
 
-  void SetFixedMask( FixedImagePointer fixedMask );
+  void SetFixedMask( FixedMaskPointer fixedMask );
   void SetFixedMask( DataObjectContainerPointer fixedMasks );
-  void AddFixedMask( FixedImagePointer fixedMask );
+  void AddFixedMask( FixedMaskPointer fixedMask );
   void RemoveFixedMask( void );
 
-  void SetMovingMask( MovingImagePointer movingMask );
+  void SetMovingMask( MovingMaskPointer movingMask );
   void SetMovingMask( DataObjectContainerPointer movingMasks );
-  void AddMovingMask( MovingImagePointer movingMask );
+  void AddMovingMask( MovingMaskPointer movingMask );
   void RemoveMovingMask( void );
 
   void SetParameterObject( ParameterObjectPointer parameterObject );
@@ -145,6 +150,7 @@ private:
   ElastixFilter();
 
   void AddInputAndAutoIncrementName( DataObjectIdentifierType key, itk::DataObject* input );
+  unsigned int GetInputUID( void );
 
   bool IsInputType( DataObjectIdentifierType inputType, DataObjectIdentifierType inputName );
   void RemoveInputType( DataObjectIdentifierType inputName );
@@ -167,6 +173,8 @@ private:
 
   bool m_LogToConsole;
   bool m_LogToFile;
+
+  unsigned int m_InputUID;
 
 };
 
