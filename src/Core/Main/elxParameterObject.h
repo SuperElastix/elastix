@@ -69,12 +69,12 @@ public:
   void WriteParameterFile( const ParameterFileNameVectorType parameterFileNameVector );
 
   // Default parameter maps
-  void SetParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 3u, const double finalGridSpacingInPhysicalUnits = 10.0 );
-  void AddParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 3u, const double finalGridSpacingInPhysicalUnits = 10.0 );
-  ParameterMapType GetParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 3u, const double finalGridSpacingInPhysicalUnits = 10.0 );
+  void SetParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 4u, const double finalGridSpacingInPhysicalUnits = 10.0 );
+  void AddParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 4u, const double finalGridSpacingInPhysicalUnits = 10.0 );
+  ParameterMapType GetParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 4u, const double finalGridSpacingInPhysicalUnits = 10.0 );
 
-  // C++11 has a to_string in the standard library, but it is undesirable to
-  // introduce a C++11 dependency for a simple number to string helper function
+  // C++11 has a to_string in the standard library, but we avoid
+  // introducing C++11 dependency for this function
   template< typename T >
   static std::string ToString( const T& n )
   {

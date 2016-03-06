@@ -236,10 +236,10 @@ ParameterObject
   // Common Components
   parameterMap[ "FixedImagePyramid" ]                  = ParameterValueVectorType( 1, "FixedSmoothingImagePyramid" );
   parameterMap[ "MovingImagePyramid" ]                 = ParameterValueVectorType( 1, "MovingSmoothingImagePyramid" );
-  parameterMap[ "Interpolator"]                        = ParameterValueVectorType( 1, "LinearInterpolator");
+  parameterMap[ "Interpolator"]                        = ParameterValueVectorType( 1, "LinearInterpolator" );
   parameterMap[ "Optimizer" ]                          = ParameterValueVectorType( 1, "AdaptiveStochasticGradientDescent" );
-  parameterMap[ "Resampler"]                           = ParameterValueVectorType( 1, "DefaultResampler" );
-  parameterMap[ "ResampleInterpolator"]                = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
+  parameterMap[ "Resampler" ]                          = ParameterValueVectorType( 1, "DefaultResampler" );
+  parameterMap[ "ResampleInterpolator" ]               = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
   parameterMap[ "FinalBSplineInterpolationOrder" ]     = ParameterValueVectorType( 1, "3" );
   parameterMap[ "NumberOfResolutions" ]                = ParameterValueVectorType( 1, ToString( numberOfResolutions ) );
 
@@ -248,7 +248,7 @@ ParameterObject
   parameterMap[ "NumberOfSpatialSamples"]              = ParameterValueVectorType( 1, "2048" );
   parameterMap[ "CheckNumberOfSamples" ]               = ParameterValueVectorType( 1, "true" );
   parameterMap[ "MaximumNumberOfSamplingAttempts" ]    = ParameterValueVectorType( 1, "8" );
-  parameterMap[ "NewSamplesEveryIteration" ]           = ParameterValueVectorType( 1, "true");
+  parameterMap[ "NewSamplesEveryIteration" ]           = ParameterValueVectorType( 1, "true" );
 
   // Optimizer
   parameterMap[ "NumberOfSamplesForExactGradient" ]    = ParameterValueVectorType( 1, "4096" );
@@ -267,7 +267,7 @@ ParameterObject
     parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
     parameterMap[ "AutomaticTransformInitialization" ] = ParameterValueVectorType( 1, "true" );
-    parameterMap[ "AutomaticTransformInitializationMethod" ] = ParameterValueVectorType( 1, "CenterOfGravity" );
+    parameterMap[ "AutomaticTransformInitializationMethod" ] = ParameterValueVectorType( 1, "GeometricalCenter" );
   }
   else if( transformName == "rigid" )
   {
@@ -281,7 +281,7 @@ ParameterObject
     parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
     parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "AffineTransform" );
     parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
-    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "512" );
+    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
   }
   else if( transformName == "bspline" || transformName == "nonrigid" ) // <-- nonrigid for backwards compatibility
   {
@@ -291,14 +291,21 @@ ParameterObject
     parameterMap[ "Metric" ].push_back( "TransformBendingEnergyPenalty" );
     parameterMap[ "Metric0Weight" ]                    = ParameterValueVectorType( 1, "1.0" );
     parameterMap[ "Metric1Weight" ]                    = ParameterValueVectorType( 1, "10000.0" );
-    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "512" );
+    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
+  }
+  else if( transformName == "spline")   
+  {   
+    parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiResolutionRegistration" );    
+    parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "SplineKernelTransform" );    
+    parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );    
+    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
   }
   else if( transformName == "groupwise" )
   {
     parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
     parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "BSplineStackTransform" );
     parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "VarianceOverLastDimensionMetric" );
-    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "512" );
+    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
     parameterMap[ "Interpolator"]                      = ParameterValueVectorType( 1, "ReducedDimensionBSplineInterpolator" );
     parameterMap[ "ResampleInterpolator" ]             = ParameterValueVectorType( 1, "FinalReducedDimensionBSplineInterpolator" );
   }
@@ -308,12 +315,12 @@ ParameterObject
   }
 
   // B-spline transform settings
-  if( transformName == "nonrigid" || transformName == "groupwise" )
+  if( transformName == "bspline" || transformName == "nonrigid" || transformName == "groupwise" ) // <-- nonrigid for backwards compatibility
   {
     ParameterValueVectorType gridSpacingSchedule = ParameterValueVectorType();
     for( unsigned int resolution = 0; resolution < numberOfResolutions; ++resolution )
     {
-      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( pow( 2, resolution ) ) );
+      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( pow( 1.41, resolution ) ) );
     }
 
     parameterMap[ "GridSpacingSchedule" ] = gridSpacingSchedule;
@@ -326,33 +333,3 @@ ParameterObject
 } // namespace elastix
 
 #endif // elxParameterObject_cxx
-
-// http://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file
-// TODO: Implement exception handling for parameter file reader/writer, rethrow itk exception
-// int main () {
-//   ifstream file;
-//   file.exceptions ( ifstream::failbit | ifstream::badbit );
-//   try {
-//     file.open ("test.txt");
-//     while (!file.eof()) file.get();
-//   }
-//   catch ( ifstream::failure e ) {
-//     cout << "Exception opening/reading file";
-//   }
-//   file.close();
-//   return 0;
-// }
-
-// int main () {
-//   ofstream file;
-//   file.exceptions ( ofstream::failbit | ofstream::badbit | ofstream::failure );
-//   try {
-//     file.open ("test.txt");
-//     while (!file.eof()) file.get();
-//   }
-//   catch (ifstream::failure e) {
-//     cout << "Exception opening/reading file";
-//   }
-//   file.close();
-//   return 0;
-// }
