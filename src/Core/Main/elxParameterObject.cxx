@@ -318,7 +318,7 @@ ParameterObject
   if( transformName == "bspline" || transformName == "nonrigid" || transformName == "groupwise" ) // <-- nonrigid for backwards compatibility
   {
     ParameterValueVectorType gridSpacingSchedule = ParameterValueVectorType();
-    for( unsigned int resolution = 0; resolution < numberOfResolutions; ++resolution )
+    for( double resolution = 0; resolution < numberOfResolutions; ++resolution )
     {
       gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( pow( 1.41, resolution ) ) );
     }

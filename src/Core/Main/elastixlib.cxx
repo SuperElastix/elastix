@@ -37,6 +37,7 @@
 #include <itksys/SystemInformation.hxx>
 
 #include "itkTimeProbe.h"
+#include <time.h>
 
 namespace elastix
 {
