@@ -49,8 +49,8 @@ public:
   typedef BaseComponent   Superclass;
 
   /** Elastix typedef's. */
-  typedef TElastix                      ElastixType;
-  typedef typename ElastixType::Pointer ElastixPointer;
+  typedef TElastix                         ElastixType;
+  typedef itk::WeakPointer< ElastixType >  ElastixPointer;
 
   /** ConfigurationType. */
   typedef typename ElastixType::ConfigurationType    ConfigurationType;
