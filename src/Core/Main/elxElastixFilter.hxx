@@ -82,9 +82,9 @@ ElastixFilter< TFixedImage, TMovingImage >
       FixedImagePointer fixedImage = static_cast< TFixedImage* >( this->ProcessObject::GetInput( inputNames[ i ] ) );
       fixedImage->Update();
 
-      typedef itk::ImageDuplicator< TFixedImage > DuplicatorType;
-      typedef typename DuplicatorType::Pointer DuplicatorPointer;
-      DuplicatorPointer duplicator = DuplicatorType::New();
+      typedef itk::ImageDuplicator< TFixedImage > ImageDuplicatorType;
+      typedef typename ImageDuplicatorType::Pointer ImageDuplicatorPointer;
+      ImageDuplicatorPointer duplicator = ImageDuplicatorType::New();
       duplicator->SetInputImage( fixedImage );
       duplicator->Update();
 
@@ -105,7 +105,18 @@ ElastixFilter< TFixedImage, TMovingImage >
         fixedMaskContainer = DataObjectContainerType::New();
       }
 
-      fixedMaskContainer->push_back( this->GetInput( inputNames[ i ] ) );
+      // TODO: Elastix destroys fixed mask after registration so we 
+      // need to deep copy every fixed mask before every registration :(
+      FixedMaskPointer fixedMask = static_cast< FixedMaskType* >( this->ProcessObject::GetInput( inputNames[ i ] ) );
+      fixedMask->Update();
+
+      typedef itk::ImageDuplicator< FixedMaskType > MaskDuplicatorType;
+      typedef typename MaskDuplicatorType::Pointer MaskDuplicatorPointer;
+      MaskDuplicatorPointer duplicator = MaskDuplicatorType::New();
+      duplicator->SetInputImage( fixedMask );
+      duplicator->Update();
+
+      fixedMaskContainer->push_back( static_cast< itk::DataObject* >( duplicator->GetOutput() ) );
       continue;
     }
 
