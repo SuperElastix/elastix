@@ -266,8 +266,6 @@ ParameterObject
     parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "TranslationTransform" );
     parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
-    parameterMap[ "AutomaticTransformInitialization" ] = ParameterValueVectorType( 1, "true" );
-    parameterMap[ "AutomaticTransformInitializationMethod" ] = ParameterValueVectorType( 1, "GeometricalCenter" );
   }
   else if( transformName == "rigid" )
   {
