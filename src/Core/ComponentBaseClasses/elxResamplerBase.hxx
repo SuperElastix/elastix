@@ -215,10 +215,23 @@ ResamplerBase< TElastix >
   this->m_Configuration->ReadParameter(
     writeResultImage, "WriteResultImage", 0 );
 
+#ifdef _ELASTIX_BUILD_LIBRARY
+  /** The library interface may executed multiple times in 
+   * a session in which case the images should not be released
+   */ 
+  bool releaseMemoryBeforeResampling = false;
+#else
   /** Release memory to be able to resample in case a limited
    * amount of memory is available.
    */
-  this->ReleaseMemory();
+  bool releaseMemoryBeforeResampling = true;
+#endif
+
+  this->m_Configuration->ReadParameter(releaseMemoryBeforeResampling, "ReleaseMemoryBeforeResampling", 0, false );
+  if( releaseMemoryBeforeResampling )
+  {
+    this->ReleaseMemory();
+  }
 
   /**
    * Create the result image and put it in ResultImageContainer
