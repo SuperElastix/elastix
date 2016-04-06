@@ -364,12 +364,7 @@ if( Doxygen_FOUND )
       string( REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP} )
     endif()
   endif()
-
-  # Configure the doxygen configuration
-  configure_file(
-    ${ELASTIX_DOXYGEN_DIR}/doxyfile.in
-    ${ELASTIX_HELP_DIR}/doxyfile.out @ONLY )
-
+      
   # Configure the footer of the help website.
   configure_file(
     ${ELASTIX_DOXYGEN_DIR}/DoxygenFooter.html.in

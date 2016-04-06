@@ -57,12 +57,12 @@ TransformixFilter< TInputImage >
   {
     typename TInputImage::RegionType region = static_cast< TInputImage* >( this->GetInput( "InputImage" ) )->GetLargestPossibleRegion();
     typename TInputImage::SizeType size = region.GetSize();
-    itkExceptionMacro( "Expected InputImage (size: " << size << ") or "
-                    << "SetInputPointSetFileName() (path: \"" << this->GetInputPointSetFileName() << "\") to be non-empty or "
-                    << "ComputeSpatialJacobian (bool: " << this->GetComputeSpatialJacobian() << "), "
-                    << "ComputeDeterminantOfSpatialJacobian (bool: " << this->GetComputeDeterminantOfSpatialJacobian() << "), "
-                    << "ComputeDeformationField (bool: " << this->GetComputeDeformationField() << "), "
-                    << "to be 1.\"" );
+    itkExceptionMacro( "Expected at least one of SetInputImage(), "
+                    << "SetInputPointSetFileName() "
+                    << "ComputeSpatialJacobianOn(), "
+                    << "ComputeDeterminantOfSpatialJacobianOn() or "
+                    << "ComputeDeformationFieldOn(), "
+                    << "to be set.\"" );
   }
 
   // Only the input "InputImage" does not require an output directory
@@ -173,7 +173,7 @@ TransformixFilter< TInputImage >
   // Instantiated pixel types are the groundtruth
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
-    // Instantiated template pixel types are groundtruth
+    // Set pixel types from input image, override user settings
     transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
     transformParameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
     transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
@@ -208,10 +208,6 @@ TransformixFilter< TInputImage >
       itkExceptionMacro( "Result image is empty (size: [0, 0])." );
     }
   }
-
-  // Override pixel types
-  transformParameterObject->SetParameterMap( transformParameterMapVector );
-  this->SetTransformParameterObject( transformParameterObject );
 }
 
 template< typename TInputImage >

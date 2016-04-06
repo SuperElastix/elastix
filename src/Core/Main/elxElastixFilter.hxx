@@ -77,18 +77,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     if( this->IsInputType( "FixedImage", inputNames[ i ] ) )
     {
-      // TODO: Elastix destroys fixed image after registration so we 
-      // need to deep copy every fixed image before every registration :(
-      FixedImagePointer fixedImage = static_cast< TFixedImage* >( this->ProcessObject::GetInput( inputNames[ i ] ) );
-      fixedImage->Update();
-
-      typedef itk::ImageDuplicator< TFixedImage > ImageDuplicatorType;
-      typedef typename ImageDuplicatorType::Pointer ImageDuplicatorPointer;
-      ImageDuplicatorPointer duplicator = ImageDuplicatorType::New();
-      duplicator->SetInputImage( fixedImage );
-      duplicator->Update();
-
-      fixedImageContainer->push_back( static_cast< itk::DataObject* >( duplicator->GetOutput() ) );
+      fixedImageContainer->push_back( this->GetInput( inputNames[ i ] ) );
       continue;
     }
 
@@ -105,18 +94,7 @@ ElastixFilter< TFixedImage, TMovingImage >
         fixedMaskContainer = DataObjectContainerType::New();
       }
 
-      // TODO: Elastix destroys fixed mask after registration so we 
-      // need to deep copy every fixed mask before every registration :(
-      FixedMaskPointer fixedMask = static_cast< FixedMaskType* >( this->ProcessObject::GetInput( inputNames[ i ] ) );
-      fixedMask->Update();
-
-      typedef itk::ImageDuplicator< FixedMaskType > MaskDuplicatorType;
-      typedef typename MaskDuplicatorType::Pointer MaskDuplicatorPointer;
-      MaskDuplicatorPointer duplicator = MaskDuplicatorType::New();
-      duplicator->SetInputImage( fixedMask );
-      duplicator->Update();
-
-      fixedMaskContainer->push_back( static_cast< itk::DataObject* >( duplicator->GetOutput() ) );
+      fixedMaskContainer->push_back( this->GetInput( inputNames[ i ] ) );
       continue;
     }
 
@@ -210,7 +188,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Run the (possibly multiple) registration(s)
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )
   {
-    // Instantiated template pixel types are groundtruth
+    // Set pixel types from input images, override user settings
     parameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
     parameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( FixedImageDimension ) );
     parameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TMovingImage::PixelType >::ToString() );
@@ -277,25 +255,16 @@ ElastixFilter< TFixedImage, TMovingImage >
   if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
   {
     this->SetPrimaryOutput( resultImageContainer->ElementAt( 0 ) );
-
-    if( this->IsEmpty( static_cast< TFixedImage* >( this->GetPrimaryOutput( ) ) ) )
-    {
-      itkExceptionMacro( "Result image is empty (size: [0, 0])." );
-    }
   }
   else
   {
-    itkExceptionMacro( "Errors occured during registration: Result not get result image." );
+    itkExceptionMacro( "Errors occured during registration: Could not read result image." );
   }
 
-  // Save parameter map
+  // Save transform parameter map
   ParameterObject::Pointer transformParameterObject = ParameterObject::New();
   transformParameterObject->SetParameterMap( transformParameterMapVector );
   this->SetOutput( "TransformParameterObject", static_cast< itk::DataObject* >( transformParameterObject ) );
-
-  // Override pixel types
-  parameterObject->SetParameterMap( parameterMapVector );
-  this->SetParameterObject( parameterObject );
 }
 
 template< typename TFixedImage, typename TMovingImage >
