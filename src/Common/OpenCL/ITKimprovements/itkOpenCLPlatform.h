@@ -104,6 +104,10 @@ public:
   /** Returns the name of the vendor of this OpenCL platform. */
   std::string GetVendor() const;
 
+  /** Returns the OpenCLPlatform::VendorType of the vendor of this OpenCL platform.
+   * \sa OpenCLPlatform::VendorType */
+  VendorType GetVendorType() const;
+
   /** Returns the vendor extension suffix for this platform if the
    * \c{cl_khr_icd} extension is supported; an empty string otherwise. */
   std::string GetExtensionSuffix() const;
@@ -171,6 +175,8 @@ operator<<( std::basic_ostream< charT, traits > & strm,
       strm << "1.2"; break;
     case VERSION_2_0:
       strm << "2.0"; break;
+    case VERSION_2_1:
+      strm << "2.1"; break;
     default:
       strm << "Unknown"; break;
   }

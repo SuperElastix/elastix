@@ -84,6 +84,34 @@ OpenCLPlatform::GetVendor() const
 
 
 //------------------------------------------------------------------------------
+OpenCLPlatform::VendorType
+OpenCLPlatform::GetVendorType() const
+{
+  const std::string vendorName = opencl_simplified( this->GetVendor() );
+  if( vendorName.compare( 0, 20, "Intel(R) Corporation" ) == 0 )
+  {
+    return OpenCLPlatform::Intel;
+  }
+  else if( vendorName.compare( 0, 18, "NVIDIA Corporation" ) == 0 )
+  {
+    return OpenCLPlatform::NVidia;
+  }
+  else if( vendorName.compare( 0, 28, "Advanced Micro Devices, Inc." ) == 0 )
+  {
+    return OpenCLPlatform::AMD;
+  }
+  else if( vendorName.compare( 0, 3, "IBM" ) == 0 )
+  {
+    return OpenCLPlatform::IBM;
+  }
+  else
+  {
+    return OpenCLPlatform::Default;
+  }
+}
+
+
+//------------------------------------------------------------------------------
 std::string
 OpenCLPlatform::GetExtensionSuffix() const
 {
