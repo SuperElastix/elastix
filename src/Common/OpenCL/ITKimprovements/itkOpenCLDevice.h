@@ -534,6 +534,8 @@ operator<<( std::basic_ostream< charT, traits > & strm,
       strm << "1.2"; break;
     case VERSION_2_0:
       strm << "2.0"; break;
+    case VERSION_2_1:
+      strm << "2.1"; break;
     default:
       strm << "Unknown"; break;
   }

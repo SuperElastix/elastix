@@ -36,12 +36,14 @@ namespace itk
  * \value VERSION_1_1 OpenCL 1.1 is supported.
  * \value VERSION_1_2 OpenCL 1.2 is supported.
  * \value VERSION_2_0 OpenCL 2.0 is supported.
+ * \value VERSION_2_1 OpenCL 2.1 is supported.
  */
 enum OpenCLVersion {
   VERSION_1_0 = 0x0001,
   VERSION_1_1 = 0x0002,
   VERSION_1_2 = 0x0003,
-  VERSION_2_0 = 0x0004
+  VERSION_2_0 = 0x0004,
+  VERSION_2_1 = 0x0005
 };
 } // end namespace itk
 
