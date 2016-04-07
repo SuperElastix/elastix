@@ -51,6 +51,15 @@ GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensio
   // Define visitor and perform factory registration
   typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 1 > visitor;
   visitor( *this );
+
+  // Perform extra factory registration with float for the output type
+  const bool outputHasFloat = typelist::HasType< TTypeListOut, float >::Type;
+  if( !outputHasFloat )
+  {
+    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
+    typelist::DualVisitDimension< TTypeListIn, FloatTypeList, 1 > visitor1;
+    visitor1( *this );
+  }
 }
 
 
@@ -63,6 +72,15 @@ GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensio
   // Define visitor and perform factory registration
   typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 2 > visitor;
   visitor( *this );
+
+  // Perform extra factory registration with float for the output type
+  const bool outputHasFloat = typelist::HasType< TTypeListOut, float >::Type;
+  if( !outputHasFloat )
+  {
+    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
+    typelist::DualVisitDimension< TTypeListIn, FloatTypeList, 2 > visitor1;
+    visitor1( *this );
+  }
 }
 
 
@@ -75,6 +93,15 @@ GPUBSplineDecompositionImageFilterFactory2< TTypeListIn, TTypeListOut, NDimensio
   // Define visitor and perform factory registration
   typelist::DualVisitDimension< TTypeListIn, TTypeListOut, 3 > visitor;
   visitor( *this );
+
+  // Perform extra factory registration with float for the output type
+  const bool outputHasFloat = typelist::HasType< TTypeListOut, float >::Type;
+  if( !outputHasFloat )
+  {
+    typedef typelist::MakeTypeList< float >::Type FloatTypeList;
+    typelist::DualVisitDimension< TTypeListIn, FloatTypeList, 3 > visitor1;
+    visitor1( *this );
+  }
 }
 
 
