@@ -193,7 +193,7 @@ MovingImagePyramidBase< TElastix >
 
   /** Do the writing. */
   xl::xout[ "coutonly" ] << std::flush;
-  xl::xout[ "coutonly" ] << "  Writing image ..." << std::endl;
+  xl::xout[ "coutonly" ] << "  Writing moving pyramid image ..." << std::endl;
   try
   {
     writer->Update();

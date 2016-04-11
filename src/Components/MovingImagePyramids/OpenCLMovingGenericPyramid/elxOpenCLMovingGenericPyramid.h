@@ -128,6 +128,9 @@ private:
   /** Helper method to report switching to CPU mode. */
   void SwitchingToCPUAndReport( const bool configError );
 
+  /** Helper method to report to elastix log. */
+  void ReportToLog( void );
+
   GPUPyramidPointer                       m_GPUPyramid;
   bool                                    m_GPUPyramidReady;
   bool                                    m_GPUPyramidCreated;

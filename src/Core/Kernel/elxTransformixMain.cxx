@@ -72,13 +72,23 @@ TransformixMain::Run( void )
 
   /** Create OpenCL context and logger here. */
 #ifdef ELASTIX_USE_OPENCL
-  std::string errorMessage = "";
-  bool errorCreatingContext = itk::CreateOpenCLContext( errorMessage );
-  if( errorCreatingContext )
+  /** Check if user overrides OpenCL device selection. */
+  std::string userSuppliedOpenCLDeviceType = "GPU";
+  this->m_Configuration->ReadParameter( userSuppliedOpenCLDeviceType,
+    "OpenCLDeviceType", 0, false );
+
+  int userSuppliedOpenCLDeviceID = -1;
+  this->m_Configuration->ReadParameter( userSuppliedOpenCLDeviceID,
+    "OpenCLDeviceID", 0, false );
+
+  std::string errorMessage              = "";
+  const bool  creatingContextSuccessful = itk::CreateOpenCLContext(
+    errorMessage, userSuppliedOpenCLDeviceType, userSuppliedOpenCLDeviceID );
+  if( !creatingContextSuccessful )
   {
     /** Report and disable the GPU by releasing the context. */
     elxout << errorMessage << std::endl;
-    elxout << "OpenCL processing is disabled." << std::endl;
+    elxout << "  OpenCL processing in transformix is disabled." << std::endl << std::endl;
 
     itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
     context->Release();

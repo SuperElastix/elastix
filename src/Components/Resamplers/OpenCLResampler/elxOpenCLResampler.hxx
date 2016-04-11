@@ -257,6 +257,8 @@ OpenCLResampler< TElastix >
   //itk::GPUExplicitSync< GPUResamplerType, GPUOutputImageType >( this->m_GPUResampler, false );
   this->GraftOutput( this->m_GPUResampler->GetOutput() );
 
+  // Report OpenCL device to the log
+  this->ReportToLog();
 } // end GenerateData()
 
 
@@ -340,6 +342,22 @@ OpenCLResampler< TElastix >
   this->m_GPUResamplerReady = false;
 
 } // end SwitchingToCPUAndReport()
+
+
+/**
+ * ************************* ReportToLog ************************************
+ */
+
+template< class TElastix >
+void
+OpenCLResampler< TElastix >
+::ReportToLog( void )
+{
+  itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
+  itk::OpenCLDevice           device  = context->GetDefaultDevice();
+  elxout << "  Applying final transform was performed by "
+         <<  device.GetName() << " from " << device.GetVendor() << "." << std::endl;
+} // end ReportToLog()
 
 
 } // end namespace elastix

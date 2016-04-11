@@ -188,7 +188,7 @@ FixedImagePyramidBase< TElastix >
 
   /** Do the writing. */
   xl::xout[ "coutonly" ] << std::flush;
-  xl::xout[ "coutonly" ] << "  Writing image ..." << std::endl;
+  xl::xout[ "coutonly" ] << "  Writing fixed pyramid image ..." << std::endl;
   try
   {
     writer->Update();

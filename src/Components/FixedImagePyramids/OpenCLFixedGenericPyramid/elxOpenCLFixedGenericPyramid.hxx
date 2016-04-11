@@ -175,6 +175,8 @@ OpenCLFixedGenericPyramid< TElastix >
   // Graft output
   this->GraftOutput( this->m_GPUPyramid->GetOutput() );
 
+  // Report OpenCL device to the log
+  this->ReportToLog();
 } // end GenerateData()
 
 
@@ -312,6 +314,22 @@ OpenCLFixedGenericPyramid< TElastix >
   this->m_GPUPyramidReady = false;
 
 } // end SwitchingToCPUAndReport()
+
+
+/**
+ * ************************* ReportToLog ************************************
+ */
+
+template< class TElastix >
+void
+OpenCLFixedGenericPyramid< TElastix >
+::ReportToLog( void )
+{
+  itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
+  itk::OpenCLDevice           device  = context->GetDefaultDevice();
+  elxout << "  Fixed pyramid was computed by "
+         <<  device.GetName() << " from " << device.GetVendor() << ".";
+} // end ReportToLog()
 
 
 } // end namespace elastix

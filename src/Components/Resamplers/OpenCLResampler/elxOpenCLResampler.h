@@ -163,6 +163,9 @@ private:
   /** Helper method to report switching to CPU mode. */
   void SwitchingToCPUAndReport( const bool configError );
 
+  /** Helper method to report to elastix log. */
+  void ReportToLog( void );
+
   TransformCopierPointer   m_TransformCopier;
   InterpolateCopierPointer m_InterpolatorCopier;
   GPUResamplerPointer      m_GPUResampler;
