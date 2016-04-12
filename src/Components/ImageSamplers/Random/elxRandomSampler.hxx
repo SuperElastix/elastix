@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __elxRandomSampler_hxx
 #define __elxRandomSampler_hxx
 

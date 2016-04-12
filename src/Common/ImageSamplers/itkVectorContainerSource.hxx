@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkVectorContainerSource_txx
-#define __itkVectorContainerSource_txx
+#ifndef __itkVectorContainerSource_hxx
+#define __itkVectorContainerSource_hxx
 
 #include "itkVectorContainerSource.h"
 
@@ -152,4 +152,4 @@ VectorContainerSource< TOutputVectorContainer >
 
 } // end namespace itk
 
-#endif // end #ifndef __itkVectorContainerSource_txx
+#endif // end #ifndef __itkVectorContainerSource_hxx

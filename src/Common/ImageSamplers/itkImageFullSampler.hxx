@@ -15,9 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
-#ifndef __ImageFullSampler_txx
-#define __ImageFullSampler_txx
+#ifndef __ImageFullSampler_hxx
+#define __ImageFullSampler_hxx
 
 #include "itkImageFullSampler.h"
 
@@ -244,4 +243,4 @@ ImageFullSampler< TInputImage >
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageFullSampler_txx
+#endif // end #ifndef __ImageFullSampler_hxx

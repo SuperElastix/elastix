@@ -35,8 +35,10 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef _itkVectorDataContainer_txx
-#define _itkVectorDataContainer_txx
+#ifndef _itkVectorDataContainer_hxx
+#define _itkVectorDataContainer_hxx
+
+
 #include "itkVectorDataContainer.h"
 
 #include "itkNumericTraits.h"

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __ImageGridSampler_txx
-#define __ImageGridSampler_txx
+#ifndef __ImageGridSampler_hxx
+#define __ImageGridSampler_hxx
 
 #include "itkImageGridSampler.h"
 
@@ -300,4 +300,4 @@ ImageGridSampler< TInputImage >
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageGridSampler_txx
+#endif // end #ifndef __ImageGridSampler_hxx

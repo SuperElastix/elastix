@@ -91,7 +91,7 @@ RandomCoordinateSampler< TElastix >
       sampleRegionSize[ i ] = vnl_math_min( maxthird, sampleRegionSize[ i ] );
     }
 
-    /** Read user's choice. */
+    /** Read and check user's choice. */
     for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
       this->GetConfiguration()->ReadParameter(
@@ -99,6 +99,20 @@ RandomCoordinateSampler< TElastix >
         this->GetComponentLabel(), level * InputImageDimension + i, 0 );
     }
     this->SetSampleRegionSize( sampleRegionSize );
+
+    for( unsigned int i = 0; i < InputImageDimension; ++i )
+    {
+      if( sampleRegionSize[ i ] > ( fixedImageSize[ i ] - 1 ) * fixedImageSpacing[ i ] )
+      {
+        itkExceptionMacro( << "ERROR: in your parameter file you selected\n"
+          << "  SampleRegionSize[ " << i << " ] = " << sampleRegionSize[ i ]
+          << " mm,\n  while the fixed image size at dim = " << i
+          << " is " << fixedImageSize[ i ] << " voxels or "
+          << fixedImageSize[ i ] * fixedImageSpacing[ i ] << " mm.\n"
+          << "  Please select a smaller SampleRegionSize!\n"
+          << "  It is recommended to be not larger than 1/3 of the image size in mm.");
+      }
+    }
   }
 
 } // end BeforeEachResolution()
