@@ -18,8 +18,6 @@
 #ifndef elxElastixFilter_hxx
 #define elxElastixFilter_hxx
 
-#include "itkImageDuplicator.h"
-
 namespace elastix
 {
 
@@ -37,20 +35,19 @@ ElastixFilter< TFixedImage, TMovingImage >
   this->m_FixedImageContainer = DataObjectContainerType::New();
   this->m_MovingImageContainer = DataObjectContainerType::New();
 
-  this->m_FixedPointSetFileName = "";
-  this->m_MovingPointSetFileName = "";
+  this->SetFixedPointSetFileName( "" );
+  this->SetMovingPointSetFileName( "" );
 
-  this->m_OutputDirectory = ".";
-  this->m_LogFileName = "";
+  this->SetOutputDirectory( "." );
+  this->SetLogFileName( "" );
 
   this->LogToConsoleOff();
   this->LogToFileOff();
 
   ParameterObjectPointer defaultParameterObject = ParameterObject::New();
   defaultParameterObject->AddParameterMap( "translation" );
-  defaultParameterObject->AddParameterMap( "rigid" );
   defaultParameterObject->AddParameterMap( "affine" );
-  defaultParameterObject->AddParameterMap( "nonrigid" );
+  defaultParameterObject->AddParameterMap( "bspline" );
   this->SetParameterObject( defaultParameterObject );
 
   this->m_InputUID = 0;
@@ -172,7 +169,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     if( this->GetLogFileName().empty() )
     {
-      logFileName = this->GetOutputDirectory() + "transformix.log";
+      logFileName = this->GetOutputDirectory() + "elastix.log";
     }
     else
     {
@@ -189,11 +186,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )
   {
     // Set pixel types from input images, override user settings
-    parameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
+    parameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelType< typename TFixedImage::PixelType >::ToString() );
     parameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( FixedImageDimension ) );
-    parameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TMovingImage::PixelType >::ToString() );
+    parameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelType< typename TMovingImage::PixelType >::ToString() );
     parameterMapVector[ i ][ "MovingImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( MovingImageDimension ) );
-    parameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TFixedImage::PixelType >::ToString() );
+    parameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1, PixelType< typename TFixedImage::PixelType >::ToString() );
 
     // Create new instance of ElastixMain
     ElastixMainPointer elastix = ElastixMainType::New();
@@ -254,7 +251,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Save result image
   if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
   {
-    this->SetPrimaryOutput( resultImageContainer->ElementAt( 0 ) );
+    this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }
   else
   {
@@ -283,21 +280,22 @@ ElastixFilter< TFixedImage, TMovingImage >
   return static_cast< ParameterObject* >( this->GetInput( "ParameterObject" ) );
 }
 
-template< typename TFixedImage, typename TMovingImage >
-typename ElastixFilter< TFixedImage, TMovingImage >::FixedImagePointer
-ElastixFilter< TFixedImage, TMovingImage >
-::GetOutput( void )
-{
-  this->Update();
-  return static_cast< TFixedImage* >( itk::ProcessObject::GetOutput( "ResultImage" ) );
-}
+// template< typename TFixedImage, typename TMovingImage >
+// typename ElastixFilter< TFixedImage, TMovingImage >::FixedImagePointer
+// ElastixFilter< TFixedImage, TMovingImage >
+// ::GetOutput( void )
+// {
+//   // TODO: We should not have to override GetOutput from superclass. This is a bug.
+//   this->Update();
+//   return static_cast< TFixedImage* >( itk::ProcessObject::GetOutput( "ResultImage" ) );
+// }
 
 template< typename TFixedImage, typename TMovingImage >
 typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectPointer
 ElastixFilter< TFixedImage, TMovingImage >
 ::GetTransformParameterObject( void )
 {
-  // Make sure the transform parameters are up to date
+  // The transform parameters are not the primary output so we have to manually ensure they are up to date
   this->Update();
   return static_cast< ParameterObject* >( itk::ProcessObject::GetOutput( "TransformParameterObject" ) );
 }
@@ -337,7 +335,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 
   while( fixedImageIterator != fixedImages->End() )
   {
-    this->AddInputAndAutoIncrementName( "FixedImage", fixedImageIterator->Value() );
+    this->SetInputWithUniqueName( "FixedImage", fixedImageIterator->Value() );
     ++fixedImageIterator;
   }
 }
@@ -353,7 +351,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
   else
   {
-    this->AddInputAndAutoIncrementName( "FixedImage", static_cast< itk::DataObject* >( fixedImage ) );
+    this->SetInputWithUniqueName( "FixedImage", static_cast< itk::DataObject* >( fixedImage ) );
   }
 }
 
@@ -392,7 +390,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 
   while( movingImageIterator != movingImages->End() )
   {
-    this->AddInputAndAutoIncrementName( "MovingImage", static_cast< itk::DataObject* >( movingImageIterator->Value() ) );
+    this->SetInputWithUniqueName( "MovingImage", static_cast< itk::DataObject* >( movingImageIterator->Value() ) );
     ++movingImageIterator;
   }
 }
@@ -408,7 +406,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
   else
   {
-    this->AddInputAndAutoIncrementName( "MovingImage", static_cast< itk::DataObject* >( movingImage ) );
+    this->SetInputWithUniqueName( "MovingImage", static_cast< itk::DataObject* >( movingImage ) );
   }
 }
 
@@ -440,7 +438,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   DataObjectContainerIterator fixedMaskIterator = fixedMasks->Begin();
   while( fixedMaskIterator != fixedMasks->End() )
   {
-    this->AddInputAndAutoIncrementName( "FixedMask", fixedMaskIterator->Value() );
+    this->SetInputWithUniqueName( "FixedMask", fixedMaskIterator->Value() );
     ++fixedMaskIterator;
   }
 }
@@ -450,7 +448,7 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::AddFixedMask( FixedMaskPointer fixedMask )
 {
-  this->AddInputAndAutoIncrementName( "FixedMask", static_cast< itk::DataObject* >( fixedMask ) );
+  this->SetInputWithUniqueName( "FixedMask", static_cast< itk::DataObject* >( fixedMask ) );
 }
 
 template< typename TFixedImage, typename TMovingImage >
@@ -488,7 +486,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   DataObjectContainerIterator movingMaskIterator = movingMasks->Begin();
   while( movingMaskIterator != movingMasks->End() )
   {
-    this->AddInputAndAutoIncrementName( "MovingMask", movingMaskIterator->Value() );
+    this->SetInputWithUniqueName( "MovingMask", movingMaskIterator->Value() );
     ++movingMaskIterator;
   }
 }
@@ -498,7 +496,7 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::AddMovingMask( MovingMaskPointer movingMask )
 {
-  this->AddInputAndAutoIncrementName( "MovingMask", static_cast< itk::DataObject* >( movingMask ) );
+  this->SetInputWithUniqueName( "MovingMask", static_cast< itk::DataObject* >( movingMask ) );
 }
 
 template< typename TFixedImage, typename TMovingImage >
@@ -513,7 +511,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 template< typename TFixedImage, typename TMovingImage >
 void
 ElastixFilter< TFixedImage, TMovingImage >
-::AddInputAndAutoIncrementName( DataObjectIdentifierType inputName, itk::DataObject* input )
+::SetInputWithUniqueName( DataObjectIdentifierType inputName, itk::DataObject* input )
 {
   inputName += "_" + ParameterObject::ToString( this->m_InputUID++ );
   this->SetInput( inputName, input );
@@ -550,14 +548,6 @@ ElastixFilter< TFixedImage, TMovingImage >
   typename TFixedImage::RegionType region = image->GetLargestPossibleRegion();
   typename TFixedImage::SizeType size = region.GetSize();
   return size[ 0 ] == 0 && size[ 1 ] == 0;
-}
-
-template< typename TFixedImage, typename TMovingImage >
-void
-ElastixFilter< TFixedImage, TMovingImage >
-::VerifyInputInformation()
-{
-  // Override superclass and let elastix handle input verification
 }
 
 } // namespace elx
