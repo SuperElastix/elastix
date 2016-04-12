@@ -22,7 +22,7 @@
 
 #include "elxTransformixMain.h"
 #include "elxParameterObject.h"
-#include "elxPixelTypeName.h"
+#include "elxPixelType.h"
 
 /**
  * Transformix library exposed as an ITK filter.
@@ -31,15 +31,16 @@
 namespace elastix {
 
 template< typename TInputImage >
-class TransformixFilter : public itk::ImageToImageFilter< TInputImage, TInputImage >
+class TransformixFilter : public itk::ImageSource< TInputImage >
 {
 public:
 
   typedef TransformixFilter               Self;
+  typedef itk::ImageSource< TInputImage > Superclass; 
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
   itkNewMacro( Self );
-  itkTypeMacro( Self, itk::ImageToImageFilter );
+  itkTypeMacro( Self, itk::ImageSource );
 
   typedef elastix::TransformixMain                          TransformixMainType;
   typedef TransformixMainType::Pointer                      TransformixMainPointer;
@@ -60,12 +61,13 @@ public:
 
   itkStaticConstMacro( InputImageDimension, unsigned int, TInputImage::ImageDimension );
 
-  void SetInputImage( InputImagePointer inputImage );
-  InputImagePointer GetInputImage( void );
+  void SetInput( InputImagePointer inputImage );
+  InputImagePointer GetInput( void );
+  void RemoveInput( void );
 
   itkSetMacro( InputPointSetFileName, std::string );
   itkGetMacro( InputPointSetFileName, std::string );
-  void RemoveInputPointSetFileName() { this->m_InputPointSetFileName = std::string(); };
+  void RemoveInputPointSetFileName() { this->SetInputPointSetFileName( "" ); };
 
   itkSetMacro( ComputeSpatialJacobian, bool );
   itkGetConstMacro( ComputeSpatialJacobian, bool );
@@ -84,19 +86,18 @@ public:
 
   itkSetMacro( OutputDirectory, std::string );
   itkGetConstMacro( OutputDirectory, std::string );
-  void RemoveOutputDirectory() { this->m_OutputDirectory = std::string(); };
+  void RemoveOutputDirectory() { this->SetOutputDirectory( "" ); };
 
   void SetLogFileName( std::string logFileName )
   {
     this->m_LogFileName = logFileName;
     this->LogToFileOn();
-    this->Modified();
   }
 
   itkGetConstMacro( LogFileName, std::string );
 
   void RemoveLogFileName( void ) {
-    this->m_LogFileName = std::string();
+    this->SetLogFileName( "" );
     this->LogToFileOff();
   };
 
@@ -108,15 +109,19 @@ public:
   itkGetConstMacro( LogToFile, bool );
   itkBooleanMacro( LogToFile );
 
-  using itk::ProcessObject::GetInput;
-
 protected:
 
   void GenerateData( void ) ITK_OVERRIDE;
 
 private:
 
-  TransformixFilter();
+  using itk::ProcessObject::SetInput;
+  using itk::ProcessObject::GetInput;
+
+  TransformixFilter( void );
+
+  TransformixFilter( const Self & );
+  void operator=( const Self & );
 
   bool IsEmpty( InputImagePointer inputImage );
 
@@ -130,7 +135,6 @@ private:
 
   bool          m_LogToConsole;
   bool          m_LogToFile;
-
 
 };
 

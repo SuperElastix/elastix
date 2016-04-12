@@ -26,6 +26,7 @@ TransformixFilter< TInputImage >
 ::TransformixFilter( void )
 {
   this->AddRequiredInputName( "TransformParameterObject" );
+  this->SetInput( TInputImage::New() );
 
   this->SetPrimaryInputName( "InputImage" );
   this->SetPrimaryOutputName( "ResultImage" );
@@ -40,8 +41,6 @@ TransformixFilter< TInputImage >
 
   this->LogToConsoleOff();
   this->LogToFileOff();
-
-  this->SetInputImage( TInputImage::New() );
 }
 
 template< typename TInputImage >
@@ -55,8 +54,6 @@ TransformixFilter< TInputImage >
       !this->GetComputeDeterminantOfSpatialJacobian() &&
       !this->GetComputeDeformationField() )
   {
-    typename TInputImage::RegionType region = static_cast< TInputImage* >( this->GetInput( "InputImage" ) )->GetLargestPossibleRegion();
-    typename TInputImage::SizeType size = region.GetSize();
     itkExceptionMacro( "Expected at least one of SetInputImage(), "
                     << "SetInputPointSetFileName() "
                     << "ComputeSpatialJacobianOn(), "
@@ -77,7 +74,7 @@ TransformixFilter< TInputImage >
   }
 
   // Check if output directory exists
-  if( !this->GetOutputDirectory().empty() && !itksys::SystemTools::FileExists( this->GetOutputDirectory() ) )
+  if( !itksys::SystemTools::FileExists( this->GetOutputDirectory() ) )
   {
     itkExceptionMacro( "Output directory \"" << this->GetOutputDirectory() << "\" does not exist." )
   }
@@ -174,11 +171,11 @@ TransformixFilter< TInputImage >
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
     // Set pixel types from input image, override user settings
-    transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
+    transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelType< typename TInputImage::PixelType >::ToString() );
     transformParameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
-    transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
+    transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelType< typename TInputImage::PixelType >::ToString() );
     transformParameterMapVector[ i ][ "MovingImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
-    transformParameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1, PixelTypeName< typename TInputImage::PixelType >::ToString() );
+    transformParameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1, PixelType< typename TInputImage::PixelType >::ToString() );
   }
 
   // Run transformix
@@ -202,18 +199,13 @@ TransformixFilter< TInputImage >
   if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
-
-    if( this->IsEmpty( static_cast< TInputImage* >( this->GetPrimaryOutput( ) ) ) )
-    {
-      itkExceptionMacro( "Result image is empty (size: [0, 0])." );
-    }
   }
 }
 
 template< typename TInputImage >
 void
 TransformixFilter< TInputImage >
-::SetInputImage( InputImagePointer inputImage )
+::SetInput( InputImagePointer inputImage )
 {
   this->SetInput( "InputImage", static_cast< itk::DataObject* >( inputImage ) );
 }
@@ -221,9 +213,17 @@ TransformixFilter< TInputImage >
 template< typename TInputImage >
 typename TransformixFilter< TInputImage >::InputImagePointer
 TransformixFilter< TInputImage >
-::GetInputImage( void )
+::GetInput( void )
 {
   return static_cast< TInputImage* >( this->GetInput( "InputImage" ) );
+}
+
+template< typename TInputImage >
+void
+TransformixFilter< TInputImage >
+::RemoveInput( void )
+{
+  this->SetInput( TInputImage::New() );
 }
 
 template< typename TInputImage >
@@ -247,9 +247,14 @@ bool
 TransformixFilter< TInputImage >
 ::IsEmpty( InputImagePointer inputImage )
 {
-  typename TInputImage::RegionType region = inputImage->GetLargestPossibleRegion();
-  typename TInputImage::SizeType size = region.GetSize();
-  return size[ 0 ] == 0 && size[ 1 ] == 0;
+  if( inputImage.IsNotNull() )
+  {
+    typename TInputImage::RegionType region = inputImage->GetLargestPossibleRegion();
+    typename TInputImage::SizeType size = region.GetSize();
+    return size[ 0 ] == 0 && size[ 1 ] == 0;
+  }
+
+  itkExceptionMacro( "Input image is null." );
 }
 
 } // namespace elx
