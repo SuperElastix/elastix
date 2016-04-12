@@ -18,11 +18,11 @@
 #ifndef elxElastixFilter_h
 #define elxElastixFilter_h
 
-#include "itkImageToImageFilter.h"
+#include "itkImageSource.h"
 
 #include "elxElastixMain.h"
 #include "elxParameterObject.h"
-#include "elxPixelTypeName.h"
+#include "elxPixelType.h"
 
 /**
  * Elastix registration library exposed as an ITK filter.
@@ -32,15 +32,16 @@ namespace elastix
 {
 
 template< typename TFixedImage, typename TMovingImage >
-class ElastixFilter : public itk::ImageToImageFilter< TFixedImage, TFixedImage >
+class ElastixFilter : public itk::ImageSource< TFixedImage >
 {
 public:
 
   typedef ElastixFilter                   Self;
+  // typedef itk::ImageSource< TFixedImage > Superclass; 
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
   itkNewMacro( Self );
-  itkTypeMacro( Self, itk::ImageToImageFilter );
+  itkTypeMacro( Self, itk::ImageSource );
 
   typedef elastix::ElastixMain                                ElastixMainType;
   typedef ElastixMainType::Pointer                            ElastixMainPointer;
@@ -101,19 +102,19 @@ public:
   // TODO: Pass transform object instead of reading from disk
   itkSetMacro( InitialTransformParameterFileName, std::string );
   itkGetConstMacro( InitialTransformParameterFileName, std::string );
-  void RemoveInitialTransformParameterFileName( void ) { this->SetInitialTransformParameterFileName( std::string() ); };
+  void RemoveInitialTransformParameterFileName( void ) { this->SetInitialTransformParameterFileName( "" ); };
 
   itkSetMacro( FixedPointSetFileName, std::string );
   itkGetConstMacro( FixedPointSetFileName, std::string );
-  void RemoveFixedPointSetFileName( void ) { this->SetFixedPointSetFileName( std::string() ); };
+  void RemoveFixedPointSetFileName( void ) { this->SetFixedPointSetFileName( "" ); };
 
   itkSetMacro( MovingPointSetFileName, std::string );
   itkGetConstMacro( MovingPointSetFileName, std::string );
-  void RemoveMovingPointSetFileName( void ) { this->SetMovingPointSetFileName( std::string() ); };
+  void RemoveMovingPointSetFileName( void ) { this->SetMovingPointSetFileName( "" ); };
 
   itkSetMacro( OutputDirectory, std::string );
   itkGetConstMacro( OutputDirectory, std::string );
-  void RemoveOutputDirectory() { this->m_OutputDirectory = std::string(); };
+  void RemoveOutputDirectory() { this->SetOutputDirectory( "" ); };
 
   void SetLogFileName( std::string logFileName )
   {
@@ -124,7 +125,7 @@ public:
   itkGetConstMacro( LogFileName, std::string );
 
   void RemoveLogFileName( void ) {
-    this->m_LogFileName = std::string();
+    this->SetLogFileName( "" );
     this->LogToFileOff();
   };
 
@@ -136,10 +137,8 @@ public:
   itkGetConstMacro( LogToFile, bool );
   itkBooleanMacro( LogToFile );
 
-  using itk::ProcessObject::GetInput;
-
   // TODO: We should not have to override GetOutput from superclass. This is a bug.
-  FixedImagePointer GetOutput( void );
+  // FixedImagePointer GetOutput( void );
 
 protected:
 
@@ -147,16 +146,20 @@ protected:
 
 private:
 
-  ElastixFilter();
+  // using itk::ProcessObject::GetInput;
 
-  void AddInputAndAutoIncrementName( DataObjectIdentifierType key, itk::DataObject* input );
-  unsigned int GetInputUID( void );
+  ElastixFilter( void );
 
+  ElastixFilter( const Self & );
+  void operator=( const Self & );
+
+  void SetInputWithUniqueName( DataObjectIdentifierType key, itk::DataObject* input );
   bool IsInputType( DataObjectIdentifierType inputType, DataObjectIdentifierType inputName );
   void RemoveInputType( DataObjectIdentifierType inputName );
   bool IsEmpty( FixedImagePointer image );
 
-  void VerifyInputInformation( void ) ITK_OVERRIDE;
+  // Let elastix handle input verification internally
+  void VerifyInputInformation( void ) ITK_OVERRIDE {};
 
   // TODO: When set to true, ReleaseDataFlag should also touch these containers
   DataObjectContainerPointer m_FixedImageContainer;
