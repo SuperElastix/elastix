@@ -15,15 +15,15 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef elxPixelTypeName_h
-#define elxPixelTypeName_h
+#ifndef elxPixelType_h
+#define elxPixelType_h
 
 namespace elastix {
 // PixelType traits for writing types as strings to parameter files
 
 // Default implementation
 template < typename T >
-struct PixelTypeName
+struct PixelType
 {
   static const char* ToString()
   {
@@ -32,7 +32,7 @@ struct PixelTypeName
 };
 
 template <>
-struct PixelTypeName< char >
+struct PixelType< char >
 {
   static const char* ToString()
   {
@@ -41,7 +41,7 @@ struct PixelTypeName< char >
 };
 
 template <>
-struct PixelTypeName< unsigned char >
+struct PixelType< unsigned char >
 {
   static const char* ToString()
   {
@@ -50,7 +50,7 @@ struct PixelTypeName< unsigned char >
 };
 
 template <>
-struct PixelTypeName< short >
+struct PixelType< short >
 {
   static const char* ToString()
   {
@@ -59,7 +59,7 @@ struct PixelTypeName< short >
 };
 
 template <>
-struct PixelTypeName< unsigned short >
+struct PixelType< unsigned short >
 {
   static const char* ToString()
   {
@@ -68,7 +68,7 @@ struct PixelTypeName< unsigned short >
 };
 
 template <>
-struct PixelTypeName< int >
+struct PixelType< int >
 {
   static const char* ToString()
   {
@@ -77,7 +77,7 @@ struct PixelTypeName< int >
 };
 
 template <>
-struct PixelTypeName< unsigned int >
+struct PixelType< unsigned int >
 {
   static const char* ToString()
   {
@@ -86,7 +86,7 @@ struct PixelTypeName< unsigned int >
 };
 
 template <>
-struct PixelTypeName< long >
+struct PixelType< long >
 {
   static const char* ToString()
   {
@@ -95,7 +95,7 @@ struct PixelTypeName< long >
 };
 
 template <>
-struct PixelTypeName< unsigned long >
+struct PixelType< unsigned long >
 {
   static const char* ToString()
   {
@@ -104,7 +104,7 @@ struct PixelTypeName< unsigned long >
 };
 
 template <>
-struct PixelTypeName< float >
+struct PixelType< float >
 {
   static const char* ToString()
   {
@@ -113,7 +113,7 @@ struct PixelTypeName< float >
 };
 
 template <>
-struct PixelTypeName< double >
+struct PixelType< double >
 {
   static const char* ToString()
   {
@@ -123,4 +123,4 @@ struct PixelTypeName< double >
 
 }
 
-#endif // elxPixelTypeName_h
+#endif // elxPixelType_h
