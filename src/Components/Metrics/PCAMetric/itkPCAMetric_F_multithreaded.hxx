@@ -217,8 +217,8 @@ PCAMetric<TFixedImage, TMovingImage>
   typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-  unsigned int NumberOfSamples = sampleContainer->Size();
-  MatrixType datablock( NumberOfSamples, this->m_G );
+  const unsigned int numberOfSamples = sampleContainer->Size();
+  MatrixType datablock( numberOfSamples, this->m_G );
 
   /** Initialize dummy loop variable */
   unsigned int pixelIndex = 0;
@@ -282,15 +282,15 @@ PCAMetric<TFixedImage, TMovingImage>
   }/** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples( NumberOfSamples, this->m_NumberOfPixelsCounted );
+  this->CheckNumberOfSamples( numberOfSamples, this->m_NumberOfPixelsCounted );
   MatrixType A( datablock.extract( this->m_NumberOfPixelsCounted, this->m_G ) );
 
   /** Calculate mean of from columns */
   vnl_vector< RealType > mean( this->m_G );
   mean.fill( NumericTraits< RealType >::Zero );
-  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  for( unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
   {
-    for( int j = 0; j < this->m_G; j++ )
+    for( unsigned int j = 0; j < this->m_G; j++ )
     {
       mean( j ) += A( i, j );
     }
@@ -300,21 +300,21 @@ PCAMetric<TFixedImage, TMovingImage>
   MatrixType Amm( this->m_NumberOfPixelsCounted, this->m_G );
   Amm.fill( NumericTraits< RealType >::Zero );
 
-  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  for( unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
   {
-    for( int j = 0; j < this->m_G; j++ )
+    for( unsigned int j = 0; j < this->m_G; j++ )
     {
       Amm( i, j ) = A( i, j ) - mean( j );
     }
   }
 
-  /** Compute covariancematrix C */
+  /** Compute covariance matrix C */
   MatrixType C( Amm.transpose()*Amm );
   C /= static_cast<RealType> ( RealType( this->m_NumberOfPixelsCounted ) - 1.0 );
 
   vnl_diag_matrix< RealType > S( this->m_G );
   S.fill( NumericTraits< RealType >::Zero );
-  for( int j = 0; j < this->m_G; j++ )
+  for( unsigned int j = 0; j < this->m_G; j++ )
   {
     S( j, j ) = 1.0 / sqrt( C( j, j ) );
   }
@@ -403,8 +403,8 @@ PCAMetric<TFixedImage, TMovingImage>
   std::vector< FixedImagePointType > SamplesOK;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-  unsigned int NumberOfSamples = sampleContainer->Size();
-  MatrixType datablock( NumberOfSamples, this->m_G );
+  const unsigned int numberOfSamples = sampleContainer->Size();
+  MatrixType datablock( numberOfSamples, this->m_G );
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;
@@ -475,9 +475,9 @@ PCAMetric<TFixedImage, TMovingImage>
   /** Calculate mean of from columns */
   vnl_vector< RealType > mean( this->m_G );
   mean.fill( NumericTraits< RealType >::Zero );
-  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  for( unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
   {
-    for( int j = 0; j < this->m_G; j++ )
+    for( unsigned int j = 0; j < this->m_G; j++ )
     {
       mean( j ) += A( i, j );
     }
@@ -487,22 +487,22 @@ PCAMetric<TFixedImage, TMovingImage>
   /** Calculate standard deviation from columns */
   MatrixType Amm( this->m_NumberOfPixelsCounted, this->m_G );
   Amm.fill( NumericTraits< RealType >::Zero );
-  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  for( unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
   {
-    for( int j = 0; j < this->m_G; j++ )
+    for( unsigned int j = 0; j < this->m_G; j++ )
     {
       Amm( i, j ) = A( i, j ) - mean( j );
     }
   }
 
-  /** Compute covariancematrix C */
+  /** Compute covariance matrix C */
   MatrixType Atmm = Amm.transpose();
   MatrixType C( Atmm*Amm );
   C /= static_cast<RealType> ( RealType( this->m_NumberOfPixelsCounted ) - 1.0 );
 
   vnl_diag_matrix< RealType > S( this->m_G );
   S.fill( NumericTraits< RealType >::Zero );
-  for( int j = 0; j < this->m_G; j++ )
+  for( unsigned int j = 0; j < this->m_G; j++ )
   {
     S( j, j ) = 1.0 / sqrt( C( j, j ) );
   }
@@ -859,9 +859,9 @@ PCAMetric< TFixedImage, TMovingImage >
   /** Calculate mean of from columns */
   vnl_vector< RealType > mean( this->m_G );
   mean.fill( NumericTraits< RealType >::Zero );
-  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  for( unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
   {
-    for( int j = 0; j < this->m_G; j++ )
+    for( unsigned int j = 0; j < this->m_G; j++ )
     {
       mean( j ) += A( i, j );
     }
@@ -871,9 +871,9 @@ PCAMetric< TFixedImage, TMovingImage >
   /** Calculate standard deviation from columns */
   MatrixType Amm( this->m_NumberOfPixelsCounted, this->m_G );
   Amm.fill( NumericTraits< RealType >::Zero );
-  for( int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+  for( unsigned int i = 0; i < this->m_NumberOfPixelsCounted; i++ )
   {
-    for( int j = 0; j < this->m_G; j++ )
+    for( unsigned int j = 0; j < this->m_G; j++ )
     {
       Amm( i, j ) = A( i, j ) - mean( j );
     }
@@ -886,7 +886,7 @@ PCAMetric< TFixedImage, TMovingImage >
 
   vnl_diag_matrix< RealType > S( this->m_G );
   S.fill( NumericTraits< RealType >::Zero );
-  for( int j = 0; j < this->m_G; j++ )
+  for( unsigned int j = 0; j < this->m_G; j++ )
   {
     S( j, j ) = 1.0 / sqrt( C( j, j ) );
   }
