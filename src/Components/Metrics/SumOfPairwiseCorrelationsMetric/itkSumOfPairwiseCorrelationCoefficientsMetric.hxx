@@ -271,7 +271,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
   vnl_diag_matrix< RealType > S( G );
   S.fill( NumericTraits< RealType >::Zero );
-  for( int j = 0; j < G; j++ )
+  for( unsigned int j = 0; j < G; j++ )
   {
     S( j, j ) = 1.0 / sqrt( C( j, j ) );
   }
@@ -454,7 +454,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
   vnl_diag_matrix< RealType > S( G );
   S.fill( NumericTraits< RealType >::Zero );
-  for( int j = 0; j < G; j++ )
+  for( unsigned int j = 0; j < G; j++ )
   {
     S( j, j ) = 1.0 / sqrt( C( j, j ) );
   }

@@ -133,13 +133,13 @@ PolydataDummyPenalty< TElastix >
     fmeshArgument << ch << metricNumber;
     std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
     typename MeshType::Pointer fixedMesh = 0;
-    if (itksys::SystemTools::GetFilenameLastExtension(fixedMeshName) == ".txt")
+    if( itksys::SystemTools::GetFilenameLastExtension( fixedMeshName ) == ".txt" )
     {
-      this->ReadTransformixPoints(fixedMeshName, fixedMesh);
+      this->ReadTransformixPoints( fixedMeshName, fixedMesh );
     }
     else
     {
-      this->ReadMesh(fixedMeshName, fixedMesh);
+      this->ReadMesh( fixedMeshName, fixedMesh );
     }
 
     meshPointerContainer->SetElement( meshNumber, dynamic_cast<  MeshType * >( fixedMesh.GetPointer() ) );
@@ -453,7 +453,7 @@ PolydataDummyPenalty< TElastix >
   {
     elxout << "  Input points are specified in world coordinates." << std::endl;
   }
-  unsigned int nrofpoints = ippReader->GetNumberOfPoints();
+  const unsigned int nrofpoints = ippReader->GetNumberOfPoints();
   elxout << "  Number of specified input points: " << nrofpoints << std::endl;
 
   /** Get the set of input points. */
@@ -540,7 +540,7 @@ PolydataDummyPenalty< TElastix >
     typedef typename MeshType::CellType::CellAutoPointer CellAutoPointer;
     typedef itk::LineCell< typename MeshType::CellType > LineType;
 
-    for( int i = 0; i < nrofpoints; ++i )
+    for( unsigned int i = 0; i < nrofpoints; ++i )
     {
 
       // Create a link to the previous point in the column (below the current point)

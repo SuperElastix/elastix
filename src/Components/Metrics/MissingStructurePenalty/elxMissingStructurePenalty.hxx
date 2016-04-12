@@ -472,7 +472,7 @@ the sequence of points to form a 2d connected polydata contour.
   {
     elxout << "  Input points are specified in world coordinates." << std::endl;
   }
-  unsigned int nrofpoints = ippReader->GetNumberOfPoints();
+  const unsigned int nrofpoints = ippReader->GetNumberOfPoints();
   elxout << "  Number of specified input points: " << nrofpoints << std::endl;
 
   /** Get the set of input points. */
@@ -570,7 +570,7 @@ the sequence of points to form a 2d connected polydata contour.
     typedef typename MeshType::CellType::CellAutoPointer CellAutoPointer;
     typedef itk::LineCell< typename MeshType::CellType > LineType;
 
-    for( int i = 0; i < nrofpoints; ++i )
+    for( unsigned int i = 0; i < nrofpoints; ++i )
     {
 
       // Create a link to the previous point in the column (below the current point)
