@@ -21,7 +21,7 @@
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkVarianceOverLastDimensionImageMetric.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
-#include "../Transforms/StackTransform/itkStackTransform.h"
+#include "itkStackTransform.h"
 
 
 namespace elastix

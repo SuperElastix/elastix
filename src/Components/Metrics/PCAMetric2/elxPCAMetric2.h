@@ -22,7 +22,7 @@
 #include "itkPCAMetric2.h"
 
 #include "itkAdvancedBSplineDeformableTransform.h"
-#include "../../Components/Transforms/StackTransform/itkStackTransform.h"
+#include "itkStackTransform.h"
 
 
 namespace elastix
