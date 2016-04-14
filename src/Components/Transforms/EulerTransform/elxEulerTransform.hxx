@@ -310,14 +310,29 @@ EulerTransformElastix< TElastix >
     transformInitializer->InitializeTransform();
   }
 
-  /** Set the translation to zero, if no AutomaticTransformInitialization
-   * was desired.
+  /** If no AutomaticTransformInitialization was desired, set the translation 
+   * to the given initial translation or to zero if none was given.
    */
   if( !automaticTransformInitialization )
   {
-    OutputVectorType noTranslation;
-    noTranslation.Fill( 0.0 );
-    this->m_EulerTransform->SetTranslation( noTranslation );
+    OutputVectorType initialTranslation;
+    initialTranslation.Fill(0.0);
+    bool initialTranslationGiven = true;
+    for (unsigned int i = 0; i < SpaceDimension; i++)
+    {
+      initialTranslationGiven &= this->m_Configuration->ReadParameter(
+        initialTranslation[i], "InitialTranslation", i, false);
+    }
+
+    /** If not all required translation components are given, 
+     * set the translation to 0.
+     */
+    if ( !initialTranslationGiven )
+    {
+      initialTranslation.Fill(0.0);
+    }
+
+    this->m_EulerTransform->SetTranslation( initialTranslation );
   }
 
   /** Set the center of rotation if it was entered by the user. */
