@@ -21,19 +21,20 @@
 namespace elastix
 {
 
+/**
+ * ********************* Constructor *********************
+ */
+
 template< typename TFixedImage, typename TMovingImage >
 ElastixFilter< TFixedImage, TMovingImage >
 ::ElastixFilter( void )
 {
-  this->AddRequiredInputName( "FixedImage" );
-  this->AddRequiredInputName( "MovingImage" );
-  this->AddRequiredInputName( "ParameterObject" );
-
   this->SetPrimaryInputName( "FixedImage" );
   this->SetPrimaryOutputName( "ResultImage" );
 
-  this->m_FixedImageContainer = DataObjectContainerType::New();
-  this->m_MovingImageContainer = DataObjectContainerType::New();
+  this->AddRequiredInputName( "FixedImage" );
+  this->AddRequiredInputName( "MovingImage" );
+  this->AddRequiredInputName( "ParameterObject" );
 
   this->SetFixedPointSetFileName( "" );
   this->SetMovingPointSetFileName( "" );
@@ -51,7 +52,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   this->SetParameterObject( defaultParameterObject );
 
   this->m_InputUID = 0;
-}
+} // end Constructor
+
+/**
+ * ********************* GenerateData *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -59,12 +64,12 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::GenerateData( void )
 {
   // Initialize variables here so they don't go out of scope between iterations of the main loop
-  ElastixMainObjectPointer    transform            = 0;
   DataObjectContainerPointer  fixedImageContainer  = DataObjectContainerType::New();
   DataObjectContainerPointer  movingImageContainer = DataObjectContainerType::New();
   DataObjectContainerPointer  fixedMaskContainer   = 0;
   DataObjectContainerPointer  movingMaskContainer  = 0;
   DataObjectContainerPointer  resultImageContainer = 0;
+  ElastixMainObjectPointer    transform            = 0;
   ParameterMapVectorType      transformParameterMapVector;
   FlatDirectionCosinesType    fixedImageOriginalDirection;
 
@@ -108,7 +113,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 
   // Set ParameterMap
   ParameterObjectPointer parameterObject = static_cast< ParameterObject* >( this->GetInput( "ParameterObject" ) );
-  ParameterMapVectorType parameterMapVector = parameterObject->GetParameterMap();
+  ParameterMapVectorType& parameterMapVector = parameterObject->GetParameterMap();
 
   if( parameterMapVector.size() == 0 )
   {
@@ -116,29 +121,27 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
 
   // Elastix must always write result image to guarantee that the ITK pipeline is in a consistent state
-  parameterMapVector[ parameterMapVector.size()-1 ][ "WriteResultImage" ] = ParameterValueVectorType( 1, "true" );
+  parameterMapVector[ parameterMapVector.size() - 1 ][ "WriteResultImage" ] = ParameterValueVectorType( 1, "true" );
 
+  // Setup argument map
   ArgumentMapType argumentMap;
 
-  // Initial transform
   if( !this->m_InitialTransformParameterFileName.empty() )
   {
     argumentMap.insert( ArgumentMapEntryType( "-t0", this->m_InitialTransformParameterFileName ) );
   }
 
-  // Fixed mesh
   if( !this->m_FixedPointSetFileName.empty() )
   {
     argumentMap.insert( ArgumentMapEntryType( "-fp", this->m_FixedPointSetFileName ) );
   }
 
-  // Moving mesh
   if( !this->m_MovingPointSetFileName.empty() )
   {
     argumentMap.insert( ArgumentMapEntryType( "-mp", this->m_MovingPointSetFileName ) );
   }
 
-  // Logging, disk I/O
+  // Setup output directory
   if( this->GetOutputDirectory().empty() ) {
     if( this->GetLogToFile() )
     {
@@ -155,7 +158,8 @@ ElastixFilter< TFixedImage, TMovingImage >
        itkExceptionMacro( "Output directory \"" << this->GetOutputDirectory() << "\" does not exist." );
     }
 
-    if( this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '/' || this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '\\' )
+    if( this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '/' 
+     || this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '\\' )
     {
       this->SetOutputDirectory( this->GetOutputDirectory() + "/" );
     }
@@ -163,7 +167,7 @@ ElastixFilter< TFixedImage, TMovingImage >
     argumentMap.insert( ArgumentMapEntryType( "-out", this->GetOutputDirectory() ) );
   }
 
-  // Setup xout
+  // Setup log file
   std::string logFileName;
   if( this->GetLogToFile() )
   {
@@ -177,6 +181,7 @@ ElastixFilter< TFixedImage, TMovingImage >
     }
   }
 
+  // Setup xout
   if( elx::xoutSetup( logFileName.c_str(), this->GetLogToFile(), this->GetLogToConsole() ) )
   {
     itkExceptionMacro( "Error while setting up xout" );
@@ -236,17 +241,16 @@ ElastixFilter< TFixedImage, TMovingImage >
     transformParameterMapVector.push_back( elastix->GetTransformParametersMap() );
 
     // TODO: Fix elastix corrupting default pixel value
-    transformParameterMapVector[ transformParameterMapVector.size()-1 ][ "DefaultPixelValue" ] = parameterMapVector[ i ][ "DefaultPixelValue" ];
+    transformParameterMapVector[ transformParameterMapVector.size() - 1 ][ "DefaultPixelValue" ] = parameterMapVector[ i ][ "DefaultPixelValue" ];
 
     // Set initial transform to an index number instead of a parameter filename
     if( i > 0 )
     {
       std::stringstream index;
-      index << ( i - 1 );
+      index << ( i - 1 ); // MS: Can this be done in the constructor of stringstream?
       transformParameterMapVector[ i ][ "InitialTransformParametersFileName" ][ 0 ] = index.str();
     }
   } // End loop over registrations
-
 
   // Save result image
   if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
@@ -258,11 +262,15 @@ ElastixFilter< TFixedImage, TMovingImage >
     itkExceptionMacro( "Errors occured during registration: Could not read result image." );
   }
 
-  // Save transform parameter map
+  // Save parameter map
   ParameterObject::Pointer transformParameterObject = ParameterObject::New();
   transformParameterObject->SetParameterMap( transformParameterMapVector );
   this->SetOutput( "TransformParameterObject", static_cast< itk::DataObject* >( transformParameterObject ) );
 }
+
+/**
+ * ********************* SetParameterObject *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -270,7 +278,11 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::SetParameterObject( ParameterObjectPointer parameterObject )
 {
   this->SetInput( "ParameterObject", static_cast< itk::DataObject* >( parameterObject ) );
-}
+} // end SetParameterObject()
+
+/**
+ * ********************* GetParameterObject *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectPointer
@@ -278,17 +290,11 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::GetParameterObject( void )
 {
   return static_cast< ParameterObject* >( this->GetInput( "ParameterObject" ) );
-}
+} // end GetParameterObject()
 
-// template< typename TFixedImage, typename TMovingImage >
-// typename ElastixFilter< TFixedImage, TMovingImage >::FixedImagePointer
-// ElastixFilter< TFixedImage, TMovingImage >
-// ::GetOutput( void )
-// {
-//   // TODO: We should not have to override GetOutput from superclass. This is a bug.
-//   this->Update();
-//   return static_cast< TFixedImage* >( itk::ProcessObject::GetOutput( "ResultImage" ) );
-// }
+/**
+ * ********************* GetTransformParameterObject *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectPointer
@@ -298,7 +304,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   // The transform parameters are not the primary output so we have to manually ensure they are up to date
   this->Update();
   return static_cast< ParameterObject* >( itk::ProcessObject::GetOutput( "TransformParameterObject" ) );
-}
+} // end GetTransformParameterObject()
+
+/**
+ * ********************* SetFixedImage *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -307,9 +317,12 @@ ElastixFilter< TFixedImage, TMovingImage >
 {
   // Free references to fixed images that has already been set
   this->RemoveInputType( "FixedImage" );
-
   this->SetInput( "FixedImage", static_cast< itk::DataObject* >( fixedImage ) );
-}
+} // end SetFixedImage()
+
+/**
+ * ********************* SetFixedImage *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -338,7 +351,11 @@ ElastixFilter< TFixedImage, TMovingImage >
     this->SetInputWithUniqueName( "FixedImage", fixedImageIterator->Value() );
     ++fixedImageIterator;
   }
-}
+} // end SetFixedImage()
+
+/**
+ * ********************* AddFixedImage *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -353,7 +370,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     this->SetInputWithUniqueName( "FixedImage", static_cast< itk::DataObject* >( fixedImage ) );
   }
-}
+} // end AddFixedImage()
+
+/**
+ * ********************* SetMovingImage *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -364,7 +385,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   this->RemoveInputType( "MovingImage" );
 
   this->SetInput( "MovingImage", static_cast< itk::DataObject* >( movingImage ) );
-}
+} // end SetMovingImage()
+
+/**
+ * ********************* SetMovingImage *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -393,7 +418,11 @@ ElastixFilter< TFixedImage, TMovingImage >
     this->SetInputWithUniqueName( "MovingImage", static_cast< itk::DataObject* >( movingImageIterator->Value() ) );
     ++movingImageIterator;
   }
-}
+} // end SetMovingImage()
+
+/**
+ * ********************* AddMovingImage *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -408,8 +437,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     this->SetInputWithUniqueName( "MovingImage", static_cast< itk::DataObject* >( movingImage ) );
   }
-}
+} // end AddMovingImage()
 
+/**
+ * ********************* SetFixedMask *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -420,7 +452,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   this->RemoveInputType( "FixedMask" );
 
   this->SetInput( "FixedMask", static_cast< itk::DataObject* >( fixedMask ) );
-}
+} // end SetFixedMask()
+
+/**
+ * ********************* SetFixedMask *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -441,7 +477,11 @@ ElastixFilter< TFixedImage, TMovingImage >
     this->SetInputWithUniqueName( "FixedMask", fixedMaskIterator->Value() );
     ++fixedMaskIterator;
   }
-}
+} // end SetFixedMask()
+
+/**
+ * ********************* AddFixedMask *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -449,7 +489,11 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::AddFixedMask( FixedMaskPointer fixedMask )
 {
   this->SetInputWithUniqueName( "FixedMask", static_cast< itk::DataObject* >( fixedMask ) );
-}
+} // end AddFixedMask()
+
+/**
+ * *********************  *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -458,7 +502,11 @@ ElastixFilter< TFixedImage, TMovingImage >
 {
   this->RemoveInputType( "FixedMask" );
   this->m_FixedMaskContainer = 0;
-}
+} // end RemoveFixedMask()
+
+/**
+ * ********************* RemoveFixedMask *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -468,7 +516,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Free references to moving masks that has already been set
   this->RemoveInputType( "MovingMask" );
   this->AddMovingMask( movingMask );
-}
+} // end SetMovingMask()
+
+/**
+ * ********************* SetMovingMask *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -489,7 +541,11 @@ ElastixFilter< TFixedImage, TMovingImage >
     this->SetInputWithUniqueName( "MovingMask", movingMaskIterator->Value() );
     ++movingMaskIterator;
   }
-}
+} // end SetMovingMask()
+
+/**
+ * ********************* AddMovingMask *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -497,7 +553,11 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::AddMovingMask( MovingMaskPointer movingMask )
 {
   this->SetInputWithUniqueName( "MovingMask", static_cast< itk::DataObject* >( movingMask ) );
-}
+} // end AddMovingMask()
+
+/**
+ * ********************* RemoveMovingMask *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
@@ -506,29 +566,41 @@ ElastixFilter< TFixedImage, TMovingImage >
 {
   this->RemoveInputType( "MovingMask" );
   this->m_MovingMaskContainer = 0;
-}
+} // end RemoveMovingMask()
+
+/**
+ * ********************* SetInputWithUniqueName *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
 ElastixFilter< TFixedImage, TMovingImage >
-::SetInputWithUniqueName( DataObjectIdentifierType inputName, itk::DataObject* input )
+::SetInputWithUniqueName( const DataObjectIdentifierType& inputName, itk::DataObject* input )
 {
-  inputName += "_" + ParameterObject::ToString( this->m_InputUID++ );
-  this->SetInput( inputName, input );
-}
+  std::string uniqueInputName = inputName + "_" + ParameterObject::ToString( this->m_InputUID++ );
+  this->SetInput( uniqueInputName, input );
+} // end SetInputWithUniqueName()
+
+/**
+ * ********************* IsInputType *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 bool
 ElastixFilter< TFixedImage, TMovingImage >
-::IsInputType( DataObjectIdentifierType inputType, DataObjectIdentifierType inputName )
+::IsInputType( const DataObjectIdentifierType& inputType, DataObjectIdentifierType inputName )
 {
   return std::strncmp( inputType.c_str(), inputName.c_str(), std::min( inputType.size(), inputName.size() ) ) == 0;
-}
+} // end IsInputType()
+
+/**
+ * ********************* RemoveInputType *********************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
 void
 ElastixFilter< TFixedImage, TMovingImage >
-::RemoveInputType( DataObjectIdentifierType inputType )
+::RemoveInputType( const DataObjectIdentifierType& inputType )
 {
   InputNameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
@@ -538,17 +610,32 @@ ElastixFilter< TFixedImage, TMovingImage >
       this->RemoveInput( inputNames[ i ] );
     }
   }
-}
+} // end RemoveInputType()
+
+/**
+ * ********************* SetLogFileName ****************************
+ */
 
 template< typename TFixedImage, typename TMovingImage >
-bool
+void
 ElastixFilter< TFixedImage, TMovingImage >
-::IsEmpty( FixedImagePointer image )
+::SetLogFileName( std::string logFileName )
 {
-  typename TFixedImage::RegionType region = image->GetLargestPossibleRegion();
-  typename TFixedImage::SizeType size = region.GetSize();
-  return size[ 0 ] == 0 && size[ 1 ] == 0;
-}
+  this->m_LogFileName = logFileName;
+  this->LogToFileOn();
+} // end SetLogFileName()
+
+/**
+ * ********************* RemoveLogFileName ****************************
+ */
+
+template< typename TFixedImage, typename TMovingImage >
+void
+ElastixFilter< TFixedImage, TMovingImage >
+::RemoveLogFileName( void ) {
+  this->SetLogFileName( "" );
+  this->LogToFileOff();
+} // end RemoveLogFileName()
 
 } // namespace elx
 

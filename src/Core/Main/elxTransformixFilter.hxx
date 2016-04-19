@@ -21,15 +21,18 @@
 namespace elastix
 {
 
+/**
+ * ********************* Constructor *********************
+ */
+
 template< typename TInputImage  >
 TransformixFilter< TInputImage >
 ::TransformixFilter( void )
 {
-  this->AddRequiredInputName( "TransformParameterObject" );
-  this->SetInput( TInputImage::New() );
-
   this->SetPrimaryInputName( "InputImage" );
   this->SetPrimaryOutputName( "ResultImage" );
+
+  this->AddRequiredInputName( "TransformParameterObject" );
 
   this->SetInputPointSetFileName( "" );
   this->ComputeSpatialJacobianOff();
@@ -41,7 +44,16 @@ TransformixFilter< TInputImage >
 
   this->LogToConsoleOff();
   this->LogToFileOff();
-}
+
+  // The filter requires in input image to be set even if we 
+  // compute outputs that do not depend on an input image,
+  // e.g. a deformation field, so we set one here
+  this->SetInput( "InputImage", TInputImage::New() );
+} // end Constructor
+
+/**
+ * ********************* GenerateData *********************
+ */
 
 template< typename TInputImage >
 void
@@ -62,25 +74,8 @@ TransformixFilter< TInputImage >
                     << "to be set.\"" );
   }
 
-  // Only the input "InputImage" does not require an output directory
-  if( ( this->GetComputeSpatialJacobian() ||
-        this->GetComputeDeterminantOfSpatialJacobian() ||
-        this->GetComputeDeformationField() ||
-        !this->GetInputPointSetFileName().empty() ||
-        this->GetLogToFile() ) &&
-      this->GetOutputDirectory().empty() )
-  {
-    this->SetOutputDirectory( "." );
-  }
-
-  // Check if output directory exists
-  if( !itksys::SystemTools::FileExists( this->GetOutputDirectory() ) )
-  {
-    itkExceptionMacro( "Output directory \"" << this->GetOutputDirectory() << "\" does not exist." )
-  }
-
-  // Transformix uses "-def" for path to point sets AND as flag for writing deformation field
   // TODO: Patch upstream transformix to split this into seperate arguments
+  // Transformix uses "-def" for path to point sets AND as flag for writing deformation field
   if( this->GetComputeDeformationField() && !this->GetInputPointSetFileName().empty() )
   {
     itkExceptionMacro( << "For backwards compatibility, only one of ComputeDeformationFieldOn() "
@@ -89,19 +84,6 @@ TransformixFilter< TInputImage >
 
   // Setup argument map which transformix uses internally ito figure out what needs to be done
   ArgumentMapType argumentMap;
-  if( this->GetOutputDirectory().empty() ) {
-    // There must be an "-out", this is checked later in the code
-    argumentMap.insert( ArgumentMapEntryType( "-out", "output_path_not_set" ) );
-  }
-  else
-  {
-    if( this->GetOutputDirectory().back() != '/' || this->GetOutputDirectory().back() != '\\' )
-    {
-      this->SetOutputDirectory( this->GetOutputDirectory() + "/" );
-    }
-
-    argumentMap.insert( ArgumentMapEntryType( "-out", this->GetOutputDirectory() ) );
-  }
 
   if( this->GetComputeSpatialJacobian() )
   {
@@ -123,7 +105,38 @@ TransformixFilter< TInputImage >
     argumentMap.insert( ArgumentMapEntryType( "-def", this->GetInputPointSetFileName() ) );
   }
 
-  // Setup xout
+  // Setup output directory
+  // Only the input "InputImage" does not require an output directory
+  if( ( this->GetComputeSpatialJacobian() ||
+        this->GetComputeDeterminantOfSpatialJacobian() ||
+        this->GetComputeDeformationField() ||
+        !this->GetInputPointSetFileName().empty() ||
+        this->GetLogToFile() ) &&
+      this->GetOutputDirectory().empty() )
+  {
+    this->SetOutputDirectory( "." );
+  }
+  
+  if( !this->GetOutputDirectory().empty() && !itksys::SystemTools::FileExists( this->GetOutputDirectory() ) )
+  {
+    itkExceptionMacro( "Output directory \"" << this->GetOutputDirectory() << "\" does not exist." )
+  }
+
+  if( this->GetOutputDirectory().empty() ) {
+    // There must be an "-out", this is checked later in the code
+    argumentMap.insert( ArgumentMapEntryType( "-out", "output_path_not_set" ) );
+  }
+  else
+  {
+    if( this->GetOutputDirectory().back() != '/' || this->GetOutputDirectory().back() != '\\' )
+    {
+      this->SetOutputDirectory( this->GetOutputDirectory() + "/" );
+    }
+
+    argumentMap.insert( ArgumentMapEntryType( "-out", this->GetOutputDirectory() ) );
+  }
+
+  // Setup log file
   std::string logFileName;
   if( this->GetLogToFile() )
   {
@@ -133,14 +146,11 @@ TransformixFilter< TInputImage >
     }
     else
     {
-      if( this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '/' || this->GetOutputDirectory()[ this->GetOutputDirectory().size()-1 ] != '\\' )
-      {
-        this->SetOutputDirectory( this->GetOutputDirectory() + "/" );
-      }
       logFileName = this->GetOutputDirectory() + this->GetLogFileName();
     }
   }
 
+  // Setup xout
   if( elx::xoutSetup( logFileName.c_str(), this->GetLogToFile(), this->GetLogToConsole() ) )
   {
     itkExceptionMacro( "Error while setting up xout" );
@@ -167,10 +177,9 @@ TransformixFilter< TInputImage >
     itkExceptionMacro( "Empty parameter map in parameter object." );
   }
   
-  // Instantiated pixel types are the groundtruth
+  // Set pixel types from input image, override user settings
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
-    // Set pixel types from input image, override user settings
     transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelType< typename TInputImage::PixelType >::ToString() );
     transformParameterMapVector[ i ][ "FixedImageDimension" ] = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
     transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1, PixelType< typename TInputImage::PixelType >::ToString() );
@@ -186,7 +195,7 @@ TransformixFilter< TInputImage >
   }
   catch( itk::ExceptionObject &e )
   {
-    itkExceptionMacro( "Errors occured during registration: " << e.what() );
+    itkExceptionMacro( "Errors occured during execution: " << e.what() );
   }
 
   if( isError != 0 )
@@ -200,7 +209,11 @@ TransformixFilter< TInputImage >
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }
-}
+} // end GenerateData()
+
+/**
+ * ********************* SetInput *********************
+ */
 
 template< typename TInputImage >
 void
@@ -208,7 +221,11 @@ TransformixFilter< TInputImage >
 ::SetInput( InputImagePointer inputImage )
 {
   this->SetInput( "InputImage", static_cast< itk::DataObject* >( inputImage ) );
-}
+} // end SetInput()
+
+/**
+ * ********************* GetInput *********************
+ */
 
 template< typename TInputImage >
 typename TransformixFilter< TInputImage >::InputImagePointer
@@ -216,7 +233,11 @@ TransformixFilter< TInputImage >
 ::GetInput( void )
 {
   return static_cast< TInputImage* >( this->GetInput( "InputImage" ) );
-}
+} // end GetInput()
+
+/**
+ * ********************* RemoveInput *********************
+ */
 
 template< typename TInputImage >
 void
@@ -224,7 +245,11 @@ TransformixFilter< TInputImage >
 ::RemoveInput( void )
 {
   this->SetInput( TInputImage::New() );
-}
+} // end RemoveInput
+
+/**
+ * ********************* SetTransformParameterObject *********************
+ */
 
 template< typename TInputImage >
 void
@@ -232,7 +257,11 @@ TransformixFilter< TInputImage >
 ::SetTransformParameterObject( ParameterObjectPointer parameterObject )
 {
   this->SetInput( "TransformParameterObject", static_cast< itk::DataObject* >( parameterObject ) );
-}
+} // end SetTransformParameterObject()
+
+/**
+ * ********************* GetTransformParameterObject *********************
+ */
 
 template< typename TInputImage >
 typename TransformixFilter< TInputImage >::ParameterObjectPointer
@@ -240,22 +269,45 @@ TransformixFilter< TInputImage >
 ::GetTransformParameterObject( void )
 {
   return static_cast< ParameterObject* >( this->GetInput( "TransformParameterObject" ) );
-}
+} // end SetTransformParameterObject()
+
+/**
+* ********************* IsEmpty ****************************
+*/
 
 template< typename TInputImage >
 bool
 TransformixFilter< TInputImage >
-::IsEmpty( InputImagePointer inputImage )
+::IsEmpty( const InputImagePointer inputImage )
 {
-  if( inputImage.IsNotNull() )
-  {
-    typename TInputImage::RegionType region = inputImage->GetLargestPossibleRegion();
-    typename TInputImage::SizeType size = region.GetSize();
-    return size[ 0 ] == 0 && size[ 1 ] == 0;
-  }
+  typename TInputImage::RegionType region = inputImage->GetLargestPossibleRegion();
+  return region.GetNumberOfPixels() == 0;
+} // end IsEmpty()
 
-  itkExceptionMacro( "Input image is null." );
-}
+/**
+ * ********************* SetLogFileName ****************************
+ */
+
+template< typename TInputImage >
+void
+TransformixFilter< TInputImage >
+::SetLogFileName( std::string logFileName )
+{
+  this->m_LogFileName = logFileName;
+  this->LogToFileOn();
+} // end SetLogFileName()
+
+/**
+ * ********************* RemoveLogFileName ****************************
+ */
+
+template< typename TInputImage >
+void
+TransformixFilter< TInputImage >
+::RemoveLogFileName( void ) {
+  this->SetLogFileName( "" );
+  this->LogToFileOff();
+} // end RemoveLogFileName()
 
 } // namespace elx
 

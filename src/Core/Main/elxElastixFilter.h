@@ -36,13 +36,19 @@ class ElastixFilter : public itk::ImageSource< TFixedImage >
 {
 public:
 
+  /** Standard ITK typedefs. */
   typedef ElastixFilter                   Self;
-  // typedef itk::ImageSource< TFixedImage > Superclass; 
+  typedef itk::ImageSource< TFixedImage > Superclass; 
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
+
+  /** Method for creation through the object factory. */
   itkNewMacro( Self );
+
+  /** Run-time type information (and related methods). */
   itkTypeMacro( Self, itk::ImageSource );
 
+  /** Typedefs. */
   typedef elastix::ElastixMain                                ElastixMainType;
   typedef ElastixMainType::Pointer                            ElastixMainPointer;
   typedef std::vector< ElastixMainPointer >                   ElastixMainVectorType;
@@ -77,95 +83,96 @@ public:
   typedef itk::Image< unsigned char, MovingImageDimension >   MovingMaskType;
   typedef typename MovingMaskType::Pointer                    MovingMaskPointer;
 
+  // MS: \todo: see if you can use SetConstObjectMacro's and GetConstObjectMacro's below.
+  //            have a look at the signatures of the itk::ImageToImageMetric functions and copy them if possible.
+  // MS: \todo: add get macro's
+  // MS: \todo: move all implementations to the hxx file
+
+  /** Set/Get/Add fixed image. */
   void SetFixedImage( FixedImagePointer fixedImage );
   void SetFixedImage( DataObjectContainerPointer fixedImages );
   void AddFixedImage( FixedImagePointer fixedImage );
 
+  /** Set/Get/Add moving image. */
   void SetMovingImage( MovingImagePointer movingImages );
   void SetMovingImage( DataObjectContainerPointer movingImages );
   void AddMovingImage( MovingImagePointer movingImage );
 
+  /** Set/Get/Add fixed mask. */
   void SetFixedMask( FixedMaskPointer fixedMask );
   void SetFixedMask( DataObjectContainerPointer fixedMasks );
   void AddFixedMask( FixedMaskPointer fixedMask );
   void RemoveFixedMask( void );
 
+  /** Set/Get/Add moving mask. */
   void SetMovingMask( MovingMaskPointer movingMask );
   void SetMovingMask( DataObjectContainerPointer movingMasks );
   void AddMovingMask( MovingMaskPointer movingMask );
   void RemoveMovingMask( void );
 
+  /** Set/Get parameter object.*/
   void SetParameterObject( ParameterObjectPointer parameterObject );
   ParameterObjectPointer GetParameterObject( void );
   ParameterObjectPointer GetTransformParameterObject( void );
 
+  /** Set/Get/Remove initial transform parameter filename. */
   // TODO: Pass transform object instead of reading from disk
   itkSetMacro( InitialTransformParameterFileName, std::string );
-  itkGetConstMacro( InitialTransformParameterFileName, std::string );
+  itkGetConstReferenceMacro( InitialTransformParameterFileName, std::string );
   void RemoveInitialTransformParameterFileName( void ) { this->SetInitialTransformParameterFileName( "" ); };
 
+  /** Set/Get/Remove fixed point set filename. */
   itkSetMacro( FixedPointSetFileName, std::string );
-  itkGetConstMacro( FixedPointSetFileName, std::string );
+  itkGetConstReferenceMacro( FixedPointSetFileName, std::string );
   void RemoveFixedPointSetFileName( void ) { this->SetFixedPointSetFileName( "" ); };
 
+  /** Set/Get/Remove moving point set filename. */
   itkSetMacro( MovingPointSetFileName, std::string );
-  itkGetConstMacro( MovingPointSetFileName, std::string );
+  itkGetConstReferenceMacro( MovingPointSetFileName, std::string );
   void RemoveMovingPointSetFileName( void ) { this->SetMovingPointSetFileName( "" ); };
 
+  /** Set/Get/Remove output directory. */
   itkSetMacro( OutputDirectory, std::string );
-  itkGetConstMacro( OutputDirectory, std::string );
+  itkGetConstReferenceMacro( OutputDirectory, std::string );
   void RemoveOutputDirectory() { this->SetOutputDirectory( "" ); };
 
-  void SetLogFileName( std::string logFileName )
-  {
-    this->m_LogFileName = logFileName;
-    this->LogToFileOn();
-  }
-
+  /** Set/Get/Remove log filename. */
+  void SetLogFileName( std::string logFileName );
   itkGetConstMacro( LogFileName, std::string );
+  void RemoveLogFileName( void );
 
-  void RemoveLogFileName( void ) {
-    this->SetLogFileName( "" );
-    this->LogToFileOff();
-  };
-
+  /** Log to std::cout on/off. */
   itkSetMacro( LogToConsole, bool );
-  itkGetConstMacro( LogToConsole, bool );
+  itkGetConstReferenceMacro( LogToConsole, bool );
   itkBooleanMacro( LogToConsole );
 
+  /** Log to file on/off. */
   itkSetMacro( LogToFile, bool );
-  itkGetConstMacro( LogToFile, bool );
+  itkGetConstReferenceMacro( LogToFile, bool );
   itkBooleanMacro( LogToFile );
-
-  // TODO: We should not have to override GetOutput from superclass. This is a bug.
-  // FixedImagePointer GetOutput( void );
 
 protected:
 
-  void GenerateData( void ) ITK_OVERRIDE;
-
-private:
-
-  // using itk::ProcessObject::GetInput;
-
   ElastixFilter( void );
 
-  ElastixFilter( const Self & );
-  void operator=( const Self & );
+  void GenerateData( void ) ITK_OVERRIDE;
 
-  void SetInputWithUniqueName( DataObjectIdentifierType key, itk::DataObject* input );
-  bool IsInputType( DataObjectIdentifierType inputType, DataObjectIdentifierType inputName );
-  void RemoveInputType( DataObjectIdentifierType inputName );
-  bool IsEmpty( FixedImagePointer image );
+private: 
 
-  // Let elastix handle input verification internally
+  ElastixFilter( const Self & );  // purposely not implemented
+  void operator=( const Self & ); // purposely not implemented
+
+  /** SetInputWithUniqueName. */
+  void SetInputWithUniqueName( const DataObjectIdentifierType& key, itk::DataObject* input );
+
+  /** IsInputType. */
+  bool IsInputType( const DataObjectIdentifierType& inputType, DataObjectIdentifierType inputName );
+
+  /** RemoveInputType. */
+  void RemoveInputType( const DataObjectIdentifierType& inputName );
+
+  /** Let elastix handle input verification internally */
   void VerifyInputInformation( void ) ITK_OVERRIDE {};
-
-  // TODO: When set to true, ReleaseDataFlag should also touch these containers
-  DataObjectContainerPointer m_FixedImageContainer;
-  DataObjectContainerPointer m_MovingImageContainer;
-  DataObjectContainerPointer m_FixedMaskContainer;
-  DataObjectContainerPointer m_MovingMaskContainer;
 
   std::string m_InitialTransformParameterFileName;
   std::string m_FixedPointSetFileName;
