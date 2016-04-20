@@ -36,6 +36,7 @@
 #define __itkGPUUnaryFunctorImageFilter_hxx
 
 #include "itkGPUUnaryFunctorImageFilter.h"
+#include "itkOpenCLUtil.h"
 
 namespace itk
 {
