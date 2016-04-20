@@ -321,6 +321,16 @@ protected:
    * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
    */
   void AutomaticScalesEstimation( ScalesType & scales ) const;
+  
+    /** Estimate a scales vector for a stack transform (elxTranslationStackTransform, 
+   * elxAffineStackTransform, ...) Instead of sampling along the n dimensions of the
+   * fixed image, it samples along n-1 dimensions. Then 
+   * \li N=10000 points are sampled.
+   * \li Jacobians dT/dmu are computed
+   * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
+   */
+
+  void AutomaticScalesEstimationStackTransform( const unsigned int numSubTransforms, ScalesType & scales ) const;
 
   /** Member variables. */
   ParametersType * m_TransformParametersPointer;
