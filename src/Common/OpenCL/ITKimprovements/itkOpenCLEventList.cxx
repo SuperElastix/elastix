@@ -113,6 +113,7 @@ OpenCLEventList::Remove( const OpenCLEvent & event )
     {
       clReleaseEvent( *it );
       this->m_Events.erase( it );
+      break;
     }
   }
 }
