@@ -62,7 +62,7 @@ public:
   typedef BaseComponentSE< TElastix > Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MovingImagePyramidBase, BaseComponentSE );
+  itkTypeMacroNoParent( MovingImagePyramidBase );
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::ElastixType          ElastixType;

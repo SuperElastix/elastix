@@ -77,7 +77,7 @@ public:
   typedef BaseComponentSE< TElastix > Superclass;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MetricBase, BaseComponentSE );
+  itkTypeMacroNoParent( MetricBase );
 
   /** Typedef's inherited from Elastix. */
   typedef typename Superclass::ElastixType          ElastixType;
