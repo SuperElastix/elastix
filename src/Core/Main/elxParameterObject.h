@@ -56,13 +56,14 @@ public:
   typedef itk::ParameterFileParser                                ParameterFileParserType;
   typedef ParameterFileParserType::Pointer                        ParameterFileParserPointer;
 
+  itkSetMacro( ParameterMap, ParameterMapVectorType );
   void SetParameterMap( const ParameterMapType parameterMap );
-  void SetParameterMap( const ParameterMapVectorType parameterMapVector );
   void AddParameterMap( const ParameterMapType parameterMap );
 
-  ParameterMapType& GetParameterMap( unsigned int index );
-  ParameterMapVectorType& GetParameterMap( void );
-  const ParameterMapVectorType& GetParameterMap( void ) const;
+  ParameterMapType& GetParameterMap( const unsigned int index );
+  const ParameterMapType& GetParameterMap( const unsigned int index ) const;
+  itkGetMacro( ParameterMap, ParameterMapVectorType );
+  itkGetConstReferenceMacro( ParameterMap, ParameterMapVectorType );
 
   void ReadParameterFile( const ParameterFileNameType parameterFileName );
   void ReadParameterFile( const ParameterFileNameVectorType parameterFileNameVector );
@@ -89,7 +90,7 @@ public:
 
 private:
 
-  ParameterMapVectorType  m_ParameterMapVector;
+  ParameterMapVectorType  m_ParameterMap;
 
 };
 
