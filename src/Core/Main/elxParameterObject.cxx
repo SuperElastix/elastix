@@ -39,41 +39,26 @@ ParameterObject
 
 void
 ParameterObject
-::SetParameterMap( const ParameterMapVectorType parameterMapVector )
-{
-  this->Modified();
-  this->m_ParameterMapVector = parameterMapVector;
-}
-
-void
-ParameterObject
 ::AddParameterMap( const ParameterMapType parameterMap )
 {
   this->Modified();
-  this->m_ParameterMapVector.push_back( parameterMap );
+  this->m_ParameterMap.push_back( parameterMap );
 }
 
-ParameterObject::ParameterMapType&
+ParameterObject::ParameterMapType &
 ParameterObject
-::GetParameterMap( unsigned int index )
+::GetParameterMap( const unsigned int index )
 {
   this->Modified();
-  return this->m_ParameterMapVector[ index ];
+  return this->m_ParameterMap[ index ];
 }
 
-ParameterObject::ParameterMapVectorType&
+const ParameterObject::ParameterMapType &
 ParameterObject
-::GetParameterMap( void )
+::GetParameterMap( const unsigned int index ) const
 {
   this->Modified();
-  return this->m_ParameterMapVector;
-}
-
-const ParameterObject::ParameterMapVectorType&
-ParameterObject
-::GetParameterMap( void ) const
-{
-  return this->m_ParameterMapVector;
+  return this->m_ParameterMap[ index ];
 }
 
 void
@@ -95,7 +80,7 @@ ParameterObject
     itkExceptionMacro( "Parameter filename container is empty." );
   }
 
-  this->m_ParameterMapVector.clear();
+  this->m_ParameterMap.clear();
 
   for( unsigned int i = 0; i < parameterFileNameVector.size(); ++i )
   {
@@ -115,7 +100,7 @@ ParameterObject
   ParameterFileParserPointer parameterFileParser = ParameterFileParserType::New();
   parameterFileParser->SetParameterFileName( parameterFileName );
   parameterFileParser->ReadParameterFile();
-  this->m_ParameterMapVector.push_back( parameterFileParser->GetParameterMap() );
+  this->m_ParameterMap.push_back( parameterFileParser->GetParameterMap() );
 }
 
 void
@@ -182,33 +167,33 @@ void
 ParameterObject
 ::WriteParameterFile( const ParameterFileNameType parameterFileName )
 {
-  if( this->m_ParameterMapVector.size() == 0 )
+  if( this->m_ParameterMap.size() == 0 )
   {
     itkExceptionMacro( "Error writing parameter map to disk: The parameter object is empty." );
   }
 
-  if( this->m_ParameterMapVector.size() > 1 )
+  if( this->m_ParameterMap.size() > 1 )
   {
-    itkExceptionMacro( "Error writing to disk: The number of parameter maps (" << this->m_ParameterMapVector.size() << ")"
+    itkExceptionMacro( "Error writing to disk: The number of parameter maps (" << this->m_ParameterMap.size() << ")"
                     << " does not match the number of provided filenames (1). Please provide a vector of filenames." );
   }
 
-  this->WriteParameterFile( this->m_ParameterMapVector[ 0 ], parameterFileName );
+  this->WriteParameterFile( this->m_ParameterMap[ 0 ], parameterFileName );
 }
 
 void
 ParameterObject
 ::WriteParameterFile( const ParameterFileNameVectorType parameterFileNameVector )
 {
-  if( this->m_ParameterMapVector.size() != parameterFileNameVector.size() )
+  if( this->m_ParameterMap.size() != parameterFileNameVector.size() )
   {
-    itkExceptionMacro( "Error writing to disk: The number of parameter maps (" << this->m_ParameterMapVector.size() << ")"
+    itkExceptionMacro( "Error writing to disk: The number of parameter maps (" << this->m_ParameterMap.size() << ")"
                     << " does not match the number of provided filenames (" << parameterFileNameVector.size() << ")." );
   }
 
-  for( unsigned int i = 0; i < this->m_ParameterMapVector.size(); ++i )
+  for( unsigned int i = 0; i < this->m_ParameterMap.size(); ++i )
   {
-    this->WriteParameterFile( this->m_ParameterMapVector[ i ], parameterFileNameVector[ i ] );
+    this->WriteParameterFile( this->m_ParameterMap[ i ], parameterFileNameVector[ i ] );
   }
 }
 
@@ -216,14 +201,14 @@ void
 ParameterObject
 ::SetParameterMap( const std::string transformName, const unsigned int numberOfResolutions, const double finalGridSpacingInPhysicalUnits )
 {
-  this->m_ParameterMapVector = ParameterMapVectorType( 1, this->GetParameterMap( transformName, numberOfResolutions, finalGridSpacingInPhysicalUnits ) );
+  this->m_ParameterMap = ParameterMapVectorType( 1, this->GetParameterMap( transformName, numberOfResolutions, finalGridSpacingInPhysicalUnits ) );
 }
 
 void
 ParameterObject
 ::AddParameterMap( const std::string transformName, const unsigned int numberOfResolutions, const double finalGridSpacingInPhysicalUnits )
 {
-  this->m_ParameterMapVector.push_back( this->GetParameterMap( transformName, numberOfResolutions, finalGridSpacingInPhysicalUnits ) );
+  this->m_ParameterMap.push_back( this->GetParameterMap( transformName, numberOfResolutions, finalGridSpacingInPhysicalUnits ) );
 }
 
 ParameterObject::ParameterMapType
