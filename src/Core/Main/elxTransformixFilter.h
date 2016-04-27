@@ -25,7 +25,8 @@
 #include "elxPixelType.h"
 
 /**
- * Transformix library exposed as an ITK filter.
+ * \class TransformixFilter
+ * \brief Transformix library exposed as an ITK filter.
  */
 
 namespace elastix {
@@ -64,12 +65,13 @@ public:
   typedef typename ParameterObject::ConstPointer            ParameterObjectConstPointer;
 
   typedef typename TInputImage::Pointer                     InputImagePointer;
+  typedef typename TInputImage::ConstPointer                InputImageConstPointer;
 
   itkStaticConstMacro( InputImageDimension, unsigned int, TInputImage::ImageDimension );
 
   /** Set/Get/Add moving image. */
-  void SetInput( InputImagePointer inputImage );
-  InputImagePointer GetInput( void );
+  void SetInput( TInputImage* inputImage );
+  InputImageConstPointer GetInput( void );
   void RemoveInput( void );
 
   /** Set/Get/Remove moving point set filename. */

@@ -28,42 +28,64 @@
 namespace elastix
 {
 
+/**
+ * ********************* SetParameterMap *********************
+ */
+
 void
 ParameterObject
-::SetParameterMap( const ParameterMapType parameterMap )
+::SetParameterMap( const ParameterMapType & parameterMap )
 {
-  ParameterMapVectorType parameterMapVector;
-  parameterMapVector.push_back( parameterMap );
+  ParameterMapVectorType parameterMapVector = ParameterMapVectorType( 1, parameterMap );
   this->SetParameterMap( parameterMapVector );
 }
 
+/**
+ * ********************* SetParameterMap *********************
+ */
+
 void
 ParameterObject
-::AddParameterMap( const ParameterMapType parameterMap )
+::SetParameterMap( const ParameterMapVectorType & parameterMap )
 {
-  this->Modified();
-  this->m_ParameterMap.push_back( parameterMap );
+  if( this->m_ParameterMap != parameterMap )
+  {
+    this->m_ParameterMap = parameterMap;
+    this->Modified();
+  }
 }
 
-ParameterObject::ParameterMapType &
+
+/**
+ * ********************* AddParameterMap *********************
+ */
+
+void
 ParameterObject
-::GetParameterMap( const unsigned int index )
+::AddParameterMap( const ParameterMapType & parameterMap )
 {
+  this->m_ParameterMap.push_back( parameterMap );
   this->Modified();
-  return this->m_ParameterMap[ index ];
 }
+
+/**
+ * ********************* GetParameterMap *********************
+ */
 
 const ParameterObject::ParameterMapType &
 ParameterObject
 ::GetParameterMap( const unsigned int index ) const
 {
-  this->Modified();
   return this->m_ParameterMap[ index ];
 }
 
+/**
+ * ********************* ReadParameterFile *********************
+ */
+
 void
 ParameterObject
-::ReadParameterFile( const ParameterFileNameType parameterFileName )
+::ReadParameterFile( const ParameterFileNameType & parameterFileName )
 {
   ParameterFileParserPointer parameterFileParser = ParameterFileParserType::New();
   parameterFileParser->SetParameterFileName( parameterFileName );
@@ -71,9 +93,13 @@ ParameterObject
   this->SetParameterMap( ParameterMapVectorType( 1, parameterFileParser->GetParameterMap() ) );
 }
 
+/**
+ * ********************* ReadParameterFile *********************
+ */
+
 void
 ParameterObject
-::ReadParameterFile( const ParameterFileNameVectorType parameterFileNameVector )
+::ReadParameterFile( const ParameterFileNameVectorType & parameterFileNameVector )
 {
   if( parameterFileNameVector.size() == 0 )
   {
@@ -93,9 +119,13 @@ ParameterObject
   }
 }
 
+/**
+ * ********************* AddParameterFile *********************
+ */
+
 void
 ParameterObject
-::AddParameterFile( const ParameterFileNameType parameterFileName )
+::AddParameterFile( const ParameterFileNameType & parameterFileName )
 {
   ParameterFileParserPointer parameterFileParser = ParameterFileParserType::New();
   parameterFileParser->SetParameterFileName( parameterFileName );
@@ -103,9 +133,13 @@ ParameterObject
   this->m_ParameterMap.push_back( parameterFileParser->GetParameterMap() );
 }
 
+/**
+ * ********************* WriteParameterFile *********************
+ */
+
 void
 ParameterObject
-::WriteParameterFile( const ParameterMapType parameterMap, const ParameterFileNameType parameterFileName )
+::WriteParameterFile( const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName )
 {
   std::ofstream parameterFile;
   parameterFile.exceptions( std::ofstream::failbit | std::ofstream::badbit );
@@ -163,9 +197,13 @@ ParameterObject
   }
 }
 
+/**
+ * ********************* WriteParameterFile *********************
+ */
+
 void
 ParameterObject
-::WriteParameterFile( const ParameterFileNameType parameterFileName )
+::WriteParameterFile( const ParameterFileNameType & parameterFileName )
 {
   if( this->m_ParameterMap.size() == 0 )
   {
@@ -181,9 +219,13 @@ ParameterObject
   this->WriteParameterFile( this->m_ParameterMap[ 0 ], parameterFileName );
 }
 
+/**
+ * ********************* WriteParameterFile *********************
+ */
+
 void
 ParameterObject
-::WriteParameterFile( const ParameterFileNameVectorType parameterFileNameVector )
+::WriteParameterFile( const ParameterFileNameVectorType & parameterFileNameVector )
 {
   if( this->m_ParameterMap.size() != parameterFileNameVector.size() )
   {
@@ -197,23 +239,13 @@ ParameterObject
   }
 }
 
-void
-ParameterObject
-::SetParameterMap( const std::string transformName, const unsigned int numberOfResolutions, const double finalGridSpacingInPhysicalUnits )
-{
-  this->m_ParameterMap = ParameterMapVectorType( 1, this->GetParameterMap( transformName, numberOfResolutions, finalGridSpacingInPhysicalUnits ) );
-}
+/**
+ * ********************* GetParameterMap *********************
+ */
 
-void
+const ParameterObject::ParameterMapType
 ParameterObject
-::AddParameterMap( const std::string transformName, const unsigned int numberOfResolutions, const double finalGridSpacingInPhysicalUnits )
-{
-  this->m_ParameterMap.push_back( this->GetParameterMap( transformName, numberOfResolutions, finalGridSpacingInPhysicalUnits ) );
-}
-
-ParameterObject::ParameterMapType
-ParameterObject
-::GetParameterMap( const std::string transformName, const unsigned int numberOfResolutions, const double finalGridSpacingInPhysicalUnits )
+::GetDefaultParameterMap( const std::string & transformName, const unsigned int & numberOfResolutions, const double & finalGridSpacingInPhysicalUnits )
 {
   // Parameters that depend on size and number of resolutions
   ParameterMapType parameterMap                        = ParameterMapType();
@@ -294,7 +326,7 @@ ParameterObject
   }
   else
   {
-    itkExceptionMacro( "No default parameter map \"" << transformName << "\"." );
+    itkGenericExceptionMacro( "No default parameter map \"" << transformName << "\"." );
   }
 
   // B-spline transform settings

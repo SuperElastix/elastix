@@ -52,34 +52,30 @@ public:
   typedef std::vector< ParameterFileNameType >                    ParameterFileNameVectorType;
   typedef ParameterFileNameVectorType::iterator                   ParameterFileNameVectorIterator;
   typedef ParameterFileNameVectorType::const_iterator             ParameterFileNameVectorConstIterator;
-
   typedef itk::ParameterFileParser                                ParameterFileParserType;
   typedef ParameterFileParserType::Pointer                        ParameterFileParserPointer;
 
-  itkSetMacro( ParameterMap, ParameterMapVectorType );
-  void SetParameterMap( const ParameterMapType parameterMap );
-  void AddParameterMap( const ParameterMapType parameterMap );
-
-  ParameterMapType& GetParameterMap( const unsigned int index );
+  /* Set/Get/Add parameter map or vector of parameter maps. */
+  // TODO: Use itkSetMacro for ParameterMapVectorType
+  void SetParameterMap( const ParameterMapType & parameterMap );
+  void SetParameterMap( const ParameterMapVectorType & parameterMap );
+  void AddParameterMap( const ParameterMapType & parameterMap );
   const ParameterMapType& GetParameterMap( const unsigned int index ) const;
-  itkGetMacro( ParameterMap, ParameterMapVectorType );
   itkGetConstReferenceMacro( ParameterMap, ParameterMapVectorType );
 
-  void ReadParameterFile( const ParameterFileNameType parameterFileName );
-  void ReadParameterFile( const ParameterFileNameVectorType parameterFileNameVector );
-  void AddParameterFile( const ParameterFileNameType parameterFileName );
-  
-  void WriteParameterFile( const ParameterMapType parameterMap, const ParameterFileNameType parameterFileName );
-  void WriteParameterFile( const ParameterFileNameType parameterFileName );
-  void WriteParameterFile( const ParameterFileNameVectorType parameterFileNameVector );
+  /* Read/Write parameter file or multiple parameter files to/from disk. */
+  void ReadParameterFile( const ParameterFileNameType & parameterFileName );
+  void ReadParameterFile( const ParameterFileNameVectorType & parameterFileNameVector );
+  void AddParameterFile( const ParameterFileNameType & parameterFileName );
+  void WriteParameterFile( const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName );
+  void WriteParameterFile( const ParameterFileNameType & parameterFileName );
+  void WriteParameterFile( const ParameterFileNameVectorType & parameterFileNameVector );
 
-  // Default parameter maps
-  void SetParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 4u, const double finalGridSpacingInPhysicalUnits = 10.0 );
-  void AddParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 4u, const double finalGridSpacingInPhysicalUnits = 10.0 );
-  ParameterMapType GetParameterMap( const std::string transformName, const unsigned int numberOfResolutions = 4u, const double finalGridSpacingInPhysicalUnits = 10.0 );
+  /* Get preconfigured parameter maps. */
+  static const ParameterMapType GetDefaultParameterMap( const std::string & transformName, const unsigned int & numberOfResolutions = 4u, const double & finalGridSpacingInPhysicalUnits = 10.0 );
 
-  // C++11 has a to_string in the standard library, but we avoid
-  // introducing C++11 dependency for this function
+  // C++11 has a to_string in the standard library, but we like to 
+  // avoid introducing C++11 dependency for this single function
   template< typename T >
   static std::string ToString( const T& n )
   {
@@ -90,7 +86,7 @@ public:
 
 private:
 
-  ParameterMapVectorType  m_ParameterMap;
+  ParameterMapVectorType m_ParameterMap;
 
 };
 

@@ -34,20 +34,18 @@ TransformixFilter< TInputImage >
 
   this->AddRequiredInputName( "TransformParameterObject" );
 
-  this->SetInputPointSetFileName( "" );
-  this->ComputeSpatialJacobianOff();
-  this->ComputeDeterminantOfSpatialJacobianOff();
-  this->ComputeDeformationFieldOff();
+  this->m_InputPointSetFileName = "";
+  this->m_ComputeSpatialJacobian = false;
+  this->m_ComputeDeterminantOfSpatialJacobian = false;
+  this->m_ComputeDeformationField = false;
 
-  this->SetOutputDirectory( "" );
-  this->SetLogFileName( "" );
+  this->m_OutputDirectory = "";
+  this->m_LogFileName = "";
 
-  this->LogToConsoleOff();
-  this->LogToFileOff();
+  this->m_LogToConsole = false;
+  this->m_LogToFile = false;
 
-  // The filter requires in input image to be set even if we 
-  // compute outputs that do not depend on an input image,
-  // e.g. a deformation field, so we set one here
+  // TransformixFilter must have an input image
   this->SetInput( "InputImage", TInputImage::New() );
 } // end Constructor
 
@@ -218,9 +216,9 @@ TransformixFilter< TInputImage >
 template< typename TInputImage >
 void
 TransformixFilter< TInputImage >
-::SetInput( InputImagePointer inputImage )
+::SetInput( TInputImage* inputImage )
 {
-  this->SetInput( "InputImage", static_cast< itk::DataObject* >( inputImage ) );
+  this->SetInput( "InputImage", dynamic_cast< itk::DataObject* >( inputImage ) );
 } // end SetInput()
 
 /**
@@ -228,7 +226,7 @@ TransformixFilter< TInputImage >
  */
 
 template< typename TInputImage >
-typename TransformixFilter< TInputImage >::InputImagePointer
+typename TransformixFilter< TInputImage >::InputImageConstPointer
 TransformixFilter< TInputImage >
 ::GetInput( void )
 {
@@ -268,6 +266,7 @@ typename TransformixFilter< TInputImage >::ParameterObjectPointer
 TransformixFilter< TInputImage >
 ::GetTransformParameterObject( void )
 {
+  this->Update();
   return static_cast< ParameterObject* >( this->GetInput( "TransformParameterObject" ) );
 } // end SetTransformParameterObject()
 
