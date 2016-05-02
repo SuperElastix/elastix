@@ -54,18 +54,16 @@ public:
   typedef ElastixMainType::Pointer                            ElastixMainPointer;
   typedef std::vector< ElastixMainPointer >                   ElastixMainVectorType;
   typedef ElastixMainType::ObjectPointer                      ElastixMainObjectPointer;
-
-  typedef ElastixMainType::FlatDirectionCosinesType           FlatDirectionCosinesType;
-
   typedef ElastixMainType::ArgumentMapType                    ArgumentMapType;
   typedef ArgumentMapType::value_type                         ArgumentMapEntryType;
+  typedef ElastixMainType::FlatDirectionCosinesType           FlatDirectionCosinesType;
 
   typedef ElastixMainType::DataObjectContainerType            DataObjectContainerType;
   typedef ElastixMainType::DataObjectContainerPointer         DataObjectContainerPointer;
   typedef DataObjectContainerType::Iterator                   DataObjectContainerIterator;
   typedef itk::ProcessObject::DataObjectIdentifierType        DataObjectIdentifierType;
   typedef itk::ProcessObject::DataObjectPointerArraySizeType  DataObjectPointerArraySizeType;
-  typedef itk::ProcessObject::NameArray                       InputNameArrayType;
+  typedef itk::ProcessObject::NameArray                       NameArrayType;
 
   typedef ParameterObject                                     ParameterObjectType;
   typedef ParameterObjectType::ParameterMapType               ParameterMapType;
@@ -121,12 +119,12 @@ public:
 
   /** Set/Get parameter object.*/
   itkSetInputMacro( ParameterObject, ParameterObject );
-  ParameterObject* GetParameterObject( void );
-  const ParameterObject* GetParameterObject( void ) const;
+  ParameterObjectType* GetParameterObject( void );
+  const ParameterObjectType* GetParameterObject( void ) const;
  
   /** Get transform parameter object.*/
-  ParameterObject* GetTransformParameterObject( void );
-  const ParameterObject* GetTransformParameterObject( void ) const;
+  ParameterObjectType* GetTransformParameterObject( void );
+  const ParameterObjectType* GetTransformParameterObject( void ) const;
 
   /** Set/Get/Remove initial transform parameter filename. */
   itkSetMacro( InitialTransformParameterFileName, std::string );

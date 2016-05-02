@@ -75,7 +75,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   FlatDirectionCosinesType    fixedImageOriginalDirection;
 
   // Split inputs into separate containers
-  const InputNameArrayType inputNames = this->GetInputNames();
+  const NameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
   {
     if( this->IsInputOfType( "FixedImage", inputNames[ i ] ) )
@@ -321,6 +321,7 @@ const typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectType*
 ElastixFilter< TFixedImage, TMovingImage >
 ::GetTransformParameterObject( void ) const
 {
+  this->Update();
   return static_cast< const ParameterObjectType* >( itk::ProcessObject::GetOutput( "TransformParameterObject" ) );
 }
 
@@ -383,7 +384,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::GetFixedImage( const unsigned int index ) const
 {
   unsigned int n = 0;
-  InputNameArrayType inputNames = this->GetInputNames();
+  NameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
   {
     if( this->IsInputOfType( "FixedImage", inputNames[ i ] ) )
@@ -473,7 +474,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::GetMovingImage( const unsigned int index ) const
 {
   unsigned int n = 0;
-  InputNameArrayType inputNames = this->GetInputNames();
+  NameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
   {
     if( this->IsInputOfType( "MovingImage", inputNames[ i ] ) )
@@ -551,7 +552,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::GetFixedMask( const unsigned int index ) const
 {
   unsigned int n = 0;
-  InputNameArrayType inputNames = this->GetInputNames();
+  NameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
   {
     if( this->IsInputOfType( "FixedMask", inputNames[ i ] ) )
@@ -641,7 +642,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::GetMovingMask( const unsigned int index ) const
 {
   unsigned int n = 0;
-  InputNameArrayType inputNames = this->GetInputNames();
+  NameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
   {
     if( this->IsInputOfType( "MovingMask", inputNames[ i ] ) )
@@ -743,7 +744,7 @@ ElastixFilter< TFixedImage, TMovingImage >
 ::GetNumberOfInputsOfType( const DataObjectIdentifierType & inputType )
 {
   unsigned int n = 0;
-  InputNameArrayType inputNames = this->GetInputNames();
+  NameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
   {
     if( this->IsInputOfType( inputType, inputNames[ i ] ) )
@@ -764,7 +765,7 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::RemoveInputOfType( const DataObjectIdentifierType& inputType )
 {
-  InputNameArrayType inputNames = this->GetInputNames();
+  NameArrayType inputNames = this->GetInputNames();
   for( unsigned int i = 0; i < inputNames.size(); ++i )
   {
     if( this->IsInputOfType( inputType, inputNames[ i ] ) )

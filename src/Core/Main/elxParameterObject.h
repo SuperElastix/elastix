@@ -84,6 +84,10 @@ public:
     return stm.str();
   }
 
+protected: 
+  
+  void PrintSelf( std::ostream & os, itk::Indent indent ) const ITK_OVERRIDE;
+
 private:
 
   ParameterMapVectorType m_ParameterMap;

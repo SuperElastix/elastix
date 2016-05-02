@@ -58,11 +58,12 @@ public:
   typedef TransformixMainType::DataObjectContainerType      DataObjectContainerType;
   typedef TransformixMainType::DataObjectContainerPointer   DataObjectContainerPointer;
 
-  typedef ParameterObject::ParameterMapVectorType           ParameterMapVectorType;
-  typedef ParameterObject::ParameterMapType                 ParameterMapType;
-  typedef ParameterObject::ParameterValueVectorType         ParameterValueVectorType;
-  typedef typename ParameterObject::Pointer                 ParameterObjectPointer;
-  typedef typename ParameterObject::ConstPointer            ParameterObjectConstPointer;
+  typedef ParameterObject                                   ParameterObjectType;
+  typedef ParameterObjectType::ParameterMapVectorType       ParameterMapVectorType;
+  typedef ParameterObjectType::ParameterMapType             ParameterMapType;
+  typedef ParameterObjectType::ParameterValueVectorType     ParameterValueVectorType;
+  typedef typename ParameterObjectType::Pointer             ParameterObjectPointer;
+  typedef typename ParameterObjectType::ConstPointer        ParameterObjectConstPointer;
 
   typedef typename TInputImage::Pointer                     InputImagePointer;
   typedef typename TInputImage::ConstPointer                InputImageConstPointer;
@@ -95,8 +96,9 @@ public:
   itkBooleanMacro( ComputeDeformationField );
 
   /** Get/Set transform parameter object. */
-  void SetTransformParameterObject( ParameterObjectPointer parameterObject );
-  ParameterObjectPointer GetTransformParameterObject( void );
+  void SetTransformParameterObject( ParameterObjectPointer transformParameterObject );
+  ParameterObjectType* GetTransformParameterObject( void );
+  const ParameterObjectType* GetTransformParameterObject( void ) const;
 
   /** Set/Get/Remove output directory. */
   itkSetMacro( OutputDirectory, std::string );

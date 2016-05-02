@@ -345,6 +345,46 @@ ParameterObject
   return parameterMap;
 }
 
+/**
+ * ********************* PrintSelf *********************
+ */
+
+void
+ParameterObject
+::PrintSelf( std::ostream & os, itk::Indent indent ) const
+{
+  Superclass::PrintSelf(os, indent);
+
+  for( unsigned int i = 0; i < this->m_ParameterMap.size(); ++i )
+  {
+    os << "ParameterMap " << i << ": " << std::endl;
+    ParameterMapConstIterator parameterMapIterator = this->m_ParameterMap[ i ].begin();
+    ParameterMapConstIterator parameterMapIteratorEnd = this->m_ParameterMap[ i ].end();
+    while( parameterMapIterator != parameterMapIteratorEnd )
+    {
+      os << "  (" << parameterMapIterator->first;
+      ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
+      
+      for(unsigned int j = 0; j < parameterMapValueVector.size(); ++j)
+      {
+        std::stringstream stream( parameterMapValueVector[ j ] );
+        float number;
+        stream >> number;
+        if( stream.fail() ) {
+           os << " \"" << parameterMapValueVector[ j ] << "\"";
+        }
+        else
+        {
+          os << " " << number;
+        }      
+      }
+      
+      os << ")" << std::endl;
+      ++parameterMapIterator;
+    }
+  }
+}
+
 } // namespace elastix
 
 #endif // elxParameterObject_cxx

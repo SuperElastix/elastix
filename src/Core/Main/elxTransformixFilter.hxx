@@ -262,13 +262,26 @@ TransformixFilter< TInputImage >
  */
 
 template< typename TInputImage >
-typename TransformixFilter< TInputImage >::ParameterObjectPointer
+typename TransformixFilter< TInputImage >::ParameterObjectType*
 TransformixFilter< TInputImage >
 ::GetTransformParameterObject( void )
 {
   this->Update();
-  return static_cast< ParameterObject* >( this->GetInput( "TransformParameterObject" ) );
-} // end SetTransformParameterObject()
+  return static_cast< ParameterObjectType* >( this->GetInput( "TransformParameterObject" ) );
+} // end GetTransformParameterObject()
+
+/**
+ * ********************* GetTransformParameterObject *********************
+ */
+
+template< typename TInputImage >
+const typename TransformixFilter< TInputImage >::ParameterObjectType*
+TransformixFilter< TInputImage >
+::GetTransformParameterObject( void ) const
+{
+  this->Update();
+  return static_cast< const ParameterObjectType* >( this->GetInput( "TransformParameterObject" ) );
+} // end GetTransformParameterObject()
 
 /**
 * ********************* IsEmpty ****************************
