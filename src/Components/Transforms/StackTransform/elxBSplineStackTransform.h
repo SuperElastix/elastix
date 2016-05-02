@@ -179,6 +179,7 @@ public:
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ParametersType         ParametersType;
+  typedef typename Superclass2::ParameterMapType       ParameterMapType;
   typedef typename Superclass1::NumberOfParametersType NumberOfParametersType;
 
   /** Typedef's specific for the BSplineTransform. */
@@ -225,6 +226,9 @@ public:
   typedef itk::UpsampleBSplineParametersFilter<
     ParametersType, ReducedDimensionImageType >           GridUpsamplerType;
   typedef typename GridUpsamplerType::Pointer GridUpsamplerPointer;
+
+  /** Typedef's creation of parameter map */
+  typedef std::vector< std::string > ParameterValueType;
 
   /** Execute stuff before anything else is done:
    * \li Initialize the right BSplineTransform.
@@ -277,6 +281,10 @@ public:
 
   /** Set the scales of the edge B-spline coefficients to zero. */
   virtual void SetOptimizerScales( const unsigned int edgeWidth );
+
+  /** Function to create transform-parameters map */
+  virtual void CreateTransformParametersMap(
+    const ParametersType & param, ParameterMapType * paramsMap ) const;
 
 protected:
 

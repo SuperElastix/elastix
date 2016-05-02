@@ -518,17 +518,18 @@ void
 BSplineStackTransform< TElastix >
 ::ReadFromFile( void )
 {
+
   /** Read spline order settings and initialize BSplineTransform. */
   m_SplineOrder = 3;
   this->GetConfiguration()->ReadParameter( m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0 );
 
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
-  this->GetConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
+  bool dummy = this->GetConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
     "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0 );
-  this->GetConfiguration()->ReadParameter( this->m_StackOrigin,
+  dummy |= this->GetConfiguration()->ReadParameter( this->m_StackOrigin,
     "StackOrigin", this->GetComponentLabel(), 0, 0 );
-  this->GetConfiguration()->ReadParameter( this->m_StackSpacing,
+  dummy |= this->GetConfiguration()->ReadParameter( this->m_StackSpacing,
     "StackSpacing", this->GetComponentLabel(), 0, 0 );
 
   /** Initialize the right B-spline transform. */
@@ -559,15 +560,22 @@ BSplineStackTransform< TElastix >
   /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
   for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
-    this->m_Configuration->ReadParameter( gridsize[ i ], "GridSize", i );
-    this->m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
-    this->m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
-    this->m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
+    dummy |= this->m_Configuration->ReadParameter( gridsize[ i ], "GridSize", i );
+    dummy |= this->m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
+    dummy |= this->m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
+    dummy |= this->m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
     for( unsigned int j = 0; j < ReducedSpaceDimension; j++ )
     {
       this->m_Configuration->ReadParameter( griddirection( j, i ),
         "GridDirection", i * ReducedSpaceDimension + j );
     }
+  }
+
+  if( !dummy )
+  {
+    itkExceptionMacro( "NumberOfSubTransforms, StackOrigin, StackSpacing, GridSize, "
+                    << "GridIndex, GridSpacing and GridOrigin is required by "
+                    << this->GetNameOfClass() << "." )
   }
 
   /** Set it all. */
@@ -774,6 +782,97 @@ BSplineStackTransform< TElastix >::SetOptimizerScales( const unsigned int edgeWi
 
 } // end SetOptimizerScales()
 
+/**
+ * ************************* CreateTransformParametersMap ************************
+ *
+ * Creates the TransformParametersmap
+ *
+ */
+
+template< class TElastix >
+void
+BSplineStackTransform< TElastix >
+::CreateTransformParametersMap(
+  const ParametersType & param,
+  ParameterMapType * paramsMap ) const
+{
+  char tmpValue[ 256 ];
+
+  /** Call the CreateTransformParametersMap from the TransformBase. */
+  this->Superclass2::CreateTransformParametersMap( param, paramsMap );
+
+  /** Write BSplineStackTransform-specific parameters */
+
+  /** Get the GridSize, GridIndex, GridSpacing,
+   * GridOrigin, and GridDirection of this transform. */
+  ReducedDimensionBSplineTransformBasePointer firstSubTransform
+    = dynamic_cast< ReducedDimensionBSplineTransformBaseType * >( this->m_BSplineStackTransform->GetSubTransform( 0 ).GetPointer() );
+  ReducedDimensionSizeType      size      = firstSubTransform->GetGridRegion().GetSize();
+  ReducedDimensionIndexType     index     = firstSubTransform->GetGridRegion().GetIndex();
+  ReducedDimensionSpacingType   spacing   = firstSubTransform->GetGridSpacing();
+  ReducedDimensionOriginType    origin    = firstSubTransform->GetGridOrigin();
+  ReducedDimensionDirectionType direction = firstSubTransform->GetGridDirection();
+
+  /** Write the GridSize of this transform. */
+  ParameterValueType GridSize;
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    sprintf( tmpValue, "%.10lu", size[ i ] );
+    GridSize.push_back( tmpValue );
+  }
+  paramsMap->insert( make_pair( "GridSize", GridSize ) );
+
+  /** Write the GridIndex of this transform. */
+  ParameterValueType GridIndex;
+  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
+  {
+    sprintf( tmpValue, "%.10ld", index[ i ] );
+    GridIndex.push_back( tmpValue );
+  }
+  paramsMap->insert( make_pair( "GridIndex", GridIndex ) );
+
+  /** Write the GridSpacing of this transform.  */
+  std::vector< std::string > GridSpacing;
+  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
+  {
+    sprintf( tmpValue, "%.10lf", spacing[ i ] );
+    GridSpacing.push_back( tmpValue );
+  }
+  paramsMap->insert( make_pair( "GridSpacing", GridSpacing ) );
+
+  /** Write the GridOrigin of this transform. */
+  ParameterValueType GridOrigin;
+  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
+  {
+    sprintf( tmpValue, "%.10lf", origin[ i ] );
+    GridOrigin.push_back( tmpValue );
+  }
+  paramsMap->insert( make_pair( "GridOrigin", GridOrigin ) );
+
+  /** Write the GridDirection of this transform. */
+  ParameterValueType GridDirection;
+  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
+  {
+    for( unsigned int j = 0; j < ReducedSpaceDimension; j++ )
+    {
+      sprintf( tmpValue, "%.10lf", direction( j, i ) );
+      GridDirection.push_back( tmpValue );
+    }
+  }
+  paramsMap->insert( make_pair( "GridDirection", GridDirection ) );
+
+  /** Write the spline order of this transform. */
+  sprintf( tmpValue, "%i", m_SplineOrder );
+  paramsMap->insert( make_pair( "BSplineTransformSplineOrder", ParameterValueType( 1, tmpValue ) ) );
+
+  /** Write the stack spacing, stack origin and number of sub transforms. */
+  sprintf( tmpValue, "%.10lf", this->m_BSplineStackTransform->GetStackSpacing() );
+  paramsMap->insert( make_pair( "StackSpacing", ParameterValueType( 1, tmpValue ) ) );
+  sprintf( tmpValue, "%.10lf", this->m_BSplineStackTransform->GetStackOrigin() );
+  paramsMap->insert( make_pair( "StackOrigin", ParameterValueType( 1, tmpValue ) ) );
+  sprintf( tmpValue, "%i", this->m_BSplineStackTransform->GetNumberOfSubTransforms() );
+  paramsMap->insert( make_pair( "NumberOfSubTransforms", ParameterValueType( 1, tmpValue ) ) );
+}
 
 } // end namespace elastix
 
