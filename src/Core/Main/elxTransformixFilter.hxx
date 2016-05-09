@@ -126,7 +126,8 @@ TransformixFilter< TInputImage >
   }
   else
   {
-    if( this->GetOutputDirectory().back() != '/' || this->GetOutputDirectory().back() != '\\' )
+    if( this->GetOutputDirectory()[ this->GetOutputDirectory().size() - 1 ] != '/' 
+     || this->GetOutputDirectory()[ this->GetOutputDirectory().size() - 1 ] != '\\' )
     {
       this->SetOutputDirectory( this->GetOutputDirectory() + "/" );
     }
