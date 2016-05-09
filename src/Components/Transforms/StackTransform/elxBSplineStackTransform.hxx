@@ -815,7 +815,7 @@ BSplineStackTransform< TElastix >
 
   /** Write the GridSize of this transform. */
   ParameterValueType GridSize;
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
+  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
     sprintf( tmpValue, "%.10lu", size[ i ] );
     GridSize.push_back( tmpValue );
