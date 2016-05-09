@@ -26,7 +26,7 @@
 
 /**
  * \class ElastixFilter
- * \brief Elastix registration library exposed as an ITK filter.
+ * \brief ITK Filter interface to the Elastix registration library.
  */
 
 namespace elastix
@@ -118,7 +118,7 @@ public:
   unsigned int GetNumberOfMovingMasks( void ) const;
 
   /** Set/Get parameter object.*/
-  itkSetInputMacro( ParameterObject, ParameterObject );
+  void SetParameterObject( const ParameterObjectType* parameterObject );
   ParameterObjectType* GetParameterObject( void );
   const ParameterObjectType* GetParameterObject( void ) const;
  
