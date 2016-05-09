@@ -277,6 +277,22 @@ ElastixFilter< TFixedImage, TMovingImage >
 }
 
 /**
+ * ********************* SetParameterObject *********************
+ */
+
+template< typename TFixedImage, typename TMovingImage >
+void 
+ElastixFilter< TFixedImage, TMovingImage >
+::SetParameterObject( const ParameterObjectType* parameterObject )
+{
+  if( parameterObject != static_cast< ParameterObjectType* >( this->GetInput( "ParameterObject" ) ) )
+  {
+    this->SetInput( "ParameterObject", const_cast< ParameterObjectType* >( parameterObject ) );
+    this->Modified();
+  }
+}
+
+/**
  * ********************* GetParameterObject *********************
  */
 
