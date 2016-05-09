@@ -26,7 +26,7 @@
 
 /**
  * \class TransformixFilter
- * \brief Transformix library exposed as an ITK filter.
+ * \brief ITK Filter interface to the Transformix library.
  */
 
 namespace elastix {
@@ -71,14 +71,14 @@ public:
   itkStaticConstMacro( InputImageDimension, unsigned int, TInputImage::ImageDimension );
 
   /** Set/Get/Add moving image. */
-  void SetInput( TInputImage* inputImage );
+  virtual void SetInput( TInputImage* inputImage );
   InputImageConstPointer GetInput( void );
-  void RemoveInput( void );
+  virtual void RemoveInput( void );
 
   /** Set/Get/Remove moving point set filename. */
   itkSetMacro( InputPointSetFileName, std::string );
   itkGetMacro( InputPointSetFileName, std::string );
-  void RemoveInputPointSetFileName() { this->SetInputPointSetFileName( "" ); };
+  virtual void RemoveInputPointSetFileName() { this->SetInputPointSetFileName( "" ); };
 
   /** Compute spatial Jacobian On/Off. */
   itkSetMacro( ComputeSpatialJacobian, bool );
@@ -96,19 +96,19 @@ public:
   itkBooleanMacro( ComputeDeformationField );
 
   /** Get/Set transform parameter object. */
-  void SetTransformParameterObject( ParameterObjectPointer transformParameterObject );
+  virtual void SetTransformParameterObject( ParameterObjectPointer transformParameterObject );
   ParameterObjectType* GetTransformParameterObject( void );
   const ParameterObjectType* GetTransformParameterObject( void ) const;
 
   /** Set/Get/Remove output directory. */
   itkSetMacro( OutputDirectory, std::string );
   itkGetConstMacro( OutputDirectory, std::string );
-  void RemoveOutputDirectory() { this->SetOutputDirectory( "" ); };
+  virtual void RemoveOutputDirectory() { this->SetOutputDirectory( "" ); };
 
   /** Set/Get/Remove log filename. */
-  void SetLogFileName( std::string logFileName );
+  virtual void SetLogFileName( std::string logFileName );
   itkGetConstMacro( LogFileName, std::string );
-  void RemoveLogFileName( void );
+  virtual void RemoveLogFileName( void );
 
   /** Log to std::cout on/off. */
   itkSetMacro( LogToConsole, bool );
@@ -124,7 +124,7 @@ protected:
 
   TransformixFilter( void );
 
-  void GenerateData( void ) ITK_OVERRIDE;
+  virtual void GenerateData( void ) ITK_OVERRIDE;
 
 private:
 
@@ -132,10 +132,10 @@ private:
   void operator=( const Self & );    // purposely not implemented
 
   /** IsEmpty. */
-  bool IsEmpty( const InputImagePointer inputImage );
+  virtual bool IsEmpty( const InputImagePointer inputImage );
 
   /** Let transformix handle input verification internally */
-  void VerifyInputInformation( void ) ITK_OVERRIDE {};
+  virtual void VerifyInputInformation( void ) ITK_OVERRIDE {};
 
   /** Tell the compiler we want all definitions of Get/Set/Remove 
    *  from ProcessObject and TransformixFilter. */
