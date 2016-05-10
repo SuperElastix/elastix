@@ -166,8 +166,8 @@ AffineLogTransformElastix<TElastix>
   InputPointType centerOfRotationPoint;
   bool centerGivenAsIndex = true;
   bool centerGivenAsPoint = true;
-  SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()
-    ->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  //SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()
+  //  ->GetFixedImage()->GetLargestPossibleRegion().GetSize();
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Initialize. */
