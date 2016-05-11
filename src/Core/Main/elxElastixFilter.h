@@ -88,37 +88,37 @@ public:
   typedef typename MovingMaskType::Pointer                    MovingMaskConstPointer;
 
   /** Set/Add/Get/NumberOf fixed images. */
-  void SetFixedImage( TFixedImage* fixedImage );
-  void AddFixedImage( TFixedImage* fixedImage );
+  virtual void SetFixedImage( TFixedImage* fixedImage );
+  virtual void AddFixedImage( TFixedImage* fixedImage );
   FixedImageConstPointer GetFixedImage( void ) const;
   FixedImageConstPointer GetFixedImage( const unsigned int index ) const;
   unsigned int GetNumberOfFixedImages( void ) const;
 
   /** Set/Add/Get/NumberOf moving images. */
-  void SetMovingImage( TMovingImage* movingImages );
-  void AddMovingImage( TMovingImage* movingImage );
+  virtual void SetMovingImage( TMovingImage* movingImages );
+  virtual void AddMovingImage( TMovingImage* movingImage );
   MovingImageConstPointer GetMovingImage( void ) const;
   MovingImageConstPointer GetMovingImage( const unsigned int index ) const;
   unsigned int GetNumberOfMovingImages( void ) const;
 
   /** Set/Add/Get/Remove/NumberOf fixed masks. */
-  void AddFixedMask( FixedMaskType* fixedMask );
-  void SetFixedMask( FixedMaskType* fixedMask );
+  virtual void AddFixedMask( FixedMaskType* fixedMask );
+  virtual void SetFixedMask( FixedMaskType* fixedMask );
   FixedMaskConstPointer GetFixedMask( void ) const;
   FixedMaskConstPointer GetFixedMask( const unsigned int index ) const;
   void RemoveFixedMask( void );
   unsigned int GetNumberOfFixedMasks( void ) const;
 
   /** Set/Add/Get/Remove/NumberOf moving masks. */
-  void SetMovingMask( MovingMaskType* movingMask );
-  void AddMovingMask( MovingMaskType* movingMask );
+  virtual void SetMovingMask( MovingMaskType* movingMask );
+  virtual void AddMovingMask( MovingMaskType* movingMask );
   MovingMaskConstPointer GetMovingMask( void ) const;
   MovingMaskConstPointer GetMovingMask( const unsigned int index ) const;
-  void RemoveMovingMask( void );
+  virtual void RemoveMovingMask( void );
   unsigned int GetNumberOfMovingMasks( void ) const;
 
   /** Set/Get parameter object.*/
-  void SetParameterObject( const ParameterObjectType* parameterObject );
+  virtual void SetParameterObject( const ParameterObjectType* parameterObject );
   ParameterObjectType* GetParameterObject( void );
   const ParameterObjectType* GetParameterObject( void ) const;
  
@@ -129,7 +129,7 @@ public:
   /** Set/Get/Remove initial transform parameter filename. */
   itkSetMacro( InitialTransformParameterFileName, std::string );
   itkGetMacro( InitialTransformParameterFileName, std::string );
-  void RemoveInitialTransformParameterFileName( void ) { this->SetInitialTransformParameterFileName( "" ); };
+  virtual void RemoveInitialTransformParameterFileName( void ) { this->SetInitialTransformParameterFileName( "" ); };
 
   /** Set/Get/Remove fixed point set filename. */
   itkSetMacro( FixedPointSetFileName, std::string );
@@ -172,17 +172,17 @@ private:
   ElastixFilter( const Self & );  // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
 
-  /** SetInputWithUniqueIdentifier. */
-  void SetInputWithUniqueIdentifier( const DataObjectIdentifierType & key, itk::DataObject* input );
+  /** MakeUniqueName. */
+  std::string MakeUniqueName( const DataObjectIdentifierType & key );
 
   /** IsInputOfType. */
   bool IsInputOfType( const DataObjectIdentifierType & InputOfType, DataObjectIdentifierType inputName );
 
-  /** GetNumberOfInputOfType */
+  /** GetNumberOfInputsOfType */
   unsigned int GetNumberOfInputsOfType( const DataObjectIdentifierType & intputType );
 
-  /** RemoveInputOfType. */
-  void RemoveInputOfType( const DataObjectIdentifierType & inputName );
+  /** RemoveInputsOfType. */
+  void RemoveInputsOfType( const DataObjectIdentifierType & inputName );
 
   /** Let elastix handle input verification internally */
   virtual void VerifyInputInformation( void ) ITK_OVERRIDE {};

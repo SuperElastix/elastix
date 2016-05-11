@@ -127,7 +127,7 @@ TransformixFilter< TInputImage >
   else
   {
     if( this->GetOutputDirectory()[ this->GetOutputDirectory().size() - 1 ] != '/' 
-     || this->GetOutputDirectory()[ this->GetOutputDirectory().size() - 1 ] != '\\' )
+     && this->GetOutputDirectory()[ this->GetOutputDirectory().size() - 1 ] != '\\' )
     {
       this->SetOutputDirectory( this->GetOutputDirectory() + "/" );
     }
@@ -199,7 +199,7 @@ TransformixFilter< TInputImage >
 
   if( isError != 0 )
   {
-    itkExceptionMacro( "Internal transformix error: See transformix log." );
+    itkExceptionMacro( "Internal transformix error: See transformix log (use LogToConsoleOn() or LogToFileOn())" );
   }
 
   // Save result image
