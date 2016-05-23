@@ -398,9 +398,6 @@ BSplineStackTransform< TElastix >
 
 /**
  * ******************** InitializeTransform ***********************
- *
- * Set the size of the initial control point grid and initialize
- * the parameters to 0.
  */
 
 template< class TElastix >
@@ -436,8 +433,6 @@ BSplineStackTransform< TElastix >
 
 /**
  * *********************** IncreaseScale ************************
- *
- * Upsample the grid of control points.
  */
 
 template< class TElastix >
@@ -601,9 +596,6 @@ BSplineStackTransform< TElastix >
 
 /**
  * ************************* WriteToFile ************************
- *
- * Saves the TransformParameters as a vector and if wanted
- * also as a deformation field.
  */
 
 template< class TElastix >
@@ -692,8 +684,6 @@ BSplineStackTransform< TElastix >
 
 /**
  * *********************** SetOptimizerScales ***********************
- *
- * Set the optimizer scales of the edge coefficients to infinity.
  */
 
 template< class TElastix >
@@ -782,11 +772,9 @@ BSplineStackTransform< TElastix >::SetOptimizerScales( const unsigned int edgeWi
 
 } // end SetOptimizerScales()
 
+
 /**
  * ************************* CreateTransformParametersMap ************************
- *
- * Creates the TransformParametersmap
- *
  */
 
 template< class TElastix >
@@ -804,7 +792,8 @@ BSplineStackTransform< TElastix >
   /** Write BSplineStackTransform-specific parameters */
 
   /** Get the GridSize, GridIndex, GridSpacing,
-   * GridOrigin, and GridDirection of this transform. */
+   * GridOrigin, and GridDirection of this transform.
+   */
   ReducedDimensionBSplineTransformBasePointer firstSubTransform
     = dynamic_cast< ReducedDimensionBSplineTransformBaseType * >( this->m_BSplineStackTransform->GetSubTransform( 0 ).GetPointer() );
   ReducedDimensionSizeType      size      = firstSubTransform->GetGridRegion().GetSize();
