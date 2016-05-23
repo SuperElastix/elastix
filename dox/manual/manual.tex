@@ -1174,10 +1174,13 @@ pre-compiled binaries.
        \texttt{export PATH=folder/bin:\$PATH}\\
        \texttt{export LD\_LIBRARY\_PATH=folder/lib:\$LD\_LIBRARY\_PATH}
        \end{quote}
+
+    \item Mac: Use \texttt{DYLD\_LIBRARY\_PATH} instead of \texttt{LD\_LIBRARY\_PATH}
+
     \end{enumerate}
     or call \elastix\ with the full path:
-    \texttt{fullPathToFolder$\backslash$elastix}. Note that in Linux, you
-    will have to set the \texttt{LD\_LIBRARY\_PATH} anyway.
+    \texttt{fullPathToFolder$\backslash$elastix}. Note that in Linux and Mac, you
+    will have to set the \texttt{LD\_LIBRARY\_PATH} or \texttt{DYLD\_LIBRARY\_PATH} anyway.
 \end{enumerate}
 
 \subsection{Getting started the easy way}
