@@ -34,7 +34,9 @@ namespace elastix
 template< class TElastix >
 AdvancedBSplineTransform< TElastix >
 ::AdvancedBSplineTransform()
-{} // end Constructor()
+{
+} // end Constructor()
+
 
 /**
  * ************ InitializeBSplineTransform ***************
@@ -747,7 +749,8 @@ AdvancedBSplineTransform< TElastix >
 
 template< class TElastix >
 void
-AdvancedBSplineTransform< TElastix >::SetOptimizerScales( const unsigned int edgeWidth )
+AdvancedBSplineTransform< TElastix >
+::SetOptimizerScales( const unsigned int edgeWidth )
 {
   /** Some typedefs. */
   typedef itk::ImageRegionExclusionConstIteratorWithIndex< ImageType > IteratorType;

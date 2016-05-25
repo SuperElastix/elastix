@@ -5,10 +5,6 @@ ADD_ELXCOMPONENT( AdaptiveStochasticGradientDescent
  elxAdaptiveStochasticGradientDescent.cxx
  itkAdaptiveStochasticGradientDescentOptimizer.h
  itkAdaptiveStochasticGradientDescentOptimizer.cxx
- itkComputeJacobianTerms.h
- itkComputeJacobianTerms.hxx
- itkComputeDisplacementDistribution.h
- itkComputeDisplacementDistribution.hxx
  ../StandardGradientDescent/itkStandardGradientDescentOptimizer.cxx
  ../StandardGradientDescent/itkGradientDescentOptimizer2.cxx
 )

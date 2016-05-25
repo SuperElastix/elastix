@@ -25,6 +25,10 @@ set( CommonFiles
   itkAdvancedLinearInterpolateImageFunction.hxx
   itkAdvancedRayCastInterpolateImageFunction.h
   itkAdvancedRayCastInterpolateImageFunction.hxx
+  itkComputeDisplacementDistribution.h
+  itkComputeDisplacementDistribution.hxx
+  itkComputeJacobianTerms.h
+  itkComputeJacobianTerms.hxx
   itkGenericMultiResolutionPyramidImageFilter.h
   itkGenericMultiResolutionPyramidImageFilter.hxx
   itkImageFileCastWriter.h

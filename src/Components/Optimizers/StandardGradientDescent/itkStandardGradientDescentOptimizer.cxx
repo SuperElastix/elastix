@@ -38,6 +38,7 @@ StandardGradientDescentOptimizer
 
   this->m_CurrentTime = 0.0;
   this->m_InitialTime = 0.0;
+  this->m_UseConstantStep = false;
 
 }   // end Constructor
 
@@ -63,7 +64,15 @@ StandardGradientDescentOptimizer
 ::AdvanceOneStep( void )
 {
 
-  this->SetLearningRate( this->Compute_a( this->m_CurrentTime ) );
+  /** Decide which type of step size is chosen. */
+  if ( this->m_UseConstantStep )
+  {
+    this->SetLearningRate( this->Compute_a( 0 ));
+  }
+  else
+  {
+    this->SetLearningRate( this->Compute_a( this->m_CurrentTime ) );
+  }
 
   this->Superclass::AdvanceOneStep();
 

@@ -146,8 +146,7 @@ GridScheduleComputer< TTransformScalarType, VImageDimension >
     for( unsigned int dim = 0; dim < Dimension; ++dim )
     {
       /** Compute the grid spacings. */
-      double gridSpacing
-                                         = finalGridSpacing[ dim ] * this->m_GridSpacingFactors[ res ][ dim ];
+      double gridSpacing                 = finalGridSpacing[ dim ] * this->m_GridSpacingFactors[ res ][ dim ];
       this->m_GridSpacings[ res ][ dim ] = gridSpacing;
 
       /** Compute the grid size without the extra grid points at the edges. */

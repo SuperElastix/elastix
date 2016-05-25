@@ -126,6 +126,9 @@ public:
   /** Get current gradient. */
   itkGetConstReferenceMacro( Gradient, DerivativeType );
 
+  /** Get current search direction */
+  itkGetConstReferenceMacro( SearchDirection, DerivativeType);
+
   /** Set the number of threads. */
   void SetNumberOfThreads( ThreadIdType numberOfThreads )
   {
@@ -151,6 +154,7 @@ protected:
   // made protected so subclass can access
   double            m_Value;
   DerivativeType    m_Gradient;
+  DerivativeType    m_SearchDirection;
   double            m_LearningRate;
   StopConditionType m_StopCondition;
 

@@ -218,6 +218,7 @@ protected:
   ExactMetricImageSamplerPointer   m_ExactMetricSampler;
   MeasureType                      m_CurrentExactMetricValue;
   ExactMetricSampleGridSpacingType m_ExactMetricSampleGridSpacing;
+  unsigned int                     m_ExactMetricEachXNumberOfIterations;
 
 private:
 

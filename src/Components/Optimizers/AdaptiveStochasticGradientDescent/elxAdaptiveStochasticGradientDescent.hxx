@@ -165,6 +165,11 @@ AdaptiveStochasticGradientDescent< TElastix >
   this->GetConfiguration()->ReadParameter( this->m_AutomaticParameterEstimation,
     "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0 );
 
+  /** Set which step size strategy is chosen; default: false. */
+  this->m_UseConstantStep = false;
+  this->GetConfiguration()->ReadParameter( this->m_UseConstantStep,
+    "UseConstantStep", this->GetComponentLabel(), level, 0 );
+
   if( this->m_AutomaticParameterEstimation )
   {
     /** Set the maximum step length: the maximum displacement of a voxel in mm.
@@ -585,7 +590,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   /** Compute the Jacobian terms. */
   elxout << "  Computing JacobianTerms ..." << std::endl;
   timer2.Start();
-  computeJacobianTerms->ComputeParameters( TrC, TrCC, maxJJ, maxJCJ );
+  computeJacobianTerms->Compute( TrC, TrCC, maxJJ, maxJCJ );
   timer2.Stop();
   elxout << "  Computing the Jacobian terms took "
     << this->ConvertSecondsToDHMS( timer2.GetMean(), 6 ) << std::endl;
@@ -740,7 +745,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   /** Compute the Jacobian terms. */
   elxout << "  Computing displacement distribution ..." << std::endl;
   timer4.Start();
-  computeDisplacementDistribution->ComputeDistributionTerms(
+  computeDisplacementDistribution->Compute(
     this->GetScaledCurrentPosition(), jacg, maxJJ,
     maximumDisplacementEstimationMethod );
   timer4.Stop();

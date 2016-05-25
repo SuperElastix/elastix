@@ -36,6 +36,7 @@ MetricBase< TElastix >
   this->m_ExactMetricSampler      = 0;
   this->m_CurrentExactMetricValue = 0.0;
   this->m_ExactMetricSampleGridSpacing.Fill( 1 );
+  this->m_ExactMetricEachXNumberOfIterations = 1;
 
 } // end Constructor
 
@@ -93,6 +94,12 @@ MetricBase< TElastix >
       this->m_ExactMetricSampleGridSpacing[ dim ]
         = static_cast< SampleGridSpacingValueType >( spacing_dim );
     }
+
+    /** Read the requested frequency of exact metric evaluation. */
+    unsigned int eachXNumberOfIterations = 1;
+    this->GetConfiguration()->ReadParameter( eachXNumberOfIterations,
+      "ExactMetricEveryXIterations", this->GetComponentLabel(), level, 0 );
+    this->m_ExactMetricEachXNumberOfIterations = eachXNumberOfIterations;
   }
 
   /** Cast this to AdvancedMetricType. */
@@ -193,7 +200,8 @@ MetricBase< TElastix >
   exactMetricColumn += this->GetComponentLabel();
 
   this->m_CurrentExactMetricValue = 0.0;
-  if( this->m_ShowExactMetricValue )
+  if( this->m_ShowExactMetricValue
+    && ( this->m_Elastix->GetIterationCounter() % this->m_ExactMetricEachXNumberOfIterations == 0 ) )
   {
     this->m_CurrentExactMetricValue = this->GetExactValue(
       this->GetElastix()->GetElxOptimizerBase()

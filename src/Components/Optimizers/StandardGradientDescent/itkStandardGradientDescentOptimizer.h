@@ -147,6 +147,9 @@ protected:
   /** The current time, which serves as input for Compute_a */
   double m_CurrentTime;
 
+  /** Constant step size or others, different value of k. */
+  bool m_UseConstantStep;
+
 private:
 
   StandardGradientDescentOptimizer( const Self & ); // purposely not implemented
