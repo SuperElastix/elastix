@@ -198,9 +198,9 @@ main( int argc, char * argv[] )
   typedef itk::BSplineTransform_TEST<
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
 
-  typedef TransformType::InputPointType         InputPointType;
-  typedef TransformType::OutputPointType        OutputPointType;
-  typedef TransformType::ParametersType         ParametersType;
+  typedef TransformType::InputPointType  InputPointType;
+  typedef TransformType::OutputPointType OutputPointType;
+  typedef TransformType::ParametersType  ParametersType;
 
   typedef itk::Image< CoordinateRepresentationType,
     Dimension >                                         InputImageType;

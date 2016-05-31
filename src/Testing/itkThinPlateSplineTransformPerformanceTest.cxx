@@ -121,10 +121,10 @@ main( int argc, char * argv[] )
   typedef itk::TransformixInputPointFileReader<
     PointSetType >                                      IPPReaderType;
 
-  typedef PointSetType::PointsContainer   PointsContainerType;
-  typedef PointsContainerType::Pointer    PointsContainerPointer;
-  typedef PointSetType::PointType         PointType;
-  typedef TransformType::LMatrixType      LMatrixType;
+  typedef PointSetType::PointsContainer PointsContainerType;
+  typedef PointsContainerType::Pointer  PointsContainerPointer;
+  typedef PointSetType::PointType       PointType;
+  typedef TransformType::LMatrixType    LMatrixType;
 
   PointSetType::Pointer dummyLandmarks = PointSetType::New();
 

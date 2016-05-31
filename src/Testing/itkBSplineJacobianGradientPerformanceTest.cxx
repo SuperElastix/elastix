@@ -58,9 +58,9 @@ main( int argc, char * argv[] )
   typedef itk::AdvancedBSplineDeformableTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
 
-  typedef TransformType::NumberOfParametersType NumberOfParametersType;
-  typedef TransformType::InputPointType         InputPointType;
-  typedef TransformType::ParametersType         ParametersType;
+  typedef TransformType::NumberOfParametersType     NumberOfParametersType;
+  typedef TransformType::InputPointType             InputPointType;
+  typedef TransformType::ParametersType             ParametersType;
   typedef TransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
   typedef TransformType::DerivativeType             DerivativeType;
   typedef TransformType::JacobianType               JacobianType;
@@ -126,7 +126,7 @@ main( int argc, char * argv[] )
   transform->SetParameters( parameters );
 
   /** Declare variables. */
-  InputPointType  inputPoint; inputPoint.Fill( 4.1 );
+  InputPointType          inputPoint; inputPoint.Fill( 4.1 );
   MovingImageGradientType movingImageGradient;
   movingImageGradient[ 0 ] = 29.43; movingImageGradient[ 0 ] = 18.21; movingImageGradient[ 0 ] = 1.7;
   const NumberOfParametersType nnzji = transform->GetNumberOfNonZeroJacobianIndices();
