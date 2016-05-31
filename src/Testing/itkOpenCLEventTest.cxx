@@ -33,6 +33,7 @@ main( int argc, char * argv[] )
     // Create and check OpenCL context
     if( !itk::CreateContext() )
     {
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
@@ -42,6 +43,7 @@ main( int argc, char * argv[] )
 #ifdef OPENCL_PROFILING
     if( !context->GetDefaultCommandQueue().IsProfilingEnabled() )
     {
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 #else
@@ -49,6 +51,7 @@ main( int argc, char * argv[] )
       = context->CreateCommandQueue( CL_QUEUE_PROFILING_ENABLE );
     if( !queue.IsProfilingEnabled() )
     {
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
     context->SetCommandQueue( queue );
@@ -89,21 +92,25 @@ main( int argc, char * argv[] )
     // Check the event execution times
     if( event.GetFinishTime() == 0 )
     {
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
     if( event.GetSubmitTime() <= event.GetQueueTime() )
     {
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
     if( event.GetRunTime() <= event.GetSubmitTime() )
     {
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
     if( event.GetFinishTime() <= event.GetRunTime() )
     {
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
@@ -112,8 +119,10 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
+  itk::ReleaseContext();
   return EXIT_SUCCESS;
 }

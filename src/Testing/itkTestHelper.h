@@ -100,6 +100,18 @@ CreateContext()
 
 //------------------------------------------------------------------------------
 void
+ReleaseContext()
+{
+  itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
+  if( context->IsCreated() )
+  {
+    context->Release();
+  }
+}
+
+
+//------------------------------------------------------------------------------
+void
 CreateOpenCLLogger( const std::string & prefixFileName )
 {
   /** Create the OpenCL logger */
@@ -200,9 +212,9 @@ ComputeRMSE( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
   TScalarType & rmsRelative )
 {
   ImageRegionConstIterator< CPUImageType > cit(
-  cpuImage, cpuImage->GetLargestPossibleRegion() );
+    cpuImage, cpuImage->GetLargestPossibleRegion() );
   ImageRegionConstIterator< GPUImageType > git(
-  gpuImage, gpuImage->GetLargestPossibleRegion() );
+    gpuImage, gpuImage->GetLargestPossibleRegion() );
 
   TScalarType rmse          = 0.0;
   TScalarType sumCPUSquared = 0.0;
@@ -230,9 +242,9 @@ ComputeRMSE2( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
   const float & threshold )
 {
   ImageRegionConstIterator< CPUImageType > cit(
-  cpuImage, cpuImage->GetLargestPossibleRegion() );
+    cpuImage, cpuImage->GetLargestPossibleRegion() );
   ImageRegionConstIterator< GPUImageType > git(
-  gpuImage, gpuImage->GetLargestPossibleRegion() );
+    gpuImage, gpuImage->GetLargestPossibleRegion() );
 
   TScalarType rmse = 0.0;
 
@@ -345,14 +357,14 @@ ComputeRMSE( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
   TScalarType & rmsRelative )
 {
   ImageRegionConstIterator< CPUImageType > cit(
-  cpuImage, cpuImage->GetLargestPossibleRegion() );
+    cpuImage, cpuImage->GetLargestPossibleRegion() );
   ImageRegionConstIterator< GPUImageType > git(
-  gpuImage, gpuImage->GetLargestPossibleRegion() );
+    gpuImage, gpuImage->GetLargestPossibleRegion() );
 
   ImageRegionConstIterator< MaskImageType > mcit(
-  cpuImageMask, cpuImageMask->GetLargestPossibleRegion() );
+    cpuImageMask, cpuImageMask->GetLargestPossibleRegion() );
   ImageRegionConstIterator< MaskImageType > mgit(
-  gpuImageMask, gpuImageMask->GetLargestPossibleRegion() );
+    gpuImageMask, gpuImageMask->GetLargestPossibleRegion() );
 
   TScalarType rmse          = 0.0;
   TScalarType sumCPUSquared = 0.0;
@@ -392,14 +404,14 @@ ComputeRMSE2( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
   const float threshold, TScalarType & rmsRelative )
 {
   ImageRegionConstIterator< CPUImageType > cit(
-  cpuImage, cpuImage->GetLargestPossibleRegion() );
+    cpuImage, cpuImage->GetLargestPossibleRegion() );
   ImageRegionConstIterator< GPUImageType > git(
-  gpuImage, gpuImage->GetLargestPossibleRegion() );
+    gpuImage, gpuImage->GetLargestPossibleRegion() );
 
   ImageRegionConstIterator< MaskImageType > mcit(
-  cpuImageMask, cpuImageMask->GetLargestPossibleRegion() );
+    cpuImageMask, cpuImageMask->GetLargestPossibleRegion() );
   ImageRegionConstIterator< MaskImageType > mgit(
-  gpuImageMask, gpuImageMask->GetLargestPossibleRegion() );
+    gpuImageMask, gpuImageMask->GetLargestPossibleRegion() );
 
   TScalarType rmse          = 0.0;
   TScalarType sumCPUSquared = 0.0;
@@ -407,7 +419,7 @@ ComputeRMSE2( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
   for( cit.GoToBegin(), git.GoToBegin(), mcit.GoToBegin(), mgit.GoToBegin();
     !cit.IsAtEnd(); ++cit, ++git, ++mcit, ++mgit )
   {
-    if(  mcit.Get() == NumericTraits< typename MaskImageType::PixelType >::One
+    if( mcit.Get() == NumericTraits< typename MaskImageType::PixelType >::One
       && mgit.Get() == NumericTraits< typename MaskImageType::PixelType >::OneValue() )
     {
       ++count;

@@ -142,7 +142,7 @@ ComputeCenterOfTheImage( const typename InputImageType::ConstPointer & image )
 template< typename InterpolatorType >
 void
 DefineInterpolator( typename InterpolatorType::Pointer & interpolator,
-  const std::string &interpolatorName,
+  const std::string & interpolatorName,
   const unsigned int splineOrderInterpolator )
 {
   // Interpolator typedefs
@@ -642,6 +642,7 @@ main( int argc, char * argv[] )
   {
     std::cerr << "Your OpenCL device: " << context->GetDefaultDevice().GetName()
               << ", does not support 'double' computations. Consider updating it." << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -658,10 +659,12 @@ main( int argc, char * argv[] )
 
   if( validateArguments == itk::CommandLineArgumentParser::FAILED )
   {
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
   else if( validateArguments == itk::CommandLineArgumentParser::HELPREQUESTED )
   {
+    itk::ReleaseContext();
     return EXIT_SUCCESS;
   }
 
@@ -685,6 +688,7 @@ main( int argc, char * argv[] )
     && interpolator != "BSpline" )
   {
     std::cerr << "ERROR: interpolator \"-i\" should be one of {NearestNeighbor, Linear, BSpline}." << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -698,6 +702,7 @@ main( int argc, char * argv[] )
   if( transforms.size() > 1 && !useComboTransform )
   {
     std::cerr << "ERROR: for multiple transforms option \"-c\" should provided." << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -714,6 +719,7 @@ main( int argc, char * argv[] )
       std::cerr << "ERROR: transforms \"-t\" should be one of "
                 << "{Affine, Translation, BSpline, Euler, Similarity}"
                 << " or combination of them." << std::endl;
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
   }
@@ -728,6 +734,7 @@ main( int argc, char * argv[] )
       if( !retp )
       {
         std::cerr << "ERROR: You should specify parameters file \"-p\" for the B-spline transform." << std::endl;
+        itk::ReleaseContext();
         return EXIT_FAILURE;
       }
       // Faster B-spline tests
@@ -827,6 +834,7 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: Caught ITK exception during cpuReader->Update(): " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -959,6 +967,7 @@ main( int argc, char * argv[] )
     catch( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: Caught ITK exception during cpuFilter->Update(): " << e << std::endl;
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
@@ -986,6 +995,7 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: Caught ITK exception during cpuWriter->Update(): " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -1041,6 +1051,7 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "Caught ITK exception during gpuFilter::New(): " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -1064,6 +1075,7 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: Caught ITK exception during cpuReader->Update(): " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -1093,6 +1105,7 @@ main( int argc, char * argv[] )
       else
       {
         std::cerr << "ERROR: Unable to retrieve CPU AdvancedCombinationTransform." << std::endl;
+        itk::ReleaseContext();
         return EXIT_FAILURE;
       }
     }
@@ -1100,6 +1113,7 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: Caught ITK exception during copy transforms: " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -1124,6 +1138,7 @@ main( int argc, char * argv[] )
     catch( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: " << e << std::endl;
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
@@ -1134,6 +1149,7 @@ main( int argc, char * argv[] )
     catch( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: " << e << std::endl;
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
     // Modify the filter, only not the last iteration
@@ -1160,6 +1176,7 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -1175,9 +1192,11 @@ main( int argc, char * argv[] )
     std::cerr << "ERROR: the RMSE between the CPU and GPU results is "
               << RMSerror << ", which is larger than the expected "
               << rmseError << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
   // End program.
+  itk::ReleaseContext();
   return EXIT_SUCCESS;
 }

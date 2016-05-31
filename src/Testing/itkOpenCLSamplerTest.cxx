@@ -41,14 +41,17 @@ main( int argc, char * argv[] )
 
     if( sampler.IsNull() )
     {
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
   }
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
+  itk::ReleaseContext();
   return EXIT_SUCCESS;
 }

@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 #include "itkOpenCLContext.h"
+#include "itkTestHelper.h"
 
 int
 main( int argc, char * argv[] )
@@ -24,6 +25,7 @@ main( int argc, char * argv[] )
 
   if( contextNull->IsCreated() )
   {
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -32,6 +34,7 @@ main( int argc, char * argv[] )
   // Check the pointers, they should be the same
   if( contextNull.GetPointer() != context.GetPointer() )
   {
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -43,6 +46,7 @@ main( int argc, char * argv[] )
 
   if( !context->IsCreated() )
   {
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -53,7 +57,6 @@ main( int argc, char * argv[] )
   }
 
   // Release and exit
-  context->Release();
-
+  itk::ReleaseContext();
   return EXIT_SUCCESS;
 }

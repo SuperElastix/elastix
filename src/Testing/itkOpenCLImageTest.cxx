@@ -39,6 +39,7 @@ main( int argc, char * argv[] )
     if( !context->IsCreated() )
     {
       std::cerr << "OpenCL-enabled device is not present." << std::endl;
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
 
@@ -68,9 +69,9 @@ main( int argc, char * argv[] )
 
     // Test the OpenCLImage 2D
     const itk::OpenCLImageFormat format2d(
-    itk::OpenCLImageFormat::IMAGE2D,
-    itk::OpenCLImageFormat::RGBA,
-    itk::OpenCLImageFormat::UNSIGNED_INT8 );
+      itk::OpenCLImageFormat::IMAGE2D,
+      itk::OpenCLImageFormat::RGBA,
+      itk::OpenCLImageFormat::UNSIGNED_INT8 );
 
     std::cout << format2d;
     itk::OpenCLSize size2D( imageSize1D, imageSize1D );
@@ -112,8 +113,10 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "Caught ITK exception: " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
+  itk::ReleaseContext();
   return EXIT_SUCCESS;
 }

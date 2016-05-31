@@ -109,6 +109,7 @@ main( int argc, char * argv[] )
     catch( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: " << e << std::endl;
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
     filter->Modified();
@@ -130,6 +131,7 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -162,6 +164,7 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
   gpuFilter->SetSigmaArray( sigmaArray );
@@ -193,6 +196,7 @@ main( int argc, char * argv[] )
     catch( itk::ExceptionObject & e )
     {
       std::cerr << "ERROR: " << e << std::endl;
+      itk::ReleaseContext();
       return EXIT_FAILURE;
     }
     gpuFilter->Modified();
@@ -214,6 +218,7 @@ main( int argc, char * argv[] )
   catch( itk::ExceptionObject & e )
   {
     std::cerr << "ERROR: " << e << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
@@ -227,9 +232,11 @@ main( int argc, char * argv[] )
   if( RMSerror > epsilon )
   {
     std::cerr << "ERROR: RMSE between CPU and GPU result larger than expected" << std::endl;
+    itk::ReleaseContext();
     return EXIT_FAILURE;
   }
 
   // End program.
+  itk::ReleaseContext();
   return EXIT_SUCCESS;
 } // end main()
