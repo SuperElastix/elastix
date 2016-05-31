@@ -143,7 +143,7 @@ main( int argc, char * argv[] )
   /** Generate all information. */
   try
   {
-    testReader->GenerateOutputInformation();
+    testReader->UpdateOutputInformation();
   }
   catch( itk::ExceptionObject & e )
   {
