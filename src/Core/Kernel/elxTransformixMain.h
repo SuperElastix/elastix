@@ -105,7 +105,7 @@ public:
 protected:
 
   TransformixMain(){}
-  virtual ~TransformixMain(){}
+  virtual ~TransformixMain();
 
   /** InitDBIndex sets m_DBIndex to the value obtained
    * from the ComponentDatabase.

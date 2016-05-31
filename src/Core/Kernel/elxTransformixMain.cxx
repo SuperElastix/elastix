@@ -218,6 +218,22 @@ TransformixMain::SetInputImageContainer(
 
 
 /**
+ * ********************** Destructor ****************************
+ */
+
+TransformixMain::~TransformixMain()
+{
+#ifdef ELASTIX_USE_OPENCL
+  itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
+  if( context->IsCreated() )
+  {
+    context->Release();
+  }
+#endif
+} // end Destructor
+
+
+/**
  * ********************* InitDBIndex ****************************
  */
 
