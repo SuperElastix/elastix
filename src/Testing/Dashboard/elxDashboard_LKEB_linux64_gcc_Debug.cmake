@@ -46,7 +46,7 @@ set( dashboard_do_memcheck ON )
 # Dashboard settings
 set( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=/usr/local/toolkits/ITK/git/bin_debug
+ITK_DIR:PATH=/srv/lkeb-goliath/toolkits/ITK/git/bin_debug
 
 // Coverage settings: -fprofile-arcs -ftest-coverage
 CMAKE_CXX_FLAGS_DEBUG:STRING=-g -O0 -fprofile-arcs -ftest-coverage

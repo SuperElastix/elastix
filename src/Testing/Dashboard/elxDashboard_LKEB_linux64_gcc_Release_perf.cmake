@@ -39,7 +39,7 @@ endif()
 # Dashboard settings
 set( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=/usr/local/toolkits/ITK/git/bin_release
+ITK_DIR:PATH=/srv/lkeb-goliath/toolkits/ITK/git/bin_release
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON

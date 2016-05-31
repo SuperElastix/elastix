@@ -66,7 +66,7 @@ CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g
 //CMAKE_RANLIB:FILEPATH=/usr/clang_3_3/bin/llvm-ranlib
 
 // Which ITK to use
-ITK_DIR:PATH=/usr/local/toolkits/ITK/git/bin_release_clang
+ITK_DIR:PATH=/srv/lkeb-goliath/toolkits/ITK/git/bin_release_clang
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
