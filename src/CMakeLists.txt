@@ -19,6 +19,11 @@ option( ELASTIX_BUILD_EXECUTABLE "Generate executable or library?" ON )
 if( NOT ELASTIX_BUILD_EXECUTABLE )
   add_definitions( -D_ELASTIX_BUILD_LIBRARY )
 
+  # The following may make smaller and quicker loading libraries,
+  # that hides unnecessary symbols. Available from CMake 3.0.0.
+  #set( CMAKE_C_VISIBILITY_PRESET hidden )
+  #set( CMAKE_CXX_VISIBILITY_PRESET hidden )
+
   # Adding the option to switch between a static and a shared library.
   # The default is a static library, as it is best tested.
   mark_as_advanced( ELASTIX_BUILD_SHARED_LIBS )

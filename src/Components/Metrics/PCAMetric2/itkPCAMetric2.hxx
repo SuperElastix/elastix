@@ -372,7 +372,7 @@ PCAMetric2<TFixedImage, TMovingImage>
   itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
   /** Define derivative and Jacobian types. */
   typedef typename DerivativeType::ValueType        DerivativeValueType;
-  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
+  //typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /** Initialize some variables */
   const unsigned int P = this->GetNumberOfParameters();

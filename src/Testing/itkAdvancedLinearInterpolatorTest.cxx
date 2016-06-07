@@ -42,7 +42,7 @@ TestInterpolators( void )
   typedef typename InputImageType::SpacingType   SpacingType;
   typedef typename InputImageType::PointType     OriginType;
   typedef typename InputImageType::RegionType    RegionType;
-  typedef typename RegionType::IndexType         IndexType;
+  //typedef typename RegionType::IndexType         IndexType;
   typedef typename InputImageType::DirectionType DirectionType;
   typedef double                                 CoordRepType;
   typedef double                                 CoefficientType;
@@ -59,7 +59,7 @@ TestInterpolators( void )
 
   typedef itk::ImageRegionIterator< InputImageType >             IteratorType;
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomNumberGeneratorType;
-  typedef itk::ImageFileWriter< InputImageType >                 WriterType;
+  //typedef itk::ImageFileWriter< InputImageType >                 WriterType;
 
   RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
 

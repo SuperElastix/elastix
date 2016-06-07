@@ -95,7 +95,7 @@ main( int argc, char * argv[] )
   typedef BaseTransformType::ParametersType                ParametersType;
   typedef BaseTransformType::ScalarType                    ScalarType;
   typedef RigidTransformType::CenterType                   CenterType;
-  typedef BaseTransformType::OutputPointType               OutputPointType;
+  //typedef BaseTransformType::OutputPointType               OutputPointType;
 
   /** Interface to the original transform parameters file. */
   typedef itk::ParameterFileParser   ParserType;

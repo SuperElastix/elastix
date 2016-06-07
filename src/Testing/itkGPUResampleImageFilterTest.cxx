@@ -800,12 +800,12 @@ main( int argc, char * argv[] )
   // Interpolate typedefs
   typedef itk::InterpolateImageFunction<
     InputImageType, InterpolatorPrecisionType >             InterpolatorType;
-  typedef itk::NearestNeighborInterpolateImageFunction<
-    InputImageType, InterpolatorPrecisionType >             NearestNeighborInterpolatorType;
-  typedef itk::LinearInterpolateImageFunction<
-    InputImageType, InterpolatorPrecisionType >             LinearInterpolatorType;
-  typedef itk::BSplineInterpolateImageFunction<
-    InputImageType, ScalarType, InterpolatorPrecisionType > BSplineInterpolatorType;
+//  typedef itk::NearestNeighborInterpolateImageFunction<
+//    InputImageType, InterpolatorPrecisionType >             NearestNeighborInterpolatorType;
+//  typedef itk::LinearInterpolateImageFunction<
+//    InputImageType, InterpolatorPrecisionType >             LinearInterpolatorType;
+//  typedef itk::BSplineInterpolateImageFunction<
+//    InputImageType, ScalarType, InterpolatorPrecisionType > BSplineInterpolatorType;
 
   // Interpolator copier
   typedef itk::GPUInterpolatorCopier< OCLImageTypes, OCLImageDims, InterpolatorType, InterpolatorPrecisionType >

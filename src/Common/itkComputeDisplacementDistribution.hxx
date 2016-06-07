@@ -571,7 +571,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   Jgg.Fill( 0.0 );
   std::vector< double > JGG_k;
   double                globalDeformation = 0.0;
-  const double          sqrt2             = vcl_sqrt( static_cast< double >( 2.0 ) );
+  //const double          sqrt2             = vcl_sqrt( static_cast< double >( 2.0 ) );
   JacobianType          jacjjacj( outdim, outdim );
 
   samplenr = 0;

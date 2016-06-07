@@ -37,7 +37,7 @@ main( int argc, char * argv[] )
   typedef float ScalarType;
 
   // ITK transform typedefs
-  typedef itk::Transform< ScalarType, Dimension, Dimension > TransformType;
+  //typedef itk::Transform< ScalarType, Dimension, Dimension > TransformType;
   typedef itk::AffineTransform< ScalarType, Dimension >      AffineTransformType;
   typedef itk::TranslationTransform< ScalarType, Dimension > TranslationTransformType;
   typedef itk::BSplineTransform< ScalarType, Dimension, 3 >  BSplineTransformType;
@@ -46,8 +46,8 @@ main( int argc, char * argv[] )
   // elastix advanced transform typedefs
   typedef itk::AdvancedCombinationTransform< ScalarType, Dimension >
     AdvancedCombinationTransformType;
-  typedef itk::AdvancedTransform< ScalarType, Dimension, Dimension >
-    AdvancedTransformType;
+  //typedef itk::AdvancedTransform< ScalarType, Dimension, Dimension >
+    //AdvancedTransformType;
   typedef itk::AdvancedMatrixOffsetTransformBase< ScalarType, Dimension, Dimension >
     AdvancedAffineTransformType;
   typedef itk::AdvancedTranslationTransform< ScalarType, Dimension >
