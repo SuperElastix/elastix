@@ -26,6 +26,7 @@ set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
 set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix" )
 set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_debug_clang )
 set( CTEST_MEMORYCHECK_TYPE "AddressSanitizer" )
+set( ENV{LD_LIBRARY_PATH} "/usr/local/lib:$ENV{LD_LIBRARY_PATH}" )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
