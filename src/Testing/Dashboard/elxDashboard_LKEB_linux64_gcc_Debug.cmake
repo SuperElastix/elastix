@@ -40,7 +40,7 @@ set( dashboard_do_coverage ON )
 set( dashboard_do_memcheck ON )
 
 # Valgrind options
-#set( CTEST_MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --quiet --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=100 --verbose --demangle=yes --gen-suppressions=all" )
+set( CTEST_MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --tool=memcheck --leak-check=yes --show-reachable=no --num-callers=100 --verbose --demangle=yes" )
 #set( CTEST_MEMORYCHECK_SUPPRESSIONS_FILE ${CTEST_SOURCE_DIRECTORY}/CMake/InsightValgrind.supp )
 
 # Dashboard settings
