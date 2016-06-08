@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __itkAffineLogTransform_txx
-#define __itkAffineLogTransform_txx
+#ifndef __itkAffineLogTransform_hxx
+#define __itkAffineLogTransform_hxx
 
 #include "vnl/vnl_matrix_exp.h"
 #include "itkMath.h"
@@ -279,4 +279,4 @@ AffineLogTransform< TScalarType, Dimension >
 
 } // end namespace
 
-#endif // itkAffineLogTransform_TXX
+#endif // itkAffineLogTransform_hxx

@@ -123,7 +123,7 @@ private:
 }  // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAffineLogTransform.txx"
+#include "itkAffineLogTransform.hxx"
 #endif
 
 #endif /* __itkAffineLogTransform_h */
