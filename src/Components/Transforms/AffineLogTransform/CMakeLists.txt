@@ -4,5 +4,5 @@ ADD_ELXCOMPONENT( AffineLogTransformElastix OFF
  elxAffineLogTransform.hxx
  elxAffineLogTransform.cxx
  itkAffineLogTransform.h
- itkAffineLogTransform.txx )
+ itkAffineLogTransform.hxx )
 
