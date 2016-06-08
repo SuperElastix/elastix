@@ -22,7 +22,6 @@
 
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 

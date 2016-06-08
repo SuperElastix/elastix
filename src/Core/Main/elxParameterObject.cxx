@@ -24,7 +24,6 @@
 #include <fstream>
 #include <iostream>
 
-
 namespace elastix
 {
 
@@ -39,6 +38,7 @@ ParameterObject
   ParameterMapVectorType parameterMapVector = ParameterMapVectorType( 1, parameterMap );
   this->SetParameterMap( parameterMapVector );
 }
+
 
 /**
  * ********************* SetParameterMap *********************
@@ -68,6 +68,7 @@ ParameterObject
   this->Modified();
 }
 
+
 /**
  * ********************* GetParameterMap *********************
  */
@@ -78,6 +79,7 @@ ParameterObject
 {
   return this->m_ParameterMap[ index ];
 }
+
 
 /**
  * ********************* ReadParameterFile *********************
@@ -92,6 +94,7 @@ ParameterObject
   parameterFileParser->ReadParameterFile();
   this->SetParameterMap( ParameterMapVectorType( 1, parameterFileParser->GetParameterMap() ) );
 }
+
 
 /**
  * ********************* ReadParameterFile *********************
@@ -119,6 +122,7 @@ ParameterObject
   }
 }
 
+
 /**
  * ********************* AddParameterFile *********************
  */
@@ -132,6 +136,7 @@ ParameterObject
   parameterFileParser->ReadParameterFile();
   this->m_ParameterMap.push_back( parameterFileParser->GetParameterMap() );
 }
+
 
 /**
  * ********************* WriteParameterFile *********************
@@ -156,7 +161,7 @@ ParameterObject
 
   try
   {
-    ParameterMapConstIterator parameterMapIterator = parameterMap.begin();
+    ParameterMapConstIterator parameterMapIterator    = parameterMap.begin();
     ParameterMapConstIterator parameterMapIteratorEnd = parameterMap.end();
     while( parameterMapIterator != parameterMapIteratorEnd )
     {
@@ -166,7 +171,7 @@ ParameterObject
       for( unsigned int i = 0; i < parameterMapValueVector.size(); ++i )
       {
         std::stringstream stream( parameterMapValueVector[ i ] );
-        float number;
+        float             number;
         stream >> number;
         if( stream.fail() || stream.bad() )
         {
@@ -197,6 +202,7 @@ ParameterObject
   }
 }
 
+
 /**
  * ********************* WriteParameterFile *********************
  */
@@ -212,12 +218,15 @@ ParameterObject
 
   if( this->m_ParameterMap.size() > 1 )
   {
-    itkExceptionMacro( "Error writing to disk: The number of parameter maps (" << this->m_ParameterMap.size() << ")"
-                    << " does not match the number of provided filenames (1). Please provide a vector of filenames." );
+    itkExceptionMacro(
+      << "Error writing to disk: The number of parameter maps ("
+      << this->m_ParameterMap.size() << ")"
+      << " does not match the number of provided filenames (1). Please provide a vector of filenames." );
   }
 
   this->WriteParameterFile( this->m_ParameterMap[ 0 ], parameterFileName );
 }
+
 
 /**
  * ********************* WriteParameterFile *********************
@@ -229,8 +238,12 @@ ParameterObject
 {
   if( this->m_ParameterMap.size() != parameterFileNameVector.size() )
   {
-    itkExceptionMacro( "Error writing to disk: The number of parameter maps (" << this->m_ParameterMap.size() << ")"
-                    << " does not match the number of provided filenames (" << parameterFileNameVector.size() << ")." );
+    itkExceptionMacro(
+      << "Error writing to disk: The number of parameter maps ("
+      << this->m_ParameterMap.size() << ")"
+      << " does not match the number of provided filenames ("
+      << parameterFileNameVector.size()
+      << ")." );
   }
 
   for( unsigned int i = 0; i < this->m_ParameterMap.size(); ++i )
@@ -239,90 +252,92 @@ ParameterObject
   }
 }
 
+
 /**
  * ********************* GetParameterMap *********************
  */
 
 const ParameterObject::ParameterMapType
 ParameterObject
-::GetDefaultParameterMap( const std::string & transformName, const unsigned int & numberOfResolutions, const double & finalGridSpacingInPhysicalUnits )
+::GetDefaultParameterMap( const std::string & transformName, const unsigned int & numberOfResolutions,
+  const double & finalGridSpacingInPhysicalUnits )
 {
   // Parameters that depend on size and number of resolutions
-  ParameterMapType parameterMap                        = ParameterMapType();
+  ParameterMapType parameterMap = ParameterMapType();
 
   // Common Components
-  parameterMap[ "FixedImagePyramid" ]                  = ParameterValueVectorType( 1, "FixedSmoothingImagePyramid" );
-  parameterMap[ "MovingImagePyramid" ]                 = ParameterValueVectorType( 1, "MovingSmoothingImagePyramid" );
-  parameterMap[ "Interpolator"]                        = ParameterValueVectorType( 1, "LinearInterpolator" );
-  parameterMap[ "Optimizer" ]                          = ParameterValueVectorType( 1, "AdaptiveStochasticGradientDescent" );
-  parameterMap[ "Resampler" ]                          = ParameterValueVectorType( 1, "DefaultResampler" );
-  parameterMap[ "ResampleInterpolator" ]               = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
-  parameterMap[ "FinalBSplineInterpolationOrder" ]     = ParameterValueVectorType( 1, "3" );
-  parameterMap[ "NumberOfResolutions" ]                = ParameterValueVectorType( 1, ToString( numberOfResolutions ) );
+  parameterMap[ "FixedImagePyramid" ]              = ParameterValueVectorType( 1, "FixedSmoothingImagePyramid" );
+  parameterMap[ "MovingImagePyramid" ]             = ParameterValueVectorType( 1, "MovingSmoothingImagePyramid" );
+  parameterMap[ "Interpolator" ]                   = ParameterValueVectorType( 1, "LinearInterpolator" );
+  parameterMap[ "Optimizer" ]                      = ParameterValueVectorType( 1, "AdaptiveStochasticGradientDescent" );
+  parameterMap[ "Resampler" ]                      = ParameterValueVectorType( 1, "DefaultResampler" );
+  parameterMap[ "ResampleInterpolator" ]           = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
+  parameterMap[ "FinalBSplineInterpolationOrder" ] = ParameterValueVectorType( 1, "3" );
+  parameterMap[ "NumberOfResolutions" ]            = ParameterValueVectorType( 1, ToString( numberOfResolutions ) );
 
   // Image Sampler
-  parameterMap[ "ImageSampler" ]                       = ParameterValueVectorType( 1, "RandomCoordinate" );
-  parameterMap[ "NumberOfSpatialSamples"]              = ParameterValueVectorType( 1, "2048" );
-  parameterMap[ "CheckNumberOfSamples" ]               = ParameterValueVectorType( 1, "true" );
-  parameterMap[ "MaximumNumberOfSamplingAttempts" ]    = ParameterValueVectorType( 1, "8" );
-  parameterMap[ "NewSamplesEveryIteration" ]           = ParameterValueVectorType( 1, "true" );
+  parameterMap[ "ImageSampler" ]                    = ParameterValueVectorType( 1, "RandomCoordinate" );
+  parameterMap[ "NumberOfSpatialSamples" ]          = ParameterValueVectorType( 1, "2048" );
+  parameterMap[ "CheckNumberOfSamples" ]            = ParameterValueVectorType( 1, "true" );
+  parameterMap[ "MaximumNumberOfSamplingAttempts" ] = ParameterValueVectorType( 1, "8" );
+  parameterMap[ "NewSamplesEveryIteration" ]        = ParameterValueVectorType( 1, "true" );
 
   // Optimizer
-  parameterMap[ "NumberOfSamplesForExactGradient" ]    = ParameterValueVectorType( 1, "4096" );
-  parameterMap[ "DefaultPixelValue" ]                  = ParameterValueVectorType( 1, "0.0" );
-  parameterMap[ "AutomaticParameterEstimation" ]       = ParameterValueVectorType( 1, "true" );
+  parameterMap[ "NumberOfSamplesForExactGradient" ] = ParameterValueVectorType( 1, "4096" );
+  parameterMap[ "DefaultPixelValue" ]               = ParameterValueVectorType( 1, "0.0" );
+  parameterMap[ "AutomaticParameterEstimation" ]    = ParameterValueVectorType( 1, "true" );
 
   // Output
-  parameterMap[ "WriteResultImage" ]                   = ParameterValueVectorType( 1, "true" );
-  parameterMap[ "ResultImageFormat" ]                  = ParameterValueVectorType( 1, "nii" );
+  parameterMap[ "WriteResultImage" ]  = ParameterValueVectorType( 1, "true" );
+  parameterMap[ "ResultImageFormat" ] = ParameterValueVectorType( 1, "nii" );
 
   // transformNames
   if( transformName == "translation" )
   {
-    parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
-    parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "TranslationTransform" );
-    parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
-    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "Registration" ]              = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
+    parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "TranslationTransform" );
+    parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
+    parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
   }
   else if( transformName == "rigid" )
   {
-    parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
-    parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "EulerTransform" );
-    parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
-    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "Registration" ]              = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
+    parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "EulerTransform" );
+    parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
+    parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
   }
   else if( transformName == "affine" )
   {
-    parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
-    parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "AffineTransform" );
-    parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
-    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "Registration" ]              = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
+    parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "AffineTransform" );
+    parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
+    parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
   }
   else if( transformName == "bspline" || transformName == "nonrigid" ) // <-- nonrigid for backwards compatibility
   {
-    parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiMetricMultiResolutionRegistration" );
-    parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "BSplineTransform" );
-    parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
+    parameterMap[ "Registration" ] = ParameterValueVectorType( 1, "MultiMetricMultiResolutionRegistration" );
+    parameterMap[ "Transform" ]    = ParameterValueVectorType( 1, "BSplineTransform" );
+    parameterMap[ "Metric" ]       = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "Metric" ].push_back( "TransformBendingEnergyPenalty" );
-    parameterMap[ "Metric0Weight" ]                    = ParameterValueVectorType( 1, "1.0" );
-    parameterMap[ "Metric1Weight" ]                    = ParameterValueVectorType( 1, "10000.0" );
-    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "Metric0Weight" ]             = ParameterValueVectorType( 1, "1.0" );
+    parameterMap[ "Metric1Weight" ]             = ParameterValueVectorType( 1, "10000.0" );
+    parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
   }
-  else if( transformName == "spline")   
-  {   
-    parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiResolutionRegistration" );    
-    parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "SplineKernelTransform" );    
-    parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );    
-    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
+  else if( transformName == "spline" )
+  {
+    parameterMap[ "Registration" ]              = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
+    parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "SplineKernelTransform" );
+    parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
+    parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
   }
   else if( transformName == "groupwise" )
   {
-    parameterMap[ "Registration" ]                     = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
-    parameterMap[ "Transform" ]                        = ParameterValueVectorType( 1, "BSplineStackTransform" );
-    parameterMap[ "Metric" ]                           = ParameterValueVectorType( 1, "VarianceOverLastDimensionMetric" );
-    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
-    parameterMap[ "Interpolator"]                      = ParameterValueVectorType( 1, "ReducedDimensionBSplineInterpolator" );
-    parameterMap[ "ResampleInterpolator" ]             = ParameterValueVectorType( 1, "FinalReducedDimensionBSplineInterpolator" );
+    parameterMap[ "Registration" ]              = ParameterValueVectorType( 1, "MultiResolutionRegistration" );
+    parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "BSplineStackTransform" );
+    parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "VarianceOverLastDimensionMetric" );
+    parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "Interpolator" ]              = ParameterValueVectorType( 1, "ReducedDimensionBSplineInterpolator" );
+    parameterMap[ "ResampleInterpolator" ]      = ParameterValueVectorType( 1, "FinalReducedDimensionBSplineInterpolator" );
   }
   else
   {
@@ -338,12 +353,13 @@ ParameterObject
       gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( pow( 1.41, resolution ) ) );
     }
 
-    parameterMap[ "GridSpacingSchedule" ] = gridSpacingSchedule;
+    parameterMap[ "GridSpacingSchedule" ]             = gridSpacingSchedule;
     parameterMap[ "FinalGridSpacingInPhysicalUnits" ] = ParameterValueVectorType( 1, ToString( finalGridSpacingInPhysicalUnits ) );
   }
 
   return parameterMap;
 }
+
 
 /**
  * ********************* PrintSelf *********************
@@ -353,37 +369,39 @@ void
 ParameterObject
 ::PrintSelf( std::ostream & os, itk::Indent indent ) const
 {
-  Superclass::PrintSelf(os, indent);
+  Superclass::PrintSelf( os, indent );
 
   for( unsigned int i = 0; i < this->m_ParameterMap.size(); ++i )
   {
     os << "ParameterMap " << i << ": " << std::endl;
-    ParameterMapConstIterator parameterMapIterator = this->m_ParameterMap[ i ].begin();
+    ParameterMapConstIterator parameterMapIterator    = this->m_ParameterMap[ i ].begin();
     ParameterMapConstIterator parameterMapIteratorEnd = this->m_ParameterMap[ i ].end();
     while( parameterMapIterator != parameterMapIteratorEnd )
     {
       os << "  (" << parameterMapIterator->first;
       ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
-      
-      for(unsigned int j = 0; j < parameterMapValueVector.size(); ++j)
+
+      for( unsigned int j = 0; j < parameterMapValueVector.size(); ++j )
       {
         std::stringstream stream( parameterMapValueVector[ j ] );
-        float number;
+        float             number;
         stream >> number;
-        if( stream.fail() ) {
-           os << " \"" << parameterMapValueVector[ j ] << "\"";
+        if( stream.fail() )
+        {
+          os << " \"" << parameterMapValueVector[ j ] << "\"";
         }
         else
         {
           os << " " << number;
-        }      
+        }
       }
-      
+
       os << ")" << std::endl;
       ++parameterMapIterator;
     }
   }
 }
+
 
 } // namespace elastix
 

@@ -29,7 +29,8 @@
  * \brief ITK Filter interface to the Transformix library.
  */
 
-namespace elastix {
+namespace elastix
+{
 
 template< typename TInputImage >
 class TransformixFilter : public itk::ImageSource< TInputImage >
@@ -38,7 +39,7 @@ public:
 
   /** Standard ITK typedefs. */
   typedef TransformixFilter               Self;
-  typedef itk::ImageSource< TInputImage > Superclass; 
+  typedef itk::ImageSource< TInputImage > Superclass;
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
 
@@ -49,42 +50,44 @@ public:
   itkTypeMacro( Self, itk::ImageSource );
 
   /** Typedefs. */
-  typedef elastix::TransformixMain                          TransformixMainType;
-  typedef TransformixMainType::Pointer                      TransformixMainPointer;
-  typedef TransformixMainType::ArgumentMapType              ArgumentMapType;
-  typedef ArgumentMapType::value_type                       ArgumentMapEntryType;
+  typedef elastix::TransformixMain             TransformixMainType;
+  typedef TransformixMainType::Pointer         TransformixMainPointer;
+  typedef TransformixMainType::ArgumentMapType ArgumentMapType;
+  typedef ArgumentMapType::value_type          ArgumentMapEntryType;
 
-  typedef itk::ProcessObject::DataObjectIdentifierType      DataObjectIdentifierType;
-  typedef TransformixMainType::DataObjectContainerType      DataObjectContainerType;
-  typedef TransformixMainType::DataObjectContainerPointer   DataObjectContainerPointer;
+  typedef itk::ProcessObject::DataObjectIdentifierType    DataObjectIdentifierType;
+  typedef TransformixMainType::DataObjectContainerType    DataObjectContainerType;
+  typedef TransformixMainType::DataObjectContainerPointer DataObjectContainerPointer;
 
-  typedef ParameterObject                                   ParameterObjectType;
-  typedef ParameterObjectType::ParameterMapVectorType       ParameterMapVectorType;
-  typedef ParameterObjectType::ParameterMapType             ParameterMapType;
-  typedef ParameterObjectType::ParameterValueVectorType     ParameterValueVectorType;
-  typedef typename ParameterObjectType::Pointer             ParameterObjectPointer;
-  typedef typename ParameterObjectType::ConstPointer        ParameterObjectConstPointer;
+  typedef ParameterObject                               ParameterObjectType;
+  typedef ParameterObjectType::ParameterMapVectorType   ParameterMapVectorType;
+  typedef ParameterObjectType::ParameterMapType         ParameterMapType;
+  typedef ParameterObjectType::ParameterValueVectorType ParameterValueVectorType;
+  typedef typename ParameterObjectType::Pointer         ParameterObjectPointer;
+  typedef typename ParameterObjectType::ConstPointer    ParameterObjectConstPointer;
 
-  typedef typename TInputImage::Pointer                     InputImagePointer;
-  typedef typename TInputImage::ConstPointer                InputImageConstPointer;
+  typedef typename TInputImage::Pointer      InputImagePointer;
+  typedef typename TInputImage::ConstPointer InputImageConstPointer;
 
   itkStaticConstMacro( InputImageDimension, unsigned int, TInputImage::ImageDimension );
 
   /** Set/Get/Add moving image. */
-  virtual void SetInput( TInputImage* inputImage );
+  virtual void SetInput( TInputImage * inputImage );
+
   InputImageConstPointer GetInput( void );
+
   virtual void RemoveInput( void );
 
   /** Set/Get/Remove moving point set filename. */
   itkSetMacro( InputPointSetFileName, std::string );
   itkGetMacro( InputPointSetFileName, std::string );
-  virtual void RemoveInputPointSetFileName() { this->SetInputPointSetFileName( "" ); };
+  virtual void RemoveInputPointSetFileName() { this->SetInputPointSetFileName( "" ); }
 
   /** Compute spatial Jacobian On/Off. */
   itkSetMacro( ComputeSpatialJacobian, bool );
   itkGetConstMacro( ComputeSpatialJacobian, bool );
   itkBooleanMacro( ComputeSpatialJacobian );
-  
+
   /** Compute determinant of spatial Jacobian On/Off. */
   itkSetMacro( ComputeDeterminantOfSpatialJacobian, bool );
   itkGetConstMacro( ComputeDeterminantOfSpatialJacobian, bool );
@@ -97,16 +100,19 @@ public:
 
   /** Get/Set transform parameter object. */
   virtual void SetTransformParameterObject( ParameterObjectPointer transformParameterObject );
-  ParameterObjectType* GetTransformParameterObject( void );
-  const ParameterObjectType* GetTransformParameterObject( void ) const;
+
+  ParameterObjectType * GetTransformParameterObject( void );
+
+  const ParameterObjectType * GetTransformParameterObject( void ) const;
 
   /** Set/Get/Remove output directory. */
   itkSetMacro( OutputDirectory, std::string );
   itkGetConstMacro( OutputDirectory, std::string );
-  virtual void RemoveOutputDirectory() { this->SetOutputDirectory( "" ); };
+  virtual void RemoveOutputDirectory() { this->SetOutputDirectory( "" ); }
 
   /** Set/Get/Remove log filename. */
   virtual void SetLogFileName( std::string logFileName );
+
   itkGetConstMacro( LogFileName, std::string );
   virtual void RemoveLogFileName( void );
 
@@ -135,24 +141,24 @@ private:
   virtual bool IsEmpty( const InputImagePointer inputImage );
 
   /** Let transformix handle input verification internally */
-  virtual void VerifyInputInformation( void ) ITK_OVERRIDE {};
+  virtual void VerifyInputInformation( void ) ITK_OVERRIDE {}
 
-  /** Tell the compiler we want all definitions of Get/Set/Remove 
+  /** Tell the compiler we want all definitions of Get/Set/Remove
    *  from ProcessObject and TransformixFilter. */
   using itk::ProcessObject::SetInput;
   using itk::ProcessObject::GetInput;
   using itk::ProcessObject::RemoveInput;
 
-  std::string   m_InputPointSetFileName;
-  bool          m_ComputeSpatialJacobian;
-  bool          m_ComputeDeterminantOfSpatialJacobian;
-  bool          m_ComputeDeformationField;
+  std::string m_InputPointSetFileName;
+  bool        m_ComputeSpatialJacobian;
+  bool        m_ComputeDeterminantOfSpatialJacobian;
+  bool        m_ComputeDeformationField;
 
-  std::string   m_OutputDirectory;
-  std::string   m_LogFileName;
+  std::string m_OutputDirectory;
+  std::string m_LogFileName;
 
-  bool          m_LogToConsole;
-  bool          m_LogToFile;
+  bool m_LogToConsole;
+  bool m_LogToFile;
 
 };
 

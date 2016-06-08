@@ -144,9 +144,9 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
 
     for( unsigned int m = 0; m < InputSpaceDimension; m++ )
     {
-      centerMovingIndex[ m ] =
-        static_cast< ContinuousIndexValueType >( movingIndex[ m ] ) +
-        static_cast< ContinuousIndexValueType >( movingSize[ m ] - 1 ) / 2.0;
+      centerMovingIndex[ m ]
+        = static_cast< ContinuousIndexValueType >( movingIndex[ m ] )
+        + static_cast< ContinuousIndexValueType >( movingSize[ m ] - 1 ) / 2.0;
     }
 
     m_MovingImage->TransformContinuousIndexToPhysicalPoint(
@@ -208,13 +208,13 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
         {
           fixedCorners[ index ][ 0 ] = fixedRegion.GetIndex()[ 0 ] + x * fixedRegion.GetSize()[ 0 ];
           fixedCorners[ index ][ 1 ] = fixedRegion.GetIndex()[ 1 ] + y * fixedRegion.GetSize()[ 1 ];
-          if (InputSpaceDimension > 2)
+          if( InputSpaceDimension > 2 )
           {
             fixedCorners[ index ][ 2 ] = fixedRegion.GetIndex()[ 2 ] + z * fixedRegion.GetSize()[ 2 ];
           }
           movingCorners[ index ][ 0 ] = movingRegion.GetIndex()[ 0 ] + x * movingRegion.GetSize()[ 0 ];
           movingCorners[ index ][ 1 ] = movingRegion.GetIndex()[ 1 ] + y * movingRegion.GetSize()[ 1 ];
-          if (InputSpaceDimension > 2)
+          if( InputSpaceDimension > 2 )
           {
             movingCorners[ index ][ 2 ] = movingRegion.GetIndex()[ 2 ] + z * movingRegion.GetSize()[ 2 ];
           }
@@ -224,15 +224,15 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
 
     // Transform eight corner points to world coordinates and determine min and max coordinate values.
     typename TransformType::InputPointType minWorldFixed, maxWorldFixed, minWorldMoving, maxWorldMoving;
-    for ( std::size_t i = 0; i < fixedCorners.size(); ++i )
+    for( std::size_t i = 0; i < fixedCorners.size(); ++i )
     {
       typename TransformType::InputPointType worldFixed, worldMoving;
-      this->m_FixedImage->TransformContinuousIndexToPhysicalPoint( fixedCorners[i], worldFixed );
-      this->m_MovingImage->TransformContinuousIndexToPhysicalPoint( movingCorners[i], worldMoving );
+      this->m_FixedImage->TransformContinuousIndexToPhysicalPoint( fixedCorners[ i ], worldFixed );
+      this->m_MovingImage->TransformContinuousIndexToPhysicalPoint( movingCorners[ i ], worldMoving );
       if( i == 0 )
       {
-        minWorldFixed = worldFixed;
-        maxWorldFixed = worldFixed;
+        minWorldFixed  = worldFixed;
+        maxWorldFixed  = worldFixed;
         minWorldMoving = worldMoving;
         maxWorldMoving = worldMoving;
       }
@@ -240,10 +240,10 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       {
         for( std::size_t k = 0; k < InputSpaceDimension; ++k )
         {
-          if ( worldFixed[ k ] < minWorldFixed[ k ] )   minWorldFixed[ k ]  = worldFixed[ k ];
-          if ( worldFixed[ k ] > maxWorldFixed[ k ] )   maxWorldFixed[ k ]  = worldFixed[ k ];
-          if ( worldMoving[ k ] < minWorldMoving[ k ] ) minWorldMoving[ k ] = worldMoving[ k ];
-          if ( worldMoving[ k ] > maxWorldMoving[ k ] ) maxWorldMoving[ k ] = worldMoving[ k ];
+          if( worldFixed[ k ] < minWorldFixed[ k ] ) { minWorldFixed[ k ] = worldFixed[ k ]; }
+          if( worldFixed[ k ] > maxWorldFixed[ k ] ) { maxWorldFixed[ k ] = worldFixed[ k ]; }
+          if( worldMoving[ k ] < minWorldMoving[ k ] ) { minWorldMoving[ k ] = worldMoving[ k ]; }
+          if( worldMoving[ k ] > maxWorldMoving[ k ] ) { maxWorldMoving[ k ] = worldMoving[ k ]; }
         }
       }
     }

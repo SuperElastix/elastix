@@ -299,5 +299,4 @@ public: \
 #  endif
 #endif
 
-
 #endif // end #ifndef __elxMacro_h

@@ -121,12 +121,12 @@ const typename AffineDTI2DTransform< TScalarType >::ParametersType
 & AffineDTI2DTransform< TScalarType >
 ::GetParameters( void ) const
 {
-  this->m_Parameters[ 0 ]  = this->m_Angle[ 0 ];
-  this->m_Parameters[ 1 ]  = this->m_Shear[ 0 ];
-  this->m_Parameters[ 2 ]  = this->m_Shear[ 1 ];
-  this->m_Parameters[ 3 ]  = this->m_Scale[ 0 ];
-  this->m_Parameters[ 4 ]  = this->m_Scale[ 1 ];
-  this->m_Parameters[ 5 ]  = this->GetTranslation()[ 0 ];
+  this->m_Parameters[ 0 ] = this->m_Angle[ 0 ];
+  this->m_Parameters[ 1 ] = this->m_Shear[ 0 ];
+  this->m_Parameters[ 2 ] = this->m_Shear[ 1 ];
+  this->m_Parameters[ 3 ] = this->m_Scale[ 0 ];
+  this->m_Parameters[ 4 ] = this->m_Scale[ 1 ];
+  this->m_Parameters[ 5 ] = this->GetTranslation()[ 0 ];
   this->m_Parameters[ 6 ] = this->GetTranslation()[ 1 ];
 
   return this->m_Parameters;
@@ -179,16 +179,16 @@ AffineDTI2DTransform< TScalarType >
   Rotation[ 1 ][ 0 ] = -sx; Rotation[ 1 ][ 1 ] = cx;
 
   MatrixType ShearX;
-  ShearX[ 0 ][ 0 ] = 1; ShearX[ 0 ][ 1 ] = gx; 
-  ShearX[ 1 ][ 0 ] = 0; ShearX[ 1 ][ 1 ] = 1; 
+  ShearX[ 0 ][ 0 ] = 1; ShearX[ 0 ][ 1 ] = gx;
+  ShearX[ 1 ][ 0 ] = 0; ShearX[ 1 ][ 1 ] = 1;
 
   MatrixType ShearY;
-  ShearY[ 0 ][ 0 ] = 1;  ShearY[ 0 ][ 1 ] = 0; 
-  ShearY[ 1 ][ 0 ] = gy; ShearY[ 1 ][ 1 ] = 1; 
+  ShearY[ 0 ][ 0 ] = 1;  ShearY[ 0 ][ 1 ] = 0;
+  ShearY[ 1 ][ 0 ] = gy; ShearY[ 1 ][ 1 ] = 1;
 
   MatrixType Scale;
-  Scale[ 0 ][ 0 ] = ssx; Scale[ 0 ][ 1 ] = 0; 
-  Scale[ 1 ][ 0 ] = 0;   Scale[ 1 ][ 1 ] = ssy; 
+  Scale[ 0 ][ 0 ] = ssx; Scale[ 0 ][ 1 ] = 0;
+  Scale[ 1 ][ 0 ] = 0;   Scale[ 1 ][ 1 ] = ssy;
 
   this->SetVarMatrix(
     Rotation * ShearX * ShearY  * Scale );
@@ -261,46 +261,45 @@ AffineDTI2DTransform< TScalarType >
 
   /** NB: opposite definition as in EulerTransform */
   MatrixType Rotation;
-  Rotation[ 0 ][ 0 ] =  cx; Rotation[ 0 ][ 1 ] = sx; 
-  Rotation[ 1 ][ 0 ] = -sx; Rotation[ 1 ][ 1 ] = cx; 
+  Rotation[ 0 ][ 0 ] =  cx; Rotation[ 0 ][ 1 ] = sx;
+  Rotation[ 1 ][ 0 ] = -sx; Rotation[ 1 ][ 1 ] = cx;
 
   MatrixType ShearX;
-  ShearX[ 0 ][ 0 ] = 1; ShearX[ 0 ][ 1 ] = gx; 
-  ShearX[ 1 ][ 0 ] = 0; ShearX[ 1 ][ 1 ] = 1; 
+  ShearX[ 0 ][ 0 ] = 1; ShearX[ 0 ][ 1 ] = gx;
+  ShearX[ 1 ][ 0 ] = 0; ShearX[ 1 ][ 1 ] = 1;
 
   MatrixType ShearY;
-  ShearY[ 0 ][ 0 ] = 1;  ShearY[ 0 ][ 1 ] = 0; 
-  ShearY[ 1 ][ 0 ] = gy; ShearY[ 1 ][ 1 ] = 1; 
+  ShearY[ 0 ][ 0 ] = 1;  ShearY[ 0 ][ 1 ] = 0;
+  ShearY[ 1 ][ 0 ] = gy; ShearY[ 1 ][ 1 ] = 1;
 
   MatrixType ScaleX;
-  ScaleX[ 0 ][ 0 ] = ssx; ScaleX[ 0 ][ 1 ] = 0; 
-  ScaleX[ 1 ][ 0 ] = 0;   ScaleX[ 1 ][ 1 ] = 1; 
-  
+  ScaleX[ 0 ][ 0 ] = ssx; ScaleX[ 0 ][ 1 ] = 0;
+  ScaleX[ 1 ][ 0 ] = 0;   ScaleX[ 1 ][ 1 ] = 1;
+
   MatrixType ScaleY;
-  ScaleY[ 0 ][ 0 ] = 1; ScaleY[ 0 ][ 1 ] = 0; 
+  ScaleY[ 0 ][ 0 ] = 1; ScaleY[ 0 ][ 1 ] = 0;
   ScaleY[ 1 ][ 0 ] = 0; ScaleY[ 1 ][ 1 ] = ssy;
 
   /** Derivative matrices: */
   MatrixType RotationXd;
-  RotationXd[ 0 ][ 0 ] =  cxd; RotationXd[ 0 ][ 1 ] = sxd; 
-  RotationXd[ 1 ][ 0 ] = -sxd; RotationXd[ 1 ][ 1 ] = cxd; 
+  RotationXd[ 0 ][ 0 ] =  cxd; RotationXd[ 0 ][ 1 ] = sxd;
+  RotationXd[ 1 ][ 0 ] = -sxd; RotationXd[ 1 ][ 1 ] = cxd;
 
   MatrixType ShearXd;
-  ShearXd[ 0 ][ 0 ] = 0; ShearXd[ 0 ][ 1 ] = 1; 
-  ShearXd[ 1 ][ 0 ] = 0; ShearXd[ 1 ][ 1 ] = 0; 
-  
+  ShearXd[ 0 ][ 0 ] = 0; ShearXd[ 0 ][ 1 ] = 1;
+  ShearXd[ 1 ][ 0 ] = 0; ShearXd[ 1 ][ 1 ] = 0;
+
   MatrixType ShearYd;
-  ShearYd[ 0 ][ 0 ] = 0; ShearYd[ 0 ][ 1 ] = 0; 
-  ShearYd[ 1 ][ 0 ] = 1; ShearYd[ 1 ][ 1 ] = 0; 
+  ShearYd[ 0 ][ 0 ] = 0; ShearYd[ 0 ][ 1 ] = 0;
+  ShearYd[ 1 ][ 0 ] = 1; ShearYd[ 1 ][ 1 ] = 0;
 
   MatrixType ScaleXd;
-  ScaleXd[ 0 ][ 0 ] = 1; ScaleXd[ 0 ][ 1 ] = 0; 
-  ScaleXd[ 1 ][ 0 ] = 0; ScaleXd[ 1 ][ 1 ] = 0; 
-  
-  MatrixType ScaleYd;
-  ScaleYd[ 0 ][ 0 ] = 0; ScaleYd[ 0 ][ 1 ] = 0; 
-  ScaleYd[ 1 ][ 0 ] = 0; ScaleYd[ 1 ][ 1 ] = 1;
+  ScaleXd[ 0 ][ 0 ] = 1; ScaleXd[ 0 ][ 1 ] = 0;
+  ScaleXd[ 1 ][ 0 ] = 0; ScaleXd[ 1 ][ 1 ] = 0;
 
+  MatrixType ScaleYd;
+  ScaleYd[ 0 ][ 0 ] = 0; ScaleYd[ 0 ][ 1 ] = 0;
+  ScaleYd[ 1 ][ 0 ] = 0; ScaleYd[ 1 ][ 1 ] = 1;
 
   jsj[ 0 ] = RotationXd * ShearX * ShearY * ScaleX * ScaleY;
   jsj[ 1 ] = Rotation * ShearXd * ShearY * ScaleX * ScaleY;

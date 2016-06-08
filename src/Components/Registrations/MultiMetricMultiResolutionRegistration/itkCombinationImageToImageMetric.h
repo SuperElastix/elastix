@@ -457,7 +457,7 @@ private:
     typename std::vector< MeasureType >::iterator st_MetricValuesIterator;
     typename std::vector< DerivativeType >::iterator st_MetricDerivativesIterator;
     std::vector< double > st_MetricComputationTime;
-    ParametersType *           st_Parameters;
+    ParametersType *      st_Parameters;
   };
 
   struct MultiThreaderCombineDerivativeType

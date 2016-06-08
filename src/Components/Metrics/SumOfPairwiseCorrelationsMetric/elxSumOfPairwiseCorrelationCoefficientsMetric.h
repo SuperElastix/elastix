@@ -24,7 +24,6 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkStackTransform.h"
 
-
 namespace elastix
 {
 /** \class SumOfPairwiseCorrelationCoefficientsMetric
@@ -60,23 +59,23 @@ namespace elastix
  * \ingroup Metrics
  */
 
-template <class TElastix >
+template< class TElastix >
 class SumOfPairwiseCorrelationCoefficientsMetric :
   public itk::SumOfPairwiseCorrelationCoefficientsMetric<
-  typename MetricBase<TElastix>::FixedImageType,
-  typename MetricBase<TElastix>::MovingImageType >,
-  public MetricBase<TElastix>
+  typename MetricBase< TElastix >::FixedImageType,
+  typename MetricBase< TElastix >::MovingImageType >,
+  public MetricBase< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef SumOfPairwiseCorrelationCoefficientsMetric               Self;
+  typedef SumOfPairwiseCorrelationCoefficientsMetric   Self;
   typedef itk::SumOfPairwiseCorrelationCoefficientsMetric<
-    typename MetricBase<TElastix>::FixedImageType,
-    typename MetricBase<TElastix>::MovingImageType >    Superclass1;
-  typedef MetricBase<TElastix>                          Superclass2;
-  typedef itk::SmartPointer<Self>                       Pointer;
-  typedef itk::SmartPointer<const Self>                 ConstPointer;
+    typename MetricBase< TElastix >::FixedImageType,
+    typename MetricBase< TElastix >::MovingImageType > Superclass1;
+  typedef MetricBase< TElastix >                       Superclass2;
+  typedef itk::SmartPointer< Self >                    Pointer;
+  typedef itk::SmartPointer< const Self >              ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -147,13 +146,13 @@ public:
     MovingImageType::ImageDimension );
 
   /** Typedef's inherited from Elastix. */
-  typedef typename Superclass2::ElastixType               ElastixType;
-  typedef typename Superclass2::ElastixPointer            ElastixPointer;
-  typedef typename Superclass2::ConfigurationType         ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType          RegistrationType;
-  typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType               ITKBaseType;
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Typedef's for the B-spline transform. */
   typedef itk::AdvancedBSplineDeformableTransformBase<
@@ -180,7 +179,7 @@ public:
 protected:
 
   /** The constructor. */
-  SumOfPairwiseCorrelationCoefficientsMetric(){};
+  SumOfPairwiseCorrelationCoefficientsMetric(){}
 
   /** The destructor. */
   virtual ~SumOfPairwiseCorrelationCoefficientsMetric() {}
@@ -188,15 +187,14 @@ protected:
 private:
 
   /** The private constructor. */
-  SumOfPairwiseCorrelationCoefficientsMetric( const Self& ); // purposely not implemented
+  SumOfPairwiseCorrelationCoefficientsMetric( const Self & ); // purposely not implemented
 
   /** The private copy constructor. */
-  void operator=( const Self& );              // purposely not implemented
+  void operator=( const Self & );              // purposely not implemented
 
-}; // end class SumOfPairwiseCorrelationCoefficientsMetric
+};
 
 } // end namespace elastix
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxSumOfPairwiseCorrelationCoefficientsMetric.hxx"

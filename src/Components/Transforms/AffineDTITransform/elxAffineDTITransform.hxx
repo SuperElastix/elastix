@@ -311,7 +311,7 @@ AffineDTITransformElastix< TElastix >
   /** Give feedback. */
   // \todo: should perhaps also print fixed parameters
   elxout << "Transform parameters are initialized as: "
-    << this->GetParameters() << std::endl;
+         << this->GetParameters() << std::endl;
 
 } // end InitializeTransform()
 

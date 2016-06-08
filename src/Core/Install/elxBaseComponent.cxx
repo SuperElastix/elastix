@@ -27,7 +27,8 @@ namespace elastix
  * ****************** elxGetClassName ****************************
  */
 
-const char * BaseComponent::elxGetClassName( void ) const
+const char *
+BaseComponent::elxGetClassName( void ) const
 {
   return "BaseComponent";
 } // end elxGetClassName()
@@ -37,7 +38,8 @@ const char * BaseComponent::elxGetClassName( void ) const
  * ****************** SetComponentLabel ****************************
  */
 
-void BaseComponent::SetComponentLabel( const char * label, unsigned int idx )
+void
+BaseComponent::SetComponentLabel( const char * label, unsigned int idx )
 {
   std::ostringstream makestring;
   makestring << label << idx;
@@ -49,7 +51,8 @@ void BaseComponent::SetComponentLabel( const char * label, unsigned int idx )
  * ****************** GetComponentLabel ****************************
  */
 
-const char * BaseComponent::GetComponentLabel( void ) const
+const char *
+BaseComponent::GetComponentLabel( void ) const
 {
   return this->m_ComponentLabel.c_str();
 } // end GetComponentLabel()
@@ -59,7 +62,8 @@ const char * BaseComponent::GetComponentLabel( void ) const
  * ****************** ConvertSecondsToDHMS ****************************
  */
 
-std::string BaseComponent::ConvertSecondsToDHMS(
+std::string
+BaseComponent::ConvertSecondsToDHMS(
   const double totalSeconds, const unsigned int precision = 0 ) const
 {
   /** Define days, hours, minutes. */
@@ -68,8 +72,8 @@ std::string BaseComponent::ConvertSecondsToDHMS(
   const std::size_t secondsPerDay    = 24 * secondsPerHour;
 
   /** Convert total seconds. */
-  std::size_t iSeconds = static_cast<std::size_t>( totalSeconds );
-  const std::size_t days = iSeconds / secondsPerDay;
+  std::size_t       iSeconds = static_cast< std::size_t >( totalSeconds );
+  const std::size_t days     = iSeconds / secondsPerDay;
 
   iSeconds %= secondsPerDay;
   const std::size_t hours = iSeconds / secondsPerHour;
@@ -82,11 +86,11 @@ std::string BaseComponent::ConvertSecondsToDHMS(
   const double dSeconds = fmod( totalSeconds, 60.0 );
 
   /** Create a string in days, hours, minutes and seconds. */
-  bool nonzero = false;
+  bool               nonzero = false;
   std::ostringstream make_string( "" );
-  if( days    != 0            ){ make_string << days    << "d"; nonzero = true; }
-  if( hours   != 0 || nonzero ){ make_string << hours   << "h"; nonzero = true; }
-  if( minutes != 0 || nonzero ){ make_string << minutes << "m"; nonzero = true; }
+  if( days    != 0            ) { make_string << days    << "d"; nonzero = true; }
+  if( hours   != 0 || nonzero ) { make_string << hours   << "h"; nonzero = true; }
+  if( minutes != 0 || nonzero ) { make_string << minutes << "m"; nonzero = true; }
   make_string << std::showpoint << std::fixed << std::setprecision( precision );
   make_string << dSeconds << "s";
 

@@ -145,9 +145,9 @@ public:
   /** Assuming fixed and moving pointsets are of equal type, which implicitly
   * assumes that the fixed and moving image are of the same type.
   */
-  typedef FixedPointSetType       PointSetType;
-  typedef FixedMeshType  MeshType;
-  typedef FixedImageType ImageType;
+  typedef FixedPointSetType PointSetType;
+  typedef FixedMeshType     MeshType;
+  typedef FixedImageType    ImageType;
 
   /** Sets up a timer to measure the initialization time and calls the
   * Superclass' implementation.
@@ -193,7 +193,7 @@ private:
   void operator=( const Self & );           // purposely not implemented
 
   unsigned int m_NumberOfMeshes;
-}; // end class MissingStructurePenalty
+};
 
 } // end namespace elastix
 
@@ -202,4 +202,3 @@ private:
 #endif
 
 #endif // end #ifndef __elxMissingStructurePenalty_H__
-

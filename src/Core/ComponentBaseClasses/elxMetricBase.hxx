@@ -153,7 +153,7 @@ MetricBase< TElastix >
       /** Set and report. */
       thisAsAdvanced->SetMovingImageDerivativeScales( movingImageDerivativeScales );
       elxout << "Multiplying moving image derivatives by: "
-        << movingImageDerivativeScales << std::endl;
+             << movingImageDerivativeScales << std::endl;
 
       /** Check if the scales are applied taking into account the moving image orientation. */
       bool wrtMoving = false;

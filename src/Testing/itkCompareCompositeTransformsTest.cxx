@@ -47,7 +47,7 @@ main( int argc, char * argv[] )
   typedef itk::AdvancedCombinationTransform< ScalarType, Dimension >
     AdvancedCombinationTransformType;
   //typedef itk::AdvancedTransform< ScalarType, Dimension, Dimension >
-    //AdvancedTransformType;
+  //AdvancedTransformType;
   typedef itk::AdvancedMatrixOffsetTransformBase< ScalarType, Dimension, Dimension >
     AdvancedAffineTransformType;
   typedef itk::AdvancedTranslationTransform< ScalarType, Dimension >

@@ -145,8 +145,8 @@ public:
    * memory object is created and used as the storage bits for the memory
    * object, can be reused or freed. */
   cl_int SetDestructorCallback(
-  void( CL_CALLBACK * pfn_notify )( cl_mem, void * ),
-  void * user_data = NULL );
+    void ( CL_CALLBACK * pfn_notify )( cl_mem, void * ),
+    void * user_data = NULL );
 
 protected:
 

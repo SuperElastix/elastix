@@ -19,4 +19,3 @@
 #include "elxMissingStructurePenalty.h"
 
 elxInstallMacro( MissingStructurePenalty );
-

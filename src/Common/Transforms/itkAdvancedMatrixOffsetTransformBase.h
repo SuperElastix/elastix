@@ -119,9 +119,9 @@ public:
     NOutputDimensions * ( NInputDimensions + 1 ) );
 
   /** Typedefs from the Superclass. */
-  typedef typename Superclass::ScalarType             ScalarType;
-  typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::FixedParametersType    FixedParametersType;
+  typedef typename Superclass::ScalarType          ScalarType;
+  typedef typename Superclass::ParametersType      ParametersType;
+  typedef typename Superclass::FixedParametersType FixedParametersType;
 
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType           JacobianType;

@@ -29,21 +29,21 @@ using namespace std;
 
 namespace itk
 {
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 class PCAMetric :
-  public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef PCAMetric   Self;
+  typedef PCAMetric                   Self;
   typedef AdvancedImageToImageMetric<
-    TFixedImage, TMovingImage >                   Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+    TFixedImage, TMovingImage >       Superclass;
+  typedef SmartPointer< Self >        Pointer;
+  typedef SmartPointer< const Self >  ConstPointer;
 
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename FixedImageRegionType::SizeType         FixedImageSizeType;
+  typedef typename Superclass::FixedImageRegionType FixedImageRegionType;
+  typedef typename FixedImageRegionType::SizeType   FixedImageSizeType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -125,23 +125,24 @@ public:
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
   /** Get the derivatives of the match measure. */
-  virtual void GetDerivative(const TransformParametersType & parameters,
+  virtual void GetDerivative( const TransformParametersType & parameters,
     DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  virtual void GetValueAndDerivative(const TransformParametersType& parameters,
-      MeasureType& Value, DerivativeType& Derivative) const;
+  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
+    MeasureType & Value, DerivativeType & Derivative ) const;
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation.   */
 
-  virtual void Initialize(void) throw ( ExceptionObject );
+  virtual void Initialize( void ) throw ( ExceptionObject );
 
 protected:
+
   PCAMetric();
-  virtual ~PCAMetric() {};
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  virtual ~PCAMetric() {}
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
 
@@ -165,29 +166,29 @@ protected:
   void EvaluateTransformJacobianInnerProduct(
     const TransformJacobianType & jacobian,
     const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const;
+    DerivativeType & imageJacobian ) const;
 
-  mutable vnl_vector<double> m_firstEigenVector;
-  mutable vnl_vector<double> m_secondEigenVector;
-  mutable vnl_vector<double> m_thirdEigenVector;
-  mutable vnl_vector<double> m_fourthEigenVector;
-  mutable vnl_vector<double> m_fifthEigenVector;
-  mutable vnl_vector<double> m_sixthEigenVector;
-  mutable vnl_vector<double> m_seventhEigenVector;
-  mutable vnl_vector<double> m_eigenValues;
-  mutable vnl_vector<double> m_normdCdmu;
-  mutable int m_NumberOfSamples;
-
+  mutable vnl_vector< double > m_firstEigenVector;
+  mutable vnl_vector< double > m_secondEigenVector;
+  mutable vnl_vector< double > m_thirdEigenVector;
+  mutable vnl_vector< double > m_fourthEigenVector;
+  mutable vnl_vector< double > m_fifthEigenVector;
+  mutable vnl_vector< double > m_sixthEigenVector;
+  mutable vnl_vector< double > m_seventhEigenVector;
+  mutable vnl_vector< double > m_eigenValues;
+  mutable vnl_vector< double > m_normdCdmu;
+  mutable int                  m_NumberOfSamples;
 
 private:
-  PCAMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+
+  PCAMetric( const Self & );      // purposely not implemented
+  void operator=( const Self & ); // purposely not implemented
 
   /** Sample n random numbers from 0..m and add them to the vector. */
-  void SampleRandom (const int n, const int m, std::vector<int> & numbers) const;
+  void SampleRandom( const int n, const int m, std::vector< int > & numbers ) const;
 
   /** Variables to control random sampling in last dimension. */
-  bool m_SampleLastDimensionRandomly;
+  bool         m_SampleLastDimensionRandomly;
   unsigned int m_NumSamplesLastDimension;
   unsigned int m_NumAdditionalSamplesFixed;
   unsigned int m_ReducedDimensionIndex;
@@ -210,7 +211,7 @@ private:
 
   bool m_UseDerivativeOfMean;
 
-}; // end class PCAMetric
+};
 
 } // end namespace itk
 

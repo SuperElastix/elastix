@@ -24,7 +24,6 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkStackTransform.h"
 
-
 namespace elastix
 {
 /** \class PCAMetric2
@@ -60,23 +59,23 @@ namespace elastix
  * \ingroup Metrics
  */
 
-template <class TElastix >
+template< class TElastix >
 class PCAMetric2 :
   public itk::PCAMetric2<
-  typename MetricBase<TElastix>::FixedImageType,
-  typename MetricBase<TElastix>::MovingImageType >,
-  public MetricBase<TElastix>
+  typename MetricBase< TElastix >::FixedImageType,
+  typename MetricBase< TElastix >::MovingImageType >,
+  public MetricBase< TElastix >
 {
 public:
 
   /** Standard ITK-stuff. */
-  typedef PCAMetric2              Self;
+  typedef PCAMetric2 Self;
   typedef itk::PCAMetric2<
-    typename MetricBase<TElastix>::FixedImageType,
-    typename MetricBase<TElastix>::MovingImageType >    Superclass1;
-  typedef MetricBase<TElastix>                          Superclass2;
-  typedef itk::SmartPointer<Self>                       Pointer;
-  typedef itk::SmartPointer<const Self>                 ConstPointer;
+    typename MetricBase< TElastix >::FixedImageType,
+    typename MetricBase< TElastix >::MovingImageType > Superclass1;
+  typedef MetricBase< TElastix >                       Superclass2;
+  typedef itk::SmartPointer< Self >                    Pointer;
+  typedef itk::SmartPointer< const Self >              ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -147,13 +146,13 @@ public:
     MovingImageType::ImageDimension );
 
   /** Typedef's inherited from Elastix. */
-  typedef typename Superclass2::ElastixType               ElastixType;
-  typedef typename Superclass2::ElastixPointer            ElastixPointer;
-  typedef typename Superclass2::ConfigurationType         ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType          RegistrationType;
-  typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType               ITKBaseType;
+  typedef typename Superclass2::ElastixType          ElastixType;
+  typedef typename Superclass2::ElastixPointer       ElastixPointer;
+  typedef typename Superclass2::ConfigurationType    ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType     RegistrationType;
+  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
+  typedef typename Superclass2::ITKBaseType          ITKBaseType;
 
   /** Typedef's for the B-spline transform. */
   typedef itk::AdvancedBSplineDeformableTransformBase<
@@ -180,22 +179,20 @@ public:
 protected:
 
   /** The constructor. */
-  PCAMetric2(){};
+  PCAMetric2(){}
   /** The destructor. */
   virtual ~PCAMetric2() {}
 
 private:
 
   /** The private constructor. */
-  PCAMetric2( const Self& ); // purposely not implemented
+  PCAMetric2( const Self & ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );              // purposely not implemented
+  void operator=( const Self & );              // purposely not implemented
 
-}; // end class PCAMetric2
-
+};
 
 } // end namespace elastix
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxPCAMetric2.hxx"

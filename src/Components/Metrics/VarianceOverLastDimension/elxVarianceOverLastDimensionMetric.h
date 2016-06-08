@@ -23,7 +23,6 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkStackTransform.h"
 
-
 namespace elastix
 {
 

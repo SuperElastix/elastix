@@ -24,7 +24,6 @@
 #include "itkBSplineDecompositionImageFilter.h"
 #include "itkResampleImageFilter.h"
 
-
 namespace itk
 {
 

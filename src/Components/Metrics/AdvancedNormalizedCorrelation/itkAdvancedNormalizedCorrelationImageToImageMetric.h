@@ -263,15 +263,15 @@ private:
 
   struct CorrelationGetValueAndDerivativePerThreadStruct
   {
-    SizeValueType         st_NumberOfPixelsCounted;
-    AccumulateType        st_Sff;
-    AccumulateType        st_Smm;
-    AccumulateType        st_Sfm;
-    AccumulateType        st_Sf;
-    AccumulateType        st_Sm;
-    DerivativeType        st_DerivativeF;
-    DerivativeType        st_DerivativeM;
-    DerivativeType        st_Differential;
+    SizeValueType  st_NumberOfPixelsCounted;
+    AccumulateType st_Sff;
+    AccumulateType st_Smm;
+    AccumulateType st_Sfm;
+    AccumulateType st_Sf;
+    AccumulateType st_Sm;
+    DerivativeType st_DerivativeF;
+    DerivativeType st_DerivativeM;
+    DerivativeType st_Differential;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, CorrelationGetValueAndDerivativePerThreadStruct,
     PaddedCorrelationGetValueAndDerivativePerThreadStruct );

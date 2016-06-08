@@ -41,7 +41,7 @@ KNNGraphAlphaMutualInformationMetric< TElastix >
   this->Superclass1::Initialize();
   timer.Stop();
   elxout << "Initialization of KNNGraphAlphaMutualInformation metric took: "
-    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -109,7 +109,7 @@ KNNGraphAlphaMutualInformationMetric< TElastix >
 
   /** Get the splitting rule for all trees. */
   std::string splittingRule = "ANN_KD_SL_MIDPT";
-  bool returnValue = this->m_Configuration->ReadParameter(
+  bool        returnValue   = this->m_Configuration->ReadParameter(
     splittingRule, "SplittingRule", 0, silentSplit );
   this->m_Configuration->ReadParameter(
     splittingRule, "SplittingRule", level, true );

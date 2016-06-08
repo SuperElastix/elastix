@@ -81,7 +81,7 @@ AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
   /** Obtain the Jacobian. */
-  JacobianType jacobian;//( SpaceDimension, );
+  JacobianType jacobian; //( SpaceDimension, );
   this->GetJacobian( ipp, jacobian, nonZeroJacobianIndices );
 
   /** Perform a full multiplication. */

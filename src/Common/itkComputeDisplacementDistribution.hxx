@@ -52,7 +52,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 
   /** Threading related variables. */
   this->m_UseMultiThread = true;
-  this->m_Threader = ThreaderType::New();
+  this->m_Threader       = ThreaderType::New();
   this->m_Threader->SetUseThreadPool( false );
 
   /** Initialize the m_ThreaderParameters. */
@@ -296,7 +296,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 
   /** Get scales vector */
 #if 0
-  this->m_Scales = this->GetScales();// why?
+  this->m_Scales = this->GetScales(); // why?
   this->m_ScaledCostFunction->SetScales( this->m_Scales );
 #else
   //used to be:
@@ -322,7 +322,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 
 template< class TFixedImage, class TTransform >
 void
-  ComputeDisplacementDistribution< TFixedImage, TTransform >
+ComputeDisplacementDistribution< TFixedImage, TTransform >
 ::LaunchComputeThreaderCallback( void ) const
 {
   /** Setup threader. */
@@ -369,8 +369,8 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 {
   /** Get sample container size, number of threads, and output space dimension. */
   const SizeValueType sampleContainerSize = this->m_SampleContainer->Size();
-  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfThreads();
-  const unsigned int outdim = this->m_Transform->GetOutputSpaceDimension();
+  const ThreadIdType  numberOfThreads     = this->m_Threader->GetNumberOfThreads();
+  const unsigned int  outdim              = this->m_Transform->GetOutputSpaceDimension();
 
   /** Get a handle to the scales vector */
   const ScalesType & scales = this->GetScales();
@@ -397,13 +397,13 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Temporaries. */
   //std::vector< double > JGG_k; not here so only mean + 2 sigma is supported
   DerivativeType Jgg( outdim ); Jgg.Fill( 0.0 );
-  const double sqrt2 = vcl_sqrt( static_cast< double >( 2.0 ) );
-  JacobianType jacjjacj( outdim, outdim );
-  double maxJJ = 0.0;
-  double jggMagnitude = 0.0;
-  double displacement = 0.0;
-  double displacementSquared = 0.0;
-  unsigned long numberOfPixelsCounted = 0;
+  const double   sqrt2 = vcl_sqrt( static_cast< double >( 2.0 ) );
+  JacobianType   jacjjacj( outdim, outdim );
+  double         maxJJ                 = 0.0;
+  double         jggMagnitude          = 0.0;
+  double         displacement          = 0.0;
+  double         displacementSquared   = 0.0;
+  unsigned long  numberOfPixelsCounted = 0;
 
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator threader_fiter;
@@ -453,16 +453,16 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     }
 
     /** Sum the Jgg displacement for later use. */
-    jggMagnitude = Jgg.magnitude();
-    displacement += jggMagnitude;
+    jggMagnitude         = Jgg.magnitude();
+    displacement        += jggMagnitude;
     displacementSquared += vnl_math_sqr( jggMagnitude );
     numberOfPixelsCounted++;
   }
 
   /** Update the thread struct once. */
   this->m_ComputePerThreadVariables[ threadId ].st_MaxJJ                 = maxJJ;
-  this->m_ComputePerThreadVariables[ threadId ].st_Displacement         = displacement;
-  this->m_ComputePerThreadVariables[ threadId ].st_DisplacementSquared  = displacementSquared;
+  this->m_ComputePerThreadVariables[ threadId ].st_Displacement          = displacement;
+  this->m_ComputePerThreadVariables[ threadId ].st_DisplacementSquared   = displacementSquared;
   this->m_ComputePerThreadVariables[ threadId ].st_NumberOfPixelsCounted = numberOfPixelsCounted;
 
 } // end ThreadedCompute()
@@ -481,14 +481,14 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 
   /** Reset all variables. */
   maxJJ = 0.0;
-  double displacement = 0.0;
+  double displacement        = 0.0;
   double displacementSquared = 0.0;
   this->m_NumberOfPixelsCounted = 0.0;
 
   /** Accumulate thread results. */
   for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
-    maxJJ = vnl_math_max( maxJJ, this->m_ComputePerThreadVariables[ i ].st_MaxJJ );
+    maxJJ                          = vnl_math_max( maxJJ, this->m_ComputePerThreadVariables[ i ].st_MaxJJ );
     displacement                  += this->m_ComputePerThreadVariables[ i ].st_Displacement;
     displacementSquared           += this->m_ComputePerThreadVariables[ i ].st_DisplacementSquared;
     this->m_NumberOfPixelsCounted += this->m_ComputePerThreadVariables[ i ].st_NumberOfPixelsCounted;
@@ -571,7 +571,6 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   Jgg.Fill( 0.0 );
   std::vector< double > JGG_k;
   double                globalDeformation = 0.0;
-  //const double          sqrt2             = vcl_sqrt( static_cast< double >( 2.0 ) );
   JacobianType          jacjjacj( outdim, outdim );
 
   samplenr = 0;

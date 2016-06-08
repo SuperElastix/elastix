@@ -226,7 +226,7 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
     //MeshPointDataContainerIteratorType mappedPointDataIt = mappedNormals->Begin();
 
     /* Transform all points and their normals by current transformation*/
-    for( ; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++mappedPointIt ) //,++fixedPointDataIt,++mappedPointDataIt)
+    for(; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++mappedPointIt )  //,++fixedPointDataIt,++mappedPointDataIt)
     {
       const OutputPointType mappedPoint = this->m_Transform->TransformPoint( fixedPointIt->Value() );
       mappedPointIt.Value() = mappedPoint;
@@ -265,4 +265,3 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
 } // end namespace itk
 
 #endif // end #ifndef __itkPolydataDummyPenalty_hxx
-

@@ -58,8 +58,8 @@ OpenCLLogger::New()
 
 
 //------------------------------------------------------------------------------
-OpenCLLogger::OpenCLLogger() : 
-m_FileName( "_opencl.log" )
+OpenCLLogger::OpenCLLogger() :
+  m_FileName( "_opencl.log" )
 {
   this->m_FileStream = NULL;
   this->m_Created    = false;

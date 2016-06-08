@@ -185,4 +185,3 @@ private:
 #endif
 
 #endif // end #ifndef __elxDistancePreservingRigidityPenaltyTerm_H__
-

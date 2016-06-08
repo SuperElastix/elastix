@@ -21,7 +21,6 @@
 #include "elxPCAMetric.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 
@@ -29,17 +28,17 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-PCAMetric<TElastix>
-::Initialize(void) throw (itk::ExceptionObject)
+PCAMetric< TElastix >
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
   elxout << "Initialization of PCAMetric metric took: "
-    << static_cast<long>( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -48,13 +47,14 @@ PCAMetric<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
-void PCAMetric<TElastix>
+template< class TElastix >
+void
+PCAMetric< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Get the current resolution level. */
-  unsigned int level =
-    ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level
+    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
   unsigned int NumEigenValues = 6;
   this->GetConfiguration()->ReadParameter( NumEigenValues, "NumEigenValues",
@@ -73,17 +73,17 @@ void PCAMetric<TElastix>
 //      "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0 );
 //    this->SetNumAdditionalSamplesFixed( numAdditionalSamplesFixed );
 
-    /** Get and set the fixed timepoint number. */
+  /** Get and set the fixed timepoint number. */
 //    unsigned int reducedDimensionIndex = 0;
 //    this->GetConfiguration()->ReadParameter(
 //        reducedDimensionIndex, "ReducedDimensionIndex",
 //        this->GetComponentLabel(), 0, 0 );
 //    this->SetReducedDimensionIndex( reducedDimensionIndex );
 
-    /** Set moving image derivative scales. */
+  /** Set moving image derivative scales. */
   this->SetUseMovingImageDerivativeScales( false );
   MovingImageDerivativeScalesType movingImageDerivativeScales;
-  bool usescales = true;
+  bool                            usescales = true;
   for( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
     usescales = usescales && this->GetConfiguration()->ReadParameter(
@@ -95,16 +95,16 @@ void PCAMetric<TElastix>
     this->SetUseMovingImageDerivativeScales( true );
     this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
     elxout << "Multiplying moving image derivatives by: "
-      << movingImageDerivativeScales << std::endl;
+           << movingImageDerivativeScales << std::endl;
   }
 
   /** Check if this transform is a B-spline transform. */
   CombinationTransformType * testPtr1
-    = dynamic_cast<CombinationTransformType *>( this->GetElastix()->GetElxTransformBase() );
+    = dynamic_cast< CombinationTransformType * >( this->GetElastix()->GetElxTransformBase() );
   if( testPtr1 )
   {
     /** Check for B-spline transform. */
-    BSplineTransformBaseType * testPtr2 = dynamic_cast<BSplineTransformBaseType *>(
+    BSplineTransformBaseType * testPtr2 = dynamic_cast< BSplineTransformBaseType * >(
       testPtr1->GetCurrentTransform() );
     if( testPtr2 )
     {
@@ -113,7 +113,7 @@ void PCAMetric<TElastix>
     else
     {
       /** Check for stack transform. */
-      StackTransformType * testPtr3 = dynamic_cast<StackTransformType *>(
+      StackTransformType * testPtr3 = dynamic_cast< StackTransformType * >(
         testPtr1->GetCurrentTransform() );
       if( testPtr3 )
       {
@@ -123,7 +123,7 @@ void PCAMetric<TElastix>
         if( testPtr3->GetNumberOfSubTransforms() > 0 )
         {
           /** Check if subtransform is a B-spline transform. */
-          ReducedDimensionBSplineTransformBaseType * testPtr4 = dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(
+          ReducedDimensionBSplineTransformBaseType * testPtr4 = dynamic_cast< ReducedDimensionBSplineTransformBaseType * >(
             testPtr3->GetSubTransform( 0 ).GetPointer() );
           if( testPtr4 )
           {
@@ -138,6 +138,7 @@ void PCAMetric<TElastix>
   elxout << "end BeforeEachResolution" << std::endl;
 
 } // end BeforeEachResolution()
+
 
 } // end namespace elastix
 

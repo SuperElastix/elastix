@@ -701,7 +701,7 @@ TransformBase< TElastix >
       << std::endl;
   }
 
-  /** Write the way Transforms are combined. 
+  /** Write the way Transforms are combined.
    *  Set it to the default "Compose" when no combination transform is used. */
   std::string                      combinationMethod = "Compose";
   const CombinationTransformType * dummyComboTransform
@@ -1863,27 +1863,27 @@ TransformBase< TElastix >
  * ************** AutomaticScalesEstimationStackTransform ***************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-TransformBase<TElastix>
+TransformBase< TElastix >
 ::AutomaticScalesEstimationStackTransform(
   const unsigned int & numberOfSubTransforms, ScalesType & scales ) const
 {
-  typedef typename FixedImageType::RegionType               FixedImageRegionType;
-  typedef typename FixedImageType::IndexType                FixedImageIndexType;
-  typedef typename FixedImageType::SizeType                 SizeType;
+  typedef typename FixedImageType::RegionType FixedImageRegionType;
+  typedef typename FixedImageType::IndexType  FixedImageIndexType;
+  typedef typename FixedImageType::SizeType   SizeType;
 
-  typedef itk::ImageGridSampler< FixedImageType >           ImageSamplerType;
-  typedef typename ImageSamplerType::Pointer                ImageSamplerPointer;
+  typedef itk::ImageGridSampler< FixedImageType > ImageSamplerType;
+  typedef typename ImageSamplerType::Pointer      ImageSamplerPointer;
   typedef typename
-      ImageSamplerType::ImageSampleContainerType            ImageSampleContainerType;
-  typedef typename ImageSampleContainerType::Pointer        ImageSampleContainerPointer;
-  typedef typename ITKBaseType::JacobianType                JacobianType;
-  typedef typename ITKBaseType::NonZeroJacobianIndicesType  NonZeroJacobianIndicesType;
+    ImageSamplerType::ImageSampleContainerType ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer       ImageSampleContainerPointer;
+  typedef typename ITKBaseType::JacobianType               JacobianType;
+  typedef typename ITKBaseType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
-  const unsigned int outdim = FixedImageDimension;
-  const unsigned int N = thisITK->GetNumberOfParameters();
+  const unsigned int        outdim  = FixedImageDimension;
+  const unsigned int        N       = thisITK->GetNumberOfParameters();
 
   /** initialize */
   scales = ScalesType( N );
@@ -1891,13 +1891,13 @@ TransformBase<TElastix>
 
   /** Get fixed image region from registration. */
   const FixedImageRegionType & inputRegion = this->GetRegistration()->GetAsITKBaseType()->GetFixedImageRegion();
-  SizeType size = inputRegion.GetSize();
+  SizeType                     size        = inputRegion.GetSize();
 
   /** Set desired extraction region. */
   FixedImageIndexType start = inputRegion.GetIndex();
   start[ FixedImageDimension - 1 ] = size[ FixedImageDimension - 1 ] - 1;
 
- /** Set size of last dimension to 0. */
+  /** Set size of last dimension to 0. */
   size[ FixedImageDimension - 1 ] = 0;
 
   elxout << "start region for scales: " << start << std::endl;
@@ -1929,14 +1929,14 @@ TransformBase<TElastix>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator iter;
   typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator end   = sampleContainer->End();
 
   /** Read fixed coordinates and get Jacobian. */
-  JacobianType jacobian;
+  JacobianType               jacobian;
   NonZeroJacobianIndicesType nzji;
   for( iter = begin; iter != end; ++iter )
   {
-    const InputPointType & point = (*iter).Value().m_ImageCoordinates;
+    const InputPointType & point = ( *iter ).Value().m_ImageCoordinates;
     //const JacobianType & jacobian = thisITK->GetJacobian( point );
     thisITK->GetJacobian( point, jacobian, nzji );
 
@@ -1947,7 +1947,7 @@ TransformBase<TElastix>
       scales += element_product( jacd, jacd );
     }
   }
-  scales /= static_cast<double>( nrofsamples );
+  scales /= static_cast< double >( nrofsamples );
 
   const unsigned int numberOfScalesSubTransform = N / numberOfSubTransforms; //(FixedImageDimension)*(FixedImageDimension - 1);
 

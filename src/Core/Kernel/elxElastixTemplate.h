@@ -197,7 +197,7 @@ public:
   typedef elx::TransformBase< Self >       TransformBaseType;
 
   /** Typedef's for Timer class. */
-  typedef itk::TimeProbe     TimerType;
+  typedef itk::TimeProbe TimerType;
 
   /** Typedef's for ApplyTransform.
    * \todo How useful is this? It is not consequently supported, since the

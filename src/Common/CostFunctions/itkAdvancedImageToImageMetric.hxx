@@ -61,10 +61,10 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_InterpolatorIsLinear            = false;
   this->m_CentralDifferenceGradientFilter = 0;
 
-  this->m_AdvancedTransform              = 0;
-  this->m_TransformIsAdvanced            = false;
-  this->m_TransformIsBSpline             = false;
-  this->m_UseMovingImageDerivativeScales = false;
+  this->m_AdvancedTransform                                = 0;
+  this->m_TransformIsAdvanced                              = false;
+  this->m_TransformIsBSpline                               = false;
+  this->m_UseMovingImageDerivativeScales                   = false;
   this->m_ScaleGradientWithRespectToMovingImageOrientation = false;
   this->m_MovingImageDerivativeScales.Fill( 1.0 );
 
@@ -102,8 +102,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_ThreaderMetricParameters.st_Metric = this;
 
   // Multi-threading structs
-  this->m_GetValuePerThreadVariables = NULL;
-  this->m_GetValuePerThreadVariablesSize = 0;
+  this->m_GetValuePerThreadVariables                  = NULL;
+  this->m_GetValuePerThreadVariablesSize              = 0;
   this->m_GetValueAndDerivativePerThreadVariables     = NULL;
   this->m_GetValueAndDerivativePerThreadVariablesSize = 0;
 
@@ -200,7 +200,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   if( this->m_GetValuePerThreadVariablesSize != this->m_NumberOfThreads )
   {
     delete[] this->m_GetValuePerThreadVariables;
-    this->m_GetValuePerThreadVariables = new AlignedGetValuePerThreadStruct[ this->m_NumberOfThreads ];
+    this->m_GetValuePerThreadVariables     = new AlignedGetValuePerThreadStruct[ this->m_NumberOfThreads ];
     this->m_GetValuePerThreadVariablesSize = this->m_NumberOfThreads;
   }
 
@@ -216,7 +216,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     this->m_GetValuePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
-    this->m_GetValuePerThreadVariables[ i ].st_Value = NumericTraits< MeasureType >::Zero;
+    this->m_GetValuePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;
 
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;
@@ -669,7 +669,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-        ( *gradient ) = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+        ( *gradient )    = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
         //this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
         //  cindex, movingImageValue, *gradient );
       }
@@ -713,8 +713,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
            * First the gradient is rotated backwards to a standardized axis.
            */
           typedef typename MovingImageType::DirectionType::InternalMatrixType InternalMatrixType;
-          const InternalMatrixType M = this->GetMovingImage()->GetDirection().GetVnlMatrix();
-          vnl_vector<double> rotated_gradient_vnl = M.transpose() * gradient->GetVnlVector();
+          const InternalMatrixType M                    = this->GetMovingImage()->GetDirection().GetVnlMatrix();
+          vnl_vector< double >     rotated_gradient_vnl = M.transpose() * gradient->GetVnlVector();
 
           /** Then scales are applied. */
           for( unsigned int i = 0; i < MovingImageDimension; ++i )
@@ -1028,7 +1028,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** This thread accumulates all sub-derivatives into a single one, for the
    * range [ jmin, jmax [. Additionally, the sub-derivatives are reset.
    */
-  const DerivativeValueType zero = NumericTraits< DerivativeValueType >::Zero;
+  const DerivativeValueType zero          = NumericTraits< DerivativeValueType >::Zero;
   const DerivativeValueType normalization = 1.0 / temp->st_NormalizationFactor;
   for( unsigned int j = jmin; j < jmax; ++j )
   {

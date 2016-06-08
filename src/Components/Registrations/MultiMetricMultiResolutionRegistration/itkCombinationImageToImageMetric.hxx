@@ -22,7 +22,6 @@
 #include "itkTimeProbe.h"
 #include "itkMath.h"
 
-
 /** Macros to reduce some copy-paste work.
  * These macros provide the implementation of
  * all Set/GetFixedImage, Set/GetInterpolator etc methods
@@ -720,7 +719,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
     timer.Stop();
 
     /** store ... */
-    this->m_MetricValues[ i ] = tmpValue;
+    this->m_MetricValues[ i ]          = tmpValue;
     this->m_MetricComputationTime[ i ] = timer.GetMean() * 1000.0;
 
     /** and combine. */

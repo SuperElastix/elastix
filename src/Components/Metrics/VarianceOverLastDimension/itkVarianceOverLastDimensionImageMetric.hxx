@@ -367,7 +367,7 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
   itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
 
   /** Define derivative and Jacobian types. */
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
+  typedef typename DerivativeType::ValueType DerivativeValueType;
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;

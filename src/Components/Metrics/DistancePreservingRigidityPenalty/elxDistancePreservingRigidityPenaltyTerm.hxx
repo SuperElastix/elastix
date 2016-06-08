@@ -99,7 +99,7 @@ DistancePreservingRigidityPenalty< TElastix >
   for( unsigned int dim = 0; dim < FixedImageDimension; ++dim )
   {
     resampledImageSpacing[ dim ] = segmentedImageSpacing[ dim ] * penaltyGridSpacingInVoxels[ dim ];
-    resampledImageSize[ dim ] = static_cast< SizeValueType >(
+    resampledImageSize[ dim ]    = static_cast< SizeValueType >(
       segmentedImageSize[ dim ] / penaltyGridSpacingInVoxels[ dim ] );
   }
 
@@ -153,4 +153,3 @@ DistancePreservingRigidityPenalty< TElastix >
 } // end namespace elastix
 
 #endif // end #ifndef __elxDistancePreservingRigidityPenaltyTerm_HXX__
-

@@ -677,9 +677,9 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 {
   itkDebugMacro( "GetSelfHessian()" );
 
-  typedef typename HessianType::row                 RowType;
-  typedef typename RowType::iterator                RowIteratorType;
-  typedef typename HessianType::pair_t              ElementType;
+  typedef typename HessianType::row    RowType;
+  typedef typename RowType::iterator   RowIteratorType;
+  typedef typename HessianType::pair_t ElementType;
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;

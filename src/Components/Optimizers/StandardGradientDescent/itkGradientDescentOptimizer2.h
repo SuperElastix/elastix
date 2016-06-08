@@ -127,7 +127,7 @@ public:
   itkGetConstReferenceMacro( Gradient, DerivativeType );
 
   /** Get current search direction */
-  itkGetConstReferenceMacro( SearchDirection, DerivativeType);
+  itkGetConstReferenceMacro( SearchDirection, DerivativeType );
 
   /** Set the number of threads. */
   void SetNumberOfThreads( ThreadIdType numberOfThreads )

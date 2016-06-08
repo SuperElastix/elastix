@@ -21,7 +21,6 @@
 #include "elxAdvancedMeanSquaresMetric.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 

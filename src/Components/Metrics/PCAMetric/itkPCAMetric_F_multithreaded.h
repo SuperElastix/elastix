@@ -27,21 +27,21 @@
 
 namespace itk
 {
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 class PCAMetric :
-  public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef PCAMetric                               Self;
+  typedef PCAMetric                   Self;
   typedef AdvancedImageToImageMetric<
-    TFixedImage, TMovingImage >                   Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+    TFixedImage, TMovingImage >       Superclass;
+  typedef SmartPointer< Self >        Pointer;
+  typedef SmartPointer< const Self >  ConstPointer;
 
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename FixedImageRegionType::SizeType         FixedImageSizeType;
+  typedef typename Superclass::FixedImageRegionType FixedImageRegionType;
+  typedef typename FixedImageRegionType::SizeType   FixedImageSizeType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -99,11 +99,11 @@ public:
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
-  typedef typename Superclass::ThreaderType                    ThreaderType;
-  typedef typename Superclass::ThreadInfoType                  ThreadInfoType;
+  typedef typename DerivativeType::ValueType              DerivativeValueType;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
-  typedef vnl_matrix< RealType >                  MatrixType;
+  typedef vnl_matrix< RealType >            MatrixType;
   typedef vnl_matrix< DerivativeValueType > DerivativeMatrixType;
 
 //    typedef vnl_matrix< double > MatrixType;
@@ -121,42 +121,43 @@ public:
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
   /** Get the derivatives of the match measure. */
-  virtual void GetDerivative(const TransformParametersType & parameters,
+  virtual void GetDerivative( const TransformParametersType & parameters,
     DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  void GetValueAndDerivativeSingleThreaded(const TransformParametersType& parameters,
-      MeasureType& Value, DerivativeType& Derivative) const;
+  void GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
+    MeasureType & Value, DerivativeType & Derivative ) const;
 
-  virtual void GetValueAndDerivative(const TransformParametersType& parameters,
-      MeasureType& Value, DerivativeType& Derivative) const;
+  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
+    MeasureType & Value, DerivativeType & Derivative ) const;
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation.   */
 
-  virtual void Initialize(void) throw ( ExceptionObject );
+  virtual void Initialize( void ) throw ( ExceptionObject );
 
 protected:
+
   PCAMetric();
   virtual ~PCAMetric();
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
 
   /** Typedefs inherited from superclass */
-  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
+  typedef typename Superclass::FixedImageIndexType      FixedImageIndexType;
+  typedef typename Superclass::FixedImageIndexValueType FixedImageIndexValueType;
+  typedef typename Superclass::MovingImageIndexType     MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType      FixedImagePointType;
   typedef typename itk::ContinuousIndex< CoordinateRepresentationType, FixedImageDimension >
-                                                                  FixedImageContinuousIndexType;
-  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
-  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-  typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
+    FixedImageContinuousIndexType;
+  typedef typename Superclass::MovingImagePointType                MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType      MovingImageContinuousIndexType;
+  typedef typename Superclass::BSplineInterpolatorType             BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  typedef typename Superclass::MovingImageDerivativeType           MovingImageDerivativeType;
+  typedef typename Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
 
   /** Computes the innerproduct of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
@@ -164,7 +165,7 @@ protected:
   void EvaluateTransformJacobianInnerProduct(
     const TransformJacobianType & jacobian,
     const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const;
+    DerivativeType & imageJacobian ) const;
 
   struct PCAMetricMultiThreaderParameterType
   {
@@ -175,22 +176,21 @@ protected:
 
   struct PCAMetricGetSamplesPerThreadStruct
   {
-    SizeValueType   st_NumberOfPixelsCounted;
-    MatrixType      st_DataBlock;
+    SizeValueType                      st_NumberOfPixelsCounted;
+    MatrixType                         st_DataBlock;
     std::vector< FixedImagePointType > st_ApprovedSamples;
-    DerivativeType st_Derivative;
+    DerivativeType                     st_Derivative;
   };
 
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, PCAMetricGetSamplesPerThreadStruct,
     PaddedPCAMetricGetSamplesPerThreadStruct );
 
   itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT,
-                     PaddedPCAMetricGetSamplesPerThreadStruct,
-                     AlignedPCAMetricGetSamplesPerThreadStruct );
+    PaddedPCAMetricGetSamplesPerThreadStruct,
+    AlignedPCAMetricGetSamplesPerThreadStruct );
 
   mutable AlignedPCAMetricGetSamplesPerThreadStruct * m_PCAMetricGetSamplesPerThreadVariables;
-  mutable ThreadIdType  m_PCAMetricGetSamplesPerThreadVariablesSize;
-
+  mutable ThreadIdType                                m_PCAMetricGetSamplesPerThreadVariablesSize;
 
   /** Get value and derivatives for each thread. */
   inline void ThreadedGetSamples( ThreadIdType threadID );
@@ -204,18 +204,21 @@ protected:
 
   /** Helper function to launch the threads. */
   static ITK_THREAD_RETURN_TYPE GetSamplesThreaderCallback( void * arg );
+
   static ITK_THREAD_RETURN_TYPE ComputeDerivativeThreaderCallback( void * arg );
 
   /** Helper functions to launch the threads. */
   void LaunchGetSamplesThreaderCallback( void ) const;
+
   void LaunchComputeDerivativeThreaderCallback( void ) const;
 
   /** Initialize some multi-threading related parameters. */
   virtual void InitializeThreadingParameters( void ) const;
 
 private:
-  PCAMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+
+  PCAMetric( const Self & );      // purposely not implemented
+  void operator=( const Self & ); // purposely not implemented
 
   unsigned int m_G;
   unsigned int m_LastDimIndex;
@@ -234,13 +237,13 @@ private:
 
   /** Matrices, needed for derivative calculation */
   mutable std::vector< unsigned int > m_PixelStartIndex;
-  mutable MatrixType m_Atmm;
-  mutable DerivativeMatrixType m_vSAtmm;
-  mutable DerivativeMatrixType m_CSv;
-  mutable DerivativeMatrixType m_Sv;
-  mutable DerivativeMatrixType m_vdSdmu_part1;
+  mutable MatrixType                  m_Atmm;
+  mutable DerivativeMatrixType        m_vSAtmm;
+  mutable DerivativeMatrixType        m_CSv;
+  mutable DerivativeMatrixType        m_Sv;
+  mutable DerivativeMatrixType        m_vdSdmu_part1;
 
-}; // end class PCAMetric_F_multithreaded
+};
 
 } // end namespace itk
 

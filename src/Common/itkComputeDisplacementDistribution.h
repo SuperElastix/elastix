@@ -104,6 +104,7 @@ public:
     }
   }
 
+
   /** Get the region over which the metric will be computed. */
   itkGetConstReferenceMacro( FixedImageRegion, FixedImageRegionType );
 
@@ -123,6 +124,7 @@ public:
   {
     this->m_Threader->SetNumberOfThreads( numberOfThreads );
   }
+
 
   virtual void BeforeThreadedCompute( const ParametersType & mu );
 
@@ -153,19 +155,19 @@ protected:
   typedef typename  JacobianType::ValueType     JacobianValueType;
 
   /** Samplers. */
-  typedef ImageSamplerBase< FixedImageType >           ImageSamplerBaseType;
-  typedef typename ImageSamplerBaseType::Pointer       ImageSamplerBasePointer;
+  typedef ImageSamplerBase< FixedImageType >     ImageSamplerBaseType;
+  typedef typename ImageSamplerBaseType::Pointer ImageSamplerBasePointer;
 
-  typedef ImageFullSampler< FixedImageType >           ImageFullSamplerType;
-  typedef typename ImageFullSamplerType::Pointer       ImageFullSamplerPointer;
+  typedef ImageFullSampler< FixedImageType >     ImageFullSamplerType;
+  typedef typename ImageFullSamplerType::Pointer ImageFullSamplerPointer;
 
   typedef ImageRandomSamplerBase< FixedImageType >     ImageRandomSamplerBaseType;
   typedef typename ImageRandomSamplerBaseType::Pointer ImageRandomSamplerBasePointer;
 
-  typedef ImageGridSampler< FixedImageType >      ImageGridSamplerType;
-  typedef typename ImageGridSamplerType::Pointer  ImageGridSamplerPointer;
+  typedef ImageGridSampler< FixedImageType >     ImageGridSamplerType;
+  typedef typename ImageGridSamplerType::Pointer ImageGridSamplerPointer;
   typedef typename ImageGridSamplerType
-    ::ImageSampleContainerType                    ImageSampleContainerType;
+    ::ImageSampleContainerType                   ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer ImageSampleContainerPointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
@@ -197,17 +199,17 @@ protected:
   struct MultiThreaderParameterType
   {
     // To give the threads access to all member variables and functions.
-    Self *                st_Self;
+    Self * st_Self;
   };
   mutable MultiThreaderParameterType m_ThreaderParameters;
 
   struct ComputePerThreadStruct
   {
     // Used for accumulating derivatives
-    double                st_MaxJJ;
-    double                st_Displacement;
-    double                st_DisplacementSquared;
-    SizeValueType         st_NumberOfPixelsCounted;
+    double        st_MaxJJ;
+    double        st_Displacement;
+    double        st_DisplacementSquared;
+    SizeValueType st_NumberOfPixelsCounted;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, ComputePerThreadStruct,
     PaddedComputePerThreadStruct );
@@ -216,11 +218,10 @@ protected:
   mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
   mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
 
-  SizeValueType                 m_NumberOfPixelsCounted;
-  bool                          m_UseMultiThread;
-  //ThreadIdType                  m_NumberOfThreads;
-  ScalesType                    m_Scales;
-  ImageSampleContainerPointer   m_SampleContainer;
+  SizeValueType               m_NumberOfPixelsCounted;
+  bool                        m_UseMultiThread;
+  ScalesType                  m_Scales;
+  ImageSampleContainerPointer m_SampleContainer;
 
 private:
 

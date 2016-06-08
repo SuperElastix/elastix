@@ -31,11 +31,11 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
-::SumOfPairwiseCorrelationCoefficientsMetric():
-    m_SubtractMean( true ),
-    m_TransformIsStackTransform( true )
+template< class TFixedImage, class TMovingImage >
+SumOfPairwiseCorrelationCoefficientsMetric< TFixedImage, TMovingImage >
+::SumOfPairwiseCorrelationCoefficientsMetric() :
+  m_SubtractMean( true ),
+  m_TransformIsStackTransform( true )
 {
   this->SetUseImageSampler( true );
   this->SetUseFixedImageLimiter( false );
@@ -47,10 +47,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
  * ******************* Initialize *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
-::Initialize(void) throw ( ExceptionObject )
+SumOfPairwiseCorrelationCoefficientsMetric< TFixedImage, TMovingImage >
+::Initialize( void ) throw ( ExceptionObject )
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();
@@ -61,10 +61,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
  * ******************* PrintSelf *******************
  */
 
-template < class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
-::PrintSelf(std::ostream& os, Indent indent) const
+SumOfPairwiseCorrelationCoefficientsMetric< TFixedImage, TMovingImage >
+::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 } // end PrintSelf()
@@ -74,10 +74,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
  * ******************* SampleRandom *******************
  */
 
-template < class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
-::SampleRandom( const int n, const int m, std::vector<int> & numbers ) const
+SumOfPairwiseCorrelationCoefficientsMetric< TFixedImage, TMovingImage >
+::SampleRandom( const int n, const int m, std::vector< int > & numbers ) const
 {
   /** Empty list of last dimension positions. */
   numbers.clear();
@@ -97,8 +97,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     int randomNum = 0;
     do
     {
-      randomNum = static_cast<int>( randomGenerator->GetVariateWithClosedRange( m ) );
-    } while( find( numbers.begin(), numbers.end(), randomNum ) != numbers.end() );
+      randomNum = static_cast< int >( randomGenerator->GetVariateWithClosedRange( m ) );
+    }
+    while( find( numbers.begin(), numbers.end(), randomNum ) != numbers.end() );
     numbers.push_back( randomNum );
   }
 
@@ -109,9 +110,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
  * *************** EvaluateTransformJacobianInnerProduct ****************
  */
 
-template < class TFixedImage, class TMovingImage >
+template< class TFixedImage, class TMovingImage >
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
+SumOfPairwiseCorrelationCoefficientsMetric< TFixedImage, TMovingImage >
 ::EvaluateTransformJacobianInnerProduct(
   const TransformJacobianType & jacobian,
   const MovingImageDerivativeType & movingImageDerivative,
@@ -124,8 +125,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
   for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
   {
-    const double imDeriv = movingImageDerivative[ dim ];
-    DerivativeIteratorType imjac = imageJacobian.begin();
+    const double           imDeriv = movingImageDerivative[ dim ];
+    DerivativeIteratorType imjac   = imageJacobian.begin();
 
     for( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
     {
@@ -141,9 +142,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
-typename SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>::MeasureType
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
+template< class TFixedImage, class TMovingImage >
+typename SumOfPairwiseCorrelationCoefficientsMetric< TFixedImage, TMovingImage >::MeasureType
+SumOfPairwiseCorrelationCoefficientsMetric< TFixedImage, TMovingImage >
 ::GetValue( const TransformParametersType & parameters ) const
 {
   itkDebugMacro( "GetValue( " << parameters << " ) " );
@@ -162,23 +163,23 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Retrieve slowest varying dimension and its size. */
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-  const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+  const unsigned int G       = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
 
   typedef vnl_matrix< RealType > MatrixType;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   unsigned int NumberOfSamples = sampleContainer->Size();
-  MatrixType datablock( NumberOfSamples, G );
+  MatrixType   datablock( NumberOfSamples, G );
 
   /** Initialize dummy loop variable */
   unsigned int pixelIndex = 0;
 
   /** Initialize image sample matrix . */
-  datablock.fill( itk::NumericTraits< RealType>::Zero );
+  datablock.fill( itk::NumericTraits< RealType >::Zero );
 
   for( fiter = fbegin; fiter != fend; ++fiter )
   {
@@ -195,7 +196,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     for( unsigned int d = 0; d < G; ++d )
     {
       /** Initialize some variables. */
-      RealType movingImageValue;
+      RealType             movingImageValue;
       MovingImagePointType mappedPoint;
 
       /** Set fixed point's last dimension to lastDimPosition. */
@@ -233,7 +234,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
       this->m_NumberOfPixelsCounted++;
     }
 
-  }/** end first loop over image sample container */
+  } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(
@@ -266,8 +267,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
   MatrixType Atmm = Amm.transpose();
 
-  MatrixType C( Atmm*Amm );
-  C /= static_cast<RealType> ( RealType( N ) - 1.0 );
+  MatrixType C( Atmm * Amm );
+  C /= static_cast< RealType >( RealType( N ) - 1.0 );
 
   vnl_diag_matrix< RealType > S( G );
   S.fill( NumericTraits< RealType >::Zero );
@@ -276,7 +277,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     S( j, j ) = 1.0 / sqrt( C( j, j ) );
   }
 
-  MatrixType K( S*C*S );
+  MatrixType K( S * C * S );
 
   measure = 1.0 - ( K.fro_norm() / RealType( G ) );
 
@@ -290,11 +291,11 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
  * ******************* GetDerivative *******************
  */
 
-template < class TFixedImage, class TMovingImage>
+template< class TFixedImage, class TMovingImage >
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
+SumOfPairwiseCorrelationCoefficientsMetric< TFixedImage, TMovingImage >
 ::GetDerivative( const TransformParametersType & parameters,
-                 DerivativeType & derivative ) const
+  DerivativeType & derivative ) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -314,14 +315,14 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
 template< class TFixedImage, class TMovingImage >
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
+SumOfPairwiseCorrelationCoefficientsMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivative( const TransformParametersType & parameters,
-                         MeasureType& value, DerivativeType& derivative ) const
+  MeasureType & value, DerivativeType & derivative ) const
 {
   itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
 
   /** Define derivative and Jacobian types. */
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
+  typedef typename DerivativeType::ValueType DerivativeValueType;
   //typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /** Initialize some variables */
@@ -341,20 +342,20 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
   typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
 
   /** Retrieve slowest varying dimension and its size. */
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-  const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+  const unsigned int G       = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
 
-  typedef vnl_matrix< RealType >                  MatrixType;
+  typedef vnl_matrix< RealType >            MatrixType;
   typedef vnl_matrix< DerivativeValueType > DerivativeMatrixType;
 
   std::vector< FixedImagePointType > SamplesOK;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   unsigned int NumberOfSamples = sampleContainer->Size();
-  MatrixType datablock( NumberOfSamples, G );
+  MatrixType   datablock( NumberOfSamples, G );
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;
@@ -377,7 +378,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     for( unsigned int d = 0; d < G; ++d )
     {
       /** Initialize some variables. */
-      RealType movingImageValue;
+      RealType             movingImageValue;
       MovingImagePointType mappedPoint;
 
       /** Set fixed point's last dimension to lastDimPosition. */
@@ -406,7 +407,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
         numSamplesOk++;
         datablock( pixelIndex, d ) = movingImageValue;
 
-      }// end if sampleOk
+      } // end if sampleOk
 
     } // end loop over t
 
@@ -417,7 +418,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
       this->m_NumberOfPixelsCounted++;
     }
 
-  }/** end first loop over image sample container */
+  } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
@@ -449,8 +450,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
 
   MatrixType Atmm = Amm.transpose();
 
-  MatrixType C( Atmm*Amm );
-  C /= static_cast<RealType> ( RealType( N ) - 1.0 );
+  MatrixType C( Atmm * Amm );
+  C /= static_cast< RealType >( RealType( N ) - 1.0 );
 
   vnl_diag_matrix< RealType > S( G );
   S.fill( NumericTraits< RealType >::Zero );
@@ -459,13 +460,12 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     S( j, j ) = 1.0 / sqrt( C( j, j ) );
   }
 
-  DerivativeMatrixType K( S*C*S );
+  DerivativeMatrixType K( S * C * S );
 
   /** Create variables to store intermediate results in. */
-  TransformJacobianType jacobian;
-  DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-  std::vector<NonZeroJacobianIndicesType> nzjis( G, NonZeroJacobianIndicesType() );
-
+  TransformJacobianType                     jacobian;
+  DerivativeType                            imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  std::vector< NonZeroJacobianIndicesType > nzjis( G, NonZeroJacobianIndicesType() );
 
   DerivativeType dMTdmu;
 
@@ -483,9 +483,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
   }
 
   //DerivativeMatrixType CS( C*S );
-  DerivativeMatrixType KAtZscore( K*( Amm*S ).transpose() );
-  DerivativeMatrixType KAtZscoreAmm( K*( Amm*S ).transpose()*Amm );
-
+  DerivativeMatrixType KAtZscore( K * ( Amm * S ).transpose() );
+  DerivativeMatrixType KAtZscoreAmm( K * ( Amm * S ).transpose() * Amm );
 
   /** Second loop over fixed image samples. */
   for( pixelIndex = 0; pixelIndex < SamplesOK.size(); ++pixelIndex )
@@ -500,8 +499,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
     for( unsigned int d = 0; d < G; ++d )
     {
       /** Initialize some variables. */
-      RealType movingImageValue;
-      MovingImagePointType mappedPoint;
+      RealType                  movingImageValue;
+      MovingImagePointType      mappedPoint;
       MovingImageDerivativeType movingImageDerivative;
 
       /** Set fixed point's last dimension to lastDimPosition. */
@@ -529,16 +528,15 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
       {
         derivative[ nzjis[ d ][ p ] ] += KAtZscore[ d ][ pixelIndex ] * dMTdmu[ p ] * S( d, d );
         derivative[ nzjis[ d ][ p ] ] += dSdmu_part1( d, d ) * Atmm[ d ][ pixelIndex ] * dMTdmu[ p ] * KAtZscoreAmm[ d ][ d ];
-      }//end loop over non-zero jacobian indices
+      } //end loop over non-zero jacobian indices
 
     } // end loop over t
 
   } // end second for loop over sample container
 
-
-  derivative *= -static_cast <DerivativeValueType> ( 2.0 )
-    / ( static_cast <DerivativeValueType> ( N -
-      static_cast <DerivativeValueType>( 1.0 ) )*( K.fro_norm()*RealType( G ) ) ); //normalize
+  derivative *= -static_cast< DerivativeValueType >( 2.0 )
+    / ( static_cast< DerivativeValueType >( N
+    - static_cast< DerivativeValueType >( 1.0 ) ) * ( K.fro_norm() * RealType( G ) ) ); //normalize
 
   measure = RealType( 1.0 - ( K.fro_norm() / RealType( G ) ) );
 
@@ -555,7 +553,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
       const unsigned int numParametersPerDimension
         = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
       const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
-      DerivativeType mean( numControlPointsPerDimension );
+      DerivativeType     mean( numControlPointsPerDimension );
       for( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
       {
         /** Compute mean per dimension. */
@@ -566,7 +564,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
           const unsigned int index = i % numControlPointsPerDimension;
           mean[ index ] += derivative[ i ];
         }
-        mean /= static_cast<double>( lastDimGridSize );
+        mean /= static_cast< double >( lastDimGridSize );
 
         /** Update derivative for every control point per dimension. */
         for( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
@@ -583,7 +581,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
        * the number the time point index.
        */
       const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / G;
-      DerivativeType mean( numParametersPerLastDimension );
+      DerivativeType     mean( numParametersPerLastDimension );
       mean.Fill( 0.0 );
 
       /** Compute mean per control point. */
@@ -596,7 +594,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
           mean[ index ] += derivative[ c ];
         }
       }
-      mean /= static_cast<double>( G );
+      mean /= static_cast< double >( G );
 
       /** Update derivative per control point. */
       for( unsigned int t = 0; t < G; ++t )
@@ -615,6 +613,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage,TMovingImage>
   value = measure;
 
 } // end GetValueAndDerivative()
+
 
 } // end namespace itk
 

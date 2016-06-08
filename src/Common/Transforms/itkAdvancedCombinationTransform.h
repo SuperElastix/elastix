@@ -366,14 +366,14 @@ protected:
   //GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
 
   /** More of these. */
-  GetSparseJacobianFunctionPointer             m_SelectedGetSparseJacobianFunction;
+  GetSparseJacobianFunctionPointer                        m_SelectedGetSparseJacobianFunction;
   EvaluateJacobianWithImageGradientProductFunctionPointer m_SelectedEvaluateJacobianWithImageGradientProductFunction;
-  GetSpatialJacobianFunctionPointer            m_SelectedGetSpatialJacobianFunction;
-  GetSpatialHessianFunctionPointer             m_SelectedGetSpatialHessianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer  m_SelectedGetJacobianOfSpatialJacobianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer2 m_SelectedGetJacobianOfSpatialJacobianFunction2;
-  GetJacobianOfSpatialHessianFunctionPointer   m_SelectedGetJacobianOfSpatialHessianFunction;
-  GetJacobianOfSpatialHessianFunctionPointer2  m_SelectedGetJacobianOfSpatialHessianFunction2;
+  GetSpatialJacobianFunctionPointer                       m_SelectedGetSpatialJacobianFunction;
+  GetSpatialHessianFunctionPointer                        m_SelectedGetSpatialHessianFunction;
+  GetJacobianOfSpatialJacobianFunctionPointer             m_SelectedGetJacobianOfSpatialJacobianFunction;
+  GetJacobianOfSpatialJacobianFunctionPointer2            m_SelectedGetJacobianOfSpatialJacobianFunction2;
+  GetJacobianOfSpatialHessianFunctionPointer              m_SelectedGetJacobianOfSpatialHessianFunction;
+  GetJacobianOfSpatialHessianFunctionPointer2             m_SelectedGetJacobianOfSpatialHessianFunction2;
 
   /** ************************************************
    * Methods to transform a point.

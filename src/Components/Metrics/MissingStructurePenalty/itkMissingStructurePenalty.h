@@ -91,7 +91,7 @@ public:
     FixedPointSetDimension, FixedPointSetDimension, CoordRepType >     MeshTraitsType;
   typedef Mesh< DummyMeshPixelType, FixedPointSetDimension,
     MeshTraitsType >                                                   FixedMeshType;
-  typedef typename FixedMeshType::PointIdentifier        FixedMeshPointIdentifier;
+  typedef typename FixedMeshType::PointIdentifier FixedMeshPointIdentifier;
 
   typedef typename FixedMeshType::ConstPointer             FixedMeshConstPointer;
   typedef typename FixedMeshType::Pointer                  FixedMeshPointer;
@@ -99,7 +99,7 @@ public:
 
   typedef typename FixedMeshType::PointType             MeshPointType;
   typedef typename FixedMeshType::PointType::VectorType VectorType;
-  typedef typename VectorType::const_pointer VectorConstPointer;
+  typedef typename VectorType::const_pointer            VectorConstPointer;
   typedef itk::Vector<
     typename VectorType::ValueType, FixedPointSetDimension - 1 >         SubVectorType;
 
@@ -116,15 +116,15 @@ public:
   typedef typename FixedMeshType::PointDataContainerIterator MeshPointDataContainerConstIteratorType;
   typedef typename MeshPointDataContainerType::Iterator      MeshPointDataContainerIteratorType;
 
-  typedef unsigned int                                          MeshIdType;
-  typedef VectorContainer< MeshIdType, FixedMeshConstPointer >  FixedMeshContainerType;
-  typedef typename FixedMeshContainerType::Pointer              FixedMeshContainerPointer;
-  typedef typename FixedMeshContainerType::ConstPointer         FixedMeshContainerConstPointer;
-  typedef typename FixedMeshContainerType::ElementIdentifier    FixedMeshContainerElementIdentifier;
+  typedef unsigned int                                         MeshIdType;
+  typedef VectorContainer< MeshIdType, FixedMeshConstPointer > FixedMeshContainerType;
+  typedef typename FixedMeshContainerType::Pointer             FixedMeshContainerPointer;
+  typedef typename FixedMeshContainerType::ConstPointer        FixedMeshContainerConstPointer;
+  typedef typename FixedMeshContainerType::ElementIdentifier   FixedMeshContainerElementIdentifier;
 
-  typedef VectorContainer< MeshIdType, FixedMeshPointer >   MappedMeshContainerType;
-  typedef typename MappedMeshContainerType::Pointer         MappedMeshContainerPointer;
-  typedef typename MappedMeshContainerType::ConstPointer    MappedMeshContainerConstPointer;
+  typedef VectorContainer< MeshIdType, FixedMeshPointer > MappedMeshContainerType;
+  typedef typename MappedMeshContainerType::Pointer       MappedMeshContainerPointer;
+  typedef typename MappedMeshContainerType::ConstPointer  MappedMeshContainerConstPointer;
 
   typedef Array< DerivativeValueType > MeshPointsDerivativeValueType;
 
@@ -178,7 +178,7 @@ private:
   MissingVolumeMeshPenalty( const Self & ); // purposely not implemented
   void operator=( const Self & );           // purposely not implemented
 
-}; // end class MissingVolumeMeshPenalty
+};
 
 } // end namespace itk
 
@@ -187,4 +187,3 @@ private:
 #endif
 
 #endif
-

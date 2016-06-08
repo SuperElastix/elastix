@@ -88,9 +88,7 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template < class TTransform,
-           class TFixedImage,
-           class TMovingImage >
+template< class TTransform, class TFixedImage, class TMovingImage >
 class CenteredTransformInitializer2 : public Object
 {
 public:
@@ -112,34 +110,33 @@ public:
   typedef typename TransformType::Pointer TransformPointer;
 
   /** Dimension of parameters. */
-  itkStaticConstMacro(InputSpaceDimension, unsigned int,
-                      TransformType::InputSpaceDimension);
-  itkStaticConstMacro(OutputSpaceDimension, unsigned int,
-                      TransformType::OutputSpaceDimension);
+  itkStaticConstMacro( InputSpaceDimension, unsigned int,
+    TransformType::InputSpaceDimension );
+  itkStaticConstMacro( OutputSpaceDimension, unsigned int,
+    TransformType::OutputSpaceDimension );
 
   /** Image Types to use in the initialization of the transform */
   typedef TFixedImage  FixedImageType;
   typedef TMovingImage MovingImageType;
 
-  typedef typename FixedImageType::ConstPointer   FixedImagePointer;
-  typedef typename MovingImageType::ConstPointer  MovingImagePointer;
+  typedef typename FixedImageType::ConstPointer  FixedImagePointer;
+  typedef typename MovingImageType::ConstPointer MovingImagePointer;
 
-  typedef Image< unsigned char, InputSpaceDimension >   FixedImageMaskType;
-  typedef Image< unsigned char, OutputSpaceDimension >  MovingImageMaskType;
-  typedef typename FixedImageMaskType::ConstPointer   FixedImageMaskPointer;
-  typedef typename MovingImageMaskType::ConstPointer  MovingImageMaskPointer;
+  typedef Image< unsigned char, InputSpaceDimension >  FixedImageMaskType;
+  typedef Image< unsigned char, OutputSpaceDimension > MovingImageMaskType;
+  typedef typename FixedImageMaskType::ConstPointer    FixedImageMaskPointer;
+  typedef typename MovingImageMaskType::ConstPointer   MovingImageMaskPointer;
 
   /** Moment calculators */
   typedef ImageMomentsCalculator< FixedImageType >
-                                                 FixedImageCalculatorType;
+    FixedImageCalculatorType;
   typedef ImageMomentsCalculator< MovingImageType >
-                                                 MovingImageCalculatorType;
+    MovingImageCalculatorType;
 
   typedef typename FixedImageCalculatorType::Pointer
-                                                 FixedImageCalculatorPointer;
+    FixedImageCalculatorPointer;
   typedef typename MovingImageCalculatorType::Pointer
-                                                 MovingImageCalculatorPointer;
-
+    MovingImageCalculatorPointer;
 
   /** Offset type. */
   typedef typename TransformType::OffsetType OffsetType;
@@ -178,6 +175,7 @@ public:
   itkGetConstObjectMacro( MovingCalculator, MovingImageCalculatorType );
 
 protected:
+
   CenteredTransformInitializer2();
   ~CenteredTransformInitializer2() {}
 

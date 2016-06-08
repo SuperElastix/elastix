@@ -221,7 +221,7 @@ GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisio
     = fromTransform->GetParameters();
 
   GPUFixedParametersType fixedParametersTo;
-  GPUParametersType parametersTo;
+  GPUParametersType      parametersTo;
 
   this->CastCopyFixedParameters( fixedParametersFrom, fixedParametersTo );
   this->CastCopyParameters( parametersFrom, parametersTo );
@@ -237,7 +237,7 @@ void
 GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CastCopyParameters( const CPUParametersType & from, GPUParametersType & to )
 {
-  if( from.GetSize() == 0 ){ return; }
+  if( from.GetSize() == 0 ) { return; }
 
   to.SetSize( from.GetSize() );
   for( SizeValueType i = 0; i < from.GetSize(); ++i )
@@ -253,7 +253,7 @@ void
 GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::CastCopyFixedParameters( const CPUFixedParametersType & from, GPUFixedParametersType & to )
 {
-  if( from.GetSize() == 0 ){ return; }
+  if( from.GetSize() == 0 ) { return; }
   to.SetSize( from.GetSize() );
   for( SizeValueType i = 0; i < from.GetSize(); ++i )
   {

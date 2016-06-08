@@ -23,7 +23,6 @@
 
 //#include "elxMetricBase.h"
 
-
 #include "itkMeshFileReader.h"
 #include "itkMeshFileWriter.h"
 
@@ -158,9 +157,9 @@ public:
   /** Assuming fixed and moving pointsets are of equal type, which implicitly
    * assumes that the fixed and moving image are of the same type.
    */
-  typedef FixedPointSetType       PointSetType;
-  typedef FixedMeshType  MeshType;
-  typedef FixedImageType ImageType;
+  typedef FixedPointSetType PointSetType;
+  typedef FixedMeshType     MeshType;
+  typedef FixedImageType    ImageType;
 
   /** Typedef for timer. */
   //typedef tmr::Timer          TimerType;
@@ -210,7 +209,7 @@ private:
   void operator=( const Self & );        // purposely not implemented
 
   unsigned int m_NumberOfMeshes;
-}; // end class PolydataDummyPenalty
+};
 
 } // end namespace elastix
 
@@ -219,4 +218,3 @@ private:
 #endif
 
 #endif // end #ifndef __elxPolydataDummyPenalty_H__
-

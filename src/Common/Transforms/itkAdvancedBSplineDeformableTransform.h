@@ -180,8 +180,8 @@ public:
   typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
     ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
-  typedef typename Superclass::MovingImageGradientType MovingImageGradientType;
+  typedef typename Superclass::InternalMatrixType           InternalMatrixType;
+  typedef typename Superclass::MovingImageGradientType      MovingImageGradientType;
   typedef typename Superclass::MovingImageGradientValueType MovingImageGradientValueType;
 
   /** Parameters as SpaceDimension number of images. */

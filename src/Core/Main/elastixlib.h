@@ -25,7 +25,6 @@
 #include "itkParameterFileParser.h"
 #include "elxMacro.h"
 
-
 /********************************************************************************
  *                          *
  *      Class definition    *
@@ -107,6 +106,7 @@ public:
   ParameterMapListType GetTransformParameterMapList( void );
 
   std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 0 );
+
   std::string GetCurrentDateAndTime( void );
 
 private:

@@ -34,58 +34,71 @@ namespace elastix
 class ParameterObject : public itk::DataObject
 {
 public:
+
   typedef ParameterObject                 Self;
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
   itkNewMacro( Self );
   itkTypeMacro( Self, itk::DataObject );
 
-  typedef std::string                                             ParameterKeyType;
-  typedef std::string                                             ParameterValueType;
-  typedef std::vector< ParameterValueType >                       ParameterValueVectorType;
-  typedef ParameterValueVectorType::iterator                      ParameterValueVectorIterator;
-  typedef std::map< ParameterKeyType, ParameterValueVectorType >  ParameterMapType;
-  typedef ParameterMapType::iterator                              ParameterMapIterator;
-  typedef ParameterMapType::const_iterator                        ParameterMapConstIterator;
-  typedef std::vector< ParameterMapType >                         ParameterMapVectorType;
-  typedef std::string                                             ParameterFileNameType;
-  typedef std::vector< ParameterFileNameType >                    ParameterFileNameVectorType;
-  typedef ParameterFileNameVectorType::iterator                   ParameterFileNameVectorIterator;
-  typedef ParameterFileNameVectorType::const_iterator             ParameterFileNameVectorConstIterator;
-  typedef itk::ParameterFileParser                                ParameterFileParserType;
-  typedef ParameterFileParserType::Pointer                        ParameterFileParserPointer;
+  typedef std::string                                            ParameterKeyType;
+  typedef std::string                                            ParameterValueType;
+  typedef std::vector< ParameterValueType >                      ParameterValueVectorType;
+  typedef ParameterValueVectorType::iterator                     ParameterValueVectorIterator;
+  typedef std::map< ParameterKeyType, ParameterValueVectorType > ParameterMapType;
+  typedef ParameterMapType::iterator                             ParameterMapIterator;
+  typedef ParameterMapType::const_iterator                       ParameterMapConstIterator;
+  typedef std::vector< ParameterMapType >                        ParameterMapVectorType;
+  typedef std::string                                            ParameterFileNameType;
+  typedef std::vector< ParameterFileNameType >                   ParameterFileNameVectorType;
+  typedef ParameterFileNameVectorType::iterator                  ParameterFileNameVectorIterator;
+  typedef ParameterFileNameVectorType::const_iterator            ParameterFileNameVectorConstIterator;
+  typedef itk::ParameterFileParser                               ParameterFileParserType;
+  typedef ParameterFileParserType::Pointer                       ParameterFileParserPointer;
 
   /* Set/Get/Add parameter map or vector of parameter maps. */
   // TODO: Use itkSetMacro for ParameterMapVectorType
   void SetParameterMap( const ParameterMapType & parameterMap );
+
   void SetParameterMap( const ParameterMapVectorType & parameterMap );
+
   void AddParameterMap( const ParameterMapType & parameterMap );
-  const ParameterMapType& GetParameterMap( const unsigned int index ) const;
+
+  const ParameterMapType & GetParameterMap( const unsigned int index ) const;
+
   itkGetConstReferenceMacro( ParameterMap, ParameterMapVectorType );
 
   /* Read/Write parameter file or multiple parameter files to/from disk. */
   void ReadParameterFile( const ParameterFileNameType & parameterFileName );
+
   void ReadParameterFile( const ParameterFileNameVectorType & parameterFileNameVector );
+
   void AddParameterFile( const ParameterFileNameType & parameterFileName );
+
   void WriteParameterFile( const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName );
+
   void WriteParameterFile( const ParameterFileNameType & parameterFileName );
+
   void WriteParameterFile( const ParameterFileNameVectorType & parameterFileNameVector );
 
   /* Get preconfigured parameter maps. */
-  static const ParameterMapType GetDefaultParameterMap( const std::string & transformName, const unsigned int & numberOfResolutions = 4u, const double & finalGridSpacingInPhysicalUnits = 10.0 );
+  static const ParameterMapType GetDefaultParameterMap( const std::string & transformName,
+    const unsigned int & numberOfResolutions = 4u,
+    const double & finalGridSpacingInPhysicalUnits = 10.0 );
 
-  // C++11 has a to_string in the standard library, but we like to 
+  // C++11 has a to_string in the standard library, but we like to
   // avoid introducing C++11 dependency for this single function
   template< typename T >
-  static std::string ToString( const T& n )
+  static std::string ToString( const T & n )
   {
     std::ostringstream stm;
     stm << n;
     return stm.str();
   }
 
-protected: 
-  
+
+protected:
+
   void PrintSelf( std::ostream & os, itk::Indent indent ) const ITK_OVERRIDE;
 
 private:

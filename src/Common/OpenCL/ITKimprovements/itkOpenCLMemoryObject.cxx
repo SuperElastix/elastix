@@ -243,7 +243,7 @@ OpenCLMemoryObject::GetMapFlags( const OpenCLMemoryObject::Access access )
 //------------------------------------------------------------------------------
 cl_int
 OpenCLMemoryObject::SetDestructorCallback(
-  void( CL_CALLBACK * pfn_notify )( cl_mem, void * ), void * user_data /*= NULL*/ )
+  void ( CL_CALLBACK * pfn_notify )( cl_mem, void * ), void * user_data /*= NULL*/ )
 {
   if( this->IsNull() )
   {

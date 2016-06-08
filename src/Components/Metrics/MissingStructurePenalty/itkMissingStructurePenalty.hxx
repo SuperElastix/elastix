@@ -199,7 +199,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
 
     typename FixedMeshType::PointType &              pointCentroid = pointCentroids->ElementAt( meshId );
     typedef typename FixedMeshType::PointsContainer FixedMeshPointsContainerType;
-    typename FixedMeshType::PointsContainer::Pointer derivPoints   = FixedMeshPointsContainerType::New();
+    typename FixedMeshType::PointsContainer::Pointer derivPoints = FixedMeshPointsContainerType::New();
 
     derivPoints->resize( numberOfPoints, typename FixedMeshPointType::Point( zeroPoint ) );
 
@@ -207,7 +207,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     MeshPointsContainerIteratorType      mappedPointIt = mappedPoints->Begin();
     MeshPointsContainerConstIteratorType fixedPointEnd = fixedPoints->End();
 
-    for( ; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++mappedPointIt )
+    for(; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++mappedPointIt )
     {
       const OutputPointType mappedPoint = this->m_Transform->TransformPoint( fixedPointIt->Value() );
       mappedPointIt.Value()         = mappedPoint;
@@ -219,24 +219,24 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     typename FixedMeshType::CellsContainerConstIterator cellEnd   = fixedMesh->GetCells()->End();
 
     typename CellInterfaceType::PointIdIterator beginpointer;
-    float                              sumSignedVolume = 0.0;
-    float                              sumAbsVolume    = 0.0;
+    float sumSignedVolume = 0.0;
+    float sumAbsVolume    = 0.0;
 
     const float eps = 0.00001;
 
-    for( ; cellBegin != cellEnd; ++cellBegin )
+    for(; cellBegin != cellEnd; ++cellBegin )
     {
       beginpointer = cellBegin->Value()->PointIdsBegin();
       float signedVolume;  // = vnl_determinant(fullMatrix.GetVnlMatrix());
 
       //const VectorType::const_pointer p1,p2,p3,p4;
-      switch( static_cast<unsigned int>( FixedPointSetDimension ) )
+      switch( static_cast< unsigned int >( FixedPointSetDimension ) )
       {
         case 2:
         {
           const FixedMeshPointIdentifier p1Id = *beginpointer;
           ++beginpointer;
-          const VectorType p1   = mappedPoints->GetElement( p1Id ) - pointCentroid;
+          const VectorType               p1   = mappedPoints->GetElement( p1Id ) - pointCentroid;
           const FixedMeshPointIdentifier p2Id = *beginpointer;
           ++beginpointer;
           const VectorType p2 = mappedPoints->GetElement( p2Id ) - pointCentroid;
@@ -258,10 +258,10 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
         {
           const FixedMeshPointIdentifier p1Id = *beginpointer;
           ++beginpointer;
-          const VectorType p1   = mappedPoints->GetElement( p1Id ) - pointCentroid;
+          const VectorType               p1   = mappedPoints->GetElement( p1Id ) - pointCentroid;
           const FixedMeshPointIdentifier p2Id = *beginpointer;
           ++beginpointer;
-          const VectorType p2   = mappedPoints->GetElement( p2Id ) - pointCentroid;
+          const VectorType               p2   = mappedPoints->GetElement( p2Id ) - pointCentroid;
           const FixedMeshPointIdentifier p3Id = *beginpointer;
           ++beginpointer;
           const VectorType p3 = mappedPoints->GetElement( p3Id ) - pointCentroid;
@@ -351,12 +351,12 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
 {
   //SubVectorType subVector = SubVectorType::Vector();
 
-  typename VectorType::ConstIterator    fullVectorIt  = fullVector.Begin();
-  typename VectorType::ConstIterator    fullVectorEnd = fullVector.End();
-  typename SubVectorType::Iterator      subVectorIt   = subVector.Begin();
-  typename SubVectorType::ConstIterator subVectorEnd  = subVector.End();
-  unsigned int                 fullIndex     = 0;
-  for( ; subVectorIt != subVectorEnd; ++fullVectorIt, ++subVectorIt, ++fullIndex )
+  typename VectorType::ConstIterator fullVectorIt    = fullVector.Begin();
+  typename VectorType::ConstIterator fullVectorEnd   = fullVector.End();
+  typename SubVectorType::Iterator subVectorIt       = subVector.Begin();
+  typename SubVectorType::ConstIterator subVectorEnd = subVector.End();
+  unsigned int fullIndex = 0;
+  for(; subVectorIt != subVectorEnd; ++fullVectorIt, ++subVectorIt, ++fullIndex )
   {
     if( fullIndex == leaveOutIndex )
     {
@@ -371,4 +371,3 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
 } // end itk namespace
 
 #endif // end #ifndef __itkMissingStructurePenalty_hxx
-

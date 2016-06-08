@@ -460,7 +460,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
   /** Get sizes. */
-  const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nnzji             = this->GetNumberOfNonZeroJacobianIndices();
   const NumberOfParametersType nnzjiPerDimension = nnzji / SpaceDimension;
 
   /** NOTE: if the support region does not lie totally within the grid
@@ -473,7 +473,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     {
       nonZeroJacobianIndices[ i ] = i;
     }
-    imageJacobian.Fill(0.0);
+    imageJacobian.Fill( 0.0 );
     return;
   }
 

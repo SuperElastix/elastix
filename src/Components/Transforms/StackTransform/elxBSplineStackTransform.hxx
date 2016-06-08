@@ -569,8 +569,8 @@ BSplineStackTransform< TElastix >
   if( !dummy )
   {
     itkExceptionMacro( "NumberOfSubTransforms, StackOrigin, StackSpacing, GridSize, "
-                    << "GridIndex, GridSpacing and GridOrigin is required by "
-                    << this->GetNameOfClass() << "." )
+        << "GridIndex, GridSpacing and GridOrigin is required by "
+        << this->GetNameOfClass() << "." )
   }
 
   /** Set it all. */
@@ -862,6 +862,7 @@ BSplineStackTransform< TElastix >
   sprintf( tmpValue, "%i", this->m_BSplineStackTransform->GetNumberOfSubTransforms() );
   paramsMap->insert( make_pair( "NumberOfSubTransforms", ParameterValueType( 1, tmpValue ) ) );
 }
+
 
 } // end namespace elastix
 

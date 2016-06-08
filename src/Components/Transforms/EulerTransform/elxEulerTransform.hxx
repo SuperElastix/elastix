@@ -160,41 +160,42 @@ EulerTransformElastix< TElastix >
 
 } // end WriteToFile()
 
+
 /**
  * ************************* CreateTransformParametersMap ************************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-EulerTransformElastix<TElastix>
-::CreateTransformParametersMap( 
-  const ParametersType & param ,
-  ParameterMapType * paramsMap) const
+EulerTransformElastix< TElastix >
+::CreateTransformParametersMap(
+  const ParametersType & param,
+  ParameterMapType * paramsMap ) const
 {
-  std::ostringstream tmpStream;
-  std::string parameterName;
+  std::ostringstream         tmpStream;
+  std::string                parameterName;
   std::vector< std::string > parameterValues;
-	
+
   /** Call the CreateTransformParametersMap from the TransformBase. */
-  this->Superclass2::CreateTransformParametersMap( param , paramsMap );
+  this->Superclass2::CreateTransformParametersMap( param, paramsMap );
 
   /** Get the center of rotation point and write it to file. */
   parameterName = "CenterOfRotationPoint";
   InputPointType rotationPoint = this->m_EulerTransform->GetCenter();
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    tmpStream.str(""); tmpStream << rotationPoint[ i ];
-    parameterValues.push_back( tmpStream.str() ); 
+    tmpStream.str( "" ); tmpStream << rotationPoint[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 
   /** Write the ComputeZYX to file. */
-  if ( SpaceDimension == 3 )
+  if( SpaceDimension == 3 )
   {
     parameterName = "ComputeZYX";
     std::string computeZYX = "false";
-    if ( this->m_EulerTransform->GetComputeZYX() )
+    if( this->m_EulerTransform->GetComputeZYX() )
     {
       computeZYX = "true";
     }
@@ -204,6 +205,7 @@ EulerTransformElastix<TElastix>
   }
 
 } // end CreateTransformParametersMap()
+
 
 /**
  * ************************* InitializeTransform *********************

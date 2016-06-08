@@ -21,7 +21,6 @@
 #include "elxMultiResolutionRegistrationWithFeatures.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 

@@ -56,7 +56,7 @@ GradientDescentOptimizer2
 #ifdef ELASTIX_USE_OPENMP
   this->m_UseOpenMP = true;
 #endif
-  this->m_UseEigen       = false;
+  this->m_UseEigen = false;
 
   //this->m_Threader->SetUseThreadPool( true );
 
@@ -79,7 +79,7 @@ GradientDescentOptimizer2
   os << indent << "Value: " << this->m_Value;
   os << indent << "StopCondition: " << this->m_StopCondition;
   os << std::endl;
-  os << indent << "Gradient: "<< this->m_Gradient;
+  os << indent << "Gradient: " << this->m_Gradient;
   os << std::endl;
 
 } // end PrintSelf()
@@ -231,10 +231,10 @@ GradientDescentOptimizer2
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
   /** Update the new position. */
-  const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfThreads() );
+  const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
   omp_set_num_threads( nthreads );
   #pragma omp parallel for
-  for( int j = 0; j < static_cast<int>( spaceDimension ); j++ )
+  for( int j = 0; j < static_cast< int >( spaceDimension ); j++ )
   {
     newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
   }

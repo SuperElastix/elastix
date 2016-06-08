@@ -331,7 +331,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 {
   itkDebugMacro( << "GetValueAndDerivative( " << parameters << " ) " );
 
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
+  typedef typename DerivativeType::ValueType DerivativeValueType;
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
@@ -678,11 +678,11 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Accumulate values. */
   const AccumulateType zero = NumericTraits< AccumulateType >::Zero;
-  AccumulateType sff = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sff;
-  AccumulateType smm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Smm;
-  AccumulateType sfm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sfm;
-  AccumulateType sf  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sf;
-  AccumulateType sm  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sm;
+  AccumulateType       sff  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sff;
+  AccumulateType       smm  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Smm;
+  AccumulateType       sfm  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sfm;
+  AccumulateType       sf   = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sf;
+  AccumulateType       sm   = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sm;
   for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
   {
     sff += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sff;
@@ -843,7 +843,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   jmax = ( jmax > numPar ) ? numPar : jmax;
 
   const DerivativeValueType zero = NumericTraits< DerivativeValueType >::Zero;
-  DerivativeValueType derivativeF, derivativeM, differential;
+  DerivativeValueType       derivativeF, derivativeM, differential;
   for( unsigned int j = jmin; j < jmax; ++j )
   {
     derivativeF = derivativeM = differential = zero;
@@ -854,8 +854,8 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
       differential += temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Differential[ j ];
 
       /** Reset these variables for the next iteration. */
-      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeF[ j ] = zero;
-      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeM[ j ] = zero;
+      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeF[ j ]  = zero;
+      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeM[ j ]  = zero;
       temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Differential[ j ] = zero;
     }
 

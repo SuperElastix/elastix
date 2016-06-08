@@ -101,7 +101,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinat
     }
 
     // skip next step when last transform
-    if( i == numberOfTransforms - 1 ){ continue; }
+    if( i == numberOfTransforms - 1 ) { continue; }
 
     // Reset the GPU combo transform
     GPUComboTransformPointer initialNext = GPUComboTransformType::New();
@@ -243,7 +243,7 @@ GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinat
   GPUAdvancedTransformPointer & toTransform )
 {
   const CPUFixedParametersType & fixedParametersFrom = fromTransform->GetFixedParameters();
-  const CPUParametersType & parametersFrom = fromTransform->GetParameters();
+  const CPUParametersType &      parametersFrom      = fromTransform->GetParameters();
 
   GPUFixedParametersType fixedParametersTo;
   GPUParametersType      parametersTo;
@@ -278,7 +278,7 @@ void
 GPUAdvancedCombinationTransformCopier< TTypeList, NDimensions, TAdvancedCombinationTransform, TOutputTransformPrecisionType >
 ::CastCopyFixedParameters( const CPUFixedParametersType & from, GPUFixedParametersType & to )
 {
-  if( from.GetSize() == 0 ){ return; }
+  if( from.GetSize() == 0 ) { return; }
 
   to.SetSize( from.GetSize() );
   for( SizeValueType i = 0; i < from.GetSize(); ++i )

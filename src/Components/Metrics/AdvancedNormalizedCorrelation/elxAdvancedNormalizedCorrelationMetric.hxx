@@ -21,7 +21,6 @@
 #include "elxAdvancedNormalizedCorrelationMetric.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 
@@ -61,7 +60,7 @@ AdvancedNormalizedCorrelationMetric< TElastix >
   this->Superclass1::Initialize();
   timer.Stop();
   elxout << "Initialization of AdvancedNormalizedCorrelation metric took: "
-    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 

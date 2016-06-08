@@ -25,7 +25,6 @@
 #include "itkResampleImageFilter.h"
 #include "elxProgressCommand.h"
 
-
 namespace elastix
 {
 /**
@@ -176,7 +175,7 @@ public:
   virtual void ResampleAndWriteResultImage( const char * filename, const bool & showProgress = true );
 
   /** Function to write the result output image to a file. */
-  virtual void WriteResultImage( OutputImageType *imageimage,
+  virtual void WriteResultImage( OutputImageType * imageimage,
     const char * filename, const bool & showProgress = true );
 
   /** Function to create the result image in the format of an itk::Image. */

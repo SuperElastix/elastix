@@ -146,13 +146,13 @@ MissingStructurePenalty< TElastix >
     fmeshArgument << ch << metricNumber;
     std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
     typename MeshType::Pointer fixedMesh = 0;
-    if (itksys::SystemTools::GetFilenameLastExtension(fixedMeshName) == ".txt")
+    if( itksys::SystemTools::GetFilenameLastExtension( fixedMeshName ) == ".txt" )
     {
-      this->ReadTransformixPoints(fixedMeshName, fixedMesh);
+      this->ReadTransformixPoints( fixedMeshName, fixedMesh );
     }
     else
     {
-      this->ReadMesh(fixedMeshName, fixedMesh);
+      this->ReadMesh( fixedMeshName, fixedMesh );
     }
 
     meshPointerContainer->SetElement( meshNumber, dynamic_cast<  MeshType * >( fixedMesh.GetPointer() ) );
@@ -425,12 +425,12 @@ Function to read 2d structures by reading elastix point files (transformix forma
 the sequence of points to form a 2d connected polydata contour.
   */
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType           FixedImageRegionType;
-  typedef typename FixedImageType::PointType            FixedImageOriginType;
-  typedef typename FixedImageType::SpacingType          FixedImageSpacingType;
-  typedef typename FixedImageType::IndexType            FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType  FixedImageIndexValueType;
-  typedef typename MovingImageType::IndexType           MovingImageIndexType;
+  typedef typename FixedImageType::RegionType          FixedImageRegionType;
+  typedef typename FixedImageType::PointType           FixedImageOriginType;
+  typedef typename FixedImageType::SpacingType         FixedImageSpacingType;
+  typedef typename FixedImageType::IndexType           FixedImageIndexType;
+  typedef typename FixedImageIndexType::IndexValueType FixedImageIndexValueType;
+  typedef typename MovingImageType::IndexType          MovingImageIndexType;
   typedef
     itk::ContinuousIndex< double, FixedImageDimension >   FixedImageContinuousIndexType;
   typedef
@@ -586,7 +586,7 @@ the sequence of points to form a 2d connected polydata contour.
   return nrofpoints;
 } // end ReadTransformixPoints()
 
+
 } // end namespace elastix
 
 #endif // end #ifndef __elxMissingStructurePenalty_HXX__
-

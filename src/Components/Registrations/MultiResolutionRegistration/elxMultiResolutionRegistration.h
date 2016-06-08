@@ -21,7 +21,6 @@
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkMultiResolutionImageRegistrationMethod2.h"
 
-
 namespace elastix
 {
 

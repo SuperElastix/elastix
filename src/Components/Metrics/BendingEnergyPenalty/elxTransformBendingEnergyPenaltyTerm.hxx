@@ -21,7 +21,6 @@
 #include "elxTransformBendingEnergyPenaltyTerm.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 
@@ -39,7 +38,7 @@ TransformBendingEnergyPenalty< TElastix >
   this->Superclass1::Initialize();
   timer.Stop();
   elxout << "Initialization of TransformBendingEnergy metric took: "
-    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 

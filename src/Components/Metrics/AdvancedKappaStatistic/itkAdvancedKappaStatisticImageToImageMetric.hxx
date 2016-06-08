@@ -596,16 +596,16 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Accumulate values. */
-  const MeasureType zero = NumericTraits< MeasureType >::Zero;
-  MeasureType areaSum      = zero;
-  MeasureType intersection = zero;
+  const MeasureType zero         = NumericTraits< MeasureType >::Zero;
+  MeasureType       areaSum      = zero;
+  MeasureType       intersection = zero;
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     areaSum      += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum;
     intersection += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaIntersection;
 
     /** Reset these variables for the next iteration. */
-    this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum = zero;
+    this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum          = zero;
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaIntersection = zero;
   }
 
@@ -676,7 +676,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   jmax = ( jmax > numPar ) ? numPar : jmax;
 
   const DerivativeValueType zero = NumericTraits< DerivativeValueType >::Zero;
-  DerivativeValueType sum1, sum2; 
+  DerivativeValueType       sum1, sum2;
   for( unsigned int j = jmin; j < jmax; j++ )
   {
     sum1 = sum2 = zero;

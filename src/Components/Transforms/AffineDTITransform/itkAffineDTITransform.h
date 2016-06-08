@@ -47,6 +47,7 @@ public:
   };
 
 };
+
 /**
  * \class AffineDTIGroup<2>
  * \brief This class only contains a dummy class for the 2D case.
@@ -69,6 +70,7 @@ public:
   };
 
 };
+
 /**
  * \class AffineDTIGroup<3>
  * \brief This class only contains a dummy class for the 3D case.

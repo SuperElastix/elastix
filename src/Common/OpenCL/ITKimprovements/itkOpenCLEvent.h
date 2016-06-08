@@ -170,8 +170,8 @@ public:
    * registered callback function specified when context is created can be used
    * to report appropriate error information. */
   cl_int SetCallback( cl_int type,
-  void( CL_CALLBACK * pfn_notify )( cl_event, cl_int, void * ),
-  void * user_data = NULL );
+    void ( CL_CALLBACK * pfn_notify )( cl_event, cl_int, void * ),
+    void * user_data = NULL );
 
   /** Returns the device time in nanoseconds when the command was queued for
    * execution on the host. The return value is only valid if the command has

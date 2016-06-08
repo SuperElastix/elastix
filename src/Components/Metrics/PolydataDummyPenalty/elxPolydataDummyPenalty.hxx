@@ -28,7 +28,7 @@ namespace elastix
  */
 
 template< class TElastix >
-PolydataDummyPenalty<TElastix>
+PolydataDummyPenalty< TElastix >
 ::PolydataDummyPenalty()
 {
   this->m_NumberOfMeshes = 0;
@@ -406,12 +406,12 @@ PolydataDummyPenalty< TElastix >
   Floris: Mainly copied from elxTransformBase.hxx
   */
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType           FixedImageRegionType;
-  typedef typename FixedImageType::PointType            FixedImageOriginType;
-  typedef typename FixedImageType::SpacingType          FixedImageSpacingType;
-  typedef typename FixedImageType::IndexType            FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType  FixedImageIndexValueType;
-  typedef typename MovingImageType::IndexType           MovingImageIndexType;
+  typedef typename FixedImageType::RegionType          FixedImageRegionType;
+  typedef typename FixedImageType::PointType           FixedImageOriginType;
+  typedef typename FixedImageType::SpacingType         FixedImageSpacingType;
+  typedef typename FixedImageType::IndexType           FixedImageIndexType;
+  typedef typename FixedImageIndexType::IndexValueType FixedImageIndexValueType;
+  typedef typename MovingImageType::IndexType          MovingImageIndexType;
   typedef
     itk::ContinuousIndex< double, FixedImageDimension >   FixedImageContinuousIndexType;
   typedef
@@ -460,8 +460,8 @@ PolydataDummyPenalty< TElastix >
   typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
 
   /** Create the storage classes. */
-  std::vector< FixedImageIndexType > inputindexvec(  nrofpoints );
-  std::vector< InputPointType > inputpointvec(  nrofpoints );
+  std::vector< FixedImageIndexType >   inputindexvec(  nrofpoints );
+  std::vector< InputPointType >        inputpointvec(  nrofpoints );
   std::vector< FixedImageIndexType >   outputindexfixedvec( nrofpoints );
   std::vector< MovingImageIndexType >  outputindexmovingvec( nrofpoints );
   std::vector< DeformationVectorType > deformationvec( nrofpoints );
@@ -559,7 +559,7 @@ PolydataDummyPenalty< TElastix >
 
   typename MeshType::PointsContainerConstIterator pointsBegin = points->Begin();
   typename MeshType::PointsContainerConstIterator pointsEnd   = points->End();
-  for( ; pointsBegin != pointsEnd; ++pointsBegin )
+  for(; pointsBegin != pointsEnd; ++pointsBegin )
   {
     std::cout << "point " << pointsBegin->Index() << ": " << pointsBegin->Value().GetVnlVector() << std::endl;
   }
@@ -571,13 +571,13 @@ PolydataDummyPenalty< TElastix >
   typename CellInterfaceType::PointIdIterator beginpointer;
   typename CellInterfaceType::PointIdIterator endpointer;
 
-  for( ; cellIterator != CellsEnd; ++cellIterator )
+  for(; cellIterator != CellsEnd; ++cellIterator )
   {
     std::cout << "Cell Index: " << cellIterator->Index() << std::endl;
     beginpointer = cellIterator->Value()->PointIdsBegin();
     endpointer   = cellIterator->Value()->PointIdsEnd();
 
-    for( ; beginpointer != endpointer; ++beginpointer )
+    for(; beginpointer != endpointer; ++beginpointer )
     {
       std::cout << "Id: " << *beginpointer << std::endl;
     }
@@ -589,4 +589,3 @@ PolydataDummyPenalty< TElastix >
 } // end namespace elastix
 
 #endif // end #ifndef __elxPolydataDummyPenalty_HXX__
-

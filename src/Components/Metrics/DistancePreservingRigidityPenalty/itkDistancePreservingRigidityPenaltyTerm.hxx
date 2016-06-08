@@ -515,4 +515,3 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
 } // end namespace itk
 
 #endif // #ifndef __itkDistancePreservingRigidityPenaltyTerm_hxx
-

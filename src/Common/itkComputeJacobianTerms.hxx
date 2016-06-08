@@ -25,7 +25,6 @@
 #include "vnl/vnl_diag_matrix.h"
 #include "vnl/vnl_sparse_matrix.h"
 
-
 namespace itk
 {
 /**

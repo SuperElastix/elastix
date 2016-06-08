@@ -18,107 +18,130 @@
 #ifndef elxPixelType_h
 #define elxPixelType_h
 
-namespace elastix {
+namespace elastix
+{
 // PixelType traits for writing types as strings to parameter files
 
 // Default implementation
-template < typename T >
+template< typename T >
 struct PixelType
 {
-  static const char* ToString()
+  static const char * ToString()
   {
-     itkGenericExceptionMacro( "Pixel type \"" << typeid( T ).name() << "\" is not supported." )
+    itkGenericExceptionMacro( "Pixel type \"" << typeid( T ).name() << "\" is not supported." )
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< char >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "char";
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< unsigned char >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "unsigned char";
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< short >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "short";
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< unsigned short >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "unsigned short";
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< int >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "int";
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< unsigned int >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "unsigned int";
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< long >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "long";
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< unsigned long >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "unsigned long";
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< float >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "float";
   }
+
+
 };
 
-template <>
+template< >
 struct PixelType< double >
 {
-  static const char* ToString()
+  static const char * ToString()
   {
     return "double";
   }
+
+
 };
 
 }

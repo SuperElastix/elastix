@@ -518,7 +518,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       RealType fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
+      fixedImageValue  = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
       movingImageValue = this->GetMovingImageLimiter()
         ->Evaluate( movingImageValue, movingImageDerivative );
 
@@ -700,7 +700,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   const MarginalPDFIteratorType movingPDFend   = this->m_MovingImageMarginalPDF.end();
 
   /** Initialize */
-  this->m_PRatioArray.Fill( itk::NumericTraits< PRatioType >::ZeroValue()  );
+  this->m_PRatioArray.Fill( itk::NumericTraits< PRatioType >::ZeroValue() );
 
   /** Loop over the joint histogram. */
   PDFValueType sum         = 0.0;

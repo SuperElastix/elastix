@@ -29,7 +29,6 @@
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 
@@ -175,8 +174,8 @@ AdaptiveStochasticGradientDescent< TElastix >
     /** Set the maximum step length: the maximum displacement of a voxel in mm.
      * Compute default value: mean in-plane spacing of fixed and moving image.
      */
-    const unsigned int fixdim = vnl_math_min( (unsigned int) this->GetElastix()->FixedDimension, (unsigned int) 2 );
-    const unsigned int movdim = vnl_math_min( (unsigned int) this->GetElastix()->MovingDimension, (unsigned int) 2 );
+    const unsigned int fixdim = vnl_math_min( (unsigned int)this->GetElastix()->FixedDimension, (unsigned int)2 );
+    const unsigned int movdim = vnl_math_min( (unsigned int)this->GetElastix()->MovingDimension, (unsigned int)2 );
     double             sum    = 0.0;
     for( unsigned int d = 0; d < fixdim; ++d )
     {
@@ -523,7 +522,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   /** Print the elapsed time. */
   timer1.Stop();
   elxout << "Automatic parameter estimation took "
-    << this->ConvertSecondsToDHMS( timer1.GetMean(), 2 ) << std::endl;
+         << this->ConvertSecondsToDHMS( timer1.GetMean(), 2 ) << std::endl;
 
 } // end AutomaticParameterEstimation()
 
@@ -593,7 +592,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   computeJacobianTerms->Compute( TrC, TrCC, maxJJ, maxJCJ );
   timer2.Stop();
   elxout << "  Computing the Jacobian terms took "
-    << this->ConvertSecondsToDHMS( timer2.GetMean(), 6 ) << std::endl;
+         << this->ConvertSecondsToDHMS( timer2.GetMean(), 6 ) << std::endl;
 
   /** Determine number of gradient measurements such that
    * E + 2\sqrt(Var) < K E
@@ -636,7 +635,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     this->GetScaledCurrentPosition(), sigma4, gg, ee );
   timer3.Stop();
   elxout << "  Sampling the gradients took "
-    << this->ConvertSecondsToDHMS( timer3.GetMean(), 6 ) << std::endl;
+         << this->ConvertSecondsToDHMS( timer3.GetMean(), 6 ) << std::endl;
 
   /** Determine parameter settings. */
   double sigma1 = 0.0;
@@ -750,7 +749,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     maximumDisplacementEstimationMethod );
   timer4.Stop();
   elxout << "  Computing the displacement distribution took "
-    << this->ConvertSecondsToDHMS( timer4.GetMean(), 6 ) << std::endl;
+         << this->ConvertSecondsToDHMS( timer4.GetMean(), 6 ) << std::endl;
 
   /** Initial of the variables. */
   double       a     = 0.0;
@@ -789,7 +788,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     a =  delta * vcl_pow( A + 1.0, alpha ) / jacg * noisefactor;
     timer5.Stop();
     elxout << "  Compute the noise compensation took "
-      << this->ConvertSecondsToDHMS( timer5.GetMean(), 6 ) << std::endl;
+           << this->ConvertSecondsToDHMS( timer5.GetMean(), 6 ) << std::endl;
   }
   else
   {
@@ -851,7 +850,7 @@ AdaptiveStochasticGradientDescent< TElastix >
          * has UseRandomSampleRegion==true.
          * \todo Extend ASGD to really take into account random region sampling.
          * \todo This does not work for the MultiInputRandomCoordinateImageSampler,
-         * because it does not inherit from the RandomCoordinateImageSampler 
+         * because it does not inherit from the RandomCoordinateImageSampler
          */
         if( randomCoordinateSamplerVec[ m ].IsNotNull() )
         {
@@ -888,13 +887,13 @@ AdaptiveStochasticGradientDescent< TElastix >
 
     } // end for loop over metrics
 
-    /** Start a second loop over all metrics to turn off the random region sampling. */     
+    /** Start a second loop over all metrics to turn off the random region sampling. */
     for( unsigned int m = 0; m < M; ++m )
     {
       if( randomCoordinateSamplerVec[ m ].IsNotNull() )
       {
         randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
-      }   
+      }
     } // end loop over metrics
 
   }   // end if NewSamplesEveryIteration.

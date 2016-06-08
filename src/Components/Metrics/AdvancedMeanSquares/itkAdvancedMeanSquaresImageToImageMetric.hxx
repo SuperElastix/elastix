@@ -267,30 +267,30 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::ThreadedGetValue( ThreadIdType threadId )
 {
   /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
   const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
-      / static_cast< double >( this->m_NumberOfThreads ) ) );
+    / static_cast< double >( this->m_NumberOfThreads ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
-  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
   pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
-  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+  pos_end   = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
 
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator threader_fiter;
   typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator threader_fend = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator threader_fend   = sampleContainer->Begin();
 
   threader_fbegin += (int)pos_begin;
-  threader_fend += (int)pos_end;
+  threader_fend   += (int)pos_end;
 
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
-  MeasureType   measure = NumericTraits< MeasureType >::Zero;
+  MeasureType   measure               = NumericTraits< MeasureType >::Zero;
 
   /** Loop over the fixed image to calculate the mean squares. */
   for( threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter )
@@ -336,7 +336,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
   this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Value = measure;
+  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Value                 = measure;
 
 } // end ThreadedGetValue()
 

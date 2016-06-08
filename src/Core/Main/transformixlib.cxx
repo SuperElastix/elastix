@@ -250,10 +250,12 @@ TRANSFORMIX::TransformImage(
   return TransformImage( inputImage, parameterMaps, outputPath, performLogging, performCout );
 } // end TransformImage()
 
+
 /** ConvertSecondsToDHMS
  *
  */
-std::string TRANSFORMIX::ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision )
+std::string
+TRANSFORMIX::ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision )
 {
   /** Define days, hours, minutes. */
   const std::size_t secondsPerMinute = 60;
@@ -261,8 +263,8 @@ std::string TRANSFORMIX::ConvertSecondsToDHMS( const double totalSeconds, const 
   const std::size_t secondsPerDay    = 24 * secondsPerHour;
 
   /** Convert total seconds. */
-  std::size_t iSeconds = static_cast<std::size_t>( totalSeconds );
-  const std::size_t days = iSeconds / secondsPerDay;
+  std::size_t       iSeconds = static_cast< std::size_t >( totalSeconds );
+  const std::size_t days     = iSeconds / secondsPerDay;
 
   iSeconds %= secondsPerDay;
   const std::size_t hours = iSeconds / secondsPerHour;
@@ -275,11 +277,11 @@ std::string TRANSFORMIX::ConvertSecondsToDHMS( const double totalSeconds, const 
   const double dSeconds = fmod( totalSeconds, 60.0 );
 
   /** Create a string in days, hours, minutes and seconds. */
-  bool nonzero = false;
+  bool               nonzero = false;
   std::ostringstream make_string( "" );
-  if( days    != 0            ){ make_string << days    << "d"; nonzero = true; }
-  if( hours   != 0 || nonzero ){ make_string << hours   << "h"; nonzero = true; }
-  if( minutes != 0 || nonzero ){ make_string << minutes << "m"; nonzero = true; }
+  if( days    != 0            ) { make_string << days    << "d"; nonzero = true; }
+  if( hours   != 0 || nonzero ) { make_string << hours   << "h"; nonzero = true; }
+  if( minutes != 0 || nonzero ) { make_string << minutes << "m"; nonzero = true; }
   make_string << std::showpoint << std::fixed << std::setprecision( precision );
   make_string << dSeconds << "s";
 
@@ -290,7 +292,8 @@ std::string TRANSFORMIX::ConvertSecondsToDHMS( const double totalSeconds, const 
 
 
 /** Returns current date and time as a string. */
-std::string TRANSFORMIX::GetCurrentDateAndTime( void )
+std::string
+TRANSFORMIX::GetCurrentDateAndTime( void )
 {
   // Obtain current time
   time_t rawtime = time( NULL );
@@ -304,6 +307,7 @@ std::string TRANSFORMIX::GetCurrentDateAndTime( void )
 
   return timeAsString;
 } // end GetCurrentDateAndTime()
+
 
 } // namespace transformix
 

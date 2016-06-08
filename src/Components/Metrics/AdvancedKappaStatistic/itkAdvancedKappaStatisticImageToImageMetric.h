@@ -249,11 +249,11 @@ private:
 
   struct KappaGetValueAndDerivativePerThreadStruct
   {
-    SizeValueType         st_NumberOfPixelsCounted;
-    SizeValueType         st_AreaSum;
-    SizeValueType         st_AreaIntersection;
-    DerivativeType        st_DerivativeSum1;
-    DerivativeType        st_DerivativeSum2;
+    SizeValueType  st_NumberOfPixelsCounted;
+    SizeValueType  st_AreaSum;
+    SizeValueType  st_AreaIntersection;
+    DerivativeType st_DerivativeSum1;
+    DerivativeType st_DerivativeSum2;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, KappaGetValueAndDerivativePerThreadStruct,
     PaddedKappaGetValueAndDerivativePerThreadStruct );

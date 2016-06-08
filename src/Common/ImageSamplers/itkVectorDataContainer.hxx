@@ -38,7 +38,6 @@
 #ifndef _itkVectorDataContainer_hxx
 #define _itkVectorDataContainer_hxx
 
-
 #include "itkVectorDataContainer.h"
 
 #include "itkNumericTraits.h"
@@ -61,7 +60,6 @@ typename VectorDataContainer< TElementIdentifier, TElement >::Element
 {
   this->Modified();
   return this->VectorType::operator[]( id );
-
 }
 
 /**
@@ -76,7 +74,6 @@ const typename VectorDataContainer< TElementIdentifier, TElement >::Element
 ::ElementAt( ElementIdentifier id ) const
 {
   return this->VectorType::operator[]( id );
-
 }
 
 /**
@@ -98,7 +95,6 @@ typename VectorDataContainer< TElementIdentifier, TElement >::Element
   }
   this->Modified();
   return this->VectorType::operator[]( id );
-
 }
 
 /**

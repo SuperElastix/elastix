@@ -21,7 +21,6 @@
 #include "elxGradientDifferenceMetric.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 
@@ -39,7 +38,7 @@ GradientDifferenceMetric< TElastix >
   this->Superclass1::Initialize();
   timer.Stop();
   elxout << "Initialization of GradientDifference metric took: "
-    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 

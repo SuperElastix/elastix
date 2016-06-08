@@ -422,8 +422,8 @@ protected:
   // test per thread struct with padding and alignment
   struct GetValuePerThreadStruct
   {
-    SizeValueType         st_NumberOfPixelsCounted;
-    MeasureType           st_Value;
+    SizeValueType st_NumberOfPixelsCounted;
+    MeasureType   st_Value;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValuePerThreadStruct,
     PaddedGetValuePerThreadStruct );
@@ -435,9 +435,9 @@ protected:
   // test per thread struct with padding and alignment
   struct GetValueAndDerivativePerThreadStruct
   {
-    SizeValueType         st_NumberOfPixelsCounted;
-    MeasureType           st_Value;
-    DerivativeType        st_Derivative;
+    SizeValueType  st_NumberOfPixelsCounted;
+    MeasureType    st_Value;
+    DerivativeType st_Derivative;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValueAndDerivativePerThreadStruct,
     PaddedGetValueAndDerivativePerThreadStruct );

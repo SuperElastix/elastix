@@ -48,8 +48,7 @@ namespace elastix
 
 ELASTIX::ELASTIX() :
   m_ResultImage( 0 )
-{
-} // end Constructor
+{} // end Constructor
 
 
 /**
@@ -374,7 +373,7 @@ ELASTIX::RegisterImages(
   /** Stop totaltimer and print it. */
   totaltimer.Stop();
   elxout << "Total time elapsed: "
-    << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
+         << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
 
   /************************************************************************
    *                                *
@@ -412,10 +411,12 @@ ELASTIX::RegisterImages(
 
 } // end RegisterImages()
 
+
 /** ConvertSecondsToDHMS
  *
  */
-std::string ELASTIX::ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision )
+std::string
+ELASTIX::ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision )
 {
   /** Define days, hours, minutes. */
   const std::size_t secondsPerMinute = 60;
@@ -423,8 +424,8 @@ std::string ELASTIX::ConvertSecondsToDHMS( const double totalSeconds, const unsi
   const std::size_t secondsPerDay    = 24 * secondsPerHour;
 
   /** Convert total seconds. */
-  std::size_t iSeconds = static_cast<std::size_t>( totalSeconds );
-  const std::size_t days = iSeconds / secondsPerDay;
+  std::size_t       iSeconds = static_cast< std::size_t >( totalSeconds );
+  const std::size_t days     = iSeconds / secondsPerDay;
 
   iSeconds %= secondsPerDay;
   const std::size_t hours = iSeconds / secondsPerHour;
@@ -437,11 +438,11 @@ std::string ELASTIX::ConvertSecondsToDHMS( const double totalSeconds, const unsi
   const double dSeconds = fmod( totalSeconds, 60.0 );
 
   /** Create a string in days, hours, minutes and seconds. */
-  bool nonzero = false;
+  bool               nonzero = false;
   std::ostringstream make_string( "" );
-  if( days    != 0            ){ make_string << days    << "d"; nonzero = true; }
-  if( hours   != 0 || nonzero ){ make_string << hours   << "h"; nonzero = true; }
-  if( minutes != 0 || nonzero ){ make_string << minutes << "m"; nonzero = true; }
+  if( days    != 0            ) { make_string << days    << "d"; nonzero = true; }
+  if( hours   != 0 || nonzero ) { make_string << hours   << "h"; nonzero = true; }
+  if( minutes != 0 || nonzero ) { make_string << minutes << "m"; nonzero = true; }
   make_string << std::showpoint << std::fixed << std::setprecision( precision );
   make_string << dSeconds << "s";
 
@@ -452,7 +453,8 @@ std::string ELASTIX::ConvertSecondsToDHMS( const double totalSeconds, const unsi
 
 
 /** Returns current date and time as a string. */
-std::string ELASTIX::GetCurrentDateAndTime( void )
+std::string
+ELASTIX::GetCurrentDateAndTime( void )
 {
   // Obtain current time
   time_t rawtime = time( NULL );
@@ -466,6 +468,7 @@ std::string ELASTIX::GetCurrentDateAndTime( void )
 
   return timeAsString;
 } // end GetCurrentDateAndTime()
+
 
 } // end namespace elastix
 

@@ -188,8 +188,7 @@ private:
   /** Unimplemented spline order */
   inline double Evaluate( const DispatchBase &, const double & ) const
   {
-    itkExceptionMacro( "Evaluate not implemented for spline\
-                      order "                                                              << SplineOrder );
+    itkExceptionMacro( "Evaluate not implemented for spline order " << SplineOrder );
     return 0.0; // This is to avoid compiler warning about missing
     // return statement.  It should never be evaluated.
   }

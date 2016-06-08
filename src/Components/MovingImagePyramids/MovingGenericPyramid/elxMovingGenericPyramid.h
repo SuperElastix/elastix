@@ -84,8 +84,8 @@ public:
     typename MovingImagePyramidBase< TElastix >::InputImageType,
     typename MovingImagePyramidBase< TElastix >::OutputImageType >   Superclass1;
   typedef MovingImagePyramidBase< TElastix > Superclass2;
-  typedef itk::SmartPointer< Self >         Pointer;
-  typedef itk::SmartPointer< const Self >   ConstPointer;
+  typedef itk::SmartPointer< Self >          Pointer;
+  typedef itk::SmartPointer< const Self >    ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );

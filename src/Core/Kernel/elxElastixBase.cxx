@@ -382,7 +382,7 @@ ElastixBase::GenerateFileNameContainer(
   std::ostringstream argusedss( "" );
   argusedss << optionkey << 0;
   std::string argused = argusedss.str();
-  std::string check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
+  std::string check   = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
   if( check == "" )
   {
     /** Try optionkey. */

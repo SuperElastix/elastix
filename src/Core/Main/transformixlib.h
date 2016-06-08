@@ -25,7 +25,6 @@
 #include "itkParameterFileParser.h"
 #include "elxMacro.h"
 
-
 /********************************************************************************
  *                          *
  *      Class definition    *
@@ -77,6 +76,7 @@ public:
   ImagePointer GetResultImage( void );
 
   std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 0 );
+
   std::string GetCurrentDateAndTime( void );
 
 private:

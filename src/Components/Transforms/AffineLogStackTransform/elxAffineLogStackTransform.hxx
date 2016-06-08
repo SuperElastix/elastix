@@ -29,57 +29,63 @@ namespace elastix
 /**
 * ********************* Constructor ****************************
 */
-template <class TElastix>
-AffineLogStackTransform<TElastix>
+template< class TElastix >
+AffineLogStackTransform< TElastix >
 ::AffineLogStackTransform()
-{
-} // end Constructor
+{} // end Constructor
+
 
 /**
 * ********************* InitializeAffineTransform ****************************
 */
-template <class TElastix>
-unsigned int AffineLogStackTransform<TElastix>
+template< class TElastix >
+unsigned int
+AffineLogStackTransform< TElastix >
 ::InitializeAffineLogTransform()
 {
-    /** Initialize the m_AffineDummySubTransform */
-    this->m_AffineLogDummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
+  /** Initialize the m_AffineDummySubTransform */
+  this->m_AffineLogDummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
 
-    /** Create stack transform. */
-    this->m_AffineLogStackTransform = AffineLogStackTransformType::New();
+  /** Create stack transform. */
+  this->m_AffineLogStackTransform = AffineLogStackTransformType::New();
 
-    /** Set stack transform as current transform. */
-    this->SetCurrentTransform( this->m_AffineLogStackTransform );
+  /** Set stack transform as current transform. */
+  this->SetCurrentTransform( this->m_AffineLogStackTransform );
 
-    return 0;
+  return 0;
 }
+
 
 /**
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
-int AffineLogStackTransform<TElastix>
+template< class TElastix >
+int
+AffineLogStackTransform< TElastix >
 ::BeforeAll( void )
 {
   /** Initialize affine transform. */
   return InitializeAffineLogTransform();
 }
 
+
 /**
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
-void AffineLogStackTransform<TElastix>::BeforeRegistration( void )
+template< class TElastix >
+void
+AffineLogStackTransform< TElastix >
+::BeforeRegistration( void )
 {
   /** Task 1 - Set the stack transform parameters. */
 
   /** Determine stack transform settings. Here they are based on the fixed image. */
   const SizeType imageSize = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
   this->m_NumberOfSubTransforms = imageSize[ SpaceDimension - 1 ];
-  this->m_StackSpacing = this->GetElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
-  this->m_StackOrigin = this->GetElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
+  this->m_StackSpacing          = this->GetElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
+  this->m_StackOrigin           = this->GetElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
 
   /** Set stack transform parameters. */
   this->m_AffineLogStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
@@ -95,38 +101,38 @@ void AffineLogStackTransform<TElastix>::BeforeRegistration( void )
 
   /** Put parameters in the registration. */
   this->m_Registration->GetAsITKBaseType()
-      ->SetInitialTransformParameters( dummyInitialParameters );
+    ->SetInitialTransformParameters( dummyInitialParameters );
 
   /** Task 4 - Initialize the transform */
   this->InitializeTransform();
 
-    /** Task 2 - Set the scales. */
-    this->SetScales();
+  /** Task 2 - Set the scales. */
+  this->SetScales();
 
- } // end BeforeRegistration()
+} // end BeforeRegistration()
 
 
 /**
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
-void AffineLogStackTransform<TElastix>
+template< class TElastix >
+void
+AffineLogStackTransform< TElastix >
 ::ReadFromFile( void )
 {
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
   this->GetConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
-      "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0 );
+    "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0 );
   this->GetConfiguration()->ReadParameter( this->m_StackOrigin,
-      "StackOrigin", this->GetComponentLabel(), 0, 0 );
+    "StackOrigin", this->GetComponentLabel(), 0, 0 );
   this->GetConfiguration()->ReadParameter( this->m_StackSpacing,
-      "StackSpacing", this->GetComponentLabel(), 0, 0 );
+    "StackSpacing", this->GetComponentLabel(), 0, 0 );
 
   ReducedDimensionInputPointType RDcenterOfRotationPoint;
   RDcenterOfRotationPoint.Fill( 0.0 );
   bool pointRead = false;
   bool indexRead = false;
-
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
@@ -138,16 +144,16 @@ void AffineLogStackTransform<TElastix>
    * is trying to be read that was generated using an older elastix
    * version. Try to read it as an index, and convert to point.
    */
-  if ( !pointRead )
+  if( !pointRead )
   {
     indexRead = this->ReadCenterOfRotationIndex( RDcenterOfRotationPoint );
   }
 
-  if ( !pointRead && !indexRead )
+  if( !pointRead && !indexRead )
   {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the "
-      << "transform parameter file" << std::endl;
-    itkExceptionMacro( << "Transform parameter file is corrupt.")
+    xl::xout[ "error" ] << "ERROR: No center of rotation is specified in the "
+                        << "transform parameter file" << std::endl;
+    itkExceptionMacro( << "Transform parameter file is corrupt." )
   }
 
   this->InitializeAffineLogTransform();
@@ -163,7 +169,7 @@ void AffineLogStackTransform<TElastix>
   this->m_AffineLogStackTransform->SetAllSubTransforms( this->m_AffineLogDummySubTransform );
 
   /** Call the ReadFromFile from the TransformBase. */
-    this->Superclass2::ReadFromFile();
+  this->Superclass2::ReadFromFile();
 
 } // end ReadFromFile()
 
@@ -175,8 +181,9 @@ void AffineLogStackTransform<TElastix>
  * also as a deformation field.
  */
 
-template <class TElastix>
-void AffineLogStackTransform<TElastix>
+template< class TElastix >
+void
+AffineLogStackTransform< TElastix >
 ::WriteToFile( const ParametersType & param ) const
 {
 
@@ -184,72 +191,74 @@ void AffineLogStackTransform<TElastix>
   this->Superclass2::WriteToFile( param );
 
   /** Add some AffineTransform specific lines. */
-  xout["transpar"] << std::endl << "// AffineLogStackTransform specific" << std::endl;
+  xout[ "transpar" ] << std::endl << "// AffineLogStackTransform specific" << std::endl;
 
   /** Set the precision of cout to 10. */
-  xout["transpar"] << std::setprecision( 10 );
+  xout[ "transpar" ] << std::setprecision( 10 );
 
   /** Get the center of rotation point and write it to file. */
   ReducedDimensionInputPointType rotationPoint = this->m_AffineLogDummySubTransform->GetCenter();
-  xout["transpar"] << "(CenterOfRotationPoint ";
-  for ( unsigned int i = 0; i < ReducedSpaceDimension-1; i++ )
+  xout[ "transpar" ] << "(CenterOfRotationPoint ";
+  for( unsigned int i = 0; i < ReducedSpaceDimension - 1; i++ )
   {
-      xout["transpar"] << rotationPoint[ i ] << " ";
+    xout[ "transpar" ] << rotationPoint[ i ] << " ";
   }
-    xout["transpar"] << rotationPoint[ReducedSpaceDimension-1] << ")" << std::endl;
+  xout[ "transpar" ] << rotationPoint[ ReducedSpaceDimension - 1 ] << ")" << std::endl;
 
   /** Write the stack spacing, stack origin and number of sub transforms. */
-  xout["transpar"] << "(StackSpacing " << this->m_AffineLogStackTransform->GetStackSpacing() << ")" << std::endl;
-  xout["transpar"] << "(StackOrigin " << this->m_AffineLogStackTransform->GetStackOrigin() << ")" << std::endl;
-  xout["transpar"] << "(NumberOfSubTransforms " << this->m_AffineLogStackTransform->GetNumberOfSubTransforms() << ")" << std::endl;
+  xout[ "transpar" ] << "(StackSpacing " << this->m_AffineLogStackTransform->GetStackSpacing() << ")" << std::endl;
+  xout[ "transpar" ] << "(StackOrigin " << this->m_AffineLogStackTransform->GetStackOrigin() << ")" << std::endl;
+  xout[ "transpar" ] << "(NumberOfSubTransforms " << this->m_AffineLogStackTransform->GetNumberOfSubTransforms() << ")" << std::endl;
 
   /** Set the precision back to default value. */
-  xout["transpar"] << std::setprecision(
+  xout[ "transpar" ] << std::setprecision(
     this->m_Elastix->GetDefaultOutputPrecision() );
 
 } // end WriteToFile()
+
 
 /**
  * ********************* InitializeTransform ****************************
  */
 
-template <class TElastix>
-void AffineLogStackTransform<TElastix>::InitializeTransform()
+template< class TElastix >
+void
+AffineLogStackTransform< TElastix >
+::InitializeTransform()
 {
-   /** Set all parameters to zero (no rotations, no translation). */
-   this->m_AffineLogDummySubTransform->SetIdentity();
+  /** Set all parameters to zero (no rotations, no translation). */
+  this->m_AffineLogDummySubTransform->SetIdentity();
 
- /** Try to read CenterOfRotationIndex from parameter file,
+  /** Try to read CenterOfRotationIndex from parameter file,
    * which is the rotationPoint, expressed in index-values.
    */
 
-    ContinuousIndexType centerOfRotationIndex;
-    InputPointType centerOfRotationPoint;
-    ReducedDimensionContinuousIndexType RDcenterOfRotationIndex;
-    ReducedDimensionInputPointType RDcenterOfRotationPoint;
-    InputPointType TransformedCenterOfRotation;
-    ReducedDimensionInputPointType RDTransformedCenterOfRotation;
+  ContinuousIndexType                 centerOfRotationIndex;
+  InputPointType                      centerOfRotationPoint;
+  ReducedDimensionContinuousIndexType RDcenterOfRotationIndex;
+  ReducedDimensionInputPointType      RDcenterOfRotationPoint;
+  InputPointType                      TransformedCenterOfRotation;
+  ReducedDimensionInputPointType      RDTransformedCenterOfRotation;
 
-  bool centerGivenAsIndex = true;
-  bool centerGivenAsPoint = true;
-    SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
-        GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  bool     centerGivenAsIndex = true;
+  bool     centerGivenAsPoint = true;
+  SizeType fixedImageSize     = this->m_Registration->GetAsITKBaseType()->
+    GetFixedImage()->GetLargestPossibleRegion().GetSize();
 
-  for ( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
+  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
     /** Initialize. */
-    centerOfRotationIndex[ i ] = 0;
-        RDcenterOfRotationIndex[ i ] = 0;
-        RDcenterOfRotationPoint[ i ] = 0.0;
-        centerOfRotationPoint[ i ] = 0.0;
-        TransformedCenterOfRotation[ i ] = 0.0;
-        RDTransformedCenterOfRotation[ i ] = 0.0;
-
+    centerOfRotationIndex[ i ]         = 0;
+    RDcenterOfRotationIndex[ i ]       = 0;
+    RDcenterOfRotationPoint[ i ]       = 0.0;
+    centerOfRotationPoint[ i ]         = 0.0;
+    TransformedCenterOfRotation[ i ]   = 0.0;
+    RDTransformedCenterOfRotation[ i ] = 0.0;
 
     /** Check COR index: Returns zero when parameter was in the parameter file. */
     bool foundI = this->m_Configuration->ReadParameter(
       centerOfRotationIndex[ i ], "CenterOfRotation", i, false );
-    if ( !foundI )
+    if( !foundI )
     {
       centerGivenAsIndex &= false;
     }
@@ -257,66 +266,66 @@ void AffineLogStackTransform<TElastix>::InitializeTransform()
     /** Check COR point: Returns zero when parameter was in the parameter file. */
     bool foundP = this->m_Configuration->ReadParameter(
       RDcenterOfRotationPoint[ i ], "CenterOfRotationPoint", i, false );
-    if ( !foundP )
+    if( !foundP )
     {
       centerGivenAsPoint &= false;
     }
   } // end loop over SpaceDimension
 
-    /** Check if user wants automatic transform initialization; false by default.
+  /** Check if user wants automatic transform initialization; false by default.
    * If an initial transform is given, automatic transform initialization is
    * not possible.
    */
   bool automaticTransformInitialization = false;
-  bool tmpBool = false;
+  bool tmpBool                          = false;
   this->m_Configuration->ReadParameter( tmpBool,
     "AutomaticTransformInitialization", 0 );
-  if ( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
+  if( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
   {
     automaticTransformInitialization = true;
   }
 
   /** Set the center of rotation to the center of the image if no center was given */
-    bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-    if ( !centerGiven  )
+  bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
+  if( !centerGiven  )
+  {
+    /** Use center of image as default center of rotation */
+    for( unsigned int k = 0; k < SpaceDimension; k++ )
     {
-        /** Use center of image as default center of rotation */
-        for(unsigned int k = 0; k < SpaceDimension; k++)
-        {
-            centerOfRotationIndex[ k ] = (fixedImageSize[ k ]-1.0)/2.0;
-        }
-        /** Convert from continuous index to physical point */
-        this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
-            TransformContinuousIndexToPhysicalPoint( centerOfRotationIndex, TransformedCenterOfRotation );
+      centerOfRotationIndex[ k ] = ( fixedImageSize[ k ] - 1.0 ) / 2.0;
+    }
+    /** Convert from continuous index to physical point */
+    this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
+      TransformContinuousIndexToPhysicalPoint( centerOfRotationIndex, TransformedCenterOfRotation );
 
-        for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
-        {
-            RDTransformedCenterOfRotation[ k ] = TransformedCenterOfRotation[ k ];
-        }
-
-        this->m_AffineLogDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
+    for( unsigned int k = 0; k < ReducedSpaceDimension; k++ )
+    {
+      RDTransformedCenterOfRotation[ k ] = TransformedCenterOfRotation[ k ];
     }
 
-    /** Set the center of rotation if it was entered by the user. */
-    if ( centerGivenAsPoint )
+    this->m_AffineLogDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
+  }
+
+  /** Set the center of rotation if it was entered by the user. */
+  if( centerGivenAsPoint )
+  {
+    this->m_AffineLogDummySubTransform->SetCenter( RDcenterOfRotationPoint );
+  }
+  if( centerGivenAsIndex )
+  {
+    this->m_Registration->GetAsITKBaseType()->GetFixedImage()
+      ->TransformContinuousIndexToPhysicalPoint(
+      centerOfRotationIndex, TransformedCenterOfRotation );
+    for( unsigned int k = 0; k < ReducedSpaceDimension; k++ )
     {
-        this->m_AffineLogDummySubTransform->SetCenter( RDcenterOfRotationPoint );
+      RDTransformedCenterOfRotation[ k ] = TransformedCenterOfRotation[ k ];
     }
-    if( centerGivenAsIndex)
-    {
-        this->m_Registration->GetAsITKBaseType()->GetFixedImage()
-            ->TransformContinuousIndexToPhysicalPoint(
-            centerOfRotationIndex, TransformedCenterOfRotation );
-        for(unsigned int k = 0; k < ReducedSpaceDimension; k++)
-        {
-            RDTransformedCenterOfRotation[ k ] = TransformedCenterOfRotation[ k ];
-        }
-        this->m_AffineLogDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
-    }
+    this->m_AffineLogDummySubTransform->SetCenter( RDTransformedCenterOfRotation );
+  }
 
   /** Set the translation to zero */
   ReducedDimensionOutputVectorType noTranslation;
-  noTranslation.Fill(0.0);
+  noTranslation.Fill( 0.0 );
   this->m_AffineLogDummySubTransform->SetTranslation( noTranslation );
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
@@ -324,32 +333,34 @@ void AffineLogStackTransform<TElastix>::InitializeTransform()
 
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()->
-      SetInitialTransformParameters( this->GetParameters() );
+    SetInitialTransformParameters( this->GetParameters() );
 
 } // end InitializeTransform()
+
 
 /**
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
-void AffineLogStackTransform<TElastix>
+template< class TElastix >
+void
+AffineLogStackTransform< TElastix >
 ::SetScales( void )
 {
   /** Create the new scales. */
   const NumberOfParametersType N = this->GetNumberOfParameters();
-  ScalesType newscales( N );
+  ScalesType                   newscales( N );
 
   /** Check if automatic scales estimation is desired. */
   bool automaticScalesEstimationStackTransform = false;
   this->m_Configuration->ReadParameter( automaticScalesEstimationStackTransform,
     "AutomaticScalesEstimationStackTransform", 0 );
 
-  if ( automaticScalesEstimationStackTransform )
+  if( automaticScalesEstimationStackTransform )
   {
     elxout << "Scales are estimated automatically." << std::endl;
     this->AutomaticScalesEstimationStackTransform( this->m_AffineLogStackTransform->GetNumberOfSubTransforms(), newscales );
-        elxout << "finished setting scales" << std::endl;
+    elxout << "finished setting scales" << std::endl;
   }
   else
   {
@@ -380,8 +391,8 @@ void AffineLogStackTransform<TElastix>
      * represent rotations (4 in 2D and 9 in 3D).
      */
 
-    const unsigned int rotationPart = (ReducedSpaceDimension) * (ReducedSpaceDimension);
-    const unsigned int totalPart = (SpaceDimension) * (ReducedSpaceDimension);
+    const unsigned int rotationPart = ( ReducedSpaceDimension ) * ( ReducedSpaceDimension );
+    const unsigned int totalPart    = ( SpaceDimension ) * ( ReducedSpaceDimension );
 
     /** this->m_Configuration->ReadParameter() returns 0 if there is a value given
      * in the parameter-file, and returns 1 if there is no value given in the
@@ -396,26 +407,26 @@ void AffineLogStackTransform<TElastix>
      */
     const double defaultScalingvalue = 10000.0;
 
-    int sizeLastDimension = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize()[SpaceDimension - 1];
+    int sizeLastDimension = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize()[ SpaceDimension - 1 ];
 
     std::size_t count
       = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
 
     /** Check which of the above options is used. */
-    if ( count == 0 )
+    if( count == 0 )
     {
       /** In this case the first option is used. */
       newscales.Fill( defaultScalingvalue );
 
       /** The non-rotation scales are set to 1.0 */
-      for(unsigned int i=rotationPart; i < ( totalPart * sizeLastDimension ); i=i+totalPart)
+      for( unsigned int i = rotationPart; i < ( totalPart * sizeLastDimension ); i = i + totalPart )
       {
-          newscales[ i ] = 1.0;
-          newscales[ i+1 ] = 1.0;
+        newscales[ i ]     = 1.0;
+        newscales[ i + 1 ] = 1.0;
       }
     }
 
-    else if ( count == 1 )
+    else if( count == 1 )
     {
       /** In this case the second option is used. */
       double scale = defaultScalingvalue;
@@ -423,18 +434,18 @@ void AffineLogStackTransform<TElastix>
       newscales.Fill( scale );
 
       /** The non-rotation scales are set to 1.0 */
-      for(unsigned int i=rotationPart; i < ( totalPart * sizeLastDimension ); i=i+totalPart)
+      for( unsigned int i = rotationPart; i < ( totalPart * sizeLastDimension ); i = i + totalPart )
       {
-          newscales[ i ] = 1.0;
-          newscales[ i+1 ] = 1.0;
+        newscales[ i ]     = 1.0;
+        newscales[ i + 1 ] = 1.0;
       }
 
     }
-    else if ( count == this->GetNumberOfParameters() )
+    else if( count == this->GetNumberOfParameters() )
     {
       newscales.Fill( 1.0 );
       /** In this case the third option is used. */
-      for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+      for( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
       {
         this->m_Configuration->ReadParameter( newscales[ i ], "Scales", i );
       }
@@ -446,13 +457,12 @@ void AffineLogStackTransform<TElastix>
        * can give unpredictable results.
        */
       itkExceptionMacro( << "ERROR: The Scales-option in the parameter-file"
-        << " has not been set properly." );
+                         << " has not been set properly." );
     }
 
   } // end else: no automaticScalesEstimationStackTransform
 
   elxout << "Scales for transform parameters are: " << newscales << std::endl;
-
 
   /** And set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
@@ -464,29 +474,30 @@ void AffineLogStackTransform<TElastix>
  * ******************** ReadCenterOfRotationIndex *********************
  */
 
-template <class TElastix>
-bool AffineLogStackTransform<TElastix>
+template< class TElastix >
+bool
+AffineLogStackTransform< TElastix >
 ::ReadCenterOfRotationIndex( ReducedDimensionInputPointType & rotationPoint ) const
 {
   /** Try to read CenterOfRotationIndex from the transform parameter
    * file, which is the rotationPoint, expressed in index-values.
    */
   ReducedDimensionContinuousIndexType RDcenterOfRotationIndex;
-  bool centerGivenAsIndex = true;
-  for ( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
+  bool                                centerGivenAsIndex = true;
+  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
     RDcenterOfRotationIndex[ i ] = 0;
 
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(
       RDcenterOfRotationIndex[ i ], "CenterOfRotation", i, false );
-    if ( !found )
+    if( !found )
     {
       centerGivenAsIndex &= false;
     }
   }
 
-  if ( !centerGivenAsIndex )
+  if( !centerGivenAsIndex )
   {
     return false;
   }
@@ -495,14 +506,14 @@ bool AffineLogStackTransform<TElastix>
    * We put this in a dummy image, so that we can correctly
    * calculate the center of rotation in world coordinates.
    */
-  SpacingType           spacing;
-  IndexType             index;
-  PointType             origin;
-  SizeType              size;
-  DirectionType         direction;
+  SpacingType   spacing;
+  IndexType     index;
+  PointType     origin;
+  SizeType      size;
+  DirectionType direction;
   direction.SetIdentity();
 
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Read size from the parameter file. Zero by default, which is illegal. */
     size[ i ] = 0;
@@ -521,7 +532,7 @@ bool AffineLogStackTransform<TElastix>
     this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
 
     /** Read direction cosines. Default identity */
-    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    for( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       this->m_Configuration->ReadParameter( direction( j, i ),
         "Direction", i * SpaceDimension + j );
@@ -530,17 +541,17 @@ bool AffineLogStackTransform<TElastix>
 
   /** Check for image size. */
   bool illegalSize = false;
-  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    if ( size[ i ] == 0 )
+    if( size[ i ] == 0 )
     {
       illegalSize = true;
     }
   }
 
-  if ( illegalSize )
+  if( illegalSize )
   {
-    xl::xout["error"] << "ERROR: One or more image sizes are 0!" << std::endl;
+    xl::xout[ "error" ] << "ERROR: One or more image sizes are 0!" << std::endl;
     return false;
   }
 
@@ -551,11 +562,11 @@ bool AffineLogStackTransform<TElastix>
   typename DummyImageType::Pointer dummyImage = DummyImageType::New();
   ReducedDimensionRegionType rdregion;
 
-    ReducedDimensionSpacingType             rdspacing;
-    ReducedDimensionIndexType     rdindex;
-    ReducedDimensionPointType               rdorigin;
-    ReducedDimensionSizeType                rdsize;
-    ReducedDimensionDirectionType           rddirection;
+  ReducedDimensionSpacingType   rdspacing;
+  ReducedDimensionIndexType     rdindex;
+  ReducedDimensionPointType     rdorigin;
+  ReducedDimensionSizeType      rdsize;
+  ReducedDimensionDirectionType rddirection;
 
   rdregion.SetIndex( rdindex );
   rdregion.SetSize( rdsize );
@@ -576,30 +587,30 @@ bool AffineLogStackTransform<TElastix>
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template <class TElastix>
+template< class TElastix >
 bool
-AffineLogStackTransform<TElastix>
+AffineLogStackTransform< TElastix >
 ::ReadCenterOfRotationPoint( ReducedDimensionInputPointType & rotationPoint ) const
 {
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */
   ReducedDimensionInputPointType RDcenterOfRotationPoint;
-  bool centerGivenAsPoint = true;
-  for ( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
+  bool                           centerGivenAsPoint = true;
+  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
     RDcenterOfRotationPoint[ i ] = 0.0;
 
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(
       RDcenterOfRotationPoint[ i ], "CenterOfRotationPoint", i, false );
-    if ( !found )
+    if( !found )
     {
       centerGivenAsPoint &= false;
     }
   }
 
-  if ( !centerGivenAsPoint )
+  if( !centerGivenAsPoint )
   {
     return false;
   }
@@ -614,7 +625,7 @@ AffineLogStackTransform<TElastix>
 
 } // end ReadCenterOfRotationPoint()
 
-} // end namespace elastix
 
+} // end namespace elastix
 
 #endif // ELXAFFINELOGSTACKTRANSFORM_HXX

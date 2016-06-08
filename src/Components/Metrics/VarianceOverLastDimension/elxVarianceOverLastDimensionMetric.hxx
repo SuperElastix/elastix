@@ -21,7 +21,6 @@
 #include "elxVarianceOverLastDimensionMetric.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 
@@ -39,7 +38,7 @@ VarianceOverLastDimensionMetric< TElastix >
   this->Superclass1::Initialize();
   timer.Stop();
   elxout << "Initialization of VarianceOverLastDimensionMetric metric took: "
-    << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -67,16 +66,16 @@ VarianceOverLastDimensionMetric< TElastix >
     dcValid &= ( dc[ FixedImageDimension - 1 ][ i ] == 0 );
     dcValid &= ( dc[ i ][ FixedImageDimension - 1 ] == 0 );
   }
-  dcValid &= ( dc[ FixedImageDimension - 1][ FixedImageDimension - 1 ] == 1 );
+  dcValid &= ( dc[ FixedImageDimension - 1 ][ FixedImageDimension - 1 ] == 1 );
 
   if( !dcValid )
   {
     itkExceptionMacro( << "\nERROR: the direction cosines matrix of the fixed image is invalid!\n\n"
-      << "  The VarianceOverLastDimensionMetric expects the last dimension to represent\n"
-      << "  time and therefore requires a direction cosines matrix of the form:\n"
-      << "       [ . . 0 ]\n"
-      << "  dc = [ . . 0 ]\n"
-      << "       [ 0 0 1 ]" );
+                       << "  The VarianceOverLastDimensionMetric expects the last dimension to represent\n"
+                       << "  time and therefore requires a direction cosines matrix of the form:\n"
+                       << "       [ . . 0 ]\n"
+                       << "  dc = [ . . 0 ]\n"
+                       << "       [ 0 0 1 ]" );
   }
 
 } // end BeforeRegistration()

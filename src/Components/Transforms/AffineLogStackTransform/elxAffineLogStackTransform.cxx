@@ -18,4 +18,3 @@
 #include "elxAffineLogStackTransform.h"
 
 elxInstallMacro( AffineLogStackTransform );
-

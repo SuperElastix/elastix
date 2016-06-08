@@ -22,7 +22,6 @@
 #include "vnl/vnl_math.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 

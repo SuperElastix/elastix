@@ -21,7 +21,6 @@
 #include "elxPCAMetric2.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 
@@ -29,9 +28,9 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template< class TElastix >
 void
-PCAMetric2<TElastix>
+PCAMetric2< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
   itk::TimeProbe timer;
@@ -39,7 +38,7 @@ PCAMetric2<TElastix>
   this->Superclass1::Initialize();
   timer.Stop();
   elxout << "Initialization of PCAMetric2 metric took: "
-    << static_cast<long>( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -48,13 +47,14 @@ PCAMetric2<TElastix>
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
-void PCAMetric2<TElastix>
+template< class TElastix >
+void
+PCAMetric2< TElastix >
 ::BeforeEachResolution( void )
 {
   /** Get the current resolution level. */
-  unsigned int level =
-    ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level
+    = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
   /** Get and set if we want to subtract the mean from the derivative. */
   bool subtractMean = false;
@@ -78,7 +78,7 @@ void PCAMetric2<TElastix>
   /** Set moving image derivative scales. */
   this->SetUseMovingImageDerivativeScales( false );
   MovingImageDerivativeScalesType movingImageDerivativeScales;
-  bool usescales = true;
+  bool                            usescales = true;
   for( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
     usescales = usescales && this->GetConfiguration()->ReadParameter(
@@ -90,16 +90,16 @@ void PCAMetric2<TElastix>
     this->SetUseMovingImageDerivativeScales( true );
     this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
     elxout << "Multiplying moving image derivatives by: "
-      << movingImageDerivativeScales << std::endl;
+           << movingImageDerivativeScales << std::endl;
   }
 
   /** Check if this transform is a B-spline transform. */
   CombinationTransformType * testPtr1
-    = dynamic_cast<CombinationTransformType *>( this->GetElastix()->GetElxTransformBase() );
+    = dynamic_cast< CombinationTransformType * >( this->GetElastix()->GetElxTransformBase() );
   if( testPtr1 )
   {
     /** Check for B-spline transform. */
-    BSplineTransformBaseType * testPtr2 = dynamic_cast<BSplineTransformBaseType *>(
+    BSplineTransformBaseType * testPtr2 = dynamic_cast< BSplineTransformBaseType * >(
       testPtr1->GetCurrentTransform() );
     if( testPtr2 )
     {
@@ -108,7 +108,7 @@ void PCAMetric2<TElastix>
     else
     {
       /** Check for stack transform. */
-      StackTransformType * testPtr3 = dynamic_cast<StackTransformType *>(
+      StackTransformType * testPtr3 = dynamic_cast< StackTransformType * >(
         testPtr1->GetCurrentTransform() );
       if( testPtr3 )
       {
@@ -118,7 +118,7 @@ void PCAMetric2<TElastix>
         if( testPtr3->GetNumberOfSubTransforms() > 0 )
         {
           /** Check if subtransform is a B-spline transform. */
-          ReducedDimensionBSplineTransformBaseType * testPtr4 = dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(
+          ReducedDimensionBSplineTransformBaseType * testPtr4 = dynamic_cast< ReducedDimensionBSplineTransformBaseType * >(
             testPtr3->GetSubTransform( 0 ).GetPointer() );
           if( testPtr4 )
           {
@@ -133,7 +133,7 @@ void PCAMetric2<TElastix>
 
 } // end BeforeEachResolution()
 
-} // end namespace elastix
 
+} // end namespace elastix
 
 #endif // end #ifndef __elxPCAMetric2_HXX__

@@ -25,7 +25,6 @@
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 
@@ -136,7 +135,7 @@ ResamplerBase< TElastix >
     /** Print the elapsed time for the resampling. */
     timer.Stop();
     elxout << "  Applying transform took "
-      << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
+           << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
 
   } // end if
 
@@ -216,9 +215,9 @@ ResamplerBase< TElastix >
     writeResultImage, "WriteResultImage", 0 );
 
 #ifdef _ELASTIX_BUILD_LIBRARY
-  /** The library interface may executed multiple times in 
+  /** The library interface may executed multiple times in
    * a session in which case the images should not be released
-   */ 
+   */
   bool releaseMemoryBeforeResampling = false;
 #else
   /** Release memory to be able to resample in case a limited
@@ -227,7 +226,7 @@ ResamplerBase< TElastix >
   bool releaseMemoryBeforeResampling = true;
 #endif
 
-  this->m_Configuration->ReadParameter(releaseMemoryBeforeResampling, "ReleaseMemoryBeforeResampling", 0, false );
+  this->m_Configuration->ReadParameter( releaseMemoryBeforeResampling, "ReleaseMemoryBeforeResampling", 0, false );
   if( releaseMemoryBeforeResampling )
   {
     this->ReleaseMemory();
@@ -277,7 +276,7 @@ ResamplerBase< TElastix >
     /** Print the elapsed time for the resampling. */
     timer.Stop();
     elxout << "  Applying final transform took "
-      << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
+           << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
   }
   else
   {
@@ -376,7 +375,7 @@ ResamplerBase< TElastix >
 template< class TElastix >
 void
 ResamplerBase< TElastix >
-::WriteResultImage( OutputImageType *image,
+::WriteResultImage( OutputImageType * image,
   const char * filename, const bool & showProgress )
 {
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
@@ -549,22 +548,24 @@ ResamplerBase< TElastix >
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< long, InputImageType::ImageDimension > >            CastFilterLong;
   typedef itk::CastImageFilter< InputImageType,
-     itk::Image< unsigned long, InputImageType::ImageDimension > >  CastFilterULong;
+    itk::Image< unsigned long, InputImageType::ImageDimension > >  CastFilterULong;
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< float, InputImageType::ImageDimension > >           CastFilterFloat;
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< double, InputImageType::ImageDimension > >          CastFilterDouble;
 
   /** cast the image to the correct output image Type */
-  if( resultImagePixelType.compare( "char" ) == 0 ) {
+  if( resultImagePixelType.compare( "char" ) == 0 )
+  {
     typename CastFilterChar::Pointer castFilter = CastFilterChar::New();
-    castFilter->SetInput(infoChanger->GetOutput());
+    castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
-  if( resultImagePixelType.compare( "unsigned char" ) == 0 ) {
+  if( resultImagePixelType.compare( "unsigned char" ) == 0 )
+  {
     typename CastFilterUChar::Pointer castFilter = CastFilterUChar::New();
-    castFilter->SetInput(infoChanger->GetOutput());
+    castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
@@ -627,7 +628,10 @@ ResamplerBase< TElastix >
 
   if( resultImage.IsNull() )
   {
-    itkExceptionMacro( "Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned char\", \"short\", \"ushort\", \"unsigned short\", \"int\", \"unsigned int\", \"long\", \"unsigned long\", \"float\" or \"double\" but was \"" << resultImagePixelType << "\"." );
+    itkExceptionMacro(
+      << "Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned char\", \"short\", \"ushort\", \"unsigned short\", \"int\", \"unsigned int\", \"long\", \"unsigned long\", \"float\" or \"double\" but was \""
+      << resultImagePixelType
+      << "\"." );
   }
 
   //put image in container

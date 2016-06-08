@@ -26,7 +26,6 @@
 #include "itkImageGridSampler.h"
 #include "itkPointSet.h"
 
-
 namespace elastix
 {
 

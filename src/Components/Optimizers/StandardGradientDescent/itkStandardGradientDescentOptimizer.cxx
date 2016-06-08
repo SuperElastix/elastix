@@ -36,8 +36,8 @@ StandardGradientDescentOptimizer
   this->m_Param_A     = 1.0;
   this->m_Param_alpha = 0.602;
 
-  this->m_CurrentTime = 0.0;
-  this->m_InitialTime = 0.0;
+  this->m_CurrentTime     = 0.0;
+  this->m_InitialTime     = 0.0;
   this->m_UseConstantStep = false;
 
 }   // end Constructor
@@ -65,9 +65,9 @@ StandardGradientDescentOptimizer
 {
 
   /** Decide which type of step size is chosen. */
-  if ( this->m_UseConstantStep )
+  if( this->m_UseConstantStep )
   {
-    this->SetLearningRate( this->Compute_a( 0 ));
+    this->SetLearningRate( this->Compute_a( 0 ) );
   }
   else
   {

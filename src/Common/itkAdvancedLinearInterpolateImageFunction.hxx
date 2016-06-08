@@ -106,7 +106,7 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
     }
 
     /** Separately deal with cases on the image edge. */
-    if( Math::FloatAlmostEqual( xm[ dim ], static_cast<ContinuousIndexValueType>( this->m_EndIndex[ dim ] ) ) )
+    if( Math::FloatAlmostEqual( xm[ dim ], static_cast< ContinuousIndexValueType >( this->m_EndIndex[ dim ] ) ) )
     {
       xm[ dim ] -= 0.000001;
     }
@@ -191,7 +191,7 @@ AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
     }
 
     /** Separately deal with cases on the image edge. */
-    if( Math::FloatAlmostEqual( xm[ dim ], static_cast<ContinuousIndexValueType>( this->m_EndIndex[ dim ] ) ) )
+    if( Math::FloatAlmostEqual( xm[ dim ], static_cast< ContinuousIndexValueType >( this->m_EndIndex[ dim ] ) ) )
     {
       xm[ dim ] -= 0.000001;
     }

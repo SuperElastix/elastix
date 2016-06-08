@@ -23,7 +23,6 @@
 #include "vnl/vnl_math.h"
 #include "itkTimeProbe.h"
 
-
 namespace elastix
 {
 
@@ -254,7 +253,7 @@ SplineKernelTransform< TElastix >
   this->m_KernelTransform->SetSourceLandmarks( landmarkPointSet );
   timer.Stop();
   elxout << "  Setting the fixed image landmarks took: "
-    << this->ConvertSecondsToDHMS( timer.GetMean(), 6 ) << std::endl;
+         << this->ConvertSecondsToDHMS( timer.GetMean(), 6 ) << std::endl;
 
 } // end DetermineSourceLandmarks()
 
@@ -290,7 +289,7 @@ SplineKernelTransform< TElastix >
   this->m_KernelTransform->SetTargetLandmarks( landmarkPointSet );
   timer.Stop();
   elxout << "  Setting the moving image landmarks took: "
-    << this->ConvertSecondsToDHMS( timer.GetMean(), 6 ) << std::endl;
+         << this->ConvertSecondsToDHMS( timer.GetMean(), 6 ) << std::endl;
 
   return true;
 

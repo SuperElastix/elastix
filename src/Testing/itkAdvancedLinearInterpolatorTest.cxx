@@ -37,11 +37,11 @@ template< unsigned int Dimension >
 bool
 TestInterpolators( void )
 {
-  typedef itk::Image< short, Dimension >         InputImageType;
-  typedef typename InputImageType::SizeType      SizeType;
-  typedef typename InputImageType::SpacingType   SpacingType;
-  typedef typename InputImageType::PointType     OriginType;
-  typedef typename InputImageType::RegionType    RegionType;
+  typedef itk::Image< short, Dimension >       InputImageType;
+  typedef typename InputImageType::SizeType    SizeType;
+  typedef typename InputImageType::SpacingType SpacingType;
+  typedef typename InputImageType::PointType   OriginType;
+  typedef typename InputImageType::RegionType  RegionType;
   //typedef typename RegionType::IndexType         IndexType;
   typedef typename InputImageType::DirectionType DirectionType;
   typedef double                                 CoordRepType;
