@@ -30,34 +30,38 @@ namespace itk
 template< class TFixedImage, class TScalarType >
 bool
 TransformPenaltyTerm< TFixedImage, TScalarType >
-::CheckForBSplineTransform( BSplineTransformPointer & bspline ) const
+::CheckForBSplineTransform2( BSplineOrder3TransformPointer & bspline ) const
 {
-  /** Check if this transform is a B-spline transform. */
-  BSplineTransformType * testPtr1
-    = dynamic_cast< BSplineTransformType * >( this->m_AdvancedTransform.GetPointer() );
+  /** The following checks for many spline orders. */
+  this->CheckForBSplineTransform();
+
+  /** Quit if the advanced transform is not a B-spline. */
+  if( !this->m_TransformIsBSpline ) return false;
+
+  /** We will return the B-spline by reference, but only in case it is a third order B-spline. */
+  BSplineOrder3TransformType * testPtr1
+    = dynamic_cast< BSplineOrder3TransformType * >( this->m_AdvancedTransform.GetPointer() );
   CombinationTransformType * testPtr2a
     = dynamic_cast< CombinationTransformType * >( this->m_AdvancedTransform.GetPointer() );
-  bool transformIsBSpline = false;
+
   if( testPtr1 )
   {
     /** The transform is of type AdvancedBSplineDeformableTransform. */
-    transformIsBSpline = true;
-    bspline            = testPtr1;
+    bspline = testPtr1;
   }
   else if( testPtr2a )
   {
     /** The transform is of type AdvancedCombinationTransform. */
-    BSplineTransformType * testPtr2b = dynamic_cast< BSplineTransformType * >(
+    BSplineOrder3TransformType * testPtr2b = dynamic_cast< BSplineOrder3TransformType * >(
       ( testPtr2a->GetCurrentTransform() ) );
     if( testPtr2b )
     {
       /** The current transform is of type AdvancedBSplineDeformableTransform. */
-      transformIsBSpline = true;
-      bspline            = testPtr2b;
+      bspline = testPtr2b;
     }
   }
 
-  return transformIsBSpline;
+  return this->m_TransformIsBSpline;
 
 } // end CheckForBSplineTransform()
 

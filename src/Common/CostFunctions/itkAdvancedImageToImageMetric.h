@@ -159,6 +159,9 @@ public:
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 1 > BSplineOrder1TransformType;
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 2 > BSplineOrder2TransformType;
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 3 > BSplineOrder3TransformType;
+  typedef typename BSplineOrder1TransformType::Pointer                             BSplineOrder1TransformPointer;
+  typedef typename BSplineOrder2TransformType::Pointer                             BSplineOrder2TransformPointer;
+  typedef typename BSplineOrder3TransformType::Pointer                             BSplineOrder3TransformPointer;
 
   /** Hessian type; for SelfHessian (experimental feature) */
   typedef typename DerivativeType::ValueType    HessianValueType;
@@ -334,20 +337,21 @@ protected:
   mutable ImageSamplerPointer m_ImageSampler;
 
   /** Variables for image derivative computation. */
+  bool                                   m_InterpolatorIsLinear;
   bool                                   m_InterpolatorIsBSpline;
   bool                                   m_InterpolatorIsBSplineFloat;
   bool                                   m_InterpolatorIsReducedBSpline;
-  bool                                   m_InterpolatorIsLinear;
+  LinearInterpolatorPointer              m_LinearInterpolator;
   BSplineInterpolatorPointer             m_BSplineInterpolator;
   BSplineInterpolatorFloatPointer        m_BSplineInterpolatorFloat;
   ReducedBSplineInterpolatorPointer      m_ReducedBSplineInterpolator;
-  LinearInterpolatorPointer              m_LinearInterpolator;
+
   CentralDifferenceGradientFilterPointer m_CentralDifferenceGradientFilter;
 
   /** Variables to store the AdvancedTransform. */
   bool m_TransformIsAdvanced;
   typename AdvancedTransformType::Pointer m_AdvancedTransform;
-  bool m_TransformIsBSpline;
+  mutable bool m_TransformIsBSpline;
 
   /** Variables for the Limiters. */
   FixedImageLimiterPointer     m_FixedImageLimiter;
@@ -502,7 +506,7 @@ protected:
   virtual void CheckForAdvancedTransform( void );
 
   /** Check if the transform is a B-spline. Called by Initialize. */
-  virtual void CheckForBSplineTransform( void );
+  virtual void CheckForBSplineTransform( void ) const;
 
   /** Transform a point from FixedImage domain to MovingImage domain.
    * This function also checks if mapped point is within support region of

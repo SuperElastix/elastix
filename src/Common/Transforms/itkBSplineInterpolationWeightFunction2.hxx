@@ -54,20 +54,16 @@ BSplineInterpolationWeightFunction2< TCoordRep, VSpaceDimension, VSplineOrder >
   {
     double x = index[ i ] - static_cast< double >( startIndex[ i ] );
 
-//     for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
-//     {
-//       weights1D[ i ][ k ] = this->m_Kernel->Evaluate( x );
-//       x -= 1.0;
-//     }
-    WeightArrayType weights;
+    // Compute weights
+    double weights[ 6 ]; // Sufficiently large: maximum implemented SplineOrder + 1
     this->m_Kernel->Evaluate( x, weights );
 
+    // Copy
     for( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
     {
       weights1D[ i ][ k ] = weights[ k ];
     }
   }
-
 } // end Compute1DWeights()
 
 

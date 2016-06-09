@@ -51,14 +51,14 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_UseImageSampler             = false;
   this->m_RequiredRatioOfValidSamples = 0.25;
 
+  this->m_LinearInterpolator              = 0;
   this->m_BSplineInterpolator             = 0;
   this->m_BSplineInterpolatorFloat        = 0;
   this->m_ReducedBSplineInterpolator      = 0;
-  this->m_LinearInterpolator              = 0;
+  this->m_InterpolatorIsLinear            = false;
   this->m_InterpolatorIsBSpline           = false;
   this->m_InterpolatorIsBSplineFloat      = false;
   this->m_InterpolatorIsReducedBSpline    = false;
-  this->m_InterpolatorIsLinear            = false;
   this->m_CentralDifferenceGradientFilter = 0;
 
   this->m_AdvancedTransform                                = 0;
@@ -592,7 +592,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::CheckForBSplineTransform( void )
+::CheckForBSplineTransform( void ) const
 {
   /** Check if this transform is a combo transform. */
   CombinationTransformType * testPtr_combo

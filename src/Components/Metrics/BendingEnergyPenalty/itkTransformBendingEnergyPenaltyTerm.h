@@ -105,6 +105,15 @@ public:
   typedef typename Superclass::ThreaderType                 ThreaderType;
   typedef typename Superclass::ThreadInfoType               ThreadInfoType;
 
+  /** Typedef's for the B-spline transform. */
+  typedef typename Superclass::CombinationTransformType       CombinationTransformType;
+  typedef typename Superclass::BSplineOrder1TransformType     BSplineOrder1TransformType;
+  typedef typename Superclass::BSplineOrder1TransformPointer  BSplineOrder1TransformPointer;
+  typedef typename Superclass::BSplineOrder2TransformType     BSplineOrder2TransformType;
+  typedef typename Superclass::BSplineOrder2TransformPointer  BSplineOrder2TransformPointer;
+  typedef typename Superclass::BSplineOrder3TransformType     BSplineOrder3TransformType;
+  typedef typename Superclass::BSplineOrder3TransformPointer  BSplineOrder3TransformPointer;
+
   /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
@@ -161,10 +170,6 @@ protected:
   typedef typename Superclass::MovingImagePointType           MovingImagePointType;
   typedef typename Superclass::MovingImageContinuousIndexType MovingImageContinuousIndexType;
   typedef typename Superclass::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
-
-  /** Typedefs for the B-spline transform. */
-  typedef typename Superclass::BSplineTransformType     BSplineTransformType;
-  typedef typename Superclass::CombinationTransformType CombinationTransformType;
 
   /** Typedefs for SelfHessian */
   typedef ImageGridSampler< FixedImageType > SelfHessianSamplerType;

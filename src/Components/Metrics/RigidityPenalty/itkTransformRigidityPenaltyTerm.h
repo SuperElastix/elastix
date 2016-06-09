@@ -123,14 +123,21 @@ public:
   typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
   typedef typename Superclass::ScalarType                   ScalarType;
 
+  /** Typedef's for the B-spline transform. */
+  typedef typename Superclass::CombinationTransformType       CombinationTransformType;
+  typedef typename Superclass::BSplineOrder1TransformType     BSplineOrder1TransformType;
+  typedef typename Superclass::BSplineOrder1TransformPointer  BSplineOrder1TransformPointer;
+  typedef typename Superclass::BSplineOrder2TransformType     BSplineOrder2TransformType;
+  typedef typename Superclass::BSplineOrder2TransformPointer  BSplineOrder2TransformPointer;
+  typedef typename Superclass::BSplineOrder3TransformType     BSplineOrder3TransformType;
+  typedef typename Superclass::BSplineOrder3TransformPointer  BSplineOrder3TransformPointer;
+
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType SpatialHessianType;
-  typedef typename Superclass
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType  JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
@@ -141,21 +148,18 @@ public:
   virtual void Initialize( void ) throw ( ExceptionObject );
 
   /** Typedef's for B-spline transform. */
-  typedef AdvancedBSplineDeformableTransform< ScalarType,
-    FixedImageDimension, 3 >                            BSplineTransformType;
+  typedef BSplineOrder3TransformType                 BSplineTransformType;
   typedef typename BSplineTransformType::Pointer     BSplineTransformPointer;
   typedef typename BSplineTransformType::SpacingType GridSpacingType;
   typedef typename BSplineTransformType::ImageType   CoefficientImageType;
   typedef typename CoefficientImageType::Pointer     CoefficientImagePointer;
   typedef typename CoefficientImageType::SpacingType CoefficientImageSpacingType;
-  typedef AdvancedCombinationTransform< ScalarType,
-    FixedImageDimension >                               CombinationTransformType;
 
   /** Typedef support for neighborhoods, filters, etc. */
   typedef Neighborhood< ScalarType,
     itkGetStaticConstMacro( FixedImageDimension ) >     NeighborhoodType;
-  typedef typename NeighborhoodType::SizeType         NeighborhoodSizeType;
-  typedef ImageRegionIterator< CoefficientImageType > CoefficientImageIteratorType;
+  typedef typename NeighborhoodType::SizeType           NeighborhoodSizeType;
+  typedef ImageRegionIterator< CoefficientImageType >   CoefficientImageIteratorType;
   typedef NeighborhoodOperatorImageFilter<
     CoefficientImageType, CoefficientImageType >        NOIFType;
   typedef NeighborhoodIterator< CoefficientImageType >  NeighborhoodIteratorType;

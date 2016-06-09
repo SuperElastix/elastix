@@ -35,6 +35,7 @@ StackTransform< TScalarType, NInputDimensions, NOutputDimensions >
   m_StackOrigin( 0.0 )
 {} // end Constructor
 
+
 /**
  * ************************ SetParameters ***********************
  */
@@ -65,12 +66,13 @@ StackTransform< TScalarType, NInputDimensions, NOutputDimensions >
   }
 
   this->Modified();
-} // end SetParameters
+} // end SetParameters()
 
 
 /**
  * ************************ GetParameters ***********************
  */
+
 template< class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 const typename StackTransform< TScalarType, NInputDimensions, NOutputDimensions >::ParametersType
 & StackTransform< TScalarType, NInputDimensions, NOutputDimensions >
@@ -90,7 +92,8 @@ const typename StackTransform< TScalarType, NInputDimensions, NOutputDimensions 
   }
 
   return this->m_Parameters;
-} // end GetParameters
+} // end GetParameters()
+
 
 /**
  * ********************* TransformPoint ****************************
@@ -127,7 +130,7 @@ StackTransform< TScalarType, NInputDimensions, NOutputDimensions >
 
   return opp;
 
-} // end TransformPoint
+} // end TransformPoint()
 
 
 /**

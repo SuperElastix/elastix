@@ -49,11 +49,11 @@ class BSplineInterpolationWeightFunction2 :
 public:
 
   /** Standard class typedefs. */
-  typedef BSplineInterpolationWeightFunction2 Self;
+  typedef BSplineInterpolationWeightFunction2       Self;
   typedef BSplineInterpolationWeightFunctionBase<
     TCoordRep, VSpaceDimension, VSplineOrder >      Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef SmartPointer< Self >                      Pointer;
+  typedef SmartPointer< const Self >                ConstPointer;
 
   /** New macro for creation of through the object factory.*/
   itkNewMacro( Self );

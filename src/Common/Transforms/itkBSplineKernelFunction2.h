@@ -88,7 +88,7 @@ public:
   /** Evaluate the function at the entire support. This is slightly faster,
    * since no if's are needed.
    */
-  inline void Evaluate( const double & u, WeightArrayType & weights ) const
+  inline void Evaluate( const double & u, double * weights ) const
   {
     this->Evaluate( Dispatch< VSplineOrder >(), u, weights );
   }
@@ -108,8 +108,8 @@ protected:
 
 private:
 
-  BSplineKernelFunction2( const Self & ); //purposely not implemented
-  void operator=( const Self & );         //purposely not implemented
+  BSplineKernelFunction2( const Self & ); // purposely not implemented
+  void operator=( const Self & );         // purposely not implemented
 
   /** Structures to control overloaded versions of Evaluate */
   struct DispatchBase {};
@@ -179,8 +179,7 @@ private:
   /** Unimplemented spline order. */
   inline double Evaluate( const DispatchBase &, const double & ) const
   {
-    itkExceptionMacro( << "Evaluate not implemented for spline order "
-                       << SplineOrder );
+    itkExceptionMacro( << "Evaluate not implemented for spline order " << SplineOrder );
     return 0.0;
   }
 
@@ -191,7 +190,7 @@ private:
 
   /** Zeroth order spline. */
   inline void Evaluate( const Dispatch< 0 > &, const double & u,
-    WeightArrayType & weights ) const
+    double * weights ) const
   {
     if( u < 0.5 ) { weights[ 0 ] = 1.0; }
     else { weights[ 0 ] = 0.5; }
@@ -200,7 +199,7 @@ private:
 
   /** First order spline */
   inline void Evaluate( const Dispatch< 1 > &, const double & u,
-    WeightArrayType & weights ) const
+    double * weights ) const
   {
     weights[ 0 ] = 1.0 - u;
     weights[ 1 ] = u;
@@ -209,9 +208,9 @@ private:
 
   /** Second order spline. */
   inline void Evaluate( const Dispatch< 2 > &, const double & u,
-    WeightArrayType & weights ) const
+    double * weights ) const
   {
-    const double uu = vnl_math_sqr( u );
+    const double uu = u * u;
 
     weights[ 0 ] = ( 9.0 - 12.0 * u + 4.0 * uu ) / 8.0;
     weights[ 1 ] = -0.25 + 2.0 * u - uu;
@@ -221,24 +220,25 @@ private:
 
   /**  Third order spline. */
   inline void Evaluate( const Dispatch< 3 > &, const double & u,
-    WeightArrayType & weights ) const
+    double * weights ) const
   {
-    const double uu  = vnl_math_sqr( u );
+    const double uu  = u * u;
     const double uuu = uu * u;
 
-    weights[ 0 ] = ( 8.0 - 12 * u + 6.0 * uu - uuu ) / 6.0;
-    weights[ 1 ] = ( -5.0 + 21.0 * u - 15.0 * uu + 3.0 * uuu ) / 6.0;
-    weights[ 2 ] = ( 4.0 - 12.0 * u + 12.0 * uu - 3.0 * uuu ) / 6.0;
-    weights[ 3 ] = ( -1.0 + 3.0 * u - 3.0 * uu + uuu ) / 6.0;
+    // Use (numerically) slightly less accurate multiplication with 1/6
+    // instead of division by 6 to substantially improve speed.
+    static const double onesixth = 1.0 / 6.0;
+    weights[ 0 ] = ( 8.0 - 12 * u + 6.0 * uu - uuu ) * onesixth;
+    weights[ 1 ] = ( -5.0 + 21.0 * u - 15.0 * uu + 3.0 * uuu ) * onesixth;
+    weights[ 2 ] = ( 4.0 - 12.0 * u + 12.0 * uu - 3.0 * uuu ) * onesixth;
+    weights[ 3 ] = ( -1.0 + 3.0 * u - 3.0 * uu + uuu ) * onesixth;
   }
 
 
   /** Unimplemented spline order. */
-  inline double Evaluate( const DispatchBase &, const double &,
-    WeightArrayType & ) const
+  inline double Evaluate( const DispatchBase &, const double &, double * ) const
   {
-    itkExceptionMacro( << "Evaluate not implemented for spline order "
-                       << SplineOrder );
+    itkExceptionMacro( << "Evaluate not implemented for spline order " << SplineOrder );
     return 0.0;
   }
 
