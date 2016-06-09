@@ -435,6 +435,8 @@ set_tests_properties( InvertTransformTest_COMPARE_TP
 # Add tests that run specific registration components
 elx_add_test( AdvancedBSplineDeformableTransformTest "" "Common"
   ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt )
+elx_add_test( AdvancedRecursiveBSplineTransformTest "" "Common"
+  ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTestSml.txt ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTestSmlP.txt)
 elx_add_test( AdvancedLinearInterpolatorTest "" "Common" )
 elx_add_test( BSplineDerivativeKernelFunctionTest "" "Common" )
 elx_add_test( BSplineSODerivativeKernelFunctionTest "" "Common" )
@@ -905,6 +907,13 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads4
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
   -threads 4 )
+
+elx_add_run_test( 3DCT_lung.NC.bspline_r.ASGD.001a
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline_r.ASGD.001a.txt )
 
 
 ### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES

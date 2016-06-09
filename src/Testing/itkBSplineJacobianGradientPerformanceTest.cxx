@@ -15,10 +15,13 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkAdvancedBSplineDeformableTransform.h"
+
+#include "itkAdvancedBSplineDeformableTransform.h" // original elastix
+#include "itkRecursiveBSplineTransform.h"          // recursive version
 
 // Report timings
 #include "itkTimeProbe.h"
+#include "itkTimeProbesCollectorBase.h"
 
 #include <fstream>
 #include <iomanip>
@@ -57,6 +60,8 @@ main( int argc, char * argv[] )
   /** Typedefs. */
   typedef itk::AdvancedBSplineDeformableTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
+  typedef itk::RecursiveBSplineTransform<
+    CoordinateRepresentationType, Dimension, SplineOrder >    RecursiveTransformType;
 
   typedef TransformType::NumberOfParametersType     NumberOfParametersType;
   typedef TransformType::InputPointType             InputPointType;
@@ -76,7 +81,8 @@ main( int argc, char * argv[] )
   typedef InputImageType::DirectionType DirectionType;
 
   /** Create the transform. */
-  TransformType::Pointer transform = TransformType::New();
+  TransformType::Pointer          transform          = TransformType::New();
+  RecursiveTransformType::Pointer recursiveTransform = RecursiveTransformType::New();
 
   /** Setup the B-spline transform:
    * (GridSize 44 43 35)
@@ -107,6 +113,11 @@ main( int argc, char * argv[] )
   transform->SetGridRegion( gridRegion );
   transform->SetGridDirection( gridDirection );
 
+  recursiveTransform->SetGridOrigin( gridOrigin );
+  recursiveTransform->SetGridSpacing( gridSpacing );
+  recursiveTransform->SetGridRegion( gridRegion );
+  recursiveTransform->SetGridDirection( gridDirection );
+
   /** Now read the parameters as defined in the file par.txt. */
   ParametersType parameters( transform->GetNumberOfParameters() );
   std::ifstream  input( argv[ 1 ] );
@@ -124,6 +135,7 @@ main( int argc, char * argv[] )
     return 1;
   }
   transform->SetParameters( parameters );
+  recursiveTransform->SetParameters( parameters );
 
   /** Declare variables. */
   InputPointType          inputPoint; inputPoint.Fill( 4.1 );
@@ -133,12 +145,13 @@ main( int argc, char * argv[] )
   JacobianType                 jacobian( Dimension, nnzji );
   DerivativeType               imageJacobian_old( nnzji );
   DerivativeType               imageJacobian_new( nnzji );
+  DerivativeType               imageJacobian_recursive( nnzji );
   NonZeroJacobianIndicesType   nzji( nnzji );
-  itk::TimeProbe               timeProbeOLD, timeProbeNEW;
+  itk::TimeProbesCollectorBase timeCollector;
   double                       sum = 0.0;
 
-  /** Time the old way. */
-  timeProbeOLD.Start();
+  /** Time the plain old way. */
+  timeCollector.Start( "JacobianGradient plain old" );
   for( unsigned int i = 0; i < N; ++i )
   {
     /** Get the TransformJacobian dT/dmu. */
@@ -159,11 +172,10 @@ main( int argc, char * argv[] )
 
     sum += imageJacobian_old( 0 ); // just to avoid compiler to optimize away
   }
-  timeProbeOLD.Stop();
-  const double oldTime = timeProbeOLD.GetMean();
+  timeCollector.Stop( "JacobianGradient plain old" );
 
-  /** Time the new way. */
-  timeProbeNEW.Start();
+  /** Time the plain new way. */
+  timeCollector.Start( "JacobianGradient plain new" );
   for( unsigned int i = 0; i < N; ++i )
   {
     /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
@@ -173,19 +185,74 @@ main( int argc, char * argv[] )
 
     sum += imageJacobian_new( 0 ); // just to avoid compiler to optimize away
   }
-  timeProbeNEW.Stop();
-  const double newTime = timeProbeNEW.GetMean();
+  timeCollector.Stop( "JacobianGradient plain new" );
+
+  /** Time the recursive old way. */
+  timeCollector.Start( "JacobianGradient recursive old" );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
+    recursiveTransform->GetJacobian( inputPoint, jacobian, nzji );
+
+    /** Compute the inner products (dM/dx)^T (dT/dmu). */
+    const unsigned int numberOfParametersPerDimension = nnzji / Dimension;
+    unsigned int       counter                        = 0;
+    for( unsigned int dim = 0; dim < Dimension; ++dim )
+    {
+      const double imDeriv = movingImageGradient[ dim ];
+      for( unsigned int mu = 0; mu < numberOfParametersPerDimension; ++mu )
+      {
+        imageJacobian_old( counter ) = jacobian( dim, counter ) * imDeriv;
+        ++counter;
+      }
+    }
+
+    sum += imageJacobian_old( 0 ); // just to avoid compiler to optimize away
+  }
+  timeCollector.Stop( "JacobianGradient recursive old" );
+
+  /** Time the recursive new way. */
+  timeCollector.Start( "JacobianGradient recursive new" );
+  for( unsigned int i = 0; i < N; ++i )
+  {
+    /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
+    recursiveTransform->EvaluateJacobianWithImageGradientProduct(
+      inputPoint, movingImageGradient,
+      imageJacobian_new, nzji );
+
+    sum += imageJacobian_new( 0 ); // just to avoid compiler to optimize away
+  }
+  timeCollector.Stop( "JacobianGradient recursive new" );
 
   /** Report timings. */
-  std::cerr << std::setprecision( 4 );
-  std::cerr << "Time OLD = " << oldTime << " " << timeProbeOLD.GetUnit() << std::endl;
-  std::cerr << "Time NEW = " << newTime << " " << timeProbeNEW.GetUnit() << std::endl;
-  std::cerr << "Speedup factor = " << oldTime / newTime << std::endl;
+  timeCollector.Report();
 
   // Avoid compiler optimizations, so use sum
   std::cerr << sum << std::endl; // works but ugly on screen
 
+  /**
+   *
+   * Test accuracy
+   *
+   */
+
+  transform->EvaluateJacobianWithImageGradientProduct(
+    inputPoint, movingImageGradient,
+    imageJacobian_old, nzji );
+
+  recursiveTransform->EvaluateJacobianWithImageGradientProduct(
+    inputPoint, movingImageGradient,
+    imageJacobian_new, nzji );
+
+  double diffNorm = ( imageJacobian_old - imageJacobian_new ).magnitude();
+  std::cerr << "Recursive B-spline MSD with previous: " << diffNorm << std::endl;
+  if( diffNorm > 1e-5 )
+  {
+    std::cerr << "ERROR: Recursive B-spline EvaluateJacobianWithImageGradientProduct() returning incorrect result." << std::endl;
+    return EXIT_FAILURE;
+  }
+
   /** Return a value. */
-  return 0;
+  return EXIT_SUCCESS;
 
 } // end main
