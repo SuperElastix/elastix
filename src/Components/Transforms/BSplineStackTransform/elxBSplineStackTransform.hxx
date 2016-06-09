@@ -513,7 +513,6 @@ void
 BSplineStackTransform< TElastix >
 ::ReadFromFile( void )
 {
-
   /** Read spline order settings and initialize BSplineTransform. */
   m_SplineOrder = 3;
   this->GetConfiguration()->ReadParameter( m_SplineOrder,
