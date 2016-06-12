@@ -1,0 +1,83 @@
+// ********** Image Types
+
+(FixedInternalImagePixelType "float")
+(FixedImageDimension 3)
+(MovingInternalImagePixelType "float")
+(MovingImageDimension 3)
+
+
+// ********** Components
+
+(Registration "MultiResolutionRegistration")
+(FixedImagePyramid "FixedRecursiveImagePyramid")
+(MovingImagePyramid "MovingRecursiveImagePyramid")
+(Interpolator "BSplineInterpolator")
+(Metric "AdvancedNormalizedCorrelation")
+(Optimizer "AdaptiveStochasticGradientDescent")
+(ResampleInterpolator "FinalBSplineInterpolator")
+(Resampler "DefaultResampler")
+(Transform "RecursiveBSplineTransform")
+
+
+// ********** Pyramid
+
+// Total number of resolutions
+(NumberOfResolutions 3)
+(ImagePyramidSchedule 4 4 4 2 2 2 1 1 1)
+
+
+// ********** Transform
+
+(FinalGridSpacingInPhysicalUnits 10.0 10.0 10.0)
+(GridSpacingSchedule 4.0 2.0 1.0)
+(HowToCombineTransforms "Compose")
+
+
+// ********** Optimizer
+
+// Maximum number of iterations in each resolution level:
+(MaximumNumberOfIterations 100)
+
+(AutomaticParameterEstimation "true")
+(UseAdaptiveStepSizes "true")
+
+
+// ********** Metric
+
+// Just using the default values for the NC metric
+
+
+// ********** Several
+
+(WriteTransformParametersEachIteration "false")
+(WriteTransformParametersEachResolution "true")
+(WriteResultImageAfterEachResolution "false")
+(WritePyramidImagesAfterEachResolution "false")
+(WriteResultImage "true")
+(ShowExactMetricValue "false")
+(ErodeMask "false")
+(UseDirectionCosines "true")
+
+
+// ********** ImageSampler
+
+//Number of spatial samples used to compute the mutual information in each resolution level:
+(ImageSampler "RandomCoordinate")
+(NumberOfSpatialSamples 2000)
+(NewSamplesEveryIteration "true")
+(UseRandomSampleRegion "false")
+//(SampleRegionSize 50.0 50.0 50.0)
+(MaximumNumberOfSamplingAttempts 5)
+
+
+// ********** Interpolator and Resampler
+
+//Order of B-Spline interpolation used in each resolution level:
+(BSplineInterpolationOrder 1)
+
+//Order of B-Spline interpolation used for applying the final deformation:
+(FinalBSplineInterpolationOrder 3)
+
+//Default pixel value for pixels that come from outside the picture:
+(DefaultPixelValue 0)
+

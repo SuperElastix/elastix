@@ -1,0 +1,144 @@
+#
+# ############## COMMON #####################
+#
+
+/**
+ \defgroup Common Common
+
+Common contains different types of common functionality.
+*/
+
+/**
+\defgroup ANNwrap ANNwrap
+\ingroup Common
+Classes that serve as a wrap around the ANN library.
+*/
+
+/**
+\defgroup Miscellaneous Miscellaneous
+\ingroup Common
+The Miscellaneous contains everything else.
+*/
+
+/**
+\defgroup ParameterFileParser ParameterFileParser
+\ingroup Common
+The ParameterFileParser contains functionality to communicate options and parameter values to elastix.
+*/
+
+/**
+\defgroup Timer Timer
+\ingroup Common
+Timer contains functionality to time (parts of) the registration.
+*/
+
+/**
+\defgroup xout xout
+\ingroup Common
+xout contains functionality to print all output of the program to whatever.
+*/
+
+
+#
+# ############## COMPONENTS #####################
+#
+
+/**
+ \defgroup Components Components
+
+Components contains the different registration components.
+*/
+
+/**
+\defgroup ImageSamplers ImageSamplers
+\ingroup Components
+ImageSamplers determine how the fixed image is sampled during the registration process. Examples are Random or Full (all voxels).
+*/
+
+/**
+\defgroup Interpolators Interpolators
+\ingroup Components
+Interpolators are used to interpolate intensities of images and deformations of transforms.
+*/
+
+/**
+\defgroup Metrics Metrics
+\ingroup Components
+Metrics are the similarity measures that a registration algorithm tries to optimize.
+*/
+
+/**
+\defgroup Optimizers Optimizers
+\ingroup Components
+Optimizers are used in the registration framework to find the best similarity between images, i.e., to optimize some similarity measure.
+*/
+
+/**
+\defgroup Registrations Registrations
+\ingroup Components
+Registrations are classes that combine all components of a registration framework, such as fixed and moving images, the metric, transform, optimizer, etc.
+*/
+
+/**
+\defgroup ResampleInterpolators ResampleInterpolators
+\ingroup Components
+ResampleInterpolators are used to interpolate the intensity of an image when resampling it.
+*/
+
+/**
+\defgroup Resamplers Resamplers
+\ingroup Components
+Resamplers are used to calculate a new deformed image from a tranform and an input image.
+*/
+
+/**
+\defgroup Transforms Transforms
+\ingroup Components
+Transforms model the underlying deformation field during registration.
+*/
+
+/**
+\defgroup ImagePyramids ImagePyramids
+\ingroup Components
+ImagePyramids are used in a multiresolution framework in order to avoid local minima and increase the capture range of a registration.
+*/
+
+#
+# ############## CORE #####################
+#
+
+/**
+ \defgroup Core Core
+
+This group contains the elastix core.
+*/
+
+/**
+\defgroup ComponentBaseClasses Component Base Classes
+\ingroup Core
+ComponentBaseClasses are base classes for the different components. For example: the TransformBase class contains common functionality that all Transform types need.
+*/
+
+/**
+\defgroup Configuration Configuration
+\ingroup Core
+The Configuration classes make it possible to conveniently and easily choose a registration, which consists of a combination of interpolator, transform, metric, etc.
+*/
+
+/**
+\defgroup Install Install
+\ingroup Core
+The Install group contains functionality to install and use the different libraries.
+*/
+
+/**
+\defgroup Kernel Kernel
+\ingroup Core
+Kernel contains the basic registration layout.
+*/
+
+/**
+\defgroup Main Main
+\ingroup Core
+Main contains the main elastix and transformix program.
+*/

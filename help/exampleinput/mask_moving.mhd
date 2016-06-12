@@ -1,0 +1,7 @@
+ObjectType = Image
+NDims = 2
+BinaryData = True
+BinaryDataByteOrderMSB = False
+DimSize = 256 256
+ElementType = MET_CHAR
+ElementDataFile = mask_moving.raw

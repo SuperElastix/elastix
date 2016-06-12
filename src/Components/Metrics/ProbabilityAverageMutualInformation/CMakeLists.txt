@@ -1,0 +1,9 @@
+ADD_ELXCOMPONENT( ProbabilityAverageMutualInformationMetric
+  elxProbabilityAverageMutualInformationMetric.h
+  elxProbabilityAverageMutualInformationMetric.hxx
+  elxProbabilityAverageMutualInformationMetric.cxx
+  itkProbabilityAverageMutualInformationMetric.h
+  itkProbabilityAverageMutualInformationMetric.hxx 
+  itkPAverageMutualInformationMetric.h
+  itkPAverageMutualInformationMetric.hxx
+)

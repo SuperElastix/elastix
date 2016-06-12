@@ -1,0 +1,28 @@
+(Transform "AffineTransform")
+(NumberOfParameters 6)
+(TransformParameters 1.1 0.1 0.0 0.9 20.0 0.0)
+(InitialTransformParametersFileName "NoInitialTransform")
+(HowToCombineTransforms "Compose")
+
+// Image specific
+(FixedImageDimension 2)
+(MovingImageDimension 2)
+(FixedInternalImagePixelType "float")
+(MovingInternalImagePixelType "float")
+(Size 256 256)
+(Index 0 0)
+(Spacing 1.0000000000 1.0000000000)
+(Origin 0.0000000000 0.0000000000)
+
+// AffineTransform specific
+(CenterOfRotationPoint 128.0000000000 128.0000000000)
+
+// ResampleInterpolator specific
+(ResampleInterpolator "FinalBSplineInterpolator")
+(FinalBSplineInterpolationOrder 3)
+
+// Resampler specific
+(Resampler "DefaultResampler")
+(DefaultPixelValue 0.000000)
+(ResultImageFormat "mhd")
+(ResultImagePixelType "short")

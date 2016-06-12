@@ -1,0 +1,12 @@
+
+ADD_ELXCOMPONENT( BSplineTransformWithDiffusion OFF
+ elxBSplineTransformWithDiffusion.h
+ elxBSplineTransformWithDiffusion.hxx
+ elxBSplineTransformWithDiffusion.cxx
+ itkDeformationFieldRegulizer.h
+ itkDeformationFieldRegulizer.hxx
+ itkDeformationVectorFieldTransform.h
+ itkDeformationVectorFieldTransform.hxx
+ itkVectorMeanDiffusionImageFilter.h
+ itkVectorMeanDiffusionImageFilter.hxx )
+

@@ -1,0 +1,27 @@
+
+
+<!-- Starting the user defined footer -->
+
+<br>
+<hr size="1">
+<table width="100%">
+<tr><td>
+<small>Generated on @ELASTIX_DOXYGEN_DATE@ for elastix by <a href="http://www.doxygen.org/index.html"><img src="doxygen.png" alt="doxygen" align="middle" border=0 ></a> @ELASTIX_DOXYGEN_VERSION@ </small></td>
+<td style="text-align:right"><a class="logo2" href="../index.php"><img src="../images/elastixLogo.gif" alt="elastix logo" height="40"></a>
+</td></tr></table>
+
+<!-- Start of Google Analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5189069-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+<!-- End of Google Analytics -->
+
+</body>
+</html>
+

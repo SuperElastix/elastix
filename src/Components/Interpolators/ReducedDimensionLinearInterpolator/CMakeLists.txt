@@ -1,0 +1,6 @@
+
+ADD_ELXCOMPONENT( ReducedDimensionLinearInterpolator OFF
+ elxReducedDimensionLinearInterpolator.h
+ elxReducedDimensionLinearInterpolator.hxx
+ elxReducedDimensionLinearInterpolator.cxx )
+

@@ -1,0 +1,5 @@
+ADD_ELXCOMPONENT( ReducedDimensionBSplineInterpolator
+ elxReducedDimensionBSplineInterpolator.h
+ elxReducedDimensionBSplineInterpolator.hxx
+ elxReducedDimensionBSplineInterpolator.cxx )
+

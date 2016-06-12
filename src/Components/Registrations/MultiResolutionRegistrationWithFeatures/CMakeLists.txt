@@ -1,0 +1,10 @@
+
+ADD_ELXCOMPONENT( MultiResolutionRegistrationWithFeatures
+ elxMultiResolutionRegistrationWithFeatures.h
+ elxMultiResolutionRegistrationWithFeatures.hxx
+ elxMultiResolutionRegistrationWithFeatures.cxx
+ itkMultiInputMultiResolutionImageRegistrationMethodBase.h
+ itkMultiInputMultiResolutionImageRegistrationMethodBase.hxx
+ itkMultiResolutionImageRegistrationMethodWithFeatures.h
+ itkMultiResolutionImageRegistrationMethodWithFeatures.hxx )
+

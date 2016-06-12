@@ -1,0 +1,520 @@
+\documentclass[]{article}
+
+% Define page
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+
+% Include packages for text modification
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{bm}
+
+% Include packages for citing
+\usepackage[noadjust]{cite}
+
+% Include packages for graphics
+\usepackage{graphicx,psfrag}
+\usepackage{subfigure}
+
+% Include packages for tables
+\usepackage{array,multirow}
+\usepackage{ctable}
+
+% Define new commands
+\newcommand{\etal}{\emph{et al.}}
+\newcommand{\vT}{\bm{T}}
+\newcommand{\vmu}{\bm{\mu}}
+\newcommand{\vTmu}{\bm{T_{\mu}}}
+\newcommand{\vTx}[1][]{\bm{T}_{#1}(\bm{x})}
+\newcommand{\vTy}[1][]{\bm{T}_{#1}(\bm{y})}
+\newcommand{\vx}[1][]{\bm{x}_{#1}}
+\newcommand{\vxt}[1][]{\bm{\widetilde x}_{#1}}
+\newcommand{\vy}[1][]{\bm{y}_{#1}}
+\newcommand{\D}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\Dd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
+\newcommand{\elastix}{\texttt{elastix}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{Spatial derivatives and penalty terms in ITK and \elastix}
+
+\author{Marius Staring and Stefan Klein}
+\date{}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% main text
+
+\section{Introduction}
+
+Image registration is the process of aligning images, and can be
+defined as an optimisation problem:
+\begin{align}
+\hat \vmu &= \arg \min_{\vmu} \mathcal{C}(I_F, I_M;
+\vmu),\label{eq:reg}
+\end{align}
+with $I_F$ and $I_M$ the $d$-dimensional fixed and moving image,
+respectively, and $\vmu$ the vector of parameters of size $N$ that
+model the transformation $\vT$. The cost function $\mathcal{C}$
+consists of a similarity measure $\mathcal{S}(I_F, I_M; \vmu)$ that
+defines the quality of alignment. Examples are the mean square
+difference, normalised correlation, and mutual information measure.
+In order to regularise the transformation $\vT_{\vmu}$ often a
+penalty term $\mathcal{P}(\vmu)$ is added to the cost function, so
+it becomes:
+\begin{align}
+\mathcal{C} &= \alpha_1 \mathcal{S} + \alpha_2 \mathcal{P},
+\end{align}
+where $\alpha_1, \alpha_2$ user-defined constants that weigh
+similarity against regularity.
+
+Penalty term are often based on the first or second order spatial
+derivatives of the transformation. For example the bending energy of
+the transformation, which is arguably the most common penalty term,
+is defined in 2D as:
+\begin{align}
+\mathcal{P}_{\mathrm{BE}}(\vmu) &= \frac{1}{P} \sum_{\vxt[i]}
+\left\| \frac{\partial^2 \vT}{\partial \vx \partial \vx^T}(\vxt[i])
+\right\|_F^2 \\
+&= \frac{1}{P} \sum_{\vxt[i]} \sum_{j = 1}^2 \left( \frac{\partial^2
+T_j}{\partial x_1^2}(\vxt[i]) \right)^2  + 2 \left( \frac{\partial^2
+T_j}{\partial x_1 \partial x_2}(\vxt[i]) \right)^2 + \left(
+\frac{\partial^2 T_j}{\partial x_2^2}(\vxt[i]) \right)^2,
+\end{align}
+where $P$ is the number of points $\vxt[i]$, and the tilde denotes
+the difference between a variable and a given point over which a
+term is evaluated.
+
+The optimisation problem (\ref{eq:reg}) is frequently solved using
+an iterative gradient descent routine:
+\begin{align}
+\vmu_{k+1} &= \vmu_k - a_k \frac{\partial \mathcal{C}}{\partial
+\vmu} = \vmu_k - a_k \left( \alpha_1 \frac{\partial
+\mathcal{S}}{\partial \vmu} + \alpha_2 \frac{\partial
+\mathcal{P}}{\partial \vmu} \right),\label{eq:opt}
+\end{align}
+with $a_k$ a user-defined declining function that defines the step
+size.
+
+The derivative of the similarity measure usually involves
+computation of the spatial derivative of the moving image:
+$\D{I_M}{\vx}$, and the derivative of the transformation to its
+parameters: $\D{\vT}{\vmu}$. In the ITK the last derivative is
+implemented using $\texttt{transform->GetJacobian()}$, i.e. the
+derivative to the transformation parameters $\vmu$ is referred to as
+`Jacobian'.
+
+Penalty terms usually consist of the first and second order
+\emph{spatial} derivatives of the transformation, i.e.
+$\D{\vT}{\vx}$ and $\Dd{\vT}{\vx}{\vx^T}$. We will refer to these
+derivatives as the `SpatialJacobian' and the `SpatialHessian' to
+clearly distinguish between these derivatives and the `Jacobian'. In
+order to apply the gradient descent optimisation routine
+(\ref{eq:opt}), we additionally need the derivatives $\D{}{\vmu}
+\D{\vT}{\vx}$ and $\D{}{\vmu} \Dd{\vT}{\vx}{\vx^T}$. These we call
+the `JacobianOfSpatialJacobian' and `JacobianOfSpatialHessian',
+respectively. See Table \ref{tab:notation} for details.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llll}
+\toprule \toprule
+Name & definition & matrix size & written out in 2D \\
+\midrule Transformation & $\vT = \vT_{\vmu}(\widetilde \vx)$ & $d
+\times 1$ & $\begin{bmatrix} T_1(\vx) \\ T_2(\vx) \end{bmatrix}$ \\[3ex]
+Jacobian & $\frac{\partial \vT_{\vmu}}{\partial \vmu}(\widetilde
+\vx)$ & $d \times N$ & $\begin{bmatrix}
+  \frac{\partial T_1}{\partial \mu_1}(\widetilde \vx) & \cdots & \frac{\partial T_1}{\partial \mu_N}(\widetilde \vx) \\
+  \frac{\partial T_2}{\partial \mu_1}(\widetilde \vx) & \cdots & \frac{\partial T_2}{\partial \mu_N}(\widetilde \vx) \\
+\end{bmatrix}$ \\[3ex]
+SpatialJacobian & $\frac{\partial \vT_{\vmu}}{\partial
+\vx}(\widetilde \vx)$ & $d \times d$ & $\begin{bmatrix}
+  \frac{\partial T_1}{\partial x_1}(\widetilde \vx) \frac{\partial T_1}{\partial x_2}(\widetilde \vx) \\
+  \frac{\partial T_2}{\partial x_1}(\widetilde \vx) \frac{\partial T_2}{\partial x_2}(\widetilde \vx) \\
+\end{bmatrix}$ \\[3ex]
+JacobianOfSpatialJacobian & $\frac{\partial}{\partial \vmu}
+\frac{\partial \vT_{\vmu}}{\partial \vx}(\widetilde \vx)$ & $d
+\times d \times N$ & $\begin{bmatrix}
+  \frac{\partial}{\partial \mu_1} \frac{\partial \vT_{\vmu}}{\partial
+\vx}(\widetilde \vx) & \cdots & \frac{\partial}{\partial \mu_N}
+\frac{\partial \vT_{\vmu}}{\partial \vx}(\widetilde \vx)
+\end{bmatrix}$ \\[3ex]
+SpatialHessian & $\frac{\partial^2 \vT_{\vmu}}{\partial \vx
+\partial \vx^T}$ & $d \times d \times d$ & $\left\{ \begin{bmatrix}
+  \frac{\partial^2 T_1}{\partial x_1 \partial x_1}(\widetilde \vx) \frac{\partial^2 T_1}{\partial x_2 \partial x_1}(\widetilde \vx) \\
+  \frac{\partial^2 T_1}{\partial x_2 \partial x_1}(\widetilde \vx) \frac{\partial^2 T_1}{\partial x_2 \partial x_2}(\widetilde \vx) \\
+\end{bmatrix}, \begin{bmatrix}
+  \frac{\partial^2 T_2}{\partial x_1 \partial x_1}(\widetilde \vx) \frac{\partial^2 T_2}{\partial x_2 \partial x_1}(\widetilde \vx) \\
+  \frac{\partial^2 T_2}{\partial x_2 \partial x_1}(\widetilde \vx) \frac{\partial^2 T_2}{\partial x_2 \partial x_2}(\widetilde \vx) \\
+\end{bmatrix} \right\}$ \\[3ex]
+JacobianOfSpatialHessian & $\frac{\partial}{\partial \vmu}
+\frac{\partial^2 \vT_{\vmu}}{\partial \vx \partial \vx^T}$ & $d
+\times d \times d \times N$ & $\begin{bmatrix}
+  \frac{\partial}{\partial \mu_1} \frac{\partial^2 \vT_{\vmu}}{\partial \vx
+\partial \vx^T} & \cdots & \frac{\partial}{\partial \mu_N} \frac{\partial^2 \vT_{\vmu}}{\partial \vx
+\partial \vx^T}
+\end{bmatrix}$ \\
+\bottomrule \bottomrule
+\end{tabular}
+\caption{Naming conventions and definitions for the transformation
+and its derivatives used in this paper.}\label{tab:notation}
+\end{table}
+
+\section{Support for penalty terms in the ITK}
+
+The derivative of the penalty term is not supported in the ITK. We
+propose to add the following functions in the
+\texttt{itk::Transform} class:
+\begin{quote}
+\begin{verbatim}
+virtual void GetSpatialJacobian(
+  const InputPointType &,
+  SpatialJacobianType & ) const;
+
+virtual void GetSpatialHessian(
+  const InputPointType &,
+  SpatialHessianType & ) const;
+
+virtual void GetJacobianOfSpatialJacobian(
+  const InputPointType &,
+  JacobianOfSpatialJacobianType &,
+  NonZeroJacobianIndicesType & ) const;
+
+virtual void GetJacobianOfSpatialHessian(
+  const InputPointType &,
+  JacobianOfSpatialHessianType &,
+  NonZeroJacobianIndicesType & ) const;
+\end{verbatim}
+\end{quote}
+and additionally a function to implement a sparse version of the
+Jacobian:
+\begin{quote}
+\begin{verbatim}
+virtual void GetJacobian(
+    const InputPointType &,
+    JacobianType &,
+    NonZeroJacobianIndicesType & ) const;
+\end{verbatim}
+\end{quote}
+
+The ITK structures that were used to store the data are given in
+Table \ref{tab:datastructures}. The Jacobian is of size $d \times
+N$, and since the number of transformation parameters is flexible
+for some transformations, the data structure used for storing the
+Jacobian is an \texttt{itk::Array2D} object, which inherits from the
+\texttt{vnl\_matrix}. This was already chosen previously in the ITK.
+The SpatialJacobian is of fixed size $d \times d$, and therefore we
+choose to use the \texttt{itk::Matrix} to store the SpatialJacobian,
+which inherits from the \texttt{vnl\_matrix\_fixed}. For derivatives
+to $\vmu$ we choose to use the \texttt{std::vector}. The
+SpatialHessian gives us some problems, since we really need a 3D
+matrix, but currently no such thing exists in the ITK. Therefore, we
+opt for an \texttt{itk::FixedArray} of \texttt{itk::Matrix}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule \toprule
+Name & ITK structure \\
+\midrule Transformation &  \\
+Jacobian & \texttt{Array2D = vnl\_matrix} \\
+SpatialJacobian & \texttt{Matrix = vnl\_matrix\_fixed} \\
+JacobianOfSpatialJacobian & \texttt{std::vector< Matrix >} \\
+SpatialHessian & \texttt{FixedArray< Matrix >}\footnotemark \\
+JacobianOfSpatialHessian & \texttt{std::vector< FixedArray< Matrix > >} \\
+NonZeroJacobianIndices & \texttt{std::vector< unsigned long >} \\
+\bottomrule \bottomrule
+\end{tabular}
+\caption{The ITK structures that store the
+data.}\label{tab:datastructures}
+\end{table}
+\footnotetext{by lack of a good 3D matrix structure}
+
+From the function definitions above, notice that we chose to pass
+the variables by reference, and as function arguments. The
+\texttt{GetJacobian} in the \texttt{itk::Transform} is defined as:
+\begin{quote}
+\begin{verbatim}
+virtual const JacobianType & GetJacobian( const InputPointType & ) const;
+\end{verbatim}
+\end{quote}
+which returns a reference to the member variable
+\texttt{m\_Jacobian}. It is possible, however, that this member is
+only valid for the input point, namely for transformations with a
+derivative dependent of the spatial position. Therefore, we think
+that it should not be possible to access this parameter at a later
+time, when the input point has possibly changed.
+
+Also notice the \texttt{NonZeroJacobianIndicesType} in the function
+definitions. These are meant for the support of sparse Jacobians,
+JacobianOfSpatialJacobians, etc.
+
+\section{Affine transformation}
+
+For the affine transformation, the derivatives evaluate to the
+following in 2D:
+\begin{align}
+\vTmu(\vxt) &= A \vx + \bm{t} = \begin{bmatrix} a_{11} & a_{12}
+\\ a_{21} & a_{22} \end{bmatrix} \begin{bmatrix} \widetilde x_1 \\
+\widetilde x_2 \end{bmatrix} + \begin{bmatrix} t_1 \\ t_2
+\end{bmatrix} = \begin{bmatrix} \mu_0 & \mu_1
+\\ \mu_2 & \mu_3 \end{bmatrix} \begin{bmatrix} \widetilde x_1 \\
+\widetilde x_2 \end{bmatrix} + \begin{bmatrix} \mu_4 \\ \mu_5
+\end{bmatrix}, \\
+\D{\vT}{\vmu}(\vxt) &= \begin{bmatrix} \widetilde x_1 & \widetilde
+x_2 & 0 & 0 & 1 & 0 \\ 0 & 0 & \widetilde x_1 & \widetilde x_2 & 0 &
+1 \end{bmatrix}, \\
+\D{\vT}{\vx}(\vxt) &= \begin{bmatrix} \mu_0 & \mu_1 \\ \mu_2 & \mu_3 \end{bmatrix}, \\
+\Dd{\vT}{\vx}{\vx^T}(\vxt) &= O_{d \times d \times d}, \\
+\D{}{\vmu} \D{\vT}{\vx}(\vxt) &= \left\{ \begin{bmatrix} 1 & 0 \\
+0 & 0 \end{bmatrix}, \begin{bmatrix} 0 & 1 \\ 0 & 0
+\end{bmatrix}, \begin{bmatrix} 0 & 0 \\ 1 & 0
+\end{bmatrix}, \begin{bmatrix} 0 & 0 \\ 0 & 1
+\end{bmatrix} \right\}, \\
+\D{}{\vmu} \Dd{\vT}{\vx}{\vx^T}(\vxt) &= O_{d \times d \times d
+\times N},
+\end{align}
+where $O_s$ is a zero matrix of size $s$.
+
+%centre of rotation!!!
+
+The \texttt{GetJacobianOfSpatialJacobian()} returns
+\texttt{nonZeroJacobianIndices} = $[ 0, 1, 2, 3 ]$.
+
+%For the SpatialHessian and the JacobianOfSpatialHessian we choose to
+%not return matrices filled with zeros, but instead zero sized
+%matrices. The implementation of the penalty term is assumed to check
+%for the size. In case of an affine transform the size is zero, and
+%the penalty term can simply return zero. This is a performance
+%benefit compared to walking over the zero matrix, and adding and
+%multiplying everything, which in the end also gives zero.
+
+These derivatives are implemented in the
+\texttt{itk::AdvancedMatrixOffsetTransformBase} class.
+
+\section{B-spline transformation}
+
+A transformation parameterised by third order B-splines can be
+written in 2D as follows:
+\begin{align}
+\vTmu(\vxt) &= \begin{bmatrix} T_1(\vxt;\vmu) \\ T_2(\vxt;\vmu)
+\end{bmatrix} = \begin{bmatrix} \widetilde{x}_1 \\ \widetilde{x}_2 \end{bmatrix}
+ + \begin{bmatrix} \sum_{i} \mu_i \beta^3 \left(
+\frac{ \widetilde{x}_1 - x_{1}^i}{\sigma_1} \right)
+\beta^3 \left( \frac{\widetilde{x}_2 - x_{2}^i}{\sigma_2}\right) \\
+ \sum_{i} \mu_{i+16} \beta^3 \left( \frac{ \widetilde{x}_1 - x_{1}^i}
+ {\sigma_1} \right) \beta^3 \left( \frac{\widetilde{x}_2 - x_{2}^i}{\sigma_2} \right)
+\end{bmatrix},
+\end{align}
+with $\vx^i$ the control points within the support of the B-spline
+basis functions $\beta^3(\cdot)$, and $\sigma$ the B-spline grid
+spacing. Here, we labelled the $x$-direction of the control points
+with $\mu_0, \ldots, \mu_{15}$ and the $y$-direction with $\mu_{16},
+\ldots, \mu_{31}$. (Since the support of a cubic B-spline is $4^d =
+16$.)
+
+For short notation, define:
+\begin{align}
+b_{33}^{i} &= \beta^3\left( (\widetilde{x}_1 - x_{1}^i) / \sigma_1
+\right) \cdot \beta^3 \left( (\widetilde{x}_2 - x_{2}^i) / \sigma_2
+\right), \\
+b_{23}^{i} &= \left[ \beta^2 \left( (\widetilde{x}_1 -
+x_{1}^i)/\sigma_1 + \tfrac{1}{2} \right) - \beta^2 \left(
+(\widetilde{x}_1 - x_{1}^i)/\sigma_1 - \tfrac{1}{2} \right) \right]
+\cdot \beta^3 \left( (\widetilde{x}_2 - x_{2}^i)/\sigma_2 \right) /
+\sigma_1, \\
+b_{32}^{i} &= \beta^3 \left( (\widetilde{x}_1 - x_{1}^i)/\sigma_1
+\right) \cdot \left[ \beta^2 \left( (\widetilde{x}_2 -
+x_{2}^i)/\sigma_2 + \tfrac{1}{2} \right) - \beta^2 \left( (
+\widetilde{x}_2 - x_{2}^i)/\sigma_2 - \tfrac{1}{2} \right) \right] /
+\sigma_2, \\
+\begin{split}
+b_{22}^{i} &= \left[ \beta^2 \left( ( \widetilde{x}_1 -
+x_{1}^i)/\sigma_1 + \tfrac{1}{2} \right) - \beta^2 \left( (
+\widetilde{x}_1 - x_{1}^i)/\sigma_1 - \tfrac{1}{2} \right) \right] \\
+& \qquad \qquad \cdot \left[ \beta^2 \left( ( \widetilde{x}_2 -
+x_{2}^i)/\sigma_2 + \tfrac{1}{2} \right) - \beta^2 \left( (
+\widetilde{x}_2 - x_{2}^i)/\sigma_2 - \tfrac{1}{2} \right) \right] /
+(\sigma_1 \sigma_2),
+\end{split} \\
+b_{13}^{i} &= \left[ \beta^1 \left( (\widetilde{x}_1 -
+x_{1}^i)/\sigma_1 + 1 \right) - 2 \beta^1 \left( ( \widetilde{x}_1 -
+x_{1}^i)/\sigma_1 \right) + \beta^1 \left( (\widetilde{x}_1 -
+x_{1}^i)/\sigma_1 - 1 \right) \right] \cdot \beta^3 \left(
+(\widetilde{x}_2 - x_{2}^i)/\sigma_2 \right) / \sigma_1^2, \\
+b_{31}^{i} &= \beta^3 \left( (\widetilde{x}_1 - x_{1}^i)/\sigma_1
+\right) \cdot \left[ \beta^1 \left( (\widetilde{x}_2 -
+x_{2}^i)/\sigma_2 + 1 \right) - 2 \beta^1 \left( ( \widetilde{x}_2 -
+x_{2}^i)/\sigma_2 \right) + \beta^1 \left( (\widetilde{x}_2 -
+x_{2}^i)/\sigma_2 - 1 \right) \right] / \sigma_2^2.
+\end{align}
+From these equations we derive:
+\begin{align}
+\D{\vT}{\vmu}(\vxt) &= \begin{bmatrix} b_{33}^{0} & \cdots &
+b_{33}^{15} & 0 & \cdots & 0 \\ 0 & \cdots & 0 & b_{33}^{0} &
+\cdots & b_{33}^{15} \end{bmatrix}, \\
+\D{\vT}{\vx}(\vxt) &= \begin{bmatrix} 1 + \sum_i \mu_i b_{23}^i &
+\sum_i \mu_i b_{32}^i \\ \sum_i \mu_{i+16} b_{23}^{i} & 1 + \sum_i
+\mu_{i+16} b_{32}^{i} \end{bmatrix}, \\
+\Dd{\vT}{\vx}{\vx^T}(\vxt) &= \left\{ \begin{bmatrix} \sum_i \mu_i
+b_{13}^i & \sum_i \mu_i b_{22}^i \\ \sum_i \mu_{i} b_{22}^{i} &
+\sum_i \mu_{i} b_{31}^{i} \end{bmatrix}, \begin{bmatrix} \sum_i
+\mu_{i+16} b_{13}^{i} & \sum_i \mu_{i+16} b_{22}^{i} \\ \sum_i
+\mu_{i+16} b_{22}^{i} & \sum_i \mu_{i+16} b_{31}^{i}
+\end{bmatrix} \right\} \\
+\D{}{\vmu} \D{\vT}{\vx}(\vxt) &= \left\{ \begin{bmatrix} b_{23}^{0}
+& b_{32}^{0} \\ 0 & 0 \end{bmatrix}, \cdots, \begin{bmatrix}
+b_{23}^{15} & b_{32}^{15} \\ 0 & 0 \end{bmatrix}, \begin{bmatrix} 0
+& 0 \\ b_{23}^{0} & b_{32}^{0} \end{bmatrix}, \cdots,
+\begin{bmatrix} 0 & 0 \\ b_{23}^{15} & b_{32}^{15} \end{bmatrix} \right\}
+\\
+\D{}{\vmu} \Dd{\vT}{\vx}{\vx^T}(\vxt) &= \left\{ \left\{
+\begin{bmatrix} b_{13}^0 & b_{22}^0 \\ b_{22}^0 & b_{31}^0 \end{bmatrix},
+O_{d \times d} \right\}, \cdots, \left\{ \begin{bmatrix} b_{13}^{15}
+& b_{22}^{15} \\ b_{22}^{15} & b_{31}^{15} \end{bmatrix}, O_{d
+\times d} \right\}, \right. \\
+& \qquad \left. \left\{ O_{d \times d},
+\begin{bmatrix} b_{13}^{0} & b_{22}^{0} \\ b_{22}^{0} &
+b_{31}^{0} \end{bmatrix} \right\}, \cdots, \left\{ O_{d \times d},
+\begin{bmatrix} b_{13}^{15} & b_{22}^{15} \\ b_{22}^{15} &
+b_{31}^{15} \end{bmatrix} \right\} \right\}.
+\end{align}
+
+These derivatives are implemented in the
+\texttt{itk::AdvancedBSplineDeformableTransform} class.
+
+\section{Combining transformations}
+
+\texttt{elastix} supports combining multiple transformations by
+addition or composition. Adding transformations is done via:
+\begin{align}
+\vTx &= \vTx[0] + \vTx[1] - \vx,
+\end{align}
+where $\vTx[0]$ is the initial transformation and $\vTx[1]$ the
+current transformation. Only the current transformation is optimised
+during the registration (as a choice). Composition of
+transformations is defined via:
+\begin{align}
+\vTx &= \vT_1(\vTx[0]).
+\end{align}
+
+For these combined transformations we need to derive the relations
+for the derivatives. Define $\bm{y} = \vT_0(\vxt)$.
+
+\begin{align}
+\intertext{Jacobian:}
+\D{\vTmu}{\vmu}(\vxt) &= \D{}{\vmu} \left( \vT_0(\vxt) + \vT_1(\vxt)
+- \vxt \right) = \D{}{\vmu} \vT_1(\vxt), \\
+\D{\vTmu}{\vmu}(\vxt) &= \D{}{\vmu} \left( \vT_1(\vT_0(\vxt))
+\right) = \D{}{\vmu} \vT_1(\bm{y}).
+\intertext{SpatialJacobian:}
+\D{\vTmu}{\vx}(\vxt) &= \D{}{\vx} \left( \vT_0(\vxt) + \vT_1(\vxt) -
+\vxt \right) = \D{}{\vx} \vT_0(\vxt) + \D{}{\vx} \vT_1(\vxt) - \bm{I}, \\
+%\D{\vTmu}{\vx}(\vxt) &= \D{}{\vx} \vT_1(\vT_0(\vxt)) = \D{}{\vx}
+%\vT_1(\bm{y}) \cdot \D{}{\vx} \vT_0(\vxt). \\
+\D{T_{\vmu,k}}{x_i}(\vxt) &= \left( \D{T_{1,k}}{\vx}(\vy) \right)^T
+\D{\vT_0}{x_i}(\vxt) =  \left(\D{\vT_0}{x_i}(\vxt) \right)^T
+\D{T_{1,k}}{\vx}(\vy)
+\intertext{JacobianOfSpatialJacobian:}
+\D{}{\vmu} \D{\vTmu}{\vx}(\vxt) &= \D{}{\vmu} \D{}{\vx} \left(
+\vT_0(\vxt) + \vT_1(\vxt) - \vxt \right) = \D{}{\vmu} \D{}{\vx}
+\vT_1(\vxt), \\
+\D{}{\vmu} \D{\vTmu}{\vx}(\vxt) &= \D{}{\vmu} \D{}{\vx} \left(
+\vT_1(\vTx[0]) \right) = \D{}{\vmu} \D{}{\vx} \vT_1(\bm{y}) \cdot
+\D{}{\vx} \vT_1(\bm{y})\vT_0(\vxt).
+\intertext{SpatialHessian:}
+\Dd{\vTmu}{x_i}{x_j} &= \Dd{}{x_i}{x_j} \left( \vT_0(\vxt) +
+\vT_1(\vxt) \right) = \Dd{}{x_i}{x_j} \vT_0(\vxt) +
+\Dd{}{x_i}{x_j} \vT_1(\vxt), \\
+%\Dd{\vTmu}{x_i}{x_j} &= \Dd{}{x_i}{x_j} \left( \vT_1(\vT_0(\vxt))
+%\right) = \D{}{x_i} \vT_0(\vxt) \Dd{}{x_i}{x_j} \vT_1(\bm{y})
+%\D{}{x_j} \vT_0(\vxt) + \Dd{}{x_i}{x_j} \vT_0(\vxt) \D{}{x_j}
+%\vT_1(\bm{y}). \\
+\Dd{T_{\vmu,k}}{x_i}{x_j}(\vxt) &= \left( \D{T_{1,k}}{\vx}(\vy)
+\right)^T \Dd{\vT_0}{x_i}{x_j}(\vxt) + \left(\D{\vT_0}{x_i}(\vxt)
+\right)^T \Dd{T_{1,k}}{\vx}{\vx^T}(\bm{y}) \D{\vT_0}{x_j}(\vxt)
+\intertext{JacobianOfSpatialHessian:}
+\D{}{\vmu} \Dd{\vTmu}{x_i}{x_j} &= \D{}{\vmu} \Dd{}{x_i}{x_j} \left(
+\vT_0(\vxt) + \vT_1(\vxt) - \vxt \right) = \D{}{\vmu}
+\Dd{}{x_i}{x_j} \vT_1(\vxt), \\
+%\D{}{\vmu} \Dd{\vTmu}{\vx}{\vx^T} &= \D{}{\vmu} \Dd{}{x_i}{x_j}
+%\left( \vT_1(\vT_0(\vxt)) \right) \\
+% &= \D{}{x_i} \vT_0(\vxt) \D{}{\vmu} \Dd{}{x_i}{x_j} \vT_1(\bm{y})
+%\D{}{x_j} \vT_0(\vxt) + \Dd{}{x_i}{x_j} \vT_0(\vxt) \D{}{\vmu}
+%\D{}{x_j} \vT_1(\bm{y}). \\
+\D{}{\vmu} \Dd{T_{mu,k}}{x_i}{x_j}(\vxt) &=
+\Dd{T_{1,k}}{\vmu}{\vx^T}(\vy) \Dd{\vT_0}{x_i}{x_j}(\vxt) +
+\left(\D{\vT_0}{x_i}(\vxt) \right)^T \left(\D{}{\vmu}
+\Dd{T_{1,k}}{\vx}{\vx^T}(\bm{y})\right) \D{\vT_0}{x_j}(\vxt)
+\end{align}
+
+These derivatives are implemented in the
+\texttt{itk::AdvancedCombinationTransform} class.
+
+\section{Bending energy penalty term}
+
+The bending energy was defined as:
+\begin{align}
+\mathcal{P}_{\mathrm{BE}}(\vmu) &= \frac{1}{P} \sum_{\vxt[i]}
+\sum_{k,l,m = 1}^2 \left( \Dd{T_k}{x_l}{x_m}(\vxt[i]) \right)^2.
+\end{align}
+
+We constructed an \texttt{itk::TransformBendingEnergyPenaltyTerm}
+which inherits from the \texttt{itk::ImageToImage\-Metric}. The
+\texttt{GetValue()}-method is implemented like:
+\begin{quote}
+\begin{verbatim}
+SpatialHessianType spatialHessian; for all samples
+  this->GetTransform()->GetSpatialHessian( sample, spatialHessian );
+  for all k, l, m
+    measure += spatialHessian[ k ][ l ][ m ]^2;
+  end
+end measure /= this->m_NumberOfPixelsCounted;
+\end{verbatim}
+\end{quote}
+
+For the \texttt{GetValueAndDerivative()} we have:
+\begin{align}
+\D{}{\vmu} \mathcal{P}_{\mathrm{BE}}(\vmu) &=  \frac{1}{P}
+\sum_{\vxt[i]} \sum_{k,l,m = 1}^2 2 \Dd{T_k}{x_l}{x_m} (\vxt[i])
+\D{}{\vmu} \Dd{T_k}{x_l}{x_m}(\vxt[i]),
+\end{align}
+which is implemented like:
+\begin{quote}
+\begin{verbatim}
+SpatialHessianType spatialHessian; JacobianOfSpatialHessianType
+jacobianOfSpatialHessian; for all samples
+  this->GetTransform()->GetSpatialHessian( sample, spatialHessian );
+  this->GetTransform()->GetJacobianOfSpatialHessian( sample,
+    jacobianOfSpatialHessian, nonZeroJacobianIndices );
+  for all nonZeroJacobianIndices, k, l, m
+    derivative[ nonZeroJacobianIndices[ mu ] ] += 2.0
+      * spatialHessian[ k ][ i ][ j ]
+      * jacobianOfSpatialHessian[ mu ][ k ][ i ][ j ];
+  end
+end derivative /= this->m_NumberOfPixelsCounted;
+\end{verbatim}
+\end{quote}
+
+This penalty term is implemented in the
+\texttt{itk::TransformBendingEnergyPenaltyTerm} class.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Discussion and Conclusion}
+
+This document describes the use and implementation of spatial
+derivatives of coordinate transformations. These spatial derivatives
+were exploited by the bending energy penalty term. Their usage is,
+however, not limited to that penalty term, and many more penalty
+terms can be implemented using the new functionality.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\bibliographystyle{plainnat}
+%\bibliography{mi}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

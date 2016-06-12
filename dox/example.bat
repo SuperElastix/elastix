@@ -1,0 +1,71 @@
+
+@echo # This batch file shows an example of how to call elastix.
+@echo # Run "elastix -help" for more information.
+@echo #
+@echo # This example requires elastix to be in your PATH.
+@echo #
+@echo # Here we perform a registration by doing sequentially:
+@echo #  1) a rigid registration
+@echo #  2) a bspline registration
+@echo # We write all output in the exampleoutput directory.
+@echo #
+
+mkdir exampleoutput
+
+elastix -f exampleinput/fixed.mhd -m exampleinput/moving.mhd -out exampleoutput -p exampleinput/parameters_Rigid.txt -p exampleinput/parameters_BSpline.txt
+
+
+@echo # In the following way we may mask the input images,
+@echo # to prevent background pixels to be taken into account:
+@echo #
+@echo # elastix -f exampleinput/fixed.mhd -m exampleinput/moving.mhd -fMask exampleinput/mask_fixed.mhd -mMask exampleinput/mask_moving.mhd -out exampleoutput -p exampleinput/parameters_Rigid.txt -p exampleinput/parameters_BSpline.txt
+
+@echo #
+@echo # See /exampleoutput/ for the results:
+@echo #  1) elastix.log = the logfile
+@echo #  2) result.0.mhd = the rigidly transformed result
+@echo #  3) result.1.mhd = the bspline transformed result
+@echo #  4) TransformParameters.0.txt = the found translation+rotations
+@echo #  5) TransformParameters.1.txt = the found bspline parameters
+@echo #
+@echo # You may compare result.1.mhd to the solution, which is located in
+@echo # ./exampleinput: solution_deformedmovingimage.mhd
+@echo #
+@echo # After doing the registration, we could apply the found deformation
+@echo # to the moving mask. In that case, it would be necessary to change
+@echo # the FinalBSplineInterpolationOrder to 0 first (see manual) in the
+@echo # TransformParameters.1.txt file.
+@echo # Once that has been done, call transformix as follows:
+@echo #
+
+rem transformix -in exampleinput/mask_moving.mhd -out exampleoutput -tp exampleoutput/TransformParameters.1.txt
+
+@echo #
+@echo # The /exampleoutput/ would then contain the following results:
+@echo #  6) transformix.log = the logfile
+@echo #  7) result.mhd = the transformed mask
+@echo #
+
+@echo # Transformix can also be used to generate a deformation field,
+@echo # or the "jacobian determinant" field (which indicates the amount
+@echo # of compression/expansion.
+@echo #
+@echo # In this example, we generate the jacobian determinant field:
+@echo #
+
+transformix -jac all -out exampleoutput -tp exampleoutput/TransformParameters.1.txt
+
+@echo #
+@echo # The /exampleoutput/ directory now additionally contains:
+@echo #  8) transformix.log = the logfile
+@echo #  9) spatialJacobian.mhd = the jacobian determinant image
+@echo #
+@echo # Please consult the website, FAQ, and manual for more information.
+@echo # type elastix --help or transformix --help for an overview
+@echo # of the command line arguments.
+@echo #
+@echo # If you have any questions, please register for the elastix
+@echo # user mailing-list and post your question to the community!
+@echo # In that way you will also be kept informed on updates.
+@echo #
+
