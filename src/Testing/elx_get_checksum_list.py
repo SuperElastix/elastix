@@ -11,6 +11,7 @@ from optparse import OptionParser
 # cd Testing
 # python ../../src/Testing/elx_get_checksum_list.py -l elastix_run*
 # cd ..
+# cmake .
 # ctest -C Release -R COMPARE_CHECKSUM
 # svn commit -m "ENH: updating baselines after recent change X"
 def main():
