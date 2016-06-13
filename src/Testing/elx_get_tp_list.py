@@ -56,7 +56,7 @@ def main():
       directory = re.sub( '\/$', '', directory );
       dir_part = list( os.path.split( directory ) ).pop();
       dir_part = dir_part.replace( "elastix_run_", "", 1 );
-      outputFileName = "TransformParameters_" + dir_part + ".txt";
+      outputFileName = "TransformParameters_" + dir_part + ".txt.in";
       outputFileName = os.path.join( options.outputDirectory, outputFileName );
       print( outputFileName );
 
@@ -64,13 +64,14 @@ def main():
       # the initial transform to point to the correct path.
       f1 = open( inputFileName, 'r' );
       f2 = open( outputFileName, 'w' );
-      for line in f1 :
-        if "InitialTransformParametersFileName" in line :
-          oldFileName = os.path.basename( line.split()[1][1:-2] );
-          newFileName = os.path.join( "@ELASTIX_BASELINE_DIR@", oldFileName );
-          line = "(InitialTransformParametersFileName \"" + newFileName + "\")\n";
-          if "NoInitialTransform" in oldFileName : line = "";
-        f2.write( line );
+      for oldline in f1 :
+        newline = oldline;
+        if "InitialTransformParametersFileName" in oldline :
+          oldFileName = os.path.basename( oldline.split()[1][1:-2] );
+          newFileName = os.path.join( "@ELASTIX_DATA_DIR@", oldFileName );
+          if not "NoInitialTransform" in oldFileName :
+            newline = "(InitialTransformParametersFileName \"" + newFileName + "\")\n";
+        f2.write( newline );
       f1.close(); f2.close();
 
     return 0

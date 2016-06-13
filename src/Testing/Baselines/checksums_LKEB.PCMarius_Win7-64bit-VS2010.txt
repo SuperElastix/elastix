@@ -1,7 +1,7 @@
 directory checksum
 elastix_run_3DCT_lung.example 3094748745
 elastix_run_3DCT_lung.Kappa.bspline.ASGD.001 2928589903
-elastix_run_3DCT_lung.MI.bspline.ASGD.001 2696834199
+elastix_run_3DCT_lung.MI.bspline.ASGD.001 880896227
 elastix_run_3DCT_lung.MI.bspline.SGD.001 1730060002
 elastix_run_3DCT_lung.MI.bspline.SGD.001-Threads1 1730060002
 elastix_run_3DCT_lung.MI.bspline.SGD.001-Threads2 1730060002
@@ -14,9 +14,9 @@ elastix_run_3DCT_lung.NC.bspline.ASGD.001a 3029841240
 elastix_run_3DCT_lung.NC.bspline.ASGD.001a-Threads1 3029841240
 elastix_run_3DCT_lung.NC.bspline.ASGD.001a-Threads2 3029841240
 elastix_run_3DCT_lung.NC.bspline.ASGD.001a-Threads4 3029841240
-elastix_run_3DCT_lung.NC.bspline.ASGD.001b 731425642
+elastix_run_3DCT_lung.NC.bspline.ASGD.001b 455028212
 elastix_run_3DCT_lung.NC.bspline.ASGD.001c 2035642537
-elastix_run_3DCT_lung.NC.bspline.ASGD.001d 2086063888
+elastix_run_3DCT_lung.NC.bspline.ASGD.001d 1315294851
 elastix_run_3DCT_lung.NC.bspline.ASGD.002 2254929117
 elastix_run_3DCT_lung.NC.bspline.ASGD.003 1303067821
 elastix_run_3DCT_lung.NC.bspline.ASGD.004 2278184553
@@ -26,11 +26,11 @@ elastix_run_3DCT_lung.NC.bspline.SGD.001 3261928545
 elastix_run_3DCT_lung.NC.bspline_r.ASGD.001a 3029841240
 elastix_run_3DCT_lung.NC.euler.ASGD.001 2742457834
 elastix_run_3DCT_lung.NC.translation.ASGD.001 3100551292
-elastix_run_3DCT_lung.NMI.bspline.ASGD.001 2179767604
+elastix_run_3DCT_lung.NMI.bspline.ASGD.001 542442678
 elastix_run_3DCT_lung.SSD.bspline.ASGD.001 3495286143
 elastix_run_3DCT_lung.SSD.bspline.ASGD.001-Threads1 3495286143
 elastix_run_3DCT_lung.SSD.bspline.ASGD.001-Threads2 3495286143
 elastix_run_3DCT_lung.SSD.bspline.ASGD.001-Threads4 3495286143
 elastix_run_3DCT_lung.SSD.bspline.ASGD.002 1086937419
 elastix_run_3DCT_lung.SSD.bspline.ASGD.003 491088873
-elastix_run_example 2022662610
+elastix_run_example 1346962599
