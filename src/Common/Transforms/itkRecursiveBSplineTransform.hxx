@@ -182,7 +182,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 {
   /** Define some constants. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
 
   /** Initialize output point. */
   OutputPointType outputPoint;
@@ -287,7 +286,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
    * returns the individual weights instead of the multiplied ones.
    */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   IndexType   supportIndex;
@@ -331,16 +329,14 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
-  /** Initialize. */
-  const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
-
   /** NOTE: if the support region does not lie totally within the grid
    * we assume zero displacement and zero Jacobian.
    */
+  const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
   if( !this->InsideValidRegion( cindex ) )
   {
-    nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
-    for( NumberOfParametersType i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    nonZeroJacobianIndices.resize( nnzji );
+    for( NumberOfParametersType i = 0; i < nnzji; ++i )
     {
       nonZeroJacobianIndices[ i ] = i;
     }
@@ -352,7 +348,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
    * returns the individual weights instead of the multiplied ones.
    */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   IndexType   supportIndex;
@@ -411,7 +406,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 
   /** Create storage for the B-spline interpolation weights. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
@@ -504,7 +498,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 
   /** Create storage for the B-spline interpolation weights. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
@@ -630,7 +623,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 
   /** Create storage for the B-spline interpolation weights. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
@@ -744,7 +736,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
 
   /** Create storage for the B-spline interpolation weights. */
   const unsigned int numberOfWeights = RecursiveBSplineWeightFunctionType::NumberOfWeights;
-  const unsigned int numberOfIndices = RecursiveBSplineWeightFunctionType::NumberOfIndices;
   typename WeightsType::ValueType weightsArray1D[ numberOfWeights ];
   WeightsType weights1D( weightsArray1D, numberOfWeights, false );
   typename WeightsType::ValueType derivativeWeightsArray1D[ numberOfWeights ];
