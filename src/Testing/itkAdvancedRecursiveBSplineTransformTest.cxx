@@ -250,24 +250,23 @@ main( int argc, char * argv[] )
   /** The transform point. */
   recursiveTransform->TransformPoint( inputPoint );
 
-  /** The Jacobian. *
+  /** The Jacobian. */
   recursiveTransform->GetJacobian( inputPoint, jacobian, nzji );
 
   /** The spatial Jacobian. */
-  //recursiveTransform->GetSpatialJacobian( inputPoint, spatialJacobian );
-  // crashes
+  recursiveTransform->GetSpatialJacobian( inputPoint, spatialJacobian );
 
-  /** The spatial Hessian. *
+  /** The spatial Hessian. */
   recursiveTransform->GetSpatialHessian( inputPoint, spatialHessian );
 
-  /** The Jacobian of the spatial Jacobian. *
+  /** The Jacobian of the spatial Jacobian. */
   recursiveTransform->GetJacobianOfSpatialJacobian( inputPoint,
     jacobianOfSpatialJacobian, nzji );
 
   recursiveTransform->GetJacobianOfSpatialJacobian( inputPoint,
     spatialJacobian, jacobianOfSpatialJacobian, nzji );
 
-  /** The Jacobian of the spatial Hessian. *
+  /** The Jacobian of the spatial Hessian. */
   recursiveTransform->GetJacobianOfSpatialHessian( inputPoint,
     jacobianOfSpatialHessian, nzji );
 
@@ -293,16 +292,12 @@ main( int argc, char * argv[] )
   weights2.SetSize( dummyNum );
   indices2.SetSize( dummyNum );
 
-  bool isInside = true;
-
   // Generate a list of random points
   MersenneTwisterType::Pointer mersenneTwister = MersenneTwisterType::New();
   mersenneTwister->Initialize( 140377 );
   std::vector< InputPointType >  pointList( N );
   std::vector< OutputPointType > transformedPointList1( N );
-  std::vector< OutputPointType > transformedPointList3( N );
-  std::vector< OutputPointType > transformedPointList5( N );
-  std::vector< OutputPointType > transformedPointList6( N );
+  std::vector< OutputPointType > transformedPointList2( N );
 
   IndexType               dummyIndex;
   CoefficientImagePointer coefficientImage = transform->GetCoefficientImages()[ 0 ];
@@ -326,7 +321,7 @@ main( int argc, char * argv[] )
   timeCollector.Start( "TransformPoint recursive vector " );
   for( unsigned int i = 0; i < N; ++i )
   {
-    transformedPointList3[ i ] = recursiveTransform->TransformPoint( pointList[ i ] );
+    transformedPointList2[ i ] = recursiveTransform->TransformPoint( pointList[ i ] );
   }
   timeCollector.Stop(  "TransformPoint recursive vector " );
 
@@ -421,18 +416,16 @@ main( int argc, char * argv[] )
   /** These should return the same values as the original ITK functions. */
 
   /** TransformPoint. */
-  OutputPointType opp1, opp3, opp5, opp6;
+  OutputPointType opp1, opp2;
   double          differenceNorm1 = 0.0;
-  double          differenceNorm5 = 0.0;
-  double          differenceNorm6 = 0.0;
   for( unsigned int i = 0; i < N; ++i )
   {
     opp1 = transformedPointList1[ i ]; // transform->TransformPoint();
-    opp3 = transformedPointList3[ i ]; // recursiveTransform->TransformPoint();
+    opp2 = transformedPointList2[ i ]; // recursiveTransform->TransformPoint();
 
     for( unsigned int j = 0; j < Dimension; ++j )
     {
-      differenceNorm1 += ( opp1[ j ] - opp3[ j ] ) * ( opp1[ j ] - opp3[ j ] );
+      differenceNorm1 += ( opp1[ j ] - opp2[ j ] ) * ( opp1[ j ] - opp2[ j ] );
     }
   }
   differenceNorm1 = vcl_sqrt( differenceNorm1 ) / N;
