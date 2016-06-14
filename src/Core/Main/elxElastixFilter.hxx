@@ -301,7 +301,7 @@ typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectType *
 ElastixFilter< TFixedImage, TMovingImage >
 ::GetParameterObject( void )
 {
-  return itkDynamicCastInDebugMode< ParameterObjectType * >( itk::ProcessObject::GetOutput( "ParameterObject" ) );
+  return itkDynamicCastInDebugMode< ParameterObjectType * >( itk::ProcessObject::GetInput( "ParameterObject" ) );
 }
 
 /**
@@ -313,7 +313,7 @@ const typename ElastixFilter< TFixedImage, TMovingImage >::ParameterObjectType *
 ElastixFilter< TFixedImage, TMovingImage >
 ::GetParameterObject( void ) const
 {
-  return itkDynamicCastInDebugMode< const ParameterObjectType * >( itk::ProcessObject::GetOutput( "ParameterObject" ) );
+  return itkDynamicCastInDebugMode< const ParameterObjectType * >( itk::ProcessObject::GetInput( "ParameterObject" ) );
 }
 
 /**
