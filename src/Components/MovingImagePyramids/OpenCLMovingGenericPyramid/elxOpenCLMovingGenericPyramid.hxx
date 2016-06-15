@@ -23,6 +23,7 @@
 
 // GPU includes
 #include "itkGPUImageFactory.h"
+#include "itkOpenCLLogger.h"
 
 // GPU factory includes
 #include "itkGPURecursiveGaussianImageFilterFactory.h"
@@ -41,10 +42,12 @@ namespace elastix
 
 template< class TElastix >
 OpenCLMovingGenericPyramid< TElastix >
-::OpenCLMovingGenericPyramid()
+::OpenCLMovingGenericPyramid() :
+  m_GPUPyramidReady( true ),
+  m_GPUPyramidCreated( true ),
+  m_ContextCreated( false ),
+  m_UseOpenCL( true )
 {
-  this->m_UseOpenCL = true;
-
   // Based on the Insight Journal paper:
   // http://insight-journal.org/browse/publication/884
   // it is not beneficial to create pyramids for 2D images with OpenCL.
@@ -54,7 +57,6 @@ OpenCLMovingGenericPyramid< TElastix >
   {
     xl::xout[ "warning" ] << "WARNING: Creating the moving pyramid with OpenCL for 2D images is not beneficial.\n";
     xl::xout[ "warning" ] << "  The OpenCLMovingGenericPyramid is switching back to CPU mode." << std::endl;
-    this->m_GPUPyramidCreated = false;
     return;
   }
 
@@ -65,8 +67,7 @@ OpenCLMovingGenericPyramid< TElastix >
   {
     try
     {
-      this->m_GPUPyramid        = GPUPyramidType::New();
-      this->m_GPUPyramidCreated = true;
+      this->m_GPUPyramid = GPUPyramidType::New();
     }
     catch( itk::ExceptionObject & e )
     {
@@ -79,7 +80,7 @@ OpenCLMovingGenericPyramid< TElastix >
   {
     this->SwitchingToCPUAndReport( false );
   }
-} // end Constructor()
+} // end Constructor
 
 
 /**
@@ -108,7 +109,7 @@ OpenCLMovingGenericPyramid< TElastix >
     }
     catch( itk::ExceptionObject & e )
     {
-      xl::xout[ "error" ] << "ERROR: Exception during creating GPU input image: " << e << std::endl;
+      xl::xout[ "error" ] << "ERROR: Exception during creating GPU input image for moving generic pyramid: " << e << std::endl;
       this->SwitchingToCPUAndReport( true );
     }
   }
@@ -163,20 +164,55 @@ OpenCLMovingGenericPyramid< TElastix >
     return;
   }
 
+  bool computedUsingOpenCL = true;
+
   // Register factories
   this->RegisterFactories();
+  try
+  {
+    // Perform GPU pyramid execution
+    this->m_GPUPyramid->Update();
+  }
+  catch( itk::OpenCLCompileError & e )
+  {
+    // First log then report OpenCL compile error
+    itk::OpenCLLogger::Pointer logger = itk::OpenCLLogger::GetInstance();
+    logger->Write( itk::LoggerBase::CRITICAL, e.GetDescription() );
 
-  // Perform GPU pyramid execution
-  this->m_GPUPyramid->Update();
+    xl::xout[ "error" ] << "ERROR: OpenCL program has not been compiled"
+                        << " during updating GPU moving pyramid calculation." << std::endl
+                        << "  Please check the '" << logger->GetLogFileName()
+                        << "' in output directory." << std::endl;
+    computedUsingOpenCL = false;
+  }
+  catch( itk::ExceptionObject & e )
+  {
+    xl::xout[ "error" ] << "ERROR: Exception during updating GPU moving pyramid calculation: " << e << std::endl;
+    computedUsingOpenCL = false;
+  }
+  catch( ... )
+  {
+    xl::xout[ "error" ] << "ERROR: Unknown exception during updating GPU moving pyramid calculation." << std::endl;
+    computedUsingOpenCL = false;
+  }
 
   // Unregister factories
   this->UnregisterFactories();
 
-  // Graft output
-  this->GraftOutput( this->m_GPUPyramid->GetOutput() );
+  if( computedUsingOpenCL )
+  {
+    // Graft output
+    this->GraftOutput( this->m_GPUPyramid->GetOutput() );
 
-  // Report OpenCL device to the log
-  this->ReportToLog();
+    // Report OpenCL device to the log
+    this->ReportToLog();
+  }
+  else
+  {
+    xl::xout[ "warning" ] << "WARNING: The moving pyramid computation with OpenCL failed due to the error.\n";
+    xl::xout[ "warning" ] << "  The OpenCLMovingGenericPyramid is switching back to CPU mode." << std::endl;
+    Superclass1::GenerateData();
+  }
 } // end GenerateData()
 
 
