@@ -130,6 +130,9 @@ GetOpenCLDebugFileName( const std::string & source )
   fileName.append( hex );
   fileName.append( ".cl" );
 
+  // free resources
+  itksysMD5_Delete( md5 );
+
   return fileName;
 }
 
