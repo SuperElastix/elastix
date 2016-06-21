@@ -22,7 +22,6 @@
 
 #include "itkRecursiveBSplineTransformImplementation.h"
 
-//#define USE_DIRECTION 1
 
 namespace itk
 {
@@ -101,7 +100,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     mu[ j ] = this->m_CoefficientImages[ j ]->GetBufferPointer() + totalOffsetToSupportIndex;
   }
 
-  /** Call recursive interpolate function, vector version. */
+  /** Call the recursive TransformPoint function. */
   ScalarType displacement[ SpaceDimension ];
   RecursiveBSplineTransformImplementation< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::TransformPoint( displacement, mu, bsplineOffsetTable, weightsArray1D );
@@ -326,10 +325,8 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     }
   }
 
-#if USE_DIRECTION
   /** Take into account grid spacing and direction cosines. */
   sj = sj * this->m_PointToIndexMatrix2;
-#endif
 
   /** Add the identity matrix, as this is a transformation, not displacement. */
   for( unsigned int j = 0; j < SpaceDimension; ++j )
@@ -405,7 +402,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     mu[ j ] = this->m_CoefficientImages[ j ]->GetBufferPointer() + totalOffsetToSupportIndex;
   }
 
-  /** Recursively compute the spatial Jacobian. */
+  /** Recursively compute the spatial Hessian. */
   double spatialHessian[ SpaceDimension * ( SpaceDimension + 1 ) * ( SpaceDimension + 2 ) / 2 ];
   RecursiveBSplineTransformImplementation< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetSpatialHessian( spatialHessian, mu, bsplineOffsetTable,
@@ -438,14 +435,12 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     }
   }
 
-#if USE_DIRECTION
   /** Take into account grid spacing and direction matrix. */
   for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
     sh[ dim ] = this->m_PointToIndexMatrixTransposed2
       * ( sh[ dim ] * this->m_PointToIndexMatrix2 );
   }
-#endif
 
 } // end GetSpatialHessian()
 
@@ -516,20 +511,11 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
    */
   double dummy[ 1 ] = { 1.0 };
 
-#if USE_DIRECTION
   /** Recursively expand all weights (destroys dummy), and multiply with dc. */
   const double * dc      = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
   double *       jsjPtr2 = jsj[ 0 ].GetVnlMatrix().data_block();
   RecursiveBSplineTransformImplementation< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetJacobianOfSpatialJacobian( jsjPtr2, weightsPointer, derivativeWeightsPointer, dc, dummy );
-#else
-  /** Recursively expand all weights (destroys dummy)
-    * returns complete jsj, avoiding an additional copy.
-    */
-  double * jsjPtr2 = jsj[ 0 ].GetVnlMatrix().data_block();
-  RecursiveBSplineTransformImplementation< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
-    ::GetJacobianOfSpatialJacobian( jsjPtr2, weightsPointer, derivativeWeightsPointer, dummy );
-#endif
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
   RegionType supportRegion;
@@ -628,7 +614,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   this->m_RecursiveBSplineWeightFunction->EvaluateDerivative( cindex, derivativeWeights1D, supportIndex );
   this->m_RecursiveBSplineWeightFunction->EvaluateSecondOrderDerivative( cindex, hessianWeights1D, supportIndex );
 
-#if USE_DIRECTION
   /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards).
    * This version also performs pre- and post-multiplication with the matrices dc^T and dc, respectively.
    * Other differences are that the complete matrix is returned, not just the upper triangle.
@@ -639,17 +624,6 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   double         dummy[ 1 ] = { 1.0 };
   RecursiveBSplineTransformImplementation< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetJacobianOfSpatialHessian( jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dc, dummy );
-#else
-  /** Recursively expand all weights (destroys dummy and jshPtr points to last element afterwards).
-   * DOES NOT DO MULTIPLICATION WITH DC
-   * The complete matrix is returned, not just the upper triangle.
-   * The results are directly written to the final jsh, avoiding an additional copy.
-   */
-  double * jshPtr     = jsh[ 0 ][ 0 ].GetVnlMatrix().data_block();
-  double   dummy[ 1 ] = { 1.0 };
-  RecursiveBSplineTransformImplementation< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
-    ::GetJacobianOfSpatialHessian( jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dummy );
-#endif
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
   RegionType supportRegion;
