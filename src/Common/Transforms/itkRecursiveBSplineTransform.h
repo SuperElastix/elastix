@@ -133,15 +133,6 @@ public:
    */
   virtual OutputPointType TransformPoint( const InputPointType & point ) const;
 
-  /** Temporary function to test performance of functional recursive TransformPoint. */
-  typedef ScalarType ** CoefficientPointerVectorType;
-  typedef ScalarType *  OutputPointType2;
-
-  OutputPointType TransformPointFunctionalRecursive( const InputPointType & point ) const;
-
-  void TransformPointFunctionalRecursiveFunction( OutputPointType2 displacement, const CoefficientPointerVectorType mu,
-    const OffsetValueType * gridOffsetTable, const double * weights1D, unsigned int D ) const;
-
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType & ipp,
