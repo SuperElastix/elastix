@@ -47,7 +47,7 @@ main( int argc, char * argv[] )
    * Debug and Release mode.
    */
 #ifndef NDEBUG
-  unsigned int N = static_cast< unsigned int >( 0 );
+  unsigned int N = static_cast< unsigned int >( 1 );
 #elif REDUCEDTEST
   unsigned int N = static_cast< unsigned int >( 1e5 );
 #else
@@ -368,6 +368,9 @@ main( int argc, char * argv[] )
     recursiveTransform->GetJacobianOfSpatialHessian( pointList[ i ], jshRecursive, nzji );
   }
   timeCollector.Stop(  "JacobianSpatialHessian recursive " );
+
+  /** Time the implementation of the NonZeroJacobianIndices. */
+  // Not directly possible, as these are protected functions.
 
   /** Report. */
   timeCollector.Report();

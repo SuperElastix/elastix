@@ -131,17 +131,16 @@ public:
   /** ComputeNonZeroJacobianIndices recursive implementation. */
   static inline void ComputeNonZeroJacobianIndices(
     unsigned long * nzji,
-    unsigned long parametersPerDim,
+    const unsigned long parametersPerDim,
     unsigned long currentIndex,
-    const OffsetValueType * gridOffsetTable,
-    unsigned int & c )
+    const OffsetValueType * gridOffsetTable )
   {
-    OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
+    const OffsetValueType bot = gridOffsetTable[ SpaceDimension - 1 ];
     for( unsigned int k = 0; k <= SplineOrder; ++k )
     {
       /** Recurse. */
       RecursiveBSplineTransformImplementation< OutputDimension, SpaceDimension - 1, SplineOrder, TScalar >
-        ::ComputeNonZeroJacobianIndices( nzji, parametersPerDim, currentIndex, gridOffsetTable, c );
+        ::ComputeNonZeroJacobianIndices( nzji, parametersPerDim, currentIndex, gridOffsetTable );
 
       currentIndex += bot;
     }
@@ -412,7 +411,7 @@ public:
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {
       offset                  = j * BSplineNumberOfIndices * ( OutputDimension + 1 );
-      *( jacobians + offset ) = value;
+      jacobians[ offset ] = value;
     }
     ++jacobians;
   } // end GetJacobian()
@@ -434,16 +433,15 @@ public:
   /** ComputeNonZeroJacobianIndices recursive implementation. */
   static inline void ComputeNonZeroJacobianIndices(
     unsigned long * nzji,
-    unsigned long parametersPerDim,
+    const unsigned long parametersPerDim,
     unsigned long currentIndex,
-    const OffsetValueType * gridOffsetTable,
-    unsigned int & c )
+    const OffsetValueType * gridOffsetTable )
   {
     for( unsigned int j = 0; j < OutputDimension; ++j )
     {
-      nzji[ c + j * BSplineNumberOfIndices ] = currentIndex + j * parametersPerDim;
+      nzji[ j * BSplineNumberOfIndices ] = currentIndex + j * parametersPerDim;
     }
-    ++c;
+    ++nzji;
   } // end ComputeNonZeroJacobianIndices()
 
 
