@@ -183,7 +183,9 @@ protected:
 
 private:
 
-  ITK_DISALLOW_COPY_AND_ASSIGN( GPUDataManager );
+  //ITK_DISALLOW_COPY_AND_ASSIGN( GPUDataManager );
+  GPUDataManager( const Self & );   // purposely not implemented
+  void operator=( const Self & );   // purposely not implemented
 };
 
 } // namespace itk
