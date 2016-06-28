@@ -22,7 +22,7 @@
 // \note This work was funded by the Netherlands Organisation for
 // Scientific Research (NWO NRG-2010.02 and NWO 639.021.124).
 //
-// OpenCL implementation of itk::NearestNeighborInterpolateImageFunction
+// OpenCL implementation of itk::RecursiveGaussianImageFilter
 
 #define _ELASTIX_USE_OPENCL_OPTIMIZATIONS 0
 
