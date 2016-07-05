@@ -39,6 +39,7 @@
 (MaximumNumberOfIterations 100)
 
 (AutomaticParameterEstimation "true")
+(ASGDParameterEstimationMethod "DisplacementDistribution")
 (UseAdaptiveStepSizes "true")
 
 
