@@ -740,14 +740,14 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       ++jointPDFit;
       ++movingIndex;
 
-    }  // end while-loop over moving index
+    } // end while-loop over moving index
 
     /** Update iterators. */
     ++fixedPDFit;
     jointPDFit.NextLine();
     ++fixedIndex;
 
-  }  // end while-loop over fixed index
+  } // end while-loop over fixed index
 
   // Assign
   MI = sum;

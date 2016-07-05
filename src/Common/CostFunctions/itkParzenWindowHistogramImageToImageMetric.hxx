@@ -20,7 +20,8 @@
 
 #include "itkParzenWindowHistogramImageToImageMetric.h"
 
-#include "itkBSplineDerivativeKernelFunction.h"
+#include "itkBSplineKernelFunction2.h"
+#include "itkBSplineDerivativeKernelFunction2.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkImageScanlineIterator.h"
 #include "vnl/vnl_math.h"
@@ -374,13 +375,13 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   switch( this->m_FixedKernelBSplineOrder )
   {
     case 0:
-      this->m_FixedKernel = BSplineKernelFunction< 0 >::New(); break;
+      this->m_FixedKernel = BSplineKernelFunction2< 0 >::New(); break;
     case 1:
-      this->m_FixedKernel = BSplineKernelFunction< 1 >::New(); break;
+      this->m_FixedKernel = BSplineKernelFunction2< 1 >::New(); break;
     case 2:
-      this->m_FixedKernel = BSplineKernelFunction< 2 >::New(); break;
+      this->m_FixedKernel = BSplineKernelFunction2< 2 >::New(); break;
     case 3:
-      this->m_FixedKernel = BSplineKernelFunction< 3 >::New(); break;
+      this->m_FixedKernel = BSplineKernelFunction2< 3 >::New(); break;
     default:
       itkExceptionMacro( << "The following FixedKernelBSplineOrder is not implemented: " \
                          << this->m_FixedKernelBSplineOrder );
@@ -389,25 +390,25 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   switch( this->m_MovingKernelBSplineOrder )
   {
     case 0:
-      this->m_MovingKernel = BSplineKernelFunction< 0 >::New();
+      this->m_MovingKernel = BSplineKernelFunction2< 0 >::New();
       /** The derivative of a zero order B-spline makes no sense. Using the
        * derivative of a first order gives a kind of finite difference idea
        * Anyway, if you plan to call GetValueAndDerivative you should use
        * a higher B-spline order.
        */
-      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction< 1 >::New();
+      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction2< 1 >::New();
       break;
     case 1:
-      this->m_MovingKernel           = BSplineKernelFunction< 1 >::New();
-      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction< 1 >::New();
+      this->m_MovingKernel           = BSplineKernelFunction2< 1 >::New();
+      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction2< 1 >::New();
       break;
     case 2:
-      this->m_MovingKernel           = BSplineKernelFunction< 2 >::New();
-      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction< 2 >::New();
+      this->m_MovingKernel           = BSplineKernelFunction2< 2 >::New();
+      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction2< 2 >::New();
       break;
     case 3:
-      this->m_MovingKernel           = BSplineKernelFunction< 3 >::New();
-      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction< 3 >::New();
+      this->m_MovingKernel           = BSplineKernelFunction2< 3 >::New();
+      this->m_DerivativeMovingKernel = BSplineDerivativeKernelFunction2< 3 >::New();
       break;
     default:
       itkExceptionMacro( << "The following MovingKernelBSplineOrder is not implemented: " \
@@ -425,7 +426,6 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   JointPDFSizeType parzenWindowSize;
   parzenWindowSize[ 0 ] = this->m_MovingKernelBSplineOrder + 1;
   parzenWindowSize[ 1 ] = this->m_FixedKernelBSplineOrder + 1;
-  this->m_JointPDFWindow.SetSize( parzenWindowSize );
   this->m_JointPDFWindow.SetSize( parzenWindowSize );
 
   /** The ParzenIndex is the lowest bin number that is affected by a
@@ -548,12 +548,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   double parzenWindowTerm, OffsetValueType parzenWindowIndex,
   const KernelFunctionType * kernel, ParzenValueContainerType & parzenValues ) const
 {
-  const unsigned int max_i = parzenValues.GetSize();
-  for( unsigned int i = 0; i < max_i; ++i, ++parzenWindowIndex )
-  {
-    parzenValues[ i ] = kernel->Evaluate(
-      static_cast< double >( parzenWindowIndex ) - parzenWindowTerm );
-  }
+  kernel->Evaluate( static_cast<double>( parzenWindowIndex ) - parzenWindowTerm, parzenValues.data_block() );
 } // end EvaluateParzenValues()
 
 
@@ -601,6 +596,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   JointPDFIndexType pdfWindowIndex;
   pdfWindowIndex[ 0 ] = movingImageParzenWindowIndex;
   pdfWindowIndex[ 1 ] = fixedImageParzenWindowIndex;
+
   /** For thread-safety, make a local copy of the support region,
    * and use that one. Because each thread will modify it.
    */
@@ -634,8 +630,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
     const double et = static_cast< double >( this->m_MovingImageBinSize );
 
     /** Loop over the Parzen window region and increment the values
-    * Also update the pdf derivatives.
-    */
+     * Also update the pdf derivatives.
+     */
     for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
     {
       const double fv    = fixedParzenValues[ f ];
@@ -1075,8 +1071,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
     }
 
     /** Compute the moving image value and check if the point is
-    * inside the moving image buffer.
-    */
+     * inside the moving image buffer.
+     */
     if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(

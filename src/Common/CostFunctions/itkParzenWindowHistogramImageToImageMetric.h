@@ -19,7 +19,8 @@
 #define __itkParzenWindowHistogramImageToImageMetric_H__
 
 #include "itkAdvancedImageToImageMetric.h"
-#include "itkBSplineKernelFunction.h"
+#include "itkKernelFunctionBase2.h"
+
 
 namespace itk
 {
@@ -262,7 +263,7 @@ protected:
   typedef Array< PDFValueType >                        ParzenValueContainerType;
 
   /** Typedefs for Parzen kernel. */
-  typedef KernelFunctionBase< PDFValueType >   KernelFunctionType;
+  typedef KernelFunctionBase2< PDFValueType >  KernelFunctionType;
   typedef typename KernelFunctionType::Pointer KernelFunctionPointer;
 
   /** Protected variables **************************** */
