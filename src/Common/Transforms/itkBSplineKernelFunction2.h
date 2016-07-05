@@ -34,7 +34,7 @@
 #ifndef __itkBSplineKernelFunction2_h
 #define __itkBSplineKernelFunction2_h
 
-#include "itkKernelFunctionBase.h"
+#include "itkKernelFunctionBase2.h"
 #include "vnl/vnl_math.h"
 
 namespace itk
@@ -56,20 +56,20 @@ namespace itk
  * \ingroup Functions
  */
 template< unsigned int VSplineOrder = 3 >
-class ITK_EXPORT BSplineKernelFunction2 : public KernelFunctionBase< double >
+class ITK_EXPORT BSplineKernelFunction2 : public KernelFunctionBase2< double >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef BSplineKernelFunction2       Self;
-  typedef KernelFunctionBase< double > Superclass;
-  typedef SmartPointer< Self >         Pointer;
+  typedef BSplineKernelFunction2        Self;
+  typedef KernelFunctionBase2< double > Superclass;
+  typedef SmartPointer< Self >          Pointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineKernelFunction2, KernelFunctionBase );
+  itkTypeMacro( BSplineKernelFunction2, KernelFunctionBase2 );
 
   /** Enum of for spline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
@@ -123,46 +123,46 @@ private:
   /** Zeroth order spline. */
   inline double Evaluate( const Dispatch< 0 > &, const double & u ) const
   {
-    double absValue = vnl_math_abs( u );
+    const double absValue = itk::Math::abs( u );
 
-    if( absValue < 0.5 ) { return 1.0; }
-    else if( absValue == 0.5 ) { return 0.5; }
-    else { return 0.0; }
+    if( absValue < 0.5 ) { return NumericTraits< double >::OneValue(); }
+    else if( Math::ExactlyEquals( absValue, 0.5 ) ) { return 0.5; }
+    else { return NumericTraits< double >::ZeroValue(); }
   }
 
 
   /** First order spline */
   inline double Evaluate( const Dispatch< 1 > &, const double & u ) const
   {
-    double absValue = vnl_math_abs( u );
+    const double absValue = itk::Math::abs( u );
 
-    if( absValue < 1.0 ) { return 1.0 - absValue; }
-    else { return 0.0; }
+    if( absValue < 1.0 ) { return NumericTraits< double >::OneValue() - absValue; }
+    else { return NumericTraits< double >::ZeroValue(); }
   }
 
 
   /** Second order spline. */
   inline double Evaluate( const Dispatch< 2 > &, const double & u ) const
   {
-    double absValue = vnl_math_abs( u );
+    const double absValue = itk::Math::abs( u );
 
     if( absValue < 0.5 )
     {
-      return 0.75 - vnl_math_sqr( absValue );
+      return 0.75 - itk::Math::sqr( absValue );
     }
     else if( absValue < 1.5 )
     {
-      return ( 9.0 - 12.0 * absValue + 4.0 * vnl_math_sqr( absValue ) ) / 8.0;
+      return ( 9.0 - 12.0 * absValue + 4.0 * itk::Math::sqr( absValue ) ) / 8.0;
     }
-    else { return 0.0; }
+    else { return NumericTraits< double >::ZeroValue(); }
   }
 
 
   /** Third order spline. */
   inline double Evaluate( const Dispatch< 3 > &, const double & u ) const
   {
-    double absValue = vnl_math_abs( u );
-    double sqrValue = vnl_math_sqr( u );
+    const double absValue = itk::Math::abs( u );
+    const double sqrValue = itk::Math::sqr( u );
 
     if( absValue < 1.0 )
     {
@@ -172,7 +172,7 @@ private:
     {
       return ( 8.0 - 12.0 * absValue + 6.0 * sqrValue - sqrValue * absValue ) / 6.0;
     }
-    else { return 0.0; }
+    else { return NumericTraits< double >::ZeroValue(); }
   }
 
 
@@ -192,8 +192,11 @@ private:
   inline void Evaluate( const Dispatch< 0 > &, const double & u,
     double * weights ) const
   {
-    if( u < 0.5 ) { weights[ 0 ] = 1.0; }
-    else { weights[ 0 ] = 0.5; }
+    const double absValue = itk::Math::abs( u );
+
+    if( absValue < 0.5 ) { weights[ 0 ] = NumericTraits< double >::OneValue(); }
+    else if( Math::ExactlyEquals( absValue, 0.5 ) ){ weights[ 0 ] = 0.5; }
+    else { weights[ 0 ] = NumericTraits< double >::ZeroValue(); }
   }
 
 
@@ -201,8 +204,10 @@ private:
   inline void Evaluate( const Dispatch< 1 > &, const double & u,
     double * weights ) const
   {
-    weights[ 0 ] = 1.0 - u;
-    weights[ 1 ] = u;
+    const double absValue = itk::Math::abs( u );
+
+    weights[ 0 ] = NumericTraits< double >::OneValue() - absValue;
+    weights[ 1 ] = absValue;
   }
 
 
@@ -210,11 +215,12 @@ private:
   inline void Evaluate( const Dispatch< 2 > &, const double & u,
     double * weights ) const
   {
-    const double uu = u * u;
+    const double absValue = itk::Math::abs( u );
+    const double sqrValue = itk::Math::sqr( u );
 
-    weights[ 0 ] = ( 9.0 - 12.0 * u + 4.0 * uu ) / 8.0;
-    weights[ 1 ] = -0.25 + 2.0 * u - uu;
-    weights[ 2 ] = ( 1.0 - 4.0 * u + 4.0 * uu ) / 8.0;
+    weights[ 0 ] = ( 9.0 - 12.0 * absValue + 4.0 * sqrValue ) / 8.0;
+    weights[ 1 ] = -0.25 + 2.0 * absValue - sqrValue;
+    weights[ 2 ] = ( 1.0 - 4.0 * absValue + 4.0 * sqrValue ) / 8.0;
   }
 
 
@@ -222,16 +228,17 @@ private:
   inline void Evaluate( const Dispatch< 3 > &, const double & u,
     double * weights ) const
   {
-    const double uu  = u * u;
-    const double uuu = uu * u;
+    const double absValue = itk::Math::abs( u );
+    const double sqrValue = itk::Math::sqr( u );
+    const double uuu = sqrValue * absValue;
 
     // Use (numerically) slightly less accurate multiplication with 1/6
     // instead of division by 6 to substantially improve speed.
     static const double onesixth = 1.0 / 6.0;
-    weights[ 0 ] = ( 8.0 - 12 * u + 6.0 * uu - uuu ) * onesixth;
-    weights[ 1 ] = ( -5.0 + 21.0 * u - 15.0 * uu + 3.0 * uuu ) * onesixth;
-    weights[ 2 ] = ( 4.0 - 12.0 * u + 12.0 * uu - 3.0 * uuu ) * onesixth;
-    weights[ 3 ] = ( -1.0 + 3.0 * u - 3.0 * uu + uuu ) * onesixth;
+    weights[ 0 ] = (  8.0 - 12.0 * absValue +  6.0 * sqrValue -       uuu ) * onesixth;
+    weights[ 1 ] = ( -5.0 + 21.0 * absValue - 15.0 * sqrValue + 3.0 * uuu ) * onesixth;
+    weights[ 2 ] = (  4.0 - 12.0 * absValue + 12.0 * sqrValue - 3.0 * uuu ) * onesixth;
+    weights[ 3 ] = ( -1.0 +  3.0 * absValue -  3.0 * sqrValue +       uuu ) * onesixth;
   }
 
 

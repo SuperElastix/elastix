@@ -34,7 +34,7 @@
 #ifndef __itkBSplineDerivativeKernelFunction2_h
 #define __itkBSplineDerivativeKernelFunction2_h
 
-#include "itkKernelFunctionBase.h"
+#include "itkKernelFunctionBase2.h"
 #include "vnl/vnl_math.h"
 
 namespace itk
@@ -56,20 +56,20 @@ namespace itk
  * \ingroup Functions
  */
 template< unsigned int VSplineOrder = 3 >
-class ITK_EXPORT BSplineDerivativeKernelFunction2 : public KernelFunctionBase< double >
+class ITK_EXPORT BSplineDerivativeKernelFunction2 : public KernelFunctionBase2< double >
 {
 public:
 
   /** Standard class typedefs. */
   typedef BSplineDerivativeKernelFunction2 Self;
-  typedef KernelFunctionBase< double >     Superclass;
+  typedef KernelFunctionBase2< double >    Superclass;
   typedef SmartPointer< Self >             Pointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineDerivativeKernelFunction2, KernelFunctionBase );
+  itkTypeMacro( BSplineDerivativeKernelFunction2, KernelFunctionBase2 );
 
   /** Enum of for spline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
@@ -116,28 +116,25 @@ private:
   /** First order spline */
   inline double Evaluate( const Dispatch< 1 > &, const double & u ) const
   {
+    const double absValue = itk::Math::abs( u );
 
-    double absValue = vnl_math_abs( u );
-
-    if( absValue < 1.0 )
+    if( absValue < NumericTraits< double >::OneValue() )
     {
       return -vnl_math_sgn( u );
     }
-    else if( absValue == 1.0 )
+    else if( Math::ExactlyEquals( absValue, NumericTraits< double >::OneValue() ) )
     {
       return -vnl_math_sgn( u ) / 2.0;
     }
-    else
-    {
-      return 0.0;
-    }
+    else { return NumericTraits< double >::ZeroValue(); }
   }
 
 
   inline void Evaluate( const Dispatch< 1 > &, const double & u, double * weights ) const
   {
     // MS \todo: check
-    double absValue = vnl_math_abs( u );
+    const double absValue = itk::Math::abs( u );
+
     if( absValue < 1.0 && absValue > 0.0 )
     {
       weights[ 0 ] = -1.0;
@@ -160,7 +157,7 @@ private:
   /** Second order spline. */
   inline double Evaluate( const Dispatch< 2 > &, const double & u ) const
   {
-    double absValue = vnl_math_abs( u );
+    double absValue = itk::Math::abs( u );
 
     if( absValue < 0.5 )
     {
@@ -172,7 +169,7 @@ private:
     }
     else
     {
-      return 0.0;
+      return NumericTraits< double >::ZeroValue();
     }
   }
 
@@ -189,19 +186,19 @@ private:
   /**  Third order spline. */
   inline double Evaluate( const Dispatch< 3 > &, const double & u ) const
   {
-    const double absValue = vnl_math_abs( u );
-    const double sqrValue = vnl_math_sqr( u );
+    const double absValue = itk::Math::abs( u );
+    const double sqrValue = itk::Math::sqr( u );
 
     if( absValue < 1.0 )
     {
       if( u > 0.0 )
       {
-        const double dummy = vnl_math_abs( u + 0.5 );
+        const double dummy = itk::Math::abs( u + 0.5 );
         return ( 6.0 * sqrValue - 2.0 * u - 6.0 * dummy + 3.0 ) / 4.0;
       }
       else
       {
-        const double dummy = vnl_math_abs( u - 0.5 );
+        const double dummy = itk::Math::abs( u - 0.5 );
         return -( 6.0 * sqrValue + 2.0 * u - 6.0 * dummy + 3.0 ) / 4.0;
       }
     }
@@ -209,12 +206,12 @@ private:
     {
       if( u > 0.0 )
       {
-        const double dummy = vnl_math_abs( u - 0.5 );
+        const double dummy = itk::Math::abs( u - 0.5 );
         return ( u - sqrValue + 3.0 * dummy - 2.5 ) / 2.0;
       }
       else
       {
-        const double dummy = vnl_math_abs( u + 0.5 );
+        const double dummy = itk::Math::abs( u + 0.5 );
         return ( u + sqrValue - 3.0 * dummy + 2.5 ) / 2.0;
       }
     }
@@ -227,12 +224,13 @@ private:
 
   inline void Evaluate( const Dispatch< 3 > &, const double & u, double * weights ) const
   {
-    const double uu = u * u;
+    const double absValue = itk::Math::abs( u );
+    const double sqrValue = itk::Math::sqr( u );
 
-    weights[ 0 ] = -0.5 * uu + 2.0 * u - 2.0;
-    weights[ 1 ] =  1.5 * uu - 5.0 * u + 3.5;
-    weights[ 2 ] = -1.5 * uu + 4.0 * u - 2.0;
-    weights[ 3 ] =  0.5 * uu -       u + 0.5;
+    weights[ 0 ] =  0.5 * sqrValue - 2.0 * absValue + 2.0;
+    weights[ 1 ] = -1.5 * sqrValue + 5.0 * absValue - 3.5;
+    weights[ 2 ] =  1.5 * sqrValue - 4.0 * absValue + 2.0;
+    weights[ 3 ] = -0.5 * sqrValue +       absValue - 0.5;
   }
 
 
