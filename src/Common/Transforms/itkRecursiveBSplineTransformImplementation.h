@@ -130,7 +130,7 @@ public:
 
   /** ComputeNonZeroJacobianIndices recursive implementation. */
   static inline void ComputeNonZeroJacobianIndices(
-    unsigned long * nzji,
+    unsigned long * & nzji,
     const unsigned long parametersPerDim,
     unsigned long currentIndex,
     const OffsetValueType * gridOffsetTable )
@@ -432,7 +432,7 @@ public:
 
   /** ComputeNonZeroJacobianIndices recursive implementation. */
   static inline void ComputeNonZeroJacobianIndices(
-    unsigned long * nzji,
+    unsigned long * & nzji,
     const unsigned long parametersPerDim,
     unsigned long currentIndex,
     const OffsetValueType * gridOffsetTable )
