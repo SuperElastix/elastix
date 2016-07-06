@@ -38,7 +38,9 @@
 
 #include <iostream>
 #include <sstream>
-#include <iomanip>      // std::setprecision
+#include <iomanip>    // std::setprecision
+
+#include "itkMacro.h" // itkTypeMacroNoParent
 
 /** The current elastix version. */
 #define __ELASTIX_VERSION 4.801
@@ -105,6 +107,8 @@ public:
    * elxClassNameMacro("name").
    */
   virtual const char * elxGetClassName( void ) const;
+
+  itkTypeMacroNoParent( BaseComponent );
 
   /** Set the component label, which consists of a label
    * ( "Metric", "Transform") and an index number. In case

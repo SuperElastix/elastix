@@ -99,7 +99,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   typedef typename MarginalPDFType::const_iterator          MarginalPDFIteratorType;
 
   JointPDFIteratorType jointPDFit(
-  this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
+    this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
   jointPDFit.SetDirection( 0 );
   jointPDFit.GoToBegin();
   MarginalPDFIteratorType       fixedPDFit   = this->m_FixedImageMarginalPDF.begin();
@@ -131,7 +131,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     ++fixedPDFit;
     jointPDFit.NextLine();
 
-  }  // end while-loop over fixed index
+  } // end while-loop over fixed index
 
   return static_cast< MeasureType >( -1.0 * MI );
 
@@ -692,7 +692,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   typedef typename MarginalPDFType::const_iterator   MarginalPDFIteratorType;
 
   JointPDFIteratorType jointPDFit(
-  this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
+    this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
   MarginalPDFIteratorType       fixedPDFit  = this->m_FixedImageMarginalPDF.begin();
   const MarginalPDFIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
   MarginalPDFIteratorType       movingPDFit;
