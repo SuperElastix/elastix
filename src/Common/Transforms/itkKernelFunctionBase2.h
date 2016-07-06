@@ -55,7 +55,7 @@ public:
   virtual TRealValueType Evaluate( const TRealValueType & u ) const ITK_OVERRIDE = 0;
 
   /** Evaluate the function. Subclasses must implement this. */
-  virtual void Evaluate( const TRealValueType & u, TRealValueType * weights ) const ITK_OVERRIDE = 0;
+  virtual void Evaluate( const TRealValueType & u, TRealValueType * weights ) const = 0;
 
 protected:
   KernelFunctionBase2() {};
