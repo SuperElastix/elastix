@@ -116,13 +116,13 @@ private:
   /** First order spline */
   inline double Evaluate( const Dispatch< 1 > &, const double & u ) const
   {
-    const double absValue = itk::Math::abs( u );
+    const double absValue = std::abs( u );
 
     if( absValue < NumericTraits< double >::OneValue() )
     {
       return -vnl_math_sgn( u );
     }
-    else if( Math::ExactlyEquals( absValue, NumericTraits< double >::OneValue() ) )
+    else if( absValue == NumericTraits< double >::OneValue() )
     {
       return -vnl_math_sgn( u ) / 2.0;
     }
@@ -133,7 +133,7 @@ private:
   inline void Evaluate( const Dispatch< 1 > &, const double & u, double * weights ) const
   {
     // MS \todo: check
-    const double absValue = itk::Math::abs( u );
+    const double absValue = std::abs( u );
 
     if( absValue < 1.0 && absValue > 0.0 )
     {
@@ -157,7 +157,7 @@ private:
   /** Second order spline. */
   inline double Evaluate( const Dispatch< 2 > &, const double & u ) const
   {
-    double absValue = itk::Math::abs( u );
+    double absValue = std::abs( u );
 
     if( absValue < 0.5 )
     {
@@ -186,19 +186,19 @@ private:
   /**  Third order spline. */
   inline double Evaluate( const Dispatch< 3 > &, const double & u ) const
   {
-    const double absValue = itk::Math::abs( u );
-    const double sqrValue = itk::Math::sqr( u );
+    const double absValue = std::abs( u );
+    const double sqrValue = u * u;
 
     if( absValue < 1.0 )
     {
       if( u > 0.0 )
       {
-        const double dummy = itk::Math::abs( u + 0.5 );
+        const double dummy = std::abs( u + 0.5 );
         return ( 6.0 * sqrValue - 2.0 * u - 6.0 * dummy + 3.0 ) / 4.0;
       }
       else
       {
-        const double dummy = itk::Math::abs( u - 0.5 );
+        const double dummy = std::abs( u - 0.5 );
         return -( 6.0 * sqrValue + 2.0 * u - 6.0 * dummy + 3.0 ) / 4.0;
       }
     }
@@ -206,12 +206,12 @@ private:
     {
       if( u > 0.0 )
       {
-        const double dummy = itk::Math::abs( u - 0.5 );
+        const double dummy = std::abs( u - 0.5 );
         return ( u - sqrValue + 3.0 * dummy - 2.5 ) / 2.0;
       }
       else
       {
-        const double dummy = itk::Math::abs( u + 0.5 );
+        const double dummy = std::abs( u + 0.5 );
         return ( u + sqrValue - 3.0 * dummy + 2.5 ) / 2.0;
       }
     }
@@ -224,8 +224,8 @@ private:
 
   inline void Evaluate( const Dispatch< 3 > &, const double & u, double * weights ) const
   {
-    const double absValue = itk::Math::abs( u );
-    const double sqrValue = itk::Math::sqr( u );
+    const double absValue = std::abs( u );
+    const double sqrValue = u * u;
 
     weights[ 0 ] =  0.5 * sqrValue - 2.0 * absValue + 2.0;
     weights[ 1 ] = -1.5 * sqrValue + 5.0 * absValue - 3.5;

@@ -73,9 +73,7 @@ public:
 
   /** Set/Get/Add moving image. */
   virtual void SetInput( TInputImage * inputImage );
-
   InputImageConstPointer GetInput( void );
-
   virtual void RemoveInput( void );
 
   /** Set/Get/Remove moving point set filename. */

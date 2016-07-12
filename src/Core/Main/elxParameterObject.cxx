@@ -319,9 +319,9 @@ ParameterObject
     parameterMap[ "Transform" ]    = ParameterValueVectorType( 1, "BSplineTransform" );
     parameterMap[ "Metric" ]       = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "Metric" ].push_back( "TransformBendingEnergyPenalty" );
-    parameterMap[ "Metric0Weight" ]             = ParameterValueVectorType( 1, "1.0" );
-    parameterMap[ "Metric1Weight" ]             = ParameterValueVectorType( 1, "10000.0" );
-    parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "Metric0Weight" ]                    = ParameterValueVectorType( 1, "1.0" );
+    parameterMap[ "Metric1Weight" ]                    = ParameterValueVectorType( 1, "1.0" );
+    parameterMap[ "MaximumNumberOfIterations" ]        = ParameterValueVectorType( 1, "256" );
   }
   else if( transformName == "spline" )
   {

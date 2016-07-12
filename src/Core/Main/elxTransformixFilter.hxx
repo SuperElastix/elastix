@@ -59,18 +59,18 @@ void
 TransformixFilter< TInputImage >
 ::GenerateData( void )
 {
-  if( this->IsEmpty( static_cast< TInputImage * >( this->GetInput( "InputImage" ) ) )
-    && this->GetInputPointSetFileName().empty()
-    && !this->GetComputeSpatialJacobian()
-    && !this->GetComputeDeterminantOfSpatialJacobian()
-    && !this->GetComputeDeformationField() )
+  if( this->IsEmpty( itkDynamicCastInDebugMode< TInputImage* >( this->GetInput( "InputImage" ) ) ) &&
+      this->GetInputPointSetFileName().empty() &&
+      !this->GetComputeSpatialJacobian() &&
+      !this->GetComputeDeterminantOfSpatialJacobian() &&
+      !this->GetComputeDeformationField() )
   {
     itkExceptionMacro( "Expected at least one of SetInputImage(), "
-        << "SetInputPointSetFileName() "
-        << "ComputeSpatialJacobianOn(), "
-        << "ComputeDeterminantOfSpatialJacobianOn() or "
-        << "ComputeDeformationFieldOn(), "
-        << "to be set.\"" );
+                    << "SetInputPointSetFileName() "
+                    << "ComputeSpatialJacobianOn(), "
+                    << "ComputeDeterminantOfSpatialJacobianOn() or "
+                    << "ComputeDeformationFieldOn(), "
+                    << "to be active.\"" );
   }
 
   // TODO: Patch upstream transformix to split this into seperate arguments
@@ -162,15 +162,14 @@ TransformixFilter< TInputImage >
 
   // Setup transformix for warping input image if given
   DataObjectContainerPointer inputImageContainer = 0;
-  if( !this->IsEmpty( static_cast< TInputImage * >( this->GetInput( "InputImage" ) ) ) )
-  {
-    inputImageContainer                       = DataObjectContainerType::New();
+  if( !this->IsEmpty( itkDynamicCastInDebugMode< TInputImage* >( this->GetInput( "InputImage" ) ) ) ) {
+    inputImageContainer = DataObjectContainerType::New();
     inputImageContainer->CreateElementAt( 0 ) = this->GetInput( "InputImage" );
     transformix->SetInputImageContainer( inputImageContainer );
   }
 
   // Get ParameterMap
-  ParameterObjectPointer transformParameterObject    = static_cast< ParameterObject * >( this->GetInput( "TransformParameterObject" ) );
+  ParameterObjectPointer transformParameterObject = itkDynamicCastInDebugMode< ParameterObject * >( this->GetInput( "TransformParameterObject" ) );
   ParameterMapVectorType transformParameterMapVector = transformParameterObject->GetParameterMap();
 
   // Assert user did not set empty parameter map
@@ -182,17 +181,16 @@ TransformixFilter< TInputImage >
   // Set pixel types from input image, override user settings
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
-    transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] = ParameterValueVectorType( 1,
-      PixelType< typename TInputImage::PixelType >::ToString() );
+    transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] 
+      = ParameterValueVectorType( 1, PixelType< typename TInputImage::PixelType >::ToString() );
     transformParameterMapVector[ i ][ "FixedImageDimension" ]
-                                                                       = ParameterValueVectorType( 1,
-      ParameterObject::ToString( InputImageDimension ) );
-    transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ] = ParameterValueVectorType( 1,
-      PixelType< typename TInputImage::PixelType >::ToString() );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
+    transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ]
+      = ParameterValueVectorType( 1, PixelType< typename TInputImage::PixelType >::ToString() );
     transformParameterMapVector[ i ][ "MovingImageDimension" ]
-                                                               = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
-    transformParameterMapVector[ i ][ "ResultImagePixelType" ] = ParameterValueVectorType( 1,
-      PixelType< typename TInputImage::PixelType >::ToString() );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
+    transformParameterMapVector[ i ][ "ResultImagePixelType" ]
+      = ParameterValueVectorType( 1, PixelType< typename TInputImage::PixelType >::ToString() );
   }
 
   // Run transformix
@@ -229,7 +227,7 @@ void
 TransformixFilter< TInputImage >
 ::SetInput( TInputImage * inputImage )
 {
-  this->SetInput( "InputImage", dynamic_cast< itk::DataObject * >( inputImage ) );
+  this->SetInput( "InputImage", inputImage );
 } // end SetInput()
 
 
@@ -242,7 +240,7 @@ typename TransformixFilter< TInputImage >::InputImageConstPointer
 TransformixFilter< TInputImage >
 ::GetInput( void )
 {
-  return static_cast< TInputImage * >( this->GetInput( "InputImage" ) );
+  return itkDynamicCastInDebugMode< TInputImage * >( this->GetInput( "InputImage" ) );
 } // end GetInput()
 
 
@@ -255,7 +253,7 @@ void
 TransformixFilter< TInputImage >
 ::RemoveInput( void )
 {
-  this->SetInput( TInputImage::New() );
+  this->RemoveInput( "InputImage" );
 } // end RemoveInput
 
 
@@ -268,7 +266,7 @@ void
 TransformixFilter< TInputImage >
 ::SetTransformParameterObject( ParameterObjectPointer parameterObject )
 {
-  this->SetInput( "TransformParameterObject", static_cast< itk::DataObject * >( parameterObject ) );
+  this->SetInput( "TransformParameterObject", parameterObject );
 } // end SetTransformParameterObject()
 
 
@@ -277,26 +275,26 @@ TransformixFilter< TInputImage >
  */
 
 template< typename TInputImage >
-typename TransformixFilter< TInputImage >::ParameterObjectType
-* TransformixFilter< TInputImage >
+typename TransformixFilter< TInputImage >::ParameterObjectType *
+TransformixFilter< TInputImage >
 ::GetTransformParameterObject( void )
 {
-  this->Update();
-  return static_cast< ParameterObjectType * >( this->GetInput( "TransformParameterObject" ) );
+  return dynamic_cast< ParameterObjectType * >( this->GetInput( "TransformParameterObject" ) );
 } // end GetTransformParameterObject()
+
 
 /**
  * ********************* GetTransformParameterObject *********************
  */
 
 template< typename TInputImage >
-const typename TransformixFilter< TInputImage >::ParameterObjectType
-* TransformixFilter< TInputImage >
+const typename TransformixFilter< TInputImage >::ParameterObjectType *
+TransformixFilter< TInputImage >
 ::GetTransformParameterObject( void ) const
 {
-  this->Update();
-  return static_cast< const ParameterObjectType * >( this->GetInput( "TransformParameterObject" ) );
+  return dynamic_cast< const ParameterObjectType * >( this->GetInput( "TransformParameterObject" ) );
 } // end GetTransformParameterObject()
+
 
 /**
 * ********************* IsEmpty ****************************
@@ -335,7 +333,7 @@ void
 TransformixFilter< TInputImage >
 ::RemoveLogFileName( void )
 {
-  this->SetLogFileName( "" );
+  this->m_LogFileName = "";
   this->LogToFileOff();
 } // end RemoveLogFileName()
 
