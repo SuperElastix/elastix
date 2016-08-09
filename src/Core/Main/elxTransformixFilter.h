@@ -33,7 +33,7 @@ namespace elastix
 {
 
 template< typename TInputImage >
-class TransformixFilter : public itk::ImageSource< TInputImage >
+class ELASTIXLIB_API TransformixFilter : public itk::ImageSource< TInputImage >
 {
 public:
 
@@ -139,7 +139,7 @@ private:
   virtual bool IsEmpty( const InputImagePointer inputImage );
 
   /** Let transformix handle input verification internally */
-  virtual void VerifyInputInformation( void ) ITK_OVERRIDE {}
+  virtual void VerifyInputInformation( void ) ITK_OVERRIDE {};
 
   /** Tell the compiler we want all definitions of Get/Set/Remove
    *  from ProcessObject and TransformixFilter. */

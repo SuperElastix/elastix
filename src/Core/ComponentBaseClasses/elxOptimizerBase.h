@@ -95,12 +95,12 @@ public:
   /** Execute stuff before each new pyramid resolution:
    * \li Find out if new samples are used every new iteration in this resolution.
    */
-  virtual void BeforeEachResolutionBase();
+  virtual void BeforeEachResolutionBase() ITK_OVERRIDE;
 
   /** Execute stuff after registration:
    * \li Compute and print MD5 hash of the transform parameters.
    */
-  virtual void AfterRegistrationBase( void );
+  virtual void AfterRegistrationBase( void ) ITK_OVERRIDE;
 
   /** Method that sets the scales defined by a sinus
    * scale[i] = amplitude^( sin(i/nrofparam*2pi*frequency) )

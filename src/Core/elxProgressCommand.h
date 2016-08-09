@@ -117,9 +117,9 @@ public:
   virtual void DisconnectObserver( itk::ProcessObject * filter );
 
   /** Standard Command virtual methods. */
-  virtual void Execute( itk::Object * caller, const itk::EventObject & event );
+  virtual void Execute( itk::Object * caller, const itk::EventObject & event ) ITK_OVERRIDE;
 
-  virtual void Execute( const itk::Object * caller, const itk::EventObject & event );
+  virtual void Execute( const itk::Object * caller, const itk::EventObject & event ) ITK_OVERRIDE;
 
   /** Print the progress to screen. A float value between 0.0 and 1.0
    * is expected as input.

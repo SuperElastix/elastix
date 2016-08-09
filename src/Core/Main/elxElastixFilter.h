@@ -33,7 +33,7 @@ namespace elastix
 {
 
 template< typename TFixedImage, typename TMovingImage >
-class ElastixFilter : public itk::ImageSource< TFixedImage >
+class ELASTIXLIB_API ElastixFilter : public itk::ImageSource< TFixedImage >
 {
 public:
 
@@ -186,7 +186,7 @@ private:
   void RemoveInputsOfType( const DataObjectIdentifierType & inputName );
 
   /** Let elastix handle input verification internally */
-  virtual void VerifyInputInformation( void ) ITK_OVERRIDE {}
+  virtual void VerifyInputInformation( void ) ITK_OVERRIDE {};
 
   std::string m_InitialTransformParameterFileName;
   std::string m_FixedPointSetFileName;
