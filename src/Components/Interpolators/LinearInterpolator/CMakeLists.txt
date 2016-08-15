@@ -1,5 +1,5 @@
 
-ADD_ELXCOMPONENT( LinearInterpolator OFF
+ADD_ELXCOMPONENT( LinearInterpolator
  elxLinearInterpolator.h
  elxLinearInterpolator.hxx
  elxLinearInterpolator.cxx )
