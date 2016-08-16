@@ -824,7 +824,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 #endif
 
   timer.Stop();
-  elxout << "\Creating the TransformParameterFile took "
+  elxout << "\nCreating the TransformParameterFile took "
     << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
 
   /** Call all the AfterRegistration() functions. */
