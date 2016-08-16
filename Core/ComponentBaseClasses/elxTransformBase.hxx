@@ -424,7 +424,7 @@ TransformBase< TElastix >
     {
       std::string dataFileName = "";
       this->m_Configuration->ReadParameter( dataFileName, "TransformParameters", 0 );
-      std::ifstream infile( dataFileName, std::ios::in | std::ios::binary );
+      std::ifstream infile( dataFileName.c_str(), std::ios::in | std::ios::binary );
       infile.read( reinterpret_cast<char *>( this->m_TransformParametersPointer->data_block() ), sizeof( ValueType ) * numberOfParameters );
       numberOfParametersFound = infile.gcount() / sizeof( ValueType ); // for sanity check
       infile.close();
