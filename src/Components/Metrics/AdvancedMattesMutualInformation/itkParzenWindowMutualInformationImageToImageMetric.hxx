@@ -773,7 +773,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
    *      derivative -= constant * imageJacobian *
    *          \sum_i \sum_k PRatio(i,k) * dB/dxi(xi,i,k),
    * with i, k, the fixed and moving histogram bins,
-   * PRatio the precomputed log(p(i,k)/p(i),
+   * PRatio the precomputed log( p(i,k) / p(i) ), and
    * dB/dxi the B-spline derivative.
    *
    * Note (1) that we only have to loop over i,k within the support
@@ -797,16 +797,14 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     = static_cast< int >( vcl_floor(
     movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
 
-  /** The Parzen values. */
+  /** Compute the fixed Parzen values. */
   ParzenValueContainerType fixedParzenValues( this->m_JointPDFWindow.GetSize()[ 1 ] );
-  ParzenValueContainerType movingParzenValues( this->m_JointPDFWindow.GetSize()[ 0 ] );
   this->EvaluateParzenValues(
     fixedImageParzenWindowTerm, fixedParzenWindowIndex,
     this->m_FixedKernel, fixedParzenValues );
 
   /** Compute the derivatives of the moving Parzen window. */
-  ParzenValueContainerType derivativeMovingParzenValues(
-  this->m_JointPDFWindow.GetSize()[ 0 ] );
+  ParzenValueContainerType derivativeMovingParzenValues( this->m_JointPDFWindow.GetSize()[ 0 ] );
   this->EvaluateParzenValues(
     movingImageParzenWindowTerm, movingParzenWindowIndex,
     this->m_DerivativeMovingKernel, derivativeMovingParzenValues );
@@ -819,7 +817,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
   {
     const double fv_et = fixedParzenValues[ f ] / et;
-    for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
+    for( unsigned int m = 0; m < derivativeMovingParzenValues.GetSize(); ++m )
     {
       sum += this->m_PRatioArray[ f + fixedParzenWindowIndex ][ m + movingParzenWindowIndex ]
         * fv_et * derivativeMovingParzenValues[ m ];
