@@ -704,7 +704,7 @@ TransformBase< TElastix >
       dataFileName += ".dat";
       xout[ "transpar" ] << "(TransformParameters \"" << dataFileName << "\")" << std::endl;
 
-      std::ofstream outfile( dataFileName, ios::out | ios::binary );
+      std::ofstream outfile( dataFileName.c_str(), ios::out | ios::binary );
       outfile.write( reinterpret_cast<const char *>( param.data_block() ), sizeof( ValueType ) * nrP );
       outfile.close();
     }
