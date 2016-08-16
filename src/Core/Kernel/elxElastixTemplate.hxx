@@ -795,6 +795,9 @@ void
 ElastixTemplate< TFixedImage, TMovingImage >
 ::AfterRegistration( void )
 {
+  itk::TimeProbe timer;
+  timer.Start();
+
   /** A white line. */
   elxout << std::endl;
 
@@ -819,6 +822,10 @@ ElastixTemplate< TFixedImage, TMovingImage >
   /** Get the transform parameters. */
   this->CreateTransformParametersMap(); // only relevant for dll!
 #endif
+
+  timer.Stop();
+  elxout << "\Creating the TransformParameterFile took "
+    << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
 
   /** Call all the AfterRegistration() functions. */
   this->AfterRegistrationBase();
