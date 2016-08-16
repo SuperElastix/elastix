@@ -374,6 +374,9 @@ private:
     return t0->GetTransformParametersFileName();
   }
 
+  /** Boolean to decide whether or not the transform parameters are written in binary format. */
+  bool m_UseBinaryFormatForTransformationParameters;
+
 };
 
 } // end namespace elastix
