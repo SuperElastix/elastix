@@ -291,8 +291,8 @@ public: \
 #  else
 #    define ELASTIXLIB_API __declspec( dllexport )
 #  endif
-#else
-#  if __GNUC__ >= 4
+#else 
+#  if ( __GNUC__ >= 4 || defined( __clang__ ) )
 #    define ELASTIXLIB_API __attribute__ ( ( visibility( "default" ) ) )
 #  else
 #    define ELASTIXLIB_API
