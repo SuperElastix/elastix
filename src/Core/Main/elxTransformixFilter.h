@@ -32,14 +32,14 @@
 namespace elastix
 {
 
-template< typename TInputImage >
-class ELASTIXLIB_API TransformixFilter : public itk::ImageSource< TInputImage >
+template< typename TMovingImage >
+class ELASTIXLIB_API TransformixFilter : public itk::ImageSource< TMovingImage >
 {
 public:
 
   /** Standard ITK typedefs. */
   typedef TransformixFilter               Self;
-  typedef itk::ImageSource< TInputImage > Superclass;
+  typedef itk::ImageSource< TMovingImage > Superclass;
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
 
@@ -66,13 +66,13 @@ public:
   typedef typename ParameterObjectType::Pointer         ParameterObjectPointer;
   typedef typename ParameterObjectType::ConstPointer    ParameterObjectConstPointer;
 
-  typedef typename TInputImage::Pointer      InputImagePointer;
-  typedef typename TInputImage::ConstPointer InputImageConstPointer;
+  typedef typename TMovingImage::Pointer      InputImagePointer;
+  typedef typename TMovingImage::ConstPointer InputImageConstPointer;
 
-  itkStaticConstMacro( InputImageDimension, unsigned int, TInputImage::ImageDimension );
+  itkStaticConstMacro( InputImageDimension, unsigned int, TMovingImage::ImageDimension );
 
   /** Set/Get/Add moving image. */
-  virtual void SetMovingImage( TInputImage * inputImage );
+  virtual void SetMovingImage( TMovingImage * inputImage );
   InputImageConstPointer GetMovingImage( void );
   virtual void RemoveMovingImage( void );
 
