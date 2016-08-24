@@ -72,14 +72,14 @@ public:
   itkStaticConstMacro( InputImageDimension, unsigned int, TInputImage::ImageDimension );
 
   /** Set/Get/Add moving image. */
-  virtual void SetInput( TInputImage * inputImage );
-  InputImageConstPointer GetInput( void );
-  virtual void RemoveInput( void );
+  virtual void SetMovingImage( TInputImage * inputImage );
+  InputImageConstPointer GetMovingImage( void );
+  virtual void RemoveMovingImage( void );
 
   /** Set/Get/Remove moving point set filename. */
-  itkSetMacro( InputPointSetFileName, std::string );
-  itkGetMacro( InputPointSetFileName, std::string );
-  virtual void RemoveInputPointSetFileName() { this->SetInputPointSetFileName( "" ); }
+  itkSetMacro( FixedPointSetFileName, std::string );
+  itkGetMacro( FixedPointSetFileName, std::string );
+  virtual void RemoveFixedPointSetFileName() { this->SetFixedPointSetFileName( "" ); }
 
   /** Compute spatial Jacobian On/Off. */
   itkSetMacro( ComputeSpatialJacobian, bool );
@@ -147,7 +147,7 @@ private:
   using itk::ProcessObject::GetInput;
   using itk::ProcessObject::RemoveInput;
 
-  std::string m_InputPointSetFileName;
+  std::string m_FixedPointSetFileName;
   bool        m_ComputeSpatialJacobian;
   bool        m_ComputeDeterminantOfSpatialJacobian;
   bool        m_ComputeDeformationField;

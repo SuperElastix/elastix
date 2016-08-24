@@ -34,7 +34,7 @@ TransformixFilter< TInputImage >
 
   this->AddRequiredInputName( "TransformParameterObject" );
 
-  this->m_InputPointSetFileName               = "";
+  this->m_FixedPointSetFileName               = "";
   this->m_ComputeSpatialJacobian              = false;
   this->m_ComputeDeterminantOfSpatialJacobian = false;
   this->m_ComputeDeformationField             = false;
@@ -60,13 +60,13 @@ TransformixFilter< TInputImage >
 ::GenerateData( void )
 {
   if( this->IsEmpty( itkDynamicCastInDebugMode< TInputImage* >( this->GetInput( "InputImage" ) ) ) &&
-      this->GetInputPointSetFileName().empty() &&
+      this->GetFixedPointSetFileName().empty() &&
       !this->GetComputeSpatialJacobian() &&
       !this->GetComputeDeterminantOfSpatialJacobian() &&
       !this->GetComputeDeformationField() )
   {
     itkExceptionMacro( "Expected at least one of SetInputImage(), "
-                    << "SetInputPointSetFileName() "
+                    << "SetFixedPointSetFileName() "
                     << "ComputeSpatialJacobianOn(), "
                     << "ComputeDeterminantOfSpatialJacobianOn() or "
                     << "ComputeDeformationFieldOn(), "
@@ -75,10 +75,10 @@ TransformixFilter< TInputImage >
 
   // TODO: Patch upstream transformix to split this into seperate arguments
   // Transformix uses "-def" for path to point sets AND as flag for writing deformation field
-  if( this->GetComputeDeformationField() && !this->GetInputPointSetFileName().empty() )
+  if( this->GetComputeDeformationField() && !this->GetFixedPointSetFileName().empty() )
   {
     itkExceptionMacro( << "For backwards compatibility, only one of ComputeDeformationFieldOn() "
-                       << "or SetInputPointSetFileName() can be active at any one time." )
+                       << "or SetFixedPointSetFileName() can be active at any one time." )
   }
 
   // Setup argument map which transformix uses internally ito figure out what needs to be done
@@ -99,9 +99,9 @@ TransformixFilter< TInputImage >
     argumentMap.insert( ArgumentMapEntryType( "-def", "all" ) );
   }
 
-  if( !this->GetInputPointSetFileName().empty() )
+  if( !this->GetFixedPointSetFileName().empty() )
   {
-    argumentMap.insert( ArgumentMapEntryType( "-def", this->GetInputPointSetFileName() ) );
+    argumentMap.insert( ArgumentMapEntryType( "-def", this->GetFixedPointSetFileName() ) );
   }
 
   // Setup output directory
@@ -109,7 +109,7 @@ TransformixFilter< TInputImage >
   if( ( this->GetComputeSpatialJacobian()
     || this->GetComputeDeterminantOfSpatialJacobian()
     || this->GetComputeDeformationField()
-    || !this->GetInputPointSetFileName().empty()
+    || !this->GetFixedPointSetFileName().empty()
     || this->GetLogToFile() )
     && this->GetOutputDirectory().empty() )
   {
