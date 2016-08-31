@@ -2,6 +2,7 @@ import sys, subprocess
 import os
 import os.path
 import re
+import glob
 from optparse import OptionParser
 
 #-------------------------------------------------------------------------------
@@ -47,7 +48,11 @@ def main():
   # transformix is not in the path and can therefore not be found.
   # To make sure it is found we add paths. To make sure this script also works for other machines,
   # add the correct paths manually. Non-existing paths are automatically ignored.
-  _path = os.getenv('PATH');
+  #
+  # Make sure the first path is the elastix binary directory from this build
+  _path = os.path.join( options.directory, "..", "..", "bin" ); # bin dir on Linux
+  _path += os.pathsep + os.path.join( options.directory, "..", "..", "bin", "Release" ); # bin dir on Windows
+  _path += os.pathsep + os.getenv('PATH');
   _path += os.pathsep + "/home/marius/install/bin";     # goliath
   _path += os.pathsep + "/elastix-nightly/install/bin"; # MacMini
   #_path += os.pathsep + "your_path"; # Add your own path here
@@ -72,6 +77,7 @@ def main():
   subprocess.call( [ "transformix", "-in", options.mseg, "-out", options.directory, "-tp", tpFileName ],
     stdout=subprocess.PIPE );
   subprocess.call( [ "pxcastconvert", "-in", seg, "-out", seg_defm ], stdout=subprocess.PIPE );
+  os.remove( seg );
 
   #
   # Deform the moving image segmentation by the baseline result
@@ -91,6 +97,7 @@ def main():
   subprocess.call( [ "transformix", "-in", options.mseg, "-out", options.directory, "-tp", tpFileName_b ],
     stdout=subprocess.PIPE );
   subprocess.call( [ "pxcastconvert", "-in", seg, "-out", seg_defb ], stdout=subprocess.PIPE );
+  os.remove( seg );
 
   # Compute the overlap between baseline segmentation and deformed moving segmentation
   try :

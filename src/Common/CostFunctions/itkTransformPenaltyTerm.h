@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkTransformPenaltyTerm_h
 #define __itkTransformPenaltyTerm_h
 
@@ -44,11 +48,11 @@ class TransformPenaltyTerm :
 public:
 
   /** Standard ITK stuff. */
-  typedef TransformPenaltyTerm Self;
+  typedef TransformPenaltyTerm        Self;
   typedef AdvancedImageToImageMetric<
-    TFixedImage, TFixedImage >            Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+    TFixedImage, TFixedImage >        Superclass;
+  typedef SmartPointer< Self >        Pointer;
+  typedef SmartPointer< const Self >  ConstPointer;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( TransformPenaltyTerm, AdvancedImageToImageMetric );
@@ -92,22 +96,25 @@ public:
   typedef typename Superclass::ThreaderType                ThreaderType;
   typedef typename Superclass::ThreadInfoType              ThreadInfoType;
 
+  /** Typedef's for the B-spline transform. */
+  typedef typename Superclass::CombinationTransformType       CombinationTransformType;
+  typedef typename Superclass::BSplineOrder1TransformType     BSplineOrder1TransformType;
+  typedef typename Superclass::BSplineOrder1TransformPointer  BSplineOrder1TransformPointer;
+  typedef typename Superclass::BSplineOrder2TransformType     BSplineOrder2TransformType;
+  typedef typename Superclass::BSplineOrder2TransformPointer  BSplineOrder2TransformPointer;
+  typedef typename Superclass::BSplineOrder3TransformType     BSplineOrder3TransformType;
+  typedef typename Superclass::BSplineOrder3TransformPointer  BSplineOrder3TransformPointer;
+
   /** Template parameters. FixedImageType has already been taken from superclass. */
-  typedef TScalarType ScalarType;   // \todo: not really meaningful name.
+  typedef TScalarType ScalarType; // \todo: not really meaningful name.
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass
-    ::AdvancedTransformType TransformType;
-  typedef typename TransformType
-    ::SpatialJacobianType SpatialJacobianType;
-  typedef typename TransformType
-    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
-  typedef typename TransformType
-    ::SpatialHessianType SpatialHessianType;
-  typedef typename TransformType
-    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename TransformType
-    ::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass::AdvancedTransformType            TransformType;
+  typedef typename TransformType::SpatialJacobianType           SpatialJacobianType;
+  typedef typename TransformType::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename TransformType::SpatialHessianType            SpatialHessianType;
+  typedef typename TransformType::JacobianOfSpatialHessianType  JacobianOfSpatialHessianType;
+  typedef typename TransformType::InternalMatrixType            InternalMatrixType;
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
@@ -129,18 +136,8 @@ protected:
   /** The destructor. */
   virtual ~TransformPenaltyTerm() {}
 
-  /** PrintSelf. */
-  //void PrintSelf( std::ostream& os, Indent indent ) const;
-
-  /** Typedef's for the B-spline transform. */
-  typedef AdvancedBSplineDeformableTransform<
-    ScalarType, FixedImageDimension, 3 >          BSplineTransformType;
-  typedef typename BSplineTransformType::Pointer BSplineTransformPointer;
-  typedef AdvancedCombinationTransform<
-    ScalarType, FixedImageDimension >             CombinationTransformType;
-
   /** A function to check if the transform is B-spline, for speedup. */
-  virtual bool CheckForBSplineTransform( BSplineTransformPointer & bspline ) const;
+  virtual bool CheckForBSplineTransform2( BSplineOrder3TransformPointer & bspline ) const;
 
 private:
 

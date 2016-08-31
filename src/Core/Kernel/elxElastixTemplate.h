@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxElastixTemplate_h
 #define __elxElastixTemplate_h
 
@@ -34,7 +38,7 @@
 #include "elxResampleInterpolatorBase.h"
 #include "elxTransformBase.h"
 
-#include "elxTimer.h"
+#include "itkTimeProbe.h"
 
 #include <sstream>
 #include <fstream>
@@ -95,12 +99,13 @@ namespace elastix
  * Voxel spacing and image origin are always taken into account, regardless
  * the setting of this parameter.\n
  *    example: <tt>(UseDirectionCosines "true")</tt>\n
- * Default: false. Recommended: true. The default value is false for
- * backward compatibility reasons. This parameter was introduced in
- * elastix 4.3. Setting it to false means that you choose to ignore important
- * information from the image, which relates voxel coordinates to world coordinates.
- * Ignoring it may easily lead to left/right swaps for example, which could
- * skrew up a (medical) analysis.
+ * Default: true. Recommended: true. This parameter was introduced in
+ * elastix 4.3, with a default value of false for backward compabitility.
+ *  From elastix 4.8 the default value has been changed to true. Setting it
+ *  to false means that you choose to ignore important information from the
+ *  image, which relates voxel coordinates to world coordinates. Ignoring it
+ *  may easily lead to left/right swaps for example, which could skrew up a
+ *  (medical) analysis.
  *
  * \ingroup Kernel
  */
@@ -192,8 +197,7 @@ public:
   typedef elx::TransformBase< Self >       TransformBaseType;
 
   /** Typedef's for Timer class. */
-  typedef tmr::Timer         TimerType;
-  typedef TimerType::Pointer TimerPointer;
+  typedef itk::TimeProbe TimerType;
 
   /** Typedef's for ApplyTransform.
    * \todo How useful is this? It is not consequently supported, since the
@@ -312,7 +316,7 @@ public:
 
 
   /** Get the original direction cosines of the fixed image. Returns
-   * false if it failed to determine the orignal fixed image direction. In
+   * false if it failed to determine the original fixed image direction. In
    * that case the direction var is left unchanged. If no fixed image is
    * present, it tries to read it from the parameter file. */
   virtual bool GetOriginalFixedImageDirection( FixedImageDirectionType & direction ) const;
@@ -334,9 +338,9 @@ protected:
   AfterEachResolutionCommandPointer  m_AfterEachResolutionCommand;
 
   /** Timers. */
-  TimerPointer m_Timer0;
-  TimerPointer m_IterationTimer;
-  TimerPointer m_ResolutionTimer;
+  TimerType m_Timer0;
+  TimerType m_IterationTimer;
+  TimerType m_ResolutionTimer;
 
   /** Store the CurrentTransformParameterFileName. */
   std::string m_CurrentTransformParameterFileName;

@@ -95,11 +95,13 @@ given in Chapter~\ref{chp:Tutorial}, including many recommendations
 based on the authors' experiences. More advanced registration topics
 are covered in Chapter \ref{chp:advanced}. The final chapter
 provides more details for those interested in the setup of the
-source code and gives information on how to implement your own
-additions to \elastix. In the Appendices \ref{chp:ExampleParam} and
-\ref{chp:ExampleTransformParam} example (transform) parameter files
-are given. Appendix \ref{chp:License} contains the software license
-and disclaimer under which \elastix\ is currently distributed.
+source code, gives information on how to implement your own
+additions to \elastix, and describes the use of \elastix\ as a
+library instead of a command line program. In the Appendices
+\ref{chp:ExampleParam} and \ref{chp:ExampleTransformParam} example
+(transform) parameter files are given. Appendix \ref{chp:License}
+contains the software license and disclaimer under which \elastix\
+is currently distributed.
 
 %Chapter~\ref{chp:develop} provides more details about the source code
 %and explains how to create extensions of \elastix.
@@ -140,6 +142,8 @@ for some common problems.
 
 \item When you are still stuck, do not hesitate to send an e-mail to the
     \elastix\ mailing list. In general, you will soon get an answer.
+    To subscribe visit
+    \url{http://lists.bigr.nl/mailman/listinfo/elastix}.
 \end{itemize}
 
 \section{Acknowledgements}
@@ -153,7 +157,8 @@ thank the following people for proofreading (parts of) this manual
 when we constructed a first version: Josien Pluim, Keelin Murphy,
 Martijn van der Bom, Sascha M\"{u}nzing, Jeroen de Bresser, Bram van
 Ginneken, Kajo van der Marel, Adri\"{e}nne Mendrik (in no specific
-order).
+order). Over the years several users have contributed their work as
+new components in \elastix, see the website for a list.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -336,7 +341,7 @@ Adopted from \citet{ITKSoftwareGuideSecondEdition}.}
 
 Therefore, you should take care that you use an image format that
 is able to store the relevant information (e.g. \texttt{mhd},
-DICOM). Some image formats, like \texttt{vpx}, do not store the
+DICOM). Some image formats, like \texttt{bmp}, do not store the
 origin and spacing. This may cause serious problems!
 
 Up to \elastix\ version 4.2, the image orientation (direction cosines) was not
@@ -350,10 +355,10 @@ literature. Some common choices are described below. Between brackets
 the name of the metric in \elastix\ is given:
 
 \begin{description}
-\item[Sum of Squared Differences (SSD):] (\texttt{AdvancedMeanSquares})
-The SSD is defined as:
+\item[Mean Squared Difference (MSD):] (\texttt{AdvancedMeanSquares})
+The MSD is defined as:
 \begin{align}
-\mathrm{SSD}(\vmu;I_F,I_M) &= \frac{1}{|\Omega_F|}
+\mathrm{MSD}(\vmu;I_F,I_M) &= \frac{1}{|\Omega_F|}
 \sum\limits_{\vx_i \in \Omega_F} \left( I_F(\vx_i) -
 I_M(\vT_{\vmu}(\vx_i)) \right)^2,\label{eq:ssd}
 \end{align}
@@ -442,18 +447,18 @@ foreground value that defaults to 1.
 
 \end{description}
 
-The SSD measure is a measure that is only suited for two images with
+The MSD measure is a measure that is only suited for two images with
 an equal intensity distribution, i.e. for images from the same
 modality. NCC is less strict, it assumes a linear relation between
-the intensity values of the fixed and moving image, and can therefore
-be used more often. The MI measure is even more general: only a
-relation between the probability distributions of the intensities of
-the fixed and moving image is assumed. For MI it is well-known that
-it is suited not only for mono-modal, but also for multi-modal image
-pairs. This measure is often a good choice for image registration.
-The NMI measure is, just like MI, suitable for mono- and
-multi-modality registration. \cite{Stu99:NMI} seems to indicate
-better performance than MI in some cases. The KS measure is
+the intensity values of the fixed and moving image, and can
+therefore be used more often. The MI measure is even more general:
+only a relation between the probability distributions of the
+intensities of the fixed and moving image is assumed. For MI it is
+well-known that it is suited not only for mono-modal, but also for
+multi-modal image pairs. This measure is often a good choice for
+image registration. The NMI measure is, just like MI, suitable for
+mono- and multi-modality registration. \cite{Stu99:NMI} seems to
+indicate better performance than MI in some cases. The KS measure is
 specifically meant to register binary images (segmentations). It
 measures the ``overlap'' of the segmentations.
 
@@ -971,8 +976,8 @@ similarity coefficient (DSC) is used:
 where $X$ and $Y$ represent the binary label images, and $|\cdot|$
 denotes the number of voxels that equal 1. A higher DSC indicates a
 better correspondence. A value of 1 indicates perfect overlap, a
-value of 0 means no overlap at all. Also the Tannimoto (TC)
-coefficient is used often. It is related to the DSC by
+value of 0 means no overlap at all. Also the Tannimoto coefficient
+(TC) is used often. It is related to the DSC by
 $\mathrm{DSC}=2\mathrm{TC}/(\mathrm{TC}+1)$. See also
 \cite{Cru06:Generalized}. It is important to realise that the
 surface-volume ratio of the segmented structures influences the
@@ -1002,8 +1007,8 @@ be worried.
 
 \item Inspect the convergence, by computing for each iteration
 the exact metric value (and not an approximated value, when you do
-random sampling), and plot it. For example for the SSD measure,
-the lower the metric value, the better the registration.
+random sampling), and plot it. For example for the MSD measure, the
+lower the metric value, the better the registration.
 
 \item Do not use image similarity as a way to evaluate your
 registration. Torsten Rohlfing can explain why \cite{Rohlfing2012}.
@@ -1051,8 +1056,9 @@ VV & $\checkmark$ & $\checkmark\checkmark\checkmark$ &
 \url{http://www.creatis.insa-lyon.fr/rio/vv} The 4D Slicer, a fast
 and simple viewer. VV is more specifically designed for qualitative
 evaluation of image registration and deformation field
-visualization. A tutorial on the use of VV in combination with elastix
-can be found in Appendix \ref{chp:vvtutorial} of this manual.\\
+visualization. A tutorial on the use of VV in combination with
+\elastix\ can be found in Appendix \ref{chp:vvtutorial} of this
+manual. \\
 \end{tabular*}
 \caption{A number of visualization tools. The three marks for the
 platforms column denote Windows, Linux and Mac OSX support,
@@ -1071,7 +1077,7 @@ versions we decided to put the separate components of \elastix\ in
 separate libraries. This resulted in major version 3.0 in November
 2004. \elastix\ 3.0 was also the first version that was made
 publicly available on the \elastix\ website, around the same time.
-The continued development brings us today (\today) to version 4.7.
+The continued development brings us today (\today) to version 4.8.
 
 \begin{table}[h!]
 \begin{tabular}{l|l}
@@ -1082,7 +1088,9 @@ SVN repository & \url{https://svn.bigr.nl/elastix/trunkpublic} \\
 Dashboard      & \url{http://my.cdash.org/index.php?project=elastix} \\
 WIKI           & \url{http://elastix.isi.uu.nl/wiki.php} \\
 FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php} \\
-Mailing list   & \url{elastix@bigr.nl} (subscription via website) \\
+Mailing list subscription &
+\url{http://lists.bigr.nl/mailman/listinfo/elastix} \\
+Mailing list   & \url{elastix@bigr.nl}
 \end{tabular}
 \end{table}
 
@@ -1131,8 +1139,8 @@ thanks to human readable and editable parameter file;
 \item easy to use for large amounts of data, since \elastix\ can be
 called easily in a script;
 
-\item fast, thanks to stochastic subsampling, if desired, and thanks to
-multi-threading and code optimizations;
+\item fast, thanks to stochastic subsampling \cite{KleinEA07}, and thanks to
+multi-threading and code optimizations \cite{Shamonin2014};
 
 \item relatively easy to extend, i.e. to add new components, so it is
 very suited for research also.
@@ -1157,19 +1165,22 @@ pre-compiled binaries.
 
 \item Make sure your operating system can find the program:
     \begin{enumerate}
-    \item Windows XP: Go to the control panel, go to ``System'', go to
-    the tab ``Advanced'', click ``Environmental variables'', add \texttt{folder}
-    to the variable ``path''.
+    \item Windows 7: Go to the control panel, go to ``System'', go to
+    ``Advanced system settings'', click ``Environmental variables'',
+    add \texttt{folder} to the variable ``path''.
 
     \item Linux: Add the following lines to your \texttt{.bashrc} file:
        \begin{quote}
        \texttt{export PATH=folder/bin:\$PATH}\\
        \texttt{export LD\_LIBRARY\_PATH=folder/lib:\$LD\_LIBRARY\_PATH}
        \end{quote}
+
+    \item Mac: Use \texttt{DYLD\_LIBRARY\_PATH} instead of \texttt{LD\_LIBRARY\_PATH}
+
     \end{enumerate}
     or call \elastix\ with the full path:
-    \texttt{fullPathToFolder$\backslash$elastix}. Note that in Linux, you
-    will have to set the \texttt{LD\_LIBRARY\_PATH} anyway.
+    \texttt{fullPathToFolder$\backslash$elastix}. Note that in Linux and Mac, you
+    will have to set the \texttt{LD\_LIBRARY\_PATH} or \texttt{DYLD\_LIBRARY\_PATH} anyway.
 \end{enumerate}
 
 \subsection{Getting started the easy way}
@@ -1182,7 +1193,7 @@ the GCC compiler under Linux/MacOS.
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
 
-\item Download and compile the ITK version 4.5.0: \url{www.itk.org}. Make
+\item Download and compile the ITK version 4.8: \url{www.itk.org}. Make
     sure to set the following (advanced) CMake variable to \texttt{ON}:
     \texttt{Module\_ITKReview}, and optionally \texttt{ITK\_USE\_64BITS\_IDS}
     and \texttt{ITK\_LEGACY\_REMOVE}. For faster building of ITK
@@ -1201,7 +1212,7 @@ svn co --username elastixguest --password elastixguest
 \end{verbatim}
       where XX\_X is the major version number (first 2 digits) and the
       minor version number (1 digit). So, for example, for version
-      4.7 this would be 04\_7.
+      4.8 this would be 04\_8.
   \item Use \texttt{subversion} to check out the latest development
       version. NB: this version might be unstable!
 \begin{verbatim}
@@ -1250,11 +1261,13 @@ ON.
 
 \section{How to call \elastix}\label{sec:elastix:call}
 
-\elastix\ is a command line program. This means that you have to
-open a command line interface (a DOS-box, a shell) and type in an
-appropriate \elastix\ command. This also means that there is no
-graphical user interface. Help on using the program can be acquired
-as follows:
+\elastix\ is a command line program, although since version 4.7
+(February 2014) initial support for a library interface is
+available, see Section \ref{ssec:dev:library}. This means that you
+have to open a command line interface (a DOS-box, a shell) and type
+in an appropriate \elastix\ command. This also means that there is
+no graphical user interface. Help on using the program can be
+acquired as follows:
 \begin{quote}
 \texttt{elastix --help}
 \end{quote}
@@ -1335,10 +1348,11 @@ the values need to be quoted:
 \begin{quote}
 \texttt{(ParameterName "value1" ... "valueN")}
 \end{quote}
-Comments can be provided by starting the line with `\texttt{//}'. A
-minimal example of a valid parameter file is given in Appendix
-\ref{chp:ExampleParam}. A list of available parameters for each
-class is given at
+Comments can be provided by starting the line with `\texttt{//}'.
+The order in which the parameters are given does not matter, but
+parameters can only be specified once. A minimal example of a valid
+parameter file is given in Appendix \ref{chp:ExampleParam}. A list
+of available parameters for each class is given at
 \url{http://elastix.isi.uu.nl/doxygen/parameter.html}. Examples of
 parameter files can be found at the wiki:
 \url{http://elastix.bigr.nl/wiki/index.php/Parameter_file_database}.
@@ -1868,7 +1882,7 @@ $a = 32000$ is too large.} \label{fig:stepsize}
 \end{figure}
 
 A good choice for $a$ is dependent on the cost function that is used
-for registration: the $a$ that will give you a good result for SSD
+for registration: the $a$ that will give you a good result for MSD
 is not the same as the one that gives a good result for MI. Finally,
 $a$ also depends on the amount of deformation that you expect
 between the fixed and the moving image. So again, recommendations
@@ -2000,15 +2014,15 @@ thereby neglecting the meaningful edges. The conic beam edge in
 ultrasound images is an example of such an artificial edge.
 
 \item when the image contains structures in the neighbourhood
-of your ROI that may influence the registration within your ROI. This
-is for example the case when matching lung data. Usually, you are
-interested in the lungs, and not if the rib cage is well aligned.
-However, the ribs are structures that for example in CT can have a
-strong influence on the similarity metric, especially if you use the
-SSD metric. In that case, the rib cage may be well aligned at the
-cost of vessels structures near the border of the lung with the rib
-cage. In this case it will help you if you use a dilated lung
-segmentation as a mask.
+of your ROI that may influence the registration within your ROI.
+This is for example the case when matching lung data. Usually, you
+are interested in the lungs, and not if the rib cage is well
+aligned. However, the ribs are structures that for example in CT can
+have a strong influence on the similarity metric, especially if you
+use the MSD metric. In that case, the rib cage may be well aligned
+at the cost of vessels structures near the border of the lung with
+the rib cage. In this case it will help you if you use a dilated
+lung segmentation as a mask.
 \end{itemize}
 
 Masks can be used both for the fixed and the moving image. A fixed
@@ -2191,7 +2205,7 @@ as:
 \end{align}
 with $\omega_i$ the weights. This way the same fixed and moving
 image is used for every sub-metric $\CC_i$. This way one can for
-example simultaneously optimise the SSD and MI during a
+example simultaneously optimise the MSD and MI during a
 registration.
 
 \elastix\ should be called like:
@@ -2710,7 +2724,24 @@ source tree. See Section \ref{sec:dev:newcomp} for more details about this.
 %\item ANN license!
 %\end{itemize}
 
-\section{Including \elastix\ code in your own program}
+\section{Using \elastix\ in your own software}
+
+There are (at least) three ways to use \elastix\ in your own
+software:
+\begin{enumerate}
+\item Compile the \elastix\ executable and directly call it with the
+appropriate arguments. This is the most easy way, and Matlab and
+MeVisLab code exists for that.
+
+\item Include the \elastix\ source code in your own project, see
+Section \ref{ssec:dev:include}.
+
+\item Compile \elastix\ as a library and link to it, see
+Section \ref{ssec:dev:library}. This functionality is available as
+of version 4.7 (February 2014).
+\end{enumerate}
+
+\subsection{Including \elastix\ code in your own software}\label{ssec:dev:include}
 
 You may find some \elastix\ classes useful to integrate in your own project.
 For example, if you are developing a new \elastix\ component and first would
@@ -2727,6 +2758,212 @@ such as elxCommon, to avoid recompiling code.
 
 An example of this can be found in the directory \texttt{dox/externalproject}
 of the elastix source distribution.
+
+\subsection{Using \elastix\ as a library}\label{ssec:dev:library}
+
+\subsubsection{Introduction}
+
+\elastix\ also offers the possibility to be used as dynamic or
+static linked library. This offers the possibility to integrate its
+functionality in your own software, without having to call the
+external \elastix\ executable. The latter namely has the downside
+that your software, which presumably already has the fixed and
+moving images in memory, has to store these images to disk.
+\elastix\ will then load them again (so they will be in memory
+twice), perform the registration, and write the result to disk. Your
+software then needs to load the result from the disk to memory. This
+approach obviously leads to an increase in memory use, decrease in
+performance due to the reading/writing overhead, and is just not
+very elegant. When using \elastix\ as a library your software only
+has to pass memory pointers to the library interface, so there is no
+need for reading/writing or in-memory image duplication. After
+registration \elastix\ will pass a pointer to the resulting image
+back to your program.
+
+Library functionality is still quite heavily under development, but
+the following basic functionality is already available:
+\begin{itemize}
+\item Registration of any pair of images using any combination of
+\elastix\ components.
+
+\item Usage of registration masks.
+
+\item Usage of multiple parameter files consecutively (similar to
+using the -p option of the \elastix\ executable multiple times).
+
+\item Using \transformix\ to transform an image.
+\end{itemize}
+
+\subsubsection{Building \elastix\ as a static or dynamic library}
+
+To build \elastix\ as a library you have to disable the
+\texttt{ELASTIX\_BUILD\_EXECUTABLE} option in CMake. With this
+option disabled a build project for a static library will be
+created. If you want to create a dynamic library (not very well
+tested), you have to enable the \texttt{ELASTIX\_BUILD\_SHARED\_LIBS}
+option.
+
+\subsubsection{Linking with the \elastix\ library}
+
+When building your own software project, you need to link \elastix\
+and provide the \elastix\ source directory as an include directory
+to your compiler. You can do this, for example, by adding the
+following code to your CMakeLists.txt file:
+\begin{quote}
+\begin{verbatim}
+set( ELASTIX_BUILD_DIR "" CACHE PATH "Path to elastix build folder" )
+set( ELASTIX_USE_FILE ${ELASTIX_BUILD_DIR}/UseElastix.cmake )
+
+if( EXISTS ${ELASTIX_USE_FILE} )
+  include( ${ELASTIX_USE_FILE} )
+  link_libraries( param )
+  link_libraries( elastix )
+  link_libraries( transformix )
+endif()
+\end{verbatim}
+\end{quote}
+
+This will add a parameter to CMake, \texttt{ELASTIX\_BUILD\_DIR},
+which needs to be provided by the user upon running CMake. You
+should provide the directory in which you have build the \elastix\
+sources (the directory having the \texttt{UseElastix.cmake} file).
+If you want to control better to which binaries you link \elastix,
+use the CMake \texttt{target\_link\_libraries} directive instead.
+
+\subsubsection{Preparing registration parameter settings}
+
+To be able to run \elastix, you need to prepare the parameter
+settings first. You can do this for example by reading them from
+file:
+\begin{quote}
+\begin{verbatim}
+#include "elastixlib.h"
+#include "itkParameterFileParser.h"
+
+using namespace elastix;
+typedef ELASTIX::ParameterMapType RegistrationParametersType;
+typedef itk::ParameterFileParser  ParserType;
+
+// Create parser for transform parameters text file.
+ParserType::Pointer file_parser = ParserType::New();
+
+// Try parsing transform parameters text file.
+file_parser->SetParameterFileName( "par_registration.txt" );
+try
+{
+  file_parser->ReadParameterFile();
+}
+catch( itk::ExceptionObject & e )
+{
+  std::cout << e.what() << std::endl;
+  // Do some error handling!
+}
+
+// Retrieve parameter settings as map.
+RegistrationParametersType parameters = file_parser->GetParameterMap();
+\end{verbatim}
+\end{quote}
+
+If you want to use multiple parameter files consecutively, load them
+one by one and add them to a vector:
+\begin{quote}
+\begin{verbatim}
+typedef std::vector<RegistrationParametersType> RegistrationParametersContainerType;
+\end{verbatim}
+\end{quote}
+Then use this vector in the code below instead of the single
+parameter map. You can also set up the parameter map in your C++
+code. Check the typedef of \texttt{ELASTIX::ParameterMapType} for
+the exact format.
+
+\subsubsection{Running \elastix}
+
+Once the parameter settings are loaded, run \elastix\ using, for
+example, the following code:
+\begin{quote}
+\begin{verbatim}
+ELASTIX* elastix = new ELASTIX();
+int error = 0;
+try
+{
+  error = elastix->RegisterImages(
+    static_cast<typename itk::DataObject::Pointer>( fixed_image.GetPointer() ),
+    static_cast<typename itk::DataObject::Pointer>( moving_image.GetPointer() ),
+    parameters,        // Parameter map read in previous code
+    output_directory,  // Directory where output is written, if enabled
+    write_log_file,    // Enable/disable writing of elastix.log
+    output_to_console, // Enable/disable output to console
+    0,                 // Provide fixed image mask (optional, 0 = no mask)
+    0                  // Provide moving image mask (optional, 0 = no mask)
+  );
+}
+catch( itk::ExceptionObject &err )
+{
+  // Do some error handling.
+}
+
+if( error == 0 )
+{
+  if( elastix->GetResultImage().IsNotNull() )
+  {
+    // Typedef the ITKImageType first...
+    ITKImageType * output_image = static_cast<ITKImageType *>(
+      elastix->GetResultImage().GetPointer() );
+}
+else
+{
+  // Registration failure. Do some error handling.
+}
+
+// Get transform parameters of all registration steps.
+RegistrationParametersContainerType transform_parameters
+  = elastix->GetTransformParameterMapList();
+
+// Clean up memory.
+delete elastix;
+\end{verbatim}
+\end{quote}
+
+\subsubsection{Running transformix}
+
+Given the transformation parameters provided by the \texttt{ELASTIX}
+class, you can run \transformix:
+\begin{quote}
+\begin{verbatim}
+TRANSFORMIX* transformix = new TRANSFORMIX();
+int error = 0;
+try
+{
+  error = transformix->TransformImage(
+    static_cast<typename itk::DataObject::Pointer>( input_image_adapter.GetPointer() ),
+    transform_parameters, // Parameters resulting from elastix run
+    write_log_file,       // Enable/disable writing of transformix.log
+    output_to_console);   // Enable/disable output to console
+}
+catch( itk::ExceptionObject &err )
+{
+  // Do some error handling.
+}
+
+if( error == 0 )
+{
+  // Typedef the ITKImageType first...
+  ITKImageType * output_image = static_cast<ITKImageType *>(
+    transformix->GetResultImage().GetPointer() );
+}
+else
+{
+  // Do some error handling.
+}
+
+// Clean up memory.
+delete transformix;
+\end{verbatim}
+\end{quote}
+Alternatively, you can read the transformation parameters from file
+(for example, from \texttt{TransformParameters.0.txt}) using the
+parameter file parser in the same way as was shown for the
+registration parameters above.
 
 \section{Creating new components}\label{sec:dev:newcomp}
 
@@ -3180,67 +3417,254 @@ Image Analysis}, pages 171--175, Toronto, Canada, September 2011.
 
 \chapter{Software License} \label{chp:License}
 
+\section{Copyright Notice}
+
 \small
 \begin{verbatim}
-Overview:
+elastix Copyright Notice:
 
-Elastix was developed by Stefan Klein and Marius Staring under
-supervision of Josien P.W. Pluim, initially under contract to the
-Image Sciences Institute, University Medical Center Utrecht, The
-Netherlands.
+Copyright 2014 University Medical Center Utrecht and contributors
 
-Elastix is distributed under the new and simplified BSD license
-approved by the Open Source Initiative (OSI)
+Licensed under the Apache License, Version 2.0 (the "License"); you
+may not use this file except in compliance with the License. You may
+obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0.txt
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+-------------------------------------------------------------------------------
+
+See LICENSE file for details.
+
+-------------------------------------------------------------------------------
+
+Historical note
+
+elastix was initially developed under contract of the University
+Medical Center Utrecht, The Netherlands, by Stefan Klein and Marius
+Staring under supervision of Josien P.W. Pluim. It is currently
+maintained at the Leiden University Medical Center, The Netherlands,
+and at Erasmus Medical Center, Rotterdam, The Netherlands.
+
+Versions of elastix prior to elastix v4.8 are distributed under the
+new and simplified BSD license approved by the Open Source
+Initiative (OSI)
 [http://www.opensource.org/licenses/bsd-license.php].
 
+Starting with its version elastix v4.8, elastix is distributed under
+the Apache 2.0 License.
+
 The software is partially derived from the Insight Segmentation and
-Registration Toolkit (ITK), which is also distributed under the new
-and simplified BSD licence. The ITK is required by Elastix for
-compilation of the source code.
+Registration Toolkit (ITK). Prior to ITK 4, ITK is distributed under
+the new and simplified BSD licence. Starting with its version ITK 4
+the ITK is distributed under the Apache 2.0 License. The ITK is
+required by elastix for compilation of the source code.
 
-The copyright of the files in the Common/KNN/ann_1.1 subdirectory
-is held by a third party, the University of Maryland. The ANN
-package is distributed under the GNU Lesser Public Licence. Please
-read the content of the subdirectory for specific details on this
-third-party license.
+-------------------------------------------------------------------------------
 
+elastix contains code from third parties that have different
+copyrights.
 
-Elastix Copyright Notice:
+They are:
 
-      Copyright (c) 2004-2013 University Medical Center Utrecht
-      All rights reserved.
+1) Insight Toolkit:   Copyright by the Insight Software Consortium
+                      Distributed under the Apache 2.0 license.
+                      Several files throughout elastix are derived from the
+                      Insight Toolkit.
 
+2) ANN library:       Copyright by the University of Maryland.
+                      Distributed under the GNU Lesser Public Licence.
+                      The files can be found in the subdirectory
+                      Common/KNN/ann_1.1. Please read the content of the
+                      subdirectory for details.
+\end{verbatim}
+\normalsize
 
-License:
+\section{Software Licence}
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
+\small
+\begin{verbatim}
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
 
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
-    * Redistributions in binary form must reproduce the above copyright notice,
-      this list of conditions and the following disclaimer in the documentation
-      and/or other materials provided with the distribution.
+   1. Definitions.
 
-    * Neither the name of the University Medical Center Utrecht nor the names of
-      its contributors may be used to endorse or promote products derived from
-      this software without specific prior written permission.
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
-BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
 \end{verbatim}
 \normalsize
 

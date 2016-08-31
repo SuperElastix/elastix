@@ -1,19 +1,20 @@
 /*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkCenteredTransformInitializer2.txx,v $
-  Language:  C++
-  Date:      $Date: 2009-08-15 23:42:49 $
-  Version:   $Revision: 1.22 $
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkCenteredTransformInitializer2_hxx
 #define __itkCenteredTransformInitializer2_hxx
 
@@ -27,12 +28,11 @@ template< class TTransform, class TFixedImage, class TMovingImage >
 CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
 ::CenteredTransformInitializer2()
 {
-  m_FixedCalculator   = FixedImageCalculatorType::New();
-  m_MovingCalculator  = MovingImageCalculatorType::New();
-  m_UseMoments        = false;
-  m_UseOrigins        = false;
-  m_UseTop            = false;
-  m_UseTopSliceCenter = false;
+  m_FixedCalculator  = FixedImageCalculatorType::New();
+  m_MovingCalculator = MovingImageCalculatorType::New();
+  m_UseMoments       = false;
+  m_UseOrigins       = false;
+  m_UseTop           = false;
 }
 
 
@@ -128,9 +128,6 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
 
     for( unsigned int m = 0; m < InputSpaceDimension; m++ )
     {
-      centerMovingIndex[ m ] =
-        static_cast< ContinuousIndexValueType >( movingIndex[ m ] ) +
-        static_cast< ContinuousIndexValueType >( movingSize[ m ] - 1 ) / 2.0;
     }
 
     m_MovingImage->TransformContinuousIndexToPhysicalPoint(
@@ -154,42 +151,80 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
     }
 
   }
-  else if ( m_UseTop )
+  else if( m_UseTop )
   {
     // Align the geometrical tops (z-direction) of the fixed and moving image.
     // When masks are used the geometrical tops (z-direction) of the bounding box
     // of the masks are used. Center of rotation point is set to the center of the fixed image.
     // Get fixed image (mask) information
+    typedef typename FixedImageType::RegionType FixedRegionType;
+    FixedRegionType fixedRegion = this->m_FixedImage->GetLargestPossibleRegion();
+    if( this->m_FixedImageMask )
+    {
+      typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject
+        = FixedMaskSpatialObjectType::New();
+      fixedMaskAsSpatialObject->SetImage( this->m_FixedImageMask );
+      fixedRegion = fixedMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+    }
 
-    // Create eight corner points in world coordinates for both fixed and moving image.
-    WorldCornersType fixedCornersWorld  = 
-      this->GetWorldCorners<FixedImageType, FixedImageMaskType>( m_FixedImage, m_FixedImageMask );
+    // Get moving image (mask) information
+    typedef typename MovingImageType::RegionType MovingRegionType;
+    MovingRegionType movingRegion = this->m_MovingImage->GetLargestPossibleRegion();
+    if( this->m_MovingImageMask )
+    {
+      typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject
+        = MovingMaskSpatialObjectType::New();
+      movingMaskAsSpatialObject->SetImage( this->m_MovingImageMask );
+      movingRegion = movingMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+    }
 
-    WorldCornersType movingCornersWorld = 
-      this->GetWorldCorners<MovingImageType, MovingImageMaskType>( m_MovingImage, m_MovingImageMask );
+    // Create eight corner points in voxel coordinates for both fixed and moving image.
+    std::vector< ContinuousIndex< double, InputSpaceDimension > > fixedCorners( 8 );
+    std::vector< ContinuousIndex< double, InputSpaceDimension > > movingCorners( 8 );
+    for( unsigned int z = 0, index = 0; z < 2; ++z )
+    {
+      for( unsigned int y = 0; y < 2; ++y )
+      {
+        for( unsigned int x = 0; x < 2; ++x, ++index )
+        {
+          fixedCorners[ index ][ 0 ] = fixedRegion.GetIndex()[ 0 ] + x * fixedRegion.GetSize()[ 0 ];
+          fixedCorners[ index ][ 1 ] = fixedRegion.GetIndex()[ 1 ] + y * fixedRegion.GetSize()[ 1 ];
+          if( InputSpaceDimension > 2 )
+          {
+            fixedCorners[ index ][ 2 ] = fixedRegion.GetIndex()[ 2 ] + z * fixedRegion.GetSize()[ 2 ];
+          }
+          movingCorners[ index ][ 0 ] = movingRegion.GetIndex()[ 0 ] + x * movingRegion.GetSize()[ 0 ];
+          movingCorners[ index ][ 1 ] = movingRegion.GetIndex()[ 1 ] + y * movingRegion.GetSize()[ 1 ];
+          if( InputSpaceDimension > 2 )
+          {
+            movingCorners[ index ][ 2 ] = movingRegion.GetIndex()[ 2 ] + z * movingRegion.GetSize()[ 2 ];
+          }
+        }
+      }
+    }
 
-    typename TransformType::InputPointType minWorldFixed, maxWorldFixed, minWorldMoving, maxWorldMoving;
     // Transform eight corner points to world coordinates and determine min and max coordinate values.
-    for ( size_t i = 0; i < fixedCornersWorld.size(); ++i ) 
+    typename TransformType::InputPointType minWorldFixed, maxWorldFixed, minWorldMoving, maxWorldMoving;
+    for( std::size_t i = 0; i < fixedCorners.size(); ++i )
     {
       typename TransformType::InputPointType worldFixed, worldMoving;
-      worldFixed = fixedCornersWorld[i];
-      worldMoving = movingCornersWorld[i];
-      if ( i == 0 )
+      this->m_FixedImage->TransformContinuousIndexToPhysicalPoint( fixedCorners[ i ], worldFixed );
+      this->m_MovingImage->TransformContinuousIndexToPhysicalPoint( movingCorners[ i ], worldMoving );
+      if( i == 0 )
       {
-        minWorldFixed = worldFixed;
-        maxWorldFixed = worldFixed;
+        minWorldFixed  = worldFixed;
+        maxWorldFixed  = worldFixed;
         minWorldMoving = worldMoving;
         maxWorldMoving = worldMoving;
       }
       else
       {
-        for ( size_t k = 0; k < InputSpaceDimension; ++k )
+        for( std::size_t k = 0; k < InputSpaceDimension; ++k )
         {
-          if ( worldFixed[ k ] < minWorldFixed[ k ] )   minWorldFixed[ k ]  = worldFixed[ k ];
-          if ( worldFixed[ k ] > maxWorldFixed[ k ] )   maxWorldFixed[ k ]  = worldFixed[ k ];
-          if ( worldMoving[ k ] < minWorldMoving[ k ] ) minWorldMoving[ k ] = worldMoving[ k ];
-          if ( worldMoving[ k ] > maxWorldMoving[ k ] ) maxWorldMoving[ k ] = worldMoving[ k ];
+          if( worldFixed[ k ] < minWorldFixed[ k ] ) { minWorldFixed[ k ] = worldFixed[ k ]; }
+          if( worldFixed[ k ] > maxWorldFixed[ k ] ) { maxWorldFixed[ k ] = worldFixed[ k ]; }
+          if( worldMoving[ k ] < minWorldMoving[ k ] ) { minWorldMoving[ k ] = worldMoving[ k ]; }
+          if( worldMoving[ k ] > maxWorldMoving[ k ] ) { maxWorldMoving[ k ] = worldMoving[ k ]; }
         }
       }
     }
@@ -207,43 +242,13 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
     topCenterMoving[ 2 ] = maxWorldMoving[ 2 ];
 
     // Compute the difference between the centers
-    for( unsigned int i = 0; i < InputSpaceDimension; i++ )
+    for( unsigned int i = 0; i < InputSpaceDimension; ++i )
     {
       rotationCenter[ i ]    = ( maxWorldFixed[ i ] + minWorldFixed[ i ] ) / 2.0;
       translationVector[ i ] = topCenterMoving[ i ] - topCenterFixed[ i ];
     }
   }
-  else if ( m_UseTopSliceCenter )
-  {
-    // Get eight corner points in world coordinates.
-    WorldCornersType fixedCornersWorld  = 
-        this->GetWorldCorners<FixedImageType, FixedImageMaskType>( m_FixedImage, m_FixedImageMask );
-    WorldCornersType movingCornersWorld = 
-      this->GetWorldCorners<MovingImageType, MovingImageMaskType>( m_MovingImage, m_MovingImageMask );
-
-    // Sort corners based on their z coordinate.
-    std::sort(fixedCornersWorld.begin(),  fixedCornersWorld.end(), 
-        &CenteredTransformInitializer2::MaxZCoordinate);
-    std::sort(movingCornersWorld.begin(), movingCornersWorld.end(), 
-        &CenteredTransformInitializer2::MaxZCoordinate);
-
-    const double weights[4] = {0.25, 0.25, 0.25};
-    typename TransformType::InputPointType fixedTopCenter;
-    fixedTopCenter.SetToBarycentricCombination( &fixedCornersWorld[4], weights, 4 );
-
-    typename TransformType::InputPointType movingTopCenter;
-    movingTopCenter.SetToBarycentricCombination( &movingCornersWorld[4], weights, 4 );
-
-    typename TransformType::InputPointType fixedBottomCenter;
-    fixedBottomCenter.SetToBarycentricCombination( &fixedCornersWorld[0], weights, 4 );
-
-    typename TransformType::InputPointType movingBottomCenter;
-    movingBottomCenter.SetToBarycentricCombination( &movingCornersWorld[0], weights, 4 );
-
-    // Compute the difference between the centers
-    rotationCenter.SetToBarycentricCombination( fixedBottomCenter, fixedTopCenter, 0.5 );
-    translationVector = movingTopCenter - fixedTopCenter;
-  }
+  
   else
   {
     // Align the geometrical centers of the fixed and moving image.

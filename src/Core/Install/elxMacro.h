@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxMacro_h
 #define __elxMacro_h
 
@@ -271,5 +275,28 @@ public: \
  *
  */
 #define elxout ::xl::xout[ "standard" ]
+
+/********************************************************************************
+ *                    *
+ *      Dll export    *
+ *                    *
+ ********************************************************************************/
+#if ( defined( _WIN32 ) || defined( WIN32 ) )
+#  ifdef _ELASTIX_BUILD_LIBRARY
+#    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
+#      define ELASTIXLIB_API __declspec( dllexport )
+#    else
+#      define ELASTIXLIB_API __declspec( dllimport )
+#    endif
+#  else
+#    define ELASTIXLIB_API __declspec( dllexport )
+#  endif
+#else 
+#  if ( __GNUC__ >= 4 || defined( __clang__ ) )
+#    define ELASTIXLIB_API __attribute__ ( ( visibility( "default" ) ) )
+#  else
+#    define ELASTIXLIB_API
+#  endif
+#endif
 
 #endif // end #ifndef __elxMacro_h

@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxTransformBase_hxx
 #define __elxTransformBase_hxx
 
@@ -22,7 +26,7 @@
 #include "vnl/vnl_math.h"
 #include <itksys/SystemTools.hxx>
 #include "itkVector.h"
-#include "itkTransformToDisplacementFieldSource.h"
+#include "itkTransformToDisplacementFieldFilter.h"
 #include "itkTransformToDeterminantOfSpatialJacobianSource.h"
 #include "itkTransformToSpatialJacobianSource.h"
 #include "itkImageFileWriter.h"
@@ -401,7 +405,7 @@ TransformBase< TElastix >
 
     /** Read the TransformParameters. */
     std::vector< ValueType > vecPar( numberOfParameters,
-    itk::NumericTraits< ValueType >::Zero );
+      itk::NumericTraits< ValueType >::ZeroValue() );
     this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
       0, numberOfParameters - 1, true );
 
@@ -697,15 +701,16 @@ TransformBase< TElastix >
       << std::endl;
   }
 
-  /** Write the way Transforms are combined. */
+  /** Write the way Transforms are combined.
+   *  Set it to the default "Compose" when no combination transform is used. */
   std::string                      combinationMethod = "Compose";
   const CombinationTransformType * dummyComboTransform
     = dynamic_cast< const CombinationTransformType * >( this );
   if( dummyComboTransform )
   {
-    if( dummyComboTransform->GetUseComposition() )
+    if( dummyComboTransform->GetUseAddition() )
     {
-      combinationMethod = "Compose";
+      combinationMethod = "Add";
     }
   }
 
@@ -1441,14 +1446,12 @@ TransformBase< TElastix >
 ::TransformPointsAllPoints( void ) const
 {
   /** Typedef's. */
-  typedef typename FixedImageType::RegionType    FixedImageRegionType;
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
   typedef itk::Vector<
     float, FixedImageDimension >                      VectorPixelType;
   typedef itk::Image<
     VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
-  typedef typename DeformationFieldImageType::Pointer DeformationFieldImagePointer;
-  typedef itk::TransformToDisplacementFieldSource<
+  typedef itk::TransformToDisplacementFieldFilter<
     DeformationFieldImageType, CoordRepType >         DeformationFieldGeneratorType;
   typedef itk::ChangeInformationImageFilter<
     DeformationFieldImageType >                       ChangeInfoFilterType;
@@ -1458,13 +1461,13 @@ TransformBase< TElastix >
   /** Create an setup deformation field generator. */
   typename DeformationFieldGeneratorType::Pointer defGenerator
     = DeformationFieldGeneratorType::New();
-  defGenerator->SetOutputSize(
+  defGenerator->SetSize(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
   defGenerator->SetOutputSpacing(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing() );
   defGenerator->SetOutputOrigin(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin() );
-  defGenerator->SetOutputIndex(
+  defGenerator->SetOutputStartIndex(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
   defGenerator->SetOutputDirection(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection() );
@@ -1479,13 +1482,15 @@ TransformBase< TElastix >
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( defGenerator->GetOutput() );
-#ifndef _ELASTIX_BUILD_LIBRARY
+
   /** Track the progress of the generation of the deformation field. */
+#ifndef _ELASTIX_BUILD_LIBRARY
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   progressObserver->ConnectObserver( defGenerator );
   progressObserver->SetStartString( "  Progress: " );
   progressObserver->SetEndString( "%" );
 #endif
+
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
@@ -1852,6 +1857,109 @@ TransformBase< TElastix >
   scales /= static_cast< double >( nrofsamples );
 
 } // end AutomaticScalesEstimation()
+
+
+/**
+ * ************** AutomaticScalesEstimationStackTransform ***************
+ */
+
+template< class TElastix >
+void
+TransformBase< TElastix >
+::AutomaticScalesEstimationStackTransform(
+  const unsigned int & numberOfSubTransforms, ScalesType & scales ) const
+{
+  typedef typename FixedImageType::RegionType FixedImageRegionType;
+  typedef typename FixedImageType::IndexType  FixedImageIndexType;
+  typedef typename FixedImageType::SizeType   SizeType;
+
+  typedef itk::ImageGridSampler< FixedImageType > ImageSamplerType;
+  typedef typename ImageSamplerType::Pointer      ImageSamplerPointer;
+  typedef typename
+    ImageSamplerType::ImageSampleContainerType ImageSampleContainerType;
+  typedef typename ImageSampleContainerType::Pointer       ImageSampleContainerPointer;
+  typedef typename ITKBaseType::JacobianType               JacobianType;
+  typedef typename ITKBaseType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
+
+  const ITKBaseType * const thisITK = this->GetAsITKBaseType();
+  const unsigned int        outdim  = FixedImageDimension;
+  const unsigned int        N       = thisITK->GetNumberOfParameters();
+
+  /** initialize */
+  scales = ScalesType( N );
+  scales.Fill( 0.0 );
+
+  /** Get fixed image region from registration. */
+  const FixedImageRegionType & inputRegion = this->GetRegistration()->GetAsITKBaseType()->GetFixedImageRegion();
+  SizeType                     size        = inputRegion.GetSize();
+
+  /** Set desired extraction region. */
+  FixedImageIndexType start = inputRegion.GetIndex();
+  start[ FixedImageDimension - 1 ] = size[ FixedImageDimension - 1 ] - 1;
+
+  /** Set size of last dimension to 0. */
+  size[ FixedImageDimension - 1 ] = 0;
+
+  elxout << "start region for scales: " << start << std::endl;
+  elxout << "size region for scales: " << size << std::endl;
+
+  FixedImageRegionType desiredRegion;
+  desiredRegion.SetSize( size );
+  desiredRegion.SetIndex( start );
+
+  /** Set up the grid sampler. */
+  ImageSamplerPointer sampler = ImageSamplerType::New();
+  sampler->SetInput( this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
+  sampler->SetInputImageRegion( desiredRegion );
+
+  /** Compute the grid spacing. */
+  unsigned long nrofsamples = 10000;
+  sampler->SetNumberOfSamples( nrofsamples );
+
+  /** Get samples and check the actually obtained number of samples. */
+  sampler->Update();
+  ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
+  nrofsamples = sampleContainer->Size();
+  if( nrofsamples == 0 )
+  {
+    /** \todo: should we demand a minimum number (~100) of voxels? */
+    itkExceptionMacro( << "No valid voxels found to estimate the scales." );
+  }
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator iter;
+  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator end   = sampleContainer->End();
+
+  /** Read fixed coordinates and get Jacobian. */
+  JacobianType               jacobian;
+  NonZeroJacobianIndicesType nzji;
+  for( iter = begin; iter != end; ++iter )
+  {
+    const InputPointType & point = ( *iter ).Value().m_ImageCoordinates;
+    //const JacobianType & jacobian = thisITK->GetJacobian( point );
+    thisITK->GetJacobian( point, jacobian, nzji );
+
+    /** Square each element of the Jacobian and add each row to the new scales. */
+    for( unsigned int d = 0; d < outdim; ++d )
+    {
+      ScalesType jacd( jacobian[ d ], N, false );
+      scales += element_product( jacd, jacd );
+    }
+  }
+  scales /= static_cast< double >( nrofsamples );
+
+  const unsigned int numberOfScalesSubTransform = N / numberOfSubTransforms; //(FixedImageDimension)*(FixedImageDimension - 1);
+
+  for( unsigned int i = 0; i < N; i += numberOfScalesSubTransform )
+  {
+    for( unsigned int j = 0; j < numberOfScalesSubTransform; ++j )
+    {
+      scales( i + j ) = scales( j );
+    }
+  }
+
+} // end AutomaticScalesEstimationStackTransform()
 
 
 } // end namespace elastix

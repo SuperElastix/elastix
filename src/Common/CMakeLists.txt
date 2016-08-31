@@ -1,38 +1,48 @@
 #---------------------------------------------------------------------
-PROJECT( elxCommon )
+project( elxCommon )
 
 #---------------------------------------------------------------------
 # Sub-projects.
 
-ADD_SUBDIRECTORY( ParameterFileParser )
-ADD_SUBDIRECTORY( xout )
+add_subdirectory( ParameterFileParser )
+add_subdirectory( xout )
 
-IF( USE_KNNGraphAlphaMutualInformationMetric )
-  ADD_SUBDIRECTORY( KNN )
-ENDIF()
+if( USE_KNNGraphAlphaMutualInformationMetric )
+  add_subdirectory( KNN )
+endif()
 
-ADD_SUBDIRECTORY( MevisDicomTiff )
+add_subdirectory( MevisDicomTiff )
 
-IF( ELASTIX_USE_CUDA )
-  ADD_SUBDIRECTORY( CUDA )
-ENDIF()
+if( ELASTIX_USE_OPENCL )
+  add_subdirectory( OpenCL )
+endif()
 
 #---------------------------------------------------------------------
 # Define lists of files in the subdirectories.
 
-SET( CommonFiles
-  elxTimer.cxx
-  elxTimer.h
+set( CommonFiles
   itkAdvancedLinearInterpolateImageFunction.h
   itkAdvancedLinearInterpolateImageFunction.hxx
   itkAdvancedRayCastInterpolateImageFunction.h
   itkAdvancedRayCastInterpolateImageFunction.hxx
+  itkComputeDisplacementDistribution.h
+  itkComputeDisplacementDistribution.hxx
+  itkComputeJacobianTerms.h
+  itkComputeJacobianTerms.hxx
+  itkErodeMaskImageFilter.h
+  itkErodeMaskImageFilter.hxx
   itkGenericMultiResolutionPyramidImageFilter.h
   itkGenericMultiResolutionPyramidImageFilter.hxx
   itkImageFileCastWriter.h
   itkImageFileCastWriter.hxx
+  itkImageMaskSpatialObject2.h
+  itkImageMaskSpatialObject2.hxx
+  itkImageSpatialObject2.h
+  itkImageSpatialObject2.hxx
   itkMeshFileReaderBase.h
   itkMeshFileReaderBase.hxx
+  itkMultiOrderBSplineDecompositionImageFilter.h
+  itkMultiOrderBSplineDecompositionImageFilter.hxx
   itkMultiResolutionGaussianSmoothingPyramidImageFilter.h
   itkMultiResolutionGaussianSmoothingPyramidImageFilter.hxx
   itkMultiResolutionImageRegistrationMethod2.h
@@ -42,26 +52,22 @@ SET( CommonFiles
   itkNDImageBase.h
   itkNDImageTemplate.h
   itkNDImageTemplate.hxx
-  itkScaledSingleValuedNonLinearOptimizer.cxx
-  itkScaledSingleValuedNonLinearOptimizer.h
-  itkTransformixInputPointFileReader.h
-  itkTransformixInputPointFileReader.hxx
-)
-
-SET( MaskFiles
-  itkImageMaskSpatialObject2.h
-  itkImageMaskSpatialObject2.hxx
-  itkImageSpatialObject2.h
-  itkImageSpatialObject2.hxx
-  itkErodeMaskImageFilter.h
-  itkErodeMaskImageFilter.hxx
   itkParabolicErodeDilateImageFilter.h
   itkParabolicErodeDilateImageFilter.hxx
   itkParabolicErodeImageFilter.h
   itkParabolicMorphUtils.h
+  itkRecursiveBSplineInterpolationWeightFunction.h
+  itkRecursiveBSplineInterpolationWeightFunction.hxx
+  itkReducedDimensionBSplineInterpolateImageFunction.h
+  itkReducedDimensionBSplineInterpolateImageFunction.hxx
+  itkScaledSingleValuedNonLinearOptimizer.cxx
+  itkScaledSingleValuedNonLinearOptimizer.h
+  itkTransformixInputPointFileReader.h
+  itkTransformixInputPointFileReader.hxx
+  TypeList.h
 )
 
-SET( CostFunctionFiles
+set( CostFunctionFiles
   CostFunctions/itkAdvancedImageToImageMetric.h
   CostFunctions/itkAdvancedImageToImageMetric.hxx
   CostFunctions/itkExponentialLimiterFunction.h
@@ -83,13 +89,15 @@ SET( CostFunctionFiles
   CostFunctions/itkTransformPenaltyTerm.hxx
 )
 
-SET( TransformFiles
+set( TransformFiles
   Transforms/itkAdvancedBSplineDeformableTransformBase.h
   Transforms/itkAdvancedBSplineDeformableTransformBase.hxx
   Transforms/itkAdvancedBSplineDeformableTransform.h
   Transforms/itkAdvancedBSplineDeformableTransform.hxx
   Transforms/itkAdvancedCombinationTransform.h
   Transforms/itkAdvancedCombinationTransform.hxx
+  Transforms/itkAdvancedEuler3DTransform.h
+  Transforms/itkAdvancedEuler3DTransform.hxx
   Transforms/itkAdvancedIdentityTransform.h
   Transforms/itkAdvancedMatrixOffsetTransformBase.h
   Transforms/itkAdvancedMatrixOffsetTransformBase.hxx
@@ -97,8 +105,19 @@ SET( TransformFiles
   Transforms/itkAdvancedRigid2DTransform.hxx
   Transforms/itkAdvancedRigid3DTransform.h
   Transforms/itkAdvancedRigid3DTransform.hxx
+  Transforms/itkAdvancedSimilarity2DTransform.h
+  Transforms/itkAdvancedSimilarity2DTransform.hxx
+  Transforms/itkAdvancedSimilarity3DTransform.h
+  Transforms/itkAdvancedSimilarity3DTransform.hxx
   Transforms/itkAdvancedTransform.h
   Transforms/itkAdvancedTransform.hxx
+  Transforms/itkAdvancedTranslationTransform.h
+  Transforms/itkAdvancedTranslationTransform.hxx
+  Transforms/itkAdvancedVersorTransform.h
+  Transforms/itkAdvancedVersorTransform.hxx
+  Transforms/itkAdvancedVersorRigid3DTransform.h
+  Transforms/itkAdvancedVersorRigid3DTransform.hxx
+  Transforms/itkBSplineDerivativeKernelFunction2.h
   Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
   Transforms/itkBSplineInterpolationDerivativeWeightFunction.hxx
   Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h
@@ -107,27 +126,36 @@ SET( TransformFiles
   Transforms/itkBSplineInterpolationWeightFunction2.hxx
   Transforms/itkBSplineInterpolationWeightFunctionBase.h
   Transforms/itkBSplineInterpolationWeightFunctionBase.hxx
-  #Transforms/itkBSplineKernelFunction2.h
-  #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
+  Transforms/itkBSplineKernelFunction2.h
   Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
+  Transforms/itkCyclicBSplineDeformableTransform.h
+  Transforms/itkCyclicBSplineDeformableTransform.hxx
+  Transforms/itkCyclicGridScheduleComputer.h
+  Transforms/itkCyclicGridScheduleComputer.hxx
+  Transforms/itkEulerTransform.h
+  Transforms/itkGridScheduleComputer.h
+  Transforms/itkGridScheduleComputer.hxx
+  Transforms/itkRecursiveBSplineTransform.hxx
+  Transforms/itkRecursiveBSplineTransform.h
+  Transforms/itkRecursiveBSplineTransformImplementation.h
+  Transforms/itkStackTransform.h
+  Transforms/itkStackTransform.hxx
   Transforms/itkTransformToDeterminantOfSpatialJacobianSource.h
   Transforms/itkTransformToDeterminantOfSpatialJacobianSource.hxx
   Transforms/itkTransformToSpatialJacobianSource.h
   Transforms/itkTransformToSpatialJacobianSource.hxx
-  Transforms/itkGridScheduleComputer.h
-  Transforms/itkGridScheduleComputer.hxx
   Transforms/itkUpsampleBSplineParametersFilter.h
   Transforms/itkUpsampleBSplineParametersFilter.hxx
 )
 
-SET( LineSearchOptimizersFiles
+set( LineSearchOptimizersFiles
   LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.h
   LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.cxx
   LineSearchOptimizers/itkLineSearchOptimizer.h
   LineSearchOptimizers/itkLineSearchOptimizer.cxx
 )
 
-SET( ImageSamplersFiles
+set( ImageSamplersFiles
   ImageSamplers/itkImageFullSampler.h
   ImageSamplers/itkImageFullSampler.hxx
   ImageSamplers/itkImageGridSampler.h
@@ -155,17 +183,16 @@ SET( ImageSamplersFiles
 #---------------------------------------------------------------------
 # Construct source groups for nice visualisation in Visual Studio.
 
-SOURCE_GROUP( "Masks" FILES ${MaskFiles} )
-SOURCE_GROUP( "CostFunctions" FILES ${CostFunctionFiles} )
-SOURCE_GROUP( "Transforms" FILES ${TransformFiles} )
-SOURCE_GROUP( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
-SOURCE_GROUP( "ImageSamplers" FILES ${ImageSamplersFiles} )
+source_group( "Common" FILES ${CommonFiles} )
+source_group( "CostFunctions" FILES ${CostFunctionFiles} )
+source_group( "Transforms" FILES ${TransformFiles} )
+source_group( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
+source_group( "ImageSamplers" FILES ${ImageSamplersFiles} )
 
 #---------------------------------------------------------------------
 # Create the elxCommon library.
 
-ADD_LIBRARY( elxCommon
-  ${MaskFiles}
+add_library( elxCommon STATIC
   ${CommonFiles}
   ${CostFunctionFiles}
   ${TransformFiles}
@@ -176,14 +203,14 @@ ADD_LIBRARY( elxCommon
 #---------------------------------------------------------------------
 # Link against other libraries.
 
-IF( UNIX AND NOT APPLE )
-  TARGET_LINK_LIBRARIES( elxCommon
+if( UNIX AND NOT APPLE )
+  target_link_libraries( elxCommon
     ${ITK_LIBRARIES}
     rt # Needed for elxTimer, clock_gettime()
   )
-ELSE()
-  TARGET_LINK_LIBRARIES( elxCommon
+else()
+  target_link_libraries( elxCommon
     ${ITK_LIBRARIES}
   )
-ENDIF()
+endif()
 

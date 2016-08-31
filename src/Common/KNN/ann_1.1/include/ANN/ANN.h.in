@@ -60,7 +60,7 @@
 #ifndef ANN_H
 #define ANN_H
 
-#ifdef WIN32
+#if( defined( _WIN32 ) || defined( WIN32 ) )
   //----------------------------------------------------------------------
   // For Microsoft Visual C++, externally accessible symbols must be
   // explicitly indicated with DLL_API, which is somewhat like "extern."
@@ -71,13 +71,13 @@
   // command line. In contrast, projects that use (or import) the DLL
   // objects do not define the DLL_EXPORTS symbol. This way any other
   // project whose source files include this file see DLL_API functions as
-  // being imported from a DLL, wheras this DLL sees symbols defined with
+  // being imported from a DLL, whereas this DLL sees symbols defined with
   // this macro as being exported.
   //----------------------------------------------------------------------
   #ifdef DLL_EXPORTS
-   #define DLL_API __declspec(dllexport)
+    #define DLL_API __declspec( dllexport )
   #else
-  #define DLL_API __declspec(dllimport)
+    #define DLL_API __declspec( dllimport )
   #endif
   //----------------------------------------------------------------------
   // DLL_API is ignored for all other systems

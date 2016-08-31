@@ -1,21 +1,23 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
-
-#ifndef _itkGradientDescentOptimizer2_txx
-#define _itkGradientDescentOptimizer2_txx
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 
 #include "itkGradientDescentOptimizer2.h"
+
 #include "itkCommand.h"
 #include "itkEventObject.h"
 #include "itkExceptionObject.h"
@@ -41,6 +43,7 @@ GradientDescentOptimizer2
 {
   itkDebugMacro( "Constructor" );
 
+  this->m_Stop               = false;
   this->m_LearningRate       = 1.0;
   this->m_NumberOfIterations = 100;
   this->m_CurrentIteration   = 0;
@@ -50,9 +53,14 @@ GradientDescentOptimizer2
   this->m_Threader       = ThreaderType::New();
   this->m_UseMultiThread = false;
   this->m_UseOpenMP      = false;
-  this->m_UseEigen       = false;
+#ifdef ELASTIX_USE_OPENMP
+  this->m_UseOpenMP = true;
+#endif
+  this->m_UseEigen = false;
 
-}   // end Constructor
+  //this->m_Threader->SetUseThreadPool( true );
+
+} // end Constructor
 
 
 /**
@@ -65,38 +73,30 @@ GradientDescentOptimizer2
 {
   this->Superclass::PrintSelf( os, indent );
 
-  os << indent << "LearningRate: "
-     << this->m_LearningRate << std::endl;
-  os << indent << "NumberOfIterations: "
-     << this->m_NumberOfIterations << std::endl;
-  os << indent << "CurrentIteration: "
-     << this->m_CurrentIteration;
-  os << indent << "Value: "
-     << this->m_Value;
-  os << indent << "StopCondition: "
-     << this->m_StopCondition;
+  os << indent << "LearningRate: " << this->m_LearningRate << std::endl;
+  os << indent << "NumberOfIterations: " << this->m_NumberOfIterations << std::endl;
+  os << indent << "CurrentIteration: " << this->m_CurrentIteration;
+  os << indent << "Value: " << this->m_Value;
+  os << indent << "StopCondition: " << this->m_StopCondition;
   os << std::endl;
-  os << indent << "Gradient: "
-     << this->m_Gradient;
+  os << indent << "Gradient: " << this->m_Gradient;
   os << std::endl;
 
-}   // end PrintSelf
+} // end PrintSelf()
 
 
 /**
-* **************** Start the optimization ********************
-*/
+ * **************** StartOptimization ********************
+ */
 
 void
 GradientDescentOptimizer2
 ::StartOptimization( void )
 {
-  itkDebugMacro( "StartOptimization" );
-
   this->m_CurrentIteration = 0;
 
   /** Get the number of parameters; checks also if a cost function has been set at all.
-  * if not: an exception is thrown */
+   * if not: an exception is thrown */
   this->GetScaledCostFunction()->GetNumberOfParameters();
 
   /** Initialize the scaledCostFunction with the currently set scales */
@@ -106,12 +106,12 @@ GradientDescentOptimizer2
   this->SetCurrentPosition( this->GetInitialPosition() );
 
   this->ResumeOptimization();
-}   // end StartOptimization
+} // end StartOptimization()
 
 
 /**
-* ************************ ResumeOptimization *************
-*/
+ * ************************ ResumeOptimization *************
+ */
 
 void
 GradientDescentOptimizer2
@@ -129,7 +129,6 @@ GradientDescentOptimizer2
 
   while( !this->m_Stop )
   {
-
     try
     {
       this->GetScaledValueAndDerivative(
@@ -163,9 +162,9 @@ GradientDescentOptimizer2
       break;
     }
 
-  }   // end while
+  } // end while
 
-}   // end ResumeOptimization()
+} // end ResumeOptimization()
 
 
 /**
@@ -183,12 +182,12 @@ GradientDescentOptimizer2
   /** Pass exception to caller. */
   throw err;
 
-}   // end MetricErrorResponse()
+} // end MetricErrorResponse()
 
 
 /**
-* ***************** Stop optimization ************************
-*/
+ * ***************** StopOptimization ************************
+ */
 
 void
 GradientDescentOptimizer2
@@ -198,12 +197,11 @@ GradientDescentOptimizer2
 
   this->m_Stop = true;
   this->InvokeEvent( EndEvent() );
-}   // end StopOptimization
+} // end StopOptimization()
 
 
 /**
  * ************ AdvanceOneStep ****************************
- * following the gradient direction
  */
 
 void
@@ -213,42 +211,36 @@ GradientDescentOptimizer2
   itkDebugMacro( "AdvanceOneStep" );
 
   /** Get space dimension. */
-  const unsigned int spaceDimension
-    = this->GetScaledCostFunction()->GetNumberOfParameters();
+  const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
   /** Get a reference to the previously allocated newPosition. */
   ParametersType & newPosition = this->m_ScaledCurrentPosition;
 
   /** Advance one step. */
-  // single-threadedly
-  if( !this->m_UseMultiThread || true )   // for now force single-threaded since it is fastest most of the times
-  //if( !this->m_UseMultiThread && false ) // force multi-threaded
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+#ifndef ELASTIX_USE_OPENMP // If no OpenMP detected then use single-threaded code
+  /** Get a reference to the current position. */
+  const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
-    /** Update the new position. */
-    for( unsigned int j = 0; j < spaceDimension; j++ )
-    {
-      newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
-    }
+  /** Update the new position. */
+  for( unsigned int j = 0; j < spaceDimension; ++j )
+  {
+    newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
   }
-#ifdef ELASTIX_USE_OPENMP
-  else if( this->m_UseOpenMP && !this->m_UseEigen )
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+#else // Otherwise use OpenMP
+  /** Get a reference to the current position. */
+  const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
-    /** Update the new position. */
-    const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
-    omp_set_num_threads( nthreads );
-      #pragma omp parallel for
-    for( int j = 0; j < static_cast< int >( spaceDimension ); j++ )
-    {
-      newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
-    }
+  /** Update the new position. */
+  const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
+  omp_set_num_threads( nthreads );
+  #pragma omp parallel for
+  for( int j = 0; j < static_cast< int >( spaceDimension ); j++ )
+  {
+    newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
   }
 #endif
+
+#if 0 // disable as it seems slower
 #ifdef ELASTIX_USE_EIGEN
   else if( !this->m_UseOpenMP && this->m_UseEigen )
   {
@@ -283,7 +275,7 @@ GradientDescentOptimizer2
     const int spaceDim = static_cast< int >( spaceDimension );
     const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
     omp_set_num_threads( nthreads );
-      #pragma omp parallel for
+    #pragma omp parallel for
     for( int i = 0; i < nthreads; i += 1 )
     {
       int threadId = omp_get_thread_num();
@@ -305,17 +297,16 @@ GradientDescentOptimizer2
     temp->t_Optimizer   = this;
 
     /** Call multi-threaded AdvanceOneStep(). */
-    ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_Threader->GetNumberOfThreads() );
-    local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
-    local_threader->SingleMethodExecute();
+    this->m_Threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
+    this->m_Threader->SingleMethodExecute();
 
     delete temp;
   }
+#endif
 
   this->InvokeEvent( IterationEvent() );
 
-}   // end AdvanceOneStep()
+} // end AdvanceOneStep()
 
 
 /**
@@ -373,5 +364,3 @@ GradientDescentOptimizer2
 
 
 } // end namespace itk
-
-#endif

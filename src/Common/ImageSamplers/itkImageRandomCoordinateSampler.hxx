@@ -1,19 +1,22 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
-
-#ifndef __ImageRandomCoordinateSampler_txx
-#define __ImageRandomCoordinateSampler_txx
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+#ifndef __ImageRandomCoordinateSampler_hxx
+#define __ImageRandomCoordinateSampler_hxx
 
 #include "itkImageRandomCoordinateSampler.h"
 #include "vnl/vnl_math.h"
@@ -107,7 +110,7 @@ ImageRandomCoordinateSampler< TInputImage >
       /** Convert to point */
       inputImage->TransformContinuousIndexToPhysicalPoint( sampleContIndex, samplePoint );
 
-      /** Compute the value at the contindex. */
+      /** Compute the value at the continuous index. */
       sampleValue = static_cast< ImageSampleValueType >(
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
@@ -320,9 +323,11 @@ ImageRandomCoordinateSampler< TInputImage >
     largestContIndex  = largestImageContIndex;
     return;
   }
+
   /** Convert sampleRegionSize to continuous index space and
    * compute the maximum allowed value for the smallestContIndex,
-   * such that a sampleregion of size SampleRegionSize still fits. */
+   * such that a sample region of size SampleRegionSize still fits.
+   */
   typedef typename InputImageContinuousIndexType::VectorType CIndexVectorType;
   CIndexVectorType              sampleRegionSize;
   InputImageContinuousIndexType maxSmallestContIndex;
@@ -331,9 +336,11 @@ ImageRandomCoordinateSampler< TInputImage >
     sampleRegionSize[ i ] = this->GetSampleRegionSize()[ i ]
       / this->GetInput()->GetSpacing()[ i ];
     maxSmallestContIndex[ i ] = largestImageContIndex[ i ] - sampleRegionSize[ i ];
-    /** make sure it is larger than the lower bound */
+
+    /** Make sure it is larger than the lower bound. */
     maxSmallestContIndex[ i ] = vnl_math_max( maxSmallestContIndex[ i ], smallestImageContIndex[ i ] );
   }
+
   this->GenerateRandomCoordinate( smallestImageContIndex, maxSmallestContIndex, smallestContIndex );
   largestContIndex  = smallestContIndex;
   largestContIndex += sampleRegionSize;
@@ -360,4 +367,4 @@ ImageRandomCoordinateSampler< TInputImage >
 
 } // end namespace itk
 
-#endif // end #ifndef __ImageRandomCoordinateSampler_txx
+#endif // end #ifndef __ImageRandomCoordinateSampler_hxx

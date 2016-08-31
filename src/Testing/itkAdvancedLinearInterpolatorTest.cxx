@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 /** \file
  \brief Compare the advanced linear interpolator with the linear and 1st order B-spline.
  */
@@ -24,55 +28,7 @@
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageFileWriter.h"
 #include "vnl/vnl_math.h"
-
-//-------------------------------------------------------------------------------------
-//timer helper class
-
-#if defined( _MSC_VER )
-  #define NOMINMAX // workaround a bug in windows.h
-  #define __OnWindows__
-  #include <windows.h>
-#else
-  #include <sys/time.h>
-  #define __CLOCK_OPTION__ CLOCK_MONOTONIC
-#endif
-
-class TimerHelper
-{
-public:
-
-#ifdef __OnWindows__
-  typedef LARGE_INTEGER TimeType;
-  void GetTheTime( TimeType & currentTime )
-  {
-    QueryPerformanceCounter( &currentTime );
-  }
-
-
-  double ComputeTimeDiff( const TimeType & start, const TimeType & end )
-  {
-    TimeType freq; QueryPerformanceFrequency( &freq );
-    return 1000.0 * ( end.QuadPart - start.QuadPart ) / static_cast< double >( freq.QuadPart );
-  }
-
-
-#else
-  typedef timespec TimeType;
-  void GetTheTime( TimeType & currentTime )
-  {
-    clock_gettime( __CLOCK_OPTION__, &currentTime );
-  }
-
-
-  double ComputeTimeDiff( const TimeType & start, const TimeType & end )
-  {
-    return ( end.tv_sec - start.tv_sec ) * 1.0e3
-           + ( end.tv_nsec - start.tv_nsec ) / 1.0e6;
-  }
-
-
-#endif
-};
+#include "itkTimeProbe.h"
 
 //-------------------------------------------------------------------------------------
 
@@ -81,12 +37,12 @@ template< unsigned int Dimension >
 bool
 TestInterpolators( void )
 {
-  typedef itk::Image< short, Dimension >         InputImageType;
-  typedef typename InputImageType::SizeType      SizeType;
-  typedef typename InputImageType::SpacingType   SpacingType;
-  typedef typename InputImageType::PointType     OriginType;
-  typedef typename InputImageType::RegionType    RegionType;
-  typedef typename RegionType::IndexType         IndexType;
+  typedef itk::Image< short, Dimension >       InputImageType;
+  typedef typename InputImageType::SizeType    SizeType;
+  typedef typename InputImageType::SpacingType SpacingType;
+  typedef typename InputImageType::PointType   OriginType;
+  typedef typename InputImageType::RegionType  RegionType;
+  //typedef typename RegionType::IndexType         IndexType;
   typedef typename InputImageType::DirectionType DirectionType;
   typedef double                                 CoordRepType;
   typedef double                                 CoefficientType;
@@ -103,7 +59,7 @@ TestInterpolators( void )
 
   typedef itk::ImageRegionIterator< InputImageType >             IteratorType;
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomNumberGeneratorType;
-  typedef itk::ImageFileWriter< InputImageType >                 WriterType;
+  //typedef itk::ImageFileWriter< InputImageType >                 WriterType;
 
   RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
 
@@ -116,6 +72,7 @@ TestInterpolators( void )
     origin[ i ]  = randomNum->GetUniformVariate( -1, 0 );
   }
   RegionType region; region.SetSize( size );
+
   /** Make sure to test for non-identity direction cosines. */
   DirectionType direction; direction.Fill( 0.0 );
   if( Dimension == 2 )
@@ -136,6 +93,7 @@ TestInterpolators( void )
   image->SetSpacing( spacing );
   image->SetDirection( direction );
   image->Allocate();
+
   // loop over image and fill with random values
   IteratorType it( image, image->GetLargestPossibleRegion() );
   it.GoToBegin();
@@ -202,6 +160,8 @@ TestInterpolators( void )
       }
     }
   }
+
+  /** Compare results. */
   OutputType          valueLin, valueLinA, valueBSpline, valueBSpline2;
   CovariantVectorType derivLinA, derivBSpline, derivBSpline2;
   for( unsigned int i = 0; i < count; i++ )
@@ -251,60 +211,59 @@ TestInterpolators( void )
   std::cout << std::endl;
   ContinuousIndexType cindex( &darray1[ 1 ][ 0 ] );
   std::cout << "cindex: " << cindex << std::endl;
-  OutputType            value; CovariantVectorType deriv;
-  const unsigned int    runs = 1e5;
-  TimerHelper           timerHelper;
-  TimerHelper::TimeType start, end;
+  OutputType         value; CovariantVectorType deriv;
+  const unsigned int runs = 1e5;
 
-  timerHelper.GetTheTime( start );
+  itk::TimeProbe timer;
+  timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     value = linear->EvaluateAtContinuousIndex( cindex );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "linear  (value) : "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 
-  timerHelper.GetTheTime( start );
+  timer.Reset(); timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     linearA->EvaluateValueAndDerivativeAtContinuousIndex( cindex, value, deriv );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "linearA (v&d)   : "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 
-  timerHelper.GetTheTime( start );
+  timer.Reset(); timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     value = bspline->EvaluateAtContinuousIndex( cindex );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "B-spline (value): "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 
-  timerHelper.GetTheTime( start );
+  timer.Reset(); timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     value = bspline->EvaluateAtContinuousIndex( cindex );
     deriv = bspline->EvaluateDerivativeAtContinuousIndex( cindex );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "B-spline (v+d)  : "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 
-  timerHelper.GetTheTime( start );
+  timer.Reset(); timer.Start();
   for( unsigned int i = 0; i < runs; ++i )
   {
     bspline->EvaluateValueAndDerivativeAtContinuousIndex( cindex, value, deriv );
   }
-  timerHelper.GetTheTime( end );
+  timer.Stop();
   std::cout << "B-spline (v&d)  : "
-            << 1.0e3 * timerHelper.ComputeTimeDiff( start, end ) / static_cast< double >( runs )
+            << 1.0e3 * timer.GetMean() / static_cast< double >( runs )
             << " ms" << std::endl;
 #endif
 

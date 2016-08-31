@@ -48,11 +48,25 @@ def main():
   # transformix is not in the path and can therefore not be found.
   # To make sure it is found we add paths. To make sure this script also works for other machines,
   # add the correct paths manually. Non-existing paths are automatically ignored.
-  _path = os.getenv('PATH');
+  #
+  # Make sure the first path is the elastix binary directory from this build
+  _path = os.path.join( options.directory, "..", "..", "bin" ); # bin dir on Linux
+  _path += os.pathsep + os.path.join( options.directory, "..", "..", "bin", "Release" ); # bin dir on Windows
+  _path += os.pathsep + os.getenv('PATH');
   _path += os.pathsep + "/home/marius/install/bin";     # goliath
   _path += os.pathsep + "/elastix-nightly/install/bin"; # MacMini
   #_path += os.pathsep + "your_path"; # Add your own path here
   os.environ['PATH'] = _path;
+
+  # output file of the transformix runs; and copies, for later debugging.
+  landmarkstemp = os.path.join( options.directory, "outputpoints.txt" );
+  landmarks1full = os.path.join( options.directory, "outputpoints_current.txt" );
+  landmarks2full = os.path.join( options.directory, "outputpoints_baseline.txt" );
+
+  # Remove copies otherwise os.rename will not work on Windows:
+  # "On Windows, if dst already exists, OSError will be raised"
+  if( os.path.exists( landmarks1full ) ) : os.remove( landmarks1full );
+  if( os.path.exists( landmarks2full ) ) : os.remove( landmarks2full );
 
   #
   # Transform the fixed image landmarks by the current result
@@ -63,11 +77,12 @@ def main():
     stdout=subprocess.PIPE );
 
   # Parse file to extract only the column with the output points
-  f1 = open( os.path.join( options.directory, "outputpoints.txt" ), 'r' );
+  f1 = open( landmarkstemp, 'r' );
   f2 = open( landmarks1, 'w' );
   for line in f1 :
     f2.write( line.strip().split(';')[4].strip().strip( "OutputPoint = [ " ).rstrip( " ]" ) + "\n" );
   f1.close(); f2.close();
+  os.rename( landmarkstemp, landmarks1full ); # for later inspection
 
   #
   # Transform the fixed image landmarks by the baseline result
@@ -76,14 +91,15 @@ def main():
   landmarks2 = os.path.join( options.directory, "landmarks_baseline.txt" );
   subprocess.call( [ "transformix", "-def", options.flm, "-out", options.directory, "-tp", tpFileName_b ],
     stdout=subprocess.PIPE );
-  shutil.copyfile( os.path.join( options.directory, "outputpoints.txt" ), landmarks2 );
+  # shutil.copyfile( landmarkstemp, landmarks2 ); // this should not be necessary
 
   # Parse file to extract only the column with the output points
-  f1 = open( os.path.join( options.directory, "outputpoints.txt" ), 'r' );
+  f1 = open( landmarkstemp, 'r' );
   f2 = open( landmarks2, 'w' );
   for line in f1 :
     f2.write( line.strip().split(';')[4].strip().strip( "OutputPoint = [ " ).rstrip( " ]" ) + "\n" );
   f1.close(); f2.close();
+  os.rename( landmarkstemp, landmarks2full ); # for later inspection
 
   # Compute the distance between all transformed landmarks
   f1 = open( landmarks1, 'r' ); f2 = open( landmarks2, 'r' );

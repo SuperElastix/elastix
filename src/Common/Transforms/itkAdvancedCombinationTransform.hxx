@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkAdvancedCombinationTransform_hxx
 #define __itkAdvancedCombinationTransform_hxx
 
@@ -42,6 +46,8 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 //     = &Self::GetJacobianNoCurrentTransform;
   this->m_SelectedGetSparseJacobianFunction
     = &Self::GetJacobianNoCurrentTransform;
+  this->m_SelectedEvaluateJacobianWithImageGradientProductFunction
+    = &Self::EvaluateJacobianWithImageGradientProductNoInitialTransform;
   this->m_SelectedGetSpatialJacobianFunction
     = &Self::GetSpatialJacobianNoCurrentTransform;
   this->m_SelectedGetSpatialHessianFunction
@@ -153,7 +159,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
     if( n == 0 )
     {
       // Perform const_cast, we don't like it, but there is no other option
-      // with current ITK4 itk::MultiTransform::GetNthTransform() const desing
+      // with current ITK4 itk::MultiTransform::GetNthTransform() const design
       const TransformType * currentTransformCasted
         = dynamic_cast< const TransformType * >( currentTransform.GetPointer() );
       TransformType * currentTransformConstCasted
@@ -286,7 +292,7 @@ const typename AdvancedCombinationTransform< TScalarType, NDimensions >::Paramet
  */
 
 template< typename TScalarType, unsigned int NDimensions >
-const typename AdvancedCombinationTransform< TScalarType, NDimensions >::ParametersType
+const typename AdvancedCombinationTransform< TScalarType, NDimensions >::FixedParametersType
 & AdvancedCombinationTransform< TScalarType, NDimensions >
 ::GetFixedParameters( void ) const
 {
@@ -337,7 +343,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 template< typename TScalarType, unsigned int NDimensions >
 void
 AdvancedCombinationTransform< TScalarType, NDimensions >
-::SetFixedParameters( const ParametersType & param )
+::SetFixedParameters( const FixedParametersType & param )
 {
   /** Set the parameters in the m_CurrentTransform. */
   if( this->m_CurrentTransform.IsNotNull() )
@@ -631,6 +637,8 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 //       = &Self::GetJacobianNoCurrentTransform;
     this->m_SelectedGetSparseJacobianFunction
       = &Self::GetJacobianNoCurrentTransform;
+    this->m_SelectedEvaluateJacobianWithImageGradientProductFunction
+      = &Self::EvaluateJacobianWithImageGradientProductNoCurrentTransform;
     this->m_SelectedGetSpatialJacobianFunction
       = &Self::GetSpatialJacobianNoCurrentTransform;
     this->m_SelectedGetSpatialHessianFunction
@@ -652,6 +660,8 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 //       = &Self::GetJacobianNoInitialTransform;
     this->m_SelectedGetSparseJacobianFunction
       = &Self::GetJacobianNoInitialTransform;
+    this->m_SelectedEvaluateJacobianWithImageGradientProductFunction
+      = &Self::EvaluateJacobianWithImageGradientProductNoInitialTransform;
     this->m_SelectedGetSpatialJacobianFunction
       = &Self::GetSpatialJacobianNoInitialTransform;
     this->m_SelectedGetSpatialHessianFunction
@@ -673,6 +683,8 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 //       = &Self::GetJacobianUseAddition;
     this->m_SelectedGetSparseJacobianFunction
       = &Self::GetJacobianUseAddition;
+    this->m_SelectedEvaluateJacobianWithImageGradientProductFunction
+      = &Self::EvaluateJacobianWithImageGradientProductUseAddition;
     this->m_SelectedGetSpatialJacobianFunction
       = &Self::GetSpatialJacobianUseAddition;
     this->m_SelectedGetSpatialHessianFunction
@@ -694,6 +706,8 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 //       = &Self::GetJacobianUseComposition;
     this->m_SelectedGetSparseJacobianFunction
       = &Self::GetJacobianUseComposition;
+    this->m_SelectedEvaluateJacobianWithImageGradientProductFunction
+      = &Self::EvaluateJacobianWithImageGradientProductUseComposition;
     this->m_SelectedGetSpatialJacobianFunction
       = &Self::GetSpatialJacobianUseComposition;
     this->m_SelectedGetSpatialHessianFunction
@@ -731,6 +745,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
  * ***** Functions that implement the:
  * ***** - TransformPoint()
  * ***** - GetJacobian()
+ * ***** - EvaluateJacobianWithImageGradientProduct()
  * ***** - GetSpatialJacobian()
  * ***** - GetSpatialHessian()
  * ***** - GetJacobianOfSpatialJacobian()
@@ -889,6 +904,83 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
   this->NoCurrentTransformSet();
 
 } // end GetJacobianNoCurrentTransform()
+
+
+/**
+ * ************* EvaluateJacobianWithImageGradientProductUseAddition ***************************
+ */
+
+template< typename TScalarType, unsigned int NDimensions >
+void
+AdvancedCombinationTransform< TScalarType, NDimensions >
+::EvaluateJacobianWithImageGradientProductUseAddition(
+  const InputPointType & ipp,
+  const MovingImageGradientType & movingImageGradient,
+  DerivativeType & imageJacobian,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  this->m_CurrentTransform->EvaluateJacobianWithImageGradientProduct(
+    ipp, movingImageGradient, imageJacobian, nonZeroJacobianIndices );
+
+} // end EvaluateJacobianWithImageGradientProductUseAddition()
+
+
+/**
+ * **************** EvaluateJacobianWithImageGradientProductUseComposition *************
+ */
+
+template< typename TScalarType, unsigned int NDimensions >
+void
+AdvancedCombinationTransform< TScalarType, NDimensions >
+::EvaluateJacobianWithImageGradientProductUseComposition(
+  const InputPointType & ipp,
+  const MovingImageGradientType & movingImageGradient,
+  DerivativeType & imageJacobian,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  this->m_CurrentTransform->EvaluateJacobianWithImageGradientProduct(
+    this->m_InitialTransform->TransformPoint( ipp ),
+    movingImageGradient, imageJacobian, nonZeroJacobianIndices );
+
+} // end EvaluateJacobianWithImageGradientProductUseComposition()
+
+
+/**
+ * **************** EvaluateJacobianWithImageGradientProductNoInitialTransform ******************
+ */
+
+template< typename TScalarType, unsigned int NDimensions >
+void
+AdvancedCombinationTransform< TScalarType, NDimensions >
+::EvaluateJacobianWithImageGradientProductNoInitialTransform(
+  const InputPointType & ipp,
+  const MovingImageGradientType & movingImageGradient,
+  DerivativeType & imageJacobian,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  this->m_CurrentTransform->EvaluateJacobianWithImageGradientProduct(
+    ipp, movingImageGradient, imageJacobian, nonZeroJacobianIndices );
+
+} // end EvaluateJacobianWithImageGradientProductNoInitialTransform()
+
+
+/**
+ * ******** EvaluateJacobianWithImageGradientProductNoCurrentTransform ******************
+ */
+
+template< typename TScalarType, unsigned int NDimensions >
+void
+AdvancedCombinationTransform< TScalarType, NDimensions >
+::EvaluateJacobianWithImageGradientProductNoCurrentTransform(
+  const InputPointType & ipp,
+  const MovingImageGradientType & movingImageGradient,
+  DerivativeType & imageJacobian,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** Throw an exception. */
+  this->NoCurrentTransformSet();
+
+} // end EvaluateJacobianWithImageGradientProductNoCurrentTransform()
 
 
 /**
@@ -1515,7 +1607,7 @@ typename AdvancedCombinationTransform< TScalarType, NDimensions >::OutputPointTy
 AdvancedCombinationTransform< TScalarType, NDimensions >
 ::TransformPoint( const InputPointType & point ) const
 {
-  /** Call the selected TransformPointFunction. */
+  /** Call the selected TransformPoint. */
   return ( ( *this ).*m_SelectedTransformPointFunction )( point );
 
 } // end TransformPoint()
@@ -1541,6 +1633,26 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 
 
 /**
+ * ****************** EvaluateJacobianWithImageGradientProduct ****************************
+ */
+
+template< typename TScalarType, unsigned int NDimensions >
+void
+AdvancedCombinationTransform< TScalarType, NDimensions >
+::EvaluateJacobianWithImageGradientProduct(
+  const InputPointType & ipp,
+  const MovingImageGradientType & movingImageGradient,
+  DerivativeType & imageJacobian,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** Call the selected EvaluateJacobianWithImageGradientProduct. */
+  return ( ( *this ).*m_SelectedEvaluateJacobianWithImageGradientProductFunction )(
+    ipp, movingImageGradient, imageJacobian, nonZeroJacobianIndices );
+
+} // end EvaluateJacobianWithImageGradientProduct()
+
+
+/**
  * ****************** GetSpatialJacobian ****************************
  */
 
@@ -1551,7 +1663,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
   const InputPointType & ipp,
   SpatialJacobianType & sj ) const
 {
-  /** Call the selected GetJacobian. */
+  /** Call the selected GetSpatialJacobian. */
   return ( ( *this ).*m_SelectedGetSpatialJacobianFunction )(
     ipp, sj );
 
@@ -1569,7 +1681,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
   const InputPointType & ipp,
   SpatialHessianType & sh ) const
 {
-  /** Call the selected GetJacobian. */
+  /** Call the selected GetSpatialHessian. */
   return ( ( *this ).*m_SelectedGetSpatialHessianFunction )(
     ipp, sh );
 
@@ -1588,7 +1700,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  /** Call the selected GetJacobian. */
+  /** Call the selected GetJacobianOfSpatialJacobian. */
   return ( ( *this ).*m_SelectedGetJacobianOfSpatialJacobianFunction )(
     ipp, jsj, nonZeroJacobianIndices );
 
@@ -1608,7 +1720,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  /** Call the selected GetJacobian. */
+  /** Call the selected GetJacobianOfSpatialJacobian. */
   return ( ( *this ).*m_SelectedGetJacobianOfSpatialJacobianFunction2 )(
     ipp, sj, jsj, nonZeroJacobianIndices );
 
@@ -1627,7 +1739,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  /** Call the selected GetJacobian. */
+  /** Call the selected GetJacobianOfSpatialHessian. */
   return ( ( *this ).*m_SelectedGetJacobianOfSpatialHessianFunction )(
     ipp, jsh, nonZeroJacobianIndices );
 
@@ -1647,7 +1759,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  /** Call the selected GetJacobian. */
+  /** Call the selected GetJacobianOfSpatialHessian. */
   return ( ( *this ).*m_SelectedGetJacobianOfSpatialHessianFunction2 )(
     ipp, sh, jsh, nonZeroJacobianIndices );
 

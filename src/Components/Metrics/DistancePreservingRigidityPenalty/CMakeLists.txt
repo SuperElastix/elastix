@@ -1,0 +1,8 @@
+
+ADD_ELXCOMPONENT( DistancePreservingRigidityPenalty
+ elxDistancePreservingRigidityPenaltyTerm.h
+ elxDistancePreservingRigidityPenaltyTerm.hxx
+ elxDistancePreservingRigidityPenaltyTerm.cxx
+ itkDistancePreservingRigidityPenaltyTerm.h
+ itkDistancePreservingRigidityPenaltyTerm.hxx )
+

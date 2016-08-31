@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkAdvancedImageToImageMetric_h
 #define __itkAdvancedImageToImageMetric_h
 
@@ -155,6 +159,9 @@ public:
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 1 > BSplineOrder1TransformType;
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 2 > BSplineOrder2TransformType;
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 3 > BSplineOrder3TransformType;
+  typedef typename BSplineOrder1TransformType::Pointer                             BSplineOrder1TransformPointer;
+  typedef typename BSplineOrder2TransformType::Pointer                             BSplineOrder2TransformPointer;
+  typedef typename BSplineOrder3TransformType::Pointer                             BSplineOrder3TransformPointer;
 
   /** Hessian type; for SelfHessian (experimental feature) */
   typedef typename DerivativeType::ValueType    HessianValueType;
@@ -179,7 +186,7 @@ public:
 
 
   /** Get the advanced transform. */
-  const AdvancedTransformType * GetTransform( void ) const
+  const AdvancedTransformType * GetTransform( void ) const ITK_OVERRIDE
   {
     return this->m_AdvancedTransform.GetPointer();
   }
@@ -228,13 +235,17 @@ public:
 
   /** You may specify a scaling vector for the moving image derivatives.
    * If the UseMovingImageDerivativeScales is true, the moving image derivatives
-   * are multiplied by the moving image derivative scales (elementwise)
+   * are multiplied by the moving image derivative scales (element-wise)
    * You may use this to avoid deformations in the z-dimension, for example,
    * by setting the moving image derivative scales to (1,1,0).
    * This is a rather experimental feature. In most cases you do not need it.
    */
   itkSetMacro( UseMovingImageDerivativeScales, bool );
   itkGetConstMacro( UseMovingImageDerivativeScales, bool );
+
+  itkSetMacro( ScaleGradientWithRespectToMovingImageOrientation, bool );
+  itkGetConstMacro( ScaleGradientWithRespectToMovingImageOrientation, bool );
+
   itkSetMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
   itkGetConstReferenceMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
 
@@ -246,7 +257,7 @@ public:
    * \li Check if a B-spline interpolator has been set
    * \li Check if an AdvancedTransform has been set
    */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void ) throw ( ExceptionObject ) ITK_OVERRIDE;
 
   /** Experimental feature: compute SelfHessian.
    * This base class just returns an identity matrix of the right size.
@@ -326,20 +337,21 @@ protected:
   mutable ImageSamplerPointer m_ImageSampler;
 
   /** Variables for image derivative computation. */
+  bool                                   m_InterpolatorIsLinear;
   bool                                   m_InterpolatorIsBSpline;
   bool                                   m_InterpolatorIsBSplineFloat;
   bool                                   m_InterpolatorIsReducedBSpline;
-  bool                                   m_InterpolatorIsLinear;
+  LinearInterpolatorPointer              m_LinearInterpolator;
   BSplineInterpolatorPointer             m_BSplineInterpolator;
   BSplineInterpolatorFloatPointer        m_BSplineInterpolatorFloat;
   ReducedBSplineInterpolatorPointer      m_ReducedBSplineInterpolator;
-  LinearInterpolatorPointer              m_LinearInterpolator;
+
   CentralDifferenceGradientFilterPointer m_CentralDifferenceGradientFilter;
 
   /** Variables to store the AdvancedTransform. */
   bool m_TransformIsAdvanced;
   typename AdvancedTransformType::Pointer m_AdvancedTransform;
-  bool m_TransformIsBSpline;
+  mutable bool m_TransformIsBSpline;
 
   /** Variables for the Limiters. */
   FixedImageLimiterPointer     m_FixedImageLimiter;
@@ -355,6 +367,18 @@ protected:
 
   /** Multi-threaded metric computation. */
 
+  /** Multi-threaded version of GetValue(). */
+  virtual inline void ThreadedGetValue( ThreadIdType threadID ){}
+
+  /** Finalize multi-threaded metric computation. */
+  virtual inline void AfterThreadedGetValue( MeasureType & value ) const {}
+
+  /** GetValue threader callback function. */
+  static ITK_THREAD_RETURN_TYPE GetValueThreaderCallback( void * arg );
+
+  /** Launch MultiThread GetValue. */
+  void LaunchGetValueThreaderCallback( void ) const;
+
   /** Multi-threaded version of GetValueAndDerivative(). */
   virtual inline void ThreadedGetValueAndDerivative(
     ThreadIdType threadID ){}
@@ -366,7 +390,7 @@ protected:
   /** GetValueAndDerivative threader callback function. */
   static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
 
-  /** Launch MultiThread GetValueAndDerivative */
+  /** Launch MultiThread GetValueAndDerivative. */
   void LaunchGetValueAndDerivativeThreaderCallback( void ) const;
 
   /** AccumulateDerivatives threader callback function. */
@@ -400,12 +424,24 @@ protected:
    */
 
   // test per thread struct with padding and alignment
+  struct GetValuePerThreadStruct
+  {
+    SizeValueType st_NumberOfPixelsCounted;
+    MeasureType   st_Value;
+  };
+  itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValuePerThreadStruct,
+    PaddedGetValuePerThreadStruct );
+  itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedGetValuePerThreadStruct,
+    AlignedGetValuePerThreadStruct );
+  mutable AlignedGetValuePerThreadStruct * m_GetValuePerThreadVariables;
+  mutable ThreadIdType                     m_GetValuePerThreadVariablesSize;
+
+  // test per thread struct with padding and alignment
   struct GetValueAndDerivativePerThreadStruct
   {
-    SizeValueType         st_NumberOfPixelsCounted;
-    MeasureType           st_Value;
-    DerivativeType        st_Derivative;
-    TransformJacobianType st_TransformJacobian;
+    SizeValueType  st_NumberOfPixelsCounted;
+    MeasureType    st_Value;
+    DerivativeType st_Derivative;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValueAndDerivativePerThreadStruct,
     PaddedGetValueAndDerivativePerThreadStruct );
@@ -463,11 +499,14 @@ protected:
 
   /** Methods to support transforms with sparse Jacobians, like the BSplineTransform **********/
 
-  /** Check if the transform is an AdvancedTransform. Called by Initialize. */
+  /** Check if the transform is an AdvancedTransform. Called by Initialize.
+   * If so, we can speed up derivative calculations by only inspecting
+   * the parameters in the support region of a point.
+   */
   virtual void CheckForAdvancedTransform( void );
 
   /** Check if the transform is a B-spline. Called by Initialize. */
-  virtual void CheckForBSplineTransform( void );
+  virtual void CheckForBSplineTransform( void ) const;
 
   /** Transform a point from FixedImage domain to MovingImage domain.
    * This function also checks if mapped point is within support region of
@@ -522,13 +561,15 @@ private:
   void operator=( const Self & );             // purposely not implemented
 
   /** Private member variables. */
-  bool                            m_UseImageSampler;
-  double                          m_FixedLimitRangeRatio;
-  double                          m_MovingLimitRangeRatio;
-  bool                            m_UseFixedImageLimiter;
-  bool                            m_UseMovingImageLimiter;
-  double                          m_RequiredRatioOfValidSamples;
-  bool                            m_UseMovingImageDerivativeScales;
+  bool   m_UseImageSampler;
+  double m_FixedLimitRangeRatio;
+  double m_MovingLimitRangeRatio;
+  bool   m_UseFixedImageLimiter;
+  bool   m_UseMovingImageLimiter;
+  double m_RequiredRatioOfValidSamples;
+  bool   m_UseMovingImageDerivativeScales;
+  bool   m_ScaleGradientWithRespectToMovingImageOrientation;
+
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
 
 };

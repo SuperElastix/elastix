@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
 #define __itkAdvancedMeanSquaresImageToImageMetric_h
 
@@ -128,6 +132,8 @@ public:
     MovingImageType::ImageDimension );
 
   /** Get the value for single valued optimizers. */
+  virtual MeasureType GetValueSingleThreaded( const TransformParametersType & parameters ) const;
+
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
   /** Get the derivatives of the match measure. */
@@ -206,8 +212,8 @@ protected:
   typedef BSplineInterpolateImageFunction<
     FixedImageType, CoordinateRepresentationType >                 FixedImageInterpolatorType;
   typedef NearestNeighborInterpolateImageFunction<
-    FixedImageType, CoordinateRepresentationType >                DummyFixedImageInterpolatorType;
-  typedef ImageGridSampler< FixedImageType > SelfHessianSamplerType;
+    FixedImageType, CoordinateRepresentationType >                 DummyFixedImageInterpolatorType;
+  typedef ImageGridSampler< FixedImageType >                       SelfHessianSamplerType;
 
   double m_NormalizationFactor;
 
@@ -228,10 +234,16 @@ protected:
     const NonZeroJacobianIndicesType & nzji,
     HessianType & H ) const;
 
+  /** Get value for each thread. */
+  inline void ThreadedGetValue( ThreadIdType threadID );
+
+  /** Gather the values from all threads. */
+  inline void AfterThreadedGetValue( MeasureType & value ) const;
+
   /** Get value and derivatives for each thread. */
   inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
 
-  /** Gather the values and derivatives from all threads */
+  /** Gather the values and derivatives from all threads. */
   inline void AfterThreadedGetValueAndDerivative(
     MeasureType & value, DerivativeType & derivative ) const;
 

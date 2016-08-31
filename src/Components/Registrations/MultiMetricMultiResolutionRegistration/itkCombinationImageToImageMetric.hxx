@@ -1,21 +1,25 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef _itkCombinationImageToImageMetric_hxx
 #define _itkCombinationImageToImageMetric_hxx
 
 #include "itkCombinationImageToImageMetric.h"
-#include "elxTimer.h"
+#include "itkTimeProbe.h"
 #include "itkMath.h"
 
 /** Macros to reduce some copy-paste work.
@@ -549,7 +553,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
  */
 
 template< class TFixedImage, class TMovingImage >
-std::size_t
+double
 CombinationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetMetricComputationTime( unsigned int pos ) const
 {
@@ -707,17 +711,16 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
   for( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
     /** Time the computation per metric. */
-    typename tmr::Timer::Pointer timer = tmr::Timer::New();
-    timer->StartTimer();
+    itk::TimeProbe timer;
+    timer.Start();
 
     /** Compute ... */
     MeasureType tmpValue = this->m_Metrics[ i ]->GetValue( parameters );
-    timer->StopTimer();
+    timer.Stop();
 
     /** store ... */
-    this->m_MetricValues[ i ] = tmpValue;
-    this->m_MetricComputationTime[ i ]
-      = Math::Round< std::size_t, double >( timer->GetElapsedClockSec() * 1000.0 );
+    this->m_MetricValues[ i ]          = tmpValue;
+    this->m_MetricComputationTime[ i ] = timer.GetMean() * 1000.0;
 
     /** and combine. */
     if( this->m_UseMetric[ i ] )
@@ -765,25 +768,24 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
   /** Initialise. */
   DerivativeType tmpDerivative = DerivativeType( this->GetNumberOfParameters() );
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< MeasureType >::Zero );
+  derivative.Fill( NumericTraits< MeasureType >::ZeroValue() );
 
   /** Compute, store and combine all metric derivatives. */
   for( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
     /** Time the computation per metric. */
-    typename tmr::Timer::Pointer timer = tmr::Timer::New();
-    timer->StartTimer();
+    itk::TimeProbe timer;
+    timer.Start();
 
     /** Compute ... */
-    tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
+    tmpDerivative.Fill( NumericTraits< MeasureType >::ZeroValue() );
     this->m_Metrics[ i ]->GetDerivative( parameters, tmpDerivative );
-    timer->StopTimer();
+    timer.Stop();
 
     /** store ... */
     this->m_MetricDerivatives[ i ]          = tmpDerivative;
     this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
-    this->m_MetricComputationTime[ i ]
-      = Math::Round< std::size_t, double >( timer->GetElapsedClockSec() * 1000.0 );
+    this->m_MetricComputationTime[ i ]      = timer.GetMean() * 1000.0;
 
     /** and combine. */
     if( this->m_UseMetric[ i ] )
@@ -828,7 +830,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
   DerivativeType & derivative ) const
 {
   /** Declare timer and multi-threader. */
-  typename tmr::Timer::Pointer timer            = tmr::Timer::New();
+  itk::TimeProbe timer;
   typename ThreaderType::Pointer local_threader = ThreaderType::New();
 
   /** This function must be called before the multi-threaded code.
@@ -859,7 +861,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
    * If the global maximum number of threads is smaller than the number
    * of metrics, then setting the number of threads to the number of
    * threads will result in a bug: all metrics after the max will not be
-   * run. For now we decide to run this metric single-threadly in that case.
+   * run. For now we decide to run this metric single-threadedly in that case.
    *
    * Actually we should sum the number of threads of each metric and check that
    * it does not surpass the global maximum. But for now we don't.
@@ -880,14 +882,14 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
     for( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
     {
       /** Compute ... */
-      timer->StartTimer();
+      timer.Reset();
+      timer.Start();
       this->m_Metrics[ i ]->GetValueAndDerivative( parameters,
         this->m_MetricValues[ i ], this->m_MetricDerivatives[ i ] );
-      timer->StopTimer();
+      timer.Stop();
 
       /** Store computation time. */
-      this->m_MetricComputationTime[ i ]
-        = Math::Round< std::size_t, double >( timer->GetElapsedClockSec() * 1000.0 );
+      this->m_MetricComputationTime[ i ] = timer.GetMean() * 1000.0;
     }
   }
   /** Compute all metric values and derivatives, multi-threadedly. */
@@ -916,7 +918,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** Compute the derivative magnitude, single-threadedly. */
-  // I get random segfaults on the linux or Mac systems when this is enabled.
+  // I get random segfaults on the Linux or Mac systems when this is enabled.
   // For now disable multi-threading and force single-threaded:
   //if( !this->m_UseMultiThread )
   if( true )
@@ -1028,15 +1030,14 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
   MultiThreaderComboMetricsType * temp
     = static_cast< MultiThreaderComboMetricsType * >( infoStruct->UserData );
 
-  typename tmr::Timer::Pointer timer = tmr::Timer::New();
-  timer->StartTimer();
+  itk::TimeProbe timer;
+  timer.Start();
   temp->st_MetricsIterator[ threadID ]->GetValueAndDerivative(
     *temp->st_Parameters,
     temp->st_MetricValuesIterator[ threadID ],
     temp->st_MetricDerivativesIterator[ threadID ] );
-  timer->StopTimer();
-  temp->st_MetricComputationTime[ threadID ]
-    = Math::Round< std::size_t, double >( timer->GetElapsedClockSec() * 1000.0 );
+  timer.Stop();
+  temp->st_MetricComputationTime[ threadID ] = timer.GetMean() * 1000.0;
 
   return ITK_THREAD_RETURN_VALUE;
 

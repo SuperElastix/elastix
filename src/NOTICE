@@ -1,0 +1,60 @@
+elastix Copyright Notice:
+
+Copyright 2014 University Medical Center Utrecht and contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0.txt
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-------------------------------------------------------------------------------
+
+See LICENSE file for details.
+
+-------------------------------------------------------------------------------
+
+Historical note
+
+elastix was initially developed under contract of the University Medical Center
+Utrecht, The Netherlands, by Stefan Klein and Marius Staring under supervision
+of Josien P.W. Pluim. It is currently maintained at the Leiden University
+Medical Center, The Netherlands, and at Erasmus Medical Center, Rotterdam, The
+Netherlands.
+
+Versions of elastix prior to elastix v4.8 are distributed under the new and
+simplified BSD license approved by the Open Source Initiative (OSI)
+[http://www.opensource.org/licenses/bsd-license.php].
+
+Starting with its version elastix v4.8, elastix is distributed under the Apache
+2.0 License.
+
+The software is partially derived from the Insight Segmentation and
+Registration Toolkit (ITK). Prior to ITK 4, ITK is distributed under the new
+and simplified BSD licence. Starting with its version ITK 4 the ITK is
+distributed under the Apache 2.0 License. The ITK is required by elastix for
+compilation of the source code.
+
+-------------------------------------------------------------------------------
+
+elastix contains code from third parties that have different copyrights.
+
+They are:
+
+1) Insight Toolkit:   Copyright by the Insight Software Consortium
+                      Distributed under the Apache 2.0 license.
+                      Several files throughout elastix are derived from the
+                      Insight Toolkit.
+
+2) ANN library:       Copyright by the University of Maryland.
+                      Distributed under the GNU Lesser Public Licence.
+                      The files can be found in the subdirectory
+                      Common/KNN/ann_1.1. Please read the content of the
+                      subdirectory for details.
+

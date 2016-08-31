@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxAdaptiveStochasticGradientDescent_hxx
 #define __elxAdaptiveStochasticGradientDescent_hxx
 
@@ -23,7 +27,7 @@
 #include <algorithm>
 #include <utility>
 #include "itkAdvancedImageToImageMetric.h"
-#include "elxTimer.h"
+#include "itkTimeProbe.h"
 
 namespace elastix
 {
@@ -81,26 +85,6 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   this->m_SettingsVector.clear();
 
-  /** Temporary?: Use the multi-threaded version or not. Default true. */
-  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mto" ); // mto: multi-threaded optimizers
-  if( tmp == "true" || tmp == "" )
-  {
-    this->SetUseMultiThread( true );
-    std::string  tmp2        = this->m_Configuration->GetCommandLineArgument( "-threads" );
-    unsigned int nrOfThreads = atoi( tmp2.c_str() );
-    if( tmp2 != "" )
-    {
-      this->SetNumberOfThreads( nrOfThreads );
-    }
-  }
-  else { this->SetUseMultiThread( false ); }
-
-  // Use eigen or openmp for multi-threading? Default false = use itk threads.
-  tmp = this->m_Configuration->GetCommandLineArgument( "-useEigen" );
-  if( tmp == "true" ) { this->SetUseEigen( true ); }
-  tmp = this->m_Configuration->GetCommandLineArgument( "-useOpenMP" );
-  if( tmp == "true" ) { this->SetUseOpenMP( true ); }
-
 } // end BeforeRegistration()
 
 
@@ -148,7 +132,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       << std::endl;
   }
 
-  /** Set/Get the initial time. Default: 0.0. Should be >=0. */
+  /** Set/Get the initial time. Default: 0.0. Should be >= 0. */
   double initialTime = 0.0;
   this->GetConfiguration()->ReadParameter( initialTime,
     "SigmoidInitialTime", this->GetComponentLabel(), level, 0 );
@@ -180,13 +164,18 @@ AdaptiveStochasticGradientDescent< TElastix >
   this->GetConfiguration()->ReadParameter( this->m_AutomaticParameterEstimation,
     "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0 );
 
+  /** Set which step size strategy is chosen; default: false. */
+  this->m_UseConstantStep = false;
+  this->GetConfiguration()->ReadParameter( this->m_UseConstantStep,
+    "UseConstantStep", this->GetComponentLabel(), level, 0 );
+
   if( this->m_AutomaticParameterEstimation )
   {
     /** Set the maximum step length: the maximum displacement of a voxel in mm.
-     * Compute default value: mean spacing of fixed and moving image.
+     * Compute default value: mean in-plane spacing of fixed and moving image.
      */
-    const unsigned int fixdim = this->GetElastix()->FixedDimension;
-    const unsigned int movdim = this->GetElastix()->MovingDimension;
+    const unsigned int fixdim = vnl_math_min( (unsigned int)this->GetElastix()->FixedDimension, (unsigned int)2 );
+    const unsigned int movdim = vnl_math_min( (unsigned int)this->GetElastix()->MovingDimension, (unsigned int)2 );
     double             sum    = 0.0;
     for( unsigned int d = 0; d < fixdim; ++d )
     {
@@ -197,7 +186,8 @@ AdaptiveStochasticGradientDescent< TElastix >
       sum += this->GetElastix()->GetMovingImage()->GetSpacing()[ d ];
     }
     this->m_MaximumStepLength = sum / static_cast< double >( fixdim + movdim );
-    /** Read user setting */
+
+    /** Read user setting. */
     this->GetConfiguration()->ReadParameter( this->m_MaximumStepLength,
       "MaximumStepLength", this->GetComponentLabel(), level, 0 );
 
@@ -254,13 +244,13 @@ AdaptiveStochasticGradientDescent< TElastix >
     this->SetParam_a( a );
     this->SetParam_alpha( alpha );
 
-    /** Set/Get the maximum of the sigmoid. Should be >0. Default: 1.0. */
+    /** Set/Get the maximum of the sigmoid. Should be > 0. Default: 1.0. */
     double sigmoidMax = 1.0;
     this->GetConfiguration()->ReadParameter( sigmoidMax,
       "SigmoidMax", this->GetComponentLabel(), level, 0 );
     this->SetSigmoidMax( sigmoidMax );
 
-    /** Set/Get the minimum of the sigmoid. Should be <0. Default: -0.8. */
+    /** Set/Get the minimum of the sigmoid. Should be < 0. Default: -0.8. */
     double sigmoidMin = -0.8;
     this->GetConfiguration()->ReadParameter( sigmoidMin,
       "SigmoidMin", this->GetComponentLabel(), level, 0 );
@@ -334,7 +324,6 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   switch( this->GetStopCondition() )
   {
-
     case MaximumNumberOfIterations:
       stopcondition = "Maximum number of iterations has been reached";
       break;
@@ -386,7 +375,6 @@ AdaptiveStochasticGradientDescent< TElastix >
 ::AfterRegistration( void )
 {
   /** Print the best metric value. */
-
   double bestValue = this->GetValue();
   elxout << std::endl
          << "Final metric value  = "
@@ -428,7 +416,7 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   this->Superclass1::StartOptimization();
 
-} //end StartOptimization()
+} // end StartOptimization()
 
 
 /**
@@ -441,9 +429,9 @@ AdaptiveStochasticGradientDescent< TElastix >
 ::ResumeOptimization( void )
 {
   /** The following code relies on the fact that all
-  * components have been set up and that the initial
-  * position has been set, so must be called in this
-  * function. */
+   * components have been set up and that the initial
+   * position has been set, so must be called in this
+   * function. */
 
   if( this->GetAutomaticParameterEstimation()
     && !this->m_AutomaticParameterEstimationDone )
@@ -484,7 +472,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   }
   else
   {
-    /** Stop optimisation and pass on exception. */
+    /** Stop optimization and pass on exception. */
     this->Superclass1::MetricErrorResponse( err );
   }
 
@@ -493,7 +481,6 @@ AdaptiveStochasticGradientDescent< TElastix >
 
 /**
  * ******************* AutomaticParameterEstimation **********************
- * Select different method to estimate some reasonable values for the parameters
  */
 
 template< class TElastix >
@@ -501,11 +488,9 @@ void
 AdaptiveStochasticGradientDescent< TElastix >
 ::AutomaticParameterEstimation( void )
 {
-  /** Setup timers. */
-  tmr::Timer::Pointer timer1 = tmr::Timer::New();
-
   /** Total time. */
-  timer1->StartTimer();
+  itk::TimeProbe timer1;
+  timer1.Start();
   elxout << "Starting automatic parameter estimation for "
          << this->elxGetClassName()
          << " ..." << std::endl;
@@ -535,10 +520,9 @@ AdaptiveStochasticGradientDescent< TElastix >
   }
 
   /** Print the elapsed time. */
-  timer1->StopTimer();
+  timer1.Stop();
   elxout << "Automatic parameter estimation took "
-         << timer1->PrintElapsedTimeDHMS()
-         << std::endl;
+         << this->ConvertSecondsToDHMS( timer1.GetMean(), 2 ) << std::endl;
 
 } // end AutomaticParameterEstimation()
 
@@ -552,8 +536,7 @@ void
 AdaptiveStochasticGradientDescent< TElastix >
 ::AutomaticParameterEstimationOriginal( void )
 {
-  tmr::Timer::Pointer timer2 = tmr::Timer::New();
-  tmr::Timer::Pointer timer3 = tmr::Timer::New();
+  itk::TimeProbe timer2, timer3;
 
   /** Get the user input. */
   const double delta = this->GetMaximumStepLength();
@@ -605,12 +588,11 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   /** Compute the Jacobian terms. */
   elxout << "  Computing JacobianTerms ..." << std::endl;
-  timer2->StartTimer();
-  computeJacobianTerms->ComputeParameters( TrC, TrCC, maxJJ, maxJCJ );
-  timer2->StopTimer();
+  timer2.Start();
+  computeJacobianTerms->Compute( TrC, TrCC, maxJJ, maxJCJ );
+  timer2.Stop();
   elxout << "  Computing the Jacobian terms took "
-         << timer2->PrintElapsedTimeDHMS()
-         << std::endl;
+         << this->ConvertSecondsToDHMS( timer2.GetMean(), 6 ) << std::endl;
 
   /** Determine number of gradient measurements such that
    * E + 2\sqrt(Var) < K E
@@ -620,7 +602,7 @@ AdaptiveStochasticGradientDescent< TElastix >
    * K = 1.5
    * We enforce a minimum of 2.
    */
-  timer3->StartTimer();
+  timer3.Start();
   if( this->m_NumberOfGradientMeasurements == 0 )
   {
     const double K = 1.5;
@@ -651,10 +633,9 @@ AdaptiveStochasticGradientDescent< TElastix >
   }
   this->SampleGradients(
     this->GetScaledCurrentPosition(), sigma4, gg, ee );
-  timer3->StopTimer();
+  timer3.Stop();
   elxout << "  Sampling the gradients took "
-         << timer3->PrintElapsedTimeDHMS()
-         << std::endl;
+         << this->ConvertSecondsToDHMS( timer3.GetMean(), 6 ) << std::endl;
 
   /** Determine parameter settings. */
   double sigma1 = 0.0;
@@ -711,8 +692,7 @@ void
 AdaptiveStochasticGradientDescent< TElastix >
 ::AutomaticParameterEstimationUsingDisplacementDistribution( void )
 {
-  tmr::Timer::Pointer timer4 = tmr::Timer::New();
-  tmr::Timer::Pointer timer5 = tmr::Timer::New();
+  itk::TimeProbe timer4, timer5;
 
   /** Get current position to start the parameter estimation. */
   this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
@@ -763,14 +743,13 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   /** Compute the Jacobian terms. */
   elxout << "  Computing displacement distribution ..." << std::endl;
-  timer4->StartTimer();
-  computeDisplacementDistribution->ComputeDistributionTerms(
+  timer4.Start();
+  computeDisplacementDistribution->Compute(
     this->GetScaledCurrentPosition(), jacg, maxJJ,
     maximumDisplacementEstimationMethod );
-  timer4->StopTimer();
+  timer4.Stop();
   elxout << "  Computing the displacement distribution took "
-         << timer4->PrintElapsedTimeDHMS()
-         << std::endl;
+         << this->ConvertSecondsToDHMS( timer4.GetMean(), 6 ) << std::endl;
 
   /** Initial of the variables. */
   double       a     = 0.0;
@@ -781,7 +760,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   this->GetConfiguration()->ReadParameter( this->m_UseNoiseCompensation,
     "NoiseCompensation", this->GetComponentLabel(), 0, 0 );
 
-  /** Use noise Compensation factor or not. */
+  /** Use noise compensation factor or not. */
   if( this->m_UseNoiseCompensation == true )
   {
     double sigma4       = 0.0;
@@ -789,7 +768,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     double ee           = 0.0;
     double sigma4factor = 1.0;
 
-    /** Sample the grid and random sampler container to estimate the noise factor.*/
+    /** Sample the grid and random sampler container to estimate the noise factor. */
     if( this->m_NumberOfGradientMeasurements == 0 )
     {
       this->m_NumberOfGradientMeasurements = vnl_math_max(
@@ -798,7 +777,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       elxout << "  NumberOfGradientMeasurements to estimate sigma_i: "
              << this->m_NumberOfGradientMeasurements << std::endl;
     }
-    timer5->StartTimer();
+    timer5.Start();
     if( maxJJ > 1e-14 )
     {
       sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
@@ -807,10 +786,9 @@ AdaptiveStochasticGradientDescent< TElastix >
 
     double noisefactor = gg / ( gg + ee );
     a =  delta * vcl_pow( A + 1.0, alpha ) / jacg * noisefactor;
-    timer5->StopTimer();
+    timer5.Stop();
     elxout << "  Compute the noise compensation took "
-           << timer5->PrintElapsedTimeDHMS()
-           << std::endl;
+           << this->ConvertSecondsToDHMS( timer5.GetMean(), 6 ) << std::endl;
   }
   else
   {
@@ -871,6 +849,8 @@ AdaptiveStochasticGradientDescent< TElastix >
          * Also, the AdaptiveStepSize mechanism is turned off when any of the samplers
          * has UseRandomSampleRegion==true.
          * \todo Extend ASGD to really take into account random region sampling.
+         * \todo This does not work for the MultiInputRandomCoordinateImageSampler,
+         * because it does not inherit from the RandomCoordinateImageSampler
          */
         if( randomCoordinateSamplerVec[ m ].IsNotNull() )
         {
@@ -887,7 +867,9 @@ AdaptiveStochasticGradientDescent< TElastix >
               this->SetUseAdaptiveStepSizes( false );
             }
           }
-          randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
+          /** Do not turn it off yet, as it would go wrong if you multiple metrics are using
+           * all the same sampler. */
+          //randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
 
         } // end if random coordinate sampler
 
@@ -904,6 +886,16 @@ AdaptiveStochasticGradientDescent< TElastix >
       } // end if random sampler
 
     } // end for loop over metrics
+
+    /** Start a second loop over all metrics to turn off the random region sampling. */
+    for( unsigned int m = 0; m < M; ++m )
+    {
+      if( randomCoordinateSamplerVec[ m ].IsNotNull() )
+      {
+        randomCoordinateSamplerVec[ m ]->SetUseRandomSampleRegion( false );
+      }
+    } // end loop over metrics
+
   }   // end if NewSamplesEveryIteration.
 
 #ifndef _ELASTIX_BUILD_LIBRARY
@@ -980,9 +972,11 @@ AdaptiveStochasticGradientDescent< TElastix >
     } // end else: no stochastic gradients
 
   } // end for loop over gradient measurements
+
 #ifdef _ELASTIX_BUILD_LIBARY
   progressObserver->PrintProgress( 1.0 );
 #endif
+
   /** Compute means. */
   exactgg /= this->m_NumberOfGradientMeasurements;
   diffgg  /= this->m_NumberOfGradientMeasurements;
@@ -1069,9 +1063,6 @@ AdaptiveStochasticGradientDescent< TElastix >
 
 /**
  * ****************** CheckForAdvancedTransform **********************
- * Check if the transform is of type AdvancedTransform.
- * If so, we can speed up derivative calculations by only inspecting
- * the parameters in the support region of a point.
  */
 
 template< class TElastix >
@@ -1102,7 +1093,6 @@ AdaptiveStochasticGradientDescent< TElastix >
 
 /**
  * *************** GetScaledDerivativeWithExceptionHandling ***************
- * Helper function, used by SampleGradients.
  */
 
 template< class TElastix >
@@ -1128,7 +1118,6 @@ AdaptiveStochasticGradientDescent< TElastix >
 
 /**
  * *************** AddRandomPerturbation ***************
- * Helper function, used by SampleGradients.
  */
 
 template< class TElastix >

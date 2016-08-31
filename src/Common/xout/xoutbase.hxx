@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __xoutbase_hxx
 #define __xoutbase_hxx
 
@@ -103,11 +107,8 @@ xoutbase< charT, traits >::AddTargetCell( const char * name, ostream_type * cell
   }
   else
   {
-    if( this->m_CTargetCells.count( name ) == 0 )
-    {
-      this->m_CTargetCells.insert( CStreamMapEntryType( name, cell ) );
-      returndummy = 0;
-    }
+    this->m_CTargetCells.insert( CStreamMapEntryType( name, cell ) );
+    returndummy = 0;
   }
 
   return returndummy;
@@ -132,11 +133,8 @@ xoutbase< charT, traits >::AddTargetCell( const char * name, Self * cell )
   }
   else
   {
-    if( this->m_XTargetCells.count( name ) == 0 )
-    {
-      this->m_XTargetCells.insert( XStreamMapEntryType( name, cell ) );
-      returndummy = 0;
-    }
+    this->m_XTargetCells.insert( XStreamMapEntryType( name, cell ) );
+    returndummy = 0;
   }
 
   return returndummy;
@@ -212,11 +210,8 @@ xoutbase< charT, traits >::AddOutput( const char * name, ostream_type * output )
   }
   else
   {
-    if( this->m_COutputs.count( name ) == 0 )
-    {
-      this->m_COutputs.insert( CStreamMapEntryType( name, output ) );
-      returndummy = 0;
-    }
+    this->m_COutputs.insert( CStreamMapEntryType( name, output ) );
+    returndummy = 0;
   }
 
   return returndummy;
@@ -240,11 +235,8 @@ xoutbase< charT, traits >::AddOutput( const char * name, Self * output )
   }
   else
   {
-    if( this->m_XOutputs.count( name ) == 0 )
-    {
-      this->m_XOutputs.insert( XStreamMapEntryType( name, output ) );
-      returndummy = 0;
-    }
+    this->m_XOutputs.insert( XStreamMapEntryType( name, output ) );
+    returndummy = 0;
   }
 
   return returndummy;

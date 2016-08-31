@@ -1,17 +1,20 @@
-/*======================================================================
-
-This file is part of the elastix software.
-
-Copyright (c) University Medical Center Utrecht. All rights reserved.
-See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-details.
-
-This software is distributed WITHOUT ANY WARRANTY; without even
-the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
-
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -155,6 +158,7 @@ public:
   typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::ParametersValueType    ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  typedef typename Superclass::DerivativeType         DerivativeType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::ScalarType             ScalarType;
   typedef typename Superclass::InputPointType         InputPointType;
@@ -176,7 +180,9 @@ public:
   typedef typename Superclass::SpatialHessianType SpatialHessianType;
   typedef typename Superclass
     ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType InternalMatrixType;
+  typedef typename Superclass::InternalMatrixType           InternalMatrixType;
+  typedef typename Superclass::MovingImageGradientType      MovingImageGradientType;
+  typedef typename Superclass::MovingImageGradientValueType MovingImageGradientValueType;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename Superclass::PixelType    PixelType;
@@ -249,7 +255,16 @@ public:
   virtual void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & nzji ) const;
+
+  /** Compute the inner product of the Jacobian with the moving image gradient.
+   * The Jacobian is (partially) constructed inside this function, but not returned.
+   */
+  virtual void EvaluateJacobianWithImageGradientProduct(
+    const InputPointType & ipp,
+    const MovingImageGradientType & movingImageGradient,
+    DerivativeType & imageJacobian,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
   /** Compute the spatial Jacobian of the transformation. */
   virtual void GetSpatialJacobian(

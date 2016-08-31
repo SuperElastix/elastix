@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 
 /** If running on a Windows-system, include "windows.h".
  *  This is to set the priority, but which does not work on cygwin.
@@ -21,8 +25,13 @@
 #endif
 
 #include "elxElastixMain.h"
+
 #include "elxMacro.h"
 #include "itkMultiThreader.h"
+
+#ifdef ELASTIX_USE_OPENCL
+#include "itkOpenCLSetup.h"
+#endif
 
 namespace elastix
 {
@@ -156,12 +165,18 @@ ElastixMain::ComponentDatabasePointer ElastixMain::s_CDB             = 0;
 ElastixMain::ComponentLoaderPointer   ElastixMain::s_ComponentLoader = 0;
 
 /**
-* ********************** Destructor ****************************
-*/
+ * ********************** Destructor ****************************
+ */
 
 ElastixMain::~ElastixMain()
 {
-  //nothing
+#ifdef ELASTIX_USE_OPENCL
+  itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
+  if( context->IsCreated() )
+  {
+    context->Release();
+  }
+#endif
 } // end Destructor
 
 
@@ -180,7 +195,7 @@ ElastixMain
   int dummy = this->m_Configuration->Initialize( argmap );
   if( dummy )
   {
-    xout[ "error" ] << "ERROR: Something went wrong during initialisation "
+    xout[ "error" ] << "ERROR: Something went wrong during initialization "
                     << "of the configuration object." << std::endl;
   }
 
@@ -202,7 +217,7 @@ ElastixMain
   int dummy = this->m_Configuration->Initialize( argmap, inputMap );
   if( dummy )
   {
-    xout[ "error" ] << "ERROR: Something went wrong during initialisation of the configuration object." << std::endl;
+    xout[ "error" ] << "ERROR: Something went wrong during initialization of the configuration object." << std::endl;
   }
 
 } // end EnterCommandLineArguments()
@@ -229,7 +244,7 @@ ElastixMain
     int dummy = this->m_Configurations[ i ]->Initialize( argmap, inputMaps[ i ] );
     if( dummy )
     {
-      xout[ "error" ] << "ERROR: Something went wrong during initialisation of configuration object " << i << "." << std::endl;
+      xout[ "error" ] << "ERROR: Something went wrong during initialization of configuration object " << i << "." << std::endl;
     }
   }
 
@@ -242,7 +257,7 @@ ElastixMain
  * **************************** Run *****************************
  *
  * Assuming EnterCommandLineParameters has already been invoked.
- * or that m_Configuration is initialised in another way.
+ * or that m_Configuration is initialized in another way.
  */
 
 int
@@ -273,6 +288,34 @@ ElastixMain::Run( void )
     errorCode = 1;
     return errorCode;
   }
+
+  /** Create OpenCL context and logger here. */
+#ifdef ELASTIX_USE_OPENCL
+  /** Check if user overrides OpenCL device selection. */
+  std::string userSuppliedOpenCLDeviceType = "GPU";
+  this->m_Configuration->ReadParameter( userSuppliedOpenCLDeviceType,
+    "OpenCLDeviceType", 0, false );
+
+  int userSuppliedOpenCLDeviceID = -1;
+  this->m_Configuration->ReadParameter( userSuppliedOpenCLDeviceID,
+    "OpenCLDeviceID", 0, false );
+
+  std::string errorMessage              = "";
+  const bool  creatingContextSuccessful = itk::CreateOpenCLContext(
+    errorMessage, userSuppliedOpenCLDeviceType, userSuppliedOpenCLDeviceID );
+  if( !creatingContextSuccessful )
+  {
+    /** Report and disable the GPU by releasing the context. */
+    elxout << errorMessage << std::endl;
+    elxout << "  OpenCL processing in elastix is disabled." << std::endl << std::endl;
+
+    itk::OpenCLContext::Pointer context = itk::OpenCLContext::GetInstance();
+    context->Release();
+  }
+
+  /** Create a log file. */
+  itk::CreateOpenCLLogger( "elastix", this->m_Configuration->GetCommandLineArgument( "-out" ) );
+#endif
 
   /** Set some information in the ElastixBase. */
   this->GetElastixBase()->SetConfiguration( this->m_Configuration );
@@ -447,13 +490,23 @@ ElastixMain::InitDBIndex( void )
     if( this->m_FixedImageDimension == 0 )
     {
 #ifndef _ELASTIX_BUILD_LIBRARY
-      /** Read it from the fixed image header. */
+      /** Get the fixed image file name. */
       std::string fixedImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-f" );
       if( fixedImageFileName == "" )
       {
         fixedImageFileName = this->m_Configuration->GetCommandLineArgument( "-f0" );
       }
+
+      /** Sanity check. */
+      if( fixedImageFileName == "" )
+      {
+        xout[ "error" ] << "ERROR: could not read fixed image." << std::endl;
+        xout[ "error" ] << "  both -f and -f0 are unspecified" << std::endl;
+        return 1;
+      }
+
+      /** Read it from the fixed image header. */
       try
       {
         this->GetImageInformationFromFile( fixedImageFileName,
@@ -515,13 +568,23 @@ ElastixMain::InitDBIndex( void )
     if( this->m_MovingImageDimension == 0 )
     {
 #ifndef _ELASTIX_BUILD_LIBRARY
-      /** Read it from the moving image header. */
+      /** Get the moving image file name. */
       std::string movingImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-m" );
       if( movingImageFileName == "" )
       {
         movingImageFileName = this->m_Configuration->GetCommandLineArgument( "-m0" );
       }
+
+      /** Sanity check. */
+      if( movingImageFileName == "" )
+      {
+        xout[ "error" ] << "ERROR: could not read moving image." << std::endl;
+        xout[ "error" ] << "  both -m and -m0 are unspecified" << std::endl;
+        return 1;
+      }
+
+      /** Read it from the moving image header. */
       try
       {
         this->GetImageInformationFromFile( movingImageFileName,
@@ -861,8 +924,7 @@ void
 ElastixMain::SetProcessPriority( void ) const
 {
   /** If wanted, set the priority of this process high or below normal. */
-  std::string processPriority = "";
-  processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
+  std::string processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
   if( processPriority == "high" )
   {
     #if defined( _WIN32 ) && !defined( __CYGWIN__ )
@@ -910,8 +972,7 @@ void
 ElastixMain::SetMaximumNumberOfThreads( void ) const
 {
   /** Get the number of threads from the command line. */
-  std::string maximumNumberOfThreadsString = "";
-  maximumNumberOfThreadsString
+  std::string maximumNumberOfThreadsString
     = this->m_Configuration->GetCommandLineArgument( "-threads" );
 
   /** If supplied, set the maximum number of threads. */
@@ -981,7 +1042,7 @@ ElastixMain::GetImageInformationFromFile(
     testReader->SetFileName( filename.c_str() );
 
     /** Generate all information. */
-    testReader->GenerateOutputInformation();
+    testReader->UpdateOutputInformation();
 
     /** Extract the required information. */
     itk::ImageIOBase::Pointer testImageIO = testReader->GetImageIO();

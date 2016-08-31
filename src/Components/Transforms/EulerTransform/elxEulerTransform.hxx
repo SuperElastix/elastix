@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 
 #ifndef __elxEulerTransform_HXX_
 #define __elxEulerTransform_HXX_
@@ -66,14 +70,13 @@ EulerTransformElastix< TElastix >
   /** Variables. */
   InputPointType centerOfRotationPoint;
   centerOfRotationPoint.Fill( 0.0 );
-  bool pointRead = false;
   bool indexRead = false;
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
    */
-  pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
+  bool pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
 
   /** If this did not succeed, probably a transform parameter file
    * is trying to be read that was generated using an older elastix
@@ -159,6 +162,7 @@ EulerTransformElastix< TElastix >
 
 
 /**
+
  * ************************* CreateTransformParametersMap ************************
  */
 
@@ -169,24 +173,40 @@ EulerTransformElastix< TElastix >
   const ParametersType & param,
   ParameterMapType * paramsMap ) const
 {
+  std::ostringstream         tmpStream;
   std::string                parameterName;
   std::vector< std::string > parameterValues;
-  char                       tmpValue[ 256 ];
 
   /** Call the CreateTransformParametersMap from the TransformBase. */
   this->Superclass2::CreateTransformParametersMap( param, paramsMap );
 
   /** Get the center of rotation point and write it to file. */
-  InputPointType rotationPoint = this->m_EulerTransform->GetCenter();
   parameterName = "CenterOfRotationPoint";
+  InputPointType rotationPoint = this->m_EulerTransform->GetCenter();
   for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    sprintf( tmpValue, "%.10lf", rotationPoint[ i ] );
-    parameterValues.push_back( tmpValue );
+    tmpStream.str( "" ); tmpStream << rotationPoint[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
+
+  /** Write the ComputeZYX to file. */
+  if( SpaceDimension == 3 )
+  {
+    parameterName = "ComputeZYX";
+    std::string computeZYX = "false";
+    if( this->m_EulerTransform->GetComputeZYX() )
+    {
+      computeZYX = "true";
+    }
+    parameterValues.push_back( computeZYX );
+    paramsMap->insert( make_pair( parameterName, parameterValues ) );
+    parameterValues.clear();
+  }
 
 } // end CreateTransformParametersMap()
+
 
 /**
  * ************************* InitializeTransform *********************
@@ -310,7 +330,7 @@ EulerTransformElastix< TElastix >
     transformInitializer->InitializeTransform();
   }
 
-  /** If no AutomaticTransformInitialization was desired, set the translation 
+  /** If no AutomaticTransformInitialization is desired, set the translation 
    * to the given initial translation or to zero if none was given.
    */
   if( !automaticTransformInitialization )

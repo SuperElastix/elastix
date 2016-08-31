@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef _itkAdvancedMeanSquaresImageToImageMetric_hxx
 #define _itkAdvancedMeanSquaresImageToImageMetric_hxx
 
@@ -117,16 +121,14 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ******************* GetValue *******************
+ * ******************* GetValueSingleThreaded *******************
  */
 
 template< class TFixedImage, class TMovingImage >
 typename AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >::MeasureType
 AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
-::GetValue( const TransformParametersType & parameters ) const
+::GetValueSingleThreaded( const TransformParametersType & parameters ) const
 {
-  itkDebugMacro( "GetValue( " << parameters << " ) " );
-
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
   MeasureType measure = NumericTraits< MeasureType >::Zero;
@@ -211,7 +213,174 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Return the mean squares measure value. */
   return measure;
 
+} // end GetValueSingleThreaded()
+
+
+/**
+ * ******************* GetValue *******************
+ */
+
+template< class TFixedImage, class TMovingImage >
+typename AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >::MeasureType
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
+::GetValue( const TransformParametersType & parameters ) const
+{
+  /** Option for now to still use the single threaded code. */
+  if( !this->m_UseMultiThread )
+  {
+    return this->GetValueSingleThreaded( parameters );
+  }
+
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValue itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before calling GetValue
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValue multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+  /** Launch multi-threading metric */
+  this->LaunchGetValueThreaderCallback();
+
+  /** Gather the metric values from all threads. */
+  MeasureType value = NumericTraits< MeasureType >::Zero;
+  this->AfterThreadedGetValue( value );
+
+  return value;
+
 } // end GetValue()
+
+
+/**
+ * ******************* ThreadedGetValue *******************
+ */
+
+template< class TFixedImage, class TMovingImage >
+void
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
+::ThreadedGetValue( ThreadIdType threadId )
+{
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
+  const unsigned long         sampleContainerSize = sampleContainer->Size();
+
+  /** Get the samples for this thread. */
+  const unsigned long nrOfSamplesPerThreads
+    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( this->m_NumberOfThreads ) ) );
+
+  unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
+  unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
+  pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
+  pos_end   = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator threader_fiter;
+  typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator threader_fend   = sampleContainer->Begin();
+
+  threader_fbegin += (int)pos_begin;
+  threader_fend   += (int)pos_end;
+
+  /** Create variables to store intermediate results. circumvent false sharing */
+  unsigned long numberOfPixelsCounted = 0;
+  MeasureType   measure               = NumericTraits< MeasureType >::Zero;
+
+  /** Loop over the fixed image to calculate the mean squares. */
+  for( threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter )
+  {
+    /** Read fixed coordinates and initialize some variables. */
+    const FixedImagePointType & fixedPoint = ( *threader_fiter ).Value().m_ImageCoordinates;
+    RealType                    movingImageValue;
+    MovingImagePointType        mappedPoint;
+
+    /** Transform point and check if it is inside the B-spline support region. */
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+    /** Check if point is inside mask. */
+    if( sampleOk )
+    {
+      sampleOk = this->IsInsideMovingMask( mappedPoint ); // thread-safe?
+    }
+
+    /** Compute the moving image value M(T(x)) and check if
+     * the point is inside the moving image buffer.
+     */
+    if( sampleOk )
+    {
+      sampleOk = this->EvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, 0 );
+    }
+
+    if( sampleOk )
+    {
+      numberOfPixelsCounted++;
+
+      /** Get the fixed image value. */
+      const RealType & fixedImageValue
+        = static_cast< RealType >( ( *threader_fiter ).Value().m_ImageValue );
+
+      /** The difference squared. */
+      const RealType diff = movingImageValue - fixedImageValue;
+      measure += diff * diff;
+
+    } // end if sampleOk
+
+  } // end for loop over the image sample container
+
+  /** Only update these variables at the end to prevent unnecessary "false sharing". */
+  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Value                 = measure;
+
+} // end ThreadedGetValue()
+
+
+/**
+ * ******************* AfterThreadedGetValue *******************
+ */
+
+template< class TFixedImage, class TMovingImage >
+void
+AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
+::AfterThreadedGetValue( MeasureType & value ) const
+{
+  /** Accumulate the number of pixels. */
+  this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  {
+    this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
+
+    /** Reset this variable for the next iteration. */
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = 0;
+  }
+
+  /** Check if enough samples were valid. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  this->CheckNumberOfSamples(
+    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+  /** The normalization factor. */
+  DerivativeValueType normal_sum = this->m_NormalizationFactor
+    / static_cast< DerivativeValueType >( this->m_NumberOfPixelsCounted );
+
+  /** Accumulate values. */
+  value = NumericTraits< MeasureType >::Zero;
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
+
+    /** Reset this variable for the next iteration. */
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value = NumericTraits< MeasureType >::Zero;
+  }
+  value *= normal_sum;
+
+} // end AfterThreadedGetValue()
 
 
 /**
@@ -253,11 +422,11 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   this->m_NumberOfPixelsCounted = 0;
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+  derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(
-  this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
   DerivativeType        imageJacobian( nzji.size() );
   TransformJacobianType jacobian;
 
@@ -319,12 +488,19 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
 
+#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
+#else
+      /** Compute the inner product of the transform Jacobian and the moving image gradient. */
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+        fixedPoint, movingImageDerivative,
+        imageJacobian, nzji );
+#endif
 
       /** Compute this pixel's contribution to the measure and derivatives. */
       this->UpdateValueAndDerivativeTerms(
@@ -389,9 +565,6 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
    */
   this->BeforeThreadedGetValueAndDerivative( parameters );
 
-  /** Initialize some threading related parameters. */
-  this->InitializeThreadingParameters();
-
   /** Launch multi-threading metric */
   this->LaunchGetValueAndDerivativeThreaderCallback();
 
@@ -413,16 +586,14 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType               imageJacobian( nzji.size() );
-
-  /** Get a handle to a pre-allocated transform Jacobian. */
-  TransformJacobianType & jacobian = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
+  DerivativeType               imageJacobian( nnzji );
 
   /** Get a handle to the pre-allocated derivative for the current thread.
-   * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
+   * The initialization is performed at the beginning of each resolution in
+   * InitializeThreadingParameters(), and at the end of each iteration in
+   * AfterThreadedGetValueAndDerivative() and the accumulate functions.
    */
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero ); // needed?
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
@@ -485,12 +656,18 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *threader_fiter ).Value().m_ImageValue );
 
+#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
+#else
+      /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+        fixedPoint, movingImageDerivative, imageJacobian, nzji );
+#endif
 
       /** Compute this pixel's contribution to the measure and derivatives. */
       this->UpdateValueAndDerivativeTerms(
@@ -524,6 +701,9 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
+
+    /** Reset this variable for the next iteration. */
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */
@@ -540,6 +720,9 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
+
+    /** Reset this variable for the next iteration. */
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value = NumericTraits< MeasureType >::Zero;
   }
   value *= normal_sum;
 
@@ -559,11 +742,9 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
     this->m_ThreaderMetricParameters.st_DerivativePointer   = derivative.begin();
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-    typename ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
+    this->m_Threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
       const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
-    local_threader->SingleMethodExecute();
+    this->m_Threader->SingleMethodExecute();
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp

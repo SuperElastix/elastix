@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkTransformBendingEnergyPenaltyTerm_h
 #define __itkTransformBendingEnergyPenaltyTerm_h
 
@@ -101,6 +105,15 @@ public:
   typedef typename Superclass::ThreaderType                 ThreaderType;
   typedef typename Superclass::ThreadInfoType               ThreadInfoType;
 
+  /** Typedef's for the B-spline transform. */
+  typedef typename Superclass::CombinationTransformType       CombinationTransformType;
+  typedef typename Superclass::BSplineOrder1TransformType     BSplineOrder1TransformType;
+  typedef typename Superclass::BSplineOrder1TransformPointer  BSplineOrder1TransformPointer;
+  typedef typename Superclass::BSplineOrder2TransformType     BSplineOrder2TransformType;
+  typedef typename Superclass::BSplineOrder2TransformPointer  BSplineOrder2TransformPointer;
+  typedef typename Superclass::BSplineOrder3TransformType     BSplineOrder3TransformType;
+  typedef typename Superclass::BSplineOrder3TransformPointer  BSplineOrder3TransformPointer;
+
   /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
   typedef typename Superclass
@@ -157,10 +170,6 @@ protected:
   typedef typename Superclass::MovingImagePointType           MovingImagePointType;
   typedef typename Superclass::MovingImageContinuousIndexType MovingImageContinuousIndexType;
   typedef typename Superclass::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
-
-  /** Typedefs for the B-spline transform. */
-  typedef typename Superclass::BSplineTransformType     BSplineTransformType;
-  typedef typename Superclass::CombinationTransformType CombinationTransformType;
 
   /** Typedefs for SelfHessian */
   typedef ImageGridSampler< FixedImageType > SelfHessianSamplerType;

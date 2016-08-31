@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __itkTransformRigidityPenaltyTerm_hxx
 #define __itkTransformRigidityPenaltyTerm_hxx
 
@@ -125,7 +129,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** Check if this transform is a B-spline transform. */
   typename BSplineTransformType::Pointer localBSplineTransform = 0;
-  bool transformIsBSpline = this->CheckForBSplineTransform( localBSplineTransform );
+  bool transformIsBSpline = this->CheckForBSplineTransform2( localBSplineTransform );
   if( transformIsBSpline ) { this->SetBSplineTransform( localBSplineTransform ); }
 
   /** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
@@ -952,7 +956,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** Set output values to zero. */
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< MeasureType >::Zero );
+  derivative.Fill( NumericTraits< MeasureType >::ZeroValue() );
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -2209,13 +2213,13 @@ void
 TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 ::Create1DOperator(
   NeighborhoodType & F,
-  const std::string WhichF,
+  const std::string & WhichF,
   const unsigned int WhichDimension,
   const CoefficientImageSpacingType & spacing  ) const
 {
   /** Create an operator size and set it in the operator. */
   NeighborhoodSizeType r;
-  r.Fill( NumericTraits< unsigned int >::Zero );
+  r.Fill( NumericTraits< unsigned int >::ZeroValue() );
   r[ WhichDimension - 1 ] = 1;
   F.SetRadius( r );
 
@@ -2421,7 +2425,7 @@ void
 TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 ::CreateNDOperator(
   NeighborhoodType & F,
-  const std::string WhichF,
+  const std::string & WhichF,
   const CoefficientImageSpacingType & spacing ) const
 {
   /** Create an operator size and set it in the operator. */

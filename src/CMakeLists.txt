@@ -1,6 +1,12 @@
 #---------------------------------------------------------------------
 cmake_minimum_required( VERSION 2.8 )
 cmake_policy( SET CMP0012 NEW )
+if( POLICY CMP0033 )
+  # This policy was introduced in cmake 3, so we need to check for its
+  # existence. When the minimum cmake version above is upgraded to 3
+  # this if(POLICY) check can be removed.
+  cmake_policy( SET CMP0033 OLD )
+endif()
 
 #---------------------------------------------------------------------
 project( elastix )
@@ -10,14 +16,40 @@ project( elastix )
 mark_as_advanced( ELASTIX_BUILD_EXECUTABLE )
 option( ELASTIX_BUILD_EXECUTABLE "Generate executable or library?" ON )
 
-IF( NOT ELASTIX_BUILD_EXECUTABLE )
-  ADD_DEFINITIONS( -D_ELASTIX_BUILD_LIBRARY )
-  MARK_AS_ADVANCED( ELASTIX_BUILD_SHARED_LIBS )
-  OPTION( ELASTIX_BUILD_SHARED_LIBS "Build shared libraries?" ON )
-  IF( ELASTIX_BUILD_SHARED_LIBS )
-    ADD_DEFINITIONS( -D_ELASTIX_BUILD_SHARED_LIBRARY )
-  ENDIF()
-ENDIF()
+if( NOT ELASTIX_BUILD_EXECUTABLE )
+  add_definitions( -D_ELASTIX_BUILD_LIBRARY )
+
+  # The following may make smaller and quicker loading libraries,
+  # that hides unnecessary symbols. Available from CMake 3.0.0.
+  #set( CMAKE_C_VISIBILITY_PRESET hidden )
+  #set( CMAKE_CXX_VISIBILITY_PRESET hidden )
+
+  # Adding the option to switch between a static and a shared library.
+  # The default is a static library, as it is best tested.
+  mark_as_advanced( ELASTIX_BUILD_SHARED_LIBS )
+  option( ELASTIX_BUILD_SHARED_LIBS "Build shared libraries?" OFF )
+  if( ELASTIX_BUILD_SHARED_LIBS )
+    add_definitions( -D_ELASTIX_BUILD_SHARED_LIBRARY )
+
+    # The following sets the default library type for add_library to SHARED.
+    # This is used in Core/CMakeLists.
+    set( BUILD_SHARED_LIBS ON )
+
+    # We need to make sure that also the ITK is compiled with shared
+    # libraries on. Related to flag (ITK_)BUILD_SHARED_LIBS. todo
+
+    # In order to compile a shared library, all static sub-libraries
+    # need to build position independend code.
+    # Otherwise an error similar to the following is raised:
+    #   relocation R_X86_64_32S against `.bss' can not be used when
+    #   making a shared object; recompile with -fPIC
+    set( CMAKE_POSITION_INDEPENDENT_CODE ON )
+  else()
+    # The following sets the default library type for add_library to STATIC.
+    # This is used in Core/CMakeLists.
+    set( BUILD_SHARED_LIBS OFF )
+  endif()
+endif()
 
 #---------------------------------------------------------------------
 # Find ITK.
@@ -25,22 +57,30 @@ find_package( ITK REQUIRED )
 include( ${ITK_USE_FILE} )
 
 #---------------------------------------------------------------------
-# Add the elastix source dir as an additional module path,
+# Add the CMake dir as an additional module path,
 # so that CMake is able to find the FindPackage modules.
-list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} )
+list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake )
 
 #---------------------------------------------------------------------
-# Find CUDA.
-mark_as_advanced( ELASTIX_USE_CUDA )
-option( ELASTIX_USE_CUDA "Use CUDA enabled GPU" OFF )
+# Find OpenCL.
+option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
 
-if( ELASTIX_USE_CUDA )
-  find_package( CUDA REQUIRED )
+if( ELASTIX_USE_OPENCL )
+  find_package( OpenCL REQUIRED )
+  # Force OPENCL_OPTIMIZATION_MAD_ENABLE to on
+  if( DEFINED OPENCL_OPTIMIZATION_MAD_ENABLE )
+    set( OPENCL_OPTIMIZATION_MAD_ENABLE ON CACHE BOOL
+      "Allow a * b + c to be replaced by a mad. The mad computes a * b + c with reduced accuracy." FORCE )
+  endif()
 
-  mark_as_advanced( CUDA_BUILD_CUBIN )
-  mark_as_advanced( CUDA_BUILD_EMULATION )
-  mark_as_advanced( CUDA_VERBOSE_BUILD )
-  mark_as_advanced( CUDA_SDK_ROOT_DIR )
+  # Include the OpenCL include directories to elastix
+  include_directories( ${OPENCL_INCLUDE_DIRS} )
+
+  # Add some useful macro's
+  include( elastixOpenCL )
+
+  # Add definition for the OpenCL
+  add_definitions( -DELASTIX_USE_OPENCL )
 endif()
 
 #---------------------------------------------------------------------
@@ -149,7 +189,6 @@ endif()
 set( elxCommon_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Common
   ${elastix_SOURCE_DIR}/Common/CostFunctions
-  ${elastix_SOURCE_DIR}/Common/CUDA
   ${elastix_SOURCE_DIR}/Common/ImageSamplers
   ${elastix_SOURCE_DIR}/Common/KNN
   ${elastix_SOURCE_DIR}/Common/KNN/ann_1.1/include
@@ -158,6 +197,14 @@ set( elxCommon_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Common/Transforms
   ${elastix_SOURCE_DIR}/Common/xout
   ${elastix_SOURCE_DIR}/Common/MevisDicomTiff
+)
+
+set( elxCommon_OpenCL_INCLUDE_DIRECTORIES
+  ${elastix_SOURCE_DIR}/Common/OpenCL
+  ${elastix_SOURCE_DIR}/Common/OpenCL/Factories
+  ${elastix_SOURCE_DIR}/Common/OpenCL/ITKimprovements
+  ${elastix_SOURCE_DIR}/Common/OpenCL/Filters
+  ${elastix_SOURCE_DIR}/Common/OpenCL/Kernels
 )
 
 set( elxCore_INCLUDE_DIRECTORIES
@@ -192,6 +239,15 @@ set( elxINCLUDE_DIRECTORIES
 
 include_directories( ${elxINCLUDE_DIRECTORIES} )
 
+# include the OpenCL directories
+# The key-word BEFORE is important here, because the elastix distribution
+# contains some files with the same name as in the ITK distribution.
+# Some bugs were fixed and features added. When these are contributed back
+# to the ITK the BEFORE keyword is not needed anymore.
+if( ELASTIX_USE_OPENCL )
+  include_directories( BEFORE ${elxCommon_OpenCL_INCLUDE_DIRECTORIES} )
+endif()
+
 #---------------------------------------------------------------------
 # Microsoft specific items
 
@@ -205,10 +261,36 @@ if( MSVC )
   )
 
   # Increases address capacity
-  if ( WIN32 )
+  if( WIN32 )
     set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj" )
     set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /bigobj" )
     set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj" )
+  endif()
+endif()
+
+# Add the /MP flag when compiling with Visual Studio
+set(compile_flag_lists CMAKE_C_FLAGS CMAKE_CXX_FLAGS
+    CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_MINSIZEREL
+    CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
+    CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_MINSIZEREL
+    CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+
+if(WIN32)
+  if(NOT MINGW)
+    if(CMAKE_GENERATOR MATCHES "^Visual Studio")
+      option(ELASTIX_USE_MP "Add the /MP for object-file level parallel builds" OFF)
+      set(use_mp ${ELASTIX_USE_MP})
+      foreach(listname ${compile_flag_lists})
+        if("${${listname}}" MATCHES "/Gm")
+          set(use_mp OFF)
+          message(AUTHOR_WARNING "/Gm is not compatible with /MP: set ELASTIX_USE_MP to OFF to avoid this warning.")
+        endif()
+        if(use_mp)
+          set(${listname} "/MP ${${listname}}")
+          set(${listname} "/MP ${${listname}}")
+        endif()
+      endforeach()
+    endif()
   endif()
 endif()
 
@@ -231,6 +313,7 @@ add_subdirectory( Core )
 # Configure the examples
 
 set( ELASTIX_DOX_DIR  ${elastix_SOURCE_DIR}/../dox )
+set( ELASTIX_TOOLS_DIR  ${elastix_SOURCE_DIR}/../tools )
 set( ELASTIX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH
   "path to the doxygen generated help files and the examples" )
 
@@ -299,25 +382,20 @@ if( Doxygen_FOUND )
   set( ELASTIX_DOXYGEN_DIR ${ELASTIX_DOX_DIR}/doxygen )
 
   # Get the version number of doxygen
-  EXEC_PROGRAM( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELASTIX_DOXYGEN_VERSION )
+  exec_program( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELASTIX_DOXYGEN_VERSION )
 
   # Get date
   if( UNIX OR CYGWIN )
-    EXEC_PROGRAM( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )
+    exec_program( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )
   endif()
   if( WIN32 )
     if( NOT CYGWIN )
-      EXECUTE_PROCESS( COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
+      execute_process( COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
         OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATETEMP )
       string( REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP} )
     endif()
   endif()
-
-  # Configure the doxygen configuration
-  configure_file(
-    ${ELASTIX_DOXYGEN_DIR}/doxyfile.in
-    ${ELASTIX_HELP_DIR}/doxyfile.out @ONLY )
-
+      
   # Configure the footer of the help website.
   configure_file(
     ${ELASTIX_DOXYGEN_DIR}/DoxygenFooter.html.in
@@ -358,11 +436,12 @@ if( ELASTIX_ENABLE_PACKAGER )
 
   # Also install the copyright file, since when the user enables packaging
   # we assume that the package is meant to distribute.
-  INSTALL( FILES "${elastix_SOURCE_DIR}/CopyrightElastix.txt" DESTINATION . )
+  install( FILES "${elastix_SOURCE_DIR}/LICENSE" DESTINATION . )
+  install( FILES "${elastix_SOURCE_DIR}/NOTICE" DESTINATION . )
 
   # We have split the elastix package into two components:
   # - the core: elastix and transformix
-  # - the libraries: ANNlib and cudart when ELASTIX_USE_CUDA ON
+  # - the libraries: ANNlib
   # NOTE: Currently does not work for nsis. A bug related to this
   # seems to be fixed in the upcoming CMake 2.8.3
   # Therefore, disable component support for now.
@@ -407,7 +486,7 @@ if( ELASTIX_ENABLE_PACKAGER )
   #set( CPACK_PACKAGE_DESCRIPTION_FILE
   #  "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt" )
   set( CPACK_RESOURCE_FILE_LICENSE
-    "${CMAKE_CURRENT_SOURCE_DIR}/CopyrightElastix.txt" )
+	  "${CMAKE_CURRENT_SOURCE_DIR}/NOTICE" )
 
   # The default install directories: .../elastix_v4.3
   set( CPACK_PACKAGE_INSTALL_DIRECTORY
@@ -421,9 +500,9 @@ if( ELASTIX_ENABLE_PACKAGER )
   set( CPACK_SET_DESTDIR "OFF")
 
   # Make sure the directory structure is kept in the source zip
-  # and that also the dox directory is included.
+  # and that also the dox and tools directories are included.
   set( CPACK_SOURCE_INSTALLED_DIRECTORIES
-    "${elastix_SOURCE_DIR};/src;${ELASTIX_DOX_DIR};/dox" )
+    "${elastix_SOURCE_DIR};/src;${ELASTIX_DOX_DIR};/dox;${ELASTIX_TOOLS_DIR};/tools" )
 
   # ??
   #set(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
@@ -448,8 +527,8 @@ if( ELASTIX_ENABLE_PACKAGER )
 
     # Adding icons and images to make it look nice:
     # 1 A branding image that will be displayed inside the installer
-    # 2 The icon file (.ico) for the generated install program
-    # 3 The icon file (.ico) for the generated uninstall program
+    # 2 The icon file(.ico) for the generated install program
+    # 3 The icon file(.ico) for the generated uninstall program
     set( CPACK_PACKAGE_ICON
       "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_full_small.bmp" )
     set( CPACK_NSIS_MUI_ICON
@@ -492,6 +571,6 @@ set( elxUSE_FILE ${elastix_BINARY_DIR}/UseElastix.cmake )
 #set( ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake )
 
 # Create the use file.
-configure_file( ${elastix_SOURCE_DIR}/UseElastix.cmake.in
+configure_file( ${elastix_SOURCE_DIR}/CMake/UseElastix.cmake.in
  ${elxUSE_FILE} @ONLY )
 

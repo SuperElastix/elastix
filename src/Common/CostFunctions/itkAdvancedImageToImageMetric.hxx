@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef _itkAdvancedImageToImageMetric_hxx
 #define _itkAdvancedImageToImageMetric_hxx
 
@@ -35,7 +39,7 @@ template< class TFixedImage, class TMovingImage >
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::AdvancedImageToImageMetric()
 {
-  /** don't use the default gradient image as implemented by ITK.
+  /** Don't use the default gradient image as implemented by ITK.
    * It uses a Gaussian derivative, which introduces extra smoothing,
    * which may not always be desired. Also, when the derivatives are
    * computed using Gaussian filtering, the gray-values should also be
@@ -47,20 +51,21 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_UseImageSampler             = false;
   this->m_RequiredRatioOfValidSamples = 0.25;
 
+  this->m_LinearInterpolator              = 0;
   this->m_BSplineInterpolator             = 0;
   this->m_BSplineInterpolatorFloat        = 0;
   this->m_ReducedBSplineInterpolator      = 0;
-  this->m_LinearInterpolator              = 0;
+  this->m_InterpolatorIsLinear            = false;
   this->m_InterpolatorIsBSpline           = false;
   this->m_InterpolatorIsBSplineFloat      = false;
   this->m_InterpolatorIsReducedBSpline    = false;
-  this->m_InterpolatorIsLinear            = false;
   this->m_CentralDifferenceGradientFilter = 0;
 
-  this->m_AdvancedTransform              = 0;
-  this->m_TransformIsAdvanced            = false;
-  this->m_TransformIsBSpline             = false;
-  this->m_UseMovingImageDerivativeScales = false;
+  this->m_AdvancedTransform                                = 0;
+  this->m_TransformIsAdvanced                              = false;
+  this->m_TransformIsBSpline                               = false;
+  this->m_UseMovingImageDerivativeScales                   = false;
+  this->m_ScaleGradientWithRespectToMovingImageOrientation = false;
   this->m_MovingImageDerivativeScales.Fill( 1.0 );
 
   this->m_FixedImageLimiter     = 0;
@@ -81,6 +86,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Threading related variables. */
   this->m_UseMetricSingleThreaded = true;
   this->m_UseMultiThread = false;
+  this->m_Threader->SetUseThreadPool( false ); // setting to true makes elastix hang
+                                               // at a WaitForSingleMethodThread()
 
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP
@@ -96,6 +103,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_ThreaderMetricParameters.st_Metric = this;
 
   // Multi-threading structs
+  this->m_GetValuePerThreadVariables                  = NULL;
+  this->m_GetValuePerThreadVariablesSize              = 0;
   this->m_GetValueAndDerivativePerThreadVariables     = NULL;
   this->m_GetValueAndDerivativePerThreadVariablesSize = 0;
 
@@ -110,6 +119,7 @@ template< class TFixedImage, class TMovingImage >
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::~AdvancedImageToImageMetric()
 {
+  delete[] this->m_GetValuePerThreadVariables;
   delete[] this->m_GetValueAndDerivativePerThreadVariables;
 } // end Destructor
 
@@ -159,6 +169,12 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Check if the transform is a B-spline transform. */
   this->CheckForBSplineTransform();
 
+  /** Initialize some threading related parameters. */
+  if( this->m_UseMultiThread )
+  {
+    this->InitializeThreadingParameters();
+  }
+
 } // end Initialize()
 
 
@@ -174,27 +190,39 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
    * needed, which saves valuable re-allocation time.
-   * Filling the potentially large vectors is performed later, in each thread,
-   * which has performance benefits for larger vector sizes.
+   *
+   * This function is only to be called at the start of each resolution.
+   * Re-initialization of the potentially large vectors is performed after
+   * each iteration, in the accumulate functions, in a multi-threaded fashion.
+   * This has performance benefits for larger vector sizes.
    */
+
+  /** Only resize the array of structs when needed. */
+  if( this->m_GetValuePerThreadVariablesSize != this->m_NumberOfThreads )
+  {
+    delete[] this->m_GetValuePerThreadVariables;
+    this->m_GetValuePerThreadVariables     = new AlignedGetValuePerThreadStruct[ this->m_NumberOfThreads ];
+    this->m_GetValuePerThreadVariablesSize = this->m_NumberOfThreads;
+  }
 
   /** Only resize the array of structs when needed. */
   if( this->m_GetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
   {
     delete[] this->m_GetValueAndDerivativePerThreadVariables;
-    this->m_GetValueAndDerivativePerThreadVariables
-                                                        = new AlignedGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
+    this->m_GetValueAndDerivativePerThreadVariables     = new AlignedGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
     this->m_GetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
   }
 
   /** Some initialization. */
-  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
+    this->m_GetValuePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
+    this->m_GetValuePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;
+
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative.SetSize( this->GetNumberOfParameters() );
-    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_TransformJacobian.SetSize( FixedImageDimension, nnzji );
+    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
   }
 
 } // end InitializeThreadingParameters()
@@ -422,7 +450,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
    * or of type AdvancedLinearInterpolateImageFunction.
    * If so, we can make use of their EvaluateDerivatives methods.
    * Otherwise, we precompute the gradients using a central difference scheme,
-   * and do evaluate the gradient using nearest neighbour interpolation.
+   * and do evaluate the gradient using nearest neighbor interpolation.
    */
   this->m_InterpolatorIsBSpline = false;
   BSplineInterpolatorType * testPtr
@@ -530,10 +558,6 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
 /**
  * ****************** CheckForAdvancedTransform **********************
- * Check if the transform is of type AdvancedTransform.
- * If so, we can speed up derivative calculations by only inspecting
- * the parameters in the support region of a point.
- *
  */
 
 template< class TFixedImage, class TMovingImage >
@@ -569,7 +593,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::CheckForBSplineTransform( void )
+::CheckForBSplineTransform( void ) const
 {
   /** Check if this transform is a combo transform. */
   CombinationTransformType * testPtr_combo
@@ -646,8 +670,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-        ( *gradient )
-          = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+        ( *gradient )    = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
         //this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
         //  cindex, movingImageValue, *gradient );
       }
@@ -670,13 +693,46 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
         }
         ( *gradient ) = this->m_GradientImage->GetPixel( index );
       }
+
+      /** The moving image gradient is multiplied with its scales, when requested. */
       if( this->m_UseMovingImageDerivativeScales )
       {
-        for( unsigned int i = 0; i < MovingImageDimension; ++i )
+        if( !this->m_ScaleGradientWithRespectToMovingImageOrientation )
         {
-          ( *gradient )[ i ] *= this->m_MovingImageDerivativeScales[ i ];
+          for( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            ( *gradient )[ i ] *= this->m_MovingImageDerivativeScales[ i ];
+          }
         }
-      }
+        else
+        {
+          /** Optionally, the scales are applied with respect to the moving image orientation.
+           * The above default option implicitly applies the scales with respect to the
+           * orientation of the transformation axis. In some cases you may want to restrict
+           * moving image motion with respect to its own axes. This is achieved below by pre
+           * and post rotation by the direction cosines of the moving image.
+           * First the gradient is rotated backwards to a standardized axis.
+           */
+          typedef typename MovingImageType::DirectionType::InternalMatrixType InternalMatrixType;
+          const InternalMatrixType M                    = this->GetMovingImage()->GetDirection().GetVnlMatrix();
+          vnl_vector< double >     rotated_gradient_vnl = M.transpose() * gradient->GetVnlVector();
+
+          /** Then scales are applied. */
+          for( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            rotated_gradient_vnl[ i ] *= this->m_MovingImageDerivativeScales[ i ];
+          }
+
+          /** The scaled gradient is then rotated forwards again. */
+          rotated_gradient_vnl = M * rotated_gradient_vnl;
+
+          /** Copy the vnl version back to the original. */
+          for( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            ( *gradient )[ i ] = rotated_gradient_vnl[ i ];
+          }
+        }
+      } // end if m_UseMovingImageDerivativeScales
     } // end if gradient
     else
     {
@@ -865,6 +921,47 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
+ * **************** GetValueThreaderCallback *******
+ */
+
+template< class TFixedImage, class TMovingImage >
+ITK_THREAD_RETURN_TYPE
+AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+::GetValueThreaderCallback( void * arg )
+{
+  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
+  ThreadIdType     threadID   = infoStruct->ThreadID;
+
+  MultiThreaderParameterType * temp
+    = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
+
+  temp->st_Metric->ThreadedGetValue( threadID );
+
+  return ITK_THREAD_RETURN_VALUE;
+
+} // end GetValueThreaderCallback()
+
+
+/**
+ * *********************** LaunchGetValueThreaderCallback***************
+ */
+
+template< class TFixedImage, class TMovingImage >
+void
+AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+::LaunchGetValueThreaderCallback( void ) const
+{
+  /** Setup threader. */
+  this->m_Threader->SetSingleMethod( this->GetValueThreaderCallback,
+    const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
+
+  /** Launch. */
+  this->m_Threader->SingleMethodExecute();
+
+} // end LaunchGetValueThreaderCallback()
+
+
+/**
  * **************** GetValueAndDerivativeThreaderCallback *******
  */
 
@@ -895,15 +992,12 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::LaunchGetValueAndDerivativeThreaderCallback( void ) const
 {
-  /** Setup local threader. */
-  // \todo: is a global threader better performance-wise? check
-  typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-  local_threader->SetSingleMethod( this->GetValueAndDerivativeThreaderCallback,
+  /** Setup threader. */
+  this->m_Threader->SetSingleMethod( this->GetValueAndDerivativeThreaderCallback,
     const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
 
   /** Launch. */
-  local_threader->SingleMethodExecute();
+  this->m_Threader->SingleMethodExecute();
 
 } // end LaunchGetValueAndDerivativeThreaderCallback()
 
@@ -932,13 +1026,20 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   unsigned int       jmax = ( threadID + 1 ) * subSize;
   jmax = ( jmax > numPar ) ? numPar : jmax;
 
-  DerivativeValueType normalization = 1.0 / temp->st_NormalizationFactor;
+  /** This thread accumulates all sub-derivatives into a single one, for the
+   * range [ jmin, jmax [. Additionally, the sub-derivatives are reset.
+   */
+  const DerivativeValueType zero          = NumericTraits< DerivativeValueType >::Zero;
+  const DerivativeValueType normalization = 1.0 / temp->st_NormalizationFactor;
   for( unsigned int j = jmin; j < jmax; ++j )
   {
-    DerivativeValueType tmp = NumericTraits< DerivativeValueType >::Zero;
+    DerivativeValueType tmp = zero;
     for( ThreadIdType i = 0; i < nrOfThreads; ++i )
     {
       tmp += temp->st_Metric->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
+
+      /** Reset this variable for the next iteration. */
+      temp->st_Metric->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ] = zero;
     }
     temp->st_DerivativePointer[ j ] = tmp * normalization;
   }

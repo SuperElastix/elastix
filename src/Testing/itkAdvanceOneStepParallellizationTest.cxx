@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #include "itkSmartPointer.h"
 #include "itkArray.h"
 #include <vector>
@@ -82,7 +86,9 @@ public:
 
   OptimizerTEMP()
   {
-    this->m_Threader = ThreaderType::New();
+    this->m_NumberOfParameters = 0;
+    this->m_LearningRate       = 0.0;
+    this->m_Threader           = ThreaderType::New();
     this->m_Threader->SetNumberOfThreads( 8 );
     this->m_UseOpenMP        = false;
     this->m_UseEigen         = false;
@@ -113,11 +119,6 @@ public:
 #ifdef ELASTIX_USE_OPENMP
     else if( this->m_UseOpenMP && !this->m_UseEigen )
     {
-      /** Get a reference to the current position. *
-      const ParametersType & currentPosition = this->m_CurrentPosition;
-      const double learningRate = this->m_LearningRate;
-      const ParametersType & gradient = this->m_Gradient;
-
       /** Get a pointer to the current position. */
       const InternalScalarType * currentPosition = this->m_CurrentPosition.data_block();
       const InternalScalarType   learningRate    = this->m_LearningRate;
@@ -159,10 +160,8 @@ public:
       temp->t_Optimizer   = this;
 
       /** Call multi-threaded AdvanceOneStep(). */
-      ThreaderType::Pointer local_threader = ThreaderType::New();
-      local_threader->SetNumberOfThreads( this->m_Threader->GetNumberOfThreads() );
-      local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
-      local_threader->SingleMethodExecute();
+      this->m_Threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
+      this->m_Threader->SingleMethodExecute();
 
       delete temp;
     }

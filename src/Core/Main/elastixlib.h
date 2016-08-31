@@ -1,16 +1,20 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elastixlib_h
 #define __elastixlib_h
 
@@ -19,29 +23,7 @@
  */
 #include <itkDataObject.h>
 #include "itkParameterFileParser.h"
-
-/********************************************************************************
- *                    *
- *      Dll export    *
- *                    *
- ********************************************************************************/
-#if ( defined( _WIN32 ) || defined( WIN32 ) )
-#  ifdef _ELASTIX_BUILD_LIBRARY
-#    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
-#      define ELASTIXLIB_API __declspec( dllexport )
-#    else
-#      define ELASTIXLIB_API __declspec( dllexport )
-#    endif
-#  else
-#    define ELASTIXLIB_API __declspec( dllexport )
-#  endif
-#else
-#  if __GNUC__ >= 4
-#    define ELASTIXLIB_API __attribute__ ( ( visibility( "default" ) ) )
-#  else
-#    define ELASTIXLIB_API
-#  endif
-#endif
+#include "elxMacro.h"
 
 /********************************************************************************
  *                          *
@@ -69,7 +51,7 @@ public:
    *  Constructor and destructor
    */
   ELASTIX();
-  ~ELASTIX();
+  virtual ~ELASTIX();
 
   /**
    *  The image registration interface functionality
@@ -123,6 +105,10 @@ public:
   /** Get transform parameters of all registration steps. */
   ParameterMapListType GetTransformParameterMapList( void );
 
+  std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 0 );
+
+  std::string GetCurrentDateAndTime( void );
+
 private:
 
   /* the result images */
@@ -131,7 +117,9 @@ private:
   /* Final transformation*/
   ParameterMapListType m_TransformParametersList;
 
-}; // end class ELASTIX
+};
+
+// end class ELASTIX
 
 } // end namespace elastix
 

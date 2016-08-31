@@ -1,24 +1,26 @@
-/*======================================================================
-
-  This file is part of the elastix software.
-
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
-
-======================================================================*/
-
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
 #ifndef __elxElastixMain_h
 #define __elxElastixMain_h
 
 #include "elxComponentDatabase.h"
 #include "elxComponentLoader.h"
 
-#include "elxBaseComponent.h"
 #include "elxElastixBase.h"
 #include "itkObject.h"
 
@@ -26,6 +28,10 @@
 #include <fstream>
 
 #include "itkParameterMapInterface.h"
+
+#ifdef ELASTIX_USE_OPENCL
+#include "itkOpenCLContext.h"
+#endif
 
 namespace elastix
 {
@@ -142,7 +148,7 @@ public:
   /** Typedef that is used in the elastix dll version. */
   typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
 
-  /** Set/Get functions for the description of the imagetype. */
+  /** Set/Get functions for the description of the image type. */
   itkSetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
   itkSetMacro( MovingImagePixelType,  PixelTypeDescriptionType );
   itkSetMacro( FixedImageDimension,   ImageDimensionType );
@@ -242,7 +248,7 @@ public:
   /** Start the registration
    * run() without command line parameters; it assumes that
    * EnterCommandLineParameters has been invoked already, or that
-   * m_Configuration is initialised in a different way.
+   * m_Configuration is initialized in a different way.
    */
   virtual int Run( void );
 
@@ -346,7 +352,7 @@ protected:
   virtual ObjectPointer CreateComponent( const ComponentDescriptionType & name );
 
   /** Create components. Reads from the configuration object (using the provided key)
-   * the names of the components to create and store their instantations in the
+   * the names of the components to create and store their instantiations in the
    * provided ObjectContainer.
    * The errorcode remains what it was if no error occurred. Otherwise it's set to 1.
    * The 'key' is the entry inspected in the parameter file

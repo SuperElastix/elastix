@@ -1,20 +1,25 @@
 # include this file in your CMakeLists.txt file using the add_subdirectory command.
-PROJECT( MevisDicomTiff )
+project( MevisDicomTiff )
 
-IF( ELASTIX_USE_MEVISDICOMTIFF )
-  ADD_DEFINITIONS( -D_ELASTIX_USE_MEVISDICOMTIFF )
-ENDIF()
+if( ELASTIX_USE_MEVISDICOMTIFF )
+  add_definitions( -D_ELASTIX_USE_MEVISDICOMTIFF )
+  add_library( mevisdcmtiff STATIC
+    itkMevisDicomTiffImageIO.cxx
+    itkMevisDicomTiffImageIOFactory.cxx
+    itkUseMevisDicomTiff.cxx
+  )
+else()
+  # avoid dependencies, but compile the lib, so that customers of this
+  # lib can just call RegisterMevisDicomTiff without checking.
+  add_library( mevisdcmtiff STATIC
+    itkUseMevisDicomTiff.cxx
+  )
+endif()
 
-ADD_LIBRARY( mevisdcmtiff
-  itkMevisDicomTiffImageIO.cxx
-  itkMevisDicomTiffImageIOFactory.cxx
-  itkUseMevisDicomTiff.cxx
-)
-
-TARGET_LINK_LIBRARIES( mevisdcmtiff ${ITK_LIBRARIES} )
+target_link_libraries( mevisdcmtiff ${ITK_LIBRARIES} )
 
 # Group in IDE's like Visual Studio
-SET_PROPERTY( TARGET mevisdcmtiff PROPERTY FOLDER "libraries" )
+set_property( TARGET mevisdcmtiff PROPERTY FOLDER "libraries" )
 
 # add mevisdcmtiff to the list of target_link_libraries in your cmakelists.txt file.
 

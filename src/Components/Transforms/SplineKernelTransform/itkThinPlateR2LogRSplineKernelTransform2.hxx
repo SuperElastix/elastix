@@ -1,4 +1,21 @@
 /*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+/*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkThinPlateR2LogRSplineKernelTransform2.txx,v $
@@ -27,7 +44,7 @@ void
 ThinPlateR2LogRSplineKernelTransform2< TScalarType, NDimensions >::ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const
 {
   const TScalarType r = x.GetNorm();
-  GMatrix.fill( NumericTraits< TScalarType >::Zero );
+  GMatrix.fill( NumericTraits< TScalarType >::ZeroValue() );
   const TScalarType          R2logR
     = ( r > 1e-8 ) ? r * r * vcl_log( r ) : NumericTraits< TScalarType >::Zero;
 

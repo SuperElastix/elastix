@@ -29,24 +29,23 @@ set( CTEST_DASHBOARD_ROOT "/elastix-nightly/build/" )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-SET( dashboard_model Nightly )
-IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  SET( dashboard_model Experimental )
-ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  SET( dashboard_model Continuous )
-ENDIF()
+set( dashboard_model Nightly )
+if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  set( dashboard_model Experimental )
+elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  set( dashboard_model Continuous )
+endif()
 
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
 
-SET( dashboard_cache "
+set( dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=/elastix-nightly/itk/git/bin_release
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
-ELASTIX_USE_CUDA:BOOL=OFF
 ELASTIX_USE_MEVISDICOMTIFF:BOOL=OFF
 ELASTIX_IMAGE_DIMENSIONS:STRING=2;3;4
 ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
