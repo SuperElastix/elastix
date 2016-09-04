@@ -79,8 +79,6 @@ public:
 
   itkStaticConstMacro( FixedImageDimension, unsigned int, TFixedImage::ImageDimension );
   itkStaticConstMacro( MovingImageDimension, unsigned int, TMovingImage::ImageDimension );
-  itkGetStaticConstMacro( FixedImageDimension );
-  itkGetStaticConstMacro( MovingImageDimension );
 
   typedef itk::Image< unsigned char, FixedImageDimension >  FixedMaskType;
   typedef typename FixedMaskType::Pointer                   FixedMaskPointer;

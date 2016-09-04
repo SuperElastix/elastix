@@ -70,7 +70,6 @@ public:
   typedef typename TMovingImage::ConstPointer InputImageConstPointer;
 
   itkStaticConstMacro( MovingImageDimension, unsigned int, TMovingImage::ImageDimension );
-  itkGetStaticConstMacro( MovingImageDimension );
 
   /** Set/Get/Add moving image. */
   virtual void SetMovingImage( TMovingImage * inputImage );
