@@ -193,16 +193,10 @@ ElastixFilter< TFixedImage, TMovingImage >
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )
   {
     // Set pixel types from input images, override user settings
-    parameterMapVector[ i ][ "FixedInternalImagePixelType" ]
-      = ParameterValueVectorType( 1, PixelType< typename TFixedImage::PixelType >::ToString() );
     parameterMapVector[ i ][ "FixedImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( FixedImageDimension ) );
-    parameterMapVector[ i ][ "MovingInternalImagePixelType" ]
-      = ParameterValueVectorType( 1, PixelType< typename TMovingImage::PixelType >::ToString() );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( itkGetStaticConstMacro( FixedImageDimension ) ) ) ;
     parameterMapVector[ i ][ "MovingImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( MovingImageDimension ) );
-    parameterMapVector[ i ][ "ResultImagePixelType" ]
-      = ParameterValueVectorType( 1, PixelType< typename TFixedImage::PixelType >::ToString() );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( itkGetStaticConstMacro( MovingImageDimension ) ) );
 
     // Create new instance of ElastixMain
     ElastixMainPointer elastix = ElastixMainType::New();

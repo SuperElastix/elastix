@@ -181,16 +181,10 @@ TransformixFilter< TMovingImage >
   // Set pixel types from input image, override user settings
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
-    transformParameterMapVector[ i ][ "FixedInternalImagePixelType" ] 
-      = ParameterValueVectorType( 1, PixelType< typename TMovingImage::PixelType >::ToString() );
     transformParameterMapVector[ i ][ "FixedImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
-    transformParameterMapVector[ i ][ "MovingInternalImagePixelType" ]
-      = ParameterValueVectorType( 1, PixelType< typename TMovingImage::PixelType >::ToString() );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( itkGetStaticConstMacro( FixedImageDimension ) ) );
     transformParameterMapVector[ i ][ "MovingImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( InputImageDimension ) );
-    transformParameterMapVector[ i ][ "ResultImagePixelType" ]
-      = ParameterValueVectorType( 1, PixelType< typename TMovingImage::PixelType >::ToString() );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( itkGetStaticConstMacro( MovingImageDimension ) ) );
   }
 
   // Run transformix
