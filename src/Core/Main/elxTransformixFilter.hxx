@@ -59,6 +59,12 @@ void
 TransformixFilter< TMovingImage >
 ::GenerateData( void )
 {
+  // Force compiler to instantiate the image dimension, otherwise we may get
+  //   Undefined symbols for architecture x86_64:
+  //     "elastix::TransformixFilter<itk::Image<float, 2u> >::MovingImageDimension"
+  // on some platforms.
+  const unsigned int movingImageDimension = MovingImageDimension;
+
   if( this->IsEmpty( itkDynamicCastInDebugMode< TMovingImage* >( this->GetInput( "InputImage" ) ) ) &&
       this->GetFixedPointSetFileName().empty() &&
       !this->GetComputeSpatialJacobian() &&
@@ -182,9 +188,9 @@ TransformixFilter< TMovingImage >
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
     transformParameterMapVector[ i ][ "FixedImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( itkGetStaticConstMacro( FixedImageDimension ) ) );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension );
     transformParameterMapVector[ i ][ "MovingImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( itkGetStaticConstMacro( MovingImageDimension ) ) );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension );
   }
 
   // Run transformix

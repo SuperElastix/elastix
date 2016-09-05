@@ -65,6 +65,13 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::GenerateData( void )
 {
+  // Force compiler to instantiate the image dimensions, otherwise we may get
+  //   Undefined symbols for architecture x86_64:
+  //     "elastix::ElastixFilter<itk::Image<float, 2u> >::FixedImageDimension"
+  // on some platforms.
+  const unsigned int fixedImageDimension = FixedImageDimension;
+  const unsigned int movingImageDimension = MovingImageDimension;
+
   DataObjectContainerPointer fixedImageContainer  = DataObjectContainerType::New();
   DataObjectContainerPointer movingImageContainer = DataObjectContainerType::New();
   DataObjectContainerPointer fixedMaskContainer   = 0;
@@ -192,11 +199,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Run the (possibly multiple) registration(s)
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )
   {
-    // Set pixel types from input images, override user settings
+    // Set image dimension from input images, override user settings
     parameterMapVector[ i ][ "FixedImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( itkGetStaticConstMacro( FixedImageDimension ) ) ) ;
+      = ParameterValueVectorType( 1, ParameterObject::ToString( fixedImageDimension ) ) ;
     parameterMapVector[ i ][ "MovingImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( itkGetStaticConstMacro( MovingImageDimension ) ) );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
 
     // Create new instance of ElastixMain
     ElastixMainPointer elastix = ElastixMainType::New();
