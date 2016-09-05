@@ -188,9 +188,9 @@ TransformixFilter< TMovingImage >
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
     transformParameterMapVector[ i ][ "FixedImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
     transformParameterMapVector[ i ][ "MovingImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension );
+      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
   }
 
   // Run transformix
