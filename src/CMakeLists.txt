@@ -1,5 +1,4 @@
 #---------------------------------------------------------------------
-cmake_minimum_required( VERSION 2.8 )
 cmake_policy( SET CMP0012 NEW )
 if( POLICY CMP0033 )
   # This policy was introduced in cmake 3, so we need to check for its
