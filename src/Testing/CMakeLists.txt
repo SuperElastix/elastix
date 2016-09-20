@@ -36,6 +36,17 @@ endif()
 set( mevisdcmtifflib mevisdcmtiff )
 
 #---------------------------------------------------------------------
+# Optionally run timing tests
+# - tests that are wholly devoted to timing can be added conditionally using cmake symbol ELASTIX_TEST_TIMING
+# - tests that have mixed correctness and timing testing can use the C Preprocessor symbol _ELASTIX_TEST_TIMING to
+#   conditionally enable the timing testing parts
+mark_as_advanced( ELASTIX_TEST_TIMING )
+option( ELASTIX_TEST_TIMING "Enable timing tests?  This option enables timing tests among the regular test suite." OFF )
+if ( ELASTIX_TEST_TIMING )
+  add_definitions( -D_ELASTIX_TEST_TIMING )
+endif()
+
+#---------------------------------------------------------------------
 # Core macro for elx_add_opencl_test() and elx_add_test()
 macro( elx_add_test_core executable_name source_name test_name group )
   if( NOT TARGET ${executable_name} )
