@@ -239,6 +239,7 @@ if( knownChecksumSystem )
 endif()
 
 # Python script used for comparing elastix output with baseline results
+# Note that ITKTools is required for some of these scripts.
 set( pythonfinalmetric ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
 set( pythonchecksum   ${elastix_SOURCE_DIR}/Testing/elx_compare_checksum.py )
 set( pythonoverlap    ${elastix_SOURCE_DIR}/Testing/elx_compare_overlap.py )
