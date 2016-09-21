@@ -37,11 +37,11 @@ template< unsigned int Dimension >
 bool
 TestInterpolators( void )
 {
-  typedef itk::Image< short, Dimension >       InputImageType;
-  typedef typename InputImageType::SizeType    SizeType;
-  typedef typename InputImageType::SpacingType SpacingType;
-  typedef typename InputImageType::PointType   OriginType;
-  typedef typename InputImageType::RegionType  RegionType;
+  typedef itk::Image< short, Dimension >         InputImageType;
+  typedef typename InputImageType::SizeType      SizeType;
+  typedef typename InputImageType::SpacingType   SpacingType;
+  typedef typename InputImageType::PointType     OriginType;
+  typedef typename InputImageType::RegionType    RegionType;
   //typedef typename RegionType::IndexType         IndexType;
   typedef typename InputImageType::DirectionType DirectionType;
   typedef double                                 CoordRepType;
@@ -162,20 +162,27 @@ TestInterpolators( void )
   }
 
   /** Compare results. */
-  OutputType          valueLin, valueLinA, valueBSpline, valueBSpline2;
+  OutputType          valueLinA, valueBSpline, valueBSpline2;
   CovariantVectorType derivLinA, derivBSpline, derivBSpline2;
   for( unsigned int i = 0; i < count; i++ )
   {
     ContinuousIndexType cindex( &darray1[ i ][ 0 ] );
 
-    valueLin = linear->EvaluateAtContinuousIndex( cindex );
     linearA->EvaluateValueAndDerivativeAtContinuousIndex( cindex, valueLinA, derivLinA );
     valueBSpline = bspline->EvaluateAtContinuousIndex( cindex );
     derivBSpline = bspline->EvaluateDerivativeAtContinuousIndex( cindex );
     bspline->EvaluateValueAndDerivativeAtContinuousIndex( cindex, valueBSpline2, derivBSpline2 );
 
     std::cout << "cindex: " << cindex << std::endl;
-    std::cout << "linear:   " << valueLin      << "   ---" << std::endl;
+
+    if (image->GetBufferedRegion().IsInside(cindex))
+    {
+      std::cout << "linear:   " << linear->EvaluateAtContinuousIndex(cindex) << "   ---" << std::endl;
+    }
+    else
+    {
+      std::cout << "linear:   ---    ---" << std::endl;
+    }
     std::cout << "linearA:  " << valueLinA     << "   " << derivLinA     << std::endl;
     std::cout << "B-spline: " << valueBSpline  << "   " << derivBSpline  << std::endl;
     std::cout << "B-spline: " << valueBSpline2 << "   " << derivBSpline2 << "\n" << std::endl;
