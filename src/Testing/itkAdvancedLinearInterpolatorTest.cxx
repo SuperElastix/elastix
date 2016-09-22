@@ -175,7 +175,7 @@ TestInterpolators( void )
 
     std::cout << "cindex: " << cindex << std::endl;
 
-    if (image->GetBufferedRegion().IsInside(cindex))
+    if (linear->IsInsideBuffer(cindex))
     {
       std::cout << "linear:   " << linear->EvaluateAtContinuousIndex(cindex) << "   ---" << std::endl;
     }
