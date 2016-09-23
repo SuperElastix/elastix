@@ -688,18 +688,9 @@ TransformBase< TElastix >
   }
 
   /** Write the name of the parameters-file of the initial transform. */
-  if( this->GetInitialTransform() )
-  {
-    xout[ "transpar" ] << "(InitialTransformParametersFileName \""
-                       << ( dynamic_cast< const Self * >( this->GetInitialTransform() ) )
-      ->GetTransformParametersFileName() << "\")" << std::endl;
-  }
-  else
-  {
-    xout[ "transpar" ]
-      << "(InitialTransformParametersFileName \"NoInitialTransform\")"
-      << std::endl;
-  }
+  xout[ "transpar" ] << "(InitialTransformParametersFileName \""
+                     << this->GetInitialTransformParametersFileName()
+                     << "\")" << std::endl;
 
   /** Write the way Transforms are combined.
    *  Set it to the default "Compose" when no combination transform is used. */
@@ -870,21 +861,10 @@ TransformBase< TElastix >
   }
 
   /** Write the name of the parameters-file of the initial transform. */
-  if( this->GetInitialTransform() )
-  {
-    parameterName = "InitialTransformParametersFileName";
-    parameterValues.push_back( ( dynamic_cast< const Self * >(
-        this->GetInitialTransform() ) )->GetTransformParametersFileName() );
-    paramsMap->insert( make_pair( parameterName, parameterValues ) );
-    parameterValues.clear();
-  }
-  else
-  {
-    parameterName = "InitialTransformParametersFileName";
-    parameterValues.push_back( "NoInitialTransform" );
-    paramsMap->insert( make_pair( parameterName, parameterValues ) );
-    parameterValues.clear();
-  }
+  parameterName = "InitialTransformParametersFileName";
+  parameterValues.push_back( this->GetInitialTransformParametersFileName() );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
 
   /** Write the way Transforms are combined. */
   std::string                      combinationMethod = "Compose";
