@@ -274,6 +274,7 @@ ParameterObject
   parameterMap[ "ResampleInterpolator" ]           = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
   parameterMap[ "FinalBSplineInterpolationOrder" ] = ParameterValueVectorType( 1, "3" );
   parameterMap[ "NumberOfResolutions" ]            = ParameterValueVectorType( 1, ToString( numberOfResolutions ) );
+  parameterMap[ "WriteIterationInfo" ]             = ParameterValueVectorType( 1, "false" );
 
   // Image Sampler
   parameterMap[ "ImageSampler" ]                    = ParameterValueVectorType( 1, "RandomCoordinate" );
