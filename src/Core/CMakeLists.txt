@@ -123,7 +123,7 @@ if( ELASTIX_BUILD_EXECUTABLE )
   )
 else()
   # The library type (STATIC or SHARED) is determined by the parameter
-  # BUILD_SHARED_LIBS, which is determined by ELASTIX_BUILD_SHARED_LIBS.
+  # BUILD_SHARED_LIBS.
   add_library( elastix
     Main/elxParameterObject.cxx
     Main/elxParameterObject.h

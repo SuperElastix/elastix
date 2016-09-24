@@ -25,16 +25,10 @@ if( NOT ELASTIX_BUILD_EXECUTABLE )
   #set( CMAKE_C_VISIBILITY_PRESET hidden )
   #set( CMAKE_CXX_VISIBILITY_PRESET hidden )
 
-  # Adding the option to switch between a static and a shared library.
-  # The default is a static library, as it is best tested.
-  mark_as_advanced( ELASTIX_BUILD_SHARED_LIBS )
-  option( ELASTIX_BUILD_SHARED_LIBS "Build shared libraries?" OFF )
-  if( ELASTIX_BUILD_SHARED_LIBS )
+  mark_as_advanced( BUILD_SHARED_LIBS )
+  option( BUILD_SHARED_LIBS "Build shared libraries?" OFF )
+  if( BUILD_SHARED_LIBS )
     add_definitions( -D_ELASTIX_BUILD_SHARED_LIBRARY )
-
-    # The following sets the default library type for add_library to SHARED.
-    # This is used in Core/CMakeLists.
-    set( BUILD_SHARED_LIBS ON )
 
     # We need to make sure that also the ITK is compiled with shared
     # libraries on. Related to flag (ITK_)BUILD_SHARED_LIBS. todo
@@ -45,10 +39,6 @@ if( NOT ELASTIX_BUILD_EXECUTABLE )
     #   relocation R_X86_64_32S against `.bss' can not be used when
     #   making a shared object; recompile with -fPIC
     set( CMAKE_POSITION_INDEPENDENT_CODE ON )
-  else()
-    # The following sets the default library type for add_library to STATIC.
-    # This is used in Core/CMakeLists.
-    set( BUILD_SHARED_LIBS OFF )
   endif()
 endif()
 
