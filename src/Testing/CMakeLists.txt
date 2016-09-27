@@ -6,11 +6,24 @@ set( TestDataDir ${elastix_SOURCE_DIR}/Testing/Data )
 set( TestBaselineDir ${elastix_SOURCE_DIR}/Testing/Baselines )
 set( TestOutputDir ${elastix_BINARY_DIR}/Testing )
 
+set( SITE_BASELINE_DIR "" CACHE PATH "path to site-specific baseline data" )
+if ( SITE_BASELINE_DIR )
+  if ( EXISTS ${SITE_BASELINE_DIR} )
+    set( TestSiteBaselineDir ${SITE_BASELINE_DIR} )
+    message( STATUS "Site-specific baseline dir: " ${TestSiteBaselineDir} )
+  else()
+    message( FATAL_ERROR "Invalid Site-specific baseline dir specified: " ${TestSiteBaselineDir} )
+  endif()
+endif()
+
 #---------------------------------------------------------------------
 # configure the baseline files
 set( ELASTIX_DATA_DIR ${TestDataDir} )
 file( GLOB files ${TestBaselineDir}/*.in )
-foreach( tpfile ${files} )
+if ( TestSiteBaselineDir )
+  file( GLOB sitefiles ${TestSiteBaselineDir}/*.in )
+endif()
+foreach( tpfile ${files} ${sitefiles} )
   # Get file name without directory
   get_filename_component( tpfileout ${tpfile} NAME )
   # Strip extension .in
@@ -243,6 +256,11 @@ elseif( SITE STREQUAL "BIGR.cluster"
   set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.cluster_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
   set( specializedTransformParameterSystem true )
+endif()
+
+if( EXISTS ${TestSiteBaselineDir}/checksums.txt )
+  set( checksumBaselineFile ${TestSiteBaselineDir}/checksums.txt )
+  set( knownChecksumSystem true )  
 endif()
 
 if( knownChecksumSystem )
@@ -685,25 +703,33 @@ endif()
 # This is just a consistency test over time, since the registration result
 # differs from machine to machine.
 
-# Select machine dependend baseline image
-set( baselineImage ${TestBaselineDir}/example.mha )
+# Select machine dependent baseline image, basename.mha
+# The path will be stored in variable "baselineImage_${basename}"
+function( find_image_baseline basename )
+  set( basevar baselineImage_${basename} )
+  find_file( ${basevar} NAMES ${basename}.mha PATHS ${TestSiteBaselineDir} ${TestBaselineDir} NO_DEFAULT_PATH )
+endfunction(find_image_baseline)
+
+find_image_baseline( example )
+
 if( knownChecksumSystem OR specializedTransformParameterSystem )
   if( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
-    set( baselineImage ${TestBaselineDir}/example_${SITE}.mha )
+    set( baselineImage_example ${TestBaselineDir}/example_${SITE}.mha )
   endif()
 endif()
 
 # Run the 2D brain example registration
 elx_add_run_test( example
-  "IMAGE" ${baselineImage}
+  "IMAGE" ${baselineImage_example}
   -f ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
   -m ${ELASTIX_DOX_DIR}/exampleinput/moving.mhd
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_Rigid.txt
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_BSpline.txt )
 
 # Run 3D registration with a 'common' parameter file:
+find_image_baseline( 3DCT_lung )
 elx_add_run_test( 3DCT_lung.example
-  "IMAGE;PARAMETERS;OVERLAP;LANDMARKS" ${TestBaselineDir}/3DCT_lung.mha
+  "IMAGE;PARAMETERS;OVERLAP;LANDMARKS" ${baselineImage_3DCT_lung}
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
