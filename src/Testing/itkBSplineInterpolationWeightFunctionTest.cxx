@@ -248,7 +248,9 @@ main( int argc, char * argv[] )
     std::cerr << "ERROR: the ITK implementation is more than "
               << static_cast< unsigned int >( allowedTimeDifference * 100.0 )
               << "% faster than our implementation." << std::endl;
+#if _ELASTIX_TEST_TIMING
     return EXIT_FAILURE;
+#endif
   }
 
   /**
