@@ -281,11 +281,11 @@ public: \
  *      Dll export    *
  *                    *
  ********************************************************************************/
-// Note: Consumers of the DLL must define the symbol _ELASTIX_BUILD_SHARED_LIBRARY.
+// Note: Consumers of the DLL must define the symbol _ELASTIX_USE_SHARED_LIBRARY.
 // No such symbol is required for users of the static library.
 //
 #if ( defined( _WIN32 ) || defined( WIN32 ) )
-#  ifdef _ELASTIX_BUILD_SHARED_LIBRARY
+#  ifdef _ELASTIX_USE_SHARED_LIBRARY
 #    ifdef elastix_EXPORTS
 #      define ELASTIXLIB_API __declspec( dllexport )
 #    else

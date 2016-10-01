@@ -28,7 +28,7 @@ if( NOT ELASTIX_BUILD_EXECUTABLE )
   mark_as_advanced( BUILD_SHARED_LIBS )
   option( BUILD_SHARED_LIBS "Build shared libraries?" OFF )
   if( BUILD_SHARED_LIBS )
-    add_definitions( -D_ELASTIX_BUILD_SHARED_LIBRARY )
+    add_definitions( -D_ELASTIX_USE_SHARED_LIBRARY )
 
     # We need to make sure that also the ITK is compiled with shared
     # libraries on. Related to flag (ITK_)BUILD_SHARED_LIBS. todo
