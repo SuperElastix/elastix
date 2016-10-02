@@ -140,7 +140,7 @@ main( int argc, char * argv[] )
   /** Declare variables. */
   InputPointType          inputPoint; inputPoint.Fill( 4.1 );
   MovingImageGradientType movingImageGradient;
-  movingImageGradient[ 0 ] = 29.43; movingImageGradient[ 0 ] = 18.21; movingImageGradient[ 0 ] = 1.7;
+  movingImageGradient[ 0 ] = 29.43; movingImageGradient[ 1 ] = 18.21; movingImageGradient[ 2 ] = 1.7;
   const NumberOfParametersType nnzji = transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType                 jacobian( Dimension, nnzji );
   DerivativeType               imageJacobian_old( nnzji );
