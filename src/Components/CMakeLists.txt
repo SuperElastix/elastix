@@ -129,6 +129,10 @@ macro( ADD_ELXCOMPONENT name )
     project( ${name} )
     add_library( ${name} STATIC ${filelist} )
     target_link_libraries( ${name} ${elxLinkLibs} )
+    install( TARGETS ${name}
+             ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR} 
+             LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR} 
+             RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
 
     # Group in IDE's like Visual Studio
     string( REGEX MATCH "[a-zA-Z]+" comp_group ${relative_path_to_comp} )

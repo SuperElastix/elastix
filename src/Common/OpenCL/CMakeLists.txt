@@ -63,3 +63,8 @@ target_link_libraries( elxOpenCL
 
 # Group in IDE's like Visual Studio
 set_property( TARGET elxOpenCL PROPERTY FOLDER "libraries" )
+
+install( TARGETS elxOpenCL
+         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR} 
+         LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR} 
+         RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )

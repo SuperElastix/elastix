@@ -199,6 +199,10 @@ add_library( elxCommon STATIC
   ${LineSearchOptimizersFiles}
   ${ImageSamplersFiles}
 )
+install( TARGETS elxCommon
+         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR} 
+         LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR} 
+         RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
 
 #---------------------------------------------------------------------
 # Link against other libraries.

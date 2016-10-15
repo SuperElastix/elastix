@@ -19,6 +19,10 @@ set( xouthfiles
 
 # a lib defining the global variable xout.
 add_library( xoutlib STATIC xoutmain.cxx ${xouthxxfiles} ${xouthfiles} )
+install( TARGETS xoutlib
+         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR} 
+         LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR} 
+         RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
 
 # Group in IDE's like Visual Studio
 set_property( TARGET xoutlib PROPERTY FOLDER "libraries" )

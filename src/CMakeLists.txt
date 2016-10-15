@@ -111,7 +111,7 @@ if( USE_PreconditionedGradientDescent )
 endif()
 
 #---------------------------------------------------------------------
-# Set single output directories for all executables and libraries.
+# Set single (build-tree) output directories for all executables and libraries.
 # This makes it easier to create an elxUseFile.cmake, that users can
 # include in their programs to borrow elastix functionality.
 
@@ -127,6 +127,19 @@ endif()
 
 # Mark these variables as advanced; their default value is usually fine
 mark_as_advanced( LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH )
+
+#---------------------------------------------------------------------
+# Define the install directory names, relative to install prefix
+# given by CMAKE_INSTALL_PREFIX.  All components should use the
+# same name.  Set as variable here for future customization; e.g.
+# if desire to decorate with Elastix version.
+# Allow user to customize.
+
+mark_as_advanced( ELASTIX_ARCHIVE_DIR ELASTIX_INCLUDE_DIR ELASTIX_LIBRARY_DIR ELASTIX_RUNTIME_DIR )
+set( ELASTIX_ARCHIVE_DIR "lib" CACHE STRING "Directory for installing archive files; path is relative to CMAKE_INSTALL_PREFIX" )
+set( ELASTIX_INCLUDE_DIR "include" CACHE STRING "Directory for installing include files; path is relative to CMAKE_INSTALL_PREFIX" )
+set( ELASTIX_LIBRARY_DIR "lib" CACHE STRING "Directory for installing library files; path is relative to CMAKE_INSTALL_PREFIX" )
+set( ELASTIX_RUNTIME_DIR "bin" CACHE STRING "Directory for installing runtime files; path is relative to CMAKE_INSTALL_PREFIX" )
 
 #---------------------------------------------------------------------
 # Check if Mevis DicomTiff support is desired

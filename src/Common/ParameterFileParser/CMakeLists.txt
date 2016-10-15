@@ -9,6 +9,11 @@ set( param_SRCS
 source_group( "Parser" FILES ${param_SRCS} )
 
 add_library( param STATIC ${param_SRCS} )
+install( TARGETS param
+         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR} 
+         LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR} 
+         RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
+
 
 target_link_libraries( param ${ITK_LIBRARIES} )
 

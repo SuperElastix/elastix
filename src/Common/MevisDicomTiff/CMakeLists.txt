@@ -16,6 +16,11 @@ else()
   )
 endif()
 
+install( TARGETS mevisdcmtiff
+         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR} 
+         LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR} 
+         RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
+
 target_link_libraries( mevisdcmtiff ${ITK_LIBRARIES} )
 
 # Group in IDE's like Visual Studio

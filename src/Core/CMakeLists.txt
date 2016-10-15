@@ -212,28 +212,27 @@ endif()
 #---------------------------------------------------------------------
 # Define the install directory for elastix and transformix.
 
-if( WIN32 )
-  if( ELASTIX_BUILD_EXECUTABLE )
-    install( TARGETS elastix transformix
-      RUNTIME DESTINATION . )
-      #COMPONENT core )
-  else()
-    # transformix is not implemented as library yet
-    install( TARGETS elastix transformix
-      RUNTIME DESTINATION .
-      ARCHIVE DESTINATION . )
-  endif()
-else()
+if( NOT WIN32 )
   # Tell the executables where to find the required .so files.
   set_target_properties( elastix transformix
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
-  # Put executables in bin and libraries in lib.
-  install( TARGETS elastix transformix
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION bin
-    ARCHIVE DESTINATION bin)
-    #COMPONENT core )
 endif()
+
+install( TARGETS elastix transformix elxCore
+         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR} 
+         LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR} 
+         RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
+
+# Install all header files.
+install( DIRECTORY ${elastix_SOURCE_DIR}/Common ${elastix_SOURCE_DIR}/Core ${elastix_SOURCE_DIR}/Components 
+         DESTINATION ${ELASTIX_INCLUDE_DIR}
+         FILES_MATCHING PATTERN "*.h" PATTERN "*.hxx" )
+install( FILES ${elastix_BINARY_DIR}/elxInstallComponentFunctionCalls.h
+         ${elastix_BINARY_DIR}/elxInstallComponentFunctionDeclarations.h
+         ${elastix_BINARY_DIR}/elxSupportedImageTypes.h
+         ${elastix_BINARY_DIR}/ITKIOFactoryRegistration/itkImageIOFactoryRegisterManager.h
+         ${elastix_BINARY_DIR}/ITKIOFactoryRegistration/itkTransformIOFactoryRegisterManager.h
+         DESTINATION ${ELASTIX_INCLUDE_DIR} )
 
 #---------------------------------------------------------------------
 # The Core/Install directory contains a CMakeLists file for

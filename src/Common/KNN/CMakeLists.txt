@@ -41,3 +41,7 @@ target_link_libraries( KNNlib ANNlib ${ITK_LIBRARIES} )
 # Group in IDE's like Visual Studio
 set_property( TARGET KNNlib PROPERTY FOLDER "libraries" )
 
+install( TARGETS KNNlib
+         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR} 
+         LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR} 
+         RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
