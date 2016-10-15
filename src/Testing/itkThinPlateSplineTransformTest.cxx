@@ -132,7 +132,7 @@ main( int argc, char * argv[] )
   std::cerr << "Setting source landmarks took "
             << clock() - startClock << " ms." << std::endl;
 
-  InputPointType ipp; ipp[ 0 ] = 10.0; ipp[ 0 ] = 20.0; ipp[ 0 ] = 30.0;
+  InputPointType ipp; ipp[ 0 ] = 10.0; ipp[ 1 ] = 20.0; ipp[ 2 ] = 30.0;
 
   /** Test TransformPoint(). */
   startClock = clock();
