@@ -64,7 +64,7 @@ endif()
 
 # Select a source directory name.
 if( NOT DEFINED CTEST_SOURCE_DIRECTORY )
-  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/src" )
+  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}" )
 endif()
 
 # Select a build directory name.
@@ -90,7 +90,7 @@ if( NOT DEFINED CTEST_MEMORYCHECK_COMMAND )
 endif()
 
 # Support initial checkout if necessary;
-if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
+if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}/CTestConfig.cmake"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
     AND CTEST_UPDATE_COMMAND )
 

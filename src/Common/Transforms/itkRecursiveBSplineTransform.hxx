@@ -211,6 +211,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
     {
       nonZeroJacobianIndices[ i ] = i;
     }
+    imageJacobian.Fill( 0.0 );
     return;
   }
 
