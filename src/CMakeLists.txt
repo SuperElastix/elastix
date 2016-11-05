@@ -415,12 +415,8 @@ endif()
 #---------------------------------------------------------------------
 # Testing
 
-set( ELASTIX_BUILD_TESTING OFF CACHE BOOL
-  "Perform some tests on basic functionality of elastix." )
-if( ELASTIX_BUILD_TESTING )
-  enable_testing()
+if( BUILD_TESTING )
   add_subdirectory( Testing )
-  include( CTest )
 endif()
 
 #---------------------------------------------------------------------
