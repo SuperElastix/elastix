@@ -204,6 +204,9 @@ ElastixFilter< TFixedImage, TMovingImage >
       = ParameterValueVectorType( 1, ParameterObject::ToString( fixedImageDimension ) ) ;
     parameterMapVector[ i ][ "MovingImageDimension" ]
       = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
+    parameterMapVector[ i ][ "ResultImagePixelType" ]
+      = ParameterValueVectorType( 1, ParameterObject::ToString( PixelType< typename TFixedImage::PixelType >::ToString() ) );
+
 
     // Create new instance of ElastixMain
     ElastixMainPointer elastix = ElastixMainType::New();
