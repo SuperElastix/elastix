@@ -87,7 +87,7 @@ endif()
 
 #---------------------------------------------------------------------
 # Find OpenMP
-find_package( OpenMP )
+find_package( OpenMP QUIET )
 
 if( OPENMP_FOUND )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}" )
