@@ -1,0 +1,5 @@
+ADD_ELXCOMPONENT( TranslationStackTransform
+ elxTranslationStackTransform.h
+ elxTranslationStackTransform.hxx
+ elxTranslationStackTransform.cxx)
+
