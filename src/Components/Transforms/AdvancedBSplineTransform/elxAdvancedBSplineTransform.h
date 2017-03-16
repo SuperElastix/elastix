@@ -53,6 +53,8 @@ namespace elastix
  *    If not specified, the FinalGridSpacingInVoxels is used, or the FinalGridSpacing,
  *    to compute a FinalGridSpacingInPhysicalUnits. If those are not specified, the default
  *    value for FinalGridSpacingInVoxels is used to compute a FinalGridSpacingInPhysicalUnits.
+ *    If an affine transformation is provided as initial transformation, the control grid
+ *    will be scaled to cover the fixed image domain in the space defined by the initial transformation.
  * \parameter GridSpacingSchedule: the grid spacing downsampling factors for the B-spline transform
  *    for each dimension and each resolution. \n
  *    example: <tt>(GridSpacingSchedule 4.0 4.0 2.0 2.0 1.0 1.0)</tt> \n
