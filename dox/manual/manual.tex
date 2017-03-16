@@ -1752,6 +1752,12 @@ also possible to specify the grid in voxel units:
 \begin{quote}
 \texttt{(FinalGridSpacingInVoxels 16.0 16.0 16.0)}
 \end{quote}
+
+Note that in the case of providing an affine transformation as initial
+transformation to the B-spline registration, elastix will scale
+the control grid to cover the fixed image domain in the space
+defined by the initial transform.
+
 If the final B-spline grid spacing is chosen high, then you cannot
 match small structures. On the other hand, if the grid spacing is
 chosen very low, then small structures can be matched, but you

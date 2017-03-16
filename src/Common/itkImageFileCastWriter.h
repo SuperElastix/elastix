@@ -99,7 +99,13 @@ protected:
     typename CasterType::Pointer caster                    = CasterType::New();
     this->m_Caster                                         = caster;
     typename ScalarInputImageType::Pointer localInputImage = ScalarInputImageType::New();
+
+#if ITK_VERSION_MAJOR == 4 && ITK_VERSION_MINOR >= 11
+    localInputImage->Graft( static_cast< const ScalarInputImageType * >(inputImage) );
+#else
     localInputImage->Graft( inputImage );
+#endif
+
     caster->SetInput( localInputImage );
     caster->Update();
 
