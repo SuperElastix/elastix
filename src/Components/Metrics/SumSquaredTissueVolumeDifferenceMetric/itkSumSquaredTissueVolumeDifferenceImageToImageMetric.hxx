@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef _itkSumSquaredTissueVolumeDifferenceImageToImageMetric_txx
 #define _itkSumSquaredTissueVolumeDifferenceImageToImageMetric_txx
 
@@ -92,7 +91,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage>
   typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
   /** Loop over the fixed image samples to calculate the mean squares. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
@@ -103,7 +102,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage>
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -111,12 +110,12 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage>
     /** Compute the moving image value and check if the point is
      * inside the moving image buffer.
      */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative( mappedPoint, movingImageValue, 0 );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
     {
       this->m_NumberOfPixelsCounted++;
 
@@ -143,7 +142,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Update measure value. */
   double sum = 0.0;
-  if ( this->m_NumberOfPixelsCounted > 0 )
+  if( this->m_NumberOfPixelsCounted > 0 )
   {
     sum = 1.0F / static_cast<double>( this->m_NumberOfPixelsCounted );
   }
@@ -153,6 +152,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage>
   return measure;
 
 } // end GetValueSingleThreaded()
+
 
 /**
  * ******************* GetValue *******************
@@ -195,6 +195,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
 } // end GetValue()
 
+
 /**
  * ******************* ThreadedGetValue *******************
  */
@@ -216,8 +217,8 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
 
   /** Get the samples for this thread. */
   const unsigned long nSamplesPerThread
-    = static_cast<unsigned long>(vcl_ceil(static_cast<double>(sampleContainerSize)
-    / static_cast<double>(this->m_NumberOfThreads)));
+    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
+    / static_cast<double>( this->m_NumberOfThreads ) ) );
 
   unsigned long pos_begin = nSamplesPerThread * threadId;
   unsigned long pos_end = nSamplesPerThread * (threadId + 1);
@@ -233,7 +234,7 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
   threader_fend += (int)pos_end;
 
   /** Loop over the fixed image to calculate the mean squares. */
-  for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
+  for( threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
@@ -241,31 +242,31 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
     MovingImagePointType mappedPoint;
 
     /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if (sampleOk)
+    if( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask(mappedPoint);
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
     /** Compute the moving image value M(T(x)) and check if
     * the point is inside the moving image buffer.
     */
-    if (sampleOk)
+    if( sampleOk )
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, 0);
+      sampleOk = this->EvaluateMovingImageValueAndDerivative( mappedPoint, movingImageValue, 0 );
     }
 
-    if (sampleOk)
+    if( sampleOk )
     {
       numberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>((*threader_fiter).Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>( (*threader_fiter).Value().m_ImageValue );
 
       /** Get the SpatialJacobian dT/dx. */
-      this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      this->m_AdvancedTransform->GetSpatialJacobian( fixedPoint, spatialJac );
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
       const RealType detjac = static_cast<RealType>( vnl_det( spatialJac.GetVnlMatrix() ) );
@@ -349,130 +350,132 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>
-::GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
-	MeasureType & value, DerivativeType & derivative) const
+::GetValueAndDerivativeSingleThreaded(
+  const TransformParametersType & parameters,
+  MeasureType & value,
+  DerivativeType & derivative ) const
 {
-	itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
+  itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
-	/** Initialize some variables. */
-	this->m_NumberOfPixelsCounted = 0;
-	MeasureType measure = NumericTraits< MeasureType >::Zero;
-	derivative = DerivativeType(this->GetNumberOfParameters());
-	derivative.Fill(NumericTraits< DerivativeValueType >::Zero);
+  /** Initialize some variables. */
+  this->m_NumberOfPixelsCounted = 0;
+  MeasureType measure = NumericTraits< MeasureType >::Zero;
+  derivative = DerivativeType( this->GetNumberOfParameters() );
+  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
-	/** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-	NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
-	DerivativeType imageJacobian(nzji.size());
-	TransformJacobianType jacobian;
+  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  DerivativeType imageJacobian( nzji.size() );
+  TransformJacobianType jacobian;
 
-	/** Matrix to store the spatial Jacobian, dT/dx. */
-	SpatialJacobianType spatialJac;
+  /** Matrix to store the spatial Jacobian, dT/dx. */
+  SpatialJacobianType spatialJac;
 
-	/** Matrix to store the scaled inverse spatial Jacobian, det(dT/dx) * (dT/dx)^-1 */
-	SpatialJacobianType inverseSpatialJacobian;
+  /** Matrix to store the scaled inverse spatial Jacobian, det(dT/dx) * (dT/dx)^-1 */
+  SpatialJacobianType inverseSpatialJacobian;
 
-	/** Array that stores JacobianOfSpatialJacobian, d(dT/dx)/dmu */
-	JacobianOfSpatialJacobianType jacobianOfSpatialJacobian;
+  /** Array that stores JacobianOfSpatialJacobian, d(dT/dx)/dmu */
+  JacobianOfSpatialJacobianType jacobianOfSpatialJacobian;
 
-	DerivativeType jacobianOfSpatialJacobianDeterminant(nzji.size());
+  DerivativeType jacobianOfSpatialJacobianDeterminant( nzji.size() );
 
-	/** Make sure the transform parameters are up to date. */
+  /** Make sure the transform parameters are up to date. */
   /** Update the imageSampler. */
-	this->BeforeThreadedGetValueAndDerivative( parameters );
+  this->BeforeThreadedGetValueAndDerivative( parameters );
 
-	/** Get a handle to the sample container. */
-	ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-	/** Create iterator over the sample container. */
-	typename ImageSampleContainerType::ConstIterator fiter;
-	typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-	typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
-	/** Loop over the fixed image to calculate the mean squares. */
-	for (fiter = fbegin; fiter != fend; ++fiter)
-	{
-		/** Read fixed coordinates and initialize some variables. */
-		const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-		RealType movingImageValue;
-		MovingImagePointType mappedPoint;
-		MovingImageDerivativeType movingImageDerivative;
+  /** Loop over the fixed image to calculate the mean squares. */
+  for( fiter = fbegin; fiter != fend; ++fiter )
+  {
+    /** Read fixed coordinates and initialize some variables. */
+    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    RealType movingImageValue;
+    MovingImagePointType mappedPoint;
+    MovingImageDerivativeType movingImageDerivative;
 
-		/** Transform point and check if it is inside the B-spline support region. */
-		bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+    /** Transform point and check if it is inside the B-spline support region. */
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
-		/** Check if point is inside mask. */
-		if (sampleOk)
-		{
-			sampleOk = this->IsInsideMovingMask(mappedPoint);
-		}
+    /** Check if point is inside mask. */
+    if( sampleOk )
+    {
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
+    }
 
-		/** Compute the moving image value M(T(x)) and derivative dM/dx and check if
-		* the point is inside the moving image buffer.
-		*/
-		if (sampleOk)
-		{
-			sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
-		}
+    /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
+     * the point is inside the moving image buffer.
+     */
+    if( sampleOk )
+    {
+      sampleOk = this->EvaluateMovingImageValueAndDerivative( mappedPoint, movingImageValue, &movingImageDerivative );
+    }
 
-		if (sampleOk)
-		{
-			this->m_NumberOfPixelsCounted++;
+    if( sampleOk )
+    {
+      this->m_NumberOfPixelsCounted++;
 
-			/** Get the fixed image value. */
-			const RealType & fixedImageValue = static_cast<RealType>((*fiter).Value().m_ImageValue);
+      /** Get the fixed image value. */
+      const RealType & fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
 
-			/** Get the TransformJacobian dT/dmu. */
-			this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
+      /** Get the TransformJacobian dT/dmu. */
+      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
-			/** Compute the inner products (dM/dx)^T (dT/dmu). */
-			this->EvaluateTransformJacobianInnerProduct(jacobian, movingImageDerivative, imageJacobian);
+      /** Compute the inner products (dM/dx)^T (dT/dmu). */
+      this->EvaluateTransformJacobianInnerProduct( jacobian, movingImageDerivative, imageJacobian );
 
-			/** Get the SpatialJacobian dT/dx. */
-			this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      /** Get the SpatialJacobian dT/dx. */
+      this->m_AdvancedTransform->GetSpatialJacobian( fixedPoint, spatialJac );
 
-			/** Compute the determinant of the Transform Jacobian |dT/dx|. */
-			const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
+      /** Compute the determinant of the Transform Jacobian |dT/dx|. */
+      const RealType detjac = static_cast<RealType>( vnl_det( spatialJac.GetVnlMatrix() ) );
 
-			/** Compute the inverse spatialJacobian. */
-			inverseSpatialJacobian = spatialJac.GetInverse();
+      /** Compute the inverse spatialJacobian. */
+      inverseSpatialJacobian = spatialJac.GetInverse();
 
-			/** Compute the JacobianOfSpatialJacobian. */
-			this->m_AdvancedTransform->GetJacobianOfSpatialJacobian(fixedPoint, jacobianOfSpatialJacobian, nzji);
+      /** Compute the JacobianOfSpatialJacobian. */
+      this->m_AdvancedTransform->GetJacobianOfSpatialJacobian( fixedPoint, jacobianOfSpatialJacobian, nzji );
 
-			/** Compute the dot product of the inverse spatialJacobian and JacobianOfSpatialJacobian
-			* to support calculation of the JacobianOfSpatialJacobianDeterminant. */
-			this->EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct(
-				jacobianOfSpatialJacobian, inverseSpatialJacobian, jacobianOfSpatialJacobianDeterminant);
+      /** Compute the dot product of the inverse spatialJacobian and JacobianOfSpatialJacobian
+      * to support calculation of the JacobianOfSpatialJacobianDeterminant. */
+      this->EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct(
+        jacobianOfSpatialJacobian, inverseSpatialJacobian, jacobianOfSpatialJacobianDeterminant );
 
-			/** Compute this pixel's contribution to the measure and derivatives. */
-			this->UpdateValueAndDerivativeTerms(
-				fixedImageValue,
-				movingImageValue,
-				imageJacobian,
-				nzji,
-				detjac,
-				jacobianOfSpatialJacobianDeterminant,
-				measure,
-				derivative);
+      /** Compute this pixel's contribution to the measure and derivatives. */
+      this->UpdateValueAndDerivativeTerms(
+        fixedImageValue,
+        movingImageValue,
+        imageJacobian,
+        nzji,
+        detjac,
+        jacobianOfSpatialJacobianDeterminant,
+        measure,
+        derivative );
 
-		} // end if sampleOk
+    } // end if sampleOk
 
-	} // end for loop over the image sample container
+  } // end for loop over the image sample container
 
-		/** Check if enough samples were valid. */
-	this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+    /** Check if enough samples were valid. */
+  this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
-	/** Compute the measure value and derivative. */
-	double sum = 0.0;
-	if (this->m_NumberOfPixelsCounted > 0)
-	{
-		sum = 1.0F / static_cast<double>(this->m_NumberOfPixelsCounted);
-	}
-	measure *= sum;
-	derivative *= sum;
+  /** Compute the measure value and derivative. */
+  double sum = 0.0;
+  if( this->m_NumberOfPixelsCounted > 0 )
+  {
+    sum = 1.0F / static_cast<double>( this->m_NumberOfPixelsCounted );
+  }
+  measure *= sum;
+  derivative *= sum;
 
-	/** The return value. */
-	value = measure;
+  /** The return value. */
+  value = measure;
 }
 
 
@@ -486,212 +489,219 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
   const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
 {
-	/** Option for now to still use the single threaded code. */
-	if (!this->m_UseMultiThread)
-	{
-		return this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
-	}
+  /** Option for now to still use the single threaded code. */
+  if( !this->m_UseMultiThread )
+  {
+    return this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
+  }
 
-	this->BeforeThreadedGetValueAndDerivative(parameters);
+  this->BeforeThreadedGetValueAndDerivative(parameters);
 
-	/** Initialize some threading related parameters. */
-	this->InitializeThreadingParameters();
+  /** Initialize some threading related parameters. */
+  this->InitializeThreadingParameters();
 
-	/** Launch multi-threading metric */
-	this->LaunchGetValueAndDerivativeThreaderCallback();
+  /** Launch multi-threading metric */
+  this->LaunchGetValueAndDerivativeThreaderCallback();
 
-	/** Gather the metric values and derivatives from all threads. */
-	this->AfterThreadedGetValueAndDerivative(value, derivative);
+  /** Gather the metric values and derivatives from all threads. */
+  this->AfterThreadedGetValueAndDerivative(value, derivative);
 } // end GetValueAndDerivative()
 
 
-	/*********************ThreadedGetValueAndDerivative*****************/
+/**
+ * ******************* ThreadedGetValueAndDerivative *******************
+ */
+
 template <class TFixedImage, class TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>
-::ThreadedGetValueAndDerivative(ThreadIdType threadId)
+::ThreadedGetValueAndDerivative( ThreadIdType threadId )
 {
-	/*Create variables to store intermediate results. Circumvent false sharing*/
-	unsigned long numberOfPixelsCounted = 0;
-	MeasureType measure = NumericTraits<MeasureType> ::Zero;
-	DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
+  /*Create variables to store intermediate results. Circumvent false sharing*/
+  unsigned long numberOfPixelsCounted = 0;
+  MeasureType measure = NumericTraits<MeasureType> ::Zero;
+  DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
-	/** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-	NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
-	DerivativeType imageJacobian(nzji.size());
-	TransformJacobianType jacobian;
+  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  DerivativeType imageJacobian( nzji.size() );
+  TransformJacobianType jacobian;
 
-	/** Matrix to store the spatial Jacobian, dT/dx. */
-	SpatialJacobianType spatialJac;
+  /** Matrix to store the spatial Jacobian, dT/dx. */
+  SpatialJacobianType spatialJac;
 
-	/** Matrix to store the scaled inverse spatial Jacobian, det(dT/dx) * (dT/dx)^-1 */
-	SpatialJacobianType inverseSpatialJacobian;
+  /** Matrix to store the scaled inverse spatial Jacobian, det(dT/dx) * (dT/dx)^-1 */
+  SpatialJacobianType inverseSpatialJacobian;
 
-	/** Array that stores JacobianOfSpatialJacobian, d(dT/dx)/dmu */
-	JacobianOfSpatialJacobianType jacobianOfSpatialJacobian;
+  /** Array that stores JacobianOfSpatialJacobian, d(dT/dx)/dmu */
+  JacobianOfSpatialJacobianType jacobianOfSpatialJacobian;
 
-	DerivativeType jacobianOfSpatialJacobianDeterminant(nzji.size());
+  DerivativeType jacobianOfSpatialJacobianDeterminant( nzji.size() );
 
-	/** Get a handle to the sample container. */
-	ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-	const unsigned long sampleContainerSize = sampleContainer->Size();
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  const unsigned long sampleContainerSize = sampleContainer->Size();
 
-	/** Get the samples for this thread. */
-	const unsigned long nSamplesPerThread
-		= static_cast<unsigned long>(vcl_ceil(static_cast<double>(sampleContainerSize)
-			/ static_cast<double>(this->m_NumberOfThreads)));
+  /** Get the samples for this thread. */
+  const unsigned long nSamplesPerThread
+    = static_cast<unsigned long>(vcl_ceil(static_cast<double>( sampleContainerSize )
+      / static_cast<double>( this->m_NumberOfThreads ) ) );
 
-	unsigned long pos_begin = nSamplesPerThread * threadId;
-	unsigned long pos_end = nSamplesPerThread * (threadId + 1);
-	pos_begin = (pos_begin > sampleContainerSize) ? sampleContainerSize : pos_begin;
-	pos_end = (pos_end > sampleContainerSize) ? sampleContainerSize : pos_end;
+  unsigned long pos_begin = nSamplesPerThread * threadId;
+  unsigned long pos_end = nSamplesPerThread * (threadId + 1);
+  pos_begin = (pos_begin > sampleContainerSize) ? sampleContainerSize : pos_begin;
+  pos_end = (pos_end > sampleContainerSize) ? sampleContainerSize : pos_end;
 
-	/** Create iterator over the sample container. */
-	typename ImageSampleContainerType::ConstIterator threader_fiter;
-	typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
-	typename ImageSampleContainerType::ConstIterator threader_fend = sampleContainer->Begin();
-	threader_fbegin += (int)pos_begin;
-	threader_fend += (int)pos_end;
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator threader_fiter;
+  typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator threader_fend = sampleContainer->Begin();
+  threader_fbegin += (int)pos_begin;
+  threader_fend += (int)pos_end;
 
-	/** Loop over the fixed image to calculate the mean squares. */
-	for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
-	{
-		/** Read fixed coordinates and initialize some variables. */
-		const FixedImagePointType & fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
-		RealType movingImageValue;
-		MovingImagePointType mappedPoint;
-		MovingImageDerivativeType movingImageDerivative;
+  /** Loop over the fixed image to calculate the mean squares. */
+  for( threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter )
+  {
+    /** Read fixed coordinates and initialize some variables. */
+    const FixedImagePointType & fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
+    RealType movingImageValue;
+    MovingImagePointType mappedPoint;
+    MovingImageDerivativeType movingImageDerivative;
 
-		/** Transform point and check if it is inside the B-spline support region. */
-		bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+    /** Transform point and check if it is inside the B-spline support region. */
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
-		/** Check if point is inside mask. */
-		if (sampleOk)
-		{
-			sampleOk = this->IsInsideMovingMask(mappedPoint);
-		}
+    /** Check if point is inside mask. */
+    if( sampleOk )
+    {
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
+    }
 
-		/** Compute the moving image value M(T(x)) and derivative dM/dx and check if
-		* the point is inside the moving image buffer.
-		*/
-		if (sampleOk)
-		{
-			sampleOk = this->EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, &movingImageDerivative);
-		}
+    /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
+    * the point is inside the moving image buffer.
+    */
+    if( sampleOk )
+    {
+      sampleOk = this->EvaluateMovingImageValueAndDerivative( mappedPoint, movingImageValue, &movingImageDerivative );
+    }
 
-		if (sampleOk)
-		{
-			numberOfPixelsCounted++;
+    if( sampleOk )
+    {
+      numberOfPixelsCounted++;
 
-			/** Get the fixed image value. */
-			const RealType & fixedImageValue = static_cast<RealType>((*threader_fiter).Value().m_ImageValue);
+      /** Get the fixed image value. */
+      const RealType & fixedImageValue = static_cast<RealType>( (*threader_fiter).Value().m_ImageValue );
 
-			/** Get the TransformJacobian dT/dmu. */
-			this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
+      /** Get the TransformJacobian dT/dmu. */
+      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
-			/** Compute the inner products (dM/dx)^T (dT/dmu). */
-			this->EvaluateTransformJacobianInnerProduct(jacobian, movingImageDerivative, imageJacobian);
+      /** Compute the inner products (dM/dx)^T (dT/dmu). */
+      this->EvaluateTransformJacobianInnerProduct( jacobian, movingImageDerivative, imageJacobian );
 
-			/** Get the SpatialJacobian dT/dx. */
-			this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      /** Get the SpatialJacobian dT/dx. */
+      this->m_AdvancedTransform->GetSpatialJacobian( fixedPoint, spatialJac );
 
-			/** Compute the determinant of the Transform Jacobian |dT/dx|. */
-			const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
+      /** Compute the determinant of the Transform Jacobian |dT/dx|. */
+      const RealType detjac = static_cast<RealType>( vnl_det( spatialJac.GetVnlMatrix() ) );
 
-			/** Compute the inverse spatialJacobian. */
-			inverseSpatialJacobian = spatialJac.GetInverse();
+      /** Compute the inverse spatialJacobian. */
+      inverseSpatialJacobian = spatialJac.GetInverse();
 
-			/** Compute the JacobianOfSpatialJacobian. */
-			this->m_AdvancedTransform->GetJacobianOfSpatialJacobian(fixedPoint, jacobianOfSpatialJacobian, nzji);
+      /** Compute the JacobianOfSpatialJacobian. */
+      this->m_AdvancedTransform->GetJacobianOfSpatialJacobian( fixedPoint, jacobianOfSpatialJacobian, nzji );
 
-			/** Compute the dot product of the inverse spatialJacobian and JacobianOfSpatialJacobian
-			* to support calculation of the JacobianOfSpatialJacobianDeterminant. */
-			this->EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct(
-				jacobianOfSpatialJacobian, inverseSpatialJacobian, jacobianOfSpatialJacobianDeterminant);
+      /** Compute the dot product of the inverse spatialJacobian and JacobianOfSpatialJacobian
+       * to support calculation of the JacobianOfSpatialJacobianDeterminant.
+       */
+      this->EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct(
+        jacobianOfSpatialJacobian, inverseSpatialJacobian, jacobianOfSpatialJacobianDeterminant );
 
-			/** Compute this pixel's contribution to the measure and derivatives. */
-			this->UpdateValueAndDerivativeTerms(
-				fixedImageValue,
-				movingImageValue,
-				imageJacobian,
-				nzji,
-				detjac,
-				jacobianOfSpatialJacobianDeterminant,
-				measure,
-				derivative);
+      /** Compute this pixel's contribution to the measure and derivatives. */
+      this->UpdateValueAndDerivativeTerms(
+        fixedImageValue,
+        movingImageValue,
+        imageJacobian,
+        nzji,
+        detjac,
+        jacobianOfSpatialJacobianDeterminant,
+        measure,
+        derivative );
 
-		} // end if sampleOk
+    } // end if sampleOk
 
-	}
+  }
 
-	/** Only update these variables at the end to prevent unnecessary "false sharing". */
-	this->m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-	this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
-}
+  /** Only update these variables at the end to prevent unnecessary "false sharing". */
+  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
+} // end ThreadedGetValueAndDerivative()
 
 
-	/*********************AfterThreadedGetValueAndDerivative**************/
+/**
+ * *************** AfterThreadedGetValueAndDerivative ****************
+ */
+
 template <class TFixedImage, class TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>
 ::AfterThreadedGetValueAndDerivative(
-	MeasureType & value,
-	DerivativeType & derivative) const
+  MeasureType & value,
+  DerivativeType & derivative ) const
 {
   /** Accumulate the number of pixels. */
-	this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
-	for (ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i)
-	{
-		this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+  this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  {
+    this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
 
     /** Reset this variable for the next iteration. */
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = 0;
-	}
+  }
 
-	/** Check if enough samples were valid. */
-	ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-	this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  /** Check if enough samples were valid. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
-	/** Accumulate values. */
-	value = NumericTraits< MeasureType >::Zero;
-	for (ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i)
-	{
-		value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
+  /** Accumulate values. */
+  value = NumericTraits< MeasureType >::Zero;
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
     this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value = NumericTraits< MeasureType >::Zero;
-	}
+  }
 
-	value /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
+  value /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
 
-	/** Accumulate derivatives. */
-	/** compute single-threadedly */
-	if( !this->m_UseMultiThread && false ) // force multi-threaded as in AdvancedMeanSquares
-	{
-		derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
-		for (ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i)
-		{
-			derivative += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
-		}
+  /** Accumulate derivatives. */
+  /** compute single-threadedly */
+  if( !this->m_UseMultiThread && false ) // force multi-threaded as in AdvancedMeanSquares
+  {
+    derivative = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_Derivative;
+    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+    {
+      derivative += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative;
+    }
 
-		derivative /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
-	}
+    derivative /= static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
+  }
   // compute multi-threadedly with itk threads
   else if( true ) // force ITK threads !this->m_UseOpenMP )
-	{
-		this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
-		this->m_ThreaderMetricParameters.st_NormalizationFactor =
-			static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+  {
+    this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+    this->m_ThreaderMetricParameters.st_NormalizationFactor =
+      static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
 
-		this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback,
-			const_cast<void *>(static_cast<const void *>(&this->m_ThreaderMetricParameters)));
-		this->m_Threader->SingleMethodExecute();
-	}
+    this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback,
+      const_cast<void *>(static_cast<const void *>(&this->m_ThreaderMetricParameters)));
+    this->m_Threader->SingleMethodExecute();
+  }
 
 #ifdef ELASTIX_USE_OPENMP
-	/** compute multi-threadedly with openmp.  Never used? */
-	else
-	{
+  /** compute multi-threadedly with openmp.  Never used? */
+  else
+  {
     const int spaceDimension = static_cast< int >( this->GetNumberOfParameters() );
 
     #pragma omp parallel for
@@ -702,12 +712,13 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>
       {
         tmp += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
       }
-			derivative[ j ] = tmp / static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
-		}
-	}
+      derivative[ j ] = tmp / static_cast<DerivativeValueType>( this->m_NumberOfPixelsCounted );
+    }
+  }
 #endif
 
 } // end AfterThreadedGetValueAndDerivative()
+
 
 /**
  * *************** EvaluateTransformJacobianInnerProduct ****************
@@ -723,12 +734,12 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
   JacobianIteratorType jac = jacobian.begin();
   imageJacobian.Fill( 0.0 );
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-  for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+  for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
   {
     const double imDeriv = movingImageDerivative[ dim ] / ( this->m_TissueValue - this->m_AirValue );
     DerivativeIteratorType imjac = imageJacobian.begin();
 
-    for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
+    for( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
     {
       (*imjac) += (*jac) * imDeriv;
       ++imjac;
@@ -737,6 +748,7 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
   }
 
 } // end EvaluateTransformJacobianInnerProduct()
+
 
 /**
  * *************** UpdateValueAndDerivativeTerms ***************************
@@ -752,7 +764,7 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
   const RealType spatialJacobianDeterminant,
   const DerivativeType & jacobianOfSpatialJacobianDeterminant,
   MeasureType & measure,
-	DerivativeType & deriv ) const
+  DerivativeType & deriv ) const
 {
   /** The difference squared. */
   const RealType diff = ( ( fixedImageValue - this->m_AirValue ) - spatialJacobianDeterminant * ( movingImageValue - this->m_AirValue ) )
@@ -762,13 +774,13 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
 
   /** Calculate the contributions to the derivatives with respect to each parameter. */
   const RealType diff_2 = diff * -2.0;
-  if ( nzji.size() == this->GetNumberOfParameters() )
+  if( nzji.size() == this->GetNumberOfParameters() )
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
     typename DerivativeType::const_iterator jsjdit = jacobianOfSpatialJacobianDeterminant.begin();
     typename DerivativeType::iterator derivit = deriv.begin();
-    for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
+    for( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
     {
       (*derivit) += diff_2 * spatialJacobianDeterminant *
         ( (*jsjdit) * ( movingImageValue - this->m_AirValue ) / ( this->m_TissueValue - this->m_AirValue ) + (*imjacit) );
@@ -788,7 +800,8 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
         ( movingImageValue - this->m_AirValue ) / ( this->m_TissueValue - this->m_AirValue ) + imageJacobian[ i ] );
     }
   }
-} // end UpdateValueAndDerivativeTerms
+} // end UpdateValueAndDerivativeTerms()
+
 
 /**
  * *************** EvaluateInverseSpatialJacobian **************************
@@ -802,12 +815,12 @@ bool SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
   SpatialJacobianType & inverseSpatialJacobian) const
 {
   inverseSpatialJacobian.Fill( 0.0 );
-
   inverseSpatialJacobian = spatialJacobian.GetInverse();
 
   return true;
 
-} // end EvaluateInverseSpatialJacobian
+} // end EvaluateInverseSpatialJacobian()
+
 
 /**
  * ********** EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct ******
@@ -832,21 +845,22 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
     jacobianOfSpatialJacobianDeterminant.GetSize();
 
   /** matrix product first, then trace. */
-  for ( unsigned int mu = 0; mu < sizejacobianOfSpatialJacobianDeterminant; mu++ )
+  for( unsigned int mu = 0; mu < sizejacobianOfSpatialJacobianDeterminant; mu++ )
+  {
+    for( unsigned int diag = 0; diag < FixedImageDimension; diag++ )
     {
-    for ( unsigned int diag = 0; diag < FixedImageDimension; diag++ )
+      for( unsigned int idx = 0; idx < FixedImageDimension; idx++ )
       {
-      for ( unsigned int idx = 0; idx < FixedImageDimension; idx++ )
-        {
-        (*jsjdit) += inverseSpatialJacobian(diag,idx) * (*jsjit)(idx,diag);
-        }
+        (*jsjdit) += inverseSpatialJacobian( diag, idx ) * (*jsjit)( idx, diag );
       }
-			++jsjdit;
-			++jsjit;
     }
+    ++jsjdit;
+    ++jsjit;
+  }
 
-} // end EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct
+} // end EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct()
+
 
 } // end namespace itk
 
-#endif // end #ifndef _itkSumSquaredTissueVolumeDifferenceImageToImageMetric_txx
+#endif // end #ifndef _itkSumSquaredTissueVolumeDifferenceImageToImageMetric_hxx

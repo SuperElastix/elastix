@@ -219,20 +219,24 @@ if( NOT WIN32 )
 endif()
 
 install( TARGETS elastix transformix elxCore
-         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR} 
-         LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR} 
-         RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
+  ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
+  LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
+  RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
 
 # Install all header files.
-install( DIRECTORY ${elastix_SOURCE_DIR}/Common ${elastix_SOURCE_DIR}/Core ${elastix_SOURCE_DIR}/Components 
-         DESTINATION ${ELASTIX_INCLUDE_DIR}
-         FILES_MATCHING PATTERN "*.h" PATTERN "*.hxx" )
-install( FILES ${elastix_BINARY_DIR}/elxInstallComponentFunctionCalls.h
-         ${elastix_BINARY_DIR}/elxInstallComponentFunctionDeclarations.h
-         ${elastix_BINARY_DIR}/elxSupportedImageTypes.h
-         ${elastix_BINARY_DIR}/ITKIOFactoryRegistration/itkImageIOFactoryRegisterManager.h
-         ${elastix_BINARY_DIR}/ITKIOFactoryRegistration/itkTransformIOFactoryRegisterManager.h
-         DESTINATION ${ELASTIX_INCLUDE_DIR} )
+install( DIRECTORY
+  ${elastix_SOURCE_DIR}/Common
+  ${elastix_SOURCE_DIR}/Core
+  ${elastix_SOURCE_DIR}/Components
+  DESTINATION ${ELASTIX_INCLUDE_DIR}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hxx" )
+install( FILES
+  ${elastix_BINARY_DIR}/elxInstallComponentFunctionCalls.h
+  ${elastix_BINARY_DIR}/elxInstallComponentFunctionDeclarations.h
+  ${elastix_BINARY_DIR}/elxSupportedImageTypes.h
+  ${elastix_BINARY_DIR}/ITKIOFactoryRegistration/itkImageIOFactoryRegisterManager.h
+  ${elastix_BINARY_DIR}/ITKIOFactoryRegistration/itkTransformIOFactoryRegisterManager.h
+  DESTINATION ${ELASTIX_INCLUDE_DIR} )
 
 #---------------------------------------------------------------------
 # The Core/Install directory contains a CMakeLists file for

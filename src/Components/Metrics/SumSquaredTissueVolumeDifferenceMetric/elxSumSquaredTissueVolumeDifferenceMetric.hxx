@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __elxSumSquaredTissueVolumeDifferenceMetric_HXX__
 #define __elxSumSquaredTissueVolumeDifferenceMetric_HXX__
 
@@ -25,52 +24,51 @@
 namespace elastix
 {
 
-  /**
-   * ******************* Initialize ***********************
-   */
+/**
+ * ******************* Initialize ***********************
+ */
 
-	template <class TElastix>
-	void SumSquaredTissueVolumeDifferenceMetric<TElastix>
-		::Initialize(void) throw (itk::ExceptionObject)
-	{
-		itk::TimeProbe timer;
-		timer.Start();
-		this->Superclass1::Initialize();
-		timer.Stop();
-		elxout << "Initialization of SumSquaredTissueVolumeDifference metric took: "
-			<< static_cast<long>(timer.GetMean() * 1000) << " ms." << std::endl;
+template <class TElastix>
+void SumSquaredTissueVolumeDifferenceMetric<TElastix>
+::Initialize(void) throw (itk::ExceptionObject)
+{
+  itk::TimeProbe timer;
+  timer.Start();
+  this->Superclass1::Initialize();
+  timer.Stop();
+  elxout << "Initialization of SumSquaredTissueVolumeDifference metric took: "
+    << static_cast<long>( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
-	} // end Initialize
+} // end Initialize()
 
 
-  /**
-   * ***************** BeforeEachResolution ***********************
-   */
+/**
+ * ***************** BeforeEachResolution ***********************
+ */
 
-  template <class TElastix>
-    void SumSquaredTissueVolumeDifferenceMetric<TElastix>
-    ::BeforeEachResolution(void)
-  {
-    /** Get the current resolution level. */
-    unsigned int level =
-      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+template <class TElastix>
+void SumSquaredTissueVolumeDifferenceMetric<TElastix>
+::BeforeEachResolution( void )
+{
+  /** Get the current resolution level. */
+  unsigned int level =
+    ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-    /** Get and set the AirValue. */
-    float AirValue = -1000.0;
-    this->GetConfiguration()->ReadParameter( AirValue,
-      "AirValue", this->GetComponentLabel(), level, 0 );
-    this->SetAirValue( AirValue );
+  /** Get and set the AirValue. */
+  float AirValue = -1000.0;
+  this->GetConfiguration()->ReadParameter( AirValue,
+    "AirValue", this->GetComponentLabel(), level, 0 );
+  this->SetAirValue( AirValue );
 
-    /** Get and set the TissueValue. */
-    float TissueValue = 55.0;
-    this->GetConfiguration()->ReadParameter( TissueValue,
-      "TissueValue", this->GetComponentLabel(), level, 0 );
-    this->SetTissueValue( TissueValue );
+  /** Get and set the TissueValue. */
+  float TissueValue = 55.0;
+  this->GetConfiguration()->ReadParameter( TissueValue,
+    "TissueValue", this->GetComponentLabel(), level, 0 );
+  this->SetTissueValue( TissueValue );
 
-  } // end BeforeEachResolution
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix
-
 
 #endif // end #ifndef __elxSumSquaredTissueVolumeDifferenceMetric_HXX__

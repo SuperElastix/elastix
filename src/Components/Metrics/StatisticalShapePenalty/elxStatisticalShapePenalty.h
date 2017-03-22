@@ -164,14 +164,14 @@ public:
 
   /** Function to read the corresponding points. */
   unsigned int ReadLandmarks(
-  const std::string & landmarkFileName,
-  typename PointSetType::Pointer & pointSet,
-  const typename ImageType::ConstPointer image );
+    const std::string & landmarkFileName,
+    typename PointSetType::Pointer & pointSet,
+    const typename ImageType::ConstPointer image );
 
   unsigned int ReadShape(
-  const std::string & ShapeFileName,
-  typename PointSetType::Pointer & pointSet,
-  const typename ImageType::ConstPointer image );
+    const std::string & ShapeFileName,
+    typename PointSetType::Pointer & pointSet,
+    const typename ImageType::ConstPointer image );
 
   /** Overwrite to silence warning. */
   virtual void SelectNewSamples( void ){}

@@ -345,7 +345,7 @@ main( int argc, char * argv[] )
 #endif
 
     // Report timings for this array size
-    timeCollector.Report();
+    timeCollector.Report( std::cout, false, true );
     std::cout << std::endl;
 
   } // end loop over array sizes

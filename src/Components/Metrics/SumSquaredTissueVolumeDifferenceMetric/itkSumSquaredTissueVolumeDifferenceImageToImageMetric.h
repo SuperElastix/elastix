@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
-
 #ifndef __itkSumSquaredTissueVolumeDifferenceImageToImageMetric_h
 #define __itkSumSquaredTissueVolumeDifferenceImageToImageMetric_h
 
@@ -61,7 +59,7 @@ namespace itk
 
 template < class TFixedImage, class TMovingImage >
 class SumSquaredTissueVolumeDifferenceImageToImageMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
 
@@ -142,11 +140,11 @@ public:
 
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const;
 
-	/** Get value and derivatives single-threaded */
-	void GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
-		MeasureType & measure, DerivativeType & derivative) const;
+  /** Get value and derivatives single-threaded */
+  void GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
+    MeasureType & measure, DerivativeType & derivative) const;
 
   /** Set/get the air intensity value */
   itkSetMacro( AirValue, RealType );
@@ -159,7 +157,8 @@ public:
 protected:
   SumSquaredTissueVolumeDifferenceImageToImageMetric();
   virtual ~SumSquaredTissueVolumeDifferenceImageToImageMetric() {};
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
 
@@ -199,20 +198,22 @@ protected:
    * Note that this function does not calculate the true inverse, but instead calculates
    * the inverse SpatialJacobian multiplied by the determinant of the SpatialJacobian, to
    * avoid redundant use of the determinant.
-   * This function returns false if the SpatialJacobianDeterminant is zero */
+   * This function returns false if the SpatialJacobianDeterminant is zero.
+   */
   bool EvaluateInverseSpatialJacobian(
     const SpatialJacobianType & spatialJacobian,
     const RealType spatialJacobianDeterminant,
-    SpatialJacobianType & inverseSpatialJacobian) const;
+    SpatialJacobianType & inverseSpatialJacobian ) const;
 
   /** Compute the dot product of the inverse SpatialJacobian with the
    * Jacobian of SpatialJacobian.  The results are stored in
    * jacobianOfSpatialJacobianDeterminant, which has a length equal to
-   * the number of transform parameters times the length of the spatialJacobian. */
+   * the number of transform parameters times the length of the spatialJacobian.
+   */
   void EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct(
     const JacobianOfSpatialJacobianType & jacobianOfSpatialJacobian,
     const SpatialJacobianType & inverseSpatialJacobian,
-    DerivativeType & jacobianOfSpatialJacobianDeterminant) const;
+    DerivativeType & jacobianOfSpatialJacobianDeterminant ) const;
 
   /** Get value for each thread. */
   inline void ThreadedGetValue( ThreadIdType threadID );
@@ -221,15 +222,15 @@ protected:
   inline void AfterThreadedGetValue( MeasureType & value ) const;
 
   /** Get value and derivatives for each thread. */
-	inline void ThreadedGetValueAndDerivative(ThreadIdType threadId);
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadId );
 
-	/** Gather the values and derivatives from all threads */
-	inline void AfterThreadedGetValueAndDerivative(
-		MeasureType & measure, DerivativeType & derivative) const;
+  /** Gather the values and derivatives from all threads */
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & measure, DerivativeType & derivative ) const;
 
 private:
-  SumSquaredTissueVolumeDifferenceImageToImageMetric(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  SumSquaredTissueVolumeDifferenceImageToImageMetric(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
   /** Intensity value to use for air.  Default is -1000 */
   RealType m_AirValue;

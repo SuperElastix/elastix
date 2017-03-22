@@ -360,13 +360,6 @@ StatisticalShapePenalty< TElastix >
 
 /**
  * ************** TransformPointsSomePointsVTK *********************
- *
- * This function reads points from a .vtk file and transforms
- * these fixed-image coordinates to moving-image
- * coordinates.
- *
- * Reads the inputmesh from a vtk file, assuming world coordinates.
- * Computes the transformed points, save as outputpoints.vtk.
  */
 
 template< class TElastix >

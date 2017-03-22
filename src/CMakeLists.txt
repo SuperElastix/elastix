@@ -136,10 +136,14 @@ mark_as_advanced( LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH )
 # Allow user to customize.
 
 mark_as_advanced( ELASTIX_ARCHIVE_DIR ELASTIX_INCLUDE_DIR ELASTIX_LIBRARY_DIR ELASTIX_RUNTIME_DIR )
-set( ELASTIX_ARCHIVE_DIR "lib" CACHE STRING "Directory for installing archive files; path is relative to CMAKE_INSTALL_PREFIX" )
-set( ELASTIX_INCLUDE_DIR "include" CACHE STRING "Directory for installing include files; path is relative to CMAKE_INSTALL_PREFIX" )
-set( ELASTIX_LIBRARY_DIR "lib" CACHE STRING "Directory for installing library files; path is relative to CMAKE_INSTALL_PREFIX" )
-set( ELASTIX_RUNTIME_DIR "bin" CACHE STRING "Directory for installing runtime files; path is relative to CMAKE_INSTALL_PREFIX" )
+set( ELASTIX_ARCHIVE_DIR "lib"      CACHE STRING
+  "Directory for installing archive files; path is relative to CMAKE_INSTALL_PREFIX" )
+set( ELASTIX_INCLUDE_DIR "include"  CACHE STRING
+  "Directory for installing include files; path is relative to CMAKE_INSTALL_PREFIX" )
+set( ELASTIX_LIBRARY_DIR "lib"      CACHE STRING
+  "Directory for installing library files; path is relative to CMAKE_INSTALL_PREFIX" )
+set( ELASTIX_RUNTIME_DIR "bin"      CACHE STRING
+  "Directory for installing runtime files; path is relative to CMAKE_INSTALL_PREFIX" )
 
 #---------------------------------------------------------------------
 # Check if Mevis DicomTiff support is desired
@@ -261,8 +265,7 @@ if( MSVC )
   add_definitions(
     /D_SCL_SECURE_NO_DEPRECATE
     /D_CRT_SECURE_NO_DEPRECATE
-    /D_CRT_TIME_FUNCTIONS_NO_DEPRECATE
-  )
+    /D_CRT_TIME_FUNCTIONS_NO_DEPRECATE )
 
   # Increases address capacity
   if( WIN32 )
@@ -273,25 +276,25 @@ if( MSVC )
 endif()
 
 # Add the /MP flag when compiling with Visual Studio
-set(compile_flag_lists CMAKE_C_FLAGS CMAKE_CXX_FLAGS
-    CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_MINSIZEREL
-    CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
-    CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_MINSIZEREL
-    CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+set( compile_flag_lists CMAKE_C_FLAGS CMAKE_CXX_FLAGS
+  CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_MINSIZEREL
+  CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
+  CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_MINSIZEREL
+  CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELWITHDEBINFO )
 
-if(WIN32)
-  if(NOT MINGW)
-    if(CMAKE_GENERATOR MATCHES "^Visual Studio")
-      option(ELASTIX_USE_MP "Add the /MP for object-file level parallel builds" OFF)
-      set(use_mp ${ELASTIX_USE_MP})
-      foreach(listname ${compile_flag_lists})
-        if("${${listname}}" MATCHES "/Gm")
-          set(use_mp OFF)
-          message(AUTHOR_WARNING "/Gm is not compatible with /MP: set ELASTIX_USE_MP to OFF to avoid this warning.")
+if( WIN32 )
+  if( NOT MINGW )
+    if( CMAKE_GENERATOR MATCHES "^Visual Studio" )
+      option( ELASTIX_USE_MP "Add the /MP for object-file level parallel builds" OFF )
+      set( use_mp ${ELASTIX_USE_MP} )
+      foreach( listname ${compile_flag_lists} )
+        if( "${${listname}}" MATCHES "/Gm" )
+          set( use_mp OFF )
+          message( AUTHOR_WARNING "/Gm is not compatible with /MP: set ELASTIX_USE_MP to OFF to avoid this warning." )
         endif()
-        if(use_mp)
-          set(${listname} "/MP ${${listname}}")
-          set(${listname} "/MP ${${listname}}")
+        if( use_mp )
+          set( ${listname} "/MP ${${listname}}" )
+          set( ${listname} "/MP ${${listname}}" )
         endif()
       endforeach()
     endif()
@@ -399,7 +402,7 @@ if( Doxygen_FOUND )
       string( REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP} )
     endif()
   endif()
-      
+
   # Configure the footer of the help website.
   configure_file(
     ${ELASTIX_DOXYGEN_DIR}/DoxygenFooter.html.in
