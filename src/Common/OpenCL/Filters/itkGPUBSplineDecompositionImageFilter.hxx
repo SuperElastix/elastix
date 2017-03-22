@@ -114,7 +114,7 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   const typename GPUOutputImage::SizeType outSize
     = otPtr->GetLargestPossibleRegion().GetSize();
   const typename GPUInputImage::SizeType dataLength
-                                                   = inPtr->GetLargestPossibleRegion().GetSize();
+    = inPtr->GetLargestPossibleRegion().GetSize();
   typename GPUOutputImage::SizeValueType maxLength = 0;
 
   for( std::size_t n = 0; n < InputImageDimension; n++ )
@@ -177,37 +177,39 @@ GPUBSplineDecompositionImageFilter< TInputImage, TOutputImage >
       unsigned int imageSize1D[ 2 ];
       imageSize1D[ 0 ] = imageSize[ 0 ];
       imageSize1D[ 1 ] = 0;
-      this->m_GPUKernelManager->SetKernelArg(
-      this->m_FilterGPUKernelHandle, argidx++, sizeof( cl_uint2 ), &imageSize1D );
+      this->m_GPUKernelManager->SetKernelArg( this->m_FilterGPUKernelHandle,
+        argidx++, sizeof( cl_uint2 ), &imageSize1D );
       break;
     case 2:
-      this->m_GPUKernelManager->SetKernelArg(
-      this->m_FilterGPUKernelHandle, argidx++, sizeof( cl_uint2 ), &imageSize );
+      this->m_GPUKernelManager->SetKernelArg( this->m_FilterGPUKernelHandle,
+        argidx++, sizeof( cl_uint2 ), &imageSize );
       break;
     case 3:
-      this->m_GPUKernelManager->SetKernelArg(
-      this->m_FilterGPUKernelHandle, argidx++, sizeof( cl_uint3 ), &imageSize );
+      this->m_GPUKernelManager->SetKernelArg( this->m_FilterGPUKernelHandle,
+        argidx++, sizeof( cl_uint3 ), &imageSize );
       break;
   }
 
   // Set poles calculated for a given spline order
   float spline_poles[ 2 ];
-  if( this->m_NumberOfPoles == 1 )
+  const int itkNumberOfPoles = this->GetNumberOfPoles();
+  const SplinePolesVectorType itkSplinePoles = this->GetSplinePoles();
+  if( itkNumberOfPoles == 1 )
   {
-    spline_poles[ 0 ] = static_cast< float >( this->m_SplinePoles[ 0 ] );
+    spline_poles[ 0 ] = static_cast< float >( itkSplinePoles[ 0 ] );
     spline_poles[ 1 ] = 0.0;
   }
-  else if( this->m_NumberOfPoles == 2 )
+  else if( itkNumberOfPoles == 2 )
   {
-    spline_poles[ 0 ] = static_cast< float >( this->m_SplinePoles[ 0 ] );
-    spline_poles[ 1 ] = static_cast< float >( this->m_SplinePoles[ 1 ] );
+    spline_poles[ 0 ] = static_cast< float >( itkSplinePoles[ 0 ] );
+    spline_poles[ 1 ] = static_cast< float >( itkSplinePoles[ 1 ] );
   }
   this->m_GPUKernelManager->SetKernelArg(
     this->m_FilterGPUKernelHandle, argidx++, sizeof( cl_float2 ), &spline_poles );
 
   // Set m_NumberOfPoles
   this->m_GPUKernelManager->SetKernelArg(
-    this->m_FilterGPUKernelHandle, argidx++, sizeof( cl_int ), &this->m_NumberOfPoles );
+    this->m_FilterGPUKernelHandle, argidx++, sizeof( cl_int ), &itkNumberOfPoles );
 
   // Loop over directions
   OpenCLEventList eventList;

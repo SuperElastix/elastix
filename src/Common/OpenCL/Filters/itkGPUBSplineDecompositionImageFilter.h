@@ -62,6 +62,7 @@ public:
   /** Superclass typedefs. */
   typedef typename GPUSuperclass::OutputImageRegionType OutputImageRegionType;
   typedef typename GPUSuperclass::OutputImagePixelType  OutputImagePixelType;
+  typedef typename GPUSuperclass::SplinePolesVectorType SplinePolesVectorType;
 
   /** Some convenient typedefs. */
   typedef TInputImage                           InputImageType;
