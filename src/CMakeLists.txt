@@ -163,13 +163,6 @@ set( ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH
   "directories with user defined elastix components" )
 
 #---------------------------------------------------------------------
-# elastix depends on some ITK settings
-
-if( NOT ITKReview_LOADED )
-  message( SEND_ERROR "Module_ITKReview has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
-endif()
-
-#---------------------------------------------------------------------
 # If IDE supports it, do use folder view.
 # gcc automatically ignores it. VC Express does not support and gives
 # annoying warnings when this option is turned on.
