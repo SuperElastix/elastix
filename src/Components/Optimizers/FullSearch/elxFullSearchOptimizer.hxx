@@ -268,23 +268,29 @@ FullSearch< TElastix >
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
   /** Write the optimization surface to disk */
-  try
+  bool writeSurfaceEachResolution = false;
+  this->GetConfiguration()->ReadParameter(writeSurfaceEachResolution,
+      "WriteOptimizationSurfaceEachResolution", 0, false);
+  if (writeSurfaceEachResolution)
   {
-    this->m_OptimizationSurface->Write();
-    elxout
-      << "\nThe scanned optimization surface is saved as: "
-      << this->m_OptimizationSurface->GetOutputFileName()
-      << std::endl;
-  }
-  catch( itk::ExceptionObject & err )
-  {
-    xl::xout[ "error" ]
-      << "ERROR: Saving "
-      << this->m_OptimizationSurface->GetOutputFileName()
-      << " failed."
-      << std::endl;
-    xl::xout[ "error" ] << err << std::endl;
-    // do not throw an error, since we would like to go on.
+      try
+      {
+        this->m_OptimizationSurface->Write();
+        elxout
+          << "\nThe scanned optimization surface is saved as: "
+          << this->m_OptimizationSurface->GetOutputFileName()
+          << std::endl;
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        xl::xout[ "error" ]
+          << "ERROR: Saving "
+          << this->m_OptimizationSurface->GetOutputFileName()
+          << " failed."
+          << std::endl;
+        xl::xout[ "error" ] << err << std::endl;
+        // do not throw an error, since we would like to go on.
+      }
   }
 
   /** Print the best metric value */
