@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __elxFullSearchOptimizer_hxx
 #define __elxFullSearchOptimizer_hxx
 
@@ -269,28 +268,28 @@ FullSearch< TElastix >
 
   /** Write the optimization surface to disk */
   bool writeSurfaceEachResolution = false;
-  this->GetConfiguration()->ReadParameter(writeSurfaceEachResolution,
-      "WriteOptimizationSurfaceEachResolution", 0, false);
-  if (writeSurfaceEachResolution)
+  this->GetConfiguration()->ReadParameter( writeSurfaceEachResolution,
+      "WriteOptimizationSurfaceEachResolution", 0, false );
+  if( writeSurfaceEachResolution )
   {
-      try
-      {
-        this->m_OptimizationSurface->Write();
-        elxout
-          << "\nThe scanned optimization surface is saved as: "
-          << this->m_OptimizationSurface->GetOutputFileName()
-          << std::endl;
-      }
-      catch( itk::ExceptionObject & err )
-      {
-        xl::xout[ "error" ]
-          << "ERROR: Saving "
-          << this->m_OptimizationSurface->GetOutputFileName()
-          << " failed."
-          << std::endl;
-        xl::xout[ "error" ] << err << std::endl;
-        // do not throw an error, since we would like to go on.
-      }
+    try
+    {
+      this->m_OptimizationSurface->Write();
+      elxout
+        << "\nThe scanned optimization surface is saved as: "
+        << this->m_OptimizationSurface->GetOutputFileName()
+        << std::endl;
+    }
+    catch( itk::ExceptionObject & err )
+    {
+      xl::xout[ "error" ]
+        << "ERROR: Saving "
+        << this->m_OptimizationSurface->GetOutputFileName()
+        << " failed."
+        << std::endl;
+      xl::xout[ "error" ] << err << std::endl;
+      // do not throw an error, since we would like to go on.
+    }
   }
 
   /** Print the best metric value */
