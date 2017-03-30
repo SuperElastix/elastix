@@ -3,7 +3,7 @@
 #define vnl_adjugate_fixed_h_
 //:
 // \file
-// \brief Calculates adjugate or cofactor matrix of a small vnl_matrix_fixed. 
+// \brief Calculates adjugate or cofactor matrix of a small vnl_matrix_fixed.
 // Code is only a small adaptation from Peter Vanroose's vnl_inverse.h
 // adjugate == inverse/det
 // cofactor == adjugate^T

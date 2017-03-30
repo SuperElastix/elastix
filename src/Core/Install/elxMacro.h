@@ -292,9 +292,9 @@ public: \
 #      define ELASTIXLIB_API __declspec( dllimport )
 #    endif
 #  else
-#    define ELASTIXLIB_API 
+#    define ELASTIXLIB_API
 #  endif
-#else 
+#else
 #  if ( __GNUC__ >= 4 || defined( __clang__ ) )
 #    define ELASTIXLIB_API __attribute__ ( ( visibility( "default" ) ) )
 #  else

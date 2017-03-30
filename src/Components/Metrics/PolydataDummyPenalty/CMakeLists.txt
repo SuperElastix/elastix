@@ -3,6 +3,6 @@ ADD_ELXCOMPONENT( PolydataDummyPenalty OFF
  elxPolydataDummyPenalty.h
  elxPolydataDummyPenalty.hxx
  itkPolydataDummyPenalty.h
- itkPolydataDummyPenalty.hxx 
+ itkPolydataDummyPenalty.hxx
 )
 

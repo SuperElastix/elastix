@@ -329,10 +329,10 @@ ElastixFilter< TFixedImage, TMovingImage >
 {
   if( this->HasOutput( "TransformParameterObject") )
   {
-    return itkDynamicCastInDebugMode< ParameterObjectType * >( itk::ProcessObject::GetOutput( "TransformParameterObject" ) );    
+    return itkDynamicCastInDebugMode< ParameterObjectType * >( itk::ProcessObject::GetOutput( "TransformParameterObject" ) );
   }
 
-  itkExceptionMacro( "TransformParameterObject has not been generated. Update() ElastixFilter before requesting this output.")  
+  itkExceptionMacro( "TransformParameterObject has not been generated. Update() ElastixFilter before requesting this output.")
 }
 
 /**
@@ -346,10 +346,10 @@ ElastixFilter< TFixedImage, TMovingImage >
 {
   if( this->HasOutput( "TransformParameterObject") )
   {
-    return itkDynamicCastInDebugMode< const ParameterObjectType * >( itk::ProcessObject::GetOutput( "TransformParameterObject" ) );    
+    return itkDynamicCastInDebugMode< const ParameterObjectType * >( itk::ProcessObject::GetOutput( "TransformParameterObject" ) );
   }
 
-  itkExceptionMacro( "TransformParameterObject has not been generated. Update() ElastixFilter before requesting this output.")  
+  itkExceptionMacro( "TransformParameterObject has not been generated. Update() ElastixFilter before requesting this output.")
 }
 
 /**
