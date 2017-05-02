@@ -8,6 +8,7 @@ if( POLICY CMP0033 )
 endif()
 
 cmake_policy( SET CMP0007 OLD )
+cmake_policy( SET CMP0042 NEW )
 
 #---------------------------------------------------------------------
 project( elastix )

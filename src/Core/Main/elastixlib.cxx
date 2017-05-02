@@ -108,8 +108,7 @@ ELASTIX::RegisterImages(
   bool performLogging,
   bool performCout,
   ImagePointer fixedMask,
-  ImagePointer movingMask,
-  initialTransform )
+  ImagePointer movingMask )
 {
   std::vector< ParameterMapType > parameterMaps( 1 );
   parameterMaps[ 0 ] = parameterMap;
@@ -118,8 +117,7 @@ ELASTIX::RegisterImages(
     parameterMaps,
     outputPath,
     performLogging, performCout,
-    fixedMask, movingMask,
-    transform );
+    fixedMask, movingMask );
 
 } // end RegisterImages()
 
@@ -137,8 +135,7 @@ ELASTIX::RegisterImages(
   bool performLogging,
   bool performCout,
   ImagePointer fixedMask,
-  ImagePointer movingMask,
-  transform )
+  ImagePointer movingMask )
 {
   /** Some typedef's. */
   typedef elx::ElastixMain                            ElastixMainType;
@@ -162,6 +159,7 @@ ELASTIX::RegisterImages(
   /** Some declarations and initialisations. */
   ElastixMainVectorType elastices;
 
+  ObjectPointer              transform            = 0;
   DataObjectContainerPointer fixedImageContainer  = 0;
   DataObjectContainerPointer movingImageContainer = 0;
   DataObjectContainerPointer fixedMaskContainer   = 0;

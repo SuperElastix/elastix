@@ -47,9 +47,6 @@ public:
   typedef itk::ParameterFileParser::ParameterMapType                ParameterMapType;
   typedef std::vector< itk::ParameterFileParser::ParameterMapType > ParameterMapListType;
 
-  //typedefs for ObjectPointer
-  typedef elastix::ElastixMain::ObjectPointer                       ObjectPointer;
-
   /**
    *  Constructor and destructor
    */
@@ -88,8 +85,7 @@ public:
     bool performLogging,
     bool performCout,
     ImagePointer fixedMask = 0,
-    ImagePointer movingMask = 0,
-    ObjectPointer transform = 0 );
+    ImagePointer movingMask = 0 );
 
   int RegisterImages( ImagePointer fixedImage,
     ImagePointer movingImage,
@@ -98,8 +94,7 @@ public:
     bool performLogging,
     bool performCout,
     ImagePointer fixedMask = 0,
-    ImagePointer movingMask = 0,
-    ObjectPointer transform = 0 );
+    ImagePointer movingMask = 0 );
 
   /** Getter for result image. */
   ImagePointer GetResultImage( void );
