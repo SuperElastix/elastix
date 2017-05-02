@@ -19,6 +19,7 @@ configure_file(
 include_directories(
   ${ANN_SOURCE_DIR}/include
   ${ANN_SOURCE_DIR}/src
+  ${elastix_BINARY_DIR}/ANN
 )
 
 # Sources of non-templated classes.
