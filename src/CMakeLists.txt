@@ -77,7 +77,7 @@ endif()
 #---------------------------------------------------------------------
 # Find Eigen
 mark_as_advanced( ELASTIX_USE_EIGEN )
-option( ELASTIX_USE_EIGEN "Use Eigen library" OFF )
+option( ELASTIX_USE_EIGEN "Use Eigen library." OFF )
 
 if( ELASTIX_USE_EIGEN )
   find_package( Eigen3 REQUIRED )
@@ -87,14 +87,18 @@ endif()
 
 #---------------------------------------------------------------------
 # Find OpenMP
-find_package( OpenMP QUIET )
+mark_as_advanced( ELASTIX_USE_OPENMP )
+option( ELASTIX_USE_OPENMP "Use OpenMP to speed up certain computations." ON )
 
-if( OPENMP_FOUND )
-  set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}" )
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}" )
-  #  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}
-  #  ${OpenMP_EXE_LINKER_FLAGS}")
-  add_definitions( -DELASTIX_USE_OPENMP )
+if( ELASTIX_USE_OPENMP )
+  find_package( OpenMP QUIET )
+  if( OPENMP_FOUND )
+    set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}" )
+    #  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}
+    #  ${OpenMP_EXE_LINKER_FLAGS}")
+    add_definitions( -DELASTIX_USE_OPENMP )
+  endif()
 endif()
 
 #----------------------------------------------------------------------
