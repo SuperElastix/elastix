@@ -6,11 +6,6 @@ project( elxCommon )
 
 add_subdirectory( ParameterFileParser )
 add_subdirectory( xout )
-
-if( USE_KNNGraphAlphaMutualInformationMetric )
-  add_subdirectory( KNN )
-endif()
-
 add_subdirectory( MevisDicomTiff )
 
 if( ELASTIX_USE_OPENCL )

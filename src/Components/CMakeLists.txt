@@ -176,7 +176,7 @@ set( USE_ALL_COMPONENTS OFF CACHE BOOL "Compile all components" )
 # Initialize the list of link libs.
 set( AllComponentLibs "" CACHE INTERNAL "All component libraries for elastix/transformix"  )
 
-file( GLOB_RECURSE ListOfComponents "*/CMakeLists.txt" )
+file( GLOB ListOfComponents "*/*/CMakeLists.txt" )
 
 foreach( component ${ListOfComponents} )
   get_filename_component( path_to_comp ${component} PATH )
