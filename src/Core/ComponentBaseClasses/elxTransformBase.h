@@ -346,14 +346,14 @@ private:
   /** Boolean to decide whether or not the transform parameters are written. */
   bool m_ReadWriteTransformParameters;
 
-  std::string GetInitialTransformParametersFileName() const
+  std::string GetInitialTransformParametersFileName( void ) const
   {
-    if (!this->GetInitialTransform())
+    if( !this->GetInitialTransform() )
     {
       return "NoInitialTransform";
     }
 
-    const Self* t0 = dynamic_cast<const Self *>(this->GetInitialTransform());
+    const Self * t0 = dynamic_cast<const Self *>( this->GetInitialTransform() );
     return t0->GetTransformParametersFileName();
   }
 
