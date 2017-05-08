@@ -11,6 +11,12 @@ cmake_policy( SET CMP0007 OLD )
 cmake_policy( SET CMP0042 NEW )
 
 #---------------------------------------------------------------------
+# With the move of the main CMakeLists to the main directory, instead
+# in /src, we need to redefine the elastix_SOURCE_DIR, since all CMake
+# files have been created with src in mind.
+set( elastix_SOURCE_DIR ${elastix_SOURCE_DIR}/src )
+
+#---------------------------------------------------------------------
 # Generate executable, static library or dynamic library.
 mark_as_advanced( ELASTIX_BUILD_EXECUTABLE )
 option( ELASTIX_BUILD_EXECUTABLE "Generate executable or library?" ON )
