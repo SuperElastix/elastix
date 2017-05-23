@@ -85,6 +85,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Threading related variables. */
   this->m_UseMetricSingleThreaded = true;
+  this->m_UseMultiThread = false;
   this->m_Threader->SetUseThreadPool( false ); // setting to true makes elastix hang
                                                // at a WaitForSingleMethodThread()
 
