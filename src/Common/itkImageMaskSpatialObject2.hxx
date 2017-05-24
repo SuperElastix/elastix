@@ -167,7 +167,7 @@ ImageMaskSpatialObject2< TDimension >
   PixelType    outsideValue = NumericTraits< PixelType >::Zero;
 
   // Initialize index and size in case image only consists of background values.
-  for(unsigned int axis = 0; axis < ImageType::ImageDimension; ++axis)
+  for( unsigned int axis = 0; axis < ImageType::ImageDimension; ++axis )
   {
     index[ axis ] = 0;
     size[ axis ] = 0;
