@@ -8,6 +8,7 @@ env:
     ITK_URL=https://github.com/InsightSoftwareConsortium/ITK
     ITK_SOURCE_DIR=${HOME_DIR}/ITK-source
     ITK_BUILD_DIR=${HOME_DIR}/ITK-build
+    OMP_NUM_THREADS=2
 
 cache:
   directories:
@@ -30,7 +31,6 @@ matrix:
       compiler: gcc
 
 before_script:
-  - export OMP_NUM_THREADS=2
   - mkdir -p ${ELASTIX_BUILD_DIR}
 
 script:
