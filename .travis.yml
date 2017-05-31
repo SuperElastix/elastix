@@ -1,0 +1,51 @@
+language: cpp
+
+env:
+  global:
+    HOME_DIR=${TRAVIS_BUILD_DIR}/..
+    ELASTIX_SOURCE_DIR=${TRAVIS_BUILD_DIR}
+    ELASTIX_BUILD_DIR=${HOME_DIR}/elastix-build
+    ITK_URL=https://github.com/InsightSoftwareConsortium/ITK
+    ITK_SOURCE_DIR=${HOME_DIR}/ITK-source
+    ITK_BUILD_DIR=${HOME_DIR}/ITK-build
+    OMP_NUM_THREADS=2
+
+cache:
+  directories:
+    - ${ITK_SOURCE_DIR}
+    - ${ITK_BUILD_DIR}
+    
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: gcc
+    - os: osx
+      compiler: clang
+    - os: osx
+      compiler: gcc
+
+before_script:
+  - mkdir -p ${ELASTIX_BUILD_DIR}
+
+script:
+  - if [[ ! -e ${ITK_BUILD_DIR}/ITKConfig.cmake ]]; then
+      rm -rf ${ITK_SOURCE_DIR} {ITK_BUILD_DIR} &&
+      git clone ${ITK_URL} ${ITK_SOURCE_DIR} &&
+      cd ${ITK_SOURCE_DIR} &&
+      git checkout v4.11.1 &&
+      mkdir -p ${ITK_BUILD_DIR} &&
+      cd ${ITK_BUILD_DIR} &&
+      cmake -DBUILD_EXAMPLES=OFF -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF -DITKGroup_IO:BOOL=ON -DModule_ITKDistanceMap:BOOL=ON -DModule_ITKImageFusion:BOOL=ON -DModule_ITKLabelMap:BOOL:=ON -DModule_ITKMathematicalMorphology:BOOL=ON -DModule_ITKOptimizers:BOOL=ON -DModule_ITKOptimizersv4:BOOL=ON -DModule_ITKRegistrationCommon:BOOL=ON -DModule_ITKVideoIO:BOOL=ON-DCMAKE_BUILD_TYPE=Release ${ITK_SOURCE_DIR} &&
+      make --jobs=4 && 
+      touch ${HOME}/built_cache; fi
+  - if [[ ! -e ${HOME_DIR}/built_cache ]]; then
+      cd ${ELASTIX_BUILD_DIR} &&
+      cmake -DITK_DIR=${ITK_BUILD_DIR} -DCMAKE_BUILD_TYPE=Release ${ELASTIX_SOURCE_DIR} &&
+      make --jobs=4 && 
+      ctest --jobs=4; fi

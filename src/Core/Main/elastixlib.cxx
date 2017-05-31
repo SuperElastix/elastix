@@ -48,7 +48,8 @@ namespace elastix
 
 ELASTIX::ELASTIX() :
   m_ResultImage( 0 )
-{} // end Constructor
+{
+} // end Constructor
 
 
 /**
@@ -135,7 +136,8 @@ ELASTIX::RegisterImages(
   bool performLogging,
   bool performCout,
   ImagePointer fixedMask,
-  ImagePointer movingMask )
+  ImagePointer movingMask,
+  ObjectPointer transform)
 {
   /** Some typedef's. */
   typedef elx::ElastixMain                            ElastixMainType;
@@ -159,7 +161,7 @@ ELASTIX::RegisterImages(
   /** Some declarations and initialisations. */
   ElastixMainVectorType elastices;
 
-  ObjectPointer              transform            = 0;
+  //ObjectPointer              transform = 0;
   DataObjectContainerPointer fixedImageContainer  = 0;
   DataObjectContainerPointer movingImageContainer = 0;
   DataObjectContainerPointer fixedMaskContainer   = 0;

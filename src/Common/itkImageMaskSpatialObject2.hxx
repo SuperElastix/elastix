@@ -166,6 +166,13 @@ ImageMaskSpatialObject2< TDimension >
   ImagePointer image        = this->GetImage();
   PixelType    outsideValue = NumericTraits< PixelType >::Zero;
 
+  // Initialize index and size in case image only consists of background values.
+  for( unsigned int axis = 0; axis < ImageType::ImageDimension; ++axis )
+  {
+    index[ axis ] = 0;
+    size[ axis ] = 0;
+  }
+
   /** For 3D a smart implementation existed in the ITK already. */
   if( ImageType::ImageDimension == 3 )
   {
