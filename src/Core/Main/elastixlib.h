@@ -24,6 +24,8 @@
 #include <itkDataObject.h>
 #include "itkParameterFileParser.h"
 #include "elxMacro.h"
+#include "elxElastixMain.h"
+
 
 /********************************************************************************
  *                          *
@@ -46,6 +48,9 @@ public:
   typedef itk::ParameterFileParser::ParameterValuesType             ParameterValuesType;
   typedef itk::ParameterFileParser::ParameterMapType                ParameterMapType;
   typedef std::vector< itk::ParameterFileParser::ParameterMapType > ParameterMapListType;
+
+  //typedefs for ObjectPointer
+  typedef elastix::ElastixMain::ObjectPointer              ObjectPointer;
 
   /**
    *  Constructor and destructor
@@ -94,7 +99,8 @@ public:
     bool performLogging,
     bool performCout,
     ImagePointer fixedMask = 0,
-    ImagePointer movingMask = 0 );
+    ImagePointer movingMask = 0,
+    ObjectPointer transform = 0);
 
   /** Getter for result image. */
   ImagePointer GetResultImage( void );
