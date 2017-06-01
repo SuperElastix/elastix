@@ -127,7 +127,6 @@ def main():
 
   # Run the nightly dashboard!
   #
-  # This one probably goes wrong with new clean checkout, since ...
   command = [ "ctest", "-C", options.C, "-S", local_dash, "-V" ];
   flog.write( ' '.join( command ) ); flog.write( '\n' );
   subprocess.call( command, stdout = flog, stderr = subprocess.STDOUT );
