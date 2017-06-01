@@ -69,7 +69,7 @@ endif()
 
 # Select a source directory name.
 if( NOT DEFINED CTEST_SOURCE_DIRECTORY )
-  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/elastix/src" )
+  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/elastix" )
 endif()
 
 # Select a build directory name.
