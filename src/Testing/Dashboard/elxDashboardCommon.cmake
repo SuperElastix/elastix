@@ -57,9 +57,14 @@ if( NOT DEFINED CTEST_BUILD_CONFIGURATION )
   set( CTEST_BUILD_CONFIGURATION Release )
 endif()
 
-# Select svn source to use.
-if( NOT DEFINED dashboard_url )
-  set( dashboard_url "https://svn.bigr.nl/elastix/trunkpublic" )
+# Select git source to use.
+if( NOT DEFINED dashboard_git_url )
+  set( dashboard_git_url "git://github.com/SuperElastix/elastix.git" )
+endif()
+
+# Select branch to use
+if( NOT DEFINED dashboard_git_branch )
+  set( dashboard_git_branch develop )
 endif()
 
 # Select a source directory name.
@@ -79,6 +84,16 @@ if( NOT DEFINED CTEST_UPDATE_COMMAND )
     HINTS "C:/cygwin/bin/" )
 endif()
 
+# Look for a GIT command-line client.
+if( NOT DEFINED CTEST_GIT_COMMAND )
+  find_program( CTEST_GIT_COMMAND
+    NAMES git git.cmd
+    HINTS "C:/Program Files/Git/bin/" )
+endif()
+if( NOT DEFINED CTEST_GIT_COMMAND )
+  message( FATAL_ERROR "No Git Found." )
+endif()
+
 # Look for a coverage command-line client.
 if( NOT DEFINED CTEST_COVERAGE_COMMAND )
   find_program( CTEST_COVERAGE_COMMAND gcov )
@@ -90,13 +105,13 @@ if( NOT DEFINED CTEST_MEMORYCHECK_COMMAND )
 endif()
 
 # Support initial checkout if necessary;
-if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}/CTestConfig.cmake"
+if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
-    AND CTEST_UPDATE_COMMAND )
+    AND CTEST_GIT_COMMAND )
 
-  # checkout command; NB: --trust-server-cert is only supported in newer subversions;
-   set( CTEST_CHECKOUT_COMMAND
-     "\"${CTEST_UPDATE_COMMAND}\" --non-interactive --trust-server-cert co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
+  # Assume git version 1.6.5 or higher, which has git clone -b option.
+  set( CTEST_CHECKOUT_COMMAND
+     "\"${CTEST_GIT_COMMAND}\" clone -b ${dashboard_git_branch} \"${dashboard_git_url}\" \"${CTEST_ITKTOOLS_DIRECTORY}\"" )
 
   # CTest delayed initialization is broken, so we copy the
   # CTestConfig.cmake info here.
@@ -139,6 +154,8 @@ foreach( v
   CTEST_COVERAGE_COMMAND
   CTEST_MEMORYCHECK_COMMAND
   CTEST_SCRIPT_DIRECTORY
+  dashboard_git_url
+  dashboard_git_branch
   dashboard_model
   )
   set( vars "${vars}  ${v}=[${${v}}]\n" )
@@ -150,13 +167,19 @@ set( ENV{LC_ALL} C )
 
 # Helper macro to write the initial cache.
 macro( write_cache )
+set( cache_build_type "" )
+  set( cache_make_program "" )
   if( CTEST_CMAKE_GENERATOR MATCHES "Make" )
     set( cache_build_type CMAKE_BUILD_TYPE:STRING=${CTEST_BUILD_CONFIGURATION} )
+    if( CMAKE_MAKE_PROGRAM )
+      set( cache_make_program CMAKE_MAKE_PROGRAM:FILEPATH=${CMAKE_MAKE_PROGRAM} )
+    endif()
   endif()
   file( WRITE ${CTEST_BINARY_DIRECTORY}/CMakeCache.txt "
 SITE:STRING=${CTEST_SITE}
 BUILDNAME:STRING=${CTEST_BUILD_NAME}
 ${cache_build_type}
+${cache_make_program}
 ${dashboard_cache}
 ")
 endmacro()
