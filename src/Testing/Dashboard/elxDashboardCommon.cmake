@@ -59,7 +59,7 @@ endif()
 
 # Select git source to use.
 if( NOT DEFINED dashboard_git_url )
-  set( dashboard_git_url "git://github.com/SuperElastix/elastix.git" )
+  set( dashboard_git_url "https://github.com/SuperElastix/elastix.git" )
 endif()
 
 # Select branch to use
@@ -69,7 +69,7 @@ endif()
 
 # Select a source directory name.
 if( NOT DEFINED CTEST_SOURCE_DIRECTORY )
-  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}" )
+  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/elastix/src" )
 endif()
 
 # Select a build directory name.
@@ -80,8 +80,8 @@ make_directory( ${CTEST_BINARY_DIRECTORY} )
 
 # Look for a Subversion command-line client.
 if( NOT DEFINED CTEST_UPDATE_COMMAND )
-  find_program( CTEST_UPDATE_COMMAND svn
-    HINTS "C:/cygwin/bin/" )
+  find_program( CTEST_UPDATE_COMMAND git git.cmd
+    HINTS "C:/Program Files/Git/bin/" )
 endif()
 
 # Look for a GIT command-line client.
@@ -111,7 +111,7 @@ if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
 
   # Assume git version 1.6.5 or higher, which has git clone -b option.
   set( CTEST_CHECKOUT_COMMAND
-     "\"${CTEST_GIT_COMMAND}\" clone -b ${dashboard_git_branch} \"${dashboard_git_url}\" \"${CTEST_ITKTOOLS_DIRECTORY}\"" )
+     "\"${CTEST_GIT_COMMAND}\" clone -b ${dashboard_git_branch} \"${dashboard_git_url}\" \"${CTEST_DASHBOARD_ROOT}/elastix\"" )
 
   # CTest delayed initialization is broken, so we copy the
   # CTestConfig.cmake info here.
