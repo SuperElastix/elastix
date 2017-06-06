@@ -81,11 +81,14 @@ def main():
 
   # Check if required executables can be found
   for exe in [ 'svn', 'git', 'ctest' ] :
-    if shutil.which( exe ) == None :
-      message = "ERROR: unable to find executable: " + exe;
-      print( message );
-      flog.write( message );
-      exit();
+    # Since whutil.which() only exists from python 3.3 we use try
+    try :
+      if shutil.which( exe ) == None :
+        message = "ERROR: unable to find executable: " + exe;
+        print( message );
+        flog.write( message );
+        exit();
+    except : pass;
 
   # Remote. Define the remote location of the dashboard scripts
   remote        = remote_base + "/branches/" + branch + "/src/Testing/Dashboard";
