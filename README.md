@@ -6,7 +6,7 @@
 
 Welcome to elastix: a toolbox for rigid and nonrigid registration of images.
 
-elastix is open source software, based on the well-known [Insight Segmentation and Registration Toolkit (ITK)](https://itk.org/). The software consists of a collection of algorithms that are commonly used to solve (medical) image registration problems. The modular design of elastix allows the user to quickly configure, test, and compare different registration methods for a specific application. A command-line interface enables automated processing of large numbers of data sets, by means of scripting. Nowadays elastix is accompanied by [SimpleElastix](http://simpleelastix.github.io/), making it available in languages like C++, Python, Java, R, Ruby, Octave, C#, and Lua.
+elastix is open source software, based on the well-known [Insight Segmentation and Registration Toolkit (ITK)](https://itk.org/). The software consists of a collection of algorithms that are commonly used to solve (medical) image registration problems. The modular design of elastix allows the user to quickly configure, test, and compare different registration methods for a specific application. A command-line interface enables automated processing of large numbers of data sets, by means of scripting. Nowadays elastix is accompanied by [SimpleElastix](http://simpleelastix.github.io/), making it available in languages like C++, Python, Java, R, Ruby, C# and Lua.
 
 ## Authors ##
 
