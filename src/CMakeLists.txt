@@ -438,8 +438,8 @@ if( ELASTIX_ENABLE_PACKAGER )
 
   # Also install the copyright file, since when the user enables packaging
   # we assume that the package is meant to distribute.
-  install( FILES "${elastix_SOURCE_DIR}/LICENSE" DESTINATION . )
-  install( FILES "${elastix_SOURCE_DIR}/NOTICE" DESTINATION . )
+  install( FILES "${elastix_SOURCE_DIR}/../LICENSE" DESTINATION . )
+  install( FILES "${elastix_SOURCE_DIR}/../NOTICE" DESTINATION . )
 
   # We have split the elastix package into two components:
   # - the core: elastix and transformix
@@ -488,7 +488,7 @@ if( ELASTIX_ENABLE_PACKAGER )
   #set( CPACK_PACKAGE_DESCRIPTION_FILE
   #  "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt" )
   set( CPACK_RESOURCE_FILE_LICENSE
-	  "${CMAKE_CURRENT_SOURCE_DIR}/NOTICE" )
+	  "${CMAKE_CURRENT_SOURCE_DIR}/../NOTICE" )
 
   # The default install directories: .../elastix_v4.3
   set( CPACK_PACKAGE_INSTALL_DIRECTORY
