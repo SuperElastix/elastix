@@ -18,7 +18,7 @@ IF( EXISTS ${ELASTIX_USE_FILE} )
 ENDIF()
 
 # Build a small test executable (this test is basically the same as
-# the one found in the <elastix-dir>/src/Testing dir.
+# the one found in the <elastix-dir>/Testing dir.
 ADD_EXECUTABLE( elxtimertest itkTimerTest.cxx )
 
 # Link to some libraries
