@@ -20,4 +20,4 @@ If you use this software anywhere we would appreciate if you cite the following 
 
 More information, including an extensive manual, can be found on the website: <http://elastix.isi.uu.nl/>. 
 
-You can also subscribe to the [mailing list](http://lists.bigr.nl/mailman/listinfo/elastix) for questions. Information on contributing to `elastix` can be found [here](CONTRIBUTING.md)
+You can also subscribe to the [mailing list](http://lists.bigr.nl/mailman/listinfo/elastix) for questions. Information on contributing to `elastix` can be found [here](CONTRIBUTING.md).
