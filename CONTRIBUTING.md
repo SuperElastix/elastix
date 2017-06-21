@@ -5,7 +5,7 @@
 
 ### Do you have questions about the source code? ###
 
-* Ask any question about how to use `elastix` on the _mailing list_. You can subscribe to the mailing list [here](http://lists.bigr.nl/mailman/listinfo/elastix), after which you can email elastix@bigr.nl.
+* Ask any question about how to use `elastix` on the _mailing list_. You can subscribe to the mailing list [here](http://lists.bigr.nl/mailman/listinfo/elastix), after which you can email to elastix@bigr.nl.
 
 * Do not open an issue on GitHub for general questions, registration questions, or issues you may have while running `elastix`. _GitHub issues are primarily intended for bug reports and fixes._
 
@@ -30,9 +30,16 @@
 * Open a new [GitHub pull request](https://github.com/SuperElastix/elastix/pull/new/develop) (PR) with the patch.
 
 * Ensure the PR description (log message) _clearly describes the problem and solution_. Include the relevant issue number if applicable. One-line messages are fine for small changes, but bigger changes should look like this:  
-    $ git commit -m "A brief summary of the commit
+    $ git commit -m "ENH: A brief summary of the commit
     > 
     > A paragraph describing what changed and its impact."
+
+* We use the following tags for commit messages:
+  - ENH: for functional enhancements of the code
+  - BUG: for fixing runtime issues (crash, segmentation fault, exception, or incorrect result)
+  - COMP: for compilation issues (error or warning)
+  - PERF: for performance improvements
+  - STYLE: a change that does not impact the logic or execution of the code (improve coding style, comments, documentation)
 
 * Ensure the PR adheres to our [coding conventions](#coding-conventions).
 
