@@ -29,6 +29,8 @@
 
 * Open a new [GitHub pull request](https://github.com/SuperElastix/elastix/pull/new/develop) (PR) with the patch.
 
+* Make sure the PR is done with respect to the [develop branch](https://github.com/SuperElastix/elastix/tree/develop).
+
 * Ensure the PR description (log message) _clearly describes the problem and solution_. Include the relevant issue number if applicable. One-line messages are fine for small changes, but bigger changes should look like this:  
     $ git commit -m "ENH: A brief summary of the commit
     > 
@@ -42,6 +44,8 @@
   - STYLE: a change that does not impact the logic or execution of the code (improve coding style, comments, documentation)
 
 * Ensure the PR adheres to our [coding conventions](#coding-conventions).
+
+* We will review your PR and possibly suggest changes. We also have an automatic build and test system checking all PRs ([Travis-CI](https://travis-ci.org/)). When all lights are green, the PR will be merged.
 
 * More information on pull requests can be found [here](https://help.github.com/articles/creating-a-pull-request/) and [here](https://gist.github.com/Chaser324/ce0505fbed06b947d962).
 
