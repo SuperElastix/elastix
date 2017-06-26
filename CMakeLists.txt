@@ -64,6 +64,14 @@ option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
 
 if( ELASTIX_USE_OPENCL )
   find_package( OpenCL REQUIRED QUIET )
+
+  # Make sure ITK is not compiled with GPU extensions on,
+  # since elastix overrides ITK classes with new ones.
+  if( ${ITK_USE_GPU} )
+    message( FATAL_ERROR "ITK_USE_GPU: " ${ITK_USE_GPU}
+      "\nERROR: ITK should be compiled with ITK_USE_GPU OFF, as elastix overrides ITK classes." )
+  endif()
+
   # Force OPENCL_OPTIMIZATION_MAD_ENABLE to on
   if( DEFINED OPENCL_OPTIMIZATION_MAD_ENABLE )
     set( OPENCL_OPTIMIZATION_MAD_ENABLE ON CACHE BOOL
