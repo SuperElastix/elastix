@@ -286,33 +286,6 @@ if( MSVC )
   endif()
 endif()
 
-# Add the /MP flag when compiling with Visual Studio
-set( compile_flag_lists CMAKE_C_FLAGS CMAKE_CXX_FLAGS
-  CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_MINSIZEREL
-  CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
-  CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_MINSIZEREL
-  CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELWITHDEBINFO )
-
-if( WIN32 )
-  if( NOT MINGW )
-    if( CMAKE_GENERATOR MATCHES "^Visual Studio" )
-      option( ELASTIX_USE_MP "Add the /MP for object-file level parallel builds" OFF )
-      mark_as_advanced( ELASTIX_USE_MP )
-      set( use_mp ${ELASTIX_USE_MP} )
-      foreach( listname ${compile_flag_lists} )
-        if( "${${listname}}" MATCHES "/Gm" )
-          set( use_mp OFF )
-          message( AUTHOR_WARNING "/Gm is not compatible with /MP: set ELASTIX_USE_MP to OFF to avoid this warning." )
-        endif()
-        if( use_mp )
-          set( ${listname} "/MP ${${listname}}" )
-          set( ${listname} "/MP ${${listname}}" )
-        endif()
-      endforeach()
-    endif()
-  endif()
-endif()
-
 #---------------------------------------------------------------------
 # Process the sub-directories
 
