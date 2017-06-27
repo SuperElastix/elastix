@@ -58,7 +58,7 @@ main( int argc, char * argv[] )
   u[ 8 ] =  0.0;
   for( unsigned int i = ( size_u + 3 ) / 2; i < size_u; ++i )
   {
-    u[ i ] = -u[ -i + size_u + 1 ];
+    u[ i ] = -u[ size_u + 1 - i ];
   }
 
   /** Time the implementation. */
