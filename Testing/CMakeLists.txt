@@ -193,6 +193,7 @@ macro( trx_add_test name )
 
   # Add the test.
   add_test( NAME ${name} COMMAND ${EXECUTABLE_OUTPUT_PATH}/transformix ${ARGN} -out ${output_dir} )
+  set_tests_properties( ${name} PROPERTIES TIMEOUT 10000 )
 endmacro()
 
 #---------------------------------------------------------------------
@@ -754,6 +755,13 @@ elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
 
+elx_add_run_test( 3DCT_lung.NC.bspline_r.ASGD.001a
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline_r.ASGD.001a.txt )
+
 # Test some metrics
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
@@ -946,48 +954,37 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001-Threads4
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
   -threads 4 )
 
-elx_add_run_test( 3DCT_lung.NC.bspline_r.ASGD.001a
-  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
-  -f ${TestDataDir}/3DCT_lung_baseline.mha
-  -m ${TestDataDir}/3DCT_lung_followup.mha
-  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline_r.ASGD.001a.txt )
-
-
-### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES
-# Checksums defined on windows 64 bit machine LKEB PC Marius
-elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a
+# Test several ASGD options
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a # auto estimation and adaptive stepsize
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt )
 
-elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001b
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001b # auto estimation and no adaptive stepsize
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001b.txt )
 
-elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001c
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001c # manual estimation and adaptive stepsize
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001c.txt )
 
-elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d # manual estimation and no adaptive stepsize
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.txt )
 
-### TRANSFORMIX TESTING TO CHECK MEMORY PROBLEM
+# Test transformix to check memory problem
 trx_add_test( TransformixMemoryTest
   -in ${TestDataDir}/3DCT_lung_baseline_small.mha
   -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
-
-set_tests_properties( TransformixMemoryTest PROPERTIES TIMEOUT 10000 )
 
