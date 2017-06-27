@@ -356,7 +356,7 @@ macro( elx_add_run_test testbasename howtocompare )
       COMMAND elxImageCompare
       -base ${baseline}
       -test ${output_dir}/result.${countp}.mhd
-      -t 1.0 )
+      -t 5 -a 50 )
     set_tests_properties( ${testname}_COMPARE_IM
       PROPERTIES DEPENDS  ${testname}_OUTPUT )
   endif()

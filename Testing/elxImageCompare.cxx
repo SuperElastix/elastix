@@ -158,7 +158,8 @@ main( int argc, char ** argv )
   {
     std::cerr << "There are " << numberOfDifferentPixels
               << " pixels with difference larger than "
-              << allowedTolerance << "!" << std::endl;
+              << diffThreshold
+              << ", while " << allowedTolerance << " are allowed!" << std::endl;
 
     // Create name for diff image
     std::string diffImageFileName
