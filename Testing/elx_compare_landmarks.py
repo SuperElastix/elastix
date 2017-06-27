@@ -132,7 +132,7 @@ def main():
   print( "The landmark distance between current and baseline is:" );
   print( "min   | Q1    | med   | Q3    | max   | mean" );
   print( minDistance + " | " +  Q1 + " | " +  medDistance + " | " +  Q3 + " | " + maxDistance + " | " +  meanDistance  );
-  if float( Q3 ) < threshold :
+  if float( Q3 ) < float( threshold ) :
     print( "SUCCESS: third quartile landmark distance is lower than " + str( threshold ) + " mm" );
     return 0;
   else :
