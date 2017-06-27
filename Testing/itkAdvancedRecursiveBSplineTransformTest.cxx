@@ -48,10 +48,8 @@ main( int argc, char * argv[] )
    */
 #ifndef NDEBUG
   unsigned int N = static_cast< unsigned int >( 1 );
-#elif REDUCEDTEST
-  unsigned int N = static_cast< unsigned int >( 1e5 );
 #else
-  unsigned int N = static_cast< unsigned int >( 1e6 );
+  unsigned int N = static_cast< unsigned int >( 1e5 );
 #endif
   std::cerr << "N = " << N << std::endl;
 
@@ -117,7 +115,7 @@ main( int argc, char * argv[] )
   {
     std::cerr << "ERROR: The file containing the parameters specifies "
               << dimsInPar1 << " dimensions, while this test is compiled for "
-              << Dimension << "dimensions." << std::endl;
+              << Dimension << " dimensions." << std::endl;
     return EXIT_FAILURE;
   }
 
