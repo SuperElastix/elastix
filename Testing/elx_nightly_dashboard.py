@@ -91,7 +91,7 @@ def main():
     except : pass;
 
   # Remote. Define the remote location of the dashboard scripts
-  remote        = remote_base + "/branches/" + branch + "/src/Testing/Dashboard";
+  remote        = remote_base + "/branches/" + branch + "/Testing/Dashboard";
   remote_common = remote + "/elxDashboardCommon.cmake";
   remote_dash   = remote + "/" + options.dashboard_script;
 
