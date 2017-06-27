@@ -21,6 +21,7 @@ def main():
   parser.add_option( "-d", "--directory", dest="directory", help="elastix output directory" );
   parser.add_option( "-f", "--fixedlandmarks", dest="flm", help="fixed image landmarks" );
   parser.add_option( "-b", "--baselinetp", dest="btp", help="baseline transform parameter file" );
+  parser.add_option( "-t", "--threshold", dest="threshold", help="threshold on landmark error" );
 
   (options, args) = parser.parse_args();
 
@@ -31,6 +32,8 @@ def main():
     parser.error( "The option directory (-f) should be given" );
   if options.btp == None :
     parser.error( "The option directory (-b) should be given" );
+  if options.threshold == None : threshold = 0.5;
+  else :                         threshold = options.threshold;
 
   # Get the transform parameters files
   tpFileName   = os.path.join( options.directory, "TransformParameters.0.txt" );
@@ -129,11 +132,11 @@ def main():
   print( "The landmark distance between current and baseline is:" );
   print( "min   | Q1    | med   | Q3    | max   | mean" );
   print( minDistance + " | " +  Q1 + " | " +  medDistance + " | " +  Q3 + " | " + maxDistance + " | " +  meanDistance  );
-  if float( Q3 ) < 0.5 :
-    print( "SUCCESS: third quartile landmark distance is lower than 0.5 mm" );
+  if float( Q3 ) < threshold :
+    print( "SUCCESS: third quartile landmark distance is lower than " + str( threshold ) + " mm" );
     return 0;
   else :
-    print( "FAILURE: third quartile landmark distance is higher than 0.5 mm" );
+    print( "FAILURE: third quartile landmark distance is higher than " + str( threshold ) + " mm" );
     return 1;
 
 #-------------------------------------------------------------------------------
