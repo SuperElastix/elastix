@@ -48,6 +48,9 @@ def main():
     dirList.extend( args );
 
     for directory in dirList :
+      # Skip directories with "Threads" in the name
+      if "Threads" in directory : continue;
+
       # Find the largest TransformParameters.?.txt
       inputFileNames = glob.glob( os.path.join( directory, "TransformParameters.?.txt" ) );
       inputFileNames.sort( reverse = True );
@@ -63,7 +66,7 @@ def main():
 
       # Copy the results as the new baselines, while replacing
       # the initial transform to point to the correct path.
-      f1 = open( inputFileName, 'r' );
+      f1 = open( inputFileName, 'rU' );
       f2 = open( outputFileName, 'w' );
       for oldline in f1 :
         newline = oldline;
