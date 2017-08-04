@@ -46,6 +46,8 @@ ElastixFilter< TFixedImage, TMovingImage >
   this->m_LogToConsole = false;
   this->m_LogToFile    = false;
 
+  this->m_NumberOfThreads = 0;
+
   ParameterObjectPointer defaultParameterObject = ParameterObject::New();
   defaultParameterObject->AddParameterMap( ParameterObject::GetDefaultParameterMap( "translation" ) );
   defaultParameterObject->AddParameterMap( ParameterObject::GetDefaultParameterMap( "affine" ) );
@@ -188,6 +190,12 @@ ElastixFilter< TFixedImage, TMovingImage >
     {
       logFileName = this->GetOutputDirectory() + this->GetLogFileName();
     }
+  }
+
+  // Set Number of threads
+  if( this->m_NumberOfThreads > 0 )
+  {
+    argumentMap.insert( ArgumentMapEntryType( "-threads", ParameterObjectType::ToString( this->m_NumberOfThreads ) ) );
   }
 
   // Setup xout

@@ -162,6 +162,9 @@ public:
   itkGetConstReferenceMacro( LogToFile, bool );
   itkBooleanMacro( LogToFile );
 
+  itkSetMacro( NumberOfThreads, int );
+  itkGetMacro( NumberOfThreads, int );
+
 protected:
 
   ElastixFilter( void );
@@ -197,6 +200,8 @@ private:
 
   bool m_LogToConsole;
   bool m_LogToFile;
+
+  int m_NumberOfThreads;
 
   unsigned int m_InputUID;
 
