@@ -1,0 +1,25 @@
+branches:
+ only:
+ - add-appveyor
+os:
+  - Visual Studio 2013
+shallow_clone: false
+skip_tags: true
+clone_folder: c:\elastix-source
+configuration:
+  - Release
+platform:
+  - x64
+environment:
+  ELASTIX_SOURCE_DIR: c:\elastix-source
+  ELASTIX_BUILD_DIR: c:\elastix-build
+  ITK_URL: https://github.com/InsightSoftwareConsortium/ITK
+  ITK_SOURCE_DIR: c:\ITK-source
+  ITK_BUILD_DIR: c:\ITK-build
+cache:
+  - '%ITK_SOURCE_DIR%'
+  - '%ITK_BUILD_DIR%'
+build_script:
+  - cmd: git clone %ITK_URL% %ITK_SOURCE_DIR% && cd %ITK_SOURCE_DIR% && git checkout v4.11.1
+  - cmd: mkdir -p %ITK_BUILD_DIR% && cd %ITK_BUILD_DIR% && cmake -G "Visual Studio 12 2013 Win64" -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF -DITKGroup_IO:BOOL=ON -DModule_ITKDistanceMap:BOOL=ON -DModule_ITKImageFusion:BOOL=ON -DModule_ITKLabelMap:BOOL:=ON -DModule_ITKMathematicalMorphology:BOOL=ON -DModule_ITKOptimizers:BOOL=ON -DModule_ITKOptimizersv4:BOOL=ON -DModule_ITKRegistrationCommon:BOOL=ON -DModule_ITKVideoIO:BOOL=ON-DCMAKE_BUILD_TYPE=Release %ITK_SOURCE_DIR% && cmake --build . --config Release -- /m
+  - cmd: mkdir -p %ELASTIX_BUILD_DIR% && cd %ELASTIX_BUILD_DIR% && cmake -G "Visual Studio 12 2013 Win64" -DITK_DIR=%ITK_BUILD_DIR% -DCMAKE_BUILD_TYPE=Release %ELASTIX_SOURCE_DIR% && cmake --build . --config Release -- /m && ctest -j4 -VV -C Release
