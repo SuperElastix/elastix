@@ -218,8 +218,37 @@ TransformixFilter< TMovingImage >
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }
+  // Optionally, save result deformation field
+  DataObjectContainerPointer resultDeformationFieldContainer = transformix->GetResultDeformationFieldContainer();
+  if (resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0)
+  {
+    this->GraftOutput("ResultDeformationField", resultDeformationFieldContainer->ElementAt(0));
+  }
 } // end GenerateData()
 
+
+/**
+*
+*/
+template< typename TMovingImage >
+typename TransformixFilter< TMovingImage >::DataObjectPointer
+TransformixFilter< TMovingImage >
+::MakeOutput(const DataObjectIdentifierType & key)
+{
+  if (key == "ResultImage")
+  {
+    return TMovingImage::New().GetPointer();
+  }
+  else if (key == "ResultDeformationField")
+  {
+    return OutputDeformationFieldType::New().GetPointer();
+  }
+  else
+  {
+    // Primary and all other outputs default to ResultImage.
+    return TMovingImage::New().GetPointer();
+  }
+}
 
 /**
  * ********************* SetInput *********************
@@ -297,6 +326,31 @@ TransformixFilter< TMovingImage >
 {
   return dynamic_cast< const ParameterObjectType * >( this->GetInput( "TransformParameterObject" ) );
 } // end GetTransformParameterObject()
+
+
+/**
+*  ********************* GetOutputDeformationField *********************
+*/
+template< typename TMovingImage >
+typename TransformixFilter< TMovingImage >::OutputDeformationFieldType *
+TransformixFilter< TMovingImage >
+::GetOutputDeformationField()
+{
+
+  return itkDynamicCastInDebugMode< OutputDeformationFieldType * >(this->ProcessObject::GetOutput("ResultDeformationField"));
+}
+
+/**
+*  ********************* GetOutputDeformationField *********************
+*/
+template< typename TMovingImage >
+const typename TransformixFilter< TMovingImage >::OutputDeformationFieldType *
+TransformixFilter< TMovingImage >
+::GetOutputDeformationField() const
+{
+
+  return itkDynamicCastInDebugMode< const OutputDeformationFieldType * >(this->ProcessObject::GetOutput("ResultDeformationField"));
+}
 
 
 /**
