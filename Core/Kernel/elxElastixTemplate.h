@@ -151,6 +151,9 @@ public:
   /** Result image */
   typedef itk::DataObject ResultImageType;
 
+  /** Result deformation field */
+  typedef itk::DataObject ResultDeformationFieldType;
+
   /** For using the Dimensions. */
   itkStaticConstMacro( Dimension,       unsigned int, FixedImageType::ImageDimension );
   itkStaticConstMacro( FixedDimension,  unsigned int, FixedImageType::ImageDimension );
@@ -273,6 +276,17 @@ public:
   virtual ResultImageType * GetResultImage( unsigned int idx ) const;
 
   virtual int SetResultImage( DataObjectPointer result_image );
+
+  
+  virtual ResultDeformationFieldType * GetResultDeformationField( void ) const
+  {
+    return this->GetResultDeformationField( 0 );
+  }
+
+
+  virtual ResultDeformationFieldType * GetResultDeformationField( unsigned int idx ) const;
+
+  virtual int SetResultDeformationField( DataObjectPointer result_deformationfield );
 
   /** Main functions:
    * Run() for registration, and ApplyTransform() for just

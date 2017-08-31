@@ -67,7 +67,8 @@ public:
   typedef typename ParameterObjectType::Pointer         ParameterObjectPointer;
   typedef typename ParameterObjectType::ConstPointer    ParameterObjectConstPointer;
 
-  typedef typename itk::Image< itk::Vector< float, TMovingImage::ImageDimension >, TMovingImage::ImageDimension > OutputDeformationFieldType;
+  typedef typename itk::Image< itk::Vector< float, TMovingImage::ImageDimension >, 
+                         TMovingImage::ImageDimension > OutputDeformationFieldType;
 
   typedef typename TMovingImage::Pointer      InputImagePointer;
   typedef typename TMovingImage::ConstPointer InputImageConstPointer;
@@ -106,9 +107,9 @@ public:
 
   const ParameterObjectType * GetTransformParameterObject( void ) const;
 
-  OutputDeformationFieldType * GetOutputDeformationField(void);
+  OutputDeformationFieldType * GetOutputDeformationField( void );
   
-  const OutputDeformationFieldType * GetOutputDeformationField(void) const;
+  const OutputDeformationFieldType * GetOutputDeformationField( void ) const;
 
   /** Set/Get/Remove output directory. */
   itkSetMacro( OutputDirectory, std::string );
@@ -132,7 +133,7 @@ public:
   itkBooleanMacro( LogToFile );
 
   /** To support outputs of different types (i.e. ResultImage and ResultDeformationField) MakeOutput from itk::ImageSource< TOutputImage > needs to be overridden */
-  virtual DataObjectPointer MakeOutput(const DataObjectIdentifierType & key) ITK_OVERRIDE;
+  virtual DataObjectPointer MakeOutput( const DataObjectIdentifierType & key ) ITK_OVERRIDE;
 
 protected:
 

@@ -252,6 +252,10 @@ public:
   elxGetObjectMacro( ResultImageContainer, DataObjectContainerType );
   elxSetObjectMacro( ResultImageContainer, DataObjectContainerType );
 
+  /** Set/Get the result image container. */
+  elxGetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
+  elxSetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
+
   /** Set/Get The Image FileName containers.
    * Normally, these are filled in the BeforeAllBase function.
    */
@@ -288,6 +292,7 @@ public:
   elxGetNumberOfMacro( FixedMaskFileName );
   elxGetNumberOfMacro( MovingMaskFileName );
   elxGetNumberOfMacro( ResultImage );
+  elxGetNumberOfMacro( ResultDeformationField );
 
   /** Set/Get the initial transform
    * The type is ObjectType, but the pointer should actually point
@@ -524,6 +529,9 @@ private:
 
   /** The result image container. These are stored as pointers to itk::DataObject. */
   DataObjectContainerPointer m_ResultImageContainer;
+
+  /** The result deformation field container. These are stored as pointers to itk::DataObject. */
+  DataObjectContainerPointer m_ResultDeformationFieldContainer;
 
   /** The image and mask FileNameContainers. */
   FileNameContainerPointer m_FixedImageFileNameContainer;

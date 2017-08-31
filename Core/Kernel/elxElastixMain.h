@@ -183,8 +183,8 @@ public:
   itkSetObjectMacro( ResultImageContainer, DataObjectContainerType );
   itkGetObjectMacro( ResultImageContainer, DataObjectContainerType );
 
-  itkSetObjectMacro(ResultDeformationFieldContainer, DataObjectContainerType);
-  itkGetObjectMacro(ResultDeformationFieldContainer, DataObjectContainerType);
+  itkSetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
+  itkGetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
 
   /** Set/Get the configuration object. */
   itkSetObjectMacro( Configuration, ConfigurationType );

@@ -192,6 +192,12 @@ public:
   typedef typename ITKBaseType::InputPointType  InputPointType;
   typedef typename ITKBaseType::OutputPointType OutputPointType;
 
+  /** Typedef's for TransformPointsAllPoints. */
+  typedef itk::Vector<
+    float, FixedImageDimension >                      VectorPixelType;
+  typedef itk::Image<
+    VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
+
   /** Typedefs needed for AutomaticScalesEstimation function */
   typedef typename RegistrationType::ITKBaseType      ITKRegistrationType;
   typedef typename ITKRegistrationType::OptimizerType OptimizerType;
@@ -293,7 +299,15 @@ public:
   virtual void TransformPointsSomePointsVTK( const std::string filename ) const;
 
   /** Function to transform all coordinates from fixed to moving image. */
-  virtual void TransformPointsAllPoints( void ) const;
+  /** Legacy note: the function formerly called TransformPointsAllPoints was split into 
+      GenerateDeformationFieldImage for generating and WriteDeformationFieldImage for 
+      writing to disk*/
+  typename DeformationFieldImageType::Pointer GenerateDeformationFieldImage( void ) const;
+
+  void WriteDeformationFieldImage( typename DeformationFieldImageType::Pointer ) const;
+
+  /** Function to transform all coordinates from fixed to moving image. */
+  virtual void TransformPointsAllPoints(void) const;
 
   /** Function to compute the determinant of the spatial Jacobian. */
   virtual void ComputeDeterminantOfSpatialJacobian( void ) const;
