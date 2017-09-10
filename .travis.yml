@@ -47,4 +47,4 @@ script:
       cd ${ELASTIX_BUILD_DIR} &&
       cmake -DITK_DIR=${ITK_BUILD_DIR} -DCMAKE_BUILD_TYPE=Release ${ELASTIX_SOURCE_DIR} &&
       make --jobs=4 && 
-      ctest --jobs=4; fi
+      ctest --jobs=4 --verbose; fi
