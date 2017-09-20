@@ -40,11 +40,11 @@ script:
       git checkout v4.11.1 &&
       mkdir -p ${ITK_BUILD_DIR} &&
       cd ${ITK_BUILD_DIR} &&
-      cmake -DELASTIX_USE_OPENMP=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF -DITKGroup_IO:BOOL=ON -DModule_ITKDistanceMap:BOOL=ON -DModule_ITKImageFusion:BOOL=ON -DModule_ITKLabelMap:BOOL:=ON -DModule_ITKMathematicalMorphology:BOOL=ON -DModule_ITKOptimizers:BOOL=ON -DModule_ITKOptimizersv4:BOOL=ON -DModule_ITKRegistrationCommon:BOOL=ON -DModule_ITKVideoIO:BOOL=ON-DCMAKE_BUILD_TYPE=Release ${ITK_SOURCE_DIR} &&
+      cmake -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF -DITKGroup_IO:BOOL=ON -DModule_ITKDistanceMap:BOOL=ON -DModule_ITKImageFusion:BOOL=ON -DModule_ITKLabelMap:BOOL:=ON -DModule_ITKMathematicalMorphology:BOOL=ON -DModule_ITKOptimizers:BOOL=ON -DModule_ITKOptimizersv4:BOOL=ON -DModule_ITKRegistrationCommon:BOOL=ON -DModule_ITKVideoIO:BOOL=ON-DCMAKE_BUILD_TYPE=Release ${ITK_SOURCE_DIR} &&
       make --jobs=4 && 
       touch ${HOME}/built_cache; fi
   - if [[ ! -e ${HOME}/built_cache ]]; then
       cd ${ELASTIX_BUILD_DIR} &&
-      cmake -DITK_DIR=${ITK_BUILD_DIR} -DCMAKE_BUILD_TYPE=Release ${ELASTIX_SOURCE_DIR} &&
+      cmake -DELASTIX_USE_OPENMP=OFF -DITK_DIR=${ITK_BUILD_DIR} -DCMAKE_BUILD_TYPE=Release ${ELASTIX_SOURCE_DIR} &&
       make --jobs=4 && 
       ctest --jobs=4 --verbose; fi
