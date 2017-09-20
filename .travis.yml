@@ -45,6 +45,6 @@ script:
       touch ${HOME}/built_cache; fi
   - if [[ ! -e ${HOME}/built_cache ]]; then
       cd ${ELASTIX_BUILD_DIR} &&
-      cmake -DITK_DIR=${ITK_BUILD_DIR} -DCMAKE_BUILD_TYPE=Release ${ELASTIX_SOURCE_DIR} &&
+      cmake -DELASTIX_USE_OPENMP=OFF -DITK_DIR=${ITK_BUILD_DIR} -DCMAKE_BUILD_TYPE=Release ${ELASTIX_SOURCE_DIR} &&
       make --jobs=4 && 
       ctest --jobs=4 --verbose; fi
