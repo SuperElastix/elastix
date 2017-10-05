@@ -298,15 +298,18 @@ public:
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
   virtual void TransformPointsSomePointsVTK( const std::string filename ) const;
 
+  /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions 
+   *  into Generate* and Write* functions, since that would facilitate a proper library 
+   *  interface. To keep everything functional during the transition period we need to 
+   *  keep the orignal Compute* and TransformPoints* functions and let them just call 
+   *  Generate* and Write*. These functions should be considered marked deprecated.
+
   /** Function to transform all coordinates from fixed to moving image. */
-  /** Legacy note: the function formerly called TransformPointsAllPoints was split into 
-      GenerateDeformationFieldImage for generating and WriteDeformationFieldImage for 
-      writing to disk*/
   typename DeformationFieldImageType::Pointer GenerateDeformationFieldImage( void ) const;
 
   void WriteDeformationFieldImage( typename DeformationFieldImageType::Pointer ) const;
 
-  /** Function to transform all coordinates from fixed to moving image. */
+  /** Legacy function that calls GenerateDeformationFieldImage and WriteDeformationFieldImage. */
   virtual void TransformPointsAllPoints(void) const;
 
   /** Function to compute the determinant of the spatial Jacobian. */
