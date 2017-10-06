@@ -2,7 +2,6 @@ cmake_minimum_required( VERSION 2.8 )
 
 project( elastix )
 
-
 #---------------------------------------------------------------------
 cmake_policy( SET CMP0012 NEW )
 if( POLICY CMP0033 )
@@ -57,6 +56,9 @@ include( ${ITK_USE_FILE} )
 # Add the CMake dir as an additional module path,
 # so that CMake is able to find the FindPackage modules.
 list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake )
+
+# Function for exporting targets
+include(elastixExportTarget)
 
 #---------------------------------------------------------------------
 # Find OpenCL.
@@ -551,13 +553,16 @@ endif()
 set( elxLIBRARY_DEPENDS_FILE ${elastix_BINARY_DIR}/elxLibraryDepends.cmake )
 export_library_dependencies( ${elxLIBRARY_DEPENDS_FILE} )
 
-# The "use" file.
-set( elxUSE_FILE ${elastix_BINARY_DIR}/UseElastix.cmake )
-
 # The build settings file. (necessary for elastix?)
 #set( ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake )
 
-# Create the use file.
-configure_file( ${elastix_SOURCE_DIR}/CMake/UseElastix.cmake.in
- ${elxUSE_FILE} @ONLY )
+elastix_export_target( elastix )
+elastix_export_target( transformix )
 
+foreach( LIB IN LISTS AllComponentLibs )
+  elastix_export_target( ${LIB} )
+endforeach()
+
+configure_file( ${CMAKE_SOURCE_DIR}/ElastixConfig.cmake.in ${CMAKE_BINARY_DIR}/ElastixConfig.cmake @ONLY )
+configure_file( ${CMAKE_SOURCE_DIR}/ElastixConfigVersion.cmake.in ${CMAKE_BINARY_DIR}/ElastixConfigVersion.cmake @ONLY )
+configure_file( ${CMAKE_SOURCE_DIR}/UseElastix.cmake.in ${CMAKE_BINARY_DIR}/UseElastix.cmake @ONLY )

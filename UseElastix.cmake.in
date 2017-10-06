@@ -1,0 +1,21 @@
+#
+# To use elastix-code in your own program, add the following
+# cmake code to your CMakeLists file:
+#
+# set( Elastix_DIR "path/to/elastix/binary/directory" )
+# find_package( Elastix REQUIRED )
+# include( ${ELASTIX_USE_FILE} )
+# 
+
+# Add include dirs
+include_directories( ${ELASTIX_INCLUDE_DIRS} )
+
+# Add library dirs
+link_directories( ${ELASTIX_LIBRARY_DIRS} )
+
+# Add targets
+include( ${ELASTIX_CONFIG_TARGETS_FILE} )
+
+# Read in the library dependencies
+include( "@elxLIBRARY_DEPENDS_FILE@" )
+
