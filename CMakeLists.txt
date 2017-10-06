@@ -15,6 +15,18 @@ cmake_policy( SET CMP0007 OLD )
 cmake_policy( SET CMP0042 NEW )
 
 #---------------------------------------------------------------------
+# Get version information.
+
+# Get the version number of elastix
+file( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h
+  ELASTIX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
+string( SUBSTRING ${ELASTIX_VERSION} 26 3 ELASTIX_VERSION )
+
+# Split version in major minor. Assuming no patch number, just x.y
+string( REGEX MATCH "[0-9]+" ELASTIX_VERSION_MAJOR "${ELASTIX_VERSION}" )
+string( REGEX REPLACE "([0-9]+)\\." "" ELASTIX_VERSION_MINOR "${ELASTIX_VERSION}" )
+
+#---------------------------------------------------------------------
 include( CTest )
 
 #---------------------------------------------------------------------
@@ -349,18 +361,6 @@ foreach( ELX_EXAMPLEINPUTFILE ${ELX_EXAMPLEINPUTFILES} )
     ${ELASTIX_HELP_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
     COPYONLY )
 endforeach()
-
-#---------------------------------------------------------------------
-# Get version information.
-
-# Get the version number of elastix
-file( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h
-  ELASTIX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
-string( SUBSTRING ${ELASTIX_VERSION} 26 3 ELASTIX_VERSION )
-
-# Split version in major minor. Assuming no patch number, just x.y
-string( REGEX MATCH "[0-9]+" ELASTIX_VERSION_MAJOR "${ELASTIX_VERSION}" )
-string( REGEX REPLACE "([0-9]+)\\." "" ELASTIX_VERSION_MINOR "${ELASTIX_VERSION}" )
 
 #---------------------------------------------------------------------
 # Configure the doxygen-configuration
