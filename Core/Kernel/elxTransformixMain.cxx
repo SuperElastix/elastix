@@ -157,6 +157,8 @@ TransformixMain::Run( void )
     this->GetElastixBase()->GetMovingImageContainer() );
   this->SetResultImageContainer(
     this->GetElastixBase()->GetResultImageContainer() );
+  this->SetResultDeformationFieldContainer(
+    this->GetElastixBase()->GetResultDeformationFieldContainer() );
 
   return errorCode;
 

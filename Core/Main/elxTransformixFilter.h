@@ -55,6 +55,7 @@ public:
   typedef TransformixMainType::ArgumentMapType ArgumentMapType;
   typedef ArgumentMapType::value_type          ArgumentMapEntryType;
 
+  typedef itk::ProcessObject::DataObjectPointer           DataObjectPointer;
   typedef itk::ProcessObject::DataObjectIdentifierType    DataObjectIdentifierType;
   typedef TransformixMainType::DataObjectContainerType    DataObjectContainerType;
   typedef TransformixMainType::DataObjectContainerPointer DataObjectContainerPointer;
@@ -65,6 +66,9 @@ public:
   typedef ParameterObjectType::ParameterValueVectorType ParameterValueVectorType;
   typedef typename ParameterObjectType::Pointer         ParameterObjectPointer;
   typedef typename ParameterObjectType::ConstPointer    ParameterObjectConstPointer;
+
+  typedef typename itk::Image< itk::Vector< float, TMovingImage::ImageDimension >, 
+                         TMovingImage::ImageDimension > OutputDeformationFieldType;
 
   typedef typename TMovingImage::Pointer      InputImagePointer;
   typedef typename TMovingImage::ConstPointer InputImageConstPointer;
@@ -103,6 +107,10 @@ public:
 
   const ParameterObjectType * GetTransformParameterObject( void ) const;
 
+  OutputDeformationFieldType * GetOutputDeformationField( void );
+  
+  const OutputDeformationFieldType * GetOutputDeformationField( void ) const;
+
   /** Set/Get/Remove output directory. */
   itkSetMacro( OutputDirectory, std::string );
   itkGetConstMacro( OutputDirectory, std::string );
@@ -123,6 +131,9 @@ public:
   itkSetMacro( LogToFile, bool );
   itkGetConstMacro( LogToFile, bool );
   itkBooleanMacro( LogToFile );
+
+  /** To support outputs of different types (i.e. ResultImage and ResultDeformationField) MakeOutput from itk::ImageSource< TOutputImage > needs to be overridden */
+  virtual DataObjectPointer MakeOutput( const DataObjectIdentifierType & key ) ITK_OVERRIDE;
 
 protected:
 

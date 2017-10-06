@@ -192,6 +192,12 @@ public:
   typedef typename ITKBaseType::InputPointType  InputPointType;
   typedef typename ITKBaseType::OutputPointType OutputPointType;
 
+  /** Typedef's for TransformPointsAllPoints. */
+  typedef itk::Vector<
+    float, FixedImageDimension >                      VectorPixelType;
+  typedef itk::Image<
+    VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
+
   /** Typedefs needed for AutomaticScalesEstimation function */
   typedef typename RegistrationType::ITKBaseType      ITKRegistrationType;
   typedef typename ITKRegistrationType::OptimizerType OptimizerType;
@@ -292,8 +298,19 @@ public:
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
   virtual void TransformPointsSomePointsVTK( const std::string filename ) const;
 
+  /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions 
+   *  into Generate* and Write* functions, since that would facilitate a proper library 
+   *  interface. To keep everything functional during the transition period we need to 
+   *  keep the orignal Compute* and TransformPoints* functions and let them just call 
+   *  Generate* and Write*. These functions should be considered marked deprecated.
+
   /** Function to transform all coordinates from fixed to moving image. */
-  virtual void TransformPointsAllPoints( void ) const;
+  typename DeformationFieldImageType::Pointer GenerateDeformationFieldImage( void ) const;
+
+  void WriteDeformationFieldImage( typename DeformationFieldImageType::Pointer ) const;
+
+  /** Legacy function that calls GenerateDeformationFieldImage and WriteDeformationFieldImage. */
+  virtual void TransformPointsAllPoints(void) const;
 
   /** Function to compute the determinant of the spatial Jacobian. */
   virtual void ComputeDeterminantOfSpatialJacobian( void ) const;

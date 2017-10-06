@@ -31,6 +31,7 @@ TransformixFilter< TMovingImage >
 {
   this->SetPrimaryInputName( "InputImage" );
   this->SetPrimaryOutputName( "ResultImage" );
+  this->SetOutput( "ResultDeformationField", this->MakeOutput( "ResultDeformationField" ) );
 
   this->AddRequiredInputName( "TransformParameterObject" );
 
@@ -218,11 +219,40 @@ TransformixFilter< TMovingImage >
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }
+  // Optionally, save result deformation field
+  DataObjectContainerPointer resultDeformationFieldContainer = transformix->GetResultDeformationFieldContainer();
+  if ( resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0 )
+  {
+    this->GraftOutput( "ResultDeformationField", resultDeformationFieldContainer->ElementAt( 0 ) );
+  }
 } // end GenerateData()
 
 
 /**
- * ********************* SetInput *********************
+* ********************* MakeOutput *********************
+*/
+template< typename TMovingImage >
+typename TransformixFilter< TMovingImage >::DataObjectPointer
+TransformixFilter< TMovingImage >
+::MakeOutput( const DataObjectIdentifierType & key )
+{
+  if ( key == "ResultImage" )
+  {
+    return TMovingImage::New().GetPointer();
+  }
+  else if ( key == "ResultDeformationField" )
+  {
+    return OutputDeformationFieldType::New().GetPointer();
+  }
+  else
+  {
+    // Primary and all other outputs default to ResultImage.
+    return TMovingImage::New().GetPointer();
+  }
+} // end MakeOutput()
+
+/**
+ * ********************* SetMovingImage *********************
  */
 
 template< typename TMovingImage >
@@ -231,11 +261,11 @@ TransformixFilter< TMovingImage >
 ::SetMovingImage( TMovingImage * inputImage )
 {
   this->SetInput( "InputImage", inputImage );
-} // end SetInput()
+} // end SetMovingImage()
 
 
 /**
- * ********************* GetInput *********************
+ * ********************* GetMovingImage *********************
  */
 
 template< typename TMovingImage >
@@ -244,11 +274,11 @@ TransformixFilter< TMovingImage >
 ::GetMovingImage( void )
 {
   return itkDynamicCastInDebugMode< TMovingImage * >( this->GetInput( "InputImage" ) );
-} // end GetInput()
+} // end GetMovingImage()
 
 
 /**
- * ********************* RemoveInput *********************
+ * ********************* RemoveMovingImage *********************
  */
 
 template< typename TMovingImage >
@@ -257,7 +287,7 @@ TransformixFilter< TMovingImage >
 ::RemoveMovingImage( void )
 {
   this->RemoveInput( "InputImage" );
-} // end RemoveInput
+} // end RemoveMovingImage
 
 
 /**
@@ -297,6 +327,33 @@ TransformixFilter< TMovingImage >
 {
   return dynamic_cast< const ParameterObjectType * >( this->GetInput( "TransformParameterObject" ) );
 } // end GetTransformParameterObject()
+
+
+/**
+*  ********************* GetOutputDeformationField *********************
+*/
+template< typename TMovingImage >
+typename TransformixFilter< TMovingImage >::OutputDeformationFieldType *
+TransformixFilter< TMovingImage >
+::GetOutputDeformationField()
+{
+
+  return itkDynamicCastInDebugMode< OutputDeformationFieldType * >(
+    this->itk::ProcessObject::GetOutput( "ResultDeformationField" ) );
+} // end GetOutputDeformationField
+
+/**
+*  ********************* GetOutputDeformationField *********************
+*/
+template< typename TMovingImage >
+const typename TransformixFilter< TMovingImage >::OutputDeformationFieldType *
+TransformixFilter< TMovingImage >
+::GetOutputDeformationField() const
+{
+
+  return itkDynamicCastInDebugMode< const OutputDeformationFieldType * >(
+    this->itk::ProcessObject::GetOutput( "ResultDeformationField" ) );
+} // end GetOutputDeformationField
 
 
 /**

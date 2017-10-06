@@ -183,6 +183,9 @@ public:
   itkSetObjectMacro( ResultImageContainer, DataObjectContainerType );
   itkGetObjectMacro( ResultImageContainer, DataObjectContainerType );
 
+  itkSetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
+  itkGetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
+
   /** Set/Get the configuration object. */
   itkSetObjectMacro( Configuration, ConfigurationType );
   itkGetObjectMacro( Configuration, ConfigurationType );
@@ -323,6 +326,7 @@ protected:
   DataObjectContainerPointer m_FixedMaskContainer;
   DataObjectContainerPointer m_MovingMaskContainer;
   DataObjectContainerPointer m_ResultImageContainer;
+  DataObjectContainerPointer m_ResultDeformationFieldContainer;
 
   /** A transform that is the result of registration. */
   ObjectPointer m_FinalTransform;

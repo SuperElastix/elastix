@@ -1425,18 +1425,35 @@ void
 TransformBase< TElastix >
 ::TransformPointsAllPoints( void ) const
 {
+  typename DeformationFieldImageType::Pointer deformationfield = this->GenerateDeformationFieldImage();
+  //put deformation field in container
+  this->m_Elastix->SetResultDeformationField( deformationfield.GetPointer() );
+  
+#ifndef _ELASTIX_BUILD_LIBRARY
+  WriteDeformationFieldImage( deformationfield );
+#endif
+  
+} // end TransformPointsAllPoints()
+
+/**
+* ************** GenerateDeformationFieldImage **********************
+*
+* This function transforms all indexes to a physical point.
+* The difference vector (= the deformation at that index) is
+* stored in an image of vectors (of floats).
+*/
+
+template< class TElastix >
+typename TransformBase< TElastix >::DeformationFieldImageType::Pointer
+TransformBase< TElastix >
+::GenerateDeformationFieldImage( void ) const
+{
   /** Typedef's. */
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
-  typedef itk::Vector<
-    float, FixedImageDimension >                      VectorPixelType;
-  typedef itk::Image<
-    VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
   typedef itk::TransformToDisplacementFieldFilter<
     DeformationFieldImageType, CoordRepType >         DeformationFieldGeneratorType;
   typedef itk::ChangeInformationImageFilter<
     DeformationFieldImageType >                       ChangeInfoFilterType;
-  typedef itk::ImageFileWriter<
-    DeformationFieldImageType >                       DeformationFieldWriterType;
 
   /** Create an setup deformation field generator. */
   typename DeformationFieldGeneratorType::Pointer defGenerator
@@ -1471,6 +1488,38 @@ TransformBase< TElastix >
   progressObserver->SetEndString( "%" );
 #endif
 
+  try
+  {
+    infoChanger->Update();
+  }
+  catch ( itk::ExceptionObject & excp )
+  {
+    /** Add information to the exception. */
+    excp.SetLocation( "TransformBase - GenerateDeformationFieldImage()" );
+    std::string err_str = excp.GetDescription();
+    err_str += "\nError occurred while generating deformation field image.\n";
+    excp.SetDescription( err_str );
+
+    /** Pass the exception to an higher level. */
+    throw excp;
+  }
+
+  return infoChanger->GetOutput();
+} // end GenerateDeformationFieldImage()
+
+/**
+* ************** WriteDeformationFieldImage **********************
+*
+*/
+
+template< class TElastix >
+void
+TransformBase< TElastix >::
+WriteDeformationFieldImage(typename TransformBase< TElastix >::DeformationFieldImageType::Pointer deformationfield) const
+{
+  typedef itk::ImageFileWriter<
+    DeformationFieldImageType >                       DeformationFieldWriterType;
+
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
@@ -1481,7 +1530,7 @@ TransformBase< TElastix >
   /** Write outputImage to disk. */
   typename DeformationFieldWriterType::Pointer defWriter
     = DeformationFieldWriterType::New();
-  defWriter->SetInput( infoChanger->GetOutput() );
+  defWriter->SetInput( deformationfield );
   defWriter->SetFileName( makeFileName.str().c_str() );
 
   /** Do the writing. */
@@ -1493,7 +1542,7 @@ TransformBase< TElastix >
   catch( itk::ExceptionObject & excp )
   {
     /** Add information to the exception. */
-    excp.SetLocation( "TransformBase - TransformPointsAllPoints()" );
+    excp.SetLocation( "TransformBase - WriteDeformationFieldImage()" );
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while writing deformation field image.\n";
     excp.SetDescription( err_str );
@@ -1501,8 +1550,7 @@ TransformBase< TElastix >
     /** Pass the exception to an higher level. */
     throw excp;
   }
-
-} // end TransformPointsAllPoints()
+} // end WriteDeformationFieldImage()
 
 
 /**
