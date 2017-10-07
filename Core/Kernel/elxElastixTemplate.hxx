@@ -317,6 +317,9 @@ ElastixTemplate< TFixedImage, TMovingImage >
     err_str += "\n\nError occurred during actual registration.";
     excp.SetDescription( err_str );
 
+    /** Clean up before returning - very important for exception safety of the xout global static object */
+    this->AfterRegistrationBase();
+
     /** Pass the exception to a higher level. */
     throw excp;
   }
