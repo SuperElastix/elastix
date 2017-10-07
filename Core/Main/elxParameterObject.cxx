@@ -142,6 +142,25 @@ ParameterObject
  * ********************* WriteParameterFile *********************
  */
 
+
+void
+ParameterObject
+::WriteParameterFile( void )
+{
+  ParameterFileNameVectorType parameterFileNameVector;
+  for( unsigned int i = 0; i < m_ParameterMap.size(); ++i )
+  {
+    parameterFileNameVector.push_back( "ParametersFile." + ParameterObject::ToString( i ) + ".txt" );
+  }
+
+  this->WriteParameterFile( this->m_ParameterMap, parameterFileNameVector );
+}
+
+
+/**
+ * ********************* WriteParameterFile *********************
+ */
+
 void
 ParameterObject
 ::WriteParameterFile( const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName )
@@ -234,22 +253,43 @@ ParameterObject
 
 void
 ParameterObject
-::WriteParameterFile( const ParameterFileNameVectorType & parameterFileNameVector )
+::WriteParameterFile( const ParameterMapVectorType & parameterMapVector, const ParameterFileNameVectorType & parameterFileNameVector )
 {
-  if( this->m_ParameterMap.size() != parameterFileNameVector.size() )
+  if( parameterMapVector.size() != parameterFileNameVector.size() )
   {
     itkExceptionMacro(
       << "Error writing to disk: The number of parameter maps ("
-      << this->m_ParameterMap.size() << ")"
+      << parameterMapVector.size() << ")"
       << " does not match the number of provided filenames ("
       << parameterFileNameVector.size()
       << ")." );
   }
 
-  for( unsigned int i = 0; i < this->m_ParameterMap.size(); ++i )
+  // Add initial transform parameter file names. Do not touch the first one,
+  // since it may have one already
+  for( unsigned int i = 1; i < parameterMapVector.size(); ++i )
   {
-    this->WriteParameterFile( this->m_ParameterMap[ i ], parameterFileNameVector[ i ] );
+    ParameterMapType parameterMap = parameterMapVector[ i ];
+    if( parameterMap.find( "TransformParameters" ) != parameterMap.end() )
+    {
+      parameterMap[ "InitialTransformParameterFileName" ][ 0 ] = parameterFileNameVector[ i - 1 ];
+    }
+
+    this->WriteParameterFile( parameterMap, parameterFileNameVector[ i ] );
   }
+}
+
+
+/**
+ * ********************* WriteParameterFile *********************
+ */
+
+
+void
+ParameterObject
+::WriteParameterFile( const ParameterFileNameVectorType & parameterFileNameVector )
+{
+  this->WriteParameterFile( this->m_ParameterMap, parameterFileNameVector );
 }
 
 

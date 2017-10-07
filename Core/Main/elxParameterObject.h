@@ -75,11 +75,15 @@ public:
 
   void AddParameterFile( const ParameterFileNameType & parameterFileName );
 
+  void WriteParameterFile( void );
+
   void WriteParameterFile( const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName );
 
   void WriteParameterFile( const ParameterFileNameType & parameterFileName );
 
   void WriteParameterFile( const ParameterFileNameVectorType & parameterFileNameVector );
+
+  void WriteParameterFile( const ParameterMapVectorType & parameterMapVector, const ParameterFileNameVectorType & parameterFileNameVector );
 
   /* Get preconfigured parameter maps. */
   static const ParameterMapType GetDefaultParameterMap( const std::string & transformName,
