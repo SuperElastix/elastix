@@ -13,9 +13,12 @@ include_directories( ${ELASTIX_INCLUDE_DIRS} )
 # Add library dirs
 link_directories( ${ELASTIX_LIBRARY_DIRS} )
 
-# Add targets
-include( ${ELASTIX_CONFIG_TARGETS_FILE} )
+# Maintains backwards compatibility by providing old-style target information
+# provide a targets file
+if( ${ELASTIX_CONFIG_TARGETS_FILE} )
+	include( ${ELASTIX_CONFIG_TARGETS_FILE} )
+endif()
 
-# Read in the library dependencies
-include( "@elxLIBRARY_DEPENDS_FILE@" )
-
+if( ${elxLIBRARY_DEPENDS_FILE} )
+	include( ${elxLIBRARY_DEPENDS_FILE} )
+endif()

@@ -22,5 +22,6 @@ set( ELASTIX_USE_MEVISDICOMTIFF @ELASTIX_USE_MEVISDICOMTIFF@ )
 set( ELASTIX_DOX_DIR @ELASTIX_DOX_DIR@ )
 set( ELASTIX_HELP_DIR @ELASTIX_HELP_DIR@ )
 
-# The entire list of all components libraries.
+# Maintain backwards compatibility by also exporting old-style target information
 set( ELASTIX_ALL_COMPONENT_LIBS @AllComponentLibs@ )
+set( elxLIBRARY_DEPENDS_FILE @elxLIBRARY_DEPENDS_FILE@ )
