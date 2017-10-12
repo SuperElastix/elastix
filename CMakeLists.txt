@@ -379,7 +379,7 @@ if( Doxygen_FOUND )
     exec_program( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )
   endif()
   if( WIN32 )
-    if( NOT CYGWIN )
+    if( NOT CYGWIN AND NOT MINGW )
       execute_process( COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
         OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATETEMP )
       string( REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP} )
