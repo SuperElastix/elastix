@@ -91,10 +91,10 @@ int main( int argc, char ** argv )
   /** Typedefs. */
   typedef itk::Image< PixelType, Dimension >          ImageType;
   typedef itk::ImageFileReader< ImageType >           ImageReaderType;
-  typedef typename ImageReaderType::Pointer           ImageReaderPointer;
+  typedef ImageReaderType::Pointer                    ImageReaderPointer;
   typedef itk::AndImageFilter<
     ImageType, ImageType, ImageType >                 AndFilterType;
-  typedef typename AndFilterType::Pointer             AndFilterPointer;
+  typedef AndFilterType::Pointer                      AndFilterPointer;
   typedef itk::ImageRegionConstIterator< ImageType >  IteratorType;
 
   /** Create readers and an AND filter. */
