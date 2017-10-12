@@ -29,6 +29,7 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <ctime>
 
 #include "itkObject.h"
 #include "itkDataObject.h"
