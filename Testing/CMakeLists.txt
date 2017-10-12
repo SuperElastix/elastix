@@ -396,7 +396,8 @@ macro( elx_add_run_test testbasename howtocompare )
       add_test( NAME ${testname}_COMPARE_OVERLAP
         CONFIGURATIONS Release
         COMMAND ${python_executable} ${pythonoverlap}
-        -b ${baselineTP} -d ${output_dir} -m ${TestDataDir}/3DCT_lung_followup_mask.mha )
+        -b ${baselineTP} -d ${output_dir} -m ${TestDataDir}/3DCT_lung_followup_mask.mha
+        -p $<TARGET_FILE:elxComputeOverlap> )
       set_tests_properties( ${testname}_COMPARE_OVERLAP
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif()
@@ -409,7 +410,8 @@ macro( elx_add_run_test testbasename howtocompare )
       add_test( NAME ${testname}_COMPARE_LANDMARKS
         CONFIGURATIONS Release
         COMMAND ${python_executable} ${pythonlandmarks}
-        -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt -t 1.0 )
+        -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt -t 1.0
+        -p $<TARGET_FILE:transformix> )
       set_tests_properties( ${testname}_COMPARE_LANDMARKS
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif()
@@ -429,6 +431,11 @@ macro( elx_add_run_test testbasename howtocompare )
 endmacro()
 
 #---------------------------------------------------------------------
+
+# Create elxComputeOverlap
+add_executable( elxComputeOverlap elxComputeOverlap.cxx itkCommandLineArgumentParser.cxx )
+target_link_libraries( elxComputeOverlap ${ITK_LIBRARIES} )
+set_property( TARGET elxComputeOverlap PROPERTY FOLDER "tests/Executable" )
 
 # Create elxImageCompare
 add_executable( elxImageCompare elxImageCompare.cxx itkCommandLineArgumentParser.cxx )
