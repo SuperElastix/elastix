@@ -94,7 +94,7 @@ def main():
   seg_defb = os.path.join( options.directory, "segmentation_baseline.mha" );
   subprocess.call( [ "transformix", "-in", options.mseg, "-out", options.directory, "-tp", tpFileName_b ],
     stdout=subprocess.PIPE );
-  if( os.path.exists( seg_defm ) ) : os.remove( seg_defb );
+  if( os.path.exists( seg_defb ) ) : os.remove( seg_defb );
   shutil.move( seg, seg_defb );
 
   # Compute the overlap between baseline segmentation and deformed moving segmentation
