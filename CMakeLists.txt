@@ -303,8 +303,8 @@ add_subdirectory( Core )
 # Configure the examples
 
 set( ELASTIX_DOX_DIR  ${elastix_SOURCE_DIR}/dox )
-set( ELASTIX_TOOLS_DIR  ${elastix_SOURCE_DIR}/tools )
-set( ELASTIX_HELP_DIR ${elastix_SOURCE_DIR}/help CACHE PATH
+set( ELASTIX_TOOLS_DIR  ${elastix_BINARY_DIR}/tools )
+set( ELASTIX_HELP_DIR ${elastix_BINARY_DIR}/help CACHE PATH
   "path to the doxygen generated help files and the examples" )
 
 # Copy the examples to the help directory
@@ -363,39 +363,40 @@ string( REGEX REPLACE "([0-9]+)\\." "" ELASTIX_VERSION_MINOR "${ELASTIX_VERSION}
 #---------------------------------------------------------------------
 # Configure the doxygen-configuration
 
-find_package( Doxygen QUIET )
-string( COMPARE NOTEQUAL ${DOXYGEN} "DOXYGEN-NOTFOUND" Doxygen_FOUND )
+option( BUILD_DOCUMENTATION "Build elastix documentation." OFF )
 
-if( Doxygen_FOUND )
+if( ${BUILD_DOCUMENTATION} )
+  find_package( Doxygen QUIET )
+  string( COMPARE NOTEQUAL ${DOXYGEN} "DOXYGEN-NOTFOUND" Doxygen_FOUND )
+  if( Doxygen_FOUND )
+    # Set the path to the doxygen configuration source
+    set( ELASTIX_DOXYGEN_DIR ${ELASTIX_DOX_DIR}/doxygen )
 
-  # Set the path to the doxygen configuration source
-  set( ELASTIX_DOXYGEN_DIR ${ELASTIX_DOX_DIR}/doxygen )
+    # Get the version number of doxygen
+    exec_program( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELASTIX_DOXYGEN_VERSION )
 
-  # Get the version number of doxygen
-  exec_program( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELASTIX_DOXYGEN_VERSION )
-
-  # Get date
-  if( UNIX OR CYGWIN )
-    exec_program( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )
-  endif()
-  if( WIN32 )
-    if( NOT CYGWIN AND NOT MINGW )
-      execute_process( COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
-        OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATETEMP )
-      string( REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP} )
+    # Get date
+    if( UNIX OR CYGWIN )
+      exec_program( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )
     endif()
+    if( WIN32 )
+      if( NOT CYGWIN AND NOT MINGW )
+        execute_process( COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
+          OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATETEMP )
+        string( REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP} )
+      endif()
+    endif()
+
+    # Configure the footer of the help website.
+    configure_file(
+      ${ELASTIX_DOXYGEN_DIR}/DoxygenFooter.html.in
+      ${ELASTIX_HELP_DIR}/DoxygenFooter.html @ONLY )
+
+    # Configure the MainPage.dox
+    configure_file(
+      ${ELASTIX_DOXYGEN_DIR}/MainPage.dox.in
+      ${ELASTIX_HELP_DIR}/MainPage.dox @ONLY )
   endif()
-
-  # Configure the footer of the help website.
-  configure_file(
-    ${ELASTIX_DOXYGEN_DIR}/DoxygenFooter.html.in
-    ${ELASTIX_HELP_DIR}/DoxygenFooter.html @ONLY )
-
-  # Configure the MainPage.dox
-  configure_file(
-    ${ELASTIX_DOXYGEN_DIR}/MainPage.dox.in
-    ${ELASTIX_HELP_DIR}/MainPage.dox @ONLY )
-
 endif()
 
 #---------------------------------------------------------------------
