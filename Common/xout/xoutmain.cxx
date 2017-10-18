@@ -37,6 +37,10 @@ set_xout( xoutbase_type * arg )
   local_xout = arg;
 }
 
+bool xout_valid() {
+  return local_xout != 0;
+}
+
 
 } // end namespace
 
