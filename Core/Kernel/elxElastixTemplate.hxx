@@ -318,7 +318,10 @@ ElastixTemplate< TFixedImage, TMovingImage >
     excp.SetDescription( err_str );
 
     /** Clean up before returning - very important for exception safety of the xout global static object */
-    this->AfterRegistrationBase();
+    if( xoutlibrary::xout_valid() )
+    {
+      xoutlibrary::xout.RemoveTargetCell("iteration");
+    }
 
     /** Pass the exception to a higher level. */
     throw excp;
