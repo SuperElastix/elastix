@@ -21,6 +21,6 @@ if( Elastix_FOUND )
   # This file was found by find_package
   include( ${ELASTIX_CONFIG_TARGETS_FILE} )
 else()
-  # Linking dependencies for backwards compatibility
+  # Include linking dependency info for backwards compatibility
   include( ${elxLIBRARY_DEPENDS_FILE} )
 endif()
