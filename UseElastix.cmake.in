@@ -20,8 +20,7 @@ link_directories( ${ELASTIX_LIBRARY_DIRS} )
 if( Elastix_FOUND )
   # This file was found by find_package
   include( ${ELASTIX_CONFIG_TARGETS_FILE} )
-endif()
-
-if( Elastix_FOUND )
+else()
+  # Linking dependencies for backwards compatibility
   include( ${elxLIBRARY_DEPENDS_FILE} )
 endif()
