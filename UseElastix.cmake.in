@@ -13,12 +13,14 @@ include_directories( ${ELASTIX_INCLUDE_DIRS} )
 # Add library dirs
 link_directories( ${ELASTIX_LIBRARY_DIRS} )
 
-# Add linking dependencies
+# If Elastix_FOUND is set, this file is included via find_package() which provides
+# ELASTIX_CONFIG_TARGETS_FILE and elxLIBRARY_DEPENDS_FILE. Guarding the following
+# include statements allow users to include this file directly for backwards 
+# compatibility.
 if( Elastix_FOUND )
-  # If Elastix_FOUND is set, this file has been found via find_package() which provides 
-  # the ELASTIX_CONFIG_TARGETS_FILE.
+  # This file was found by find_package
   include( ${ELASTIX_CONFIG_TARGETS_FILE} )
 else()
-  # Add the old library depnds file for backwards compatibility
+  # Include linking dependency info for backwards compatibility
   include( ${elxLIBRARY_DEPENDS_FILE} )
 endif()
