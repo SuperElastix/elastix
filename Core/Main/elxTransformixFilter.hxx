@@ -195,6 +195,11 @@ TransformixFilter< TMovingImage >
     transformParameterMapVector[ i ][ "ResultImagePixelType" ]
       = ParameterValueVectorType( 1, ParameterObject::ToString( PixelType< typename TMovingImage::PixelType >::ToString() ) );
 
+    if( i > 0 )
+    {
+      transformParameterMapVector[ i ][ "InitialTransformParametersFileName" ]
+        = ParameterValueVectorType( 1, ParameterObject::ToString( i - 1 ) );
+    }
   }
 
   // Run transformix
