@@ -97,6 +97,8 @@ add_library( elxCore STATIC
   ${ProgressCommandFiles}
 )
 
+elastix_export_target( elxCore )
+
 #---------------------------------------------------------------------
 # Link against other libraries.
 
@@ -106,6 +108,10 @@ target_link_libraries( elxCore
   param # Needed for elxConfiguration
   #  ${ITK_LIBRARIES}
 )
+
+elastix_export_target( elxCommon )
+elastix_export_target( xoutlib )
+elastix_export_target( param )
 
 #---------------------------------------------------------------------
 # Define the mevis dcm tiff lib to which we should link.
@@ -162,6 +168,7 @@ else()
     Kernel/elxTransformixMain.h
     ${InstallFilesForExecutables}
   )
+  set( ELASTIX_LIBRARIES elastix transformix PARENT_SCOPE )
 endif()
 
 #---------------------------------------------------------------------

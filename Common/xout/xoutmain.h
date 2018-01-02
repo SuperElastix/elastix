@@ -41,6 +41,8 @@ xoutbase_type & get_xout( void );
 
 void set_xout( xoutbase_type * arg );
 
+bool xout_valid();
+
 } // end namespace xoutlibrary
 
 #endif // end #ifndef __xoutmain_h

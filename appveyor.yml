@@ -9,6 +9,7 @@ configuration:
   - Release
 platform:
   - x64
+  - x86
 environment:
   ELASTIX_SOURCE_DIR: c:\elastix-source
   ELASTIX_BUILD_DIR: c:\elastix-build

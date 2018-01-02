@@ -28,3 +28,4 @@ set_property( TARGET mevisdcmtiff PROPERTY FOLDER "libraries" )
 
 # add mevisdcmtiff to the list of target_link_libraries in your cmakelists.txt file.
 
+elastix_export_target( mevisdcmtiff )
