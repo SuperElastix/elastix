@@ -1,6 +1,7 @@
 import sys, subprocess
 import os
 import os.path
+import shutil
 import re
 import glob
 from optparse import OptionParser
@@ -71,7 +72,8 @@ def main():
   seg_defm = os.path.join( options.directory, "segmentation_deformed.mha" );
   subprocess.call( [ "transformix", "-in", options.mseg, "-out", options.directory, "-tp", tpFileName ],
     stdout=subprocess.PIPE );
-  os.replace( seg, seg_defm );
+  if( os.path.exists( seg_defm ) ) : os.remove( seg_defm );
+  shutil.move( seg, seg_defm );
 
   #
   # Deform the moving image segmentation by the baseline result
@@ -92,7 +94,8 @@ def main():
   seg_defb = os.path.join( options.directory, "segmentation_baseline.mha" );
   subprocess.call( [ "transformix", "-in", options.mseg, "-out", options.directory, "-tp", tpFileName_b ],
     stdout=subprocess.PIPE );
-  os.replace( seg, seg_defb );
+  if( os.path.exists( seg_defb ) ) : os.remove( seg_defb );
+  shutil.move( seg, seg_defb );
 
   # Compute the overlap between baseline segmentation and deformed moving segmentation
   try :

@@ -78,7 +78,7 @@ def main():
   for line in f1 :
     f2.write( line.strip().split(';')[4].strip().strip( "OutputPoint = [ " ).rstrip( " ]" ) + "\n" );
   f1.close(); f2.close();
-  os.rename( landmarkstemp, landmarks1full ); # for later inspection
+  shutil.move( landmarkstemp, landmarks1full ); # for later inspection
 
   #
   # Transform the fixed image landmarks by the baseline result
@@ -95,7 +95,7 @@ def main():
   for line in f1 :
     f2.write( line.strip().split(';')[4].strip().strip( "OutputPoint = [ " ).rstrip( " ]" ) + "\n" );
   f1.close(); f2.close();
-  os.rename( landmarkstemp, landmarks2full ); # for later inspection
+  shutil.move( landmarkstemp, landmarks2full ); # for later inspection
 
   # Compute the distance between all transformed landmarks
   f1 = open( landmarks1, 'r' ); f2 = open( landmarks2, 'r' );
