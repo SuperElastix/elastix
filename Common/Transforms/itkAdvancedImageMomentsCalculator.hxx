@@ -17,6 +17,7 @@
  *=========================================================================*/
 #ifndef itkAdvancedImageMomentsCalculator_hxx
 #define itkAdvancedImageMomentsCalculator_hxx
+
 #include "itkAdvancedImageMomentsCalculator.h"
 
 #include "vnl/algo/vnl_real_eigensystem.h"
@@ -136,7 +137,7 @@ void
 AdvancedImageMomentsCalculator< TImage >
 ::ComputeSingleThreaded()
 {
-  if ( this->m_CenterOfGravityUseBonyInfo )
+  if ( this->m_CenterOfGravityUsesLowerThreshold )
   {
     typename BinaryThresholdImageFilterType::Pointer thresholdFilter
       = BinaryThresholdImageFilterType::New();

@@ -306,6 +306,7 @@ private:
 
   ImageConstPointer         m_Image;
   SpatialObjectConstPointer m_SpatialObjectMask;
+
 };  // class AdvancedImageMomentsCalculator
 } // end namespace itk
 
