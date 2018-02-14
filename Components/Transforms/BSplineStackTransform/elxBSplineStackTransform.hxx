@@ -35,6 +35,7 @@ BSplineStackTransform< TElastix >
 ::BSplineStackTransform()
 {} // end Constructor()
 
+
 /**
  * ************ InitializeBSplineTransform ***************
  */
@@ -46,15 +47,15 @@ BSplineStackTransform< TElastix >
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
   this->m_GridScheduleComputer = GridScheduleComputerType::New();
   this->m_GridScheduleComputer->SetBSplineOrder( m_SplineOrder );
-  if( m_SplineOrder == 1 )
+  if( this->m_SplineOrder == 1 )
   {
     this->m_BSplineDummySubTransform = BSplineTransformLinearType::New();
   }
-  else if( m_SplineOrder == 2 )
+  else if( this->m_SplineOrder == 2 )
   {
     this->m_BSplineDummySubTransform = BSplineTransformQuadraticType::New();
   }
-  else if( m_SplineOrder == 3 )
+  else if( this->m_SplineOrder == 3 )
   {
     this->m_BSplineDummySubTransform = BSplineTransformCubicType::New();
   }
@@ -77,10 +78,10 @@ BSplineStackTransform< TElastix >
 
   /** Create grid upsampler. */
   this->m_GridUpsampler = GridUpsamplerType::New();
-  this->m_GridUpsampler->SetBSplineOrder( m_SplineOrder );
+  this->m_GridUpsampler->SetBSplineOrder( this->m_SplineOrder );
 
   return 0;
-}
+} // end InitializeBSplineTransform()
 
 
 /**
@@ -93,13 +94,13 @@ BSplineStackTransform< TElastix >
 ::BeforeAll( void )
 {
   /** Read spline order from configuration file. */
-  m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+  this->m_SplineOrder = 3;
+  this->GetConfiguration()->ReadParameter( this->m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
 
   /** Initialize B-spline transform and grid scheduler. */
   return InitializeBSplineTransform();
-}
+} // end BeforeAll()
 
 
 /**
@@ -499,7 +500,7 @@ BSplineStackTransform< TElastix >
 
   /** Set the initial parameters for the next level. */
   this->m_Registration->GetAsITKBaseType()
-  ->SetInitialTransformParametersOfNextLevel( this->GetParameters() );
+    ->SetInitialTransformParametersOfNextLevel( this->GetParameters() );
 
 }  // end IncreaseScale()
 
@@ -514,8 +515,8 @@ BSplineStackTransform< TElastix >
 ::ReadFromFile( void )
 {
   /** Read spline order settings and initialize BSplineTransform. */
-  m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+  this->m_SplineOrder = 3;
+  this->GetConfiguration()->ReadParameter( this->m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0 );
 
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
@@ -527,7 +528,7 @@ BSplineStackTransform< TElastix >
     "StackSpacing", this->GetComponentLabel(), 0, 0 );
 
   /** Initialize the right B-spline transform. */
-  InitializeBSplineTransform();
+  this->InitializeBSplineTransform();
 
   /** Set stack transform parameters. */
   this->m_BSplineStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
@@ -783,7 +784,9 @@ BSplineStackTransform< TElastix >
   const ParametersType & param,
   ParameterMapType * paramsMap ) const
 {
-  char tmpValue[ 256 ];
+  std::ostringstream         tmpStream;
+  std::string                parameterName;
+  std::vector< std::string > parameterValues;
 
   /** Call the CreateTransformParametersMap from the TransformBase. */
   this->Superclass2::CreateTransformParametersMap( param, paramsMap );
@@ -802,65 +805,85 @@ BSplineStackTransform< TElastix >
   ReducedDimensionDirectionType direction = firstSubTransform->GetGridDirection();
 
   /** Write the GridSize of this transform. */
-  ParameterValueType GridSize;
+  parameterName = "GridSize";
   for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
-    sprintf( tmpValue, "%.10lu", size[ i ] );
-    GridSize.push_back( tmpValue );
+    tmpStream.str( "" ); tmpStream << size[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
-  paramsMap->insert( make_pair( "GridSize", GridSize ) );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
 
   /** Write the GridIndex of this transform. */
-  ParameterValueType GridIndex;
+  parameterName = "GridIndex";
   for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
-    sprintf( tmpValue, "%.10ld", index[ i ] );
-    GridIndex.push_back( tmpValue );
+    tmpStream.str( "" ); tmpStream << index[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
-  paramsMap->insert( make_pair( "GridIndex", GridIndex ) );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
 
   /** Write the GridSpacing of this transform.  */
-  std::vector< std::string > GridSpacing;
+  parameterName = "GridSpacing";
   for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
-    sprintf( tmpValue, "%.10lf", spacing[ i ] );
-    GridSpacing.push_back( tmpValue );
+    tmpStream.str( "" ); tmpStream << spacing[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
-  paramsMap->insert( make_pair( "GridSpacing", GridSpacing ) );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
 
   /** Write the GridOrigin of this transform. */
-  ParameterValueType GridOrigin;
+  parameterName = "GridOrigin";
   for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
-    sprintf( tmpValue, "%.10lf", origin[ i ] );
-    GridOrigin.push_back( tmpValue );
+    tmpStream.str( "" ); tmpStream << origin[ i ];
+    parameterValues.push_back( tmpStream.str() );
   }
-  paramsMap->insert( make_pair( "GridOrigin", GridOrigin ) );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
 
   /** Write the GridDirection of this transform. */
-  ParameterValueType GridDirection;
+  parameterName = "GridDirection";
   for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
   {
     for( unsigned int j = 0; j < ReducedSpaceDimension; j++ )
     {
-      sprintf( tmpValue, "%.10lf", direction( j, i ) );
-      GridDirection.push_back( tmpValue );
+      tmpStream.str( "" ); tmpStream << direction( j, i );
+      parameterValues.push_back( tmpStream.str() );
     }
   }
-  paramsMap->insert( make_pair( "GridDirection", GridDirection ) );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
 
   /** Write the spline order of this transform. */
-  sprintf( tmpValue, "%i", m_SplineOrder );
-  paramsMap->insert( make_pair( "BSplineTransformSplineOrder", ParameterValueType( 1, tmpValue ) ) );
+  parameterName = "BSplineTransformSplineOrder";
+  tmpStream.str( "" ); tmpStream << this->m_SplineOrder;
+  parameterValues.push_back( tmpStream.str() );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
 
   /** Write the stack spacing, stack origin and number of sub transforms. */
-  sprintf( tmpValue, "%.10lf", this->m_BSplineStackTransform->GetStackSpacing() );
-  paramsMap->insert( make_pair( "StackSpacing", ParameterValueType( 1, tmpValue ) ) );
-  sprintf( tmpValue, "%.10lf", this->m_BSplineStackTransform->GetStackOrigin() );
-  paramsMap->insert( make_pair( "StackOrigin", ParameterValueType( 1, tmpValue ) ) );
-  sprintf( tmpValue, "%i", this->m_BSplineStackTransform->GetNumberOfSubTransforms() );
-  paramsMap->insert( make_pair( "NumberOfSubTransforms", ParameterValueType( 1, tmpValue ) ) );
-}
+  parameterName = "StackSpacing";
+  tmpStream.str( "" ); tmpStream << this->m_BSplineStackTransform->GetStackSpacing();
+  parameterValues.push_back( tmpStream.str() );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
+
+  parameterName = "StackOrigin";
+  tmpStream.str( "" ); tmpStream << this->m_BSplineStackTransform->GetStackOrigin();
+  parameterValues.push_back( tmpStream.str() );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
+
+  parameterName = "NumberOfSubTransforms";
+  tmpStream.str( "" ); tmpStream << this->m_BSplineStackTransform->GetNumberOfSubTransforms();
+  parameterValues.push_back( tmpStream.str() );
+  paramsMap->insert( make_pair( parameterName, parameterValues ) );
+  parameterValues.clear();
+
+} // end CreateTransformParametersMap()
 
 
 } // end namespace elastix
