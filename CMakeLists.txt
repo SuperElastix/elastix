@@ -1,17 +1,9 @@
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.5.1 )
 
 project( elastix )
 
 #---------------------------------------------------------------------
 cmake_policy( SET CMP0012 NEW )
-if( POLICY CMP0033 )
-  # This policy was introduced in cmake 3, so we need to check for its
-  # existence. When the minimum cmake version above is upgraded to 3
-  # this if(POLICY) check can be removed.
-  cmake_policy( SET CMP0033 OLD )
-endif()
-
-cmake_policy( SET CMP0007 OLD )
 cmake_policy( SET CMP0042 NEW )
 
 #---------------------------------------------------------------------
@@ -551,7 +543,10 @@ endif()
 # Save library dependencies.
 # The library dependencies file.
 set( elxLIBRARY_DEPENDS_FILE ${elastix_BINARY_DIR}/elxLibraryDepends.cmake )
-export_library_dependencies( ${elxLIBRARY_DEPENDS_FILE} )
+# TODO Replace the original command,
+# export_library_dependencies( ${elxLIBRARY_DEPENDS_FILE} )
+# by export() and install(EXPORT) commands
+# See https://cmake.org/cmake/help/v3.10/policy/CMP0033.html
 
 # The build settings file. (necessary for elastix?)
 #set( ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake )
