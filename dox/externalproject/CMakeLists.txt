@@ -1,7 +1,7 @@
 # Example project for using elastix code from external projects.
 PROJECT( elxExternalProject )
 
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.5.1 )
 
 # Find TIK
 FIND_PACKAGE( ITK REQUIRED )
