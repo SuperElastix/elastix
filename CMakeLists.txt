@@ -541,12 +541,7 @@ endif()
 # Make it easier to include elastix functionality in other programs.
 
 # Save library dependencies.
-# The library dependencies file.
-set( elxLIBRARY_DEPENDS_FILE ${elastix_BINARY_DIR}/elxLibraryDepends.cmake )
-# TODO Replace the original command,
-# export_library_dependencies( ${elxLIBRARY_DEPENDS_FILE} )
-# by export() and install(EXPORT) commands
-# See https://cmake.org/cmake/help/v3.10/policy/CMP0033.html
+
 
 # The build settings file. (necessary for elastix?)
 #set( ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake )
