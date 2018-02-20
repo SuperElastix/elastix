@@ -13,9 +13,5 @@ include_directories( ${ELASTIX_INCLUDE_DIRS} )
 # Add library dirs
 link_directories( ${ELASTIX_LIBRARY_DIRS} )
 
-# If Elastix_FOUND is set, this file is included via find_package() which provides
-# ELASTIX_CONFIG_TARGETS_FILE.
-if( Elastix_FOUND )
-  # This file was found by find_package
-  include( ${ELASTIX_CONFIG_TARGETS_FILE} )
-endif()
+# This file was found by find_package
+include( ${ELASTIX_CONFIG_TARGETS_FILE} )
