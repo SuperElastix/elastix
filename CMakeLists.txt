@@ -549,10 +549,6 @@ endif()
 elastix_export_target( elastix )
 elastix_export_target( transformix )
 
-foreach( LIB IN LISTS AllComponentLibs )
-  elastix_export_target( ${LIB} )
-endforeach()
-
 configure_file( ${CMAKE_SOURCE_DIR}/ElastixConfig.cmake.in ${CMAKE_BINARY_DIR}/ElastixConfig.cmake @ONLY )
 configure_file( ${CMAKE_SOURCE_DIR}/ElastixConfigVersion.cmake.in ${CMAKE_BINARY_DIR}/ElastixConfigVersion.cmake @ONLY )
 configure_file( ${CMAKE_SOURCE_DIR}/UseElastix.cmake.in ${CMAKE_BINARY_DIR}/UseElastix.cmake @ONLY )

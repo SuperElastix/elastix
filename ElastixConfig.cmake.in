@@ -21,6 +21,3 @@ set( ELASTIX_USE_OPENCL @ELASTIX_USE_OPENCL@ )
 set( ELASTIX_USE_MEVISDICOMTIFF @ELASTIX_USE_MEVISDICOMTIFF@ )
 set( ELASTIX_DOX_DIR @ELASTIX_DOX_DIR@ )
 set( ELASTIX_HELP_DIR @ELASTIX_HELP_DIR@ )
-
-# Maintain backwards compatibility by also exporting old-style target information
-set( ELASTIX_ALL_COMPONENT_LIBS @AllComponentLibs@ )
