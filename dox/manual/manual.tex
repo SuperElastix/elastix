@@ -339,10 +339,12 @@ Adopted from \citet{ITKSoftwareGuideSecondEdition}.}
 \label{fig:image}
 \end{figure}
 
-Therefore, you should take care that you use an image format that
-is able to store the relevant information (e.g. \texttt{mhd},
-DICOM). Some image formats, like \texttt{bmp}, do not store the
-origin and spacing. This may cause serious problems!
+Therefore, you should take care that you use an image format that is
+able to store the relevant information (e.g. \texttt{mhd}, DICOM).
+Some image formats, like \texttt{bmp}, do not store the origin and
+spacing. This may cause serious problems! Note that \elastix\
+supports all file formats that are supported by the ITK
+(\url{https://itk.org/Wiki/ITK/File_Formats}).
 
 Up to \elastix\ version 4.2, the image orientation (direction cosines) was not
 yet fully supported in \elastix. From \elastix\ 4.3, image orientation is fully
