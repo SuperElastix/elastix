@@ -15,7 +15,10 @@ from optparse import OptionParser
 # cd ..
 # cmake .
 # ctest -C Release -R COMPARE_TP
-# svn commit -m "ENH: updating baselines after recent change X"
+# cd ..
+# git add Testing/Baselines/TransformParameters_*
+# git commit -m "ENH: updating baselines after recent change X"
+# git push
 def main():
     # usage, parse parameters
     usage = "usage: %prog [options] arg";
