@@ -11,7 +11,7 @@ from optparse import OptionParser
 # cd bin_VS2010
 # ctest -C Release
 # cd Testing
-# python ../../src/Testing/elx_get_tp_list.py -l elastix_run* -o ../../src/Testing/Baselines
+# python ../../Testing/elx_get_tp_list.py -l elastix_run* -o ../../Testing/Baselines
 # cd ..
 # cmake .
 # ctest -C Release -R COMPARE_TP
