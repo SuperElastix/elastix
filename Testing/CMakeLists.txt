@@ -224,8 +224,8 @@ endmacro()
 set( knownChecksumSystem false )
 set( specializedTransformParameterSystem false )
 if( SITE STREQUAL "LKEB.PCMarius"
-    AND BUILDNAME STREQUAL "Win7-64bit-VS2010" )
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2010.txt )
+    AND BUILDNAME STREQUAL "Win10-64bit-VS2015" )
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win10-64bit-VS2015.txt )
   set( knownChecksumSystem true )
   set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "LKEB-ELDB91"
@@ -256,7 +256,7 @@ if( EXISTS ${TestSiteBaselineDir}/checksums.txt )
 endif()
 
 if( knownChecksumSystem )
-  message( STATUS "Checksum baseline file:" ${checksumBaselineFile} )
+  message( STATUS "Checksum baseline file: " ${checksumBaselineFile} )
 endif()
 
 # Python script used for comparing elastix output with baseline results
