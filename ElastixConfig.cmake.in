@@ -1,0 +1,27 @@
+set( Elastix_DIR @PROJECT_BINARY_DIR@ )
+
+# Add include directories needed to use SuperElastix
+set( ELASTIX_INCLUDE_DIRS @elxINCLUDE_DIRECTORIES@ )
+
+# Add list of Elastix library directories
+set( ELASTIX_LIBRARY_DIRS @LIBRARY_OUTPUT_PATH@ )
+
+# Add list of SuperElastix libraries
+set( ELASTIX_LIBRARIES @ELASTIX_LIBRARIES@ )
+
+# The location of the Elastix use-file
+set( ELASTIX_USE_FILE "${Elastix_DIR}/UseElastix.cmake" )
+
+set( ELASTIX_CONFIG_TARGETS_FILE "${Elastix_DIR}/ElastixTargets.cmake" )
+
+# Set some variables that the user might want to use
+set( ELASTIX_BUILD_EXECUTABLE @ELASTIX_BUILD_EXECUTABLE@ )
+set( ELASTIX_USE_OPENMP @ELASTIX_USE_OPENMP@ )
+set( ELASTIX_USE_OPENCL @ELASTIX_USE_OPENCL@ )
+set( ELASTIX_USE_MEVISDICOMTIFF @ELASTIX_USE_MEVISDICOMTIFF@ )
+set( ELASTIX_DOX_DIR @ELASTIX_DOX_DIR@ )
+set( ELASTIX_HELP_DIR @ELASTIX_HELP_DIR@ )
+
+# Maintain backwards compatibility by also exporting old-style target information
+set( ELASTIX_ALL_COMPONENT_LIBS @AllComponentLibs@ )
+set( elxLIBRARY_DEPENDS_FILE @elxLIBRARY_DEPENDS_FILE@ )

@@ -1,0 +1,27 @@
+os:
+  - Visual Studio 2013
+  - Visual Studio 2015
+  - Visual Studio 2017
+shallow_clone: false
+skip_tags: true
+clone_folder: c:\elastix-source
+configuration:
+  - Release
+platform:
+  - x64
+  - x86
+environment:
+  ELASTIX_SOURCE_DIR: c:\elastix-source
+  ELASTIX_BUILD_DIR: c:\elastix-build
+  ITK_URL: https://github.com/InsightSoftwareConsortium/ITK
+  ITK_SOURCE_DIR: c:\ITK-source
+  ITK_BUILD_DIR: c:\ITK-build
+  ITK_BUILD_CACHE_STAMP: c:\BUILT_ITK
+cache:
+  - '%ITK_SOURCE_DIR%'
+  - '%ITK_BUILD_DIR%'
+build_script:
+  - cmd: if not exist %ITK_SOURCE_DIR% git clone %ITK_URL% %ITK_SOURCE_DIR% && cd %ITK_SOURCE_DIR% && git checkout v4.11.1
+  - cmd: if not exist %ITK_BUILD_DIR% mkdir -p %ITK_BUILD_DIR% && cd %ITK_BUILD_DIR% && cmake -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF -DITKGroup_IO:BOOL=ON -DModule_ITKDistanceMap:BOOL=ON -DModule_ITKImageFusion:BOOL=ON -DModule_ITKLabelMap:BOOL:=ON -DModule_ITKMathematicalMorphology:BOOL=ON -DModule_ITKOptimizers:BOOL=ON -DModule_ITKOptimizersv4:BOOL=ON -DModule_ITKRegistrationCommon:BOOL=ON -DModule_ITKVideoIO:BOOL=ON-DCMAKE_BUILD_TYPE=Release %ITK_SOURCE_DIR% && cmake --build . --config Release -- /m && @echo BUILT_ITK > %ITK_BUILD_CACHE_STAMP%
+  - cmd: if not exist %ITK_BUILD_CACHE_STAMP% mkdir -p %ELASTIX_BUILD_DIR% && cd %ELASTIX_BUILD_DIR% && cmake -DUSE_ALL_COMPONENTS=ON -DITK_DIR=%ITK_BUILD_DIR% -DCMAKE_BUILD_TYPE=Release %ELASTIX_SOURCE_DIR% && cmake --build . --config Release -- /m && ctest -j4 -VV -C Release || true
+
