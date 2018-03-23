@@ -29,11 +29,11 @@ template< typename TMovingImage  >
 TransformixFilter< TMovingImage >
 ::TransformixFilter( void )
 {
-  this->SetPrimaryInputName( "InputImage" );
+  this->SetPrimaryInputName( "TransformParameterObject" );
   this->SetPrimaryOutputName( "ResultImage" );
   this->SetOutput( "ResultDeformationField", this->MakeOutput( "ResultDeformationField" ) );
 
-  this->AddRequiredInputName( "TransformParameterObject" );
+  //this->AddRequiredInputName( "InputImage" );
 
   this->m_FixedPointSetFileName               = "";
   this->m_ComputeSpatialJacobian              = false;
@@ -46,8 +46,6 @@ TransformixFilter< TMovingImage >
   this->m_LogToConsole = false;
   this->m_LogToFile    = false;
 
-  // TransformixFilter must have an input image
-  this->SetInput( "InputImage", TMovingImage::New() );
 } // end Constructor
 
 
@@ -256,6 +254,97 @@ TransformixFilter< TMovingImage >
   }
 } // end MakeOutput()
 
+
+/**
+* ********************* GenerateOutputInformation *********************
+*/
+template< typename TMovingImage >
+void
+TransformixFilter< TMovingImage >
+::GenerateOutputInformation( void )
+{
+
+  // Get pointers to the input and output
+  const ParameterObjectType * transformParameterObjectPtr = this->GetTransformParameterObject();
+  OutputImageType * outputPtr = this->GetOutput();
+  OutputDeformationFieldType * outputOutputDeformationFieldPtr = this->GetOutputDeformationField();
+
+  itkAssertInDebugAndIgnoreInReleaseMacro( transformParameterObjectPtr );
+  itkAssertInDebugAndIgnoreInReleaseMacro( outputPtr != ITK_NULLPTR );
+  itkAssertInDebugAndIgnoreInReleaseMacro( outputOutputDeformationFieldPtr != ITK_NULLPTR );
+
+  // assuming that transformParameterObjects can have only 1 Map
+  const ParameterMapType transformParameterObjectMap = transformParameterObjectPtr->GetParameterMap( 0 );
+  
+  ParameterMapType::const_iterator spacingMapIter = transformParameterObjectMap.find( "Spacing" );
+  if ( spacingMapIter == transformParameterObjectMap.cend() )
+  {
+    itkExceptionMacro( "No entry Spacing found in transformParameterObjectMap" );
+  }
+  const ParameterValueVectorType spacingStrings = spacingMapIter->second;
+
+  ParameterMapType::const_iterator sizeMapIter = transformParameterObjectMap.find( "Size" );
+  if (sizeMapIter == transformParameterObjectMap.cend())
+  {
+    itkExceptionMacro( "No entry Size found in transformParameterObjectMap" );
+  }
+  const ParameterValueVectorType sizeStrings = sizeMapIter->second;
+
+  ParameterMapType::const_iterator indexMapIter = transformParameterObjectMap.find( "Index" );
+  if (indexMapIter == transformParameterObjectMap.cend())
+  {
+    itkExceptionMacro( "No entry Index found in transformParameterObjectMap" );
+  }
+  const ParameterValueVectorType indexStrings = indexMapIter->second;
+
+  ParameterMapType::const_iterator originMapIter = transformParameterObjectMap.find( "Origin" );
+  if (originMapIter == transformParameterObjectMap.cend())
+  {
+    itkExceptionMacro( "No entry Origin found in transformParameterObjectMap" );
+  }
+  const ParameterValueVectorType originStrings = originMapIter->second;
+
+  ParameterMapType::const_iterator directionMapIter = transformParameterObjectMap.find( "Direction" );
+  if (directionMapIter == transformParameterObjectMap.cend())
+  {
+    itkExceptionMacro( "No entry Direction found in transformParameterObjectMap" );
+  }
+  const ParameterValueVectorType directionStrings = directionMapIter->second;
+
+  typename TMovingImage::SpacingType outputSpacing;
+  typename TMovingImage::SizeType outputSize;
+  typename TMovingImage::IndexType outputStartIndex;
+  typename TMovingImage::PointType outputOrigin;
+  typename TMovingImage::DirectionType outputDirection;
+
+  for ( unsigned int i = 0; i < TMovingImage::ImageDimension; i++ )
+  {
+    outputSpacing[i] = std::atof( spacingStrings[i].c_str() );
+    outputSize[i] = std::atoi( sizeStrings[i].c_str() );
+    outputStartIndex[i] = ::atoi( indexStrings[i].c_str() );
+    outputOrigin[i] = std::atof( originStrings[i].c_str() );
+    for (unsigned int j = 0; j < TMovingImage::ImageDimension; j++)
+    {
+      outputDirection(j,i) = std::atof( directionStrings[ i * TMovingImage::ImageDimension + j ].c_str() );
+    }
+  }
+
+  outputPtr->SetSpacing( outputSpacing );
+  outputOutputDeformationFieldPtr->SetSpacing( outputSpacing );
+  outputPtr->SetOrigin( outputOrigin );
+  outputOutputDeformationFieldPtr->SetOrigin( outputOrigin );
+
+  // Set region
+  typename TMovingImage::RegionType outputLargestPossibleRegion;
+  outputLargestPossibleRegion.SetSize( outputSize );
+  outputLargestPossibleRegion.SetIndex( outputStartIndex );
+
+  outputPtr->SetLargestPossibleRegion( outputLargestPossibleRegion );
+  outputOutputDeformationFieldPtr->SetLargestPossibleRegion( outputLargestPossibleRegion );
+
+  outputPtr->SetNumberOfComponentsPerPixel( 1 );
+  outputOutputDeformationFieldPtr->SetNumberOfComponentsPerPixel( TMovingImage::ImageDimension );
+}
 /**
  * ********************* SetMovingImage *********************
  */
