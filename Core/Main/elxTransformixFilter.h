@@ -67,6 +67,7 @@ public:
   typedef typename ParameterObjectType::Pointer         ParameterObjectPointer;
   typedef typename ParameterObjectType::ConstPointer    ParameterObjectConstPointer;
 
+  typedef typename Superclass::OutputImageType OutputImageType;
   typedef typename itk::Image< itk::Vector< float, TMovingImage::ImageDimension >, 
                          TMovingImage::ImageDimension > OutputDeformationFieldType;
 
