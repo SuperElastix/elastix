@@ -132,10 +132,12 @@ public:
   itkGetConstMacro( LogToFile, bool );
   itkBooleanMacro( LogToFile );
 
-  /** To support outputs of different types (i.e. ResultImage and ResultDeformationField) MakeOutput from itk::ImageSource< TOutputImage > needs to be overridden */
+  /** To support outputs of different types (i.e. ResultImage and ResultDeformationField)
+   * MakeOutput from itk::ImageSource< TOutputImage > needs to be overridden.
+   */
   virtual DataObjectPointer MakeOutput( const DataObjectIdentifierType & key ) ITK_OVERRIDE;
 
-  /** The ResultImage and ResultDeformationField get their image properties from the TransformParameterObject*/
+  /** The ResultImage and ResultDeformationField get their image properties from the TransformParameterObject. */
   virtual void GenerateOutputInformation( void ) ITK_OVERRIDE;
 
 protected:
@@ -152,11 +154,12 @@ private:
   /** IsEmpty. */
   virtual bool IsEmpty( const InputImagePointer inputImage );
 
-  /** Let transformix handle input verification internally */
+  /** Let transformix handle input verification internally. */
   virtual void VerifyInputInformation( void ) ITK_OVERRIDE {};
 
   /** Tell the compiler we want all definitions of Get/Set/Remove
-   *  from ProcessObject and TransformixFilter. */
+   *  from ProcessObject and TransformixFilter.
+   */
   using itk::ProcessObject::SetInput;
   using itk::ProcessObject::GetInput;
   using itk::ProcessObject::RemoveInput;
