@@ -16,6 +16,6 @@
  *
  *=========================================================================*/
 
-#include "elxReducedDimensionBSplineResampleInterpolator.h"
+#include "elxRDBSplineResampleInterpolator.h"
 
 elxInstallMacro( ReducedDimensionBSplineResampleInterpolator );

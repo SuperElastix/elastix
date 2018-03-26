@@ -9,7 +9,7 @@ from optparse import OptionParser
 # cd bin_VS2010
 # ctest -C Release
 # cd Testing
-# python ../../src/Testing/elx_get_checksum_list.py -l elastix_run*
+# python ../../elastix/Testing/elx_get_checksum_list.py -l elastix_run*
 # cd ..
 # cmake .
 # ctest -C Release -R COMPARE_CHECKSUM

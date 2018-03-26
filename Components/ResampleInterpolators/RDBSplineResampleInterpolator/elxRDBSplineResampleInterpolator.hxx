@@ -15,11 +15,10 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __elxReducedDimensionBSplineResampleInterpolator_hxx
 #define __elxReducedDimensionBSplineResampleInterpolator_hxx
 
-#include "elxReducedDimensionBSplineResampleInterpolator.h"
+#include "elxRDBSplineResampleInterpolator.h"
 
 namespace elastix
 {

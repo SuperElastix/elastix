@@ -11,19 +11,19 @@
 # and defaults to Nightly.
 # NOTE that Model should directly follow the comma: no space allowed!
 #
-# Setup: Linux 64bit, Ubuntu 14.04 LTS, 3.13.0-24-generic
-# gcc 4.8.2
-# Release mode, ITK 4.x (git)
-# PC: LKEB (MS), goliath
+# Setup: Linux 64bit, Ubuntu 16.04.3 LTS
+# gcc 5.4.0
+# Release mode, ITK 4.13.0
+# PC: LKEB (MS), LKEB-ELDB91
 
 # Client maintainer: m.staring@lumc.nl
-set( CTEST_SITE "LKEB.goliath" )
-set( CTEST_BUILD_NAME "Linux-64bit-gcc4.8.2-Release" )
-set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
-set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
+set( CTEST_SITE "LKEB-ELDB91" )
+set( CTEST_BUILD_NAME "Linux-64bit-gcc5.4.0-Release" )
+set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
+set( CTEST_TEST_ARGS PARALLEL_LEVEL 2 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix" )
+set( CTEST_DASHBOARD_ROOT "/home/mstaring/nightly/elastix" )
 set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_release )
 
 # Specify the kind of dashboard to submit
@@ -38,12 +38,12 @@ endif()
 # Dashboard settings
 set( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=/srv/lkeb-goliath/toolkits/ITK/git/bin_release
+ITK_DIR:PATH=/home/mstaring/nightly/ITK/bin_release
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
-ELASTIX_USE_EIGEN:BOOL=ON
+ELASTIX_USE_EIGEN:BOOL=OFF
 ELASTIX_USE_OPENCL:BOOL=OFF
 ELASTIX_USE_MEVISDICOMTIFF:BOOL=OFF
 ELASTIX_IMAGE_DIMENSIONS:STRING=2;3;4

@@ -138,7 +138,7 @@ private:
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxReducedDimensionBSplineResampleInterpolator.hxx"
+#include "elxRDBSplineResampleInterpolator.hxx"
 #endif
 
 #endif // end __elxReducedDimensionBSplineResampleInterpolator_h

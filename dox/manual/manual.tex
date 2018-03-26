@@ -339,10 +339,12 @@ Adopted from \citet{ITKSoftwareGuideSecondEdition}.}
 \label{fig:image}
 \end{figure}
 
-Therefore, you should take care that you use an image format that
-is able to store the relevant information (e.g. \texttt{mhd},
-DICOM). Some image formats, like \texttt{bmp}, do not store the
-origin and spacing. This may cause serious problems!
+Therefore, you should take care that you use an image format that is
+able to store the relevant information (e.g. \texttt{mhd}, DICOM).
+Some image formats, like \texttt{bmp}, do not store the origin and
+spacing. This may cause serious problems! Note that \elastix\
+supports all file formats that are supported by the ITK
+(\url{https://itk.org/Wiki/ITK/File_Formats}).
 
 Up to \elastix\ version 4.2, the image orientation (direction cosines) was not
 yet fully supported in \elastix. From \elastix\ 4.3, image orientation is fully
@@ -1085,13 +1087,12 @@ The continued development brings us today (\today) to version 4.9.
 what & where \\
 \hline
 Website        & \url{http://elastix.isi.uu.nl} \\
-SVN repository & \url{https://svn.bigr.nl/elastix/trunkpublic} \\
+GIT repository & \url{https://github.com/SuperElastix/elastix} \\
 Dashboard      & \url{http://my.cdash.org/index.php?project=elastix} \\
-WIKI           & \url{http://elastix.isi.uu.nl/wiki.php} \\
+WIKI           & \url{https://github.com/SuperElastix/elastix/wiki} \\
 FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php} \\
-Mailing list subscription &
-\url{http://lists.bigr.nl/mailman/listinfo/elastix} \\
-Mailing list   & \url{elastix@bigr.nl}
+Mailing list   &
+\url{https://groups.google.com/forum/#!forum/elastix-imageregistration}
 \end{tabular}
 \end{table}
 
@@ -1165,7 +1166,13 @@ from the binaries, or by compiling \elastix\ yourself.
 The easiest way to get started with \elastix\ is to use the
 pre-compiled binaries.
 \begin{enumerate}
-\item Download the compressed archive from the website:
+\item Download the compressed archive. From \elastix\ v4.9.0 onwards
+the binaries can be found at GitHub:
+    \begin{quote}
+    \url{https://github.com/SuperElastix/elastix/releases}
+    \end{quote}
+
+Binaries for \elastix\ v4.8.0 and earlier can be found at:
     \begin{quote}
     \url{http://elastix.isi.uu.nl/download.php}
     \end{quote}
@@ -1202,37 +1209,33 @@ the GCC compiler under Linux/MacOS.
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
 
-\item Download and compile the ITK version 4.11: \url{www.itk.org}. Make
-    sure to set the following (advanced) CMake variable to \texttt{ON}:
-    \texttt{Module\_ITKReview}, and optionally \texttt{ITK\_USE\_64BITS\_IDS}
+\item Download and compile the ITK version 4.13.0: \url{www.itk.org}.
+    Optionally set the following (advanced) CMake variables to
+    \texttt{ON}: \texttt{ITK\_USE\_64BITS\_IDS}
     and \texttt{ITK\_LEGACY\_REMOVE}. For faster building of ITK
     you can switch off \texttt{BUILD\_EXAMPLES} and
     \texttt{BUILD\_TESTING}.
 
 \item Obtain the sources. There are three possibilities:
   \begin{enumerate}
-  \item Download the compressed sources from the website. Extract the
+  \item Download the compressed sources from GitHub. Extract the
       archive to \texttt{<your-elastix-folder>} of your choice.
-  \item Use \texttt{subversion} (\url{https://subversion.tigris.org})
-      to check out the release from the subversion repository:
-\begin{verbatim}
-svn co --username elastixguest --password elastixguest
-  https://svn.bigr.nl/elastix/tagspublic/elastix_XX_X <your-elastix-folder>
-\end{verbatim}
-      where XX\_X is the major version number (first 2 digits) and the
-      minor version number (1 digit). So, for example, for version
-      4.9 this would be 04\_9.
-  \item Use \texttt{subversion} to check out the latest development
-      version. NB: this version might be unstable!
-\begin{verbatim}
-svn co --username elastixguest --password elastixguest
-  https://svn.bigr.nl/elastix/trunkpublic <your-elastix-folder>
-\end{verbatim}
+  \item Use \texttt{git} (\url{https://git-scm.com/})
+      to clone the release from the GitHub repository:
+    \begin{verbatim}
+    git clone https://github.com/SuperElastix/elastix.git <your-elastix-folder>
+    \end{verbatim}
+  \item Checkout the release you are interested in:
+    \begin{verbatim}
+    git checkout v4.9.0
+    \end{verbatim}
+  \item Follow the \texttt{develop} branch for the latest development.
+    NB: this version might be unstable!
   \end{enumerate}
 
 \item Run CMake for \elastix:
     \begin{enumerate}
-    \item Windows: start CMake. Find the \texttt{src} folder with the
+    \item Windows: start CMake. Find the folder with the
         source code. Set the folder where you want the binaries to be
         created. Click ``Configure'' and select the compiler that you
         use. Set the \texttt{CMAKE\_INSTALL\_PREFIX} to the directory
@@ -1734,7 +1737,7 @@ parameters corresponding to translation). We recommend to let
 \texttt{(AutomaticScalesEstimation "true")}\footnote{The
 implementation is given in
 %\verb=elastix\src\Core\ComponentBaseClasses\elxTransformBase.hxx=}
-\texttt{elastix$\backslash$src$\backslash$Core$\backslash$ComponentBaseClasses$\backslash$elxTransformBase.hxx}}.
+\texttt{elastix$\backslash$Core$\backslash$ComponentBaseClasses$\backslash$elxTransformBase.hxx}}.
 Always start with a rigid or affine transformation before doing a
 nonrigid one, to get a good initial alignment.
 
@@ -2621,9 +2624,9 @@ A large part of the \elastix\ code is based on the ITK
 that the low-level functionality (image classes, memory allocation
 etc.) is thoroughly tested. Naturally, all image formats supported
 by the ITK are supported by \elastix\ as well. The C++ source code
-can be compiled on multiple operating systems (Windows XP, Linux,
-Mac OS X), using various compilers (MS Visual Studio, GCC), and
-supports both 32 and 64 bit systems.
+can be compiled on multiple operating systems (Windows, Linux, Mac
+OS X), using various compilers (MS Visual Studio, GCC), and supports
+both 32 and 64 bit systems.
 
 In addition to the existing ITK image registration classes,
 \elastix\ implements new functionality. The most important
@@ -2686,25 +2689,25 @@ compiled and tested independent of layer B. Subsequently, a small
 layer B wrapper needs to be written, which connects the layer A
 class to the other parts of \elastix.
 
-The image samplers, for example, are implemented as ITK classes that all
-inherit from a base class \texttt{itk::ImageSamplerBase}. These can be found in
-\texttt{src/Common/ImageSamplers}. This is ``layer A'' in \elastix. For each
-sampler (random, grid, full... ) a wrapper is written, located in
-\texttt{src/Components/ImageSamplers}, which takes care of configuring the
-sampler before each new resolution of the registration process. This is ``layer
-B'' of \elastix.
+The image samplers, for example, are implemented as ITK classes that
+all inherit from a base class \texttt{itk::ImageSamplerBase}. These
+can be found in \texttt{Common/ImageSamplers}. This is ``layer A''
+in \elastix. For each sampler (random, grid, full... ) a wrapper is
+written, located in \texttt{Components/ImageSamplers}, which takes
+care of configuring the sampler before each new resolution of the
+registration process. This is ``layer B'' of \elastix.
 
 \subsection{Directory structure}
 
 The basic directory structure is as follows:
 \begin{itemize}
 \item dox
-\item src/Common: ITK classes, Layer A stuff. This directory also contains
+\item Common: ITK classes, Layer A stuff. This directory also contains
     some external libraries, unrelated to ITK, like xout (which is written
     by us) and the ANNlib.
-\item src/Core: this is the main \elastix\ kernel, responsible for the
+\item Core: this is the main \elastix\ kernel, responsible for the
     execution flow, connecting the classes, reading parameters etc.
-\item src/Components: this directory contains the components and their
+\item Components: this directory contains the components and their
     \elastix\ wrappers (layer B). Very component-specific layer A code can
     also be found here.
 \end{itemize}
@@ -2773,12 +2776,12 @@ of version 4.7 (February 2014).
 
 \subsection{Including \elastix\ code in your own software}\label{ssec:dev:include}
 
-You may find some \elastix\ classes useful to integrate in your own project.
-For example, if you are developing a new \elastix\ component and first would
-like to test it outside elastix (see Section \ref{sec:dev:newcomp}. In such a
-case, you could of course copy the required \elastix\ files to your own
-project, or set the include-paths manually, but this would not be very
-convenient.
+You may find some \elastix\ classes useful to integrate in your own
+project. For example, if you are developing a new \elastix\
+component and first would like to test it outside \elastix\ (see
+Section \ref{sec:dev:newcomp}. In such a case, you could of course
+copy the required \elastix\ files to your own project, or set the
+include-paths manually, but this would not be very convenient.
 
 To make it easier, a \texttt{UseElastix.cmake} file is generated in the
 \elastix\ binary directory. You can include this in the \texttt{CMakeLists.txt}
@@ -2786,8 +2789,8 @@ file of your own project, and CMake will make sure that all necessary
 include\_directories are set. Also, you can link to the \elastix\ libraries,
 such as elxCommon, to avoid recompiling code.
 
-An example of this can be found in the directory \texttt{dox/externalproject}
-of the elastix source distribution.
+An example of this can be found in the directory
+\texttt{dox/externalproject} of the \elastix\ source distribution.
 
 \subsection{Using \elastix\ as a library}\label{ssec:dev:library}
 
@@ -3026,13 +3029,14 @@ ADD_ELXCOMPONENT( AdvancedMeanSquaresMetric
  \end{verbatim}
  \end{quote}
 The \texttt{ADD\_ELXCOMPONENT} command is a macro defined in
-\texttt{src/Components/CMakeLists.txt}. The first argument is the name of the
-layer B wrapper class, which is declared in ``elxAdvancedMeanSquaresMetric.h''.
-After that, you can specify the source files on which the component relies. In
-the example above, the files that start with ``itk'' form the layer A code.
-Files that start with ``elx'' are the layer B code. The file
-``elxAdvancedMeanSquaresMetric.cxx'' is particularly simple. It just consists
-of two lines:
+\texttt{Components/CMakeLists.txt}. The first argument is the name
+of the layer B wrapper class, which is declared in
+``elxAdvancedMeanSquaresMetric.h''. After that, you can specify the
+source files on which the component relies. In the example above,
+the files that start with ``itk'' form the layer A code. Files that
+start with ``elx'' are the layer B code. The file
+``elxAdvancedMeanSquaresMetric.cxx'' is particularly simple. It just
+consists of two lines:
 \begin{quote}
 \begin{verbatim}
 #include "elxAdvancedMeanSquaresMetric.h"
@@ -3040,7 +3044,7 @@ elxInstallMacro( AdvancedMeanSquaresMetric );
 \end{verbatim}
 \end{quote}
 The \texttt{elxInstallMacro} is defined in
-\texttt{src/Core/Install/elxMacro.h}.
+\texttt{Core/Install/elxMacro.h}.
 
 The files \texttt{elxAdvancedMeanSquaresMetric.h/hxx} together define the layer
 B wrapper class. That class inherits from the corresponding layer A class, but

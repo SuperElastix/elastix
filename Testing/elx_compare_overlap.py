@@ -8,6 +8,12 @@ from optparse import OptionParser
 
 #-------------------------------------------------------------------------------
 # the main function
+# Below we deform the moving image segmentation by the current result as well as
+# by a previous stored result. This makes this test a regression test.
+#
+# We could instead compare with a fixed image segmentation, but that would require
+# the tested registrations to be relatively good, which they are not to save time.
+
 def main():
   # usage, parse parameters
   usage = "usage: %prog [options] arg";

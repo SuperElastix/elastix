@@ -104,9 +104,9 @@ void
 BSplineResampleInterpolator< TElastix >
 ::CreateTransformParametersMap( ParameterMapType * paramsMap ) const
 {
+  std::ostringstream         tmpStream;
   std::string                parameterName;
   std::vector< std::string > parameterValues;
-  char                       tmpValue[ 256 ];
 
   /** Call CreateTransformParametersMap of the ResamplerBase. */
   this->Superclass2::CreateTransformParametersMap( paramsMap );
@@ -115,8 +115,8 @@ BSplineResampleInterpolator< TElastix >
 
   /** Write the FinalBSplineInterpolationOrder. */
   parameterName = "FinalBSplineInterpolationOrder";
-  sprintf( tmpValue, "%d", this->GetSplineOrder() );
-  parameterValues.push_back( tmpValue );
+  tmpStream.str( "" ); tmpStream << this->GetSplineOrder();
+  parameterValues.push_back( tmpStream.str() );
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
   parameterValues.clear();
 

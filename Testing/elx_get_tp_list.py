@@ -11,11 +11,14 @@ from optparse import OptionParser
 # cd bin_VS2010
 # ctest -C Release
 # cd Testing
-# python ../../src/Testing/elx_get_tp_list.py -l elastix_run* -o ../../src/Testing/Baselines
+# python ../../Testing/elx_get_tp_list.py -l elastix_run* -o ../../Testing/Baselines
 # cd ..
 # cmake .
 # ctest -C Release -R COMPARE_TP
-# svn commit -m "ENH: updating baselines after recent change X"
+# cd ..
+# git add Testing/Baselines/TransformParameters_*
+# git commit -m "ENH: updating baselines after recent change X"
+# git push
 def main():
     # usage, parse parameters
     usage = "usage: %prog [options] arg";

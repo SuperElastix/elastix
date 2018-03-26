@@ -224,23 +224,14 @@ endmacro()
 set( knownChecksumSystem false )
 set( specializedTransformParameterSystem false )
 if( SITE STREQUAL "LKEB.PCMarius"
-    AND BUILDNAME STREQUAL "Win7-64bit-VS2010" )
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2010.txt )
+    AND BUILDNAME STREQUAL "Win10-64bit-VS2015" )
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win10-64bit-VS2015.txt )
   set( knownChecksumSystem true )
   set( specializedTransformParameterSystem true )
-elseif( SITE STREQUAL "LKEB.goliath"
-    AND ( BUILDNAME STREQUAL "Linux-64bit-gcc4.8.2-Release"
-      OR BUILDNAME STREQUAL "Linux-64bit-gcc4.8.2-Release-perf" ) )
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
+elseif( SITE STREQUAL "LKEB-ELDB91"
+    AND BUILDNAME STREQUAL "Linux-64bit-gcc5.4.0-Release" )
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.ELDB91_Linux-64bit-gcc5.txt )
   set( knownChecksumSystem true )
-  set( specializedTransformParameterSystem true )
-elseif( SITE STREQUAL "LKEB.goliath"
-    AND BUILDNAME STREQUAL "Linux-64bit-gcc4.6.3-Release-perf" )
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
-  set( knownChecksumSystem true )
-  set( specializedTransformParameterSystem true )
-elseif( SITE STREQUAL "LKEB.goliath"
-    AND BUILDNAME STREQUAL "Linux-clang3.3-Release" )
   set( specializedTransformParameterSystem true )
 elseif( SITE STREQUAL "LKEB.MacMini"
     AND BUILDNAME STREQUAL "MacOSX-64bit-gcc4.2.1" )
@@ -265,11 +256,10 @@ if( EXISTS ${TestSiteBaselineDir}/checksums.txt )
 endif()
 
 if( knownChecksumSystem )
-  message( STATUS "Checksum baseline file:" ${checksumBaselineFile} )
+  message( STATUS "Checksum baseline file: " ${checksumBaselineFile} )
 endif()
 
 # Python script used for comparing elastix output with baseline results
-# Note that ITKTools is required for some of these scripts.
 set( pythonfinalmetric ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
 set( pythonchecksum   ${elastix_SOURCE_DIR}/Testing/elx_compare_checksum.py )
 set( pythonoverlap    ${elastix_SOURCE_DIR}/Testing/elx_compare_overlap.py )
@@ -318,7 +308,7 @@ macro( elx_add_run_test testbasename howtocompare )
     PROPERTIES TIMEOUT 600 )
 
   # To compare against a baseline TransformParameters file
-  # Baselines have been generated on LKEB, PCMarius, Win7, 64 bit, VS2008
+  # Baselines have been generated on LKEB, PCMarius, Win10, 64 bit, VS2015
   set( baselineTP ${TestOutputDir}/TransformParameters_${testbasename}.txt )
   set( testTP ${output_dir}/TransformParameters.${countp}.txt )
 
@@ -326,7 +316,7 @@ macro( elx_add_run_test testbasename howtocompare )
   # These three tests give different results on different platforms
   # They all seem to be using ASGD and B-splines and (N)MI
   if( specializedTransformParameterSystem )
-    if( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
+    if( ( SITE STREQUAL "LKEB-ELDB91" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
       if( ${testbasename} STREQUAL "3DCT_lung.MI.bspline.ASGD.001"
         OR ${testbasename} STREQUAL "3DCT_lung.NMI.bspline.ASGD.001" )
         set( baselineTP ${TestOutputDir}/TransformParameters_${SITE}_${testbasename}.txt )
@@ -721,7 +711,7 @@ endfunction()
 find_image_baseline( example )
 
 if( knownChecksumSystem OR specializedTransformParameterSystem )
-  if( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
+  if( ( SITE STREQUAL "LKEB-ELDB91" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
     set( baselineImage_example ${TestBaselineDir}/example_${SITE}.mha )
   endif()
 endif()
