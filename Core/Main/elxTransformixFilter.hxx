@@ -25,7 +25,7 @@ namespace elastix
  * ********************* Constructor *********************
  */
 
-template< typename TMovingImage  >
+template< typename TMovingImage >
 TransformixFilter< TMovingImage >
 ::TransformixFilter( void )
 {
@@ -232,18 +232,19 @@ TransformixFilter< TMovingImage >
 
 
 /**
-* ********************* MakeOutput *********************
-*/
+ * ********************* MakeOutput *********************
+ */
+
 template< typename TMovingImage >
 typename TransformixFilter< TMovingImage >::DataObjectPointer
 TransformixFilter< TMovingImage >
 ::MakeOutput( const DataObjectIdentifierType & key )
 {
-  if ( key == "ResultImage" )
+  if( key == "ResultImage" )
   {
     return TMovingImage::New().GetPointer();
   }
-  else if ( key == "ResultDeformationField" )
+  else if( key == "ResultDeformationField" )
   {
     return OutputDeformationFieldType::New().GetPointer();
   }
@@ -256,14 +257,14 @@ TransformixFilter< TMovingImage >
 
 
 /**
-* ********************* GenerateOutputInformation *********************
-*/
+ * ********************* GenerateOutputInformation *********************
+ */
+
 template< typename TMovingImage >
 void
 TransformixFilter< TMovingImage >
 ::GenerateOutputInformation( void )
 {
-
   // Get pointers to the input and output
   const ParameterObjectType * transformParameterObjectPtr = this->GetTransformParameterObject();
   OutputImageType * outputPtr = this->GetOutput();
@@ -277,35 +278,35 @@ TransformixFilter< TMovingImage >
   const ParameterMapType transformParameterObjectMap = transformParameterObjectPtr->GetParameterMap( 0 );
   
   ParameterMapType::const_iterator spacingMapIter = transformParameterObjectMap.find( "Spacing" );
-  if ( spacingMapIter == transformParameterObjectMap.cend() )
+  if( spacingMapIter == transformParameterObjectMap.cend() )
   {
     itkExceptionMacro( "No entry Spacing found in transformParameterObjectMap" );
   }
   const ParameterValueVectorType spacingStrings = spacingMapIter->second;
 
   ParameterMapType::const_iterator sizeMapIter = transformParameterObjectMap.find( "Size" );
-  if (sizeMapIter == transformParameterObjectMap.cend())
+  if( sizeMapIter == transformParameterObjectMap.cend() )
   {
     itkExceptionMacro( "No entry Size found in transformParameterObjectMap" );
   }
   const ParameterValueVectorType sizeStrings = sizeMapIter->second;
 
   ParameterMapType::const_iterator indexMapIter = transformParameterObjectMap.find( "Index" );
-  if (indexMapIter == transformParameterObjectMap.cend())
+  if( indexMapIter == transformParameterObjectMap.cend() )
   {
     itkExceptionMacro( "No entry Index found in transformParameterObjectMap" );
   }
   const ParameterValueVectorType indexStrings = indexMapIter->second;
 
   ParameterMapType::const_iterator originMapIter = transformParameterObjectMap.find( "Origin" );
-  if (originMapIter == transformParameterObjectMap.cend())
+  if( originMapIter == transformParameterObjectMap.cend() )
   {
     itkExceptionMacro( "No entry Origin found in transformParameterObjectMap" );
   }
   const ParameterValueVectorType originStrings = originMapIter->second;
 
   ParameterMapType::const_iterator directionMapIter = transformParameterObjectMap.find( "Direction" );
-  if (directionMapIter == transformParameterObjectMap.cend())
+  if( directionMapIter == transformParameterObjectMap.cend() )
   {
     itkExceptionMacro( "No entry Direction found in transformParameterObjectMap" );
   }
@@ -317,15 +318,15 @@ TransformixFilter< TMovingImage >
   typename TMovingImage::PointType outputOrigin;
   typename TMovingImage::DirectionType outputDirection;
 
-  for ( unsigned int i = 0; i < TMovingImage::ImageDimension; i++ )
+  for( unsigned int i = 0; i < TMovingImage::ImageDimension; i++ )
   {
-    outputSpacing[i] = std::atof( spacingStrings[i].c_str() );
-    outputSize[i] = std::atoi( sizeStrings[i].c_str() );
-    outputStartIndex[i] = ::atoi( indexStrings[i].c_str() );
-    outputOrigin[i] = std::atof( originStrings[i].c_str() );
-    for (unsigned int j = 0; j < TMovingImage::ImageDimension; j++)
+    outputSpacing[ i ]    = std::atof( spacingStrings[i].c_str() );
+    outputSize[ i ]       = std::atoi( sizeStrings[i].c_str() );
+    outputStartIndex[ i ] = std::atoi( indexStrings[i].c_str() );
+    outputOrigin[ i ]     = std::atof( originStrings[i].c_str() );
+    for( unsigned int j = 0; j < TMovingImage::ImageDimension; j++ )
     {
-      outputDirection(j,i) = std::atof( directionStrings[ i * TMovingImage::ImageDimension + j ].c_str() );
+      outputDirection( j, i ) = std::atof( directionStrings[ i * TMovingImage::ImageDimension + j ].c_str() );
     }
   }
 
@@ -344,7 +345,9 @@ TransformixFilter< TMovingImage >
 
   outputPtr->SetNumberOfComponentsPerPixel( 1 );
   outputOutputDeformationFieldPtr->SetNumberOfComponentsPerPixel( TMovingImage::ImageDimension );
-}
+} // end GenerateOutputInformation()
+
+
 /**
  * ********************* SetMovingImage *********************
  */
