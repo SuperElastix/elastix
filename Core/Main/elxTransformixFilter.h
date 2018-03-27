@@ -68,7 +68,7 @@ public:
   typedef typename ParameterObjectType::ConstPointer    ParameterObjectConstPointer;
 
   typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename itk::Image< itk::Vector< float, TMovingImage::ImageDimension >, 
+  typedef typename itk::Image< itk::Vector< float, TMovingImage::ImageDimension >,
                          TMovingImage::ImageDimension > OutputDeformationFieldType;
 
   typedef typename TMovingImage::Pointer      InputImagePointer;
@@ -109,7 +109,7 @@ public:
   const ParameterObjectType * GetTransformParameterObject( void ) const;
 
   OutputDeformationFieldType * GetOutputDeformationField( void );
-  
+
   const OutputDeformationFieldType * GetOutputDeformationField( void ) const;
 
   /** Set/Get/Remove output directory. */

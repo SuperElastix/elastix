@@ -135,11 +135,32 @@ endif()
 # before declaring any targets.
 
 if( USE_PreconditionedGradientDescent )
- set( SUITESPARSE_BINARY_DIR "" CACHE PATH "Path to SuiteSparse" )
- set( SUITESPARSE_USE_FILE ${SUITESPARSE_BINARY_DIR}/UseSuiteSparse.cmake )
- if( EXISTS ${SUITESPARSE_USE_FILE} )
-  include( ${SUITESPARSE_USE_FILE} )
- endif()
+# ------------------------------------------------------------------
+## CMake file to locate SuiteSparse and its useful composite projects
+## The first developpement of this file was made fro Windows users who
+## use:
+##  https://github.com/jlblancoc/suitesparse-metis-for-windows
+## Anyway, it chould be work also on linux (tested on fedora 17 when you installed suitesparse from yum)
+# Detect SuiteSparse libraries:
+# If not found automatically, set SuiteSparse_DIR in CMake to the
+# directory where SuiteSparse was built.
+# ------------------------------------------------------------------
+  list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/.." ) # Add the directory where FindSuiteSparse.cmake module can be found.
+
+  set( SuiteSparse_USE_LAPACK_BLAS ON )
+  find_package( SuiteSparse QUIET NO_MODULE )  # 1st: Try to locate the *config.cmake file.
+  if( NOT SuiteSparse_FOUND )
+    set( SuiteSparse_VERBOSE ON )
+    find_package( SuiteSparse REQUIRED )       # 2nd: Use FindSuiteSparse.cmake module
+    include_directories( ${SuiteSparse_INCLUDE_DIRS} )
+  else()
+    message( STATUS "Find SuiteSparse : include(${USE_SuiteSparse})" )
+    include( ${USE_SuiteSparse} )
+  endif()
+  message( STATUS "SuiteSparse_LIBS: ${SuiteSparse_LIBRARIES}" )
+# ------------------------------------------------------------------
+#   End of SuiteSparse detection
+# ------------------------------------------------------------------
 endif()
 
 #---------------------------------------------------------------------

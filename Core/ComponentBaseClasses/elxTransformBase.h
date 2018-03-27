@@ -298,10 +298,10 @@ public:
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
   virtual void TransformPointsSomePointsVTK( const std::string filename ) const;
 
-  /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions 
-   *  into Generate* and Write* functions, since that would facilitate a proper library 
-   *  interface. To keep everything functional during the transition period we need to 
-   *  keep the orignal Compute* and TransformPoints* functions and let them just call 
+  /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions
+   *  into Generate* and Write* functions, since that would facilitate a proper library
+   *  interface. To keep everything functional during the transition period we need to
+   *  keep the orignal Compute* and TransformPoints* functions and let them just call
    *  Generate* and Write*. These functions should be considered marked deprecated.
 
   /** Function to transform all coordinates from fixed to moving image. */
@@ -373,6 +373,9 @@ private:
     const Self * t0 = dynamic_cast<const Self *>( this->GetInitialTransform() );
     return t0->GetTransformParametersFileName();
   }
+
+  /** Boolean to decide whether or not the transform parameters are written in binary format. */
+  bool m_UseBinaryFormatForTransformationParameters;
 
 };
 

@@ -33,12 +33,12 @@ namespace itk
  *
  * More specifically this class computes the Jacobian terms related to the automatic
  * parameter estimation for the adaptive stochastic gradient descent optimizer.
- * Details can be found in the SPIE paper
+ * Details can be found in the TMI paper
  *
- * [1]  Y.Qiao, B.P.F. Lelieveldt, M.Staring
- * "Fast automatic estimation of the optimization step size for nonrigid image registration,"
- * SPIE Medical Imaging: Image Processing,February, 2014.
- * http://elastix.isi.uu.nl/marius/publications/2014_c_SPIEMI.php
+ * [1] Y. Qiao, B. van Lew, B.P.F. Lelieveldt and M. Staring
+ * "Fast Automatic Step Size Estimation for Gradient Descent Optimization of Image Registration,"
+ * IEEE Transactions on Medical Imaging, vol. 35, no. 2, pp. 391 - 403, February 2016.
+ * http://elastix.isi.uu.nl/marius/publications/2016_j_TMIa.php
  *
  */
 
@@ -108,11 +108,11 @@ public:
   /** Get the region over which the metric will be computed. */
   itkGetConstReferenceMacro( FixedImageRegion, FixedImageRegionType );
 
-  /** The main functions that performs the computation. */
+  /** The main function that performs the multi-threaded computation. */
   virtual void Compute( const ParametersType & mu,
     double & jacg, double & maxJJ, std::string method );
 
-  /** The main functions that performs the computation. */
+  /** The main function that performs the single-threaded computation. */
   virtual void ComputeSingleThreaded( const ParametersType & mu,
     double & jacg, double & maxJJ, std::string method );
 
@@ -181,7 +181,7 @@ protected:
   virtual void SampleFixedImageForJacobianTerms(
     ImageSampleContainerPointer & sampleContainer );
 
-  /** Launch MultiThread GetValue. */
+  /** Launch MultiThread Compute. */
   void LaunchComputeThreaderCallback( void ) const;
 
   /** Compute threader callback function. */
@@ -193,19 +193,16 @@ protected:
   /** Initialize some multi-threading related parameters. */
   virtual void InitializeThreadingParameters( void );
 
-  /** Helper structs that multi-threads the computation of
-   * the metric derivative using ITK threads.
-   */
+  /** To give the threads access to all member variables and functions. */
   struct MultiThreaderParameterType
   {
-    // To give the threads access to all member variables and functions.
     Self * st_Self;
   };
   mutable MultiThreaderParameterType m_ThreaderParameters;
 
   struct ComputePerThreadStruct
   {
-    // Used for accumulating derivatives
+    /**  Used for accumulating variables. */
     double        st_MaxJJ;
     double        st_Displacement;
     double        st_DisplacementSquared;
