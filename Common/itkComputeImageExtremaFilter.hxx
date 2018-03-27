@@ -26,7 +26,7 @@ namespace itk
 * ********************* Constructor ****************************
 */
 
-template< typename TInputImage >  
+template< typename TInputImage >
   ComputeImageExtremaFilter< TInputImage >
   ::ComputeImageExtremaFilter()
 {
@@ -80,7 +80,7 @@ ComputeImageExtremaFilter< TInputImage >
 {
   if( this->GetInput()->GetLargestPossibleRegion().GetSize() == this->m_ImageSpatialMask->GetImage()->GetLargestPossibleRegion().GetSize()
     && this->GetInput()->GetOrigin() == this->m_ImageSpatialMask->GetImage()->GetOrigin() )
-  {    
+  {
     this->m_SameGeometry = true;
   }
 }
@@ -95,7 +95,7 @@ ComputeImageExtremaFilter< TInputImage >
     Superclass::AfterThreadedGenerateData();
   }
   else
-  { 
+  {
     ThreadIdType    i;
     SizeValueType   count;
     RealType        sumOfSquares;
@@ -214,7 +214,7 @@ ComputeImageExtremaFilter< TInputImage >
         sumOfSquares += ( realValue * realValue );
         ++count;
       }
-    } // end for  
+    } // end for
   }
   else
   {
@@ -236,7 +236,7 @@ ComputeImageExtremaFilter< TInputImage >
         ++count;
       }
     } // end for
-  } // end if   
+  } // end if
 
   m_ThreadSum[ threadId ] = sum;
   m_SumOfSquares[ threadId ] = sumOfSquares;

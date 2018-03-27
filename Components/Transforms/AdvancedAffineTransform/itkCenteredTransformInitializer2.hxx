@@ -119,7 +119,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
     {
       /** Set the lower threshold for center gravity calculation. */
       m_FixedCalculator->SetCenterOfGravityUsesLowerThreshold( this->m_CenterOfGravityUsesLowerThreshold );
-      m_FixedCalculator->SetLowerThresholdForCenterGravity( this->m_LowerThresholdForCenterGravity );      
+      m_FixedCalculator->SetLowerThresholdForCenterGravity( this->m_LowerThresholdForCenterGravity );
     }
     m_FixedCalculator->SetNumberOfSamplesForCenteredTransformInitialization(
       this->m_NumberOfSamplesForCenteredTransformInitialization );
@@ -132,7 +132,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       /** Set the lower threshold for center gravity calculation. */
       m_MovingCalculator->SetCenterOfGravityUsesLowerThreshold( this->m_CenterOfGravityUsesLowerThreshold );
       m_MovingCalculator->SetLowerThresholdForCenterGravity( this->m_LowerThresholdForCenterGravity );
-    }    
+    }
     m_MovingCalculator->SetNumberOfSamplesForCenteredTransformInitialization(
       this->m_NumberOfSamplesForCenteredTransformInitialization );
     m_MovingCalculator->Compute();

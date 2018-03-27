@@ -166,7 +166,7 @@ public:
   itkSetMacro( NumberOfSamplesForCenteredTransformInitialization, SizeValueType );
   itkSetMacro( LowerThresholdForCenterGravity, InputPixelType );
   itkSetMacro( CenterOfGravityUsesLowerThreshold, bool );
-  
+
   /** Initialize the transform using data from the images */
   virtual void InitializeTransform();
 
@@ -189,7 +189,7 @@ protected:
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
   itkGetObjectMacro( Transform, TransformType );
-  
+
   /** Settings for MomentsCalculator. */
   SizeValueType  m_NumberOfSamplesForCenteredTransformInitialization;
   InputPixelType m_LowerThresholdForCenterGravity;

@@ -1472,11 +1472,11 @@ TransformBase< TElastix >
   typename DeformationFieldImageType::Pointer deformationfield = this->GenerateDeformationFieldImage();
   //put deformation field in container
   this->m_Elastix->SetResultDeformationField( deformationfield.GetPointer() );
-  
+
 #ifndef _ELASTIX_BUILD_LIBRARY
   WriteDeformationFieldImage( deformationfield );
 #endif
-  
+
 } // end TransformPointsAllPoints()
 
 /**

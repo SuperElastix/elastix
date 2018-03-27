@@ -313,7 +313,7 @@ AdvancedAffineTransformElastix< TElastix >
           "LowerThresholdForCenterGravity", 0 );
         transformInitializer->SetLowerThresholdForCenterGravity( lowerThresholdForCenterGravity );
       }
-      
+
       double nrofsamples = 10000;
       this->m_Configuration->ReadParameter( nrofsamples,
         "NumberOfSamplesForCenteredTransformInitialization", 0 );

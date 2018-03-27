@@ -254,7 +254,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     computeFixedImageExtrema->SetImageRegion( this->GetFixedImageRegion() );
     if( this->m_FixedImageMask.IsNotNull() )
     {
-      computeFixedImageExtrema->SetUseMask( true ); 
+      computeFixedImageExtrema->SetUseMask( true );
 
       const FixedImageMaskSpatialObject2Type * fmask
         = dynamic_cast< const FixedImageMaskSpatialObject2Type * >( this->m_FixedImageMask.GetPointer() );
@@ -267,15 +267,15 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
         computeFixedImageExtrema->SetImageMask( this->GetFixedImageMask() );
       }
     }
-    
+
     computeFixedImageExtrema->Update();
     timer.Stop();
     elxout << "  Computing the FixedImageExtrema took "
       << static_cast< long >(timer.GetMean() * 1000) << " ms." << std::endl;
 
     this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
-    this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();    
-    
+    this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
+
     this->m_FixedImageMinLimit = static_cast< FixedImageLimiterOutputType >(
       this->m_FixedImageTrueMin - this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
     this->m_FixedImageMaxLimit = static_cast< FixedImageLimiterOutputType >(
@@ -304,7 +304,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
     typedef typename itk::ComputeImageExtremaFilter<MovingImageType> ComputeMovingImageExtremaFilterType;
     typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema = ComputeMovingImageExtremaFilterType::New();
-    computeMovingImageExtrema->SetInput( this->GetMovingImage() );    
+    computeMovingImageExtrema->SetInput( this->GetMovingImage() );
     computeMovingImageExtrema->SetImageRegion( this->GetMovingImage()->GetBufferedRegion() );
     if( this->m_MovingImageMask.IsNotNull() )
     {
@@ -318,7 +318,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
       else
       {
         computeMovingImageExtrema->SetImageMask( this->GetMovingImageMask() );
-      }      
+      }
     }
     computeMovingImageExtrema->Update();
 

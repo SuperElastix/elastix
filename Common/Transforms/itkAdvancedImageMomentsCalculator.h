@@ -23,7 +23,7 @@
 #include "itkAffineTransform.h"
 #include "itkImage.h"
 #include "itkSpatialObject.h"
-#include "itkImageGridSampler.h" 
+#include "itkImageGridSampler.h"
 #include "itkImageFullSampler.h"
 
 #include "vnl/vnl_vector_fixed.h"

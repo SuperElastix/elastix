@@ -276,7 +276,7 @@ TransformixFilter< TMovingImage >
 
   // assuming that transformParameterObjects can have only 1 Map
   const ParameterMapType transformParameterObjectMap = transformParameterObjectPtr->GetParameterMap( 0 );
-  
+
   ParameterMapType::const_iterator spacingMapIter = transformParameterObjectMap.find( "Spacing" );
   if( spacingMapIter == transformParameterObjectMap.cend() )
   {

@@ -93,7 +93,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 
     this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
     this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
-        
+
     this->m_FixedImageMinLimit = static_cast< FixedImageLimiterOutputType >(
       this->m_FixedImageTrueMin - this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
     this->m_FixedImageMaxLimit = static_cast< FixedImageLimiterOutputType >(
@@ -115,7 +115,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
       else
       {
         computeMovingImageExtrema->SetImageMask( this->GetMovingImageMask() );
-      }  
+      }
     }
 
     computeMovingImageExtrema->Update();
@@ -127,7 +127,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
       this->m_MovingImageTrueMin - this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
     this->m_MovingImageMaxLimit = static_cast< MovingImageLimiterOutputType >(
       this->m_MovingImageTrueMax + this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
-    
+
     // TODO: we may actually reuse these values from AdvancedImageToImageMetric::InitializeLimiters
     // without recomputing them here.
     const double diff1   = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;

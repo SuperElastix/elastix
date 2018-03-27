@@ -309,7 +309,7 @@ AdvancedImageMomentsCalculator< TImage >
   {
     return;
   }
-  
+
   if ( this->m_CenterOfGravityUsesLowerThreshold )
   {
     typename BinaryThresholdImageFilterType::Pointer thresholdFilter
@@ -441,7 +441,7 @@ AdvancedImageMomentsCalculator< TImage >
   this->m_ComputePerThreadVariables[threadId].st_Cg = Cg;
   this->m_ComputePerThreadVariables[threadId].st_Cm = Cm;
   this->m_ComputePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-    
+
 }// end ThreadedCompute()
 
  /**
