@@ -49,6 +49,10 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
   m_UseMoments       = false;
   m_UseOrigins       = false;
   m_UseTop           = false;
+
+  this->m_CenterOfGravityUsesLowerThreshold = false;
+  this->m_NumberOfSamplesForCenteredTransformInitialization = 10000;
+  this->m_LowerThresholdForCenterGravity = 500;
 }
 
 
@@ -109,12 +113,28 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
     }
 
     // Moments
-    m_FixedCalculator->SetImage(  m_FixedImage );
+    m_FixedCalculator->SetImage( m_FixedImage );
     m_FixedCalculator->SetSpatialObjectMask( fixedMaskAsSpatialObject );
+    if( this->m_CenterOfGravityUsesLowerThreshold )
+    {
+      /** Set the lower threshold for center gravity calculation. */
+      m_FixedCalculator->SetCenterOfGravityUsesLowerThreshold( this->m_CenterOfGravityUsesLowerThreshold );
+      m_FixedCalculator->SetLowerThresholdForCenterGravity( this->m_LowerThresholdForCenterGravity );
+    }
+    m_FixedCalculator->SetNumberOfSamplesForCenteredTransformInitialization(
+      this->m_NumberOfSamplesForCenteredTransformInitialization );
     m_FixedCalculator->Compute();
 
     m_MovingCalculator->SetImage( m_MovingImage );
     m_MovingCalculator->SetSpatialObjectMask( movingMaskAsSpatialObject );
+    if( this->m_CenterOfGravityUsesLowerThreshold )
+    {
+      /** Set the lower threshold for center gravity calculation. */
+      m_MovingCalculator->SetCenterOfGravityUsesLowerThreshold( this->m_CenterOfGravityUsesLowerThreshold );
+      m_MovingCalculator->SetLowerThresholdForCenterGravity( this->m_LowerThresholdForCenterGravity );
+    }
+    m_MovingCalculator->SetNumberOfSamplesForCenteredTransformInitialization(
+      this->m_NumberOfSamplesForCenteredTransformInitialization );
     m_MovingCalculator->Compute();
 
     typename FixedImageCalculatorType::VectorType fixedCenter = m_FixedCalculator->GetCenterOfGravity();

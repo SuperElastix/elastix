@@ -35,6 +35,7 @@
 #define __itkAdvancedBSplineDeformableTransform_h
 
 #include "itkAdvancedBSplineDeformableTransformBase.h"
+
 #include "itkImage.h"
 #include "itkImageRegion.h"
 #include "itkBSplineInterpolationWeightFunction2.h"

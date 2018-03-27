@@ -123,6 +123,9 @@ public:
   typedef typename Superclass::ThreaderType     ThreaderType;
   typedef typename Superclass::ThreadInfoType   ThreadInfoType;
 
+  typedef typename Superclass::FixedImageMaskSpatialObject2Type    FixedImageMaskSpatialObject2Type;
+  typedef typename Superclass::MovingImageMaskSpatialObject2Type   MovingImageMaskSpatialObject2Type;
+
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );

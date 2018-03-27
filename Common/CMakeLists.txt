@@ -20,6 +20,8 @@ set( CommonFiles
   itkAdvancedLinearInterpolateImageFunction.hxx
   itkAdvancedRayCastInterpolateImageFunction.h
   itkAdvancedRayCastInterpolateImageFunction.hxx
+  itkComputeImageExtremaFilter.h
+  itkComputeImageExtremaFilter.hxx
   itkComputeDisplacementDistribution.h
   itkComputeDisplacementDistribution.hxx
   itkComputeJacobianTerms.h
@@ -94,6 +96,8 @@ set( TransformFiles
   Transforms/itkAdvancedEuler3DTransform.h
   Transforms/itkAdvancedEuler3DTransform.hxx
   Transforms/itkAdvancedIdentityTransform.h
+  Transforms/itkAdvancedImageMomentsCalculator.h
+  Transforms/itkAdvancedImageMomentsCalculator.hxx
   Transforms/itkAdvancedMatrixOffsetTransformBase.h
   Transforms/itkAdvancedMatrixOffsetTransformBase.hxx
   Transforms/itkAdvancedRigid2DTransform.h

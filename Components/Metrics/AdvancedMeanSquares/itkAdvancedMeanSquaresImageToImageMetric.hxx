@@ -21,6 +21,7 @@
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
 #include "vnl/algo/vnl_matrix_update.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
+#include "itkComputeImageExtremaFilter.h"
 
 #ifdef ELASTIX_USE_OPENMP
 #include <omp.h>
@@ -69,14 +70,66 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   if( this->GetUseNormalization() )
   {
     /** Try to guess a normalization factor. */
-    this->ComputeFixedImageExtrema(
-      this->GetFixedImage(),
-      this->GetFixedImageRegion() );
+    typedef typename itk::ComputeImageExtremaFilter< FixedImageType > ComputeFixedImageExtremaFilterType;
+    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema = ComputeFixedImageExtremaFilterType::New();
+    computeFixedImageExtrema->SetInput( this->GetFixedImage() );
+    computeFixedImageExtrema->SetImageRegion( this->GetFixedImageRegion() );
+    if ( this->m_FixedImageMask.IsNotNull() )
+    {
+      computeFixedImageExtrema->SetUseMask( true );
+      const FixedImageMaskSpatialObject2Type * fmask
+        = dynamic_cast< const FixedImageMaskSpatialObject2Type * >( this->m_FixedImageMask.GetPointer() );
+      if( fmask )
+      {
+        computeFixedImageExtrema->SetImageSpatialMask( fmask );
+      }
+      else
+      {
+        computeFixedImageExtrema->SetImageMask( this->GetFixedImageMask() );
+      }
+    }
 
-    this->ComputeMovingImageExtrema(
-      this->GetMovingImage(),
-      this->GetMovingImage()->GetBufferedRegion() );
+    computeFixedImageExtrema->Update();
 
+    this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
+    this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
+
+    this->m_FixedImageMinLimit = static_cast< FixedImageLimiterOutputType >(
+      this->m_FixedImageTrueMin - this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
+    this->m_FixedImageMaxLimit = static_cast< FixedImageLimiterOutputType >(
+      this->m_FixedImageTrueMax + this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
+
+    typedef typename itk::ComputeImageExtremaFilter< MovingImageType > ComputeMovingImageExtremaFilterType;
+    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema = ComputeMovingImageExtremaFilterType::New();
+    computeMovingImageExtrema->SetInput( this->GetMovingImage() );
+    computeMovingImageExtrema->SetImageRegion( this->GetMovingImage()->GetBufferedRegion() );
+    if( this->m_MovingImageMask.IsNotNull() )
+    {
+      computeMovingImageExtrema->SetUseMask( true );
+            const MovingImageMaskSpatialObject2Type * mMask
+        = dynamic_cast< const MovingImageMaskSpatialObject2Type * >( this->m_MovingImageMask.GetPointer() );
+      if( mMask )
+      {
+        computeMovingImageExtrema->SetImageSpatialMask( mMask );
+      }
+      else
+      {
+        computeMovingImageExtrema->SetImageMask( this->GetMovingImageMask() );
+      }
+    }
+
+    computeMovingImageExtrema->Update();
+
+    this->m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
+    this->m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
+
+    this->m_MovingImageMinLimit = static_cast< MovingImageLimiterOutputType >(
+      this->m_MovingImageTrueMin - this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
+    this->m_MovingImageMaxLimit = static_cast< MovingImageLimiterOutputType >(
+      this->m_MovingImageTrueMax + this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
+
+    // TODO: we may actually reuse these values from AdvancedImageToImageMetric::InitializeLimiters
+    // without recomputing them here.
     const double diff1   = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
     const double diff2   = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
     const double maxdiff = vnl_math_max( diff1, diff2 );

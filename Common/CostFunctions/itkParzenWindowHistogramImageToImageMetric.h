@@ -33,7 +33,7 @@ namespace itk
  * where the probability density distribution are estimated using
  * Parzen histograms.
  *
- * One the PDF's have been constructed, the metric value and derivative
+ * Once the PDF's have been constructed, the metric value and derivative
  * can be computed. Inheriting classes should make sure to call
  * the function ComputePDFs(AndPDFDerivatives) before using m_JointPDF and m_Alpha
  * (and m_JointPDFDerivatives).

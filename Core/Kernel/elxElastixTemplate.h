@@ -277,7 +277,7 @@ public:
 
   virtual int SetResultImage( DataObjectPointer result_image );
 
-  
+
   virtual ResultDeformationFieldType * GetResultDeformationField( void ) const
   {
     return this->GetResultDeformationField( 0 );

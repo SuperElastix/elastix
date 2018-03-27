@@ -91,11 +91,9 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
   this->m_TransformMovingImageFilter->SetOutputDirection(
     this->m_FixedImage->GetDirection() );
   this->m_TransformMovingImageFilter->UpdateLargestPossibleRegion();
-  this->ComputeFixedImageExtrema(
-    this->GetFixedImage(), this->GetFixedImageRegion() );
-  this->ComputeMovingImageExtrema(
-    this->m_TransformMovingImageFilter->GetOutput(),
-    this->m_TransformMovingImageFilter->GetOutput()->GetBufferedRegion() );
+
+  //this->InitializeLimiters();
+
   this->m_NormalizationFactor = this->m_FixedImageTrueMax / this->m_MovingImageTrueMax;
   this->m_MultiplyImageFilter->SetInput(
     this->m_TransformMovingImageFilter->GetOutput() );
@@ -118,7 +116,7 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ********************* Constructor ******************************PrintSelf
+ * ********************* PrintSelf ******************************
  */
 
 template< class TFixedImage, class TMovingImage >
