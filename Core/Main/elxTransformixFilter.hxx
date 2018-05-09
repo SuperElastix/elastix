@@ -266,13 +266,14 @@ TransformixFilter< TMovingImage >
 ::GenerateOutputInformation( void )
 {
 
+  // Get pointers to the input and output
+  const ParameterObjectType * transformParameterObjectPtr = this->GetTransformParameterObject();
+
   if( transformParameterObjectPtr->GetNumberOfParameterMaps() == 0 )
   {
     itkExceptionMacro( "Empty parameter map in parameter object." );
   }
 
-  // Get pointers to the input and output
-  const ParameterObjectType * transformParameterObjectPtr = this->GetTransformParameterObject();
   OutputImageType * outputPtr = this->GetOutput();
   OutputDeformationFieldType * outputOutputDeformationFieldPtr = this->GetOutputDeformationField();
 

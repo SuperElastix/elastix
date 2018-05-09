@@ -68,6 +68,8 @@ public:
 
   itkGetConstReferenceMacro( ParameterMap, ParameterMapVectorType );
 
+  unsigned int GetNumberOfParameterMaps() const { return this->m_ParameterMap.size(); }
+
   /* Read/Write parameter file or multiple parameter files to/from disk. */
   void ReadParameterFile( const ParameterFileNameType & parameterFileName );
 
