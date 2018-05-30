@@ -5,13 +5,13 @@
 
 ### Do you have questions about the source code? ###
 
-* Ask any question about how to use `elastix` on the _mailing list_. You can subscribe to the mailing list [here](http://lists.bigr.nl/mailman/listinfo/elastix), after which you can email to elastix@bigr.nl.
+* Ask any question about how to use `elastix` on the [mailing list](https://groups.google.com/forum/#!forum/elastix-imageregistration).
 
 * Do not open an issue on GitHub for general questions, registration questions, or issues you may have while running `elastix`. _GitHub issues are primarily intended for bug reports and fixes._
 
-* General information about `elastix` can be found on our [website](http://elastix.isi.uu.nl/).
+* General information about `elastix` can be found on our [wiki](https://github.com/SuperElastix/elastix/wiki) or at the [website](http://elastix.isi.uu.nl/).
 
-* [The manual](http://elastix.isi.uu.nl/download/elastix_manual_v4.8.pdf) explains much of the inner workings of image registration.
+* [The manual](https://github.com/SuperElastix/elastix/releases/download/4.9.0/elastix-4.9.0-manual.pdf) explains much of the inner workings of image registration.
 
 ### Did you find a bug? ###
 

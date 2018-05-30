@@ -228,8 +228,9 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
 } // end InitializeThreadingParameters()
 
+
 /**
- * ****************** InitializeLimiter *****************************
+ * ****************** InitializeLimiters *****************************
  */
 
 template< class TFixedImage, class TMovingImage >
@@ -249,18 +250,19 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     timer.Start();
 
     typedef typename itk::ComputeImageExtremaFilter<FixedImageType> ComputeFixedImageExtremaFilterType;
-    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema = ComputeFixedImageExtremaFilterType::New();
+    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema
+      = ComputeFixedImageExtremaFilterType::New();
     computeFixedImageExtrema->SetInput( this->GetFixedImage() );
     computeFixedImageExtrema->SetImageRegion( this->GetFixedImageRegion() );
     if( this->m_FixedImageMask.IsNotNull() )
     {
       computeFixedImageExtrema->SetUseMask( true );
 
-      const FixedImageMaskSpatialObject2Type * fmask
+      const FixedImageMaskSpatialObject2Type * fMask
         = dynamic_cast< const FixedImageMaskSpatialObject2Type * >( this->m_FixedImageMask.GetPointer() );
-      if( fmask )
+      if( fMask )
       {
-        computeFixedImageExtrema->SetImageSpatialMask( fmask );
+        computeFixedImageExtrema->SetImageSpatialMask( fMask );
       }
       else
       {
@@ -270,8 +272,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
     computeFixedImageExtrema->Update();
     timer.Stop();
-    elxout << "  Computing the FixedImageExtrema took "
-      << static_cast< long >(timer.GetMean() * 1000) << " ms." << std::endl;
+    elxout << "  Computing the fixed image extrema took "
+      << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
     this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
     this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
@@ -303,8 +305,9 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     timer.Start();
 
     typedef typename itk::ComputeImageExtremaFilter<MovingImageType> ComputeMovingImageExtremaFilterType;
-    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema = ComputeMovingImageExtremaFilterType::New();
-    computeMovingImageExtrema->SetInput( this->GetMovingImage() );
+    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema
+      = ComputeMovingImageExtremaFilterType::New();
+    computeMovingImageExtrema->SetInput( this->GetMovingImage() );    
     computeMovingImageExtrema->SetImageRegion( this->GetMovingImage()->GetBufferedRegion() );
     if( this->m_MovingImageMask.IsNotNull() )
     {
@@ -323,8 +326,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     computeMovingImageExtrema->Update();
 
     timer.Stop();
-    elxout << "  Computing the MovingImageExtrema took "
-      << static_cast< long >(timer.GetMean() * 1000) << " ms." << std::endl;
+    elxout << "  Computing the moving image extrema took "
+      << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
     this->m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
     this->m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
@@ -344,7 +347,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     this->m_MovingImageLimiter->Initialize();
   }
 
-} // end InitializeLimiter()
+} // end InitializeLimiters()
 
 
 /**

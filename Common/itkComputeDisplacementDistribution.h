@@ -217,7 +217,6 @@ protected:
 
   SizeValueType               m_NumberOfPixelsCounted;
   bool                        m_UseMultiThread;
-  ScalesType                  m_Scales;
   ImageSampleContainerPointer m_SampleContainer;
 
 private:
