@@ -351,7 +351,7 @@ StatisticalShapePenalty< TElastix >
       pointSet->SetPoint( j, point );
 
     } // end for all points
-  }   // end for points are indices
+  } // end for points are indices
 
   return nrofpoints;
 

@@ -115,7 +115,7 @@ ImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if no mask
+  } // end if no mask
   else
   {
     /** Update the mask. */
@@ -164,7 +164,7 @@ ImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if mask
+  } // end if mask
 
 } // end GenerateData()
 

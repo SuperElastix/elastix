@@ -36,7 +36,7 @@ SimultaneousPerturbation< TElastix >
 ::SimultaneousPerturbation()
 {
   this->m_ShowMetricValues = false;
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -69,7 +69,7 @@ SimultaneousPerturbation< TElastix >::BeforeRegistration( void )
   xl::xout[ "iteration" ][ "3:Gain a_k" ] << std::showpoint << std::fixed;
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
 
-}   // end BeforeRegistration
+} // end BeforeRegistration
 
 
 /**
@@ -119,7 +119,7 @@ SimultaneousPerturbation< TElastix >
   /** Ignore the build-in stop criterion; it's quite ad hoc. */
   this->SetTolerance( 0.0 );
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution
 
 
 /**
@@ -154,7 +154,7 @@ SimultaneousPerturbation< TElastix >
     this->SelectNewSamples();
   }
 
-}   // end AfterEachIteration
+} // end AfterEachIteration
 
 
 /**
@@ -193,7 +193,7 @@ SimultaneousPerturbation< TElastix >
 
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-}   // end AfterEachResolution
+} // end AfterEachResolution
 
 
 /**
@@ -215,7 +215,7 @@ SimultaneousPerturbation< TElastix >
     << bestValue
     << std::endl;
 
-}   // end AfterRegistration
+} // end AfterRegistration
 
 
 /**
@@ -248,7 +248,7 @@ SimultaneousPerturbation< TElastix >
 
   /** \todo to optimizerbase? */
 
-}   // end SetInitialPosition
+} // end SetInitialPosition
 
 
 } // end namespace elastix

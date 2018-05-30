@@ -65,7 +65,7 @@ BaseComponentSE< TElastix >::SetElastix( TElastix * _arg )
     }
   }
 
-}   // end SetElastix
+} // end SetElastix
 
 
 /**
@@ -90,7 +90,7 @@ BaseComponentSE< TElastix >::SetConfiguration( ConfigurationType * _arg )
     }
   }
 
-}   // end SetConfiguration
+} // end SetConfiguration
 
 
 } // end namespace elastix

@@ -572,7 +572,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
           }
         }
       } // end if B-spline
-    }   // end if sampleOk
+    } // end if sampleOk
   }     // end for loop over the image sample container
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */

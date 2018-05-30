@@ -137,7 +137,7 @@ FixedImagePyramidBase< TElastix >
       found &= ijfound;
 
     } // end for FixedImageDimension
-  }   // end for numberOfResolutions
+  } // end for numberOfResolutions
 
   if( !found && this->GetConfiguration()->GetPrintErrorMessages() )
   {

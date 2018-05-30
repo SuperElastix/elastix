@@ -73,7 +73,7 @@ CMAEvolutionStrategy< TElastix >::InitializeProgressVariables( void )
     << "UseCovarianceMatrixAdaptation = " << this->GetUseCovarianceMatrixAdaptation() << "\n"
     << "UpdateBDPeriod = " << this->GetUpdateBDPeriod() << "\n" << std::endl;
 
-}   // end InitializeProgressVariables
+} // end InitializeProgressVariables
 
 
 /**
@@ -102,7 +102,7 @@ CMAEvolutionStrategy< TElastix >::BeforeRegistration( void )
   xout[ "iteration" ][ "5b:MaximumD" ] << std::showpoint << std::fixed;
   xout[ "iteration" ][ "5c:MinimumD" ] << std::showpoint << std::fixed;
 
-}   // end BeforeRegistration
+} // end BeforeRegistration
 
 
 /**
@@ -208,7 +208,7 @@ CMAEvolutionStrategy< TElastix >
     "MinimumDeviation", this->GetComponentLabel(), level, 0 );
   this->SetMinimumDeviation( minimumDeviation );
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution
 
 
 /**
@@ -237,7 +237,7 @@ CMAEvolutionStrategy< TElastix >
     this->SelectNewSamples();
   }
 
-}   // end AfterEachIteration
+} // end AfterEachIteration
 
 
 /**
@@ -295,7 +295,7 @@ CMAEvolutionStrategy< TElastix >
   /** Print the stopping condition */
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-}   // end AfterEachResolution
+} // end AfterEachResolution
 
 
 /**
@@ -316,7 +316,7 @@ CMAEvolutionStrategy< TElastix >
     << bestValue
     << std::endl;
 
-}   // end AfterRegistration
+} // end AfterRegistration
 
 
 } // end namespace elastix

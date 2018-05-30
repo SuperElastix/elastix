@@ -213,7 +213,7 @@ PolydataDummyPenalty< TElastix >
                             << "Resuming elastix." << std::endl;
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachIteration()
 
@@ -268,7 +268,7 @@ PolydataDummyPenalty< TElastix >
                             << "Resuming elastix." << std::endl;
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachResolution()
 

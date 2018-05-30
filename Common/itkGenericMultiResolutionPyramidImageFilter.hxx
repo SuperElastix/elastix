@@ -381,7 +381,7 @@ GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage, TPrecisionT
 
     }
   } // end for ilevel
-}   // end GenerateData()
+} // end GenerateData()
 
 
 /**

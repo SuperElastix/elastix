@@ -117,7 +117,7 @@ RayCastResampleInterpolator< TElastix >
 
   return 0;
 
-}   // end BeforeAll()
+} // end BeforeAll()
 
 
 /*
@@ -132,7 +132,7 @@ RayCastResampleInterpolator< TElastix >
 
   this->InitializeRayCastInterpolator();
 
-}   // end BeforeRegistration()
+} // end BeforeRegistration()
 
 
 /*
@@ -149,7 +149,7 @@ RayCastResampleInterpolator< TElastix >
   this->Superclass2::ReadFromFile();
   this->InitializeRayCastInterpolator();
 
-}   // end ReadFromFile()
+} // end ReadFromFile()
 
 
 /**
@@ -189,7 +189,7 @@ RayCastResampleInterpolator< TElastix >
   xout[ "transpar" ] << "(Threshold "
                      << threshold << ")" << std::endl;
 
-}   // end WriteToFile()
+} // end WriteToFile()
 
 
 } // end namespace elastix

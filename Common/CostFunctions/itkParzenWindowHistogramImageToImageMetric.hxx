@@ -971,7 +971,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         rindex[ 1 ] = movParzenWindowIndexRight;
 
       } // end for f
-    }   // end if maskr
+    } // end if maskr
 
     if( maskl > 1e-10 )
     {
@@ -1006,7 +1006,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         lindex[ 1 ] = movParzenWindowIndexLeft;
 
       } // end for f
-    }   // end if maskl
+    } // end if maskl
 
     /** Update the perturbed alphas. */
     this->m_PerturbedAlphaRight[ mu ] += ( maskr - movingMaskValue );
@@ -1436,7 +1436,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         fixedImageValue, movingImageValue, &imageJacobian, &nzji, this->m_JointPDF.GetPointer() );
 
     } //end if-block check sampleOk
-  }   // end iterating over fixed image spatial sample container for loop
+  } // end iterating over fixed image spatial sample container for loop
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(
@@ -1639,7 +1639,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         movingMaskValuesRight, movingMaskValuesLeft, nzji );
 
     } //end if-block check sampleOk
-  }   // end iterating over fixed image spatial sample container for loop
+  } // end iterating over fixed image spatial sample container for loop
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(

@@ -591,7 +591,7 @@ TransformBase< TElastix >
     }
 
   } // end if
-}   // end ReadInitialTransformFromVector()
+} // end ReadInitialTransformFromVector()
 
 
 /**

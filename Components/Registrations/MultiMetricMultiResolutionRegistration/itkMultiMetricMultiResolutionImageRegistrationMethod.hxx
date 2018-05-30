@@ -80,6 +80,7 @@ itkImplementationGetMacro( Interpolator, , InterpolatorType * );
 itkImplementationGetMacro( FixedImagePyramid, , FixedImagePyramidType * );
 itkImplementationGetMacro( MovingImagePyramid, , MovingImagePyramidType * );
 
+
 /**
  * ****************** Constructor ******************
  */
@@ -119,11 +120,9 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 
 } // end GetFixedImageRegion()
 
+
 /**
  * ********************** SetMetric *******************************
- * Reimplement this method to check if
- * the metric is a combination metric.
- * GetMetric returns the combination metric.
  */
 
 template< typename TFixedImage, typename TMovingImage >
@@ -149,7 +148,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end SetMetric()
 
 
-/*
+/**
  * ****************** Initialize *******************************
  */
 
@@ -210,8 +209,8 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end Initialize()
 
 
-/*
- * ****************** Prepare all pyramids ******************
+/**
+ * ****************** PrepareAllPyramids ******************
  */
 
 template< typename TFixedImage, typename TMovingImage >
@@ -340,7 +339,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end PrepareAllPyramids()
 
 
-/*
+/**
  * ****************** PrintSelf ******************
  */
 
@@ -354,7 +353,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end PrintSelf()
 
 
-/*
+/**
  * ********************* GenerateData ***********************
  */
 
@@ -515,7 +514,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end GetMTime()
 
 
-/*
+/**
  * ****************** CheckPyramids ******************
  */
 
@@ -564,7 +563,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end CheckPyramids()
 
 
-/*
+/**
  * ****************** CheckOnInitialize ******************
  */
 

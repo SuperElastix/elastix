@@ -33,7 +33,7 @@ xoutbase< charT, traits >::xoutbase()
 {
   this->m_Call = false;
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -45,7 +45,7 @@ xoutbase< charT, traits >::~xoutbase()
 {
   //nothing
 
-}   // end Destructor
+} // end Destructor
 
 
 /**
@@ -58,7 +58,7 @@ xoutbase< charT, traits >::operator[]( const char * cellname )
 {
   return this->SelectXCell( cellname );
 
-}   // end operator[]
+} // end operator[]
 
 
 /**
@@ -87,7 +87,7 @@ xoutbase< charT, traits >::WriteBufferedData( void )
     ( *( xit->second ) ).WriteBufferedData();
   }
 
-}   // end WriteBufferedData
+} // end WriteBufferedData
 
 
 /**
@@ -113,7 +113,7 @@ xoutbase< charT, traits >::AddTargetCell( const char * name, ostream_type * cell
 
   return returndummy;
 
-}   // end AddTargetCell
+} // end AddTargetCell
 
 
 /**
@@ -139,7 +139,7 @@ xoutbase< charT, traits >::AddTargetCell( const char * name, Self * cell )
 
   return returndummy;
 
-}   // end AddTargetCell
+} // end AddTargetCell
 
 
 /**
@@ -166,7 +166,7 @@ xoutbase< charT, traits >::RemoveTargetCell( const char * name )
 
   return returndummy;
 
-}   // end RemoveTargetCell
+} // end RemoveTargetCell
 
 
 /**
@@ -179,7 +179,7 @@ xoutbase< charT, traits >::SetTargetCells( const CStreamMapType & cellmap )
 {
   this->m_CTargetCells = cellmap;
 
-}   // end SetTargetCells
+} // end SetTargetCells
 
 
 /**
@@ -191,7 +191,7 @@ xoutbase< charT, traits >::SetTargetCells( const XStreamMapType & cellmap )
 {
   this->m_XTargetCells = cellmap;
 
-}   // end SetTargetCells
+} // end SetTargetCells
 
 
 /**
@@ -216,7 +216,7 @@ xoutbase< charT, traits >::AddOutput( const char * name, ostream_type * output )
 
   return returndummy;
 
-}   // end AddOutput
+} // end AddOutput
 
 
 /**
@@ -241,7 +241,7 @@ xoutbase< charT, traits >::AddOutput( const char * name, Self * output )
 
   return returndummy;
 
-}   // end AddOutput
+} // end AddOutput
 
 
 /**
@@ -268,7 +268,7 @@ xoutbase< charT, traits >::RemoveOutput( const char * name )
 
   return returndummy;
 
-}   // end RemoveOutput
+} // end RemoveOutput
 
 
 /**
@@ -281,7 +281,7 @@ xoutbase< charT, traits >::SetOutputs( const CStreamMapType & outputmap )
 {
   this->m_COutputs = outputmap;
 
-}   // end SetOutputs
+} // end SetOutputs
 
 
 /**
@@ -294,7 +294,7 @@ xoutbase< charT, traits >::SetOutputs( const XStreamMapType & outputmap )
 {
   this->m_XOutputs = outputmap;
 
-}   // end SetOutputs
+} // end SetOutputs
 
 
 /**
@@ -316,7 +316,7 @@ xoutbase< charT, traits >::SelectXCell( const char * name )
     return *this;
   }
 
-}   // end SelectXCell
+} // end SelectXCell
 
 
 /**
@@ -329,7 +329,7 @@ const typename xoutbase< charT, traits >::XStreamMapType
 {
   return this->m_XOutputs;
 
-}   // end GetOutputs
+} // end GetOutputs
 
 /**
  * **************** GetOutputs (map of c-streams) ***************
@@ -341,7 +341,7 @@ const typename xoutbase< charT, traits >::CStreamMapType
 {
   return this->m_COutputs;
 
-}   // end GetOutputs
+} // end GetOutputs
 
 } // end namespace xoutlibrary
 

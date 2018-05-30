@@ -902,7 +902,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       }
     } // end loop over metrics
 
-  }   // end if NewSamplesEveryIteration.
+  } // end if NewSamplesEveryIteration.
 
 #ifndef _ELASTIX_BUILD_LIBRARY
   /** Prepare for progress printing. */

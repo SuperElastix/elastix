@@ -76,7 +76,7 @@ CMAEvolutionStrategyOptimizer::CMAEvolutionStrategyOptimizer()
   this->m_PositionToleranceMax       = 1e8;
   this->m_ValueTolerance             = 1e-12;
 
-}   // end constructor
+} // end constructor
 
 
 /**
@@ -133,7 +133,7 @@ CMAEvolutionStrategyOptimizer::PrintSelf( std::ostream & os, Indent indent ) con
   // template:
   //os << indent << ": " << this-> << std::endl;
 
-}   // end PrintSelf;
+} // end PrintSelf;
 
 
 /**
@@ -175,7 +175,7 @@ CMAEvolutionStrategyOptimizer::StartOptimization()
     this->ResumeOptimization();
   }
 
-}   // end StartOptimization
+} // end StartOptimization
 
 
 /**
@@ -258,9 +258,9 @@ CMAEvolutionStrategyOptimizer::ResumeOptimization()
     /** Next iteration */
     ++( this->m_CurrentIteration );
 
-  }   // end while !m_Stop
+  } // end while !m_Stop
 
-}   // end ResumeOptimization
+} // end ResumeOptimization
 
 
 /**
@@ -273,7 +273,7 @@ CMAEvolutionStrategyOptimizer::StopOptimization()
   itkDebugMacro( "StopOptimization" );
   this->m_Stop = true;
   this->InvokeEvent( EndEvent() );
-}   // end StopOptimization()
+} // end StopOptimization()
 
 
 /**
@@ -385,7 +385,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
     this->GetMaximumNumberOfIterations(),
     10 + static_cast< unsigned long >( vcl_ceil( 3.0 * 10.0 * Nd / lambdad ) ) ) );
 
-}   // end InitializeConstants
+} // end InitializeConstants
 
 
 /**
@@ -447,7 +447,7 @@ CMAEvolutionStrategyOptimizer::InitializeProgressVariables( void )
   this->m_CurrentMaximumD = 1.0;
   this->m_CurrentMinimumD = 1.0;
 
-}   // end InitializeProgressVariables
+} // end InitializeProgressVariables
 
 
 /**
@@ -488,7 +488,7 @@ CMAEvolutionStrategyOptimizer::InitializeBCD( void )
     this->m_D.clear();
   }
 
-}   // end InitializeBCD
+} // end InitializeBCD
 
 
 /**
@@ -569,7 +569,7 @@ CMAEvolutionStrategyOptimizer::GenerateOffspring( void )
     ++lam;
   }
 
-}   // end GenerateOffspring
+} // end GenerateOffspring
 
 
 /**
@@ -592,7 +592,7 @@ CMAEvolutionStrategyOptimizer::SortCostFunctionValues( void )
     this->m_MeasureHistory.pop_back();
   }
 
-}   // end SortCostFunctionValues
+} // end SortCostFunctionValues
 
 
 /**
@@ -636,7 +636,7 @@ CMAEvolutionStrategyOptimizer::AdvanceOneStep( void )
     this->StopOptimization();
     throw err;
   }
-}   // end AdvanceOneStep
+} // end AdvanceOneStep
 
 
 /**
@@ -664,7 +664,7 @@ CMAEvolutionStrategyOptimizer::UpdateConjugateEvolutionPath( void )
     this->m_ConjugateEvolutionPath += ( factor * this->m_CurrentNormalizedStep );
   }
 
-}   // end UpdateConjugateEvolutionPath
+} // end UpdateConjugateEvolutionPath
 
 
 /**
@@ -697,7 +697,7 @@ CMAEvolutionStrategyOptimizer::UpdateHeaviside( void )
     this->m_Heaviside = true;
   }
 
-}   // end UpdateHeaviside
+} // end UpdateHeaviside
 
 
 /**
@@ -721,7 +721,7 @@ CMAEvolutionStrategyOptimizer::UpdateEvolutionPath( void )
     this->m_EvolutionPath += ( factor * this->m_CurrentScaledStep );
   }
 
-}   // end UpdateEvolutionPath
+} // end UpdateEvolutionPath
 
 
 /**
@@ -788,9 +788,9 @@ CMAEvolutionStrategyOptimizer::UpdateC( void )
         this->m_C[ i ][ j ] += update;
       }
     }
-  }   // end for m
+  } // end for m
 
-}   // end UpdateC
+} // end UpdateC
 
 
 /**
@@ -818,7 +818,7 @@ CMAEvolutionStrategyOptimizer::UpdateSigma( void )
     this->m_CurrentSigma *= vcl_exp( ( normps / chiN - 1.0 ) * c_sigma / d_sigma );
   }
 
-}   // end UpdateSigma
+} // end UpdateSigma
 
 
 /**
@@ -906,7 +906,7 @@ CMAEvolutionStrategyOptimizer::UpdateBD( void )
   this->m_CurrentMaximumD = this->m_D.diagonal().max_value();
   this->m_CurrentMinimumD = this->m_D.diagonal().min_value();
 
-}   // end UpdateBD
+} // end UpdateBD
 
 
 /**
@@ -990,7 +990,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
       this->m_CurrentSigma *= strange_factor;
     }
 
-  }   // end else: no covariance matrix adaptation
+  } // end else: no covariance matrix adaptation
 
   /** Adjust too low coordinate axis deviations that would cause numerical
    * problems (because of finite precision of the datatypes). This check
@@ -1010,7 +1010,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
         this->m_C[ i ][ i ]         *= ( 1.0 + c_cov );
         numericalProblemsEncountered = true;
       }
-    }   // end for i
+    } // end for i
   }
   else
   {
@@ -1026,7 +1026,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
         numericalProblemsEncountered = true;
       }
     }
-  }   // end else: no covariance matrix adaptation
+  } // end else: no covariance matrix adaptation
   if( numericalProblemsEncountered )
   {
     /** \todo: does this make sense if m_UseDecayingSigma == true??
@@ -1060,7 +1060,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
     {
       numericalProblemsEncountered2 = true;
     }
-  }   // end else: no covariance matrix adaptation
+  } // end else: no covariance matrix adaptation
   if( numericalProblemsEncountered2 )
   {
     /** \todo: does this make sense if m_UseDecayingSigma == true??
@@ -1095,7 +1095,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
     }
   }
 
-}   // end FixNumericalErrors
+} // end FixNumericalErrors
 
 
 /**
@@ -1136,7 +1136,7 @@ CMAEvolutionStrategyOptimizer::TestConvergence( bool firstCheck )
         stepTooLarge = true;
         break;
       }
-    }   // end for i
+    } // end for i
   }
   else
   {
@@ -1146,7 +1146,7 @@ CMAEvolutionStrategyOptimizer::TestConvergence( bool firstCheck )
     {
       stepTooLarge = true;
     }
-  }   // end else: if no covariance matrix adaptation
+  } // end else: if no covariance matrix adaptation
   if( stepTooLarge )
   {
     this->m_StopCondition = PositionToleranceMax;
@@ -1223,7 +1223,7 @@ CMAEvolutionStrategyOptimizer::TestConvergence( bool firstCheck )
 
   return false;
 
-}   // end TestConvergence
+} // end TestConvergence
 
 
 } // end namespace itk

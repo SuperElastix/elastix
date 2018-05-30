@@ -90,7 +90,7 @@ MultiInputRandomCoordinateSampler< TElastix >
     this->SetSampleRegionSize( sampleRegionSize );
   }
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution
 
 
 } // end namespace elastix

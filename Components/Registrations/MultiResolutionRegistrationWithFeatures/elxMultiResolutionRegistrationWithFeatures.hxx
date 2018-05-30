@@ -47,7 +47,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   /** Set the fixed image interpolators. */
   this->GetAndSetFixedImageInterpolators();
 
-}   // end BeforeRegistration()
+} // end BeforeRegistration()
 
 
 /**
@@ -66,7 +66,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   this->UpdateFixedMasks( level );
   this->UpdateMovingMasks( level );
 
-}   // end BeforeEachResolution()
+} // end BeforeEachResolution()
 
 
 /**
@@ -151,7 +151,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     }
   }
 
-}   // end GetAndSetComponents()
+} // end GetAndSetComponents()
 
 
 /**
@@ -185,7 +185,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     this->SetFixedImageRegion( this->GetElastix()->GetFixedImage( i )->GetBufferedRegion(), i );
   }
 
-}   // end GetAndSetFixedImageRegions()
+} // end GetAndSetFixedImageRegions()
 
 
 /**
@@ -222,7 +222,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     this->SetFixedImageInterpolator( interpolators[ i ], i );
   }
 
-}   // end GetAndSetFixedImageInterpolators()
+} // end GetAndSetFixedImageInterpolators()
 
 
 /**
@@ -265,7 +265,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
          << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
-}   // end UpdateFixedMasks()
+} // end UpdateFixedMasks()
 
 
 /**
@@ -308,7 +308,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
          << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
-}   // end UpdateMovingMasks()
+} // end UpdateMovingMasks()
 
 
 } // end namespace elastix

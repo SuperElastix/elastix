@@ -40,30 +40,29 @@ StandardGradientDescentOptimizer
   this->m_InitialTime     = 0.0;
   this->m_UseConstantStep = false;
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
-* ********************** StartOptimization *********************
-*/
+ * ********************** StartOptimization *********************
+ */
 
 void
 StandardGradientDescentOptimizer::StartOptimization( void )
 {
   this->m_CurrentTime = this->m_InitialTime;
   this->Superclass::StartOptimization();
-}   // end StartOptimization
+} // end StartOptimization()
 
 
 /**
-* ******************** AdvanceOneStep **************************
-*/
+ * ******************** AdvanceOneStep **************************
+ */
 
 void
 StandardGradientDescentOptimizer
 ::AdvanceOneStep( void )
 {
-
   /** Decide which type of step size is chosen. */
   if( this->m_UseConstantStep )
   {
@@ -78,15 +77,12 @@ StandardGradientDescentOptimizer
 
   this->UpdateCurrentTime();
 
-}   // end AdvanceOneStep
+} // end AdvanceOneStep()
 
 
 /**
-* ************************** Compute_a *************************
-*
-* This function computes the parameter a at iteration/time k, as
-* described by Spall.
-*/
+ * ************************** Compute_a *************************
+ */
 
 double
 StandardGradientDescentOptimizer
@@ -95,14 +91,12 @@ StandardGradientDescentOptimizer
   return static_cast< double >(
     this->m_Param_a / vcl_pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
 
-}   // end Compute_a
+} // end Compute_a()
 
 
 /**
-* ************************** UpdateCurrentTime ********************
-*
-* This function computes the input for the Compute_a function.
-*/
+ * ************************** UpdateCurrentTime ********************
+ */
 
 void
 StandardGradientDescentOptimizer
@@ -111,7 +105,7 @@ StandardGradientDescentOptimizer
   /** Simply Robbins-Monro: time=iterationnr. */
   this->m_CurrentTime += 1.0;
 
-}   // end UpdateCurrentTime
+} // end UpdateCurrentTime()
 
 
 } // end namespace itk

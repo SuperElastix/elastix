@@ -34,7 +34,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
   this->m_NumberOfFixedFeatureImages  = 0;
   this->m_NumberOfMovingFeatureImages = 0;
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -86,7 +86,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
   /** Check if the moving feature image interpolators are B-spline interpolators. */
   this->CheckForBSplineFeatureInterpolators();
 
-}   // end Initialize()
+} // end Initialize()
 
 
 /**
@@ -106,7 +106,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     this->Modified();
   }
 
-}   // end SetNumberOfFixedFeatureImages()
+} // end SetNumberOfFixedFeatureImages()
 
 
 /**
@@ -134,7 +134,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     }
   }
 
-}   // end SetFixedFeatureImage()
+} // end SetFixedFeatureImage()
 
 
 /**
@@ -148,7 +148,7 @@ TFixedFeatureImage, TMovingFeatureImage >::FixedFeatureImageType
 ::GetFixedFeatureImage( unsigned int i ) const
 {
   return this->m_FixedFeatureImages[ i ].GetPointer();
-}   // end GetFixedFeatureImage()
+} // end GetFixedFeatureImage()
 
 /**
  * ********************* SetFixedFeatureInterpolator ****************************
@@ -175,7 +175,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     }
   }
 
-}   // end SetFixedFeatureInterpolator()
+} // end SetFixedFeatureInterpolator()
 
 
 /**
@@ -189,7 +189,7 @@ TFixedFeatureImage, TMovingFeatureImage >::FixedFeatureInterpolatorType
 ::GetFixedFeatureInterpolator( unsigned int i ) const
 {
   return this->m_FixedFeatureInterpolators[ i ].GetPointer();
-}   // end GetFixedFeatureInterpolator()
+} // end GetFixedFeatureInterpolator()
 
 /**
  * ********************* SetNumberOfMovingFeatureImages ****************************
@@ -208,7 +208,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     this->Modified();
   }
 
-}   // end SetNumberOfMovingFeatureImages()
+} // end SetNumberOfMovingFeatureImages()
 
 
 /**
@@ -236,7 +236,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     }
   }
 
-}   // end SetMovingFeatureImage()
+} // end SetMovingFeatureImage()
 
 
 /**
@@ -250,7 +250,7 @@ TFixedFeatureImage, TMovingFeatureImage >::MovingFeatureImageType
 ::GetMovingFeatureImage( unsigned int i ) const
 {
   return this->m_MovingFeatureImages[ i ].GetPointer();
-}   // end GetMovingFeatureImage()
+} // end GetMovingFeatureImage()
 
 /**
  * ********************* SetMovingFeatureInterpolator ****************************
@@ -277,7 +277,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     }
   }
 
-}   // end SetMovingFeatureInterpolator()
+} // end SetMovingFeatureInterpolator()
 
 
 /**
@@ -290,7 +290,7 @@ const typename ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixed
 ::GetMovingFeatureInterpolator( unsigned int i ) const
 {
   return this->m_MovingFeatureInterpolators[ i ].GetPointer();
-}   // end GetMovingFeatureInterpolator()
+} // end GetMovingFeatureInterpolator()
 
 /**
  * ****************** CheckForBSplineFeatureInterpolators **********************
@@ -327,9 +327,9 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
       itkDebugMacro( << "Interpolator " << i << " is NOT B-spline." );
       itkExceptionMacro( << "Interpolator " << i << " is NOT B-spline." );
     }
-  }   // end for-loop
+  } // end for-loop
 
-}   // end CheckForBSplineFeatureInterpolators()
+} // end CheckForBSplineFeatureInterpolators()
 
 
 /**
@@ -370,7 +370,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
        << this->m_MovingFeatureInterpolators[ i ].GetPointer() << std::endl;
   }
 
-}   // end PrintSelf()
+} // end PrintSelf()
 
 
 } // end namespace itk

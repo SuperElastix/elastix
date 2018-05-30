@@ -48,7 +48,7 @@ QuasiNewtonLBFGS< TElastix >
   this->m_StopIfWolfeNotSatisfied      = true;
   this->m_WolfeIsStopCondition         = false;
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -76,7 +76,7 @@ QuasiNewtonLBFGS< TElastix >::InvokeIterationEvent( const itk::EventObject & eve
   }
 
   this->m_StartLineSearch = false;
-}   // end InvokeIterationEvent
+} // end InvokeIterationEvent
 
 
 /**
@@ -147,7 +147,7 @@ QuasiNewtonLBFGS< TElastix >::LineSearch(
       g    = this->GetCurrentGradient();
     }
   }
-}   // end LineSearch
+} // end LineSearch
 
 
 /**
@@ -169,7 +169,7 @@ QuasiNewtonLBFGS< TElastix >::DeterminePhase( void ) const
 
   return std::string( "Main" );
 
-}   // end DeterminePhase
+} // end DeterminePhase
 
 
 /**
@@ -214,7 +214,7 @@ QuasiNewtonLBFGS< TElastix >::BeforeRegistration( void )
     this->m_GenerateLineSearchIterations = true;
   }
 
-}   // end BeforeRegistration
+} // end BeforeRegistration
 
 
 /**
@@ -286,7 +286,7 @@ QuasiNewtonLBFGS< TElastix >
   this->m_SearchDirectionMagnitude = 0.0;
   this->m_StartLineSearch          = false;
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution
 
 
 /**
@@ -330,7 +330,7 @@ QuasiNewtonLBFGS< TElastix >
     this->m_LineOptimizer->GetCurrentDerivative( cd );
     xout[ "iteration" ][ "4a:||Gradient||" ] << cd.magnitude();
     xout[ "iteration" ][ "7:LinSrchStopCondition" ] << "---";
-  }   // end if in line search
+  } // end if in line search
   else
   {
     xout[ "iteration" ][ "2:Metric" ]
@@ -341,7 +341,7 @@ QuasiNewtonLBFGS< TElastix >
       << this->GetCurrentGradient().magnitude();
     xout[ "iteration" ][ "7:LinSrchStopCondition" ]
       << this->GetLineSearchStopCondition();
-  }   // end else (not in line search)
+  } // end else (not in line search)
 
   xout[ "iteration" ][ "1a:SrchDirNr" ] << this->GetCurrentIteration();
   xout[ "iteration" ][ "5:Phase" ] << this->DeterminePhase();
@@ -387,9 +387,9 @@ QuasiNewtonLBFGS< TElastix >
         throw err;
       }
     } //end if new samples every iteration
-  }   // end if not in line search
+  } // end if not in line search
 
-}   // end AfterEachIteration
+} // end AfterEachIteration
 
 
 /**
@@ -456,7 +456,7 @@ QuasiNewtonLBFGS< TElastix >
   /** Print the stopping condition */
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-}   // end AfterEachResolution
+} // end AfterEachResolution
 
 
 /**
@@ -477,7 +477,7 @@ QuasiNewtonLBFGS< TElastix >
     << bestValue
     << std::endl;
 
-}   // end AfterRegistration
+} // end AfterRegistration
 
 
 /**
@@ -508,7 +508,7 @@ QuasiNewtonLBFGS< TElastix >
 
   return convergence;
 
-}   // end TestConvergence
+} // end TestConvergence
 
 
 /**
@@ -582,7 +582,7 @@ QuasiNewtonLBFGS< TElastix >
 
   return stopcondition;
 
-}   // end GetLineSearchStopCondition
+} // end GetLineSearchStopCondition
 
 
 } // end namespace elastix

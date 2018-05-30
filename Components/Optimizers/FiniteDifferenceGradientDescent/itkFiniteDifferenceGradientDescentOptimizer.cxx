@@ -54,7 +54,7 @@ FiniteDifferenceGradientDescentOptimizer
   this->m_Param_alpha         = 0.602;
   this->m_Param_gamma         = 0.101;
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -79,7 +79,7 @@ FiniteDifferenceGradientDescentOptimizer
      << this->m_StopCondition;
   os << std::endl;
 
-}   // end PrintSelf
+} // end PrintSelf
 
 
 /**
@@ -109,7 +109,7 @@ FiniteDifferenceGradientDescentOptimizer
     this->ResumeOptimization();
   }
 
-}   // end StartOptimization
+} // end StartOptimization
 
 
 /**
@@ -216,7 +216,7 @@ FiniteDifferenceGradientDescentOptimizer
 
   }   // while !m_stop
 
-}   // end ResumeOptimization
+} // end ResumeOptimization
 
 
 /**
@@ -232,7 +232,7 @@ FiniteDifferenceGradientDescentOptimizer
   this->m_Stop = true;
   InvokeEvent( EndEvent() );
 
-}   // end StopOptimization
+} // end StopOptimization
 
 
 /**
@@ -266,7 +266,7 @@ FiniteDifferenceGradientDescentOptimizer
 
   this->InvokeEvent( IterationEvent() );
 
-}   // end AdvanceOneStep
+} // end AdvanceOneStep
 
 
 /**
@@ -283,7 +283,7 @@ FiniteDifferenceGradientDescentOptimizer
   return static_cast< double >(
     this->m_Param_a / vcl_pow( this->m_Param_A + k + 1, this->m_Param_alpha ) );
 
-}   // end Compute_a
+} // end Compute_a
 
 
 /**
@@ -300,7 +300,7 @@ FiniteDifferenceGradientDescentOptimizer
   return static_cast< double >(
     this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
 
-}   // end Compute_c
+} // end Compute_c
 
 
 } // end namespace itk

@@ -33,7 +33,7 @@ ExponentialLimiterFunction< TInput, NDimension >
 ::ExponentialLimiterFunction()
 {
   this->ComputeLimiterSettings();
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -46,7 +46,7 @@ ExponentialLimiterFunction< TInput, NDimension >
 ::Initialize( void ) throw ( ExceptionObject )
 {
   this->ComputeLimiterSettings();
-}   // end Initialize()
+} // end Initialize()
 
 
 /**
@@ -76,7 +76,7 @@ ExponentialLimiterFunction< TInput, NDimension >
 
   /** Leave the value as it is */
   return static_cast< OutputType >( input );
-}   // end Evaluate()
+} // end Evaluate()
 
 
 /**
@@ -116,7 +116,7 @@ ExponentialLimiterFunction< TInput, NDimension >
 
   /** Leave the value and derivative as they are */
   return static_cast< OutputType >( input );
-}   // end Evaluate()
+} // end Evaluate()
 
 
 /**
@@ -150,7 +150,7 @@ ExponentialLimiterFunction< TInput, NDimension >::ComputeLimiterSettings( void )
     this->m_LTminLB    = 0.0;
     this->m_LTminLBinv = 0.0;
   }
-}   // end ComputeLimiterSettings()
+} // end ComputeLimiterSettings()
 
 
 } // end namespace itk

@@ -449,7 +449,7 @@ ElastixBase::GenerateFileNameContainer(
         ++i;
       }
     } // end while
-  }   // end if
+  } // end if
 
   return fileNameContainer;
 
