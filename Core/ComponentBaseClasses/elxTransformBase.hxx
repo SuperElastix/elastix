@@ -322,6 +322,7 @@ const typename TransformBase< TElastix >::InitialTransformType
 
 } // end GetInitialTransform()
 
+
 /**
  * ******************* SetInitialTransform **********************
  */
@@ -1479,13 +1480,14 @@ TransformBase< TElastix >
 
 } // end TransformPointsAllPoints()
 
+
 /**
-* ************** GenerateDeformationFieldImage **********************
-*
-* This function transforms all indexes to a physical point.
-* The difference vector (= the deformation at that index) is
-* stored in an image of vectors (of floats).
-*/
+ * ************** GenerateDeformationFieldImage **********************
+ *
+ * This function transforms all indexes to a physical point.
+ * The difference vector (= the deformation at that index) is
+ * stored in an image of vectors (of floats).
+ */
 
 template< class TElastix >
 typename TransformBase< TElastix >::DeformationFieldImageType::Pointer
@@ -1551,15 +1553,16 @@ TransformBase< TElastix >
   return infoChanger->GetOutput();
 } // end GenerateDeformationFieldImage()
 
+
 /**
-* ************** WriteDeformationFieldImage **********************
-*
-*/
+ * ************** WriteDeformationFieldImage **********************
+ */
 
 template< class TElastix >
 void
 TransformBase< TElastix >::
-WriteDeformationFieldImage(typename TransformBase< TElastix >::DeformationFieldImageType::Pointer deformationfield) const
+WriteDeformationFieldImage(
+  typename TransformBase< TElastix >::DeformationFieldImageType::Pointer deformationfield ) const
 {
   typedef itk::ImageFileWriter<
     DeformationFieldImageType >                       DeformationFieldWriterType;
