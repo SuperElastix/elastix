@@ -59,32 +59,29 @@ public:
   /* Set/Get/Add parameter map or vector of parameter maps. */
   // TODO: Use itkSetMacro for ParameterMapVectorType
   void SetParameterMap( const ParameterMapType & parameterMap );
-
+  void SetParameterMap( const unsigned int& index, const ParameterMapType & parameterMap );
   void SetParameterMap( const ParameterMapVectorType & parameterMap );
-
   void AddParameterMap( const ParameterMapType & parameterMap );
-
-  const ParameterMapType & GetParameterMap( const unsigned int index ) const;
-
+  const ParameterMapType& GetParameterMap( const unsigned int& index ) const;
   itkGetConstReferenceMacro( ParameterMap, ParameterMapVectorType );
-
   unsigned int GetNumberOfParameterMaps() const { return this->m_ParameterMap.size(); }
+
+  void SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueType& value );
+  void SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueVectorType& value );
+  void SetParameter( const ParameterKeyType& key, const ParameterValueType& value );
+  void SetParameter( const ParameterKeyType& key, const ParameterValueVectorType& value );
+  const ParameterValueVectorType& GetParameter( const unsigned int& index, const ParameterKeyType& key);
+  void RemoveParameter( const unsigned int& index, const ParameterKeyType& key );
+  void RemoveParameter( const ParameterKeyType& key );
 
   /* Read/Write parameter file or multiple parameter files to/from disk. */
   void ReadParameterFile( const ParameterFileNameType & parameterFileName );
-
   void ReadParameterFile( const ParameterFileNameVectorType & parameterFileNameVector );
-
   void AddParameterFile( const ParameterFileNameType & parameterFileName );
-
   void WriteParameterFile( void );
-
   void WriteParameterFile( const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName );
-
   void WriteParameterFile( const ParameterFileNameType & parameterFileName );
-
   void WriteParameterFile( const ParameterFileNameVectorType & parameterFileNameVector );
-
   void WriteParameterFile( const ParameterMapVectorType & parameterMapVector, const ParameterFileNameVectorType & parameterFileNameVector );
 
   /* Get preconfigured parameter maps. */

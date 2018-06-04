@@ -39,6 +39,17 @@ ParameterObject
   this->SetParameterMap( parameterMapVector );
 }
 
+/**
+ * ********************* SetParameterMap *********************
+ */
+
+void
+ParameterObject
+::SetParameterMap( const unsigned int& index, const ParameterMapType & parameterMap )
+{
+  this->m_ParameterMap[ index ] = parameterMap;
+}
+
 
 /**
  * ********************* SetParameterMap *********************
@@ -75,9 +86,99 @@ ParameterObject
 
 const ParameterObject::ParameterMapType &
 ParameterObject
-::GetParameterMap( const unsigned int index ) const
+::GetParameterMap( const unsigned int& index ) const
 {
   return this->m_ParameterMap[ index ];
+}
+
+
+/**
+ * ********************* SetParameter *********************
+ */
+
+void
+ParameterObject
+::SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueType& value )
+{
+  this->m_ParameterMap[ index ][ key ] = ParameterValueVectorType(1, value);
+}
+
+
+/**
+ * ********************* SetParameter *********************
+ */
+
+void
+ParameterObject
+::SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueVectorType& value )
+{
+  this->m_ParameterMap[ index ][ key ] = value;
+}
+
+
+/**
+ * ********************* SetParameter *********************
+ */
+
+void
+ParameterObject
+::SetParameter( const ParameterKeyType& key, const ParameterValueType& value  )
+{
+  for(unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++) {
+    this->SetParameter(index, key, value);
+  }
+}
+
+
+/**
+ * ********************* SetParameter *********************
+ */
+
+void
+ParameterObject
+::SetParameter( const ParameterKeyType& key, const ParameterValueVectorType& value  )
+{
+  for(unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++) {
+    this->SetParameter(index, key, value);
+  }
+}
+
+
+/**
+ * ********************* GetParameter *********************
+ */
+
+const ParameterObject::ParameterValueVectorType&
+ParameterObject
+::GetParameter( const unsigned int& index, const ParameterKeyType& key )
+{
+  return this->m_ParameterMap[ index ][ key ];
+}
+
+
+/**
+ * ********************* RemoveParameter *********************
+ */
+
+void
+ParameterObject
+::RemoveParameter( const unsigned int& index, const ParameterKeyType& key )
+{
+  this->m_ParameterMap[ index ].erase( key );
+}
+
+
+/**
+ * ********************* RemoveParameter *********************
+ */
+
+void
+ParameterObject
+::RemoveParameter( const ParameterKeyType& key )
+{
+  for(unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++) {
+    this->RemoveParameter(index, key);
+  }
 }
 
 
@@ -294,7 +395,7 @@ ParameterObject
 
 
 /**
- * ********************* GetParameterMap *********************
+ * ********************* GetDefaultParameterMap *********************
  */
 
 const ParameterObject::ParameterMapType
