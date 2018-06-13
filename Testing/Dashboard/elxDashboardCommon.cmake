@@ -57,19 +57,14 @@ if( NOT DEFINED CTEST_BUILD_CONFIGURATION )
   set( CTEST_BUILD_CONFIGURATION Release )
 endif()
 
-# Select git source to use.
-if( NOT DEFINED dashboard_git_url )
-  set( dashboard_git_url "https://github.com/SuperElastix/elastix.git" )
-endif()
-
-# Select branch to use
-if( NOT DEFINED dashboard_git_branch )
-  set( dashboard_git_branch develop )
+# Select svn source to use.
+if( NOT DEFINED dashboard_url )
+  set( dashboard_url "https://svn.bigr.nl/elastix/trunkpublic" )
 endif()
 
 # Select a source directory name.
 if( NOT DEFINED CTEST_SOURCE_DIRECTORY )
-  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/elastix" )
+  set( CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/src" )
 endif()
 
 # Select a build directory name.
@@ -80,18 +75,8 @@ make_directory( ${CTEST_BINARY_DIRECTORY} )
 
 # Look for a Subversion command-line client.
 if( NOT DEFINED CTEST_UPDATE_COMMAND )
-  find_program( CTEST_UPDATE_COMMAND git git.cmd
-    HINTS "C:/Program Files/Git/bin/" )
-endif()
-
-# Look for a GIT command-line client.
-if( NOT DEFINED CTEST_GIT_COMMAND )
-  find_program( CTEST_GIT_COMMAND
-    NAMES git git.cmd
-    HINTS "C:/Program Files/Git/bin/" )
-endif()
-if( NOT DEFINED CTEST_GIT_COMMAND )
-  message( FATAL_ERROR "No Git Found." )
+  find_program( CTEST_UPDATE_COMMAND svn
+    HINTS "C:/cygwin/bin/" )
 endif()
 
 # Look for a coverage command-line client.
@@ -107,11 +92,11 @@ endif()
 # Support initial checkout if necessary;
 if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
-    AND CTEST_GIT_COMMAND )
+    AND CTEST_UPDATE_COMMAND )
 
-  # Assume git version 1.6.5 or higher, which has git clone -b option.
-  set( CTEST_CHECKOUT_COMMAND
-     "\"${CTEST_GIT_COMMAND}\" clone -b ${dashboard_git_branch} \"${dashboard_git_url}\" \"${CTEST_DASHBOARD_ROOT}/elastix\"" )
+  # checkout command; NB: --trust-server-cert is only supported in newer subversions;
+   set( CTEST_CHECKOUT_COMMAND
+     "\"${CTEST_UPDATE_COMMAND}\" --non-interactive --trust-server-cert co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
 
   # CTest delayed initialization is broken, so we copy the
   # CTestConfig.cmake info here.
@@ -154,8 +139,6 @@ foreach( v
   CTEST_COVERAGE_COMMAND
   CTEST_MEMORYCHECK_COMMAND
   CTEST_SCRIPT_DIRECTORY
-  dashboard_git_url
-  dashboard_git_branch
   dashboard_model
   )
   set( vars "${vars}  ${v}=[${${v}}]\n" )
@@ -167,19 +150,13 @@ set( ENV{LC_ALL} C )
 
 # Helper macro to write the initial cache.
 macro( write_cache )
-set( cache_build_type "" )
-  set( cache_make_program "" )
   if( CTEST_CMAKE_GENERATOR MATCHES "Make" )
     set( cache_build_type CMAKE_BUILD_TYPE:STRING=${CTEST_BUILD_CONFIGURATION} )
-    if( CMAKE_MAKE_PROGRAM )
-      set( cache_make_program CMAKE_MAKE_PROGRAM:FILEPATH=${CMAKE_MAKE_PROGRAM} )
-    endif()
   endif()
   file( WRITE ${CTEST_BINARY_DIRECTORY}/CMakeCache.txt "
 SITE:STRING=${CTEST_SITE}
 BUILDNAME:STRING=${CTEST_BUILD_NAME}
 ${cache_build_type}
-${cache_make_program}
 ${dashboard_cache}
 ")
 endmacro()
@@ -228,7 +205,7 @@ if( dashboard_model STREQUAL Continuous )
 else()
   write_cache()
   ctest_start( ${dashboard_model} )
-  ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT}/elastix )
+  ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} )
   # run cmake twice; this seems to be necessary, otherwise the
   # KNN lib is not built
   ctest_configure()

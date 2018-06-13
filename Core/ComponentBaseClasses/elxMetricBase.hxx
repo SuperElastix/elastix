@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxMetricBase_hxx
 #define __elxMetricBase_hxx
 
@@ -36,7 +33,6 @@ MetricBase< TElastix >
   this->m_ExactMetricSampler      = 0;
   this->m_CurrentExactMetricValue = 0.0;
   this->m_ExactMetricSampleGridSpacing.Fill( 1 );
-  this->m_ExactMetricEachXNumberOfIterations = 1;
 
 } // end Constructor
 
@@ -94,12 +90,6 @@ MetricBase< TElastix >
       this->m_ExactMetricSampleGridSpacing[ dim ]
         = static_cast< SampleGridSpacingValueType >( spacing_dim );
     }
-
-    /** Read the requested frequency of exact metric evaluation. */
-    unsigned int eachXNumberOfIterations = 1;
-    this->GetConfiguration()->ReadParameter( eachXNumberOfIterations,
-      "ExactMetricEveryXIterations", this->GetComponentLabel(), level, 0 );
-    this->m_ExactMetricEachXNumberOfIterations = eachXNumberOfIterations;
   }
 
   /** Cast this to AdvancedMetricType. */
@@ -129,58 +119,21 @@ MetricBase< TElastix >
       thisAsAdvanced->SetRequiredRatioOfValidSamples( ratio );
     }
 
-    /** Set moving image derivative scales. */
-    std::size_t usescales = this->GetConfiguration()
-      ->CountNumberOfParameterEntries( "MovingImageDerivativeScales" );
-    if( usescales == 0 )
+    /** Temporary?: Use the multi-threaded version or not. Default true. */
+    std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mtm" ); // mtm: multi-threaded metrics
+    if( tmp == "true" || tmp == "" )
     {
-      thisAsAdvanced->SetUseMovingImageDerivativeScales( false );
-      thisAsAdvanced->SetScaleGradientWithRespectToMovingImageOrientation( false );
-    }
-    else
-    {
-      thisAsAdvanced->SetUseMovingImageDerivativeScales( true );
-
-      /** Read the scales from the parameter file. */
-      MovingImageDerivativeScalesType movingImageDerivativeScales;
-      movingImageDerivativeScales.Fill( 1.0 );
-      for( unsigned int i = 0; i < MovingImageDimension; ++i )
+      thisAsAdvanced->SetUseMultiThread( true );
+      std::string  tmp2        = this->m_Configuration->GetCommandLineArgument( "-threads" );
+      unsigned int nrOfThreads = atoi( tmp2.c_str() );
+      if( tmp2 != "" )
       {
-        this->GetConfiguration()->ReadParameter(
-          movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-          this->GetComponentLabel(), i, -1, false );
-      }
-
-      /** Set and report. */
-      thisAsAdvanced->SetMovingImageDerivativeScales( movingImageDerivativeScales );
-      elxout << "Multiplying moving image derivatives by: "
-             << movingImageDerivativeScales << std::endl;
-
-      /** Check if the scales are applied taking into account the moving image orientation. */
-      bool wrtMoving = false;
-      this->GetConfiguration()->ReadParameter(
-        wrtMoving, "ScaleGradientWithRespectToMovingImageOrientation",
-        this->GetComponentLabel(), level, false );
-      thisAsAdvanced->SetScaleGradientWithRespectToMovingImageOrientation( wrtMoving );
-    }
-
-    /** Should the metric use multi-threading? */
-    bool useMultiThreading = true;
-    this->GetConfiguration()->ReadParameter( useMultiThreading,
-      "UseMultiThreadingForMetrics", this->GetComponentLabel(), level, 0 );
-
-    thisAsAdvanced->SetUseMultiThread( useMultiThreading );
-    if( useMultiThreading )
-    {
-      std::string tmp = this->m_Configuration->GetCommandLineArgument( "-threads" );
-      if( tmp != "" )
-      {
-        const unsigned int nrOfThreads = atoi( tmp.c_str() );
         thisAsAdvanced->SetNumberOfThreads( nrOfThreads );
       }
     }
+    else { thisAsAdvanced->SetUseMultiThread( false ); }
 
-  } // end advanced metric
+  } // end Advanced metric
 
 } // end BeforeEachResolutionBase()
 
@@ -201,8 +154,7 @@ MetricBase< TElastix >
   exactMetricColumn += this->GetComponentLabel();
 
   this->m_CurrentExactMetricValue = 0.0;
-  if( this->m_ShowExactMetricValue
-    && ( this->m_Elastix->GetIterationCounter() % this->m_ExactMetricEachXNumberOfIterations == 0 ) )
+  if( this->m_ShowExactMetricValue )
   {
     this->m_CurrentExactMetricValue = this->GetExactValue(
       this->GetElastix()->GetElxOptimizerBase()
@@ -389,6 +341,30 @@ typename MetricBase< TElastix >::ImageSamplerBaseType
   return thisAsMetricWithSampler->GetImageSampler();
 
 } // end GetAdvancedMetricImageSampler()
+
+/**
+ * ******************* Switch grid shift strategy ******************
+ */
+
+template <class TElastix>
+void
+MetricBase<TElastix>
+::SetUseGridShiftStrategy( bool useStrategy )
+{
+	itkExceptionMacro( << "Subclass should override this method" );
+}
+
+/**
+ * ******************* Initialize random shift list ******************
+ */
+
+template <class TElastix>
+void
+MetricBase<TElastix>
+::SetRandomShiftList( std::vector< double > randomList )
+{
+	itkExceptionMacro( << "Subclass should override this method" );
+}
 
 } // end namespace elastix
 

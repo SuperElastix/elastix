@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __itkAdvancedCombinationTransform_h
 #define __itkAdvancedCombinationTransform_h
 
@@ -77,10 +73,7 @@ public:
   /** Typedefs inherited from Superclass.*/
   typedef typename Superclass::ScalarType                    ScalarType;
   typedef typename Superclass::ParametersType                ParametersType;
-  typedef typename Superclass::FixedParametersType           FixedParametersType;
-  typedef typename Superclass::ParametersValueType           ParametersValueType;
   typedef typename Superclass::NumberOfParametersType        NumberOfParametersType;
-  typedef typename Superclass::DerivativeType                DerivativeType;
   typedef typename Superclass::JacobianType                  JacobianType;
   typedef typename Superclass::InputVectorType               InputVectorType;
   typedef typename Superclass::OutputVectorType              OutputVectorType;
@@ -99,8 +92,8 @@ public:
   typedef typename Superclass::InverseTransformBaseType      InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer   InverseTransformBasePointer;
   typedef typename Superclass::TransformCategoryType         TransformCategoryType;
-  typedef typename Superclass::MovingImageGradientType       MovingImageGradientType;
-  typedef typename Superclass::MovingImageGradientValueType  MovingImageGradientValueType;
+  typedef typename Superclass::SpacingType                   SpacingType;
+  typedef typename Superclass::OriginType                    OriginType;
 
   /** Transform typedefs for the from Superclass. */
   typedef typename Superclass::TransformType   TransformType;
@@ -200,7 +193,7 @@ public:
   virtual const ParametersType & GetParameters( void ) const;
 
   /** Get the fixed parameters from the CurrentTransform. */
-  virtual const FixedParametersType & GetFixedParameters( void ) const;
+  virtual const ParametersType & GetFixedParameters( void ) const;
 
   /** Set the transformation parameters in the CurrentTransform. */
   virtual void SetParameters( const ParametersType & param );
@@ -211,7 +204,7 @@ public:
   virtual void SetParametersByValue( const ParametersType & param );
 
   /** Set the fixed parameters in the CurrentTransform. */
-  virtual void SetFixedParameters( const FixedParametersType & fixedParam );
+  virtual void SetFixedParameters( const ParametersType & fixedParam );
 
   /** Return the inverse \f$T^{-1}\f$ of the transform.
    *  This is only possible when:
@@ -244,13 +237,6 @@ public:
   virtual void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
-
-  /** Compute the inner product of the Jacobian with the moving image gradient. */
-  virtual void EvaluateJacobianWithImageGradientProduct(
-    const InputPointType & ipp,
-    const MovingImageGradientType & movingImageGradient,
-    DerivativeType & imageJacobian,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
   /** Compute the spatial Jacobian of the transformation. */
@@ -299,11 +285,6 @@ public:
     const InputPointType &,
     JacobianType &,
     NonZeroJacobianIndicesType & ) const;
-  typedef void (Self::* EvaluateJacobianWithImageGradientProductFunctionPointer)(
-    const InputPointType &,
-    const MovingImageGradientType &,
-    DerivativeType &,
-    NonZeroJacobianIndicesType & ) const;
   typedef void (Self::* GetSpatialJacobianFunctionPointer)(
     const InputPointType &,
     SpatialJacobianType & ) const;
@@ -328,6 +309,12 @@ public:
     SpatialHessianType &,
     JacobianOfSpatialHessianType &,
     NonZeroJacobianIndicesType & ) const;
+
+  virtual void GetOriginAndSpacing(
+	  OriginType & origin,
+	  SpacingType & sp ) const;
+
+  virtual void SetOrigin( const OriginType & origin );
 
 protected:
 
@@ -366,14 +353,13 @@ protected:
   //GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
 
   /** More of these. */
-  GetSparseJacobianFunctionPointer                        m_SelectedGetSparseJacobianFunction;
-  EvaluateJacobianWithImageGradientProductFunctionPointer m_SelectedEvaluateJacobianWithImageGradientProductFunction;
-  GetSpatialJacobianFunctionPointer                       m_SelectedGetSpatialJacobianFunction;
-  GetSpatialHessianFunctionPointer                        m_SelectedGetSpatialHessianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer             m_SelectedGetJacobianOfSpatialJacobianFunction;
-  GetJacobianOfSpatialJacobianFunctionPointer2            m_SelectedGetJacobianOfSpatialJacobianFunction2;
-  GetJacobianOfSpatialHessianFunctionPointer              m_SelectedGetJacobianOfSpatialHessianFunction;
-  GetJacobianOfSpatialHessianFunctionPointer2             m_SelectedGetJacobianOfSpatialHessianFunction2;
+  GetSparseJacobianFunctionPointer             m_SelectedGetSparseJacobianFunction;
+  GetSpatialJacobianFunctionPointer            m_SelectedGetSpatialJacobianFunction;
+  GetSpatialHessianFunctionPointer             m_SelectedGetSpatialHessianFunction;
+  GetJacobianOfSpatialJacobianFunctionPointer  m_SelectedGetJacobianOfSpatialJacobianFunction;
+  GetJacobianOfSpatialJacobianFunctionPointer2 m_SelectedGetJacobianOfSpatialJacobianFunction2;
+  GetJacobianOfSpatialHessianFunctionPointer   m_SelectedGetJacobianOfSpatialHessianFunction;
+  GetJacobianOfSpatialHessianFunctionPointer2  m_SelectedGetJacobianOfSpatialHessianFunction2;
 
   /** ************************************************
    * Methods to transform a point.
@@ -425,40 +411,6 @@ protected:
   inline void GetJacobianNoCurrentTransform(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
-
-  /** ************************************************
-   * Methods to compute the inner product of the Jacobian with the moving image gradient.
-   */
-
-  /** ADDITION: \f$J(x) = J_1(x)\f$ */
-  inline void EvaluateJacobianWithImageGradientProductUseAddition(
-    const InputPointType &,
-    const MovingImageGradientType &,
-    DerivativeType &,
-    NonZeroJacobianIndicesType & ) const;
-
-  /** COMPOSITION: \f$J(x) = J_1( T_0(x) )\f$
-   * \warning: assumes that input and output point type are the same.
-   */
-  inline void EvaluateJacobianWithImageGradientProductUseComposition(
-    const InputPointType &,
-    const MovingImageGradientType &,
-    DerivativeType &,
-    NonZeroJacobianIndicesType & ) const;
-
-  /** CURRENT ONLY: \f$J(x) = J_1(x)\f$ */
-  inline void EvaluateJacobianWithImageGradientProductNoInitialTransform(
-    const InputPointType &,
-    const MovingImageGradientType &,
-    DerivativeType &,
-    NonZeroJacobianIndicesType & ) const;
-
-  /** NO CURRENT TRANSFORM SET: throw an exception. */
-  inline void EvaluateJacobianWithImageGradientProductNoCurrentTransform(
-    const InputPointType &,
-    const MovingImageGradientType &,
-    DerivativeType &,
     NonZeroJacobianIndicesType & ) const;
 
   /** ************************************************

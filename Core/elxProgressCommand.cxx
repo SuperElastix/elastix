@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #include "elxProgressCommand.h"
 #include "xoutmain.h"
@@ -45,7 +41,7 @@ ProgressCommand::ProgressCommand()
     this->m_StreamOutputIsConsole = true;
   }
 
-} // end Constructor()
+}   // end Constructor()
 
 
 /**
@@ -56,7 +52,7 @@ ProgressCommand::~ProgressCommand()
 {
   this->DisconnectObserver( this->m_ObservedProcessObject );
 
-} // end Destructor()
+}   // end Destructor()
 
 
 /**
@@ -91,7 +87,7 @@ ProgressCommand
     this->m_NumberOfUpdates = 1;
   }
 
-} // end SetUpdateFrequency()
+}   // end SetUpdateFrequency()
 
 
 /**
@@ -113,7 +109,7 @@ ProgressCommand
     this->m_ObservedProcessObject = filter;
   }
 
-} // end ConnectObserver()
+}   // end ConnectObserver()
 
 
 /**
@@ -134,7 +130,7 @@ ProgressCommand
     }
   }
 
-} // end DisconnectObserver()
+}   // end DisconnectObserver()
 
 
 /**
@@ -153,7 +149,7 @@ ProgressCommand
     this->PrintProgress( po->GetProgress() );
   }
 
-} // end Execute()
+}   // end Execute()
 
 
 /**
@@ -172,7 +168,7 @@ ProgressCommand
     this->PrintProgress( po->GetProgress() );
   }
 
-} // end Execute()
+}   // end Execute()
 
 
 /**
@@ -198,7 +194,7 @@ ProgressCommand
     xl::xout["coutonly"] << std::endl;
   }*/
 
-} // end PrintProgress()
+}   // end PrintProgress()
 
 
 /**
@@ -221,7 +217,7 @@ ProgressCommand
     }
   }
 
-} // end PrintProgress()
+}   // end PrintProgress()
 
 
 } // end namespace itk

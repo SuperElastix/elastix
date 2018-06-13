@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #ifndef __elxPowell_hxx
 #define __elxPowell_hxx
@@ -45,7 +41,7 @@ Powell< TElastix >::BeforeRegistration( void )
   xl::xout[ "iteration" ][ "3:StepSize" ] << std::showpoint << std::fixed;
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
 
-} // end BeforeRegistration
+}   // end BeforeRegistration
 
 
 /**
@@ -85,7 +81,7 @@ Powell< TElastix >
     "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
   this->SetMaximumIteration( maximumNumberOfIterations );
 
-} // end BeforeEachResolution
+}   // end BeforeEachResolution
 
 
 /**
@@ -100,7 +96,7 @@ Powell< TElastix >
   /** Print some information */
   xl::xout[ "iteration" ][ "2:Metric" ] << this->GetValue();
   xl::xout[ "iteration" ][ "3:StepSize" ] << this->GetStepLength();
-} // end AfterEachIteration
+}   // end AfterEachIteration
 
 
 /**
@@ -121,7 +117,7 @@ Powell< TElastix >
   /** Print the stopping condition */
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-} // end AfterEachResolution
+}   // end AfterEachResolution
 
 
 /**
@@ -137,7 +133,7 @@ Powell< TElastix >
   double bestValue = this->GetValue();
   elxout << std::endl << "Final metric value  = " << bestValue  << std::endl;
 
-} // end AfterRegistration
+}   // end AfterRegistration
 
 
 /**
@@ -170,7 +166,7 @@ Powell< TElastix >
 
   /** \todo to optimizerbase? */
 
-} // end SetInitialPosition
+}   // end SetInitialPosition
 
 
 } // end namespace elastix

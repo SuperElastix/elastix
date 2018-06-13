@@ -26,7 +26,6 @@ set( InstallFilesForExecutables
 set( InstallFilesForComponents
   Install/elxComponentDatabase.cxx
   Install/elxComponentDatabase.h
-  Install/elxBaseComponent.cxx
   Install/elxBaseComponent.h
   Install/elxBaseComponentSE.h
   Install/elxBaseComponentSE.hxx
@@ -89,15 +88,13 @@ source_group( "ProgressCommand" FILES ${ProgressCommandFiles} )
 #---------------------------------------------------------------------
 # Create the elxCore library.
 
-add_library( elxCore STATIC
+add_library( elxCore
   ${KernelFilesForComponents}
   ${InstallFilesForComponents}
   ${ConfigurationFiles}
   ${ComponentBaseClassFiles}
   ${ProgressCommandFiles}
 )
-
-elastix_export_target( elxCore )
 
 #---------------------------------------------------------------------
 # Link against other libraries.
@@ -109,67 +106,76 @@ target_link_libraries( elxCore
   #  ${ITK_LIBRARIES}
 )
 
-elastix_export_target( elxCommon )
-elastix_export_target( xoutlib )
-elastix_export_target( param )
-
 #---------------------------------------------------------------------
 # Define the mevis dcm tiff lib to which we should link.
 set( mevisdcmtifflib mevisdcmtiff )
 
 #---------------------------------------------------------------------
 # Create the elastix executable or library.
-if( ELASTIX_BUILD_EXECUTABLE )
-  add_executable( elastix
+IF( ELASTIX_BUILD_EXECUTABLE )
+  ADD_EXECUTABLE( elastix
     Main/elastix.cxx
     Main/elastix.h
     Kernel/elxElastixMain.cxx
     Kernel/elxElastixMain.h
     ${InstallFilesForExecutables}
   )
-else()
-  # The library type (STATIC or SHARED) is determined by the parameter
-  # BUILD_SHARED_LIBS.
-  add_library( elastix
-    Main/elxParameterObject.cxx
-    Main/elxParameterObject.h
-    Main/elastixlib.cxx
-    Main/elastixlib.h
-    Kernel/elxElastixMain.cxx
-    Kernel/elxElastixMain.h
-    ${InstallFilesForExecutables}
-  )
-endif()
+ELSE(ELASTIX_BUILD_EXECUTABLE)
+  IF( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_LIBRARY( elastix SHARED
+      Main/elastixlib.cxx
+      Main/elastixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ELSE(ELASTIX_BUILD_SHARED_LIBS)
+    ADD_LIBRARY( elastix STATIC
+      Main/elastixlib.cxx
+      Main/elastixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ENDIF(ELASTIX_BUILD_SHARED_LIBS)
+ENDIF(ELASTIX_BUILD_EXECUTABLE)
 
 #---------------------------------------------------------------------
 # Create the transformix executable.
 
-if( ELASTIX_BUILD_EXECUTABLE )
-  add_executable( transformix
+IF( ELASTIX_BUILD_EXECUTABLE )
+  ADD_EXECUTABLE( transformix
     Main/transformix.cxx
-    Main/elastix.h
+    Main/transformix.h
     Kernel/elxElastixMain.cxx
     Kernel/elxElastixMain.h
     Kernel/elxTransformixMain.cxx
     Kernel/elxTransformixMain.h
     ${InstallFilesForExecutables}
   )
-else()
-  # The library type (STATIC or SHARED) is determined by the parameter
-  # BUILD_SHARED_LIBS.
-  add_library( transformix
-    Main/elxParameterObject.cxx
-    Main/elxParameterObject.h
-    Main/transformixlib.cxx
-    Main/transformixlib.h
-    Kernel/elxElastixMain.cxx
-    Kernel/elxElastixMain.h
-    Kernel/elxTransformixMain.cxx
-    Kernel/elxTransformixMain.h
-    ${InstallFilesForExecutables}
-  )
-  set( ELASTIX_LIBRARIES elastix transformix PARENT_SCOPE )
-endif()
+ELSE()
+  IF( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_LIBRARY( transformix SHARED
+      Main/transformixlib.cxx
+      Main/transformixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      Kernel/elxTransformixMain.cxx
+      Kernel/elxTransformixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ELSE( ELASTIX_BUILD_SHARED_LIBS )
+    ADD_LIBRARY( transformix STATIC
+      Main/transformixlib.cxx
+      Main/transformixlib.h
+      Kernel/elxElastixMain.cxx
+      Kernel/elxElastixMain.h
+      Kernel/elxTransformixMain.cxx
+      Kernel/elxTransformixMain.h
+      ${InstallFilesForExecutables}
+    )
+  ENDIF( ELASTIX_BUILD_SHARED_LIBS )
+ENDIF()
 
 #---------------------------------------------------------------------
 # Link elastix against other libraries.
@@ -184,10 +190,6 @@ target_link_libraries( elastix
   ${ITK_LIBRARIES}
 )
 
-if( ELASTIX_USE_OPENCL )
-  target_link_libraries( elastix elxOpenCL )
-endif()
-
 #---------------------------------------------------------------------
 # Link transformix against other libraries.
 
@@ -200,10 +202,6 @@ target_link_libraries( transformix
   ${AllComponentLibs}
   ${ITK_LIBRARIES}
 )
-
-if( ELASTIX_USE_OPENCL )
-  target_link_libraries( transformix elxOpenCL )
-endif()
 
 if( MSVC )
   # NOTE: that linker /INCREMENTAL:NO flag makes it impossible to use
@@ -219,32 +217,28 @@ endif()
 #---------------------------------------------------------------------
 # Define the install directory for elastix and transformix.
 
-if( NOT WIN32 )
+if( WIN32 )
+  if( ELASTIX_BUILD_EXECUTABLE )
+    install( TARGETS elastix transformix
+      RUNTIME DESTINATION . )
+      #COMPONENT core )
+  ELSE( ELASTIX_BUILD_EXECUTABLE )
+    # transformix is not implemented as library yet
+    INSTALL( TARGETS elastix transformix
+      RUNTIME DESTINATION .
+      ARCHIVE DESTINATION . )
+  ENDIF( ELASTIX_BUILD_EXECUTABLE )
+ELSE( WIN32 )
   # Tell the executables where to find the required .so files.
-  set_target_properties( elastix transformix
+  SET_TARGET_PROPERTIES( elastix transformix
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
-endif()
-
-install( TARGETS elastix transformix elxCore
-  ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
-  LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
-  RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR}
-  COMPONENT RuntimeLibraries )
-
-# Install all header files.
-install( DIRECTORY
-  ${elastix_SOURCE_DIR}/Common
-  ${elastix_SOURCE_DIR}/Core
-  ${elastix_SOURCE_DIR}/Components
-  DESTINATION ${ELASTIX_INCLUDE_DIR}
-  FILES_MATCHING PATTERN "*.h" PATTERN "*.hxx" )
-install( FILES
-  ${elastix_BINARY_DIR}/elxInstallComponentFunctionCalls.h
-  ${elastix_BINARY_DIR}/elxInstallComponentFunctionDeclarations.h
-  ${elastix_BINARY_DIR}/elxSupportedImageTypes.h
-  ${elastix_BINARY_DIR}/ITKFactoryRegistration/itkImageIOFactoryRegisterManager.h
-  ${elastix_BINARY_DIR}/ITKFactoryRegistration/itkTransformIOFactoryRegisterManager.h
-  DESTINATION ${ELASTIX_INCLUDE_DIR} )
+  # Put executables in bin and libraries in lib.
+  install( TARGETS elastix transformix
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION bin
+    ARCHIVE DESTINATION bin)
+    #COMPONENT core )
+ENDIF( WIN32 )
 
 #---------------------------------------------------------------------
 # The Core/Install directory contains a CMakeLists file for

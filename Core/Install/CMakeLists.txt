@@ -6,16 +6,20 @@
 
 # User specified variables:
 mark_as_advanced( ELASTIX_IMAGE_DIMENSIONS )
-set( ELASTIX_IMAGE_DIMENSIONS 2 3 4 CACHE STRING "Specify image dimensions" )
+set( ELASTIX_IMAGE_DIMENSIONS 2 3 4
+  CACHE STRING "Specify image dimensions" )
 
 mark_as_advanced( ELASTIX_IMAGE_2D_PIXELTYPES )
-set( ELASTIX_IMAGE_2D_PIXELTYPES "float" CACHE STRING "Specify 2D pixel types" )
+set( ELASTIX_IMAGE_2D_PIXELTYPES "float"
+  CACHE STRING "Specify 2D pixel types" )
 
 mark_as_advanced( ELASTIX_IMAGE_3D_PIXELTYPES )
-set( ELASTIX_IMAGE_3D_PIXELTYPES "short" "float" CACHE STRING "Specify 3D pixel types" )
+set( ELASTIX_IMAGE_3D_PIXELTYPES "short" "float"
+  CACHE STRING "Specify 3D pixel types" )
 
 mark_as_advanced( ELASTIX_IMAGE_4D_PIXELTYPES )
-set( ELASTIX_IMAGE_4D_PIXELTYPES "short" CACHE STRING "Specify 4D pixel types" )
+set( ELASTIX_IMAGE_4D_PIXELTYPES "short"
+  CACHE STRING "Specify 4D pixel types" )
 
 # Define supported dimensions and types for sanity checks.
 # Gives protection against typo's.
@@ -35,7 +39,6 @@ endif()
 # Start a string containing the supported image types
 # and initialize some variables.
 set( supportString "" )
-set( supportOpenCLImages "" )
 set( index 1 )
 set( numSupported 0 )
 
@@ -84,29 +87,6 @@ foreach( dim ${ELASTIX_IMAGE_DIMENSIONS} )
     math( EXPR index "${index} + 1" )
     math( EXPR numSupported "${numSupported} + 1" )
   endforeach()
-
-  # OpenCL
-  if( ELASTIX_USE_OPENCL )
-    # Construct supportOpenCLImages
-    set( openclindex 0 )
-    list( LENGTH pixelTypeList pixelTypeListLength )
-
-    if( supportOpenCLImages STREQUAL "" )
-      set( supportOpenCLImages "typedef typelist::MakeTypeList<" )
-    else()
-      set( supportOpenCLImages "${supportOpenCLImages}\n  typedef typelist::MakeTypeList<" )
-    endif()
-
-    foreach( type ${pixelTypeList} )
-      set( supportOpenCLImages "${supportOpenCLImages}${type}" )
-      math( EXPR openclindex "${openclindex} + 1" )
-      if( NOT openclindex EQUAL pixelTypeListLength )
-        set( supportOpenCLImages "${supportOpenCLImages}, " )
-      endif()
-    endforeach()
-    set( supportOpenCLImages "${supportOpenCLImages}>::Type OpenCLImageTypes${dim}D;" )
-  endif()
-
 endforeach()
 
 # Prepend the string with the number of supported images.
@@ -120,39 +100,4 @@ configure_file(
   ${elastix_SOURCE_DIR}/Core/Install/elxSupportedImageTypes.h.in
   ${elastix_BINARY_DIR}/elxSupportedImageTypes.h
   @ONLY )
-
-# OpenCL
-if( ELASTIX_USE_OPENCL )
-  # Construct supportOpenCLDimensions
-  set( supportOpenCLDimensions "" )
-
-  # Check 2D
-  list( FIND ELASTIX_IMAGE_DIMENSIONS 2 ELASTIX_SUPPORT_OPENCL_2D )
-  if( NOT ELASTIX_SUPPORT_OPENCL_2D EQUAL -1 )
-    set( tof "true" )
-  else()
-    set( tof "false" )
-  endif()
-  set( supportOpenCLDimensions "itkStaticConstMacro( Support2D, bool, ${tof} );" )
-
-  # Check 3D
-  list( FIND ELASTIX_IMAGE_DIMENSIONS 3 ELASTIX_SUPPORT_OPENCL_3D )
-  if( NOT ELASTIX_SUPPORT_OPENCL_3D EQUAL -1 )
-    set( tof "true" )
-  else()
-    set( tof "false" )
-  endif()
-  set( supportOpenCLDimensions
-    "${supportOpenCLDimensions}\n    itkStaticConstMacro( Support3D, bool, ${tof} );" )
-
-  set( UserDefinedSupportedDimensions "${supportOpenCLDimensions}" )
-  set( UserDefinedSupportedImageTypes "${supportOpenCLImages}" )
-
-  # Put the generated string in the elxOpenCLSupportedImageTypes.h
-  # header using configure_file.
-  configure_file(
-    ${elastix_SOURCE_DIR}/Core/Install/elxOpenCLSupportedImageTypes.h.in
-    ${elastix_BINARY_DIR}/elxOpenCLSupportedImageTypes.h
-    @ONLY )
-endif()
 

@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef _itkMultiMetricMultiResolutionImageRegistrationMethod_hxx
 #define _itkMultiMetricMultiResolutionImageRegistrationMethod_hxx
 
@@ -80,7 +76,6 @@ itkImplementationGetMacro( Interpolator, , InterpolatorType * );
 itkImplementationGetMacro( FixedImagePyramid, , FixedImagePyramidType * );
 itkImplementationGetMacro( MovingImagePyramid, , MovingImagePyramidType * );
 
-
 /**
  * ****************** Constructor ******************
  */
@@ -120,9 +115,11 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 
 } // end GetFixedImageRegion()
 
-
 /**
  * ********************** SetMetric *******************************
+ * Reimplement this method to check if
+ * the metric is a combination metric.
+ * GetMetric returns the combination metric.
  */
 
 template< typename TFixedImage, typename TMovingImage >
@@ -148,7 +145,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end SetMetric()
 
 
-/**
+/*
  * ****************** Initialize *******************************
  */
 
@@ -209,8 +206,8 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end Initialize()
 
 
-/**
- * ****************** PrepareAllPyramids ******************
+/*
+ * ****************** Prepare all pyramids ******************
  */
 
 template< typename TFixedImage, typename TMovingImage >
@@ -304,8 +301,9 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
         for( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
         {
           start[ dim ] = static_cast< IndexValueType >( vcl_ceil( startcindex[ dim ] ) );
-          size[ dim ]  = vnl_math_max( NumericTraits< SizeValueType >::One, static_cast< SizeValueType >(
-            static_cast< SizeValueType >( vcl_floor( endcindex[ dim ] ) ) - start[ dim ] + 1 ) );
+          size[ dim ]  = static_cast< SizeValueType >(
+            static_cast< SizeValueType >( vcl_floor( endcindex[ dim ] ) )
+            - start[ dim ] + 1 );
         }
 
         this->m_FixedImageRegionPyramids[ i ][ level ].SetSize( size );
@@ -339,7 +337,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end PrepareAllPyramids()
 
 
-/**
+/*
  * ****************** PrintSelf ******************
  */
 
@@ -353,7 +351,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end PrintSelf()
 
 
-/**
+/*
  * ********************* GenerateData ***********************
  */
 
@@ -514,7 +512,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end GetMTime()
 
 
-/**
+/*
  * ****************** CheckPyramids ******************
  */
 
@@ -563,7 +561,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end CheckPyramids()
 
 
-/**
+/*
  * ****************** CheckOnInitialize ******************
  */
 

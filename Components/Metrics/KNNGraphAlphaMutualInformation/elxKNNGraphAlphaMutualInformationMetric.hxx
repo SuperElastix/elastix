@@ -1,27 +1,24 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxKNNGraphAlphaMutualInformationMetric_HXX__
 #define __elxKNNGraphAlphaMutualInformationMetric_HXX__
 
 #include "elxKNNGraphAlphaMutualInformationMetric.h"
 
 #include "itkBSplineInterpolateImageFunction.h"
-#include "itkTimeProbe.h"
+
 #include <string>
 
 namespace elastix
@@ -36,12 +33,13 @@ void
 KNNGraphAlphaMutualInformationMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  itk::TimeProbe timer;
-  timer.Start();
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
   this->Superclass1::Initialize();
-  timer.Stop();
+  timer->StopTimer();
   elxout << "Initialization of KNNGraphAlphaMutualInformation metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
+         << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -108,8 +106,9 @@ KNNGraphAlphaMutualInformationMetric< TElastix >
   this->m_Configuration->ReadParameter( bucketSize, "BucketSize", level, true );
 
   /** Get the splitting rule for all trees. */
+  bool        returnValue   = false;
   std::string splittingRule = "ANN_KD_SL_MIDPT";
-  bool        returnValue   = this->m_Configuration->ReadParameter(
+  returnValue = this->m_Configuration->ReadParameter(
     splittingRule, "SplittingRule", 0, silentSplit );
   this->m_Configuration->ReadParameter(
     splittingRule, "SplittingRule", level, true );
@@ -136,6 +135,7 @@ KNNGraphAlphaMutualInformationMetric< TElastix >
     jointSplittingRule, "JointSplittingRule", level, true );
 
   /** Get the shrinking rule for all trees. */
+  returnValue = false;
   std::string shrinkingRule = "ANN_BD_SIMPLE";
   returnValue = this->m_Configuration->ReadParameter(
     shrinkingRule, "ShrinkingRule", 0, silentShrink );

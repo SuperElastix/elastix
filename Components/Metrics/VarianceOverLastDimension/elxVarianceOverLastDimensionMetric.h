@@ -1,27 +1,25 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __elxVarianceOverLastDimensionMetric_H__
 #define __elxVarianceOverLastDimensionMetric_H__
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkVarianceOverLastDimensionImageMetric.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
-#include "itkStackTransform.h"
+#include "../Transforms/StackTransform/itkStackTransform.h"
+
+#include "elxTimer.h"
 
 namespace elastix
 {
@@ -169,16 +167,15 @@ public:
   typedef itk::AdvancedBSplineDeformableTransformBase<
     ScalarType, FixedImageDimension - 1 >                   ReducedDimensionBSplineTransformBaseType;
 
-  /** Sets up a timer to measure the initialization time and
+  /** Typedef for timer. */
+  typedef tmr::Timer TimerType;
+  /** Typedef for timer. */
+  typedef TimerType::Pointer TimerPointer;
+
+  /** Sets up a timer to measure the initialisation time and
    * calls the Superclass' implementation.
    */
   virtual void Initialize( void ) throw ( itk::ExceptionObject );
-
-  /**
-   * Do some things before registration:
-   * \li check the direction cosines
-   */
-  virtual void BeforeRegistration( void );
 
   /**
    * Do some things before each resolution:
@@ -199,7 +196,7 @@ private:
   /** The private constructor. */
   VarianceOverLastDimensionMetric( const Self & );  // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );                   // purposely not implemented
+  void operator=( const Self & );               // purposely not implemented
 
 };
 

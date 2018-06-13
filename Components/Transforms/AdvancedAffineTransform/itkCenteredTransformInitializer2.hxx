@@ -1,21 +1,4 @@
 /*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
-/*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkCenteredTransformInitializer2.txx,v $
@@ -49,10 +32,6 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
   m_UseMoments       = false;
   m_UseOrigins       = false;
   m_UseTop           = false;
-
-  this->m_CenterOfGravityUsesLowerThreshold = false;
-  this->m_NumberOfSamplesForCenteredTransformInitialization = 10000;
-  this->m_LowerThresholdForCenterGravity = 500;
 }
 
 
@@ -113,28 +92,12 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
     }
 
     // Moments
-    m_FixedCalculator->SetImage( m_FixedImage );
+    m_FixedCalculator->SetImage(  m_FixedImage );
     m_FixedCalculator->SetSpatialObjectMask( fixedMaskAsSpatialObject );
-    if( this->m_CenterOfGravityUsesLowerThreshold )
-    {
-      /** Set the lower threshold for center gravity calculation. */
-      m_FixedCalculator->SetCenterOfGravityUsesLowerThreshold( this->m_CenterOfGravityUsesLowerThreshold );
-      m_FixedCalculator->SetLowerThresholdForCenterGravity( this->m_LowerThresholdForCenterGravity );
-    }
-    m_FixedCalculator->SetNumberOfSamplesForCenteredTransformInitialization(
-      this->m_NumberOfSamplesForCenteredTransformInitialization );
     m_FixedCalculator->Compute();
 
     m_MovingCalculator->SetImage( m_MovingImage );
     m_MovingCalculator->SetSpatialObjectMask( movingMaskAsSpatialObject );
-    if( this->m_CenterOfGravityUsesLowerThreshold )
-    {
-      /** Set the lower threshold for center gravity calculation. */
-      m_MovingCalculator->SetCenterOfGravityUsesLowerThreshold( this->m_CenterOfGravityUsesLowerThreshold );
-      m_MovingCalculator->SetLowerThresholdForCenterGravity( this->m_LowerThresholdForCenterGravity );
-    }
-    m_MovingCalculator->SetNumberOfSamplesForCenteredTransformInitialization(
-      this->m_NumberOfSamplesForCenteredTransformInitialization );
     m_MovingCalculator->Compute();
 
     typename FixedImageCalculatorType::VectorType fixedCenter = m_FixedCalculator->GetCenterOfGravity();
@@ -164,9 +127,9 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
 
     for( unsigned int m = 0; m < InputSpaceDimension; m++ )
     {
-      centerMovingIndex[ m ]
-        = static_cast< ContinuousIndexValueType >( movingIndex[ m ] )
-        + static_cast< ContinuousIndexValueType >( movingSize[ m ] - 1 ) / 2.0;
+      centerMovingIndex[ m ] =
+        static_cast< ContinuousIndexValueType >( movingIndex[ m ] ) +
+        static_cast< ContinuousIndexValueType >( movingSize[ m ] - 1 ) / 2.0;
     }
 
     m_MovingImage->TransformContinuousIndexToPhysicalPoint(
@@ -228,13 +191,13 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
         {
           fixedCorners[ index ][ 0 ] = fixedRegion.GetIndex()[ 0 ] + x * fixedRegion.GetSize()[ 0 ];
           fixedCorners[ index ][ 1 ] = fixedRegion.GetIndex()[ 1 ] + y * fixedRegion.GetSize()[ 1 ];
-          if( InputSpaceDimension > 2 )
+          if (InputSpaceDimension > 2)
           {
             fixedCorners[ index ][ 2 ] = fixedRegion.GetIndex()[ 2 ] + z * fixedRegion.GetSize()[ 2 ];
           }
           movingCorners[ index ][ 0 ] = movingRegion.GetIndex()[ 0 ] + x * movingRegion.GetSize()[ 0 ];
           movingCorners[ index ][ 1 ] = movingRegion.GetIndex()[ 1 ] + y * movingRegion.GetSize()[ 1 ];
-          if( InputSpaceDimension > 2 )
+          if (InputSpaceDimension > 2)
           {
             movingCorners[ index ][ 2 ] = movingRegion.GetIndex()[ 2 ] + z * movingRegion.GetSize()[ 2 ];
           }
@@ -244,15 +207,15 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
 
     // Transform eight corner points to world coordinates and determine min and max coordinate values.
     typename TransformType::InputPointType minWorldFixed, maxWorldFixed, minWorldMoving, maxWorldMoving;
-    for( std::size_t i = 0; i < fixedCorners.size(); ++i )
+    for ( std::size_t i = 0; i < fixedCorners.size(); ++i )
     {
       typename TransformType::InputPointType worldFixed, worldMoving;
-      this->m_FixedImage->TransformContinuousIndexToPhysicalPoint( fixedCorners[ i ], worldFixed );
-      this->m_MovingImage->TransformContinuousIndexToPhysicalPoint( movingCorners[ i ], worldMoving );
+      this->m_FixedImage->TransformContinuousIndexToPhysicalPoint( fixedCorners[i], worldFixed );
+      this->m_MovingImage->TransformContinuousIndexToPhysicalPoint( movingCorners[i], worldMoving );
       if( i == 0 )
       {
-        minWorldFixed  = worldFixed;
-        maxWorldFixed  = worldFixed;
+        minWorldFixed = worldFixed;
+        maxWorldFixed = worldFixed;
         minWorldMoving = worldMoving;
         maxWorldMoving = worldMoving;
       }
@@ -260,10 +223,10 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       {
         for( std::size_t k = 0; k < InputSpaceDimension; ++k )
         {
-          if( worldFixed[ k ] < minWorldFixed[ k ] ) { minWorldFixed[ k ] = worldFixed[ k ]; }
-          if( worldFixed[ k ] > maxWorldFixed[ k ] ) { maxWorldFixed[ k ] = worldFixed[ k ]; }
-          if( worldMoving[ k ] < minWorldMoving[ k ] ) { minWorldMoving[ k ] = worldMoving[ k ]; }
-          if( worldMoving[ k ] > maxWorldMoving[ k ] ) { maxWorldMoving[ k ] = worldMoving[ k ]; }
+          if ( worldFixed[ k ] < minWorldFixed[ k ] )   minWorldFixed[ k ]  = worldFixed[ k ];
+          if ( worldFixed[ k ] > maxWorldFixed[ k ] )   maxWorldFixed[ k ]  = worldFixed[ k ];
+          if ( worldMoving[ k ] < minWorldMoving[ k ] ) minWorldMoving[ k ] = worldMoving[ k ];
+          if ( worldMoving[ k ] > maxWorldMoving[ k ] ) maxWorldMoving[ k ] = worldMoving[ k ];
         }
       }
     }

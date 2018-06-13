@@ -11,12 +11,12 @@
 (Registration "MultiMetricMultiResolutionRegistration")
 (FixedImagePyramid "FixedRecursiveImagePyramid")
 (MovingImagePyramid "MovingRecursiveImagePyramid")
-(Interpolator "LinearInterpolator")
+(Interpolator "BSplineInterpolator")
 (Metric "AdvancedNormalizedCorrelation" "CorrespondingPointsEuclideanDistanceMetric")
 (Optimizer "AdaptiveStochasticGradientDescent")
 (ResampleInterpolator "FinalBSplineInterpolator")
 (Resampler "DefaultResampler")
-(Transform "RecursiveBSplineTransform")
+(Transform "BSplineTransform")
 
 
 // ********** Pyramid
@@ -36,7 +36,7 @@
 // ********** Optimizer
 
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 50)
+(MaximumNumberOfIterations 100)
 
 // For fast testing:
 (NumberOfJacobianMeasurements 2500 5000 10000)

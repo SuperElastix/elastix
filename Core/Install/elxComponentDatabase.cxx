@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 /**
  * Implementation of the ComponentDatabase class.
@@ -40,7 +36,7 @@ ComponentDatabase::GetCreatorMap( void )
 {
   return CreatorMap;
 
-} // end GetCreatorMap
+}   // end GetCreatorMap
 
 
 /**
@@ -52,7 +48,7 @@ ComponentDatabase::GetIndexMap( void )
 {
   return IndexMap;
 
-} // end GetIndexMap
+}   // end GetIndexMap
 
 
 /**
@@ -86,7 +82,7 @@ ComponentDatabase::SetCreator(
     return 0;
   }
 
-} // end SetCreator
+}   // end SetCreator
 
 
 /**
@@ -124,7 +120,7 @@ ComponentDatabase::SetIndex(
     return 0;
   }
 
-} // end SetIndex
+}   // end SetIndex
 
 
 /**
@@ -156,7 +152,7 @@ ComponentDatabase::GetCreator(
     return map[ key ];
   }
 
-} // end GetCreator
+}   // end GetCreator
 
 
 /**
@@ -199,7 +195,7 @@ ComponentDatabase::GetIndex(
     return map[ key ];
   }
 
-} // end GetIndex
+}   // end GetIndex
 
 
 } // end namespace elastix

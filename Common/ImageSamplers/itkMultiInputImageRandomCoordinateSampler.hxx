@@ -1,22 +1,19 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
-#ifndef __MultiInputImageRandomCoordinateSampler_hxx
-#define __MultiInputImageRandomCoordinateSampler_hxx
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
+#ifndef __MultiInputImageRandomCoordinateSampler_txx
+#define __MultiInputImageRandomCoordinateSampler_txx
 
 #include "itkMultiInputImageRandomCoordinateSampler.h"
 #include "vnl/vnl_inverse.h"
@@ -45,7 +42,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
   this->m_UseRandomSampleRegion = false;
   this->m_SampleRegionSize.Fill( 1.0 );
 
-} // end Constructor()
+}   // end Constructor()
 
 
 /**
@@ -108,7 +105,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  } // end if no mask
+  }   // end if no mask
   else
   {
     /** Update all masks. */
@@ -154,9 +151,9 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  } // end if mask
+  }   // end if mask
 
-} // end GenerateData()
+}   // end GenerateData()
 
 
 /**
@@ -260,7 +257,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >::GenerateSampleRegion(
     largestContIndex += sampleRegionSize;
   }
 
-} // end GenerateSampleRegion()
+}   // end GenerateSampleRegion()
 
 
 /**
@@ -280,7 +277,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >::GenerateRandomCoordinate(
       this->m_RandomGenerator->GetUniformVariate(
       smallestContIndex[ i ], largestContIndex[ i ] ) );
   }
-} // end GenerateRandomCoordinate()
+}   // end GenerateRandomCoordinate()
 
 
 /**
@@ -297,9 +294,9 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
   os << indent << "Interpolator: " << this->m_Interpolator.GetPointer() << std::endl;
   os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 
-} // end PrintSelf
+}   // end PrintSelf
 
 
 } // end namespace itk
 
-#endif // end #ifndef __MultiInputImageRandomCoordinateSampler_hxx
+#endif // end #ifndef __MultiInputImageRandomCoordinateSampler_txx

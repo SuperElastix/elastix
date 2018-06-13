@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+This file is part of the elastix software.
+
+Copyright (c) University Medical Center Utrecht. All rights reserved.
+See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+details.
+
+This software is distributed WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 /*
 
@@ -119,10 +115,8 @@ public:
     NOutputDimensions * ( NInputDimensions + 1 ) );
 
   /** Typedefs from the Superclass. */
-  typedef typename Superclass::ScalarType          ScalarType;
-  typedef typename Superclass::ParametersType      ParametersType;
-  typedef typename Superclass::FixedParametersType FixedParametersType;
-
+  typedef typename Superclass::ScalarType             ScalarType;
+  typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::InputVectorType        InputVectorType;
@@ -314,10 +308,10 @@ public:
   const ParametersType & GetParameters( void ) const;
 
   /** Set the fixed parameters and update internal transformation. */
-  virtual void SetFixedParameters( const FixedParametersType & );
+  virtual void SetFixedParameters( const ParametersType & );
 
   /** Get the Fixed Parameters. */
-  virtual const FixedParametersType & GetFixedParameters( void ) const;
+  virtual const ParametersType & GetFixedParameters( void ) const;
 
   /** Compose with another AdvancedMatrixOffsetTransformBase
    *
@@ -547,7 +541,7 @@ private:
   mutable TimeStamp m_InverseMatrixMTime;
 
   /** Used by the GetJacobian() function which returns the
-   * Jacobian as an output variable. */
+   * jacobian as an output variable. */
   mutable NonZeroJacobianIndicesType m_NonZeroJacobianIndicesTemp;
 
 };

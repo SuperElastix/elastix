@@ -1,25 +1,21 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxMultiResolutionRegistrationWithFeatures_HXX__
 #define __elxMultiResolutionRegistrationWithFeatures_HXX__
 
 #include "elxMultiResolutionRegistrationWithFeatures.h"
-#include "itkTimeProbe.h"
 
 namespace elastix
 {
@@ -47,7 +43,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   /** Set the fixed image interpolators. */
   this->GetAndSetFixedImageInterpolators();
 
-} // end BeforeRegistration()
+}   // end BeforeRegistration()
 
 
 /**
@@ -66,7 +62,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   this->UpdateFixedMasks( level );
   this->UpdateMovingMasks( level );
 
-} // end BeforeEachResolution()
+}   // end BeforeEachResolution()
 
 
 /**
@@ -151,7 +147,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     }
   }
 
-} // end GetAndSetComponents()
+}   // end GetAndSetComponents()
 
 
 /**
@@ -185,7 +181,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     this->SetFixedImageRegion( this->GetElastix()->GetFixedImage( i )->GetBufferedRegion(), i );
   }
 
-} // end GetAndSetFixedImageRegions()
+}   // end GetAndSetFixedImageRegions()
 
 
 /**
@@ -222,7 +218,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     this->SetFixedImageInterpolator( interpolators[ i ], i );
   }
 
-} // end GetAndSetFixedImageInterpolators()
+}   // end GetAndSetFixedImageInterpolators()
 
 
 /**
@@ -250,8 +246,8 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     nrOfFixedImageMasks, "Fixed", level );
 
   /** Create and start timer, to time the whole mask configuration procedure. */
-  itk::TimeProbe timer;
-  timer.Start();
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
 
   /** Set the fixed image mask. Only one mask is assumed here. */
   FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
@@ -260,12 +256,12 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   this->GetMultiInputMetric()->SetFixedImageMask( fixedMask );
 
   /** Stop timer and print the elapsed time. */
-  timer.Stop();
+  timer->StopTimer();
   elxout << "Setting the fixed masks took: "
-         << static_cast< long >( timer.GetMean() * 1000 )
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
          << " ms." << std::endl;
 
-} // end UpdateFixedMasks()
+}   // end UpdateFixedMasks()
 
 
 /**
@@ -293,8 +289,8 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     nrOfMovingImageMasks, "Moving", level );
 
   /** Create and start timer, to time the whole mask configuration procedure. */
-  itk::TimeProbe timer;
-  timer.Start();
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
 
   /** Set the moving image mask. Only one mask is assumed here. */
   MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
@@ -303,12 +299,12 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   this->GetMultiInputMetric()->SetMovingImageMask( movingMask );
 
   /** Stop timer and print the elapsed time. */
-  timer.Stop();
+  timer->StopTimer();
   elxout << "Setting the moving masks took: "
-         << static_cast< long >( timer.GetMean() * 1000 )
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
          << " ms." << std::endl;
 
-} // end UpdateMovingMasks()
+}   // end UpdateMovingMasks()
 
 
 } // end namespace elastix

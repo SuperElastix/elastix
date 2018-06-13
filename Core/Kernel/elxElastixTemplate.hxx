@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxElastixTemplate_hxx
 #define __elxElastixTemplate_hxx
 
@@ -53,9 +50,9 @@ ElastixTemplate< TFixedImage, TMovingImage >
   this->m_AfterEachIterationCommand   = 0;
 
   /** Create timers. */
-  this->m_Timer0.Reset();
-  this->m_IterationTimer.Reset();
-  this->m_ResolutionTimer.Reset();
+  this->m_Timer0          = TimerType::New();
+  this->m_IterationTimer  = TimerType::New();
+  this->m_ResolutionTimer = TimerType::New();
 
   /** Initialize the this->m_IterationCounter. */
   this->m_IterationCounter = 0;
@@ -178,39 +175,6 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
 
 /**
-* ********************** GetResultDeformationField *************************
-*/
-
-template< class TFixedImage, class TMovingImage >
-typename ElastixTemplate< TFixedImage, TMovingImage >::ResultDeformationFieldType
-* ElastixTemplate< TFixedImage, TMovingImage >
-::GetResultDeformationField( unsigned int idx ) const
-{
-  if (idx < this->GetNumberOfResultDeformationFields() )
-  {
-    return dynamic_cast< ResultDeformationFieldType * >(
-      this->GetResultDeformationFieldContainer()->ElementAt( idx ).GetPointer() );
-  }
-
-  return 0;
-
-} // end GetResultDeformationField()
-
-/**
-* ********************** SetResultDeformationField *************************
-*/
-
-template< class TFixedImage, class TMovingImage >
-int
-ElastixTemplate< TFixedImage, TMovingImage >
-::SetResultDeformationField( DataObjectPointer result_deformationfield )
-{
-  this->SetResultDeformationFieldContainer(
-    MultipleDataObjectFiller::GenerateImageContainer( result_deformationfield ) );
-  return 0;
-} // end SetResultDeformationField()
-
-/**
  * **************************** Run *****************************
  */
 
@@ -243,15 +207,15 @@ ElastixTemplate< TFixedImage, TMovingImage >
   this->m_AfterEachResolutionCommand->SetCallbackFunction( this, &Self::AfterEachResolution );
   this->m_AfterEachIterationCommand->SetCallbackFunction( this, &Self::AfterEachIteration );
 
-  this->GetElxRegistrationBase()->GetAsITKBaseType()->AddObserver(
-    itk::IterationEvent(), this->m_BeforeEachResolutionCommand );
-  this->GetElxOptimizerBase()->GetAsITKBaseType()->AddObserver(
-    itk::IterationEvent(), this->m_AfterEachIterationCommand );
-  this->GetElxOptimizerBase()->GetAsITKBaseType()->AddObserver(
-    itk::EndEvent(), this->m_AfterEachResolutionCommand );
+  this->GetElxRegistrationBase()->GetAsITKBaseType()->
+  AddObserver( itk::IterationEvent(), this->m_BeforeEachResolutionCommand );
+  this->GetElxOptimizerBase()->GetAsITKBaseType()->
+  AddObserver( itk::IterationEvent(), this->m_AfterEachIterationCommand );
+  this->GetElxOptimizerBase()->GetAsITKBaseType()->
+  AddObserver( itk::EndEvent(), this->m_AfterEachResolutionCommand );
 
   /** Start the timer for reading images. */
-  this->m_Timer0.Start();
+  this->m_Timer0->StartTimer();
   elxout << "\nReading images..." << std::endl;
 
   /** Read images and masks, if not set already. */
@@ -269,7 +233,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
     /**
      *  images are set in elastixlib.cxx
      *  just set direction cosines
-     *  in case images are imported for executable it does not matter
+     *  in case images are imported for executable it doesnt matter
      *  because the InfoChanger has changed these images.
      */
     FixedImageType * fixedIm = this->GetFixedImage( 0 );
@@ -297,9 +261,9 @@ ElastixTemplate< TFixedImage, TMovingImage >
   }
 
   /** Print the time spent on reading images. */
-  this->m_Timer0.Stop();
+  this->m_Timer0->StopTimer();
   elxout << "Reading images took " << static_cast< unsigned long >(
-    this->m_Timer0.GetMean() * 1000 ) << " ms.\n" << std::endl;
+    this->m_Timer0->GetElapsedClockSec() * 1000 ) << " ms.\n" << std::endl;
 
   /** Give all components the opportunity to do some initialization. */
   this->BeforeRegistration();
@@ -316,12 +280,6 @@ ElastixTemplate< TFixedImage, TMovingImage >
     std::string err_str = excp.GetDescription();
     err_str += "\n\nError occurred during actual registration.";
     excp.SetDescription( err_str );
-
-    /** Clean up before returning - very important for exception safety of the xout global static object */
-    if( xoutlibrary::xout_valid() )
-    {
-      xoutlibrary::xout.RemoveTargetCell("iteration");
-    }
 
     /** Pass the exception to a higher level. */
     throw excp;
@@ -371,7 +329,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 ::ApplyTransform( void )
 {
   /** Timer. */
-  TimerType timer;
+  tmr::Timer::Pointer timer = tmr::Timer::New();
 
   /** Tell all components where to find the ElastixTemplate. */
   this->ConfigureComponents( this );
@@ -388,7 +346,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
     || ( this->GetMovingImage() != 0 ) )
   {
     /** Timer. */
-    timer.Start();
+    timer->StartTimer();
 
     /** Tell the user. */
     elxout << std::endl << "Reading input image ..." << std::endl;
@@ -403,33 +361,31 @@ ElastixTemplate< TFixedImage, TMovingImage >
     } // end if !moving image
 
     /** Tell the user. */
-    timer.Stop();
+    timer->StopTimer();
     elxout << "  Reading input image took "
-           << timer.GetMean()
+           << timer->PrintElapsedTimeSec()
            << " s" << std::endl;
 
   } // end if inputImageFileName
 
   /** Call all the ReadFromFile() functions. */
-  timer.Reset();
-  timer.Start();
+  timer->StartTimer();
   elxout << "Calling all ReadFromFile()'s ..." << std::endl;
   this->GetElxResampleInterpolatorBase()->ReadFromFile();
   this->GetElxResamplerBase()->ReadFromFile();
   this->GetElxTransformBase()->ReadFromFile();
 
   /** Tell the user. */
-  timer.Stop();
+  timer->StopTimer();
   elxout << "  Calling all ReadFromFile()'s took "
-         << timer.GetMean()
+         << timer->PrintElapsedTimeSec()
          << " s" << std::endl;
 
   /** Call TransformPoints.
    * Actually we could loop over all transforms.
    * But for now, there seems to be no use yet for that.
    */
-  timer.Reset();
-  timer.Start();
+  timer->StartTimer();
   elxout << "Transforming points ..." << std::endl;
   try
   {
@@ -440,16 +396,16 @@ ElastixTemplate< TFixedImage, TMovingImage >
     xout[ "error" ] << excp << std::endl;
     xout[ "error" ] << "However, transformix continues anyway." << std::endl;
   }
-  timer.Stop();
+  timer->StopTimer();
   elxout << "  Transforming points done, it took "
-         << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
+         << timer->PrintElapsedTimeSec()
+         << " s" << std::endl;
 
   /** Call ComputeDeterminantOfSpatialJacobian.
    * Actually we could loop over all transforms.
    * But for now, there seems to be no use yet for that.
    */
-  timer.Reset();
-  timer.Start();
+  timer->StartTimer();
   elxout << "Compute determinant of spatial Jacobian ..." << std::endl;
   try
   {
@@ -460,16 +416,16 @@ ElastixTemplate< TFixedImage, TMovingImage >
     xout[ "error" ] << excp << std::endl;
     xout[ "error" ] << "However, transformix continues anyway." << std::endl;
   }
-  timer.Stop();
+  timer->StopTimer();
   elxout << "  Computing determinant of spatial Jacobian done, it took "
-         << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
+         << timer->PrintElapsedTimeSec()
+         << " s" << std::endl;
 
   /** Call ComputeSpatialJacobian.
    * Actually we could loop over all transforms.
    * But for now, there seems to be no use yet for that.
    */
-  timer.Reset();
-  timer.Start();
+  timer->StartTimer();
   elxout << "Compute spatial Jacobian (full matrix) ..." << std::endl;
   try
   {
@@ -480,15 +436,15 @@ ElastixTemplate< TFixedImage, TMovingImage >
     xout[ "error" ] << excp << std::endl;
     xout[ "error" ] << "However, transformix continues anyway." << std::endl;
   }
-  timer.Stop();
+  timer->StopTimer();
   elxout << "  Computing spatial Jacobian done, it took "
-         << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
+         << timer->PrintElapsedTimeSec()
+         << " s" << std::endl;
 
   /** Resample the image. */
   if( this->GetMovingImage() != 0 )
   {
-    timer.Reset();
-    timer.Start();
+    timer->StartTimer();
     elxout << "Resampling image and writing to disk ..." << std::endl;
 
     /** Create a name for the final result. */
@@ -504,15 +460,16 @@ ElastixTemplate< TFixedImage, TMovingImage >
      * But for now, there seems to be no use yet for that.
      */
 #ifndef _ELASTIX_BUILD_LIBRARY
-    this->GetElxResamplerBase()->ResampleAndWriteResultImage( makeFileName.str().c_str() );
+    this->GetElxResamplerBase()->WriteResultImage( makeFileName.str().c_str() );
 #else
     this->GetElxResamplerBase()->CreateItkResultImage();
 #endif
-
     /** Print the elapsed time for the resampling. */
-    timer.Stop();
+    timer->StopTimer();
+    elxout << std::setprecision( 2 );
     elxout << "  Resampling took "
-           << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
+           << timer->GetElapsedClockSec() << " s" << std::endl;
+    elxout << std::setprecision( this->GetDefaultOutputPrecision() );
   }
 
   /** Return a value. */
@@ -569,15 +526,13 @@ ElastixTemplate< TFixedImage, TMovingImage >
   returndummy |= this->GetElxResampleInterpolatorBase()->BeforeAllTransformix();
   returndummy |= this->GetElxResamplerBase()->BeforeAllTransformix();
   returndummy |= this->GetElxTransformBase()->BeforeAllTransformix();
-
+#ifndef _ELASTIX_BUILD_LIBRARY
   /** The GetConfiguration also has a BeforeAllTransformix,
    * It print the Transform Parameter file to the log file. That's
    * why we call it after the other components.
    */
-#ifndef _ELASTIX_BUILD_LIBRARY
   returndummy |= this->GetConfiguration()->BeforeAllTransformix();
 #endif
-
   /** Return a value. */
   return returndummy;
 
@@ -594,8 +549,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 ::BeforeRegistration( void )
 {
   /** Start timer for initializing all components. */
-  this->m_Timer0.Reset();
-  this->m_Timer0.Start();
+  this->m_Timer0->StartTimer();
 
   /** Call all the BeforeRegistration() functions. */
   this->BeforeRegistrationBase();
@@ -607,19 +561,17 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
   /** Add a column to iteration with timing information. */
   xout[ "iteration" ].AddTargetCell( "Time[ms]" );
-  xout[ "iteration" ][ "Time[ms]" ] << std::showpoint << std::fixed << std::setprecision( 1 );
 
   /** Print time for initializing. */
-  this->m_Timer0.Stop();
+  this->m_Timer0->StopTimer();
   elxout << "Initialization of all components (before registration) took: "
-         << static_cast< unsigned long >( this->m_Timer0.GetMean() * 1000 )
+         << static_cast< unsigned long >( this->m_Timer0->GetElapsedClockSec() * 1000 )
          << " ms.\n";
 
   /** Start Timer0 here, to make it possible to measure the time needed for
    * preparation of the first resolution.
    */
-  this->m_Timer0.Reset();
-  this->m_Timer0.Start();
+  this->m_Timer0->StartTimer();
 
 } // end BeforeRegistration()
 
@@ -639,12 +591,11 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
   if( level == 0 )
   {
-    this->m_Timer0.Stop();
+    this->m_Timer0->StopTimer();
     elxout << "Preparation of the image pyramids took: "
-           << static_cast< unsigned long >( this->m_Timer0.GetMean() * 1000 )
+           << static_cast< unsigned long >( this->m_Timer0->GetElapsedClockSec() * 1000 )
            << " ms.\n";
-    this->m_Timer0.Reset();
-    this->m_Timer0.Start();
+    this->m_Timer0->StartTimer();
   }
 
   /** Reset the this->m_IterationCounter. */
@@ -668,19 +619,17 @@ ElastixTemplate< TFixedImage, TMovingImage >
   CallInEachComponent( &BaseComponentType::BeforeEachResolution );
 
   /** Print the extra preparation time needed for this resolution. */
-  this->m_Timer0.Stop();
+  this->m_Timer0->StopTimer();
   elxout << "Elastix initialization of all components (for this resolution) took: "
-         << static_cast< unsigned long >( this->m_Timer0.GetMean() * 1000 ) << " ms.\n";
+         << static_cast< unsigned long >( this->m_Timer0->GetElapsedClockSec() * 1000 ) << " ms.\n";
 
   /** Start ResolutionTimer, which measures the total iteration time in this resolution. */
-  this->m_ResolutionTimer.Reset();
-  this->m_ResolutionTimer.Start();
+  this->m_ResolutionTimer->StartTimer();
 
   /** Start IterationTimer here, to make it possible to measure the time
    * of the first iteration.
    */
-  this->m_IterationTimer.Reset();
-  this->m_IterationTimer.Start();
+  this->m_IterationTimer->StartTimer();
 
 } // end BeforeEachResolution()
 
@@ -700,12 +649,12 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
   /** Print the total iteration time. */
   elxout << std::setprecision( 3 );
-  this->m_ResolutionTimer.Stop();
+  this->m_ResolutionTimer->StopTimer();
   elxout
     << "Time spent in resolution "
     << ( level )
-    << " (ITK initialization and iterating): "
-    << this->m_ResolutionTimer.GetMean()
+    << " (ITK initialisation and iterating): "
+    << this->m_ResolutionTimer->GetElapsedClockSec()
     << " s.\n";
   elxout << std::setprecision( this->GetDefaultOutputPrecision() );
 
@@ -727,18 +676,17 @@ ElastixTemplate< TFixedImage, TMovingImage >
                  << this->GetConfiguration()->GetElastixLevel()
                  << ".R" << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
                  << ".txt";
-    std::string fileName = makeFileName.str();
+    std::string FileName = makeFileName.str();
 
     /** Create a TransformParameterFile for this iteration. */
-    this->CreateTransformParameterFile( fileName, false );
+    this->CreateTransformParameterFile( FileName, false );
   }
 
   /** Start Timer0 here, to make it possible to measure the time needed for:
    *    - executing the BeforeEachResolution methods (if this was not the last resolution)
    *    - executing the AfterRegistration methods (if this was the last resolution)
    */
-  this->m_Timer0.Reset();
-  this->m_Timer0.Start();
+  this->m_Timer0->StartTimer();
 
 } // end AfterEachResolution()
 
@@ -752,7 +700,7 @@ void
 ElastixTemplate< TFixedImage, TMovingImage >
 ::AfterEachIteration( void )
 {
-  /** Write the headers of the columns that are printed each iteration. */
+  /** Write the headers of the colums that are printed each iteration. */
   if( this->m_IterationCounter == 0 )
   {
     xout[ "iteration" ][ "WriteHeaders" ];
@@ -767,8 +715,9 @@ ElastixTemplate< TFixedImage, TMovingImage >
   xout[ "iteration" ][ "1:ItNr" ] << m_IterationCounter;
 
   /** Time in this iteration. */
-  this->m_IterationTimer.Stop();
-  xout[ "iteration" ][ "Time[ms]" ] << this->m_IterationTimer.GetMean() * 1000.0;
+  this->m_IterationTimer->StopTimer();
+  xout[ "iteration" ][ "Time[ms]" ]
+    << static_cast< unsigned long >( this->m_IterationTimer->GetElapsedClockSec() * 1000 );
 
   /** Write the iteration info of this iteration. */
   xout[ "iteration" ].WriteBufferedData();
@@ -777,6 +726,8 @@ ElastixTemplate< TFixedImage, TMovingImage >
   bool writeTansformParametersThisIteration = false;
   this->GetConfiguration()->ReadParameter( writeTansformParametersThisIteration,
     "WriteTransformParametersEachIteration", 0, false );
+  //this->GetConfiguration()->ReadParameter( writeTansformParametersThisIteration,
+  //"WriteTransformParametersEachIteration", level, true );
   if( writeTansformParametersThisIteration )
   {
     /** Add zeros to the number of iterations, to make sure
@@ -819,8 +770,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
   this->m_IterationCounter++;
 
   /** Start timer for next iteration. */
-  this->m_IterationTimer.Reset();
-  this->m_IterationTimer.Start();
+  this->m_IterationTimer->StartTimer();
 
 } // end AfterEachIteration()
 
@@ -834,9 +784,6 @@ void
 ElastixTemplate< TFixedImage, TMovingImage >
 ::AfterRegistration( void )
 {
-  itk::TimeProbe timer;
-  timer.Start();
-
   /** A white line. */
   elxout << std::endl;
 
@@ -862,19 +809,15 @@ ElastixTemplate< TFixedImage, TMovingImage >
   this->CreateTransformParametersMap(); // only relevant for dll!
 #endif
 
-  timer.Stop();
-  elxout << "\nCreating the TransformParameterFile took "
-    << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
-
   /** Call all the AfterRegistration() functions. */
   this->AfterRegistrationBase();
   CallInEachComponent( &BaseComponentType::AfterRegistrationBase );
   CallInEachComponent( &BaseComponentType::AfterRegistration );
 
   /** Print the time spent on things after the registration. */
-  this->m_Timer0.Stop();
+  this->m_Timer0->StopTimer();
   elxout << "Time spent on saving the results, applying the final transform etc.: "
-         << static_cast< unsigned long >( this->m_Timer0.GetMean() * 1000 ) << " ms.\n";
+         << static_cast< unsigned long >( this->m_Timer0->GetElapsedClockSec() * 1000 ) << " ms.\n";
 
 } // end AfterRegistration()
 
@@ -965,8 +908,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 itk::ParameterMapInterface::ParameterMapType
 //somehow using typedef ParameterMapType does not compile!
-ElastixTemplate< TFixedImage, TMovingImage >
-::GetTransformParametersMap( void ) const
+ElastixTemplate< TFixedImage, TMovingImage >::GetTransformParametersMap( void ) const
 {
   return this->m_TransformParametersMap;
 } // end GetTransformParametersMap()
@@ -1203,13 +1145,13 @@ ElastixTemplate< TFixedImage, TMovingImage >
                << this->m_Configuration->GetElastixLevel()
                << ".R" << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
                << ".txt";
-  std::string fileName = makeFileName.str();
+  std::string FileName = makeFileName.str();
 
   /** Open the IterationInfoFile. */
-  this->m_IterationInfoFile.open( fileName.c_str() );
+  this->m_IterationInfoFile.open( FileName.c_str() );
   if( !( this->m_IterationInfoFile.is_open() ) )
   {
-    xout[ "error" ] << "ERROR: File \"" << fileName << "\" could not be opened!" << std::endl;
+    xout[ "error" ] << "ERROR: File \"" << FileName << "\" could not be opened!" << std::endl;
   }
   else
   {
@@ -1232,6 +1174,7 @@ bool
 ElastixTemplate< TFixedImage, TMovingImage >
 ::GetOriginalFixedImageDirection( FixedImageDirectionType & direction ) const
 {
+  typedef typename FixedImageLoaderType::ChangeInfoFilterType ChangerType;
   if( this->GetFixedImage() == 0 )
   {
     /** Try to read direction cosines from (transform-)parameter file. */

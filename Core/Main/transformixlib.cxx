@@ -1,27 +1,23 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __transformixlib_CXX_
 #define __transformixlib_CXX_
 
 #include "transformixlib.h"
 
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
-#include "itkUseMevisDicomTiff.h"
+  #include "itkUseMevisDicomTiff.h"
 #endif
 
 #include "elxTransformixMain.h"
@@ -29,14 +25,13 @@
 #include <string>
 #include <vector>
 #include <queue>
-#include <ctime>
 
 #include "itkObject.h"
 #include "itkDataObject.h"
 #include <itksys/SystemTools.hxx>
 #include <itksys/SystemInformation.hxx>
 
-#include "itkTimeProbe.h"
+#include "elxTimer.h"
 
 namespace transformix
 {
@@ -185,9 +180,10 @@ TRANSFORMIX::TransformImage(
   elxout << std::endl;
 
   /** Declare a timer, start it and print the start time. */
-  itk::TimeProbe totaltimer;
-  totaltimer.Start();
-  elxout << "transformix is started at " << GetCurrentDateAndTime() << ".\n" << std::endl;
+  tmr::Timer::Pointer totaltimer = tmr::Timer::New();
+  totaltimer->StartTimer();
+  elxout << "transformix is started at " << totaltimer->PrintStartTime()
+         << ".\n" << std::endl;
 
   /**
    * ********************* START TRANSFORMATION *******************
@@ -216,9 +212,11 @@ TRANSFORMIX::TransformImage(
   resultImageContainer = transformix->GetResultImageContainer();
 
   /** Stop timer and print it. */
-  totaltimer.Stop();
-  elxout << "\nTransformix has finished at " << GetCurrentDateAndTime() << "." << std::endl;
-  elxout << "Elapsed time: " << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
+  totaltimer->StopTimer();
+  elxout << "\nTransformix has finished at "
+         << totaltimer->PrintStopTime() << "." << std::endl;
+  elxout << "Elapsed time: "
+         << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
   this->m_ResultImage = resultImageContainer->ElementAt( 0 );
 
@@ -244,70 +242,14 @@ TRANSFORMIX::TransformImage(
   bool performLogging,
   bool performCout )
 {
+
   // Transform single parameter map to a one-sized vector of parameter maps and call other
   // transform method.
   std::vector< ParameterMapType > parameterMaps;
   parameterMaps.push_back( parameterMap );
   return TransformImage( inputImage, parameterMaps, outputPath, performLogging, performCout );
+
 } // end TransformImage()
-
-
-/** ConvertSecondsToDHMS
- *
- */
-std::string
-TRANSFORMIX::ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision )
-{
-  /** Define days, hours, minutes. */
-  const std::size_t secondsPerMinute = 60;
-  const std::size_t secondsPerHour   = 60 * secondsPerMinute;
-  const std::size_t secondsPerDay    = 24 * secondsPerHour;
-
-  /** Convert total seconds. */
-  std::size_t       iSeconds = static_cast< std::size_t >( totalSeconds );
-  const std::size_t days     = iSeconds / secondsPerDay;
-
-  iSeconds %= secondsPerDay;
-  const std::size_t hours = iSeconds / secondsPerHour;
-
-  iSeconds %= secondsPerHour;
-  const std::size_t minutes = iSeconds / secondsPerMinute;
-
-  //iSeconds %= secondsPerMinute;
-  //const std::size_t seconds = iSeconds;
-  const double dSeconds = fmod( totalSeconds, 60.0 );
-
-  /** Create a string in days, hours, minutes and seconds. */
-  bool               nonzero = false;
-  std::ostringstream make_string( "" );
-  if( days    != 0            ) { make_string << days    << "d"; nonzero = true; }
-  if( hours   != 0 || nonzero ) { make_string << hours   << "h"; nonzero = true; }
-  if( minutes != 0 || nonzero ) { make_string << minutes << "m"; nonzero = true; }
-  make_string << std::showpoint << std::fixed << std::setprecision( precision );
-  make_string << dSeconds << "s";
-
-  /** Return a value. */
-  return make_string.str();
-
-} // end ConvertSecondsToDHMS()
-
-
-/** Returns current date and time as a string. */
-std::string
-TRANSFORMIX::GetCurrentDateAndTime( void )
-{
-  // Obtain current time
-  time_t rawtime = time( NULL );
-  // Convert to local time
-  struct tm * timeinfo = localtime( &rawtime );
-  // Convert to human-readable format
-  std::string timeAsString = std::string( asctime( timeinfo ) );
-  // Erase newline character at end
-  timeAsString.erase( timeAsString.end() - 1 );
-  //timeAsString.pop_back() // c++11 feature
-
-  return timeAsString;
-} // end GetCurrentDateAndTime()
 
 
 } // namespace transformix

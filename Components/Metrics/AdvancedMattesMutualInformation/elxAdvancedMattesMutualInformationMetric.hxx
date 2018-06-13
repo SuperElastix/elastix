@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxAdvancedMattesMutualInformationMetric_HXX__
 #define __elxAdvancedMattesMutualInformationMetric_HXX__
 
@@ -24,7 +21,6 @@
 #include "itkExponentialLimiterFunction.h"
 #include <string>
 #include "vnl/vnl_math.h"
-#include "itkTimeProbe.h"
 
 namespace elastix
 {
@@ -42,7 +38,7 @@ AdvancedMattesMutualInformationMetric< TElastix >
   this->m_Param_gamma      = 0.101;
   this->SetUseDerivative( true );
 
-} // end Constructor()
+}   // end Constructor()
 
 
 /**
@@ -54,14 +50,14 @@ void
 AdvancedMattesMutualInformationMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  itk::TimeProbe timer;
-  timer.Start();
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
   this->Superclass1::Initialize();
-  timer.Stop();
+  timer->StopTimer();
   elxout << "Initialization of AdvancedMattesMutualInformation metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-} // end Initialize()
+}   // end Initialize()
 
 
 /**
@@ -152,7 +148,27 @@ AdvancedMattesMutualInformationMetric< TElastix >
     this->SetFiniteDifferencePerturbation( this->Compute_c( 0 ) );
   }
 
-} // end BeforeEachResolution()
+  /** Set whether to use moving image derivative scales. */
+  this->SetUseMovingImageDerivativeScales( false );
+  MovingImageDerivativeScalesType movingImageDerivativeScales;
+  movingImageDerivativeScales.Fill( 1.0 );
+  bool usescales = false;
+  for( unsigned int i = 0; i < MovingImageDimension; ++i )
+  {
+    usescales |= this->GetConfiguration()->ReadParameter(
+      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+      this->GetComponentLabel(), i, -1, false );
+  }
+
+  if( usescales )
+  {
+    this->SetUseMovingImageDerivativeScales( true );
+    this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
+    elxout << "Multiplying moving image derivatives by: "
+           << movingImageDerivativeScales << std::endl;
+  }
+
+}   // end BeforeEachResolution()
 
 
 /**
@@ -170,11 +186,14 @@ AdvancedMattesMutualInformationMetric< TElastix >
     this->SetFiniteDifferencePerturbation(
       this->Compute_c( this->m_CurrentIteration ) );
   }
-} // end AfterEachIteration()
+}    // end AfterEachIteration()
 
 
 /**
  * ************************** Compute_c *************************
+ *
+ * This function computes the parameter a at iteration k, as
+ * in the finite difference optimizer.
  */
 
 template< class TElastix >
@@ -185,7 +204,7 @@ AdvancedMattesMutualInformationMetric< TElastix >
   return static_cast< double >(
     this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
 
-} // end Compute_c()
+}   // end Compute_c()
 
 
 } // end namespace elastix

@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #ifndef __itkFiniteDifferenceGradientDescentOptimizer_cxx
 #define __itkFiniteDifferenceGradientDescentOptimizer_cxx
@@ -39,7 +35,6 @@ FiniteDifferenceGradientDescentOptimizer
 {
   itkDebugMacro( "Constructor" );
 
-  this->m_Stop               = false;
   this->m_NumberOfIterations = 100;
   this->m_CurrentIteration   = 0;
   this->m_Value              = 0.0;
@@ -54,7 +49,7 @@ FiniteDifferenceGradientDescentOptimizer
   this->m_Param_alpha         = 0.602;
   this->m_Param_gamma         = 0.101;
 
-} // end Constructor
+}   // end Constructor
 
 
 /**
@@ -79,7 +74,7 @@ FiniteDifferenceGradientDescentOptimizer
      << this->m_StopCondition;
   os << std::endl;
 
-} // end PrintSelf
+}   // end PrintSelf
 
 
 /**
@@ -109,7 +104,7 @@ FiniteDifferenceGradientDescentOptimizer
     this->ResumeOptimization();
   }
 
-} // end StartOptimization
+}   // end StartOptimization
 
 
 /**
@@ -216,7 +211,7 @@ FiniteDifferenceGradientDescentOptimizer
 
   }   // while !m_stop
 
-} // end ResumeOptimization
+}   // end ResumeOptimization
 
 
 /**
@@ -232,7 +227,7 @@ FiniteDifferenceGradientDescentOptimizer
   this->m_Stop = true;
   InvokeEvent( EndEvent() );
 
-} // end StopOptimization
+}   // end StopOptimization
 
 
 /**
@@ -266,7 +261,7 @@ FiniteDifferenceGradientDescentOptimizer
 
   this->InvokeEvent( IterationEvent() );
 
-} // end AdvanceOneStep
+}   // end AdvanceOneStep
 
 
 /**
@@ -283,7 +278,7 @@ FiniteDifferenceGradientDescentOptimizer
   return static_cast< double >(
     this->m_Param_a / vcl_pow( this->m_Param_A + k + 1, this->m_Param_alpha ) );
 
-} // end Compute_a
+}   // end Compute_a
 
 
 /**
@@ -300,7 +295,7 @@ FiniteDifferenceGradientDescentOptimizer
   return static_cast< double >(
     this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
 
-} // end Compute_c
+}   // end Compute_c
 
 
 } // end namespace itk

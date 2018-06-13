@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+This file is part of the elastix software.
+
+Copyright (c) University Medical Center Utrecht. All rights reserved.
+See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+details.
+
+This software is distributed WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -108,10 +105,8 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType             ScalarType;
   typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::FixedParametersType    FixedParametersType;
   typedef typename Superclass::ParametersValueType    ParametersValueType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::DerivativeType         DerivativeType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::InputVectorType        InputVectorType;
   typedef typename Superclass::OutputVectorType       OutputVectorType;
@@ -150,20 +145,18 @@ public:
   typedef std::vector< SpatialHessianType >                JacobianOfSpatialHessianType;
   typedef typename SpatialJacobianType::InternalMatrixType InternalMatrixType;
 
-  /** Typedef for the moving image gradient type.
-   * This type is defined by the B-spline interpolator as
-   * typedef CovariantVector< RealType, ImageDimension >
-   * As we cannot access this type we simply re-construct it to be identical.
-   */
-  typedef OutputCovariantVectorType                   MovingImageGradientType;
-  typedef typename MovingImageGradientType::ValueType MovingImageGradientValueType;
-
   /** Get the number of nonzero Jacobian indices. By default all. */
   virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
 
   /** Whether the advanced transform has nonzero matrices. */
   itkGetConstMacro( HasNonZeroSpatialHessian, bool );
   itkGetConstMacro( HasNonZeroJacobianOfSpatialHessian, bool );
+
+  typedef typename ParametersType::ValueType                   PixelType;
+  typedef Image< PixelType,
+	  itkGetStaticConstMacro( InputSpaceDimension )>           ImageType;
+  typedef typename ImageType::SpacingType                      SpacingType;
+  typedef typename ImageType::PointType                        OriginType;
 
   /** This returns a sparse version of the Jacobian of the transformation.
    *
@@ -195,15 +188,6 @@ public:
     const InputPointType & ipp,
     JacobianType & j,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
-
-  /** Compute the inner product of the Jacobian with the moving image gradient.
-   * The Jacobian is (partially) constructed inside this function, but not returned.
-   */
-  virtual void EvaluateJacobianWithImageGradientProduct(
-    const InputPointType & ipp,
-    const MovingImageGradientType & movingImageGradient,
-    DerivativeType & imageJacobian,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
   /** Compute the spatial Jacobian of the transformation.
    *
@@ -309,6 +293,12 @@ public:
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
+
+  virtual void GetOriginAndSpacing(
+	  OriginType & origin,
+	  SpacingType & sp ) const;
+
+  virtual void SetOrigin( const OriginType & origin );
 
 protected:
 

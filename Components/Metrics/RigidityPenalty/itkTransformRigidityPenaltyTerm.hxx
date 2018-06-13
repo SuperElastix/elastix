@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __itkTransformRigidityPenaltyTerm_hxx
 #define __itkTransformRigidityPenaltyTerm_hxx
 
@@ -129,7 +125,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** Check if this transform is a B-spline transform. */
   typename BSplineTransformType::Pointer localBSplineTransform = 0;
-  bool transformIsBSpline = this->CheckForBSplineTransform2( localBSplineTransform );
+  bool transformIsBSpline = this->CheckForBSplineTransform( localBSplineTransform );
   if( transformIsBSpline ) { this->SetBSplineTransform( localBSplineTransform ); }
 
   /** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
@@ -735,7 +731,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       }
       ++it_RCI;
     } // end while
-  } // end if do orthonormality
+  }   // end if do orthonormality
 
   /** TASK 4B:
    * Do the actual calculation of the rigidity penalty term value.
@@ -803,7 +799,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       ++it_RCI;
 
     } // end while
-  } // end if do properness
+  }   // end if do properness
 
   /** TASK 4C:
    * Do the actual calculation of the rigidity penalty term value.
@@ -850,7 +846,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       ++it_RCI;
 
     } // end while
-  } // end if do properness
+  }   // end if do properness
 
   /** TASK 5:
    * Do the actual calculation of the rigidity penalty term value.
@@ -956,7 +952,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** Set output values to zero. */
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< MeasureType >::ZeroValue() );
+  derivative.Fill( NumericTraits< MeasureType >::Zero );
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -1434,7 +1430,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       ++it_RCI;
 
     } // end while
-  } // end if do orthonormality
+  }   // end if do orthonormality
 
   /** TASK 4B:
    * Do the calculation of the properness parts.
@@ -1677,7 +1673,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       ++it_RCI;
 
     } // end while
-  } // end if do properness
+  }   // end if do properness
 
   /** TASK 4C:
    * Do the calculation of the linearity parts.
@@ -1760,7 +1756,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       ++it_RCI;
 
     } // end while
-  } // end if do linearity
+  }   // end if do linearity
 
   /** TASK 5:
    * Do the actual calculation of the rigidity penalty term value.
@@ -1945,7 +1941,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         }
       }
     } // end while
-  } // end if do orthonormality
+  }   // end if do orthonormality
 
   /** TASK 7B:
    * Calculate the filtered versions of the properness subparts.
@@ -1998,7 +1994,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         }
       }
     } // end while
-  } // end if do properness
+  }   // end if do properness
 
   /** TASK 7C:
    * Calculate the filtered versions of the linearity subparts.
@@ -2059,7 +2055,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         }
       }
     } // end while
-  } // end if do linearity
+  }   // end if do linearity
 
   /** TASK 8:
    * Add it all to create the final derivative images.
@@ -2146,7 +2142,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       ++itDIs[ i ];
       j++;
     } // end while
-  } // end for
+  }   // end for
 
 } // end GetValueAndDerivative()
 
@@ -2213,13 +2209,13 @@ void
 TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 ::Create1DOperator(
   NeighborhoodType & F,
-  const std::string & WhichF,
+  const std::string WhichF,
   const unsigned int WhichDimension,
   const CoefficientImageSpacingType & spacing  ) const
 {
   /** Create an operator size and set it in the operator. */
   NeighborhoodSizeType r;
-  r.Fill( NumericTraits< unsigned int >::ZeroValue() );
+  r.Fill( NumericTraits< unsigned int >::Zero );
   r[ WhichDimension - 1 ] = 1;
   F.SetRadius( r );
 
@@ -2425,7 +2421,7 @@ void
 TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 ::CreateNDOperator(
   NeighborhoodType & F,
-  const std::string & WhichF,
+  const std::string WhichF,
   const CoefficientImageSpacingType & spacing ) const
 {
   /** Create an operator size and set it in the operator. */

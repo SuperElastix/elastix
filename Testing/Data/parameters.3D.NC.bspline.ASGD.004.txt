@@ -11,12 +11,12 @@
 (Registration "MultiMetricMultiResolutionRegistration")
 (FixedImagePyramid "FixedRecursiveImagePyramid")
 (MovingImagePyramid "MovingRecursiveImagePyramid")
-(Interpolator "LinearInterpolator")
+(Interpolator "BSplineInterpolator")
 (Metric "AdvancedNormalizedCorrelation" "TransformRigidityPenalty")
 (Optimizer "AdaptiveStochasticGradientDescent")
 (ResampleInterpolator "FinalBSplineInterpolator")
 (Resampler "DefaultResampler")
-(Transform "RecursiveBSplineTransform")
+(Transform "BSplineTransform")
 
 
 // ********** Pyramid

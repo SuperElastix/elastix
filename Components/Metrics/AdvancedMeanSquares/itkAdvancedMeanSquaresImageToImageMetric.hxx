@@ -1,27 +1,22 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef _itkAdvancedMeanSquaresImageToImageMetric_hxx
 #define _itkAdvancedMeanSquaresImageToImageMetric_hxx
 
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
 #include "vnl/algo/vnl_matrix_update.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
-#include "itkComputeImageExtremaFilter.h"
 
 #ifdef ELASTIX_USE_OPENMP
 #include <omp.h>
@@ -51,6 +46,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   this->m_NumberOfSamplesForSelfHessian = 100000;
 
   this->m_SelfHessianNoiseRange = 1.0;
+  this->m_CurrentResolutionLevel = 0;
 
 } // end Constructor
 
@@ -70,66 +66,14 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   if( this->GetUseNormalization() )
   {
     /** Try to guess a normalization factor. */
-    typedef typename itk::ComputeImageExtremaFilter< FixedImageType > ComputeFixedImageExtremaFilterType;
-    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema = ComputeFixedImageExtremaFilterType::New();
-    computeFixedImageExtrema->SetInput( this->GetFixedImage() );
-    computeFixedImageExtrema->SetImageRegion( this->GetFixedImageRegion() );
-    if ( this->m_FixedImageMask.IsNotNull() )
-    {
-      computeFixedImageExtrema->SetUseMask( true );
-      const FixedImageMaskSpatialObject2Type * fmask
-        = dynamic_cast< const FixedImageMaskSpatialObject2Type * >( this->m_FixedImageMask.GetPointer() );
-      if( fmask )
-      {
-        computeFixedImageExtrema->SetImageSpatialMask( fmask );
-      }
-      else
-      {
-        computeFixedImageExtrema->SetImageMask( this->GetFixedImageMask() );
-      }
-    }
+    this->ComputeFixedImageExtrema(
+      this->GetFixedImage(),
+      this->GetFixedImageRegion() );
 
-    computeFixedImageExtrema->Update();
+    this->ComputeMovingImageExtrema(
+      this->GetMovingImage(),
+      this->GetMovingImage()->GetBufferedRegion() );
 
-    this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
-    this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
-
-    this->m_FixedImageMinLimit = static_cast< FixedImageLimiterOutputType >(
-      this->m_FixedImageTrueMin - this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
-    this->m_FixedImageMaxLimit = static_cast< FixedImageLimiterOutputType >(
-      this->m_FixedImageTrueMax + this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
-
-    typedef typename itk::ComputeImageExtremaFilter< MovingImageType > ComputeMovingImageExtremaFilterType;
-    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema = ComputeMovingImageExtremaFilterType::New();
-    computeMovingImageExtrema->SetInput( this->GetMovingImage() );
-    computeMovingImageExtrema->SetImageRegion( this->GetMovingImage()->GetBufferedRegion() );
-    if( this->m_MovingImageMask.IsNotNull() )
-    {
-      computeMovingImageExtrema->SetUseMask( true );
-            const MovingImageMaskSpatialObject2Type * mMask
-        = dynamic_cast< const MovingImageMaskSpatialObject2Type * >( this->m_MovingImageMask.GetPointer() );
-      if( mMask )
-      {
-        computeMovingImageExtrema->SetImageSpatialMask( mMask );
-      }
-      else
-      {
-        computeMovingImageExtrema->SetImageMask( this->GetMovingImageMask() );
-      }
-    }
-
-    computeMovingImageExtrema->Update();
-
-    this->m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
-    this->m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
-
-    this->m_MovingImageMinLimit = static_cast< MovingImageLimiterOutputType >(
-      this->m_MovingImageTrueMin - this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
-    this->m_MovingImageMaxLimit = static_cast< MovingImageLimiterOutputType >(
-      this->m_MovingImageTrueMax + this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
-
-    // TODO: we may actually reuse these values from AdvancedImageToImageMetric::InitializeLimiters
-    // without recomputing them here.
     const double diff1   = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
     const double diff2   = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
     const double maxdiff = vnl_math_max( diff1, diff2 );
@@ -174,14 +118,16 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ******************* GetValueSingleThreaded *******************
+ * ******************* GetValue *******************
  */
 
 template< class TFixedImage, class TMovingImage >
 typename AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >::MeasureType
 AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
-::GetValueSingleThreaded( const TransformParametersType & parameters ) const
+::GetValue( const TransformParametersType & parameters ) const
 {
+  itkDebugMacro( "GetValue( " << parameters << " ) " );
+
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
   MeasureType measure = NumericTraits< MeasureType >::Zero;
@@ -266,174 +212,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Return the mean squares measure value. */
   return measure;
 
-} // end GetValueSingleThreaded()
-
-
-/**
- * ******************* GetValue *******************
- */
-
-template< class TFixedImage, class TMovingImage >
-typename AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >::MeasureType
-AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
-::GetValue( const TransformParametersType & parameters ) const
-{
-  /** Option for now to still use the single threaded code. */
-  if( !this->m_UseMultiThread )
-  {
-    return this->GetValueSingleThreaded( parameters );
-  }
-
-  /** Call non-thread-safe stuff, such as:
-   *   this->SetTransformParameters( parameters );
-   *   this->GetImageSampler()->Update();
-   * Because of these calls GetValue itself is not thread-safe,
-   * so cannot be called multiple times simultaneously.
-   * This is however needed in the CombinationImageToImageMetric.
-   * In that case, you need to:
-   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
-   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before calling GetValue
-   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
-   * - Now you can call GetValue multi-threaded.
-   */
-  this->BeforeThreadedGetValueAndDerivative( parameters );
-
-  /** Launch multi-threading metric */
-  this->LaunchGetValueThreaderCallback();
-
-  /** Gather the metric values from all threads. */
-  MeasureType value = NumericTraits< MeasureType >::Zero;
-  this->AfterThreadedGetValue( value );
-
-  return value;
-
 } // end GetValue()
-
-
-/**
- * ******************* ThreadedGetValue *******************
- */
-
-template< class TFixedImage, class TMovingImage >
-void
-AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
-::ThreadedGetValue( ThreadIdType threadId )
-{
-  /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
-  const unsigned long         sampleContainerSize = sampleContainer->Size();
-
-  /** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
-
-  unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
-  unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
-  pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
-  pos_end   = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
-
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator threader_fiter;
-  typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator threader_fend   = sampleContainer->Begin();
-
-  threader_fbegin += (int)pos_begin;
-  threader_fend   += (int)pos_end;
-
-  /** Create variables to store intermediate results. circumvent false sharing */
-  unsigned long numberOfPixelsCounted = 0;
-  MeasureType   measure               = NumericTraits< MeasureType >::Zero;
-
-  /** Loop over the fixed image to calculate the mean squares. */
-  for( threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter )
-  {
-    /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = ( *threader_fiter ).Value().m_ImageCoordinates;
-    RealType                    movingImageValue;
-    MovingImagePointType        mappedPoint;
-
-    /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-
-    /** Check if point is inside mask. */
-    if( sampleOk )
-    {
-      sampleOk = this->IsInsideMovingMask( mappedPoint ); // thread-safe?
-    }
-
-    /** Compute the moving image value M(T(x)) and check if
-     * the point is inside the moving image buffer.
-     */
-    if( sampleOk )
-    {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(
-        mappedPoint, movingImageValue, 0 );
-    }
-
-    if( sampleOk )
-    {
-      numberOfPixelsCounted++;
-
-      /** Get the fixed image value. */
-      const RealType & fixedImageValue
-        = static_cast< RealType >( ( *threader_fiter ).Value().m_ImageValue );
-
-      /** The difference squared. */
-      const RealType diff = movingImageValue - fixedImageValue;
-      measure += diff * diff;
-
-    } // end if sampleOk
-
-  } // end for loop over the image sample container
-
-  /** Only update these variables at the end to prevent unnecessary "false sharing". */
-  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Value                 = measure;
-
-} // end ThreadedGetValue()
-
-
-/**
- * ******************* AfterThreadedGetValue *******************
- */
-
-template< class TFixedImage, class TMovingImage >
-void
-AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
-::AfterThreadedGetValue( MeasureType & value ) const
-{
-  /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
-  {
-    this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
-
-    /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = 0;
-  }
-
-  /** Check if enough samples were valid. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(
-    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-
-  /** The normalization factor. */
-  DerivativeValueType normal_sum = this->m_NormalizationFactor
-    / static_cast< DerivativeValueType >( this->m_NumberOfPixelsCounted );
-
-  /** Accumulate values. */
-  value = NumericTraits< MeasureType >::Zero;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
-  {
-    value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
-
-    /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value = NumericTraits< MeasureType >::Zero;
-  }
-  value *= normal_sum;
-
-} // end AfterThreadedGetValue()
 
 
 /**
@@ -471,116 +250,441 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 {
   itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
 
-  /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits< MeasureType >::Zero;
-  derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
+  OriginType oldGridOrigin;
+  OriginType newGridOrigin;
+  SpacingType oldGridSpacing;
 
-  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji(
-    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-  DerivativeType        imageJacobian( nzji.size() );
-  TransformJacobianType jacobian;
-
-  /** Call non-thread-safe stuff, such as:
-   *   this->SetTransformParameters( parameters );
-   *   this->GetImageSampler()->Update();
-   * Because of these calls GetValueAndDerivative itself is not thread-safe,
-   * so cannot be called multiple times simultaneously.
-   * This is however needed in the CombinationImageToImageMetric.
-   * In that case, you need to:
-   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
-   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
-   *   calling GetValueAndDerivative
-   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
-   * - Now you can call GetValueAndDerivative multi-threaded.
-   */
-  this->BeforeThreadedGetValueAndDerivative( parameters );
-
-  /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
-
-  /** Loop over the fixed image to calculate the mean squares. */
-  for( fiter = fbegin; fiter != fend; ++fiter )
+  if ( this->m_UseGridShift == true )
   {
-    /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
-    RealType                    movingImageValue;
-    MovingImagePointType        mappedPoint;
-    MovingImageDerivativeType   movingImageDerivative;
+	  if ( this->m_GridShiftStrategy == "UniformRandomOne" )
+	  {
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+		  }
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
+		  double gridShift [FixedImageDimension];
 
-    /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+		  double random = 0.0;
+		  random = this->m_RandomShiftList[this->m_IterationCounter];
+		  this->m_IterationCounter++;
 
-    /** Check if point is inside mask. */
-    if( sampleOk )
-    {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );
-    }
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  gridShift[i] = oldGridSpacing[i] * random;
+			  newGridOrigin[i] = oldGridOrigin[i] + gridShift[i];
+		  }
+	  }else if ( this->m_GridShiftStrategy == "UniformRandomAll" || this->m_GridShiftStrategy == "NormalRandomAll" )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
+		  double gridShift [FixedImageDimension];
 
-    /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
-     * the point is inside the moving image buffer.
-     */
-    if( sampleOk )
-    {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(
-        mappedPoint, movingImageValue, &movingImageDerivative );
-    }
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+		  }
 
-    if( sampleOk )
-    {
-      this->m_NumberOfPixelsCounted++;
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  double random = 0.0;
 
-      /** Get the fixed image value. */
-      const RealType & fixedImageValue
-        = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
+			  random = this->m_RandomShiftList[this->m_IterationCounter];
+			  this->m_IterationCounter++;
+			  gridShift[i] = oldGridSpacing[i] * random;
+			  newGridOrigin[i] = oldGridOrigin[i] + gridShift[i];
+		  }
+	  }else if ( this->m_GridShiftStrategy == "UniformRandomAllVariance" || this->m_GridShiftStrategy == "NormalRandomAllVariance" )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
+		  double gridShift [FixedImageDimension];
 
-#if 0
-      /** Get the TransformJacobian dT/dmu. */
-      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+		  }
 
-      /** Compute the inner products (dM/dx)^T (dT/dmu). */
-      this->EvaluateTransformJacobianInnerProduct(
-        jacobian, movingImageDerivative, imageJacobian );
-#else
-      /** Compute the inner product of the transform Jacobian and the moving image gradient. */
-      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
-        fixedPoint, movingImageDerivative,
-        imageJacobian, nzji );
-#endif
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  double random = 0.0;
 
-      /** Compute this pixel's contribution to the measure and derivatives. */
-      this->UpdateValueAndDerivativeTerms(
-        fixedImageValue, movingImageValue,
-        imageJacobian, nzji,
-        measure, derivative );
+			  random = this->m_RandomShiftList[this->m_IterationCounter];
+			  this->m_IterationCounter++;
+			  gridShift[i] = random;
+			  newGridOrigin[i] = oldGridOrigin[i] + gridShift[i];
+		  }
+	  }else if ( this->m_GridShiftStrategy == "UniformRandomAllLinear" )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
+		  double gridShift [FixedImageDimension];
 
-    } // end if sampleOk
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+		  }
 
-  } // end for loop over the image sample container
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  double random = 0.0;
 
-  /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(
-    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+			  random = this->m_RandomShiftList[this->m_IterationCounter];
+			  this->m_IterationCounter++;
+			  if ( random < 0.5 )
+			  {
+				  random = sqrt(2*random) - 1;
+			  } 
+			  else
+			  {
+				  random = 1 - sqrt(2 - 2*random);
+			  }
 
-  /** Compute the measure value and derivative. */
-  double normal_sum = 0.0;
-  if( this->m_NumberOfPixelsCounted > 0 )
-  {
-    normal_sum = this->m_NormalizationFactor
-      / static_cast< double >( this->m_NumberOfPixelsCounted );
+			  gridShift[i] = oldGridSpacing[i] * random;
+			  newGridOrigin[i] = oldGridOrigin[i] + gridShift[i];
+		  }
+	  }else if ( this->m_GridShiftStrategy == "OrderedStepNumber" )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
+
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+			  this->m_ShiftDirection = true;
+			  this->m_ShiftSequence.SetSize( this->m_GridShiftStepNumber+1, FixedImageDimension );
+			  this->m_ReversedShiftSequence.SetSize( this->m_GridShiftStepNumber-1, FixedImageDimension );
+
+			  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+			  {			  
+				  double unitSpacing = oldGridSpacing[i] / this->m_GridShiftStepNumber;
+				  for( unsigned int j = 0; j <  this->m_GridShiftStepNumber+1; j++ )
+				  {
+					  if( j == 0 )
+					  {
+						  this->m_ShiftSequence[j][i] = oldGridOrigin[i] - oldGridSpacing[i] * 0.5;
+					  }else
+					  {
+						  this->m_ShiftSequence [j][i]= oldGridOrigin[i] - 0.5*oldGridSpacing[i] + unitSpacing*j;
+					  }
+					  if ( j != 0 && j!= this->m_GridShiftStepNumber )
+					  {						  
+						  this->m_ReversedShiftSequence[this->m_GridShiftStepNumber-1-j][i] = this->m_ShiftSequence[j][i];
+					  }
+				  }
+			  }
+		  }
+
+		  unsigned k = this->m_IterationCounter%(this->m_GridShiftStepNumber+1);
+
+		  this->m_IterationCounter++;
+
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {		
+			  if ( this->m_ShiftDirection )
+			  {
+				  newGridOrigin[i] = this->m_ShiftSequence[k][i];
+				  if ( i == FixedImageDimension-1 && k == this->m_GridShiftStepNumber )
+				  {
+					  this->m_ShiftDirection = !this->m_ShiftDirection;
+					  this->m_IterationCounter = 0;
+				  }
+			  }else
+			  {
+				  newGridOrigin[i] = this->m_ReversedShiftSequence[k][i];
+				  if ( i == FixedImageDimension-1 && k == this->m_GridShiftStepNumber - 2 )
+				  {
+					  this->m_ShiftDirection = !this->m_ShiftDirection;
+					  this->m_IterationCounter = 0;
+				  }
+			  }
+		  }
+	  }
   }
-  measure    *= normal_sum;
-  derivative *= normal_sum;
+
+  if ( this->m_UseGridShift == true && this->m_GridShiftStrategy != "")
+  {  
+	  this->m_AdvancedTransform->SetOrigin( newGridOrigin );
+  }
+
+  MeasureType measure = NumericTraits< MeasureType >::Zero;
+
+  if ( this->m_UseFullPerturbationRange == true && FixedImageDimension == 2 )
+  {
+
+	  /** Initialize some variables. */
+	  this->m_NumberOfPixelsCounted = 0;
+	  derivative = DerivativeType( this->GetNumberOfParameters() );
+	  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+	  value = 0.0;
+	  SpacingType shiftBound;
+
+	  if ( this->m_UseFullPerturbationRange == true )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  shiftBound[i] = oldGridSpacing[i] / (2 * this->m_PerturbationFactor);
+		  }
+	  }
+	  unsigned long avgFactor = 0;
+	  for ( double xDimension = oldGridOrigin[0]-shiftBound[0]; xDimension <= oldGridOrigin[0]+shiftBound[0]; xDimension++ )
+	  {
+		  for ( double yDimension = oldGridOrigin[1]-shiftBound[1]; yDimension <= oldGridOrigin[1]+shiftBound[1]; yDimension++ )
+		  {
+			  avgFactor++;
+		  }
+	  }
+
+	  for ( double xDimension = oldGridOrigin[0]-shiftBound[0]; xDimension <= oldGridOrigin[0]+shiftBound[0]; xDimension++ )
+	  {
+		  for ( double yDimension = oldGridOrigin[1]-shiftBound[1]; yDimension <= oldGridOrigin[1]+shiftBound[1]; yDimension++ )
+		  {
+			  newGridOrigin[0] = xDimension;
+			  newGridOrigin[1] = yDimension;
+			  this->m_AdvancedTransform->SetOrigin( newGridOrigin );
+
+			  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+			  NonZeroJacobianIndicesType nzji(
+				  this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+			  DerivativeType        imageJacobian( nzji.size() );
+			  TransformJacobianType jacobian;
+
+			  MeasureType tempMeasure = NumericTraits< MeasureType >::Zero;
+			  DerivativeType tempDerivative = DerivativeType( this->GetNumberOfParameters() );
+			  tempDerivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+			  this->m_NumberOfPixelsCounted = 0;
+
+			  /** Call non-thread-safe stuff, such as:
+			  *   this->SetTransformParameters( parameters );
+			  *   this->GetImageSampler()->Update();
+			  * Because of these calls GetValueAndDerivative itself is not thread-safe,
+			  * so cannot be called multiple times simultaneously.
+			  * This is however needed in the CombinationImageToImageMetric.
+			  * In that case, you need to:
+			  * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+			  * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+			  *   calling GetValueAndDerivative
+			  * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+			  * - Now you can call GetValueAndDerivative multi-threaded.
+			  */
+			  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+			  /** Get a handle to the sample container. */
+			  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+
+			  /** Create iterator over the sample container. */
+			  typename ImageSampleContainerType::ConstIterator fiter;
+			  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+			  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
+
+			  /** Loop over the fixed image to calculate the mean squares. */
+			  for( fiter = fbegin; fiter != fend; ++fiter )
+			  {
+				  /** Read fixed coordinates and initialize some variables. */
+				  const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+				  RealType                    movingImageValue;
+				  MovingImagePointType        mappedPoint;
+				  MovingImageDerivativeType   movingImageDerivative;
+
+				  /** Transform point and check if it is inside the B-spline support region. */
+				  bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+				  /** Check if point is inside mask. */
+				  if( sampleOk )
+				  {
+					  sampleOk = this->IsInsideMovingMask( mappedPoint );
+				  }
+
+				  /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
+				  * the point is inside the moving image buffer.
+				  */
+				  if( sampleOk )
+				  {
+					  sampleOk = this->EvaluateMovingImageValueAndDerivative(
+						  mappedPoint, movingImageValue, &movingImageDerivative );
+				  }
+
+				  if( sampleOk )
+				  {
+					  this->m_NumberOfPixelsCounted++;
+
+					  /** Get the fixed image value. */
+					  const RealType & fixedImageValue
+						  = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
+
+					  /** Get the TransformJacobian dT/dmu. */
+					  this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+
+					  /** Compute the inner products (dM/dx)^T (dT/dmu). */
+					  this->EvaluateTransformJacobianInnerProduct(
+						  jacobian, movingImageDerivative, imageJacobian );
+
+					  /** Compute this pixel's contribution to the measure and derivatives. */
+					  this->UpdateValueAndDerivativeTerms(
+						  fixedImageValue, movingImageValue,
+						  imageJacobian, nzji,
+						  tempMeasure, tempDerivative );
+
+				  } // end if sampleOk
+
+			  } // end for loop over the image sample container
+
+			  /** Check if enough samples were valid. */
+			  this->CheckNumberOfSamples(
+				  sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+			  /** Compute the measure value and derivative. */
+			  double normal_sum = 0.0;
+			  if( this->m_NumberOfPixelsCounted > 0 )
+			  {
+				  normal_sum = this->m_NormalizationFactor
+					  / static_cast< double >( this->m_NumberOfPixelsCounted );
+			  }
+			  tempMeasure    *= normal_sum;
+			  tempDerivative *= normal_sum;
+
+			  if ( this->m_UseFullPerturbationRange == true )
+			  {
+				  measure += tempMeasure / avgFactor;
+				  derivative += tempDerivative / avgFactor;
+			  } 
+			  else
+			  {
+				  measure = tempMeasure ;
+				  derivative = tempDerivative;
+				  value = measure;
+
+				  if ( this->m_UseFullPerturbationRange == false )
+				  {
+					  return;
+				  }
+			  }
+		  }
+	  }// end For each query
+
+  }else
+  {
+	  /** Initialize some variables. */
+	  this->m_NumberOfPixelsCounted = 0;
+	  derivative = DerivativeType( this->GetNumberOfParameters() );
+	  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+
+	  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+	  NonZeroJacobianIndicesType nzji(
+		  this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+	  DerivativeType        imageJacobian( nzji.size() );
+	  TransformJacobianType jacobian;
+
+	  /** Call non-thread-safe stuff, such as:
+	  *   this->SetTransformParameters( parameters );
+	  *   this->GetImageSampler()->Update();
+	  * Because of these calls GetValueAndDerivative itself is not thread-safe,
+	  * so cannot be called multiple times simultaneously.
+	  * This is however needed in the CombinationImageToImageMetric.
+	  * In that case, you need to:
+	  * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+	  * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+	  *   calling GetValueAndDerivative
+	  * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+	  * - Now you can call GetValueAndDerivative multi-threaded.
+	  */
+	  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+	  /** Get a handle to the sample container. */
+	  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+
+	  /** Create iterator over the sample container. */
+	  typename ImageSampleContainerType::ConstIterator fiter;
+	  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+	  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
+
+	  /** Loop over the fixed image to calculate the mean squares. */
+	  for( fiter = fbegin; fiter != fend; ++fiter )
+	  {
+		  /** Read fixed coordinates and initialize some variables. */
+		  const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+		  RealType                    movingImageValue;
+		  MovingImagePointType        mappedPoint;
+		  MovingImageDerivativeType   movingImageDerivative;
+
+		  /** Transform point and check if it is inside the B-spline support region. */
+		  bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+		  /** Check if point is inside mask. */
+		  if( sampleOk )
+		  {
+			  sampleOk = this->IsInsideMovingMask( mappedPoint );
+		  }
+
+		  /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
+		  * the point is inside the moving image buffer.
+		  */
+		  if( sampleOk )
+		  {
+			  sampleOk = this->EvaluateMovingImageValueAndDerivative(
+				  mappedPoint, movingImageValue, &movingImageDerivative );
+		  }
+
+		  if( sampleOk )
+		  {
+			  this->m_NumberOfPixelsCounted++;
+
+			  /** Get the fixed image value. */
+			  const RealType & fixedImageValue
+				  = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
+
+			  /** Get the TransformJacobian dT/dmu. */
+			  this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+
+			  /** Compute the inner products (dM/dx)^T (dT/dmu). */
+			  this->EvaluateTransformJacobianInnerProduct(
+				  jacobian, movingImageDerivative, imageJacobian );
+
+			  /** Compute this pixel's contribution to the measure and derivatives. */
+			  this->UpdateValueAndDerivativeTerms(
+				  fixedImageValue, movingImageValue,
+				  imageJacobian, nzji,
+				  measure, derivative );
+
+		  } // end if sampleOk
+
+	  } // end for loop over the image sample container
+
+	  /** Check if enough samples were valid. */
+	  this->CheckNumberOfSamples(
+		  sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+	  /** Compute the measure value and derivative. */
+	  double normal_sum = 0.0;
+	  if( this->m_NumberOfPixelsCounted > 0 )
+	  {
+		  normal_sum = this->m_NormalizationFactor
+			  / static_cast< double >( this->m_NumberOfPixelsCounted );
+	  }
+	  measure    *= normal_sum;
+	  derivative *= normal_sum;
+  }
 
   /** The return value. */
   value = measure;
+
+  if ( (this->m_UseGridShift == true && this->m_GridShiftStrategy != "") || this->m_UseFullPerturbationRange == true )
+  {  
+	  this->m_AdvancedTransform->SetOrigin( oldGridOrigin );
+  }
 
 } // end GetValueAndDerivativeSingleThreaded()
 
@@ -618,6 +722,9 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
    */
   this->BeforeThreadedGetValueAndDerivative( parameters );
 
+  /** Initialize some threading related parameters. */
+  this->InitializeThreadingParameters();
+
   /** Launch multi-threading metric */
   this->LaunchGetValueAndDerivativeThreaderCallback();
 
@@ -639,14 +746,16 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType               imageJacobian( nnzji );
+  DerivativeType               imageJacobian( nzji.size() );
+
+  /** Get a handle to a pre-allocated transform Jacobian. */
+  TransformJacobianType & jacobian = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
 
   /** Get a handle to the pre-allocated derivative for the current thread.
-   * The initialization is performed at the beginning of each resolution in
-   * InitializeThreadingParameters(), and at the end of each iteration in
-   * AfterThreadedGetValueAndDerivative() and the accumulate functions.
+   * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
    */
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[ threadId ].st_Derivative;
+  derivative.Fill( NumericTraits< DerivativeValueType >::Zero ); // needed?
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
@@ -709,18 +818,12 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *threader_fiter ).Value().m_ImageValue );
 
-#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
-#else
-      /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
-      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
-        fixedPoint, movingImageDerivative, imageJacobian, nzji );
-#endif
 
       /** Compute this pixel's contribution to the measure and derivatives. */
       this->UpdateValueAndDerivativeTerms(
@@ -754,9 +857,6 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
-
-    /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */
@@ -773,9 +873,6 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
-
-    /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value = NumericTraits< MeasureType >::Zero;
   }
   value *= normal_sum;
 
@@ -795,9 +892,11 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
     this->m_ThreaderMetricParameters.st_DerivativePointer   = derivative.begin();
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-    this->m_Threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
+    typename ThreaderType::Pointer local_threader = ThreaderType::New();
+    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+    local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
       const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
-    this->m_Threader->SingleMethodExecute();
+    local_threader->SingleMethodExecute();
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp

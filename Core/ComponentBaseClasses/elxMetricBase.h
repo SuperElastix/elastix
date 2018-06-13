@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxMetricBase_h
 #define __elxMetricBase_h
 
@@ -25,6 +22,8 @@
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkImageGridSampler.h"
 #include "itkPointSet.h"
+
+#include "elxTimer.h"
 
 namespace elastix
 {
@@ -100,7 +99,6 @@ public:
   typedef itk::SingleValuedCostFunction ITKBaseType;
   typedef itk::AdvancedImageToImageMetric<
     FixedImageType, MovingImageType >                 AdvancedMetricType;
-  typedef typename AdvancedMetricType::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
 
   /** Get the dimension of the fixed image. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
@@ -185,6 +183,12 @@ public:
   virtual MeasureType GetCurrentExactMetricValue( void ) const
   { return this->m_CurrentExactMetricValue; }
 
+  /** Switch grid shift strategy */
+  virtual void SetUseGridShiftStrategy( bool useStrategy );
+
+  /** Initialize random shift list */
+  virtual void SetRandomShiftList( std::vector< double > randomList );
+
 protected:
 
   /** The parameters type. */
@@ -217,7 +221,6 @@ protected:
   ExactMetricImageSamplerPointer   m_ExactMetricSampler;
   MeasureType                      m_CurrentExactMetricValue;
   ExactMetricSampleGridSpacingType m_ExactMetricSampleGridSpacing;
-  unsigned int                     m_ExactMetricEachXNumberOfIterations;
 
 private:
 

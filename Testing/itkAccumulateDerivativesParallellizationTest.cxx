@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #include "itkSmartPointer.h"
 #include "itkArray.h"
 #include <vector>
@@ -79,16 +75,11 @@ public:
   // Constructor
   MetricTEMP()
   {
-    this->m_ThreaderMetricParameters.st_Metric              = NULL;
-    this->m_ThreaderMetricParameters.st_DerivativePointer   = NULL;
-    this->m_ThreaderMetricParameters.st_NormalizationFactor = 0.0;
-
-    this->m_NumberOfParameters = 0;
-    this->m_Threader           = ThreaderType::New();
-    this->m_NumberOfThreads    = this->m_Threader->GetNumberOfThreads();
-    this->m_UseOpenMP          = false;
-    this->m_UseMultiThreaded   = false;
-    this->m_NormalSum          = 3.1415926;
+    this->m_Threader         = ThreaderType::New();
+    this->m_NumberOfThreads  = this->m_Threader->GetNumberOfThreads();
+    this->m_UseOpenMP        = false;
+    this->m_UseMultiThreaded = false;
+    this->m_NormalSum        = 3.1415926;
 
 #ifdef ELASTIX_USE_OPENMP
     const int nthreads = static_cast< int >( this->m_NumberOfThreads );
@@ -118,9 +109,11 @@ public:
       this->m_ThreaderMetricParameters.st_DerivativePointer   = derivative.begin();
       this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-      this->m_Threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
+      ThreaderType::Pointer local_threader = ThreaderType::New();
+      local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+      local_threader->SetSingleMethod( this->AccumulateDerivativesThreaderCallback,
         const_cast< void * >( static_cast< const void * >( &this->m_ThreaderMetricParameters ) ) );
-      this->m_Threader->SingleMethodExecute();
+      local_threader->SingleMethodExecute();
     }
 #ifdef ELASTIX_USE_OPENMP
     // compute multi-threadedly with openmp

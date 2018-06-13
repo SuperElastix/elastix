@@ -1,6 +1,0 @@
-
-ADD_ELXCOMPONENT( ReducedDimensionBSplineResampleInterpolator
- elxRDBSplineResampleInterpolator.h
- elxRDBSplineResampleInterpolator.hxx
- elxRDBSplineResampleInterpolator.cxx )
-

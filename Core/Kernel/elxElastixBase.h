@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 /**
  * This file contains the declaration of the elx::ElastixBase class.
@@ -252,10 +248,6 @@ public:
   elxGetObjectMacro( ResultImageContainer, DataObjectContainerType );
   elxSetObjectMacro( ResultImageContainer, DataObjectContainerType );
 
-  /** Set/Get the result image container. */
-  elxGetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
-  elxSetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
-
   /** Set/Get The Image FileName containers.
    * Normally, these are filled in the BeforeAllBase function.
    */
@@ -292,7 +284,6 @@ public:
   elxGetNumberOfMacro( FixedMaskFileName );
   elxGetNumberOfMacro( MovingMaskFileName );
   elxGetNumberOfMacro( ResultImage );
-  elxGetNumberOfMacro( ResultDeformationField );
 
   /** Set/Get the initial transform
    * The type is ObjectType, but the pointer should actually point
@@ -529,9 +520,6 @@ private:
 
   /** The result image container. These are stored as pointers to itk::DataObject. */
   DataObjectContainerPointer m_ResultImageContainer;
-
-  /** The result deformation field container. These are stored as pointers to itk::DataObject. */
-  DataObjectContainerPointer m_ResultDeformationFieldContainer;
 
   /** The image and mask FileNameContainers. */
   FileNameContainerPointer m_FixedImageFileNameContainer;

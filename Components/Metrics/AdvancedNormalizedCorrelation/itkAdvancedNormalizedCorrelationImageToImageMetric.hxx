@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef _itkAdvancedNormalizedCorrelationImageToImageMetric_hxx
 #define _itkAdvancedNormalizedCorrelationImageToImageMetric_hxx
 
@@ -44,6 +40,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   // Multi-threading structs
   this->m_CorrelationGetValueAndDerivativePerThreadVariables     = NULL;
   this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize = 0;
+  this->m_CurrentResolutionLevel = 0;
 
 } // end Constructor
 
@@ -87,22 +84,20 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** Some initialization. */
-  const AccumulateType      zero1 = NumericTraits< AccumulateType >::Zero;
-  const DerivativeValueType zero2 = NumericTraits< DerivativeValueType >::Zero;
+  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  const AccumulateType         zero  = NumericTraits< AccumulateType >::Zero;
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sff                   = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Smm                   = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sfm                   = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sf                    = zero1;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sm                    = zero1;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sff                   = zero;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Smm                   = zero;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sfm                   = zero;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sf                    = zero;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sm                    = zero;
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeF.SetSize( this->GetNumberOfParameters() );
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeM.SetSize( this->GetNumberOfParameters() );
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Differential.SetSize( this->GetNumberOfParameters() );
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeF.Fill( zero2 );
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeM.Fill( zero2 );
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Differential.Fill( zero2 );
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_TransformJacobian.SetSize( FixedImageDimension, nnzji );
   }
 
 } // end InitializeThreadingParameters()
@@ -331,149 +326,526 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 {
   itkDebugMacro( << "GetValueAndDerivative( " << parameters << " ) " );
 
-  typedef typename DerivativeType::ValueType DerivativeValueType;
+  OriginType oldGridOrigin;
+  OriginType newGridOrigin;
+  SpacingType oldGridSpacing;
 
-  /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
-  derivative                    = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
-  DerivativeType derivativeF = DerivativeType( this->GetNumberOfParameters() );
-  derivativeF.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
-  DerivativeType derivativeM = DerivativeType( this->GetNumberOfParameters() );
-  derivativeM.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
-  DerivativeType differential = DerivativeType( this->GetNumberOfParameters() );
-  differential.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
-
-  /** Array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
-  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-  DerivativeType             imageJacobian( nzji.size() );
-  TransformJacobianType      jacobian;
-
-  /** Initialize some variables for intermediate results. */
-  AccumulateType sff = NumericTraits< AccumulateType >::Zero;
-  AccumulateType smm = NumericTraits< AccumulateType >::Zero;
-  AccumulateType sfm = NumericTraits< AccumulateType >::Zero;
-  AccumulateType sf  = NumericTraits< AccumulateType >::Zero;
-  AccumulateType sm  = NumericTraits< AccumulateType >::Zero;
-
-  /** Call non-thread-safe stuff, such as:
-   *   this->SetTransformParameters( parameters );
-   *   this->GetImageSampler()->Update();
-   * Because of these calls GetValueAndDerivative itself is not thread-safe,
-   * so cannot be called multiple times simultaneously.
-   * This is however needed in the CombinationImageToImageMetric.
-   * In that case, you need to:
-   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
-   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
-   *   calling GetValueAndDerivative
-   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
-   * - Now you can call GetValueAndDerivative multi-threaded.
-   */
-  this->BeforeThreadedGetValueAndDerivative( parameters );
-
-  /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
-
-  /** Loop over the fixed image to calculate the correlation. */
-  for( fiter = fbegin; fiter != fend; ++fiter )
+  if ( this->m_UseGridShift == true )
   {
-    /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
-    RealType                    movingImageValue;
-    MovingImagePointType        mappedPoint;
-    MovingImageDerivativeType   movingImageDerivative;
+	  if ( this->m_GridShiftStrategy == "UniformRandomOne" )
+	  {
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+		  }
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
+		  double gridShift [FixedImageDimension];
 
-    /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+		  double random = 0.0;
+		  random = this->m_RandomShiftList[this->m_IterationCounter];
+		  this->m_IterationCounter++;
 
-    /** Check if point is inside mask. */
-    if( sampleOk )
-    {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );
-    }
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  gridShift[i] = oldGridSpacing[i] * random;
+			  newGridOrigin[i] = oldGridOrigin[i] + gridShift[i];
+		  }
+	  }else if ( this->m_GridShiftStrategy == "UniformRandomAll" || this->m_GridShiftStrategy == "NormalRandomAll" )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
+		  double gridShift [FixedImageDimension];
 
-    /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
-     * the point is inside the moving image buffer.
-     */
-    if( sampleOk )
-    {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(
-        mappedPoint, movingImageValue, &movingImageDerivative );
-    }
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+		  }
 
-    if( sampleOk )
-    {
-      this->m_NumberOfPixelsCounted++;
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  double random = 0.0;
 
-      /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
+			  random = this->m_RandomShiftList[this->m_IterationCounter];
+			  this->m_IterationCounter++;
+			  gridShift[i] = oldGridSpacing[i] * random;
+			  newGridOrigin[i] = oldGridOrigin[i] + gridShift[i];
+		  }
+	  }else if ( this->m_GridShiftStrategy == "UniformRandomAllVariance" || this->m_GridShiftStrategy == "NormalRandomAllVariance" )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
+		  double gridShift [FixedImageDimension];
 
-      /** Get the TransformJacobian dT/dmu. */
-      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+		  }
 
-      /** Compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu). */
-      this->EvaluateTransformJacobianInnerProduct(
-        jacobian, movingImageDerivative, imageJacobian );
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  double random = 0.0;
 
-      /** Update some sums needed to calculate the value of NC. */
-      sff += fixedImageValue  * fixedImageValue;
-      smm += movingImageValue * movingImageValue;
-      sfm += fixedImageValue  * movingImageValue;
-      sf  += fixedImageValue;  // Only needed when m_SubtractMean == true
-      sm  += movingImageValue; // Only needed when m_SubtractMean == true
+			  random = this->m_RandomShiftList[this->m_IterationCounter];
+			  this->m_IterationCounter++;
+			  gridShift[i] = random;
+			  newGridOrigin[i] = oldGridOrigin[i] + gridShift[i];
+		  }
+	  }else if ( this->m_GridShiftStrategy == "UniformRandomAllLinear" )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
+		  double gridShift [FixedImageDimension];
 
-      /** Compute this pixel's contribution to the derivative terms. */
-      this->UpdateDerivativeTerms(
-        fixedImageValue, movingImageValue, imageJacobian, nzji,
-        derivativeF, derivativeM, differential );
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+		  }
 
-    } // end if sampleOk
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  double random = 0.0;
 
-  } // end for loop over the image sample container
+			  random = this->m_RandomShiftList[this->m_IterationCounter];
+			  this->m_IterationCounter++;
+			  if ( random < 0.5 )
+			  {
+				  random = sqrt(2*random) - 1;
+			  } 
+			  else
+			  {
+				  random = 1 - sqrt(2 - 2*random);
+			  }
 
-  /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(
-    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+			  gridShift[i] = oldGridSpacing[i] * random;
+			  newGridOrigin[i] = oldGridOrigin[i] + gridShift[i];
+		  }
+	  }else if ( this->m_GridShiftStrategy == "OrderedStepNumber" )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+		  newGridOrigin = oldGridOrigin;  
+		  SpacingType newGridSpacing = oldGridSpacing;
 
-  /** If SubtractMean, then subtract things from sff, smm, sfm,
-   * derivativeF and derivativeM.
-   */
-  const RealType N = static_cast< RealType >( this->m_NumberOfPixelsCounted );
-  if( this->m_SubtractMean && this->m_NumberOfPixelsCounted > 0 )
-  {
-    sff -= ( sf * sf / N );
-    smm -= ( sm * sm / N );
-    sfm -= ( sf * sm / N );
+		  if ( this->m_StoredResolutionLevel != m_CurrentResolutionLevel )
+		  {
+			  this->m_StoredResolutionLevel = m_CurrentResolutionLevel;
+			  this->m_IterationCounter = 0;
+			  this->m_ShiftDirection = true;
+			  this->m_ShiftSequence.SetSize( this->m_GridShiftStepNumber+1, FixedImageDimension );
+			  this->m_ReversedShiftSequence.SetSize( this->m_GridShiftStepNumber-1, FixedImageDimension );
 
-    for( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
-    {
-      derivativeF[ i ] -= sf * differential[ i ] / N;
-      derivativeM[ i ] -= sm * differential[ i ] / N;
-    }
+			  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+			  {			  
+				  double unitSpacing = oldGridSpacing[i] / this->m_GridShiftStepNumber;
+				  for( unsigned int j = 0; j <  this->m_GridShiftStepNumber+1; j++ )
+				  {
+					  if( j == 0 )
+					  {
+						  this->m_ShiftSequence[j][i] = oldGridOrigin[i] - oldGridSpacing[i] * 0.5;
+					  }else
+					  {
+						  this->m_ShiftSequence [j][i]= oldGridOrigin[i] - 0.5*oldGridSpacing[i] + unitSpacing*j;
+					  }
+					  if ( j != 0 && j!= this->m_GridShiftStepNumber )
+					  {						  
+						  this->m_ReversedShiftSequence[this->m_GridShiftStepNumber-1-j][i] = this->m_ShiftSequence[j][i];
+					  }
+				  }
+			  }
+		  }
+
+		  unsigned k = this->m_IterationCounter%(this->m_GridShiftStepNumber+1);
+
+		  this->m_IterationCounter++;
+
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {		
+			  if ( this->m_ShiftDirection )
+			  {
+				  newGridOrigin[i] = this->m_ShiftSequence[k][i];
+				  if ( i == FixedImageDimension-1 && k == this->m_GridShiftStepNumber )
+				  {
+					  this->m_ShiftDirection = !this->m_ShiftDirection;
+					  this->m_IterationCounter = 0;
+				  }
+			  }else
+			  {
+				  newGridOrigin[i] = this->m_ReversedShiftSequence[k][i];
+				  if ( i == FixedImageDimension-1 && k == this->m_GridShiftStepNumber - 2 )
+				  {
+					  this->m_ShiftDirection = !this->m_ShiftDirection;
+					  this->m_IterationCounter = 0;
+				  }
+			  }
+		  }
+	  }
   }
 
-  /** The denominator of the value and the derivative. */
-  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
-
-  /** Calculate the value and the derivative. */
-  if( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
-  {
-    value = sfm / denom;
-    for( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
-    {
-      derivative[ i ] = ( derivativeF[ i ] - ( sfm / smm ) * derivativeM[ i ] )
-        / denom;
-    }
+  if ( this->m_UseGridShift == true && this->m_GridShiftStrategy != "")
+  {  
+	  this->m_AdvancedTransform->SetOrigin( newGridOrigin );
   }
-  else
+
+  typedef typename DerivativeType::ValueType        DerivativeValueType;
+  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
+
+  if ( this->m_UseFullPerturbationRange == true && FixedImageDimension == 2 )
   {
-    value = NumericTraits< MeasureType >::Zero;
-    derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
+	  /** Initialize some variables. */
+	  derivative                    = DerivativeType( this->GetNumberOfParameters() );
+	  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+	  value = 0.0;
+
+	  SpacingType shiftBound;
+
+	  if ( this->m_UseFullPerturbationRange == true )
+	  {
+		  this->m_AdvancedTransform->GetOriginAndSpacing( oldGridOrigin, oldGridSpacing );
+
+		  for( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+			  shiftBound[i] = oldGridSpacing[i] / (2 * this->m_PerturbationFactor);
+		  }
+	  }
+	  unsigned long avgFactor = 0;
+	  for ( double xDimension = oldGridOrigin[0]-shiftBound[0]; xDimension <= oldGridOrigin[0]+shiftBound[0]; xDimension++ )
+	  {
+		  for ( double yDimension = oldGridOrigin[1]-shiftBound[1]; yDimension <= oldGridOrigin[1]+shiftBound[1]; yDimension++ )
+		  {
+			  avgFactor++;
+		  }
+	  }
+
+	  for ( double xDimension = oldGridOrigin[0]-shiftBound[0]; xDimension <= oldGridOrigin[0]+shiftBound[0]; xDimension++ )
+	  {
+		  for ( double yDimension = oldGridOrigin[1]-shiftBound[1]; yDimension <= oldGridOrigin[1]+shiftBound[1]; yDimension++ )
+		  {
+			  newGridOrigin[0] = xDimension;
+			  newGridOrigin[1] = yDimension;
+			  this->m_AdvancedTransform->SetOrigin( newGridOrigin );
+
+			  /** Initialize some variables. */
+			  DerivativeType derivativeF = DerivativeType( this->GetNumberOfParameters() );
+			  derivativeF.Fill( NumericTraits< DerivativeValueType >::Zero );
+			  DerivativeType derivativeM = DerivativeType( this->GetNumberOfParameters() );
+			  derivativeM.Fill( NumericTraits< DerivativeValueType >::Zero );
+			  DerivativeType differential = DerivativeType( this->GetNumberOfParameters() );
+			  differential.Fill( NumericTraits< DerivativeValueType >::Zero );
+
+			  /** Array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
+			  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+			  DerivativeType             imageJacobian( nzji.size() );
+			  TransformJacobianType      jacobian;
+
+			  /** Initialize some variables for intermediate results. */
+			  AccumulateType sff = NumericTraits< AccumulateType >::Zero;
+			  AccumulateType smm = NumericTraits< AccumulateType >::Zero;
+			  AccumulateType sfm = NumericTraits< AccumulateType >::Zero;
+			  AccumulateType sf  = NumericTraits< AccumulateType >::Zero;
+			  AccumulateType sm  = NumericTraits< AccumulateType >::Zero;
+
+			  MeasureType tempMeasure = NumericTraits< MeasureType >::Zero;
+			  DerivativeType tempDerivative = DerivativeType( this->GetNumberOfParameters() );
+			  tempDerivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+			  this->m_NumberOfPixelsCounted = 0;
+
+			  /** Call non-thread-safe stuff, such as:
+			  *   this->SetTransformParameters( parameters );
+			  *   this->GetImageSampler()->Update();
+			  * Because of these calls GetValueAndDerivative itself is not thread-safe,
+			  * so cannot be called multiple times simultaneously.
+			  * This is however needed in the CombinationImageToImageMetric.
+			  * In that case, you need to:
+			  * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+			  * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+			  *   calling GetValueAndDerivative
+			  * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+			  * - Now you can call GetValueAndDerivative multi-threaded.
+			  */
+			  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+			  /** Get a handle to the sample container. */
+			  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+
+			  /** Create iterator over the sample container. */
+			  typename ImageSampleContainerType::ConstIterator fiter;
+			  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+			  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
+
+			  /** Loop over the fixed image to calculate the correlation. */
+			  for( fiter = fbegin; fiter != fend; ++fiter )
+			  {
+				  /** Read fixed coordinates and initialize some variables. */
+				  const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+				  RealType                    movingImageValue;
+				  MovingImagePointType        mappedPoint;
+				  MovingImageDerivativeType   movingImageDerivative;
+
+				  /** Transform point and check if it is inside the B-spline support region. */
+				  bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+				  /** Check if point is inside mask. */
+				  if( sampleOk )
+				  {
+					  sampleOk = this->IsInsideMovingMask( mappedPoint );
+				  }
+
+				  /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
+				  * the point is inside the moving image buffer.
+				  */
+				  if( sampleOk )
+				  {
+					  sampleOk = this->EvaluateMovingImageValueAndDerivative(
+						  mappedPoint, movingImageValue, &movingImageDerivative );
+				  }
+
+				  if( sampleOk )
+				  {
+					  this->m_NumberOfPixelsCounted++;
+
+					  /** Get the fixed image value. */
+					  const RealType & fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
+
+					  /** Get the TransformJacobian dT/dmu. */
+					  this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+
+					  /** Compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu). */
+					  this->EvaluateTransformJacobianInnerProduct(
+						  jacobian, movingImageDerivative, imageJacobian );
+
+					  /** Update some sums needed to calculate the value of NC. */
+					  sff += fixedImageValue  * fixedImageValue;
+					  smm += movingImageValue * movingImageValue;
+					  sfm += fixedImageValue  * movingImageValue;
+					  sf  += fixedImageValue;  // Only needed when m_SubtractMean == true
+					  sm  += movingImageValue; // Only needed when m_SubtractMean == true
+
+					  /** Compute this pixel's contribution to the derivative terms. */
+					  this->UpdateDerivativeTerms(
+						  fixedImageValue, movingImageValue, imageJacobian, nzji,
+						  derivativeF, derivativeM, differential );
+
+				  } // end if sampleOk
+
+			  } // end for loop over the image sample container
+
+			  /** Check if enough samples were valid. */
+			  this->CheckNumberOfSamples(
+				  sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+			  /** If SubtractMean, then subtract things from sff, smm, sfm,
+			  * derivativeF and derivativeM.
+			  */
+			  const RealType N = static_cast< RealType >( this->m_NumberOfPixelsCounted );
+			  if( this->m_SubtractMean && this->m_NumberOfPixelsCounted > 0 )
+			  {
+				  sff -= ( sf * sf / N );
+				  smm -= ( sm * sm / N );
+				  sfm -= ( sf * sm / N );
+
+				  for( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+				  {
+					  derivativeF[ i ] -= sf * differential[ i ] / N;
+					  derivativeM[ i ] -= sm * differential[ i ] / N;
+				  }
+			  }
+
+			  /** The denominator of the value and the derivative. */
+			  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+
+			  /** Calculate the value and the derivative. */
+			  if( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
+			  {
+				  tempMeasure = sfm / denom;
+				  for( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+				  {
+					  tempDerivative[ i ] = ( derivativeF[ i ] - ( sfm / smm ) * derivativeM[ i ] )
+						  / denom;
+				  }
+			  }
+			  else
+			  {
+				  tempMeasure = NumericTraits< MeasureType >::Zero;
+				  tempDerivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+			  }
+
+			  if ( this->m_UseFullPerturbationRange == true )
+			  {
+				  value += tempMeasure / avgFactor;
+				  derivative += tempDerivative / avgFactor;
+			  } 
+			  else
+			  {
+				  value = tempMeasure ;
+				  derivative = tempDerivative;
+			  }
+
+		  }
+	  }
+  }else
+  {
+	  /** Initialize some variables. */
+	  derivative                    = DerivativeType( this->GetNumberOfParameters() );
+	  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+	  value = 0.0;
+
+	  /** Initialize some variables. */
+	  DerivativeType derivativeF = DerivativeType( this->GetNumberOfParameters() );
+	  derivativeF.Fill( NumericTraits< DerivativeValueType >::Zero );
+	  DerivativeType derivativeM = DerivativeType( this->GetNumberOfParameters() );
+	  derivativeM.Fill( NumericTraits< DerivativeValueType >::Zero );
+	  DerivativeType differential = DerivativeType( this->GetNumberOfParameters() );
+	  differential.Fill( NumericTraits< DerivativeValueType >::Zero );
+
+	  /** Array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
+	  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+	  DerivativeType             imageJacobian( nzji.size() );
+	  TransformJacobianType      jacobian;
+
+	  /** Initialize some variables for intermediate results. */
+	  AccumulateType sff = NumericTraits< AccumulateType >::Zero;
+	  AccumulateType smm = NumericTraits< AccumulateType >::Zero;
+	  AccumulateType sfm = NumericTraits< AccumulateType >::Zero;
+	  AccumulateType sf  = NumericTraits< AccumulateType >::Zero;
+	  AccumulateType sm  = NumericTraits< AccumulateType >::Zero;
+
+	  MeasureType tempMeasure = NumericTraits< MeasureType >::Zero;
+	  DerivativeType tempDerivative = DerivativeType( this->GetNumberOfParameters() );
+	  tempDerivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+	  this->m_NumberOfPixelsCounted = 0;
+
+	  /** Call non-thread-safe stuff, such as:
+	  *   this->SetTransformParameters( parameters );
+	  *   this->GetImageSampler()->Update();
+	  * Because of these calls GetValueAndDerivative itself is not thread-safe,
+	  * so cannot be called multiple times simultaneously.
+	  * This is however needed in the CombinationImageToImageMetric.
+	  * In that case, you need to:
+	  * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+	  * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+	  *   calling GetValueAndDerivative
+	  * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+	  * - Now you can call GetValueAndDerivative multi-threaded.
+	  */
+	  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+	  /** Get a handle to the sample container. */
+	  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+
+	  /** Create iterator over the sample container. */
+	  typename ImageSampleContainerType::ConstIterator fiter;
+	  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+	  typename ImageSampleContainerType::ConstIterator fend   = sampleContainer->End();
+
+	  /** Loop over the fixed image to calculate the correlation. */
+	  for( fiter = fbegin; fiter != fend; ++fiter )
+	  {
+		  /** Read fixed coordinates and initialize some variables. */
+		  const FixedImagePointType & fixedPoint = ( *fiter ).Value().m_ImageCoordinates;
+		  RealType                    movingImageValue;
+		  MovingImagePointType        mappedPoint;
+		  MovingImageDerivativeType   movingImageDerivative;
+
+		  /** Transform point and check if it is inside the B-spline support region. */
+		  bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+		  /** Check if point is inside mask. */
+		  if( sampleOk )
+		  {
+			  sampleOk = this->IsInsideMovingMask( mappedPoint );
+		  }
+
+		  /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
+		  * the point is inside the moving image buffer.
+		  */
+		  if( sampleOk )
+		  {
+			  sampleOk = this->EvaluateMovingImageValueAndDerivative(
+				  mappedPoint, movingImageValue, &movingImageDerivative );
+		  }
+
+		  if( sampleOk )
+		  {
+			  this->m_NumberOfPixelsCounted++;
+
+			  /** Get the fixed image value. */
+			  const RealType & fixedImageValue = static_cast< RealType >( ( *fiter ).Value().m_ImageValue );
+
+			  /** Get the TransformJacobian dT/dmu. */
+			  this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+
+			  /** Compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu). */
+			  this->EvaluateTransformJacobianInnerProduct(
+				  jacobian, movingImageDerivative, imageJacobian );
+
+			  /** Update some sums needed to calculate the value of NC. */
+			  sff += fixedImageValue  * fixedImageValue;
+			  smm += movingImageValue * movingImageValue;
+			  sfm += fixedImageValue  * movingImageValue;
+			  sf  += fixedImageValue;  // Only needed when m_SubtractMean == true
+			  sm  += movingImageValue; // Only needed when m_SubtractMean == true
+
+			  /** Compute this pixel's contribution to the derivative terms. */
+			  this->UpdateDerivativeTerms(
+				  fixedImageValue, movingImageValue, imageJacobian, nzji,
+				  derivativeF, derivativeM, differential );
+
+		  } // end if sampleOk
+
+	  } // end for loop over the image sample container
+
+	  /** Check if enough samples were valid. */
+	  this->CheckNumberOfSamples(
+		  sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+	  /** If SubtractMean, then subtract things from sff, smm, sfm,
+	  * derivativeF and derivativeM.
+	  */
+	  const RealType N = static_cast< RealType >( this->m_NumberOfPixelsCounted );
+	  if( this->m_SubtractMean && this->m_NumberOfPixelsCounted > 0 )
+	  {
+		  sff -= ( sf * sf / N );
+		  smm -= ( sm * sm / N );
+		  sfm -= ( sf * sm / N );
+
+		  for( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+		  {
+			  derivativeF[ i ] -= sf * differential[ i ] / N;
+			  derivativeM[ i ] -= sm * differential[ i ] / N;
+		  }
+	  }
+
+	  /** The denominator of the value and the derivative. */
+	  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+
+	  /** Calculate the value and the derivative. */
+	  if( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
+	  {
+		  value = sfm / denom;
+		  for( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+		  {
+			  derivative[ i ] = ( derivativeF[ i ] - ( sfm / smm ) * derivativeM[ i ] )
+				  / denom;
+		  }
+	  }
+	  else
+	  {
+		  value = NumericTraits< MeasureType >::Zero;
+		  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+	  }
+  }
+
+  if ( this->m_UseGridShift == true && this->m_GridShiftStrategy != "")
+  {  
+	  this->m_AdvancedTransform->SetOrigin( oldGridOrigin );
   }
 
 } // end GetValueAndDerivativeSingleThreaded()
@@ -512,6 +884,9 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
    */
   this->BeforeThreadedGetValueAndDerivative( parameters );
 
+  /** Initialize some threading related parameters. */
+  this->InitializeThreadingParameters();
+
   /** launch multithreading metric */
   this->LaunchGetValueAndDerivativeThreaderCallback();
 
@@ -535,14 +910,19 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   NonZeroJacobianIndicesType   nzji  = NonZeroJacobianIndicesType( nnzji );
   DerivativeType               imageJacobian( nzji.size() );
 
+  /** Get a handle to a pre-allocated transform Jacobian. */
+  TransformJacobianType & jacobian
+    = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ threadId ].st_TransformJacobian;
+
   /** Get handles to the pre-allocated derivatives for the current thread.
-   * The initialization is performed at the beginning of each resolution in
-   * InitializeThreadingParameters(), and at the end of each iteration in
-   * AfterThreadedGetValueAndDerivative() and the accumulate functions.
+   * Also initialize per thread, instead of sequentially in InitializeThreadingParameters().
    */
   DerivativeType & derivativeF  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ threadId ].st_DerivativeF;
   DerivativeType & derivativeM  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ threadId ].st_DerivativeM;
   DerivativeType & differential = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ threadId ].st_Differential;
+  derivativeF.Fill(  NumericTraits< DerivativeValueType >::Zero ); // seems needed unfortunately
+  derivativeM.Fill(  NumericTraits< DerivativeValueType >::Zero ); // seems needed unfortunately
+  differential.Fill( NumericTraits< DerivativeValueType >::Zero ); // seems needed unfortunately
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer     = this->GetImageSampler()->GetOutput();
@@ -609,18 +989,12 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
       const RealType & fixedImageValue
         = static_cast< RealType >( ( *threader_fiter ).Value().m_ImageValue );
 
-#if 0
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
-#else
-      /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
-      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
-        fixedPoint, movingImageDerivative, imageJacobian, nzji );
-#endif
 
       /** Update some sums needed to calculate the value of NC. */
       sff += fixedImageValue  * fixedImageValue;
@@ -666,9 +1040,6 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   {
     this->m_NumberOfPixelsCounted
       += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
-
-    /** Reset this variable for the next iteration. */
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */
@@ -677,12 +1048,11 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Accumulate values. */
-  const AccumulateType zero = NumericTraits< AccumulateType >::Zero;
-  AccumulateType       sff  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sff;
-  AccumulateType       smm  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Smm;
-  AccumulateType       sfm  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sfm;
-  AccumulateType       sf   = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sf;
-  AccumulateType       sm   = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sm;
+  AccumulateType sff = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sff;
+  AccumulateType smm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Smm;
+  AccumulateType sfm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sfm;
+  AccumulateType sf  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sf;
+  AccumulateType sm  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sm;
   for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
   {
     sff += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sff;
@@ -690,13 +1060,6 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     sfm += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sfm;
     sf  += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sf;
     sm  += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sm;
-
-    /** Reset these variables for the next iteration. */
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sff = zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Smm = zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sfm = zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sf  = zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sm  = zero;
   }
 
   /** If SubtractMean, then subtract things from sff, smm and sfm. */
@@ -715,7 +1078,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   if( denom > -1e-14 )
   {
     value = NumericTraits< MeasureType >::Zero;
-    derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
+    derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
     return;
   }
 
@@ -768,8 +1131,10 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     temp->st_InvertedDenominator = 1.0 / denom;
     temp->st_DerivativePointer   = derivative.begin();
 
-    this->m_Threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
-    this->m_Threader->SingleMethodExecute();
+    typename ThreaderType::Pointer local_threader = ThreaderType::New();
+    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+    local_threader->SetSingleMethod( AccumulateDerivativesThreaderCallback, temp );
+    local_threader->SingleMethodExecute();
 
     delete temp;
   }
@@ -838,25 +1203,23 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   const unsigned int numPar  = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize = static_cast< unsigned int >(
     vcl_ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
+
   unsigned int jmin = threadId * subSize;
   unsigned int jmax = ( threadId + 1 ) * subSize;
   jmax = ( jmax > numPar ) ? numPar : jmax;
 
-  const DerivativeValueType zero = NumericTraits< DerivativeValueType >::Zero;
-  DerivativeValueType       derivativeF, derivativeM, differential;
+  DerivativeValueType derivativeF, derivativeM, differential;
   for( unsigned int j = jmin; j < jmax; ++j )
   {
-    derivativeF = derivativeM = differential = zero;
-    for( ThreadIdType i = 0; i < nrOfThreads; ++i )
+    derivativeF  = temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_DerivativeF[ j ];
+    derivativeM  = temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_DerivativeM[ j ];
+    differential = temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Differential[ j ];
+
+    for( ThreadIdType i = 1; i < nrOfThreads; ++i )
     {
       derivativeF  += temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeF[ j ];
       derivativeM  += temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeM[ j ];
       differential += temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Differential[ j ];
-
-      /** Reset these variables for the next iteration. */
-      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeF[ j ]  = zero;
-      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeM[ j ]  = zero;
-      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Differential[ j ] = zero;
     }
 
     if( subtractMean )

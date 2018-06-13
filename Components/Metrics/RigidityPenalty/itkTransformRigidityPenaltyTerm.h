@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __itkTransformRigidityPenaltyTerm_h
 #define __itkTransformRigidityPenaltyTerm_h
 
@@ -123,21 +119,14 @@ public:
   typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
   typedef typename Superclass::ScalarType                   ScalarType;
 
-  /** Typedef's for the B-spline transform. */
-  typedef typename Superclass::CombinationTransformType       CombinationTransformType;
-  typedef typename Superclass::BSplineOrder1TransformType     BSplineOrder1TransformType;
-  typedef typename Superclass::BSplineOrder1TransformPointer  BSplineOrder1TransformPointer;
-  typedef typename Superclass::BSplineOrder2TransformType     BSplineOrder2TransformType;
-  typedef typename Superclass::BSplineOrder2TransformPointer  BSplineOrder2TransformPointer;
-  typedef typename Superclass::BSplineOrder3TransformType     BSplineOrder3TransformType;
-  typedef typename Superclass::BSplineOrder3TransformPointer  BSplineOrder3TransformPointer;
-
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType  JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType             SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::SpatialJacobianType SpatialJacobianType;
+  typedef typename Superclass
+    ::JacobianOfSpatialJacobianType JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType SpatialHessianType;
+  typedef typename Superclass
+    ::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
@@ -148,18 +137,21 @@ public:
   virtual void Initialize( void ) throw ( ExceptionObject );
 
   /** Typedef's for B-spline transform. */
-  typedef BSplineOrder3TransformType                 BSplineTransformType;
+  typedef AdvancedBSplineDeformableTransform< ScalarType,
+    FixedImageDimension, 3 >                            BSplineTransformType;
   typedef typename BSplineTransformType::Pointer     BSplineTransformPointer;
   typedef typename BSplineTransformType::SpacingType GridSpacingType;
   typedef typename BSplineTransformType::ImageType   CoefficientImageType;
   typedef typename CoefficientImageType::Pointer     CoefficientImagePointer;
   typedef typename CoefficientImageType::SpacingType CoefficientImageSpacingType;
+  typedef AdvancedCombinationTransform< ScalarType,
+    FixedImageDimension >                               CombinationTransformType;
 
   /** Typedef support for neighborhoods, filters, etc. */
   typedef Neighborhood< ScalarType,
     itkGetStaticConstMacro( FixedImageDimension ) >     NeighborhoodType;
-  typedef typename NeighborhoodType::SizeType           NeighborhoodSizeType;
-  typedef ImageRegionIterator< CoefficientImageType >   CoefficientImageIteratorType;
+  typedef typename NeighborhoodType::SizeType         NeighborhoodSizeType;
+  typedef ImageRegionIterator< CoefficientImageType > CoefficientImageIteratorType;
   typedef NeighborhoodOperatorImageFilter<
     CoefficientImageType, CoefficientImageType >        NOIFType;
   typedef NeighborhoodIterator< CoefficientImageType >  NeighborhoodIteratorType;
@@ -315,11 +307,11 @@ private:
   virtual void DilateRigidityImages( void );
 
   /** Private function used for the filtering. It creates 1D separable operators F. */
-  void Create1DOperator( NeighborhoodType & F, const std::string & whichF,
+  void Create1DOperator( NeighborhoodType & F, const std::string WhichF,
     const unsigned int WhichDimension, const CoefficientImageSpacingType & spacing ) const;
 
   /** Private function used for the filtering. It creates ND inseparable operators F. */
-  void CreateNDOperator( NeighborhoodType & F, const std::string & whichF,
+  void CreateNDOperator( NeighborhoodType & F, const std::string WhichF,
     const CoefficientImageSpacingType & spacing ) const;
 
   /** Private function used for the filtering. It performs 1D separable filtering. */

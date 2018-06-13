@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #include "elxElastixBase.h"
 #include <sstream>
 #include "itkMersenneTwisterRandomVariateGenerator.h"
@@ -65,9 +61,8 @@ ElastixBase::ElastixBase()
   this->m_InitialTransform = 0;
   this->m_FinalTransform   = 0;
 
-  /** From Elastix 4.3 to 4.7: Ignore direction cosines by default, for
-   * backward compatability. From Elastix 4.8: set it to true by default.*/
-  this->m_UseDirectionCosines = true;
+  /** Ignore direction cosines by default, for backward compatability. */
+  this->m_UseDirectionCosines = false;
 
 } // end Constructor
 
@@ -153,6 +148,7 @@ ElastixBase::BeforeAllBase( void )
    * This check has already been performed in elastix.cxx,
    * Here we do it again. MS: WHY?
    */
+  check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
   if( check == "" )
   {
@@ -189,6 +185,7 @@ ElastixBase::BeforeAllBase( void )
   bool         loop = true;
   while( loop )
   {
+    check = "";
     std::ostringstream tempPname( "" );
     tempPname << "-p(" << i << ")";
     check = this->GetConfiguration()->GetCommandLineArgument( tempPname.str().c_str() );
@@ -199,6 +196,7 @@ ElastixBase::BeforeAllBase( void )
 
   /** Check for appearance of "-priority", if this is a Windows station. */
 #ifdef _WIN32
+  check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-priority" );
   if( check == "" )
   {
@@ -211,6 +209,7 @@ ElastixBase::BeforeAllBase( void )
 #endif
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
+  check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
   if( check == "" )
   {
@@ -222,15 +221,15 @@ ElastixBase::BeforeAllBase( void )
   }
 
   /** Check the very important UseDirectionCosines parameter. */
-  this->m_UseDirectionCosines = true;
+  this->m_UseDirectionCosines = false;
   bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines,
     "UseDirectionCosines", 0 );
   if( !retudc )
   {
     xl::xout[ "warning" ]
-      << "\nWARNING: The option \"UseDirectionCosines\" was not found in your parameter file.\n"
-      << "  From elastix 4.8 it defaults to true!\n"
-      << "This may change the behavior of your registrations considerably.\n"
+      << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
+      << "the UseDirectionCosines option to your parameter file! See\n"
+      << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n"
       << std::endl;
   }
 
@@ -270,6 +269,7 @@ ElastixBase::BeforeAllTransformixBase( void )
 
   /** Check Command line options and print them to the logfile. */
   elxout << "Command line options from ElastixBase:" << std::endl;
+  std::string check = "";
 #ifndef _ELASTIX_BUILD_LIBRARY
   /** Read the input image filenames. These are not obliged options,
    * so do not print an error if they are not present.
@@ -285,7 +285,7 @@ ElastixBase::BeforeAllTransformixBase( void )
   }
 #endif
   /** Check for appearance of "-out". */
-  std::string check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
+  check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
   if( check == "" )
   {
     xl::xout[ "error" ] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
@@ -304,6 +304,7 @@ ElastixBase::BeforeAllTransformixBase( void )
   }
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
+  check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
   if( check == "" )
   {
@@ -377,12 +378,14 @@ ElastixBase::GenerateFileNameContainer(
   bool printerrors, bool printinfo ) const
 {
   FileNameContainerPointer fileNameContainer = FileNameContainerType::New();
+  std::string              check             = "";
+  std::string              argused( "" );
 
   /** Try optionkey0. */
   std::ostringstream argusedss( "" );
   argusedss << optionkey << 0;
-  std::string argused = argusedss.str();
-  std::string check   = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
+  argused = argusedss.str();
+  check   = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
   if( check == "" )
   {
     /** Try optionkey. */
@@ -449,7 +452,7 @@ ElastixBase::GenerateFileNameContainer(
         ++i;
       }
     } // end while
-  } // end if
+  }   // end if
 
   return fileNameContainer;
 

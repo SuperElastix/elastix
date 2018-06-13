@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h
 #define __itkAdvancedNormalizedCorrelationImageToImageMetric_h
 
@@ -154,6 +150,8 @@ public:
     Superclass::MovingImageDerivativeScalesType MovingImageDerivativeScalesType;
   typedef typename Superclass::ThreaderType   ThreaderType;
   typedef typename Superclass::ThreadInfoType ThreadInfoType;
+  typedef typename Superclass::SpacingType    SpacingType;
+  typedef typename Superclass::OriginType     OriginType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -188,6 +186,9 @@ public:
   itkSetMacro( SubtractMean, bool );
   itkGetConstReferenceMacro( SubtractMean, bool );
   itkBooleanMacro( SubtractMean );
+
+  /** CurrentResolutionLevel */
+  itkSetMacro( CurrentResolutionLevel, unsigned int );
 
 protected:
 
@@ -244,6 +245,7 @@ private:
   void operator=( const Self & );                                  // purposely not implemented
 
   mutable bool m_SubtractMean;
+  unsigned int m_CurrentResolutionLevel;
 
   typedef typename NumericTraits< MeasureType >::AccumulateType AccumulateType;
 
@@ -263,15 +265,16 @@ private:
 
   struct CorrelationGetValueAndDerivativePerThreadStruct
   {
-    SizeValueType  st_NumberOfPixelsCounted;
-    AccumulateType st_Sff;
-    AccumulateType st_Smm;
-    AccumulateType st_Sfm;
-    AccumulateType st_Sf;
-    AccumulateType st_Sm;
-    DerivativeType st_DerivativeF;
-    DerivativeType st_DerivativeM;
-    DerivativeType st_Differential;
+    SizeValueType         st_NumberOfPixelsCounted;
+    AccumulateType        st_Sff;
+    AccumulateType        st_Smm;
+    AccumulateType        st_Sfm;
+    AccumulateType        st_Sf;
+    AccumulateType        st_Sm;
+    DerivativeType        st_DerivativeF;
+    DerivativeType        st_DerivativeM;
+    DerivativeType        st_Differential;
+    TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, CorrelationGetValueAndDerivativePerThreadStruct,
     PaddedCorrelationGetValueAndDerivativePerThreadStruct );
