@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __transformixlib_h
 #define __transformixlib_h
 
@@ -23,7 +19,29 @@
  */
 #include <itkDataObject.h>
 #include "itkParameterFileParser.h"
-#include "elxMacro.h"
+
+/********************************************************************************
+ *                    *
+ *      Dll export    *
+ *                    *
+ ********************************************************************************/
+#if ( defined( _WIN32 ) || defined( WIN32 ) )
+#  ifdef _ELASTIX_BUILD_LIBRARY
+#    ifdef _ELASTIX_BUILD_SHARED_LIBRARY
+#      define TRANSFORMIXLIB_API __declspec( dllexport )
+#    else
+#      define TRANSFORMIXLIB_API __declspec( dllimport )
+#    endif
+#  else
+#    define TRANSFORMIXLIB_API __declspec( dllexport )
+#  endif
+#else
+#  if __GNUC__ >= 4
+#    define TRANSFORMIXLIB_API __attribute__ ( ( visibility( "default" ) ) )
+#  else
+#    define TRANSFORMIXLIB_API
+#  endif
+#endif
 
 /********************************************************************************
  *                          *
@@ -33,7 +51,7 @@
 namespace transformix
 {
 
-class ELASTIXLIB_API TRANSFORMIX
+class TRANSFORMIXLIB_API TRANSFORMIX
 {
 public:
 
@@ -74,10 +92,6 @@ public:
 
   /** Getter for result image. */
   ImagePointer GetResultImage( void );
-
-  std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 0 );
-
-  std::string GetCurrentDateAndTime( void );
 
 private:
 

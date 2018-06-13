@@ -1,21 +1,4 @@
 /*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
-/*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkCenteredTransformInitializer2.h,v $
@@ -37,7 +20,7 @@
 #include "itkObject.h"
 #include "itkObjectFactory.h"
 #include "itkSpatialObject.h"
-#include "itkAdvancedImageMomentsCalculator.h"
+#include "itkImageMomentsCalculator.h"
 
 #include <iostream>
 
@@ -88,7 +71,9 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template< class TTransform, class TFixedImage, class TMovingImage >
+template < class TTransform,
+           class TFixedImage,
+           class TMovingImage >
 class CenteredTransformInitializer2 : public Object
 {
 public:
@@ -110,33 +95,34 @@ public:
   typedef typename TransformType::Pointer TransformPointer;
 
   /** Dimension of parameters. */
-  itkStaticConstMacro( InputSpaceDimension, unsigned int,
-    TransformType::InputSpaceDimension );
-  itkStaticConstMacro( OutputSpaceDimension, unsigned int,
-    TransformType::OutputSpaceDimension );
+  itkStaticConstMacro(InputSpaceDimension, unsigned int,
+                      TransformType::InputSpaceDimension);
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int,
+                      TransformType::OutputSpaceDimension);
 
   /** Image Types to use in the initialization of the transform */
   typedef TFixedImage  FixedImageType;
   typedef TMovingImage MovingImageType;
 
-  typedef typename FixedImageType::ConstPointer  FixedImagePointer;
-  typedef typename MovingImageType::ConstPointer MovingImagePointer;
+  typedef typename FixedImageType::ConstPointer   FixedImagePointer;
+  typedef typename MovingImageType::ConstPointer  MovingImagePointer;
 
-  typedef Image< unsigned char, InputSpaceDimension >  FixedImageMaskType;
-  typedef Image< unsigned char, OutputSpaceDimension > MovingImageMaskType;
-  typedef typename FixedImageMaskType::ConstPointer    FixedImageMaskPointer;
-  typedef typename MovingImageMaskType::ConstPointer   MovingImageMaskPointer;
+  typedef Image< unsigned char, InputSpaceDimension >   FixedImageMaskType;
+  typedef Image< unsigned char, OutputSpaceDimension >  MovingImageMaskType;
+  typedef typename FixedImageMaskType::ConstPointer   FixedImageMaskPointer;
+  typedef typename MovingImageMaskType::ConstPointer  MovingImageMaskPointer;
 
   /** Moment calculators */
-  typedef AdvancedImageMomentsCalculator< FixedImageType >
-    FixedImageCalculatorType;
-  typedef AdvancedImageMomentsCalculator< MovingImageType >
-    MovingImageCalculatorType;
+  typedef ImageMomentsCalculator< FixedImageType >
+                                                 FixedImageCalculatorType;
+  typedef ImageMomentsCalculator< MovingImageType >
+                                                 MovingImageCalculatorType;
 
   typedef typename FixedImageCalculatorType::Pointer
-    FixedImageCalculatorPointer;
+                                                 FixedImageCalculatorPointer;
   typedef typename MovingImageCalculatorType::Pointer
-    MovingImageCalculatorPointer;
+                                                 MovingImageCalculatorPointer;
+
 
   /** Offset type. */
   typedef typename TransformType::OffsetType OffsetType;
@@ -146,8 +132,6 @@ public:
 
   /** Vector type. */
   typedef typename TransformType::OutputVectorType OutputVectorType;
-
-  typedef typename FixedImageType::PixelType  InputPixelType;
 
   /** Set the transform to be initialized */
   itkSetObjectMacro( Transform,   TransformType   );
@@ -162,11 +146,6 @@ public:
   itkSetConstObjectMacro( FixedImageMask, FixedImageMaskType  );
   itkSetConstObjectMacro( MovingImageMask, MovingImageMaskType );
 
-  /** Settings for MomentsCalculator. */
-  itkSetMacro( NumberOfSamplesForCenteredTransformInitialization, SizeValueType );
-  itkSetMacro( LowerThresholdForCenterGravity, InputPixelType );
-  itkSetMacro( CenterOfGravityUsesLowerThreshold, bool );
-
   /** Initialize the transform using data from the images */
   virtual void InitializeTransform();
 
@@ -176,24 +155,18 @@ public:
   void MomentsOn()     { m_UseMoments = true; m_UseOrigins = false; m_UseTop = false; }
   void OriginsOn()     { m_UseMoments = false; m_UseOrigins = true; m_UseTop = false; }
   void GeometryTopOn() { m_UseMoments = false; m_UseOrigins = false; m_UseTop = true; }
-
+ 
   /** Get() access to the moments calculators */
   itkGetConstObjectMacro( FixedCalculator,  FixedImageCalculatorType  );
   itkGetConstObjectMacro( MovingCalculator, MovingImageCalculatorType );
 
 protected:
-
   CenteredTransformInitializer2();
   ~CenteredTransformInitializer2() {}
 
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
   itkGetObjectMacro( Transform, TransformType );
-
-  /** Settings for MomentsCalculator. */
-  SizeValueType  m_NumberOfSamplesForCenteredTransformInitialization;
-  InputPixelType m_LowerThresholdForCenterGravity;
-  bool           m_CenterOfGravityUsesLowerThreshold;
 
 private:
 

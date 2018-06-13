@@ -1,56 +1,53 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __itkGradientDescentOptimizer2_h
 #define __itkGradientDescentOptimizer2_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 #include "itkMultiThreader.h"
+#include "itkMersenneTwisterRandomVariateGenerator.h"
 
 namespace itk
 {
 
 /** \class GradientDescentOptimizer2
- * \brief Implement a gradient descent optimizer
- *
- * GradientDescentOptimizer2 implements a simple gradient descent optimizer.
- * At each iteration the current position is updated according to
- *
- * \f[
- *        p_{n+1} = p_n
- *                + \mbox{learningRate}
-                  \, \frac{\partial f(p_n) }{\partial p_n}
- * \f]
- *
- * The learning rate is a fixed scalar defined via SetLearningRate().
- * The optimizer steps through a user defined number of iterations;
- * no convergence checking is done.
- *
- * Additionally, user can scale each component of the \f$\partial f / \partial p\f$
- * but setting a scaling vector using method SetScale().
- *
- * The difference of this class with the itk::GradientDescentOptimizer
- * is that it's based on the ScaledSingleValuedNonLinearOptimizer
- *
- * \sa ScaledSingleValuedNonLinearOptimizer
- *
- * \ingroup Numerics Optimizers
- */
-
+* \brief Implement a gradient descent optimizer
+*
+* GradientDescentOptimizer2 implements a simple gradient descent optimizer.
+* At each iteration the current position is updated according to
+*
+* \f[
+*        p_{n+1} = p_n
+*                + \mbox{learningRate}
+\, \frac{\partial f(p_n) }{\partial p_n}
+* \f]
+*
+* The learning rate is a fixed scalar defined via SetLearningRate().
+* The optimizer steps through a user defined number of iterations;
+* no convergence checking is done.
+*
+* Additionally, user can scale each component of the \f$\partial f / \partial p\f$
+* but setting a scaling vector using method SetScale().
+*
+* The difference of this class with the itk::GradientDescentOptimizer
+* is that it's based on the ScaledSingleValuedNonLinearOptimizer
+*
+* \sa ScaledSingleValuedNonLinearOptimizer
+*
+* \ingroup Numerics Optimizers
+*/
 class GradientDescentOptimizer2 :
   public ScaledSingleValuedNonLinearOptimizer
 {
@@ -76,8 +73,11 @@ public:
   typedef Superclass::ScalesType                ScalesType;
   typedef Superclass::ScaledCostFunctionType    ScaledCostFunctionType;
   typedef Superclass::ScaledCostFunctionPointer ScaledCostFunctionPointer;
+  
+  /** Random generator. */
+  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
 
-  /** Codes of stopping conditions
+    /** Codes of stopping conditions
    * The MinimumStepSize stopcondition never occurs, but may
    * be implemented in inheriting classes */
   typedef enum {
@@ -93,14 +93,14 @@ public:
   virtual void StartOptimization( void );
 
   /** Resume previously stopped optimization with current parameters
-   * \sa StopOptimization. */
+  * \sa StopOptimization. */
   virtual void ResumeOptimization( void );
 
-  /** Stop optimization and pass on exception. */
+  /** Stop optimisation and pass on exception. */
   virtual void MetricErrorResponse( ExceptionObject & err );
 
   /** Stop optimization.
-   * \sa ResumeOptimization */
+  * \sa ResumeOptimization */
   virtual void StopOptimization( void );
 
   /** Set the learning rate. */
@@ -127,9 +127,6 @@ public:
   /** Get current gradient. */
   itkGetConstReferenceMacro( Gradient, DerivativeType );
 
-  /** Get current search direction */
-  itkGetConstReferenceMacro( SearchDirection, DerivativeType );
-
   /** Set the number of threads. */
   void SetNumberOfThreads( ThreadIdType numberOfThreads )
   {
@@ -139,8 +136,18 @@ public:
 
   //itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
   itkSetMacro( UseMultiThread, bool );
+
   itkSetMacro( UseOpenMP, bool );
   itkSetMacro( UseEigen, bool );
+
+  itkSetMacro( RandomizedSmoothingStrategy, std::string );
+  itkSetMacro( RandomQueryNumber, unsigned int );
+  itkSetMacro( RandomizedSmoothingFactor, double );
+  itkSetMacro( UseDecreasingPerturbation, bool );
+  itkSetMacro( DecreasingFunctionType, std::string );
+  itkSetMacro( DecreasingConstant, float );
+  itkSetMacro( UseFullPerturbationRangeRS, bool );
+  itkSetMacro( PerturbationFactor, unsigned int );
 
 protected:
 
@@ -152,10 +159,10 @@ protected:
   typedef itk::MultiThreader             ThreaderType;
   typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
 
+
   // made protected so subclass can access
   double            m_Value;
   DerivativeType    m_Gradient;
-  DerivativeType    m_SearchDirection;
   double            m_LearningRate;
   StopConditionType m_StopCondition;
 
@@ -164,6 +171,17 @@ protected:
   bool          m_Stop;
   unsigned long m_NumberOfIterations;
   unsigned long m_CurrentIteration;
+
+  bool                                               m_UseRandomizedSmoothing;
+  std::string                                        m_RandomizedSmoothingStrategy;
+  unsigned int                                       m_RandomQueryNumber;
+  double                                             m_RandomizedSmoothingFactor;
+  bool                                               m_UseDecreasingPerturbation;
+  RandomGeneratorType::Pointer                       m_RandomGenerator;
+  std::string                                        m_DecreasingFunctionType;
+  float                                              m_DecreasingConstant;
+  bool                                               m_UseFullPerturbationRangeRS;
+  unsigned int                                       m_PerturbationFactor;
 
 private:
 

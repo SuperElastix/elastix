@@ -1,25 +1,21 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxVarianceOverLastDimensionMetric_HXX__
 #define __elxVarianceOverLastDimensionMetric_HXX__
 
 #include "elxVarianceOverLastDimensionMetric.h"
-#include "itkTimeProbe.h"
 
 namespace elastix
 {
@@ -33,52 +29,14 @@ void
 VarianceOverLastDimensionMetric< TElastix >
 ::Initialize( void ) throw ( itk::ExceptionObject )
 {
-  itk::TimeProbe timer;
-  timer.Start();
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
   this->Superclass1::Initialize();
-  timer.Stop();
+  timer->StopTimer();
   elxout << "Initialization of VarianceOverLastDimensionMetric metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-} // end Initialize()
-
-
-/**
- * ***************** BeforeRegistration ***********************
- */
-
-template< class TElastix >
-void
-VarianceOverLastDimensionMetric< TElastix >
-::BeforeRegistration( void )
-{
-  /** Check that the direction cosines are structured like
-   *       [ dc  dc  0 ]
-   *  dc = [ dc  dc  0 ]
-   *       [  0   0  1 ]
-   */
-  typedef typename FixedImageType::DirectionType DirectionType;
-  DirectionType dc = this->GetElastix()->GetFixedImage()->GetDirection();
-
-  bool dcValid = true;
-  for( unsigned int i = 0; i < FixedImageDimension - 1; ++i )
-  {
-    dcValid &= ( dc[ FixedImageDimension - 1 ][ i ] == 0 );
-    dcValid &= ( dc[ i ][ FixedImageDimension - 1 ] == 0 );
-  }
-  dcValid &= ( dc[ FixedImageDimension - 1 ][ FixedImageDimension - 1 ] == 1 );
-
-  if( !dcValid )
-  {
-    itkExceptionMacro( << "\nERROR: the direction cosines matrix of the fixed image is invalid!\n\n"
-                       << "  The VarianceOverLastDimensionMetric expects the last dimension to represent\n"
-                       << "  time and therefore requires a direction cosines matrix of the form:\n"
-                       << "       [ . . 0 ]\n"
-                       << "  dc = [ . . 0 ]\n"
-                       << "       [ 0 0 1 ]" );
-  }
-
-} // end BeforeRegistration()
+}   // end Initialize
 
 
 /**
@@ -112,7 +70,7 @@ VarianceOverLastDimensionMetric< TElastix >
     "NumSamplesLastDimension", this->GetComponentLabel(), level, 0 );
   this->SetNumSamplesLastDimension( numSamplesLastDimension );
 
-  /** Get and set the number of additional samples sampled at the fixed time point.  */
+  /** Get and set the number of additional samples sampled at the fixed timepoint.  */
   unsigned int numAdditionalSamplesFixed = 0;
   this->GetConfiguration()->ReadParameter( numAdditionalSamplesFixed,
     "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0 );
@@ -124,6 +82,24 @@ VarianceOverLastDimensionMetric< TElastix >
     reducedDimensionIndex, "ReducedDimensionIndex",
     this->GetComponentLabel(), 0, 0 );
   this->SetReducedDimensionIndex( reducedDimensionIndex );
+
+  /** Set moving image derivative scales. */
+  this->SetUseMovingImageDerivativeScales( false );
+  MovingImageDerivativeScalesType movingImageDerivativeScales;
+  bool                            usescales = true;
+  for( unsigned int i = 0; i < MovingImageDimension; ++i )
+  {
+    usescales = usescales && this->GetConfiguration()->ReadParameter(
+      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+      this->GetComponentLabel(), i, -1, true );
+  }
+  if( usescales )
+  {
+    this->SetUseMovingImageDerivativeScales( true );
+    this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
+    elxout << "Multiplying moving image derivatives by: "
+           << movingImageDerivativeScales << std::endl;
+  }
 
   /** Check if this transform is a B-spline transform. */
   CombinationTransformType * testPtr1
@@ -163,7 +139,7 @@ VarianceOverLastDimensionMetric< TElastix >
     }
   }
 
-} // end BeforeEachResolution()
+}   // end BeforeEachResolution
 
 
 } // end namespace elastix

@@ -1,25 +1,21 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxMultiMetricMultiResolutionRegistration_HXX__
 #define __elxMultiMetricMultiResolutionRegistration_HXX__
 
 #include "elxMultiMetricMultiResolutionRegistration.h"
-#include "itkTimeProbe.h"
 
 namespace elastix
 {
@@ -102,7 +98,7 @@ MultiMetricMultiResolutionRegistration< TElastix >
     std::ostringstream makestring3;
     makestring3 << "Time" << std::setfill( '0' ) << std::setw( width ) << i << "[ms]";
     xout[ "iteration" ].AddTargetCell( makestring3.str().c_str() );
-    xl::xout[ "iteration" ][ makestring3.str().c_str() ] << std::showpoint << std::fixed << std::setprecision( 1 );
+    xl::xout[ "iteration" ][ makestring3.str().c_str() ] << std::showpoint << std::fixed;
   }
 
   /** Temporary? Use the multi-threaded version or not. */
@@ -397,8 +393,8 @@ MultiMetricMultiResolutionRegistration< TElastix >
     nrOfFixedMasks, "Fixed", level );
 
   /** Create and start timer, to time the whole mask configuration procedure. */
-  itk::TimeProbe timer;
-  timer.Start();
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
 
   /** Now set the masks. */
   if( ( ( nrOfFixedImages == 1 ) || ( nrOfFixedMasks == 0 ) )
@@ -455,9 +451,9 @@ MultiMetricMultiResolutionRegistration< TElastix >
   } // end else
 
   /** Stop timer and print the elapsed time. */
-  timer.Stop();
+  timer->StopTimer();
   elxout << "Setting the fixed masks took: "
-         << static_cast< long >( timer.GetMean() * 1000 )
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
          << " ms." << std::endl;
 
 } // end UpdateFixedMasks()
@@ -495,8 +491,8 @@ MultiMetricMultiResolutionRegistration< TElastix >
     nrOfMovingMasks, "Moving", level );
 
   /** Create and start timer, to time the whole mask configuration procedure. */
-  itk::TimeProbe timer;
-  timer.Start();
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
 
   /** Now set the masks. */
   if( ( ( nrOfMovingImages == 1 ) || ( nrOfMovingMasks == 0 ) )
@@ -553,9 +549,9 @@ MultiMetricMultiResolutionRegistration< TElastix >
   } // end else
 
   /** Stop timer and print the elapsed time. */
-  timer.Stop();
+  timer->StopTimer();
   elxout << "Setting the moving masks took: "
-         << static_cast< long >( timer.GetMean() * 1000 )
+         << static_cast< long >( timer->GetElapsedClockSec() * 1000 )
          << " ms." << std::endl;
 
 } // end UpdateMovingMasks()

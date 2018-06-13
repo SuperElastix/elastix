@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 /** This file is a slightly modified version of an ITK file.
  * Original ITK copyright message: */
@@ -96,7 +92,7 @@ ImageMaskSpatialObject2< TDimension >
   }
 
   const bool insideMask
-    = ( this->GetImage()->GetPixel( index ) != NumericTraits< PixelType >::ZeroValue() );
+    = ( this->GetImage()->GetPixel( index ) != NumericTraits< PixelType >::Zero );
 
   return insideMask;
 
@@ -165,13 +161,6 @@ ImageMaskSpatialObject2< TDimension >
 
   ImagePointer image        = this->GetImage();
   PixelType    outsideValue = NumericTraits< PixelType >::Zero;
-
-  // Initialize index and size in case image only consists of background values.
-  for( unsigned int axis = 0; axis < ImageType::ImageDimension; ++axis )
-  {
-    index[ axis ] = 0;
-    size[ axis ] = 0;
-  }
 
   /** For 3D a smart implementation existed in the ITK already. */
   if( ImageType::ImageDimension == 3 )

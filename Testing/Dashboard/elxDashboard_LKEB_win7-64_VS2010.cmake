@@ -29,32 +29,28 @@ set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/bin_VS2010 )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
-set( dashboard_model Nightly )
-if( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
-  set( dashboard_model Experimental )
-elseif( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
-  set( dashboard_model Continuous )
-endif()
+SET( dashboard_model Nightly )
+IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  SET( dashboard_model Experimental )
+ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  SET( dashboard_model Continuous )
+ENDIF()
 
-set( dashboard_cache "
+# CUDA does not support MSVC 2010 compiler
+# nvcc fatal: nvcc cannot find a supported cl version. Only MSVC 8.0 and MSVC 9.0 are supported
+SET( dashboard_cache "
 // Which ITK to use:
 ITK_DIR:PATH=D:/toolkits/ITK/git/binVS2010
 
 // Some elastix settings, defining the configuration:
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
-ELASTIX_USE_EIGEN:BOOL=OFF
-ELASTIX_USE_OPENCL:BOOL=OFF
+ELASTIX_USE_CUDA:BOOL=OFF
 ELASTIX_USE_MEVISDICOMTIFF:BOOL=OFF
 ELASTIX_IMAGE_DIMENSIONS:STRING=2;3;4
 ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_3D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_4D_PIXELTYPES:STRING=short
-
-// Eigen and OpenCL
-OPENCL_INCLUDE_DIRS:PATH=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v6.0/include
-OPENCL_LIBRARIES:FILEPATH=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v6.0/lib/x64/OpenCL.lib
-OPENCL_USE_NVIDIA_SDK:BOOL=ON
 
 // Compile all elastix components:
 USE_ALL_COMPONENTS:BOOL=ON

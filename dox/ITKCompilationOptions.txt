@@ -1,4 +1,0 @@
-elastix 4.9 compiles with ITK 4.13.0 compiled with the default options.
-
-
-Optionally use ITK_USE_64BITS_IDS and ITK_LEGACY_REMOVE.

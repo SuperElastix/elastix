@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #ifndef __elxWeightedCombinationTransform_HXX_
 #define __elxWeightedCombinationTransform_HXX_
@@ -35,7 +31,7 @@ WeightedCombinationTransformElastix< TElastix >
   this->m_WeightedCombinationTransform
     = WeightedCombinationTransformType::New();
   this->SetCurrentTransform( this->m_WeightedCombinationTransform );
-} // end Constructor
+}   // end Constructor
 
 
 /*
@@ -60,7 +56,7 @@ WeightedCombinationTransformElastix< TElastix >
   /** Set the scales. */
   this->SetScales();
 
-} // end BeforeRegistration
+}   // end BeforeRegistration
 
 
 /**
@@ -96,7 +92,7 @@ WeightedCombinationTransformElastix< TElastix >
   this->m_Registration->GetAsITKBaseType()->
   SetInitialTransformParameters( this->GetParameters() );
 
-} // end InitializeTransform
+}   // end InitializeTransform
 
 
 /**
@@ -120,7 +116,7 @@ WeightedCombinationTransformElastix< TElastix >
   /** Call the ReadFromFile from the TransformBase to read in the parameters.  */
   this->Superclass2::ReadFromFile();
 
-} // end ReadFromFile()
+}   // end ReadFromFile()
 
 
 /**
@@ -154,7 +150,7 @@ WeightedCombinationTransformElastix< TElastix >
   }
   xout[ "transpar" ] << ")" << std::endl;
 
-} // end WriteToFile()
+}   // end WriteToFile()
 
 
 /**
@@ -206,14 +202,14 @@ WeightedCombinationTransformElastix< TElastix >
                          << " has not been set properly." );
     }
 
-  } // end else: no automaticScalesEstimation
+  }   // end else: no automaticScalesEstimation
 
   elxout << "Scales for transform parameters are: " << newscales << std::endl;
 
   /** And set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
 
-} // end SetScales()
+}   // end SetScales()
 
 
 /**
@@ -226,6 +222,7 @@ WeightedCombinationTransformElastix< TElastix >
 ::LoadSubTransforms( void )
 {
   /** Typedef's from ComponentDatabase. */
+  typedef typename Superclass2::ComponentDatabaseType    ComponentDatabaseType;
   typedef typename Superclass2::ComponentDescriptionType ComponentDescriptionType;
   typedef typename Superclass2::PtrToCreator             PtrToCreator;
   typedef typename Superclass2::ObjectType               ObjectType;
@@ -315,7 +312,7 @@ WeightedCombinationTransformElastix< TElastix >
   /** Set the subTransforms in the WeightedCombination object. */
   this->m_WeightedCombinationTransform->SetTransformContainer( subTransforms );
 
-} // end LoadSubTransforms()
+}   // end LoadSubTransforms()
 
 
 } // end namespace elastix

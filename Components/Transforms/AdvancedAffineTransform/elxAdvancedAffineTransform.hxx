@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #ifndef __elxAdvancedAffineTransform_HXX_
 #define __elxAdvancedAffineTransform_HXX_
@@ -22,8 +18,6 @@
 #include "elxAdvancedAffineTransform.h"
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
-
-#include "itkTimeProbe.h"
 
 namespace elastix
 {
@@ -51,17 +45,8 @@ void
 AdvancedAffineTransformElastix< TElastix >
 ::BeforeRegistration( void )
 {
-  /** Total time. */
-  itk::TimeProbe timer1;
-  timer1.Start();
-
   /** Task 1 - Set initial parameters. */
   this->InitializeTransform();
-
-  /** Print the elapsed time. */
-  timer1.Stop();
-  elxout << "InitializeTransform took "
-    << this->ConvertSecondsToDHMS(timer1.GetMean(), 2) << std::endl;
 
   /** Task 2 - Set the scales. */
   this->SetScales();
@@ -80,13 +65,14 @@ AdvancedAffineTransformElastix< TElastix >
 {
   InputPointType centerOfRotationPoint;
   centerOfRotationPoint.Fill( 0.0 );
+  bool pointRead = false;
   bool indexRead = false;
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
    */
-  bool pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
+  pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
 
   /** If this did not succeed, probably a transform parameter file
    * is trying to be read that was generated using an older elastix
@@ -160,9 +146,9 @@ AdvancedAffineTransformElastix< TElastix >
   const ParametersType & param,
   ParameterMapType * paramsMap ) const
 {
-  std::ostringstream         tmpStream;
   std::string                parameterName;
   std::vector< std::string > parameterValues;
+  char                       tmpValue[ 256 ];
 
   /** Call the CreateTransformParametersMap from the TransformBase. */
   this->Superclass2::CreateTransformParametersMap( param, paramsMap );
@@ -172,11 +158,10 @@ AdvancedAffineTransformElastix< TElastix >
   parameterName = "CenterOfRotationPoint";
   for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    tmpStream.str( "" ); tmpStream << rotationPoint[ i ];
-    parameterValues.push_back( tmpStream.str() );
+    sprintf( tmpValue, "%.10lf", rotationPoint[ i ] );
+    parameterValues.push_back( tmpValue );
   }
   paramsMap->insert( make_pair( parameterName, parameterValues ) );
-  parameterValues.clear();
 
 } // end CreateTransformParametersMap()
 
@@ -302,23 +287,6 @@ AdvancedAffineTransformElastix< TElastix >
       "AutomaticTransformInitializationMethod", 0 );
     if( method == "CenterOfGravity" )
     {
-      bool centerOfGravityUsesLowerThreshold = false;
-      this->GetConfiguration()->ReadParameter( centerOfGravityUsesLowerThreshold,
-        "CenterOfGravityUsesLowerThreshold", this->GetComponentLabel(), 0, false );
-      transformInitializer->SetCenterOfGravityUsesLowerThreshold( centerOfGravityUsesLowerThreshold );
-      if( centerOfGravityUsesLowerThreshold )
-      {
-        double lowerThresholdForCenterGravity = 500;
-        this->m_Configuration->ReadParameter( lowerThresholdForCenterGravity,
-          "LowerThresholdForCenterGravity", 0 );
-        transformInitializer->SetLowerThresholdForCenterGravity( lowerThresholdForCenterGravity );
-      }
-
-      double nrofsamples = 10000;
-      this->m_Configuration->ReadParameter( nrofsamples,
-        "NumberOfSamplesForCenteredTransformInitialization", 0 );
-      transformInitializer->SetNumberOfSamplesForCenteredTransformInitialization( nrofsamples );
-
       transformInitializer->MomentsOn();
     }
     else if( method == "Origins" )
@@ -327,7 +295,7 @@ AdvancedAffineTransformElastix< TElastix >
     }
     else if( method == "GeometryTop" )
     {
-      if( SpaceDimension < 3 )
+      if (SpaceDimension < 3)
       {
         /** Check if dimension is 3D or higher. **/
         itkExceptionMacro( << "ERROR: The GeometryTop intialization method does not make sense for"

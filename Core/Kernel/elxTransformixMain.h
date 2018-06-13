@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __elxTransformixMain_H_
 #define __elxTransformixMain_H_
 
@@ -88,12 +84,12 @@ public:
   typedef Superclass::ParameterMapType ParameterMapType;
 
   /** Overwrite Run() from base-class. */
-  virtual int Run( void ) ITK_OVERRIDE;
+  virtual int Run( void );
 
   /** Overwrite Run( argmap ) from superclass. Simply calls the superclass. */
-  virtual int Run( ArgumentMapType & argmap ) ITK_OVERRIDE;
+  virtual int Run( ArgumentMapType & argmap );
 
-  virtual int Run( ArgumentMapType & argmap, ParameterMapType & inputMap ) ITK_OVERRIDE;
+  virtual int Run( ArgumentMapType & argmap, ParameterMapType & inputMap );
 
   /** Run version for using transformix as library. */
   virtual int Run( ArgumentMapType & argmap, std::vector< ParameterMapType > & inputMaps );
@@ -105,12 +101,12 @@ public:
 protected:
 
   TransformixMain(){}
-  virtual ~TransformixMain();
+  virtual ~TransformixMain(){}
 
   /** InitDBIndex sets m_DBIndex to the value obtained
    * from the ComponentDatabase.
    */
-  virtual int InitDBIndex( void ) ITK_OVERRIDE;
+  virtual int InitDBIndex( void );
 
 private:
 

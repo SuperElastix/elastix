@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxRandomCoordinateSampler_hxx
 #define __elxRandomCoordinateSampler_hxx
 
@@ -91,7 +88,7 @@ RandomCoordinateSampler< TElastix >
       sampleRegionSize[ i ] = vnl_math_min( maxthird, sampleRegionSize[ i ] );
     }
 
-    /** Read and check user's choice. */
+    /** Read user's choice. */
     for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
       this->GetConfiguration()->ReadParameter(
@@ -99,20 +96,6 @@ RandomCoordinateSampler< TElastix >
         this->GetComponentLabel(), level * InputImageDimension + i, 0 );
     }
     this->SetSampleRegionSize( sampleRegionSize );
-
-    for( unsigned int i = 0; i < InputImageDimension; ++i )
-    {
-      if( sampleRegionSize[ i ] > ( fixedImageSize[ i ] - 1 ) * fixedImageSpacing[ i ] )
-      {
-        itkExceptionMacro( << "ERROR: in your parameter file you selected\n"
-          << "  SampleRegionSize[ " << i << " ] = " << sampleRegionSize[ i ]
-          << " mm,\n  while the fixed image size at dim = " << i
-          << " is " << fixedImageSize[ i ] << " voxels or "
-          << fixedImageSize[ i ] * fixedImageSpacing[ i ] << " mm.\n"
-          << "  Please select a smaller SampleRegionSize!\n"
-          << "  It is recommended to be not larger than 1/3 of the image size in mm.");
-      }
-    }
   }
 
 } // end BeforeEachResolution()

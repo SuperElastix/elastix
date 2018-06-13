@@ -1,19 +1,11 @@
 import sys, subprocess
 import os
 import os.path
-import shutil
 import re
-import glob
 from optparse import OptionParser
 
 #-------------------------------------------------------------------------------
 # the main function
-# Below we deform the moving image segmentation by the current result as well as
-# by a previous stored result. This makes this test a regression test.
-#
-# We could instead compare with a fixed image segmentation, but that would require
-# the tested registrations to be relatively good, which they are not to save time.
-
 def main():
   # usage, parse parameters
   usage = "usage: %prog [options] arg";
@@ -26,7 +18,6 @@ def main():
   parser.add_option( "-d", "--directory", dest="directory", help="elastix output directory" );
   parser.add_option( "-m", "--movingsegmentation", dest="mseg", help="moving image segmentation" );
   parser.add_option( "-b", "--baselinetp", dest="btp", help="baseline transform parameter file" );
-  parser.add_option( "-p", "--path", dest="path", help="path where executables can be found" );
 
   (options, args) = parser.parse_args();
 
@@ -49,13 +40,17 @@ def main():
     print( "ERROR: the file " + tpFileName_in + " does not exist" );
     return 1;
 
-  # Below we use programs that are compiled with elastix, and are thus available
-  # in the binary directory. The user of this script has to supply the path
-  # to the binary directory via the command line.
-  # In order to make sure that python is able to find these programs we add
-  # the paths to the local environment.
-  _path = os.path.dirname( options.path );
-  _path += os.pathsep + os.getenv('PATH');
+  # Below we use external programs. We have to make sure that python is able to find them.
+  # Under Windows we call this script using the Task Scheduler, which honours the system path.
+  # So, as long as transformix, etc is in the path all is fine.
+  # Under Linux we call this script using crontab, which only has a minimal environment, i.e.
+  # transformix is not in the path and can therefore not be found.
+  # To make sure it is found we add paths. To make sure this script also works for other machines,
+  # add the correct paths manually. Non-existing paths are automatically ignored.
+  _path = os.getenv('PATH');
+  _path += os.pathsep + "/home/marius/install/bin";     # goliath
+  _path += os.pathsep + "/elastix-nightly/install/bin"; # MacMini
+  #_path += os.pathsep + "your_path"; # Add your own path here
   os.environ['PATH'] = _path;
 
   #
@@ -68,8 +63,6 @@ def main():
   for line in f1 :
     lineout = line.replace( '(FinalBSplineInterpolationOrder 3)', '(FinalBSplineInterpolationOrder 0)' );
     lineout = re.sub( "(ResultImageFormat \"mhd\")", "ResultImageFormat \"mha\"", lineout );
-    lineout = re.sub( "(ResultImagePixelType \"short\")", "ResultImagePixelType \"unsigned char\"", lineout );
-    lineout = re.sub( "(CompressResultImage \"false\")", "CompressResultImage \"true\"", lineout );
     f2.write( lineout );
   f1.close(); f2.close();
 
@@ -78,8 +71,7 @@ def main():
   seg_defm = os.path.join( options.directory, "segmentation_deformed.mha" );
   subprocess.call( [ "transformix", "-in", options.mseg, "-out", options.directory, "-tp", tpFileName ],
     stdout=subprocess.PIPE );
-  if( os.path.exists( seg_defm ) ) : os.remove( seg_defm );
-  shutil.move( seg, seg_defm );
+  subprocess.call( [ "pxcastconvert", "-in", seg, "-out", seg_defm ], stdout=subprocess.PIPE );
 
   #
   # Deform the moving image segmentation by the baseline result
@@ -91,8 +83,6 @@ def main():
   for line in f1 :
     lineout = line.replace( '(FinalBSplineInterpolationOrder 3)', '(FinalBSplineInterpolationOrder 0)' );
     lineout = re.sub( "(ResultImageFormat \"mhd\")", "ResultImageFormat \"mha\"", lineout );
-    lineout = re.sub( "(ResultImagePixelType \"short\")", "ResultImagePixelType \"unsigned char\"", lineout );
-    lineout = re.sub( "(CompressResultImage \"false\")", "CompressResultImage \"true\"", lineout );
     f2.write( lineout );
   f1.close(); f2.close();
 
@@ -100,16 +90,16 @@ def main():
   seg_defb = os.path.join( options.directory, "segmentation_baseline.mha" );
   subprocess.call( [ "transformix", "-in", options.mseg, "-out", options.directory, "-tp", tpFileName_b ],
     stdout=subprocess.PIPE );
-  if( os.path.exists( seg_defb ) ) : os.remove( seg_defb );
-  shutil.move( seg, seg_defb );
+  subprocess.call( [ "pxcastconvert", "-in", seg, "-out", seg_defb ], stdout=subprocess.PIPE );
 
   # Compute the overlap between baseline segmentation and deformed moving segmentation
   try :
     # This will work from python 2.7 on
-    outputAsString = subprocess.check_output( [ "elxComputeOverlap", "-in", seg_defm, seg_defb ] ).decode("utf-8");
+    outputAsString = subprocess.check_output( [ "pxcomputeoverlap", "-in", seg_defm, seg_defb ] ).decode("utf-8");
   except :
     # Workaround for python 2.6 and lower. For MacMini specifically.
-    outputAsString = subprocess.Popen( [ "elxComputeOverlap", "-in", seg_defm, seg_defb ], stdout=subprocess.PIPE ).communicate()[0].decode("utf-8");
+    outputAsString = subprocess.Popen( [ "pxcomputeoverlap", "-in", seg_defm, seg_defb ], stdout=subprocess.PIPE ).communicate()[0].decode("utf-8");
+  #outputAsString = subprocess.check_output( [ "pxcomputeoverlap", "-in", seg_defm, seg_defb ] ).decode("utf-8");
   overlap = outputAsString[ outputAsString.find( "Overlap" ) : ].strip( "Overlap: " );
 
   # Report

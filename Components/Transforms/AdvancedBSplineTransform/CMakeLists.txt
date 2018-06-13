@@ -2,5 +2,9 @@
 ADD_ELXCOMPONENT( AdvancedBSplineTransform
  elxAdvancedBSplineTransform.h
  elxAdvancedBSplineTransform.hxx
- elxAdvancedBSplineTransform.cxx )
+ elxAdvancedBSplineTransform.cxx
+ itkCyclicBSplineDeformableTransform.h
+ itkCyclicBSplineDeformableTransform.hxx
+ itkCyclicGridScheduleComputer.h
+ itkCyclicGridScheduleComputer.hxx )
 

@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #ifndef __itkFullSearchOptimizer_cxx
 #define __itkFullSearchOptimizer_cxx
@@ -144,7 +140,7 @@ FullSearchOptimizer
     /** Set the next position in search space. */
     this->UpdateCurrentPosition();
 
-  } // end while
+  }   // end while
 
 }   //end function ResumeOptimization
 
@@ -165,7 +161,7 @@ FullSearchOptimizer
     this->PointToPosition( m_BestPointInSearchSpace ) );
   InvokeEvent( EndEvent() );
 
-} // end function StopOptimization
+}   // end function StopOptimization
 
 
 /**
@@ -221,9 +217,9 @@ FullSearchOptimizer
       {
         m_CurrentIndexInSearchSpace[ ssdim ] = dummy;
       }
-    } // end if justsetprevdimtozero
+    }   // end if justsetprevdimtozero
 
-  } // end for
+  }   // end for
 
   /** Initialise the iterator. */
   SearchSpaceIteratorType it( m_SearchSpace->Begin() );
@@ -244,9 +240,9 @@ FullSearchOptimizer
     /** Update the array of parameters. */
     currentPosition[ it.Index() ] = m_CurrentPointInSearchSpace[ ssdim ];
     it++;
-  } // end for
+  }   // end for
 
-} // end UpdateCurrentPosition
+}   // end UpdateCurrentPosition
 
 
 /**
@@ -279,12 +275,12 @@ FullSearchOptimizer
       it++;
     }
 
-  } // end if search space modified
+  }   // end if search space modified
 
   /** Remember the time of the last processed changes */
   m_LastSearchSpaceChanges = m_SearchSpace->GetMTime();
 
-} // end function ProcessSearchSpaceChanges
+}   // end function ProcessSearchSpaceChanges
 
 
 /**
@@ -355,7 +351,7 @@ FullSearchOptimizer
     {
       nr_it *= sssize[ ssdim ];
     }
-  } // end if
+  }   // end if
 
   return nr_it;
 }
@@ -419,7 +415,7 @@ FullSearchOptimizer
 
   return param;
 
-} // end point to position
+}   // end point to position
 
 
 /**
@@ -456,11 +452,11 @@ FullSearchOptimizer
 
     /** go to next dimension in search space */
     it++;
-  } // end for
+  }   // end for
 
   return point;
 
-} // end IndexToPoint
+}   // end IndexToPoint
 
 
 } // end namespace itk

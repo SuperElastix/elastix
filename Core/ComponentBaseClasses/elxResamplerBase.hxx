@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxResamplerBase_hxx
 #define __elxResamplerBase_hxx
 
@@ -23,22 +20,10 @@
 #include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
-#include "itkTimeProbe.h"
+#include "elxTimer.h"
 
 namespace elastix
 {
-
-/**
- * ******************* Constructor *******************
- */
-
-template< class TElastix >
-ResamplerBase< TElastix >
-::ResamplerBase()
-{
-  this->m_ShowProgress = true;
-} // end Constructor
-
 
 /**
  * ******************* BeforeRegistrationBase *******************
@@ -116,14 +101,15 @@ ResamplerBase< TElastix >
       << "." << resultImageFormat;
 
     /** Time the resampling. */
-    itk::TimeProbe timer;
-    timer.Start();
+    typedef tmr::Timer TimerType;
+    TimerType::Pointer timer = TimerType::New();
+    timer->StartTimer();
 
     /** Apply the final transform, and save the result. */
     elxout << "Applying transform this resolution ..." << std::endl;
     try
     {
-      this->ResampleAndWriteResultImage( makeFileName.str().c_str() );
+      this->WriteResultImage( makeFileName.str().c_str() );
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -133,9 +119,10 @@ ResamplerBase< TElastix >
     }
 
     /** Print the elapsed time for the resampling. */
-    timer.Stop();
+    timer->StopTimer();
     elxout << "  Applying transform took "
-           << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
+           << static_cast< long >( timer->GetElapsedClockSec() )
+           << " s." << std::endl;
 
   } // end if
 
@@ -151,6 +138,9 @@ void
 ResamplerBase< TElastix >
 ::AfterEachIterationBase( void )
 {
+  /** Set the final transform parameters. */
+  this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
+
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
@@ -165,9 +155,6 @@ ResamplerBase< TElastix >
   /** Writing result image. */
   if( writeResultImageThisIteration )
   {
-    /** Set the final transform parameters. */
-    this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
-
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
     this->m_Configuration->ReadParameter( resultImageFormat,
@@ -180,10 +167,16 @@ ResamplerBase< TElastix >
       << ".It" << std::setfill( '0' ) << std::setw( 7 ) << iter
       << "." << resultImageFormat;
 
+    /** Time the resampling. */
+    //typedef tmr::Timer TimerType;
+    //TimerType::Pointer timer = TimerType::New();
+    //timer->StartTimer();
+
     /** Apply the final transform, and save the result. */
+    //elxout << "Applying transform this iteration ..." << std::endl;
     try
     {
-      this->ResampleAndWriteResultImage( makeFileName.str().c_str(), false );
+      this->WriteResultImage( makeFileName.str().c_str(), false );
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -191,6 +184,12 @@ ResamplerBase< TElastix >
       xl::xout[ "error" ] << excp
                           << "Resuming elastix." << std::endl;
     }
+
+    /** Print the elapsed time for the resampling. */
+    //timer->StopTimer();
+    //elxout << "  Applying transform took "
+    //  << static_cast<long>( timer->GetElapsedClockSec() )
+    //  << " s." << std::endl;
 
   } // end if
 
@@ -214,34 +213,24 @@ ResamplerBase< TElastix >
   this->m_Configuration->ReadParameter(
     writeResultImage, "WriteResultImage", 0 );
 
-#ifdef _ELASTIX_BUILD_LIBRARY
-  /** The library interface may executed multiple times in
-   * a session in which case the images should not be released
-   */
-  bool releaseMemoryBeforeResampling = false;
-#else
   /** Release memory to be able to resample in case a limited
    * amount of memory is available.
    */
-  bool releaseMemoryBeforeResampling = true;
-#endif
-
-  this->m_Configuration->ReadParameter( releaseMemoryBeforeResampling, "ReleaseMemoryBeforeResampling", 0, false );
-  if( releaseMemoryBeforeResampling )
-  {
-    this->ReleaseMemory();
-  }
+  this->ReleaseMemory();
 
   /**
    * Create the result image and put it in ResultImageContainer
    * Only necessary when compiling elastix as a library!
    */
 #ifdef _ELASTIX_BUILD_LIBRARY
+
   if( writeResultImage == "true" )
   {
     this->CreateItkResultImage();
   }
+
 #else
+
   /** Writing result image. */
   if( writeResultImage == "true" )
   {
@@ -256,27 +245,32 @@ ResamplerBase< TElastix >
       << "." << resultImageFormat;
 
     /** Time the resampling. */
-    itk::TimeProbe timer;
-    timer.Start();
+    typedef tmr::Timer TimerType;
+    TimerType::Pointer timer = TimerType::New();
+    timer->StartTimer();
 
     /** Apply the final transform, and save the result,
-     * by calling ResampleAndWriteResultImage.
+     * by calling WriteResultImage.
      */
     elxout << "\nApplying final transform ..." << std::endl;
     try
     {
-      this->ResampleAndWriteResultImage( makeFileName.str().c_str(), this->m_ShowProgress );
+      this->WriteResultImage( makeFileName.str().c_str() );
     }
     catch( itk::ExceptionObject & excp )
     {
       xl::xout[ "error" ] << "Exception caught: " << std::endl;
-      xl::xout[ "error" ] << excp << "Resuming elastix." << std::endl;
+      xl::xout[ "error" ] << excp
+                          << "Resuming elastix." << std::endl;
     }
 
     /** Print the elapsed time for the resampling. */
-    timer.Stop();
+    timer->StopTimer();
+    elxout << std::setprecision( 2 );
     elxout << "  Applying final transform took "
-           << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
+           << timer->GetElapsedClockSec() << " s" << std::endl;
+    elxout << std::setprecision(
+      this->m_Elastix->GetDefaultOutputPrecision() );
   }
   else
   {
@@ -285,6 +279,7 @@ ResamplerBase< TElastix >
            << "Skipping applying final transform, no resulting output image generated."
            << std::endl;
   } // end if
+
 #endif
 
 } // end AfterRegistrationBase()
@@ -315,19 +310,18 @@ ResamplerBase< TElastix >
 
 
 /**
- * ******************* ResampleAndWriteResultImage ********************
+ * ******************* WriteResultImage ********************
  */
 
 template< class TElastix >
 void
 ResamplerBase< TElastix >
-::ResampleAndWriteResultImage( const char * filename, const bool & showProgress )
+::WriteResultImage( const char * filename, const bool & showProgress )
 {
   /** Make sure the resampler is updated. */
   this->GetAsITKBaseType()->Modified();
-
-  /** Add a progress observer to the resampler. */
 #ifndef _ELASTIX_BUILD_LIBRARY
+  /** Add a progress observer to the resampler. */
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   if( showProgress )
   {
@@ -336,7 +330,6 @@ ResamplerBase< TElastix >
     progressObserver->SetEndString( "%" );
   }
 #endif
-
   /** Do the resampling. */
   try
   {
@@ -354,30 +347,6 @@ ResamplerBase< TElastix >
     throw excp;
   }
 
-  /** Perform the writing. */
-  this->WriteResultImage( this->GetAsITKBaseType()->GetOutput(), filename, showProgress );
-
-  /** Disconnect from the resampler. */
-#ifndef _ELASTIX_BUILD_LIBRARY
-  if( showProgress )
-  {
-    progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
-  }
-#endif
-
-} // end ResampleAndWriteResultImage()
-
-
-/**
- * ******************* WriteResultImage ********************
- */
-
-template< class TElastix >
-void
-ResamplerBase< TElastix >
-::WriteResultImage( OutputImageType * image,
-  const char * filename, const bool & showProgress )
-{
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
   typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType,
     CoordRepType > RayCastInterpolatorType;
@@ -422,7 +391,7 @@ ResamplerBase< TElastix >
   bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
-  infoChanger->SetInput( image );
+  infoChanger->SetInput( this->GetAsITKBaseType()->GetOutput() );
 
   /** Create writer. */
   WriterPointer writer = WriterType::New();
@@ -454,6 +423,13 @@ ResamplerBase< TElastix >
     /** Pass the exception to an higher level. */
     throw excp;
   }
+#ifndef _ELASTIX_BUILD_LIBRARY
+  /** Disconnect from the resampler. */
+  if( showProgress )
+  {
+    progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
+  }
+#endif
 } // end WriteResultImage()
 
 
@@ -517,6 +493,9 @@ ResamplerBase< TElastix >
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter( resultImagePixelType,
     "ResultImagePixelType", 0, false );
+  std::basic_string< char >::size_type       pos  = resultImagePixelType.find( " " );
+  const std::basic_string< char >::size_type npos = std::basic_string< char >::npos;
+  if( pos != npos ) { resultImagePixelType.replace( pos, 1, "_" ); }
 
   /** Typedef's for writing the output image. */
   typedef itk::ChangeInformationImageFilter<
@@ -533,105 +512,44 @@ ResamplerBase< TElastix >
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( this->GetAsITKBaseType()->GetOutput() );
 
-  typedef itk::CastImageFilter< InputImageType,
-    itk::Image< char, InputImageType::ImageDimension > >            CastFilterChar;
-  typedef itk::CastImageFilter< InputImageType,
-    itk::Image< unsigned char, InputImageType::ImageDimension > >   CastFilterUChar;
+  /** Casting of the image to the correct output itk::Image type. */
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< short, InputImageType::ImageDimension > >           CastFilterShort;
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< unsigned short, InputImageType::ImageDimension > >  CastFilterUShort;
   typedef itk::CastImageFilter< InputImageType,
-    itk::Image< int, InputImageType::ImageDimension > >             CastFilterInt;
-  typedef itk::CastImageFilter< InputImageType,
-    itk::Image< unsigned int, InputImageType::ImageDimension > >    CastFilterUInt;
-  typedef itk::CastImageFilter< InputImageType,
-    itk::Image< long, InputImageType::ImageDimension > >            CastFilterLong;
-  typedef itk::CastImageFilter< InputImageType,
-    itk::Image< unsigned long, InputImageType::ImageDimension > >  CastFilterULong;
+    itk::Image< unsigned char, InputImageType::ImageDimension > >   CastFilterUChar;
   typedef itk::CastImageFilter< InputImageType,
     itk::Image< float, InputImageType::ImageDimension > >           CastFilterFloat;
-  typedef itk::CastImageFilter< InputImageType,
-    itk::Image< double, InputImageType::ImageDimension > >          CastFilterDouble;
 
   /** cast the image to the correct output image Type */
-  if( resultImagePixelType.compare( "char" ) == 0 )
-  {
-    typename CastFilterChar::Pointer castFilter = CastFilterChar::New();
-    castFilter->SetInput( infoChanger->GetOutput() );
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
-  }
-  if( resultImagePixelType.compare( "unsigned char" ) == 0 )
-  {
-    typename CastFilterUChar::Pointer castFilter = CastFilterUChar::New();
-    castFilter->SetInput( infoChanger->GetOutput() );
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
-  }
-  else if( resultImagePixelType.compare( "short" ) == 0 )
+  if( resultImagePixelType.compare( "short" ) == 0 )
   {
     typename CastFilterShort::Pointer castFilter = CastFilterShort::New();
     castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
-  else if( resultImagePixelType.compare( "ushort" ) == 0 || resultImagePixelType.compare( "unsigned short" ) == 0 ) // <-- ushort for backwards compatibility
+  else if( resultImagePixelType == "ushort" ) // \todo: use compare()?
   {
     typename CastFilterUShort::Pointer castFilter = CastFilterUShort::New();
     castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
-  else if( resultImagePixelType.compare( "int" ) == 0 )
+  else if( resultImagePixelType == "unsigned char" )
   {
-    typename CastFilterInt::Pointer castFilter = CastFilterInt::New();
+    typename CastFilterUChar::Pointer castFilter = CastFilterUChar::New();
     castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
   }
-  else if( resultImagePixelType.compare( "unsigned int" ) == 0 )
-  {
-    typename CastFilterUInt::Pointer castFilter = CastFilterUInt::New();
-    castFilter->SetInput( infoChanger->GetOutput() );
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
-  }
-  else if( resultImagePixelType.compare( "long" ) == 0 )
-  {
-    typename CastFilterLong::Pointer castFilter = CastFilterLong::New();
-    castFilter->SetInput( infoChanger->GetOutput() );
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
-  }
-  else if( resultImagePixelType.compare( "unsigned long" ) == 0 )
-  {
-    typename CastFilterULong::Pointer castFilter = CastFilterULong::New();
-    castFilter->SetInput( infoChanger->GetOutput() );
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
-  }
-  else if( resultImagePixelType.compare( "float" ) == 0 )
+  else if( resultImagePixelType == "float" )
   {
     typename CastFilterFloat::Pointer castFilter = CastFilterFloat::New();
     castFilter->SetInput( infoChanger->GetOutput() );
     castFilter->Update();
     resultImage = castFilter->GetOutput();
-  }
-  else if( resultImagePixelType.compare( "double" ) == 0 )
-  {
-    typename CastFilterDouble::Pointer castFilter = CastFilterDouble::New();
-    castFilter->SetInput( infoChanger->GetOutput() );
-    castFilter->Update();
-    resultImage = castFilter->GetOutput();
-  }
-
-  if( resultImage.IsNull() )
-  {
-    itkExceptionMacro(
-      << "Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned char\", \"short\", \"ushort\", \"unsigned short\", \"int\", \"unsigned int\", \"long\", \"unsigned long\", \"float\" or \"double\" but was \""
-      << resultImagePixelType
-      << "\"." );
   }
 
   //put image in container

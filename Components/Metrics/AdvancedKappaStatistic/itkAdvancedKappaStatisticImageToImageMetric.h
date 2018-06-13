@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __itkAdvancedKappaStatisticImageToImageMetric_h
 #define __itkAdvancedKappaStatisticImageToImageMetric_h
 
@@ -26,7 +23,7 @@ namespace itk
 /** \class AdvancedKappaStatisticImageToImageMetric
  * \brief Computes similarity between two objects to be registered
  *
- * This class is templated over the type of the fixed and moving
+ * This Class is templated over the type of the fixed and moving
  * images to be compared.  The metric here is designed for matching
  * pixels in two images with the same exact value.  Only one value can
  * be considered (the default is 255) and can be specified with the
@@ -249,11 +246,12 @@ private:
 
   struct KappaGetValueAndDerivativePerThreadStruct
   {
-    SizeValueType  st_NumberOfPixelsCounted;
-    SizeValueType  st_AreaSum;
-    SizeValueType  st_AreaIntersection;
-    DerivativeType st_DerivativeSum1;
-    DerivativeType st_DerivativeSum2;
+    SizeValueType         st_NumberOfPixelsCounted;
+    SizeValueType         st_AreaSum;
+    SizeValueType         st_AreaIntersection;
+    DerivativeType        st_DerivativeSum1;
+    DerivativeType        st_DerivativeSum2;
+    TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, KappaGetValueAndDerivativePerThreadStruct,
     PaddedKappaGetValueAndDerivativePerThreadStruct );

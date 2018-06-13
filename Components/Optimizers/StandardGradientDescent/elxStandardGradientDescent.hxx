@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxStandardGradientDescent_hxx
 #define __elxStandardGradientDescent_hxx
 
@@ -36,7 +33,7 @@ StandardGradientDescent< TElastix >::StandardGradientDescent()
   this->m_CurrentNumberOfSamplingAttempts = 0;
   this->m_PreviousErrorAtIteration        = 0;
 
-} // end Constructor()
+}   // end Constructor()
 
 
 /**
@@ -57,7 +54,7 @@ StandardGradientDescent< TElastix >::BeforeRegistration( void )
   xl::xout[ "iteration" ][ "3:StepSize" ] << std::showpoint << std::fixed;
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
 
-} // end BeforeRegistration()
+}   // end BeforeRegistration()
 
 
 /**
@@ -108,7 +105,7 @@ StandardGradientDescent< TElastix >
       << std::endl;
   }
 
-} // end BeforeEachResolution()
+}   // end BeforeEachResolution()
 
 
 /**
@@ -131,7 +128,7 @@ StandardGradientDescent< TElastix >
     this->SelectNewSamples();
   }
 
-} // end AfterEachIteration()
+}   // end AfterEachIteration()
 
 
 /**
@@ -167,7 +164,7 @@ StandardGradientDescent< TElastix >
   /** Print the stopping condition */
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-} // end AfterEachResolution()
+}   // end AfterEachResolution()
 
 
 /**
@@ -187,7 +184,7 @@ StandardGradientDescent< TElastix >
     << bestValue
     << std::endl;
 
-} // end AfterRegistration()
+}   // end AfterRegistration()
 
 
 /**
@@ -220,7 +217,7 @@ StandardGradientDescent< TElastix >
   /** Superclass implementation. */
   this->Superclass1::StartOptimization();
 
-} // end StartOptimization()
+}   // end StartOptimization()
 
 
 /**
@@ -253,7 +250,7 @@ StandardGradientDescent< TElastix >
     this->Superclass1::MetricErrorResponse( err );
   }
 
-} // end MetricErrorResponse()
+}   // end MetricErrorResponse()
 
 
 } // end namespace elastix

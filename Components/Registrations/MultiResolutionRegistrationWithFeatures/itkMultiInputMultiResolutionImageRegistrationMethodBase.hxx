@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef _itkMultiInputMultiResolutionImageRegistrationMethodBase_hxx
 #define _itkMultiInputMultiResolutionImageRegistrationMethodBase_hxx
 
@@ -101,7 +97,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImages[ pos ].GetPointer();
   }
 
-} // end GetFixedImage()
+}   // end GetFixedImage()
 
 /**
  * **************** GetMovingImage **********************************
@@ -123,7 +119,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_MovingImages[ pos ].GetPointer();
   }
 
-} // end GetMovingImage()
+}   // end GetMovingImage()
 
 /**
  * **************** GetInterpolator **********************************
@@ -145,7 +141,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_Interpolators[ pos ].GetPointer();
   }
 
-} // end GetInterpolator()
+}   // end GetInterpolator()
 
 /**
  * **************** GetFixedImageInterpolator **********************************
@@ -167,7 +163,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImageInterpolators[ pos ].GetPointer();
   }
 
-} // end GetFixedImageInterpolator()
+}   // end GetFixedImageInterpolator()
 
 /**
  * **************** GetFixedImagePyramid **********************************
@@ -189,7 +185,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImagePyramids[ pos ].GetPointer();
   }
 
-} // end GetFixedImagePyramid()
+}   // end GetFixedImagePyramid()
 
 /**
  * **************** GetMovingImagePyramid **********************************
@@ -211,7 +207,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_MovingImagePyramids[ pos ].GetPointer();
   }
 
-} // end GetMovingImagePyramid()
+}   // end GetMovingImagePyramid()
 
 /**
  * **************** GetFixedImageRegion **********************************
@@ -234,7 +230,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImageRegions[ pos ];
   }
 
-} // end GetFixedImageRegion()
+}   // end GetFixedImageRegion()
 
 /*
  * ****************** SetMetric *******************************
@@ -257,7 +253,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     itkExceptionMacro( << "ERROR: This registration method expects a MultiInputImageToImageMetric" );
   }
 
-} // end SetMetric()
+}   // end SetMetric()
 
 
 /*
@@ -324,7 +320,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
   transformOutput->Set( this->GetTransform() );
 
-} // end Initialize()
+}   // end Initialize()
 
 
 /*
@@ -447,13 +443,13 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
         this->m_FixedImageRegionPyramids[ i ][ level ].SetSize( size );
         this->m_FixedImageRegionPyramids[ i ][ level ].SetIndex( start );
 
-      } // end for loop over res levels
+      }   // end for loop over res levels
 
-    } // end if fixpyr!=0
+    }   // end if fixpyr!=0
 
-  } // end for loop over fixed pyramids
+  }   // end for loop over fixed pyramids
 
-} // end PreparePyramids()
+}   // end PreparePyramids()
 
 
 /*
@@ -540,9 +536,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
         this->m_LastTransformParameters );
     }
 
-  } // end for loop over res levels
+  }   // end for loop over res levels
 
-} // end GenerateData()
+}   // end GenerateData()
 
 
 /**
@@ -612,7 +608,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
   return mtime;
 
-} // end GetMTime()
+}   // end GetMTime()
 
 
 /*
@@ -658,7 +654,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     itkExceptionMacro( << "The number of fixed image regions should equal the number of fixed image" );
   }
 
-} // end CheckPyramids()
+}   // end CheckPyramids()
 
 
 /*
@@ -695,7 +691,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     itkExceptionMacro( << "NumberOfMovingImagePyramids can not exceed the NumberOfInterpolators!" );
   }
 
-} // end CheckOnInitialize()
+}   // end CheckOnInitialize()
 
 
 /*
@@ -778,7 +774,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   }
   os << "]" << std::endl;
 
-} // end PrintSelf()
+}   // end PrintSelf()
 
 
 } // end namespace itk

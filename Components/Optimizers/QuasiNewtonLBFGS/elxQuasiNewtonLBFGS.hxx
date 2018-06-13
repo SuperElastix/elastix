@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #ifndef __elxQuasiNewtonLBFGS_hxx
 #define __elxQuasiNewtonLBFGS_hxx
@@ -48,7 +44,7 @@ QuasiNewtonLBFGS< TElastix >
   this->m_StopIfWolfeNotSatisfied      = true;
   this->m_WolfeIsStopCondition         = false;
 
-} // end Constructor
+}   // end Constructor
 
 
 /**
@@ -76,7 +72,7 @@ QuasiNewtonLBFGS< TElastix >::InvokeIterationEvent( const itk::EventObject & eve
   }
 
   this->m_StartLineSearch = false;
-} // end InvokeIterationEvent
+}   // end InvokeIterationEvent
 
 
 /**
@@ -147,7 +143,7 @@ QuasiNewtonLBFGS< TElastix >::LineSearch(
       g    = this->GetCurrentGradient();
     }
   }
-} // end LineSearch
+}   // end LineSearch
 
 
 /**
@@ -169,7 +165,7 @@ QuasiNewtonLBFGS< TElastix >::DeterminePhase( void ) const
 
   return std::string( "Main" );
 
-} // end DeterminePhase
+}   // end DeterminePhase
 
 
 /**
@@ -214,7 +210,7 @@ QuasiNewtonLBFGS< TElastix >::BeforeRegistration( void )
     this->m_GenerateLineSearchIterations = true;
   }
 
-} // end BeforeRegistration
+}   // end BeforeRegistration
 
 
 /**
@@ -286,7 +282,7 @@ QuasiNewtonLBFGS< TElastix >
   this->m_SearchDirectionMagnitude = 0.0;
   this->m_StartLineSearch          = false;
 
-} // end BeforeEachResolution
+}   // end BeforeEachResolution
 
 
 /**
@@ -330,7 +326,7 @@ QuasiNewtonLBFGS< TElastix >
     this->m_LineOptimizer->GetCurrentDerivative( cd );
     xout[ "iteration" ][ "4a:||Gradient||" ] << cd.magnitude();
     xout[ "iteration" ][ "7:LinSrchStopCondition" ] << "---";
-  } // end if in line search
+  }   // end if in line search
   else
   {
     xout[ "iteration" ][ "2:Metric" ]
@@ -341,7 +337,7 @@ QuasiNewtonLBFGS< TElastix >
       << this->GetCurrentGradient().magnitude();
     xout[ "iteration" ][ "7:LinSrchStopCondition" ]
       << this->GetLineSearchStopCondition();
-  } // end else (not in line search)
+  }   // end else (not in line search)
 
   xout[ "iteration" ][ "1a:SrchDirNr" ] << this->GetCurrentIteration();
   xout[ "iteration" ][ "5:Phase" ] << this->DeterminePhase();
@@ -387,9 +383,9 @@ QuasiNewtonLBFGS< TElastix >
         throw err;
       }
     } //end if new samples every iteration
-  } // end if not in line search
+  }   // end if not in line search
 
-} // end AfterEachIteration
+}   // end AfterEachIteration
 
 
 /**
@@ -456,7 +452,7 @@ QuasiNewtonLBFGS< TElastix >
   /** Print the stopping condition */
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-} // end AfterEachResolution
+}   // end AfterEachResolution
 
 
 /**
@@ -477,7 +473,7 @@ QuasiNewtonLBFGS< TElastix >
     << bestValue
     << std::endl;
 
-} // end AfterRegistration
+}   // end AfterRegistration
 
 
 /**
@@ -508,7 +504,7 @@ QuasiNewtonLBFGS< TElastix >
 
   return convergence;
 
-} // end TestConvergence
+}   // end TestConvergence
 
 
 /**
@@ -582,7 +578,7 @@ QuasiNewtonLBFGS< TElastix >
 
   return stopcondition;
 
-} // end GetLineSearchStopCondition
+}   // end GetLineSearchStopCondition
 
 
 } // end namespace elastix

@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -68,46 +65,6 @@ AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
 
 
 /**
- * ********************* EvaluateJacobianWithImageGradientProduct ****************************
- */
-
-template< class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-void
-AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
-::EvaluateJacobianWithImageGradientProduct(
-  const InputPointType & ipp,
-  const MovingImageGradientType & movingImageGradient,
-  DerivativeType & imageJacobian,
-  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-{
-  /** Obtain the Jacobian. */
-  JacobianType jacobian; //( SpaceDimension, );
-  this->GetJacobian( ipp, jacobian, nonZeroJacobianIndices );
-
-  /** Perform a full multiplication. */
-  typedef typename JacobianType::const_iterator JacobianIteratorType;
-  typedef typename DerivativeType::iterator     DerivativeIteratorType;
-  JacobianIteratorType jac = jacobian.begin();
-  imageJacobian.Fill( 0.0 );
-  const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-
-  for( unsigned int dim = 0; dim < InputSpaceDimension; ++dim )
-  {
-    const double           imDeriv = movingImageGradient[ dim ];
-    DerivativeIteratorType imjac   = imageJacobian.begin();
-
-    for( unsigned int mu = 0; mu < sizeImageJacobian; ++mu )
-    {
-      ( *imjac ) += ( *jac ) * imDeriv;
-      ++imjac;
-      ++jac;
-    }
-  }
-
-} // end EvaluateJacobianWithImageGradientProduct()
-
-
-/**
  * ********************* GetNumberOfNonZeroJacobianIndices ****************************
  */
 
@@ -120,6 +77,25 @@ AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
 
 } // end GetNumberOfNonZeroJacobianIndices()
 
+template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+void
+	AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
+	::GetOriginAndSpacing(
+	OriginType & origin,
+	SpacingType & sp ) const
+{
+	itkExceptionMacro( << "Subclass should override this method" );
+
+} // end GetOriginAndSpacing()
+
+template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+void
+	AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
+	::SetOrigin( const OriginType & origin )
+{
+	itkExceptionMacro( << "Subclass should override this method" );
+
+} // end SetOrigin()
 
 } // end namespace itk
 

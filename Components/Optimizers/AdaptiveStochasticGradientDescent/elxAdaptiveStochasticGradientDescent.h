@@ -1,32 +1,26 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __elxAdaptiveStochasticGradientDescent_h
 #define __elxAdaptiveStochasticGradientDescent_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkAdaptiveStochasticGradientDescentOptimizer.h"
-
-#include "itkComputeJacobianTerms.h"            // For  ASGD step size
-#include "itkComputeDisplacementDistribution.h" // For FASGD step size
+#include "itkComputeJacobianTerms.h"
+#include "itkComputeDisplacementDistribution.h"
 #include "elxProgressCommand.h"
 #include "itkAdvancedTransform.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
-
 
 namespace elastix
 {
@@ -60,10 +54,10 @@ namespace elastix
  *
  * Acceleration in case of many transform parameters was proposed in the following paper:
  *
- * [3] Y. Qiao, B. van Lew, B.P.F. Lelieveldt and M. Staring
- * "Fast Automatic Step Size Estimation for Gradient Descent Optimization of Image Registration,"
- * IEEE Transactions on Medical Imaging, vol. 35, no. 2, pp. 391 - 403, February 2016.
- * http://elastix.isi.uu.nl/marius/publications/2016_j_TMIa.php
+ * [3]  Y.Qiao, B.P.F. Lelieveldt, M.Staring
+ * "Fast automatic estimation of the optimization step size for nonrigid image registration,"
+ * SPIE Medical Imaging: Image Processing,February, 2014.
+ * http://elastix.isi.uu.nl/marius/publications/2014_c_SPIEMI.php
  *
  * The parameters used in this class are:
  * \parameter Optimizer: Select this optimizer as follows:\n
@@ -286,8 +280,8 @@ public:
 protected:
 
   /** Protected typedefs */
-  typedef typename RegistrationType::FixedImageType   FixedImageType;
-  typedef typename RegistrationType::MovingImageType  MovingImageType;
+  typedef typename RegistrationType::FixedImageType  FixedImageType;
+  typedef typename RegistrationType::MovingImageType MovingImageType;
 
   typedef typename FixedImageType::RegionType         FixedImageRegionType;
   typedef typename FixedImageType::IndexType          FixedImageIndexType;
@@ -409,7 +403,6 @@ private:
 
   bool   m_AutomaticParameterEstimation;
   double m_MaximumStepLength;
-  double m_MaximumStepLengthRatio;
 
   /** Private variables for the sampling attempts. */
   SizeValueType m_MaximumNumberOfSamplingAttempts;
@@ -425,6 +418,9 @@ private:
   bool m_UseNoiseCompensation;
   bool m_OriginalButSigmoidToDefault;
 
+  /** Private variables for random perturbation. */
+  double m_RandomShiftVariance;
+  double m_RandomShiftBound;
 };
 
 } // end namespace elastix

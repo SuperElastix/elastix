@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #ifndef __itkGenericConjugateGradientOptimizer_cxx
 #define __itkGenericConjugateGradientOptimizer_cxx
@@ -62,7 +58,7 @@ GenericConjugateGradientOptimizer::GenericConjugateGradientOptimizer()
 
   this->SetBetaDefinition( "DaiYuanHestenesStiefel" );
 
-} // end constructor
+}   // end constructor
 
 
 /**
@@ -107,7 +103,7 @@ GenericConjugateGradientOptimizer::StartOptimization()
     this->ResumeOptimization();
   }
 
-} // end StartOptimization
+}   // end StartOptimization
 
 
 /**
@@ -147,7 +143,8 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
   }
 
   /** Test if not by chance we are already converged */
-  bool convergence = this->TestConvergence( false );
+  bool convergence = false;
+  convergence = this->TestConvergence( false );
   if( convergence )
   {
     this->StopOptimization();
@@ -223,7 +220,8 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
       limitCount = 0;
     }
 
-    /** Test if convergence has occurred in some other sense */
+    /** Test if convergence has occured in some other sense */
+    convergence = false;
     convergence = this->TestConvergence( true );
     if( convergence )
     {
@@ -234,9 +232,9 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
     /** Next iteration */
     this->m_CurrentIteration++;
 
-  } // end while !m_Stop
+  }   // end while !m_Stop
 
-} // end ResumeOptimization
+}   // end ResumeOptimization
 
 
 /**
@@ -249,7 +247,7 @@ GenericConjugateGradientOptimizer::StopOptimization()
   itkDebugMacro( "StopOptimization" );
   this->m_Stop = true;
   this->InvokeEvent( EndEvent() );
-} // end StopOptimization()
+}   // end StopOptimization()
 
 
 /**
@@ -289,7 +287,7 @@ GenericConjugateGradientOptimizer::ComputeSearchDirection(
     searchDir[ i ] = -gradient[ i ] + beta * searchDir[ i ];
   }
 
-} // end ComputeSearchDirection
+}   // end ComputeSearchDirection
 
 
 /**
@@ -356,7 +354,7 @@ GenericConjugateGradientOptimizer::LineSearch(
   /** For the next iteration: */
   //LSO->SetInitialStepLengthEstimate(step); for now in elx.
 
-} // end LineSearch
+}   // end LineSearch
 
 
 /**
@@ -376,7 +374,7 @@ GenericConjugateGradientOptimizer::ComputeBeta(
   return ( ( *this ).*betaComputer )(
     previousGradient, gradient, previousSearchDir );
 
-} // end ComputeBeta
+}   // end ComputeBeta
 
 
 /**
@@ -392,7 +390,7 @@ GenericConjugateGradientOptimizer::ComputeBetaSD(
   /** A simple hack that makes the conjugate gradient equal to
    * a steepest descent method */
   return 0.0;
-} // end ComputeBetaSD
+}   // end ComputeBetaSD
 
 
 /**
@@ -425,7 +423,7 @@ GenericConjugateGradientOptimizer::ComputeBetaFR(
   }
   return num / den;
 
-} // end ComputeBetaFR
+}   // end ComputeBetaFR
 
 
 /**
@@ -458,7 +456,7 @@ GenericConjugateGradientOptimizer::ComputeBetaPR(
   }
   return num / den;
 
-} // end ComputeBetaPR
+}   // end ComputeBetaPR
 
 
 /**
@@ -489,7 +487,7 @@ GenericConjugateGradientOptimizer::ComputeBetaDY(
     return 0.0;
   }
   return num / den;
-} // end ComputeBetaDY
+}   // end ComputeBetaDY
 
 
 /**
@@ -521,7 +519,7 @@ GenericConjugateGradientOptimizer::ComputeBetaHS(
   }
 
   return num / den;
-} // end ComputeBetaHS
+}   // end ComputeBetaHS
 
 
 /**
@@ -542,7 +540,7 @@ GenericConjugateGradientOptimizer::ComputeBetaDYHS(
 
   return vnl_math_max( 0.0, vnl_math_min( beta_DY, beta_HS ) );
 
-} // end ComputeBetaDYHS
+}   // end ComputeBetaDYHS
 
 
 /**
@@ -562,7 +560,7 @@ GenericConjugateGradientOptimizer::SetBetaDefinition( const BetaDefinitionType &
     this->m_BetaDefinition = arg;
     this->Modified();
   }
-} // end SetBetaDefinition
+}   // end SetBetaDefinition
 
 
 /**
@@ -578,7 +576,7 @@ GenericConjugateGradientOptimizer::AddBetaDefinition(
 
   this->m_BetaDefinitionMap[ name ] = function;
 
-} // end AddBetaDefinition
+}   // end AddBetaDefinition
 
 
 /**
@@ -592,7 +590,7 @@ GenericConjugateGradientOptimizer::SetMaxNrOfItWithoutImprovement( unsigned long
   this->m_UseDefaultMaxNrOfItWithoutImprovement = false;
   this->m_MaxNrOfItWithoutImprovement           = arg;
   this->Modified();
-} // end SetMaxNrOfItWithoutImprovement
+}   // end SetMaxNrOfItWithoutImprovement
 
 
 /**
@@ -622,7 +620,7 @@ GenericConjugateGradientOptimizer::TestConvergence( bool itkNotUsed( firstLineSe
 
   return false;
 
-} // end TestConvergence
+}   // end TestConvergence
 
 
 /**

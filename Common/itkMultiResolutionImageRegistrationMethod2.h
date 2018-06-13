@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 /** This class is a slight modification of the original ITK class:
  * MultiResolutionImageRegistrationMethod.
@@ -239,7 +235,7 @@ public:
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  unsigned long GetMTime( void ) const ITK_OVERRIDE;
+  unsigned long GetMTime( void ) const;
 
 protected:
 
@@ -250,12 +246,12 @@ protected:
   virtual ~MultiResolutionImageRegistrationMethod2() {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
-  virtual void GenerateData( void ) ITK_OVERRIDE;
+  virtual void GenerateData( void );
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the

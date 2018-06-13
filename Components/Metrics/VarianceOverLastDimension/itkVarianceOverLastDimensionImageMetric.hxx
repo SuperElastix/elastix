@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) Erasmus MC, Rotterdam. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __itkVarianceOverLastDimensionImageMetric_hxx
 #define __itkVarianceOverLastDimensionImageMetric_hxx
 
@@ -304,7 +301,7 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
         sumValues        += movingImageValue;
         sumValuesSquared += movingImageValue * movingImageValue;
       } // end if sampleOk
-    } // end for loop over last dimension
+    }   // end for loop over last dimension
 
     if( numSamplesOk > 0 )
     {
@@ -367,13 +364,14 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
   itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
 
   /** Define derivative and Jacobian types. */
-  typedef typename DerivativeType::ValueType DerivativeValueType;
+  typedef typename DerivativeType::ValueType        DerivativeValueType;
+  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
+  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -445,7 +443,7 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
     }
 
     /** Initialize MT vector. */
-    std::fill( MT.begin(), MT.end(), itk::NumericTraits< RealType >::ZeroValue() );
+    std::fill( MT.begin(), MT.end(), itk::NumericTraits< RealType >::Zero );
 
     /** Transform sampled point to voxel coordinates. */
     FixedImageContinuousIndexType voxelCoord;
@@ -506,7 +504,7 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
       else
       {
         dMTdmu[ d ] = DerivativeType( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-        dMTdmu[ d ].Fill( itk::NumericTraits< DerivativeValueType >::ZeroValue() );
+        dMTdmu[ d ].Fill( itk::NumericTraits< DerivativeValueType >::Zero );
         nzjis[ d ] = NonZeroJacobianIndicesType( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices(), 0 );
       } // end if sampleOk
     }

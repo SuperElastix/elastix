@@ -1,20 +1,17 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __elxTransformBase_h
 #define __elxTransformBase_h
 
@@ -192,12 +189,6 @@ public:
   typedef typename ITKBaseType::InputPointType  InputPointType;
   typedef typename ITKBaseType::OutputPointType OutputPointType;
 
-  /** Typedef's for TransformPointsAllPoints. */
-  typedef itk::Vector<
-    float, FixedImageDimension >                      VectorPixelType;
-  typedef itk::Image<
-    VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
-
   /** Typedefs needed for AutomaticScalesEstimation function */
   typedef typename RegistrationType::ITKBaseType      ITKRegistrationType;
   typedef typename ITKRegistrationType::OptimizerType OptimizerType;
@@ -298,19 +289,8 @@ public:
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
   virtual void TransformPointsSomePointsVTK( const std::string filename ) const;
 
-  /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions
-   *  into Generate* and Write* functions, since that would facilitate a proper library
-   *  interface. To keep everything functional during the transition period we need to
-   *  keep the orignal Compute* and TransformPoints* functions and let them just call
-   *  Generate* and Write*. These functions should be considered marked deprecated.
-
   /** Function to transform all coordinates from fixed to moving image. */
-  typename DeformationFieldImageType::Pointer GenerateDeformationFieldImage( void ) const;
-
-  void WriteDeformationFieldImage( typename DeformationFieldImageType::Pointer ) const;
-
-  /** Legacy function that calls GenerateDeformationFieldImage and WriteDeformationFieldImage. */
-  virtual void TransformPointsAllPoints(void) const;
+  virtual void TransformPointsAllPoints( void ) const;
 
   /** Function to compute the determinant of the spatial Jacobian. */
   virtual void ComputeDeterminantOfSpatialJacobian( void ) const;
@@ -338,16 +318,6 @@ protected:
    */
   void AutomaticScalesEstimation( ScalesType & scales ) const;
 
-  /** Estimate a scales vector for a stack transform (elxTranslationStackTransform,
-   * elxAffineStackTransform, ...) Instead of sampling along the n dimensions of the
-   * fixed image, it samples along n-1 dimensions. Then
-   * \li N=10000 points are sampled.
-   * \li Jacobians dT/dmu are computed
-   * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
-   */
-  void AutomaticScalesEstimationStackTransform(
-    const unsigned int & numSubTransforms, ScalesType & scales ) const;
-
   /** Member variables. */
   ParametersType * m_TransformParametersPointer;
   std::string      m_TransformParametersFileName;
@@ -362,20 +332,6 @@ private:
 
   /** Boolean to decide whether or not the transform parameters are written. */
   bool m_ReadWriteTransformParameters;
-
-  std::string GetInitialTransformParametersFileName( void ) const
-  {
-    if( !this->GetInitialTransform() )
-    {
-      return "NoInitialTransform";
-    }
-
-    const Self * t0 = dynamic_cast<const Self *>( this->GetInitialTransform() );
-    return t0->GetTransformParametersFileName();
-  }
-
-  /** Boolean to decide whether or not the transform parameters are written in binary format. */
-  bool m_UseBinaryFormatForTransformationParameters;
 
 };
 

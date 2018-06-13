@@ -1,21 +1,4 @@
 /*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
-/*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile: itkAdvancedTranslationTransform.h,v $
@@ -79,7 +62,6 @@ public:
 
   /** Standard parameters container. */
   typedef typename Superclass::ParametersType         ParametersType;
-  typedef typename Superclass::FixedParametersType    FixedParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::TransformCategoryType  TransformCategoryType;
 
@@ -242,13 +224,13 @@ public:
   /** Set the fixed parameters and update internal transformation.
    * The Translation Transform does not require fixed parameters,
    * therefore the implementation of this method is a null operation. */
-  virtual void SetFixedParameters( const FixedParametersType & )
+  virtual void SetFixedParameters( const ParametersType & )
   { /* purposely blank */ }
 
   /** Get the Fixed Parameters. The AdvancedTranslationTransform does not
     * require Fixed parameters, therefore this method returns an
     * parameters array of size zero. */
-  virtual const FixedParametersType & GetFixedParameters( void ) const
+  virtual const ParametersType & GetFixedParameters( void ) const
   {
     this->m_FixedParameters.SetSize( 0 );
     return this->m_FixedParameters;

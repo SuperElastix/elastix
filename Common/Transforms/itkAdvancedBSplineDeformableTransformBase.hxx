@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __itkAdvancedBSplineDeformableTransformBase_hxx
 #define __itkAdvancedBSplineDeformableTransformBase_hxx
 
@@ -140,7 +136,7 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 ::UpdatePointIndexConversions( void )
 {
   DirectionType scale;
-  for( unsigned int i = 0; i < SpaceDimension; ++i )
+  for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     scale[ i ][ i ] = this->m_GridSpacing[ i ];
   }
@@ -321,9 +317,9 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 template< class TScalarType, unsigned int NDimensions >
 void
 AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
-::SetFixedParameters( const FixedParametersType & passedParameters )
+::SetFixedParameters( const ParametersType & passedParameters )
 {
-  FixedParametersType parameters( NDimensions * ( 3 + NDimensions ) );
+  ParametersType parameters( NDimensions * ( 3 + NDimensions ) );
 
   // check if the number of parameters match the
   // expected number of parameters
@@ -423,8 +419,8 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 
   for( unsigned int j = 0; j < SpaceDimension; j++ )
   {
-    this->m_WrappedImage[ j ]->GetPixelContainer()
-      ->SetImportPointer( dataPointer, numberOfPixels );
+    this->m_WrappedImage[ j ]->GetPixelContainer()->
+    SetImportPointer( dataPointer, numberOfPixels );
     dataPointer                   += numberOfPixels;
     this->m_CoefficientImages[ j ] = this->m_WrappedImage[ j ];
   }
@@ -485,7 +481,7 @@ typename AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 template< class TScalarType, unsigned int NDimensions >
 const
 typename AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
-::FixedParametersType
+::ParametersType
 & AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 ::GetFixedParameters( void ) const
 {

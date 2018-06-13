@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #ifndef __elxSimultaneousPerturbation_hxx
 #define __elxSimultaneousPerturbation_hxx
@@ -36,7 +32,7 @@ SimultaneousPerturbation< TElastix >
 ::SimultaneousPerturbation()
 {
   this->m_ShowMetricValues = false;
-} // end Constructor
+}   // end Constructor
 
 
 /**
@@ -69,7 +65,7 @@ SimultaneousPerturbation< TElastix >::BeforeRegistration( void )
   xl::xout[ "iteration" ][ "3:Gain a_k" ] << std::showpoint << std::fixed;
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
 
-} // end BeforeRegistration
+}   // end BeforeRegistration
 
 
 /**
@@ -119,7 +115,7 @@ SimultaneousPerturbation< TElastix >
   /** Ignore the build-in stop criterion; it's quite ad hoc. */
   this->SetTolerance( 0.0 );
 
-} // end BeforeEachResolution
+}   // end BeforeEachResolution
 
 
 /**
@@ -154,7 +150,7 @@ SimultaneousPerturbation< TElastix >
     this->SelectNewSamples();
   }
 
-} // end AfterEachIteration
+}   // end AfterEachIteration
 
 
 /**
@@ -193,7 +189,7 @@ SimultaneousPerturbation< TElastix >
 
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-} // end AfterEachResolution
+}   // end AfterEachResolution
 
 
 /**
@@ -215,7 +211,7 @@ SimultaneousPerturbation< TElastix >
     << bestValue
     << std::endl;
 
-} // end AfterRegistration
+}   // end AfterRegistration
 
 
 /**
@@ -248,7 +244,7 @@ SimultaneousPerturbation< TElastix >
 
   /** \todo to optimizerbase? */
 
-} // end SetInitialPosition
+}   // end SetInitialPosition
 
 
 } // end namespace elastix

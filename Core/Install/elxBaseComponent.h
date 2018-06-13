@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __elxBaseComponent_h
 #define __elxBaseComponent_h
 
@@ -38,12 +34,9 @@
 
 #include <iostream>
 #include <sstream>
-#include <iomanip>    // std::setprecision
-
-#include "itkMacro.h" // itkTypeMacroNoParent
 
 /** The current elastix version. */
-#define __ELASTIX_VERSION 4.900
+#define __ELASTIX_VERSION 4.700
 
 /** All elastix components should be in namespace elastix. */
 namespace elastix
@@ -72,7 +65,7 @@ public:
    * Callback methods that each component of elastix is supposed
    * to have. These methods can be overridden in each base component
    * (like MetricBase, TransformBase, etc.). In this way similar
-   * behavior for a group of components can be implemented.
+   * behaviour for a group of components can be implemented.
    */
   virtual int BeforeAllBase( void ) { return 0; }
   virtual int BeforeAll( void ) { return 0; }
@@ -81,7 +74,7 @@ public:
    * Callback methods that each component of elastix is supposed
    * to have. These methods can be overridden in each base component
    * (like MetricBase, TransformBase, etc.). In this way similar
-   * behavior for a group of components can be implemented.
+   * behaviour for a group of components can be implemented.
    */
   virtual void BeforeRegistrationBase( void ) {}
   virtual void BeforeEachResolutionBase( void ) {}
@@ -93,7 +86,7 @@ public:
    * Callback methods that each component of elastix is supposed
    * to have. These methods can be overridden in each single
    * component (like MattesMutualInformationMetric) to achieve
-   * behavior, specific for that single component.
+   * behaviour, specific for that single component.
    */
   virtual void BeforeRegistration( void ) {}
   virtual void BeforeEachResolution( void ) {}
@@ -106,9 +99,11 @@ public:
    * Override this function not directly, but with the
    * elxClassNameMacro("name").
    */
-  virtual const char * elxGetClassName( void ) const;
+  virtual const char * elxGetClassName( void ) const
+  {
+    return "BaseComponent";
+  }
 
-  itkTypeMacroNoParent( BaseComponent );
 
   /** Set the component label, which consists of a label
    * ( "Metric", "Transform") and an index number. In case
@@ -117,13 +112,20 @@ public:
    * parameter file for example, to distinguish between options
    * meant for Metric0 and for Metric1.
    */
-  virtual void SetComponentLabel( const char * label, unsigned int idx );
+  virtual void SetComponentLabel( const char * label, unsigned int idx )
+  {
+    std::ostringstream makestring;
+    makestring << label << idx;
+    this->m_ComponentLabel = makestring.str();
+  }
+
 
   /** Get the componentlabel as a string: "Metric0" for example. */
-  virtual const char * GetComponentLabel( void ) const;
+  virtual const char * GetComponentLabel( void ) const
+  {
+    return this->m_ComponentLabel.c_str();
+  }
 
-  /** Convenience function to convert seconds to day, hour, minute, second format. */
-  std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision ) const;
 
 protected:
 

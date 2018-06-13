@@ -21,8 +21,6 @@ def main():
   parser.add_option( "-d", "--directory", dest="directory", help="elastix output directory" );
   parser.add_option( "-f", "--fixedlandmarks", dest="flm", help="fixed image landmarks" );
   parser.add_option( "-b", "--baselinetp", dest="btp", help="baseline transform parameter file" );
-  parser.add_option( "-t", "--threshold", dest="threshold", help="threshold on landmark error" );
-  parser.add_option( "-p", "--path", dest="path", help="path where executables can be found" );
 
   (options, args) = parser.parse_args();
 
@@ -33,8 +31,6 @@ def main():
     parser.error( "The option directory (-f) should be given" );
   if options.btp == None :
     parser.error( "The option directory (-b) should be given" );
-  if options.threshold == None : threshold = 0.5;
-  else :                         threshold = options.threshold;
 
   # Get the transform parameters files
   tpFileName   = os.path.join( options.directory, "TransformParameters.0.txt" );
@@ -45,24 +41,18 @@ def main():
     print( "ERROR: the file " + tpFileName + " does not exist" );
     return 1;
 
-  # Below we use programs that are compiled with elastix, and are thus available
-  # in the binary directory. The user of this script has to supply the path
-  # to the binary directory via the command line.
-  # In order to make sure that python is able to find these programs we add
-  # the paths to the local environment.
-  _path = os.path.dirname( options.path );
-  _path += os.pathsep + os.getenv('PATH');
+  # Below we use external programs. We have to make sure that python is able to find them.
+  # Under Windows we call this script using the Task Scheduler, which honours the system path.
+  # So, as long as transformix, etc is in the path all is fine.
+  # Under Linux we call this script using crontab, which only has a minimal environment, i.e.
+  # transformix is not in the path and can therefore not be found.
+  # To make sure it is found we add paths. To make sure this script also works for other machines,
+  # add the correct paths manually. Non-existing paths are automatically ignored.
+  _path = os.getenv('PATH');
+  _path += os.pathsep + "/home/marius/install/bin";     # goliath
+  _path += os.pathsep + "/elastix-nightly/install/bin"; # MacMini
+  #_path += os.pathsep + "your_path"; # Add your own path here
   os.environ['PATH'] = _path;
-
-  # output file of the transformix runs; and copies, for later debugging.
-  landmarkstemp = os.path.join( options.directory, "outputpoints.txt" );
-  landmarks1full = os.path.join( options.directory, "outputpoints_current.txt" );
-  landmarks2full = os.path.join( options.directory, "outputpoints_baseline.txt" );
-
-  # Remove copies otherwise os.rename will not work on Windows:
-  # "On Windows, if dst already exists, OSError will be raised"
-  if( os.path.exists( landmarks1full ) ) : os.remove( landmarks1full );
-  if( os.path.exists( landmarks2full ) ) : os.remove( landmarks2full );
 
   #
   # Transform the fixed image landmarks by the current result
@@ -73,12 +63,11 @@ def main():
     stdout=subprocess.PIPE );
 
   # Parse file to extract only the column with the output points
-  f1 = open( landmarkstemp, 'r' );
+  f1 = open( os.path.join( options.directory, "outputpoints.txt" ), 'r' );
   f2 = open( landmarks1, 'w' );
   for line in f1 :
     f2.write( line.strip().split(';')[4].strip().strip( "OutputPoint = [ " ).rstrip( " ]" ) + "\n" );
   f1.close(); f2.close();
-  shutil.move( landmarkstemp, landmarks1full ); # for later inspection
 
   #
   # Transform the fixed image landmarks by the baseline result
@@ -87,15 +76,14 @@ def main():
   landmarks2 = os.path.join( options.directory, "landmarks_baseline.txt" );
   subprocess.call( [ "transformix", "-def", options.flm, "-out", options.directory, "-tp", tpFileName_b ],
     stdout=subprocess.PIPE );
-  # shutil.copyfile( landmarkstemp, landmarks2 ); // this should not be necessary
+  shutil.copyfile( os.path.join( options.directory, "outputpoints.txt" ), landmarks2 );
 
   # Parse file to extract only the column with the output points
-  f1 = open( landmarkstemp, 'r' );
+  f1 = open( os.path.join( options.directory, "outputpoints.txt" ), 'r' );
   f2 = open( landmarks2, 'w' );
   for line in f1 :
     f2.write( line.strip().split(';')[4].strip().strip( "OutputPoint = [ " ).rstrip( " ]" ) + "\n" );
   f1.close(); f2.close();
-  shutil.move( landmarkstemp, landmarks2full ); # for later inspection
 
   # Compute the distance between all transformed landmarks
   f1 = open( landmarks1, 'r' ); f2 = open( landmarks2, 'r' );
@@ -125,11 +113,11 @@ def main():
   print( "The landmark distance between current and baseline is:" );
   print( "min   | Q1    | med   | Q3    | max   | mean" );
   print( minDistance + " | " +  Q1 + " | " +  medDistance + " | " +  Q3 + " | " + maxDistance + " | " +  meanDistance  );
-  if float( Q3 ) < float( threshold ) :
-    print( "SUCCESS: third quartile landmark distance is lower than " + str( threshold ) + " mm" );
+  if float( Q3 ) < 0.5 :
+    print( "SUCCESS: third quartile landmark distance is lower than 0.5 mm" );
     return 0;
   else :
-    print( "FAILURE: third quartile landmark distance is higher than " + str( threshold ) + " mm" );
+    print( "FAILURE: third quartile landmark distance is higher than 0.5 mm" );
     return 1;
 
 #-------------------------------------------------------------------------------

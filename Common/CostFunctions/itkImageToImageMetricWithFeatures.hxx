@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef _itkImageToImageMetricWithFeatures_hxx
 #define _itkImageToImageMetricWithFeatures_hxx
 
@@ -34,7 +30,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
   this->m_NumberOfFixedFeatureImages  = 0;
   this->m_NumberOfMovingFeatureImages = 0;
 
-} // end Constructor
+}   // end Constructor
 
 
 /**
@@ -86,7 +82,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
   /** Check if the moving feature image interpolators are B-spline interpolators. */
   this->CheckForBSplineFeatureInterpolators();
 
-} // end Initialize()
+}   // end Initialize()
 
 
 /**
@@ -106,7 +102,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     this->Modified();
   }
 
-} // end SetNumberOfFixedFeatureImages()
+}   // end SetNumberOfFixedFeatureImages()
 
 
 /**
@@ -134,7 +130,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     }
   }
 
-} // end SetFixedFeatureImage()
+}   // end SetFixedFeatureImage()
 
 
 /**
@@ -148,7 +144,7 @@ TFixedFeatureImage, TMovingFeatureImage >::FixedFeatureImageType
 ::GetFixedFeatureImage( unsigned int i ) const
 {
   return this->m_FixedFeatureImages[ i ].GetPointer();
-} // end GetFixedFeatureImage()
+}   // end GetFixedFeatureImage()
 
 /**
  * ********************* SetFixedFeatureInterpolator ****************************
@@ -175,7 +171,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     }
   }
 
-} // end SetFixedFeatureInterpolator()
+}   // end SetFixedFeatureInterpolator()
 
 
 /**
@@ -189,7 +185,7 @@ TFixedFeatureImage, TMovingFeatureImage >::FixedFeatureInterpolatorType
 ::GetFixedFeatureInterpolator( unsigned int i ) const
 {
   return this->m_FixedFeatureInterpolators[ i ].GetPointer();
-} // end GetFixedFeatureInterpolator()
+}   // end GetFixedFeatureInterpolator()
 
 /**
  * ********************* SetNumberOfMovingFeatureImages ****************************
@@ -208,7 +204,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     this->Modified();
   }
 
-} // end SetNumberOfMovingFeatureImages()
+}   // end SetNumberOfMovingFeatureImages()
 
 
 /**
@@ -236,7 +232,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     }
   }
 
-} // end SetMovingFeatureImage()
+}   // end SetMovingFeatureImage()
 
 
 /**
@@ -250,7 +246,7 @@ TFixedFeatureImage, TMovingFeatureImage >::MovingFeatureImageType
 ::GetMovingFeatureImage( unsigned int i ) const
 {
   return this->m_MovingFeatureImages[ i ].GetPointer();
-} // end GetMovingFeatureImage()
+}   // end GetMovingFeatureImage()
 
 /**
  * ********************* SetMovingFeatureInterpolator ****************************
@@ -277,7 +273,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
     }
   }
 
-} // end SetMovingFeatureInterpolator()
+}   // end SetMovingFeatureInterpolator()
 
 
 /**
@@ -290,7 +286,7 @@ const typename ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixed
 ::GetMovingFeatureInterpolator( unsigned int i ) const
 {
   return this->m_MovingFeatureInterpolators[ i ].GetPointer();
-} // end GetMovingFeatureInterpolator()
+}   // end GetMovingFeatureInterpolator()
 
 /**
  * ****************** CheckForBSplineFeatureInterpolators **********************
@@ -327,9 +323,9 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
       itkDebugMacro( << "Interpolator " << i << " is NOT B-spline." );
       itkExceptionMacro( << "Interpolator " << i << " is NOT B-spline." );
     }
-  } // end for-loop
+  }   // end for-loop
 
-} // end CheckForBSplineFeatureInterpolators()
+}   // end CheckForBSplineFeatureInterpolators()
 
 
 /**
@@ -370,7 +366,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
        << this->m_MovingFeatureInterpolators[ i ].GetPointer() << std::endl;
   }
 
-} // end PrintSelf()
+}   // end PrintSelf()
 
 
 } // end namespace itk

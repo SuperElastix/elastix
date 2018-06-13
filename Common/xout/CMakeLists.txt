@@ -1,16 +1,17 @@
+CMAKE_MINIMUM_REQUIRED( VERSION 1.6 )
 
 # This project is intended to be built outside the Insight source tree
-project( xout )
+PROJECT( xout )
 
-set( xoutcfiles xoutmain.cxx xouttest.cxx )
+SET( xoutcfiles xoutmain.cxx xouttest.cxx )
 
-set( xouthxxfiles
+SET( xouthxxfiles
   xoutbase.hxx
   xoutsimple.hxx
   xoutrow.hxx
   xoutcell.hxx )
 
-set( xouthfiles
+SET( xouthfiles
   xoutbase.h
   xoutmain.h
   xoutsimple.h
@@ -18,11 +19,7 @@ set( xouthfiles
   xoutcell.h )
 
 # a lib defining the global variable xout.
-add_library( xoutlib STATIC xoutmain.cxx ${xouthxxfiles} ${xouthfiles} )
-install( TARGETS xoutlib
-  ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
-  LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
-  RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR} )
+ADD_LIBRARY( xoutlib xoutmain.cxx ${xouthxxfiles} ${xouthfiles} )
 
 # Group in IDE's like Visual Studio
-set_property( TARGET xoutlib PROPERTY FOLDER "libraries" )
+SET_PROPERTY( TARGET xoutlib PROPERTY FOLDER "libraries" )

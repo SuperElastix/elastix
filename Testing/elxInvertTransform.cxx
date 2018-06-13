@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #include "itkCommandLineArgumentParser.h"
 #include "itkParameterFileParser.h"
 #include "itkParameterMapInterface.h"
@@ -24,8 +20,7 @@
 
 // Supported transforms:
 #include "itkTransform.h"
-#include "itkEulerTransform.h"
-//#include "itkEuler3DTransform.h"
+#include "itkEuler3DTransform.h"
 #include "itkAffineTransform.h"
 
 #include <iostream>
@@ -89,13 +84,14 @@ main( int argc, char * argv[] )
   std::string dummyErrorMessage = "";
 
   typedef itk::Transform<
-    PrecisionType, Dimension, Dimension >                  BaseTransformType;
-  typedef itk::EulerTransform< PrecisionType, Dimension >  RigidTransformType;
-  typedef itk::AffineTransform< PrecisionType, Dimension > AffineTransformType;
-  typedef BaseTransformType::ParametersType                ParametersType;
-  typedef BaseTransformType::ScalarType                    ScalarType;
-  typedef RigidTransformType::CenterType                   CenterType;
-  //typedef BaseTransformType::OutputPointType               OutputPointType;
+    PrecisionType, Dimension, Dimension >               BaseTransformType;
+  typedef itk::Euler3DTransform< PrecisionType > RigidTransformType;
+  typedef itk::AffineTransform<
+    PrecisionType, Dimension >                            AffineTransformType;
+  typedef BaseTransformType::ParametersType  ParametersType;
+  typedef BaseTransformType::ScalarType      ScalarType;
+  typedef RigidTransformType::CenterType     CenterType;
+  typedef BaseTransformType::OutputPointType OutputPointType;
 
   /** Interface to the original transform parameters file. */
   typedef itk::ParameterFileParser   ParserType;
@@ -116,17 +112,6 @@ main( int argc, char * argv[] )
     return EXIT_FAILURE;
   }
 
-  /** Check dimension. */
-  unsigned int dimF = 0;
-  config->ReadParameter( dimF, "FixedImageDimension", 0, dummyErrorMessage );
-  if( dimF != Dimension )
-  {
-    std::cerr << "ERROR: the program elxInvertTransform was compiled for images of dimension " << Dimension << ",\n"
-              << "  while the parameter \"FixedImageDimension\" reads " << dimF << ".\n"
-              << "  Recompile elxInvertTransform for Dimension = " << dimF << std::endl;
-    return EXIT_FAILURE;
-  }
-
   /**
    * *** TASK 1:
    * *** Read the moving image to determine the inverted fixed image domain.
@@ -143,7 +128,7 @@ main( int argc, char * argv[] )
   /** Generate all information. */
   try
   {
-    testReader->UpdateOutputInformation();
+    testReader->GenerateOutputInformation();
   }
   catch( itk::ExceptionObject & e )
   {
@@ -164,7 +149,7 @@ main( int argc, char * argv[] )
 
   /** Read the TransformParameters as a vector. */
   std::vector< ScalarType > vecPar( numberOfParameters,
-    itk::NumericTraits< ScalarType >::ZeroValue() );
+  itk::NumericTraits< ScalarType >::Zero );
   config->ReadParameter( vecPar, "TransformParameters",
     0, numberOfParameters - 1, true, dummyErrorMessage );
 
@@ -189,44 +174,39 @@ main( int argc, char * argv[] )
 
   std::string transformType = "";
   config->ReadParameter( transformType, "Transform", 0, dummyErrorMessage );
-
-  try
+  if( transformType == "EulerTransform" )
   {
-    if( transformType == "EulerTransform" )
-    {
-      RigidTransformType::Pointer rigidTransform = RigidTransformType::New();
-      rigidTransform->SetCenter( centerOfRotation );
-      rigidTransform->SetParametersByValue( transformParameters );
+    RigidTransformType::Pointer rigidTransform = RigidTransformType::New();
+    rigidTransform->SetCenter( centerOfRotation );
+    rigidTransform->SetParametersByValue( transformParameters );
+    OutputPointType mappedCenterOfRotation = rigidTransform->TransformPoint( centerOfRotation );
 
-      RigidTransformType::Pointer inverseRigidTransform = RigidTransformType::New();
-      rigidTransform->GetInverse( inverseRigidTransform );
+    RigidTransformType::Pointer inverseRigidTransform = RigidTransformType::New();
+    inverseRigidTransform->SetCenter( mappedCenterOfRotation );
+    rigidTransform->GetInverse( inverseRigidTransform );
 
-      transformParametersInv = inverseRigidTransform->GetParameters();
-      centerOfRotationInv    = inverseRigidTransform->GetCenter();
-    }
-    else if( transformType == "AffineTransform" )
-    {
-      AffineTransformType::Pointer affineTransform = AffineTransformType::New();
-      affineTransform->SetCenter( centerOfRotation );
-      affineTransform->SetParametersByValue( transformParameters );
-
-      AffineTransformType::Pointer inverseAffineTransform = AffineTransformType::New();
-      affineTransform->GetInverse( inverseAffineTransform );
-
-      transformParametersInv = inverseAffineTransform->GetParameters();
-      centerOfRotationInv    = inverseAffineTransform->GetCenter();
-    }
-    else
-    {
-      std::cerr << "ERROR: Transforms of the type "
-                << transformType
-                << " are not supported." << std::endl;
-      return EXIT_FAILURE;
-    }
+    transformParametersInv = inverseRigidTransform->GetParameters();
+    centerOfRotationInv    = inverseRigidTransform->GetCenter();
   }
-  catch( itk::ExceptionObject & e )
+  else if( transformType == "AffineTransform" )
   {
-    std::cerr << "ERROR: Caught ITK exception: " << e << std::endl;
+    AffineTransformType::Pointer affineTransform = AffineTransformType::New();
+    affineTransform->SetCenter( centerOfRotation );
+    affineTransform->SetParametersByValue( transformParameters );
+    OutputPointType mappedCenterOfRotation = affineTransform->TransformPoint( centerOfRotation );
+
+    AffineTransformType::Pointer inverseAffineTransform = AffineTransformType::New();
+    inverseAffineTransform->SetCenter( mappedCenterOfRotation );
+    affineTransform->GetInverse( inverseAffineTransform );
+
+    transformParametersInv = inverseAffineTransform->GetParameters();
+    centerOfRotationInv    = inverseAffineTransform->GetCenter();
+  }
+  else
+  {
+    std::cerr << "ERROR: Transforms of the type "
+              << transformType
+              << " are not supported." << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -340,7 +320,7 @@ main( int argc, char * argv[] )
   {
     for( unsigned int j = 0; j < MovDim; j++ )
     {
-      outputTPFile << " " << imageIOBase->GetDirection( i )[ j ];
+      outputTPFile << " " << imageIOBase->GetDirection( j )[ i ]; // or i j?
     }
   }
   outputTPFile << ")" << std::endl;

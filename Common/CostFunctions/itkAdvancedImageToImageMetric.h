@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __itkAdvancedImageToImageMetric_h
 #define __itkAdvancedImageToImageMetric_h
 
@@ -29,8 +25,6 @@
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
 #include "vnl/vnl_sparse_matrix.h"
-
-#include "itkImageMaskSpatialObject2.h"
 
 // Needed for checking for B-spline for faster implementation
 #include "itkAdvancedBSplineDeformableTransform.h"
@@ -131,9 +125,6 @@ public:
   typedef typename DerivativeType::ValueType                DerivativeValueType;
   typedef typename Superclass::ParametersType               ParametersType;
 
-  typedef ImageMaskSpatialObject2< itkGetStaticConstMacro( FixedImageDimension ) > FixedImageMaskSpatialObject2Type;
-  typedef ImageMaskSpatialObject2< itkGetStaticConstMacro( MovingImageDimension ) > MovingImageMaskSpatialObject2Type;
-
   /** Some useful extra typedefs. */
   typedef typename FixedImageType::PixelType               FixedImagePixelType;
   typedef typename MovingImageType::RegionType             MovingImageRegionType;
@@ -164,9 +155,6 @@ public:
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 1 > BSplineOrder1TransformType;
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 2 > BSplineOrder2TransformType;
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 3 > BSplineOrder3TransformType;
-  typedef typename BSplineOrder1TransformType::Pointer                             BSplineOrder1TransformPointer;
-  typedef typename BSplineOrder2TransformType::Pointer                             BSplineOrder2TransformPointer;
-  typedef typename BSplineOrder3TransformType::Pointer                             BSplineOrder3TransformPointer;
 
   /** Hessian type; for SelfHessian (experimental feature) */
   typedef typename DerivativeType::ValueType    HessianValueType;
@@ -175,6 +163,12 @@ public:
   /** Typedefs for multi-threading. */
   typedef itk::MultiThreader                      ThreaderType;
   typedef typename ThreaderType::ThreadInfoStruct ThreadInfoType;
+
+  typedef typename FixedImageType::SpacingType            SpacingType;
+  typedef typename FixedImageType::PointType              OriginType;
+
+  /** Random shift list. */
+  typedef std::vector< double >                 RandomShiftListType;
 
   /** Public methods ********************/
 
@@ -191,7 +185,7 @@ public:
 
 
   /** Get the advanced transform. */
-  const AdvancedTransformType * GetTransform( void ) const ITK_OVERRIDE
+  const AdvancedTransformType * GetTransform( void ) const
   {
     return this->m_AdvancedTransform.GetPointer();
   }
@@ -240,19 +234,20 @@ public:
 
   /** You may specify a scaling vector for the moving image derivatives.
    * If the UseMovingImageDerivativeScales is true, the moving image derivatives
-   * are multiplied by the moving image derivative scales (element-wise)
+   * are multiplied by the moving image derivative scales (elementwise)
    * You may use this to avoid deformations in the z-dimension, for example,
    * by setting the moving image derivative scales to (1,1,0).
    * This is a rather experimental feature. In most cases you do not need it.
    */
   itkSetMacro( UseMovingImageDerivativeScales, bool );
   itkGetConstMacro( UseMovingImageDerivativeScales, bool );
-
-  itkSetMacro( ScaleGradientWithRespectToMovingImageOrientation, bool );
-  itkGetConstMacro( ScaleGradientWithRespectToMovingImageOrientation, bool );
-
   itkSetMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
   itkGetConstReferenceMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
+
+  itkSetMacro( GridShiftStrategy, std::string );
+  itkSetMacro( GridShiftStepNumber, unsigned int );
+  itkSetMacro( UseFullPerturbationRange, bool );
+  itkSetMacro( PerturbationFactor, unsigned int );
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
@@ -262,7 +257,7 @@ public:
    * \li Check if a B-spline interpolator has been set
    * \li Check if an AdvancedTransform has been set
    */
-  virtual void Initialize( void ) throw ( ExceptionObject ) ITK_OVERRIDE;
+  virtual void Initialize( void ) throw ( ExceptionObject );
 
   /** Experimental feature: compute SelfHessian.
    * This base class just returns an identity matrix of the right size.
@@ -342,21 +337,20 @@ protected:
   mutable ImageSamplerPointer m_ImageSampler;
 
   /** Variables for image derivative computation. */
-  bool                                   m_InterpolatorIsLinear;
   bool                                   m_InterpolatorIsBSpline;
   bool                                   m_InterpolatorIsBSplineFloat;
   bool                                   m_InterpolatorIsReducedBSpline;
-  LinearInterpolatorPointer              m_LinearInterpolator;
+  bool                                   m_InterpolatorIsLinear;
   BSplineInterpolatorPointer             m_BSplineInterpolator;
   BSplineInterpolatorFloatPointer        m_BSplineInterpolatorFloat;
   ReducedBSplineInterpolatorPointer      m_ReducedBSplineInterpolator;
-
+  LinearInterpolatorPointer              m_LinearInterpolator;
   CentralDifferenceGradientFilterPointer m_CentralDifferenceGradientFilter;
 
   /** Variables to store the AdvancedTransform. */
   bool m_TransformIsAdvanced;
   typename AdvancedTransformType::Pointer m_AdvancedTransform;
-  mutable bool m_TransformIsBSpline;
+  bool m_TransformIsBSpline;
 
   /** Variables for the Limiters. */
   FixedImageLimiterPointer     m_FixedImageLimiter;
@@ -370,19 +364,20 @@ protected:
   MovingImageLimiterOutputType m_MovingImageMinLimit;
   MovingImageLimiterOutputType m_MovingImageMaxLimit;
 
+  /** Variables for random perturbation. */
+  bool                                               m_UseGridShift;
+  std::string                                        m_GridShiftStrategy;
+  unsigned int                                       m_GridShiftStepNumber;
+  mutable unsigned int                               m_IterationCounter;
+  mutable int                                        m_StoredResolutionLevel;
+  mutable Array2D<double>                            m_ShiftSequence;
+  mutable Array2D<double>                            m_ReversedShiftSequence;
+  mutable bool                                       m_ShiftDirection;
+  RandomShiftListType                                m_RandomShiftList;
+  bool                                               m_UseFullPerturbationRange;
+  unsigned int                                       m_PerturbationFactor;
+  
   /** Multi-threaded metric computation. */
-
-  /** Multi-threaded version of GetValue(). */
-  virtual inline void ThreadedGetValue( ThreadIdType threadID ){}
-
-  /** Finalize multi-threaded metric computation. */
-  virtual inline void AfterThreadedGetValue( MeasureType & value ) const {}
-
-  /** GetValue threader callback function. */
-  static ITK_THREAD_RETURN_TYPE GetValueThreaderCallback( void * arg );
-
-  /** Launch MultiThread GetValue. */
-  void LaunchGetValueThreaderCallback( void ) const;
 
   /** Multi-threaded version of GetValueAndDerivative(). */
   virtual inline void ThreadedGetValueAndDerivative(
@@ -395,7 +390,7 @@ protected:
   /** GetValueAndDerivative threader callback function. */
   static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
 
-  /** Launch MultiThread GetValueAndDerivative. */
+  /** Launch MultiThread GetValueAndDerivative */
   void LaunchGetValueAndDerivativeThreaderCallback( void ) const;
 
   /** AccumulateDerivatives threader callback function. */
@@ -429,24 +424,12 @@ protected:
    */
 
   // test per thread struct with padding and alignment
-  struct GetValuePerThreadStruct
-  {
-    SizeValueType st_NumberOfPixelsCounted;
-    MeasureType   st_Value;
-  };
-  itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValuePerThreadStruct,
-    PaddedGetValuePerThreadStruct );
-  itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedGetValuePerThreadStruct,
-    AlignedGetValuePerThreadStruct );
-  mutable AlignedGetValuePerThreadStruct * m_GetValuePerThreadVariables;
-  mutable ThreadIdType                     m_GetValuePerThreadVariablesSize;
-
-  // test per thread struct with padding and alignment
   struct GetValueAndDerivativePerThreadStruct
   {
-    SizeValueType  st_NumberOfPixelsCounted;
-    MeasureType    st_Value;
-    DerivativeType st_Derivative;
+    SizeValueType         st_NumberOfPixelsCounted;
+    MeasureType           st_Value;
+    DerivativeType        st_Derivative;
+    TransformJacobianType st_TransformJacobian;
   };
   itkPadStruct( ITK_CACHE_LINE_ALIGNMENT, GetValueAndDerivativePerThreadStruct,
     PaddedGetValueAndDerivativePerThreadStruct );
@@ -504,14 +487,11 @@ protected:
 
   /** Methods to support transforms with sparse Jacobians, like the BSplineTransform **********/
 
-  /** Check if the transform is an AdvancedTransform. Called by Initialize.
-   * If so, we can speed up derivative calculations by only inspecting
-   * the parameters in the support region of a point.
-   */
+  /** Check if the transform is an AdvancedTransform. Called by Initialize. */
   virtual void CheckForAdvancedTransform( void );
 
   /** Check if the transform is a B-spline. Called by Initialize. */
-  virtual void CheckForBSplineTransform( void ) const;
+  virtual void CheckForBSplineTransform( void );
 
   /** Transform a point from FixedImage domain to MovingImage domain.
    * This function also checks if mapped point is within support region of
@@ -535,17 +515,34 @@ protected:
   /** Convenience method: check if point is inside the moving mask. *****************/
   virtual bool IsInsideMovingMask( const MovingImagePointType & point ) const;
 
+  /** Methods for the support of gray value limiters. ***************/
+
+  /** Compute the extrema of fixed image over a region
+   * Initializes the m_Fixed[True]{Max,Min}[Limit]
+   * This method is called by InitializeLimiters() and uses the FixedLimitRangeRatio */
+  virtual void ComputeFixedImageExtrema(
+    const FixedImageType * image,
+    const FixedImageRegionType & region );
+
+  /** Compute the extrema of the moving image over a region
+   * Initializes the m_Moving[True]{Max,Min}[Limit]
+   * This method is called by InitializeLimiters() and uses the MovingLimitRangeRatio; */
+  virtual void ComputeMovingImageExtrema(
+    const MovingImageType * image,
+    const MovingImageRegionType & region );
+
   /** Initialize the {Fixed,Moving}[True]{Max,Min}[Limit] and the {Fixed,Moving}ImageLimiter
    * Only does something when Use{Fixed,Moving}Limiter is set to true; */
   virtual void InitializeLimiters( void );
+
+  /** Initialize random shift list */
+  virtual void InitializeRandomShiftList( RandomShiftListType list );
 
   /** Inheriting classes can specify whether they use the image limiter functionality
    * Make sure to set it before calling Initialize; default: false. */
   itkSetMacro( UseFixedImageLimiter, bool );
   itkSetMacro( UseMovingImageLimiter, bool );
-
-  double m_FixedLimitRangeRatio;
-  double m_MovingLimitRangeRatio;
+  itkSetMacro( UseGridShift, bool );
 
 private:
 
@@ -553,13 +550,13 @@ private:
   void operator=( const Self & );             // purposely not implemented
 
   /** Private member variables. */
-  bool   m_UseImageSampler;
-  bool   m_UseFixedImageLimiter;
-  bool   m_UseMovingImageLimiter;
-  double m_RequiredRatioOfValidSamples;
-  bool   m_UseMovingImageDerivativeScales;
-  bool   m_ScaleGradientWithRespectToMovingImageOrientation;
-
+  bool                            m_UseImageSampler;
+  double                          m_FixedLimitRangeRatio;
+  double                          m_MovingLimitRangeRatio;
+  bool                            m_UseFixedImageLimiter;
+  bool                            m_UseMovingImageLimiter;
+  double                          m_RequiredRatioOfValidSamples;
+  bool                            m_UseMovingImageDerivativeScales;
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
 
 };

@@ -1,20 +1,16 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 
 #ifndef __itkQuasiNewtonLBFGSOptimizer_cxx
 #define __itkQuasiNewtonLBFGSOptimizer_cxx
@@ -49,7 +45,7 @@ QuasiNewtonLBFGSOptimizer::QuasiNewtonLBFGSOptimizer()
   this->m_LineSearchOptimizer        = 0;
   this->m_Memory                     = 5;
 
-} // end constructor
+}   // end constructor
 
 
 /**
@@ -96,7 +92,7 @@ QuasiNewtonLBFGSOptimizer::StartOptimization()
     this->ResumeOptimization();
   }
 
-} // end StartOptimization
+}   // end StartOptimization
 
 
 /**
@@ -133,7 +129,8 @@ QuasiNewtonLBFGSOptimizer::ResumeOptimization()
   }
 
   /** Test if the gradient was not zero already by chance */
-  bool convergence = this->TestConvergence( false );
+  bool convergence = false;
+  convergence = this->TestConvergence( false );
   if( convergence )
   {
     this->StopOptimization();
@@ -194,7 +191,8 @@ QuasiNewtonLBFGSOptimizer::ResumeOptimization()
       break;
     }
 
-    /** Test if convergence has occurred */
+    /** Test if convergence has occured */
+    convergence = false;
     convergence = this->TestConvergence( true );
     if( convergence )
     {
@@ -212,9 +210,9 @@ QuasiNewtonLBFGSOptimizer::ResumeOptimization()
 
     this->m_CurrentIteration++;
 
-  } // end while !m_Stop
+  }   // end while !m_Stop
 
-} // end ResumeOptimization
+}   // end ResumeOptimization
 
 
 /**
@@ -227,7 +225,7 @@ QuasiNewtonLBFGSOptimizer::StopOptimization()
   itkDebugMacro( "StopOptimization" );
   this->m_Stop = true;
   this->InvokeEvent( EndEvent() );
-} // end StopOptimization()
+}   // end StopOptimization()
 
 
 /**
@@ -257,7 +255,7 @@ QuasiNewtonLBFGSOptimizer::ComputeDiagonalMatrix( DiagonalMatrixType & diag_H0 )
 
   diag_H0.Fill( fill_value );
 
-} // end ComputeDiagonalMatrix
+}   // end ComputeDiagonalMatrix
 
 
 /**
@@ -329,7 +327,7 @@ QuasiNewtonLBFGSOptimizer::ComputeSearchDirection(
     searchDir /= gradient.magnitude();
   }
 
-} // end ComputeSearchDirection
+}   // end ComputeSearchDirection
 
 
 /**
@@ -393,7 +391,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(
     throw err;
   }
 
-} // end LineSearch
+}   // end LineSearch
 
 
 /**
@@ -411,7 +409,7 @@ QuasiNewtonLBFGSOptimizer::StoreCurrentPoint(
   this->m_Y[ this->m_Point ]   = grad_dif;                              // y
   this->m_Rho[ this->m_Point ] = 1.0 / inner_product( step, grad_dif ); // 1/ys
 
-} // end StoreCurrentPoint
+}   // end StoreCurrentPoint
 
 
 /**
@@ -451,7 +449,7 @@ QuasiNewtonLBFGSOptimizer::TestConvergence( bool firstLineSearchDone )
 
   return false;
 
-} // end TestConvergence
+}   // end TestConvergence
 
 
 } // end namespace itk

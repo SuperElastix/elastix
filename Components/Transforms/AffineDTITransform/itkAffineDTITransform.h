@@ -1,24 +1,20 @@
-/*=========================================================================
- *
- *  Copyright UMC Utrecht and contributors
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __itkAffineDTITransform_H__
 #define __itkAffineDTITransform_H__
 
-#include "itkAffineDTI2DTransform.h"
 #include "itkAffineDTI3DTransform.h"
 #include "itkAdvancedMatrixOffsetTransformBase.h"
 
@@ -43,29 +39,6 @@ public:
 
     /** Typedef's.*/
     typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension > AffineDTITransform_tmp;
-
-  };
-
-};
-
-/**
- * \class AffineDTIGroup<2>
- * \brief This class only contains a dummy class for the 2D case.
- *
- */
-
-template< >
-class AffineDTIGroup< 2 >
-{
-public:
-
-  template< class TScalarType >
-  class Dummy
-  {
-public:
-
-    /** Typedef's.*/
-    typedef AffineDTI2DTransform< TScalarType > AffineDTITransform_tmp;
 
   };
 
@@ -130,9 +103,10 @@ public:
 
 /**
  * \class AffineDTITransform
- * \brief This class combines the AffineDTI2DTransform with the AffineDTI3DTransform.
+ * \brief This class makes the AffineDTI3DTransform templated over the dimension.
  *
- * This transform is an affine transform with MR-DTI specific parametrization.
+ * This transform is an affine transform with MR-DTI specific parametrisation.
+ * NB: no implementation for 2D yet!
  *
  * \ingroup Transforms
  */
@@ -162,8 +136,6 @@ public:
   itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
 
   /** Typedefs inherited from the superclass. */
-
-  /** These are both in AffineDTI2D and AffineDTI3D. */
   typedef typename Superclass::ScalarType                ScalarType;
   typedef typename Superclass::ParametersType            ParametersType;
   typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
