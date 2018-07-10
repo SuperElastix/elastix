@@ -25,8 +25,8 @@ namespace elastix
 {
 
 /**
-* ******************* BeforeEachResolution ******************
-*/
+ * ******************* BeforeEachResolution ******************
+ */
 
 template< class TElastix >
 void
@@ -90,7 +90,7 @@ MultiInputRandomCoordinateSampler< TElastix >
     this->SetSampleRegionSize( sampleRegionSize );
   }
 
-} // end BeforeEachResolution
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix
