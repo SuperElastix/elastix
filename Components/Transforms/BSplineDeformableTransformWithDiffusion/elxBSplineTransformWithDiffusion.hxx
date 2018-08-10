@@ -296,7 +296,7 @@ BSplineTransformWithDiffusion< TElastix >
         /** Pass the exception to an higher level. */
         throw excp;
       } // end try/catch
-    }   // end if fixed segmentation
+    } // end if fixed segmentation
   }     // end if moving segmentation
   /** Otherwise defining rigid object is based on thresholding the resampled moving image. */
   else if( !this->m_UseMovingSegmentation && this->m_ThresholdBool )
@@ -1263,7 +1263,7 @@ BSplineTransformWithDiffusion< TElastix >
         /** Update iterator. */
         ++it;
       } // end while
-    }   // end if
+    } // end if
   }
   /** In case we do use a segmentation of the moving image: */
   else

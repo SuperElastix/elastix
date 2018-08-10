@@ -43,7 +43,7 @@ RandomSamplerSparseMask< TElastix >
 
   this->SetNumberOfSamples( numberOfSpatialSamples );
 
-}   // end BeforeEachResolution()
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix

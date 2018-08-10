@@ -43,7 +43,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
 
   /** This function is not complete, but we don't use it anyway. */
 
-}   // end PrintSelf()
+} // end PrintSelf()
 
 
 /**
@@ -76,7 +76,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
     ++PDFit;
   }
 
-}   // end ComputeLogMarginalPDF
+} // end ComputeLogMarginalPDF
 
 
 /**
@@ -131,7 +131,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
 
   jointEntropy = sumden;
   return static_cast< MeasureType >( sumnum / sumden );
-}   // end ComputeNormalizedMutualInformation
+} // end ComputeNormalizedMutualInformation
 
 
 /**
@@ -165,7 +165,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
 
   return static_cast< MeasureType >( -1.0 * nMI );
 
-}   // end GetValue
+} // end GetValue
 
 
 /**
@@ -277,7 +277,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
     jointPDFconstit.NextLine();
   }    // end while-loop over fixed index
 
-}   // end GetValueAndDerivative
+} // end GetValueAndDerivative
 
 
 } // end namespace itk

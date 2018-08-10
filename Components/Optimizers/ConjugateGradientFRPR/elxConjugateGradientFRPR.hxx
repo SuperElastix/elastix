@@ -41,7 +41,7 @@ ConjugateGradientFRPR< TElastix >
   this->m_CurrentSearchDirectionMagnitude = 0.0;
   this->m_CurrentDerivativeMagnitude      = 0.0;
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -67,7 +67,7 @@ ConjugateGradientFRPR< TElastix >::DeterminePhase( void ) const
 
   return "Main";
 
-}   // end DeterminePhase
+} // end DeterminePhase
 
 
 /**
@@ -96,7 +96,7 @@ ConjugateGradientFRPR< TElastix >::BeforeRegistration( void )
 
   /** \todo: call the correct functions */
 
-}   // end BeforeRegistration
+} // end BeforeRegistration
 
 
 /**
@@ -151,7 +151,7 @@ ConjugateGradientFRPR< TElastix >
     "LineSearchStepTolerance", this->GetComponentLabel(), level, 0 );
   this->SetStepTolerance( stepTolerance );
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution
 
 
 /**
@@ -189,9 +189,9 @@ ConjugateGradientFRPR< TElastix >
       xl::xout[ "iteration" ][ "3:StepLength" ] << "---";
     }
     xl::xout[ "iteration" ][ "4a:||Gradient||" ] << "---";
-  }   // end if main iteration
+  } // end if main iteration
 
-}   // end AfterEachIteration
+} // end AfterEachIteration
 
 
 /**
@@ -233,7 +233,7 @@ ConjugateGradientFRPR< TElastix >
   /** Print the stopping condition */
   //elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-}   // end AfterEachResolution
+} // end AfterEachResolution
 
 
 /**
@@ -254,7 +254,7 @@ ConjugateGradientFRPR< TElastix >
     << bestValue
     << std::endl;
 
-}   // end AfterRegistration
+} // end AfterRegistration
 
 
 /**
@@ -287,7 +287,7 @@ ConjugateGradientFRPR< TElastix >
 
   /** \todo to optimizerbase? */
 
-}   // end SetInitialPosition
+} // end SetInitialPosition
 
 
 /**
@@ -315,7 +315,7 @@ ConjugateGradientFRPR< TElastix >
   this->Superclass1::GetValueAndDerivative( p, val, xi );
   this->m_CurrentDerivativeMagnitude = ( *xi ).magnitude();
 
-}   // end GetValueAndDerivative
+} // end GetValueAndDerivative
 
 
 /**
@@ -338,7 +338,7 @@ ConjugateGradientFRPR< TElastix >
   this->InvokeEvent( itk::IterationEvent() );
   this->SetLineBracketing( false );
 
-}   // end LineBracket
+} // end LineBracket
 
 
 /**

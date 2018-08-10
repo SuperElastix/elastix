@@ -30,6 +30,8 @@
 #include "itkAdvancedTransform.h"
 #include "vnl/vnl_sparse_matrix.h"
 
+#include "itkImageMaskSpatialObject2.h"
+
 // Needed for checking for B-spline for faster implementation
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkAdvancedCombinationTransform.h"
@@ -128,6 +130,9 @@ public:
   typedef typename Superclass::DerivativeType               DerivativeType;
   typedef typename DerivativeType::ValueType                DerivativeValueType;
   typedef typename Superclass::ParametersType               ParametersType;
+
+  typedef ImageMaskSpatialObject2< itkGetStaticConstMacro( FixedImageDimension ) > FixedImageMaskSpatialObject2Type;
+  typedef ImageMaskSpatialObject2< itkGetStaticConstMacro( MovingImageDimension ) > MovingImageMaskSpatialObject2Type;
 
   /** Some useful extra typedefs. */
   typedef typename FixedImageType::PixelType               FixedImagePixelType;
@@ -530,22 +535,6 @@ protected:
   /** Convenience method: check if point is inside the moving mask. *****************/
   virtual bool IsInsideMovingMask( const MovingImagePointType & point ) const;
 
-  /** Methods for the support of gray value limiters. ***************/
-
-  /** Compute the extrema of fixed image over a region
-   * Initializes the m_Fixed[True]{Max,Min}[Limit]
-   * This method is called by InitializeLimiters() and uses the FixedLimitRangeRatio */
-  virtual void ComputeFixedImageExtrema(
-    const FixedImageType * image,
-    const FixedImageRegionType & region );
-
-  /** Compute the extrema of the moving image over a region
-   * Initializes the m_Moving[True]{Max,Min}[Limit]
-   * This method is called by InitializeLimiters() and uses the MovingLimitRangeRatio; */
-  virtual void ComputeMovingImageExtrema(
-    const MovingImageType * image,
-    const MovingImageRegionType & region );
-
   /** Initialize the {Fixed,Moving}[True]{Max,Min}[Limit] and the {Fixed,Moving}ImageLimiter
    * Only does something when Use{Fixed,Moving}Limiter is set to true; */
   virtual void InitializeLimiters( void );
@@ -555,6 +544,9 @@ protected:
   itkSetMacro( UseFixedImageLimiter, bool );
   itkSetMacro( UseMovingImageLimiter, bool );
 
+  double m_FixedLimitRangeRatio;
+  double m_MovingLimitRangeRatio;
+
 private:
 
   AdvancedImageToImageMetric( const Self & ); // purposely not implemented
@@ -562,8 +554,6 @@ private:
 
   /** Private member variables. */
   bool   m_UseImageSampler;
-  double m_FixedLimitRangeRatio;
-  double m_MovingLimitRangeRatio;
   bool   m_UseFixedImageLimiter;
   bool   m_UseMovingImageLimiter;
   double m_RequiredRatioOfValidSamples;

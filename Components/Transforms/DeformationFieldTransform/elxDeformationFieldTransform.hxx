@@ -52,7 +52,7 @@ DeformationFieldTransform< TElastix >
   /** Initialize to identity. */
   this->m_OriginalDeformationFieldDirection.SetIdentity();
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -149,7 +149,7 @@ DeformationFieldTransform< TElastix >::ReadFromFile( void )
   this->m_DeformationFieldInterpolatingTransform->
   SetDeformationFieldInterpolator( interpolator );
 
-}   // end ReadFromFile()
+} // end ReadFromFile()
 
 
 /**
@@ -238,7 +238,7 @@ DeformationFieldTransform< TElastix >
     xl::xout[ "error" ] << excp << std::endl;
   }
 
-}   // end WriteToFile()
+} // end WriteToFile()
 
 
 } // end namespace elastix

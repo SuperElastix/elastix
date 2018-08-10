@@ -329,7 +329,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
         }
       }
 
-    }   // end loop over all corresponding points
+    } // end loop over all corresponding points
 
     /** Check if enough samples were valid. */
 

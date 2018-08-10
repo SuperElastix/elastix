@@ -35,7 +35,7 @@ WeightedCombinationTransformElastix< TElastix >
   this->m_WeightedCombinationTransform
     = WeightedCombinationTransformType::New();
   this->SetCurrentTransform( this->m_WeightedCombinationTransform );
-}   // end Constructor
+} // end Constructor
 
 
 /*
@@ -60,7 +60,7 @@ WeightedCombinationTransformElastix< TElastix >
   /** Set the scales. */
   this->SetScales();
 
-}   // end BeforeRegistration
+} // end BeforeRegistration
 
 
 /**
@@ -96,7 +96,7 @@ WeightedCombinationTransformElastix< TElastix >
   this->m_Registration->GetAsITKBaseType()->
   SetInitialTransformParameters( this->GetParameters() );
 
-}   // end InitializeTransform
+} // end InitializeTransform
 
 
 /**
@@ -120,7 +120,7 @@ WeightedCombinationTransformElastix< TElastix >
   /** Call the ReadFromFile from the TransformBase to read in the parameters.  */
   this->Superclass2::ReadFromFile();
 
-}   // end ReadFromFile()
+} // end ReadFromFile()
 
 
 /**
@@ -154,7 +154,7 @@ WeightedCombinationTransformElastix< TElastix >
   }
   xout[ "transpar" ] << ")" << std::endl;
 
-}   // end WriteToFile()
+} // end WriteToFile()
 
 
 /**
@@ -206,14 +206,14 @@ WeightedCombinationTransformElastix< TElastix >
                          << " has not been set properly." );
     }
 
-  }   // end else: no automaticScalesEstimation
+  } // end else: no automaticScalesEstimation
 
   elxout << "Scales for transform parameters are: " << newscales << std::endl;
 
   /** And set the scales into the optimizer. */
   this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
 
-}   // end SetScales()
+} // end SetScales()
 
 
 /**
@@ -315,7 +315,7 @@ WeightedCombinationTransformElastix< TElastix >
   /** Set the subTransforms in the WeightedCombination object. */
   this->m_WeightedCombinationTransform->SetTransformContainer( subTransforms );
 
-}   // end LoadSubTransforms()
+} // end LoadSubTransforms()
 
 
 } // end namespace elastix

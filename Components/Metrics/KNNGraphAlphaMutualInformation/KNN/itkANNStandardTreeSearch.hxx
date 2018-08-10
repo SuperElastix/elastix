@@ -32,7 +32,7 @@ ANNStandardTreeSearch< TBinaryTree >
 ::ANNStandardTreeSearch()
 {
   this->m_ErrorBound = 0.0;
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -90,7 +90,7 @@ ANNStandardTreeSearch< TBinaryTree >
   /** Deallocate the temporary ANNQueryPoint. */
   annDeallocPt( ANNQueryPoint );
 
-}   // end Search
+} // end Search
 
 
 } // end namespace itk

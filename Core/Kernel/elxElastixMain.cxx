@@ -909,7 +909,7 @@ ElastixMain::CreateComponents(
         return objectContainer;
       }
     } // end if
-  }   // end while
+  } // end while
 
   return objectContainer;
 

@@ -20,13 +20,14 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 
-#include "itkImageRegionConstIterator.h"          // used for extrema computation
-#include "itkImageRegionConstIteratorWithIndex.h" // used for extrema computation
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
+#include "itkComputeImageExtremaFilter.h"
 
 #ifdef ELASTIX_USE_OPENMP
 #include <omp.h>
 #endif
+
+#include "itkTimeProbe.h"
 
 namespace itk
 {
@@ -229,134 +230,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ****************** ComputeFixedImageExtrema ***************************
- */
-
-template< class TFixedImage, class TMovingImage >
-void
-AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::ComputeFixedImageExtrema(
-  const FixedImageType * image,
-  const FixedImageRegionType & region )
-{
-  /** NB: We can't use StatisticsImageFilterWithMask to do this because
-   * the filter computes the min/max for the largest possible region.
-   * This filter is multi-threaded though.
-   */
-  FixedImagePixelType trueMinTemp = NumericTraits< FixedImagePixelType >::max();
-  FixedImagePixelType trueMaxTemp = NumericTraits< FixedImagePixelType >::NonpositiveMin();
-
-  /** If no mask. */
-  if( this->m_FixedImageMask.IsNull() )
-  {
-    typedef ImageRegionConstIterator< FixedImageType > IteratorType;
-    IteratorType it( image, region );
-    for( it.GoToBegin(); !it.IsAtEnd(); ++it )
-    {
-      const FixedImagePixelType sample = it.Get();
-      trueMinTemp = vnl_math_min( trueMinTemp, sample );
-      trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
-    }
-  }
-  /** Excluded extrema outside the mask.
-   * Because we have to call TransformIndexToPhysicalPoint() and
-   * check IsInside() this way is much (!) slower.
-   */
-  else
-  {
-    typedef ImageRegionConstIteratorWithIndex< FixedImageType > IteratorType;
-    IteratorType it( image, region );
-
-    for( it.GoToBegin(); !it.IsAtEnd(); ++it )
-    {
-      OutputPointType point;
-      image->TransformIndexToPhysicalPoint( it.GetIndex(), point );
-      if( this->m_FixedImageMask->IsInside( point ) )
-      {
-        const FixedImagePixelType sample = it.Get();
-        trueMinTemp = vnl_math_min( trueMinTemp, sample );
-        trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
-      }
-    }
-  }
-
-  /** Update member variables. */
-  this->m_FixedImageTrueMin = trueMinTemp;
-  this->m_FixedImageTrueMax = trueMaxTemp;
-
-  this->m_FixedImageMinLimit = static_cast< FixedImageLimiterOutputType >(
-    trueMinTemp - this->m_FixedLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-  this->m_FixedImageMaxLimit = static_cast< FixedImageLimiterOutputType >(
-    trueMaxTemp + this->m_FixedLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-
-} // end ComputeFixedImageExtrema()
-
-
-/**
- * ****************** ComputeMovingImageExtrema ***************************
- */
-
-template< class TFixedImage, class TMovingImage >
-void
-AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::ComputeMovingImageExtrema(
-  const MovingImageType * image,
-  const MovingImageRegionType & region )
-{
-  /** NB: We can't use StatisticsImageFilter to do this because
-   * the filter computes the min/max for the largest possible region.
-   */
-  MovingImagePixelType trueMinTemp = NumericTraits< MovingImagePixelType >::max();
-  MovingImagePixelType trueMaxTemp = NumericTraits< MovingImagePixelType >::NonpositiveMin();
-
-  /** If no mask. */
-  if( this->m_MovingImageMask.IsNull() )
-  {
-    typedef ImageRegionConstIterator< MovingImageType > IteratorType;
-    IteratorType iterator( image, region );
-    for( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
-    {
-      const MovingImagePixelType sample = iterator.Get();
-      trueMinTemp = vnl_math_min( trueMinTemp, sample );
-      trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
-    }
-  }
-  /** Excluded extrema outside the mask.
-   * Because we have to call TransformIndexToPhysicalPoint() and
-   * check IsInside() this way is much (!) slower.
-   */
-  else
-  {
-    typedef ImageRegionConstIteratorWithIndex< MovingImageType > IteratorType;
-    IteratorType it( image, region );
-
-    for( it.GoToBegin(); !it.IsAtEnd(); ++it )
-    {
-      OutputPointType point;
-      image->TransformIndexToPhysicalPoint( it.GetIndex(), point );
-      if( this->m_MovingImageMask->IsInside( point ) )
-      {
-        const MovingImagePixelType sample = it.Get();
-        trueMinTemp = vnl_math_min( trueMinTemp, sample );
-        trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
-      }
-    }
-  }
-
-  /** Update member variables. */
-  this->m_MovingImageTrueMin = trueMinTemp;
-  this->m_MovingImageTrueMax = trueMaxTemp;
-
-  this->m_MovingImageMinLimit = static_cast< MovingImageLimiterOutputType >(
-    trueMinTemp - this->m_MovingLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-  this->m_MovingImageMaxLimit = static_cast< MovingImageLimiterOutputType >(
-    trueMaxTemp + this->m_MovingLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-
-} // end ComputeMovingImageExtrema()
-
-
-/**
- * ****************** InitializeLimiter *****************************
+ * ****************** InitializeLimiters *****************************
  */
 
 template< class TFixedImage, class TMovingImage >
@@ -372,9 +246,42 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
       itkExceptionMacro( << "No fixed image limiter has been set!" );
     }
 
-    this->ComputeFixedImageExtrema(
-      this->GetFixedImage(),
-      this->GetFixedImageRegion() );
+    itk::TimeProbe timer;
+    timer.Start();
+
+    typedef typename itk::ComputeImageExtremaFilter<FixedImageType> ComputeFixedImageExtremaFilterType;
+    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema
+      = ComputeFixedImageExtremaFilterType::New();
+    computeFixedImageExtrema->SetInput( this->GetFixedImage() );
+    computeFixedImageExtrema->SetImageRegion( this->GetFixedImageRegion() );
+    if( this->m_FixedImageMask.IsNotNull() )
+    {
+      computeFixedImageExtrema->SetUseMask( true );
+
+      const FixedImageMaskSpatialObject2Type * fMask
+        = dynamic_cast< const FixedImageMaskSpatialObject2Type * >( this->m_FixedImageMask.GetPointer() );
+      if( fMask )
+      {
+        computeFixedImageExtrema->SetImageSpatialMask( fMask );
+      }
+      else
+      {
+        computeFixedImageExtrema->SetImageMask( this->GetFixedImageMask() );
+      }
+    }
+
+    computeFixedImageExtrema->Update();
+    timer.Stop();
+    elxout << "  Computing the fixed image extrema took "
+      << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+
+    this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
+    this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
+
+    this->m_FixedImageMinLimit = static_cast< FixedImageLimiterOutputType >(
+      this->m_FixedImageTrueMin - this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
+    this->m_FixedImageMaxLimit = static_cast< FixedImageLimiterOutputType >(
+      this->m_FixedImageTrueMax + this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
 
     this->m_FixedImageLimiter->SetLowerThreshold(
       static_cast< RealType >( this->m_FixedImageTrueMin ) );
@@ -394,9 +301,41 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
       itkExceptionMacro( << "No moving image limiter has been set!" );
     }
 
-    this->ComputeMovingImageExtrema(
-      this->GetMovingImage(),
-      this->GetMovingImage()->GetBufferedRegion() );
+    itk::TimeProbe timer;
+    timer.Start();
+
+    typedef typename itk::ComputeImageExtremaFilter<MovingImageType> ComputeMovingImageExtremaFilterType;
+    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema
+      = ComputeMovingImageExtremaFilterType::New();
+    computeMovingImageExtrema->SetInput( this->GetMovingImage() );    
+    computeMovingImageExtrema->SetImageRegion( this->GetMovingImage()->GetBufferedRegion() );
+    if( this->m_MovingImageMask.IsNotNull() )
+    {
+      computeMovingImageExtrema->SetUseMask( true );
+      const MovingImageMaskSpatialObject2Type * mMask
+        = dynamic_cast< const MovingImageMaskSpatialObject2Type * >( this->m_MovingImageMask.GetPointer() );
+      if( mMask )
+      {
+        computeMovingImageExtrema->SetImageSpatialMask( mMask );
+      }
+      else
+      {
+        computeMovingImageExtrema->SetImageMask( this->GetMovingImageMask() );
+      }
+    }
+    computeMovingImageExtrema->Update();
+
+    timer.Stop();
+    elxout << "  Computing the moving image extrema took "
+      << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+
+    this->m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
+    this->m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
+
+    this->m_MovingImageMinLimit = static_cast< MovingImageLimiterOutputType >(
+      this->m_MovingImageTrueMin - this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
+    this->m_MovingImageMaxLimit = static_cast< MovingImageLimiterOutputType >(
+      this->m_MovingImageTrueMax + this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
 
     this->m_MovingImageLimiter->SetLowerThreshold(
       static_cast< RealType >( this->m_MovingImageTrueMin ) );
@@ -408,7 +347,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     this->m_MovingImageLimiter->Initialize();
   }
 
-} // end InitializeLimiter()
+} // end InitializeLimiters()
 
 
 /**

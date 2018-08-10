@@ -36,7 +36,7 @@ ANNkDTree< TListSample >
   this->m_SplittingRule = ANN_KD_SL_MIDPT;
   this->m_BucketSize    = 1;
 
-}   // end Constructor()
+} // end Constructor()
 
 
 /**
@@ -49,7 +49,7 @@ ANNkDTree< TListSample >
 {
   ANNBinaryTreeCreator::DeleteANNkDTree( this->m_ANNTree );
 
-}   // end Destructor()
+} // end Destructor()
 
 
 /**
@@ -90,7 +90,7 @@ ANNkDTree< TListSample >
     itkWarningMacro( << "WARNING: No such spliting rule." );
   }
 
-}   // end SetSplittingRule()
+} // end SetSplittingRule()
 
 
 /**
@@ -118,7 +118,7 @@ ANNkDTree< TListSample >
       return "ANN_KD_SUGGEST";
   }
 
-}   // end GetSplittingRule()
+} // end GetSplittingRule()
 
 
 /**
@@ -139,7 +139,7 @@ ANNkDTree< TListSample >
   this->m_ANNTree = ANNBinaryTreeCreator::CreateANNkDTree(
     this->GetSample()->GetInternalContainer(), nop, dim, bcs, this->m_SplittingRule );
 
-}   // end GenerateTree()
+} // end GenerateTree()
 
 
 /**
@@ -157,7 +157,7 @@ ANNkDTree< TListSample >
   os << indent << "SplittingRule: " << this->m_SplittingRule << std::endl;
   os << indent << "BucketSize: " << this->m_BucketSize << std::endl;
 
-}   // end PrintSelf()
+} // end PrintSelf()
 
 
 } // end namespace itk

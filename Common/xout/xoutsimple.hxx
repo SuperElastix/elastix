@@ -33,7 +33,7 @@ xoutsimple< charT, traits >::xoutsimple()
 {
   //nothing
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -45,7 +45,7 @@ xoutsimple< charT, traits >::~xoutsimple()
 {
   //nothing
 
-}   // end Destructor
+} // end Destructor
 
 
 /**
@@ -58,7 +58,7 @@ xoutsimple< charT, traits >::AddOutput( const char * name, ostream_type * output
 {
   return this->AddTargetCell( name, output );
 
-}   // end AddOutput
+} // end AddOutput
 
 
 /**
@@ -71,7 +71,7 @@ xoutsimple< charT, traits >::AddOutput( const char * name, Superclass * output )
 {
   return this->AddTargetCell( name, output );
 
-}   // end AddOutput
+} // end AddOutput
 
 
 /**
@@ -84,7 +84,7 @@ xoutsimple< charT, traits >::RemoveOutput( const char * name )
 {
   return this->RemoveTargetCell( name );
 
-}   // end RemoveOutput
+} // end RemoveOutput
 
 
 /**
@@ -97,7 +97,7 @@ xoutsimple< charT, traits >::SetOutputs( const CStreamMapType & outputmap )
 {
   this->SetTargetCells( outputmap );
 
-}   // end SetOutputs
+} // end SetOutputs
 
 
 /**
@@ -110,7 +110,7 @@ xoutsimple< charT, traits >::SetOutputs( const XStreamMapType & outputmap )
 {
   this->SetTargetCells( outputmap );
 
-}   // end SetOutputs()
+} // end SetOutputs()
 
 
 /**
@@ -123,7 +123,7 @@ const typename xoutsimple< charT, traits >::XStreamMapType
 {
   return this->m_XTargetCells;
 
-}   // end GetXOutputs()
+} // end GetXOutputs()
 
 /**
  * **************** GetOutputs (map of c-streams) ***************
@@ -135,7 +135,7 @@ const typename xoutsimple< charT, traits >::CStreamMapType
 {
   return this->m_CTargetCells;
 
-}   // end GetCOutputs()
+} // end GetCOutputs()
 
 } // end namespace xoutlibrary
 

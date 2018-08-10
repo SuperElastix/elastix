@@ -77,7 +77,7 @@ ImageRandomSampler< TInputImage >
       ++randIter;
 
     } // end for loop
-  }   // end if no mask
+  } // end if no mask
   else
   {
     /** Update the mask. */

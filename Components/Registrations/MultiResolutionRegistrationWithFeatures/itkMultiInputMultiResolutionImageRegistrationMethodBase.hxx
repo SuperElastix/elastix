@@ -101,7 +101,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImages[ pos ].GetPointer();
   }
 
-}   // end GetFixedImage()
+} // end GetFixedImage()
 
 /**
  * **************** GetMovingImage **********************************
@@ -123,7 +123,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_MovingImages[ pos ].GetPointer();
   }
 
-}   // end GetMovingImage()
+} // end GetMovingImage()
 
 /**
  * **************** GetInterpolator **********************************
@@ -145,7 +145,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_Interpolators[ pos ].GetPointer();
   }
 
-}   // end GetInterpolator()
+} // end GetInterpolator()
 
 /**
  * **************** GetFixedImageInterpolator **********************************
@@ -167,7 +167,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImageInterpolators[ pos ].GetPointer();
   }
 
-}   // end GetFixedImageInterpolator()
+} // end GetFixedImageInterpolator()
 
 /**
  * **************** GetFixedImagePyramid **********************************
@@ -189,7 +189,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImagePyramids[ pos ].GetPointer();
   }
 
-}   // end GetFixedImagePyramid()
+} // end GetFixedImagePyramid()
 
 /**
  * **************** GetMovingImagePyramid **********************************
@@ -211,7 +211,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_MovingImagePyramids[ pos ].GetPointer();
   }
 
-}   // end GetMovingImagePyramid()
+} // end GetMovingImagePyramid()
 
 /**
  * **************** GetFixedImageRegion **********************************
@@ -234,7 +234,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImageRegions[ pos ];
   }
 
-}   // end GetFixedImageRegion()
+} // end GetFixedImageRegion()
 
 /*
  * ****************** SetMetric *******************************
@@ -257,7 +257,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     itkExceptionMacro( << "ERROR: This registration method expects a MultiInputImageToImageMetric" );
   }
 
-}   // end SetMetric()
+} // end SetMetric()
 
 
 /*
@@ -324,7 +324,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
   transformOutput->Set( this->GetTransform() );
 
-}   // end Initialize()
+} // end Initialize()
 
 
 /*
@@ -447,13 +447,13 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
         this->m_FixedImageRegionPyramids[ i ][ level ].SetSize( size );
         this->m_FixedImageRegionPyramids[ i ][ level ].SetIndex( start );
 
-      }   // end for loop over res levels
+      } // end for loop over res levels
 
-    }   // end if fixpyr!=0
+    } // end if fixpyr!=0
 
-  }   // end for loop over fixed pyramids
+  } // end for loop over fixed pyramids
 
-}   // end PreparePyramids()
+} // end PreparePyramids()
 
 
 /*
@@ -540,9 +540,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
         this->m_LastTransformParameters );
     }
 
-  }   // end for loop over res levels
+  } // end for loop over res levels
 
-}   // end GenerateData()
+} // end GenerateData()
 
 
 /**
@@ -612,7 +612,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
   return mtime;
 
-}   // end GetMTime()
+} // end GetMTime()
 
 
 /*
@@ -658,7 +658,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     itkExceptionMacro( << "The number of fixed image regions should equal the number of fixed image" );
   }
 
-}   // end CheckPyramids()
+} // end CheckPyramids()
 
 
 /*
@@ -695,7 +695,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     itkExceptionMacro( << "NumberOfMovingImagePyramids can not exceed the NumberOfInterpolators!" );
   }
 
-}   // end CheckOnInitialize()
+} // end CheckOnInitialize()
 
 
 /*
@@ -778,7 +778,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   }
   os << "]" << std::endl;
 
-}   // end PrintSelf()
+} // end PrintSelf()
 
 
 } // end namespace itk

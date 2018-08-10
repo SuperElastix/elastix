@@ -73,7 +73,7 @@ MovingGenericPyramid< TElastix >
       foundRescale &= ijfound;
 
     } // end for MovingImageDimension
-  }   // end for numberOfResolutions
+  } // end for numberOfResolutions
 
   if( !foundRescale && this->GetConfiguration()->GetPrintErrorMessages() )
   {
@@ -107,7 +107,7 @@ MovingGenericPyramid< TElastix >
       foundSmoothing &= ijfound;
 
     } // end for MovingImageDimension
-  }   // end for numberOfResolutions
+  } // end for numberOfResolutions
 
   if( !foundSmoothing && this->GetConfiguration()->GetPrintErrorMessages() )
   {

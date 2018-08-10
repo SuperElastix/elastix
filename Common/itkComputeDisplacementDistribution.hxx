@@ -150,7 +150,8 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   this->m_ScaledCostFunction->SetScales( scales );
 
   /** Get the exact gradient. */
-  this->m_ExactGradient( P );
+  this->m_ExactGradient = DerivativeType( P );
+  this->m_ExactGradient.Fill( 0.0 );
   this->GetScaledDerivative( mu, this->m_ExactGradient );
 
   /** Get transform and set current position. */
@@ -266,7 +267,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   }
   // The multi-threaded route only supports methods == 2sigma for now
 
-  /** Launch multi-threading */
+  /** Initialize multi-threading. */
   this->InitializeThreadingParameters();
 
   /** Tackle stuff needed before multi-threading. */
@@ -295,19 +296,12 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     this->m_Transform->GetNumberOfParameters() ); // why is this parameter needed?
 
   /** Get scales vector */
-#if 0
-  this->m_Scales = this->GetScales(); // why?
-  this->m_ScaledCostFunction->SetScales( this->m_Scales );
-#else
-  //used to be:
   const ScalesType & scales = this->GetScales();
   this->m_ScaledCostFunction->SetScales( scales );
-#endif
 
   /** Get the exact gradient. */
   this->m_ExactGradient = DerivativeType( this->m_NumberOfParameters );
   this->m_ExactGradient.Fill( 0.0 );
-  //this->m_ExactGradient( P ); //?? use this instead?
   this->GetScaledDerivative( mu, this->m_ExactGradient );
 
   /** Get samples. */

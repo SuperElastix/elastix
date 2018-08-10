@@ -656,7 +656,7 @@ RayCastHelper< TInputImage, TCoordRep >
       nSidesCrossed++;
     }
 
-  }   // End of loop over all four planes
+  } // end of loop over all four planes
 
   m_RayStartCoordInMM[ 0 ] = cubeInter[ 0 ][ 0 ];
   m_RayStartCoordInMM[ 1 ] = cubeInter[ 0 ][ 1 ];

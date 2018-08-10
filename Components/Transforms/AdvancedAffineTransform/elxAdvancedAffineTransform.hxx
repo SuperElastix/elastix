@@ -23,6 +23,8 @@
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
 
+#include "itkTimeProbe.h"
+
 namespace elastix
 {
 
@@ -49,8 +51,17 @@ void
 AdvancedAffineTransformElastix< TElastix >
 ::BeforeRegistration( void )
 {
+  /** Total time. */
+  itk::TimeProbe timer1;
+  timer1.Start();
+
   /** Task 1 - Set initial parameters. */
   this->InitializeTransform();
+
+  /** Print the elapsed time. */
+  timer1.Stop();
+  elxout << "InitializeTransform took "
+    << this->ConvertSecondsToDHMS(timer1.GetMean(), 2) << std::endl;
 
   /** Task 2 - Set the scales. */
   this->SetScales();
@@ -291,6 +302,23 @@ AdvancedAffineTransformElastix< TElastix >
       "AutomaticTransformInitializationMethod", 0 );
     if( method == "CenterOfGravity" )
     {
+      bool centerOfGravityUsesLowerThreshold = false;
+      this->GetConfiguration()->ReadParameter( centerOfGravityUsesLowerThreshold,
+        "CenterOfGravityUsesLowerThreshold", this->GetComponentLabel(), 0, false );
+      transformInitializer->SetCenterOfGravityUsesLowerThreshold( centerOfGravityUsesLowerThreshold );
+      if( centerOfGravityUsesLowerThreshold )
+      {
+        double lowerThresholdForCenterGravity = 500;
+        this->m_Configuration->ReadParameter( lowerThresholdForCenterGravity,
+          "LowerThresholdForCenterGravity", 0 );
+        transformInitializer->SetLowerThresholdForCenterGravity( lowerThresholdForCenterGravity );
+      }
+
+      double nrofsamples = 10000;
+      this->m_Configuration->ReadParameter( nrofsamples,
+        "NumberOfSamplesForCenteredTransformInitialization", 0 );
+      transformInitializer->SetNumberOfSamplesForCenteredTransformInitialization( nrofsamples );
+
       transformInitializer->MomentsOn();
     }
     else if( method == "Origins" )

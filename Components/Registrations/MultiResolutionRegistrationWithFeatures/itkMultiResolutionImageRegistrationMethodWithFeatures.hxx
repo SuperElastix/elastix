@@ -69,7 +69,7 @@ MultiResolutionImageRegistrationMethodWithFeatures< TFixedImage, TMovingImage >
     itkExceptionMacro( << "The number of fixed image regions should equal the number of fixed image" );
   }
 
-}   // end CheckPyramids()
+} // end CheckPyramids()
 
 
 } // end namespace itk

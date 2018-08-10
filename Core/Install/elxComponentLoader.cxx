@@ -129,7 +129,7 @@ ComponentLoader::InstallSupportedImageTypes( void )
 
   return _InstallDummy_SupportedImageTypes;
 
-}   // end InstallSupportedImageTypes
+} // end InstallSupportedImageTypes
 
 
 /**
@@ -170,7 +170,7 @@ ComponentLoader::LoadComponents( const char * /** argv0 */ )
 
   return 0;
 
-}   // end LoadComponents
+} // end LoadComponents
 
 
 /**
@@ -187,7 +187,7 @@ ComponentLoader::UnloadComponents()
   //Not necessary I think:
   //this->m_ComponentDatabase = 0;
 
-}   // end UnloadComponents
+} // end UnloadComponents
 
 
 } //end namespace elastix

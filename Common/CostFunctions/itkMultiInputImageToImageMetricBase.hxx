@@ -118,7 +118,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 
   this->m_InterpolatorsAreBSpline = false;
 
-}   // end Constructor()
+} // end Constructor()
 
 
 /** Set components. */
@@ -136,6 +136,7 @@ itkImplementationGetConstObjectMacro( MovingImage, MovingImageType );
 itkImplementationGetObjectMacro( MovingImageMask, MovingImageMaskType );
 itkImplementationGetObjectMacro( Interpolator, InterpolatorType );
 itkImplementationGetObjectMacro( FixedImageInterpolator, FixedImageInterpolatorType );
+
 
 /**
  * ************************ SetFixedImageRegion *************************
@@ -161,7 +162,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
     this->Modified();
   }
 
-}   // end SetFixedImageRegion()
+} // end SetFixedImageRegion()
 
 
 /**
@@ -181,7 +182,8 @@ const typename MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 
   return this->m_FixedImageRegionVector[ pos ];
 
-}   // end GetFixedImageRegion()
+} // end GetFixedImageRegion()
+
 
 /**
  * ****************** CheckForBSplineInterpolators **********************
@@ -217,9 +219,9 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
       itkDebugMacro( << "Interpolator " << i << " is NOT B-spline." );
       itkExceptionMacro( << "Interpolator " << i << " is NOT B-spline." );
     }
-  }   // end for-loop
+  } // end for-loop
 
-}   // end CheckForBSplineInterpolators()
+} // end CheckForBSplineInterpolators()
 
 
 /**
@@ -249,7 +251,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
   /** Call the superclass' implementation. */
   this->Superclass::Initialize();
 
-}   // end Initialize()
+} // end Initialize()
 
 
 /**
@@ -288,7 +290,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
     }
   }
 
-}   // end InitializeImageSampler()
+} // end InitializeImageSampler()
 
 
 /**
@@ -317,7 +319,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
   return this->Superclass::EvaluateMovingImageValueAndDerivative(
     mappedPoint, movingImageValue, gradient );
 
-}   // end EvaluateMovingImageValueAndDerivative()
+} // end EvaluateMovingImageValueAndDerivative()
 
 
 /**
@@ -351,7 +353,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
   }
   return inside;
 
-}   // end IsInsideMovingMask()
+} // end IsInsideMovingMask()
 
 
 } // end namespace itk

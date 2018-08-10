@@ -73,7 +73,7 @@ FixedGenericPyramid< TElastix >
       foundRescale &= ijfound;
 
     } // end for FixedImageDimension
-  }   // end for numberOfResolutions
+  } // end for numberOfResolutions
 
   if( !foundRescale && this->GetConfiguration()->GetPrintErrorMessages() )
   {
@@ -107,7 +107,7 @@ FixedGenericPyramid< TElastix >
       foundSmoothing &= ijfound;
 
     } // end for FixedImageDimension
-  }   // end for numberOfResolutions
+  } // end for numberOfResolutions
 
   if( !foundSmoothing && this->GetConfiguration()->GetPrintErrorMessages() )
   {

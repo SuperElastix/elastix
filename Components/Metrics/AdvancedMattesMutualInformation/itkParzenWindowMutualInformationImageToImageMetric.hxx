@@ -225,7 +225,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
           ++derivit;
           ++jointPDFDerivativesit;
         } // end while-loop over parameters
-      }   // end if-block to check non-zero bin contribution
+      } // end if-block to check non-zero bin contribution
 
       ++movingPDFit;
       ++jointPDFit;
@@ -387,7 +387,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
         fixedImageValue, movingImageValue, imageJacobian, nzji, derivative );
 
     } // end sampleOk
-  }   // end loop over sample container
+  } // end loop over sample container
 
   /** If desired, apply the technique introduced by Tustison */
   if( this->GetUseJacobianPreconditioning() )
@@ -562,7 +562,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
         derivative );
 
     } // end sampleOk
-  }   // end loop over sample container
+  } // end loop over sample container
 
   /** If desired, apply the technique introduced by Tustison. */
   if( this->GetUseJacobianPreconditioning() )

@@ -217,7 +217,8 @@ GradientDescentOptimizer2
   ParametersType & newPosition = this->m_ScaledCurrentPosition;
 
   /** Advance one step. */
-#ifndef ELASTIX_USE_OPENMP // If no OpenMP detected then use single-threaded code
+#if 1 // force single-threaded since it is fastest most of the times
+//#ifndef ELASTIX_USE_OPENMP // If no OpenMP detected then use single-threaded code
   /** Get a reference to the current position. */
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 

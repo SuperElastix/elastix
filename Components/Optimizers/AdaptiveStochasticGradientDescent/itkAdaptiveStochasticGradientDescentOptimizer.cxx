@@ -36,7 +36,7 @@ AdaptiveStochasticGradientDescentOptimizer
   this->m_SigmoidMin           = -0.8;
   this->m_SigmoidScale         = 1e-8;
 
-}   // end Constructor
+} // end Constructor
 
 
 /**

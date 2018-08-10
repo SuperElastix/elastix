@@ -152,6 +152,7 @@ itkImplementationGetConstObjectMacro2( MovingImageMask, MovingImageMaskType );
 itkImplementationGetConstObjectMacro1( FixedImage, FixedImageType );
 itkImplementationGetConstObjectMacro1( MovingImage, MovingImageType );
 
+
 /**
  * ********************* Constructor ****************************
  */
@@ -262,6 +263,7 @@ const typename CombinationImageToImageMetric< TFixedImage, TMovingImage >
 
 } // end GetFixedImageRegion()
 
+
 /**
  * ********************* SetNumberOfMetrics ****************************
  */
@@ -331,6 +333,7 @@ typename CombinationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
 } // end GetMetric()
+
 
 /**
  * ********************* SetMetricWeight ****************************
@@ -526,6 +529,7 @@ const typename CombinationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
 } // end GetMetricDerivative()
+
 
 /**
  * ********************* GetMetricDerivativeMagnitude ****************************
@@ -965,7 +969,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
       double weight = this->GetFinalMetricWeight( i );
       value += weight * this->m_MetricValues[ i ];
     } // end if m_UseMetric[i]
-  }   // end of combine metrics
+  } // end of combine metrics
 
   /** Combine the metric derivatives, single-threadedly. */
   // I get random segfaults on the linux or Mac systems when this is enabled.
@@ -993,7 +997,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
         double weight = this->GetFinalMetricWeight( i );
         derivative += weight * this->m_MetricDerivatives[ i ];
       } // end if m_UseMetric[i]
-    }   // end of combine metrics
+    } // end of combine metrics
   }
   /** Combine the derivatives, multi-threadedly. */
   else
@@ -1188,7 +1192,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
         }
 
       } // end if metric i exists
-    }   // end if use metric i
+    } // end if use metric i
   }     // end for metrics
 
   /** If none of the submetrics has a valid implementation of GetSelfHessian,

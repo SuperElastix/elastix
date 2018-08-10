@@ -45,7 +45,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
   this->m_UseRandomSampleRegion = false;
   this->m_SampleRegionSize.Fill( 1.0 );
 
-}   // end Constructor()
+} // end Constructor()
 
 
 /**
@@ -108,7 +108,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if no mask
+  } // end if no mask
   else
   {
     /** Update all masks. */
@@ -154,9 +154,9 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if mask
+  } // end if mask
 
-}   // end GenerateData()
+} // end GenerateData()
 
 
 /**
@@ -260,7 +260,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >::GenerateSampleRegion(
     largestContIndex += sampleRegionSize;
   }
 
-}   // end GenerateSampleRegion()
+} // end GenerateSampleRegion()
 
 
 /**
@@ -280,7 +280,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >::GenerateRandomCoordinate(
       this->m_RandomGenerator->GetUniformVariate(
       smallestContIndex[ i ], largestContIndex[ i ] ) );
   }
-}   // end GenerateRandomCoordinate()
+} // end GenerateRandomCoordinate()
 
 
 /**
@@ -297,7 +297,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
   os << indent << "Interpolator: " << this->m_Interpolator.GetPointer() << std::endl;
   os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 
-}   // end PrintSelf
+} // end PrintSelf
 
 
 } // end namespace itk

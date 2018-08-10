@@ -47,6 +47,7 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   this->m_AutomaticParameterEstimation = false;
   this->m_MaximumStepLength            = 1.0;
+  this->m_MaximumStepLengthRatio       = 1.0;
 
   this->m_NumberOfGradientMeasurements    = 0;
   this->m_NumberOfJacobianMeasurements    = 0;
@@ -171,11 +172,16 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   if( this->m_AutomaticParameterEstimation )
   {
+    /** Read user setting. */
+    this->m_MaximumStepLengthRatio = 1.0;
+    this->GetConfiguration()->ReadParameter( this->m_MaximumStepLengthRatio,
+      "MaximumStepLengthRatio", this->GetComponentLabel(), level, 0 );
+
     /** Set the maximum step length: the maximum displacement of a voxel in mm.
      * Compute default value: mean in-plane spacing of fixed and moving image.
      */
-    const unsigned int fixdim = vnl_math_min( (unsigned int)this->GetElastix()->FixedDimension, (unsigned int)2 );
-    const unsigned int movdim = vnl_math_min( (unsigned int)this->GetElastix()->MovingDimension, (unsigned int)2 );
+    const unsigned int fixdim = vnl_math_min( (unsigned int) this->GetElastix()->FixedDimension, (unsigned int) 2 );
+    const unsigned int movdim = vnl_math_min( (unsigned int) this->GetElastix()->MovingDimension, (unsigned int) 2 );
     double             sum    = 0.0;
     for( unsigned int d = 0; d < fixdim; ++d )
     {
@@ -185,7 +191,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     {
       sum += this->GetElastix()->GetMovingImage()->GetSpacing()[ d ];
     }
-    this->m_MaximumStepLength = sum / static_cast< double >( fixdim + movdim );
+    this->m_MaximumStepLength = this->m_MaximumStepLengthRatio * sum / static_cast< double >( fixdim + movdim );
 
     /** Read user setting. */
     this->GetConfiguration()->ReadParameter( this->m_MaximumStepLength,
@@ -787,7 +793,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     double noisefactor = gg / ( gg + ee );
     a =  delta * vcl_pow( A + 1.0, alpha ) / jacg * noisefactor;
     timer5.Stop();
-    elxout << "  Compute the noise compensation took "
+    elxout << "  Computing the noise compensation took "
            << this->ConvertSecondsToDHMS( timer5.GetMean(), 6 ) << std::endl;
   }
   else
@@ -896,7 +902,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       }
     } // end loop over metrics
 
-  }   // end if NewSamplesEveryIteration.
+  } // end if NewSamplesEveryIteration.
 
 #ifndef _ELASTIX_BUILD_LIBRARY
   /** Prepare for progress printing. */
