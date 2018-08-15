@@ -403,15 +403,6 @@ public:
    */
   virtual unsigned long GetMTime() const;
 
-  /** GetValueAndDerivatives threader callback function */
-  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeComboThreaderCallback( void * arg );
-
-  /** CombineDerivatives threader callback function */
-  static ITK_THREAD_RETURN_TYPE CombineDerivativesThreaderCallback( void * arg );
-
-  /** Compute Derivatives Magnitude threader callback function */
-  static ITK_THREAD_RETURN_TYPE ComputeDerivativesMagnitudeThreaderCallback( void * arg );
-
 protected:
 
   CombinationImageToImageMetric();
@@ -449,25 +440,6 @@ private:
    * strategy and derivative magnitude.
    */
   double GetFinalMetricWeight( unsigned int pos ) const;
-
-  /** For threading: store thread data. */
-  struct MultiThreaderComboMetricsType
-  {
-    std::vector< SingleValuedCostFunctionPointer > st_MetricsIterator;
-    typename std::vector< MeasureType >::iterator st_MetricValuesIterator;
-    typename std::vector< DerivativeType >::iterator st_MetricDerivativesIterator;
-    std::vector< double > st_MetricComputationTime;
-    ParametersType *      st_Parameters;
-  };
-
-  struct MultiThreaderCombineDerivativeType
-  {
-    Self *                st_ThisComboMetric;
-    std::vector< double > st_DerivativesSumOfSquares;
-    DerivativeValueType * st_Derivative;
-  };
-
-  bool m_UseMultiThread;
 
 };
 
