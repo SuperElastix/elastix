@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __itkScaledSingleValuedCostFunction_cxx
 #define __itkScaledSingleValuedCostFunction_cxx
 

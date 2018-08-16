@@ -26,10 +26,6 @@
 #include <omp.h>
 #endif
 
-#ifdef ELASTIX_USE_EIGEN
-#include <Eigen/Dense>
-#include <Eigen/Core>
-#endif
 
 namespace itk
 {
@@ -50,15 +46,10 @@ GradientDescentOptimizer2
   this->m_Value              = 0.0;
   this->m_StopCondition      = MaximumNumberOfIterations;
 
-  this->m_Threader       = ThreaderType::New();
-  this->m_UseMultiThread = false;
   this->m_UseOpenMP      = false;
 #ifdef ELASTIX_USE_OPENMP
   this->m_UseOpenMP = true;
 #endif
-  this->m_UseEigen = false;
-
-  //this->m_Threader->SetUseThreadPool( true );
 
 } // end Constructor
 
@@ -241,127 +232,9 @@ GradientDescentOptimizer2
   }
 #endif
 
-#if 0 // disable as it seems slower
-#ifdef ELASTIX_USE_EIGEN
-  else if( !this->m_UseOpenMP && this->m_UseEigen )
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-    const double           learningRate    = this->m_LearningRate;
-
-    /** Wrap itk::Arrays into Eigen jackets. */
-    typedef Eigen::VectorXd ParametersTypeEigen;
-    Eigen::Map< ParametersTypeEigen >       newPositionE( newPosition.data_block(), spaceDimension );
-    Eigen::Map< const ParametersTypeEigen > currentPositionE( currentPosition.data_block(), spaceDimension );
-    Eigen::Map< ParametersTypeEigen >       gradientE( this->m_Gradient.data_block(), spaceDimension );
-
-    /** Update the new position. */
-    newPositionE = currentPositionE - learningRate * gradientE;
-  }
-#endif
-#if defined( ELASTIX_USE_OPENMP ) && defined( ELASTIX_USE_EIGEN )
-  else if( this->m_UseOpenMP && this->m_UseEigen )
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-    const double           learningRate    = this->m_LearningRate;
-
-    /** Wrap itk::Arrays into Eigen jackets. */
-    typedef Eigen::VectorXd ParametersTypeEigen;
-    Eigen::Map< ParametersTypeEigen >       newPositionE( newPosition.data_block(), spaceDimension );
-    Eigen::Map< const ParametersTypeEigen > currentPositionE( currentPosition.data_block(), spaceDimension );
-    Eigen::Map< ParametersTypeEigen >       gradientE( this->m_Gradient.data_block(), spaceDimension );
-
-    /** Update the new position. */
-    const int spaceDim = static_cast< int >( spaceDimension );
-    const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
-    omp_set_num_threads( nthreads );
-    #pragma omp parallel for
-    for( int i = 0; i < nthreads; i += 1 )
-    {
-      int threadId = omp_get_thread_num();
-      int chunk    = ( spaceDimension + nthreads - 1 ) / nthreads;
-      int jmin     = threadId * chunk;
-      int jmax     = ( threadId + 1 ) * chunk < spaceDim ? ( threadId + 1 ) * chunk : spaceDim;
-      int subSize  = jmax - jmin;
-
-      newPositionE.segment( jmin, subSize ) = currentPositionE.segment( jmin, subSize )
-        - learningRate * gradientE.segment( jmin, subSize );
-    }
-  }
-#endif
-  else
-  {
-    /** Fill the threader parameter struct with information. */
-    MultiThreaderParameterType * temp = new  MultiThreaderParameterType;
-    temp->t_NewPosition = &newPosition;
-    temp->t_Optimizer   = this;
-
-    /** Call multi-threaded AdvanceOneStep(). */
-    this->m_Threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
-    this->m_Threader->SingleMethodExecute();
-
-    delete temp;
-  }
-#endif
-
   this->InvokeEvent( IterationEvent() );
 
 } // end AdvanceOneStep()
-
-
-/**
- * ************ AdvanceOneStepThreaderCallback ****************************
- */
-
-ITK_THREAD_RETURN_TYPE
-GradientDescentOptimizer2
-::AdvanceOneStepThreaderCallback( void * arg )
-{
-  /** Get the current thread id and user data. */
-  ThreadInfoType *             infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType                 threadID   = infoStruct->ThreadID;
-  MultiThreaderParameterType * temp
-    = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
-
-  /** Call the real implementation. */
-  temp->t_Optimizer->ThreadedAdvanceOneStep( threadID, *( temp->t_NewPosition ) );
-
-  return ITK_THREAD_RETURN_VALUE;
-
-} // end AdvanceOneStepThreaderCallback()
-
-
-/**
- * ************ ThreadedAdvanceOneStep ****************************
- */
-
-void
-GradientDescentOptimizer2
-::ThreadedAdvanceOneStep( ThreadIdType threadId, ParametersType & newPosition )
-{
-  /** Compute the range for this thread. */
-  const unsigned int spaceDimension
-    = this->GetScaledCostFunction()->GetNumberOfParameters();
-  const unsigned int subSize = static_cast< unsigned int >(
-    vcl_ceil( static_cast< double >( spaceDimension )
-    / static_cast< double >( this->m_Threader->GetNumberOfThreads() ) ) );
-  const unsigned int jmin = threadId * subSize;
-  unsigned int       jmax = ( threadId + 1 ) * subSize;
-  jmax = ( jmax > spaceDimension ) ? spaceDimension : jmax;
-
-  /** Get a reference to the current position. */
-  const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-  const double           learningRate    = this->m_LearningRate;
-  const DerivativeType & gradient        = this->m_Gradient;
-
-  /** Advance one step: mu_{k+1} = mu_k - a_k * gradient_k */
-  for( unsigned int j = jmin; j < jmax; j++ )
-  {
-    newPosition[ j ] = currentPosition[ j ] - learningRate * gradient[ j ];
-  }
-
-} // end ThreadedAdvanceOneStep()
 
 
 } // end namespace itk

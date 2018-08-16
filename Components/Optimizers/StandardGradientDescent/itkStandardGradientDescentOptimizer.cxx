@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __itkStandardGradientDescentOptimizer_cxx
 #define __itkStandardGradientDescentOptimizer_cxx
 
