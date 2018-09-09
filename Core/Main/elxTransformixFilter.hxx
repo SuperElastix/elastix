@@ -472,6 +472,10 @@ bool
 TransformixFilter< TMovingImage >
 ::IsEmpty( const InputImagePointer inputImage )
 {
+  if(!inputImage) {
+    return true;
+  }
+
   typename TMovingImage::RegionType region = inputImage->GetLargestPossibleRegion();
   return region.GetNumberOfPixels() == 0;
 } // end IsEmpty()
