@@ -108,17 +108,17 @@ CorrespondingPointsEuclideanDistanceMetric< TElastix >
 ::BeforeRegistration( void )
 {
   /** Read and set the fixed pointset. */
-  std::string fixedName = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
+  std::string fixedName = this->GetModifiableConfiguration()->GetCommandLineArgument( "-fp" );
   typename PointSetType::Pointer fixedPointSet      = 0;
-  const typename ImageType::ConstPointer fixedImage = this->GetElastix()->GetFixedImage();
+  const typename ImageType::ConstPointer fixedImage = this->GetModifiableElastix()->GetFixedImage();
   const unsigned int nrOfFixedPoints = this->ReadLandmarks(
     fixedName, fixedPointSet, fixedImage );
   this->SetFixedPointSet( fixedPointSet );
 
   /** Read and set the moving pointset. */
-  std::string movingName = this->GetConfiguration()->GetCommandLineArgument( "-mp" );
+  std::string movingName = this->GetModifiableConfiguration()->GetCommandLineArgument( "-mp" );
   typename PointSetType::Pointer movingPointSet      = 0;
-  const typename ImageType::ConstPointer movingImage = this->GetElastix()->GetMovingImage();
+  const typename ImageType::ConstPointer movingImage = this->GetModifiableElastix()->GetMovingImage();
   const unsigned int nrOfMovingPoints = this->ReadLandmarks(
     movingName, movingPointSet, movingImage );
   this->SetMovingPointSet( movingPointSet );

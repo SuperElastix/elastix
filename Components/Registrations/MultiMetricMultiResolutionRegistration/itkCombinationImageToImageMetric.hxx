@@ -24,7 +24,7 @@
 
 /** Macros to reduce some copy-paste work.
  * These macros provide the implementation of
- * all Set/GetFixedImage, Set/GetInterpolator etc methods
+ * all Set/GetFixedImage, Set/GetModifiableInterpolator etc methods
  *
  * The macros are undef'ed at the end of this file
  */
@@ -41,9 +41,9 @@
       this->Superclass::Set##_name( _arg ); \
     } \
     ImageMetricType * testPtr1 \
-      = dynamic_cast< ImageMetricType * >( this->GetMetric( pos ) ); \
+      = dynamic_cast< ImageMetricType * >( this->GetModifiableMetric( pos ) ); \
     PointSetMetricType * testPtr2 \
-      = dynamic_cast< PointSetMetricType * >( this->GetMetric( pos ) ); \
+      = dynamic_cast< PointSetMetricType * >( this->GetModifiableMetric( pos ) ); \
     if( testPtr1 ) \
     { \
       testPtr1->Set##_name( _arg ); \
@@ -75,7 +75,7 @@
       this->Superclass::Set##_name( _arg ); \
     } \
     ImageMetricType * testPtr1 \
-      = dynamic_cast< ImageMetricType * >( this->GetMetric( pos ) ); \
+      = dynamic_cast< ImageMetricType * >( this->GetModifiableMetric( pos ) ); \
     if( testPtr1 ) \
     { \
       testPtr1->Set##_name( _arg ); \
@@ -100,7 +100,7 @@
   ::Get##_name( unsigned int pos ) const \
   { \
     const ImageMetricType * testPtr1 \
-      = dynamic_cast< const ImageMetricType * >( this->GetMetric( pos ) ); \
+      = dynamic_cast< const ImageMetricType * >( this->GetModifiableMetric( pos ) ); \
     if( testPtr1 ) \
     { \
       return testPtr1->Get##_name(); \
@@ -118,9 +118,9 @@
   ::Get##_name( unsigned int pos ) const \
   { \
     const ImageMetricType * testPtr1 \
-      = dynamic_cast< const ImageMetricType * >( this->GetMetric( pos ) ); \
+      = dynamic_cast< const ImageMetricType * >( this->GetModifiableMetric( pos ) ); \
     const PointSetMetricType * testPtr2 \
-      = dynamic_cast< const PointSetMetricType * >( this->GetMetric( pos ) ); \
+      = dynamic_cast< const PointSetMetricType * >( this->GetModifiableMetric( pos ) ); \
     if( testPtr1 ) \
     { \
       return testPtr1->Get##_name(); \
@@ -212,7 +212,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
     this->Superclass::SetFixedImageRegion( _arg );
   }
   ImageMetricType * testPtr = dynamic_cast< ImageMetricType * >(
-    this->GetMetric( pos ) );
+    this->GetModifiableMetric( pos ) );
   if( testPtr )
   {
     testPtr->SetFixedImageRegion( _arg );
@@ -249,7 +249,7 @@ const typename CombinationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetFixedImageRegion( unsigned int pos ) const
 {
   const ImageMetricType * testPtr
-    = dynamic_cast< const ImageMetricType * >( this->GetMetric( pos ) );
+    = dynamic_cast< const ImageMetricType * >( this->GetModifiableMetric( pos ) );
   if( testPtr )
   {
     return testPtr->GetFixedImageRegion();
@@ -312,14 +312,14 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ********************* GetMetric ****************************
+ * ********************* GetModifiableMetric ****************************
  */
 
 template< class TFixedImage, class TMovingImage >
 typename CombinationImageToImageMetric< TFixedImage, TMovingImage >
 ::SingleValuedCostFunctionType
 * CombinationImageToImageMetric< TFixedImage, TMovingImage >
-::GetMetric( unsigned int pos ) const
+::GetModifiableMetric( unsigned int pos ) const
 {
   if( pos >= this->GetNumberOfMetrics() )
   {
@@ -330,7 +330,7 @@ typename CombinationImageToImageMetric< TFixedImage, TMovingImage >
     return this->m_Metrics[ pos ];
   }
 
-} // end GetMetric()
+} // end GetModifiableMetric()
 
 
 /**
@@ -584,7 +584,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
   for( unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i )
   {
     const ImageMetricType * testPtr
-      = dynamic_cast< const ImageMetricType * >( this->GetMetric( i ) );
+      = dynamic_cast< const ImageMetricType * >( this->GetModifiableMetric( i ) );
     if( testPtr )
     {
       sum += testPtr->GetNumberOfPixelsCounted();
@@ -622,13 +622,13 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
   /** Call Initialize for all metrics. */
   for( unsigned int i = 0; i < this->GetNumberOfMetrics(); i++ )
   {
-    SingleValuedCostFunctionType * costfunc = this->GetMetric( i );
+    SingleValuedCostFunctionType * costfunc = this->GetModifiableMetric( i );
     if( !costfunc )
     {
       itkExceptionMacro( << "Metric " << i << " has not been set!" );
     }
-    ImageMetricType *    testPtr1 = dynamic_cast< ImageMetricType * >( this->GetMetric( i ) );
-    PointSetMetricType * testPtr2 = dynamic_cast< PointSetMetricType * >( this->GetMetric( i ) );
+    ImageMetricType *    testPtr1 = dynamic_cast< ImageMetricType * >( this->GetModifiableMetric( i ) );
+    PointSetMetricType * testPtr2 = dynamic_cast< PointSetMetricType * >( this->GetModifiableMetric( i ) );
     if( testPtr1 )
     {
       // The NumberOfThreadsPerMetric is changed after Initialize() so we save it before and then
@@ -839,8 +839,8 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
    */
   for( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
-    ImageMetricType *    testPtr1 = dynamic_cast< ImageMetricType * >( this->GetMetric( i ) );
-    PointSetMetricType * testPtr2 = dynamic_cast< PointSetMetricType * >( this->GetMetric( i ) );
+    ImageMetricType *    testPtr1 = dynamic_cast< ImageMetricType * >( this->GetModifiableMetric( i ) );
+    PointSetMetricType * testPtr2 = dynamic_cast< PointSetMetricType * >( this->GetModifiableMetric( i ) );
     if( testPtr1 )
     {
       testPtr1->SetUseMetricSingleThreaded( true );
@@ -937,7 +937,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
     if( this->m_UseMetric[ i ] )
     {
       const double      w      = this->m_MetricWeights[ i ];
-      ImageMetricType * metric = dynamic_cast< ImageMetricType * >( this->GetMetric( i ) );
+      ImageMetricType * metric = dynamic_cast< ImageMetricType * >( this->GetModifiableMetric( i ) );
       if( metric )
       {
         initialized = true;
@@ -986,7 +986,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
   /** Check the modified time of the sub metrics */
   for( unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i )
   {
-    SingleValuedCostFunctionPointer metric = this->GetMetric( i );
+    SingleValuedCostFunctionPointer metric = this->GetModifiableMetric( i );
     if( metric.IsNotNull() )
     {
       m     = metric->GetMTime();

@@ -76,7 +76,7 @@ OptimizerBase< TElastix >
 
   /** Check if after every iteration a new sample set should be created. */
   this->m_NewSamplesEveryIteration = false;
-  this->GetConfiguration()->ReadParameter( this->m_NewSamplesEveryIteration,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_NewSamplesEveryIteration,
     "NewSamplesEveryIteration", this->GetComponentLabel(), level, 0 );
 
 } // end BeforeEachResolutionBase()
@@ -128,9 +128,9 @@ OptimizerBase< TElastix >
   /** Force the metric to base its computation on a new subset of image samples.
    * Not every metric may have implemented this.
    */
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMetrics(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfMetrics(); ++i )
   {
-    this->GetElastix()->GetElxMetricBase( i )->SelectNewSamples();
+    this->GetModifiableElastix()->GetElxMetricBase( i )->SelectNewSamples();
   }
 
 } // end SelectNewSamples()

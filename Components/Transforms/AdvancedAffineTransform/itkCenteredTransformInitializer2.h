@@ -188,7 +188,7 @@ protected:
 
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
-  itkGetObjectMacro( Transform, TransformType );
+  itkGetModifiableObjectMacro( Transform, TransformType );
 
   /** Settings for MomentsCalculator. */
   SizeValueType  m_NumberOfSamplesForCenteredTransformInitialization;

@@ -79,7 +79,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::FixedImageType
   if( idx < this->GetNumberOfFixedImages() )
   {
     return dynamic_cast< FixedImageType * >(
-      this->GetFixedImageContainer()->ElementAt( idx ).GetPointer() );
+      this->GetModifiableFixedImageContainer()->ElementAt( idx ).GetPointer() );
   }
 
   return 0;
@@ -98,7 +98,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::MovingImageType
   if( idx < this->GetNumberOfMovingImages() )
   {
     return dynamic_cast< MovingImageType * >(
-      this->GetMovingImageContainer()->ElementAt( idx ).GetPointer() );
+      this->GetModifiableMovingImageContainer()->ElementAt( idx ).GetPointer() );
   }
 
   return 0;
@@ -117,7 +117,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::FixedMaskType
   if( idx < this->GetNumberOfFixedMasks() )
   {
     return dynamic_cast< FixedMaskType * >(
-      this->GetFixedMaskContainer()->ElementAt( idx ).GetPointer() );
+      this->GetModifiableFixedMaskContainer()->ElementAt( idx ).GetPointer() );
   }
 
   return 0;
@@ -136,7 +136,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::MovingMaskType
   if( idx < this->GetNumberOfMovingMasks() )
   {
     return dynamic_cast< MovingMaskType * >(
-      this->GetMovingMaskContainer()->ElementAt( idx ).GetPointer() );
+      this->GetModifiableMovingMaskContainer()->ElementAt( idx ).GetPointer() );
   }
 
   return 0;
@@ -155,7 +155,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::ResultImageType
   if( idx < this->GetNumberOfResultImages() )
   {
     return dynamic_cast< ResultImageType * >(
-      this->GetResultImageContainer()->ElementAt( idx ).GetPointer() );
+      this->GetModifiableResultImageContainer()->ElementAt( idx ).GetPointer() );
   }
 
   return 0;
@@ -189,7 +189,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::ResultDeformationFieldTyp
   if (idx < this->GetNumberOfResultDeformationFields() )
   {
     return dynamic_cast< ResultDeformationFieldType * >(
-      this->GetResultDeformationFieldContainer()->ElementAt( idx ).GetPointer() );
+      this->GetModifiableResultDeformationFieldContainer()->ElementAt( idx ).GetPointer() );
   }
 
   return 0;
@@ -493,10 +493,10 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
-    this->GetConfiguration()->ReadParameter( resultImageFormat,
+    this->GetModifiableConfiguration()->ReadParameter( resultImageFormat,
       "ResultImageFormat", 0, false );
     std::ostringstream makeFileName( "" );
-    makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
+    makeFileName << this->GetModifiableConfiguration()->GetCommandLineArgument( "-out" )
                  << "result." << resultImageFormat;
 
     /** Write the resampled image to disk.
@@ -570,12 +570,12 @@ ElastixTemplate< TFixedImage, TMovingImage >
   returndummy |= this->GetElxResamplerBase()->BeforeAllTransformix();
   returndummy |= this->GetElxTransformBase()->BeforeAllTransformix();
 
-  /** The GetConfiguration also has a BeforeAllTransformix,
+  /** The GetModifiableConfiguration also has a BeforeAllTransformix,
    * It print the Transform Parameter file to the log file. That's
    * why we call it after the other components.
    */
 #ifndef _ELASTIX_BUILD_LIBRARY
-  returndummy |= this->GetConfiguration()->BeforeAllTransformix();
+  returndummy |= this->GetModifiableConfiguration()->BeforeAllTransformix();
 #endif
 
   /** Return a value. */
@@ -655,7 +655,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
   /** Create a TransformParameter-file for the current resolution. */
   bool writeIterationInfo = true;
-  this->GetConfiguration()->ReadParameter( writeIterationInfo,
+  this->GetModifiableConfiguration()->ReadParameter( writeIterationInfo,
     "WriteIterationInfo", 0, false );
   if( writeIterationInfo )
   {
@@ -716,7 +716,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
   /** Create a TransformParameter-file for the current resolution. */
   bool writeTransformParameterEachResolution = false;
-  this->GetConfiguration()->ReadParameter( writeTransformParameterEachResolution,
+  this->GetModifiableConfiguration()->ReadParameter( writeTransformParameterEachResolution,
     "WriteTransformParametersEachResolution", 0, false );
   if( writeTransformParameterEachResolution )
   {
@@ -724,7 +724,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
     std::ostringstream makeFileName( "" );
     makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
                  << "TransformParameters."
-                 << this->GetConfiguration()->GetElastixLevel()
+                 << this->GetModifiableConfiguration()->GetElastixLevel()
                  << ".R" << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
                  << ".txt";
     std::string fileName = makeFileName.str();
@@ -775,7 +775,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
   /** Create a TransformParameter-file for the current iteration. */
   bool writeTansformParametersThisIteration = false;
-  this->GetConfiguration()->ReadParameter( writeTansformParametersThisIteration,
+  this->GetModifiableConfiguration()->ReadParameter( writeTansformParametersThisIteration,
     "WriteTransformParametersEachIteration", 0, false );
   if( writeTansformParametersThisIteration )
   {
@@ -803,9 +803,9 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
     /** Create the TransformParameters filename for this iteration. */
     std::ostringstream makeFileName( "" );
-    makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
+    makeFileName << this->GetModifiableConfiguration()->GetCommandLineArgument( "-out" )
                  << "TransformParameters."
-                 << this->GetConfiguration()->GetElastixLevel()
+                 << this->GetModifiableConfiguration()->GetElastixLevel()
                  << ".R" << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
                  << ".It" << makeIterationString.str()
                  << ".txt";
@@ -842,14 +842,14 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
   /** Create the final TransformParameters filename. */
   bool writeFinalTansformParameters = true;
-  this->GetConfiguration()->ReadParameter( writeFinalTansformParameters,
+  this->GetModifiableConfiguration()->ReadParameter( writeFinalTansformParameters,
     "WriteFinalTransformParameters", 0, false );
   if( writeFinalTansformParameters )
   {
     std::ostringstream makeFileName( "" );
-    makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
+    makeFileName << this->GetModifiableConfiguration()->GetCommandLineArgument( "-out" )
                  << "TransformParameters."
-                 << this->GetConfiguration()->GetElastixLevel()
+                 << this->GetModifiableConfiguration()->GetElastixLevel()
                  << ".txt";
     std::string FileName = makeFileName.str();
 
@@ -1002,7 +1002,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 ::CallInEachComponent( PtrToMemberFunction func )
 {
   /** Call the memberfunction 'func' of all components. */
-  ( ( *( this->GetConfiguration() ) ).*func )();
+  ( ( *( this->GetModifiableConfiguration() ) ).*func )();
 
   for( unsigned int i = 0; i < this->GetNumberOfRegistrations(); ++i )
   {
@@ -1061,7 +1061,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
   int returndummy = 0;
 
   /** Call the memberfunction 'func' of all components. */
-  returndummy |= ( ( *( this->GetConfiguration() ) ).*func )();
+  returndummy |= ( ( *( this->GetModifiableConfiguration() ) ).*func )();
 
   for( unsigned int i = 0; i < this->GetNumberOfRegistrations(); ++i )
   {
@@ -1119,7 +1119,7 @@ void
 ElastixTemplate< TFixedImage, TMovingImage >
 ::ConfigureComponents( Self * This )
 {
-  this->GetConfiguration()->SetComponentLabel( "Configuration", 0 );
+  this->GetModifiableConfiguration()->SetComponentLabel( "Configuration", 0 );
 
   for( unsigned int i = 0; i < this->GetNumberOfRegistrations(); ++i )
   {
@@ -1309,12 +1309,12 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
 
 /**
- * ************** GetConfiguration *********************
+ * ************** GetModifiableConfiguration *********************
  */
 
 template< class TFixedImage, class TMovingImage >
 typename ElastixTemplate< TFixedImage, TMovingImage >::ConfigurationPointer
-ElastixTemplate< TFixedImage, TMovingImage >::GetConfiguration( const size_t index )
+ElastixTemplate< TFixedImage, TMovingImage >::GetModifiableConfiguration( const size_t index )
 {
   return this->m_Configurations[ index ];
 }

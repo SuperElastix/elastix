@@ -175,10 +175,10 @@ public:
   /** Set/Get the FixedImagePyramid. */
   virtual void SetFixedImagePyramid( FixedImagePyramidType * _arg, unsigned int pos );
 
-  virtual FixedImagePyramidType * GetFixedImagePyramid( unsigned int pos ) const;
+  virtual FixedImagePyramidType * GetModifiableFixedImagePyramid( unsigned int pos ) const;
 
-  virtual FixedImagePyramidType * GetFixedImagePyramid( void )
-  { return this->GetFixedImagePyramid( 0 ); }
+  virtual FixedImagePyramidType * GetModifiableFixedImagePyramid( void )
+  { return this->GetModifiableFixedImagePyramid( 0 ); }
   itkSimpleSetMacro( FixedImagePyramid, FixedImagePyramidType * );
   itkSetNumberOfMacro( FixedImagePyramid );
   itkGetNumberOfMacro( FixedImagePyramid );
@@ -197,10 +197,10 @@ public:
   /** Set/Get the MovingImagePyramid. */
   virtual void SetMovingImagePyramid( MovingImagePyramidType * _arg, unsigned int pos );
 
-  virtual MovingImagePyramidType * GetMovingImagePyramid( unsigned int pos ) const;
+  virtual MovingImagePyramidType * GetModifiableMovingImagePyramid( unsigned int pos ) const;
 
-  virtual MovingImagePyramidType * GetMovingImagePyramid( void )
-  { return this->GetMovingImagePyramid( 0 ); }
+  virtual MovingImagePyramidType * GetModifiableMovingImagePyramid( void )
+  { return this->GetModifiableMovingImagePyramid( 0 ); }
   itkSimpleSetMacro( MovingImagePyramid, MovingImagePyramidType * );
   itkSetNumberOfMacro( MovingImagePyramid );
   itkGetNumberOfMacro( MovingImagePyramid );
@@ -208,10 +208,10 @@ public:
   /** Set/Get the Interpolator. */
   virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos );
 
-  virtual InterpolatorType * GetInterpolator( unsigned int pos ) const;
+  virtual InterpolatorType * GetModifiableInterpolator( unsigned int pos ) const;
 
-  virtual InterpolatorType * GetInterpolator( void )
-  { return this->GetInterpolator( 0 ); }
+  virtual InterpolatorType * GetModifiableInterpolator( void )
+  { return this->GetModifiableInterpolator( 0 ); }
   itkSimpleSetMacro( Interpolator, InterpolatorType * );
   itkSetNumberOfMacro( Interpolator );
   itkGetNumberOfMacro( Interpolator );
@@ -231,7 +231,7 @@ public:
   virtual void SetMetric( MetricType * _arg );
 
   /** Get a metric that takes multiple inputs. */
-  itkGetObjectMacro( MultiInputMetric, MultiInputMetricType );
+  itkGetModifiableObjectMacro( MultiInputMetric, MultiInputMetricType );
 
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.

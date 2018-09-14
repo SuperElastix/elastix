@@ -111,8 +111,8 @@ SplineKernelTransform< TElastix >
    * line arguments, then and only then we continue.
    */
   // fp used to be ipp, added in elastix 4.5
-  std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
-  std::string fp  = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
+  std::string ipp = this->GetModifiableConfiguration()->GetCommandLineArgument( "-ipp" );
+  std::string fp  = this->GetModifiableConfiguration()->GetCommandLineArgument( "-fp" );
 
   // Backwards compatibility stuff:
   if( !ipp.empty() )
@@ -141,7 +141,7 @@ SplineKernelTransform< TElastix >
   /** Check if -mp is given. If the optional command "-mp"
    * is given in the command line arguments, then we print it.
    */
-  std::string mp = this->GetConfiguration()->GetCommandLineArgument( "-mp" );
+  std::string mp = this->GetModifiableConfiguration()->GetCommandLineArgument( "-mp" );
 
   /** Is the moving landmark file specified? */
   if( mp.empty() )
@@ -169,7 +169,7 @@ SplineKernelTransform< TElastix >
 {
   /** Determine type of spline. */
   std::string kernelType = "ThinPlateSpline";
-  this->GetConfiguration()->ReadParameter(
+  this->GetModifiableConfiguration()->ReadParameter(
     kernelType, "SplineKernelType", this->GetComponentLabel(), 0, -1 );
   bool knownType = this->SetKernelType( kernelType );
   if( !knownType )
@@ -182,7 +182,7 @@ SplineKernelTransform< TElastix >
 
   /** Interpolating or approximating spline. */
   double splineRelaxationFactor = 0.0;
-  this->GetConfiguration()->ReadParameter(
+  this->GetModifiableConfiguration()->ReadParameter(
     splineRelaxationFactor, "SplineRelaxationFactor", this->GetComponentLabel(), 0, -1 );
   this->m_KernelTransform->SetStiffness( splineRelaxationFactor );
 
@@ -190,14 +190,14 @@ SplineKernelTransform< TElastix >
   if( kernelType == "ElasticBodySpline" || kernelType == "ElastixBodyReciprocalSpline" )
   {
     double poissonRatio = 0.3;
-    this->GetConfiguration()->ReadParameter(
+    this->GetModifiableConfiguration()->ReadParameter(
       poissonRatio, "SplinePoissonRatio", this->GetComponentLabel(), 0, -1 );
     this->m_KernelTransform->SetPoissonRatio( poissonRatio );
   }
 
   /** Set the matrix inversion method (one of {SVD, QR}). */
   std::string matrixInversionMethod = "SVD";
-  this->GetConfiguration()->ReadParameter(
+  this->GetModifiableConfiguration()->ReadParameter(
     matrixInversionMethod, "TPSMatrixInversionMethod", 0, true );
   this->m_KernelTransform->SetMatrixInversionMethod( matrixInversionMethod );
 
@@ -237,8 +237,8 @@ SplineKernelTransform< TElastix >
          << ":" << this->elxGetClassName() << "." << std::endl;
 
   // fp used to be ipp
-  std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
-  std::string fp  = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
+  std::string ipp = this->GetModifiableConfiguration()->GetCommandLineArgument( "-ipp" );
+  std::string fp  = this->GetModifiableConfiguration()->GetCommandLineArgument( "-fp" );
   if( fp.empty() )
   {
     fp = ipp;                 // backwards compatibility, added in elastix 4.5
@@ -268,7 +268,7 @@ SplineKernelTransform< TElastix >
 ::DetermineTargetLandmarks( void )
 {
   /** The moving landmark file name. */
-  std::string mp = this->GetConfiguration()->GetCommandLineArgument( "-mp" );
+  std::string mp = this->GetModifiableConfiguration()->GetCommandLineArgument( "-mp" );
   if( mp.empty() )
   {
     return false;
@@ -347,8 +347,8 @@ SplineKernelTransform< TElastix >
   if( landmarkReader->GetPointsAreIndices() )
   {
     /** Get handles to the fixed and moving images. */
-    typename FixedImageType::Pointer fixedImage   = this->GetElastix()->GetFixedImage();
-    typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
+    typename FixedImageType::Pointer fixedImage   = this->GetModifiableElastix()->GetFixedImage();
+    typename MovingImageType::Pointer movingImage = this->GetModifiableElastix()->GetMovingImage();
 
     InputPointType landmarkPoint; landmarkPoint.Fill( 0.0f );
     IndexType      landmarkIndex;
@@ -381,13 +381,13 @@ SplineKernelTransform< TElastix >
 
   /** Apply initial transform if necessary, for fixed image landmarks only. */
   if( landmarksInFixedImage && this->GetUseComposition()
-    && this->Superclass1::GetInitialTransform() != 0 )
+    && this->Superclass1::GetModifiableInitialTransform() != 0 )
   {
     InputPointType inputPoint; inputPoint.Fill( 0.0f );
     for( unsigned int j = 0; j < nrofpoints; ++j )
     {
       landmarkPointSet->GetPoint( j, &inputPoint );
-      inputPoint = this->Superclass1::GetInitialTransform()
+      inputPoint = this->Superclass1::GetModifiableInitialTransform()
         ->TransformPoint( inputPoint );
       landmarkPointSet->SetPoint( j, inputPoint );
     }
@@ -407,7 +407,7 @@ SplineKernelTransform< TElastix >
 {
   /** Read kernel type. */
   std::string kernelType = "unknown";
-  bool        skret      = this->GetConfiguration()->ReadParameter(
+  bool        skret      = this->GetModifiableConfiguration()->ReadParameter(
     kernelType, "SplineKernelType", 0 );
   if( skret )
   {
@@ -422,25 +422,25 @@ SplineKernelTransform< TElastix >
 
   /** Interpolating or approximating spline. */
   double splineRelaxationFactor = 0.0;
-  this->GetConfiguration()->ReadParameter(
+  this->GetModifiableConfiguration()->ReadParameter(
     splineRelaxationFactor, "SplineRelaxationFactor", this->GetComponentLabel(), 0, -1 );
   this->m_KernelTransform->SetStiffness( splineRelaxationFactor );
 
   /** Set the Poisson ratio; default = 0.3 = steel. */
   double poissonRatio = 0.3;
-  this->GetConfiguration()->ReadParameter(
+  this->GetModifiableConfiguration()->ReadParameter(
     poissonRatio, "SplinePoissonRatio", this->GetComponentLabel(), 0, -1 );
   this->m_KernelTransform->SetPoissonRatio( poissonRatio );
 
   /** Read number of parameters. */
   unsigned int numberOfParameters = 0;
-  this->GetConfiguration()->ReadParameter(
+  this->GetModifiableConfiguration()->ReadParameter(
     numberOfParameters, "NumberOfParameters", 0 );
 
   /** Read source landmarks. */
   std::vector< CoordRepType > fixedImageLandmarks(
   numberOfParameters, itk::NumericTraits< CoordRepType >::ZeroValue() );
-  bool retfil = this->GetConfiguration()->ReadParameter(
+  bool retfil = this->GetModifiableConfiguration()->ReadParameter(
     fixedImageLandmarks, "FixedImageLandmarks", 0, numberOfParameters - 1, true );
   if( !retfil )
   {

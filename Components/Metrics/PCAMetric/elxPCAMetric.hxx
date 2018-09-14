@@ -57,25 +57,25 @@ PCAMetric< TElastix >
     = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
   unsigned int NumEigenValues = 6;
-  this->GetConfiguration()->ReadParameter( NumEigenValues, "NumEigenValues",
+  this->GetModifiableConfiguration()->ReadParameter( NumEigenValues, "NumEigenValues",
     this->GetComponentLabel(), level, 0 );
   this->SetNumEigenValues( NumEigenValues );
 
   /** Get and set if we want to subtract the mean from the derivative. */
   bool subtractMean = false;
-  this->GetConfiguration()->ReadParameter( subtractMean,
+  this->GetModifiableConfiguration()->ReadParameter( subtractMean,
     "SubtractMean", this->GetComponentLabel(), 0, 0 );
   this->SetSubtractMean( subtractMean );
 
   /** Get and set the number of additional samples sampled at the fixed timepoint.  */
 //    unsigned int numAdditionalSamplesFixed = 0;
-//    this->GetConfiguration()->ReadParameter( numAdditionalSamplesFixed,
+//    this->GetModifiableConfiguration()->ReadParameter( numAdditionalSamplesFixed,
 //      "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0 );
 //    this->SetNumAdditionalSamplesFixed( numAdditionalSamplesFixed );
 
   /** Get and set the fixed timepoint number. */
 //    unsigned int reducedDimensionIndex = 0;
-//    this->GetConfiguration()->ReadParameter(
+//    this->GetModifiableConfiguration()->ReadParameter(
 //        reducedDimensionIndex, "ReducedDimensionIndex",
 //        this->GetComponentLabel(), 0, 0 );
 //    this->SetReducedDimensionIndex( reducedDimensionIndex );
@@ -86,7 +86,7 @@ PCAMetric< TElastix >
   bool                            usescales = true;
   for( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
-    usescales = usescales && this->GetConfiguration()->ReadParameter(
+    usescales = usescales && this->GetModifiableConfiguration()->ReadParameter(
       movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
       this->GetComponentLabel(), i, -1, true );
   }
@@ -100,12 +100,12 @@ PCAMetric< TElastix >
 
   /** Check if this transform is a B-spline transform. */
   CombinationTransformType * testPtr1
-    = dynamic_cast< CombinationTransformType * >( this->GetElastix()->GetElxTransformBase() );
+    = dynamic_cast< CombinationTransformType * >( this->GetModifiableElastix()->GetElxTransformBase() );
   if( testPtr1 )
   {
     /** Check for B-spline transform. */
     BSplineTransformBaseType * testPtr2 = dynamic_cast< BSplineTransformBaseType * >(
-      testPtr1->GetCurrentTransform() );
+      testPtr1->GetModifiableCurrentTransform() );
     if( testPtr2 )
     {
       this->SetGridSize( testPtr2->GetGridRegion().GetSize() );
@@ -114,7 +114,7 @@ PCAMetric< TElastix >
     {
       /** Check for stack transform. */
       StackTransformType * testPtr3 = dynamic_cast< StackTransformType * >(
-        testPtr1->GetCurrentTransform() );
+        testPtr1->GetModifiableCurrentTransform() );
       if( testPtr3 )
       {
         /** Set itk member variable. */

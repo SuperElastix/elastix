@@ -72,7 +72,7 @@ public:
   virtual void Execute( Object * caller, const EventObject & )
   {
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
-    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
 
@@ -80,7 +80,7 @@ public:
   {
     CallerType * castcaller = const_cast< CallerType * >(
       dynamic_cast< const CallerType * >( caller ) );
-    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
 
@@ -271,10 +271,10 @@ TransformBase< TElastix >
    * No need to cast to InitialAdvancedTransformType, since InitialAdvancedTransformType
    * inherits from InitialTransformType.
    */
-  if( this->m_Elastix->GetInitialTransform() )
+  if( this->m_Elastix->GetModifiableInitialTransform() )
   {
     InitialTransformType * testPointer = dynamic_cast< InitialTransformType * >(
-      this->m_Elastix->GetInitialTransform() );
+      this->m_Elastix->GetModifiableInitialTransform() );
     if( testPointer )
     {
       this->SetInitialTransform( testPointer );
@@ -300,13 +300,13 @@ TransformBase< TElastix >
 
 
 /**
- * ******************* GetInitialTransform **********************
+ * ******************* GetModifiableInitialTransform **********************
  */
 
 template< class TElastix >
 const typename TransformBase< TElastix >::InitialTransformType
 * TransformBase< TElastix >
-::GetInitialTransform( void ) const
+::GetModifiableInitialTransform( void ) const
 {
   /** Cast to a(n Advanced)CombinationTransform. */
   const CombinationTransformType * thisAsGrouper
@@ -315,12 +315,12 @@ const typename TransformBase< TElastix >::InitialTransformType
   /** Set the initial transform. */
   if( thisAsGrouper )
   {
-    return thisAsGrouper->GetInitialTransform();
+    return thisAsGrouper->GetModifiableInitialTransform();
   }
 
   return 0;
 
-} // end GetInitialTransform()
+} // end GetModifiableInitialTransform()
 
 
 /**
@@ -359,7 +359,7 @@ TransformBase< TElastix >
   /** Make a local copy, since some transforms do not do this,
    * like the B-spline transform.
    */
-  this->m_FinalParameters = this->GetElastix()->GetElxOptimizerBase()
+  this->m_FinalParameters = this->GetModifiableElastix()->GetElxOptimizerBase()
     ->GetAsITKBaseType()->GetCurrentPosition();
 
   /** Set the final Parameters for the resampler. */
@@ -499,7 +499,7 @@ TransformBase< TElastix >
     std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(
       fileName.c_str() );
     std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(
-      this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
+      this->GetModifiableConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
     if( fullFileName1 == fullFileName2 )
     {
       itkExceptionMacro( << "ERROR: The InitialTransformParametersFileName "
@@ -541,7 +541,7 @@ TransformBase< TElastix >
    * as an initial transform (see the WriteToFile method)
    */
   this->SetTransformParametersFileName(
-    this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
+    this->GetModifiableConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
 
 } // end ReadFromFile()
 
@@ -557,7 +557,7 @@ TransformBase< TElastix >
 {
   /** Retrieve configuration object from internally stored vector of configuration objects. */
   ConfigurationPointer configurationInitialTransform
-    = this->GetElastix()->GetConfiguration( index );
+    = this->GetModifiableElastix()->GetModifiableConfiguration( index );
 
   /** Read the InitialTransform name. */
   ComponentDescriptionType initialTransformName = "AffineTransform";
@@ -568,7 +568,7 @@ TransformBase< TElastix >
   ObjectType::Pointer initialTransform;
 
   PtrToCreator testcreator = 0;
-  testcreator = this->GetElastix()->GetComponentDatabase()
+  testcreator = this->GetModifiableElastix()->GetModifiableComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
   initialTransform = testcreator ? testcreator() : NULL;
 
@@ -579,7 +579,7 @@ TransformBase< TElastix >
   if( elx_initialTransform )
   {
     //elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
-    elx_initialTransform->SetElastix( this->GetElastix() );
+    elx_initialTransform->SetElastix( this->GetModifiableElastix() );
     elx_initialTransform->SetConfiguration( configurationInitialTransform );
     elx_initialTransform->ReadFromFile();
 
@@ -630,7 +630,7 @@ TransformBase< TElastix >
   ObjectType::Pointer initialTransform;
 
   PtrToCreator testcreator = 0;
-  testcreator = this->GetElastix()->GetComponentDatabase()
+  testcreator = this->GetModifiableElastix()->GetModifiableComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
   initialTransform = testcreator ? testcreator() : NULL;
 
@@ -641,7 +641,7 @@ TransformBase< TElastix >
   if( elx_initialTransform )
   {
     //elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
-    elx_initialTransform->SetElastix( this->GetElastix() );
+    elx_initialTransform->SetElastix( this->GetModifiableElastix() );
     elx_initialTransform->SetConfiguration( configurationInitialTransform );
     elx_initialTransform->ReadFromFile();
 
@@ -793,7 +793,7 @@ TransformBase< TElastix >
   //  this->m_Elastix->GetFixedImage()->GetDirection();
   /** But to support the UseDirectionCosines option, we should do it like this: */
   FixedImageDirectionType direction;
-  this->GetElastix()->GetOriginalFixedImageDirection( direction );
+  this->GetModifiableElastix()->GetOriginalFixedImageDirection( direction );
 
   /** Write image Size. */
   xout[ "transpar" ] << "(Size ";
@@ -850,7 +850,7 @@ TransformBase< TElastix >
    * This parameter is written from elastix 4.203.
    */
   std::string useDirectionCosinesBool = "false";
-  if( this->GetElastix()->GetUseDirectionCosines() )
+  if( this->GetModifiableElastix()->GetUseDirectionCosines() )
   {
     useDirectionCosinesBool = "true";
   }
@@ -981,7 +981,7 @@ TransformBase< TElastix >
   //  this->m_Elastix->GetFixedImage()->GetDirection();
   /** But to support the UseDirectionCosines option, we should do it like this: */
   FixedImageDirectionType direction;
-  this->GetElastix()->GetOriginalFixedImageDirection( direction );
+  this->GetModifiableElastix()->GetOriginalFixedImageDirection( direction );
 
   /** Write image Size. */
   parameterName = "Size";
@@ -1048,7 +1048,7 @@ TransformBase< TElastix >
    * This parameter is written from elastix 4.203.
    */
   std::string useDirectionCosinesBool = "false";
-  if( this->GetElastix()->GetUseDirectionCosines() )
+  if( this->GetModifiableElastix()->GetUseDirectionCosines() )
   {
     useDirectionCosinesBool = "true";
   }
@@ -1076,8 +1076,8 @@ TransformBase< TElastix >
   /** If the optional command "-def" is given in the command
    * line arguments, then and only then we continue.
    */
-  const std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
-  std::string       def = this->GetConfiguration()->GetCommandLineArgument( "-def" );
+  const std::string ipp = this->GetModifiableConfiguration()->GetCommandLineArgument( "-ipp" );
+  std::string       def = this->GetModifiableConfiguration()->GetCommandLineArgument( "-def" );
 
   /** For backwards compatibility def = ipp. */
   if( def != "" && ipp != "" )
@@ -1232,7 +1232,7 @@ TransformBase< TElastix >
 
   /** Also output moving image indices if a moving image was supplied. */
   bool alsoMovingIndices = false;
-  typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
+  typename MovingImageType::Pointer movingImage = this->GetModifiableElastix()->GetMovingImage();
   if( movingImage.IsNotNull() )
   {
     alsoMovingIndices = true;
@@ -1521,9 +1521,9 @@ TransformBase< TElastix >
    * the UseDirectionCosines flag was set to false. */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
-  bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool                    retdc = this->GetModifiableElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
-  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetChangeDirection( retdc & !this->GetModifiableElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( defGenerator->GetOutput() );
 
   /** Track the progress of the generation of the deformation field. */
@@ -1612,7 +1612,7 @@ TransformBase< TElastix >
   /** If the optional command "-jac" is given in the command line arguments,
    * then and only then we continue.
    */
-  std::string jac = this->GetConfiguration()->GetCommandLineArgument( "-jac" );
+  std::string jac = this->GetModifiableConfiguration()->GetCommandLineArgument( "-jac" );
   if( jac == "" )
   {
     elxout << "  The command-line option \"-jac\" is not used, "
@@ -1659,9 +1659,9 @@ TransformBase< TElastix >
    * the UseDirectionCosines flag was set to false. */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
-  bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool                    retdc = this->GetModifiableElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
-  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetChangeDirection( retdc & !this->GetModifiableElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( jacGenerator->GetOutput() );
 #ifndef _ELASTIX_BUILD_LIBRARY
   /** Track the progress of the generation of the deformation field. */
@@ -1715,7 +1715,7 @@ TransformBase< TElastix >
   /** If the optional command "-jacmat" is given in the command line arguments,
    * then and only then we continue.
    */
-  std::string jac = this->GetConfiguration()->GetCommandLineArgument( "-jacmat" );
+  std::string jac = this->GetModifiableConfiguration()->GetCommandLineArgument( "-jacmat" );
   if( jac != "all" )
   {
     elxout << "  The command-line option \"-jacmat\" is not used, "
@@ -1762,9 +1762,9 @@ TransformBase< TElastix >
    */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
-  bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool                    retdc = this->GetModifiableElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
-  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetChangeDirection( retdc & !this->GetModifiableElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( jacGenerator->GetOutput() );
 #ifndef _ELASTIX_BUILD_LIBRARY
   /** Track the progress of the generation of the deformation field. */

@@ -93,7 +93,7 @@ public:
 
   /** Set/Get the interpolator. A 3rd order B-spline interpolator is used by default. */
   itkSetObjectMacro( Interpolator, InterpolatorType );
-  itkGetObjectMacro( Interpolator, InterpolatorType );
+  itkGetModifiableObjectMacro( Interpolator, InterpolatorType );
 
   /** Set/Get the sample region size (in mm). Only needed when UseRandomSampleRegion==true;
    * default: filled with ones.  */

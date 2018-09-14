@@ -38,7 +38,7 @@ MultiResolutionRegistration< TElastix >
    * file: using MultiResolutionRegistration in combination with
    * more than 1 metric.
    */
-  const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
+  const unsigned int nrOfMetrics = this->GetModifiableElastix()->GetNumberOfMetrics();
   if( nrOfMetrics > 1 )
   {
     itkExceptionMacro( "\nERROR: the parameter file specifies \n"
@@ -62,7 +62,7 @@ MultiResolutionRegistration< TElastix >
   /** Make sure the fixed image is up to date. */
   try
   {
-    this->GetElastix()->GetFixedImage()->Update();
+    this->GetModifiableElastix()->GetFixedImage()->Update();
   }
   catch( itk::ExceptionObject & excp )
   {
@@ -76,7 +76,7 @@ MultiResolutionRegistration< TElastix >
   }
 
   /** Set the fixedImageRegion. */
-  this->SetFixedImageRegion( this->GetElastix()->GetFixedImage()->GetBufferedRegion() );
+  this->SetFixedImageRegion( this->GetModifiableElastix()->GetFixedImage()->GetBufferedRegion() );
 
 } // end BeforeRegistration()
 
@@ -110,23 +110,23 @@ void
 MultiResolutionRegistration< TElastix >
 ::SetComponents( void )
 {
-  /** Get the component from this-GetElastix() (as elx::...BaseType *),
+  /** Get the component from this-GetModifiableElastix() (as elx::...BaseType *),
    * cast it to the appropriate type and set it in 'this'. */
 
-  this->SetFixedImage( this->GetElastix()->GetFixedImage() );
-  this->SetMovingImage( this->GetElastix()->GetMovingImage() );
+  this->SetFixedImage( this->GetModifiableElastix()->GetFixedImage() );
+  this->SetMovingImage( this->GetModifiableElastix()->GetMovingImage() );
 
-  this->SetFixedImagePyramid( this->GetElastix()->
+  this->SetFixedImagePyramid( this->GetModifiableElastix()->
     GetElxFixedImagePyramidBase()->GetAsITKBaseType() );
 
-  this->SetMovingImagePyramid( this->GetElastix()->
+  this->SetMovingImagePyramid( this->GetModifiableElastix()->
     GetElxMovingImagePyramidBase()->GetAsITKBaseType() );
 
-  this->SetInterpolator( this->GetElastix()->
+  this->SetInterpolator( this->GetModifiableElastix()->
     GetElxInterpolatorBase()->GetAsITKBaseType() );
 
   MetricType * testPtr = dynamic_cast< MetricType * >(
-    this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
+    this->GetModifiableElastix()->GetElxMetricBase()->GetAsITKBaseType() );
   if( testPtr )
   {
     this->SetMetric( testPtr );
@@ -138,18 +138,18 @@ MultiResolutionRegistration< TElastix >
   }
 
   this->SetOptimizer( dynamic_cast< OptimizerType * >(
-      this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
+      this->GetModifiableElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
 
-  this->SetTransform( this->GetElastix()->
+  this->SetTransform( this->GetModifiableElastix()->
     GetElxTransformBase()->GetAsITKBaseType() );
 
   /** Samplers are not always needed: */
-  if( this->GetElastix()->GetElxMetricBase()->GetAdvancedMetricUseImageSampler() )
+  if( this->GetModifiableElastix()->GetElxMetricBase()->GetAdvancedMetricUseImageSampler() )
   {
-    if( this->GetElastix()->GetElxImageSamplerBase() )
+    if( this->GetModifiableElastix()->GetElxImageSamplerBase() )
     {
-      this->GetElastix()->GetElxMetricBase()->SetAdvancedMetricImageSampler(
-        this->GetElastix()->GetElxImageSamplerBase()->GetAsITKBaseType() );
+      this->GetModifiableElastix()->GetElxMetricBase()->SetAdvancedMetricImageSampler(
+        this->GetModifiableElastix()->GetElxImageSamplerBase()->GetAsITKBaseType() );
     }
     else
     {
@@ -171,8 +171,8 @@ MultiResolutionRegistration< TElastix >
 ::UpdateMasks( unsigned int level )
 {
   /** some shortcuts */
-  const unsigned int nrOfFixedMasks    = this->GetElastix()->GetNumberOfFixedMasks();
-  const unsigned int nrOfMovingMasks   = this->GetElastix()->GetNumberOfMovingMasks();
+  const unsigned int nrOfFixedMasks    = this->GetModifiableElastix()->GetNumberOfFixedMasks();
+  const unsigned int nrOfMovingMasks   = this->GetModifiableElastix()->GetNumberOfMovingMasks();
   const unsigned int oneOrNoFixedMasks = vnl_math_min( static_cast< unsigned int >( 1 ),
     nrOfFixedMasks );
   const unsigned int oneOrNoMovingMasks = vnl_math_min( static_cast< unsigned int >( 1 ),
@@ -202,9 +202,9 @@ MultiResolutionRegistration< TElastix >
   timer.Start();
 
   FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
-    this->GetElastix()->GetFixedMask(), useFixedMaskErosion,
-    this->GetFixedImagePyramid(), level );
-  this->GetMetric()->SetFixedImageMask( fixedMask );
+    this->GetModifiableElastix()->GetFixedMask(), useFixedMaskErosion,
+    this->GetModifiableFixedImagePyramid(), level );
+  this->GetModifiableMetric()->SetFixedImageMask( fixedMask );
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
@@ -217,9 +217,9 @@ MultiResolutionRegistration< TElastix >
   timer.Start();
 
   MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
-    this->GetElastix()->GetMovingMask(), useMovingMaskErosion,
-    this->GetMovingImagePyramid(), level );
-  this->GetMetric()->SetMovingImageMask( movingMask );
+    this->GetModifiableElastix()->GetMovingMask(), useMovingMaskErosion,
+    this->GetModifiableMovingImagePyramid(), level );
+  this->GetModifiableMetric()->SetMovingImageMask( movingMask );
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();

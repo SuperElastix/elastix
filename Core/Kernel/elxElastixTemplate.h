@@ -321,9 +321,9 @@ public:
   virtual void SetConfigurations( std::vector< ConfigurationPointer > & configurations );
 
   /** Return configuration from vector of configurations. Library only. */
-  virtual ConfigurationPointer GetConfiguration( const size_t index );
+  virtual ConfigurationPointer GetModifiableConfiguration( const size_t index );
 
-  virtual ConfigurationPointer GetConfiguration()
+  virtual ConfigurationPointer GetModifiableConfiguration()
   {
     return Superclass2::GetConfiguration();
   }

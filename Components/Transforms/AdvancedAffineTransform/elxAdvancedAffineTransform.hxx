@@ -265,7 +265,7 @@ AdvancedAffineTransformElastix< TElastix >
   bool tmpBool                          = false;
   this->m_Configuration->ReadParameter( tmpBool,
     "AutomaticTransformInitialization", 0 );
-  if( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
+  if( tmpBool && this->Superclass1::GetModifiableInitialTransform() == 0 )
   {
     automaticTransformInitialization = true;
   }
@@ -289,7 +289,7 @@ AdvancedAffineTransformElastix< TElastix >
     transformInitializer->SetFixedImageMask(
       this->m_Elastix->GetFixedMask() );
     // Note that setting the mask like this:
-    //  this->m_Registration->GetAsITKBaseType()->GetMetric()->GetFixedImageMask() );
+    //  this->m_Registration->GetAsITKBaseType()->GetModifiableMetric()->GetFixedImageMask() );
     // does not work since it is not yet initialized at this point in the metric.
     transformInitializer->SetMovingImageMask(
       this->m_Elastix->GetMovingMask() );
@@ -303,7 +303,7 @@ AdvancedAffineTransformElastix< TElastix >
     if( method == "CenterOfGravity" )
     {
       bool centerOfGravityUsesLowerThreshold = false;
-      this->GetConfiguration()->ReadParameter( centerOfGravityUsesLowerThreshold,
+      this->GetModifiableConfiguration()->ReadParameter( centerOfGravityUsesLowerThreshold,
         "CenterOfGravityUsesLowerThreshold", this->GetComponentLabel(), 0, false );
       transformInitializer->SetCenterOfGravityUsesLowerThreshold( centerOfGravityUsesLowerThreshold );
       if( centerOfGravityUsesLowerThreshold )
@@ -367,10 +367,10 @@ AdvancedAffineTransformElastix< TElastix >
    * the current (affine) transform.
    */
   if( this->GetUseComposition()
-    && this->Superclass1::GetInitialTransform() != 0 )
+    && this->Superclass1::GetModifiableInitialTransform() != 0 )
   {
     InputPointType transformedCenterOfRotationPoint
-      = this->Superclass1::GetInitialTransform()->TransformPoint(
+      = this->Superclass1::GetModifiableInitialTransform()->TransformPoint(
       this->m_AffineTransform->GetCenter() );
     this->m_AffineTransform->SetCenter(
       transformedCenterOfRotationPoint );
@@ -500,7 +500,7 @@ AdvancedAffineTransformElastix< TElastix >
   elxout << "Scales for transform parameters are: " << newscales << std::endl;
 
   /** And set the scales into the optimizer. */
-  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+  this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newscales );
 
 } // end SetScales()
 

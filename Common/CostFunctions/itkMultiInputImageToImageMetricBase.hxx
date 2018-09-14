@@ -22,7 +22,7 @@
 
 /** Macros to reduce some copy-paste work.
  * These macros provide the implementation of
- * all Set/GetFixedImage, Set/GetInterpolator etc methods
+ * all Set/GetFixedImage, Set/GetModifiableInterpolator etc methods
  *
  * The macros are undef'ed at the end of this file
  */
@@ -83,6 +83,20 @@
     return this->m_##_name##Vector[ pos ]; \
   } // comments for allowing ; after calling the macro
 
+/** Macro for getting modifiable objects. */
+#define itkImplementationGetModifiableObjectMacro( _name, _type ) \
+  template< class TFixedImage, class TMovingImage > \
+  typename MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >::_type   \
+  * MultiInputImageToImageMetricBase< TFixedImage, TMovingImage > \
+  ::GetModifiable##_name( unsigned int pos ) const \
+  { \
+    if( this->m_##_name##Vector.size() < pos + 1 ) \
+    { \
+      return 0; \
+    } \
+    return this->m_##_name##Vector[ pos ]; \
+  } // comments for allowing ; after calling the macro
+
 /** Macro for getting const objects. */
 #define itkImplementationGetConstObjectMacro( _name, _type ) \
   template< class TFixedImage, class TMovingImage > \
@@ -134,7 +148,7 @@ itkImplementationGetConstObjectMacro( FixedImage, FixedImageType );
 itkImplementationGetObjectMacro( FixedImageMask, FixedImageMaskType );
 itkImplementationGetConstObjectMacro( MovingImage, MovingImageType );
 itkImplementationGetObjectMacro( MovingImageMask, MovingImageMaskType );
-itkImplementationGetObjectMacro( Interpolator, InterpolatorType );
+itkImplementationGetModifiableObjectMacro( Interpolator, InterpolatorType );
 itkImplementationGetObjectMacro( FixedImageInterpolator, FixedImageInterpolatorType );
 
 
@@ -309,7 +323,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
   bool sampleOk = true;
   for( unsigned int i = 1; i < this->GetNumberOfInterpolators(); ++i )
   {
-    sampleOk &= this->GetInterpolator( i )->IsInsideBuffer( mappedPoint );
+    sampleOk &= this->GetModifiableInterpolator( i )->IsInsideBuffer( mappedPoint );
 
     /** If not inside this buffer we can quit. */
     if( !sampleOk ) { return false; }
@@ -360,7 +374,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 
 #undef itkImplementationSetObjectMacro
 #undef itkImplementationSetObjectMacro2
-#undef itkImplementationGetObjectMacro
+#undef itkImplementationGetModifiableObjectMacro
 #undef itkImplementationGetConstObjectMacro
 
 #endif // end #ifndef _itkMultiInputImageToImageMetricBase_hxx

@@ -58,7 +58,7 @@ TransformBendingEnergyPenalty< TElastix >
 
   /** Set the number of samples used to compute the SelfHessian */
   unsigned int numberOfSamplesForSelfHessian = 100000;
-  this->GetConfiguration()->ReadParameter( numberOfSamplesForSelfHessian,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfSamplesForSelfHessian,
     "NumberOfSamplesForSelfHessian", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfSamplesForSelfHessian( numberOfSamplesForSelfHessian );
 

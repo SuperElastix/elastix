@@ -58,7 +58,7 @@ AdvancedMeanSquaresMetric< TElastix >
 
   /** Get and set the normalization. */
   bool useNormalization = false;
-  this->GetConfiguration()->ReadParameter( useNormalization,
+  this->GetModifiableConfiguration()->ReadParameter( useNormalization,
     "UseNormalization", this->GetComponentLabel(), level, 0 );
   this->SetUseNormalization( useNormalization );
 
@@ -66,19 +66,19 @@ AdvancedMeanSquaresMetric< TElastix >
 
   /** Set the number of samples used to compute the SelfHessian */
   unsigned int numberOfSamplesForSelfHessian = 100000;
-  this->GetConfiguration()->ReadParameter( numberOfSamplesForSelfHessian,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfSamplesForSelfHessian,
     "NumberOfSamplesForSelfHessian", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfSamplesForSelfHessian( numberOfSamplesForSelfHessian );
 
   /** Set the smoothing sigma used to compute the SelfHessian */
   double selfHessianSmoothingSigma = 1.0;
-  this->GetConfiguration()->ReadParameter( selfHessianSmoothingSigma,
+  this->GetModifiableConfiguration()->ReadParameter( selfHessianSmoothingSigma,
     "SelfHessianSmoothingSigma", this->GetComponentLabel(), level, 0 );
   this->SetSelfHessianSmoothingSigma( selfHessianSmoothingSigma );
 
   /** Set the smoothing sigma used to compute the SelfHessian */
   double selfHessianNoiseRange = 1.0;
-  this->GetConfiguration()->ReadParameter( selfHessianNoiseRange,
+  this->GetModifiableConfiguration()->ReadParameter( selfHessianNoiseRange,
     "SelfHessianNoiseRange", this->GetComponentLabel(), level, 0 );
   this->SetSelfHessianNoiseRange( selfHessianNoiseRange );
 

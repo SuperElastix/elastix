@@ -75,7 +75,7 @@ StandardGradientDescent< TElastix >
 
   /** Set the maximumNumberOfIterations. */
   unsigned int maximumNumberOfIterations = 500;
-  this->GetConfiguration()->ReadParameter( maximumNumberOfIterations,
+  this->GetModifiableConfiguration()->ReadParameter( maximumNumberOfIterations,
     "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfIterations( maximumNumberOfIterations );
 
@@ -84,9 +84,9 @@ StandardGradientDescent< TElastix >
   double A     = 50.0;
   double alpha = 0.602;
 
-  this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( A, "SP_A", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
+  this->GetModifiableConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
+  this->GetModifiableConfiguration()->ReadParameter( A, "SP_A", this->GetComponentLabel(), level, 0 );
+  this->GetModifiableConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
 
   this->SetParam_a( a );
   this->SetParam_A( A );
@@ -94,7 +94,7 @@ StandardGradientDescent< TElastix >
 
   /** Set the MaximumNumberOfSamplingAttempts. */
   unsigned int maximumNumberOfSamplingAttempts = 0;
-  this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
+  this->GetModifiableConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
     "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
   this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
   if( maximumNumberOfSamplingAttempts > 5 )

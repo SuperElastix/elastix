@@ -56,13 +56,13 @@ void SumSquaredTissueVolumeDifferenceMetric<TElastix>
 
   /** Get and set the AirValue. */
   float AirValue = -1000.0;
-  this->GetConfiguration()->ReadParameter( AirValue,
+  this->GetModifiableConfiguration()->ReadParameter( AirValue,
     "AirValue", this->GetComponentLabel(), level, 0 );
   this->SetAirValue( AirValue );
 
   /** Get and set the TissueValue. */
   float TissueValue = 55.0;
-  this->GetConfiguration()->ReadParameter( TissueValue,
+  this->GetModifiableConfiguration()->ReadParameter( TissueValue,
     "TissueValue", this->GetComponentLabel(), level, 0 );
   this->SetTissueValue( TissueValue );
 

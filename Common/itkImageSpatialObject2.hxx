@@ -360,7 +360,7 @@ ImageSpatialObject2< TDimension,  PixelType >
 template< unsigned int TDimension, class PixelType >
 const typename ImageSpatialObject2< TDimension,  PixelType >::ImageType
 * ImageSpatialObject2< TDimension,  PixelType >
-::GetImage( void ) const
+::GetModifiableImage( void ) const
 {
   return m_Image.GetPointer();
 }

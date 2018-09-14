@@ -43,7 +43,7 @@ GridSampler< TElastix >
   for( unsigned int dim = 0; dim < InputImageDimension; dim++ )
   {
     spacing_dim = 2;
-    this->GetConfiguration()->ReadParameter(
+    this->GetModifiableConfiguration()->ReadParameter(
       spacing_dim, "SampleGridSpacing",
       this->GetComponentLabel(), level * InputImageDimension + dim, -1 );
     gridspacing[ dim ] = static_cast< SampleGridSpacingValueType >( spacing_dim );

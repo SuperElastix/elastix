@@ -102,24 +102,24 @@ AdaptiveStochasticGradientDescent< TElastix >
   unsigned int level = static_cast< unsigned int >(
     this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
 
-  const unsigned int P = this->GetElastix()->GetElxTransformBase()
+  const unsigned int P = this->GetModifiableElastix()->GetElxTransformBase()
     ->GetAsITKBaseType()->GetNumberOfParameters();
 
   /** Set the maximumNumberOfIterations. */
   SizeValueType maximumNumberOfIterations = 500;
-  this->GetConfiguration()->ReadParameter( maximumNumberOfIterations,
+  this->GetModifiableConfiguration()->ReadParameter( maximumNumberOfIterations,
     "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfIterations( maximumNumberOfIterations );
 
   /** Set the gain parameter A. */
   double A = 20.0;
-  this->GetConfiguration()->ReadParameter( A,
+  this->GetModifiableConfiguration()->ReadParameter( A,
     "SP_A", this->GetComponentLabel(), level, 0 );
   this->SetParam_A( A );
 
   /** Set the MaximumNumberOfSamplingAttempts. */
   SizeValueType maximumNumberOfSamplingAttempts = 0;
-  this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
+  this->GetModifiableConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
     "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
   this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
   if( maximumNumberOfSamplingAttempts > 5 )
@@ -135,18 +135,18 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   /** Set/Get the initial time. Default: 0.0. Should be >= 0. */
   double initialTime = 0.0;
-  this->GetConfiguration()->ReadParameter( initialTime,
+  this->GetModifiableConfiguration()->ReadParameter( initialTime,
     "SigmoidInitialTime", this->GetComponentLabel(), level, 0 );
   this->SetInitialTime( initialTime );
 
   /** Set the maximum band size of the covariance matrix. */
   this->m_MaxBandCovSize = 192;
-  this->GetConfiguration()->ReadParameter( this->m_MaxBandCovSize,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_MaxBandCovSize,
     "MaxBandCovSize", this->GetComponentLabel(), level, 0 );
 
   /** Set the number of random samples used to estimate the structure of the covariance matrix. */
   this->m_NumberOfBandStructureSamples = 10;
-  this->GetConfiguration()->ReadParameter( this->m_NumberOfBandStructureSamples,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_NumberOfBandStructureSamples,
     "NumberOfBandStructureSamples", this->GetComponentLabel(), level, 0 );
 
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true
@@ -154,47 +154,47 @@ AdaptiveStochasticGradientDescent< TElastix >
    * Deprecated alias UseCruzAcceleration is also still supported.
    */
   bool useAdaptiveStepSizes = true;
-  this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
+  this->GetModifiableConfiguration()->ReadParameter( useAdaptiveStepSizes,
     "UseCruzAcceleration", this->GetComponentLabel(), level, 0, false );
-  this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
+  this->GetModifiableConfiguration()->ReadParameter( useAdaptiveStepSizes,
     "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0 );
   this->SetUseAdaptiveStepSizes( useAdaptiveStepSizes );
 
   /** Set whether automatic gain estimation is required; default: true. */
   this->m_AutomaticParameterEstimation = true;
-  this->GetConfiguration()->ReadParameter( this->m_AutomaticParameterEstimation,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_AutomaticParameterEstimation,
     "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0 );
 
   /** Set which step size strategy is chosen; default: false. */
   this->m_UseConstantStep = false;
-  this->GetConfiguration()->ReadParameter( this->m_UseConstantStep,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_UseConstantStep,
     "UseConstantStep", this->GetComponentLabel(), level, 0 );
 
   if( this->m_AutomaticParameterEstimation )
   {
     /** Read user setting. */
     this->m_MaximumStepLengthRatio = 1.0;
-    this->GetConfiguration()->ReadParameter( this->m_MaximumStepLengthRatio,
+    this->GetModifiableConfiguration()->ReadParameter( this->m_MaximumStepLengthRatio,
       "MaximumStepLengthRatio", this->GetComponentLabel(), level, 0 );
 
     /** Set the maximum step length: the maximum displacement of a voxel in mm.
      * Compute default value: mean in-plane spacing of fixed and moving image.
      */
-    const unsigned int fixdim = vnl_math_min( (unsigned int) this->GetElastix()->FixedDimension, (unsigned int) 2 );
-    const unsigned int movdim = vnl_math_min( (unsigned int) this->GetElastix()->MovingDimension, (unsigned int) 2 );
+    const unsigned int fixdim = vnl_math_min( (unsigned int) this->GetModifiableElastix()->FixedDimension, (unsigned int) 2 );
+    const unsigned int movdim = vnl_math_min( (unsigned int) this->GetModifiableElastix()->MovingDimension, (unsigned int) 2 );
     double             sum    = 0.0;
     for( unsigned int d = 0; d < fixdim; ++d )
     {
-      sum += this->GetElastix()->GetFixedImage()->GetSpacing()[ d ];
+      sum += this->GetModifiableElastix()->GetFixedImage()->GetSpacing()[ d ];
     }
     for( unsigned int d = 0; d < movdim; ++d )
     {
-      sum += this->GetElastix()->GetMovingImage()->GetSpacing()[ d ];
+      sum += this->GetModifiableElastix()->GetMovingImage()->GetSpacing()[ d ];
     }
     this->m_MaximumStepLength = this->m_MaximumStepLengthRatio * sum / static_cast< double >( fixdim + movdim );
 
     /** Read user setting. */
-    this->GetConfiguration()->ReadParameter( this->m_MaximumStepLength,
+    this->GetModifiableConfiguration()->ReadParameter( this->m_MaximumStepLength,
       "MaximumStepLength", this->GetComponentLabel(), level, 0 );
 
     /** Number of gradients N to estimate the average square magnitudes
@@ -202,7 +202,7 @@ AdaptiveStochasticGradientDescent< TElastix >
      * A value of 0 (default) means automatic estimation.
      */
     this->m_NumberOfGradientMeasurements = 0;
-    this->GetConfiguration()->ReadParameter(
+    this->GetModifiableConfiguration()->ReadParameter(
       this->m_NumberOfGradientMeasurements,
       "NumberOfGradientMeasurements",
       this->GetComponentLabel(), level, 0 );
@@ -214,7 +214,7 @@ AdaptiveStochasticGradientDescent< TElastix >
      */
     this->m_NumberOfJacobianMeasurements = vnl_math_max(
       static_cast< unsigned int >( 1000 ), static_cast< unsigned int >( P ) );
-    this->GetConfiguration()->ReadParameter(
+    this->GetModifiableConfiguration()->ReadParameter(
       this->m_NumberOfJacobianMeasurements,
       "NumberOfJacobianMeasurements",
       this->GetComponentLabel(), level, 0 );
@@ -224,7 +224,7 @@ AdaptiveStochasticGradientDescent< TElastix >
      * If the image is smaller, the number of samples is automatically reduced later.
      */
     this->m_NumberOfSamplesForExactGradient = 100000;
-    this->GetConfiguration()->ReadParameter(
+    this->GetModifiableConfiguration()->ReadParameter(
       this->m_NumberOfSamplesForExactGradient,
       "NumberOfSamplesForExactGradient",
       this->GetComponentLabel(), level, 0 );
@@ -233,7 +233,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       * cause a more wide sigmoid. Default: 0.1. Should be >0.
       */
     double sigmoidScaleFactor = 0.1;
-    this->GetConfiguration()->ReadParameter( sigmoidScaleFactor,
+    this->GetModifiableConfiguration()->ReadParameter( sigmoidScaleFactor,
       "SigmoidScaleFactor", this->GetComponentLabel(), level, 0 );
     this->m_SigmoidScaleFactor = sigmoidScaleFactor;
 
@@ -245,20 +245,20 @@ AdaptiveStochasticGradientDescent< TElastix >
      */
     double a     = 400.0; // arbitrary guess
     double alpha = 0.602;
-    this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
-    this->GetConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
+    this->GetModifiableConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
+    this->GetModifiableConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
     this->SetParam_a( a );
     this->SetParam_alpha( alpha );
 
     /** Set/Get the maximum of the sigmoid. Should be > 0. Default: 1.0. */
     double sigmoidMax = 1.0;
-    this->GetConfiguration()->ReadParameter( sigmoidMax,
+    this->GetModifiableConfiguration()->ReadParameter( sigmoidMax,
       "SigmoidMax", this->GetComponentLabel(), level, 0 );
     this->SetSigmoidMax( sigmoidMax );
 
     /** Set/Get the minimum of the sigmoid. Should be < 0. Default: -0.8. */
     double sigmoidMin = -0.8;
-    this->GetConfiguration()->ReadParameter( sigmoidMin,
+    this->GetModifiableConfiguration()->ReadParameter( sigmoidMin,
       "SigmoidMin", this->GetComponentLabel(), level, 0 );
     this->SetSigmoidMin( sigmoidMin );
 
@@ -266,7 +266,7 @@ AdaptiveStochasticGradientDescent< TElastix >
      * cause a more wide sigmoid. Default: 1e-8. Should be >0.
      */
     double sigmoidScale = 1e-8;
-    this->GetConfiguration()->ReadParameter( sigmoidScale,
+    this->GetModifiableConfiguration()->ReadParameter( sigmoidScale,
       "SigmoidScale", this->GetComponentLabel(), level, 0 );
     this->SetSigmoidScale( sigmoidScale );
 
@@ -503,7 +503,7 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   /** Decide which method is to be used. */
   std::string asgdParameterEstimationMethod = "Original";
-  this->GetConfiguration()->ReadParameter( asgdParameterEstimationMethod,
+  this->GetModifiableConfiguration()->ReadParameter( asgdParameterEstimationMethod,
     "ASGDParameterEstimationMethod", this->GetComponentLabel(), 0, 0 );
 
   /** Perform automatic optimizer parameter estimation by the desired method. */
@@ -554,13 +554,13 @@ AdaptiveStochasticGradientDescent< TElastix >
   double maxJCJ = 0.0;
 
   /** Get current position to start the parameter estimation. */
-  this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
+  this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(
     this->GetCurrentPosition() );
 
   /** Cast to advanced metric type. */
   typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
   MetricType * testPtr = dynamic_cast< MetricType * >(
-    this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
+    this->GetModifiableElastix()->GetElxMetricBase()->GetAsITKBaseType() );
   if( !testPtr )
   {
     itkExceptionMacro( << "ERROR: AdaptiveStochasticGradientDescent expects "
@@ -573,7 +573,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   computeJacobianTerms->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
   computeJacobianTerms->SetFixedImageMask( testPtr->GetFixedImageMask() );
   computeJacobianTerms->SetTransform(
-    this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+    this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform() );
   computeJacobianTerms->SetMaxBandCovSize( this->m_MaxBandCovSize );
   computeJacobianTerms->SetNumberOfBandStructureSamples(
     this->m_NumberOfBandStructureSamples );
@@ -701,7 +701,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   itk::TimeProbe timer4, timer5;
 
   /** Get current position to start the parameter estimation. */
-  this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
+  this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(
     this->GetCurrentPosition() );
 
   /** Get the user input. */
@@ -711,7 +711,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   /** Cast to advanced metric type. */
   typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
   MetricType * testPtr = dynamic_cast< MetricType * >(
-    this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
+    this->GetModifiableElastix()->GetElxMetricBase()->GetAsITKBaseType() );
   if( !testPtr )
   {
     itkExceptionMacro( << "ERROR: AdaptiveStochasticGradientDescent expects "
@@ -725,7 +725,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   computeDisplacementDistribution->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
   computeDisplacementDistribution->SetFixedImageMask( testPtr->GetFixedImageMask() );
   computeDisplacementDistribution->SetTransform(
-    this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+    this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform() );
   computeDisplacementDistribution->SetCostFunction( this->m_CostFunction );
   computeDisplacementDistribution->SetNumberOfJacobianMeasurements(
     this->m_NumberOfJacobianMeasurements );
@@ -744,7 +744,7 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   double      jacg                                = 0.0;
   std::string maximumDisplacementEstimationMethod = "2sigma";
-  this->GetConfiguration()->ReadParameter( maximumDisplacementEstimationMethod,
+  this->GetModifiableConfiguration()->ReadParameter( maximumDisplacementEstimationMethod,
     "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0 );
 
   /** Compute the Jacobian terms. */
@@ -763,7 +763,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   const double alpha = 1.0;
 
   this->m_UseNoiseCompensation = true;
-  this->GetConfiguration()->ReadParameter( this->m_UseNoiseCompensation,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_UseNoiseCompensation,
     "NoiseCompensation", this->GetComponentLabel(), 0, 0 );
 
   /** Use noise compensation factor or not. */
@@ -819,7 +819,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   double perturbationSigma, double & gg, double & ee )
 {
   /** Some shortcuts. */
-  const unsigned int M = this->GetElastix()->GetNumberOfMetrics();
+  const unsigned int M = this->GetModifiableElastix()->GetNumberOfMetrics();
 
   /** Variables for sampler support. Each metric may have a sampler. */
   std::vector< bool >                                useRandomSampleRegionVec( M, false );
@@ -838,7 +838,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     {
       /** Get the sampler. */
       ImageSamplerBasePointer sampler
-        = this->GetElastix()->GetElxMetricBase( m )->GetAdvancedMetricImageSampler();
+        = this->GetModifiableElastix()->GetElxMetricBase( m )->GetAdvancedMetricImageSampler();
       randomSamplerVec[ m ]
         = dynamic_cast< ImageRandomSamplerBaseType * >( sampler.GetPointer() );
       randomCoordinateSamplerVec[ m ]
@@ -914,7 +914,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
-  const unsigned int P = this->GetElastix()->GetElxTransformBase()
+  const unsigned int P = this->GetModifiableElastix()->GetElxTransformBase()
     ->GetAsITKBaseType()->GetNumberOfParameters();
   DerivativeType approxgradient( P );
   DerivativeType exactgradient( P );
@@ -943,7 +943,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       {
         if( gridSamplerVec[ m ].IsNotNull() )
         {
-          this->GetElastix()->GetElxMetricBase( m )
+          this->GetModifiableElastix()->GetElxMetricBase( m )
           ->SetAdvancedMetricImageSampler( gridSamplerVec[ m ] );
         }
       }
@@ -954,7 +954,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       {
         if( randomSamplerVec[ m ].IsNotNull() )
         {
-          this->GetElastix()->GetElxMetricBase( m )->
+          this->GetModifiableElastix()->GetElxMetricBase( m )->
           SetAdvancedMetricImageSampler( randomSamplerVec[ m ] );
         }
       }
@@ -1077,7 +1077,7 @@ AdaptiveStochasticGradientDescent< TElastix >
 ::CheckForAdvancedTransform( void )
 {
   typename TransformType::Pointer transform = this->GetRegistration()
-    ->GetAsITKBaseType()->GetTransform();
+    ->GetAsITKBaseType()->GetModifiableTransform();
 
   AdvancedTransformType * testPtr = dynamic_cast< AdvancedTransformType * >(
     transform.GetPointer() );

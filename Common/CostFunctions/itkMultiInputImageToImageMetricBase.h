@@ -264,12 +264,12 @@ public:
 
 
   /** Get the interpolators. */
-  virtual InterpolatorType * GetInterpolator( unsigned int pos ) const;
+  virtual InterpolatorType * GetModifiableInterpolator( unsigned int pos ) const;
 
   /** Get the first interpolator. */
-  virtual InterpolatorType * GetInterpolator( void ) const
+  virtual InterpolatorType * GetModifiableInterpolator( void ) const
   {
-    return this->GetInterpolator( 0 );
+    return this->GetModifiableInterpolator( 0 );
   }
 
 

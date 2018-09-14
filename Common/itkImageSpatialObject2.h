@@ -98,7 +98,7 @@ public:
   void SetImage( const ImageType * image );
 
   /** Get a pointer to the image currently attached to the object. */
-  const ImageType * GetImage( void ) const;
+  const ImageType * GetModifiableImage( void ) const;
 
   /** Return true if the object is evaluable at the requested point,
    *  and else otherwise. */
@@ -142,7 +142,7 @@ public:
   /** Set/Get the interpolator */
   void SetInterpolator( InterpolatorType * interpolator );
 
-  itkGetObjectMacro( Interpolator, InterpolatorType );
+  itkGetModifiableObjectMacro( Interpolator, InterpolatorType );
 
 protected:
 

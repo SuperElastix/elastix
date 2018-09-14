@@ -79,16 +79,16 @@ AdvancedMattesMutualInformationMetric< TElastix >
 
   /** Get and set the number of histogram bins. */
   unsigned int numberOfHistogramBins = 32;
-  this->GetConfiguration()->ReadParameter( numberOfHistogramBins,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfHistogramBins,
     "NumberOfHistogramBins", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
   this->SetNumberOfMovingHistogramBins( numberOfHistogramBins );
 
   unsigned int numberOfFixedHistogramBins  = numberOfHistogramBins;
   unsigned int numberOfMovingHistogramBins = numberOfHistogramBins;
-  this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfFixedHistogramBins,
     "NumberOfFixedHistogramBins", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfMovingHistogramBins,
     "NumberOfMovingHistogramBins", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
   this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
@@ -102,9 +102,9 @@ AdvancedMattesMutualInformationMetric< TElastix >
   /** Get and set the limit range ratios. */
   double fixedLimitRangeRatio  = 0.01;
   double movingLimitRangeRatio = 0.01;
-  this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio,
+  this->GetModifiableConfiguration()->ReadParameter( fixedLimitRangeRatio,
     "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( movingLimitRangeRatio,
+  this->GetModifiableConfiguration()->ReadParameter( movingLimitRangeRatio,
     "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0 );
   this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
   this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
@@ -112,28 +112,28 @@ AdvancedMattesMutualInformationMetric< TElastix >
   /** Set B-spline Parzen kernel orders. */
   unsigned int fixedKernelBSplineOrder  = 0;
   unsigned int movingKernelBSplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( fixedKernelBSplineOrder,
     "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( movingKernelBSplineOrder,
     "MovingKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
   this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
   this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
 
   /** Set whether a low memory consumption should be used. */
   bool useFastAndLowMemoryVersion = true;
-  this->GetConfiguration()->ReadParameter( useFastAndLowMemoryVersion,
+  this->GetModifiableConfiguration()->ReadParameter( useFastAndLowMemoryVersion,
     "UseFastAndLowMemoryVersion", this->GetComponentLabel(), level, 0 );
   this->SetUseExplicitPDFDerivatives( !useFastAndLowMemoryVersion );
 
   /** Set whether to use Nick Tustison's preconditioning technique. */
   bool useJacobianPreconditioning = false;
-  this->GetConfiguration()->ReadParameter( useJacobianPreconditioning,
+  this->GetModifiableConfiguration()->ReadParameter( useJacobianPreconditioning,
     "UseJacobianPreconditioning", this->GetComponentLabel(), level, 0 );
   this->SetUseJacobianPreconditioning( useJacobianPreconditioning );
 
   /** Set whether a finite difference derivative should be used. */
   bool useFiniteDifferenceDerivative = false;
-  this->GetConfiguration()->ReadParameter( useFiniteDifferenceDerivative,
+  this->GetModifiableConfiguration()->ReadParameter( useFiniteDifferenceDerivative,
     "FiniteDifferenceDerivative", this->GetComponentLabel(), level, 0 );
   this->SetUseFiniteDifferenceDerivative( useFiniteDifferenceDerivative );
 
@@ -143,9 +143,9 @@ AdvancedMattesMutualInformationMetric< TElastix >
   {
     double c     = 1.0;
     double gamma = 0.101;
-    this->GetConfiguration()->ReadParameter( c, "SP_c",
+    this->GetModifiableConfiguration()->ReadParameter( c, "SP_c",
       this->GetComponentLabel(), level, 0 );
-    this->GetConfiguration()->ReadParameter( gamma, "SP_gamma",
+    this->GetModifiableConfiguration()->ReadParameter( gamma, "SP_gamma",
       this->GetComponentLabel(), level, 0 );
     this->SetParam_c( c );
     this->SetParam_gamma( gamma );

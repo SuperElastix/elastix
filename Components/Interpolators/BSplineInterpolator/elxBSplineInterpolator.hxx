@@ -39,7 +39,7 @@ BSplineInterpolator< TElastix >
 
   /** Read the desired spline order from the parameter file. */
   unsigned int splineOrder = 1;
-  this->GetConfiguration()->ReadParameter( splineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( splineOrder,
     "BSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
 
   /** Check. */

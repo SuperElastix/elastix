@@ -253,7 +253,7 @@ public:
   virtual void AfterRegistrationBase( void );
 
   /** Get the initial transform. */
-  virtual const InitialTransformType * GetInitialTransform( void ) const;
+  virtual const InitialTransformType * GetModifiableInitialTransform( void ) const;
 
   /** Set the initial transform. */
   virtual void SetInitialTransform( InitialTransformType * _arg );
@@ -365,12 +365,12 @@ private:
 
   std::string GetInitialTransformParametersFileName( void ) const
   {
-    if( !this->GetInitialTransform() )
+    if( !this->GetModifiableInitialTransform() )
     {
       return "NoInitialTransform";
     }
 
-    const Self * t0 = dynamic_cast<const Self *>( this->GetInitialTransform() );
+    const Self * t0 = dynamic_cast<const Self *>( this->GetModifiableInitialTransform() );
     return t0->GetTransformParametersFileName();
   }
 

@@ -144,7 +144,7 @@ MovingImagePyramidBase< TElastix >
     } // end for MovingImageDimension
   } // end for numberOfResolutions
 
-  if( !found && this->GetConfiguration()->GetPrintErrorMessages() )
+  if( !found && this->GetModifiableConfiguration()->GetPrintErrorMessages() )
   {
     xl::xout[ "warning" ] << "WARNING: the moving pyramid schedule is not fully specified!\n";
     xl::xout[ "warning" ] << "  A default pyramid schedule is used." << std::endl;

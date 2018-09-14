@@ -351,7 +351,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(
 
   itkDebugMacro( "LineSearch" );
 
-  LineSearchOptimizerPointer LSO = this->GetLineSearchOptimizer();
+  LineSearchOptimizerPointer LSO = this->GetModifiableLineSearchOptimizer();
 
   if( LSO.IsNull() )
   {

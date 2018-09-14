@@ -373,14 +373,14 @@ ElastixMain::Run( void )
   /** Set the images and masks. If not set by the user, it is not a problem.
    * ElastixTemplate will try to load them from disk.
    */
-  this->GetElastixBase()->SetFixedImageContainer( this->GetFixedImageContainer() );
-  this->GetElastixBase()->SetMovingImageContainer( this->GetMovingImageContainer() );
-  this->GetElastixBase()->SetFixedMaskContainer( this->GetFixedMaskContainer() );
-  this->GetElastixBase()->SetMovingMaskContainer( this->GetMovingMaskContainer() );
-  this->GetElastixBase()->SetResultImageContainer( this->GetResultImageContainer() );
+  this->GetElastixBase()->SetFixedImageContainer( this->GetModifiableFixedImageContainer() );
+  this->GetElastixBase()->SetMovingImageContainer( this->GetModifiableMovingImageContainer() );
+  this->GetElastixBase()->SetFixedMaskContainer( this->GetModifiableFixedMaskContainer() );
+  this->GetElastixBase()->SetMovingMaskContainer( this->GetModifiableMovingMaskContainer() );
+  this->GetElastixBase()->SetResultImageContainer( this->GetModifiableResultImageContainer() );
 
   /** Set the initial transform, if it happens to be there. */
-  this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
+  this->GetElastixBase()->SetInitialTransform( this->GetModifiableInitialTransform() );
 
   /** Set the original fixed image direction cosines (relevant in case the
    * UseDirectionCosines parameter was set to false.
@@ -1045,7 +1045,7 @@ ElastixMain::GetImageInformationFromFile(
     testReader->UpdateOutputInformation();
 
     /** Extract the required information. */
-    itk::ImageIOBase::Pointer testImageIO = testReader->GetImageIO();
+    itk::ImageIOBase::Pointer testImageIO = testReader->GetModifiableImageIO();
     //itk::ImageIOBase::IOComponentType componentType = testImageIO->GetComponentType();
     //pixelType = itk::ImageIOBase::GetComponentTypeAsString( componentType );
     if( testImageIO.IsNull() )

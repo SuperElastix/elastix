@@ -79,10 +79,10 @@ EulerStackTransform< TElastix >
   /** Task 1 - Set the stack transform parameters. */
 
   /** Determine stack transform settings. Here they are based on the fixed image. */
-  const SizeType imageSize = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  const SizeType imageSize = this->GetModifiableElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
   this->m_NumberOfSubTransforms = imageSize[ SpaceDimension - 1 ];
-  this->m_StackSpacing          = this->GetElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
-  this->m_StackOrigin           = this->GetElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
+  this->m_StackSpacing          = this->GetModifiableElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
+  this->m_StackOrigin           = this->GetModifiableElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
 
   /** Set stack transform parameters. */
   this->m_EulerStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
@@ -119,11 +119,11 @@ EulerStackTransform< TElastix >
 {
 
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
-  this->GetConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
     "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0 );
-  this->GetConfiguration()->ReadParameter( this->m_StackOrigin,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_StackOrigin,
     "StackOrigin", this->GetComponentLabel(), 0, 0 );
-  this->GetConfiguration()->ReadParameter( this->m_StackSpacing,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_StackSpacing,
     "StackSpacing", this->GetComponentLabel(), 0, 0 );
 
   ReducedDimensionInputPointType RDcenterOfRotationPoint;
@@ -338,7 +338,7 @@ EulerStackTransform< TElastix >
    * the current (euler) transform.
    */
   if( this->GetUseComposition()
-    && this->Superclass1::GetInitialTransform() != 0 )
+    && this->Superclass1::GetModifiableInitialTransform() != 0 )
   {
     /** Transform point to voxel coordinates. */
     InputPointType      fullDimensionCenterPoint;
@@ -369,7 +369,7 @@ EulerStackTransform< TElastix >
 
       /** Transform point using initial transform. */
       InputPointType transformedCenterOfRotationPoint
-        = this->Superclass1::GetInitialTransform()->TransformPoint(
+        = this->Superclass1::GetModifiableInitialTransform()->TransformPoint(
         fullDimensionCenterPoint );
 
       /** Add to averagePoint. */
@@ -457,7 +457,7 @@ EulerStackTransform< TElastix >
     const double defaultScalingvalue = 10000.0;
 
     const int sizeLastDimension
-      = this->GetElastix()->GetFixedImage()
+      = this->GetModifiableElastix()->GetFixedImage()
         ->GetLargestPossibleRegion().GetSize()[ SpaceDimension - 1 ];
 
     std::size_t count

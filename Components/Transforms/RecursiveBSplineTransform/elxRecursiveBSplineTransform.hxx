@@ -112,10 +112,10 @@ RecursiveBSplineTransform< TElastix >
 {
   /** Read spline order and periodicity setting from configuration file. */
   this->m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( this->m_SplineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
   this->m_Cyclic = false;
-  this->GetConfiguration()->ReadParameter( this->m_Cyclic,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_Cyclic,
     "UseCyclicTransform", this->GetComponentLabel(), 0, 0, true );
 
   return this->InitializeBSplineTransform();
@@ -206,7 +206,7 @@ RecursiveBSplineTransform< TElastix >
 
   /** Get the PassiveEdgeWidth and use it to set the OptimizerScales. */
   unsigned int passiveEdgeWidth = 0;
-  this->GetConfiguration()->ReadParameter( passiveEdgeWidth,
+  this->GetModifiableConfiguration()->ReadParameter( passiveEdgeWidth,
     "PassiveEdgeWidth", this->GetComponentLabel(), level, 0, false );
   this->SetOptimizerScales( passiveEdgeWidth );
 
@@ -228,18 +228,18 @@ RecursiveBSplineTransform< TElastix >
 
   /** Set up grid schedule computer with image info. */
   this->m_GridScheduleComputer->SetImageOrigin(
-    this->GetElastix()->GetFixedImage()->GetOrigin() );
+    this->GetModifiableElastix()->GetFixedImage()->GetOrigin() );
   this->m_GridScheduleComputer->SetImageSpacing(
-    this->GetElastix()->GetFixedImage()->GetSpacing() );
+    this->GetModifiableElastix()->GetFixedImage()->GetSpacing() );
   this->m_GridScheduleComputer->SetImageDirection(
-    this->GetElastix()->GetFixedImage()->GetDirection() );
+    this->GetModifiableElastix()->GetFixedImage()->GetDirection() );
   this->m_GridScheduleComputer->SetImageRegion(
-    this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
+    this->GetModifiableElastix()->GetFixedImage()->GetLargestPossibleRegion() );
 
   /** Take the initial transform only into account, if composition is used. */
   if( this->GetUseComposition() )
   {
-    this->m_GridScheduleComputer->SetInitialTransform( this->Superclass1::GetInitialTransform() );
+    this->m_GridScheduleComputer->SetInitialTransform( this->Superclass1::GetModifiableInitialTransform() );
   }
 
   /** Get the grid spacing schedule from the parameter file.
@@ -301,7 +301,7 @@ RecursiveBSplineTransform< TElastix >
     {
       finalGridSpacingInPhysicalUnits[ dim ]
         = finalGridSpacingInVoxels[ dim ]
-        * this->GetElastix()->GetFixedImage()->GetSpacing()[ dim ];
+        * this->GetModifiableElastix()->GetFixedImage()->GetSpacing()[ dim ];
     }
   }
 
@@ -491,10 +491,10 @@ RecursiveBSplineTransform< TElastix >
 {
   /** Read spline order and periodicity settings and initialize BSplineTransform. */
   m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0 );
   m_Cyclic = false;
-  this->GetConfiguration()->ReadParameter( m_Cyclic,
+  this->GetModifiableConfiguration()->ReadParameter( m_Cyclic,
     "UseCyclicTransform", this->GetComponentLabel(), 0, 0 );
   InitializeBSplineTransform();
 
@@ -772,7 +772,7 @@ RecursiveBSplineTransform< TElastix >
   if( edgeWidth == 0 )
   {
     /** Just set the unit scales into the optimizer. */
-    this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+    this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newScales );
     return;
   }
 
@@ -830,7 +830,7 @@ RecursiveBSplineTransform< TElastix >
   }
 
   /** Set the scales into the optimizer. */
-  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+  this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newScales );
 
 } // end SetOptimizerScales()
 

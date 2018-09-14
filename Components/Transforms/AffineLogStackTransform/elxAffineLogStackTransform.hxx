@@ -82,10 +82,10 @@ AffineLogStackTransform< TElastix >
   /** Task 1 - Set the stack transform parameters. */
 
   /** Determine stack transform settings. Here they are based on the fixed image. */
-  const SizeType imageSize = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  const SizeType imageSize = this->GetModifiableElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
   this->m_NumberOfSubTransforms = imageSize[ SpaceDimension - 1 ];
-  this->m_StackSpacing          = this->GetElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
-  this->m_StackOrigin           = this->GetElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
+  this->m_StackSpacing          = this->GetModifiableElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
+  this->m_StackOrigin           = this->GetModifiableElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
 
   /** Set stack transform parameters. */
   this->m_AffineLogStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
@@ -122,11 +122,11 @@ AffineLogStackTransform< TElastix >
 ::ReadFromFile( void )
 {
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
-  this->GetConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
     "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0 );
-  this->GetConfiguration()->ReadParameter( this->m_StackOrigin,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_StackOrigin,
     "StackOrigin", this->GetComponentLabel(), 0, 0 );
-  this->GetConfiguration()->ReadParameter( this->m_StackSpacing,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_StackSpacing,
     "StackSpacing", this->GetComponentLabel(), 0, 0 );
 
   ReducedDimensionInputPointType RDcenterOfRotationPoint;
@@ -280,7 +280,7 @@ AffineLogStackTransform< TElastix >
   bool tmpBool                          = false;
   this->m_Configuration->ReadParameter( tmpBool,
     "AutomaticTransformInitialization", 0 );
-  if( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
+  if( tmpBool && this->Superclass1::GetModifiableInitialTransform() == 0 )
   {
     automaticTransformInitialization = true;
   }
@@ -407,7 +407,7 @@ AffineLogStackTransform< TElastix >
      */
     const double defaultScalingvalue = 10000.0;
 
-    int sizeLastDimension = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize()[ SpaceDimension - 1 ];
+    int sizeLastDimension = this->GetModifiableElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize()[ SpaceDimension - 1 ];
 
     std::size_t count
       = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );

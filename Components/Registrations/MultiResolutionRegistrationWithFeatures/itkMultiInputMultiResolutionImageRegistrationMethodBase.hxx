@@ -126,7 +126,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 } // end GetMovingImage()
 
 /**
- * **************** GetInterpolator **********************************
+ * **************** GetModifiableInterpolator **********************************
  */
 
 template< typename TFixedImage, typename TMovingImage >
@@ -134,7 +134,7 @@ typename
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
 ::InterpolatorType
 * MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
-::GetInterpolator( unsigned int pos ) const
+::GetModifiableInterpolator( unsigned int pos ) const
 {
   if( pos >= this->GetNumberOfInterpolators() )
   {
@@ -145,7 +145,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_Interpolators[ pos ].GetPointer();
   }
 
-} // end GetInterpolator()
+} // end GetModifiableInterpolator()
 
 /**
  * **************** GetFixedImageInterpolator **********************************
@@ -170,7 +170,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 } // end GetFixedImageInterpolator()
 
 /**
- * **************** GetFixedImagePyramid **********************************
+ * **************** GetModifiableFixedImagePyramid **********************************
  */
 
 template< typename TFixedImage, typename TMovingImage >
@@ -178,7 +178,7 @@ typename
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
 ::FixedImagePyramidType
 * MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
-::GetFixedImagePyramid( unsigned int pos ) const
+::GetModifiableFixedImagePyramid( unsigned int pos ) const
 {
   if( pos >= this->GetNumberOfFixedImagePyramids() )
   {
@@ -189,10 +189,10 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImagePyramids[ pos ].GetPointer();
   }
 
-} // end GetFixedImagePyramid()
+} // end GetModifiableFixedImagePyramid()
 
 /**
- * **************** GetMovingImagePyramid **********************************
+ * **************** GetModifiableMovingImagePyramid **********************************
  */
 
 template< typename TFixedImage, typename TMovingImage >
@@ -200,7 +200,7 @@ typename
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
 ::MovingImagePyramidType
 * MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
-::GetMovingImagePyramid( unsigned int pos ) const
+::GetModifiableMovingImagePyramid( unsigned int pos ) const
 {
   if( pos >= this->GetNumberOfMovingImagePyramids() )
   {
@@ -211,7 +211,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_MovingImagePyramids[ pos ].GetPointer();
   }
 
-} // end GetMovingImagePyramid()
+} // end GetModifiableMovingImagePyramid()
 
 /**
  * **************** GetFixedImageRegion **********************************
@@ -273,56 +273,56 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   this->CheckOnInitialize();
 
   /** Setup the metric: the transform. */
-  this->GetMultiInputMetric()->SetTransform( this->GetTransform() );
+  this->GetModifiableMultiInputMetric()->SetTransform( this->GetModifiableTransform() );
 
   /** Setup the metric: the images. */
-  this->GetMultiInputMetric()->SetNumberOfFixedImages( this->GetNumberOfFixedImages() );
-  this->GetMultiInputMetric()->SetNumberOfMovingImages( this->GetNumberOfMovingImages() );
+  this->GetModifiableMultiInputMetric()->SetNumberOfFixedImages( this->GetNumberOfFixedImages() );
+  this->GetModifiableMultiInputMetric()->SetNumberOfMovingImages( this->GetNumberOfMovingImages() );
 
   for( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
   {
-    this->GetMultiInputMetric()->SetFixedImage(
-      this->GetFixedImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
+    this->GetModifiableMultiInputMetric()->SetFixedImage(
+      this->GetModifiableFixedImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
   }
 
   for( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
   {
-    this->GetMultiInputMetric()->SetMovingImage(
-      this->GetMovingImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
+    this->GetModifiableMultiInputMetric()->SetMovingImage(
+      this->GetModifiableMovingImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
   }
 
   /** Setup the metric: the fixed image regions. */
   for( unsigned int i = 0; i < this->m_FixedImageRegionPyramids.size(); ++i )
   {
-    this->GetMultiInputMetric()->SetFixedImageRegion(
+    this->GetModifiableMultiInputMetric()->SetFixedImageRegion(
       this->m_FixedImageRegionPyramids[ i ][ this->GetCurrentLevel() ], i );
   }
 
   /** Setup the metric: the interpolators. */
   for( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
   {
-    this->GetMultiInputMetric()->SetInterpolator( this->GetInterpolator( i ), i );
+    this->GetModifiableMultiInputMetric()->SetInterpolator( this->GetModifiableInterpolator( i ), i );
   }
 
   for( unsigned int i = 0; i < this->GetNumberOfFixedImageInterpolators(); ++i )
   {
-    this->GetMultiInputMetric()
+    this->GetModifiableMultiInputMetric()
     ->SetFixedImageInterpolator( this->GetFixedImageInterpolator( i ), i );
   }
 
   /** Initialize the metric. */
-  this->GetMultiInputMetric()->Initialize();
+  this->GetModifiableMultiInputMetric()->Initialize();
 
   /** Setup the optimizer. */
-  this->GetOptimizer()->SetCostFunction( this->GetMetric() );
-  this->GetOptimizer()->SetInitialPosition(
+  this->GetModifiableOptimizer()->SetCostFunction( this->GetModifiableMetric() );
+  this->GetModifiableOptimizer()->SetInitialPosition(
     this->GetInitialTransformParametersOfNextLevel() );
 
   /** Connect the transform to the Decorator. */
   TransformOutputType * transformOutput
     = static_cast< TransformOutputType * >( this->ProcessObject::GetOutput( 0 ) );
 
-  transformOutput->Set( this->GetTransform() );
+  transformOutput->Set( this->GetModifiableTransform() );
 
 } // end Initialize()
 
@@ -342,7 +342,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   /** Setup the moving image pyramids. */
   for( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
   {
-    MovingImagePyramidPointer movpyr = this->GetMovingImagePyramid( i );
+    MovingImagePyramidPointer movpyr = this->GetModifiableMovingImagePyramid( i );
     if( movpyr.IsNotNull() )
     {
       movpyr->SetNumberOfLevels( this->GetNumberOfLevels() );
@@ -368,7 +368,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   for( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
   {
     /** Setup the fixed image pyramid. */
-    FixedImagePyramidPointer fixpyr = this->GetFixedImagePyramid( i );
+    FixedImagePyramidPointer fixpyr = this->GetModifiableFixedImagePyramid( i );
     if( fixpyr.IsNotNull() )
     {
       fixpyr->SetNumberOfLevels( this->GetNumberOfLevels() );
@@ -468,7 +468,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   this->m_Stop = false;
 
   /** Check the transform and set the initial parameters. */
-  if( this->GetTransform() == 0 )
+  if( this->GetModifiableTransform() == 0 )
   {
     itkExceptionMacro( << "Transform is not present" );
   }
@@ -476,7 +476,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   this->SetInitialTransformParametersOfNextLevel( this->GetInitialTransformParameters() );
 
   if( this->GetInitialTransformParametersOfNextLevel().Size() !=
-    this->GetTransform()->GetNumberOfParameters() )
+    this->GetModifiableTransform()->GetNumberOfParameters() )
   {
     itkExceptionMacro( << "Size mismatch between initial parameter and transform" );
   }
@@ -517,7 +517,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     try
     {
       // do the optimization
-      this->GetOptimizer()->StartOptimization();
+      this->GetModifiableOptimizer()->StartOptimization();
     }
     catch( ExceptionObject & err )
     {
@@ -531,7 +531,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
     /** Get the results. */
     this->m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
-    this->GetTransform()->SetParameters( this->m_LastTransformParameters );
+    this->GetModifiableTransform()->SetParameters( this->m_LastTransformParameters );
 
     /** Setup the initial parameters for next level. */
     if( this->GetCurrentLevel() < this->GetNumberOfLevels() - 1 )
@@ -562,7 +562,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
   for( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
   {
-    InterpolatorPointer interpolator = this->GetInterpolator( i );
+    InterpolatorPointer interpolator = this->GetModifiableInterpolator( i );
     if( interpolator )
     {
       m     = interpolator->GetMTime();
@@ -592,7 +592,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
   for( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
   {
-    FixedImagePyramidPointer fixedImagePyramid = this->GetFixedImagePyramid( i );
+    FixedImagePyramidPointer fixedImagePyramid = this->GetModifiableFixedImagePyramid( i );
     if( fixedImagePyramid )
     {
       m     = fixedImagePyramid->GetMTime();
@@ -602,7 +602,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
   for( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
   {
-    MovingImagePyramidPointer movingImagePyramid = this->GetMovingImagePyramid( i );
+    MovingImagePyramidPointer movingImagePyramid = this->GetModifiableMovingImagePyramid( i );
     if( movingImagePyramid )
     {
       m     = movingImagePyramid->GetMTime();
@@ -633,11 +633,11 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   {
     itkExceptionMacro( << "MovingImage is not present" );
   }
-  if( this->GetFixedImagePyramid() == 0 )
+  if( this->GetModifiableFixedImagePyramid() == 0 )
   {
     itkExceptionMacro( << "Fixed image pyramid is not present" );
   }
-  if( this->GetMovingImagePyramid() == 0 )
+  if( this->GetModifiableMovingImagePyramid() == 0 )
   {
     itkExceptionMacro( << "Moving image pyramid is not present" );
   }
@@ -671,7 +671,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 ::CheckOnInitialize( void ) throw ( ExceptionObject )
 {
   /** check if at least one of the following is present. */
-  if( this->GetMetric() == 0 )
+  if( this->GetModifiableMetric() == 0 )
   {
     itkExceptionMacro( << "Metric is not present" );
   }
@@ -679,11 +679,11 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   {
     itkExceptionMacro( << "Optimizer is not present" );
   }
-  if( this->GetTransform() == 0 )
+  if( this->GetModifiableTransform() == 0 )
   {
     itkExceptionMacro( << "Transform is not present" );
   }
-  if( this->GetInterpolator() == 0 )
+  if( this->GetModifiableInterpolator() == 0 )
   {
     itkExceptionMacro( << "Interpolator is not present" );
   }

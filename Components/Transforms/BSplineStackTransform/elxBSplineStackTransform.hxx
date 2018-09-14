@@ -95,7 +95,7 @@ BSplineStackTransform< TElastix >
 {
   /** Read spline order from configuration file. */
   this->m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( this->m_SplineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
 
   /** Initialize B-spline transform and grid scheduler. */
@@ -150,10 +150,10 @@ BSplineStackTransform< TElastix >
   /** Task 2 - Set the stack transform parameters. */
 
   /** Determine stack transform settings. Here they are based on the fixed image. */
-  const SizeType imageSize = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+  const SizeType imageSize = this->GetModifiableElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
   this->m_NumberOfSubTransforms = imageSize[ SpaceDimension - 1 ];
-  this->m_StackSpacing          = this->GetElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
-  this->m_StackOrigin           = this->GetElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
+  this->m_StackSpacing          = this->GetModifiableElastix()->GetFixedImage()->GetSpacing()[ SpaceDimension - 1 ];
+  this->m_StackOrigin           = this->GetModifiableElastix()->GetFixedImage()->GetOrigin()[ SpaceDimension - 1 ];
 
   /** Set stack transform parameters. */
   this->m_BSplineStackTransform->SetNumberOfSubTransforms( this->m_NumberOfSubTransforms );
@@ -203,7 +203,7 @@ BSplineStackTransform< TElastix >
 
   /** Get the PassiveEdgeWidth and use it to set the OptimizerScales. */
   unsigned int passiveEdgeWidth = 0;
-  this->GetConfiguration()->ReadParameter( passiveEdgeWidth,
+  this->GetModifiableConfiguration()->ReadParameter( passiveEdgeWidth,
     "PassiveEdgeWidth", this->GetComponentLabel(), level, 0, false );
   this->SetOptimizerScales( passiveEdgeWidth );
 
@@ -224,10 +224,10 @@ BSplineStackTransform< TElastix >
     = this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
 
   /** Get current image origin, spacing, direction and largest possible region. */
-  const OriginType    origin    = this->GetElastix()->GetFixedImage()->GetOrigin();
-  const SpacingType   spacing   = this->GetElastix()->GetFixedImage()->GetSpacing();
-  const DirectionType direction = this->GetElastix()->GetFixedImage()->GetDirection();
-  const RegionType    region    = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion();
+  const OriginType    origin    = this->GetModifiableElastix()->GetFixedImage()->GetOrigin();
+  const SpacingType   spacing   = this->GetModifiableElastix()->GetFixedImage()->GetSpacing();
+  const DirectionType direction = this->GetModifiableElastix()->GetFixedImage()->GetDirection();
+  const RegionType    region    = this->GetModifiableElastix()->GetFixedImage()->GetLargestPossibleRegion();
 
   /** Variables to store reduced dimension origin, spacing, direction and region in. */
   ReducedDimensionOriginType    rorigin;
@@ -261,7 +261,7 @@ BSplineStackTransform< TElastix >
      * initial transform of a higher dimension than the grid. We probably need
      * to program some kind of stack grid schedule computer for that.
      */
-    // this->m_GridScheduleComputer->SetInitialTransform( this->Superclass1::GetInitialTransform() );
+    // this->m_GridScheduleComputer->SetInitialTransform( this->Superclass1::GetModifiableInitialTransform() );
   }
 
   /** Get the grid spacing schedule from the parameter file.
@@ -323,7 +323,7 @@ BSplineStackTransform< TElastix >
     {
       finalGridSpacingInPhysicalUnits[ dim ]
         = finalGridSpacingInVoxels[ dim ]
-        * this->GetElastix()->GetFixedImage()->GetSpacing()[ dim ];
+        * this->GetModifiableElastix()->GetFixedImage()->GetSpacing()[ dim ];
     }
   }
 
@@ -516,15 +516,15 @@ BSplineStackTransform< TElastix >
 {
   /** Read spline order settings and initialize BSplineTransform. */
   this->m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( this->m_SplineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( this->m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0 );
 
   /** Read stack-spacing, stack-origin and number of sub-transforms. */
-  bool dummy = this->GetConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
+  bool dummy = this->GetModifiableConfiguration()->ReadParameter( this->m_NumberOfSubTransforms,
     "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0 );
-  dummy |= this->GetConfiguration()->ReadParameter( this->m_StackOrigin,
+  dummy |= this->GetModifiableConfiguration()->ReadParameter( this->m_StackOrigin,
     "StackOrigin", this->GetComponentLabel(), 0, 0 );
-  dummy |= this->GetConfiguration()->ReadParameter( this->m_StackSpacing,
+  dummy |= this->GetModifiableConfiguration()->ReadParameter( this->m_StackSpacing,
     "StackSpacing", this->GetComponentLabel(), 0, 0 );
 
   /** Initialize the right B-spline transform. */

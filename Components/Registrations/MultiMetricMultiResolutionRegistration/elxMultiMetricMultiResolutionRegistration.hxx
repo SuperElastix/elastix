@@ -57,11 +57,11 @@ MultiMetricMultiResolutionRegistration< TElastix >
   /** Set the FixedImageRegions to the buffered regions. */
 
   /** Make sure the fixed image is up to date. */
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfFixedImages(); ++i )
   {
     try
     {
-      this->GetElastix()->GetFixedImage( i )->Update();
+      this->GetModifiableElastix()->GetFixedImage( i )->Update();
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -75,7 +75,7 @@ MultiMetricMultiResolutionRegistration< TElastix >
     }
 
     /** Set the fixedImageRegion. */
-    this->SetFixedImageRegion( this->GetElastix()->GetFixedImage( i )->GetBufferedRegion(), i );
+    this->SetFixedImageRegion( this->GetModifiableElastix()->GetFixedImage( i )->GetBufferedRegion(), i );
   }
 
   /** Add the target cells "Metric<i>" and "||Gradient<i>||" to xout["iteration"]
@@ -158,7 +158,7 @@ MultiMetricMultiResolutionRegistration< TElastix >
     {
       if( this->GetCombinationMetric()->GetUseMetric( i ) )
       {
-        const double currentExactMetricValue_i = this->GetElastix()->
+        const double currentExactMetricValue_i = this->GetModifiableElastix()->
           GetElxMetricBase( i )->GetCurrentExactMetricValue();
 
         const double weight_i = this->GetCombinationMetric()->GetMetricWeight( i );
@@ -194,7 +194,7 @@ MultiMetricMultiResolutionRegistration< TElastix >
 
   /** Set the use of relative metric weights. */
   bool useRelativeWeights = false;
-  this->GetConfiguration()->ReadParameter( useRelativeWeights, "UseRelativeWeights", 0 );
+  this->GetModifiableConfiguration()->ReadParameter( useRelativeWeights, "UseRelativeWeights", 0 );
   this->GetCombinationMetric()->SetUseRelativeWeights( useRelativeWeights );
 
   /** Set the metric weights. The default metric weight is 1.0 / nrOfMetrics. */
@@ -206,7 +206,7 @@ MultiMetricMultiResolutionRegistration< TElastix >
       double             weight = defaultWeight;
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "Weight";
-      this->GetConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
+      this->GetModifiableConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
       this->GetCombinationMetric()->SetMetricWeight( weight, metricnr );
     }
   }
@@ -221,7 +221,7 @@ MultiMetricMultiResolutionRegistration< TElastix >
       double             weight = defaultRelativeWeight;
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "RelativeWeight";
-      this->GetConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
+      this->GetModifiableConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
       this->GetCombinationMetric()->SetMetricRelativeWeight( weight, metricnr );
     }
   }
@@ -232,7 +232,7 @@ MultiMetricMultiResolutionRegistration< TElastix >
     bool               use = true;
     std::ostringstream makestring;
     makestring << "Metric" << metricnr << "Use";
-    this->GetConfiguration()->ReadParameter( use, makestring.str(), "", level, 0, false );
+    this->GetModifiableConfiguration()->ReadParameter( use, makestring.str(), "", level, 0, false );
     this->GetCombinationMetric()->SetUseMetric( use, metricnr );
   }
 
@@ -244,7 +244,7 @@ MultiMetricMultiResolutionRegistration< TElastix >
   this->m_ShowExactMetricValue = false;
   for( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
   {
-    this->m_ShowExactMetricValue |= this->GetElastix()->
+    this->m_ShowExactMetricValue |= this->GetModifiableElastix()->
       GetElxMetricBase( metricnr )->GetShowExactMetricValue();
   }
 
@@ -274,68 +274,68 @@ void
 MultiMetricMultiResolutionRegistration< TElastix >
 ::SetComponents( void )
 {
-  /** Get the component from this->GetElastix() (as elx::...BaseType *),
+  /** Get the component from this->GetModifiableElastix() (as elx::...BaseType *),
    * cast it to the appropriate type and set it in 'this'.
    */
-  const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
+  const unsigned int nrOfMetrics = this->GetModifiableElastix()->GetNumberOfMetrics();
   this->GetCombinationMetric()->SetNumberOfMetrics( nrOfMetrics );
   for( unsigned int i = 0; i < nrOfMetrics; ++i )
   {
-    this->GetCombinationMetric()->SetMetric( this->GetElastix()->
+    this->GetCombinationMetric()->SetMetric( this->GetModifiableElastix()->
       GetElxMetricBase( i )->GetAsITKBaseType(), i );
   }
 
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfFixedImages(); ++i )
   {
-    this->SetFixedImage( this->GetElastix()->GetFixedImage( i ), i );
+    this->SetFixedImage( this->GetModifiableElastix()->GetFixedImage( i ), i );
   }
 
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImages(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfMovingImages(); ++i )
   {
-    this->SetMovingImage( this->GetElastix()->GetMovingImage( i ), i );
+    this->SetMovingImage( this->GetModifiableElastix()->GetMovingImage( i ), i );
   }
 
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImagePyramids(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfFixedImagePyramids(); ++i )
   {
-    this->SetFixedImagePyramid( this->GetElastix()->
+    this->SetFixedImagePyramid( this->GetModifiableElastix()->
       GetElxFixedImagePyramidBase( i )->GetAsITKBaseType(), i );
   }
 
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImagePyramids(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfMovingImagePyramids(); ++i )
   {
-    this->SetMovingImagePyramid( this->GetElastix()->
+    this->SetMovingImagePyramid( this->GetModifiableElastix()->
       GetElxMovingImagePyramidBase( i )->GetAsITKBaseType(), i );
   }
 
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfInterpolators(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfInterpolators(); ++i )
   {
-    this->SetInterpolator( this->GetElastix()->
+    this->SetInterpolator( this->GetModifiableElastix()->
       GetElxInterpolatorBase( i )->GetAsITKBaseType(), i );
   }
 
   this->SetOptimizer( dynamic_cast< OptimizerType * >(
-      this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
+      this->GetModifiableElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
 
-  this->SetTransform( this->GetElastix()->
+  this->SetTransform( this->GetModifiableElastix()->
     GetElxTransformBase()->GetAsITKBaseType() );
 
   /** Samplers are not always needed: */
   for( unsigned int i = 0; i < nrOfMetrics; ++i )
   {
-    if( this->GetElastix()->GetElxMetricBase( i )->GetAdvancedMetricUseImageSampler() )
+    if( this->GetModifiableElastix()->GetElxMetricBase( i )->GetAdvancedMetricUseImageSampler() )
     {
       /** Try the i-th sampler for the i-th metric. */
-      if( this->GetElastix()->GetElxImageSamplerBase( i ) )
+      if( this->GetModifiableElastix()->GetElxImageSamplerBase( i ) )
       {
-        this->GetElastix()->GetElxMetricBase( i )->SetAdvancedMetricImageSampler(
-          this->GetElastix()->GetElxImageSamplerBase( i )->GetAsITKBaseType() );
+        this->GetModifiableElastix()->GetElxMetricBase( i )->SetAdvancedMetricImageSampler(
+          this->GetModifiableElastix()->GetElxImageSamplerBase( i )->GetAsITKBaseType() );
       }
       else
       {
         /** When a different fixed image pyramid is used for each metric,
          * using one sampler for all metrics makes no sense.
          */
-        if( this->GetElastix()->GetElxFixedImagePyramidBase( i ) )
+        if( this->GetModifiableElastix()->GetElxFixedImagePyramidBase( i ) )
         {
           xl::xout[ "error" ]
             << "ERROR: An ImageSamper for metric "
@@ -347,10 +347,10 @@ MultiMetricMultiResolutionRegistration< TElastix >
         }
 
         /** Try the zeroth image sampler for each metric. */
-        if( this->GetElastix()->GetElxImageSamplerBase( 0 ) )
+        if( this->GetModifiableElastix()->GetElxImageSamplerBase( 0 ) )
         {
-          this->GetElastix()->GetElxMetricBase( i )->SetAdvancedMetricImageSampler(
-            this->GetElastix()->GetElxImageSamplerBase( 0 )->GetAsITKBaseType() );
+          this->GetModifiableElastix()->GetElxMetricBase( i )->SetAdvancedMetricImageSampler(
+            this->GetModifiableElastix()->GetElxImageSamplerBase( 0 )->GetAsITKBaseType() );
         }
         else
         {
@@ -376,13 +376,13 @@ MultiMetricMultiResolutionRegistration< TElastix >
 {
   /** some shortcuts */
   const unsigned int nrOfMetrics
-    = this->GetElastix()->GetNumberOfMetrics();
+    = this->GetModifiableElastix()->GetNumberOfMetrics();
   const unsigned int nrOfFixedMasks
-    = this->GetElastix()->GetNumberOfFixedMasks();
+    = this->GetModifiableElastix()->GetNumberOfFixedMasks();
   const unsigned int nrOfFixedImages
-    = this->GetElastix()->GetNumberOfFixedImages();
+    = this->GetModifiableElastix()->GetNumberOfFixedImages();
   const unsigned int nrOfFixedImagePyramids
-    = this->GetElastix()->GetNumberOfFixedImagePyramids();
+    = this->GetModifiableElastix()->GetNumberOfFixedImagePyramids();
 
   /** Array of bools, that remembers for each mask if erosion is wanted. */
   UseMaskErosionArrayType useMaskErosionArray;
@@ -409,8 +409,8 @@ MultiMetricMultiResolutionRegistration< TElastix >
      * --> we can use one mask for all metrics! (or no mask at all).
      */
     FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
-      this->GetElastix()->GetFixedMask(), useMaskErosion,
-      this->GetFixedImagePyramid(), level );
+      this->GetModifiableElastix()->GetFixedMask(), useMaskErosion,
+      this->GetModifiableFixedImagePyramid(), level );
     this->GetCombinationMetric()->SetFixedImageMask( fixedMask );
   }
   else if( ( nrOfFixedImages == 1 ) && ( nrOfFixedMasks == 1 ) )
@@ -423,8 +423,8 @@ MultiMetricMultiResolutionRegistration< TElastix >
     for( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
       FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
-        this->GetElastix()->GetFixedMask(), useMaskErosion,
-        this->GetFixedImagePyramid( i ), level );
+        this->GetModifiableElastix()->GetFixedMask(), useMaskErosion,
+        this->GetModifiableFixedImagePyramid( i ), level );
       this->GetCombinationMetric()->SetFixedImageMask( fixedMask, i );
     }
   }
@@ -443,13 +443,13 @@ MultiMetricMultiResolutionRegistration< TElastix >
       {
         useMask_i = useMaskErosionArray[ i ];
       }
-      FixedImagePyramidPointer pyramid_i = this->GetFixedImagePyramid(); // default value in case of only 1 pyramid
+      FixedImagePyramidPointer pyramid_i = this->GetModifiableFixedImagePyramid(); // default value in case of only 1 pyramid
       if( i < nrOfFixedImagePyramids )
       {
-        pyramid_i = this->GetFixedImagePyramid( i );
+        pyramid_i = this->GetModifiableFixedImagePyramid( i );
       }
       FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
-        this->GetElastix()->GetFixedMask( i ), useMask_i, pyramid_i, level );
+        this->GetModifiableElastix()->GetFixedMask( i ), useMask_i, pyramid_i, level );
       this->GetCombinationMetric()->SetFixedImageMask( fixedMask, i );
     }
   } // end else
@@ -474,13 +474,13 @@ MultiMetricMultiResolutionRegistration< TElastix >
 {
   /** Some shortcuts. */
   const unsigned int nrOfMetrics
-    = this->GetElastix()->GetNumberOfMetrics();
+    = this->GetModifiableElastix()->GetNumberOfMetrics();
   const unsigned int nrOfMovingMasks
-    = this->GetElastix()->GetNumberOfMovingMasks();
+    = this->GetModifiableElastix()->GetNumberOfMovingMasks();
   const unsigned int nrOfMovingImages
-    = this->GetElastix()->GetNumberOfMovingImages();
+    = this->GetModifiableElastix()->GetNumberOfMovingImages();
   const unsigned int nrOfMovingImagePyramids
-    = this->GetElastix()->GetNumberOfMovingImagePyramids();
+    = this->GetModifiableElastix()->GetNumberOfMovingImagePyramids();
 
   /** Array of bools, that remembers for each mask if erosion is wanted. */
   UseMaskErosionArrayType useMaskErosionArray;
@@ -507,8 +507,8 @@ MultiMetricMultiResolutionRegistration< TElastix >
      * --> we can use one mask for all metrics! (or no mask at all).
      */
     MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
-      this->GetElastix()->GetMovingMask(), useMaskErosion,
-      this->GetMovingImagePyramid(), level );
+      this->GetModifiableElastix()->GetMovingMask(), useMaskErosion,
+      this->GetModifiableMovingImagePyramid(), level );
     this->GetCombinationMetric()->SetMovingImageMask( movingMask );
   }
   else if( ( nrOfMovingImages == 1 ) && ( nrOfMovingMasks == 1 ) )
@@ -521,8 +521,8 @@ MultiMetricMultiResolutionRegistration< TElastix >
     for( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
       MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
-        this->GetElastix()->GetMovingMask(), useMaskErosion,
-        this->GetMovingImagePyramid( i ), level );
+        this->GetModifiableElastix()->GetMovingMask(), useMaskErosion,
+        this->GetModifiableMovingImagePyramid( i ), level );
       this->GetCombinationMetric()->SetMovingImageMask( movingMask, i );
     }
   }
@@ -541,13 +541,13 @@ MultiMetricMultiResolutionRegistration< TElastix >
       {
         useMask_i = useMaskErosionArray[ i ];
       }
-      MovingImagePyramidPointer pyramid_i = this->GetMovingImagePyramid(); // default value in case of only 1 pyramid
+      MovingImagePyramidPointer pyramid_i = this->GetModifiableMovingImagePyramid(); // default value in case of only 1 pyramid
       if( i < nrOfMovingImagePyramids )
       {
-        pyramid_i = this->GetMovingImagePyramid( i );
+        pyramid_i = this->GetModifiableMovingImagePyramid( i );
       }
       MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
-        this->GetElastix()->GetMovingMask( i ), useMask_i, pyramid_i, level );
+        this->GetModifiableElastix()->GetMovingMask( i ), useMask_i, pyramid_i, level );
       this->GetCombinationMetric()->SetMovingImageMask( movingMask, i );
     }
   } // end else

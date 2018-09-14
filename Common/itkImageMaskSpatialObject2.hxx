@@ -88,7 +88,7 @@ ImageMaskSpatialObject2< TDimension >
   }
 
   const bool insideBuffer
-    = this->GetImage()->GetBufferedRegion().IsInside( index );
+    = this->GetModifiableImage()->GetBufferedRegion().IsInside( index );
 
   if( !insideBuffer )
   {
@@ -96,7 +96,7 @@ ImageMaskSpatialObject2< TDimension >
   }
 
   const bool insideMask
-    = ( this->GetImage()->GetPixel( index ) != NumericTraits< PixelType >::ZeroValue() );
+    = ( this->GetModifiableImage()->GetPixel( index ) != NumericTraits< PixelType >::ZeroValue() );
 
   return insideMask;
 
@@ -163,7 +163,7 @@ ImageMaskSpatialObject2< TDimension >
   // having to walk the whole image. Since we are using slice iterators,
   // we will implement this only for 3D images.
 
-  ImagePointer image        = this->GetImage();
+  ImagePointer image        = this->GetModifiableImage();
   PixelType    outsideValue = NumericTraits< PixelType >::Zero;
 
   // Initialize index and size in case image only consists of background values.

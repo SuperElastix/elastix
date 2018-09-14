@@ -54,9 +54,9 @@ RegistrationBase< TElastix >
   {
     /** Default values for all masks. Look for ErodeMask, or Erode<Fixed,Moving>Mask. */
     bool erosionOrNot = true;
-    this->GetConfiguration()->ReadParameter( erosionOrNot,
+    this->GetModifiableConfiguration()->ReadParameter( erosionOrNot,
       "ErodeMask", "", level, 0, false );
-    this->GetConfiguration()->ReadParameter( erosionOrNot,
+    this->GetModifiableConfiguration()->ReadParameter( erosionOrNot,
       whichErodeMaskOption.c_str(), "", level, 0 );
     if( erosionOrNot )
     {
@@ -73,7 +73,7 @@ RegistrationBase< TElastix >
       std::ostringstream makestring;
       makestring << whichErodeMaskOption << i; // key for parameter file
       bool erosionOrNot_i = erosionOrNot;      // default value
-      this->GetConfiguration()->ReadParameter( erosionOrNot_i,
+      this->GetModifiableConfiguration()->ReadParameter( erosionOrNot_i,
         makestring.str().c_str(), "", level, 0, false );
       if( erosionOrNot_i )
       {

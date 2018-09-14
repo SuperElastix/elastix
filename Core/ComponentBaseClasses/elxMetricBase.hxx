@@ -65,7 +65,7 @@ MetricBase< TElastix >
 
   /** Read the parameter file: Show the exact metric in every iteration? */
   bool showExactMetricValue = false;
-  this->GetConfiguration()->ReadParameter( showExactMetricValue,
+  this->GetModifiableConfiguration()->ReadParameter( showExactMetricValue,
     "ShowExactMetricValue", this->GetComponentLabel(), level, 0 );
   this->m_ShowExactMetricValue = showExactMetricValue;
   if( showExactMetricValue )
@@ -88,7 +88,7 @@ MetricBase< TElastix >
     for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
     {
       spacing_dim = this->m_ExactMetricSampleGridSpacing[ dim ];
-      this->GetConfiguration()->ReadParameter(
+      this->GetModifiableConfiguration()->ReadParameter(
         spacing_dim, "ExactMetricSampleGridSpacing",
         this->GetComponentLabel(), level * FixedImageDimension + dim, -1 );
       this->m_ExactMetricSampleGridSpacing[ dim ]
@@ -97,7 +97,7 @@ MetricBase< TElastix >
 
     /** Read the requested frequency of exact metric evaluation. */
     unsigned int eachXNumberOfIterations = 1;
-    this->GetConfiguration()->ReadParameter( eachXNumberOfIterations,
+    this->GetModifiableConfiguration()->ReadParameter( eachXNumberOfIterations,
       "ExactMetricEveryXIterations", this->GetComponentLabel(), level, 0 );
     this->m_ExactMetricEachXNumberOfIterations = eachXNumberOfIterations;
   }
@@ -111,12 +111,12 @@ MetricBase< TElastix >
   {
     /** Should the metric check for enough samples? */
     bool checkNumberOfSamples = true;
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples,
+    this->GetModifiableConfiguration()->ReadParameter( checkNumberOfSamples,
       "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
 
     /** Get the required ratio. */
     float ratio = 0.25;
-    this->GetConfiguration()->ReadParameter( ratio,
+    this->GetModifiableConfiguration()->ReadParameter( ratio,
       "RequiredRatioOfValidSamples", this->GetComponentLabel(), level, 0, false );
 
     /** Set it. */
@@ -130,7 +130,7 @@ MetricBase< TElastix >
     }
 
     /** Set moving image derivative scales. */
-    std::size_t usescales = this->GetConfiguration()
+    std::size_t usescales = this->GetModifiableConfiguration()
       ->CountNumberOfParameterEntries( "MovingImageDerivativeScales" );
     if( usescales == 0 )
     {
@@ -146,7 +146,7 @@ MetricBase< TElastix >
       movingImageDerivativeScales.Fill( 1.0 );
       for( unsigned int i = 0; i < MovingImageDimension; ++i )
       {
-        this->GetConfiguration()->ReadParameter(
+        this->GetModifiableConfiguration()->ReadParameter(
           movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
           this->GetComponentLabel(), i, -1, false );
       }
@@ -158,7 +158,7 @@ MetricBase< TElastix >
 
       /** Check if the scales are applied taking into account the moving image orientation. */
       bool wrtMoving = false;
-      this->GetConfiguration()->ReadParameter(
+      this->GetModifiableConfiguration()->ReadParameter(
         wrtMoving, "ScaleGradientWithRespectToMovingImageOrientation",
         this->GetComponentLabel(), level, false );
       thisAsAdvanced->SetScaleGradientWithRespectToMovingImageOrientation( wrtMoving );
@@ -166,7 +166,7 @@ MetricBase< TElastix >
 
     /** Should the metric use multi-threading? */
     bool useMultiThreading = true;
-    this->GetConfiguration()->ReadParameter( useMultiThreading,
+    this->GetModifiableConfiguration()->ReadParameter( useMultiThreading,
       "UseMultiThreadingForMetrics", this->GetComponentLabel(), level, 0 );
 
     thisAsAdvanced->SetUseMultiThread( useMultiThreading );
@@ -205,7 +205,7 @@ MetricBase< TElastix >
     && ( this->m_Elastix->GetIterationCounter() % this->m_ExactMetricEachXNumberOfIterations == 0 ) )
   {
     this->m_CurrentExactMetricValue = this->GetExactValue(
-      this->GetElastix()->GetElxOptimizerBase()
+      this->GetModifiableElastix()->GetElxOptimizerBase()
       ->GetAsITKBaseType()->GetCurrentPosition() );
 
     xl::xout[ "iteration" ][ exactMetricColumn.c_str() ]

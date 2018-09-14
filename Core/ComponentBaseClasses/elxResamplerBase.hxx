@@ -91,7 +91,7 @@ ResamplerBase< TElastix >
 ::AfterEachResolutionBase( void )
 {
   /** Set the final transform parameters. */
-  this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
+  this->GetModifiableElastix()->GetElxTransformBase()->SetFinalParameters();
 
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
@@ -166,7 +166,7 @@ ResamplerBase< TElastix >
   if( writeResultImageThisIteration )
   {
     /** Set the final transform parameters. */
-    this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
+    this->GetModifiableElastix()->GetElxTransformBase()->SetFinalParameters();
 
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
@@ -207,7 +207,7 @@ ResamplerBase< TElastix >
 ::AfterRegistrationBase( void )
 {
   /** Set the final transform parameters. */
-  this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
+  this->GetModifiableElastix()->GetElxTransformBase()->SetFinalParameters();
 
   /** Decide whether or not to write the result image. */
   std::string writeResultImage = "true";
@@ -382,7 +382,7 @@ ResamplerBase< TElastix >
   typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType,
     CoordRepType > RayCastInterpolatorType;
   const RayCastInterpolatorType * testptr = dynamic_cast< const
-    RayCastInterpolatorType * >( this->GetAsITKBaseType()->GetInterpolator() );
+    RayCastInterpolatorType * >( this->GetAsITKBaseType()->GetModifiableInterpolator() );
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings.
@@ -391,7 +391,7 @@ ResamplerBase< TElastix >
   if( testptr )
   {
     this->GetAsITKBaseType()->SetTransform(
-      ( const_cast< RayCastInterpolatorType * >( testptr ) )->GetTransform() );
+      ( const_cast< RayCastInterpolatorType * >( testptr ) )->GetModifiableTransform() );
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
@@ -419,9 +419,9 @@ ResamplerBase< TElastix >
    */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   DirectionType originalDirection;
-  bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool          retdc = this->GetModifiableElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
-  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetChangeDirection( retdc & !this->GetModifiableElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( image );
 
   /** Create writer. */
@@ -502,7 +502,7 @@ ResamplerBase< TElastix >
     CoordRepType > RayCastInterpolatorType;
 
   const RayCastInterpolatorType * testptr = dynamic_cast< const
-    RayCastInterpolatorType * >( this->GetAsITKBaseType()->GetInterpolator() );
+    RayCastInterpolatorType * >( this->GetAsITKBaseType()->GetModifiableInterpolator() );
 
   /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings */
@@ -510,7 +510,7 @@ ResamplerBase< TElastix >
   if( testptr )
   {
     this->GetAsITKBaseType()->SetTransform(
-      ( const_cast< RayCastInterpolatorType * >( testptr ) )->GetTransform() );
+      ( const_cast< RayCastInterpolatorType * >( testptr ) )->GetModifiableTransform() );
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
@@ -528,9 +528,9 @@ ResamplerBase< TElastix >
    */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   DirectionType originalDirection;
-  bool          retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  bool          retdc = this->GetModifiableElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
-  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetChangeDirection( retdc & !this->GetModifiableElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( this->GetAsITKBaseType()->GetOutput() );
 
   typedef itk::CastImageFilter< InputImageType,
@@ -710,7 +710,7 @@ ResamplerBase< TElastix >
    * should be used, set identity cosines, to simulate the
    * old ITK behavior.
    */
-  if( !this->GetElastix()->GetUseDirectionCosines() )
+  if( !this->GetModifiableElastix()->GetUseDirectionCosines() )
   {
     direction.SetIdentity();
   }
@@ -848,33 +848,33 @@ ResamplerBase< TElastix >
    */
 
   /** Release more memory, but only if this is the final elastix level. */
-  if( this->GetConfiguration()->GetElastixLevel() + 1
-    == this->GetConfiguration()->GetTotalNumberOfElastixLevels() )
+  if( this->GetModifiableConfiguration()->GetElastixLevel() + 1
+    == this->GetModifiableConfiguration()->GetTotalNumberOfElastixLevels() )
   {
     /** Release fixed image memory. */
-    const unsigned int nofi = this->GetElastix()->GetNumberOfFixedImages();
+    const unsigned int nofi = this->GetModifiableElastix()->GetNumberOfFixedImages();
     for( unsigned int i = 0; i < nofi; ++i )
     {
-      this->GetElastix()->GetFixedImage( i )->ReleaseData();
+      this->GetModifiableElastix()->GetFixedImage( i )->ReleaseData();
     }
 
     /** Release fixed mask image memory. */
-    const unsigned int nofm = this->GetElastix()->GetNumberOfFixedMasks();
+    const unsigned int nofm = this->GetModifiableElastix()->GetNumberOfFixedMasks();
     for( unsigned int i = 0; i < nofm; ++i )
     {
-      if( this->GetElastix()->GetFixedMask( i ) != 0 )
+      if( this->GetModifiableElastix()->GetFixedMask( i ) != 0 )
       {
-        this->GetElastix()->GetFixedMask( i )->ReleaseData();
+        this->GetModifiableElastix()->GetFixedMask( i )->ReleaseData();
       }
     }
 
     /** Release moving mask image memory. */
-    const unsigned int nomm = this->GetElastix()->GetNumberOfMovingMasks();
+    const unsigned int nomm = this->GetModifiableElastix()->GetNumberOfMovingMasks();
     for( unsigned int i = 0; i < nomm; ++i )
     {
-      if( this->GetElastix()->GetMovingMask( i ) != 0 )
+      if( this->GetModifiableElastix()->GetMovingMask( i ) != 0 )
       {
-        this->GetElastix()->GetMovingMask( i )->ReleaseData();
+        this->GetModifiableElastix()->GetMovingMask( i )->ReleaseData();
       }
     }
 
@@ -885,7 +885,7 @@ ResamplerBase< TElastix >
    * zero. The interpolator is not needed anymore, since we have the
    * resampler interpolator.
    */
-  this->GetElastix()->GetElxInterpolatorBase()->GetAsITKBaseType()->SetInputImage( 0 );
+  this->GetModifiableElastix()->GetElxInterpolatorBase()->GetAsITKBaseType()->SetInputImage( 0 );
 
   // Clear ImageSampler, metric, optimizer, interpolator, registration, internal images?
 

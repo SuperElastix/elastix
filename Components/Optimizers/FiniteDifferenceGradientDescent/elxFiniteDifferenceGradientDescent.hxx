@@ -48,7 +48,7 @@ void
 FiniteDifferenceGradientDescent< TElastix >::BeforeRegistration( void )
 {
   std::string showMetricValues( "false" );
-  this->GetConfiguration()->ReadParameter(
+  this->GetModifiableConfiguration()->ReadParameter(
     showMetricValues, "ShowMetricValues", 0 );
   if( showMetricValues == "false" )
   {
@@ -100,11 +100,11 @@ FiniteDifferenceGradientDescent< TElastix >
   double alpha = 0.602;
   double gamma = 0.101;
 
-  this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( c, "SP_c", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( A, "SP_A", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
+  this->GetModifiableConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
+  this->GetModifiableConfiguration()->ReadParameter( c, "SP_c", this->GetComponentLabel(), level, 0 );
+  this->GetModifiableConfiguration()->ReadParameter( A, "SP_A", this->GetComponentLabel(), level, 0 );
+  this->GetModifiableConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
+  this->GetModifiableConfiguration()->ReadParameter( gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
 
   this->SetParam_a( a );
   this->SetParam_c( c );

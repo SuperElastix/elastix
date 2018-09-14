@@ -38,7 +38,7 @@ RandomSamplerSparseMask< TElastix >
 
   /** Set the NumberOfSpatialSamples. */
   unsigned long numberOfSpatialSamples = 5000;
-  this->GetConfiguration()->ReadParameter( numberOfSpatialSamples,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfSpatialSamples,
     "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0 );
 
   this->SetNumberOfSamples( numberOfSpatialSamples );

@@ -98,7 +98,7 @@ FullSearch< TElastix >
 
     if( realGood && found )
     {
-      found = this->GetConfiguration()->ReadParameter(
+      found = this->GetModifiableConfiguration()->ReadParameter(
         name, fullFieldName.c_str(), entry_nr, false );
       realGood = this->CheckSearchSpaceRangeDefinition(
         fullFieldName.c_str(), found, entry_nr );
@@ -106,7 +106,7 @@ FullSearch< TElastix >
     }
     if( realGood && found )
     {
-      found = this->GetConfiguration()->ReadParameter(
+      found = this->GetModifiableConfiguration()->ReadParameter(
         param_nr, fullFieldName.c_str(), entry_nr, false );
       realGood = this->CheckSearchSpaceRangeDefinition(
         fullFieldName.c_str(), found, entry_nr );
@@ -114,7 +114,7 @@ FullSearch< TElastix >
     }
     if( realGood && found )
     {
-      found = this->GetConfiguration()->ReadParameter(
+      found = this->GetModifiableConfiguration()->ReadParameter(
         minimum, fullFieldName.c_str(), entry_nr, false );
       realGood = this->CheckSearchSpaceRangeDefinition(
         fullFieldName.c_str(), found, entry_nr );
@@ -122,7 +122,7 @@ FullSearch< TElastix >
     }
     if( realGood && found )
     {
-      found = this->GetConfiguration()->ReadParameter(
+      found = this->GetModifiableConfiguration()->ReadParameter(
         maximum, fullFieldName.c_str(), entry_nr, false );
       realGood = this->CheckSearchSpaceRangeDefinition(
         fullFieldName.c_str(), found, entry_nr );
@@ -130,7 +130,7 @@ FullSearch< TElastix >
     }
     if( realGood && found )
     {
-      found = this->GetConfiguration()->ReadParameter(
+      found = this->GetModifiableConfiguration()->ReadParameter(
         stepsize, fullFieldName.c_str(), entry_nr, false );
       realGood = this->CheckSearchSpaceRangeDefinition(
         fullFieldName.c_str(), found, entry_nr );
@@ -186,9 +186,9 @@ FullSearch< TElastix >
       resultImageFormat, "ResultImageFormat", 0, false );
     makeString.str( "" );
     makeString
-      << this->GetConfiguration()->GetCommandLineArgument( "-out" )
+      << this->GetModifiableConfiguration()->GetCommandLineArgument( "-out" )
       << "OptimizationSurface."
-      << this->GetConfiguration()->GetElastixLevel()
+      << this->GetModifiableConfiguration()->GetElastixLevel()
       << ".R" << level
       << "." << resultImageFormat;
     this->m_OptimizationSurface->SetOutputFileName( makeString.str().c_str() );
@@ -268,7 +268,7 @@ FullSearch< TElastix >
 
   /** Write the optimization surface to disk */
   bool writeSurfaceEachResolution = false;
-  this->GetConfiguration()->ReadParameter( writeSurfaceEachResolution,
+  this->GetModifiableConfiguration()->ReadParameter( writeSurfaceEachResolution,
       "WriteOptimizationSurfaceEachResolution", 0, false );
   if( writeSurfaceEachResolution )
   {

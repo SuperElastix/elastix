@@ -380,7 +380,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       // \todo: Note that we should actually use the inverted initial transform
       // here, a little bit like:
       // isInFixedImage = this->m_FixedRigidityImageDilated
-      //   ->TransformPhysicalPointToIndex( this->Transform->GetInitialTransform()
+      //   ->TransformPhysicalPointToIndex( this->Transform->GetModifiableInitialTransform()
       //   ->GetInverse()->TransformPoint( point ), index1 );
       // This is needed to compensate for the B-spline grid shift that has been
       // performed earlier, which causes the B-spline grid region and thus the

@@ -274,11 +274,11 @@ main( int argc, char ** argv )
     /** Get the transform, the fixedImage and the movingImage
      * in order to put it in the (possibly) next registration.
      */
-    transform                   = elastices[ i ]->GetFinalTransform();
-    fixedImageContainer         = elastices[ i ]->GetFixedImageContainer();
-    movingImageContainer        = elastices[ i ]->GetMovingImageContainer();
-    fixedMaskContainer          = elastices[ i ]->GetFixedMaskContainer();
-    movingMaskContainer         = elastices[ i ]->GetMovingMaskContainer();
+    transform                   = elastices[ i ]->GetModifiableFinalTransform();
+    fixedImageContainer         = elastices[ i ]->GetModifiableFixedImageContainer();
+    movingImageContainer        = elastices[ i ]->GetModifiableMovingImageContainer();
+    fixedMaskContainer          = elastices[ i ]->GetModifiableFixedMaskContainer();
+    movingMaskContainer         = elastices[ i ]->GetModifiableMovingMaskContainer();
     fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
 
     /** Print a finish message. */

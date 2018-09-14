@@ -62,16 +62,16 @@ NormalizedMutualInformationMetric< TElastix >
 
   /** Get and set the number of histogram bins. */
   unsigned int numberOfHistogramBins = 32;
-  this->GetConfiguration()->ReadParameter( numberOfHistogramBins,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfHistogramBins,
     "NumberOfHistogramBins", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
   this->SetNumberOfMovingHistogramBins( numberOfHistogramBins );
 
   unsigned int numberOfFixedHistogramBins  = numberOfHistogramBins;
   unsigned int numberOfMovingHistogramBins = numberOfHistogramBins;
-  this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfFixedHistogramBins,
     "NumberOfFixedHistogramBins", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfMovingHistogramBins,
     "NumberOfMovingHistogramBins", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
   this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
@@ -85,9 +85,9 @@ NormalizedMutualInformationMetric< TElastix >
   /** Get and set the number of histogram bins. */
   double fixedLimitRangeRatio  = 0.01;
   double movingLimitRangeRatio = 0.01;
-  this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio,
+  this->GetModifiableConfiguration()->ReadParameter( fixedLimitRangeRatio,
     "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( movingLimitRangeRatio,
+  this->GetModifiableConfiguration()->ReadParameter( movingLimitRangeRatio,
     "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0 );
   this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
   this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
@@ -95,9 +95,9 @@ NormalizedMutualInformationMetric< TElastix >
   /** Set B-spline parzen kernel orders */
   unsigned int fixedKernelBSplineOrder  = 0;
   unsigned int movingKernelBSplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( fixedKernelBSplineOrder,
     "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
-  this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( movingKernelBSplineOrder,
     "MovingKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
   this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
   this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );

@@ -160,9 +160,9 @@ public:
   virtual unsigned int GetImageDimension( void );
 
   /** Get the actual image */
-  itkGetObjectMacro( Image, DataObject );
-  itkGetObjectMacro( Writer, ProcessObject );
-  itkGetObjectMacro( Reader, ProcessObject );
+  itkGetModifiableObjectMacro( Image, DataObject );
+  itkGetModifiableObjectMacro( Writer, ProcessObject );
+  itkGetModifiableObjectMacro( Reader, ProcessObject );
 
   /** Write the actual image to file. */
   virtual void Write( void );

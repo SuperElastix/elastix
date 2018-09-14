@@ -78,8 +78,8 @@ void
 ComputeImageExtremaFilter< TInputImage >
 ::SameGeometry()
 {
-  if( this->GetInput()->GetLargestPossibleRegion().GetSize() == this->m_ImageSpatialMask->GetImage()->GetLargestPossibleRegion().GetSize()
-    && this->GetInput()->GetOrigin() == this->m_ImageSpatialMask->GetImage()->GetOrigin() )
+  if( this->GetInput()->GetLargestPossibleRegion().GetSize() == this->m_ImageSpatialMask->GetModifiableImage()->GetLargestPossibleRegion().GetSize()
+    && this->GetInput()->GetOrigin() == this->m_ImageSpatialMask->GetModifiableImage()->GetOrigin() )
   {
     this->m_SameGeometry = true;
   }
@@ -202,7 +202,7 @@ ComputeImageExtremaFilter< TInputImage >
     ImageRegionConstIterator< TInputImage > it (this->GetInput(), outputRegionForThread );
     for( it.GoToBegin(); !it.IsAtEnd(); ++it )
     {
-      if( this->m_ImageSpatialMask->GetImage()->GetPixel( it.GetIndex()) != NumericTraits< PixelType >::ZeroValue() )
+      if( this->m_ImageSpatialMask->GetModifiableImage()->GetPixel( it.GetIndex()) != NumericTraits< PixelType >::ZeroValue() )
       {
         value = it.Get();
         realValue = static_cast<RealType>( value );

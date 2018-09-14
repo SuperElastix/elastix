@@ -78,13 +78,13 @@ void
 MultiResolutionRegistrationWithFeatures< TElastix >
 ::GetAndSetComponents( void )
 {
-  /** Get the component from this->GetElastix() (as elx::...BaseType *),
+  /** Get the component from this->GetModifiableElastix() (as elx::...BaseType *),
    * cast it to the appropriate type and set it in 'this'.
    */
 
   /** Set the metric. */
   MetricType * testPtr = dynamic_cast< MetricType * >(
-    this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
+    this->GetModifiableElastix()->GetElxMetricBase()->GetAsITKBaseType() );
   if( testPtr )
   {
     this->SetMetric( testPtr );
@@ -96,53 +96,53 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   }
 
   /** Set the fixed images. */
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfFixedImages(); ++i )
   {
-    this->SetFixedImage( this->GetElastix()->GetFixedImage( i ), i );
+    this->SetFixedImage( this->GetModifiableElastix()->GetFixedImage( i ), i );
   }
 
   /** Set the moving images. */
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImages(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfMovingImages(); ++i )
   {
-    this->SetMovingImage( this->GetElastix()->GetMovingImage( i ), i );
+    this->SetMovingImage( this->GetModifiableElastix()->GetMovingImage( i ), i );
   }
 
   /** Set the fixed image pyramids. */
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImagePyramids(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfFixedImagePyramids(); ++i )
   {
-    this->SetFixedImagePyramid( this->GetElastix()->
+    this->SetFixedImagePyramid( this->GetModifiableElastix()->
       GetElxFixedImagePyramidBase( i )->GetAsITKBaseType(), i );
   }
 
   /** Set the moving image pyramids. */
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImagePyramids(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfMovingImagePyramids(); ++i )
   {
-    this->SetMovingImagePyramid( this->GetElastix()->
+    this->SetMovingImagePyramid( this->GetModifiableElastix()->
       GetElxMovingImagePyramidBase( i )->GetAsITKBaseType(), i );
   }
 
   /** Set the moving image interpolators. */
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfInterpolators(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfInterpolators(); ++i )
   {
-    this->SetInterpolator( this->GetElastix()->
+    this->SetInterpolator( this->GetModifiableElastix()->
       GetElxInterpolatorBase( i )->GetAsITKBaseType(), i );
   }
 
   /** Set the optimizer. */
   this->SetOptimizer( dynamic_cast< OptimizerType * >(
-      this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
+      this->GetModifiableElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
 
   /** Set the transform. */
-  this->SetTransform( this->GetElastix()->
+  this->SetTransform( this->GetModifiableElastix()->
     GetElxTransformBase()->GetAsITKBaseType() );
 
   /** Samplers are not always needed: */
-  if( this->GetElastix()->GetElxMetricBase()->GetAdvancedMetricUseImageSampler() )
+  if( this->GetModifiableElastix()->GetElxMetricBase()->GetAdvancedMetricUseImageSampler() )
   {
-    if( this->GetElastix()->GetElxImageSamplerBase() )
+    if( this->GetModifiableElastix()->GetElxImageSamplerBase() )
     {
-      this->GetElastix()->GetElxMetricBase()->SetAdvancedMetricImageSampler(
-        this->GetElastix()->GetElxImageSamplerBase()->GetAsITKBaseType() );
+      this->GetModifiableElastix()->GetElxMetricBase()->SetAdvancedMetricImageSampler(
+        this->GetModifiableElastix()->GetElxImageSamplerBase()->GetAsITKBaseType() );
     }
     else
     {
@@ -163,12 +163,12 @@ void
 MultiResolutionRegistrationWithFeatures< TElastix >
 ::GetAndSetFixedImageRegions( void )
 {
-  for( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )
+  for( unsigned int i = 0; i < this->GetModifiableElastix()->GetNumberOfFixedImages(); ++i )
   {
     /** Make sure the fixed image is up to date. */
     try
     {
-      this->GetElastix()->GetFixedImage( i )->Update();
+      this->GetModifiableElastix()->GetFixedImage( i )->Update();
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -182,7 +182,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     }
 
     /** Set the fixed image region. */
-    this->SetFixedImageRegion( this->GetElastix()->GetFixedImage( i )->GetBufferedRegion(), i );
+    this->SetFixedImageRegion( this->GetModifiableElastix()->GetFixedImage( i )->GetBufferedRegion(), i );
   }
 
 } // end GetAndSetFixedImageRegions()
@@ -235,7 +235,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
 ::UpdateFixedMasks( unsigned int level )
 {
   /** Use only one mask. */
-  const unsigned int nrOfFixedImageMasks = 1;  //this->GetElastix()->GetNumberOfFixedMasks();
+  const unsigned int nrOfFixedImageMasks = 1;  //this->GetModifiableElastix()->GetNumberOfFixedMasks();
 
   /** Array of bools, that remembers for each mask if erosion is wanted. */
   UseMaskErosionArrayType useMaskErosionArray;
@@ -255,9 +255,9 @@ MultiResolutionRegistrationWithFeatures< TElastix >
 
   /** Set the fixed image mask. Only one mask is assumed here. */
   FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
-    this->GetElastix()->GetFixedMask(), useMaskErosion,
-    this->GetFixedImagePyramid(), level );
-  this->GetMultiInputMetric()->SetFixedImageMask( fixedMask );
+    this->GetModifiableElastix()->GetFixedMask(), useMaskErosion,
+    this->GetModifiableFixedImagePyramid(), level );
+  this->GetModifiableMultiInputMetric()->SetFixedImageMask( fixedMask );
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
@@ -278,7 +278,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
 ::UpdateMovingMasks( unsigned int level )
 {
   /** Use only one mask. */
-  const unsigned int nrOfMovingImageMasks = 1;  //this->GetElastix()->GetNumberOfMovingMasks();
+  const unsigned int nrOfMovingImageMasks = 1;  //this->GetModifiableElastix()->GetNumberOfMovingMasks();
 
   /** Array of bools, that remembers for each mask if erosion is wanted. */
   UseMaskErosionArrayType useMaskErosionArray;
@@ -298,9 +298,9 @@ MultiResolutionRegistrationWithFeatures< TElastix >
 
   /** Set the moving image mask. Only one mask is assumed here. */
   MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
-    this->GetElastix()->GetMovingMask(), useMaskErosion,
-    this->GetMovingImagePyramid(), level );
-  this->GetMultiInputMetric()->SetMovingImageMask( movingMask );
+    this->GetModifiableElastix()->GetMovingMask(), useMaskErosion,
+    this->GetModifiableMovingImagePyramid(), level );
+  this->GetModifiableMultiInputMetric()->SetMovingImageMask( movingMask );
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();

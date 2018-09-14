@@ -67,7 +67,7 @@ TranslationTransformElastix< TElastix >
   bool automaticTransformInitialization = false;
   bool tmpBool                          = false;
   this->m_Configuration->ReadParameter( tmpBool, "AutomaticTransformInitialization", 0 );
-  if( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
+  if( tmpBool && this->Superclass1::GetModifiableInitialTransform() == 0 )
   {
     automaticTransformInitialization = true;
   }
@@ -85,8 +85,8 @@ TranslationTransformElastix< TElastix >
       this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
     transformInitializer->SetMovingImage(
       this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
-    transformInitializer->SetFixedMask( this->GetElastix()->GetFixedMask() );
-    transformInitializer->SetMovingMask( this->GetElastix()->GetMovingMask() );
+    transformInitializer->SetFixedMask( this->GetModifiableElastix()->GetFixedMask() );
+    transformInitializer->SetMovingMask( this->GetModifiableElastix()->GetMovingMask() );
     transformInitializer->SetTransform( this->m_TranslationTransform );
 
     /** Select the method of initialization. Default: "GeometricalCenter". */

@@ -91,7 +91,7 @@ DeformationFieldTransform< TElastix >::ReadFromFile( void )
   DirectionType           direction;
   direction.SetIdentity();
   infoChanger->SetOutputDirection( direction );
-  infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetChangeDirection( !this->GetModifiableElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( vectorReader->GetOutput() );
 
   /** Read deformationFieldImage from file. */
@@ -177,7 +177,7 @@ DeformationFieldTransform< TElastix >
   /** Get the last part of the filename of the transformParameter-file,
    * which is going to be part of the filename of the deformationField image.
    */
-  std::string                          ctpfn    = this->GetElastix()->GetCurrentTransformParameterFileName();
+  std::string                          ctpfn    = this->GetModifiableElastix()->GetCurrentTransformParameterFileName();
   std::basic_string< char >::size_type pos      = ctpfn.rfind( "TransformParameters." );
   std::string                          lastpart = ctpfn.substr( pos + 19, ctpfn.size() - pos - 19 - 4 );
 
@@ -195,7 +195,7 @@ DeformationFieldTransform< TElastix >
   /** Write the interpolation order to file */
   std::string interpolatorName
     = this->m_DeformationFieldInterpolatingTransform->
-    GetDeformationFieldInterpolator()->GetNameOfClass();
+    GetModifiableDeformationFieldInterpolator()->GetNameOfClass();
 
   unsigned int interpolationOrder = 0;
   if( interpolatorName == "NearestNeighborInterpolateImageFunction" )
@@ -212,8 +212,8 @@ DeformationFieldTransform< TElastix >
   /** Possibly change the direction cosines to there original value */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   infoChanger->SetOutputDirection( this->m_OriginalDeformationFieldDirection );
-  infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
-  infoChanger->SetInput( this->m_DeformationFieldInterpolatingTransform->GetDeformationField() );
+  infoChanger->SetChangeDirection( !this->GetModifiableElastix()->GetUseDirectionCosines() );
+  infoChanger->SetInput( this->m_DeformationFieldInterpolatingTransform->GetModifiableDeformationField() );
 
   /** Write the deformation field image. */
   typedef itk::ImageFileWriter< DeformationFieldType > VectorWriterType;

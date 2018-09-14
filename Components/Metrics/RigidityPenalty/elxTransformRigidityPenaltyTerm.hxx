@@ -37,7 +37,7 @@ TransformRigidityPenalty< TElastix >
 {
   /** Read the fixed rigidity image if desired. */
   std::string fixedRigidityImageName = "";
-  this->GetConfiguration()->ReadParameter( fixedRigidityImageName,
+  this->GetModifiableConfiguration()->ReadParameter( fixedRigidityImageName,
     "FixedRigidityImageName", this->GetComponentLabel(), 0, -1, false );
 
   typedef typename Superclass1::RigidityImageType   RigidityImageType;
@@ -61,7 +61,7 @@ TransformRigidityPenalty< TElastix >
     DirectionType           direction;
     direction.SetIdentity();
     infoChanger->SetOutputDirection( direction );
-    infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetChangeDirection( !this->GetModifiableElastix()->GetUseDirectionCosines() );
     infoChanger->SetInput( fixedRigidityReader->GetOutput() );
 
     /** Do the reading. */
@@ -90,7 +90,7 @@ TransformRigidityPenalty< TElastix >
 
   /** Read the moving rigidity image if desired. */
   std::string movingRigidityImageName = "";
-  this->GetConfiguration()->ReadParameter( movingRigidityImageName,
+  this->GetModifiableConfiguration()->ReadParameter( movingRigidityImageName,
     "MovingRigidityImageName", this->GetComponentLabel(), 0, -1, false );
 
   typename RigidityImageReaderType::Pointer movingRigidityReader;
@@ -108,7 +108,7 @@ TransformRigidityPenalty< TElastix >
     DirectionType           direction;
     direction.SetIdentity();
     infoChanger->SetOutputDirection( direction );
-    infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetChangeDirection( !this->GetModifiableElastix()->GetUseDirectionCosines() );
     infoChanger->SetInput( movingRigidityReader->GetOutput() );
 
     /** Do the reading. */
@@ -206,49 +206,49 @@ TransformRigidityPenalty< TElastix >
 
   /** Get and set the dilateRigidityImages. */
   bool dilateRigidityImages = true;
-  this->GetConfiguration()->ReadParameter( dilateRigidityImages,
+  this->GetModifiableConfiguration()->ReadParameter( dilateRigidityImages,
     "DilateRigidityImages", this->GetComponentLabel(), level, 0 );
   this->SetDilateRigidityImages( dilateRigidityImages );
 
   /** Get and set the dilationRadiusMultiplier. */
   double dilationRadiusMultiplier = 1.0;
-  this->GetConfiguration()->ReadParameter( dilationRadiusMultiplier,
+  this->GetModifiableConfiguration()->ReadParameter( dilationRadiusMultiplier,
     "DilationRadiusMultiplier", this->GetComponentLabel(), level, 0 );
   this->SetDilationRadiusMultiplier( dilationRadiusMultiplier );
 
   /** Get and set the usage of the linearity condition part. */
   bool useLinearityCondition = true;
-  this->GetConfiguration()->ReadParameter( useLinearityCondition,
+  this->GetModifiableConfiguration()->ReadParameter( useLinearityCondition,
     "UseLinearityCondition", this->GetComponentLabel(), level, 0 );
   this->SetUseLinearityCondition( useLinearityCondition );
 
   /** Get and set the usage of the orthonormality condition part. */
   bool useOrthonormalityCondition = true;
-  this->GetConfiguration()->ReadParameter( useOrthonormalityCondition,
+  this->GetModifiableConfiguration()->ReadParameter( useOrthonormalityCondition,
     "UseOrthonormalityCondition", this->GetComponentLabel(), level, 0 );
   this->SetUseOrthonormalityCondition( useOrthonormalityCondition );
 
   /** Set the usage of the properness condition part. */
   bool usePropernessCondition = true;
-  this->GetConfiguration()->ReadParameter( usePropernessCondition,
+  this->GetModifiableConfiguration()->ReadParameter( usePropernessCondition,
     "UsePropernessCondition", this->GetComponentLabel(), level, 0 );
   this->SetUsePropernessCondition( usePropernessCondition );
 
   /** Set the calculation of the linearity condition part. */
   bool calculateLinearityCondition = true;
-  this->GetConfiguration()->ReadParameter( calculateLinearityCondition,
+  this->GetModifiableConfiguration()->ReadParameter( calculateLinearityCondition,
     "CalculateLinearityCondition", this->GetComponentLabel(), level, 0 );
   this->SetCalculateLinearityCondition( calculateLinearityCondition );
 
   /** Set the calculation of the orthonormality condition part. */
   bool calculateOrthonormalityCondition = true;
-  this->GetConfiguration()->ReadParameter( calculateOrthonormalityCondition,
+  this->GetModifiableConfiguration()->ReadParameter( calculateOrthonormalityCondition,
     "CalculateOrthonormalityCondition", this->GetComponentLabel(), level, 0 );
   this->SetCalculateOrthonormalityCondition( calculateOrthonormalityCondition );
 
   /** Set the calculation of the properness condition part. */
   bool calculatePropernessCondition = true;
-  this->GetConfiguration()->ReadParameter( calculatePropernessCondition,
+  this->GetModifiableConfiguration()->ReadParameter( calculatePropernessCondition,
     "CalculatePropernessCondition", this->GetComponentLabel(), level, 0 );
   this->SetCalculatePropernessCondition( calculatePropernessCondition );
 

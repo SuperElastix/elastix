@@ -38,7 +38,7 @@ MultiInputRandomCoordinateSampler< TElastix >
 
   /** Set the NumberOfSpatialSamples. */
   unsigned long numberOfSpatialSamples = 5000;
-  this->GetConfiguration()->ReadParameter( numberOfSpatialSamples,
+  this->GetModifiableConfiguration()->ReadParameter( numberOfSpatialSamples,
     "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfSamples( numberOfSpatialSamples );
 
@@ -46,14 +46,14 @@ MultiInputRandomCoordinateSampler< TElastix >
   typename DefaultInterpolatorType::Pointer fixedImageInterpolator
     = DefaultInterpolatorType::New();
   unsigned int splineOrder = 1;
-  this->GetConfiguration()->ReadParameter( splineOrder,
+  this->GetModifiableConfiguration()->ReadParameter( splineOrder,
     "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
   fixedImageInterpolator->SetSplineOrder( splineOrder );
   this->SetInterpolator( fixedImageInterpolator );
 
   /** Set the UseRandomSampleRegion bool. */
   bool useRandomSampleRegion = false;
-  this->GetConfiguration()->ReadParameter( useRandomSampleRegion,
+  this->GetModifiableConfiguration()->ReadParameter( useRandomSampleRegion,
     "UseRandomSampleRegion", this->GetComponentLabel(), level, 0 );
   this->SetUseRandomSampleRegion( useRandomSampleRegion );
 
@@ -62,9 +62,9 @@ MultiInputRandomCoordinateSampler< TElastix >
   {
     InputImageSpacingType sampleRegionSize;
     InputImageSpacingType fixedImageSpacing
-      = this->GetElastix()->GetFixedImage()->GetSpacing();
+      = this->GetModifiableElastix()->GetFixedImage()->GetSpacing();
     InputImageSizeType fixedImageSize
-      = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+      = this->GetModifiableElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
 
     /** Estimate default:
      * sampleRegionSize[i] = min ( fixedImageSizeInMM[i], max_i ( fixedImageSizeInMM[i]/3 ) )
@@ -83,7 +83,7 @@ MultiInputRandomCoordinateSampler< TElastix >
     /** Read user's choice. */
     for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
-      this->GetConfiguration()->ReadParameter(
+      this->GetModifiableConfiguration()->ReadParameter(
         sampleRegionSize[ i ], "SampleRegionSize",
         this->GetComponentLabel(), level * InputImageDimension + i, 0 );
     }

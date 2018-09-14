@@ -75,7 +75,7 @@ FixedGenericPyramid< TElastix >
     } // end for FixedImageDimension
   } // end for numberOfResolutions
 
-  if( !foundRescale && this->GetConfiguration()->GetPrintErrorMessages() )
+  if( !foundRescale && this->GetModifiableConfiguration()->GetPrintErrorMessages() )
   {
     xl::xout[ "warning" ] << "WARNING: the fixed pyramid rescale schedule is not fully specified!\n";
     xl::xout[ "warning" ] << "  A default pyramid rescale schedule is used." << std::endl;
@@ -109,7 +109,7 @@ FixedGenericPyramid< TElastix >
     } // end for FixedImageDimension
   } // end for numberOfResolutions
 
-  if( !foundSmoothing && this->GetConfiguration()->GetPrintErrorMessages() )
+  if( !foundSmoothing && this->GetModifiableConfiguration()->GetPrintErrorMessages() )
   {
     xl::xout[ "warning" ] << "WARNING: the fixed pyramid smoothing schedule is not fully specified!\n";
     xl::xout[ "warning" ] << "  A default pyramid smoothing schedule is used." << std::endl;

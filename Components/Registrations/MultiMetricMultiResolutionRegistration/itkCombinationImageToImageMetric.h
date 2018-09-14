@@ -32,11 +32,11 @@ namespace itk
  *
  * NB: while it may seem not logical that the SetInterpolator(arg)
  * sets the interpolator in all submetrics whereas the
- * GetInterpolator(void) returns GetInterpolator(0) it is logical.
+ * GetModifiableInterpolator(void) returns GetModifiableInterpolator(0) it is logical.
  * If you set the interpolator the same in all metrics, you will
- * receive the correct interpolator with GetInterpolator(0).
+ * receive the correct interpolator with GetModifiableInterpolator(0).
  * If you set the interpolator differently in all metrics, the most
- * logical action is to return GetInterpolator(0) when GetInterpolator()
+ * logical action is to return GetModifiableInterpolator(0) when GetModifiableInterpolator()
  * is invoked.
  *
  * Note: If you use Set{Transform,Interpolator etc}(0) or
@@ -182,7 +182,7 @@ public:
   void SetMetric( SingleValuedCostFunctionType * metric, unsigned int pos );
 
   /** Get metric i. */
-  SingleValuedCostFunctionType * GetMetric( unsigned int count ) const;
+  SingleValuedCostFunctionType * GetModifiableMetric( unsigned int count ) const;
 
   /** Set the weight for metric i. */
   void SetMetricWeight( double weight, unsigned int pos );
@@ -250,12 +250,12 @@ public:
   /** Returns the transform set in a specific metric. If the submetric is a
    * singlevalued costfunction a zero pointer will be returned.
    */
-  virtual const TransformType * GetTransform( unsigned int pos ) const;
+  virtual const TransformType * GetModifiableTransform( unsigned int pos ) const;
 
   /** Return Transform 0 */
-  virtual const TransformType * GetTransform( void ) const
+  virtual const TransformType * GetModifiableTransform( void ) const
   {
-    return this->GetTransform( 0 );
+    return this->GetModifiableTransform( 0 );
   }
 
 
@@ -268,12 +268,12 @@ public:
   /** Returns the interpolator set in a specific metric. If the submetric is
    * a singlevalued costfunction a zero pointer will be returned.
    */
-  virtual const InterpolatorType * GetInterpolator( unsigned int pos ) const;
+  virtual const InterpolatorType * GetModifiableInterpolator( unsigned int pos ) const;
 
   /** Return Interpolator 0 */
-  virtual const InterpolatorType * GetInterpolator( void ) const
+  virtual const InterpolatorType * GetModifiableInterpolator( void ) const
   {
-    return this->GetInterpolator( 0 );
+    return this->GetModifiableInterpolator( 0 );
   }
 
 

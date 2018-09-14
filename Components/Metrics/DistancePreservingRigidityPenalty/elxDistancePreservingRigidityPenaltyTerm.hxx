@@ -38,7 +38,7 @@ DistancePreservingRigidityPenalty< TElastix >
 {
   /** Read the fixed rigidity image. */
   string segmentedImageName = "";
-  this->GetConfiguration()->ReadParameter( segmentedImageName,
+  this->GetModifiableConfiguration()->ReadParameter( segmentedImageName,
     "SegmentedImageName", this->GetComponentLabel(), 0, -1, false );
 
   typedef typename Superclass1::SegmentedImageType                SegmentedImageType;
@@ -58,7 +58,7 @@ DistancePreservingRigidityPenalty< TElastix >
   DirectionType           direction;
   direction.SetIdentity();
   infoChanger->SetOutputDirection( direction );
-  infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetChangeDirection( !this->GetModifiableElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( segmentedImageReader->GetOutput() );
 
   /** Do the reading. */
@@ -80,9 +80,9 @@ DistancePreservingRigidityPenalty< TElastix >
   this->SetSegmentedImage( infoChanger->GetOutput() );
 
   /** Get information from the segmented image. */
-  typename SegmentedImageType::SizeType segmentedImageSize       = this->GetSegmentedImage()->GetBufferedRegion().GetSize();
-  typename SegmentedImageType::PointType segmentedImageOrigin    = this->GetSegmentedImage()->GetOrigin();
-  typename SegmentedImageType::SpacingType segmentedImageSpacing = this->GetSegmentedImage()->GetSpacing();
+  typename SegmentedImageType::SizeType segmentedImageSize       = this->GetModifiableSegmentedImage()->GetBufferedRegion().GetSize();
+  typename SegmentedImageType::PointType segmentedImageOrigin    = this->GetModifiableSegmentedImage()->GetOrigin();
+  typename SegmentedImageType::SpacingType segmentedImageSpacing = this->GetModifiableSegmentedImage()->GetSpacing();
 
   /** Get the grid sampling spacing for calculation of the rigidity penalty term. */
   typename SegmentedImageType::SpacingType penaltyGridSpacingInVoxels;
@@ -120,7 +120,7 @@ DistancePreservingRigidityPenalty< TElastix >
   resampler->SetOutputSpacing( resampledImageSpacing );
   resampler->SetOutputOrigin( segmentedImageOrigin );
   resampler->SetSize( resampledImageSize );
-  resampler->SetInput( this->GetSegmentedImage() );
+  resampler->SetInput( this->GetModifiableSegmentedImage() );
   resampler->Update();
 
   this->SetSampledSegmentedImage( resampler->GetOutput() );

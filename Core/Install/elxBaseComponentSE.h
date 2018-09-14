@@ -33,7 +33,7 @@ namespace elastix
  * Most elastix component will not directly inherit from the
  * elx::BaseComponent class but from this one, since it adds
  * some methods that most methods need anyway, such as
- * Set/GetElastix, Set/GetConfiguration.
+ * Set/GetModifiableElastix, Set/GetModifiableConfiguration.
  *
  * \sa BaseComponent
  * \ingroup Install
@@ -76,20 +76,20 @@ public:
    */
   virtual void SetElastix( ElastixType * _arg );
 
-  /** itkGetObjectMacro( Elastix, ElastixType );
+  /** itkGetModifiableObjectMacro( Elastix, ElastixType );
    * without the itkDebug call.
    */
-  virtual ElastixType * GetElastix( void ) const
+  virtual ElastixType * GetModifiableElastix( void ) const
   {
     return this->m_Elastix.GetPointer();
   }
 
 
-  /** itkGetObjectMacro(Configuration, ConfigurationType);
+  /** itkGetModifiableObjectMacro(Configuration, ConfigurationType);
    * The configuration object provides functionality to
    * read parameters and command line arguments.
    */
-  virtual ConfigurationType * GetConfiguration( void ) const
+  virtual ConfigurationType * GetModifiableConfiguration( void ) const
   {
     return this->m_Configuration.GetPointer();
   }
@@ -101,7 +101,7 @@ public:
   /** Get a pointer to the Registration component.
    * This is a convenience function, since the registration
    * component is needed often by other components.
-   * It could be accessed also via GetElastix->GetElxRegistrationBase().
+   * It could be accessed also via GetModifiableElastix->GetElxRegistrationBase().
    */
   virtual RegistrationPointer GetRegistration( void ) const
   {

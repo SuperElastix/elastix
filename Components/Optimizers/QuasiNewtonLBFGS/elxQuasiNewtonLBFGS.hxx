@@ -129,7 +129,7 @@ QuasiNewtonLBFGS< TElastix >::LineSearch(
   }
   catch( itk::ExceptionObject & err )
   {
-    if( this->GetLineSearchOptimizer() == 0 )
+    if( this->GetModifiableLineSearchOptimizer() == 0 )
     {
       throw err;
     }
