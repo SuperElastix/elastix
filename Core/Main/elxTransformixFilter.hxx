@@ -33,8 +33,6 @@ TransformixFilter< TMovingImage >
   this->SetPrimaryOutputName( "ResultImage" );
   this->SetOutput( "ResultDeformationField", this->MakeOutput( "ResultDeformationField" ) );
 
-  //this->AddRequiredInputName( "InputImage" );
-
   this->m_FixedPointSetFileName               = "";
   this->m_ComputeSpatialJacobian              = false;
   this->m_ComputeDeterminantOfSpatialJacobian = false;
@@ -286,35 +284,35 @@ TransformixFilter< TMovingImage >
   const ParameterMapType transformParameterMap = transformParameterObjectPtr->GetParameterMap( lastIndex );
 
   ParameterMapType::const_iterator spacingMapIter = transformParameterMap.find( "Spacing" );
-  if( spacingMapIter == transformParameterMap.cend() )
+  if( spacingMapIter == transformParameterMap.end() )
   {
     itkExceptionMacro( "No entry Spacing found in transformParameterMap" );
   }
   const ParameterValueVectorType spacingStrings = spacingMapIter->second;
 
   ParameterMapType::const_iterator sizeMapIter = transformParameterMap.find( "Size" );
-  if( sizeMapIter == transformParameterMap.cend() )
+  if( sizeMapIter == transformParameterMap.end() )
   {
     itkExceptionMacro( "No entry Size found in transformParameterMap" );
   }
   const ParameterValueVectorType sizeStrings = sizeMapIter->second;
 
   ParameterMapType::const_iterator indexMapIter = transformParameterMap.find( "Index" );
-  if( indexMapIter == transformParameterMap.cend() )
+  if( indexMapIter == transformParameterMap.end() )
   {
     itkExceptionMacro( "No entry Index found in transformParameterMap" );
   }
   const ParameterValueVectorType indexStrings = indexMapIter->second;
 
   ParameterMapType::const_iterator originMapIter = transformParameterMap.find( "Origin" );
-  if( originMapIter == transformParameterMap.cend() )
+  if( originMapIter == transformParameterMap.end() )
   {
     itkExceptionMacro( "No entry Origin found in transformParameterMap" );
   }
   const ParameterValueVectorType originStrings = originMapIter->second;
 
   ParameterMapType::const_iterator directionMapIter = transformParameterMap.find( "Direction" );
-  if( directionMapIter == transformParameterMap.cend() )
+  if( directionMapIter == transformParameterMap.end() )
   {
     itkExceptionMacro( "No entry Direction found in transformParameterMap" );
   }
