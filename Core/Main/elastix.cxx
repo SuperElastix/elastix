@@ -73,11 +73,11 @@ main( int argc, char ** argv )
   /** Some declarations and initializations. */
   ElastixMainVectorType elastices;
 
-  ObjectPointer              transform            = 0;
-  DataObjectContainerPointer fixedImageContainer  = 0;
-  DataObjectContainerPointer movingImageContainer = 0;
-  DataObjectContainerPointer fixedMaskContainer   = 0;
-  DataObjectContainerPointer movingMaskContainer  = 0;
+  ObjectPointer              transform;
+  DataObjectContainerPointer fixedImageContainer;
+  DataObjectContainerPointer movingImageContainer;
+  DataObjectContainerPointer fixedMaskContainer;
+  DataObjectContainerPointer movingMaskContainer;
   FlatDirectionCosinesType   fixedImageOriginalDirection;
   int                        returndummy        = 0;
   unsigned long              nrOfParameterFiles = 0;
