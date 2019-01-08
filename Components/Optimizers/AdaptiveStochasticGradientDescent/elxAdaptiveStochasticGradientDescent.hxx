@@ -635,7 +635,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   double       ee           = 0.0;
   if( maxJJ > 1e-14 )
   {
-    sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
+    sigma4 = sigma4factor * delta / std::sqrt( maxJJ );
   }
   this->SampleGradients(
     this->GetScaledCurrentPosition(), sigma4, gg, ee );
@@ -652,11 +652,11 @@ AdaptiveStochasticGradientDescent< TElastix >
    */
   if( gg > 1e-14 && TrC > 1e-14 )
   {
-    sigma1 = vcl_sqrt( gg / TrC );
+    sigma1 = std::sqrt( gg / TrC );
   }
   if( ee > 1e-14 && TrC > 1e-14 )
   {
-    sigma3 = vcl_sqrt( ee / TrC );
+    sigma3 = std::sqrt( ee / TrC );
   }
 
   const double alpha = 1.0;
@@ -664,14 +664,14 @@ AdaptiveStochasticGradientDescent< TElastix >
   double       a_max = 0.0;
   if( sigma1 > 1e-14 && maxJCJ > 1e-14 )
   {
-    a_max = A * delta / sigma1 / vcl_sqrt( maxJCJ );
+    a_max = A * delta / sigma1 / std::sqrt( maxJCJ );
   }
   const double noisefactor = sigma1 * sigma1
     / ( sigma1 * sigma1 + sigma3 * sigma3 + 1e-14 );
   const double a = a_max * noisefactor;
 
   const double omega = vnl_math_max( 1e-14,
-    this->m_SigmoidScaleFactor * sigma3 * sigma3 * vcl_sqrt( TrCC ) );
+    this->m_SigmoidScaleFactor * sigma3 * sigma3 * std::sqrt( TrCC ) );
   const double fmax = 1.0;
   const double fmin = -0.99 + 0.98 * noisefactor;
 
@@ -786,19 +786,19 @@ AdaptiveStochasticGradientDescent< TElastix >
     timer5.Start();
     if( maxJJ > 1e-14 )
     {
-      sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
+      sigma4 = sigma4factor * delta / std::sqrt( maxJJ );
     }
     this->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
 
     double noisefactor = gg / ( gg + ee );
-    a =  delta * vcl_pow( A + 1.0, alpha ) / jacg * noisefactor;
+    a =  delta * std::pow( A + 1.0, alpha ) / jacg * noisefactor;
     timer5.Stop();
     elxout << "  Computing the noise compensation took "
            << this->ConvertSecondsToDHMS( timer5.GetMean(), 6 ) << std::endl;
   }
   else
   {
-    a = delta * vcl_pow( A + 1.0, alpha ) / jacg;
+    a = delta * std::pow( A + 1.0, alpha ) / jacg;
   }
 
   /** Set parameters in superclass. */

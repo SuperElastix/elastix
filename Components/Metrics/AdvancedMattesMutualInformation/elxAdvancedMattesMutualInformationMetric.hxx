@@ -183,7 +183,7 @@ AdvancedMattesMutualInformationMetric< TElastix >
 ::Compute_c( unsigned long k ) const
 {
   return static_cast< double >(
-    this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
+    this->m_Param_c / std::pow( k + 1, this->m_Param_gamma ) );
 
 } // end Compute_c()
 

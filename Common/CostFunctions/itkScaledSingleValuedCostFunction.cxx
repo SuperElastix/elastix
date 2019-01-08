@@ -217,7 +217,7 @@ ScaledSingleValuedCostFunction
   this->m_Scales.SetSize( squaredScales.GetSize() );
   for( unsigned int i = 0; i < squaredScales.Size(); ++i )
   {
-    this->m_Scales[ i ] = vcl_sqrt( squaredScales[ i ] );
+    this->m_Scales[ i ] = std::sqrt( squaredScales[ i ] );
   }
   this->Modified();
 

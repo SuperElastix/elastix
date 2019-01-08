@@ -383,7 +383,7 @@ ImageSamplerBase< TInputImage >
       maxIndex[ i ] = static_cast< IndexValueType >(
         vcl_ceil( bbIndex->GetMaximum()[ i ] ) );
       minIndex[ i ] = static_cast< IndexValueType >(
-        vcl_floor( bbIndex->GetMinimum()[ i ] ) );
+        std::floor( bbIndex->GetMinimum()[ i ] ) );
       size[ i ] = maxIndex[ i ] - minIndex[ i ] + 1;
     }
     boundingBoxRegion.SetIndex( minIndex );

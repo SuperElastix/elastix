@@ -523,7 +523,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
   {
     if( splineOrder & 1 )     // Use this index calculation for odd splineOrder
     {
-      indx = (long)vcl_floor( (float)x[ n ] ) - splineOrder / 2;
+      indx = (long)std::floor( (float)x[ n ] ) - splineOrder / 2;
       for( unsigned int k = 0; k <= splineOrder; k++ )
       {
         evaluateIndex[ n ][ k ] = indx++;
@@ -531,7 +531,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
     }
     else                       // Use this index calculation for even splineOrder
     {
-      indx = (long)vcl_floor( (float)( x[ n ] + 0.5 ) ) - splineOrder / 2;
+      indx = (long)std::floor( (float)( x[ n ] + 0.5 ) ) - splineOrder / 2;
       for( unsigned int k = 0; k <= splineOrder; k++ )
       {
         evaluateIndex[ n ][ k ] = indx++;

@@ -122,7 +122,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       /** Check for non-zero bin contribution. */
       if( jointPDFValue > 1e-16 && fixPDFmovPDF > 1e-16 )
       {
-        MI += jointPDFValue * vcl_log( jointPDFValue / fixPDFmovPDF );
+        MI += jointPDFValue * std::log( jointPDFValue / fixPDFmovPDF );
       }
       ++movingPDFit;
       ++jointPDFit;
@@ -215,7 +215,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       if( jointPDFValue > 1e-16 && fixPDFmovPDF > 1e-16 )
       {
         derivit = derivbegin;
-        const double pRatio      = vcl_log( jointPDFValue / fixPDFmovPDF );
+        const double pRatio      = std::log( jointPDFValue / fixPDFmovPDF );
         const double pRatioAlpha = this->m_Alpha * pRatio;
         MI += jointPDFValue * pRatio;
         while( derivit != derivend )
@@ -712,7 +712,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     double       logFixedPDFValue = 0.0;
     if( fixedPDFValue > 1e-16 )
     {
-      logFixedPDFValue = vcl_log( fixedPDFValue );
+      logFixedPDFValue = std::log( fixedPDFValue );
     }
     movingPDFit = movingPDFbegin;
     movingIndex = 0;
@@ -725,7 +725,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       /** Check for non-zero bin contribution. */
       if( jointPDFValue > 1e-16 && movingPDFValue > 1e-16 )
       {
-        const PDFValueType pRatio = vcl_log( jointPDFValue / movingPDFValue );
+        const PDFValueType pRatio = std::log( jointPDFValue / movingPDFValue );
         this->m_PRatioArray[ fixedIndex ][ movingIndex ] = static_cast< PRatioType >(
           this->m_Alpha * pRatio );
 
@@ -791,10 +791,10 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 
   /** The lowest bin numbers affected by this pixel: */
   const int fixedParzenWindowIndex
-    = static_cast< int >( vcl_floor(
+    = static_cast< int >( std::floor(
     fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
   const int movingParzenWindowIndex
-    = static_cast< int >( vcl_floor(
+    = static_cast< int >( std::floor(
     movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
 
   /** Compute the fixed Parzen values. */
@@ -950,7 +950,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       /** Check for non-zero bin contribution and update the mutual information value. */
       if( jointPDFValue > 1e-16 && fixPDFmovPDFAlpha > 1e-16 )
       {
-        MI += this->m_Alpha * jointPDFValue * vcl_log( jointPDFValue / fixPDFmovPDFAlpha );
+        MI += this->m_Alpha * jointPDFValue * std::log( jointPDFValue / fixPDFmovPDFAlpha );
       }
 
       /** Update the derivative. */
@@ -980,7 +980,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
         if( perturbedJointPDFRightValue > 1e-16 && perturbedfixPDFmovPDFAlphaRight > 1e-16 )
         {
           contrib += perturbedAlphaRightValue * perturbedJointPDFRightValue
-            * vcl_log( perturbedJointPDFRightValue / perturbedfixPDFmovPDFAlphaRight );
+            * std::log( perturbedJointPDFRightValue / perturbedfixPDFmovPDFAlphaRight );
         }
 
         /** For clarity, get some values and give them a name. */
@@ -999,7 +999,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
         if( perturbedJointPDFLeftValue > 1e-16 && perturbedfixPDFmovPDFAlphaLeft > 1e-16 )
         {
           contrib -= perturbedAlphaLeftValue * perturbedJointPDFLeftValue
-            * vcl_log( perturbedJointPDFLeftValue / perturbedfixPDFmovPDFAlphaLeft );
+            * std::log( perturbedJointPDFLeftValue / perturbedfixPDFmovPDFAlphaLeft );
         }
 
         /** Update the derivative component. */

@@ -202,7 +202,7 @@ main( int argc, char ** argv )
       baselineNorm += vnl_math_sqr( parametersBaseline[ i ] );
       diffNorm     += vnl_math_sqr( parametersBaseline[ i ] - parametersTest[ i ] );
     }
-    diffNormNormalized = vcl_sqrt( diffNorm ) / vcl_sqrt( baselineNorm );
+    diffNormNormalized = std::sqrt( diffNorm ) / std::sqrt( baselineNorm );
   }
   else
   {
@@ -274,7 +274,7 @@ main( int argc, char ** argv )
         unsigned int j = index + i * numberParPerDim;
         diffNormTmp += vnl_math_sqr( parametersBaseline[ j ] - parametersTest[ j ] );
       }
-      diffNormTmp = vcl_sqrt( diffNormTmp );
+      diffNormTmp = std::sqrt( diffNormTmp );
       it.Set( diffNormTmp );
 
       /** Compare. */
@@ -301,7 +301,7 @@ main( int argc, char ** argv )
     } // end while
 
     /** Final normalized norm. */
-    diffNormNormalized = vcl_sqrt( diffNorm ) / vcl_sqrt( baselineNorm );
+    diffNormNormalized = std::sqrt( diffNorm ) / std::sqrt( baselineNorm );
 
     /** Create name for difference image. */
     std::string diffImageFileName
@@ -336,7 +336,7 @@ main( int argc, char ** argv )
             << "    ---------------------\n"
             << "       || baseline ||\n";
   std::cerr << "Computed difference: "
-            << vcl_sqrt( diffNorm ) << " / " << vcl_sqrt( baselineNorm ) << " = "
+            << std::sqrt( diffNorm ) << " / " << std::sqrt( baselineNorm ) << " = "
             << diffNormNormalized << std::endl;
   std::cerr << "Allowed  difference: " << allowedTolerance << std::endl;
 

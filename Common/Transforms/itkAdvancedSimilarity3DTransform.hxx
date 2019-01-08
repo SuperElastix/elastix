@@ -147,7 +147,7 @@ AdvancedSimilarity3DTransform< TScalarType >
   axis[ 2 ] = parameters[ 2 ];
   if( norm > 0 )
   {
-    norm = vcl_sqrt( norm );
+    norm = std::sqrt( norm );
   }
 
   double epsilon = 1e-10;
@@ -184,7 +184,7 @@ AdvancedSimilarity3DTransform< TScalarType >
 //
 // Parameters are ordered as:
 //
-// p[0:2] = right part of the versor (axis times vcl_sin(t/2))
+// p[0:2] = right part of the versor (axis times std::sin(t/2))
 // p[3:5} = translation components
 // p[6:6} = scaling factor (isotropic)
 //
@@ -346,7 +346,7 @@ AdvancedSimilarity3DTransform< TScalarType >
   {
     jsj[ par ].Fill( 0.0 );
   }
-  if( vcl_abs( this->m_Scale ) > 0 )
+  if( std::abs( this->m_Scale ) > 0 )
   {
     jsj[ 6 ] = this->GetMatrix().GetVnlMatrix() / this->m_Scale;
   }

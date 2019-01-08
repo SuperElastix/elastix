@@ -68,13 +68,13 @@ RegularStepGradientDescent< TElastix >
   this->SetGradientMagnitudeTolerance( minGradientMagnitude );
 
   /** Set the MaximumStepLength.*/
-  double maxStepLength = 16.0 / vcl_pow( 2.0, static_cast< int >( level ) );
+  double maxStepLength = 16.0 / std::pow( 2.0, static_cast< int >( level ) );
   this->m_Configuration->ReadParameter( maxStepLength,
     "MaximumStepLength", this->GetComponentLabel(), level, 0 );
   this->SetMaximumStepLength( maxStepLength );
 
   /** Set the MinimumStepLength.*/
-  double minStepLength = 0.5 / vcl_pow( 2.0, static_cast< int >( level ) );
+  double minStepLength = 0.5 / std::pow( 2.0, static_cast< int >( level ) );
   this->m_Configuration->ReadParameter( minStepLength,
     "MinimumStepLength", this->GetComponentLabel(), level, 0 );
   this->SetMinimumStepLength( minStepLength );

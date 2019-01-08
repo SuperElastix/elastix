@@ -179,7 +179,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
       for( unsigned int j = i; j < sizejacind; ++j )
       {
         const int jacindj = static_cast< int >( jacind[ j ] );
-        difHist[ static_cast< unsigned int >( vcl_abs( jacindj - jacindi ) ) ]++;
+        difHist[ static_cast< unsigned int >( std::abs( jacindj - jacindi ) ) ]++;
       }
     }
   }
@@ -265,7 +265,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
             if( q >= p )
             {
               const double tempval = jactjac( pi, qi ) / n;
-              if( vcl_abs( tempval ) > 1e-14 )
+              if( std::abs( tempval ) > 1e-14 )
               {
                 const unsigned int bandindex = bandcovMap[ q - p ];
                 if( bandindex < bandcovsize )
@@ -303,7 +303,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
       if( q >= p )
       {
         const double tempval = jactjac( pi, qi ) / n;
-        if( vcl_abs( tempval ) > 1e-14 )
+        if( std::abs( tempval ) > 1e-14 )
         {
           const unsigned int bandindex = bandcovMap[ q - p ];
           if( bandindex < bandcovsize )
@@ -327,7 +327,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
     for( unsigned int b = 0; b < bandcovsize; ++b )
     {
       const double tempval = bandcov( p, b );
-      if( vcl_abs( tempval ) > 1e-14 )
+      if( std::abs( tempval ) > 1e-14 )
       {
         const unsigned int q = p + bandcovMap2[ b ];
         cov( p, q ) = tempval;
@@ -392,7 +392,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
    */
   maxJJ  = 0.0;
   maxJCJ = 0.0;
-  const double sqrt2 = vcl_sqrt( static_cast< double >( 2.0 ) );
+  const double sqrt2 = std::sqrt( static_cast< double >( 2.0 ) );
 
   JacobianType                       jacjjacj( outdim, outdim );
   JacobianType                       jacjcov( outdim, sizejacind );

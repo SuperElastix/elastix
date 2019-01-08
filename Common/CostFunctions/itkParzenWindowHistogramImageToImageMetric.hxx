@@ -430,7 +430,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
   /** The ParzenIndex is the lowest bin number that is affected by a
    * pixel and computed as:
-   * ParzenIndex = vcl_floor( ParzenTerm + ParzenTermToIndexOffset )
+   * ParzenIndex = std::floor( ParzenTerm + ParzenTermToIndexOffset )
    * where ParzenTermToIndexOffset = 1/2, 0, -1/2, or -1.
    */
   this->m_FixedParzenTermToIndexOffset
@@ -576,10 +576,10 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
   /** The lowest bin numbers affected by this pixel: */
   const OffsetValueType fixedImageParzenWindowIndex
-    = static_cast< OffsetValueType >( vcl_floor(
+    = static_cast< OffsetValueType >( std::floor(
     fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
   const OffsetValueType movingImageParzenWindowIndex
-    = static_cast< OffsetValueType >( vcl_floor(
+    = static_cast< OffsetValueType >( std::floor(
     movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
 
   /** The Parzen values. */
@@ -856,7 +856,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
   /** The lowest bin numbers affected by this pixel: */
   const OffsetValueType fixedImageParzenWindowIndex
-    = static_cast< OffsetValueType >( vcl_floor(
+    = static_cast< OffsetValueType >( std::floor(
     fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
   this->EvaluateParzenValues(
     fixedImageParzenWindowTerm, fixedImageParzenWindowIndex,
@@ -868,7 +868,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
     const double movingImageParzenWindowTerm
       = movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
     const OffsetValueType movingImageParzenWindowIndex
-      = static_cast< OffsetValueType >( vcl_floor(
+      = static_cast< OffsetValueType >( std::floor(
       movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
     this->EvaluateParzenValues(
       movingImageParzenWindowTerm, movingImageParzenWindowIndex,
@@ -945,7 +945,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
       const double movParzenWindowTermRight
         = movr / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
       const OffsetValueType movParzenWindowIndexRight
-        = static_cast< OffsetValueType >( vcl_floor(
+        = static_cast< OffsetValueType >( std::floor(
         movParzenWindowTermRight + this->m_MovingParzenTermToIndexOffset ) );
       this->EvaluateParzenValues(
         movParzenWindowTermRight, movParzenWindowIndexRight,
@@ -980,7 +980,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
       const double movParzenWindowTermLeft
         = movl / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
       const OffsetValueType movParzenWindowIndexLeft
-        = static_cast< OffsetValueType >( vcl_floor(
+        = static_cast< OffsetValueType >( std::floor(
         movParzenWindowTermLeft + this->m_MovingParzenTermToIndexOffset ) );
       this->EvaluateParzenValues(
         movParzenWindowTermLeft, movParzenWindowIndexLeft,

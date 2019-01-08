@@ -280,7 +280,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** The denominator of the NC. */
-  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+  const RealType denom = -1.0 * std::sqrt( sff * smm );
 
   /** Calculate the measure value. */
   if( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
@@ -458,7 +458,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** The denominator of the value and the derivative. */
-  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+  const RealType denom = -1.0 * std::sqrt( sff * smm );
 
   /** Calculate the value and the derivative. */
   if( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
@@ -709,7 +709,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** The denominator of the value and the derivative. */
-  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+  const RealType denom = -1.0 * std::sqrt( sff * smm );
 
   /** Check for sufficiently large denominator. */
   if( denom > -1e-14 )

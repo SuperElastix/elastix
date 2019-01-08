@@ -672,17 +672,17 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       {
         this->m_OrthonormalityConditionValue
           += it_RCI.Get() * (
-          vcl_pow(
+          std::pow(
           +( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
           + mu2_A * mu2_A
           - 1.0,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +mu1_B * mu1_B
           + ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
           - 1.0,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +( 1.0 + mu1_A ) * mu1_B
           + mu2_A * ( 1.0 + mu2_B ),
           2.0 )
@@ -692,34 +692,34 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       {
         this->m_OrthonormalityConditionValue
           += it_RCI.Get() * (
-          vcl_pow(
+          std::pow(
           +( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
           + mu2_A * mu2_A
           + mu3_A * mu3_A
           - 1.0,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +( 1.0 + mu1_A ) * mu1_B
           + mu2_A * ( 1.0 + mu2_B )
           + mu3_A * mu3_B,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +( 1.0 + mu1_A ) * mu1_C
           + mu2_A * mu2_C
           + mu3_A * ( 1.0 + mu3_C ),
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +mu1_B * mu1_B
           + ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
           + mu3_B * mu3_B
           - 1.0,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +mu1_B * mu1_C
           + ( 1.0 + mu2_B ) * mu2_C
           + mu3_B * ( 1.0 + mu3_C ),
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +mu1_C * mu1_C
           + mu2_C * mu2_C
           + ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
@@ -771,7 +771,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       {
         this->m_PropernessConditionValue
           += it_RCI.Get() * (
-          vcl_pow(
+          std::pow(
           +( 1.0 + mu1_A ) * ( 1.0 + mu2_B )
           - mu2_A * mu1_B
           - 1.0,
@@ -782,7 +782,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       {
         this->m_PropernessConditionValue
           += it_RCI.Get() * (
-          vcl_pow(
+          std::pow(
           -mu1_C * ( 1.0 + mu2_B ) * mu3_A
           + mu1_B * mu2_C * mu3_A
           + mu1_C * mu2_A * mu3_B
@@ -1214,17 +1214,17 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         /** Calculate the value of the orthonormality condition. */
         this->m_OrthonormalityConditionValue
           += it_RCI.Get() * (
-          vcl_pow(
+          std::pow(
           +( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
           + mu2_A * mu2_A
           - 1.0,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +mu1_B * mu1_B
           + ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
           - 1.0,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +( 1.0 + mu1_A ) * mu1_B
           + mu2_A * ( 1.0 + mu2_B ),
           2.0 )
@@ -1268,34 +1268,34 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         /** Calculate the value of the orthonormality condition. */
         this->m_OrthonormalityConditionValue
           += it_RCI.Get() * (
-          vcl_pow(
+          std::pow(
           +( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
           + mu2_A * mu2_A
           + mu3_A * mu3_A
           - 1.0,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +( 1.0 + mu1_A ) * mu1_B
           + mu2_A * ( 1.0 + mu2_B )
           + mu3_A * mu3_B,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +( 1.0 + mu1_A ) * mu1_C
           + mu2_A * mu2_C
           + mu3_A * ( 1.0 + mu3_C ),
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +mu1_B * mu1_B
           + ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
           + mu3_B * mu3_B
           - 1.0,
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +mu1_B * mu1_C
           + ( 1.0 + mu2_B ) * mu2_C
           + mu3_B * ( 1.0 + mu3_C ),
           2.0 )
-          + vcl_pow(
+          + std::pow(
           +mu1_C * mu1_C
           + mu2_C * mu2_C
           + ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
@@ -1470,7 +1470,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         /** Calculate the value of the properness condition. */
         this->m_PropernessConditionValue
           += it_RCI.Get() * (
-          vcl_pow(
+          std::pow(
           +( 1.0 + mu1_A ) * ( 1.0 + mu2_B )
           - mu2_A * mu1_B
           - 1.0,
@@ -1507,7 +1507,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         /** Calculate the value of the properness condition. */
         this->m_PropernessConditionValue
           += it_RCI.Get() * (
-          vcl_pow(
+          std::pow(
           -mu1_C * ( 1.0 + mu2_B ) * mu3_A
           + mu1_B * mu2_C * mu3_A
           + mu1_C * mu2_A * mu3_B
@@ -2131,9 +2131,9 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   } // end while
 
   /** Set the gradient magnitudes of the several terms. */
-  this->m_LinearityConditionGradientMagnitude      = vcl_sqrt( gradMagLC );
-  this->m_OrthonormalityConditionGradientMagnitude = vcl_sqrt( gradMagOC );
-  this->m_PropernessConditionGradientMagnitude     = vcl_sqrt( gradMagPC );
+  this->m_LinearityConditionGradientMagnitude      = std::sqrt( gradMagLC );
+  this->m_OrthonormalityConditionGradientMagnitude = std::sqrt( gradMagOC );
+  this->m_PropernessConditionGradientMagnitude     = std::sqrt( gradMagPC );
 
   /** Rearrange to create a derivative. */
   unsigned int j = 0;
