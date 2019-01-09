@@ -20,7 +20,7 @@
 #define __itkMoreThuenteLineSearchOptimizer_cxx
 
 #include "itkMoreThuenteLineSearchOptimizer.h"
-#include "vcl_limits.h"
+#include <limits>
 #include "vnl/vnl_math.h"
 
 namespace itk
