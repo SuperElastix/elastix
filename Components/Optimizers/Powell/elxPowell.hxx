@@ -68,13 +68,13 @@ Powell< TElastix >
   this->SetValueTolerance( valueTolerance );
 
   /** Set the MaximumStepLength.*/
-  double maxStepLength = 16.0 / vcl_pow( 2.0, static_cast< int >( level ) );
+  double maxStepLength = 16.0 / std::pow( 2.0, static_cast< int >( level ) );
   this->m_Configuration->ReadParameter( maxStepLength,
     "MaximumStepLength", this->GetComponentLabel(), level, 0 );
   this->SetStepLength( maxStepLength );
 
   /** Set the MinimumStepLength.*/
-  double stepTolerance = 0.5 / vcl_pow( 2.0, static_cast< int >( level ) );
+  double stepTolerance = 0.5 / std::pow( 2.0, static_cast< int >( level ) );
   this->m_Configuration->ReadParameter( stepTolerance,
     "StepTolerance", this->GetComponentLabel(), level, 0 );
   this->SetStepTolerance( stepTolerance );

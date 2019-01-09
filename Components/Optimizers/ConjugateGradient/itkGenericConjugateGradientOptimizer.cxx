@@ -31,6 +31,7 @@ namespace itk
 
 GenericConjugateGradientOptimizer::GenericConjugateGradientOptimizer()
 {
+  vcl_abs(0);
   itkDebugMacro( "Constructor" );
 
   this->m_CurrentValue                          = NumericTraits< MeasureType >::Zero;
@@ -199,10 +200,10 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
 
     /** Check for convergence
      * \todo: move this code to TestConvergence() */
-    if( 2.0 * vcl_abs( this->GetCurrentValue() - previousValue ) <=
+    if( 2.0 * std::abs( this->GetCurrentValue() - previousValue ) <=
       this->GetValueTolerance()
-      * ( vcl_abs( this->GetCurrentValue() )
-      + vcl_abs( previousValue ) + TINY_NUMBER ) )
+      * ( std::abs( this->GetCurrentValue() )
+      + std::abs( previousValue ) + TINY_NUMBER ) )
     {
       if( limitCount < this->GetMaxNrOfItWithoutImprovement() )
       {

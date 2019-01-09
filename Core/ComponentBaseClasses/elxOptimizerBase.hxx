@@ -170,7 +170,7 @@ OptimizerBase< TElastix >
   {
     const double x = static_cast< double >( i ) / nrofpar * 2.0
       * vnl_math::pi * frequency;
-    scales[ i ] = vcl_pow( amplitude, vcl_sin( x ) );
+    scales[ i ] = std::pow( amplitude, std::sin( x ) );
   }
   this->GetAsITKBaseType()->SetScales( scales );
 

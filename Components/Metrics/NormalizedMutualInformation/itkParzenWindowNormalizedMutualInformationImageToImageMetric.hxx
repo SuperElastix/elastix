@@ -67,7 +67,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
   {
     if( ( *PDFit ) > 1e-16 )
     {
-      ( *PDFit ) = vcl_log( *PDFit );
+      ( *PDFit ) = std::log( *PDFit );
     }
     else
     {
@@ -120,7 +120,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
       /** check for non-zero bin contribution */
       if( jointPDFValue > 1e-16 )
       {
-        sumden -= jointPDFValue * vcl_log( jointPDFValue );
+        sumden -= jointPDFValue * std::log( jointPDFValue );
       }
       ++movingPDFconstit;
       ++jointPDFconstit;
@@ -257,7 +257,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
       const double jointPDFValue          = jointPDFconstit.Get();
       if( jointPDFValue > 1e-16 )
       {
-        const double pRatio = ( nMI * vcl_log( jointPDFValue )
+        const double pRatio = ( nMI * std::log( jointPDFValue )
           - logFixedImagePDFValue - logMovingImagePDFValue ) / jointEntropy;
         const double pRatioAlpha = this->m_Alpha * pRatio;
         /** check for non-zero bin contribution */

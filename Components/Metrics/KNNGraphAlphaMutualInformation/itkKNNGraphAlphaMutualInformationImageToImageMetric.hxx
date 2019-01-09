@@ -425,11 +425,11 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
      *
     for ( unsigned int j = 0; j < K; j++ )
     {
-    enumerator = vcl_sqrt( distsJ[ j ] );
-    denominator = vcl_sqrt( vcl_sqrt( distsF[ j ] ) * vcl_sqrt( distsM[ j ] ) );
+    enumerator = std::sqrt( distsJ[ j ] );
+    denominator = std::sqrt( std::sqrt( distsF[ j ] ) * std::sqrt( distsM[ j ] ) );
     if ( denominator > 1e-14 )
     {
-    contribution += vcl_pow( enumerator / denominator, twoGamma );
+    contribution += std::pow( enumerator / denominator, twoGamma );
     }
     }*/
 
@@ -446,18 +446,18 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     /** Loop over the neighbours. */
     for( unsigned int p = 0; p < k; p++ )
     {
-      Gamma_F += vcl_sqrt( distances_F[ p ] );
-      Gamma_M += vcl_sqrt( distances_M[ p ] );
-      Gamma_J += vcl_sqrt( distances_J[ p ] );
+      Gamma_F += std::sqrt( distances_F[ p ] );
+      Gamma_M += std::sqrt( distances_M[ p ] );
+      Gamma_J += std::sqrt( distances_J[ p ] );
     } // end loop over the k neighbours
 
     /** Calculate the contribution of this query point. */
-    H = vcl_sqrt( Gamma_F * Gamma_M );
+    H = std::sqrt( Gamma_F * Gamma_M );
     if( H > this->m_AvoidDivisionBy )
     {
       /** Compute some sums. */
       G     = Gamma_J / H;
-      sumG += vcl_pow( G, twoGamma );
+      sumG += std::pow( G, twoGamma );
     }
   } // end looping over all query points
 
@@ -470,8 +470,8 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   {
     /** Compute the measure. */
     n       = static_cast< double >( this->m_NumberOfPixelsCounted );
-    number  = vcl_pow( n, this->m_Alpha );
-    measure = vcl_log( sumG / number ) / ( this->m_Alpha - 1.0 );
+    number  = std::pow( n, this->m_Alpha );
+    measure = std::log( sumG / number ) / ( this->m_Alpha - 1.0 );
   }
 
   /** Return the negative alpha - mutual information. */
@@ -670,9 +670,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       listSampleMoving->GetMeasurementVector( indices_J[ p ], z_J_ip );
 
       /** Get the distances. */
-      distance_F = vcl_sqrt( distances_F[ p ] );
-      distance_M = vcl_sqrt( distances_M[ p ] );
-      distance_J = vcl_sqrt( distances_J[ p ] );
+      distance_F = std::sqrt( distances_F[ p ] );
+      distance_M = std::sqrt( distances_M[ p ] );
+      distance_J = std::sqrt( distances_J[ p ] );
 
       /** Compute Gamma's. */
       Gamma_F += distance_F;
@@ -702,15 +702,15 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     } // end loop over the k neighbours
 
     /** Compute contributions. */
-    H = vcl_sqrt( Gamma_F * Gamma_M );
+    H = std::sqrt( Gamma_F * Gamma_M );
     if( H > this->m_AvoidDivisionBy )
     {
       /** Compute some sums. */
       G     = Gamma_J / H;
-      sumG += vcl_pow( G, twoGamma );
+      sumG += std::pow( G, twoGamma );
 
       /** Compute the contribution to the derivative. */
-      Gpow          = vcl_pow( G, twoGamma - 1.0 );
+      Gpow          = std::pow( G, twoGamma - 1.0 );
       contribution += ( Gpow / H ) * ( dGamma_J - ( 0.5 * Gamma_J / Gamma_M ) * dGamma_M );
     }
 
@@ -726,8 +726,8 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   {
     /** Compute the measure. */
     n       = static_cast< double >( this->m_NumberOfPixelsCounted );
-    number  = vcl_pow( n, this->m_Alpha );
-    measure = vcl_log( sumG / number ) / ( this->m_Alpha - 1.0 );
+    number  = std::pow( n, this->m_Alpha );
+    measure = std::log( sumG / number ) / ( this->m_Alpha - 1.0 );
 
     /** Compute the derivative (-2.0 * d = -jointSize). */
     derivative = ( static_cast< AccumulateType >( jointSize ) / sumG ) * contribution;
