@@ -150,7 +150,7 @@ main( int argc, char * argv[] )
     std::cerr << "ERROR: Caught ITK exception: " << e << std::endl;
     return EXIT_FAILURE;
   }
-  itk::ImageIOBase::Pointer imageIOBase = testReader->GetImageIO();
+  itk::SmartPointer<const itk::ImageIOBase> imageIOBase = testReader->GetImageIO();
 
   /**
    * *** TASK 2:

@@ -160,7 +160,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
   this->CheckOnInitialize();
 
   /** Setup the metric. */
-  this->GetCombinationMetric()->SetTransform( this->GetTransform() );
+  this->GetCombinationMetric()->SetTransform( this->GetModifiableTransform() );
 
   this->GetCombinationMetric()->SetFixedImage(
     this->GetFixedImagePyramid()->GetOutput( this->GetCurrentLevel() ) );
@@ -196,8 +196,8 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
   this->GetCombinationMetric()->Initialize();
 
   /** Setup the optimizer. */
-  this->GetOptimizer()->SetCostFunction( this->GetMetric() );
-  this->GetOptimizer()->SetInitialPosition(
+  this->GetModifiableOptimizer()->SetCostFunction( this->GetModifiableMetric() );
+  this->GetModifiableOptimizer()->SetInitialPosition(
     this->GetInitialTransformParametersOfNextLevel() );
 
   /** Connect the transform to the Decorator. */
@@ -416,7 +416,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
     try
     {
       // do the optimization
-      this->GetOptimizer()->StartOptimization();
+      this->GetModifiableOptimizer()->StartOptimization();
     }
     catch( ExceptionObject & err )
     {
@@ -430,7 +430,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 
     // get the results
     this->m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
-    this->GetTransform()->SetParameters( this->m_LastTransformParameters );
+    this->GetModifiableTransform()->SetParameters( this->m_LastTransformParameters );
 
     // setup the initial parameters for next level
     if( this->GetCurrentLevel() < this->GetNumberOfLevels() - 1 )

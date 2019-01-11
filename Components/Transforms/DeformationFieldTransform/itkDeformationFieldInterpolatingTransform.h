@@ -164,12 +164,12 @@ public:
   /** Set/Get the deformation field that defines the displacements */
   virtual void SetDeformationField( DeformationFieldType * _arg );
 
-  itkGetObjectMacro( DeformationField, DeformationFieldType );
+  itkGetModifiableObjectMacro( DeformationField, DeformationFieldType );
 
   /** Set/Get the deformation field interpolator */
   virtual void SetDeformationFieldInterpolator( DeformationFieldInterpolatorType * _arg );
 
-  itkGetObjectMacro( DeformationFieldInterpolator, DeformationFieldInterpolatorType );
+  itkGetModifiableObjectMacro( DeformationFieldInterpolator, DeformationFieldInterpolatorType );
 
   virtual bool IsLinear( void ) const { return false; }
 

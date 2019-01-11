@@ -184,13 +184,13 @@ public:
   itkSetObjectMacro( SegmentedImage, SegmentedImageType );
 
   /** Get the Segmented Image. */
-  itkGetObjectMacro( SegmentedImage, SegmentedImageType );
+  itkGetModifiableObjectMacro( SegmentedImage, SegmentedImageType );
 
   /** Connect the Sampled Segmented Image. */
   itkSetObjectMacro( SampledSegmentedImage, SegmentedImageType );
 
   /** Get the Sampled Segmented Image. */
-  itkGetObjectMacro( SampledSegmentedImage, SegmentedImageType );
+  itkGetModifiableObjectMacro( SampledSegmentedImage, SegmentedImageType );
 
   itkGetMacro( NumberOfRigidGrids, unsigned int );
 

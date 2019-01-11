@@ -88,7 +88,7 @@ public:
   /** Set the cost function that needs scaling. */
   itkSetObjectMacro( UnscaledCostFunction, Superclass );
   /** Get the cost function that needs scaling. */
-  itkGetObjectMacro( UnscaledCostFunction, Superclass );
+  itkGetModifiableObjectMacro( UnscaledCostFunction, Superclass );
 
   /** Set the scales. Also computes the squared scales, just in case users
    * call GetSquaredScales (for compatibility with the ITK convention). */

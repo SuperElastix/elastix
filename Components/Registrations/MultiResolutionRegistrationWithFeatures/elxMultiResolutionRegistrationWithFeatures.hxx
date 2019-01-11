@@ -257,7 +257,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
     this->GetElastix()->GetFixedMask(), useMaskErosion,
     this->GetFixedImagePyramid(), level );
-  this->GetMultiInputMetric()->SetFixedImageMask( fixedMask );
+  this->GetModifiableMultiInputMetric()->SetFixedImageMask( fixedMask );
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
@@ -300,7 +300,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
     this->GetElastix()->GetMovingMask(), useMaskErosion,
     this->GetMovingImagePyramid(), level );
-  this->GetMultiInputMetric()->SetMovingImageMask( movingMask );
+  this->GetModifiableMultiInputMetric()->SetMovingImageMask( movingMask );
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();

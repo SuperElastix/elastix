@@ -128,8 +128,7 @@ public:
   /** Set/Get a pointer to the InitialTransform. */
   virtual void SetInitialTransform( InitialTransformType * _arg );
 
-  itkGetObjectMacro( InitialTransform, InitialTransformType );
-  itkGetConstObjectMacro( InitialTransform, InitialTransformType );
+  itkGetModifiableObjectMacro( InitialTransform, InitialTransformType );
 
   /** Set/Get a pointer to the CurrentTransform.
    * Make sure to set the CurrentTransform before calling functions like
@@ -137,8 +136,7 @@ public:
    */
   virtual void SetCurrentTransform( CurrentTransformType * _arg );
 
-  itkGetObjectMacro( CurrentTransform, CurrentTransformType );
-  itkGetConstObjectMacro( CurrentTransform, CurrentTransformType );
+  itkGetModifiableObjectMacro( CurrentTransform, CurrentTransformType );
 
   /** Return the number of sub-transforms. */
   virtual SizeValueType GetNumberOfTransforms( void ) const;

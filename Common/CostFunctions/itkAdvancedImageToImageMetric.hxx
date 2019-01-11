@@ -554,11 +554,11 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   else if( testPtr_combo )
   {
     /** Check if the current transform is a B-spline transform. */
-    BSplineOrder1TransformType * testPtr_1b = dynamic_cast< BSplineOrder1TransformType * >(
+    const BSplineOrder1TransformType * testPtr_1b = dynamic_cast< const BSplineOrder1TransformType * >(
       testPtr_combo->GetCurrentTransform() );
-    BSplineOrder2TransformType * testPtr_2b = dynamic_cast< BSplineOrder2TransformType * >(
+    const BSplineOrder2TransformType * testPtr_2b = dynamic_cast< const BSplineOrder2TransformType * >(
       testPtr_combo->GetCurrentTransform() );
-    BSplineOrder3TransformType * testPtr_3b = dynamic_cast< BSplineOrder3TransformType * >(
+    const BSplineOrder3TransformType * testPtr_3b = dynamic_cast< const BSplineOrder3TransformType * >(
       testPtr_combo->GetCurrentTransform() );
     if( testPtr_1b || testPtr_2b || testPtr_3b )
     {
