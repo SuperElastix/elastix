@@ -127,7 +127,7 @@ public:
   /** \todo BeforeAll, checking parameters. */
 
   /** Get a pointer to the image containing the optimization surface. */
-  itkGetObjectMacro( OptimizationSurface, NDImageType );
+  itkGetModifiableObjectMacro( OptimizationSurface, NDImageType );
 
 protected:
 

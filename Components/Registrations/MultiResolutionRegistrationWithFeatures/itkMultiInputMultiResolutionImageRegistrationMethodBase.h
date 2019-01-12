@@ -231,7 +231,7 @@ public:
   virtual void SetMetric( MetricType * _arg );
 
   /** Get a metric that takes multiple inputs. */
-  itkGetObjectMacro( MultiInputMetric, MultiInputMetricType );
+  itkGetModifiableObjectMacro( MultiInputMetric, MultiInputMetricType );
 
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.

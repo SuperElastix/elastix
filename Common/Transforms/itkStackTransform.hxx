@@ -60,7 +60,7 @@ StackTransform< TScalarType, NInputDimensions, NOutputDimensions >
     //ParametersType subparams ( ParametersArrayType( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false ) );
     //ParametersType subparams ( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false );
     // NTA, split the parameter by number of subparameters
-    const Array< double > subarray( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false );
+    const Array< double > subarray( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters );
     ParametersType        subparams( subarray );
     this->m_SubTransformContainer[ t ]->SetParametersByValue( subparams );
   }

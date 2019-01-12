@@ -100,7 +100,7 @@ SumOfPairwiseCorrelationCoefficientsMetric< TElastix >
   if( testPtr1 )
   {
     /** Check for B-spline transform. */
-    BSplineTransformBaseType * testPtr2 = dynamic_cast< BSplineTransformBaseType * >(
+    const BSplineTransformBaseType * testPtr2 = dynamic_cast< const BSplineTransformBaseType * >(
       testPtr1->GetCurrentTransform() );
     if( testPtr2 )
     {
@@ -110,7 +110,7 @@ SumOfPairwiseCorrelationCoefficientsMetric< TElastix >
     {
       /** Check for stack transform. */
       StackTransformType * testPtr3 = dynamic_cast< StackTransformType * >(
-        testPtr1->GetCurrentTransform() );
+        testPtr1->GetModifiableCurrentTransform() );
       if( testPtr3 )
       {
         /** Set itk member variable. */

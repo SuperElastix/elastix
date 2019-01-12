@@ -193,7 +193,7 @@ public:
   }
 
 
-  itkGetMacro( NumberOfSubTransforms, unsigned int );
+  itkGetConstMacro( NumberOfSubTransforms, unsigned int );
 
   /** Set/get stack transform parameters. */
   itkSetMacro( StackSpacing, TScalarType );

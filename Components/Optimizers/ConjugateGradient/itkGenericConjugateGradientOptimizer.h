@@ -97,7 +97,7 @@ public:
 
   /** Setting: the line search optimizer */
   itkSetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
-  itkGetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
+  itkGetModifiableObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
 
   /** Setting: the maximum number of iterations */
   itkGetConstMacro( MaximumNumberOfIterations, unsigned long );

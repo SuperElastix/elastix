@@ -72,7 +72,7 @@ public:
   virtual void Execute( Object * caller, const EventObject & )
   {
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
-    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
 
@@ -80,7 +80,7 @@ public:
   {
     CallerType * castcaller = const_cast< CallerType * >(
       dynamic_cast< const CallerType * >( caller ) );
-    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
 

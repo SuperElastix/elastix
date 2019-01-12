@@ -273,49 +273,49 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   this->CheckOnInitialize();
 
   /** Setup the metric: the transform. */
-  this->GetMultiInputMetric()->SetTransform( this->GetTransform() );
+  this->GetModifiableMultiInputMetric()->SetTransform( this->GetModifiableTransform() );
 
   /** Setup the metric: the images. */
-  this->GetMultiInputMetric()->SetNumberOfFixedImages( this->GetNumberOfFixedImages() );
-  this->GetMultiInputMetric()->SetNumberOfMovingImages( this->GetNumberOfMovingImages() );
+  this->GetModifiableMultiInputMetric()->SetNumberOfFixedImages( this->GetNumberOfFixedImages() );
+  this->GetModifiableMultiInputMetric()->SetNumberOfMovingImages( this->GetNumberOfMovingImages() );
 
   for( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
   {
-    this->GetMultiInputMetric()->SetFixedImage(
+    this->GetModifiableMultiInputMetric()->SetFixedImage(
       this->GetFixedImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
   }
 
   for( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
   {
-    this->GetMultiInputMetric()->SetMovingImage(
+    this->GetModifiableMultiInputMetric()->SetMovingImage(
       this->GetMovingImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
   }
 
   /** Setup the metric: the fixed image regions. */
   for( unsigned int i = 0; i < this->m_FixedImageRegionPyramids.size(); ++i )
   {
-    this->GetMultiInputMetric()->SetFixedImageRegion(
+    this->GetModifiableMultiInputMetric()->SetFixedImageRegion(
       this->m_FixedImageRegionPyramids[ i ][ this->GetCurrentLevel() ], i );
   }
 
   /** Setup the metric: the interpolators. */
   for( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
   {
-    this->GetMultiInputMetric()->SetInterpolator( this->GetInterpolator( i ), i );
+    this->GetModifiableMultiInputMetric()->SetInterpolator( this->GetInterpolator( i ), i );
   }
 
   for( unsigned int i = 0; i < this->GetNumberOfFixedImageInterpolators(); ++i )
   {
-    this->GetMultiInputMetric()
+    this->GetModifiableMultiInputMetric()
     ->SetFixedImageInterpolator( this->GetFixedImageInterpolator( i ), i );
   }
 
   /** Initialize the metric. */
-  this->GetMultiInputMetric()->Initialize();
+  this->GetModifiableMultiInputMetric()->Initialize();
 
   /** Setup the optimizer. */
-  this->GetOptimizer()->SetCostFunction( this->GetMetric() );
-  this->GetOptimizer()->SetInitialPosition(
+  this->GetModifiableOptimizer()->SetCostFunction( this->GetModifiableMetric() );
+  this->GetModifiableOptimizer()->SetInitialPosition(
     this->GetInitialTransformParametersOfNextLevel() );
 
   /** Connect the transform to the Decorator. */
@@ -517,7 +517,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     try
     {
       // do the optimization
-      this->GetOptimizer()->StartOptimization();
+      this->GetModifiableOptimizer()->StartOptimization();
     }
     catch( ExceptionObject & err )
     {
@@ -531,7 +531,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
     /** Get the results. */
     this->m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
-    this->GetTransform()->SetParameters( this->m_LastTransformParameters );
+    this->GetModifiableTransform()->SetParameters( this->m_LastTransformParameters );
 
     /** Setup the initial parameters for next level. */
     if( this->GetCurrentLevel() < this->GetNumberOfLevels() - 1 )

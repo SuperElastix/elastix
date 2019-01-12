@@ -500,7 +500,7 @@ AdvancedAffineTransformElastix< TElastix >
   elxout << "Scales for transform parameters are: " << newscales << std::endl;
 
   /** And set the scales into the optimizer. */
-  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+  this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newscales );
 
 } // end SetScales()
 

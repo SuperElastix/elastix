@@ -68,7 +68,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
   InputImageConstPointer inputImage = this->GetInput();
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
   typename MaskType::ConstPointer mask                       = this->GetMask();
-  typename InterpolatorType::Pointer interpolator            = this->GetInterpolator();
+  typename InterpolatorType::Pointer interpolator            = this->GetModifiableInterpolator();
 
   /** Set up the interpolator. */
   interpolator->SetInputImage( inputImage );
