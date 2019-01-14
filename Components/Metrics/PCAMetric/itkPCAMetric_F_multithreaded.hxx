@@ -744,7 +744,7 @@ PCAMetric< TFixedImage, TMovingImage >
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
+    = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
     / static_cast< double >( this->m_NumberOfThreads ) ) );
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );

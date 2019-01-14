@@ -238,7 +238,7 @@ MultiOrderBSplineDecompositionImageFilter< TInputImage, TOutputImage >
   zn      = z;
   if( m_Tolerance > 0.0 )
   {
-    horizon = (long)vcl_ceil( std::log( m_Tolerance ) / std::log( std::fabs( z ) ) );
+    horizon = (long)std::ceil( std::log( m_Tolerance ) / std::log( std::fabs( z ) ) );
   }
   if( horizon < m_DataLength[ m_IteratorDirection ] )
   {
