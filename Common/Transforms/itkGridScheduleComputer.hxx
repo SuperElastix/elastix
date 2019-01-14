@@ -151,7 +151,7 @@ GridScheduleComputer< TTransformScalarType, VImageDimension >
 
       /** Compute the grid size without the extra grid points at the edges. */
       const unsigned int bareGridSize = static_cast< unsigned int >(
-        vcl_ceil( size[ dim ] * imageSpacing[ dim ] / gridSpacing ) );
+        std::ceil( size[ dim ] * imageSpacing[ dim ] / gridSpacing ) );
 
       /** The number of B-spline grid nodes is the bareGridSize plus the
        * B-spline order more grid nodes. */

@@ -26,6 +26,18 @@ string( SUBSTRING ${ELASTIX_VERSION} 26 3 ELASTIX_VERSION )
 string( REGEX MATCH "[0-9]+" ELASTIX_VERSION_MAJOR "${ELASTIX_VERSION}" )
 string( REGEX REPLACE "([0-9]+)\\." "" ELASTIX_VERSION_MINOR "${ELASTIX_VERSION}" )
 
+if ( ELASTIX_VNL_CONFIG_LEGACY_METHODS )
+  add_definitions(
+    -Dvnl_math_abs=vnl_math::abs
+    -Dvnl_math_max=vnl_math::max
+    -Dvnl_math_min=vnl_math::min 
+    -Dvnl_math_rnd=vnl_math::rnd
+    -Dvnl_math_sgn0=vnl_math::sgn0
+    -Dvnl_math_sgn=vnl_math::sgn
+    -Dvnl_math_sqr=vnl_math::sqr
+   )
+ endif()
+
 #---------------------------------------------------------------------
 include( CTest )
 

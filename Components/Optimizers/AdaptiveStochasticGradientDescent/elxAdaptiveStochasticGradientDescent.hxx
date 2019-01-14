@@ -615,7 +615,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     if( TrCC > 1e-14 && TrC > 1e-14 )
     {
       this->m_NumberOfGradientMeasurements = static_cast< unsigned int >(
-        vcl_ceil( 8.0 * TrCC / TrC / TrC / ( K - 1 ) / ( K - 1 ) ) );
+        std::ceil( 8.0 * TrCC / TrC / TrC / ( K - 1 ) / ( K - 1 ) ) );
     }
     else
     {

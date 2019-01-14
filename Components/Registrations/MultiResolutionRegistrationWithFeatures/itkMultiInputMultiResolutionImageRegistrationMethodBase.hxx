@@ -439,7 +439,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
         fixedImageAtLevel->TransformPhysicalPointToContinuousIndex( inputEndPoint, endcindex );
         for( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
         {
-          start[ dim ] = static_cast< IndexValueType >( vcl_ceil( startcindex[ dim ] ) );
+          start[ dim ] = static_cast< IndexValueType >( std::ceil( startcindex[ dim ] ) );
           size[ dim ]  = static_cast< SizeValueType >(
             static_cast< SizeValueType >( std::floor( endcindex[ dim ] ) ) - start[ dim ] + 1 );
         }
