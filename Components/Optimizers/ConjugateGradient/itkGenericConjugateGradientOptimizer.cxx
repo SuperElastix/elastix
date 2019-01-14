@@ -31,7 +31,6 @@ namespace itk
 
 GenericConjugateGradientOptimizer::GenericConjugateGradientOptimizer()
 {
-  vcl_abs(0);
   itkDebugMacro( "Constructor" );
 
   this->m_CurrentValue                          = NumericTraits< MeasureType >::Zero;
