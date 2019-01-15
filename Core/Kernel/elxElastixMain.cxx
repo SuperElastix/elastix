@@ -161,8 +161,9 @@ ElastixMain::ElastixMain()
  * ****************** Initialization of static members *********
  */
 
-ElastixMain::ComponentDatabasePointer ElastixMain::s_CDB             = 0;
-ElastixMain::ComponentLoaderPointer   ElastixMain::s_ComponentLoader = 0;
+// Both s_CDB and s_ComponentLoader are defaulted-constructed to null.
+ElastixMain::ComponentDatabasePointer ElastixMain::s_CDB;
+ElastixMain::ComponentLoaderPointer   ElastixMain::s_ComponentLoader;
 
 /**
  * ********************** Destructor ****************************
@@ -811,9 +812,11 @@ ElastixMain::CreateComponent(
 {
   /** A pointer to the New() function. */
   PtrToCreator  testcreator = 0;
-  ObjectPointer testpointer = 0;
   testcreator = this->s_CDB->GetCreator( name,  this->m_DBIndex );
-  testpointer = testcreator ? testcreator() : NULL;
+
+  // Note that ObjectPointer() yields a default-constructed SmartPointer (null).
+  ObjectPointer testpointer = testcreator ? testcreator() : ObjectPointer();
+
   if( testpointer.IsNull() )
   {
     itkExceptionMacro( << "The following component could not be created: " << name );
