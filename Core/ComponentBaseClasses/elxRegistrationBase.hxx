@@ -104,7 +104,7 @@ RegistrationBase< TElastix >
   const FixedMaskImageType * maskImage, bool useMaskErosion,
   const FixedImagePyramidType * pyramid, unsigned int level ) const
 {
-  FixedMaskSpatialObjectPointer fixedMaskSpatialObject = 0;
+  FixedMaskSpatialObjectPointer fixedMaskSpatialObject; // default-constructed (null)
   if( !maskImage )
   {
     return fixedMaskSpatialObject;
@@ -164,7 +164,7 @@ RegistrationBase< TElastix >
   const MovingMaskImageType * maskImage, bool useMaskErosion,
   const MovingImagePyramidType * pyramid, unsigned int level ) const
 {
-  MovingMaskSpatialObjectPointer movingMaskSpatialObject = 0;
+  MovingMaskSpatialObjectPointer movingMaskSpatialObject; // default-constructed (null)
   if( !maskImage )
   {
     return movingMaskSpatialObject;
