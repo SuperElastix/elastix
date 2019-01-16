@@ -84,7 +84,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
   TrC = TrCC = maxJJ = maxJCJ = 0.0;
 
   /** Get samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
+  ImageSampleContainerPointer sampleContainer; // default-constructed (null)
   SampleFixedImageForJacobianTerms( sampleContainer );
   const SizeValueType nrofsamples = sampleContainer->Size();
   const double        n           = static_cast< double >( nrofsamples );
