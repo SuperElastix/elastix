@@ -73,11 +73,13 @@ main( int argc, char ** argv )
   /** Some declarations and initializations. */
   ElastixMainVectorType elastices;
 
+  // Note that the following pointers are "smart", so they are defaulted-constructed to null.
   ObjectPointer              transform;
   DataObjectContainerPointer fixedImageContainer;
   DataObjectContainerPointer movingImageContainer;
   DataObjectContainerPointer fixedMaskContainer;
   DataObjectContainerPointer movingMaskContainer;
+
   FlatDirectionCosinesType   fixedImageOriginalDirection;
   int                        returndummy        = 0;
   unsigned long              nrOfParameterFiles = 0;

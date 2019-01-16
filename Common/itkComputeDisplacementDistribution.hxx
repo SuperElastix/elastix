@@ -137,7 +137,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   maxJJ = jacg = 0.0;
 
   /** Get samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
+  ImageSampleContainerPointer sampleContainer; // default-constructed (null)
   this->SampleFixedImageForJacobianTerms( sampleContainer );
   const SizeValueType nrofsamples = sampleContainer->Size();
 
@@ -523,7 +523,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   maxJJ = jacg = 0.0;
 
   /** Get samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
+  ImageSampleContainerPointer sampleContainer; // default-constructed (null)
   this->SampleFixedImageForJacobianTerms( sampleContainer );
   const SizeValueType nrofsamples = sampleContainer->Size();
 

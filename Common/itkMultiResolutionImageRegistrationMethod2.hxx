@@ -484,15 +484,11 @@ DataObject::Pointer
 MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
 ::MakeOutput( unsigned int output )
 {
-  switch( output )
+  if (output > 0)
   {
-    case 0:
-      return static_cast< DataObject * >( TransformOutputType::New().GetPointer() );
-      break;
-    default:
-      itkExceptionMacro( "MakeOutput request for an output number larger than the expected number of outputs" );
-      return 0;
+    itkExceptionMacro("MakeOutput request for an output number larger than the expected number of outputs.");
   }
+  return TransformOutputType::New().GetPointer();
 }
 
 

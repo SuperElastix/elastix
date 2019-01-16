@@ -258,7 +258,8 @@ NDImageBase< TPixel >::NewNDImage( unsigned int dim )
     //template and a #define MAXDIM,
     // or something like that....
     default:
-      return 0;
+      // Return a default-constructed SmartPointer (null).
+      return typename NDImageBase< TPixel >::Pointer();
   }
 
 }

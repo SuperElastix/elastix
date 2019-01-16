@@ -823,9 +823,11 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   /** Variables for sampler support. Each metric may have a sampler. */
   std::vector< bool >                                useRandomSampleRegionVec( M, false );
-  std::vector< ImageRandomSamplerBasePointer >       randomSamplerVec( M, 0 );
-  std::vector< ImageRandomCoordinateSamplerPointer > randomCoordinateSamplerVec( M, 0 );
-  std::vector< ImageGridSamplerPointer >             gridSamplerVec( M, 0 );
+
+  // Note that std::vector will properly initialize its M elements to null (by default).
+  std::vector< ImageRandomSamplerBasePointer >       randomSamplerVec( M );
+  std::vector< ImageRandomCoordinateSamplerPointer > randomCoordinateSamplerVec( M );
+  std::vector< ImageGridSamplerPointer >             gridSamplerVec( M );
 
   /** If new samples every iteration, get each sampler, and check if it is
    * a kind of random sampler. If yes, prepare an additional grid sampler
