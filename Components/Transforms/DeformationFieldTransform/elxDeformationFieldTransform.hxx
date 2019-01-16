@@ -128,7 +128,7 @@ DeformationFieldTransform< TElastix >::ReadFromFile( void )
   typedef itk::VectorLinearInterpolateImageFunction<
     DeformationFieldType, CoordRepType >  LinInterpolatorType;
 
-  typename InterpolatorType::Pointer interpolator = 0;
+  typename InterpolatorType::Pointer interpolator; // default-constructed (null)
   unsigned int interpolationOrder = 0;
   this->m_Configuration->ReadParameter( interpolationOrder,
     "DeformationFieldInterpolationOrder", 0 );

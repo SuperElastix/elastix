@@ -98,14 +98,14 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
   if( m_UseMoments )
   {
     // Convert the masks to spatial objects
-    typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject = 0;
+    typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject; // default-constructed (null)
     if( this->m_FixedImageMask )
     {
       fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedImageMask );
     }
 
-    typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject = 0;
+    typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject;  // default-constructed (null)
     if( this->m_MovingImageMask )
     {
       movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();

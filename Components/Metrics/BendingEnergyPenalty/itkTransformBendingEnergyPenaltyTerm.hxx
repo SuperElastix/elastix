@@ -191,7 +191,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   // TODO: This is only required once! and not every iteration.
 
   /** Check if this transform is a B-spline transform. */
-  typename BSplineOrder3TransformType::Pointer dummy = 0;
+  typename BSplineOrder3TransformType::Pointer dummy; // default-constructed (null)
   bool transformIsBSpline = this->CheckForBSplineTransform2( dummy );
 
   /** Call non-thread-safe stuff, such as:
@@ -426,7 +426,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   // TODO: This is only required once! and not every iteration.
 
   /** Check if this transform is a B-spline transform. */
-  typename BSplineOrder3TransformType::Pointer dummy = 0;
+  typename BSplineOrder3TransformType::Pointer dummy; // default-constructed (null)
   bool transformIsBSpline = this->CheckForBSplineTransform2( dummy );
 
   /** Get a handle to the pre-allocated derivative for the current thread.

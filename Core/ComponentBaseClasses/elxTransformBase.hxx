@@ -565,12 +565,11 @@ TransformBase< TElastix >
     initialTransformName, "Transform", 0 );
 
   /** Create an InitialTransform. */
-  ObjectType::Pointer initialTransform;
-
   PtrToCreator testcreator = 0;
   testcreator = this->GetElastix()->GetComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
-  initialTransform = testcreator ? testcreator() : NULL;
+  // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
+  ObjectType::Pointer initialTransform = testcreator ? testcreator() : ObjectType::Pointer();
 
   Self * elx_initialTransform = dynamic_cast< Self * >(
     initialTransform.GetPointer() );
@@ -627,12 +626,12 @@ TransformBase< TElastix >
     initialTransformName, "Transform", 0 );
 
   /** Create an InitialTransform. */
-  ObjectType::Pointer initialTransform;
-
   PtrToCreator testcreator = 0;
   testcreator = this->GetElastix()->GetComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
-  initialTransform = testcreator ? testcreator() : NULL;
+
+  // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
+  ObjectType::Pointer initialTransform = testcreator ? testcreator() : ObjectType::Pointer();
 
   Self * elx_initialTransform = dynamic_cast< Self * >(
     initialTransform.GetPointer() );

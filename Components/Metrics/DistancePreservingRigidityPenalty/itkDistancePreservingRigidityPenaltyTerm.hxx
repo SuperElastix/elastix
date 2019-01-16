@@ -64,7 +64,7 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
   this->Superclass::Initialize();
 
   /** Check if this transform is a B-spline transform. */
-  typename BSplineTransformType::Pointer localBSplineTransform = 0;
+  typename BSplineTransformType::Pointer localBSplineTransform; // default-constructed (null)
   bool transformIsBSpline = this->CheckForBSplineTransform2( localBSplineTransform );
   if( transformIsBSpline )
   {
