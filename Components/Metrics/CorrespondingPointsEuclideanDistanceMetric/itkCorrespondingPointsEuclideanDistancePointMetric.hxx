@@ -220,7 +220,7 @@ CorrespondingPointsEuclideanDistancePointMetric< TFixedPointSet, TMovingPointSet
       measure += distance;
 
       /** Calculate the contributions to the derivatives with respect to each parameter. */
-      if( distance > vcl_numeric_limits< MeasureType >::epsilon() )
+      if( distance > std::numeric_limits< MeasureType >::epsilon() )
       {
         VnlVectorType diff_2 = diffPoint / distance;
         if( nzji.size() == this->GetNumberOfParameters() )

@@ -127,7 +127,7 @@ AdvancedRigid2DTransform< TScalarType >
   vnl_matrix< TScalarType > r( 2, 2 );
   r = svd.U() * svd.V().transpose();
 
-  m_Angle = vcl_acos( r[ 0 ][ 0 ] );
+  m_Angle = std::acos( r[ 0 ][ 0 ] );
 
   if( r[ 1 ][ 0 ] < 0.0 )
   {
@@ -211,7 +211,7 @@ void
 AdvancedRigid2DTransform< TScalarType >
 ::SetAngleInDegrees( TScalarType angle )
 {
-  const TScalarType angleInRadians = angle * vcl_atan( 1.0 ) / 45.0;
+  const TScalarType angleInRadians = angle * std::atan( 1.0 ) / 45.0;
   this->SetAngle( angleInRadians );
 }
 
