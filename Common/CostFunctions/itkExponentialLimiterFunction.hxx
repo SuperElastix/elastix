@@ -63,7 +63,7 @@ ExponentialLimiterFunction< TInput, NDimension >
   if( diffU > 1e-10 )
   {
     return static_cast< OutputType >(
-      this->m_UTminUB * vcl_exp( this->m_UTminUBinv * diffU ) + this->m_UpperBound );
+      this->m_UTminUB * std::exp( this->m_UTminUBinv * diffU ) + this->m_UpperBound );
   }
 
   /** Apply a soft limit if the input is smaller than the LowerThreshold */
@@ -71,7 +71,7 @@ ExponentialLimiterFunction< TInput, NDimension >
   if( diffL < -1e-10 )
   {
     return static_cast< OutputType >(
-      this->m_LTminLB * vcl_exp( this->m_LTminLBinv * diffL ) + this->m_LowerBound );
+      this->m_LTminLB * std::exp( this->m_LTminLBinv * diffL ) + this->m_LowerBound );
   }
 
   /** Leave the value as it is */
@@ -92,7 +92,7 @@ ExponentialLimiterFunction< TInput, NDimension >
   const double diffU = static_cast< double >( input - this->m_UpperThreshold );
   if( diffU > 1e-10 )
   {
-    const double temp           = this->m_UTminUB * vcl_exp( this->m_UTminUBinv * diffU );
+    const double temp           = this->m_UTminUB * std::exp( this->m_UTminUBinv * diffU );
     const double gradientfactor = this->m_UTminUBinv * temp;
     for( unsigned int i = 0; i < Dimension; ++i )
     {
@@ -105,7 +105,7 @@ ExponentialLimiterFunction< TInput, NDimension >
   const double diffL = static_cast< double >( input - this->m_LowerThreshold );
   if( diffL < -1e-10 )
   {
-    const double temp           = this->m_LTminLB * vcl_exp( this->m_LTminLBinv * diffL );
+    const double temp           = this->m_LTminLB * std::exp( this->m_LTminLBinv * diffL );
     const double gradientfactor = this->m_LTminLBinv * temp;
     for( unsigned int i = 0; i < Dimension; ++i )
     {

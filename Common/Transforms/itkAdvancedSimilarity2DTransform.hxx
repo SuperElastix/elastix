@@ -162,7 +162,7 @@ AdvancedSimilarity2DTransform< TScalarType >
   m_Scale = std::sqrt( vnl_math_sqr( this->GetMatrix()[ 0 ][ 0 ] )
     + vnl_math_sqr( this->GetMatrix()[ 0 ][ 1 ] ) );
 
-  this->SetVarAngle( vcl_acos( this->GetMatrix()[ 0 ][ 0 ] / m_Scale ) );
+  this->SetVarAngle( std::acos( this->GetMatrix()[ 0 ][ 0 ] / m_Scale ) );
 
   if( this->GetMatrix()[ 1 ][ 0 ] < 0.0 )
   {
