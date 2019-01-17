@@ -258,7 +258,7 @@ protected:
    * This method is executed at every level of the pyramid with the
    * values corresponding to this resolution .
    */
-  virtual void Initialize() throw ( ExceptionObject );
+  virtual void Initialize();
 
   /** Compute the size of the fixed region for each level of the pyramid. */
   virtual void PreparePyramids( void );
@@ -266,10 +266,10 @@ protected:
   /** Function called by PreparePyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
-  virtual void CheckPyramids( void ) throw ( ExceptionObject );
+  virtual void CheckPyramids( void );
 
   /** Function called by Initialize, which checks if the user input is ok. */
-  virtual void CheckOnInitialize( void ) throw ( ExceptionObject );
+  virtual void CheckOnInitialize( void );
 
   /** Containers for the pointers supplied by the user */
   FixedImageVectorType             m_FixedImages;

@@ -136,7 +136,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the superclass to check that standard components are available. */
   this->Superclass::Initialize();

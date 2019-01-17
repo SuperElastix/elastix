@@ -96,7 +96,7 @@ MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
 
   // Sanity checks

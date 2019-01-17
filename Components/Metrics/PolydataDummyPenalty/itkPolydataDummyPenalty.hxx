@@ -51,7 +51,7 @@ MeshPenalty< TFixedPointSet, TMovingPointSet  >
 template< class TFixedPointSet, class TMovingPointSet  >
 void
 MeshPenalty< TFixedPointSet, TMovingPointSet >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the initialize of the superclass. */
   //this->Superclass::Initialize();

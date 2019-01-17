@@ -173,7 +173,7 @@ public:
 
   /** Set up a timer to measure the initialization time and
    * call the Superclass' implementation. */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  virtual void Initialize( void );
 
 protected:
 

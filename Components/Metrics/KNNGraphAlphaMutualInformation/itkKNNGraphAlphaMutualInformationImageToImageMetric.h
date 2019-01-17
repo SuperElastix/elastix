@@ -222,7 +222,7 @@ public:
    */
 
   /** Initialize the metric. */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,

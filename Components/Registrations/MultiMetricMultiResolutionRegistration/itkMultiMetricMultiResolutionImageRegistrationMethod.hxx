@@ -155,7 +155,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   this->CheckOnInitialize();
 
@@ -521,7 +521,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
-::CheckPyramids( void ) throw ( ExceptionObject )
+::CheckPyramids( void )
 {
   /** Check if at least one of the following are provided. */
   if( this->GetFixedImage() == 0 )
@@ -570,7 +570,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
-::CheckOnInitialize( void ) throw ( ExceptionObject )
+::CheckOnInitialize( void )
 {
   /** Check if at least one of the following is present. */
   if( this->GetMetric() == 0 )

@@ -43,7 +43,7 @@ ExponentialLimiterFunction< TInput, NDimension >
 template< class TInput, unsigned int NDimension >
 void
 ExponentialLimiterFunction< TInput, NDimension >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   this->ComputeLimiterSettings();
 } // end Initialize()

@@ -33,7 +33,7 @@ namespace itk
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiResolutionImageRegistrationMethodWithFeatures< TFixedImage, TMovingImage >
-::CheckPyramids( void ) throw ( ExceptionObject )
+::CheckPyramids( void )
 {
   /** Check if at least one of the following are provided. */
   if( this->GetFixedImage() == 0 )

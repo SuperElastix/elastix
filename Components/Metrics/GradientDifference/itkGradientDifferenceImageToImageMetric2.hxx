@@ -88,7 +88,7 @@ GradientDifferenceImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 GradientDifferenceImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Initialise the base class */
   Superclass::Initialize();

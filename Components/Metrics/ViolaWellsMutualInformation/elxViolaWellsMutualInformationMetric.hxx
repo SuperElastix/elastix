@@ -40,7 +40,7 @@ ViolaWellsMutualInformationMetric< TElastix >
 template< class TElastix >
 void
 ViolaWellsMutualInformationMetric< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

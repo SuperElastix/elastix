@@ -34,7 +34,7 @@ namespace elastix
 template< class TElastix >
 void
 KNNGraphAlphaMutualInformationMetric< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

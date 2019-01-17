@@ -267,7 +267,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
-::Initialize() throw ( ExceptionObject )
+::Initialize()
 {
   /** Sanity checks. */
   this->CheckOnInitialize();
@@ -622,7 +622,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
-::CheckPyramids( void ) throw ( ExceptionObject )
+::CheckPyramids( void )
 {
   /** Check if at least one of the following are provided. */
   if( this->GetFixedImage() == 0 )
@@ -668,7 +668,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
-::CheckOnInitialize( void ) throw ( ExceptionObject )
+::CheckOnInitialize( void )
 {
   /** check if at least one of the following is present. */
   if( this->GetMetric() == 0 )

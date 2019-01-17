@@ -169,7 +169,7 @@ public:
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation
    * \li Estimate the normalization factor, if asked for.  */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /** Set/Get whether to normalize the mean squares measure.
    * This divides the MeanSquares by a factor (range/10)^2,
