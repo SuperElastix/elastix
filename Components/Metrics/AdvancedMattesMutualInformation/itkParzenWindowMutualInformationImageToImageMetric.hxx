@@ -471,7 +471,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -594,12 +594,14 @@ void
 ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputeDerivativeLowMemory( DerivativeType & derivative ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+
   /** Accumulate derivatives. */
   // compute single-threadedly
   if( !this->m_UseMultiThread && false ) // force multi-threaded
   {
     derivative = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_Derivative;
-    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+    for( ThreadIdType i = 1; i < numberOfThreads; ++i )
     {
       derivative += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative;
     }
@@ -614,7 +616,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     for( int j = 0; j < spaceDimension; ++j )
     {
       DerivativeValueType sum = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_Derivative[ j ];
-      for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+      for( ThreadIdType i = 1; i < numberOfThreads; ++i )
       {
         sum += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
       }
