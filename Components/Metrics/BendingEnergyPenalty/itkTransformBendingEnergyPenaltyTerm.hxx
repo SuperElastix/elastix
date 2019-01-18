@@ -443,7 +443,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -592,9 +592,11 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = 0;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
 
@@ -609,7 +611,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 
   /** Accumulate and normalize values. */
   value = NumericTraits< MeasureType >::Zero;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
 
@@ -625,7 +627,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if( !this->m_UseMultiThread )
   {
     derivative = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_Derivative;
-    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+    for( ThreadIdType i = 1; i < numberOfThreads; ++i )
     {
       derivative += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative;
     }
@@ -647,14 +649,14 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   else
   {
     const DerivativeValueType numPix   = static_cast< DerivativeValueType >( this->m_NumberOfPixelsCounted );
-    const int                 nthreads = static_cast< int >( this->m_NumberOfThreads );
+    const int                 nthreads = static_cast< int >( numberOfThreads );
     omp_set_num_threads( nthreads );
     const int spaceDimension = static_cast< int >( this->GetNumberOfParameters() );
     #pragma omp parallel for
     for( int j = 0; j < spaceDimension; ++j )
     {
       DerivativeValueType tmp = NumericTraits< DerivativeValueType >::Zero;
-      for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+      for( ThreadIdType i = 0; i < numberOfThreads; ++i )
       {
         tmp += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
       }

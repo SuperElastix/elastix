@@ -94,7 +94,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 #ifdef ELASTIX_USE_OPENMP
   this->m_UseOpenMP = true;
 
-  const int nthreads = static_cast< int >( this->m_NumberOfThreads );
+  const int nthreads = static_cast< int >( Self::GetNumberOfThreads() );
   omp_set_num_threads( nthreads );
 #else
   this->m_UseOpenMP = false;
@@ -137,7 +137,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   Superclass::SetNumberOfThreads( numberOfThreads );
 
 #ifdef ELASTIX_USE_OPENMP
-  const int nthreads = static_cast< int >( this->m_NumberOfThreads );
+  const int nthreads = static_cast< int >( Self::GetNumberOfThreads() );
   omp_set_num_threads( nthreads );
 #endif
 } // end SetNumberOfThreads()
@@ -188,6 +188,8 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
    * needed, which saves valuable re-allocation time.
@@ -199,23 +201,23 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
    */
 
   /** Only resize the array of structs when needed. */
-  if( this->m_GetValuePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_GetValuePerThreadVariablesSize != numberOfThreads )
   {
     delete[] this->m_GetValuePerThreadVariables;
-    this->m_GetValuePerThreadVariables     = new AlignedGetValuePerThreadStruct[ this->m_NumberOfThreads ];
-    this->m_GetValuePerThreadVariablesSize = this->m_NumberOfThreads;
+    this->m_GetValuePerThreadVariables     = new AlignedGetValuePerThreadStruct[ numberOfThreads ];
+    this->m_GetValuePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Only resize the array of structs when needed. */
-  if( this->m_GetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_GetValueAndDerivativePerThreadVariablesSize != numberOfThreads )
   {
     delete[] this->m_GetValueAndDerivativePerThreadVariables;
-    this->m_GetValueAndDerivativePerThreadVariables     = new AlignedGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
-    this->m_GetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
+    this->m_GetValueAndDerivativePerThreadVariables     = new AlignedGetValueAndDerivativePerThreadStruct[ numberOfThreads ];
+    this->m_GetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Some initialization. */
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     this->m_GetValuePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_GetValuePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;

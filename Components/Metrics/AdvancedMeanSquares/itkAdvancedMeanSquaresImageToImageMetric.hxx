@@ -326,7 +326,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -403,9 +403,11 @@ void
 AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValue( MeasureType & value ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 1; i < numberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
 
@@ -424,7 +426,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Accumulate values. */
   value = NumericTraits< MeasureType >::Zero;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
 
@@ -655,7 +657,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -749,9 +751,11 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 1; i < numberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
 
@@ -770,7 +774,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Accumulate values. */
   value = NumericTraits< MeasureType >::Zero;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Value;
 
@@ -784,7 +788,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   if( !this->m_UseMultiThread && false ) // force multi-threaded
   {
     derivative = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_Derivative * normal_sum;
-    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; i++ )
+    for( ThreadIdType i = 1; i < numberOfThreads; i++ )
     {
       derivative += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative * normal_sum;
     }
@@ -809,7 +813,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
     for( int j = 0; j < spaceDimension; ++j )
     {
       DerivativeValueType tmp = NumericTraits< DerivativeValueType >::Zero;
-      for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+      for( ThreadIdType i = 0; i < numberOfThreads; ++i )
       {
         tmp += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
       }
