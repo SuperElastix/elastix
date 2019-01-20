@@ -139,7 +139,13 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::SetNumberOfThreads( ThreadIdType numberOfThreads )
 {
+#if ITK_VERSION_MAJOR >= 5
+  // Note: This is a workaround for ITK5, which renamed NumberOfThreads
+  // to NumberOfWorkUnits
+  Superclass::SetNumberOfWorkUnits( numberOfThreads );
+#else
   Superclass::SetNumberOfThreads( numberOfThreads );
+#endif
 
 #ifdef ELASTIX_USE_OPENMP
   const int nthreads = static_cast< int >( Self::GetNumberOfThreads() );
