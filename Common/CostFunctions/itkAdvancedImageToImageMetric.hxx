@@ -87,8 +87,13 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Threading related variables. */
   this->m_UseMetricSingleThreaded = true;
   this->m_UseMultiThread = false;
+
+#if ITK_VERSION_MAJOR < 5
+  // Note: This `#if` is a workaround for ITK5, which no longer supports calling
+  // `threader->SetUseThreadPool(false)`. ITK5 does not use thread pools by default. 
   this->m_Threader->SetUseThreadPool( false ); // setting to true makes elastix hang
                                                // at a WaitForSingleMethodThread()
+#endif
 
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP

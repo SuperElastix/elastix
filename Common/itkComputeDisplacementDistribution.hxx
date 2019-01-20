@@ -53,7 +53,12 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Threading related variables. */
   this->m_UseMultiThread = true;
   this->m_Threader       = ThreaderType::New();
+
+#if ITK_VERSION_MAJOR < 5
+  // Note: This `#if` is a workaround for ITK5, which no longer supports calling
+  // `threader->SetUseThreadPool(false)`. ITK5 does not use thread pools by default. 
   this->m_Threader->SetUseThreadPool( false );
+#endif
 
   /** Initialize the m_ThreaderParameters. */
   this->m_ThreaderParameters.st_Self = this;
