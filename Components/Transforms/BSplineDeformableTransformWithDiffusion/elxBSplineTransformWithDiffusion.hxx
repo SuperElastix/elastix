@@ -664,7 +664,7 @@ BSplineTransformWithDiffusion< TElastix >
       * vcl_floor( static_cast< double >( SplineOrder ) / 2.0 );
     gridindex[ j ] = 0; // isn't this always the case anyway?
     gridsize[ j ]  = static_cast< typename RegionType::SizeValueType >
-      ( vcl_ceil( gridsize[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
+      ( std::ceil( gridsize[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
   }
 
   /** Set the size data in the transform. */
@@ -736,7 +736,7 @@ BSplineTransformWithDiffusion< TElastix >
       * vcl_floor( static_cast< double >( SplineOrder ) / 2.0 );
     gridindexHigh[ j ] = 0; // isn't this always the case anyway?
     gridsizeHigh[ j ]  = static_cast< typename RegionType::SizeValueType >
-      ( vcl_ceil( gridsizeHigh[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
+      ( std::ceil( gridsizeHigh[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
   }
   gridregionHigh.SetSize( gridsizeHigh );
   gridregionHigh.SetIndex( gridindexHigh );

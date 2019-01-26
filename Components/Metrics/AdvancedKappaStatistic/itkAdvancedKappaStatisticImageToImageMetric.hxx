@@ -479,7 +479,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
+    = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
     / static_cast< double >( this->m_NumberOfThreads ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
@@ -670,7 +670,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 
   const unsigned int numPar  = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize = static_cast< unsigned int >(
-    vcl_ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
+    std::ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
   unsigned int jmin = threadId * subSize;
   unsigned int jmax = ( threadId + 1 ) * subSize;
   jmax = ( jmax > numPar ) ? numPar : jmax;

@@ -34,7 +34,6 @@
 //#include <vnl/algo/vnl_svd.h>
 #include <vnl/algo/vnl_svd_economy.h>
 
-#include <vcl_iostream.h>
 #include <string>
 
 namespace itk
