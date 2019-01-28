@@ -415,11 +415,11 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
 
   for( unsigned int i = 0; i < numberOfParameters; i++ )
   {
-    testPoint[ i ] -= this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] );
+    testPoint[ i ] -= this->m_DerivativeDelta / std::sqrt( this->m_Scales[ i ] );
     const MeasureType valuep0 = this->GetValue( testPoint );
-    testPoint[ i ] += 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] );
+    testPoint[ i ] += 2 * this->m_DerivativeDelta / std::sqrt( this->m_Scales[ i ] );
     const MeasureType valuep1 = this->GetValue( testPoint );
-    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] ) );
+    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / std::sqrt( this->m_Scales[ i ] ) );
     testPoint[ i ]  = parameters[ i ];
   }
 

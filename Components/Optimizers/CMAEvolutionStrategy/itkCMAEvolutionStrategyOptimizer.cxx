@@ -346,7 +346,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
 
   /** m_SigmaDampingConstant */
   this->m_SigmaDampingConstant = this->m_ConjugateEvolutionPathConstant
-    + ( 1.0 + 2.0 * vnl_math_max( 0.0, vcl_sqrt( ( mueff - 1.0 ) / ( Nd + 1.0 ) ) - 1.0 ) )
+    + ( 1.0 + 2.0 * vnl_math_max( 0.0, std::sqrt( ( mueff - 1.0 ) / ( Nd + 1.0 ) ) - 1.0 ) )
     * vnl_math_max( 0.3, 1.0 - Nd / static_cast< double >( this->m_MaximumNumberOfIterations ) );
 
   /** m_CovarianceMatrixAdaptationWeight (\mu_cov)*/
@@ -356,7 +356,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
 
   /** m_CovarianceMatrixAdaptationConstant (c_cov) */
   this->m_CovarianceMatrixAdaptationConstant
-    = ( 1.0 / mucov ) * 2.0 / vnl_math_sqr( Nd + vcl_sqrt( 2.0 ) )
+    = ( 1.0 / mucov ) * 2.0 / vnl_math_sqr( Nd + std::sqrt( 2.0 ) )
     + ( 1.0 - 1.0 / mucov )
     * vnl_math_min( 1.0, ( 2.0 * mueff - 1.0 ) / ( vnl_math_sqr( Nd + 2.0 ) + mueff ) );
   /** alias: */
@@ -377,13 +377,13 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
   this->m_EvolutionPathConstant = 4.0 / ( Nd + 4.0 );
 
   /** m_ExpectationNormNormalDistribution */
-  this->m_ExpectationNormNormalDistribution = vcl_sqrt( Nd )
+  this->m_ExpectationNormNormalDistribution = std::sqrt( Nd )
     * ( 1.0 - 1.0 / ( 4.0 * Nd ) + 1.0 / ( 21.0 * vnl_math_sqr( Nd ) ) );
 
   /** m_HistoryLength */
   this->m_HistoryLength = static_cast< unsigned long >( vnl_math_min(
     this->GetMaximumNumberOfIterations(),
-    10 + static_cast< unsigned long >( vcl_ceil( 3.0 * 10.0 * Nd / lambdad ) ) ) );
+    10 + static_cast< unsigned long >( std::ceil( 3.0 * 10.0 * Nd / lambdad ) ) ) );
 
 } // end InitializeConstants
 
@@ -652,7 +652,7 @@ CMAEvolutionStrategyOptimizer::UpdateConjugateEvolutionPath( void )
   const double c_sigma = this->m_ConjugateEvolutionPathConstant;
 
   /** Update p_sigma */
-  const double factor = vcl_sqrt( c_sigma * ( 2.0 - c_sigma ) * this->m_EffectiveMu );
+  const double factor = std::sqrt( c_sigma * ( 2.0 - c_sigma ) * this->m_EffectiveMu );
   this->m_ConjugateEvolutionPath *= ( 1.0 - c_sigma );
   if( this->GetUseCovarianceMatrixAdaptation() )
   {
@@ -690,7 +690,7 @@ CMAEvolutionStrategyOptimizer::UpdateHeaviside( void )
   /** Compute the Heaviside function: */
   this->m_Heaviside = false;
   const double normps        = this->m_ConjugateEvolutionPath.magnitude();
-  const double denom         = vcl_sqrt( 1.0 - vcl_pow( 1.0 - c_sigma, 2 * nextit ) );
+  const double denom         = std::sqrt( 1.0 - vcl_pow( 1.0 - c_sigma, 2 * nextit ) );
   const double righthandside = 1.5 + 1.0 / ( Nd - 0.5 );
   if( ( normps / denom / chiN ) < righthandside )
   {
@@ -717,7 +717,7 @@ CMAEvolutionStrategyOptimizer::UpdateEvolutionPath( void )
   if( this->m_Heaviside )
   {
     const double factor
-                           = vcl_sqrt( c_c * ( 2.0 - c_c ) * this->m_EffectiveMu ) / this->m_CurrentSigma;
+                           = std::sqrt( c_c * ( 2.0 - c_c ) * this->m_EffectiveMu ) / this->m_CurrentSigma;
     this->m_EvolutionPath += ( factor * this->m_CurrentScaledStep );
   }
 
@@ -776,7 +776,7 @@ CMAEvolutionStrategyOptimizer::UpdateC( void )
   for( unsigned int m = 0; m < mu; ++m )
   {
     const unsigned int lam               = this->m_CostFunctionValues[ m ].second;
-    const double       sqrtweight        = vcl_sqrt( this->m_RecombinationWeights[ m ] );
+    const double       sqrtweight        = std::sqrt( this->m_RecombinationWeights[ m ] );
     ParametersType     weightedSearchDir = this->m_SearchDirs[ lam ];
     weightedSearchDir *= ( sqrtweight / sigma );
     for( unsigned int i = 0; i < N; ++i )
@@ -899,7 +899,7 @@ CMAEvolutionStrategyOptimizer::UpdateBD( void )
   /** the D matrix is supposed to contain the square root of the eigen values */
   for( unsigned int i = 0; i < N; ++i )
   {
-    this->m_D[ i ] = vcl_sqrt( this->m_D[ i ] );
+    this->m_D[ i ] = std::sqrt( this->m_D[ i ] );
   }
 
   /** Keep for the user */
@@ -938,7 +938,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
     /** Check for too large deviation */
     for( unsigned int i = 0; i < N; ++i )
     {
-      const double sqrtCii   = vcl_sqrt( this->m_C[ i ][ i ] );
+      const double sqrtCii   = std::sqrt( this->m_C[ i ][ i ] );
       const double actualDev = this->m_CurrentSigma * sqrtCii;
       if( actualDev > this->m_MaximumDeviation )
       {
@@ -950,7 +950,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
     bool minDevViolated = false;
     for( unsigned int i = 0; i < N; ++i )
     {
-      const double sqrtCii   = vcl_sqrt( this->m_C[ i ][ i ] );
+      const double sqrtCii   = std::sqrt( this->m_C[ i ][ i ] );
       const double actualDev = this->m_CurrentSigma * sqrtCii;
       if( actualDev < this->m_MinimumDeviation )
       {
@@ -1002,7 +1002,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
     /** Check for numerically too small deviation */
     for( unsigned int i = 0; i < N; ++i )
     {
-      const double actualDev = 0.2 * this->m_CurrentSigma * vcl_sqrt( this->m_C[ i ][ i ] );
+      const double actualDev = 0.2 * this->m_CurrentSigma * std::sqrt( this->m_C[ i ][ i ] );
       if( param[ i ] == ( param[ i ] + actualDev ) )
       {
         /** The parameters wouldn't change after perturbation, because
@@ -1022,7 +1022,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
         /** The parameters wouldn't change after perturbation, because
         * of too low precision. Increase the sigma (equivalent to
         * increasing a diagonal element of C^0.5).  */
-        this->m_CurrentSigma        *= vcl_sqrt( 1.0 + c_cov );
+        this->m_CurrentSigma        *= std::sqrt( 1.0 + c_cov );
         numericalProblemsEncountered = true;
       }
     }
@@ -1074,7 +1074,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
    * be compared */
   const unsigned int populationMemberA = 0;
   const unsigned int populationMemberB = static_cast< unsigned int >(
-    vcl_ceil( 0.1 + static_cast< double >( this->m_PopulationSize ) / 4.0 ) );
+    std::ceil( 0.1 + static_cast< double >( this->m_PopulationSize ) / 4.0 ) );
   /** If they are the same: increase sigma with a magic factor */
   if( this->m_CostFunctionValues[ populationMemberA ].first ==
     this->m_CostFunctionValues[ populationMemberB ].first )
@@ -1129,7 +1129,7 @@ CMAEvolutionStrategyOptimizer::TestConvergence( bool firstCheck )
   {
     for( unsigned int i = 0; i < N; ++i )
     {
-      const double sqrtCii  = vcl_sqrt( this->m_C[ i ][ i ] );
+      const double sqrtCii  = std::sqrt( this->m_C[ i ][ i ] );
       const double stepsize =  this->m_CurrentSigma * sqrtCii;
       if( stepsize > tolxmax )
       {
@@ -1192,7 +1192,7 @@ CMAEvolutionStrategyOptimizer::TestConvergence( bool firstCheck )
     double       sqrtCii = 1.0;
     if( this->m_UseCovarianceMatrixAdaptation )
     {
-      sqrtCii = vcl_sqrt( this->m_C[ i ][ i ] );
+      sqrtCii = std::sqrt( this->m_C[ i ][ i ] );
     }
     const double stepsize =  this->m_CurrentSigma * vnl_math_max( pci, sqrtCii );
     if( stepsize > tolxmin )

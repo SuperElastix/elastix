@@ -138,7 +138,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   {
     // total # of threads
     globalSize[ i ] = localSize[ i ] * ( static_cast< unsigned int >(
-        vcl_ceil( static_cast< float >( outSize[ i ] )
+        std::ceil( static_cast< float >( outSize[ i ] )
         / static_cast< float >( localSize[ i ] ) ) ) );
   }
 

@@ -23,7 +23,6 @@
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_iostream.h>
 
 namespace elastix
 {
