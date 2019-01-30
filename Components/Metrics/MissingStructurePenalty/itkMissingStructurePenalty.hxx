@@ -19,6 +19,7 @@
 #define __itkMissingStructurePenalty_hxx
 
 #include "itkMissingStructurePenalty.h"
+#include <cmath>
 
 namespace itk
 {
@@ -302,7 +303,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
       }
 
       sumSignedVolume +=  signedVolume;
-      sumAbsVolume    += vcl_abs( signedVolume );
+      sumAbsVolume    += std::abs( signedVolume );
     }
 
     /** Create iterators. */

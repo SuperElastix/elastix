@@ -28,6 +28,7 @@
 #include "itkTransformMeshFilter.h"
 #include <itkMesh.h>
 
+#include <fstream>
 #include <typeinfo>
 
 namespace elastix
@@ -85,7 +86,7 @@ StatisticalShapePenalty< TElastix >
 
   /** Read meanVector filename. */
   std::string                  meanVectorName = this->GetConfiguration()->GetCommandLineArgument( "-mean" );
-  vcl_ifstream                 datafile;
+  std::ifstream                 datafile;
   vnl_vector< double > * const meanVector = new vnl_vector< double >();
   datafile.open( meanVectorName.c_str() );
   if( datafile.is_open() )

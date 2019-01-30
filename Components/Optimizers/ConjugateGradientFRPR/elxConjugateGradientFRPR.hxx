@@ -20,6 +20,7 @@
 #define __elxConjugateGradientFRPR_hxx
 
 #include "elxConjugateGradientFRPR.h"
+#include <cmath>
 #include <iomanip>
 #include <string>
 #include "vnl/vnl_math.h"
@@ -131,7 +132,7 @@ ConjugateGradientFRPR< TElastix >
   this->SetStepLength( stepLength );
 
   /** Set the ValueTolerance; convergence is declared if:
-   * 2.0 * abs(f2 - f1) <=  ValueTolerance * (abs(f2) + vcl_abs(f1))
+   * 2.0 * abs(f2 - f1) <=  ValueTolerance * (abs(f2) + std::abs(f1))
    */
   double valueTolerance = 0.00001;
   this->m_Configuration->ReadParameter( valueTolerance,
