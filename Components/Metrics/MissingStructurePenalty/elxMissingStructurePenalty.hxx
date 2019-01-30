@@ -145,7 +145,7 @@ MissingStructurePenalty< TElastix >
     std::ostringstream fmeshArgument( "-fmesh", std::ios_base::ate );
     fmeshArgument << ch << metricNumber;
     std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
-    typename MeshType::Pointer fixedMesh = 0;
+    typename MeshType::Pointer fixedMesh; // default-constructed (null)
     if( itksys::SystemTools::GetFilenameLastExtension( fixedMeshName ) == ".txt" )
     {
       this->ReadTransformixPoints( fixedMeshName, fixedMesh );

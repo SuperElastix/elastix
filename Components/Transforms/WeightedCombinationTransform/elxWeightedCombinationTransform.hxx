@@ -245,8 +245,9 @@ WeightedCombinationTransformElastix< TElastix >
   }
 
   /** Create a vector of subTransform pointers and initialize to null pointers.
+   * Note that std::vector will properly initialize its elements to null (by default).
    * \todo: make it a member variable if it appears to needed later */
-  TransformContainerType subTransforms( N, 0 );
+  TransformContainerType subTransforms( N );
 
   /** Load each subTransform */
   for( unsigned int i = 0; i < N; ++i )
@@ -283,7 +284,9 @@ WeightedCombinationTransformElastix< TElastix >
     PtrToCreator testcreator = 0;
     testcreator = this->GetElastix()->GetComponentDatabase()
       ->GetCreator( subTransformName, this->m_Elastix->GetDBIndex() );
-    subTransform = testcreator ? testcreator() : NULL;
+
+    // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
+    subTransform = testcreator ? testcreator() : typename ObjectType::Pointer();
 
     /** Cast to TransformBase */
     Superclass2 * elx_subTransform = dynamic_cast< Superclass2 * >(

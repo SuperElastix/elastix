@@ -73,7 +73,7 @@ StatisticalShapePenalty< TElastix >
 
   /** Read and set the fixed pointset. */
   std::string fixedName = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
-  typename PointSetType::Pointer fixedPointSet      = 0;
+  typename PointSetType::Pointer fixedPointSet; // default-constructed (null)
   const typename ImageType::ConstPointer fixedImage = this->GetElastix()->GetFixedImage();
   const unsigned int nrOfFixedPoints = this->ReadShape(
     fixedName, fixedPointSet, fixedImage );
