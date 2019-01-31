@@ -28,6 +28,7 @@
 #include "itkTransformMeshFilter.h"
 #include <itkMesh.h>
 
+#include <fstream>
 #include <typeinfo>
 
 namespace elastix
@@ -72,7 +73,7 @@ StatisticalShapePenalty< TElastix >
 
   /** Read and set the fixed pointset. */
   std::string fixedName = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
-  typename PointSetType::Pointer fixedPointSet      = 0;
+  typename PointSetType::Pointer fixedPointSet; // default-constructed (null)
   const typename ImageType::ConstPointer fixedImage = this->GetElastix()->GetFixedImage();
   const unsigned int nrOfFixedPoints = this->ReadShape(
     fixedName, fixedPointSet, fixedImage );
@@ -85,7 +86,7 @@ StatisticalShapePenalty< TElastix >
 
   /** Read meanVector filename. */
   std::string                  meanVectorName = this->GetConfiguration()->GetCommandLineArgument( "-mean" );
-  vcl_ifstream                 datafile;
+  std::ifstream                 datafile;
   vnl_vector< double > * const meanVector = new vnl_vector< double >();
   datafile.open( meanVectorName.c_str() );
   if( datafile.is_open() )

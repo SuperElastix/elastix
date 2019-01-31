@@ -23,6 +23,7 @@
 #include "itkSymmetricEigenAnalysis.h"
 #include "vnl/vnl_math.h"
 #include <algorithm>
+#include <cmath>
 #include "itkCommand.h"
 #include "itkEventObject.h"
 #include "itkExceptionObject.h"
@@ -293,7 +294,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
   if( this->m_PopulationSize == 0 )
   {
     this->m_PopulationSize = 4 + static_cast< unsigned int >(
-      vcl_floor( 3.0 * vcl_log( static_cast< double >( numberOfParameters ) ) ) );
+      std::floor( 3.0 * std::log( static_cast< double >( numberOfParameters ) ) ) );
   }
 
   /** m_NumberOfParents (if not provided by the user) */
@@ -323,11 +324,11 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
   }
   else if( this->m_RecombinationWeightsPreset == "superlinear" )
   {
-    const double logmud = vcl_log( mud + 1.0 );
+    const double logmud = std::log( mud + 1.0 );
     for( unsigned int i = 0; i < mu; ++i )
     {
       this->m_RecombinationWeights[ i ]
-        = logmud - vcl_log( static_cast< double >( i + 1 ) );
+        = logmud - std::log( static_cast< double >( i + 1 ) );
     }
   }
   this->m_RecombinationWeights /= this->m_RecombinationWeights.sum();
@@ -365,7 +366,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
   /** Update only every 'period' iterations */
   if( this->m_UpdateBDPeriod == 0 )
   {
-    this->m_UpdateBDPeriod = static_cast< unsigned int >( vcl_floor( 1.0 / c_cov / Nd / 10.0 ) );
+    this->m_UpdateBDPeriod = static_cast< unsigned int >( std::floor( 1.0 / c_cov / Nd / 10.0 ) );
   }
   this->m_UpdateBDPeriod = vnl_math_max( static_cast< unsigned int >( 1 ), this->m_UpdateBDPeriod );
   if( this->m_UpdateBDPeriod >= this->m_MaximumNumberOfIterations )
@@ -690,7 +691,7 @@ CMAEvolutionStrategyOptimizer::UpdateHeaviside( void )
   /** Compute the Heaviside function: */
   this->m_Heaviside = false;
   const double normps        = this->m_ConjugateEvolutionPath.magnitude();
-  const double denom         = std::sqrt( 1.0 - vcl_pow( 1.0 - c_sigma, 2 * nextit ) );
+  const double denom         = std::sqrt( 1.0 - std::pow( 1.0 - c_sigma, 2 * nextit ) );
   const double righthandside = 1.5 + 1.0 / ( Nd - 0.5 );
   if( ( normps / denom / chiN ) < righthandside )
   {
@@ -805,8 +806,8 @@ CMAEvolutionStrategyOptimizer::UpdateSigma( void )
   if( this->GetUseDecayingSigma() )
   {
     const double it  = static_cast< double >( this->GetCurrentIteration() );
-    const double num = vcl_pow( this->m_SigmaDecayA + it, this->m_SigmaDecayAlpha );
-    const double den = vcl_pow( this->m_SigmaDecayA + it + 1.0, this->m_SigmaDecayAlpha );
+    const double num = std::pow( this->m_SigmaDecayA + it, this->m_SigmaDecayAlpha );
+    const double den = std::pow( this->m_SigmaDecayA + it + 1.0, this->m_SigmaDecayAlpha );
     this->m_CurrentSigma *= num / den;
   }
   else
@@ -815,7 +816,7 @@ CMAEvolutionStrategyOptimizer::UpdateSigma( void )
     const double chiN    = this->m_ExpectationNormNormalDistribution;
     const double c_sigma = this->m_ConjugateEvolutionPathConstant;
     const double d_sigma = this->m_SigmaDampingConstant;
-    this->m_CurrentSigma *= vcl_exp( ( normps / chiN - 1.0 ) * c_sigma / d_sigma );
+    this->m_CurrentSigma *= std::exp( ( normps / chiN - 1.0 ) * c_sigma / d_sigma );
   }
 
 } // end UpdateSigma
@@ -927,8 +928,8 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors( void )
   const double       c_sigma         = this->m_ConjugateEvolutionPathConstant;
   const double       c_cov           = this->m_CovarianceMatrixAdaptationConstant;
   const double       d_sigma         = this->m_SigmaDampingConstant;
-  const double       strange_factor  = vcl_exp( 0.05 + c_sigma / d_sigma );
-  const double       strange_factor2 = vcl_exp( 0.2 + c_sigma / d_sigma );
+  const double       strange_factor  = std::exp( 0.05 + c_sigma / d_sigma );
+  const double       strange_factor2 = std::exp( 0.2 + c_sigma / d_sigma );
   const unsigned int nextit          = this->m_CurrentIteration + 1;
 
   /** Check if m_MaximumDeviation and m_MinimumDeviation are satisfied. This
@@ -1188,7 +1189,7 @@ CMAEvolutionStrategyOptimizer::TestConvergence( bool firstCheck )
   bool         stepTooSmall = true;
   for( unsigned int i = 0; i < N; ++i )
   {
-    const double pci     = vcl_abs( this->m_EvolutionPath[ i ] );
+    const double pci     = std::abs( this->m_EvolutionPath[ i ] );
     double       sqrtCii = 1.0;
     if( this->m_UseCovarianceMatrixAdaptation )
     {

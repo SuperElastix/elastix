@@ -22,6 +22,7 @@
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkNumericTraits.h"
 
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <stdio.h>
@@ -107,7 +108,7 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
   /* to rescale the similarity measure between 0-1;*/
   MeasureType tmpmeasure = this->GetValue( this->m_Transform->GetParameters() );
 
-  while( ( vcl_fabs( tmpmeasure ) / this->m_Rescalingfactor ) > 1 )
+  while( ( std::fabs( tmpmeasure ) / this->m_Rescalingfactor ) > 1 )
   {
     this->m_Rescalingfactor *= 10;
   }

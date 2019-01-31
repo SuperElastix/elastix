@@ -19,6 +19,7 @@
 #define __itkStatisticalShapePointPenalty_hxx
 
 #include "itkStatisticalShapePointPenalty.h"
+#include <cmath>
 
 namespace itk
 {
@@ -976,8 +977,8 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 {
   if( this->m_CutOffValue > 0.0 )
   {
-    value = vcl_log( vcl_exp( this->m_CutOffSharpness * value )
-      + vcl_exp( this->m_CutOffSharpness * this->m_CutOffValue ) )
+    value = std::log( std::exp( this->m_CutOffSharpness * value )
+      + std::exp( this->m_CutOffSharpness * this->m_CutOffValue ) )
       / this->m_CutOffSharpness;
   }
 } // end CalculateCutOffValue()
@@ -996,7 +997,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 {
   if( this->m_CutOffValue > 0.0 )
   {
-    derivativeElement *= 1.0 / ( 1.0 + vcl_exp( this->m_CutOffSharpness
+    derivativeElement *= 1.0 / ( 1.0 + std::exp( this->m_CutOffSharpness
       * ( this->m_CutOffValue - value ) ) );
   }
 } // end CalculateCutOffDerivative()
