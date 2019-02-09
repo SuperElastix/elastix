@@ -418,7 +418,7 @@ PolydataDummyPenalty< TElastix >
     itk::ContinuousIndex< double, MovingImageDimension >  MovingImageContinuousIndexType;
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
-  typedef bool DummyIPPPixelType;
+  typedef unsigned char DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<
     DummyIPPPixelType, FixedImageDimension,
     FixedImageDimension, CoordRepType >                  MeshTraitsType;
