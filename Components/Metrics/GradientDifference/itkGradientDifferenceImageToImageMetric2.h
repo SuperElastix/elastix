@@ -156,7 +156,7 @@ public:
   void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & Value, DerivativeType & derivative ) const;
 
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /** Write gradient images to a files for debugging purposes. */
   void WriteGradientImagesToFiles( void ) const;

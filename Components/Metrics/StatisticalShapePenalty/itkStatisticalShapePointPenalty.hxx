@@ -99,7 +99,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 template< class TFixedPointSet, class TMovingPointSet >
 void
 StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the initialize of the superclass. */
   this->Superclass::Initialize();

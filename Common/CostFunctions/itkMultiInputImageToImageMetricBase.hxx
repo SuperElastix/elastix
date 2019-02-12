@@ -231,7 +231,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Connect the interpolators. */
   for( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
@@ -261,7 +261,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::InitializeImageSampler( void ) throw ( ExceptionObject )
+::InitializeImageSampler( void )
 {
   if( this->GetUseImageSampler() )
   {

@@ -54,7 +54,7 @@ PCAMetric2< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 PCAMetric2< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();

@@ -315,7 +315,7 @@ public:
   /** ******************** Other public functions ******************** */
 
   /** Initialisation. */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
 protected:
 
@@ -337,7 +337,7 @@ protected:
   typedef std::vector< BSplineInterpolatorPointer >    BSplineInterpolatorVectorType;
 
   /** Initialize variables related to the image sampler; called by Initialize. */
-  virtual void InitializeImageSampler( void ) throw ( ExceptionObject );
+  virtual void InitializeImageSampler( void );
 
   /** Check if all interpolators (for the moving image) are of type
    * BSplineInterpolateImageFunction.

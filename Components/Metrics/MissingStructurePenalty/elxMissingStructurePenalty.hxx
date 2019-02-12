@@ -43,7 +43,7 @@ MissingStructurePenalty< TElastix >
 template< class TElastix >
 void
 MissingStructurePenalty< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

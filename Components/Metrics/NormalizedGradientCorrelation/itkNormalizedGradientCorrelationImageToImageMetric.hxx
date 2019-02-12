@@ -60,7 +60,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Initialize the base class */
   Superclass::Initialize();

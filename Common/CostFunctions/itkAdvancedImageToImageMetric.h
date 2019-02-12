@@ -262,7 +262,7 @@ public:
    * \li Check if a B-spline interpolator has been set
    * \li Check if an AdvancedTransform has been set
    */
-  virtual void Initialize( void ) throw ( ExceptionObject ) ITK_OVERRIDE;
+  virtual void Initialize( void ) ITK_OVERRIDE;
 
   /** Experimental feature: compute SelfHessian.
    * This base class just returns an identity matrix of the right size.
@@ -471,7 +471,7 @@ protected:
   /** Methods for image sampler support **********/
 
   /** Initialize variables related to the image sampler; called by Initialize. */
-  virtual void InitializeImageSampler( void ) throw ( ExceptionObject );
+  virtual void InitializeImageSampler( void );
 
   /** Inheriting classes can specify whether they use the image sampler functionality
    * Make sure to set it before calling Initialize; default: false. */

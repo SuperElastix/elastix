@@ -44,7 +44,7 @@ ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, T
 template< class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage >
 void
 ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the superclass. */
   this->Superclass::Initialize();

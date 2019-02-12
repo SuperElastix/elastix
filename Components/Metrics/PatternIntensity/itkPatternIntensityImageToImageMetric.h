@@ -160,7 +160,7 @@ public:
    * \li Call the superclass' implementation
    * \li Estimate the normalization factor, if asked for.
    */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /** Set/Get Scales  */
   itkSetMacro( Scales, ScalesType );

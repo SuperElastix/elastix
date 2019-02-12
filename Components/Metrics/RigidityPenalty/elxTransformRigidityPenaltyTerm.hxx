@@ -176,7 +176,7 @@ TransformRigidityPenalty< TElastix >
 template< class TElastix >
 void
 TransformRigidityPenalty< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

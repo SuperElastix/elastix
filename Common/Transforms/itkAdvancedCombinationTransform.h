@@ -345,7 +345,7 @@ protected:
   virtual void UpdateCombinationMethod( void );
 
   /** Throw an exception. */
-  virtual void NoCurrentTransformSet( void ) const throw ( ExceptionObject );
+  virtual void NoCurrentTransformSet( void ) const;
 
   /**  A pointer to one of the following functions:
    * - TransformPointUseAddition,

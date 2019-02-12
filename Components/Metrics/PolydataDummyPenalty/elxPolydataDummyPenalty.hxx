@@ -42,7 +42,7 @@ PolydataDummyPenalty< TElastix >
 template< class TElastix >
 void
 PolydataDummyPenalty< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

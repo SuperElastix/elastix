@@ -85,7 +85,7 @@ SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
 template< class TFixedPointSet, class TMovingPointSet >
 void
 SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   if( !this->m_Transform )
   {

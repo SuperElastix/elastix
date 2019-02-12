@@ -99,7 +99,7 @@ public:
   itkGetConstMacro( LowerThreshold, InputType );
 
   /** Initialize the limiter */
-  virtual void Initialize( void ) throw ( ExceptionObject ) {}
+  virtual void Initialize( void ) {}
 
 protected:
 

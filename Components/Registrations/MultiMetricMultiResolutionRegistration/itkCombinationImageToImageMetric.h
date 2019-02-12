@@ -373,7 +373,7 @@ public:
   virtual const SizeValueType & GetNumberOfPixelsCounted( void ) const;
 
   /** Pass initialization to all sub metrics. */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /**
    * Combine all sub metrics by adding them.

@@ -62,7 +62,7 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   Superclass::Initialize();
 

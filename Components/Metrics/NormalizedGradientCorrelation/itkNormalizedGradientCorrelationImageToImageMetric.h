@@ -137,7 +137,7 @@ public:
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /** Write gradient images to a files for debugging purposes. */
   void WriteGradientImagesToFiles( void ) const;

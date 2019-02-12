@@ -40,7 +40,7 @@ namespace elastix
 template< class TElastix >
 void
 StatisticalShapePenalty< TElastix >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

@@ -32,7 +32,7 @@ namespace elastix
 template< class TElastix >
 void
 CorrespondingPointsEuclideanDistanceMetric< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

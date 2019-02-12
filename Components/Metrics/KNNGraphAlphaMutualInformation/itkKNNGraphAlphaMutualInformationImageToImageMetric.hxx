@@ -272,7 +272,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the superclass. */
   this->Superclass::Initialize();

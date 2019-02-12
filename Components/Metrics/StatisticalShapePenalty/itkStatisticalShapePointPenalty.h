@@ -102,7 +102,7 @@ public:
   typedef vnl_svd_economy< CoordRepType > PCACovarianceType;
 
   /** Initialization. */
-  void Initialize( void ) throw ( ExceptionObject );
+  void Initialize( void );
 
   /**  Get the value for single valued optimizers. */
   MeasureType GetValue( const TransformParametersType & parameters ) const;

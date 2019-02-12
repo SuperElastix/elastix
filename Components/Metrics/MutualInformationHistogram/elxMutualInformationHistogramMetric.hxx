@@ -41,7 +41,7 @@ MutualInformationHistogramMetric< TElastix >
 template< class TElastix >
 void
 MutualInformationHistogramMetric< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

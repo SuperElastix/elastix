@@ -604,7 +604,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 CombinationImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Check if transform, interpolator have been set. Effectively this
    * method checks if the first sub metric is set up completely.

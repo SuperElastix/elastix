@@ -205,7 +205,7 @@ public:
 
   /** Set up a timer to measure the initialization time and
    * call the Superclass' implementation. */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  virtual void Initialize( void );
 
   /** Set/Get c. For finite difference derivative estimation */
   itkSetMacro( Param_c, double );

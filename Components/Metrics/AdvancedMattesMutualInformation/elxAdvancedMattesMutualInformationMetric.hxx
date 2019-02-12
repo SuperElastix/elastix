@@ -52,7 +52,7 @@ AdvancedMattesMutualInformationMetric< TElastix >
 template< class TElastix >
 void
 AdvancedMattesMutualInformationMetric< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

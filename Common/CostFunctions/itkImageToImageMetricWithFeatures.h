@@ -202,7 +202,7 @@ public:
 
 
   /** Initialize the metric. */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
 protected:
 

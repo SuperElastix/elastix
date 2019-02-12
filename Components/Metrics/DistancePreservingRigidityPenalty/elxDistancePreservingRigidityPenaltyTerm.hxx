@@ -135,7 +135,7 @@ DistancePreservingRigidityPenalty< TElastix >
 template< class TElastix >
 void
 DistancePreservingRigidityPenalty< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   /** Initialize this class with the Superclass initializer. */
   itk::TimeProbe timer;

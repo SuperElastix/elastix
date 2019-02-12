@@ -122,7 +122,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 template< class TFixedImage, class TScalarType >
 void
 TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the initialize of the superclass. */
   this->Superclass::Initialize();
