@@ -23,6 +23,7 @@
 
 #include <itksys/SystemTools.hxx>
 #include <itksys/RegularExpression.hxx>
+#include <itksys/String.hxx>
 
 namespace itk
 {
