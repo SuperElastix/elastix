@@ -28,7 +28,7 @@
 namespace itk
 {
 // static variable initialization
-OpenCLContext::Pointer OpenCLContext::m_Instance = 0;
+OpenCLContext::Pointer OpenCLContext::m_Instance = nullptr;
 
 //------------------------------------------------------------------------------
 // Return the single instance of the OpenCLContext
