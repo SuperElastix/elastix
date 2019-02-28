@@ -61,7 +61,7 @@ GPUImageDataManager< ImageType >::UpdateCPUBuffer()
 
   if( m_Image.IsNotNull() )
   {
-    m_Mutex.Lock();
+    m_Mutex.lock();
 
     unsigned long gpu_time       = this->GetMTime();
     TimeStamp     cpu_time_stamp = m_Image->GetTimeStamp();
@@ -99,7 +99,7 @@ GPUImageDataManager< ImageType >::UpdateCPUBuffer()
       m_IsGPUBufferDirty = false;
     }
 
-    m_Mutex.Unlock();
+    m_Mutex.unlock();
   }
 }
 
@@ -116,7 +116,7 @@ GPUImageDataManager< ImageType >::UpdateGPUBuffer()
 
   if( m_Image.IsNotNull() )
   {
-    m_Mutex.Lock();
+    m_Mutex.lock();
 
     unsigned long gpu_time       = this->GetMTime();
     TimeStamp     cpu_time_stamp = m_Image->GetTimeStamp();
@@ -152,7 +152,7 @@ GPUImageDataManager< ImageType >::UpdateGPUBuffer()
       m_IsGPUBufferDirty = false;
     }
 
-    m_Mutex.Unlock();
+    m_Mutex.unlock();
   }
 }
 

@@ -23,7 +23,7 @@
 namespace itk
 {
 // static variable initialization
-OpenCLLogger::Pointer OpenCLLogger::m_Instance = 0;
+OpenCLLogger::Pointer OpenCLLogger::m_Instance = nullptr;
 
 //------------------------------------------------------------------------------
 // Return the single instance of the OpenCLLogger

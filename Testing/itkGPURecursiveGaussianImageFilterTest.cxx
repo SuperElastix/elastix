@@ -75,8 +75,7 @@ main( int argc, char * argv[] )
   const double       sigma             = 3.0;
   unsigned int       direction         = 0;
   const double       epsilon           = 0.01;
-  const unsigned int maximumNumberOfThreads
-    = itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
+  const unsigned int maximumNumberOfThreads = itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads();
 
   std::cout << std::showpoint << std::setprecision( 4 );
 
