@@ -51,6 +51,14 @@
 #include "itkTestOutputWindow.h"
 
 //------------------------------------------------------------------------------
+
+// Allow calling, e.g, itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads()
+// with ITK4 (as well as ITK5).
+#if ITK_VERSION <= 4
+#define MultiThreaderBase MultiThreader
+#endif
+
+//------------------------------------------------------------------------------
 // Definition of the OCLImageDims
 struct OCLImageDims
 {
