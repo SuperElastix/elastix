@@ -33,8 +33,6 @@ TransformixFilter< TMovingImage >
   this->SetPrimaryOutputName( "ResultImage" );
   this->SetOutput( "ResultDeformationField", this->MakeOutput( "ResultDeformationField" ) );
 
-  //this->AddRequiredInputName( "InputImage" );
-
   this->m_FixedPointSetFileName               = "";
   this->m_ComputeSpatialJacobian              = false;
   this->m_ComputeDeterminantOfSpatialJacobian = false;
@@ -265,50 +263,58 @@ void
 TransformixFilter< TMovingImage >
 ::GenerateOutputInformation( void )
 {
+
   // Get pointers to the input and output
   const ParameterObjectType * transformParameterObjectPtr = this->GetTransformParameterObject();
+
+  if( transformParameterObjectPtr->GetNumberOfParameterMaps() == 0 )
+  {
+    itkExceptionMacro( "Empty parameter map in parameter object." );
+  }
+
   OutputImageType * outputPtr = this->GetOutput();
   OutputDeformationFieldType * outputOutputDeformationFieldPtr = this->GetOutputDeformationField();
 
-  itkAssertInDebugAndIgnoreInReleaseMacro( transformParameterObjectPtr );
+  itkAssertInDebugAndIgnoreInReleaseMacro( transformParameterObjectPtr != ITK_NULLPTR );
   itkAssertInDebugAndIgnoreInReleaseMacro( outputPtr != ITK_NULLPTR );
   itkAssertInDebugAndIgnoreInReleaseMacro( outputOutputDeformationFieldPtr != ITK_NULLPTR );
 
-  // assuming that transformParameterObjects can have only 1 Map
-  const ParameterMapType transformParameterObjectMap = transformParameterObjectPtr->GetParameterMap( 0 );
+  // Get world coordinate system from the last map
+  const unsigned int lastIndex = transformParameterObjectPtr->GetNumberOfParameterMaps() - 1;
+  const ParameterMapType transformParameterMap = transformParameterObjectPtr->GetParameterMap( lastIndex );
 
-  ParameterMapType::const_iterator spacingMapIter = transformParameterObjectMap.find( "Spacing" );
-  if( spacingMapIter == transformParameterObjectMap.cend() )
+  ParameterMapType::const_iterator spacingMapIter = transformParameterMap.find( "Spacing" );
+  if( spacingMapIter == transformParameterMap.end() )
   {
-    itkExceptionMacro( "No entry Spacing found in transformParameterObjectMap" );
+    itkExceptionMacro( "No entry Spacing found in transformParameterMap" );
   }
   const ParameterValueVectorType spacingStrings = spacingMapIter->second;
 
-  ParameterMapType::const_iterator sizeMapIter = transformParameterObjectMap.find( "Size" );
-  if( sizeMapIter == transformParameterObjectMap.cend() )
+  ParameterMapType::const_iterator sizeMapIter = transformParameterMap.find( "Size" );
+  if( sizeMapIter == transformParameterMap.end() )
   {
-    itkExceptionMacro( "No entry Size found in transformParameterObjectMap" );
+    itkExceptionMacro( "No entry Size found in transformParameterMap" );
   }
   const ParameterValueVectorType sizeStrings = sizeMapIter->second;
 
-  ParameterMapType::const_iterator indexMapIter = transformParameterObjectMap.find( "Index" );
-  if( indexMapIter == transformParameterObjectMap.cend() )
+  ParameterMapType::const_iterator indexMapIter = transformParameterMap.find( "Index" );
+  if( indexMapIter == transformParameterMap.end() )
   {
-    itkExceptionMacro( "No entry Index found in transformParameterObjectMap" );
+    itkExceptionMacro( "No entry Index found in transformParameterMap" );
   }
   const ParameterValueVectorType indexStrings = indexMapIter->second;
 
-  ParameterMapType::const_iterator originMapIter = transformParameterObjectMap.find( "Origin" );
-  if( originMapIter == transformParameterObjectMap.cend() )
+  ParameterMapType::const_iterator originMapIter = transformParameterMap.find( "Origin" );
+  if( originMapIter == transformParameterMap.end() )
   {
-    itkExceptionMacro( "No entry Origin found in transformParameterObjectMap" );
+    itkExceptionMacro( "No entry Origin found in transformParameterMap" );
   }
   const ParameterValueVectorType originStrings = originMapIter->second;
 
-  ParameterMapType::const_iterator directionMapIter = transformParameterObjectMap.find( "Direction" );
-  if( directionMapIter == transformParameterObjectMap.cend() )
+  ParameterMapType::const_iterator directionMapIter = transformParameterMap.find( "Direction" );
+  if( directionMapIter == transformParameterMap.end() )
   {
-    itkExceptionMacro( "No entry Direction found in transformParameterObjectMap" );
+    itkExceptionMacro( "No entry Direction found in transformParameterMap" );
   }
   const ParameterValueVectorType directionStrings = directionMapIter->second;
 
@@ -334,6 +340,8 @@ TransformixFilter< TMovingImage >
   outputOutputDeformationFieldPtr->SetSpacing( outputSpacing );
   outputPtr->SetOrigin( outputOrigin );
   outputOutputDeformationFieldPtr->SetOrigin( outputOrigin );
+  outputPtr->SetDirection( outputDirection );
+  outputOutputDeformationFieldPtr->SetDirection( outputDirection );
 
   // Set region
   typename TMovingImage::RegionType outputLargestPossibleRegion;
@@ -462,6 +470,10 @@ bool
 TransformixFilter< TMovingImage >
 ::IsEmpty( const InputImagePointer inputImage )
 {
+  if(!inputImage) {
+    return true;
+  }
+
   typename TMovingImage::RegionType region = inputImage->GetLargestPossibleRegion();
   return region.GetNumberOfPixels() == 0;
 } // end IsEmpty()

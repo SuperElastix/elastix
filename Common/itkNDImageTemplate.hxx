@@ -295,7 +295,7 @@ NDImageTemplate< TPixel, VDimension >::GetImageIOWriter( void )
 {
   if( this->m_Writer )
   {
-    return this->m_Writer->GetImageIO();
+    return this->m_Writer->GetModifiableImageIO();
   }
   else
   {
@@ -322,7 +322,7 @@ NDImageTemplate< TPixel, VDimension >::GetImageIOReader( void )
 {
   if( this->m_Reader )
   {
-    return this->m_Reader->GetImageIO();
+    return this->m_Reader->GetModifiableImageIO();
   }
   else
   {

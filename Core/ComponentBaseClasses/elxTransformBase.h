@@ -303,6 +303,7 @@ public:
    *  interface. To keep everything functional during the transition period we need to
    *  keep the orignal Compute* and TransformPoints* functions and let them just call
    *  Generate* and Write*. These functions should be considered marked deprecated.
+   */
 
   /** Function to transform all coordinates from fixed to moving image. */
   typename DeformationFieldImageType::Pointer GenerateDeformationFieldImage( void ) const;

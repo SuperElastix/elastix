@@ -150,7 +150,7 @@ public:
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation.   */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
 protected:
 

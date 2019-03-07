@@ -146,7 +146,7 @@ public:
    * to define a search space.
    */
   itkSetObjectMacro( SearchSpace, SearchSpaceType );
-  itkGetObjectMacro( SearchSpace, SearchSpaceType );
+  itkGetModifiableObjectMacro( SearchSpace, SearchSpaceType );
 
   /** Add/Remove a dimension to/from the SearchSpace */
   virtual void AddSearchDimension( unsigned int param_nr,

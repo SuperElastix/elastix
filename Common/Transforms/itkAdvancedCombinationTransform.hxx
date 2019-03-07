@@ -732,7 +732,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 template< typename TScalarType, unsigned int NDimensions >
 void
 AdvancedCombinationTransform< TScalarType, NDimensions >
-::NoCurrentTransformSet( void ) const throw ( ExceptionObject )
+::NoCurrentTransformSet( void ) const
 {
   itkExceptionMacro( << "No current transform set in the AdvancedCombinationTransform" );
 

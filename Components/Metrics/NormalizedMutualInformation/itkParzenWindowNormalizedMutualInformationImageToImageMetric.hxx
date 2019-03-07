@@ -43,7 +43,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
 
   /** This function is not complete, but we don't use it anyway. */
 
-}   // end PrintSelf()
+} // end PrintSelf()
 
 
 /**
@@ -67,7 +67,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
   {
     if( ( *PDFit ) > 1e-16 )
     {
-      ( *PDFit ) = vcl_log( *PDFit );
+      ( *PDFit ) = std::log( *PDFit );
     }
     else
     {
@@ -76,7 +76,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
     ++PDFit;
   }
 
-}   // end ComputeLogMarginalPDF
+} // end ComputeLogMarginalPDF
 
 
 /**
@@ -120,7 +120,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
       /** check for non-zero bin contribution */
       if( jointPDFValue > 1e-16 )
       {
-        sumden -= jointPDFValue * vcl_log( jointPDFValue );
+        sumden -= jointPDFValue * std::log( jointPDFValue );
       }
       ++movingPDFconstit;
       ++jointPDFconstit;
@@ -131,7 +131,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
 
   jointEntropy = sumden;
   return static_cast< MeasureType >( sumnum / sumden );
-}   // end ComputeNormalizedMutualInformation
+} // end ComputeNormalizedMutualInformation
 
 
 /**
@@ -165,7 +165,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
 
   return static_cast< MeasureType >( -1.0 * nMI );
 
-}   // end GetValue
+} // end GetValue
 
 
 /**
@@ -257,7 +257,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
       const double jointPDFValue          = jointPDFconstit.Get();
       if( jointPDFValue > 1e-16 )
       {
-        const double pRatio = ( nMI * vcl_log( jointPDFValue )
+        const double pRatio = ( nMI * std::log( jointPDFValue )
           - logFixedImagePDFValue - logMovingImagePDFValue ) / jointEntropy;
         const double pRatioAlpha = this->m_Alpha * pRatio;
         /** check for non-zero bin contribution */
@@ -277,7 +277,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric< TFixedImage, TMovingI
     jointPDFconstit.NextLine();
   }    // end while-loop over fixed index
 
-}   // end GetValueAndDerivative
+} // end GetValueAndDerivative
 
 
 } // end namespace itk

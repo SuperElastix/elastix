@@ -23,7 +23,6 @@
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_iostream.h>
 
 namespace elastix
 {
@@ -152,7 +151,7 @@ public:
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /**
    * Do some things before registration:

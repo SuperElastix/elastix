@@ -20,7 +20,7 @@
 #define __itkMoreThuenteLineSearchOptimizer_cxx
 
 #include "itkMoreThuenteLineSearchOptimizer.h"
-#include "vcl_limits.h"
+#include <limits>
 #include "vnl/vnl_math.h"
 
 namespace itk
@@ -730,7 +730,7 @@ MoreThuenteLineSearchOptimizer
       vnl_math_max( vnl_math_abs( theta ), vnl_math_abs( dx ) ),
       vnl_math_abs( dp ) );
     d__1  = theta / s;
-    gamma = s * vcl_sqrt( d__1 * d__1 - dx / s * ( dp / s ) );
+    gamma = s * std::sqrt( d__1 * d__1 - dx / s * ( dp / s ) );
     if( stp < stx )
     {
       gamma = -gamma;
@@ -766,7 +766,7 @@ MoreThuenteLineSearchOptimizer
       vnl_math_max( vnl_math_abs( theta ), vnl_math_abs( dx ) ),
       vnl_math_abs( dp ) );
     d__1  = theta / s;
-    gamma = s * vcl_sqrt( d__1 * d__1 - dx / s * ( dp / s ) );
+    gamma = s * std::sqrt( d__1 * d__1 - dx / s * ( dp / s ) );
     if( stp > stx )
     {
       gamma = -gamma;
@@ -810,7 +810,7 @@ MoreThuenteLineSearchOptimizer
 
     d__1  = theta / s;
     d__1  = d__1 * d__1 - dx / s * ( dp / s );
-    gamma = s * vcl_sqrt( vnl_math_max( 0., d__1 ) );
+    gamma = s * std::sqrt( vnl_math_max( 0., d__1 ) );
     if( stp > stx )
     {
       gamma = -gamma;
@@ -871,7 +871,7 @@ MoreThuenteLineSearchOptimizer
         vnl_math_max( vnl_math_abs( theta ), vnl_math_abs( dy ) ),
         vnl_math_abs( dp ) );
       d__1  = theta / s;
-      gamma = s * vcl_sqrt( d__1 * d__1 - dy / s * ( dp / s ) );
+      gamma = s * std::sqrt( d__1 * d__1 - dy / s * ( dp / s ) );
       if( stp > sty )
       {
         gamma = -gamma;

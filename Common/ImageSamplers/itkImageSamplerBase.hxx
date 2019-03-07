@@ -381,9 +381,9 @@ ImageSamplerBase< TInputImage >
       /** apply ceil/floor for max/min resp. to be sure that
       * the bounding box is not too small */
       maxIndex[ i ] = static_cast< IndexValueType >(
-        vcl_ceil( bbIndex->GetMaximum()[ i ] ) );
+        std::ceil( bbIndex->GetMaximum()[ i ] ) );
       minIndex[ i ] = static_cast< IndexValueType >(
-        vcl_floor( bbIndex->GetMinimum()[ i ] ) );
+        std::floor( bbIndex->GetMinimum()[ i ] ) );
       size[ i ] = maxIndex[ i ] - minIndex[ i ] + 1;
     }
     boundingBoxRegion.SetIndex( minIndex );

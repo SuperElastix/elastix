@@ -33,7 +33,7 @@ ANNbdTree< TListSample >
 {
   this->m_ShrinkingRule = ANN_BD_SIMPLE;
 
-}   // end Constructor()
+} // end Constructor()
 
 
 /**
@@ -66,7 +66,7 @@ ANNbdTree< TListSample >
     itkWarningMacro( << "WARNING: No such shrinking rule." );
   }
 
-}   // end SetShrinkingRule()
+} // end SetShrinkingRule()
 
 
 /**
@@ -90,7 +90,7 @@ ANNbdTree< TListSample >
       return "ANN_BD_SUGGEST";
   }
 
-}   // end GetShrinkingRule()
+} // end GetShrinkingRule()
 
 
 /**
@@ -112,7 +112,7 @@ ANNbdTree< TListSample >
     this->GetSample()->GetInternalContainer(), nop, dim, bcs,
     this->m_SplittingRule, this->m_ShrinkingRule );
 
-}   // end GenerateTree()
+} // end GenerateTree()
 
 
 /**
@@ -128,7 +128,7 @@ ANNbdTree< TListSample >
 
   os << indent << "ShrinkingRule: " << this->m_ShrinkingRule << std::endl;
 
-}   // end PrintSelf()
+} // end PrintSelf()
 
 
 } // end namespace itk

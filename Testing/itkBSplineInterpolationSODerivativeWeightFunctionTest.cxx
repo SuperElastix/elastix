@@ -123,7 +123,7 @@ main( int argc, char * argv[] )
   {
     error += vnl_math_sqr( soWeights[ i ] - trueSOWeights[ i ] );
   }
-  error = vcl_sqrt( error );
+  error = std::sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
   if( error > distance )
@@ -212,7 +212,7 @@ main( int argc, char * argv[] )
   {
     error += vnl_math_sqr( soWeights[ i ] - trueSOWeights[ i ] );
   }
-  error = vcl_sqrt( error );
+  error = std::sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
   if( error > distance )
@@ -265,7 +265,7 @@ main( int argc, char * argv[] )
   }
 
   if( soWeightFunction->GetNumberOfWeights()
-    != static_cast< unsigned long >( vcl_pow(
+    != static_cast< unsigned long >( std::pow(
     static_cast< float >( SplineOrder + 1 ), 2.0f ) ) )
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;

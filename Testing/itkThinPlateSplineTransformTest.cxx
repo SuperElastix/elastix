@@ -109,7 +109,7 @@ main( int argc, char * argv[] )
   kernelTransform->SetIdentity();                    // target landmarks = source landmarks
 
   /** Create new target landmarks by adding a random vector to it. */
-  PointSetType::Pointer        targetLandmarks         = kernelTransform->GetTargetLandmarks();
+  PointSetType::ConstPointer   targetLandmarks         = kernelTransform->GetTargetLandmarks();
   PointsContainerPointer       newTargetLandmarkPoints = PointsContainerType::New();
   MersenneTwisterType::Pointer mersenneTwister         = MersenneTwisterType::New();
   mersenneTwister->Initialize( 140377 );

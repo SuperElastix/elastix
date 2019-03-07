@@ -171,7 +171,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     // when spline order is even.
     // The valid interval for evaluation is [start+offset, last-offset)
     // when spline order is odd.
-    // Where offset = vcl_floor(spline / 2 ).
+    // Where offset = std::floor(spline / 2 ).
     // Note that the last pixel is not included in the valid region
     // with odd spline orders.
     // For backward compatibility m_ValidRegion is still created.
@@ -1092,7 +1092,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
       ++count;
 
     } // end for j
-  }   // end for i
+  } // end for i
 
   /** Compute d/dmu d^2T_{dim} / dx_i dx_j = weights. */
   for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
@@ -1270,7 +1270,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
       }
 
     } // end for j
-  }   // end for i
+  } // end for i
 
   /** Take into account grid spacing and direction matrix. */
   for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
@@ -1450,7 +1450,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
           = globalParNum + dim * parametersPerDim;
       }
     } // end for
-  }   // end general case
+  } // end general case
 
 } // end ComputeNonZeroJacobianIndices()
 

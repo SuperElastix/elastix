@@ -154,7 +154,7 @@ OpenCLKernelManager::SetKernelArg( const std::size_t kernelId,
   this->m_Context->ReportError( error, __FILE__, __LINE__, ITK_LOCATION );
 
   this->m_KernelArgumentReady[ kernelId ][ argId ].m_IsReady        = true;
-  this->m_KernelArgumentReady[ kernelId ][ argId ].m_GPUDataManager = (GPUDataManager::Pointer)NULL;
+  this->m_KernelArgumentReady[ kernelId ][ argId ].m_GPUDataManager = (GPUDataManager::Pointer)nullptr;
 
   return true;
 }
@@ -241,7 +241,7 @@ OpenCLKernelManager::CheckArgumentReady( const std::size_t kernelId )
     if( !( this->m_KernelArgumentReady[ kernelId ][ i ].m_IsReady ) ) { return false; }
 
     // automatic synchronization before kernel launch
-    if( this->m_KernelArgumentReady[ kernelId ][ i ].m_GPUDataManager != (GPUDataManager::Pointer)NULL )
+    if( this->m_KernelArgumentReady[ kernelId ][ i ].m_GPUDataManager != (GPUDataManager::Pointer)nullptr)
     {
       this->m_KernelArgumentReady[ kernelId ][ i ].m_GPUDataManager->SetCPUBufferDirty();
     }
@@ -259,7 +259,7 @@ OpenCLKernelManager::ResetArguments( const std::size_t kernelIdx )
   for( std::size_t i = 0; i < nArg; i++ )
   {
     this->m_KernelArgumentReady[ kernelIdx ][ i ].m_IsReady        = false;
-    this->m_KernelArgumentReady[ kernelIdx ][ i ].m_GPUDataManager = (GPUDataManager::Pointer)NULL;
+    this->m_KernelArgumentReady[ kernelIdx ][ i ].m_GPUDataManager = (GPUDataManager::Pointer)nullptr;
   }
 }
 

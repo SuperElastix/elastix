@@ -49,7 +49,7 @@ QuasiNewtonLBFGSOptimizer::QuasiNewtonLBFGSOptimizer()
   this->m_LineSearchOptimizer        = 0;
   this->m_Memory                     = 5;
 
-}   // end constructor
+} // end constructor
 
 
 /**
@@ -96,7 +96,7 @@ QuasiNewtonLBFGSOptimizer::StartOptimization()
     this->ResumeOptimization();
   }
 
-}   // end StartOptimization
+} // end StartOptimization
 
 
 /**
@@ -212,9 +212,9 @@ QuasiNewtonLBFGSOptimizer::ResumeOptimization()
 
     this->m_CurrentIteration++;
 
-  }   // end while !m_Stop
+  } // end while !m_Stop
 
-}   // end ResumeOptimization
+} // end ResumeOptimization
 
 
 /**
@@ -227,7 +227,7 @@ QuasiNewtonLBFGSOptimizer::StopOptimization()
   itkDebugMacro( "StopOptimization" );
   this->m_Stop = true;
   this->InvokeEvent( EndEvent() );
-}   // end StopOptimization()
+} // end StopOptimization()
 
 
 /**
@@ -257,7 +257,7 @@ QuasiNewtonLBFGSOptimizer::ComputeDiagonalMatrix( DiagonalMatrixType & diag_H0 )
 
   diag_H0.Fill( fill_value );
 
-}   // end ComputeDiagonalMatrix
+} // end ComputeDiagonalMatrix
 
 
 /**
@@ -329,7 +329,7 @@ QuasiNewtonLBFGSOptimizer::ComputeSearchDirection(
     searchDir /= gradient.magnitude();
   }
 
-}   // end ComputeSearchDirection
+} // end ComputeSearchDirection
 
 
 /**
@@ -351,7 +351,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(
 
   itkDebugMacro( "LineSearch" );
 
-  LineSearchOptimizerPointer LSO = this->GetLineSearchOptimizer();
+  LineSearchOptimizerPointer LSO = this->GetModifiableLineSearchOptimizer();
 
   if( LSO.IsNull() )
   {
@@ -393,7 +393,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(
     throw err;
   }
 
-}   // end LineSearch
+} // end LineSearch
 
 
 /**
@@ -411,7 +411,7 @@ QuasiNewtonLBFGSOptimizer::StoreCurrentPoint(
   this->m_Y[ this->m_Point ]   = grad_dif;                              // y
   this->m_Rho[ this->m_Point ] = 1.0 / inner_product( step, grad_dif ); // 1/ys
 
-}   // end StoreCurrentPoint
+} // end StoreCurrentPoint
 
 
 /**
@@ -451,7 +451,7 @@ QuasiNewtonLBFGSOptimizer::TestConvergence( bool firstLineSearchDone )
 
   return false;
 
-}   // end TestConvergence
+} // end TestConvergence
 
 
 } // end namespace itk

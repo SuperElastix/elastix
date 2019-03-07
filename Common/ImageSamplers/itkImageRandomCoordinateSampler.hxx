@@ -67,7 +67,7 @@ ImageRandomCoordinateSampler< TInputImage >
   /** Get handles to the input image, output sample container, and interpolator. */
   InputImageConstPointer inputImage = this->GetInput();
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
-  typename InterpolatorType::Pointer interpolator            = this->GetInterpolator();
+  typename InterpolatorType::Pointer interpolator            = this->GetModifiableInterpolator();
 
   /** Set up the interpolator. */
   interpolator->SetInputImage( inputImage ); // only once?
@@ -115,7 +115,7 @@ ImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if no mask
+  } // end if no mask
   else
   {
     /** Update the mask. */
@@ -164,7 +164,7 @@ ImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if mask
+  } // end if mask
 
 } // end GenerateData()
 
@@ -179,7 +179,7 @@ ImageRandomCoordinateSampler< TInputImage >
 ::BeforeThreadedGenerateData( void )
 {
   /** Set up the interpolator. */
-  typename InterpolatorType::Pointer interpolator = this->GetInterpolator();
+  typename InterpolatorType::Pointer interpolator = this->GetModifiableInterpolator();
   interpolator->SetInputImage( this->GetInput() ); // only once per resolution?
 
   /** Clear the random number list. */

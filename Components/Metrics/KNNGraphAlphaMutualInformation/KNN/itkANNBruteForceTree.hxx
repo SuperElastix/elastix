@@ -33,7 +33,7 @@ ANNBruteForceTree< TListSample >
 ::ANNBruteForceTree()
 {
   this->m_ANNTree = 0;
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -45,7 +45,7 @@ ANNBruteForceTree< TListSample >
 ::~ANNBruteForceTree()
 {
   ANNBinaryTreeCreator::DeleteANNBruteForceTree( this->m_ANNTree );
-}   // end Destructor
+} // end Destructor
 
 
 /**
@@ -65,7 +65,7 @@ ANNBruteForceTree< TListSample >
   this->m_ANNTree = ANNBinaryTreeCreator::CreateANNBruteForceTree(
     this->GetSample()->GetInternalContainer(), nop, dim );
 
-}   // end GenerateTree
+} // end GenerateTree
 
 
 } // end namespace itk

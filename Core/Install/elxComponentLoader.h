@@ -58,7 +58,7 @@ public:
 
   /** Set and get the ComponentDatabase. */
   itkSetObjectMacro( ComponentDatabase, ComponentDatabaseType );
-  itkGetObjectMacro( ComponentDatabase, ComponentDatabaseType );
+  itkGetModifiableObjectMacro( ComponentDatabase, ComponentDatabaseType );
 
   /** Function to load components. The argv0 used to be useful
    * to find the program directory, but is not used anymore. */

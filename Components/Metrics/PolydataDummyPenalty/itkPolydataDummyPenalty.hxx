@@ -51,7 +51,7 @@ MeshPenalty< TFixedPointSet, TMovingPointSet  >
 template< class TFixedPointSet, class TMovingPointSet  >
 void
 MeshPenalty< TFixedPointSet, TMovingPointSet >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the initialize of the superclass. */
   //this->Superclass::Initialize();
@@ -233,7 +233,7 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
       //this->TransformPointNormal(fixedPointIt->Value(),  fixedPointDataIt->Value(), mappedPointDataIt->Value()  );
 
     }
-  }   // End of loop over meshes
+  } // end of loop over meshes
 
   // Since this is a dummy metric always return value = 0 and derivative = [0,...,0]
 

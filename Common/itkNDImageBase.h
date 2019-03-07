@@ -182,11 +182,11 @@ public:
   virtual unsigned int GetImageDimension( void ) = 0;
 
   /** Get the actual image */
-  virtual DataObject * GetImage( void ) = 0;
+  virtual DataObject * GetModifiableImage( void ) = 0;
 
-  virtual ProcessObject * GetWriter( void ) = 0;
+  virtual ProcessObject * GetModifiableWriter( void ) = 0;
 
-  virtual ProcessObject * GetReader( void ) = 0;
+  virtual ProcessObject * GetModifiableReader( void ) = 0;
 
   virtual void SetImageIOWriter( ImageIOBase * _arg ) = 0;
 
@@ -258,7 +258,8 @@ NDImageBase< TPixel >::NewNDImage( unsigned int dim )
     //template and a #define MAXDIM,
     // or something like that....
     default:
-      return 0;
+      // Return a default-constructed SmartPointer (null).
+      return typename NDImageBase< TPixel >::Pointer();
   }
 
 }

@@ -33,7 +33,7 @@ ANNPriorityTreeSearch< TBinaryTree >
 {
   this->m_ErrorBound         = 0.0;
   this->m_BinaryTreeAskDTree = 0;
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -86,7 +86,7 @@ ANNPriorityTreeSearch< TBinaryTree >
     this->m_BinaryTreeAskDTree = 0;
   }
 
-}   // end SetBinaryTree
+} // end SetBinaryTree
 
 
 /**
@@ -137,7 +137,7 @@ ANNPriorityTreeSearch< TBinaryTree >
   /** Deallocate the temporary ANNQueryPoint. */
   annDeallocPt( ANNQueryPoint );
 
-}   // end Search
+} // end Search
 
 
 } // end namespace itk

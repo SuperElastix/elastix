@@ -31,7 +31,7 @@ HardLimiterFunction< TInput, NDimension >
 {
   OutputType output = vnl_math_min( static_cast< OutputType >( input ), this->m_UpperBound );
   return ( vnl_math_max( output, this->m_LowerBound ) );
-}   // end Evaluate()
+} // end Evaluate()
 
 
 template< class TInput, unsigned int NDimension >
@@ -50,7 +50,7 @@ HardLimiterFunction< TInput, NDimension >
     return ( this->m_LowerBound );
   }
   return ( static_cast< OutputType >( input ) );
-}   // end Evaluate()
+} // end Evaluate()
 
 
 } // end namespace itk

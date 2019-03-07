@@ -36,6 +36,7 @@
 #define __itkAffineDTI3DTransform_hxx
 
 #include "itkAffineDTI3DTransform.h"
+#include <cmath>
 
 namespace itk
 {
@@ -192,12 +193,12 @@ AffineDTI3DTransform< TScalarType >
 ::ComputeMatrix( void )
 {
   // need to check if angles are in the right order
-  const double cx  = vcl_cos( this->m_Angle[ 0 ] );
-  const double sx  = vcl_sin( this->m_Angle[ 0 ] );
-  const double cy  = vcl_cos( this->m_Angle[ 1 ] );
-  const double sy  = vcl_sin( this->m_Angle[ 1 ] );
-  const double cz  = vcl_cos( this->m_Angle[ 2 ] );
-  const double sz  = vcl_sin( this->m_Angle[ 2 ] );
+  const double cx  = std::cos( this->m_Angle[ 0 ] );
+  const double sx  = std::sin( this->m_Angle[ 0 ] );
+  const double cy  = std::cos( this->m_Angle[ 1 ] );
+  const double sy  = std::sin( this->m_Angle[ 1 ] );
+  const double cz  = std::cos( this->m_Angle[ 2 ] );
+  const double sz  = std::sin( this->m_Angle[ 2 ] );
   const double gx  = this->m_Shear[ 0 ];
   const double gy  = this->m_Shear[ 1 ];
   const double gz  = this->m_Shear[ 2 ];
@@ -300,12 +301,12 @@ AffineDTI3DTransform< TScalarType >
   jsj.resize( ParametersDimension );
 
   // need to check if angles are in the right order
-  const double cx  = vcl_cos( this->m_Angle[ 0 ] );
-  const double sx  = vcl_sin( this->m_Angle[ 0 ] );
-  const double cy  = vcl_cos( this->m_Angle[ 1 ] );
-  const double sy  = vcl_sin( this->m_Angle[ 1 ] );
-  const double cz  = vcl_cos( this->m_Angle[ 2 ] );
-  const double sz  = vcl_sin( this->m_Angle[ 2 ] );
+  const double cx  = std::cos( this->m_Angle[ 0 ] );
+  const double sx  = std::sin( this->m_Angle[ 0 ] );
+  const double cy  = std::cos( this->m_Angle[ 1 ] );
+  const double sy  = std::sin( this->m_Angle[ 1 ] );
+  const double cz  = std::cos( this->m_Angle[ 2 ] );
+  const double sz  = std::sin( this->m_Angle[ 2 ] );
   const double gx  = this->m_Shear[ 0 ];
   const double gy  = this->m_Shear[ 1 ];
   const double gz  = this->m_Shear[ 2 ];
@@ -314,12 +315,12 @@ AffineDTI3DTransform< TScalarType >
   const double ssz = this->m_Scale[ 2 ];
 
   /** derivatives: */
-  const double cxd = -vcl_sin( this->m_Angle[ 0 ] );
-  const double sxd = vcl_cos( this->m_Angle[ 0 ] );
-  const double cyd = -vcl_sin( this->m_Angle[ 1 ] );
-  const double syd = vcl_cos( this->m_Angle[ 1 ] );
-  const double czd = -vcl_sin( this->m_Angle[ 2 ] );
-  const double szd = vcl_cos( this->m_Angle[ 2 ] );
+  const double cxd = -std::sin( this->m_Angle[ 0 ] );
+  const double sxd = std::cos( this->m_Angle[ 0 ] );
+  const double cyd = -std::sin( this->m_Angle[ 1 ] );
+  const double syd = std::cos( this->m_Angle[ 1 ] );
+  const double czd = -std::sin( this->m_Angle[ 2 ] );
+  const double szd = std::cos( this->m_Angle[ 2 ] );
 
   /** NB: opposite definition as in EulerTransform */
   MatrixType RotationX;

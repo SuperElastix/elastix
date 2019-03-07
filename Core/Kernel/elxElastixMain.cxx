@@ -161,8 +161,9 @@ ElastixMain::ElastixMain()
  * ****************** Initialization of static members *********
  */
 
-ElastixMain::ComponentDatabasePointer ElastixMain::s_CDB             = 0;
-ElastixMain::ComponentLoaderPointer   ElastixMain::s_ComponentLoader = 0;
+// Both s_CDB and s_ComponentLoader are defaulted-constructed to null.
+ElastixMain::ComponentDatabasePointer ElastixMain::s_CDB;
+ElastixMain::ComponentLoaderPointer   ElastixMain::s_ComponentLoader;
 
 /**
  * ********************** Destructor ****************************
@@ -373,14 +374,14 @@ ElastixMain::Run( void )
   /** Set the images and masks. If not set by the user, it is not a problem.
    * ElastixTemplate will try to load them from disk.
    */
-  this->GetElastixBase()->SetFixedImageContainer( this->GetFixedImageContainer() );
-  this->GetElastixBase()->SetMovingImageContainer( this->GetMovingImageContainer() );
-  this->GetElastixBase()->SetFixedMaskContainer( this->GetFixedMaskContainer() );
-  this->GetElastixBase()->SetMovingMaskContainer( this->GetMovingMaskContainer() );
-  this->GetElastixBase()->SetResultImageContainer( this->GetResultImageContainer() );
+  this->GetElastixBase()->SetFixedImageContainer( this->GetModifiableFixedImageContainer() );
+  this->GetElastixBase()->SetMovingImageContainer( this->GetModifiableMovingImageContainer() );
+  this->GetElastixBase()->SetFixedMaskContainer( this->GetModifiableFixedMaskContainer() );
+  this->GetElastixBase()->SetMovingMaskContainer( this->GetModifiableMovingMaskContainer() );
+  this->GetElastixBase()->SetResultImageContainer( this->GetModifiableResultImageContainer() );
 
   /** Set the initial transform, if it happens to be there. */
-  this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
+  this->GetElastixBase()->SetInitialTransform( this->GetModifiableInitialTransform() );
 
   /** Set the original fixed image direction cosines (relevant in case the
    * UseDirectionCosines parameter was set to false.
@@ -811,9 +812,11 @@ ElastixMain::CreateComponent(
 {
   /** A pointer to the New() function. */
   PtrToCreator  testcreator = 0;
-  ObjectPointer testpointer = 0;
   testcreator = this->s_CDB->GetCreator( name,  this->m_DBIndex );
-  testpointer = testcreator ? testcreator() : NULL;
+
+  // Note that ObjectPointer() yields a default-constructed SmartPointer (null).
+  ObjectPointer testpointer = testcreator ? testcreator() : ObjectPointer();
+
   if( testpointer.IsNull() )
   {
     itkExceptionMacro( << "The following component could not be created: " << name );
@@ -909,7 +912,7 @@ ElastixMain::CreateComponents(
         return objectContainer;
       }
     } // end if
-  }   // end while
+  } // end while
 
   return objectContainer;
 
@@ -1045,7 +1048,7 @@ ElastixMain::GetImageInformationFromFile(
     testReader->UpdateOutputInformation();
 
     /** Extract the required information. */
-    itk::ImageIOBase::Pointer testImageIO = testReader->GetImageIO();
+    itk::SmartPointer<const itk::ImageIOBase> testImageIO = testReader->GetImageIO();
     //itk::ImageIOBase::IOComponentType componentType = testImageIO->GetComponentType();
     //pixelType = itk::ImageIOBase::GetComponentTypeAsString( componentType );
     if( testImageIO.IsNull() )

@@ -122,7 +122,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       /** Check for non-zero bin contribution. */
       if( jointPDFValue > 1e-16 && fixPDFmovPDF > 1e-16 )
       {
-        MI += jointPDFValue * vcl_log( jointPDFValue / fixPDFmovPDF );
+        MI += jointPDFValue * std::log( jointPDFValue / fixPDFmovPDF );
       }
       ++movingPDFit;
       ++jointPDFit;
@@ -215,7 +215,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       if( jointPDFValue > 1e-16 && fixPDFmovPDF > 1e-16 )
       {
         derivit = derivbegin;
-        const double pRatio      = vcl_log( jointPDFValue / fixPDFmovPDF );
+        const double pRatio      = std::log( jointPDFValue / fixPDFmovPDF );
         const double pRatioAlpha = this->m_Alpha * pRatio;
         MI += jointPDFValue * pRatio;
         while( derivit != derivend )
@@ -225,7 +225,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
           ++derivit;
           ++jointPDFDerivativesit;
         } // end while-loop over parameters
-      }   // end if-block to check non-zero bin contribution
+      } // end if-block to check non-zero bin contribution
 
       ++movingPDFit;
       ++jointPDFit;
@@ -387,7 +387,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
         fixedImageValue, movingImageValue, imageJacobian, nzji, derivative );
 
     } // end sampleOk
-  }   // end loop over sample container
+  } // end loop over sample container
 
   /** If desired, apply the technique introduced by Tustison */
   if( this->GetUseJacobianPreconditioning() )
@@ -470,8 +470,8 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -562,7 +562,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
         derivative );
 
     } // end sampleOk
-  }   // end loop over sample container
+  } // end loop over sample container
 
   /** If desired, apply the technique introduced by Tustison. */
   if( this->GetUseJacobianPreconditioning() )
@@ -594,12 +594,14 @@ void
 ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputeDerivativeLowMemory( DerivativeType & derivative ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+
   /** Accumulate derivatives. */
   // compute single-threadedly
   if( !this->m_UseMultiThread && false ) // force multi-threaded
   {
     derivative = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_Derivative;
-    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+    for( ThreadIdType i = 1; i < numberOfThreads; ++i )
     {
       derivative += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative;
     }
@@ -614,7 +616,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     for( int j = 0; j < spaceDimension; ++j )
     {
       DerivativeValueType sum = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_Derivative[ j ];
-      for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+      for( ThreadIdType i = 1; i < numberOfThreads; ++i )
       {
         sum += this->m_GetValueAndDerivativePerThreadVariables[ i ].st_Derivative[ j ];
       }
@@ -712,7 +714,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     double       logFixedPDFValue = 0.0;
     if( fixedPDFValue > 1e-16 )
     {
-      logFixedPDFValue = vcl_log( fixedPDFValue );
+      logFixedPDFValue = std::log( fixedPDFValue );
     }
     movingPDFit = movingPDFbegin;
     movingIndex = 0;
@@ -725,7 +727,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       /** Check for non-zero bin contribution. */
       if( jointPDFValue > 1e-16 && movingPDFValue > 1e-16 )
       {
-        const PDFValueType pRatio = vcl_log( jointPDFValue / movingPDFValue );
+        const PDFValueType pRatio = std::log( jointPDFValue / movingPDFValue );
         this->m_PRatioArray[ fixedIndex ][ movingIndex ] = static_cast< PRatioType >(
           this->m_Alpha * pRatio );
 
@@ -791,10 +793,10 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 
   /** The lowest bin numbers affected by this pixel: */
   const int fixedParzenWindowIndex
-    = static_cast< int >( vcl_floor(
+    = static_cast< int >( std::floor(
     fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
   const int movingParzenWindowIndex
-    = static_cast< int >( vcl_floor(
+    = static_cast< int >( std::floor(
     movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
 
   /** Compute the fixed Parzen values. */
@@ -950,7 +952,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       /** Check for non-zero bin contribution and update the mutual information value. */
       if( jointPDFValue > 1e-16 && fixPDFmovPDFAlpha > 1e-16 )
       {
-        MI += this->m_Alpha * jointPDFValue * vcl_log( jointPDFValue / fixPDFmovPDFAlpha );
+        MI += this->m_Alpha * jointPDFValue * std::log( jointPDFValue / fixPDFmovPDFAlpha );
       }
 
       /** Update the derivative. */
@@ -980,7 +982,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
         if( perturbedJointPDFRightValue > 1e-16 && perturbedfixPDFmovPDFAlphaRight > 1e-16 )
         {
           contrib += perturbedAlphaRightValue * perturbedJointPDFRightValue
-            * vcl_log( perturbedJointPDFRightValue / perturbedfixPDFmovPDFAlphaRight );
+            * std::log( perturbedJointPDFRightValue / perturbedfixPDFmovPDFAlphaRight );
         }
 
         /** For clarity, get some values and give them a name. */
@@ -999,7 +1001,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
         if( perturbedJointPDFLeftValue > 1e-16 && perturbedfixPDFmovPDFAlphaLeft > 1e-16 )
         {
           contrib -= perturbedAlphaLeftValue * perturbedJointPDFLeftValue
-            * vcl_log( perturbedJointPDFLeftValue / perturbedfixPDFmovPDFAlphaLeft );
+            * std::log( perturbedJointPDFLeftValue / perturbedfixPDFmovPDFAlphaLeft );
         }
 
         /** Update the derivative component. */

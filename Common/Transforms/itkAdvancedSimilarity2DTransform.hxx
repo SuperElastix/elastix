@@ -137,8 +137,8 @@ AdvancedSimilarity2DTransform< TScalarType >
 {
   const double angle = this->GetAngle();
 
-  const double cc = vcl_cos( angle );
-  const double ss = vcl_sin( angle );
+  const double cc = std::cos( angle );
+  const double ss = std::sin( angle );
 
   const double ca = cc * m_Scale;
   const double sa = ss * m_Scale;
@@ -159,17 +159,17 @@ void
 AdvancedSimilarity2DTransform< TScalarType >
 ::ComputeMatrixParameters( void )
 {
-  m_Scale = vcl_sqrt( vnl_math_sqr( this->GetMatrix()[ 0 ][ 0 ] )
+  m_Scale = std::sqrt( vnl_math_sqr( this->GetMatrix()[ 0 ][ 0 ] )
     + vnl_math_sqr( this->GetMatrix()[ 0 ][ 1 ] ) );
 
-  this->SetVarAngle( vcl_acos( this->GetMatrix()[ 0 ][ 0 ] / m_Scale ) );
+  this->SetVarAngle( std::acos( this->GetMatrix()[ 0 ][ 0 ] / m_Scale ) );
 
   if( this->GetMatrix()[ 1 ][ 0 ] < 0.0 )
   {
     this->SetVarAngle( -this->GetAngle() );
   }
 
-  if( ( this->GetMatrix()[ 1 ][ 0 ] / m_Scale ) - vcl_sin( this->GetAngle() ) > 0.000001 )
+  if( ( this->GetMatrix()[ 1 ][ 0 ] / m_Scale ) - std::sin( this->GetAngle() ) > 0.000001 )
   {
     std::cout << "Bad Rotation Matrix" << std::endl;
   }
@@ -193,8 +193,8 @@ AdvancedSimilarity2DTransform< TScalarType >::GetJacobian( const InputPointType 
 
   // Some helper variables
   const double         angle  = this->GetAngle();
-  const double         ca     = vcl_cos( angle );
-  const double         sa     = vcl_sin( angle );
+  const double         ca     = std::cos( angle );
+  const double         sa     = std::sin( angle );
   const InputPointType center = this->GetCenter();
   const double         cx     = center[ 0 ];
   const double         cy     = center[ 1 ];
@@ -303,8 +303,8 @@ AdvancedSimilarity2DTransform< TScalarType >
 {
   /** The Jacobian of spatial Jacobian remains constant, so is precomputed */
   const double                    angle = this->GetAngle();
-  double                          ca    = vcl_cos( angle );
-  double                          sa    = vcl_sin( angle );
+  double                          ca    = std::cos( angle );
+  double                          sa    = std::sin( angle );
   JacobianOfSpatialJacobianType & jsj   = this->m_JacobianOfSpatialJacobian;
   jsj.resize( ParametersDimension );
   if( ParametersDimension > 1 )

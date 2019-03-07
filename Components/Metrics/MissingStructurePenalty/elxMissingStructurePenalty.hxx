@@ -43,7 +43,7 @@ MissingStructurePenalty< TElastix >
 template< class TElastix >
 void
 MissingStructurePenalty< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -145,7 +145,7 @@ MissingStructurePenalty< TElastix >
     std::ostringstream fmeshArgument( "-fmesh", std::ios_base::ate );
     fmeshArgument << ch << metricNumber;
     std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
-    typename MeshType::Pointer fixedMesh = 0;
+    typename MeshType::Pointer fixedMesh; // default-constructed (null)
     if( itksys::SystemTools::GetFilenameLastExtension( fixedMeshName ) == ".txt" )
     {
       this->ReadTransformixPoints( fixedMeshName, fixedMesh );
@@ -226,7 +226,7 @@ MissingStructurePenalty< TElastix >
                             << "Resuming elastix." << std::endl;
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachIteration()
 
@@ -437,7 +437,7 @@ the sequence of points to form a 2d connected polydata contour.
     itk::ContinuousIndex< double, MovingImageDimension >  MovingImageContinuousIndexType;
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
-  typedef bool DummyIPPPixelType;
+  typedef unsigned char DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<
     DummyIPPPixelType, FixedImageDimension,
     FixedImageDimension, CoordRepType >                  MeshTraitsType;

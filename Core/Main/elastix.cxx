@@ -73,11 +73,13 @@ main( int argc, char ** argv )
   /** Some declarations and initializations. */
   ElastixMainVectorType elastices;
 
-  ObjectPointer              transform            = 0;
-  DataObjectContainerPointer fixedImageContainer  = 0;
-  DataObjectContainerPointer movingImageContainer = 0;
-  DataObjectContainerPointer fixedMaskContainer   = 0;
-  DataObjectContainerPointer movingMaskContainer  = 0;
+  // Note that the following pointers are "smart", so they are defaulted-constructed to null.
+  ObjectPointer              transform;
+  DataObjectContainerPointer fixedImageContainer;
+  DataObjectContainerPointer movingImageContainer;
+  DataObjectContainerPointer fixedMaskContainer;
+  DataObjectContainerPointer movingMaskContainer;
+
   FlatDirectionCosinesType   fixedImageOriginalDirection;
   int                        returndummy        = 0;
   unsigned long              nrOfParameterFiles = 0;
@@ -274,11 +276,11 @@ main( int argc, char ** argv )
     /** Get the transform, the fixedImage and the movingImage
      * in order to put it in the (possibly) next registration.
      */
-    transform                   = elastices[ i ]->GetFinalTransform();
-    fixedImageContainer         = elastices[ i ]->GetFixedImageContainer();
-    movingImageContainer        = elastices[ i ]->GetMovingImageContainer();
-    fixedMaskContainer          = elastices[ i ]->GetFixedMaskContainer();
-    movingMaskContainer         = elastices[ i ]->GetMovingMaskContainer();
+    transform                   = elastices[ i ]->GetModifiableFinalTransform();
+    fixedImageContainer         = elastices[ i ]->GetModifiableFixedImageContainer();
+    movingImageContainer        = elastices[ i ]->GetModifiableMovingImageContainer();
+    fixedMaskContainer          = elastices[ i ]->GetModifiableFixedMaskContainer();
+    movingMaskContainer         = elastices[ i ]->GetModifiableMovingMaskContainer();
     fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
 
     /** Print a finish message. */

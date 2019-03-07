@@ -19,6 +19,7 @@
 #define __itkAffineDTI2DTransform_hxx
 
 #include "itkAffineDTI2DTransform.h"
+#include <cmath>
 
 namespace itk
 {
@@ -165,8 +166,8 @@ AffineDTI2DTransform< TScalarType >
 ::ComputeMatrix( void )
 {
   // need to check if angles are in the right order
-  const double cx  = vcl_cos( this->m_Angle[ 0 ] );
-  const double sx  = vcl_sin( this->m_Angle[ 0 ] );
+  const double cx  = std::cos( this->m_Angle[ 0 ] );
+  const double sx  = std::sin( this->m_Angle[ 0 ] );
   const double gx  = this->m_Shear[ 0 ];
   const double gy  = this->m_Shear[ 1 ];
   const double ssx = this->m_Scale[ 0 ];
@@ -248,16 +249,16 @@ AffineDTI2DTransform< TScalarType >
   jsj.resize( ParametersDimension );
 
   // need to check if angles are in the right order
-  const double cx  = vcl_cos( this->m_Angle[ 0 ] );
-  const double sx  = vcl_sin( this->m_Angle[ 0 ] );
+  const double cx  = std::cos( this->m_Angle[ 0 ] );
+  const double sx  = std::sin( this->m_Angle[ 0 ] );
   const double gx  = this->m_Shear[ 0 ];
   const double gy  = this->m_Shear[ 1 ];
   const double ssx = this->m_Scale[ 0 ];
   const double ssy = this->m_Scale[ 1 ];
 
   /** derivatives: */
-  const double cxd = -vcl_sin( this->m_Angle[ 0 ] );
-  const double sxd = vcl_cos( this->m_Angle[ 0 ] );
+  const double cxd = -std::sin( this->m_Angle[ 0 ] );
+  const double sxd = std::cos( this->m_Angle[ 0 ] );
 
   /** NB: opposite definition as in EulerTransform */
   MatrixType Rotation;

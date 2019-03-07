@@ -270,7 +270,7 @@ protected:
    * This method is executed at every level of the pyramid with the
    * values corresponding to this resolution.
    */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /** Compute the size of the fixed region for each level of the pyramid.
    * Actually we would like to override PreparePyramids, but this function
@@ -281,12 +281,12 @@ protected:
   /** Function called by PrepareAllPyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
-  virtual void CheckPyramids( void ) throw ( ExceptionObject );
+  virtual void CheckPyramids( void );
 
   /** Function called by Initialize, which checks if the user input
    * is ok. Called by Initialize().
    */
-  virtual void CheckOnInitialize( void ) throw ( ExceptionObject );
+  virtual void CheckOnInitialize( void );
 
   /** Variables already defined in the superclass, but as private...  */
   bool           m_Stop;

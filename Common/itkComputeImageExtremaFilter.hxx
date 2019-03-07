@@ -32,6 +32,11 @@ template< typename TInputImage >
 {
   this->m_UseMask = false;
   this->m_SameGeometry = false;
+
+#if ITK_VERSION_MAJOR >= 5
+  // Use the classic (ITK4) threading model, to ensure ThreadedGenerateData is being called.
+  this->itk::ImageSource<TInputImage>::DynamicMultiThreadingOff();
+#endif
 }
 
 template< typename TInputImage >

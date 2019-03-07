@@ -53,7 +53,7 @@ AdvancedNormalizedCorrelationMetric< TElastix >
 template< class TElastix >
 void
 AdvancedNormalizedCorrelationMetric< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();

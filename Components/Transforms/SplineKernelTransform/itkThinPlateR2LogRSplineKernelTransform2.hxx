@@ -46,7 +46,7 @@ ThinPlateR2LogRSplineKernelTransform2< TScalarType, NDimensions >::ComputeG( con
   const TScalarType r = x.GetNorm();
   GMatrix.fill( NumericTraits< TScalarType >::ZeroValue() );
   const TScalarType          R2logR
-    = ( r > 1e-8 ) ? r * r * vcl_log( r ) : NumericTraits< TScalarType >::Zero;
+    = ( r > 1e-8 ) ? r * r * std::log( r ) : NumericTraits< TScalarType >::Zero;
 
   GMatrix.fill_diagonal( R2logR );
 }
@@ -66,7 +66,7 @@ ThinPlateR2LogRSplineKernelTransform2< TScalarType, NDimensions >::ComputeDeform
     InputVectorType            position = thisPoint - sp->Value();
     const TScalarType          r        = position.GetNorm();
     const TScalarType          R2logR
-      = ( r > 1e-8 ) ? r * r * vcl_log( r ) : NumericTraits< TScalarType >::Zero;
+      = ( r > 1e-8 ) ? r * r * std::log( r ) : NumericTraits< TScalarType >::Zero;
     for( unsigned int odim = 0; odim < NDimensions; odim++ )
     {
       result[ odim ] += R2logR * this->m_DMatrix( odim, lnd );

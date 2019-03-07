@@ -20,6 +20,7 @@
 #define __elxConjugateGradientFRPR_hxx
 
 #include "elxConjugateGradientFRPR.h"
+#include <cmath>
 #include <iomanip>
 #include <string>
 #include "vnl/vnl_math.h"
@@ -41,7 +42,7 @@ ConjugateGradientFRPR< TElastix >
   this->m_CurrentSearchDirectionMagnitude = 0.0;
   this->m_CurrentDerivativeMagnitude      = 0.0;
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -67,7 +68,7 @@ ConjugateGradientFRPR< TElastix >::DeterminePhase( void ) const
 
   return "Main";
 
-}   // end DeterminePhase
+} // end DeterminePhase
 
 
 /**
@@ -96,7 +97,7 @@ ConjugateGradientFRPR< TElastix >::BeforeRegistration( void )
 
   /** \todo: call the correct functions */
 
-}   // end BeforeRegistration
+} // end BeforeRegistration
 
 
 /**
@@ -131,7 +132,7 @@ ConjugateGradientFRPR< TElastix >
   this->SetStepLength( stepLength );
 
   /** Set the ValueTolerance; convergence is declared if:
-   * 2.0 * abs(f2 - f1) <=  ValueTolerance * (abs(f2) + vcl_abs(f1))
+   * 2.0 * abs(f2 - f1) <=  ValueTolerance * (abs(f2) + std::abs(f1))
    */
   double valueTolerance = 0.00001;
   this->m_Configuration->ReadParameter( valueTolerance,
@@ -151,7 +152,7 @@ ConjugateGradientFRPR< TElastix >
     "LineSearchStepTolerance", this->GetComponentLabel(), level, 0 );
   this->SetStepTolerance( stepTolerance );
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution
 
 
 /**
@@ -189,9 +190,9 @@ ConjugateGradientFRPR< TElastix >
       xl::xout[ "iteration" ][ "3:StepLength" ] << "---";
     }
     xl::xout[ "iteration" ][ "4a:||Gradient||" ] << "---";
-  }   // end if main iteration
+  } // end if main iteration
 
-}   // end AfterEachIteration
+} // end AfterEachIteration
 
 
 /**
@@ -233,7 +234,7 @@ ConjugateGradientFRPR< TElastix >
   /** Print the stopping condition */
   //elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-}   // end AfterEachResolution
+} // end AfterEachResolution
 
 
 /**
@@ -254,7 +255,7 @@ ConjugateGradientFRPR< TElastix >
     << bestValue
     << std::endl;
 
-}   // end AfterRegistration
+} // end AfterRegistration
 
 
 /**
@@ -287,7 +288,7 @@ ConjugateGradientFRPR< TElastix >
 
   /** \todo to optimizerbase? */
 
-}   // end SetInitialPosition
+} // end SetInitialPosition
 
 
 /**
@@ -315,7 +316,7 @@ ConjugateGradientFRPR< TElastix >
   this->Superclass1::GetValueAndDerivative( p, val, xi );
   this->m_CurrentDerivativeMagnitude = ( *xi ).magnitude();
 
-}   // end GetValueAndDerivative
+} // end GetValueAndDerivative
 
 
 /**
@@ -338,7 +339,7 @@ ConjugateGradientFRPR< TElastix >
   this->InvokeEvent( itk::IterationEvent() );
   this->SetLineBracketing( false );
 
-}   // end LineBracket
+} // end LineBracket
 
 
 /**

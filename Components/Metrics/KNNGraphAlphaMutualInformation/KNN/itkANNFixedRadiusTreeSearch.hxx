@@ -33,7 +33,7 @@ ANNFixedRadiusTreeSearch< TBinaryTree >
 {
   this->m_ErrorBound    = 0.0;
   this->m_SquaredRadius = 0.0;
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -92,7 +92,7 @@ ANNFixedRadiusTreeSearch< TBinaryTree >
   /** Deallocate the temporary ANNQueryPoint. */
   annDeallocPt( ANNQueryPoint );
 
-}   // end Search
+} // end Search
 
 
 /**
@@ -141,7 +141,7 @@ ANNFixedRadiusTreeSearch< TBinaryTree >
   /** Deallocate the temporary ANNQueryPoint. */
   annDeallocPt( ANNQueryPoint );
 
-}   // end Search
+} // end Search
 
 
 } // end namespace itk

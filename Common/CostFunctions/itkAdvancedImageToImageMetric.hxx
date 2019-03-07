@@ -87,14 +87,19 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Threading related variables. */
   this->m_UseMetricSingleThreaded = true;
   this->m_UseMultiThread = false;
+
+#if ITK_VERSION_MAJOR < 5
+  // Note: This `#if` is a workaround for ITK5, which no longer supports calling
+  // `threader->SetUseThreadPool(false)`. ITK5 does not use thread pools by default. 
   this->m_Threader->SetUseThreadPool( false ); // setting to true makes elastix hang
                                                // at a WaitForSingleMethodThread()
+#endif
 
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP
   this->m_UseOpenMP = true;
 
-  const int nthreads = static_cast< int >( this->m_NumberOfThreads );
+  const int nthreads = static_cast< int >( Self::GetNumberOfThreads() );
   omp_set_num_threads( nthreads );
 #else
   this->m_UseOpenMP = false;
@@ -134,10 +139,16 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::SetNumberOfThreads( ThreadIdType numberOfThreads )
 {
+#if ITK_VERSION_MAJOR >= 5
+  // Note: This is a workaround for ITK5, which renamed NumberOfThreads
+  // to NumberOfWorkUnits
+  Superclass::SetNumberOfWorkUnits( numberOfThreads );
+#else
   Superclass::SetNumberOfThreads( numberOfThreads );
+#endif
 
 #ifdef ELASTIX_USE_OPENMP
-  const int nthreads = static_cast< int >( this->m_NumberOfThreads );
+  const int nthreads = static_cast< int >( Self::GetNumberOfThreads() );
   omp_set_num_threads( nthreads );
 #endif
 } // end SetNumberOfThreads()
@@ -150,7 +161,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();
@@ -188,6 +199,8 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
    * needed, which saves valuable re-allocation time.
@@ -199,23 +212,23 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
    */
 
   /** Only resize the array of structs when needed. */
-  if( this->m_GetValuePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_GetValuePerThreadVariablesSize != numberOfThreads )
   {
     delete[] this->m_GetValuePerThreadVariables;
-    this->m_GetValuePerThreadVariables     = new AlignedGetValuePerThreadStruct[ this->m_NumberOfThreads ];
-    this->m_GetValuePerThreadVariablesSize = this->m_NumberOfThreads;
+    this->m_GetValuePerThreadVariables     = new AlignedGetValuePerThreadStruct[ numberOfThreads ];
+    this->m_GetValuePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Only resize the array of structs when needed. */
-  if( this->m_GetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_GetValueAndDerivativePerThreadVariablesSize != numberOfThreads )
   {
     delete[] this->m_GetValueAndDerivativePerThreadVariables;
-    this->m_GetValueAndDerivativePerThreadVariables     = new AlignedGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
-    this->m_GetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
+    this->m_GetValueAndDerivativePerThreadVariables     = new AlignedGetValueAndDerivativePerThreadStruct[ numberOfThreads ];
+    this->m_GetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Some initialization. */
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     this->m_GetValuePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_GetValuePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;
@@ -357,7 +370,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::InitializeImageSampler( void ) throw ( ExceptionObject )
+::InitializeImageSampler( void )
 {
   if( this->GetUseImageSampler() )
   {
@@ -554,11 +567,11 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   else if( testPtr_combo )
   {
     /** Check if the current transform is a B-spline transform. */
-    BSplineOrder1TransformType * testPtr_1b = dynamic_cast< BSplineOrder1TransformType * >(
+    const BSplineOrder1TransformType * testPtr_1b = dynamic_cast< const BSplineOrder1TransformType * >(
       testPtr_combo->GetCurrentTransform() );
-    BSplineOrder2TransformType * testPtr_2b = dynamic_cast< BSplineOrder2TransformType * >(
+    const BSplineOrder2TransformType * testPtr_2b = dynamic_cast< const BSplineOrder2TransformType * >(
       testPtr_combo->GetCurrentTransform() );
-    BSplineOrder3TransformType * testPtr_3b = dynamic_cast< BSplineOrder3TransformType * >(
+    const BSplineOrder3TransformType * testPtr_3b = dynamic_cast< const BSplineOrder3TransformType * >(
       testPtr_combo->GetCurrentTransform() );
     if( testPtr_1b || testPtr_2b || testPtr_3b )
     {
@@ -959,7 +972,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
   const unsigned int numPar  = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize = static_cast< unsigned int >(
-    vcl_ceil( static_cast< double >( numPar )
+    std::ceil( static_cast< double >( numPar )
     / static_cast< double >( nrOfThreads ) ) );
   const unsigned int jmin = threadID * subSize;
   unsigned int       jmax = ( threadID + 1 ) * subSize;

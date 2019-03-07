@@ -82,14 +82,14 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
   if( this->m_UseMoments )
   {
     // Convert the masks to spatial objects
-    typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject = 0;
+    typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject; // default-constructed (null)
     if( this->m_FixedMask )
     {
       fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedMask );
     }
 
-    typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject = 0;
+    typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject; // default-constructed (null)
     if( this->m_MovingMask )
     {
       movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();

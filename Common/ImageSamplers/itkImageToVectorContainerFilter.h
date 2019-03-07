@@ -19,6 +19,7 @@
 #define __itkImageToVectorContainerFilter_h
 
 #include "itkVectorContainerSource.h"
+#include "itkMultiThreader.h"
 
 namespace itk
 {

@@ -76,18 +76,20 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
    * which has performance benefits for larger vector sizes.
    */
 
+  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+
   /** Only resize the array of structs when needed. */
-  if( this->m_KappaGetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_KappaGetValueAndDerivativePerThreadVariablesSize != numberOfThreads)
   {
     delete[] this->m_KappaGetValueAndDerivativePerThreadVariables;
-    this->m_KappaGetValueAndDerivativePerThreadVariables     = new AlignedKappaGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
-    this->m_KappaGetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
+    this->m_KappaGetValueAndDerivativePerThreadVariables     = new AlignedKappaGetValueAndDerivativePerThreadStruct[ numberOfThreads ];
+    this->m_KappaGetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Some initialization. */
   const SizeValueType       zero1 = NumericTraits< SizeValueType >::Zero;
   const DerivativeValueType zero2 = NumericTraits< DerivativeValueType >::Zero;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = zero1;
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum               = zero1;
@@ -479,8 +481,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -578,10 +580,12 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted
     = this->m_KappaGetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 1; i < numberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted
       += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
@@ -599,7 +603,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   const MeasureType zero         = NumericTraits< MeasureType >::Zero;
   MeasureType       areaSum      = zero;
   MeasureType       intersection = zero;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     areaSum      += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum;
     intersection += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaIntersection;
@@ -627,7 +631,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   {
     DerivativeType vecSum1 = this->m_KappaGetValueAndDerivativePerThreadVariables[ 0 ].st_DerivativeSum1;
     DerivativeType vecSum2 = this->m_KappaGetValueAndDerivativePerThreadVariables[ 0 ].st_DerivativeSum2;
-    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+    for( ThreadIdType i = 1; i < numberOfThreads; ++i )
     {
       vecSum1 += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeSum1;
       vecSum2 += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeSum2;
@@ -670,7 +674,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 
   const unsigned int numPar  = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize = static_cast< unsigned int >(
-    vcl_ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
+    std::ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
   unsigned int jmin = threadId * subSize;
   unsigned int jmax = ( threadId + 1 ) * subSize;
   jmax = ( jmax > numPar ) ? numPar : jmax;

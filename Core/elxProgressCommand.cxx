@@ -45,7 +45,7 @@ ProgressCommand::ProgressCommand()
     this->m_StreamOutputIsConsole = true;
   }
 
-}   // end Constructor()
+} // end Constructor()
 
 
 /**
@@ -56,7 +56,7 @@ ProgressCommand::~ProgressCommand()
 {
   this->DisconnectObserver( this->m_ObservedProcessObject );
 
-}   // end Destructor()
+} // end Destructor()
 
 
 /**
@@ -91,7 +91,7 @@ ProgressCommand
     this->m_NumberOfUpdates = 1;
   }
 
-}   // end SetUpdateFrequency()
+} // end SetUpdateFrequency()
 
 
 /**
@@ -113,7 +113,7 @@ ProgressCommand
     this->m_ObservedProcessObject = filter;
   }
 
-}   // end ConnectObserver()
+} // end ConnectObserver()
 
 
 /**
@@ -134,7 +134,7 @@ ProgressCommand
     }
   }
 
-}   // end DisconnectObserver()
+} // end DisconnectObserver()
 
 
 /**
@@ -153,7 +153,7 @@ ProgressCommand
     this->PrintProgress( po->GetProgress() );
   }
 
-}   // end Execute()
+} // end Execute()
 
 
 /**
@@ -172,7 +172,7 @@ ProgressCommand
     this->PrintProgress( po->GetProgress() );
   }
 
-}   // end Execute()
+} // end Execute()
 
 
 /**
@@ -198,7 +198,7 @@ ProgressCommand
     xl::xout["coutonly"] << std::endl;
   }*/
 
-}   // end PrintProgress()
+} // end PrintProgress()
 
 
 /**
@@ -221,7 +221,7 @@ ProgressCommand
     }
   }
 
-}   // end PrintProgress()
+} // end PrintProgress()
 
 
 } // end namespace itk

@@ -67,7 +67,12 @@ AdvancedImageMomentsCalculator< TImage >::AdvancedImageMomentsCalculator(void)
   /** Threading related variables. */
   this->m_UseMultiThread = true;
   this->m_Threader = ThreaderType::New();
+
+#if ITK_VERSION_MAJOR < 5
+  // Note: This `#if` is a workaround for ITK5, which no longer supports calling
+  // `threader->SetUseThreadPool(false)`. ITK5 does not use thread pools by default. 
   this->m_Threader->SetUseThreadPool(false);
+#endif
 
   /** Initialize the m_ThreaderParameters. */
   this->m_ThreaderParameters.st_Self = this;
@@ -395,7 +400,7 @@ AdvancedImageMomentsCalculator< TImage >
 
 /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast<unsigned long>(vcl_ceil(static_cast<double>(sampleContainerSize)
+    = static_cast<unsigned long>(std::ceil(static_cast<double>(sampleContainerSize)
       / static_cast<double>(numberOfThreads)));
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;

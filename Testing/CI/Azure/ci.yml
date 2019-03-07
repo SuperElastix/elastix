@@ -1,0 +1,206 @@
+variables:
+  ITKv4_VERSION: release-4.13
+  ITKv5_VERSION: eb431fa16ae8b3a93e65db1f77e57e73dc83c6a2 # master branch as of Feb 10, 2019
+  ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
+  ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
+  ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
+  ELASTIX_BINARY_DIR: $(Agent.BuildDirectory)/Elastix-build
+      
+jobs:
+- job: Windows
+  timeoutInMinutes: 0
+  pool:
+    vmImage: 'vs2017-win2016'
+  strategy:
+    matrix:
+      ITKv4:
+        itk.version: $(ITKv4_VERSION)
+      ITKv5:
+        itk.version: $(ITKv5_VERSION)
+  steps:
+  - script: |
+      git clone https://github.com/InsightSoftwareConsortium/ITK "$(ITK_SOURCE_DIR)"
+      pushd "$(ITK_SOURCE_DIR)"
+      git checkout $(itk.version)
+      popd
+    displayName: Clone ITK
+  - script: |
+      mkdir "$(ITK_BINARY_DIR)"
+      mkdir "$(ELASTIX_BINARY_DIR)"
+    displayName: Make build directories
+  - task: CMake@1
+    displayName: 'CMake Generate ITK'
+    inputs:
+      cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF "$(ITK_SOURCE_DIR)"
+      workingDirectory: "$(ITK_BINARY_DIR)"
+  - task: CMake@1
+    displayName: 'CMake Build ITK'
+    inputs:
+      cmakeArgs: --build . --config Release -j 2
+      workingDirectory: "$(ITK_BINARY_DIR)"
+  - task: CMake@1
+    displayName: 'CMake Generate Elastix'
+    inputs:
+      cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DITK_DIR="$(ITK_BINARY_DIR)" -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)"
+      workingDirectory: "$(ELASTIX_BINARY_DIR)"
+  - task: CMake@1
+    displayName: 'CMake Build Elastix'
+    inputs:
+      cmakeArgs: --build . --config Release -j 2
+      workingDirectory: "$(ELASTIX_BINARY_DIR)"
+  - script: | 
+      pushd "$(ELASTIX_BINARY_DIR)"
+      # We exclude two flaky tests whose output depend on the runtime environment which cause them to fail on Azure
+      ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
+      popd
+    displayName: 'CTest Elastix'
+- job: Ubuntu1604
+  timeoutInMinutes: 0
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      ITKv4:
+        itk.version: $(ITKv4_VERSION)
+      ITKv5:
+        itk.version: $(ITKv5_VERSION)
+  steps:
+  - script: |
+      git clone https://github.com/InsightSoftwareConsortium/ITK $(ITK_SOURCE_DIR)
+      pushd $(ITK_SOURCE_DIR)
+      git checkout $(itk.version)
+      popd
+  - script: |
+      mkdir $(ITK_BINARY_DIR)
+      mkdir $(ELASTIX_BINARY_DIR)
+    displayName: Clone ITK
+  - task: CMake@1
+    displayName: 'CMake Generate ITK'
+    inputs:
+      cmakeArgs: -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF $(ITK_SOURCE_DIR)
+      workingDirectory: $(ITK_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Build ITK'
+    inputs:
+      cmakeArgs: --build . --config Release -j 2
+      workingDirectory: $(ITK_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Generate Elastix'
+    inputs:
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
+      workingDirectory: $(ELASTIX_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Build Elastix'
+    inputs:
+      cmakeArgs: --build . --config Release -j 2
+      workingDirectory: $(ELASTIX_BINARY_DIR)
+  - bash: ctest --config Release -VV -j 2
+    displayName: 'CTest Elastix'
+    workingDirectory: $(ELASTIX_BINARY_DIR)
+- job: Ubuntu1404
+  timeoutInMinutes: 0
+  pool:
+    vmImage: 'ubuntu-16.04'
+  container: ubuntu:14.04
+  strategy:
+    matrix:
+      ITKv4:
+        itk.version: $(ITKv4_VERSION)
+      ITKv5:
+        itk.version: $(ITKv5_VERSION)
+  steps:
+  - script: |
+      sudo apt-get update && \
+      sudo apt-get -y upgrade && \
+      sudo apt-get install -y build-essential && \
+      sudo apt-get install -y software-properties-common && \
+      sudo apt-get install -y git wget
+    displayName: Install dependencies
+  - script: |
+      wget https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3.tar.gz
+      tar -xvzf cmake-3.13.3.tar.gz 
+      pushd cmake-3.13.3/ 
+      ./configure 
+      make -j2
+      sudo make install
+      popd
+      sudo update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 --force
+    displayName: Build CMake
+  - script: |
+      git clone https://github.com/InsightSoftwareConsortium/ITK $(ITK_SOURCE_DIR)
+      pushd $(ITK_SOURCE_DIR)
+      git checkout $(itk.version)
+      popd
+    displayName: Clone ITK
+  - script: |
+      mkdir $(ITK_BINARY_DIR)
+      mkdir $(ELASTIX_BINARY_DIR)
+    displayName: Make build directories
+  - task: CMake@1
+    displayName: 'CMake Generate ITK'
+    inputs:
+      cmakeArgs: -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF $(ITK_SOURCE_DIR)
+      workingDirectory: $(ITK_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Build ITK'
+    inputs:
+      cmakeArgs: --build . --config Release -j 2
+      workingDirectory: $(ITK_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Generate Elastix'
+    inputs:
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
+      workingDirectory: $(ELASTIX_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Build Elastix'
+    inputs:
+      cmakeArgs: --build . --config Release -j 2
+      workingDirectory: $(ELASTIX_BINARY_DIR)
+  - bash: ctest --config Release -VV -j 2
+    displayName: 'CTest Elastix'
+    workingDirectory: $(ELASTIX_BINARY_DIR)
+- job: macOS
+  timeoutInMinutes: 0
+  pool:
+    vmImage: 'macOS-10.13'
+  strategy:
+    matrix:
+      ITKv4:
+        itk.version: $(ITKv4_VERSION)
+      ITKv5:
+        itk.version: $(ITKv5_VERSION)
+  steps:
+  - script: |
+      git clone https://github.com/InsightSoftwareConsortium/ITK $(ITK_SOURCE_DIR)
+      pushd $(ITK_SOURCE_DIR)
+      git checkout $(itk.version)
+      popd
+    displayName: Clone ITK
+  - script: |
+      mkdir $(ITK_BINARY_DIR)
+      mkdir $(ELASTIX_BINARY_DIR)
+    displayName: Make build directories
+  - task: CMake@1
+    displayName: 'CMake Generate ITK'
+    inputs:
+      cmakeArgs: -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF $(ITK_SOURCE_DIR)
+      workingDirectory: $(ITK_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Build ITK'
+    inputs:
+      cmakeArgs: --build . --config Release -j 2
+      workingDirectory: $(ITK_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Generate Elastix'
+    inputs:
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON $(Build.Repository.LocalPath)
+      workingDirectory: $(ELASTIX_BINARY_DIR)
+  - task: CMake@1
+    displayName: 'CMake Build Elastix'
+    inputs:
+      cmakeArgs: --build . --config Release -j 2
+      workingDirectory: $(ELASTIX_BINARY_DIR)
+  - bash: ctest --config Release -VV -j 2
+    displayName: 'CTest Elastix'
+    workingDirectory: $(ELASTIX_BINARY_DIR)
+    

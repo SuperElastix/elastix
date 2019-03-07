@@ -62,7 +62,7 @@ GenericConjugateGradientOptimizer::GenericConjugateGradientOptimizer()
 
   this->SetBetaDefinition( "DaiYuanHestenesStiefel" );
 
-}   // end constructor
+} // end constructor
 
 
 /**
@@ -107,7 +107,7 @@ GenericConjugateGradientOptimizer::StartOptimization()
     this->ResumeOptimization();
   }
 
-}   // end StartOptimization
+} // end StartOptimization
 
 
 /**
@@ -199,10 +199,10 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
 
     /** Check for convergence
      * \todo: move this code to TestConvergence() */
-    if( 2.0 * vcl_abs( this->GetCurrentValue() - previousValue ) <=
+    if( 2.0 * std::abs( this->GetCurrentValue() - previousValue ) <=
       this->GetValueTolerance()
-      * ( vcl_abs( this->GetCurrentValue() )
-      + vcl_abs( previousValue ) + TINY_NUMBER ) )
+      * ( std::abs( this->GetCurrentValue() )
+      + std::abs( previousValue ) + TINY_NUMBER ) )
     {
       if( limitCount < this->GetMaxNrOfItWithoutImprovement() )
       {
@@ -234,9 +234,9 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
     /** Next iteration */
     this->m_CurrentIteration++;
 
-  }   // end while !m_Stop
+  } // end while !m_Stop
 
-}   // end ResumeOptimization
+} // end ResumeOptimization
 
 
 /**
@@ -249,7 +249,7 @@ GenericConjugateGradientOptimizer::StopOptimization()
   itkDebugMacro( "StopOptimization" );
   this->m_Stop = true;
   this->InvokeEvent( EndEvent() );
-}   // end StopOptimization()
+} // end StopOptimization()
 
 
 /**
@@ -289,7 +289,7 @@ GenericConjugateGradientOptimizer::ComputeSearchDirection(
     searchDir[ i ] = -gradient[ i ] + beta * searchDir[ i ];
   }
 
-}   // end ComputeSearchDirection
+} // end ComputeSearchDirection
 
 
 /**
@@ -311,7 +311,7 @@ GenericConjugateGradientOptimizer::LineSearch(
 
   itkDebugMacro( "LineSearch" );
 
-  LineSearchOptimizerPointer LSO = this->GetLineSearchOptimizer();
+  LineSearchOptimizerPointer LSO = this->GetModifiableLineSearchOptimizer();
 
   if( LSO.IsNull() )
   {
@@ -356,7 +356,7 @@ GenericConjugateGradientOptimizer::LineSearch(
   /** For the next iteration: */
   //LSO->SetInitialStepLengthEstimate(step); for now in elx.
 
-}   // end LineSearch
+} // end LineSearch
 
 
 /**
@@ -376,7 +376,7 @@ GenericConjugateGradientOptimizer::ComputeBeta(
   return ( ( *this ).*betaComputer )(
     previousGradient, gradient, previousSearchDir );
 
-}   // end ComputeBeta
+} // end ComputeBeta
 
 
 /**
@@ -392,7 +392,7 @@ GenericConjugateGradientOptimizer::ComputeBetaSD(
   /** A simple hack that makes the conjugate gradient equal to
    * a steepest descent method */
   return 0.0;
-}   // end ComputeBetaSD
+} // end ComputeBetaSD
 
 
 /**
@@ -425,7 +425,7 @@ GenericConjugateGradientOptimizer::ComputeBetaFR(
   }
   return num / den;
 
-}   // end ComputeBetaFR
+} // end ComputeBetaFR
 
 
 /**
@@ -458,7 +458,7 @@ GenericConjugateGradientOptimizer::ComputeBetaPR(
   }
   return num / den;
 
-}   // end ComputeBetaPR
+} // end ComputeBetaPR
 
 
 /**
@@ -489,7 +489,7 @@ GenericConjugateGradientOptimizer::ComputeBetaDY(
     return 0.0;
   }
   return num / den;
-}   // end ComputeBetaDY
+} // end ComputeBetaDY
 
 
 /**
@@ -521,7 +521,7 @@ GenericConjugateGradientOptimizer::ComputeBetaHS(
   }
 
   return num / den;
-}   // end ComputeBetaHS
+} // end ComputeBetaHS
 
 
 /**
@@ -542,7 +542,7 @@ GenericConjugateGradientOptimizer::ComputeBetaDYHS(
 
   return vnl_math_max( 0.0, vnl_math_min( beta_DY, beta_HS ) );
 
-}   // end ComputeBetaDYHS
+} // end ComputeBetaDYHS
 
 
 /**
@@ -562,7 +562,7 @@ GenericConjugateGradientOptimizer::SetBetaDefinition( const BetaDefinitionType &
     this->m_BetaDefinition = arg;
     this->Modified();
   }
-}   // end SetBetaDefinition
+} // end SetBetaDefinition
 
 
 /**
@@ -578,7 +578,7 @@ GenericConjugateGradientOptimizer::AddBetaDefinition(
 
   this->m_BetaDefinitionMap[ name ] = function;
 
-}   // end AddBetaDefinition
+} // end AddBetaDefinition
 
 
 /**
@@ -592,7 +592,7 @@ GenericConjugateGradientOptimizer::SetMaxNrOfItWithoutImprovement( unsigned long
   this->m_UseDefaultMaxNrOfItWithoutImprovement = false;
   this->m_MaxNrOfItWithoutImprovement           = arg;
   this->Modified();
-}   // end SetMaxNrOfItWithoutImprovement
+} // end SetMaxNrOfItWithoutImprovement
 
 
 /**
@@ -622,7 +622,7 @@ GenericConjugateGradientOptimizer::TestConvergence( bool itkNotUsed( firstLineSe
 
   return false;
 
-}   // end TestConvergence
+} // end TestConvergence
 
 
 /**

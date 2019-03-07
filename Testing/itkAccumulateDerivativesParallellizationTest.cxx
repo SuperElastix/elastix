@@ -157,7 +157,7 @@ public:
 
     const unsigned int numPar  = temp->st_Metric->m_NumberOfParameters;
     const unsigned int subSize = static_cast< unsigned int >(
-      vcl_ceil( static_cast< double >( numPar )
+      std::ceil( static_cast< double >( numPar )
       / static_cast< double >( nrOfThreads ) ) );
     const unsigned int jmin = threadID * subSize;
     unsigned int       jmax = ( threadID + 1 ) * subSize;

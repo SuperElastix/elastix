@@ -19,6 +19,7 @@
 #define __itkMissingStructurePenalty_hxx
 
 #include "itkMissingStructurePenalty.h"
+#include <cmath>
 
 namespace itk
 {
@@ -52,7 +53,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet  >
 template< class TFixedPointSet, class TMovingPointSet  >
 void
 MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the initialize of the superclass. */
   //this->Superclass::Initialize();
@@ -302,7 +303,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
       }
 
       sumSignedVolume +=  signedVolume;
-      sumAbsVolume    += vcl_abs( signedVolume );
+      sumAbsVolume    += std::abs( signedVolume );
     }
 
     /** Create iterators. */
@@ -329,7 +330,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
         }
       }
 
-    }   // end loop over all corresponding points
+    } // end loop over all corresponding points
 
     /** Check if enough samples were valid. */
 

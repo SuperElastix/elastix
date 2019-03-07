@@ -72,7 +72,7 @@ public:
   virtual void Execute( Object * caller, const EventObject & )
   {
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
-    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
 
@@ -80,7 +80,7 @@ public:
   {
     CallerType * castcaller = const_cast< CallerType * >(
       dynamic_cast< const CallerType * >( caller ) );
-    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
 
@@ -321,6 +321,7 @@ const typename TransformBase< TElastix >::InitialTransformType
   return 0;
 
 } // end GetInitialTransform()
+
 
 /**
  * ******************* SetInitialTransform **********************
@@ -564,12 +565,11 @@ TransformBase< TElastix >
     initialTransformName, "Transform", 0 );
 
   /** Create an InitialTransform. */
-  ObjectType::Pointer initialTransform;
-
   PtrToCreator testcreator = 0;
   testcreator = this->GetElastix()->GetComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
-  initialTransform = testcreator ? testcreator() : NULL;
+  // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
+  ObjectType::Pointer initialTransform = testcreator ? testcreator() : ObjectType::Pointer();
 
   Self * elx_initialTransform = dynamic_cast< Self * >(
     initialTransform.GetPointer() );
@@ -591,7 +591,7 @@ TransformBase< TElastix >
     }
 
   } // end if
-}   // end ReadInitialTransformFromVector()
+} // end ReadInitialTransformFromVector()
 
 
 /**
@@ -626,12 +626,12 @@ TransformBase< TElastix >
     initialTransformName, "Transform", 0 );
 
   /** Create an InitialTransform. */
-  ObjectType::Pointer initialTransform;
-
   PtrToCreator testcreator = 0;
   testcreator = this->GetElastix()->GetComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
-  initialTransform = testcreator ? testcreator() : NULL;
+
+  // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
+  ObjectType::Pointer initialTransform = testcreator ? testcreator() : ObjectType::Pointer();
 
   Self * elx_initialTransform = dynamic_cast< Self * >(
     initialTransform.GetPointer() );
@@ -1154,7 +1154,7 @@ TransformBase< TElastix >
     itk::ContinuousIndex< double, MovingImageDimension >  MovingImageContinuousIndexType;
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
-  typedef bool DummyIPPPixelType;
+  typedef unsigned char DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<
     DummyIPPPixelType, FixedImageDimension,
     FixedImageDimension, CoordRepType >                  MeshTraitsType;
@@ -1479,13 +1479,14 @@ TransformBase< TElastix >
 
 } // end TransformPointsAllPoints()
 
+
 /**
-* ************** GenerateDeformationFieldImage **********************
-*
-* This function transforms all indexes to a physical point.
-* The difference vector (= the deformation at that index) is
-* stored in an image of vectors (of floats).
-*/
+ * ************** GenerateDeformationFieldImage **********************
+ *
+ * This function transforms all indexes to a physical point.
+ * The difference vector (= the deformation at that index) is
+ * stored in an image of vectors (of floats).
+ */
 
 template< class TElastix >
 typename TransformBase< TElastix >::DeformationFieldImageType::Pointer
@@ -1551,15 +1552,16 @@ TransformBase< TElastix >
   return infoChanger->GetOutput();
 } // end GenerateDeformationFieldImage()
 
+
 /**
-* ************** WriteDeformationFieldImage **********************
-*
-*/
+ * ************** WriteDeformationFieldImage **********************
+ */
 
 template< class TElastix >
 void
 TransformBase< TElastix >::
-WriteDeformationFieldImage(typename TransformBase< TElastix >::DeformationFieldImageType::Pointer deformationfield) const
+WriteDeformationFieldImage(
+  typename TransformBase< TElastix >::DeformationFieldImageType::Pointer deformationfield ) const
 {
   typedef itk::ImageFileWriter<
     DeformationFieldImageType >                       DeformationFieldWriterType;

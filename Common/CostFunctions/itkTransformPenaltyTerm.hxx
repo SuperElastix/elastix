@@ -53,7 +53,7 @@ TransformPenaltyTerm< TFixedImage, TScalarType >
   {
     /** The transform is of type AdvancedCombinationTransform. */
     BSplineOrder3TransformType * testPtr2b = dynamic_cast< BSplineOrder3TransformType * >(
-      ( testPtr2a->GetCurrentTransform() ) );
+      ( testPtr2a->GetModifiableCurrentTransform() ) );
     if( testPtr2b )
     {
       /** The current transform is of type AdvancedBSplineDeformableTransform. */

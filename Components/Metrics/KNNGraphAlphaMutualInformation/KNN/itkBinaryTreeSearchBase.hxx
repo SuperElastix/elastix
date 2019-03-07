@@ -33,7 +33,7 @@ BinaryTreeSearchBase< TBinaryTree >
 {
   this->m_BinaryTree        = 0;
   this->m_KNearestNeighbors = 1;
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -63,7 +63,7 @@ BinaryTreeSearchBase< TBinaryTree >
     }
     this->Modified();
   }
-}   // end SetBinaryTree
+} // end SetBinaryTree
 
 
 /**
@@ -76,7 +76,7 @@ const typename BinaryTreeSearchBase< TBinaryTree >::BinaryTreeType
 ::GetBinaryTree( void ) const
 {
   return this->m_BinaryTree.GetPointer();
-}   // end GetBinaryTree
+} // end GetBinaryTree
 
 } // end namespace itk
 

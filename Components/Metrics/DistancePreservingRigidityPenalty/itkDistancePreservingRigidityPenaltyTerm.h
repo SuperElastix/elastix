@@ -140,7 +140,7 @@ public:
   itkStaticConstMacro( ImageDimension, unsigned int, FixedImageType::ImageDimension );
 
   /** Initialize the penalty term. */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /** Typedef's for B-spline transform. */
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 3 > BSplineTransformType;
@@ -184,13 +184,13 @@ public:
   itkSetObjectMacro( SegmentedImage, SegmentedImageType );
 
   /** Get the Segmented Image. */
-  itkGetObjectMacro( SegmentedImage, SegmentedImageType );
+  itkGetModifiableObjectMacro( SegmentedImage, SegmentedImageType );
 
   /** Connect the Sampled Segmented Image. */
   itkSetObjectMacro( SampledSegmentedImage, SegmentedImageType );
 
   /** Get the Sampled Segmented Image. */
-  itkGetObjectMacro( SampledSegmentedImage, SegmentedImageType );
+  itkGetModifiableObjectMacro( SampledSegmentedImage, SegmentedImageType );
 
   itkGetMacro( NumberOfRigidGrids, unsigned int );
 

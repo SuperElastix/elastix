@@ -42,7 +42,7 @@ PolydataDummyPenalty< TElastix >
 template< class TElastix >
 void
 PolydataDummyPenalty< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -132,7 +132,7 @@ PolydataDummyPenalty< TElastix >
     std::ostringstream fmeshArgument( "-fmesh", std::ios_base::ate );
     fmeshArgument << ch << metricNumber;
     std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
-    typename MeshType::Pointer fixedMesh = 0;
+    typename MeshType::Pointer fixedMesh; // default-constructed (null)
     if( itksys::SystemTools::GetFilenameLastExtension( fixedMeshName ) == ".txt" )
     {
       this->ReadTransformixPoints( fixedMeshName, fixedMesh );
@@ -213,7 +213,7 @@ PolydataDummyPenalty< TElastix >
                             << "Resuming elastix." << std::endl;
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachIteration()
 
@@ -268,7 +268,7 @@ PolydataDummyPenalty< TElastix >
                             << "Resuming elastix." << std::endl;
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachResolution()
 
@@ -418,7 +418,7 @@ PolydataDummyPenalty< TElastix >
     itk::ContinuousIndex< double, MovingImageDimension >  MovingImageContinuousIndexType;
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
-  typedef bool DummyIPPPixelType;
+  typedef unsigned char DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<
     DummyIPPPixelType, FixedImageDimension,
     FixedImageDimension, CoordRepType >                  MeshTraitsType;

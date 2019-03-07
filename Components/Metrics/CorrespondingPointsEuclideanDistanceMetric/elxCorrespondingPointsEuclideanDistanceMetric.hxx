@@ -32,7 +32,7 @@ namespace elastix
 template< class TElastix >
 void
 CorrespondingPointsEuclideanDistanceMetric< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -109,7 +109,7 @@ CorrespondingPointsEuclideanDistanceMetric< TElastix >
 {
   /** Read and set the fixed pointset. */
   std::string fixedName = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
-  typename PointSetType::Pointer fixedPointSet      = 0;
+  typename PointSetType::Pointer fixedPointSet; // default-constructed (null)
   const typename ImageType::ConstPointer fixedImage = this->GetElastix()->GetFixedImage();
   const unsigned int nrOfFixedPoints = this->ReadLandmarks(
     fixedName, fixedPointSet, fixedImage );
@@ -117,7 +117,7 @@ CorrespondingPointsEuclideanDistanceMetric< TElastix >
 
   /** Read and set the moving pointset. */
   std::string movingName = this->GetConfiguration()->GetCommandLineArgument( "-mp" );
-  typename PointSetType::Pointer movingPointSet      = 0;
+  typename PointSetType::Pointer movingPointSet; // default-constructed (null)
   const typename ImageType::ConstPointer movingImage = this->GetElastix()->GetMovingImage();
   const unsigned int nrOfMovingPoints = this->ReadLandmarks(
     movingName, movingPointSet, movingImage );
@@ -208,7 +208,7 @@ CorrespondingPointsEuclideanDistanceMetric< TElastix >
       pointSet->SetPoint( j, point );
 
     } // end for all points
-  }   // end for points are indices
+  } // end for points are indices
 
   return nrofpoints;
 

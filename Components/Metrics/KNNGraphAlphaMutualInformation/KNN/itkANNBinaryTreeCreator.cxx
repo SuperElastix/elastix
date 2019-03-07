@@ -37,7 +37,7 @@ ANNBinaryTreeCreator::CreateANNkDTree(
 {
   IncreaseReferenceCount();
   return new ANNkd_tree( pa, n, d, bs, split );
-}   // end CreateANNkDTree
+} // end CreateANNkDTree
 
 
 /**
@@ -51,7 +51,7 @@ ANNBinaryTreeCreator::CreateANNbdTree(
 {
   IncreaseReferenceCount();
   return new ANNbd_tree( pa, n, d, bs, split, shrink );
-}   // end CreateANNbdTree
+} // end CreateANNbdTree
 
 
 /**
@@ -64,7 +64,7 @@ ANNBinaryTreeCreator::CreateANNBruteForceTree(
 {
   IncreaseReferenceCount();
   return new ANNbruteForce( pa, n, d );
-}   // end CreateANNBruteForceTree
+} // end CreateANNBruteForceTree
 
 
 /**
@@ -80,7 +80,7 @@ ANNBinaryTreeCreator::DeleteANNkDTree( ANNkDTreeType * & tree )
     tree = 0;
     DecreaseReferenceCount();
   }
-}   // end DeleteANNkDTree
+} // end DeleteANNkDTree
 
 
 /**
@@ -96,7 +96,7 @@ ANNBinaryTreeCreator::DeleteANNBruteForceTree( ANNBruteForceTreeType * & tree )
     tree = 0;
     DecreaseReferenceCount();
   }
-}   // end DeleteANNBruteForceTree
+} // end DeleteANNBruteForceTree
 
 
 /**
@@ -107,7 +107,7 @@ void
 ANNBinaryTreeCreator::IncreaseReferenceCount( void )
 {
   m_NumberOfANNBinaryTrees++;
-}   // end IncreaseReferenceCount
+} // end IncreaseReferenceCount
 
 
 /**
@@ -122,7 +122,7 @@ ANNBinaryTreeCreator::DecreaseReferenceCount( void )
   {
     annClose();
   }
-}   // end DecreaseReferenceCount
+} // end DecreaseReferenceCount
 
 
 } // end namespace itk

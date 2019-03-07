@@ -143,7 +143,7 @@ public:
    * (3) InitializeKernels()
    * (4) Resize AlphaDerivatives
    */
-  void Initialize( void ) throw ( ExceptionObject );
+  void Initialize( void );
 
   /** Get the derivatives of the match measure. This method simply calls the
    * the GetValueAndDerivative, since this will be mostly almost as fast

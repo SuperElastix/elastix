@@ -112,7 +112,7 @@ protected:
   /** Function called by PreparePyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
-  virtual void CheckPyramids( void ) throw ( ExceptionObject );
+  virtual void CheckPyramids( void );
 
 private:
 

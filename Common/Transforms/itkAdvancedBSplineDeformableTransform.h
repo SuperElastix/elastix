@@ -318,7 +318,7 @@ protected:
   /** Allow subclasses to access and manipulate the weights function. */
   // Why??
   itkSetObjectMacro( WeightsFunction, WeightsFunctionType );
-  itkGetObjectMacro( WeightsFunction, WeightsFunctionType );
+  itkGetModifiableObjectMacro( WeightsFunction, WeightsFunctionType );
 
   /** Wrap flat array into images of coefficients. */
   void WrapAsImages( void );

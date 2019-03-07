@@ -53,7 +53,12 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Threading related variables. */
   this->m_UseMultiThread = true;
   this->m_Threader       = ThreaderType::New();
+
+#if ITK_VERSION_MAJOR < 5
+  // Note: This `#if` is a workaround for ITK5, which no longer supports calling
+  // `threader->SetUseThreadPool(false)`. ITK5 does not use thread pools by default. 
   this->m_Threader->SetUseThreadPool( false );
+#endif
 
   /** Initialize the m_ThreaderParameters. */
   this->m_ThreaderParameters.st_Self = this;
@@ -137,7 +142,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   maxJJ = jacg = 0.0;
 
   /** Get samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
+  ImageSampleContainerPointer sampleContainer; // default-constructed (null)
   this->SampleFixedImageForJacobianTerms( sampleContainer );
   const SizeValueType nrofsamples = sampleContainer->Size();
 
@@ -179,7 +184,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   Jgg.Fill( 0.0 );
   std::vector< double > JGG_k;
   double                globalDeformation = 0.0;
-  const double          sqrt2             = vcl_sqrt( static_cast< double >( 2.0 ) );
+  const double          sqrt2             = std::sqrt( static_cast< double >( 2.0 ) );
   JacobianType          jacjjacj( outdim, outdim );
 
   samplenr = 0;
@@ -244,7 +249,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
       sigma += vnl_math_sqr( JGG_k[ i ] - mean_JGG );
     }
     sigma /= ( nrofsamples - 1 ); // unbiased estimation
-    jacg   = mean_JGG + 2.0 * vcl_sqrt( sigma );
+    jacg   = mean_JGG + 2.0 * std::sqrt( sigma );
   }
 
 } // end ComputeSingleThreaded()
@@ -371,7 +376,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
+    = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
     / static_cast< double >( numberOfThreads ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
@@ -391,7 +396,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Temporaries. */
   //std::vector< double > JGG_k; not here so only mean + 2 sigma is supported
   DerivativeType Jgg( outdim ); Jgg.Fill( 0.0 );
-  const double   sqrt2 = vcl_sqrt( static_cast< double >( 2.0 ) );
+  const double   sqrt2 = std::sqrt( static_cast< double >( 2.0 ) );
   JacobianType   jacjjacj( outdim, outdim );
   double         maxJJ                 = 0.0;
   double         jggMagnitude          = 0.0;
@@ -498,7 +503,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   const double meanDisplacement = displacement / this->m_NumberOfPixelsCounted;
   const double sigma            = displacementSquared / this->m_NumberOfPixelsCounted - vnl_math_sqr( meanDisplacement );
 
-  jacg = meanDisplacement + 2.0 * vcl_sqrt( sigma );
+  jacg = meanDisplacement + 2.0 * std::sqrt( sigma );
 
 } // end AfterThreadedCompute()
 
@@ -523,7 +528,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   maxJJ = jacg = 0.0;
 
   /** Get samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
+  ImageSampleContainerPointer sampleContainer; // default-constructed (null)
   this->SampleFixedImageForJacobianTerms( sampleContainer );
   const SizeValueType nrofsamples = sampleContainer->Size();
 
@@ -619,7 +624,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
       sigma += vnl_math_sqr( JGG_k[ i ] - mean_JGG );
     }
     sigma /= ( nrofsamples - 1 ); // unbiased estimation
-    jacg   = mean_JGG + 2.0 * vcl_sqrt( sigma );
+    jacg   = mean_JGG + 2.0 * std::sqrt( sigma );
   }
 } // end ComputeUsingSearchDirection()
 

@@ -130,12 +130,12 @@ TransformixMain::Run( void )
    * ElastixTemplate will try to load them from disk.
    */
   this->GetElastixBase()->SetMovingImageContainer(
-    this->GetMovingImageContainer() );
+    this->GetModifiableMovingImageContainer() );
 
   /** Set the initial transform, if it happens to be there
   * \todo: Does this make sense for transformix?
   */
-  this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
+  this->GetElastixBase()->SetInitialTransform( this->GetModifiableInitialTransform() );
 
   /** ApplyTransform! */
   try

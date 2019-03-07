@@ -41,7 +41,6 @@
 #include <itkObjectFactory.h>
 #include "itkGPUImage.h"
 #include "itkGPUDataManager.h"
-#include "itkSimpleFastMutexLock.h"
 
 namespace itk
 {

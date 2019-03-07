@@ -33,7 +33,7 @@ xoutcell< charT, traits >::xoutcell()
 {
   this->AddTargetCell( "InternalBuffer", &( this->m_InternalBuffer ) );
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -45,7 +45,7 @@ xoutcell< charT, traits >::~xoutcell()
 {
   //nothing
 
-}   // end Destructor
+} // end Destructor
 
 
 /**
@@ -83,7 +83,7 @@ xoutcell< charT, traits >::WriteBufferedData( void )
   /** Empty the internal buffer */
   this->m_InternalBuffer.str( string( "" ) );
 
-}   // end WriteBufferedData
+} // end WriteBufferedData
 
 
 } // end namespace xoutlibrary

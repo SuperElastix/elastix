@@ -145,7 +145,7 @@ public:
   itkStaticConstMacro( ImageDimension, unsigned int, FixedImageType::ImageDimension );
 
   /** Initialize the penalty term. */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
   /** Typedef's for B-spline transform. */
   typedef BSplineOrder3TransformType                 BSplineTransformType;

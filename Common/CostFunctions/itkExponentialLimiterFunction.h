@@ -73,7 +73,7 @@ public:
   virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const;
 
   /** Initialize the limiter; calls the ComputeLimiterSettings() function */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void );
 
 protected:
 

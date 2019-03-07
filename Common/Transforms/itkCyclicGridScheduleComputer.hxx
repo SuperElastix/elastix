@@ -97,7 +97,7 @@ CyclicGridScheduleComputer< TTransformScalarType, VImageDimension >
       {
         /** Compute the grid size without the extra grid points at the edges. */
         bareGridSize = static_cast< unsigned int >(
-          vcl_ceil( size[ dim ] * imageSpacing[ dim ] / gridSpacing ) );
+          std::ceil( size[ dim ] * imageSpacing[ dim ] / gridSpacing ) );
       }
 
       this->m_GridSpacings[ res ][ dim ] = gridSpacing;
