@@ -26,6 +26,8 @@ set( CommonFiles
   itkComputeDisplacementDistribution.hxx
   itkComputeJacobianTerms.h
   itkComputeJacobianTerms.hxx
+  itkComputePreconditionerUsingDisplacementDistribution.h
+  itkComputePreconditionerUsingDisplacementDistribution.hxx
   itkErodeMaskImageFilter.h
   itkErodeMaskImageFilter.hxx
   itkGenericMultiResolutionPyramidImageFilter.h
