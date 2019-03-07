@@ -20,6 +20,8 @@
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "itkPreconditionedASGDOptimizer.h"
+#include "itkComputeDisplacementDistribution.h" // For fast step size estimation
+
 
 #include "itkComputePreconditionerUsingDisplacementDistribution.h"
 #include "elxProgressCommand.h"
@@ -49,19 +51,7 @@ namespace elastix
  *
  * This optimization method is described in the following references:
  *
- * [1] P. Cruz,
- * "Almost sure convergence and asymptotical normality of a generalization of Kesten's
- * stochastic approximation algorithm for multidimensional case."
- * Technical Report, 2005. http://hdl.handle.net/2052/74
- *
- * [2] S. Klein, J.P.W. Pluim, and M. Staring, M.A. Viergever,
- * "Adaptive stochastic gradient descent optimization for image registration,"
- * International Journal of Computer Vision, vol. 81, no. 3, pp. 227-239, 2009.
- * http://dx.doi.org/10.1007/s11263-008-0168-y
- *
- * Acceleration in case of many transform parameters was proposed in the following paper:
- *
- * [3] Y. Qiao, B. van Lew, B.P.F. Lelieveldt and M. Staring
+ * [1] Y. Qiao, B. van Lew, B.P.F. Lelieveldt and M. Staring
  * "Fast Automatic Step Size Estimation for Gradient Descent Optimization of Image Registration,"
  * IEEE Transactions on Medical Imaging, vol. 35, no. 2, pp. 391 - 403, February 2016.
  * http://elastix.isi.uu.nl/marius/publications/2016_j_TMIa.php
@@ -309,6 +299,9 @@ protected :
   typedef itk::ComputePreconditionerUsingDisplacementDistribution<
     FixedImageType, TransformType >                     PreconditionerEstimationType;
   typedef typename PreconditionerEstimationType::Pointer PreconditionerEstimationPointer;
+
+  typedef itk::ComputeDisplacementDistribution<
+	  FixedImageType, TransformType >                    ComputeDisplacementDistributionType;
 
   /** Samplers: */
   typedef itk::ImageSamplerBase< FixedImageType >       ImageSamplerBaseType;

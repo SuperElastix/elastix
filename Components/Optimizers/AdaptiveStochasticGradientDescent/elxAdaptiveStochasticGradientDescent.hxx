@@ -790,15 +790,15 @@ AdaptiveStochasticGradientDescent< TElastix >
     }
     this->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
 
-    double noisefactor = gg / ( gg + ee );
-    a =  delta * std::pow( A + 1.0, alpha ) / jacg * noisefactor;
+    const double noisefactor = gg / ( gg + ee + 1e-14 );
+    a =  delta * std::pow( A + 1.0, alpha ) / ( jacg + 1e-14 ) * noisefactor;
     timer5.Stop();
     elxout << "  Computing the noise compensation took "
            << this->ConvertSecondsToDHMS( timer5.GetMean(), 6 ) << std::endl;
   }
   else
   {
-    a = delta * std::pow( A + 1.0, alpha ) / jacg;
+    a = delta * std::pow( A + 1.0, alpha ) / ( jacg + 1e-14 );
   }
 
   /** Set parameters in superclass. */
