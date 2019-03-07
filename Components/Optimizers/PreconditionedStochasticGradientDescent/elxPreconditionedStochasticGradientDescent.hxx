@@ -128,6 +128,10 @@ PreconditionedStochasticGradientDescent< TElastix >
     "SP_A", this->GetComponentLabel(), level, 0 );
   this->SetParam_A( A );
 
+  double a = 1.0;
+  this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
+  this->SetParam_a(a);
+
   /** Set the MaximumNumberOfSamplingAttempts. check if needed? */
   SizeValueType maximumNumberOfSamplingAttempts = 0;
   this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
@@ -265,7 +269,7 @@ PreconditionedStochasticGradientDescent< TElastix >
     /** If no automatic parameter estimation is used, a and alpha also need
      * to be specified.
      */
-    double a     = 400.0; // arbitrary guess
+    double a     = 1.0; // arbitrary guess
     double alpha = 0.602;
     this->GetConfiguration()->ReadParameter( a, "SP_a", this->GetComponentLabel(), level, 0 );
     this->GetConfiguration()->ReadParameter( alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
@@ -451,7 +455,7 @@ PreconditionedStochasticGradientDescent< TElastix >
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
   /** Compute and set the learning rate. */
-  double lamda = 1.0 / ( 1.0 + this->Superclass1::GetCurrentTime() / this->GetParam_A() );
+  const double lamda = this->GetParam_a() / ( 1.0 + this->Superclass1::GetCurrentTime() / this->GetParam_A() );
   this->SetLearningRate( lamda );
 
   DerivativeType & searchDirection = this->m_SearchDirection;
@@ -568,7 +572,7 @@ PreconditionedStochasticGradientDescent< TElastix >
     this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
   if( !testPtr )
   {
-    itkExceptionMacro( << "ERROR: VoxelWiseASGD expects "
+    itkExceptionMacro( << "ERROR: PreconditionedStochasticGradientDescent expects "
                        << "the metric to be of type AdvancedImageToImageMetric!" );
   }
 
@@ -582,7 +586,7 @@ PreconditionedStochasticGradientDescent< TElastix >
     originalSampler[ m ] = dynamic_cast< ImageSamplerBaseType * >( sampler.GetPointer() );
   }
 
-  /** Create some samplers that can be used for the pre-conditioner computation. */
+  /** Create a random sampler with more samples that can be used for the pre-conditioner computation. */
   //std::vector< ImageRandomCoordinateSamplerPointer > preconditionSamplers( M, 0 ); // very slow, leave this for reminder. YQ
   std::vector< ImageRandomSamplerPointer > preconditionSamplers( M, 0 );
   for( unsigned int m = 0; m < M; ++m )
@@ -624,11 +628,11 @@ PreconditionedStochasticGradientDescent< TElastix >
   elxout << "  Computing preconditioner ..." << std::endl;
   double maxJJ = 0; // needed for the noise compensation term
 
-  bool JacobiType = false;
-  this->GetConfiguration()->ReadParameter( JacobiType,
+  bool useJacobiType = false;
+  this->GetConfiguration()->ReadParameter( useJacobiType,
     "JacobiTypePreconditioner", this->GetComponentLabel(), level, 0 );
 
-  if( JacobiType )
+  if( useJacobiType )
   {
     preconditionerEstimator->ComputeJacobiTypePreconditioner( this->GetScaledCurrentPosition(),
       maxJJ, this->m_PreconditionVector );
@@ -644,7 +648,7 @@ PreconditionedStochasticGradientDescent< TElastix >
     << this->ConvertSecondsToDHMS( timer_P.GetMean(), 6 )
     << std::endl;
 
-#if 1
+#if 0
   elxout << std::scientific;
   elxout << "The preconditioner: [ ";
   for( unsigned int i = 0; i < P; ++i ) elxout << m_PreconditionVector[ i ] << " ";
@@ -658,13 +662,43 @@ PreconditionedStochasticGradientDescent< TElastix >
     this->GetElastix()->GetElxMetricBase( m )->SetAdvancedMetricImageSampler( originalSampler[ m ] );
   }
 
+  /** This part is for PSGD-Jacobian type preconditioner, automatic etimation of the step size. */
+  double      jacg = 0.0;
+  if( useJacobiType )
+  {
+    itk::TimeProbe timer4;
+    /** Construct computeJacobianTerms to initialize the parameter estimation. */
+    typename ComputeDisplacementDistributionType::Pointer
+      computeDisplacementDistribution = ComputeDisplacementDistributionType::New();
+    computeDisplacementDistribution->SetFixedImage( testPtr->GetFixedImage() );
+    computeDisplacementDistribution->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
+    computeDisplacementDistribution->SetFixedImageMask( testPtr->GetFixedImageMask() );
+    computeDisplacementDistribution->SetTransform(
+      this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+    computeDisplacementDistribution->SetCostFunction( this->m_CostFunction );
+    computeDisplacementDistribution->SetNumberOfJacobianMeasurements(
+      this->m_NumberOfJacobianMeasurements );
+
+    std::string maximumDisplacementEstimationMethod = "2sigma";
+    this->GetConfiguration()->ReadParameter(maximumDisplacementEstimationMethod,
+      "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0 );
+
+    /** Compute the Jacobian terms. */
+    elxout << "  Computing displacement distribution ..." << std::endl;
+    timer4.Start();
+    computeDisplacementDistribution->Compute(
+      this->GetScaledCurrentPosition(), jacg, maxJJ,
+      maximumDisplacementEstimationMethod );
+    timer4.Stop();
+    elxout << "  Computing the displacement distribution took "
+      << this->ConvertSecondsToDHMS( timer4.GetMean(), 6 ) << std::endl;
+  }
 
   /** Sample the fixed image to estimate the noise factor. */
   itk::TimeProbe timer_noise; timer_noise.Start();
   double sigma4factor = 1.0;
   double sigma4       = 0.0;
   elxout << "  The estimated MaxJJ is: " << maxJJ << std::endl;
-  maxJJ = 0.0;
   if( maxJJ > 1e-14 )
   {
     sigma4 = sigma4factor * this->m_MaximumStepLength / vcl_sqrt( maxJJ );
@@ -672,7 +706,7 @@ PreconditionedStochasticGradientDescent< TElastix >
   double gg           = 0.0;
   double ee           = 0.0;
   this->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
-  this->m_NoiseFactor = gg / ( gg + ee );
+  this->m_NoiseFactor = gg / ( gg + ee + 1e-14 );
   timer_noise.Stop();
   elxout << "  The MaxJJ used for noisefactor is: " << maxJJ << std::endl;
   elxout << "  The NoiseFactor is: " << m_NoiseFactor << std::endl;
@@ -691,6 +725,17 @@ PreconditionedStochasticGradientDescent< TElastix >
   this->SetParam_alpha( alpha );
   this->SetSigmoidMax( fmax );
   this->SetSigmoidMin( fmin );
+
+  /** Initial of the variables. */
+  double       a = 1.0;
+  const double A = this->GetParam_A();
+  const double delta = this->GetMaximumStepLength();
+
+  if( useJacobiType )
+  {
+    a = delta * vcl_pow( A + 1.0, alpha ) / ( jacg + 1e-14 );
+  }
+  this->SetParam_a( a );
 
   /** Print the elapsed time. */
   timer.Stop();

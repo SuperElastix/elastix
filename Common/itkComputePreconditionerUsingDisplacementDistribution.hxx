@@ -522,55 +522,30 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
 
 
   /** Compute the mean local step sizes and apply the 2 sigma rule. */
-  unsigned int counter_tmp = 0;
-  double maxEigenvalue = -1e-9;
+  double maxEigenvalue = -1e+9;
   double minEigenvalue = 1e+9;
   for( unsigned int i = 0; i < P; ++i )
   {
     /** Mean deformation magnitude. */
     double nonZeroBin = binCount[ i ];
-    if( nonZeroBin > 0 )
-    {
-      const double meanLocalStepSize = preconditioner[ i ] / nonZeroBin;
-      double sigma = ( localStepSizeSquared[ i ] / nonZeroBin ) - meanLocalStepSize * meanLocalStepSize;
 
-      /** Due to numerical issues, in case of very small squared sums and means,
-       * the standard deviation may become negative. This happens for example in
-       * case of an affine transformation for the translational parameters.
-       */
-      if( sigma < 1e-9 ) sigma = 0.0;
+    const double meanLocalStepSize = preconditioner[ i ] / ( nonZeroBin + 1e-14 );
+    double sigma = localStepSizeSquared[ i ] / ( nonZeroBin + 1e-14 ) - meanLocalStepSize * meanLocalStepSize;
 
-      /** Apply the 2 sigma rule. */
-      double localStep = meanLocalStepSize + 2.0 * vcl_sqrt( sigma );
-      minEigenvalue = vnl_math_min( localStep, minEigenvalue );
-      maxEigenvalue = vnl_math_max( localStep, maxEigenvalue );
+    /** Due to numerical issues, in case of very small squared sums and means,
+     * the standard deviation may become negative. This happens for example in
+     * case of an affine transformation for the translational parameters.
+     */
+    if( sigma < 1e-14 ) sigma = 0;
 
-      if( localStep > 1e-9 ) // MS: check this value
-      {
-        preconditioner[ i ] = this->m_MaximumStepLength / ( localStep );
-      }
-      else
-      {
-        preconditioner[ i ] = -1.0; // to be fixed in StepSizeInterpolation()
-        ++counter_tmp;
-      } // end check of extreme small value in preconditioner
-    }
-    else
-    {
-      /** else should not happen for affine transforms.
-      * For the B-spline transform this may happen if no samples were found in the
-      * support region of some parameters. In that case we perform some form of
-      * interpolation using the function StepSizeInterpolation() below.
-      */
-      preconditioner[ i ] = -1.0; // to be fixed in StepSizeInterpolation()
-      ++counter_tmp;
-    } // end check the insufficient sample set
+    /** Apply the 2 sigma rule. */
+    double localStep = meanLocalStepSize + 2.0 * vcl_sqrt( sigma ) + 1e-14;
+
+    minEigenvalue = vnl_math_min( localStep, minEigenvalue );
+    maxEigenvalue = vnl_math_max( localStep, maxEigenvalue );
+    preconditioner[ i ] = this->m_MaximumStepLength / localStep;
+
   } // end loop over step size vector
-
-  if( transformIsBSpline && counter_tmp > 0 )
-  {
-    this->PreconditionerInterpolation( preconditioner );
-  }
 
   /** Constrained the condition number into a given range, here we first try kappa = 2. */
   double conditionNumber = maxEigenvalue / minEigenvalue;
@@ -600,14 +575,6 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
       }
     }
   } // end condition number check.
-
-#if 0
-  elxout << std::scientific;
-  elxout << "The condition number after constraints is: [ ";
-  elxout << maxEigenvalue / minEigenvalue << " ";
-  elxout << "]" << std::endl;
-  elxout << std::fixed;
-#endif
 
 } // end Compute()
 
@@ -685,31 +652,21 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     }
   }
 
-  double maxEigenvalue = -1e-9;
+  double maxEigenvalue = -1e+9;
   double minEigenvalue = 1e+9;
-
   for( unsigned int i = 0; i < P; ++i )
   {
-    double nonZeroBin = binCount[ i ];
+    double nonZeroBin = binCount[ i ] / outdim;
     if( nonZeroBin > 0 && preconditioner[ i ] > 1e-9 )
     {
-      double eigenvalue = vcl_sqrt( preconditioner[ i ] / nonZeroBin );
+      double eigenvalue = vcl_sqrt( preconditioner[ i ] / ( nonZeroBin ) ) + 1e-14;
       maxEigenvalue = vnl_math_max( eigenvalue, maxEigenvalue );
       minEigenvalue = vnl_math_min( eigenvalue, minEigenvalue );
       preconditioner[ i ] = 1.0 / eigenvalue;
     }
   }
 
-  /** Filling the non estimated preconditioners. */
-  if( transformIsBSpline )
-  {
-    this->PreconditionerInterpolation( preconditioner );
-  }
-
-  /** Condition number check. */
-  double conditionNumber = maxEigenvalue / minEigenvalue;
-
-#if 1
+#if 0
   elxout << std::scientific;
   elxout << "The max eigen value is: [ ";
   elxout << maxEigenvalue << " ";
@@ -717,11 +674,10 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   elxout << "The min eigen value is: [ ";
   elxout << minEigenvalue << " ";
   elxout << "]" << std::endl;
-  elxout << "The condition number before constraints is: [ ";
-  elxout << conditionNumber << " ";
-  elxout << "]" << std::endl;
-  elxout << std::fixed;
 #endif
+	
+  /** Condition number check. */
+  double conditionNumber = maxEigenvalue / minEigenvalue;
 
   if( transformIsBSpline && conditionNumber > this->m_ConditionNumber )
   {
@@ -735,7 +691,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     }
   }
 
-#if 1
+#if 0
   elxout << std::scientific;
   elxout << "The condition number after constraints is: [ ";
   elxout << maxEigenvalue / minEigenvalue << " ";
@@ -932,7 +888,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     {
       while (!itSlice.IsAtReverseEndOfSlice())
       {
-        // forward
+        // backward
         double previous = -1.0;
         while (!itSlice.IsAtReverseEndOfLine())
         {
@@ -1042,7 +998,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
 #endif
     while( !it3.IsAtEnd() )
     {
-      preconditioner[ k ] = it3.Value();
+      preconditioner[ k ] = it3.Value() + 1e-8;
       ++k; ++it3;
     }
   } // end loop over all dimensions
