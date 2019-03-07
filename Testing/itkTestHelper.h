@@ -54,7 +54,7 @@
 
 // Allow calling, e.g, itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads()
 // with ITK4 (as well as ITK5).
-#if ITK_VERSION <= 4
+#if ITK_VERSION_MAJOR <= 4
 #define MultiThreaderBase MultiThreader
 #endif
 
