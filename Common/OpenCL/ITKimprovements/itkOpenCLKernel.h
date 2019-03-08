@@ -722,9 +722,9 @@ public:
 
 private:
 
-  std::auto_ptr< OpenCLKernelPimpl > d_ptr;
-  cl_kernel                          m_KernelId;
-  bool                               m_DoubleAsFloat;
+  std::unique_ptr< OpenCLKernelPimpl > d_ptr;
+  cl_kernel                            m_KernelId;
+  bool                                 m_DoubleAsFloat;
 
   ITK_OPENCL_DECLARE_PRIVATE( OpenCLKernel )
 };
