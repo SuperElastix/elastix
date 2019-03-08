@@ -40,13 +40,13 @@ namespace itk
  */
 
 template< class TFixedPointSet, class TMovingPointSet >
-class ITK_EXPORT PointDistributionShapeMetric :
+class ITK_EXPORT ActiveRegistrationModelShapeMetric :
   public SingleValuedPointSetToPointSetMetric< TFixedPointSet, TMovingPointSet >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef PointDistributionShapeMetric                 Self;
+  typedef ActiveRegistrationModelShapeMetric                 Self;
   typedef SingleValuedPointSetToPointSetMetric<
     TFixedPointSet, TMovingPointSet > Superclass;
   typedef SmartPointer< Self >        Pointer;
@@ -125,7 +125,7 @@ public:
 
   typedef Array< DerivativeValueType > MeshPointsDerivativeValueType;
 
-  // ActiveRegistrationModelShapeMetric typedefs
+  // ActiveRegistrationModel typedefs
   typedef double                                                                  StatisticalModelCoordRepType;
   typedef vnl_vector< float >                                                     StatisticalModelFloatVectorType;
   typedef vnl_vector< double >                                                    StatisticalModelVectorType;
@@ -194,9 +194,6 @@ public:
   itkSetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
   itkGetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
 
-  itkSetConstObjectMacro( StatisticalModelOrthonormalPCABasisMatrixContainer, StatisticalModelMatrixContainerType );
-  itkGetConstObjectMacro( StatisticalModelOrthonormalPCABasisMatrixContainer, StatisticalModelMatrixContainerType );
-
   void GetValueAndFiniteDifferenceDerivative( const TransformParametersType & parameters,
                                               MeasureType & value,
                                               DerivativeType & derivative ) const;
@@ -210,8 +207,6 @@ public:
                                                                      const TransformParametersType & parameters ) const;
 
   void TransformMesh( StatisticalModelMeshPointer fixedMesh, StatisticalModelMeshPointer movingMesh ) const;
-
-  //StatisticalModelVectorType ToVnlVector(
 
   /** Initialize the Metric by making sure that all the components are
   *  present and plugged together correctly.
@@ -231,18 +226,17 @@ public:
 
 protected:
 
-  PointDistributionShapeMetric();
-  virtual ~PointDistributionShapeMetric();
+  ActiveRegistrationModelShapeMetric();
+  virtual ~ActiveRegistrationModelShapeMetric();
 
   /** PrintSelf. */
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
   mutable StatisticalModelContainerConstPointer m_StatisticalModelContainer;
-  mutable StatisticalModelMatrixContainerConstPointer m_StatisticalModelOrthonormalPCABasisMatrixContainer;
 
 private:
 
-  PointDistributionShapeMetric( const Self & );    // purposely not implemented
+  ActiveRegistrationModelShapeMetric( const Self & );    // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
 
   StatisticalModelPathVectorType m_ShapeModelFilenames;

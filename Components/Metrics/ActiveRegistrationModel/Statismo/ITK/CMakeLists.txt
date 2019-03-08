@@ -5,7 +5,3 @@ if(MSVC11) #i.e. Visual Studio 2012
   add_definitions(-D BOOST_HAS_TR1)
   add_definitions(-D BOOST_NO_0X_HDR_INITIALIZER_LIST)
 endif()
-
-if(${BUILD_TESTING} )
-  add_subdirectory(tests)
-endif()

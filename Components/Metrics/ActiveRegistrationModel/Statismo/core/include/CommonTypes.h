@@ -47,6 +47,7 @@
 #include <boost/functional/hash.hpp>
 
 #include "itk_eigen.h"
+#include ITK_EIGEN(Dense)
 
 #include "Config.h"
 #include "Domain.h"

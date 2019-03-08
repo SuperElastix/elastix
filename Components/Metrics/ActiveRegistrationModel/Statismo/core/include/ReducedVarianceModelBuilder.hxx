@@ -42,7 +42,8 @@
 
 #include <iostream>
 
-#include <Eigen/SVD>
+#include ITK_EIGEN(SVD)
+#include ITK_EIGEN(Eigenvalues)
 
 #include "CommonTypes.h"
 #include "Exceptions.h"

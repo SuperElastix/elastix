@@ -40,16 +40,16 @@
 #define HDF5UTILS_H_
 
 #include "CommonTypes.h"
+#include "itk_H5Cpp.h"
 
-
-namespace H5 {
+/*namespace H5 {
 class H5Location;
-class CommonFG;
+class H5Location;
 class Group;
 class H5File;
 class H5Object;
 class DataSet;
-}
+}*/
 
 namespace statismo {
 

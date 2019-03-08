@@ -33,7 +33,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of ActiveRegistrationModelShapeMetric metric took: "
+  elxout << "Initialization of ActiveRegistrationModel metric took: "
          << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
@@ -119,9 +119,6 @@ ActiveRegistrationModelShapeMetric< TElastix >
   StatisticalModelContainerPointer statisticalModelContainer = StatisticalModelContainerType::New();
   statisticalModelContainer->Reserve( this->m_LoadShapeModelFileNames.size() + this->m_ShapeDirectories.size() );
 
-  StatisticalModelMatrixContainerPointer statisticalModelOrthonormalPCABasisMatrixContainer = StatisticalModelMatrixContainerType::New();
-  statisticalModelOrthonormalPCABasisMatrixContainer->Reserve( this->m_LoadShapeModelFileNames.size() + this->m_ShapeDirectories.size() );
-
   // Load models
   if( this->m_LoadShapeModelFileNames.size() > 0 )
   {
@@ -135,7 +132,6 @@ ActiveRegistrationModelShapeMetric< TElastix >
         RepresenterPointer representer = RepresenterType::New();
         StatisticalModelPointer statisticalModel = itk::StatismoIO<StatisticalModelMeshType>::LoadStatisticalModel(representer, this->m_LoadShapeModelFileNames[ modelNumber ]);
         statisticalModelContainer->SetElement( modelNumber, statisticalModel.GetPointer() );
-        statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( modelNumber, statisticalModel->GetOrthonormalPCABasisMatrix() );
       }
       catch( statismo::StatisticalModelException &e )
       {
@@ -173,7 +169,6 @@ ActiveRegistrationModelShapeMetric< TElastix >
         ModelBuilderPointer pcaModelBuilder = ModelBuilderType::New();
         StatisticalModelPointer statisticalModel = pcaModelBuilder->BuildNewModel( dataManager->GetData(), this->GetNoiseVariance()[ modelNumber ] );
         statisticalModelContainer->SetElement( this->m_LoadShapeModelFileNames.size()+modelNumber, dynamic_cast< StatisticalModelType * >( statisticalModel.GetPointer() ) );
-        statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( modelNumber, statisticalModel->GetOrthonormalPCABasisMatrix() );
         elxout << "  Built statistical shape model. Number of modes: "
                <<  statisticalModelContainer->GetElement( this->m_LoadShapeModelFileNames.size()+modelNumber )->GetNumberOfPrincipalComponents()
                << "." << std::endl;
@@ -184,7 +179,6 @@ ActiveRegistrationModelShapeMetric< TElastix >
           ReducedVarianceModelBuilderPointer reducedVarianceModelBuilder = ReducedVarianceModelBuilderType::New();
           statisticalModel = reducedVarianceModelBuilder->BuildNewModelWithVariance( statisticalModel, this->GetTotalVariance()[ modelNumber ] );
           statisticalModelContainer->SetElement( this->m_LoadShapeModelFileNames.size()+modelNumber, dynamic_cast< StatisticalModelType * >( statisticalModel.GetPointer() ) );
-          statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( modelNumber, statisticalModel->GetOrthonormalPCABasisMatrix() );
           elxout << "  Kept " << this->GetTotalVariance()[ modelNumber ] * 100.0
                  << "% variance. Number of modes retained: " << statisticalModelContainer->GetElement( this->m_LoadShapeModelFileNames.size()+modelNumber )->GetNumberOfPrincipalComponents()
                  << "." << std::endl;
@@ -192,7 +186,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
           if( this->m_SaveShapeModelFileNames.size() > 0 )
           {
             elxout << "Saving shape model " << modelNumber << " to " << this->m_SaveShapeModelFileNames[ modelNumber ] << ". " << std::endl;
-            itk::StatismoIO<StatisticalModelMeshType>::SaveStatisticalModel(statisticalModel, this->m_SaveShapeModelFileNames[ modelNumber ].c_str());
+            itk::StatismoIO<StatisticalModelMeshType>::SaveStatisticalModel(statisticalModel, this->m_SaveShapeModelFileNames[ modelNumber ]);
           }
 
         }
@@ -205,7 +199,6 @@ ActiveRegistrationModelShapeMetric< TElastix >
   }
   
   this->SetStatisticalModelContainer( statisticalModelContainer );
-  this->SetStatisticalModelOrthonormalPCABasisMatrixContainer( statisticalModelOrthonormalPCABasisMatrixContainer );
 
   // SingleValuedPointSetToPointSetMetric (from which this class is derived) needs a fixed and moving point set
   typename PointSetType::Pointer dummyPointSet = PointSetType::New();
@@ -327,7 +320,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
   catch( itk::ExceptionObject & excp )
   {
     // Add information to the exception.
-    excp.SetLocation( "ActiveRegistrationModelShapeMetric - WriteMesh()" );
+    excp.SetLocation( "ActiveRegistrationModel - WriteMesh()" );
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while writing mesh.\n";
     excp.SetDescription( err_str );
@@ -376,7 +369,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
   std::ostringstream key( parameter, std::ios_base::ate );
   key << this->GetMetricNumber();
   
-  StatisticalModelParameterVectorType noiseVarianceVector = StatisticalModelParameterVectorType( this->m_ShapeDirectories.size(), 10.0 );
+  StatisticalModelParameterVectorType noiseVarianceVector = StatisticalModelParameterVectorType( this->m_ShapeDirectories.size(), 0.0 );
   unsigned int n = this->GetConfiguration()->CountNumberOfParameterEntries( key.str() );
   
   if( n == 0 )

@@ -63,7 +63,7 @@ namespace itk {
 
 template <class TPixel, unsigned ImageDimension>
 StandardImageRepresenter<TPixel, ImageDimension>::StandardImageRepresenter()
-    : m_reference(0) {
+    : m_reference() {
 }
 template <class TPixel, unsigned ImageDimension>
 StandardImageRepresenter<TPixel, ImageDimension>::~StandardImageRepresenter() {

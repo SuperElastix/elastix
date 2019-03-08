@@ -45,7 +45,7 @@
 #include <memory>
 
 #include "CommonTypes.h"
-#include "H5Cpp.h"
+#include "itk_H5Cpp.h"
 
 namespace statismo {
 
@@ -103,17 +103,17 @@ class ModelInfo {
     /**
      * Saves the model info to the given group in the HDF5 file
      */
-    virtual void Save(const H5::CommonFG& publicFg) const;
+    virtual void Save(const H5::H5Location& publicFg) const;
 
     /**
      * Loads the model info from the given group in the HDF5 file.
      */
-    virtual void Load(const H5::CommonFG& publicFg);
+    virtual void Load(const H5::H5Location& publicFg);
 
 
   private:
 
-    BuilderInfo LoadDataInfoOldStatismoFormat(const H5::CommonFG& publicFg) const;
+    BuilderInfo LoadDataInfoOldStatismoFormat(const H5::H5Location& publicFg) const;
 
     MatrixType m_scores;
     BuilderInfoList m_builderInfo;
@@ -158,12 +158,12 @@ class BuilderInfo {
     /**
      * Saves the builder info to the given group in the HDF5 file
      */
-    virtual void Save(const H5::CommonFG& publicFg) const;
+    virtual void Save(const H5::H5Location& publicFg) const;
 
     /**
      * Loads the builder info from the given group in the HDF5 file.
      */
-    virtual void Load(const H5::CommonFG& publicFg);
+    virtual void Load(const H5::H5Location& publicFg);
 
     /**
      * Returns the data info
@@ -179,7 +179,7 @@ class BuilderInfo {
 
 
 
-    static void FillKeyValueListFromInfoGroup(const H5::CommonFG& group, KeyValueList& keyValueList);
+    static void FillKeyValueListFromInfoGroup(const H5::H5Location& group, KeyValueList& keyValueList);
 
     std::string m_modelBuilderName;
     std::string m_buildtime;

@@ -76,7 +76,7 @@ const MatrixType &ModelInfo::GetScoresMatrix() const {
 }
 
 void
-ModelInfo::Save(const H5::CommonFG& publicFg) const {
+ModelInfo::Save(const H5::H5Location& publicFg) const {
     using namespace H5;
 
     // get time and date
@@ -115,7 +115,7 @@ ModelInfo::Save(const H5::CommonFG& publicFg) const {
 }
 
 void
-ModelInfo::Load(const H5::CommonFG& publicFg) {
+ModelInfo::Load(const H5::H5Location& publicFg) {
     using namespace H5;
     Group publicModelGroup = publicFg.openGroup("./modelinfo");
     try {
@@ -163,7 +163,7 @@ ModelInfo::Load(const H5::CommonFG& publicFg) {
 
 inline
 BuilderInfo
-ModelInfo::LoadDataInfoOldStatismoFormat(const H5::CommonFG& publicModelGroup) const {
+ModelInfo::LoadDataInfoOldStatismoFormat(const H5::H5Location& publicModelGroup) const {
     using namespace H5;
 
     Group dataInfoGroup = publicModelGroup.openGroup("./dataInfo");
@@ -233,7 +233,7 @@ BuilderInfo::BuilderInfo(const BuilderInfo &orig) {
 }
 
 void
-BuilderInfo::Save(const H5::CommonFG& modelBuilderGroup) const {
+BuilderInfo::Save(const H5::H5Location& modelBuilderGroup) const {
     using namespace H5;
 
     try {
@@ -263,7 +263,7 @@ BuilderInfo::Save(const H5::CommonFG& modelBuilderGroup) const {
 }
 
 void
-BuilderInfo::Load(const H5::CommonFG& modelBuilderGroup) {
+BuilderInfo::Load(const H5::H5Location& modelBuilderGroup) {
 
     using namespace H5;
 
@@ -293,7 +293,7 @@ const BuilderInfo::ParameterInfoList &BuilderInfo::GetParameterInfo() const {
 
 inline
 void
-BuilderInfo::FillKeyValueListFromInfoGroup(const H5::CommonFG& group, KeyValueList& keyValueList) {
+BuilderInfo::FillKeyValueListFromInfoGroup(const H5::H5Location& group, KeyValueList& keyValueList) {
     keyValueList.clear();
     unsigned numEntries = group.getNumObjs();
     for (unsigned i = 0; i < numEntries; i++) {

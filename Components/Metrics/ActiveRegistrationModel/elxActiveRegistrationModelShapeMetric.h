@@ -53,7 +53,7 @@ namespace elastix
 template< class TElastix >
 class ActiveRegistrationModelShapeMetric :
   public
-  itk::PointDistributionShapeMetric<
+  itk::ActiveRegistrationModelShapeMetric<
   typename MetricBase< TElastix >::FixedPointSetType,
   typename MetricBase< TElastix >::MovingPointSetType >,
   public MetricBase< TElastix >
@@ -62,7 +62,7 @@ public:
 
   /** Standard ITK-stuff. */
   typedef ActiveRegistrationModelShapeMetric Self;
-  typedef itk::PointDistributionShapeMetric<
+  typedef itk::ActiveRegistrationModelShapeMetric<
     typename MetricBase< TElastix >::FixedPointSetType,
     typename MetricBase< TElastix >::MovingPointSetType > Superclass1;
   typedef MetricBase< TElastix >          Superclass2;
@@ -73,7 +73,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ActiveRegistrationModelShapeMetric, itk::PointDistributionShapeMetric );
+  itkTypeMacro(ActiveRegistrationModelShapeMetric, itk::ActiveRegistrationModelShapeMetric );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
@@ -249,7 +249,7 @@ private:
   StatisticalModelParameterVectorType m_NoiseVariance;
   StatisticalModelParameterVectorType m_TotalVariance;
   
-}; // end class ActiveRegistrationModelShapeMetric
+}; // end class ActiveRegistrationModel
 
 } // end namespace elastix
 

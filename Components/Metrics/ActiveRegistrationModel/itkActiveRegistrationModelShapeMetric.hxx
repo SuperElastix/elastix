@@ -15,6 +15,7 @@ PURPOSE. See the above copyright notices for more information.
 #define __itkActiveRegistrationModelPointDistributionShapeMetric_hxx__
 
 #include "itkActiveRegistrationModelShapeMetric.h"
+#include "math.h"
 
 namespace itk
 {
@@ -24,8 +25,8 @@ namespace itk
  */
 
 template< class TFixedPointSet, class TMovingPointSet >
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
-::PointDistributionShapeMetric()
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
+::ActiveRegistrationModelShapeMetric()
 {
 } // end Constructor
 
@@ -35,8 +36,8 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
  */
 
 template< class TFixedPointSet, class TMovingPointSet >
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet  >
-::~PointDistributionShapeMetric()
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet  >
+::~ActiveRegistrationModelShapeMetric()
 {} // end Destructor
 
 /**
@@ -45,7 +46,7 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet  >
 
 template< class TFixedPointSet, class TMovingPointSet  >
 void
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::Initialize( void )
 {
   if( !this->GetTransform() )
@@ -72,8 +73,8 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
  */
 
 template< class TFixedPointSet, class TMovingPointSet >
-typename PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >::MeasureType
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
+typename ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >::MeasureType
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::GetValue( const TransformParametersType & parameters ) const
 {
   MeasureType value = NumericTraits< MeasureType >::Zero;
@@ -101,7 +102,7 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
 
 template< class TFixedPointSet, class TMovingPointSet >
 void
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::GetModelValue( StatisticalModelConstPointer statisticalModel,
 		 MeasureType & value,
                  const TransformParametersType & parameters ) const
@@ -161,7 +162,7 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
 
 template< class TFixedPointSet, class TMovingPointSet >
 void
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::GetDerivative( const TransformParametersType & parameters,
   DerivativeType & derivative ) const
 {
@@ -183,7 +184,7 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
 
 template< class TFixedPointSet, class TMovingPointSet >
 void
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::GetValueAndDerivative( const TransformParametersType & parameters,
                          MeasureType & value,
                          DerivativeType & derivative ) const
@@ -201,12 +202,11 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
   StatisticalModelContainerConstIterator statisticalModelIteratorEnd = this->GetStatisticalModelContainer()->End();
   while( statisticalModelIterator != statisticalModelIteratorEnd )
   {
-
-
-
     MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
+
+    const StatisticalModelMatrixType PCABasisMatrix = statisticalModelIterator->Value()->GetOrthonormalPCABasisMatrix();
 
     const StatisticalModelMeshPointer meanMesh = statisticalModelIterator->Value()->DrawMean();
     StatisticalModelMeshPointer movingMesh = StatisticalModelMeshType::New();
@@ -223,12 +223,6 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
       ++movingMeshIterator;
     }
 
-    // Compute coefficients of model synthesized shape
-    const StatisticalModelVectorType modelCoefficients = statisticalModelIterator->Value()->ComputeCoefficients( movingMesh );
-
-    const StatisticalModelMatrixType PCABasis = statisticalModelIterator->Value()->GetPCABasisMatrix();
-    const StatisticalModelMatrixType InverseCovarianceMatrix = statisticalModelIterator->Value()->GetInverseCovarianceMatrix();
-
     // Compute contribution to derivative for each point
     meanMeshIterator = meanMesh->GetPoints()->Begin();
     movingMeshIterator = movingMesh->GetPoints()->Begin();
@@ -237,28 +231,21 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
     // TODO: Use Orthonormal PCA basis matrix container
     while( meanMeshIterator != meanMeshIteratorEnd )
     {
-
-      const StatisticalModelPointType reconstructedPoint = statisticalModelIterator->Value()->DrawSampleAtPoint( modelCoefficients, referenceMeshIterator->Value(), false );
-      const StatisticalModelVectorType reconstructionError = movingMeshIterator->Value().GetVnlVector() - reconstructedPoint.GetVnlVector();
-
-      // J(X)
-      this->GetTransform()->GetJacobian( meanMeshIterator->Value(), Jacobian, nzji );
-
       const unsigned int pointId = statisticalModelIterator->Value()->GetRepresenter()->GetPointIdForPoint( referenceMeshIterator->Value() );
-
-      // M'M
-      modelValue += reconstructionError.squared_magnitude();
-
-      // I-VV^T
       const unsigned int internalIdx = pointId * StatisticalModelMeshDimension;
-      const StatisticalModelMatrixType PCABasis = statisticalModelIterator->Value()->GetOrthonormalPCABasisMatrix().get_n_rows( internalIdx, StatisticalModelMeshDimension );
-      const StatisticalModelVectorType shapeModelReconstructionFactor = meanMeshIterator->Value().GetVnlVector() * ( 1.0 - PCABasis * PCABasis.transpose() );
+      const StatisticalModelMatrixType PCABasisPoint = PCABasisMatrix.get_n_rows( internalIdx, StatisticalModelMeshDimension );
+
+      const StatisticalModelVectorType movingPoint = movingMeshIterator->Value().GetVnlVector() - meanMeshIterator->Value().GetVnlVector();
+      const StatisticalModelVectorType tmp = movingPoint * ( 1.0 - PCABasisPoint * PCABasisPoint.transpose() );
+
+      const MeasureType modelValue = dot_product(tmp, movingPoint);
 
       // Loop over Jacobian
+      this->GetTransform()->GetJacobian( meanMeshIterator->Value(), Jacobian, nzji );
       for( unsigned int i = 0; i < Jacobian.size(); ++i )
       {
         const unsigned int mu = nzji[ i ];
-        modelDerivative[ mu ] += dot_product( shapeModelReconstructionFactor, Jacobian.get_column( i ) );
+        modelDerivative[ mu ] += dot_product( tmp, Jacobian.get_column( i ) );
       }
 
       ++meanMeshIterator;
@@ -273,7 +260,7 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
 
     if( meanMesh->GetNumberOfPoints() > 0 )
     {
-      value += modelValue / meanMesh->GetNumberOfPoints();
+      value += modelValue * modelValue / meanMesh->GetNumberOfPoints();
       derivative += 2.0 * modelDerivative / meanMesh->GetNumberOfPoints();
     }
 
@@ -297,7 +284,7 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
 
 template< class TFixedPointSet, class TMovingPointSet >
 void
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::GetValueAndFiniteDifferenceDerivative( const TransformParametersType & parameters,
                                          MeasureType & value,
                                          DerivativeType & derivative ) const
@@ -330,7 +317,7 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
 
 template< class TFixedPointSet, class TMovingPointSet >
 void
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::GetModelFiniteDifferenceDerivative( StatisticalModelConstPointer statisticalModel,
                                       DerivativeType & modelDerivative,
                                       const TransformParametersType & parameters ) const
@@ -367,7 +354,7 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
 
 template< class TFixedPointSet, class TMovingPointSet >
 void
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::TransformMesh( StatisticalModelMeshPointer fixedMesh, StatisticalModelMeshPointer movingMesh ) const
 {
   movingMesh->GetPoints()->Reserve( fixedMesh->GetNumberOfPoints() );
@@ -392,7 +379,7 @@ PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
 
 template< class TFixedPointSet, class TMovingPointSet >
 void
-PointDistributionShapeMetric< TFixedPointSet, TMovingPointSet >
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );

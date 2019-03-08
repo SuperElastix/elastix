@@ -107,6 +107,36 @@ struct RepresenterTraits<itk::Image<itk::Vector<float, 2u>, 2u> > {
 };
 
 template<>
+struct RepresenterTraits<itk::Image<double, 4u> > {
+
+  typedef itk::Image<double, 4u> ImageType;
+  typedef ImageType::Pointer DatasetPointerType;
+  typedef ImageType::Pointer DatasetConstPointerType;
+  typedef ImageType::PointType PointType;
+  typedef ImageType::PixelType ValueType;
+};
+
+template<>
+struct RepresenterTraits<itk::Image<double, 3u> > {
+
+  typedef itk::Image<double, 3u> ImageType;
+  typedef ImageType::Pointer DatasetPointerType;
+  typedef ImageType::Pointer DatasetConstPointerType;
+  typedef ImageType::PointType PointType;
+  typedef ImageType::PixelType ValueType;
+};
+
+template<>
+struct RepresenterTraits<itk::Image<double, 2u> > {
+
+  typedef itk::Image<double, 2u> ImageType;
+  typedef ImageType::Pointer DatasetPointerType;
+  typedef ImageType::Pointer DatasetConstPointerType;
+  typedef ImageType::PointType PointType;
+  typedef ImageType::PixelType ValueType;
+};
+
+template<>
 struct RepresenterTraits<itk::Image<float, 4u> > {
 
     typedef itk::Image<float, 4u> ImageType;
