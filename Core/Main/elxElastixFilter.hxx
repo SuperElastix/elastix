@@ -195,7 +195,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   // Set Number of threads
   if( this->m_NumberOfThreads > 0 )
   {
-    argumentMap.insert( ArgumentMapEntryType( "-threads", ParameterObjectType::ToString( this->m_NumberOfThreads ) ) );
+    argumentMap.insert( ArgumentMapEntryType( "-threads", std::to_string( this->m_NumberOfThreads ) ) );
   }
 
   // Setup xout
@@ -209,11 +209,11 @@ ElastixFilter< TFixedImage, TMovingImage >
   {
     // Set image dimension from input images (overrides user settings)
     parameterMapVector[ i ][ "FixedImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( fixedImageDimension ) ) ;
+      = ParameterValueVectorType( 1, std::to_string( fixedImageDimension ) ) ;
     parameterMapVector[ i ][ "MovingImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
+      = ParameterValueVectorType( 1, std::to_string( movingImageDimension ) );
     parameterMapVector[ i ][ "ResultImagePixelType" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( PixelType< typename TFixedImage::PixelType >::ToString() ) );
+      = ParameterValueVectorType( 1, PixelType< typename TFixedImage::PixelType >::ToString() );
 
     // Initial transform parameter files are handled via arguments and enclosing loop, not InitialTransformParametersFileName
     if( parameterMapVector[ i ].find( "InitialTransformParametersFileName" ) != parameterMapVector[ i ].end() )
@@ -266,7 +266,7 @@ ElastixFilter< TFixedImage, TMovingImage >
     if( i > 0 )
     {
       transformParameterMapVector[ i ][ "InitialTransformParametersFileName" ]
-        = ParameterValueVectorType( 1, ParameterObject::ToString( i - 1 ) );
+        = ParameterValueVectorType( 1, std::to_string( i - 1 ) );
     }
 
     // TODO: Fix elastix corrupting default pixel value parameter
@@ -782,7 +782,7 @@ std::string
 ElastixFilter< TFixedImage, TMovingImage >
 ::MakeUniqueName( const DataObjectIdentifierType & inputName )
 {
-  return inputName + ParameterObject::ToString( this->m_InputUID++ );
+  return inputName + std::to_string( this->m_InputUID++ );
 } // end MakeUniqueName()
 
 

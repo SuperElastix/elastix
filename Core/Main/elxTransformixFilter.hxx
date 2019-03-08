@@ -185,16 +185,16 @@ TransformixFilter< TMovingImage >
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
     transformParameterMapVector[ i ][ "FixedImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
+      = ParameterValueVectorType( 1, std::to_string( movingImageDimension ) );
     transformParameterMapVector[ i ][ "MovingImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
+      = ParameterValueVectorType( 1, std::to_string( movingImageDimension ) );
     transformParameterMapVector[ i ][ "ResultImagePixelType" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( PixelType< typename TMovingImage::PixelType >::ToString() ) );
+      = ParameterValueVectorType( 1, PixelType< typename TMovingImage::PixelType >::ToString() );
 
     if( i > 0 )
     {
       transformParameterMapVector[ i ][ "InitialTransformParametersFileName" ]
-        = ParameterValueVectorType( 1, ParameterObject::ToString( i - 1 ) );
+        = ParameterValueVectorType( 1, std::to_string( i - 1 ) );
     }
   }
 
