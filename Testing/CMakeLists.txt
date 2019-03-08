@@ -980,8 +980,10 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d # manual estimation and no adap
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.txt )
 
-# Test transformix to check memory problem
-trx_add_test( TransformixMemoryTest
-  -in ${TestDataDir}/3DCT_lung_baseline_small.mha
-  -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
+if(${ELASTIX_BUILD_EXECUTABLE})
+  # Test transformix to check memory problem
+  trx_add_test( TransformixMemoryTest
+    -in ${TestDataDir}/3DCT_lung_baseline_small.mha
+    -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
+endif()
 
