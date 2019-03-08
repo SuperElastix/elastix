@@ -76,10 +76,10 @@ ElastixFilter< TFixedImage, TMovingImage >
 
   DataObjectContainerPointer fixedImageContainer  = DataObjectContainerType::New();
   DataObjectContainerPointer movingImageContainer = DataObjectContainerType::New();
-  DataObjectContainerPointer fixedMaskContainer   = 0;
-  DataObjectContainerPointer movingMaskContainer  = 0;
-  DataObjectContainerPointer resultImageContainer = 0;
-  ElastixMainObjectPointer   transform            = 0;
+  DataObjectContainerPointer fixedMaskContainer   = nullptr;
+  DataObjectContainerPointer movingMaskContainer  = nullptr;
+  DataObjectContainerPointer resultImageContainer = nullptr;
+  ElastixMainObjectPointer   transform            = nullptr;
   ParameterMapVectorType     transformParameterMapVector;
   FlatDirectionCosinesType   fixedImageOriginalDirection;
 
@@ -275,7 +275,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   } // End loop over registrations
 
   // Save result image
-  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
+  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 && resultImageContainer->ElementAt( 0 ).IsNotNull() )
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }

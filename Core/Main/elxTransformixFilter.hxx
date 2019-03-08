@@ -164,7 +164,7 @@ TransformixFilter< TMovingImage >
   TransformixMainPointer transformix = TransformixMainType::New();
 
   // Setup transformix for warping input image if given
-  DataObjectContainerPointer inputImageContainer = 0;
+  DataObjectContainerPointer inputImageContainer = nullptr;
   if( !this->IsEmpty( itkDynamicCastInDebugMode< TMovingImage* >( this->GetInput( "InputImage" ) ) ) ) {
     inputImageContainer = DataObjectContainerType::New();
     inputImageContainer->CreateElementAt( 0 ) = this->GetInput( "InputImage" );
