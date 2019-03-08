@@ -37,3 +37,4 @@ cmake*
 Makefile
 CMakeFiles/
 CTestTestfile.cmake
+.idea/
