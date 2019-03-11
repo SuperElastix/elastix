@@ -51,10 +51,10 @@ namespace elastix
  *
  * This optimization method is described in the following references:
  *
- * [1] Y. Qiao, B. van Lew, B.P.F. Lelieveldt and M. Staring
- * "Fast Automatic Step Size Estimation for Gradient Descent Optimization of Image Registration,"
- * IEEE Transactions on Medical Imaging, vol. 35, no. 2, pp. 391 - 403, February 2016.
- * http://elastix.isi.uu.nl/marius/publications/2016_j_TMIa.php
+ * [1] Y. Qiao, B.P.F. Lelieveldt, M. Staring
+ * An efficient preconditioner for stochastic gradient descent optimization of image registration
+ * IEEE Transactions on Medical Imaging, 2019
+ * https://doi.org/10.1109/TMI.2019.2897943
  *
  * The parameters used in this class are:
  * \parameter Optimizer: Select this optimizer as follows:\n

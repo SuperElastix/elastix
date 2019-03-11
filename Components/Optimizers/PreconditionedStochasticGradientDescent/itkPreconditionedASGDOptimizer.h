@@ -48,12 +48,12 @@ namespace itk
 * This method is described in the following references:
 *
 * [1] P. Cruz,
-* "Almost sure convergence and asymptotical normality of a generalization of Kesten's
-* stochastic approximation algorithm for multidimensional case."
+* Almost sure convergence and asymptotical normality of a generalization of Kesten's
+*   stochastic approximation algorithm for multidimensional case.
 * Technical Report, 2005. http://hdl.handle.net/2052/74
 *
-* [2] S. Klein, J.P.W. Pluim, and M. Staring, M.A. Viergever,
-* "Adaptive stochastic gradient descent optimisation for image registration,"
+* [2] S. Klein, J.P.W. Pluim, M. Staring, M.A. Viergever,
+* Adaptive stochastic gradient descent optimisation for image registration
 * International Journal of Computer Vision, vol. 81, no. 3, pp. 227-239, 2009.
 * http://dx.doi.org/10.1007/s11263-008-0168-y
 

@@ -48,22 +48,22 @@ namespace elastix
   *
   * This optimization method is described in the following references:
   *
-  * [1] P. Cruz,
-  * "Almost sure convergence and asymptotical normality of a generalization of Kesten's
-  * stochastic approximation algorithm for multidimensional case."
+  * [1] P. Cruz
+  * Almost sure convergence and asymptotical normality of a generalization of Kesten's
+  *   stochastic approximation algorithm for multidimensional case
   * Technical Report, 2005. http://hdl.handle.net/2052/74
   *
   * [2] S. Klein, J.P.W. Pluim, and M. Staring, M.A. Viergever,
-  * "Adaptive stochastic gradient descent optimisation for image registration,"
-  * International Journal of Computer Vision, vol. 81, no. 3, pp. 227-239, 2009.
+  * Adaptive stochastic gradient descent optimisation for image registration
+  * International Journal of Computer Vision, vol. 81, no. 3, pp. 227-239, 2009
   * http://dx.doi.org/10.1007/s11263-008-0168-y
   *
   * Acceleration in case of many transform parameters was proposed in the following paper:
   *
-  * [3]  Y.Qiao, B.P.F. Lelieveldt, M.Staring
-  * "Fast automatic estimation of the optimization step size for nonrigid image registration,"
-  * SPIE Medical Imaging: Image Processing,February, 2014.
-  * http://elastix.isi.uu.nl/marius/publications/2014_c_SPIEMI.php
+  * [3] Y.Qiao, B.P.F. Lelieveldt, M.Staring
+  * Fast Automatic Step Size Estimation for Gradient Descent Optimization of Image Registration
+  * IEEE Transactions on Medical Imaging, vol. 35, no. 2, pp. 391 - 403, February 2016
+  * http://dx.doi.org/10.1109/TMI.2015.2476354
   *
   * The parameters used in this class are:
   * \parameter Optimizer: Select this optimizer as follows:\n
@@ -296,7 +296,7 @@ public:
 
 //   /** Set the learning rate. */
 //   itkSetMacro( LearningRate, double );
-// 
+//
 //   /** Get the learning rate. */
 //   itkGetConstReferenceMacro( LearningRate, double);
 

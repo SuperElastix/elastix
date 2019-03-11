@@ -28,13 +28,12 @@ namespace itk
  * // update below
  * More specifically this class computes the Jacobian terms related to the automatic
  * parameter estimation for the adaptive stochastic gradient descent optimizer.
- * Details can be found in the SPIE paper
+ * Details can be found in the TMI paper
  *
- * [1]  Y.Qiao, B.P.F. Lelieveldt, M.Staring
- * "Fast automatic estimation of the optimization step size for nonrigid image registration,"
- * SPIE Medical Imaging: Image Processing,February, 2014.
- * http://elastix.isi.uu.nl/marius/publications/2014_c_SPIEMI.php
- *
+ * [1] Y. Qiao, B. van Lew, B.P.F. Lelieveldt, M. Staring
+ * Fast Automatic Step Size Estimation for Gradient Descent Optimization of Image Registration
+ * IEEE Transactions on Medical Imaging, vol. 35, no. 2, pp. 391 - 403, February 2016
+ * http://dx.doi.org/10.1109/TMI.2015.2476354
  */
 
 template< class TFixedImage, class TTransform >

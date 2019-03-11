@@ -42,16 +42,9 @@ namespace itk
  * \c NewSamplesEveryIteration to \c "true" to achieve this effect.
  * For more information on this strategy, you may have a look at:
  *
- * S. Klein, M. Staring, J.P.W. Pluim,
- * "Comparison of gradient approximation techniques for optimisation of mutual information in nonrigid registration",
- * in: SPIE Medical Imaging: Image Processing,
- * Editor(s): J.M. Fitzpatrick, J.M. Reinhardt, SPIE press, 2005, vol. 5747, Proceedings of SPIE, pp. 192-203.
- *
- * Or:
- *
- * S. Klein, M. Staring, J.P.W. Pluim,
+ * [1] S. Klein, M. Staring, J.P.W. Pluim,
  * "Evaluation of Optimization Methods for Nonrigid Medical Image Registration using Mutual Information and B-Splines"
- * IEEE Transactions on Image Processing, 2007, nr. 16(12), December.
+ * IEEE Transactions on Image Processing, vol. 16 (12), December 2007.
  *
  * This class also serves as a base class for other preconditioned GradientDescent type
  * algorithms, like the AdaptiveStochasticPreconditionedGradientDescentOptimizer.
