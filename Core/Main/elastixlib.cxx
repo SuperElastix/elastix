@@ -46,9 +46,8 @@ namespace elastix
  * ******************* Constructor ***********************
  */
 
-ELASTIX::ELASTIX()
+ELASTIX::ELASTIX() : m_ResultImage(nullptr)
 {
-  m_ResultImage = nullptr;
 } // end Constructor
 
 

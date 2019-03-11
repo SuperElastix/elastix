@@ -45,9 +45,8 @@ namespace transformix
  * ******************* Constructor ***********************
  */
 
-TRANSFORMIX::TRANSFORMIX()
+TRANSFORMIX::TRANSFORMIX() : m_ResultImage(nullptr)
 {
-  m_ResultImage = nullptr;
 } // end Constructor
 
 
