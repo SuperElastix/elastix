@@ -23,6 +23,7 @@
 #include "itkFileTools.h"
 #include <fstream>
 #include <iostream>
+#include <math.h>
 
 namespace elastix
 {
@@ -251,7 +252,7 @@ ParameterObject
   ParameterFileNameVectorType parameterFileNameVector;
   for( unsigned int i = 0; i < m_ParameterMap.size(); ++i )
   {
-    parameterFileNameVector.push_back( "ParametersFile." + ParameterObject::ToString( i ) + ".txt" );
+    parameterFileNameVector.push_back( "ParametersFile." + std::to_string( i ) + ".txt" );
   }
 
   this->WriteParameterFile( this->m_ParameterMap, parameterFileNameVector );
@@ -414,7 +415,7 @@ ParameterObject
   parameterMap[ "Resampler" ]                      = ParameterValueVectorType( 1, "DefaultResampler" );
   parameterMap[ "ResampleInterpolator" ]           = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
   parameterMap[ "FinalBSplineInterpolationOrder" ] = ParameterValueVectorType( 1, "3" );
-  parameterMap[ "NumberOfResolutions" ]            = ParameterValueVectorType( 1, ToString( numberOfResolutions ) );
+  parameterMap[ "NumberOfResolutions" ]            = ParameterValueVectorType( 1, std::to_string( numberOfResolutions ) );
   parameterMap[ "WriteIterationInfo" ]             = ParameterValueVectorType( 1, "false" );
 
   // Image Sampler
@@ -492,11 +493,11 @@ ParameterObject
     ParameterValueVectorType gridSpacingSchedule = ParameterValueVectorType();
     for( double resolution = 0; resolution < numberOfResolutions; ++resolution )
     {
-      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( pow( 1.41, resolution ) ) );
+      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), std::to_string( std::pow( 1.41, resolution ) ) );
     }
 
     parameterMap[ "GridSpacingSchedule" ]             = gridSpacingSchedule;
-    parameterMap[ "FinalGridSpacingInPhysicalUnits" ] = ParameterValueVectorType( 1, ToString( finalGridSpacingInPhysicalUnits ) );
+    parameterMap[ "FinalGridSpacingInPhysicalUnits" ] = ParameterValueVectorType( 1, std::to_string( finalGridSpacingInPhysicalUnits ) );
   }
 
   return parameterMap;

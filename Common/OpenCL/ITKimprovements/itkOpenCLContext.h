@@ -469,7 +469,7 @@ private:
 
   ITK_OPENCL_DECLARE_PRIVATE( OpenCLContext )
 
-  std::auto_ptr< OpenCLContextPimpl > d_ptr;
+  std::unique_ptr< OpenCLContextPimpl > d_ptr;
   static Pointer m_Instance;
 
   /** Quick get active queue method for friend classes. */

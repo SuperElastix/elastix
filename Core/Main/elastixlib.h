@@ -89,8 +89,8 @@ public:
     std::string outputPath,
     bool performLogging,
     bool performCout,
-    ImagePointer fixedMask = 0,
-    ImagePointer movingMask = 0 );
+    ImagePointer fixedMask = nullptr,
+    ImagePointer movingMask = nullptr );
 
   int RegisterImages( ImagePointer fixedImage,
     ImagePointer movingImage,
@@ -98,9 +98,9 @@ public:
     std::string outputPath,
     bool performLogging,
     bool performCout,
-    ImagePointer fixedMask = 0,
-    ImagePointer movingMask = 0,
-    ObjectPointer transform = 0);
+    ImagePointer fixedMask = nullptr,
+    ImagePointer movingMask = nullptr,
+    ObjectPointer transform = nullptr);
 
   /** Getter for result image. */
   ImagePointer GetResultImage( void );

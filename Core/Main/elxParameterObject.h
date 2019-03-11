@@ -89,17 +89,6 @@ public:
     const unsigned int & numberOfResolutions = 4u,
     const double & finalGridSpacingInPhysicalUnits = 10.0 );
 
-  // C++11 has a to_string in the standard library, but we like to
-  // avoid introducing C++11 dependency for this single function
-  template< typename T >
-  static std::string ToString( const T & n )
-  {
-    std::ostringstream stm;
-    stm << n;
-    return stm.str();
-  }
-
-
 protected:
 
   void PrintSelf( std::ostream & os, itk::Indent indent ) const ITK_OVERRIDE;

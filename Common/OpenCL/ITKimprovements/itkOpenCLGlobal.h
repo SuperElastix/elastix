@@ -26,8 +26,8 @@ template< typename T >
 static inline T *
 OpenCLGetPtrHelper( T * ptr ) { return ptr; }
 template< typename TObjectType >
-static inline typename std::auto_ptr< TObjectType >::element_type * OpenCLGetPtrHelper(
-  const std::auto_ptr< TObjectType > &p )
+static inline typename std::unique_ptr< TObjectType >::element_type * OpenCLGetPtrHelper(
+  const std::unique_ptr< TObjectType > &p )
 {
   return p.get();
 }

@@ -164,7 +164,7 @@ TransformixFilter< TMovingImage >
   TransformixMainPointer transformix = TransformixMainType::New();
 
   // Setup transformix for warping input image if given
-  DataObjectContainerPointer inputImageContainer = 0;
+  DataObjectContainerPointer inputImageContainer = nullptr;
   if( !this->IsEmpty( itkDynamicCastInDebugMode< TMovingImage* >( this->GetInput( "InputImage" ) ) ) ) {
     inputImageContainer = DataObjectContainerType::New();
     inputImageContainer->CreateElementAt( 0 ) = this->GetInput( "InputImage" );
@@ -185,16 +185,16 @@ TransformixFilter< TMovingImage >
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
     transformParameterMapVector[ i ][ "FixedImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
+      = ParameterValueVectorType( 1, std::to_string( movingImageDimension ) );
     transformParameterMapVector[ i ][ "MovingImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
+      = ParameterValueVectorType( 1, std::to_string( movingImageDimension ) );
     transformParameterMapVector[ i ][ "ResultImagePixelType" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( PixelType< typename TMovingImage::PixelType >::ToString() ) );
+      = ParameterValueVectorType( 1, PixelType< typename TMovingImage::PixelType >::ToString() );
 
     if( i > 0 )
     {
       transformParameterMapVector[ i ][ "InitialTransformParametersFileName" ]
-        = ParameterValueVectorType( 1, ParameterObject::ToString( i - 1 ) );
+        = ParameterValueVectorType( 1, std::to_string( i - 1 ) );
     }
   }
 
@@ -216,13 +216,13 @@ TransformixFilter< TMovingImage >
 
   // Save result image
   DataObjectContainerPointer resultImageContainer = transformix->GetResultImageContainer();
-  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
+  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 && resultImageContainer->ElementAt( 0 ).IsNotNull()  )
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }
   // Optionally, save result deformation field
   DataObjectContainerPointer resultDeformationFieldContainer = transformix->GetResultDeformationFieldContainer();
-  if ( resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0 )
+  if ( resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0 && resultDeformationFieldContainer->ElementAt( 0 ).IsNotNull()  )
   {
     this->GraftOutput( "ResultDeformationField", resultDeformationFieldContainer->ElementAt( 0 ) );
   }
