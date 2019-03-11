@@ -153,7 +153,7 @@ private:
   void operator=( const Self & );    // purposely not implemented
 
   /** IsEmpty. */
-  bool IsEmpty( const InputImagePointer inputImage );
+  static bool IsEmpty( const InputImagePointer inputImage );
 
   /** Tell the compiler we want all definitions of Get/Set/Remove
    *  from ProcessObject and TransformixFilter.
