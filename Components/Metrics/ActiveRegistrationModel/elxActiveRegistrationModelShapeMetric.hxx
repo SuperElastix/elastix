@@ -247,7 +247,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
       continue;
     }
 
-    std::string fullpath = shapeDataDirectory + filename;
+    std::string fullpath = shapeDataDirectory + "/" + filename;
     StatisticalModelMeshPointer mesh = StatisticalModelMeshType::New();
     int numberOfMeshPoints = 0;
     numberOfMeshPoints = this->ReadMesh( fullpath.c_str(), mesh );
