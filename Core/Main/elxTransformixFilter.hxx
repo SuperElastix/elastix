@@ -216,13 +216,13 @@ TransformixFilter< TMovingImage >
 
   // Save result image
   DataObjectContainerPointer resultImageContainer = transformix->GetResultImageContainer();
-  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
+  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 && resultImageContainer->ElementAt( 0 ).IsNotNull()  )
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }
   // Optionally, save result deformation field
   DataObjectContainerPointer resultDeformationFieldContainer = transformix->GetResultDeformationFieldContainer();
-  if ( resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0 )
+  if ( resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0 && resultDeformationFieldContainer->ElementAt( 0 ).IsNotNull()  )
   {
     this->GraftOutput( "ResultDeformationField", resultDeformationFieldContainer->ElementAt( 0 ) );
   }
