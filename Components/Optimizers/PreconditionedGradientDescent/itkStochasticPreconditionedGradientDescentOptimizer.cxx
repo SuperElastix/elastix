@@ -54,8 +54,8 @@ StochasticPreconditionedGradientDescentOptimizer
 
 
 /**
-* ******************** AdvanceOneStep **************************
-*/
+ * ******************** AdvanceOneStep **************************
+ */
 
 void
 StochasticPreconditionedGradientDescentOptimizer
