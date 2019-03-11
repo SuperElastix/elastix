@@ -136,16 +136,16 @@ public:
   /** To support outputs of different types (i.e. ResultImage and ResultDeformationField)
    * MakeOutput from itk::ImageSource< TOutputImage > needs to be overridden.
    */
-  virtual DataObjectPointer MakeOutput( const DataObjectIdentifierType & key ) ITK_OVERRIDE;
+  virtual DataObjectPointer MakeOutput( const DataObjectIdentifierType & key ) override;
 
   /** The ResultImage and ResultDeformationField get their image properties from the TransformParameterObject. */
-  virtual void GenerateOutputInformation( void ) ITK_OVERRIDE;
+  virtual void GenerateOutputInformation( void ) override;
 
 protected:
 
   TransformixFilter( void );
 
-  virtual void GenerateData( void ) ITK_OVERRIDE;
+  virtual void GenerateData( void ) override;
 
 private:
 
