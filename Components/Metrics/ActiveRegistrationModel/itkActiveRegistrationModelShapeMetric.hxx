@@ -202,55 +202,53 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
   StatisticalModelContainerConstIterator statisticalModelIteratorEnd = this->GetStatisticalModelContainer()->End();
   while( statisticalModelIterator != statisticalModelIteratorEnd )
   {
-    MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
+    MeasureType modelValue;
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
-    const StatisticalModelMatrixType PCABasisMatrix = statisticalModelIterator->Value()->GetOrthonormalPCABasisMatrix();
-
     const StatisticalModelMeshPointer meanMesh = statisticalModelIterator->Value()->DrawMean();
-    StatisticalModelMeshPointer movingMesh = StatisticalModelMeshType::New();
-    movingMesh->GetPoints()->Reserve( meanMesh->GetNumberOfPoints() );
 
     // Warp fixed mesh
     StatisticalModelMeshConstIteratorType meanMeshIterator = meanMesh->GetPoints()->Begin();
     StatisticalModelMeshConstIteratorType meanMeshIteratorEnd = meanMesh->GetPoints()->End();
-    StatisticalModelMeshIteratorType movingMeshIterator = movingMesh->GetPoints()->Begin();
+    StatisticalModelVectorType movingShape = StatisticalModelVectorType(meanMesh->GetNumberOfPoints() * FixedPointSetDimension, 0.);
+    auto movingShapeIterator = movingShape.begin();
     while( meanMeshIterator != meanMeshIteratorEnd )
     {
-      movingMeshIterator->Value() = this->GetTransform()->TransformPoint( meanMeshIterator->Value() );
-      ++meanMeshIterator;
-      ++movingMeshIterator;
-    }
-
-    // Compute contribution to derivative for each point
-    meanMeshIterator = meanMesh->GetPoints()->Begin();
-    movingMeshIterator = movingMesh->GetPoints()->Begin();
-    StatisticalModelMeshConstIteratorType referenceMeshIterator = statisticalModelIterator->Value()->GetRepresenter()->GetReference()->GetPoints()->Begin();
-
-    // TODO: Use Orthonormal PCA basis matrix container
-    while( meanMeshIterator != meanMeshIteratorEnd )
-    {
-      const unsigned int pointId = statisticalModelIterator->Value()->GetRepresenter()->GetPointIdForPoint( referenceMeshIterator->Value() );
-      const unsigned int internalIdx = pointId * StatisticalModelMeshDimension;
-      const StatisticalModelMatrixType PCABasisPoint = PCABasisMatrix.get_n_rows( internalIdx, StatisticalModelMeshDimension );
-
-      const StatisticalModelVectorType movingPoint = movingMeshIterator->Value().GetVnlVector() - meanMeshIterator->Value().GetVnlVector();
-      const StatisticalModelVectorType tmp = movingPoint * ( 1.0 - PCABasisPoint * PCABasisPoint.transpose() );
-
-      const MeasureType modelValue = dot_product(tmp, movingPoint);
-
-      // Loop over Jacobian
-      this->GetTransform()->GetJacobian( meanMeshIterator->Value(), Jacobian, nzji );
-      for( unsigned int i = 0; i < Jacobian.size(); ++i )
-      {
-        const unsigned int mu = nzji[ i ];
-        modelDerivative[ mu ] += dot_product( tmp, Jacobian.get_column( i ) );
+      // We subtract the mean and convert to vnl_vector here (Surely there's a better way to initialize a vnl_vector from itk::PointSet?)
+      const auto Point = this->GetTransform()->TransformPoint( meanMeshIterator->Value() ) - meanMeshIterator->Value();
+      for(unsigned int d = 0; d < FixedPointSetDimension; d++) {
+        *movingShapeIterator = Point[d];
+        ++movingShapeIterator;
       }
 
       ++meanMeshIterator;
-      ++movingMeshIterator;
-      ++referenceMeshIterator;
+    }
+
+    // TODO: Use a container so we dont have to load it every time
+    const auto PCABasisMatrix = statisticalModelIterator->Value()->GetOrthonormalPCABasisMatrix();
+
+    // std::cout << "GetPCABasisMatrix\n" << a << std::endl;
+    StatisticalModelMatrixType W(PCABasisMatrix.rows(), PCABasisMatrix.rows());
+    assert(PCABasisMatrix.rows() == meanMesh->GetNumberOfPoints() * FixedPointSetDimension);
+    W.set_identity();
+    W -= PCABasisMatrix * PCABasisMatrix.transpose();
+
+    StatisticalModelVectorType tmp = movingShape * W;
+    modelValue = dot_product(tmp, movingShape);
+
+    meanMeshIterator = meanMesh->GetPoints()->Begin();
+    unsigned int n = 0;
+    while( meanMeshIterator != meanMeshIteratorEnd )
+    {
+      this->GetTransform()->GetJacobian( meanMeshIterator->Value(), Jacobian, nzji );
+      for(unsigned int i = 0; i < nzji.size(); i++) {
+        const auto& mu = nzji[i];
+        modelDerivative[mu] += dot_product(tmp.extract(FixedPointSetDimension, n * FixedPointSetDimension), Jacobian.get_column(i));
+      }
+
+      meanMeshIterator++;
+      n++;
     }
 
     if( std::isnan( modelValue ) )
@@ -260,8 +258,8 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 
     if( meanMesh->GetNumberOfPoints() > 0 )
     {
-      value += modelValue * modelValue / meanMesh->GetNumberOfPoints();
-      derivative += 2.0 * modelDerivative / meanMesh->GetNumberOfPoints();
+      value += modelValue / (meanMesh->GetNumberOfPoints());
+      derivative += 2.0 * modelDerivative / (meanMesh->GetNumberOfPoints());
     }
 
     ++statisticalModelIterator;

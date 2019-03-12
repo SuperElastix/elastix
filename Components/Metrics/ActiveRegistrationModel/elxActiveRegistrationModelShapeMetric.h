@@ -191,8 +191,8 @@ public:
   itkSetMacro( TotalVariance, StatisticalModelParameterVectorType );
   itkGetMacro( TotalVariance, StatisticalModelParameterVectorType );
   
-  typename DataManagerType::Pointer LoadMeshesFromDirectory( std::string shapeDataDirectory,
-                                                             std::string fixedPointSetFilename );
+  typename DataManagerType::Pointer ReadMeshesFromDirectory(std::string shapeDataDirectory,
+                                                            std::string fixedPointSetFilename);
   
   unsigned long ReadMesh( const std::string & meshFilename, StatisticalModelMeshPointer & mesh );
 

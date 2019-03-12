@@ -156,7 +156,8 @@ ActiveRegistrationModelShapeMetric< TElastix >
       DataManagerPointer dataManager;
       try 
       {
-        dataManager = this->LoadMeshesFromDirectory( this->m_ShapeDirectories[ modelNumber ], this->m_ReferenceFilenames[ modelNumber ] );
+        dataManager = this->ReadMeshesFromDirectory(this->m_ShapeDirectories[modelNumber],
+                                                    this->m_ReferenceFilenames[modelNumber]);
       }
       catch( statismo::StatisticalModelException &e )
       {
@@ -215,9 +216,9 @@ ActiveRegistrationModelShapeMetric< TElastix >
 template< class TElastix >
 typename ActiveRegistrationModelShapeMetric< TElastix >::DataManagerType::Pointer
 ActiveRegistrationModelShapeMetric< TElastix >
-::LoadMeshesFromDirectory(
-  std::string shapeDataDirectory, 
-  std::string referenceFilename )
+::ReadMeshesFromDirectory(
+        std::string shapeDataDirectory,
+        std::string referenceFilename)
 {
   
   itk::Directory::Pointer directory = itk::Directory::New();
@@ -228,7 +229,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
   
   // Read reference shape
   StatisticalModelMeshPointer reference = StatisticalModelMeshType::New();
-  if( !ReadMesh( referenceFilename, reference ) )
+  if( this->ReadMesh( referenceFilename, reference ) == 0 )
   {
     itkExceptionMacro( "Failed to read reference file " << referenceFilename << ".");
   }
@@ -549,7 +550,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
   {
     for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ )
     {
-
+      // TODO: Do loop and lets see model
       StatisticalModelVectorType variance = this->GetStatisticalModelContainer()->GetElement( i )->GetPCAVarianceVector();
       MeshFileWriterPointer imageWriter = MeshFileWriterType::New();
 

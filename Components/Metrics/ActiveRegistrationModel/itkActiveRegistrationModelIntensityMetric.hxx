@@ -166,6 +166,9 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
   value = NumericTraits< MeasureType >::ZeroValue();
   derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
+  StatisticalModelMatrixType I(FixedImageDimension, FixedImageDimension);
+  I.set_identity();
+
   // Make sure transform parameters are up to date
   this->SetTransformParameters( parameters );
 
@@ -206,7 +209,7 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
       // I-VV^T
       const StatisticalModelVectorType PCABasis = this->GetStatisticalModelOrthonormalPCABasisMatrixContainer()->ElementAt( this->GetLevel() ).get_row( pointId );
       // const double intensityModelReconstructionFactor = movingImageValue * ( 1.0 - dot_product( PCABasis, PCABasis ) );
-      const double intensityModelReconstructionFactor = (movingImageValue - meanImageValue) * ( 1.0 - dot_product( PCABasis, PCABasis ) );
+      const double intensityModelReconstructionFactor = (movingImageValue - meanImageValue) * ( I - dot_product( PCABasis, PCABasis ) );
 
       // (dM/dx)(dT/du)
       this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct( fixedPoint, movingImageDerivative, imageJacobian, nzji );
