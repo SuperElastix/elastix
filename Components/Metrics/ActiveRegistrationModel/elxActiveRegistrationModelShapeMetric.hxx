@@ -165,13 +165,13 @@ ActiveRegistrationModelShapeMetric< TElastix >
       }
       
       // Build model
+      StatisticalModelPointer statisticalModel;
       try
       {
         ModelBuilderPointer pcaModelBuilder = ModelBuilderType::New();
-        StatisticalModelPointer statisticalModel = pcaModelBuilder->BuildNewModel( dataManager->GetData(), this->GetNoiseVariance()[ modelNumber ] );
-        statisticalModelContainer->SetElement( this->m_LoadShapeModelFileNames.size()+modelNumber, dynamic_cast< StatisticalModelType * >( statisticalModel.GetPointer() ) );
+        statisticalModel = pcaModelBuilder->BuildNewModel( dataManager->GetData(), this->GetNoiseVariance()[ modelNumber ] );
         elxout << "  Built statistical shape model. Number of modes: "
-               <<  statisticalModelContainer->GetElement( this->m_LoadShapeModelFileNames.size()+modelNumber )->GetNumberOfPrincipalComponents()
+               <<  statisticalModel->GetNumberOfPrincipalComponents()
                << "." << std::endl;
         
         // Pick out first principal components
@@ -179,22 +179,22 @@ ActiveRegistrationModelShapeMetric< TElastix >
         {
           ReducedVarianceModelBuilderPointer reducedVarianceModelBuilder = ReducedVarianceModelBuilderType::New();
           statisticalModel = reducedVarianceModelBuilder->BuildNewModelWithVariance( statisticalModel, this->GetTotalVariance()[ modelNumber ] );
-          statisticalModelContainer->SetElement( this->m_LoadShapeModelFileNames.size()+modelNumber, dynamic_cast< StatisticalModelType * >( statisticalModel.GetPointer() ) );
           elxout << "  Kept " << this->GetTotalVariance()[ modelNumber ] * 100.0
-                 << "% variance. Number of modes retained: " << statisticalModelContainer->GetElement( this->m_LoadShapeModelFileNames.size()+modelNumber )->GetNumberOfPrincipalComponents()
+                 << "% variance. Number of modes retained: " << statisticalModel->GetNumberOfPrincipalComponents()
                  << "." << std::endl;
-
-          if( this->m_SaveShapeModelFileNames.size() > 0 )
-          {
-            elxout << "Saving shape model " << modelNumber << " to " << this->m_SaveShapeModelFileNames[ modelNumber ] << ". " << std::endl;
-            itk::StatismoIO<StatisticalModelMeshType>::SaveStatisticalModel(statisticalModel, this->m_SaveShapeModelFileNames[ modelNumber ]);
-          }
-
         }
       }
       catch( statismo::StatisticalModelException &e )
       {
         itkExceptionMacro( << "Error building statistical shape model: " << e.what() );
+      }
+
+      statisticalModelContainer->SetElement( this->m_LoadShapeModelFileNames.size()+modelNumber, dynamic_cast< StatisticalModelType* >( statisticalModel.GetPointer() ) );
+
+      if( this->m_SaveShapeModelFileNames.size() > 0 )
+      {
+        elxout << "Saving shape model " << modelNumber << " to " << this->m_SaveShapeModelFileNames[ modelNumber ] << ". " << std::endl;
+        itk::StatismoIO<StatisticalModelMeshType>::SaveStatisticalModel(statisticalModel, this->m_SaveShapeModelFileNames[ modelNumber ]);
       }
     }
   }

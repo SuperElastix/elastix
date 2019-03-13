@@ -68,6 +68,7 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 
 
 
+
 /**
  * ******************* GetValue *******************
  */
@@ -104,7 +105,7 @@ template< class TFixedPointSet, class TMovingPointSet >
 void
 ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::GetModelValue( StatisticalModelConstPointer statisticalModel,
-		 MeasureType & value,
+                 MeasureType & value,
                  const TransformParametersType & parameters ) const
 {
   MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
@@ -139,10 +140,6 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
   {
     // f_i(X)
     const StatisticalModelPointType reconstructedPoint = statisticalModel->DrawSampleAtPoint( modelCoefficients, referenceMeshIterator->Value(), false );
-
-
-    const StatisticalModelVectorType movingMeshVector = movingMeshIterator->Value().GetVnlVector();
-    const StatisticalModelVectorType reconpointVector = reconstructedPoint.GetVnlVector();
     const StatisticalModelVectorType reconstructionError = movingMeshIterator->Value().GetVnlVector() - reconstructedPoint.GetVnlVector();
 
     // Value
@@ -206,47 +203,28 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
-    const auto referenceMesh = statisticalModelIterator->Value()->GetRepresenter()->GetReference();
-
-    // Warp fixed mesh
-    StatisticalModelMeshConstIteratorType referenceMeshIterator = referenceMesh->GetPoints()->Begin();
-    StatisticalModelMeshConstIteratorType referenceMeshIteratorEnd = referenceMesh->GetPoints()->End();
-    StatisticalModelVectorType movingShape = StatisticalModelVectorType(referenceMesh->GetNumberOfPoints() * FixedPointSetDimension, 0.);
-    auto movingShapeIterator = movingShape.begin();
-    while( referenceMeshIterator != referenceMeshIteratorEnd )
+    const auto meanShape = statisticalModelIterator->Value()->GetMeanVector();
+    StatisticalModelVectorType movingShape = StatisticalModelVectorType( meanShape.size(), 0. );
+    for( unsigned int i = 0; i < meanShape.size(); i += FixedPointSetDimension )
     {
-      // We subtract the reference and convert to vnl_vector here (Surely there's a better way to initialize a vnl_vector from an itk::Mesh?)
-      const auto Point = this->GetTransform()->TransformPoint( referenceMeshIterator->Value() ) - referenceMeshIterator->Value();
-      for(unsigned int d = 0; d < FixedPointSetDimension; d++) {
-        *movingShapeIterator = Point[d];
-        ++movingShapeIterator;
-      }
-
-      ++referenceMeshIterator;
+      const auto transformedPoint = this->GetTransform()->TransformPoint( meanShape.data_block() + i );
+      movingShape.update( transformedPoint.GetVnlVector(), i );
     }
 
-    // TODO: Use a container so we dont have to load it at every iteration
-    const auto PCABasisMatrix = statisticalModelIterator->Value()->GetOrthonormalPCABasisMatrix();
-    StatisticalModelMatrixType W(PCABasisMatrix.rows(), PCABasisMatrix.rows());
-    assert(PCABasisMatrix.rows() == referenceMesh->GetNumberOfPoints() * FixedPointSetDimension);
-    W.set_identity();
-    W -= PCABasisMatrix * PCABasisMatrix.transpose();
+    movingShape -= meanShape;
 
-    StatisticalModelVectorType tmp = movingShape * W;
+    // tmp = (T(S) - mu) * (I - VV^T)
+    const StatisticalModelMatrixType PCABasisMatrix = statisticalModelIterator->Value()->GetOrthonormalPCABasisMatrix();
+    const StatisticalModelVectorType tmp = movingShape - this->Reconstruct(movingShape, PCABasisMatrix);
     modelValue = dot_product(tmp, movingShape);
 
-    referenceMeshIterator = referenceMesh->GetPoints()->Begin();
-    unsigned int n = 0;
-    while( referenceMeshIterator != referenceMeshIteratorEnd )
+    for(unsigned int i = 0; i < meanShape.size(); i += FixedPointSetDimension)
     {
-      this->GetTransform()->GetJacobian( referenceMeshIterator->Value(), Jacobian, nzji );
-      for(unsigned int i = 0; i < nzji.size(); i++) {
-        const auto& mu = nzji[i];
-        modelDerivative[mu] += dot_product(tmp.extract(FixedPointSetDimension, n * FixedPointSetDimension), Jacobian.get_column(i));
+      this->GetTransform()->GetJacobian( meanShape.data_block() + i, Jacobian, nzji );
+      for( unsigned int j = 0; j < nzji.size(); j++ ) {
+        const auto& mu = nzji[ j ];
+        modelDerivative[ mu ] += dot_product(tmp.extract( FixedPointSetDimension, i ), Jacobian.get_column( j ));
       }
-
-      referenceMeshIterator++;
-      n++;
     }
 
     if( std::isnan( modelValue ) )
@@ -254,10 +232,10 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
         itkExceptionMacro( "Model value is NaN.")
     }
 
-    if( referenceMesh->GetNumberOfPoints() > 0 )
+    if( FixedPointSetDimension * meanShape.size() > 0 )
     {
-      value += modelValue / referenceMesh->GetNumberOfPoints();
-      derivative += 2.0 * modelDerivative / referenceMesh->GetNumberOfPoints();
+      value += modelValue * FixedPointSetDimension / meanShape.size();
+      derivative += 2.0 * modelDerivative * FixedPointSetDimension / meanShape.size();
     }
 
     ++statisticalModelIterator;
@@ -266,13 +244,26 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
   value /= this->GetStatisticalModelContainer()->Size();
   derivative /= this->GetStatisticalModelContainer()->Size();
 
-  const bool useFiniteDifferenceDerivative = false;
+  const bool useFiniteDifferenceDerivative = true;
   if( useFiniteDifferenceDerivative )
   {
     elxout << "Analytical: " << value << ", " << derivative << std::endl;
     this->GetValueAndFiniteDifferenceDerivative( parameters, value, derivative );
   }
 }
+
+/**
+ * ******************* Reconstruct *******************
+ */
+
+template< class TFixedPointSet, class TMovingPointSet >
+const typename ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >::StatisticalModelVectorType
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
+::Reconstruct(const StatisticalModelVectorType& movingShape, const StatisticalModelMatrixType& basisMatrix) const
+{
+  const StatisticalModelVectorType tmp = movingShape * basisMatrix;
+  return tmp * basisMatrix.transpose();
+};
 
 /**
  * ******************* GetValueAndFiniteDifferenceDerivative *******************

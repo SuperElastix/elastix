@@ -127,12 +127,9 @@ public:
 
   // ActiveRegistrationModel typedefs
   typedef double                                                                  StatisticalModelCoordRepType;
-  typedef vnl_vector< float >                                                     StatisticalModelFloatVectorType;
   typedef vnl_vector< double >                                                    StatisticalModelVectorType;
-  typedef vnl_vector< double >                                                    StatisticalModelDoublePrecisionVectorType;
   typedef vnl_matrix< double  >                                                   StatisticalModelMatrixType;
-  typedef double                                                                  StatisticalModelMeasureType;
-  typedef vnl_vector< double >                                                    StatisticalModelDerivativeType;
+  typedef vnl_diag_matrix< double >                                               StatisticalModelDiagonalMatrixType;
 
   itkStaticConstMacro( StatisticalModelMeshDimension, unsigned int, Superclass::FixedPointSetDimension );
 
@@ -238,6 +235,10 @@ private:
 
   ActiveRegistrationModelShapeMetric( const Self & );    // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
+
+  /**  Memory efficient computation of movingShape * VV^T */
+  const StatisticalModelVectorType Reconstruct(const StatisticalModelVectorType& movingShape,
+                                               const StatisticalModelMatrixType& basisMatrix) const;
 
   StatisticalModelPathVectorType m_ShapeModelFilenames;
   StatisticalModelPathVectorType m_ShapeDirectories;
