@@ -11,8 +11,8 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-#ifndef __itkActiveRegistrationModelPointDistributionShapeMetric_h__
-#define __itkActiveRegistrationModelPointDistributionShapeMetric_h__
+#ifndef __itkActiveRegistrationModelShapeMetric_h__
+#define __itkActiveRegistrationModelShapeMetric_h__
 
 #include "itkSingleValuedPointSetToPointSetMetric.h"
 #include "itkPoint.h"
@@ -126,7 +126,7 @@ public:
   typedef Array< DerivativeValueType > MeshPointsDerivativeValueType;
 
   // ActiveRegistrationModel typedefs
-  typedef double                                                                  StatisticalModelCoordRepType;
+  typedef double                                                                  StatisticalModelScalarType;
   typedef vnl_vector< double >                                                    StatisticalModelVectorType;
   typedef vnl_matrix< double  >                                                   StatisticalModelMatrixType;
   typedef vnl_diag_matrix< double >                                               StatisticalModelDiagonalMatrixType;
@@ -134,14 +134,14 @@ public:
   itkStaticConstMacro( StatisticalModelMeshDimension, unsigned int, Superclass::FixedPointSetDimension );
 
   typedef DefaultStaticMeshTraits<
-    StatisticalModelCoordRepType,
+    StatisticalModelScalarType,
     FixedPointSetDimension,
     FixedPointSetDimension,
-    StatisticalModelCoordRepType,
-    StatisticalModelCoordRepType >                                                StatisticalModelMeshTraitsType;
+    StatisticalModelScalarType,
+    StatisticalModelScalarType >                                                  StatisticalModelMeshTraitsType;
 
   typedef Mesh<
-    StatisticalModelCoordRepType,
+    StatisticalModelScalarType,
     StatisticalModelMeshDimension,
     StatisticalModelMeshTraitsType >                                              StatisticalModelMeshType;
 
@@ -158,7 +158,7 @@ public:
   typedef std::vector< std::string >                                              StatisticalModelPathVectorType;
 
   typedef StandardMeshRepresenter<
-    StatisticalModelCoordRepType,
+    StatisticalModelScalarType,
     StatisticalModelMeshDimension >                                               RepresenterType;
   typedef typename RepresenterType::Pointer                                       RepresenterPointer;
 
@@ -168,8 +168,6 @@ public:
   typedef StatisticalModel< StatisticalModelMeshType >                            StatisticalModelType;
   typedef typename StatisticalModelType::Pointer                                  StatisticalModelPointer;
   typedef typename StatisticalModelType::ConstPointer                             StatisticalModelConstPointer;
-  typedef typename StatisticalModelType::PointValuePairType                       StatisticalModelPointValuePairType;
-  typedef typename StatisticalModelType::PointValueListType                       StatisticalModelPointValueListType;
 
   typedef PCAModelBuilder< StatisticalModelMeshType >                             ModelBuilderType;
   typedef typename ModelBuilderType::Pointer                                      ModelBuilderPointer;
@@ -188,22 +186,31 @@ public:
   typedef typename StatisticalModelMatrixContainerType::ConstPointer              StatisticalModelMatrixContainerConstPointer;
   typedef typename StatisticalModelMatrixContainerType::ConstIterator             StatisticalModelMatrixContainerConstIterator;
 
-  itkSetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
-  itkGetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
+  typedef VectorContainer< StatisticalModelIdType, StatisticalModelVectorType >   StatisticalModelVectorContainerType;
+  typedef typename StatisticalModelVectorContainerType::Pointer                   StatisticalModelVectorContainerPointer;
+  typedef typename StatisticalModelVectorContainerType::ConstPointer              StatisticalModelVectorContainerConstPointer;
+  typedef typename StatisticalModelVectorContainerType::ConstIterator             StatisticalModelVectorContainerConstIterator;
+
+  typedef VectorContainer< StatisticalModelIdType, StatisticalModelScalarType >   StatisticalModelScalarContainerType;
+  typedef typename StatisticalModelScalarContainerType::Pointer                   StatisticalModelScalarContainerPointer;
+  typedef typename StatisticalModelScalarContainerType::ConstPointer              StatisticalModelScalarContainerConstPointer;
+  typedef typename StatisticalModelScalarContainerType::ConstIterator             StatisticalModelScalarContainerConstIterator;
 
   void GetValueAndFiniteDifferenceDerivative( const TransformParametersType & parameters,
                                               MeasureType & value,
                                               DerivativeType & derivative ) const;
 
-  void GetModelValue( StatisticalModelConstPointer statisticalModel,
-                             MeasureType & modelValue,
-                             const TransformParametersType & parameters ) const;
+  void GetModelValue( const StatisticalModelVectorType& meanVector,
+                      const StatisticalModelMatrixType& basisMatrix,
+                      const StatisticalModelScalarType& noiseVariance,
+                      MeasureType & modelValue,
+                      const TransformParametersType& parameters ) const;
 
-  void GetModelFiniteDifferenceDerivative( StatisticalModelConstPointer statisticalModel,
-                                                                     DerivativeType & modelDerivative,
-                                                                     const TransformParametersType & parameters ) const;
-
-  void TransformMesh( StatisticalModelMeshPointer fixedMesh, StatisticalModelMeshPointer movingMesh ) const;
+  void GetModelFiniteDifferenceDerivative( const StatisticalModelVectorType& meanVector,
+                                           const StatisticalModelMatrixType& basisMatrix,
+                                           const StatisticalModelScalarType& noiseVariance,
+                                           DerivativeType& modelDerivative,
+                                           const TransformParametersType & parameters ) const;
 
   /** Initialize the Metric by making sure that all the components are
   *  present and plugged together correctly.
@@ -221,6 +228,21 @@ public:
   void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & Value, DerivativeType & Derivative ) const;
 
+  itkSetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
+  itkGetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
+
+  itkSetConstObjectMacro( BasisMatrixContainer, StatisticalModelMatrixContainerType );
+  itkGetConstObjectMacro( BasisMatrixContainer, StatisticalModelMatrixContainerType );
+
+  itkSetConstObjectMacro( VarianceContainer, StatisticalModelVectorContainerType );
+  itkGetConstObjectMacro( VarianceContainer, StatisticalModelVectorContainerType );
+
+  itkSetConstObjectMacro( NoiseVarianceContainer, StatisticalModelScalarContainerType );
+  itkGetConstObjectMacro( NoiseVarianceContainer, StatisticalModelScalarContainerType );
+
+  itkSetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
+  itkGetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
+
 protected:
 
   ActiveRegistrationModelShapeMetric();
@@ -229,22 +251,21 @@ protected:
   /** PrintSelf. */
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
-  mutable StatisticalModelContainerConstPointer m_StatisticalModelContainer;
-
 private:
 
   ActiveRegistrationModelShapeMetric( const Self & );    // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
 
   /**  Memory efficient computation of movingShape * VV^T */
-  const StatisticalModelVectorType Reconstruct(const StatisticalModelVectorType& movingShape,
-                                               const StatisticalModelMatrixType& basisMatrix) const;
+  const StatisticalModelVectorType Reconstruct( const StatisticalModelVectorType& movingVector,
+                                                const StatisticalModelMatrixType& basisMatrix,
+                                                const StatisticalModelScalarType& noiseVariance ) const;
 
-  StatisticalModelPathVectorType m_ShapeModelFilenames;
-  StatisticalModelPathVectorType m_ShapeDirectories;
-  StatisticalModelPathVectorType m_ReferenceFilenames;
-  StatisticalModelParameterVectorType m_NoiseVariance;
-  StatisticalModelParameterVectorType m_TotalVariance;
+  StatisticalModelVectorContainerConstPointer m_MeanVectorContainer;
+  StatisticalModelMatrixContainerConstPointer m_BasisMatrixContainer;
+  StatisticalModelVectorContainerConstPointer m_VarianceContainer;
+  StatisticalModelScalarContainerConstPointer m_NoiseVarianceContainer;
+  StatisticalModelScalarContainerConstPointer m_TotalVarianceContainer;
 
 }; // end class PointSetPenalty
 

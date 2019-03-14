@@ -11,8 +11,8 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-#ifndef __elxActiveRegistrationModelPointDistributionShapeMetric_H__
-#define __elxActiveRegistrationModelPointDistributionShapeMetric_H__
+#ifndef __elxActiveRegistrationModelShapeMetric_H__
+#define __elxActiveRegistrationModelShapeMetric_H__
 
 #include "elxIncludes.h"
 #include "itkActiveRegistrationModelShapeMetric.h"
@@ -148,53 +148,57 @@ public:
   typedef FixedMeshType  MeshType;
   typedef FixedImageType ImageType;
 
-  typedef vnl_vector< double >                                           StatisticalModelParameterVectorType;
-  typedef vector<std::string>                                            StatisticalModelPathVectorType;
-  typedef typename Superclass1::StatisticalModelVectorType               StatisticalModelVectorType;
+  typedef vnl_vector< double >                                                StatisticalModelParameterVectorType;
+  typedef vector< std::string >                                               StatisticalModelPathVectorType;
+  typedef typename Superclass1::StatisticalModelVectorType                    StatisticalModelVectorType;
   
   /** ActiveRegistrationModel types */
-  typedef typename Superclass1::StatisticalModelMeshType                 StatisticalModelMeshType;
-  typedef typename Superclass1::StatisticalModelMeshPointer              StatisticalModelMeshPointer;
+  typedef typename Superclass1::StatisticalModelMeshType                      StatisticalModelMeshType;
+  typedef typename Superclass1::StatisticalModelMeshPointer                   StatisticalModelMeshPointer;
   
-  typedef typename Superclass1::MeshReaderType                           MeshReaderType;
-  typedef typename Superclass1::MeshReaderPointer                        MeshReaderPointer;
+  typedef typename Superclass1::MeshReaderType                                MeshReaderType;
+  typedef typename Superclass1::MeshReaderPointer                             MeshReaderPointer;
   
-  typedef typename Superclass1::RepresenterType                          RepresenterType;
-  typedef typename Superclass1::RepresenterPointer                       RepresenterPointer;
+  typedef typename Superclass1::RepresenterType                               RepresenterType;
+  typedef typename Superclass1::RepresenterPointer                            RepresenterPointer;
 
-  typedef typename Superclass1::ModelBuilderType                         ModelBuilderType;
-  typedef typename Superclass1::ModelBuilderPointer                      ModelBuilderPointer;
+  typedef typename Superclass1::ModelBuilderType                              ModelBuilderType;
+  typedef typename Superclass1::ModelBuilderPointer                           ModelBuilderPointer;
   
-  typedef typename Superclass1::ReducedVarianceModelBuilderType          ReducedVarianceModelBuilderType;
-  typedef typename Superclass1::ReducedVarianceModelBuilderPointer       ReducedVarianceModelBuilderPointer;
-  
-  typedef typename Superclass1::StatisticalModelIdType                   StatisticalModelIdType;
-  typedef typename Superclass1::StatisticalModelType                     StatisticalModelType;
-  typedef typename Superclass1::StatisticalModelPointer                  StatisticalModelPointer;
-  typedef typename Superclass1::StatisticalModelContainerType            StatisticalModelContainerType;
-  typedef typename Superclass1::StatisticalModelContainerPointer         StatisticalModelContainerPointer;
+  typedef typename Superclass1::ReducedVarianceModelBuilderType               ReducedVarianceModelBuilderType;
+  typedef typename Superclass1::ReducedVarianceModelBuilderPointer            ReducedVarianceModelBuilderPointer;
 
-  typedef typename Superclass1::StatisticalModelMatrixContainerType      StatisticalModelMatrixContainerType;
+  typedef typename Superclass1::StatisticalModelIdType                        StatisticalModelIdType;
+  typedef typename Superclass1::StatisticalModelType                          StatisticalModelType;
+  typedef typename Superclass1::StatisticalModelPointer                       StatisticalModelPointer;
+  typedef typename Superclass1::StatisticalModelContainerType                 StatisticalModelContainerType;
+  typedef typename Superclass1::StatisticalModelContainerPointer              StatisticalModelContainerPointer;
+
+  typedef typename Superclass1::StatisticalModelMatrixContainerType           StatisticalModelMatrixContainerType;
   typedef typename Superclass1::StatisticalModelMatrixContainerPointer        StatisticalModelMatrixContainerPointer;
   typedef typename Superclass1::StatisticalModelMatrixContainerConstPointer   StatisticalModelMatrixContainerConstPointer;
   typedef typename Superclass1::StatisticalModelMatrixContainerConstIterator  StatisticalModelMatrixContainerConstIterator;
+
+  typedef typename Superclass1::StatisticalModelVectorContainerType           StatisticalModelVectorContainerType;
+  typedef typename Superclass1::StatisticalModelVectorContainerPointer        StatisticalModelVectorContainerPointer;
+  typedef typename Superclass1::StatisticalModelVectorContainerConstPointer   StatisticalModelVectorContainerConstPointer;
+  typedef typename Superclass1::StatisticalModelVectorContainerConstIterator  StatisticalModelVectorContainerConstIterator;
+
+  typedef typename Superclass1::StatisticalModelScalarContainerType           StatisticalModelScalarContainerType;
+  typedef typename Superclass1::StatisticalModelScalarContainerPointer        StatisticalModelScalarContainerPointer;
+  typedef typename Superclass1::StatisticalModelScalarContainerConstPointer   StatisticalModelScalarContainerConstPointer;
+  typedef typename Superclass1::StatisticalModelScalarContainerConstIterator  StatisticalModelScalarContainerConstIterator;
   
-  typedef typename Superclass1::DataManagerType                          DataManagerType;
-  typedef typename Superclass1::DataManagerPointer                       DataManagerPointer;
+  typedef typename Superclass1::DataManagerType                               DataManagerType;
+  typedef typename Superclass1::DataManagerPointer                            DataManagerPointer;
   
-  itkSetMacro( MetricNumber, std::string );
-  itkGetMacro( MetricNumber, std::string );
-  
-  itkSetMacro( NoiseVariance, StatisticalModelParameterVectorType );
-  itkGetMacro( NoiseVariance, StatisticalModelParameterVectorType );
-   
-  itkSetMacro( TotalVariance, StatisticalModelParameterVectorType );
-  itkGetMacro( TotalVariance, StatisticalModelParameterVectorType );
+  itkSetMacro( MetricNumber, unsigned long );
+  itkGetMacro( MetricNumber, unsigned long );
   
   typename DataManagerType::Pointer ReadMeshesFromDirectory(std::string shapeDataDirectory,
                                                             std::string fixedPointSetFilename);
   
-  unsigned long ReadMesh( const std::string & meshFilename, StatisticalModelMeshPointer & mesh );
+  unsigned long ReadMesh( const std::string & meshFilename, StatisticalModelMeshPointer& mesh );
 
   typedef itk::MeshFileWriter< StatisticalModelMeshType >  MeshFileWriterType;
   typedef typename MeshFileWriterType::Pointer             MeshFileWriterPointer;
@@ -202,9 +206,9 @@ public:
   
   StatisticalModelPathVectorType ReadPath( std::string parameter );
   
-  StatisticalModelParameterVectorType ReadNoiseVariance( std::string parameter );
+  StatisticalModelParameterVectorType ReadNoiseVariance();
   
-  StatisticalModelParameterVectorType ReadTotalVariance( std::string parameter );
+  StatisticalModelParameterVectorType ReadTotalVariance();
 
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.
@@ -237,17 +241,13 @@ private:
   ActiveRegistrationModelShapeMetric(const Self & );  // purposely not implemented
   /** The private copy constructor. */
   void operator=( const Self & );        // purposely not implemented
-
-  unsigned int m_NumberOfMeshes;
   
-  std::string m_MetricNumber;
+  unsigned long m_MetricNumber;
 
   StatisticalModelPathVectorType m_LoadShapeModelFileNames;
   StatisticalModelPathVectorType m_SaveShapeModelFileNames;
   StatisticalModelPathVectorType m_ShapeDirectories;
   StatisticalModelPathVectorType m_ReferenceFilenames;
-  StatisticalModelParameterVectorType m_NoiseVariance;
-  StatisticalModelParameterVectorType m_TotalVariance;
   
 }; // end class ActiveRegistrationModel
 
@@ -257,5 +257,5 @@ private:
 #include "elxActiveRegistrationModelShapeMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxActiveRegistrationModelShapeMetric_H__
+#endif // end #ifndef __elxActiveRegistrationModelShapeMetric_h__
 

@@ -11,11 +11,11 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-#ifndef __itkActiveRegistrationModelPointDistributionShapeMetric_hxx__
-#define __itkActiveRegistrationModelPointDistributionShapeMetric_hxx__
+#ifndef __itkActiveRegistrationModelShapeMetric_hxx__
+#define __itkActiveRegistrationModelShapeMetric_hxx__
 
 #include "itkActiveRegistrationModelShapeMetric.h"
-#include "math.h"
+#include "vnl_sample.h"
 
 namespace itk
 {
@@ -54,14 +54,24 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
     itkExceptionMacro( << "Transform is not present" );
   }
 
-  if( !this->GetStatisticalModelContainer()  )
+  if( this->GetMeanVectorContainer()->Size() == 0  )
   {
-    itkExceptionMacro( << "StatisticalModelContainer has not been assigned." );
+    itkExceptionMacro( << "MeanVectorContainer is empty." );
   }
 
-  if( !this->GetStatisticalModelContainer()->Size() )
+  if( this->GetBasisMatrixContainer()->Size() == 0  )
   {
-    itkExceptionMacro( << "StatisticalModelContainer is empty." );
+    itkExceptionMacro( << "BasisMatrixContainer is empty." );
+  }
+
+  if( this->GetVarianceContainer()->Size() == 0  )
+  {
+    itkExceptionMacro( << "VarianceContainer is empty." );
+  }
+
+  if( this->GetNoiseVarianceContainer()->Size() == 0  )
+  {
+    itkExceptionMacro( << "NoiseVarianceContainer is empty." );
   }
 } // end Initialize()
 
@@ -76,21 +86,22 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 template< class TFixedPointSet, class TMovingPointSet >
 typename ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >::MeasureType
 ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
-::GetValue( const TransformParametersType & parameters ) const
+::GetValue( const TransformParametersType& parameters ) const
 {
   MeasureType value = NumericTraits< MeasureType >::Zero;
 
   // Loop over models
-  StatisticalModelContainerConstIterator statisticalModelIterator = this->GetStatisticalModelContainer()->Begin();
-  StatisticalModelContainerConstIterator statisticalModelIteratorEnd = this->GetStatisticalModelContainer()->End();
-  while( statisticalModelIterator != statisticalModelIteratorEnd )
+  for(std::tuple< StatisticalModelVectorContainerConstIterator,
+                  StatisticalModelMatrixContainerConstIterator,
+                  StatisticalModelScalarContainerConstIterator > it = std::make_tuple( this->GetMeanVectorContainer()->Begin(),
+                                                                                       this->GetBasisMatrixContainer()->Begin(),
+                                                                                       this->GetNoiseVarianceContainer()->Begin() );
+      std::get<0>(it) != this->GetMeanVectorContainer()->End(); ++std::get<0>(it), ++std::get<1>(it), ++std::get<2>(it))
   {
-    // GetValue
-    this->GetModelValue( statisticalModelIterator->Value(), value, parameters );
-    ++statisticalModelIterator;
+    this->GetModelValue( std::get<0>(it)->Value(), std::get<1>(it)->Value(), std::get<2>(it)->Value(), value, parameters );
   }
 
-  value /= this->GetStatisticalModelContainer()->Size();
+  value /= this->GetMeanVectorContainer()->Size();
 
   return value;
 } // end GetValue()
@@ -104,53 +115,109 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 template< class TFixedPointSet, class TMovingPointSet >
 void
 ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
-::GetModelValue( StatisticalModelConstPointer statisticalModel,
-                 MeasureType & value,
-                 const TransformParametersType & parameters ) const
+::GetModelValue( const StatisticalModelVectorType& meanVector,
+                 const StatisticalModelMatrixType& basisMatrix,
+                 const StatisticalModelScalarType& noiseVariance,
+                 MeasureType& modelValue,
+                 const TransformParametersType& parameters ) const
 {
-  MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
-
   // Make sure transform parameters are up-to-date
   this->SetTransformParameters( parameters );
 
-  // Get model reconstruction of movingMesh
-  const StatisticalModelMeshPointer meanMesh = statisticalModel->DrawMean();
-  StatisticalModelMeshPointer movingMesh = StatisticalModelMeshType::New();
-  movingMesh->GetPoints()->Reserve( meanMesh->GetNumberOfPoints() );
-
-  // Warp fixed mesh
-  StatisticalModelMeshConstIteratorType meanMeshIterator = meanMesh->GetPoints()->Begin();
-  StatisticalModelMeshConstIteratorType meanMeshIteratorEnd = meanMesh->GetPoints()->End();
-  StatisticalModelMeshIteratorType movingMeshIterator = movingMesh->GetPoints()->Begin();
-  while( meanMeshIterator != meanMeshIteratorEnd )
+  // Warp mean mesh
+  StatisticalModelVectorType movingVector = StatisticalModelVectorType( meanVector.size(), 0. );
+  for( unsigned int i = 0; i < meanVector.size(); i += FixedPointSetDimension )
   {
-    movingMeshIterator->Value() = this->GetTransform()->TransformPoint( meanMeshIterator->Value() );
-    ++meanMeshIterator;
-    ++movingMeshIterator;
+    const auto transformedPoint = this->GetTransform()->TransformPoint( meanVector.data_block() + i );
+    movingVector.update( transformedPoint.GetVnlVector(), i );
   }
 
-  // Compute coefficients of model synthesized shape
-  const StatisticalModelVectorType modelCoefficients = statisticalModel->ComputeCoefficients( movingMesh );
+  movingVector -= meanVector;
+  const StatisticalModelVectorType tmp = movingVector - this->Reconstruct(movingVector, basisMatrix, noiseVariance);
+  modelValue += dot_product(tmp, movingVector) * FixedPointSetDimension / meanVector.size();
+}
 
-  // Get value f(X)
-  meanMeshIterator = meanMesh->GetPoints()->Begin();
-  StatisticalModelMeshConstIteratorType referenceMeshIterator = statisticalModel->GetRepresenter()->GetReference()->GetPoints()->Begin();
-  movingMeshIterator = movingMesh->GetPoints()->Begin();
-  while( meanMeshIterator != meanMeshIteratorEnd )
+
+/**
+ * ******************* GetValueAndFiniteDifferenceDerivative *******************
+ */
+
+template< class TFixedPointSet, class TMovingPointSet >
+void
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
+::GetValueAndFiniteDifferenceDerivative( const TransformParametersType & parameters,
+                                         MeasureType& value,
+                                         DerivativeType& derivative ) const
+{
+  value = NumericTraits< MeasureType >::ZeroValue();
+  derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
+
+  // Loop over models
+  for(std::tuple< StatisticalModelVectorContainerConstIterator,
+          StatisticalModelMatrixContainerConstIterator,
+          StatisticalModelScalarContainerConstIterator > it =
+          std::make_tuple( this->GetMeanVectorContainer()->Begin(),
+                           this->GetBasisMatrixContainer()->Begin(),
+                           this->GetNoiseVarianceContainer()->Begin() );
+      std::get<0>(it) != this->GetMeanVectorContainer()->End();
+      ++std::get<0>(it), ++std::get<1>(it), ++std::get<2>(it))
   {
-    // f_i(X)
-    const StatisticalModelPointType reconstructedPoint = statisticalModel->DrawSampleAtPoint( modelCoefficients, referenceMeshIterator->Value(), false );
-    const StatisticalModelVectorType reconstructionError = movingMeshIterator->Value().GetVnlVector() - reconstructedPoint.GetVnlVector();
+    const StatisticalModelVectorType& meanVector = std::get<0>(it)->Value();
+    const StatisticalModelMatrixType& basisMatrix = std::get<1>(it)->Value();
+    const StatisticalModelScalarType& noiseVariance = std::get<2>(it)->Value();
 
-    // Value
-    modelValue += reconstructionError.squared_magnitude();
+    // Initialize value container
+    MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
+    DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
+    modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
-    ++meanMeshIterator;
-    ++referenceMeshIterator;
-    ++movingMeshIterator;
+    this->GetModelValue( meanVector, basisMatrix, noiseVariance, modelValue, parameters );
+    this->GetModelFiniteDifferenceDerivative( meanVector, basisMatrix, noiseVariance, modelDerivative, parameters );
+
+    value += modelValue;
+    derivative += modelDerivative;
   }
 
-  value += modelValue / meanMesh->GetNumberOfPoints();
+  value /= this->GetMeanVectorContainer()->Size();
+  derivative /= this->GetMeanVectorContainer()->Size();
+
+  elxout << "FiniteDiff: " << value << ", " << derivative << std::endl;
+}
+
+/**
+ * ******************* GetModelFiniteDifferenceDerivative *******************
+ */
+
+template< class TFixedPointSet, class TMovingPointSet >
+void
+ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
+::GetModelFiniteDifferenceDerivative( const StatisticalModelVectorType& meanVector,
+                                      const StatisticalModelMatrixType& basisMatrix,
+                                      const StatisticalModelScalarType& noiseVariance,
+                                      DerivativeType & modelDerivative,
+                                      const TransformParametersType & parameters ) const
+{
+  const DerivativeValueType h = 0.01;
+
+  for( unsigned int i = 0; i < parameters.size(); ++i )\
+  {
+    MeasureType plusModelValue = NumericTraits< DerivativeValueType >::ZeroValue();
+    MeasureType minusModelValue = NumericTraits< DerivativeValueType >::ZeroValue();
+
+    TransformParametersType plusParameters = parameters;
+    TransformParametersType minusParameters = parameters;
+
+    plusParameters[ i ] += h;
+    minusParameters[ i ] -= h;
+
+    this->GetModelValue( meanVector, basisMatrix, noiseVariance, plusModelValue, plusParameters );
+    this->GetModelValue( meanVector, basisMatrix, noiseVariance, minusModelValue, minusParameters );
+
+    modelDerivative[ i ] += ( plusModelValue - minusModelValue ) / ( 2 * h );
+  }
+
+  // Reset transform parameters
+  this->SetTransformParameters( parameters );
 }
 
 /**
@@ -195,32 +262,38 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
   NonZeroJacobianIndicesType nzji( this->GetTransform()->GetNumberOfNonZeroJacobianIndices() );
 
   // Loop over models
-  StatisticalModelContainerConstIterator statisticalModelIterator = this->GetStatisticalModelContainer()->Begin();
-  StatisticalModelContainerConstIterator statisticalModelIteratorEnd = this->GetStatisticalModelContainer()->End();
-  while( statisticalModelIterator != statisticalModelIteratorEnd )
+  for(std::tuple< StatisticalModelVectorContainerConstIterator,
+          StatisticalModelMatrixContainerConstIterator,
+          StatisticalModelScalarContainerConstIterator > it =
+          std::make_tuple( this->GetMeanVectorContainer()->Begin(),
+                           this->GetBasisMatrixContainer()->Begin(),
+                           this->GetNoiseVarianceContainer()->Begin() );
+      std::get<0>(it) != this->GetMeanVectorContainer()->End();
+      ++std::get<0>(it), ++std::get<1>(it), ++std::get<2>(it))
   {
-    MeasureType modelValue;
+    const StatisticalModelVectorType& meanVector = std::get<0>(it)->Value();
+    const StatisticalModelMatrixType& basisMatrix = std::get<1>(it)->Value();
+    const StatisticalModelScalarType& noiseVariance = std::get<2>(it)->Value();
+
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
-    const auto meanShape = statisticalModelIterator->Value()->GetMeanVector();
-    StatisticalModelVectorType movingShape = StatisticalModelVectorType( meanShape.size(), 0. );
-    for( unsigned int i = 0; i < meanShape.size(); i += FixedPointSetDimension )
+    StatisticalModelVectorType movingVector = StatisticalModelVectorType( meanVector.size(), 0. );
+    for( unsigned int i = 0; i < meanVector.size(); i += FixedPointSetDimension )
     {
-      const auto transformedPoint = this->GetTransform()->TransformPoint( meanShape.data_block() + i );
-      movingShape.update( transformedPoint.GetVnlVector(), i );
+      const auto transformedPoint = this->GetTransform()->TransformPoint( meanVector.data_block() + i );
+      movingVector.update( transformedPoint.GetVnlVector(), i );
     }
 
-    movingShape -= meanShape;
+    movingVector -= meanVector;
 
     // tmp = (T(S) - mu) * (I - VV^T)
-    const StatisticalModelMatrixType PCABasisMatrix = statisticalModelIterator->Value()->GetOrthonormalPCABasisMatrix();
-    const StatisticalModelVectorType tmp = movingShape - this->Reconstruct(movingShape, PCABasisMatrix);
-    modelValue = dot_product(tmp, movingShape);
+    const StatisticalModelVectorType tmp = movingVector - this->Reconstruct(movingVector, basisMatrix, noiseVariance);
+    MeasureType modelValue = dot_product(tmp, movingVector);
 
-    for(unsigned int i = 0; i < meanShape.size(); i += FixedPointSetDimension)
+    for(unsigned int i = 0; i < meanVector.size(); i += FixedPointSetDimension)
     {
-      this->GetTransform()->GetJacobian( meanShape.data_block() + i, Jacobian, nzji );
+      this->GetTransform()->GetJacobian( meanVector.data_block() + i, Jacobian, nzji );
       for( unsigned int j = 0; j < nzji.size(); j++ ) {
         const auto& mu = nzji[ j ];
         modelDerivative[ mu ] += dot_product(tmp.extract( FixedPointSetDimension, i ), Jacobian.get_column( j ));
@@ -232,19 +305,17 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
         itkExceptionMacro( "Model value is NaN.")
     }
 
-    if( FixedPointSetDimension * meanShape.size() > 0 )
+    if( FixedPointSetDimension * meanVector.size() > 0 )
     {
-      value += modelValue * FixedPointSetDimension / meanShape.size();
-      derivative += 2.0 * modelDerivative * FixedPointSetDimension / meanShape.size();
+      value += modelValue * FixedPointSetDimension / meanVector.size();
+      derivative += 2.0 * modelDerivative * FixedPointSetDimension / meanVector.size();
     }
-
-    ++statisticalModelIterator;
   }
 
-  value /= this->GetStatisticalModelContainer()->Size();
-  derivative /= this->GetStatisticalModelContainer()->Size();
+  value /= this->GetMeanVectorContainer()->Size();
+  derivative /= this->GetMeanVectorContainer()->Size();
 
-  const bool useFiniteDifferenceDerivative = true;
+  const bool useFiniteDifferenceDerivative = false;
   if( useFiniteDifferenceDerivative )
   {
     elxout << "Analytical: " << value << ", " << derivative << std::endl;
@@ -259,106 +330,22 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 template< class TFixedPointSet, class TMovingPointSet >
 const typename ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >::StatisticalModelVectorType
 ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
-::Reconstruct(const StatisticalModelVectorType& movingShape, const StatisticalModelMatrixType& basisMatrix) const
+::Reconstruct(const StatisticalModelVectorType& movingVector, const StatisticalModelMatrixType& basisMatrix,
+              const StatisticalModelScalarType& noiseVariance) const
 {
-  const StatisticalModelVectorType tmp = movingShape * basisMatrix;
-  return tmp * basisMatrix.transpose();
+  StatisticalModelVectorType epsilon = StatisticalModelVectorType(movingVector.size(), 0.);
+
+  if( noiseVariance > 0 ) {
+    StatisticalModelScalarType sigma = std::sqrt(noiseVariance);
+    for( unsigned int i = 0; i < movingVector.size(); i++) {
+      epsilon[ i ] = vnl_sample_normal(0., sigma);
+    }
+  }
+
+  // Compute movingShape * VV^T without compute VV^T to reduce peak memory
+  const StatisticalModelVectorType coefficients = movingVector * basisMatrix;
+  return coefficients * basisMatrix.transpose() + epsilon;
 };
-
-/**
- * ******************* GetValueAndFiniteDifferenceDerivative *******************
- */
-
-template< class TFixedPointSet, class TMovingPointSet >
-void
-ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
-::GetValueAndFiniteDifferenceDerivative( const TransformParametersType & parameters,
-                                         MeasureType & value,
-                                         DerivativeType & derivative ) const
-{
-  // Loop over models
-  StatisticalModelContainerConstIterator statisticalModelIterator = this->GetStatisticalModelContainer()->Begin();
-  StatisticalModelContainerConstIterator statisticalModelIteratorEnd = this->GetStatisticalModelContainer()->End();
-  while( statisticalModelIterator != statisticalModelIteratorEnd )
-  {
-    // Initialize value container
-    MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
-    DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
-    modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
-
-    this->GetModelValue( statisticalModelIterator->Value(), modelValue, parameters );
-    this->GetModelFiniteDifferenceDerivative( statisticalModelIterator->Value(), modelDerivative, parameters );
-
-    value = modelValue / this->GetStatisticalModelContainer()->Size();
-    derivative = modelDerivative / this->GetStatisticalModelContainer()->Size();
-
-    ++statisticalModelIterator;
-  }
-
-  elxout << "FiniteDiff: " << value << ", " << derivative << std::endl;
-}
-
-/**
- * ******************* GetModelFiniteDifferenceDerivative *******************
- */
-
-template< class TFixedPointSet, class TMovingPointSet >
-void
-ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
-::GetModelFiniteDifferenceDerivative( StatisticalModelConstPointer statisticalModel,
-                                      DerivativeType & modelDerivative,
-                                      const TransformParametersType & parameters ) const
-{
-  const double h = 0.01;
-
-  // Get derivative (J(X)-W*(inv(C)*(W^T*J(X))))^T*f(X)
-  for( unsigned int i = 0; i < parameters.size(); ++i )\
-  {
-    MeasureType plusModelValue = NumericTraits< MeasureType >::ZeroValue();
-    MeasureType minusModelValue = NumericTraits< MeasureType >::ZeroValue();
-
-    TransformParametersType plusParameters = parameters;
-    TransformParametersType minusParameters = parameters;
-
-    plusParameters[ i ] += h;
-    minusParameters[ i ] -= h;
-
-    this->GetModelValue( statisticalModel, plusModelValue, plusParameters );
-    this->GetModelValue( statisticalModel, minusModelValue, minusParameters );
-
-    modelDerivative[ i ] += ( plusModelValue - minusModelValue ) / ( 2*h );
-  }
-
-  // Reset transform parameters
-  this->SetTransformParameters( parameters );
-}
-
-
-
-/**
- * ******************* TransformMesh *******************
- */
-
-template< class TFixedPointSet, class TMovingPointSet >
-void
-ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
-::TransformMesh( StatisticalModelMeshPointer fixedMesh, StatisticalModelMeshPointer movingMesh ) const
-{
-  movingMesh->GetPoints()->Reserve( fixedMesh->GetNumberOfPoints() );
-
-  // Transform mesh
-  StatisticalModelMeshConstIteratorType fixedMeshIterator = fixedMesh->GetPoints()->Begin();
-  StatisticalModelMeshConstIteratorType fixedMeshIteratorEnd = fixedMesh->GetPoints()->End();
-  StatisticalModelMeshIteratorType movingMeshIterator = movingMesh->GetPoints()->Begin();
-  while( fixedMeshIterator != fixedMeshIteratorEnd )
-  {
-    movingMeshIterator->Value() = this->GetTransform()->TransformPoint( fixedMeshIterator->Value() );
-    ++fixedMeshIterator;
-    ++movingMeshIterator;
-  }
-}
-
-
 
 /**
  * ******************* PrintSelf *******************
@@ -369,21 +356,13 @@ void
 ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
-  Superclass::PrintSelf( os, indent );
-  //
-  //   if ( this->m_ComputeSquaredDistance )
-  //   {
-  //     os << indent << "m_ComputeSquaredDistance: True" << std::endl;
-  //   }
-  //   else
-  //   {
-  //     os << indent << "m_ComputeSquaredDistance: False" << std::endl;
-  //   }
-} // end PrintSelf()
+  Superclass::PrintSelf(os, indent);
+  // TODO
+}
 
 
 
 } // end namespace itk
 
-#endif // end #ifndef __ActiveRegistrationModelShapeMetric_hxx__
+#endif // end #ifndef __itkActiveRegistrationModelShapeMetric_hxx__
 
