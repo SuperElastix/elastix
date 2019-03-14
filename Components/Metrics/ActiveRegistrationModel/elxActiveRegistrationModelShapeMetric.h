@@ -91,8 +91,6 @@ public:
   typedef typename Superclass1::FixedPointSetConstPointer    FixedPointSetConstPointer;
   typedef typename Superclass1::FixedMeshContainerType       FixedMeshContainerType;
   typedef typename Superclass1::FixedMeshContainerPointer    FixedMeshContainerPointer;
-  typedef typename Superclass1::MappedMeshContainerType      MappedMeshContainerType;
-  typedef typename Superclass1::MappedMeshContainerPointer   MappedMeshContainerPointer;
   typedef typename Superclass1::MovingPointSetType           MovingPointSetType;
   typedef typename Superclass1::MovingPointSetConstPointer   MovingPointSetConstPointer;
   typedef typename Superclass1::CellInterfaceType            CellInterfaceType;
@@ -171,8 +169,6 @@ public:
   typedef typename Superclass1::StatisticalModelIdType                        StatisticalModelIdType;
   typedef typename Superclass1::StatisticalModelType                          StatisticalModelType;
   typedef typename Superclass1::StatisticalModelPointer                       StatisticalModelPointer;
-  typedef typename Superclass1::StatisticalModelContainerType                 StatisticalModelContainerType;
-  typedef typename Superclass1::StatisticalModelContainerPointer              StatisticalModelContainerPointer;
 
   typedef typename Superclass1::StatisticalModelMatrixContainerType           StatisticalModelMatrixContainerType;
   typedef typename Superclass1::StatisticalModelMatrixContainerPointer        StatisticalModelMatrixContainerPointer;

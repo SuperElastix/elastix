@@ -77,7 +77,8 @@ ActiveRegistrationModelShapeMetric< TElastix >
     // Reference shapes for model building
     this->m_ReferenceFilenames = ReadPath("ReferenceShape");
 
-    if (this->m_ReferenceFilenames.size() != this->m_ShapeDirectories.size()) {
+    if (this->m_ReferenceFilenames.size() != this->m_ShapeDirectories.size())
+    {
       itkExceptionMacro(<< "The number of reference shapes does not match the number of directories given.");
     }
   }

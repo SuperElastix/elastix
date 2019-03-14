@@ -119,17 +119,11 @@ public:
   typedef typename FixedMeshContainerType::ConstPointer         FixedMeshContainerConstPointer;
   typedef typename FixedMeshContainerType::ElementIdentifier    FixedMeshContainerElementIdentifier;
 
-  typedef VectorContainer< MeshIdType, FixedMeshPointer >   MappedMeshContainerType;
-  typedef typename MappedMeshContainerType::Pointer         MappedMeshContainerPointer;
-  typedef typename MappedMeshContainerType::ConstPointer    MappedMeshContainerConstPointer;
-
-  typedef Array< DerivativeValueType > MeshPointsDerivativeValueType;
 
   // ActiveRegistrationModel typedefs
   typedef double                                                                  StatisticalModelScalarType;
   typedef vnl_vector< double >                                                    StatisticalModelVectorType;
   typedef vnl_matrix< double  >                                                   StatisticalModelMatrixType;
-  typedef vnl_diag_matrix< double >                                               StatisticalModelDiagonalMatrixType;
 
   itkStaticConstMacro( StatisticalModelMeshDimension, unsigned int, Superclass::FixedPointSetDimension );
 
@@ -144,18 +138,12 @@ public:
     StatisticalModelScalarType,
     StatisticalModelMeshDimension,
     StatisticalModelMeshTraitsType >                                              StatisticalModelMeshType;
-
-  typedef typename StatisticalModelMeshType::PointType                            StatisticalModelPointType;
   typedef typename StatisticalModelMeshType::Pointer                              StatisticalModelMeshPointer;
-  typedef typename StatisticalModelMeshType::ConstPointer                         StatisticalModelMeshConstPointer;
-  typedef typename StatisticalModelMeshType::PointsContainerIterator              StatisticalModelMeshIteratorType;
-  typedef typename StatisticalModelMeshType::PointsContainerConstIterator         StatisticalModelMeshConstIteratorType;
 
   typedef MeshFileReader< StatisticalModelMeshType >                              MeshReaderType;
   typedef typename MeshReaderType::Pointer                                        MeshReaderPointer;
 
   typedef vnl_vector< double >                                                    StatisticalModelParameterVectorType;
-  typedef std::vector< std::string >                                              StatisticalModelPathVectorType;
 
   typedef StandardMeshRepresenter<
     StatisticalModelScalarType,
@@ -176,10 +164,6 @@ public:
   typedef typename ReducedVarianceModelBuilderType::Pointer                       ReducedVarianceModelBuilderPointer;
 
   typedef unsigned int                                                            StatisticalModelIdType;
-  typedef VectorContainer< StatisticalModelIdType, StatisticalModelConstPointer > StatisticalModelContainerType;
-  typedef typename StatisticalModelContainerType::Pointer                         StatisticalModelContainerPointer;
-  typedef typename StatisticalModelContainerType::ConstPointer                    StatisticalModelContainerConstPointer;
-  typedef typename StatisticalModelContainerType::ConstIterator                   StatisticalModelContainerConstIterator;
 
   typedef VectorContainer< StatisticalModelIdType, StatisticalModelMatrixType >   StatisticalModelMatrixContainerType;
   typedef typename StatisticalModelMatrixContainerType::Pointer                   StatisticalModelMatrixContainerPointer;
