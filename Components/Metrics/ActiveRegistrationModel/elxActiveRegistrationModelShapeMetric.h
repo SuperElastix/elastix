@@ -82,18 +82,10 @@ public:
   elxClassNameMacro( "ActiveRegistrationModelShapeMetric" );
 
   /** Typedefs from the superclass. */
-  typedef typename Superclass1::FixedMeshType         FixedMeshType;
-  typedef typename Superclass1::FixedMeshPointer      FixedMeshPointer;
-  typedef typename Superclass1::FixedMeshConstPointer FixedMeshConstPointer;
 
   typedef typename Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass1::FixedPointSetType            FixedPointSetType;
-  typedef typename Superclass1::FixedPointSetConstPointer    FixedPointSetConstPointer;
-  typedef typename Superclass1::FixedMeshContainerType       FixedMeshContainerType;
-  typedef typename Superclass1::FixedMeshContainerPointer    FixedMeshContainerPointer;
   typedef typename Superclass1::MovingPointSetType           MovingPointSetType;
-  typedef typename Superclass1::MovingPointSetConstPointer   MovingPointSetConstPointer;
-  typedef typename Superclass1::CellInterfaceType            CellInterfaceType;
 
   typedef typename Superclass1::TransformType           TransformType;
   typedef typename Superclass1::TransformPointer        TransformPointer;
@@ -101,18 +93,16 @@ public:
   typedef typename Superclass1::OutputPointType         OutputPointType;
   typedef typename Superclass1::TransformParametersType TransformParametersType;
   typedef typename Superclass1::TransformJacobianType   TransformJacobianType;
-  typedef typename Superclass1::FixedImageMaskType     FixedImageMaskType;
-  typedef typename Superclass1::FixedImageMaskPointer  FixedImageMaskPointer;
-  typedef typename Superclass1::MovingImageMaskType    MovingImageMaskType;
-  typedef typename Superclass1::MovingImageMaskPointer MovingImageMaskPointer;
+  typedef typename Superclass1::FixedImageMaskType      FixedImageMaskType;
+  typedef typename Superclass1::FixedImageMaskPointer   FixedImageMaskPointer;
+  typedef typename Superclass1::MovingImageMaskType     MovingImageMaskType;
+  typedef typename Superclass1::MovingImageMaskPointer  MovingImageMaskPointer;
   
-  typedef typename Superclass1::MeasureType            MeasureType;
-  typedef typename Superclass1::DerivativeType         DerivativeType;
-  typedef typename Superclass1::ParametersType         ParametersType;
+  typedef typename Superclass1::MeasureType             MeasureType;
+  typedef typename Superclass1::DerivativeType          DerivativeType;
+  typedef typename Superclass1::ParametersType          ParametersType;
 
   typedef typename OutputPointType::CoordRepType CoordRepType;
-
-  typedef typename Superclass1::MeshIdType MeshIdType;
   
   /** Other typedef's. */
   typedef itk::Object ObjectType;
@@ -139,16 +129,10 @@ public:
   itkStaticConstMacro( MovingImageDimension, unsigned int,
     MovingImageType::ImageDimension );
 
-  /** Assuming fixed and moving pointsets are of equal type, which implicitly
-   * assumes that the fixed and moving image are of the same type.
-   */
-  typedef FixedPointSetType       PointSetType;
-  typedef FixedMeshType  MeshType;
   typedef FixedImageType ImageType;
 
-  typedef vnl_vector< double >                                                StatisticalModelParameterVectorType;
-  typedef vector< std::string >                                               StatisticalModelPathVectorType;
   typedef typename Superclass1::StatisticalModelVectorType                    StatisticalModelVectorType;
+  typedef vector< std::string >                                               StatisticalModelPathVectorType;
   
   /** ActiveRegistrationModel types */
   typedef typename Superclass1::StatisticalModelMeshType                      StatisticalModelMeshType;
@@ -157,8 +141,8 @@ public:
   typedef typename Superclass1::MeshReaderType                                MeshReaderType;
   typedef typename Superclass1::MeshReaderPointer                             MeshReaderPointer;
   
-  typedef typename Superclass1::RepresenterType                               RepresenterType;
-  typedef typename Superclass1::RepresenterPointer                            RepresenterPointer;
+  typedef typename Superclass1::StatisticalModelRepresenterType               StatisticalModelRepresenterType;
+  typedef typename Superclass1::StatisticalModelRepresenterPointer            StatisticalModelRepresenterPointer;
 
   typedef typename Superclass1::ModelBuilderType                              ModelBuilderType;
   typedef typename Superclass1::ModelBuilderPointer                           ModelBuilderPointer;
@@ -167,32 +151,25 @@ public:
   typedef typename Superclass1::ReducedVarianceModelBuilderPointer            ReducedVarianceModelBuilderPointer;
 
   typedef typename Superclass1::StatisticalModelIdType                        StatisticalModelIdType;
-  typedef typename Superclass1::StatisticalModelType                          StatisticalModelType;
   typedef typename Superclass1::StatisticalModelPointer                       StatisticalModelPointer;
 
   typedef typename Superclass1::StatisticalModelMatrixContainerType           StatisticalModelMatrixContainerType;
   typedef typename Superclass1::StatisticalModelMatrixContainerPointer        StatisticalModelMatrixContainerPointer;
-  typedef typename Superclass1::StatisticalModelMatrixContainerConstPointer   StatisticalModelMatrixContainerConstPointer;
-  typedef typename Superclass1::StatisticalModelMatrixContainerConstIterator  StatisticalModelMatrixContainerConstIterator;
 
   typedef typename Superclass1::StatisticalModelVectorContainerType           StatisticalModelVectorContainerType;
   typedef typename Superclass1::StatisticalModelVectorContainerPointer        StatisticalModelVectorContainerPointer;
-  typedef typename Superclass1::StatisticalModelVectorContainerConstPointer   StatisticalModelVectorContainerConstPointer;
-  typedef typename Superclass1::StatisticalModelVectorContainerConstIterator  StatisticalModelVectorContainerConstIterator;
 
   typedef typename Superclass1::StatisticalModelScalarContainerType           StatisticalModelScalarContainerType;
   typedef typename Superclass1::StatisticalModelScalarContainerPointer        StatisticalModelScalarContainerPointer;
-  typedef typename Superclass1::StatisticalModelScalarContainerConstPointer   StatisticalModelScalarContainerConstPointer;
-  typedef typename Superclass1::StatisticalModelScalarContainerConstIterator  StatisticalModelScalarContainerConstIterator;
   
-  typedef typename Superclass1::DataManagerType                               DataManagerType;
-  typedef typename Superclass1::DataManagerPointer                            DataManagerPointer;
+  typedef typename Superclass1::StatisticalModelDataManagerType               StatisticalModelDataManagerType;
+  typedef typename Superclass1::StatisticalModelDataManagerPointer            StatisticalModelDataManagerPointer;
   
   itkSetMacro( MetricNumber, unsigned long );
   itkGetMacro( MetricNumber, unsigned long );
-  
-  typename DataManagerType::Pointer ReadMeshesFromDirectory(std::string shapeDataDirectory,
-                                                            std::string fixedPointSetFilename);
+
+  StatisticalModelDataManagerPointer ReadMeshesFromDirectory( std::string shapeDataDirectory,
+                                                              std::string fixedPointSetFilename );
   
   unsigned long ReadMesh( const std::string & meshFilename, StatisticalModelMeshPointer& mesh );
 
@@ -201,10 +178,10 @@ public:
   void WriteMesh( const char * filename, StatisticalModelMeshType mesh );
   
   StatisticalModelPathVectorType ReadPath( std::string parameter );
-  
-  StatisticalModelParameterVectorType ReadNoiseVariance();
-  
-  StatisticalModelParameterVectorType ReadTotalVariance();
+
+  StatisticalModelVectorType ReadNoiseVariance();
+
+  StatisticalModelVectorType ReadTotalVariance();
 
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.

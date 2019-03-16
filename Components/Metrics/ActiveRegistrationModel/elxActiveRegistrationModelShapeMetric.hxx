@@ -134,10 +134,10 @@ ActiveRegistrationModelShapeMetric< TElastix >
       StatisticalModelPointer statisticalModel;
       try
       {
-        RepresenterPointer representer = RepresenterType::New();
-        statisticalModel = itk::StatismoIO< StatisticalModelMeshType >::LoadStatisticalModel(representer, this->m_LoadShapeModelFileNames[ statisticalModelId ]);
-        statisticalModelMeanVectorContainer->SetElement( statisticalModelId, statisticalModel->GetMeanVector());
-        statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( statisticalModelId, statisticalModel->GetOrthonormalPCABasisMatrix());
+        StatisticalModelRepresenterPointer representer = StatisticalModelRepresenterType::New();
+        statisticalModel = itk::StatismoIO< StatisticalModelMeshType >::LoadStatisticalModel( representer, this->m_LoadShapeModelFileNames[ statisticalModelId ] );
+        statisticalModelMeanVectorContainer->SetElement( statisticalModelId, statisticalModel->GetMeanVector() );
+        statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( statisticalModelId, statisticalModel->GetOrthonormalPCABasisMatrix() );
         statisticalModelVarianceVectorContainer->SetElement( statisticalModelId, statisticalModel->GetPCAVarianceVector() );
         statisticalModelNoiseVarianceContainer->SetElement( statisticalModelId, statisticalModel->GetNoiseVariance() );
       }
@@ -158,16 +158,16 @@ ActiveRegistrationModelShapeMetric< TElastix >
     elxout << std::endl << "Building models for " << this->GetComponentLabel() << ":" << this->elxGetClassName() << " ... " << std::endl;
 
     // Noise parameter for probabilistic pca model
-    StatisticalModelParameterVectorType noiseVariance = this->ReadNoiseVariance();
+    StatisticalModelVectorType noiseVariance = this->ReadNoiseVariance();
 
     // Number of principal components to keep by variance
-    StatisticalModelParameterVectorType totalVariance = this->ReadTotalVariance();
+    StatisticalModelVectorType totalVariance = this->ReadTotalVariance();
     
     // Loop over all data directories
     for( StatisticalModelIdType statisticalModelId = 0; statisticalModelId < this->m_ShapeDirectories.size(); ++statisticalModelId )
     { 
       // Load data
-      DataManagerPointer dataManager;
+      StatisticalModelDataManagerPointer dataManager;
       try 
       {
         dataManager = this->ReadMeshesFromDirectory(this->m_ShapeDirectories[ statisticalModelId ],
@@ -191,7 +191,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
                << "." << std::endl;
         
         // Pick out first principal components
-        if(totalVariance[ statisticalModelId ] < 1.0 )
+        if( totalVariance[ statisticalModelId ] < 1.0 )
         {
           elxout << "  Reducing model to " << totalVariance[ statisticalModelId ] * 100.0 << "% variance ... ";
           ReducedVarianceModelBuilderPointer reducedVarianceModelBuilder = ReducedVarianceModelBuilderType::New();
@@ -200,33 +200,41 @@ ActiveRegistrationModelShapeMetric< TElastix >
                  << "  Number of modes retained: " << statisticalModel->GetNumberOfPrincipalComponents() << "." << std::endl;
         }
       }
-      catch( statismo::StatisticalModelException &e )
+      catch( statismo::StatisticalModelException& e )
       {
         itkExceptionMacro( << "Error building statistical shape model: " << e.what() );
+      }
+
+      if( this->m_SaveShapeModelFileNames.size() > 0 )
+      {
+        elxout << "  Saving shape model " << statisticalModelId << " to " << this->m_SaveShapeModelFileNames[ statisticalModelId ] << ". " << std::endl;
+        try
+        {
+          itk::StatismoIO< StatisticalModelMeshType >::SaveStatisticalModel(statisticalModel, this->m_SaveShapeModelFileNames[ statisticalModelId ]);
+        }
+        catch( statismo::StatisticalModelException& e )
+        {
+          itkExceptionMacro( "Could not save shape model to " << this->m_SaveShapeModelFileNames[ statisticalModelId ] << ".");
+        }
       }
 
       statisticalModelMeanVectorContainer->SetElement( statisticalModelId, statisticalModel->GetMeanVector());
       statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( statisticalModelId, statisticalModel->GetOrthonormalPCABasisMatrix());
       statisticalModelVarianceVectorContainer->SetElement( statisticalModelId, statisticalModel->GetPCAVarianceVector() );
       statisticalModelNoiseVarianceContainer->SetElement( statisticalModelId, noiseVariance[ statisticalModelId ]);
-
-      if( this->m_SaveShapeModelFileNames.size() > 0 )
-      {
-        elxout << "  Saving shape model " << statisticalModelId << " to " << this->m_SaveShapeModelFileNames[ statisticalModelId ] << ". " << std::endl;
-        itk::StatismoIO<StatisticalModelMeshType>::SaveStatisticalModel(statisticalModel, this->m_SaveShapeModelFileNames[ statisticalModelId ]);
-      }
     }
   }
   
-  this->SetMeanVectorContainer(statisticalModelMeanVectorContainer);
-  this->SetBasisMatrixContainer(statisticalModelOrthonormalPCABasisMatrixContainer);
-  this->SetVarianceContainer(statisticalModelVarianceVectorContainer);
-  this->SetNoiseVarianceContainer(statisticalModelNoiseVarianceContainer);
+  this->SetMeanVectorContainer( statisticalModelMeanVectorContainer );
+  this->SetBasisMatrixContainer( statisticalModelOrthonormalPCABasisMatrixContainer );
+  this->SetVarianceContainer( statisticalModelVarianceVectorContainer );
+  this->SetNoiseVarianceContainer( statisticalModelNoiseVarianceContainer );
 
   // SingleValuedPointSetToPointSetMetric (from which this class is derived) needs a fixed and moving point set
-  typename PointSetType::Pointer dummyPointSet = PointSetType::New();
-  this->SetFixedPointSet( dummyPointSet );  // FB: TODO solve hack
-  this->SetMovingPointSet( dummyPointSet ); // FB: TODO solve hack
+  typename FixedPointSetType::Pointer fixedDummyPointSet = FixedPointSetType::New();
+  typename MovingPointSetType::Pointer movingDummyPointSet = MovingPointSetType::New();
+  this->SetFixedPointSet( fixedDummyPointSet );  // FB: TODO solve hack
+  this->SetMovingPointSet( movingDummyPointSet ); // FB: TODO solve hack
 
   std::cout << std::endl;
 } // end BeforeRegistration()
@@ -238,7 +246,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
  */
 
 template< class TElastix >
-typename ActiveRegistrationModelShapeMetric< TElastix >::DataManagerType::Pointer
+typename ActiveRegistrationModelShapeMetric< TElastix >::StatisticalModelDataManagerPointer
 ActiveRegistrationModelShapeMetric< TElastix >
 ::ReadMeshesFromDirectory(
         std::string shapeDataDirectory,
@@ -258,11 +266,11 @@ ActiveRegistrationModelShapeMetric< TElastix >
     itkExceptionMacro( "Failed to read reference file " << referenceFilename << ".");
   }
 
-  RepresenterPointer representer = RepresenterType::New();
+  StatisticalModelRepresenterPointer representer = StatisticalModelRepresenterType::New();
   representer->SetReference( reference );
-  
-  DataManagerPointer dataManager = DataManagerType::New();
-  dataManager->SetRepresenter( representer );
+
+  StatisticalModelDataManagerPointer dataManager = StatisticalModelDataManagerType::New();
+  dataManager->SetRepresenter( representer.GetPointer() );
   
   for( int i = 0; i < directory->GetNumberOfFiles(); ++i )
   {
@@ -309,7 +317,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
   }
   catch( itk::ExceptionObject & err )
   {
-    elxout << "skipping " << meshFilename << " (not a valid mesh file)." << std::endl;
+    elxout << "skipping " << meshFilename << " (not a valid mesh file or file does not exist)." << std::endl;
     return 0;
   }
 
@@ -394,14 +402,14 @@ ActiveRegistrationModelShapeMetric< TElastix >
  */
 
 template< class TElastix >
-typename ActiveRegistrationModelShapeMetric< TElastix >::StatisticalModelParameterVectorType
+typename ActiveRegistrationModelShapeMetric< TElastix >::StatisticalModelVectorType
 ActiveRegistrationModelShapeMetric< TElastix >
 ::ReadNoiseVariance()
 {
   std::ostringstream key( "NoiseVariance", std::ios_base::ate );
   key << this->GetMetricNumber();
-  
-  StatisticalModelParameterVectorType noiseVarianceVector = StatisticalModelParameterVectorType( this->m_ShapeDirectories.size(), 0.0 );
+
+  StatisticalModelVectorType noiseVarianceVector = StatisticalModelVectorType( this->m_ShapeDirectories.size(), 0.0 );
   unsigned int n = this->GetConfiguration()->CountNumberOfParameterEntries( key.str() );
   
   if( n == 0 )
@@ -447,18 +455,18 @@ ActiveRegistrationModelShapeMetric< TElastix >
 
 
 /**
- * ***************** ReadNoiseVariance ***********************
+ * ***************** ReadTotalVariance ***********************
  */
 
 template< class TElastix >
-typename ActiveRegistrationModelShapeMetric< TElastix >::StatisticalModelParameterVectorType
+typename ActiveRegistrationModelShapeMetric< TElastix >::StatisticalModelVectorType
 ActiveRegistrationModelShapeMetric< TElastix >
 ::ReadTotalVariance()
 {
   std::ostringstream key( "TotalVariance", std::ios_base::ate );
   key << this->GetMetricNumber();
-  
-  StatisticalModelParameterVectorType totalVarianceVector = StatisticalModelParameterVectorType( this->m_ShapeDirectories.size(), 1.0 );
+
+  StatisticalModelVectorType totalVarianceVector = StatisticalModelVectorType( this->m_ShapeDirectories.size(), 1.0 );
   unsigned int n = this->GetConfiguration()->CountNumberOfParameterEntries( key.str() );
   
   if( n == 0 )

@@ -97,29 +97,6 @@ public:
   typedef typename FixedMeshType::Pointer                  FixedMeshPointer;
   typedef typename MeshTraitsType::CellType::CellInterface CellInterfaceType;
 
-  typedef typename FixedMeshType::PointType             MeshPointType;
-  typedef typename FixedMeshType::PointType::VectorType VectorType;
-
-  typedef typename FixedMeshType::PointsContainer              MeshPointsContainerType;
-  typedef typename MeshPointsContainerType::Pointer            MeshPointsContainerPointer;
-  typedef typename MeshPointsContainerType::ConstPointer       MeshPointsContainerConstPointer;
-  typedef typename FixedMeshType::PointsContainerConstIterator MeshPointsContainerConstIteratorType;
-  typedef typename FixedMeshType::PointsContainerIterator      MeshPointsContainerIteratorType;
-
-  typedef typename FixedMeshType::PointDataContainer             MeshPointDataContainerType;
-  typedef typename FixedMeshType::PointDataContainerConstPointer MeshPointDataContainerConstPointer;
-  typedef typename FixedMeshType::PointDataContainerPointer      MeshPointDataContainerPointer;
-  //typedef typename FixedMeshType::PointDataContainerConstIterator     MeshPointDataContainerConstIteratorType;
-  typedef typename FixedMeshType::PointDataContainerIterator MeshPointDataContainerConstIteratorType;
-  typedef typename MeshPointDataContainerType::Iterator      MeshPointDataContainerIteratorType;
-
-  typedef unsigned int                                          MeshIdType;
-  typedef VectorContainer< MeshIdType, FixedMeshConstPointer >  FixedMeshContainerType;
-  typedef typename FixedMeshContainerType::Pointer              FixedMeshContainerPointer;
-  typedef typename FixedMeshContainerType::ConstPointer         FixedMeshContainerConstPointer;
-  typedef typename FixedMeshContainerType::ElementIdentifier    FixedMeshContainerElementIdentifier;
-
-
   // ActiveRegistrationModel typedefs
   typedef double                                                                  StatisticalModelScalarType;
   typedef vnl_vector< double >                                                    StatisticalModelVectorType;
@@ -143,19 +120,16 @@ public:
   typedef MeshFileReader< StatisticalModelMeshType >                              MeshReaderType;
   typedef typename MeshReaderType::Pointer                                        MeshReaderPointer;
 
-  typedef vnl_vector< double >                                                    StatisticalModelParameterVectorType;
-
-  typedef StandardMeshRepresenter<
-    StatisticalModelScalarType,
-    StatisticalModelMeshDimension >                                               RepresenterType;
-  typedef typename RepresenterType::Pointer                                       RepresenterPointer;
-
-  typedef DataManager< StatisticalModelMeshType >                                 DataManagerType;
-  typedef typename DataManagerType::Pointer                                       DataManagerPointer;
+  typedef DataManager< StatisticalModelMeshType >                                 StatisticalModelDataManagerType;
+  typedef typename StatisticalModelDataManagerType::Pointer                       StatisticalModelDataManagerPointer;
 
   typedef StatisticalModel< StatisticalModelMeshType >                            StatisticalModelType;
   typedef typename StatisticalModelType::Pointer                                  StatisticalModelPointer;
-  typedef typename StatisticalModelType::ConstPointer                             StatisticalModelConstPointer;
+
+  typedef StandardMeshRepresenter<
+          StatisticalModelScalarType,
+          StatisticalModelMeshDimension >                                         StatisticalModelRepresenterType;
+  typedef typename StatisticalModelRepresenterType::Pointer                       StatisticalModelRepresenterPointer;
 
   typedef PCAModelBuilder< StatisticalModelMeshType >                             ModelBuilderType;
   typedef typename ModelBuilderType::Pointer                                      ModelBuilderPointer;
@@ -180,38 +154,6 @@ public:
   typedef typename StatisticalModelScalarContainerType::ConstPointer              StatisticalModelScalarContainerConstPointer;
   typedef typename StatisticalModelScalarContainerType::ConstIterator             StatisticalModelScalarContainerConstIterator;
 
-  void GetValueAndFiniteDifferenceDerivative( const TransformParametersType & parameters,
-                                              MeasureType & value,
-                                              DerivativeType & derivative ) const;
-
-  void GetModelValue( const StatisticalModelVectorType& meanVector,
-                      const StatisticalModelMatrixType& basisMatrix,
-                      const StatisticalModelScalarType& noiseVariance,
-                      MeasureType & modelValue,
-                      const TransformParametersType& parameters ) const;
-
-  void GetModelFiniteDifferenceDerivative( const StatisticalModelVectorType& meanVector,
-                                           const StatisticalModelMatrixType& basisMatrix,
-                                           const StatisticalModelScalarType& noiseVariance,
-                                           DerivativeType& modelDerivative,
-                                           const TransformParametersType & parameters ) const;
-
-  /** Initialize the Metric by making sure that all the components are
-  *  present and plugged together correctly.
-  */
-  virtual void Initialize( void );
-
-  /**  Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const;
-
-  /** Get the derivatives of the match measure. */
-  void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & Derivative ) const;
-
-  /**  Get value and derivatives for multiple valued optimizers. */
-  void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const;
-
   itkSetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
   itkGetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
 
@@ -227,6 +169,38 @@ public:
   itkSetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
   itkGetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
 
+  /** Initialize the Metric by making sure that all the components are
+  *  present and plugged together correctly.
+  */
+  virtual void Initialize( void );
+
+  /**  Get the value for single valued optimizers. */
+  MeasureType GetValue( const TransformParametersType & parameters ) const;
+
+  /** Get the derivatives of the match measure. */
+  void GetDerivative( const TransformParametersType & parameters,
+    DerivativeType& Derivative ) const;
+
+  /**  Get value and derivatives for multiple valued optimizers. */
+  void GetValueAndDerivative( const TransformParametersType& parameters,
+    MeasureType& Value, DerivativeType& Derivative ) const;
+
+  void GetValueAndFiniteDifferenceDerivative( const TransformParametersType& parameters,
+                                              MeasureType& value,
+                                              DerivativeType& derivative ) const;
+
+  void GetModelValue( const StatisticalModelVectorType& meanVector,
+                      const StatisticalModelMatrixType& basisMatrix,
+                      const StatisticalModelScalarType& noiseVariance,
+                      MeasureType& modelValue,
+                      const TransformParametersType& parameters ) const;
+
+  void GetModelFiniteDifferenceDerivative( const StatisticalModelVectorType& meanVector,
+                                           const StatisticalModelMatrixType& basisMatrix,
+                                           const StatisticalModelScalarType& noiseVariance,
+                                           DerivativeType& modelDerivative,
+                                           const TransformParametersType& parameters ) const;
+
 protected:
 
   ActiveRegistrationModelShapeMetric();
@@ -240,7 +214,7 @@ private:
   ActiveRegistrationModelShapeMetric( const Self & );    // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
 
-  /**  Memory efficient computation of movingShape * VV^T */
+  /**  Memory efficient computation of T(mu) * VV^T */
   const StatisticalModelVectorType Reconstruct( const StatisticalModelVectorType& movingVector,
                                                 const StatisticalModelMatrixType& basisMatrix,
                                                 const StatisticalModelScalarType& noiseVariance ) const;

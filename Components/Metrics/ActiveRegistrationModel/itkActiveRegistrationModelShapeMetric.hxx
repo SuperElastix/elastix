@@ -77,8 +77,6 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 
 
 
-
-
 /**
  * ******************* GetValue *******************
  */
@@ -249,9 +247,9 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 template< class TFixedPointSet, class TMovingPointSet >
 void
 ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
-::GetValueAndDerivative( const TransformParametersType & parameters,
-                         MeasureType & value,
-                         DerivativeType & derivative ) const
+::GetValueAndDerivative( const TransformParametersType& parameters,
+                         MeasureType& value,
+                         DerivativeType& derivative ) const
 {
   this->SetTransformParameters( parameters );
 
@@ -291,12 +289,19 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
     const StatisticalModelVectorType tmp = movingVector - this->Reconstruct(movingVector, basisMatrix, noiseVariance);
     MeasureType modelValue = dot_product(tmp, movingVector);
 
-    for(unsigned int i = 0; i < meanVector.size(); i += FixedPointSetDimension)
+    for(unsigned int i = 0; i < meanVector.size(); i += FixedPointSetDimension )
     {
       this->GetTransform()->GetJacobian( meanVector.data_block() + i, Jacobian, nzji );
-      for( unsigned int j = 0; j < nzji.size(); j++ ) {
-        const auto& mu = nzji[ j ];
-        modelDerivative[ mu ] += dot_product(tmp.extract( FixedPointSetDimension, i ), Jacobian.get_column( j ));
+      if( nzji.size() == this->GetNumberOfParameters() )
+      {
+        modelDerivative += tmp.extract( FixedPointSetDimension, i ) * Jacobian;
+      }
+      else
+      {
+        for( unsigned int j = 0; j < nzji.size(); j++ ) {
+          const auto& mu = nzji[ j ];
+          modelDerivative[ mu ] += dot_product( tmp.extract( FixedPointSetDimension, i ), Jacobian.get_column( j ) );
+        }
       }
     }
 
@@ -331,14 +336,13 @@ template< class TFixedPointSet, class TMovingPointSet >
 const typename ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >::StatisticalModelVectorType
 ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 ::Reconstruct(const StatisticalModelVectorType& movingVector, const StatisticalModelMatrixType& basisMatrix,
-              const StatisticalModelScalarType& noiseVariance) const
+              const StatisticalModelScalarType& noiseVariance ) const
 {
   StatisticalModelVectorType epsilon = StatisticalModelVectorType(movingVector.size(), 0.);
 
   if( noiseVariance > 0 ) {
-    StatisticalModelScalarType sigma = std::sqrt(noiseVariance);
     for( unsigned int i = 0; i < movingVector.size(); i++) {
-      epsilon[ i ] = vnl_sample_normal(0., sigma);
+      epsilon[ i ] = vnl_sample_normal(0., 1.);
     }
   }
 
