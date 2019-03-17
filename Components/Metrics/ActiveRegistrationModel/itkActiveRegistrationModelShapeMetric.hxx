@@ -132,7 +132,7 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
 
   movingVector -= meanVector;
   const StatisticalModelVectorType tmp = movingVector - this->Reconstruct(movingVector, basisMatrix, noiseVariance);
-  modelValue += dot_product(tmp, movingVector) * FixedPointSetDimension / meanVector.size();
+  modelValue += dot_product(movingVector, tmp) * FixedPointSetDimension / meanVector.size();
 }
 
 
@@ -347,8 +347,8 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
   }
 
   // Compute movingShape * VV^T without compute VV^T to reduce peak memory
-  const StatisticalModelVectorType coefficients = movingVector * basisMatrix;
-  return coefficients * basisMatrix.transpose() + epsilon;
+  const StatisticalModelVectorType coefficients = basisMatrix.transpose() * movingVector;
+  return basisMatrix * coefficients + epsilon;
 };
 
 /**

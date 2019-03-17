@@ -260,12 +260,12 @@ private:
   ActiveRegistrationModelIntensityMetric( const Self & ); // purposely not implemented
   void operator=( const Self & );       // purposely not implemented
 
-  bool m_WriteReconstructedImageEachIteration;
-
-  /**  Memory efficient computation of T(mu) * VV^T */
-  const StatisticalModelVectorType Reconstruct( const StatisticalModelVectorType& movingVector,
-                                                const StatisticalModelMatrixType& basisMatrix,
+  /**  Memory efficient computation of VV^T * ( T(mu) - mu ) */
+  const StatisticalModelVectorType Reconstruct( const StatisticalModelVectorType& movingImageValues,
+                                                const StatisticalModelMatrixType& subsampledBasisMatrix,
                                                 const StatisticalModelScalarType& noiseVariance ) const;
+
+  bool m_WriteReconstructedImageEachIteration;
 
   StatisticalModelVectorContainerConstPointer m_MeanVectorContainer;
   StatisticalModelMatrixContainerConstPointer m_BasisMatrixContainer;

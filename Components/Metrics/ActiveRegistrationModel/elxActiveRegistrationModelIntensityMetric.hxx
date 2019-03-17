@@ -197,13 +197,13 @@ ActiveRegistrationModelIntensityMetric< TElastix >
       }
 
       // Build model
-      elxout << "  Building statistical intensity model for metric " << this->GetMetricNumber() << "... ";
+      elxout << "  Building statistical intensity model for metric " << this->GetMetricNumber() << " ... ";
       StatisticalModelPointer statisticalModel;
       try
       {
         StatisticalModelBuilderPointer pcaModelBuilder = StatisticalModelBuilderType::New();
         statisticalModel = pcaModelBuilder->BuildNewModel( dataManager->GetData(), noiseVariance[ statisticalModelId ] );
-        elxout << "  Done."
+        elxout << " Done." << std::endl
                << "  Number of modes: " << statisticalModel->GetNumberOfPrincipalComponents() << "." << std::endl
                << "  Noise variance: " << statisticalModel->GetNoiseVariance()
                << "." << std::endl;

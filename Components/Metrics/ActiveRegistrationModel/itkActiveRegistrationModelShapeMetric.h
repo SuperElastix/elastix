@@ -214,7 +214,7 @@ private:
   ActiveRegistrationModelShapeMetric( const Self & );    // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
 
-  /**  Memory efficient computation of T(mu) * VV^T */
+  /**  Memory efficient computation of VV^T * ( T(mu) - mu ) */
   const StatisticalModelVectorType Reconstruct( const StatisticalModelVectorType& movingVector,
                                                 const StatisticalModelMatrixType& basisMatrix,
                                                 const StatisticalModelScalarType& noiseVariance ) const;
