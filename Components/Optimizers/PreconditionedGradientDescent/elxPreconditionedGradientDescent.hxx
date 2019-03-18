@@ -180,7 +180,7 @@ PreconditionedGradientDescent<TElastix>
       this->GetComponentLabel(), level, 0 );
     this->SetParam_alpha( alpha );
 
-    double a = 2.0 * noisefactor * vcl_pow( this->GetParam_A() + 1.0, alpha );
+    double a = 2.0 * noisefactor * std::pow( this->GetParam_A() + 1.0, alpha );
     this->GetConfiguration()->ReadParameter(a, "SP_a",
       this->GetComponentLabel(), level, 0 );
     this->SetParam_a( a );
@@ -513,7 +513,7 @@ PreconditionedGradientDescent<TElastix>
   {
     const double K = 1.5;
     this->m_NumberOfGradientMeasurements = static_cast<unsigned int>(
-      vcl_ceil( 8.0 / P / (K-1) / (K-1) ) );
+      std::ceil( 8.0 / P / (K-1) / (K-1) ) );
     this->m_NumberOfGradientMeasurements = vnl_math_max(
       static_cast<unsigned int>( 2 ),
       this->m_NumberOfGradientMeasurements );
@@ -536,7 +536,7 @@ PreconditionedGradientDescent<TElastix>
   const double a = a_max * noisefactor;
 
   const double omega = vnl_math_max( 1e-14,
-    this->m_SigmoidScaleFactor * ( sigma1 + sigma2 ) * vcl_sqrt( Pd ) );
+    this->m_SigmoidScaleFactor * ( sigma1 + sigma2 ) * std::sqrt( Pd ) );
   const double fmax = 1.0;
   const double fmin = -0.99 + 0.98 * noisefactor;
 
@@ -574,9 +574,9 @@ PreconditionedGradientDescent<TElastix>
 
   /** Variables for sampler support. Each metric may have a sampler. */
   std::vector< bool >                                 useRandomSampleRegionVec( M, false );
-  std::vector< ImageRandomSamplerBasePointer >        randomSamplerVec( M, 0 );
-  std::vector< ImageRandomCoordinateSamplerPointer >  randomCoordinateSamplerVec( M, 0 );
-  std::vector< ImageGridSamplerPointer >              gridSamplerVec( M, 0 );
+  std::vector< ImageRandomSamplerBasePointer >        randomSamplerVec( M );
+  std::vector< ImageRandomCoordinateSamplerPointer >  randomCoordinateSamplerVec( M );
+  std::vector< ImageGridSamplerPointer >              gridSamplerVec( M );
 
   /** If new samples every iteration, get each sampler, and check if it is
    * a kind of random sampler. If yes, prepare an additional grid sampler
@@ -696,7 +696,7 @@ PreconditionedGradientDescent<TElastix>
     double perturbationSigma = 0.0;
     if( sigma1 > 0 )
     {
-      perturbationSigma = vcl_sqrt( sigma1 );
+      perturbationSigma = std::sqrt( sigma1 );
     }
 
     /** sum_n g_n' P g_n */

@@ -334,7 +334,7 @@ PreconditionedGradientDescentOptimizer
   while( derivIt != gradient.end() )
   {
     const double currentVal = (*derivIt);
-    if( vcl_abs(currentVal) > minimumGradientElementMagnitude )
+    if( std::abs(currentVal) > minimumGradientElementMagnitude )
     {
       ++( gCol[1] );
       (*gRow) = static_cast<CInt>(derivIt - derivBegin);
@@ -392,7 +392,7 @@ PreconditionedGradientDescentOptimizer
   /** estimate of largest eigenvalue, not very accurate */
   //DiagonalType diagP( spaceDimension );
   //precondition.diag_AtA( diagP );
-  //const double frobnormP = vcl_sqrt( diagP.sum() );
+  //const double frobnormP = std::sqrt( diagP.sum() );
 
   /** Check range of eigenvalues */
   for( unsigned int r = 0; r < spaceDimension; ++r )

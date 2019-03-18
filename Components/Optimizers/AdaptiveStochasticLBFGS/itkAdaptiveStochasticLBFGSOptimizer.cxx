@@ -58,7 +58,7 @@ AdaptiveStochasticLBFGSOptimizer
   sigmoid.SetOutputMinimum( this->GetSigmoidMin() );
   sigmoid.SetAlpha( this->GetSigmoidScale() );
   const double beta = this->GetSigmoidScale() *
-    vcl_log( - this->GetSigmoidMax() / this->GetSigmoidMin() );
+    std::log( - this->GetSigmoidMax() / this->GetSigmoidMin() );
   sigmoid.SetBeta( beta );
 
   /** to be cleaned about the logical issues. */

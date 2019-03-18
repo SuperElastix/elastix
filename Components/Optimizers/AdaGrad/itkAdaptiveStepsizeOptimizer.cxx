@@ -63,7 +63,7 @@ AdaptiveStepsizeOptimizer
       sigmoid.SetOutputMinimum( this->GetSigmoidMin() );
       sigmoid.SetAlpha( this->GetSigmoidScale() );
       const double beta = this->GetSigmoidScale()
-        * vcl_log( -this->GetSigmoidMax() / this->GetSigmoidMin() );
+        * std::log( -this->GetSigmoidMax() / this->GetSigmoidMin() );
       sigmoid.SetBeta( beta );
 
       /** Formula (2) in Cruz */

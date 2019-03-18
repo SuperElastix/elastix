@@ -466,12 +466,12 @@ AdaGrad< TElastix >
   const double eta = 1e-14;
   const double lamda2 = lamda * this->m_NoiseFactor;
 //  const double lamda2 = 0.01;
-	for (unsigned int j = 0; j < spaceDimension; ++j)
-	{
-		this->m_PreconditionVector[j] += this->m_Gradient[j] * this->m_Gradient[j];
-		searchDirection[j] = this->m_Gradient[j] / (vcl_sqrt(this->m_PreconditionVector[j] + eta));
-		newPosition[j] = currentPosition[j] - lamda2 * searchDirection[j];
-	}
+  for( unsigned int j = 0; j < spaceDimension; ++j )
+  {
+    this->m_PreconditionVector[ j ] += this->m_Gradient[ j ] * this->m_Gradient[ j ];
+    searchDirection[ j ] = this->m_Gradient[ j ] / ( std::sqrt( this->m_PreconditionVector[ j ] + eta ) );
+    newPosition[ j ] = currentPosition[ j ] - lamda2 * searchDirection[ j ];
+  }
 
   this->Superclass1::UpdateCurrentTime();
   this->InvokeEvent( itk::IterationEvent() );
@@ -577,7 +577,7 @@ AdaGrad< TElastix >
 
   /** Getting pointers to the samplers. */
   const unsigned int M = this->GetElastix()->GetNumberOfMetrics();
-  std::vector< ImageSamplerBasePointer >  originalSampler( M, 0 );
+  std::vector< ImageSamplerBasePointer >  originalSampler( M );
   for( unsigned int m = 0; m < M; ++m )
   {
     ImageSamplerBasePointer sampler =
@@ -588,7 +588,7 @@ AdaGrad< TElastix >
 #if 0
   /** Create some samplers that can be used for the pre-conditioner computation. */
   //std::vector< ImageRandomCoordinateSamplerPointer > preconditionSamplers( M, 0 ); // very slow, leave this for reminder. YQ
-  std::vector< ImageRandomSamplerPointer > preconditionSamplers( M, 0 );
+  std::vector< ImageRandomSamplerPointer > preconditionSamplers( M );
   for( unsigned int m = 0; m < M; ++m )
   {
     ImageSamplerBasePointer sampler =
@@ -667,30 +667,30 @@ AdaGrad< TElastix >
   double      jacg = 0.0;
   double      maxJJ = 0.0;
   typename ComputeDisplacementDistributionType::Pointer
-	  computeDisplacementDistribution = ComputeDisplacementDistributionType::New();
+    computeDisplacementDistribution = ComputeDisplacementDistributionType::New();
   computeDisplacementDistribution->SetFixedImage(testPtr->GetFixedImage());
   computeDisplacementDistribution->SetFixedImageRegion(testPtr->GetFixedImageRegion());
   computeDisplacementDistribution->SetFixedImageMask(testPtr->GetFixedImageMask());
   computeDisplacementDistribution->SetTransform(
-	  this->GetRegistration()->GetAsITKBaseType()->GetTransform());
+    this->GetRegistration()->GetAsITKBaseType()->GetTransform());
   computeDisplacementDistribution->SetCostFunction(this->m_CostFunction);
   computeDisplacementDistribution->SetNumberOfJacobianMeasurements(
-	  this->m_NumberOfJacobianMeasurements);
+    this->m_NumberOfJacobianMeasurements);
 
 
   std::string maximumDisplacementEstimationMethod = "2sigma";
   this->GetConfiguration()->ReadParameter(maximumDisplacementEstimationMethod,
-	  "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0);
+    "MaximumDisplacementEstimationMethod", this->GetComponentLabel(), 0, 0);
 
   /** Compute the Jacobian terms. */
   elxout << "  Computing displacement distribution ..." << std::endl;
   timer4.Start();
   computeDisplacementDistribution->Compute(
-	  this->GetScaledCurrentPosition(), jacg, maxJJ,
-	  maximumDisplacementEstimationMethod);
+    this->GetScaledCurrentPosition(), jacg, maxJJ,
+    maximumDisplacementEstimationMethod);
   timer4.Stop();
   elxout << "  Computing the displacement distribution took "
-	  << this->ConvertSecondsToDHMS(timer4.GetMean(), 6) << std::endl;
+    << this->ConvertSecondsToDHMS(timer4.GetMean(), 6) << std::endl;
 
   /** Sample the fixed image to estimate the noise factor. */
   itk::TimeProbe timer_noise; timer_noise.Start();
@@ -699,7 +699,7 @@ AdaGrad< TElastix >
   elxout << "  The estimated MaxJJ is: " << maxJJ << std::endl;
   if( maxJJ > 1e-14 )
   {
-    sigma4 = sigma4factor * this->m_MaximumStepLength / vcl_sqrt( maxJJ );
+    sigma4 = sigma4factor * this->m_MaximumStepLength / std::sqrt( maxJJ );
   }
   double gg           = 0.0;
   double ee           = 0.0;
@@ -728,9 +728,9 @@ AdaGrad< TElastix >
   const double A = this->GetParam_A();
   const double delta = this->GetMaximumStepLength();
 
-  a = delta * vcl_pow(A + 1.0, alpha) / (jacg + 1e-14);
+  a = delta * std::pow( A + 1.0, alpha ) / ( jacg + 1e-14 );
 
-  this->SetParam_a(a);
+  this->SetParam_a( a );
   /** Print the elapsed time. */
   timer.Stop();
   elxout << "Automatic preconditioner estimation took "
@@ -755,9 +755,9 @@ AdaGrad< TElastix >
 
   /** Variables for sampler support. Each metric may have a sampler. */
   std::vector< bool >                                useRandomSampleRegionVec( M, false );
-  std::vector< ImageRandomSamplerBasePointer >       randomSamplerVec( M, 0 );
-  std::vector< ImageRandomCoordinateSamplerPointer > randomCoordinateSamplerVec( M, 0 );
-  std::vector< ImageGridSamplerPointer >             gridSamplerVec( M, 0 );
+  std::vector< ImageRandomSamplerBasePointer >       randomSamplerVec( M );
+  std::vector< ImageRandomCoordinateSamplerPointer > randomCoordinateSamplerVec( M );
+  std::vector< ImageGridSamplerPointer >             gridSamplerVec( M );
 
   /** If new samples every iteration, get each sampler, and check if it is
    * a kind of random sampler. If yes, prepare an additional grid sampler
@@ -883,7 +883,7 @@ AdaGrad< TElastix >
       }
       this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
 
-	  exactgg += inner_product(exactgradient, exactgradient);
+    exactgg += inner_product(exactgradient, exactgradient);
 
       /** Set random sampler(s), select new spatial samples and get approximate derivative. */
       for( unsigned int m = 0; m < M; ++m )
@@ -899,7 +899,7 @@ AdaGrad< TElastix >
 
       /** Compute error vector. */
       diffgradient = exactgradient - approxgradient;
-	  approxgg = inner_product(diffgradient, diffgradient);
+    approxgg = inner_product(diffgradient, diffgradient);
       diffgg += approxgg;
     }
     else // no stochastic gradients

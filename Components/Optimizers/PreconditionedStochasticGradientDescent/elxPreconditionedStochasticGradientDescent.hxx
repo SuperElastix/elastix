@@ -578,7 +578,7 @@ PreconditionedStochasticGradientDescent< TElastix >
 
   /** Getting pointers to the samplers. */
   const unsigned int M = this->GetElastix()->GetNumberOfMetrics();
-  std::vector< ImageSamplerBasePointer >  originalSampler( M, 0 );
+  std::vector< ImageSamplerBasePointer >  originalSampler( M );
   for( unsigned int m = 0; m < M; ++m )
   {
     ImageSamplerBasePointer sampler =
@@ -588,7 +588,7 @@ PreconditionedStochasticGradientDescent< TElastix >
 
   /** Create a random sampler with more samples that can be used for the pre-conditioner computation. */
   //std::vector< ImageRandomCoordinateSamplerPointer > preconditionSamplers( M, 0 ); // very slow, leave this for reminder. YQ
-  std::vector< ImageRandomSamplerPointer > preconditionSamplers( M, 0 );
+  std::vector< ImageRandomSamplerPointer > preconditionSamplers( M );
   for( unsigned int m = 0; m < M; ++m )
   {
     ImageSamplerBasePointer sampler =
@@ -701,7 +701,7 @@ PreconditionedStochasticGradientDescent< TElastix >
   elxout << "  The estimated MaxJJ is: " << maxJJ << std::endl;
   if( maxJJ > 1e-14 )
   {
-    sigma4 = sigma4factor * this->m_MaximumStepLength / vcl_sqrt( maxJJ );
+    sigma4 = sigma4factor * this->m_MaximumStepLength / std::sqrt( maxJJ );
   }
   double gg           = 0.0;
   double ee           = 0.0;
@@ -733,7 +733,7 @@ PreconditionedStochasticGradientDescent< TElastix >
 
   if( useJacobiType )
   {
-    a = delta * vcl_pow( A + 1.0, alpha ) / ( jacg + 1e-14 );
+    a = delta * std::pow( A + 1.0, alpha ) / ( jacg + 1e-14 );
   }
   this->SetParam_a( a );
 
@@ -761,9 +761,9 @@ PreconditionedStochasticGradientDescent< TElastix >
 
   /** Variables for sampler support. Each metric may have a sampler. */
   std::vector< bool >                                useRandomSampleRegionVec( M, false );
-  std::vector< ImageRandomSamplerBasePointer >       randomSamplerVec( M, 0 );
-  std::vector< ImageRandomCoordinateSamplerPointer > randomCoordinateSamplerVec( M, 0 );
-  std::vector< ImageGridSamplerPointer >             gridSamplerVec( M, 0 );
+  std::vector< ImageRandomSamplerBasePointer >       randomSamplerVec( M );
+  std::vector< ImageRandomCoordinateSamplerPointer > randomCoordinateSamplerVec( M );
+  std::vector< ImageGridSamplerPointer >             gridSamplerVec( M );
 
   /** If new samples every iteration, get each sampler, and check if it is
    * a kind of random sampler. If yes, prepare an additional grid sampler
