@@ -883,7 +883,7 @@ AdaGrad< TElastix >
       }
       this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
 
-    exactgg += inner_product(exactgradient, exactgradient);
+      exactgg += inner_product(exactgradient, exactgradient);
 
       /** Set random sampler(s), select new spatial samples and get approximate derivative. */
       for( unsigned int m = 0; m < M; ++m )
@@ -899,7 +899,7 @@ AdaGrad< TElastix >
 
       /** Compute error vector. */
       diffgradient = exactgradient - approxgradient;
-    approxgg = inner_product(diffgradient, diffgradient);
+      approxgg = inner_product(diffgradient, diffgradient);
       diffgg += approxgg;
     }
     else // no stochastic gradients
