@@ -149,7 +149,7 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
 
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
   std::list< FixedImagePointType > fixedPoints;
-  typename StatisticalModelType::PointValueListType movingPointImageValues;
+  typename StatisticalModelType::PointValueListType fixedPointMovingImageValues;
 
   for( const auto& sample : sampleContainer->CastToSTLConstContainer() )
   {
@@ -182,32 +182,27 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
 
     if( sampleOk )
     {
-      fixedPoints.emplace_back( fixedPoint );
-      movingPointImageValues.emplace_back( movingPoint, movingImageValue );
+      fixedPointMovingImageValues.emplace_back( fixedPoint, movingImageValue );
     }
   }
 
-  this->CheckNumberOfSamples( sampleContainer->Size(), movingPointImageValues.size() );
+  this->CheckNumberOfSamples( sampleContainer->Size(), fixedPointMovingImageValues.size() );
 
-  const auto coeffs = statisticalModel->ComputeCoefficientsForPointValues( movingPointImageValues, statisticalModel->GetNoiseVariance() );
+  const auto coeffs = statisticalModel->ComputeCoefficientsForPointValues( fixedPointMovingImageValues, statisticalModel->GetNoiseVariance() );
 
-  // tmp = (M(T(mu) - mu) * (I - VV^T) * (M(T(mu)) - mu)
+  // tmp = sum_J (M(T(mu_j) - mu_j) * (I - V_j V_j^T) * (M(T(mu_j)) - mu_j)
   RealType tmp = 0;
-  for( auto it = std::make_pair( fixedPoints.begin(), movingPointImageValues.begin() );
-          it.first != fixedPoints.end();
-          it.first++, it.second++) {
-    const auto& fixedPoint = it.first;
-    const auto& movingPoint = it.second->first;
+  for( const auto& fixedPointMovingImageValue : fixedPointMovingImageValues ) {
+    const auto& fixedPoint = fixedPointMovingImageValue.first;
+    const auto& movingImageValue = fixedPointMovingImageValue.second;
 
-    const auto& mean = statisticalModel->DrawMeanAtPoint( fixedPoint );
-    const auto& movingImageValue = it.second->second - mean;
-
-    tmp += movingImageValue  * ( movingImageValue - statisticalModel->DrawSampleAtPoint( coeffs, movingPoint, true ) );
+    tmp += ( movingImageValue - statisticalModel->DrawMeanAtPoint( fixedPoint ) ) *
+           ( movingImageValue - statisticalModel->DrawSampleAtPoint( coeffs, fixedPoint, true ) );
   }
 
-  if( movingPointImageValues.size() > 0 )
+  if( fixedPointMovingImageValues.size() > 0 )
   {
-    modelValue += tmp / movingPointImageValues.size();
+    modelValue += tmp / fixedPointMovingImageValues.size();
   }
 
 } // end GetModelValue()
