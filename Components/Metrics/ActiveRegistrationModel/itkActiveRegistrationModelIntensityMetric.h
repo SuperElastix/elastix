@@ -163,6 +163,7 @@ public:
   typedef typename ReducedVarianceModelBuilderType::Pointer                       ReducedVarianceModelBuilderPointer;
 
   typedef unsigned int                                                            StatisticalModelIdType;
+  typedef std::vector< std::pair< unsigned int, RealType > >                      EnumeratedMovingImageValuesType;
 
   typedef VectorContainer< StatisticalModelIdType, StatisticalModelMatrixType >   StatisticalModelMatrixContainerType;
   typedef typename StatisticalModelMatrixContainerType::Pointer                   StatisticalModelMatrixContainerPointer;
@@ -184,6 +185,11 @@ public:
   typedef typename StatisticalModelRepresenterContainerType::ConstPointer         StatisticalModelRepresenterContainerConstPointer;
   typedef typename StatisticalModelRepresenterContainerType::ConstIterator        StatisticalModelRepresenterContainerConstIterator;
 
+  typedef VectorContainer< StatisticalModelIdType, StatisticalModelType > StatisticalModelContainerType;
+  typedef typename StatisticalModelContainerType::Pointer                 StatisticalModelContainerPointer;
+  typedef typename StatisticalModelContainerType::ConstPointer            StatisticalModelContainerConstPointer;
+  typedef typename StatisticalModelContainerType::ConstIterator           StatisticalModelContainerConstIterator;
+
   itkSetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
   itkGetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
 
@@ -201,6 +207,9 @@ public:
 
   itkSetConstObjectMacro( RepresenterContainer, StatisticalModelRepresenterContainerType );
   itkGetConstObjectMacro( RepresenterContainer, StatisticalModelRepresenterContainerType );
+
+  itkSetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
+  itkGetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
 
   /** Initialize the Metric by making sure that all the components are
   *  present and plugged together correctly.
@@ -273,6 +282,7 @@ private:
   StatisticalModelScalarContainerConstPointer m_NoiseVarianceContainer;
   StatisticalModelScalarContainerConstPointer m_TotalVarianceContainer;
   StatisticalModelRepresenterContainerConstPointer m_RepresenterContainer;
+  StatisticalModelContainerConstPointer m_StatisticalModelContainer;
 };
 
 } // end namespace itk

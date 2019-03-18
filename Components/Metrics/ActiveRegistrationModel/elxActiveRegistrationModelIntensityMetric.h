@@ -181,11 +181,14 @@ public:
   typedef typename Superclass1::StatisticalModelScalarContainerType           StatisticalModelScalarContainerType;
   typedef typename Superclass1::StatisticalModelScalarContainerPointer        StatisticalModelScalarContainerPointer;
 
-  typedef typename Superclass1::StatisticalModelRepresenterContainerType     StatisticalModelRepresenterContainerType;
-  typedef typename Superclass1::StatisticalModelRepresenterContainerPointer  StatisticalModelRepresenterContainerPointer;
+  typedef typename Superclass1::StatisticalModelRepresenterContainerType      StatisticalModelRepresenterContainerType;
+  typedef typename Superclass1::StatisticalModelRepresenterContainerPointer   StatisticalModelRepresenterContainerPointer;
 
   typedef typename Superclass1::StatisticalModelDataManagerType               StatisticalModelDataManagerType;
   typedef typename Superclass1::StatisticalModelDataManagerPointer            StatisticalModelDataManagerPointer;
+
+  typedef typename Superclass1::StatisticalModelContainerType                 StatisticalModelContainerType;
+  typedef typename Superclass1::StatisticalModelContainerPointer              StatisticalModelContainerPointer;
 
   typedef itk::ImageFileWriter< FixedImageType >                              FixedImageFileWriterType;
   typedef typename FixedImageFileWriterType::Pointer                          FixedImageFileWriterPointer;

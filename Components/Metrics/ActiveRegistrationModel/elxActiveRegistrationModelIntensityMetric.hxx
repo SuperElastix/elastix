@@ -165,9 +165,10 @@ ActiveRegistrationModelIntensityMetric< TElastix >
         itkExceptionMacro( "Error loading statistical shape model: " << e.what() );
       }
 
-      elxout << "  Loaded model " << this->m_LoadIntensityModelFileNames[ statisticalModelId ].c_str() << "." << std::endl;
-      elxout << "  Number of principal components: " << statisticalModel->GetNumberOfPrincipalComponents() << "." << std::endl;
-      elxout << "  Noise variance: " << statisticalModel->GetNoiseVariance() << "." << std::endl;
+      elxout << "  Loaded model " << this->m_LoadIntensityModelFileNames[ statisticalModelId ].c_str() << "." << std::endl
+             << "  Number modes: " << statisticalModel->GetNumberOfPrincipalComponents() << "." << std::endl
+             << "  Variance: " << statisticalModel->GetPCAVarianceVector() << "." << std::endl
+             << "  Noise variance: " << statisticalModel->GetNoiseVariance() << "." << std::endl;
     }
   }
 
@@ -205,6 +206,7 @@ ActiveRegistrationModelIntensityMetric< TElastix >
         statisticalModel = pcaModelBuilder->BuildNewModel( dataManager->GetData(), noiseVariance[ statisticalModelId ] );
         elxout << " Done." << std::endl
                << "  Number of modes: " << statisticalModel->GetNumberOfPrincipalComponents() << "." << std::endl
+               << "  Variance: " << statisticalModel->GetPCAVarianceVector()
                << "  Noise variance: " << statisticalModel->GetNoiseVariance()
                << "." << std::endl;
 

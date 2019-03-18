@@ -172,18 +172,14 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
   // Make sure transform parameters are up-to-date
   this->SetTransformParameters( parameters );
 
-  unsigned int numberOfOkSamples = 0;
-
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  StatisticalModelVectorType movingImageValues = StatisticalModelVectorType( sampleContainer->Size(), 0. );
-  StatisticalModelMatrixType subsampledBasisMatrix = StatisticalModelMatrixType( sampleContainer->Size(), basisMatrix.cols(), 0. );
+  StatisticalModelVectorType coeff = StatisticalModelVectorType( basisMatrix.cols(), 0. );
+  EnumeratedMovingImageValuesType enumeratedMovingImageValues;
 
-  for( auto it = std::make_pair( 0, sampleContainer->Begin() );
-       it.second != sampleContainer->End();
-       it.first++, it.second++)
+  for( auto sampleContainerIterator = sampleContainer->Begin(); sampleContainerIterator != sampleContainer->End(); ++sampleContainerIterator)
   {
     // Transform point
-    const FixedImagePointType &fixedPoint = it.second->Value().m_ImageCoordinates;
+    const FixedImagePointType &fixedPoint = sampleContainerIterator->Value().m_ImageCoordinates;
     MovingImagePointType movingPoint;
     RealType movingImageValue;
     bool sampleOk = this->TransformPoint( fixedPoint, movingPoint );
@@ -212,21 +208,29 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
     if( sampleOk )
     {
       const unsigned int pointId = representer->GetPointIdForPoint( fixedPoint );
-      movingImageValues[it.first] = movingImageValue - meanVector[ pointId ];
-      subsampledBasisMatrix.set_row(it.first, basisMatrix.get_row( pointId ));
-
-      numberOfOkSamples++;
+      const RealType tmp = movingImageValue - meanVector[ pointId ];
+      coeff += basisMatrix.get_row( pointId ) * tmp;
+      enumeratedMovingImageValues.emplace_back( pointId, tmp );
     }
   }
 
-  // Check number of samples
-  this->CheckNumberOfSamples( sampleContainer->Size(), numberOfOkSamples );
+  this->CheckNumberOfSamples( sampleContainer->Size(), enumeratedMovingImageValues.size() );
 
-  if( numberOfOkSamples > 0 )
+  // tmp = (M(T(mu) - mu) * (I - VV^T) * (M(T(mu)) - mu)
+  RealType modelValueTmp = 0;
+  for( const auto& enumeratedMovingImageValue : enumeratedMovingImageValues ) {
+    RealType epsilon = 0;
+    if( noiseVariance > 0 ) {
+      epsilon = vnl_sample_normal(0., 1.);
+    }
+
+    RealType tmp = enumeratedMovingImageValue.second - dot_product( basisMatrix.get_row( enumeratedMovingImageValue.first ), coeff ) + epsilon;
+    modelValueTmp += tmp * tmp;
+  }
+
+  if( enumeratedMovingImageValues.size() > 0 )
   {
-    // tmp = (I - VV^T) * (M(T(mu)) - mu)
-    const StatisticalModelVectorType tmp = movingImageValues - this->Reconstruct(movingImageValues, subsampledBasisMatrix, noiseVariance);
-    modelValue += dot_product(movingImageValues, tmp) / movingImageValues.size();
+    modelValue += modelValueTmp / enumeratedMovingImageValues.size();
   }
 
 } // end GetModelValue()
