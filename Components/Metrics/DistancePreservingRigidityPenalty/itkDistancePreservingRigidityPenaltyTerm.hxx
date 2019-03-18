@@ -186,8 +186,6 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
   typename PenaltyGridImageType::IndexType penaltyGridIndex, neighborPenaltyGridIndex;
   typename PenaltyGridImageType::PointType penaltyGridPoint, neighborPenaltyGridPoint, xn, xf;
 
-  typename TransformType::OutputVectorType dd_dx, dd_dy, dd_dz;
-
   typedef itk::ConstNeighborhoodIterator< PenaltyGridImageType > NeighborhoodIteratorType;
   typename NeighborhoodIteratorType::RadiusType radius;
   radius.Fill( 1 );
@@ -328,7 +326,7 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
   typedef typename WeightsFunctionType::ContinuousIndexType                    ContinuousIndexType;
   typedef double                                                               ContinuousIndexValueType;
 
-  ContinuousIndexType      tindex, neighbor_tindex, neighbor_tindex_start;
+  ContinuousIndexType      tindex;
   ContinuousIndexValueType tx, ty, tz;
 
   ContinuousIndexValueType m, n, p, neighbor_m, neighbor_n, neighbor_p;
