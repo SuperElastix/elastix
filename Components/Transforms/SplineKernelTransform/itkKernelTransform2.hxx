@@ -757,7 +757,7 @@ KernelTransform2< TScalarType, NDimensions >
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
   jac.SetSize( NDimensions, numberOfLandmarks * NDimensions );
   jac.Fill( 0.0 );
-  GMatrixType    Gmatrix, GMatrixSym; // dim x dim
+  GMatrixType    Gmatrix; // , GMatrixSym; // dim x dim
   PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
 
   // General route working for all kernels (but slow)
