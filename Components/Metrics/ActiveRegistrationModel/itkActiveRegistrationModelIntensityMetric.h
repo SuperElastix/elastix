@@ -185,7 +185,7 @@ public:
   typedef typename StatisticalModelRepresenterContainerType::ConstPointer         StatisticalModelRepresenterContainerConstPointer;
   typedef typename StatisticalModelRepresenterContainerType::ConstIterator        StatisticalModelRepresenterContainerConstIterator;
 
-  typedef VectorContainer< StatisticalModelIdType, StatisticalModelType > StatisticalModelContainerType;
+  typedef VectorContainer< StatisticalModelIdType, StatisticalModelPointer > StatisticalModelContainerType;
   typedef typename StatisticalModelContainerType::Pointer                 StatisticalModelContainerPointer;
   typedef typename StatisticalModelContainerType::ConstPointer            StatisticalModelContainerConstPointer;
   typedef typename StatisticalModelContainerType::ConstIterator           StatisticalModelContainerConstIterator;
@@ -228,18 +228,12 @@ public:
                                               MeasureType& value,
                                               DerivativeType& derivative ) const;
 
-  void GetModelValue( const StatisticalModelVectorType& meanVector,
-                      const StatisticalModelMatrixType& basisMatrix,
-                      const StatisticalModelScalarType& noiseVariance,
-                      const StatisticalModelRepresenterPointer representer,
+  void GetModelValue( const StatisticalModelPointer statisticalModel,
                       MeasureType & modelValue,
                       const TransformParametersType& parameters ) const;
 
 
-  void GetModelFiniteDifferenceDerivative( const StatisticalModelVectorType& meanVector,
-                                           const StatisticalModelMatrixType& basisMatrix,
-                                           const StatisticalModelScalarType& noiseVariance,
-                                           const StatisticalModelRepresenterPointer representer,
+  void GetModelFiniteDifferenceDerivative( const StatisticalModelPointer statisticalModel,
                                            DerivativeType& modelDerivative,
                                            const TransformParametersType & parameters ) const;
 

@@ -141,6 +141,9 @@ ActiveRegistrationModelIntensityMetric< TElastix >
   StatisticalModelRepresenterContainerPointer statisticalModelRepresenterContainer = StatisticalModelRepresenterContainerType::New();
   statisticalModelRepresenterContainer->Reserve( this->m_LoadIntensityModelFileNames.size() + this->m_ImageDirectories.size() );
 
+  StatisticalModelContainerPointer statisticalModelContainer = StatisticalModelContainerType::New();
+  statisticalModelContainer->Reserve( this->m_LoadIntensityModelFileNames.size() + this->m_ImageDirectories.size() );
+
   // Load models
   if( this->m_LoadIntensityModelFileNames.size() > 0 )
   {
@@ -159,6 +162,7 @@ ActiveRegistrationModelIntensityMetric< TElastix >
         statisticalModelVarianceVectorContainer->SetElement( statisticalModelId, statisticalModel->GetPCAVarianceVector() );
         statisticalModelNoiseVarianceContainer->SetElement( statisticalModelId, statisticalModel->GetNoiseVariance() );
         statisticalModelRepresenterContainer->SetElement( statisticalModelId, representer );
+        statisticalModelContainer->SetElement( statisticalModelId, statisticalModel );
       }
       catch( statismo::StatisticalModelException &e )
       {
@@ -246,6 +250,8 @@ ActiveRegistrationModelIntensityMetric< TElastix >
       StatisticalModelRepresenterPointer representer = StatisticalModelRepresenterType::New();
       representer->SetReference( statisticalModel->GetRepresenter()->GetReference() );
       statisticalModelRepresenterContainer->SetElement( statisticalModelId, representer );
+
+      statisticalModelContainer->SetElement( statisticalModelId, statisticalModel );
     }
   }
 
@@ -254,6 +260,7 @@ ActiveRegistrationModelIntensityMetric< TElastix >
   this->SetVarianceContainer( statisticalModelVarianceVectorContainer );
   this->SetNoiseVarianceContainer( statisticalModelNoiseVarianceContainer) ;
   this->SetRepresenterContainer( statisticalModelRepresenterContainer );
+  this->SetStatisticalModelContainer( statisticalModelContainer );
 
   std::cout << std::endl;
 } // end BeforeRegistration()

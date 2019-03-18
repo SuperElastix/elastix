@@ -76,34 +76,23 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
   derivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
   // Loop over models
-  for(auto it =
-          std::make_tuple(
-                  this->GetMeanVectorContainer()->Begin(),
-                  this->GetBasisMatrixContainer()->Begin(),
-                  this->GetNoiseVarianceContainer()->Begin(),
-                  this->GetRepresenterContainer()->Begin() );
-      std::get<0>(it) != this->GetMeanVectorContainer()->End();
-      ++std::get<0>(it), ++std::get<1>(it), ++std::get<2>(it), ++std::get<3>(it))
+  for( const auto& statisticalModel : this->GetStatisticalModelContainer()->CastToSTLConstContainer() )
   {
-    const StatisticalModelVectorType& meanVector = std::get<0>(it)->Value();
-    const StatisticalModelMatrixType& basisMatrix = std::get<1>(it)->Value();
-    const StatisticalModelScalarType& noiseVariance = std::get<2>(it)->Value();
-    const StatisticalModelRepresenterPointer representer = std::get<3>(it)->Value();
 
     // Initialize value container
     MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
-    this->GetModelValue( meanVector, basisMatrix, noiseVariance, representer, modelValue, parameters );
-    this->GetModelFiniteDifferenceDerivative( meanVector, basisMatrix, noiseVariance, representer, modelDerivative, parameters );
+    this->GetModelValue( statisticalModel, modelValue, parameters );
+    this->GetModelFiniteDifferenceDerivative( statisticalModel, modelDerivative, parameters );
 
     value += modelValue;
     derivative += modelDerivative;
   }
 
-  value /= this->GetMeanVectorContainer()->Size();
-  derivative /= this->GetMeanVectorContainer()->Size();
+  value /= this->GetStatisticalModelContainer()->Size();
+  derivative /= this->GetStatisticalModelContainer()->Size();
 
   elxout << "FiniteDiff: " << value << ", " << derivative << std::endl;
 }
@@ -125,30 +114,19 @@ ActiveRegistrationModelIntensityMetric< TFixedPointSet, TMovingPointSet >
   MeasureType value = NumericTraits< MeasureType >::ZeroValue();
 
   // Loop over models
-  for(auto it =
-          std::make_tuple( this->GetMeanVectorContainer()->Begin(),
-                           this->GetBasisMatrixContainer()->Begin(),
-                           this->GetNoiseVarianceContainer()->Begin(),
-                           this->GetRepresenterContainer()->Begin() );
-      std::get<0>(it) != this->GetMeanVectorContainer()->End();
-      ++std::get<0>(it), ++std::get<1>(it), ++std::get<2>(it), ++std::get<3>(it))
+  for( const auto& statisticalModel : this->GetStatisticalModelContainer()->CastToSTLConstContainer() )
   {
-    const StatisticalModelVectorType& meanVector = std::get<0>(it)->Value();
-    const StatisticalModelMatrixType& basisMatrix = std::get<1>(it)->Value();
-    const StatisticalModelScalarType& noiseVariance = std::get<2>(it)->Value();
-    const StatisticalModelRepresenterPointer representer = std::get<3>(it)->Value();
-
     // Initialize value container
     MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
-    this->GetModelValue( meanVector, basisMatrix, noiseVariance, representer, modelValue, parameters );
+    this->GetModelValue( statisticalModel, modelValue, parameters );
 
     value += modelValue;
   }
 
-  value /= this->GetMeanVectorContainer()->Size();
+  value /= this->GetStatisticalModelContainer()->Size();
 
   return value;
 } // end GetValue()
@@ -162,10 +140,7 @@ ActiveRegistrationModelIntensityMetric< TFixedPointSet, TMovingPointSet >
 template<class TFixedImage, class TMovingImage>
 void
 ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
-::GetModelValue( const StatisticalModelVectorType& meanVector,
-                 const StatisticalModelMatrixType& basisMatrix,
-                 const StatisticalModelScalarType& noiseVariance,
-                 const StatisticalModelRepresenterPointer representer,
+::GetModelValue( const StatisticalModelPointer statisticalModel,
                  MeasureType& modelValue,
                  const TransformParametersType& parameters ) const {
 
@@ -173,13 +148,13 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
   this->SetTransformParameters( parameters );
 
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  StatisticalModelVectorType coeff = StatisticalModelVectorType( basisMatrix.cols(), 0. );
-  EnumeratedMovingImageValuesType enumeratedMovingImageValues;
+  std::list< FixedImagePointType > fixedPoints;
+  typename StatisticalModelType::PointValueListType movingPointImageValues;
 
-  for( auto sampleContainerIterator = sampleContainer->Begin(); sampleContainerIterator != sampleContainer->End(); ++sampleContainerIterator)
+  for( const auto& sample : sampleContainer->CastToSTLConstContainer() )
   {
     // Transform point
-    const FixedImagePointType &fixedPoint = sampleContainerIterator->Value().m_ImageCoordinates;
+    const FixedImagePointType& fixedPoint = sample.m_ImageCoordinates;
     MovingImagePointType movingPoint;
     RealType movingImageValue;
     bool sampleOk = this->TransformPoint( fixedPoint, movingPoint );
@@ -207,30 +182,32 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
 
     if( sampleOk )
     {
-      const unsigned int pointId = representer->GetPointIdForPoint( fixedPoint );
-      const RealType tmp = movingImageValue - meanVector[ pointId ];
-      coeff += basisMatrix.get_row( pointId ) * tmp;
-      enumeratedMovingImageValues.emplace_back( pointId, tmp );
+      fixedPoints.emplace_back( fixedPoint );
+      movingPointImageValues.emplace_back( movingPoint, movingImageValue );
     }
   }
 
-  this->CheckNumberOfSamples( sampleContainer->Size(), enumeratedMovingImageValues.size() );
+  this->CheckNumberOfSamples( sampleContainer->Size(), movingPointImageValues.size() );
+
+  const auto coeffs = statisticalModel->ComputeCoefficientsForPointValues( movingPointImageValues, statisticalModel->GetNoiseVariance() );
 
   // tmp = (M(T(mu) - mu) * (I - VV^T) * (M(T(mu)) - mu)
-  RealType modelValueTmp = 0;
-  for( const auto& enumeratedMovingImageValue : enumeratedMovingImageValues ) {
-    RealType epsilon = 0;
-    if( noiseVariance > 0 ) {
-      epsilon = vnl_sample_normal(0., 1.);
-    }
+  RealType tmp = 0;
+  for( auto it = std::make_pair( fixedPoints.begin(), movingPointImageValues.begin() );
+          it.first != fixedPoints.end();
+          it.first++, it.second++) {
+    const auto& fixedPoint = it.first;
+    const auto& movingPoint = it.second->first;
 
-    RealType tmp = enumeratedMovingImageValue.second - dot_product( basisMatrix.get_row( enumeratedMovingImageValue.first ), coeff ) + epsilon;
-    modelValueTmp += tmp * tmp;
+    const auto& mean = statisticalModel->DrawMeanAtPoint( fixedPoint );
+    const auto& movingImageValue = it.second->second - mean;
+
+    tmp += movingImageValue  * ( movingImageValue - statisticalModel->DrawSampleAtPoint( coeffs, movingPoint, true ) );
   }
 
-  if( enumeratedMovingImageValues.size() > 0 )
+  if( movingPointImageValues.size() > 0 )
   {
-    modelValue += modelValueTmp / enumeratedMovingImageValues.size();
+    modelValue += tmp / movingPointImageValues.size();
   }
 
 } // end GetModelValue()
@@ -243,10 +220,7 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
 template< class TFixedImage, class TMovingImage >
 void
 ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
-::GetModelFiniteDifferenceDerivative( const StatisticalModelVectorType& meanVector,
-                                      const StatisticalModelMatrixType& basisMatrix,
-                                      const StatisticalModelScalarType& noiseVariance,
-                                      const StatisticalModelRepresenterPointer representer,
+::GetModelFiniteDifferenceDerivative( const StatisticalModelPointer statisticalModel,
                                       DerivativeType& modelDerivative,
                                       const TransformParametersType & parameters ) const
 {
@@ -265,8 +239,8 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
     plusParameters[ i ] += h;
     minusParameters[ i ] -= h;
 
-    this->GetModelValue( meanVector, basisMatrix, noiseVariance, representer, plusModelValue, plusParameters );
-    this->GetModelValue( meanVector, basisMatrix, noiseVariance, representer, minusModelValue, minusParameters );
+    this->GetModelValue( statisticalModel, plusModelValue, plusParameters );
+    this->GetModelValue( statisticalModel, minusModelValue, minusParameters );
 
     modelDerivative[ i ] += ( plusModelValue - minusModelValue ) / ( 2 * h );
   }
@@ -434,6 +408,7 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
   if (useFiniteDifferenceDerivative) {
     elxout << "Analytical: " << value << ", " << derivative << std::endl;
     this->GetValueAndFiniteDifferenceDerivative( parameters, value, derivative );
+    elxout << "Parameters: " << parameters << std::endl;
   }
 
   return;
