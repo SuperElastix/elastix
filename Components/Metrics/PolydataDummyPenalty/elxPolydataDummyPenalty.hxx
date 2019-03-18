@@ -491,7 +491,6 @@ PolydataDummyPenalty< TElastix >
 
   /** Temp vars */
   FixedImageContinuousIndexType  fixedcindex;
-  MovingImageContinuousIndexType movingcindex;
 
   /** Read the input points, as index or as point. */
   if( !( ippReader->GetPointsAreIndices() ) )

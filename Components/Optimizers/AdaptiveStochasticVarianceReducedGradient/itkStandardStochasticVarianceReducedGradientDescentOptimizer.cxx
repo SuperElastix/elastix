@@ -32,88 +32,82 @@ namespace itk
 StandardStochasticVarianceReducedGradientOptimizer
 ::StandardStochasticVarianceReducedGradientOptimizer()
 {
-    this->m_Param_a = 1.0;
-    this->m_Param_A = 1.0;
-    this->m_Param_alpha = 0.602;
+  this->m_Param_a = 1.0;
+  this->m_Param_A = 1.0;
+  this->m_Param_alpha = 0.602;
 
-    this->m_CurrentTime = 0.0;
-    this->m_InitialTime = 0.0;
+  this->m_CurrentTime = 0.0;
+  this->m_InitialTime = 0.0;
 
-  } // end Constructor
-
-
-  /**
-  * ********************** StartOptimization *********************
-  */
-
-  void StandardStochasticVarianceReducedGradientOptimizer::StartOptimization(void)
-  {
-    this->m_CurrentTime = this->m_InitialTime;
-    this->Superclass::StartOptimization();
-  } // end StartOptimization
+} // end Constructor
 
 
-  /**
-  * ******************** AdvanceOneStep **************************
-  */
+/**
+ * ********************** StartOptimization *********************
+ */
 
-  void
-    StandardStochasticVarianceReducedGradientOptimizer
-    ::AdvanceOneStep(void)
-  {
-
-    this->SetLearningRate( this->Compute_a( this->m_CurrentTime ) );
-
-    this->Superclass::AdvanceOneStep();
-
-    this->UpdateCurrentTime();
-
-  } // end AdvanceOneStep
+void StandardStochasticVarianceReducedGradientOptimizer::StartOptimization( void )
+{
+  this->m_CurrentTime = this->m_InitialTime;
+  this->Superclass::StartOptimization();
+} // end StartOptimization
 
 
-  /**
-  * ************************** Compute_a *************************
-  *
-  * This function computes the parameter a at iteration/time k, as
-  * described by Spall.
-  */
+/**
+ * ******************** AdvanceOneStep **************************
+ */
 
-  double StandardStochasticVarianceReducedGradientOptimizer
-    ::Compute_a(double k) const
-  {
-    return static_cast<double>(
-      this->m_Param_a / vcl_pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
+void
+StandardStochasticVarianceReducedGradientOptimizer
+::AdvanceOneStep( void )
+{
 
-  } // end Compute_a
+  this->SetLearningRate( this->Compute_a( this->m_CurrentTime ) );
 
-    /**
-  * ************************** Compute_beta *************************
-  *
-  * This function computes the parameter a at iteration/time k, as
-  * described by Spall.
-  */
+  this->Superclass::AdvanceOneStep();
 
-  double StandardStochasticVarianceReducedGradientOptimizer
-    ::Compute_beta(double k) const
-  {
-    return static_cast<double>(
-      this->m_Param_beta / vcl_pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
+  this->UpdateCurrentTime();
 
-  } // end Compute_beta
+} // end AdvanceOneStep
 
-  /**
-  * ************************** UpdateCurrentTime ********************
-  *
-  * This function computes the input for the Compute_a function.
-  */
 
-  void StandardStochasticVarianceReducedGradientOptimizer
-    ::UpdateCurrentTime( void )
-  {
-    /** Simply Robbins-Monro: time=iterationnr. */
-    this->m_CurrentTime += 1.0;
+/**
+ * ************************** Compute_a *************************
+ */
 
-  } // end UpdateCurrentTime
+double StandardStochasticVarianceReducedGradientOptimizer
+::Compute_a( double k ) const
+{
+  return static_cast<double>(
+    this->m_Param_a / std::pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
+
+} // end Compute_a
+
+
+/**
+ * ************************** Compute_beta *************************
+ */
+
+double StandardStochasticVarianceReducedGradientOptimizer
+::Compute_beta( double k ) const
+{
+  return static_cast<double>(
+    this->m_Param_beta / std::pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
+
+} // end Compute_beta
+
+
+/**
+ * ************************** UpdateCurrentTime ********************
+ */
+
+void StandardStochasticVarianceReducedGradientOptimizer
+::UpdateCurrentTime( void )
+{
+  /** Simply Robbins-Monro: time=iterationnr. */
+  this->m_CurrentTime += 1.0;
+
+} // end UpdateCurrentTime
 
 
 } // end namespace itk

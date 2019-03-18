@@ -164,7 +164,8 @@ public:
   /** Get a handle to the cropped InputImageregion. */
   itkGetConstReferenceMacro( CroppedInputImageRegion, InputImageRegionType );
 
-  /** Get the number of samples. */
+  /** Set/Get the number of samples. */
+  itkSetClampMacro( NumberOfSamples, unsigned long, 1, NumericTraits< unsigned long >::max() );
   itkGetConstMacro( NumberOfSamples, unsigned long );
 
   /** \todo: Temporary, should think about interface. */

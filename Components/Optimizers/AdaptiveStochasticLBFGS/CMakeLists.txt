@@ -1,0 +1,13 @@
+
+ADD_ELXCOMPONENT( AdaptiveStochasticLBFGS
+ elxAdaptiveStochasticLBFGS.h
+ elxAdaptiveStochasticLBFGS.hxx
+ elxAdaptiveStochasticLBFGS.cxx
+ itkAdaptiveStochasticLBFGSOptimizer.h
+ itkAdaptiveStochasticLBFGSOptimizer.cxx
+ ../StandardStochasticGradientDescent/itkStandardStochasticGradientDescentOptimizer.h
+ ../StandardStochasticGradientDescent/itkStandardStochasticGradientDescentOptimizer.cxx
+ ../StandardStochasticGradientDescent/itkStochasticGradientDescentOptimizer.h
+ ../StandardStochasticGradientDescent/itkStochasticGradientDescentOptimizer.cxx
+)
+

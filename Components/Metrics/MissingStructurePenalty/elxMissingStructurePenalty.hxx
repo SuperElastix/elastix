@@ -512,7 +512,6 @@ the sequence of points to form a 2d connected polydata contour.
 
   /** Temp vars */
   FixedImageContinuousIndexType  fixedcindex;
-  MovingImageContinuousIndexType movingcindex;
 
   /** Also output moving image indices if a moving image was supplied. */
   bool alsoMovingIndices = false;

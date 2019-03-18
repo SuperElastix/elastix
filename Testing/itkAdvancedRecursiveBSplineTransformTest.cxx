@@ -243,7 +243,6 @@ main( int argc, char * argv[] )
    */
 
   itk::TimeProbesCollectorBase                    timeCollector;
-  OutputPointType                                 opp;
   TransformType::WeightsType                      weights;
   RecursiveTransformType::WeightsType             weights2;
   TransformType::ParameterIndexArrayType          indices;

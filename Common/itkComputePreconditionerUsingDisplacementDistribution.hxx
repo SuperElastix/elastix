@@ -106,7 +106,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   this->GetScaledDerivative( mu, exactgradient );
 
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
+  ImageSampleContainerPointer sampleContainer;
   this->SampleFixedImageForJacobianTerms( sampleContainer );
   const SizeValueType nrofsamples = sampleContainer->Size();
 
@@ -282,7 +282,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   double meanGlobalDeformation = globalDeformation / samplenr;
   double global_sigma = globalDeformationSquare - meanGlobalDeformation * globalDeformation;
   global_sigma /= ( nrofsamples - 1 ); // unbiased estimation
-  globalStepSize = meanGlobalDeformation + 2.0 * vcl_sqrt( global_sigma );
+  globalStepSize = meanGlobalDeformation + 2.0 * std::sqrt( global_sigma );
   */
 
   /** Convert the local step sizes to a scaling factor. */
@@ -301,7 +301,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
         if (sigma < 1e-9) sigma = 0.0;
 
         /** Apply the 2 sigma rule. */
-        preconditioner[ i ] = delta / (std::sqrt(3.0) * ( meanLocalStepSize + 2.0 * vcl_sqrt(sigma)));
+        preconditioner[ i ] = delta / ( std::sqrt( 3.0 ) * ( meanLocalStepSize + 2.0 * std::sqrt( sigma ) ) );
       }
     }
     // else this entry remains 0, but this will be fixed later
@@ -356,7 +356,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   this->GetScaledDerivative( mu, exactgradient );
 
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
+  ImageSampleContainerPointer sampleContainer;
   this->SampleFixedImageForJacobianTerms( sampleContainer );
   const SizeValueType nrofsamples = sampleContainer->Size();
 
@@ -379,7 +379,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   DerivativeType jacj_g( outdim );
   jacj_g.Fill( 0.0 );
   JacobianType          jacjjacj( outdim, outdim );
-  const double          sqrt2 = vcl_sqrt( static_cast< double >( 2.0 ) );
+  const double          sqrt2 = std::sqrt( static_cast< double >( 2.0 ) );
   std::vector< double > localStepSizeSquared( P, 0.0 );
   ParametersType binCount( P );
   binCount.Fill( 0.0 );
@@ -539,7 +539,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     if( sigma < 1e-14 ) sigma = 0;
 
     /** Apply the 2 sigma rule. */
-    double localStep = meanLocalStepSize + 2.0 * vcl_sqrt( sigma ) + 1e-14;
+    double localStep = meanLocalStepSize + 2.0 * std::sqrt( sigma ) + 1e-14;
 
     minEigenvalue = vnl_math_min( localStep, minEigenvalue );
     maxEigenvalue = vnl_math_max( localStep, maxEigenvalue );
@@ -601,7 +601,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   if( P > 13 ) transformIsBSpline = true; // assume B-spline
 
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
+  ImageSampleContainerPointer sampleContainer;
   this->SampleFixedImageForJacobianTerms( sampleContainer );
   const SizeValueType nrofsamples = sampleContainer->Size();
 
@@ -619,7 +619,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   JacobianType jacj( outdim, sizejacind );
   jacj.Fill( 0.0 );
   JacobianType          jacjjacj( outdim, outdim );
-  const double          sqrt2 = vcl_sqrt( static_cast< double >( 2.0 ) );
+  const double          sqrt2 = std::sqrt( static_cast< double >( 2.0 ) );
   NonZeroJacobianIndicesType jacind( sizejacind );
   ParametersType binCount( P );
   binCount.Fill( 0.0 );
@@ -659,7 +659,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     double nonZeroBin = binCount[ i ] / outdim;
     if( nonZeroBin > 0 && preconditioner[ i ] > 1e-9 )
     {
-      double eigenvalue = vcl_sqrt( preconditioner[ i ] / ( nonZeroBin ) ) + 1e-14;
+      double eigenvalue = std::sqrt( preconditioner[ i ] / ( nonZeroBin ) ) + 1e-14;
       maxEigenvalue = vnl_math_max( eigenvalue, maxEigenvalue );
       minEigenvalue = vnl_math_min( eigenvalue, minEigenvalue );
       preconditioner[ i ] = 1.0 / eigenvalue;
@@ -675,7 +675,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   elxout << minEigenvalue << " ";
   elxout << "]" << std::endl;
 #endif
-	
+
   /** Condition number check. */
   double conditionNumber = maxEigenvalue / minEigenvalue;
 

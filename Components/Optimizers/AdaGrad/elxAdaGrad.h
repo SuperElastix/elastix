@@ -313,7 +313,7 @@ protected :
   typedef typename PreconditionerEstimationType::Pointer PreconditionerEstimationPointer;
 
   typedef itk::ComputeDisplacementDistribution<
-	  FixedImageType, TransformType >                    ComputeDisplacementDistributionType;
+    FixedImageType, TransformType >                    ComputeDisplacementDistributionType;
 
 
   /** Samplers: */
