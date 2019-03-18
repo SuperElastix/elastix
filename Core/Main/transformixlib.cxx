@@ -45,9 +45,8 @@ namespace transformix
  * ******************* Constructor ***********************
  */
 
-TRANSFORMIX::TRANSFORMIX()
+TRANSFORMIX::TRANSFORMIX() : m_ResultImage(nullptr)
 {
-  this->m_ResultImage = 0;
 } // end Constructor
 
 
@@ -57,7 +56,7 @@ TRANSFORMIX::TRANSFORMIX()
 
 TRANSFORMIX::~TRANSFORMIX()
 {
-  this->m_ResultImage = 0;
+  this->m_ResultImage = nullptr;
 } // end Destructor
 
 
@@ -96,8 +95,8 @@ TRANSFORMIX::TransformImage(
   /** Declare an instance of the Transformix class. */
   TransformixMainPointer transformix;
 
-  DataObjectContainerPointer movingImageContainer = 0;
-  DataObjectContainerPointer resultImageContainer = 0;
+  DataObjectContainerPointer movingImageContainer = nullptr;;
+  DataObjectContainerPointer resultImageContainer = nullptr;
 
   /** Initialize. */
   int             returndummy = 0;
@@ -223,7 +222,7 @@ TRANSFORMIX::TransformImage(
   this->m_ResultImage = resultImageContainer->ElementAt( 0 );
 
   /** Clean up. */
-  transformix = 0;
+  transformix = nullptr;
   TransformixMainType::UnloadComponents();
 
   /** Exit and return the error code. */

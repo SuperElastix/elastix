@@ -104,13 +104,13 @@ public:
   /** Get/Set transform parameter object. */
   virtual void SetTransformParameterObject( ParameterObjectPointer transformParameterObject );
 
-  ParameterObjectType * GetTransformParameterObject( void );
+  ParameterObjectType* GetTransformParameterObject( void );
 
-  const ParameterObjectType * GetTransformParameterObject( void ) const;
+  const ParameterObjectType* GetTransformParameterObject( void ) const;
 
-  OutputDeformationFieldType * GetOutputDeformationField( void );
+  OutputDeformationFieldType* GetOutputDeformationField( void );
 
-  const OutputDeformationFieldType * GetOutputDeformationField( void ) const;
+  const OutputDeformationFieldType* GetOutputDeformationField( void ) const;
 
   /** Set/Get/Remove output directory. */
   itkSetMacro( OutputDirectory, std::string );
@@ -136,16 +136,16 @@ public:
   /** To support outputs of different types (i.e. ResultImage and ResultDeformationField)
    * MakeOutput from itk::ImageSource< TOutputImage > needs to be overridden.
    */
-  virtual DataObjectPointer MakeOutput( const DataObjectIdentifierType & key ) ITK_OVERRIDE;
+  virtual DataObjectPointer MakeOutput( const DataObjectIdentifierType & key ) override;
 
   /** The ResultImage and ResultDeformationField get their image properties from the TransformParameterObject. */
-  virtual void GenerateOutputInformation( void ) ITK_OVERRIDE;
+  virtual void GenerateOutputInformation( void ) override;
 
 protected:
 
   TransformixFilter( void );
 
-  virtual void GenerateData( void ) ITK_OVERRIDE;
+  virtual void GenerateData( void ) override;
 
 private:
 
@@ -153,10 +153,7 @@ private:
   void operator=( const Self & );    // purposely not implemented
 
   /** IsEmpty. */
-  virtual bool IsEmpty( const InputImagePointer inputImage );
-
-  /** Let transformix handle input verification internally. */
-  virtual void VerifyInputInformation( void ) ITK_OVERRIDE {};
+  static bool IsEmpty( const InputImagePointer inputImage );
 
   /** Tell the compiler we want all definitions of Get/Set/Remove
    *  from ProcessObject and TransformixFilter.
