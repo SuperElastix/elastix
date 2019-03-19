@@ -158,7 +158,6 @@ public:
   typedef typename Superclass1::StatisticalModelPointer                       StatisticalModelPointer;
 
   typedef typename Superclass1::StatisticalModelVectorType                    StatisticalModelVectorType;
-  typedef typename Superclass1::StatisticalModelMatrixType                    StatisticalModelMatrixType;
   typedef vector< std::string >                                               StatisticalModelPathVectorType;
 
   typedef typename Superclass1::MovingImagePointer                            MovingImagePointer;
@@ -169,20 +168,8 @@ public:
   typedef typename Superclass1::StatisticalModelModelBuilderType              StatisticalModelBuilderType;
   typedef typename Superclass1::StatisticalModelBuilderPointer                StatisticalModelBuilderPointer;
 
-  typedef typename Superclass1::ReducedVarianceModelBuilderType               ReducedVarianceModelBuilderType;
-  typedef typename Superclass1::ReducedVarianceModelBuilderPointer            ReducedVarianceModelBuilderPointer;
-
-  typedef typename Superclass1::StatisticalModelMatrixContainerType           StatisticalModelMatrixContainerType;
-  typedef typename Superclass1::StatisticalModelMatrixContainerPointer        StatisticalModelMatrixContainerPointer;
-
-  typedef typename Superclass1::StatisticalModelVectorContainerType           StatisticalModelVectorContainerType;
-  typedef typename Superclass1::StatisticalModelVectorContainerPointer        StatisticalModelVectorContainerPointer;
-
-  typedef typename Superclass1::StatisticalModelScalarContainerType           StatisticalModelScalarContainerType;
-  typedef typename Superclass1::StatisticalModelScalarContainerPointer        StatisticalModelScalarContainerPointer;
-
-  typedef typename Superclass1::StatisticalModelRepresenterContainerType      StatisticalModelRepresenterContainerType;
-  typedef typename Superclass1::StatisticalModelRepresenterContainerPointer   StatisticalModelRepresenterContainerPointer;
+  typedef typename Superclass1::StatisticalModelReducedVarianceBuilderType    StatisticalModelReducedVarianceBuilderType;
+  typedef typename Superclass1::StatisticalModelReducedVarianceBuilderPointer StatisticalModelReducedVarianceBuilderPointer;
 
   typedef typename Superclass1::StatisticalModelDataManagerType               StatisticalModelDataManagerType;
   typedef typename Superclass1::StatisticalModelDataManagerPointer            StatisticalModelDataManagerPointer;
@@ -197,9 +184,6 @@ public:
 
   itkSetMacro( MetricNumber, std::string );
   itkGetMacro( MetricNumber, std::string );
-
-  itkSetMacro( NoiseVariance, StatisticalModelVectorType );
-  itkGetMacro( NoiseVariance, StatisticalModelVectorType );
 
   StatisticalModelDataManagerPointer ReadImagesFromDirectory( std::string imageDataDirectory,
                                                               std::string referenceFilename );
@@ -249,7 +233,6 @@ private:
   StatisticalModelPathVectorType m_SaveIntensityModelFileNames;
   StatisticalModelPathVectorType m_ImageDirectories;
   StatisticalModelPathVectorType m_ReferenceFilenames;
-  StatisticalModelVectorType m_NoiseVariance;
 
 };
 

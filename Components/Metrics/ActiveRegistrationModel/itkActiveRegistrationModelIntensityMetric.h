@@ -159,54 +159,15 @@ public:
   typedef PCAModelBuilder< StatisticalModelImageType >                            StatisticalModelModelBuilderType;
   typedef typename StatisticalModelModelBuilderType::Pointer                      StatisticalModelBuilderPointer;
 
-  typedef ReducedVarianceModelBuilder< StatisticalModelImageType >                ReducedVarianceModelBuilderType;
-  typedef typename ReducedVarianceModelBuilderType::Pointer                       ReducedVarianceModelBuilderPointer;
+  typedef ReducedVarianceModelBuilder< StatisticalModelImageType >                StatisticalModelReducedVarianceBuilderType;
+  typedef typename StatisticalModelReducedVarianceBuilderType::Pointer                       StatisticalModelReducedVarianceBuilderPointer;
 
   typedef unsigned int                                                            StatisticalModelIdType;
-  typedef std::vector< std::pair< unsigned int, RealType > >                      EnumeratedMovingImageValuesType;
-
-  typedef VectorContainer< StatisticalModelIdType, StatisticalModelMatrixType >   StatisticalModelMatrixContainerType;
-  typedef typename StatisticalModelMatrixContainerType::Pointer                   StatisticalModelMatrixContainerPointer;
-  typedef typename StatisticalModelMatrixContainerType::ConstPointer              StatisticalModelMatrixContainerConstPointer;
-  typedef typename StatisticalModelMatrixContainerType::ConstIterator             StatisticalModelMatrixContainerConstIterator;
-
-  typedef VectorContainer< StatisticalModelIdType, StatisticalModelVectorType >   StatisticalModelVectorContainerType;
-  typedef typename StatisticalModelVectorContainerType::Pointer                   StatisticalModelVectorContainerPointer;
-  typedef typename StatisticalModelVectorContainerType::ConstPointer              StatisticalModelVectorContainerConstPointer;
-  typedef typename StatisticalModelVectorContainerType::ConstIterator             StatisticalModelVectorContainerConstIterator;
-
-  typedef VectorContainer< StatisticalModelIdType, StatisticalModelScalarType >   StatisticalModelScalarContainerType;
-  typedef typename StatisticalModelScalarContainerType::Pointer                   StatisticalModelScalarContainerPointer;
-  typedef typename StatisticalModelScalarContainerType::ConstPointer              StatisticalModelScalarContainerConstPointer;
-  typedef typename StatisticalModelScalarContainerType::ConstIterator             StatisticalModelScalarContainerConstIterator;
-
-  typedef VectorContainer< StatisticalModelIdType, StatisticalModelRepresenterPointer > StatisticalModelRepresenterContainerType;
-  typedef typename StatisticalModelRepresenterContainerType::Pointer              StatisticalModelRepresenterContainerPointer;
-  typedef typename StatisticalModelRepresenterContainerType::ConstPointer         StatisticalModelRepresenterContainerConstPointer;
-  typedef typename StatisticalModelRepresenterContainerType::ConstIterator        StatisticalModelRepresenterContainerConstIterator;
 
   typedef VectorContainer< StatisticalModelIdType, StatisticalModelPointer > StatisticalModelContainerType;
   typedef typename StatisticalModelContainerType::Pointer                 StatisticalModelContainerPointer;
   typedef typename StatisticalModelContainerType::ConstPointer            StatisticalModelContainerConstPointer;
   typedef typename StatisticalModelContainerType::ConstIterator           StatisticalModelContainerConstIterator;
-
-  itkSetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
-  itkGetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
-
-  itkSetConstObjectMacro( BasisMatrixContainer, StatisticalModelMatrixContainerType );
-  itkGetConstObjectMacro( BasisMatrixContainer, StatisticalModelMatrixContainerType );
-
-  itkSetConstObjectMacro( VarianceContainer, StatisticalModelVectorContainerType );
-  itkGetConstObjectMacro( VarianceContainer, StatisticalModelVectorContainerType );
-
-  itkSetConstObjectMacro( NoiseVarianceContainer, StatisticalModelScalarContainerType );
-  itkGetConstObjectMacro( NoiseVarianceContainer, StatisticalModelScalarContainerType );
-
-  itkSetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
-  itkGetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
-
-  itkSetConstObjectMacro( RepresenterContainer, StatisticalModelRepresenterContainerType );
-  itkGetConstObjectMacro( RepresenterContainer, StatisticalModelRepresenterContainerType );
 
   itkSetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
   itkGetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
@@ -263,19 +224,6 @@ private:
   ActiveRegistrationModelIntensityMetric( const Self & ); // purposely not implemented
   void operator=( const Self & );       // purposely not implemented
 
-  /**  Memory efficient computation of VV^T * ( T(mu) - mu ) */
-  const StatisticalModelVectorType Reconstruct( const StatisticalModelVectorType& movingImageValues,
-                                                const StatisticalModelMatrixType& subsampledBasisMatrix,
-                                                const StatisticalModelScalarType& noiseVariance ) const;
-
-  bool m_WriteReconstructedImageEachIteration;
-
-  StatisticalModelVectorContainerConstPointer m_MeanVectorContainer;
-  StatisticalModelMatrixContainerConstPointer m_BasisMatrixContainer;
-  StatisticalModelVectorContainerConstPointer m_VarianceContainer;
-  StatisticalModelScalarContainerConstPointer m_NoiseVarianceContainer;
-  StatisticalModelScalarContainerConstPointer m_TotalVarianceContainer;
-  StatisticalModelRepresenterContainerConstPointer m_RepresenterContainer;
   StatisticalModelContainerConstPointer m_StatisticalModelContainer;
 };
 

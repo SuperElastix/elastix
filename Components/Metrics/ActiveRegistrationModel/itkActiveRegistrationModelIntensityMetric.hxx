@@ -118,8 +118,6 @@ ActiveRegistrationModelIntensityMetric< TFixedPointSet, TMovingPointSet >
   {
     // Initialize value container
     MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
-    DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
-    modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
     this->GetModelValue( statisticalModel, modelValue, parameters );
 
@@ -148,15 +146,16 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
   this->SetTransformParameters( parameters );
 
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  std::list< FixedImagePointType > fixedPoints;
   typename StatisticalModelType::PointValueListType fixedPointMovingImageValues;
+
+  FixedImagePointType fixedPoint;
+  MovingImagePointType movingPoint;
+  RealType movingImageValue;
 
   for( const auto& sample : sampleContainer->CastToSTLConstContainer() )
   {
     // Transform point
-    const FixedImagePointType& fixedPoint = sample.m_ImageCoordinates;
-    MovingImagePointType movingPoint;
-    RealType movingImageValue;
+    fixedPoint = sample.m_ImageCoordinates;
     bool sampleOk = this->TransformPoint( fixedPoint, movingPoint );
 
     // Check if movingPoint is inside moving image
@@ -175,7 +174,7 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
 
     // Sample moving image
     if( sampleOk ) {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative(movingPoint, movingImageValue, nullptr);
+      sampleOk = this->EvaluateMovingImageValueAndDerivative( movingPoint, movingImageValue, nullptr );
     } else {
       continue;
     }
@@ -190,7 +189,7 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
 
   const auto coeffs = statisticalModel->ComputeCoefficientsForPointValues( fixedPointMovingImageValues, statisticalModel->GetNoiseVariance() );
 
-  // tmp = sum_J (M(T(mu_j) - mu_j) * (I - V_j V_j^T) * (M(T(mu_j)) - mu_j)
+  // tmp = sum_J (M_j - mu_j) * (I - V_j V_j^T) * (M_j - mu_j)
   RealType tmp = 0;
   for( const auto& fixedPointMovingImageValue : fixedPointMovingImageValues ) {
     const auto& fixedPoint = fixedPointMovingImageValue.first;
@@ -290,116 +289,92 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
   DerivativeType Jacobian( this->GetTransform()->GetNumberOfNonZeroJacobianIndices() );
   NonZeroJacobianIndicesType nzji( this->GetTransform()->GetNumberOfNonZeroJacobianIndices() );
 
-  MovingImagePointType movingPoint;
-  RealType movingImageValue;
-  MovingImageDerivativeType  movingImageDerivative;
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   // Loop over models
-  for(auto it = std::make_tuple(
-          this->GetMeanVectorContainer()->Begin(),
-          this->GetBasisMatrixContainer()->Begin(),
-          this->GetNoiseVarianceContainer()->Begin(),
-          this->GetRepresenterContainer()->Begin() );
-      std::get<0>(it) != this->GetMeanVectorContainer()->End();
-      ++std::get<0>(it), ++std::get<1>(it), ++std::get<2>(it), ++std::get<3>(it)) {
-    const StatisticalModelVectorType& meanVector = std::get<0>(it)->Value();
-    const StatisticalModelMatrixType& basisMatrix = std::get<1>(it)->Value();
-    const StatisticalModelScalarType& noiseVariance = std::get<2>(it)->Value();
-    const StatisticalModelRepresenterPointer representer = std::get<3>(it)->Value();
-
-    RealType modelValue = NumericTraits< RealType >::ZeroValue();
+  for( const auto& statisticalModel : this->GetStatisticalModelContainer()->CastToSTLConstContainer() )
+  {
+    // Initialize value container
+    MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
-    unsigned int numberOfOkSamples = 0;
+    typename StatisticalModelType::PointValueListType fixedPointMovingImageValues;
+    typename std::vector< MovingImageDerivativeType > movingImageDerivatives;
 
-    ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-    typename ImageSampleContainerType::ConstIterator fixedSampleContainerIterator = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator fixedSampleContainerIteratorEnd = sampleContainer->End();
-    while( fixedSampleContainerIterator != fixedSampleContainerIteratorEnd )
+    for( const auto& sample : sampleContainer->CastToSTLConstContainer() )
     {
+      MovingImagePointType movingPoint;
+      RealType movingImageValue;
+      MovingImageDerivativeType movingImageDerivative;
+
       // Transform point
-      const FixedImagePointType& fixedPoint = fixedSampleContainerIterator->Value().m_ImageCoordinates;
+      const FixedImagePointType& fixedPoint = sample.m_ImageCoordinates;
       bool sampleOk = this->TransformPoint( fixedPoint, movingPoint );
 
       // Check if movingPoint is inside moving image
-      if( sampleOk )
-      {
+      if( sampleOk ) {
         sampleOk = this->m_Interpolator->IsInsideBuffer( movingPoint );
-      }
-      else
-      {
-        fixedSampleContainerIterator++;
+      } else {
         continue;
       }
 
       // Check if movingPoint is inside moving mask if moving mask is used
-      if( sampleOk )
-      {
-        sampleOk = this->IsInsideMovingMask( movingPoint );
-      }
-      else
-      {
-        fixedSampleContainerIterator++;
+      if( sampleOk ) {
+        sampleOk = this->IsInsideMovingMask(movingPoint);
+      } else {
         continue;
       }
 
       // Sample moving image
-      if( sampleOk )
-      {
-        sampleOk = this->EvaluateMovingImageValueAndDerivative( movingPoint, movingImageValue, &movingImageDerivative );
-      }
-      else
-      {
-        fixedSampleContainerIterator++;
+      if( sampleOk ) {
+        sampleOk = this->EvaluateMovingImageValueAndDerivative(movingPoint, movingImageValue, &movingImageDerivative);
+      } else {
         continue;
       }
 
       if( sampleOk )
       {
-        RealType epsilon = 0;
-
-        if( noiseVariance > 0 )
-        {
-          epsilon = vnl_sample_normal(0., 1.);
-        }
-
-        const unsigned int pointId = representer->GetPointIdForPoint( fixedPoint );
-        movingImageValue -= meanVector[ pointId ];
-        const StatisticalModelVectorType basisVector = basisMatrix.get_row( pointId );
-        RealType tmp =  movingImageValue * ( 1.0 - ( dot_product( basisVector, basisVector ) + epsilon ) );
-        modelValue += tmp * movingImageValue;
-
-        // (dM/d{x,y,z})(dT/du)
-        this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct( fixedPoint, movingImageDerivative, Jacobian, nzji );
-
-        // Loop over Jacobian
-        for( unsigned int i = 0; i < nzji.size(); ++i )
-        {
-          const unsigned int mu = nzji[ i ];
-          modelDerivative[ mu ] += tmp * Jacobian[ i ];
-        }
-
-        numberOfOkSamples++;
+        fixedPointMovingImageValues.emplace_back( fixedPoint, movingImageValue );
+        movingImageDerivatives.emplace_back( movingImageDerivative );
       }
-
-      fixedSampleContainerIterator++;
     }
 
-    // Check number of samples
-    this->CheckNumberOfSamples( sampleContainer->Size(), numberOfOkSamples );
+    this->CheckNumberOfSamples( sampleContainer->Size(), fixedPointMovingImageValues.size() );
 
-    if( numberOfOkSamples > 0 )
-    {
-      value += modelValue / numberOfOkSamples;
-      derivative += 2.0 * modelDerivative / numberOfOkSamples;
+    const auto coeffs = statisticalModel->ComputeCoefficientsForPointValues( fixedPointMovingImageValues, statisticalModel->GetNoiseVariance() );
+
+    for( auto it = std::make_pair( fixedPointMovingImageValues.begin(), movingImageDerivatives.begin() );
+         it.first != fixedPointMovingImageValues.end();
+         it.first++, it.second++) {
+
+      const FixedImagePointType& fixedPoint = it.first->first;
+      const RealType& movingImageValue = it.first->second;
+      const MovingImageDerivativeType& movingImageDerivative = *it.second;
+
+      // tmp = (M_j - mu_j) * (I - V_j V_j^T)
+      RealType tmp = movingImageValue - statisticalModel->DrawSampleAtPoint( coeffs, fixedPoint, true );
+      modelValue += ( movingImageValue - statisticalModel->DrawMeanAtPoint( fixedPoint ) ) * tmp;
+
+      // (dM/d{x,y,z})(dT/du)
+      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct( fixedPoint, movingImageDerivative, Jacobian, nzji );
+
+      // Loop over Jacobian
+      for( unsigned int i = 0; i < nzji.size(); ++i )
+      {
+        const unsigned int& mu = nzji[ i ];
+        modelDerivative[ mu ] += tmp * Jacobian[ i ];
+      }
     }
+
+    value += modelValue / fixedPointMovingImageValues.size();
+    derivative += 2.0 * modelDerivative / fixedPointMovingImageValues.size();
   }
 
-  value /= this->GetMeanVectorContainer()->Size();
-  derivative /= this->GetMeanVectorContainer()->Size();
+  value /= this->GetStatisticalModelContainer()->Size();
+  derivative /= this->GetStatisticalModelContainer()->Size();
 
-  const bool useFiniteDifferenceDerivative = true;
+  const bool useFiniteDifferenceDerivative = false;
   if (useFiniteDifferenceDerivative) {
     elxout << "Analytical: " << value << ", " << derivative << std::endl;
     this->GetValueAndFiniteDifferenceDerivative( parameters, value, derivative );
@@ -408,31 +383,6 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
 
   return;
 }  // end GetValueAndDerivative()
-
-
-/**
- * ******************* Reconstruct *******************
- */
-
-template< class TFixedImage, class TMovingImage >
-const typename ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >::StatisticalModelVectorType
-ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
-::Reconstruct(const StatisticalModelVectorType& movingImageValues, const StatisticalModelMatrixType& subsampledBasisMatrix,
-              const StatisticalModelScalarType& noiseVariance ) const
-{
-  StatisticalModelVectorType epsilon = StatisticalModelVectorType(movingImageValues.size(), 0.);
-
-  if( noiseVariance > 0 ) {
-    for( unsigned int i = 0; i < movingImageValues.size(); i++) {
-      epsilon[ i ] = vnl_sample_normal(0., 1.);
-    }
-  }
-
-  // Compute movingShape * VV^T without compute VV^T to reduce peak memory
-  const StatisticalModelVectorType coefficients = subsampledBasisMatrix.transpose() * movingImageValues;
-  return subsampledBasisMatrix * coefficients + epsilon;
-}
-
 
 } // end namespace itk
 
