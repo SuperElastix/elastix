@@ -656,10 +656,9 @@ ActiveRegistrationModelIntensityMetric< TElastix >
       std::string imageFormat = "nii.gz";
       this->m_Configuration->ReadParameter( imageFormat, "ResultImageFormat", 0, false );
 
-      StatisticalModelVectorType variance = this->GetStatisticalModelContainer()->GetElement( i )->GetPCAVarianceVector();
       MovingImageFileWriterPointer imageWriter = MovingImageFileWriterType::New();
 
-      for( unsigned int j = 0; j < variance.size(); j++ ) {
+      for( unsigned int j = 0; j < this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(); j++ ) {
         StatisticalModelVectorType plus3std = StatisticalModelVectorType(
                 this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
         plus3std[ j ] = 3.0;
