@@ -12,9 +12,3 @@ target_include_directories(statismo_core PUBLIC
 target_link_libraries(statismo_core ${Boost_LIBRARIES} ITKInternalEigen3::Eigen)
 
 elastix_export_target(statismo_core)
-# install(TARGETS statismo_core
-#   ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
-#   LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
-#   RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR}
-# )
-
