@@ -123,6 +123,9 @@ ActiveRegistrationModelShapeMetric< TElastix >
   StatisticalModelScalarContainerPointer statisticalModelNoiseVarianceContainer = StatisticalModelScalarContainerType::New();
   statisticalModelNoiseVarianceContainer->Reserve( this->m_LoadShapeModelFileNames.size() + this->m_ShapeDirectories.size() );
 
+  StatisticalModelContainerPointer statisticalModelContainer = StatisticalModelContainerType::New();
+  statisticalModelContainer->Reserve( this->m_LoadShapeModelFileNames.size() + this->m_ShapeDirectories.size() );
+
   // Load models
   if( this->m_LoadShapeModelFileNames.size() > 0 )
   {
@@ -140,6 +143,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
         statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( statisticalModelId, statisticalModel->GetOrthonormalPCABasisMatrix() );
         statisticalModelVarianceVectorContainer->SetElement( statisticalModelId, statisticalModel->GetPCAVarianceVector() );
         statisticalModelNoiseVarianceContainer->SetElement( statisticalModelId, statisticalModel->GetNoiseVariance() );
+        statisticalModelContainer->SetElement( statisticalModelId, statisticalModel );
       }
       catch( statismo::StatisticalModelException &e )
       {
@@ -183,7 +187,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
       StatisticalModelPointer statisticalModel;
       try
       {
-        ModelBuilderPointer pcaModelBuilder = ModelBuilderType::New();
+        StatisticalModelBuilderPointer pcaModelBuilder = StatisticalModelBuilderType::New();
         statisticalModel = pcaModelBuilder->BuildNewModel( dataManager->GetData(), noiseVariance[ statisticalModelId ] );
         elxout << "  Done."
                << "  Number of modes: " << statisticalModel->GetNumberOfPrincipalComponents() << "." << std::endl
@@ -194,7 +198,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
         if( totalVariance[ statisticalModelId ] < 1.0 )
         {
           elxout << "  Reducing model to " << totalVariance[ statisticalModelId ] * 100.0 << "% variance ... ";
-          ReducedVarianceModelBuilderPointer reducedVarianceModelBuilder = ReducedVarianceModelBuilderType::New();
+          StatisticalModelReducedVarianceBuilderPointer reducedVarianceModelBuilder = StatisticalModelReducedVarianceBuilderType::New();
           statisticalModel = reducedVarianceModelBuilder->BuildNewModelWithVariance( statisticalModel, totalVariance[ statisticalModelId ] );
           elxout << " Done." << std::endl
                  << "  Number of modes retained: " << statisticalModel->GetNumberOfPrincipalComponents() << "." << std::endl;
@@ -222,6 +226,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
       statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( statisticalModelId, statisticalModel->GetOrthonormalPCABasisMatrix());
       statisticalModelVarianceVectorContainer->SetElement( statisticalModelId, statisticalModel->GetPCAVarianceVector() );
       statisticalModelNoiseVarianceContainer->SetElement( statisticalModelId, noiseVariance[ statisticalModelId ]);
+      statisticalModelContainer->SetElement( statisticalModelId, statisticalModel );
     }
   }
   
@@ -229,6 +234,8 @@ ActiveRegistrationModelShapeMetric< TElastix >
   this->SetBasisMatrixContainer( statisticalModelOrthonormalPCABasisMatrixContainer );
   this->SetVarianceContainer( statisticalModelVarianceVectorContainer );
   this->SetNoiseVarianceContainer( statisticalModelNoiseVarianceContainer );
+
+  this->SetStatisticalModelContainer( statisticalModelContainer );
 
   // SingleValuedPointSetToPointSetMetric (from which this class is derived) needs a fixed and moving point set
   typename FixedPointSetType::Pointer fixedDummyPointSet = FixedPointSetType::New();

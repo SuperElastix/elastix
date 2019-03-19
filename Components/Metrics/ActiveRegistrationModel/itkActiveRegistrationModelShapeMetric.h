@@ -116,6 +116,9 @@ public:
     StatisticalModelMeshDimension,
     StatisticalModelMeshTraitsType >                                              StatisticalModelMeshType;
   typedef typename StatisticalModelMeshType::Pointer                              StatisticalModelMeshPointer;
+  typedef typename StatisticalModelMeshType::ConstPointer                         StatisticalModelMeshConstPointer;
+  typedef typename StatisticalModelMeshType::PointsContainerIterator              StatisticalModelMeshIteratorType;
+  typedef typename StatisticalModelMeshType::PointsContainerConstIterator         StatisticalModelMeshConstIteratorType;
 
   typedef MeshFileReader< StatisticalModelMeshType >                              MeshReaderType;
   typedef typename MeshReaderType::Pointer                                        MeshReaderPointer;
@@ -134,8 +137,8 @@ public:
   typedef PCAModelBuilder< StatisticalModelMeshType >                             ModelBuilderType;
   typedef typename ModelBuilderType::Pointer                                      ModelBuilderPointer;
 
-  typedef ReducedVarianceModelBuilder< StatisticalModelMeshType >                 ReducedVarianceModelBuilderType;
-  typedef typename ReducedVarianceModelBuilderType::Pointer                       ReducedVarianceModelBuilderPointer;
+  typedef ReducedVarianceModelBuilder< StatisticalModelMeshType >                 StatisticalModelReducedVarianceBuilderType;
+  typedef typename StatisticalModelReducedVarianceBuilderType::Pointer            StatisticalModelReducedVarianceBuilderPointer;
 
   typedef unsigned int                                                            StatisticalModelIdType;
 
@@ -154,6 +157,10 @@ public:
   typedef typename StatisticalModelScalarContainerType::ConstPointer              StatisticalModelScalarContainerConstPointer;
   typedef typename StatisticalModelScalarContainerType::ConstIterator             StatisticalModelScalarContainerConstIterator;
 
+  typedef VectorContainer< StatisticalModelIdType, StatisticalModelPointer >      StatisticalModelContainerType;
+  typedef typename StatisticalModelContainerType::Pointer                         StatisticalModelContainerPointer;
+  typedef typename StatisticalModelContainerType::ConstPointer                    StatisticalModelContainerConstPointer;
+
   itkSetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
   itkGetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
 
@@ -168,6 +175,9 @@ public:
 
   itkSetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
   itkGetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
+
+  itkSetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
+  itkGetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
 
   /** Initialize the Metric by making sure that all the components are
   *  present and plugged together correctly.
@@ -189,17 +199,14 @@ public:
                                               MeasureType& value,
                                               DerivativeType& derivative ) const;
 
-  void GetModelValue( const StatisticalModelVectorType& meanVector,
-                      const StatisticalModelMatrixType& basisMatrix,
-                      const StatisticalModelScalarType& noiseVariance,
-                      MeasureType& modelValue,
-                      const TransformParametersType& parameters ) const;
+  void GetModelValue( const TransformParametersType& parameters,
+                      const StatisticalModelPointer statisticalModel,
+                      MeasureType& modelValue ) const;
 
-  void GetModelFiniteDifferenceDerivative( const StatisticalModelVectorType& meanVector,
-                                           const StatisticalModelMatrixType& basisMatrix,
-                                           const StatisticalModelScalarType& noiseVariance,
-                                           DerivativeType& modelDerivative,
-                                           const TransformParametersType& parameters ) const;
+
+  void GetModelFiniteDifferenceDerivative( const TransformParametersType & parameters,
+                                           const StatisticalModelPointer statisticalModel,
+                                           DerivativeType& modelDerivative ) const;
 
 protected:
 
@@ -214,6 +221,8 @@ private:
   ActiveRegistrationModelShapeMetric( const Self & );    // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
 
+  StatisticalModelMeshPointer TransformMesh( StatisticalModelMeshPointer fixedMesh ) const;
+
   /**  Memory efficient computation of VV^T * ( T(mu) - mu ) */
   const StatisticalModelVectorType Reconstruct( const StatisticalModelVectorType& movingVector,
                                                 const StatisticalModelMatrixType& basisMatrix,
@@ -224,6 +233,7 @@ private:
   StatisticalModelVectorContainerConstPointer m_VarianceContainer;
   StatisticalModelScalarContainerConstPointer m_NoiseVarianceContainer;
   StatisticalModelScalarContainerConstPointer m_TotalVarianceContainer;
+  StatisticalModelContainerConstPointer m_StatisticalModelContainer;
 
 }; // end class PointSetPenalty
 

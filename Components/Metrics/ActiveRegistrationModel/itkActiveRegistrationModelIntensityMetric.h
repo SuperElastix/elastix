@@ -167,7 +167,6 @@ public:
   typedef VectorContainer< StatisticalModelIdType, StatisticalModelPointer > StatisticalModelContainerType;
   typedef typename StatisticalModelContainerType::Pointer                 StatisticalModelContainerPointer;
   typedef typename StatisticalModelContainerType::ConstPointer            StatisticalModelContainerConstPointer;
-  typedef typename StatisticalModelContainerType::ConstIterator           StatisticalModelContainerConstIterator;
 
   itkSetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
   itkGetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
@@ -189,14 +188,14 @@ public:
                                               MeasureType& value,
                                               DerivativeType& derivative ) const;
 
-  void GetModelValue( const StatisticalModelPointer statisticalModel,
-                      MeasureType & modelValue,
-                      const TransformParametersType& parameters ) const;
+  void GetModelValue( const TransformParametersType& parameters,
+                      const StatisticalModelPointer statisticalModel,
+                      MeasureType& modelValue ) const;
 
 
-  void GetModelFiniteDifferenceDerivative( const StatisticalModelPointer statisticalModel,
-                                           DerivativeType& modelDerivative,
-                                           const TransformParametersType & parameters ) const;
+  void GetModelFiniteDifferenceDerivative( const TransformParametersType & parameters,
+                                           const StatisticalModelPointer statisticalModel,
+                                           DerivativeType& modelDerivative ) const;
 
 protected:
 

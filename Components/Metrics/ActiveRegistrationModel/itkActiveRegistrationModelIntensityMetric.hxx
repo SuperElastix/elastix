@@ -84,8 +84,8 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
-    this->GetModelValue( statisticalModel, modelValue, parameters );
-    this->GetModelFiniteDifferenceDerivative( statisticalModel, modelDerivative, parameters );
+    this->GetModelValue( parameters, statisticalModel, modelValue );
+    this->GetModelFiniteDifferenceDerivative( parameters, statisticalModel, modelDerivative );
 
     value += modelValue;
     derivative += modelDerivative;
@@ -113,15 +113,9 @@ ActiveRegistrationModelIntensityMetric< TFixedPointSet, TMovingPointSet >
 {
   MeasureType value = NumericTraits< MeasureType >::ZeroValue();
 
-  // Loop over models
   for( const auto& statisticalModel : this->GetStatisticalModelContainer()->CastToSTLConstContainer() )
   {
-    // Initialize value container
-    MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
-
-    this->GetModelValue( statisticalModel, modelValue, parameters );
-
-    value += modelValue;
+    this->GetModelValue( parameters, statisticalModel, value );
   }
 
   value /= this->GetStatisticalModelContainer()->Size();
@@ -138,9 +132,10 @@ ActiveRegistrationModelIntensityMetric< TFixedPointSet, TMovingPointSet >
 template<class TFixedImage, class TMovingImage>
 void
 ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
-::GetModelValue( const StatisticalModelPointer statisticalModel,
-                 MeasureType& modelValue,
-                 const TransformParametersType& parameters ) const {
+::GetModelValue( const TransformParametersType& parameters,
+                 const StatisticalModelPointer statisticalModel,
+                 MeasureType& modelValue ) const
+{
 
   // Make sure transform parameters are up-to-date
   this->SetTransformParameters( parameters );
@@ -214,9 +209,9 @@ ActiveRegistrationModelIntensityMetric<TFixedImage, TMovingImage>
 template< class TFixedImage, class TMovingImage >
 void
 ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
-::GetModelFiniteDifferenceDerivative( const StatisticalModelPointer statisticalModel,
-                                      DerivativeType& modelDerivative,
-                                      const TransformParametersType & parameters ) const
+::GetModelFiniteDifferenceDerivative( const TransformParametersType & parameters,
+                                      const StatisticalModelPointer statisticalModel,
+                                      DerivativeType& modelDerivative ) const
 {
   const double h = 0.01;
 
@@ -233,8 +228,8 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
     plusParameters[ i ] += h;
     minusParameters[ i ] -= h;
 
-    this->GetModelValue( statisticalModel, plusModelValue, plusParameters );
-    this->GetModelValue( statisticalModel, minusModelValue, minusParameters );
+    this->GetModelValue( plusParameters, statisticalModel, plusModelValue );
+    this->GetModelValue( minusParameters, statisticalModel, minusModelValue );
 
     modelDerivative[ i ] += ( plusModelValue - minusModelValue ) / ( 2 * h );
   }

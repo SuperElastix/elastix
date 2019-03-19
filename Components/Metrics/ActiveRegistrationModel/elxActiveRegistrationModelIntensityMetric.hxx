@@ -220,6 +220,7 @@ ActiveRegistrationModelIntensityMetric< TElastix >
           itkExceptionMacro( "Could not save shape model to " << this->m_SaveIntensityModelFileNames[ statisticalModelId ] << ".");
         }
       }
+
       statisticalModelContainer->SetElement( statisticalModelId, statisticalModel );
     }
   }

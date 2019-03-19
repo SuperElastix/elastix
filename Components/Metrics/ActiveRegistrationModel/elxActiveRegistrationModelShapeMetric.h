@@ -144,11 +144,11 @@ public:
   typedef typename Superclass1::StatisticalModelRepresenterType               StatisticalModelRepresenterType;
   typedef typename Superclass1::StatisticalModelRepresenterPointer            StatisticalModelRepresenterPointer;
 
-  typedef typename Superclass1::ModelBuilderType                              ModelBuilderType;
-  typedef typename Superclass1::ModelBuilderPointer                           ModelBuilderPointer;
+  typedef typename Superclass1::ModelBuilderType                              StatisticalModelBuilderType;
+  typedef typename Superclass1::ModelBuilderPointer                           StatisticalModelBuilderPointer;
   
-  typedef typename Superclass1::ReducedVarianceModelBuilderType               ReducedVarianceModelBuilderType;
-  typedef typename Superclass1::ReducedVarianceModelBuilderPointer            ReducedVarianceModelBuilderPointer;
+  typedef typename Superclass1::StatisticalModelReducedVarianceBuilderType    StatisticalModelReducedVarianceBuilderType;
+  typedef typename Superclass1::StatisticalModelReducedVarianceBuilderPointer StatisticalModelReducedVarianceBuilderPointer;
 
   typedef typename Superclass1::StatisticalModelIdType                        StatisticalModelIdType;
   typedef typename Superclass1::StatisticalModelPointer                       StatisticalModelPointer;
@@ -164,6 +164,9 @@ public:
   
   typedef typename Superclass1::StatisticalModelDataManagerType               StatisticalModelDataManagerType;
   typedef typename Superclass1::StatisticalModelDataManagerPointer            StatisticalModelDataManagerPointer;
+
+  typedef typename Superclass1::StatisticalModelContainerType                 StatisticalModelContainerType;
+  typedef typename Superclass1::StatisticalModelContainerPointer              StatisticalModelContainerPointer;
   
   itkSetMacro( MetricNumber, unsigned long );
   itkGetMacro( MetricNumber, unsigned long );
