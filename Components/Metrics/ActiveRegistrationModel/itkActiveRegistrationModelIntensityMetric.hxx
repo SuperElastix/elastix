@@ -289,7 +289,6 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
   // Loop over models
   for( const auto& statisticalModel : this->GetStatisticalModelContainer()->CastToSTLConstContainer() )
   {
-    // Initialize value container
     MeasureType modelValue = NumericTraits< MeasureType >::ZeroValue();
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
@@ -370,10 +369,10 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
   derivative /= this->GetStatisticalModelContainer()->Size();
 
   const bool useFiniteDifferenceDerivative = false;
-  if (useFiniteDifferenceDerivative) {
+  if (useFiniteDifferenceDerivative)
+  {
     elxout << "Analytical: " << value << ", " << derivative << std::endl;
     this->GetValueAndFiniteDifferenceDerivative( parameters, value, derivative );
-    elxout << "Parameters: " << parameters << std::endl;
   }
 
   return;

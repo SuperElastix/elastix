@@ -115,16 +115,16 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
   // Make sure transform parameters are up-to-date
   this->SetTransformParameters( parameters );
 
-  const auto& meanMesh = statisticalModel->DrawMean();
-  const auto& meanVector = statisticalModel->GetRepresenter()->SampleToSampleVector( meanMesh );
+  const auto& fixedMesh = statisticalModel->DrawMean();
+  const auto& fixedVector = statisticalModel->GetRepresenter()->SampleToSampleVector( fixedMesh );
 
-  const auto& movingMeanMesh = this->TransformMesh( meanMesh );
-  const auto& movingMeanVector = statisticalModel->GetRepresenter()->SampleToSampleVector( this->TransformMesh( movingMeanMesh ) );
+  const auto& movingMesh = this->TransformMesh( fixedMesh );
+  const auto& movingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( movingMesh );
 
-  const auto& coeffs = statisticalModel->ComputeCoefficients( movingMeanMesh );
+  const auto& coeffs = statisticalModel->ComputeCoefficients( movingMesh );
   const auto& reconstructedVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, true ) );
 
-  modelValue += ( movingMeanVector - meanVector ).dot( movingMeanVector - reconstructedVector ) / meanMesh->GetNumberOfPoints();
+  modelValue += ( movingVector - fixedVector ).dot( movingVector - reconstructedVector ) / fixedMesh->GetNumberOfPoints();
 }
 
 
@@ -241,49 +241,37 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
   NonZeroJacobianIndicesType nzji( this->GetTransform()->GetNumberOfNonZeroJacobianIndices() );
 
   // Loop over models
-  for(std::tuple< StatisticalModelVectorContainerConstIterator,
-          StatisticalModelMatrixContainerConstIterator,
-          StatisticalModelScalarContainerConstIterator > it =
-          std::make_tuple( this->GetMeanVectorContainer()->Begin(),
-                           this->GetBasisMatrixContainer()->Begin(),
-                           this->GetNoiseVarianceContainer()->Begin() );
-      std::get<0>(it) != this->GetMeanVectorContainer()->End();
-      ++std::get<0>(it), ++std::get<1>(it), ++std::get<2>(it))
+  for( const auto& statisticalModel : this->GetStatisticalModelContainer()->CastToSTLConstContainer() )
   {
-    const StatisticalModelVectorType& meanVector = std::get<0>(it)->Value();
-    const StatisticalModelMatrixType& basisMatrix = std::get<1>(it)->Value();
-    const StatisticalModelScalarType& noiseVariance = std::get<2>(it)->Value();
-
     DerivativeType modelDerivative = DerivativeType( this->GetNumberOfParameters() );
     modelDerivative.Fill( NumericTraits< DerivativeValueType >::ZeroValue() );
 
-    StatisticalModelVectorType movingVector = StatisticalModelVectorType( meanVector.size(), 0. );
-    for( unsigned int i = 0; i < meanVector.size(); i += FixedPointSetDimension )
+    const auto& fixedMesh = statisticalModel->DrawMean();
+    const auto& fixedVector = statisticalModel->GetRepresenter()->SampleToSampleVector( fixedMesh );
+
+    const auto& movingMesh = this->TransformMesh( fixedMesh );
+    const auto& movingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( movingMesh );
+
+    const auto& coeffs = statisticalModel->ComputeCoefficients( movingMesh );
+    const auto& reconstructedVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, true ) );
+
+    const statismo::VectorType tmp = movingVector - reconstructedVector;
+    MeasureType modelValue = ( movingVector - fixedVector ).dot( tmp );
+
+    unsigned int i = 0;
+    for( unsigned int i = 0; i < fixedMesh->GetNumberOfPoints(); i++ )
     {
-      const auto transformedPoint = this->GetTransform()->TransformPoint( meanVector.data_block() + i );
-      movingVector.update( transformedPoint.GetVnlVector(), i );
-    }
+      const auto& tmp_i = StatisticalModelVectorType( tmp.data() + i * StatisticalModelMeshDimension,
+              StatisticalModelMeshDimension );
 
-    movingVector -= meanVector;
+      this->GetTransform()->GetJacobian( fixedMesh->GetPoints()->ElementAt( i ), Jacobian, nzji );
 
-    // tmp = (T(S) - mu) * (I - VV^T)
-    const StatisticalModelVectorType tmp = movingVector - this->Reconstruct(movingVector, basisMatrix, noiseVariance);
-    MeasureType modelValue = dot_product(tmp, movingVector);
-
-    for(unsigned int i = 0; i < meanVector.size(); i += FixedPointSetDimension )
-    {
-      this->GetTransform()->GetJacobian( meanVector.data_block() + i, Jacobian, nzji );
-      if( nzji.size() == this->GetNumberOfParameters() )
-      {
-        modelDerivative += tmp.extract( FixedPointSetDimension, i ) * Jacobian;
+      for( unsigned int j = 0; j < nzji.size(); j++ ) {
+        const auto& mu = nzji[ j ];
+        modelDerivative[ mu ] += dot_product( tmp_i, Jacobian.get_column( j ) );
       }
-      else
-      {
-        for( unsigned int j = 0; j < nzji.size(); j++ ) {
-          const auto& mu = nzji[ j ];
-          modelDerivative[ mu ] += dot_product( tmp.extract( FixedPointSetDimension, i ), Jacobian.get_column( j ) );
-        }
-      }
+
+      i += StatisticalModelMeshDimension;
     }
 
     if( std::isnan( modelValue ) )
@@ -291,17 +279,17 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
         itkExceptionMacro( "Model value is NaN.")
     }
 
-    if( FixedPointSetDimension * meanVector.size() > 0 )
+    if( fixedMesh->GetNumberOfPoints() > 0 )
     {
-      value += modelValue * FixedPointSetDimension / meanVector.size();
-      derivative += 2.0 * modelDerivative * FixedPointSetDimension / meanVector.size();
+      value += modelValue / fixedMesh->GetNumberOfPoints();
+      derivative += 2.0 * modelDerivative / fixedMesh->GetNumberOfPoints();
     }
   }
 
-  value /= this->GetMeanVectorContainer()->Size();
-  derivative /= this->GetMeanVectorContainer()->Size();
+  value /= this->GetStatisticalModelContainer()->Size();
+  derivative /= this->GetStatisticalModelContainer()->Size();
 
-  const bool useFiniteDifferenceDerivative = true;
+  const bool useFiniteDifferenceDerivative = false;
   if( useFiniteDifferenceDerivative )
   {
     elxout << "Analytical: " << value << ", " << derivative << std::endl;
