@@ -178,6 +178,8 @@ public:
                                            const StatisticalModelPointer statisticalModel,
                                            DerivativeType& modelDerivative ) const;
 
+  StatisticalModelMeshPointer TransformMesh( StatisticalModelMeshPointer fixedMesh ) const;
+
 protected:
 
   ActiveRegistrationModelShapeMetric();
@@ -190,8 +192,6 @@ private:
 
   ActiveRegistrationModelShapeMetric( const Self & );    // purposely not implemented
   void operator=( const Self & ); // purposely not implemented
-
-  StatisticalModelMeshPointer TransformMesh( StatisticalModelMeshPointer fixedMesh ) const;
 
   StatisticalModelContainerConstPointer m_StatisticalModelContainer;
 

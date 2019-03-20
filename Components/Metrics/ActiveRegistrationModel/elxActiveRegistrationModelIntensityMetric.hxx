@@ -459,6 +459,11 @@ ActiveRegistrationModelIntensityMetric< TElastix >
 } // end ReadImage()
 
 
+
+/**
+ * ***************** AfterEachIteration ***********************
+ */
+
 template< class TElastix >
 void
 ActiveRegistrationModelIntensityMetric< TElastix >
@@ -467,17 +472,17 @@ ActiveRegistrationModelIntensityMetric< TElastix >
   const unsigned int iter = this->m_Elastix->GetIterationCounter();
 
   /** Decide whether or not to write final model image */
-  bool writeIntensityModelImageAfterEachIteration = false;
-  this->m_Configuration->ReadParameter( writeIntensityModelImageAfterEachIteration,
-                                        "WriteIntensityModelImageAfterEachIteration", 0, false );
+  bool writeIntensityModelReconstructionAfterEachIteration = false;
+  this->m_Configuration->ReadParameter( writeIntensityModelReconstructionAfterEachIteration,
+                                        "WriteIntensityModelReconstructionAfterEachIteration", 0, false );
 
   this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
 
-  for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ ) {
-    StatisticalModelVectorType modelCoefficients = this->GetStatisticalModelContainer()->GetElement( i )
+  for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
+    StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->GetElement( statisticalModelId )
             ->ComputeCoefficients(this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->GetOutput());
 
-    if( writeIntensityModelImageAfterEachIteration ) {
+    if( writeIntensityModelReconstructionAfterEachIteration ) {
       std::string imageFormat = "nii.gz";
       this->m_Configuration->ReadParameter(imageFormat, "ResultImageFormat", 0, false);
 
@@ -485,21 +490,23 @@ ActiveRegistrationModelIntensityMetric< TElastix >
       makeFileName
               << this->m_Configuration->GetCommandLineArgument("-out")
               << "Metric" << this->GetMetricNumber()
-              << "IntensityModel" << i
+              << "IntensityModel" << statisticalModelId
               << "Iteration" << iter
               << "Image." << imageFormat;
 
-      elxout << "  Writing intensity model " << i << " image for "
+      elxout << "  Writing intensity model " << statisticalModelId << " image for "
              << this->GetComponentLabel() << " after iteration " << iter << " to " << makeFileName.str() << ". ";
-      elxout << " Coefficents are [" << modelCoefficients << "]." << std::endl;
+      elxout << " Coefficents are [" << coeffs << "]." << std::endl;
 
       MovingImageFileWriterPointer imageWriter = MovingImageFileWriterType::New();
-      imageWriter->SetInput(this->GetStatisticalModelContainer()->GetElement(i)->DrawSample(modelCoefficients));
+      imageWriter->SetInput(this->GetStatisticalModelContainer()->GetElement(statisticalModelId)->DrawSample(coeffs));
       imageWriter->SetFileName(makeFileName.str());
       imageWriter->Update();
     }
   }
 }
+
+
 
 /**
  * ***************** AfterEachResolution ***********************
@@ -513,17 +520,17 @@ ActiveRegistrationModelIntensityMetric< TElastix >
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Decide whether or not to write model image after each resolution */
-  bool writeIntensityModelImageAfterEachResolution = false;
-  this->m_Configuration->ReadParameter( writeIntensityModelImageAfterEachResolution,
-                                        "WriteIntensityModelImageAfterEachResolution", 0, false );
+  bool writeIntensityModelReconstructionAfterEachResolution = false;
+  this->m_Configuration->ReadParameter( writeIntensityModelReconstructionAfterEachResolution,
+                                        "WriteIntensityModelReconstructionAfterEachResolution", 0, false );
 
   this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
 
-  for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ ) {
-    StatisticalModelVectorType modelCoefficients = this->GetStatisticalModelContainer()->GetElement( i )
+  for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
+    StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->GetElement( statisticalModelId )
             ->ComputeCoefficients(this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->GetOutput());
 
-    if( writeIntensityModelImageAfterEachResolution ) {
+    if( writeIntensityModelReconstructionAfterEachResolution ) {
       std::string imageFormat = "nii.gz";
       this->m_Configuration->ReadParameter(imageFormat, "ResultImageFormat", 0, false);
 
@@ -531,16 +538,16 @@ ActiveRegistrationModelIntensityMetric< TElastix >
       makeFileName
               << this->m_Configuration->GetCommandLineArgument("-out")
               << "Metric" << this->GetMetricNumber()
-              << "IntensityModel" << i
+              << "IntensityModel" << statisticalModelId
               << "Resolution" << level
               << "Image." << imageFormat;
 
-      elxout << "  Writing intensity model " << i << " image " << " for "
+      elxout << "  Writing intensity model " << statisticalModelId << " image " << " for "
              << this->GetComponentLabel() << " after resolution " << level << " to " << makeFileName.str() << ". ";
-      elxout << " Coefficents are [" << modelCoefficients << "]." << std::endl;
+      elxout << " Coefficents are [" << coeffs << "]." << std::endl;
 
       MovingImageFileWriterPointer imageWriter = MovingImageFileWriterType::New();
-      imageWriter->SetInput(this->GetStatisticalModelContainer()->GetElement(i)->DrawSample(modelCoefficients));
+      imageWriter->SetInput(this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->DrawSample(coeffs));
       imageWriter->SetFileName(makeFileName.str());
       imageWriter->Update();
     }
@@ -558,8 +565,6 @@ void
 ActiveRegistrationModelIntensityMetric< TElastix >
 ::AfterRegistration( void )
 {
-  const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
-
   /** Decide whether or not to write the mean images */
   bool writeIntensityModelMeanImage = false;
   this->m_Configuration->ReadParameter( writeIntensityModelMeanImage,
@@ -567,7 +572,7 @@ ActiveRegistrationModelIntensityMetric< TElastix >
 
   if( writeIntensityModelMeanImage )
   {
-    for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ )
+    for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ )
     {
       std::string meanImageFormat = "nii.gz";
       this->m_Configuration->ReadParameter( meanImageFormat, "ResultImageFormat", 0, false );
@@ -576,36 +581,36 @@ ActiveRegistrationModelIntensityMetric< TElastix >
       makeFileName
         << this->m_Configuration->GetCommandLineArgument( "-out" )
         << "Metric" << this->GetMetricNumber()
-        << "IntensityModel" << i
+        << "IntensityModel" << statisticalModelId
         << "MeanImage." << meanImageFormat;
 
-      elxout << "  Writing intensity model " << i << " mean image for " << this->GetComponentLabel() << " to "
+      elxout << "  Writing intensity model " << statisticalModelId << " mean image for " << this->GetComponentLabel() << " to "
              << makeFileName.str() << std::endl;
 
       FixedImageFileWriterPointer imageWriter = FixedImageFileWriterType::New();
-      imageWriter->SetInput( this->GetStatisticalModelContainer()->GetElement( i )->DrawMean() );
+      imageWriter->SetInput( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->DrawMean() );
       imageWriter->SetFileName( makeFileName.str() );
       imageWriter->Update();
     }
   }
 
   /** Decide whether or not to write final model image */
-  bool writeIntensityModelFinalImage = false;
-  this->m_Configuration->ReadParameter( writeIntensityModelFinalImage,
-                                        "WriteIntensityModelFinalImageAfterRegistration", 0, false );
+  bool writeIntensityModelFinalReconstruction = false;
+  this->m_Configuration->ReadParameter( writeIntensityModelFinalReconstruction,
+                                        "WriteIntensityModelFinalReconstructionAfterRegistration", 0, false );
 
   /** Decide whether or not to write sample probability */
-  bool writeIntensityModelProbability = false;
-  this->m_Configuration->ReadParameter( writeIntensityModelProbability,
-                                        "WriteIntensityModelProbabilityAfterRegistration", 0, false );
+  bool writeIntensityModelFinalReconstructionProbability = false;
+  this->m_Configuration->ReadParameter( writeIntensityModelFinalReconstructionProbability,
+                                        "WriteIntensityModelFinalReconstructionProbabilityAfterRegistration", 0, false );
 
-  if( writeIntensityModelFinalImage || writeIntensityModelProbability )
+  if( writeIntensityModelFinalReconstruction || writeIntensityModelFinalReconstructionProbability )
   {
-    for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ ) {
-      StatisticalModelVectorType modelCoefficients = this->GetStatisticalModelContainer()->GetElement(
-              i )->ComputeCoefficients( this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->GetOutput());
+    for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
+      StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->GetElement(
+              statisticalModelId )->ComputeCoefficients( this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->GetOutput());
 
-      if (writeIntensityModelFinalImage) {
+      if( writeIntensityModelFinalReconstruction ) {
         std::string imageFormat = "nii.gz";
         this->m_Configuration->ReadParameter(imageFormat, "ResultImageFormat", 0, false);
 
@@ -613,34 +618,34 @@ ActiveRegistrationModelIntensityMetric< TElastix >
         makeFileName
                 << this->m_Configuration->GetCommandLineArgument("-out")
                 << "Metric" << this->GetMetricNumber()
-                << "IntensityModel" << i
+                << "IntensityModel" << statisticalModelId
                 << "FinalImage." << imageFormat;
 
-        elxout << "  Writing intensity model " << i << " final image for " << this->GetComponentLabel() << " to " <<
+        elxout << "  Writing intensity model " << statisticalModelId << " final image for " << this->GetComponentLabel() << " to " <<
                makeFileName.str() << ".";
-        elxout << " Coefficents are [" << modelCoefficients << "]." << std::endl;
+        elxout << " Coefficents are [" << coeffs << "]." << std::endl;
 
         MovingImageFileWriterPointer imageWriter = MovingImageFileWriterType::New();
-        imageWriter->SetInput(this->GetStatisticalModelContainer()->GetElement(i)->DrawSample(modelCoefficients));
+        imageWriter->SetInput(this->GetStatisticalModelContainer()->ElementAt(statisticalModelId)->DrawSample(coeffs));
         imageWriter->SetFileName(makeFileName.str());
         imageWriter->Update();
       }
 
-      if (writeIntensityModelProbability) {
+      if( writeIntensityModelFinalReconstructionProbability ) {
         std::ostringstream makeProbFileName;
         makeProbFileName
         << this->m_Configuration->GetCommandLineArgument("-out")
         << "Metric" << this->GetMetricNumber()
-        << "IntensityModel" << i
+        << "IntensityModel" << statisticalModelId
         << "Probability.txt";
 
-        elxout << "  Writing intensity model " << i << " final image probablity for " << this->GetComponentLabel()
+        elxout << "  Writing intensity model " << statisticalModelId << " final image probablity for " << this->GetComponentLabel()
                << " to " << makeProbFileName.str() << ". ";
-        elxout << "  Coefficents are [" << modelCoefficients << "]." << std::endl;
+        elxout << "  Coefficents are [" << coeffs << "]." << std::endl;
         ofstream probabilityFile;
         probabilityFile.open(makeProbFileName.str());
         probabilityFile <<
-        this->GetStatisticalModelContainer()->GetElement( i )->ComputeLogProbabilityOfCoefficients(modelCoefficients);
+        this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->ComputeLogProbabilityOfCoefficients(coeffs);
         probabilityFile.close();
       }
     }
@@ -652,45 +657,45 @@ ActiveRegistrationModelIntensityMetric< TElastix >
 
   if( writeIntensityModelPrincipalComponents )
   {
-    for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ )
+    for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ )
     {
       std::string imageFormat = "nii.gz";
       this->m_Configuration->ReadParameter( imageFormat, "ResultImageFormat", 0, false );
 
       MovingImageFileWriterPointer imageWriter = MovingImageFileWriterType::New();
 
-      for( unsigned int j = 0; j < this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(); j++ ) {
+      for( unsigned int j = 0; j < this->GetStatisticalModelContainer()->GetElement( statisticalModelId )->GetNumberOfPrincipalComponents(); j++ ) {
         StatisticalModelVectorType plus3std = StatisticalModelVectorType(
-                this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
+                this->GetStatisticalModelContainer()->GetElement( statisticalModelId )->GetNumberOfPrincipalComponents(), 0.0 );
         plus3std[ j ] = 3.0;
 
         std::ostringstream makeFileNameP3STD( "" );
         makeFileNameP3STD
                 << this->m_Configuration->GetCommandLineArgument("-out")
                 << "Metric" << this->GetMetricNumber()
-                << "IntensityModel" << i
+                << "IntensityModel" << statisticalModelId
                 << "PC" << j << "plus3std." << imageFormat;
 
-        elxout << "  Writing intensity model " << i << " principal component " << j << " plus 3 standard deviations"
+        elxout << "  Writing intensity model " << statisticalModelId << " principal component " << j << " plus 3 standard deviations"
                << " for " << this->GetComponentLabel() << " to " << makeFileNameP3STD.str() << std::endl;
-        imageWriter->SetInput(this->GetStatisticalModelContainer()->GetElement( i )->DrawSample( plus3std)) ;
+        imageWriter->SetInput(this->GetStatisticalModelContainer()->GetElement( statisticalModelId )->DrawSample( plus3std ) ) ;
         imageWriter->SetFileName( makeFileNameP3STD.str() );
         imageWriter->Update();
 
         StatisticalModelVectorType minus3std = StatisticalModelVectorType(
-                this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
+                this->GetStatisticalModelContainer()->GetElement( statisticalModelId )->GetNumberOfPrincipalComponents(), 0.0 );
         minus3std[ j ] = -3.0;
 
         std::ostringstream makeFileNamePCM3STD("");
         makeFileNamePCM3STD
                 << this->m_Configuration->GetCommandLineArgument("-out")
                 << "Metric" << this->GetMetricNumber()
-                << "IntensityModel" << i
+                << "IntensityModel" << statisticalModelId
                 << "PC" << j << "minus3std." << imageFormat;
 
-        elxout << "  Writing intensity model " << i << " principal component " << j << " minus 3 standard deviations"
+        elxout << "  Writing intensity model " << statisticalModelId << " principal component " << j << " minus 3 standard deviations"
                << " for " << this->GetComponentLabel() << " to " << makeFileNamePCM3STD.str() << std::endl;
-        imageWriter->SetInput(this->GetStatisticalModelContainer()->GetElement(i)->DrawSample( minus3std ));
+        imageWriter->SetInput(this->GetStatisticalModelContainer()->GetElement(statisticalModelId)->DrawSample( minus3std ) );
         imageWriter->SetFileName( makeFileNamePCM3STD.str() );
         imageWriter->Update();
       }

@@ -315,14 +315,14 @@ ActiveRegistrationModelIntensityMetric< TFixedImage, TMovingImage >
 
       // Check if movingPoint is inside moving mask if moving mask is used
       if( sampleOk ) {
-        sampleOk = this->IsInsideMovingMask(movingPoint);
+        sampleOk = this->IsInsideMovingMask( movingPoint );
       } else {
         continue;
       }
 
       // Sample moving image
       if( sampleOk ) {
-        sampleOk = this->EvaluateMovingImageValueAndDerivative(movingPoint, movingImageValue, &movingImageDerivative);
+        sampleOk = this->EvaluateMovingImageValueAndDerivative( movingPoint, movingImageValue, &movingImageDerivative );
       } else {
         continue;
       }

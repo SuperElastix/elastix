@@ -493,6 +493,102 @@ ActiveRegistrationModelShapeMetric< TElastix >
 
 
 
+
+/**
+ * ***************** AfterEachIteration ***********************
+ */
+
+template< class TElastix >
+void
+ActiveRegistrationModelShapeMetric< TElastix >
+::AfterEachIteration( void )
+{
+  const unsigned int iter = this->m_Elastix->GetIterationCounter();
+
+  /** Decide whether or not to write final model image */
+  bool writeShapeModelReconstructionAfterEachIteration = false;
+  this->m_Configuration->ReadParameter( writeShapeModelReconstructionAfterEachIteration,
+                                        "WriteShapeModelReconstructionAfterEachIteration", 0, false );
+
+  this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
+
+  for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
+    StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->ComputeCoefficients(
+            this->TransformMesh( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId)->DrawMean() ) );
+
+    if( writeShapeModelReconstructionAfterEachIteration ) {
+      std::string shapeFormat = "vtk";
+      this->m_Configuration->ReadParameter( shapeFormat, "ResultShapeFormat", 0, false );
+
+      std::ostringstream makeFileName("");
+      makeFileName
+              << this->m_Configuration->GetCommandLineArgument("-out")
+              << "Metric" << this->GetMetricNumber()
+              << "ShapeModel" << statisticalModelId
+              << "Iteration" << iter
+              << "Shape." << shapeFormat;
+
+      elxout << "  Writing shape model " << statisticalModelId << " shape for "
+             << this->GetComponentLabel() << " after iteration " << iter << " to " << makeFileName.str() << ". ";
+      elxout << " Coefficents are [" << coeffs << "]." << std::endl;
+
+      MeshFileWriterPointer meshWriter = MeshFileWriterType::New();
+      meshWriter->SetInput( this->GetStatisticalModelContainer()->ElementAt(statisticalModelId)->DrawSample( coeffs ) );
+      meshWriter->SetFileName(makeFileName.str());
+      meshWriter->Update();
+    }
+  }
+}
+
+
+
+/**
+ * ***************** AfterEachResolution ***********************
+ */
+
+template< class TElastix >
+void
+ActiveRegistrationModelShapeMetric< TElastix >
+::AfterEachResolution( void )
+{
+  const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+
+  /** Decide whether or not to write model image after each resolution */
+  bool writeIntensityModelReconstructionAfterEachResolution = false;
+  this->m_Configuration->ReadParameter( writeIntensityModelReconstructionAfterEachResolution,
+                                        "WriteIntensityModelReconstructionAfterEachResolution", 0, false );
+
+  this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
+
+  for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
+    StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->ComputeCoefficients(
+            this->TransformMesh( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId)->DrawMean() ) );
+
+    if( writeIntensityModelReconstructionAfterEachResolution ) {
+      std::string shapeFormat = "vtk";
+      this->m_Configuration->ReadParameter( shapeFormat, "ResultShapeFormat", 0, false );
+
+      std::ostringstream makeFileName("");
+      makeFileName
+              << this->m_Configuration->GetCommandLineArgument("-out")
+              << "Metric" << this->GetMetricNumber()
+              << "IntensityModel" << statisticalModelId
+              << "Resolution" << level
+              << "Image." << shapeFormat;
+
+      elxout << "  Writing intensity model " << statisticalModelId << " image " << " for "
+             << this->GetComponentLabel() << " after resolution " << level << " to " << makeFileName.str() << ". ";
+      elxout << " Coefficents are [" << coeffs << "]." << std::endl;
+
+      MeshFileWriterPointer meshWriter = MeshFileWriterType::New();
+      meshWriter->SetInput( this->GetStatisticalModelContainer()->ElementAt(statisticalModelId)->DrawSample( coeffs ) );
+      meshWriter->SetFileName(makeFileName.str());
+      meshWriter->Update();
+    }
+  }
+} // end AfterEachResolution()
+
+
 /**
  * ***************** AfterRegistration ***********************
  */
@@ -502,176 +598,136 @@ void
 ActiveRegistrationModelShapeMetric< TElastix >
 ::AfterRegistration( void )
 {
-  const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
-
   /** Decide whether or not to write the mean images */
   bool writeShapeModelMeanShape = false;
   this->m_Configuration->ReadParameter( writeShapeModelMeanShape,
-                                        "WriteShapeModelMeanShapeAfterRegistration", "", level, 0, false );
+                                        "WriteShapeModelMeanShapeAfterRegistration", 0, false );
+
+  std::string shapeFormat = "vtk";
+  this->m_Configuration->ReadParameter( shapeFormat, "ResultShapeFormat", 0, false );
 
   if( writeShapeModelMeanShape )
   {
-//    for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ )
-//    {
-//
-//      std::ostringstream makeFileName( "" );
-//      makeFileName
-//      << this->m_Configuration->GetCommandLineArgument( "-out" )
-//      << "ShapeModel" << i
-//      << "Metric" << this->GetMetricNumber()
-//      << "MeanShape.vtk";
-//
-//      elxout << "  Writing statistical model mean shape " << i << " for " << this->GetComponentLabel() << " to " << makeFileName.str() << std::endl;
-//
-//      MeshFileWriterPointer meshWriter = MeshFileWriterType::New();
-//      meshWriter->SetInput( this->GetStatisticalModelContainer()->GetElement( i )->DrawMean() );
-//      meshWriter->SetFileName( makeFileName.str() );
-//      meshWriter->Update();
-//    }
+    for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ )
+    {
+      std::ostringstream makeFileName( "" );
+      makeFileName
+      << this->m_Configuration->GetCommandLineArgument( "-out" )
+      << "Metric" << this->GetMetricNumber()
+      << "ShapeModel" << statisticalModelId
+      << "MeanShape." << shapeFormat;
+
+      elxout << "  Writing statistical model " << statisticalModelId << " mean shape for " << this->GetComponentLabel() << " to " << makeFileName.str() << std::endl;
+
+      MeshFileWriterPointer meshWriter = MeshFileWriterType::New();
+      meshWriter->SetInput( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->DrawMean() );
+      meshWriter->SetFileName( makeFileName.str() );
+      meshWriter->Update();
+    }
   }
 
   /** Decide whether or not to write final model image */
-  bool writeShapeModelFinalShape = false;
-  this->m_Configuration->ReadParameter( writeShapeModelFinalShape,
-                                        "WriteShapeModelFinalShapeAfterRegistration", "", level, 0, false );
+  bool writeShapeModelFinalReconstruction = false;
+  this->m_Configuration->ReadParameter( writeShapeModelFinalReconstruction,
+                                        "WriteShapeModelFinalReconstructionAfterRegistration", 0, false );
 
-  if( writeShapeModelFinalShape )
+  /** Decide whether or not to write sample probability */
+  bool writeShapeModelFinalReconstructionProbability = false;
+  this->m_Configuration->ReadParameter( writeShapeModelFinalReconstructionProbability,
+                                        "WriteShapeModelFinalShapeProbabilityAfterRegistration", 0, false );
+
+  if( writeShapeModelFinalReconstruction || writeShapeModelFinalReconstructionProbability )
   {
-// TODO: For now we just warp with transformix after registration
-//    for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ )
-//    {
-//      std::string meanImageFormat = "nii.gz";
-//      this->m_Configuration->ReadParameter( meanImageFormat, "ResultImageFormat", 0, false );
-//
-//      std::ostringstream makeFileName( "" );
-//      makeFileName
-//      << this->m_Configuration->GetCommandLineArgument( "-out" )
-//      << "ImageIntensityModel" << i
-//      << "Metric" << this->GetMetricNumber()
-//      << "FinalImage." << meanImageFormat;
-//
-//      elxout << "  Writing statistical model final image " << i << " for " << this->GetComponentLabel() << " to " << makeFileName.str() << std::endl;
-//
-//      // This happens after Applying final transform so no need to update resampler
-//
-//      StatisticalModelVectorType modelCoefficients = this->GetStatisticalModelContainer()->GetElement( i )->ComputeCoefficientsForDataset( movingMesh );
-//
-//      MeshFileWriterPointer meshWriter = MeshFileWriterType::New();
-//      meshWriter->SetInput( this->GetStatisticalModelContainer()->GetElement( i )->DrawMean() );
-//      meshWriter->SetFileName( makeFileName.str() );
-//      meshWriter->Update();
-//    }
+    for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ )
+    {
+      StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->ComputeCoefficients(
+              this->TransformMesh( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId)->DrawMean() ) );
+
+      if( writeShapeModelFinalReconstruction )
+      {
+        std::ostringstream makeFileName( "" );
+        makeFileName
+                << this->m_Configuration->GetCommandLineArgument( "-out" )
+                << "Metric" << this->GetMetricNumber()
+                << "ShapeModel" << statisticalModelId
+                << "FinalShape." << shapeFormat;
+
+        elxout << "  Writing statistical model final image " << statisticalModelId << " for " << this->GetComponentLabel() << " to " << makeFileName.str() << std::endl;
+
+        MeshFileWriterPointer meshWriter = MeshFileWriterType::New();
+        meshWriter->SetInput( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->DrawSample( coeffs ) );
+        meshWriter->SetFileName( makeFileName.str() );
+        meshWriter->Update();
+      }
+
+      if( writeShapeModelFinalReconstructionProbability ) {
+        std::ostringstream makeProbFileName;
+        makeProbFileName
+                << this->m_Configuration->GetCommandLineArgument("-out")
+                << "Metric" << this->GetMetricNumber()
+                << "ShapeModel" << statisticalModelId
+                << "Probability.txt";
+
+        elxout << "  Writing shape model " << statisticalModelId << " final shape probablity for " << this->GetComponentLabel()
+               << " to " << makeProbFileName.str() << ". ";
+        elxout << "  Coefficents are [" << coeffs << "]." << std::endl;
+        ofstream probabilityFile;
+        probabilityFile.open(makeProbFileName.str());
+        probabilityFile << this->GetStatisticalModelContainer()->GetElement( statisticalModelId )->ComputeLogProbabilityOfCoefficients( coeffs );
+        probabilityFile.close();
+      }
+    }
   }
 
   bool writeShapeModelPrincipalComponents = false;
   this->m_Configuration->ReadParameter( writeShapeModelPrincipalComponents,
-                                        "WriteShapeModelPrincipalComponentsAfterRegistration", "", level, 0, false );
+                                        "WriteShapeModelPrincipalComponentsAfterRegistration", 0, false );
 
   if( writeShapeModelPrincipalComponents )
   {
-//    for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ )
-//    {
-//      // TODO: Do loop and lets see model
-//      StatisticalModelVectorType variance = this->GetStatisticalModelContainer()->GetElement( i )->GetPCAVarianceVector();
-//      MeshFileWriterPointer imageWriter = MeshFileWriterType::New();
-//
-//      // 1st principal component
-//      StatisticalModelVectorType pc0plus3std = StatisticalModelVectorType( this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
-//      pc0plus3std[ 0 ] = 3.0;
-//
-//      std::ostringstream makeFileNamePC0P3STD( "" );
-//      makeFileNamePC0P3STD
-//      << this->m_Configuration->GetCommandLineArgument( "-out" )
-//      << "ShapeModel" << i
-//      << "Metric" << this->GetMetricNumber()
-//      << "PC0plus3std.vtk";
-//
-//      elxout << "  Writing statistical model principal component 0 plus 3 standard deviations for model " << i << " for " << this->GetComponentLabel() << " to " << makeFileNamePC0P3STD.str() << std::endl;
-//
-//      MeshFileWriterPointer meshWriter = MeshFileWriterType::New();
-//      meshWriter->SetInput( this->GetStatisticalModelContainer()->GetElement( i )->DrawMean() );
-//      meshWriter->SetFileName( makeFileNamePC0P3STD.str() );
-//      meshWriter->Update();
-//
-//      StatisticalModelVectorType pc0minus3std = StatisticalModelVectorType( this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
-//      pc0minus3std[ 0 ] = -3.0;
-//
-//      std::ostringstream makeFileNamePC0M3STD( "" );
-//      makeFileNamePC0M3STD
-//      << this->m_Configuration->GetCommandLineArgument( "-out" )
-//      << "ShapeModel" << i
-//      << "Metric" << this->GetMetricNumber()
-//      << "PC0minus3std.vtk";
-//
-//      elxout << "  Writing statistical model principal component 0 minus 3 standard deviations for model " << i << " for " << this->GetComponentLabel() << " to " << makeFileNamePC0M3STD.str() << std::endl;
-//      meshWriter->SetInput( this->GetStatisticalModelContainer()->GetElement( i )->DrawMean() );
-//      meshWriter->SetFileName( makeFileNamePC0M3STD.str() );
-//      meshWriter->Update();
-//
-//      // 2nd principal component
-//      StatisticalModelVectorType pc1plus3std = StatisticalModelVectorType( this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
-//      pc1plus3std[ 1 ] = 3.0;
-//
-//      std::ostringstream makeFileNamePC1P3STD( "" );
-//      makeFileNamePC1P3STD
-//      << this->m_Configuration->GetCommandLineArgument( "-out" )
-//      << "ShapeModel" << i
-//      << "Metric" << this->GetMetricNumber()
-//      << "PC1plus3std.vtk";
-//
-//      elxout << "  Writing statistical model principal component 1 plus 3 standard deviations for model " << i << " for " << this->GetComponentLabel() << " to " << makeFileNamePC1P3STD.str() << std::endl;
-//      meshWriter->SetInput( this->GetStatisticalModelContainer()->GetElement( i )->DrawMean() );
-//      meshWriter->SetFileName( makeFileNamePC1P3STD.str() );
-//      meshWriter->Update();
-//
-//      //
-//      StatisticalModelVectorType pc1minus3std = StatisticalModelVectorType( this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
-//      pc1minus3std[ 1 ] = -3.0;
-//
-//      std::ostringstream makeFileNamePC1M3STD( "" );
-//      makeFileNamePC1M3STD
-//      << this->m_Configuration->GetCommandLineArgument( "-out" )
-//      << "ShapeModel" << i
-//      << "Metric" << this->GetMetricNumber()
-//      << "PC1minus3std.vtk";
-//
-//      elxout << "  Writing statistical model principal component 1 minus 3 standard deviations for model " << i << " for " << this->GetComponentLabel() << " to " << makeFileNamePC1M3STD.str() << std::endl;
-//      meshWriter->SetInput( this->GetStatisticalModelContainer()->GetElement( i )->DrawMean() );
-//      meshWriter->SetFileName( makeFileNamePC1M3STD.str() );
-//      meshWriter->Update();
-//
-//      // 3rd principal component
-//      StatisticalModelVectorType pc2plus3std = StatisticalModelVectorType( this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
-//      pc2plus3std[ 2 ] = 3.0;
-//
-//      std::ostringstream makeFileNamePC2P3STD( "" );
-//      makeFileNamePC2P3STD
-//      << this->m_Configuration->GetCommandLineArgument( "-out" )
-//      << "ShapeModel" << i
-//      << "Metric" << this->GetMetricNumber()
-//      << "PC2plus3std.vtk";
-//
-//      elxout << "  Writing statistical model principal component 2 plus 3 standard deviations for model " << i << " for " << this->GetComponentLabel() << " to " << makeFileNamePC2P3STD.str() << std::endl;
-//      meshWriter->SetInput( this->GetStatisticalModelContainer()->GetElement( i )->DrawMean() );
-//      meshWriter->SetFileName( makeFileNamePC2P3STD.str() );
-//      meshWriter->Update();
-//
-//      //
-//      StatisticalModelVectorType pc2minus3std = StatisticalModelVectorType( this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
-//      pc2minus3std[ 2 ] = -3.0;
-//
-//      std::ostringstream makeFileNamePC2M3STD( "" );
-//      makeFileNamePC2M3STD
-//      << this->m_Configuration->GetCommandLineArgument( "-out" )
-//      << "ShapeModel" << i
-//      << "Metric" << this->GetMetricNumber()
-//      << "PC2minus3std.vtk";
-//
-//      elxout << "  Writing statistical model principal component 2 minus 3 standard deviations for model " << i << " for " << this->GetComponentLabel() << " to " << makeFileNamePC2M3STD.str() << std::endl;
-//      meshWriter->SetInput( this->GetStatisticalModelContainer()->GetElement( i )->DrawMean() );
-//      meshWriter->SetFileName( makeFileNamePC2M3STD.str() );
-//      meshWriter->Update();
-//    }
+    for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ )
+    {
+      std::string shapeFormat = "vtk";
+      this->m_Configuration->ReadParameter( shapeFormat, "ResultShapeFormat", 0, false );
+
+      MeshFileWriterPointer meshWriter = MeshFileWriterType::New();
+
+      for( unsigned int j = 0; j < this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(); j++ ) {
+        StatisticalModelVectorType plus3std = StatisticalModelVectorType(
+                this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
+        plus3std[ j ] = 3.0;
+
+        std::ostringstream makeFileNameP3STD( "" );
+        makeFileNameP3STD
+                << this->m_Configuration->GetCommandLineArgument("-out")
+                << "Metric" << this->GetMetricNumber()
+                << "ShapeModel" << i
+                << "PC" << j << "plus3std." << shapeFormat;
+
+        elxout << "  Writing shape model " << i << " principal component " << j << " plus 3 standard deviations"
+               << " for " << this->GetComponentLabel() << " to " << makeFileNameP3STD.str() << std::endl;
+        meshWriter->SetInput(this->GetStatisticalModelContainer()->GetElement( i )->DrawSample( plus3std)) ;
+        meshWriter->SetFileName( makeFileNameP3STD.str() );
+        meshWriter->Update();
+
+        StatisticalModelVectorType minus3std = StatisticalModelVectorType(
+                this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
+        minus3std[ j ] = -3.0;
+
+        std::ostringstream makeFileNamePCM3STD("");
+        makeFileNamePCM3STD
+                << this->m_Configuration->GetCommandLineArgument("-out")
+                << "Metric" << this->GetMetricNumber()
+                << "ShapeModel" << i
+                << "PC" << j << "minus3std." << shapeFormat;
+
+        elxout << "  Writing shape model " << i << " principal component " << j << " minus 3 standard deviations"
+               << " for " << this->GetComponentLabel() << " to " << makeFileNamePCM3STD.str() << std::endl;
+        meshWriter->SetInput(this->GetStatisticalModelContainer()->GetElement(i)->DrawSample( minus3std ));
+        meshWriter->SetFileName( makeFileNamePCM3STD.str() );
+        meshWriter->Update();
+      }
+    }
   }
 } // end AfterRegistration()
 

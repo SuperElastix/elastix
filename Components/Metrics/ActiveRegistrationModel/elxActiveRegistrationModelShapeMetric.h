@@ -177,23 +177,20 @@ public:
 
   StatisticalModelVectorType ReadTotalVariance();
 
-  /** Sets up a timer to measure the initialization time and calls the
-   * Superclass' implementation.
+  /** Sets up a timer to measure the initialization time and
+   * calls the Superclass' implementation.
    */
   virtual void Initialize( void );
 
-  /**
-   * Do some things before registration:
-   * \li Load and set the pointsets.
-   */
   virtual int BeforeAllBase( void );
 
   virtual void BeforeRegistration( void );
 
-  virtual void AfterRegistration( void );
+  virtual void AfterEachIteration( void );
 
-  /** Overwrite to silence warning. */
-  virtual void SelectNewSamples( void ){}
+  virtual void AfterEachResolution( void );
+
+  virtual void AfterRegistration( void );
 
 protected:
   

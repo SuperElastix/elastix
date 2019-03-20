@@ -201,18 +201,15 @@ public:
    */
   virtual void Initialize( void );
 
-  // Load data
   virtual int BeforeAllBase( void );
 
-  // Build models
   virtual void BeforeRegistration( void );
+
+  virtual void AfterEachIteration( void );
 
   virtual void AfterEachResolution( void );
 
   virtual void AfterRegistration( void );
-
-  // Write model reconstruction to disk
-  virtual void AfterEachIteration( void );
 
 protected:
 

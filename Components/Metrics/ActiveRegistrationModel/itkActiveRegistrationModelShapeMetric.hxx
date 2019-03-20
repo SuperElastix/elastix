@@ -107,9 +107,9 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
   const auto& movingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( movingMesh );
 
   const auto& coeffs = statisticalModel->ComputeCoefficients( movingMesh );
-  const auto& reconstructedVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, true ) );
+  const auto& reconstructedMovingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, true ) );
 
-  modelValue += ( movingVector - fixedVector ).dot( movingVector - reconstructedVector ) / fixedMesh->GetNumberOfPoints();
+  modelValue += ( movingVector - fixedVector ).dot( movingVector - reconstructedMovingVector ) / fixedMesh->GetNumberOfPoints();
 }
 
 
@@ -238,12 +238,11 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
     const auto& movingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( movingMesh );
 
     const auto& coeffs = statisticalModel->ComputeCoefficients( movingMesh );
-    const auto& reconstructedVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, true ) );
+    const auto& reconstructedMovingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, true ) );
 
-    const statismo::VectorType tmp = movingVector - reconstructedVector;
+    const statismo::VectorType tmp = movingVector - reconstructedMovingVector;
     MeasureType modelValue = ( movingVector - fixedVector ).dot( tmp );
 
-    unsigned int i = 0;
     for( unsigned int i = 0; i < fixedMesh->GetNumberOfPoints(); i++ )
     {
       const auto& tmp_i = StatisticalModelVectorType( tmp.data() + i * StatisticalModelMeshDimension,
@@ -255,8 +254,6 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
         const auto& mu = nzji[ j ];
         modelDerivative[ mu ] += dot_product( tmp_i, Jacobian.get_column( j ) );
       }
-
-      i += StatisticalModelMeshDimension;
     }
 
     if( std::isnan( modelValue ) )
