@@ -142,39 +142,9 @@ public:
 
   typedef unsigned int                                                            StatisticalModelIdType;
 
-  typedef VectorContainer< StatisticalModelIdType, StatisticalModelMatrixType >   StatisticalModelMatrixContainerType;
-  typedef typename StatisticalModelMatrixContainerType::Pointer                   StatisticalModelMatrixContainerPointer;
-  typedef typename StatisticalModelMatrixContainerType::ConstPointer              StatisticalModelMatrixContainerConstPointer;
-  typedef typename StatisticalModelMatrixContainerType::ConstIterator             StatisticalModelMatrixContainerConstIterator;
-
-  typedef VectorContainer< StatisticalModelIdType, StatisticalModelVectorType >   StatisticalModelVectorContainerType;
-  typedef typename StatisticalModelVectorContainerType::Pointer                   StatisticalModelVectorContainerPointer;
-  typedef typename StatisticalModelVectorContainerType::ConstPointer              StatisticalModelVectorContainerConstPointer;
-  typedef typename StatisticalModelVectorContainerType::ConstIterator             StatisticalModelVectorContainerConstIterator;
-
-  typedef VectorContainer< StatisticalModelIdType, StatisticalModelScalarType >   StatisticalModelScalarContainerType;
-  typedef typename StatisticalModelScalarContainerType::Pointer                   StatisticalModelScalarContainerPointer;
-  typedef typename StatisticalModelScalarContainerType::ConstPointer              StatisticalModelScalarContainerConstPointer;
-  typedef typename StatisticalModelScalarContainerType::ConstIterator             StatisticalModelScalarContainerConstIterator;
-
   typedef VectorContainer< StatisticalModelIdType, StatisticalModelPointer >      StatisticalModelContainerType;
   typedef typename StatisticalModelContainerType::Pointer                         StatisticalModelContainerPointer;
   typedef typename StatisticalModelContainerType::ConstPointer                    StatisticalModelContainerConstPointer;
-
-  itkSetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
-  itkGetConstObjectMacro( MeanVectorContainer, StatisticalModelVectorContainerType );
-
-  itkSetConstObjectMacro( BasisMatrixContainer, StatisticalModelMatrixContainerType );
-  itkGetConstObjectMacro( BasisMatrixContainer, StatisticalModelMatrixContainerType );
-
-  itkSetConstObjectMacro( VarianceContainer, StatisticalModelVectorContainerType );
-  itkGetConstObjectMacro( VarianceContainer, StatisticalModelVectorContainerType );
-
-  itkSetConstObjectMacro( NoiseVarianceContainer, StatisticalModelScalarContainerType );
-  itkGetConstObjectMacro( NoiseVarianceContainer, StatisticalModelScalarContainerType );
-
-  itkSetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
-  itkGetConstObjectMacro( TotalVarianceContainer, StatisticalModelScalarContainerType );
 
   itkSetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
   itkGetConstObjectMacro( StatisticalModelContainer, StatisticalModelContainerType );
@@ -223,16 +193,6 @@ private:
 
   StatisticalModelMeshPointer TransformMesh( StatisticalModelMeshPointer fixedMesh ) const;
 
-  /**  Memory efficient computation of VV^T * ( T(mu) - mu ) */
-  const StatisticalModelVectorType Reconstruct( const StatisticalModelVectorType& movingVector,
-                                                const StatisticalModelMatrixType& basisMatrix,
-                                                const StatisticalModelScalarType& noiseVariance ) const;
-
-  StatisticalModelVectorContainerConstPointer m_MeanVectorContainer;
-  StatisticalModelMatrixContainerConstPointer m_BasisMatrixContainer;
-  StatisticalModelVectorContainerConstPointer m_VarianceContainer;
-  StatisticalModelScalarContainerConstPointer m_NoiseVarianceContainer;
-  StatisticalModelScalarContainerConstPointer m_TotalVarianceContainer;
   StatisticalModelContainerConstPointer m_StatisticalModelContainer;
 
 }; // end class PointSetPenalty

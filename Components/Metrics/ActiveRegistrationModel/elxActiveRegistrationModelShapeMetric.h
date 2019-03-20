@@ -152,15 +152,6 @@ public:
 
   typedef typename Superclass1::StatisticalModelIdType                        StatisticalModelIdType;
   typedef typename Superclass1::StatisticalModelPointer                       StatisticalModelPointer;
-
-  typedef typename Superclass1::StatisticalModelMatrixContainerType           StatisticalModelMatrixContainerType;
-  typedef typename Superclass1::StatisticalModelMatrixContainerPointer        StatisticalModelMatrixContainerPointer;
-
-  typedef typename Superclass1::StatisticalModelVectorContainerType           StatisticalModelVectorContainerType;
-  typedef typename Superclass1::StatisticalModelVectorContainerPointer        StatisticalModelVectorContainerPointer;
-
-  typedef typename Superclass1::StatisticalModelScalarContainerType           StatisticalModelScalarContainerType;
-  typedef typename Superclass1::StatisticalModelScalarContainerPointer        StatisticalModelScalarContainerPointer;
   
   typedef typename Superclass1::StatisticalModelDataManagerType               StatisticalModelDataManagerType;
   typedef typename Superclass1::StatisticalModelDataManagerPointer            StatisticalModelDataManagerPointer;

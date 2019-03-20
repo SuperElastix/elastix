@@ -111,18 +111,6 @@ void
 ActiveRegistrationModelShapeMetric< TElastix >
 ::BeforeRegistration( void )
 {
-  StatisticalModelVectorContainerPointer statisticalModelMeanVectorContainer = StatisticalModelVectorContainerType::New();
-  statisticalModelMeanVectorContainer->Reserve( this->m_LoadShapeModelFileNames.size() + this->m_ShapeDirectories.size() );
-
-  StatisticalModelMatrixContainerPointer statisticalModelOrthonormalPCABasisMatrixContainer = StatisticalModelMatrixContainerType::New();
-  statisticalModelOrthonormalPCABasisMatrixContainer->Reserve( this->m_LoadShapeModelFileNames.size() + this->m_ShapeDirectories.size() );
-
-  StatisticalModelVectorContainerPointer statisticalModelVarianceVectorContainer = StatisticalModelVectorContainerType::New();
-  statisticalModelVarianceVectorContainer->Reserve( this->m_LoadShapeModelFileNames.size() + this->m_ShapeDirectories.size() );
-
-  StatisticalModelScalarContainerPointer statisticalModelNoiseVarianceContainer = StatisticalModelScalarContainerType::New();
-  statisticalModelNoiseVarianceContainer->Reserve( this->m_LoadShapeModelFileNames.size() + this->m_ShapeDirectories.size() );
-
   StatisticalModelContainerPointer statisticalModelContainer = StatisticalModelContainerType::New();
   statisticalModelContainer->Reserve( this->m_LoadShapeModelFileNames.size() + this->m_ShapeDirectories.size() );
 
@@ -139,10 +127,6 @@ ActiveRegistrationModelShapeMetric< TElastix >
       {
         StatisticalModelRepresenterPointer representer = StatisticalModelRepresenterType::New();
         statisticalModel = itk::StatismoIO< StatisticalModelMeshType >::LoadStatisticalModel( representer, this->m_LoadShapeModelFileNames[ statisticalModelId ] );
-        statisticalModelMeanVectorContainer->SetElement( statisticalModelId, statisticalModel->GetMeanVector() );
-        statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( statisticalModelId, statisticalModel->GetOrthonormalPCABasisMatrix() );
-        statisticalModelVarianceVectorContainer->SetElement( statisticalModelId, statisticalModel->GetPCAVarianceVector() );
-        statisticalModelNoiseVarianceContainer->SetElement( statisticalModelId, statisticalModel->GetNoiseVariance() );
         statisticalModelContainer->SetElement( statisticalModelId, statisticalModel );
       }
       catch( statismo::StatisticalModelException &e )
@@ -222,18 +206,9 @@ ActiveRegistrationModelShapeMetric< TElastix >
         }
       }
 
-      statisticalModelMeanVectorContainer->SetElement( statisticalModelId, statisticalModel->GetMeanVector());
-      statisticalModelOrthonormalPCABasisMatrixContainer->SetElement( statisticalModelId, statisticalModel->GetOrthonormalPCABasisMatrix());
-      statisticalModelVarianceVectorContainer->SetElement( statisticalModelId, statisticalModel->GetPCAVarianceVector() );
-      statisticalModelNoiseVarianceContainer->SetElement( statisticalModelId, noiseVariance[ statisticalModelId ]);
       statisticalModelContainer->SetElement( statisticalModelId, statisticalModel );
     }
   }
-  
-  this->SetMeanVectorContainer( statisticalModelMeanVectorContainer );
-  this->SetBasisMatrixContainer( statisticalModelOrthonormalPCABasisMatrixContainer );
-  this->SetVarianceContainer( statisticalModelVarianceVectorContainer );
-  this->SetNoiseVarianceContainer( statisticalModelNoiseVarianceContainer );
 
   this->SetStatisticalModelContainer( statisticalModelContainer );
 

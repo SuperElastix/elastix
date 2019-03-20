@@ -54,24 +54,9 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
     itkExceptionMacro( << "Transform is not present" );
   }
 
-  if( this->GetMeanVectorContainer()->Size() == 0  )
+  if( this->GetStatisticalModelContainer()->Size() == 0  )
   {
-    itkExceptionMacro( << "MeanVectorContainer is empty." );
-  }
-
-  if( this->GetBasisMatrixContainer()->Size() == 0  )
-  {
-    itkExceptionMacro( << "BasisMatrixContainer is empty." );
-  }
-
-  if( this->GetVarianceContainer()->Size() == 0  )
-  {
-    itkExceptionMacro( << "VarianceContainer is empty." );
-  }
-
-  if( this->GetNoiseVarianceContainer()->Size() == 0  )
-  {
-    itkExceptionMacro( << "NoiseVarianceContainer is empty." );
+    itkExceptionMacro( << "StatisticalModelContainer is empty." );
   }
 } // end Initialize()
 
@@ -296,31 +281,6 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
     this->GetValueAndFiniteDifferenceDerivative( parameters, value, derivative );
   }
 }
-
-
-
-/**
- * ******************* Reconstruct *******************
- */
-
-template< class TFixedPointSet, class TMovingPointSet >
-const typename ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >::StatisticalModelVectorType
-ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
-::Reconstruct(const StatisticalModelVectorType& movingVector, const StatisticalModelMatrixType& basisMatrix,
-              const StatisticalModelScalarType& noiseVariance ) const
-{
-  StatisticalModelVectorType epsilon = StatisticalModelVectorType(movingVector.size(), 0.);
-
-  if( noiseVariance > 0 ) {
-    for( unsigned int i = 0; i < movingVector.size(); i++) {
-      epsilon[ i ] = vnl_sample_normal(0., 1.);
-    }
-  }
-
-  // Compute movingShape * VV^T without compute VV^T to reduce peak memory
-  const StatisticalModelVectorType coefficients = basisMatrix.transpose() * movingVector;
-  return basisMatrix * coefficients + epsilon;
-};
 
 
 
