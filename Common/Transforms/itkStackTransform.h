@@ -94,9 +94,14 @@ public:
   typedef AdvancedTransform< TScalarType,
     itkGetStaticConstMacro( ReducedInputSpaceDimension ),
     itkGetStaticConstMacro( ReducedOutputSpaceDimension ) >  SubTransformType;
-  typedef typename SubTransformType::Pointer      SubTransformPointer;
-  typedef std::vector< SubTransformPointer  >     SubTransformContainerType;
-  typedef typename SubTransformType::JacobianType SubTransformJacobianType;
+  typedef typename SubTransformType::Pointer             SubTransformPointer;
+  typedef std::vector< SubTransformPointer  >            SubTransformContainerType;
+  typedef typename SubTransformType::JacobianType        SubTransformJacobianType;
+  typedef typename SubTransformType::SpatialJacobianType SubTransformSpatialJacobianType;
+  typedef typename SubTransformType::JacobianOfSpatialJacobianType
+    SubTransformTypeJacobianOfSpatialJacobianType;
+  typedef typename SubTransformType::SpatialHessianType           SubTransformSpatialHessianType;
+  typedef typename SubTransformType::JacobianOfSpatialHessianType SubTransformJacobianOfSpatialHessianType;
 
   /** Dimension - 1 point types. */
   typedef typename SubTransformType::InputPointType  SubTransformInputPointType;
@@ -141,6 +146,41 @@ public:
   virtual void GetJacobian(
     const InputPointType & ipp,
     JacobianType & jac,
+    NonZeroJacobianIndicesType & nzji ) const;
+
+  /** Compute the Spatial Jacobian. */
+  virtual void GetSpatialJacobian(
+    const InputPointType & ipp,
+    SpatialJacobianType & sj ) const;
+
+  /** Compute the Jacobian of the spatial Jacobian. */
+  virtual void GetJacobianOfSpatialJacobian(
+    const InputPointType & ipp,
+    JacobianOfSpatialJacobianType & jsj,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+
+  /** Compute the spatial Jacobian and its Jacobian. */
+  virtual void GetJacobianOfSpatialJacobian(
+    const InputPointType & ipp, SpatialJacobianType & sj,
+    JacobianOfSpatialJacobianType & jsj,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+
+  /** Compute the spatial Hessian of the transformation. */
+  virtual void GetSpatialHessian(
+    const InputPointType & ipp,
+    SpatialHessianType & sh ) const;
+
+  /** Compute the jacobian of the spatial Hessian of the transformation. */
+  void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp,
+    JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nzji ) const;
+
+  /** Compute the spatial Hessian (and its jacobian) of the transformation. */
+  void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp,
+    SpatialHessianType & sh,
+    JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nzji ) const;
 
   /** Set the parameters. Checks if the number of parameters
@@ -233,55 +273,6 @@ public:
 
   /** Get number of nonzero Jacobian indices. */
   virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
-
-  /** Must be provided. */
-  virtual void GetSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj ) const
-  {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
-  }
-
-
-  virtual void GetSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh ) const
-  {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
-  }
-
-
-  virtual void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-  {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
-  }
-
-
-  virtual void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-  {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
-  }
-
-
-  virtual void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-  {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
-  }
-
-
-  virtual void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-  {
-    itkExceptionMacro( << "Not implemented for StackTransform" );
-  }
-
 
 protected:
 
