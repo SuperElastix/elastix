@@ -495,7 +495,11 @@ private:
   bool m_UseEigen;
 
   /** The callback function. */
+#if ITK_VERSION_MAJOR >= 5
+  static itk::ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg );
+#else
   static ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg );
+#endif
 
   /** The threaded implementation of AdvanceOneStep(). */
   inline void ThreadedAdvanceOneStep( ThreadIdType threadId, ParametersType & newPosition );

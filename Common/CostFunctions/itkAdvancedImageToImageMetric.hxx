@@ -889,7 +889,11 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
   temp->st_Metric->ThreadedGetValue( threadID );
 
+#if ITK_VERSION_MAJOR >= 5
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+#else
   return ITK_THREAD_RETURN_VALUE;
+#endif
 
 } // end GetValueThreaderCallback()
 
@@ -930,7 +934,11 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
   temp->st_Metric->ThreadedGetValueAndDerivative( threadID );
 
+#if ITK_VERSION_MAJOR >= 5
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+#else
   return ITK_THREAD_RETURN_VALUE;
+#endif
 
 } // end GetValueAndDerivativeThreaderCallback()
 
@@ -996,7 +1004,11 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     temp->st_DerivativePointer[ j ] = tmp * normalization;
   }
 
+#if ITK_VERSION_MAJOR >= 5
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+#else
   return ITK_THREAD_RETURN_VALUE;
+#endif
 
 } // end AccumulateDerivativesThreaderCallback()
 
