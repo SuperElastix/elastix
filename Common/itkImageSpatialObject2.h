@@ -149,14 +149,17 @@ protected:
   ImageSpatialObject2( const Self & ); // purposely not implemented
   void operator=( const Self & );      // purposely not implemented
 
-  ImagePointer m_Image;
-
   ImageSpatialObject2();
   virtual ~ImageSpatialObject2();
 
   void PrintSelf( std::ostream & os, Indent indent ) const;
 
+private:
+
+  ImagePointer m_Image;
+
   int *       m_SlicePosition;
+
   std::string m_PixelType;
 
   typename InterpolatorType::Pointer m_Interpolator;
