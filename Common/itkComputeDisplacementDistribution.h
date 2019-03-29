@@ -198,7 +198,6 @@ protected:
   {
     Self * st_Self;
   };
-  mutable MultiThreaderParameterType m_ThreaderParameters;
 
   struct ComputePerThreadStruct
   {
@@ -212,6 +211,11 @@ protected:
     PaddedComputePerThreadStruct );
   itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct,
     AlignedComputePerThreadStruct );
+
+private:
+
+  mutable MultiThreaderParameterType m_ThreaderParameters;
+
   mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
   mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
 

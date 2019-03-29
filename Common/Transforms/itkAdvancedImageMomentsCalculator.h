@@ -243,7 +243,6 @@ protected:
   /** Typedefs for multi-threading. */
   typedef itk::MultiThreader             ThreaderType;
   typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
-  ThreaderType::Pointer                   m_Threader;
 
   /** Launch MultiThread Compute. */
   void LaunchComputeThreaderCallback(void) const;
@@ -262,8 +261,6 @@ protected:
   {
     Self * st_Self;
   };
-  mutable MultiThreaderParameterType m_ThreaderParameters;
-
   struct ComputePerThreadStruct
   {
     /**  Used for accumulating variables. */
@@ -278,13 +275,20 @@ protected:
     PaddedComputePerThreadStruct);
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct,
     AlignedComputePerThreadStruct);
+
+  /** The type of region used for multithreading */
+  typedef typename ImageType::RegionType ThreadRegionType;
+
+private:
+
+  ThreaderType::Pointer m_Threader;
+
+  mutable MultiThreaderParameterType m_ThreaderParameters;
+
   mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
   mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
   bool                        m_UseMultiThread;
   SizeValueType               m_NumberOfPixelsCounted;
-
-  /** The type of region used for multithreading */
-  typedef typename ImageType::RegionType ThreadRegionType;
 
   SizeValueType  m_NumberOfSamplesForCenteredTransformInitialization;
   InputPixelType m_LowerThresholdForCenterGravity;
