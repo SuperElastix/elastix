@@ -32,6 +32,8 @@
 
 #include "itkMultiThreader.h"
 
+#include <vector>
+
 namespace itk
 {
 /** \class AdvancedImageMomentsCalculator
@@ -285,8 +287,7 @@ private:
 
   mutable MultiThreaderParameterType m_ThreaderParameters;
 
-  mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
-  mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
+  mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
   bool                        m_UseMultiThread;
   SizeValueType               m_NumberOfPixelsCounted;
 

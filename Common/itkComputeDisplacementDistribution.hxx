@@ -63,10 +63,6 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Initialize the m_ThreaderParameters. */
   this->m_ThreaderParameters.st_Self = this;
 
-  // Multi-threading structs
-  this->m_ComputePerThreadVariables     = NULL;
-  this->m_ComputePerThreadVariablesSize = 0;
-
 } // end Constructor
 
 
@@ -78,7 +74,6 @@ template< class TFixedImage, class TTransform >
 ComputeDisplacementDistribution< TFixedImage, TTransform >
 ::~ComputeDisplacementDistribution()
 {
-  delete[] this->m_ComputePerThreadVariables;
 } // end Destructor
 
 
@@ -102,22 +97,9 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
    */
   const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfThreads();
 
-  /** Only resize the array of structs when needed. */
-  if( this->m_ComputePerThreadVariablesSize != numberOfThreads )
-  {
-    delete[] this->m_ComputePerThreadVariables;
-    this->m_ComputePerThreadVariables     = new AlignedComputePerThreadStruct[ numberOfThreads ];
-    this->m_ComputePerThreadVariablesSize = numberOfThreads;
-  }
-
-  /** Some initialization. */
-  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
-  {
-    this->m_ComputePerThreadVariables[ i ].st_MaxJJ                 = NumericTraits< double >::Zero;
-    this->m_ComputePerThreadVariables[ i ].st_Displacement          = NumericTraits< double >::Zero;
-    this->m_ComputePerThreadVariables[ i ].st_DisplacementSquared   = NumericTraits< double >::Zero;
-    this->m_ComputePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
-  }
+  /** Resize (if necessary) and assign structs of zero-initialized values */
+  this->m_ComputePerThreadVariables.resize(numberOfThreads);
+  this->m_ComputePerThreadVariables.assign(numberOfThreads, AlignedComputePerThreadStruct());
 
 } // end InitializeThreadingParameters()
 
