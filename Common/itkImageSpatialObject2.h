@@ -43,6 +43,8 @@
 #include "itkInterpolateImageFunction.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
 
+#include <type_traits> // For is_same.
+
 namespace itk
 {
 
@@ -133,9 +135,30 @@ public:
   int GetSlicePosition( unsigned int dimension )
   { return m_SlicePosition[ dimension ]; }
 
-  const char * GetPixelType()
+  static const char * GetPixelType()
   {
-    return m_PixelType.c_str();
+    if (IsPixelType<short>())
+    {
+      return "short";
+    }
+    if (IsPixelType<unsigned char>())
+    {
+      return "unsigned char";
+    }
+    if (IsPixelType<unsigned short>())
+    {
+      return "unsigned short";
+    }
+    if (IsPixelType<float>())
+    {
+      return "float";
+    }
+    if (IsPixelType<double>())
+    {
+      return "double";
+    }
+    // PixelType not recognized.
+    return "";
   }
 
 
@@ -156,11 +179,15 @@ protected:
 
 private:
 
+  template <typename T>
+  static bool IsPixelType()
+  {
+    return std::is_same<PixelType, T>::value;
+  }
+
   ImagePointer m_Image;
 
   int m_SlicePosition[TDimension];
-
-  std::string m_PixelType;
 
   typename InterpolatorType::Pointer m_Interpolator;
 };

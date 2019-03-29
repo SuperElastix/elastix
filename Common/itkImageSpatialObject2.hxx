@@ -57,28 +57,10 @@ ImageSpatialObject2< TDimension,  PixelType >
   m_Image         = ImageType::New();
 
   this->ComputeBoundingBox();
-  if( typeid( PixelType ) == typeid( short ) )
+
+  if(GetPixelType()[0] == '\0')
   {
-    m_PixelType = "short";
-  }
-  else if( typeid( PixelType ) == typeid( unsigned char ) )
-  {
-    m_PixelType = "unsigned char";
-  }
-  else if( typeid( PixelType ) == typeid( unsigned short ) )
-  {
-    m_PixelType = "unsigned short";
-  }
-  else if( typeid( PixelType ) == typeid( float ) )
-  {
-    m_PixelType = "float";
-  }
-  else if( typeid( PixelType ) == typeid( double ) )
-  {
-    m_PixelType = "double";
-  }
-  else
-  {
+    // GetPixelType() returned an empty string.
     std::cout << "itk::ImageSpatialObject2() : PixelType not recognized" << std::endl;
   }
 
