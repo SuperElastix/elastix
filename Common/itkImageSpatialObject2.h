@@ -158,7 +158,7 @@ private:
 
   ImagePointer m_Image;
 
-  int *       m_SlicePosition;
+  int m_SlicePosition[TDimension];
 
   std::string m_PixelType;
 

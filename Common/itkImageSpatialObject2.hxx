@@ -49,14 +49,12 @@ namespace itk
 template< unsigned int TDimension, class PixelType >
 ImageSpatialObject2< TDimension,  PixelType >
 ::ImageSpatialObject2()
+  :
+  // Zero-initialize the elements of m_SlicePosition:
+  m_SlicePosition()
 {
   this->SetTypeName( "ImageSpatialObject2" );
   m_Image         = ImageType::New();
-  m_SlicePosition = new int[ TDimension ];
-  for( unsigned int i = 0; i < TDimension; i++ )
-  {
-    m_SlicePosition[ i ] = 0;
-  }
 
   this->ComputeBoundingBox();
   if( typeid( PixelType ) == typeid( short ) )
@@ -93,7 +91,6 @@ template< unsigned int TDimension, class PixelType >
 ImageSpatialObject2< TDimension,  PixelType >
 ::~ImageSpatialObject2()
 {
-  delete[] m_SlicePosition;
 }
 
 
