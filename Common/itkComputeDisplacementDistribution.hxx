@@ -352,7 +352,11 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Call the real implementation. */
   temp->st_Self->ThreadedCompute( threadID );
 
+#if ITK_VERSION_MAJOR >= 5
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
+#else
   return ITK_THREAD_RETURN_VALUE;
+#endif
 
 } // end ComputeThreaderCallback()
 
