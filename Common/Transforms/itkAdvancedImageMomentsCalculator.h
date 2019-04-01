@@ -285,9 +285,9 @@ private:
 
   ThreaderType::Pointer m_Threader;
 
-  mutable MultiThreaderParameterType m_ThreaderParameters;
+  MultiThreaderParameterType m_ThreaderParameters;
 
-  mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
+  std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
   bool                        m_UseMultiThread;
   SizeValueType               m_NumberOfPixelsCounted;
 

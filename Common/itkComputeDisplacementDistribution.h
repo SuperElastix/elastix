@@ -216,9 +216,9 @@ protected:
 
 private:
 
-  mutable MultiThreaderParameterType m_ThreaderParameters;
+  MultiThreaderParameterType m_ThreaderParameters;
 
-  mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
+  std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
 
   SizeValueType               m_NumberOfPixelsCounted;
   bool                        m_UseMultiThread;
