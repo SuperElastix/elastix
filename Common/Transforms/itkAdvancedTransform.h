@@ -113,7 +113,6 @@ public:
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::DerivativeType         DerivativeType;
   typedef typename Superclass::JacobianType           JacobianType;
-  typedef typename Superclass::InverseJacobianPositionType InverseJacobianPositionType;
   typedef typename Superclass::InputVectorType        InputVectorType;
   typedef typename Superclass::OutputVectorType       OutputVectorType;
   typedef typename Superclass
@@ -241,13 +240,6 @@ public:
     const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const
   {
     itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
-  }
-
-
-  virtual void ComputeJacobianWithRespectToPosition(
-    const InputPointType & itkNotUsed( p ), InverseJacobianPositionType & itkNotUsed( j ) ) const
-  {
-    itkExceptionMacro( << "This ITK function is currently not used in elastix." );
   }
 
 
