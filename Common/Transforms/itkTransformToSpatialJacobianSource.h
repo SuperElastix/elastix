@@ -171,7 +171,7 @@ public:
   virtual void BeforeThreadedGenerateData( void );
 
   /** Compute the Modified Time based on changes to the components. */
-  unsigned long GetMTime( void ) const;
+  ModifiedTimeType GetMTime( void ) const;
 
 protected:
 

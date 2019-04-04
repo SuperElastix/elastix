@@ -401,7 +401,7 @@ public:
   /** Method to return the latest modified time of this object or any of its
    * cached ivars.
    */
-  virtual unsigned long GetMTime() const;
+  virtual ModifiedTimeType GetMTime() const;
 
 protected:
 
