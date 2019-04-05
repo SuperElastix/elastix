@@ -123,7 +123,7 @@ public:
   /** Methods that is called at the very beginning of elastixTemplate::Run.
    * \li Prints the parameter file
    */
-  virtual int BeforeAll( void ) ITK_OVERRIDE;
+  virtual int BeforeAll( void ) override;
 
   /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
    * \li Prints the parameter file

@@ -81,7 +81,7 @@ protected:
   GPURecursiveGaussianImageFilter();
   ~GPURecursiveGaussianImageFilter(){}
 
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   virtual void GPUGenerateData();
 

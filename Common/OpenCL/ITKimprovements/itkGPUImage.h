@@ -96,7 +96,7 @@ public:
   typedef NeighborhoodAccessorFunctor< Self > NeighborhoodAccessorFunctorType;
 
   /** Allocate CPU and GPU memory space */
-  virtual void Allocate( bool initialize = false ) ITK_OVERRIDE;
+  virtual void Allocate( bool initialize = false ) override;
 
   void AllocateGPU( void );
 

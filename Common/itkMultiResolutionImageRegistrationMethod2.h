@@ -239,7 +239,7 @@ public:
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  ModifiedTimeType GetMTime( void ) const ITK_OVERRIDE;
+  ModifiedTimeType GetMTime( void ) const override;
 
 protected:
 
@@ -250,12 +250,12 @@ protected:
   virtual ~MultiResolutionImageRegistrationMethod2() {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
-  virtual void GenerateData( void ) ITK_OVERRIDE;
+  virtual void GenerateData( void ) override;
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the

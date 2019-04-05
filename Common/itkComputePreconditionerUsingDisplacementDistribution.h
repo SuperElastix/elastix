@@ -90,7 +90,7 @@ public:
    * DO NOT USE.
    */
   virtual void Compute( const ParametersType & mu,
-    double & jacg, double & maxJJ, std::string method ) ITK_OVERRIDE;
+    double & jacg, double & maxJJ, std::string method ) override;
 
   /** The main function that performs the computation.
    * DO NOT USE.
