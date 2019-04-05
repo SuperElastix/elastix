@@ -449,12 +449,12 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
  */
 
 template< typename TFixedImage, typename TMovingImage >
-unsigned long
+ModifiedTimeType
 MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 ::GetMTime( void ) const
 {
-  unsigned long mtime = Superclass::GetMTime();
-  unsigned long m;
+  ModifiedTimeType mtime = Superclass::GetMTime();
+  ModifiedTimeType m;
 
   // Some of the following should be removed once ivars are put in the
   // input and output lists

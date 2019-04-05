@@ -344,11 +344,11 @@ TransformToSpatialJacobianSource< TOutputImage, TTransformPrecisionType >
  * Verify if any of the components has been modified.
  */
 template< class TOutputImage, class TTransformPrecisionType >
-unsigned long
+ModifiedTimeType
 TransformToSpatialJacobianSource< TOutputImage, TTransformPrecisionType >
 ::GetMTime( void ) const
 {
-  unsigned long latestTime = Object::GetMTime();
+  ModifiedTimeType latestTime = Object::GetMTime();
 
   if( this->m_Transform )
   {

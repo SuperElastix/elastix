@@ -236,7 +236,7 @@ public:
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  unsigned long GetMTime( void ) const;
+  ModifiedTimeType GetMTime( void ) const;
 
 protected:
 

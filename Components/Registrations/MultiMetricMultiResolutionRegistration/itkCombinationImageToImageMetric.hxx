@@ -973,12 +973,12 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
  */
 
 template< class TFixedImage, class TMovingImage >
-unsigned long
+ModifiedTimeType
 CombinationImageToImageMetric< TFixedImage, TMovingImage >
 ::GetMTime( void ) const
 {
-  unsigned long mtime = this->Superclass::GetMTime();
-  unsigned long m;
+  ModifiedTimeType mtime = this->Superclass::GetMTime();
+  ModifiedTimeType m;
 
   // Some of the following should be removed once this 'ivars' are put in the
   // input and output lists
