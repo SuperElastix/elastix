@@ -73,7 +73,7 @@ public:
     itkGetStaticConstMacro( Dimension ) >            DerivativeType;
 
   /** Limit the input value. */
-  virtual OutputType Evaluate( const InputType & input ) const = 0;
+  OutputType Evaluate( const InputType & input ) const override = 0;
 
   /** Limit the input value and change the input function derivative accordingly */
   virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const = 0;
@@ -114,7 +114,7 @@ protected:
   }
 
 
-  ~LimiterFunctionBase(){}
+  ~LimiterFunctionBase() override{}
 
   OutputType m_UpperBound;
   OutputType m_LowerBound;

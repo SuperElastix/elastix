@@ -91,7 +91,7 @@ protected:
   /** The constructor. */
   MovingSmoothingPyramid() {}
   /** The destructor. */
-  virtual ~MovingSmoothingPyramid() {}
+  ~MovingSmoothingPyramid() override {}
 
 private:
 

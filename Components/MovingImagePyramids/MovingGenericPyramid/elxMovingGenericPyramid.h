@@ -124,17 +124,17 @@ public:
   /** Method for setting the schedule. Override from MovingImagePyramidBase,
    * since we now have two schedules, rescaling and smoothing.
    */
-  virtual void SetMovingSchedule( void );
+  void SetMovingSchedule( void ) override;
 
   /** Update the current resolution level. */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   MovingGenericPyramid() {}
   /** The destructor. */
-  virtual ~MovingGenericPyramid() {}
+  ~MovingGenericPyramid() override {}
 
 private:
 

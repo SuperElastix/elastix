@@ -123,7 +123,7 @@ public:
   /** Start optimization.
    * Make sure to set the initial position before starting the optimization
    */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** Resume previously stopped optimization with current parameters
    * \sa StopOptimization.
@@ -194,7 +194,7 @@ public:
 protected:
 
   FullSearchOptimizer();
-  virtual ~FullSearchOptimizer() {}
+  ~FullSearchOptimizer() override {}
 
   //void PrintSelf(std::ostream& os, Indent indent) const;
 

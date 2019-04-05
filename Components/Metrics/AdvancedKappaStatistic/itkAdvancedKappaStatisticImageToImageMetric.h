@@ -130,23 +130,23 @@ public:
     MovingImageType::ImageDimension );
 
   /** Get the value for single valued optimizers. */
-  virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /** Get the derivatives of the match measure. */
-  virtual void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & derivative ) const;
+  void GetDerivative( const TransformParametersType & parameters,
+    DerivativeType & derivative ) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivativeSingleThreaded(
     const TransformParametersType & parameters,
     MeasureType & Value, DerivativeType & Derivative ) const;
 
-  virtual void GetValueAndDerivative(
+  void GetValueAndDerivative(
     const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const override;
 
   /** Computes the moving gradient image dM/dx. */
-  virtual void ComputeGradient( void );
+  void ComputeGradient( void ) override;
 
   /** This method allows the user to set the foreground value. The default value is 1.0. */
   itkSetMacro( ForegroundValue, RealType );
@@ -174,10 +174,10 @@ public:
 protected:
 
   AdvancedKappaStatisticImageToImageMetric();
-  virtual ~AdvancedKappaStatisticImageToImageMetric();
+  ~AdvancedKappaStatisticImageToImageMetric() override;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Protected Typedefs ******************/
 
@@ -211,14 +211,14 @@ protected:
    * Overrides function in AdvancedImageToImageMetric, because
    * here we use other parameters.
    */
-  virtual void InitializeThreadingParameters( void ) const;
+  void InitializeThreadingParameters( void ) const override;
 
   /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID ) override;
 
   /** Gather the values and derivatives from all threads */
   inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const override;
 
   /** AccumulateDerivatives threader callback function */
   static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );

@@ -75,16 +75,16 @@ public:
 protected:
 
   RSGDEachParameterApartOptimizer() {}
-  virtual ~RSGDEachParameterApartOptimizer() {}
+  ~RSGDEachParameterApartOptimizer() override {}
 
   /** Advance one step along the corrected gradient taking into
   * account the steplengths represented by the factor array.
   * This method is invoked by AdvanceOneStep. It is expected
   * to be overrided by optimization methods in non-vector spaces
   * \sa AdvanceOneStep */
-  virtual void StepAlongGradient(
+  void StepAlongGradient(
     const DerivativeType & factor,
-    const DerivativeType & transformedGradient );
+    const DerivativeType & transformedGradient ) override;
 
 private:
 

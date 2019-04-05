@@ -106,10 +106,10 @@ public:
   typedef typename ParametersType::ArrayType ParametersArrayType;
 
   /**  Method to transform a point. */
-  virtual OutputPointType TransformPoint( const InputPointType & ipp ) const;
+  OutputPointType TransformPoint( const InputPointType & ipp ) const override;
 
   /** These vector transforms are not implemented for this transform. */
-  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  OutputVectorType TransformVector( const InputVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVectorType &) is not implemented "
@@ -117,7 +117,7 @@ public:
   }
 
 
-  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVnlVectorType &) is not implemented "
@@ -125,7 +125,7 @@ public:
   }
 
 
-  virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
+  OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
@@ -138,28 +138,28 @@ public:
    * However, it is a useful function, since the Jacobian is passed
    * by reference, which makes it threadsafe, unlike the normal
    * GetJacobian function. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType & ipp,
     JacobianType & jac,
-    NonZeroJacobianIndicesType & nzji ) const;
+    NonZeroJacobianIndicesType & nzji ) const override;
 
   /** Set the parameters. Checks if the number of parameters
    * is correct and sets parameters of sub transforms. */
-  virtual void SetParameters( const ParametersType & param );
+  void SetParameters( const ParametersType & param ) override;
 
   /** Get the parameters. Concatenates the parameters of the
    * sub transforms. */
-  virtual const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Set the fixed parameters. */
-  virtual void SetFixedParameters( const ParametersType & )
+  void SetFixedParameters( const ParametersType & ) override
   {
     // \todo: to be implemented by Coert
   }
 
 
   /** Get the Fixed Parameters. */
-  virtual const ParametersType & GetFixedParameters( void ) const
+  const ParametersType & GetFixedParameters( void ) const override
   {
     // \todo: to be implemented by Coert: check this:
     return this->m_FixedParameters;
@@ -167,7 +167,7 @@ public:
 
 
   /** Return the number of sub transforms that have been set. */
-  virtual NumberOfParametersType GetNumberOfParameters( void ) const
+  NumberOfParametersType GetNumberOfParameters( void ) const override
   {
     if( this->m_SubTransformContainer.size() == 0 )
     {
@@ -232,52 +232,52 @@ public:
 
 
   /** Get number of nonzero Jacobian indices. */
-  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
+  NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const override;
 
   /** Must be provided. */
-  virtual void GetSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj ) const
+  void GetSpatialJacobian(
+    const InputPointType & ipp, SpatialJacobianType & sj ) const override
   {
     itkExceptionMacro( << "Not implemented for StackTransform" );
   }
 
 
-  virtual void GetSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh ) const
+  void GetSpatialHessian(
+    const InputPointType & ipp, SpatialHessianType & sh ) const override
   {
     itkExceptionMacro( << "Not implemented for StackTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for StackTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for StackTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for StackTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for StackTransform" );
   }
@@ -286,7 +286,7 @@ public:
 protected:
 
   StackTransform();
-  virtual ~StackTransform() {}
+  ~StackTransform() override {}
 
 private:
 

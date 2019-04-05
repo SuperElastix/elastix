@@ -198,13 +198,13 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /**
    * Do some things before each resolution:
    * \li Read all parameters.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /**
    * Do some things before registration:
@@ -212,19 +212,19 @@ public:
    * \li Read the moving rigidity image.
    * \li Setup some extra target cells.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /**
    * Do some things after each iteration:
    * \li Print the OC, PC, LC parts of the rigidity term.
    */
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
   /** This metric is advanced (so it has a sampling possibility), but it
    * purposely does not use samplers. The MetricBase class, however, issues
    * a warning if this is the case, so we overwrite that function.
    */
-  virtual void SelectNewSamples( void ){}
+  void SelectNewSamples( void ) override{}
 
 protected:
 
@@ -232,7 +232,7 @@ protected:
   TransformRigidityPenalty(){}
 
   /** The destructor. */
-  virtual ~TransformRigidityPenalty() {}
+  ~TransformRigidityPenalty() override {}
 
 private:
 

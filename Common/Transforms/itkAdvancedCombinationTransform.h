@@ -158,13 +158,13 @@ public:
   itkGetConstMacro( UseAddition, bool );
 
   /**  Method to transform a point. */
-  virtual OutputPointType TransformPoint( const InputPointType  & point ) const;
+  OutputPointType TransformPoint( const InputPointType  & point ) const override;
 
   /** ITK4 change:
    * The following pure virtual functions must be overloaded.
    * For now just throw an exception, since these are not used in elastix.
    */
-  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  OutputVectorType TransformVector( const InputVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVectorType &) is not implemented "
@@ -172,7 +172,7 @@ public:
   }
 
 
-  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVnlVectorType &) is not implemented "
@@ -180,7 +180,7 @@ public:
   }
 
 
-  virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
+  OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
@@ -189,27 +189,27 @@ public:
 
 
   /** Return the number of parameters that completely define the CurrentTransform. */
-  virtual NumberOfParametersType GetNumberOfParameters( void ) const;
+  NumberOfParametersType GetNumberOfParameters( void ) const override;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
-  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
+  NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const override;
 
   /** Get the transformation parameters from the CurrentTransform. */
-  virtual const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Get the fixed parameters from the CurrentTransform. */
-  virtual const FixedParametersType & GetFixedParameters( void ) const;
+  const FixedParametersType & GetFixedParameters( void ) const override;
 
   /** Set the transformation parameters in the CurrentTransform. */
-  virtual void SetParameters( const ParametersType & param );
+  void SetParameters( const ParametersType & param ) override;
 
   /** Set the transformation parameters in the CurrentTransform.
    * This method forces the transform to copy the parameters.
    */
-  virtual void SetParametersByValue( const ParametersType & param );
+  void SetParametersByValue( const ParametersType & param ) override;
 
   /** Set the fixed parameters in the CurrentTransform. */
-  virtual void SetFixedParameters( const FixedParametersType & fixedParam );
+  void SetFixedParameters( const FixedParametersType & fixedParam ) override;
 
   /** Return the inverse \f$T^{-1}\f$ of the transform.
    *  This is only possible when:
@@ -225,71 +225,71 @@ public:
 
   /** Return whether the transform is linear (or actually: affine)
    * Returns true when both initial and current transform are linear */
-  virtual bool IsLinear( void ) const;
+  bool IsLinear( void ) const override;
 
   /** Special handling for combination transform. If all transforms
    * are linear, then return category Linear. Otherwise if all
    * transforms set to optimize are DisplacementFields, then
    * return DisplacementField category. */
-  virtual TransformCategoryType GetTransformCategory() const;
+  TransformCategoryType GetTransformCategory() const override;
 
   /** Whether the advanced transform has nonzero matrices. */
-  virtual bool GetHasNonZeroSpatialHessian( void ) const;
+  bool GetHasNonZeroSpatialHessian( void ) const override;
 
   virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const;
 
   /** Compute the (sparse) Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute the inner product of the Jacobian with the moving image gradient. */
-  virtual void EvaluateJacobianWithImageGradientProduct(
+  void EvaluateJacobianWithImageGradientProduct(
     const InputPointType & ipp,
     const MovingImageGradientType & movingImageGradient,
     DerivativeType & imageJacobian,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  virtual void GetSpatialJacobian(
+  void GetSpatialJacobian(
     const InputPointType & ipp,
-    SpatialJacobianType & sj ) const;
+    SpatialJacobianType & sj ) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  virtual void GetSpatialHessian(
+  void GetSpatialHessian(
     const InputPointType & ipp,
-    SpatialHessianType & sh ) const;
+    SpatialHessianType & sh ) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute both the spatial Jacobian and the Jacobian of the
    * spatial Jacobian of the transformation.
    */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
     SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
    */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Typedefs for function pointers. */
   typedef OutputPointType (Self::* TransformPointFunctionPointer)( const InputPointType & ) const;
@@ -333,7 +333,7 @@ protected:
   AdvancedCombinationTransform();
 
   /** Destructor. */
-  virtual ~AdvancedCombinationTransform(){}
+  ~AdvancedCombinationTransform() override{}
 
   /** Declaration of members. */
   InitialTransformPointer m_InitialTransform;

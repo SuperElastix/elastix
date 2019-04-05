@@ -95,7 +95,7 @@ protected:
   /** The constructor. */
   LinearInterpolator() {}
   /** The destructor. */
-  virtual ~LinearInterpolator() {}
+  ~LinearInterpolator() override {}
 
 private:
 

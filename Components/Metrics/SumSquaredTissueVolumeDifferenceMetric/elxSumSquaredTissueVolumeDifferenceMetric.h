@@ -143,21 +143,21 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /**
    * Do some things before each resolution:
    * \li Set AirValue setting
    * \li Set TissueValue setting
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   SumSquaredTissueVolumeDifferenceMetric(){};
   /** The destructor. */
-  virtual ~SumSquaredTissueVolumeDifferenceMetric() {}
+  ~SumSquaredTissueVolumeDifferenceMetric() override {}
 
 private:
 

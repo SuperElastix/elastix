@@ -149,13 +149,13 @@ public:
    * \li Set the fixed image regions.
    * \li Add the sub metric columns to the iteration info object.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Execute stuff before each resolution:
    * \li Update masks with an erosion.
    * \li Set the metric weights.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
@@ -163,7 +163,7 @@ protected:
   MultiResolutionRegistrationWithFeatures(){}
 
   /** The destructor. */
-  virtual ~MultiResolutionRegistrationWithFeatures() {}
+  ~MultiResolutionRegistrationWithFeatures() override {}
 
   /** Typedef's for mask support. */
   typedef typename Superclass2::MaskPixelType                  MaskPixelType;

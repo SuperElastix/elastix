@@ -117,9 +117,9 @@ public:
   virtual void DisconnectObserver( itk::ProcessObject * filter );
 
   /** Standard Command virtual methods. */
-  virtual void Execute( itk::Object * caller, const itk::EventObject & event ) override;
+  void Execute( itk::Object * caller, const itk::EventObject & event ) override;
 
-  virtual void Execute( const itk::Object * caller, const itk::EventObject & event ) override;
+  void Execute( const itk::Object * caller, const itk::EventObject & event ) override;
 
   /** Print the progress to screen. A float value between 0.0 and 1.0
    * is expected as input.
@@ -150,7 +150,7 @@ protected:
   ProgressCommand();
 
   /** The destructor. */
-  virtual ~ProgressCommand();
+  ~ProgressCommand() override;
 
 private:
 

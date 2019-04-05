@@ -82,14 +82,14 @@ protected:
   /** The constructor. */
   ImageRandomSampler() {}
   /** The destructor. */
-  virtual ~ImageRandomSampler() {}
+  ~ImageRandomSampler() override {}
 
   /** Functions that do the work. */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
-  virtual void ThreadedGenerateData(
+  void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId );
+    ThreadIdType threadId ) override;
 
 private:
 

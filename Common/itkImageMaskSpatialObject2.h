@@ -86,7 +86,7 @@ public:
 
   /** Returns true if the point is inside, false otherwise. */
   bool IsInside( const PointType & point,
-    unsigned int depth, char * name ) const;
+    unsigned int depth, char * name ) const override;
 
   /** Test whether a point is inside or outside the object
   *  For computational speed purposes, it is faster if the method does not
@@ -102,7 +102,7 @@ public:
   RegionType GetAxisAlignedBoundingBoxRegion() const;
 
   /** Compute the boundaries of the image mask spatial object. */
-  bool ComputeLocalBoundingBox() const;
+  bool ComputeLocalBoundingBox() const override;
 
   /** Helper function for GetAxisAlignedBoundingBoxRegion()
    * and ComputeLocalBoundingBox().
@@ -116,9 +116,9 @@ protected:
   void operator=( const Self & );          // purposely not implemented
 
   ImageMaskSpatialObject2();
-  virtual ~ImageMaskSpatialObject2();
+  ~ImageMaskSpatialObject2() override;
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 };
 

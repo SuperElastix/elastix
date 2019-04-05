@@ -114,7 +114,7 @@ protected:
   /** The constructor. */
   DeformationVectorFieldTransform();
   /** The destructor. */
-  virtual ~DeformationVectorFieldTransform();
+  ~DeformationVectorFieldTransform() override;
 
 private:
 

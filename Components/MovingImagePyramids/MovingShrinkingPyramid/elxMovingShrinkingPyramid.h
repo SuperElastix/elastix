@@ -92,7 +92,7 @@ protected:
   /** The constructor. */
   MovingShrinkingPyramid() {}
   /** The destructor. */
-  virtual ~MovingShrinkingPyramid() {}
+  ~MovingShrinkingPyramid() override {}
 
 private:
 

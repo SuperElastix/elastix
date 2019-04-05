@@ -107,7 +107,7 @@ public:
   typedef ContinuousIndex< TCoordRep, VSpaceDimension > ContinuousIndexType;
 
   /** Evaluate the weights at specified ContinousIndex position. */
-  virtual WeightsType Evaluate( const ContinuousIndexType & index ) const;
+  WeightsType Evaluate( const ContinuousIndexType & index ) const override;
 
   /** Evaluate the weights at specified ContinousIndex position.
    * The weights are returned in the user specified container.
@@ -132,7 +132,7 @@ public:
 protected:
 
   BSplineInterpolationWeightFunctionBase();
-  ~BSplineInterpolationWeightFunctionBase() {}
+  ~BSplineInterpolationWeightFunctionBase() override {}
 
   /** Interpolation kernel types. */
   typedef BSplineKernelFunction2< Self::SplineOrder >                      KernelType;
@@ -161,7 +161,7 @@ protected:
     OneDWeightsType & weights1D ) const = 0;
 
   /** Print the member variables. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Member variables. */
   unsigned long m_NumberOfWeights;

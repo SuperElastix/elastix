@@ -128,18 +128,18 @@ public:
    * \li Connect all components to the registration framework.
    * \li Set the number of resolution levels.
    * \li Set the fixed image region. */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Execute stuff before each resolution:
    * \li Update masks with an erosion. */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   MultiResolutionRegistration(){}
   /** The destructor. */
-  virtual ~MultiResolutionRegistration() {}
+  ~MultiResolutionRegistration() override {}
 
   /** Typedef's for mask support. */
   typedef typename Superclass2::MaskPixelType                  MaskPixelType;

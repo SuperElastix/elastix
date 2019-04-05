@@ -75,7 +75,7 @@ public:
       child[ANN_OUT]  = oc;
     }
 
-  ~ANNbd_shrink()           // destructor
+  ~ANNbd_shrink() override           // destructor
     {
       if (child[ANN_IN]!= NULL && child[ANN_IN]!=  KD_TRIVIAL)
         delete child[ANN_IN];
@@ -85,16 +85,16 @@ public:
         delete [] bnds;     // delete bounds
     }
 
-  virtual void getStats(            // get tree statistics
+  void getStats(            // get tree statistics
         int dim,            // dimension of space
         ANNkdStats &st,         // statistics
-        ANNorthRect &bnd_box);      // bounding box
-  virtual void print(int level, ostream &out);// print node
-  virtual void dump(ostream &out);      // dump node
+        ANNorthRect &bnd_box) override;      // bounding box
+  void print(int level, ostream &out) override;// print node
+  void dump(ostream &out) override;      // dump node
 
-  virtual void ann_search(ANNdist);     // standard search
-  virtual void ann_pri_search(ANNdist);   // priority search
-  virtual void ann_FR_search(ANNdist);    // fixed-radius search
+  void ann_search(ANNdist) override;     // standard search
+  void ann_pri_search(ANNdist) override;   // priority search
+  void ann_FR_search(ANNdist) override;    // fixed-radius search
 };
 
 #endif

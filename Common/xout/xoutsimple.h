@@ -61,23 +61,23 @@ public:
   xoutsimple();
 
   /** Destructor */
-  virtual ~xoutsimple();
+  ~xoutsimple() override;
 
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
-  virtual int AddOutput( const char * name, ostream_type * output );
+  int AddOutput( const char * name, ostream_type * output ) override;
 
-  virtual int AddOutput( const char * name, Superclass * output );
+  int AddOutput( const char * name, Superclass * output ) override;
 
-  virtual int RemoveOutput( const char * name );
+  int RemoveOutput( const char * name ) override;
 
-  virtual void SetOutputs( const CStreamMapType & outputmap );
+  void SetOutputs( const CStreamMapType & outputmap ) override;
 
-  virtual void SetOutputs( const XStreamMapType & outputmap );
+  void SetOutputs( const XStreamMapType & outputmap ) override;
 
   /** Get the output maps. */
-  virtual const CStreamMapType & GetCOutputs( void );
+  const CStreamMapType & GetCOutputs( void ) override;
 
-  virtual const XStreamMapType & GetXOutputs( void );
+  const XStreamMapType & GetXOutputs( void ) override;
 
 };
 

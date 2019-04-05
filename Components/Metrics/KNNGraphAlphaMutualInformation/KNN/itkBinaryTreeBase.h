@@ -76,10 +76,10 @@ protected:
   BinaryTreeBase();
 
   /** Destructor. */
-  virtual ~BinaryTreeBase() {}
+  ~BinaryTreeBase() override {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

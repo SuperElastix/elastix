@@ -69,12 +69,12 @@ public:
   xoutrow();
 
   /** Destructor */
-  virtual ~xoutrow();
+  ~xoutrow() override;
 
   /** Write the buffered cell data in a row to the outputs,
    * separated by tabs.
    */
-  virtual void WriteBufferedData( void );
+  void WriteBufferedData( void ) override;
 
   /** Writes the names of the target cells to the outputs;
    * This method can also be executed by selecting the
@@ -83,29 +83,29 @@ public:
   virtual void WriteHeaders( void );
 
   /** This method adds an xoutcell to the map of Targets. */
-  virtual int AddTargetCell( const char * name );
+  int AddTargetCell( const char * name ) override;
 
   /** This method removes an xoutcell to the map of Targets. */
-  virtual int RemoveTargetCell( const char * name );
+  int RemoveTargetCell( const char * name ) override;
 
   /** Method to set all targets at once. The outputs of these targets
    * are not set automatically, so make sure to do it yourself.
    */
-  virtual void SetTargetCells( const XStreamMapType & cellmap );
+  void SetTargetCells( const XStreamMapType & cellmap ) override;
 
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).
    * In addition to the behaviour of the Superclass's methods, these functions
    * set the outputs of the TargetCells as well.
    */
-  virtual int AddOutput( const char * name, ostream_type * output );
+  int AddOutput( const char * name, ostream_type * output ) override;
 
-  virtual int AddOutput( const char * name, Superclass * output );
+  int AddOutput( const char * name, Superclass * output ) override;
 
-  virtual int RemoveOutput( const char * name );
+  int RemoveOutput( const char * name ) override;
 
-  virtual void SetOutputs( const CStreamMapType & outputmap );
+  void SetOutputs( const CStreamMapType & outputmap ) override;
 
-  virtual void SetOutputs( const XStreamMapType & outputmap );
+  void SetOutputs( const XStreamMapType & outputmap ) override;
 
 protected:
 
@@ -113,7 +113,7 @@ protected:
    * Extension: if input = "WriteHeaders" it calls
    * this->WriteHeaders() and returns 'this'.
    */
-  virtual Superclass & SelectXCell( const char * name );
+  Superclass & SelectXCell( const char * name ) override;
 
   XStreamMapType m_CellMap;
 

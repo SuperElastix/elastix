@@ -233,7 +233,7 @@ public:
    * \li Initialize the right BSplineTransform.
    * \li Initialize the right grid schedule computer.
    */
-  virtual int BeforeAll( void );
+  int BeforeAll( void ) override;
 
   /** Execute stuff before the actual registration:
    * \li Create an initial B-spline grid.
@@ -246,13 +246,13 @@ public:
    * the number of parameters in the registration class. This check is done
    * before calling the BeforeEachResolution() methods.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Execute stuff before each new pyramid resolution:
    * \li In the first resolution call InitializeTransform().
    * \li In next resolutions upsample the B-spline grid if necessary (so, call IncreaseScale())
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Method to set the initial B-spline grid and initialize the parameters (to 0).
    * \li Define the initial grid region, origin and spacing, using the precomputed grid information.
@@ -269,17 +269,17 @@ public:
   virtual void IncreaseScale( void );
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( const ParametersType & param ) const;
+  void WriteToFile( const ParametersType & param ) const override;
 
   /** Function to create transform-parameters map.
    * Creates the TransformParametersmap as a vector and if wanted
    * also as a deformation field.
    */
-  virtual void CreateTransformParametersMap(
-    const ParametersType & param, ParameterMapType * paramsMap ) const;
+  void CreateTransformParametersMap(
+    const ParametersType & param, ParameterMapType * paramsMap ) const override;
 
   /** Set the scales of the edge B-spline coefficients to zero. */
   virtual void SetOptimizerScales( const unsigned int edgeWidth );
@@ -290,7 +290,7 @@ protected:
   RecursiveBSplineTransform();
 
   /** The destructor. */
-  virtual ~RecursiveBSplineTransform() {}
+  ~RecursiveBSplineTransform() override {}
 
   /** Read user-specified grid spacing and call the itkGridScheduleComputer. */
   virtual void PreComputeGridInformation( void );

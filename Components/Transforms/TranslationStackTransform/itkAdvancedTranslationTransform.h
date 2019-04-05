@@ -119,10 +119,10 @@ public:
 
   /** This method sets the parameters for the transform
    * value specified by the user. */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
   /** Get the Transformation Parameters. */
-  virtual const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Set offset of an Translation Transform.
    * This method sets the offset of an AdvancedTranslationTransform to a
@@ -143,14 +143,14 @@ public:
    * This method applies the affine transform given by self to a
    * given point or vector, returning the transformed point or
    * vector. */
-  OutputPointType     TransformPoint( const InputPointType  & point ) const;
+  OutputPointType     TransformPoint( const InputPointType  & point ) const override;
 
-  OutputVectorType    TransformVector( const InputVectorType & vector ) const;
+  OutputVectorType    TransformVector( const InputVectorType & vector ) const override;
 
-  OutputVnlVectorType TransformVector( const InputVnlVectorType & vector ) const;
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & vector ) const override;
 
   OutputCovariantVectorType TransformCovariantVector(
-    const InputCovariantVectorType & vector ) const;
+    const InputCovariantVectorType & vector ) const override;
 
   /** This method finds the point or vector that maps to a given
    * point or vector under the affine transformation defined by
@@ -171,54 +171,54 @@ public:
   bool GetInverse( Self * inverse ) const;
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  virtual void GetSpatialJacobian(
+  void GetSpatialJacobian(
     const InputPointType &,
-    SpatialJacobianType & ) const;
+    SpatialJacobianType & ) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  virtual void GetSpatialHessian(
+  void GetSpatialHessian(
     const InputPointType &,
-    SpatialHessianType & ) const;
+    SpatialHessianType & ) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     JacobianOfSpatialJacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     SpatialJacobianType &,
     JacobianOfSpatialJacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType &,
     JacobianOfSpatialHessianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
    */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Set the parameters to the IdentityTransform */
   void SetIdentity( void );
 
   /** Return the number of parameters that completely define the Transform  */
-  virtual NumberOfParametersType GetNumberOfParameters( void ) const
+  NumberOfParametersType GetNumberOfParameters( void ) const override
   { return NDimensions; }
 
   /** Indicates that this transform is linear. That is, given two
@@ -226,18 +226,18 @@ public:
    *
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
-  virtual bool IsLinear() const { return true; }
+  bool IsLinear() const override { return true; }
 
   /** Set the fixed parameters and update internal transformation.
    * The Translation Transform does not require fixed parameters,
    * therefore the implementation of this method is a null operation. */
-  virtual void SetFixedParameters( const ParametersType & )
+  void SetFixedParameters( const ParametersType & ) override
   { /* purposely blank */ }
 
   /** Get the Fixed Parameters. The AdvancedTranslationTransform does not
    * require Fixed parameters, therefore this method returns an
    * parameters array of size zero. */
-  virtual const ParametersType & GetFixedParameters( void ) const
+  const ParametersType & GetFixedParameters( void ) const override
   {
     this->m_FixedParameters.SetSize( 0 );
     return this->m_FixedParameters;
@@ -247,9 +247,9 @@ public:
 protected:
 
   AdvancedTranslationTransform();
-  ~AdvancedTranslationTransform();
+  ~AdvancedTranslationTransform() override;
   /** Print contents of an AdvancedTranslationTransform. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

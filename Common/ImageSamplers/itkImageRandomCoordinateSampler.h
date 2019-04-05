@@ -112,20 +112,20 @@ protected:
   /** The constructor. */
   ImageRandomCoordinateSampler();
   /** The destructor. */
-  virtual ~ImageRandomCoordinateSampler() {}
+  ~ImageRandomCoordinateSampler() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Function that does the work. */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** Multi-threaded functionality that does the work. */
-  virtual void BeforeThreadedGenerateData( void );
+  void BeforeThreadedGenerateData( void ) override;
 
-  virtual void ThreadedGenerateData(
+  void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId );
+    ThreadIdType threadId ) override;
 
   /** Generate a point randomly in a bounding box. */
   virtual void GenerateRandomCoordinate(

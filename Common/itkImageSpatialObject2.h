@@ -103,17 +103,17 @@ public:
   /** Return true if the object is evaluable at the requested point,
    *  and else otherwise. */
   bool IsEvaluableAt( const PointType & point,
-    unsigned int depth = 0, char * name = NULL ) const;
+    unsigned int depth = 0, char * name = NULL ) const override;
 
   /** Returns the value of the image at the requested point.
    *  If the point is not inside the object, then an exception is thrown.
    * \sa ExceptionObject */
   bool ValueAt( const PointType & point, double & value,
-    unsigned int depth = 0, char * name = NULL ) const;
+    unsigned int depth = 0, char * name = NULL ) const override;
 
   /** Returns true if the point is inside, false otherwise. */
   bool IsInside( const PointType & point,
-    unsigned int depth, char * name ) const;
+    unsigned int depth, char * name ) const override;
 
   /** Test whether a point is inside or outside the object
    *  For computational speed purposes, it is faster if the method does not
@@ -121,10 +121,10 @@ public:
   bool IsInside( const PointType & point ) const;
 
   /** Compute the boundaries of the image spatial object. */
-  bool ComputeLocalBoundingBox() const;
+  bool ComputeLocalBoundingBox() const override;
 
   /** Returns the latest modified time of the object and its component. */
-  ModifiedTimeType GetMTime( void ) const;
+  ModifiedTimeType GetMTime( void ) const override;
 
   /** Set the slice position */
   void SetSlicePosition( unsigned int dimension, int position );
@@ -152,9 +152,9 @@ protected:
   ImagePointer m_Image;
 
   ImageSpatialObject2();
-  virtual ~ImageSpatialObject2();
+  ~ImageSpatialObject2() override;
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   int *       m_SlicePosition;
   std::string m_PixelType;

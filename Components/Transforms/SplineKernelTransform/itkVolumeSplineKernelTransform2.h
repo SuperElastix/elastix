@@ -98,7 +98,7 @@ protected:
   }
 
 
-  virtual ~VolumeSplineKernelTransform2() {}
+  ~VolumeSplineKernelTransform2() override {}
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited. */
@@ -112,12 +112,12 @@ protected:
    * r(x) = Euclidean norm = sqrt[x1^2 + x2^2 + x3^2]
    * \f[ r(x) = \sqrt{ x_1^2 + x_2^2 + x_3^2 }  \f]
    * I = identity matrix. */
-  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const;
+  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const override;
 
   /** Compute the contribution of the landmarks weighted by the kernel funcion
       to the global deformation of the space  */
-  virtual void ComputeDeformationContribution( const InputPointType & inputPoint,
-    OutputPointType & result ) const;
+  void ComputeDeformationContribution( const InputPointType & inputPoint,
+    OutputPointType & result ) const override;
 
 private:
 

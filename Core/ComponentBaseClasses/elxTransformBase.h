@@ -235,7 +235,7 @@ public:
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.
    */
-  virtual int BeforeAllBase( void );
+  int BeforeAllBase( void ) override;
 
   /** Execute stuff before the actual transformation:
    * \li Check the appearance of inputpoints to be transformed.
@@ -245,12 +245,12 @@ public:
   /** Execute stuff before the actual registration:
    * \li Set the initial transform and how to group transforms.
    */
-  virtual void BeforeRegistrationBase( void );
+  void BeforeRegistrationBase( void ) override;
 
   /** Execute stuff after the registration:
    * \li Get and set the final parameters for the resampler.
    */
-  virtual void AfterRegistrationBase( void );
+  void AfterRegistrationBase( void ) override;
 
   /** Get the initial transform. */
   virtual const InitialTransformType * GetInitialTransform( void ) const;
@@ -329,7 +329,7 @@ protected:
   /** The constructor. */
   TransformBase();
   /** The destructor. */
-  virtual ~TransformBase();
+  ~TransformBase() override;
 
   /** Estimate a scales vector
    * AutomaticScalesEstimation works like this:

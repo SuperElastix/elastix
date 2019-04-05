@@ -157,31 +157,31 @@ public:
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed.
    */
-  virtual void BeforeRegistration( void );
-  virtual void BeforeEachResolution( void );
-  virtual void AfterEachResolution( void );
-  virtual void AfterEachIteration( void );
-  virtual void AfterRegistration( void );
+  void BeforeRegistration( void ) override;
+  void BeforeEachResolution( void ) override;
+  void AfterEachResolution( void ) override;
+  void AfterEachIteration( void ) override;
+  void AfterRegistration( void ) override;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation.
    */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** LBFGS Update step. */
   virtual void LBFGSUpdate( void );
 
   /** AdvanceOneStep. */
-  virtual void AdvanceOneStep( void );
+  void AdvanceOneStep( void ) override;
 
   /** If automatic gain estimation is desired, then estimate SP_a, SP_alpha
    * SigmoidScale, SigmoidMax, SigmoidMin.
    * After that call Superclass' implementation.
    */
-  virtual void ResumeOptimization( void );
+  void ResumeOptimization( void ) override;
 
   /** Stop optimization and pass on exception. */
-  virtual void MetricErrorResponse( itk::ExceptionObject & err );
+  void MetricErrorResponse( itk::ExceptionObject & err ) override;
 
   /** Codes of stopping conditions
    * The MinimumStepSize stopcondition never occurs, but may
@@ -193,7 +193,7 @@ public:
 
   /** Stop optimization.
   * \sa StopOptimization */
-  virtual void StopOptimization( void );
+  void StopOptimization( void ) override;
 
   /** Set/Get whether automatic parameter estimation is desired.
    * If true, make sure to set the maximum step length.
@@ -340,7 +340,7 @@ protected:
   typedef itk::Array< double >               DiagonalMatrixType;
 
   AdaptiveStochasticLBFGS();
-  virtual ~AdaptiveStochasticLBFGS() {};
+  ~AdaptiveStochasticLBFGS() override {};
 
   /** Variable to store the automatically determined settings for each resolution. */
   SettingsVectorType m_SettingsVector;

@@ -124,20 +124,20 @@ public:
   typedef typename MovedGradientImageType::PixelType MovedGradientPixelType;
 
   /** Get the derivatives of the match measure. */
-  virtual void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType  & derivative ) const;
+  void GetDerivative( const TransformParametersType & parameters,
+    DerivativeType  & derivative ) const override;
 
   /**  Get the value for single valued optimizers. */
-  virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
-  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & derivative ) const;
+  void GetValueAndDerivative( const TransformParametersType & parameters,
+    MeasureType & Value, DerivativeType & derivative ) const override;
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /** Write gradient images to a files for debugging purposes. */
   void WriteGradientImagesToFiles( void ) const;
@@ -158,8 +158,8 @@ public:
 protected:
 
   NormalizedGradientCorrelationImageToImageMetric();
-  virtual ~NormalizedGradientCorrelationImageToImageMetric() {}
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~NormalizedGradientCorrelationImageToImageMetric() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Compute the mean of the fixed and moved image gradients. */
   void ComputeMeanMovedGradient( void ) const;

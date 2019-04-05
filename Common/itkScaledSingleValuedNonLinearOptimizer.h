@@ -97,7 +97,7 @@ public:
   virtual void InitializeScales( void );
 
   /** Setting: SetCostFunction. */
-  virtual void SetCostFunction( CostFunctionType * costFunction );
+  void SetCostFunction( CostFunctionType * costFunction ) override;
 
   /** Setting: Turn on/off the use of scales. Set this flag to false when no
    * scaling is desired.
@@ -112,7 +112,7 @@ public:
   /** Get the current unscaled position: get the ScaledCurrentPosition
    * and divide each element through its scale.
    */
-  virtual const ParametersType & GetCurrentPosition( void ) const;
+  const ParametersType & GetCurrentPosition( void ) const override;
 
   /** Get a pointer to the scaled cost function. */
   itkGetConstObjectMacro( ScaledCostFunction, ScaledCostFunctionType );
@@ -131,10 +131,10 @@ protected:
   /** The constructor. */
   ScaledSingleValuedNonLinearOptimizer();
   /** The destructor. */
-  virtual ~ScaledSingleValuedNonLinearOptimizer() {}
+  ~ScaledSingleValuedNonLinearOptimizer() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Member variables. */
   ParametersType            m_ScaledCurrentPosition;
@@ -154,7 +154,7 @@ protected:
    * This method will probably only be used to convert the InitialPosition
    * entered by the user.
    */
-  virtual void  SetCurrentPosition( const ParametersType & param );
+  void  SetCurrentPosition( const ParametersType & param ) override;
 
   /** Divide the (scaled) parameters by the scales and call the GetValue routine
    * of the unscaled cost function.

@@ -219,7 +219,7 @@ public:
 protected:
 
   NDImageBase(){}
-  virtual ~NDImageBase(){}
+  ~NDImageBase() override{}
 
   //virtual void PrintSelf(std::ostream& os, Indent indent) const = 0;
 

@@ -111,20 +111,20 @@ public:
   /** Execute stuff before the actual registration:
   * \li Set the spline order.
   */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( void ) const;
+  void WriteToFile( void ) const override;
 
 protected:
 
   /** The constructor. */
   ReducedDimensionBSplineResampleInterpolator() {}
   /** The destructor. */
-  virtual ~ReducedDimensionBSplineResampleInterpolator() {}
+  ~ReducedDimensionBSplineResampleInterpolator() override {}
 
 private:
 

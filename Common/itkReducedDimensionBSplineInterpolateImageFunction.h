@@ -146,8 +146,8 @@ public:
    *
    * ImageFunction::IsInsideBuffer() can be used to check bounds before
    * calling the method. */
-  virtual OutputType EvaluateAtContinuousIndex(
-    const ContinuousIndexType & index ) const;
+  OutputType EvaluateAtContinuousIndex(
+    const ContinuousIndexType & index ) const override;
 
   /** Derivative typedef support */
   typedef CovariantVector< OutputType,
@@ -172,7 +172,7 @@ public:
   itkGetConstMacro( SplineOrder, int );
 
   /** Set the input image.  This must be set by the user. */
-  virtual void SetInputImage( const TImageType * inputData );
+  void SetInputImage( const TImageType * inputData ) override;
 
   /** The UseImageDirection flag determines whether image derivatives are
    * computed with respect to the image grid or with respect to the physical
@@ -193,8 +193,8 @@ public:
 protected:
 
   ReducedDimensionBSplineInterpolateImageFunction();
-  virtual ~ReducedDimensionBSplineInterpolateImageFunction() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~ReducedDimensionBSplineInterpolateImageFunction() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   // These are needed by the smoothing spline routine.
   std::vector< CoefficientDataType > m_Scratch;      // temp storage for processing of Coefficients

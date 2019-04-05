@@ -345,7 +345,7 @@ private:
   /**
    * Clear the elements. The final size will be zero.
    */
-  void Initialize( void );
+  void Initialize( void ) override;
 
 };
 

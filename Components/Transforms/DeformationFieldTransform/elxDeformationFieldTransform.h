@@ -130,17 +130,17 @@ public:
   typedef typename Superclass2::CombinationTransformType CombinationTransformType;
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( const ParametersType & param ) const;
+  void WriteToFile( const ParametersType & param ) const override;
 
 protected:
 
   /** The constructor. */
   DeformationFieldTransform();
   /** The destructor. */
-  virtual ~DeformationFieldTransform() {}
+  ~DeformationFieldTransform() override {}
 
 private:
 

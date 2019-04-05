@@ -237,29 +237,29 @@ public:
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation.
    */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** If automatic gain estimation is desired, then estimate SP_a, SP_alpha
    * SigmoidScale, SigmoidMax, SigmoidMin.
    * After that call Superclass' implementation.
    */
-  virtual void ResumeOptimization( void );
+  void ResumeOptimization( void ) override;
 
   /** Stop optimization and pass on exception. */
-  virtual void MetricErrorResponse( itk::ExceptionObject & err );
+  void MetricErrorResponse( itk::ExceptionObject & err ) override;
 
   /** Set/Get whether automatic parameter estimation is desired.
    * If true, make sure to set the maximum step length.
@@ -340,7 +340,7 @@ protected:
     AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   AdaptiveStochasticGradientDescent();
-  virtual ~AdaptiveStochasticGradientDescent() {}
+  ~AdaptiveStochasticGradientDescent() override {}
 
   /** Variable to store the automatically determined settings for each resolution. */
   SettingsVectorType m_SettingsVector;

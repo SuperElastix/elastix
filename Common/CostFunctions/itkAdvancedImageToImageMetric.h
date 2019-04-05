@@ -262,7 +262,7 @@ public:
    * \li Check if a B-spline interpolator has been set
    * \li Check if an AdvancedTransform has been set
    */
-  virtual void Initialize( void ) override;
+  void Initialize( void ) override;
 
   /** Experimental feature: compute SelfHessian.
    * This base class just returns an identity matrix of the right size.
@@ -297,10 +297,10 @@ protected:
   AdvancedImageToImageMetric();
 
   /** Destructor. */
-  virtual ~AdvancedImageToImageMetric();
+  ~AdvancedImageToImageMetric() override;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Protected Typedefs ******************/
 

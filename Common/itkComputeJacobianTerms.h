@@ -110,7 +110,7 @@ public:
 protected:
 
   ComputeJacobianTerms();
-  virtual ~ComputeJacobianTerms() {}
+  ~ComputeJacobianTerms() override {}
 
   typename FixedImageType::ConstPointer m_FixedImage;
   FixedImageRegionType       m_FixedImageRegion;

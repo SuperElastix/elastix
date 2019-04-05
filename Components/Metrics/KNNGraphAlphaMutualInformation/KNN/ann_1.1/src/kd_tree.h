@@ -101,18 +101,18 @@ public:
       bkt     = b;      // the bucket
     }
 
-  ~ANNkd_leaf() { }         // destructor (none)
+  ~ANNkd_leaf() override { }         // destructor (none)
 
-  virtual void getStats(            // get tree statistics
+  void getStats(            // get tree statistics
         int dim,            // dimension of space
         ANNkdStats &st,         // statistics
-        ANNorthRect &bnd_box);      // bounding box
-  virtual void print(int level, ostream &out);// print node
-  virtual void dump(ostream &out);      // dump node
+        ANNorthRect &bnd_box) override;      // bounding box
+  void print(int level, ostream &out) override;// print node
+  void dump(ostream &out) override;      // dump node
 
-  virtual void ann_search(ANNdist);     // standard search
-  virtual void ann_pri_search(ANNdist);   // priority search
-  virtual void ann_FR_search(ANNdist);    // fixed-radius search
+  void ann_search(ANNdist) override;     // standard search
+  void ann_pri_search(ANNdist) override;   // priority search
+  void ann_FR_search(ANNdist) override;    // fixed-radius search
 };
 
 //----------------------------------------------------------------------
@@ -161,7 +161,7 @@ public:
       child[ANN_HI] = hc;       // right child
     }
 
-  ~ANNkd_split()            // destructor
+  ~ANNkd_split() override            // destructor
     {
       if (child[ANN_LO]!= NULL && child[ANN_LO]!= KD_TRIVIAL)
         delete child[ANN_LO];
@@ -169,16 +169,16 @@ public:
         delete child[ANN_HI];
     }
 
-  virtual void getStats(            // get tree statistics
+  void getStats(            // get tree statistics
         int dim,            // dimension of space
         ANNkdStats &st,         // statistics
-        ANNorthRect &bnd_box);      // bounding box
-  virtual void print(int level, ostream &out);// print node
-  virtual void dump(ostream &out);      // dump node
+        ANNorthRect &bnd_box) override;      // bounding box
+  void print(int level, ostream &out) override;// print node
+  void dump(ostream &out) override;      // dump node
 
-  virtual void ann_search(ANNdist);     // standard search
-  virtual void ann_pri_search(ANNdist);   // priority search
-  virtual void ann_FR_search(ANNdist);    // fixed-radius search
+  void ann_search(ANNdist) override;     // standard search
+  void ann_pri_search(ANNdist) override;   // priority search
+  void ann_FR_search(ANNdist) override;    // fixed-radius search
 };
 
 //----------------------------------------------------------------------

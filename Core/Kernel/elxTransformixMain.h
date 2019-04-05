@@ -88,12 +88,12 @@ public:
   typedef Superclass::ParameterMapType ParameterMapType;
 
   /** Overwrite Run() from base-class. */
-  virtual int Run( void ) override;
+  int Run( void ) override;
 
   /** Overwrite Run( argmap ) from superclass. Simply calls the superclass. */
-  virtual int Run( ArgumentMapType & argmap ) override;
+  int Run( ArgumentMapType & argmap ) override;
 
-  virtual int Run( ArgumentMapType & argmap, ParameterMapType & inputMap ) override;
+  int Run( ArgumentMapType & argmap, ParameterMapType & inputMap ) override;
 
   /** Run version for using transformix as library. */
   virtual int Run( ArgumentMapType & argmap, std::vector< ParameterMapType > & inputMaps );
@@ -105,12 +105,12 @@ public:
 protected:
 
   TransformixMain(){}
-  virtual ~TransformixMain();
+  ~TransformixMain() override;
 
   /** InitDBIndex sets m_DBIndex to the value obtained
    * from the ComponentDatabase.
    */
-  virtual int InitDBIndex( void ) override;
+  int InitDBIndex( void ) override;
 
 private:
 

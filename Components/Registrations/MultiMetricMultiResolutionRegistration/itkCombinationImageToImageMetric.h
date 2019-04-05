@@ -233,7 +233,7 @@ public:
    */
 
   /** Pass the transform to all sub metrics.  */
-  virtual void SetTransform( TransformType * _arg );
+  void SetTransform( TransformType * _arg ) override;
 
   /** Pass a transform to a specific metric.
    * Only use this if you really know what you are doing.
@@ -253,14 +253,14 @@ public:
   virtual const TransformType * GetTransform( unsigned int pos ) const;
 
   /** Return Transform 0 */
-  virtual const TransformType * GetTransform( void ) const
+  const TransformType * GetTransform( void ) const override
   {
     return this->GetTransform( 0 );
   }
 
 
   /** Pass the interpolator to all sub metrics. */
-  virtual void SetInterpolator( InterpolatorType * _arg );
+  void SetInterpolator( InterpolatorType * _arg ) override;
 
   /** Pass an interpolator to a specific metric */
   virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos );
@@ -271,14 +271,14 @@ public:
   virtual const InterpolatorType * GetInterpolator( unsigned int pos ) const;
 
   /** Return Interpolator 0 */
-  virtual const InterpolatorType * GetInterpolator( void ) const
+  const InterpolatorType * GetInterpolator( void ) const override
   {
     return this->GetInterpolator( 0 );
   }
 
 
   /** Pass the fixed image to all sub metrics. */
-  virtual void SetFixedImage( const FixedImageType * _arg );
+  void SetFixedImage( const FixedImageType * _arg ) override;
 
   /** Pass a fixed image to a specific metric */
   virtual void SetFixedImage( const FixedImageType * _arg, unsigned int pos );
@@ -289,14 +289,14 @@ public:
   virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
 
   /** Return FixedImage 0 */
-  virtual const FixedImageType * GetFixedImage( void ) const
+  const FixedImageType * GetFixedImage( void ) const override
   {
     return this->GetFixedImage( 0 );
   }
 
 
   /** Pass the fixed image mask to all sub metrics. */
-  virtual void SetFixedImageMask( FixedImageMaskType * _arg );
+  void SetFixedImageMask( FixedImageMaskType * _arg ) override;
 
   /** Pass a fixed image mask to a specific metric */
   virtual void SetFixedImageMask( FixedImageMaskType * _arg, unsigned int pos );
@@ -307,14 +307,14 @@ public:
   virtual const FixedImageMaskType * GetFixedImageMask( unsigned int pos ) const;
 
   /** Return FixedImageMask 0 */
-  virtual const FixedImageMaskType * GetFixedImageMask( void ) const
+  const FixedImageMaskType * GetFixedImageMask( void ) const override
   {
     return this->GetFixedImageMask( 0 );
   }
 
 
   /** Pass the fixed image region to all sub metrics. */
-  virtual void SetFixedImageRegion( const FixedImageRegionType _arg );
+  void SetFixedImageRegion( const FixedImageRegionType _arg ) override;
 
   /** Pass a fixed image region to a specific metric. */
   virtual void SetFixedImageRegion( const FixedImageRegionType _arg, unsigned int pos );
@@ -325,14 +325,14 @@ public:
   virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
 
   /** Return FixedImageRegion 0 */
-  virtual const FixedImageRegionType & GetFixedImageRegion( void ) const
+  const FixedImageRegionType & GetFixedImageRegion( void ) const override
   {
     return this->GetFixedImageRegion( 0 );
   }
 
 
   /** Pass the moving image to all sub metrics. */
-  virtual void SetMovingImage( const MovingImageType * _arg );
+  void SetMovingImage( const MovingImageType * _arg ) override;
 
   /** Pass a moving image to a specific metric */
   virtual void SetMovingImage( const MovingImageType * _arg, unsigned int pos );
@@ -343,14 +343,14 @@ public:
   virtual const MovingImageType * GetMovingImage( unsigned int pos ) const;
 
   /** Return MovingImage 0 */
-  virtual const MovingImageType * GetMovingImage( void ) const
+  const MovingImageType * GetMovingImage( void ) const override
   {
     return this->GetMovingImage( 0 );
   }
 
 
   /** Pass the moving image mask to all sub metrics. */
-  virtual void SetMovingImageMask( MovingImageMaskType * _arg );
+  void SetMovingImageMask( MovingImageMaskType * _arg ) override;
 
   /** Pass a moving image mask to a specific metric */
   virtual void SetMovingImageMask( MovingImageMaskType * _arg, unsigned int pos );
@@ -361,7 +361,7 @@ public:
   virtual const MovingImageMaskType * GetMovingImageMask( unsigned int pos ) const;
 
   /** Return MovingImageMask 0 */
-  virtual const MovingImageMaskType * GetMovingImageMask( void ) const
+  const MovingImageMaskType * GetMovingImageMask( void ) const override
   {
     return this->GetMovingImageMask( 0 );
   }
@@ -370,44 +370,44 @@ public:
   /** Get the number of pixels considered in the computation. Return the sum
    * of pixels counted by all metrics.
    */
-  virtual const SizeValueType & GetNumberOfPixelsCounted( void ) const;
+  const SizeValueType & GetNumberOfPixelsCounted( void ) const override;
 
   /** Pass initialization to all sub metrics. */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /**
    * Combine all sub metrics by adding them.
    */
 
   /** The GetValue()-method. */
-  virtual MeasureType GetValue( const ParametersType & parameters ) const;
+  MeasureType GetValue( const ParametersType & parameters ) const override;
 
   /** The GetDerivative()-method. */
-  virtual void GetDerivative(
+  void GetDerivative(
     const ParametersType & parameters,
-    DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const override;
 
   /** The GetValueAndDerivative()-method. */
-  virtual void GetValueAndDerivative(
+  void GetValueAndDerivative(
     const ParametersType & parameters,
     MeasureType & value,
-    DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const override;
 
   /** Experimental feature: compute SelfHessian. */
-  virtual void GetSelfHessian(
+  void GetSelfHessian(
     const TransformParametersType & parameters,
-    HessianType & H ) const;
+    HessianType & H ) const override;
 
   /** Method to return the latest modified time of this object or any of its
    * cached ivars.
    */
-  virtual ModifiedTimeType GetMTime() const;
+  ModifiedTimeType GetMTime() const override;
 
 protected:
 
   CombinationImageToImageMetric();
-  virtual ~CombinationImageToImageMetric() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~CombinationImageToImageMetric() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Store the metrics and the corresponding weights. */
   unsigned int                                   m_NumberOfMetrics;
@@ -434,7 +434,7 @@ private:
    * Overrides function in AdvancedImageToImageMetric, because
    * here we use other parameters.
    */
-  virtual void InitializeThreadingParameters( void ) const;
+  void InitializeThreadingParameters( void ) const override;
 
   /** Compute the current metric weight, given the user selected
    * strategy and derivative magnitude.

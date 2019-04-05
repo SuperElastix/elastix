@@ -77,7 +77,7 @@ public:
     Unknown
   }                                   StopConditionType;
 
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   virtual void ResumeOptimization( void );
 
@@ -316,10 +316,10 @@ protected:
   CMAEvolutionStrategyOptimizer();
 
   /** Destructor */
-  virtual ~CMAEvolutionStrategyOptimizer(){}
+  ~CMAEvolutionStrategyOptimizer() override{}
 
   /** PrintSelf */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Compute the following constant variables:
    * \li m_PopulationSize (if not provided by the user)

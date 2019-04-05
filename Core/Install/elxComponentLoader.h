@@ -71,7 +71,7 @@ protected:
 
   /** Standard constructor and destructor. */
   ComponentLoader();
-  virtual ~ComponentLoader();
+  ~ComponentLoader() override;
 
   ComponentDatabasePointer m_ComponentDatabase;
 

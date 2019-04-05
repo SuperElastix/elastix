@@ -102,12 +102,12 @@ public:
   /** Execute stuff before the actual registration:
    * \li Set the schedule of the fixed image pyramid.
    */
-  virtual void BeforeRegistrationBase( void );
+  void BeforeRegistrationBase( void ) override;
 
   /** Execute stuff before each resolution:
    * \li Write the pyramid image to file.
    */
-  virtual void BeforeEachResolutionBase( void );
+  void BeforeEachResolutionBase( void ) override;
 
   /** Method for setting the schedule. */
   virtual void SetFixedSchedule( void );
@@ -121,7 +121,7 @@ protected:
   /** The constructor. */
   FixedImagePyramidBase() {}
   /** The destructor. */
-  virtual ~FixedImagePyramidBase() {}
+  ~FixedImagePyramidBase() override {}
 
 private:
 

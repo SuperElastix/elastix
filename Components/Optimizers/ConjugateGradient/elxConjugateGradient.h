@@ -140,26 +140,26 @@ public:
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** Methods to set parameters and print output at different stages
    * in the registration process.*/
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
   itkGetConstMacro( StartLineSearch, bool );
 
 protected:
 
   ConjugateGradient();
-  virtual ~ConjugateGradient() {}
+  ~ConjugateGradient() override {}
 
   LineOptimizerPointer m_LineOptimizer;
 
@@ -173,18 +173,18 @@ protected:
   /** Reimplement the superclass. Calls the superclass' implementation
    * and checks if the MoreThuente line search routine has stopped with
    * Wolfe conditions satisfied. */
-  virtual bool TestConvergence( bool firstLineSearchDone );
+  bool TestConvergence( bool firstLineSearchDone ) override;
 
   /** Call the superclass' implementation. If an itk::ExceptionObject is caught,
    * because the line search optimizer tried a too big step, the exception
    * is printed, but ignored further. The optimizer stops, but elastix
    * just goes on to the next resolution. */
-  virtual void LineSearch(
+  void LineSearch(
     const ParametersType searchDir,
     double & step,
     ParametersType & x,
     MeasureType & f,
-    DerivativeType & g );
+    DerivativeType & g ) override;
 
 private:
 

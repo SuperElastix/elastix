@@ -140,7 +140,7 @@ public:
   itkStaticConstMacro( ImageDimension, unsigned int, FixedImageType::ImageDimension );
 
   /** Initialize the penalty term. */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /** Typedef's for B-spline transform. */
   typedef AdvancedBSplineDeformableTransform< ScalarType, FixedImageDimension, 3 > BSplineTransformType;
@@ -152,13 +152,13 @@ public:
   typedef AdvancedCombinationTransform< ScalarType, FixedImageDimension >          CombinationTransformType;
 
   /** The GetValue()-method returns the rigid penalty value. */
-  virtual MeasureType GetValue( const ParametersType & parameters ) const;
+  MeasureType GetValue( const ParametersType & parameters ) const override;
 
   /** The GetDerivative()-method returns the rigid penalty derivative. */
-  virtual void GetDerivative( const ParametersType & parameters, DerivativeType & derivative ) const;
+  void GetDerivative( const ParametersType & parameters, DerivativeType & derivative ) const override;
 
   /** The GetValueAndDerivative()-method returns the rigid penalty value and its derivative. */
-  virtual void GetValueAndDerivative( const ParametersType & parameters, MeasureType & value, DerivativeType & derivative ) const;
+  void GetValueAndDerivative( const ParametersType & parameters, MeasureType & value, DerivativeType & derivative ) const override;
 
   /** Set the B-spline transform in this class.
    * This class expects a BSplineTransform! It is not suited for others.
@@ -200,10 +200,10 @@ protected:
   DistancePreservingRigidityPenaltyTerm();
 
   /** The destructor. */
-  virtual ~DistancePreservingRigidityPenaltyTerm() {}
+  ~DistancePreservingRigidityPenaltyTerm() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

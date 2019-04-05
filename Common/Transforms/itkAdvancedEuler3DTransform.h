@@ -118,9 +118,9 @@ public:
    * This is typically used by optimizers.  There are 6 parameters. The first
    * three represent the angles to rotate around the coordinate axis, and the
    * last three represents the offset. */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
-  const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Set the rotational part of the transform. */
   void SetRotation( ScalarType angleX, ScalarType angleY, ScalarType angleZ );
@@ -130,16 +130,16 @@ public:
   itkGetConstMacro( AngleZ, ScalarType );
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Set/Get the order of the computation. Default ZXY */
   itkSetMacro( ComputeZYX, bool );
   itkGetConstMacro( ComputeZYX, bool );
 
-  virtual void SetIdentity( void );
+  void SetIdentity( void ) override;
 
 protected:
 
@@ -148,17 +148,17 @@ protected:
     const OutputPointType & offset );
   AdvancedEuler3DTransform( unsigned int paramsSpaceDims );
 
-  ~AdvancedEuler3DTransform(){}
+  ~AdvancedEuler3DTransform() override{}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Set values of angles directly without recomputing other parameters. */
   void SetVarRotation( ScalarType angleX, ScalarType angleY, ScalarType angleZ );
 
   /** Compute the components of the rotation matrix in the superclass. */
-  void ComputeMatrix( void );
+  void ComputeMatrix( void ) override;
 
-  void ComputeMatrixParameters( void );
+  void ComputeMatrixParameters( void ) override;
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void PrecomputeJacobianOfSpatialJacobian( void );

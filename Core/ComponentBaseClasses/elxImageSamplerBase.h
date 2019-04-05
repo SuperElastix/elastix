@@ -84,14 +84,14 @@ public:
    * \li Give a warning when NewSamplesEveryIteration is specified,
    * but the sampler is ignoring it.
    */
-  virtual void BeforeEachResolutionBase( void );
+  void BeforeEachResolutionBase( void ) override;
 
 protected:
 
   /** The constructor. */
   ImageSamplerBase() {}
   /** The destructor. */
-  virtual ~ImageSamplerBase() {}
+  ~ImageSamplerBase() override {}
 
 private:
 

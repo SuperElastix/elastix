@@ -95,7 +95,7 @@ protected:
   /** The constructor. */
   MyStandardResampler() {}
   /** The destructor. */
-  virtual ~MyStandardResampler() {}
+  ~MyStandardResampler() override {}
 
 private:
 

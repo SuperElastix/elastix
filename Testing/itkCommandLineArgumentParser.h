@@ -222,7 +222,7 @@ public:
 protected:
 
   CommandLineArgumentParser();
-  virtual ~CommandLineArgumentParser() {}
+  ~CommandLineArgumentParser() override {}
 
   /** General functionality: find a key. */
   bool FindKey( const std::string & key,

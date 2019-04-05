@@ -133,7 +133,7 @@ public:
 protected:
 
   ComputeDisplacementDistribution();
-  virtual ~ComputeDisplacementDistribution();
+  ~ComputeDisplacementDistribution() override;
 
   /** Typedefs for multi-threading. */
   typedef itk::MultiThreader             ThreaderType;

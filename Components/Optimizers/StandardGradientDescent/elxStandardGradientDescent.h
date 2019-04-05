@@ -111,27 +111,27 @@ public:
 
   /** Methods invoked by elastix, in which parameters can be set and
   * progress information can be printed. */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
   /** Check if any scales are set, and set the UseScales flag on or off;
   * after that call the superclass' implementation */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** Stop optimisation and pass on exception. */
-  virtual void MetricErrorResponse( itk::ExceptionObject & err );
+  void MetricErrorResponse( itk::ExceptionObject & err ) override;
 
   /** Add SetCurrentPositionPublic, which calls the protected
   * SetCurrentPosition of the itkStandardGradientDescentOptimizer class.
   */
-  virtual void SetCurrentPositionPublic( const ParametersType & param )
+  void SetCurrentPositionPublic( const ParametersType & param ) override
   {
     this->Superclass1::SetCurrentPosition( param );
   }
@@ -146,7 +146,7 @@ public:
 protected:
 
   StandardGradientDescent();
-  virtual ~StandardGradientDescent() {}
+  ~StandardGradientDescent() override {}
 
 private:
 

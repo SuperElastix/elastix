@@ -91,7 +91,7 @@ protected:
   /** The constructor. */
   MovingRecursivePyramid() {}
   /** The destructor. */
-  virtual ~MovingRecursivePyramid() {}
+  ~MovingRecursivePyramid() override {}
 
 private:
 

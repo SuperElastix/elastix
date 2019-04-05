@@ -131,67 +131,67 @@ public:
    * It calls RecursiveBSplineTransformImplementation2::InterpolateTransformPoint
    * for a recursive implementation.
    */
-  virtual OutputPointType TransformPoint( const InputPointType & point ) const;
+  OutputPointType TransformPoint( const InputPointType & point ) const override;
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute the inner product of the Jacobian with the moving image gradient.
    * The Jacobian is (partially) constructed inside this function, but not returned.
    */
-  virtual void EvaluateJacobianWithImageGradientProduct(
+  void EvaluateJacobianWithImageGradientProduct(
     const InputPointType & ipp,
     const MovingImageGradientType & movingImageGradient,
     DerivativeType & imageJacobian,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  virtual void GetSpatialJacobian(
+  void GetSpatialJacobian(
     const InputPointType & ipp,
-    SpatialJacobianType & sj ) const;
+    SpatialJacobianType & sj ) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  virtual void GetSpatialHessian(
+  void GetSpatialHessian(
     const InputPointType & ipp,
-    SpatialHessianType & sh ) const;
+    SpatialHessianType & sh ) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute both the spatial Jacobian and the Jacobian of the
    * spatial Jacobian of the transformation.
    */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
     SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
    */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
 protected:
 
   RecursiveBSplineTransform();
-  virtual ~RecursiveBSplineTransform(){}
+  ~RecursiveBSplineTransform() override{}
 
   typedef typename Superclass::JacobianImageType JacobianImageType;
   typedef typename Superclass::JacobianPixelType JacobianPixelType;
@@ -199,9 +199,9 @@ protected:
   typename RecursiveBSplineWeightFunctionType::Pointer m_RecursiveBSplineWeightFunction;
 
   /** Compute the nonzero Jacobian indices. */
-  virtual void ComputeNonZeroJacobianIndices(
+  void ComputeNonZeroJacobianIndices(
     NonZeroJacobianIndicesType & nonZeroJacobianIndices,
-    const RegionType & supportRegion ) const;
+    const RegionType & supportRegion ) const override;
 
 private:
 

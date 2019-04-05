@@ -186,7 +186,7 @@ public:
    * \li Check if -fp command line argument was given
    * \li Check if -mp command line argument was given
    */
-  virtual int BeforeAll( void );
+  int BeforeAll( void ) override;
 
   /** Execute stuff before the actual registration:
    * \li Setup transform
@@ -194,20 +194,20 @@ public:
    * \li Determine moving image (target) landmarks
    * \li Call InitializeTransform.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( const ParametersType & param ) const;
+  void WriteToFile( const ParametersType & param ) const override;
 
 protected:
 
   /** The constructor. */
   SplineKernelTransform();
   /** The destructor. */
-  virtual ~SplineKernelTransform() {}
+  ~SplineKernelTransform() override {}
 
   typedef itk::ThinPlateSplineKernelTransform2<
     CoordRepType, itkGetStaticConstMacro( SpaceDimension ) >   TPKernelTransformType;

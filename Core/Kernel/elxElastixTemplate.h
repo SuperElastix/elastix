@@ -292,24 +292,24 @@ public:
    * Run() for registration, and ApplyTransform() for just
    * applying a transform to an image.
    */
-  virtual int Run( void );
+  int Run( void ) override;
 
-  virtual int ApplyTransform( void );
+  int ApplyTransform( void ) override;
 
   /** The Callback functions. */
-  virtual int BeforeAll( void );
+  int BeforeAll( void ) override;
 
   virtual int BeforeAllTransformix( void );
 
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
   /** Get the iteration number. */
   itkGetConstMacro( IterationCounter, unsigned int );
@@ -318,7 +318,7 @@ public:
   itkGetStringMacro( CurrentTransformParameterFileName );
 
   /** Set configuration vector. Library only. */
-  virtual void SetConfigurations( std::vector< ConfigurationPointer > & configurations );
+  void SetConfigurations( std::vector< ConfigurationPointer > & configurations ) override;
 
   /** Return configuration from vector of configurations. Library only. */
   virtual ConfigurationPointer GetConfiguration( const size_t index );
@@ -338,7 +338,7 @@ public:
 protected:
 
   ElastixTemplate();
-  virtual ~ElastixTemplate(){}
+  ~ElastixTemplate() override{}
 
   /** Classes that contain a function to load multiple images, given a filename container. */
   typedef typename Superclass2::MultipleImageLoader< FixedImageType >  FixedImageLoaderType;
@@ -370,10 +370,10 @@ protected:
     const bool ToLog );
 
   /** CreateTransformParametersMap. */
-  virtual void CreateTransformParametersMap( void );
+  void CreateTransformParametersMap( void ) override;
 
   /** GetTransformParametersMap. */
-  virtual ParameterMapType GetTransformParametersMap( void ) const;
+  ParameterMapType GetTransformParametersMap( void ) const override;
 
   /** Stores transformation parameters map. */
   ParameterMapType m_TransformParametersMap;

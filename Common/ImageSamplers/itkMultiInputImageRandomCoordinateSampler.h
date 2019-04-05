@@ -112,13 +112,13 @@ protected:
   MultiInputImageRandomCoordinateSampler();
 
   /** The destructor. */
-  virtual ~MultiInputImageRandomCoordinateSampler() {}
+  ~MultiInputImageRandomCoordinateSampler() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Function that does the work. */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** Generate a point randomly in a bounding box.
    * This method can be overwritten in subclasses if a different distribution is desired. */

@@ -150,7 +150,7 @@ protected:
   GridScheduleComputer();
 
   /** The destructor. */
-  virtual ~GridScheduleComputer() {}
+  ~GridScheduleComputer() override {}
 
   /** Declare member variables, needed for B-spline grid. */
   VectorSpacingType           m_GridSpacings;
@@ -161,7 +161,7 @@ protected:
   VectorGridSpacingFactorType m_GridSpacingFactors;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Get number of levels. */
   itkGetConstMacro( NumberOfLevels, unsigned int );

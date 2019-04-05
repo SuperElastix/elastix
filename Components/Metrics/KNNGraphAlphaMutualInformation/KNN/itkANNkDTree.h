@@ -79,10 +79,10 @@ public:
   //}
 
   /** Generate the tree. */
-  virtual void GenerateTree( void );
+  void GenerateTree( void ) override;
 
   /** Get the ANN tree. */
-  virtual ANNPointSetType * GetANNTree( void ) const
+  ANNPointSetType * GetANNTree( void ) const override
   {
     return this->m_ANNTree;
   }
@@ -94,10 +94,10 @@ protected:
   ANNkDTree();
 
   /** Destructor. */
-  virtual ~ANNkDTree();
+  ~ANNkDTree() override;
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Member variables. */
   ANNkDTreeType *   m_ANNTree;

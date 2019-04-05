@@ -52,14 +52,14 @@ public:
   itkTypeMacro( KernelFunctionBase2, KernelFunctionBase );
 
   /** Evaluate the function. Subclasses must implement this. */
-  virtual TRealValueType Evaluate( const TRealValueType & u ) const override = 0;
+  TRealValueType Evaluate( const TRealValueType & u ) const override = 0;
 
   /** Evaluate the function. Subclasses must implement this. */
   virtual void Evaluate( const TRealValueType & u, TRealValueType * weights ) const = 0;
 
 protected:
   KernelFunctionBase2() {};
-  virtual ~KernelFunctionBase2() {};
+  ~KernelFunctionBase2() override {};
 };
 } // end namespace itk
 

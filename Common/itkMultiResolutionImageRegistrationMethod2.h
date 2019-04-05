@@ -247,15 +247,15 @@ protected:
   MultiResolutionImageRegistrationMethod2();
 
   /** Destructor. */
-  virtual ~MultiResolutionImageRegistrationMethod2() {}
+  ~MultiResolutionImageRegistrationMethod2() override {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
-  virtual void GenerateData( void ) override;
+  void GenerateData( void ) override;
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the

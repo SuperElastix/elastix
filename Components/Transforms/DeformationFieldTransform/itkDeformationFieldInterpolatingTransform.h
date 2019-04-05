@@ -102,7 +102,7 @@ public:
   /** Set the transformation parameters is not supported.
    * Use SetDeformationField() instead
    */
-  virtual void SetParameters( const ParametersType & )
+  void SetParameters( const ParametersType & ) override
   {
     itkExceptionMacro( << "ERROR: SetParameters() is not implemented "
                        << "for DeformationFieldInterpolatingTransform.\n"
@@ -113,14 +113,14 @@ public:
 
 
   /** Set the fixed parameters. */
-  virtual void SetFixedParameters( const ParametersType & )
+  void SetFixedParameters( const ParametersType & ) override
   {
     // This transform has no fixed parameters.
   }
 
 
   /** Get the Fixed Parameters. */
-  virtual const ParametersType & GetFixedParameters( void ) const
+  const ParametersType & GetFixedParameters( void ) const override
   {
     // This transform has no fixed parameters.
     return this->m_FixedParameters;
@@ -130,10 +130,10 @@ public:
   /** Transform a point. This method adds a displacement to a given point,
    * returning the transformed point.
    */
-  OutputPointType TransformPoint( const InputPointType & point ) const;
+  OutputPointType TransformPoint( const InputPointType & point ) const override;
 
   /** These vector transforms are not implemented for this transform. */
-  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  OutputVectorType TransformVector( const InputVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVectorType &) is not implemented "
@@ -141,7 +141,7 @@ public:
   }
 
 
-  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVnlVectorType &) is not implemented "
@@ -149,7 +149,7 @@ public:
   }
 
 
-  virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
+  OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
@@ -171,60 +171,60 @@ public:
 
   itkGetModifiableObjectMacro( DeformationFieldInterpolator, DeformationFieldInterpolatorType );
 
-  virtual bool IsLinear( void ) const { return false; }
+  bool IsLinear( void ) const override { return false; }
 
   /** Must be provided. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType & ipp, JacobianType & j,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
   }
 
 
-  virtual void GetSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj ) const
+  void GetSpatialJacobian(
+    const InputPointType & ipp, SpatialJacobianType & sj ) const override
   {
     itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
   }
 
 
-  virtual void GetSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh ) const
+  void GetSpatialHessian(
+    const InputPointType & ipp, SpatialHessianType & sh ) const override
   {
     itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
   }
@@ -233,7 +233,7 @@ public:
 protected:
 
   DeformationFieldInterpolatingTransform();
-  ~DeformationFieldInterpolatingTransform();
+  ~DeformationFieldInterpolatingTransform() override;
 
   /** Typedef which is used internally */
   typedef typename DeformationFieldInterpolatorType::ContinuousIndexType
@@ -241,7 +241,7 @@ protected:
   typedef typename DeformationFieldInterpolatorType::OutputType InterpolatorOutputType;
 
   /** Print contents of an DeformationFieldInterpolatingTransform. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   DeformationFieldPointer             m_DeformationField;
   DeformationFieldPointer             m_ZeroDeformationField;

@@ -299,7 +299,7 @@ public:
 protected:
 
   ElastixMain();
-  virtual ~ElastixMain();
+  ~ElastixMain() override;
 
   /** A pointer to elastix as an itk::object. In run() this
    * pointer will be assigned to an ElastixTemplate<>.

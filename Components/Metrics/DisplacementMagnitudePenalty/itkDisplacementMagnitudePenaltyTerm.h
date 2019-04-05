@@ -101,21 +101,21 @@ public:
   /** Get the penalty term value.
    * \f[ Value = 1/N sum_x ||T(x) - x||^2 \f]
    */
-  virtual MeasureType GetValue( const ParametersType & parameters ) const;
+  MeasureType GetValue( const ParametersType & parameters ) const override;
 
   /** Get the penalty term derivative.
    * Simply calls GetValueAndDerivative and returns the derivative. */
-  virtual void GetDerivative( const ParametersType & parameters,
-    DerivativeType & derivative ) const;
+  void GetDerivative( const ParametersType & parameters,
+    DerivativeType & derivative ) const override;
 
   /** Get the penalty term value and derivative.
    * \f[ Value = C(\mu) = 1/N sum_x ||T_{\mu}(x) - x||^2 \f]
    * \f[ Derivative = \frac{\partial C}{\partial\mu} = 2/N sum_x (T_{\mu}(x)-x)' \frac{\partial T}{\partial \mu} \f]
    */
-  virtual void GetValueAndDerivative(
+  void GetValueAndDerivative(
     const ParametersType & parameters,
     MeasureType & value,
-    DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const override;
 
 protected:
 
@@ -132,7 +132,7 @@ protected:
   DisplacementMagnitudePenaltyTerm();
 
   /** The destructor. */
-  virtual ~DisplacementMagnitudePenaltyTerm() {}
+  ~DisplacementMagnitudePenaltyTerm() override {}
 
   /** PrintSelf. *
   void PrintSelf( std::ostream& os, Indent indent ) const;*/

@@ -102,7 +102,7 @@ protected:
   /** The constructor. */
   ResampleInterpolatorBase() {}
   /** The destructor. */
-  virtual ~ResampleInterpolatorBase() {}
+  ~ResampleInterpolatorBase() override {}
 
 private:
 

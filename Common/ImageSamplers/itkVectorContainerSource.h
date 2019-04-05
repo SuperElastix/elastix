@@ -71,10 +71,10 @@ protected:
   /** The constructor. */
   VectorContainerSource();
   /** The destructor. */
-  virtual ~VectorContainerSource() {}
+  ~VectorContainerSource() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

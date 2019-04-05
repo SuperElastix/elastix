@@ -84,17 +84,17 @@ public:
 
   typedef FixedArray< ScalarType > ScalarArrayType;
 
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
-  const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
-  virtual void SetIdentity( void );
+  void SetIdentity( void ) override;
 
 protected:
 
@@ -104,9 +104,9 @@ protected:
   AffineLogTransform( unsigned int outputSpaceDims,
     unsigned int paramsSpaceDims );
 
-  ~AffineLogTransform(){}
+  ~AffineLogTransform() override{}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void PrecomputeJacobianOfSpatialJacobian( void );

@@ -166,7 +166,7 @@ public:
    * \li Call InitializeTransform
    * \li Set the scales.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Initialize Transform.
    * \li Set all parameters to zero.
@@ -198,19 +198,19 @@ public:
    *
    * It reads the center of rotation and calls the superclass' implementation.
    */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file.
    * It writes the center of rotation to file and calls the superclass' implementation.
    */
-  virtual void WriteToFile( const ParametersType & param ) const;
+  void WriteToFile( const ParametersType & param ) const override;
 
 protected:
 
   /** The constructor. */
   AffineDTITransformElastix();
   /** The destructor. */
-  virtual ~AffineDTITransformElastix() {}
+  ~AffineDTITransformElastix() override {}
 
   /** Try to read the CenterOfRotationPoint from the transform parameter file
    * The CenterOfRotationPoint is already in world coordinates. */
