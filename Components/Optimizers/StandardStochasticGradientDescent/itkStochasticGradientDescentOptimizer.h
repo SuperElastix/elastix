@@ -91,7 +91,7 @@ public:
   virtual void AdvanceOneStep( void );
 
   /** Start optimization. */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** Resume previously stopped optimization with current parameters
   * \sa StopOptimization. */
@@ -165,8 +165,8 @@ public:
 
 protected:
   StochasticGradientDescentOptimizer();
-  virtual ~StochasticGradientDescentOptimizer() {};
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  ~StochasticGradientDescentOptimizer() override {};
+  void PrintSelf( std::ostream& os, Indent indent ) const override;
 
   /** Typedefs for multi-threading. */
   typedef itk::MultiThreader               ThreaderType;

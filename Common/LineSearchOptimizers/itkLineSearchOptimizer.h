@@ -117,8 +117,8 @@ public:
 protected:
 
   LineSearchOptimizer();
-  virtual ~LineSearchOptimizer() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~LineSearchOptimizer() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   double m_CurrentStepLength;
 

@@ -167,14 +167,14 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /**
    * Do some things before each resolution:
    * \li Set CheckNumberOfSamples setting
    * \li Set UseNormalization setting
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
@@ -182,7 +182,7 @@ protected:
   SumOfPairwiseCorrelationCoefficientsMetric(){}
 
   /** The destructor. */
-  virtual ~SumOfPairwiseCorrelationCoefficientsMetric() {}
+  ~SumOfPairwiseCorrelationCoefficientsMetric() override {}
 
 private:
 

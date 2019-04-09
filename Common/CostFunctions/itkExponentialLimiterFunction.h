@@ -67,18 +67,18 @@ public:
   typedef typename Superclass::DerivativeType      DerivativeType;
 
   /** Limit the input value */
-  virtual OutputType Evaluate( const InputType & input ) const;
+  OutputType Evaluate( const InputType & input ) const override;
 
   /** Limit the input value and change the input function derivative accordingly */
-  virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const;
+  OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const override;
 
   /** Initialize the limiter; calls the ComputeLimiterSettings() function */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
 protected:
 
   ExponentialLimiterFunction();
-  ~ExponentialLimiterFunction(){}
+  ~ExponentialLimiterFunction() override{}
 
   virtual void ComputeLimiterSettings( void );
 

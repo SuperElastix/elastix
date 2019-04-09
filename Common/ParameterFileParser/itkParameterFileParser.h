@@ -116,7 +116,7 @@ public:
 protected:
 
   ParameterFileParser();
-  virtual ~ParameterFileParser();
+  ~ParameterFileParser() override;
 
 private:
 

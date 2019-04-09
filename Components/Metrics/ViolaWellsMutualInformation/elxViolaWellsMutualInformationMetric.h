@@ -124,19 +124,19 @@ public:
    * \li Set the standard deviation of the fixed image.
    * \li Set the standard deviation of the moving image.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
 protected:
 
   /** The constructor. */
   ViolaWellsMutualInformationMetric();
   /** The destructor. */
-  virtual ~ViolaWellsMutualInformationMetric() {}
+  ~ViolaWellsMutualInformationMetric() override {}
 
 private:
 

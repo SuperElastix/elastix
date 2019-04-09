@@ -133,17 +133,17 @@ public:
    * \li Set initial sub transforms.
    * \li Create initial registration parameters.
    */
-  virtual int BeforeAll( void );
+  int BeforeAll( void ) override;
 
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   virtual void InitializeTransform( void );
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( const ParametersType & param ) const;
+  void WriteToFile( const ParametersType & param ) const override;
 
 protected:
 
@@ -151,7 +151,7 @@ protected:
   TranslationStackTransform();
 
   /** The destructor. */
-  virtual ~TranslationStackTransform() {}
+  ~TranslationStackTransform() override {}
 
 private:
 

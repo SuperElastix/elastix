@@ -127,14 +127,14 @@ public:
    *
    * \sa Transform::SetParameters()
    * \sa Transform::SetFixedParameters() */
-  virtual void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
   /** Directly set the rotation matrix of the transform.
    * \warning The input matrix must be orthogonal to within a specified tolerance,
    * else an exception is thrown.
    *
    * \sa AdvancedMatrixOffsetTransformBase::SetMatrix() */
-  virtual void SetMatrix( const MatrixType & matrix );
+  void SetMatrix( const MatrixType & matrix ) override;
 
   /**
    * Get rotation Matrix from an AdvancedRigid3DTransform
@@ -204,12 +204,12 @@ protected:
   AdvancedRigid3DTransform( const MatrixType & matrix,
     const OutputVectorType & offset );
   AdvancedRigid3DTransform();
-  ~AdvancedRigid3DTransform();
+  ~AdvancedRigid3DTransform() override;
 
   /**
    * Print contents of an AdvancedRigid3DTransform
    **/
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

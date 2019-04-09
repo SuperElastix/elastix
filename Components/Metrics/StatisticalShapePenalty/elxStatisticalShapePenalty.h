@@ -151,15 +151,15 @@ public:
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.
    */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /**
    * Do some things before registration:
    * \li Load and set the pointsets.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Function to read the corresponding points. */
   unsigned int ReadLandmarks(
@@ -173,14 +173,14 @@ public:
     const typename ImageType::ConstPointer image );
 
   /** Overwrite to silence warning. */
-  virtual void SelectNewSamples( void ){}
+  void SelectNewSamples( void ) override{}
 
 protected:
 
   /** The constructor. */
   StatisticalShapePenalty(){}
   /** The destructor. */
-  virtual ~StatisticalShapePenalty() {}
+  ~StatisticalShapePenalty() override {}
 
 private:
 

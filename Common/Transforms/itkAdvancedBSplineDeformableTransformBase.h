@@ -107,7 +107,7 @@ public:
      * grid region, spacing and origin.
      * NOTE: The grid region, spacing and origin must be set first.
      */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
   /** This method sets the fixed parameters of the transform.
    * For a B-spline deformation transform, the parameters are the following:
@@ -124,7 +124,7 @@ public:
    * This function was added to allow the transform to work with the
    * itkTransformReader/Writer I/O filters.
    */
-  void SetFixedParameters( const FixedParametersType & parameters );
+  void SetFixedParameters( const FixedParametersType & parameters ) override;
 
   /** This method sets the parameters of the transform.
    * For a B-spline deformation transform, the parameters are the BSpline
@@ -142,7 +142,7 @@ public:
    * grid region, spacing and origin.
    * NOTE: The grid region, spacing and origin must be set first.
    */
-  void SetParametersByValue( const ParametersType & parameters );
+  void SetParametersByValue( const ParametersType & parameters ) override;
 
   /** This method can ONLY be invoked AFTER calling SetParameters().
    *  This restriction is due to the fact that the AdvancedBSplineDeformableTransform
@@ -155,10 +155,10 @@ public:
   void SetIdentity( void );
 
   /** Get the Transformation Parameters. */
-  virtual const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Get the Transformation Fixed Parameters. */
-  virtual const FixedParametersType & GetFixedParameters( void ) const;
+  const FixedParametersType & GetFixedParameters( void ) const override;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType PixelType;
@@ -223,7 +223,7 @@ public:
   /** Method to transform a vector -
    *  not applicable for this type of transform.
    */
-  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  OutputVectorType TransformVector( const InputVectorType & ) const override
   {
     itkExceptionMacro( << "Method not applicable for deformable transform." );
     return OutputVectorType();
@@ -233,7 +233,7 @@ public:
   /** Method to transform a vnl_vector -
    *  not applicable for this type of transform.
    */
-  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
   {
     itkExceptionMacro( << "Method not applicable for deformable transform. " );
     return OutputVnlVectorType();
@@ -243,8 +243,8 @@ public:
   /** Method to transform a CovariantVector -
    *  not applicable for this type of transform.
    */
-  virtual OutputCovariantVectorType TransformCovariantVector(
-    const InputCovariantVectorType & ) const
+  OutputCovariantVectorType TransformCovariantVector(
+    const InputCovariantVectorType & ) const override
   {
     itkExceptionMacro( << "Method not applicable for deformable transform. " );
     return OutputCovariantVectorType();
@@ -252,7 +252,7 @@ public:
 
 
   /** Return the number of parameters that completely define the Transform. */
-  virtual NumberOfParametersType GetNumberOfParameters( void ) const;
+  NumberOfParametersType GetNumberOfParameters( void ) const override;
 
   /** Return the number of parameters per dimension */
   virtual NumberOfParametersType GetNumberOfParametersPerDimension( void ) const;
@@ -265,12 +265,12 @@ public:
    *
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
-  virtual bool IsLinear( void ) const { return false; }
+  bool IsLinear( void ) const override { return false; }
 
   /** Indicates the category transform.
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
    */
-  virtual TransformCategoryType GetTransformCategory( void ) const
+  TransformCategoryType GetTransformCategory( void ) const override
   {
     return Self::BSpline;
   }
@@ -278,7 +278,7 @@ public:
 
   virtual unsigned int GetNumberOfAffectedWeights( void ) const = 0;
 
-  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const = 0;
+  NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const override = 0;
 
   /** This typedef should be equal to the typedef used
    * in derived classes based on the weights function.
@@ -288,10 +288,10 @@ public:
 protected:
 
   /** Print contents of an AdvancedBSplineDeformableTransformBase. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   AdvancedBSplineDeformableTransformBase();
-  virtual ~AdvancedBSplineDeformableTransformBase();
+  ~AdvancedBSplineDeformableTransformBase() override;
 
   /** Wrap flat array into images of coefficients. */
   void WrapAsImages( void );

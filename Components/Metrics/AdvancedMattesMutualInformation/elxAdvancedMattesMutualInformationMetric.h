@@ -196,16 +196,16 @@ public:
    * \li Set the CheckNumberOfSamples option.
    * \li Set the fixed/moving LimitRangeRatio
    * \li Set the fixed/moving limiter. */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Update the CurrenIteration. This is only important
    * if a finite difference derivative estimation is used
    * (selected by the experimental parameter FiniteDifferenceDerivative)  */
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
   /** Set up a timer to measure the initialization time and
    * call the Superclass' implementation. */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /** Set/Get c. For finite difference derivative estimation */
   itkSetMacro( Param_c, double );
@@ -225,7 +225,7 @@ protected:
   AdvancedMattesMutualInformationMetric();
 
   /** The destructor. */
-  virtual ~AdvancedMattesMutualInformationMetric() {}
+  ~AdvancedMattesMutualInformationMetric() override {}
 
   unsigned long m_CurrentIteration;
 

@@ -114,15 +114,15 @@ public:
   typedef typename DimensionNameMapType::const_iterator NameIteratorType;
 
   /** Methods that have to be present everywhere.*/
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
   /** \todo BeforeAll, checking parameters. */
 
@@ -132,7 +132,7 @@ public:
 protected:
 
   FullSearch();
-  virtual ~FullSearch() {}
+  ~FullSearch() override {}
 
   NDImagePointer m_OptimizationSurface;
 

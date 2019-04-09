@@ -83,26 +83,26 @@ public:
 
   /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed. */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
   /** Override the SetInitialPosition.
    * Override the implementation in itkOptimizer.h, to
    * ensure that the scales array and the parameters
    * array have the same size. */
-  virtual void SetInitialPosition( const ParametersType & param );
+  void SetInitialPosition( const ParametersType & param ) override;
 
 protected:
 
   Powell(){}
-  virtual ~Powell() {}
+  ~Powell() override {}
 
 private:
 

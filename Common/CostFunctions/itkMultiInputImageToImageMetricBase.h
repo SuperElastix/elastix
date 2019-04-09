@@ -115,7 +115,7 @@ public:
   virtual void SetFixedImage( const FixedImageType * _arg, unsigned int pos );
 
   /** Set the first fixed image. */
-  virtual void SetFixedImage( const FixedImageType * _arg )
+  void SetFixedImage( const FixedImageType * _arg ) override
   {
     this->SetFixedImage( _arg, 0 );
   }
@@ -125,7 +125,7 @@ public:
   virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
 
   /** Get the first fixed image. */
-  virtual const FixedImageType * GetFixedImage( void ) const
+  const FixedImageType * GetFixedImage( void ) const override
   {
     return this->GetFixedImage( 0 );
   }
@@ -143,7 +143,7 @@ public:
   virtual void SetFixedImageMask( FixedImageMaskType * _arg, unsigned int pos );
 
   /** Set the first fixed image mask. */
-  virtual void SetFixedImageMask( FixedImageMaskType * _arg )
+  void SetFixedImageMask( FixedImageMaskType * _arg ) override
   {
     this->SetFixedImageMask( _arg, 0 );
   }
@@ -153,7 +153,7 @@ public:
   virtual FixedImageMaskType * GetFixedImageMask( unsigned int pos ) const;
 
   /** Get the first fixed image mask. */
-  virtual FixedImageMaskType * GetFixedImageMask( void ) const
+  FixedImageMaskType * GetFixedImageMask( void ) const override
   {
     return this->GetFixedImageMask( 0 );
   }
@@ -171,7 +171,7 @@ public:
   virtual void SetFixedImageRegion( const FixedImageRegionType _arg, unsigned int pos );
 
   /** Set the first fixed image region. */
-  virtual void SetFixedImageRegion( const FixedImageRegionType _arg )
+  void SetFixedImageRegion( const FixedImageRegionType _arg ) override
   {
     this->SetFixedImageRegion( _arg, 0 );
   }
@@ -181,7 +181,7 @@ public:
   virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
 
   /** Get the first fixed image region. */
-  virtual const FixedImageRegionType & GetFixedImageRegion( void ) const
+  const FixedImageRegionType & GetFixedImageRegion( void ) const override
   {
     return this->GetFixedImageRegion( 0 );
   }
@@ -199,7 +199,7 @@ public:
   virtual void SetMovingImage( const MovingImageType * _arg, unsigned int pos );
 
   /** Set the first moving image. */
-  virtual void SetMovingImage( const MovingImageType * _arg )
+  void SetMovingImage( const MovingImageType * _arg ) override
   {
     this->SetMovingImage( _arg, 0 );
   }
@@ -209,7 +209,7 @@ public:
   virtual const MovingImageType * GetMovingImage( unsigned int pos ) const;
 
   /** Get the first moving image. */
-  virtual const MovingImageType * GetMovingImage( void ) const
+  const MovingImageType * GetMovingImage( void ) const override
   {
     return this->GetMovingImage( 0 );
   }
@@ -227,7 +227,7 @@ public:
   virtual void SetMovingImageMask( MovingImageMaskType * _arg, unsigned int pos );
 
   /** Set the first moving image mask. */
-  virtual void SetMovingImageMask( MovingImageMaskType * _arg )
+  void SetMovingImageMask( MovingImageMaskType * _arg ) override
   {
     this->SetMovingImageMask( _arg, 0 );
   }
@@ -237,7 +237,7 @@ public:
   virtual MovingImageMaskType * GetMovingImageMask( unsigned int pos ) const;
 
   /** Get the first moving image mask. */
-  virtual MovingImageMaskType * GetMovingImageMask( void ) const
+  MovingImageMaskType * GetMovingImageMask( void ) const override
   {
     return this->GetMovingImageMask( 0 );
   }
@@ -257,7 +257,7 @@ public:
   virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos );
 
   /** Set the first interpolator. */
-  virtual void SetInterpolator( InterpolatorType * _arg )
+  void SetInterpolator( InterpolatorType * _arg ) override
   {
     return this->SetInterpolator( _arg, 0 );
   }
@@ -267,7 +267,7 @@ public:
   virtual InterpolatorType * GetInterpolator( unsigned int pos ) const;
 
   /** Get the first interpolator. */
-  virtual InterpolatorType * GetInterpolator( void ) const
+  InterpolatorType * GetInterpolator( void ) const override
   {
     return this->GetInterpolator( 0 );
   }
@@ -315,7 +315,7 @@ public:
   /** ******************** Other public functions ******************** */
 
   /** Initialisation. */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
 protected:
 
@@ -323,7 +323,7 @@ protected:
   MultiInputImageToImageMetricBase();
 
   /** Destructor. */
-  virtual ~MultiInputImageToImageMetricBase() {}
+  ~MultiInputImageToImageMetricBase() override {}
 
   /** Typedef's from the Superclass. */
   typedef typename Superclass::MovingImagePointType           MovingImagePointType;
@@ -337,7 +337,7 @@ protected:
   typedef std::vector< BSplineInterpolatorPointer >    BSplineInterpolatorVectorType;
 
   /** Initialize variables related to the image sampler; called by Initialize. */
-  virtual void InitializeImageSampler( void );
+  void InitializeImageSampler( void ) override;
 
   /** Check if all interpolators (for the moving image) are of type
    * BSplineInterpolateImageFunction.
@@ -347,14 +347,14 @@ protected:
   /** Check if mappedPoint is inside all moving images.
    * If so, the moving image value and possibly derivative are computed.
    */
-  virtual bool EvaluateMovingImageValueAndDerivative(
+  bool EvaluateMovingImageValueAndDerivative(
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
-    MovingImageDerivativeType * gradient ) const;
+    MovingImageDerivativeType * gradient ) const override;
 
   /** IsInsideMovingMask: Returns the AND of all moving image masks. */
-  virtual bool IsInsideMovingMask(
-    const MovingImagePointType & mappedPoint ) const;
+  bool IsInsideMovingMask(
+    const MovingImagePointType & mappedPoint ) const override;
 
   /** Protected member variables. */
   FixedImageVectorType             m_FixedImageVector;

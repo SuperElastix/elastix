@@ -169,7 +169,7 @@ protected:
 
   ElastixFilter( void );
 
-  virtual void GenerateData( void ) ITK_OVERRIDE;
+  virtual void GenerateData( void ) override;
 
 private:
 

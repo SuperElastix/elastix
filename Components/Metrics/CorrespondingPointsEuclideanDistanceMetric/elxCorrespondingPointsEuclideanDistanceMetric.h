@@ -119,20 +119,20 @@ public:
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.
    */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /**
    * Do some things before all:
    * \li Check and print the command line arguments fp and mp.
    *   This should be done in BeforeAllBase and not BeforeAll.
    */
-  virtual int BeforeAllBase( void );
+  int BeforeAllBase( void ) override;
 
   /**
    * Do some things before registration:
    * \li Load and set the pointsets.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Function to read the corresponding points. */
   unsigned int ReadLandmarks(
@@ -141,14 +141,14 @@ public:
   const typename ImageType::ConstPointer image );
 
   /** Overwrite to silence warning. */
-  virtual void SelectNewSamples( void ){}
+  void SelectNewSamples( void ) override{}
 
 protected:
 
   /** The constructor. */
   CorrespondingPointsEuclideanDistanceMetric(){}
   /** The destructor. */
-  virtual ~CorrespondingPointsEuclideanDistanceMetric() {}
+  ~CorrespondingPointsEuclideanDistanceMetric() override {}
 
 private:
 

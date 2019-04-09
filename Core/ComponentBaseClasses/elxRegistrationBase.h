@@ -152,7 +152,7 @@ protected:
   /** The constructor. */
   RegistrationBase() {}
   /** The destructor. */
-  virtual ~RegistrationBase() {}
+  ~RegistrationBase() override {}
 
   /** Typedef's for mask support. */
   typedef typename ElastixType::MaskPixelType   MaskPixelType;

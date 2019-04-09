@@ -169,11 +169,11 @@ public:
    * \li Set the CheckNumberOfSamples option.
    * \li Set the fixed/moving LimitRangeRatio
    * \li Set the fixed/moving limiter. */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Set up a timer to measure the initialization time and
    * call the Superclass' implementation. */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
 protected:
 
@@ -185,7 +185,7 @@ protected:
 
 
   /** The destructor. */
-  virtual ~NormalizedMutualInformationMetric() {}
+  ~NormalizedMutualInformationMetric() override {}
 
 private:
 

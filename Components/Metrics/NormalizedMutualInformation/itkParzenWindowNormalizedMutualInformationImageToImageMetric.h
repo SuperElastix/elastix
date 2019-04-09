@@ -144,11 +144,11 @@ public:
     MovingImageType::ImageDimension );
 
   /**  Get the value: the negative normalized mutual information. */
-  MeasureType GetValue( const ParametersType & parameters ) const;
+  MeasureType GetValue( const ParametersType & parameters ) const override;
 
   /**  Get the value and derivatives for single valued optimizers. */
   void GetValueAndDerivative( const ParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const override;
 
 protected:
 
@@ -156,10 +156,10 @@ protected:
   ParzenWindowNormalizedMutualInformationImageToImageMetric() {}
 
   /** The destructor. */
-  virtual ~ParzenWindowNormalizedMutualInformationImageToImageMetric() {}
+  ~ParzenWindowNormalizedMutualInformationImageToImageMetric() override {}
 
   /** Print Self. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Protected Typedefs ******************/
 

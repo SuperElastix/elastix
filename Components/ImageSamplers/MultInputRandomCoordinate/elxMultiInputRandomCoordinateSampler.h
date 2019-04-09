@@ -153,14 +153,14 @@ public:
    * \li Set the fixed image interpolation order
    * \li Set the UseRandomSampleRegion flag and the SampleRegionSize
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   MultiInputRandomCoordinateSampler() {}
   /** The destructor. */
-  virtual ~MultiInputRandomCoordinateSampler() {}
+  ~MultiInputRandomCoordinateSampler() override {}
 
 private:
 

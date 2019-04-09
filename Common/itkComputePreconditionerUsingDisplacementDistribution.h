@@ -89,8 +89,8 @@ public:
   /** The main function that performs the computation.
    * DO NOT USE.
    */
-  virtual void Compute( const ParametersType & mu,
-    double & jacg, double & maxJJ, std::string method ) ITK_OVERRIDE;
+  void Compute( const ParametersType & mu,
+    double & jacg, double & maxJJ, std::string method ) override;
 
   /** The main function that performs the computation.
    * DO NOT USE.
@@ -119,7 +119,7 @@ public:
 protected:
 
   ComputePreconditionerUsingDisplacementDistribution();
-  virtual ~ComputePreconditionerUsingDisplacementDistribution() {}
+  ~ComputePreconditionerUsingDisplacementDistribution() override {}
 
   typedef typename Superclass::FixedImageIndexType           FixedImageIndexType;
   typedef typename Superclass::FixedImagePointType           FixedImagePointType;

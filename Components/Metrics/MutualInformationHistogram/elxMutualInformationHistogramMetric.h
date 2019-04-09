@@ -104,24 +104,24 @@ public:
   /** Execute stuff before the actual registration:
    * \li Nothing yet: still to be implemented.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Execute stuff before each new pyramid resolution:
    * \li Nothing yet: still to be implemented.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
 protected:
 
   /** The constructor. */
   MutualInformationHistogramMetric();
   /** The destructor. */
-  virtual ~MutualInformationHistogramMetric() {}
+  ~MutualInformationHistogramMetric() override {}
 
 private:
 

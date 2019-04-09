@@ -79,7 +79,7 @@ public:
     itkGetStaticConstMacro( SplineOrder ) + 1 >  WeightArrayType;
 
   /** Evaluate the function at one point. */
-  inline double Evaluate( const double & u ) const
+  inline double Evaluate( const double & u ) const override
   {
     return this->Evaluate( Dispatch< VSplineOrder >(), u );
   }
@@ -88,7 +88,7 @@ public:
   /** Evaluate the function at the entire support. This is slightly faster,
    * since no if's are needed.
    */
-  inline void Evaluate( const double & u, double * weights ) const
+  inline void Evaluate( const double & u, double * weights ) const override
   {
     this->Evaluate( Dispatch< VSplineOrder >(), u, weights );
   }
@@ -97,9 +97,9 @@ public:
 protected:
 
   BSplineKernelFunction2(){}
-  ~BSplineKernelFunction2(){}
+  ~BSplineKernelFunction2() override{}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const
+  void PrintSelf( std::ostream & os, Indent indent ) const override
   {
     Superclass::PrintSelf( os, indent );
     os << indent << "Spline Order: " << SplineOrder << std::endl;

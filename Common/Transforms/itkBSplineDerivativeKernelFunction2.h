@@ -75,14 +75,14 @@ public:
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   /** Evaluate the function. */
-  inline double Evaluate( const double & u ) const
+  inline double Evaluate( const double & u ) const override
   {
     return this->Evaluate( Dispatch< VSplineOrder >(), u );
   }
 
 
   /** Evaluate the function. */
-  inline void Evaluate( const double & u, double * weights ) const
+  inline void Evaluate( const double & u, double * weights ) const override
   {
     return this->Evaluate( Dispatch< VSplineOrder >(), u, weights );
   }
@@ -91,9 +91,9 @@ public:
 protected:
 
   BSplineDerivativeKernelFunction2(){}
-  ~BSplineDerivativeKernelFunction2(){}
+  ~BSplineDerivativeKernelFunction2() override{}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const
+  void PrintSelf( std::ostream & os, Indent indent ) const override
   {
     Superclass::PrintSelf( os, indent );
     os << indent  << "Spline Order: " << SplineOrder << std::endl;

@@ -69,14 +69,14 @@ public:
   itkNewMacro( Self );
 
   /** Set the pixel type to VECTOR */
-  virtual void Execute( Object * caller, const EventObject & )
+  void Execute( Object * caller, const EventObject & ) override
   {
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
     castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
 
-  virtual void Execute( const Object * caller, const EventObject & )
+  void Execute( const Object * caller, const EventObject & ) override
   {
     CallerType * castcaller = const_cast< CallerType * >(
       dynamic_cast< const CallerType * >( caller ) );
@@ -87,7 +87,7 @@ public:
 protected:
 
   PixelTypeChangeCommand() {}
-  virtual ~PixelTypeChangeCommand() {}
+  ~PixelTypeChangeCommand() override {}
 
 private:
 

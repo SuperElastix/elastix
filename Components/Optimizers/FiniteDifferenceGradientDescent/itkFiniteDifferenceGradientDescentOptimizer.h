@@ -79,7 +79,7 @@ public:
   virtual void AdvanceOneStep( void );
 
   /** Start optimization. */
-  void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** Resume previously stopped optimization with current parameters
   * \sa StopOptimization. */
@@ -135,10 +135,10 @@ public:
 protected:
 
   FiniteDifferenceGradientDescentOptimizer();
-  virtual ~FiniteDifferenceGradientDescentOptimizer() {}
+  ~FiniteDifferenceGradientDescentOptimizer() override {}
 
   /** PrintSelf method.*/
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   // made protected so subclass can access
   DerivativeType m_Gradient;

@@ -155,7 +155,7 @@ public:
 
   virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
 
-  virtual const FixedImageType * GetFixedImage( void ) const
+  const FixedImageType * GetFixedImage( void ) const override
   { return this->GetFixedImage( 0 ); }
   itkSimpleSetMacro( FixedImage, const FixedImageType * );
   itkSetNumberOfMacro( FixedImage );
@@ -166,7 +166,7 @@ public:
 
   virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
 
-  virtual const FixedImageRegionType & GetFixedImageRegion( void ) const
+  const FixedImageRegionType & GetFixedImageRegion( void ) const override
   { return this->GetFixedImageRegion( 0 ); }
   itkSimpleSetMacro( FixedImageRegion, const FixedImageRegionType );
   itkSetNumberOfMacro( FixedImageRegion );
@@ -177,7 +177,7 @@ public:
 
   virtual FixedImagePyramidType * GetFixedImagePyramid( unsigned int pos ) const;
 
-  virtual FixedImagePyramidType * GetFixedImagePyramid( void )
+  FixedImagePyramidType * GetFixedImagePyramid( void ) override
   { return this->GetFixedImagePyramid( 0 ); }
   itkSimpleSetMacro( FixedImagePyramid, FixedImagePyramidType * );
   itkSetNumberOfMacro( FixedImagePyramid );
@@ -188,7 +188,7 @@ public:
 
   virtual const MovingImageType * GetMovingImage( unsigned int pos ) const;
 
-  virtual const MovingImageType * GetMovingImage( void ) const
+  const MovingImageType * GetMovingImage( void ) const override
   { return this->GetMovingImage( 0 ); }
   itkSimpleSetMacro( MovingImage, const MovingImageType * );
   itkSetNumberOfMacro( MovingImage );
@@ -199,7 +199,7 @@ public:
 
   virtual MovingImagePyramidType * GetMovingImagePyramid( unsigned int pos ) const;
 
-  virtual MovingImagePyramidType * GetMovingImagePyramid( void )
+  MovingImagePyramidType * GetMovingImagePyramid( void ) override
   { return this->GetMovingImagePyramid( 0 ); }
   itkSimpleSetMacro( MovingImagePyramid, MovingImagePyramidType * );
   itkSetNumberOfMacro( MovingImagePyramid );
@@ -210,7 +210,7 @@ public:
 
   virtual InterpolatorType * GetInterpolator( unsigned int pos ) const;
 
-  virtual InterpolatorType * GetInterpolator( void )
+  InterpolatorType * GetInterpolator( void ) override
   { return this->GetInterpolator( 0 ); }
   itkSimpleSetMacro( Interpolator, InterpolatorType * );
   itkSetNumberOfMacro( Interpolator );
@@ -228,7 +228,7 @@ public:
   itkGetNumberOfMacro( FixedImageInterpolator );
 
   /** Set a metric that takes multiple inputs. */
-  virtual void SetMetric( MetricType * _arg );
+  void SetMetric( MetricType * _arg ) override;
 
   /** Get a metric that takes multiple inputs. */
   itkGetModifiableObjectMacro( MultiInputMetric, MultiInputMetricType );
@@ -236,7 +236,7 @@ public:
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  ModifiedTimeType GetMTime( void ) const;
+  ModifiedTimeType GetMTime( void ) const override;
 
 protected:
 
@@ -244,24 +244,24 @@ protected:
   MultiInputMultiResolutionImageRegistrationMethodBase();
 
   /** Destructor. */
-  virtual ~MultiInputMultiResolutionImageRegistrationMethodBase() {}
+  ~MultiInputMultiResolutionImageRegistrationMethodBase() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
-  virtual void GenerateData();
+  void GenerateData() override;
 
   /** Initialize by setting the interconnects between the components.
    * This method is executed at every level of the pyramid with the
    * values corresponding to this resolution .
    */
-  virtual void Initialize();
+  void Initialize() override;
 
   /** Compute the size of the fixed region for each level of the pyramid. */
-  virtual void PreparePyramids( void );
+  void PreparePyramids( void ) override;
 
   /** Function called by PreparePyramids, which checks if the user input
    * regarding the image pyramids is ok.

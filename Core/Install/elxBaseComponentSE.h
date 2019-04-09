@@ -112,7 +112,7 @@ public:
 protected:
 
   BaseComponentSE();
-  virtual ~BaseComponentSE() {}
+  ~BaseComponentSE() override {}
 
   ElastixPointer       m_Elastix;
   ConfigurationPointer m_Configuration;

@@ -84,7 +84,7 @@ public:
 protected:
 
   ParabolicErodeImageFilter(){}
-  virtual ~ParabolicErodeImageFilter() {}
+  ~ParabolicErodeImageFilter() override {}
 //   void PrintSelf(std::ostream& os, Indent indent) const;
 
 private:

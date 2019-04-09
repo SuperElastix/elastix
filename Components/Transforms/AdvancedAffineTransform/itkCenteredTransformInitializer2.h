@@ -184,9 +184,9 @@ public:
 protected:
 
   CenteredTransformInitializer2();
-  ~CenteredTransformInitializer2() {}
+  ~CenteredTransformInitializer2() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   itkGetModifiableObjectMacro( Transform, TransformType );
 

@@ -177,13 +177,13 @@ protected:
   ImageSamplerBase();
 
   /** The destructor. */
-  virtual ~ImageSamplerBase() {}
+  ~ImageSamplerBase() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** GenerateInputRequestedRegion. */
-  virtual void GenerateInputRequestedRegion( void );
+  void GenerateInputRequestedRegion( void ) override;
 
   /** IsInsideAllMasks. */
   virtual bool IsInsideAllMasks( const InputImagePointType & point ) const;
@@ -200,9 +200,9 @@ protected:
   void CropInputImageRegion( void );
 
   /** Multi-threaded function that does the work. */
-  virtual void BeforeThreadedGenerateData( void );
+  void BeforeThreadedGenerateData( void ) override;
 
-  virtual void AfterThreadedGenerateData( void );
+  void AfterThreadedGenerateData( void ) override;
 
   /***/
   unsigned long                              m_NumberOfSamples;

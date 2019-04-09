@@ -102,18 +102,18 @@ public:
   typedef vnl_svd_economy< CoordRepType > PCACovarianceType;
 
   /** Initialization. */
-  void Initialize( void );
+  void Initialize( void ) override;
 
   /**  Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & Derivative ) const;
+    DerivativeType & Derivative ) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const override;
 
   /** Set/Get the shrinkageIntensity parameter. */
   itkSetClampMacro( ShrinkageIntensity, MeasureType, 0.0, 1.0 );
@@ -173,10 +173,10 @@ public:
 protected:
 
   StatisticalShapePointPenalty();
-  virtual ~StatisticalShapePointPenalty();
+  ~StatisticalShapePointPenalty() override;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

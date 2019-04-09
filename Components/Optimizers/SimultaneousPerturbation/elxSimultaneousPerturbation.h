@@ -125,26 +125,26 @@ public:
   typedef typename Superclass1::ParametersType ParametersType;
 
   /** Methods that take care of setting parameters and printing progress information.*/
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
   /** Override the SetInitialPosition.
    * Override the implementation in itkOptimizer.h, to
    * ensure that the scales array and the parameters
    * array have the same size. */
-  virtual void SetInitialPosition( const ParametersType & param );
+  void SetInitialPosition( const ParametersType & param ) override;
 
 protected:
 
   SimultaneousPerturbation();
-  virtual ~SimultaneousPerturbation() {}
+  ~SimultaneousPerturbation() override {}
 
   bool m_ShowMetricValues;
 

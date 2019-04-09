@@ -88,11 +88,11 @@ protected:
 
   GPUBSplineInterpolateImageFunction();
   ~GPUBSplineInterpolateImageFunction() {}
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  virtual bool GetSourceCode( std::string & source ) const ITK_OVERRIDE;
+  virtual bool GetSourceCode( std::string & source ) const override;
 
 private:
 

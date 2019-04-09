@@ -308,16 +308,16 @@ public:
    * matrix and the last NOutputDimension parameters the translation.
    * Offset is updated based on current center.
    */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
   /** Get the Transformation Parameters. */
-  const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Set the fixed parameters and update internal transformation. */
-  virtual void SetFixedParameters( const FixedParametersType & );
+  void SetFixedParameters( const FixedParametersType & ) override;
 
   /** Get the Fixed Parameters. */
-  virtual const FixedParametersType & GetFixedParameters( void ) const;
+  const FixedParametersType & GetFixedParameters( void ) const override;
 
   /** Compose with another AdvancedMatrixOffsetTransformBase
    *
@@ -341,14 +341,14 @@ public:
    * an affine point, whereas the TransformVector method transforms
    * its argument as a vector.
    */
-  OutputPointType     TransformPoint( const InputPointType & point ) const;
+  OutputPointType     TransformPoint( const InputPointType & point ) const override;
 
-  OutputVectorType    TransformVector( const InputVectorType & vector ) const;
+  OutputVectorType    TransformVector( const InputVectorType & vector ) const override;
 
-  OutputVnlVectorType TransformVector( const InputVnlVectorType & vector ) const;
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & vector ) const override;
 
   OutputCovariantVectorType TransformCovariantVector(
-    const InputCovariantVectorType & vector ) const;
+    const InputCovariantVectorType & vector ) const override;
 
   /** Create inverse of an affine transformation
     *
@@ -379,7 +379,7 @@ public:
    *
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
-  virtual bool IsLinear( void ) const
+  bool IsLinear( void ) const override
   {
     return true;
   }
@@ -388,54 +388,54 @@ public:
   /** Indicates the category transform.
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
    */
-  virtual TransformCategoryType GetTransformCategory() const
+  TransformCategoryType GetTransformCategory() const override
   {
     return Self::Linear;
   }
 
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  virtual void GetSpatialJacobian(
+  void GetSpatialJacobian(
     const InputPointType &,
-    SpatialJacobianType & ) const;
+    SpatialJacobianType & ) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  virtual void GetSpatialHessian(
+  void GetSpatialHessian(
     const InputPointType &,
-    SpatialHessianType & ) const;
+    SpatialHessianType & ) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     JacobianOfSpatialJacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     SpatialJacobianType &,
     JacobianOfSpatialJacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType &,
     JacobianOfSpatialHessianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation. */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
 protected:
 
@@ -456,10 +456,10 @@ protected:
   virtual void PrecomputeJacobians( unsigned int paramDims );
 
   /** Destroy an AdvancedMatrixOffsetTransformBase object. */
-  virtual ~AdvancedMatrixOffsetTransformBase() {}
+  ~AdvancedMatrixOffsetTransformBase() override {}
 
   /** Print contents of an AdvancedMatrixOffsetTransformBase. */
-  void PrintSelf( std::ostream & s, Indent indent ) const;
+  void PrintSelf( std::ostream & s, Indent indent ) const override;
 
   const InverseMatrixType & GetVarInverseMatrix( void ) const
   {

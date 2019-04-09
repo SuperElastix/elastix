@@ -105,7 +105,7 @@ public:
    *
    * \sa ImageToImageFilter::GenerateInputRequestedRegion().
    */
-  virtual void GenerateInputRequestedRegion() throw( InvalidRequestedRegionError );
+  void GenerateInputRequestedRegion() throw( InvalidRequestedRegionError ) override;
 
   /** Set & Get the NumberOfIterations. */
   itkSetMacro( NumberOfIterations, unsigned int );
@@ -123,9 +123,9 @@ public:
 protected:
 
   VectorMeanDiffusionImageFilter();
-  virtual ~VectorMeanDiffusionImageFilter() {}
+  ~VectorMeanDiffusionImageFilter() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** MeanImageFilter can be implemented as a multithreaded filter.
    * Therefore, this implementation provides a ThreadedGenerateData()
@@ -138,7 +138,7 @@ protected:
    * \sa ImageToImageFilter::ThreadedGenerateData(),
    *     ImageToImageFilter::GenerateData().
    */
-  void GenerateData( void );
+  void GenerateData( void ) override;
 
 private:
 

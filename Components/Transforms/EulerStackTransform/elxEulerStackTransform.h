@@ -181,14 +181,14 @@ public:
 
   /** Execute stuff before anything else is done:*/
 
-  virtual int BeforeAll( void );
+  int BeforeAll( void ) override;
 
   /** Execute stuff before the actual registration:
    * \li Set the stack transform parameters.
    * \li Set initial sub transforms.
    * \li Create initial registration parameters.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Method initialize the parameters (to 0). */
   virtual void InitializeTransform( void );
@@ -203,10 +203,10 @@ public:
   virtual void SetScales( void );
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( const ParametersType & param ) const;
+  void WriteToFile( const ParametersType & param ) const override;
 
   /** Function to rotate center of rotation point using initial transformation. */
   virtual void InitialTransformCenter( ReducedDimensionInputPointType & point );
@@ -217,7 +217,7 @@ protected:
   EulerStackTransform();
 
   /** The destructor. */
-  virtual ~EulerStackTransform() {}
+  ~EulerStackTransform() override {}
 
   /** Try to read the CenterOfRotation from the transform parameter file
    * This is an index value, and, thus, converted to world coordinates.

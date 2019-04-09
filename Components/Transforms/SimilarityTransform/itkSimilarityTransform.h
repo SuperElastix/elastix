@@ -193,7 +193,7 @@ public:
 protected:
 
   SimilarityTransform(){}
-  ~SimilarityTransform(){}
+  ~SimilarityTransform() override{}
 
 private:
 

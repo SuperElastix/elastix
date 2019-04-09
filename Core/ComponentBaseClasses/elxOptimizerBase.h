@@ -95,12 +95,12 @@ public:
   /** Execute stuff before each new pyramid resolution:
    * \li Find out if new samples are used every new iteration in this resolution.
    */
-  virtual void BeforeEachResolutionBase() ITK_OVERRIDE;
+  void BeforeEachResolutionBase() override;
 
   /** Execute stuff after registration:
    * \li Compute and print MD5 hash of the transform parameters.
    */
-  virtual void AfterRegistrationBase( void ) ITK_OVERRIDE;
+  void AfterRegistrationBase( void ) override;
 
   /** Method that sets the scales defined by a sinus
    * scale[i] = amplitude^( sin(i/nrofparam*2pi*frequency) )
@@ -113,7 +113,7 @@ protected:
   /** The constructor. */
   OptimizerBase();
   /** The destructor. */
-  virtual ~OptimizerBase() {}
+  ~OptimizerBase() override {}
 
   /** Force the metric to base its computation on a new subset of image samples.
    * Not every metric may have implemented this.

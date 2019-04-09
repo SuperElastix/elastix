@@ -148,12 +148,12 @@ public:
    * \li Check if the exact metric value should be computed
    * (to monitor the progress of the registration).
    */
-  virtual void BeforeEachResolutionBase( void );
+  void BeforeEachResolutionBase( void ) override;
 
   /** Execute stuff after each iteration:
    * \li Optionally compute the exact metric value and plot it to screen.
    */
-  virtual void AfterEachIterationBase( void );
+  void AfterEachIterationBase( void ) override;
 
   /** Force the metric to base its computation on a new subset of image samples.
    * Not every metric may have implemented this.
@@ -198,7 +198,7 @@ protected:
   /** The constructor. */
   MetricBase();
   /** The destructor. */
-  virtual ~MetricBase() {}
+  ~MetricBase() override {}
 
   /**  Get the exact value. Mutual information computed over all points.
    * It is meant in situations when you optimize using just a subset of pixels,

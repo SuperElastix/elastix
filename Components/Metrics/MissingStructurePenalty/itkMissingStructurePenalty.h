@@ -137,7 +137,7 @@ public:
   /** Initialize the Metric by making sure that all the components are
   *  present and plugged together correctly.
   */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /** Set the fixed mask. */
   // \todo: currently not used
@@ -147,20 +147,20 @@ public:
   //itkGetConstObjectMacro( FixedImageMask, FixedImageMaskType );
 
   /**  Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & Derivative ) const;
+    DerivativeType & Derivative ) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const override;
 
 protected:
 
   MissingVolumeMeshPenalty();
-  virtual ~MissingVolumeMeshPenalty();
+  ~MissingVolumeMeshPenalty() override;
 
   /** PrintSelf. */
   //void PrintSelf(std::ostream& os, Indent indent) const;

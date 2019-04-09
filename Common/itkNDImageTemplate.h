@@ -104,60 +104,60 @@ public:
   typedef typename ImageType::PointType   PointTypeD;
   typedef typename ImageType::OffsetType  OffsetTypeD;
 
-  virtual void SetRegions( SizeType size );
+  void SetRegions( SizeType size ) override;
 
-  virtual void SetRequestedRegion( DataObject * data );
+  void SetRequestedRegion( DataObject * data ) override;
 
-  virtual void Allocate( void );
+  void Allocate( void ) override;
 
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
-  virtual void FillBuffer( const TPixel & value );
+  void FillBuffer( const TPixel & value ) override;
 
-  virtual void SetPixel( const IndexType & index, const TPixel & value );
+  void SetPixel( const IndexType & index, const TPixel & value ) override;
 
-  virtual const TPixel & GetPixel( const IndexType & index ) const;
+  const TPixel & GetPixel( const IndexType & index ) const override;
 
-  virtual TPixel & GetPixel( const IndexType & index );
+  TPixel & GetPixel( const IndexType & index ) override;
 
-  virtual TPixel * GetBufferPointer();
+  TPixel * GetBufferPointer() override;
 
-  virtual const TPixel * GetBufferPointer() const;
+  const TPixel * GetBufferPointer() const override;
 
-  virtual PixelContainer * GetPixelContainer();
+  PixelContainer * GetPixelContainer() override;
 
-  virtual const PixelContainer * GetPixelContainer() const;
+  const PixelContainer * GetPixelContainer() const override;
 
-  virtual void SetPixelContainer( PixelContainer * container );
+  void SetPixelContainer( PixelContainer * container ) override;
 
-  virtual AccessorType GetPixelAccessor( void );
+  AccessorType GetPixelAccessor( void ) override;
 
-  virtual const AccessorType GetPixelAccessor( void ) const;
+  const AccessorType GetPixelAccessor( void ) const override;
 
-  virtual void SetSpacing( const SpacingType & spacing );
+  void SetSpacing( const SpacingType & spacing ) override;
 
-  virtual void SetOrigin( const PointType & origin );
+  void SetOrigin( const PointType & origin ) override;
 
-  virtual SpacingType GetSpacing( void );
+  SpacingType GetSpacing( void ) override;
 
-  virtual PointType GetOrigin( void );
+  PointType GetOrigin( void ) override;
 
   /** \todo Transform IndexToPoint methods. */
 
-  virtual void CopyInformation( const DataObject * data );
+  void CopyInformation( const DataObject * data ) override;
 
-  virtual const OffsetValueType * GetOffsetTable() const;
+  const OffsetValueType * GetOffsetTable() const override;
 
-  virtual OffsetValueType ComputeOffset( const IndexType & ind ) const;
+  OffsetValueType ComputeOffset( const IndexType & ind ) const override;
 
-  virtual IndexType ComputeIndex( OffsetValueType offset ) const;
+  IndexType ComputeIndex( OffsetValueType offset ) const override;
 
   /** Extra functions for NDImage. */
 
   /** Get the Dimension.*/
-  virtual unsigned int ImageDimension( void );
+  unsigned int ImageDimension( void ) override;
 
-  virtual unsigned int GetImageDimension( void );
+  unsigned int GetImageDimension( void ) override;
 
   /** Get the actual image */
   itkGetModifiableObjectMacro( Image, DataObject );
@@ -165,35 +165,35 @@ public:
   itkGetModifiableObjectMacro( Reader, ProcessObject );
 
   /** Write the actual image to file. */
-  virtual void Write( void );
+  void Write( void ) override;
 
   /** Read image data from file into the actual image */
-  virtual void Read( void );
+  void Read( void ) override;
 
   /** Use New method to create a new actual image */
-  virtual void CreateNewImage( void );
+  void CreateNewImage( void ) override;
 
-  virtual void SetImageIOWriter( ImageIOBase * _arg );
+  void SetImageIOWriter( ImageIOBase * _arg ) override;
 
-  virtual ImageIOBase * GetImageIOWriter( void );
+  ImageIOBase * GetImageIOWriter( void ) override;
 
-  virtual void SetImageIOReader( ImageIOBase * _arg );
+  void SetImageIOReader( ImageIOBase * _arg ) override;
 
-  virtual ImageIOBase * GetImageIOReader( void );
+  ImageIOBase * GetImageIOReader( void ) override;
 
   /** Set/Get the Output/Input FileName */
-  virtual void SetOutputFileName( const char * name );
+  void SetOutputFileName( const char * name ) override;
 
-  virtual void SetInputFileName( const char * name );
+  void SetInputFileName( const char * name ) override;
 
-  virtual const char * GetOutputFileName( void );
+  const char * GetOutputFileName( void ) override;
 
-  virtual const char * GetInputFileName( void );
+  const char * GetInputFileName( void ) override;
 
 protected:
 
   NDImageTemplate();
-  virtual ~NDImageTemplate(){}
+  ~NDImageTemplate() override{}
 
   //virtual void PrintSelf(std::ostream& os, Indent indent) const;
 

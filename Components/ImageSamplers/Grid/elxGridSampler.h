@@ -108,14 +108,14 @@ public:
   /** Execute stuff before each resolution:
    * \li Set the sampling grid size.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   GridSampler() {}
   /** The destructor. */
-  virtual ~GridSampler() {}
+  ~GridSampler() override {}
 
 private:
 

@@ -85,15 +85,15 @@ public:
   /** Prepare the allocation of the output mesh during the first back
    * propagation of the pipeline. Updates the PointsAreIndices and NumberOfPoints.
    */
-  virtual void GenerateOutputInformation( void );
+  void GenerateOutputInformation( void ) override;
 
 protected:
 
   TransformixInputPointFileReader();
-  virtual ~TransformixInputPointFileReader();
+  ~TransformixInputPointFileReader() override;
 
   /** Fill the point container of the output. */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   unsigned long m_NumberOfPoints;
   bool          m_PointsAreIndices;

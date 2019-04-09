@@ -111,14 +111,14 @@ public:
   /** Execute stuff before each resolution:
    * \li Set the number of samples.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   RandomSamplerSparseMask() {}
   /** The destructor. */
-  virtual ~RandomSamplerSparseMask() {}
+  ~RandomSamplerSparseMask() override {}
 
 private:
 

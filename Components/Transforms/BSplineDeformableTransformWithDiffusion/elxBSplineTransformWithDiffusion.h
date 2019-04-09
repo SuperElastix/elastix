@@ -304,22 +304,22 @@ public:
    * \li Create initial registration parameters.
    * \li Setup stuff for the diffusion of the deformation field.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Execute stuff before each new pyramid resolution:
    * \li upsample the B-spline grid.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Execute stuff after each iteration:
    * \li Do a diffusion of the deformation field.
    */
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
   /** Execute stuff after registration:
    * \li Destroy things that are not needed anymore in order to free memory.
    */
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
   /** Set the initial B-spline grid. */
   virtual void SetInitialGrid( bool upsampleGridOption );
@@ -328,10 +328,10 @@ public:
   virtual void IncreaseScale( void );
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( const ParametersType & param ) const;
+  void WriteToFile( const ParametersType & param ) const override;
 
   /** Diffuse the deformation field. */
   void DiffuseDeformationField( void );
@@ -346,7 +346,7 @@ public:
    * TransformPoint() method (it does not call the TransformPoint() with
    * with 5 arguments, as the BSplineDeformableTransform does).
    */
-  virtual OutputPointType TransformPoint( const InputPointType  & point ) const;
+  OutputPointType TransformPoint( const InputPointType  & point ) const override;
 
   /**  Method to transform a point with extra arguments. Just calls
    * the Superclass1's implementation. Has to be present here since it is an
@@ -364,7 +364,7 @@ protected:
   /** The constructor. */
   BSplineTransformWithDiffusion();
   /** The destructor. */
-  virtual ~BSplineTransformWithDiffusion() {}
+  ~BSplineTransformWithDiffusion() override {}
 
   /** Member variables. */
   SpacingType m_GridSpacingFactor;

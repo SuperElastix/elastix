@@ -172,28 +172,28 @@ public:
   void SetOutputParametersFromImage( const ImageBaseType * image );
 
   /** TransformToDeterminantOfSpatialJacobianSource produces a floating value image. */
-  virtual void GenerateOutputInformation( void );
+  void GenerateOutputInformation( void ) override;
 
   /** Checking if transform is set. In case of linear transformations,
    * the LinearGenerateData is called. */
-  virtual void BeforeThreadedGenerateData( void );
+  void BeforeThreadedGenerateData( void ) override;
 
   /** Compute the Modified Time based on changes to the components. */
-  ModifiedTimeType GetMTime( void ) const;
+  ModifiedTimeType GetMTime( void ) const override;
 
 protected:
 
   TransformToDeterminantOfSpatialJacobianSource();
-  ~TransformToDeterminantOfSpatialJacobianSource() {}
+  ~TransformToDeterminantOfSpatialJacobianSource() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** TransformToDeterminantOfSpatialJacobianSource can be implemented as a multithreaded
    * filter.
    */
   void ThreadedGenerateData(
     const OutputImageRegionType & outputRegionForThread,
-    ThreadIdType threadId );
+    ThreadIdType threadId ) override;
 
   /** Default implementation for resampling that works for any
    * transformation type.

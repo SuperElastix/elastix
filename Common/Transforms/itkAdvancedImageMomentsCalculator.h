@@ -237,8 +237,8 @@ public:
 
 protected:
   AdvancedImageMomentsCalculator();
-  virtual ~AdvancedImageMomentsCalculator();
-  virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
+  ~AdvancedImageMomentsCalculator() override;
+  void PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Typedefs for multi-threading. */
   typedef itk::MultiThreader             ThreaderType;

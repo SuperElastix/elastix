@@ -168,16 +168,16 @@ public:
    * only smoothed with the same standard deviation gaussian as used by
    * the superclass.
    */
-  void SetSchedule( const ScheduleType & schedule );
+  void SetSchedule( const ScheduleType & schedule ) override;
 
   /** Set spacing etc. */
-  virtual void GenerateOutputInformation();
+  void GenerateOutputInformation() override;
 
   /** Given one output whose requested region has been set, this method sets
    * the requested region for the remaining output images.  The original
    * documentation of this method is below.  \sa
    * ProcessObject::GenerateOutputRequestedRegion(); */
-  virtual void GenerateOutputRequestedRegion( DataObject * output );
+  void GenerateOutputRequestedRegion( DataObject * output ) override;
 
   /** MultiResolutionGaussianSmoothingPyramidImageFilter requires a larger input requested
    * region than the output requested regions to accomdate the
@@ -185,20 +185,20 @@ public:
    * to provide an implementation for GenerateInputRequestedRegion().  The
    * original documentation of this method is below.  \sa
    * ProcessObject::GenerateInputRequestedRegion() */
-  virtual void GenerateInputRequestedRegion();
+  void GenerateInputRequestedRegion() override;
 
 protected:
 
   MultiResolutionGaussianSmoothingPyramidImageFilter();
-  ~MultiResolutionGaussianSmoothingPyramidImageFilter() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~MultiResolutionGaussianSmoothingPyramidImageFilter() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Generate the output data. */
-  void GenerateData();
+  void GenerateData() override;
 
   /** This filter by default generates the largest possible region,
    * because it uses internally a filter that does this. */
-  virtual void EnlargeOutputRequestedRegion( DataObject * output );
+  void EnlargeOutputRequestedRegion( DataObject * output ) override;
 
 private:
 

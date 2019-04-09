@@ -236,8 +236,8 @@ public:
     SpatialJacobianType & sj ) const = 0;
 
   /** Override some pure virtual ITK4 functions. */
-  virtual void ComputeJacobianWithRespectToParameters(
-    const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const
+  void ComputeJacobianWithRespectToParameters(
+    const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const override
   {
     itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
   }
@@ -307,7 +307,7 @@ protected:
 
   AdvancedTransform();
   AdvancedTransform( NumberOfParametersType numberOfParameters );
-  virtual ~AdvancedTransform() {}
+  ~AdvancedTransform() override {}
 
   bool m_HasNonZeroSpatialHessian;
   bool m_HasNonZeroJacobianOfSpatialHessian;

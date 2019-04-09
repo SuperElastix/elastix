@@ -113,19 +113,19 @@ public:
    *
    * This function overrules any previous calls to SetSampleGridSpacing.
    */
-  virtual void SetNumberOfSamples( unsigned long nrofsamples );
+  void SetNumberOfSamples( unsigned long nrofsamples ) override;
 
   /** Selecting new samples makes no sense if nothing changed. The same
    * samples would be selected anyway.
    */
-  virtual bool SelectNewSamplesOnUpdate( void )
+  bool SelectNewSamplesOnUpdate( void ) override
   {
     return false;
   }
 
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
-  virtual bool SelectingNewSamplesOnUpdateSupported( void ) const
+  bool SelectingNewSamplesOnUpdateSupported( void ) const override
   {
     return false;
   }
@@ -137,13 +137,13 @@ protected:
   ImageGridSampler();
 
   /** The destructor. */
-  virtual ~ImageGridSampler() {}
+  ~ImageGridSampler() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Function that does the work. */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** An array of integer spacing factors */
   SampleGridSpacingType m_SampleGridSpacing;

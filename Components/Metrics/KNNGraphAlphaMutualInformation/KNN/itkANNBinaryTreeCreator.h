@@ -93,7 +93,7 @@ public:
 protected:
 
   ANNBinaryTreeCreator(){}
-  virtual ~ANNBinaryTreeCreator(){}
+  ~ANNBinaryTreeCreator() override{}
 
 private:
 

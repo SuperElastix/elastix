@@ -130,13 +130,13 @@ protected:
   ErodeMaskImageFilter();
 
   /** Destructor */
-  virtual ~ErodeMaskImageFilter(){}
+  ~ErodeMaskImageFilter() override{}
 
   /** Standard pipeline method. While this class does not implement a
    * ThreadedGenerateData(), its GenerateData() delegates all
    * calculations to the ParabolicErodeImageFilter, which is multi-threaded.
    */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
 private:
 

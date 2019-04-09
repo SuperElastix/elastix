@@ -141,19 +141,19 @@ public:
 protected:
 
   ParabolicErodeDilateImageFilter();
-  virtual ~ParabolicErodeDilateImageFilter() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~ParabolicErodeDilateImageFilter() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Generate Data */
-  void GenerateData( void );
+  void GenerateData( void ) override;
 
   int SplitRequestedRegion( int i, int num, OutputImageRegionType & splitRegion );
 
-  void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId );
+  void ThreadedGenerateData( const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId ) override;
 
 //  virtual void GenerateInputRequestedRegion() throw(InvalidRequestedRegionError);
 // Override since the filter produces the entire dataset.
-  void EnlargeOutputRequestedRegion( DataObject * output );
+  void EnlargeOutputRequestedRegion( DataObject * output ) override;
 
   bool m_UseImageSpacing;
 

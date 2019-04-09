@@ -139,7 +139,7 @@ public:
 protected:
 
   ComponentDatabase(){}
-  virtual ~ComponentDatabase(){}
+  ~ComponentDatabase() override{}
 
   CreatorMapType CreatorMap;
   IndexMapType   IndexMap;

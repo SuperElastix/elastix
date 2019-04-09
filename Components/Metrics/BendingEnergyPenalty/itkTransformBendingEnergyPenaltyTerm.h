@@ -129,11 +129,11 @@ public:
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
 
   /** Get the penalty term value. */
-  virtual MeasureType GetValue( const ParametersType & parameters ) const;
+  MeasureType GetValue( const ParametersType & parameters ) const override;
 
   /** Get the penalty term derivative. */
-  virtual void GetDerivative( const ParametersType & parameters,
-    DerivativeType & derivative ) const;
+  void GetDerivative( const ParametersType & parameters,
+    DerivativeType & derivative ) const override;
 
   /** Get the penalty term value and derivative. */
   virtual void GetValueAndDerivativeSingleThreaded(
@@ -141,20 +141,20 @@ public:
     MeasureType & value,
     DerivativeType & derivative ) const;
 
-  virtual void GetValueAndDerivative(
+  void GetValueAndDerivative(
     const ParametersType & parameters,
     MeasureType & value,
-    DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const override;
 
   /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID ) override;
 
   /** Gather the values and derivatives from all threads */
   inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const override;
 
   /** Experimental feature: compute SelfHessian */
-  virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
+  void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const override;
 
   /** Default: 100000 */
   itkSetMacro( NumberOfSamplesForSelfHessian, unsigned int );
@@ -178,7 +178,7 @@ protected:
   TransformBendingEnergyPenaltyTerm();
 
   /** The destructor. */
-  virtual ~TransformBendingEnergyPenaltyTerm() {}
+  ~TransformBendingEnergyPenaltyTerm() override {}
 
 private:
 

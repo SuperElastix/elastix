@@ -75,7 +75,7 @@ public:
   { SetMaximize( true ); }
 
   /** Start optimization. */
-  void    StartOptimization( void );
+  void    StartOptimization( void ) override;
 
   /** Resume previously stopped optimization with current parameters.
   * \sa StopOptimization */
@@ -111,8 +111,8 @@ public:
 protected:
 
   RSGDEachParameterApartBaseOptimizer();
-  virtual ~RSGDEachParameterApartBaseOptimizer() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~RSGDEachParameterApartBaseOptimizer() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Advance one step following the gradient direction
   * This method verifies if a change in direction is required

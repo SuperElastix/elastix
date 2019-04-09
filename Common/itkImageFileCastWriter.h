@@ -73,10 +73,10 @@ public:
 protected:
 
   ImageFileCastWriter();
-  ~ImageFileCastWriter();
+  ~ImageFileCastWriter() override;
 
   /** Does the real work. */
-  void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** Templated function that casts the input image and returns a
    * a pointer to the PixelBuffer. Assumes scalar singlecomponent images

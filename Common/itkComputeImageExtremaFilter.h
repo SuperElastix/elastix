@@ -94,19 +94,19 @@ public:
 
 protected:
   ComputeImageExtremaFilter();
-  virtual ~ComputeImageExtremaFilter() {}
+  ~ComputeImageExtremaFilter() override {}
 
   /** Initialize some accumulators before the threads run. */
-  virtual void BeforeThreadedGenerateData();
+  void BeforeThreadedGenerateData() override;
 
   /** Do final mean and variance computation from data accumulated in threads.
    */
-  virtual void AfterThreadedGenerateData();
+  void AfterThreadedGenerateData() override;
 
   /** Multi-thread version GenerateData. */
-  virtual void ThreadedGenerateData( const RegionType &
+  void ThreadedGenerateData( const RegionType &
                              outputRegionForThread,
-                             ThreadIdType threadId );
+                             ThreadIdType threadId ) override;
   virtual void ThreadedGenerateDataImageSpatialMask( const RegionType &
                               outputRegionForThread,
                               ThreadIdType threadId );

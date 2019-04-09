@@ -149,7 +149,7 @@ public:
    * By default, a combination metric is already set on constructing
    * this class.
    */
-  virtual void SetMetric( MetricType * _arg );
+  void SetMetric( MetricType * _arg ) override;
 
   /** Get the metric as a pointer to a combination metric type.
    * Use this method to setup the combination metric (set weights,
@@ -173,7 +173,7 @@ public:
 
   virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
 
-  virtual const FixedImageType * GetFixedImage( void ) const
+  const FixedImageType * GetFixedImage( void ) const override
   {
     return this->GetFixedImage( 0 );
   }
@@ -188,7 +188,7 @@ public:
 
   virtual const MovingImageType * GetMovingImage( unsigned int pos ) const;
 
-  virtual const MovingImageType * GetMovingImage( void ) const
+  const MovingImageType * GetMovingImage( void ) const override
   { return this->GetMovingImage( 0 ); }
   itkSimpleSetMacro( MovingImage, const MovingImageType * );
   itkSetNumberOfMacro( MovingImage );
@@ -199,7 +199,7 @@ public:
 
   virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
 
-  virtual const FixedImageRegionType & GetFixedImageRegion( void ) const
+  const FixedImageRegionType & GetFixedImageRegion( void ) const override
   { return this->GetFixedImageRegion( 0 ); }
   itkSimpleSetMacro( FixedImageRegion, const FixedImageRegionType );
   itkSetNumberOfMacro( FixedImageRegion );
@@ -210,7 +210,7 @@ public:
 
   virtual InterpolatorType * GetInterpolator( unsigned int pos ) const;
 
-  virtual InterpolatorType * GetInterpolator( void )
+  InterpolatorType * GetInterpolator( void ) override
   { return this->GetInterpolator( 0 ); }
   itkSimpleSetMacro( Interpolator, InterpolatorType * );
   itkSetNumberOfMacro( Interpolator );
@@ -221,7 +221,7 @@ public:
 
   virtual FixedImagePyramidType * GetFixedImagePyramid( unsigned int pos ) const;
 
-  virtual FixedImagePyramidType * GetFixedImagePyramid( void )
+  FixedImagePyramidType * GetFixedImagePyramid( void ) override
   { return this->GetFixedImagePyramid( 0 ); }
   itkSimpleSetMacro( FixedImagePyramid, FixedImagePyramidType * );
   itkSetNumberOfMacro( FixedImagePyramid );
@@ -232,7 +232,7 @@ public:
 
   virtual MovingImagePyramidType * GetMovingImagePyramid( unsigned int pos ) const;
 
-  virtual MovingImagePyramidType * GetMovingImagePyramid( void )
+  MovingImagePyramidType * GetMovingImagePyramid( void ) override
   { return this->GetMovingImagePyramid( 0 ); }
   itkSimpleSetMacro( MovingImagePyramid, MovingImagePyramidType * );
   itkSetNumberOfMacro( MovingImagePyramid );
@@ -241,13 +241,13 @@ public:
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  ModifiedTimeType GetMTime( void ) const;
+  ModifiedTimeType GetMTime( void ) const override;
 
   /** Get the last transformation parameters visited by
    * the optimizer. Return the member variable declared in this class,
    * and not that of the superclass (which is declared private).
    */
-  virtual const ParametersType & GetLastTransformParameters( void ) const
+  const ParametersType & GetLastTransformParameters( void ) const override
   {
     return this->m_LastTransformParameters;
   }
@@ -256,21 +256,21 @@ public:
 protected:
 
   MultiMetricMultiResolutionImageRegistrationMethod();
-  virtual ~MultiMetricMultiResolutionImageRegistrationMethod() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~MultiMetricMultiResolutionImageRegistrationMethod() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   typedef std::vector< FixedImageRegionType > FixedImageRegionPyramidType;
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** Initialize by setting the interconnects between the components.
    * This method is executed at every level of the pyramid with the
    * values corresponding to this resolution.
    */
-  virtual void Initialize( void );
+  void Initialize( void ) override;
 
   /** Compute the size of the fixed region for each level of the pyramid.
    * Actually we would like to override PreparePyramids, but this function

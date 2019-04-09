@@ -124,17 +124,17 @@ public:
   /** Method for setting the schedule. Override from FixedImagePyramidBase,
    * since we now have two schedules, rescaling and smoothing.
    */
-  virtual void SetFixedSchedule( void );
+  void SetFixedSchedule( void ) override;
 
   /** Update the current resolution level. */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   FixedGenericPyramid() {}
   /** The destructor. */
-  virtual ~FixedGenericPyramid() {}
+  ~FixedGenericPyramid() override {}
 
 private:
 

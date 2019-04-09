@@ -118,7 +118,7 @@ public:
 protected:
 
   AdaptiveStochasticVarianceReducedGradientOptimizer();
-  virtual ~AdaptiveStochasticVarianceReducedGradientOptimizer() {};
+  ~AdaptiveStochasticVarianceReducedGradientOptimizer() override {};
 
   /** Function to update the current time
    * If UseAdaptiveStepSizes is false this function just increments
@@ -127,7 +127,7 @@ protected:
    * time = max[ 0, time + sigmoid( -gradient*previousgradient) ]\n
    * In that case, also the m_PreviousGradient is updated.
    */
-  virtual void UpdateCurrentTime( void );
+  void UpdateCurrentTime( void ) override;
 
   /** The PreviousGradient, necessary for the CruzAcceleration */
   DerivativeType m_PreviousGradient;

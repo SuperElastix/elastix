@@ -61,7 +61,7 @@ public:
   typedef typename InputImageType::PixelType    InputImagePixelType;
 
   /** Create a valid output. */
-  DataObject::Pointer MakeOutput( unsigned int idx );
+  DataObject::Pointer MakeOutput( unsigned int idx ) override;
 
   /** Set the input image of this process object.  */
   void SetInput( unsigned int idx, const InputImageType * input );
@@ -96,7 +96,7 @@ public:
    * instead.
    *
    * \sa ThreadedGenerateData() */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** If an imaging filter can be implemented as a multithreaded
    * algorithm, the filter will provide an implementation of
@@ -172,10 +172,10 @@ protected:
   /** The constructor. */
   ImageToVectorContainerFilter();
   /** The destructor. */
-  virtual ~ImageToVectorContainerFilter() {}
+  ~ImageToVectorContainerFilter() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

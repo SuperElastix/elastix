@@ -104,10 +104,10 @@ public:
 
   /** Sets a new LearningRate before calling the Superclass'
    * implementation, and updates the current time. */
-  virtual void AdvanceOneStep( void );
+  void AdvanceOneStep( void ) override;
 
   /** Set current time to 0 and call superclass' implementation. */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** Set/Get the initial time. Should be >=0. This function is
    * superfluous, since Param_A does effectively the same.
@@ -133,7 +133,7 @@ public:
 protected:
 
   StandardGradientDescentOptimizer();
-  virtual ~StandardGradientDescentOptimizer() {}
+  ~StandardGradientDescentOptimizer() override {}
 
   /** Function to compute the parameter at time/iteration k. */
   virtual double Compute_a( double k ) const;

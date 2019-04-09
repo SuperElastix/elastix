@@ -82,7 +82,7 @@ public:
 protected:
 
   BSplineInterpolationSecondOrderDerivativeWeightFunction();
-  ~BSplineInterpolationSecondOrderDerivativeWeightFunction() {}
+  ~BSplineInterpolationSecondOrderDerivativeWeightFunction() override {}
 
   /** Interpolation kernel types. */
   typedef typename Superclass::KernelType           KernelType;
@@ -101,13 +101,13 @@ protected:
    * in case of equal derivative directions,
    * with \f$\beta(x) = \beta^3(x)\f$ for the non-derivative directions.
    */
-  virtual void Compute1DWeights(
+  void Compute1DWeights(
     const ContinuousIndexType & index,
     const IndexType & startIndex,
-    OneDWeightsType & weights1D ) const;
+    OneDWeightsType & weights1D ) const override;
 
   /** Print the member variables. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

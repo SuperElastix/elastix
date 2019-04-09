@@ -65,7 +65,7 @@ protected:
   BinaryANNTreeBase();
 
   /** Destructor. */
-  virtual ~BinaryANNTreeBase() {}
+  ~BinaryANNTreeBase() override {}
 
 private:
 

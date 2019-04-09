@@ -74,7 +74,7 @@ public:
 protected:
 
   BinaryTreeSearchBase();
-  virtual ~BinaryTreeSearchBase();
+  ~BinaryTreeSearchBase() override;
 
   /** Member variables. */
   BinaryTreePointer m_BinaryTree;

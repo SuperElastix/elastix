@@ -63,15 +63,15 @@ public:
   typedef typename Superclass::DerivativeType      DerivativeType;
 
   /** Limit the input value */
-  virtual OutputType Evaluate( const InputType & input ) const;
+  OutputType Evaluate( const InputType & input ) const override;
 
   /** Limit the input value and change the input function derivative accordingly */
-  virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const;
+  OutputType Evaluate( const InputType & input, DerivativeType & derivative ) const override;
 
 protected:
 
   HardLimiterFunction(){}
-  ~HardLimiterFunction(){}
+  ~HardLimiterFunction() override{}
 
 private:
 

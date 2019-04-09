@@ -113,7 +113,7 @@ public:
     ContinuousIndexType RedContinuousIndexType;
 
   /** This method specifies the region over which the grid resides. */
-  virtual void SetGridRegion( const RegionType & region );
+  void SetGridRegion( const RegionType & region ) override;
 
   /** Transform points by a B-spline deformable transformation.
    * On return, weights contains the interpolation weights used to compute the
@@ -122,12 +122,12 @@ public:
    * Parameter indices for the i-th dimension can be obtained by adding
    * ( i * this->GetNumberOfParametersPerDimension() ) to the indices array.
    */
-  virtual void TransformPoint(
+  void TransformPoint(
     const InputPointType & inputPoint,
     OutputPointType & outputPoint,
     WeightsType & weights,
     ParameterIndexArrayType & indices,
-    bool & inside ) const;
+    bool & inside ) const override;
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
@@ -136,21 +136,21 @@ public:
     ParameterIndexArrayType & indices ) const;
 
   /** Compute the spatial Jacobian of the transformation. */
-  virtual void GetSpatialJacobian(
+  void GetSpatialJacobian(
     const InputPointType & ipp,
-    SpatialJacobianType & sj ) const;
+    SpatialJacobianType & sj ) const override;
 
 protected:
 
   CyclicBSplineDeformableTransform();
-  virtual ~CyclicBSplineDeformableTransform();
+  ~CyclicBSplineDeformableTransform() override;
 
   void ComputeNonZeroJacobianIndices(
     NonZeroJacobianIndicesType & nonZeroJacobianIndices,
-    const RegionType & supportRegion ) const;
+    const RegionType & supportRegion ) const override;
 
   /** Check if a continuous index is inside the valid region. */
-  bool InsideValidRegion( const ContinuousIndexType & index ) const;
+  bool InsideValidRegion( const ContinuousIndexType & index ) const override;
 
   /** Split an image region into two regions based on the last dimension. */
   virtual void SplitRegion(

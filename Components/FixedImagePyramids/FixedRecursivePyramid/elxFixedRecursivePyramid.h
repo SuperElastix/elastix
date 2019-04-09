@@ -92,7 +92,7 @@ protected:
   /** The constructor. */
   FixedRecursivePyramid() {}
   /** The destructor. */
-  virtual ~FixedRecursivePyramid() {}
+  ~FixedRecursivePyramid() override {}
 
 private:
 

@@ -90,7 +90,7 @@ public:
   virtual void AdvanceOneStep( void );
 
   /** Start optimization. */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** Resume previously stopped optimization with current parameters
    * \sa StopOptimization. */
@@ -136,8 +136,8 @@ public:
 protected:
 
   GradientDescentOptimizer2();
-  virtual ~GradientDescentOptimizer2() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~GradientDescentOptimizer2() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   // made protected so subclass can access
   double            m_Value;

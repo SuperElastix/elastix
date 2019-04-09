@@ -87,7 +87,7 @@ protected:
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  virtual bool GetSourceCode( std::string & source ) const ITK_OVERRIDE;
+  virtual bool GetSourceCode( std::string & source ) const override;
 
   GPUCoefficientImageArray     m_GPUBSplineTransformCoefficientImages;
   GPUCoefficientImageBaseArray m_GPUBSplineTransformCoefficientImagesBase;
