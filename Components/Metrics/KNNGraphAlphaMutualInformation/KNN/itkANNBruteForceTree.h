@@ -66,10 +66,10 @@ public:
   //}
 
   /** Generate the tree. */
-  virtual void GenerateTree( void );
+  void GenerateTree( void ) override;
 
   /** Get the ANN tree. */
-  virtual ANNPointSetType * GetANNTree( void ) const
+  ANNPointSetType * GetANNTree( void ) const override
   {
     return this->m_ANNTree;
   }
@@ -78,7 +78,7 @@ public:
 protected:
 
   ANNBruteForceTree();
-  virtual ~ANNBruteForceTree();
+  ~ANNBruteForceTree() override;
 
   /** Member variables. */
   ANNBruteForceTreeType * m_ANNTree;

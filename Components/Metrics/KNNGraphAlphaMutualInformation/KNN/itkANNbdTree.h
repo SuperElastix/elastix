@@ -69,7 +69,7 @@ public:
   std::string GetShrinkingRule( void );
 
   /** Generate the tree. */
-  virtual void GenerateTree( void );
+  void GenerateTree( void ) override;
 
 protected:
 
@@ -77,10 +77,10 @@ protected:
   ANNbdTree();
 
   /** Destructor. */
-  virtual ~ANNbdTree() {}
+  ~ANNbdTree() override {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Member variables. */
   ShrinkingRuleType m_ShrinkingRule;

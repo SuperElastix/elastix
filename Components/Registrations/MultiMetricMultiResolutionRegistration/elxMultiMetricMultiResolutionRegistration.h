@@ -194,25 +194,25 @@ public:
    * \li Set the fixed image regions.
    * \li Add the sub metric columns to the iteration info object.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Execute stuff before each resolution:
    * \li Update masks with an erosion.
    * \li Set the metric weights.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Execute stuff after each iteration
    * \li Print the latest computed submetric values to screen.
    */
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
 protected:
 
   /** The constructor. */
   MultiMetricMultiResolutionRegistration();
   /** The destructor. */
-  virtual ~MultiMetricMultiResolutionRegistration() {}
+  ~MultiMetricMultiResolutionRegistration() override {}
 
   /** Typedef's for mask support. */
   typedef typename Superclass2::MaskPixelType                  MaskPixelType;
