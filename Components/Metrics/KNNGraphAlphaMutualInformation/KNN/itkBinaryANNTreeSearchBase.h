@@ -69,14 +69,14 @@ public:
   typedef BinaryANNTreeBase< ListSampleType > BinaryANNTreeType;
 
   /** Set and get the binary tree. */
-  virtual void SetBinaryTree( BinaryTreeType * tree );
+  void SetBinaryTree( BinaryTreeType * tree ) override;
 
   //const BinaryTreeType * GetBinaryTree( void ) const;
 
 protected:
 
   BinaryANNTreeSearchBase();
-  virtual ~BinaryANNTreeSearchBase();
+  ~BinaryANNTreeSearchBase() override;
 
   /** Member variables. */
   typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType;
