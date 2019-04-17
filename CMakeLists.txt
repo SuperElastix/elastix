@@ -450,6 +450,14 @@ if( BUILD_TESTING )
   add_subdirectory( Testing )
 endif()
 
+mark_as_advanced( ELASTIX_USE_GTEST )
+option( ELASTIX_USE_GTEST "Use GoogleTest to test Elastix implementation" OFF )
+
+if( ELASTIX_USE_GTEST )
+  enable_testing()
+  add_subdirectory( Common/GTesting )
+endif()
+
 #---------------------------------------------------------------------
 # Packaging
 
