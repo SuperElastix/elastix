@@ -73,15 +73,15 @@ public:
   itkGetConstMacro( ErrorBound, double );
 
   /** Search the nearest neighbours of a query point qp. */
-  virtual void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
-    DistanceArrayType & dists );
+  void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
+    DistanceArrayType & dists ) override;
 
-  virtual void SetBinaryTree( BinaryTreeType * tree );
+  void SetBinaryTree( BinaryTreeType * tree ) override;
 
 protected:
 
   ANNPriorityTreeSearch();
-  virtual ~ANNPriorityTreeSearch();
+  ~ANNPriorityTreeSearch() override;
 
   /** Member variables. */
   double          m_ErrorBound;
