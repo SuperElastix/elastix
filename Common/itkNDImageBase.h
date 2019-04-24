@@ -181,13 +181,6 @@ public:
 
   virtual unsigned int GetImageDimension( void ) = 0;
 
-  /** Get the actual image */
-  virtual DataObject * GetModifiableImage( void ) = 0;
-
-  virtual ProcessObject * GetModifiableWriter( void ) = 0;
-
-  virtual ProcessObject * GetModifiableReader( void ) = 0;
-
   virtual void SetImageIOWriter( ImageIOBase * _arg ) = 0;
 
   virtual ImageIOBase * GetImageIOWriter( void ) = 0;
