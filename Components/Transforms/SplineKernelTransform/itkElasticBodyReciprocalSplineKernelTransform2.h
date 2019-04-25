@@ -99,7 +99,7 @@ public:
 
 
   /** Get alpha */
-  itkGetConstMacro( Alpha, TScalarType );
+  elxOverrideGetConstMacro(Alpha, TScalarType);
 
   /** Convenience method */
   void SetPoissonRatio( const TScalarType Nu ) override
