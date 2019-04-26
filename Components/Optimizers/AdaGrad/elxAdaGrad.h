@@ -285,9 +285,6 @@ public:
   itkSetMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
   itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
 
-  /** Get current gradient. */
-  itkGetConstReferenceMacro( PreconditionVector, ParametersType );
-
 protected :
 
   AdaGrad();
@@ -377,7 +374,6 @@ protected :
 
   double                    m_SigmoidScaleFactor;
   double                    m_NoiseFactor;
-  ParametersType            m_PreconditionVector;
   double                    m_GlobalStepSize;
   double                    m_RegularizationKappa;
   double                    m_ConditionNumber;
