@@ -200,9 +200,6 @@ public:
   itkSetMacro( UseRelativeWeights, bool );
   itkGetMacro( UseRelativeWeights, bool );
 
-  /** \todo: Temporary, should think about interface. */
-  itkSetMacro( UseMultiThread, bool );
-
   /** Select which metrics are used.
    * This is useful in case you want to compute a certain measure, but not
    * actually use it during the registration.
