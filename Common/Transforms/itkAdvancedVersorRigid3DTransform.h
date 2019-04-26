@@ -125,15 +125,15 @@ public:
    * This is typically used by optimizers.
    * There are 6 parameters. The first three represent the
    * versor, the last three represent the translation. */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
-  virtual const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** This method computes the Jacobian matrix of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
 protected:
 
@@ -144,11 +144,11 @@ protected:
   AdvancedVersorRigid3DTransform();
   ~AdvancedVersorRigid3DTransform(){}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** This method must be made protected here because it is not a safe way of
    * initializing the Versor */
-  virtual void SetRotationMatrix( const MatrixType & matrix )
+  void SetRotationMatrix( const MatrixType & matrix ) override
   { this->Superclass::SetRotationMatrix( matrix ); }
 
 private:

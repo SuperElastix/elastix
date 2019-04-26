@@ -133,10 +133,10 @@ public:
    * of the right part of the versor. This can be seen
    * as the components of the vector parallel to the rotation
    * axis and multiplied by std::sin( angle / 2 ). */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
   /** Get the Transformation Parameters. */
-  const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Set the rotational part of the transform */
   void SetRotation( const VersorType & versor );
@@ -146,13 +146,13 @@ public:
   itkGetConstReferenceMacro( Versor, VersorType );
 
   /** Set the parameters to the IdentityTransform */
-  virtual void SetIdentity( void );
+  void SetIdentity( void ) override;
 
   /** This method computes the Jacobian matrix of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
 protected:
 
@@ -167,20 +167,20 @@ protected:
 
   /** This method must be made protected here because it is not a safe way of
    * initializing the Versor */
-  virtual void SetRotationMatrix( const MatrixType & matrix )
+  void SetRotationMatrix( const MatrixType & matrix ) override
   { this->Superclass::SetRotationMatrix( matrix ); }
 
   void SetVarVersor( const VersorType & newVersor )
   { m_Versor = newVersor; }
 
   /** Print contents of a AdvancedVersorTransform */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Compute Matrix
    *  Compute the components of the rotation matrix in the superclass */
-  void ComputeMatrix( void );
+  void ComputeMatrix( void ) override;
 
-  void ComputeMatrixParameters( void );
+  void ComputeMatrixParameters( void ) override;
 
 private:
 
