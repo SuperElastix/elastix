@@ -260,14 +260,6 @@ public:
   /** Stop optimization and pass on exception. */
   void MetricErrorResponse( itk::ExceptionObject & err ) override;
 
-  /** Codes of stopping conditions
-   * The MinimumStepSize stopcondition never occurs, but may
-   * be implemented in inheriting classes */
-  typedef enum {
-    MaximumNumberOfIterations,
-    MetricError,
-    MinimumStepSize } StopConditionType;
-
   /** Stop optimization.
   * \sa ResumeOptimization */
   void StopOptimization( void ) override;
@@ -294,33 +286,6 @@ public:
   /** Get the MaximumNumberOfSamplingAttempts. */
   itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
 
-//   /** Set the learning rate. */
-//   itkSetMacro( LearningRate, double );
-//
-//   /** Get the learning rate. */
-//   itkGetConstReferenceMacro( LearningRate, double);
-
-  /** Set the number of iterations. */
-  itkSetMacro( NumberOfIterations, unsigned long );
-
-  /** Get the number of iterations. */
-  itkGetConstReferenceMacro( NumberOfIterations, unsigned long );
-
-  /** Get the current iteration number. */
-  itkGetConstMacro( CurrentIteration, unsigned int );
-
-  /** Get the current value. */
-  itkGetConstReferenceMacro( Value, double );
-
-  /** Get current gradient. */
-  itkGetConstReferenceMacro( Gradient, DerivativeType );
-
-  /** Set the Previous Position. */
-  itkSetMacro( PreviousPosition, ParametersType );
-
-  /** Get the Previous Position. */
-  itkGetConstReferenceMacro( PreviousPosition, ParametersType);
-
   /** Get the Previous gradient. */
   itkGetConstReferenceMacro( MeanGradient, DerivativeType);
 
@@ -332,11 +297,6 @@ public:
   {
     this->m_Threader->SetNumberOfThreads( numberOfThreads );
   }
-  //itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
-  itkSetMacro( UseMultiThread, bool );
-
-  itkSetMacro( UseOpenMP, bool );
-  itkSetMacro( UseEigen, bool );
 
 protected:
 
@@ -466,16 +426,9 @@ protected:
    */
   virtual void AddRandomPerturbation( ParametersType & parameters, double sigma );
 
-  double                        m_Value;
-  DerivativeType                m_Gradient;
   DerivativeType                m_ExactGradient;
-  StopConditionType             m_StopCondition;
   DerivativeType                m_MeanGradient;
-  ThreaderType::Pointer         m_Threader;
 
-  bool                          m_Stop;
-//   unsigned long                 m_NumberOfIterations;
-//   unsigned long                 m_CurrentIteration;
   double                        m_NoiseFactor;
 
 private:
@@ -484,15 +437,11 @@ private:
   void operator=( const Self& );                     // purposely not implemented
 
   // multi-threaded AdvanceOneStep:
-  bool m_UseMultiThread;
   struct MultiThreaderParameterType
   {
     ParametersType *  t_NewPosition;
     Self *            t_Optimizer;
   };
-
-  bool m_UseOpenMP;
-  bool m_UseEigen;
 
   /** The callback function. */
 #if ITK_VERSION_MAJOR >= 5

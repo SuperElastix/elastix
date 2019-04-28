@@ -115,9 +115,6 @@ public:
     itkGetStaticConstMacro( SpaceDimension ) > GetConstNumberOfIndicesHackType;
   itkStaticConstMacro( NumberOfIndices, unsigned int, GetConstNumberOfIndicesHackType::Value );
 
-  /** Get number of weights. */
-  itkGetConstMacro( NumberOfWeights, unsigned int );
-
   /** Get number of indices. */
   itkGetConstMacro( NumberOfIndices, unsigned int );
 

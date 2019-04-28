@@ -68,9 +68,6 @@ public:
   itkStaticConstMacro( InputImageDimension, unsigned int,
     Superclass::InputImageDimension );
 
-  /** Set the number of samples. */
-  itkSetClampMacro( NumberOfSamples, unsigned long, 1, NumericTraits< unsigned long >::max() );
-
 protected:
 
   /** The constructor. */

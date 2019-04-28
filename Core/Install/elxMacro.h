@@ -254,14 +254,24 @@ public: \
  * This macro defines two functions.
  *
  * static const char * elxGetClassNameStatic(void){return _name;}
- * virtual const char * elxGetClassName(void){return _name;}
+ * const char * elxGetClassName( void ) const override { return _name; }
  *
  * Use this macro in every component that will be installed in the
  * ComponentDatabase, using "elxInstallMacro".
  */
 #define elxClassNameMacro( _name ) \
   static const char * elxGetClassNameStatic( void ) { return _name; } \
-  virtual const char * elxGetClassName( void ) const { return _name; }
+  const char * elxGetClassName( void ) const override { return _name; }
+
+ /** Get built-in type.  Creates an override of the virtual member Get"name"()
+  * This is the "const" form of the itkGetMacro.  It should be used unless
+  * the member can be changed through the "Get" access routine. */
+#define elxOverrideGetConstMacro(name, type)  \
+  type Get##name () const override    \
+    {                                 \
+    return this->m_##name;            \
+    }
+
 
 /**
  *  elxout

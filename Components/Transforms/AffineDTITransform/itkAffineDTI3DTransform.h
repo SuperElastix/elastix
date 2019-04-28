@@ -136,17 +136,17 @@ public:
    * [ Rx Ry Rz Gx Gy Gz Sx Sy Sz Tx Ty Tz ]
    * ~rotation, scale, skew, translation
    */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
-  const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
-  virtual void SetIdentity( void );
+  void SetIdentity( void ) override;
 
 protected:
 
@@ -158,7 +158,7 @@ protected:
 
   ~AffineDTI3DTransform(){}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Set values of angles etc directly without recomputing other parameters. */
   void SetVarAngleScaleShear(
@@ -167,9 +167,9 @@ protected:
     ScalarArrayType scale );
 
   /** Compute the components of the rotation matrix in the superclass. */
-  void ComputeMatrix( void );
+  void ComputeMatrix( void ) override;
 
-  void ComputeMatrixParameters( void );
+  void ComputeMatrixParameters( void ) override;
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void PrecomputeJacobianOfSpatialJacobian( void );

@@ -24,8 +24,8 @@
 
 /** defines a method that calls the same method
  * with an extra 0 argument */
-#define itkSimpleSetMacro( _name, _type ) \
-  virtual void Set##_name( _type _arg ) \
+#define elxOverrideSimpleSetMacro( _name, _type ) \
+  void Set##_name( _type _arg ) override \
   { \
     this->Set##_name( _arg, 0 ); \
   }
@@ -164,7 +164,7 @@ public:
   /** The following methods all have a similar pattern. The
    * SetFixedImage() just calls SetFixedImage(0).
    * SetFixedImage(0) also calls the Superclass::SetFixedImage(). This
-   * is defined by the itkSimpleSetMacro.
+   * is defined by the elxOverrideSimpleSetMacro.
    * GetFixedImage() just returns GetFixedImage(0) == Superclass::m_FixedImage.
    */
 
@@ -179,7 +179,7 @@ public:
   }
 
 
-  itkSimpleSetMacro( FixedImage, const FixedImageType * );
+  elxOverrideSimpleSetMacro( FixedImage, const FixedImageType * );
   itkSetNumberOfMacro( FixedImage );
   itkGetNumberOfMacro( FixedImage );
 
@@ -190,7 +190,7 @@ public:
 
   const MovingImageType * GetMovingImage( void ) const override
   { return this->GetMovingImage( 0 ); }
-  itkSimpleSetMacro( MovingImage, const MovingImageType * );
+  elxOverrideSimpleSetMacro( MovingImage, const MovingImageType * );
   itkSetNumberOfMacro( MovingImage );
   itkGetNumberOfMacro( MovingImage );
 
@@ -201,7 +201,7 @@ public:
 
   const FixedImageRegionType & GetFixedImageRegion( void ) const override
   { return this->GetFixedImageRegion( 0 ); }
-  itkSimpleSetMacro( FixedImageRegion, const FixedImageRegionType );
+  elxOverrideSimpleSetMacro( FixedImageRegion, const FixedImageRegionType );
   itkSetNumberOfMacro( FixedImageRegion );
   itkGetNumberOfMacro( FixedImageRegion );
 
@@ -212,7 +212,7 @@ public:
 
   InterpolatorType * GetInterpolator( void ) override
   { return this->GetInterpolator( 0 ); }
-  itkSimpleSetMacro( Interpolator, InterpolatorType * );
+  elxOverrideSimpleSetMacro( Interpolator, InterpolatorType * );
   itkSetNumberOfMacro( Interpolator );
   itkGetNumberOfMacro( Interpolator );
 
@@ -223,7 +223,7 @@ public:
 
   FixedImagePyramidType * GetFixedImagePyramid( void ) override
   { return this->GetFixedImagePyramid( 0 ); }
-  itkSimpleSetMacro( FixedImagePyramid, FixedImagePyramidType * );
+  elxOverrideSimpleSetMacro( FixedImagePyramid, FixedImagePyramidType * );
   itkSetNumberOfMacro( FixedImagePyramid );
   itkGetNumberOfMacro( FixedImagePyramid );
 
@@ -234,7 +234,7 @@ public:
 
   MovingImagePyramidType * GetMovingImagePyramid( void ) override
   { return this->GetMovingImagePyramid( 0 ); }
-  itkSimpleSetMacro( MovingImagePyramid, MovingImagePyramidType * );
+  elxOverrideSimpleSetMacro( MovingImagePyramid, MovingImagePyramidType * );
   itkSetNumberOfMacro( MovingImagePyramid );
   itkGetNumberOfMacro( MovingImagePyramid );
 
@@ -320,7 +320,7 @@ private:
 
 #undef itkSetNumberOfMacro
 #undef itkGetNumberOfMacro
-#undef itkSimpleSetMacro
+#undef elxOverrideSimpleSetMacro
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkMultiMetricMultiResolutionImageRegistrationMethod.hxx"

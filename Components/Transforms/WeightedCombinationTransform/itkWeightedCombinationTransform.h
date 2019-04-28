@@ -139,9 +139,6 @@ public:
    * is correct */
   void SetParameters( const ParametersType & param ) override;
 
-  /** Get the currently set parameters */
-  itkGetConstReferenceMacro( Parameters, ParametersType );
-
   /** Set the fixed parameters. */
   void SetFixedParameters( const ParametersType & ) override
   {

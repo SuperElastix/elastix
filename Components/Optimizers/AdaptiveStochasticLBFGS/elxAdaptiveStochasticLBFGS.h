@@ -221,42 +221,6 @@ public:
   /** Get the MaximumNumberOfSamplingAttempts. */
   itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
 
-//   /** Set the learning rate. */
-//   itkSetMacro( LearningRate, double );
-//
-//   /** Get the learning rate. */
-//   itkGetConstReferenceMacro( LearningRate, double);
-
-  /** Set the number of iterations. */
-  itkSetMacro( NumberOfIterations, unsigned long );
-
-  /** Get the number of iterations. */
-  itkGetConstReferenceMacro( NumberOfIterations, unsigned long );
-
-  /** Get the current iteration number. */
-  itkGetConstMacro( CurrentIteration, unsigned int );
-
-  /** Get the inner LBFGSMemory. */
-  itkGetConstMacro( LBFGSMemory, unsigned int );
-
-  /** Get the current value. */
-  itkGetConstReferenceMacro( Value, double );
-
-  /** Get current gradient. */
-  itkGetConstReferenceMacro( Gradient, DerivativeType );
-
-  /** Get current search direction. */
-  itkGetConstReferenceMacro( SearchDir, DerivativeType );
-
-  /** Set the Previous Position. */
-  itkSetMacro( PreviousPosition, ParametersType );
-
-  /** Get the Previous Position. */
-  itkGetConstReferenceMacro( PreviousPosition, ParametersType);
-
-  /** Get the Previous gradient. */
-  itkGetConstReferenceMacro( PreviousGradient, DerivativeType);
-
   /** Type to count and reference number of threads */
   typedef unsigned int  ThreadIdType;
 
@@ -265,8 +229,6 @@ public:
   {
     this->m_Threader->SetNumberOfThreads( numberOfThreads );
   }
-  //itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
-  itkSetMacro( UseMultiThread, bool );
 
 protected:
 
@@ -430,23 +392,10 @@ protected:
    * The optimizer stops when:
    * ||CurrentGradient|| < GradientMagnitudeTolerance * max(1, ||CurrentPosition||)
    */
-  //itkGetConstMacro( GradientMagnitudeTolerance, double );
-  //itkSetMacro( GradientMagnitudeTolerance, double );
 
-  //double                        m_Value;
-  //DerivativeType                m_Gradient;
-  //double                        m_LearningRate;
-  //StopConditionType             m_StopCondition;
-  //DerivativeType                m_PreviousGradient;
   DerivativeType                m_PreviousCurvatureGradient;
-  DerivativeType                m_SearchDir;
-  ThreaderType::Pointer         m_Threader;
 
-  //bool                          m_Stop;
-  unsigned long                 m_NumberOfIterations;
-  unsigned long                 m_CurrentIteration;
   double                        m_NoiseFactor;
-  unsigned long                 m_LBFGSMemory;
   unsigned int                  m_CurrentT;
   unsigned int                  m_PreviousT;
   unsigned int                  m_Bound;
@@ -463,15 +412,11 @@ private:
   void operator=( const Self& );           // purposely not implemented
 
   // multi-threaded AdvanceOneStep:
-  bool m_UseMultiThread;
   struct MultiThreaderParameterType
   {
     ParametersType *  t_NewPosition;
     Self *            t_Optimizer;
   };
-
-  bool m_UseOpenMP;
-  bool m_UseEigen;
 
   /** The callback function. */
 #if ITK_VERSION_MAJOR >= 5

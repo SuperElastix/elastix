@@ -73,8 +73,8 @@ public:
   itkGetConstMacro( SquaredRadius, double );
 
   /** Search the nearest neighbours of a query point qp. */
-  virtual void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
-    DistanceArrayType & dists );
+  void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
+    DistanceArrayType & dists ) override;
 
   /** Search the nearest neighbours of a query point qp. */
   virtual void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
@@ -83,7 +83,7 @@ public:
 protected:
 
   ANNFixedRadiusTreeSearch();
-  virtual ~ANNFixedRadiusTreeSearch();
+  ~ANNFixedRadiusTreeSearch() override;
 
   /** Member variables. */
   double m_ErrorBound;
