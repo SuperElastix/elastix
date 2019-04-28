@@ -183,14 +183,6 @@ public:
   /** Stop optimization and pass on exception. */
   void MetricErrorResponse( itk::ExceptionObject & err ) override;
 
-  /** Codes of stopping conditions
-   * The MinimumStepSize stopcondition never occurs, but may
-   * be implemented in inheriting classes *
-  typedef enum {
-    MaximumNumberOfIterations,
-    MetricError,
-    MinimumStepSize } StopConditionType;
-
   /** Stop optimization.
   * \sa StopOptimization */
   void StopOptimization( void ) override;
