@@ -89,7 +89,7 @@ source_group( "ProgressCommand" FILES ${ProgressCommandFiles} )
 #---------------------------------------------------------------------
 # Create the elxCore library.
 
-add_library( elxCore STATIC
+add_library( elxCore
   ${KernelFilesForComponents}
   ${InstallFilesForComponents}
   ${ConfigurationFiles}

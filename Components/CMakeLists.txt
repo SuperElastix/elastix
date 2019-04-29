@@ -127,7 +127,7 @@ macro( ADD_ELXCOMPONENT name )
 
     # Create project and static library
     project( ${name} )
-    add_library( ${name} STATIC ${filelist} )
+    add_library( ${name} ${filelist} )
     target_link_libraries( ${name} ${elxLinkLibs} )
     install( TARGETS ${name}
       ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}

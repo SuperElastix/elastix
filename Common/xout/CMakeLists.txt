@@ -18,7 +18,7 @@ set( xouthfiles
   xoutcell.h )
 
 # a lib defining the global variable xout.
-add_library( xoutlib STATIC xoutmain.cxx ${xouthxxfiles} ${xouthfiles} )
+add_library( xoutlib xoutmain.cxx ${xouthxxfiles} ${xouthfiles} )
 install( TARGETS xoutlib
   ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
   LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}

@@ -40,7 +40,7 @@ set( ANN_SRCS
 )
 
 # Create the ANNlib library
-add_library( ANNlib SHARED ${ANN_SRCS} )
+add_library( ANNlib ${ANN_SRCS} )
 
 # Necessary when building a library, because in windows dll_export
 # is needed for creating the dll, but dll_import for using it in a program.
