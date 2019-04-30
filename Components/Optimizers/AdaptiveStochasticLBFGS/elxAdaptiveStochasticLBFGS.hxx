@@ -76,7 +76,6 @@ AdaptiveStochasticLBFGS<TElastix>
   this->m_CurrentT  = 0;
   this->m_PreviousT = 0;
   this->m_Bound     = 0;
-  this->m_GradientMagnitudeTolerance = 0.000001;
   this->m_WindowScale = 5;
 
   this->m_RandomGenerator = RandomGeneratorType::GetInstance();
@@ -235,12 +234,6 @@ void AdaptiveStochasticLBFGS<TElastix>
   this->m_AutomaticLBFGSStepsizeEstimation = true;
   this->GetConfiguration()->ReadParameter( this->m_AutomaticLBFGSStepsizeEstimation,
     "AutomaticLBFGSstepsizeEstimation", this->GetComponentLabel(), level, 0 );
-
-  /** Set the GradientMagnitudeTolerance *
-  double gradientMagnitudeTolerance = 0.000001;
-  this->m_Configuration->ReadParameter( gradientMagnitudeTolerance,
-    "GradientMagnitudeTolerance", this->GetComponentLabel(), level, 0 );
-  this->SetGradientMagnitudeTolerance( gradientMagnitudeTolerance );
 
   /** Set the scale of the windowa for H0. */
   double windowScale = 5;
