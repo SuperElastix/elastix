@@ -441,6 +441,7 @@ ParameterObject
     parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "TranslationTransform" );
     parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "AutomaticTransformInitialization" ] = ParameterValueVectorType( 1, "true" );
   }
   else if( transformName == "rigid" )
   {
@@ -448,6 +449,7 @@ ParameterObject
     parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "EulerTransform" );
     parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "AutomaticScalesEstimation" ] = ParameterValueVectorType( 1, "true" );
   }
   else if( transformName == "affine" )
   {
@@ -455,6 +457,7 @@ ParameterObject
     parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "AffineTransform" );
     parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "AutomaticScalesEstimation" ] = ParameterValueVectorType( 1, "true" );
   }
   else if( transformName == "bspline" || transformName == "nonrigid" ) // <-- nonrigid for backwards compatibility
   {
