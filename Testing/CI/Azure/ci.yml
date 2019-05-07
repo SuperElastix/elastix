@@ -1,6 +1,6 @@
 variables:
   ITKv4_VERSION: release-4.13
-  ITKv5_VERSION: eb431fa16ae8b3a93e65db1f77e57e73dc83c6a2 # master branch as of Feb 10, 2019
+  ITKv5_VERSION: 9e122664724eb049955c968c054247c00d92eee2 # master branch as of May 9, 2019 (after v5.0rc02)
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)

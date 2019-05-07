@@ -25,7 +25,7 @@
 #include "itkMultiResolutionImageRegistrationMethod2.h"
 
 /** Mask support. */
-#include "itkImageMaskSpatialObject2.h"
+#include "itkImageMaskSpatialObject.h"
 #include "itkErodeMaskImageFilter.h"
 
 namespace elastix
@@ -160,9 +160,9 @@ protected:
   typedef typename ElastixType::MovingMaskType  MovingMaskImageType;
   typedef typename FixedMaskImageType::Pointer  FixedMaskImagePointer;
   typedef typename MovingMaskImageType::Pointer MovingMaskImagePointer;
-  typedef itk::ImageMaskSpatialObject2<
+  typedef itk::ImageMaskSpatialObject<
     itkGetStaticConstMacro( FixedImageDimension ) >          FixedMaskSpatialObjectType;
-  typedef itk::ImageMaskSpatialObject2<
+  typedef itk::ImageMaskSpatialObject<
     itkGetStaticConstMacro( MovingImageDimension ) >         MovingMaskSpatialObjectType;
   typedef typename
     FixedMaskSpatialObjectType::Pointer FixedMaskSpatialObjectPointer;

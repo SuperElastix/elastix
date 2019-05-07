@@ -34,10 +34,6 @@ set( CommonFiles
   itkGenericMultiResolutionPyramidImageFilter.hxx
   itkImageFileCastWriter.h
   itkImageFileCastWriter.hxx
-  itkImageMaskSpatialObject2.h
-  itkImageMaskSpatialObject2.hxx
-  itkImageSpatialObject2.h
-  itkImageSpatialObject2.hxx
   itkMeshFileReaderBase.h
   itkMeshFileReaderBase.hxx
   itkMultiOrderBSplineDecompositionImageFilter.h

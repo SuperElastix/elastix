@@ -351,7 +351,11 @@ ImageSamplerBase< TInputImage >
 
     typedef typename MaskType::BoundingBoxType        BoundingBoxType;
     typedef typename BoundingBoxType::PointsContainer PointsContainerType;
+#if ITK_VERSION_MAJOR < 5
     typename BoundingBoxType::Pointer bb      = this->m_Mask->GetBoundingBox();
+#else
+    typename BoundingBoxType::ConstPointer bb = this->m_Mask->GetMyBoundingBoxInWorldSpace();
+#endif
     typename BoundingBoxType::Pointer bbIndex = BoundingBoxType::New();
     const PointsContainerType * cornersWorld = bb->GetPoints();
     typename PointsContainerType::Pointer cornersIndex = PointsContainerType::New();

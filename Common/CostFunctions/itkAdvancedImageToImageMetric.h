@@ -30,7 +30,7 @@
 #include "itkAdvancedTransform.h"
 #include "vnl/vnl_sparse_matrix.h"
 
-#include "itkImageMaskSpatialObject2.h"
+#include "itkImageMaskSpatialObject.h"
 
 // Needed for checking for B-spline for faster implementation
 #include "itkAdvancedBSplineDeformableTransform.h"
@@ -131,8 +131,8 @@ public:
   typedef typename DerivativeType::ValueType                DerivativeValueType;
   typedef typename Superclass::ParametersType               ParametersType;
 
-  typedef ImageMaskSpatialObject2< itkGetStaticConstMacro( FixedImageDimension ) > FixedImageMaskSpatialObject2Type;
-  typedef ImageMaskSpatialObject2< itkGetStaticConstMacro( MovingImageDimension ) > MovingImageMaskSpatialObject2Type;
+  typedef ImageMaskSpatialObject< itkGetStaticConstMacro( FixedImageDimension ) > FixedImageMaskSpatialObject2Type;
+  typedef ImageMaskSpatialObject< itkGetStaticConstMacro( MovingImageDimension ) > MovingImageMaskSpatialObject2Type;
 
   /** Some useful extra typedefs. */
   typedef typename FixedImageType::PixelType               FixedImagePixelType;
