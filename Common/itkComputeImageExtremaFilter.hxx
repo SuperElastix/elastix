@@ -19,6 +19,8 @@
 #define itkComputeImageExtremaFilter_hxx
 #include "itkComputeImageExtremaFilter.h"
 
+#include <itkImageRegionConstIterator.h>
+
 namespace itk
 {
 
