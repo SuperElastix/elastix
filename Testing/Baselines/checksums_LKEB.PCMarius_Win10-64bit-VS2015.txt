@@ -8,7 +8,7 @@ elastix_run_3DCT_lung.MI.bspline.SGD.001-Threads2 3081148034
 elastix_run_3DCT_lung.MI.bspline.SGD.001-Threads4 3081148034
 elastix_run_3DCT_lung.MI.bspline.SGD.002 71992244
 elastix_run_3DCT_lung.MI.bspline.SGD.003 2621753943
-elastix_run_3DCT_lung.MI.bspline.SGD.004 2151955861
+elastix_run_3DCT_lung.MI.bspline.SGD.004 1162604205
 elastix_run_3DCT_lung.NC.affine.ASGD.001 3871044378
 elastix_run_3DCT_lung.NC.bspline.ASGD.001a 2682996418
 elastix_run_3DCT_lung.NC.bspline.ASGD.001a-Threads1 2682996418

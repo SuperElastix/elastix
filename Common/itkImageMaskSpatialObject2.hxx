@@ -69,10 +69,6 @@ bool
 ImageMaskSpatialObject2< TDimension >
 ::IsInside( const PointType & point ) const
 {
-  if( !this->GetBounds()->IsInside( point ) )
-  {
-    return false;
-  }
   if( !this->SetInternalInverseTransformToWorldToIndexTransform() )
   {
     return false;
