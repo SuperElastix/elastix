@@ -1,6 +1,5 @@
 add_executable(CommonGTest
   itkComputeImageExtremaFilterGTest.cxx
-  itkImageMaskSpatialObject2GTest.cxx
   )
 target_link_libraries(CommonGTest
   GTest::GTest GTest::Main

@@ -20,7 +20,7 @@
 
 #include "itkStatisticsImageFilter.h"
 #include "itkSpatialObject.h"
-#include "itkImageMaskSpatialObject2.h"
+#include "itkImageMaskSpatialObject.h"
 
 namespace itk
 {
@@ -86,7 +86,7 @@ public:
   itkSetConstObjectMacro( ImageMask, ImageMaskType );
   itkGetConstObjectMacro( ImageMask, ImageMaskType );
 
-  typedef ImageMaskSpatialObject2< itkGetStaticConstMacro(ImageDimension) > ImageSpatialMaskType;
+  typedef ImageMaskSpatialObject< itkGetStaticConstMacro(ImageDimension) > ImageSpatialMaskType;
   typedef typename ImageSpatialMaskType::Pointer ImageSpatialMaskPointer;
   typedef typename ImageSpatialMaskType::ConstPointer ImageSpatialMaskConstPointer;
   itkSetConstObjectMacro( ImageSpatialMask, ImageSpatialMaskType );
