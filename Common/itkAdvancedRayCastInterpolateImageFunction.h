@@ -213,6 +213,18 @@ private:
   AdvancedRayCastInterpolateImageFunction( const Self & ); // purposely not implemented
   void operator=( const Self & );                          // purposely not implemented
 
+#if ITK_VERSION_MAJOR >= 5
+  SizeType GetRadius() const override
+  {
+    const InputImageType* const input = this->GetInputImage();
+    if (!input)
+    {
+      itkExceptionMacro("Input image required!");
+    }
+    return input->GetLargestPossibleRegion().GetSize();
+  }
+#endif
+
 };
 
 } // namespace itk

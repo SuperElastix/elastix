@@ -22,7 +22,10 @@
 #include "itkStatisticsImageFilter.h"
 #include "itkApproximateSignedDistanceMapImageFilter.h"
 #include "itkGradientImageFilter.h"
+#if ITK_VERSION_MAJOR < 5
 #include "itkVectorCastImageFilter.h"
+#endif
+#include "itkCastImageFilter.h"
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
 #include "itkAddImageFilter.h"
@@ -364,7 +367,6 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
   typedef itk::ApproximateSignedDistanceMapImageFilter< ImageLabelType, ImageDoubleType >         DistFilterType;
   typedef itk::SmoothingRecursiveGaussianImageFilter< ImageDoubleType, ImageDoubleType >          SmoothFilterType;
   typedef itk::GradientImageFilter< ImageDoubleType, double, double >                             GradFilterType;
-  typedef itk::VectorCastImageFilter< typename GradFilterType::OutputImageType, ImageVectorType > CastVectorType;
   typedef itk::BinaryThresholdImageFilter< ImageLabelType, ImageLabelType >                       LabelExtractorType;
   typedef itk::AddImageFilter< ImageVectorType, ImageVectorType, ImageVectorType >                AddVectorImageType;
   typedef itk::MaskImageFilter< ImageVectorType, ImageLabelType, ImageVectorType >                MaskVectorImageType;
@@ -427,7 +429,13 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
     typename GradFilterType::Pointer gradFilter = GradFilterType::New();
     gradFilter->SetInput( smoothFilter->GetOutput() );
 
-    typename CastVectorType::Pointer castFilter = CastVectorType::New();
+    const auto castFilter =
+#if ITK_VERSION_MAJOR < 5
+      itk::VectorCastImageFilter< typename GradFilterType::OutputImageType, ImageVectorType >::New();
+#else
+      itk::CastImageFilter< typename GradFilterType::OutputImageType, ImageVectorType >::New();
+#endif
+
     castFilter->SetInput( gradFilter->GetOutput() );
 
     typename MaskVectorImageType::Pointer maskFilter = MaskVectorImageType::New();

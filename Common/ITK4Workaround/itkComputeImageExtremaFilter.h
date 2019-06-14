@@ -15,12 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
-#include <itkConfigure.h>
-#if ITK_VERSION_MAJOR < 5
-#include "ITK4Workaround/itkComputeImageExtremaFilter.h"
-#endif
-
 #ifndef itkComputeImageExtremaFilter_h
 #define itkComputeImageExtremaFilter_h
 
@@ -103,16 +97,22 @@ protected:
   ~ComputeImageExtremaFilter() override {}
 
   /** Initialize some accumulators before the threads run. */
-  void BeforeStreamedGenerateData() override;
+  void BeforeThreadedGenerateData() override;
 
   /** Do final mean and variance computation from data accumulated in threads.
    */
-  void AfterStreamedGenerateData() override;
+  void AfterThreadedGenerateData() override;
 
   /** Multi-thread version GenerateData. */
-  void ThreadedStreamedGenerateData(const RegionType &) override;
-  virtual void ThreadedGenerateDataImageSpatialMask( const RegionType & );
-  virtual void ThreadedGenerateDataImageMask( const RegionType & );
+  void ThreadedGenerateData( const RegionType &
+                             outputRegionForThread,
+                             ThreadIdType threadId ) override;
+  virtual void ThreadedGenerateDataImageSpatialMask( const RegionType &
+                              outputRegionForThread,
+                              ThreadIdType threadId );
+  virtual void ThreadedGenerateDataImageMask( const RegionType &
+                              outputRegionForThread,
+                              ThreadIdType threadId );
   virtual void SameGeometry();
   RegionType            m_ImageRegion;
   ImageMaskConstPointer m_ImageMask;
@@ -123,14 +123,12 @@ protected:
 private:
   ComputeImageExtremaFilter( const Self & );
   void operator = ( const Self & );
+  Array< RealType >       m_ThreadSum;
+  Array< RealType >       m_SumOfSquares;
+  Array< SizeValueType >  m_Count;
+  Array< PixelType >      m_ThreadMin;
+  Array< PixelType >      m_ThreadMax;
 
-  CompensatedSummation<RealType> m_ThreadSum{ 1 };
-  CompensatedSummation<RealType> m_SumOfSquares{ 1 };
-  SizeValueType m_Count{ 1 };
-  PixelType     m_ThreadMin{ 1 };
-  PixelType     m_ThreadMax{ 1 };
-
-  std::mutex m_Mutex;
 }; // end of class
 } // end namespace itk
 
