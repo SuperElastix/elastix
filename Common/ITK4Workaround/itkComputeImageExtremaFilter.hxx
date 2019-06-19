@@ -15,12 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
-#include <itkConfigure.h>
-#if ITK_VERSION_MAJOR < 5
-#include "ITK4Workaround/itkComputeImageExtremaFilter.h"
-#endif
-
 #ifndef itkComputeImageExtremaFilter_hxx
 #define itkComputeImageExtremaFilter_hxx
 #include "itkComputeImageExtremaFilter.h"
@@ -40,25 +34,40 @@ template< typename TInputImage >
 {
   this->m_UseMask = false;
   this->m_SameGeometry = false;
+
+#if ITK_VERSION_MAJOR >= 5
+  // Use the classic (ITK4) threading model, to ensure ThreadedGenerateData is being called.
+  this->itk::ImageSource<TInputImage>::DynamicMultiThreadingOff();
+#endif
 }
 
 template< typename TInputImage >
 void
 ComputeImageExtremaFilter< TInputImage >
-::BeforeStreamedGenerateData()
+::BeforeThreadedGenerateData()
 {
   if( !this->m_UseMask )
   {
-    Superclass::BeforeStreamedGenerateData();
+    Superclass::BeforeThreadedGenerateData();
   }
   else
   {
+    ThreadIdType numberOfThreads = this->GetNumberOfThreads();
+
     // Resize the thread temporaries
-    m_Count = NumericTraits< SizeValueType >::ZeroValue();
-    m_SumOfSquares = NumericTraits< RealType >::ZeroValue();
-    m_ThreadSum = NumericTraits< RealType >::ZeroValue();
-    m_ThreadMin = NumericTraits< PixelType >::max();
-    m_ThreadMax = NumericTraits< PixelType >::NonpositiveMin();
+    m_Count.SetSize( numberOfThreads );
+    m_SumOfSquares.SetSize( numberOfThreads );
+    m_ThreadSum.SetSize( numberOfThreads );
+    m_ThreadMin.SetSize( numberOfThreads );
+    m_ThreadMax.SetSize( numberOfThreads );
+
+    // Initialize the temporaries
+    m_Count.Fill( NumericTraits < SizeValueType >::ZeroValue() );
+    m_ThreadSum.Fill( NumericTraits < RealType >::ZeroValue() );
+    m_SumOfSquares.Fill( NumericTraits < RealType >::ZeroValue() );
+    m_ThreadMin.Fill( NumericTraits < PixelType >::max() );
+    m_ThreadMax.Fill( NumericTraits < PixelType >::NonpositiveMin() );
+    //this->SameGeometry();
 
     if( this->GetImageSpatialMask() )
     {
@@ -86,54 +95,91 @@ ComputeImageExtremaFilter< TInputImage >
 template< typename TInputImage >
 void
 ComputeImageExtremaFilter< TInputImage >
-::AfterStreamedGenerateData()
+::AfterThreadedGenerateData()
 {
-  if (!this->m_UseMask)
+  if( !this->m_UseMask )
   {
-    Superclass::AfterStreamedGenerateData();
+    Superclass::AfterThreadedGenerateData();
   }
   else
   {
-    const SizeValueType count = m_Count;
-    const RealType      sumOfSquares(m_SumOfSquares);
-    const PixelType     minimum = m_ThreadMin;
-    const PixelType     maximum = m_ThreadMax;
-    const RealType      sum(m_ThreadSum);
+    ThreadIdType    i;
+    SizeValueType   count;
+    RealType        sumOfSquares;
 
-    const RealType  mean = sum / static_cast<RealType>(count);
-    const RealType  variance = (sumOfSquares - (sum * sum / static_cast<RealType>(count)))
-      / (static_cast<RealType>(count) - 1);
-    const RealType  sigma = std::sqrt(variance);
+    ThreadIdType numberOfThreads = this->GetNumberOfThreads();
+
+    PixelType minimum;
+    PixelType maximum;
+    RealType  mean;
+    RealType  sigma;
+    RealType  variance;
+    RealType  sum;
+
+    sum = sumOfSquares = NumericTraits< RealType >::ZeroValue();
+    count = 0;
+
+    // Find the min/max over all threads and accumulate count, sum and
+    // sum of squares
+    minimum = NumericTraits< PixelType >::max();
+    maximum = NumericTraits< PixelType >::NonpositiveMin();
+    for( i = 0; i < numberOfThreads; ++i )
+    {
+      count += m_Count[ i ];
+      sum += m_ThreadSum[ i ];
+      sumOfSquares += m_SumOfSquares[ i ];
+
+      if( m_ThreadMin[ i ] < minimum )
+      {
+        minimum = m_ThreadMin[ i ];
+      }
+      if( m_ThreadMax[ i ] > maximum )
+      {
+        maximum = m_ThreadMax[ i ];
+      }
+    }
+    m_Count.Fill( NumericTraits< SizeValueType >::ZeroValue() );
+    m_SumOfSquares.Fill( NumericTraits< RealType >::ZeroValue() );
+    m_ThreadSum.Fill( NumericTraits< RealType >::ZeroValue() );
+    m_ThreadMin.Fill( NumericTraits< PixelType >::max() );
+    m_ThreadMax.Fill( NumericTraits< PixelType >::NonpositiveMin() );
+    // compute statistics
+    mean = sum / static_cast< RealType >( count );
+
+    // unbiased estimate
+    variance = ( sumOfSquares - ( sum * sum / static_cast< RealType >( count )) )
+      / (static_cast< RealType >( count ) - 1);
+    sigma = std::sqrt( variance );
 
     // Set the outputs
-    this->SetMinimum(minimum);
-    this->SetMaximum(maximum);
-    this->SetMean(mean);
-    this->SetSigma(sigma);
-    this->SetVariance(variance);
-    this->SetSum(sum);
-    this->SetSumOfSquares(sumOfSquares);
+    this->GetMinimumOutput()->Set( minimum );
+    this->GetMaximumOutput()->Set( maximum );
+    this->GetMeanOutput()->Set( mean );
+    this->GetSigmaOutput()->Set( sigma );
+    this->GetVarianceOutput()->Set( variance );
+    this->GetSumOutput()->Set( sum );
   }
 }
 
 template< typename TInputImage >
 void
 ComputeImageExtremaFilter< TInputImage >
-::ThreadedStreamedGenerateData(const RegionType & regionForThread)
+::ThreadedGenerateData( const RegionType & outputRegionForThread,
+  ThreadIdType threadId )
 {
   if( !this->m_UseMask )
   {
-    Superclass::ThreadedStreamedGenerateData( regionForThread );
+    Superclass::ThreadedGenerateData( outputRegionForThread, threadId );
   }
   else
   {
     if( this->GetImageSpatialMask() )
     {
-      this->ThreadedGenerateDataImageSpatialMask( regionForThread );
+      this->ThreadedGenerateDataImageSpatialMask( outputRegionForThread, threadId );
     }
     if( this->GetImageMask() )
     {
-      this->ThreadedGenerateDataImageMask( regionForThread );
+      this->ThreadedGenerateDataImageMask( outputRegionForThread, threadId );
     }
   }
 } // end ThreadedGenerateData()
@@ -141,9 +187,10 @@ ComputeImageExtremaFilter< TInputImage >
 template< typename TInputImage >
 void
 ComputeImageExtremaFilter< TInputImage >
-::ThreadedGenerateDataImageSpatialMask( const RegionType & regionForThread )
+::ThreadedGenerateDataImageSpatialMask( const RegionType & outputRegionForThread,
+    ThreadIdType threadId )
 {
-  const SizeValueType size0 = regionForThread.GetSize( 0 );
+  const SizeValueType size0 = outputRegionForThread.GetSize( 0 );
   if( size0 == 0 )
   {
     return;
@@ -159,7 +206,7 @@ ComputeImageExtremaFilter< TInputImage >
 
   if( this->m_SameGeometry )
   {
-    ImageRegionConstIterator< TInputImage > it (this->GetInput(), regionForThread );
+    ImageRegionConstIterator< TInputImage > it (this->GetInput(), outputRegionForThread );
     for( it.GoToBegin(); !it.IsAtEnd(); ++it )
     {
       if( this->m_ImageSpatialMask->GetImage()->GetPixel( it.GetIndex()) != NumericTraits< PixelType >::ZeroValue() )
@@ -178,7 +225,7 @@ ComputeImageExtremaFilter< TInputImage >
   }
   else
   {
-    ImageRegionConstIterator< TInputImage > it( this->GetInput(), regionForThread );
+    ImageRegionConstIterator< TInputImage > it( this->GetInput(), outputRegionForThread );
     for( it.GoToBegin(); !it.IsAtEnd(); ++it )
     {
       PointType point;
@@ -198,22 +245,21 @@ ComputeImageExtremaFilter< TInputImage >
     } // end for
   } // end if
 
-  std::lock_guard<std::mutex> mutexHolder(m_Mutex);
-  m_ThreadSum += sum;
-  m_SumOfSquares += sumOfSquares;
-  m_Count += count;
-  m_ThreadMin = std::min(min, m_ThreadMin);
-  m_ThreadMax = std::max(max, m_ThreadMax);
-
+  m_ThreadSum[ threadId ] = sum;
+  m_SumOfSquares[ threadId ] = sumOfSquares;
+  m_Count[ threadId ] = count;
+  m_ThreadMin[ threadId ] = min;
+  m_ThreadMax[ threadId ] = max;
 } // end ThreadedGenerateDataImageSpatialMask()
 
 
 template< typename TInputImage >
 void
 ComputeImageExtremaFilter< TInputImage >
-::ThreadedGenerateDataImageMask( const RegionType & regionForThread )
+::ThreadedGenerateDataImageMask( const RegionType & outputRegionForThread,
+  ThreadIdType threadId )
 {
-  const SizeValueType size0 = regionForThread.GetSize( 0 );
+  const SizeValueType size0 = outputRegionForThread.GetSize( 0 );
   if( size0 == 0 )
   {
     return;
@@ -227,7 +273,7 @@ ComputeImageExtremaFilter< TInputImage >
   PixelType min = NumericTraits< PixelType >::max();
   PixelType max = NumericTraits< PixelType >::NonpositiveMin();
 
-  ImageRegionConstIterator< TInputImage > it ( this->GetInput(), regionForThread );
+  ImageRegionConstIterator< TInputImage > it ( this->GetInput(), outputRegionForThread );
   it.GoToBegin();
 
   // do the work
@@ -250,13 +296,11 @@ ComputeImageExtremaFilter< TInputImage >
     ++it;
   }// end while
 
-  std::lock_guard<std::mutex> mutexHolder(m_Mutex);
-  m_ThreadSum += sum;
-  m_SumOfSquares += sumOfSquares;
-  m_Count += count;
-  m_ThreadMin = std::min(min, m_ThreadMin);
-  m_ThreadMax = std::max(max, m_ThreadMax);
-
+  m_ThreadSum[ threadId ] = sum;
+  m_SumOfSquares[ threadId ] = sumOfSquares;
+  m_Count[ threadId ] = count;
+  m_ThreadMin[ threadId ] = min;
+  m_ThreadMax[ threadId ] = max;
 } // end ThreadedGenerateDataImageMask()
 
 } // end namespace itk
