@@ -26,6 +26,8 @@
 #include "itkImageFullSampler.h"
 #include "itkMultiThreader.h"
 
+#include <vector>
+
 namespace itk
 {
 /**\class ComputeDisplacementDistribution
@@ -198,7 +200,6 @@ protected:
   {
     Self * st_Self;
   };
-  mutable MultiThreaderParameterType m_ThreaderParameters;
 
   struct ComputePerThreadStruct
   {
@@ -212,8 +213,12 @@ protected:
     PaddedComputePerThreadStruct );
   itkAlignedTypedef( ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct,
     AlignedComputePerThreadStruct );
-  mutable AlignedComputePerThreadStruct * m_ComputePerThreadVariables;
-  mutable ThreadIdType                    m_ComputePerThreadVariablesSize;
+
+private:
+
+  MultiThreaderParameterType m_ThreaderParameters;
+
+  std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables;
 
   SizeValueType               m_NumberOfPixelsCounted;
   bool                        m_UseMultiThread;
