@@ -1,5 +1,5 @@
 variables:
-  ITKv4_VERSION: release-4.13
+  ITKv4_VERSION: v4.13.2
   ITKv5_VERSION: v5.0.0
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
@@ -74,68 +74,6 @@ jobs:
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
     displayName: Clone ITK
-  - task: CMake@1
-    displayName: 'CMake Generate ITK'
-    inputs:
-      cmakeArgs: -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF $(ITK_SOURCE_DIR)
-      workingDirectory: $(ITK_BINARY_DIR)
-  - task: CMake@1
-    displayName: 'CMake Build ITK'
-    inputs:
-      cmakeArgs: --build . --config Release -j 2
-      workingDirectory: $(ITK_BINARY_DIR)
-  - task: CMake@1
-    displayName: 'CMake Generate Elastix'
-    inputs:
-      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
-      workingDirectory: $(ELASTIX_BINARY_DIR)
-  - task: CMake@1
-    displayName: 'CMake Build Elastix'
-    inputs:
-      cmakeArgs: --build . --config Release -j 2
-      workingDirectory: $(ELASTIX_BINARY_DIR)
-  - bash: ctest --config Release -VV -j 2
-    displayName: 'CTest Elastix'
-    workingDirectory: $(ELASTIX_BINARY_DIR)
-- job: Ubuntu1404
-  timeoutInMinutes: 0
-  pool:
-    vmImage: 'ubuntu-16.04'
-  container: ubuntu:14.04
-  strategy:
-    matrix:
-      ITKv4:
-        itk.version: $(ITKv4_VERSION)
-      ITKv5:
-        itk.version: $(ITKv5_VERSION)
-  steps:
-  - script: |
-      sudo apt-get update && \
-      sudo apt-get -y upgrade && \
-      sudo apt-get install -y build-essential && \
-      sudo apt-get install -y software-properties-common && \
-      sudo apt-get install -y git wget
-    displayName: Install dependencies
-  - script: |
-      wget https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3.tar.gz
-      tar -xvzf cmake-3.13.3.tar.gz 
-      pushd cmake-3.13.3/ 
-      ./configure 
-      make -j2
-      sudo make install
-      popd
-      sudo update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 --force
-    displayName: Build CMake
-  - script: |
-      git clone https://github.com/InsightSoftwareConsortium/ITK $(ITK_SOURCE_DIR)
-      pushd $(ITK_SOURCE_DIR)
-      git checkout $(itk.version)
-      popd
-    displayName: Clone ITK
-  - script: |
-      mkdir $(ITK_BINARY_DIR)
-      mkdir $(ELASTIX_BINARY_DIR)
-    displayName: Make build directories
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
