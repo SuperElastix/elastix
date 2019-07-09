@@ -41,7 +41,7 @@ namespace itk
 template< class TInputImage >
 class ImageSamplerBase :
   public ImageToVectorContainerFilter< TInputImage,
-  VectorDataContainer< unsigned long, ImageSample< TInputImage > > >
+  VectorDataContainer< std::size_t, ImageSample< TInputImage > > >
 {
 public:
 
@@ -49,7 +49,7 @@ public:
   typedef ImageSamplerBase Self;
   typedef ImageToVectorContainerFilter<
     TInputImage, VectorDataContainer<
-    unsigned long, ImageSample< TInputImage > > > Superclass;
+    std::size_t, ImageSample< TInputImage > > > Superclass;
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
 
@@ -75,7 +75,7 @@ public:
 
   /** Other typdefs. */
   typedef ImageSample< InputImageType >                         ImageSampleType;
-  typedef VectorDataContainer< unsigned long, ImageSampleType > ImageSampleContainerType;
+  typedef VectorDataContainer< std::size_t, ImageSampleType >   ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer            ImageSampleContainerPointer;
   typedef typename InputImageType::SizeType                     InputImageSizeType;
   typedef typename InputImageType::IndexType                    InputImageIndexType;
