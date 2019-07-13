@@ -153,7 +153,7 @@ main( int argc, char * argv[] )
 
   /** Declare variables. */
   InputPointType inputPoint;
-  inputPoint.Fill( 4.1 );
+  inputPoint.Fill( 4.1f );
   JacobianType                  jacobian;
   SpatialJacobianType           spatialJacobian;
   SpatialHessianType            spatialHessian;
