@@ -126,7 +126,7 @@ public:
   /** Setting: the memory. The number of iterations that are used
    * to estimate the Hessian. 5 by default. 0 results in (normalised) gradient
    * descent search directions */
-  itkSetClampMacro( Memory, unsigned int, 0, NumericTraits< unsigned int >::max() );
+  itkSetMacro( Memory, unsigned int );
   itkGetConstMacro( Memory, unsigned int );
 
 protected:
