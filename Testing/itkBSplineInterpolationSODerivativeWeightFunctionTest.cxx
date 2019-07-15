@@ -62,8 +62,8 @@ main( int argc, char * argv[] )
    * NOTE: don't change this, since the hard-coded ground truth depends on this.
    */
   ContinuousIndexType cindex;
-  cindex[ 0 ] =  3.1;
-  cindex[ 1 ] = -2.2;
+  cindex[ 0 ] =  3.1f;
+  cindex[ 1 ] = -2.2f;
   soWeightFunction->SetDerivativeDirections( 0, 1 );
 
   /** Run evaluate for the second order derivative. */

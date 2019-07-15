@@ -67,7 +67,7 @@ main( int argc, char * argv[] )
 
   /** Create and fill a continuous index. */
   ContinuousIndexType2D cindex;
-  cindex.Fill( 0.1 );
+  cindex.Fill( 0.1f );
 
   /** Run evaluate for the original ITK implementation. */
   WeightsType2D weights2D = weightFunction2D->Evaluate( cindex );
@@ -165,7 +165,7 @@ main( int argc, char * argv[] )
 
   /** Create and fill a continuous index. */
   ContinuousIndexType3D cindex3D;
-  cindex3D.Fill( 0.1 );
+  cindex3D.Fill( 0.1f );
 
   /** Run evaluate for the original ITK implementation. */
   WeightsType3D weights3D = weightFunction3D->Evaluate( cindex3D );
