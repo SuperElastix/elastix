@@ -28,7 +28,7 @@
 #include "itkTimeProbesCollectorBase.h"
 
 // Multi-threading using ITK threads
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 // Multi-threading using OpenMP
 #ifdef ELASTIX_USE_OPENMP
@@ -58,7 +58,7 @@ public:
   unsigned long                         m_NumberOfParameters;
   mutable std::vector< DerivativeType > m_ThreaderDerivatives;
 
-  typedef itk::MultiThreader             ThreaderType;
+  typedef itk::PlatformMultiThreader             ThreaderType;
   typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
   ThreaderType::Pointer m_Threader;
   DerivativeValueType   m_NormalSum;

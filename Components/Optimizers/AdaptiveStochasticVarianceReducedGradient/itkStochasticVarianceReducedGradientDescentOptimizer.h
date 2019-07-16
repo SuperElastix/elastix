@@ -19,7 +19,7 @@
 #define __itkStochasticVarianceReducedGradientDescentOptimizer_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 namespace itk
 {
@@ -168,7 +168,7 @@ protected:
   void PrintSelf( std::ostream& os, Indent indent ) const override;
 
   /** Typedefs for multi-threading. */
-  typedef itk::MultiThreader               ThreaderType;
+  typedef itk::PlatformMultiThreader               ThreaderType;
   typedef ThreaderType::ThreadInfoStruct   ThreadInfoType;
 
   // made protected so subclass can access

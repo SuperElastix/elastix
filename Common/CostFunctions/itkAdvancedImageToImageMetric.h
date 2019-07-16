@@ -36,7 +36,7 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkAdvancedCombinationTransform.h"
 
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 namespace itk
 {
@@ -173,7 +173,7 @@ public:
   typedef vnl_sparse_matrix< HessianValueType > HessianType;
 
   /** Typedefs for multi-threading. */
-  typedef itk::MultiThreader                      ThreaderType;
+  typedef itk::PlatformMultiThreader                      ThreaderType;
   typedef typename ThreaderType::ThreadInfoStruct ThreadInfoType;
 
   /** Public methods ********************/

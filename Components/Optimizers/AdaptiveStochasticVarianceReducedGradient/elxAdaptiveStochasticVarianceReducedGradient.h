@@ -26,7 +26,7 @@
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkComputeJacobianTerms.h"
 #include "itkComputeDisplacementDistribution.h"
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 #include "itkImageRandomSampler.h"
 namespace elastix
 {

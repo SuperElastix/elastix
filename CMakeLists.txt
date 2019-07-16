@@ -80,8 +80,6 @@ if ( NOT ITK_VERSION VERSION_LESS "5.0.0" )
      # Note: std::cbrt was introduced with C++11
      -Dvnl_math_cuberoot=std::cbrt
    )
-  # Workaround to still allow #include "itkMultiThreader.h" with ITK >= 5.
-  include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Common/ITK5Workaround )
 endif()
 
 
