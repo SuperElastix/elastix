@@ -146,7 +146,7 @@ public:
  *********** AccumulateDerivativesThreaderCallback *************
  */
 
-  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg )
+  static itk::ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg )
   {
     ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
     ThreadIdType     threadID    = infoStruct->ThreadID;

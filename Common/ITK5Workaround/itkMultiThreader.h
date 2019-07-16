@@ -24,8 +24,6 @@
 
 #include "itkPlatformMultiThreader.h"
 
-using itk::ITK_THREAD_RETURN_TYPE;
-
 namespace itk
 {
   typedef PlatformMultiThreader MultiThreader;
