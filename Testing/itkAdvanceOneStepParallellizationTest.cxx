@@ -180,7 +180,7 @@ public:
     /** Call the real implementation. */
     temp->t_Optimizer->ThreadedAdvanceOneStep2( threadID, *( temp->t_NewPosition ) );
 
-    return ITK_THREAD_RETURN_VALUE;
+    return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
   }  // end AdvanceOneStepThreaderCallback()
 

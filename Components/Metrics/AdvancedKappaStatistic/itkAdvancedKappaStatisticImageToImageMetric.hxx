@@ -697,7 +697,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
       = temp->st_Coefficient1 * sum1 - temp->st_Coefficient2 * sum2;
   }
 
-  return ITK_THREAD_RETURN_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end AccumulateDerivativesThreaderCallback()
 

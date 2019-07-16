@@ -355,7 +355,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 #if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 #else
-  return ITK_THREAD_RETURN_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 #endif
 
 } // end ComputeThreaderCallback()

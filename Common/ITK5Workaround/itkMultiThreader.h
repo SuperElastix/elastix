@@ -26,8 +26,6 @@
 
 using itk::ITK_THREAD_RETURN_TYPE;
 
-const ITK_THREAD_RETURN_TYPE ITK_THREAD_RETURN_VALUE = ITK_THREAD_RETURN_DEFAULT_VALUE;
-
 namespace itk
 {
   typedef PlatformMultiThreader MultiThreader;

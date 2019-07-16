@@ -173,7 +173,7 @@ public:
       temp->st_DerivativePointer[ j ] = tmp / temp->st_NormalizationFactor;
     }
 
-    return ITK_THREAD_RETURN_VALUE;
+    return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
   } // end AccumulateDerivativesThreaderCallback()
 
