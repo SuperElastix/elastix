@@ -1,5 +1,4 @@
 variables:
-  ITKv4_VERSION: v4.13.2
   ITKv5_VERSION: v5.0.0
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
@@ -13,8 +12,6 @@ jobs:
     vmImage: 'vs2017-win2016'
   strategy:
     matrix:
-      ITKv4:
-        itk.version: $(ITKv4_VERSION)
       ITKv5:
         itk.version: $(ITKv5_VERSION)
   steps:
@@ -60,8 +57,6 @@ jobs:
     vmImage: 'ubuntu-16.04'
   strategy:
     matrix:
-      ITKv4:
-        itk.version: $(ITKv4_VERSION)
       ITKv5:
         itk.version: $(ITKv5_VERSION)
   steps:
@@ -103,8 +98,6 @@ jobs:
     vmImage: 'macOS-10.14'
   strategy:
     matrix:
-      ITKv4:
-        itk.version: $(ITKv4_VERSION)
       ITKv5:
         itk.version: $(ITKv5_VERSION)
   steps:
