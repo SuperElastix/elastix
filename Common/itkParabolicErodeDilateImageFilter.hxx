@@ -55,10 +55,8 @@ ParabolicErodeDilateImageFilter< TInputImage, doDilate, TOutputImage >
   }
   m_UseImageSpacing = false;
 
-#if ITK_VERSION_MAJOR >= 5
   // Use the classic (ITK4) threading model, to ensure ThreadedGenerateData is being called.
   this->itk::ImageSource<TInputImage>::DynamicMultiThreadingOff();
-#endif
 }
 
 

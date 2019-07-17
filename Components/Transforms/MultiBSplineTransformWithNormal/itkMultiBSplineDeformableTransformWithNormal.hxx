@@ -22,9 +22,6 @@
 #include "itkStatisticsImageFilter.h"
 #include "itkApproximateSignedDistanceMapImageFilter.h"
 #include "itkGradientImageFilter.h"
-#if ITK_VERSION_MAJOR < 5
-#include "itkVectorCastImageFilter.h"
-#endif
 #include "itkCastImageFilter.h"
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
@@ -430,11 +427,7 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
     gradFilter->SetInput( smoothFilter->GetOutput() );
 
     const auto castFilter =
-#if ITK_VERSION_MAJOR < 5
-      itk::VectorCastImageFilter< typename GradFilterType::OutputImageType, ImageVectorType >::New();
-#else
       itk::CastImageFilter< typename GradFilterType::OutputImageType, ImageVectorType >::New();
-#endif
 
     castFilter->SetInput( gradFilter->GetOutput() );
 

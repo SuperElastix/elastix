@@ -1321,11 +1321,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
   temp->m_Metric->ThreadedComputePDFs( threadId );
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_DEFAULT_VALUE;
-#endif
 
 } // end ComputePDFsThreaderCallback()
 

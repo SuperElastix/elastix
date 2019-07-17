@@ -945,11 +945,7 @@ PCAMetric< TFixedImage, TMovingImage >
 
   temp->m_Metric->ThreadedGetSamples( threadId );
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_DEFAULT_VALUE;
-#endif
 
 } // GetSamplesThreaderCallback()
 
@@ -1159,11 +1155,7 @@ PCAMetric< TFixedImage, TMovingImage >
 
   temp->m_Metric->ThreadedComputeDerivative( threadId );
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_DEFAULT_VALUE;
-#endif
 
 } // end omputeDerivativeThreaderCallback()
 

@@ -54,12 +54,6 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   this->m_UseMultiThread = true;
   this->m_Threader       = ThreaderType::New();
 
-#if ITK_VERSION_MAJOR < 5
-  // Note: This `#if` is a workaround for ITK5, which no longer supports calling
-  // `threader->SetUseThreadPool(false)`. ITK5 does not use thread pools by default. 
-  this->m_Threader->SetUseThreadPool( false );
-#endif
-
   /** Initialize the m_ThreaderParameters. */
   this->m_ThreaderParameters.st_Self = this;
 
@@ -352,11 +346,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Call the real implementation. */
   temp->st_Self->ThreadedCompute( threadID );
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_DEFAULT_VALUE;
-#endif
 
 } // end ComputeThreaderCallback()
 

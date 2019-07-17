@@ -370,13 +370,11 @@ protected:
   MovingImageLimiterOutputType m_MovingImageMinLimit;
   MovingImageLimiterOutputType m_MovingImageMaxLimit;
 
-#if ITK_VERSION_MAJOR >= 5
   /** \note This is a workaround for ITK5, which renamed NumberOfThreads to NumberOfWorkUnits. */
   ThreadIdType GetNumberOfThreads() const
   {
     return Superclass::GetNumberOfWorkUnits();
   }
-#endif
 
   /** Multi-threaded metric computation. */
 

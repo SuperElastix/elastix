@@ -872,11 +872,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
       = ( derivativeF - sfm_smm * derivativeM ) * invertedDenominator;
   }
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_DEFAULT_VALUE;
-#endif
 
 } // end AccumulateDerivativesThreaderCallback()
 
