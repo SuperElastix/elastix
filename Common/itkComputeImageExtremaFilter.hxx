@@ -15,12 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
-#include <itkConfigure.h>
-#if ITK_VERSION_MAJOR < 5
-#include "ITK4Workaround/itkComputeImageExtremaFilter.h"
-#endif
-
 #ifndef itkComputeImageExtremaFilter_hxx
 #define itkComputeImageExtremaFilter_hxx
 #include "itkComputeImageExtremaFilter.h"
