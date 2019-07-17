@@ -859,15 +859,13 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.003
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.003.txt )
 
-if ( NOT ITK_VERSION VERSION_LESS "5.0.0" )
-  elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
-    "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
-    -f ${TestDataDir}/3DCT_lung_baseline.mha
-    -m ${TestDataDir}/3DCT_lung_followup.mha
-    -fMask ${TestDataDir}/3DCT_lung_baseline_mask.mha
-    -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-    -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.004.txt )
-endif()
+elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
+  "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -fMask ${TestDataDir}/3DCT_lung_baseline_mask.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.004.txt )
 
 # Test some interpolators
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.002
