@@ -100,7 +100,7 @@ AdvancedSimilarity3DTransform< TScalarType >
   // It will imply a reflection of the coordinate system.
   //
 
-  double s = vnl_math_cuberoot( det );
+  double s = std::cbrt( det );
 
   //
   // A negative scale is not acceptable
@@ -278,7 +278,7 @@ AdvancedSimilarity3DTransform< TScalarType >
 {
   MatrixType matrix = this->GetMatrix();
 
-  m_Scale = vnl_math_cuberoot( vnl_det( matrix.GetVnlMatrix() ) );
+  m_Scale = std::cbrt( vnl_det( matrix.GetVnlMatrix() ) );
 
   matrix /= m_Scale;
 
