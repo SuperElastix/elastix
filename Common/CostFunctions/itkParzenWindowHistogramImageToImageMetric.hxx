@@ -470,7 +470,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   jointPDFRegion.SetIndex( jointPDFIndex );
   jointPDFRegion.SetSize( jointPDFSize );
 
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Only resize the array of structs when needed. */
   if( this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize != numberOfThreads )
@@ -1170,7 +1170,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -1246,7 +1246,7 @@ void
 ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputePDFs( void ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted

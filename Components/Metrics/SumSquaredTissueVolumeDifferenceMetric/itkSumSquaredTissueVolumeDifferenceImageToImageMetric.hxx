@@ -218,7 +218,7 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
   /** Get the samples for this thread. */
   const unsigned long nSamplesPerThread
     = static_cast<unsigned long>( std::ceil( static_cast<double>( sampleContainerSize )
-    / static_cast<double>( Self::GetNumberOfThreads() ) ) );
+    / static_cast<double>( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nSamplesPerThread * threadId;
   unsigned long pos_end = nSamplesPerThread * (threadId + 1);
@@ -295,7 +295,7 @@ template <class TFixedImage, class TMovingImage>
 void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 ::AfterThreadedGetValue( MeasureType & value ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
@@ -547,7 +547,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>
   /** Get the samples for this thread. */
   const unsigned long nSamplesPerThread
     = static_cast<unsigned long>(std::ceil(static_cast<double>( sampleContainerSize )
-      / static_cast<double>( Self::GetNumberOfThreads() ) ) );
+      / static_cast<double>( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nSamplesPerThread * threadId;
   unsigned long pos_end = nSamplesPerThread * (threadId + 1);
@@ -650,7 +650,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>
   MeasureType & value,
   DerivativeType & derivative ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;

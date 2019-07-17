@@ -92,7 +92,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 #ifdef ELASTIX_USE_OPENMP
   this->m_UseOpenMP = true;
 
-  const int nthreads = static_cast< int >( Self::GetNumberOfThreads() );
+  const int nthreads = static_cast< int >( Self::GetNumberOfWorkUnits() );
   omp_set_num_threads( nthreads );
 #else
   this->m_UseOpenMP = false;
@@ -137,7 +137,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   Superclass::SetNumberOfWorkUnits( numberOfThreads );
 
 #ifdef ELASTIX_USE_OPENMP
-  const int nthreads = static_cast< int >( Self::GetNumberOfThreads() );
+  const int nthreads = static_cast< int >( Self::GetNumberOfWorkUnits() );
   omp_set_num_threads( nthreads );
 #endif
 } // end SetNumberOfThreads()
@@ -188,7 +188,7 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not

@@ -153,12 +153,12 @@ ImageRandomSampler< TInputImage >
   InputImageConstPointer inputImage = this->GetInput();
 
   /** Figure out which samples to process. */
-  unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfThreads();
+  unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
   unsigned long sampleStart = threadId * chunkSize;
-  if( threadId == this->GetNumberOfThreads() - 1 )
+  if( threadId == this->GetNumberOfWorkUnits() - 1 )
   {
     chunkSize = this->GetNumberOfSamples()
-      - ( ( this->GetNumberOfThreads() - 1 ) * chunkSize );
+      - ( ( this->GetNumberOfWorkUnits() - 1 ) * chunkSize );
   }
 
   /** Get a reference to the output and reserve memory for it. */

@@ -69,7 +69,7 @@ void
 AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
@@ -552,7 +552,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -660,7 +660,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted

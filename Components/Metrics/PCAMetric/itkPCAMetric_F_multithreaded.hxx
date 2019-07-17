@@ -118,7 +118,7 @@ void
 PCAMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Resize and initialize the threading related parameters.
  * The SetSize() functions do not resize the data when this is not
@@ -747,7 +747,7 @@ PCAMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
   pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
@@ -835,7 +835,7 @@ void
 PCAMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetSamples( MeasureType & value ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = this->m_PCAMetricGetSamplesPerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
@@ -962,7 +962,7 @@ PCAMetric< TFixedImage, TMovingImage >
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
   typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( Self::GetNumberOfThreads() );
+  local_threader->SetNumberOfThreads( Self::GetNumberOfWorkUnits() );
   local_threader->SetSingleMethod( this->GetSamplesThreaderCallback,
     const_cast< void * >( static_cast< const void * >(
       &this->m_PCAMetricThreaderParameters ) ) );
@@ -1057,7 +1057,7 @@ PCAMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputeDerivative(
   DerivativeType & derivative ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   derivative = this->m_PCAMetricGetSamplesPerThreadVariables[ 0 ].st_Derivative;
   for( ThreadIdType i = 1; i < numberOfThreads; ++i )
@@ -1172,7 +1172,7 @@ PCAMetric< TFixedImage, TMovingImage >
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
   typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( Self::GetNumberOfThreads() );
+  local_threader->SetNumberOfThreads( Self::GetNumberOfWorkUnits() );
   local_threader->SetSingleMethod( this->ComputeDerivativeThreaderCallback,
     const_cast< void * >( static_cast< const void * >(
       &this->m_PCAMetricThreaderParameters ) ) );
