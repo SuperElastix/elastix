@@ -1136,7 +1136,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     const TransformJacobianValueType * jacit1 = jac[ drow ];
     for( unsigned int mu = 0; mu < M; ++mu )
     {
-      *tempit += vnl_math_sqr( *jacit1 );
+      *tempit += vnl_math::sqr( *jacit1 );
       ++tempit;
       ++jacit1;
     }

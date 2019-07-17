@@ -443,7 +443,7 @@ QuasiNewtonLBFGSOptimizer::TestConvergence( bool firstLineSearchDone )
   /** Check for convergence of gradient magnitude */
   const double gnorm = this->GetCurrentGradient().magnitude();
   const double xnorm = this->GetScaledCurrentPosition().magnitude();
-  if( gnorm / vnl_math_max( 1.0, xnorm ) <= this->GetGradientMagnitudeTolerance() )
+  if( gnorm / vnl_math::max( 1.0, xnorm ) <= this->GetGradientMagnitudeTolerance() )
   {
     this->m_StopCondition = GradientMagnitudeTolerance;
     return true;

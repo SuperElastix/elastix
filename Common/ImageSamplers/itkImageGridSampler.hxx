@@ -262,7 +262,7 @@ ImageGridSampler< TInputImage >
   const double indimd      = static_cast< double >( InputImageDimension );
   int          gridspacing = static_cast< int >(  // no unsigned int version of rnd, max
     Math::Round< double >( std::pow( fraction, 1.0 / indimd ) ) );
-  gridspacing = vnl_math_max( 1, gridspacing );
+  gridspacing = vnl_math::max( 1, gridspacing );
 
   /** Set gridspacings for all dimensions
    * Do not use the SetSampleGridSpacing function because it calls

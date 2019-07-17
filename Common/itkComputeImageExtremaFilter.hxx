@@ -161,8 +161,8 @@ ComputeImageExtremaFilter< TInputImage >
         value = it.Get();
         realValue = static_cast<RealType>( value );
 
-        min = vnl_math_min( min, value );
-        max = vnl_math_max( max, value );
+        min = vnl_math::min( min, value );
+        max = vnl_math::max( max, value );
 
         sum += realValue;
         sumOfSquares += ( realValue * realValue );
@@ -182,8 +182,8 @@ ComputeImageExtremaFilter< TInputImage >
         value = it.Get();
         realValue = static_cast<RealType>( value );
 
-        min = vnl_math_min( min, value );
-        max = vnl_math_max( max, value );
+        min = vnl_math::min( min, value );
+        max = vnl_math::max( max, value );
 
         sum += realValue;
         sumOfSquares += ( realValue * realValue );
@@ -234,8 +234,8 @@ ComputeImageExtremaFilter< TInputImage >
       value = it.Get();
       realValue = static_cast<RealType>( value );
 
-      min = vnl_math_min( min, value );
-      max = vnl_math_max( max, value );
+      min = vnl_math::min( min, value );
+      max = vnl_math::max( max, value );
 
       sum += realValue;
       sumOfSquares +=  ( realValue * realValue );

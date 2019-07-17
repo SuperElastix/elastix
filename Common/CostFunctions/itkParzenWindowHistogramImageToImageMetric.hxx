@@ -208,8 +208,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   this->m_FixedImageBinSize
     = ( this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit
     + 2.0 * smallNumberFixed ) / fixedHistogramWidth;
-  this->m_FixedImageBinSize = vnl_math_max( this->m_FixedImageBinSize, 1e-10 );
-  this->m_FixedImageBinSize = vnl_math_min( this->m_FixedImageBinSize, 1e+10 );
+  this->m_FixedImageBinSize = vnl_math::max( this->m_FixedImageBinSize, 1e-10 );
+  this->m_FixedImageBinSize = vnl_math::min( this->m_FixedImageBinSize, 1e+10 );
   this->m_FixedImageNormalizedMin
     = ( this->m_FixedImageMinLimit - smallNumberFixed )
     / this->m_FixedImageBinSize - static_cast< double >( fixedPadding );
@@ -220,8 +220,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   this->m_MovingImageBinSize
     = ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit
     + 2.0 * smallNumberMoving ) / movingHistogramWidth;
-  this->m_MovingImageBinSize = vnl_math_max( this->m_MovingImageBinSize, 1e-10 );
-  this->m_MovingImageBinSize = vnl_math_min( this->m_MovingImageBinSize, 1e+10 );
+  this->m_MovingImageBinSize = vnl_math::max( this->m_MovingImageBinSize, 1e-10 );
+  this->m_MovingImageBinSize = vnl_math::min( this->m_MovingImageBinSize, 1e+10 );
   this->m_MovingImageNormalizedMin
     = ( this->m_MovingImageMinLimit - smallNumberMoving )
     / this->m_MovingImageBinSize - static_cast< double >( movingPadding );

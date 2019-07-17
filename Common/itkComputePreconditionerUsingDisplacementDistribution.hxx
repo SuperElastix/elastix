@@ -151,11 +151,11 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   double supportRegionDimension = 1;
   if( outdim == 3 )
   {
-    supportRegionDimension = vnl_math_cuberoot( double(supportRegionSize) );
+    supportRegionDimension = vnl_math::cuberoot( double(supportRegionSize) );
   }
   else if( outdim == 2 )
   {
-    supportRegionDimension = vnl_math_sqr( double(supportRegionSize) );
+    supportRegionDimension = vnl_math::sqr( double(supportRegionSize) );
   }
   size.Fill( supportRegionDimension );
 
@@ -215,7 +215,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
       }
 
       // Use the absolute value
-      jacj_g( i ) = vnl_math_abs( temp );
+      jacj_g( i ) = vnl_math::abs( temp );
     }
 
     /** A support region is where this voxel has the affect on the B-Spline
@@ -258,7 +258,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
 #elif METHOD_BSPLINE == 3
       // MS: the following will use the Jacobian as weights
       const unsigned int pj = jacind[ j ];
-      const double weight = vnl_math_abs( jacj( nonzerodim, j ) );
+      const double weight = vnl_math::abs( jacj( nonzerodim, j ) );
       // YQ: the weight is positive.
 
       /** localStepSize keeps track of the mean displacement.
@@ -392,14 +392,14 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     this->m_Transform->GetJacobian( point, jacj, jacind );
 
     /** Compute 1st part of JJ: ||J_j||_F^2. */
-    double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
+    double JJ_j = vnl_math::sqr( jacj.frobenius_norm() );
 
     /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
     vnl_fastops::ABt( jacjjacj, jacj, jacj );
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math_max( maxJJ, JJ_j );
+    maxJJ = vnl_math::max( maxJJ, JJ_j );
 
     double displacement2_j = 0.0;
     if( transformIsBSpline )
@@ -414,7 +414,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
         }
 
         // Use the absolute value
-        jacj_g( i ) = vnl_math_abs( temp );
+        jacj_g( i ) = vnl_math::abs( temp );
       }
       displacement2_j = jacj_g.magnitude();
     }
@@ -427,9 +427,9 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
       double jacj_current = 0.0;
       for( unsigned int i = 0; i < outdim; ++i )
       {
-        jacj_current += vnl_math_abs( jacj( i, j ) );
+        jacj_current += vnl_math::abs( jacj( i, j ) );
       }
-      displacement_j = vnl_math_abs( jacj_current * exactgradient( pj ) );
+      displacement_j = vnl_math::abs( jacj_current * exactgradient( pj ) );
 
       if( transformIsBSpline )
       {
@@ -455,9 +455,9 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
             double jacj_k = 0.0;
             for( unsigned int i = 0; i < outdim; ++i )
             {
-              jacj_k += vnl_math_abs( jacj( i, k ) );
+              jacj_k += vnl_math::abs( jacj( i, k ) );
             }
-            diff_jacobian = vnl_math_abs( jacj_k - jacj_current );
+            diff_jacobian = vnl_math::abs( jacj_k - jacj_current );
             if( diff_jacobian > 0 && mindiffCheck )
             {
               mindiff = diff_jacobian;
@@ -489,13 +489,13 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
             double jacj_k = 0.0;
             for( unsigned int i = 0; i < outdim; ++i )
             {
-              jacj_k += vnl_math_abs( jacj( i, k ) );
+              jacj_k += vnl_math::abs( jacj( i, k ) );
             }
 
-            diff_jacobian = vnl_math_abs( jacj_k - jacj_current );
-            weight = std::exp( -( vnl_math_sqr( diff_jacobian / weight_sigma ) / 2.0 ) );
+            diff_jacobian = vnl_math::abs( jacj_k - jacj_current );
+            weight = std::exp( -( vnl_math::sqr( diff_jacobian / weight_sigma ) / 2.0 ) );
 
-            sum_displacement += vnl_math_abs( jacj_k * exactgradient( pk ) ) * weight;
+            sum_displacement += vnl_math::abs( jacj_k * exactgradient( pk ) ) * weight;
             sum_weight += weight;
           } // end if
         } // end for loop regularization
@@ -541,8 +541,8 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     /** Apply the 2 sigma rule. */
     double localStep = meanLocalStepSize + 2.0 * std::sqrt( sigma ) + 1e-14;
 
-    minEigenvalue = vnl_math_min( localStep, minEigenvalue );
-    maxEigenvalue = vnl_math_max( localStep, maxEigenvalue );
+    minEigenvalue = vnl_math::min( localStep, minEigenvalue );
+    maxEigenvalue = vnl_math::max( localStep, maxEigenvalue );
     preconditioner[ i ] = this->m_MaximumStepLength / localStep;
 
   } // end loop over step size vector
@@ -632,21 +632,21 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     this->m_Transform->GetJacobian( point, jacj, jacind );
 
     /** Compute 1st part of JJ: ||J_j||_F^2. */
-    double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
+    double JJ_j = vnl_math::sqr( jacj.frobenius_norm() );
 
     /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
     vnl_fastops::ABt( jacjjacj, jacj, jacj );
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math_max( maxJJ, JJ_j );
+    maxJJ = vnl_math::max( maxJJ, JJ_j );
 
     for( unsigned int i = 0; i < outdim; ++i )
     {
       for( unsigned int j = 0; j < sizejacind; ++j )
       {
         const unsigned int pj = jacind[ j ];
-        preconditioner[ pj ] += vnl_math_sqr( jacj( i, j ) );
+        preconditioner[ pj ] += vnl_math::sqr( jacj( i, j ) );
         binCount[ pj ] += 1;
       }
     }
@@ -660,8 +660,8 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     if( nonZeroBin > 0 && preconditioner[ i ] > 1e-9 )
     {
       double eigenvalue = std::sqrt( preconditioner[ i ] / ( nonZeroBin ) ) + 1e-14;
-      maxEigenvalue = vnl_math_max( eigenvalue, maxEigenvalue );
-      minEigenvalue = vnl_math_min( eigenvalue, minEigenvalue );
+      maxEigenvalue = vnl_math::max( eigenvalue, maxEigenvalue );
+      minEigenvalue = vnl_math::min( eigenvalue, minEigenvalue );
       preconditioner[ i ] = 1.0 / eigenvalue;
     }
   }

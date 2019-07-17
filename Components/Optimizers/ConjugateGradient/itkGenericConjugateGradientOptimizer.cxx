@@ -540,7 +540,7 @@ GenericConjugateGradientOptimizer::ComputeBetaDYHS(
   const double beta_HS = this->ComputeBetaHS(
     previousGradient, gradient, previousSearchDir );
 
-  return vnl_math_max( 0.0, vnl_math_min( beta_DY, beta_HS ) );
+  return vnl_math::max( 0.0, vnl_math::min( beta_DY, beta_HS ) );
 
 } // end ComputeBetaDYHS
 
@@ -614,7 +614,7 @@ GenericConjugateGradientOptimizer::TestConvergence( bool itkNotUsed( firstLineSe
   /** Check for convergence of gradient magnitude */
   const double gnorm = this->GetCurrentGradient().magnitude();
   const double xnorm = this->GetScaledCurrentPosition().magnitude();
-  if( gnorm / vnl_math_max( 1.0, xnorm ) <= this->GetGradientMagnitudeTolerance() )
+  if( gnorm / vnl_math::max( 1.0, xnorm ) <= this->GetGradientMagnitudeTolerance() )
   {
     this->m_StopCondition = GradientMagnitudeTolerance;
     return true;

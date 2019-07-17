@@ -121,7 +121,7 @@ main( int argc, char * argv[] )
   double error = 0.0;
   for( unsigned int i = 0; i < soWeights.Size(); ++i )
   {
-    error += vnl_math_sqr( soWeights[ i ] - trueSOWeights[ i ] );
+    error += vnl_math::sqr( soWeights[ i ] - trueSOWeights[ i ] );
   }
   error = std::sqrt( error );
 
@@ -210,7 +210,7 @@ main( int argc, char * argv[] )
   error = 0.0;
   for( unsigned int i = 0; i < soWeights.Size(); ++i )
   {
-    error += vnl_math_sqr( soWeights[ i ] - trueSOWeights[ i ] );
+    error += vnl_math::sqr( soWeights[ i ] - trueSOWeights[ i ] );
   }
   error = std::sqrt( error );
 

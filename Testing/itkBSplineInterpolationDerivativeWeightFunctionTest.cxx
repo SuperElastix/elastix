@@ -118,7 +118,7 @@ main( int argc, char * argv[] )
   double error = 0.0;
   for( unsigned int i = 0; i < foWeights.Size(); ++i )
   {
-    error += vnl_math_sqr( foWeights[ i ] - trueFOWeights[ i ] );
+    error += vnl_math::sqr( foWeights[ i ] - trueFOWeights[ i ] );
   }
   error = std::sqrt( error );
 

@@ -116,7 +116,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       /** Compute the contribution of this point. */
       for( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
-        measure += vnl_math_sqr(
+        measure += vnl_math::sqr(
           spatialHessian[ k ].GetVnlMatrix().frobenius_norm() );
       }
 
@@ -262,7 +262,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       /** Compute the contribution to the metric value of this point. */
       for( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
-        measure += vnl_math_sqr( A[ k ].frobenius_norm() );
+        measure += vnl_math::sqr( A[ k ].frobenius_norm() );
       }
 
       /** Make a distinction between a B-spline transform and other transforms. */
@@ -502,7 +502,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       /** Compute the contribution to the metric value of this point. */
       for( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
-        measure += vnl_math_sqr( A[ k ].frobenius_norm() );
+        measure += vnl_math::sqr( A[ k ].frobenius_norm() );
       }
 
       /** Make a distinction between a B-spline transform and other transforms. */

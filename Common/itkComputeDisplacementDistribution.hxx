@@ -199,14 +199,14 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     }
 
     /** Compute 1st part of JJ: ||J_j||_F^2. */
-    double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
+    double JJ_j = vnl_math::sqr( jacj.frobenius_norm() );
 
     /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
     vnl_fastops::ABt( jacjjacj, jacj, jacj );
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math_max( maxJJ, JJ_j );
+    maxJJ = vnl_math::max( maxJJ, JJ_j );
 
     /** Compute the matrix of jac*gradient */
     for( unsigned int i = 0; i < outdim; ++i )
@@ -240,7 +240,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     double mean_JGG = globalDeformation / samplenr;
     for( unsigned int i = 0; i < nrofsamples; ++i )
     {
-      sigma += vnl_math_sqr( JGG_k[ i ] - mean_JGG );
+      sigma += vnl_math::sqr( JGG_k[ i ] - mean_JGG );
     }
     sigma /= ( nrofsamples - 1 ); // unbiased estimation
     jacg   = mean_JGG + 2.0 * std::sqrt( sigma );
@@ -424,14 +424,14 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     }
 
     /** Compute 1st part of JJ: ||J_j||_F^2. */
-    double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
+    double JJ_j = vnl_math::sqr( jacj.frobenius_norm() );
 
     /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
     vnl_fastops::ABt( jacjjacj, jacj, jacj ); // is this thread-safe?
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math_max( maxJJ, JJ_j );
+    maxJJ = vnl_math::max( maxJJ, JJ_j );
 
     /** Compute the displacement  jac * gradient. */
     for( unsigned int i = 0; i < outdim; ++i )
@@ -448,7 +448,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     /** Sum the Jgg displacement for later use. */
     jggMagnitude         = Jgg.magnitude();
     displacement        += jggMagnitude;
-    displacementSquared += vnl_math_sqr( jggMagnitude );
+    displacementSquared += vnl_math::sqr( jggMagnitude );
     numberOfPixelsCounted++;
   }
 
@@ -481,7 +481,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Accumulate thread results. */
   for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
-    maxJJ                          = vnl_math_max( maxJJ, this->m_ComputePerThreadVariables[ i ].st_MaxJJ );
+    maxJJ                          = vnl_math::max( maxJJ, this->m_ComputePerThreadVariables[ i ].st_MaxJJ );
     displacement                  += this->m_ComputePerThreadVariables[ i ].st_Displacement;
     displacementSquared           += this->m_ComputePerThreadVariables[ i ].st_DisplacementSquared;
     this->m_NumberOfPixelsCounted += this->m_ComputePerThreadVariables[ i ].st_NumberOfPixelsCounted;
@@ -495,7 +495,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 
   /** Compute the sigma of the distribution of the displacements. */
   const double meanDisplacement = displacement / this->m_NumberOfPixelsCounted;
-  const double sigma            = displacementSquared / this->m_NumberOfPixelsCounted - vnl_math_sqr( meanDisplacement );
+  const double sigma            = displacementSquared / this->m_NumberOfPixelsCounted - vnl_math::sqr( meanDisplacement );
 
   jacg = meanDisplacement + 2.0 * std::sqrt( sigma );
 
@@ -615,7 +615,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     double mean_JGG = globalDeformation / samplenr;
     for( unsigned int i = 0; i < nrofsamples; ++i )
     {
-      sigma += vnl_math_sqr( JGG_k[ i ] - mean_JGG );
+      sigma += vnl_math::sqr( JGG_k[ i ] - mean_JGG );
     }
     sigma /= ( nrofsamples - 1 ); // unbiased estimation
     jacg   = mean_JGG + 2.0 * std::sqrt( sigma );

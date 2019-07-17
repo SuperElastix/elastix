@@ -173,9 +173,9 @@ MultiResolutionRegistration< TElastix >
   /** some shortcuts */
   const unsigned int nrOfFixedMasks    = this->GetElastix()->GetNumberOfFixedMasks();
   const unsigned int nrOfMovingMasks   = this->GetElastix()->GetNumberOfMovingMasks();
-  const unsigned int oneOrNoFixedMasks = vnl_math_min( static_cast< unsigned int >( 1 ),
+  const unsigned int oneOrNoFixedMasks = vnl_math::min( static_cast< unsigned int >( 1 ),
     nrOfFixedMasks );
-  const unsigned int oneOrNoMovingMasks = vnl_math_min( static_cast< unsigned int >( 1 ),
+  const unsigned int oneOrNoMovingMasks = vnl_math::min( static_cast< unsigned int >( 1 ),
     nrOfMovingMasks );
 
   /** Array of bools, that remembers for each mask if erosion is wanted.

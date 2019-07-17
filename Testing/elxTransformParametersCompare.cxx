@@ -199,8 +199,8 @@ main( int argc, char ** argv )
     /** Now compare the two parameter vectors. */
     for( unsigned int i = 0; i < numberOfParametersTest; i++ )
     {
-      baselineNorm += vnl_math_sqr( parametersBaseline[ i ] );
-      diffNorm     += vnl_math_sqr( parametersBaseline[ i ] - parametersTest[ i ] );
+      baselineNorm += vnl_math::sqr( parametersBaseline[ i ] );
+      diffNorm     += vnl_math::sqr( parametersBaseline[ i ] - parametersTest[ i ] );
     }
     diffNormNormalized = std::sqrt( diffNorm ) / std::sqrt( baselineNorm );
   }
@@ -272,7 +272,7 @@ main( int argc, char ** argv )
       for( unsigned int i = 0; i < dimension; i++ )
       {
         unsigned int j = index + i * numberParPerDim;
-        diffNormTmp += vnl_math_sqr( parametersBaseline[ j ] - parametersTest[ j ] );
+        diffNormTmp += vnl_math::sqr( parametersBaseline[ j ] - parametersTest[ j ] );
       }
       diffNormTmp = std::sqrt( diffNormTmp );
       it.Set( diffNormTmp );
@@ -291,8 +291,8 @@ main( int argc, char ** argv )
       for( unsigned int i = 0; i < dimension; i++ )
       {
         unsigned int j = index + i * numberParPerDim;
-        baselineNorm += include * vnl_math_sqr( parametersBaseline[ j ] );
-        diffNorm     += include * vnl_math_sqr( parametersBaseline[ j ] - parametersTest[ j ] );
+        baselineNorm += include * vnl_math::sqr( parametersBaseline[ j ] );
+        diffNorm     += include * vnl_math::sqr( parametersBaseline[ j ] - parametersTest[ j ] );
       }
 
       /** Update iterators. */

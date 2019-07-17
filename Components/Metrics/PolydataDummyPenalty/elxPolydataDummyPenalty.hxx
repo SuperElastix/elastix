@@ -506,7 +506,7 @@ PolydataDummyPenalty< TElastix >
       for( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
         inputindexvec[ j ][ i ] = static_cast< FixedImageIndexValueType >(
-          vnl_math_rnd( fixedcindex[ i ] ) );
+          vnl_math::rnd( fixedcindex[ i ] ) );
       }
     }
   }
@@ -522,7 +522,7 @@ PolydataDummyPenalty< TElastix >
       for( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
         inputindexvec[ j ][ i ] = static_cast< FixedImageIndexValueType >(
-          vnl_math_rnd( point[ i ] ) );
+          vnl_math::rnd( point[ i ] ) );
       }
       /** Compute the input point in physical coordinates. */
       dummyImage->TransformIndexToPhysicalPoint(

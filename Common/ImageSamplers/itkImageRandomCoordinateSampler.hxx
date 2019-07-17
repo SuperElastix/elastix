@@ -338,7 +338,7 @@ ImageRandomCoordinateSampler< TInputImage >
     maxSmallestContIndex[ i ] = largestImageContIndex[ i ] - sampleRegionSize[ i ];
 
     /** Make sure it is larger than the lower bound. */
-    maxSmallestContIndex[ i ] = vnl_math_max( maxSmallestContIndex[ i ], smallestImageContIndex[ i ] );
+    maxSmallestContIndex[ i ] = vnl_math::max( maxSmallestContIndex[ i ], smallestImageContIndex[ i ] );
   }
 
   this->GenerateRandomCoordinate( smallestImageContIndex, maxSmallestContIndex, smallestContIndex );

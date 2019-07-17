@@ -159,8 +159,8 @@ void
 AdvancedSimilarity2DTransform< TScalarType >
 ::ComputeMatrixParameters( void )
 {
-  m_Scale = std::sqrt( vnl_math_sqr( this->GetMatrix()[ 0 ][ 0 ] )
-    + vnl_math_sqr( this->GetMatrix()[ 0 ][ 1 ] ) );
+  m_Scale = std::sqrt( vnl_math::sqr( this->GetMatrix()[ 0 ][ 0 ] )
+    + vnl_math::sqr( this->GetMatrix()[ 0 ][ 1 ] ) );
 
   this->SetVarAngle( std::acos( this->GetMatrix()[ 0 ][ 0 ] / m_Scale ) );
 

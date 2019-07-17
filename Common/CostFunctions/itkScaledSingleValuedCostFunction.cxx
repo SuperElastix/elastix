@@ -197,7 +197,7 @@ ScaledSingleValuedCostFunction
   this->m_SquaredScales.SetSize( scales.GetSize() );
   for( unsigned int i = 0; i < scales.Size(); ++i )
   {
-    this->m_SquaredScales[ i ] = vnl_math_sqr( scales[ i ] );
+    this->m_SquaredScales[ i ] = vnl_math::sqr( scales[ i ] );
   }
   this->Modified();
 

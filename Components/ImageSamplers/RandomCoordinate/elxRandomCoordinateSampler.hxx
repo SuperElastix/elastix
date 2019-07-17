@@ -84,11 +84,11 @@ RandomCoordinateSampler< TElastix >
     for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
       sampleRegionSize[ i ] = ( fixedImageSize[ i ] - 1 ) * fixedImageSpacing[ i ];
-      maxthird              = vnl_math_max( maxthird, sampleRegionSize[ i ] / 3.0 );
+      maxthird              = vnl_math::max( maxthird, sampleRegionSize[ i ] / 3.0 );
     }
     for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
-      sampleRegionSize[ i ] = vnl_math_min( maxthird, sampleRegionSize[ i ] );
+      sampleRegionSize[ i ] = vnl_math::min( maxthird, sampleRegionSize[ i ] );
     }
 
     /** Read and check user's choice. */
