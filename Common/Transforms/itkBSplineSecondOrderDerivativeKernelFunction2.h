@@ -20,6 +20,7 @@
 
 #include "itkKernelFunctionBase.h"
 #include "vnl/vnl_math.h"
+#include <cmath> // For abs.
 
 namespace itk
 {
@@ -103,7 +104,7 @@ private:
   /** Second order spline. */
   inline double Evaluate( const Dispatch< 2 > &, const double & u ) const
   {
-    double absValue = vnl_math::abs( u );
+    double absValue = std::abs( u );
 
     if( absValue < 0.5 )
     {
@@ -139,7 +140,7 @@ private:
   /**  Third order spline. */
   inline double Evaluate( const Dispatch< 3 > &, const double & u ) const
   {
-    const double absValue = vnl_math::abs( u );
+    const double absValue = std::abs( u );
 
     if( absValue < 1.0 )
     {

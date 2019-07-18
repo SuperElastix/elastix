@@ -29,6 +29,8 @@
 #include "itkZeroFluxNeumannPadImageFilter.h"
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 
+#include <cmath> // For abs.
+
 
 namespace itk
 {
@@ -215,7 +217,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
       }
 
       // Use the absolute value
-      jacj_g( i ) = vnl_math::abs( temp );
+      jacj_g( i ) = std::abs( temp );
     }
 
     /** A support region is where this voxel has the affect on the B-Spline
@@ -258,7 +260,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
 #elif METHOD_BSPLINE == 3
       // MS: the following will use the Jacobian as weights
       const unsigned int pj = jacind[ j ];
-      const double weight = vnl_math::abs( jacj( nonzerodim, j ) );
+      const double weight = std::abs( jacj( nonzerodim, j ) );
       // YQ: the weight is positive.
 
       /** localStepSize keeps track of the mean displacement.
@@ -414,7 +416,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
         }
 
         // Use the absolute value
-        jacj_g( i ) = vnl_math::abs( temp );
+        jacj_g( i ) = std::abs( temp );
       }
       displacement2_j = jacj_g.magnitude();
     }
@@ -427,9 +429,9 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
       double jacj_current = 0.0;
       for( unsigned int i = 0; i < outdim; ++i )
       {
-        jacj_current += vnl_math::abs( jacj( i, j ) );
+        jacj_current += std::abs( jacj( i, j ) );
       }
-      displacement_j = vnl_math::abs( jacj_current * exactgradient( pj ) );
+      displacement_j = std::abs( jacj_current * exactgradient( pj ) );
 
       if( transformIsBSpline )
       {
@@ -455,9 +457,9 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
             double jacj_k = 0.0;
             for( unsigned int i = 0; i < outdim; ++i )
             {
-              jacj_k += vnl_math::abs( jacj( i, k ) );
+              jacj_k += std::abs( jacj( i, k ) );
             }
-            diff_jacobian = vnl_math::abs( jacj_k - jacj_current );
+            diff_jacobian = std::abs( jacj_k - jacj_current );
             if( diff_jacobian > 0 && mindiffCheck )
             {
               mindiff = diff_jacobian;
@@ -489,13 +491,13 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
             double jacj_k = 0.0;
             for( unsigned int i = 0; i < outdim; ++i )
             {
-              jacj_k += vnl_math::abs( jacj( i, k ) );
+              jacj_k += std::abs( jacj( i, k ) );
             }
 
-            diff_jacobian = vnl_math::abs( jacj_k - jacj_current );
+            diff_jacobian = std::abs( jacj_k - jacj_current );
             weight = std::exp( -( vnl_math::sqr( diff_jacobian / weight_sigma ) / 2.0 ) );
 
-            sum_displacement += vnl_math::abs( jacj_k * exactgradient( pk ) ) * weight;
+            sum_displacement += std::abs( jacj_k * exactgradient( pk ) ) * weight;
             sum_weight += weight;
           } // end if
         } // end for loop regularization
