@@ -20,6 +20,7 @@
 
 #include "elxAdaGrad.h"
 
+#include <cmath> // For abs.
 #include <iomanip>
 #include <string>
 #include <vector>
@@ -926,8 +927,8 @@ AdaGrad< TElastix >
    * the rank, in case of maximum likelihood. In case of no maximum likelihood,
    * the rank equals Pd.
    */
-  gg = vnl_math::abs( exactgg );
-  ee = vnl_math::abs( diffgg );
+  gg = std::abs( exactgg );
+  ee = std::abs( diffgg );
 
   /** Set back useRandomSampleRegion flag to what it was. */
   for( unsigned int m = 0; m < M; ++m )

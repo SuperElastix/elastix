@@ -20,8 +20,8 @@
 #define __itkMoreThuenteLineSearchOptimizer_cxx
 
 #include "itkMoreThuenteLineSearchOptimizer.h"
+#include <cmath> // For abs.
 #include <limits>
-#include "vnl/vnl_math.h"
 
 namespace itk
 {
@@ -449,7 +449,7 @@ MoreThuenteLineSearchOptimizer
   MeasureType ftest1 = this->m_finit + step * this->m_dgtest;
 
   this->m_SufficientDecreaseConditionSatisfied = ( this->m_f <= ftest1 );
-  this->m_CurvatureConditionSatisfied          = ( vnl_math::abs( this->m_dg ) <=
+  this->m_CurvatureConditionSatisfied          = ( std::abs( this->m_dg ) <=
     this->GetGradientTolerance() * ( -this->m_dginit ) );
 
   if( ( this->m_brackt
@@ -594,12 +594,12 @@ MoreThuenteLineSearchOptimizer
     const double & stx = this->m_stepx;
     const double & sty = this->m_stepy;
 
-    if( vnl_math::abs( sty - stx ) >= .66 * this->m_width1 )
+    if( std::abs( sty - stx ) >= .66 * this->m_width1 )
     {
       this->m_step = stx + .5 * ( sty - stx );
     }
     this->m_width1 = this->m_width;
-    this->m_width  = vnl_math::abs( sty - stx );
+    this->m_width  = std::abs( sty - stx );
   }
 
 } // end ForceSufficientDecreaseInIntervalWidth()
@@ -714,7 +714,7 @@ MoreThuenteLineSearchOptimizer
 
   /* DETERMINE IF THE DERIVATIVES HAVE OPPOSITE SIGN. */
 
-  sgnd = dp * ( dx / vnl_math::abs( dx ) );
+  sgnd = dp * ( dx / std::abs( dx ) );
 
   /*     FIRST CASE. A HIGHER FUNCTION VALUE. */
   /*     THE MINIMUM IS BRACKETED. IF THE CUBIC STEP IS CLOSER */
@@ -727,8 +727,8 @@ MoreThuenteLineSearchOptimizer
     bound      = true;
     theta      = ( fx - fp ) * 3 / ( stp - stx ) + dx + dp;
     s          = std::max(
-      std::max( vnl_math::abs( theta ), vnl_math::abs( dx ) ),
-      vnl_math::abs( dp ) );
+      std::max( std::abs( theta ), std::abs( dx ) ),
+      std::abs( dp ) );
     d__1  = theta / s;
     gamma = s * std::sqrt( d__1 * d__1 - dx / s * ( dp / s ) );
     if( stp < stx )
@@ -741,7 +741,7 @@ MoreThuenteLineSearchOptimizer
     stpc = stx + r * ( stp - stx );
     stpq = stx
       + dx / ( ( fx - fp ) / ( stp - stx ) + dx ) / 2 * ( stp - stx );
-    if( vnl_math::abs( stpc - stx ) < vnl_math::abs( stpq - stx ) )
+    if( std::abs( stpc - stx ) < std::abs( stpq - stx ) )
     {
       stpf = stpc;
     }
@@ -763,8 +763,8 @@ MoreThuenteLineSearchOptimizer
     bound      = false;
     theta      = ( fx - fp ) * 3 / ( stp - stx ) + dx + dp;
     s          = std::max(
-      std::max( vnl_math::abs( theta ), vnl_math::abs( dx ) ),
-      vnl_math::abs( dp ) );
+      std::max( std::abs( theta ), std::abs( dx ) ),
+      std::abs( dp ) );
     d__1  = theta / s;
     gamma = s * std::sqrt( d__1 * d__1 - dx / s * ( dp / s ) );
     if( stp > stx )
@@ -776,7 +776,7 @@ MoreThuenteLineSearchOptimizer
     r    = p / q;
     stpc = stp + r * ( stx - stp );
     stpq = stp + dp / ( dp - dx ) * ( stx - stp );
-    if( vnl_math::abs( stpc - stp ) > vnl_math::abs( stpq - stp ) )
+    if( std::abs( stpc - stp ) > std::abs( stpq - stp ) )
     {
       stpf = stpc;
     }
@@ -796,14 +796,14 @@ MoreThuenteLineSearchOptimizer
     /*     CLOSEST TO STX IS TAKEN, ELSE THE STEP FARTHEST AWAY IS TAKEN. */
 
   }
-  else if( vnl_math::abs( dp ) < vnl_math::abs( dx ) )
+  else if( std::abs( dp ) < std::abs( dx ) )
   {
     returncode = 3;
     bound      = true;
     theta      = ( fx - fp ) * 3 / ( stp - stx ) + dx + dp;
     s          = std::max(
-      std::max( vnl_math::abs( theta ), vnl_math::abs( dx ) ),
-      vnl_math::abs( dp ) );
+      std::max( std::abs( theta ), std::abs( dx ) ),
+      std::abs( dp ) );
 
     /* THE CASE GAMMA = 0 ONLY ARISES IF THE CUBIC DOES NOT TEND */
     /* TO INFINITY IN THE DIRECTION OF THE STEP. */
@@ -833,7 +833,7 @@ MoreThuenteLineSearchOptimizer
     stpq = stp + dp / ( dp - dx ) * ( stx - stp );
     if( brackt )
     {
-      if( vnl_math::abs( stp - stpc ) < vnl_math::abs( stp - stpq ) )
+      if( std::abs( stp - stpc ) < std::abs( stp - stpq ) )
       {
         stpf = stpc;
       }
@@ -844,7 +844,7 @@ MoreThuenteLineSearchOptimizer
     }
     else
     {
-      if( vnl_math::abs( stp - stpc ) > vnl_math::abs( stp - stpq ) )
+      if( std::abs( stp - stpc ) > std::abs( stp - stpq ) )
       {
         stpf = stpc;
       }
@@ -868,8 +868,8 @@ MoreThuenteLineSearchOptimizer
     {
       theta = ( fp - fy ) * 3 / ( sty - stp ) + dy + dp;
       s     = std::max(
-        std::max( vnl_math::abs( theta ), vnl_math::abs( dy ) ),
-        vnl_math::abs( dp ) );
+        std::max( std::abs( theta ), std::abs( dy ) ),
+        std::abs( dp ) );
       d__1  = theta / s;
       gamma = s * std::sqrt( d__1 * d__1 - dy / s * ( dp / s ) );
       if( stp > sty )

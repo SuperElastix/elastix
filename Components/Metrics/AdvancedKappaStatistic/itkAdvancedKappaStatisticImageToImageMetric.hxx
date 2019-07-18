@@ -19,6 +19,7 @@
 #define _itkAdvancedKappaStatisticImageToImageMetric_hxx
 
 #include "itkAdvancedKappaStatisticImageToImageMetric.h"
+#include <cmath> // For abs.
 
 namespace itk
 {
@@ -205,8 +206,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
       /** Update the intermediate values. */
       if( this->m_UseForegroundValue )
       {
-        const RealType diffFixed  = vnl_math::abs( fixedImageValue - this->m_ForegroundValue );
-        const RealType diffMoving = vnl_math::abs( movingImageValue - this->m_ForegroundValue );
+        const RealType diffFixed  = std::abs( fixedImageValue - this->m_ForegroundValue );
+        const RealType diffMoving = std::abs( movingImageValue - this->m_ForegroundValue );
         if( diffFixed < this->m_Epsilon ) { fixedForegroundArea++; }
         if( diffMoving < this->m_Epsilon ) { movingForegroundArea++; }
         if( diffFixed < this->m_Epsilon
@@ -724,8 +725,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   bool usableFixedSample = false;
   if( this->m_UseForegroundValue )
   {
-    const RealType diffFixed  = vnl_math::abs( fixedImageValue - this->m_ForegroundValue );
-    const RealType diffMoving = vnl_math::abs( movingImageValue - this->m_ForegroundValue );
+    const RealType diffFixed  = std::abs( fixedImageValue - this->m_ForegroundValue );
+    const RealType diffMoving = std::abs( movingImageValue - this->m_ForegroundValue );
     if( diffFixed < this->m_Epsilon ) { fixedForegroundArea++; usableFixedSample = true; }
     if( diffMoving < this->m_Epsilon ) { movingForegroundArea++; }
     if( diffFixed < this->m_Epsilon
@@ -829,8 +830,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
         plusIndex[ i ]  = currIndex[ i ] + 1;
         const RealType minusVal  = static_cast< RealType >( this->m_MovingImage->GetPixel( minusIndex ) );
         const RealType plusVal   = static_cast< RealType >( this->m_MovingImage->GetPixel( plusIndex ) );
-        const RealType minusDiff = vnl_math::abs( minusVal - this->m_ForegroundValue );
-        const RealType plusDiff  = vnl_math::abs(  plusVal - this->m_ForegroundValue );
+        const RealType minusDiff = std::abs( minusVal - this->m_ForegroundValue );
+        const RealType plusDiff  = std::abs(  plusVal - this->m_ForegroundValue );
 
         /** Calculate the gradient. */
         if( minusDiff >= this->m_Epsilon && plusDiff < this->m_Epsilon )
