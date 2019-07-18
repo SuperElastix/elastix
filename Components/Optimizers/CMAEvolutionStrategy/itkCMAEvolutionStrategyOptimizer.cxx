@@ -347,8 +347,8 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
 
   /** m_SigmaDampingConstant */
   this->m_SigmaDampingConstant = this->m_ConjugateEvolutionPathConstant
-    + ( 1.0 + 2.0 * vnl_math::max( 0.0, std::sqrt( ( mueff - 1.0 ) / ( Nd + 1.0 ) ) - 1.0 ) )
-    * vnl_math::max( 0.3, 1.0 - Nd / static_cast< double >( this->m_MaximumNumberOfIterations ) );
+    + ( 1.0 + 2.0 * std::max( 0.0, std::sqrt( ( mueff - 1.0 ) / ( Nd + 1.0 ) ) - 1.0 ) )
+    * std::max( 0.3, 1.0 - Nd / static_cast< double >( this->m_MaximumNumberOfIterations ) );
 
   /** m_CovarianceMatrixAdaptationWeight (\mu_cov)*/
   this->m_CovarianceMatrixAdaptationWeight = mueff;
@@ -359,7 +359,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
   this->m_CovarianceMatrixAdaptationConstant
     = ( 1.0 / mucov ) * 2.0 / vnl_math::sqr( Nd + std::sqrt( 2.0 ) )
     + ( 1.0 - 1.0 / mucov )
-    * vnl_math::min( 1.0, ( 2.0 * mueff - 1.0 ) / ( vnl_math::sqr( Nd + 2.0 ) + mueff ) );
+    * std::min( 1.0, ( 2.0 * mueff - 1.0 ) / ( vnl_math::sqr( Nd + 2.0 ) + mueff ) );
   /** alias: */
   const double c_cov = this->m_CovarianceMatrixAdaptationConstant;
 
@@ -368,7 +368,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
   {
     this->m_UpdateBDPeriod = static_cast< unsigned int >( std::floor( 1.0 / c_cov / Nd / 10.0 ) );
   }
-  this->m_UpdateBDPeriod = vnl_math::max( static_cast< unsigned int >( 1 ), this->m_UpdateBDPeriod );
+  this->m_UpdateBDPeriod = std::max( static_cast< unsigned int >( 1 ), this->m_UpdateBDPeriod );
   if( this->m_UpdateBDPeriod >= this->m_MaximumNumberOfIterations )
   {
     this->SetUseCovarianceMatrixAdaptation( false );
@@ -382,7 +382,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants( void )
     * ( 1.0 - 1.0 / ( 4.0 * Nd ) + 1.0 / ( 21.0 * vnl_math::sqr( Nd ) ) );
 
   /** m_HistoryLength */
-  this->m_HistoryLength = static_cast< unsigned long >( vnl_math::min(
+  this->m_HistoryLength = static_cast< unsigned long >( std::min(
     this->GetMaximumNumberOfIterations(),
     10 + static_cast< unsigned long >( std::ceil( 3.0 * 10.0 * Nd / lambdad ) ) ) );
 
@@ -1195,7 +1195,7 @@ CMAEvolutionStrategyOptimizer::TestConvergence( bool firstCheck )
     {
       sqrtCii = std::sqrt( this->m_C[ i ][ i ] );
     }
-    const double stepsize =  this->m_CurrentSigma * vnl_math::max( pci, sqrtCii );
+    const double stepsize =  this->m_CurrentSigma * std::max( pci, sqrtCii );
     if( stepsize > tolxmin )
     {
       stepTooSmall = false;

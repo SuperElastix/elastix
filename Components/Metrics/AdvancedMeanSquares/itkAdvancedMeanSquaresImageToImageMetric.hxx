@@ -132,7 +132,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
     // without recomputing them here.
     const double diff1   = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
     const double diff2   = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
-    const double maxdiff = vnl_math::max( diff1, diff2 );
+    const double maxdiff = std::max( diff1, diff2 );
 
     /** We guess that maxdiff/10 is the maximum average difference that will
      * be observed.

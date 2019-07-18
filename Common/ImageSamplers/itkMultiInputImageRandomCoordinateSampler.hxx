@@ -229,10 +229,10 @@ MultiInputImageRandomCoordinateSampler< TInputImage >::GenerateSampleRegion(
     for( unsigned int j = 0; j < InputImageDimension; ++j )
     {
       /** Get the largest smallest point. */
-      smallestPoint[ j ] = vnl_math::max( smallestPoint[ j ], smallestImagePoint[ j ] );
+      smallestPoint[ j ] = std::max( smallestPoint[ j ], smallestImagePoint[ j ] );
 
       /** Get the smallest largest point. */
-      largestPoint[ j ] = vnl_math::min( largestPoint[ j ], largestImagePoint[ j ] );
+      largestPoint[ j ] = std::min( largestPoint[ j ], largestImagePoint[ j ] );
     }
   }
 

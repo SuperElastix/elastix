@@ -399,7 +399,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math::max( maxJJ, JJ_j );
+    maxJJ = std::max( maxJJ, JJ_j );
 
     double displacement2_j = 0.0;
     if( transformIsBSpline )
@@ -541,8 +541,8 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     /** Apply the 2 sigma rule. */
     double localStep = meanLocalStepSize + 2.0 * std::sqrt( sigma ) + 1e-14;
 
-    minEigenvalue = vnl_math::min( localStep, minEigenvalue );
-    maxEigenvalue = vnl_math::max( localStep, maxEigenvalue );
+    minEigenvalue = std::min( localStep, minEigenvalue );
+    maxEigenvalue = std::max( localStep, maxEigenvalue );
     preconditioner[ i ] = this->m_MaximumStepLength / localStep;
 
   } // end loop over step size vector
@@ -639,7 +639,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math::max( maxJJ, JJ_j );
+    maxJJ = std::max( maxJJ, JJ_j );
 
     for( unsigned int i = 0; i < outdim; ++i )
     {
@@ -660,8 +660,8 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
     if( nonZeroBin > 0 && preconditioner[ i ] > 1e-9 )
     {
       double eigenvalue = std::sqrt( preconditioner[ i ] / ( nonZeroBin ) ) + 1e-14;
-      maxEigenvalue = vnl_math::max( eigenvalue, maxEigenvalue );
-      minEigenvalue = vnl_math::min( eigenvalue, minEigenvalue );
+      maxEigenvalue = std::max( eigenvalue, maxEigenvalue );
+      minEigenvalue = std::min( eigenvalue, minEigenvalue );
       preconditioner[ i ] = 1.0 / eigenvalue;
     }
   }

@@ -206,7 +206,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math::max( maxJJ, JJ_j );
+    maxJJ = std::max( maxJJ, JJ_j );
 
     /** Compute the matrix of jac*gradient */
     for( unsigned int i = 0; i < outdim; ++i )
@@ -431,7 +431,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math::max( maxJJ, JJ_j );
+    maxJJ = std::max( maxJJ, JJ_j );
 
     /** Compute the displacement  jac * gradient. */
     for( unsigned int i = 0; i < outdim; ++i )
@@ -481,7 +481,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   /** Accumulate thread results. */
   for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
-    maxJJ                          = vnl_math::max( maxJJ, this->m_ComputePerThreadVariables[ i ].st_MaxJJ );
+    maxJJ                          = std::max( maxJJ, this->m_ComputePerThreadVariables[ i ].st_MaxJJ );
     displacement                  += this->m_ComputePerThreadVariables[ i ].st_Displacement;
     displacementSquared           += this->m_ComputePerThreadVariables[ i ].st_DisplacementSquared;
     this->m_NumberOfPixelsCounted += this->m_ComputePerThreadVariables[ i ].st_NumberOfPixelsCounted;

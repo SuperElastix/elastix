@@ -29,8 +29,8 @@ typename HardLimiterFunction< TInput, NDimension >::OutputType
 HardLimiterFunction< TInput, NDimension >
 ::Evaluate( const InputType & input ) const
 {
-  OutputType output = vnl_math::min( static_cast< OutputType >( input ), this->m_UpperBound );
-  return ( vnl_math::max( output, this->m_LowerBound ) );
+  OutputType output = std::min( static_cast< OutputType >( input ), this->m_UpperBound );
+  return ( std::max( output, this->m_LowerBound ) );
 } // end Evaluate()
 
 

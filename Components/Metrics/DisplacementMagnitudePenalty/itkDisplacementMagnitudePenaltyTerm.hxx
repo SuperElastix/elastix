@@ -118,7 +118,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Update measure value. Avoid division by zero. */
-  measure /= vnl_math::max( NumericTraits< RealType >::One,
+  measure /= std::max( NumericTraits< RealType >::One,
     static_cast< RealType >( this->m_NumberOfPixelsCounted ) );
 
   /** Return the value. */
@@ -244,7 +244,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
 
   /** Update measure value and derivative. The factor 2 in the derivative
    * originates from the square in ||T(x)-x||^2 */
-  const RealType normalizationConstant = vnl_math::max(
+  const RealType normalizationConstant = std::max(
     NumericTraits< RealType >::One,
     static_cast< RealType >( this->m_NumberOfPixelsCounted ) );
   measure    /= normalizationConstant;

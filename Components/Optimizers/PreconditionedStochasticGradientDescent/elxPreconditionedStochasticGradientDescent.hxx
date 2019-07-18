@@ -176,8 +176,8 @@ PreconditionedStochasticGradientDescent< TElastix >
     /** Set the maximum step length: the maximum displacement of a voxel in mm.
      * Compute default value: mean in-plane spacing of fixed and moving image.
      */
-    const unsigned int fixdim = vnl_math::min( (unsigned int) this->GetElastix()->FixedDimension, (unsigned int) 2);
-    const unsigned int movdim = vnl_math::min( (unsigned int) this->GetElastix()->MovingDimension, (unsigned int) 2);
+    const unsigned int fixdim = std::min( (unsigned int) this->GetElastix()->FixedDimension, (unsigned int) 2);
+    const unsigned int movdim = std::min( (unsigned int) this->GetElastix()->MovingDimension, (unsigned int) 2);
     double             sum    = 0.0;
     for( unsigned int d = 0; d < fixdim; ++d )
     {
@@ -201,7 +201,7 @@ PreconditionedStochasticGradientDescent< TElastix >
       this->m_NumberOfGradientMeasurements,
       "NumberOfGradientMeasurements",
       this->GetComponentLabel(), level, 0 );
-    this->m_NumberOfGradientMeasurements = vnl_math::max(
+    this->m_NumberOfGradientMeasurements = std::max(
       static_cast< SizeValueType >( 2 ),
       this->m_NumberOfGradientMeasurements );
 
@@ -210,7 +210,7 @@ PreconditionedStochasticGradientDescent< TElastix >
      * M = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfJacobianMeasurements = vnl_math::max(
+    this->m_NumberOfJacobianMeasurements = std::max(
       static_cast< unsigned int >( 5000 ), static_cast< unsigned int >( 2 * P ) );
     this->GetConfiguration()->ReadParameter(
       this->m_NumberOfJacobianMeasurements,
@@ -228,7 +228,7 @@ PreconditionedStochasticGradientDescent< TElastix >
      * P = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfSamplesForPrecondition = vnl_math::max(
+    this->m_NumberOfSamplesForPrecondition = std::max(
       static_cast< unsigned int >( 1000 ), static_cast< unsigned int >( P ) );
     this->GetConfiguration()->ReadParameter(
       this->m_NumberOfSamplesForPrecondition,

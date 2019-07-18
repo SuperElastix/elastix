@@ -196,7 +196,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
   difHist.resize( 0 );
 
   /** Compute the number of bands. */
-  const unsigned int bandcovsize = vnl_math::min( this->m_MaxBandCovSize,
+  const unsigned int bandcovsize = std::min( this->m_MaxBandCovSize,
     static_cast< unsigned int >( difHist2.size() ) );
 
   /** Maps parameterNrDifference (q-p) to colnr in bandcov. */
@@ -427,7 +427,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math::max( maxJJ, JJ_j );
+    maxJJ = std::max( maxJJ, JJ_j );
 
     /** Compute JCJ_j. */
     double JCJ_j = 0.0;
@@ -500,7 +500,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
     JCJ_j += 2.0 * sqrt2 * jacjcovjacj.frobenius_norm();
 
     /** Max_j [JCJ_j]. */
-    maxJCJ = vnl_math::max( maxJCJ, JCJ_j );
+    maxJCJ = std::max( maxJCJ, JCJ_j );
 
     /** Show progress 50-100%. */
     //progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
