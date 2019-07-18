@@ -30,7 +30,7 @@
 #include "vnl/vnl_matrix_fixed.h"
 #include "vnl/vnl_diag_matrix.h"
 
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 namespace itk
 {
@@ -241,7 +241,7 @@ protected:
   void PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Typedefs for multi-threading. */
-  typedef itk::MultiThreader             ThreaderType;
+  typedef itk::PlatformMultiThreader             ThreaderType;
   typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
   ThreaderType::Pointer                   m_Threader;
 

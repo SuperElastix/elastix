@@ -76,7 +76,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
    * which has performance benefits for larger vector sizes.
    */
 
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Only resize the array of structs when needed. */
   if( this->m_KappaGetValueAndDerivativePerThreadVariablesSize != numberOfThreads)
@@ -205,8 +205,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
       /** Update the intermediate values. */
       if( this->m_UseForegroundValue )
       {
-        const RealType diffFixed  = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
-        const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
+        const RealType diffFixed  = vnl_math::abs( fixedImageValue - this->m_ForegroundValue );
+        const RealType diffMoving = vnl_math::abs( movingImageValue - this->m_ForegroundValue );
         if( diffFixed < this->m_Epsilon ) { fixedForegroundArea++; }
         if( diffMoving < this->m_Epsilon ) { movingForegroundArea++; }
         if( diffFixed < this->m_Epsilon
@@ -482,7 +482,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -580,7 +580,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted
@@ -697,7 +697,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
       = temp->st_Coefficient1 * sum1 - temp->st_Coefficient2 * sum2;
   }
 
-  return ITK_THREAD_RETURN_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end AccumulateDerivativesThreaderCallback()
 
@@ -724,8 +724,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   bool usableFixedSample = false;
   if( this->m_UseForegroundValue )
   {
-    const RealType diffFixed  = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
-    const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
+    const RealType diffFixed  = vnl_math::abs( fixedImageValue - this->m_ForegroundValue );
+    const RealType diffMoving = vnl_math::abs( movingImageValue - this->m_ForegroundValue );
     if( diffFixed < this->m_Epsilon ) { fixedForegroundArea++; usableFixedSample = true; }
     if( diffMoving < this->m_Epsilon ) { movingForegroundArea++; }
     if( diffFixed < this->m_Epsilon
@@ -829,8 +829,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
         plusIndex[ i ]  = currIndex[ i ] + 1;
         const RealType minusVal  = static_cast< RealType >( this->m_MovingImage->GetPixel( minusIndex ) );
         const RealType plusVal   = static_cast< RealType >( this->m_MovingImage->GetPixel( plusIndex ) );
-        const RealType minusDiff = vnl_math_abs( minusVal - this->m_ForegroundValue );
-        const RealType plusDiff  = vnl_math_abs(  plusVal - this->m_ForegroundValue );
+        const RealType minusDiff = vnl_math::abs( minusVal - this->m_ForegroundValue );
+        const RealType plusDiff  = vnl_math::abs(  plusVal - this->m_ForegroundValue );
 
         /** Calculate the gradient. */
         if( minusDiff >= this->m_Epsilon && plusDiff < this->m_Epsilon )

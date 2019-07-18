@@ -28,7 +28,7 @@
 #include "itkTimeProbesCollectorBase.h"
 
 // Multi-threading using ITK threads
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 // Multi-threading using OpenMP
 #ifdef ELASTIX_USE_OPENMP
@@ -58,7 +58,7 @@ public:
   unsigned long                         m_NumberOfParameters;
   mutable std::vector< DerivativeType > m_ThreaderDerivatives;
 
-  typedef itk::MultiThreader             ThreaderType;
+  typedef itk::PlatformMultiThreader             ThreaderType;
   typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
   ThreaderType::Pointer m_Threader;
   DerivativeValueType   m_NormalSum;
@@ -146,7 +146,7 @@ public:
  *********** AccumulateDerivativesThreaderCallback *************
  */
 
-  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg )
+  static itk::ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg )
   {
     ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
     ThreadIdType     threadID    = infoStruct->ThreadID;
@@ -173,7 +173,7 @@ public:
       temp->st_DerivativePointer[ j ] = tmp / temp->st_NormalizationFactor;
     }
 
-    return ITK_THREAD_RETURN_VALUE;
+    return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
   } // end AccumulateDerivativesThreaderCallback()
 

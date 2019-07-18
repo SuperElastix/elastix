@@ -790,7 +790,7 @@ RecursiveBSplineTransform< TElastix >
   IndexType  insetgridindex;
   for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    insetgridsize[ i ] = static_cast< unsigned int >( vnl_math_max(
+    insetgridsize[ i ] = static_cast< unsigned int >( std::max(
       0, static_cast< int >( gridsize[ i ] - 2 * edgeWidth ) ) );
     if( insetgridsize[ i ] == 0 )
     {

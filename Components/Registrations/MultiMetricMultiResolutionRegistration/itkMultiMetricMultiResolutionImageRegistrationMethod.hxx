@@ -304,7 +304,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
         for( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
         {
           start[ dim ] = static_cast< IndexValueType >( std::ceil( startcindex[ dim ] ) );
-          size[ dim ]  = vnl_math_max( NumericTraits< SizeValueType >::One, static_cast< SizeValueType >(
+          size[ dim ]  = std::max( NumericTraits< SizeValueType >::One, static_cast< SizeValueType >(
             static_cast< SizeValueType >( std::floor( endcindex[ dim ] ) ) - start[ dim ] + 1 ) );
         }
 

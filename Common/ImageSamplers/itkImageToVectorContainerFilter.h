@@ -19,7 +19,7 @@
 #define __itkImageToVectorContainerFilter_h
 
 #include "itkVectorContainerSource.h"
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 namespace itk
 {
@@ -156,7 +156,7 @@ public:
   virtual unsigned int SplitRequestedRegion( const ThreadIdType & threadId,
     const ThreadIdType & numberOfSplits, InputImageRegionType & splitRegion );
 
-  /** Static function used as a "callback" by the MultiThreader.  The threading
+  /** Static function used as a "callback" by the PlatformMultiThreader.  The threading
    * library will call this routine for each thread, which will delegate the
    * control to ThreadedGenerateData(). */
   static ITK_THREAD_RETURN_TYPE ThreaderCallback( void * arg );

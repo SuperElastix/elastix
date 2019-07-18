@@ -356,7 +356,7 @@ main( int argc, char * argv[] )
   {
     for( unsigned int j = 0; j < Dimension; j++ )
     {
-      jacDiff += vnl_math_sqr( jacobianElastix[ j ][ i ] - jacobianITK[ j ][ nzji[ i ] ] );
+      jacDiff += vnl_math::sqr( jacobianElastix[ j ][ i ] - jacobianITK[ j ][ nzji[ i ] ] );
     }
   }
   //if ( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
@@ -391,14 +391,14 @@ main( int argc, char * argv[] )
   //for( unsigned int i = 0; i < Dimension; i++ ) {
   //  for( unsigned int j = 0; j < Dimension; j++ ) {
   //    for( unsigned int k = 0; k < Dimension; k++ ) {
-  //      shDiff += vnl_math_sqr( spatialHessian1[i][j][k] - spatialHessian2[i][j][k] );
+  //      shDiff += vnl_math::sqr( spatialHessian1[i][j][k] - spatialHessian2[i][j][k] );
   //    } } }
   //double jshDiff = 0.0;
   //for( unsigned int mu = 0; mu < nzji.size(); mu++ ) {
   //  for( unsigned int i = 0; i < Dimension; i++ ) {
   //    for( unsigned int j = 0; j < Dimension; j++ ) {
   //      for( unsigned int k = 0; k < Dimension; k++ ) {
-  //        jshDiff += vnl_math_sqr( jacobianOfSpatialHessian1[mu][i][j][k] - jacobianOfSpatialHessian2[mu][i][j][k] );
+  //        jshDiff += vnl_math::sqr( jacobianOfSpatialHessian1[mu][i][j][k] - jacobianOfSpatialHessian2[mu][i][j][k] );
   //      } } } }
   //if ( std::sqrt( shDiff ) > 1e-8 )
   //{

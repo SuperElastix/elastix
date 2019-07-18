@@ -210,12 +210,10 @@ private:
   ReducedDimensionBSplineInterpolateImageFunction( const Self & ); //purposely not implemented
   void operator=( const Self & );                                  //purposely not implemented
 
-#if ITK_VERSION_MAJOR >= 5
   SizeType GetRadius() const override
   {
     return SizeType::Filled(m_SplineOrder + 1);
   }
-#endif
 
   /** Determines the weights for interpolation of the value x */
   void SetInterpolationWeights( const ContinuousIndexType & x,

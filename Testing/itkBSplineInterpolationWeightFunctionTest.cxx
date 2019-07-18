@@ -90,7 +90,7 @@ main( int argc, char * argv[] )
   double error = 0.0;
   for( unsigned int i = 0; i < weights2D.Size(); ++i )
   {
-    error += vnl_math_sqr( weights2D[ i ] - weights2_2D[ i ] );
+    error += vnl_math::sqr( weights2D[ i ] - weights2_2D[ i ] );
   }
   error = std::sqrt( error );
 
@@ -189,7 +189,7 @@ main( int argc, char * argv[] )
   error = 0.0;
   for( unsigned int i = 0; i < weights3D.Size(); ++i )
   {
-    error += vnl_math_sqr( weights3D[ i ] - weights2_3D[ i ] );
+    error += vnl_math::sqr( weights3D[ i ] - weights2_3D[ i ] );
   }
   error = std::sqrt( error );
 

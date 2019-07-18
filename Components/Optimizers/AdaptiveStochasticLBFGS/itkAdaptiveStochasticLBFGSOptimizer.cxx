@@ -70,7 +70,7 @@ AdaptiveStochasticLBFGSOptimizer
       /** Formula (2) in Cruz: <g_k, g_{k-1}>. */
       const double inprod = inner_product( this->m_PreviousGradient, this->GetGradient() );
       this->m_CurrentTime += sigmoid( -inprod );
-      this->m_CurrentTime = vnl_math_max( 0.0, this->m_CurrentTime );
+      this->m_CurrentTime = std::max( 0.0, this->m_CurrentTime );
     }
 
     /** Save for next iteration */
@@ -86,7 +86,7 @@ AdaptiveStochasticLBFGSOptimizer
       /** test <g_k, d_k>, only using the information of current gradient and search direction. */
       const double inprod = inner_product( this->GetGradient(),  searchDir );
       this->m_CurrentTime += sigmoid( -inprod );
-      this->m_CurrentTime = vnl_math_max( 0.0, this->m_CurrentTime );
+      this->m_CurrentTime = std::max( 0.0, this->m_CurrentTime );
     }
 
     /** Save for next iteration */

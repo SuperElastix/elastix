@@ -27,7 +27,7 @@
 #include "elxElastixMain.h"
 
 #include "elxMacro.h"
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 #ifdef ELASTIX_USE_OPENCL
 #include "itkOpenCLSetup.h"
@@ -983,7 +983,7 @@ ElastixMain::SetMaximumNumberOfThreads( void ) const
   {
     const int maximumNumberOfThreads
       = atoi( maximumNumberOfThreadsString.c_str() );
-    itk::MultiThreader::SetGlobalMaximumNumberOfThreads(
+    itk::PlatformMultiThreader::SetGlobalMaximumNumberOfThreads(
       maximumNumberOfThreads );
   }
 } // end SetMaximumNumberOfThreads()

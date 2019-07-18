@@ -471,7 +471,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -594,7 +594,7 @@ void
 ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputeDerivativeLowMemory( DerivativeType & derivative ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate derivatives. */
   // compute single-threadedly
@@ -655,11 +655,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 
   temp->m_Metric->ThreadedComputeDerivativeLowMemory( threadId );
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_VALUE;
-#endif
 
 } // end ComputeDerivativeLowMemoryThreaderCallback()
 
@@ -1140,7 +1136,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
     const TransformJacobianValueType * jacit1 = jac[ drow ];
     for( unsigned int mu = 0; mu < M; ++mu )
     {
-      *tempit += vnl_math_sqr( *jacit1 );
+      *tempit += vnl_math::sqr( *jacit1 );
       ++tempit;
       ++jacit1;
     }

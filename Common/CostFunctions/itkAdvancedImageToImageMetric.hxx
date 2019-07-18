@@ -88,18 +88,11 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_UseMetricSingleThreaded = true;
   this->m_UseMultiThread = false;
 
-#if ITK_VERSION_MAJOR < 5
-  // Note: This `#if` is a workaround for ITK5, which no longer supports calling
-  // `threader->SetUseThreadPool(false)`. ITK5 does not use thread pools by default. 
-  this->m_Threader->SetUseThreadPool( false ); // setting to true makes elastix hang
-                                               // at a WaitForSingleMethodThread()
-#endif
-
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP
   this->m_UseOpenMP = true;
 
-  const int nthreads = static_cast< int >( Self::GetNumberOfThreads() );
+  const int nthreads = static_cast< int >( Self::GetNumberOfWorkUnits() );
   omp_set_num_threads( nthreads );
 #else
   this->m_UseOpenMP = false;
@@ -139,16 +132,12 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::SetNumberOfThreads( ThreadIdType numberOfThreads )
 {
-#if ITK_VERSION_MAJOR >= 5
   // Note: This is a workaround for ITK5, which renamed NumberOfThreads
   // to NumberOfWorkUnits
   Superclass::SetNumberOfWorkUnits( numberOfThreads );
-#else
-  Superclass::SetNumberOfThreads( numberOfThreads );
-#endif
 
 #ifdef ELASTIX_USE_OPENMP
-  const int nthreads = static_cast< int >( Self::GetNumberOfThreads() );
+  const int nthreads = static_cast< int >( Self::GetNumberOfWorkUnits() );
   omp_set_num_threads( nthreads );
 #endif
 } // end SetNumberOfThreads()
@@ -199,7 +188,7 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
@@ -889,11 +878,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
   temp->st_Metric->ThreadedGetValue( threadID );
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_VALUE;
-#endif
 
 } // end GetValueThreaderCallback()
 
@@ -934,11 +919,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
   temp->st_Metric->ThreadedGetValueAndDerivative( threadID );
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_VALUE;
-#endif
 
 } // end GetValueAndDerivativeThreaderCallback()
 
@@ -1004,11 +985,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     temp->st_DerivativePointer[ j ] = tmp * normalization;
   }
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_VALUE;
-#endif
 
 } // end AccumulateDerivativesThreaderCallback()
 

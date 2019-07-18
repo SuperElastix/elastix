@@ -60,10 +60,8 @@ TransformToSpatialJacobianSource< TOutputImage, TTransformPrecisionType >
     itkExceptionMacro( "The specified output image type is not allowed for this filter" );
   }
 
-#if ITK_VERSION_MAJOR >= 5
   // Use the classic (ITK4) threading model, to ensure ThreadedGenerateData is being called.
   this->itk::ImageSource<TOutputImage>::DynamicMultiThreadingOff();
-#endif
 
 } // end Constructor
 

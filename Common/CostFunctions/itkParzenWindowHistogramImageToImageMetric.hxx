@@ -208,8 +208,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   this->m_FixedImageBinSize
     = ( this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit
     + 2.0 * smallNumberFixed ) / fixedHistogramWidth;
-  this->m_FixedImageBinSize = vnl_math_max( this->m_FixedImageBinSize, 1e-10 );
-  this->m_FixedImageBinSize = vnl_math_min( this->m_FixedImageBinSize, 1e+10 );
+  this->m_FixedImageBinSize = std::max( this->m_FixedImageBinSize, 1e-10 );
+  this->m_FixedImageBinSize = std::min( this->m_FixedImageBinSize, 1e+10 );
   this->m_FixedImageNormalizedMin
     = ( this->m_FixedImageMinLimit - smallNumberFixed )
     / this->m_FixedImageBinSize - static_cast< double >( fixedPadding );
@@ -220,8 +220,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   this->m_MovingImageBinSize
     = ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit
     + 2.0 * smallNumberMoving ) / movingHistogramWidth;
-  this->m_MovingImageBinSize = vnl_math_max( this->m_MovingImageBinSize, 1e-10 );
-  this->m_MovingImageBinSize = vnl_math_min( this->m_MovingImageBinSize, 1e+10 );
+  this->m_MovingImageBinSize = std::max( this->m_MovingImageBinSize, 1e-10 );
+  this->m_MovingImageBinSize = std::min( this->m_MovingImageBinSize, 1e+10 );
   this->m_MovingImageNormalizedMin
     = ( this->m_MovingImageMinLimit - smallNumberMoving )
     / this->m_MovingImageBinSize - static_cast< double >( movingPadding );
@@ -470,7 +470,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   jointPDFRegion.SetIndex( jointPDFIndex );
   jointPDFRegion.SetSize( jointPDFSize );
 
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Only resize the array of structs when needed. */
   if( this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize != numberOfThreads )
@@ -1170,7 +1170,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -1246,7 +1246,7 @@ void
 ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputePDFs( void ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted
@@ -1321,11 +1321,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
   temp->m_Metric->ThreadedComputePDFs( threadId );
 
-#if ITK_VERSION_MAJOR >= 5
   return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-#else
-  return ITK_THREAD_RETURN_VALUE;
-#endif
 
 } // end ComputePDFsThreaderCallback()
 

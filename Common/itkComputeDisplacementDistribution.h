@@ -24,7 +24,7 @@
 #include "itkImageRandomSamplerBase.h"
 #include "itkImageRandomCoordinateSampler.h"
 #include "itkImageFullSampler.h"
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 namespace itk
 {
@@ -136,7 +136,7 @@ protected:
   ~ComputeDisplacementDistribution() override;
 
   /** Typedefs for multi-threading. */
-  typedef itk::MultiThreader             ThreaderType;
+  typedef itk::PlatformMultiThreader             ThreaderType;
   typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
 
   typename FixedImageType::ConstPointer   m_FixedImage;

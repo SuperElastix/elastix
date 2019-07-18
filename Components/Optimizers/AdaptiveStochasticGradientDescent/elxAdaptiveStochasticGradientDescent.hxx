@@ -180,8 +180,8 @@ AdaptiveStochasticGradientDescent< TElastix >
     /** Set the maximum step length: the maximum displacement of a voxel in mm.
      * Compute default value: mean in-plane spacing of fixed and moving image.
      */
-    const unsigned int fixdim = vnl_math_min( (unsigned int) this->GetElastix()->FixedDimension, (unsigned int) 2 );
-    const unsigned int movdim = vnl_math_min( (unsigned int) this->GetElastix()->MovingDimension, (unsigned int) 2 );
+    const unsigned int fixdim = std::min( (unsigned int) this->GetElastix()->FixedDimension, (unsigned int) 2 );
+    const unsigned int movdim = std::min( (unsigned int) this->GetElastix()->MovingDimension, (unsigned int) 2 );
     double             sum    = 0.0;
     for( unsigned int d = 0; d < fixdim; ++d )
     {
@@ -212,7 +212,7 @@ AdaptiveStochasticGradientDescent< TElastix >
      * M = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfJacobianMeasurements = vnl_math_max(
+    this->m_NumberOfJacobianMeasurements = std::max(
       static_cast< unsigned int >( 1000 ), static_cast< unsigned int >( P ) );
     this->GetConfiguration()->ReadParameter(
       this->m_NumberOfJacobianMeasurements,
@@ -621,7 +621,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     {
       this->m_NumberOfGradientMeasurements = 2;
     }
-    this->m_NumberOfGradientMeasurements = vnl_math_max(
+    this->m_NumberOfGradientMeasurements = std::max(
       static_cast< SizeValueType >( 2 ),
       this->m_NumberOfGradientMeasurements );
     elxout << "  NumberOfGradientMeasurements to estimate sigma_i: "
@@ -670,7 +670,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     / ( sigma1 * sigma1 + sigma3 * sigma3 + 1e-14 );
   const double a = a_max * noisefactor;
 
-  const double omega = vnl_math_max( 1e-14,
+  const double omega = std::max( 1e-14,
     this->m_SigmoidScaleFactor * sigma3 * sigma3 * std::sqrt( TrCC ) );
   const double fmax = 1.0;
   const double fmin = -0.99 + 0.98 * noisefactor;
@@ -777,7 +777,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     /** Sample the grid and random sampler container to estimate the noise factor. */
     if( this->m_NumberOfGradientMeasurements == 0 )
     {
-      this->m_NumberOfGradientMeasurements = vnl_math_max(
+      this->m_NumberOfGradientMeasurements = std::max(
         static_cast< SizeValueType >( 2 ),
         this->m_NumberOfGradientMeasurements );
       elxout << "  NumberOfGradientMeasurements to estimate sigma_i: "

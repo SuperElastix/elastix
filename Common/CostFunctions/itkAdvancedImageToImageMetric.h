@@ -36,7 +36,7 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkAdvancedCombinationTransform.h"
 
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 namespace itk
 {
@@ -173,7 +173,7 @@ public:
   typedef vnl_sparse_matrix< HessianValueType > HessianType;
 
   /** Typedefs for multi-threading. */
-  typedef itk::MultiThreader                      ThreaderType;
+  typedef itk::PlatformMultiThreader                      ThreaderType;
   typedef typename ThreaderType::ThreadInfoStruct ThreadInfoType;
 
   /** Public methods ********************/
@@ -369,14 +369,6 @@ protected:
   FixedImageLimiterOutputType  m_FixedImageMaxLimit;
   MovingImageLimiterOutputType m_MovingImageMinLimit;
   MovingImageLimiterOutputType m_MovingImageMaxLimit;
-
-#if ITK_VERSION_MAJOR >= 5
-  /** \note This is a workaround for ITK5, which renamed NumberOfThreads to NumberOfWorkUnits. */
-  ThreadIdType GetNumberOfThreads() const
-  {
-    return Superclass::GetNumberOfWorkUnits();
-  }
-#endif
 
   /** Multi-threaded metric computation. */
 

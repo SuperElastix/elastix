@@ -68,7 +68,7 @@ AdaptiveStochasticGradientDescentOptimizer
       const double inprod = inner_product(
         this->m_PreviousGradient, this->GetGradient() );
       this->m_CurrentTime += sigmoid( -inprod );
-      this->m_CurrentTime  = vnl_math_max( 0.0, this->m_CurrentTime );
+      this->m_CurrentTime  = std::max( 0.0, this->m_CurrentTime );
     }
 
     /** Save for next iteration */

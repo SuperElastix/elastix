@@ -633,7 +633,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
     {
       // The NumberOfThreadsPerMetric is changed after Initialize() so we save it before and then
       // set it on.
-      unsigned nrOfThreadsPerMetric = this->GetNumberOfThreads();
+      unsigned nrOfThreadsPerMetric = this->GetNumberOfWorkUnits();
       testPtr1->Initialize();
       testPtr1->SetNumberOfThreads( nrOfThreadsPerMetric );
     }

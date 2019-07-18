@@ -55,10 +55,8 @@ ParabolicErodeDilateImageFilter< TInputImage, doDilate, TOutputImage >
   }
   m_UseImageSpacing = false;
 
-#if ITK_VERSION_MAJOR >= 5
   // Use the classic (ITK4) threading model, to ensure ThreadedGenerateData is being called.
   this->itk::ImageSource<TInputImage>::DynamicMultiThreadingOff();
-#endif
 }
 
 
@@ -185,7 +183,7 @@ ParabolicErodeDilateImageFilter< TInputImage, doDilate, TOutputImage >
   // Set up the multithreaded processing
   typename ImageSource< TOutputImage >::ThreadStruct str;
   str.Filter = this;
-  this->GetMultiThreader()->SetNumberOfThreads( this->GetNumberOfThreads() );
+  this->GetMultiThreader()->SetNumberOfThreads( this->GetNumberOfWorkUnits() );
   this->GetMultiThreader()->SetSingleMethod( this->ThreaderCallback, &str );
 
   // multithread the execution

@@ -120,11 +120,11 @@ private:
 
     if( absValue < NumericTraits< double >::OneValue() )
     {
-      return -vnl_math_sgn( u );
+      return -vnl_math::sgn( u );
     }
     else if( absValue == NumericTraits< double >::OneValue() )
     {
-      return -vnl_math_sgn( u ) / 2.0;
+      return -vnl_math::sgn( u ) / 2.0;
     }
     else { return NumericTraits< double >::ZeroValue(); }
   }
@@ -165,7 +165,7 @@ private:
     }
     else if( absValue < 1.5 )
     {
-      return u - 1.5 * vnl_math_sgn( u );
+      return u - 1.5 * vnl_math::sgn( u );
     }
     else
     {

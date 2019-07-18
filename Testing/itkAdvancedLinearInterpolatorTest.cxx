@@ -187,13 +187,13 @@ TestInterpolators( void )
     std::cout << "B-spline: " << valueBSpline  << "   " << derivBSpline  << std::endl;
     std::cout << "B-spline: " << valueBSpline2 << "   " << derivBSpline2 << "\n" << std::endl;
 
-    if( vnl_math_abs( valueLinA - valueBSpline ) > 1.0e-3 )
+    if( vnl_math::abs( valueLinA - valueBSpline ) > 1.0e-3 )
     {
       std::cerr << "ERROR: there is a difference in the interpolated value, "
                 << "between the linear and the 1st-order B-spline interpolator." << std::endl;
       return false;
     }
-    if( vnl_math_abs( valueBSpline - valueBSpline2 ) > 1.0e-3 )
+    if( vnl_math::abs( valueBSpline - valueBSpline2 ) > 1.0e-3 )
     {
       std::cerr << "ERROR: there is a difference in the interpolated value, "
                 << "within the 1st-order B-spline interpolator (inconsistency)." << std::endl;

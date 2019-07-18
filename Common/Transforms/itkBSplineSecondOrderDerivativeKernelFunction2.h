@@ -103,7 +103,7 @@ private:
   /** Second order spline. */
   inline double Evaluate( const Dispatch< 2 > &, const double & u ) const
   {
-    double absValue = vnl_math_abs( u );
+    double absValue = vnl_math::abs( u );
 
     if( absValue < 0.5 )
     {
@@ -139,15 +139,15 @@ private:
   /**  Third order spline. */
   inline double Evaluate( const Dispatch< 3 > &, const double & u ) const
   {
-    const double absValue = vnl_math_abs( u );
+    const double absValue = vnl_math::abs( u );
 
     if( absValue < 1.0 )
     {
-      return vnl_math_sgn0( u ) * ( 3.0 * u ) - 2.0;
+      return vnl_math::sgn0( u ) * ( 3.0 * u ) - 2.0;
     }
     else if( absValue < 2.0 )
     {
-      return -vnl_math_sgn( u ) * u + 2.0;
+      return -vnl_math::sgn( u ) * u + 2.0;
     }
     else
     {

@@ -27,7 +27,7 @@
 #include "itkTimeProbesCollectorBase.h"
 
 // Multi-threading using ITK threads
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 // Multi-threading using OpenMP
 #ifdef ELASTIX_USE_OPENMP
@@ -71,7 +71,7 @@ public:
   ParametersType     m_Gradient;
   InternalScalarType m_LearningRate;
 
-  typedef itk::MultiThreader             ThreaderType;
+  typedef itk::PlatformMultiThreader             ThreaderType;
   typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
   ThreaderType::Pointer m_Threader;
   bool                  m_UseOpenMP;
@@ -169,7 +169,7 @@ public:
 
 
   /** The callback function. */
-  static ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg )
+  static itk::ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg )
   {
     /** Get the current thread id and user data. */
     ThreadInfoType *             infoStruct = static_cast< ThreadInfoType * >( arg );
@@ -180,7 +180,7 @@ public:
     /** Call the real implementation. */
     temp->t_Optimizer->ThreadedAdvanceOneStep2( threadID, *( temp->t_NewPosition ) );
 
-    return ITK_THREAD_RETURN_VALUE;
+    return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
   }  // end AdvanceOneStepThreaderCallback()
 

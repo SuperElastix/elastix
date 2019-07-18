@@ -116,7 +116,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       /** Compute the contribution of this point. */
       for( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
-        measure += vnl_math_sqr(
+        measure += vnl_math::sqr(
           spatialHessian[ k ].GetVnlMatrix().frobenius_norm() );
       }
 
@@ -262,7 +262,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       /** Compute the contribution to the metric value of this point. */
       for( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
-        measure += vnl_math_sqr( A[ k ].frobenius_norm() );
+        measure += vnl_math::sqr( A[ k ].frobenius_norm() );
       }
 
       /** Make a distinction between a B-spline transform and other transforms. */
@@ -443,7 +443,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -502,7 +502,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       /** Compute the contribution to the metric value of this point. */
       for( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
-        measure += vnl_math_sqr( A[ k ].frobenius_norm() );
+        measure += vnl_math::sqr( A[ k ].frobenius_norm() );
       }
 
       /** Make a distinction between a B-spline transform and other transforms. */
@@ -592,7 +592,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = 0;

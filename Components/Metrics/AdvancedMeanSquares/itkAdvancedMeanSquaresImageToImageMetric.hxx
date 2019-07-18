@@ -132,7 +132,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
     // without recomputing them here.
     const double diff1   = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
     const double diff2   = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
-    const double maxdiff = vnl_math_max( diff1, diff2 );
+    const double maxdiff = std::max( diff1, diff2 );
 
     /** We guess that maxdiff/10 is the maximum average difference that will
      * be observed.
@@ -326,7 +326,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -403,7 +403,7 @@ void
 AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValue( MeasureType & value ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
@@ -657,7 +657,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
     = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( Self::GetNumberOfThreads() ) ) );
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -751,7 +751,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;

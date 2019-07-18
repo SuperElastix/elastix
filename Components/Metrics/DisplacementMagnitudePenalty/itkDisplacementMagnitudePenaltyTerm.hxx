@@ -106,7 +106,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
       * \todo FixedImageDimension should be MovingImageDimension  */
       for( unsigned int d = 0; d < FixedImageDimension; ++d )
       {
-        measure += vnl_math_sqr( mappedPoint[ d ] - fixedPoint[ d ] );
+        measure += vnl_math::sqr( mappedPoint[ d ] - fixedPoint[ d ] );
       }
 
     } // end if sampleOk
@@ -118,7 +118,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Update measure value. Avoid division by zero. */
-  measure /= vnl_math_max( NumericTraits< RealType >::One,
+  measure /= std::max( NumericTraits< RealType >::One,
     static_cast< RealType >( this->m_NumberOfPixelsCounted ) );
 
   /** Return the value. */
@@ -244,7 +244,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
 
   /** Update measure value and derivative. The factor 2 in the derivative
    * originates from the square in ||T(x)-x||^2 */
-  const RealType normalizationConstant = vnl_math_max(
+  const RealType normalizationConstant = std::max(
     NumericTraits< RealType >::One,
     static_cast< RealType >( this->m_NumberOfPixelsCounted ) );
   measure    /= normalizationConstant;
