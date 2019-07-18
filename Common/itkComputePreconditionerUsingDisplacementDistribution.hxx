@@ -151,7 +151,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   double supportRegionDimension = 1;
   if( outdim == 3 )
   {
-    supportRegionDimension = vnl_math::cuberoot( double(supportRegionSize) );
+    supportRegionDimension = std::cbrt( double(supportRegionSize) );
   }
   else if( outdim == 2 )
   {
