@@ -270,7 +270,7 @@ public:
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
 
   /** Set number of threads to use for computations. */
-  virtual void SetNumberOfThreads( ThreadIdType numberOfThreads );
+  virtual void SetNumberOfWorkUnits( ThreadIdType numberOfThreads );
 
   /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
   itkSetMacro( UseMetricSingleThreaded, bool );

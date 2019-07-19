@@ -227,7 +227,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
   ThreadStruct str;
   str.Filter = this;
 
-  this->GetMultiThreader()->SetNumberOfThreads( this->GetNumberOfWorkUnits() );
+  this->GetMultiThreader()->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
   this->GetMultiThreader()->SetSingleMethod( this->ThreaderCallback, &str );
 
   // multithread the execution

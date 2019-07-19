@@ -153,9 +153,9 @@ public:
   itkGetConstReferenceMacro( PreviousGradient, DerivativeType );
 
   /** Set the number of threads. */
-  void SetNumberOfThreads( ThreadIdType numberOfThreads )
+  void SetNumberOfWorkUnits( ThreadIdType numberOfThreads )
   {
-    this->m_Threader->SetNumberOfThreads( numberOfThreads );
+    this->m_Threader->SetNumberOfWorkUnits( numberOfThreads );
   }
   //itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
   itkSetMacro( UseMultiThread, bool );

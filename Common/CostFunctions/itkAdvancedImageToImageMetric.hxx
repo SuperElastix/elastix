@@ -124,13 +124,13 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ********************* SetNumberOfThreads ****************************
+ * ********************* SetNumberOfWorkUnits ****************************
  */
 
 template< class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::SetNumberOfThreads( ThreadIdType numberOfThreads )
+::SetNumberOfWorkUnits( ThreadIdType numberOfThreads )
 {
   // Note: This is a workaround for ITK5, which renamed NumberOfThreads
   // to NumberOfWorkUnits
@@ -140,7 +140,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   const int nthreads = static_cast< int >( Self::GetNumberOfWorkUnits() );
   omp_set_num_threads( nthreads );
 #endif
-} // end SetNumberOfThreads()
+} // end SetNumberOfWorkUnits()
 
 
 /**

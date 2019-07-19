@@ -595,7 +595,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
     timeCollector.Stop( "copy" );
 
     timeCollector.Start( "g1" );
-    this->GetRegistration()->GetAsITKBaseType()->GetMetric()->SetNumberOfThreads(
+    this->GetRegistration()->GetAsITKBaseType()->GetMetric()->SetNumberOfWorkUnits(
       this->GetRegistration()->GetAsITKBaseType()->GetMetric()->GetThreader()->GetGlobalDefaultNumberOfThreads()
       );
     this->GetScaledDerivativeWithExceptionHandling( previousPosition, this->m_MeanGradient );
@@ -639,7 +639,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
       // (and large parameter vectors)
       if( this->m_NumberOfInnerLoopSamples < 300 )
       {
-        this->GetRegistration()->GetAsITKBaseType()->GetMetric()->SetNumberOfThreads( 1 );
+        this->GetRegistration()->GetAsITKBaseType()->GetMetric()->SetNumberOfWorkUnits( 1 );
       }
     }
 

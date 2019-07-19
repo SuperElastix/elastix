@@ -315,7 +315,7 @@ StochasticVarianceReducedGradientDescentOptimizer
 
     /** Call multi-threaded AdvanceOneStep(). */
     ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_Threader->GetNumberOfWorkUnits() );
+    local_threader->SetNumberOfWorkUnits( this->m_Threader->GetNumberOfWorkUnits() );
     local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
     local_threader->SingleMethodExecute();
 

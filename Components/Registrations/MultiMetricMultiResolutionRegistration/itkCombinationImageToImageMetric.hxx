@@ -635,7 +635,7 @@ CombinationImageToImageMetric< TFixedImage, TMovingImage >
       // set it on.
       unsigned nrOfThreadsPerMetric = this->GetNumberOfWorkUnits();
       testPtr1->Initialize();
-      testPtr1->SetNumberOfThreads( nrOfThreadsPerMetric );
+      testPtr1->SetNumberOfWorkUnits( nrOfThreadsPerMetric );
     }
     else if( testPtr2 )
     {
