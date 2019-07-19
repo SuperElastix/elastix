@@ -94,7 +94,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
    * each iteration, in the accumulate functions, in a multi-threaded fashion.
    * This has performance benefits for larger vector sizes.
    */
-  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
   /** Only resize the array of structs when needed. */
   if( this->m_ComputePerThreadVariablesSize != numberOfThreads )
@@ -362,7 +362,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
 {
   /** Get sample container size, number of threads, and output space dimension. */
   const SizeValueType sampleContainerSize = this->m_SampleContainer->Size();
-  const ThreadIdType  numberOfThreads     = this->m_Threader->GetNumberOfThreads();
+  const ThreadIdType  numberOfThreads     = this->m_Threader->GetNumberOfWorkUnits();
   const unsigned int  outdim              = this->m_Transform->GetOutputSpaceDimension();
 
   /** Get a handle to the scales vector */
@@ -470,7 +470,7 @@ void
 ComputeDisplacementDistribution< TFixedImage, TTransform >
 ::AfterThreadedCompute( double & jacg, double & maxJJ )
 {
-  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
   /** Reset all variables. */
   maxJJ = 0.0;

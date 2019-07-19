@@ -126,7 +126,7 @@ public:
       InternalScalarType *       newPos          = newPosition.data_block();
 
       /** Update the new position. */
-      const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
+      const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfWorkUnits() );
       omp_set_num_threads( nthreads );
       #pragma omp parallel for
       for( int j = 0; j < static_cast< int >( spaceDimension ); j++ )
@@ -148,7 +148,7 @@ public:
       Eigen::Map< ParametersTypeEigen >       gradientE( this->m_Gradient.data_block(), spaceDimension );
 
       /** Update the new position. */
-      //Eigen::setNbThreads( this->m_Threader->GetNumberOfThreads() );
+      //Eigen::setNbThreads( this->m_Threader->GetNumberOfWorkUnits() );
       newPositionE = currentPositionE - learningRate * gradientE;
     }
 #endif
@@ -192,7 +192,7 @@ public:
     const unsigned int spaceDimension = m_NumberOfParameters;
     const unsigned int subSize        = static_cast< unsigned int >(
       std::ceil( static_cast< double >( spaceDimension )
-      / static_cast< double >( this->m_Threader->GetNumberOfThreads() ) ) );
+      / static_cast< double >( this->m_Threader->GetNumberOfWorkUnits() ) ) );
     const unsigned int jmin = threadId * subSize;
     unsigned int       jmax = ( threadId + 1 ) * subSize;
     jmax = ( jmax > spaceDimension ) ? spaceDimension : jmax;
@@ -218,7 +218,7 @@ public:
     const unsigned int spaceDimension = m_NumberOfParameters;
     const unsigned int subSize        = static_cast< unsigned int >(
       std::ceil( static_cast< double >( spaceDimension )
-      / static_cast< double >( this->m_Threader->GetNumberOfThreads() ) ) );
+      / static_cast< double >( this->m_Threader->GetNumberOfWorkUnits() ) ) );
     const unsigned int jmin = threadId * subSize;
     unsigned int       jmax = ( threadId + 1 ) * subSize;
     jmax = ( jmax > spaceDimension ) ? spaceDimension : jmax;

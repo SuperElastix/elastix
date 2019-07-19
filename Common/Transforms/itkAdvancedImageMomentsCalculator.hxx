@@ -106,7 +106,7 @@ AdvancedImageMomentsCalculator< TImage >
   * each iteration, in the accumulate functions, in a multi-threaded fashion.
   * This has performance benefits for larger vector sizes.
   */
-  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
   /** Only resize the array of structs when needed. */
   if (this->m_ComputePerThreadVariablesSize != numberOfThreads)
@@ -390,7 +390,7 @@ AdvancedImageMomentsCalculator< TImage >
 
   /** Get sample container size, number of threads, and output space dimension. */
   const SizeValueType sampleContainerSize = this->m_SampleContainer->Size();
-  const ThreadIdType  numberOfThreads = this->m_Threader->GetNumberOfThreads();
+  const ThreadIdType  numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
 /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
@@ -452,7 +452,7 @@ void
 AdvancedImageMomentsCalculator< TImage >
 ::AfterThreadedCompute()
 {
-  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfThreads();
+  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
   /** Accumulate thread results. */
   for (ThreadIdType k = 0; k < numberOfThreads; ++k)
   {

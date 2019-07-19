@@ -247,7 +247,7 @@ StochasticGradientDescentOptimizer
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
     /** Update the new position. */
-    const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfThreads() );
+    const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfWorkUnits() );
     omp_set_num_threads( nthreads );
 #pragma omp parallel for
     for( int j = 0; j < static_cast<int>( spaceDimension ); j++ )
@@ -288,7 +288,7 @@ StochasticGradientDescentOptimizer
 
     /** Update the new position. */
     const int spaceDim = static_cast<int>( spaceDimension );
-    const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfThreads() );
+    const int nthreads = static_cast<int>( this->m_Threader->GetNumberOfWorkUnits() );
     omp_set_num_threads( nthreads );
 #pragma omp parallel for
     for( int i = 0; i < nthreads; i += 1 )
@@ -313,7 +313,7 @@ StochasticGradientDescentOptimizer
 
     /** Call multi-threaded AdvanceOneStep(). */
     ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_Threader->GetNumberOfThreads() );
+    local_threader->SetNumberOfThreads( this->m_Threader->GetNumberOfWorkUnits() );
     local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
     local_threader->SingleMethodExecute();
 
@@ -358,7 +358,7 @@ void StochasticGradientDescentOptimizer
     = this->GetScaledCostFunction()->GetNumberOfParameters();
   const unsigned int subSize = static_cast<unsigned int>(
     std::ceil( static_cast<double>( spaceDimension )
-      / static_cast<double>( this->m_Threader->GetNumberOfThreads() ) ) );
+      / static_cast<double>( this->m_Threader->GetNumberOfWorkUnits() ) ) );
   const unsigned int jmin = threadId * subSize;
   unsigned int jmax = ( threadId + 1 ) * subSize;
   jmax = ( jmax > spaceDimension ) ? spaceDimension : jmax;

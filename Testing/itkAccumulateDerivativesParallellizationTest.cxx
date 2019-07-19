@@ -85,7 +85,7 @@ public:
 
     this->m_NumberOfParameters = 0;
     this->m_Threader           = ThreaderType::New();
-    this->m_NumberOfThreads    = this->m_Threader->GetNumberOfThreads();
+    this->m_NumberOfThreads    = this->m_Threader->GetNumberOfWorkUnits();
     this->m_UseOpenMP          = false;
     this->m_UseMultiThreaded   = false;
     this->m_NormalSum          = 3.1415926;
@@ -100,7 +100,7 @@ public:
   void AccumulateDerivatives( DerivativeType & derivative )
   {
     DerivativeValueType normal_sum = this->m_NormalSum;
-    this->m_NumberOfThreads = this->m_Threader->GetNumberOfThreads();
+    this->m_NumberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
     /** Accumulate derivatives. */
     if( !this->m_UseMultiThreaded ) // single threadedly
@@ -206,7 +206,7 @@ main( int argc, char * argv[] )
   repetitions.push_back( 2e6 ); repetitions.push_back( 2e5 ); repetitions.push_back( 2e4 );
   repetitions.push_back( 2e3 ); repetitions.push_back( 1e2 ); repetitions.push_back( 1e1 );
 
-  const ThreadIdType nrThreads = metric->m_Threader->GetNumberOfThreads();
+  const ThreadIdType nrThreads = metric->m_Threader->GetNumberOfWorkUnits();
 
   /** For all sizes. */
   for( unsigned int s = 0; s < arraySizes.size(); ++s )
