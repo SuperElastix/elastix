@@ -203,7 +203,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject
         = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedImageMask );
-      fixedRegion = fixedMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      fixedRegion = fixedMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Get moving image (mask) information
@@ -214,7 +214,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject
         = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage( this->m_MovingImageMask );
-      movingRegion = movingMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      movingRegion = movingMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Create eight corner points in voxel coordinates for both fixed and moving image.
@@ -300,7 +300,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject
         = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedImageMask );
-      fixedRegion = fixedMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      fixedRegion = fixedMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Compute center of the fixed image (mask bounding box) in physical units
@@ -322,7 +322,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject
         = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage( this->m_MovingImageMask );
-      movingRegion = movingMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      movingRegion = movingMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Compute center of the moving image (mask bounding box) in physical units

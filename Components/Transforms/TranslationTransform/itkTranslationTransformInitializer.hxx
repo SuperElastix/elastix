@@ -132,7 +132,7 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
       typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject
         = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedMask );
-      fixedRegion = fixedMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      fixedRegion = fixedMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Compute center of the fixed image (mask bounding box) in physical units
@@ -153,7 +153,7 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
       typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject
         = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage( this->m_MovingMask );
-      movingRegion = movingMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      movingRegion = movingMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Compute center of the moving image (mask bounding box) in physical units
