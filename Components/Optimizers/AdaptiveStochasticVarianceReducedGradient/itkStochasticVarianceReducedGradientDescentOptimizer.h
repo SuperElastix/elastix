@@ -169,7 +169,7 @@ protected:
 
   /** Typedefs for multi-threading. */
   typedef itk::PlatformMultiThreader               ThreaderType;
-  typedef ThreaderType::ThreadInfoStruct   ThreadInfoType;
+  typedef ThreaderType::WorkUnitInfo   ThreadInfoType;
 
   // made protected so subclass can access
   double                        m_Value;

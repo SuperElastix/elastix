@@ -275,10 +275,10 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 ::ThreaderCallback( void * arg )
 {
   ThreadStruct * str;
-  ThreadIdType   threadId    = ( (PlatformMultiThreader::ThreadInfoStruct *)( arg ) )->ThreadID;
-  ThreadIdType   threadCount = ( (PlatformMultiThreader::ThreadInfoStruct *)( arg ) )->NumberOfThreads;
+  ThreadIdType   threadId    = ( (PlatformMultiThreader::WorkUnitInfo *)( arg ) )->WorkUnitID;
+  ThreadIdType   threadCount = ( (PlatformMultiThreader::WorkUnitInfo *)( arg ) )->NumberOfWorkUnits;
 
-  str = (ThreadStruct *)( ( (PlatformMultiThreader::ThreadInfoStruct *)( arg ) )->UserData );
+  str = (ThreadStruct *)( ( (PlatformMultiThreader::WorkUnitInfo *)( arg ) )->UserData );
 
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.

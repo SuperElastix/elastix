@@ -59,7 +59,7 @@ public:
   mutable std::vector< DerivativeType > m_ThreaderDerivatives;
 
   typedef itk::PlatformMultiThreader             ThreaderType;
-  typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
+  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
   ThreaderType::Pointer m_Threader;
   DerivativeValueType   m_NormalSum;
   ThreadIdType          m_NumberOfThreads;
@@ -149,8 +149,8 @@ public:
   static itk::ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg )
   {
     ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
-    ThreadIdType     threadID    = infoStruct->ThreadID;
-    ThreadIdType     nrOfThreads = infoStruct->NumberOfThreads;
+    ThreadIdType     threadID    = infoStruct->WorkUnitID;
+    ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
 
     MultiThreaderParameterType * temp
       = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );

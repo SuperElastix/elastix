@@ -1314,7 +1314,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputePDFsThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId   = infoStruct->ThreadID;
+  ThreadIdType     threadId   = infoStruct->WorkUnitID;
 
   ParzenWindowHistogramMultiThreaderParameterType * temp
     = static_cast< ParzenWindowHistogramMultiThreaderParameterType * >( infoStruct->UserData );

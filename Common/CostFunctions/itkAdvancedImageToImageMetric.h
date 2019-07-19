@@ -174,7 +174,7 @@ public:
 
   /** Typedefs for multi-threading. */
   typedef itk::PlatformMultiThreader                      ThreaderType;
-  typedef typename ThreaderType::ThreadInfoStruct ThreadInfoType;
+  typedef typename ThreaderType::WorkUnitInfo ThreadInfoType;
 
   /** Public methods ********************/
 

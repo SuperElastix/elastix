@@ -667,8 +667,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::AccumulateDerivativesThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId    = infoStruct->ThreadID;
-  ThreadIdType     nrOfThreads = infoStruct->NumberOfThreads;
+  ThreadIdType     threadId    = infoStruct->WorkUnitID;
+  ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
 
   MultiThreaderAccumulateDerivativeType * temp
     = static_cast< MultiThreaderAccumulateDerivativeType * >( infoStruct->UserData );

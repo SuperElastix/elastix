@@ -871,7 +871,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadID   = infoStruct->ThreadID;
+  ThreadIdType     threadID   = infoStruct->WorkUnitID;
 
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
@@ -912,7 +912,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivativeThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadID   = infoStruct->ThreadID;
+  ThreadIdType     threadID   = infoStruct->WorkUnitID;
 
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
@@ -953,8 +953,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::AccumulateDerivativesThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadID    = infoStruct->ThreadID;
-  ThreadIdType     nrOfThreads = infoStruct->NumberOfThreads;
+  ThreadIdType     threadID    = infoStruct->WorkUnitID;
+  ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
 
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );

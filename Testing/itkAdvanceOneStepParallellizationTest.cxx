@@ -72,7 +72,7 @@ public:
   InternalScalarType m_LearningRate;
 
   typedef itk::PlatformMultiThreader             ThreaderType;
-  typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
+  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
   ThreaderType::Pointer m_Threader;
   bool                  m_UseOpenMP;
   bool                  m_UseEigen;
@@ -173,7 +173,7 @@ public:
   {
     /** Get the current thread id and user data. */
     ThreadInfoType *             infoStruct = static_cast< ThreadInfoType * >( arg );
-    itk::ThreadIdType            threadID   = infoStruct->ThreadID;
+    itk::ThreadIdType            threadID   = infoStruct->WorkUnitID;
     MultiThreaderParameterType * temp
       = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
 

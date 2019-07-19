@@ -137,7 +137,7 @@ protected:
 
   /** Typedefs for multi-threading. */
   typedef itk::PlatformMultiThreader             ThreaderType;
-  typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
+  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
 
   typename FixedImageType::ConstPointer   m_FixedImage;
   FixedImageRegionType                    m_FixedImageRegion;

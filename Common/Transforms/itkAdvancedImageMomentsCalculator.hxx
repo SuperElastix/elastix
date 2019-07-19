@@ -353,7 +353,7 @@ AdvancedImageMomentsCalculator< TImage >
 {
   /** Get the current thread id and user data. */
   ThreadInfoType *             infoStruct = static_cast< ThreadInfoType * >(arg);
-  ThreadIdType                 threadID = infoStruct->ThreadID;
+  ThreadIdType                 threadID = infoStruct->WorkUnitID;
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >(infoStruct->UserData);
 
