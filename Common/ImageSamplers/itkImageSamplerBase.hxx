@@ -266,7 +266,7 @@ ImageSamplerBase< TInputImage >
   bool ret = true;
   for( unsigned int i = 0; i < this->m_NumberOfMasks; ++i )
   {
-    ret &= this->GetMask( i )->IsInside( point );
+    ret &= this->GetMask( i )->IsInsideInWorldSpace( point );
   }
 
   return ret;

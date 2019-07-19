@@ -184,7 +184,7 @@ ImageGridSampler< TInputImage >
             inputImage->TransformIndexToPhysicalPoint(
               index, tempsample.m_ImageCoordinates );
 
-            if( mask->IsInside( tempsample.m_ImageCoordinates ) )
+            if( mask->IsInsideInWorldSpace( tempsample.m_ImageCoordinates ) )
             {
               // Get sampled fixed image value.
               tempsample.m_ImageValue = inputImage->GetPixel( index );

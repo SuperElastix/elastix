@@ -177,7 +177,7 @@ ComputeImageExtremaFilter< TInputImage >
     {
       PointType point;
       this->GetInput()->TransformIndexToPhysicalPoint( it.GetIndex(), point );
-      if( this->m_ImageSpatialMask->IsInside( point ) )
+      if( this->m_ImageSpatialMask->IsInsideInWorldSpace( point ) )
       {
         value = it.Get();
         realValue = static_cast<RealType>( value );
@@ -229,7 +229,7 @@ ComputeImageExtremaFilter< TInputImage >
   {
     PointType point;
     this->GetInput()->TransformIndexToPhysicalPoint( it.GetIndex(), point );
-    if( this->m_ImageMask->IsInside( point ) )
+    if( this->m_ImageMask->IsInsideInWorldSpace( point ) )
     {
       value = it.Get();
       realValue = static_cast<RealType>( value );

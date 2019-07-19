@@ -342,7 +342,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
     MovingImageMaskPointer movingImageMask = this->GetMovingImageMask( i );
     if( movingImageMask.IsNotNull() )
     {
-      inside &= movingImageMask->IsInside( mappedPoint );
+      inside &= movingImageMask->IsInsideInWorldSpace( mappedPoint );
     }
 
     /** If the point falls outside one mask, we can skip the rest. */

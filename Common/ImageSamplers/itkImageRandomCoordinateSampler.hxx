@@ -157,7 +157,7 @@ ImageRandomCoordinateSampler< TInputImage >
 
       }
       while( !interpolator->IsInsideBuffer( sampleContIndex )
-        || !mask->IsInside( samplePoint ) );
+        || !mask->IsInsideInWorldSpace( samplePoint ) );
 
       /** Compute the value at the point. */
       sampleValue = static_cast< ImageSampleValueType >(

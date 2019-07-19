@@ -804,7 +804,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** If a mask has been set: */
   if( this->m_MovingImageMask.IsNotNull() )
   {
-    return this->m_MovingImageMask->IsInside( point );
+    return this->m_MovingImageMask->IsInsideInWorldSpace( point );
   }
 
   /** If no mask has been set, just return true. */

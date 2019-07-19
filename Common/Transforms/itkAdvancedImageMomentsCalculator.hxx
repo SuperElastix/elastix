@@ -174,7 +174,7 @@ AdvancedImageMomentsCalculator< TImage >
     m_Image->TransformIndexToPhysicalPoint(indexPosition, physicalPosition);
 
     if ( m_SpatialObjectMask.IsNull()
-         || m_SpatialObjectMask->IsInside(physicalPosition) )
+         || m_SpatialObjectMask->IsInsideInWorldSpace(physicalPosition) )
       {
       m_M0 += value;
 
@@ -417,7 +417,7 @@ AdvancedImageMomentsCalculator< TImage >
     Point< double, ImageDimension > physicalPosition = (*threader_fiter).Value().m_ImageCoordinates;
 
     if (m_SpatialObjectMask.IsNull()
-      || m_SpatialObjectMask->IsInside(physicalPosition))
+      || m_SpatialObjectMask->IsInsideInWorldSpace(physicalPosition))
     {
       M0 += value;
 
