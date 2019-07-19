@@ -983,7 +983,7 @@ ElastixMain::SetMaximumNumberOfThreads( void ) const
   {
     const int maximumNumberOfThreads
       = atoi( maximumNumberOfThreadsString.c_str() );
-    itk::PlatformMultiThreader::SetGlobalMaximumNumberOfThreads(
+    itk::MultiThreaderBase::SetGlobalMaximumNumberOfThreads(
       maximumNumberOfThreads );
   }
 } // end SetMaximumNumberOfThreads()
