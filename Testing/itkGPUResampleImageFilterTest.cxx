@@ -981,7 +981,7 @@ main( int argc, char * argv[] )
 
   std::cout << "CPU " << cpuTransform->GetNameOfClass()
             << " " << cpuInterpolator->GetNameOfClass()
-            << " " << cpuFilter->GetNumberOfThreads()
+            << " " << cpuFilter->GetNumberOfWorkUnits()
             << " " << cputimer.GetMean() / runTimes << std::endl;
 
   /** Write the CPU result. */

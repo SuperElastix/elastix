@@ -114,7 +114,7 @@ ImageRandomSampler< TInputImage >
         InputImageIndexType index = randIter.GetIndex();
         inputImage->TransformIndexToPhysicalPoint( index, inputPoint );
         /** Check if it's inside the mask. */
-        insideMask = mask->IsInside( inputPoint );
+        insideMask = mask->IsInsideInWorldSpace( inputPoint );
       }
       while( !insideMask );
 

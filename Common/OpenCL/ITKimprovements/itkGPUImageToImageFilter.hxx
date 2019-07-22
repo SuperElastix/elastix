@@ -46,7 +46,7 @@ GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
   m_GPUEnabled( true )
 {
   m_GPUKernelManager = OpenCLKernelManager::New();
-  Superclass::SetNumberOfThreads( 1 );
+  Superclass::SetNumberOfWorkUnits( 1 );
 }
 
 
@@ -54,9 +54,9 @@ GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
 template< typename TInputImage, typename TOutputImage, typename TParentImageFilter >
 void
 GPUImageToImageFilter< TInputImage, TOutputImage, TParentImageFilter >
-::SetNumberOfThreads( ThreadIdType _arg )
+::SetNumberOfWorkUnits( ThreadIdType _arg )
 {
-  Superclass::SetNumberOfThreads( 1 );
+  Superclass::SetNumberOfWorkUnits( 1 );
 }
 
 

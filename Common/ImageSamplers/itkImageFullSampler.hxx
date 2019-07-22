@@ -115,7 +115,7 @@ ImageFullSampler< TInputImage >
       inputImage->TransformIndexToPhysicalPoint( index,
         tempSample.m_ImageCoordinates );
 
-      if( mask->IsInside( tempSample.m_ImageCoordinates ) )
+      if( mask->IsInsideInWorldSpace( tempSample.m_ImageCoordinates ) )
       {
         /** Get sampled image value. */
         tempSample.m_ImageValue = iter.Get();
@@ -213,7 +213,7 @@ ImageFullSampler< TInputImage >
       inputImage->TransformIndexToPhysicalPoint( index,
         tempSample.m_ImageCoordinates );
 
-      if( mask->IsInside( tempSample.m_ImageCoordinates ) )
+      if( mask->IsInsideInWorldSpace( tempSample.m_ImageCoordinates ) )
       {
         /** Get sampled image value. */
         tempSample.m_ImageValue = iter.Get();

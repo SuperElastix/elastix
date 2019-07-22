@@ -28,7 +28,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
-      cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF "$(ITK_SOURCE_DIR)"
+      cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DITK_LEGACY_REMOVE=ON "$(ITK_SOURCE_DIR)"
       workingDirectory: "$(ITK_BINARY_DIR)"
   - task: CMake@1
     displayName: 'CMake Build ITK'
@@ -72,7 +72,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
-      cmakeArgs: -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF $(ITK_SOURCE_DIR)
+      cmakeArgs: -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DITK_LEGACY_REMOVE=ON $(ITK_SOURCE_DIR)
       workingDirectory: $(ITK_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build ITK'
@@ -114,7 +114,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
-      cmakeArgs: -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF $(ITK_SOURCE_DIR)
+      cmakeArgs: -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DITK_LEGACY_REMOVE=ON $(ITK_SOURCE_DIR)
       workingDirectory: $(ITK_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build ITK'

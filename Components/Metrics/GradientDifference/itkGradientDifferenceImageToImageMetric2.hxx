@@ -267,7 +267,7 @@ GradientDifferenceImageToImageMetric< TFixedImage, TMovingImage >
       /** if fixedMask is given */
       if( !this->m_FixedImageMask.IsNull() )
       {
-        if( this->m_FixedImageMask->IsInside( point ) )
+        if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
         {
           sampleOK = true;
         }
@@ -316,7 +316,7 @@ GradientDifferenceImageToImageMetric< TFixedImage, TMovingImage >
       /** if fixedMask is given */
       if( !this->m_FixedImageMask.IsNull() )
       {
-        if( this->m_FixedImageMask->IsInside( point ) )
+        if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
         {
           sampleOK = true;
         }
@@ -425,7 +425,7 @@ GradientDifferenceImageToImageMetric< TFixedImage, TMovingImage >
       if( !this->m_FixedImageMask.IsNull() )
       {
 
-        if( this->m_FixedImageMask->IsInside( point ) )   // sample is good
+        if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )   // sample is good
         {
           sampleOK = true;
         }

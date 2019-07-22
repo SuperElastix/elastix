@@ -72,7 +72,7 @@ public:
   InternalScalarType m_LearningRate;
 
   typedef itk::PlatformMultiThreader             ThreaderType;
-  typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
+  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
   ThreaderType::Pointer m_Threader;
   bool                  m_UseOpenMP;
   bool                  m_UseEigen;
@@ -89,7 +89,7 @@ public:
     this->m_NumberOfParameters = 0;
     this->m_LearningRate       = 0.0;
     this->m_Threader           = ThreaderType::New();
-    this->m_Threader->SetNumberOfThreads( 8 );
+    this->m_Threader->SetNumberOfWorkUnits( 8 );
     this->m_UseOpenMP        = false;
     this->m_UseEigen         = false;
     this->m_UseMultiThreaded = false;
@@ -126,7 +126,7 @@ public:
       InternalScalarType *       newPos          = newPosition.data_block();
 
       /** Update the new position. */
-      const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfThreads() );
+      const int nthreads = static_cast< int >( this->m_Threader->GetNumberOfWorkUnits() );
       omp_set_num_threads( nthreads );
       #pragma omp parallel for
       for( int j = 0; j < static_cast< int >( spaceDimension ); j++ )
@@ -148,7 +148,7 @@ public:
       Eigen::Map< ParametersTypeEigen >       gradientE( this->m_Gradient.data_block(), spaceDimension );
 
       /** Update the new position. */
-      //Eigen::setNbThreads( this->m_Threader->GetNumberOfThreads() );
+      //Eigen::setNbThreads( this->m_Threader->GetNumberOfWorkUnits() );
       newPositionE = currentPositionE - learningRate * gradientE;
     }
 #endif
@@ -173,7 +173,7 @@ public:
   {
     /** Get the current thread id and user data. */
     ThreadInfoType *             infoStruct = static_cast< ThreadInfoType * >( arg );
-    itk::ThreadIdType            threadID   = infoStruct->ThreadID;
+    itk::ThreadIdType            threadID   = infoStruct->WorkUnitID;
     MultiThreaderParameterType * temp
       = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
 
@@ -192,7 +192,7 @@ public:
     const unsigned int spaceDimension = m_NumberOfParameters;
     const unsigned int subSize        = static_cast< unsigned int >(
       std::ceil( static_cast< double >( spaceDimension )
-      / static_cast< double >( this->m_Threader->GetNumberOfThreads() ) ) );
+      / static_cast< double >( this->m_Threader->GetNumberOfWorkUnits() ) ) );
     const unsigned int jmin = threadId * subSize;
     unsigned int       jmax = ( threadId + 1 ) * subSize;
     jmax = ( jmax > spaceDimension ) ? spaceDimension : jmax;
@@ -218,7 +218,7 @@ public:
     const unsigned int spaceDimension = m_NumberOfParameters;
     const unsigned int subSize        = static_cast< unsigned int >(
       std::ceil( static_cast< double >( spaceDimension )
-      / static_cast< double >( this->m_Threader->GetNumberOfThreads() ) ) );
+      / static_cast< double >( this->m_Threader->GetNumberOfWorkUnits() ) ) );
     const unsigned int jmin = threadId * subSize;
     unsigned int       jmax = ( threadId + 1 ) * subSize;
     jmax = ( jmax > spaceDimension ) ? spaceDimension : jmax;

@@ -86,7 +86,7 @@ CorrespondingPointsEuclideanDistancePointMetric< TFixedPointSet, TMovingPointSet
       //sampleOk = this->IsInsideMovingMask( mappedPoint );
       if( this->m_MovingImageMask.IsNotNull() )
       {
-        sampleOk = this->m_MovingImageMask->IsInside( mappedPoint );
+        sampleOk = this->m_MovingImageMask->IsInsideInWorldSpace( mappedPoint );
       }
     }
 
@@ -203,7 +203,7 @@ CorrespondingPointsEuclideanDistancePointMetric< TFixedPointSet, TMovingPointSet
       //sampleOk = this->IsInsideMovingMask( mappedPoint );
       if( this->m_MovingImageMask.IsNotNull() )
       {
-        sampleOk = this->m_MovingImageMask->IsInside( mappedPoint );
+        sampleOk = this->m_MovingImageMask->IsInsideInWorldSpace( mappedPoint );
       }
     }
 

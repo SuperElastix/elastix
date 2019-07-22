@@ -648,7 +648,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeDerivativeLowMemoryThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId   = infoStruct->ThreadID;
+  ThreadIdType     threadId   = infoStruct->WorkUnitID;
 
   ParzenWindowMutualInformationMultiThreaderParameterType * temp
     = static_cast< ParzenWindowMutualInformationMultiThreaderParameterType * >( infoStruct->UserData );

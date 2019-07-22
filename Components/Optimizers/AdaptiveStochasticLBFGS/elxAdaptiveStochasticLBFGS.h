@@ -217,9 +217,9 @@ public:
   typedef unsigned int  ThreadIdType;
 
   /** Set the number of threads. */
-  void SetNumberOfThreads( ThreadIdType numberOfThreads )
+  void SetNumberOfWorkUnits( ThreadIdType numberOfThreads )
   {
-    this->m_Threader->SetNumberOfThreads( numberOfThreads );
+    this->m_Threader->SetNumberOfWorkUnits( numberOfThreads );
   }
 
 protected:

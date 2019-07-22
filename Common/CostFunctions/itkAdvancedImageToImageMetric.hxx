@@ -124,13 +124,13 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ********************* SetNumberOfThreads ****************************
+ * ********************* SetNumberOfWorkUnits ****************************
  */
 
 template< class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::SetNumberOfThreads( ThreadIdType numberOfThreads )
+::SetNumberOfWorkUnits( ThreadIdType numberOfThreads )
 {
   // Note: This is a workaround for ITK5, which renamed NumberOfThreads
   // to NumberOfWorkUnits
@@ -140,7 +140,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   const int nthreads = static_cast< int >( Self::GetNumberOfWorkUnits() );
   omp_set_num_threads( nthreads );
 #endif
-} // end SetNumberOfThreads()
+} // end SetNumberOfWorkUnits()
 
 
 /**
@@ -804,7 +804,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** If a mask has been set: */
   if( this->m_MovingImageMask.IsNotNull() )
   {
-    return this->m_MovingImageMask->IsInside( point );
+    return this->m_MovingImageMask->IsInsideInWorldSpace( point );
   }
 
   /** If no mask has been set, just return true. */
@@ -871,7 +871,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadID   = infoStruct->ThreadID;
+  ThreadIdType     threadID   = infoStruct->WorkUnitID;
 
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
@@ -912,7 +912,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivativeThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadID   = infoStruct->ThreadID;
+  ThreadIdType     threadID   = infoStruct->WorkUnitID;
 
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
@@ -953,8 +953,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::AccumulateDerivativesThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadID    = infoStruct->ThreadID;
-  ThreadIdType     nrOfThreads = infoStruct->NumberOfThreads;
+  ThreadIdType     threadID    = infoStruct->WorkUnitID;
+  ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
 
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );

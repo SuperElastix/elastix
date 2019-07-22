@@ -938,7 +938,7 @@ PCAMetric< TFixedImage, TMovingImage >
 ::GetSamplesThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId   = infoStruct->ThreadID;
+  ThreadIdType     threadId   = infoStruct->WorkUnitID;
 
   PCAMetricMultiThreaderParameterType * temp
     = static_cast< PCAMetricMultiThreaderParameterType * >( infoStruct->UserData );
@@ -962,7 +962,7 @@ PCAMetric< TFixedImage, TMovingImage >
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
   typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( Self::GetNumberOfWorkUnits() );
+  local_threader->SetNumberOfWorkUnits( Self::GetNumberOfWorkUnits() );
   local_threader->SetSingleMethod( this->GetSamplesThreaderCallback,
     const_cast< void * >( static_cast< const void * >(
       &this->m_PCAMetricThreaderParameters ) ) );
@@ -1148,7 +1148,7 @@ PCAMetric< TFixedImage, TMovingImage >
 ::ComputeDerivativeThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId   = infoStruct->ThreadID;
+  ThreadIdType     threadId   = infoStruct->WorkUnitID;
 
   PCAMetricMultiThreaderParameterType * temp
     = static_cast< PCAMetricMultiThreaderParameterType * >( infoStruct->UserData );
@@ -1172,7 +1172,7 @@ PCAMetric< TFixedImage, TMovingImage >
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
   typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( Self::GetNumberOfWorkUnits() );
+  local_threader->SetNumberOfWorkUnits( Self::GetNumberOfWorkUnits() );
   local_threader->SetSingleMethod( this->ComputeDerivativeThreaderCallback,
     const_cast< void * >( static_cast< const void * >(
       &this->m_PCAMetricThreaderParameters ) ) );

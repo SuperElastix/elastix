@@ -176,7 +176,7 @@ MetricBase< TElastix >
       if( tmp != "" )
       {
         const unsigned int nrOfThreads = atoi( tmp.c_str() );
-        thisAsAdvanced->SetNumberOfThreads( nrOfThreads );
+        thisAsAdvanced->SetNumberOfWorkUnits( nrOfThreads );
       }
     }
 

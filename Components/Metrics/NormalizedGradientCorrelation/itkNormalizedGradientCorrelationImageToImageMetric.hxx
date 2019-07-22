@@ -187,7 +187,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     /** if fixedMask is given */
     if( !this->m_FixedImageMask.IsNull() )
     {
-      if( this->m_FixedImageMask->IsInside( point ) )
+      if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
       {
         sampleOK = true;
       }
@@ -267,7 +267,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     /** if fixedMask is given */
     if( !this->m_FixedImageMask.IsNull() )
     {
-      if( this->m_FixedImageMask->IsInside( point ) )
+      if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
       {
         sampleOK = true;
       }
@@ -364,7 +364,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     /** if fixedMask is given */
     if( !this->m_FixedImageMask.IsNull() )
     {
-      if( this->m_FixedImageMask->IsInside( point ) )
+      if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
       {
         sampleOK = true;
       }

@@ -209,9 +209,9 @@ public:
   AffineTransformPointer GetPhysicalAxesToPrincipalAxesTransform() const;
 
   /** Set the number of threads. */
-  void SetNumberOfThreads(ThreadIdType numberOfThreads)
+  void SetNumberOfWorkUnits(ThreadIdType numberOfThreads)
   {
-    this->m_Threader->SetNumberOfThreads(numberOfThreads);
+    this->m_Threader->SetNumberOfWorkUnits(numberOfThreads);
   }
 
   virtual void BeforeThreadedCompute( void );
@@ -242,7 +242,7 @@ protected:
 
   /** Typedefs for multi-threading. */
   typedef itk::PlatformMultiThreader             ThreaderType;
-  typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
+  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
   ThreaderType::Pointer                   m_Threader;
 
   /** Launch MultiThread Compute. */

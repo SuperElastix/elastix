@@ -107,7 +107,7 @@ main( int argc, char * argv[] )
   {
     // Test CPU
     cputimer.Start();
-    cpuFilter->SetNumberOfThreads( nThreads );
+    cpuFilter->SetNumberOfWorkUnits( nThreads );
     cpuFilter->SetInput( reader->GetOutput() );
     cpuFilter->SetSigma( sigma );
     cpuFilter->SetDirection( direction );
@@ -197,7 +197,7 @@ main( int argc, char * argv[] )
   for( direction = 0; direction < ImageDimension; direction++ )
   {
     cputimer.Start();
-    cpuFilter->SetNumberOfThreads( maximumNumberOfThreads );
+    cpuFilter->SetNumberOfWorkUnits( maximumNumberOfThreads );
     cpuFilter->SetInput( reader->GetOutput() );
     cpuFilter->SetSigma( sigma );
     cpuFilter->SetDirection( direction );
