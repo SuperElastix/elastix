@@ -554,7 +554,7 @@ PreconditionedStochasticGradientDescent< TElastix >
          << this->elxGetClassName() << " ..." << std::endl;
 
   /** Get current position to start the parameter estimation. */
-  this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
+  this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(
     this->GetCurrentPosition() );
 
   /** Get the number of parameters. */
@@ -611,7 +611,7 @@ PreconditionedStochasticGradientDescent< TElastix >
   preconditionerEstimator->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
   preconditionerEstimator->SetFixedImageMask( testPtr->GetFixedImageMask() );
   preconditionerEstimator->SetTransform(
-    this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+    this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform() );
   preconditionerEstimator->SetCostFunction( this->m_CostFunction );
   preconditionerEstimator->SetNumberOfJacobianMeasurements(
     this->m_NumberOfJacobianMeasurements );
@@ -675,7 +675,7 @@ PreconditionedStochasticGradientDescent< TElastix >
     computeDisplacementDistribution->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
     computeDisplacementDistribution->SetFixedImageMask( testPtr->GetFixedImageMask() );
     computeDisplacementDistribution->SetTransform(
-      this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+      this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform() );
     computeDisplacementDistribution->SetCostFunction( this->m_CostFunction );
     computeDisplacementDistribution->SetNumberOfJacobianMeasurements(
       this->m_NumberOfJacobianMeasurements );
@@ -1026,7 +1026,7 @@ PreconditionedStochasticGradientDescent< TElastix >
 ::CheckForAdvancedTransform( void )
 {
   typename TransformType::Pointer transform = this->GetRegistration()
-    ->GetAsITKBaseType()->GetTransform();
+    ->GetAsITKBaseType()->GetModifiableTransform();
 
   AdvancedTransformType * testPtr = dynamic_cast< AdvancedTransformType * >(
     transform.GetPointer() );

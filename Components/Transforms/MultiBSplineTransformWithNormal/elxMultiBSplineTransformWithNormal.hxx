@@ -782,7 +782,7 @@ MultiBSplineTransformWithNormal< TElastix >::SetOptimizerScales( const unsigned 
   if( edgeWidth == 0 )
   {
     /** Just set the unit scales into the optimizer. */
-    this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+    this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newScales );
     return;
   }
 
@@ -840,7 +840,7 @@ MultiBSplineTransformWithNormal< TElastix >::SetOptimizerScales( const unsigned 
   }
 
   /** Set the scales into the optimizer. */
-  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+  this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newScales );
 
 } // end SetOptimizerScales()
 

@@ -739,7 +739,7 @@ ComputePreconditionerUsingDisplacementDistribution< TFixedImage, TTransform >
   CombinationTransformType * testPtr_combo
     = dynamic_cast< CombinationTransformType * >( this->m_Transform.GetPointer() );
   if( !testPtr_combo ) return; // throw an error?
-  BSplineTransformType * testPtr_bspline = dynamic_cast<BSplineTransformType *>( testPtr_combo->GetCurrentTransform() );
+  const auto testPtr_bspline = dynamic_cast<const BSplineTransformType *>( testPtr_combo->GetCurrentTransform() );
   if( !testPtr_bspline ) return; // throw an error?
 
   GridRegionType gridRegion = testPtr_bspline->GetGridRegion();

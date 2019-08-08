@@ -340,7 +340,7 @@ MissingStructurePenalty< TElastix >
   /** Setup the pipeline. */
 
   /** Set the points of the latest transformation. */
-  const MappedMeshContainerPointer mappedMeshContainer = this->GetMappedMeshContainer();
+  const MappedMeshContainerPointer mappedMeshContainer = this->GetModifiableMappedMeshContainer();
   FixedMeshPointer                 mappedMesh          = mappedMeshContainer->ElementAt( meshId );
 
   /** Use pointer to the mesh data of fixedMesh; const_cast are assumed since outputMesh will only be used for writing the output*/

@@ -132,7 +132,7 @@ public:
   itkGetConstObjectMacro( FixedMeshContainer, FixedMeshContainerType );
 
   itkSetObjectMacro( MappedMeshContainer, MappedMeshContainerType );
-  itkGetObjectMacro( MappedMeshContainer, MappedMeshContainerType );
+  itkGetModifiableObjectMacro( MappedMeshContainer, MappedMeshContainerType );
 
   /** Initialize the Metric by making sure that all the components are
   *  present and plugged together correctly.
