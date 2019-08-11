@@ -9,6 +9,13 @@ jobs:
     vmImage: 'vs2017-win2016'
   steps:
   - script: |
+      cd /d C:\vcpkg
+      git log -1
+      git pull
+      git log -1
+      .\bootstrap-vcpkg.bat
+    displayName: git pull vcpkg and bootstrap-vcpkg
+  - script: |
       set VCPKG_DEFAULT_TRIPLET=x64-windows
       vcpkg.exe install itk
     displayName: vcpkg install itk
