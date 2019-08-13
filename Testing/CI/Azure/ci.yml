@@ -18,7 +18,8 @@ jobs:
   - script: |
       set VCPKG_DEFAULT_TRIPLET=x64-windows
       vcpkg.exe install itk
-    displayName: vcpkg install itk
+      vcpkg.exe integrate install
+    displayName: vcpkg install itk and integrate
   - script: |
       mkdir "$(ELASTIX_BINARY_DIR)"
     displayName: Make build directories
