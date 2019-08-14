@@ -28,11 +28,12 @@ jobs:
     inputs:
       cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)" "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
       workingDirectory: "$(ELASTIX_BINARY_DIR)"
-  - task: CMake@1
-    displayName: 'CMake Build Elastix'
+  - task: MSBuild@1
+    displayName: 'MSBuild'
     inputs:
-      cmakeArgs: --build . --config Release -j 2
-      workingDirectory: "$(ELASTIX_BINARY_DIR)"
+      solution: '$(ELASTIX_BINARY_DIR)/ALL_BUILD.vcxproj'
+      configuration: Release
+      platform: x64
   - script: | 
       pushd "$(ELASTIX_BINARY_DIR)"
       # We exclude two flaky tests whose output depend on the runtime environment which cause them to fail on Azure
