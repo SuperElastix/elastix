@@ -34,6 +34,7 @@ jobs:
       solution: '$(ELASTIX_BINARY_DIR)/ALL_BUILD.vcxproj'
       configuration: Release
       platform: x64
+      msbuildArguments: /p:VcpkgEnabled=true
   - script: | 
       pushd "$(ELASTIX_BINARY_DIR)"
       # We exclude two flaky tests whose output depend on the runtime environment which cause them to fail on Azure
