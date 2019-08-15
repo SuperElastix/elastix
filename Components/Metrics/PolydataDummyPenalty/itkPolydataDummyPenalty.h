@@ -126,7 +126,7 @@ public:
   itkGetConstObjectMacro( FixedMeshContainer, FixedMeshContainerType );
 
   itkSetObjectMacro( MappedMeshContainer, MappedMeshContainerType );
-  itkGetObjectMacro( MappedMeshContainer, MappedMeshContainerType );
+  itkGetModifiableObjectMacro( MappedMeshContainer, MappedMeshContainerType );
 
   /** Get the mapped points. */
   //itkGetObjectMacro( MappedPoints, MeshPointsContainerPointer );

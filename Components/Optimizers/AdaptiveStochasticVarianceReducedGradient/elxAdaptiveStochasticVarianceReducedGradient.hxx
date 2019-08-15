@@ -595,7 +595,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
     timeCollector.Stop( "copy" );
 
     timeCollector.Start( "g1" );
-    this->GetRegistration()->GetAsITKBaseType()->GetMetric()->SetNumberOfWorkUnits(
+    this->GetRegistration()->GetAsITKBaseType()->GetModifiableMetric()->SetNumberOfWorkUnits(
       this->GetRegistration()->GetAsITKBaseType()->GetMetric()->GetThreader()->GetGlobalDefaultNumberOfThreads()
       );
     this->GetScaledDerivativeWithExceptionHandling( previousPosition, this->m_MeanGradient );
@@ -639,7 +639,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
       // (and large parameter vectors)
       if( this->m_NumberOfInnerLoopSamples < 300 )
       {
-        this->GetRegistration()->GetAsITKBaseType()->GetMetric()->SetNumberOfWorkUnits( 1 );
+        this->GetRegistration()->GetAsITKBaseType()->GetModifiableMetric()->SetNumberOfWorkUnits( 1 );
       }
     }
 
@@ -825,7 +825,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
   double maxJCJ = 0.0;
 
   /** Get current position to start the parameter estimation. */
-  this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
+  this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(
     this->GetCurrentPosition() );
 
   /** Cast to advanced metric type. */
@@ -844,7 +844,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
   computeJacobianTerms->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
   computeJacobianTerms->SetFixedImageMask( testPtr->GetFixedImageMask() );
   computeJacobianTerms->SetTransform(
-    this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+    this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform() );
   computeJacobianTerms->SetMaxBandCovSize( this->m_MaxBandCovSize );
   computeJacobianTerms->SetNumberOfBandStructureSamples(
     this->m_NumberOfBandStructureSamples );
@@ -974,7 +974,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
   itk::TimeProbe timer4, timer5;
 
   /** Get current position to start the parameter estimation. */
-  this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
+  this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(
     this->GetCurrentPosition() );
 
   /** Get the user input. */
@@ -998,7 +998,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
   computeDisplacementDistribution->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
   computeDisplacementDistribution->SetFixedImageMask( testPtr->GetFixedImageMask() );
   computeDisplacementDistribution->SetTransform(
-    this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+    this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform() );
   computeDisplacementDistribution->SetCostFunction( this->m_CostFunction );
   computeDisplacementDistribution->SetNumberOfJacobianMeasurements(
     this->m_NumberOfJacobianMeasurements );
@@ -1360,7 +1360,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
 ::CheckForAdvancedTransform( void )
 {
   typename TransformType::Pointer transform = this->GetRegistration()
-    ->GetAsITKBaseType()->GetTransform();
+    ->GetAsITKBaseType()->GetModifiableTransform();
 
   AdvancedTransformType * testPtr = dynamic_cast<AdvancedTransformType *>(
     transform.GetPointer() );
