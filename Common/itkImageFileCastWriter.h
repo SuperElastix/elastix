@@ -20,7 +20,7 @@
 
 #include "itkImageFileWriter.h"
 #include "itkImageIOBase.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkSize.h"
 #include "itkImageIORegion.h"
 #include "itkCastImageFilter.h"

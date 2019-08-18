@@ -19,7 +19,7 @@
 #define __itkAdvancedCombinationTransform_h
 
 #include "itkAdvancedTransform.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 
 namespace itk
 {

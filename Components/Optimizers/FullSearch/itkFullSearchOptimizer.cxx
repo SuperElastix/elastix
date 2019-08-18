@@ -22,7 +22,7 @@
 #include "itkFullSearchOptimizer.h"
 #include "itkCommand.h"
 #include "itkEventObject.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkNumericTraits.h"
 
 namespace itk
