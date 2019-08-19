@@ -19,7 +19,7 @@
 #include "itkStochasticGradientDescentOptimizer.h"
 #include "itkCommand.h"
 #include "itkEventObject.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 
 #ifdef ELASTIX_USE_OPENMP
 #include <omp.h>

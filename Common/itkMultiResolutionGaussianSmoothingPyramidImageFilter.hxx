@@ -40,7 +40,7 @@
 #include "itkMultiResolutionGaussianSmoothingPyramidImageFilter.h"
 #include "itkCastImageFilter.h"
 #include "itkRecursiveGaussianImageFilter.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 
 #include "vnl/vnl_math.h"
 

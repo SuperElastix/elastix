@@ -22,7 +22,7 @@
 
 #include "itkCommand.h"
 #include "itkEventObject.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "vnl/vnl_math.h"
 #include "vnl/vnl_vector.h"
 #include "vnl/algo/vnl_sparse_symmetric_eigensystem.h"

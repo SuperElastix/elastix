@@ -20,7 +20,7 @@
 
 #include <iostream>
 #include "itkAdvancedTransform.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkImage.h"
 #include "itkVectorInterpolateImageFunction.h"
 #include "itkVectorNearestNeighborInterpolateImageFunction.h"

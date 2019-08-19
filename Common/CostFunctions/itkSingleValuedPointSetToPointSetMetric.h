@@ -37,7 +37,7 @@
 #include "itkImageBase.h"
 #include "itkAdvancedTransform.h"
 #include "itkSingleValuedCostFunction.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkSpatialObject.h"
 #include "itkPointSet.h"
 

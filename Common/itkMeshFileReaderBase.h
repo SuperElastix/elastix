@@ -19,7 +19,7 @@
 #define __itkMeshFileReaderBase_h
 
 #include "itkMeshSource.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkMeshFileReader.h" // for MeshFileReaderException
 
 namespace itk

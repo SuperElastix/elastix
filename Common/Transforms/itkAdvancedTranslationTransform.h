@@ -36,7 +36,7 @@
 
 #include <iostream>
 #include "itkAdvancedTransform.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkMatrix.h"
 
 namespace itk

@@ -19,7 +19,7 @@
 #define __itkLimiterFunctionBase_h
 
 #include "itkFunctionBase.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 
 namespace itk
 {

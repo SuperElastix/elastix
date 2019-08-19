@@ -22,7 +22,7 @@
 #include "itkFiniteDifferenceGradientDescentOptimizer.h"
 #include "itkCommand.h"
 #include "itkEventObject.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 
 #include "math.h"
 #include "vnl/vnl_math.h"
