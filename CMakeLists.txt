@@ -146,7 +146,7 @@ if( USE_PreconditionedGradientDescent )
 # If not found automatically, set SuiteSparse_DIR in CMake to the
 # directory where SuiteSparse was built.
 # ------------------------------------------------------------------
-  list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/.." ) # Add the directory where FindSuiteSparse.cmake module can be found.
+  list( APPEND CMAKE_MODULE_PATH "${elastix_SOURCE_DIR}/.." ) # Add the directory where FindSuiteSparse.cmake module can be found.
 
   set( SuiteSparse_USE_LAPACK_BLAS ON )
   find_package( SuiteSparse QUIET NO_MODULE )  # 1st: Try to locate the *config.cmake file.
@@ -593,6 +593,6 @@ foreach( LIB IN LISTS AllComponentLibs )
   elastix_export_target( ${LIB} )
 endforeach()
 
-configure_file( ${CMAKE_SOURCE_DIR}/ElastixConfig.cmake.in ${CMAKE_BINARY_DIR}/ElastixConfig.cmake @ONLY )
-configure_file( ${CMAKE_SOURCE_DIR}/ElastixConfigVersion.cmake.in ${CMAKE_BINARY_DIR}/ElastixConfigVersion.cmake @ONLY )
-configure_file( ${CMAKE_SOURCE_DIR}/UseElastix.cmake.in ${CMAKE_BINARY_DIR}/UseElastix.cmake @ONLY )
+configure_file( ${elastix_SOURCE_DIR}/ElastixConfig.cmake.in ${elastix_BINARY_DIR}/ElastixConfig.cmake @ONLY )
+configure_file( ${elastix_SOURCE_DIR}/ElastixConfigVersion.cmake.in ${elastix_BINARY_DIR}/ElastixConfigVersion.cmake @ONLY )
+configure_file( ${elastix_SOURCE_DIR}/UseElastix.cmake.in ${elastix_BINARY_DIR}/UseElastix.cmake @ONLY )
