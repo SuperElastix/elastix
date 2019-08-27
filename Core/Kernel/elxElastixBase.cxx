@@ -222,7 +222,6 @@ ElastixBase::BeforeAllBase( void )
   }
 
   /** Check the very important UseDirectionCosines parameter. */
-  this->m_UseDirectionCosines = true;
   bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines,
     "UseDirectionCosines", 0 );
   if( !retudc )
@@ -318,8 +317,8 @@ ElastixBase::BeforeAllTransformixBase( void )
   check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
   elxout << "-tp       " << check << std::endl;
 #endif
+
   /** Check the very important UseDirectionCosines parameter. */
-  this->m_UseDirectionCosines = false;
   bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines,
     "UseDirectionCosines", 0 );
   if( !retudc )
