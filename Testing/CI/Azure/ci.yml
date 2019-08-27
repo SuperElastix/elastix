@@ -4,7 +4,7 @@ variables:
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
   ELASTIX_BINARY_DIR: $(Agent.BuildDirectory)/Elastix-build
-      
+
 jobs:
 - job: Windows
   timeoutInMinutes: 0
@@ -45,7 +45,7 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: "$(ELASTIX_BINARY_DIR)"
-  - script: | 
+  - script: |
       pushd "$(ELASTIX_BINARY_DIR)"
       # We exclude two flaky tests whose output depend on the runtime environment which cause them to fail on Azure
       ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
@@ -134,4 +134,4 @@ jobs:
   - bash: ctest --config Release -VV -j 2
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
-    
+

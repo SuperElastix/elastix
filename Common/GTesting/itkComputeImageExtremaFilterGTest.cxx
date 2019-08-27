@@ -174,7 +174,7 @@ namespace
     maskImage->SetRegions(imageSize);
     maskImage->Allocate(true);
     maskImage->SetPixel(IndexType(), 1);
-    
+
     const auto maskSpatialObject = typename FilterType::ImageSpatialMaskType::New();
     maskSpatialObject->SetImage(maskImage);
     maskSpatialObject->Update();

@@ -309,7 +309,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     typedef typename itk::ComputeImageExtremaFilter<MovingImageType> ComputeMovingImageExtremaFilterType;
     typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema
       = ComputeMovingImageExtremaFilterType::New();
-    computeMovingImageExtrema->SetInput( this->GetMovingImage() );    
+    computeMovingImageExtrema->SetInput( this->GetMovingImage() );
     computeMovingImageExtrema->SetImageRegion( this->GetMovingImage()->GetBufferedRegion() );
     if( this->m_MovingImageMask.IsNotNull() )
     {
