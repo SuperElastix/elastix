@@ -411,6 +411,10 @@ MultiMetricMultiResolutionRegistration< TElastix >
     FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
       this->GetElastix()->GetFixedMask(), useMaskErosion,
       this->GetFixedImagePyramid(), level );
+    if (fixedMask != nullptr)
+    {
+      fixedMask->Update();
+    }
     this->GetCombinationMetric()->SetFixedImageMask( fixedMask );
   }
   else if( ( nrOfFixedImages == 1 ) && ( nrOfFixedMasks == 1 ) )
@@ -425,6 +429,10 @@ MultiMetricMultiResolutionRegistration< TElastix >
       FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
         this->GetElastix()->GetFixedMask(), useMaskErosion,
         this->GetFixedImagePyramid( i ), level );
+      if (fixedMask != nullptr)
+      {
+        fixedMask->Update();
+      }
       this->GetCombinationMetric()->SetFixedImageMask( fixedMask, i );
     }
   }
@@ -450,6 +458,10 @@ MultiMetricMultiResolutionRegistration< TElastix >
       }
       FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
         this->GetElastix()->GetFixedMask( i ), useMask_i, pyramid_i, level );
+	  if (fixedMask != nullptr)
+      {
+        fixedMask->Update();
+      }
       this->GetCombinationMetric()->SetFixedImageMask( fixedMask, i );
     }
   } // end else
