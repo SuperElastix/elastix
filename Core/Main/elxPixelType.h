@@ -18,6 +18,8 @@
 #ifndef elxPixelType_h
 #define elxPixelType_h
 
+#include <typeinfo>
+
 namespace elastix
 {
 // PixelType traits for writing types as strings to parameter files
