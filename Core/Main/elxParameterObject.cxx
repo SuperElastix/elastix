@@ -23,7 +23,7 @@
 #include "itkFileTools.h"
 #include <fstream>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 namespace elastix
 {
