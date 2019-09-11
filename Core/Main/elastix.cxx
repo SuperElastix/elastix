@@ -19,6 +19,9 @@
 #include "elastix.h"
 #include "elxElastixMain.h"
 
+#include <cstddef> // For size_t.
+#include <limits>
+
 int
 main( int argc, char ** argv )
 {
@@ -43,6 +46,44 @@ main( int argc, char ** argv )
       std::cout << std::showpoint;
       std::cout << std::setprecision( 3 );
       std::cout << "elastix version: " << __ELASTIX_VERSION << std::endl;
+      return 0;
+    }
+    else if (argument == "--extended-version")
+    {
+      std::cout
+        << std::fixed
+        << std::showpoint
+        << std::setprecision(3)
+        << "elastix version: "
+        << __ELASTIX_VERSION
+        << "\nITK version: "
+        << ITK_VERSION_STRING
+        << "\nBuild date: "
+        << __DATE__
+        << ' '
+        << __TIME__
+#ifdef _MSC_VER
+        << "\nCompiler: Visual C++ version "
+        << _MSC_FULL_VER
+#endif
+#ifdef __clang__
+        << "\nCompiler: Clang"
+#ifdef __VERSION__
+        << " version "
+        << __VERSION__
+#endif
+#endif
+#if defined(__GNUC__)
+        << "\nCompiler: GCC"
+#ifdef __VERSION__
+        << " version "
+        << __VERSION__
+#endif
+#endif
+        << "\nMemory addressing: "
+        << std::numeric_limits<std::size_t>::digits
+        << "-bit"
+        << std::endl;
       return 0;
     }
     else
@@ -347,7 +388,8 @@ PrintHelp( void )
   std::cout << "elastix registers a moving image to a fixed image.\n";
   std::cout << "The registration-process is specified in the parameter file.\n";
   std::cout << "  --help, -h displays this message and exit\n";
-  std::cout << "  --version  output version information and exit\n" << std::endl;
+  std::cout << "  --version  output version information and exit\n"
+    << "  --extended-version  output extended version information and exit\n" << std::endl;
 
   /** Mandatory arguments.*/
   std::cout << "Call elastix from the command line with mandatory arguments:\n";
