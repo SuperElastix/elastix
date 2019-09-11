@@ -3,6 +3,10 @@ cmake_minimum_required( VERSION 2.8 )
 project( elastix )
 set(CMAKE_CXX_STANDARD 11)
 
+if( BUILD_SHARED_LIBS )
+  message(FATAL_ERROR "Elastix does not support BUILD_SHARED_LIBS")
+endif()
+
 #---------------------------------------------------------------------
 cmake_policy( SET CMP0012 NEW )
 if( POLICY CMP0033 )

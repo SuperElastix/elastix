@@ -2832,9 +2832,9 @@ using the -p option of the \elastix\ executable multiple times).
 To build \elastix\ as a library you have to disable the
 \texttt{ELASTIX\_BUILD\_EXECUTABLE} option in CMake. With this
 option disabled a build project for a static library will be
-created. If you want to create a dynamic library (not very well
-tested), you have to enable the \texttt{BUILD\_SHARED\_LIBS}
-option.
+created. Note that \elastix\ cannot be built as a dynamic library:
+The CMake option \texttt{BUILD\_SHARED\_LIBS} should be \texttt{OFF},
+when building \elastix\.
 
 \subsubsection{Linking with the \elastix\ library}
 
@@ -2863,10 +2863,6 @@ sources (the directory having the \texttt{UseElastix.cmake} file).
 If you want to control better to which binaries you link \elastix,
 use the CMake \texttt{target\_link\_libraries} directive instead.
 
-If \elastix\ is supplied as a shared library (DLL), you need to define
-the preprocessor symbol \texttt{\_ELASTIX\_USE\_SHARED\_LIBRARY}.
-No such symbol is required when linking against a static
-\elastix\ library.
 
 \subsubsection{Preparing registration parameter settings}
 
