@@ -87,6 +87,7 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
     {
       fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedMask );
+      fixedMaskAsSpatialObject->Update();
     }
 
     typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject; // default-constructed (null)
@@ -94,6 +95,7 @@ TranslationTransformInitializer< TTransform, TFixedImage, TMovingImage >
     {
       movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage( this->m_MovingMask );
+      movingMaskAsSpatialObject->Update();
     }
 
     // Compute the image moments

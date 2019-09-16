@@ -103,6 +103,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
     {
       fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedImageMask );
+      fixedMaskAsSpatialObject->Update();
     }
 
     typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject;  // default-constructed (null)
@@ -110,6 +111,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
     {
       movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage( this->m_MovingImageMask );
+      movingMaskAsSpatialObject->Update();
     }
 
     // Moments
