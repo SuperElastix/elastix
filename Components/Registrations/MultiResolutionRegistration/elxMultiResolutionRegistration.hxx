@@ -205,10 +205,6 @@ MultiResolutionRegistration< TElastix >
     this->GetElastix()->GetFixedMask(), useFixedMaskErosion,
     this->GetFixedImagePyramid(), level );
 
-  if (fixedMask != nullptr)
-  {
-    fixedMask->Update();
-  }
   this->GetModifiableMetric()->SetFixedImageMask( fixedMask );
 
   /** Stop timer and print the elapsed time. */
