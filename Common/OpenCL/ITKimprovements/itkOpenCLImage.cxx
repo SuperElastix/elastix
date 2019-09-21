@@ -265,7 +265,7 @@ OpenCLImage::Map(
 {
   if( this->IsNull() || region.IsZero() )
   {
-    return NULL;
+    return nullptr;
   }
 
   cl_int      error;

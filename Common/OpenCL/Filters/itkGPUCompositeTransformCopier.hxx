@@ -27,8 +27,8 @@ template<  typename TTypeList, typename NDimensions, typename TCompositeTransfor
 GPUCompositeTransformCopier< TTypeList, NDimensions, TCompositeTransform, TOutputTransformPrecisionType >
 ::GPUCompositeTransformCopier()
 {
-  this->m_InputTransform        = NULL;
-  this->m_Output                = NULL;
+  this->m_InputTransform        = nullptr;
+  this->m_Output                = nullptr;
   this->m_InternalTransformTime = 0;
   this->m_ExplicitMode          = true;
   this->m_TransformCopier       = GPUTransformCopierType::New();

@@ -146,7 +146,7 @@ public:
    * object, can be reused or freed. */
   cl_int SetDestructorCallback(
     void ( CL_CALLBACK * pfn_notify )( cl_mem, void * ),
-    void * user_data = NULL );
+    void * user_data = nullptr );
 
 protected:
 

@@ -86,9 +86,9 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     // mappedMesh was constructed with a Cellscontainer and CellDatacontainer of size 0.
     // We use a null pointer to set them to undefined, which is also the default behavior of the MeshReader.
     // "Write result mesh" checks the null pointer and writes a mesh with the remaining data filled in from the fixed mesh.
-    mappedMesh->SetPointData( NULL );
-    mappedMesh->SetCells( NULL );
-    mappedMesh->SetCellData( NULL );
+    mappedMesh->SetPointData( nullptr );
+    mappedMesh->SetCells( nullptr );
+    mappedMesh->SetCellData( nullptr );
 
     this->m_MappedMeshContainer->SetElement( meshId, mappedMesh );
 

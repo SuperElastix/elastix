@@ -92,7 +92,7 @@ public:
 
 protected:
 
-  GPUImageDataManager() { m_Image = NULL; }
+  GPUImageDataManager() { m_Image = nullptr; }
   virtual ~GPUImageDataManager() {}
 
 private:

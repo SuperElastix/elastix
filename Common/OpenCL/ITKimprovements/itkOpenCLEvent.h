@@ -171,7 +171,7 @@ public:
    * to report appropriate error information. */
   cl_int SetCallback( cl_int type,
     void ( CL_CALLBACK * pfn_notify )( cl_event, cl_int, void * ),
-    void * user_data = NULL );
+    void * user_data = nullptr );
 
   /** Returns the device time in nanoseconds when the command was queued for
    * execution on the host. The return value is only valid if the command has

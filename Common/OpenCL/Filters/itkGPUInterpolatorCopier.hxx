@@ -40,9 +40,9 @@ template< typename TTypeList, typename NDimensions, typename TInterpolator, type
 GPUInterpolatorCopier< TTypeList, NDimensions, TInterpolator, TOutputCoordRep >
 ::GPUInterpolatorCopier()
 {
-  this->m_InputInterpolator     = NULL;
-  this->m_Output                = NULL;
-  this->m_ExplicitOutput        = NULL;
+  this->m_InputInterpolator     = nullptr;
+  this->m_Output                = nullptr;
+  this->m_ExplicitOutput        = nullptr;
   this->m_InternalTransformTime = 0;
   this->m_ExplicitMode          = true;
 }
