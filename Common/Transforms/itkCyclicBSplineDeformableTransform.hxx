@@ -312,7 +312,7 @@ CyclicBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }

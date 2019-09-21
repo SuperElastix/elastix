@@ -89,7 +89,7 @@ std::string
 GetCurrentDateAndTime( void )
 {
   // Obtain current time
-  time_t rawtime = time( NULL );
+  time_t rawtime = time( nullptr );
   // Convert to local time
   struct tm * timeinfo = localtime( &rawtime );
   // Convert to human-readable format

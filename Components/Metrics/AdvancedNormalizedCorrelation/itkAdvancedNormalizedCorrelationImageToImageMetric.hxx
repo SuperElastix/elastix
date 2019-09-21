@@ -42,7 +42,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   this->SetUseMovingImageLimiter( false );
 
   // Multi-threading structs
-  this->m_CorrelationGetValueAndDerivativePerThreadVariables     = NULL;
+  this->m_CorrelationGetValueAndDerivativePerThreadVariables     = nullptr;
   this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor

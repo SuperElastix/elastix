@@ -56,7 +56,7 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
     this->m_WrappedImage[ j ]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
     this->m_WrappedImage[ j ]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     this->m_WrappedImage[ j ]->SetDirection( this->m_GridDirection );
-    this->m_CoefficientImages[ j ] = NULL;
+    this->m_CoefficientImages[ j ] = nullptr;
   }
 
   this->m_ValidRegion = this->m_GridRegion;
@@ -472,7 +472,7 @@ typename AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
   /** NOTE: For efficiency, this class does not keep a copy of the parameters -
    * it just keeps pointer to input parameters.
    */
-  if( NULL == this->m_InputParametersPointer )
+  if( nullptr == this->m_InputParametersPointer )
   {
     itkExceptionMacro( << "Cannot GetParameters() because m_InputParametersPointer is NULL."
                        << " Perhaps SetCoefficientImages() has been called causing the NULL pointer." );
@@ -535,7 +535,7 @@ AdvancedBSplineDeformableTransformBase< TScalarType, NDimensions >
 
     // Clean up buffered parameters
     this->m_InternalParametersBuffer = ParametersType( 0 );
-    this->m_InputParametersPointer   = NULL;
+    this->m_InputParametersPointer   = nullptr;
 
   }
 

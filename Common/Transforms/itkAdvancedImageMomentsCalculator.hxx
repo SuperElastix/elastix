@@ -72,7 +72,7 @@ AdvancedImageMomentsCalculator< TImage >::AdvancedImageMomentsCalculator(void)
   this->m_ThreaderParameters.st_Self = this;
 
   // Multi-threading structs
-  this->m_ComputePerThreadVariables = NULL;
+  this->m_ComputePerThreadVariables = nullptr;
   this->m_ComputePerThreadVariablesSize = 0;
   this->m_CenterOfGravityUsesLowerThreshold = false;
   this->m_NumberOfSamplesForCenteredTransformInitialization = 10000;

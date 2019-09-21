@@ -111,7 +111,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
   }
   else
   {
-    m_Coefficients = NULL;
+    m_Coefficients = nullptr;
   }
 }
 

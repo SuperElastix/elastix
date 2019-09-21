@@ -51,7 +51,7 @@ PCAMetric< TFixedImage, TMovingImage >
   this->SetUseMovingImageLimiter( false );
 
   // Multi-threading structs
-  this->m_PCAMetricGetSamplesPerThreadVariables     = NULL;
+  this->m_PCAMetricGetSamplesPerThreadVariables     = nullptr;
   this->m_PCAMetricGetSamplesPerThreadVariablesSize = 0;
 
   /** Initialize the m_ParzenWindowHistogramThreaderParameters. */

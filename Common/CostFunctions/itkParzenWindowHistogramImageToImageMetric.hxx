@@ -73,7 +73,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   this->m_ParzenWindowHistogramThreaderParameters.m_Metric = this;
 
   // Multi-threading structs
-  this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables     = NULL;
+  this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables     = nullptr;
   this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor

@@ -35,10 +35,10 @@ template< class TFixedImage, class TTransform >
 ComputeJacobianTerms< TFixedImage, TTransform >
 ::ComputeJacobianTerms()
 {
-  this->m_FixedImage     = NULL;
-  this->m_FixedImageMask = NULL;
-  this->m_Transform      = NULL;
-  this->m_FixedImageMask = NULL;
+  this->m_FixedImage     = nullptr;
+  this->m_FixedImageMask = nullptr;
+  this->m_Transform      = nullptr;
+  this->m_FixedImageMask = nullptr;
   this->m_UseScales      = false;
 
   this->m_MaxBandCovSize               = 0;
