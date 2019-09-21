@@ -238,7 +238,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
   {
     delete[] this->m_InternalContainer[ 0 ];
     delete[] this->m_InternalContainer;
-    this->m_InternalContainer = NULL;
+    this->m_InternalContainer = nullptr;
   }
 } // end DeallocateInternalContainer()
 

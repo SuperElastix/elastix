@@ -85,7 +85,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   /** We don't use an image sampler for this advanced metric. */
   this->SetUseImageSampler( false );
 
-  this->m_BSplineTransform = NULL;
+  this->m_BSplineTransform = nullptr;
 
 } // end Constructor
 

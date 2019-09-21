@@ -94,7 +94,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     this->m_WrappedImage[ j ]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
     this->m_WrappedImage[ j ]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     this->m_WrappedImage[ j ]->SetDirection( this->m_GridDirection );
-    this->m_CoefficientImages[ j ] = NULL;
+    this->m_CoefficientImages[ j ] = nullptr;
   }
 
   // Setup variables for computing interpolation
@@ -378,7 +378,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
   /** This implements a sparse version of the Jacobian. */
 
   /** Sanity check. */
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -756,7 +756,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -860,7 +860,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -1025,7 +1025,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -1144,7 +1144,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }

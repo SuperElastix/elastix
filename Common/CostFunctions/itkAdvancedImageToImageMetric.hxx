@@ -102,9 +102,9 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_ThreaderMetricParameters.st_Metric = this;
 
   // Multi-threading structs
-  this->m_GetValuePerThreadVariables                  = NULL;
+  this->m_GetValuePerThreadVariables                  = nullptr;
   this->m_GetValuePerThreadVariablesSize              = 0;
-  this->m_GetValueAndDerivativePerThreadVariables     = NULL;
+  this->m_GetValueAndDerivativePerThreadVariables     = nullptr;
   this->m_GetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor

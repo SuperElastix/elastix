@@ -79,8 +79,8 @@ public:
   // Constructor
   MetricTEMP()
   {
-    this->m_ThreaderMetricParameters.st_Metric              = NULL;
-    this->m_ThreaderMetricParameters.st_DerivativePointer   = NULL;
+    this->m_ThreaderMetricParameters.st_Metric              = nullptr;
+    this->m_ThreaderMetricParameters.st_DerivativePointer   = nullptr;
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 0.0;
 
     this->m_NumberOfParameters = 0;

@@ -1192,7 +1192,7 @@ RayCastHelper< TInputImage, TCoordRep >
         m_RayIntersectionVoxels[ 0 ]
               = m_RayIntersectionVoxels[ 1 ]
               = m_RayIntersectionVoxels[ 2 ]
-              = m_RayIntersectionVoxels[ 3 ] = NULL;
+              = m_RayIntersectionVoxels[ 3 ] = nullptr;
       }
       break;
     }
@@ -1226,7 +1226,7 @@ RayCastHelper< TInputImage, TCoordRep >
         m_RayIntersectionVoxels[ 0 ]
               = m_RayIntersectionVoxels[ 1 ]
               = m_RayIntersectionVoxels[ 2 ]
-              = m_RayIntersectionVoxels[ 3 ] = NULL;
+              = m_RayIntersectionVoxels[ 3 ] = nullptr;
       }
       break;
     }
@@ -1261,7 +1261,7 @@ RayCastHelper< TInputImage, TCoordRep >
         m_RayIntersectionVoxels[ 0 ]
               = m_RayIntersectionVoxels[ 1 ]
               = m_RayIntersectionVoxels[ 2 ]
-              = m_RayIntersectionVoxels[ 3 ] = NULL;
+              = m_RayIntersectionVoxels[ 3 ] = nullptr;
       }
       break;
     }

@@ -43,10 +43,10 @@ template< class TFixedImage, class TTransform >
 ComputeDisplacementDistribution< TFixedImage, TTransform >
 ::ComputeDisplacementDistribution()
 {
-  this->m_FixedImage                   = NULL;
-  this->m_FixedImageMask               = NULL;
-  this->m_Transform                    = NULL;
-  this->m_FixedImageMask               = NULL;
+  this->m_FixedImage                   = nullptr;
+  this->m_FixedImageMask               = nullptr;
+  this->m_Transform                    = nullptr;
+  this->m_FixedImageMask               = nullptr;
   this->m_NumberOfJacobianMeasurements = 0;
   this->m_SampleContainer              = 0;
 
@@ -58,7 +58,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   this->m_ThreaderParameters.st_Self = this;
 
   // Multi-threading structs
-  this->m_ComputePerThreadVariables     = NULL;
+  this->m_ComputePerThreadVariables     = nullptr;
   this->m_ComputePerThreadVariablesSize = 0;
 
 } // end Constructor

@@ -402,7 +402,7 @@ public:
 
     static DataObjectContainerPointer GenerateImageContainer(
       FileNameContainerType * fileNameContainer, const std::string & imageDescription,
-      bool useDirectionCosines, DirectionType * originalDirectionCosines = NULL )
+      bool useDirectionCosines, DirectionType * originalDirectionCosines = nullptr )
     {
       DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
 
