@@ -63,7 +63,7 @@ MevisDicomTiffImageIO
 ::MevisDicomTiffImageIO() :
   m_DcmFileName( "" ),
   m_TiffFileName( "" ),
-  m_TIFFImage( NULL ),
+  m_TIFFImage( nullptr ),
   m_TIFFDimension( 2 ),
   m_IsOpen( false ),
   m_Compression( 0 ),
@@ -168,7 +168,7 @@ MevisDicomTiffImageIO::FindElement(
     {
       if( it->GetVR() == gdcm::VR::SQ )
       {
-        if( it->GetValueAsSQ() != NULL )
+        if( it->GetValueAsSQ() != nullptr )
         {
           if( !it->GetValueAsSQ()->Begin()->GetNestedDataSet().IsEmpty() )
           {
@@ -293,7 +293,7 @@ MevisDicomTiffImageIO::CanReadFile( const char * filename )
 
   // checking if tiff is valid tif
   m_TIFFImage = TIFFOpen( m_TiffFileName.c_str(), "rc" ); // c is disable strip chopping
-  if( m_TIFFImage == NULL )
+  if( m_TIFFImage == nullptr )
   {
     itkDebugMacro( << "mevisIO:canreadfile(): error opening tif file " << m_TiffFileName );
     return false;
@@ -688,7 +688,7 @@ MevisDicomTiffImageIO::ReadImageInformation()
   // determine size
   // numberofcomponents
   // data type
-  if( m_TIFFImage == NULL )
+  if( m_TIFFImage == nullptr )
   {
     itkExceptionMacro( << "mevisIO:readimageinformation: error opening file " << m_TiffFileName );
     return;

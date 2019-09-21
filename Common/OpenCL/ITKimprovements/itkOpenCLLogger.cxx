@@ -61,7 +61,7 @@ OpenCLLogger::New()
 OpenCLLogger::OpenCLLogger() :
   m_FileName( "_opencl.log" )
 {
-  this->m_FileStream = NULL;
+  this->m_FileStream = nullptr;
   this->m_Created    = false;
 }
 
@@ -105,7 +105,7 @@ OpenCLLogger::Initialize()
   {
     itkExceptionMacro( << "Unable to open file: " << logFileName );
     delete this->m_FileStream;
-    this->m_FileStream = NULL;
+    this->m_FileStream = nullptr;
     this->m_Created    = false;
     return;
   }

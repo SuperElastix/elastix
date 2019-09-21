@@ -86,7 +86,7 @@ OpenCLKernelToImageBridge< TImage >::SetImageDataManager( OpenCLKernel & kernel,
   {
     // According OpenCL specification clSetKernelArg arg_value
     // could be NULL object.
-    cl_mem null_buffer = NULL;
+    cl_mem null_buffer = nullptr;
     error = kernel.SetArg( argumentIndex, &null_buffer, sizeof( cl_mem ) );
   }
 

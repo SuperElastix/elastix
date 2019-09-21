@@ -43,7 +43,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   this->m_Complement         = true;
 
   // Multi-threading structs
-  this->m_KappaGetValueAndDerivativePerThreadVariables     = NULL;
+  this->m_KappaGetValueAndDerivativePerThreadVariables     = nullptr;
   this->m_KappaGetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor

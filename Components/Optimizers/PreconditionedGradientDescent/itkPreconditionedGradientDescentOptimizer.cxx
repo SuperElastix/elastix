@@ -498,7 +498,7 @@ PreconditionedGradientDescentOptimizer
   double beta[2];
   beta[0] = 0.0; // this->GetDiagonalWeight() * largestEig; but we already did that above
   beta[1] = 0.0; // this is for potential imaginary part of complex number.
-  cholmod_factorize_p( cPrecondition, beta, NULL, 0,
+  cholmod_factorize_p( cPrecondition, beta, nullptr, 0,
     this->m_CholmodFactor, this->m_CholmodCommon );
 
   /** Store condition number of user */

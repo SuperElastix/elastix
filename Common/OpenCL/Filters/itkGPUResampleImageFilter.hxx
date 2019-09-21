@@ -77,8 +77,8 @@ GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
   this->m_FilterPreGPUKernelHandle  = -1;
   this->m_FilterPostGPUKernelHandle = -1;
 
-  this->m_InterpolatorBase = NULL;
-  this->m_TransformBase    = NULL;
+  this->m_InterpolatorBase = nullptr;
+  this->m_TransformBase    = nullptr;
 
   this->m_RequestedNumberOfSplits = 5;
 

@@ -334,9 +334,9 @@ PolydataDummyPenalty< TElastix >
    * will only be used for writing the output.
    * */
   FixedMeshConstPointer fixedMesh        = this->GetFixedMeshContainer()->ElementAt( meshId );
-  bool                  tempSetPointData = ( mappedMesh->GetPointData() == NULL );
-  bool                  tempSetCells     = ( mappedMesh->GetCells() == NULL );
-  bool                  tempSetCellData  = ( mappedMesh->GetCellData() == NULL );
+  bool                  tempSetPointData = ( mappedMesh->GetPointData() == nullptr );
+  bool                  tempSetCells     = ( mappedMesh->GetCells() == nullptr );
+  bool                  tempSetCellData  = ( mappedMesh->GetCellData() == nullptr );
 
   if( tempSetPointData )
   {
@@ -376,16 +376,16 @@ PolydataDummyPenalty< TElastix >
 
   if( tempSetPointData )
   {
-    mappedMesh->SetPointData( NULL );
+    mappedMesh->SetPointData( nullptr );
   }
 
   if( tempSetCells )
   {
-    mappedMesh->SetCells( NULL );
+    mappedMesh->SetCells( nullptr );
   }
   if( tempSetCellData )
   {
-    mappedMesh->SetCellData( NULL );
+    mappedMesh->SetCellData( nullptr );
   }
 
 } // end WriteResultMesh()

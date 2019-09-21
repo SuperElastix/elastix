@@ -210,7 +210,7 @@ OpenCLKernelManager::SetKernelArgWithImage(
 #endif
     // According OpenCL 1.1 specification clSetKernelArg arg_value could be NULL
     // object.
-    cl_mem null_buffer = NULL;
+    cl_mem null_buffer = nullptr;
     error = clSetKernelArg( this->GetKernel( kernelId ).GetKernelId(), argId, sizeof( cl_mem ), &null_buffer );
   }
 

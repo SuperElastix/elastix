@@ -1334,12 +1334,12 @@ OpenCLKernel::LaunchKernel()
   if( gwoNull && lwsNull )
   {
     error = clEnqueueNDRangeKernel( d->context->GetActiveQueue(), this->m_KernelId,
-      work_dim, NULL, d->global_work_size.GetSizes(), NULL, 0, 0, &event );
+      work_dim, nullptr, d->global_work_size.GetSizes(), nullptr, 0, 0, &event );
   }
   else if( gwoNull && !lwsNull )
   {
     error = clEnqueueNDRangeKernel( d->context->GetActiveQueue(), this->m_KernelId,
-      work_dim, NULL, d->global_work_size.GetSizes(),
+      work_dim, nullptr, d->global_work_size.GetSizes(),
       ( d->local_work_size.GetWidth() ? d->local_work_size.GetSizes() : 0 ),
 
       0, 0, &event );
@@ -1348,7 +1348,7 @@ OpenCLKernel::LaunchKernel()
   {
     error = clEnqueueNDRangeKernel( d->context->GetActiveQueue(), this->m_KernelId,
       work_dim, d->global_work_offset.GetSizes(), d->global_work_size.GetSizes(),
-      NULL, 0, 0, &event );
+      nullptr, 0, 0, &event );
   }
   else
   {
@@ -1405,13 +1405,13 @@ OpenCLKernel::LaunchKernel( const OpenCLEventList & event_list )
   if( gwoNull && lwsNull )
   {
     error = clEnqueueNDRangeKernel( d->context->GetActiveQueue(), this->m_KernelId,
-      work_dim, NULL, d->global_work_size.GetSizes(), NULL,
+      work_dim, nullptr, d->global_work_size.GetSizes(), nullptr,
       event_list.GetSize(), event_list.GetEventData(), &event );
   }
   else if( gwoNull && !lwsNull )
   {
     error = clEnqueueNDRangeKernel( d->context->GetActiveQueue(), this->m_KernelId,
-      work_dim, NULL, d->global_work_size.GetSizes(),
+      work_dim, nullptr, d->global_work_size.GetSizes(),
       ( d->local_work_size.GetWidth() ? d->local_work_size.GetSizes() : 0 ),
       event_list.GetSize(), event_list.GetEventData(), &event );
   }
@@ -1419,7 +1419,7 @@ OpenCLKernel::LaunchKernel( const OpenCLEventList & event_list )
   {
     error = clEnqueueNDRangeKernel( d->context->GetActiveQueue(), this->m_KernelId,
       work_dim, d->global_work_offset.GetSizes(), d->global_work_size.GetSizes(),
-      NULL,
+      nullptr,
       event_list.GetSize(), event_list.GetEventData(), &event );
   }
   else

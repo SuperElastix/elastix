@@ -345,9 +345,9 @@ MissingStructurePenalty< TElastix >
 
   /** Use pointer to the mesh data of fixedMesh; const_cast are assumed since outputMesh will only be used for writing the output*/
   FixedMeshConstPointer fixedMesh        = this->GetFixedMeshContainer()->ElementAt( meshId );
-  bool                  tempSetPointData = ( mappedMesh->GetPointData() == NULL );
-  bool                  tempSetCells     = ( mappedMesh->GetCells() == NULL );
-  bool                  tempSetCellData  = ( mappedMesh->GetCellData() == NULL );
+  bool                  tempSetPointData = ( mappedMesh->GetPointData() == nullptr );
+  bool                  tempSetCells     = ( mappedMesh->GetCells() == nullptr );
+  bool                  tempSetCellData  = ( mappedMesh->GetCellData() == nullptr );
 
   if( tempSetPointData )
   {
@@ -391,18 +391,18 @@ MissingStructurePenalty< TElastix >
   if( tempSetPointData )
   {
     // restore pointdata as undefined
-    mappedMesh->SetPointData( NULL );
+    mappedMesh->SetPointData( nullptr );
   }
 
   if( tempSetCells )
   {
     // restore cells as undefined
-    mappedMesh->SetCells( NULL );
+    mappedMesh->SetCells( nullptr );
   }
   if( tempSetCellData )
   {
     // restore celldata as undefined
-    mappedMesh->SetCellData( NULL );
+    mappedMesh->SetCellData( nullptr );
   }
 
 } // end WriteResultMesh()
