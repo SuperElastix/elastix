@@ -1141,7 +1141,7 @@ typename GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisi
 * GPUResampleImageFilter< TInputImage, TOutputImage, TInterpolatorPrecisionType >
 ::GetGPUBSplineBaseTransform( const std::size_t transformIndex )
 {
-  GPUBSplineBaseTransformType * GPUBSplineTransformBase = NULL;
+  GPUBSplineBaseTransformType * GPUBSplineTransformBase = nullptr;
 
   // Get GPUBSplineTransformBase
   if( this->m_TransformIsCombo )
