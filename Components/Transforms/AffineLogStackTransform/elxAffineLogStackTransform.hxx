@@ -132,7 +132,6 @@ AffineLogStackTransform< TElastix >
   ReducedDimensionInputPointType RDcenterOfRotationPoint;
   RDcenterOfRotationPoint.Fill( 0.0 );
   bool pointRead = false;
-  bool indexRead = false;
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
@@ -140,16 +139,7 @@ AffineLogStackTransform< TElastix >
    */
   pointRead = this->ReadCenterOfRotationPoint( RDcenterOfRotationPoint );
 
-  /** If this did not succeed, probably a transform parameter file
-   * is trying to be read that was generated using an older elastix
-   * version. Try to read it as an index, and convert to point.
-   */
   if( !pointRead )
-  {
-    indexRead = this->ReadCenterOfRotationIndex( RDcenterOfRotationPoint );
-  }
-
-  if( !pointRead && !indexRead )
   {
     xl::xout[ "error" ] << "ERROR: No center of rotation is specified in the "
                         << "transform parameter file" << std::endl;
@@ -468,119 +458,6 @@ AffineLogStackTransform< TElastix >
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newscales );
 
 } // end SetScales()
-
-
-/**
- * ******************** ReadCenterOfRotationIndex *********************
- */
-
-template< class TElastix >
-bool
-AffineLogStackTransform< TElastix >
-::ReadCenterOfRotationIndex( ReducedDimensionInputPointType & rotationPoint ) const
-{
-  /** Try to read CenterOfRotationIndex from the transform parameter
-   * file, which is the rotationPoint, expressed in index-values.
-   */
-  ReducedDimensionContinuousIndexType RDcenterOfRotationIndex;
-  bool                                centerGivenAsIndex = true;
-  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
-  {
-    RDcenterOfRotationIndex[ i ] = 0;
-
-    /** Returns zero when parameter was in the parameter file. */
-    bool found = this->m_Configuration->ReadParameter(
-      RDcenterOfRotationIndex[ i ], "CenterOfRotation", i, false );
-    if( !found )
-    {
-      centerGivenAsIndex &= false;
-    }
-  }
-
-  if( !centerGivenAsIndex )
-  {
-    return false;
-  }
-
-  /** Get spacing, origin and size of the fixed image.
-   * We put this in a dummy image, so that we can correctly
-   * calculate the center of rotation in world coordinates.
-   */
-  SpacingType   spacing;
-  IndexType     index;
-  PointType     origin;
-  SizeType      size;
-  DirectionType direction;
-  direction.SetIdentity();
-
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
-  {
-    /** Read size from the parameter file. Zero by default, which is illegal. */
-    size[ i ] = 0;
-    this->m_Configuration->ReadParameter( size[ i ], "Size", i );
-
-    /** Default index. Read index from the parameter file. */
-    index[ i ] = 0;
-    this->m_Configuration->ReadParameter( index[ i ], "Index", i );
-
-    /** Default spacing. Read spacing from the parameter file. */
-    spacing[ i ] = 1.0;
-    this->m_Configuration->ReadParameter( spacing[ i ], "Spacing", i );
-
-    /** Default origin. Read origin from the parameter file. */
-    origin[ i ] = 0.0;
-    this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
-
-    /** Read direction cosines. Default identity */
-    for( unsigned int j = 0; j < SpaceDimension; j++ )
-    {
-      this->m_Configuration->ReadParameter( direction( j, i ),
-        "Direction", i * SpaceDimension + j );
-    }
-  }
-
-  /** Check for image size. */
-  bool illegalSize = false;
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
-  {
-    if( size[ i ] == 0 )
-    {
-      illegalSize = true;
-    }
-  }
-
-  if( illegalSize )
-  {
-    xl::xout[ "error" ] << "ERROR: One or more image sizes are 0!" << std::endl;
-    return false;
-  }
-
-  /** Make a temporary image with the right region info,
-   * so that the TransformIndexToPhysicalPoint-functions will be right.
-   */
-  typedef ReducedDimensionImageType DummyImageType;
-  typename DummyImageType::Pointer dummyImage = DummyImageType::New();
-  ReducedDimensionRegionType rdregion;
-
-  ReducedDimensionSpacingType   rdspacing;
-  ReducedDimensionIndexType     rdindex;
-  ReducedDimensionPointType     rdorigin;
-  ReducedDimensionSizeType      rdsize;
-  ReducedDimensionDirectionType rddirection;
-
-  rdregion.SetIndex( rdindex );
-  rdregion.SetSize( rdsize );
-  dummyImage->SetRegions( rdregion );
-  dummyImage->SetOrigin( rdorigin );
-  dummyImage->SetSpacing( rdspacing );
-  dummyImage->SetDirection( rddirection );
-
-  /** Convert center of rotation from index-value to physical-point-value. */
-  dummyImage->TransformContinuousIndexToPhysicalPoint(
-    RDcenterOfRotationIndex, rotationPoint );
-
-  return true;
-} // end ReadCenterOfRotationIndex()
 
 
 /**
