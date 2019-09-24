@@ -141,6 +141,8 @@ else()
   )
 endif()
 
+target_compile_definitions(elastix PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}")
+
 #---------------------------------------------------------------------
 # Create the transformix executable.
 

@@ -57,14 +57,17 @@ main( int argc, char ** argv )
         << "elastix version: "
         << __ELASTIX_VERSION
         << "\nITK version: "
-        << ITK_VERSION_STRING
+        << ITK_VERSION_MAJOR << '.'
+        << ITK_VERSION_MINOR << '.'
+        << ITK_VERSION_PATCH
         << "\nBuild date: "
         << __DATE__
         << ' '
         << __TIME__
-#ifdef _MSC_VER
+#ifdef _MSC_FULL_VER
         << "\nCompiler: Visual C++ version "
-        << _MSC_FULL_VER
+        << _MSC_FULL_VER << '.'
+        << _MSC_BUILD
 #endif
 #ifdef __clang__
         << "\nCompiler: Clang"
@@ -80,9 +83,11 @@ main( int argc, char ** argv )
         << __VERSION__
 #endif
 #endif
-        << "\nMemory addressing: "
+        << "\nMemory address size: "
         << std::numeric_limits<std::size_t>::digits
         << "-bit"
+        << "\nCMake version: "
+        << ELX_CMAKE_VERSION
         << std::endl;
       return 0;
     }
