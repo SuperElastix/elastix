@@ -43,7 +43,7 @@
 #include "itkMacro.h" // itkTypeMacroNoParent
 
 /** The current elastix version. */
-#define __ELASTIX_VERSION 4.900
+#define __ELASTIX_VERSION 5.000
 
 /** All elastix components should be in namespace elastix. */
 namespace elastix
