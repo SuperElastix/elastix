@@ -47,8 +47,6 @@ if( NOT ELASTIX_BUILD_EXECUTABLE )
   #set( CMAKE_C_VISIBILITY_PRESET hidden )
   #set( CMAKE_CXX_VISIBILITY_PRESET hidden )
 
-  mark_as_advanced( BUILD_SHARED_LIBS )
-  option( BUILD_SHARED_LIBS "Build shared libraries?" OFF )
   if( BUILD_SHARED_LIBS )
     add_definitions( -D_ELASTIX_USE_SHARED_LIBRARY )
 
