@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------
-// File:      bd_fix_rad_search.cpp
-// Programmer:    David Mount
-// Description:   Standard bd-tree search
-// Last modified: 05/03/05 (Version 1.1)
+// File:			bd_fix_rad_search.cpp
+// Programmer:		David Mount
+// Description:		Standard bd-tree search
+// Last modified:	05/03/05 (Version 1.1)
 //----------------------------------------------------------------------
 // Copyright (c) 1997-2005 University of Maryland and Sunil Arya and
 // David Mount.  All Rights Reserved.
@@ -18,44 +18,44 @@
 // warranty.
 //----------------------------------------------------------------------
 // History:
-//  Revision 1.1  05/03/05
-//    Initial release
+//	Revision 1.1  05/03/05
+//		Initial release
 //----------------------------------------------------------------------
 
-#include "bd_tree.h"          // bd-tree declarations
-#include "kd_fix_rad_search.h"      // kd-tree FR search declarations
+#include "bd_tree.h"					// bd-tree declarations
+#include "kd_fix_rad_search.h"			// kd-tree FR search declarations
 
 //----------------------------------------------------------------------
-//  Approximate searching for bd-trees.
-//    See the file kd_FR_search.cpp for general information on the
-//    approximate nearest neighbor search algorithm.  Here we
-//    include the extensions for shrinking nodes.
+//	Approximate searching for bd-trees.
+//		See the file kd_FR_search.cpp for general information on the
+//		approximate nearest neighbor search algorithm.  Here we
+//		include the extensions for shrinking nodes.
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
-//  bd_shrink::ann_FR_search - search a shrinking node
+//	bd_shrink::ann_FR_search - search a shrinking node
 //----------------------------------------------------------------------
 
 void ANNbd_shrink::ann_FR_search(ANNdist box_dist)
 {
-                        // check dist calc term cond.
-  if (ANNmaxPtsVisited != 0 && ANNptsVisited > ANNmaxPtsVisited) return;
+												// check dist calc term cond.
+	if (ANNmaxPtsVisited != 0 && ANNptsVisited > ANNmaxPtsVisited) return;
 
-  ANNdist inner_dist = 0;           // distance to inner box
-  for (int i = 0; i < n_bnds; i++) {      // is query point in the box?
-    if (bnds[i].out(ANNkdFRQ)) {      // outside this bounding side?
-                        // add to inner distance
-      inner_dist = (ANNdist) ANN_SUM(inner_dist, bnds[i].dist(ANNkdFRQ));
-    }
-  }
-  if (inner_dist <= box_dist) {       // if inner box is closer
-    child[ANN_IN]->ann_FR_search(inner_dist);// search inner child first
-    child[ANN_OUT]->ann_FR_search(box_dist);// ...then outer child
-  }
-  else {                    // if outer box is closer
-    child[ANN_OUT]->ann_FR_search(box_dist);// search outer child first
-    child[ANN_IN]->ann_FR_search(inner_dist);// ...then outer child
-  }
-  ANN_FLOP(3*n_bnds)              // increment floating ops
-  ANN_SHR(1)                  // one more shrinking node
+	ANNdist inner_dist = 0;						// distance to inner box
+	for (int i = 0; i < n_bnds; i++) {			// is query point in the box?
+		if (bnds[i].out(ANNkdFRQ)) {			// outside this bounding side?
+												// add to inner distance
+			inner_dist = (ANNdist) ANN_SUM(inner_dist, bnds[i].dist(ANNkdFRQ));
+		}
+	}
+	if (inner_dist <= box_dist) {				// if inner box is closer
+		child[ANN_IN]->ann_FR_search(inner_dist);// search inner child first
+		child[ANN_OUT]->ann_FR_search(box_dist);// ...then outer child
+	}
+	else {										// if outer box is closer
+		child[ANN_OUT]->ann_FR_search(box_dist);// search outer child first
+		child[ANN_IN]->ann_FR_search(inner_dist);// ...then outer child
+	}
+	ANN_FLOP(3*n_bnds)							// increment floating ops
+	ANN_SHR(1)									// one more shrinking node
 }
