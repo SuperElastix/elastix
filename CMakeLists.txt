@@ -415,6 +415,11 @@ if( ${BUILD_DOCUMENTATION} )
       endif()
     endif()
 
+    # Configure the doxygen configuration
+    configure_file(
+      ${ELASTIX_DOXYGEN_DIR}/doxyfile.in
+      ${ELASTIX_HELP_DIR}/doxyfile.out @ONLY )
+
     # Configure the footer of the help website.
     configure_file(
       ${ELASTIX_DOXYGEN_DIR}/DoxygenFooter.html.in
