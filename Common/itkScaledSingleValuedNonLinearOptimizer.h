@@ -28,8 +28,8 @@ namespace itk
  * Optimizers that inherit from this class optimize a scaled
  * cost function \f$F(y)\f$ instead of the original function \f$f(x)\f$:
  *
- *    \f[ y    = x \cdot s  \f]
- *    \f[ F(y) = f(y/s) \f]
+ *   \f[ y    = x \cdot s  \f]
+ *   \f[ F(y) = f(y/s) \f]
  *
  * where \f$y\f$ are the scaled parameters, \f$x\f$ the original parameters
  * and \f$s\f$ the scales.

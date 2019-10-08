@@ -34,7 +34,7 @@ namespace itk
  *
  * The optimizer solves the unconstrained minimization problem
  *
- *      \f[ \min F(x), \quad x = ( x_1,x_2,\ldots,x_N ), \f]
+ *   \f[ \min F(x), \quad x = ( x_1,x_2,\ldots,x_N ), \f]
  *
  * using the limited memory BFGS method. The routine is especially
  * effective on problems involving a large number of variables. In
