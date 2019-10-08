@@ -30,11 +30,11 @@ namespace itk
  * If \f$C(x)\f$ is a costfunction that has to be minimised, the following iterative
  * algorithm is used to find the optimal parameters \f$x\f$:
  *
- *     \f[ x(k+1) = x(k) - a(k) dC/dx \f]
+ *   \f[ x(k+1) = x(k) - a(k) dC/dx \f]
  *
  * The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by:
  *
- *     \f[ a(k) =  a / (A + k + 1)^alpha \f].
+ *   \f[ a(k) =  a / (A + k + 1)^alpha \f].
  *
  * It is very suitable to be used in combination with a stochastic estimate
  * of the gradient \f$dC/dx\f$. For example, in image registration problems it is

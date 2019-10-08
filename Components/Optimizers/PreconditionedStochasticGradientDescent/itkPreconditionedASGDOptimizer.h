@@ -29,15 +29,15 @@ namespace itk
  * If \f$C(x)\f$ is a cost function that has to be minimized, the following iterative
  * algorithm is used to find the optimal parameters \f$x\f$:
  *
- *     \f[ x(k+1) = x(k) - a(t_k) dC/dx \f]
+ *   \f[ x(k+1) = x(k) - a(t_k) dC/dx \f]
  *
  * The gain \f$a(t_k)\f$ at each iteration \f$k\f$ is defined by:
  *
- *     \f[ a(t_k) =  a / (A + t_k + 1)^alpha \f].
+ *   \f[ a(t_k) =  a / (A + t_k + 1)^alpha \f].
  *
  * And the time \f$t_k\f$ is updated according to:
  *
- *     \f[ t_{k+1} = [ t_k + sigmoid( -g_k^T g_{k-1} ) ]^+ \f]
+ *   \f[ t_{k+1} = [ t_k + sigmoid( -g_k^T g_{k-1} ) ]^+ \f]
  *
  * where \f$g_k\f$ equals \f$dC/dx\f$ at iteration \f$k\f$.
  * For \f$t_0\f$ the InitialTime is used, which is defined in the
