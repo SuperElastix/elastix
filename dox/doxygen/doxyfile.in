@@ -874,7 +874,7 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = "@elastix_SOURCE_DIR@/Common/KNN/ann_1.1" \
+EXCLUDE                = "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphAlphaMutualInformation/KNN/ann_1.1" \
                          "@elastix_SOURCE_DIR@/Components/Transforms/AffineDTITransform/itkAffineDTITransform.h" \
                          "@elastix_SOURCE_DIR@/Components/Transforms/EulerTransform/itkEulerTransform.h" \
                          "@elastix_SOURCE_DIR@/Components/Transforms/SimilarityTransform/itkSimilarityTransform.h" \
@@ -905,24 +905,41 @@ EXCLUDE_PATTERNS       = */.svn/*
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories use the pattern */test/*
 
-EXCLUDE_SYMBOLS        = AdaptiveStochasticGradientDescent::SettingsType \
+EXCLUDE_SYMBOLS        = AdaGrad::SettingsType \
+                         AdaptiveStochasticGradientDescent::SettingsType \
+                         Append \
                          Command \
                          DataObject \
                          *Dispatch \
                          *DispatchBase \
+                         DualVisit* \
                          ExceptionObject \
+                         EulerGroup* \
                          GetConstNumberOfWeightsHack* \
+                         GPUCast \
+                         GPUMath \
+                         GPUTraits \
+                         HasType \
+                         IndexOf \
                          KernelFunction \
+                         Length \
+                         LightObject \
+                         MakeTypeList \
                          MeshSource \
                          NDImageTemplate::ConvertTo*Array \
+                         NullType \
                          Object \
                          ObjectFactoryBase \
+                         PixelType \
                          ProcessObject \
                          ResamplerBase::ITKBaseType \
                          Sample \
                          Transform \
+                         TypeAt \
+                         TypeList \
                          vector \
                          VectorDataContainer::*Iterator \
+                         Visit \
                          xoutbase*::Send
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
@@ -2173,36 +2190,36 @@ INCLUDE_FILE_PATTERNS  =
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 PREDEFINED             = "itkNotUsed(x)=" \
-                         "itkSetMacro(name,type)=                   virtual void Set##name (type _arg);" \
-                         "itkGetMacro(name,type)=                   virtual type Get##name ();" \
-                         "itkGetConstMacro(name,type)=                   virtual type Get##name () const;" \
-                         "itkSetStringMacro(name)=                   virtual void Set##name (const char* _arg);" \
-                         "itkGetStringMacro(name)=                   virtual const char* Get##name () const;" \
-                         "itkSetClampMacro(name,type,min,max)=                   virtual void Set##name (type _arg);" \
-                         "itkSetObjectMacro(name,type)=                   virtual void Set##name (type* _arg);" \
-                         "itkGetObjectMacro(name,type)=                   virtual type* Get##name ();" \
-                         "itkSetConstObjectMacro(name,type)=                   virtual void Set##name ( const type* _arg);" \
-                         "itkGetConstObjectMacro(name,type)=                   virtual const type* Get##name ();" \
-                         "itkGetConstReferenceMacro(name,type)=                   virtual const type& Get##name ();" \
-                         "itkGetConstReferenceObjectMacro(name,type)=                   virtual const type::Pointer& Get##name () const;" \
-                         "itkBooleanMacro(name)=                   virtual void name##On ();                   virtual void name##Off ();" \
-                         "itkSetVector2Macro(name,type)=                   virtual void Set##name (type _arg1, type _arg2)                   virtual void Set##name (type _arg[2]);" \
-                         "itkGetVector2Macro(name,type)=                   virtual type* Get##name () const;                   virtual void Get##name (type& _arg1, type& _arg2) const;                   virtual void Get##name (type _arg[2]) const;" \
-                         "itkSetVector3Macro(name,type)=                   virtual void Set##name (type _arg1, type _arg2, type _arg3)                   virtual void Set##name (type _arg[3]);" \
-                         "itkGetVector3Macro(name,type)=                   virtual type* Get##name () const;                   virtual void Get##name (type& _arg1, type& _arg2, type& _arg3) const;                   virtual void Get##name (type _arg[3]) const;" \
-                         "itkSetVector4Macro(name,type)=                   virtual void Set##name (type _arg1, type _arg2, type _arg3, type _arg4)                   virtual void Set##name (type _arg[4]);" \
-                         "itkGetVector4Macro(name,type)=                   virtual type* Get##name () const;                   virtual void Get##name (type& _arg1, type& _arg2, type& _arg3, type& _arg4) const;                   virtual void Get##name (type _arg[4]) const;" \
-                         "itkSetVector6Macro(name,type)=                   virtual void Set##name (type _arg1, type _arg2, type _arg3, type _arg4, type _arg5, type _arg6)                   virtual void Set##name (type _arg[6]);" \
-                         "itkGetVector6Macro(name,type)=                   virtual type* Get##name () const;                   virtual void Get##name (type& _arg1, type& _arg2, type& _arg3, type& _arg4, type& _arg5, type& _arg6) const;                   virtual void Get##name (type _arg[6]) const;" \
-                         "itkSetVectorMacro(name,type,count)=                   virtual void Set##name(type data[]);" \
-                         "itkGetVectorMacro(name,type,count)=                   virtual type* Get##name () const;" \
-                         "itkNewMacro(type)=                   static Pointer New();" \
-                         "itkTypeMacro(thisClass,superclass)=                   virtual const char *GetClassName() const;" \
-                         "itkConceptMacro(name,concept)=                   enum { name = 0 };" \
-                         "vcl_numeric_limits=                   std::numeric_limits" \
-                         "ITK_TYPENAME=                   typename" \
-                         "FEM_ABSTRACT_CLASS(thisClass,parentClass)=                   public:                                                                   /** Standard  Self typedef.*/                                          typedef thisClass Self;                                                 /** Standard  Superclass typedef. */                                   typedef parentClass Superclass;                                         /** Pointer or SmartPointer to an object. */                            typedef Self* Pointer;                                                  /** Const pointer or SmartPointer to an object. */                      typedef const Self* ConstPointer;                                     private:" \
-                         "FEM_CLASS(thisClass,parentClass)=                   FEM_ABSTRACT_CLASS(thisClass,parentClass)                               public:                                                                   /** Create a new object from the existing one  */                       virtual Baseclass::Pointer Clone() const;                               /** Class ID for FEM object factory */                                  static const int CLID;                                                  /** Virtual function to access the class ID */                          virtual int ClassID() const                                               { return CLID; }                                                      /** Object creation in an itk compatible way */                         static Self::Pointer New()                                                { return new Self(); }                                              private:" \
+                         "itkSetMacro(name,type)=                     virtual void Set##name (type _arg);" \
+                         "itkGetMacro(name,type)=                     virtual type Get##name ();" \
+                         "itkGetConstMacro(name,type)=                virtual type Get##name () const;" \
+                         "itkSetStringMacro(name)=                    virtual void Set##name (const char* _arg);" \
+                         "itkGetStringMacro(name)=                    virtual const char* Get##name () const;" \
+                         "itkSetClampMacro(name,type,min,max)=        virtual void Set##name (type _arg);" \
+                         "itkSetObjectMacro(name,type)=               virtual void Set##name (type* _arg);" \
+                         "itkGetObjectMacro(name,type)=               virtual type* Get##name ();" \
+                         "itkSetConstObjectMacro(name,type)=          virtual void Set##name ( const type* _arg);" \
+                         "itkGetConstObjectMacro(name,type)=          virtual const type* Get##name ();" \
+                         "itkGetConstReferenceMacro(name,type)=       virtual const type& Get##name ();" \
+                         "itkGetConstReferenceObjectMacro(name,type)= virtual const type::Pointer& Get##name () const;" \
+                         "itkBooleanMacro(name)=                      virtual void name##On ();                   virtual void name##Off ();" \
+                         "itkSetVector2Macro(name,type)=              virtual void Set##name (type _arg1, type _arg2)                   virtual void Set##name (type _arg[2]);" \
+                         "itkGetVector2Macro(name,type)=              virtual type* Get##name () const;                   virtual void Get##name (type& _arg1, type& _arg2) const;                   virtual void Get##name (type _arg[2]) const;" \
+                         "itkSetVector3Macro(name,type)=              virtual void Set##name (type _arg1, type _arg2, type _arg3)                   virtual void Set##name (type _arg[3]);" \
+                         "itkGetVector3Macro(name,type)=              virtual type* Get##name () const;                   virtual void Get##name (type& _arg1, type& _arg2, type& _arg3) const;                   virtual void Get##name (type _arg[3]) const;" \
+                         "itkSetVector4Macro(name,type)=              virtual void Set##name (type _arg1, type _arg2, type _arg3, type _arg4)                   virtual void Set##name (type _arg[4]);" \
+                         "itkGetVector4Macro(name,type)=              virtual type* Get##name () const;                   virtual void Get##name (type& _arg1, type& _arg2, type& _arg3, type& _arg4) const;                   virtual void Get##name (type _arg[4]) const;" \
+                         "itkSetVector6Macro(name,type)=              virtual void Set##name (type _arg1, type _arg2, type _arg3, type _arg4, type _arg5, type _arg6)                   virtual void Set##name (type _arg[6]);" \
+                         "itkGetVector6Macro(name,type)=              virtual type* Get##name () const;                   virtual void Get##name (type& _arg1, type& _arg2, type& _arg3, type& _arg4, type& _arg5, type& _arg6) const;                   virtual void Get##name (type _arg[6]) const;" \
+                         "itkSetVectorMacro(name,type,count)=         virtual void Set##name(type data[]);" \
+                         "itkGetVectorMacro(name,type,count)=         virtual type* Get##name () const;" \
+                         "itkNewMacro(type)=                          static Pointer New();" \
+                         "itkTypeMacro(thisClass,superclass)=         virtual const char *GetClassName() const;" \
+                         "itkConceptMacro(name,concept)=              enum { name = 0 };" \
+                         "vcl_numeric_limits=                         std::numeric_limits" \
+                         "ITK_TYPENAME=                               typename" \
+                         "FEM_ABSTRACT_CLASS(thisClass,parentClass)=  public:                                                                   /** Standard  Self typedef.*/                                          typedef thisClass Self;                                                 /** Standard  Superclass typedef. */                                   typedef parentClass Superclass;                                         /** Pointer or SmartPointer to an object. */                            typedef Self* Pointer;                                                  /** Const pointer or SmartPointer to an object. */                      typedef const Self* ConstPointer;                                     private:" \
+                         "FEM_CLASS(thisClass,parentClass)=           FEM_ABSTRACT_CLASS(thisClass,parentClass)                               public:                                                                   /** Create a new object from the existing one  */                       virtual Baseclass::Pointer Clone() const;                               /** Class ID for FEM object factory */                                  static const int CLID;                                                  /** Virtual function to access the class ID */                          virtual int ClassID() const                                               { return CLID; }                                                      /** Object creation in an itk compatible way */                         static Self::Pointer New()                                                { return new Self(); }                                              private:" \
                          "FREEVERSION" \
                          "ERROR_CHECKING" \
                          "HAS_TIFF" \
