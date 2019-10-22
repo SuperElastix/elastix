@@ -23,6 +23,8 @@
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
 
+#include "itkTimeProbe.h"
+
 namespace elastix
 {
 
@@ -49,8 +51,17 @@ void
 AdvancedAffineTransformElastix< TElastix >
 ::BeforeRegistration( void )
 {
+  /** Total time. */
+  itk::TimeProbe timer1;
+  timer1.Start();
+
   /** Task 1 - Set initial parameters. */
   this->InitializeTransform();
+
+  /** Print the elapsed time. */
+  timer1.Stop();
+  elxout << "InitializeTransform took "
+    << this->ConvertSecondsToDHMS(timer1.GetMean(), 2) << std::endl;
 
   /** Task 2 - Set the scales. */
   this->SetScales();
@@ -69,7 +80,6 @@ AdvancedAffineTransformElastix< TElastix >
 {
   InputPointType centerOfRotationPoint;
   centerOfRotationPoint.Fill( 0.0 );
-  bool indexRead = false;
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
@@ -77,16 +87,7 @@ AdvancedAffineTransformElastix< TElastix >
    */
   bool pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
 
-  /** If this did not succeed, probably a transform parameter file
-   * is trying to be read that was generated using an older elastix
-   * version. Try to read it as an index, and convert to point.
-   */
   if( !pointRead )
-  {
-    indexRead = this->ReadCenterOfRotationIndex( centerOfRotationPoint );
-  }
-
-  if( !pointRead && !indexRead )
   {
     xl::xout[ "error" ] << "ERROR: No center of rotation is specified in the "
                         << "transform parameter file" << std::endl;
@@ -291,6 +292,23 @@ AdvancedAffineTransformElastix< TElastix >
       "AutomaticTransformInitializationMethod", 0 );
     if( method == "CenterOfGravity" )
     {
+      bool centerOfGravityUsesLowerThreshold = false;
+      this->GetConfiguration()->ReadParameter( centerOfGravityUsesLowerThreshold,
+        "CenterOfGravityUsesLowerThreshold", this->GetComponentLabel(), 0, false );
+      transformInitializer->SetCenterOfGravityUsesLowerThreshold( centerOfGravityUsesLowerThreshold );
+      if( centerOfGravityUsesLowerThreshold )
+      {
+        double lowerThresholdForCenterGravity = 500;
+        this->m_Configuration->ReadParameter( lowerThresholdForCenterGravity,
+          "LowerThresholdForCenterGravity", 0 );
+        transformInitializer->SetLowerThresholdForCenterGravity( lowerThresholdForCenterGravity );
+      }
+
+      double nrofsamples = 10000;
+      this->m_Configuration->ReadParameter( nrofsamples,
+        "NumberOfSamplesForCenteredTransformInitialization", 0 );
+      transformInitializer->SetNumberOfSamplesForCenteredTransformInitialization( nrofsamples );
+
       transformInitializer->MomentsOn();
     }
     else if( method == "Origins" )
@@ -472,116 +490,9 @@ AdvancedAffineTransformElastix< TElastix >
   elxout << "Scales for transform parameters are: " << newscales << std::endl;
 
   /** And set the scales into the optimizer. */
-  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+  this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newscales );
 
 } // end SetScales()
-
-
-/**
- * ******************** ReadCenterOfRotationIndex *********************
- */
-
-template< class TElastix >
-bool
-AdvancedAffineTransformElastix< TElastix >
-::ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const
-{
-  /** Try to read CenterOfRotationIndex from the transform parameter
-   * file, which is the rotationPoint, expressed in index-values.
-   */
-  IndexType centerOfRotationIndex;
-  bool      centerGivenAsIndex = true;
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
-  {
-    centerOfRotationIndex[ i ] = 0;
-
-    /** Returns zero when parameter was in the parameter file. */
-    bool found = this->m_Configuration->ReadParameter(
-      centerOfRotationIndex[ i ], "CenterOfRotation", i, false );
-    if( !found )
-    {
-      centerGivenAsIndex &= false;
-    }
-  }
-
-  if( !centerGivenAsIndex )
-  {
-    return false;
-  }
-
-  /** Get spacing, origin and size of the fixed image.
-   * We put this in a dummy image, so that we can correctly
-   * calculate the center of rotation in world coordinates.
-   */
-  SpacingType   spacing;
-  IndexType     index;
-  PointType     origin;
-  SizeType      size;
-  DirectionType direction;
-  direction.SetIdentity();
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
-  {
-    /** Read size from the parameter file. Zero by default, which is illegal. */
-    size[ i ] = 0;
-    this->m_Configuration->ReadParameter( size[ i ], "Size", i );
-
-    /** Default index. Read index from the parameter file. */
-    index[ i ] = 0;
-    this->m_Configuration->ReadParameter( index[ i ], "Index", i );
-
-    /** Default spacing. Read spacing from the parameter file. */
-    spacing[ i ] = 1.0;
-    this->m_Configuration->ReadParameter( spacing[ i ], "Spacing", i );
-
-    /** Default origin. Read origin from the parameter file. */
-    origin[ i ] = 0.0;
-    this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
-
-    /** Read direction cosines. Default identity */
-    for( unsigned int j = 0; j < SpaceDimension; j++ )
-    {
-      this->m_Configuration->ReadParameter( direction( j, i ),
-        "Direction", i * SpaceDimension + j );
-    }
-  }
-
-  /** Check for image size. */
-  bool illegalSize = false;
-  for( unsigned int i = 0; i < SpaceDimension; i++ )
-  {
-    if( size[ i ] == 0 )
-    {
-      illegalSize = true;
-    }
-  }
-
-  if( illegalSize )
-  {
-    xl::xout[ "error" ] << "ERROR: One or more image sizes are 0!" << std::endl;
-    return false;
-  }
-
-  /** Make a temporary image with the right region info,
-   * so that the TransformIndexToPhysicalPoint-functions will be right.
-   */
-  typedef FixedImageType DummyImageType;
-  typename DummyImageType::Pointer dummyImage = DummyImageType::New();
-  RegionType region;
-  region.SetIndex( index );
-  region.SetSize( size );
-  dummyImage->SetRegions( region );
-  dummyImage->SetOrigin( origin );
-  dummyImage->SetSpacing( spacing );
-  dummyImage->SetDirection( direction );
-
-  /** Convert center of rotation from index-value to physical-point-value. */
-  dummyImage->TransformIndexToPhysicalPoint(
-    centerOfRotationIndex, rotationPoint );
-
-  /** Successfully read centerOfRotation as Index. */
-  return true;
-
-} // end ReadCenterOfRotationIndex()
 
 
 /**

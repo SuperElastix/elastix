@@ -75,14 +75,14 @@ public:
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   /** Evaluate the function. */
-  inline double Evaluate( const double & u ) const
+  inline double Evaluate( const double & u ) const override
   {
     return this->Evaluate( Dispatch< VSplineOrder >(), u );
   }
 
 
   /** Evaluate the function. */
-  inline void Evaluate( const double & u, double * weights ) const
+  inline void Evaluate( const double & u, double * weights ) const override
   {
     return this->Evaluate( Dispatch< VSplineOrder >(), u, weights );
   }
@@ -91,9 +91,9 @@ public:
 protected:
 
   BSplineDerivativeKernelFunction2(){}
-  ~BSplineDerivativeKernelFunction2(){}
+  ~BSplineDerivativeKernelFunction2() override{}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const
+  void PrintSelf( std::ostream & os, Indent indent ) const override
   {
     Superclass::PrintSelf( os, indent );
     os << indent  << "Spline Order: " << SplineOrder << std::endl;
@@ -120,11 +120,11 @@ private:
 
     if( absValue < NumericTraits< double >::OneValue() )
     {
-      return -vnl_math_sgn( u );
+      return -vnl_math::sgn( u );
     }
     else if( absValue == NumericTraits< double >::OneValue() )
     {
-      return -vnl_math_sgn( u ) / 2.0;
+      return -vnl_math::sgn( u ) / 2.0;
     }
     else { return NumericTraits< double >::ZeroValue(); }
   }
@@ -165,7 +165,7 @@ private:
     }
     else if( absValue < 1.5 )
     {
-      return u - 1.5 * vnl_math_sgn( u );
+      return u - 1.5 * vnl_math::sgn( u );
     }
     else
     {

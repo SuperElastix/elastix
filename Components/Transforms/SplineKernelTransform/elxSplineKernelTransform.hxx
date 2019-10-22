@@ -243,7 +243,7 @@ SplineKernelTransform< TElastix >
   {
     fp = ipp;                 // backwards compatibility, added in elastix 4.5
   }
-  PointSetPointer landmarkPointSet = 0;
+  PointSetPointer landmarkPointSet; // default-constructed (null)
   this->ReadLandmarkFile( fp, landmarkPointSet, true );
 
   /** Set the fp as source landmarks. */
@@ -279,7 +279,7 @@ SplineKernelTransform< TElastix >
          << this->GetComponentLabel()
          << ":" << this->elxGetClassName() << "." << std::endl;
 
-  PointSetPointer landmarkPointSet = 0;
+  PointSetPointer landmarkPointSet;
   this->ReadLandmarkFile( mp, landmarkPointSet, false );
 
   /** Set the mp as target landmarks. */

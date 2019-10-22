@@ -123,7 +123,7 @@ public:
   /** Start optimization.
    * Make sure to set the initial position before starting the optimization
    */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** Resume previously stopped optimization with current parameters
    * \sa StopOptimization.
@@ -146,7 +146,7 @@ public:
    * to define a search space.
    */
   itkSetObjectMacro( SearchSpace, SearchSpaceType );
-  itkGetObjectMacro( SearchSpace, SearchSpaceType );
+  itkGetModifiableObjectMacro( SearchSpace, SearchSpaceType );
 
   /** Add/Remove a dimension to/from the SearchSpace */
   virtual void AddSearchDimension( unsigned int param_nr,
@@ -194,7 +194,7 @@ public:
 protected:
 
   FullSearchOptimizer();
-  virtual ~FullSearchOptimizer() {}
+  ~FullSearchOptimizer() override {}
 
   //void PrintSelf(std::ostream& os, Indent indent) const;
 

@@ -22,6 +22,7 @@
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkNumericTraits.h"
 
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <stdio.h>
@@ -61,7 +62,7 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   Superclass::Initialize();
 
@@ -91,11 +92,9 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
   this->m_TransformMovingImageFilter->SetOutputDirection(
     this->m_FixedImage->GetDirection() );
   this->m_TransformMovingImageFilter->UpdateLargestPossibleRegion();
-  this->ComputeFixedImageExtrema(
-    this->GetFixedImage(), this->GetFixedImageRegion() );
-  this->ComputeMovingImageExtrema(
-    this->m_TransformMovingImageFilter->GetOutput(),
-    this->m_TransformMovingImageFilter->GetOutput()->GetBufferedRegion() );
+
+  //this->InitializeLimiters();
+
   this->m_NormalizationFactor = this->m_FixedImageTrueMax / this->m_MovingImageTrueMax;
   this->m_MultiplyImageFilter->SetInput(
     this->m_TransformMovingImageFilter->GetOutput() );
@@ -109,7 +108,7 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
   /* to rescale the similarity measure between 0-1;*/
   MeasureType tmpmeasure = this->GetValue( this->m_Transform->GetParameters() );
 
-  while( ( vcl_fabs( tmpmeasure ) / this->m_Rescalingfactor ) > 1 )
+  while( ( std::fabs( tmpmeasure ) / this->m_Rescalingfactor ) > 1 )
   {
     this->m_Rescalingfactor *= 10;
   }
@@ -118,7 +117,7 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ********************* Constructor ******************************PrintSelf
+ * ********************* PrintSelf ******************************
  */
 
 template< class TFixedImage, class TMovingImage >
@@ -185,7 +184,7 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
     /** if fixedMask is given */
     if( !this->m_FixedImageMask.IsNull() )
     {
-      if( this->m_FixedImageMask->IsInside( point ) )
+      if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
       {
         sampleOK = true;
       }
@@ -297,7 +296,7 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
     /** if fixedMask is given */
     if( !this->m_FixedImageMask.IsNull() )
     {
-      if( this->m_FixedImageMask->IsInside( point ) )
+      if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
       {
         sampleOK = true;
       }
@@ -417,11 +416,11 @@ PatternIntensityImageToImageMetric< TFixedImage, TMovingImage >
 
   for( unsigned int i = 0; i < numberOfParameters; i++ )
   {
-    testPoint[ i ] -= this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] );
+    testPoint[ i ] -= this->m_DerivativeDelta / std::sqrt( this->m_Scales[ i ] );
     const MeasureType valuep0 = this->GetValue( testPoint );
-    testPoint[ i ] += 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] );
+    testPoint[ i ] += 2 * this->m_DerivativeDelta / std::sqrt( this->m_Scales[ i ] );
     const MeasureType valuep1 = this->GetValue( testPoint );
-    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] ) );
+    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / std::sqrt( this->m_Scales[ i ] ) );
     testPoint[ i ]  = parameters[ i ];
   }
 

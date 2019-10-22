@@ -254,14 +254,24 @@ public: \
  * This macro defines two functions.
  *
  * static const char * elxGetClassNameStatic(void){return _name;}
- * virtual const char * elxGetClassName(void){return _name;}
+ * const char * elxGetClassName( void ) const override { return _name; }
  *
  * Use this macro in every component that will be installed in the
  * ComponentDatabase, using "elxInstallMacro".
  */
 #define elxClassNameMacro( _name ) \
   static const char * elxGetClassNameStatic( void ) { return _name; } \
-  virtual const char * elxGetClassName( void ) const { return _name; }
+  const char * elxGetClassName( void ) const override { return _name; }
+
+ /** Get built-in type.  Creates an override of the virtual member Get"name"()
+  * This is the "const" form of the itkGetMacro.  It should be used unless
+  * the member can be changed through the "Get" access routine. */
+#define elxOverrideGetConstMacro(name, type)  \
+  type Get##name () const override    \
+    {                                 \
+    return this->m_##name;            \
+    }
+
 
 /**
  *  elxout
@@ -281,19 +291,9 @@ public: \
  *      Dll export    *
  *                    *
  ********************************************************************************/
-// Note: Consumers of the DLL must define the symbol _ELASTIX_USE_SHARED_LIBRARY.
-// No such symbol is required for users of the static library.
-//
+
 #if ( defined( _WIN32 ) || defined( WIN32 ) )
-#  ifdef _ELASTIX_USE_SHARED_LIBRARY
-#    ifdef elastix_EXPORTS
-#      define ELASTIXLIB_API __declspec( dllexport )
-#    else
-#      define ELASTIXLIB_API __declspec( dllimport )
-#    endif
-#  else
-#    define ELASTIXLIB_API
-#  endif
+#  define ELASTIXLIB_API
 #else
 #  if ( __GNUC__ >= 4 || defined( __clang__ ) )
 #    define ELASTIXLIB_API __attribute__ ( ( visibility( "default" ) ) )

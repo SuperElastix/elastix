@@ -152,14 +152,14 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  void Initialize( void ) override;
 
   /**
    * Do some things before registration:
    * \li Read the fixed rigidity image.
    * \li Setup some extra target cells.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
 protected:
 
@@ -167,7 +167,7 @@ protected:
   DistancePreservingRigidityPenalty(){}
 
   /** The destructor. */
-  virtual ~DistancePreservingRigidityPenalty() {}
+  ~DistancePreservingRigidityPenalty() override {}
 
 private:
 

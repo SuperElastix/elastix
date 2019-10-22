@@ -151,7 +151,7 @@ public:
     MovingImageType::ImageDimension );
 
   /**  Get the value. */
-  MeasureType GetValue( const ParametersType & parameters ) const;
+  MeasureType GetValue( const ParametersType & parameters ) const override;
 
   /** Set/get whether to apply the technique introduced by Nicholas Tustison; default: false */
   itkGetConstMacro( UseJacobianPreconditioning, bool );
@@ -163,7 +163,7 @@ protected:
   ParzenWindowMutualInformationImageToImageMetric();
 
   /** The destructor. */
-  virtual ~ParzenWindowMutualInformationImageToImageMetric() {}
+  ~ParzenWindowMutualInformationImageToImageMetric() override {}
 
   /** Protected Typedefs ******************/
 
@@ -200,9 +200,9 @@ protected:
    * a large block of memory to explicitly store the joint histogram derivative.
    * It's size is #FixedHistogramBins * #MovingHistogramBins * #parameters * float.
    */
-  virtual void GetValueAndAnalyticDerivative(
+  void GetValueAndAnalyticDerivative(
     const ParametersType & parameters,
-    MeasureType & value, DerivativeType & derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const override;
 
   /** Get the value and analytic derivative.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false
@@ -222,9 +222,9 @@ protected:
    *
    * This is really only here for experimental purposes.
    */
-  virtual void GetValueAndFiniteDifferenceDerivative(
+  void GetValueAndFiniteDifferenceDerivative(
     const ParametersType & parameters,
-    MeasureType & value, DerivativeType & derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const override;
 
   /** Compute terms to implement preconditioning as proposed by Tustison et al. */
   virtual void ComputeJacobianPreconditioner(
@@ -234,7 +234,7 @@ protected:
     DerivativeType & divisor ) const;
 
   /** Some initialization functions, called by Initialize. */
-  virtual void InitializeHistograms( void );
+  void InitializeHistograms( void ) override;
 
   /** Threading related parameters. */
   struct ParzenWindowMutualInformationMultiThreaderParameterType

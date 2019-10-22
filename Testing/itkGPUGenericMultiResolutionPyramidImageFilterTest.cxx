@@ -185,7 +185,7 @@ main( int argc, char * argv[] )
   cputimer.Stop();
 
   std::cout << "CPU "
-            << cpuFilter->GetNumberOfThreads()
+            << cpuFilter->GetNumberOfWorkUnits()
             << " " << cputimer.GetMean() / runTimes << std::endl;
 
   /** Write the CPU result. */

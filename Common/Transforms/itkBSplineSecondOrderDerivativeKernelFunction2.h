@@ -20,6 +20,7 @@
 
 #include "itkKernelFunctionBase.h"
 #include "vnl/vnl_math.h"
+#include <cmath> // For abs.
 
 namespace itk
 {
@@ -59,7 +60,7 @@ public:
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   /** Evaluate the function. */
-  inline double Evaluate( const double & u ) const
+  inline double Evaluate( const double & u ) const override
   {
     return this->Evaluate( Dispatch< VSplineOrder >(), u );
   }
@@ -75,9 +76,9 @@ public:
 protected:
 
   BSplineSecondOrderDerivativeKernelFunction2(){}
-  ~BSplineSecondOrderDerivativeKernelFunction2(){}
+  ~BSplineSecondOrderDerivativeKernelFunction2() override{}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const
+  void PrintSelf( std::ostream & os, Indent indent ) const override
   {
     Superclass::PrintSelf( os, indent );
     os << indent  << "Spline Order: " << SplineOrder << std::endl;
@@ -103,7 +104,7 @@ private:
   /** Second order spline. */
   inline double Evaluate( const Dispatch< 2 > &, const double & u ) const
   {
-    double absValue = vnl_math_abs( u );
+    double absValue = std::abs( u );
 
     if( absValue < 0.5 )
     {
@@ -139,15 +140,15 @@ private:
   /**  Third order spline. */
   inline double Evaluate( const Dispatch< 3 > &, const double & u ) const
   {
-    const double absValue = vnl_math_abs( u );
+    const double absValue = std::abs( u );
 
     if( absValue < 1.0 )
     {
-      return vnl_math_sgn0( u ) * ( 3.0 * u ) - 2.0;
+      return vnl_math::sgn0( u ) * ( 3.0 * u ) - 2.0;
     }
     else if( absValue < 2.0 )
     {
-      return -vnl_math_sgn( u ) * u + 2.0;
+      return -vnl_math::sgn( u ) * u + 2.0;
     }
     else
     {

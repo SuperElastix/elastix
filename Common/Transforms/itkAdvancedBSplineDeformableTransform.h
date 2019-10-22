@@ -35,6 +35,7 @@
 #define __itkAdvancedBSplineDeformableTransform_h
 
 #include "itkAdvancedBSplineDeformableTransformBase.h"
+
 #include "itkImage.h"
 #include "itkImageRegion.h"
 #include "itkBSplineInterpolationWeightFunction2.h"
@@ -200,10 +201,10 @@ public:
   typedef typename Superclass::GridOffsetType GridOffsetType;
 
   /** This method specifies the region over which the grid resides. */
-  virtual void SetGridRegion( const RegionType & region );
+  void SetGridRegion( const RegionType & region ) override;
 
   /** Transform points by a B-spline deformable transformation. */
-  OutputPointType TransformPoint( const InputPointType & point ) const;
+  OutputPointType TransformPoint( const InputPointType & point ) const override;
 
   /** Interpolation weights function type. */
   typedef BSplineInterpolationWeightFunction2< ScalarType,
@@ -247,84 +248,84 @@ public:
   }
 
 
-  unsigned int GetNumberOfAffectedWeights( void ) const;
+  unsigned int GetNumberOfAffectedWeights( void ) const override;
 
-  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
+  NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const override;
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & nzji ) const;
+    NonZeroJacobianIndicesType & nzji ) const override;
 
   /** Compute the inner product of the Jacobian with the moving image gradient.
    * The Jacobian is (partially) constructed inside this function, but not returned.
    */
-  virtual void EvaluateJacobianWithImageGradientProduct(
+  void EvaluateJacobianWithImageGradientProduct(
     const InputPointType & ipp,
     const MovingImageGradientType & movingImageGradient,
     DerivativeType & imageJacobian,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  virtual void GetSpatialJacobian(
+  void GetSpatialJacobian(
     const InputPointType & ipp,
-    SpatialJacobianType & sj ) const;
+    SpatialJacobianType & sj ) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  virtual void GetSpatialHessian(
+  void GetSpatialHessian(
     const InputPointType & ipp,
-    SpatialHessianType & sh ) const;
+    SpatialHessianType & sh ) const override;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute both the spatial Jacobian and the Jacobian of the
    * spatial Jacobian of the transformation.
    */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
     SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
    */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
 protected:
 
   /** Print contents of an AdvancedBSplineDeformableTransform. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   AdvancedBSplineDeformableTransform();
-  virtual ~AdvancedBSplineDeformableTransform();
+  ~AdvancedBSplineDeformableTransform() override;
 
   /** Allow subclasses to access and manipulate the weights function. */
   // Why??
   itkSetObjectMacro( WeightsFunction, WeightsFunctionType );
-  itkGetObjectMacro( WeightsFunction, WeightsFunctionType );
+  itkGetModifiableObjectMacro( WeightsFunction, WeightsFunctionType );
 
   /** Wrap flat array into images of coefficients. */
   void WrapAsImages( void );
 
-  virtual void ComputeNonZeroJacobianIndices(
+  void ComputeNonZeroJacobianIndices(
     NonZeroJacobianIndicesType & nonZeroJacobianIndices,
-    const RegionType & supportRegion ) const;
+    const RegionType & supportRegion ) const override;
 
   typedef typename Superclass::JacobianImageType JacobianImageType;
   typedef typename Superclass::JacobianPixelType JacobianPixelType;

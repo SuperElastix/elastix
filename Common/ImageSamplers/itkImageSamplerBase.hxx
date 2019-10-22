@@ -266,7 +266,7 @@ ImageSamplerBase< TInputImage >
   bool ret = true;
   for( unsigned int i = 0; i < this->m_NumberOfMasks; ++i )
   {
-    ret &= this->GetMask( i )->IsInside( point );
+    ret &= this->GetMask( i )->IsInsideInWorldSpace( point );
   }
 
   return ret;
@@ -351,7 +351,7 @@ ImageSamplerBase< TInputImage >
 
     typedef typename MaskType::BoundingBoxType        BoundingBoxType;
     typedef typename BoundingBoxType::PointsContainer PointsContainerType;
-    typename BoundingBoxType::Pointer bb      = this->m_Mask->GetBoundingBox();
+    typename BoundingBoxType::ConstPointer bb = this->m_Mask->GetMyBoundingBoxInWorldSpace();
     typename BoundingBoxType::Pointer bbIndex = BoundingBoxType::New();
     const PointsContainerType * cornersWorld = bb->GetPoints();
     typename PointsContainerType::Pointer cornersIndex = PointsContainerType::New();
@@ -381,9 +381,9 @@ ImageSamplerBase< TInputImage >
       /** apply ceil/floor for max/min resp. to be sure that
       * the bounding box is not too small */
       maxIndex[ i ] = static_cast< IndexValueType >(
-        vcl_ceil( bbIndex->GetMaximum()[ i ] ) );
+        std::ceil( bbIndex->GetMaximum()[ i ] ) );
       minIndex[ i ] = static_cast< IndexValueType >(
-        vcl_floor( bbIndex->GetMinimum()[ i ] ) );
+        std::floor( bbIndex->GetMinimum()[ i ] ) );
       size[ i ] = maxIndex[ i ] - minIndex[ i ] + 1;
     }
     boundingBoxRegion.SetIndex( minIndex );
@@ -417,8 +417,8 @@ ImageSamplerBase< TInputImage >
 {
   /** Initialize variables needed for threads. */
   this->m_ThreaderSampleContainer.clear();
-  this->m_ThreaderSampleContainer.resize( this->GetNumberOfThreads() );
-  for( std::size_t i = 0; i < this->GetNumberOfThreads(); i++ )
+  this->m_ThreaderSampleContainer.resize( this->GetNumberOfWorkUnits() );
+  for( std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++ )
   {
     this->m_ThreaderSampleContainer[ i ] = ImageSampleContainerType::New();
   }
@@ -437,7 +437,7 @@ ImageSamplerBase< TInputImage >
 {
   /** Get the combined number of samples. */
   this->m_NumberOfSamples = 0;
-  for( std::size_t i = 0; i < this->GetNumberOfThreads(); i++ )
+  for( std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++ )
   {
     this->m_NumberOfSamples += this->m_ThreaderSampleContainer[ i ]->Size();
   }
@@ -448,7 +448,7 @@ ImageSamplerBase< TInputImage >
   sampleContainer->reserve( this->m_NumberOfSamples );
 
   /** Combine the results of all threads. */
-  for( std::size_t i = 0; i < this->GetNumberOfThreads(); i++ )
+  for( std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++ )
   {
     sampleContainer->insert( sampleContainer->end(),
       this->m_ThreaderSampleContainer[ i ]->begin(),

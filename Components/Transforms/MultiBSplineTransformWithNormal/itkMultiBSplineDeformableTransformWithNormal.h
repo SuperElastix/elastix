@@ -114,7 +114,7 @@ public:
    * grid region, spacing and origin.
    * NOTE: The grid region, spacing and origin must be set first.
    */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
   /** This method sets the fixed parameters of the transform.
    * For a BSpline deformation transform, the parameters are the following:
@@ -131,7 +131,7 @@ public:
    * This function was added to allow the transform to work with the
    * itkTransformReader/Writer I/O filters.
    */
-  void SetFixedParameters( const ParametersType & parameters );
+  void SetFixedParameters( const ParametersType & parameters ) override;
 
   /** This method sets the parameters of the transform.
    * For a BSpline deformation transform, the parameters are the BSpline
@@ -149,7 +149,7 @@ public:
    * grid region, spacing and origin.
    * NOTE: The grid region, spacing and origin must be set first.
    */
-  void SetParametersByValue( const ParametersType & parameters );
+  void SetParametersByValue( const ParametersType & parameters ) override;
 
   /** This method can ONLY be invoked AFTER calling SetParameters().
    *  This restriction is due to the fact that the AdvancedBSplineDeformableTransform
@@ -162,10 +162,10 @@ public:
   void SetIdentity( void );
 
   /** Get the Transformation Parameters. */
-  virtual const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Get the Transformation Fixed Parameters. */
-  virtual const ParametersType & GetFixedParameters( void ) const;
+  const ParametersType & GetFixedParameters( void ) const override;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType PixelType;
@@ -257,7 +257,7 @@ public:
   /** Method to transform a vector -
    *  not applicable for this type of transform.
    */
-  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  OutputVectorType TransformVector( const InputVectorType & ) const override
   {
     itkExceptionMacro( << "Method not applicable for deformable transform." );
     return OutputVectorType();
@@ -267,7 +267,7 @@ public:
   /** Method to transform a vnl_vector -
    *  not applicable for this type of transform.
    */
-  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
   {
     itkExceptionMacro( << "Method not applicable for deformable transform. " );
     return OutputVnlVectorType();
@@ -277,8 +277,8 @@ public:
   /** Method to transform a CovariantVector -
    *  not applicable for this type of transform.
    */
-  virtual OutputCovariantVectorType TransformCovariantVector(
-    const InputCovariantVectorType & ) const
+  OutputCovariantVectorType TransformCovariantVector(
+    const InputCovariantVectorType & ) const override
   {
     itkExceptionMacro( << "Method not applicable for deformable transform. " );
     return OutputCovariantVectorType();
@@ -286,7 +286,7 @@ public:
 
 
   /** Return the number of parameters that completely define the Transform. */
-  virtual NumberOfParametersType GetNumberOfParameters( void ) const;
+  NumberOfParametersType GetNumberOfParameters( void ) const override;
 
   /** Return the number of parameters per dimension */
   virtual NumberOfParametersType GetNumberOfParametersPerDimension( void ) const;
@@ -303,7 +303,7 @@ public:
    *
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
-  virtual bool IsLinear( void ) const { return false; }
+  bool IsLinear( void ) const override { return false; }
 
   /** Get number of weights. */
   virtual unsigned long GetNumberOfWeights( void ) const
@@ -318,7 +318,7 @@ public:
   }
 
 
-  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const
+  NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const override
   {
     return m_Trans[ 0 ]->m_WeightsFunction->GetNumberOfWeights() * SpaceDimension;
   }
@@ -337,7 +337,7 @@ public:
   }
 
 
-  virtual bool GetHasNonZeroSpatialHessian( void ) const
+  bool GetHasNonZeroSpatialHessian( void ) const override
   {
     return true;
   }
@@ -353,61 +353,61 @@ public:
   typedef ContinuousIndex< ScalarType, SpaceDimension > ContinuousIndexType;
 
   /** Transform points by a BSpline deformable transformation. */
-  OutputPointType TransformPoint( const InputPointType & point ) const;
+  OutputPointType TransformPoint( const InputPointType & point ) const override;
 
   /** Compute the Jacobian matrix of the transformation at one point. */
   //virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute the spatial Jacobian of the transformation. */
-  virtual void GetSpatialJacobian(
+  void GetSpatialJacobian(
     const InputPointType & ipp,
-    SpatialJacobianType & sj ) const;
+    SpatialJacobianType & sj ) const override;
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override;
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     SpatialJacobianType &,
     JacobianOfSpatialJacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  virtual void GetSpatialHessian(
+  void GetSpatialHessian(
     const InputPointType & ipp,
-    SpatialHessianType & sh ) const;
+    SpatialHessianType & sh ) const override;
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "ERROR: GetJacobianOfSpatialHessian() not yet implemented "
                        << "in the MultiBSplineDeformableTransformWithNormal class." );
   }
 
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType &,
     SpatialHessianType &,
     JacobianOfSpatialHessianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
 protected:
 
   /** Print contents of an MultiBSplineDeformableTransformWithNormal. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   MultiBSplineDeformableTransformWithNormal();
-  virtual ~MultiBSplineDeformableTransformWithNormal();
+  ~MultiBSplineDeformableTransformWithNormal() override;
 
   /** Wrap flat array into images of coefficients. */
   // void WrapAsImages( void );

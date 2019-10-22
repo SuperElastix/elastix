@@ -72,7 +72,7 @@ public:
   typedef typename Superclass::InputImageConstPointer InputImageConstPointer;
 
   /** Overwrite the Superclass implementation: no padding required. */
-  virtual void GenerateInputRequestedRegion( void );
+  void GenerateInputRequestedRegion( void ) override;
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
@@ -86,10 +86,10 @@ public:
 protected:
 
   MultiResolutionShrinkPyramidImageFilter() {}
-  ~MultiResolutionShrinkPyramidImageFilter() {}
+  ~MultiResolutionShrinkPyramidImageFilter() override {}
 
   /** Generate the output data. */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
 private:
 

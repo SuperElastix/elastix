@@ -18,6 +18,9 @@
 #ifndef elxPixelType_h
 #define elxPixelType_h
 
+#include <typeinfo>
+#include "itkMacro.h"
+
 namespace elastix
 {
 // PixelType traits for writing types as strings to parameter files
@@ -28,7 +31,7 @@ struct PixelType
 {
   static const char * ToString()
   {
-    itkGenericExceptionMacro( "Pixel type \"" << typeid( T ).name() << "\" is not supported." )
+    itkGenericExceptionMacro(<< "Pixel type \"" << typeid( T ).name() << "\" is not supported." );
   }
 
 

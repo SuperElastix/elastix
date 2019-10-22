@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
 #ifndef __itkScaledSingleValuedNonLinearOptimizer_cxx
 #define __itkScaledSingleValuedNonLinearOptimizer_cxx
 
@@ -38,8 +37,8 @@ ScaledSingleValuedNonLinearOptimizer
 
 
 /**
-* ****************** InitializeScales ******************************
-*/
+ * ****************** InitializeScales ******************************
+ */
 
 void
 ScaledSingleValuedNonLinearOptimizer
@@ -134,8 +133,8 @@ ScaledSingleValuedNonLinearOptimizer
   MeasureType & value,
   DerivativeType & derivative ) const
 {
-  this->m_ScaledCostFunction->
-  GetValueAndDerivative( parameters, value, derivative );
+  this->m_ScaledCostFunction
+    ->GetValueAndDerivative( parameters, value, derivative );
 
 } // end GetScaledValueAndDerivative()
 
@@ -157,8 +156,8 @@ ScaledSingleValuedNonLinearOptimizer
     /** Get the ScaledCurrentPosition and divide each
      * element through its scale. */
     this->m_UnscaledCurrentPosition = scaledCurrentPosition;
-    this->m_ScaledCostFunction->
-    ConvertScaledToUnscaledParameters( this->m_UnscaledCurrentPosition );
+    this->m_ScaledCostFunction
+      ->ConvertScaledToUnscaledParameters( this->m_UnscaledCurrentPosition );
 
     return this->m_UnscaledCurrentPosition;
   }
@@ -203,7 +202,7 @@ ScaledSingleValuedNonLinearOptimizer
   {
     ParametersType scaledParameters = param;
     this->m_ScaledCostFunction
-    ->ConvertUnscaledToScaledParameters( scaledParameters );
+      ->ConvertUnscaledToScaledParameters( scaledParameters );
     this->SetScaledCurrentPosition( scaledParameters );
   }
   else

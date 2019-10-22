@@ -104,10 +104,10 @@ protected:
   UpsampleBSplineParametersFilter();
 
   /** Destructor. */
-  ~UpsampleBSplineParametersFilter() {}
+  ~UpsampleBSplineParametersFilter() override {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Function that checks if upsampling is required. */
   virtual bool DoUpsampling( void );

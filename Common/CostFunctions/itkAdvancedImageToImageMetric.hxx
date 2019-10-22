@@ -20,13 +20,14 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 
-#include "itkImageRegionConstIterator.h"          // used for extrema computation
-#include "itkImageRegionConstIteratorWithIndex.h" // used for extrema computation
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
+#include "itkComputeImageExtremaFilter.h"
 
 #ifdef ELASTIX_USE_OPENMP
 #include <omp.h>
 #endif
+
+#include "itkTimeProbe.h"
 
 namespace itk
 {
@@ -86,14 +87,12 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Threading related variables. */
   this->m_UseMetricSingleThreaded = true;
   this->m_UseMultiThread = false;
-  this->m_Threader->SetUseThreadPool( false ); // setting to true makes elastix hang
-                                               // at a WaitForSingleMethodThread()
 
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP
   this->m_UseOpenMP = true;
 
-  const int nthreads = static_cast< int >( this->m_NumberOfThreads );
+  const int nthreads = static_cast< int >( Self::GetNumberOfWorkUnits() );
   omp_set_num_threads( nthreads );
 #else
   this->m_UseOpenMP = false;
@@ -103,9 +102,9 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   this->m_ThreaderMetricParameters.st_Metric = this;
 
   // Multi-threading structs
-  this->m_GetValuePerThreadVariables                  = NULL;
+  this->m_GetValuePerThreadVariables                  = nullptr;
   this->m_GetValuePerThreadVariablesSize              = 0;
-  this->m_GetValueAndDerivativePerThreadVariables     = NULL;
+  this->m_GetValueAndDerivativePerThreadVariables     = nullptr;
   this->m_GetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor
@@ -125,21 +124,23 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ********************* SetNumberOfThreads ****************************
+ * ********************* SetNumberOfWorkUnits ****************************
  */
 
 template< class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::SetNumberOfThreads( ThreadIdType numberOfThreads )
+::SetNumberOfWorkUnits( ThreadIdType numberOfThreads )
 {
-  Superclass::SetNumberOfThreads( numberOfThreads );
+  // Note: This is a workaround for ITK5, which renamed NumberOfThreads
+  // to NumberOfWorkUnits
+  Superclass::SetNumberOfWorkUnits( numberOfThreads );
 
 #ifdef ELASTIX_USE_OPENMP
-  const int nthreads = static_cast< int >( this->m_NumberOfThreads );
+  const int nthreads = static_cast< int >( Self::GetNumberOfWorkUnits() );
   omp_set_num_threads( nthreads );
 #endif
-} // end SetNumberOfThreads()
+} // end SetNumberOfWorkUnits()
 
 
 /**
@@ -149,7 +150,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();
@@ -187,6 +188,8 @@ void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
    * needed, which saves valuable re-allocation time.
@@ -198,23 +201,23 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
    */
 
   /** Only resize the array of structs when needed. */
-  if( this->m_GetValuePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_GetValuePerThreadVariablesSize != numberOfThreads )
   {
     delete[] this->m_GetValuePerThreadVariables;
-    this->m_GetValuePerThreadVariables     = new AlignedGetValuePerThreadStruct[ this->m_NumberOfThreads ];
-    this->m_GetValuePerThreadVariablesSize = this->m_NumberOfThreads;
+    this->m_GetValuePerThreadVariables     = new AlignedGetValuePerThreadStruct[ numberOfThreads ];
+    this->m_GetValuePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Only resize the array of structs when needed. */
-  if( this->m_GetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_GetValueAndDerivativePerThreadVariablesSize != numberOfThreads )
   {
     delete[] this->m_GetValueAndDerivativePerThreadVariables;
-    this->m_GetValueAndDerivativePerThreadVariables     = new AlignedGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
-    this->m_GetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
+    this->m_GetValueAndDerivativePerThreadVariables     = new AlignedGetValueAndDerivativePerThreadStruct[ numberOfThreads ];
+    this->m_GetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Some initialization. */
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     this->m_GetValuePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_GetValuePerThreadVariables[ i ].st_Value                 = NumericTraits< MeasureType >::Zero;
@@ -229,134 +232,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 
 
 /**
- * ****************** ComputeFixedImageExtrema ***************************
- */
-
-template< class TFixedImage, class TMovingImage >
-void
-AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::ComputeFixedImageExtrema(
-  const FixedImageType * image,
-  const FixedImageRegionType & region )
-{
-  /** NB: We can't use StatisticsImageFilterWithMask to do this because
-   * the filter computes the min/max for the largest possible region.
-   * This filter is multi-threaded though.
-   */
-  FixedImagePixelType trueMinTemp = NumericTraits< FixedImagePixelType >::max();
-  FixedImagePixelType trueMaxTemp = NumericTraits< FixedImagePixelType >::NonpositiveMin();
-
-  /** If no mask. */
-  if( this->m_FixedImageMask.IsNull() )
-  {
-    typedef ImageRegionConstIterator< FixedImageType > IteratorType;
-    IteratorType it( image, region );
-    for( it.GoToBegin(); !it.IsAtEnd(); ++it )
-    {
-      const FixedImagePixelType sample = it.Get();
-      trueMinTemp = vnl_math_min( trueMinTemp, sample );
-      trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
-    }
-  }
-  /** Excluded extrema outside the mask.
-   * Because we have to call TransformIndexToPhysicalPoint() and
-   * check IsInside() this way is much (!) slower.
-   */
-  else
-  {
-    typedef ImageRegionConstIteratorWithIndex< FixedImageType > IteratorType;
-    IteratorType it( image, region );
-
-    for( it.GoToBegin(); !it.IsAtEnd(); ++it )
-    {
-      OutputPointType point;
-      image->TransformIndexToPhysicalPoint( it.GetIndex(), point );
-      if( this->m_FixedImageMask->IsInside( point ) )
-      {
-        const FixedImagePixelType sample = it.Get();
-        trueMinTemp = vnl_math_min( trueMinTemp, sample );
-        trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
-      }
-    }
-  }
-
-  /** Update member variables. */
-  this->m_FixedImageTrueMin = trueMinTemp;
-  this->m_FixedImageTrueMax = trueMaxTemp;
-
-  this->m_FixedImageMinLimit = static_cast< FixedImageLimiterOutputType >(
-    trueMinTemp - this->m_FixedLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-  this->m_FixedImageMaxLimit = static_cast< FixedImageLimiterOutputType >(
-    trueMaxTemp + this->m_FixedLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-
-} // end ComputeFixedImageExtrema()
-
-
-/**
- * ****************** ComputeMovingImageExtrema ***************************
- */
-
-template< class TFixedImage, class TMovingImage >
-void
-AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::ComputeMovingImageExtrema(
-  const MovingImageType * image,
-  const MovingImageRegionType & region )
-{
-  /** NB: We can't use StatisticsImageFilter to do this because
-   * the filter computes the min/max for the largest possible region.
-   */
-  MovingImagePixelType trueMinTemp = NumericTraits< MovingImagePixelType >::max();
-  MovingImagePixelType trueMaxTemp = NumericTraits< MovingImagePixelType >::NonpositiveMin();
-
-  /** If no mask. */
-  if( this->m_MovingImageMask.IsNull() )
-  {
-    typedef ImageRegionConstIterator< MovingImageType > IteratorType;
-    IteratorType iterator( image, region );
-    for( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
-    {
-      const MovingImagePixelType sample = iterator.Get();
-      trueMinTemp = vnl_math_min( trueMinTemp, sample );
-      trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
-    }
-  }
-  /** Excluded extrema outside the mask.
-   * Because we have to call TransformIndexToPhysicalPoint() and
-   * check IsInside() this way is much (!) slower.
-   */
-  else
-  {
-    typedef ImageRegionConstIteratorWithIndex< MovingImageType > IteratorType;
-    IteratorType it( image, region );
-
-    for( it.GoToBegin(); !it.IsAtEnd(); ++it )
-    {
-      OutputPointType point;
-      image->TransformIndexToPhysicalPoint( it.GetIndex(), point );
-      if( this->m_MovingImageMask->IsInside( point ) )
-      {
-        const MovingImagePixelType sample = it.Get();
-        trueMinTemp = vnl_math_min( trueMinTemp, sample );
-        trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
-      }
-    }
-  }
-
-  /** Update member variables. */
-  this->m_MovingImageTrueMin = trueMinTemp;
-  this->m_MovingImageTrueMax = trueMaxTemp;
-
-  this->m_MovingImageMinLimit = static_cast< MovingImageLimiterOutputType >(
-    trueMinTemp - this->m_MovingLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-  this->m_MovingImageMaxLimit = static_cast< MovingImageLimiterOutputType >(
-    trueMaxTemp + this->m_MovingLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-
-} // end ComputeMovingImageExtrema()
-
-
-/**
- * ****************** InitializeLimiter *****************************
+ * ****************** InitializeLimiters *****************************
  */
 
 template< class TFixedImage, class TMovingImage >
@@ -372,9 +248,42 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
       itkExceptionMacro( << "No fixed image limiter has been set!" );
     }
 
-    this->ComputeFixedImageExtrema(
-      this->GetFixedImage(),
-      this->GetFixedImageRegion() );
+    itk::TimeProbe timer;
+    timer.Start();
+
+    typedef typename itk::ComputeImageExtremaFilter<FixedImageType> ComputeFixedImageExtremaFilterType;
+    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema
+      = ComputeFixedImageExtremaFilterType::New();
+    computeFixedImageExtrema->SetInput( this->GetFixedImage() );
+    computeFixedImageExtrema->SetImageRegion( this->GetFixedImageRegion() );
+    if( this->m_FixedImageMask.IsNotNull() )
+    {
+      computeFixedImageExtrema->SetUseMask( true );
+
+      const FixedImageMaskSpatialObject2Type * fMask
+        = dynamic_cast< const FixedImageMaskSpatialObject2Type * >( this->m_FixedImageMask.GetPointer() );
+      if( fMask )
+      {
+        computeFixedImageExtrema->SetImageSpatialMask( fMask );
+      }
+      else
+      {
+        computeFixedImageExtrema->SetImageMask( this->GetFixedImageMask() );
+      }
+    }
+
+    computeFixedImageExtrema->Update();
+    timer.Stop();
+    elxout << "  Computing the fixed image extrema took "
+      << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+
+    this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
+    this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
+
+    this->m_FixedImageMinLimit = static_cast< FixedImageLimiterOutputType >(
+      this->m_FixedImageTrueMin - this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
+    this->m_FixedImageMaxLimit = static_cast< FixedImageLimiterOutputType >(
+      this->m_FixedImageTrueMax + this->m_FixedLimitRangeRatio * ( this->m_FixedImageTrueMax - this->m_FixedImageTrueMin ) );
 
     this->m_FixedImageLimiter->SetLowerThreshold(
       static_cast< RealType >( this->m_FixedImageTrueMin ) );
@@ -394,9 +303,41 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
       itkExceptionMacro( << "No moving image limiter has been set!" );
     }
 
-    this->ComputeMovingImageExtrema(
-      this->GetMovingImage(),
-      this->GetMovingImage()->GetBufferedRegion() );
+    itk::TimeProbe timer;
+    timer.Start();
+
+    typedef typename itk::ComputeImageExtremaFilter<MovingImageType> ComputeMovingImageExtremaFilterType;
+    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema
+      = ComputeMovingImageExtremaFilterType::New();
+    computeMovingImageExtrema->SetInput( this->GetMovingImage() );
+    computeMovingImageExtrema->SetImageRegion( this->GetMovingImage()->GetBufferedRegion() );
+    if( this->m_MovingImageMask.IsNotNull() )
+    {
+      computeMovingImageExtrema->SetUseMask( true );
+      const MovingImageMaskSpatialObject2Type * mMask
+        = dynamic_cast< const MovingImageMaskSpatialObject2Type * >( this->m_MovingImageMask.GetPointer() );
+      if( mMask )
+      {
+        computeMovingImageExtrema->SetImageSpatialMask( mMask );
+      }
+      else
+      {
+        computeMovingImageExtrema->SetImageMask( this->GetMovingImageMask() );
+      }
+    }
+    computeMovingImageExtrema->Update();
+
+    timer.Stop();
+    elxout << "  Computing the moving image extrema took "
+      << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+
+    this->m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
+    this->m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
+
+    this->m_MovingImageMinLimit = static_cast< MovingImageLimiterOutputType >(
+      this->m_MovingImageTrueMin - this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
+    this->m_MovingImageMaxLimit = static_cast< MovingImageLimiterOutputType >(
+      this->m_MovingImageTrueMax + this->m_MovingLimitRangeRatio * ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin ) );
 
     this->m_MovingImageLimiter->SetLowerThreshold(
       static_cast< RealType >( this->m_MovingImageTrueMin ) );
@@ -408,7 +349,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     this->m_MovingImageLimiter->Initialize();
   }
 
-} // end InitializeLimiter()
+} // end InitializeLimiters()
 
 
 /**
@@ -418,7 +359,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-::InitializeImageSampler( void ) throw ( ExceptionObject )
+::InitializeImageSampler( void )
 {
   if( this->GetUseImageSampler() )
   {
@@ -615,11 +556,11 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   else if( testPtr_combo )
   {
     /** Check if the current transform is a B-spline transform. */
-    BSplineOrder1TransformType * testPtr_1b = dynamic_cast< BSplineOrder1TransformType * >(
+    const BSplineOrder1TransformType * testPtr_1b = dynamic_cast< const BSplineOrder1TransformType * >(
       testPtr_combo->GetCurrentTransform() );
-    BSplineOrder2TransformType * testPtr_2b = dynamic_cast< BSplineOrder2TransformType * >(
+    const BSplineOrder2TransformType * testPtr_2b = dynamic_cast< const BSplineOrder2TransformType * >(
       testPtr_combo->GetCurrentTransform() );
-    BSplineOrder3TransformType * testPtr_3b = dynamic_cast< BSplineOrder3TransformType * >(
+    const BSplineOrder3TransformType * testPtr_3b = dynamic_cast< const BSplineOrder3TransformType * >(
       testPtr_combo->GetCurrentTransform() );
     if( testPtr_1b || testPtr_2b || testPtr_3b )
     {
@@ -863,7 +804,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** If a mask has been set: */
   if( this->m_MovingImageMask.IsNotNull() )
   {
-    return this->m_MovingImageMask->IsInside( point );
+    return this->m_MovingImageMask->IsInsideInWorldSpace( point );
   }
 
   /** If no mask has been set, just return true. */
@@ -930,14 +871,14 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadID   = infoStruct->ThreadID;
+  ThreadIdType     threadID   = infoStruct->WorkUnitID;
 
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
 
   temp->st_Metric->ThreadedGetValue( threadID );
 
-  return ITK_THREAD_RETURN_VALUE;
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end GetValueThreaderCallback()
 
@@ -971,14 +912,14 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivativeThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadID   = infoStruct->ThreadID;
+  ThreadIdType     threadID   = infoStruct->WorkUnitID;
 
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
 
   temp->st_Metric->ThreadedGetValueAndDerivative( threadID );
 
-  return ITK_THREAD_RETURN_VALUE;
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end GetValueAndDerivativeThreaderCallback()
 
@@ -1012,15 +953,15 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::AccumulateDerivativesThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadID    = infoStruct->ThreadID;
-  ThreadIdType     nrOfThreads = infoStruct->NumberOfThreads;
+  ThreadIdType     threadID    = infoStruct->WorkUnitID;
+  ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
 
   MultiThreaderParameterType * temp
     = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
 
   const unsigned int numPar  = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize = static_cast< unsigned int >(
-    vcl_ceil( static_cast< double >( numPar )
+    std::ceil( static_cast< double >( numPar )
     / static_cast< double >( nrOfThreads ) ) );
   const unsigned int jmin = threadID * subSize;
   unsigned int       jmax = ( threadID + 1 ) * subSize;
@@ -1044,7 +985,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     temp->st_DerivativePointer[ j ] = tmp * normalization;
   }
 
-  return ITK_THREAD_RETURN_VALUE;
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end AccumulateDerivativesThreaderCallback()
 

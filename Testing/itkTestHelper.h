@@ -227,8 +227,8 @@ ComputeRMSE( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
     sumCPUSquared += cpu * cpu;
   }
 
-  rmse        = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
-  rmsRelative = rmse / vcl_sqrt( sumCPUSquared / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
+  rmse        = std::sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
+  rmsRelative = rmse / std::sqrt( sumCPUSquared / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
 
   return rmse;
 } // end ComputeRMSE()
@@ -256,7 +256,7 @@ ComputeRMSE2( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
       rmse += err * err;
     }
   }
-  rmse = vcl_sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
+  rmse = std::sqrt( rmse / cpuImage->GetLargestPossibleRegion().GetNumberOfPixels() );
   return rmse;
 } // end ComputeRMSE2()
 
@@ -389,8 +389,8 @@ ComputeRMSE( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
     return 0.0;
   }
 
-  rmse        = vcl_sqrt( rmse / count );
-  rmsRelative = rmse / vcl_sqrt( sumCPUSquared / count );
+  rmse        = std::sqrt( rmse / count );
+  rmsRelative = rmse / std::sqrt( sumCPUSquared / count );
   return rmse;
 } // end ComputeRMSE()
 
@@ -439,8 +439,8 @@ ComputeRMSE2( const CPUImageType * cpuImage, const GPUImageType * gpuImage,
     return 0.0;
   }
 
-  rmse        = vcl_sqrt( rmse / count );
-  rmsRelative = rmse / vcl_sqrt( sumCPUSquared / count );
+  rmse        = std::sqrt( rmse / count );
+  rmsRelative = rmse / std::sqrt( sumCPUSquared / count );
   return rmse;
 } // end ComputeRMSE()
 

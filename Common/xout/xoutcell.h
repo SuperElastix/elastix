@@ -65,10 +65,10 @@ public:
   xoutcell();
 
   /** Destructor */
-  virtual ~xoutcell();
+  ~xoutcell() override;
 
   /** Write the buffered cell data to the outputs. */
-  virtual void WriteBufferedData( void );
+  void WriteBufferedData( void ) override;
 
 protected:
 

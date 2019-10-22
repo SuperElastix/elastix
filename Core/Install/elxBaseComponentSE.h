@@ -76,7 +76,7 @@ public:
    */
   virtual void SetElastix( ElastixType * _arg );
 
-  /** itkGetObjectMacro( Elastix, ElastixType );
+  /** itkGetModifiableObjectMacro( Elastix, ElastixType );
    * without the itkDebug call.
    */
   virtual ElastixType * GetElastix( void ) const
@@ -85,7 +85,7 @@ public:
   }
 
 
-  /** itkGetObjectMacro(Configuration, ConfigurationType);
+  /** itkGetModifiableObjectMacro(Configuration, ConfigurationType);
    * The configuration object provides functionality to
    * read parameters and command line arguments.
    */
@@ -112,7 +112,7 @@ public:
 protected:
 
   BaseComponentSE();
-  virtual ~BaseComponentSE() {}
+  ~BaseComponentSE() override {}
 
   ElastixPointer       m_Elastix;
   ConfigurationPointer m_Configuration;

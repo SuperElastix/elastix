@@ -88,20 +88,20 @@ ImageFileCastWriter< TInputImage >
   {
     typedef typename InputImageType::InternalPixelType VectorImageScalarType;
     //this->GetImageIO()->SetPixelTypeInfo( typeid(VectorImageScalarType) );
-    this->GetImageIO()->SetPixelTypeInfo( static_cast< const VectorImageScalarType * >( 0 ) );
+    this->GetModifiableImageIO()->SetPixelTypeInfo( static_cast< const VectorImageScalarType * >( 0 ) );
 
     typedef typename InputImageType::AccessorFunctorType AccessorFunctorType;
-    this->GetImageIO()->SetNumberOfComponents( AccessorFunctorType::GetVectorLength( input ) );
+    this->GetModifiableImageIO()->SetNumberOfComponents(AccessorFunctorType::GetVectorLength(input));
   }
   else
   {
     // Set the pixel and component type; the number of components.
     //this->GetImageIO()->SetPixelTypeInfo(typeid(ScalarType));
-    this->GetImageIO()->SetPixelTypeInfo( static_cast< const ScalarType * >( 0 ) );
+    this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast< const ScalarType * >(0));
   }
 
   /** Setup the image IO for writing. */
-  this->GetImageIO()->SetFileName( this->GetFileName() );
+  this->GetModifiableImageIO()->SetFileName( this->GetFileName() );
 
   /** Get the number of Components */
   unsigned int numberOfComponents = this->GetImageIO()->GetNumberOfComponents();
@@ -171,7 +171,7 @@ ImageFileCastWriter< TInputImage >
     }
 
     /** Do the writing */
-    this->GetImageIO()->Write( convertedDataBuffer );
+    this->GetModifiableImageIO()->Write( convertedDataBuffer );
     /** Release the caster's memory */
     this->m_Caster = 0;
 
@@ -180,7 +180,7 @@ ImageFileCastWriter< TInputImage >
   {
     /** No casting needed or possible, just write */
     const void * dataPtr = (const void *)input->GetBufferPointer();
-    this->GetImageIO()->Write( dataPtr );
+    this->GetModifiableImageIO()->Write( dataPtr );
   }
 
 }

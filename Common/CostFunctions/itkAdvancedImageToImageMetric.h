@@ -30,11 +30,13 @@
 #include "itkAdvancedTransform.h"
 #include "vnl/vnl_sparse_matrix.h"
 
+#include "itkImageMaskSpatialObject.h"
+
 // Needed for checking for B-spline for faster implementation
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkAdvancedCombinationTransform.h"
 
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 namespace itk
 {
@@ -129,6 +131,9 @@ public:
   typedef typename DerivativeType::ValueType                DerivativeValueType;
   typedef typename Superclass::ParametersType               ParametersType;
 
+  typedef ImageMaskSpatialObject< itkGetStaticConstMacro( FixedImageDimension ) > FixedImageMaskSpatialObject2Type;
+  typedef ImageMaskSpatialObject< itkGetStaticConstMacro( MovingImageDimension ) > MovingImageMaskSpatialObject2Type;
+
   /** Some useful extra typedefs. */
   typedef typename FixedImageType::PixelType               FixedImagePixelType;
   typedef typename MovingImageType::RegionType             MovingImageRegionType;
@@ -168,8 +173,8 @@ public:
   typedef vnl_sparse_matrix< HessianValueType > HessianType;
 
   /** Typedefs for multi-threading. */
-  typedef itk::MultiThreader                      ThreaderType;
-  typedef typename ThreaderType::ThreadInfoStruct ThreadInfoType;
+  typedef itk::PlatformMultiThreader                      ThreaderType;
+  typedef typename ThreaderType::WorkUnitInfo ThreadInfoType;
 
   /** Public methods ********************/
 
@@ -186,7 +191,7 @@ public:
 
 
   /** Get the advanced transform. */
-  const AdvancedTransformType * GetTransform( void ) const ITK_OVERRIDE
+  const AdvancedTransformType * GetTransform( void ) const override
   {
     return this->m_AdvancedTransform.GetPointer();
   }
@@ -257,7 +262,7 @@ public:
    * \li Check if a B-spline interpolator has been set
    * \li Check if an AdvancedTransform has been set
    */
-  virtual void Initialize( void ) throw ( ExceptionObject ) ITK_OVERRIDE;
+  void Initialize( void ) override;
 
   /** Experimental feature: compute SelfHessian.
    * This base class just returns an identity matrix of the right size.
@@ -265,7 +270,7 @@ public:
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
 
   /** Set number of threads to use for computations. */
-  virtual void SetNumberOfThreads( ThreadIdType numberOfThreads );
+  virtual void SetNumberOfWorkUnits( ThreadIdType numberOfThreads );
 
   /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
   itkSetMacro( UseMetricSingleThreaded, bool );
@@ -292,10 +297,10 @@ protected:
   AdvancedImageToImageMetric();
 
   /** Destructor. */
-  virtual ~AdvancedImageToImageMetric();
+  ~AdvancedImageToImageMetric() override;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Protected Typedefs ******************/
 
@@ -458,7 +463,7 @@ protected:
   /** Methods for image sampler support **********/
 
   /** Initialize variables related to the image sampler; called by Initialize. */
-  virtual void InitializeImageSampler( void ) throw ( ExceptionObject );
+  virtual void InitializeImageSampler( void );
 
   /** Inheriting classes can specify whether they use the image sampler functionality
    * Make sure to set it before calling Initialize; default: false. */
@@ -530,22 +535,6 @@ protected:
   /** Convenience method: check if point is inside the moving mask. *****************/
   virtual bool IsInsideMovingMask( const MovingImagePointType & point ) const;
 
-  /** Methods for the support of gray value limiters. ***************/
-
-  /** Compute the extrema of fixed image over a region
-   * Initializes the m_Fixed[True]{Max,Min}[Limit]
-   * This method is called by InitializeLimiters() and uses the FixedLimitRangeRatio */
-  virtual void ComputeFixedImageExtrema(
-    const FixedImageType * image,
-    const FixedImageRegionType & region );
-
-  /** Compute the extrema of the moving image over a region
-   * Initializes the m_Moving[True]{Max,Min}[Limit]
-   * This method is called by InitializeLimiters() and uses the MovingLimitRangeRatio; */
-  virtual void ComputeMovingImageExtrema(
-    const MovingImageType * image,
-    const MovingImageRegionType & region );
-
   /** Initialize the {Fixed,Moving}[True]{Max,Min}[Limit] and the {Fixed,Moving}ImageLimiter
    * Only does something when Use{Fixed,Moving}Limiter is set to true; */
   virtual void InitializeLimiters( void );
@@ -555,6 +544,9 @@ protected:
   itkSetMacro( UseFixedImageLimiter, bool );
   itkSetMacro( UseMovingImageLimiter, bool );
 
+  double m_FixedLimitRangeRatio;
+  double m_MovingLimitRangeRatio;
+
 private:
 
   AdvancedImageToImageMetric( const Self & ); // purposely not implemented
@@ -562,8 +554,6 @@ private:
 
   /** Private member variables. */
   bool   m_UseImageSampler;
-  double m_FixedLimitRangeRatio;
-  double m_MovingLimitRangeRatio;
   bool   m_UseFixedImageLimiter;
   bool   m_UseMovingImageLimiter;
   double m_RequiredRatioOfValidSamples;

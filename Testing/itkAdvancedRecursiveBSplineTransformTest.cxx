@@ -243,13 +243,12 @@ main( int argc, char * argv[] )
    */
 
   itk::TimeProbesCollectorBase                    timeCollector;
-  OutputPointType                                 opp;
   TransformType::WeightsType                      weights;
   RecursiveTransformType::WeightsType             weights2;
   TransformType::ParameterIndexArrayType          indices;
   RecursiveTransformType::ParameterIndexArrayType indices2;
 
-  const unsigned int dummyNum = vcl_pow( static_cast< double >( SplineOrder + 1 ), static_cast< double >( Dimension ) );
+  const unsigned int dummyNum = std::pow( static_cast< double >( SplineOrder + 1 ), static_cast< double >( Dimension ) );
   weights.SetSize( dummyNum );
   indices.SetSize( dummyNum );
   weights2.SetSize( dummyNum );
@@ -394,7 +393,7 @@ main( int argc, char * argv[] )
       differenceNorm1 += ( opp1[ j ] - opp2[ j ] ) * ( opp1[ j ] - opp2[ j ] );
     }
   }
-  differenceNorm1 = vcl_sqrt( differenceNorm1 ) / N;
+  differenceNorm1 = std::sqrt( differenceNorm1 ) / N;
 
   std::cerr << "\n" << std::endl;
   std::cerr << "Recursive B-spline TransformPoint() MSD with ITK: " << differenceNorm1 << std::endl;

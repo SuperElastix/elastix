@@ -160,20 +160,20 @@ public:
   typedef vnl_matrix_fixed< TScalarType, NDimensions, NDimensions > IMatrixType;
 
   /** Return the number of parameters that completely define the Transform. */
-  virtual NumberOfParametersType GetNumberOfParameters( void ) const
+  NumberOfParametersType GetNumberOfParameters( void ) const override
   {
     return ( this->m_SourceLandmarks->GetNumberOfPoints() * SpaceDimension );
   }
 
 
   /** Get the source landmarks list, which we will denote \f$ p \f$. */
-  itkGetObjectMacro( SourceLandmarks, PointSetType );
+  itkGetModifiableObjectMacro( SourceLandmarks, PointSetType );
 
   /** Set the source landmarks list. */
   virtual void SetSourceLandmarks( PointSetType * );
 
   /** Get the target landmarks list, which we will denote  \f$ q \f$. */
-  itkGetObjectMacro( TargetLandmarks, PointSetType );
+  itkGetModifiableObjectMacro( TargetLandmarks, PointSetType );
 
   /** Set the target landmarks list. */
   virtual void SetTargetLandmarks( PointSetType * );
@@ -181,7 +181,7 @@ public:
   /** Get the displacements list, which we will denote \f$ d \f$,
    * where \f$ d_i = q_i - p_i \f$.
    */
-  itkGetObjectMacro( Displacements, VectorSetType );
+  itkGetModifiableObjectMacro( Displacements, VectorSetType );
 
   /** Compute W matrix. */
   void ComputeWMatrix( void );
@@ -190,10 +190,10 @@ public:
   void ComputeLInverse( void );
 
   /** Compute the position of point in the new space */
-  virtual OutputPointType TransformPoint( const InputPointType & thisPoint ) const;
+  OutputPointType TransformPoint( const InputPointType & thisPoint ) const override;
 
   /** These vector transforms are not implemented for this transform. */
-  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  OutputVectorType TransformVector( const InputVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVectorType &) is not implemented "
@@ -201,7 +201,7 @@ public:
   }
 
 
-  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVnlVectorType &) is not implemented "
@@ -209,7 +209,7 @@ public:
   }
 
 
-  virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
+  OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
@@ -218,10 +218,10 @@ public:
 
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Set the Transformation Parameters to be an identity transform. */
   virtual void SetIdentity( void );
@@ -231,23 +231,23 @@ public:
    * by NDimensions doubles. All the landmarks are concatenated to form one flat
    * Array<double>.
    */
-  virtual void SetParameters( const ParametersType & );
+  void SetParameters( const ParametersType & ) override;
 
   /** Set Transform Fixed Parameters:
    *     To support the transform file writer this function was
    *     added to set the target landmarks similar to the
    *     SetParameters function setting the source landmarks
    */
-  virtual void SetFixedParameters( const ParametersType & );
+  void SetFixedParameters( const ParametersType & ) override;
 
   /** Update the Parameters array from the landmarks coordinates. */
   virtual void UpdateParameters( void );
 
   /** Get the Transformation Parameters - Gets the source landmarks. */
-  virtual const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Get Transform Fixed Parameters - Gets the target landmarks. */
-  virtual const ParametersType & GetFixedParameters( void ) const;
+  const ParametersType & GetFixedParameters( void ) const override;
 
   /** Stiffness of the spline.  A stiffness of zero results in the
    * standard interpolating spline.  A non-zero stiffness allows the
@@ -297,49 +297,49 @@ public:
   itkGetConstReferenceMacro( MatrixInversionMethod, std::string );
 
   /** Must be provided. */
-  virtual void GetSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj ) const
+  void GetSpatialJacobian(
+    const InputPointType & ipp, SpatialJacobianType & sj ) const override
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
 
 
-  virtual void GetSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh ) const
+  void GetSpatialHessian(
+    const InputPointType & ipp, SpatialHessianType & sh ) const override
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
 
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
 
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
 
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
 
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for KernelTransform2" );
   }
@@ -348,8 +348,8 @@ public:
 protected:
 
   KernelTransform2();
-  virtual ~KernelTransform2();
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~KernelTransform2() override;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 public:
 

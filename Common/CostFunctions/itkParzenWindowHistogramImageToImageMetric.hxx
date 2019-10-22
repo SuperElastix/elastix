@@ -73,7 +73,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   this->m_ParzenWindowHistogramThreaderParameters.m_Metric = this;
 
   // Multi-threading structs
-  this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables     = NULL;
+  this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables     = nullptr;
   this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor
@@ -136,7 +136,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the superclass to check that standard components are available. */
   this->Superclass::Initialize();
@@ -208,8 +208,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   this->m_FixedImageBinSize
     = ( this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit
     + 2.0 * smallNumberFixed ) / fixedHistogramWidth;
-  this->m_FixedImageBinSize = vnl_math_max( this->m_FixedImageBinSize, 1e-10 );
-  this->m_FixedImageBinSize = vnl_math_min( this->m_FixedImageBinSize, 1e+10 );
+  this->m_FixedImageBinSize = std::max( this->m_FixedImageBinSize, 1e-10 );
+  this->m_FixedImageBinSize = std::min( this->m_FixedImageBinSize, 1e+10 );
   this->m_FixedImageNormalizedMin
     = ( this->m_FixedImageMinLimit - smallNumberFixed )
     / this->m_FixedImageBinSize - static_cast< double >( fixedPadding );
@@ -220,8 +220,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   this->m_MovingImageBinSize
     = ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit
     + 2.0 * smallNumberMoving ) / movingHistogramWidth;
-  this->m_MovingImageBinSize = vnl_math_max( this->m_MovingImageBinSize, 1e-10 );
-  this->m_MovingImageBinSize = vnl_math_min( this->m_MovingImageBinSize, 1e+10 );
+  this->m_MovingImageBinSize = std::max( this->m_MovingImageBinSize, 1e-10 );
+  this->m_MovingImageBinSize = std::min( this->m_MovingImageBinSize, 1e+10 );
   this->m_MovingImageNormalizedMin
     = ( this->m_MovingImageMinLimit - smallNumberMoving )
     / this->m_MovingImageBinSize - static_cast< double >( movingPadding );
@@ -430,7 +430,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
   /** The ParzenIndex is the lowest bin number that is affected by a
    * pixel and computed as:
-   * ParzenIndex = vcl_floor( ParzenTerm + ParzenTermToIndexOffset )
+   * ParzenIndex = std::floor( ParzenTerm + ParzenTermToIndexOffset )
    * where ParzenTermToIndexOffset = 1/2, 0, -1/2, or -1.
    */
   this->m_FixedParzenTermToIndexOffset
@@ -470,18 +470,20 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   jointPDFRegion.SetIndex( jointPDFIndex );
   jointPDFRegion.SetSize( jointPDFSize );
 
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   /** Only resize the array of structs when needed. */
-  if( this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize != numberOfThreads )
   {
     delete[] this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
     this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables
       = new AlignedParzenWindowHistogramGetValueAndDerivativePerThreadStruct[
-      this->m_NumberOfThreads ];
-    this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
+      numberOfThreads ];
+    this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Some initialization. */
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
 
@@ -576,10 +578,10 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
   /** The lowest bin numbers affected by this pixel: */
   const OffsetValueType fixedImageParzenWindowIndex
-    = static_cast< OffsetValueType >( vcl_floor(
+    = static_cast< OffsetValueType >( std::floor(
     fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
   const OffsetValueType movingImageParzenWindowIndex
-    = static_cast< OffsetValueType >( vcl_floor(
+    = static_cast< OffsetValueType >( std::floor(
     movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
 
   /** The Parzen values. */
@@ -856,7 +858,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
   /** The lowest bin numbers affected by this pixel: */
   const OffsetValueType fixedImageParzenWindowIndex
-    = static_cast< OffsetValueType >( vcl_floor(
+    = static_cast< OffsetValueType >( std::floor(
     fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
   this->EvaluateParzenValues(
     fixedImageParzenWindowTerm, fixedImageParzenWindowIndex,
@@ -868,7 +870,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
     const double movingImageParzenWindowTerm
       = movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
     const OffsetValueType movingImageParzenWindowIndex
-      = static_cast< OffsetValueType >( vcl_floor(
+      = static_cast< OffsetValueType >( std::floor(
       movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
     this->EvaluateParzenValues(
       movingImageParzenWindowTerm, movingImageParzenWindowIndex,
@@ -945,7 +947,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
       const double movParzenWindowTermRight
         = movr / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
       const OffsetValueType movParzenWindowIndexRight
-        = static_cast< OffsetValueType >( vcl_floor(
+        = static_cast< OffsetValueType >( std::floor(
         movParzenWindowTermRight + this->m_MovingParzenTermToIndexOffset ) );
       this->EvaluateParzenValues(
         movParzenWindowTermRight, movParzenWindowIndexRight,
@@ -971,7 +973,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         rindex[ 1 ] = movParzenWindowIndexRight;
 
       } // end for f
-    }   // end if maskr
+    } // end if maskr
 
     if( maskl > 1e-10 )
     {
@@ -980,7 +982,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
       const double movParzenWindowTermLeft
         = movl / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
       const OffsetValueType movParzenWindowIndexLeft
-        = static_cast< OffsetValueType >( vcl_floor(
+        = static_cast< OffsetValueType >( std::floor(
         movParzenWindowTermLeft + this->m_MovingParzenTermToIndexOffset ) );
       this->EvaluateParzenValues(
         movParzenWindowTermLeft, movParzenWindowIndexLeft,
@@ -1006,7 +1008,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         lindex[ 1 ] = movParzenWindowIndexLeft;
 
       } // end for f
-    }   // end if maskl
+    } // end if maskl
 
     /** Update the perturbed alphas. */
     this->m_PerturbedAlphaRight[ mu ] += ( maskr - movingMaskValue );
@@ -1167,8 +1169,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -1244,10 +1246,12 @@ void
 ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputePDFs( void ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted
     = this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 1; i < numberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted
       += this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
@@ -1268,8 +1272,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   // could be multi-threaded too, by each thread updating only a part of the JointPDF.
   typedef ImageScanlineIterator< JointPDFType > JointPDFIteratorType;
   JointPDFIteratorType                it( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
-  std::vector< JointPDFIteratorType > itT( this->m_NumberOfThreads );
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  std::vector< JointPDFIteratorType > itT( numberOfThreads );
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     itT[ i ] = JointPDFIteratorType(
       this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[ i ].st_JointPDF,
@@ -1282,7 +1286,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
     while( !it.IsAtEndOfLine() )
     {
       sum = NumericTraits< PDFValueType >::Zero;
-      for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+      for( ThreadIdType i = 0; i < numberOfThreads; ++i )
       {
         sum += itT[ i ].Value();
         ++itT[ i ];
@@ -1291,7 +1295,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
       ++it;
     }
     it.NextLine();
-    for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+    for( ThreadIdType i = 0; i < numberOfThreads; ++i )
     {
       itT[ i ].NextLine();
     }
@@ -1310,14 +1314,14 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputePDFsThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId   = infoStruct->ThreadID;
+  ThreadIdType     threadId   = infoStruct->WorkUnitID;
 
   ParzenWindowHistogramMultiThreaderParameterType * temp
     = static_cast< ParzenWindowHistogramMultiThreaderParameterType * >( infoStruct->UserData );
 
   temp->m_Metric->ThreadedComputePDFs( threadId );
 
-  return ITK_THREAD_RETURN_VALUE;
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end ComputePDFsThreaderCallback()
 
@@ -1436,7 +1440,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         fixedImageValue, movingImageValue, &imageJacobian, &nzji, this->m_JointPDF.GetPointer() );
 
     } //end if-block check sampleOk
-  }   // end iterating over fixed image spatial sample container for loop
+  } // end iterating over fixed image spatial sample container for loop
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(
@@ -1639,7 +1643,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         movingMaskValuesRight, movingMaskValuesLeft, nzji );
 
     } //end if-block check sampleOk
-  }   // end iterating over fixed image spatial sample container for loop
+  } // end iterating over fixed image spatial sample container for loop
 
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(

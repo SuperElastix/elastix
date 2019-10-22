@@ -1,6 +1,11 @@
 cmake_minimum_required( VERSION 2.8 )
 
 project( elastix )
+set(CMAKE_CXX_STANDARD 11)
+
+if( BUILD_SHARED_LIBS )
+  message(FATAL_ERROR "Elastix does not support BUILD_SHARED_LIBS")
+endif()
 
 #---------------------------------------------------------------------
 cmake_policy( SET CMP0012 NEW )
@@ -61,7 +66,7 @@ endif()
 
 #---------------------------------------------------------------------
 # Find ITK.
-find_package( ITK REQUIRED )
+find_package( ITK 5.0 REQUIRED )
 include( ${ITK_USE_FILE} )
 
 #---------------------------------------------------------------------
@@ -135,11 +140,32 @@ endif()
 # before declaring any targets.
 
 if( USE_PreconditionedGradientDescent )
- set( SUITESPARSE_BINARY_DIR "" CACHE PATH "Path to SuiteSparse" )
- set( SUITESPARSE_USE_FILE ${SUITESPARSE_BINARY_DIR}/UseSuiteSparse.cmake )
- if( EXISTS ${SUITESPARSE_USE_FILE} )
-  include( ${SUITESPARSE_USE_FILE} )
- endif()
+# ------------------------------------------------------------------
+## CMake file to locate SuiteSparse and its useful composite projects
+## The first developpement of this file was made fro Windows users who
+## use:
+##  https://github.com/jlblancoc/suitesparse-metis-for-windows
+## Anyway, it chould be work also on linux (tested on fedora 17 when you installed suitesparse from yum)
+# Detect SuiteSparse libraries:
+# If not found automatically, set SuiteSparse_DIR in CMake to the
+# directory where SuiteSparse was built.
+# ------------------------------------------------------------------
+  list( APPEND CMAKE_MODULE_PATH "${elastix_SOURCE_DIR}/.." ) # Add the directory where FindSuiteSparse.cmake module can be found.
+
+  set( SuiteSparse_USE_LAPACK_BLAS ON )
+  find_package( SuiteSparse QUIET NO_MODULE )  # 1st: Try to locate the *config.cmake file.
+  if( NOT SuiteSparse_FOUND )
+    set( SuiteSparse_VERBOSE ON )
+    find_package( SuiteSparse REQUIRED )       # 2nd: Use FindSuiteSparse.cmake module
+    include_directories( ${SuiteSparse_INCLUDE_DIRS} )
+  else()
+    message( STATUS "Find SuiteSparse : include(${USE_SuiteSparse})" )
+    include( ${USE_SuiteSparse} )
+  endif()
+  message( STATUS "SuiteSparse_LIBS: ${SuiteSparse_LIBRARIES}" )
+# ------------------------------------------------------------------
+#   End of SuiteSparse detection
+# ------------------------------------------------------------------
 endif()
 
 #---------------------------------------------------------------------
@@ -389,6 +415,11 @@ if( ${BUILD_DOCUMENTATION} )
       endif()
     endif()
 
+    # Configure the doxygen configuration
+    configure_file(
+      ${ELASTIX_DOXYGEN_DIR}/doxyfile.in
+      ${ELASTIX_HELP_DIR}/doxyfile.out @ONLY )
+
     # Configure the footer of the help website.
     configure_file(
       ${ELASTIX_DOXYGEN_DIR}/DoxygenFooter.html.in
@@ -406,6 +437,14 @@ endif()
 
 if( BUILD_TESTING )
   add_subdirectory( Testing )
+endif()
+
+mark_as_advanced( ELASTIX_USE_GTEST )
+option( ELASTIX_USE_GTEST "Use GoogleTest to test Elastix implementation" OFF )
+
+if( ELASTIX_USE_GTEST )
+  enable_testing()
+  add_subdirectory( Common/GTesting )
 endif()
 
 #---------------------------------------------------------------------
@@ -475,7 +514,7 @@ if( ELASTIX_ENABLE_PACKAGER )
   #set( CPACK_PACKAGE_DESCRIPTION_FILE
   #  "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt" )
   set( CPACK_RESOURCE_FILE_LICENSE
-	  "${CMAKE_CURRENT_SOURCE_DIR}/NOTICE" )
+    "${CMAKE_CURRENT_SOURCE_DIR}/NOTICE" )
 
   # The default install directories: .../elastix_v4.3
   set( CPACK_PACKAGE_INSTALL_DIRECTORY
@@ -563,6 +602,6 @@ foreach( LIB IN LISTS AllComponentLibs )
   elastix_export_target( ${LIB} )
 endforeach()
 
-configure_file( ${CMAKE_SOURCE_DIR}/ElastixConfig.cmake.in ${CMAKE_BINARY_DIR}/ElastixConfig.cmake @ONLY )
-configure_file( ${CMAKE_SOURCE_DIR}/ElastixConfigVersion.cmake.in ${CMAKE_BINARY_DIR}/ElastixConfigVersion.cmake @ONLY )
-configure_file( ${CMAKE_SOURCE_DIR}/UseElastix.cmake.in ${CMAKE_BINARY_DIR}/UseElastix.cmake @ONLY )
+configure_file( ${elastix_SOURCE_DIR}/ElastixConfig.cmake.in ${elastix_BINARY_DIR}/ElastixConfig.cmake @ONLY )
+configure_file( ${elastix_SOURCE_DIR}/ElastixConfigVersion.cmake.in ${elastix_BINARY_DIR}/ElastixConfigVersion.cmake @ONLY )
+configure_file( ${elastix_SOURCE_DIR}/UseElastix.cmake.in ${elastix_BINARY_DIR}/UseElastix.cmake @ONLY )

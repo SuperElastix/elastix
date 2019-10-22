@@ -115,13 +115,13 @@ protected:
   RayCastInterpolator() {}
 
   /** The destructor. */
-  virtual ~RayCastInterpolator() {}
+  ~RayCastInterpolator() override {}
 
-  virtual int BeforeAll( void );
+  int BeforeAll( void ) override;
 
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 private:
 

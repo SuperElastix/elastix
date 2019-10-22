@@ -39,7 +39,7 @@ namespace itk
  * uncertainty is initially chosen so that it contains a
  * minimizer of the modified function
  *
- *    \f[ f(x+stp*s) - f(x) - ValueTolerance*stp*(gradf(x)'s). \f]
+ *   \f[ f(x+stp*s) - f(x) - ValueTolerance*stp*(gradf(x)'s). \f]
  *
  * If a step is obtained for which the modified function
  * has a nonpositive function value and nonnegative derivative,
@@ -49,11 +49,11 @@ namespace itk
  * The algorithm is designed to find a step which satisfies
  * the sufficient decrease condition
  *
- *    \f[ f(x+stp*s) <= f(x) + ValueTolerance*stp*(gradf(x)'s), \f]
+ *   \f[ f(x+stp*s) <= f(x) + ValueTolerance*stp*(gradf(x)'s), \f]
  *
  * and the curvature condition
  *
- *    \f[ \| gradf(x+stp*s)'s) \| <= GradientTolerance * \| gradf(x)'s \|. \f]
+ *   \f[ \| gradf(x+stp*s)'s) \| <= GradientTolerance * \| gradf(x)'s \|. \f]
  *
  * (together also called the Strong Wolfe Conditions)
  *
@@ -97,26 +97,26 @@ public:
     Unknown
   }                                   StopConditionType;
 
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   virtual void StopOptimization( void );
 
   /** If initial derivative and/or value are given we can save some
    * computation time!
    */
-  virtual void SetInitialDerivative( const DerivativeType & derivative );
+  void SetInitialDerivative( const DerivativeType & derivative ) override;
 
-  virtual void SetInitialValue( MeasureType value );
+  void SetInitialValue( MeasureType value ) override;
 
   /** Progress information: value, derivative, and directional derivative
    * at the current position.
    */
-  virtual void GetCurrentValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const;
+  void GetCurrentValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const override;
 
-  virtual void GetCurrentDerivative( DerivativeType & derivative ) const;
+  void GetCurrentDerivative( DerivativeType & derivative ) const override;
 
-  virtual MeasureType GetCurrentValue( void ) const;
+  MeasureType GetCurrentValue( void ) const override;
 
   virtual double GetCurrentDirectionalDerivative( void ) const;
 
@@ -169,9 +169,9 @@ public:
 protected:
 
   MoreThuenteLineSearchOptimizer();
-  virtual ~MoreThuenteLineSearchOptimizer() {}
+  ~MoreThuenteLineSearchOptimizer() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   unsigned long     m_CurrentIteration;
   bool              m_InitialDerivativeProvided;

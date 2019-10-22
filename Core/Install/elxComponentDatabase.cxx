@@ -40,7 +40,7 @@ ComponentDatabase::GetCreatorMap( void )
 {
   return CreatorMap;
 
-}   // end GetCreatorMap
+} // end GetCreatorMap
 
 
 /**
@@ -52,7 +52,7 @@ ComponentDatabase::GetIndexMap( void )
 {
   return IndexMap;
 
-}   // end GetIndexMap
+} // end GetIndexMap
 
 
 /**
@@ -86,7 +86,7 @@ ComponentDatabase::SetCreator(
     return 0;
   }
 
-}   // end SetCreator
+} // end SetCreator
 
 
 /**
@@ -124,7 +124,7 @@ ComponentDatabase::SetIndex(
     return 0;
   }
 
-}   // end SetIndex
+} // end SetIndex
 
 
 /**
@@ -156,7 +156,7 @@ ComponentDatabase::GetCreator(
     return map[ key ];
   }
 
-}   // end GetCreator
+} // end GetCreator
 
 
 /**
@@ -199,7 +199,7 @@ ComponentDatabase::GetIndex(
     return map[ key ];
   }
 
-}   // end GetIndex
+} // end GetIndex
 
 
 } // end namespace elastix

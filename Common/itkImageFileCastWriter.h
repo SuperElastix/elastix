@@ -20,7 +20,7 @@
 
 #include "itkImageFileWriter.h"
 #include "itkImageIOBase.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkSize.h"
 #include "itkImageIORegion.h"
 #include "itkCastImageFilter.h"
@@ -73,10 +73,10 @@ public:
 protected:
 
   ImageFileCastWriter();
-  ~ImageFileCastWriter();
+  ~ImageFileCastWriter() override;
 
   /** Does the real work. */
-  void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** Templated function that casts the input image and returns a
    * a pointer to the PixelBuffer. Assumes scalar singlecomponent images
@@ -93,18 +93,14 @@ protected:
 
     /** Reconfigure the imageIO */
     //this->GetImageIO()->SetPixelTypeInfo( typeid(OutputComponentType) );
-    this->GetImageIO()->SetPixelTypeInfo( static_cast< const OutputComponentType * >( 0 ) );
+    this->GetModifiableImageIO()->SetPixelTypeInfo( static_cast< const OutputComponentType * >( 0 ) );
 
     /** cast the input image */
     typename CasterType::Pointer caster                    = CasterType::New();
     this->m_Caster                                         = caster;
     typename ScalarInputImageType::Pointer localInputImage = ScalarInputImageType::New();
 
-#if (ITK_VERSION_MAJOR > 4) || (ITK_VERSION_MAJOR == 4 && ITK_VERSION_MINOR >= 11)
     localInputImage->Graft( static_cast< const ScalarInputImageType * >(inputImage) );
-#else
-    localInputImage->Graft( inputImage );
-#endif
 
     caster->SetInput( localInputImage );
     caster->Update();

@@ -25,15 +25,13 @@ namespace elastix
  * ********************* Constructor *********************
  */
 
-template< typename TMovingImage  >
+template< typename TMovingImage >
 TransformixFilter< TMovingImage >
 ::TransformixFilter( void )
 {
-  this->SetPrimaryInputName( "InputImage" );
+  this->SetPrimaryInputName( "TransformParameterObject" );
   this->SetPrimaryOutputName( "ResultImage" );
   this->SetOutput( "ResultDeformationField", this->MakeOutput( "ResultDeformationField" ) );
-
-  this->AddRequiredInputName( "TransformParameterObject" );
 
   this->m_FixedPointSetFileName               = "";
   this->m_ComputeSpatialJacobian              = false;
@@ -46,8 +44,6 @@ TransformixFilter< TMovingImage >
   this->m_LogToConsole = false;
   this->m_LogToFile    = false;
 
-  // TransformixFilter must have an input image
-  this->SetInput( "InputImage", TMovingImage::New() );
 } // end Constructor
 
 
@@ -168,7 +164,7 @@ TransformixFilter< TMovingImage >
   TransformixMainPointer transformix = TransformixMainType::New();
 
   // Setup transformix for warping input image if given
-  DataObjectContainerPointer inputImageContainer = 0;
+  DataObjectContainerPointer inputImageContainer = nullptr;
   if( !this->IsEmpty( itkDynamicCastInDebugMode< TMovingImage* >( this->GetInput( "InputImage" ) ) ) ) {
     inputImageContainer = DataObjectContainerType::New();
     inputImageContainer->CreateElementAt( 0 ) = this->GetInput( "InputImage" );
@@ -189,16 +185,16 @@ TransformixFilter< TMovingImage >
   for( unsigned int i = 0; i < transformParameterMapVector.size(); ++i )
   {
     transformParameterMapVector[ i ][ "FixedImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
+      = ParameterValueVectorType( 1, std::to_string( movingImageDimension ) );
     transformParameterMapVector[ i ][ "MovingImageDimension" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( movingImageDimension ) );
+      = ParameterValueVectorType( 1, std::to_string( movingImageDimension ) );
     transformParameterMapVector[ i ][ "ResultImagePixelType" ]
-      = ParameterValueVectorType( 1, ParameterObject::ToString( PixelType< typename TMovingImage::PixelType >::ToString() ) );
+      = ParameterValueVectorType( 1, PixelType< typename TMovingImage::PixelType >::ToString() );
 
     if( i > 0 )
     {
       transformParameterMapVector[ i ][ "InitialTransformParametersFileName" ]
-        = ParameterValueVectorType( 1, ParameterObject::ToString( i - 1 ) );
+        = ParameterValueVectorType( 1, std::to_string( i - 1 ) );
     }
   }
 
@@ -220,13 +216,13 @@ TransformixFilter< TMovingImage >
 
   // Save result image
   DataObjectContainerPointer resultImageContainer = transformix->GetResultImageContainer();
-  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
+  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 && resultImageContainer->ElementAt( 0 ).IsNotNull()  )
   {
     this->GraftOutput( "ResultImage", resultImageContainer->ElementAt( 0 ) );
   }
   // Optionally, save result deformation field
   DataObjectContainerPointer resultDeformationFieldContainer = transformix->GetResultDeformationFieldContainer();
-  if ( resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0 )
+  if ( resultDeformationFieldContainer.IsNotNull() && resultDeformationFieldContainer->Size() > 0 && resultDeformationFieldContainer->ElementAt( 0 ).IsNotNull()  )
   {
     this->GraftOutput( "ResultDeformationField", resultDeformationFieldContainer->ElementAt( 0 ) );
   }
@@ -234,18 +230,19 @@ TransformixFilter< TMovingImage >
 
 
 /**
-* ********************* MakeOutput *********************
-*/
+ * ********************* MakeOutput *********************
+ */
+
 template< typename TMovingImage >
 typename TransformixFilter< TMovingImage >::DataObjectPointer
 TransformixFilter< TMovingImage >
 ::MakeOutput( const DataObjectIdentifierType & key )
 {
-  if ( key == "ResultImage" )
+  if( key == "ResultImage" )
   {
     return TMovingImage::New().GetPointer();
   }
-  else if ( key == "ResultDeformationField" )
+  else if( key == "ResultDeformationField" )
   {
     return OutputDeformationFieldType::New().GetPointer();
   }
@@ -255,6 +252,109 @@ TransformixFilter< TMovingImage >
     return TMovingImage::New().GetPointer();
   }
 } // end MakeOutput()
+
+
+/**
+ * ********************* GenerateOutputInformation *********************
+ */
+
+template< typename TMovingImage >
+void
+TransformixFilter< TMovingImage >
+::GenerateOutputInformation( void )
+{
+
+  // Get pointers to the input and output
+  const ParameterObjectType * transformParameterObjectPtr = this->GetTransformParameterObject();
+
+  if( transformParameterObjectPtr->GetNumberOfParameterMaps() == 0 )
+  {
+    itkExceptionMacro( "Empty parameter map in parameter object." );
+  }
+
+  OutputImageType * outputPtr = this->GetOutput();
+  OutputDeformationFieldType * outputOutputDeformationFieldPtr = this->GetOutputDeformationField();
+
+  itkAssertInDebugAndIgnoreInReleaseMacro( transformParameterObjectPtr != ITK_NULLPTR );
+  itkAssertInDebugAndIgnoreInReleaseMacro( outputPtr != ITK_NULLPTR );
+  itkAssertInDebugAndIgnoreInReleaseMacro( outputOutputDeformationFieldPtr != ITK_NULLPTR );
+
+  // Get world coordinate system from the last map
+  const unsigned int lastIndex = transformParameterObjectPtr->GetNumberOfParameterMaps() - 1;
+  const ParameterMapType transformParameterMap = transformParameterObjectPtr->GetParameterMap( lastIndex );
+
+  ParameterMapType::const_iterator spacingMapIter = transformParameterMap.find( "Spacing" );
+  if( spacingMapIter == transformParameterMap.end() )
+  {
+    itkExceptionMacro( "No entry Spacing found in transformParameterMap" );
+  }
+  const ParameterValueVectorType spacingStrings = spacingMapIter->second;
+
+  ParameterMapType::const_iterator sizeMapIter = transformParameterMap.find( "Size" );
+  if( sizeMapIter == transformParameterMap.end() )
+  {
+    itkExceptionMacro( "No entry Size found in transformParameterMap" );
+  }
+  const ParameterValueVectorType sizeStrings = sizeMapIter->second;
+
+  ParameterMapType::const_iterator indexMapIter = transformParameterMap.find( "Index" );
+  if( indexMapIter == transformParameterMap.end() )
+  {
+    itkExceptionMacro( "No entry Index found in transformParameterMap" );
+  }
+  const ParameterValueVectorType indexStrings = indexMapIter->second;
+
+  ParameterMapType::const_iterator originMapIter = transformParameterMap.find( "Origin" );
+  if( originMapIter == transformParameterMap.end() )
+  {
+    itkExceptionMacro( "No entry Origin found in transformParameterMap" );
+  }
+  const ParameterValueVectorType originStrings = originMapIter->second;
+
+  ParameterMapType::const_iterator directionMapIter = transformParameterMap.find( "Direction" );
+  if( directionMapIter == transformParameterMap.end() )
+  {
+    itkExceptionMacro( "No entry Direction found in transformParameterMap" );
+  }
+  const ParameterValueVectorType directionStrings = directionMapIter->second;
+
+  typename TMovingImage::SpacingType outputSpacing;
+  typename TMovingImage::SizeType outputSize;
+  typename TMovingImage::IndexType outputStartIndex;
+  typename TMovingImage::PointType outputOrigin;
+  typename TMovingImage::DirectionType outputDirection;
+
+  for( unsigned int i = 0; i < TMovingImage::ImageDimension; i++ )
+  {
+    outputSpacing[ i ]    = std::atof( spacingStrings[i].c_str() );
+    outputSize[ i ]       = std::atoi( sizeStrings[i].c_str() );
+    outputStartIndex[ i ] = std::atoi( indexStrings[i].c_str() );
+    outputOrigin[ i ]     = std::atof( originStrings[i].c_str() );
+    for( unsigned int j = 0; j < TMovingImage::ImageDimension; j++ )
+    {
+      outputDirection( j, i ) = std::atof( directionStrings[ i * TMovingImage::ImageDimension + j ].c_str() );
+    }
+  }
+
+  outputPtr->SetSpacing( outputSpacing );
+  outputOutputDeformationFieldPtr->SetSpacing( outputSpacing );
+  outputPtr->SetOrigin( outputOrigin );
+  outputOutputDeformationFieldPtr->SetOrigin( outputOrigin );
+  outputPtr->SetDirection( outputDirection );
+  outputOutputDeformationFieldPtr->SetDirection( outputDirection );
+
+  // Set region
+  typename TMovingImage::RegionType outputLargestPossibleRegion;
+  outputLargestPossibleRegion.SetSize( outputSize );
+  outputLargestPossibleRegion.SetIndex( outputStartIndex );
+
+  outputPtr->SetLargestPossibleRegion( outputLargestPossibleRegion );
+  outputOutputDeformationFieldPtr->SetLargestPossibleRegion( outputLargestPossibleRegion );
+
+  outputPtr->SetNumberOfComponentsPerPixel( 1 );
+  outputOutputDeformationFieldPtr->SetNumberOfComponentsPerPixel( TMovingImage::ImageDimension );
+} // end GenerateOutputInformation()
+
 
 /**
  * ********************* SetMovingImage *********************
@@ -370,6 +470,10 @@ bool
 TransformixFilter< TMovingImage >
 ::IsEmpty( const InputImagePointer inputImage )
 {
+  if(!inputImage) {
+    return true;
+  }
+
   typename TMovingImage::RegionType region = inputImage->GetLargestPossibleRegion();
   return region.GetNumberOfPixels() == 0;
 } // end IsEmpty()

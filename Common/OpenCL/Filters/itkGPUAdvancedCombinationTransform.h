@@ -71,7 +71,7 @@ protected:
 
   GPUAdvancedCombinationTransform() {}
   virtual ~GPUAdvancedCombinationTransform() {}
-  void PrintSelf( std::ostream & s, Indent indent ) const ITK_OVERRIDE
+  void PrintSelf( std::ostream & s, Indent indent ) const override
   { CPUSuperclass::PrintSelf( s, indent ); }
 
 private:

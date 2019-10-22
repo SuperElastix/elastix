@@ -29,9 +29,9 @@ typename HardLimiterFunction< TInput, NDimension >::OutputType
 HardLimiterFunction< TInput, NDimension >
 ::Evaluate( const InputType & input ) const
 {
-  OutputType output = vnl_math_min( static_cast< OutputType >( input ), this->m_UpperBound );
-  return ( vnl_math_max( output, this->m_LowerBound ) );
-}   // end Evaluate()
+  OutputType output = std::min( static_cast< OutputType >( input ), this->m_UpperBound );
+  return ( std::max( output, this->m_LowerBound ) );
+} // end Evaluate()
 
 
 template< class TInput, unsigned int NDimension >
@@ -50,7 +50,7 @@ HardLimiterFunction< TInput, NDimension >
     return ( this->m_LowerBound );
   }
   return ( static_cast< OutputType >( input ) );
-}   // end Evaluate()
+} // end Evaluate()
 
 
 } // end namespace itk

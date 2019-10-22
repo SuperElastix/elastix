@@ -75,8 +75,7 @@ main( int argc, char * argv[] )
   const double       sigma             = 3.0;
   unsigned int       direction         = 0;
   const double       epsilon           = 0.01;
-  const unsigned int maximumNumberOfThreads
-    = itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
+  const unsigned int maximumNumberOfThreads = itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads();
 
   std::cout << std::showpoint << std::setprecision( 4 );
 
@@ -108,7 +107,7 @@ main( int argc, char * argv[] )
   {
     // Test CPU
     cputimer.Start();
-    cpuFilter->SetNumberOfThreads( nThreads );
+    cpuFilter->SetNumberOfWorkUnits( nThreads );
     cpuFilter->SetInput( reader->GetOutput() );
     cpuFilter->SetSigma( sigma );
     cpuFilter->SetDirection( direction );
@@ -198,7 +197,7 @@ main( int argc, char * argv[] )
   for( direction = 0; direction < ImageDimension; direction++ )
   {
     cputimer.Start();
-    cpuFilter->SetNumberOfThreads( maximumNumberOfThreads );
+    cpuFilter->SetNumberOfWorkUnits( maximumNumberOfThreads );
     cpuFilter->SetInput( reader->GetOutput() );
     cpuFilter->SetSigma( sigma );
     cpuFilter->SetDirection( direction );

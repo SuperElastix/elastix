@@ -58,13 +58,13 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
 template< class TFixedImage, class TScalarType >
 void
 DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the initialize of the superclass. */
   this->Superclass::Initialize();
 
   /** Check if this transform is a B-spline transform. */
-  typename BSplineTransformType::Pointer localBSplineTransform = 0;
+  typename BSplineTransformType::Pointer localBSplineTransform; // default-constructed (null)
   bool transformIsBSpline = this->CheckForBSplineTransform2( localBSplineTransform );
   if( transformIsBSpline )
   {
@@ -186,8 +186,6 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
   typename PenaltyGridImageType::IndexType penaltyGridIndex, neighborPenaltyGridIndex;
   typename PenaltyGridImageType::PointType penaltyGridPoint, neighborPenaltyGridPoint, xn, xf;
 
-  typename TransformType::OutputVectorType dd_dx, dd_dy, dd_dz;
-
   typedef itk::ConstNeighborhoodIterator< PenaltyGridImageType > NeighborhoodIteratorType;
   typename NeighborhoodIteratorType::RadiusType radius;
   radius.Fill( 1 );
@@ -263,7 +261,7 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
               penaltyTerm += penaltyTermBuffer / numberOfRigidGridsNeighbor / ( this->m_NumberOfRigidGrids );
             }
           } // end for
-        }   // end if
+        } // end if
       }     // end if
     }       // end for
   }         // end if ( dimension = 3 )
@@ -328,7 +326,7 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
   typedef typename WeightsFunctionType::ContinuousIndexType                    ContinuousIndexType;
   typedef double                                                               ContinuousIndexValueType;
 
-  ContinuousIndexType      tindex, neighbor_tindex, neighbor_tindex_start;
+  ContinuousIndexType      tindex;
   ContinuousIndexValueType tx, ty, tz;
 
   ContinuousIndexValueType m, n, p, neighbor_m, neighbor_n, neighbor_p;
@@ -485,10 +483,10 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
               }
             }
           } // end for
-        }   // end if
+        } // end if
       }
     } // end for
-  }   // end if ( dimension = 3 )
+  } // end if ( dimension = 3 )
 
 } // end GetValueAndDerivative()
 

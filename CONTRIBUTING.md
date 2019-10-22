@@ -5,13 +5,13 @@
 
 ### Do you have questions about the source code? ###
 
-* Ask any question about how to use `elastix` on the _mailing list_. You can subscribe to the mailing list [here](http://lists.bigr.nl/mailman/listinfo/elastix), after which you can email to elastix@bigr.nl.
+* Ask any question about how to use `elastix` on the [mailing list](https://groups.google.com/forum/#!forum/elastix-imageregistration).
 
 * Do not open an issue on GitHub for general questions, registration questions, or issues you may have while running `elastix`. _GitHub issues are primarily intended for bug reports and fixes._
 
-* General information about `elastix` can be found on our [website](http://elastix.isi.uu.nl/).
+* General information about `elastix` can be found on our [wiki](https://github.com/SuperElastix/elastix/wiki) or at the [website](http://elastix.isi.uu.nl/).
 
-* [The manual](http://elastix.isi.uu.nl/download/elastix_manual_v4.8.pdf) explains much of the inner workings of image registration.
+* [The manual](https://github.com/SuperElastix/elastix/releases/download/4.9.0/elastix-4.9.0-manual.pdf) explains much of the inner workings of image registration.
 
 ### Did you find a bug? ###
 
@@ -31,9 +31,9 @@
 
 * Make sure the PR is done with respect to the [develop branch](https://github.com/SuperElastix/elastix/tree/develop).
 
-* Ensure the PR description (log message) _clearly describes the problem and solution_. Include the relevant issue number if applicable. One-line messages are fine for small changes, but bigger changes should look like this:  
+* Ensure the PR description (log message) _clearly describes the problem and solution_. Include the relevant issue number if applicable. One-line messages are fine for small changes, but bigger changes should look like this:
     $ git commit -m "ENH: A brief summary of the commit
-    > 
+    >
     > A paragraph describing what changed and its impact."
 
 * We use the following tags for commit messages:
@@ -60,7 +60,7 @@
 
 Start reading our code and you'll get the hang of it. We optimize for readability:
 
-* We indent using two spaces (soft tabs). This ensures a consistent layout of the code on different text editors. 
+* We indent using two spaces (soft tabs). This ensures a consistent layout of the code on different text editors.
 
 * We ALWAYS put spaces after list items and function arguments (`[1, 2, 3]`, not `[1,2,3]`), around operators (`x += 1`, not `x+=1`), etc.
 
@@ -68,9 +68,9 @@ Start reading our code and you'll get the hang of it. We optimize for readabilit
 
 * Member variables of classes should start their name with `m_`. For example: `m_NumberOfIterations`.
 
-* Type definitions should start with a capital. ImageType for example, instead of imageType. 
+* Type definitions should start with a capital. ImageType for example, instead of imageType.
 
 * This is open source software. Consider the people who will read your code, and make it look nice for them. It's sort of like driving a car: Perhaps you love doing donuts when you're alone, but with passengers the goal is to make the ride as smooth as possible.
 
-Thanks,  
+Thanks,
 The `elastix` team

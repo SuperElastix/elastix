@@ -226,7 +226,7 @@ GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage, TPrecisionT
        */
       if( level > 0 )
       {
-        this->m_SmoothingSchedule[ level ][ dim ] = vnl_math_min(
+        this->m_SmoothingSchedule[ level ][ dim ] = std::min(
           this->m_SmoothingSchedule[ level ][ dim ],
           this->m_SmoothingSchedule[ level - 1 ][ dim ] );
       }
@@ -381,7 +381,7 @@ GenericMultiResolutionPyramidImageFilter< TInputImage, TOutputImage, TPrecisionT
 
     }
   } // end for ilevel
-}   // end GenerateData()
+} // end GenerateData()
 
 
 /**

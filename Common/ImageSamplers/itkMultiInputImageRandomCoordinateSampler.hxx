@@ -45,7 +45,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
   this->m_UseRandomSampleRegion = false;
   this->m_SampleRegionSize.Fill( 1.0 );
 
-}   // end Constructor()
+} // end Constructor()
 
 
 /**
@@ -68,7 +68,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
   InputImageConstPointer inputImage = this->GetInput();
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
   typename MaskType::ConstPointer mask                       = this->GetMask();
-  typename InterpolatorType::Pointer interpolator            = this->GetInterpolator();
+  typename InterpolatorType::Pointer interpolator            = this->GetModifiableInterpolator();
 
   /** Set up the interpolator. */
   interpolator->SetInputImage( inputImage );
@@ -108,7 +108,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if no mask
+  } // end if no mask
   else
   {
     /** Update all masks. */
@@ -154,9 +154,9 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if mask
+  } // end if mask
 
-}   // end GenerateData()
+} // end GenerateData()
 
 
 /**
@@ -229,10 +229,10 @@ MultiInputImageRandomCoordinateSampler< TInputImage >::GenerateSampleRegion(
     for( unsigned int j = 0; j < InputImageDimension; ++j )
     {
       /** Get the largest smallest point. */
-      smallestPoint[ j ] = vnl_math_max( smallestPoint[ j ], smallestImagePoint[ j ] );
+      smallestPoint[ j ] = std::max( smallestPoint[ j ], smallestImagePoint[ j ] );
 
       /** Get the smallest largest point. */
-      largestPoint[ j ] = vnl_math_min( largestPoint[ j ], largestImagePoint[ j ] );
+      largestPoint[ j ] = std::min( largestPoint[ j ], largestImagePoint[ j ] );
     }
   }
 
@@ -260,7 +260,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >::GenerateSampleRegion(
     largestContIndex += sampleRegionSize;
   }
 
-}   // end GenerateSampleRegion()
+} // end GenerateSampleRegion()
 
 
 /**
@@ -280,7 +280,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >::GenerateRandomCoordinate(
       this->m_RandomGenerator->GetUniformVariate(
       smallestContIndex[ i ], largestContIndex[ i ] ) );
   }
-}   // end GenerateRandomCoordinate()
+} // end GenerateRandomCoordinate()
 
 
 /**
@@ -297,7 +297,7 @@ MultiInputImageRandomCoordinateSampler< TInputImage >
   os << indent << "Interpolator: " << this->m_Interpolator.GetPointer() << std::endl;
   os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 
-}   // end PrintSelf
+} // end PrintSelf
 
 
 } // end namespace itk

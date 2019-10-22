@@ -22,7 +22,7 @@
 #include "itkFullSearchOptimizer.h"
 #include "itkCommand.h"
 #include "itkEventObject.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkNumericTraits.h"
 
 namespace itk
@@ -144,7 +144,7 @@ FullSearchOptimizer
     /** Set the next position in search space. */
     this->UpdateCurrentPosition();
 
-  }   // end while
+  } // end while
 
 }   //end function ResumeOptimization
 
@@ -165,7 +165,7 @@ FullSearchOptimizer
     this->PointToPosition( m_BestPointInSearchSpace ) );
   InvokeEvent( EndEvent() );
 
-}   // end function StopOptimization
+} // end function StopOptimization
 
 
 /**
@@ -221,9 +221,9 @@ FullSearchOptimizer
       {
         m_CurrentIndexInSearchSpace[ ssdim ] = dummy;
       }
-    }   // end if justsetprevdimtozero
+    } // end if justsetprevdimtozero
 
-  }   // end for
+  } // end for
 
   /** Initialise the iterator. */
   SearchSpaceIteratorType it( m_SearchSpace->Begin() );
@@ -244,9 +244,9 @@ FullSearchOptimizer
     /** Update the array of parameters. */
     currentPosition[ it.Index() ] = m_CurrentPointInSearchSpace[ ssdim ];
     it++;
-  }   // end for
+  } // end for
 
-}   // end UpdateCurrentPosition
+} // end UpdateCurrentPosition
 
 
 /**
@@ -279,12 +279,12 @@ FullSearchOptimizer
       it++;
     }
 
-  }   // end if search space modified
+  } // end if search space modified
 
   /** Remember the time of the last processed changes */
   m_LastSearchSpaceChanges = m_SearchSpace->GetMTime();
 
-}   // end function ProcessSearchSpaceChanges
+} // end function ProcessSearchSpaceChanges
 
 
 /**
@@ -355,7 +355,7 @@ FullSearchOptimizer
     {
       nr_it *= sssize[ ssdim ];
     }
-  }   // end if
+  } // end if
 
   return nr_it;
 }
@@ -419,7 +419,7 @@ FullSearchOptimizer
 
   return param;
 
-}   // end point to position
+} // end point to position
 
 
 /**
@@ -456,11 +456,11 @@ FullSearchOptimizer
 
     /** go to next dimension in search space */
     it++;
-  }   // end for
+  } // end for
 
   return point;
 
-}   // end IndexToPoint
+} // end IndexToPoint
 
 
 } // end namespace itk

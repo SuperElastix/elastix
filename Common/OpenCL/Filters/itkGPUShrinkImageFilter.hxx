@@ -124,7 +124,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
     // It is plausible that due to small amounts of loss of numerical
     // precision that the offset is negative, this would cause sampling
     // out of out region, this is insurance against that possibility
-    offsetIndex[ i ] = vnl_math_max( zeroOffset, offsetIndex[ i ] );
+    offsetIndex[ i ] = std::max( zeroOffset, offsetIndex[ i ] );
   }
 
   const typename GPUOutputImage::SizeType inSize  = inPtr->GetLargestPossibleRegion().GetSize();
@@ -138,7 +138,7 @@ GPUShrinkImageFilter< TInputImage, TOutputImage >
   {
     // total # of threads
     globalSize[ i ] = localSize[ i ] * ( static_cast< unsigned int >(
-        vcl_ceil( static_cast< float >( outSize[ i ] )
+        std::ceil( static_cast< float >( outSize[ i ] )
         / static_cast< float >( localSize[ i ] ) ) ) );
   }
 

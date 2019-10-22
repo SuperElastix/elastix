@@ -209,7 +209,7 @@ RSGDEachParameterApartBaseOptimizer
     magnitudeSquare += weighted * weighted;
   }
 
-  m_GradientMagnitude = vcl_sqrt( magnitudeSquare );
+  m_GradientMagnitude = std::sqrt( magnitudeSquare );
 
   if( m_GradientMagnitude < m_GradientMagnitudeTolerance )
   {

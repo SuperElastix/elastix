@@ -51,7 +51,7 @@ PCAMetric< TFixedImage, TMovingImage >
   this->SetUseMovingImageLimiter( false );
 
   // Multi-threading structs
-  this->m_PCAMetricGetSamplesPerThreadVariables     = NULL;
+  this->m_PCAMetricGetSamplesPerThreadVariables     = nullptr;
   this->m_PCAMetricGetSamplesPerThreadVariablesSize = 0;
 
   /** Initialize the m_ParzenWindowHistogramThreaderParameters. */
@@ -78,7 +78,7 @@ PCAMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 PCAMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();
@@ -118,6 +118,8 @@ void
 PCAMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   /** Resize and initialize the threading related parameters.
  * The SetSize() functions do not resize the data when this is not
  * needed, which saves valuable re-allocation time.
@@ -126,22 +128,22 @@ PCAMetric< TFixedImage, TMovingImage >
  */
 
   /** Only resize the array of structs when needed. */
-  if( this->m_PCAMetricGetSamplesPerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_PCAMetricGetSamplesPerThreadVariablesSize != numberOfThreads )
   {
     delete[] this->m_PCAMetricGetSamplesPerThreadVariables;
     this->m_PCAMetricGetSamplesPerThreadVariables
-      = new AlignedPCAMetricGetSamplesPerThreadStruct[ this->m_NumberOfThreads ];
-    this->m_PCAMetricGetSamplesPerThreadVariablesSize = this->m_NumberOfThreads;
+      = new AlignedPCAMetricGetSamplesPerThreadStruct[ numberOfThreads ];
+    this->m_PCAMetricGetSamplesPerThreadVariablesSize = numberOfThreads;
   }
 
   /** Some initialization. */
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_Derivative.SetSize( this->GetNumberOfParameters() );
   }
 
-  this->m_PixelStartIndex.resize( this->m_NumberOfThreads );
+  this->m_PixelStartIndex.resize( numberOfThreads );
 
 } // end InitializeThreadingParameters()
 
@@ -744,8 +746,8 @@ PCAMetric< TFixedImage, TMovingImage >
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
   pos_begin = ( pos_begin > sampleContainerSize ) ? sampleContainerSize : pos_begin;
@@ -833,9 +835,11 @@ void
 PCAMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetSamples( MeasureType & value ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = this->m_PCAMetricGetSamplesPerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
     this->m_NumberOfPixelsCounted += this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_NumberOfPixelsCounted;
   }
@@ -847,7 +851,7 @@ PCAMetric< TFixedImage, TMovingImage >
 
   MatrixType   A( this->m_NumberOfPixelsCounted, this->m_G );
   unsigned int row_start = 0;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     A.update( this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_DataBlock, row_start, 0 );
     this->m_PixelStartIndex[ i ] = row_start;
@@ -934,14 +938,14 @@ PCAMetric< TFixedImage, TMovingImage >
 ::GetSamplesThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId   = infoStruct->ThreadID;
+  ThreadIdType     threadId   = infoStruct->WorkUnitID;
 
   PCAMetricMultiThreaderParameterType * temp
     = static_cast< PCAMetricMultiThreaderParameterType * >( infoStruct->UserData );
 
   temp->m_Metric->ThreadedGetSamples( threadId );
 
-  return ITK_THREAD_RETURN_VALUE;
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // GetSamplesThreaderCallback()
 
@@ -958,7 +962,7 @@ PCAMetric< TFixedImage, TMovingImage >
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
   typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+  local_threader->SetNumberOfWorkUnits( Self::GetNumberOfWorkUnits() );
   local_threader->SetSingleMethod( this->GetSamplesThreaderCallback,
     const_cast< void * >( static_cast< const void * >(
       &this->m_PCAMetricThreaderParameters ) ) );
@@ -1053,8 +1057,10 @@ PCAMetric< TFixedImage, TMovingImage >
 ::AfterThreadedComputeDerivative(
   DerivativeType & derivative ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   derivative = this->m_PCAMetricGetSamplesPerThreadVariables[ 0 ].st_Derivative;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 1; i < numberOfThreads; ++i )
   {
     derivative += this->m_PCAMetricGetSamplesPerThreadVariables[ i ].st_Derivative;
   }
@@ -1142,14 +1148,14 @@ PCAMetric< TFixedImage, TMovingImage >
 ::ComputeDerivativeThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId   = infoStruct->ThreadID;
+  ThreadIdType     threadId   = infoStruct->WorkUnitID;
 
   PCAMetricMultiThreaderParameterType * temp
     = static_cast< PCAMetricMultiThreaderParameterType * >( infoStruct->UserData );
 
   temp->m_Metric->ThreadedComputeDerivative( threadId );
 
-  return ITK_THREAD_RETURN_VALUE;
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end omputeDerivativeThreaderCallback()
 
@@ -1166,7 +1172,7 @@ PCAMetric< TFixedImage, TMovingImage >
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
   typename ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+  local_threader->SetNumberOfWorkUnits( Self::GetNumberOfWorkUnits() );
   local_threader->SetSingleMethod( this->ComputeDerivativeThreaderCallback,
     const_cast< void * >( static_cast< const void * >(
       &this->m_PCAMetricThreaderParameters ) ) );

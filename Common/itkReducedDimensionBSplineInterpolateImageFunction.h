@@ -108,6 +108,8 @@ public:
   /** OutputType typedef support. */
   typedef typename Superclass::OutputType OutputType;
 
+  using SizeType = typename TImageType::SizeType;
+
   /** InputImageType typedef support. */
   typedef typename Superclass::InputImageType InputImageType;
 
@@ -146,8 +148,8 @@ public:
    *
    * ImageFunction::IsInsideBuffer() can be used to check bounds before
    * calling the method. */
-  virtual OutputType EvaluateAtContinuousIndex(
-    const ContinuousIndexType & index ) const;
+  OutputType EvaluateAtContinuousIndex(
+    const ContinuousIndexType & index ) const override;
 
   /** Derivative typedef support */
   typedef CovariantVector< OutputType,
@@ -172,7 +174,7 @@ public:
   itkGetConstMacro( SplineOrder, int );
 
   /** Set the input image.  This must be set by the user. */
-  virtual void SetInputImage( const TImageType * inputData );
+  void SetInputImage( const TImageType * inputData ) override;
 
   /** The UseImageDirection flag determines whether image derivatives are
    * computed with respect to the image grid or with respect to the physical
@@ -193,8 +195,8 @@ public:
 protected:
 
   ReducedDimensionBSplineInterpolateImageFunction();
-  virtual ~ReducedDimensionBSplineInterpolateImageFunction() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~ReducedDimensionBSplineInterpolateImageFunction() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   // These are needed by the smoothing spline routine.
   std::vector< CoefficientDataType > m_Scratch;      // temp storage for processing of Coefficients
@@ -207,6 +209,11 @@ private:
 
   ReducedDimensionBSplineInterpolateImageFunction( const Self & ); //purposely not implemented
   void operator=( const Self & );                                  //purposely not implemented
+
+  SizeType GetRadius() const override
+  {
+    return SizeType::Filled(m_SplineOrder + 1);
+  }
 
   /** Determines the weights for interpolation of the value x */
   void SetInterpolationWeights( const ContinuousIndexType & x,

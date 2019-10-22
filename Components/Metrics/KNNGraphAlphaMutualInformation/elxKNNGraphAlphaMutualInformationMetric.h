@@ -152,7 +152,7 @@ public:
    * \li Set the spline orders of the fixed feature interpolators.
    * \li Set the spline orders of the moving feature interpolators.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Execute stuff before each new pyramid resolution:
    * \li Set the tree type.
@@ -164,19 +164,19 @@ public:
    * \li Set the error bound epsilon for ANN search.
    * \li Set the squared search radius, if appropriate.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  void Initialize( void ) override;
 
 protected:
 
   /** The constructor. */
   KNNGraphAlphaMutualInformationMetric() {}
   /** The destructor. */
-  virtual ~KNNGraphAlphaMutualInformationMetric() {}
+  ~KNNGraphAlphaMutualInformationMetric() override {}
 
 private:
 

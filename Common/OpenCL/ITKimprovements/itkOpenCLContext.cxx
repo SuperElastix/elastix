@@ -28,7 +28,7 @@
 namespace itk
 {
 // static variable initialization
-OpenCLContext::Pointer OpenCLContext::m_Instance = 0;
+OpenCLContext::Pointer OpenCLContext::m_Instance = nullptr;
 
 //------------------------------------------------------------------------------
 // Return the single instance of the OpenCLContext
@@ -996,7 +996,7 @@ OpenCLContext::CreateImageDevice( const OpenCLImageFormat & format,
   cl_mem mem = clCreateImage
       ( d->id, flags, &( format.m_Format ), &imageDesc, 0, &( d->last_error ) );
 #else
-  cl_mem mem = NULL;
+  cl_mem mem = nullptr;
   if( size.GetDimension() == 1 )
   {
     itkGenericExceptionMacro( << "OpenCLContext::CreateImageDevice() not supported for 1D." );
@@ -1056,7 +1056,7 @@ OpenCLContext::CreateImageHost( const OpenCLImageFormat & format,
   cl_mem mem = clCreateImage
       ( d->id, flags, &( format.m_Format ), &imageDesc, data, &( d->last_error ) );
 #else
-  cl_mem mem = NULL;
+  cl_mem mem = nullptr;
   if( size.GetDimension() == 1 )
   {
     itkGenericExceptionMacro( << "OpenCLContext::CreateImageHost() not supported for 1D." );
@@ -1109,7 +1109,7 @@ OpenCLContext::CreateImageCopy( const OpenCLImageFormat & format,
       ( d->id, flags, &( format.m_Format ), &imageDesc,
       const_cast< void * >( data ), &( d->last_error ) );
 #else
-  cl_mem mem = NULL;
+  cl_mem mem = nullptr;
   if( size.GetDimension() == 1 )
   {
     itkGenericExceptionMacro( << "OpenCLContext::CreateImageCopy() not supported for 1D." );
@@ -1765,8 +1765,8 @@ OpenCLContext::OpenCLProfile( cl_event clEvent,
     return;
   }
   cl_ulong start, end;
-  errid  = clGetEventProfilingInfo( clEvent, CL_PROFILING_COMMAND_END, sizeof( cl_ulong ), &end, NULL );
-  errid |= clGetEventProfilingInfo( clEvent, CL_PROFILING_COMMAND_START, sizeof( cl_ulong ), &start, NULL );
+  errid  = clGetEventProfilingInfo( clEvent, CL_PROFILING_COMMAND_END, sizeof( cl_ulong ), &end, nullptr );
+  errid |= clGetEventProfilingInfo( clEvent, CL_PROFILING_COMMAND_START, sizeof( cl_ulong ), &start, nullptr );
   this->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
   if( errid != CL_SUCCESS )
   {

@@ -103,7 +103,7 @@ public:
 
   virtual void GraftOutput( const DataObjectIdentifierType & key, DataObject * graft );
 
-  virtual void SetNumberOfThreads( ThreadIdType _arg );
+  virtual void SetNumberOfWorkUnits( ThreadIdType _arg );
 
 protected:
 

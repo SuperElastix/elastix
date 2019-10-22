@@ -319,7 +319,7 @@ public:
   /** Function that is called at the very beginning of ElastixTemplate::Run().
    * It checks the command line input arguments.
    */
-  virtual int BeforeAllBase( void );
+  int BeforeAllBase( void ) override;
 
   /** Function that is called at the very beginning of ElastixTemplate::ApplyTransform().
    * It checks the command line input arguments.
@@ -329,9 +329,9 @@ public:
   /** Functions called before and after registration.
    * They install/uninstall the xout["iteration"] field.
    */
-  virtual void BeforeRegistrationBase( void );
+  void BeforeRegistrationBase( void ) override;
 
-  virtual void AfterRegistrationBase( void );
+  void AfterRegistrationBase( void ) override;
 
   /** Get the default precision of xout.
    * (The value assumed when no DefaultOutputPrecision is given in the
@@ -367,7 +367,7 @@ public:
 protected:
 
   ElastixBase();
-  virtual ~ElastixBase() {}
+  ~ElastixBase() override {}
 
   ConfigurationPointer     m_Configuration;
   DBIndexType              m_DBIndex;
@@ -402,7 +402,7 @@ public:
 
     static DataObjectContainerPointer GenerateImageContainer(
       FileNameContainerType * fileNameContainer, const std::string & imageDescription,
-      bool useDirectionCosines, DirectionType * originalDirectionCosines = NULL )
+      bool useDirectionCosines, DirectionType * originalDirectionCosines = nullptr )
     {
       DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
 

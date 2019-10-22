@@ -129,7 +129,7 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  void Initialize( void ) override;
 
   /**
    * Do some things before each resolution:
@@ -137,9 +137,9 @@ public:
    * \li Set UseNormalization setting
    */
 
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
@@ -147,7 +147,7 @@ protected:
   GradientDifferenceMetric(){}
 
   /** The destructor. */
-  virtual ~GradientDifferenceMetric() {}
+  ~GradientDifferenceMetric() override {}
 
 private:
 

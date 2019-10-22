@@ -42,7 +42,7 @@ PolydataDummyPenalty< TElastix >
 template< class TElastix >
 void
 PolydataDummyPenalty< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+::Initialize( void )
 {
   itk::TimeProbe timer;
   timer.Start();
@@ -132,7 +132,7 @@ PolydataDummyPenalty< TElastix >
     std::ostringstream fmeshArgument( "-fmesh", std::ios_base::ate );
     fmeshArgument << ch << metricNumber;
     std::string fixedMeshName = this->GetConfiguration()->GetCommandLineArgument( fmeshArgument.str() );
-    typename MeshType::Pointer fixedMesh = 0;
+    typename MeshType::Pointer fixedMesh; // default-constructed (null)
     if( itksys::SystemTools::GetFilenameLastExtension( fixedMeshName ) == ".txt" )
     {
       this->ReadTransformixPoints( fixedMeshName, fixedMesh );
@@ -213,7 +213,7 @@ PolydataDummyPenalty< TElastix >
                             << "Resuming elastix." << std::endl;
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachIteration()
 
@@ -268,7 +268,7 @@ PolydataDummyPenalty< TElastix >
                             << "Resuming elastix." << std::endl;
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachResolution()
 
@@ -327,16 +327,16 @@ PolydataDummyPenalty< TElastix >
   typename MeshWriterType::Pointer meshWriter = MeshWriterType::New();
 
   /** Set the points of the latest transformation. */
-  const MappedMeshContainerPointer mappedMeshContainer = this->GetMappedMeshContainer();
+  const MappedMeshContainerPointer mappedMeshContainer = this->GetModifiableMappedMeshContainer();
   FixedMeshPointer                 mappedMesh          = mappedMeshContainer->ElementAt( meshId );
 
   /** Use pointer to the mesh data of fixedMesh; const_cast are assumed since outputMesh
    * will only be used for writing the output.
    * */
   FixedMeshConstPointer fixedMesh        = this->GetFixedMeshContainer()->ElementAt( meshId );
-  bool                  tempSetPointData = ( mappedMesh->GetPointData() == NULL );
-  bool                  tempSetCells     = ( mappedMesh->GetCells() == NULL );
-  bool                  tempSetCellData  = ( mappedMesh->GetCellData() == NULL );
+  bool                  tempSetPointData = ( mappedMesh->GetPointData() == nullptr );
+  bool                  tempSetCells     = ( mappedMesh->GetCells() == nullptr );
+  bool                  tempSetCellData  = ( mappedMesh->GetCellData() == nullptr );
 
   if( tempSetPointData )
   {
@@ -376,16 +376,16 @@ PolydataDummyPenalty< TElastix >
 
   if( tempSetPointData )
   {
-    mappedMesh->SetPointData( NULL );
+    mappedMesh->SetPointData( nullptr );
   }
 
   if( tempSetCells )
   {
-    mappedMesh->SetCells( NULL );
+    mappedMesh->SetCells( nullptr );
   }
   if( tempSetCellData )
   {
-    mappedMesh->SetCellData( NULL );
+    mappedMesh->SetCellData( nullptr );
   }
 
 } // end WriteResultMesh()
@@ -418,7 +418,7 @@ PolydataDummyPenalty< TElastix >
     itk::ContinuousIndex< double, MovingImageDimension >  MovingImageContinuousIndexType;
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
-  typedef bool DummyIPPPixelType;
+  typedef unsigned char DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<
     DummyIPPPixelType, FixedImageDimension,
     FixedImageDimension, CoordRepType >                  MeshTraitsType;
@@ -491,7 +491,6 @@ PolydataDummyPenalty< TElastix >
 
   /** Temp vars */
   FixedImageContinuousIndexType  fixedcindex;
-  MovingImageContinuousIndexType movingcindex;
 
   /** Read the input points, as index or as point. */
   if( !( ippReader->GetPointsAreIndices() ) )
@@ -507,7 +506,7 @@ PolydataDummyPenalty< TElastix >
       for( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
         inputindexvec[ j ][ i ] = static_cast< FixedImageIndexValueType >(
-          vnl_math_rnd( fixedcindex[ i ] ) );
+          vnl_math::rnd( fixedcindex[ i ] ) );
       }
     }
   }
@@ -523,7 +522,7 @@ PolydataDummyPenalty< TElastix >
       for( unsigned int i = 0; i < FixedImageDimension; i++ )
       {
         inputindexvec[ j ][ i ] = static_cast< FixedImageIndexValueType >(
-          vnl_math_rnd( point[ i ] ) );
+          vnl_math::rnd( point[ i ] ) );
       }
       /** Compute the input point in physical coordinates. */
       dummyImage->TransformIndexToPhysicalPoint(

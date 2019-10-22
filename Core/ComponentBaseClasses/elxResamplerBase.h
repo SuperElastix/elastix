@@ -145,22 +145,22 @@ public:
    * \li Set output image information, such as size, spacing, etc.
    * \li Set the default pixel value.
    */
-  virtual void BeforeRegistrationBase( void );
+  void BeforeRegistrationBase( void ) override;
 
   /** Execute stuff after each resolution:
    * \li Write the resulting output image.
    */
-  virtual void AfterEachResolutionBase( void );
+  void AfterEachResolutionBase( void ) override;
 
   /** Execute stuff after each iteration:
    * \li Write the resulting output image.
    */
-  virtual void AfterEachIterationBase( void );
+  void AfterEachIterationBase( void ) override;
 
   /** Execute stuff after the registration:
    * \li Write the resulting output image.
    */
-  virtual void AfterRegistrationBase( void );
+  void AfterRegistrationBase( void ) override;
 
   /** Function to read transform-parameters from a file. */
   virtual void ReadFromFile( void );
@@ -186,7 +186,7 @@ protected:
   /** The constructor. */
   ResamplerBase();
   /** The destructor. */
-  virtual ~ResamplerBase() {}
+  ~ResamplerBase() override {}
 
   /** Method that sets the transform, the interpolator and the inputImage. */
   virtual void SetComponents( void );

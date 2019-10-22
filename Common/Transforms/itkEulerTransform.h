@@ -191,35 +191,92 @@ public:
   /** Make sure SetComputeZYX() is available, also in 2D,
    * in which case, its just a dummy function.
    */
-  virtual void SetComputeZYX( const bool arg )
+  void SetComputeZYX( const bool ) // No override.
   {
-    if( SpaceDimension == 3 )
-    {
-      typedef AdvancedEuler3DTransform< ScalarType > Euler3DTransformType;
-      typename Euler3DTransformType::Pointer transform
-        = dynamic_cast< Euler3DTransformType * >( this );
-      if( transform )
-      {
-        transform->Euler3DTransformType::SetComputeZYX( arg );
-      }
-    }
+    static_assert(SpaceDimension != 3, "This is not the specialization is 3D!");
   }
 
 
   /** Make sure GetComputeZYX() is available, also in 2D,
    * in which case, it just returns false.
    */
-  virtual bool GetComputeZYX( void ) const
+  bool GetComputeZYX( void ) const // No override.
   {
-    if( SpaceDimension == 3 )
+    static_assert(SpaceDimension != 3, "This is not the specialization is 3D!");
+    return false;
+  }
+
+
+protected:
+
+  EulerTransform(){}
+  ~EulerTransform() override{}
+
+private:
+
+  EulerTransform( const Self & );  // purposely not implemented
+  void operator=( const Self & );  // purposely not implemented
+
+};
+
+template< class TScalarType >
+class EulerTransform<TScalarType, 3> :
+  public EulerGroupTemplate<
+  TScalarType, 3 >::EulerTransform_tmp
+{
+public:
+
+  /** Standard ITK-stuff. */
+  typedef EulerTransform Self;
+  typedef typename EulerGroupTemplate<
+    TScalarType, 3 >
+    ::EulerTransform_tmp Superclass;
+  typedef SmartPointer< Self >       Pointer;
+  typedef SmartPointer< const Self > ConstPointer;
+
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
+
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( EulerTransform, EulerGroupTemplate );
+
+  /** Dimension of the domain space. */
+  itkStaticConstMacro( SpaceDimension, unsigned int, 3 );
+
+
+  /** Make sure SetComputeZYX() is available, also in 2D,
+   * in which case, its just a dummy function.
+   * \note This member function is only an `override` in 3D.
+   */
+  void SetComputeZYX( const bool arg ) override
+  {
+    static_assert(SpaceDimension == 3, "This specialization is for 3D only!");
+
+    typedef AdvancedEuler3DTransform< TScalarType > Euler3DTransformType;
+    typename Euler3DTransformType::Pointer transform
+      = dynamic_cast< Euler3DTransformType * >( this );
+    if( transform )
     {
-      typedef AdvancedEuler3DTransform< ScalarType > Euler3DTransformType;
-      typename Euler3DTransformType::ConstPointer transform
-        = dynamic_cast< const Euler3DTransformType * >( this );
-      if( transform )
-      {
-        return transform->Euler3DTransformType::GetComputeZYX();
-      }
+      transform->Euler3DTransformType::SetComputeZYX( arg );
+    }
+  }
+
+
+  /** Make sure GetComputeZYX() is available, also in 2D,
+   * in which case, it just returns false.
+   * \note This member function is only an `override` in 3D.
+   */
+  bool GetComputeZYX( void ) const override
+  {
+    static_assert(SpaceDimension == 3, "This specialization is for 3D only!");
+
+    typedef AdvancedEuler3DTransform< TScalarType > Euler3DTransformType;
+    typename Euler3DTransformType::ConstPointer transform
+      = dynamic_cast< const Euler3DTransformType * >( this );
+
+    if( transform )
+    {
+      return transform->Euler3DTransformType::GetComputeZYX();
     }
     return false;
   }
@@ -228,7 +285,7 @@ public:
 protected:
 
   EulerTransform(){}
-  ~EulerTransform(){}
+  ~EulerTransform() override{}
 
 private:
 

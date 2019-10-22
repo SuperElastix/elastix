@@ -77,7 +77,7 @@ ImageRandomSampler< TInputImage >
       ++randIter;
 
     } // end for loop
-  }   // end if no mask
+  } // end if no mask
   else
   {
     /** Update the mask. */
@@ -114,7 +114,7 @@ ImageRandomSampler< TInputImage >
         InputImageIndexType index = randIter.GetIndex();
         inputImage->TransformIndexToPhysicalPoint( index, inputPoint );
         /** Check if it's inside the mask. */
-        insideMask = mask->IsInside( inputPoint );
+        insideMask = mask->IsInsideInWorldSpace( inputPoint );
       }
       while( !insideMask );
 
@@ -153,12 +153,12 @@ ImageRandomSampler< TInputImage >
   InputImageConstPointer inputImage = this->GetInput();
 
   /** Figure out which samples to process. */
-  unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfThreads();
+  unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
   unsigned long sampleStart = threadId * chunkSize;
-  if( threadId == this->GetNumberOfThreads() - 1 )
+  if( threadId == this->GetNumberOfWorkUnits() - 1 )
   {
     chunkSize = this->GetNumberOfSamples()
-      - ( ( this->GetNumberOfThreads() - 1 ) * chunkSize );
+      - ( ( this->GetNumberOfWorkUnits() - 1 ) * chunkSize );
   }
 
   /** Get a reference to the output and reserve memory for it. */

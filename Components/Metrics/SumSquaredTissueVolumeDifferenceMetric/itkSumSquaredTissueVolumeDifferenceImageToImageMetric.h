@@ -132,15 +132,15 @@ public:
   /** Get the value for single valued optimizers. */
   virtual MeasureType GetValueSingleThreaded( const TransformParametersType & parameters ) const;
 
-  virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /** Get the derivatives of the match measure. */
-  virtual void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & derivative ) const;
+  void GetDerivative( const TransformParametersType & parameters,
+    DerivativeType & derivative ) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const;
+  void GetValueAndDerivative( const TransformParametersType & parameters,
+    MeasureType & Value, DerivativeType & Derivative ) const override;
 
   /** Get value and derivatives single-threaded */
   void GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
@@ -156,9 +156,9 @@ public:
 
 protected:
   SumSquaredTissueVolumeDifferenceImageToImageMetric();
-  virtual ~SumSquaredTissueVolumeDifferenceImageToImageMetric() {};
+  ~SumSquaredTissueVolumeDifferenceImageToImageMetric() override {};
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Protected Typedefs ******************/
 
@@ -180,7 +180,7 @@ protected:
   void EvaluateTransformJacobianInnerProduct(
     const TransformJacobianType & jacobian,
     const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const;
+    DerivativeType & imageJacobian) const override;
 
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative(). */
@@ -216,17 +216,17 @@ protected:
     DerivativeType & jacobianOfSpatialJacobianDeterminant ) const;
 
   /** Get value for each thread. */
-  inline void ThreadedGetValue( ThreadIdType threadID );
+  inline void ThreadedGetValue( ThreadIdType threadID ) override;
 
   /** Gather the values from all threads. */
-  inline void AfterThreadedGetValue( MeasureType & value ) const;
+  inline void AfterThreadedGetValue( MeasureType & value ) const override;
 
   /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative( ThreadIdType threadId );
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadId ) override;
 
   /** Gather the values and derivatives from all threads */
   inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & measure, DerivativeType & derivative ) const;
+    MeasureType & measure, DerivativeType & derivative ) const override;
 
 private:
   SumSquaredTissueVolumeDifferenceImageToImageMetric(const Self&); // purposely not implemented

@@ -36,7 +36,7 @@
 
 #include <iostream>
 #include "itkAdvancedMatrixOffsetTransformBase.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 
 namespace itk
 {
@@ -149,7 +149,7 @@ public:
    *
    * \sa AdvancedMatrixOffsetTransformBase::SetMatrix()
    */
-  virtual void SetMatrix( const MatrixType & matrix );
+  void SetMatrix( const MatrixType & matrix ) override;
 
   /**
    * Set/Get the rotation matrix. These methods are old and are
@@ -211,7 +211,7 @@ public:
    *
    * \sa Transform::SetParameters()
    * \sa Transform::SetFixedParameters() */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
   /** Get the parameters that uniquely define the transform
    * This is typically used by optimizers.
@@ -221,16 +221,16 @@ public:
    *
    * \sa Transform::GetParameters()
    * \sa Transform::GetFixedParameters() */
-  const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** This method computes the Jacobian matrix of the transformation
    * at a given input point.
    *
    * \sa Transform::GetJacobian() */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /**
    * This method creates and returns a new AdvancedRigid2DTransform object
@@ -245,7 +245,7 @@ public:
   void CloneTo( Pointer & clone ) const;
 
   /** Reset the parameters to create and identity transform. */
-  virtual void SetIdentity( void );
+  void SetIdentity( void ) override;
 
 protected:
 
@@ -253,24 +253,24 @@ protected:
   AdvancedRigid2DTransform( unsigned int parametersDimension );
   AdvancedRigid2DTransform( unsigned int outputSpaceDimension, unsigned int parametersDimension );
 
-  ~AdvancedRigid2DTransform();
+  ~AdvancedRigid2DTransform() override;
 
   /**
     * Print contents of an AdvancedRigid2DTransform
     */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Compute the matrix from angle. This is used in Set methods
    * to update the underlying matrix whenever a transform parameter
    * is changed.
    * Also update the m_JacobianOfSpatialJacobian. */
-  virtual void ComputeMatrix( void );
+  void ComputeMatrix( void ) override;
 
   /** Compute the angle from the matrix. This is used to compute
    * transform parameters from a given matrix. This is used in
    * AdvancedMatrixOffsetTransformBase::Compose() and
    * AdvancedMatrixOffsetTransformBase::GetInverse(). */
-  virtual void ComputeMatrixParameters( void );
+  void ComputeMatrixParameters( void ) override;
 
   /** Update angle without recomputation of other internal variables. */
   void SetVarAngle( TScalarType angle )

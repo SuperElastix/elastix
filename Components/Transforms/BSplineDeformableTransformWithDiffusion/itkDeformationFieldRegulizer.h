@@ -110,14 +110,14 @@ public:
   itkGetConstObjectMacro( IntermediaryDeformationFieldTransform, IntermediaryDFTransformType );
 
   /** Method to transform a point. */
-  virtual OutputPointType TransformPoint( const InputPointType & inputPoint ) const;
+  OutputPointType TransformPoint( const InputPointType & inputPoint ) const override;
 
 protected:
 
   /** The constructor. */
   DeformationFieldRegulizer();
   /** The destructor. */
-  virtual ~DeformationFieldRegulizer() {}
+  ~DeformationFieldRegulizer() override {}
 
 private:
 

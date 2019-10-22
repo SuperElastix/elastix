@@ -160,7 +160,7 @@ public:
   /** Virtual destructor needed for subclasses. Has to have empty throw(). */
   virtual ~OpenCLCompileError() throw( ) {}
 
-  virtual const char * GetNameOfClass() const ITK_OVERRIDE
+  virtual const char * GetNameOfClass() const override
   { return "OpenCLCompileError"; }
 };
 

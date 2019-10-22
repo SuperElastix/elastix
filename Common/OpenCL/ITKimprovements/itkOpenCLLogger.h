@@ -69,7 +69,7 @@ public:
   bool IsCreated() const;
 
   /** Overloaded. */
-  virtual void Write( PriorityLevelType level, std::string const & content ) ITK_OVERRIDE;
+  virtual void Write( PriorityLevelType level, std::string const & content ) override;
 
 protected:
 

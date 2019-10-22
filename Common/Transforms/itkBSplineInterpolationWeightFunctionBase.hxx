@@ -144,7 +144,7 @@ BSplineInterpolationWeightFunctionBase< TCoordRep, VSpaceDimension, VSplineOrder
   for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     startIndex[ i ] = static_cast< typename IndexType::IndexValueType >(
-      vcl_floor( cindex[ i ]
+      std::floor( cindex[ i ]
       - static_cast< double >( this->m_SupportSize[ i ] - 2.0 ) / 2.0 ) );
   }
 

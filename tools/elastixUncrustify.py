@@ -16,7 +16,7 @@ from optparse import OptionParser
 # The configuration file for uncrustify is called elastixUncrustify.cfg.
 #
 # Execute this script without any option to create a preview directory
-# called '_beautiful_code' in the src\_beautiful_code. 
+# called '_beautiful_code' in the src\_beautiful_code.
 # To apply uncrustify directly to the code use option '-a'.
 # Including and excluding files and directories could be also indicated, see options.
 #

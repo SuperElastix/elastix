@@ -68,22 +68,19 @@ public:
   itkStaticConstMacro( InputImageDimension, unsigned int,
     Superclass::InputImageDimension );
 
-  /** Set the number of samples. */
-  itkSetClampMacro( NumberOfSamples, unsigned long, 1, NumericTraits< unsigned long >::max() );
-
 protected:
 
   /** The constructor. */
   ImageRandomSamplerBase();
 
   /** The destructor. */
-  virtual ~ImageRandomSamplerBase() {}
+  ~ImageRandomSamplerBase() override {}
 
   /** Multi-threaded function that does the work. */
-  virtual void BeforeThreadedGenerateData( void );
+  void BeforeThreadedGenerateData( void ) override;
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Member variable used when threading. */
   std::vector< double > m_RandomNumberList;

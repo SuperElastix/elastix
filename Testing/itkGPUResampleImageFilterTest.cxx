@@ -743,9 +743,9 @@ main( int argc, char * argv[] )
   }
 
   // Threads.
-  unsigned int maximumNumberOfThreads = itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
+  unsigned int maximumNumberOfThreads = itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads();
   parser->GetCommandLineArgument( "-threads", maximumNumberOfThreads );
-  itk::MultiThreader::SetGlobalMaximumNumberOfThreads( maximumNumberOfThreads );
+  itk::MultiThreaderBase::SetGlobalMaximumNumberOfThreads( maximumNumberOfThreads );
 
   // Setup for debugging.
   itk::SetupForDebugging();
@@ -981,7 +981,7 @@ main( int argc, char * argv[] )
 
   std::cout << "CPU " << cpuTransform->GetNameOfClass()
             << " " << cpuInterpolator->GetNameOfClass()
-            << " " << cpuFilter->GetNumberOfThreads()
+            << " " << cpuFilter->GetNumberOfWorkUnits()
             << " " << cputimer.GetMean() / runTimes << std::endl;
 
   /** Write the CPU result. */

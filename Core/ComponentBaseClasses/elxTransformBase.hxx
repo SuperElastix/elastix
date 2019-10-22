@@ -69,25 +69,25 @@ public:
   itkNewMacro( Self );
 
   /** Set the pixel type to VECTOR */
-  virtual void Execute( Object * caller, const EventObject & )
+  void Execute( Object * caller, const EventObject & ) override
   {
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
-    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
 
-  virtual void Execute( const Object * caller, const EventObject & )
+  void Execute( const Object * caller, const EventObject & ) override
   {
     CallerType * castcaller = const_cast< CallerType * >(
       dynamic_cast< const CallerType * >( caller ) );
-    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
 
 
 protected:
 
   PixelTypeChangeCommand() {}
-  virtual ~PixelTypeChangeCommand() {}
+  ~PixelTypeChangeCommand() override {}
 
 private:
 
@@ -112,6 +112,7 @@ TransformBase< TElastix >
   /** Initialize. */
   this->m_TransformParametersPointer   = 0;
   this->m_ReadWriteTransformParameters = true;
+  this->m_UseBinaryFormatForTransformationParameters = false;
 
 } // end Constructor()
 
@@ -156,6 +157,13 @@ TransformBase< TElastix >
   {
     elxout << "-t0       " << check << std::endl;
   }
+
+  /** Check if the faster binary format is to be used when
+   * when writing the transform parameter file.
+   */
+  this->m_Configuration->ReadParameter(
+    this->m_UseBinaryFormatForTransformationParameters,
+    "UseBinaryFormatForTransformationParameters", 0, false );
 
   /** Return a value. */
   return 0;
@@ -314,6 +322,7 @@ const typename TransformBase< TElastix >::InitialTransformType
 
 } // end GetInitialTransform()
 
+
 /**
  * ******************* SetInitialTransform **********************
  */
@@ -394,6 +403,12 @@ TransformBase< TElastix >
   unsigned int numberOfParameters = 0;
   this->m_Configuration->ReadParameter( numberOfParameters, "NumberOfParameters", 0 );
 
+  /** Read the way the transform parameters are written. */
+  bool useBinaryFormatForTransformationParameters = false; // or the member?
+  this->m_Configuration->ReadParameter( useBinaryFormatForTransformationParameters,
+    "UseBinaryFormatForTransformationParameters", 0 );
+
+  /** Read the TransformParameters. */
   if( this->m_ReadWriteTransformParameters )
   {
     /** Get the TransformParameters pointer. */
@@ -404,19 +419,30 @@ TransformBase< TElastix >
     this->m_TransformParametersPointer = new ParametersType( numberOfParameters );
 
     /** Read the TransformParameters. */
-    std::vector< ValueType > vecPar( numberOfParameters,
-      itk::NumericTraits< ValueType >::ZeroValue() );
-    this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
-      0, numberOfParameters - 1, true );
+    std::size_t numberOfParametersFound = 0;
+    std::vector< ValueType > vecPar;
+    if( useBinaryFormatForTransformationParameters )
+    {
+      std::string dataFileName = "";
+      this->m_Configuration->ReadParameter( dataFileName, "TransformParameters", 0 );
+      std::ifstream infile( dataFileName.c_str(), std::ios::in | std::ios::binary );
+      infile.read( reinterpret_cast<char *>( this->m_TransformParametersPointer->data_block() ), sizeof( ValueType ) * numberOfParameters );
+      numberOfParametersFound = infile.gcount() / sizeof( ValueType ); // for sanity check
+      infile.close();
+    }
+    else
+    {
+      vecPar.resize( numberOfParameters, itk::NumericTraits< ValueType >::ZeroValue() );
+      this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
+        0, numberOfParameters - 1, true );
+
+      /** Do not rely on vecPar.size(), since it is unchanged by ReadParameter(). */
+      numberOfParametersFound = this->m_Configuration->CountNumberOfParameterEntries( "TransformParameters" );
+    }
 
     /** Sanity check. Are the number of found parameters the same as
      * the number of specified parameters?
-     * Do not rely on vecPar.size(), since it is unchanged by ReadParameter(),
-     * so we cannot use: numberOfParametersFound = vecPar.size().
      */
-    const std::size_t numberOfParametersFound
-      = this->m_Configuration->CountNumberOfParameterEntries( "TransformParameters" );
-
     if( numberOfParametersFound != numberOfParameters )
     {
       std::ostringstream makeMessage( "" );
@@ -429,23 +455,17 @@ TransformBase< TElastix >
                   << "  (TransformParameters num num ... num)\n"
                   << "with " << numberOfParameters << " parameters." << std::endl;
       itkExceptionMacro( << makeMessage.str().c_str() );
-
-      /** Historical note:
-       * The old way of specifying parameters was
-       *  - for less than 20 parameters:
-       *      (TransformParameters num num ... num)
-       *  - Otherwise:
-       *      // (TransformParameters)
-       *      // num num ... num
-       *
-       * This behavior was deprecated since elastix 4.2, and removed in elastix 4.5.
-       */
     }
 
     /** Copy to m_TransformParametersPointer. */
-    for( unsigned int i = 0; i < numberOfParameters; i++ )
+    if( !useBinaryFormatForTransformationParameters )
     {
-      ( *( this->m_TransformParametersPointer ) )[ i ] = vecPar[ i ];
+      // NOTE: we could avoid this by directly reading into the transform parameters,
+      // e.g. by overloading ReadParameter(), or use swap (?).
+      for( unsigned int i = 0; i < numberOfParameters; i++ )
+      {
+        ( *( this->m_TransformParametersPointer ) )[ i ] = vecPar[ i ];
+      }
     }
 
     /** Set the parameters into this transform. */
@@ -545,12 +565,11 @@ TransformBase< TElastix >
     initialTransformName, "Transform", 0 );
 
   /** Create an InitialTransform. */
-  ObjectType::Pointer initialTransform;
-
   PtrToCreator testcreator = 0;
   testcreator = this->GetElastix()->GetComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
-  initialTransform = testcreator ? testcreator() : NULL;
+  // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
+  ObjectType::Pointer initialTransform = testcreator ? testcreator() : ObjectType::Pointer();
 
   Self * elx_initialTransform = dynamic_cast< Self * >(
     initialTransform.GetPointer() );
@@ -572,7 +591,7 @@ TransformBase< TElastix >
     }
 
   } // end if
-}   // end ReadInitialTransformFromVector()
+} // end ReadInitialTransformFromVector()
 
 
 /**
@@ -607,12 +626,12 @@ TransformBase< TElastix >
     initialTransformName, "Transform", 0 );
 
   /** Create an InitialTransform. */
-  ObjectType::Pointer initialTransform;
-
   PtrToCreator testcreator = 0;
   testcreator = this->GetElastix()->GetComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
-  initialTransform = testcreator ? testcreator() : NULL;
+
+  // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
+  ObjectType::Pointer initialTransform = testcreator ? testcreator() : ObjectType::Pointer();
 
   Self * elx_initialTransform = dynamic_cast< Self * >(
     initialTransform.GetPointer() );
@@ -669,7 +688,7 @@ TransformBase< TElastix >
                      << this->elxGetClassName() << "\")" << std::endl;
 
   /** Get the number of parameters of this transform. */
-  unsigned int nrP = param.GetSize();
+  const unsigned int nrP = param.GetSize();
 
   /** Write the number of parameters of this transform. */
   xout[ "transpar" ] << "(NumberOfParameters "
@@ -678,19 +697,44 @@ TransformBase< TElastix >
   /** Write the parameters of this transform. */
   if( this->m_ReadWriteTransformParameters )
   {
-    /** In this case, write in a normal way to the parameter file. */
-    xout[ "transpar" ] << "(TransformParameters ";
-    for( unsigned int i = 0; i < nrP - 1; i++ )
+    if( this->m_UseBinaryFormatForTransformationParameters )
     {
-      xout[ "transpar" ] << param[ i ] << " ";
+      /** Writing in binary format is faster for large vectors, and slightly more accurate. */
+      std::string dataFileName = this->GetTransformParametersFileName();
+      dataFileName += ".dat";
+      xout[ "transpar" ] << "(TransformParameters \"" << dataFileName << "\")" << std::endl;
+
+      std::ofstream outfile( dataFileName.c_str(), ios::out | ios::binary );
+      outfile.write( reinterpret_cast<const char *>( param.data_block() ), sizeof( ValueType ) * nrP );
+      outfile.close();
     }
-    xout[ "transpar" ] << param[ nrP - 1 ] << ")" << std::endl;
+    else
+    {
+      /** In this case, write in a normal way to the parameter file. */
+      xout[ "transpar" ] << "(TransformParameters ";
+      for( unsigned int i = 0; i < nrP - 1; i++ )
+      {
+        xout[ "transpar" ] << param[ i ] << " ";
+      }
+      xout[ "transpar" ] << param[ nrP - 1 ] << ")" << std::endl;
+    }
   }
 
   /** Write the name of the parameters-file of the initial transform. */
   xout[ "transpar" ] << "(InitialTransformParametersFileName \""
                      << this->GetInitialTransformParametersFileName()
                      << "\")" << std::endl;
+
+  /** Write the way the transform parameters are written. */
+  xout[ "transpar" ] << "(UseBinaryFormatForTransformationParameters ";
+  if( this->m_UseBinaryFormatForTransformationParameters )
+  {
+    xout[ "transpar" ] << "\"true\")" << std::endl;
+  }
+  else
+  {
+    xout[ "transpar" ] << "\"false\")" << std::endl;
+  }
 
   /** Write the way Transforms are combined.
    *  Set it to the default "Compose" when no combination transform is used. */
@@ -1110,7 +1154,7 @@ TransformBase< TElastix >
     itk::ContinuousIndex< double, MovingImageDimension >  MovingImageContinuousIndexType;
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
-  typedef bool DummyIPPPixelType;
+  typedef unsigned char DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<
     DummyIPPPixelType, FixedImageDimension,
     FixedImageDimension, CoordRepType >                  MeshTraitsType;
@@ -1428,20 +1472,21 @@ TransformBase< TElastix >
   typename DeformationFieldImageType::Pointer deformationfield = this->GenerateDeformationFieldImage();
   //put deformation field in container
   this->m_Elastix->SetResultDeformationField( deformationfield.GetPointer() );
-  
+
 #ifndef _ELASTIX_BUILD_LIBRARY
   WriteDeformationFieldImage( deformationfield );
 #endif
-  
+
 } // end TransformPointsAllPoints()
 
+
 /**
-* ************** GenerateDeformationFieldImage **********************
-*
-* This function transforms all indexes to a physical point.
-* The difference vector (= the deformation at that index) is
-* stored in an image of vectors (of floats).
-*/
+ * ************** GenerateDeformationFieldImage **********************
+ *
+ * This function transforms all indexes to a physical point.
+ * The difference vector (= the deformation at that index) is
+ * stored in an image of vectors (of floats).
+ */
 
 template< class TElastix >
 typename TransformBase< TElastix >::DeformationFieldImageType::Pointer
@@ -1507,15 +1552,16 @@ TransformBase< TElastix >
   return infoChanger->GetOutput();
 } // end GenerateDeformationFieldImage()
 
+
 /**
-* ************** WriteDeformationFieldImage **********************
-*
-*/
+ * ************** WriteDeformationFieldImage **********************
+ */
 
 template< class TElastix >
 void
 TransformBase< TElastix >::
-WriteDeformationFieldImage(typename TransformBase< TElastix >::DeformationFieldImageType::Pointer deformationfield) const
+WriteDeformationFieldImage(
+  typename TransformBase< TElastix >::DeformationFieldImageType::Pointer deformationfield ) const
 {
   typedef itk::ImageFileWriter<
     DeformationFieldImageType >                       DeformationFieldWriterType;

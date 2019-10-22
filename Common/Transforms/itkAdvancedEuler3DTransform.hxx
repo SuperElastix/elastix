@@ -177,44 +177,44 @@ AdvancedEuler3DTransform< TScalarType >
   if( m_ComputeZYX )
   {
     m_AngleY = -asin( this->GetMatrix()[ 2 ][ 0 ] );
-    double C = vcl_cos( m_AngleY );
-    if( vcl_fabs( C ) > 0.00005 )
+    double C = std::cos( m_AngleY );
+    if( std::fabs( C ) > 0.00005 )
     {
       double x = this->GetMatrix()[ 2 ][ 2 ] / C;
       double y = this->GetMatrix()[ 2 ][ 1 ] / C;
-      m_AngleX = vcl_atan2( y, x );
+      m_AngleX = std::atan2( y, x );
       x        = this->GetMatrix()[ 0 ][ 0 ] / C;
       y        = this->GetMatrix()[ 1 ][ 0 ] / C;
-      m_AngleZ = vcl_atan2( y, x );
+      m_AngleZ = std::atan2( y, x );
     }
     else
     {
       m_AngleX = 0;
       double x = this->GetMatrix()[ 1 ][ 1 ];
       double y = -this->GetMatrix()[ 0 ][ 1 ];
-      m_AngleZ = vcl_atan2( y, x );
+      m_AngleZ = std::atan2( y, x );
     }
   }
   else
   {
-    m_AngleX = vcl_asin( this->GetMatrix()[ 2 ][ 1 ] );
-    double A = vcl_cos( m_AngleX );
-    if( vcl_fabs( A ) > 0.00005 )
+    m_AngleX = std::asin( this->GetMatrix()[ 2 ][ 1 ] );
+    double A = std::cos( m_AngleX );
+    if( std::fabs( A ) > 0.00005 )
     {
       double x = this->GetMatrix()[ 2 ][ 2 ] / A;
       double y = -this->GetMatrix()[ 2 ][ 0 ] / A;
-      m_AngleY = vcl_atan2( y, x );
+      m_AngleY = std::atan2( y, x );
 
       x        = this->GetMatrix()[ 1 ][ 1 ] / A;
       y        = -this->GetMatrix()[ 0 ][ 1 ] / A;
-      m_AngleZ = vcl_atan2( y, x );
+      m_AngleZ = std::atan2( y, x );
     }
     else
     {
       m_AngleZ = 0;
       double x = this->GetMatrix()[ 0 ][ 0 ];
       double y = this->GetMatrix()[ 1 ][ 0 ];
-      m_AngleY = vcl_atan2( y, x );
+      m_AngleY = std::atan2( y, x );
     }
   }
   this->ComputeMatrix();
@@ -228,12 +228,12 @@ AdvancedEuler3DTransform< TScalarType >
 ::ComputeMatrix( void )
 {
   // need to check if angles are in the right order
-  const double cx = vcl_cos( m_AngleX );
-  const double sx = vcl_sin( m_AngleX );
-  const double cy = vcl_cos( m_AngleY );
-  const double sy = vcl_sin( m_AngleY );
-  const double cz = vcl_cos( m_AngleZ );
-  const double sz = vcl_sin( m_AngleZ );
+  const double cx = std::cos( m_AngleX );
+  const double sx = std::sin( m_AngleX );
+  const double cy = std::cos( m_AngleY );
+  const double sy = std::sin( m_AngleY );
+  const double cz = std::cos( m_AngleZ );
+  const double sz = std::sin( m_AngleZ );
 
   Matrix< TScalarType, 3, 3 > RotationX;
   RotationX[ 0 ][ 0 ] = 1; RotationX[ 0 ][ 1 ] = 0; RotationX[ 0 ][ 2 ] = 0;
@@ -317,20 +317,20 @@ AdvancedEuler3DTransform< TScalarType >
   /** The Jacobian of spatial Jacobian is constant over inputspace, so is precomputed */
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   jsj.resize( ParametersDimension );
-  const double cx = vcl_cos( m_AngleX );
-  const double sx = vcl_sin( m_AngleX );
-  const double cy = vcl_cos( m_AngleY );
-  const double sy = vcl_sin( m_AngleY );
-  const double cz = vcl_cos( m_AngleZ );
-  const double sz = vcl_sin( m_AngleZ );
+  const double cx = std::cos( m_AngleX );
+  const double sx = std::sin( m_AngleX );
+  const double cy = std::cos( m_AngleY );
+  const double sy = std::sin( m_AngleY );
+  const double cz = std::cos( m_AngleZ );
+  const double sz = std::sin( m_AngleZ );
 
   /** derivatives: */
-  const double cxd = -vcl_sin( m_AngleX );
-  const double sxd = vcl_cos( m_AngleX );
-  const double cyd = -vcl_sin( m_AngleY );
-  const double syd = vcl_cos( m_AngleY );
-  const double czd = -vcl_sin( m_AngleZ );
-  const double szd = vcl_cos( m_AngleZ );
+  const double cxd = -std::sin( m_AngleX );
+  const double sxd = std::cos( m_AngleX );
+  const double cyd = -std::sin( m_AngleY );
+  const double syd = std::cos( m_AngleY );
+  const double czd = -std::sin( m_AngleZ );
+  const double szd = std::cos( m_AngleZ );
 
   /** rotation matrices */
   Matrix< TScalarType, 3, 3 > RotationX;

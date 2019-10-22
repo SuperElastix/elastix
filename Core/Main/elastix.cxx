@@ -19,6 +19,9 @@
 #include "elastix.h"
 #include "elxElastixMain.h"
 
+#include <cstddef> // For size_t.
+#include <limits>
+
 int
 main( int argc, char ** argv )
 {
@@ -43,6 +46,49 @@ main( int argc, char ** argv )
       std::cout << std::showpoint;
       std::cout << std::setprecision( 3 );
       std::cout << "elastix version: " << __ELASTIX_VERSION << std::endl;
+      return 0;
+    }
+    else if (argument == "--extended-version")
+    {
+      std::cout
+        << std::fixed
+        << std::showpoint
+        << std::setprecision(3)
+        << "elastix version: "
+        << __ELASTIX_VERSION
+        << "\nITK version: "
+        << ITK_VERSION_MAJOR << '.'
+        << ITK_VERSION_MINOR << '.'
+        << ITK_VERSION_PATCH
+        << "\nBuild date: "
+        << __DATE__
+        << ' '
+        << __TIME__
+#ifdef _MSC_FULL_VER
+        << "\nCompiler: Visual C++ version "
+        << _MSC_FULL_VER << '.'
+        << _MSC_BUILD
+#endif
+#ifdef __clang__
+        << "\nCompiler: Clang"
+#ifdef __VERSION__
+        << " version "
+        << __VERSION__
+#endif
+#endif
+#if defined(__GNUC__)
+        << "\nCompiler: GCC"
+#ifdef __VERSION__
+        << " version "
+        << __VERSION__
+#endif
+#endif
+        << "\nMemory address size: "
+        << std::numeric_limits<std::size_t>::digits
+        << "-bit"
+        << "\nCMake version: "
+        << ELX_CMAKE_VERSION
+        << std::endl;
       return 0;
     }
     else
@@ -73,11 +119,13 @@ main( int argc, char ** argv )
   /** Some declarations and initializations. */
   ElastixMainVectorType elastices;
 
-  ObjectPointer              transform            = 0;
-  DataObjectContainerPointer fixedImageContainer  = 0;
-  DataObjectContainerPointer movingImageContainer = 0;
-  DataObjectContainerPointer fixedMaskContainer   = 0;
-  DataObjectContainerPointer movingMaskContainer  = 0;
+  // Note that the following pointers are "smart", so they are defaulted-constructed to null.
+  ObjectPointer              transform;
+  DataObjectContainerPointer fixedImageContainer;
+  DataObjectContainerPointer movingImageContainer;
+  DataObjectContainerPointer fixedMaskContainer;
+  DataObjectContainerPointer movingMaskContainer;
+
   FlatDirectionCosinesType   fixedImageOriginalDirection;
   int                        returndummy        = 0;
   unsigned long              nrOfParameterFiles = 0;
@@ -274,11 +322,11 @@ main( int argc, char ** argv )
     /** Get the transform, the fixedImage and the movingImage
      * in order to put it in the (possibly) next registration.
      */
-    transform                   = elastices[ i ]->GetFinalTransform();
-    fixedImageContainer         = elastices[ i ]->GetFixedImageContainer();
-    movingImageContainer        = elastices[ i ]->GetMovingImageContainer();
-    fixedMaskContainer          = elastices[ i ]->GetFixedMaskContainer();
-    movingMaskContainer         = elastices[ i ]->GetMovingMaskContainer();
+    transform                   = elastices[ i ]->GetModifiableFinalTransform();
+    fixedImageContainer         = elastices[ i ]->GetModifiableFixedImageContainer();
+    movingImageContainer        = elastices[ i ]->GetModifiableMovingImageContainer();
+    fixedMaskContainer          = elastices[ i ]->GetModifiableFixedMaskContainer();
+    movingMaskContainer         = elastices[ i ]->GetModifiableMovingMaskContainer();
     fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
 
     /** Print a finish message. */
@@ -345,7 +393,8 @@ PrintHelp( void )
   std::cout << "elastix registers a moving image to a fixed image.\n";
   std::cout << "The registration-process is specified in the parameter file.\n";
   std::cout << "  --help, -h displays this message and exit\n";
-  std::cout << "  --version  output version information and exit\n" << std::endl;
+  std::cout << "  --version  output version information and exit\n"
+    << "  --extended-version  output extended version information and exit\n" << std::endl;
 
   /** Mandatory arguments.*/
   std::cout << "Call elastix from the command line with mandatory arguments:\n";

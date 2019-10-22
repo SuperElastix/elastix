@@ -156,7 +156,7 @@ public:
     *
     * \sa Transform::SetParameters()
     * \sa Transform::SetFixedParameters() */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
   /** Get the parameters that uniquely define the transform
    * This is typically used by optimizers.
@@ -167,7 +167,7 @@ public:
    *
    * \sa Transform::GetParameters()
    * \sa Transform::GetFixedParameters() */
-  const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** This method computes the Jacobian matrix of the transformation
    * at a given input point.
@@ -175,13 +175,13 @@ public:
    * \sa Transform::GetJacobian() */
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
   /** Set the transformation to an identity. */
-  virtual void SetIdentity( void );
+  void SetIdentity( void ) override;
 
   /**
    * This method creates and returns a new AdvancedSimilarity2DTransform object
@@ -208,7 +208,7 @@ public:
    * \sa MatrixOffsetTransformBase::SetMatrix()
    *
    **/
-  virtual void SetMatrix( const MatrixType & matrix );
+  void SetMatrix( const MatrixType & matrix ) override;
 
 protected:
 
@@ -216,26 +216,26 @@ protected:
   AdvancedSimilarity2DTransform( unsigned int spaceDimension,
     unsigned int parametersDimension );
 
-  ~AdvancedSimilarity2DTransform(){}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~AdvancedSimilarity2DTransform() override{}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Compute matrix from angle and scale. This is used in Set methods
    * to update the underlying matrix whenever a transform parameter
    * is changed. */
-  virtual void ComputeMatrix( void );
+  void ComputeMatrix( void ) override;
 
   /** Compute the angle and scale from the matrix. This is used to compute
    * transform parameters from a given matrix. This is used in
    * MatrixOffsetTransformBase::Compose() and
    * MatrixOffsetTransformBase::GetInverse(). */
-  virtual void ComputeMatrixParameters( void );
+  void ComputeMatrixParameters( void ) override;
 
   /** Set the scale without updating underlying variables. */
   void SetVarScale( ScaleType scale )
   { m_Scale = scale; }
 
   /** Update the m_JacobianOfSpatialJacobian.  */
-  virtual void PrecomputeJacobianOfSpatialJacobian( void );
+  void PrecomputeJacobianOfSpatialJacobian( void ) override;
 
 private:
 

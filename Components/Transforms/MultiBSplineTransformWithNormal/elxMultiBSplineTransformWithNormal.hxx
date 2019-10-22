@@ -782,7 +782,7 @@ MultiBSplineTransformWithNormal< TElastix >::SetOptimizerScales( const unsigned 
   if( edgeWidth == 0 )
   {
     /** Just set the unit scales into the optimizer. */
-    this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+    this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newScales );
     return;
   }
 
@@ -800,7 +800,7 @@ MultiBSplineTransformWithNormal< TElastix >::SetOptimizerScales( const unsigned 
   IndexType  insetgridindex;
   for( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    insetgridsize[ i ] = static_cast< unsigned int >( vnl_math_max(
+    insetgridsize[ i ] = static_cast< unsigned int >( std::max(
       0, static_cast< int >( gridsize[ i ] - 2 * edgeWidth ) ) );
     if( insetgridsize[ i ] == 0 )
     {
@@ -840,7 +840,7 @@ MultiBSplineTransformWithNormal< TElastix >::SetOptimizerScales( const unsigned 
   }
 
   /** Set the scales into the optimizer. */
-  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+  this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newScales );
 
 } // end SetOptimizerScales()
 

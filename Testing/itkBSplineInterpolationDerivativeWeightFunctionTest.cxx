@@ -60,8 +60,8 @@ main( int argc, char * argv[] )
    * NOTE: don't change this, since the hard-coded ground truth depends on this.
    */
   ContinuousIndexType cindex;
-  cindex[ 0 ] =  3.1;
-  cindex[ 1 ] = -2.2;
+  cindex[ 0 ] =  3.1f;
+  cindex[ 1 ] = -2.2f;
   foWeightFunction->SetDerivativeDirection( 0 );
 
   /** Run evaluate for the first order derivative. */
@@ -118,9 +118,9 @@ main( int argc, char * argv[] )
   double error = 0.0;
   for( unsigned int i = 0; i < foWeights.Size(); ++i )
   {
-    error += vnl_math_sqr( foWeights[ i ] - trueFOWeights[ i ] );
+    error += vnl_math::sqr( foWeights[ i ] - trueFOWeights[ i ] );
   }
-  error = vcl_sqrt( error );
+  error = std::sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
   if( error > distance )
@@ -173,7 +173,7 @@ main( int argc, char * argv[] )
   }
 
   if( foWeightFunction->GetNumberOfWeights()
-    != static_cast< unsigned long >( vcl_pow(
+    != static_cast< unsigned long >( std::pow(
     static_cast< float >( SplineOrder + 1 ), 2.0f ) ) )
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;

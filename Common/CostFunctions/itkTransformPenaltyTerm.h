@@ -134,7 +134,7 @@ protected:
   TransformPenaltyTerm(){}
 
   /** The destructor. */
-  virtual ~TransformPenaltyTerm() {}
+  ~TransformPenaltyTerm() override {}
 
   /** A function to check if the transform is B-spline, for speedup. */
   virtual bool CheckForBSplineTransform2( BSplineOrder3TransformPointer & bspline ) const;

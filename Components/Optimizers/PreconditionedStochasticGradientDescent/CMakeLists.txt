@@ -1,0 +1,11 @@
+
+ADD_ELXCOMPONENT( PreconditionedStochasticGradientDescent
+ elxPreconditionedStochasticGradientDescent.h
+ elxPreconditionedStochasticGradientDescent.hxx
+ elxPreconditionedStochasticGradientDescent.cxx
+ itkPreconditionedASGDOptimizer.h
+ itkPreconditionedASGDOptimizer.cxx
+ ../StandardGradientDescent/itkStandardGradientDescentOptimizer.cxx
+ ../StandardGradientDescent/itkGradientDescentOptimizer2.cxx
+)
+

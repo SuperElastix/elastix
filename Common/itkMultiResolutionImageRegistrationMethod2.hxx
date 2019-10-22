@@ -96,7 +96,7 @@ MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
 
   // Sanity checks
@@ -260,9 +260,9 @@ MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
     fixedImageAtLevel->TransformPhysicalPointToContinuousIndex( inputEndPoint, endcindex );
     for( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
     {
-      start[ dim ] = static_cast< IndexValueType >( vcl_ceil( startcindex[ dim ] ) );
-      size[ dim ]  = vnl_math_max( NumericTraits< SizeValueType >::One, static_cast< SizeValueType >(
-          static_cast< SizeValueType >( vcl_floor( endcindex[ dim ] ) ) - start[ dim ] + 1 ) );
+      start[ dim ] = static_cast< IndexValueType >( std::ceil( startcindex[ dim ] ) );
+      size[ dim ]  = std::max( NumericTraits< SizeValueType >::One, static_cast< SizeValueType >(
+          static_cast< SizeValueType >( std::floor( endcindex[ dim ] ) ) - start[ dim ] + 1 ) );
     }
 
     this->m_FixedImageRegionPyramid[ level ].SetSize( size );
@@ -417,12 +417,12 @@ MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
 
 
 template< typename TFixedImage, typename TMovingImage >
-unsigned long
+ModifiedTimeType
 MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
 ::GetMTime( void ) const
 {
-  unsigned long mtime = Superclass::GetMTime();
-  unsigned long m;
+  ModifiedTimeType mtime = Superclass::GetMTime();
+  ModifiedTimeType m;
 
   // Some of the following should be removed once ivars are put in the
   // input and output lists
@@ -484,15 +484,11 @@ DataObject::Pointer
 MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
 ::MakeOutput( unsigned int output )
 {
-  switch( output )
+  if (output > 0)
   {
-    case 0:
-      return static_cast< DataObject * >( TransformOutputType::New().GetPointer() );
-      break;
-    default:
-      itkExceptionMacro( "MakeOutput request for an output number larger than the expected number of outputs" );
-      return 0;
+    itkExceptionMacro("MakeOutput request for an output number larger than the expected number of outputs.");
   }
+  return TransformOutputType::New().GetPointer();
 }
 
 

@@ -23,6 +23,7 @@
 #include "itkFileTools.h"
 #include <fstream>
 #include <iostream>
+#include <cmath>
 
 namespace elastix
 {
@@ -37,6 +38,17 @@ ParameterObject
 {
   ParameterMapVectorType parameterMapVector = ParameterMapVectorType( 1, parameterMap );
   this->SetParameterMap( parameterMapVector );
+}
+
+/**
+ * ********************* SetParameterMap *********************
+ */
+
+void
+ParameterObject
+::SetParameterMap( const unsigned int& index, const ParameterMapType & parameterMap )
+{
+  this->m_ParameterMap[ index ] = parameterMap;
 }
 
 
@@ -75,9 +87,99 @@ ParameterObject
 
 const ParameterObject::ParameterMapType &
 ParameterObject
-::GetParameterMap( const unsigned int index ) const
+::GetParameterMap( const unsigned int& index ) const
 {
   return this->m_ParameterMap[ index ];
+}
+
+
+/**
+ * ********************* SetParameter *********************
+ */
+
+void
+ParameterObject
+::SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueType& value )
+{
+  this->m_ParameterMap[ index ][ key ] = ParameterValueVectorType(1, value);
+}
+
+
+/**
+ * ********************* SetParameter *********************
+ */
+
+void
+ParameterObject
+::SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueVectorType& value )
+{
+  this->m_ParameterMap[ index ][ key ] = value;
+}
+
+
+/**
+ * ********************* SetParameter *********************
+ */
+
+void
+ParameterObject
+::SetParameter( const ParameterKeyType& key, const ParameterValueType& value  )
+{
+  for(unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++) {
+    this->SetParameter(index, key, value);
+  }
+}
+
+
+/**
+ * ********************* SetParameter *********************
+ */
+
+void
+ParameterObject
+::SetParameter( const ParameterKeyType& key, const ParameterValueVectorType& value  )
+{
+  for(unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++) {
+    this->SetParameter(index, key, value);
+  }
+}
+
+
+/**
+ * ********************* GetParameter *********************
+ */
+
+const ParameterObject::ParameterValueVectorType&
+ParameterObject
+::GetParameter( const unsigned int& index, const ParameterKeyType& key )
+{
+  return this->m_ParameterMap[ index ][ key ];
+}
+
+
+/**
+ * ********************* RemoveParameter *********************
+ */
+
+void
+ParameterObject
+::RemoveParameter( const unsigned int& index, const ParameterKeyType& key )
+{
+  this->m_ParameterMap[ index ].erase( key );
+}
+
+
+/**
+ * ********************* RemoveParameter *********************
+ */
+
+void
+ParameterObject
+::RemoveParameter( const ParameterKeyType& key )
+{
+  for(unsigned int index = 0; index < this->GetNumberOfParameterMaps(); index++) {
+    this->RemoveParameter(index, key);
+  }
 }
 
 
@@ -150,7 +252,7 @@ ParameterObject
   ParameterFileNameVectorType parameterFileNameVector;
   for( unsigned int i = 0; i < m_ParameterMap.size(); ++i )
   {
-    parameterFileNameVector.push_back( "ParametersFile." + ParameterObject::ToString( i ) + ".txt" );
+    parameterFileNameVector.push_back( "ParametersFile." + std::to_string( i ) + ".txt" );
   }
 
   this->WriteParameterFile( this->m_ParameterMap, parameterFileNameVector );
@@ -294,7 +396,7 @@ ParameterObject
 
 
 /**
- * ********************* GetParameterMap *********************
+ * ********************* GetDefaultParameterMap *********************
  */
 
 const ParameterObject::ParameterMapType
@@ -313,7 +415,7 @@ ParameterObject
   parameterMap[ "Resampler" ]                      = ParameterValueVectorType( 1, "DefaultResampler" );
   parameterMap[ "ResampleInterpolator" ]           = ParameterValueVectorType( 1, "FinalBSplineInterpolator" );
   parameterMap[ "FinalBSplineInterpolationOrder" ] = ParameterValueVectorType( 1, "3" );
-  parameterMap[ "NumberOfResolutions" ]            = ParameterValueVectorType( 1, ToString( numberOfResolutions ) );
+  parameterMap[ "NumberOfResolutions" ]            = ParameterValueVectorType( 1, std::to_string( numberOfResolutions ) );
   parameterMap[ "WriteIterationInfo" ]             = ParameterValueVectorType( 1, "false" );
 
   // Image Sampler
@@ -339,6 +441,7 @@ ParameterObject
     parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "TranslationTransform" );
     parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "AutomaticTransformInitialization" ] = ParameterValueVectorType( 1, "true" );
   }
   else if( transformName == "rigid" )
   {
@@ -346,6 +449,7 @@ ParameterObject
     parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "EulerTransform" );
     parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "AutomaticScalesEstimation" ] = ParameterValueVectorType( 1, "true" );
   }
   else if( transformName == "affine" )
   {
@@ -353,6 +457,7 @@ ParameterObject
     parameterMap[ "Transform" ]                 = ParameterValueVectorType( 1, "AffineTransform" );
     parameterMap[ "Metric" ]                    = ParameterValueVectorType( 1, "AdvancedMattesMutualInformation" );
     parameterMap[ "MaximumNumberOfIterations" ] = ParameterValueVectorType( 1, "256" );
+    parameterMap[ "AutomaticScalesEstimation" ] = ParameterValueVectorType( 1, "true" );
   }
   else if( transformName == "bspline" || transformName == "nonrigid" ) // <-- nonrigid for backwards compatibility
   {
@@ -391,11 +496,11 @@ ParameterObject
     ParameterValueVectorType gridSpacingSchedule = ParameterValueVectorType();
     for( double resolution = 0; resolution < numberOfResolutions; ++resolution )
     {
-      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), ToString( pow( 1.41, resolution ) ) );
+      gridSpacingSchedule.insert( gridSpacingSchedule.begin(), std::to_string( std::pow( 1.41, resolution ) ) );
     }
 
     parameterMap[ "GridSpacingSchedule" ]             = gridSpacingSchedule;
-    parameterMap[ "FinalGridSpacingInPhysicalUnits" ] = ParameterValueVectorType( 1, ToString( finalGridSpacingInPhysicalUnits ) );
+    parameterMap[ "FinalGridSpacingInPhysicalUnits" ] = ParameterValueVectorType( 1, std::to_string( finalGridSpacingInPhysicalUnits ) );
   }
 
   return parameterMap;

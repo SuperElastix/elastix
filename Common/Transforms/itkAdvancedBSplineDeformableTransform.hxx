@@ -94,7 +94,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     this->m_WrappedImage[ j ]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
     this->m_WrappedImage[ j ]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     this->m_WrappedImage[ j ]->SetDirection( this->m_GridDirection );
-    this->m_CoefficientImages[ j ] = NULL;
+    this->m_CoefficientImages[ j ] = nullptr;
   }
 
   // Setup variables for computing interpolation
@@ -171,7 +171,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
     // when spline order is even.
     // The valid interval for evaluation is [start+offset, last-offset)
     // when spline order is odd.
-    // Where offset = vcl_floor(spline / 2 ).
+    // Where offset = std::floor(spline / 2 ).
     // Note that the last pixel is not included in the valid region
     // with odd spline orders.
     // For backward compatibility m_ValidRegion is still created.
@@ -378,7 +378,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
   /** This implements a sparse version of the Jacobian. */
 
   /** Sanity check. */
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -756,7 +756,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -860,7 +860,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -1025,7 +1025,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -1092,7 +1092,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
       ++count;
 
     } // end for j
-  }   // end for i
+  } // end for i
 
   /** Compute d/dmu d^2T_{dim} / dx_i dx_j = weights. */
   for( unsigned int mu = 0; mu < numberOfWeights; ++mu )
@@ -1144,7 +1144,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -1270,7 +1270,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
       }
 
     } // end for j
-  }   // end for i
+  } // end for i
 
   /** Take into account grid spacing and direction matrix. */
   for( unsigned int dim = 0; dim < SpaceDimension; ++dim )
@@ -1450,7 +1450,7 @@ AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
           = globalParNum + dim * parametersPerDim;
       }
     } // end for
-  }   // end general case
+  } // end general case
 
 } // end ComputeNonZeroJacobianIndices()
 

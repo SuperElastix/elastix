@@ -40,8 +40,8 @@ namespace itk
 GPUDataManager::GPUDataManager()
 {
   m_Context   = OpenCLContext::GetInstance();
-  m_GPUBuffer = NULL;
-  m_CPUBuffer = NULL;
+  m_GPUBuffer = nullptr;
+  m_CPUBuffer = nullptr;
 
   m_CPUBufferLock = false;
   m_GPUBufferLock = false;
@@ -99,7 +99,7 @@ GPUDataManager::Allocate()
               << m_BufferSize << " Bytes" << std::endl;
 #endif
     m_GPUBuffer = clCreateBuffer( m_Context->GetContextId(),
-      m_MemFlags, m_BufferSize, NULL, &errid );
+      m_MemFlags, m_BufferSize, nullptr, &errid );
     m_Context->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
     m_IsGPUBufferDirty = true;
   }
@@ -159,7 +159,7 @@ GPUDataManager::UpdateCPUBuffer()
 
   MutexHolderType holder( m_Mutex );
 
-  if( m_IsCPUBufferDirty && m_GPUBuffer != NULL && m_CPUBuffer != NULL )
+  if( m_IsCPUBufferDirty && m_GPUBuffer != nullptr && m_CPUBuffer != nullptr )
   {
 #if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
     std::cout << "clEnqueueReadBuffer, " << this
@@ -171,11 +171,11 @@ GPUDataManager::UpdateCPUBuffer()
 #ifdef OPENCL_PROFILING
     cl_event clEvent = NULL;
     errid = clEnqueueReadBuffer( m_Context->GetCommandQueue().GetQueueId(), m_GPUBuffer, CL_TRUE, 0,
-      m_BufferSize, m_CPUBuffer, 0, NULL,
+      m_BufferSize, m_CPUBuffer, 0, nullptr,
       &clEvent );
 #else
     errid = clEnqueueReadBuffer( m_Context->GetCommandQueue().GetQueueId(), m_GPUBuffer, CL_TRUE, 0,
-      m_BufferSize, m_CPUBuffer, 0, NULL, NULL );
+      m_BufferSize, m_CPUBuffer, 0, nullptr, nullptr);
 #endif
 
     m_Context->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
@@ -197,7 +197,7 @@ GPUDataManager::UpdateGPUBuffer()
 
   MutexHolderType holder( m_Mutex );
 
-  if( m_IsGPUBufferDirty && m_CPUBuffer != NULL && m_GPUBuffer != NULL )
+  if( m_IsGPUBufferDirty && m_CPUBuffer != nullptr && m_GPUBuffer != nullptr )
   {
 #if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
     std::cout << "clEnqueueWriteBuffer, " << this << "::UpdateGPUBuffer CPU->GPU data copy "
@@ -208,12 +208,12 @@ GPUDataManager::UpdateGPUBuffer()
 #ifdef OPENCL_PROFILING
     cl_event clEvent = NULL;
     errid = clEnqueueWriteBuffer(
-      m_Context->GetCommandQueue().GetQueueId(), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL,
+      m_Context->GetCommandQueue().GetQueueId(), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, nullptr,
       &clEvent );
 #else
     errid = clEnqueueWriteBuffer(
-      m_Context->GetCommandQueue().GetQueueId(), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL,
-      NULL );
+      m_Context->GetCommandQueue().GetQueueId(), m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, nullptr,
+      nullptr );
 #endif
     m_Context->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
     //m_ContextManager->OpenCLProfile(clEvent, "clEnqueueWriteBuffer CPU->GPU");
@@ -308,8 +308,8 @@ GPUDataManager::Initialize()
   }
 
   m_BufferSize       = 0;
-  m_GPUBuffer        = NULL;
-  m_CPUBuffer        = NULL;
+  m_GPUBuffer        = nullptr;
+  m_CPUBuffer        = nullptr;
   m_MemFlags         = CL_MEM_READ_WRITE; // default flag
   m_IsGPUBufferDirty = false;
   m_IsCPUBufferDirty = false;

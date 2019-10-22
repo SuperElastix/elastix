@@ -108,14 +108,14 @@ public:
   /** Execute stuff before each new pyramid resolution:
    * \li Set the spline order.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   BSplineInterpolator() {}
   /** The destructor. */
-  virtual ~BSplineInterpolator() {}
+  ~BSplineInterpolator() override {}
 
 private:
 

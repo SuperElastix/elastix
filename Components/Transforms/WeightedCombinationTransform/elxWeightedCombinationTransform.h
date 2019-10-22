@@ -166,7 +166,7 @@ public:
    * \li Read some parameters
    * \li Call InitializeTransform.
    * \li Set the scales. */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Initialize Transform.
    * \li Load subtransforms
@@ -191,13 +191,13 @@ public:
    * It loads the subtransforms, the NormalizeWeights option,
    * and calls the superclass' implementation.
    */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file.
    * It writes the names of the subTransform parameterFiles.
    * and the NormalizeWeights option, and calls the superclass' implementation.
    */
-  virtual void WriteToFile( const ParametersType & param ) const;
+  void WriteToFile( const ParametersType & param ) const override;
 
   /** Load from the parameter file a list of subtransforms. The filenames are
    * stored in the m_SubTransformFileNames list */
@@ -208,7 +208,7 @@ protected:
   /** The constructor. */
   WeightedCombinationTransformElastix();
   /** The destructor. */
-  virtual ~WeightedCombinationTransformElastix() {}
+  ~WeightedCombinationTransformElastix() override {}
 
   WeightedCombinationTransformPointer m_WeightedCombinationTransform;
   std::vector< std::string >          m_SubTransformFileNames;

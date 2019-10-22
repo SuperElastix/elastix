@@ -81,7 +81,7 @@ public:
     Unknown
   }                                   StopConditionType;
 
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   virtual void ResumeOptimization( void );
 
@@ -97,7 +97,7 @@ public:
 
   /** Setting: the line search optimizer */
   itkSetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
-  itkGetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
+  itkGetModifiableObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
 
   /** Setting: the maximum number of iterations */
   itkGetConstMacro( MaximumNumberOfIterations, unsigned long );
@@ -138,9 +138,9 @@ public:
 protected:
 
   GenericConjugateGradientOptimizer();
-  virtual ~GenericConjugateGradientOptimizer(){}
+  ~GenericConjugateGradientOptimizer() override{}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   DerivativeType    m_CurrentGradient;
   MeasureType       m_CurrentValue;

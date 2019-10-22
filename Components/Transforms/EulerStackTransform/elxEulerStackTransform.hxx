@@ -137,15 +137,6 @@ EulerStackTransform< TElastix >
    */
   pointRead = this->ReadCenterOfRotationPoint( RDcenterOfRotationPoint );
 
-  /** If this did not succeed, probably a transform parameter file
-   * is trying to be read that was generated using an older elastix
-   * version. Try to read it as an index, and convert to point.
-   */
-  if( !pointRead )
-  {
-    indexRead = this->ReadCenterOfRotationIndex( RDcenterOfRotationPoint );
-  }
-
   if( !pointRead && !indexRead )
   {
     xl::xout[ "error" ] << "ERROR: No center of rotation is specified in the "
@@ -518,118 +509,9 @@ EulerStackTransform< TElastix >
   elxout << "Scales for transform parameters are: " << newscales << std::endl;
 
   /** And set the scales into the optimizer. */
-  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+  this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales( newscales );
 
 } // end SetScales()
-
-
-/**
- * ******************** ReadCenterOfRotationIndex *********************
- */
-
-template< class TElastix >
-bool
-EulerStackTransform< TElastix >
-::ReadCenterOfRotationIndex( ReducedDimensionInputPointType & rotationPoint ) const
-{
-  /** Try to read CenterOfRotationIndex from the transform parameter
-   * file, which is the rotationPoint, expressed in index-values.
-   */
-  ReducedDimensionContinuousIndexType redDimCenterOfRotationIndex;
-  bool                                centerGivenAsIndex = true;
-  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
-  {
-    redDimCenterOfRotationIndex[ i ] = 0;
-
-    /** Returns zero when parameter was in the parameter file. */
-    bool found = this->m_Configuration->ReadParameter(
-      redDimCenterOfRotationIndex[ i ], "CenterOfRotation", i, false );
-    if( !found )
-    {
-      centerGivenAsIndex &= false;
-    }
-  }
-
-  if( !centerGivenAsIndex )
-  {
-    return false;
-  }
-
-  /** Get spacing, origin and size of the fixed image.
-   * We put this in a dummy image, so that we can correctly
-   * calculate the center of rotation in world coordinates.
-   */
-  ReducedDimensionSpacingType   spacing;
-  ReducedDimensionIndexType     index;
-  ReducedDimensionPointType     origin;
-  ReducedDimensionSizeType      size;
-  ReducedDimensionDirectionType direction;
-  direction.SetIdentity();
-
-  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
-  {
-    /** Read size from the parameter file. Zero by default, which is illegal. */
-    size[ i ] = 0;
-    this->m_Configuration->ReadParameter( size[ i ], "Size", i );
-
-    /** Default index. Read index from the parameter file. */
-    index[ i ] = 0;
-    this->m_Configuration->ReadParameter( index[ i ], "Index", i );
-
-    /** Default spacing. Read spacing from the parameter file. */
-    spacing[ i ] = 1.0;
-    this->m_Configuration->ReadParameter( spacing[ i ], "Spacing", i );
-
-    /** Default origin. Read origin from the parameter file. */
-    origin[ i ] = 0.0;
-    this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
-
-    /** Read direction cosines. Default identity */
-    for( unsigned int j = 0; j < ReducedSpaceDimension; j++ )
-    {
-      this->m_Configuration->ReadParameter( direction( j, i ),
-        "Direction", i * SpaceDimension + j );
-    }
-  }
-
-  /** Check for image size. */
-  bool illegalSize = false;
-  for( unsigned int i = 0; i < ReducedSpaceDimension; i++ )
-  {
-    if( size[ i ] == 0 )
-    {
-      illegalSize = true;
-    }
-  }
-
-  if( illegalSize )
-  {
-    xl::xout[ "error" ] << "ERROR: One or more image sizes are 0!" << std::endl;
-    return false;
-  }
-
-  /** Make a temporary image with the right region info,
-   * so that the TransformIndexToPhysicalPoint-functions will be right.
-   */
-  typedef  ReducedDimensionImageType DummyImageType;
-  typename DummyImageType::Pointer dummyImage = DummyImageType::New();
-  ReducedDimensionRegionType redDimRegion;
-
-  redDimRegion.SetIndex( index );
-  redDimRegion.SetSize( size );
-  dummyImage->SetRegions( redDimRegion );
-  dummyImage->SetOrigin( origin );
-  dummyImage->SetSpacing( spacing );
-  dummyImage->SetDirection( direction );
-
-  /** Convert center of rotation from index-value to physical-point-value. */
-  dummyImage->TransformContinuousIndexToPhysicalPoint(
-    redDimCenterOfRotationIndex, rotationPoint );
-
-  /** Successfully read centerOfRotation as Index. */
-  return true;
-
-} // end ReadCenterOfRotationIndex()
 
 
 /**

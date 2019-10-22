@@ -47,7 +47,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   /** Set the fixed image interpolators. */
   this->GetAndSetFixedImageInterpolators();
 
-}   // end BeforeRegistration()
+} // end BeforeRegistration()
 
 
 /**
@@ -66,7 +66,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   this->UpdateFixedMasks( level );
   this->UpdateMovingMasks( level );
 
-}   // end BeforeEachResolution()
+} // end BeforeEachResolution()
 
 
 /**
@@ -151,7 +151,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     }
   }
 
-}   // end GetAndSetComponents()
+} // end GetAndSetComponents()
 
 
 /**
@@ -185,7 +185,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     this->SetFixedImageRegion( this->GetElastix()->GetFixedImage( i )->GetBufferedRegion(), i );
   }
 
-}   // end GetAndSetFixedImageRegions()
+} // end GetAndSetFixedImageRegions()
 
 
 /**
@@ -222,7 +222,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
     this->SetFixedImageInterpolator( interpolators[ i ], i );
   }
 
-}   // end GetAndSetFixedImageInterpolators()
+} // end GetAndSetFixedImageInterpolators()
 
 
 /**
@@ -257,7 +257,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
     this->GetElastix()->GetFixedMask(), useMaskErosion,
     this->GetFixedImagePyramid(), level );
-  this->GetMultiInputMetric()->SetFixedImageMask( fixedMask );
+  this->GetModifiableMultiInputMetric()->SetFixedImageMask( fixedMask );
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
@@ -265,7 +265,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
          << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
-}   // end UpdateFixedMasks()
+} // end UpdateFixedMasks()
 
 
 /**
@@ -300,7 +300,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
   MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
     this->GetElastix()->GetMovingMask(), useMaskErosion,
     this->GetMovingImagePyramid(), level );
-  this->GetMultiInputMetric()->SetMovingImageMask( movingMask );
+  this->GetModifiableMultiInputMetric()->SetMovingImageMask( movingMask );
 
   /** Stop timer and print the elapsed time. */
   timer.Stop();
@@ -308,7 +308,7 @@ MultiResolutionRegistrationWithFeatures< TElastix >
          << static_cast< long >( timer.GetMean() * 1000 )
          << " ms." << std::endl;
 
-}   // end UpdateMovingMasks()
+} // end UpdateMovingMasks()
 
 
 } // end namespace elastix

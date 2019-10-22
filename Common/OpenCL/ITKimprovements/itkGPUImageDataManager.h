@@ -41,7 +41,6 @@
 #include <itkObjectFactory.h>
 #include "itkGPUImage.h"
 #include "itkGPUDataManager.h"
-#include "itkSimpleFastMutexLock.h"
 
 namespace itk
 {
@@ -93,7 +92,7 @@ public:
 
 protected:
 
-  GPUImageDataManager() { m_Image = NULL; }
+  GPUImageDataManager() { m_Image = nullptr; }
   virtual ~GPUImageDataManager() {}
 
 private:

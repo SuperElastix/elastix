@@ -77,7 +77,7 @@ public:
 protected:
 
   BSplineInterpolationWeightFunction2();
-  ~BSplineInterpolationWeightFunction2() {}
+  ~BSplineInterpolationWeightFunction2() override {}
 
   /** Interpolation kernel types. */
   typedef typename Superclass::KernelType           KernelType;
@@ -92,10 +92,10 @@ protected:
    * [ \beta^3( x[i] - startIndex[i] ), \beta^3( x[i] - startIndex[i] - 1 ),
    * \beta^3( x[i] - startIndex[i] - 2 ), \beta^3( x[i] - startIndex[i] - 3 ) ]
    */
-  virtual void Compute1DWeights(
+  void Compute1DWeights(
     const ContinuousIndexType & index,
     const IndexType & startIndex,
-    OneDWeightsType & weights1D ) const;
+    OneDWeightsType & weights1D ) const override;
 
 private:
 

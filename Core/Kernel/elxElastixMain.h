@@ -164,8 +164,8 @@ public:
    */
   itkSetObjectMacro( FixedImageContainer,  DataObjectContainerType );
   itkSetObjectMacro( MovingImageContainer, DataObjectContainerType );
-  itkGetObjectMacro( FixedImageContainer,  DataObjectContainerType );
-  itkGetObjectMacro( MovingImageContainer, DataObjectContainerType );
+  itkGetModifiableObjectMacro( FixedImageContainer,  DataObjectContainerType );
+  itkGetModifiableObjectMacro( MovingImageContainer, DataObjectContainerType );
 
   /** Set/Get functions for the fixed and moving masks
    * (if these are not used, elastix tries to read them from disk,
@@ -173,28 +173,28 @@ public:
    */
   itkSetObjectMacro( FixedMaskContainer, DataObjectContainerType );
   itkSetObjectMacro( MovingMaskContainer, DataObjectContainerType );
-  itkGetObjectMacro( FixedMaskContainer, DataObjectContainerType );
-  itkGetObjectMacro( MovingMaskContainer, DataObjectContainerType );
+  itkGetModifiableObjectMacro( FixedMaskContainer, DataObjectContainerType );
+  itkGetModifiableObjectMacro( MovingMaskContainer, DataObjectContainerType );
 
   /** Set/Get functions for the result images
    * (if these are not used, elastix tries to read them from disk,
    * according to the command line parameters).
    */
   itkSetObjectMacro( ResultImageContainer, DataObjectContainerType );
-  itkGetObjectMacro( ResultImageContainer, DataObjectContainerType );
+  itkGetModifiableObjectMacro( ResultImageContainer, DataObjectContainerType );
 
   itkSetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
-  itkGetObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
+  itkGetModifiableObjectMacro( ResultDeformationFieldContainer, DataObjectContainerType );
 
   /** Set/Get the configuration object. */
   itkSetObjectMacro( Configuration, ConfigurationType );
-  itkGetObjectMacro( Configuration, ConfigurationType );
+  itkGetModifiableObjectMacro( Configuration, ConfigurationType );
 
   /** Functions to get pointers to the elastix components.
    * The components are returned as Object::Pointer.
    * Before calling this functions, call run().
    */
-  itkGetObjectMacro( Elastix, ObjectType );
+  itkGetModifiableObjectMacro( Elastix, ObjectType );
 
   /** Convenience function that returns the elastix component as
    * a pointer to an ElastixBaseType. Use only after having called run()!
@@ -206,14 +206,14 @@ public:
    * of ElastixMain.
    * Only valid after calling Run()!
    */
-  itkGetObjectMacro( FinalTransform, ObjectType );
+  itkGetModifiableObjectMacro( FinalTransform, ObjectType );
 
   /** Set/Get the initial transform
    * the type is ObjectType, but the pointer should actually point
    * to an itk::Transform type (or inherited from that one).
    */
   itkSetObjectMacro( InitialTransform, ObjectType );
-  itkGetObjectMacro( InitialTransform, ObjectType );
+  itkGetModifiableObjectMacro( InitialTransform, ObjectType );
 
   /** Set/Get the original fixed image direction as a flat array
    * (d11 d21 d31 d21 d22 etc ) */
@@ -299,7 +299,7 @@ public:
 protected:
 
   ElastixMain();
-  virtual ~ElastixMain();
+  ~ElastixMain() override;
 
   /** A pointer to elastix as an itk::object. In run() this
    * pointer will be assigned to an ElastixTemplate<>.

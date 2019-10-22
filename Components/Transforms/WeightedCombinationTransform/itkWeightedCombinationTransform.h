@@ -97,10 +97,10 @@ public:
   typedef std::vector< TransformPointer > TransformContainerType;
 
   /**  Method to transform a point. */
-  virtual OutputPointType TransformPoint( const InputPointType & ipp ) const;
+  OutputPointType TransformPoint( const InputPointType & ipp ) const override;
 
   /** These vector transforms are not implemented for this transform. */
-  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  OutputVectorType TransformVector( const InputVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVectorType &) is not implemented "
@@ -108,7 +108,7 @@ public:
   }
 
 
-  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformVector(const InputVnlVectorType &) is not implemented "
@@ -116,7 +116,7 @@ public:
   }
 
 
-  virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
+  OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const override
   {
     itkExceptionMacro(
         << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
@@ -129,28 +129,25 @@ public:
    * However, it is a useful function, since the Jacobian is passed
    * by reference, which makes it thread-safe, unlike the normal
    * GetJacobian function. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType & ipp,
     JacobianType & jac,
-    NonZeroJacobianIndicesType & nzji ) const;
+    NonZeroJacobianIndicesType & nzji ) const override;
 
   /** Set the parameters. Computes the sum of weights (which is
    * the normalization term). And checks if the number of parameters
    * is correct */
-  virtual void SetParameters( const ParametersType & param );
-
-  /** Get the currently set parameters */
-  itkGetConstReferenceMacro( Parameters, ParametersType );
+  void SetParameters( const ParametersType & param ) override;
 
   /** Set the fixed parameters. */
-  virtual void SetFixedParameters( const ParametersType & )
+  void SetFixedParameters( const ParametersType & ) override
   {
     // \todo: to be implemented by Stefan
   }
 
 
   /** Get the Fixed Parameters. */
-  virtual const ParametersType & GetFixedParameters( void ) const
+  const ParametersType & GetFixedParameters( void ) const override
   {
     // \todo: to be implemented by Stefan: check this:
     return this->m_FixedParameters;
@@ -158,7 +155,7 @@ public:
 
 
   /** Return the number of sub-transforms that have been set. */
-  virtual NumberOfParametersType GetNumberOfParameters( void ) const
+  NumberOfParametersType GetNumberOfParameters( void ) const override
   {
     return this->m_TransformContainer.size();
   }
@@ -193,49 +190,49 @@ public:
 
 
   /** Must be provided. */
-  virtual void GetSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj ) const
+  void GetSpatialJacobian(
+    const InputPointType & ipp, SpatialJacobianType & sj ) const override
   {
     itkExceptionMacro( << "Not implemented for WeightedCombinationTransform" );
   }
 
 
-  virtual void GetSpatialHessian(
-    const InputPointType & ipp, SpatialHessianType & sh ) const
+  void GetSpatialHessian(
+    const InputPointType & ipp, SpatialHessianType & sh ) const override
   {
     itkExceptionMacro( << "Not implemented for WeightedCombinationTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for WeightedCombinationTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp, SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for WeightedCombinationTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for WeightedCombinationTransform" );
   }
 
 
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType & ipp, SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     itkExceptionMacro( << "Not implemented for WeightedCombinationTransform" );
   }
@@ -244,7 +241,7 @@ public:
 protected:
 
   WeightedCombinationTransform();
-  virtual ~WeightedCombinationTransform() {}
+  ~WeightedCombinationTransform() override {}
 
   TransformContainerType m_TransformContainer;
   double                 m_SumOfWeights;

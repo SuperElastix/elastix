@@ -19,6 +19,7 @@
 #define __itkImageToVectorContainerFilter_h
 
 #include "itkVectorContainerSource.h"
+#include "itkPlatformMultiThreader.h"
 
 namespace itk
 {
@@ -60,7 +61,7 @@ public:
   typedef typename InputImageType::PixelType    InputImagePixelType;
 
   /** Create a valid output. */
-  DataObject::Pointer MakeOutput( unsigned int idx );
+  DataObject::Pointer MakeOutput( unsigned int idx ) override;
 
   /** Set the input image of this process object.  */
   void SetInput( unsigned int idx, const InputImageType * input );
@@ -95,7 +96,7 @@ public:
    * instead.
    *
    * \sa ThreadedGenerateData() */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** If an imaging filter can be implemented as a multithreaded
    * algorithm, the filter will provide an implementation of
@@ -155,7 +156,7 @@ public:
   virtual unsigned int SplitRequestedRegion( const ThreadIdType & threadId,
     const ThreadIdType & numberOfSplits, InputImageRegionType & splitRegion );
 
-  /** Static function used as a "callback" by the MultiThreader.  The threading
+  /** Static function used as a "callback" by the PlatformMultiThreader.  The threading
    * library will call this routine for each thread, which will delegate the
    * control to ThreadedGenerateData(). */
   static ITK_THREAD_RETURN_TYPE ThreaderCallback( void * arg );
@@ -171,10 +172,10 @@ protected:
   /** The constructor. */
   ImageToVectorContainerFilter();
   /** The destructor. */
-  virtual ~ImageToVectorContainerFilter() {}
+  ~ImageToVectorContainerFilter() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

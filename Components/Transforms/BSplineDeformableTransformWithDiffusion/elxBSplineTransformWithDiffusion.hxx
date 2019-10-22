@@ -24,7 +24,7 @@
 #include "itkBSplineResampleImageFunction.h"
 #include "itkBSplineDecompositionImageFilter.h"
 
-#include "vnl/vnl_math.h"
+#include <cmath>
 
 namespace elastix
 {
@@ -296,7 +296,7 @@ BSplineTransformWithDiffusion< TElastix >
         /** Pass the exception to an higher level. */
         throw excp;
       } // end try/catch
-    }   // end if fixed segmentation
+    } // end if fixed segmentation
   }     // end if moving segmentation
   /** Otherwise defining rigid object is based on thresholding the resampled moving image. */
   else if( !this->m_UseMovingSegmentation && this->m_ThresholdBool )
@@ -652,7 +652,7 @@ BSplineTransformWithDiffusion< TElastix >
   {
     int nrOfResolutions = static_cast< int >(
       this->GetRegistration()->GetAsITKBaseType()->GetNumberOfLevels() );
-    this->m_GridSpacingFactor *= vcl_pow( 2.0,
+    this->m_GridSpacingFactor *= std::pow( 2.0,
       static_cast< double >( nrOfResolutions - 1 ) );
   }
 
@@ -661,10 +661,10 @@ BSplineTransformWithDiffusion< TElastix >
   {
     gridspacing[ j ] = gridspacing[ j ] * this->m_GridSpacingFactor[ j ];
     gridorigin[ j ] -= gridspacing[ j ]
-      * vcl_floor( static_cast< double >( SplineOrder ) / 2.0 );
+      * std::floor( static_cast< double >( SplineOrder ) / 2.0 );
     gridindex[ j ] = 0; // isn't this always the case anyway?
     gridsize[ j ]  = static_cast< typename RegionType::SizeValueType >
-      ( vcl_ceil( gridsize[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
+      ( std::ceil( gridsize[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
   }
 
   /** Set the size data in the transform. */
@@ -733,10 +733,10 @@ BSplineTransformWithDiffusion< TElastix >
   {
     gridspacingHigh[ j ] = gridspacingHigh[ j ] * this->m_GridSpacingFactor[ j ];
     gridoriginHigh[ j ] -= gridspacingHigh[ j ]
-      * vcl_floor( static_cast< double >( SplineOrder ) / 2.0 );
+      * std::floor( static_cast< double >( SplineOrder ) / 2.0 );
     gridindexHigh[ j ] = 0; // isn't this always the case anyway?
     gridsizeHigh[ j ]  = static_cast< typename RegionType::SizeValueType >
-      ( vcl_ceil( gridsizeHigh[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
+      ( std::ceil( gridsizeHigh[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
   }
   gridregionHigh.SetSize( gridsizeHigh );
   gridregionHigh.SetIndex( gridindexHigh );
@@ -1263,7 +1263,7 @@ BSplineTransformWithDiffusion< TElastix >
         /** Update iterator. */
         ++it;
       } // end while
-    }   // end if
+    } // end if
   }
   /** In case we do use a segmentation of the moving image: */
   else

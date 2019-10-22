@@ -96,7 +96,7 @@ ImageFullSampler< TInputImage >
       sampleContainer->SetElement( ind, tempSample );
 
     } // end for
-  }   // end if no mask
+  } // end if no mask
   else
   {
     if( mask->GetSource() )
@@ -115,7 +115,7 @@ ImageFullSampler< TInputImage >
       inputImage->TransformIndexToPhysicalPoint( index,
         tempSample.m_ImageCoordinates );
 
-      if( mask->IsInside( tempSample.m_ImageCoordinates ) )
+      if( mask->IsInsideInWorldSpace( tempSample.m_ImageCoordinates ) )
       {
         /** Get sampled image value. */
         tempSample.m_ImageValue = iter.Get();
@@ -124,7 +124,7 @@ ImageFullSampler< TInputImage >
         sampleContainer->push_back( tempSample );
 
       } // end if
-    }   // end for
+    } // end for
   }     // end else (if mask exists)
 
 } // end GenerateData()
@@ -194,7 +194,7 @@ ImageFullSampler< TInputImage >
       sampleContainerThisThread->SetElement( ind, tempSample );
 
     } // end for
-  }   // end if no mask
+  } // end if no mask
   else
   {
     if( mask->GetSource() )
@@ -213,7 +213,7 @@ ImageFullSampler< TInputImage >
       inputImage->TransformIndexToPhysicalPoint( index,
         tempSample.m_ImageCoordinates );
 
-      if( mask->IsInside( tempSample.m_ImageCoordinates ) )
+      if( mask->IsInsideInWorldSpace( tempSample.m_ImageCoordinates ) )
       {
         /** Get sampled image value. */
         tempSample.m_ImageValue = iter.Get();
@@ -222,7 +222,7 @@ ImageFullSampler< TInputImage >
         sampleContainerThisThread->push_back( tempSample );
 
       } // end if
-    }   // end for
+    } // end for
   }     // end else (if mask exists)
 
 } // end ThreadedGenerateData()

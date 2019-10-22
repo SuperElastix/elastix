@@ -142,7 +142,7 @@ MovingImagePyramidBase< TElastix >
       found &= ijfound;
 
     } // end for MovingImageDimension
-  }   // end for numberOfResolutions
+  } // end for numberOfResolutions
 
   if( !found && this->GetConfiguration()->GetPrintErrorMessages() )
   {

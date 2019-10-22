@@ -42,7 +42,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   this->SetUseMovingImageLimiter( false );
 
   // Multi-threading structs
-  this->m_CorrelationGetValueAndDerivativePerThreadVariables     = NULL;
+  this->m_CorrelationGetValueAndDerivativePerThreadVariables     = nullptr;
   this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor
@@ -69,6 +69,8 @@ void
 AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 ::InitializeThreadingParameters( void ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
    * needed, which saves valuable re-allocation time.
@@ -77,19 +79,18 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
    */
 
   /** Only resize the array of structs when needed. */
-  if( this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize != numberOfThreads )
   {
     delete[] this->m_CorrelationGetValueAndDerivativePerThreadVariables;
     this->m_CorrelationGetValueAndDerivativePerThreadVariables
-      = new AlignedCorrelationGetValueAndDerivativePerThreadStruct[ this->
-      m_NumberOfThreads ];
-    this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
+      = new AlignedCorrelationGetValueAndDerivativePerThreadStruct[ numberOfThreads ];
+    this->m_CorrelationGetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Some initialization. */
   const AccumulateType      zero1 = NumericTraits< AccumulateType >::Zero;
   const DerivativeValueType zero2 = NumericTraits< DerivativeValueType >::Zero;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = NumericTraits< SizeValueType >::Zero;
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sff                   = zero1;
@@ -280,7 +281,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** The denominator of the NC. */
-  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+  const RealType denom = -1.0 * std::sqrt( sff * smm );
 
   /** Calculate the measure value. */
   if( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
@@ -458,7 +459,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** The denominator of the value and the derivative. */
-  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+  const RealType denom = -1.0 * std::sqrt( sff * smm );
 
   /** Calculate the value and the derivative. */
   if( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
@@ -550,8 +551,8 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -659,10 +660,12 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted
     = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 1; i < numberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted
       += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
@@ -683,7 +686,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   AccumulateType       sfm  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sfm;
   AccumulateType       sf   = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sf;
   AccumulateType       sm   = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Sm;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 1; i < numberOfThreads; ++i )
   {
     sff += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Sff;
     smm += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_Smm;
@@ -709,7 +712,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   }
 
   /** The denominator of the value and the derivative. */
-  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+  const RealType denom = -1.0 * std::sqrt( sff * smm );
 
   /** Check for sufficiently large denominator. */
   if( denom > -1e-14 )
@@ -730,7 +733,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     DerivativeType & derivativeM  = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_DerivativeM;
     DerivativeType & differential = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Differential;
 
-    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+    for( ThreadIdType i = 1; i < numberOfThreads; ++i )
     {
       derivativeF  += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeF;
       derivativeM  += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeM;
@@ -792,7 +795,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
       DerivativeValueType differential
         = this->m_CorrelationGetValueAndDerivativePerThreadVariables[ 0 ].st_Differential[ j ];
 
-      for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+      for( ThreadIdType i = 1; i < numberOfThreads; ++i )
       {
         derivativeF  += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeF[ j ];
         derivativeM  += this->m_CorrelationGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeM[ j ];
@@ -823,8 +826,8 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 ::AccumulateDerivativesThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId    = infoStruct->ThreadID;
-  ThreadIdType     nrOfThreads = infoStruct->NumberOfThreads;
+  ThreadIdType     threadId    = infoStruct->WorkUnitID;
+  ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
 
   MultiThreaderAccumulateDerivativeType * temp
     = static_cast< MultiThreaderAccumulateDerivativeType * >( infoStruct->UserData );
@@ -837,7 +840,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 
   const unsigned int numPar  = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize = static_cast< unsigned int >(
-    vcl_ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
+    std::ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
   unsigned int jmin = threadId * subSize;
   unsigned int jmax = ( threadId + 1 ) * subSize;
   jmax = ( jmax > numPar ) ? numPar : jmax;
@@ -869,7 +872,7 @@ AdvancedNormalizedCorrelationImageToImageMetric< TFixedImage, TMovingImage >
       = ( derivativeF - sfm_smm * derivativeM ) * invertedDenominator;
   }
 
-  return ITK_THREAD_RETURN_VALUE;
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end AccumulateDerivativesThreaderCallback()
 

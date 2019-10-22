@@ -38,10 +38,8 @@
 #include "itkObject.h"
 #include "itkDataObject.h"
 #include "itkObjectFactory.h"
-#include "itkSimpleFastMutexLock.h"
-#include "itkMutexLockHolder.h"
-
 #include "itkOpenCLContext.h"
+#include <mutex>
 
 namespace itk
 {
@@ -69,6 +67,7 @@ class ITKOpenCL_EXPORT GPUDataManager : public Object   //DataObject//
   friend class OpenCLKernelManager;
 
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(GPUDataManager);
 
   typedef GPUDataManager             Self;
   typedef Object                     Superclass;
@@ -81,7 +80,7 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( GPUDataManager, Object );
 
-  typedef MutexLockHolder< SimpleFastMutexLock > MutexHolderType;
+  using MutexHolderType = std::lock_guard<std::mutex>;
 
   /** total buffer size in bytes */
   void SetBufferSize( unsigned int num );
@@ -90,7 +89,6 @@ public:
   {
     return m_BufferSize;
   }
-
 
   void SetBufferFlag( cl_mem_flags flags );
 
@@ -113,12 +111,10 @@ public:
     return m_IsCPUBufferDirty;
   }
 
-
   bool IsGPUBufferDirty()
   {
     return m_IsGPUBufferDirty;
   }
-
 
   /** actual GPU->CPU memory copy takes place here */
   virtual void UpdateCPUBuffer();
@@ -179,13 +175,7 @@ protected:
   bool m_GPUBufferLock;
 
   /** Mutex lock to prevent r/w hazard for multithreaded code */
-  SimpleFastMutexLock m_Mutex;
-
-private:
-
-  //ITK_DISALLOW_COPY_AND_ASSIGN( GPUDataManager );
-  GPUDataManager( const Self & );   // purposely not implemented
-  void operator=( const Self & );   // purposely not implemented
+  std::mutex m_Mutex;
 };
 
 } // namespace itk

@@ -80,6 +80,7 @@ itkImplementationGetMacro( Interpolator, , InterpolatorType * );
 itkImplementationGetMacro( FixedImagePyramid, , FixedImagePyramidType * );
 itkImplementationGetMacro( MovingImagePyramid, , MovingImagePyramidType * );
 
+
 /**
  * ****************** Constructor ******************
  */
@@ -119,11 +120,9 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 
 } // end GetFixedImageRegion()
 
+
 /**
  * ********************** SetMetric *******************************
- * Reimplement this method to check if
- * the metric is a combination metric.
- * GetMetric returns the combination metric.
  */
 
 template< typename TFixedImage, typename TMovingImage >
@@ -149,19 +148,19 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end SetMetric()
 
 
-/*
+/**
  * ****************** Initialize *******************************
  */
 
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   this->CheckOnInitialize();
 
   /** Setup the metric. */
-  this->GetCombinationMetric()->SetTransform( this->GetTransform() );
+  this->GetCombinationMetric()->SetTransform( this->GetModifiableTransform() );
 
   this->GetCombinationMetric()->SetFixedImage(
     this->GetFixedImagePyramid()->GetOutput( this->GetCurrentLevel() ) );
@@ -197,8 +196,8 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
   this->GetCombinationMetric()->Initialize();
 
   /** Setup the optimizer. */
-  this->GetOptimizer()->SetCostFunction( this->GetMetric() );
-  this->GetOptimizer()->SetInitialPosition(
+  this->GetModifiableOptimizer()->SetCostFunction( this->GetModifiableMetric() );
+  this->GetModifiableOptimizer()->SetInitialPosition(
     this->GetInitialTransformParametersOfNextLevel() );
 
   /** Connect the transform to the Decorator. */
@@ -210,8 +209,8 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end Initialize()
 
 
-/*
- * ****************** Prepare all pyramids ******************
+/**
+ * ****************** PrepareAllPyramids ******************
  */
 
 template< typename TFixedImage, typename TMovingImage >
@@ -304,9 +303,9 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
           inputEndPoint, endcindex );
         for( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
         {
-          start[ dim ] = static_cast< IndexValueType >( vcl_ceil( startcindex[ dim ] ) );
-          size[ dim ]  = vnl_math_max( NumericTraits< SizeValueType >::One, static_cast< SizeValueType >(
-            static_cast< SizeValueType >( vcl_floor( endcindex[ dim ] ) ) - start[ dim ] + 1 ) );
+          start[ dim ] = static_cast< IndexValueType >( std::ceil( startcindex[ dim ] ) );
+          size[ dim ]  = std::max( NumericTraits< SizeValueType >::One, static_cast< SizeValueType >(
+            static_cast< SizeValueType >( std::floor( endcindex[ dim ] ) ) - start[ dim ] + 1 ) );
         }
 
         this->m_FixedImageRegionPyramids[ i ][ level ].SetSize( size );
@@ -340,7 +339,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end PrepareAllPyramids()
 
 
-/*
+/**
  * ****************** PrintSelf ******************
  */
 
@@ -354,7 +353,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end PrintSelf()
 
 
-/*
+/**
  * ********************* GenerateData ***********************
  */
 
@@ -417,7 +416,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
     try
     {
       // do the optimization
-      this->GetOptimizer()->StartOptimization();
+      this->GetModifiableOptimizer()->StartOptimization();
     }
     catch( ExceptionObject & err )
     {
@@ -431,7 +430,7 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 
     // get the results
     this->m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
-    this->GetTransform()->SetParameters( this->m_LastTransformParameters );
+    this->GetModifiableTransform()->SetParameters( this->m_LastTransformParameters );
 
     // setup the initial parameters for next level
     if( this->GetCurrentLevel() < this->GetNumberOfLevels() - 1 )
@@ -450,12 +449,12 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
  */
 
 template< typename TFixedImage, typename TMovingImage >
-unsigned long
+ModifiedTimeType
 MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 ::GetMTime( void ) const
 {
-  unsigned long mtime = Superclass::GetMTime();
-  unsigned long m;
+  ModifiedTimeType mtime = Superclass::GetMTime();
+  ModifiedTimeType m;
 
   // Some of the following should be removed once ivars are put in the
   // input and output lists
@@ -515,14 +514,14 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end GetMTime()
 
 
-/*
+/**
  * ****************** CheckPyramids ******************
  */
 
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
-::CheckPyramids( void ) throw ( ExceptionObject )
+::CheckPyramids( void )
 {
   /** Check if at least one of the following are provided. */
   if( this->GetFixedImage() == 0 )
@@ -564,14 +563,14 @@ MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
 } // end CheckPyramids()
 
 
-/*
+/**
  * ****************** CheckOnInitialize ******************
  */
 
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiMetricMultiResolutionImageRegistrationMethod< TFixedImage, TMovingImage >
-::CheckOnInitialize( void ) throw ( ExceptionObject )
+::CheckOnInitialize( void )
 {
   /** Check if at least one of the following is present. */
   if( this->GetMetric() == 0 )

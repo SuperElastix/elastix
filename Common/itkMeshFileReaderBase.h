@@ -19,7 +19,7 @@
 #define __itkMeshFileReaderBase_h
 
 #include "itkMeshSource.h"
-#include "itkExceptionObject.h"
+#include "itkMacro.h"
 #include "itkMeshFileReader.h" // for MeshFileReaderException
 
 namespace itk
@@ -62,19 +62,19 @@ public:
   /** Prepare the allocation of the output mesh during the first back
    * propagation of the pipeline.
    */
-  virtual void GenerateOutputInformation( void );
+  void GenerateOutputInformation( void ) override;
 
   /** Give the reader a chance to indicate that it will produce more
    * output than it was requested to produce. MeshFileReader cannot
    * currently read a portion of a mesh, so the MeshFileReader must
    * enlarge the RequestedRegion to the size of the mesh on disk.
    */
-  virtual void EnlargeOutputRequestedRegion( DataObject * output );
+  void EnlargeOutputRequestedRegion( DataObject * output ) override;
 
 protected:
 
   MeshFileReaderBase();
-  virtual ~MeshFileReaderBase(){}
+  ~MeshFileReaderBase() override{}
 
   /** Test whether the given filename exist and it is readable,
    * this is intended to be called before attempting to use

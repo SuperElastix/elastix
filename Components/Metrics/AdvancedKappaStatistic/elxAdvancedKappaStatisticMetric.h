@@ -142,21 +142,21 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  void Initialize( void ) override;
 
   /**
    * Do some things before registration:
    * \li Set the UseComplement setting
    * \li Set the ForeGroundvalue setting
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
 protected:
 
   /** The constructor. */
   AdvancedKappaStatisticMetric(){}
   /** The destructor. */
-  virtual ~AdvancedKappaStatisticMetric() {}
+  ~AdvancedKappaStatisticMetric() override {}
 
 private:
 

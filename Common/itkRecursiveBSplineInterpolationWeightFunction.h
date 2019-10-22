@@ -115,15 +115,12 @@ public:
     itkGetStaticConstMacro( SpaceDimension ) > GetConstNumberOfIndicesHackType;
   itkStaticConstMacro( NumberOfIndices, unsigned int, GetConstNumberOfIndicesHackType::Value );
 
-  /** Get number of weights. */
-  itkGetConstMacro( NumberOfWeights, unsigned int );
-
   /** Get number of indices. */
   itkGetConstMacro( NumberOfIndices, unsigned int );
 
   /** Evaluate the weights at specified ContinousIndex position.
    * Subclasses must provide this method. */
-  virtual WeightsType Evaluate( const ContinuousIndexType & index ) const;
+  WeightsType Evaluate( const ContinuousIndexType & index ) const override;
 
   /** Evaluate the weights at specified ContinousIndex position.
    * The weights are returned in the user specified container.
@@ -133,8 +130,8 @@ public:
    * On return, startIndex contains the start index of the
    * support region over which the weights are defined.
    */
-  virtual void Evaluate( const ContinuousIndexType & index,
-    WeightsType & weights, IndexType & startIndex ) const;
+  void Evaluate( const ContinuousIndexType & index,
+    WeightsType & weights, IndexType & startIndex ) const override;
 
   void EvaluateDerivative( const ContinuousIndexType & index,
     WeightsType & weights, const IndexType & startIndex ) const;
@@ -145,8 +142,8 @@ public:
 protected:
 
   RecursiveBSplineInterpolationWeightFunction();
-  ~RecursiveBSplineInterpolationWeightFunction() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~RecursiveBSplineInterpolationWeightFunction() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

@@ -94,7 +94,7 @@ protected:
   /** The constructor. */
   NearestNeighborInterpolator() {}
   /** The destructor. */
-  virtual ~NearestNeighborInterpolator() {}
+  ~NearestNeighborInterpolator() override {}
 
 private:
 

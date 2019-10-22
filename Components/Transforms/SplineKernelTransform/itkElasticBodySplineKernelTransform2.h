@@ -89,7 +89,7 @@ public:
    * \f$\alpha = 12 ( 1 - \nu ) - 1\f$
    */
   //itkSetMacro( Alpha, TScalarType ); Cant use the macro because the matrices must be recomputed
-  virtual void SetAlpha( TScalarType Alpha )
+  void SetAlpha( TScalarType Alpha ) override
   {
     this->m_Alpha            = Alpha;
     this->m_LMatrixComputed  = false;
@@ -99,10 +99,10 @@ public:
 
 
   /** Get alpha */
-  itkGetConstMacro( Alpha, TScalarType );
+  elxOverrideGetConstMacro( Alpha, TScalarType );
 
   /** Convenience method */
-  virtual void SetPoissonRatio( const TScalarType Nu )
+  void SetPoissonRatio( const TScalarType Nu ) override
   {
     if( Nu > -1.0 && Nu < 0.5 )
     {
@@ -111,7 +111,7 @@ public:
   }
 
 
-  virtual const TScalarType GetPoissonRatio( void ) const
+  const TScalarType GetPoissonRatio( void ) const override
   {
     return 1.0 - ( this->m_Alpha + 1.0 ) / 12.0;
   }
@@ -129,8 +129,8 @@ public:
 protected:
 
   ElasticBodySplineKernelTransform2();
-  virtual ~ElasticBodySplineKernelTransform2() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~ElasticBodySplineKernelTransform2() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
@@ -144,7 +144,7 @@ protected:
    * \f$ r(x) = \sqrt{ x_1^2 + x_2^2 + x_3^2 } \f$ and
    * \f$I\f$ is the identity matrix.
    */
-  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const;
+  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const override;
 
   /** alpha,  Alpha is related to Poisson's Ratio \f$\nu\f$ as
    * \f$\alpha = 12 ( 1 - \nu ) - 1\f$

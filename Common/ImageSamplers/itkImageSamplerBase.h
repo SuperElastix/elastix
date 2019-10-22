@@ -41,7 +41,7 @@ namespace itk
 template< class TInputImage >
 class ImageSamplerBase :
   public ImageToVectorContainerFilter< TInputImage,
-  VectorDataContainer< unsigned long, ImageSample< TInputImage > > >
+  VectorDataContainer< std::size_t, ImageSample< TInputImage > > >
 {
 public:
 
@@ -49,7 +49,7 @@ public:
   typedef ImageSamplerBase Self;
   typedef ImageToVectorContainerFilter<
     TInputImage, VectorDataContainer<
-    unsigned long, ImageSample< TInputImage > > > Superclass;
+    std::size_t, ImageSample< TInputImage > > > Superclass;
   typedef SmartPointer< Self >       Pointer;
   typedef SmartPointer< const Self > ConstPointer;
 
@@ -75,7 +75,7 @@ public:
 
   /** Other typdefs. */
   typedef ImageSample< InputImageType >                         ImageSampleType;
-  typedef VectorDataContainer< unsigned long, ImageSampleType > ImageSampleContainerType;
+  typedef VectorDataContainer< std::size_t, ImageSampleType >   ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer            ImageSampleContainerPointer;
   typedef typename InputImageType::SizeType                     InputImageSizeType;
   typedef typename InputImageType::IndexType                    InputImageIndexType;
@@ -164,7 +164,8 @@ public:
   /** Get a handle to the cropped InputImageregion. */
   itkGetConstReferenceMacro( CroppedInputImageRegion, InputImageRegionType );
 
-  /** Get the number of samples. */
+  /** Set/Get the number of samples. */
+  itkSetClampMacro( NumberOfSamples, unsigned long, 1, NumericTraits< unsigned long >::max() );
   itkGetConstMacro( NumberOfSamples, unsigned long );
 
   /** \todo: Temporary, should think about interface. */
@@ -176,13 +177,13 @@ protected:
   ImageSamplerBase();
 
   /** The destructor. */
-  virtual ~ImageSamplerBase() {}
+  ~ImageSamplerBase() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** GenerateInputRequestedRegion. */
-  virtual void GenerateInputRequestedRegion( void );
+  void GenerateInputRequestedRegion( void ) override;
 
   /** IsInsideAllMasks. */
   virtual bool IsInsideAllMasks( const InputImagePointType & point ) const;
@@ -199,9 +200,9 @@ protected:
   void CropInputImageRegion( void );
 
   /** Multi-threaded function that does the work. */
-  virtual void BeforeThreadedGenerateData( void );
+  void BeforeThreadedGenerateData( void ) override;
 
-  virtual void AfterThreadedGenerateData( void );
+  void AfterThreadedGenerateData( void ) override;
 
   /***/
   unsigned long                              m_NumberOfSamples;

@@ -178,7 +178,7 @@ protected:
       this->Callback();
     }
     return *this;
-  }   // end SendToTargets
+  } // end SendToTargets
 
 
 private:
@@ -204,7 +204,7 @@ public:
         *( xit->second ) << _arg;
       }
 
-    }   // end ToTargets
+    } // end ToTargets
 
 
   };

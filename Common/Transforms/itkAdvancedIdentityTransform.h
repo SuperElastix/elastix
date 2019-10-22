@@ -144,20 +144,20 @@ public:
   typedef typename Superclass::InternalMatrixType InternalMatrixType;
 
   /**  Method to transform a point. */
-  virtual OutputPointType TransformPoint( const InputPointType  & point ) const
+  OutputPointType TransformPoint( const InputPointType  & point ) const override
   { return point; }
 
   /**  Method to transform a vector. */
-  virtual OutputVectorType TransformVector( const InputVectorType & vector ) const
+  OutputVectorType TransformVector( const InputVectorType & vector ) const override
   { return vector; }
 
   /**  Method to transform a vnl_vector. */
-  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & vector ) const
+  OutputVnlVectorType TransformVector( const InputVnlVectorType & vector ) const override
   { return vector; }
 
   /**  Method to transform a CovariantVector. */
-  virtual OutputCovariantVectorType TransformCovariantVector(
-    const InputCovariantVectorType & vector ) const
+  OutputCovariantVectorType TransformCovariantVector(
+    const InputCovariantVectorType & vector ) const override
   { return vector; }
 
   /** Set the transformation to an Identity
@@ -167,7 +167,7 @@ public:
   void SetIdentity( void ) {}
 
   /** Return an inverse of the identity transform - another identity transform. */
-  virtual InverseTransformBasePointer GetInverseTransform( void ) const
+  InverseTransformBasePointer GetInverseTransform( void ) const override
   {
     return this->New().GetPointer();
   }
@@ -178,42 +178,42 @@ public:
    *
    *           T( a*P + b*Q ) = a * T(P) + b * T(Q)
    */
-  virtual bool IsLinear() const { return true; }
+  bool IsLinear() const override { return true; }
 
   /** Indicates the category transform.
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
    */
-  virtual TransformCategoryType GetTransformCategory() const
+  TransformCategoryType GetTransformCategory() const override
   {
     return Self::Linear;
   }
 
 
   /** Get the Fixed Parameters. */
-  virtual const ParametersType & GetFixedParameters( void ) const
+  const ParametersType & GetFixedParameters( void ) const override
   {
     return this->m_FixedParameters;
   }
 
 
   /** Set the fixed parameters and update internal transformation. */
-  virtual void SetFixedParameters( const ParametersType & ) {}
+  void SetFixedParameters( const ParametersType & ) override {}
 
   /** Get the Parameters. */
-  virtual const ParametersType & GetParameters( void ) const
+  const ParametersType & GetParameters( void ) const override
   {
     return this->m_Parameters;
   }
 
 
   /** Set the fixed parameters and update internal transformation. */
-  virtual void SetParameters( const ParametersType & ) {}
+  void SetParameters( const ParametersType & ) override {}
 
   /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType & j,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     j                      = this->m_LocalJacobian;
     nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
@@ -221,28 +221,28 @@ public:
 
 
   /** Compute the spatial Jacobian of the transformation. */
-  virtual void GetSpatialJacobian(
+  void GetSpatialJacobian(
     const InputPointType &,
-    SpatialJacobianType & sj ) const
+    SpatialJacobianType & sj ) const override
   {
     sj = this->m_SpatialJacobian;
   }
 
 
   /** Compute the spatial Hessian of the transformation. */
-  virtual void GetSpatialHessian(
+  void GetSpatialHessian(
     const InputPointType &,
-    SpatialHessianType & sh ) const
+    SpatialHessianType & sh ) const override
   {
     sh = this->m_SpatialHessian;
   }
 
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     jsj                    = this->m_JacobianOfSpatialJacobian;
     nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
@@ -250,11 +250,11 @@ public:
 
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
-  virtual void GetJacobianOfSpatialJacobian(
+  void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     sj                     = this->m_SpatialJacobian;
     jsj                    = this->m_JacobianOfSpatialJacobian;
@@ -263,10 +263,10 @@ public:
 
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType &,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     jsh                    = this->m_JacobianOfSpatialHessian;
     nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
@@ -276,11 +276,11 @@ public:
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
    */
-  virtual void GetJacobianOfSpatialHessian(
+  void GetJacobianOfSpatialHessian(
     const InputPointType &,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const override
   {
     sh                     = this->m_SpatialHessian;
     jsh                    = this->m_JacobianOfSpatialHessian;
@@ -317,7 +317,7 @@ protected:
   }
 
 
-  virtual ~AdvancedIdentityTransform() {}
+  ~AdvancedIdentityTransform() override {}
 
 private:
 

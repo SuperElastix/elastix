@@ -147,16 +147,16 @@ public:
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType  & derivative ) const;
+    DerivativeType  & derivative ) const override;
 
   /**  Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & derivative ) const;
+    MeasureType & Value, DerivativeType & derivative ) const override;
 
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  void Initialize( void ) override;
 
   /** Write gradient images to a files for debugging purposes. */
   void WriteGradientImagesToFiles( void ) const;
@@ -173,8 +173,8 @@ public:
 protected:
 
   GradientDifferenceImageToImageMetric();
-  virtual ~GradientDifferenceImageToImageMetric() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~GradientDifferenceImageToImageMetric() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Compute the range of the moved image gradients. */
   void ComputeMovedGradientRange( void ) const;

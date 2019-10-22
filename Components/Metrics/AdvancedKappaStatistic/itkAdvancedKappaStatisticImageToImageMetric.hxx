@@ -19,6 +19,7 @@
 #define _itkAdvancedKappaStatisticImageToImageMetric_hxx
 
 #include "itkAdvancedKappaStatisticImageToImageMetric.h"
+#include <cmath> // For abs.
 
 namespace itk
 {
@@ -42,7 +43,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   this->m_Complement         = true;
 
   // Multi-threading structs
-  this->m_KappaGetValueAndDerivativePerThreadVariables     = NULL;
+  this->m_KappaGetValueAndDerivativePerThreadVariables     = nullptr;
   this->m_KappaGetValueAndDerivativePerThreadVariablesSize = 0;
 
 } // end Constructor
@@ -76,18 +77,20 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
    * which has performance benefits for larger vector sizes.
    */
 
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   /** Only resize the array of structs when needed. */
-  if( this->m_KappaGetValueAndDerivativePerThreadVariablesSize != this->m_NumberOfThreads )
+  if( this->m_KappaGetValueAndDerivativePerThreadVariablesSize != numberOfThreads)
   {
     delete[] this->m_KappaGetValueAndDerivativePerThreadVariables;
-    this->m_KappaGetValueAndDerivativePerThreadVariables     = new AlignedKappaGetValueAndDerivativePerThreadStruct[ this->m_NumberOfThreads ];
-    this->m_KappaGetValueAndDerivativePerThreadVariablesSize = this->m_NumberOfThreads;
+    this->m_KappaGetValueAndDerivativePerThreadVariables     = new AlignedKappaGetValueAndDerivativePerThreadStruct[ numberOfThreads ];
+    this->m_KappaGetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Some initialization. */
   const SizeValueType       zero1 = NumericTraits< SizeValueType >::Zero;
   const DerivativeValueType zero2 = NumericTraits< DerivativeValueType >::Zero;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted = zero1;
     this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum               = zero1;
@@ -203,8 +206,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
       /** Update the intermediate values. */
       if( this->m_UseForegroundValue )
       {
-        const RealType diffFixed  = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
-        const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
+        const RealType diffFixed  = std::abs( fixedImageValue - this->m_ForegroundValue );
+        const RealType diffMoving = std::abs( movingImageValue - this->m_ForegroundValue );
         if( diffFixed < this->m_Epsilon ) { fixedForegroundArea++; }
         if( diffMoving < this->m_Epsilon ) { movingForegroundArea++; }
         if( diffFixed < this->m_Epsilon
@@ -479,8 +482,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads
-    = static_cast< unsigned long >( vcl_ceil( static_cast< double >( sampleContainerSize )
-    / static_cast< double >( this->m_NumberOfThreads ) ) );
+    = static_cast< unsigned long >( std::ceil( static_cast< double >( sampleContainerSize )
+    / static_cast< double >( Self::GetNumberOfWorkUnits() ) ) );
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end   = nrOfSamplesPerThreads * ( threadId + 1 );
@@ -578,10 +581,12 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
+  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
+
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted
     = this->m_KappaGetValueAndDerivativePerThreadVariables[ 0 ].st_NumberOfPixelsCounted;
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 1; i < numberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted
       += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_NumberOfPixelsCounted;
@@ -599,7 +604,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   const MeasureType zero         = NumericTraits< MeasureType >::Zero;
   MeasureType       areaSum      = zero;
   MeasureType       intersection = zero;
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
   {
     areaSum      += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaSum;
     intersection += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_AreaIntersection;
@@ -627,7 +632,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   {
     DerivativeType vecSum1 = this->m_KappaGetValueAndDerivativePerThreadVariables[ 0 ].st_DerivativeSum1;
     DerivativeType vecSum2 = this->m_KappaGetValueAndDerivativePerThreadVariables[ 0 ].st_DerivativeSum2;
-    for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+    for( ThreadIdType i = 1; i < numberOfThreads; ++i )
     {
       vecSum1 += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeSum1;
       vecSum2 += this->m_KappaGetValueAndDerivativePerThreadVariables[ i ].st_DerivativeSum2;
@@ -662,15 +667,15 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
 ::AccumulateDerivativesThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType     threadId    = infoStruct->ThreadID;
-  ThreadIdType     nrOfThreads = infoStruct->NumberOfThreads;
+  ThreadIdType     threadId    = infoStruct->WorkUnitID;
+  ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
 
   MultiThreaderAccumulateDerivativeType * temp
     = static_cast< MultiThreaderAccumulateDerivativeType * >( infoStruct->UserData );
 
   const unsigned int numPar  = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize = static_cast< unsigned int >(
-    vcl_ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
+    std::ceil( static_cast< double >( numPar ) / static_cast< double >( nrOfThreads ) ) );
   unsigned int jmin = threadId * subSize;
   unsigned int jmax = ( threadId + 1 ) * subSize;
   jmax = ( jmax > numPar ) ? numPar : jmax;
@@ -693,7 +698,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
       = temp->st_Coefficient1 * sum1 - temp->st_Coefficient2 * sum2;
   }
 
-  return ITK_THREAD_RETURN_VALUE;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end AccumulateDerivativesThreaderCallback()
 
@@ -720,8 +725,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
   bool usableFixedSample = false;
   if( this->m_UseForegroundValue )
   {
-    const RealType diffFixed  = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
-    const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
+    const RealType diffFixed  = std::abs( fixedImageValue - this->m_ForegroundValue );
+    const RealType diffMoving = std::abs( movingImageValue - this->m_ForegroundValue );
     if( diffFixed < this->m_Epsilon ) { fixedForegroundArea++; usableFixedSample = true; }
     if( diffMoving < this->m_Epsilon ) { movingForegroundArea++; }
     if( diffFixed < this->m_Epsilon
@@ -825,8 +830,8 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
         plusIndex[ i ]  = currIndex[ i ] + 1;
         const RealType minusVal  = static_cast< RealType >( this->m_MovingImage->GetPixel( minusIndex ) );
         const RealType plusVal   = static_cast< RealType >( this->m_MovingImage->GetPixel( plusIndex ) );
-        const RealType minusDiff = vnl_math_abs( minusVal - this->m_ForegroundValue );
-        const RealType plusDiff  = vnl_math_abs(  plusVal - this->m_ForegroundValue );
+        const RealType minusDiff = std::abs( minusVal - this->m_ForegroundValue );
+        const RealType plusDiff  = std::abs(  plusVal - this->m_ForegroundValue );
 
         /** Calculate the gradient. */
         if( minusDiff >= this->m_Epsilon && plusDiff < this->m_Epsilon )

@@ -126,7 +126,7 @@ public:
   /** Execute stuff before the actual registration:
    * \li Call InitializeTransform.
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Initialize Transform.
    * \li Set all parameters to zero.
@@ -141,7 +141,7 @@ protected:
   /** The constructor. */
   TranslationTransformElastix();
   /** The destructor. */
-  virtual ~TranslationTransformElastix() {}
+  ~TranslationTransformElastix() override {}
 
   TranslationTransformPointer m_TranslationTransform;
 

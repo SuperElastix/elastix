@@ -139,13 +139,13 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  void Initialize( void ) override;
 
   /**
    * Do some things before each resolution:
    * \li Set options for SelfHessian
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
@@ -153,7 +153,7 @@ protected:
   TransformBendingEnergyPenalty(){}
 
   /** The destructor. */
-  virtual ~TransformBendingEnergyPenalty() {}
+  ~TransformBendingEnergyPenalty() override {}
 
 private:
 

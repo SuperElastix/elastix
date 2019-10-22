@@ -138,21 +138,21 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  void Initialize( void ) override;
 
   /**
    * Do some things before each resolution:
    * \li Set CheckNumberOfSamples setting
    * \li Set UseNormalization setting
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   AdvancedMeanSquaresMetric(){}
   /** The destructor. */
-  virtual ~AdvancedMeanSquaresMetric() {}
+  ~AdvancedMeanSquaresMetric() override {}
 
 private:
 

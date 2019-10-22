@@ -127,7 +127,7 @@ AdvancedRigid2DTransform< TScalarType >
   vnl_matrix< TScalarType > r( 2, 2 );
   r = svd.U() * svd.V().transpose();
 
-  m_Angle = vcl_acos( r[ 0 ][ 0 ] );
+  m_Angle = std::acos( r[ 0 ][ 0 ] );
 
   if( r[ 1 ][ 0 ] < 0.0 )
   {
@@ -211,7 +211,7 @@ void
 AdvancedRigid2DTransform< TScalarType >
 ::SetAngleInDegrees( TScalarType angle )
 {
-  const TScalarType angleInRadians = angle * vcl_atan( 1.0 ) / 45.0;
+  const TScalarType angleInRadians = angle * std::atan( 1.0 ) / 45.0;
   this->SetAngle( angleInRadians );
 }
 
@@ -222,8 +222,8 @@ void
 AdvancedRigid2DTransform< TScalarType >
 ::ComputeMatrix( void )
 {
-  const double ca = vcl_cos( m_Angle );
-  const double sa = vcl_sin( m_Angle );
+  const double ca = std::cos( m_Angle );
+  const double sa = std::sin( m_Angle );
 
   MatrixType rotationMatrix;
   rotationMatrix[ 0 ][ 0 ] = ca; rotationMatrix[ 0 ][ 1 ] = -sa;
@@ -300,8 +300,8 @@ AdvancedRigid2DTransform< TScalarType >::GetJacobian( const InputPointType & p,
   j.Fill( 0.0 );
 
   // Some helper variables
-  const double ca = vcl_cos( this->GetAngle() );
-  const double sa = vcl_sin( this->GetAngle() );
+  const double ca = std::cos( this->GetAngle() );
+  const double sa = std::sin( this->GetAngle() );
   const double cx = this->GetCenter()[ 0 ];
   const double cy = this->GetCenter()[ 1 ];
 
@@ -328,8 +328,8 @@ AdvancedRigid2DTransform< TScalarType >
 ::PrecomputeJacobianOfSpatialJacobian( void )
 {
   /** The Jacobian of spatial Jacobian remains constant, so is precomputed */
-  const double                    ca  = vcl_cos( m_Angle );
-  const double                    sa  = vcl_sin( m_Angle );
+  const double                    ca  = std::cos( m_Angle );
+  const double                    sa  = std::sin( m_Angle );
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   jsj.resize( ParametersDimension );
   if( ParametersDimension > 1 )

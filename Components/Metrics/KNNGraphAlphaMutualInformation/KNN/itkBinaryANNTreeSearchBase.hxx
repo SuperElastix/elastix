@@ -32,7 +32,7 @@ BinaryANNTreeSearchBase< TBinaryTree >
 ::BinaryANNTreeSearchBase()
 {
   this->m_BinaryTreeAsITKANNType = 0;
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -79,7 +79,7 @@ BinaryANNTreeSearchBase< TBinaryTree >
     }
   }
 
-}   // end SetBinaryTree
+} // end SetBinaryTree
 
 
 /**

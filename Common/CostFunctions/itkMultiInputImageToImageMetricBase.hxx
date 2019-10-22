@@ -118,7 +118,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 
   this->m_InterpolatorsAreBSpline = false;
 
-}   // end Constructor()
+} // end Constructor()
 
 
 /** Set components. */
@@ -136,6 +136,7 @@ itkImplementationGetConstObjectMacro( MovingImage, MovingImageType );
 itkImplementationGetObjectMacro( MovingImageMask, MovingImageMaskType );
 itkImplementationGetObjectMacro( Interpolator, InterpolatorType );
 itkImplementationGetObjectMacro( FixedImageInterpolator, FixedImageInterpolatorType );
+
 
 /**
  * ************************ SetFixedImageRegion *************************
@@ -161,7 +162,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
     this->Modified();
   }
 
-}   // end SetFixedImageRegion()
+} // end SetFixedImageRegion()
 
 
 /**
@@ -181,7 +182,8 @@ const typename MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 
   return this->m_FixedImageRegionVector[ pos ];
 
-}   // end GetFixedImageRegion()
+} // end GetFixedImageRegion()
+
 
 /**
  * ****************** CheckForBSplineInterpolators **********************
@@ -217,9 +219,9 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
       itkDebugMacro( << "Interpolator " << i << " is NOT B-spline." );
       itkExceptionMacro( << "Interpolator " << i << " is NOT B-spline." );
     }
-  }   // end for-loop
+  } // end for-loop
 
-}   // end CheckForBSplineInterpolators()
+} // end CheckForBSplineInterpolators()
 
 
 /**
@@ -229,7 +231,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Connect the interpolators. */
   for( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
@@ -249,7 +251,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
   /** Call the superclass' implementation. */
   this->Superclass::Initialize();
 
-}   // end Initialize()
+} // end Initialize()
 
 
 /**
@@ -259,7 +261,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
-::InitializeImageSampler( void ) throw ( ExceptionObject )
+::InitializeImageSampler( void )
 {
   if( this->GetUseImageSampler() )
   {
@@ -288,7 +290,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
     }
   }
 
-}   // end InitializeImageSampler()
+} // end InitializeImageSampler()
 
 
 /**
@@ -317,7 +319,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
   return this->Superclass::EvaluateMovingImageValueAndDerivative(
     mappedPoint, movingImageValue, gradient );
 
-}   // end EvaluateMovingImageValueAndDerivative()
+} // end EvaluateMovingImageValueAndDerivative()
 
 
 /**
@@ -340,7 +342,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
     MovingImageMaskPointer movingImageMask = this->GetMovingImageMask( i );
     if( movingImageMask.IsNotNull() )
     {
-      inside &= movingImageMask->IsInside( mappedPoint );
+      inside &= movingImageMask->IsInsideInWorldSpace( mappedPoint );
     }
 
     /** If the point falls outside one mask, we can skip the rest. */
@@ -351,7 +353,7 @@ MultiInputImageToImageMetricBase< TFixedImage, TMovingImage >
   }
   return inside;
 
-}   // end IsInsideMovingMask()
+} // end IsInsideMovingMask()
 
 
 } // end namespace itk

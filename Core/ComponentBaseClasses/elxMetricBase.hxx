@@ -176,7 +176,7 @@ MetricBase< TElastix >
       if( tmp != "" )
       {
         const unsigned int nrOfThreads = atoi( tmp.c_str() );
-        thisAsAdvanced->SetNumberOfThreads( nrOfThreads );
+        thisAsAdvanced->SetNumberOfWorkUnits( nrOfThreads );
       }
     }
 
@@ -291,6 +291,7 @@ MetricBase< TElastix >
     currentSampler->GetInputImageRegion() );
   this->m_ExactMetricSampler->SetSampleGridSpacing(
     this->m_ExactMetricSampleGridSpacing );
+  this->m_ExactMetricSampler->Update();
   this->SetAdvancedMetricImageSampler( this->m_ExactMetricSampler );
 
   /** Compute the metric value on the full images. */

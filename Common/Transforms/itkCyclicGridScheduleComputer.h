@@ -85,7 +85,7 @@ public:
   typedef typename TransformType::ConstPointer TransformConstPointer;
 
   /** Compute the B-spline grid. */
-  virtual void ComputeBSplineGrid( void );
+  void ComputeBSplineGrid( void ) override;
 
 protected:
 
@@ -93,7 +93,7 @@ protected:
   CyclicGridScheduleComputer();
 
   /** The destructor. */
-  virtual ~CyclicGridScheduleComputer() {}
+  ~CyclicGridScheduleComputer() override {}
 
 private:
 

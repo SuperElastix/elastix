@@ -35,10 +35,10 @@ template< class TFixedImage, class TTransform >
 ComputeJacobianTerms< TFixedImage, TTransform >
 ::ComputeJacobianTerms()
 {
-  this->m_FixedImage     = NULL;
-  this->m_FixedImageMask = NULL;
-  this->m_Transform      = NULL;
-  this->m_FixedImageMask = NULL;
+  this->m_FixedImage     = nullptr;
+  this->m_FixedImageMask = nullptr;
+  this->m_Transform      = nullptr;
+  this->m_FixedImageMask = nullptr;
   this->m_UseScales      = false;
 
   this->m_MaxBandCovSize               = 0;
@@ -84,7 +84,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
   TrC = TrCC = maxJJ = maxJCJ = 0.0;
 
   /** Get samples. */
-  ImageSampleContainerPointer sampleContainer = 0;
+  ImageSampleContainerPointer sampleContainer; // default-constructed (null)
   SampleFixedImageForJacobianTerms( sampleContainer );
   const SizeValueType nrofsamples = sampleContainer->Size();
   const double        n           = static_cast< double >( nrofsamples );
@@ -179,7 +179,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
       for( unsigned int j = i; j < sizejacind; ++j )
       {
         const int jacindj = static_cast< int >( jacind[ j ] );
-        difHist[ static_cast< unsigned int >( vcl_abs( jacindj - jacindi ) ) ]++;
+        difHist[ static_cast< unsigned int >( std::abs( jacindj - jacindi ) ) ]++;
       }
     }
   }
@@ -196,7 +196,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
   difHist.resize( 0 );
 
   /** Compute the number of bands. */
-  const unsigned int bandcovsize = vnl_math_min( this->m_MaxBandCovSize,
+  const unsigned int bandcovsize = std::min( this->m_MaxBandCovSize,
     static_cast< unsigned int >( difHist2.size() ) );
 
   /** Maps parameterNrDifference (q-p) to colnr in bandcov. */
@@ -265,7 +265,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
             if( q >= p )
             {
               const double tempval = jactjac( pi, qi ) / n;
-              if( vcl_abs( tempval ) > 1e-14 )
+              if( std::abs( tempval ) > 1e-14 )
               {
                 const unsigned int bandindex = bandcovMap[ q - p ];
                 if( bandindex < bandcovsize )
@@ -303,7 +303,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
       if( q >= p )
       {
         const double tempval = jactjac( pi, qi ) / n;
-        if( vcl_abs( tempval ) > 1e-14 )
+        if( std::abs( tempval ) > 1e-14 )
         {
           const unsigned int bandindex = bandcovMap[ q - p ];
           if( bandindex < bandcovsize )
@@ -327,7 +327,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
     for( unsigned int b = 0; b < bandcovsize; ++b )
     {
       const double tempval = bandcov( p, b );
-      if( vcl_abs( tempval ) > 1e-14 )
+      if( std::abs( tempval ) > 1e-14 )
       {
         const unsigned int q = p + bandcovMap2[ b ];
         cov( p, q ) = tempval;
@@ -375,7 +375,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
   bool notfinished2 = cov.next();
   while( notfinished2 )
   {
-    TrCC        += vnl_math_sqr( cov.value() );
+    TrCC        += vnl_math::sqr( cov.value() );
     notfinished2 = cov.next();
   }
 
@@ -392,7 +392,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
    */
   maxJJ  = 0.0;
   maxJCJ = 0.0;
-  const double sqrt2 = vcl_sqrt( static_cast< double >( 2.0 ) );
+  const double sqrt2 = std::sqrt( static_cast< double >( 2.0 ) );
 
   JacobianType                       jacjjacj( outdim, outdim );
   JacobianType                       jacjcov( outdim, sizejacind );
@@ -420,14 +420,14 @@ ComputeJacobianTerms< TFixedImage, TTransform >
     }
 
     /** Compute 1st part of JJ: ||J_j||_F^2. */
-    double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
+    double JJ_j = vnl_math::sqr( jacj.frobenius_norm() );
 
     /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
     vnl_fastops::ABt( jacjjacj, jacj, jacj );
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
-    maxJJ = vnl_math_max( maxJJ, JJ_j );
+    maxJJ = std::max( maxJJ, JJ_j );
 
     /** Compute JCJ_j. */
     double JCJ_j = 0.0;
@@ -500,7 +500,7 @@ ComputeJacobianTerms< TFixedImage, TTransform >
     JCJ_j += 2.0 * sqrt2 * jacjcovjacj.frobenius_norm();
 
     /** Max_j [JCJ_j]. */
-    maxJCJ = vnl_math_max( maxJCJ, JCJ_j );
+    maxJCJ = std::max( maxJCJ, JCJ_j );
 
     /** Show progress 50-100%. */
     //progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );

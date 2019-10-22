@@ -1,0 +1,11 @@
+
+ADD_ELXCOMPONENT( AdaptiveStochasticVarianceReducedGradient
+ elxAdaptiveStochasticVarianceReducedGradient.h
+ elxAdaptiveStochasticVarianceReducedGradient.hxx
+ elxAdaptiveStochasticVarianceReducedGradient.cxx
+ itkAdaptiveStochasticVarianceReducedGradientOptimizer.h
+ itkAdaptiveStochasticVarianceReducedGradientOptimizer.cxx
+ itkStandardStochasticVarianceReducedGradientDescentOptimizer.cxx
+ itkStochasticVarianceReducedGradientDescentOptimizer.cxx
+)
+

@@ -123,6 +123,9 @@ public:
   typedef typename Superclass::ThreaderType     ThreaderType;
   typedef typename Superclass::ThreadInfoType   ThreadInfoType;
 
+  typedef typename Superclass::FixedImageMaskSpatialObject2Type    FixedImageMaskSpatialObject2Type;
+  typedef typename Superclass::MovingImageMaskSpatialObject2Type   MovingImageMaskSpatialObject2Type;
+
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );
@@ -134,21 +137,21 @@ public:
   /** Get the value for single valued optimizers. */
   virtual MeasureType GetValueSingleThreaded( const TransformParametersType & parameters ) const;
 
-  virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /** Get the derivatives of the match measure. */
-  virtual void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & derivative ) const;
+  void GetDerivative( const TransformParametersType & parameters,
+    DerivativeType & derivative ) const override;
 
   /** Get value and derivative. */
   void GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
-  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & value, DerivativeType & derivative ) const;
+  void GetValueAndDerivative( const TransformParametersType & parameters,
+    MeasureType & value, DerivativeType & derivative ) const override;
 
   /** Experimental feature: compute SelfHessian */
-  virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
+  void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const override;
 
   /** Default: 1.0 mm */
   itkSetMacro( SelfHessianSmoothingSigma, double );
@@ -166,7 +169,7 @@ public:
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation
    * \li Estimate the normalization factor, if asked for.  */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  void Initialize( void ) override;
 
   /** Set/Get whether to normalize the mean squares measure.
    * This divides the MeanSquares by a factor (range/10)^2,
@@ -188,9 +191,9 @@ public:
 protected:
 
   AdvancedMeanSquaresImageToImageMetric();
-  virtual ~AdvancedMeanSquaresImageToImageMetric(){}
+  ~AdvancedMeanSquaresImageToImageMetric() override{}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Protected Typedefs ******************/
 
@@ -235,17 +238,17 @@ protected:
     HessianType & H ) const;
 
   /** Get value for each thread. */
-  inline void ThreadedGetValue( ThreadIdType threadID );
+  inline void ThreadedGetValue( ThreadIdType threadID ) override;
 
   /** Gather the values from all threads. */
-  inline void AfterThreadedGetValue( MeasureType & value ) const;
+  inline void AfterThreadedGetValue( MeasureType & value ) const override;
 
   /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID ) override;
 
   /** Gather the values and derivatives from all threads. */
   inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const override;
 
 private:
 

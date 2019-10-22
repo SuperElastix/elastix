@@ -138,19 +138,19 @@ public:
    * \li Set the flag to subtract the mean.
    * \li Set the CheckNumberOfSamples setting.
    */
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  void Initialize( void ) override;
 
 protected:
 
   /** The constructor. */
   AdvancedNormalizedCorrelationMetric() {}
   /** The destructor. */
-  virtual ~AdvancedNormalizedCorrelationMetric() {}
+  ~AdvancedNormalizedCorrelationMetric() override {}
 
 private:
 

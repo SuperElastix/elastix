@@ -80,20 +80,20 @@ public:
   typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /**  Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & Derivative ) const;
+    DerivativeType & Derivative ) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const override;
 
 protected:
 
   CorrespondingPointsEuclideanDistancePointMetric();
-  virtual ~CorrespondingPointsEuclideanDistancePointMetric() {}
+  ~CorrespondingPointsEuclideanDistancePointMetric() override {}
 
 private:
 

@@ -94,7 +94,7 @@ protected:
   /** The constructor. */
   LinearResampleInterpolator() {}
   /** The destructor. */
-  virtual ~LinearResampleInterpolator() {}
+  ~LinearResampleInterpolator() override {}
 
 private:
 

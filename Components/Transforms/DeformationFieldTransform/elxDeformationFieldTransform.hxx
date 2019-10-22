@@ -52,7 +52,7 @@ DeformationFieldTransform< TElastix >
   /** Initialize to identity. */
   this->m_OriginalDeformationFieldDirection.SetIdentity();
 
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -128,7 +128,7 @@ DeformationFieldTransform< TElastix >::ReadFromFile( void )
   typedef itk::VectorLinearInterpolateImageFunction<
     DeformationFieldType, CoordRepType >  LinInterpolatorType;
 
-  typename InterpolatorType::Pointer interpolator = 0;
+  typename InterpolatorType::Pointer interpolator; // default-constructed (null)
   unsigned int interpolationOrder = 0;
   this->m_Configuration->ReadParameter( interpolationOrder,
     "DeformationFieldInterpolationOrder", 0 );
@@ -149,7 +149,7 @@ DeformationFieldTransform< TElastix >::ReadFromFile( void )
   this->m_DeformationFieldInterpolatingTransform->
   SetDeformationFieldInterpolator( interpolator );
 
-}   // end ReadFromFile()
+} // end ReadFromFile()
 
 
 /**
@@ -238,7 +238,7 @@ DeformationFieldTransform< TElastix >
     xl::xout[ "error" ] << excp << std::endl;
   }
 
-}   // end WriteToFile()
+} // end WriteToFile()
 
 
 } // end namespace elastix

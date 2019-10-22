@@ -92,7 +92,7 @@ protected:
   /** The constructor. */
   FixedSmoothingPyramid() {}
   /** The destructor. */
-  virtual ~FixedSmoothingPyramid() {}
+  ~FixedSmoothingPyramid() override {}
 
 private:
 

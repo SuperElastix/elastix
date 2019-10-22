@@ -111,7 +111,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
   }
   else
   {
-    m_Coefficients = NULL;
+    m_Coefficients = nullptr;
   }
 }
 
@@ -171,7 +171,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
   // perform interpolation
   double    interpolated = 0.0;
   IndexType coefficientIndex;
-  coefficientIndex[ ImageDimension - 1 ] = vnl_math_rnd( x[ ImageDimension - 1 ] );
+  coefficientIndex[ ImageDimension - 1 ] = vnl_math::rnd( x[ ImageDimension - 1 ] );
 
   // Step through eachpoint in the N-dimensional interpolation cube.
   for( unsigned int p = 0; p < m_MaxNumberInterpolationPoints; p++ )
@@ -233,7 +233,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
   derivativeValue[ ImageDimension - 1 ] = static_cast< OutputType >( 0.0 );
   double    tempValue;
   IndexType coefficientIndex;
-  coefficientIndex[ ImageDimension - 1 ] = vnl_math_rnd( x[ ImageDimension - 1 ] );
+  coefficientIndex[ ImageDimension - 1 ] = vnl_math::rnd( x[ ImageDimension - 1 ] );
   for( unsigned int n = 0; n < ImageDimension - 1; n++ )
   {
     derivativeValue[ n ] = 0.0;
@@ -523,7 +523,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
   {
     if( splineOrder & 1 )     // Use this index calculation for odd splineOrder
     {
-      indx = (long)vcl_floor( (float)x[ n ] ) - splineOrder / 2;
+      indx = (long)std::floor( (float)x[ n ] ) - splineOrder / 2;
       for( unsigned int k = 0; k <= splineOrder; k++ )
       {
         evaluateIndex[ n ][ k ] = indx++;
@@ -531,7 +531,7 @@ ReducedDimensionBSplineInterpolateImageFunction< TImageType, TCoordRep, TCoeffic
     }
     else                       // Use this index calculation for even splineOrder
     {
-      indx = (long)vcl_floor( (float)( x[ n ] + 0.5 ) ) - splineOrder / 2;
+      indx = (long)std::floor( (float)( x[ n ] + 0.5 ) ) - splineOrder / 2;
       for( unsigned int k = 0; k <= splineOrder; k++ )
       {
         evaluateIndex[ n ][ k ] = indx++;

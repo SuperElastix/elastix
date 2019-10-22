@@ -169,7 +169,7 @@ protected:
 
   ElastixFilter( void );
 
-  virtual void GenerateData( void ) ITK_OVERRIDE;
+  virtual void GenerateData( void ) override;
 
 private:
 
@@ -187,9 +187,6 @@ private:
 
   /** RemoveInputsOfType. */
   void RemoveInputsOfType( const DataObjectIdentifierType & inputName );
-
-  /** Let elastix handle input verification internally */
-  virtual void VerifyInputInformation( void ) ITK_OVERRIDE {};
 
   std::string m_InitialTransformParameterFileName;
   std::string m_FixedPointSetFileName;

@@ -107,12 +107,12 @@ protected:
   MultiResolutionImageRegistrationMethodWithFeatures(){}
 
   /** Destructor. */
-  virtual ~MultiResolutionImageRegistrationMethodWithFeatures() {}
+  ~MultiResolutionImageRegistrationMethodWithFeatures() override {}
 
   /** Function called by PreparePyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
-  virtual void CheckPyramids( void ) throw ( ExceptionObject );
+  void CheckPyramids( void ) override;
 
 private:
 

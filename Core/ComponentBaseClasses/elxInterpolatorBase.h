@@ -86,7 +86,7 @@ protected:
   /** The constructor. */
   InterpolatorBase() {}
   /** The destructor. */
-  virtual ~InterpolatorBase() {}
+  ~InterpolatorBase() override {}
 
 private:
 

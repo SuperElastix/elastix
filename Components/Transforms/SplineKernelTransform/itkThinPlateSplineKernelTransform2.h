@@ -97,7 +97,7 @@ protected:
   }
 
 
-  virtual ~ThinPlateSplineKernelTransform2() {}
+  ~ThinPlateSplineKernelTransform2() override {}
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited.
@@ -113,13 +113,13 @@ protected:
    * \f[ r(x) = \sqrt{ x_1^2 + x_2^2 + x_3^2 }  \f]
    * I = identity matrix.
    */
-  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const;
+  void ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const override;
 
   /** Compute the contribution of the landmarks weighted by the kernel function
    * to the global deformation of the space.
    */
-  virtual void ComputeDeformationContribution(
-    const InputPointType & inputPoint, OutputPointType & result ) const;
+  void ComputeDeformationContribution(
+    const InputPointType & inputPoint, OutputPointType & result ) const override;
 
 private:
 

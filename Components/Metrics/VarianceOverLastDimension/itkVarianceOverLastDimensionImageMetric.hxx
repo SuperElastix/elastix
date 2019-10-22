@@ -52,7 +52,7 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();
@@ -304,7 +304,7 @@ VarianceOverLastDimensionImageMetric< TFixedImage, TMovingImage >
         sumValues        += movingImageValue;
         sumValuesSquared += movingImageValue * movingImageValue;
       } // end if sampleOk
-    }   // end for loop over last dimension
+    } // end for loop over last dimension
 
     if( numSamplesOk > 0 )
     {

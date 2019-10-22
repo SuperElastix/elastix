@@ -138,9 +138,9 @@ public:
 protected:
 
   TranslationTransformInitializer();
-  ~TranslationTransformInitializer(){}
+  ~TranslationTransformInitializer() override{}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

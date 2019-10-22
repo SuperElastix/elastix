@@ -45,7 +45,7 @@ RSGDEachParameterApart< TElastix >::BeforeRegistration( void )
   xl::xout[ "iteration" ][ "3:StepSize" ] << std::showpoint << std::fixed;
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
 
-}   // end BeforeRegistration
+} // end BeforeRegistration
 
 
 /**
@@ -97,7 +97,7 @@ RSGDEachParameterApart< TElastix >
     "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfIterations( maximumNumberOfIterations );
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution
 
 
 /**
@@ -114,7 +114,7 @@ RSGDEachParameterApart< TElastix >
   xl::xout[ "iteration" ][ "3:StepSize" ] << this->GetCurrentStepLength();
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << this->GetGradientMagnitude();
 
-}   // end AfterEachIteration
+} // end AfterEachIteration
 
 
 /**
@@ -169,7 +169,7 @@ RSGDEachParameterApart< TElastix >
 
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-}   // end AfterEachResolution
+} // end AfterEachResolution
 
 
 /**
@@ -185,7 +185,7 @@ RSGDEachParameterApart< TElastix >
   double bestValue = this->GetValue();
   elxout << std::endl << "Final metric value  = " << bestValue  << std::endl;
 
-}   // end AfterRegistration
+} // end AfterRegistration
 
 
 /**
@@ -218,7 +218,7 @@ RSGDEachParameterApart< TElastix >
 
   /** \todo to optimizerbase? */
 
-}   // end SetInitialPosition
+} // end SetInitialPosition
 
 
 } // end namespace elastix

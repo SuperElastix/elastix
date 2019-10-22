@@ -312,7 +312,7 @@ CyclicBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -388,7 +388,7 @@ CyclicBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
       /** Update the spatial Jacobian sj. */
       sj( dim, i ) += sum;
     } // end for dim
-  }   // end for i
+  } // end for i
 
   /** Take into account grid spacing and direction cosines. */
   sj = sj * this->m_PointToIndexMatrix;
@@ -452,7 +452,7 @@ CyclicBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
       ++iterator;
       ++mu;
     } // end while
-  }   // end for (supportregions)
+  } // end for (supportregions)
 
 } // end ComputeNonZeroJacobianIndices()
 

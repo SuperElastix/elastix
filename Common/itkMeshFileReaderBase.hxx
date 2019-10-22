@@ -71,7 +71,7 @@ MeshFileReaderBase< TOutputMesh >
   // region = ?
   //output->SetLargestPossibleRegion(region);
 
-}   // end GenerateOutputInformation()
+} // end GenerateOutputInformation()
 
 
 /**

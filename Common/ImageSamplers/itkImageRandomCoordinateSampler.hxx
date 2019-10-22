@@ -67,7 +67,7 @@ ImageRandomCoordinateSampler< TInputImage >
   /** Get handles to the input image, output sample container, and interpolator. */
   InputImageConstPointer inputImage = this->GetInput();
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
-  typename InterpolatorType::Pointer interpolator            = this->GetInterpolator();
+  typename InterpolatorType::Pointer interpolator            = this->GetModifiableInterpolator();
 
   /** Set up the interpolator. */
   interpolator->SetInputImage( inputImage ); // only once?
@@ -115,7 +115,7 @@ ImageRandomCoordinateSampler< TInputImage >
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if no mask
+  } // end if no mask
   else
   {
     /** Update the mask. */
@@ -157,14 +157,14 @@ ImageRandomCoordinateSampler< TInputImage >
 
       }
       while( !interpolator->IsInsideBuffer( sampleContIndex )
-        || !mask->IsInside( samplePoint ) );
+        || !mask->IsInsideInWorldSpace( samplePoint ) );
 
       /** Compute the value at the point. */
       sampleValue = static_cast< ImageSampleValueType >(
         this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
     } // end for loop
-  }   // end if mask
+  } // end if mask
 
 } // end GenerateData()
 
@@ -179,7 +179,7 @@ ImageRandomCoordinateSampler< TInputImage >
 ::BeforeThreadedGenerateData( void )
 {
   /** Set up the interpolator. */
-  typename InterpolatorType::Pointer interpolator = this->GetInterpolator();
+  typename InterpolatorType::Pointer interpolator = this->GetModifiableInterpolator();
   interpolator->SetInputImage( this->GetInput() ); // only once per resolution?
 
   /** Clear the random number list. */
@@ -210,8 +210,8 @@ ImageRandomCoordinateSampler< TInputImage >
 
   /** Initialize variables needed for threads. */
   this->m_ThreaderSampleContainer.clear();
-  this->m_ThreaderSampleContainer.resize( this->GetNumberOfThreads() );
-  for( std::size_t i = 0; i < this->GetNumberOfThreads(); i++ )
+  this->m_ThreaderSampleContainer.resize( this->GetNumberOfWorkUnits() );
+  for( std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++ )
   {
     this->m_ThreaderSampleContainer[ i ] = ImageSampleContainerType::New();
   }
@@ -239,12 +239,12 @@ ImageRandomCoordinateSampler< TInputImage >
   InputImageConstPointer inputImage = this->GetInput();
 
   /** Figure out which samples to process. */
-  unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfThreads();
+  unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
   unsigned long sampleStart = threadId * chunkSize * InputImageDimension;
-  if( threadId == this->GetNumberOfThreads() - 1 )
+  if( threadId == this->GetNumberOfWorkUnits() - 1 )
   {
     chunkSize = this->GetNumberOfSamples()
-      - ( ( this->GetNumberOfThreads() - 1 ) * chunkSize );
+      - ( ( this->GetNumberOfWorkUnits() - 1 ) * chunkSize );
   }
 
   /** Get a reference to the output and reserve memory for it. */
@@ -338,7 +338,7 @@ ImageRandomCoordinateSampler< TInputImage >
     maxSmallestContIndex[ i ] = largestImageContIndex[ i ] - sampleRegionSize[ i ];
 
     /** Make sure it is larger than the lower bound. */
-    maxSmallestContIndex[ i ] = vnl_math_max( maxSmallestContIndex[ i ], smallestImageContIndex[ i ] );
+    maxSmallestContIndex[ i ] = std::max( maxSmallestContIndex[ i ], smallestImageContIndex[ i ] );
   }
 
   this->GenerateRandomCoordinate( smallestImageContIndex, maxSmallestContIndex, smallestContIndex );

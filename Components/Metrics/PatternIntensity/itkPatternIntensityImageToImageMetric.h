@@ -145,22 +145,22 @@ public:
     MovingImageType::ImageDimension );
 
   /** Get the value for single valued optimizers. */
-  virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /** Get the derivatives of the match measure. */
-  virtual void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & derivative ) const;
+  void GetDerivative( const TransformParametersType & parameters,
+    DerivativeType & derivative ) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const;
+  void GetValueAndDerivative( const TransformParametersType & parameters,
+    MeasureType & Value, DerivativeType & Derivative ) const override;
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation
    * \li Estimate the normalization factor, if asked for.
    */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  void Initialize( void ) override;
 
   /** Set/Get Scales  */
   itkSetMacro( Scales, ScalesType );
@@ -177,8 +177,8 @@ public:
 protected:
 
   PatternIntensityImageToImageMetric();
-  virtual ~PatternIntensityImageToImageMetric() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~PatternIntensityImageToImageMetric() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Compute the pattern intensity fixed image*/
   MeasureType ComputePIFixed( void ) const;

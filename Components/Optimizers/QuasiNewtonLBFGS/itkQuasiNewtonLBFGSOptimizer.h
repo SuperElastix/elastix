@@ -34,7 +34,7 @@ namespace itk
  *
  * The optimizer solves the unconstrained minimization problem
  *
- *      \f[ \min F(x), \quad x = ( x_1,x_2,\ldots,x_N ), \f]
+ *   \f[ \min F(x), \quad x = ( x_1,x_2,\ldots,x_N ), \f]
  *
  * using the limited memory BFGS method. The routine is especially
  * effective on problems involving a large number of variables. In
@@ -92,7 +92,7 @@ public:
     Unknown
   }                                   StopConditionType;
 
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   virtual void ResumeOptimization( void );
 
@@ -108,7 +108,7 @@ public:
 
   /** Setting: the line search optimizer */
   itkSetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
-  itkGetObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
+  itkGetModifiableObjectMacro( LineSearchOptimizer, LineSearchOptimizerType );
 
   /** Setting: the maximum number of iterations */
   itkGetConstMacro( MaximumNumberOfIterations, unsigned long );
@@ -126,16 +126,16 @@ public:
   /** Setting: the memory. The number of iterations that are used
    * to estimate the Hessian. 5 by default. 0 results in (normalised) gradient
    * descent search directions */
-  itkSetClampMacro( Memory, unsigned int, 0, NumericTraits< unsigned int >::max() );
+  itkSetMacro( Memory, unsigned int );
   itkGetConstMacro( Memory, unsigned int );
 
 protected:
 
   QuasiNewtonLBFGSOptimizer();
-  virtual ~QuasiNewtonLBFGSOptimizer(){}
+  ~QuasiNewtonLBFGSOptimizer() override{}
 
   // \todo: should be implemented
-  void PrintSelf( std::ostream & os, Indent indent ) const {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override {}
 
   DerivativeType    m_CurrentGradient;
   MeasureType       m_CurrentValue;

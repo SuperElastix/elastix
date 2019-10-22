@@ -114,18 +114,18 @@ public:
 
   /** Methods to set parameters and print output at different stages
    * in the registration process.*/
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
   /** Override the SetInitialPosition.*/
-  virtual void SetInitialPosition( const ParametersType & param );
+  void SetInitialPosition( const ParametersType & param ) override;
 
   /** Check if the optimizer is currently Bracketing the minimum, or is
    * optimizing along a line */
@@ -144,7 +144,7 @@ public:
 protected:
 
   ConjugateGradientFRPR();
-  virtual ~ConjugateGradientFRPR() {}
+  ~ConjugateGradientFRPR() override {}
 
   /** To store the latest computed derivative's magnitude */
   double m_CurrentDerivativeMagnitude;
@@ -180,8 +180,8 @@ protected:
    * This implementation sets the LineBracketing flag to 'true', calls the
    * superclass' implementation, stores bx as the current step length,
    * invokes an iteration event, and sets the LineBracketing flag to 'false' */
-  virtual void   LineBracket( double * ax, double * bx, double * cx,
-    double * fa, double * fb, double * fc );
+  void   LineBracket( double * ax, double * bx, double * cx,
+    double * fa, double * fb, double * fc ) override;
 
   /** Given a bracketing triple of points and their function values, returns
    * a bounded extreme.  These values are in parameter space, along the
@@ -192,9 +192,9 @@ protected:
    * This implementation sets the LineOptimizing flag to 'true', calls the
    * the superclass's implementation, stores extX as the current step length,
    * and sets the LineOptimizing flag to 'false' again. */
-  virtual void   BracketedLineOptimize( double ax, double bx, double cx,
+  void   BracketedLineOptimize( double ax, double bx, double cx,
     double fa, double fb, double fc,
-    double * extX, double * extVal );
+    double * extX, double * extVal ) override;
 
   /**
    * store the line search direction's (xi) magnitude and call the superclass'

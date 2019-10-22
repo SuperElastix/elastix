@@ -37,7 +37,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
   this->m_InternalContainer     = 0;
   this->m_InternalContainerSize = 0;
   this->m_ActualSize            = 0;
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -48,7 +48,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
 ::~ListSampleCArray()
 {
   this->DeallocateInternalContainer();
-}   // end Destructor
+} // end Destructor
 
 
 /**
@@ -68,7 +68,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
   }
   itkExceptionMacro( << "The requested index is larger than the container size." );
 
-}   // end GetMeasurementVector()
+} // end GetMeasurementVector()
 
 
 /**
@@ -92,7 +92,7 @@ const typename ListSampleCArray< TMeasurementVector, TInternalValue >
   /** dummy return; */
   return this->m_TemporaryMeasurementVector;
 
-}   // end GetMeasurementVector()
+} // end GetMeasurementVector()
 
 /**
  * ************************ SetMeasurement *************************
@@ -108,7 +108,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
   {
     this->m_InternalContainer[ id ][ dim ] = value;
   }
-}   // end SetMeasurement()
+} // end SetMeasurement()
 
 
 /**
@@ -130,7 +130,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
     }
     // or maybe with iterators
   }
-}   // end SetMeasurementVector()
+} // end SetMeasurementVector()
 
 
 /**
@@ -161,7 +161,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
     this->Modified();
   }
 
-}   // end Resize()
+} // end Resize()
 
 
 /**
@@ -178,7 +178,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
     this->m_ActualSize = size;
     this->Modified();
   }
-}   // end SetActualSize()
+} // end SetActualSize()
 
 
 /**
@@ -191,7 +191,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
 ::GetActualSize( void )
 {
   return this->m_ActualSize;
-}   // end GetActualSize()
+} // end GetActualSize()
 
 
 /**
@@ -204,7 +204,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
 ::Clear( void )
 {
   this->Resize( 0 );
-}   // end Clear()
+} // end Clear()
 
 
 /**
@@ -222,7 +222,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
   {
     this->m_InternalContainer[ i ] = &( p[ i * dim ] );
   }
-}   // end AllocateInternalContainer()
+} // end AllocateInternalContainer()
 
 
 /**
@@ -238,9 +238,9 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
   {
     delete[] this->m_InternalContainer[ 0 ];
     delete[] this->m_InternalContainer;
-    this->m_InternalContainer = NULL;
+    this->m_InternalContainer = nullptr;
   }
-}   // end DeallocateInternalContainer()
+} // end DeallocateInternalContainer()
 
 
 /**
@@ -260,7 +260,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
   {
     return itk::NumericTraits< AbsoluteFrequencyType >::Zero;
   }
-}   // end GetFrequency()
+} // end GetFrequency()
 
 
 /**
@@ -277,7 +277,7 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
   os << indent << "Internal Data Container: "
      << &m_InternalContainer << std::endl;
 
-}   // end PrintSelf()
+} // end PrintSelf()
 
 
 } // end of namespace Statistics

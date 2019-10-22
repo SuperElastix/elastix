@@ -45,7 +45,7 @@ RegularStepGradientDescent< TElastix >::BeforeRegistration( void )
   xl::xout[ "iteration" ][ "3:StepSize" ] << std::showpoint << std::fixed;
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
 
-}   // end BeforeRegistration
+} // end BeforeRegistration
 
 
 /**
@@ -68,13 +68,13 @@ RegularStepGradientDescent< TElastix >
   this->SetGradientMagnitudeTolerance( minGradientMagnitude );
 
   /** Set the MaximumStepLength.*/
-  double maxStepLength = 16.0 / vcl_pow( 2.0, static_cast< int >( level ) );
+  double maxStepLength = 16.0 / std::pow( 2.0, static_cast< int >( level ) );
   this->m_Configuration->ReadParameter( maxStepLength,
     "MaximumStepLength", this->GetComponentLabel(), level, 0 );
   this->SetMaximumStepLength( maxStepLength );
 
   /** Set the MinimumStepLength.*/
-  double minStepLength = 0.5 / vcl_pow( 2.0, static_cast< int >( level ) );
+  double minStepLength = 0.5 / std::pow( 2.0, static_cast< int >( level ) );
   this->m_Configuration->ReadParameter( minStepLength,
     "MinimumStepLength", this->GetComponentLabel(), level, 0 );
   this->SetMinimumStepLength( minStepLength );
@@ -94,7 +94,7 @@ RegularStepGradientDescent< TElastix >
     "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfIterations( maximumNumberOfIterations );
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution
 
 
 /**
@@ -110,7 +110,7 @@ RegularStepGradientDescent< TElastix >
   xl::xout[ "iteration" ][ "2:Metric" ] << this->GetValue();
   xl::xout[ "iteration" ][ "3:StepSize" ] << this->GetCurrentStepLength();
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << this->GetGradient().magnitude();
-}   // end AfterEachIteration
+} // end AfterEachIteration
 
 
 /**
@@ -161,7 +161,7 @@ RegularStepGradientDescent< TElastix >
 
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-}   // end AfterEachResolution
+} // end AfterEachResolution
 
 
 /**
@@ -177,7 +177,7 @@ RegularStepGradientDescent< TElastix >
   double bestValue = this->GetValue();
   elxout << std::endl << "Final metric value  = " << bestValue  << std::endl;
 
-}   // end AfterRegistration
+} // end AfterRegistration
 
 
 /**
@@ -210,7 +210,7 @@ RegularStepGradientDescent< TElastix >
 
   /** \todo to optimizerbase? */
 
-}   // end SetInitialPosition
+} // end SetInitialPosition
 
 
 } // end namespace elastix

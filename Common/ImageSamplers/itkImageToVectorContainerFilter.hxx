@@ -227,7 +227,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
   ThreadStruct str;
   str.Filter = this;
 
-  this->GetMultiThreader()->SetNumberOfThreads( this->GetNumberOfThreads() );
+  this->GetMultiThreader()->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
   this->GetMultiThreader()->SetSingleMethod( this->ThreaderCallback, &str );
 
   // multithread the execution
@@ -275,10 +275,10 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 ::ThreaderCallback( void * arg )
 {
   ThreadStruct * str;
-  ThreadIdType   threadId    = ( (MultiThreader::ThreadInfoStruct *)( arg ) )->ThreadID;
-  ThreadIdType   threadCount = ( (MultiThreader::ThreadInfoStruct *)( arg ) )->NumberOfThreads;
+  ThreadIdType   threadId    = ( (PlatformMultiThreader::WorkUnitInfo *)( arg ) )->WorkUnitID;
+  ThreadIdType   threadCount = ( (PlatformMultiThreader::WorkUnitInfo *)( arg ) )->NumberOfWorkUnits;
 
-  str = (ThreadStruct *)( ( (MultiThreader::ThreadInfoStruct *)( arg ) )->UserData );
+  str = (ThreadStruct *)( ( (PlatformMultiThreader::WorkUnitInfo *)( arg ) )->UserData );
 
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
@@ -296,7 +296,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
   //   few threads idle.
   //   }
 
-  return ITK_THREAD_RETURN_VALUE;
+  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end ThreaderCallback()
 

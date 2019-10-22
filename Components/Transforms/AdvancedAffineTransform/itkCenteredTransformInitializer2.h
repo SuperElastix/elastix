@@ -37,7 +37,7 @@
 #include "itkObject.h"
 #include "itkObjectFactory.h"
 #include "itkSpatialObject.h"
-#include "itkImageMomentsCalculator.h"
+#include "itkAdvancedImageMomentsCalculator.h"
 
 #include <iostream>
 
@@ -128,9 +128,9 @@ public:
   typedef typename MovingImageMaskType::ConstPointer   MovingImageMaskPointer;
 
   /** Moment calculators */
-  typedef ImageMomentsCalculator< FixedImageType >
+  typedef AdvancedImageMomentsCalculator< FixedImageType >
     FixedImageCalculatorType;
-  typedef ImageMomentsCalculator< MovingImageType >
+  typedef AdvancedImageMomentsCalculator< MovingImageType >
     MovingImageCalculatorType;
 
   typedef typename FixedImageCalculatorType::Pointer
@@ -147,6 +147,8 @@ public:
   /** Vector type. */
   typedef typename TransformType::OutputVectorType OutputVectorType;
 
+  typedef typename FixedImageType::PixelType  InputPixelType;
+
   /** Set the transform to be initialized */
   itkSetObjectMacro( Transform,   TransformType   );
 
@@ -159,6 +161,11 @@ public:
   /** Mask support. */
   itkSetConstObjectMacro( FixedImageMask, FixedImageMaskType  );
   itkSetConstObjectMacro( MovingImageMask, MovingImageMaskType );
+
+  /** Settings for MomentsCalculator. */
+  itkSetMacro( NumberOfSamplesForCenteredTransformInitialization, SizeValueType );
+  itkSetMacro( LowerThresholdForCenterGravity, InputPixelType );
+  itkSetMacro( CenterOfGravityUsesLowerThreshold, bool );
 
   /** Initialize the transform using data from the images */
   virtual void InitializeTransform();
@@ -177,11 +184,16 @@ public:
 protected:
 
   CenteredTransformInitializer2();
-  ~CenteredTransformInitializer2() {}
+  ~CenteredTransformInitializer2() override {}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
-  itkGetObjectMacro( Transform, TransformType );
+  itkGetModifiableObjectMacro( Transform, TransformType );
+
+  /** Settings for MomentsCalculator. */
+  SizeValueType  m_NumberOfSamplesForCenteredTransformInitialization;
+  InputPixelType m_LowerThresholdForCenterGravity;
+  bool           m_CenterOfGravityUsesLowerThreshold;
 
 private:
 

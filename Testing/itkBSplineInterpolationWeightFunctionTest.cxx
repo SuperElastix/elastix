@@ -67,7 +67,7 @@ main( int argc, char * argv[] )
 
   /** Create and fill a continuous index. */
   ContinuousIndexType2D cindex;
-  cindex.Fill( 0.1 );
+  cindex.Fill( 0.1f );
 
   /** Run evaluate for the original ITK implementation. */
   WeightsType2D weights2D = weightFunction2D->Evaluate( cindex );
@@ -90,9 +90,9 @@ main( int argc, char * argv[] )
   double error = 0.0;
   for( unsigned int i = 0; i < weights2D.Size(); ++i )
   {
-    error += vnl_math_sqr( weights2D[ i ] - weights2_2D[ i ] );
+    error += vnl_math::sqr( weights2D[ i ] - weights2_2D[ i ] );
   }
-  error = vcl_sqrt( error );
+  error = std::sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
   if( error > distance )
@@ -165,7 +165,7 @@ main( int argc, char * argv[] )
 
   /** Create and fill a continuous index. */
   ContinuousIndexType3D cindex3D;
-  cindex3D.Fill( 0.1 );
+  cindex3D.Fill( 0.1f );
 
   /** Run evaluate for the original ITK implementation. */
   WeightsType3D weights3D = weightFunction3D->Evaluate( cindex3D );
@@ -189,9 +189,9 @@ main( int argc, char * argv[] )
   error = 0.0;
   for( unsigned int i = 0; i < weights3D.Size(); ++i )
   {
-    error += vnl_math_sqr( weights3D[ i ] - weights2_3D[ i ] );
+    error += vnl_math::sqr( weights3D[ i ] - weights2_3D[ i ] );
   }
-  error = vcl_sqrt( error );
+  error = std::sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
   if( error > distance )
@@ -280,7 +280,7 @@ main( int argc, char * argv[] )
   }
 
   if( weight2Function2D->GetNumberOfWeights()
-    != static_cast< unsigned long >( vcl_pow(
+    != static_cast< unsigned long >( std::pow(
     static_cast< float >( SplineOrder + 1 ), 2.0f ) ) )
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;

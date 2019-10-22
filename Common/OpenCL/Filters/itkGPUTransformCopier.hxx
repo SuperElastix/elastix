@@ -48,8 +48,8 @@ template< typename TTypeList, typename NDimensions, typename TTransform, typenam
 GPUTransformCopier< TTypeList, NDimensions, TTransform, TOutputTransformPrecisionType >
 ::GPUTransformCopier()
 {
-  this->m_InputTransform        = NULL;
-  this->m_Output                = NULL;
+  this->m_InputTransform        = nullptr;
+  this->m_Output                = nullptr;
   this->m_InternalTransformTime = 0;
   this->m_ExplicitMode          = true;
 }

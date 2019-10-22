@@ -25,8 +25,8 @@ namespace elastix
 {
 
 /**
-* ******************* BeforeEachResolution ******************
-*/
+ * ******************* BeforeEachResolution ******************
+ */
 
 template< class TElastix >
 void
@@ -73,11 +73,11 @@ MultiInputRandomCoordinateSampler< TElastix >
     for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
       sampleRegionSize[ i ] = ( fixedImageSize[ i ] - 1 ) * fixedImageSpacing[ i ];
-      maxthird              = vnl_math_max( maxthird, sampleRegionSize[ i ] / 3.0 );
+      maxthird              = std::max( maxthird, sampleRegionSize[ i ] / 3.0 );
     }
     for( unsigned int i = 0; i < InputImageDimension; ++i )
     {
-      sampleRegionSize[ i ] = vnl_math_min( maxthird, sampleRegionSize[ i ] );
+      sampleRegionSize[ i ] = std::min( maxthird, sampleRegionSize[ i ] );
     }
 
     /** Read user's choice. */
@@ -90,7 +90,7 @@ MultiInputRandomCoordinateSampler< TElastix >
     this->SetSampleRegionSize( sampleRegionSize );
   }
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix

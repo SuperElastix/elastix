@@ -168,19 +168,19 @@ public:
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  void Initialize( void ) override;
 
   /**
    * Do some things before registration:
    * \li Load and set the pointsets.
    */
-  virtual int BeforeAllBase( void );
+  int BeforeAllBase( void ) override;
 
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
   /** Function to read the corresponding points. */
   unsigned int ReadMesh(
@@ -192,14 +192,14 @@ public:
   unsigned int ReadTransformixPoints( const std::string & filename, typename MeshType::Pointer & mesh );
 
   /** Overwrite to silence warning. */
-  virtual void SelectNewSamples( void ){}
+  void SelectNewSamples( void ) override{}
 
 protected:
 
   /** The constructor. */
   PolydataDummyPenalty();
   /** The destructor. */
-  virtual ~PolydataDummyPenalty() {}
+  ~PolydataDummyPenalty() override {}
 
 private:
 

@@ -153,7 +153,7 @@ main( int argc, char * argv[] )
 
   /** Declare variables. */
   InputPointType inputPoint;
-  inputPoint.Fill( 4.1 );
+  inputPoint.Fill( 4.1f );
   JacobianType                  jacobian;
   SpatialJacobianType           spatialJacobian;
   SpatialHessianType            spatialHessian;
@@ -338,7 +338,7 @@ main( int argc, char * argv[] )
   {
     differenceNorm += ( opp1[ i ] - opp2[ i ] ) * ( opp1[ i ] - opp2[ i ] );
   }
-  if( vcl_sqrt( differenceNorm ) > 1e-10 )
+  if( std::sqrt( differenceNorm ) > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline TransformPoint() returning incorrect result." << std::endl;
     return 1;
@@ -356,11 +356,11 @@ main( int argc, char * argv[] )
   {
     for( unsigned int j = 0; j < Dimension; j++ )
     {
-      jacDiff += vnl_math_sqr( jacobianElastix[ j ][ i ] - jacobianITK[ j ][ nzji[ i ] ] );
+      jacDiff += vnl_math::sqr( jacobianElastix[ j ][ i ] - jacobianITK[ j ][ nzji[ i ] ] );
     }
   }
   //if ( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
-  if( vcl_sqrt( jacDiff ) > 1e-10 )
+  if( std::sqrt( jacDiff ) > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline GetJacobian() returning incorrect result." << std::endl;
     return 1;
@@ -391,27 +391,27 @@ main( int argc, char * argv[] )
   //for( unsigned int i = 0; i < Dimension; i++ ) {
   //  for( unsigned int j = 0; j < Dimension; j++ ) {
   //    for( unsigned int k = 0; k < Dimension; k++ ) {
-  //      shDiff += vnl_math_sqr( spatialHessian1[i][j][k] - spatialHessian2[i][j][k] );
+  //      shDiff += vnl_math::sqr( spatialHessian1[i][j][k] - spatialHessian2[i][j][k] );
   //    } } }
   //double jshDiff = 0.0;
   //for( unsigned int mu = 0; mu < nzji.size(); mu++ ) {
   //  for( unsigned int i = 0; i < Dimension; i++ ) {
   //    for( unsigned int j = 0; j < Dimension; j++ ) {
   //      for( unsigned int k = 0; k < Dimension; k++ ) {
-  //        jshDiff += vnl_math_sqr( jacobianOfSpatialHessian1[mu][i][j][k] - jacobianOfSpatialHessian2[mu][i][j][k] );
+  //        jshDiff += vnl_math::sqr( jacobianOfSpatialHessian1[mu][i][j][k] - jacobianOfSpatialHessian2[mu][i][j][k] );
   //      } } } }
-  //if ( vcl_sqrt( shDiff ) > 1e-8 )
+  //if ( std::sqrt( shDiff ) > 1e-8 )
   //{
   //  std::cerr << "ERROR: Advanced B-spline GetJacobianOfSpatialHessian_opt() "
   //    << "returning incorrect spatial Hessian result: MSD = "
-  //    << vcl_sqrt( shDiff ) << std::endl;
+  //    << std::sqrt( shDiff ) << std::endl;
   //  return 1;
   //}
-  //if ( vcl_sqrt( jshDiff ) > 1e-8 )
+  //if ( std::sqrt( jshDiff ) > 1e-8 )
   //{
   //  std::cerr << "ERROR: Advanced B-spline GetJacobianOfSpatialHessian_opt() "
   //    << "returning incorrect Jacobian of spatial Hessian result: MSD = "
-  //    << vcl_sqrt( jshDiff ) << std::endl;
+  //    << std::sqrt( jshDiff ) << std::endl;
   //  return 1;
   //}
 

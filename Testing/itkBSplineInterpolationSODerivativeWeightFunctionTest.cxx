@@ -62,8 +62,8 @@ main( int argc, char * argv[] )
    * NOTE: don't change this, since the hard-coded ground truth depends on this.
    */
   ContinuousIndexType cindex;
-  cindex[ 0 ] =  3.1;
-  cindex[ 1 ] = -2.2;
+  cindex[ 0 ] =  3.1f;
+  cindex[ 1 ] = -2.2f;
   soWeightFunction->SetDerivativeDirections( 0, 1 );
 
   /** Run evaluate for the second order derivative. */
@@ -121,9 +121,9 @@ main( int argc, char * argv[] )
   double error = 0.0;
   for( unsigned int i = 0; i < soWeights.Size(); ++i )
   {
-    error += vnl_math_sqr( soWeights[ i ] - trueSOWeights[ i ] );
+    error += vnl_math::sqr( soWeights[ i ] - trueSOWeights[ i ] );
   }
-  error = vcl_sqrt( error );
+  error = std::sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
   if( error > distance )
@@ -210,9 +210,9 @@ main( int argc, char * argv[] )
   error = 0.0;
   for( unsigned int i = 0; i < soWeights.Size(); ++i )
   {
-    error += vnl_math_sqr( soWeights[ i ] - trueSOWeights[ i ] );
+    error += vnl_math::sqr( soWeights[ i ] - trueSOWeights[ i ] );
   }
-  error = vcl_sqrt( error );
+  error = std::sqrt( error );
 
   /** TEST: Compare the two qualitatively. */
   if( error > distance )
@@ -265,7 +265,7 @@ main( int argc, char * argv[] )
   }
 
   if( soWeightFunction->GetNumberOfWeights()
-    != static_cast< unsigned long >( vcl_pow(
+    != static_cast< unsigned long >( std::pow(
     static_cast< float >( SplineOrder + 1 ), 2.0f ) ) )
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;

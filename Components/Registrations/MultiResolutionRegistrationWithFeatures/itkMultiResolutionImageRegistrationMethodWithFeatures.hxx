@@ -33,7 +33,7 @@ namespace itk
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiResolutionImageRegistrationMethodWithFeatures< TFixedImage, TMovingImage >
-::CheckPyramids( void ) throw ( ExceptionObject )
+::CheckPyramids( void )
 {
   /** Check if at least one of the following are provided. */
   if( this->GetFixedImage() == 0 )
@@ -69,7 +69,7 @@ MultiResolutionImageRegistrationMethodWithFeatures< TFixedImage, TMovingImage >
     itkExceptionMacro( << "The number of fixed image regions should equal the number of fixed image" );
   }
 
-}   // end CheckPyramids()
+} // end CheckPyramids()
 
 
 } // end namespace itk

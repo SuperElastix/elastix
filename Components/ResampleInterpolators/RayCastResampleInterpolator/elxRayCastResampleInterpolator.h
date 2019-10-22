@@ -102,15 +102,15 @@ public:
     itkGetStaticConstMacro( ImageDimension ) >            CombinationTransformType;
   typedef typename CombinationTransformType::Pointer CombinationTransformPointer;
 
-  virtual int BeforeAll( void );
+  int BeforeAll( void ) override;
 
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( void ) const;
+  void WriteToFile( void ) const override;
 
 protected:
 
@@ -118,7 +118,7 @@ protected:
   RayCastResampleInterpolator() {}
 
   /** The destructor. */
-  virtual ~RayCastResampleInterpolator() {}
+  ~RayCastResampleInterpolator() override {}
 
   /** Helper function to initialize the combination transform
    * with a pre-transform.

@@ -101,7 +101,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImages[ pos ].GetPointer();
   }
 
-}   // end GetFixedImage()
+} // end GetFixedImage()
 
 /**
  * **************** GetMovingImage **********************************
@@ -123,7 +123,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_MovingImages[ pos ].GetPointer();
   }
 
-}   // end GetMovingImage()
+} // end GetMovingImage()
 
 /**
  * **************** GetInterpolator **********************************
@@ -145,7 +145,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_Interpolators[ pos ].GetPointer();
   }
 
-}   // end GetInterpolator()
+} // end GetInterpolator()
 
 /**
  * **************** GetFixedImageInterpolator **********************************
@@ -167,7 +167,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImageInterpolators[ pos ].GetPointer();
   }
 
-}   // end GetFixedImageInterpolator()
+} // end GetFixedImageInterpolator()
 
 /**
  * **************** GetFixedImagePyramid **********************************
@@ -189,7 +189,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImagePyramids[ pos ].GetPointer();
   }
 
-}   // end GetFixedImagePyramid()
+} // end GetFixedImagePyramid()
 
 /**
  * **************** GetMovingImagePyramid **********************************
@@ -211,7 +211,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_MovingImagePyramids[ pos ].GetPointer();
   }
 
-}   // end GetMovingImagePyramid()
+} // end GetMovingImagePyramid()
 
 /**
  * **************** GetFixedImageRegion **********************************
@@ -234,7 +234,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     return this->m_FixedImageRegions[ pos ];
   }
 
-}   // end GetFixedImageRegion()
+} // end GetFixedImageRegion()
 
 /*
  * ****************** SetMetric *******************************
@@ -257,7 +257,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     itkExceptionMacro( << "ERROR: This registration method expects a MultiInputImageToImageMetric" );
   }
 
-}   // end SetMetric()
+} // end SetMetric()
 
 
 /*
@@ -267,55 +267,55 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
-::Initialize() throw ( ExceptionObject )
+::Initialize()
 {
   /** Sanity checks. */
   this->CheckOnInitialize();
 
   /** Setup the metric: the transform. */
-  this->GetMultiInputMetric()->SetTransform( this->GetTransform() );
+  this->GetModifiableMultiInputMetric()->SetTransform( this->GetModifiableTransform() );
 
   /** Setup the metric: the images. */
-  this->GetMultiInputMetric()->SetNumberOfFixedImages( this->GetNumberOfFixedImages() );
-  this->GetMultiInputMetric()->SetNumberOfMovingImages( this->GetNumberOfMovingImages() );
+  this->GetModifiableMultiInputMetric()->SetNumberOfFixedImages( this->GetNumberOfFixedImages() );
+  this->GetModifiableMultiInputMetric()->SetNumberOfMovingImages( this->GetNumberOfMovingImages() );
 
   for( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
   {
-    this->GetMultiInputMetric()->SetFixedImage(
+    this->GetModifiableMultiInputMetric()->SetFixedImage(
       this->GetFixedImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
   }
 
   for( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
   {
-    this->GetMultiInputMetric()->SetMovingImage(
+    this->GetModifiableMultiInputMetric()->SetMovingImage(
       this->GetMovingImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
   }
 
   /** Setup the metric: the fixed image regions. */
   for( unsigned int i = 0; i < this->m_FixedImageRegionPyramids.size(); ++i )
   {
-    this->GetMultiInputMetric()->SetFixedImageRegion(
+    this->GetModifiableMultiInputMetric()->SetFixedImageRegion(
       this->m_FixedImageRegionPyramids[ i ][ this->GetCurrentLevel() ], i );
   }
 
   /** Setup the metric: the interpolators. */
   for( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
   {
-    this->GetMultiInputMetric()->SetInterpolator( this->GetInterpolator( i ), i );
+    this->GetModifiableMultiInputMetric()->SetInterpolator( this->GetInterpolator( i ), i );
   }
 
   for( unsigned int i = 0; i < this->GetNumberOfFixedImageInterpolators(); ++i )
   {
-    this->GetMultiInputMetric()
+    this->GetModifiableMultiInputMetric()
     ->SetFixedImageInterpolator( this->GetFixedImageInterpolator( i ), i );
   }
 
   /** Initialize the metric. */
-  this->GetMultiInputMetric()->Initialize();
+  this->GetModifiableMultiInputMetric()->Initialize();
 
   /** Setup the optimizer. */
-  this->GetOptimizer()->SetCostFunction( this->GetMetric() );
-  this->GetOptimizer()->SetInitialPosition(
+  this->GetModifiableOptimizer()->SetCostFunction( this->GetModifiableMetric() );
+  this->GetModifiableOptimizer()->SetInitialPosition(
     this->GetInitialTransformParametersOfNextLevel() );
 
   /** Connect the transform to the Decorator. */
@@ -324,7 +324,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
   transformOutput->Set( this->GetTransform() );
 
-}   // end Initialize()
+} // end Initialize()
 
 
 /*
@@ -439,21 +439,21 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
         fixedImageAtLevel->TransformPhysicalPointToContinuousIndex( inputEndPoint, endcindex );
         for( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
         {
-          start[ dim ] = static_cast< IndexValueType >( vcl_ceil( startcindex[ dim ] ) );
+          start[ dim ] = static_cast< IndexValueType >( std::ceil( startcindex[ dim ] ) );
           size[ dim ]  = static_cast< SizeValueType >(
-            static_cast< SizeValueType >( vcl_floor( endcindex[ dim ] ) ) - start[ dim ] + 1 );
+            static_cast< SizeValueType >( std::floor( endcindex[ dim ] ) ) - start[ dim ] + 1 );
         }
 
         this->m_FixedImageRegionPyramids[ i ][ level ].SetSize( size );
         this->m_FixedImageRegionPyramids[ i ][ level ].SetIndex( start );
 
-      }   // end for loop over res levels
+      } // end for loop over res levels
 
-    }   // end if fixpyr!=0
+    } // end if fixpyr!=0
 
-  }   // end for loop over fixed pyramids
+  } // end for loop over fixed pyramids
 
-}   // end PreparePyramids()
+} // end PreparePyramids()
 
 
 /*
@@ -517,7 +517,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     try
     {
       // do the optimization
-      this->GetOptimizer()->StartOptimization();
+      this->GetModifiableOptimizer()->StartOptimization();
     }
     catch( ExceptionObject & err )
     {
@@ -531,7 +531,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
     /** Get the results. */
     this->m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
-    this->GetTransform()->SetParameters( this->m_LastTransformParameters );
+    this->GetModifiableTransform()->SetParameters( this->m_LastTransformParameters );
 
     /** Setup the initial parameters for next level. */
     if( this->GetCurrentLevel() < this->GetNumberOfLevels() - 1 )
@@ -540,9 +540,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
         this->m_LastTransformParameters );
     }
 
-  }   // end for loop over res levels
+  } // end for loop over res levels
 
-}   // end GenerateData()
+} // end GenerateData()
 
 
 /**
@@ -550,12 +550,12 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
  */
 
 template< typename TFixedImage, typename TMovingImage >
-unsigned long
+ModifiedTimeType
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
 ::GetMTime() const
 {
-  unsigned long mtime = Superclass::GetMTime();
-  unsigned long m;
+  ModifiedTimeType mtime = Superclass::GetMTime();
+  ModifiedTimeType m;
 
   // Some of the following should be removed once ivars are put in the
   // input and output lists
@@ -612,7 +612,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 
   return mtime;
 
-}   // end GetMTime()
+} // end GetMTime()
 
 
 /*
@@ -622,7 +622,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
-::CheckPyramids( void ) throw ( ExceptionObject )
+::CheckPyramids( void )
 {
   /** Check if at least one of the following are provided. */
   if( this->GetFixedImage() == 0 )
@@ -658,7 +658,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     itkExceptionMacro( << "The number of fixed image regions should equal the number of fixed image" );
   }
 
-}   // end CheckPyramids()
+} // end CheckPyramids()
 
 
 /*
@@ -668,7 +668,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 template< typename TFixedImage, typename TMovingImage >
 void
 MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage >
-::CheckOnInitialize( void ) throw ( ExceptionObject )
+::CheckOnInitialize( void )
 {
   /** check if at least one of the following is present. */
   if( this->GetMetric() == 0 )
@@ -695,7 +695,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
     itkExceptionMacro( << "NumberOfMovingImagePyramids can not exceed the NumberOfInterpolators!" );
   }
 
-}   // end CheckOnInitialize()
+} // end CheckOnInitialize()
 
 
 /*
@@ -778,7 +778,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   }
   os << "]" << std::endl;
 
-}   // end PrintSelf()
+} // end PrintSelf()
 
 
 } // end namespace itk

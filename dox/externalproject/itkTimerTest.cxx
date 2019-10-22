@@ -61,10 +61,10 @@ int TestZeroTimeOutput( void )
 
 int main( int argc, char *argv[] )
 {
-	int errorCode = TestStartStop() || TestZeroTimeOutput();
-	
-	std::cerr << "Elastix code was successfully used outside the Elastix tree!" << std::endl;
+  int errorCode = TestStartStop() || TestZeroTimeOutput();
 
-	return errorCode;
+  std::cerr << "Elastix code was successfully used outside the Elastix tree!" << std::endl;
+
+  return errorCode;
 } // end main()
 

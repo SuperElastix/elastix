@@ -24,8 +24,8 @@
 
 /** defines a method that calls the same method
  * with an extra 0 argument */
-#define itkSimpleSetMacro( _name, _type ) \
-  virtual void Set##_name( _type _arg ) \
+#define elxOverrideSimpleSetMacro( _name, _type ) \
+  void Set##_name( _type _arg ) override \
   { \
     this->Set##_name( _arg, 0 ); \
   }
@@ -149,7 +149,7 @@ public:
    * By default, a combination metric is already set on constructing
    * this class.
    */
-  virtual void SetMetric( MetricType * _arg );
+  void SetMetric( MetricType * _arg ) override;
 
   /** Get the metric as a pointer to a combination metric type.
    * Use this method to setup the combination metric (set weights,
@@ -164,7 +164,7 @@ public:
   /** The following methods all have a similar pattern. The
    * SetFixedImage() just calls SetFixedImage(0).
    * SetFixedImage(0) also calls the Superclass::SetFixedImage(). This
-   * is defined by the itkSimpleSetMacro.
+   * is defined by the elxOverrideSimpleSetMacro.
    * GetFixedImage() just returns GetFixedImage(0) == Superclass::m_FixedImage.
    */
 
@@ -173,13 +173,13 @@ public:
 
   virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
 
-  virtual const FixedImageType * GetFixedImage( void ) const
+  const FixedImageType * GetFixedImage( void ) const override
   {
     return this->GetFixedImage( 0 );
   }
 
 
-  itkSimpleSetMacro( FixedImage, const FixedImageType * );
+  elxOverrideSimpleSetMacro( FixedImage, const FixedImageType * );
   itkSetNumberOfMacro( FixedImage );
   itkGetNumberOfMacro( FixedImage );
 
@@ -188,9 +188,9 @@ public:
 
   virtual const MovingImageType * GetMovingImage( unsigned int pos ) const;
 
-  virtual const MovingImageType * GetMovingImage( void ) const
+  const MovingImageType * GetMovingImage( void ) const override
   { return this->GetMovingImage( 0 ); }
-  itkSimpleSetMacro( MovingImage, const MovingImageType * );
+  elxOverrideSimpleSetMacro( MovingImage, const MovingImageType * );
   itkSetNumberOfMacro( MovingImage );
   itkGetNumberOfMacro( MovingImage );
 
@@ -199,9 +199,9 @@ public:
 
   virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
 
-  virtual const FixedImageRegionType & GetFixedImageRegion( void ) const
+  const FixedImageRegionType & GetFixedImageRegion( void ) const override
   { return this->GetFixedImageRegion( 0 ); }
-  itkSimpleSetMacro( FixedImageRegion, const FixedImageRegionType );
+  elxOverrideSimpleSetMacro( FixedImageRegion, const FixedImageRegionType );
   itkSetNumberOfMacro( FixedImageRegion );
   itkGetNumberOfMacro( FixedImageRegion );
 
@@ -210,9 +210,9 @@ public:
 
   virtual InterpolatorType * GetInterpolator( unsigned int pos ) const;
 
-  virtual InterpolatorType * GetInterpolator( void )
+  InterpolatorType * GetInterpolator( void ) override
   { return this->GetInterpolator( 0 ); }
-  itkSimpleSetMacro( Interpolator, InterpolatorType * );
+  elxOverrideSimpleSetMacro( Interpolator, InterpolatorType * );
   itkSetNumberOfMacro( Interpolator );
   itkGetNumberOfMacro( Interpolator );
 
@@ -221,9 +221,9 @@ public:
 
   virtual FixedImagePyramidType * GetFixedImagePyramid( unsigned int pos ) const;
 
-  virtual FixedImagePyramidType * GetFixedImagePyramid( void )
+  FixedImagePyramidType * GetFixedImagePyramid( void ) override
   { return this->GetFixedImagePyramid( 0 ); }
-  itkSimpleSetMacro( FixedImagePyramid, FixedImagePyramidType * );
+  elxOverrideSimpleSetMacro( FixedImagePyramid, FixedImagePyramidType * );
   itkSetNumberOfMacro( FixedImagePyramid );
   itkGetNumberOfMacro( FixedImagePyramid );
 
@@ -232,22 +232,22 @@ public:
 
   virtual MovingImagePyramidType * GetMovingImagePyramid( unsigned int pos ) const;
 
-  virtual MovingImagePyramidType * GetMovingImagePyramid( void )
+  MovingImagePyramidType * GetMovingImagePyramid( void ) override
   { return this->GetMovingImagePyramid( 0 ); }
-  itkSimpleSetMacro( MovingImagePyramid, MovingImagePyramidType * );
+  elxOverrideSimpleSetMacro( MovingImagePyramid, MovingImagePyramidType * );
   itkSetNumberOfMacro( MovingImagePyramid );
   itkGetNumberOfMacro( MovingImagePyramid );
 
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  unsigned long GetMTime( void ) const;
+  ModifiedTimeType GetMTime( void ) const override;
 
   /** Get the last transformation parameters visited by
    * the optimizer. Return the member variable declared in this class,
    * and not that of the superclass (which is declared private).
    */
-  virtual const ParametersType & GetLastTransformParameters( void ) const
+  const ParametersType & GetLastTransformParameters( void ) const override
   {
     return this->m_LastTransformParameters;
   }
@@ -256,21 +256,21 @@ public:
 protected:
 
   MultiMetricMultiResolutionImageRegistrationMethod();
-  virtual ~MultiMetricMultiResolutionImageRegistrationMethod() {}
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~MultiMetricMultiResolutionImageRegistrationMethod() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   typedef std::vector< FixedImageRegionType > FixedImageRegionPyramidType;
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** Initialize by setting the interconnects between the components.
    * This method is executed at every level of the pyramid with the
    * values corresponding to this resolution.
    */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  void Initialize( void ) override;
 
   /** Compute the size of the fixed region for each level of the pyramid.
    * Actually we would like to override PreparePyramids, but this function
@@ -281,12 +281,12 @@ protected:
   /** Function called by PrepareAllPyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
-  virtual void CheckPyramids( void ) throw ( ExceptionObject );
+  virtual void CheckPyramids( void );
 
   /** Function called by Initialize, which checks if the user input
    * is ok. Called by Initialize().
    */
-  virtual void CheckOnInitialize( void ) throw ( ExceptionObject );
+  virtual void CheckOnInitialize( void );
 
   /** Variables already defined in the superclass, but as private...  */
   bool           m_Stop;
@@ -320,7 +320,7 @@ private:
 
 #undef itkSetNumberOfMacro
 #undef itkGetNumberOfMacro
-#undef itkSimpleSetMacro
+#undef elxOverrideSimpleSetMacro
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkMultiMetricMultiResolutionImageRegistrationMethod.hxx"

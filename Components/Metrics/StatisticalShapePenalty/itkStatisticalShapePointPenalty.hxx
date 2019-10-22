@@ -19,6 +19,7 @@
 #define __itkStatisticalShapePointPenalty_hxx
 
 #include "itkStatisticalShapePointPenalty.h"
+#include <cmath>
 
 namespace itk
 {
@@ -30,12 +31,12 @@ template< class TFixedPointSet, class TMovingPointSet >
 StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 ::StatisticalShapePointPenalty()
 {
-  this->m_MeanVector              = NULL;
-  this->m_EigenVectors            = NULL;
-  this->m_EigenValues             = NULL;
-  this->m_EigenValuesRegularized  = NULL;
-  this->m_ProposalDerivative      = NULL;
-  this->m_InverseCovarianceMatrix = NULL;
+  this->m_MeanVector              = nullptr;
+  this->m_EigenVectors            = nullptr;
+  this->m_EigenValues             = nullptr;
+  this->m_EigenValuesRegularized  = nullptr;
+  this->m_ProposalDerivative      = nullptr;
+  this->m_InverseCovarianceMatrix = nullptr;
 
   this->m_ShrinkageIntensityNeedsUpdate = true;
   this->m_BaseVarianceNeedsUpdate       = true;
@@ -52,40 +53,40 @@ template< class TFixedPointSet, class TMovingPointSet >
 StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 ::~StatisticalShapePointPenalty()
 {
-  if( this->m_MeanVector != NULL )
+  if( this->m_MeanVector != nullptr )
   {
     delete this->m_MeanVector;
-    this->m_MeanVector = NULL;
+    this->m_MeanVector = nullptr;
   }
-  if( this->m_CovarianceMatrix != NULL )
+  if( this->m_CovarianceMatrix != nullptr )
   {
     delete this->m_CovarianceMatrix;
-    this->m_CovarianceMatrix = NULL;
+    this->m_CovarianceMatrix = nullptr;
   }
-  if( this->m_EigenVectors != NULL )
+  if( this->m_EigenVectors != nullptr )
   {
     delete this->m_EigenVectors;
-    this->m_EigenVectors = NULL;
+    this->m_EigenVectors = nullptr;
   }
-  if( this->m_EigenValues != NULL )
+  if( this->m_EigenValues != nullptr )
   {
     delete this->m_EigenValues;
-    this->m_EigenValues = NULL;
+    this->m_EigenValues = nullptr;
   }
-  if( this->m_EigenValuesRegularized != NULL )
+  if( this->m_EigenValuesRegularized != nullptr )
   {
     delete this->m_EigenValuesRegularized;
-    this->m_EigenValuesRegularized = NULL;
+    this->m_EigenValuesRegularized = nullptr;
   }
-  if( this->m_ProposalDerivative != NULL )
+  if( this->m_ProposalDerivative != nullptr )
   {
     delete this->m_ProposalDerivative;
-    this->m_ProposalDerivative = NULL;
+    this->m_ProposalDerivative = nullptr;
   }
-  if( this->m_InverseCovarianceMatrix != NULL )
+  if( this->m_InverseCovarianceMatrix != nullptr )
   {
     delete this->m_InverseCovarianceMatrix;
-    this->m_InverseCovarianceMatrix = NULL;
+    this->m_InverseCovarianceMatrix = nullptr;
   }
 
 } // end Destructor
@@ -98,7 +99,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 template< class TFixedPointSet, class TMovingPointSet >
 void
 StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Call the initialize of the superclass. */
   this->Superclass::Initialize();
@@ -178,7 +179,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
          */
         this->m_InverseCovarianceMatrix = new vnl_matrix< double >( vnl_svd_inverse( regularizedCovariance ) );
       }
-      this->m_EigenValuesRegularized = NULL;
+      this->m_EigenValuesRegularized = nullptr;
       break;
     }
     case 1: // decomposed covariance (uniform regularization)
@@ -194,19 +195,19 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
       unsigned int nonZeroLength = 0;
       for(; lambdaIt != lambdaEnd && ( *lambdaIt ) > 1e-14; ++lambdaIt, ++nonZeroLength )
       {}
-      if( this->m_EigenValues != NULL )
+      if( this->m_EigenValues != nullptr )
       {
         delete this->m_EigenValues;
       }
       this->m_EigenValues = new VnlVectorType( pcaCovariance.lambdas().extract( nonZeroLength ) );
 
-      if( this->m_EigenVectors != NULL )
+      if( this->m_EigenVectors != nullptr )
       {
         delete this->m_EigenVectors;
       }
       this->m_EigenVectors = new VnlMatrixType( pcaCovariance.V().get_n_columns( 0, nonZeroLength ) );
 
-      if( this->m_EigenValuesRegularized == NULL )
+      if( this->m_EigenValuesRegularized == nullptr )
       {
         this->m_EigenValuesRegularized = new vnl_vector< double >( this->m_EigenValues->size() );
       }
@@ -244,7 +245,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
           *regularizedValue = *eigenValue;
         }
       }
-      this->m_InverseCovarianceMatrix = NULL;
+      this->m_InverseCovarianceMatrix = nullptr;
     }
     break;
     case 2: // decomposed scaled covariance (element specific regularization)
@@ -287,13 +288,13 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
         for(; lambdaIt != lambdaEnd && ( *lambdaIt ) > 1e-14; ++lambdaIt, ++nonZeroLength )
         {}
 
-        if( this->m_EigenValues != NULL )
+        if( this->m_EigenValues != nullptr )
         {
           delete this->m_EigenValues;
         }
         this->m_EigenValues = new VnlVectorType( pcaCovariance.lambdas().extract( nonZeroLength ) );
 
-        if( this->m_EigenVectors != NULL )
+        if( this->m_EigenVectors != nullptr )
         {
           delete this->m_EigenVectors;
         }
@@ -301,7 +302,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
       }
       if( this->m_ShrinkageIntensityNeedsUpdate || pcaNeedsUpdate )
       {
-        if( this->m_EigenValuesRegularized != NULL )
+        if( this->m_EigenValuesRegularized != nullptr )
         {
           delete this->m_EigenValuesRegularized;
         }
@@ -335,12 +336,12 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
       this->m_ShrinkageIntensityNeedsUpdate = false;
       this->m_BaseVarianceNeedsUpdate       = false;
       this->m_VariancesNeedsUpdate          = false;
-      this->m_InverseCovarianceMatrix       = NULL;
+      this->m_InverseCovarianceMatrix       = nullptr;
     }
     break;
     default:
-      this->m_InverseCovarianceMatrix = NULL;
-      this->m_EigenValuesRegularized  = NULL;
+      this->m_InverseCovarianceMatrix = nullptr;
+      this->m_EigenValuesRegularized  = nullptr;
   }
 
 } // end Initialize()
@@ -479,7 +480,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
     * fixedPointSet->GetNumberOfPoints();
 
   this->m_ProposalVector.set_size( this->m_ProposalLength );
-  this->m_ProposalDerivative = new ProposalDerivativeType( this->GetNumberOfParameters(), NULL );
+  this->m_ProposalDerivative = new ProposalDerivativeType( this->GetNumberOfParameters(), nullptr );
 
   /** Part 1:
    * - Copy point positions in proposal vector
@@ -547,14 +548,14 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
     typename ProposalDerivativeType::iterator proposalDerivativeEnd = this->m_ProposalDerivative->end();
     for(; proposalDerivativeIt != proposalDerivativeEnd; ++proposalDerivativeIt )
     {
-      if( *proposalDerivativeIt != NULL )
+      if( *proposalDerivativeIt != nullptr )
       {
         delete ( *proposalDerivativeIt );
       }
     }
   }
   delete this->m_ProposalDerivative;
-  this->m_ProposalDerivative = NULL;
+  this->m_ProposalDerivative = nullptr;
 
   this->CalculateCutOffValue( value );
 
@@ -616,7 +617,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
   for( unsigned int i = 0; i < nzji.size(); ++i )
   {
     const unsigned int mu = nzji[ i ];
-    if( ( *this->m_ProposalDerivative )[ mu ] == NULL )
+    if( ( *this->m_ProposalDerivative )[ mu ] == nullptr )
     {
       /** Create the big column vector if it does not yet exist for this mu*/
       ( *this->m_ProposalDerivative )[ mu ] = new VnlVectorType( this->m_ProposalLength, 0.0 );
@@ -682,7 +683,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
   typename ProposalDerivativeType::iterator proposalDerivativeEnd = m_ProposalDerivative->end();
   while( proposalDerivativeIt != proposalDerivativeEnd )
   {
-    if( *proposalDerivativeIt != NULL )
+    if( *proposalDerivativeIt != nullptr )
     {
       for( unsigned int d = 0; d < Self::FixedPointSetDimension; ++d )
       {
@@ -767,7 +768,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 
   while( proposalDerivativeIt != proposalDerivativeEnd )
   {
-    if( *proposalDerivativeIt != NULL )
+    if( *proposalDerivativeIt != nullptr )
     {
       double & l2normDerivative = ( **proposalDerivativeIt )[ shapeLength + Self::FixedPointSetDimension ];
       l2normDerivative = 0; // initialize to zero
@@ -888,7 +889,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 
   for(; proposalDerivativeIt != proposalDerivativeEnd; ++proposalDerivativeIt, ++derivativeIt )
   {
-    if( *proposalDerivativeIt != NULL )
+    if( *proposalDerivativeIt != nullptr )
     {
       switch( this->m_ShapeModelCalculation )
       {
@@ -976,8 +977,8 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 {
   if( this->m_CutOffValue > 0.0 )
   {
-    value = vcl_log( vcl_exp( this->m_CutOffSharpness * value )
-      + vcl_exp( this->m_CutOffSharpness * this->m_CutOffValue ) )
+    value = std::log( std::exp( this->m_CutOffSharpness * value )
+      + std::exp( this->m_CutOffSharpness * this->m_CutOffValue ) )
       / this->m_CutOffSharpness;
   }
 } // end CalculateCutOffValue()
@@ -996,7 +997,7 @@ StatisticalShapePointPenalty< TFixedPointSet, TMovingPointSet >
 {
   if( this->m_CutOffValue > 0.0 )
   {
-    derivativeElement *= 1.0 / ( 1.0 + vcl_exp( this->m_CutOffSharpness
+    derivativeElement *= 1.0 / ( 1.0 + std::exp( this->m_CutOffSharpness
       * ( this->m_CutOffValue - value ) ) );
   }
 } // end CalculateCutOffDerivative()

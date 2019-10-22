@@ -22,7 +22,7 @@
 #include "itkStatisticsImageFilter.h"
 #include "itkApproximateSignedDistanceMapImageFilter.h"
 #include "itkGradientImageFilter.h"
-#include "itkVectorCastImageFilter.h"
+#include "itkCastImageFilter.h"
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
 #include "itkAddImageFilter.h"
@@ -364,7 +364,6 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
   typedef itk::ApproximateSignedDistanceMapImageFilter< ImageLabelType, ImageDoubleType >         DistFilterType;
   typedef itk::SmoothingRecursiveGaussianImageFilter< ImageDoubleType, ImageDoubleType >          SmoothFilterType;
   typedef itk::GradientImageFilter< ImageDoubleType, double, double >                             GradFilterType;
-  typedef itk::VectorCastImageFilter< typename GradFilterType::OutputImageType, ImageVectorType > CastVectorType;
   typedef itk::BinaryThresholdImageFilter< ImageLabelType, ImageLabelType >                       LabelExtractorType;
   typedef itk::AddImageFilter< ImageVectorType, ImageVectorType, ImageVectorType >                AddVectorImageType;
   typedef itk::MaskImageFilter< ImageVectorType, ImageLabelType, ImageVectorType >                MaskVectorImageType;
@@ -427,7 +426,9 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
     typename GradFilterType::Pointer gradFilter = GradFilterType::New();
     gradFilter->SetInput( smoothFilter->GetOutput() );
 
-    typename CastVectorType::Pointer castFilter = CastVectorType::New();
+    const auto castFilter =
+      itk::CastImageFilter< typename GradFilterType::OutputImageType, ImageVectorType >::New();
+
     castFilter->SetInput( gradFilter->GetOutput() );
 
     typename MaskVectorImageType::Pointer maskFilter = MaskVectorImageType::New();
@@ -611,7 +612,7 @@ typename MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VS
   /** NOTE: For efficiency, this class does not keep a copy of the parameters -
    * it just keeps pointer to input parameters.
    */
-  if( NULL == this->m_InputParametersPointer )
+  if( nullptr == this->m_InputParametersPointer )
   {
     itkExceptionMacro(
         << "Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps SetCoefficientImages() has been called causing the NULL pointer." );
@@ -733,7 +734,7 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
   // This implements a sparse version of the Jacobian.
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -829,7 +830,7 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
 
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -865,7 +866,7 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
 
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -933,7 +934,7 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
   // This implements a sparse version of the Jacobian.
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
@@ -1035,7 +1036,7 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
   // This implements a sparse version of the Jacobian.
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if( this->m_InputParametersPointer == NULL )
+  if( this->m_InputParametersPointer == nullptr )
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }

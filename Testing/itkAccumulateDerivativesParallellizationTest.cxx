@@ -28,7 +28,7 @@
 #include "itkTimeProbesCollectorBase.h"
 
 // Multi-threading using ITK threads
-#include "itkMultiThreader.h"
+#include "itkPlatformMultiThreader.h"
 
 // Multi-threading using OpenMP
 #ifdef ELASTIX_USE_OPENMP
@@ -58,8 +58,8 @@ public:
   unsigned long                         m_NumberOfParameters;
   mutable std::vector< DerivativeType > m_ThreaderDerivatives;
 
-  typedef itk::MultiThreader             ThreaderType;
-  typedef ThreaderType::ThreadInfoStruct ThreadInfoType;
+  typedef itk::PlatformMultiThreader             ThreaderType;
+  typedef ThreaderType::WorkUnitInfo ThreadInfoType;
   ThreaderType::Pointer m_Threader;
   DerivativeValueType   m_NormalSum;
   ThreadIdType          m_NumberOfThreads;
@@ -79,13 +79,13 @@ public:
   // Constructor
   MetricTEMP()
   {
-    this->m_ThreaderMetricParameters.st_Metric              = NULL;
-    this->m_ThreaderMetricParameters.st_DerivativePointer   = NULL;
+    this->m_ThreaderMetricParameters.st_Metric              = nullptr;
+    this->m_ThreaderMetricParameters.st_DerivativePointer   = nullptr;
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 0.0;
 
     this->m_NumberOfParameters = 0;
     this->m_Threader           = ThreaderType::New();
-    this->m_NumberOfThreads    = this->m_Threader->GetNumberOfThreads();
+    this->m_NumberOfThreads    = this->m_Threader->GetNumberOfWorkUnits();
     this->m_UseOpenMP          = false;
     this->m_UseMultiThreaded   = false;
     this->m_NormalSum          = 3.1415926;
@@ -100,7 +100,7 @@ public:
   void AccumulateDerivatives( DerivativeType & derivative )
   {
     DerivativeValueType normal_sum = this->m_NormalSum;
-    this->m_NumberOfThreads = this->m_Threader->GetNumberOfThreads();
+    this->m_NumberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
     /** Accumulate derivatives. */
     if( !this->m_UseMultiThreaded ) // single threadedly
@@ -146,18 +146,18 @@ public:
  *********** AccumulateDerivativesThreaderCallback *************
  */
 
-  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg )
+  static itk::ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg )
   {
     ThreadInfoType * infoStruct  = static_cast< ThreadInfoType * >( arg );
-    ThreadIdType     threadID    = infoStruct->ThreadID;
-    ThreadIdType     nrOfThreads = infoStruct->NumberOfThreads;
+    ThreadIdType     threadID    = infoStruct->WorkUnitID;
+    ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
 
     MultiThreaderParameterType * temp
       = static_cast< MultiThreaderParameterType * >( infoStruct->UserData );
 
     const unsigned int numPar  = temp->st_Metric->m_NumberOfParameters;
     const unsigned int subSize = static_cast< unsigned int >(
-      vcl_ceil( static_cast< double >( numPar )
+      std::ceil( static_cast< double >( numPar )
       / static_cast< double >( nrOfThreads ) ) );
     const unsigned int jmin = threadID * subSize;
     unsigned int       jmax = ( threadID + 1 ) * subSize;
@@ -173,7 +173,7 @@ public:
       temp->st_DerivativePointer[ j ] = tmp / temp->st_NormalizationFactor;
     }
 
-    return ITK_THREAD_RETURN_VALUE;
+    return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
   } // end AccumulateDerivativesThreaderCallback()
 
@@ -206,7 +206,7 @@ main( int argc, char * argv[] )
   repetitions.push_back( 2e6 ); repetitions.push_back( 2e5 ); repetitions.push_back( 2e4 );
   repetitions.push_back( 2e3 ); repetitions.push_back( 1e2 ); repetitions.push_back( 1e1 );
 
-  const ThreadIdType nrThreads = metric->m_Threader->GetNumberOfThreads();
+  const ThreadIdType nrThreads = metric->m_Threader->GetNumberOfWorkUnits();
 
   /** For all sizes. */
   for( unsigned int s = 0; s < arraySizes.size(); ++s )

@@ -76,14 +76,14 @@ public:
   /** Selecting new samples makes no sense if nothing changed.
    * The same samples would be selected anyway.
    */
-  virtual bool SelectNewSamplesOnUpdate( void )
+  bool SelectNewSamplesOnUpdate( void ) override
   {
     return false;
   }
 
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate(). */
-  virtual bool SelectingNewSamplesOnUpdateSupported( void ) const
+  bool SelectingNewSamplesOnUpdateSupported( void ) const override
   {
     return false;
   }
@@ -94,18 +94,18 @@ protected:
   /** The constructor. */
   ImageFullSampler() {}
   /** The destructor. */
-  virtual ~ImageFullSampler() {}
+  ~ImageFullSampler() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Function that does the work. */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** Multi-threaded function that does the work. */
-  virtual void ThreadedGenerateData(
+  void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId );
+    ThreadIdType threadId ) override;
 
 private:
 

@@ -114,23 +114,23 @@ public:
   /** Execute stuff before the actual registration:
   * \li Set the spline order.
   */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
   /** Function to read transform-parameters from a file. */
-  virtual void ReadFromFile( void );
+  void ReadFromFile( void ) override;
 
   /** Function to write transform-parameters to a file. */
-  virtual void WriteToFile( void ) const;
+  void WriteToFile( void ) const override;
 
   /** Function to create transform parameters map. */
-  virtual void CreateTransformParametersMap( ParameterMapType * paramsMap ) const;
+  void CreateTransformParametersMap( ParameterMapType * paramsMap ) const override;
 
 protected:
 
   /** The constructor. */
   BSplineResampleInterpolator() {}
   /** The destructor. */
-  virtual ~BSplineResampleInterpolator() {}
+  ~BSplineResampleInterpolator() override {}
 
 private:
 

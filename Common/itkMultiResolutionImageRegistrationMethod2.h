@@ -178,11 +178,11 @@ public:
 
   /** Set/Get the Optimizer. */
   itkSetObjectMacro( Optimizer, OptimizerType );
-  itkGetObjectMacro( Optimizer, OptimizerType );
+  itkGetModifiableObjectMacro( Optimizer, OptimizerType );
 
   /** Set/Get the Metric. */
   itkSetObjectMacro( Metric, MetricType );
-  itkGetObjectMacro( Metric, MetricType );
+  itkGetModifiableObjectMacro( Metric, MetricType );
 
   /** Set/Get the Metric. */
   itkSetMacro( FixedImageRegion, FixedImageRegionType );
@@ -190,19 +190,19 @@ public:
 
   /** Set/Get the Transform. */
   itkSetObjectMacro( Transform, TransformType );
-  itkGetObjectMacro( Transform, TransformType );
+  itkGetModifiableObjectMacro( Transform, TransformType );
 
   /** Set/Get the Interpolator. */
   itkSetObjectMacro( Interpolator, InterpolatorType );
-  itkGetObjectMacro( Interpolator, InterpolatorType );
+  itkGetModifiableObjectMacro( Interpolator, InterpolatorType );
 
   /** Set/Get the Fixed image pyramid. */
   itkSetObjectMacro( FixedImagePyramid, FixedImagePyramidType );
-  itkGetObjectMacro( FixedImagePyramid, FixedImagePyramidType );
+  itkGetModifiableObjectMacro( FixedImagePyramid, FixedImagePyramidType );
 
   /** Set/Get the Moving image pyramid. */
   itkSetObjectMacro( MovingImagePyramid, MovingImagePyramidType );
-  itkGetObjectMacro( MovingImagePyramid, MovingImagePyramidType );
+  itkGetModifiableObjectMacro( MovingImagePyramid, MovingImagePyramidType );
 
   /** Set/Get the number of multi-resolution levels. */
   itkSetClampMacro( NumberOfLevels, unsigned long, 1,
@@ -239,7 +239,7 @@ public:
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  unsigned long GetMTime( void ) const ITK_OVERRIDE;
+  ModifiedTimeType GetMTime( void ) const override;
 
 protected:
 
@@ -247,21 +247,21 @@ protected:
   MultiResolutionImageRegistrationMethod2();
 
   /** Destructor. */
-  virtual ~MultiResolutionImageRegistrationMethod2() {}
+  ~MultiResolutionImageRegistrationMethod2() override {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
-  virtual void GenerateData( void ) ITK_OVERRIDE;
+  void GenerateData( void ) override;
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the
       values corresponding to this resolution
    */
-  virtual void Initialize() throw ( ExceptionObject );
+  virtual void Initialize();
 
   /** Compute the size of the fixed region for each level of the pyramid. */
   virtual void PreparePyramids( void );

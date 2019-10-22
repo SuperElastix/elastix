@@ -47,6 +47,7 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   this->m_AutomaticParameterEstimation = false;
   this->m_MaximumStepLength            = 1.0;
+  this->m_MaximumStepLengthRatio       = 1.0;
 
   this->m_NumberOfGradientMeasurements    = 0;
   this->m_NumberOfJacobianMeasurements    = 0;
@@ -171,11 +172,16 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   if( this->m_AutomaticParameterEstimation )
   {
+    /** Read user setting. */
+    this->m_MaximumStepLengthRatio = 1.0;
+    this->GetConfiguration()->ReadParameter( this->m_MaximumStepLengthRatio,
+      "MaximumStepLengthRatio", this->GetComponentLabel(), level, 0 );
+
     /** Set the maximum step length: the maximum displacement of a voxel in mm.
      * Compute default value: mean in-plane spacing of fixed and moving image.
      */
-    const unsigned int fixdim = vnl_math_min( (unsigned int)this->GetElastix()->FixedDimension, (unsigned int)2 );
-    const unsigned int movdim = vnl_math_min( (unsigned int)this->GetElastix()->MovingDimension, (unsigned int)2 );
+    const unsigned int fixdim = std::min( (unsigned int) this->GetElastix()->FixedDimension, (unsigned int) 2 );
+    const unsigned int movdim = std::min( (unsigned int) this->GetElastix()->MovingDimension, (unsigned int) 2 );
     double             sum    = 0.0;
     for( unsigned int d = 0; d < fixdim; ++d )
     {
@@ -185,7 +191,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     {
       sum += this->GetElastix()->GetMovingImage()->GetSpacing()[ d ];
     }
-    this->m_MaximumStepLength = sum / static_cast< double >( fixdim + movdim );
+    this->m_MaximumStepLength = this->m_MaximumStepLengthRatio * sum / static_cast< double >( fixdim + movdim );
 
     /** Read user setting. */
     this->GetConfiguration()->ReadParameter( this->m_MaximumStepLength,
@@ -206,7 +212,7 @@ AdaptiveStochasticGradientDescent< TElastix >
      * M = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfJacobianMeasurements = vnl_math_max(
+    this->m_NumberOfJacobianMeasurements = std::max(
       static_cast< unsigned int >( 1000 ), static_cast< unsigned int >( P ) );
     this->GetConfiguration()->ReadParameter(
       this->m_NumberOfJacobianMeasurements,
@@ -548,7 +554,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   double maxJCJ = 0.0;
 
   /** Get current position to start the parameter estimation. */
-  this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
+  this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(
     this->GetCurrentPosition() );
 
   /** Cast to advanced metric type. */
@@ -567,7 +573,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   computeJacobianTerms->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
   computeJacobianTerms->SetFixedImageMask( testPtr->GetFixedImageMask() );
   computeJacobianTerms->SetTransform(
-    this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+    this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform());
   computeJacobianTerms->SetMaxBandCovSize( this->m_MaxBandCovSize );
   computeJacobianTerms->SetNumberOfBandStructureSamples(
     this->m_NumberOfBandStructureSamples );
@@ -609,13 +615,13 @@ AdaptiveStochasticGradientDescent< TElastix >
     if( TrCC > 1e-14 && TrC > 1e-14 )
     {
       this->m_NumberOfGradientMeasurements = static_cast< unsigned int >(
-        vcl_ceil( 8.0 * TrCC / TrC / TrC / ( K - 1 ) / ( K - 1 ) ) );
+        std::ceil( 8.0 * TrCC / TrC / TrC / ( K - 1 ) / ( K - 1 ) ) );
     }
     else
     {
       this->m_NumberOfGradientMeasurements = 2;
     }
-    this->m_NumberOfGradientMeasurements = vnl_math_max(
+    this->m_NumberOfGradientMeasurements = std::max(
       static_cast< SizeValueType >( 2 ),
       this->m_NumberOfGradientMeasurements );
     elxout << "  NumberOfGradientMeasurements to estimate sigma_i: "
@@ -629,7 +635,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   double       ee           = 0.0;
   if( maxJJ > 1e-14 )
   {
-    sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
+    sigma4 = sigma4factor * delta / std::sqrt( maxJJ );
   }
   this->SampleGradients(
     this->GetScaledCurrentPosition(), sigma4, gg, ee );
@@ -646,11 +652,11 @@ AdaptiveStochasticGradientDescent< TElastix >
    */
   if( gg > 1e-14 && TrC > 1e-14 )
   {
-    sigma1 = vcl_sqrt( gg / TrC );
+    sigma1 = std::sqrt( gg / TrC );
   }
   if( ee > 1e-14 && TrC > 1e-14 )
   {
-    sigma3 = vcl_sqrt( ee / TrC );
+    sigma3 = std::sqrt( ee / TrC );
   }
 
   const double alpha = 1.0;
@@ -658,14 +664,14 @@ AdaptiveStochasticGradientDescent< TElastix >
   double       a_max = 0.0;
   if( sigma1 > 1e-14 && maxJCJ > 1e-14 )
   {
-    a_max = A * delta / sigma1 / vcl_sqrt( maxJCJ );
+    a_max = A * delta / sigma1 / std::sqrt( maxJCJ );
   }
   const double noisefactor = sigma1 * sigma1
     / ( sigma1 * sigma1 + sigma3 * sigma3 + 1e-14 );
   const double a = a_max * noisefactor;
 
-  const double omega = vnl_math_max( 1e-14,
-    this->m_SigmoidScaleFactor * sigma3 * sigma3 * vcl_sqrt( TrCC ) );
+  const double omega = std::max( 1e-14,
+    this->m_SigmoidScaleFactor * sigma3 * sigma3 * std::sqrt( TrCC ) );
   const double fmax = 1.0;
   const double fmin = -0.99 + 0.98 * noisefactor;
 
@@ -695,7 +701,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   itk::TimeProbe timer4, timer5;
 
   /** Get current position to start the parameter estimation. */
-  this->GetRegistration()->GetAsITKBaseType()->GetTransform()->SetParameters(
+  this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(
     this->GetCurrentPosition() );
 
   /** Get the user input. */
@@ -719,7 +725,7 @@ AdaptiveStochasticGradientDescent< TElastix >
   computeDisplacementDistribution->SetFixedImageRegion( testPtr->GetFixedImageRegion() );
   computeDisplacementDistribution->SetFixedImageMask( testPtr->GetFixedImageMask() );
   computeDisplacementDistribution->SetTransform(
-    this->GetRegistration()->GetAsITKBaseType()->GetTransform() );
+    this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform() );
   computeDisplacementDistribution->SetCostFunction( this->m_CostFunction );
   computeDisplacementDistribution->SetNumberOfJacobianMeasurements(
     this->m_NumberOfJacobianMeasurements );
@@ -771,7 +777,7 @@ AdaptiveStochasticGradientDescent< TElastix >
     /** Sample the grid and random sampler container to estimate the noise factor. */
     if( this->m_NumberOfGradientMeasurements == 0 )
     {
-      this->m_NumberOfGradientMeasurements = vnl_math_max(
+      this->m_NumberOfGradientMeasurements = std::max(
         static_cast< SizeValueType >( 2 ),
         this->m_NumberOfGradientMeasurements );
       elxout << "  NumberOfGradientMeasurements to estimate sigma_i: "
@@ -780,19 +786,19 @@ AdaptiveStochasticGradientDescent< TElastix >
     timer5.Start();
     if( maxJJ > 1e-14 )
     {
-      sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
+      sigma4 = sigma4factor * delta / std::sqrt( maxJJ );
     }
     this->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
 
-    double noisefactor = gg / ( gg + ee );
-    a =  delta * vcl_pow( A + 1.0, alpha ) / jacg * noisefactor;
+    const double noisefactor = gg / ( gg + ee + 1e-14 );
+    a =  delta * std::pow( A + 1.0, alpha ) / ( jacg + 1e-14 ) * noisefactor;
     timer5.Stop();
-    elxout << "  Compute the noise compensation took "
+    elxout << "  Computing the noise compensation took "
            << this->ConvertSecondsToDHMS( timer5.GetMean(), 6 ) << std::endl;
   }
   else
   {
-    a = delta * vcl_pow( A + 1.0, alpha ) / jacg;
+    a = delta * std::pow( A + 1.0, alpha ) / ( jacg + 1e-14 );
   }
 
   /** Set parameters in superclass. */
@@ -817,9 +823,11 @@ AdaptiveStochasticGradientDescent< TElastix >
 
   /** Variables for sampler support. Each metric may have a sampler. */
   std::vector< bool >                                useRandomSampleRegionVec( M, false );
-  std::vector< ImageRandomSamplerBasePointer >       randomSamplerVec( M, 0 );
-  std::vector< ImageRandomCoordinateSamplerPointer > randomCoordinateSamplerVec( M, 0 );
-  std::vector< ImageGridSamplerPointer >             gridSamplerVec( M, 0 );
+
+  // Note that std::vector will properly initialize its M elements to null (by default).
+  std::vector< ImageRandomSamplerBasePointer >       randomSamplerVec( M );
+  std::vector< ImageRandomCoordinateSamplerPointer > randomCoordinateSamplerVec( M );
+  std::vector< ImageGridSamplerPointer >             gridSamplerVec( M );
 
   /** If new samples every iteration, get each sampler, and check if it is
    * a kind of random sampler. If yes, prepare an additional grid sampler
@@ -896,7 +904,7 @@ AdaptiveStochasticGradientDescent< TElastix >
       }
     } // end loop over metrics
 
-  }   // end if NewSamplesEveryIteration.
+  } // end if NewSamplesEveryIteration.
 
 #ifndef _ELASTIX_BUILD_LIBRARY
   /** Prepare for progress printing. */
@@ -1071,7 +1079,7 @@ AdaptiveStochasticGradientDescent< TElastix >
 ::CheckForAdvancedTransform( void )
 {
   typename TransformType::Pointer transform = this->GetRegistration()
-    ->GetAsITKBaseType()->GetTransform();
+    ->GetAsITKBaseType()->GetModifiableTransform();
 
   AdvancedTransformType * testPtr = dynamic_cast< AdvancedTransformType * >(
     transform.GetPointer() );

@@ -42,9 +42,9 @@ set( ANN_SRCS
 # Create the ANNlib library
 add_library( ANNlib SHARED ${ANN_SRCS} )
 
-# Necessary when building a library, because in windows dll_export
-# is needed for creating the dll, but dll_import for using it in a program.
-set_target_properties( ANNlib PROPERTIES DEFINE_SYMBOL DLL_EXPORTS )
+include(GenerateExportHeader)
+generate_export_header( ANNlib
+  EXPORT_FILE_NAME ${elastix_BINARY_DIR}/ANN/ANNExport.h )
 
 # Group in IDE's like Visual Studio
 set_property( TARGET ANNlib PROPERTY FOLDER "libraries" )

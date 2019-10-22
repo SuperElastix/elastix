@@ -126,15 +126,15 @@ public:
    * to within a specified tolerance, else an exception is thrown.
    *
    * \sa MatrixOffsetTransformBase::SetMatrix() */
-  virtual void SetMatrix( const MatrixType & matrix );
+  void SetMatrix( const MatrixType & matrix ) override;
 
   /** Set the transformation from a container of parameters This is typically
    * used by optimizers.  There are 7 parameters. The first three represent the
    * versor, the next three represent the translation and the last one
    * represents the scaling factor. */
-  void SetParameters( const ParametersType & parameters );
+  void SetParameters( const ParametersType & parameters ) override;
 
-  virtual const ParametersType & GetParameters( void ) const;
+  const ParametersType & GetParameters( void ) const override;
 
   /** Set/Get the value of the isotropic scaling factor */
   void SetScale( ScaleType scale );
@@ -142,10 +142,10 @@ public:
   itkGetConstReferenceMacro( Scale, ScaleType );
 
   /** This method computes the Jacobian matrix of the transformation. */
-  virtual void GetJacobian(
+  void GetJacobian(
     const InputPointType &,
     JacobianType &,
-    NonZeroJacobianIndicesType & ) const;
+    NonZeroJacobianIndicesType & ) const override;
 
 protected:
 
@@ -156,14 +156,14 @@ protected:
   AdvancedSimilarity3DTransform();
   ~AdvancedSimilarity3DTransform(){}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Recomputes the matrix by calling the Superclass::ComputeMatrix() and then
    * applying the scale factor. */
-  void ComputeMatrix();
+  void ComputeMatrix() override;
 
   /** Computes the parameters from an input matrix. */
-  void ComputeMatrixParameters();
+  void ComputeMatrixParameters() override;
 
   /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void PrecomputeJacobianOfSpatialJacobian( void );

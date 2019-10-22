@@ -387,7 +387,7 @@ public:
 protected:
 
   ParameterMapInterface();
-  virtual ~ParameterMapInterface();
+  ~ParameterMapInterface() override;
 
 private:
 

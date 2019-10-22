@@ -36,7 +36,7 @@ FiniteDifferenceGradientDescent< TElastix >
 ::FiniteDifferenceGradientDescent()
 {
   this->m_ShowMetricValues = false;
-}   // end Constructor
+} // end Constructor
 
 
 /**
@@ -71,7 +71,7 @@ FiniteDifferenceGradientDescent< TElastix >::BeforeRegistration( void )
   xl::xout[ "iteration" ][ "3:Gain a_k" ] << std::showpoint << std::fixed;
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
 
-}   // end BeforeRegistration
+} // end BeforeRegistration
 
 
 /**
@@ -112,7 +112,7 @@ FiniteDifferenceGradientDescent< TElastix >
   this->SetParam_alpha( alpha );
   this->SetParam_gamma( gamma );
 
-}   // end BeforeEachResolution
+} // end BeforeEachResolution
 
 
 /**
@@ -145,7 +145,7 @@ FiniteDifferenceGradientDescent< TElastix >
     this->SelectNewSamples();
   }
 
-}   // end AfterEachIteration
+} // end AfterEachIteration
 
 
 /**
@@ -183,7 +183,7 @@ FiniteDifferenceGradientDescent< TElastix >
 
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-}   // end AfterEachResolution
+} // end AfterEachResolution
 
 
 /**
@@ -215,7 +215,7 @@ FiniteDifferenceGradientDescent< TElastix >
       << std::endl;
   }
 
-}   // end AfterRegistration
+} // end AfterRegistration
 
 
 /**

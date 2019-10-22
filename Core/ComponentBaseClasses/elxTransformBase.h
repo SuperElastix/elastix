@@ -57,9 +57,7 @@ namespace elastix
  * Voxel spacing and image origin are always taken into account, regardless
  * the setting of this parameter.\n
  *    example: <tt>(UseDirectionCosines "true")</tt>\n
- * Default: false. Recommended: true. The default value is false for
- * backward compatibility reasons. This parameter was introduced in
- * elastix 4.3. Setting it to false means that you choose to ignore important
+ * Default: true. Setting it to false means that you choose to ignore important
  * information from the image, which relates voxel coordinates to world coordinates.
  * Ignoring it may easily lead to left/right swaps for example, which could
  * skrew up a (medical) analysis.
@@ -235,7 +233,7 @@ public:
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.
    */
-  virtual int BeforeAllBase( void );
+  int BeforeAllBase( void ) override;
 
   /** Execute stuff before the actual transformation:
    * \li Check the appearance of inputpoints to be transformed.
@@ -245,12 +243,12 @@ public:
   /** Execute stuff before the actual registration:
    * \li Set the initial transform and how to group transforms.
    */
-  virtual void BeforeRegistrationBase( void );
+  void BeforeRegistrationBase( void ) override;
 
   /** Execute stuff after the registration:
    * \li Get and set the final parameters for the resampler.
    */
-  virtual void AfterRegistrationBase( void );
+  void AfterRegistrationBase( void ) override;
 
   /** Get the initial transform. */
   virtual const InitialTransformType * GetInitialTransform( void ) const;
@@ -298,11 +296,12 @@ public:
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
   virtual void TransformPointsSomePointsVTK( const std::string filename ) const;
 
-  /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions 
-   *  into Generate* and Write* functions, since that would facilitate a proper library 
-   *  interface. To keep everything functional during the transition period we need to 
-   *  keep the orignal Compute* and TransformPoints* functions and let them just call 
+  /** Deprecation note: The plan is to split all Compute* and TransformPoints* functions
+   *  into Generate* and Write* functions, since that would facilitate a proper library
+   *  interface. To keep everything functional during the transition period we need to
+   *  keep the orignal Compute* and TransformPoints* functions and let them just call
    *  Generate* and Write*. These functions should be considered marked deprecated.
+   */
 
   /** Function to transform all coordinates from fixed to moving image. */
   typename DeformationFieldImageType::Pointer GenerateDeformationFieldImage( void ) const;
@@ -328,7 +327,7 @@ protected:
   /** The constructor. */
   TransformBase();
   /** The destructor. */
-  virtual ~TransformBase();
+  ~TransformBase() override;
 
   /** Estimate a scales vector
    * AutomaticScalesEstimation works like this:
@@ -373,6 +372,9 @@ private:
     const Self * t0 = dynamic_cast<const Self *>( this->GetInitialTransform() );
     return t0->GetTransformParametersFileName();
   }
+
+  /** Boolean to decide whether or not the transform parameters are written in binary format. */
+  bool m_UseBinaryFormatForTransformationParameters;
 
 };
 

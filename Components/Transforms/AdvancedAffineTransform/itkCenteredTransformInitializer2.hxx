@@ -49,6 +49,10 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
   m_UseMoments       = false;
   m_UseOrigins       = false;
   m_UseTop           = false;
+
+  this->m_CenterOfGravityUsesLowerThreshold = false;
+  this->m_NumberOfSamplesForCenteredTransformInitialization = 10000;
+  this->m_LowerThresholdForCenterGravity = 500;
 }
 
 
@@ -94,27 +98,45 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
   if( m_UseMoments )
   {
     // Convert the masks to spatial objects
-    typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject = 0;
+    typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject; // default-constructed (null)
     if( this->m_FixedImageMask )
     {
       fixedMaskAsSpatialObject = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedImageMask );
+      fixedMaskAsSpatialObject->Update();
     }
 
-    typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject = 0;
+    typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject;  // default-constructed (null)
     if( this->m_MovingImageMask )
     {
       movingMaskAsSpatialObject = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage( this->m_MovingImageMask );
+      movingMaskAsSpatialObject->Update();
     }
 
     // Moments
-    m_FixedCalculator->SetImage(  m_FixedImage );
+    m_FixedCalculator->SetImage( m_FixedImage );
     m_FixedCalculator->SetSpatialObjectMask( fixedMaskAsSpatialObject );
+    if( this->m_CenterOfGravityUsesLowerThreshold )
+    {
+      /** Set the lower threshold for center gravity calculation. */
+      m_FixedCalculator->SetCenterOfGravityUsesLowerThreshold( this->m_CenterOfGravityUsesLowerThreshold );
+      m_FixedCalculator->SetLowerThresholdForCenterGravity( this->m_LowerThresholdForCenterGravity );
+    }
+    m_FixedCalculator->SetNumberOfSamplesForCenteredTransformInitialization(
+      this->m_NumberOfSamplesForCenteredTransformInitialization );
     m_FixedCalculator->Compute();
 
     m_MovingCalculator->SetImage( m_MovingImage );
     m_MovingCalculator->SetSpatialObjectMask( movingMaskAsSpatialObject );
+    if( this->m_CenterOfGravityUsesLowerThreshold )
+    {
+      /** Set the lower threshold for center gravity calculation. */
+      m_MovingCalculator->SetCenterOfGravityUsesLowerThreshold( this->m_CenterOfGravityUsesLowerThreshold );
+      m_MovingCalculator->SetLowerThresholdForCenterGravity( this->m_LowerThresholdForCenterGravity );
+    }
+    m_MovingCalculator->SetNumberOfSamplesForCenteredTransformInitialization(
+      this->m_NumberOfSamplesForCenteredTransformInitialization );
     m_MovingCalculator->Compute();
 
     typename FixedImageCalculatorType::VectorType fixedCenter = m_FixedCalculator->GetCenterOfGravity();
@@ -183,7 +205,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject
         = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedImageMask );
-      fixedRegion = fixedMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      fixedRegion = fixedMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Get moving image (mask) information
@@ -194,7 +216,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject
         = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage( this->m_MovingImageMask );
-      movingRegion = movingMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      movingRegion = movingMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Create eight corner points in voxel coordinates for both fixed and moving image.
@@ -280,7 +302,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       typename FixedMaskSpatialObjectType::Pointer fixedMaskAsSpatialObject
         = FixedMaskSpatialObjectType::New();
       fixedMaskAsSpatialObject->SetImage( this->m_FixedImageMask );
-      fixedRegion = fixedMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      fixedRegion = fixedMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Compute center of the fixed image (mask bounding box) in physical units
@@ -302,7 +324,7 @@ CenteredTransformInitializer2< TTransform, TFixedImage, TMovingImage >
       typename MovingMaskSpatialObjectType::Pointer movingMaskAsSpatialObject
         = MovingMaskSpatialObjectType::New();
       movingMaskAsSpatialObject->SetImage( this->m_MovingImageMask );
-      movingRegion = movingMaskAsSpatialObject->GetAxisAlignedBoundingBoxRegion();
+      movingRegion = movingMaskAsSpatialObject->ComputeMyBoundingBoxInIndexSpace();
     }
 
     // Compute center of the moving image (mask bounding box) in physical units

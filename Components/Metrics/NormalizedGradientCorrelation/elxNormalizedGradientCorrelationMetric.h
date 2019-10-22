@@ -130,23 +130,23 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( itk::ExceptionObject );
+  void Initialize( void ) override;
 
   /**
    * Do some things before each resolution:
    * \li Set CheckNumberOfSamples setting
    * \li Set UseNormalization setting
    */
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
 protected:
 
   /** The constructor. */
   NormalizedGradientCorrelationMetric(){}
   /** The destructor. */
-  virtual ~NormalizedGradientCorrelationMetric() {}
+  ~NormalizedGradientCorrelationMetric() override {}
 
 private:
 

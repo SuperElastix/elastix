@@ -184,7 +184,7 @@ ImageGridSampler< TInputImage >
             inputImage->TransformIndexToPhysicalPoint(
               index, tempsample.m_ImageCoordinates );
 
-            if( mask->IsInside( tempsample.m_ImageCoordinates ) )
+            if( mask->IsInsideInWorldSpace( tempsample.m_ImageCoordinates ) )
             {
               // Get sampled fixed image value.
               tempsample.m_ImageValue = inputImage->GetPixel( index );
@@ -261,8 +261,8 @@ ImageGridSampler< TInputImage >
   /** Compute the grid spacing. */
   const double indimd      = static_cast< double >( InputImageDimension );
   int          gridspacing = static_cast< int >(  // no unsigned int version of rnd, max
-    Math::Round< double >( vcl_pow( fraction, 1.0 / indimd ) ) );
-  gridspacing = vnl_math_max( 1, gridspacing );
+    Math::Round< double >( std::pow( fraction, 1.0 / indimd ) ) );
+  gridspacing = std::max( 1, gridspacing );
 
   /** Set gridspacings for all dimensions
    * Do not use the SetSampleGridSpacing function because it calls

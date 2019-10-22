@@ -103,7 +103,7 @@ protected:
   /** The constructor. */
   FullSampler() {}
   /** The destructor. */
-  virtual ~FullSampler() {}
+  ~FullSampler() override {}
 
 private:
 

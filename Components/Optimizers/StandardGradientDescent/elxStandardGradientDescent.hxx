@@ -36,7 +36,7 @@ StandardGradientDescent< TElastix >::StandardGradientDescent()
   this->m_CurrentNumberOfSamplingAttempts = 0;
   this->m_PreviousErrorAtIteration        = 0;
 
-}   // end Constructor()
+} // end Constructor()
 
 
 /**
@@ -57,7 +57,7 @@ StandardGradientDescent< TElastix >::BeforeRegistration( void )
   xl::xout[ "iteration" ][ "3:StepSize" ] << std::showpoint << std::fixed;
   xl::xout[ "iteration" ][ "4:||Gradient||" ] << std::showpoint << std::fixed;
 
-}   // end BeforeRegistration()
+} // end BeforeRegistration()
 
 
 /**
@@ -108,7 +108,7 @@ StandardGradientDescent< TElastix >
       << std::endl;
   }
 
-}   // end BeforeEachResolution()
+} // end BeforeEachResolution()
 
 
 /**
@@ -131,7 +131,7 @@ StandardGradientDescent< TElastix >
     this->SelectNewSamples();
   }
 
-}   // end AfterEachIteration()
+} // end AfterEachIteration()
 
 
 /**
@@ -167,7 +167,7 @@ StandardGradientDescent< TElastix >
   /** Print the stopping condition */
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
-}   // end AfterEachResolution()
+} // end AfterEachResolution()
 
 
 /**
@@ -187,7 +187,7 @@ StandardGradientDescent< TElastix >
     << bestValue
     << std::endl;
 
-}   // end AfterRegistration()
+} // end AfterRegistration()
 
 
 /**
@@ -220,7 +220,7 @@ StandardGradientDescent< TElastix >
   /** Superclass implementation. */
   this->Superclass1::StartOptimization();
 
-}   // end StartOptimization()
+} // end StartOptimization()
 
 
 /**
@@ -253,7 +253,7 @@ StandardGradientDescent< TElastix >
     this->Superclass1::MetricErrorResponse( err );
   }
 
-}   // end MetricErrorResponse()
+} // end MetricErrorResponse()
 
 
 } // end namespace elastix

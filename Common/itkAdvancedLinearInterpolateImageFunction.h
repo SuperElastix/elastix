@@ -122,7 +122,7 @@ public:
 protected:
 
   AdvancedLinearInterpolateImageFunction();
-  ~AdvancedLinearInterpolateImageFunction(){}
+  ~AdvancedLinearInterpolateImageFunction() override{}
 
 private:
 

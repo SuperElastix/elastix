@@ -46,8 +46,7 @@ namespace elastix
  * ******************* Constructor ***********************
  */
 
-ELASTIX::ELASTIX() :
-  m_ResultImage( 0 )
+ELASTIX::ELASTIX() : m_ResultImage(nullptr)
 {
 } // end Constructor
 
@@ -58,7 +57,7 @@ ELASTIX::ELASTIX() :
 
 ELASTIX::~ELASTIX()
 {
-  this->m_ResultImage = 0;
+  this->m_ResultImage = nullptr;
   this->m_TransformParametersList.clear();
 } // end Destructor
 
@@ -162,11 +161,11 @@ ELASTIX::RegisterImages(
   ElastixMainVectorType elastices;
 
   //ObjectPointer              transform = 0;
-  DataObjectContainerPointer fixedImageContainer  = 0;
-  DataObjectContainerPointer movingImageContainer = 0;
-  DataObjectContainerPointer fixedMaskContainer   = 0;
-  DataObjectContainerPointer movingMaskContainer  = 0;
-  DataObjectContainerPointer resultImageContainer = 0;
+  DataObjectContainerPointer fixedImageContainer  = nullptr;
+  DataObjectContainerPointer movingImageContainer = nullptr;
+  DataObjectContainerPointer fixedMaskContainer   = nullptr;
+  DataObjectContainerPointer movingMaskContainer  = nullptr;
+  DataObjectContainerPointer resultImageContainer = nullptr;
   FlatDirectionCosinesType   fixedImageOriginalDirection;
   int                        returndummy = 0;
   ArgumentMapType            argMap;
@@ -365,7 +364,7 @@ ELASTIX::RegisterImages(
     }
 
     /** Try to release some memory. */
-    elastices[ i ] = 0;
+    elastices[ i ] = nullptr;
 
   } // end loop over registrations
 
@@ -389,21 +388,21 @@ ELASTIX::RegisterImages(
    */
   for( i = 0; i < nrOfParameterFiles; i++ )
   {
-    elastices[ i ] = 0;
+    elastices[ i ] = nullptr;
   }
 
   /* Set result image for output */
-  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 )
+  if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 && resultImageContainer->ElementAt( 0 ).IsNotNull() )
   {
     this->m_ResultImage = resultImageContainer->ElementAt( 0 );
   }
 
-  transform            = 0;
-  fixedImageContainer  = 0;
-  movingImageContainer = 0;
-  fixedMaskContainer   = 0;
-  movingMaskContainer  = 0;
-  resultImageContainer = 0;
+  transform            = nullptr;
+  fixedImageContainer  = nullptr;
+  movingImageContainer = nullptr;
+  fixedMaskContainer   = nullptr;
+  movingMaskContainer  = nullptr;
+  resultImageContainer = nullptr;
 
   /** Close the modules. */
   ElastixMainType::UnloadComponents();
@@ -459,7 +458,7 @@ std::string
 ELASTIX::GetCurrentDateAndTime( void )
 {
   // Obtain current time
-  time_t rawtime = time( NULL );
+  time_t rawtime = time( nullptr );
   // Convert to local time
   struct tm * timeinfo = localtime( &rawtime );
   // Convert to human-readable format

@@ -66,29 +66,29 @@ public:
   /** Divide the parameters by the scales and call the GetValue routine
    * of the unscaled cost function.
    */
-  virtual MeasureType GetValue( const ParametersType & parameters ) const;
+  MeasureType GetValue( const ParametersType & parameters ) const override;
 
   /** Divide the parameters by the scales, call the GetDerivative routine
    * of the unscaled cost function and divide the resulting derivative by
    * the scales.
    */
-  virtual void GetDerivative(
+  void GetDerivative(
     const ParametersType & parameters,
-    DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const override;
 
   /** Same procedure as in GetValue and GetDerivative. */
-  virtual void GetValueAndDerivative(
+  void GetValueAndDerivative(
     const ParametersType & parameters,
     MeasureType & value,
-    DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const override;
 
   /** Ask the UnscaledCostFunction how many parameters it has. */
-  virtual NumberOfParametersType GetNumberOfParameters( void ) const;
+  NumberOfParametersType GetNumberOfParameters( void ) const override;
 
   /** Set the cost function that needs scaling. */
   itkSetObjectMacro( UnscaledCostFunction, Superclass );
   /** Get the cost function that needs scaling. */
-  itkGetObjectMacro( UnscaledCostFunction, Superclass );
+  itkGetModifiableObjectMacro( UnscaledCostFunction, Superclass );
 
   /** Set the scales. Also computes the squared scales, just in case users
    * call GetSquaredScales (for compatibility with the ITK convention). */
@@ -131,10 +131,10 @@ protected:
   /** The constructor. */
   ScaledSingleValuedCostFunction();
   /** The destructor. */
-  virtual ~ScaledSingleValuedCostFunction() {}
+  ~ScaledSingleValuedCostFunction() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

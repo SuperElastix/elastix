@@ -158,27 +158,27 @@ public:
 
   /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation */
-  virtual void StartOptimization( void );
+  void StartOptimization( void ) override;
 
   /** Methods to set parameters and print output at different stages
    * in the registration process.*/
-  virtual void BeforeRegistration( void );
+  void BeforeRegistration( void ) override;
 
-  virtual void BeforeEachResolution( void );
+  void BeforeEachResolution( void ) override;
 
-  virtual void AfterEachResolution( void );
+  void AfterEachResolution( void ) override;
 
-  virtual void AfterEachIteration( void );
+  void AfterEachIteration( void ) override;
 
-  virtual void AfterRegistration( void );
+  void AfterRegistration( void ) override;
 
 protected:
 
   CMAEvolutionStrategy(){}
-  virtual ~CMAEvolutionStrategy() {}
+  ~CMAEvolutionStrategy() override {}
 
   /** Call the superclass' implementation and print the value of some variables */
-  virtual void InitializeProgressVariables( void );
+  void InitializeProgressVariables( void ) override;
 
 private:
 

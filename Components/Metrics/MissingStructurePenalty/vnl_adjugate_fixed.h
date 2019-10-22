@@ -18,7 +18,6 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_det.h>
-#include <vcl_cassert.h>
 
 //: Calculates adjugate of a small vnl_matrix_fixed (not using svd)
 //  This allows you to write e.g.

@@ -167,7 +167,7 @@ public:
    * this condition. All shrink factors less than one will also be clamped
    * to the value of 1.
    */
-  virtual void SetSchedule( const ScheduleType & schedule );
+  void SetSchedule( const ScheduleType & schedule ) override;
 
   /** Set a multi-resolution rescale schedule. The input schedule must have only
    * ImageDimension number of columns and NumberOfLevels number of rows. For
@@ -204,7 +204,7 @@ public:
    * schedule will be resized accordingly. The schedules are populated with
    * default values.
    */
-  virtual void SetNumberOfLevels( unsigned int num );
+  void SetNumberOfLevels( unsigned int num ) override;
 
   /** Set the current multi-resolution levels. The current level is clamped to
    * a total number of levels.
@@ -232,10 +232,10 @@ public:
 protected:
 
   GenericMultiResolutionPyramidImageFilter();
-  ~GenericMultiResolutionPyramidImageFilter() {}
+  ~GenericMultiResolutionPyramidImageFilter() override {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** GenericMultiResolutionPyramidImageFilter may produce images which are of
    * different resolution and different pixel spacing than its input image.
@@ -244,20 +244,20 @@ protected:
    * pipeline execution model. The original documentation of this method is
    * below. \sa ProcessObject::GenerateOutputInformaton().
    */
-  virtual void GenerateOutputInformation( void );
+  void GenerateOutputInformation( void ) override;
 
   /** Given one output whose requested region has been set, this method sets
    * the requested region for the remaining output images. The original
    * documentation of this method is below. \sa
    * ProcessObject::GenerateOutputRequestedRegion().
    */
-  virtual void GenerateOutputRequestedRegion( DataObject * output );
+  void GenerateOutputRequestedRegion( DataObject * output ) override;
 
   /** Overwrite the Superclass implementation: no padding required. */
-  virtual void GenerateInputRequestedRegion( void );
+  void GenerateInputRequestedRegion( void ) override;
 
   /** Generate the output data. */
-  virtual void GenerateData( void );
+  void GenerateData( void ) override;
 
   /** Release the output data when the current level is used. */
   void ReleaseOutputs( void );

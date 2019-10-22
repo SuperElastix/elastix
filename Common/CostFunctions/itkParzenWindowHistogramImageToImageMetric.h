@@ -33,7 +33,7 @@ namespace itk
  * where the probability density distribution are estimated using
  * Parzen histograms.
  *
- * One the PDF's have been constructed, the metric value and derivative
+ * Once the PDF's have been constructed, the metric value and derivative
  * can be computed. Inheriting classes should make sure to call
  * the function ComputePDFs(AndPDFDerivatives) before using m_JointPDF and m_Alpha
  * (and m_JointPDFDerivatives).
@@ -143,7 +143,7 @@ public:
    * (3) InitializeKernels()
    * (4) Resize AlphaDerivatives
    */
-  void Initialize( void ) throw ( ExceptionObject );
+  void Initialize( void ) override;
 
   /** Get the derivatives of the match measure. This method simply calls the
    * the GetValueAndDerivative, since this will be mostly almost as fast
@@ -151,7 +151,7 @@ public:
    */
   void GetDerivative(
     const ParametersType & parameters,
-    DerivativeType & Derivative ) const;
+    DerivativeType & Derivative ) const override;
 
   /**  Get the value and derivatives for single valued optimizers.
    * This method calls this->GetValueAndAnalyticDerivative or
@@ -159,7 +159,7 @@ public:
    * m_UseFiniteDifferenceDerivative.
    */
   void GetValueAndDerivative( const ParametersType & parameters,
-    MeasureType & value, DerivativeType & derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const override;
 
   /** Number of bins to use for the fixed image in the histogram.
    * Typical value is 32.  The minimum value is 4 due to the padding
@@ -221,10 +221,10 @@ protected:
   ParzenWindowHistogramImageToImageMetric();
 
   /** The destructor. */
-  virtual ~ParzenWindowHistogramImageToImageMetric();
+  ~ParzenWindowHistogramImageToImageMetric() override;
 
   /** Print Self. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Protected Typedefs ******************/
 
@@ -322,7 +322,7 @@ protected:
   mutable ThreadIdType                                                       m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariablesSize;
 
   /** Initialize threading related parameters. */
-  virtual void InitializeThreadingParameters( void ) const;
+  void InitializeThreadingParameters( void ) const override;
 
   /** Multi-threaded versions of the ComputePDF function. */
   inline void ThreadedComputePDFs( ThreadIdType threadId );

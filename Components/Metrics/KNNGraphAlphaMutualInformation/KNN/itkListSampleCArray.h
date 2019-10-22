@@ -88,7 +88,7 @@ public:
   void Clear( void );
 
   /** Function to get the size of the data container. */
-  virtual InstanceIdentifier Size( void ) const
+  InstanceIdentifier Size( void ) const override
   {
     return this->m_InternalContainerSize;
   }
@@ -100,8 +100,8 @@ public:
    * The method GetMeasurementVector( const InstanceIdentifier &id, MeasurementVectorType & mv)
    * is actually a preferred way to get a measurement vector.
    */
-  virtual const MeasurementVectorType & GetMeasurementVector(
-    InstanceIdentifier id ) const;
+  const MeasurementVectorType & GetMeasurementVector(
+    InstanceIdentifier id ) const override;
 
   /** Function to get a point from the data container. */
   void GetMeasurementVector( InstanceIdentifier id,
@@ -116,10 +116,10 @@ public:
     const MeasurementVectorType & mv );
 
   /** Function to get the frequency of point i. 1.0 if it exist, 0.0 otherwise. */
-  virtual AbsoluteFrequencyType GetFrequency( InstanceIdentifier id ) const;
+  AbsoluteFrequencyType GetFrequency( InstanceIdentifier id ) const override;
 
   /** Function to get the total frequency. */
-  virtual TotalAbsoluteFrequencyType GetTotalFrequency( void ) const
+  TotalAbsoluteFrequencyType GetTotalFrequency( void ) const override
   {
     return static_cast< TotalAbsoluteFrequencyType >( this->m_InternalContainerSize );
   }
@@ -128,8 +128,8 @@ public:
 protected:
 
   ListSampleCArray();
-  virtual ~ListSampleCArray();
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~ListSampleCArray() override;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

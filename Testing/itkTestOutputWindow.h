@@ -61,7 +61,7 @@ public:
   itkTypeMacro( TestOutputWindow, OutputWindow );
 
   /** Overloaded */
-  virtual void DisplayText( const char * ) ITK_OVERRIDE;
+  virtual void DisplayText( const char * ) override;
 
 protected:
 

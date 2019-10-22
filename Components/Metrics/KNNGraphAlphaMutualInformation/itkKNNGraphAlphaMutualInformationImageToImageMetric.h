@@ -222,18 +222,18 @@ public:
    */
 
   /** Initialize the metric. */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  void Initialize( void ) override;
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & Derivative ) const;
+    DerivativeType & Derivative ) const override;
 
   /** Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const;
+  MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & Value, DerivativeType & Derivative ) const;
+    MeasureType & Value, DerivativeType & Derivative ) const override;
 
   /** Set alpha from alpha - mutual information. */
   itkSetClampMacro( Alpha, double, 0.0, 1.0 );
@@ -253,10 +253,10 @@ protected:
   KNNGraphAlphaMutualInformationImageToImageMetric();
 
   /** Destructor. */
-  virtual ~KNNGraphAlphaMutualInformationImageToImageMetric() {}
+  ~KNNGraphAlphaMutualInformationImageToImageMetric() override {}
 
   /** PrintSelf. */
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Member variables. */
   BinaryKNNTreePointer m_BinaryKNNTreeFixed;

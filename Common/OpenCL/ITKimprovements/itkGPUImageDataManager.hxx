@@ -61,7 +61,7 @@ GPUImageDataManager< ImageType >::UpdateCPUBuffer()
 
   if( m_Image.IsNotNull() )
   {
-    m_Mutex.Lock();
+    m_Mutex.lock();
 
     unsigned long gpu_time       = this->GetMTime();
     TimeStamp     cpu_time_stamp = m_Image->GetTimeStamp();
@@ -73,7 +73,7 @@ GPUImageDataManager< ImageType >::UpdateCPUBuffer()
     * correctly managed. Therefore, we check the time stamp of
     * CPU and GPU data as well
     */
-    if( ( m_IsCPUBufferDirty || ( gpu_time > cpu_time ) ) && m_GPUBuffer != NULL && m_CPUBuffer != NULL )
+    if( ( m_IsCPUBufferDirty || ( gpu_time > cpu_time ) ) && m_GPUBuffer != nullptr && m_CPUBuffer != nullptr )
     {
       cl_int errid;
 #if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
@@ -83,7 +83,7 @@ GPUImageDataManager< ImageType >::UpdateCPUBuffer()
 #ifdef OPENCL_PROFILING
       cl_event clEvent = NULL;
       errid = clEnqueueReadBuffer( m_Context->GetCommandQueue().GetQueueId(),
-        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent );
+        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, nullptr, &clEvent );
 #else
       errid = clEnqueueReadBuffer( m_Context->GetCommandQueue().GetQueueId(),
         m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, 0, 0 );
@@ -99,7 +99,7 @@ GPUImageDataManager< ImageType >::UpdateCPUBuffer()
       m_IsGPUBufferDirty = false;
     }
 
-    m_Mutex.Unlock();
+    m_Mutex.unlock();
   }
 }
 
@@ -116,7 +116,7 @@ GPUImageDataManager< ImageType >::UpdateGPUBuffer()
 
   if( m_Image.IsNotNull() )
   {
-    m_Mutex.Lock();
+    m_Mutex.lock();
 
     unsigned long gpu_time       = this->GetMTime();
     TimeStamp     cpu_time_stamp = m_Image->GetTimeStamp();
@@ -128,7 +128,7 @@ GPUImageDataManager< ImageType >::UpdateGPUBuffer()
     * correctly managed. Therefore, we check the time stamp of
     * CPU and GPU data as well
     */
-    if( ( m_IsGPUBufferDirty || ( gpu_time < cpu_time ) ) && m_CPUBuffer != NULL && m_GPUBuffer != NULL )
+    if( ( m_IsGPUBufferDirty || ( gpu_time < cpu_time ) ) && m_CPUBuffer != nullptr && m_GPUBuffer != nullptr )
     {
       cl_int errid;
 #if ( defined( _WIN32 ) && defined( _DEBUG ) ) || !defined( NDEBUG )
@@ -138,10 +138,10 @@ GPUImageDataManager< ImageType >::UpdateGPUBuffer()
 #ifdef OPENCL_PROFILING
       cl_event clEvent = NULL;
       errid = clEnqueueWriteBuffer( m_Context->GetCommandQueue().GetQueueId(),
-        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, &clEvent );
+        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, nullptr, &clEvent );
 #else
       errid = clEnqueueWriteBuffer( m_Context->GetCommandQueue().GetQueueId(),
-        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, NULL, NULL );
+        m_GPUBuffer, CL_TRUE, 0, m_BufferSize, m_CPUBuffer, 0, nullptr, nullptr );
 #endif
       m_Context->ReportError( errid, __FILE__, __LINE__, ITK_LOCATION );
       //m_ContextManager->OpenCLProfile(clEvent, "clEnqueueWriteBuffer CPU->GPU");
@@ -152,7 +152,7 @@ GPUImageDataManager< ImageType >::UpdateGPUBuffer()
       m_IsGPUBufferDirty = false;
     }
 
-    m_Mutex.Unlock();
+    m_Mutex.unlock();
   }
 }
 

@@ -60,7 +60,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 template< class TFixedImage, class TMovingImage >
 void
 NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void )
 {
   /** Initialize the base class */
   Superclass::Initialize();
@@ -187,7 +187,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     /** if fixedMask is given */
     if( !this->m_FixedImageMask.IsNull() )
     {
-      if( this->m_FixedImageMask->IsInside( point ) )
+      if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
       {
         sampleOK = true;
       }
@@ -267,7 +267,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     /** if fixedMask is given */
     if( !this->m_FixedImageMask.IsNull() )
     {
-      if( this->m_FixedImageMask->IsInside( point ) )
+      if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
       {
         sampleOK = true;
       }
@@ -364,7 +364,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
     /** if fixedMask is given */
     if( !this->m_FixedImageMask.IsNull() )
     {
-      if( this->m_FixedImageMask->IsInside( point ) )
+      if( this->m_FixedImageMask->IsInsideInWorldSpace( point ) )
       {
         sampleOK = true;
       }
@@ -394,7 +394,7 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
   } // end while
 
   measure = -1.0 * ( NGcrosscorrelation
-    / ( vcl_sqrt( NGautocorrelationfixed ) * vcl_sqrt( NGautocorrelationmoving ) ) );
+    / ( std::sqrt( NGautocorrelationfixed ) * std::sqrt( NGautocorrelationmoving ) ) );
   return measure;
 
 } // end ComputeMeasure()
@@ -477,11 +477,11 @@ NormalizedGradientCorrelationImageToImageMetric< TFixedImage, TMovingImage >
 
   for( unsigned int i = 0; i < numberOfParameters; i++ )
   {
-    testPoint[ i ] -= this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] );
+    testPoint[ i ] -= this->m_DerivativeDelta / std::sqrt( this->m_Scales[ i ] );
     const MeasureType valuep0 = this->GetValue( testPoint );
-    testPoint[ i ] += 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] );
+    testPoint[ i ] += 2 * this->m_DerivativeDelta / std::sqrt( this->m_Scales[ i ] );
     const MeasureType valuep1 = this->GetValue( testPoint );
-    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] ) );
+    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / std::sqrt( this->m_Scales[ i ] ) );
     testPoint[ i ]  = parameters[ i ];
   }
 
