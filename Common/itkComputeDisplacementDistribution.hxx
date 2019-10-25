@@ -333,7 +333,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
  */
 
 template< class TFixedImage, class TTransform >
-ITK_THREAD_RETURN_TYPE
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ComputeDisplacementDistribution< TFixedImage, TTransform >
 ::ComputeThreaderCallback( void * arg )
 {

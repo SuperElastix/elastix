@@ -347,7 +347,7 @@ AdvancedImageMomentsCalculator< TImage >
 */
 
 template< typename TImage >
-ITK_THREAD_RETURN_TYPE
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedImageMomentsCalculator< TImage >
 ::ComputeThreaderCallback(void * arg)
 {
