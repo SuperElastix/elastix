@@ -35,6 +35,8 @@ void
 ImageRandomSampler< TInputImage >
 ::GenerateData( void )
 {
+  this->m_WorkUnitId.store(0);
+
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
   typename MaskType::ConstPointer mask = this->GetMask();
   if( mask.IsNull() && this->m_UseMultiThread )
@@ -140,7 +142,7 @@ ImageRandomSampler< TInputImage >
 template< class TInputImage >
 void
 ImageRandomSampler< TInputImage >
-::ThreadedGenerateData( const InputImageRegionType &, ThreadIdType threadId )
+::DynamicThreadedGenerateData( const InputImageRegionType & )
 {
   /** Sanity check. */
   typename MaskType::ConstPointer mask = this->GetMask();
@@ -152,10 +154,12 @@ ImageRandomSampler< TInputImage >
   /** Get handle to the input image. */
   InputImageConstPointer inputImage = this->GetInput();
 
+  const ThreadIdType workUnitId = this->m_WorkUnitId++;
+
   /** Figure out which samples to process. */
   unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
-  unsigned long sampleStart = threadId * chunkSize;
-  if( threadId == this->GetNumberOfWorkUnits() - 1 )
+  unsigned long sampleStart = workUnitId * chunkSize;
+  if( workUnitId == this->GetNumberOfWorkUnits() - 1 )
   {
     chunkSize = this->GetNumberOfSamples()
       - ( ( this->GetNumberOfWorkUnits() - 1 ) * chunkSize );
@@ -163,7 +167,7 @@ ImageRandomSampler< TInputImage >
 
   /** Get a reference to the output and reserve memory for it. */
   ImageSampleContainerPointer & sampleContainerThisThread
-    = this->m_ThreaderSampleContainer[ threadId ];
+    = this->m_ThreaderSampleContainer[ workUnitId ];
   sampleContainerThisThread->Reserve( chunkSize );
 
   /** Setup an iterator over the sampleContainerThisThread. */

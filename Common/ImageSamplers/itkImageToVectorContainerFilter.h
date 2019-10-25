@@ -78,8 +78,7 @@ public:
   /** Get the output Mesh of this process object.  */
   OutputVectorContainerType * GetOutput( void );
 
-  /** Prepare the output. */
-  //virtual void GenerateOutputInformation( void );
+protected:
 
   /** A version of GenerateData() specific for image processing
    * filters.  This implementation will split the processing across
@@ -100,29 +99,28 @@ public:
 
   /** If an imaging filter can be implemented as a multithreaded
    * algorithm, the filter will provide an implementation of
-   * ThreadedGenerateData().  This superclass will automatically split
-   * the output image into a number of pieces, spawn multiple threads,
-   * and call ThreadedGenerateData() in each thread. Prior to spawning
-   * threads, the BeforeThreadedGenerateData() method is called. After
-   * all the threads have completed, the AfterThreadedGenerateData()
+   * DynamicThreadedGenerateData().  This superclass will automatically split
+   * the output image into a number of pieces
+   * and call DynamicThreadedGenerateData() in each work unit. Prior to
+   * parallel
+   * execution, the BeforeThreadedGenerateData() method is called. After
+   * all the work units have completed, the AfterThreadedGenerateData()
    * method is called. If an image processing filter cannot support
    * threading, that filter should provide an implementation of the
    * GenerateData() method instead of providing an implementation of
-   * ThreadedGenerateData().  If a filter provides a GenerateData()
+   * DynamicThreadedGenerateData().  If a filter provides a GenerateData()
    * method as its implementation, then the filter is responsible for
    * allocating the output data.  If a filter provides a
    * ThreadedGenerateData() method as its implementation, then the
    * output memory will allocated automatically by this superclass.
    * The ThreadedGenerateData() method should only produce the output
    * specified by "outputThreadRegion"
-   * parameter. ThreadedGenerateData() cannot write to any other
+   * parameter. DynamicThreadedGenerateData() cannot write to any other
    * portion of the output image (as this is responsibility of a
    * different thread).
    *
-   * \sa GenerateData(), SplitRequestedRegion() */
-  virtual void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId );
+   * \sa GenerateData() */
+  virtual void DynamicThreadedGenerateData( const InputImageRegionType & inputRegionForWorkUnit );
 
   /** If an imaging filter needs to perform processing after the buffer
    * has been allocated but before threads are spawned, the filter can
@@ -148,26 +146,6 @@ public:
    * a ThreadedGenerateData() method and NOT a GenerateData() method. */
   virtual void AfterThreadedGenerateData( void ) {}
 
-  /** Split the output's RequestedRegion into "numberOfSplits" pieces, returning
-   * region "i" as "splitRegion". This method is called "numberOfSplits" times. The
-   * regions must not overlap. The method returns the number of pieces that
-   * the routine is capable of splitting the output RequestedRegion,
-   * i.e. return value is less than or equal to "numberOfSplits". */
-  virtual unsigned int SplitRequestedRegion( const ThreadIdType & threadId,
-    const ThreadIdType & numberOfSplits, InputImageRegionType & splitRegion );
-
-  /** Static function used as a "callback" by the PlatformMultiThreader.  The threading
-   * library will call this routine for each thread, which will delegate the
-   * control to ThreadedGenerateData(). */
-  static ITK_THREAD_RETURN_TYPE ThreaderCallback( void * arg );
-
-  /** Internal structure used for passing image data into the threading library */
-  struct ThreadStruct //?
-  {
-    Pointer Filter;
-  };
-
-protected:
 
   /** The constructor. */
   ImageToVectorContainerFilter();

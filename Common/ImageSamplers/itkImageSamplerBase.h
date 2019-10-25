@@ -23,6 +23,8 @@
 #include "itkVectorDataContainer.h"
 #include "itkSpatialObject.h"
 
+#include <mutex>
+
 namespace itk
 {
 /** \class ImageSamplerBase
@@ -205,10 +207,13 @@ protected:
   void AfterThreadedGenerateData( void ) override;
 
   /***/
-  unsigned long                              m_NumberOfSamples;
-  std::vector< ImageSampleContainerPointer > m_ThreaderSampleContainer;
+  unsigned long                                           m_NumberOfSamples;
 
-  //tmp?
+  using ThreaderSampleContainerType = std::vector< ImageSampleContainerPointer >;
+  ThreaderSampleContainerType                             m_ThreaderSampleContainer;
+
+  std::mutex m_Mutex;
+
   bool m_UseMultiThread;
 
 private:
@@ -228,7 +233,6 @@ private:
 
   InputImageRegionType m_CroppedInputImageRegion;
   InputImageRegionType m_DummyInputImageRegion;
-
 };
 
 } // end namespace itk

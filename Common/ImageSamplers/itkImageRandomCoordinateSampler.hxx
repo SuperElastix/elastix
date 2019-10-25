@@ -216,6 +216,8 @@ ImageRandomCoordinateSampler< TInputImage >
     this->m_ThreaderSampleContainer[ i ] = ImageSampleContainerType::New();
   }
 
+  this->m_WorkUnitId.store(0);
+
 } // end BeforeThreadedGenerateData()
 
 
@@ -226,7 +228,7 @@ ImageRandomCoordinateSampler< TInputImage >
 template< class TInputImage >
 void
 ImageRandomCoordinateSampler< TInputImage >
-::ThreadedGenerateData( const InputImageRegionType &, ThreadIdType threadId )
+::DynamicThreadedGenerateData( const InputImageRegionType & )
 {
   /** Sanity check. */
   typename MaskType::ConstPointer mask = this->GetMask();
@@ -235,13 +237,15 @@ ImageRandomCoordinateSampler< TInputImage >
     itkExceptionMacro( << "ERROR: do not call this function when a mask is supplied." );
   }
 
+  const ThreadIdType workUnitId = this->m_WorkUnitId++;
+
   /** Get handle to the input image. */
   InputImageConstPointer inputImage = this->GetInput();
 
   /** Figure out which samples to process. */
   unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
-  unsigned long sampleStart = threadId * chunkSize * InputImageDimension;
-  if( threadId == this->GetNumberOfWorkUnits() - 1 )
+  unsigned long sampleStart = workUnitId * chunkSize * InputImageDimension;
+  if( workUnitId == this->GetNumberOfWorkUnits() - 1 )
   {
     chunkSize = this->GetNumberOfSamples()
       - ( ( this->GetNumberOfWorkUnits() - 1 ) * chunkSize );
@@ -249,7 +253,7 @@ ImageRandomCoordinateSampler< TInputImage >
 
   /** Get a reference to the output and reserve memory for it. */
   ImageSampleContainerPointer & sampleContainerThisThread // & ???
-    = this->m_ThreaderSampleContainer[ threadId ];
+    = this->m_ThreaderSampleContainer[ workUnitId ];
   sampleContainerThisThread->Reserve( chunkSize );
 
   /** Setup an iterator over the sampleContainerThisThread. */

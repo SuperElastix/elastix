@@ -22,6 +22,8 @@
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageFullSampler.h"
 
+#include <atomic>
+
 namespace itk
 {
 /** \class ImageRandomSamplerSparseMask
@@ -97,9 +99,7 @@ protected:
   /** Multi-threaded functionality that does the work. */
   void BeforeThreadedGenerateData( void ) override;
 
-  void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) override;
+  void DynamicThreadedGenerateData( const InputImageRegionType & inputRegionForThread ) override;
 
   RandomGeneratorPointer     m_RandomGenerator;
   InternalFullSamplerPointer m_InternalFullSampler;
@@ -111,6 +111,7 @@ private:
   /** The private copy constructor. */
   void operator=( const Self & );                // purposely not implemented
 
+  std::atomic< ThreadIdType > m_WorkUnitId;
 };
 
 } // end namespace itk

@@ -137,14 +137,12 @@ ImageFullSampler< TInputImage >
 template< class TInputImage >
 void
 ImageFullSampler< TInputImage >
-::ThreadedGenerateData( const InputImageRegionType & inputRegionForThread,
-  ThreadIdType threadId )
+::DynamicThreadedGenerateData( const InputImageRegionType & inputRegionForThread )
 {
   /** Get handles to the input image, mask and the output. */
   InputImageConstPointer inputImage = this->GetInput();
   typename MaskType::ConstPointer mask = this->GetMask();
-  ImageSampleContainerPointer & sampleContainerThisThread // & ???
-    = this->m_ThreaderSampleContainer[ threadId ];
+  ImageSampleContainerPointer sampleContainerThisWorkUnit = ImageSampleContainerType::New();
 
   /** Set up a region iterator within the user specified image region. */
   typedef ImageRegionConstIteratorWithIndex< InputImageType > InputImageIterator;
@@ -160,7 +158,7 @@ ImageFullSampler< TInputImage >
      */
     try
     {
-      sampleContainerThisThread->Reserve( chunkSize );
+      sampleContainerThisWorkUnit->Reserve( chunkSize );
     }
     catch( std::exception & excp )
     {
@@ -191,7 +189,7 @@ ImageFullSampler< TInputImage >
       tempSample.m_ImageValue = iter.Get();
 
       /** Store in container. */
-      sampleContainerThisThread->SetElement( ind, tempSample );
+      sampleContainerThisWorkUnit->SetElement( ind, tempSample );
 
     } // end for
   } // end if no mask
@@ -219,13 +217,15 @@ ImageFullSampler< TInputImage >
         tempSample.m_ImageValue = iter.Get();
 
         /**  Store in container. */
-        sampleContainerThisThread->push_back( tempSample );
+        sampleContainerThisWorkUnit->push_back( tempSample );
 
       } // end if
     } // end for
   }     // end else (if mask exists)
 
-} // end ThreadedGenerateData()
+  std::lock_guard<std::mutex> mutexHolder( this->m_Mutex );
+  this->m_ThreaderSampleContainer.push_back( sampleContainerThisWorkUnit );
+} // end DynamicThreadedGenerateData()
 
 
 /**

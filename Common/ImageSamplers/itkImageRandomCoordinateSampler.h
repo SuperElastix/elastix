@@ -123,9 +123,7 @@ protected:
   /** Multi-threaded functionality that does the work. */
   void BeforeThreadedGenerateData( void ) override;
 
-  void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) override;
+  void DynamicThreadedGenerateData( const InputImageRegionType & inputRegionForThread ) override;
 
   /** Generate a point randomly in a bounding box. */
   virtual void GenerateRandomCoordinate(
@@ -157,6 +155,7 @@ private:
 
   bool m_UseRandomSampleRegion;
 
+  std::atomic< ThreadIdType > m_WorkUnitId;
 };
 
 } // end namespace itk

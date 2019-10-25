@@ -140,72 +140,6 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 
 
 /**
- * ******************* SplitRequestedRegion *******************
- */
-
-template< class TInputImage, class TOutputVectorContainer >
-unsigned int
-ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-::SplitRequestedRegion( const ThreadIdType & threadId,
-  const ThreadIdType & numberOfSplits, InputImageRegionType & splitRegion )
-{
-  // Get the input pointer
-  const InputImageType * inputPtr = this->GetInput();
-  const typename TInputImage::SizeType & requestedRegionSize
-    = inputPtr->GetRequestedRegion().GetSize();
-  // \todo: requested region -> this->GetCroppedInputImageRegion()
-
-  int splitAxis;
-  typename TInputImage::IndexType splitIndex;
-  typename TInputImage::SizeType splitSize;
-
-  // Initialize the splitRegion to the output requested region
-  splitRegion = inputPtr->GetRequestedRegion();
-  splitIndex  = splitRegion.GetIndex();
-  splitSize   = splitRegion.GetSize();
-
-  // split on the outermost dimension available
-  splitAxis = inputPtr->GetImageDimension() - 1;
-  while( requestedRegionSize[ splitAxis ] == 1 )
-  {
-    --splitAxis;
-    if( splitAxis < 0 )
-    {   // cannot split
-      itkDebugMacro( "  Cannot Split" );
-      return 1;
-    }
-  }
-
-  // determine the actual number of pieces that will be generated
-  typename TInputImage::SizeType::SizeValueType range = requestedRegionSize[ splitAxis ];
-  unsigned int valuesPerThread = Math::Ceil< unsigned int >( range / (double)numberOfSplits );
-  unsigned int maxThreadIdUsed = Math::Ceil< unsigned int >( range / (double)valuesPerThread ) - 1;
-
-  // Split the region
-  if( threadId < maxThreadIdUsed )
-  {
-    splitIndex[ splitAxis ] += threadId * valuesPerThread;
-    splitSize[ splitAxis ]   = valuesPerThread;
-  }
-  if( threadId == maxThreadIdUsed )
-  {
-    splitIndex[ splitAxis ] += threadId * valuesPerThread;
-    // last thread needs to process the "rest" dimension being split
-    splitSize[ splitAxis ] = splitSize[ splitAxis ] - threadId * valuesPerThread;
-  }
-
-  // set the split region ivars
-  splitRegion.SetIndex( splitIndex );
-  splitRegion.SetSize( splitSize );
-
-  itkDebugMacro( << "  Split Piece: " << splitRegion );
-
-  return maxThreadIdUsed + 1;
-
-} // end SplitRequestedRegion()
-
-
-/**
  * ******************* GenerateData *******************
  */
 
@@ -224,14 +158,13 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
   this->BeforeThreadedGenerateData();
 
   // Set up the multithreaded processing
-  ThreadStruct str;
-  str.Filter = this;
-
-  this->GetMultiThreader()->SetNumberOfWorkUnits( this->GetNumberOfWorkUnits() );
-  this->GetMultiThreader()->SetSingleMethod( this->ThreaderCallback, &str );
-
-  // multithread the execution
-  this->GetMultiThreader()->SingleMethodExecute();
+  this->GetMultiThreader()->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
+  this->GetMultiThreader()->template ParallelizeImageRegion<InputImageType::ImageDimension>(
+    this->GetInput()->GetRequestedRegion(),
+    [this](const InputImageRegionType & regionForThread) {
+      this->DynamicThreadedGenerateData(regionForThread);
+    },
+    this);
 
   // Call a method that can be overridden by a subclass to perform
   // some calculations after all the threads have completed
@@ -247,7 +180,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 template< class TInputImage, class TOutputVectorContainer >
 void
 ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-::ThreadedGenerateData( const InputImageRegionType &, ThreadIdType )
+::DynamicThreadedGenerateData( const InputImageRegionType & )
 {
   // The following code is equivalent to:
   // itkExceptionMacro("subclass should override this method!!!");
@@ -260,45 +193,6 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
   throw e_;
 
 } // end ThreadedGenerateData()
-
-
-/**
- * ******************* ThreaderCallback *******************
- */
-
-// Callback routine used by the threading library. This routine just calls
-// the ThreadedGenerateData method after setting the correct region for this
-// thread.
-template< class TInputImage, class TOutputVectorContainer >
-ITK_THREAD_RETURN_TYPE
-ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-::ThreaderCallback( void * arg )
-{
-  ThreadStruct * str;
-  ThreadIdType   threadId    = ( (PlatformMultiThreader::WorkUnitInfo *)( arg ) )->WorkUnitID;
-  ThreadIdType   threadCount = ( (PlatformMultiThreader::WorkUnitInfo *)( arg ) )->NumberOfWorkUnits;
-
-  str = (ThreadStruct *)( ( (PlatformMultiThreader::WorkUnitInfo *)( arg ) )->UserData );
-
-  // execute the actual method with appropriate output region
-  // first find out how many pieces extent can be split into.
-  typename TInputImage::RegionType splitRegion;
-  unsigned int total = str->Filter->SplitRequestedRegion( threadId, threadCount, splitRegion );
-
-  if( threadId < total )
-  {
-    str->Filter->ThreadedGenerateData( splitRegion, threadId );
-  }
-  // else
-  //   {
-  //   otherwise don't use this thread. Sometimes the threads dont
-  //   break up very well and it is just as efficient to leave a
-  //   few threads idle.
-  //   }
-
-  return itk::ITK_THREAD_RETURN_DEFAULT_VALUE;
-
-} // end ThreaderCallback()
 
 
 } // end namespace itk

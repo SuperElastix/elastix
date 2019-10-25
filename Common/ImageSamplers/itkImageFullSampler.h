@@ -103,9 +103,7 @@ protected:
   void GenerateData( void ) override;
 
   /** Multi-threaded function that does the work. */
-  void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) override;
+  void DynamicThreadedGenerateData( const InputImageRegionType & inputRegionForThread) override;
 
 private:
 

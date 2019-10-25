@@ -151,6 +151,7 @@ ImageRandomSamplerSparseMask< TInputImage >
     this->m_ThreaderSampleContainer[ i ] = ImageSampleContainerType::New();
   }
 
+  this->m_WorkUnitId.store(0);
 } // end BeforeThreadedGenerateData()
 
 
@@ -161,7 +162,7 @@ ImageRandomSamplerSparseMask< TInputImage >
 template< class TInputImage >
 void
 ImageRandomSamplerSparseMask< TInputImage >
-::ThreadedGenerateData( const InputImageRegionType &, ThreadIdType threadId )
+::DynamicThreadedGenerateData( const InputImageRegionType & )
 {
   /** Get a handle to the full sampler output. */
   typename ImageSampleContainerType::Pointer allValidSamples
@@ -169,8 +170,9 @@ ImageRandomSamplerSparseMask< TInputImage >
 
   /** Figure out which samples to process. */
   unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
-  unsigned long sampleStart = threadId * chunkSize;
-  if( threadId == this->GetNumberOfWorkUnits() - 1 )
+  const ThreadIdType workUnitId = this->m_WorkUnitId++;
+  unsigned long sampleStart = workUnitId * chunkSize;
+  if( workUnitId == this->GetNumberOfWorkUnits() - 1 )
   {
     chunkSize = this->GetNumberOfSamples()
       - ( ( this->GetNumberOfWorkUnits() - 1 ) * chunkSize );
@@ -178,7 +180,7 @@ ImageRandomSamplerSparseMask< TInputImage >
 
   /** Get a reference to the output and reserve memory for it. */
   ImageSampleContainerPointer & sampleContainerThisThread
-    = this->m_ThreaderSampleContainer[ threadId ];
+    = this->m_ThreaderSampleContainer[ workUnitId ];
   sampleContainerThisThread->Reserve( chunkSize );
 
   /** Setup an iterator over the sampleContainerThisThread. */
