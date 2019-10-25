@@ -94,18 +94,18 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
    * each iteration, in the accumulate functions, in a multi-threaded fashion.
    * This has performance benefits for larger vector sizes.
    */
-  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
+  const ThreadIdType numberOfWorkUnits = this->m_Threader->GetNumberOfWorkUnits();
 
   /** Only resize the array of structs when needed. */
-  if( this->m_ComputePerThreadVariablesSize != numberOfThreads )
+  if( this->m_ComputePerThreadVariablesSize != numberOfWorkUnits )
   {
     delete[] this->m_ComputePerThreadVariables;
-    this->m_ComputePerThreadVariables     = new AlignedComputePerThreadStruct[ numberOfThreads ];
-    this->m_ComputePerThreadVariablesSize = numberOfThreads;
+    this->m_ComputePerThreadVariables     = new AlignedComputePerThreadStruct[ numberOfWorkUnits ];
+    this->m_ComputePerThreadVariablesSize = numberOfWorkUnits;
   }
 
   /** Some initialization. */
-  for( ThreadIdType i = 0; i < numberOfThreads; ++i )
+  for( ThreadIdType i = 0; i < numberOfWorkUnits; ++i )
   {
     this->m_ComputePerThreadVariables[ i ].st_MaxJJ                 = NumericTraits< double >::Zero;
     this->m_ComputePerThreadVariables[ i ].st_Displacement          = NumericTraits< double >::Zero;
