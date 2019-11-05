@@ -143,13 +143,8 @@ ImageRandomSamplerSparseMask< TInputImage >
     this->m_RandomNumberList.push_back( randomIndex );
   }
 
-  /** Initialize variables needed for threads. */
-  this->m_ThreaderSampleContainer.clear();
-  this->m_ThreaderSampleContainer.resize( this->GetNumberOfWorkUnits() );
-  for( std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++ )
-  {
-    this->m_ThreaderSampleContainer[ i ] = ImageSampleContainerType::New();
-  }
+  /** Initialize variables needed for work units. */
+  Superclass::BeforeThreadedGenerateData();
 
   this->m_WorkUnitId.store(0);
 } // end BeforeThreadedGenerateData()
@@ -178,22 +173,23 @@ ImageRandomSamplerSparseMask< TInputImage >
       - ( ( this->GetNumberOfWorkUnits() - 1 ) * chunkSize );
   }
 
-  /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread
-    = this->m_ThreaderSampleContainer[ workUnitId ];
-  sampleContainerThisThread->Reserve( chunkSize );
+  ImageSampleContainerPointer sampleContainerThisWorkUnit = ImageSampleContainerType::New();
+  sampleContainerThisWorkUnit->Reserve( chunkSize );
 
-  /** Setup an iterator over the sampleContainerThisThread. */
+  /** Setup an iterator over the sampleContainerThisWorkUnit. */
   typename ImageSampleContainerType::Iterator iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisThread->End();
+  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisWorkUnit->End();
 
   /** Take random samples from the allValidSamples-container. */
   unsigned long sampleId = sampleStart;
-  for( iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++ )
+  for( iter = sampleContainerThisWorkUnit->Begin(); iter != end; ++iter, sampleId++ )
   {
     unsigned long randomIndex = static_cast< unsigned long >( this->m_RandomNumberList[ sampleId ] );
     ( *iter ).Value() = allValidSamples->ElementAt( randomIndex );
   }
+
+  std::lock_guard<std::mutex> mutexHolder( this->m_Mutex );
+  this->m_ThreaderSampleContainer.push_back( sampleContainerThisWorkUnit );
 
 } // end ThreadedGenerateData()
 

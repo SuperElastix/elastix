@@ -131,7 +131,7 @@ ImageFullSampler< TInputImage >
 
 
 /**
- * ******************* ThreadedGenerateData *******************
+ * ******************* DynamicThreadedGenerateData *******************
  */
 
 template< class TInputImage >
