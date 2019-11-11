@@ -2916,19 +2916,19 @@ Once the parameter settings are loaded, run \elastix\ using, for
 example, the following code:
 \begin{quote}
 \begin{verbatim}
-ELASTIX* elastix = new ELASTIX();
+ELASTIX elastix;
 int error = 0;
 try
 {
-  error = elastix->RegisterImages(
+  error = elastix.RegisterImages(
     static_cast<typename itk::DataObject::Pointer>( fixed_image.GetPointer() ),
     static_cast<typename itk::DataObject::Pointer>( moving_image.GetPointer() ),
     parameters,        // Parameter map read in previous code
     output_directory,  // Directory where output is written, if enabled
     write_log_file,    // Enable/disable writing of elastix.log
     output_to_console, // Enable/disable output to console
-    0,                 // Provide fixed image mask (optional, 0 = no mask)
-    0                  // Provide moving image mask (optional, 0 = no mask)
+    nullptr,           // Provide fixed image mask (optional, nullptr = no mask)
+    nullptr            // Provide moving image mask (optional, nullptr = no mask)
   );
 }
 catch( itk::ExceptionObject &err )
@@ -2942,7 +2942,8 @@ if( error == 0 )
   {
     // Typedef the ITKImageType first...
     ITKImageType * output_image = static_cast<ITKImageType *>(
-      elastix->GetResultImage().GetPointer() );
+      elastix.GetResultImage().GetPointer());
+  }
 }
 else
 {
@@ -2951,10 +2952,7 @@ else
 
 // Get transform parameters of all registration steps.
 RegistrationParametersContainerType transform_parameters
-  = elastix->GetTransformParameterMapList();
-
-// Clean up memory.
-delete elastix;
+  = elastix.GetTransformParameterMapList();
 \end{verbatim}
 \end{quote}
 
@@ -2964,13 +2962,14 @@ Given the transformation parameters provided by the \texttt{ELASTIX}
 class, you can run \transformix:
 \begin{quote}
 \begin{verbatim}
-TRANSFORMIX* transformix = new TRANSFORMIX();
+TRANSFORMIX transformix;
 int error = 0;
 try
 {
-  error = transformix->TransformImage(
-    static_cast<typename itk::DataObject::Pointer>( input_image_adapter.GetPointer() ),
+  error = transformix.TransformImage(
+    static_cast<typename itk::DataObject::Pointer>(input_image_adapter.GetPointer()),
     transform_parameters, // Parameters resulting from elastix run
+    output_path,
     write_log_file,       // Enable/disable writing of transformix.log
     output_to_console);   // Enable/disable output to console
 }
@@ -2983,15 +2982,13 @@ if( error == 0 )
 {
   // Typedef the ITKImageType first...
   ITKImageType * output_image = static_cast<ITKImageType *>(
-    transformix->GetResultImage().GetPointer() );
+    transformix.GetResultImage().GetPointer());
 }
 else
 {
   // Do some error handling.
 }
 
-// Clean up memory.
-delete transformix;
 \end{verbatim}
 \end{quote}
 Alternatively, you can read the transformation parameters from file
