@@ -300,6 +300,7 @@ include_directories( ${elxINCLUDE_DIRECTORIES} )
 # to the ITK the BEFORE keyword is not needed anymore.
 if( ELASTIX_USE_OPENCL )
   include_directories( BEFORE ${elxCommon_OpenCL_INCLUDE_DIRECTORIES} )
+  list( APPEND elxINCLUDE_DIRECTORIES ${elxCommon_OpenCL_INCLUDE_DIRECTORIES} )
 endif()
 
 #---------------------------------------------------------------------
