@@ -445,6 +445,9 @@ option( ELASTIX_USE_GTEST "Use GoogleTest to test Elastix implementation" OFF )
 if( ELASTIX_USE_GTEST )
   enable_testing()
   add_subdirectory( Common/GTesting )
+  if( NOT ELASTIX_BUILD_EXECUTABLE )
+    add_subdirectory( Core/Main/GTesting )
+  endif()
 endif()
 
 #---------------------------------------------------------------------
