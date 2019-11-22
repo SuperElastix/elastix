@@ -239,14 +239,14 @@ public:
    * if elastix.exe is used to do a registration.
    * The Configuration object will be initialized in this way.
    */
-  virtual void EnterCommandLineArguments( ArgumentMapType & argmap );
+  virtual void EnterCommandLineArguments( const ArgumentMapType & argmap );
 
-  virtual void EnterCommandLineArguments( ArgumentMapType & argmap,
-    ParameterMapType & inputMap );
+  virtual void EnterCommandLineArguments( const ArgumentMapType & argmap,
+    const ParameterMapType & inputMap );
 
   // Version used when elastix is used as a library.
-  virtual void EnterCommandLineArguments( ArgumentMapType & argmap,
-    std::vector< ParameterMapType > & inputMaps );
+  virtual void EnterCommandLineArguments( const ArgumentMapType & argmap,
+    const std::vector< ParameterMapType > & inputMaps );
 
   /** Start the registration
    * run() without command line parameters; it assumes that
@@ -259,9 +259,9 @@ public:
    * this version of 'run' first calls this->EnterCommandLineParameters(argc,argv)
    * and then calls run().
    */
-  virtual int Run( ArgumentMapType & argmap );
+  virtual int Run( const ArgumentMapType & argmap );
 
-  virtual int Run( ArgumentMapType & argmap, ParameterMapType & inputMap );
+  virtual int Run( const ArgumentMapType & argmap, const ParameterMapType & inputMap );
 
   /** Set process priority, which is read from the command line arguments.
    * Syntax:

@@ -91,12 +91,12 @@ public:
   int Run( void ) override;
 
   /** Overwrite Run( argmap ) from superclass. Simply calls the superclass. */
-  int Run( ArgumentMapType & argmap ) override;
+  int Run( const ArgumentMapType & argmap ) override;
 
-  int Run( ArgumentMapType & argmap, ParameterMapType & inputMap ) override;
+  int Run( const ArgumentMapType & argmap, const ParameterMapType & inputMap ) override;
 
   /** Run version for using transformix as library. */
-  virtual int Run( ArgumentMapType & argmap, std::vector< ParameterMapType > & inputMaps );
+  virtual int Run( const ArgumentMapType & argmap, const std::vector< ParameterMapType > & inputMaps );
 
   /** Get and Set input- and outputImage. */
   virtual void SetInputImageContainer(
