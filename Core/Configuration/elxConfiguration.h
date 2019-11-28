@@ -75,7 +75,7 @@ public:
   typedef ParameterMapInterfaceType::Pointer ParameterMapInterfacePointer;
 
   /** Get and Set CommandLine arguments into the argument map. */
-  const std::string GetCommandLineArgument( const std::string & key ) const;
+  std::string GetCommandLineArgument( const std::string & key ) const;
 
   void SetCommandLineArgument( const std::string & key, const std::string & value );
 
