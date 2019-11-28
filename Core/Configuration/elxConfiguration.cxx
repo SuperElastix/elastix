@@ -234,17 +234,19 @@ Configuration
  * ****************** GetCommandLineArgument ********************
  */
 
-const std::string
+std::string
 Configuration
 ::GetCommandLineArgument( const std::string & key ) const
 {
+  const auto found = this->m_CommandLineArgumentMap.find(key);
+
   /** Check if the argument was given. If no return "". */
-  if( this->m_CommandLineArgumentMap.count( key ) == 0 )
+  if( found == this->m_CommandLineArgumentMap.end() )
   {
     return "";
   }
 
-  return this->m_CommandLineArgumentMap.find( key )->second.c_str();
+  return found->second;
 
 } // end GetCommandLineArgument()
 
@@ -257,11 +259,7 @@ void
 Configuration
 ::SetCommandLineArgument( const std::string & key, const std::string & value )
 {
-  /** Remove all (!) entries with key 'key' and
-   * insert one entry ( key, value ).
-   */
-  this->m_CommandLineArgumentMap.erase( key );
-  this->m_CommandLineArgumentMap.insert( CommandLineEntryType( key, value ) );
+  this->m_CommandLineArgumentMap[ key ] = value;
 
 } // end SetCommandLineArgument()
 
