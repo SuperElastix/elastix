@@ -254,7 +254,7 @@ OpenCLResampler< TElastix >
   this->m_GPUResampler->Update();
 
   // Perform GPU explicit sync and graft the output to this filter
-  //itk::GPUExplicitSync< GPUResamplerType, GPUOutputImageType >( this->m_GPUResampler, false );
+  this->m_GPUResampler->GetOutput()->UpdateCPUBuffer();
   this->GraftOutput( this->m_GPUResampler->GetOutput() );
 
   // Report OpenCL device to the log
