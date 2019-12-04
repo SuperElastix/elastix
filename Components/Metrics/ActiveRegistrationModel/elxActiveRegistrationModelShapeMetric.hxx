@@ -754,7 +754,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
 
       std::ofstream f;
       f.open(makeFileNameEigVal.str());
-      auto tmp = this->GetStatisticalModelContainer()->GetElement(i)->GetPCAVarianceVector();
+      f << this->GetStatisticalModelContainer()->GetElement(i)->GetPCAVarianceVector().apply(std::sqrt);
       f.close();
     }
   }
