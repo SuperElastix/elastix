@@ -177,7 +177,7 @@ ActiveRegistrationModelIntensityMetric< TElastix >
       }
       catch( statismo::StatisticalModelException &e )
       {
-        itkExceptionMacro( "Error loading samples in " << this->m_ImageDirectories[ statisticalModelId ] <<": " << e.what() );
+        itkExceptionMacro( "Error loading samples in " << this->m_ImageDirectories[ statisticalModelId ] << ": " << e.what() );
       }
 
       // Build model
@@ -476,13 +476,14 @@ ActiveRegistrationModelIntensityMetric< TElastix >
   this->m_Configuration->ReadParameter( writeIntensityModelReconstructionAfterEachIteration,
                                         "WriteIntensityModelReconstructionAfterEachIteration", 0, false );
 
-  this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
 
-  for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
-    StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->GetElement( statisticalModelId )
-            ->ComputeCoefficients(this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->GetOutput());
+  if( writeIntensityModelReconstructionAfterEachIteration ) {
+    this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
+    for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
+      StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->GetElement( statisticalModelId )
+              ->ComputeCoefficients(this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->GetOutput());
 
-    if( writeIntensityModelReconstructionAfterEachIteration ) {
+
       std::string imageFormat = "nii.gz";
       this->m_Configuration->ReadParameter(imageFormat, "ResultImageFormat", 0, false);
 
@@ -524,13 +525,14 @@ ActiveRegistrationModelIntensityMetric< TElastix >
   this->m_Configuration->ReadParameter( writeIntensityModelReconstructionAfterEachResolution,
                                         "WriteIntensityModelReconstructionAfterEachResolution", 0, false );
 
-  this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
+  if( writeIntensityModelReconstructionAfterEachResolution ) {
+    this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
 
-  for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
-    StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->GetElement( statisticalModelId )
-            ->ComputeCoefficients(this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->GetOutput());
+    for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
+      StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->GetElement( statisticalModelId )
+              ->ComputeCoefficients(this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->GetOutput());
 
-    if( writeIntensityModelReconstructionAfterEachResolution ) {
+
       std::string imageFormat = "nii.gz";
       this->m_Configuration->ReadParameter(imageFormat, "ResultImageFormat", 0, false);
 
@@ -606,6 +608,7 @@ ActiveRegistrationModelIntensityMetric< TElastix >
 
   if( writeIntensityModelFinalReconstruction || writeIntensityModelFinalReconstructionProbability )
   {
+    this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
     for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
       StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->GetElement(
               statisticalModelId )->ComputeCoefficients( this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->GetOutput());

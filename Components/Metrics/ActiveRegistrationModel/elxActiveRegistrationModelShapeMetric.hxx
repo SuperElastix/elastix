@@ -510,15 +510,13 @@ ActiveRegistrationModelShapeMetric< TElastix >
   this->m_Configuration->ReadParameter( writeShapeModelReconstructionAfterEachIteration,
                                         "WriteShapeModelReconstructionAfterEachIteration", 0, false );
 
-  this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
+  if( writeShapeModelReconstructionAfterEachIteration ) {
 
-  for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
-    StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->ComputeCoefficients(
-            this->TransformMesh( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId)->DrawMean() ) );
-
-    if( writeShapeModelReconstructionAfterEachIteration ) {
-      std::string shapeFormat = "vtk";
-      this->m_Configuration->ReadParameter( shapeFormat, "ResultShapeFormat", 0, false );
+    for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
+      StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->ComputeCoefficients(
+              this->TransformMesh( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId)->DrawMean() ) );
+        std::string shapeFormat = "vtk";
+        this->m_Configuration->ReadParameter( shapeFormat, "ResultShapeFormat", 0, false );
 
       std::ostringstream makeFileName("");
       makeFileName
@@ -554,17 +552,16 @@ ActiveRegistrationModelShapeMetric< TElastix >
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Decide whether or not to write model image after each resolution */
-  bool writeIntensityModelReconstructionAfterEachResolution = false;
-  this->m_Configuration->ReadParameter( writeIntensityModelReconstructionAfterEachResolution,
-                                        "WriteIntensityModelReconstructionAfterEachResolution", 0, false );
+  bool writeShapeModelReconstructionAfterEachResolution = false;
+  this->m_Configuration->ReadParameter( writeShapeModelReconstructionAfterEachResolution,
+                                        "WriteShapeModelReconstructionAfterEachResolution", 0, false );
 
-  this->GetElastix()->GetElxResamplerBase()->GetAsITKBaseType()->Update();
+  if( writeShapeModelReconstructionAfterEachResolution ) {
+    for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
+      StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->ComputeCoefficients(
+              this->TransformMesh( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId)->DrawMean() ) );
 
-  for( unsigned int statisticalModelId = 0; statisticalModelId < this->GetStatisticalModelContainer()->Size(); statisticalModelId++ ) {
-    StatisticalModelVectorType coeffs = this->GetStatisticalModelContainer()->ElementAt( statisticalModelId )->ComputeCoefficients(
-            this->TransformMesh( this->GetStatisticalModelContainer()->ElementAt( statisticalModelId)->DrawMean() ) );
 
-    if( writeIntensityModelReconstructionAfterEachResolution ) {
       std::string shapeFormat = "vtk";
       this->m_Configuration->ReadParameter( shapeFormat, "ResultShapeFormat", 0, false );
 
@@ -697,6 +694,19 @@ ActiveRegistrationModelShapeMetric< TElastix >
                 this->GetStatisticalModelContainer()->GetElement( i )->GetNumberOfPrincipalComponents(), 0.0 );
         plus3std[ j ] = 3.0;
 
+        std::ostringstream makeFileNamePC("");
+        makeFileNamePC
+            << this->m_Configuration->GetCommandLineArgument("-out")
+            << "Metric" << this->GetMetricNumber()
+            << "ShapeModel" << i
+            << "PC" << j << "." << shapeFormat;
+
+        elxout << "  Writing shape model " << i << " principal component " << j
+               << " for " << this->GetComponentLabel() << " to " << makeFileNamePC.str() << std::endl;
+        meshWriter->SetInput(this->GetStatisticalModelContainer()->GetElement( i )->DrawPCABasisSample( j ));
+        meshWriter->SetFileName( makeFileNamePC.str() );
+        meshWriter->Update();
+
         std::ostringstream makeFileNameP3STD( "" );
         makeFileNameP3STD
                 << this->m_Configuration->GetCommandLineArgument("-out")
@@ -706,7 +716,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
 
         elxout << "  Writing shape model " << i << " principal component " << j << " plus 3 standard deviations"
                << " for " << this->GetComponentLabel() << " to " << makeFileNameP3STD.str() << std::endl;
-        meshWriter->SetInput(this->GetStatisticalModelContainer()->GetElement( i )->DrawSample( plus3std)) ;
+        meshWriter->SetInput(this->GetStatisticalModelContainer()->GetElement( i )->DrawSample( plus3std )) ;
         meshWriter->SetFileName( makeFileNameP3STD.str() );
         meshWriter->Update();
 
@@ -729,6 +739,26 @@ ActiveRegistrationModelShapeMetric< TElastix >
       }
     }
   }
+
+  bool writeShapeModelEigenValues = false;
+  this->m_Configuration->ReadParameter( writeShapeModelEigenValues,
+                                        "WriteShapeModelEigenValuesAfterRegistration", 0, false );
+  if( writeShapeModelEigenValues ) {
+    for( unsigned int i = 0; i < this->GetStatisticalModelContainer()->Size(); i++ ) {
+      std::ostringstream makeFileNameEigVal( "" );
+      makeFileNameEigVal
+          << this->m_Configuration->GetCommandLineArgument("-out")
+          << "Metric" << this->GetMetricNumber()
+          << "ShapeModel" << i
+          << "EigenValues.txt";
+
+      std::ofstream f;
+      f.open(makeFileNameEigVal.str());
+      auto tmp = this->GetStatisticalModelContainer()->GetElement(i)->GetPCAVarianceVector();
+      f.close();
+    }
+  }
+
 } // end AfterRegistration()
 
 } // end namespace elastix
