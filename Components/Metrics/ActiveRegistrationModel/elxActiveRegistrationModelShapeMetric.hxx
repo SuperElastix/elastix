@@ -136,6 +136,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
       
       elxout << "  Loaded model " << this->m_LoadShapeModelFileNames[ statisticalModelId ].c_str() << "." << std::endl;
       elxout << "  Number of principal components: " << statisticalModel->GetNumberOfPrincipalComponents() << "." << std::endl;
+      elxout << "  Eigenvalues: " << statisticalModel->GetPCAVarianceVector().apply(std::sqrt) << "." << std::endl;
       elxout << "  Noise variance: " << statisticalModel->GetNoiseVariance() << "." << std::endl;
     }
   }
@@ -173,8 +174,9 @@ ActiveRegistrationModelShapeMetric< TElastix >
       {
         StatisticalModelBuilderPointer pcaModelBuilder = StatisticalModelBuilderType::New();
         statisticalModel = pcaModelBuilder->BuildNewModel( dataManager->GetData(), noiseVariance[ statisticalModelId ] );
-        elxout << "  Done."
+        elxout << "  Done." << std::endl
                << "  Number of modes: " << statisticalModel->GetNumberOfPrincipalComponents() << "." << std::endl
+               << "  Eigenvalues: " << statisticalModel->GetPCAVarianceVector().apply(std::sqrt) << "." << std::endl
                << "  Noise variance: " << statisticalModel->GetNoiseVariance()
                << "." << std::endl;
         
@@ -306,7 +308,7 @@ ActiveRegistrationModelShapeMetric< TElastix >
   // Some user-feedback. 
   mesh = meshReader->GetOutput();
   unsigned long numberOfPoints = mesh->GetNumberOfPoints();
-  if( numberOfPoints == 0 )
+  if( numberOfPoints > 0 )
   {
     elxout << "read " << numberOfPoints << " points." << std::endl;
   }
