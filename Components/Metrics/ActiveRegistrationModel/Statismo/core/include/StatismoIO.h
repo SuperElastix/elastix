@@ -130,7 +130,6 @@ class IO {
             HDF5Utils::readVector(modelGroup, "./mean", mean);
             VectorType pcaVariance;
             HDF5Utils::readVector(modelGroup, "./pcaVariance", maxNumberOfPCAComponents, pcaVariance);
-
             float noiseVariance = HDF5Utils::readFloat(modelGroup, "./noiseVariance");
 
             // Depending on the statismo version, the pcaBasis matrix was stored as U*D or U (where U are the orthonormal PCA Basis functions and D the standard deviations).

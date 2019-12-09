@@ -321,7 +321,7 @@ void HDF5Utils::readVector(const H5::H5Location& fg, const char* name, unsigned 
     memspace.selectHyperslab( H5S_SELECT_SET, count_out, offset_out );
 
     vector.resize(nElements);
-    ds.read(vector.data(), H5::PredType::NATIVE_FLOAT, memspace, dataspace);
+    HDF5Utils::readVector(fg, name, vector);
 }
 
 
