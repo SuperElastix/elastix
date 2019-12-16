@@ -331,7 +331,7 @@ protected:
   inline void AfterThreadedComputePDFs( void ) const;
 
   /** Helper function to launch the threads. */
-  static ITK_THREAD_RETURN_TYPE ComputePDFsThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION ComputePDFsThreaderCallback( void * arg );
 
   /** Helper function to launch the threads. */
   void LaunchComputePDFsThreaderCallback( void ) const;

@@ -907,7 +907,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
  */
 
 template< class TFixedImage, class TMovingImage >
-ITK_THREAD_RETURN_TYPE
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::GetValueAndDerivativeThreaderCallback( void * arg )
 {
@@ -948,7 +948,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
  */
 
 template< class TFixedImage, class TMovingImage >
-ITK_THREAD_RETURN_TYPE
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 ::AccumulateDerivativesThreaderCallback( void * arg )
 {
