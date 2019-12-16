@@ -209,7 +209,7 @@ private:
   bool m_UseEigen;
 
   /** The callback function. */
-  static ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION AdvanceOneStepThreaderCallback( void * arg );
 
   /** The threaded implementation of AdvanceOneStep(). */
   inline void ThreadedAdvanceOneStep( ThreadIdType threadId, ParametersType & newPosition );

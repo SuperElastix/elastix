@@ -203,9 +203,9 @@ protected:
   inline void AfterThreadedComputeDerivative( DerivativeType & derivative ) const;
 
   /** Helper function to launch the threads. */
-  static ITK_THREAD_RETURN_TYPE GetSamplesThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION GetSamplesThreaderCallback( void * arg );
 
-  static ITK_THREAD_RETURN_TYPE ComputeDerivativeThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION ComputeDerivativeThreaderCallback( void * arg );
 
   /** Helper functions to launch the threads. */
   void LaunchGetSamplesThreaderCallback( void ) const;

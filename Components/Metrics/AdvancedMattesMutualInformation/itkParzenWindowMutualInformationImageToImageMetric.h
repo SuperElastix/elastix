@@ -251,7 +251,7 @@ protected:
     DerivativeType & derivative ) const;
 
   /** Helper function to launch the threads. */
-  static ITK_THREAD_RETURN_TYPE ComputeDerivativeLowMemoryThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION ComputeDerivativeLowMemoryThreaderCallback( void * arg );
 
   /** Helper function to launch the threads. */
   void LaunchComputeDerivativeLowMemoryThreaderCallback( void ) const;
