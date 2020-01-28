@@ -39,7 +39,7 @@ public:
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
   itkNewMacro( Self );
-  itkTypeMacro( Self, itk::DataObject );
+  itkTypeMacro( ParameterObject, itk::DataObject );
 
   typedef std::string                                            ParameterKeyType;
   typedef std::string                                            ParameterValueType;
