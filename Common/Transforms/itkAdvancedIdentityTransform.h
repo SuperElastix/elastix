@@ -98,7 +98,7 @@ public:
   /** Type of the input parameters. */
   typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::TransformCategoryType  TransformCategoryType;
+  typedef typename Superclass::TransformCategoryEnum  TransformCategoryType;
 
   /** Type of the Jacobian matrix. */
   typedef typename Superclass::JacobianType JacobianType;

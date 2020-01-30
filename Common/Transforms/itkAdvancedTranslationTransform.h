@@ -81,7 +81,7 @@ public:
   typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::FixedParametersType    FixedParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::TransformCategoryType  TransformCategoryType;
+  typedef typename Superclass::TransformCategoryEnum  TransformCategoryType;
 
   /** Standard Jacobian container. */
   typedef typename Superclass::JacobianType JacobianType;
