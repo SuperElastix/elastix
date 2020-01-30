@@ -47,7 +47,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( Self, itk::ImageSource );
+  itkTypeMacro( ElastixFilter, itk::ImageSource );
 
   /** Typedefs. */
   typedef elastix::ElastixMain                      ElastixMainType;
