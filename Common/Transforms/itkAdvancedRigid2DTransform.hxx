@@ -121,10 +121,10 @@ AdvancedRigid2DTransform< TScalarType >
 {
   // Extract the orthogonal part of the matrix
   //
-  vnl_matrix< TScalarType > p( 2, 2 );
+  vnl_matrix_fixed< TScalarType, 2, 2 > p( 2, 2 );
   p = this->GetMatrix().GetVnlMatrix();
   vnl_svd< TScalarType >    svd( p );
-  vnl_matrix< TScalarType > r( 2, 2 );
+  vnl_matrix_fixed< TScalarType, 2, 2 > r( 2, 2 );
   r = svd.U() * svd.V().transpose();
 
   m_Angle = std::acos( r[ 0 ][ 0 ] );
