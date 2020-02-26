@@ -20,6 +20,8 @@
 
 #include "itkUseMevisDicomTiff.h"
 
+#include <cassert>
+#include <ctime>
 #include <iostream>
 #include <iomanip>      // std::setprecision
 #include <string>
@@ -30,7 +32,6 @@
 #include <itksys/SystemTools.hxx>
 #include <itksys/SystemInformation.hxx>
 #include "itkTimeProbe.h"
-#include <time.h>
 
 /** Declare PrintHelp function.
  *
@@ -89,14 +90,32 @@ std::string
 GetCurrentDateAndTime( void )
 {
   // Obtain current time
-  time_t rawtime = time( nullptr );
+  const std::time_t rawtime{ std::time( nullptr ) };
+
   // Convert to local time
-  struct tm * timeinfo = localtime( &rawtime );
-  // Convert to human-readable format
-  std::string timeAsString = std::string( asctime( timeinfo ) );
-  // Erase newline character at end
-  timeAsString.erase( timeAsString.end() - 1 );
-  //timeAsString.pop_back() // c++11 feature
+  // Note: std::localtime is not threadsafe!
+  const std::tm* const localTimePtr{ std::localtime( &rawtime ) };
+
+  if (localTimePtr == nullptr)
+  {
+    assert(!"std::localtime should not return null!");
+    return {};
+  }
+
+  // Make a copy of the internal object from std::localtime, to reduce the
+  // risk of a race condition.
+  const std::tm localTimeValue{ *localTimePtr };
+
+  constexpr std::size_t maxNumberOfChars{ 32 };
+  char timeAsString[maxNumberOfChars]{};
+  static_assert(maxNumberOfChars > sizeof("Thu Aug 23 14:55:02 2001"),
+    "timeAsString should be large enough to hold a typical example date and time");
+
+  if (std::strftime(timeAsString, maxNumberOfChars, "%c", &localTimeValue) == 0)
+  {
+    assert(!"std::strftime has failed!");
+    return {};
+  }
 
   return timeAsString;
 } // end GetCurrentDateAndTime()
