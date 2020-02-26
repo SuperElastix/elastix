@@ -67,10 +67,10 @@ public:
   typedef typename XStreamMapType::value_type     XStreamMapEntryType;
 
   /** Constructors */
-  xoutbase();
+  xoutbase() = default;
 
   /** Destructor */
-  virtual ~xoutbase();
+  virtual ~xoutbase() = default;
 
   /** The operator [] simply calls this->SelectXCell(cellname).
    * It returns an x-cell */
@@ -163,7 +163,7 @@ protected:
 
   /** Boolean that says whether the Callback-function must be called.
    * False by default. */
-  bool m_Call;
+  bool m_Call{ false };
 
   /** Called each time << is used, but only when m_Call == true; */
   virtual void Callback( void ){}
