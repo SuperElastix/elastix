@@ -70,7 +70,7 @@
 #define elxGetNumberOfMacro( _name ) \
   virtual unsigned int GetNumberOf##_name##s( void ) const \
   { \
-    if( this->Get##_name##Container() != 0 ) \
+    if( this->Get##_name##Container() != nullptr ) \
     { \
       return this->Get##_name##Container()->Size(); \
     } \
