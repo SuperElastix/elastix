@@ -141,7 +141,6 @@ ELASTIX::RegisterImages(
   /** Some typedef's. */
   typedef elx::ElastixMain                            ElastixMainType;
   typedef ElastixMainType::Pointer                    ElastixMainPointer;
-  typedef std::vector< ElastixMainPointer >           ElastixMainVectorType;
   typedef ElastixMainType::ObjectPointer              ObjectPointer;
   typedef ElastixMainType::DataObjectContainerType    DataObjectContainerType;
   typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
@@ -158,7 +157,6 @@ ELASTIX::RegisterImages(
   this->m_TransformParametersList.clear();
 
   /** Some declarations and initialisations. */
-  ElastixMainVectorType elastices;
 
   //ObjectPointer              transform = 0;
   DataObjectContainerPointer fixedImageContainer  = nullptr;
@@ -294,20 +292,20 @@ ELASTIX::RegisterImages(
   for( i = 0; i < nrOfParameterFiles; i++ )
   {
     /** Create another instance of ElastixMain. */
-    elastices.push_back( ElastixMainType::New() );
+    const auto elastixMain = ElastixMainType::New();
 
     /** Set stuff we get from a former registration. */
-    elastices[ i ]->SetInitialTransform( transform );
-    elastices[ i ]->SetFixedImageContainer( fixedImageContainer );
-    elastices[ i ]->SetMovingImageContainer( movingImageContainer );
-    elastices[ i ]->SetFixedMaskContainer( fixedMaskContainer );
-    elastices[ i ]->SetMovingMaskContainer( movingMaskContainer );
-    elastices[ i ]->SetResultImageContainer( resultImageContainer );
-    elastices[ i ]->SetOriginalFixedImageDirectionFlat( fixedImageOriginalDirection );
+    elastixMain->SetInitialTransform( transform );
+    elastixMain->SetFixedImageContainer( fixedImageContainer );
+    elastixMain->SetMovingImageContainer( movingImageContainer );
+    elastixMain->SetFixedMaskContainer( fixedMaskContainer );
+    elastixMain->SetMovingMaskContainer( movingMaskContainer );
+    elastixMain->SetResultImageContainer( resultImageContainer );
+    elastixMain->SetOriginalFixedImageDirectionFlat( fixedImageOriginalDirection );
 
     /** Set the current elastix-level. */
-    elastices[ i ]->SetElastixLevel( i );
-    elastices[ i ]->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
+    elastixMain->SetElastixLevel( i );
+    elastixMain->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
 
     /** Delete the previous ParameterFileName. */
     if( argMap.count( "-p" ) )
@@ -325,7 +323,7 @@ ELASTIX::RegisterImages(
     elxout << "Current time: " << GetCurrentDateAndTime() << "." << std::endl;
 
     /** Start registration. */
-    returndummy = elastices[ i ]->Run( argMap, parameterMaps[ i ] );
+    returndummy = elastixMain->Run( argMap, parameterMaps[ i ] );
 
     /** Check for errors. */
     if( returndummy != 0 )
@@ -337,13 +335,13 @@ ELASTIX::RegisterImages(
     /** Get the transform, the fixedImage and the movingImage
      * in order to put it in the (possibly) next registration.
      */
-    transform                   = elastices[ i ]->GetFinalTransform();
-    fixedImageContainer         = elastices[ i ]->GetFixedImageContainer();
-    movingImageContainer        = elastices[ i ]->GetMovingImageContainer();
-    fixedMaskContainer          = elastices[ i ]->GetFixedMaskContainer();
-    movingMaskContainer         = elastices[ i ]->GetMovingMaskContainer();
-    resultImageContainer        = elastices[ i ]->GetResultImageContainer();
-    fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
+    transform                   = elastixMain->GetFinalTransform();
+    fixedImageContainer         = elastixMain->GetFixedImageContainer();
+    movingImageContainer        = elastixMain->GetMovingImageContainer();
+    fixedMaskContainer          = elastixMain->GetFixedMaskContainer();
+    movingMaskContainer         = elastixMain->GetMovingMaskContainer();
+    resultImageContainer        = elastixMain->GetResultImageContainer();
+    fixedImageOriginalDirection = elastixMain->GetOriginalFixedImageDirectionFlat();
 
     /** Stop timer and print it. */
     timer.Stop();
@@ -352,7 +350,7 @@ ELASTIX::RegisterImages(
            << ConvertSecondsToDHMS( timer.GetMean(), 1 ) << ".\n" << std::endl;
 
     /** Get the transformation parameter map. */
-    this->m_TransformParametersList.push_back( elastices[ i ]->GetTransformParametersMap() );
+    this->m_TransformParametersList.push_back( elastixMain->GetTransformParametersMap() );
 
     /** Set initial transform to an index number instead of a parameter filename. */
     if( i > 0 )
@@ -362,10 +360,6 @@ ELASTIX::RegisterImages(
       this->m_TransformParametersList[ i ][ "InitialTransformParametersFileName" ][ 0 ]
         = toString.str();
     }
-
-    /** Try to release some memory. */
-    elastices[ i ] = nullptr;
-
   } // end loop over registrations
 
   elxout << "-------------------------------------------------------------------------"
@@ -386,10 +380,6 @@ ELASTIX::RegisterImages(
    *  Make sure all the components that are defined in a Module (.DLL/.so)
    *  are deleted before the modules are closed.
    */
-  for( i = 0; i < nrOfParameterFiles; i++ )
-  {
-    elastices[ i ] = nullptr;
-  }
 
   /* Set result image for output */
   if( resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 && resultImageContainer->ElementAt( 0 ).IsNotNull() )
