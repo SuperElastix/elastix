@@ -101,7 +101,6 @@ main( int argc, char ** argv )
   /** Some typedef's. */
   typedef elx::ElastixMain                            ElastixMainType;
   typedef ElastixMainType::Pointer                    ElastixMainPointer;
-  typedef std::vector< ElastixMainPointer >           ElastixMainVectorType;
   typedef ElastixMainType::ObjectPointer              ObjectPointer;
   typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
   typedef ElastixMainType::FlatDirectionCosinesType   FlatDirectionCosinesType;
@@ -115,9 +114,6 @@ main( int argc, char ** argv )
 
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();
-
-  /** Some declarations and initializations. */
-  ElastixMainVectorType elastices;
 
   // Note that the following pointers are "smart", so they are defaulted-constructed to null.
   ObjectPointer              transform;
@@ -272,19 +268,19 @@ main( int argc, char ** argv )
   for( unsigned int i = 0; i < nrOfParameterFiles; i++ )
   {
     /** Create another instance of ElastixMain. */
-    elastices.push_back( ElastixMainType::New() );
+    const auto elastixMain = ElastixMainType::New();
 
     /** Set stuff we get from a former registration. */
-    elastices[ i ]->SetInitialTransform( transform );
-    elastices[ i ]->SetFixedImageContainer( fixedImageContainer );
-    elastices[ i ]->SetMovingImageContainer( movingImageContainer );
-    elastices[ i ]->SetFixedMaskContainer( fixedMaskContainer );
-    elastices[ i ]->SetMovingMaskContainer( movingMaskContainer );
-    elastices[ i ]->SetOriginalFixedImageDirectionFlat( fixedImageOriginalDirection );
+    elastixMain->SetInitialTransform( transform );
+    elastixMain->SetFixedImageContainer( fixedImageContainer );
+    elastixMain->SetMovingImageContainer( movingImageContainer );
+    elastixMain->SetFixedMaskContainer( fixedMaskContainer );
+    elastixMain->SetMovingMaskContainer( movingMaskContainer );
+    elastixMain->SetOriginalFixedImageDirectionFlat( fixedImageOriginalDirection );
 
     /** Set the current elastix-level. */
-    elastices[ i ]->SetElastixLevel( i );
-    elastices[ i ]->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
+    elastixMain->SetElastixLevel( i );
+    elastixMain->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
 
     /** Delete the previous ParameterFileName. */
     if( argMap.count( "-p" ) )
@@ -310,7 +306,7 @@ main( int argc, char ** argv )
     elxout << "Current time: " << GetCurrentDateAndTime() << "." << std::endl;
 
     /** Start registration. */
-    returndummy = elastices[ i ]->Run( argMap );
+    returndummy = elastixMain->Run( argMap );
 
     /** Check for errors. */
     if( returndummy != 0 )
@@ -322,12 +318,12 @@ main( int argc, char ** argv )
     /** Get the transform, the fixedImage and the movingImage
      * in order to put it in the (possibly) next registration.
      */
-    transform                   = elastices[ i ]->GetModifiableFinalTransform();
-    fixedImageContainer         = elastices[ i ]->GetModifiableFixedImageContainer();
-    movingImageContainer        = elastices[ i ]->GetModifiableMovingImageContainer();
-    fixedMaskContainer          = elastices[ i ]->GetModifiableFixedMaskContainer();
-    movingMaskContainer         = elastices[ i ]->GetModifiableMovingMaskContainer();
-    fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
+    transform                   = elastixMain->GetModifiableFinalTransform();
+    fixedImageContainer         = elastixMain->GetModifiableFixedImageContainer();
+    movingImageContainer        = elastixMain->GetModifiableMovingImageContainer();
+    fixedMaskContainer          = elastixMain->GetModifiableFixedMaskContainer();
+    movingMaskContainer         = elastixMain->GetModifiableMovingMaskContainer();
+    fixedImageOriginalDirection = elastixMain->GetOriginalFixedImageDirectionFlat();
 
     /** Print a finish message. */
     elxout << "Running elastix with parameter file " << i
@@ -338,10 +334,6 @@ main( int argc, char ** argv )
     elxout << "\nCurrent time: " << GetCurrentDateAndTime() << "." << std::endl;
     elxout << "Time used for running elastix with this parameter file:\n  "
            << ConvertSecondsToDHMS( timer.GetMean(), 1 ) << ".\n" << std::endl;
-
-    /** Try to release some memory. */
-    elastices[ i ] = 0;
-
   } // end loop over registrations
 
   elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
@@ -355,11 +347,6 @@ main( int argc, char ** argv )
    * Make sure all the components that are defined in a Module (.DLL/.so)
    * are deleted before the modules are closed.
    */
-
-  for( unsigned int i = 0; i < nrOfParameterFiles; i++ )
-  {
-    elastices[ i ] = 0;
-  }
 
   transform            = 0;
   fixedImageContainer  = 0;
