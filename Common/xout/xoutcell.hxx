@@ -61,9 +61,9 @@ xoutcell< charT, traits >::WriteBufferedData( void )
   /** Make sure all data is written to the string */
   this->m_InternalBuffer << flush;
 
-  const std::string & strbuf = this->m_InternalBuffer.str();
+  const std::string strbuf = this->m_InternalBuffer.str();
 
-  const char * charbuf = strbuf.c_str();
+  const char * const charbuf = strbuf.c_str();
 
   /** Send the string to the outputs */
   for( CStreamMapIteratorType cit = this->m_COutputs.begin();
