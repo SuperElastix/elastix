@@ -16,8 +16,17 @@
  *
  *=========================================================================*/
 
+ // Elastix header files:
 #include "elastix.h"
 #include "elxTransformixMain.h"
+#include "itkUseMevisDicomTiff.h"
+
+// ITK header files:
+#include <itkTimeProbe.h>
+
+// Standard C++ header files:
+#include <iostream>
+
 
 int
 main( int argc, char ** argv )
