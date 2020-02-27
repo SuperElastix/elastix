@@ -16,11 +16,22 @@
  *
  *=========================================================================*/
 
+// Elastix header files:
 #include "elastix.h"
 #include "elxElastixMain.h"
+#include "itkUseMevisDicomTiff.h"
 
+// ITK header files:
+#include <itkTimeProbe.h>
+#include <itksys/SystemInformation.hxx>
+#include <itksys/SystemTools.hxx>
+
+// Standard C++ header files:
 #include <cstddef> // For size_t.
+#include <iostream>
 #include <limits>
+#include <queue>
+#include <vector>
 
 int
 main( int argc, char ** argv )

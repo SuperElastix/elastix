@@ -18,20 +18,12 @@
 #ifndef __elastix_h
 #define __elastix_h
 
-#include "itkUseMevisDicomTiff.h"
-
 #include <cassert>
 #include <ctime>
-#include <iostream>
+#include <cmath>        // For fmod.
 #include <iomanip>      // std::setprecision
+#include <sstream>
 #include <string>
-#include <vector>
-#include <queue>
-#include "itkObject.h"
-#include "itkDataObject.h"
-#include <itksys/SystemTools.hxx>
-#include <itksys/SystemInformation.hxx>
-#include "itkTimeProbe.h"
 
 /** Declare PrintHelp function.
  *
@@ -68,7 +60,7 @@ ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 
 
   //iSeconds %= secondsPerMinute;
   //const std::size_t seconds = iSeconds;
-  const double dSeconds = fmod( totalSeconds, 60.0 );
+  const double dSeconds = std::fmod( totalSeconds, 60.0 );
 
   /** Create a string in days, hours, minutes and seconds. */
   bool               nonzero = false;
