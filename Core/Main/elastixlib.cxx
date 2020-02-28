@@ -37,7 +37,6 @@
 #include <climits> // For UINT_MAX.
 #include <iostream>
 #include <string>
-#include <queue>
 #include <vector>
 
 namespace elastix
@@ -151,8 +150,6 @@ ELASTIX::RegisterImages(
   typedef ArgumentMapType::value_type      ArgumentMapEntryType;
 
   typedef std::pair< std::string, std::string > ArgPairType;
-  typedef std::queue< ArgPairType >             ParameterFileListType;
-  typedef ParameterFileListType::value_type     ParameterFileListEntryType;
 
   // Clear output transform parameters
   this->m_TransformParametersList.clear();
@@ -168,7 +165,6 @@ ELASTIX::RegisterImages(
   FlatDirectionCosinesType   fixedImageOriginalDirection;
   int                        returndummy = 0;
   ArgumentMapType            argMap;
-  ParameterFileListType      parameterFileList;
   std::string                outFolder   = "";
   std::string                logFileName = "";
   std::string                key;
