@@ -148,17 +148,13 @@ ELASTIX::RegisterImages(
 
   /** Some declarations and initialisations. */
 
-  ArgumentMapType            argMap;
-  std::string                outFolder   = "";
   std::string                logFileName = "";
-  std::string                key;
   std::string                value;
 
   /** Setup the argumentMap for output path. */
   if( !outputPath.empty() )
   {
     /** Put command line parameters into parameterFileList. */
-    key   = "-out";
     value = outputPath;
 
     /** Make sure that last character of the output folder equals a '/'. */
@@ -171,25 +167,18 @@ ELASTIX::RegisterImages(
   {
     /** Put command line parameters into parameterFileList. */
     //there must be an "-out", this is checked later in code!!
-    key   = "-out";
     value = "output_path_not_set";
   }
 
   /** Save this information. */
-  outFolder = value;
+  const auto outFolder = value;
 
-  /** Attempt to save the arguments in the ArgumentMap. */
-  if( argMap.count( key.c_str() ) == 0 )
+  const ArgumentMapType argMap
   {
-    argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
-  }
-  else if( performCout )
-  {
-    /** Duplicate arguments. */
-    std::cerr << "WARNING!" << std::endl;
-    std::cerr << "Argument " << key.c_str() << "is only required once." << std::endl;
-    std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
-  }
+    /** The argv0 argument, required for finding the component.dll/so's. */
+    ArgumentMapEntryType("-argv0", "elastix"),
+    ArgumentMapEntryType("-out", outFolder)
+  };
 
   if( performLogging )
   {
@@ -213,9 +202,6 @@ ELASTIX::RegisterImages(
       }
     }
   }
-
-  /** The argv0 argument, required for finding the component.dll/so's. */
-  argMap.insert( ArgumentMapEntryType( "-argv0", "elastix" ) );
 
   /** Setup xout. */
   int returndummy = elx::xoutSetup( logFileName.c_str(), performLogging, performCout );
@@ -292,12 +278,6 @@ ELASTIX::RegisterImages(
     /** Set the current elastix-level. */
     elastixMain->SetElastixLevel( i );
     elastixMain->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
-
-    /** Delete the previous ParameterFileName. */
-    if( argMap.count( "-p" ) )
-    {
-      argMap.erase( "-p" );
-    }
 
     /** Print a start message. */
     elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
