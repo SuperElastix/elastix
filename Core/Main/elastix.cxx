@@ -128,14 +128,6 @@ main( int argc, char ** argv )
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();
 
-  // Note that the following pointers are "smart", so they are defaulted-constructed to null.
-  ObjectPointer              transform;
-  DataObjectContainerPointer fixedImageContainer;
-  DataObjectContainerPointer movingImageContainer;
-  DataObjectContainerPointer fixedMaskContainer;
-  DataObjectContainerPointer movingMaskContainer;
-
-  FlatDirectionCosinesType   fixedImageOriginalDirection;
   int                        returndummy        = 0;
   unsigned long              nrOfParameterFiles = 0;
   ArgumentMapType            argMap;
@@ -272,6 +264,14 @@ main( int argc, char ** argv )
          << static_cast< unsigned int >( info.GetProcessorClockFrequency() )
          << " MHz." << std::endl;
 
+
+  ObjectPointer              transform            = nullptr;
+  DataObjectContainerPointer fixedImageContainer  = nullptr;
+  DataObjectContainerPointer movingImageContainer = nullptr;
+  DataObjectContainerPointer fixedMaskContainer   = nullptr;
+  DataObjectContainerPointer movingMaskContainer  = nullptr;
+  FlatDirectionCosinesType   fixedImageOriginalDirection;
+
   /**
    * ********************* START REGISTRATION *********************
    *
@@ -363,11 +363,11 @@ main( int argc, char ** argv )
    * are deleted before the modules are closed.
    */
 
-  transform            = 0;
-  fixedImageContainer  = 0;
-  movingImageContainer = 0;
-  fixedMaskContainer   = 0;
-  movingMaskContainer  = 0;
+  transform            = nullptr;
+  fixedImageContainer  = nullptr;
+  movingImageContainer = nullptr;
+  fixedMaskContainer   = nullptr;
+  movingMaskContainer  = nullptr;
 
   /** Close the modules. */
   ElastixMainType::UnloadComponents();
