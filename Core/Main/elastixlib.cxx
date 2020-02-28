@@ -104,8 +104,8 @@ int
 ELASTIX::RegisterImages(
   ImagePointer fixedImage,
   ImagePointer movingImage,
-  ParameterMapType & parameterMap,
-  std::string outputPath,
+  const ParameterMapType & parameterMap,
+  const std::string & outputPath,
   bool performLogging,
   bool performCout,
   ImagePointer fixedMask,
@@ -131,8 +131,8 @@ int
 ELASTIX::RegisterImages(
   ImagePointer fixedImage,
   ImagePointer movingImage,
-  std::vector< ParameterMapType > & parameterMaps,
-  std::string outputPath,
+  const std::vector< ParameterMapType > & parameterMaps,
+  const std::string & outputPath,
   bool performLogging,
   bool performCout,
   ImagePointer fixedMask,
