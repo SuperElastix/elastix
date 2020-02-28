@@ -16,29 +16,27 @@
  *
  *=========================================================================*/
 
-// \todo: cxx's don't need ifdefs?
-#ifndef __elastixlib_cxx
-#define __elastixlib_cxx
-
+ // Elastix header files:
 #include "elastixlib.h"
+#include "elxElastixMain.h"
 #include "elastix.h" // For ConvertSecondsToDHMS and GetCurrentDateAndTime.
 
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
 #include "itkUseMevisDicomTiff.h"
 #endif
 
-#include "elxElastixMain.h"
+// ITK header files:
+#include <itkDataObject.h>
+#include <itkObject.h>
+#include <itkTimeProbe.h>
+#include <itksys/SystemInformation.hxx>
+#include <itksys/SystemTools.hxx>
+
+// Standard C++ header files:
 #include <iostream>
 #include <string>
-#include <vector>
 #include <queue>
-#include "itkObject.h"
-#include "itkDataObject.h"
-#include <itksys/SystemTools.hxx>
-#include <itksys/SystemInformation.hxx>
-
-#include "itkTimeProbe.h"
-#include <time.h>
+#include <vector>
 
 namespace elastix
 {
@@ -405,5 +403,3 @@ ELASTIX::RegisterImages(
 
 
 } // end namespace elastix
-
-#endif // end #ifndef __elastixlib_cxx
