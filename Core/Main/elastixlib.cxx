@@ -148,13 +148,6 @@ ELASTIX::RegisterImages(
 
   /** Some declarations and initialisations. */
 
-  //ObjectPointer              transform = 0;
-  DataObjectContainerPointer fixedImageContainer  = nullptr;
-  DataObjectContainerPointer movingImageContainer = nullptr;
-  DataObjectContainerPointer fixedMaskContainer   = nullptr;
-  DataObjectContainerPointer movingMaskContainer  = nullptr;
-  DataObjectContainerPointer resultImageContainer = nullptr;
-  FlatDirectionCosinesType   fixedImageOriginalDirection;
   int                        returndummy = 0;
   ArgumentMapType            argMap;
   std::string                outFolder   = "";
@@ -249,10 +242,15 @@ ELASTIX::RegisterImages(
    ************************************************************************/
 
   /* Allocate and store images in containers */
-  fixedImageContainer                        = DataObjectContainerType::New();
-  movingImageContainer                       = DataObjectContainerType::New();
+  auto fixedImageContainer                   = DataObjectContainerType::New();
+  auto movingImageContainer                  = DataObjectContainerType::New();
   fixedImageContainer->CreateElementAt( 0 )  = fixedImage;
   movingImageContainer->CreateElementAt( 0 ) = movingImage;
+
+  DataObjectContainerPointer fixedMaskContainer   = nullptr;
+  DataObjectContainerPointer movingMaskContainer  = nullptr;
+  DataObjectContainerPointer resultImageContainer = nullptr;
+  FlatDirectionCosinesType   fixedImageOriginalDirection;
 
   /* Allocate and store masks in containers if available*/
   if( fixedMask )
@@ -269,12 +267,11 @@ ELASTIX::RegisterImages(
   //todo original direction cosin, problem is that Image type is unknown at this in elastixlib.cxx
   //for now in elaxElastixTemplate (Run()) direction cosines are taken from fixed image
 
-  /************************************************************************
-   *                                                  *
-   *    START REGISTRATION                            *
-   *  Do the (possibly multiple) registration(s).     *
-   *                                                  *
-   ************************************************************************/
+  /**
+   * ********************* START REGISTRATION *********************
+   *
+   * Do the (possibly multiple) registration(s).
+   */
   
   const auto nrOfParameterFiles = parameterMaps.size();
   assert(nrOfParameterFiles <= UINT_MAX);
