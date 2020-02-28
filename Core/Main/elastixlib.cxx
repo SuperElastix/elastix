@@ -148,7 +148,6 @@ ELASTIX::RegisterImages(
 
   /** Some declarations and initialisations. */
 
-  int                        returndummy = 0;
   ArgumentMapType            argMap;
   std::string                outFolder   = "";
   std::string                logFileName = "";
@@ -219,7 +218,7 @@ ELASTIX::RegisterImages(
   argMap.insert( ArgumentMapEntryType( "-argv0", "elastix" ) );
 
   /** Setup xout. */
-  returndummy = elx::xoutSetup( logFileName.c_str(), performLogging, performCout );
+  int returndummy = elx::xoutSetup( logFileName.c_str(), performLogging, performCout );
   if( returndummy && performCout )
   {
     if( performCout )

@@ -128,7 +128,6 @@ main( int argc, char ** argv )
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();
 
-  int                        returndummy        = 0;
   unsigned long              nrOfParameterFiles = 0;
   ArgumentMapType            argMap;
   ParameterFileListType      parameterFileList;
@@ -199,6 +198,8 @@ main( int argc, char ** argv )
 
   /** The argv0 argument, required for finding the component.dll/so's. */
   argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] ) );
+
+  int returndummy{};
 
   /** Check if at least once the option "-p" is given. */
   if( nrOfParameterFiles == 0 )
@@ -373,7 +374,7 @@ main( int argc, char ** argv )
   ElastixMainType::UnloadComponents();
 
   /** Exit and return the error code. */
-  return returndummy;
+  return 0;
 
 } // end main
 
