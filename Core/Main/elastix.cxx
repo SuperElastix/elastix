@@ -121,16 +121,12 @@ main( int argc, char ** argv )
   typedef ElastixMainType::ArgumentMapType ArgumentMapType;
   typedef ArgumentMapType::value_type      ArgumentMapEntryType;
 
-  typedef std::pair< std::string, std::string > ArgPairType;
-  typedef std::queue< ArgPairType >             ParameterFileListType;
-  typedef ParameterFileListType::value_type     ParameterFileListEntryType;
-
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();
 
   unsigned long              nrOfParameterFiles = 0;
   ArgumentMapType            argMap;
-  ParameterFileListType      parameterFileList;
+  std::queue< std::string >  parameterFileList;
   bool                       outFolderPresent = false;
   std::string                outFolder        = "";
   std::string                logFileName      = "";
@@ -145,8 +141,7 @@ main( int argc, char ** argv )
     {
       /** Queue the ParameterFileNames. */
       nrOfParameterFiles++;
-      parameterFileList.push(
-        ParameterFileListEntryType( key.c_str(), value.c_str() ) );
+      parameterFileList.push( value );
       /** The different '-p' are stored in the argMap, with
        * keys p(1), p(2), etc. */
       std::ostringstream tempPname( "" );
@@ -298,23 +293,17 @@ main( int argc, char ** argv )
     elastixMain->SetElastixLevel( i );
     elastixMain->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
 
-    /** Delete the previous ParameterFileName. */
-    if( argMap.count( "-p" ) )
-    {
-      argMap.erase( "-p" );
-    }
-
-    /** Read the first parameterFileName in the queue. */
-    ArgPairType argPair = parameterFileList.front();
+    /** Get the argMap entry for the parameter file, and exchange its file name
+     * with the first file name in the list.
+     */
+    std::string& parameterFileName = argMap[ "-p" ];
+    parameterFileName.swap( parameterFileList.front() );
     parameterFileList.pop();
-
-    /** Put it in the ArgumentMap. */
-    argMap.insert( ArgumentMapEntryType( argPair.first, argPair.second ) );
 
     /** Print a start message. */
     elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
     elxout << "Running elastix with parameter file " << i
-           << ": \"" << argMap[ "-p" ] << "\".\n" << std::endl;
+           << ": \"" << parameterFileName << "\".\n" << std::endl;
 
     /** Declare a timer, start it and print the start time. */
     itk::TimeProbe timer;
@@ -343,7 +332,7 @@ main( int argc, char ** argv )
 
     /** Print a finish message. */
     elxout << "Running elastix with parameter file " << i
-           << ": \"" << argMap[ "-p" ] << "\", has finished.\n" << std::endl;
+           << ": \"" << parameterFileName << "\", has finished.\n" << std::endl;
 
     /** Stop timer and print it. */
     timer.Stop();
