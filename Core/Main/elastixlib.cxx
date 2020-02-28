@@ -33,6 +33,8 @@
 #include <itksys/SystemTools.hxx>
 
 // Standard C++ header files:
+#include <cassert>
+#include <climits> // For UINT_MAX.
 #include <iostream>
 #include <string>
 #include <queue>
@@ -169,10 +171,8 @@ ELASTIX::RegisterImages(
   ParameterFileListType      parameterFileList;
   std::string                outFolder   = "";
   std::string                logFileName = "";
-  unsigned short             i;
   std::string                key;
   std::string                value;
-  unsigned long              nrOfParameterFiles = parameterMaps.size();
 
   /** Setup the argumentMap for output path. */
   if( !outputPath.empty() )
@@ -287,8 +287,11 @@ ELASTIX::RegisterImages(
    *  Do the (possibly multiple) registration(s).     *
    *                                                  *
    ************************************************************************/
+  
+  const auto nrOfParameterFiles = parameterMaps.size();
+  assert(nrOfParameterFiles <= UINT_MAX);
 
-  for( i = 0; i < nrOfParameterFiles; i++ )
+  for( unsigned i{}; i < static_cast<unsigned>(nrOfParameterFiles); ++i )
   {
     /** Create another instance of ElastixMain. */
     const auto elastixMain = ElastixMainType::New();

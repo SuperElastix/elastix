@@ -27,6 +27,8 @@
 #include <itksys/SystemTools.hxx>
 
 // Standard C++ header files:
+#include <cassert>
+#include <climits> // For UINT_MAX.
 #include <cstddef> // For size_t.
 #include <iostream>
 #include <limits>
@@ -276,7 +278,9 @@ main( int argc, char ** argv )
    * Do the (possibly multiple) registration(s).
    */
 
-  for( unsigned int i = 0; i < nrOfParameterFiles; i++ )
+  assert(nrOfParameterFiles <= UINT_MAX);
+
+  for( unsigned i{}; i < static_cast<unsigned>(nrOfParameterFiles); ++i )
   {
     /** Create another instance of ElastixMain. */
     const auto elastixMain = ElastixMainType::New();
