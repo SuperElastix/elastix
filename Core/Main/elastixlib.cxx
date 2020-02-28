@@ -46,21 +46,13 @@ namespace elastix
  * ******************* Constructor ***********************
  */
 
-ELASTIX::ELASTIX() : m_ResultImage(nullptr)
-{
-} // end Constructor
-
+ELASTIX::ELASTIX() = default;
 
 /**
  * ******************* Destructor ***********************
  */
 
-ELASTIX::~ELASTIX()
-{
-  this->m_ResultImage = nullptr;
-  this->m_TransformParametersList.clear();
-} // end Destructor
-
+ELASTIX::~ELASTIX() = default;
 
 /**
  * ******************* GetResultImage ***********************
