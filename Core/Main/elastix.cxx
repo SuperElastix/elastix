@@ -147,7 +147,7 @@ main( int argc, char ** argv )
       std::ostringstream tempPname( "" );
       tempPname << "-p(" << nrOfParameterFiles << ")";
       std::string tempPName = tempPname.str();
-      argMap.insert( ArgumentMapEntryType( tempPName.c_str(), value.c_str() ) );
+      argMap.insert( ArgumentMapEntryType( tempPName, value ) );
     }
     else
     {
@@ -156,14 +156,14 @@ main( int argc, char ** argv )
         /** Make sure that last character of the output folder equals a '/' or '\'. */
         const char last = value[ value.size() - 1 ];
         if( last != '/' && last != '\\' ) { value.append( "/" ); }
-        value = itksys::SystemTools::ConvertToOutputPath( value.c_str() );
+        value = itksys::SystemTools::ConvertToOutputPath( value );
 
         /** Note that on Windows, in case the output folder contains a space,
          * the path name is double quoted by ConvertToOutputPath, which is undesirable.
          * So, we remove these quotes again.
          */
-        if( itksys::SystemTools::StringStartsWith( value.c_str(), "\"" )
-          && itksys::SystemTools::StringEndsWith(   value.c_str(), "\"" ) )
+        if( itksys::SystemTools::StringStartsWith( value, "\"" )
+          && itksys::SystemTools::StringEndsWith(   value, "\"" ) )
         {
           value = value.substr( 1, value.length() - 2 );
         }
@@ -175,16 +175,16 @@ main( int argc, char ** argv )
       } // end if key == "-out"
 
       /** Attempt to save the arguments in the ArgumentMap. */
-      if( argMap.count( key.c_str() ) == 0 )
+      if( argMap.count( key ) == 0 )
       {
-        argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
+        argMap.insert( ArgumentMapEntryType( key, value ) );
       }
       else
       {
         /** Duplicate arguments. */
         std::cerr << "WARNING!" << std::endl;
-        std::cerr << "Argument " << key.c_str() << "is only required once." << std::endl;
-        std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
+        std::cerr << "Argument " << key << "is only required once." << std::endl;
+        std::cerr << "Arguments " << key << " " << value << "are ignored" << std::endl;
       }
 
     } // end else (so, if key does not equal "-p")
@@ -207,7 +207,7 @@ main( int argc, char ** argv )
   if( outFolderPresent )
   {
     /** Check if the output directory exists. */
-    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
+    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder );
     if( !outFolderExists )
     {
       std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist." << std::endl;
