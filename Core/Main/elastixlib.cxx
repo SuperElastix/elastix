@@ -148,7 +148,6 @@ ELASTIX::RegisterImages(
 
   /** Some declarations and initialisations. */
 
-  std::string                logFileName;
   std::string                value;
 
   /** Setup the argumentMap for output path. */
@@ -180,29 +179,19 @@ ELASTIX::RegisterImages(
     ArgumentMapEntryType("-out", outFolder)
   };
 
-  if( performLogging )
+  /** Check if the output directory exists. */
+  if( performLogging && ! itksys::SystemTools::FileIsDirectory( outFolder ) )
   {
-    /** Check if the output directory exists. */
-    if( ! itksys::SystemTools::FileIsDirectory( outFolder ) )
+    if( performCout )
     {
-      if( performCout )
-      {
-        std::cerr << "ERROR: the output directory does not exist." << std::endl;
-        std::cerr << "You are responsible for creating it." << std::endl;
-      }
-      return -2;
+      std::cerr << "ERROR: the output directory does not exist." << std::endl;
+      std::cerr << "You are responsible for creating it." << std::endl;
     }
-    else
-    {
-      /** Setup xout. */
-      if( performLogging )
-      {
-        logFileName = outFolder + "elastix.log";
-      }
-    }
+    return -2;
   }
 
   /** Setup xout. */
+  const std::string logFileName = performLogging ? (outFolder + "elastix.log") : "";
   int returndummy = elx::xoutSetup( logFileName.c_str(), performLogging, performCout );
   if( returndummy && performCout )
   {
