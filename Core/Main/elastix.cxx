@@ -127,7 +127,6 @@ main( int argc, char ** argv )
   unsigned long              nrOfParameterFiles = 0;
   ArgumentMapType            argMap;
   std::queue< std::string >  parameterFileList;
-  bool                       outFolderPresent = false;
   std::string                outFolder;
   std::string                logFileName;
 
@@ -169,8 +168,7 @@ main( int argc, char ** argv )
         }
 
         /** Save this information. */
-        outFolderPresent = true;
-        outFolder        = value;
+        outFolder = value;
 
       } // end if key == "-out"
 
@@ -204,11 +202,10 @@ main( int argc, char ** argv )
   }
 
   /** Check if the -out option is given. */
-  if( outFolderPresent )
+  if( ! outFolder.empty() )
   {
     /** Check if the output directory exists. */
-    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder );
-    if( !outFolderExists )
+    if( ! itksys::SystemTools::FileIsDirectory( outFolder ) )
     {
       std::cerr << "ERROR: the output directory \"" << outFolder << "\" does not exist." << std::endl;
       std::cerr << "You are responsible for creating it." << std::endl;

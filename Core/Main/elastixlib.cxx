@@ -183,8 +183,7 @@ ELASTIX::RegisterImages(
   if( performLogging )
   {
     /** Check if the output directory exists. */
-    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder );
-    if( !outFolderExists )
+    if( ! itksys::SystemTools::FileIsDirectory( outFolder ) )
     {
       if( performCout )
       {
