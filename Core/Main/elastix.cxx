@@ -113,7 +113,6 @@ main( int argc, char ** argv )
 
   /** Some typedef's. */
   typedef elx::ElastixMain                            ElastixMainType;
-  typedef ElastixMainType::Pointer                    ElastixMainPointer;
   typedef ElastixMainType::ObjectPointer              ObjectPointer;
   typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
   typedef ElastixMainType::FlatDirectionCosinesType   FlatDirectionCosinesType;
