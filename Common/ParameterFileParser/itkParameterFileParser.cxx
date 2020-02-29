@@ -32,12 +32,7 @@ namespace itk
  */
 
 ParameterFileParser
-::ParameterFileParser()
-{
-  this->m_ParameterFileName = "";
-  this->m_ParameterMap.clear();
-
-} // end Constructor()
+::ParameterFileParser() = default;
 
 
 /**
@@ -45,14 +40,7 @@ ParameterFileParser
  */
 
 ParameterFileParser
-::~ParameterFileParser()
-{
-  if( this->m_ParameterFile.is_open() )
-  {
-    this->m_ParameterFile.close();
-  }
-
-} // end Destructor()
+::~ParameterFileParser() = default;
 
 
 /**
