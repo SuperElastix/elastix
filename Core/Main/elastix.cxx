@@ -128,8 +128,8 @@ main( int argc, char ** argv )
   ArgumentMapType            argMap;
   std::queue< std::string >  parameterFileList;
   bool                       outFolderPresent = false;
-  std::string                outFolder        = "";
-  std::string                logFileName      = "";
+  std::string                outFolder;
+  std::string                logFileName;
 
   /** Put command line parameters into parameterFileList. */
   for( unsigned int i = 1; static_cast< long >( i ) < ( argc - 1 ); i += 2 )
@@ -144,7 +144,7 @@ main( int argc, char ** argv )
       parameterFileList.push( value );
       /** The different '-p' are stored in the argMap, with
        * keys p(1), p(2), etc. */
-      std::ostringstream tempPname( "" );
+      std::ostringstream tempPname;
       tempPname << "-p(" << nrOfParameterFiles << ")";
       std::string tempPName = tempPname.str();
       argMap.insert( ArgumentMapEntryType( tempPName, value ) );
