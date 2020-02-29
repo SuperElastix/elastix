@@ -87,8 +87,8 @@ ParameterFileParser
   this->m_ParameterMap.clear();
 
   /** Loop over the parameter file, line by line. */
-  std::string lineIn  = "";
-  std::string lineOut = "";
+  std::string lineIn;
+  std::string lineOut;
   while( this->m_ParameterFile.good() )
   {
     /** Extract a line. */
@@ -439,7 +439,7 @@ ParameterFileParser
   }
 
   /** Loop over the parameter file, line by line. */
-  std::string line = "";
+  std::string line;
   std::string output;
   while( this->m_ParameterFile.good() )
   {
