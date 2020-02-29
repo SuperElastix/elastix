@@ -148,7 +148,7 @@ ELASTIX::RegisterImages(
 
   /** Some declarations and initialisations. */
 
-  std::string                logFileName = "";
+  std::string                logFileName;
   std::string                value;
 
   /** Setup the argumentMap for output path. */
