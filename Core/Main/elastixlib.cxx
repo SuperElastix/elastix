@@ -132,7 +132,6 @@ ELASTIX::RegisterImages(
 {
   /** Some typedef's. */
   typedef elx::ElastixMain                            ElastixMainType;
-  typedef ElastixMainType::Pointer                    ElastixMainPointer;
   typedef ElastixMainType::ObjectPointer              ObjectPointer;
   typedef ElastixMainType::DataObjectContainerType    DataObjectContainerType;
   typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
