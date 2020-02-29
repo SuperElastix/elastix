@@ -278,11 +278,11 @@ ParameterFileParser
 
   /** 3) Get the parameter values. */
   std::vector< std::string > parameterValues;
-  for( unsigned int i = 0; i < splittedLine.size(); ++i )
+  for( const auto& value: splittedLine )
   {
-    if( ! splittedLine[ i ].empty() )
+    if( ! value.empty() )
     {
-      parameterValues.push_back( splittedLine[ i ] );
+      parameterValues.push_back( value );
     }
   }
 
@@ -299,13 +299,13 @@ ParameterFileParser
 
   /** 5) Perform checks on the parameter values. */
   itksys::RegularExpression reInvalidCharacters2( "[,;!@#$%&|<>?]" );
-  for( unsigned int i = 0; i < parameterValues.size(); ++i )
+  for( const auto& parameterValue: parameterValues )
   {
     /** For all entries some characters are not allowed. */
-    if( reInvalidCharacters2.find( parameterValues[ i ] ) )
+    if( reInvalidCharacters2.find( parameterValue ) )
     {
       const std::string hint = "The parameter value \""
-        + parameterValues[ i ]
+        + parameterValue
         + "\" contains invalid characters (,;!@#$%&|<>?).";
       this->ThrowException( fullLine, hint );
     }
@@ -352,19 +352,18 @@ ParameterFileParser
   }
 
   /** Loop over the line. */
-  std::string::const_iterator it;
   unsigned int                index = 0;
   numQuotes = 0;
-  for( it = line.begin(); it < line.end(); ++it )
+  for( const char currentChar: line )
   {
-    if( *it == '"' )
+    if( currentChar == '"' )
     {
       /** Start a new element. */
       splittedLine.push_back( "" );
       index++;
       numQuotes++;
     }
-    else if( *it == ' ' )
+    else if( currentChar == ' ' )
     {
       /** Only start a new element if it is not a quote, otherwise just add
        * the space to the string.
@@ -376,13 +375,13 @@ ParameterFileParser
       }
       else
       {
-        splittedLine[ index ].push_back( *it );
+        splittedLine[ index ].push_back( currentChar );
       }
     }
     else
     {
       /** Add this character to the element. */
-      splittedLine[ index ].push_back( *it );
+      splittedLine[ index ].push_back( currentChar );
     }
   }
 
