@@ -215,7 +215,7 @@ main( int argc, char ** argv )
       /** Setup xout. */
       const std::string logFileName = outFolder + "elastix.log";
       const int returndummy2{ elx::xoutSetup(logFileName.c_str(), true, true) };
-      if( returndummy2 )
+      if( returndummy2 != 0 )
       {
         std::cerr << "ERROR while setting up xout." << std::endl;
       }
@@ -229,7 +229,7 @@ main( int argc, char ** argv )
   }
 
   /** Stop if some fatal errors occurred. */
-  if( returndummy )
+  if( returndummy != 0 )
   {
     return returndummy;
   }

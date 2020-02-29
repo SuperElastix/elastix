@@ -193,7 +193,7 @@ ELASTIX::RegisterImages(
   /** Setup xout. */
   const std::string logFileName = performLogging ? (outFolder + "elastix.log") : "";
   int returndummy = elx::xoutSetup( logFileName.c_str(), performLogging, performCout );
-  if( returndummy && performCout )
+  if( ( returndummy != 0 ) && performCout )
   {
     if( performCout )
     {
