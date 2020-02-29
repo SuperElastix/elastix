@@ -124,7 +124,6 @@ main( int argc, char ** argv )
   /** Support Mevis Dicom Tiff (if selected in cmake) */
   RegisterMevisDicomTiff();
 
-  unsigned long              nrOfParameterFiles = 0;
   ArgumentMapType            argMap;
   std::queue< std::string >  parameterFileList;
   std::string                outFolder;
@@ -138,12 +137,11 @@ main( int argc, char ** argv )
     if( key == "-p" )
     {
       /** Queue the ParameterFileNames. */
-      nrOfParameterFiles++;
       parameterFileList.push( value );
       /** The different '-p' are stored in the argMap, with
        * keys p(1), p(2), etc. */
       std::ostringstream tempPname;
-      tempPname << "-p(" << nrOfParameterFiles << ")";
+      tempPname << "-p(" << parameterFileList.size() << ")";
       std::string tempPName = tempPname.str();
       argMap.insert( ArgumentMapEntryType( tempPName, value ) );
     }
@@ -194,7 +192,7 @@ main( int argc, char ** argv )
   int returndummy{};
 
   /** Check if at least once the option "-p" is given. */
-  if( nrOfParameterFiles == 0 )
+  if( parameterFileList.empty() )
   {
     std::cerr << "ERROR: No CommandLine option \"-p\" given!" << std::endl;
     returndummy |= -1;
@@ -270,6 +268,7 @@ main( int argc, char ** argv )
    * Do the (possibly multiple) registration(s).
    */
 
+  const auto nrOfParameterFiles = parameterFileList.size();
   assert(nrOfParameterFiles <= UINT_MAX);
 
   for( unsigned i{}; i < static_cast<unsigned>(nrOfParameterFiles); ++i )
