@@ -134,7 +134,7 @@ ParameterFileParser
 ::BasicFileChecking( void ) const
 {
   /** Check if the file name is given. */
-  if( this->m_ParameterFileName == "" )
+  if( this->m_ParameterFileName.empty() )
   {
     itkExceptionMacro( << "ERROR: FileName has not been set." );
   }
@@ -292,7 +292,7 @@ ParameterFileParser
   std::vector< std::string > parameterValues;
   for( unsigned int i = 0; i < splittedLine.size(); ++i )
   {
-    if( splittedLine[ i ] != "" )
+    if( ! splittedLine[ i ].empty() )
     {
       parameterValues.push_back( splittedLine[ i ] );
     }
