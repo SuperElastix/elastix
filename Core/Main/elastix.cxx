@@ -128,7 +128,6 @@ main( int argc, char ** argv )
   ArgumentMapType            argMap;
   std::queue< std::string >  parameterFileList;
   std::string                outFolder;
-  std::string                logFileName;
 
   /** Put command line parameters into parameterFileList. */
   for( unsigned int i = 1; static_cast< long >( i ) < ( argc - 1 ); i += 2 )
@@ -214,7 +213,7 @@ main( int argc, char ** argv )
     else
     {
       /** Setup xout. */
-      logFileName = outFolder + "elastix.log";
+      const std::string logFileName = outFolder + "elastix.log";
       const int returndummy2{ elx::xoutSetup(logFileName.c_str(), true, true) };
       if( returndummy2 )
       {
