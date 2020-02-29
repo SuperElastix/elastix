@@ -85,7 +85,7 @@ ParameterFileParser
     this->m_ParameterFile.clear();
     this->m_ParameterFile.close();
   }
-  this->m_ParameterFile.open( this->m_ParameterFileName.c_str(), std::fstream::in );
+  this->m_ParameterFile.open( this->m_ParameterFileName, std::fstream::in );
 
   /** Check if it opened. */
   if( !this->m_ParameterFile.is_open() )
@@ -141,7 +141,7 @@ ParameterFileParser
 
   /** Basic error checking: existence. */
   bool exists = itksys::SystemTools::FileExists(
-    this->m_ParameterFileName.c_str() );
+    this->m_ParameterFileName );
   if( !exists )
   {
     itkExceptionMacro( << "ERROR: the file "
@@ -151,7 +151,7 @@ ParameterFileParser
 
   /** Basic error checking: file or directory. */
   bool isDir = itksys::SystemTools::FileIsDirectory(
-    this->m_ParameterFileName.c_str() );
+    this->m_ParameterFileName );
   if( isDir )
   {
     itkExceptionMacro( << "ERROR: the file "
@@ -232,8 +232,8 @@ ParameterFileParser
   }
 
   /** 3. Check if line is between brackets. */
-  if( !itksys::SystemTools::StringStartsWith( lineOut.c_str(), "(" )
-    || !itksys::SystemTools::StringEndsWith( lineOut.c_str(), ")" ) )
+  if( !itksys::SystemTools::StringStartsWith( lineOut, "(" )
+    || !itksys::SystemTools::StringEndsWith( lineOut, ")" ) )
   {
     std::string hint = "Line is not between brackets: \"(...)\".";
     this->ThrowException( lineIn, hint );
@@ -418,7 +418,7 @@ ParameterFileParser
     + "\nPlease correct you parameter file!";
 
   /** Throw exception. */
-  itkExceptionMacro( << errorMessage.c_str() );
+  itkExceptionMacro( << errorMessage );
 
 } // end ThrowException()
 
@@ -440,7 +440,7 @@ ParameterFileParser
     this->m_ParameterFile.clear();
     this->m_ParameterFile.close();
   }
-  this->m_ParameterFile.open( this->m_ParameterFileName.c_str(), std::fstream::in );
+  this->m_ParameterFile.open( this->m_ParameterFileName, std::fstream::in );
 
   /** Check if it opened. */
   if( !this->m_ParameterFile.is_open() )
