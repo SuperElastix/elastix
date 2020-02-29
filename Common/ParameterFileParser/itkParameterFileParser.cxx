@@ -95,7 +95,7 @@ ParameterFileParser
     itksys::SystemTools::GetLineFromStream( this->m_ParameterFile, lineIn );
 
     /** Check this line. */
-    bool validLine = this->CheckLine( lineIn, lineOut );
+    const bool validLine = this->CheckLine( lineIn, lineOut );
 
     if( validLine )
     {
@@ -128,7 +128,7 @@ ParameterFileParser
   }
 
   /** Basic error checking: existence. */
-  bool exists = itksys::SystemTools::FileExists(
+  const bool exists = itksys::SystemTools::FileExists(
     this->m_ParameterFileName );
   if( !exists )
   {
@@ -138,7 +138,7 @@ ParameterFileParser
   }
 
   /** Basic error checking: file or directory. */
-  bool isDir = itksys::SystemTools::FileIsDirectory(
+  const bool isDir = itksys::SystemTools::FileIsDirectory(
     this->m_ParameterFileName );
   if( isDir )
   {
@@ -148,7 +148,7 @@ ParameterFileParser
   }
 
   /** Check the extension. */
-  std::string ext = itksys::SystemTools::GetFilenameLastExtension(
+  const std::string ext = itksys::SystemTools::GetFilenameLastExtension(
     this->m_ParameterFileName );
   if( ext != ".txt" )
   {
@@ -205,7 +205,7 @@ ParameterFileParser
 
   /** 1. Check for non-empty lines. */
   itksys::RegularExpression reNonEmptyLine( "[^ ]+" );
-  bool                      match1 = reNonEmptyLine.find( lineOut );
+  const bool                match1 = reNonEmptyLine.find( lineOut );
   if( !match1 )
   {
     return false;
@@ -213,7 +213,7 @@ ParameterFileParser
 
   /** 2. Check for comments. */
   itksys::RegularExpression reComment( "^//" );
-  bool                      match2 = reComment.find( lineOut );
+  const bool                match2 = reComment.find( lineOut );
   if( match2 )
   {
     return false;
@@ -223,7 +223,7 @@ ParameterFileParser
   if( !itksys::SystemTools::StringStartsWith( lineOut, "(" )
     || !itksys::SystemTools::StringEndsWith( lineOut, ")" ) )
   {
-    std::string hint = "Line is not between brackets: \"(...)\".";
+    const std::string hint = "Line is not between brackets: \"(...)\".";
     this->ThrowException( lineIn, hint );
   }
 
@@ -232,10 +232,10 @@ ParameterFileParser
 
   /** 4. Check: the line should contain at least two words. */
   itksys::RegularExpression reTwoWords( "([ ]+)([^ ]+)" );
-  bool                      match4 = reTwoWords.find( lineOut );
+  const bool                match4 = reTwoWords.find( lineOut );
   if( !match4 )
   {
-    std::string hint = "Line does not contain a parameter name and value.";
+    const std::string hint = "Line does not contain a parameter name and value.";
     this->ThrowException( lineIn, hint );
   }
 
@@ -288,10 +288,10 @@ ParameterFileParser
 
   /** 4) Perform some checks on the parameter name. */
   itksys::RegularExpression reInvalidCharacters1( "[.,:;!@#$%^&-+|<>?]" );
-  bool                      match = reInvalidCharacters1.find( parameterName );
+  const bool                match = reInvalidCharacters1.find( parameterName );
   if( match )
   {
-    std::string hint = "The parameter \""
+    const std::string hint = "The parameter \""
       + parameterName
       + "\" contains invalid characters (.,:;!@#$%^&-+|<>?).";
     this->ThrowException( fullLine, hint );
@@ -304,7 +304,7 @@ ParameterFileParser
     /** For all entries some characters are not allowed. */
     if( reInvalidCharacters2.find( parameterValues[ i ] ) )
     {
-      std::string hint = "The parameter value \""
+      const std::string hint = "The parameter value \""
         + parameterValues[ i ]
         + "\" contains invalid characters (,;!@#$%&|<>?).";
       this->ThrowException( fullLine, hint );
@@ -314,7 +314,7 @@ ParameterFileParser
   /** 6) Insert this combination in the parameter map. */
   if( this->m_ParameterMap.count( parameterName ) )
   {
-    std::string hint = "The parameter \""
+    const std::string hint = "The parameter \""
       + parameterName
       + "\" is specified more than once.";
     this->ThrowException( fullLine, hint );
@@ -347,7 +347,7 @@ ParameterFileParser
   if( numQuotes % 2 == 1 )
   {
     /** An invalid parameter line. */
-    std::string hint = "This line has an odd number of quotes (\").";
+    const std::string hint = "This line has an odd number of quotes (\").";
     this->ThrowException( fullLine, hint );
   }
 
@@ -398,7 +398,7 @@ ParameterFileParser
 ::ThrowException( const std::string & line, const std::string & hint ) const
 {
   /** Construct an error message. */
-  std::string errorMessage
+  const std::string errorMessage
     = "ERROR: the following line in your parameter file is invalid: \n\""
     + line
     + "\"\n"
