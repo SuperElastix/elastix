@@ -25,7 +25,6 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <fstream>
 
 namespace itk
 {
@@ -153,7 +152,6 @@ private:
 
   /** Member variables. */
   std::string      m_ParameterFileName;
-  std::ifstream    m_ParameterFile;
   ParameterMapType m_ParameterMap;
 
 };

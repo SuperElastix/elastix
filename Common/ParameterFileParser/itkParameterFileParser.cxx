@@ -24,6 +24,8 @@
 #include <itksys/SystemTools.hxx>
 #include <itksys/RegularExpression.hxx>
 
+#include <fstream>
+
 namespace itk
 {
 
@@ -68,15 +70,10 @@ ParameterFileParser
   this->BasicFileChecking();
 
   /** Open the parameter file for reading. */
-  if( this->m_ParameterFile.is_open() )
-  {
-    this->m_ParameterFile.clear();
-    this->m_ParameterFile.close();
-  }
-  this->m_ParameterFile.open( this->m_ParameterFileName, std::fstream::in );
+  std::ifstream parameterFile( this->m_ParameterFileName );
 
   /** Check if it opened. */
-  if( !this->m_ParameterFile.is_open() )
+  if( !parameterFile.is_open() )
   {
     itkExceptionMacro( << "ERROR: could not open "
                        << this->m_ParameterFileName
@@ -89,10 +86,10 @@ ParameterFileParser
   /** Loop over the parameter file, line by line. */
   std::string lineIn;
   std::string lineOut;
-  while( this->m_ParameterFile.good() )
+  while( parameterFile.good() )
   {
     /** Extract a line. */
-    itksys::SystemTools::GetLineFromStream( this->m_ParameterFile, lineIn );
+    itksys::SystemTools::GetLineFromStream( parameterFile, lineIn );
 
     /** Check this line. */
     const bool validLine = this->CheckLine( lineIn, lineOut );
@@ -105,10 +102,6 @@ ParameterFileParser
     // Otherwise, we simply ignore this line
 
   }
-
-  /** Close the parameter file. */
-  this->m_ParameterFile.clear();
-  this->m_ParameterFile.close();
 
 } // end ReadParameterFile()
 
@@ -422,15 +415,10 @@ ParameterFileParser
   this->BasicFileChecking();
 
   /** Open the parameter file for reading. */
-  if( this->m_ParameterFile.is_open() )
-  {
-    this->m_ParameterFile.clear();
-    this->m_ParameterFile.close();
-  }
-  this->m_ParameterFile.open( this->m_ParameterFileName, std::fstream::in );
+  std::ifstream parameterFile( this->m_ParameterFileName );
 
   /** Check if it opened. */
-  if( !this->m_ParameterFile.is_open() )
+  if( !parameterFile.is_open() )
   {
     itkExceptionMacro( << "ERROR: could not open "
                        << this->m_ParameterFileName
@@ -440,17 +428,13 @@ ParameterFileParser
   /** Loop over the parameter file, line by line. */
   std::string line;
   std::string output;
-  while( this->m_ParameterFile.good() )
+  while( parameterFile.good() )
   {
     /** Extract a line. */
-    itksys::SystemTools::GetLineFromStream( this->m_ParameterFile, line ); // \todo: returns bool
+    itksys::SystemTools::GetLineFromStream( parameterFile, line ); // \todo: returns bool
 
     output += line + "\n";
   }
-
-  /** Close the parameter file. */
-  this->m_ParameterFile.clear();
-  this->m_ParameterFile.close();
 
   /** Return the string. */
   return output;
