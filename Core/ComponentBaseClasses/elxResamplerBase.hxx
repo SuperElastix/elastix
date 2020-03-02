@@ -214,17 +214,15 @@ ResamplerBase< TElastix >
   this->m_Configuration->ReadParameter(
     writeResultImage, "WriteResultImage", 0 );
 
-#ifdef _ELASTIX_BUILD_LIBRARY
+  const auto isElastixLibrary = BaseComponent::IsElastixLibrary();
+
   /** The library interface may executed multiple times in
    * a session in which case the images should not be released
-   */
-  bool releaseMemoryBeforeResampling = false;
-#else
-  /** Release memory to be able to resample in case a limited
+   * However, if this is not the library interface:
+   * Release memory to be able to resample in case a limited
    * amount of memory is available.
    */
-  bool releaseMemoryBeforeResampling = true;
-#endif
+  bool releaseMemoryBeforeResampling{ !isElastixLibrary };
 
   this->m_Configuration->ReadParameter( releaseMemoryBeforeResampling, "ReleaseMemoryBeforeResampling", 0, false );
   if( releaseMemoryBeforeResampling )
@@ -236,56 +234,59 @@ ResamplerBase< TElastix >
    * Create the result image and put it in ResultImageContainer
    * Only necessary when compiling elastix as a library!
    */
-#ifdef _ELASTIX_BUILD_LIBRARY
-  if( writeResultImage == "true" )
+  if (isElastixLibrary)
   {
-    this->CreateItkResultImage();
-  }
-#else
-  /** Writing result image. */
-  if( writeResultImage == "true" )
-  {
-    /** Create a name for the final result. */
-    std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter(
-      resultImageFormat, "ResultImageFormat", 0 );
-    std::ostringstream makeFileName( "" );
-    makeFileName
-      << this->m_Configuration->GetCommandLineArgument( "-out" )
-      << "result." << this->m_Configuration->GetElastixLevel()
-      << "." << resultImageFormat;
-
-    /** Time the resampling. */
-    itk::TimeProbe timer;
-    timer.Start();
-
-    /** Apply the final transform, and save the result,
-     * by calling ResampleAndWriteResultImage.
-     */
-    elxout << "\nApplying final transform ..." << std::endl;
-    try
+    if( writeResultImage == "true" )
     {
-      this->ResampleAndWriteResultImage( makeFileName.str().c_str(), this->m_ShowProgress );
+      this->CreateItkResultImage();
     }
-    catch( itk::ExceptionObject & excp )
-    {
-      xl::xout[ "error" ] << "Exception caught: " << std::endl;
-      xl::xout[ "error" ] << excp << "Resuming elastix." << std::endl;
-    }
-
-    /** Print the elapsed time for the resampling. */
-    timer.Stop();
-    elxout << "  Applying final transform took "
-           << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
   }
   else
   {
-    /** Do not apply the final transform. */
-    elxout << std::endl
-           << "Skipping applying final transform, no resulting output image generated."
-           << std::endl;
-  } // end if
-#endif
+    /** Writing result image. */
+    if( writeResultImage == "true" )
+    {
+      /** Create a name for the final result. */
+      std::string resultImageFormat = "mhd";
+      this->m_Configuration->ReadParameter(
+        resultImageFormat, "ResultImageFormat", 0 );
+      std::ostringstream makeFileName( "" );
+      makeFileName
+        << this->m_Configuration->GetCommandLineArgument( "-out" )
+        << "result." << this->m_Configuration->GetElastixLevel()
+        << "." << resultImageFormat;
+
+      /** Time the resampling. */
+      itk::TimeProbe timer;
+      timer.Start();
+
+      /** Apply the final transform, and save the result,
+       * by calling ResampleAndWriteResultImage.
+       */
+      elxout << "\nApplying final transform ..." << std::endl;
+      try
+      {
+        this->ResampleAndWriteResultImage( makeFileName.str().c_str(), this->m_ShowProgress );
+      }
+      catch( itk::ExceptionObject & excp )
+      {
+        xl::xout[ "error" ] << "Exception caught: " << std::endl;
+        xl::xout[ "error" ] << excp << "Resuming elastix." << std::endl;
+      }
+
+      /** Print the elapsed time for the resampling. */
+      timer.Stop();
+      elxout << "  Applying final transform took "
+             << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
+    }
+    else
+    {
+      /** Do not apply the final transform. */
+      elxout << std::endl
+             << "Skipping applying final transform, no resulting output image generated."
+             << std::endl;
+    } // end if
+  }
 
 } // end AfterRegistrationBase()
 
@@ -327,15 +328,14 @@ ResamplerBase< TElastix >
   this->GetAsITKBaseType()->Modified();
 
   /** Add a progress observer to the resampler. */
-#ifndef _ELASTIX_BUILD_LIBRARY
-  typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
-  if( showProgress )
+  const auto progressObserver = BaseComponent::IsElastixLibrary() ?
+    nullptr : ProgressCommandType::New();
+  if( showProgress && (progressObserver != nullptr) )
   {
     progressObserver->ConnectObserver( this->GetAsITKBaseType() );
     progressObserver->SetStartString( "  Progress: " );
     progressObserver->SetEndString( "%" );
   }
-#endif
 
   /** Do the resampling. */
   try
@@ -358,12 +358,10 @@ ResamplerBase< TElastix >
   this->WriteResultImage( this->GetAsITKBaseType()->GetOutput(), filename, showProgress );
 
   /** Disconnect from the resampler. */
-#ifndef _ELASTIX_BUILD_LIBRARY
-  if( showProgress )
+  if( showProgress && (progressObserver != nullptr) )
   {
     progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
   }
-#endif
 
 } // end ResampleAndWriteResultImage()
 
@@ -472,13 +470,8 @@ ResamplerBase< TElastix >
   /** Make sure the resampler is updated. */
   this->GetAsITKBaseType()->Modified();
 
-#ifndef _ELASTIX_BUILD_LIBRARY
-  /** Add a progress observer to the resampler. */
-  typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
-  progressObserver->ConnectObserver( this->GetAsITKBaseType() );
-  progressObserver->SetStartString( "  Progress: " );
-  progressObserver->SetEndString( "%" );
-#endif
+  const auto progressObserver = BaseComponent::IsElastixLibrary() ?
+    nullptr : ProgressCommandType::CreateAndConnect(*(this->GetAsITKBaseType()));
 
   /** Do the resampling. */
   try
@@ -637,10 +630,11 @@ ResamplerBase< TElastix >
   //put image in container
   this->m_Elastix->SetResultImage( resultImage );
 
-#ifndef _ELASTIX_BUILD_LIBRARY
-  /** Disconnect from the resampler. */
-  progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
-#endif
+  if ( progressObserver != nullptr )
+  {
+    /** Disconnect from the resampler. */
+    progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
+  }
 } // end CreateItkResultImage()
 
 

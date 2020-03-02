@@ -503,11 +503,14 @@ ElastixTemplate< TFixedImage, TMovingImage >
      * Actually we could loop over all resamplers.
      * But for now, there seems to be no use yet for that.
      */
-#ifndef _ELASTIX_BUILD_LIBRARY
-    this->GetElxResamplerBase()->ResampleAndWriteResultImage( makeFileName.str().c_str() );
-#else
-    this->GetElxResamplerBase()->CreateItkResultImage();
-#endif
+    if (!BaseComponent::IsElastixLibrary())
+    {
+      this->GetElxResamplerBase()->ResampleAndWriteResultImage( makeFileName.str().c_str() );
+    }
+    else
+    {
+      this->GetElxResamplerBase()->CreateItkResultImage();
+    }
 
     /** Print the elapsed time for the resampling. */
     timer.Stop();
@@ -574,9 +577,10 @@ ElastixTemplate< TFixedImage, TMovingImage >
    * It print the Transform Parameter file to the log file. That's
    * why we call it after the other components.
    */
-#ifndef _ELASTIX_BUILD_LIBRARY
-  returndummy |= this->GetConfiguration()->BeforeAllTransformix();
-#endif
+  if (!BaseComponent::IsElastixLibrary())
+  {
+    returndummy |= this->GetConfiguration()->BeforeAllTransformix();
+  }
 
   /** Return a value. */
   return returndummy;
@@ -857,10 +861,11 @@ ElastixTemplate< TFixedImage, TMovingImage >
     this->CreateTransformParameterFile( FileName, true );
   }
 
-#ifdef _ELASTIX_BUILD_LIBRARY
-  /** Get the transform parameters. */
-  this->CreateTransformParametersMap(); // only relevant for dll!
-#endif
+  if (BaseComponent::IsElastixLibrary())
+  {
+    /** Get the transform parameters. */
+    this->CreateTransformParametersMap(); // only relevant for dll!
+  }
 
   timer.Stop();
   elxout << "\nCreating the TransformParameterFile took "

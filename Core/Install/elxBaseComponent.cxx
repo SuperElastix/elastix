@@ -20,6 +20,20 @@
 
 #include <cmath>
 
+namespace
+{
+bool IsElastixLibrary(const bool initialValue = false)
+{
+  // By default, assume that this is not the elastix library.
+
+  // Note that the initialization of this static variable is thread-safe,
+  // as supported by C++11 "magic statics".
+  static const bool isElastixLibrary{ initialValue };
+
+  return isElastixLibrary;
+}
+}
+
 namespace elastix
 {
 
@@ -57,6 +71,16 @@ BaseComponent::GetComponentLabel( void ) const
   return this->m_ComponentLabel.c_str();
 } // end GetComponentLabel()
 
+
+bool BaseComponent::IsElastixLibrary()
+{
+  return ::IsElastixLibrary();
+}
+
+void BaseComponent::InitializeElastixLibrary()
+{
+  ::IsElastixLibrary(true);
+}
 
 /**
  * ****************** ConvertSecondsToDHMS ****************************

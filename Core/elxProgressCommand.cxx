@@ -224,4 +224,26 @@ ProgressCommand
 } // end PrintProgress()
 
 
+ProgressCommand::Pointer
+ProgressCommand
+::CreateAndSetUpdateFrequency( const unsigned long numberOfVoxels )
+{
+  const auto result = Self::New();
+  result->Self::SetUpdateFrequency(numberOfVoxels, numberOfVoxels);
+  result->SetStartString("  Progress: ");
+  return result;
+}
+
+ProgressCommand::Pointer
+ProgressCommand
+::CreateAndConnect(itk::ProcessObject& processObject)
+{
+  const auto result = Self::New();
+  result->Self::ConnectObserver(&processObject);
+  result->Self::SetStartString("  Progress: ");
+  result->Self::SetEndString("%");
+  return result;
+}
+
+
 } // end namespace itk
