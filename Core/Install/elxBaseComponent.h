@@ -122,6 +122,10 @@ public:
   /** Get the componentlabel as a string: "Metric0" for example. */
   virtual const char * GetComponentLabel( void ) const;
 
+  static bool IsElastixLibrary();
+
+  static void InitializeElastixLibrary();
+
   /** Convenience function to convert seconds to day, hour, minute, second format. */
   std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision ) const;
 

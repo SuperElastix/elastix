@@ -46,13 +46,20 @@ namespace elastix
  * ******************* Constructor ***********************
  */
 
-ELASTIX::ELASTIX() = default;
+ELASTIX::ELASTIX()
+{
+  BaseComponent::InitializeElastixLibrary();
+  assert(BaseComponent::IsElastixLibrary());
+}
 
 /**
  * ******************* Destructor ***********************
  */
 
-ELASTIX::~ELASTIX() = default;
+ELASTIX::~ELASTIX()
+{
+  assert(BaseComponent::IsElastixLibrary());
+}
 
 /**
  * ******************* GetResultImage ***********************

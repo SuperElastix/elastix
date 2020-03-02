@@ -40,7 +40,6 @@ mark_as_advanced( ELASTIX_BUILD_EXECUTABLE )
 option( ELASTIX_BUILD_EXECUTABLE "Generate executable or library?" ON )
 
 if( NOT ELASTIX_BUILD_EXECUTABLE )
-  add_definitions( -D_ELASTIX_BUILD_LIBRARY )
 
   # The following may make smaller and quicker loading libraries,
   # that hides unnecessary symbols. Available from CMake 3.0.0.

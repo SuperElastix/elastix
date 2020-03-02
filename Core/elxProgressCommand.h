@@ -144,6 +144,10 @@ public:
   /** Get a boolean indicating if the output is a console. */
   itkGetConstReferenceMacro( StreamOutputIsConsole, bool );
 
+  static Pointer CreateAndSetUpdateFrequency(unsigned long numberOfVoxels);
+
+  static Pointer CreateAndConnect(itk::ProcessObject&);
+
 protected:
 
   /** The constructor. */

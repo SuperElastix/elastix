@@ -843,13 +843,9 @@ PreconditionedStochasticGradientDescent< TElastix >
 
   }   // end if NewSamplesEveryIteration.
 
-#ifndef _ELASTIX_BUILD_LIBRARY
   /** Prepare for progress printing. */
-  ProgressCommandPointer progressObserver = ProgressCommandType::New();
-  progressObserver->SetUpdateFrequency(
-    this->m_NumberOfGradientMeasurements, this->m_NumberOfGradientMeasurements );
-  progressObserver->SetStartString( "  Progress: " );
-#endif
+  const auto progressObserver = BaseComponent::IsElastixLibrary() ?
+    nullptr : ProgressCommandType::CreateAndSetUpdateFrequency( this->m_NumberOfGradientMeasurements );
   elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
@@ -866,10 +862,11 @@ PreconditionedStochasticGradientDescent< TElastix >
   /** Compute gg for some random parameters. */
   for( unsigned int i = 0; i < this->m_NumberOfGradientMeasurements; ++i )
   {
-#ifndef _ELASTIX_BUILD_LIBRARY
-    /** Show progress 0-100% */
-    progressObserver->UpdateAndPrintProgress( i );
-#endif
+    if ( progressObserver != nullptr )
+    {
+      /** Show progress 0-100% */
+      progressObserver->UpdateAndPrintProgress( i );
+    }
     /** Generate a perturbation, according to:
      *    \mu_i ~ N( \mu_0, perturbationsigma^2 I ).
      */
@@ -928,9 +925,10 @@ PreconditionedStochasticGradientDescent< TElastix >
 
   } // end for loop over gradient measurements
 
-#ifdef _ELASTIX_BUILD_LIBARY
-  progressObserver->PrintProgress( 1.0 );
-#endif
+  if ( progressObserver != nullptr )
+  {
+    progressObserver->PrintProgress( 1.0 );
+  }
 
   /** Compute means. */
   exactgg /= this->m_NumberOfGradientMeasurements;

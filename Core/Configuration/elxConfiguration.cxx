@@ -75,9 +75,10 @@ int
 Configuration
 ::BeforeAll( void )
 {
-#ifndef _ELASTIX_BUILD_LIBRARY
-  this->PrintParameterFile();
-#endif
+  if (!BaseComponent::IsElastixLibrary())
+  {
+    this->PrintParameterFile();
+  }
   return 0;
 
 } // end BeforeAll()

@@ -98,9 +98,10 @@ TransformixMain::Run( void )
   itk::CreateOpenCLLogger( "transformix", this->m_Configuration->GetCommandLineArgument( "-out" ) );
 #endif
 
-#ifdef _ELASTIX_BUILD_LIBRARY
-  this->GetElastixBase()->SetConfigurations( this->m_Configurations );
-#endif // #ifdef _ELASTIX_BUILD_LIBRARY
+  if (BaseComponent::IsElastixLibrary())
+  {
+    this->GetElastixBase()->SetConfigurations( this->m_Configurations );
+  }
 
   /** Set some information in the ElastixBase. */
   this->GetElastixBase()->SetConfiguration( this->m_Configuration );
