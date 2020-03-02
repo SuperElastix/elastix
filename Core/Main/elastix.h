@@ -40,6 +40,7 @@ void PrintHelp( void );
 /** ConvertSecondsToDHMS
  *
  */
+inline
 std::string
 ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 0 )
 {
@@ -78,6 +79,7 @@ ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 
 
 
 /** Returns current date and time as a string. */
+inline
 std::string
 GetCurrentDateAndTime( void )
 {
