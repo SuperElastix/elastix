@@ -117,37 +117,54 @@ elastix_export_target( param )
 # Define the mevis dcm tiff lib to which we should link.
 set( mevisdcmtifflib mevisdcmtiff )
 
+set( ELASTIX_TARGET_LINK_LIBRARIES
+  param
+  xoutlib
+  elxCommon
+  elxCore
+  ${mevisdcmtifflib}
+  ${AllComponentLibs}
+  ${ITK_LIBRARIES}
+)
+if( ELASTIX_USE_OPENCL )
+  set( ELASTIX_TARGET_LINK_LIBRARIES  ${ELASTIX_TARGET_LINK_LIBRARIES} elxOpenCL )
+endif()
+
 #---------------------------------------------------------------------
 # Create the elastix executable or library.
 if( ELASTIX_BUILD_EXECUTABLE )
-  add_executable( elastix
+  add_executable( elastix_exe
     Main/elastix.cxx
     Main/elastix.h
     Kernel/elxElastixMain.cxx
     Kernel/elxElastixMain.h
     ${InstallFilesForExecutables}
   )
-else()
-  # The library type (STATIC or SHARED) is determined by the parameter
-  # BUILD_SHARED_LIBS.
-  add_library( elastix
-    Main/elxParameterObject.cxx
-    Main/elxParameterObject.h
-    Main/elastixlib.cxx
-    Main/elastixlib.h
-    Kernel/elxElastixMain.cxx
-    Kernel/elxElastixMain.h
-    ${InstallFilesForExecutables}
-  )
+  set_target_properties( elastix_exe PROPERTIES OUTPUT_NAME elastix )
+  target_compile_definitions( elastix_exe PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}" )
+  target_link_libraries( elastix_exe ${ELASTIX_TARGET_LINK_LIBRARIES} )
 endif()
 
-target_compile_definitions(elastix PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}")
+# The library type (STATIC or SHARED) is determined by the parameter
+# BUILD_SHARED_LIBS.
+add_library( elastix_lib
+  Main/elxParameterObject.cxx
+  Main/elxParameterObject.h
+  Main/elastixlib.cxx
+  Main/elastixlib.h
+  Kernel/elxElastixMain.cxx
+  Kernel/elxElastixMain.h
+  ${InstallFilesForExecutables}
+)
+set_target_properties( elastix_lib PROPERTIES OUTPUT_NAME elastix )
+target_compile_definitions( elastix_lib PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}" )
+target_link_libraries( elastix_lib ${ELASTIX_TARGET_LINK_LIBRARIES} )
 
 #---------------------------------------------------------------------
 # Create the transformix executable.
 
 if( ELASTIX_BUILD_EXECUTABLE )
-  add_executable( transformix
+  add_executable( transformix_exe
     Main/transformix.cxx
     Main/elastix.h
     Kernel/elxElastixMain.cxx
@@ -156,56 +173,27 @@ if( ELASTIX_BUILD_EXECUTABLE )
     Kernel/elxTransformixMain.h
     ${InstallFilesForExecutables}
   )
-else()
-  # The library type (STATIC or SHARED) is determined by the parameter
-  # BUILD_SHARED_LIBS.
-  add_library( transformix
-    Main/elxParameterObject.cxx
-    Main/elxParameterObject.h
-    Main/transformixlib.cxx
-    Main/transformixlib.h
-    Kernel/elxElastixMain.cxx
-    Kernel/elxElastixMain.h
-    Kernel/elxTransformixMain.cxx
-    Kernel/elxTransformixMain.h
-    ${InstallFilesForExecutables}
-  )
-  set( ELASTIX_LIBRARIES elastix transformix PARENT_SCOPE )
+  set_target_properties(transformix_exe PROPERTIES OUTPUT_NAME transformix)
+  target_link_libraries( transformix_exe ${ELASTIX_TARGET_LINK_LIBRARIES} )
 endif()
 
-#---------------------------------------------------------------------
-# Link elastix against other libraries.
-
-target_link_libraries( elastix
-  param
-  xoutlib
-  elxCommon
-  elxCore
-  ${mevisdcmtifflib}
-  ${AllComponentLibs}
-  ${ITK_LIBRARIES}
+# The library type (STATIC or SHARED) is determined by the parameter
+# BUILD_SHARED_LIBS.
+add_library( transformix_lib
+  Main/elxParameterObject.cxx
+  Main/elxParameterObject.h
+  Main/transformixlib.cxx
+  Main/transformixlib.h
+  Kernel/elxElastixMain.cxx
+  Kernel/elxElastixMain.h
+  Kernel/elxTransformixMain.cxx
+  Kernel/elxTransformixMain.h
+  ${InstallFilesForExecutables}
 )
+set_target_properties( transformix_lib PROPERTIES OUTPUT_NAME transformix )
+target_link_libraries( transformix_lib ${ELASTIX_TARGET_LINK_LIBRARIES} )
 
-if( ELASTIX_USE_OPENCL )
-  target_link_libraries( elastix elxOpenCL )
-endif()
-
-#---------------------------------------------------------------------
-# Link transformix against other libraries.
-
-target_link_libraries( transformix
-  param
-  xoutlib
-  elxCommon
-  elxCore
-  ${mevisdcmtifflib}
-  ${AllComponentLibs}
-  ${ITK_LIBRARIES}
-)
-
-if( ELASTIX_USE_OPENCL )
-  target_link_libraries( transformix elxOpenCL )
-endif()
+set( ELASTIX_LIBRARIES elastix transformix PARENT_SCOPE )
 
 if( MSVC )
   # NOTE: that linker /INCREMENTAL:NO flag makes it impossible to use
@@ -221,13 +209,13 @@ endif()
 #---------------------------------------------------------------------
 # Define the install directory for elastix and transformix.
 
-if( NOT WIN32 )
+if( ELASTIX_BUILD_EXECUTABLE AND NOT WIN32 )
   # Tell the executables where to find the required .so files.
-  set_target_properties( elastix transformix
+  set_target_properties( elastix_exe transformix_exe
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
 endif()
 
-install( TARGETS elastix transformix elxCore
+install( TARGETS elastix_lib transformix_lib elxCore
   ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
   LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
   RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR}
