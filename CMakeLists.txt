@@ -37,30 +37,27 @@ include( CTest )
 #---------------------------------------------------------------------
 # Generate executable, static library or dynamic library.
 mark_as_advanced( ELASTIX_BUILD_EXECUTABLE )
-option( ELASTIX_BUILD_EXECUTABLE "Generate executable or library?" ON )
-
-if( NOT ELASTIX_BUILD_EXECUTABLE )
+option( ELASTIX_BUILD_EXECUTABLE "Generate executable? (The library is always generated anyway.)" ON )
 
   # The following may make smaller and quicker loading libraries,
   # that hides unnecessary symbols. Available from CMake 3.0.0.
   #set( CMAKE_C_VISIBILITY_PRESET hidden )
   #set( CMAKE_CXX_VISIBILITY_PRESET hidden )
 
-  mark_as_advanced( BUILD_SHARED_LIBS )
-  option( BUILD_SHARED_LIBS "Build shared libraries?" OFF )
-  if( BUILD_SHARED_LIBS )
-    add_definitions( -D_ELASTIX_USE_SHARED_LIBRARY )
+mark_as_advanced( BUILD_SHARED_LIBS )
+option( BUILD_SHARED_LIBS "Build shared libraries?" OFF )
+if( BUILD_SHARED_LIBS )
+  add_definitions( -D_ELASTIX_USE_SHARED_LIBRARY )
 
-    # We need to make sure that also the ITK is compiled with shared
-    # libraries on. Related to flag (ITK_)BUILD_SHARED_LIBS. todo
+  # We need to make sure that also the ITK is compiled with shared
+  # libraries on. Related to flag (ITK_)BUILD_SHARED_LIBS. todo
 
-    # In order to compile a shared library, all static sub-libraries
-    # need to build position independend code.
-    # Otherwise an error similar to the following is raised:
-    #   relocation R_X86_64_32S against `.bss' can not be used when
-    #   making a shared object; recompile with -fPIC
-    set( CMAKE_POSITION_INDEPENDENT_CODE ON )
-  endif()
+  # In order to compile a shared library, all static sub-libraries
+  # need to build position independend code.
+  # Otherwise an error similar to the following is raised:
+  #   relocation R_X86_64_32S against `.bss' can not be used when
+  #   making a shared object; recompile with -fPIC
+  set( CMAKE_POSITION_INDEPENDENT_CODE ON )
 endif()
 
 #---------------------------------------------------------------------
@@ -444,9 +441,7 @@ option( ELASTIX_USE_GTEST "Use GoogleTest to test Elastix implementation" OFF )
 if( ELASTIX_USE_GTEST )
   enable_testing()
   add_subdirectory( Common/GTesting )
-  if( NOT ELASTIX_BUILD_EXECUTABLE )
-    add_subdirectory( Core/Main/GTesting )
-  endif()
+  add_subdirectory( Core/Main/GTesting )
 endif()
 
 #---------------------------------------------------------------------
@@ -597,8 +592,8 @@ export_library_dependencies( ${elxLIBRARY_DEPENDS_FILE} )
 # The build settings file. (necessary for elastix?)
 #set( ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake )
 
-elastix_export_target( elastix )
-elastix_export_target( transformix )
+elastix_export_target( elastix_lib )
+elastix_export_target( transformix_lib )
 
 foreach( LIB IN LISTS AllComponentLibs )
   elastix_export_target( ${LIB} )

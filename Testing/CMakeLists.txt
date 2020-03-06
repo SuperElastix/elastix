@@ -401,7 +401,7 @@ macro( elx_add_run_test testbasename howtocompare )
         CONFIGURATIONS Release
         COMMAND ${python_executable} ${pythonlandmarks}
         -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt -t 1.0
-        -p $<TARGET_FILE:transformix> )
+        -p $<TARGET_FILE:transformix_exe> )
       set_tests_properties( ${testname}_COMPARE_LANDMARKS
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif()

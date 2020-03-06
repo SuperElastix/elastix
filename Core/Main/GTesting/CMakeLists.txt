@@ -5,7 +5,7 @@ add_executable(ElastixLibGTest
 target_link_libraries( ElastixLibGTest
   GTest::GTest
   GTest::Main
-  elastix
+  elastix_lib
   ${ITK_LIBRARIES}
 )
 
