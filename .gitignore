@@ -33,7 +33,6 @@
 
 # Generated files and
 help/
-cmake*
 Makefile
 CMakeFiles/
 CTestTestfile.cmake
