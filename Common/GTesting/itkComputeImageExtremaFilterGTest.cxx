@@ -26,8 +26,8 @@
 
 namespace itk
 {
-  template ComputeImageExtremaFilter<itk::Image<int>>;
-  template ComputeImageExtremaFilter<itk::Image<double, 3>>;
+  template class ComputeImageExtremaFilter<itk::Image<int>>;
+  template class ComputeImageExtremaFilter<itk::Image<double, 3>>;
 }
 
 using itk::ComputeImageExtremaFilter;
@@ -163,6 +163,7 @@ namespace
     using PixelType = typename TImage::PixelType;
     using IndexType = typename TImage::IndexType;
     using FilterType = ComputeImageExtremaFilter<TImage>;
+    using ImageSpatialMaskType = typename FilterType::ImageSpatialMaskType;
 
     constexpr auto ImageDimension = TImage::ImageDimension;
 
@@ -175,7 +176,7 @@ namespace
     maskImage->Allocate(true);
     maskImage->SetPixel(IndexType(), 1);
 
-    const auto maskSpatialObject = typename FilterType::ImageSpatialMaskType::New();
+    const auto maskSpatialObject = ImageSpatialMaskType::New();
     maskSpatialObject->SetImage(maskImage);
     maskSpatialObject->Update();
 
@@ -212,6 +213,7 @@ namespace
     using PixelType = typename TImage::PixelType;
     using IndexType = typename TImage::IndexType;
     using FilterType = ComputeImageExtremaFilter<TImage>;
+    using ImageSpatialMaskType = typename FilterType::ImageSpatialMaskType;
 
     constexpr auto ImageDimension = TImage::ImageDimension;
 
@@ -223,7 +225,7 @@ namespace
     maskImage->SetRegions(imageSize);
     maskImage->Allocate();
     maskImage->FillBuffer(1);
-    const auto maskSpatialObject = typename FilterType::ImageSpatialMaskType::New();
+    const auto maskSpatialObject = ImageSpatialMaskType::New();
     maskSpatialObject->SetImage(maskImage);
     maskSpatialObject->Update();
 
