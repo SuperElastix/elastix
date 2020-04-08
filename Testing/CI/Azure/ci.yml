@@ -38,7 +38,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DITK_DIR="$(ITK_BINARY_DIR)" -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)"
+      cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DITK_DIR="$(ITK_BINARY_DIR)" -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)"
       workingDirectory: "$(ELASTIX_BINARY_DIR)"
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -82,7 +82,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
       workingDirectory: $(ELASTIX_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -124,7 +124,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON $(Build.Repository.LocalPath)
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(Build.Repository.LocalPath)
       workingDirectory: $(ELASTIX_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build Elastix'
