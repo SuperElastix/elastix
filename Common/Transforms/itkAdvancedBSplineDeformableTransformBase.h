@@ -226,7 +226,6 @@ public:
   OutputVectorType TransformVector( const InputVectorType & ) const override
   {
     itkExceptionMacro( << "Method not applicable for deformable transform." );
-    return OutputVectorType();
   }
 
 
@@ -236,7 +235,6 @@ public:
   OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const override
   {
     itkExceptionMacro( << "Method not applicable for deformable transform. " );
-    return OutputVnlVectorType();
   }
 
 
@@ -247,7 +245,6 @@ public:
     const InputCovariantVectorType & ) const override
   {
     itkExceptionMacro( << "Method not applicable for deformable transform. " );
-    return OutputCovariantVectorType();
   }
 
 

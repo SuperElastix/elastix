@@ -427,7 +427,6 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
      */
 
     itkExceptionMacro( << "ERROR: not implemented" );
-    return false;
 
 //     /** Try create the inverse of the initial transform. */
 //     InitialTransformPointer inverseT0 = InitialTransformType::New();
