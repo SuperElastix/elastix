@@ -331,7 +331,6 @@ KernelTransform2< TScalarType, NDimensions >
   {
     itkExceptionMacro( << "ERROR: invalid matrix inversion method ("
                        << this->m_MatrixInversionMethod << ")" );
-    this->m_LInverseComputed = false;
   }
 
 } // end ComputeLInverse()
