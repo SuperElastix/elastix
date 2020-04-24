@@ -201,8 +201,14 @@ OpenCLMovingGenericPyramid< TElastix >
 
   if( computedUsingOpenCL )
   {
+    /* Try fixing the error encountered during fixing CL_OUT_OF_RESOURCE issue #70
+     * Original GraftOutput() only grafts first output, and the output Image after 2nd level is not grafted.
+     */
     // Graft output
-    this->GraftOutput( this->m_GPUPyramid->GetOutput() );
+    for(int i=0 ; i< this->GetNumberOfLevels();i++){
+      this->GraftNthOutput(i, this->m_GPUPyramid->GetOutput(i) );
+    }
+    // End try fixing the error encountered during fixing CL_OUT_OF_RESOURCE issue #70
 
     // Report OpenCL device to the log
     this->ReportToLog();

@@ -221,6 +221,20 @@ public:
   itkGetConstReferenceMacro( IndexToPhysicalPoint, DirectionType );
   itkGetConstReferenceMacro( PhysicalPointToIndex, DirectionType );
 
+  //Add for: OpenCL memory error CL_OUT_OF_RESOURCES, Issue#70
+  template <typename UPixelType, unsigned int NUImageDimension = VImageDimension>
+  struct Rebind
+    {
+      using Type = itk::GPUImage<UPixelType, NUImageDimension>;
+    };
+
+
+  template <typename UPixelType, unsigned int NUImageDimension = VImageDimension>
+    using RebindImageType = itk::GPUImage<UPixelType, NUImageDimension>;
+  //End add for: OpenCL memory error CL_OUT_OF_RESOURCES, Issue#70
+
+
+
 protected:
 
   GPUImage();
