@@ -51,6 +51,15 @@ GPURecursiveGaussianImageFilter< TInputImage, TOutputImage >
     = this->m_GPUKernelManager->GetContext()->GetDefaultDevice().GetLocalMemorySize();
 
   this->m_DeviceLocalMemorySize = ( localMemSize / 3 ) / sizeof( float );
+  
+  //Added by HUC 
+  //Original implementation set BUFFSIZE as (local memory size)/3, which can handle up to 1365 pixels along one dimension
+  //But in Device with larger local memory size(eg. GTX 2080Ti with 48KB local memory, BUFFZISE=4096), the BUFFSIZE would become
+  //overkill for most medical implementation, and would use up all GPU global memoy due to memory spill;
+  
+  this->m_DeviceLocalMemorySize = ( this->m_DeviceLocalMemorySize > 1024)?(1024):( this->m_DeviceLocalMemorySize);
+
+  //End add by HUC
 
   defines << "#define BUFFSIZE " << this->m_DeviceLocalMemorySize << "\n";
   defines << "#define BUFFPIXELTYPE float" << "\n";
