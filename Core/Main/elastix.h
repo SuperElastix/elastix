@@ -96,7 +96,7 @@ GetCurrentDateAndTime( void )
 
   // Make a copy of the internal object from std::localtime, to reduce the
   // risk of a race condition.
-  const std::tm localTimeValue{ *localTimePtr };
+  const std::tm localTimeValue( *localTimePtr );
 
   constexpr std::size_t maxNumberOfChars{ 32 };
   char timeAsString[maxNumberOfChars]{};
