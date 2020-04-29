@@ -107,7 +107,7 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
   const auto& movingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( movingMesh );
 
   const auto& coeffs = statisticalModel->ComputeCoefficients( movingMesh );
-  const auto& reconstructedMovingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, true ) );
+  const auto& reconstructedMovingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, false ) );
 
   modelValue += ( movingVector - fixedVector ).dot( movingVector - reconstructedMovingVector ) / fixedMesh->GetNumberOfPoints();
 }
@@ -238,7 +238,7 @@ ActiveRegistrationModelShapeMetric< TFixedPointSet, TMovingPointSet >
     const auto& movingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( movingMesh );
 
     const auto& coeffs = statisticalModel->ComputeCoefficients( movingMesh );
-    const auto& reconstructedMovingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, true ) );
+    const auto& reconstructedMovingVector = statisticalModel->GetRepresenter()->SampleToSampleVector( statisticalModel->DrawSample( coeffs, false ) );
 
     const statismo::VectorType tmp = movingVector - reconstructedMovingVector;
     MeasureType modelValue = ( movingVector - fixedVector ).dot( tmp );
