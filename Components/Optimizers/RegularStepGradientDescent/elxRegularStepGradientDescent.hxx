@@ -132,23 +132,23 @@ RegularStepGradientDescent< TElastix >
   switch( this->GetStopCondition() )
   {
 
-    case GradientMagnitudeTolerance:
+  case StopConditionEnum::GradientMagnitudeTolerance:
       stopcondition = "Minimum gradient magnitude has been reached";
       break;
 
-    case StepTooSmall:
+    case StopConditionEnum::StepTooSmall:
       stopcondition = "Minimum step size has been reached";
       break;
 
-    case MaximumNumberOfIterations:
+    case StopConditionEnum::MaximumNumberOfIterations:
       stopcondition = "Maximum number of iterations has been reached";
       break;
 
-    case ImageNotAvailable:
+    case StopConditionEnum::ImageNotAvailable:
       stopcondition = "No image available";
       break;
 
-    case CostFunctionError:
+    case StopConditionEnum::CostFunctionError:
       stopcondition = "Error in cost function";
       break;
 

@@ -111,7 +111,7 @@ OpenCLLogger::Initialize()
   }
 
   // Create an ITK Logger
-  LoggerBase::TimeStampFormatType timeStampFormat = LoggerBase::HUMANREADABLE;
+  LoggerBaseEnums::TimeStampFormat timeStampFormat = LoggerBaseEnums::TimeStampFormat::HUMANREADABLE;
   this->SetTimeStampFormat( timeStampFormat );
   const std::string humanReadableFormat = "%b %d %Y %H:%M:%S";
   this->SetHumanReadableFormat( humanReadableFormat );
