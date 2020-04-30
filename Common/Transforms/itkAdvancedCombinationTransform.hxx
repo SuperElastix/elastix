@@ -245,7 +245,7 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
  */
 
 template< typename TScalarType, unsigned int NDimensions >
-typename AdvancedCombinationTransform< TScalarType, NDimensions >::TransformCategoryType
+typename AdvancedCombinationTransform< TScalarType, NDimensions >::TransformCategoryEnum
 AdvancedCombinationTransform< TScalarType, NDimensions >
 ::GetTransformCategory() const
 {
@@ -253,12 +253,12 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
   const bool isLinearTransform = this->IsLinear();
   if( isLinearTransform )
   {
-    return Self::Linear;
+    return TransformCategoryEnum::Linear;
   }
 
   // It is unclear how you would prefer to define the rest of them,
   // lets just return Self::UnknownTransformCategory for now
-  return Self::UnknownTransformCategory;
+  return TransformCategoryEnum::UnknownTransformCategory;
 }
 
 

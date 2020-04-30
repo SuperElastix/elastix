@@ -110,7 +110,6 @@ public:
   /** Typedef's inherited from Superclass1.*/
   typedef Superclass1::CostFunctionType    CostFunctionType;
   typedef Superclass1::CostFunctionPointer CostFunctionPointer;
-  typedef Superclass1::StopConditionType   StopConditionType;
 
   /** Typedef's inherited from Elastix.*/
   typedef typename Superclass2::ElastixType          ElastixType;

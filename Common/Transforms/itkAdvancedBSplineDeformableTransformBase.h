@@ -75,7 +75,7 @@ public:
     InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType
     OutputCovariantVectorType;
-  typedef typename Superclass::TransformCategoryType TransformCategoryType;
+  typedef typename Superclass::TransformCategoryEnum TransformCategoryEnum;
 
   typedef typename Superclass
     ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
@@ -267,9 +267,9 @@ public:
   /** Indicates the category transform.
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
    */
-  TransformCategoryType GetTransformCategory( void ) const override
+  TransformCategoryEnum GetTransformCategory( void ) const override
   {
-    return Self::BSpline;
+    return TransformCategoryEnum::BSpline;
   }
 
 

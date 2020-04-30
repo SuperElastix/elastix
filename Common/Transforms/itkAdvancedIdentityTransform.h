@@ -98,7 +98,7 @@ public:
   /** Type of the input parameters. */
   typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::TransformCategoryType  TransformCategoryType;
+  typedef typename Superclass::TransformCategoryEnum  TransformCategoryEnum;
 
   /** Type of the Jacobian matrix. */
   typedef typename Superclass::JacobianType JacobianType;
@@ -183,9 +183,9 @@ public:
   /** Indicates the category transform.
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
    */
-  TransformCategoryType GetTransformCategory() const override
+  TransformCategoryEnum GetTransformCategory() const override
   {
-    return Self::Linear;
+    return TransformCategoryEnum::Linear;
   }
 
 

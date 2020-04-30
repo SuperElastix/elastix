@@ -81,7 +81,7 @@ public:
   typedef typename Superclass::ParametersType         ParametersType;
   typedef typename Superclass::FixedParametersType    FixedParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
-  typedef typename Superclass::TransformCategoryType  TransformCategoryType;
+  typedef typename Superclass::TransformCategoryEnum  TransformCategoryEnum;
 
   /** Standard Jacobian container. */
   typedef typename Superclass::JacobianType JacobianType;
@@ -233,9 +233,9 @@ public:
   /** Indicates the category transform.
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
    */
-  TransformCategoryType GetTransformCategory() const override
+  TransformCategoryEnum GetTransformCategory() const override
   {
-    return Self::Linear;
+    return TransformCategoryEnum::Linear;
   }
 
 

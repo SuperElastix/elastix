@@ -37,6 +37,7 @@
 #include "itkMeshFileReader.h"
 #include "itkMeshFileWriter.h"
 #include "itkTransformMeshFilter.h"
+#include "itkCommonEnums.h"
 
 namespace itk
 {
@@ -72,7 +73,7 @@ public:
   void Execute( Object * caller, const EventObject & ) override
   {
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
-    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( CommonEnums::IOPixel::VECTOR );
   }
 
 
@@ -80,7 +81,7 @@ public:
   {
     CallerType * castcaller = const_cast< CallerType * >(
       dynamic_cast< const CallerType * >( caller ) );
-    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( CommonEnums::IOPixel::VECTOR );
   }
 
 

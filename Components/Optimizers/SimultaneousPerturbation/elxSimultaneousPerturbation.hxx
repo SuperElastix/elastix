@@ -176,11 +176,11 @@ SimultaneousPerturbation< TElastix >
   switch( this->GetStopCondition() )
   {
 
-    case MaximumNumberOfIterations:
+    case StopConditionSPSAOptimizerEnum::MaximumNumberOfIterations:
       stopcondition = "Maximum number of iterations has been reached";
       break;
 
-    case MetricError:
+    case StopConditionSPSAOptimizerEnum::MetricError:
       stopcondition = "Error in metric";
       break;
 
