@@ -31,6 +31,9 @@
 int
 main( int argc, char ** argv )
 {
+  elastix::BaseComponent::InitializeElastixExecutable();
+  assert(!elastix::BaseComponent::IsElastixLibrary());
+
   /** Check if "-help" or "--version" was asked for.*/
   if( argc == 1 )
   {

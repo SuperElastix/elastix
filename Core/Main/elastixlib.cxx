@@ -48,7 +48,6 @@ namespace elastix
 
 ELASTIX::ELASTIX()
 {
-  BaseComponent::InitializeElastixLibrary();
   assert(BaseComponent::IsElastixLibrary());
 }
 

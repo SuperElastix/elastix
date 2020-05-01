@@ -124,7 +124,7 @@ public:
 
   static bool IsElastixLibrary();
 
-  static void InitializeElastixLibrary();
+  static void InitializeElastixExecutable();
 
   /** Convenience function to convert seconds to day, hour, minute, second format. */
   std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision ) const;

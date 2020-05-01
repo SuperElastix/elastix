@@ -22,9 +22,9 @@
 
 namespace
 {
-bool IsElastixLibrary(const bool initialValue = false)
+bool IsElastixLibrary(const bool initialValue = true)
 {
-  // By default, assume that this is not the elastix library.
+  // By default, assume that this is the elastix library (not the elastix executable).
 
   // Note that the initialization of this static variable is thread-safe,
   // as supported by C++11 "magic statics".
@@ -77,9 +77,9 @@ bool BaseComponent::IsElastixLibrary()
   return ::IsElastixLibrary();
 }
 
-void BaseComponent::InitializeElastixLibrary()
+void BaseComponent::InitializeElastixExecutable()
 {
-  ::IsElastixLibrary(true);
+  ::IsElastixLibrary(false);
 }
 
 /**
