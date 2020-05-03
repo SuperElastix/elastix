@@ -180,17 +180,17 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void );
+  virtual void Initialize( void ) override;
 
-  virtual int BeforeAllBase( void );
+  virtual int BeforeAllBase( void ) override;
 
-  virtual void BeforeRegistration( void );
+  virtual void BeforeRegistration( void ) override;
 
-  virtual void AfterEachIteration( void );
+  virtual void AfterEachIteration( void ) override;
 
-  virtual void AfterEachResolution( void );
+  virtual void AfterEachResolution( void ) override;
 
-  virtual void AfterRegistration( void );
+  virtual void AfterRegistration( void ) override;
 
 protected:
   

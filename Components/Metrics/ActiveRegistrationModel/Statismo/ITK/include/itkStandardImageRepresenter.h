@@ -89,31 +89,31 @@ class StandardImageRepresenter: public Object, public statismo::Representer<
     static StandardImageRepresenter* Create() {
         return new StandardImageRepresenter();
     }
-    void Load(const H5::Group& fg);
-    StandardImageRepresenter* Clone() const;
+    void Load(const H5::Group& fg) override;
+    StandardImageRepresenter* Clone() const override;
 
     StandardImageRepresenter();
     virtual ~StandardImageRepresenter();
 
-    unsigned GetDimensions() const {
+    unsigned GetDimensions() const override {
         return PixelConversionTrait<TPixel>::GetPixelDimension();
     }
-    std::string GetName() const {
+    std::string GetName() const override {
         return "itkStandardImageRepresenter";
     }
-    typename RepresenterBaseType::RepresenterDataType GetType() const {
+    typename RepresenterBaseType::RepresenterDataType GetType() const override {
         return RepresenterBaseType::IMAGE;
     }
 
-    const DomainType& GetDomain() const {
+    const DomainType& GetDomain() const override {
         return m_domain;
     }
-    std::string GetVersion() const {
+    std::string GetVersion() const override {
         return "0.1";
     }
 
     /// return the reference used in the representer
-    DatasetConstPointerType GetReference() const {
+    DatasetConstPointerType GetReference() const override {
         return m_reference;
     }
 
@@ -125,30 +125,30 @@ class StandardImageRepresenter: public Object, public statismo::Representer<
      * Creates a sample by first aligning the dataset ds to the reference using Procrustes
      * Alignment.
      */
-    statismo::VectorType PointToVector(const PointType& pt) const;
-    statismo::VectorType SampleToSampleVector(DatasetConstPointerType sample) const;
+    statismo::VectorType PointToVector(const PointType& pt) const override;
+    statismo::VectorType SampleToSampleVector(DatasetConstPointerType sample) const override;
     DatasetPointerType SampleVectorToSample(
-        const statismo::VectorType& sample) const;
+        const statismo::VectorType& sample) const override;
 
     ValueType PointSampleFromSample(DatasetConstPointerType sample,
-                                    unsigned ptid) const;
+                                    unsigned ptid) const override;
     ValueType PointSampleVectorToPointSample(
-        const statismo::VectorType& pointSample) const;
+        const statismo::VectorType& pointSample) const override;
     statismo::VectorType PointSampleToPointSampleVector(
-        const ValueType& v) const;
+        const ValueType& v) const override;
 
-    void Save(const H5::Group& fg) const;
-    virtual unsigned GetPointIdForPoint(const PointType& point) const;
+    void Save(const H5::Group& fg) const override;
+    virtual unsigned GetPointIdForPoint(const PointType& point) const override;
 
     unsigned GetNumberOfPoints() const;
 
-    void Delete() const {
+    void Delete() const override{
         this->UnRegister();
     }
 
 
-    void DeleteDataset(DatasetConstPointerType d) const {}
-    DatasetPointerType CloneDataset(DatasetConstPointerType d) const;
+    void DeleteDataset(DatasetConstPointerType d) const  override {}
+    DatasetPointerType CloneDataset(DatasetConstPointerType d) const override;
 
   private:
 

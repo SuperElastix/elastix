@@ -19,7 +19,6 @@
 #define _itkActiveRegistrationModelImageIntensityMetric_hxx
 
 #include "itkActiveRegistrationModelIntensityMetric.h"
-#include "vnl_sample.h"
 
 namespace itk {
 

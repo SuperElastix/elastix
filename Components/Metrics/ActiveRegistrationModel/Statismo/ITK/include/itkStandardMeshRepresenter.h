@@ -142,8 +142,8 @@ class StandardMeshRepresenter : public statismo::Representer<itk::Mesh<TPixel, M
         return new StandardMeshRepresenter();
     }
 
-    void Load(const H5::Group& fg);
-    StandardMeshRepresenter* Clone() const;
+    void Load(const H5::Group& fg) override;
+    StandardMeshRepresenter* Clone() const override;
 
     /// The type of the data set to be used
     typedef MeshType DatasetType;
@@ -154,78 +154,78 @@ class StandardMeshRepresenter : public statismo::Representer<itk::Mesh<TPixel, M
     StandardMeshRepresenter();
     virtual ~StandardMeshRepresenter();
 
-    unsigned GetDimensions() const {
+    unsigned GetDimensions() const override {
         return MeshDimension;
     }
-    std::string GetName() const {
+    std::string GetName() const override {
         return "itkStandardMeshRepresenter";
     }
-    typename RepresenterBaseType::RepresenterDataType GetType() const {
+    typename RepresenterBaseType::RepresenterDataType GetType() const override {
         return RepresenterBaseType::POLYGON_MESH;
     }
-    std::string GetVersion() const {
+    std::string GetVersion() const override {
         return "0.1";
     }
 
-    const DomainType& GetDomain() const {
+    const DomainType& GetDomain() const override {
         return m_domain;
     }
 
     /** Set the reference that is used to build the model */
     void SetReference(DatasetPointerType ds);
 
-    statismo::VectorType PointToVector(const PointType& pt) const;
+    statismo::VectorType PointToVector(const PointType& pt) const override;
 
 
     /**
      * Converts a sample to its vectorial representation
      */
-    statismo::VectorType SampleToSampleVector(DatasetConstPointerType sample) const;
+    statismo::VectorType SampleToSampleVector(DatasetConstPointerType sample) const override;
 
     /**
      * Converts the given sample Vector to a Sample (an itk::Mesh)
      */
-    DatasetPointerType SampleVectorToSample(const statismo::VectorType& sample) const;
+    DatasetPointerType SampleVectorToSample(const statismo::VectorType& sample) const override;
 
     /**
      * Returns the value of the sample at the point with the given id.
      */
-    ValueType PointSampleFromSample(DatasetConstPointerType sample, unsigned ptid) const;
+    ValueType PointSampleFromSample(DatasetConstPointerType sample, unsigned ptid) const override;
 
     /**
      * Given a vector, represening a points convert it to an itkPoint
      */
-    ValueType PointSampleVectorToPointSample(const statismo::VectorType& pointSample) const;
+    ValueType PointSampleVectorToPointSample(const statismo::VectorType& pointSample) const override;
 
     /**
      * Given an itkPoint, convert it to a sample vector
      */
-    statismo::VectorType PointSampleToPointSampleVector(const ValueType& v) const;
+    statismo::VectorType PointSampleToPointSampleVector(const ValueType& v) const override;
 
     /**
      * Save the state of the representer (this simply saves the reference)
      */
-    void Save(const H5::Group& fg) const;
+    void Save(const H5::Group& fg) const override;
 
     /// return the number of points of the reference
     virtual unsigned GetNumberOfPoints() const;
 
     /// return the point id associated with the given point
     /// \warning This works currently only for points that are defined on the reference
-    virtual unsigned GetPointIdForPoint(const PointType& point) const;
+    virtual unsigned GetPointIdForPoint(const PointType& point) const override;
 
     /// return the reference used in the representer
-    DatasetConstPointerType GetReference() const {
+    DatasetConstPointerType GetReference() const override {
         return m_reference;
     }
 
-    void Delete() const {
+    void Delete() const override {
         this->UnRegister();
     }
 
 
-    void DeleteDataset(DatasetPointerType d) const { };
-    DatasetPointerType CloneDataset(DatasetConstPointerType mesh) const;
+    void DeleteDataset(DatasetPointerType d) const override { };
+    DatasetPointerType CloneDataset(DatasetConstPointerType mesh) const override;
 
   private:
 

@@ -15,7 +15,6 @@ PURPOSE. See the above copyright notices for more information.
 #define __itkActiveRegistrationModelShapeMetric_hxx__
 
 #include "itkActiveRegistrationModelShapeMetric.h"
-#include "vnl_sample.h"
 
 namespace itk
 {

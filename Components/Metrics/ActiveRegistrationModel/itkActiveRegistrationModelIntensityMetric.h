@@ -135,7 +135,7 @@ public:
     MovingImageType::ImageDimension );
 
   /** Get the value for single valued optimizers. */
-  virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
+  virtual MeasureType GetValue( const TransformParametersType & parameters ) const override;
 
   // ActiveRegistrationModel typedefs
   typedef double                                                                  StatisticalModelScalarType;
@@ -174,15 +174,15 @@ public:
   /** Initialize the Metric by making sure that all the components are
   *  present and plugged together correctly.
   */
-  virtual void Initialize( void );
+  virtual void Initialize( void ) override;
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
-                      DerivativeType & Derivative ) const;
+                      DerivativeType & Derivative ) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-                              MeasureType & Value, DerivativeType & Derivative ) const;
+                              MeasureType & Value, DerivativeType & Derivative ) const override;
 
   void GetValueAndFiniteDifferenceDerivative( const TransformParametersType & parameters,
                                               MeasureType& value,
@@ -202,7 +202,7 @@ protected:
   ActiveRegistrationModelIntensityMetric();
   virtual ~ActiveRegistrationModelIntensityMetric(){}
 
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Protected Typedefs ******************/
 
