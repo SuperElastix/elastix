@@ -20,6 +20,8 @@
 
 #include "itkImageRandomSamplerBase.h"
 
+#include <atomic>
+
 namespace itk
 {
 /** \class ImageRandomSampler
@@ -87,9 +89,7 @@ protected:
   /** Functions that do the work. */
   void GenerateData( void ) override;
 
-  void ThreadedGenerateData(
-    const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) override;
+  void DynamicThreadedGenerateData( const InputImageRegionType & inputRegionForThread ) override;
 
 private:
 
@@ -98,6 +98,7 @@ private:
   /** The private copy constructor. */
   void operator=( const Self & );            // purposely not implemented
 
+  std::atomic< ThreadIdType > m_WorkUnitId;
 };
 
 } // end namespace itk

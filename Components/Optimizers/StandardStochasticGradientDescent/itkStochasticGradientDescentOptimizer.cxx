@@ -329,7 +329,7 @@ StochasticGradientDescentOptimizer
  * ************ AdvanceOneStepThreaderCallback ****************************
  */
 
-ITK_THREAD_RETURN_TYPE StochasticGradientDescentOptimizer
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION StochasticGradientDescentOptimizer
 ::AdvanceOneStepThreaderCallback( void * arg )
 {
   /** Get the current thread id and user data. */

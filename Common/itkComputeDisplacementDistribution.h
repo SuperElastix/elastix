@@ -185,7 +185,7 @@ protected:
   void LaunchComputeThreaderCallback( void ) const;
 
   /** Compute threader callback function. */
-  static ITK_THREAD_RETURN_TYPE ComputeThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION ComputeThreaderCallback( void * arg );
 
   /** The threaded implementation of Compute(). */
   virtual inline void ThreadedCompute( ThreadIdType threadID );

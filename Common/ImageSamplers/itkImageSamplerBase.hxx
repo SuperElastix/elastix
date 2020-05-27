@@ -35,9 +35,7 @@ ImageSamplerBase< TInputImage >
   this->m_NumberOfMasks             = 0;
   this->m_NumberOfInputImageRegions = 0;
   this->m_NumberOfSamples           = 0;
-
-  //tmp?
-  this->m_UseMultiThread = false;
+  this->m_UseMultiThread            = false;
 
 } // end Constructor()
 
@@ -417,11 +415,6 @@ ImageSamplerBase< TInputImage >
 {
   /** Initialize variables needed for threads. */
   this->m_ThreaderSampleContainer.clear();
-  this->m_ThreaderSampleContainer.resize( this->GetNumberOfWorkUnits() );
-  for( std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++ )
-  {
-    this->m_ThreaderSampleContainer[ i ] = ImageSampleContainerType::New();
-  }
 
 } // end BeforeThreadedGenerateData()
 
@@ -437,9 +430,10 @@ ImageSamplerBase< TInputImage >
 {
   /** Get the combined number of samples. */
   this->m_NumberOfSamples = 0;
-  for( std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++ )
+
+  for( const auto & container : this->m_ThreaderSampleContainer )
   {
-    this->m_NumberOfSamples += this->m_ThreaderSampleContainer[ i ]->Size();
+    this->m_NumberOfSamples += container->Size();
   }
 
   /** Get handle to the output sample container. */
@@ -448,11 +442,11 @@ ImageSamplerBase< TInputImage >
   sampleContainer->reserve( this->m_NumberOfSamples );
 
   /** Combine the results of all threads. */
-  for( std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++ )
+  for( const auto & container : this->m_ThreaderSampleContainer )
   {
     sampleContainer->insert( sampleContainer->end(),
-      this->m_ThreaderSampleContainer[ i ]->begin(),
-      this->m_ThreaderSampleContainer[ i ]->end() );
+      container->begin(),
+      container->end() );
   }
 
 } // end AfterThreadedGenerateData()

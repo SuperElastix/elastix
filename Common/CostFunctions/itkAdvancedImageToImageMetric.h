@@ -379,7 +379,7 @@ protected:
   virtual inline void AfterThreadedGetValue( MeasureType & value ) const {}
 
   /** GetValue threader callback function. */
-  static ITK_THREAD_RETURN_TYPE GetValueThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION GetValueThreaderCallback( void * arg );
 
   /** Launch MultiThread GetValue. */
   void LaunchGetValueThreaderCallback( void ) const;
@@ -393,13 +393,13 @@ protected:
     MeasureType & value, DerivativeType & derivative ) const {}
 
   /** GetValueAndDerivative threader callback function. */
-  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION GetValueAndDerivativeThreaderCallback( void * arg );
 
   /** Launch MultiThread GetValueAndDerivative. */
   void LaunchGetValueAndDerivativeThreaderCallback( void ) const;
 
   /** AccumulateDerivatives threader callback function. */
-  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION AccumulateDerivativesThreaderCallback( void * arg );
 
   /** Variables for multi-threading. */
   bool m_UseMetricSingleThreaded;

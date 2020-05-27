@@ -221,7 +221,7 @@ protected:
     MeasureType & value, DerivativeType & derivative ) const override;
 
   /** AccumulateDerivatives threader callback function */
-  static ITK_THREAD_RETURN_TYPE AccumulateDerivativesThreaderCallback( void * arg );
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION AccumulateDerivativesThreaderCallback( void * arg );
 
 private:
 

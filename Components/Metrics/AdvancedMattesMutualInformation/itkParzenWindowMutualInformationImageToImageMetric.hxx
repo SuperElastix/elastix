@@ -643,7 +643,7 @@ ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
  */
 
 template< class TFixedImage, class TMovingImage >
-ITK_THREAD_RETURN_TYPE
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ParzenWindowMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
 ::ComputeDerivativeLowMemoryThreaderCallback( void * arg )
 {

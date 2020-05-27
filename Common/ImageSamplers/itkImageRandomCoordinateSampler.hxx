@@ -208,13 +208,10 @@ ImageRandomCoordinateSampler< TInputImage >
     }
   }
 
-  /** Initialize variables needed for threads. */
-  this->m_ThreaderSampleContainer.clear();
-  this->m_ThreaderSampleContainer.resize( this->GetNumberOfWorkUnits() );
-  for( std::size_t i = 0; i < this->GetNumberOfWorkUnits(); i++ )
-  {
-    this->m_ThreaderSampleContainer[ i ] = ImageSampleContainerType::New();
-  }
+  /** Initialize variables needed for work units. */
+  Superclass::BeforeThreadedGenerateData();
+
+  this->m_WorkUnitId.store(0);
 
 } // end BeforeThreadedGenerateData()
 
@@ -226,7 +223,7 @@ ImageRandomCoordinateSampler< TInputImage >
 template< class TInputImage >
 void
 ImageRandomCoordinateSampler< TInputImage >
-::ThreadedGenerateData( const InputImageRegionType &, ThreadIdType threadId )
+::DynamicThreadedGenerateData( const InputImageRegionType & )
 {
   /** Sanity check. */
   typename MaskType::ConstPointer mask = this->GetMask();
@@ -235,31 +232,31 @@ ImageRandomCoordinateSampler< TInputImage >
     itkExceptionMacro( << "ERROR: do not call this function when a mask is supplied." );
   }
 
+  const ThreadIdType workUnitId = this->m_WorkUnitId++;
+
   /** Get handle to the input image. */
   InputImageConstPointer inputImage = this->GetInput();
 
   /** Figure out which samples to process. */
   unsigned long chunkSize   = this->GetNumberOfSamples() / this->GetNumberOfWorkUnits();
-  unsigned long sampleStart = threadId * chunkSize * InputImageDimension;
-  if( threadId == this->GetNumberOfWorkUnits() - 1 )
+  unsigned long sampleStart = workUnitId * chunkSize * InputImageDimension;
+  if( workUnitId == this->GetNumberOfWorkUnits() - 1 )
   {
     chunkSize = this->GetNumberOfSamples()
       - ( ( this->GetNumberOfWorkUnits() - 1 ) * chunkSize );
   }
 
-  /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread // & ???
-    = this->m_ThreaderSampleContainer[ threadId ];
-  sampleContainerThisThread->Reserve( chunkSize );
+  ImageSampleContainerPointer sampleContainerThisWorkUnit = ImageSampleContainerType::New();
+  sampleContainerThisWorkUnit->Reserve( chunkSize );
 
-  /** Setup an iterator over the sampleContainerThisThread. */
+  /** Setup an iterator over the sampleContainerThisWorkUnit. */
   typename ImageSampleContainerType::Iterator iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisThread->End();
+  typename ImageSampleContainerType::ConstIterator end = sampleContainerThisWorkUnit->End();
 
   /** Fill the local sample container. */
   InputImageContinuousIndexType sampleCIndex;
   unsigned long                 sampleId = sampleStart;
-  for( iter = sampleContainerThisThread->Begin(); iter != end; ++iter )
+  for( iter = sampleContainerThisWorkUnit->Begin(); iter != end; ++iter )
   {
     /** Create a random point out of InputImageDimension random numbers. */
     for( unsigned int j = 0; j < InputImageDimension; ++j, sampleId++ )
@@ -279,6 +276,9 @@ ImageRandomCoordinateSampler< TInputImage >
       this->m_Interpolator->EvaluateAtContinuousIndex( sampleCIndex ) );
 
   } // end for loop
+
+  std::lock_guard<std::mutex> mutexHolder( this->m_Mutex );
+  this->m_ThreaderSampleContainer.push_back( sampleContainerThisWorkUnit );
 
 } // end ThreadedGenerateData()
 

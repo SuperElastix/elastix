@@ -39,9 +39,6 @@ VectorContainerSource< TOutputVectorContainer >
   this->ProcessObject::SetNumberOfRequiredOutputs( 1 );
   this->ProcessObject::SetNthOutput( 0, output.GetPointer() );
 
-  this->m_GenerateDataRegion          = 0;
-  this->m_GenerateDataNumberOfRegions = 0;
-
 } // end Constructor
 
 
@@ -144,9 +141,6 @@ VectorContainerSource< TOutputVectorContainer >
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
-
-//   int m_GenerateDataRegion;
-//   int m_GenerateDataNumberOfRegions;
 } // end PrintSelf()
 
 

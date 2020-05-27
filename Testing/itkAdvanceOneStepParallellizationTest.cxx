@@ -169,7 +169,7 @@ public:
 
 
   /** The callback function. */
-  static itk::ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg )
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION AdvanceOneStepThreaderCallback( void * arg )
   {
     /** Get the current thread id and user data. */
     ThreadInfoType *             infoStruct = static_cast< ThreadInfoType * >( arg );
