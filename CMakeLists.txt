@@ -1,4 +1,6 @@
-cmake_minimum_required( VERSION 2.8 )
+# Minimum CMake version. Equal to ITK 5.0.1 ITK_OLDEST_VALIDATED_POLICIES_VERSION,
+# and to the CMake version used to build the elastix 5.0.0 Linux binaries.
+cmake_minimum_required( VERSION 3.10.2 )
 
 project( elastix )
 set(CMAKE_CXX_STANDARD 11)
