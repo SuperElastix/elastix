@@ -294,12 +294,12 @@ ELASTIX::RegisterImages(
     /** Get the transform, the fixedImage and the movingImage
      * in order to put it in the (possibly) next registration.
      */
-    transform                   = elastixMain->GetFinalTransform();
-    fixedImageContainer         = elastixMain->GetFixedImageContainer();
-    movingImageContainer        = elastixMain->GetMovingImageContainer();
-    fixedMaskContainer          = elastixMain->GetFixedMaskContainer();
-    movingMaskContainer         = elastixMain->GetMovingMaskContainer();
-    resultImageContainer        = elastixMain->GetResultImageContainer();
+    transform                   = elastixMain->GetModifiableFinalTransform();
+    fixedImageContainer         = elastixMain->GetModifiableFixedImageContainer();
+    movingImageContainer        = elastixMain->GetModifiableMovingImageContainer();
+    fixedMaskContainer          = elastixMain->GetModifiableFixedMaskContainer();
+    movingMaskContainer         = elastixMain->GetModifiableMovingMaskContainer();
+    resultImageContainer        = elastixMain->GetModifiableResultImageContainer();
     fixedImageOriginalDirection = elastixMain->GetOriginalFixedImageDirectionFlat();
 
     /** Stop timer and print it. */

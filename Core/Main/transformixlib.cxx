@@ -213,7 +213,7 @@ TRANSFORMIX::TransformImage(
   }
 
   /** Get the result image */
-  resultImageContainer = transformix->GetResultImageContainer();
+  resultImageContainer = transformix->GetModifiableResultImageContainer();
 
   /** Stop timer and print it. */
   totaltimer.Stop();
