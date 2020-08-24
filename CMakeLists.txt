@@ -34,11 +34,6 @@ string( REGEX REPLACE "([0-9]+)\\." "" ELASTIX_VERSION_MINOR "${ELASTIX_VERSION}
 #---------------------------------------------------------------------
 include( CTest )
 
-#---------------------------------------------------------------------
-# Generate executable, static library or dynamic library.
-mark_as_advanced( ELASTIX_BUILD_EXECUTABLE )
-option( ELASTIX_BUILD_EXECUTABLE "Generate executable? (The library is always generated anyway.)" ON )
-
   # The following may make smaller and quicker loading libraries,
   # that hides unnecessary symbols. Available from CMake 3.0.0.
   #set( CMAKE_C_VISIBILITY_PRESET hidden )

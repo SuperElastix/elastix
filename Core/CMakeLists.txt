@@ -131,19 +131,17 @@ if( ELASTIX_USE_OPENCL )
 endif()
 
 #---------------------------------------------------------------------
-# Create the elastix executable or library.
-if( ELASTIX_BUILD_EXECUTABLE )
-  add_executable( elastix_exe
-    Main/elastix.cxx
-    Main/elastix.h
-    Kernel/elxElastixMain.cxx
-    Kernel/elxElastixMain.h
-    ${InstallFilesForExecutables}
-  )
-  set_target_properties( elastix_exe PROPERTIES OUTPUT_NAME elastix )
-  target_compile_definitions( elastix_exe PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}" )
-  target_link_libraries( elastix_exe ${ELASTIX_TARGET_LINK_LIBRARIES} )
-endif()
+# Create the elastix executable and library.
+add_executable( elastix_exe
+  Main/elastix.cxx
+  Main/elastix.h
+  Kernel/elxElastixMain.cxx
+  Kernel/elxElastixMain.h
+  ${InstallFilesForExecutables}
+)
+set_target_properties( elastix_exe PROPERTIES OUTPUT_NAME elastix )
+target_compile_definitions( elastix_exe PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}" )
+target_link_libraries( elastix_exe ${ELASTIX_TARGET_LINK_LIBRARIES} )
 
 # The library type (STATIC or SHARED) is determined by the parameter
 # BUILD_SHARED_LIBS.
@@ -163,19 +161,17 @@ target_link_libraries( elastix_lib ${ELASTIX_TARGET_LINK_LIBRARIES} )
 #---------------------------------------------------------------------
 # Create the transformix executable.
 
-if( ELASTIX_BUILD_EXECUTABLE )
-  add_executable( transformix_exe
-    Main/transformix.cxx
-    Main/elastix.h
-    Kernel/elxElastixMain.cxx
-    Kernel/elxElastixMain.h
-    Kernel/elxTransformixMain.cxx
-    Kernel/elxTransformixMain.h
-    ${InstallFilesForExecutables}
-  )
-  set_target_properties(transformix_exe PROPERTIES OUTPUT_NAME transformix)
-  target_link_libraries( transformix_exe ${ELASTIX_TARGET_LINK_LIBRARIES} )
-endif()
+add_executable( transformix_exe
+  Main/transformix.cxx
+  Main/elastix.h
+  Kernel/elxElastixMain.cxx
+  Kernel/elxElastixMain.h
+  Kernel/elxTransformixMain.cxx
+  Kernel/elxTransformixMain.h
+  ${InstallFilesForExecutables}
+)
+set_target_properties(transformix_exe PROPERTIES OUTPUT_NAME transformix)
+target_link_libraries( transformix_exe ${ELASTIX_TARGET_LINK_LIBRARIES} )
 
 # The library type (STATIC or SHARED) is determined by the parameter
 # BUILD_SHARED_LIBS.
@@ -209,7 +205,7 @@ endif()
 #---------------------------------------------------------------------
 # Define the install directory for elastix and transformix.
 
-if( ELASTIX_BUILD_EXECUTABLE AND NOT WIN32 )
+if( NOT WIN32 )
   # Tell the executables where to find the required .so files.
   set_target_properties( elastix_exe transformix_exe
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )

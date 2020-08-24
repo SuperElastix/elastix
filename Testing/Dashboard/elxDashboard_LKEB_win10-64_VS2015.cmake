@@ -41,7 +41,6 @@ set( dashboard_cache "
 ITK_DIR:PATH=D:/toolkits/ITK/latest_release/bin_VS2015
 
 // Some elastix settings, defining the configuration:
-ELASTIX_BUILD_EXECUTABLE=ON
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
 ELASTIX_USE_EIGEN:BOOL=OFF
