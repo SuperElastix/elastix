@@ -134,18 +134,17 @@ ComponentDatabase::SetIndex(
 ComponentDatabase::PtrToCreator
 ComponentDatabase::GetCreator(
   const ComponentDescriptionType & name,
-  IndexType i )
+  IndexType i ) const
 {
-  /** Get the map */
-  CreatorMapType map = GetCreatorMap();
-
   /** Make a key with the input arguments */
   CreatorMapKeyType key( name, i );
+
+  const auto found = CreatorMap.find(key);
 
   /** Check if this key has been defined. If yes, return the 'creator'
    * that is linked to it.
    */
-  if( map.count( key ) == 0 )    // of gewoon !map.count( key ) als boven??
+  if( found == end(CreatorMap) )
   {
     xout[ "error" ] << "Error: " << std::endl;
     xout[ "error" ] << name << "(index " << i << ") - This component is not installed!" << std::endl;
@@ -153,7 +152,7 @@ ComponentDatabase::GetCreator(
   }
   else
   {
-    return map[ key ];
+    return found->second;
   }
 
 } // end GetCreator
@@ -168,20 +167,19 @@ ComponentDatabase::GetIndex(
   const PixelTypeDescriptionType & fixedPixelType,
   ImageDimensionType fixedDimension,
   const PixelTypeDescriptionType & movingPixelType,
-  ImageDimensionType movingDimension )
+  ImageDimensionType movingDimension ) const
 {
-  /** Get the map */
-  IndexMapType map = GetIndexMap();
-
   /** Make a key with the input arguments */
   ImageTypeDescriptionType fixedImage( fixedPixelType, fixedDimension );
   ImageTypeDescriptionType movingImage( movingPixelType, movingDimension );
   IndexMapKeyType          key( fixedImage, movingImage );
 
+  const auto found = IndexMap.find(key);
+
   /** Check if this key has been defined. If yes, return the 'index'
    * that is linked to it.
    */
-  if( map.count( key ) == 0 )
+  if( found == end(IndexMap) )
   {
     xout[ "error" ] << "ERROR:\n"
                     << "  FixedImageType:  " << fixedDimension << "D " << fixedPixelType << std::endl
@@ -196,7 +194,7 @@ ComponentDatabase::GetIndex(
   }
   else
   {
-    return map[ key ];
+    return found->second;
   }
 
 } // end GetIndex

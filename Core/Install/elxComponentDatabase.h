@@ -128,13 +128,13 @@ public:
   /** Functions to get an entry in a map */
   PtrToCreator GetCreator(
     const ComponentDescriptionType & name,
-    IndexType i );
+    IndexType i ) const;
 
   IndexType GetIndex(
     const PixelTypeDescriptionType & fixedPixelType,
     ImageDimensionType fixedDimension,
     const PixelTypeDescriptionType & movingPixelType,
-    ImageDimensionType movingDimension );
+    ImageDimensionType movingDimension ) const;
 
 protected:
 
