@@ -32,30 +32,6 @@ namespace elastix
 using namespace xl;
 
 /**
- * ******************** GetCreatorMap ***************************
- */
-
-ComponentDatabase::CreatorMapType &
-ComponentDatabase::GetCreatorMap( void )
-{
-  return CreatorMap;
-
-} // end GetCreatorMap
-
-
-/**
- * ********************** GetIndexMap ***************************
- */
-
-ComponentDatabase::IndexMapType &
-ComponentDatabase::GetIndexMap( void )
-{
-  return IndexMap;
-
-} // end GetIndexMap
-
-
-/**
  * *********************** SetCreator ***************************
  */
 
@@ -65,16 +41,13 @@ ComponentDatabase::SetCreator(
   IndexType i,
   PtrToCreator creator )
 {
-  /** Get the map */
-  CreatorMapType & map = GetCreatorMap();
-
   /** Make a key with the input arguments */
   CreatorMapKeyType key( name, i );
 
   /** Check if this key has been defined already.
    * If not, insert the key + creator in the map.
    */
-  if( map.count( key ) )    //==1
+  if( CreatorMap.count( key ) )    //==1
   {
     xout[ "error" ] << "Error: " << std::endl;
     xout[ "error" ] << name << "(index " << i << ") - This component has already been installed!" << std::endl;
@@ -82,7 +55,7 @@ ComponentDatabase::SetCreator(
   }
   else
   {
-    map.insert( CreatorMapEntryType( key, creator ) );
+    CreatorMap.insert( CreatorMapEntryType( key, creator ) );
     return 0;
   }
 
@@ -101,16 +74,13 @@ ComponentDatabase::SetIndex(
   ImageDimensionType movingDimension,
   IndexType i )
 {
-  /** Get the map.*/
-  IndexMapType & map = GetIndexMap();
-
   /** Make a key with the input arguments.*/
   ImageTypeDescriptionType fixedImage( fixedPixelType, fixedDimension );
   ImageTypeDescriptionType movingImage( movingPixelType, movingDimension );
   IndexMapKeyType          key( fixedImage, movingImage );
 
   /** Insert the key+index in the map, if it hadn't been done before yet.*/
-  if( map.count( key ) )  //==1
+  if( IndexMap.count( key ) )  //==1
   {
     xout[ "error" ] << "Error:" << std::endl;
     xout[ "error" ] << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << std::endl;
@@ -120,7 +90,7 @@ ComponentDatabase::SetIndex(
   }
   else
   {
-    map.insert( IndexMapEntryType( key, i ) );
+    IndexMap.insert( IndexMapEntryType( key, i ) );
     return 0;
   }
 

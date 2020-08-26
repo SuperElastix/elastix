@@ -107,11 +107,6 @@ public:
     IndexMapValueType >                IndexMapType;
   typedef IndexMapType::value_type IndexMapEntryType;
 
-  /** Functions to get the CreatorMap and the IndexMap.*/
-  CreatorMapType & GetCreatorMap( void );
-
-  IndexMapType & GetIndexMap( void );
-
   /** Functions to set an entry in a map.*/
   int SetCreator(
     const ComponentDescriptionType & name,
