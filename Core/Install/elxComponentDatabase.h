@@ -141,10 +141,10 @@ protected:
   ComponentDatabase(){}
   ~ComponentDatabase() override{}
 
+private:
+
   CreatorMapType CreatorMap;
   IndexMapType   IndexMap;
-
-private:
 
   ComponentDatabase( const Self & ); // purposely not implemented
   void operator=( const Self & );    // purposely not implemented
