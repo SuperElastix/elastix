@@ -200,3 +200,66 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
 
   EXPECT_EQ(roundedTranslationOffset, translationOffset);
 }
+
+
+// Tests that the TransformParameters of a translation are all zero when the
+// fixed and the moving image are the same. 
+GTEST_TEST(ElastixLib, TranslationTransformParametersAreZeroWhenFixedImageIsMovingImage)
+{
+  using ImageType = itk::Image<float>;
+  constexpr auto ImageDimension = ImageType::ImageDimension;
+  using SizeType = itk::Size<ImageDimension>;
+
+  const std::pair<std::string, std::string> parameterArray[] =
+  {
+    // Parameters with non-default values (A-Z):
+    { "FixedImageDimension", std::to_string(ImageDimension)},
+    { "ImageSampler", "Full" },
+    { "Metric", "AdvancedNormalizedCorrelation" },
+    { "MovingImageDimension", std::to_string(ImageDimension)},
+    { "Optimizer", "AdaptiveStochasticGradientDescent" },
+    { "Transform", "TranslationTransform" }
+  };
+
+  std::map < std::string, std::vector< std::string > > parameters;
+
+  for (const auto& pair : parameterArray)
+  {
+    ASSERT_TRUE(parameters.insert({ pair.first, {pair.second} }).second);
+  }
+
+  const auto indexValue = 1;
+  const auto regionSizeValue = 2;
+  const auto imageSizeValue = 4;
+
+  const auto image = ImageType::New();
+  image->SetRegions(SizeType::Filled(imageSizeValue));
+  image->Allocate(true);
+
+  for (itk::ImageRegionIterator<ImageType> it(image, itk::ImageRegion<ImageDimension>{ {{indexValue,indexValue}}, SizeType::Filled(regionSizeValue) });
+    !it.IsAtEnd();
+    ++it)
+  {
+    it.Set(1);
+  }
+
+  elastix::ELASTIX elastix;
+  ASSERT_EQ(elastix.RegisterImages(image, image, parameters, ".", false, false), 0);
+
+  const auto transformParameterMaps = elastix.GetTransformParameterMapList();
+
+  ASSERT_TRUE(!transformParameterMaps.empty());
+  EXPECT_EQ(transformParameterMaps.size(), 1);
+
+  const auto& transformParameterMap = transformParameterMaps.front();
+  const auto found = transformParameterMap.find("TransformParameters");
+  ASSERT_NE(found, transformParameterMap.cend());
+
+  const auto& transformParameters = found->second;
+  ASSERT_EQ(transformParameters.size(), ImageDimension);
+
+  for (const auto& transformParameter : transformParameters)
+  {
+    EXPECT_EQ(transformParameter, "0");
+  }
+}
