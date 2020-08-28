@@ -98,7 +98,6 @@ public:
   typedef typename Superclass::InternalMatrixType            InternalMatrixType;
   typedef typename Superclass::InverseTransformBaseType      InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer   InverseTransformBasePointer;
-  typedef typename Superclass::TransformCategoryType         TransformCategoryType;
   typedef typename Superclass::MovingImageGradientType       MovingImageGradientType;
   typedef typename Superclass::MovingImageGradientValueType  MovingImageGradientValueType;
 

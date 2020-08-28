@@ -75,7 +75,6 @@ public:
     InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType
     OutputCovariantVectorType;
-  typedef typename Superclass::TransformCategoryType TransformCategoryType;
 
   typedef typename Superclass
     ::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
