@@ -1,4 +1,5 @@
 add_executable(ElastixLibGTest
+  ElastixFilterGTest.cxx
   ElastixLibGTest.cxx
 )
 
