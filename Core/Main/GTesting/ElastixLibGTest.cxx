@@ -22,7 +22,7 @@
 
 // ITK header files:
 #include <itkImage.h>
-#include <itkImageRegionIterator.h>
+#include <itkImageRegionRange.h>
 
 // GoogleTest header file:
 #include <gtest/gtest.h>
@@ -43,7 +43,7 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
   using OffsetType = itk::Offset<ImageDimension>;
-  using RegionIteratorType = itk::ImageRegionIterator<ITKImageType>;
+  using RegionRangeType = itk::Experimental::ImageRegionRange<ITKImageType>;
 
   const std::pair<std::string, std::string> parameterArray[] =
   {
@@ -104,26 +104,21 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   const OffsetType translationOffset{ { 1, -2 } };
   const auto regionSize = SizeType::Filled(2);
   const SizeType imageSize{ { 5, 6 } };
+  const IndexType fixedImageRegionIndex{ { 1, 3 } };
 
   const auto fixed_image = ITKImageType::New();
   fixed_image->SetRegions(imageSize);
   fixed_image->Allocate(true);
-
-  const IndexType fixedImageRegionIndex{ { 1, 3 } };
-
-  for (RegionIteratorType it(fixed_image, RegionType{ fixedImageRegionIndex, regionSize }); !it.IsAtEnd(); ++it)
-  {
-    it.Set(1);
-  }
+  const RegionType fixedImageRegion{ fixedImageRegionIndex, regionSize };
+  const RegionRangeType fixedImageRegionRange{ *fixed_image, fixedImageRegion };
+  std::fill(std::begin(fixedImageRegionRange), std::end(fixedImageRegionRange), 1.0f);
 
   const auto moving_image = ITKImageType::New();
   moving_image->SetRegions(imageSize);
   moving_image->Allocate(true);
-
-  for (RegionIteratorType it(moving_image, RegionType{ fixedImageRegionIndex + translationOffset, regionSize }); !it.IsAtEnd(); ++it)
-  {
-    it.Set(1);
-  }
+  const RegionType movingImageRegion{ fixedImageRegionIndex + translationOffset, regionSize };
+  const RegionRangeType movingImageRegionRange{ *moving_image, movingImageRegion };
+  std::fill(std::begin(movingImageRegionRange), std::end(movingImageRegionRange), 1.0f);
 
   const std::string output_directory(".");
   const bool write_log_file{ false };
@@ -235,13 +230,9 @@ GTEST_TEST(ElastixLib, TranslationTransformParametersAreZeroWhenFixedImageIsMovi
   const auto image = ImageType::New();
   image->SetRegions(SizeType::Filled(imageSizeValue));
   image->Allocate(true);
-
-  for (itk::ImageRegionIterator<ImageType> it(image, itk::ImageRegion<ImageDimension>{ {{indexValue,indexValue}}, SizeType::Filled(regionSizeValue) });
-    !it.IsAtEnd();
-    ++it)
-  {
-    it.Set(1);
-  }
+  const itk::ImageRegion<ImageDimension> imageRegion{ { {indexValue, indexValue}}, SizeType::Filled(regionSizeValue) };
+  const itk::Experimental::ImageRegionRange<ImageType> imageRegionRange{ *image, imageRegion };
+  std::fill(std::begin(imageRegionRange), std::end(imageRegionRange), 1.0f);
 
   elastix::ELASTIX elastix;
   ASSERT_EQ(elastix.RegisterImages(image, image, parameters, ".", false, false), 0);
