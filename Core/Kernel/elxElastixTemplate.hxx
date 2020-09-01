@@ -22,7 +22,7 @@
 
 #define elxCheckAndSetComponentMacro( _name ) \
   _name##BaseType * base = this->GetElx##_name##Base( i ); \
-  if( base != 0 ) \
+  if( base != nullptr ) \
   { \
     base->SetComponentLabel( #_name, i ); \
     base->SetElastix( This ); \
@@ -49,8 +49,8 @@ ElastixTemplate< TFixedImage, TMovingImage >
 ::ElastixTemplate()
 {
   /** Initialize CallBack commands. */
-  this->m_BeforeEachResolutionCommand = 0;
-  this->m_AfterEachIterationCommand   = 0;
+  this->m_BeforeEachResolutionCommand = nullptr;
+  this->m_AfterEachIterationCommand   = nullptr;
 
   /** Create timers. */
   this->m_Timer0.Reset();
@@ -82,7 +82,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::FixedImageType
       this->GetFixedImageContainer()->ElementAt( idx ).GetPointer() );
   }
 
-  return 0;
+  return nullptr;
 
 } // end GetFixedImage()
 
@@ -101,7 +101,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::MovingImageType
       this->GetMovingImageContainer()->ElementAt( idx ).GetPointer() );
   }
 
-  return 0;
+  return nullptr;
 
 } // end SetMovingImage()
 
@@ -120,7 +120,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::FixedMaskType
       this->GetFixedMaskContainer()->ElementAt( idx ).GetPointer() );
   }
 
-  return 0;
+  return nullptr;
 
 } // end SetFixedMask()
 
@@ -139,7 +139,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::MovingMaskType
       this->GetMovingMaskContainer()->ElementAt( idx ).GetPointer() );
   }
 
-  return 0;
+  return nullptr;
 
 } // end SetMovingMask()
 
@@ -158,7 +158,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::ResultImageType
       this->GetResultImageContainer()->ElementAt( idx ).GetPointer() );
   }
 
-  return 0;
+  return nullptr;
 
 } // end GetResultImage()
 
@@ -192,7 +192,7 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::ResultDeformationFieldTyp
       this->GetResultDeformationFieldContainer()->ElementAt( idx ).GetPointer() );
   }
 
-  return 0;
+  return nullptr;
 
 } // end GetResultDeformationField()
 
@@ -257,7 +257,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
   /** Read images and masks, if not set already. */
   const bool              useDirCos = this->GetUseDirectionCosines();
   FixedImageDirectionType fixDirCos;
-  if( this->GetFixedImage() == 0 )
+  if( this->GetFixedImage() == nullptr )
   {
     this->SetFixedImageContainer(
       FixedImageLoaderType::GenerateImageContainer(
@@ -277,19 +277,19 @@ ElastixTemplate< TFixedImage, TMovingImage >
     this->SetOriginalFixedImageDirection( fixDirCos );
   }
 
-  if( this->GetMovingImage() == 0 )
+  if( this->GetMovingImage() == nullptr )
   {
     this->SetMovingImageContainer(
       MovingImageLoaderType::GenerateImageContainer(
       this->GetMovingImageFileNameContainer(), "Moving Image", useDirCos ) );
   }
-  if( this->GetFixedMask() == 0 )
+  if( this->GetFixedMask() == nullptr )
   {
     this->SetFixedMaskContainer(
       FixedMaskLoaderType::GenerateImageContainer(
       this->GetFixedMaskFileNameContainer(), "Fixed Mask", useDirCos ) );
   }
-  if( this->GetMovingMask() == 0 )
+  if( this->GetMovingMask() == nullptr )
   {
     this->SetMovingMaskContainer(
       MovingMaskLoaderType::GenerateImageContainer(
@@ -353,7 +353,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
   /** Decouple the components from Elastix. This increases the chance that
    * some memory is released.
    */
-  this->ConfigureComponents( 0 );
+  this->ConfigureComponents( nullptr );
 
   /** Return a value. */
   return 0;
@@ -385,7 +385,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
    * load the image.
    */
   if( ( this->GetNumberOfMovingImageFileNames() > 0 )
-    || ( this->GetMovingImage() != 0 ) )
+    || ( this->GetMovingImage() != nullptr ) )
   {
     /** Timer. */
     timer.Start();
@@ -395,7 +395,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
     /** Load the image from disk, if it wasn't set already by the user. */
     const bool useDirCos = this->GetUseDirectionCosines();
-    if( this->GetMovingImage() == 0 )
+    if( this->GetMovingImage() == nullptr )
     {
       this->SetMovingImageContainer(
         MovingImageLoaderType::GenerateImageContainer(
@@ -485,7 +485,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
          << this->ConvertSecondsToDHMS( timer.GetMean(), 2 ) << std::endl;
 
   /** Resample the image. */
-  if( this->GetMovingImage() != 0 )
+  if( this->GetMovingImage() != nullptr )
   {
     timer.Reset();
     timer.Start();
@@ -1237,7 +1237,7 @@ bool
 ElastixTemplate< TFixedImage, TMovingImage >
 ::GetOriginalFixedImageDirection( FixedImageDirectionType & direction ) const
 {
-  if( this->GetFixedImage() == 0 )
+  if( this->GetFixedImage() == nullptr )
   {
     /** Try to read direction cosines from (transform-)parameter file. */
     bool                    retdc         = true;
