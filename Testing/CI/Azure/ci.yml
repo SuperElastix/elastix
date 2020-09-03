@@ -1,5 +1,5 @@
 variables:
-  ITKv5_VERSION: v5.1.0
+  ITKv5_VERSION: v5.1.1
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
