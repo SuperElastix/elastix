@@ -118,8 +118,8 @@ OpenCLLogger::Initialize()
 
   // Setting the logger
   this->SetName( "OpenCLLogger" );
-  this->SetPriorityLevel( LoggerBase::INFO );
-  this->SetLevelForFlushing( LoggerBase::CRITICAL );
+  this->SetPriorityLevel( LoggerBase::PriorityLevelEnum::INFO );
+  this->SetLevelForFlushing( LoggerBase::PriorityLevelEnum::CRITICAL );
 
   // Create StdStreamLogOutput
   this->m_Stream = StdStreamLogOutput::New();
@@ -150,7 +150,7 @@ OpenCLLogger::IsCreated() const
 
 //------------------------------------------------------------------------------
 void
-OpenCLLogger::Write( PriorityLevelType level, std::string const & content )
+OpenCLLogger::Write( PriorityLevelEnum level, std::string const & content )
 {
   if( this->m_Stream.IsNull() )
   {
