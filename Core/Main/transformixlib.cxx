@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __transformixlib_CXX_
-#define __transformixlib_CXX_
 
 #include "transformixlib.h"
 #include "elastix.h" // For ConvertSecondsToDHMS and GetCurrentDateAndTime.
@@ -252,5 +250,3 @@ TRANSFORMIX::TransformImage(
 } // end TransformImage()
 
 } // namespace transformix
-
-#endif // end #ifndef __transformixlib_CXX_

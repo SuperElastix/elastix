@@ -15,8 +15,6 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef __elxConfiguration_CXX__
-#define __elxConfiguration_CXX__
 
 #include "elxConfiguration.h"
 
@@ -266,5 +264,3 @@ Configuration
 
 
 } // end namespace elastix
-
-#endif // end #ifndef __elxMyConfiguration_CXX__
