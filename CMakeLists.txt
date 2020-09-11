@@ -11,14 +11,6 @@ endif()
 
 #---------------------------------------------------------------------
 cmake_policy( SET CMP0012 NEW )
-if( POLICY CMP0033 )
-  # This policy was introduced in cmake 3, so we need to check for its
-  # existence. When the minimum cmake version above is upgraded to 3
-  # this if(POLICY) check can be removed.
-  cmake_policy( SET CMP0033 OLD )
-endif()
-
-cmake_policy( SET CMP0007 OLD )
 cmake_policy( SET CMP0042 NEW )
 
 #---------------------------------------------------------------------
@@ -581,10 +573,8 @@ endif()
 #---------------------------------------------------------------------
 # Make it easier to include elastix functionality in other programs.
 
-# Save library dependencies.
-# The library dependencies file.
-set( elxLIBRARY_DEPENDS_FILE ${elastix_BINARY_DIR}/elxLibraryDepends.cmake )
-export_library_dependencies( ${elxLIBRARY_DEPENDS_FILE} )
+
+
 
 # The build settings file. (necessary for elastix?)
 #set( ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake )
