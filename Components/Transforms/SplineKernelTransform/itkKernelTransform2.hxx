@@ -376,6 +376,7 @@ KernelTransform2< TScalarType, NDimensions >
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
   GMatrixType         G;
+  const auto          G_ref = G.as_ref();
 
   this->m_KMatrix.set_size( NDimensions * numberOfLandmarks,
     NDimensions * numberOfLandmarks );
@@ -395,7 +396,7 @@ KernelTransform2< TScalarType, NDimensions >
     // Compute the block diagonal element, i.e. kernel for pi->pi
     // Can ignore GMatrix, since p1 - p1 = 0
     this->ComputeReflexiveG( p1, G );
-    this->m_KMatrix.update( G, i * NDimensions, i * NDimensions );
+    this->m_KMatrix.update( G_ref, i * NDimensions, i * NDimensions );
     p2++; j++;
 
     // Compute the upper (and copy into lower) triangular part of K
@@ -404,8 +405,8 @@ KernelTransform2< TScalarType, NDimensions >
       const InputVectorType s = p1.Value() - p2.Value();
       this->ComputeG( s, G );
       // write value in upper and lower triangle of matrix
-      this->m_KMatrix.update( G, i * NDimensions, j * NDimensions );
-      this->m_KMatrix.update( G, j * NDimensions, i * NDimensions );
+      this->m_KMatrix.update( G_ref, i * NDimensions, j * NDimensions );
+      this->m_KMatrix.update( G_ref, j * NDimensions, i * NDimensions );
       p2++; j++;
     }
     p1++; i++;
@@ -426,6 +427,8 @@ KernelTransform2< TScalarType, NDimensions >
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
   IMatrixType         I; I.set_identity();
   IMatrixType         temp;
+  const auto          temp_ref = temp.as_ref();
+  const auto          I_ref = I.as_ref();
   InputPointType      p; p.Fill( 0.0f );
 
   this->m_PMatrix.set_size( NDimensions * numberOfLandmarks,
@@ -438,9 +441,9 @@ KernelTransform2< TScalarType, NDimensions >
     for( unsigned int j = 0; j < NDimensions; j++ )
     {
       temp = I * p[ j ];
-      this->m_PMatrix.update( temp, i * NDimensions, j * NDimensions );
+      this->m_PMatrix.update( temp_ref, i * NDimensions, j * NDimensions );
     }
-    this->m_PMatrix.update( I, i * NDimensions, NDimensions * NDimensions );
+    this->m_PMatrix.update( I_ref, i * NDimensions, NDimensions * NDimensions );
   }
 
 } // end ComputeP()
