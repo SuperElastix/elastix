@@ -81,7 +81,7 @@ protected:
 
   GPUBSplineDecompositionImageFilter();
   ~GPUBSplineDecompositionImageFilter(){}
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   virtual void GPUGenerateData( void );
 

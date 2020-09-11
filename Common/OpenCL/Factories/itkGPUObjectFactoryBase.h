@@ -47,7 +47,7 @@ public:
   typedef SmartPointer< const Self > ConstPointer;
 
   /** Class methods used to interface with the registered factories. */
-  virtual const char * GetITKSourceVersion() const { return ITK_SOURCE_VERSION; }
+  const char * GetITKSourceVersion() const override { return ITK_SOURCE_VERSION; }
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( GPUObjectFactoryBase, ObjectFactoryBase );
@@ -64,7 +64,7 @@ public:
 protected:
 
   GPUObjectFactoryBase() {}
-  virtual ~GPUObjectFactoryBase() {}
+  ~GPUObjectFactoryBase() override {}
 
   /** Register methods for 1D. */
   virtual void Register1D() {}

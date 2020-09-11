@@ -158,9 +158,9 @@ public:
   OpenCLCompileError( const std::string & file, unsigned int lineNumber ) : ExceptionObject( file, lineNumber ) {}
 
   /** Virtual destructor needed for subclasses. Has to have empty throw(). */
-  virtual ~OpenCLCompileError() throw( ) {}
+  ~OpenCLCompileError() throw( ) override {}
 
-  virtual const char * GetNameOfClass() const override
+  const char * GetNameOfClass() const override
   { return "OpenCLCompileError"; }
 };
 

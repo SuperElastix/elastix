@@ -125,8 +125,8 @@ public:
 protected:
 
   GPUTransformCopier();
-  virtual ~GPUTransformCopier() {}
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
+  ~GPUTransformCopier() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Method to copy the transforms parameters. */
   bool CopyTransform(

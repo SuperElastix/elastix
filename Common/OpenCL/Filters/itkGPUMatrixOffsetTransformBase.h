@@ -54,7 +54,7 @@ public:
   itkTypeMacro( GPUMatrixOffsetTransformBase, GPUSuperclass );
 
   /**  */
-  virtual bool IsMatrixOffsetTransform( void ) const { return true; }
+  bool IsMatrixOffsetTransform( void ) const override { return true; }
 
   /** Type of the scalar representing coordinate and vector elements. */
   typedef TScalarType ScalarType;
@@ -84,14 +84,14 @@ public:
 protected:
 
   GPUMatrixOffsetTransformBase();
-  virtual ~GPUMatrixOffsetTransformBase() {}
+  ~GPUMatrixOffsetTransformBase() override {}
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  virtual bool GetSourceCode( std::string & source ) const override;
+  bool GetSourceCode( std::string & source ) const override;
 
   /** Returns data manager that stores all settings for the transform. */
-  virtual GPUDataManager::Pointer GetParametersDataManager( void ) const override;
+  GPUDataManager::Pointer GetParametersDataManager( void ) const override;
 
 private:
 

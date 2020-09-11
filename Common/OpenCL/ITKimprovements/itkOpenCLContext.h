@@ -444,7 +444,7 @@ protected:
 
   /** Destroys this OpenCL context object. If the underlying
    * GetContextId() has been created, then it will be released. */
-  virtual ~OpenCLContext();
+  ~OpenCLContext() override;
 
   /** \internal
    * This method is only used when CMake OpenCL profiling is enabled. */
