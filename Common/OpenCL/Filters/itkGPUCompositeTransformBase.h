@@ -97,15 +97,15 @@ public:
 protected:
 
   GPUCompositeTransformBase() {}
-  virtual ~GPUCompositeTransformBase() {}
+  ~GPUCompositeTransformBase() override {}
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  virtual bool GetSourceCode( std::string & source ) const override;
+  bool GetSourceCode( std::string & source ) const override;
 
   /** Returns data manager that stores all settings for the transform \a index.
    * Used by combination transforms. */
-  virtual GPUDataManager::Pointer GetParametersDataManager( const std::size_t index ) const override;
+  GPUDataManager::Pointer GetParametersDataManager( const std::size_t index ) const override;
 
 private:
 

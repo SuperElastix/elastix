@@ -71,7 +71,7 @@ protected:
   GPUAdvancedBSplineDeformableTransform();
   virtual ~GPUAdvancedBSplineDeformableTransform() {}
 
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   void CopyCoefficientImagesToGPU( void );
 

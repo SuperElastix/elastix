@@ -71,7 +71,7 @@ protected:
   GPUBSplineTransform();
   virtual ~GPUBSplineTransform() {}
 
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   void CopyCoefficientImagesToGPU();
 

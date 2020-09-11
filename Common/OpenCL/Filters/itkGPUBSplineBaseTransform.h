@@ -64,7 +64,7 @@ public:
   typedef FixedArray< GPUDataManagerPointer, NDimensions >      GPUCoefficientImageBaseArray;
 
   /** Returns true, the transform is BSpline transform. */
-  virtual bool IsBSplineTransform( void ) const { return true; }
+  bool IsBSplineTransform( void ) const override { return true; }
 
   /** Get the GPU array of coefficient images. */
   const GPUCoefficientImageArray GetGPUCoefficientImages( void ) const;
@@ -83,11 +83,11 @@ protected:
   virtual void SetSplineOrder( const unsigned int splineOrder );
 
   GPUBSplineBaseTransform();
-  virtual ~GPUBSplineBaseTransform() {}
+  ~GPUBSplineBaseTransform() override {}
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  virtual bool GetSourceCode( std::string & source ) const override;
+  bool GetSourceCode( std::string & source ) const override;
 
   GPUCoefficientImageArray     m_GPUBSplineTransformCoefficientImages;
   GPUCoefficientImageBaseArray m_GPUBSplineTransformCoefficientImagesBase;

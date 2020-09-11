@@ -50,12 +50,12 @@ public:
 
   GPUCast() {}
 
-  ~GPUCast() {}
+  ~GPUCast() override {}
 
   /** Setup GPU kernel arguments for this functor.
    * Returns current argument index to set additional arguments in the GPU kernel.
    */
-  int SetGPUKernelArguments( OpenCLKernelManager::Pointer KernelManager, int KernelHandle )
+  int SetGPUKernelArguments( OpenCLKernelManager::Pointer KernelManager, int KernelHandle ) override
   {
     return 0;
   }

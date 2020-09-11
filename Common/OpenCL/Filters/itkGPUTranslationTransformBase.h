@@ -51,7 +51,7 @@ public:
   itkTypeMacro( GPUTranslationTransformBase, GPUSuperclass );
 
   /** Returns true, the transform is translation transform. */
-  virtual bool IsTranslationTransform( void ) const { return true; }
+  bool IsTranslationTransform( void ) const override { return true; }
 
   /** Type of the scalar representing coordinate and vector elements. */
   typedef TScalarType ScalarType;
@@ -69,14 +69,14 @@ public:
 protected:
 
   GPUTranslationTransformBase();
-  virtual ~GPUTranslationTransformBase() {}
+  ~GPUTranslationTransformBase() override {}
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  virtual bool GetSourceCode( std::string & source ) const override;
+  bool GetSourceCode( std::string & source ) const override;
 
   /** Returns data manager that stores all settings for the transform. */
-  virtual GPUDataManager::Pointer GetParametersDataManager( void ) const override;
+  GPUDataManager::Pointer GetParametersDataManager( void ) const override;
 
 private:
 

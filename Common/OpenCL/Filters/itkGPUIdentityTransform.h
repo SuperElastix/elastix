@@ -60,17 +60,17 @@ public:
 
   /** Returns true if the derived transform is identity transform,
    * false otherwise. */
-  virtual bool IsIdentityTransform( void ) const { return true; }
+  bool IsIdentityTransform( void ) const override { return true; }
 
 protected:
 
   GPUIdentityTransform();
-  virtual ~GPUIdentityTransform() {}
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
+  ~GPUIdentityTransform() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Returns OpenCL \a source code for the transform.
    * Returns true if source code was combined, false otherwise. */
-  virtual bool GetSourceCode( std::string & source ) const override;
+  bool GetSourceCode( std::string & source ) const override;
 
 private:
 

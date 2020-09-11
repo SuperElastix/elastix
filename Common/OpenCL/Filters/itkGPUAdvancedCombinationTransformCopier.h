@@ -145,8 +145,8 @@ public:
 protected:
 
   GPUAdvancedCombinationTransformCopier();
-  virtual ~GPUAdvancedCombinationTransformCopier() {}
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
+  ~GPUAdvancedCombinationTransformCopier() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Method to copy the transforms parameters. */
   bool CopyToCurrentTransform(
