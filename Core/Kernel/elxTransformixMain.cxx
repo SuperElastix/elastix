@@ -29,6 +29,7 @@
 #include "elxMacro.h"
 
 #ifdef ELASTIX_USE_OPENCL
+#include "itkOpenCLContext.h"
 #include "itkOpenCLSetup.h"
 #endif
 
