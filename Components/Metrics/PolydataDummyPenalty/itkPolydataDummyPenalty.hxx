@@ -214,9 +214,7 @@ MeshPenalty< TFixedPointSet, TMovingPointSet >
     //const MeshPointDataContainerPointer mappedNormals =  mappedMesh->GetPointData();
 
     //FixedMeshType::PointsContainer::Pointer derivPoints = FixedMeshType::PointsContainer::New();
-    //FixedMeshType::PointType zeroPoint =  FixedMeshType::PointType::Point();
-    //zeroPoint.Fill(0.0);
-    //derivPoints->resize(numberOfPoints,FixedMeshType::PointType::Point(zeroPoint));
+    //derivPoints->resize(numberOfPoints);
 
     MeshPointsContainerConstIteratorType fixedPointIt  = fixedPoints->Begin();
     MeshPointsContainerIteratorType      mappedPointIt = mappedPoints->Begin();
