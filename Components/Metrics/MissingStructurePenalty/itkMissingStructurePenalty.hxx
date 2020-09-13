@@ -181,13 +181,8 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
 
   const FixedMeshContainerElementIdentifier numberOfMeshes = this->m_FixedMeshContainer->Size();
 
-  typedef typename FixedMeshType::PointType FixedMeshPointType;
-
-  FixedMeshPointType zeroPoint = typename FixedMeshPointType::Point();
-  zeroPoint.Fill( 0.0 );
-
   typename MeshPointsContainerType::Pointer pointCentroids = FixedMeshType::PointsContainer::New();
-  pointCentroids->resize( numberOfMeshes, typename FixedMeshPointType::Point( zeroPoint ) );
+  pointCentroids->resize( numberOfMeshes );
 
   for( FixedMeshContainerElementIdentifier meshId = 0; meshId < numberOfMeshes; ++meshId ) // loop over all meshes in container
   {
@@ -202,7 +197,7 @@ MissingVolumeMeshPenalty< TFixedPointSet, TMovingPointSet >
     typedef typename FixedMeshType::PointsContainer FixedMeshPointsContainerType;
     typename FixedMeshType::PointsContainer::Pointer derivPoints = FixedMeshPointsContainerType::New();
 
-    derivPoints->resize( numberOfPoints, typename FixedMeshPointType::Point( zeroPoint ) );
+    derivPoints->resize( numberOfPoints );
 
     MeshPointsContainerConstIteratorType fixedPointIt  = fixedPoints->Begin();
     MeshPointsContainerIteratorType      mappedPointIt = mappedPoints->Begin();
