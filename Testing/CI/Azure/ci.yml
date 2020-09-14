@@ -1,5 +1,6 @@
 variables:
   ITKv5_VERSION: v5.1.1
+  ITK_GIT_URL: https://github.com/InsightSoftwareConsortium/ITK
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
@@ -16,10 +17,7 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone https://github.com/InsightSoftwareConsortium/ITK "$(ITK_SOURCE_DIR)"
-      pushd "$(ITK_SOURCE_DIR)"
-      git checkout $(itk.version)
-      popd
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
     displayName: Clone ITK
   - script: |
       mkdir "$(ITK_BINARY_DIR)"
@@ -61,10 +59,7 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone https://github.com/InsightSoftwareConsortium/ITK $(ITK_SOURCE_DIR)
-      pushd $(ITK_SOURCE_DIR)
-      git checkout $(itk.version)
-      popd
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
   - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
@@ -102,10 +97,7 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone https://github.com/InsightSoftwareConsortium/ITK $(ITK_SOURCE_DIR)
-      pushd $(ITK_SOURCE_DIR)
-      git checkout $(itk.version)
-      popd
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
     displayName: Clone ITK
   - script: |
       mkdir $(ITK_BINARY_DIR)
@@ -134,4 +126,3 @@ jobs:
   - bash: ctest --config Release -VV -j 2
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
-
