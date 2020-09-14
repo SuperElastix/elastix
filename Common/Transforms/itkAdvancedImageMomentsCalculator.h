@@ -292,6 +292,10 @@ protected:
   ImageSampleContainerPointer m_SampleContainer;
 
 private:
+  /** Internal helper function. Does post processing at the end of
+   * ComputeSingleThreaded() and AfterThreadedCompute() */
+  void DoPostProcessing();
+
   AdvancedImageMomentsCalculator( const Self & );
   void operator = ( const Self & );
 
