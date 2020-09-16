@@ -385,7 +385,7 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::AddFixedImage( TFixedImage * fixedImage )
 {
-  if( this->GetInput( "FixedImage" ) == ITK_NULLPTR )
+  if( this->GetInput( "FixedImage" ) == nullptr )
   {
     this->SetFixedImage( fixedImage );
   }
@@ -480,7 +480,7 @@ void
 ElastixFilter< TFixedImage, TMovingImage >
 ::AddMovingImage( TMovingImage * movingImage )
 {
-  if( this->GetInput( "MovingImage" ) == ITK_NULLPTR )
+  if( this->GetInput( "MovingImage" ) == nullptr )
   {
     this->SetMovingImage( movingImage );
   }

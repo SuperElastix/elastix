@@ -54,8 +54,8 @@ template< typename TImage >
 AdvancedImageMomentsCalculator< TImage >::AdvancedImageMomentsCalculator(void)
 {
   m_Valid = false;
-  m_Image = ITK_NULLPTR;
-  m_SpatialObjectMask = ITK_NULLPTR;
+  m_Image = nullptr;
+  m_SpatialObjectMask = nullptr;
   m_M0 = NumericTraits< ScalarType >::ZeroValue();
   m_M1.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
   m_M2.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
