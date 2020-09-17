@@ -36,7 +36,7 @@ include( CTest )
 
 #---------------------------------------------------------------------
 # Find ITK.
-find_package( ITK 5.1.1 REQUIRED )
+find_package( ITK 5.1 REQUIRED )
 include( ${ITK_USE_FILE} )
 
 #---------------------------------------------------------------------
