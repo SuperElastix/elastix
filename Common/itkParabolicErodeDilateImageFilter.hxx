@@ -135,7 +135,7 @@ ParabolicErodeDilateImageFilter< TInputImage, doDilate, TOutputImage >
 template< typename TInputImage, bool doDilate, typename TOutputImage >
 void
 ParabolicErodeDilateImageFilter< TInputImage, doDilate, TOutputImage >
-::GenerateInputRequestedRegion() throw( InvalidRequestedRegionError )
+::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method. this should
   // copy the output requested region to the input requested region
