@@ -157,8 +157,8 @@ public:
   /** Constructor. Needed to ensure the exception object can be copied. */
   OpenCLCompileError( const std::string & file, unsigned int lineNumber ) : ExceptionObject( file, lineNumber ) {}
 
-  /** Virtual destructor needed for subclasses. Has to have empty throw(). */
-  ~OpenCLCompileError() throw( ) override {}
+  /** Virtual destructor needed for subclasses. */
+  ~OpenCLCompileError() override {}
 
   const char * GetNameOfClass() const override
   { return "OpenCLCompileError"; }
