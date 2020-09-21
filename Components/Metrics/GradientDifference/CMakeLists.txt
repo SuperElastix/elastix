@@ -1,5 +1,5 @@
 
-ADD_ELXCOMPONENT( GradientDifferenceMetric OFF
+ADD_ELXCOMPONENT( GradientDifferenceMetric # Was OFF by default before elastix 5.0.1
  elxGradientDifferenceMetric.h
  elxGradientDifferenceMetric.hxx
  elxGradientDifferenceMetric.cxx

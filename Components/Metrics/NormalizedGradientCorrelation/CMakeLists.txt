@@ -1,5 +1,5 @@
 
-ADD_ELXCOMPONENT( NormalizedGradientCorrelationMetric OFF
+ADD_ELXCOMPONENT( NormalizedGradientCorrelationMetric # Was OFF by default before elastix 5.0.1
  elxNormalizedGradientCorrelationMetric.h
  elxNormalizedGradientCorrelationMetric.hxx
  elxNormalizedGradientCorrelationMetric.cxx

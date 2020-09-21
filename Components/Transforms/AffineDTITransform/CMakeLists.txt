@@ -1,5 +1,5 @@
 
-ADD_ELXCOMPONENT( AffineDTITransformElastix OFF
+ADD_ELXCOMPONENT( AffineDTITransformElastix # Was OFF by default before elastix 5.0.1
  elxAffineDTITransform.h
  elxAffineDTITransform.hxx
  elxAffineDTITransform.cxx

@@ -1,5 +1,5 @@
 
-ADD_ELXCOMPONENT( RSGDEachParameterApart OFF
+ADD_ELXCOMPONENT( RSGDEachParameterApart # Was OFF by default before elastix 5.0.1
  elxRSGDEachParameterApart.h
  elxRSGDEachParameterApart.hxx
  elxRSGDEachParameterApart.cxx
