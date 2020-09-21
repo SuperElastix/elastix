@@ -1,4 +1,4 @@
-ADD_ELXCOMPONENT( MissingStructurePenalty OFF
+ADD_ELXCOMPONENT( MissingStructurePenalty # Was OFF by default before elastix 5.0.1
  elxMissingStructurePenalty.cxx
  elxMissingStructurePenalty.h
  elxMissingStructurePenalty.hxx
