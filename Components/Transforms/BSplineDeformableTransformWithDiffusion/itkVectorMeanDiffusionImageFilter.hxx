@@ -55,7 +55,7 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 template< class TInputImage, class TGrayValueImage >
 void
 VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
-::GenerateInputRequestedRegion() throw ( InvalidRequestedRegionError )
+::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
   Superclass::GenerateInputRequestedRegion();
