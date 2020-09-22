@@ -202,7 +202,9 @@ OpenCLMovingGenericPyramid< TElastix >
   if( computedUsingOpenCL )
   {
     // Graft output
-    this->GraftOutput( this->m_GPUPyramid->GetOutput() );
+    for( int i=0 ; i < this->GetNumberOfLevels() ; i++ ){
+      this->GraftNthOutput( i, this->m_GPUPyramid->GetOutput( i ) );
+    }
 
     // Report OpenCL device to the log
     this->ReportToLog();

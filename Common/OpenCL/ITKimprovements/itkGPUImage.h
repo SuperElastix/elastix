@@ -221,6 +221,19 @@ public:
   itkGetConstReferenceMacro( IndexToPhysicalPoint, DirectionType );
   itkGetConstReferenceMacro( PhysicalPointToIndex, DirectionType );
 
+  /** GPUImage counterpart*/
+  template <typename UPixelType, unsigned int NUImageDimension = VImageDimension>
+  struct Rebind
+    {
+      using Type = itk::GPUImage<UPixelType, NUImageDimension>;
+    };
+
+
+  template <typename UPixelType, unsigned int NUImageDimension = VImageDimension>
+    using RebindImageType = itk::GPUImage<UPixelType, NUImageDimension>;
+
+
+
 protected:
 
   GPUImage();
