@@ -90,7 +90,7 @@ void BaseComponent::InitializeElastixExecutable()
 
 std::string
 BaseComponent::ConvertSecondsToDHMS(
-  const double totalSeconds, const unsigned int precision = 0 ) const
+  const double totalSeconds, const unsigned int precision )
 {
   /** Define days, hours, minutes. */
   const std::size_t secondsPerMinute = 60;
