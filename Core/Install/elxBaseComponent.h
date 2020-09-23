@@ -36,11 +36,9 @@
 #pragma warning ( disable : 4503 )
 #endif
 
-#include <iostream>
-#include <sstream>
-#include <iomanip>    // std::setprecision
-
 #include "itkMacro.h" // itkTypeMacroNoParent
+
+#include <string>
 
 /** The current elastix version. */
 #define __ELASTIX_VERSION 5.000

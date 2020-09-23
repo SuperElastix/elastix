@@ -18,7 +18,9 @@
 
 #include "elxBaseComponent.h"
 
-#include <cmath>
+#include <cmath> // For fmod.
+#include <iomanip> // For setprecision.
+#include <sstream> // For ostringstream.
 
 namespace
 {
