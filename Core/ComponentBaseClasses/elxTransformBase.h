@@ -27,8 +27,7 @@
 #include "elxComponentDatabase.h"
 #include "elxProgressCommand.h"
 
-#include <fstream>
-#include <iomanip>
+#include <memory> // For unique_ptr.
 
 namespace elastix
 {
@@ -130,6 +129,7 @@ class TransformBase :
   public BaseComponentSE< TElastix >
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(TransformBase);
 
   /** Standard ITK stuff. */
   typedef TransformBase               Self;
@@ -139,16 +139,17 @@ public:
   itkTypeMacro( TransformBase, BaseComponentSE );
 
   /** Typedef's from Superclass. */
-  typedef typename Superclass::ElastixType          ElastixType;
-  typedef typename Superclass::ElastixPointer       ElastixPointer;
-  typedef typename Superclass::ConfigurationType    ConfigurationType;
-  typedef typename Superclass::ConfigurationPointer ConfigurationPointer;
+  using typename Superclass::ElastixType;
+  using typename Superclass::ElastixPointer;
+  using typename Superclass::ConfigurationType;
+  using typename Superclass::ConfigurationPointer;
+  using typename Superclass::RegistrationType;
+  using typename Superclass::RegistrationPointer;
+
   typedef typename ConfigurationType
     ::CommandLineArgumentMapType CommandLineArgumentMapType;
   typedef typename ConfigurationType
     ::CommandLineEntryType CommandLineEntryType;
-  typedef typename Superclass::RegistrationType    RegistrationType;
-  typedef typename Superclass::RegistrationPointer RegistrationPointer;
 
   /** Elastix typedef's. */
   typedef typename ElastixType::CoordRepType    CoordRepType;
@@ -324,10 +325,10 @@ public:
 
 protected:
 
-  /** The constructor. */
-  TransformBase();
+  /** The default-constructor. */
+  TransformBase() = default;
   /** The destructor. */
-  ~TransformBase() override;
+  ~TransformBase() override = default;
 
   /** Estimate a scales vector
    * AutomaticScalesEstimation works like this:
@@ -347,20 +348,15 @@ protected:
   void AutomaticScalesEstimationStackTransform(
     const unsigned int & numSubTransforms, ScalesType & scales ) const;
 
+private:
+
   /** Member variables. */
-  ParametersType * m_TransformParametersPointer;
+  std::unique_ptr<ParametersType> m_TransformParametersPointer{};
   std::string      m_TransformParametersFileName;
   ParametersType   m_FinalParameters;
 
-private:
-
-  /** The private constructor. */
-  TransformBase( const Self & );   // purposely not implemented
-  /** The private copy constructor. */
-  void operator=( const Self & );  // purposely not implemented
-
   /** Boolean to decide whether or not the transform parameters are written. */
-  bool m_ReadWriteTransformParameters;
+  bool m_ReadWriteTransformParameters{ true };
 
   std::string GetInitialTransformParametersFileName( void ) const
   {
@@ -374,7 +370,7 @@ private:
   }
 
   /** Boolean to decide whether or not the transform parameters are written in binary format. */
-  bool m_UseBinaryFormatForTransformationParameters;
+  bool m_UseBinaryFormatForTransformationParameters{};
 
 };
 

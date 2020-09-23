@@ -23,7 +23,6 @@
 #include "itkPointSet.h"
 #include "itkDefaultStaticMeshTraits.h"
 #include "itkTransformixInputPointFileReader.h"
-#include "vnl/vnl_math.h"
 #include <itksys/SystemTools.hxx>
 #include "itkVector.h"
 #include "itkTransformToDisplacementFieldFilter.h"
@@ -38,6 +37,10 @@
 #include "itkMeshFileWriter.h"
 #include "itkTransformMeshFilter.h"
 #include "itkCommonEnums.h"
+
+#include <fstream>
+#include <iomanip> // For setprecision.
+
 
 namespace itk
 {
@@ -55,6 +58,7 @@ template< class T >
 class PixelTypeChangeCommand : public Command
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(PixelTypeChangeCommand);
 
   /** Standard class typedefs. */
   typedef PixelTypeChangeCommand    Self;
@@ -87,13 +91,8 @@ public:
 
 protected:
 
-  PixelTypeChangeCommand() {}
-  ~PixelTypeChangeCommand() override {}
-
-private:
-
-  PixelTypeChangeCommand( const Self & ); // purposely not implemented
-  void operator=( const Self & );         // purposely not implemented
+  PixelTypeChangeCommand() = default;
+  ~PixelTypeChangeCommand() override = default;
 
 };
 
@@ -102,37 +101,6 @@ private:
 namespace elastix
 {
 
-/**
- * ********************* Constructor ****************************
- */
-
-template< class TElastix >
-TransformBase< TElastix >
-::TransformBase()
-{
-  /** Initialize. */
-  this->m_TransformParametersPointer   = 0;
-  this->m_ReadWriteTransformParameters = true;
-  this->m_UseBinaryFormatForTransformationParameters = false;
-
-} // end Constructor()
-
-
-/**
- * ********************** Destructor ****************************
- */
-
-template< class TElastix >
-TransformBase< TElastix >
-::~TransformBase()
-{
-  /** Delete. */
-  if( this->m_TransformParametersPointer )
-  {
-    delete this->m_TransformParametersPointer;
-  }
-
-} // end Destructor()
 
 
 /**
@@ -413,11 +381,7 @@ TransformBase< TElastix >
   if( this->m_ReadWriteTransformParameters )
   {
     /** Get the TransformParameters pointer. */
-    if( this->m_TransformParametersPointer )
-    {
-      delete this->m_TransformParametersPointer;
-    }
-    this->m_TransformParametersPointer = new ParametersType( numberOfParameters );
+    this->m_TransformParametersPointer.reset(new ParametersType( numberOfParameters ));
 
     /** Read the TransformParameters. */
     std::size_t numberOfParametersFound = 0;
