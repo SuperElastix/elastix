@@ -65,6 +65,7 @@ namespace elastix
 class BaseComponent
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(BaseComponent);
 
   /**
    * Callback methods that each component of elastix is supposed
@@ -115,27 +116,24 @@ public:
    * parameter file for example, to distinguish between options
    * meant for Metric0 and for Metric1.
    */
-  virtual void SetComponentLabel( const char * label, unsigned int idx );
+  void SetComponentLabel( const char * label, unsigned int idx );
 
   /** Get the componentlabel as a string: "Metric0" for example. */
-  virtual const char * GetComponentLabel( void ) const;
+  const char * GetComponentLabel( void ) const;
 
   static bool IsElastixLibrary();
 
   static void InitializeElastixExecutable();
 
   /** Convenience function to convert seconds to day, hour, minute, second format. */
-  std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision ) const;
+  static std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision );
 
 protected:
 
-  BaseComponent() {}
-  virtual ~BaseComponent() {}
+  BaseComponent() = default;
+  virtual ~BaseComponent() = default;
 
 private:
-
-  BaseComponent( const BaseComponent & );     // purposely not implemented
-  void operator=( const BaseComponent & );    // purposely not implemented
 
   std::string m_ComponentLabel;
 
