@@ -573,7 +573,7 @@ TransformBase< TElastix >
 {
   /** Create a new configuration, which will be initialized with
    * the transformParameterFileName. */
-  ConfigurationPointer configurationInitialTransform = ConfigurationType::New();
+  const auto configurationInitialTransform = ConfigurationType::New();
 
   /** Create argmapInitialTransform. */
   CommandLineArgumentMapType argmapInitialTransform;
@@ -1133,7 +1133,7 @@ TransformBase< TElastix >
   typedef itk::Vector< float, FixedImageDimension > DeformationVectorType;
 
   /** Construct an ipp-file reader. */
-  typename IPPReaderType::Pointer ippReader = IPPReaderType::New();
+  const auto ippReader = IPPReaderType::New();
   ippReader->SetFileName( filename.c_str() );
 
   /** Read the input points. */
@@ -1187,7 +1187,7 @@ TransformBase< TElastix >
   region.SetSize(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
 
-  typename FixedImageType::Pointer dummyImage = FixedImageType::New();
+  const auto dummyImage = FixedImageType::New();
   dummyImage->SetRegions( region );
   dummyImage->SetOrigin( origin );
   dummyImage->SetSpacing( spacing );
@@ -1367,7 +1367,7 @@ TransformBase< TElastix >
     MeshType, MeshType, CombinationTransformType >       TransformMeshFilterType;
 
   /** Read the input points. */
-  typename MeshReaderType::Pointer meshReader = MeshReaderType::New();
+  const auto meshReader = MeshReaderType::New();
   meshReader->SetFileName( filename.c_str() );
   elxout << "  Reading input point file: " << filename << std::endl;
   try
@@ -1387,7 +1387,7 @@ TransformBase< TElastix >
 
   /** Apply the transform. */
   elxout << "  The input points are transformed." << std::endl;
-  typename TransformMeshFilterType::Pointer meshTransformer = TransformMeshFilterType::New();
+  const auto meshTransformer = TransformMeshFilterType::New();
   meshTransformer->SetTransform(
     const_cast< CombinationTransformType * >( this->GetAsCombinationTransform() ) );
   meshTransformer->SetInput( meshReader->GetOutput() );
@@ -1407,7 +1407,7 @@ TransformBase< TElastix >
   outputPointsFileName += "outputpoints.vtk";
   elxout << "  The transformed points are saved in: "
          <<  outputPointsFileName << std::endl;
-  typename MeshWriterType::Pointer meshWriter = MeshWriterType::New();
+  const auto meshWriter = MeshWriterType::New();
   meshWriter->SetFileName( outputPointsFileName.c_str() );
   meshWriter->SetInput( meshTransformer->GetOutput() );
 
@@ -1470,8 +1470,7 @@ TransformBase< TElastix >
     DeformationFieldImageType >                       ChangeInfoFilterType;
 
   /** Create an setup deformation field generator. */
-  typename DeformationFieldGeneratorType::Pointer defGenerator
-    = DeformationFieldGeneratorType::New();
+  const auto defGenerator = DeformationFieldGeneratorType::New();
   defGenerator->SetSize(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
   defGenerator->SetOutputSpacing(
@@ -1487,7 +1486,7 @@ TransformBase< TElastix >
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false. */
-  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  const auto infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
   bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
@@ -1539,8 +1538,7 @@ WriteDeformationFieldImage(
                << "deformationField." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  typename DeformationFieldWriterType::Pointer defWriter
-    = DeformationFieldWriterType::New();
+  const auto defWriter = DeformationFieldWriterType::New();
   defWriter->SetInput( deformationfield );
   defWriter->SetFileName( makeFileName.str().c_str() );
 
@@ -1601,7 +1599,7 @@ TransformBase< TElastix >
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
   /** Create an setup Jacobian generator. */
-  typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
+  const auto jacGenerator = JacobianGeneratorType::New();
   jacGenerator->SetTransform( const_cast< const ITKBaseType * >(
       this->GetAsITKBaseType() ) );
   jacGenerator->SetOutputSize(
@@ -1621,7 +1619,7 @@ TransformBase< TElastix >
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false. */
-  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  const auto infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
   bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
@@ -1639,7 +1637,7 @@ TransformBase< TElastix >
                << "spatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
+  const auto jacWriter = JacobianWriterType::New();
   jacWriter->SetInput( infoChanger->GetOutput() );
   jacWriter->SetFileName( makeFileName.str().c_str() );
 
@@ -1700,7 +1698,7 @@ TransformBase< TElastix >
     JacobianWriterType >                              PixelTypeChangeCommandType;
 
   /** Create an setup Jacobian generator. */
-  typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
+  const auto jacGenerator = JacobianGeneratorType::New();
   jacGenerator->SetTransform( const_cast< const ITKBaseType * >(
       this->GetAsITKBaseType() ) );
   jacGenerator->SetOutputSize(
@@ -1721,7 +1719,7 @@ TransformBase< TElastix >
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false.
    */
-  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  const auto infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
   bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
@@ -1738,12 +1736,11 @@ TransformBase< TElastix >
                << "fullSpatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
+  const auto jacWriter = JacobianWriterType::New();
   jacWriter->SetInput( infoChanger->GetOutput() );
   jacWriter->SetFileName( makeFileName.str().c_str() );
   /** Hack to change the pixel type to vector. Not necessary for mhd. */
-  typename PixelTypeChangeCommandType::Pointer jacStartWriteCommand
-    = PixelTypeChangeCommandType::New();
+  const auto jacStartWriteCommand = PixelTypeChangeCommandType::New();
   if( resultImageFormat != "mhd" )
   {
     jacWriter->AddObserver( itk::StartEvent(), jacStartWriteCommand );
@@ -1841,7 +1838,7 @@ TransformBase< TElastix >
   scales = ScalesType( N );
 
   /** Set up grid sampler. */
-  ImageSamplerPointer sampler = ImageSamplerType::New();
+  const auto sampler = ImageSamplerType::New();
   sampler->SetInput(
     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
   sampler->SetInputImageRegion(
@@ -1940,7 +1937,7 @@ TransformBase< TElastix >
   desiredRegion.SetIndex( start );
 
   /** Set up the grid sampler. */
-  ImageSamplerPointer sampler = ImageSamplerType::New();
+  const auto sampler = ImageSamplerType::New();
   sampler->SetInput( this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
   sampler->SetInputImageRegion( desiredRegion );
 
