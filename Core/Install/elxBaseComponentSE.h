@@ -19,7 +19,8 @@
 #define __elxBaseComponentSE_h
 
 #include "elxBaseComponent.h"
-#include "itkObject.h"
+#include "itkMacro.h" // For ITK_DISALLOW_COPY_AND_ASSIGN.
+#include "itkWeakPointer.h"
 
 namespace elastix
 {
@@ -43,6 +44,7 @@ template< class TElastix >
 class BaseComponentSE : public BaseComponent
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(BaseComponentSE);
 
   /** Standard stuff. */
   typedef BaseComponentSE Self;
@@ -53,8 +55,8 @@ public:
   typedef itk::WeakPointer< ElastixType > ElastixPointer;
 
   /** ConfigurationType. */
-  typedef typename ElastixType::ConfigurationType    ConfigurationType;
-  typedef typename ElastixType::ConfigurationPointer ConfigurationPointer;
+  typedef Configuration          ConfigurationType;
+  typedef Configuration::Pointer ConfigurationPointer;
 
   /** RegistrationType; NB: this is the elx::RegistrationBase
    * not an itk::Object or something like that.
@@ -74,12 +76,12 @@ public:
    * Besides setting m_Elastix, this method also sets m_Configuration
    * and m_Registration.
    */
-  virtual void SetElastix( ElastixType * _arg );
+  void SetElastix( ElastixType * _arg );
 
   /** itkGetModifiableObjectMacro( Elastix, ElastixType );
    * without the itkDebug call.
    */
-  virtual ElastixType * GetElastix( void ) const
+  ElastixType * GetElastix( void ) const
   {
     return this->m_Elastix.GetPointer();
   }
@@ -89,21 +91,21 @@ public:
    * The configuration object provides functionality to
    * read parameters and command line arguments.
    */
-  virtual ConfigurationType * GetConfiguration( void ) const
+  ConfigurationType * GetConfiguration( void ) const
   {
     return this->m_Configuration.GetPointer();
   }
 
 
   /** Set the configuration. Added for transformix. */
-  virtual void SetConfiguration( ConfigurationType * _arg );
+  void SetConfiguration( ConfigurationType * _arg );
 
   /** Get a pointer to the Registration component.
    * This is a convenience function, since the registration
    * component is needed often by other components.
    * It could be accessed also via GetElastix->GetElxRegistrationBase().
    */
-  virtual RegistrationPointer GetRegistration( void ) const
+  RegistrationPointer GetRegistration( void ) const
   {
     return this->m_Registration;
   }
@@ -111,18 +113,12 @@ public:
 
 protected:
 
-  BaseComponentSE();
-  ~BaseComponentSE() override {}
+  BaseComponentSE() = default;
+  ~BaseComponentSE() override = default;
 
-  ElastixPointer       m_Elastix;
-  ConfigurationPointer m_Configuration;
-  RegistrationPointer  m_Registration;
-
-private:
-
-  BaseComponentSE( const Self & );   // purposely not implemented
-  void operator=( const Self & );    // purposely not implemented
-
+  ElastixPointer       m_Elastix{};
+  ConfigurationPointer m_Configuration{};
+  RegistrationPointer  m_Registration{};
 };
 
 } //end namespace elastix

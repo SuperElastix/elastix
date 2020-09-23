@@ -20,23 +20,10 @@
 #define __elxBaseComponentSE_hxx
 
 #include "elxBaseComponentSE.h"
+#include "itkObject.h"
 
 namespace elastix
 {
-
-/**
- * ********************* Constructor ****************************
- */
-
-template< class TElastix >
-BaseComponentSE< TElastix >::BaseComponentSE()
-{
-  /** Initialize.*/
-  this->m_Elastix       = 0;
-  this->m_Configuration = 0;
-  this->m_Registration  = 0;
-}
-
 
 /**
  * *********************** SetElastix ***************************
