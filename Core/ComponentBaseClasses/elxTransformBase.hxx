@@ -1858,18 +1858,13 @@ TransformBase< TElastix >
     itkExceptionMacro( << "No valid voxels found to estimate the scales." );
   }
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator iter;
-  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end   = sampleContainer->End();
-
   /** initialize */
   scales.Fill( 0.0 );
 
   /** Read fixed coordinates and get Jacobian. */
-  for( iter = begin; iter != end; ++iter )
+  for( const auto& sample : *sampleContainer )
   {
-    const InputPointType & point = ( *iter ).Value().m_ImageCoordinates;
+    const InputPointType & point = sample.m_ImageCoordinates;
     //const JacobianType & jacobian = thisITK->GetJacobian( point );
     JacobianType jacobian; NonZeroJacobianIndicesType nzji;
     thisITK->GetJacobian( point, jacobian, nzji );
@@ -1955,17 +1950,12 @@ TransformBase< TElastix >
     itkExceptionMacro( << "No valid voxels found to estimate the scales." );
   }
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator iter;
-  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end   = sampleContainer->End();
-
   /** Read fixed coordinates and get Jacobian. */
   JacobianType               jacobian;
   NonZeroJacobianIndicesType nzji;
-  for( iter = begin; iter != end; ++iter )
+  for( const auto& sample : *sampleContainer )
   {
-    const InputPointType & point = ( *iter ).Value().m_ImageCoordinates;
+    const InputPointType & point = sample.m_ImageCoordinates;
     //const JacobianType & jacobian = thisITK->GetJacobian( point );
     thisITK->GetJacobian( point, jacobian, nzji );
 
