@@ -19,6 +19,7 @@
 // Elastix header files:
 #include "elastix.h"
 #include "elxElastixMain.h"
+#include <Core/elxVersionMacros.h>
 #include "itkUseMevisDicomTiff.h"
 
 // ITK header files:
@@ -57,20 +58,13 @@ main( int argc, char ** argv )
     }
     else if( argument == "--version" )
     {
-      std::cout << std::fixed;
-      std::cout << std::showpoint;
-      std::cout << std::setprecision( 3 );
-      std::cout << "elastix version: " << __ELASTIX_VERSION << std::endl;
+      std::cout << "elastix version: " ELASTIX_VERSION_STRING << std::endl;
       return 0;
     }
     else if (argument == "--extended-version")
     {
       std::cout
-        << std::fixed
-        << std::showpoint
-        << std::setprecision(3)
-        << "elastix version: "
-        << __ELASTIX_VERSION
+        << "elastix version: " ELASTIX_VERSION_STRING
         << "\nITK version: "
         << ITK_VERSION_MAJOR << '.'
         << ITK_VERSION_MINOR << '.'
@@ -372,10 +366,7 @@ void
 PrintHelp( void )
 {
   /** Print the version. */
-  std::cout << std::fixed;
-  std::cout << std::showpoint;
-  std::cout << std::setprecision( 3 );
-  std::cout << "elastix version: " << __ELASTIX_VERSION << "\n" << std::endl;
+  std::cout << "elastix version: " << ELASTIX_VERSION_STRING "\n\n";
 
   /** What is elastix? */
   std::cout << "elastix registers a moving image to a fixed image.\n";

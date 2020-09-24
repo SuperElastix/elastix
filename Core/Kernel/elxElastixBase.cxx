@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 #include "elxElastixBase.h"
+#include <Core/elxVersionMacros.h>
 #include <sstream>
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
@@ -110,11 +111,7 @@ ElastixBase::BeforeAllBase( void )
   elxout << std::setprecision( this->m_DefaultOutputPrecision );
 
   /** Print to log file. */
-  elxout << std::fixed;
-  elxout << std::showpoint;
-  elxout << std::setprecision( 3 );
-  elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
-  elxout << std::setprecision( this->GetDefaultOutputPrecision() );
+  elxout << "ELASTIX version: " ELASTIX_VERSION_STRING "\n";
 
   /** Check Command line options and print them to the logfile. */
   elxout << "Command line options from ElastixBase:" << std::endl;
@@ -262,10 +259,7 @@ ElastixBase::BeforeAllTransformixBase( void )
   int returndummy = 0;
 
   /** Print to log file. */
-  elxout << std::fixed;
-  elxout << std::showpoint;
-  elxout << std::setprecision( 3 );
-  elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
+  elxout << "ELASTIX version: " ELASTIX_VERSION_STRING "\n";
   elxout << std::setprecision( this->GetDefaultOutputPrecision() );
 
   /** Check Command line options and print them to the logfile. */
