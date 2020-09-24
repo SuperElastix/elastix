@@ -150,8 +150,8 @@ public:
 protected:
 
   GPUDataManager();
-  virtual ~GPUDataManager();
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~GPUDataManager() override;
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 protected:
 

@@ -25,30 +25,6 @@ namespace xoutlibrary
 using namespace std;
 
 /**
- * ********************* Constructor ****************************
- */
-
-template< class charT, class traits >
-xoutbase< charT, traits >::xoutbase()
-{
-  this->m_Call = false;
-
-} // end Constructor
-
-
-/**
- * ********************* Destructor *****************************
- */
-
-template< class charT, class traits >
-xoutbase< charT, traits >::~xoutbase()
-{
-  //nothing
-
-} // end Destructor
-
-
-/**
  * ********************* operator[] *****************************
  */
 

@@ -23,9 +23,9 @@
 #include "itkCommand.h"
 #include "itkEventObject.h"
 #include "itkMacro.h"
-#include "vnl/vnl_math.h"
 #include "vnl/vnl_vector.h"
 #include "vnl/algo/vnl_sparse_symmetric_eigensystem.h"
+#include <algorithm> // For max.
 
 namespace itk
 {
@@ -398,7 +398,7 @@ PreconditionedGradientDescentOptimizer
   for( unsigned int r = 0; r < spaceDimension; ++r )
   {
     PreconditionValueType & prr = precondition( r, r );
-    maxDiag = vnl_math_max( maxDiag, prr );
+    maxDiag = std::max( maxDiag, prr );
   }
 
   /** make positive definite by adding a small negligible fraction of maxDiag.

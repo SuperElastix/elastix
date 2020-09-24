@@ -401,7 +401,7 @@ macro( elx_add_run_test testbasename howtocompare )
         CONFIGURATIONS Release
         COMMAND ${python_executable} ${pythonlandmarks}
         -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt -t 1.0
-        -p $<TARGET_FILE:transformix> )
+        -p $<TARGET_FILE:transformix_exe> )
       set_tests_properties( ${testname}_COMPARE_LANDMARKS
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif()
@@ -980,10 +980,8 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d # manual estimation and no adap
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.txt )
 
-if(${ELASTIX_BUILD_EXECUTABLE})
-  # Test transformix to check memory problem
-  trx_add_test( TransformixMemoryTest
-    -in ${TestDataDir}/3DCT_lung_baseline_small.mha
-    -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
-endif()
+# Test transformix to check memory problem
+trx_add_test( TransformixMemoryTest
+  -in ${TestDataDir}/3DCT_lung_baseline_small.mha
+  -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
 

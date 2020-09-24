@@ -188,7 +188,7 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 {
   // First quick check if Linear
   if( this->GetNthTransform( index )->GetTransformCategory()
-    != TransformBaseTemplate< TScalarType >::Linear )
+    != TransformBaseTemplate< TScalarType >::TransformCategoryEnum::Linear )
   {
     return false;
   }
@@ -211,7 +211,7 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 {
   // First quick check if Linear
   if( this->GetNthTransform( index )->GetTransformCategory()
-    != TransformBaseTemplate< TScalarType >::Linear )
+    != TransformBaseTemplate< TScalarType >::TransformCategoryEnum::Linear )
   {
     return false;
   }
@@ -235,7 +235,7 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 {
   // First quick check if Linear
   if( this->GetNthTransform( index )->GetTransformCategory()
-    != TransformBaseTemplate< TScalarType >::Linear )
+    != TransformBaseTemplate< TScalarType >::TransformCategoryEnum::Linear )
   {
     return false;
   }
@@ -258,7 +258,7 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
 ::IsBSplineTransform( const std::size_t index ) const
 {
   if( this->GetNthTransform( index )->GetTransformCategory()
-    == TransformBaseTemplate< TScalarType >::BSpline )
+    == TransformBaseTemplate< TScalarType >::TransformCategoryEnum::BSpline )
   {
     return true;
   }
@@ -351,7 +351,7 @@ GPUCompositeTransformBase< TScalarType, NDimensions >
   const bool loadSource, std::string & source ) const
 {
   if( this->GetNthTransform( _index )->GetTransformCategory()
-    == TransformBaseTemplate< TScalarType >::BSpline )
+    == TransformBaseTemplate< TScalarType >::TransformCategoryEnum::BSpline )
   {
     if( loadSource )
     {

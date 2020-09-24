@@ -63,11 +63,11 @@ public:
 protected:
 
   GPUInterpolateImageFunction();
-  ~GPUInterpolateImageFunction() {}
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const override;
+  ~GPUInterpolateImageFunction() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
   /** Returns data manager that stores all settings for the transform. */
-  virtual GPUDataManager::Pointer GetParametersDataManager( void ) const override;
+  GPUDataManager::Pointer GetParametersDataManager( void ) const override;
 
 private:
 

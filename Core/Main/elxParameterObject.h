@@ -39,7 +39,7 @@ public:
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
   itkNewMacro( Self );
-  itkTypeMacro( Self, itk::DataObject );
+  itkTypeMacro( ParameterObject, itk::DataObject );
 
   typedef std::string                                            ParameterKeyType;
   typedef std::string                                            ParameterValueType;
@@ -64,7 +64,7 @@ public:
   void AddParameterMap( const ParameterMapType & parameterMap );
   const ParameterMapType& GetParameterMap( const unsigned int& index ) const;
   itkGetConstReferenceMacro( ParameterMap, ParameterMapVectorType );
-  unsigned int GetNumberOfParameterMaps() const { return this->m_ParameterMap.size(); }
+  unsigned int GetNumberOfParameterMaps() const { return static_cast< unsigned int >(this->m_ParameterMap.size()); }
 
   void SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueType& value );
   void SetParameter( const unsigned int& index, const ParameterKeyType& key, const ParameterValueVectorType& value );

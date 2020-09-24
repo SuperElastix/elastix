@@ -22,6 +22,7 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkTimeProbe.h"
+#include <algorithm> // For max.
 #include <iomanip>
 #include <string>
 
@@ -514,7 +515,7 @@ PreconditionedGradientDescent<TElastix>
     const double K = 1.5;
     this->m_NumberOfGradientMeasurements = static_cast<unsigned int>(
       std::ceil( 8.0 / P / (K-1) / (K-1) ) );
-    this->m_NumberOfGradientMeasurements = vnl_math_max(
+    this->m_NumberOfGradientMeasurements = std::max(
       static_cast<unsigned int>( 2 ),
       this->m_NumberOfGradientMeasurements );
     elxout << "  NumberOfGradientMeasurements to estimate sigma_i: "
@@ -535,7 +536,7 @@ PreconditionedGradientDescent<TElastix>
   const double noisefactor = sigma1 / ( 2.0 * sigma1  + sigma2 + 1e-14 );
   const double a = a_max * noisefactor;
 
-  const double omega = vnl_math_max( 1e-14,
+  const double omega = std::max( 1e-14,
     this->m_SigmoidScaleFactor * ( sigma1 + sigma2 ) * std::sqrt( Pd ) );
   const double fmax = 1.0;
   const double fmin = -0.99 + 0.98 * noisefactor;

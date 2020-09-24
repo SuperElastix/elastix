@@ -82,10 +82,10 @@ public:
   void SetImagePointer( typename ImageType::Pointer img );
 
   /** actual GPU->CPU memory copy takes place here */
-  virtual void UpdateCPUBuffer();
+  void UpdateCPUBuffer() override;
 
   /** actual CPU->GPU memory copy takes place here */
-  virtual void UpdateGPUBuffer();
+  void UpdateGPUBuffer() override;
 
   /** Grafting GPU Image Data */
   virtual void Graft( const GPUImageDataManager * data );
@@ -93,7 +93,7 @@ public:
 protected:
 
   GPUImageDataManager() { m_Image = nullptr; }
-  virtual ~GPUImageDataManager() {}
+  ~GPUImageDataManager() override {}
 
 private:
 

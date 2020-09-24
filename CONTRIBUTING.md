@@ -9,9 +9,9 @@
 
 * Do not open an issue on GitHub for general questions, registration questions, or issues you may have while running `elastix`. _GitHub issues are primarily intended for bug reports and fixes._
 
-* General information about `elastix` can be found on our [wiki](https://github.com/SuperElastix/elastix/wiki) or at the [website](http://elastix.isi.uu.nl/).
+* General information about `elastix` can be found on our [wiki](https://github.com/SuperElastix/elastix/wiki) or at the [website](https://elastix.lumc.nl/).
 
-* [The manual](https://github.com/SuperElastix/elastix/releases/download/4.9.0/elastix-4.9.0-manual.pdf) explains much of the inner workings of image registration.
+* [The manual](https://github.com/SuperElastix/elastix/releases/download/5.0.0/elastix-5.0.0-manual.pdf) explains much of the inner workings of image registration.
 
 ### Did you find a bug? ###
 
@@ -71,6 +71,10 @@ Start reading our code and you'll get the hang of it. We optimize for readabilit
 * Type definitions should start with a capital. ImageType for example, instead of imageType.
 
 * This is open source software. Consider the people who will read your code, and make it look nice for them. It's sort of like driving a car: Perhaps you love doing donuts when you're alone, but with passengers the goal is to make the ride as smooth as possible.
+
+## Code of conduct ##
+
+Please respect our [code of conduct](CODE_OF_CONDUCT.md).
 
 Thanks,
 The `elastix` team

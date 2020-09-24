@@ -98,7 +98,7 @@ public:
   typedef typename Superclass::InternalMatrixType            InternalMatrixType;
   typedef typename Superclass::InverseTransformBaseType      InverseTransformBaseType;
   typedef typename Superclass::InverseTransformBasePointer   InverseTransformBasePointer;
-  typedef typename Superclass::TransformCategoryType         TransformCategoryType;
+  typedef typename Superclass::TransformCategoryEnum         TransformCategoryEnum;
   typedef typename Superclass::MovingImageGradientType       MovingImageGradientType;
   typedef typename Superclass::MovingImageGradientValueType  MovingImageGradientValueType;
 
@@ -231,7 +231,7 @@ public:
    * are linear, then return category Linear. Otherwise if all
    * transforms set to optimize are DisplacementFields, then
    * return DisplacementField category. */
-  TransformCategoryType GetTransformCategory() const override;
+  TransformCategoryEnum GetTransformCategory() const override;
 
   /** Whether the advanced transform has nonzero matrices. */
   bool GetHasNonZeroSpatialHessian( void ) const override;

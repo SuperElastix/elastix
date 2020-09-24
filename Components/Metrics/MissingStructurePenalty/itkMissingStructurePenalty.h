@@ -95,7 +95,7 @@ public:
 
   typedef typename FixedMeshType::ConstPointer             FixedMeshConstPointer;
   typedef typename FixedMeshType::Pointer                  FixedMeshPointer;
-  typedef typename MeshTraitsType::CellType::CellInterface CellInterfaceType;
+  typedef typename MeshTraitsType::CellType                CellInterfaceType;
 
   typedef typename FixedMeshType::PointType             MeshPointType;
   typedef typename FixedMeshType::PointType::VectorType VectorType;

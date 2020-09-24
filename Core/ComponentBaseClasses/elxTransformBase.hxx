@@ -23,7 +23,6 @@
 #include "itkPointSet.h"
 #include "itkDefaultStaticMeshTraits.h"
 #include "itkTransformixInputPointFileReader.h"
-#include "vnl/vnl_math.h"
 #include <itksys/SystemTools.hxx>
 #include "itkVector.h"
 #include "itkTransformToDisplacementFieldFilter.h"
@@ -37,6 +36,11 @@
 #include "itkMeshFileReader.h"
 #include "itkMeshFileWriter.h"
 #include "itkTransformMeshFilter.h"
+#include "itkCommonEnums.h"
+
+#include <fstream>
+#include <iomanip> // For setprecision.
+
 
 namespace itk
 {
@@ -54,6 +58,7 @@ template< class T >
 class PixelTypeChangeCommand : public Command
 {
 public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(PixelTypeChangeCommand);
 
   /** Standard class typedefs. */
   typedef PixelTypeChangeCommand    Self;
@@ -72,7 +77,7 @@ public:
   void Execute( Object * caller, const EventObject & ) override
   {
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
-    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( CommonEnums::IOPixel::VECTOR );
   }
 
 
@@ -80,19 +85,14 @@ public:
   {
     CallerType * castcaller = const_cast< CallerType * >(
       dynamic_cast< const CallerType * >( caller ) );
-    castcaller->GetModifiableImageIO()->SetPixelType( ImageIOBase::VECTOR );
+    castcaller->GetModifiableImageIO()->SetPixelType( CommonEnums::IOPixel::VECTOR );
   }
 
 
 protected:
 
-  PixelTypeChangeCommand() {}
-  ~PixelTypeChangeCommand() override {}
-
-private:
-
-  PixelTypeChangeCommand( const Self & ); // purposely not implemented
-  void operator=( const Self & );         // purposely not implemented
+  PixelTypeChangeCommand() = default;
+  ~PixelTypeChangeCommand() override = default;
 
 };
 
@@ -101,37 +101,6 @@ private:
 namespace elastix
 {
 
-/**
- * ********************* Constructor ****************************
- */
-
-template< class TElastix >
-TransformBase< TElastix >
-::TransformBase()
-{
-  /** Initialize. */
-  this->m_TransformParametersPointer   = 0;
-  this->m_ReadWriteTransformParameters = true;
-  this->m_UseBinaryFormatForTransformationParameters = false;
-
-} // end Constructor()
-
-
-/**
- * ********************** Destructor ****************************
- */
-
-template< class TElastix >
-TransformBase< TElastix >
-::~TransformBase()
-{
-  /** Delete. */
-  if( this->m_TransformParametersPointer )
-  {
-    delete this->m_TransformParametersPointer;
-  }
-
-} // end Destructor()
 
 
 /**
@@ -412,11 +381,7 @@ TransformBase< TElastix >
   if( this->m_ReadWriteTransformParameters )
   {
     /** Get the TransformParameters pointer. */
-    if( this->m_TransformParametersPointer )
-    {
-      delete this->m_TransformParametersPointer;
-    }
-    this->m_TransformParametersPointer = new ParametersType( numberOfParameters );
+    this->m_TransformParametersPointer.reset(new ParametersType( numberOfParameters ));
 
     /** Read the TransformParameters. */
     std::size_t numberOfParametersFound = 0;
@@ -483,33 +448,36 @@ TransformBase< TElastix >
   /** Call the function ReadInitialTransformFromFile. */
   if( fileName != "NoInitialTransform" )
   {
-#ifdef _ELASTIX_BUILD_LIBRARY
-    /** Get initial transform index number. */
-    std::istringstream to_size_t( fileName );
-    size_t             index;
-    to_size_t >> index;
-
-    /** We can safely read the initial transform. */
-    this->ReadInitialTransformFromVector( index );
-#else
-    /** Check if the initial transform of this transform parameter file
-     * is not the same as this transform parameter file. Otherwise,
-     * we will have an infinite loop.
-     */
-    std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(
-      fileName.c_str() );
-    std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(
-      this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
-    if( fullFileName1 == fullFileName2 )
+    if (BaseComponent::IsElastixLibrary())
     {
-      itkExceptionMacro( << "ERROR: The InitialTransformParametersFileName "
-                         << "is identical to the current TransformParameters filename! "
-                         << "An infinite loop is not allowed." );
-    }
+      /** Get initial transform index number. */
+      std::istringstream to_size_t( fileName );
+      size_t             index;
+      to_size_t >> index;
 
-    /** We can safely read the initial transform. */
-    this->ReadInitialTransformFromFile( fileName.c_str() );
-#endif
+      /** We can safely read the initial transform. */
+      this->ReadInitialTransformFromVector( index );
+    }
+    else
+    {
+      /** Check if the initial transform of this transform parameter file
+       * is not the same as this transform parameter file. Otherwise,
+       * we will have an infinite loop.
+       */
+      std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(
+        fileName.c_str() );
+      std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(
+        this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
+      if( fullFileName1 == fullFileName2 )
+      {
+        itkExceptionMacro( << "ERROR: The InitialTransformParametersFileName "
+                           << "is identical to the current TransformParameters filename! "
+                           << "An infinite loop is not allowed." );
+      }
+
+      /** We can safely read the initial transform. */
+      this->ReadInitialTransformFromFile( fileName.c_str() );
+    }
   }
 
   /** Task 3 - Read from the configuration file how to combine the
@@ -605,7 +573,7 @@ TransformBase< TElastix >
 {
   /** Create a new configuration, which will be initialized with
    * the transformParameterFileName. */
-  ConfigurationPointer configurationInitialTransform = ConfigurationType::New();
+  const auto configurationInitialTransform = ConfigurationType::New();
 
   /** Create argmapInitialTransform. */
   CommandLineArgumentMapType argmapInitialTransform;
@@ -1165,7 +1133,7 @@ TransformBase< TElastix >
   typedef itk::Vector< float, FixedImageDimension > DeformationVectorType;
 
   /** Construct an ipp-file reader. */
-  typename IPPReaderType::Pointer ippReader = IPPReaderType::New();
+  const auto ippReader = IPPReaderType::New();
   ippReader->SetFileName( filename.c_str() );
 
   /** Read the input points. */
@@ -1219,7 +1187,7 @@ TransformBase< TElastix >
   region.SetSize(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
 
-  typename FixedImageType::Pointer dummyImage = FixedImageType::New();
+  const auto dummyImage = FixedImageType::New();
   dummyImage->SetRegions( region );
   dummyImage->SetOrigin( origin );
   dummyImage->SetSpacing( spacing );
@@ -1399,7 +1367,7 @@ TransformBase< TElastix >
     MeshType, MeshType, CombinationTransformType >       TransformMeshFilterType;
 
   /** Read the input points. */
-  typename MeshReaderType::Pointer meshReader = MeshReaderType::New();
+  const auto meshReader = MeshReaderType::New();
   meshReader->SetFileName( filename.c_str() );
   elxout << "  Reading input point file: " << filename << std::endl;
   try
@@ -1419,7 +1387,7 @@ TransformBase< TElastix >
 
   /** Apply the transform. */
   elxout << "  The input points are transformed." << std::endl;
-  typename TransformMeshFilterType::Pointer meshTransformer = TransformMeshFilterType::New();
+  const auto meshTransformer = TransformMeshFilterType::New();
   meshTransformer->SetTransform(
     const_cast< CombinationTransformType * >( this->GetAsCombinationTransform() ) );
   meshTransformer->SetInput( meshReader->GetOutput() );
@@ -1439,7 +1407,7 @@ TransformBase< TElastix >
   outputPointsFileName += "outputpoints.vtk";
   elxout << "  The transformed points are saved in: "
          <<  outputPointsFileName << std::endl;
-  typename MeshWriterType::Pointer meshWriter = MeshWriterType::New();
+  const auto meshWriter = MeshWriterType::New();
   meshWriter->SetFileName( outputPointsFileName.c_str() );
   meshWriter->SetInput( meshTransformer->GetOutput() );
 
@@ -1473,9 +1441,10 @@ TransformBase< TElastix >
   //put deformation field in container
   this->m_Elastix->SetResultDeformationField( deformationfield.GetPointer() );
 
-#ifndef _ELASTIX_BUILD_LIBRARY
-  WriteDeformationFieldImage( deformationfield );
-#endif
+  if (!BaseComponent::IsElastixLibrary())
+  {
+    WriteDeformationFieldImage( deformationfield );
+  }
 
 } // end TransformPointsAllPoints()
 
@@ -1501,8 +1470,7 @@ TransformBase< TElastix >
     DeformationFieldImageType >                       ChangeInfoFilterType;
 
   /** Create an setup deformation field generator. */
-  typename DeformationFieldGeneratorType::Pointer defGenerator
-    = DeformationFieldGeneratorType::New();
+  const auto defGenerator = DeformationFieldGeneratorType::New();
   defGenerator->SetSize(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
   defGenerator->SetOutputSpacing(
@@ -1518,7 +1486,7 @@ TransformBase< TElastix >
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false. */
-  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  const auto infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
   bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
@@ -1526,12 +1494,8 @@ TransformBase< TElastix >
   infoChanger->SetInput( defGenerator->GetOutput() );
 
   /** Track the progress of the generation of the deformation field. */
-#ifndef _ELASTIX_BUILD_LIBRARY
-  typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
-  progressObserver->ConnectObserver( defGenerator );
-  progressObserver->SetStartString( "  Progress: " );
-  progressObserver->SetEndString( "%" );
-#endif
+  const auto progressObserver = BaseComponent::IsElastixLibrary() ?
+    nullptr : ProgressCommandType::CreateAndConnect(*defGenerator);
 
   try
   {
@@ -1574,8 +1538,7 @@ WriteDeformationFieldImage(
                << "deformationField." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  typename DeformationFieldWriterType::Pointer defWriter
-    = DeformationFieldWriterType::New();
+  const auto defWriter = DeformationFieldWriterType::New();
   defWriter->SetInput( deformationfield );
   defWriter->SetFileName( makeFileName.str().c_str() );
 
@@ -1636,7 +1599,7 @@ TransformBase< TElastix >
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
   /** Create an setup Jacobian generator. */
-  typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
+  const auto jacGenerator = JacobianGeneratorType::New();
   jacGenerator->SetTransform( const_cast< const ITKBaseType * >(
       this->GetAsITKBaseType() ) );
   jacGenerator->SetOutputSize(
@@ -1656,19 +1619,16 @@ TransformBase< TElastix >
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false. */
-  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  const auto infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
   bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( jacGenerator->GetOutput() );
-#ifndef _ELASTIX_BUILD_LIBRARY
+
   /** Track the progress of the generation of the deformation field. */
-  typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
-  progressObserver->ConnectObserver( jacGenerator );
-  progressObserver->SetStartString( "  Progress: " );
-  progressObserver->SetEndString( "%" );
-#endif
+  const auto progressObserver = BaseComponent::IsElastixLibrary() ?
+    nullptr : ProgressCommandType::CreateAndConnect(*jacGenerator);
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
@@ -1677,7 +1637,7 @@ TransformBase< TElastix >
                << "spatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
+  const auto jacWriter = JacobianWriterType::New();
   jacWriter->SetInput( infoChanger->GetOutput() );
   jacWriter->SetFileName( makeFileName.str().c_str() );
 
@@ -1738,7 +1698,7 @@ TransformBase< TElastix >
     JacobianWriterType >                              PixelTypeChangeCommandType;
 
   /** Create an setup Jacobian generator. */
-  typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
+  const auto jacGenerator = JacobianGeneratorType::New();
   jacGenerator->SetTransform( const_cast< const ITKBaseType * >(
       this->GetAsITKBaseType() ) );
   jacGenerator->SetOutputSize(
@@ -1759,19 +1719,15 @@ TransformBase< TElastix >
    * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false.
    */
-  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  const auto infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;
   bool                    retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
   infoChanger->SetOutputDirection( originalDirection );
   infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
   infoChanger->SetInput( jacGenerator->GetOutput() );
-#ifndef _ELASTIX_BUILD_LIBRARY
-  /** Track the progress of the generation of the deformation field. */
-  typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
-  progressObserver->ConnectObserver( jacGenerator );
-  progressObserver->SetStartString( "  Progress: " );
-  progressObserver->SetEndString( "%" );
-#endif
+
+  const auto progressObserver = BaseComponent::IsElastixLibrary() ?
+    nullptr : ProgressCommandType::CreateAndConnect(*jacGenerator);
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
@@ -1780,12 +1736,11 @@ TransformBase< TElastix >
                << "fullSpatialJacobian." << resultImageFormat;
 
   /** Write outputImage to disk. */
-  typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
+  const auto jacWriter = JacobianWriterType::New();
   jacWriter->SetInput( infoChanger->GetOutput() );
   jacWriter->SetFileName( makeFileName.str().c_str() );
   /** Hack to change the pixel type to vector. Not necessary for mhd. */
-  typename PixelTypeChangeCommandType::Pointer jacStartWriteCommand
-    = PixelTypeChangeCommandType::New();
+  const auto jacStartWriteCommand = PixelTypeChangeCommandType::New();
   if( resultImageFormat != "mhd" )
   {
     jacWriter->AddObserver( itk::StartEvent(), jacStartWriteCommand );
@@ -1883,7 +1838,7 @@ TransformBase< TElastix >
   scales = ScalesType( N );
 
   /** Set up grid sampler. */
-  ImageSamplerPointer sampler = ImageSamplerType::New();
+  const auto sampler = ImageSamplerType::New();
   sampler->SetInput(
     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
   sampler->SetInputImageRegion(
@@ -1903,18 +1858,13 @@ TransformBase< TElastix >
     itkExceptionMacro( << "No valid voxels found to estimate the scales." );
   }
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator iter;
-  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end   = sampleContainer->End();
-
   /** initialize */
   scales.Fill( 0.0 );
 
   /** Read fixed coordinates and get Jacobian. */
-  for( iter = begin; iter != end; ++iter )
+  for( const auto& sample : *sampleContainer )
   {
-    const InputPointType & point = ( *iter ).Value().m_ImageCoordinates;
+    const InputPointType & point = sample.m_ImageCoordinates;
     //const JacobianType & jacobian = thisITK->GetJacobian( point );
     JacobianType jacobian; NonZeroJacobianIndicesType nzji;
     thisITK->GetJacobian( point, jacobian, nzji );
@@ -1982,7 +1932,7 @@ TransformBase< TElastix >
   desiredRegion.SetIndex( start );
 
   /** Set up the grid sampler. */
-  ImageSamplerPointer sampler = ImageSamplerType::New();
+  const auto sampler = ImageSamplerType::New();
   sampler->SetInput( this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
   sampler->SetInputImageRegion( desiredRegion );
 
@@ -2000,17 +1950,12 @@ TransformBase< TElastix >
     itkExceptionMacro( << "No valid voxels found to estimate the scales." );
   }
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator iter;
-  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end   = sampleContainer->End();
-
   /** Read fixed coordinates and get Jacobian. */
   JacobianType               jacobian;
   NonZeroJacobianIndicesType nzji;
-  for( iter = begin; iter != end; ++iter )
+  for( const auto& sample : *sampleContainer )
   {
-    const InputPointType & point = ( *iter ).Value().m_ImageCoordinates;
+    const InputPointType & point = sample.m_ImageCoordinates;
     //const JacobianType & jacobian = thisITK->GetJacobian( point );
     thisITK->GetJacobian( point, jacobian, nzji );
 

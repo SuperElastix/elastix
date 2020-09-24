@@ -1,5 +1,6 @@
 variables:
-  ITKv5_VERSION: v5.0.1
+  ITKv5_VERSION: v5.1.1
+  ITK_GIT_URL: https://github.com/InsightSoftwareConsortium/ITK
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
@@ -16,10 +17,7 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone https://github.com/InsightSoftwareConsortium/ITK "$(ITK_SOURCE_DIR)"
-      pushd "$(ITK_SOURCE_DIR)"
-      git checkout $(itk.version)
-      popd
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
     displayName: Clone ITK
   - script: |
       mkdir "$(ITK_BINARY_DIR)"
@@ -38,7 +36,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DITK_DIR="$(ITK_BINARY_DIR)" -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)"
+      cmakeArgs: -G "Visual Studio 15 2017 Win64" -T host=x64 -DITK_DIR="$(ITK_BINARY_DIR)" -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)"
       workingDirectory: "$(ELASTIX_BINARY_DIR)"
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -61,10 +59,7 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone https://github.com/InsightSoftwareConsortium/ITK $(ITK_SOURCE_DIR)
-      pushd $(ITK_SOURCE_DIR)
-      git checkout $(itk.version)
-      popd
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
   - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
@@ -82,7 +77,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
       workingDirectory: $(ELASTIX_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -102,10 +97,7 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone https://github.com/InsightSoftwareConsortium/ITK $(ITK_SOURCE_DIR)
-      pushd $(ITK_SOURCE_DIR)
-      git checkout $(itk.version)
-      popd
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
     displayName: Clone ITK
   - script: |
       mkdir $(ITK_BINARY_DIR)
@@ -124,7 +116,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DUSE_ALL_COMPONENTS=ON $(Build.Repository.LocalPath)
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(Build.Repository.LocalPath)
       workingDirectory: $(ELASTIX_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -134,4 +126,3 @@ jobs:
   - bash: ctest --config Release -VV -j 2
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
-

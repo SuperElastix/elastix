@@ -18,7 +18,23 @@
 
 #include "elxBaseComponent.h"
 
-#include <cmath>
+#include <cmath> // For fmod.
+#include <iomanip> // For setprecision.
+#include <sstream> // For ostringstream.
+
+namespace
+{
+bool IsElastixLibrary(const bool initialValue = true)
+{
+  // By default, assume that this is the elastix library (not the elastix executable).
+
+  // Note that the initialization of this static variable is thread-safe,
+  // as supported by C++11 "magic statics".
+  static const bool isElastixLibrary{ initialValue };
+
+  return isElastixLibrary;
+}
+}
 
 namespace elastix
 {
@@ -58,13 +74,23 @@ BaseComponent::GetComponentLabel( void ) const
 } // end GetComponentLabel()
 
 
+bool BaseComponent::IsElastixLibrary()
+{
+  return ::IsElastixLibrary();
+}
+
+void BaseComponent::InitializeElastixExecutable()
+{
+  ::IsElastixLibrary(false);
+}
+
 /**
  * ****************** ConvertSecondsToDHMS ****************************
  */
 
 std::string
 BaseComponent::ConvertSecondsToDHMS(
-  const double totalSeconds, const unsigned int precision = 0 ) const
+  const double totalSeconds, const unsigned int precision )
 {
   /** Define days, hours, minutes. */
   const std::size_t secondsPerMinute = 60;

@@ -73,7 +73,6 @@ public:
   typedef typename Superclass1::InterpolatorPointerType InterpolatePointerType;
   typedef typename Superclass1::SizeType                SizeType;
   typedef typename Superclass1::IndexType               IndexType;
-  typedef typename Superclass1::PointType               PointType;
   typedef typename Superclass1::PixelType               PixelType;
   typedef typename Superclass1::OutputImageRegionType   OutputImageRegionType;
   typedef typename Superclass1::SpacingType             SpacingType;

@@ -124,12 +124,13 @@ ElastixBase::BeforeAllBase( void )
    * so print an error if they are not present.
    * Print also some info (second boolean = true).
    */
-#ifndef _ELASTIX_BUILD_LIBRARY
-  this->m_FixedImageFileNameContainer = this->GenerateFileNameContainer(
-    "-f", returndummy, true, true );
-  this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
-    "-m", returndummy, true, true );
-#endif
+  if (!BaseComponent::IsElastixLibrary())
+  {
+    this->m_FixedImageFileNameContainer = this->GenerateFileNameContainer(
+      "-f", returndummy, true, true );
+    this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
+      "-m", returndummy, true, true );
+  }
   /** Read the fixed and moving mask filenames. These are not obliged options,
    * so do not print any errors if they are not present.
    * Do print some info (second boolean = true).
@@ -269,20 +270,21 @@ ElastixBase::BeforeAllTransformixBase( void )
 
   /** Check Command line options and print them to the logfile. */
   elxout << "Command line options from ElastixBase:" << std::endl;
-#ifndef _ELASTIX_BUILD_LIBRARY
-  /** Read the input image filenames. These are not obliged options,
-   * so do not print an error if they are not present.
-   * Print also some info (second boolean = true)
-   * Save the result in the moving image file name container.
-   */
-  int inreturndummy = 0;
-  this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
-    "-in", inreturndummy, false, true );
-  if( inreturndummy != 0 )
+  if (!BaseComponent::IsElastixLibrary())
   {
-    elxout << "-in       unspecified, so no input image specified" << std::endl;
+    /** Read the input image filenames. These are not obliged options,
+     * so do not print an error if they are not present.
+     * Print also some info (second boolean = true)
+     * Save the result in the moving image file name container.
+     */
+    int inreturndummy = 0;
+    this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
+      "-in", inreturndummy, false, true );
+    if( inreturndummy != 0 )
+    {
+      elxout << "-in       unspecified, so no input image specified" << std::endl;
+    }
   }
-#endif
   /** Check for appearance of "-out". */
   std::string check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
   if( check == "" )
@@ -312,12 +314,12 @@ ElastixBase::BeforeAllTransformixBase( void )
   {
     elxout << "-threads  " << check << std::endl;
   }
-#ifndef _ELASTIX_BUILD_LIBRARY
-  /** Print "-tp". */
-  check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
-  elxout << "-tp       " << check << std::endl;
-#endif
-
+  if (!BaseComponent::IsElastixLibrary())
+  {
+    /** Print "-tp". */
+    check = this->GetConfiguration()->GetCommandLineArgument("-tp");
+    elxout << "-tp       " << check << std::endl;
+  }
   /** Check the very important UseDirectionCosines parameter. */
   bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines,
     "UseDirectionCosines", 0 );

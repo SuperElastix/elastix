@@ -270,7 +270,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 // the ThreadedGenerateData method after setting the correct region for this
 // thread.
 template< class TInputImage, class TOutputVectorContainer >
-ITK_THREAD_RETURN_TYPE
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 ::ThreaderCallback( void * arg )
 {

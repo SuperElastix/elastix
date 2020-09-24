@@ -107,11 +107,6 @@ public:
     IndexMapValueType >                IndexMapType;
   typedef IndexMapType::value_type IndexMapEntryType;
 
-  /** Functions to get the CreatorMap and the IndexMap.*/
-  CreatorMapType & GetCreatorMap( void );
-
-  IndexMapType & GetIndexMap( void );
-
   /** Functions to set an entry in a map.*/
   int SetCreator(
     const ComponentDescriptionType & name,
@@ -128,23 +123,23 @@ public:
   /** Functions to get an entry in a map */
   PtrToCreator GetCreator(
     const ComponentDescriptionType & name,
-    IndexType i );
+    IndexType i ) const;
 
   IndexType GetIndex(
     const PixelTypeDescriptionType & fixedPixelType,
     ImageDimensionType fixedDimension,
     const PixelTypeDescriptionType & movingPixelType,
-    ImageDimensionType movingDimension );
+    ImageDimensionType movingDimension ) const;
 
 protected:
 
   ComponentDatabase(){}
   ~ComponentDatabase() override{}
 
+private:
+
   CreatorMapType CreatorMap;
   IndexMapType   IndexMap;
-
-private:
 
   ComponentDatabase( const Self & ); // purposely not implemented
   void operator=( const Self & );    // purposely not implemented

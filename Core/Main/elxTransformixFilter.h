@@ -47,7 +47,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( Self, itk::ImageSource );
+  itkTypeMacro( TransformixFilter, itk::ImageSource );
 
   /** Typedefs. */
   typedef elastix::TransformixMain             TransformixMainType;

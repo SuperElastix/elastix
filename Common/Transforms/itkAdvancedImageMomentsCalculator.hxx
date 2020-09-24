@@ -54,8 +54,8 @@ template< typename TImage >
 AdvancedImageMomentsCalculator< TImage >::AdvancedImageMomentsCalculator(void)
 {
   m_Valid = false;
-  m_Image = ITK_NULLPTR;
-  m_SpatialObjectMask = ITK_NULLPTR;
+  m_Image = nullptr;
+  m_SpatialObjectMask = nullptr;
   m_M0 = NumericTraits< ScalarType >::ZeroValue();
   m_M1.Fill(NumericTraits< typename VectorType::ValueType >::ZeroValue());
   m_M2.Fill(NumericTraits< typename MatrixType::ValueType >::ZeroValue());
@@ -202,63 +202,7 @@ AdvancedImageMomentsCalculator< TImage >
 
     ++it;
     }
-
-  // Throw an error if the total mass is zero
-  if ( m_M0 == 0.0 )
-    {
-    itkExceptionMacro(
-      << "Compute(): Total Mass of the image was zero. Aborting here to prevent division by zero later on.");
-    }
-
-  // Normalize using the total mass
-  for ( unsigned int i = 0; i < ImageDimension; i++ )
-    {
-    m_Cg[i] /= m_M0;
-    m_M1[i] /= m_M0;
-    for ( unsigned int j = 0; j < ImageDimension; j++ )
-      {
-      m_M2[i][j] /= m_M0;
-      m_Cm[i][j] /= m_M0;
-      }
-    }
-
-  // Center the second order moments
-  for ( unsigned int i = 0; i < ImageDimension; i++ )
-    {
-    for ( unsigned int j = 0; j < ImageDimension; j++ )
-      {
-      m_M2[i][j] -= m_M1[i] * m_M1[j];
-      m_Cm[i][j] -= m_Cg[i] * m_Cg[j];
-      }
-    }
-
-  // Compute principal moments and axes
-  vnl_symmetric_eigensystem< double > eigen( m_Cm.GetVnlMatrix() );
-  vnl_diag_matrix< double >           pm = eigen.D;
-  for ( unsigned int i = 0; i < ImageDimension; i++ )
-    {
-    m_Pm[i] = pm(i) * m_M0;
-    }
-  m_Pa = eigen.V.transpose();
-
-  // Add a final reflection if needed for a proper rotation,
-  // by multiplying the last row by the determinant
-  vnl_real_eigensystem                     eigenrot( m_Pa.GetVnlMatrix() );
-  vnl_diag_matrix< std::complex< double > > eigenval = eigenrot.D;
-  std::complex< double >                    det(1.0, 0.0);
-
-  for ( unsigned int i = 0; i < ImageDimension; i++ )
-    {
-    det *= eigenval(i);
-    }
-
-  for ( unsigned int i = 0; i < ImageDimension; i++ )
-    {
-    m_Pa[ImageDimension - 1][i] *= std::real(det);
-    }
-
-  /* Remember that the moments are valid */
-  m_Valid = 1;
+  DoPostProcessing();
 }
 
 //----------------------------------------------------------------------
@@ -347,7 +291,7 @@ AdvancedImageMomentsCalculator< TImage >
 */
 
 template< typename TImage >
-ITK_THREAD_RETURN_TYPE
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedImageMomentsCalculator< TImage >
 ::ComputeThreaderCallback(void * arg)
 {
@@ -473,7 +417,15 @@ AdvancedImageMomentsCalculator< TImage >
       this->m_ComputePerThreadVariables[k].st_M0 = 0;
     }
   }
+  DoPostProcessing();
+}
 
+
+template< typename TImage >
+void
+AdvancedImageMomentsCalculator< TImage >
+::DoPostProcessing()
+{
   // Throw an error if the total mass is zero
   if (this->m_M0 == 0.0)
   {
@@ -504,7 +456,7 @@ AdvancedImageMomentsCalculator< TImage >
   }
 
   // Compute principal moments and axes
-  vnl_symmetric_eigensystem< double > eigen(m_Cm.GetVnlMatrix());
+  vnl_symmetric_eigensystem< double > eigen(m_Cm.GetVnlMatrix().as_ref());
   vnl_diag_matrix< double >           pm = eigen.D;
   for (unsigned int i = 0; i < ImageDimension; i++)
   {
@@ -514,7 +466,7 @@ AdvancedImageMomentsCalculator< TImage >
 
   // Add a final reflection if needed for a proper rotation,
   // by multiplying the last row by the determinant
-  vnl_real_eigensystem                     eigenrot(m_Pa.GetVnlMatrix());
+  vnl_real_eigensystem                     eigenrot(m_Pa.GetVnlMatrix().as_ref());
   vnl_diag_matrix< std::complex< double > > eigenval = eigenrot.D;
   std::complex< double >                    det(1.0, 0.0);
 

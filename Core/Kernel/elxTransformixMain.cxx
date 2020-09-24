@@ -29,6 +29,7 @@
 #include "elxMacro.h"
 
 #ifdef ELASTIX_USE_OPENCL
+#include "itkOpenCLContext.h"
 #include "itkOpenCLSetup.h"
 #endif
 
@@ -98,9 +99,10 @@ TransformixMain::Run( void )
   itk::CreateOpenCLLogger( "transformix", this->m_Configuration->GetCommandLineArgument( "-out" ) );
 #endif
 
-#ifdef _ELASTIX_BUILD_LIBRARY
-  this->GetElastixBase()->SetConfigurations( this->m_Configurations );
-#endif // #ifdef _ELASTIX_BUILD_LIBRARY
+  if (BaseComponent::IsElastixLibrary())
+  {
+    this->GetElastixBase()->SetConfigurations( this->m_Configurations );
+  }
 
   /** Set some information in the ElastixBase. */
   this->GetElastixBase()->SetConfiguration( this->m_Configuration );
@@ -170,7 +172,7 @@ TransformixMain::Run( void )
  */
 
 int
-TransformixMain::Run( ArgumentMapType & argmap )
+TransformixMain::Run( const ArgumentMapType & argmap )
 {
   this->EnterCommandLineArguments( argmap );
   return this->Run();
@@ -183,8 +185,8 @@ TransformixMain::Run( ArgumentMapType & argmap )
 
 int
 TransformixMain::Run(
-  ArgumentMapType & argmap,
-  ParameterMapType & inputMap )
+  const ArgumentMapType & argmap,
+  const ParameterMapType & inputMap )
 {
   this->EnterCommandLineArguments( argmap, inputMap );
   return this->Run();
@@ -197,8 +199,8 @@ TransformixMain::Run(
 
 int
 TransformixMain::Run(
-  ArgumentMapType & argmap,
-  std::vector< ParameterMapType > & inputMaps )
+  const ArgumentMapType & argmap,
+  const std::vector< ParameterMapType > & inputMaps )
 {
   this->EnterCommandLineArguments( argmap, inputMaps );
   return this->Run();

@@ -70,7 +70,7 @@
 #define elxGetNumberOfMacro( _name ) \
   virtual unsigned int GetNumberOf##_name##s( void ) const \
   { \
-    if( this->Get##_name##Container() != 0 ) \
+    if( this->Get##_name##Container() != nullptr ) \
     { \
       return this->Get##_name##Container()->Size(); \
     } \
@@ -367,7 +367,7 @@ public:
 protected:
 
   ElastixBase();
-  ~ElastixBase() override {}
+  ~ElastixBase() override = default;
 
   ConfigurationPointer     m_Configuration;
   DBIndexType              m_DBIndex;
@@ -467,8 +467,8 @@ public:
     } // GenerateImageContainer()
 
 
-    MultipleImageLoader(){}
-    ~MultipleImageLoader(){}
+    MultipleImageLoader() = default;
+    ~MultipleImageLoader() = default;
 
   };
 
@@ -494,8 +494,8 @@ public:
 
 
     /** Constructor and destructor. */
-    MultipleDataObjectFiller(){}
-    ~MultipleDataObjectFiller(){}
+    MultipleDataObjectFiller() = default;
+    ~MultipleDataObjectFiller() = default;
   };
 
 private:

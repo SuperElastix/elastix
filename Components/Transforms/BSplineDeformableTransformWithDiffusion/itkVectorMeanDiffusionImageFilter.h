@@ -105,7 +105,7 @@ public:
    *
    * \sa ImageToImageFilter::GenerateInputRequestedRegion().
    */
-  void GenerateInputRequestedRegion() throw( InvalidRequestedRegionError ) override;
+  void GenerateInputRequestedRegion() override;
 
   /** Set & Get the NumberOfIterations. */
   itkSetMacro( NumberOfIterations, unsigned int );

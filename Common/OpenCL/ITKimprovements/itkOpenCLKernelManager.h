@@ -136,7 +136,7 @@ public:
 protected:
 
   OpenCLKernelManager();
-  virtual ~OpenCLKernelManager();
+  ~OpenCLKernelManager() override;
 
   bool CheckArgumentReady( const std::size_t kernelId );
 

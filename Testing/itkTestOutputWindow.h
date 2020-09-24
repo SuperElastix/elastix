@@ -61,13 +61,13 @@ public:
   itkTypeMacro( TestOutputWindow, OutputWindow );
 
   /** Overloaded */
-  virtual void DisplayText( const char * ) override;
+  void DisplayText( const char * ) override;
 
 protected:
 
   TestOutputWindow() {}
-  virtual ~TestOutputWindow() {}
-  virtual void PrintSelf( std::ostream & os, Indent indent ) const;
+  ~TestOutputWindow() override {}
+  void PrintSelf( std::ostream & os, Indent indent ) const override;
 
 private:
 

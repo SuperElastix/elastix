@@ -1,4 +1,6 @@
-cmake_minimum_required( VERSION 2.8 )
+# Minimum CMake version. Equal to ITK 5.0.1 ITK_OLDEST_VALIDATED_POLICIES_VERSION,
+# and to the CMake version used to build the elastix 5.0.0 Linux binaries.
+cmake_minimum_required( VERSION 3.10.2 )
 
 project( elastix )
 set(CMAKE_CXX_STANDARD 11)
@@ -9,14 +11,6 @@ endif()
 
 #---------------------------------------------------------------------
 cmake_policy( SET CMP0012 NEW )
-if( POLICY CMP0033 )
-  # This policy was introduced in cmake 3, so we need to check for its
-  # existence. When the minimum cmake version above is upgraded to 3
-  # this if(POLICY) check can be removed.
-  cmake_policy( SET CMP0033 OLD )
-endif()
-
-cmake_policy( SET CMP0007 OLD )
 cmake_policy( SET CMP0042 NEW )
 
 #---------------------------------------------------------------------
@@ -34,39 +28,14 @@ string( REGEX REPLACE "([0-9]+)\\." "" ELASTIX_VERSION_MINOR "${ELASTIX_VERSION}
 #---------------------------------------------------------------------
 include( CTest )
 
-#---------------------------------------------------------------------
-# Generate executable, static library or dynamic library.
-mark_as_advanced( ELASTIX_BUILD_EXECUTABLE )
-option( ELASTIX_BUILD_EXECUTABLE "Generate executable or library?" ON )
-
-if( NOT ELASTIX_BUILD_EXECUTABLE )
-  add_definitions( -D_ELASTIX_BUILD_LIBRARY )
-
   # The following may make smaller and quicker loading libraries,
   # that hides unnecessary symbols. Available from CMake 3.0.0.
   #set( CMAKE_C_VISIBILITY_PRESET hidden )
   #set( CMAKE_CXX_VISIBILITY_PRESET hidden )
 
-  mark_as_advanced( BUILD_SHARED_LIBS )
-  option( BUILD_SHARED_LIBS "Build shared libraries?" OFF )
-  if( BUILD_SHARED_LIBS )
-    add_definitions( -D_ELASTIX_USE_SHARED_LIBRARY )
-
-    # We need to make sure that also the ITK is compiled with shared
-    # libraries on. Related to flag (ITK_)BUILD_SHARED_LIBS. todo
-
-    # In order to compile a shared library, all static sub-libraries
-    # need to build position independend code.
-    # Otherwise an error similar to the following is raised:
-    #   relocation R_X86_64_32S against `.bss' can not be used when
-    #   making a shared object; recompile with -fPIC
-    set( CMAKE_POSITION_INDEPENDENT_CODE ON )
-  endif()
-endif()
-
 #---------------------------------------------------------------------
 # Find ITK.
-find_package( ITK 5.0 REQUIRED )
+find_package( ITK 5.1.1 REQUIRED )
 include( ${ITK_USE_FILE} )
 
 #---------------------------------------------------------------------
@@ -445,6 +414,7 @@ option( ELASTIX_USE_GTEST "Use GoogleTest to test Elastix implementation" OFF )
 if( ELASTIX_USE_GTEST )
   enable_testing()
   add_subdirectory( Common/GTesting )
+  add_subdirectory( Core/Main/GTesting )
 endif()
 
 #---------------------------------------------------------------------
@@ -587,16 +557,14 @@ endif()
 #---------------------------------------------------------------------
 # Make it easier to include elastix functionality in other programs.
 
-# Save library dependencies.
-# The library dependencies file.
-set( elxLIBRARY_DEPENDS_FILE ${elastix_BINARY_DIR}/elxLibraryDepends.cmake )
-export_library_dependencies( ${elxLIBRARY_DEPENDS_FILE} )
+
+
 
 # The build settings file. (necessary for elastix?)
 #set( ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake )
 
-elastix_export_target( elastix )
-elastix_export_target( transformix )
+elastix_export_target( elastix_lib )
+elastix_export_target( transformix_lib )
 
 foreach( LIB IN LISTS AllComponentLibs )
   elastix_export_target( ${LIB} )

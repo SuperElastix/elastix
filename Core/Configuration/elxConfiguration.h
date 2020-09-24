@@ -75,7 +75,7 @@ public:
   typedef ParameterMapInterfaceType::Pointer ParameterMapInterfacePointer;
 
   /** Get and Set CommandLine arguments into the argument map. */
-  const std::string GetCommandLineArgument( const std::string & key ) const;
+  std::string GetCommandLineArgument( const std::string & key ) const;
 
   void SetCommandLineArgument( const std::string & key, const std::string & value );
 
@@ -93,7 +93,7 @@ public:
   virtual int Initialize( const CommandLineArgumentMapType & _arg );
 
   virtual int Initialize( const CommandLineArgumentMapType & _arg,
-    ParameterFileParserType::ParameterMapType & inputMap );
+    const ParameterFileParserType::ParameterMapType & inputMap );
 
   /** True, if Initialize was successfully called. */
   virtual bool IsInitialized( void ) const; //to elxconfigurationbase

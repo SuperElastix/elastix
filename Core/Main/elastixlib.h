@@ -85,8 +85,8 @@ public:
    */
   int RegisterImages( ImagePointer fixedImage,
     ImagePointer movingImage,
-    ParameterMapType & parameterMap,
-    std::string outputPath,
+    const ParameterMapType & parameterMap,
+    const std::string & outputPath,
     bool performLogging,
     bool performCout,
     ImagePointer fixedMask = nullptr,
@@ -94,8 +94,8 @@ public:
 
   int RegisterImages( ImagePointer fixedImage,
     ImagePointer movingImage,
-    std::vector< ParameterMapType > & parameterMaps,
-    std::string outputPath,
+    const std::vector< ParameterMapType > & parameterMaps,
+    const std::string & outputPath,
     bool performLogging,
     bool performCout,
     ImagePointer fixedMask = nullptr,
@@ -110,10 +110,6 @@ public:
 
   /** Get transform parameters of all registration steps. */
   ParameterMapListType GetTransformParameterMapList( void );
-
-  std::string ConvertSecondsToDHMS( const double totalSeconds, const unsigned int precision = 0 );
-
-  std::string GetCurrentDateAndTime( void );
 
 private:
 
