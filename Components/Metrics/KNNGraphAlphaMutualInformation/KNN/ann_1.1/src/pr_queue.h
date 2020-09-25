@@ -1,3 +1,4 @@
+#pragma once
 //----------------------------------------------------------------------
 // File:			pr_queue.h
 // Programmer:		Sunil Arya and David Mount

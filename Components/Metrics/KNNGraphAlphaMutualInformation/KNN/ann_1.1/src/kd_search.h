@@ -1,3 +1,4 @@
+#pragma once
 //----------------------------------------------------------------------
 // File:			kd_search.h
 // Programmer:		Sunil Arya and David Mount

@@ -1,3 +1,4 @@
+#pragma once
 //----------------------------------------------------------------------
 //	File:			ANNperf.h
 //	Programmer:		Sunil Arya and David Mount

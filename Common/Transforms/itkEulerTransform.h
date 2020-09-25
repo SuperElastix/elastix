@@ -1,3 +1,4 @@
+#pragma once
 /*=========================================================================
  *
  *  Copyright UMC Utrecht and contributors

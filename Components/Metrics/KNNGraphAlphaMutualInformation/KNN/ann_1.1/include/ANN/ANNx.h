@@ -1,3 +1,4 @@
+#pragma once
 //----------------------------------------------------------------------
 // File:			ANNx.h
 // Programmer: 		Sunil Arya and David Mount

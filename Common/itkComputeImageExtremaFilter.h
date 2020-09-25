@@ -1,3 +1,4 @@
+#pragma once
 /*=========================================================================
  *
  *  Copyright Insight Software Consortium

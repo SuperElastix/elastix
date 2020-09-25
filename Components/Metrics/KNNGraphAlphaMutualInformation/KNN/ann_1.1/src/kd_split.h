@@ -1,3 +1,4 @@
+#pragma once
 //----------------------------------------------------------------------
 // File:			kd_split.h
 // Programmer:		Sunil Arya and David Mount

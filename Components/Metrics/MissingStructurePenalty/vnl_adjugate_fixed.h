@@ -1,3 +1,4 @@
+#pragma once
 // This is core/vnl/vnl_adjugate_fixed.h
 #ifndef vnl_adjugate_fixed_h_
 #define vnl_adjugate_fixed_h_

@@ -1,3 +1,4 @@
+#pragma once
 //----------------------------------------------------------------------
 // File:			bd_tree.h
 // Programmer:		David Mount
