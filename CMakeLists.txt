@@ -277,6 +277,11 @@ if( MSVC )
     /D_CRT_SECURE_NO_DEPRECATE
     /D_CRT_TIME_FUNCTIONS_NO_DEPRECATE )
 
+  # Force to always compile with W4
+  # https://stackoverflow.com/questions/2368811/how-to-set-warning-level-in-cmake
+  string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+
   # Increases address capacity
   if( WIN32 )
     set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj" )
