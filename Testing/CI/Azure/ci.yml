@@ -46,6 +46,12 @@ jobs:
   - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
+  - script: |
+      pushd "$(ELASTIX_BINARY_DIR)"
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      MSBuild.exe Experimental.vcxproj -p:Configuration=Release
+      popd
+    displayName: 'To my.cdash.org/index.php?project=elastix'
 - job: Ubuntu
   timeoutInMinutes: 0
   pool:
