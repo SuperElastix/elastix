@@ -87,6 +87,12 @@ source_group( "ComponentBaseClasses" FILES ${ComponentBaseClassFiles} )
 source_group( "ProgressCommand" FILES ${ProgressCommandFiles} )
 
 #---------------------------------------------------------------------
+
+configure_file(
+  elxVersionMacros.h.in
+  elxVersionMacros.h)
+
+#---------------------------------------------------------------------
 # Create the elxCore library.
 
 add_library( elxCore STATIC

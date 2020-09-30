@@ -14,18 +14,6 @@ cmake_policy( SET CMP0012 NEW )
 cmake_policy( SET CMP0042 NEW )
 
 #---------------------------------------------------------------------
-# Get version information.
-
-# Get the version number of elastix
-file( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h
-  ELASTIX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
-string( SUBSTRING ${ELASTIX_VERSION} 26 3 ELASTIX_VERSION )
-
-# Split version in major minor. Assuming no patch number, just x.y
-string( REGEX MATCH "[0-9]+" ELASTIX_VERSION_MAJOR "${ELASTIX_VERSION}" )
-string( REGEX REPLACE "([0-9]+)\\." "" ELASTIX_VERSION_MINOR "${ELASTIX_VERSION}" )
-
-#---------------------------------------------------------------------
 include( CTest )
 
   # The following may make smaller and quicker loading libraries,
@@ -42,6 +30,10 @@ include( ${ITK_USE_FILE} )
 # Add the CMake dir as an additional module path,
 # so that CMake is able to find the FindPackage modules.
 list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake )
+
+#---------------------------------------------------------------------
+# Get version information.
+include( elastixVersion )
 
 # Function for exporting targets
 include(elastixExportTarget)
@@ -427,10 +419,9 @@ if( ELASTIX_ENABLE_PACKAGER )
   # Version information
   # If the next line is uncommented the package name will be like
   # elastix-4.3-win64 instead of elastix-4.3.0-win64
-  #set( CPACK_PACKAGE_VERSION ${ELASTIX_VERSION} )
   set( CPACK_PACKAGE_VERSION_MAJOR ${ELASTIX_VERSION_MAJOR} )
   set( CPACK_PACKAGE_VERSION_MINOR ${ELASTIX_VERSION_MINOR} )
-  set( CPACK_PACKAGE_VERSION_PATCH "0" )
+  set( CPACK_PACKAGE_VERSION_PATCH ${ELASTIX_VERSION_PATCH} )
 
   # Also install the copyright file, since when the user enables packaging
   # we assume that the package is meant to distribute.
