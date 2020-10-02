@@ -53,8 +53,7 @@ namespace elastix
  * \li 1 fixed image pyramid is used.
  * This will save a bit of memory and computation time.
  * In general however, it is better to use the same number of samplers as
- * metrics. Note that some metrics (ViolaWellsMutualInformation for example)
- * do not support the image sampler functionality (yet).
+ * metrics.
  *
  * The parameters used in this class are:\n
  * \parameter Registration: Select this registration framework as follows:\n
