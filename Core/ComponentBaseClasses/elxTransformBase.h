@@ -27,6 +27,9 @@
 #include "elxComponentDatabase.h"
 #include "elxProgressCommand.h"
 
+// ITK header file:
+#include <itkImage.h>
+
 #include <memory> // For unique_ptr.
 
 namespace elastix
