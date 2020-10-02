@@ -19,8 +19,11 @@
 #define __elxBaseComponentSE_h
 
 #include "elxBaseComponent.h"
-#include "itkMacro.h" // For ITK_DISALLOW_COPY_AND_ASSIGN.
-#include "itkWeakPointer.h"
+#include "elxConfiguration.h"
+
+ // ITK header files:
+#include <itkMacro.h> // For ITK_DISALLOW_COPY_AND_ASSIGN.
+#include <itkWeakPointer.h>
 
 namespace elastix
 {
