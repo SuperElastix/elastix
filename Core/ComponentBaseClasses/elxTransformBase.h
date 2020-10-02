@@ -142,22 +142,20 @@ public:
   itkTypeMacro( TransformBase, BaseComponentSE );
 
   /** Typedef's from Superclass. */
-  using typename Superclass::ElastixType;
   using typename Superclass::ElastixPointer;
-  using typename Superclass::ConfigurationType;
   using typename Superclass::ConfigurationPointer;
   using typename Superclass::RegistrationType;
   using typename Superclass::RegistrationPointer;
 
-  typedef typename ConfigurationType
+  typedef Configuration
     ::CommandLineArgumentMapType CommandLineArgumentMapType;
-  typedef typename ConfigurationType
+  typedef Configuration
     ::CommandLineEntryType CommandLineEntryType;
 
   /** Elastix typedef's. */
-  typedef typename ElastixType::CoordRepType    CoordRepType;
-  typedef typename ElastixType::FixedImageType  FixedImageType;
-  typedef typename ElastixType::MovingImageType MovingImageType;
+  typedef typename TElastix::CoordRepType    CoordRepType;
+  typedef typename TElastix::FixedImageType  FixedImageType;
+  typedef typename TElastix::MovingImageType MovingImageType;
 
   /** Typedef's from ComponentDatabase. */
   typedef ComponentDatabase                               ComponentDatabaseType;
@@ -206,7 +204,7 @@ public:
   typedef typename OptimizerType::ScalesType          ScalesType;
 
   /** Typedef that is used in the elastix dll version. */
-  typedef typename ElastixType::ParameterMapType ParameterMapType;
+  typedef typename TElastix::ParameterMapType ParameterMapType;
 
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )
