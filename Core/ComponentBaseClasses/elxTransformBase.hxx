@@ -573,7 +573,7 @@ TransformBase< TElastix >
 {
   /** Create a new configuration, which will be initialized with
    * the transformParameterFileName. */
-  const auto configurationInitialTransform = ConfigurationType::New();
+  const auto configurationInitialTransform = Configuration::New();
 
   /** Create argmapInitialTransform. */
   CommandLineArgumentMapType argmapInitialTransform;
