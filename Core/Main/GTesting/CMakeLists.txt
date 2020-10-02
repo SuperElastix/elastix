@@ -1,6 +1,7 @@
 add_executable(ElastixLibGTest
   ElastixFilterGTest.cxx
   ElastixLibGTest.cxx
+  itkElastixRegistrationMethodGTest.cxx
 )
 
 target_link_libraries( ElastixLibGTest
