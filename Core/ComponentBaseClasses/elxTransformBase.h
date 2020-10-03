@@ -27,8 +27,9 @@
 #include "elxComponentDatabase.h"
 #include "elxProgressCommand.h"
 
-// ITK header file:
+// ITK header files:
 #include <itkImage.h>
+#include <itkOptimizerParameters.h>
 
 #include <memory> // For unique_ptr.
 
@@ -181,9 +182,9 @@ public:
   typedef typename
     CombinationTransformType::InitialTransformType InitialTransformType;
 
-  /** Typedef's from Transform. */
-  typedef typename ITKBaseType::ParametersType ParametersType;
-  typedef typename ParametersType::ValueType   ValueType;
+  /** Typedef's for parameters. */
+  using ValueType = double;
+  using ParametersType = itk::OptimizerParameters<ValueType>;
 
   /** Typedef's for TransformPoint. */
   typedef typename ITKBaseType::InputPointType  InputPointType;
