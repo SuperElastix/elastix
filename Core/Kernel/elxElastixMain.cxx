@@ -34,7 +34,7 @@
 #include "itkOpenCLSetup.h"
 #endif
 
-namespace elastix
+namespace
 {
 
 using namespace xl;
@@ -46,16 +46,21 @@ using namespace xl;
  * by xoutSetup.
  */
 
-/** \todo move to ElastixMain class, as static vars? */
+struct Data
+{
+  /** xout TargetCells. */
+  xoutbase_type   Xout;
+  xoutsimple_type WarningXout;
+  xoutsimple_type ErrorXout;
+  xoutsimple_type StandardXout;
+  xoutsimple_type CoutOnlyXout;
+  xoutsimple_type LogOnlyXout;
+  std::ofstream   LogFileStream;
+};
 
-/** xout TargetCells. */
-xoutbase_type   g_xout;
-xoutsimple_type g_WarningXout;
-xoutsimple_type g_ErrorXout;
-xoutsimple_type g_StandardXout;
-xoutsimple_type g_CoutOnlyXout;
-xoutsimple_type g_LogOnlyXout;
-std::ofstream   g_LogFileStream;
+Data g_data;
+
+} // end unnamed namespace
 
 /**
  * ********************* xoutSetup ******************************
@@ -65,19 +70,16 @@ std::ofstream   g_LogFileStream;
  */
 
 int
-xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
+elastix::xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
 {
-  /** The namespace of xout. */
-  using namespace xl;
-
   int returndummy = 0;
-  set_xout( &g_xout );
+  set_xout( &g_data.Xout );
 
   if( setupLogging )
   {
     /** Open the logfile for writing. */
-    g_LogFileStream.open( logfilename );
-    if( !g_LogFileStream.is_open() )
+    g_data.LogFileStream.open( logfilename );
+    if( !g_data.LogFileStream.is_open() )
     {
       std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
       return 1;
@@ -87,7 +89,7 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
   /** Set std::cout and the logfile as outputs of xout. */
   if( setupLogging )
   {
-    returndummy |= xout.AddOutput( "log", &g_LogFileStream );
+    returndummy |= xout.AddOutput( "log", &g_data.LogFileStream );
   }
   if( setupCout )
   {
@@ -95,24 +97,24 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
   }
 
   /** Set outputs of LogOnly and CoutOnly. */
-  returndummy |= g_LogOnlyXout.AddOutput( "log", &g_LogFileStream );
-  returndummy |= g_CoutOnlyXout.AddOutput( "cout", &std::cout );
+  returndummy |= g_data.LogOnlyXout.AddOutput( "log", &g_data.LogFileStream );
+  returndummy |= g_data.CoutOnlyXout.AddOutput( "cout", &std::cout );
 
   /** Copy the outputs to the warning-, error- and standard-xouts. */
-  g_WarningXout.SetOutputs( xout.GetCOutputs() );
-  g_ErrorXout.SetOutputs( xout.GetCOutputs() );
-  g_StandardXout.SetOutputs( xout.GetCOutputs() );
+  g_data.WarningXout.SetOutputs( xout.GetCOutputs() );
+  g_data.ErrorXout.SetOutputs( xout.GetCOutputs() );
+  g_data.StandardXout.SetOutputs( xout.GetCOutputs() );
 
-  g_WarningXout.SetOutputs( xout.GetXOutputs() );
-  g_ErrorXout.SetOutputs( xout.GetXOutputs() );
-  g_StandardXout.SetOutputs( xout.GetXOutputs() );
+  g_data.WarningXout.SetOutputs( xout.GetXOutputs() );
+  g_data.ErrorXout.SetOutputs( xout.GetXOutputs() );
+  g_data.StandardXout.SetOutputs( xout.GetXOutputs() );
 
   /** Link the warning-, error- and standard-xouts to xout. */
-  returndummy |= xout.AddTargetCell( "warning", &g_WarningXout );
-  returndummy |= xout.AddTargetCell( "error", &g_ErrorXout );
-  returndummy |= xout.AddTargetCell( "standard", &g_StandardXout );
-  returndummy |= xout.AddTargetCell( "logonly", &g_LogOnlyXout );
-  returndummy |= xout.AddTargetCell( "coutonly", &g_CoutOnlyXout );
+  returndummy |= xout.AddTargetCell( "warning", &g_data.WarningXout );
+  returndummy |= xout.AddTargetCell( "error", &g_data.ErrorXout );
+  returndummy |= xout.AddTargetCell( "standard", &g_data.StandardXout );
+  returndummy |= xout.AddTargetCell( "logonly", &g_data.LogOnlyXout );
+  returndummy |= xout.AddTargetCell( "coutonly", &g_data.CoutOnlyXout );
 
   /** Format the output. */
   xout[ "standard" ] << std::fixed;
@@ -123,6 +125,9 @@ xoutSetup( const char * logfilename, bool setupLogging, bool setupCout )
 
 } // end xoutSetup()
 
+
+namespace elastix
+{
 
 /**
  * ********************* Constructor ****************************
