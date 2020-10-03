@@ -141,11 +141,8 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( TransformBase, BaseComponentSE );
 
-  /** Typedef's from Superclass. */
-  using typename Superclass::ElastixPointer;
-  using typename Superclass::ConfigurationPointer;
-  using typename Superclass::RegistrationType;
-  using typename Superclass::RegistrationPointer;
+  /** Typedef from Superclass. */
+  typedef typename Superclass::RegistrationType RegistrationType;
 
   typedef Configuration
     ::CommandLineArgumentMapType CommandLineArgumentMapType;

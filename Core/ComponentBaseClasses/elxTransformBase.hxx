@@ -524,7 +524,7 @@ TransformBase< TElastix >
 ::ReadInitialTransformFromVector( const size_t index )
 {
   /** Retrieve configuration object from internally stored vector of configuration objects. */
-  ConfigurationPointer configurationInitialTransform
+  const auto configurationInitialTransform
     = this->GetElastix()->GetConfiguration( index );
 
   /** Read the InitialTransform name. */
