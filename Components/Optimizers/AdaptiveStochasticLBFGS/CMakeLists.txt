@@ -1,5 +1,5 @@
 
-ADD_ELXCOMPONENT( AdaptiveStochasticLBFGS
+ADD_ELXCOMPONENT( AdaptiveStochasticLBFGS OFF # OFF by default after elastix 5.0.1
  elxAdaptiveStochasticLBFGS.h
  elxAdaptiveStochasticLBFGS.hxx
  elxAdaptiveStochasticLBFGS.cxx
