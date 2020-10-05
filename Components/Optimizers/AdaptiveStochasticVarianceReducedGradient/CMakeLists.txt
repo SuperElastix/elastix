@@ -1,5 +1,5 @@
 
-ADD_ELXCOMPONENT( AdaptiveStochasticVarianceReducedGradient
+ADD_ELXCOMPONENT( AdaptiveStochasticVarianceReducedGradient OFF # OFF by default after elastix 5.0.1
  elxAdaptiveStochasticVarianceReducedGradient.h
  elxAdaptiveStochasticVarianceReducedGradient.hxx
  elxAdaptiveStochasticVarianceReducedGradient.cxx
