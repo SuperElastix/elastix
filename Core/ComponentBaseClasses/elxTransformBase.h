@@ -22,6 +22,7 @@
 #include "elxMacro.h"
 
 #include "elxBaseComponentSE.h"
+#include "elxElastixBase.h"
 #include "itkAdvancedTransform.h"
 #include "itkAdvancedCombinationTransform.h"
 #include "elxComponentDatabase.h"
@@ -151,7 +152,7 @@ public:
     ::CommandLineEntryType CommandLineEntryType;
 
   /** Elastix typedef's. */
-  typedef typename TElastix::CoordRepType    CoordRepType;
+  typedef ElastixBase::CoordRepType CoordRepType;
   typedef typename TElastix::FixedImageType  FixedImageType;
   typedef typename TElastix::MovingImageType MovingImageType;
 

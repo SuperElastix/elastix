@@ -31,13 +31,16 @@
 #include "elxBaseComponent.h"
 #include "elxComponentDatabase.h"
 #include "elxConfiguration.h"
-#include "itkObject.h"
-#include "itkDataObject.h"
 #include "elxMacro.h"
 #include "xoutmain.h"
-#include "itkVectorContainer.h"
-#include "itkImageFileReader.h"
-#include "itkChangeInformationImageFilter.h"
+
+// ITK header files:
+#include <itkChangeInformationImageFilter.h>
+#include <itkCostFunction.h>
+#include <itkDataObject.h>
+#include <itkImageFileReader.h>
+#include <itkObject.h>
+#include <itkVectorContainer.h>
 
 #include <fstream>
 #include <iomanip>
@@ -170,6 +173,9 @@ public:
   typedef ComponentDatabaseType::Pointer   ComponentDatabasePointer;
   typedef ComponentDatabaseType::IndexType DBIndexType;
   typedef std::vector< double >            FlatDirectionCosinesType;
+
+  /** Type for representation of the transform coordinates. */
+  typedef itk::CostFunction::ParametersValueType CoordRepType;   // double
 
   /** Typedef that is used in the elastix dll version. */
   typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;

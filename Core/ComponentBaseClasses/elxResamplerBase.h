@@ -94,7 +94,7 @@ public:
   typedef typename ElastixType::MovingImageType InputImageType;
   typedef typename ElastixType::MovingImageType OutputImageType;
   //typedef typename ElastixType::FixedImageType      OutputImageType;
-  typedef typename ElastixType::CoordRepType CoordRepType;
+  typedef ElastixBase::CoordRepType CoordRepType;
 
   /** Other typedef's. */
   typedef itk::ResampleImageFilter<
