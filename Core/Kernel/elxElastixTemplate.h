@@ -169,9 +169,6 @@ public:
   /** Typedef for the UseDirectionCosines option. */
   typedef typename FixedImageType::DirectionType FixedImageDirectionType;
 
-  /** Type for representation of the transform coordinates. */
-  typedef itk::CostFunction::ParametersValueType CoordRepType;   // double
-
   /** BaseComponent. */
   typedef BaseComponent BaseComponentType;
 

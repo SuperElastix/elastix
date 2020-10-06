@@ -23,6 +23,7 @@
 #include "elxMacro.h"
 
 #include "elxBaseComponentSE.h"
+#include "elxElastixBase.h"
 
 #include "itkInterpolateImageFunction.h"
 
@@ -61,7 +62,7 @@ public:
 
   /** Other typedef's. */
   typedef typename ElastixType::MovingImageType InputImageType;
-  typedef typename ElastixType::CoordRepType    CoordRepType;
+  typedef ElastixBase::CoordRepType CoordRepType;
 
   /** ITKBaseType. */
   typedef itk::InterpolateImageFunction<
