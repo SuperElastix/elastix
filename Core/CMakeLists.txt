@@ -217,7 +217,7 @@ if( NOT WIN32 )
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
 endif()
 
-install( TARGETS elastix_lib transformix_lib elxCore
+install( TARGETS elastix_exe transformix_exe elastix_lib transformix_lib elxCore
   ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
   LIBRARY DESTINATION ${ELASTIX_LIBRARY_DIR}
   RUNTIME DESTINATION ${ELASTIX_RUNTIME_DIR}
