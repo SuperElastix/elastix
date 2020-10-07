@@ -509,7 +509,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
   /** Allocate memory for jsj. If you want also the Jacobian,
    * numberOfIndices more elements are needed.
    */
-  double dummy[ 1 ] = { 1.0 };
+  const double dummy[ 1 ] = { 1.0 };
 
   /** Recursively expand all weights (destroys dummy), and multiply with dc. */
   const double * dc      = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
@@ -621,7 +621,7 @@ RecursiveBSplineTransform< TScalar, NDimensions, VSplineOrder >
    */
   double *       jshPtr     = jsh[ 0 ][ 0 ].GetVnlMatrix().data_block();
   const double * dc         = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
-  double         dummy[ 1 ] = { 1.0 };
+  const double dummy[ 1 ] = { 1.0 };
   RecursiveBSplineTransformImplementation< SpaceDimension, SpaceDimension, SplineOrder, TScalar >
     ::GetJacobianOfSpatialHessian( jshPtr, weightsPointer, derivativeWeightsPointer, hessianWeightsPointer, dc, dummy );
 

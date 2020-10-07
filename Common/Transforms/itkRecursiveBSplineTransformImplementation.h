@@ -286,7 +286,7 @@ public:
     const double * weights1D,                   // normal B-spline weights
     const double * derivativeWeights1D,         // 1st derivative of B-spline
     const double * directionCosines,
-    InternalFloatType * jsj )
+    const InternalFloatType * const jsj )
   {
     const unsigned int helperDim = OutputDimension - SpaceDimension + 1;
 
@@ -323,7 +323,7 @@ public:
     const double * derivativeWeights1D,         // 1st derivative of B-spline
     const double * hessianWeights1D,            // 2nd derivative of B-spline
     const double * directionCosines,
-    InternalFloatType * jsh )
+    const InternalFloatType * const jsh )
   {
     const unsigned int helperDim   = OutputDimension - SpaceDimension;
     const unsigned int helperDimW  = ( helperDim + 1 ) * ( helperDim + 2 ) / 2;
@@ -482,7 +482,7 @@ public:
     const double * weights1D,                   // normal B-spline weights
     const double * derivativeWeights1D,         // 1st derivative of B-spline
     const double * directionCosines,
-    InternalFloatType * jsj )
+    const InternalFloatType * const jsj )
   {
     /** Copy the correct elements to the output.
      * Note that the first element jsj[0] is the normal Jacobian. We ignore it for now.
@@ -522,7 +522,7 @@ public:
     const double * derivativeWeights1D,         // 1st derivative of B-spline
     const double * hessianWeights1D,            // 2nd derivative of B-spline
     const double * directionCosines,
-    InternalFloatType * jsh )
+    const InternalFloatType * const jsh )
   {
     double jsh_tmp[ OutputDimension * OutputDimension ];
     double matrixProduct[ OutputDimension * OutputDimension ];
