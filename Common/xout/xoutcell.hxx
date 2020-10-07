@@ -37,18 +37,6 @@ xoutcell< charT, traits >::xoutcell()
 
 
 /**
- * ********************* Destructor *****************************
- */
-
-template< class charT, class traits >
-xoutcell< charT, traits >::~xoutcell()
-{
-  //nothing
-
-} // end Destructor
-
-
-/**
  * ******************** WriteBufferedData ***********************
  *
  * The buffered data is sent to the outputs.

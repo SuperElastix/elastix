@@ -24,34 +24,6 @@ namespace xoutlibrary
 {
 using namespace std;
 
-/**
- * ********************* Constructor ****************************
- */
-
-template< class charT, class traits >
-xoutrow< charT, traits >
-::xoutrow()
-{
-  //nothing
-} // end Constructor
-
-
-/**
- * ********************* Destructor *****************************
- */
-
-template< class charT, class traits >
-xoutrow< charT, traits >
-::~xoutrow()
-{
-  /** Call the function SetTargetCells, with as argument an empty
-   * XStreamMapType; In this way the memory that is managed by
-   * the cells in this->m_CellMap is properly deallocated.
-   */
-  this->SetTargetCells( XStreamMapType() );
-
-} // end Destructor
-
 
 /**
  * ******************** WriteBufferedData ***********************

@@ -58,10 +58,10 @@ public:
   typedef typename Superclass::XStreamMapEntryType    XStreamMapEntryType;
 
   /** Constructors */
-  xoutsimple();
+  xoutsimple() = default;
 
   /** Destructor */
-  ~xoutsimple() override;
+  ~xoutsimple() override = default;
 
   /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
   int AddOutput( const char * name, ostream_type * output ) override;
