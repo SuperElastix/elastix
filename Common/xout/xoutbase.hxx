@@ -128,15 +128,13 @@ xoutbase< charT, traits >::RemoveTargetCell( const char * name )
 {
   int returndummy = 1;
 
-  if( this->m_XTargetCells.count( name ) )
+  if( this->m_XTargetCells.erase( name ) > 0 )
   {
-    this->m_XTargetCells.erase( name );
     returndummy = 0;
   }
 
-  if( this->m_CTargetCells.count( name ) )
+  if( this->m_CTargetCells.erase( name ) > 0 )
   {
-    this->m_CTargetCells.erase( name );
     returndummy = 0;
   }
 
