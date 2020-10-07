@@ -65,7 +65,7 @@ public:
   xoutcell();
 
   /** Destructor */
-  ~xoutcell() override;
+  ~xoutcell() override = default;
 
   /** Write the buffered cell data to the outputs. */
   void WriteBufferedData( void ) override;

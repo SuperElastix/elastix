@@ -25,30 +25,6 @@ namespace xoutlibrary
 using namespace std;
 
 /**
- * ********************* Constructor ****************************
- */
-
-template< class charT, class traits >
-xoutsimple< charT, traits >::xoutsimple()
-{
-  //nothing
-
-} // end Constructor
-
-
-/**
- * ********************* Destructor *****************************
- */
-
-template< class charT, class traits >
-xoutsimple< charT, traits >::~xoutsimple()
-{
-  //nothing
-
-} // end Destructor
-
-
-/**
  * **************** AddOutput (ostream_type) ********************
  */
 

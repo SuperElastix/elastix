@@ -68,10 +68,10 @@ public:
   typedef xoutcell< charT, traits > XOutCellType;
 
   /** Constructor */
-  xoutrow();
+  xoutrow() = default;
 
   /** Destructor */
-  ~xoutrow() override;
+  ~xoutrow() override = default;
 
   /** Write the buffered cell data in a row to the outputs,
    * separated by tabs.
