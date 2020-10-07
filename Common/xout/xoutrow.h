@@ -20,6 +20,8 @@
 
 #include "xoutbase.h"
 #include "xoutcell.h"
+
+#include <memory> // For unique_ptr.
 #include <sstream>
 
 namespace xoutlibrary
@@ -115,7 +117,9 @@ protected:
    */
   Superclass & SelectXCell( const char * name ) override;
 
-  XStreamMapType m_CellMap;
+private:
+
+  std::map< std::string, std::unique_ptr<xoutbase<charT, traits>> > m_CellMap;
 
 };
 
