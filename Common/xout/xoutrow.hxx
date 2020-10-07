@@ -102,7 +102,8 @@ xoutrow< charT, traits >
   if( this->m_CellMap.count( name ) == 0 )
   {
     /** A new cell (type xoutcell) is created. */
-    XOutCellType * cell = new XOutCellType;
+    std::unique_ptr<XOutCellType> cell{ new XOutCellType };
+    auto& cellReference = *cell;
 
     /** Set the outputs equal to the outputs of this object. */
     cell->SetOutputs( this->m_COutputs );
@@ -111,16 +112,15 @@ xoutrow< charT, traits >
     /** Stored in a map, to make sure that later we can
      * delete all memory, assigned in this function.
      */
-    this->m_CellMap.insert( XStreamMapEntryType( name, cell ) );
+    this->m_CellMap.insert( std::make_pair( name, std::move(cell) ) );
 
+    /** Add the address of the cell to the TargetCell-map. */
+    return this->Superclass::AddTargetCell(name, &cellReference);
   }
   else
   {
     return 1;
   }
-
-  /** Add the pointer to the TargetCell-map. */
-  return this->Superclass::AddTargetCell( name, this->m_CellMap[ name ] );
 
 } // end AddTargetCell()
 
@@ -144,7 +144,6 @@ xoutrow< charT, traits >
 
   if( this->m_CellMap.count( name ) )
   {
-    delete this->m_CellMap[ name ];
     this->m_CellMap.erase( name );
     returndummy = 0;
   }
@@ -166,13 +165,6 @@ xoutrow< charT, traits >
   /** Clean the this->m_CellMap (cells that are created using the
    * AddTarget(const char *) method.
    */
-  XStreamMapIteratorType xit;
-
-  for( xit = this->m_CellMap.begin(); xit != this->m_CellMap.end(); ++xit )
-  {
-    delete xit->second;
-  }
-
   this->m_CellMap.clear();
 
   /** Replace the TargetCellMap with the input of this function.
