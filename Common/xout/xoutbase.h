@@ -191,17 +191,15 @@ public:
     static void ToTargets( T & _arg, CStreamMapType & CTargetCells, XStreamMapType & XTargetCells )
     {
       /** Send input to the target c-streams. */
-      for( CStreamMapIteratorType cit = CTargetCells.begin();
-        cit != CTargetCells.end(); ++cit )
+      for( const auto& cell : CTargetCells )
       {
-        *( cit->second ) << _arg;
+        *( cell.second ) << _arg;
       }
 
       /** Send input to the target xout-objects. */
-      for( XStreamMapIteratorType xit = XTargetCells.begin();
-        xit != XTargetCells.end(); ++xit )
+      for( const auto& cell : XTargetCells )
       {
-        *( xit->second ) << _arg;
+        *( cell.second ) << _arg;
       }
 
     } // end ToTargets

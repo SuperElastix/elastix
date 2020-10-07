@@ -54,18 +54,16 @@ xoutcell< charT, traits >::WriteBufferedData( void )
   const char * const charbuf = strbuf.c_str();
 
   /** Send the string to the outputs */
-  for( CStreamMapIteratorType cit = this->m_COutputs.begin();
-    cit != this->m_COutputs.end(); ++cit )
+  for( const auto& output : this->m_COutputs )
   {
-    *( cit->second ) << charbuf << flush;
+    *( output.second ) << charbuf << flush;
   }
 
   /** Send the string to the outputs */
-  for( XStreamMapIteratorType xit = this->m_XOutputs.begin();
-    xit != this->m_XOutputs.end(); ++xit )
+  for( const auto& output : this->m_XOutputs )
   {
-    *( xit->second ) << charbuf;
-    xit->second->WriteBufferedData();
+    *( output.second ) << charbuf;
+    output.second->WriteBufferedData();
   }
 
   /** Empty the internal buffer */
