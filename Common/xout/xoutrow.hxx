@@ -156,12 +156,11 @@ xoutrow< charT, traits >
 ::AddOutput( const char * name, ostream_type * output )
 {
   int                    returndummy = 0;
-  XStreamMapIteratorType xit;
 
   /** Set the output in all cells. */
-  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( const auto& cell : this->m_XTargetCells )
   {
-    returndummy |= xit->second->AddOutput( name, output );
+    returndummy |= cell.second->AddOutput( name, output );
   }
 
   /** Call the Superclass's implementation. */
@@ -181,12 +180,11 @@ xoutrow< charT, traits >
 ::AddOutput( const char * name, Superclass * output )
 {
   int                    returndummy = 0;
-  XStreamMapIteratorType xit;
 
   /** Set the output in all cells. */
-  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( const auto& cell : this->m_XTargetCells )
   {
-    returndummy |= xit->second->AddOutput( name, output );
+    returndummy |= cell.second->AddOutput( name, output );
   }
 
   /** Call the Superclass's implementation. */
@@ -206,12 +204,10 @@ xoutrow< charT, traits >
 ::RemoveOutput( const char * name )
 {
   int                    returndummy = 0;
-  XStreamMapIteratorType xit;
-
   /** Set the output in all cells. */
-  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( const auto& cell : this->m_XTargetCells )
   {
-    returndummy |= xit->second->RemoveOutput( name );
+    returndummy |= cell.second->RemoveOutput( name );
   }
 
   /** Call the Superclass's implementation. */
@@ -230,12 +226,10 @@ void
 xoutrow< charT, traits >
 ::SetOutputs( const CStreamMapType & outputmap )
 {
-  XStreamMapIteratorType xit;
-
   /** Set the output in all cells. */
-  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( const auto& cell : this->m_XTargetCells )
   {
-    xit->second->SetOutputs( outputmap );
+    cell.second->SetOutputs( outputmap );
   }
 
   /** Call the Superclass's implementation. */
@@ -253,12 +247,10 @@ void
 xoutrow< charT, traits >
 ::SetOutputs( const XStreamMapType & outputmap )
 {
-  XStreamMapIteratorType xit;
-
   /** Set the output in all cells. */
-  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( const auto& cell : this->m_XTargetCells )
   {
-    xit->second->SetOutputs( outputmap );
+    cell.second->SetOutputs( outputmap );
   }
 
   /** Call the Superclass's implementation. */
@@ -284,11 +276,10 @@ xoutrow< charT, traits >
   headerwriter.SetOutputs( this->m_XOutputs );
 
   /** Write the cell-names to the cells of the headerwriter. */
-  XStreamMapIteratorType xit;
-  for( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
+  for( const auto& cell : this->m_XTargetCells )
   {
     /** Write the cell's name to each cell. */
-    headerwriter[ xit->first.c_str() ] << xit->first;
+    headerwriter[ cell.first.c_str() ] << cell.first;
   } // end for
   headerwriter.WriteBufferedData();
 

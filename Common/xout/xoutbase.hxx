@@ -50,17 +50,15 @@ void
 xoutbase< charT, traits >::WriteBufferedData( void )
 {
   /** Update the target c-streams. */
-  for( CStreamMapIteratorType cit = this->m_CTargetCells.begin();
-    cit != this->m_CTargetCells.end(); ++cit )
+  for( const auto& cell : m_CTargetCells )
   {
-    *( cit->second ) << flush;
+    *( cell.second ) << flush;
   }
 
   /** WriteBufferedData of the target xout-objects. */
-  for( XStreamMapIteratorType xit = this->m_XTargetCells.begin();
-    xit != this->m_XTargetCells.end(); ++xit )
+  for( const auto& cell : m_XTargetCells )
   {
-    ( *( xit->second ) ).WriteBufferedData();
+    ( *( cell.second ) ).WriteBufferedData();
   }
 
 } // end WriteBufferedData
