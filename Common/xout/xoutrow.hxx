@@ -136,15 +136,13 @@ xoutrow< charT, traits >
 {
   int returndummy = 1;
 
-  if( this->m_XTargetCells.count( name ) )
+  if( this->m_XTargetCells.erase( name ) > 0 )
   {
-    this->m_XTargetCells.erase( name );
     returndummy = 0;
   }
 
-  if( this->m_CellMap.count( name ) )
+  if( this->m_CellMap.erase( name ) > 0 )
   {
-    this->m_CellMap.erase( name );
     returndummy = 0;
   }
 
