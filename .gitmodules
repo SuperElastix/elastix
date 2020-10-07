@@ -1,0 +1,5 @@
+[submodule "dox/manual"]
+	path = dox/manual
+	url = https://github.com/SuperElastix/manual.git
+	update = merge
+	branch = main
