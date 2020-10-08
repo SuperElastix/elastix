@@ -36,7 +36,6 @@
 
 // ITK header files:
 #include <itkChangeInformationImageFilter.h>
-#include <itkCostFunction.h>
 #include <itkDataObject.h>
 #include <itkImageFileReader.h>
 #include <itkObject.h>
@@ -175,7 +174,7 @@ public:
   typedef std::vector< double >            FlatDirectionCosinesType;
 
   /** Type for representation of the transform coordinates. */
-  typedef itk::CostFunction::ParametersValueType CoordRepType;   // double
+  typedef double CoordRepType;   // itk::CostFunction::ParametersValueType
 
   /** Typedef that is used in the elastix dll version. */
   typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
