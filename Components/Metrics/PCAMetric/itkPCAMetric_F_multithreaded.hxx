@@ -264,7 +264,7 @@ PCAMetric< TFixedImage, TMovingImage >
       if( sampleOk )
       {
         sampleOk = this->EvaluateMovingImageValueAndDerivative(
-          mappedPoint, movingImageValue, 0 );
+          mappedPoint, movingImageValue, nullptr );
       }
 
       if( sampleOk )
@@ -450,7 +450,7 @@ PCAMetric< TFixedImage, TMovingImage >
 
       {
         sampleOk = this->EvaluateMovingImageValueAndDerivative(
-          mappedPoint, movingImageValue, 0 );
+          mappedPoint, movingImageValue, nullptr );
       }
 
       if( sampleOk )
@@ -800,7 +800,7 @@ PCAMetric< TFixedImage, TMovingImage >
 
       {
         sampleOk = this->EvaluateMovingImageValueAndDerivative(
-          mappedPoint, movingImageValue, 0 );
+          mappedPoint, movingImageValue, nullptr );
       }
 
       if( sampleOk )

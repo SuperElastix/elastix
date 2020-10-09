@@ -36,19 +36,19 @@ MultiResolutionImageRegistrationMethodWithFeatures< TFixedImage, TMovingImage >
 ::CheckPyramids( void )
 {
   /** Check if at least one of the following are provided. */
-  if( this->GetFixedImage() == 0 )
+  if( this->GetFixedImage() == nullptr )
   {
     itkExceptionMacro( << "FixedImage is not present" );
   }
-  if( this->GetMovingImage() == 0 )
+  if( this->GetMovingImage() == nullptr )
   {
     itkExceptionMacro( << "MovingImage is not present" );
   }
-  if( this->GetFixedImagePyramid() == 0 )
+  if( this->GetFixedImagePyramid() == nullptr )
   {
     itkExceptionMacro( << "Fixed image pyramid is not present" );
   }
-  if( this->GetMovingImagePyramid() == 0 )
+  if( this->GetMovingImagePyramid() == nullptr )
   {
     itkExceptionMacro( << "Moving image pyramid is not present" );
   }

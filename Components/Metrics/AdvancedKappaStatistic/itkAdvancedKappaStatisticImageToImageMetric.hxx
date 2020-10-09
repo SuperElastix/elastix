@@ -191,7 +191,7 @@ AdvancedKappaStatisticImageToImageMetric< TFixedImage, TMovingImage >
     if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
-        mappedPoint, movingImageValue, 0 );
+        mappedPoint, movingImageValue, nullptr );
     }
 
     /** Do the actual calculation of the metric value. */

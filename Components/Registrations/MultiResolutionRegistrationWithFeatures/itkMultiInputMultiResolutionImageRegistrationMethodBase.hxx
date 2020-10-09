@@ -94,7 +94,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 {
   if( pos >= this->GetNumberOfFixedImages() )
   {
-    return 0;
+    return nullptr;
   }
   else
   {
@@ -116,7 +116,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 {
   if( pos >= this->GetNumberOfMovingImages() )
   {
-    return 0;
+    return nullptr;
   }
   else
   {
@@ -138,7 +138,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 {
   if( pos >= this->GetNumberOfInterpolators() )
   {
-    return 0;
+    return nullptr;
   }
   else
   {
@@ -160,7 +160,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 {
   if( pos >= this->GetNumberOfFixedImageInterpolators() )
   {
-    return 0;
+    return nullptr;
   }
   else
   {
@@ -182,7 +182,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 {
   if( pos >= this->GetNumberOfFixedImagePyramids() )
   {
-    return 0;
+    return nullptr;
   }
   else
   {
@@ -204,7 +204,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 {
   if( pos >= this->GetNumberOfMovingImagePyramids() )
   {
-    return 0;
+    return nullptr;
   }
   else
   {
@@ -468,7 +468,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
   this->m_Stop = false;
 
   /** Check the transform and set the initial parameters. */
-  if( this->GetTransform() == 0 )
+  if( this->GetTransform() == nullptr )
   {
     itkExceptionMacro( << "Transform is not present" );
   }
@@ -625,19 +625,19 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 ::CheckPyramids( void )
 {
   /** Check if at least one of the following are provided. */
-  if( this->GetFixedImage() == 0 )
+  if( this->GetFixedImage() == nullptr )
   {
     itkExceptionMacro( << "FixedImage is not present" );
   }
-  if( this->GetMovingImage() == 0 )
+  if( this->GetMovingImage() == nullptr )
   {
     itkExceptionMacro( << "MovingImage is not present" );
   }
-  if( this->GetFixedImagePyramid() == 0 )
+  if( this->GetFixedImagePyramid() == nullptr )
   {
     itkExceptionMacro( << "Fixed image pyramid is not present" );
   }
-  if( this->GetMovingImagePyramid() == 0 )
+  if( this->GetMovingImagePyramid() == nullptr )
   {
     itkExceptionMacro( << "Moving image pyramid is not present" );
   }
@@ -671,19 +671,19 @@ MultiInputMultiResolutionImageRegistrationMethodBase< TFixedImage, TMovingImage 
 ::CheckOnInitialize( void )
 {
   /** check if at least one of the following is present. */
-  if( this->GetMetric() == 0 )
+  if( this->GetMetric() == nullptr )
   {
     itkExceptionMacro( << "Metric is not present" );
   }
-  if( this->GetOptimizer() == 0 )
+  if( this->GetOptimizer() == nullptr )
   {
     itkExceptionMacro( << "Optimizer is not present" );
   }
-  if( this->GetTransform() == 0 )
+  if( this->GetTransform() == nullptr )
   {
     itkExceptionMacro( << "Transform is not present" );
   }
-  if( this->GetInterpolator() == 0 )
+  if( this->GetInterpolator() == nullptr )
   {
     itkExceptionMacro( << "Interpolator is not present" );
   }

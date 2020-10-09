@@ -118,7 +118,7 @@ ComponentDatabase::GetCreator(
   {
     xout[ "error" ] << "Error: " << std::endl;
     xout[ "error" ] << name << "(index " << i << ") - This component is not installed!" << std::endl;
-    return 0;
+    return nullptr;
   }
   else
   {

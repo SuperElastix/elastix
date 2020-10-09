@@ -56,12 +56,12 @@ MultiResolutionImageRegistrationMethod2< TFixedImage, TMovingImage >
 {
   this->SetNumberOfRequiredOutputs( 1 );  // for the Transform
 
-  this->m_FixedImage   = 0; // has to be provided by the user.
-  this->m_MovingImage  = 0; // has to be provided by the user.
-  this->m_Transform    = 0; // has to be provided by the user.
-  this->m_Interpolator = 0; // has to be provided by the user.
-  this->m_Metric       = 0; // has to be provided by the user.
-  this->m_Optimizer    = 0; // has to be provided by the user.
+  this->m_FixedImage   = nullptr; // has to be provided by the user.
+  this->m_MovingImage  = nullptr; // has to be provided by the user.
+  this->m_Transform    = nullptr; // has to be provided by the user.
+  this->m_Interpolator = nullptr; // has to be provided by the user.
+  this->m_Metric       = nullptr; // has to be provided by the user.
+  this->m_Optimizer    = nullptr; // has to be provided by the user.
 
   // Use MultiResolutionPyramidImageFilter as the default
   // image pyramids.

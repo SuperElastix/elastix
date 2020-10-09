@@ -44,7 +44,7 @@ GenericConjugateGradientOptimizer::GenericConjugateGradientOptimizer()
   this->m_GradientMagnitudeTolerance            = 1e-5;
   this->m_MaxNrOfItWithoutImprovement           = 10;
   this->m_UseDefaultMaxNrOfItWithoutImprovement = true;
-  this->m_LineSearchOptimizer                   = 0;
+  this->m_LineSearchOptimizer                   = nullptr;
   this->m_PreviousGradientAndSearchDirValid     = false;
 
   this->AddBetaDefinition(

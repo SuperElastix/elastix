@@ -64,8 +64,8 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   /** Initialize rigidity images and their usage. */
   this->m_UseFixedRigidityImage            = true;
   this->m_UseMovingRigidityImage           = true;
-  this->m_FixedRigidityImage               = 0;
-  this->m_MovingRigidityImage              = 0;
+  this->m_FixedRigidityImage               = nullptr;
+  this->m_MovingRigidityImage              = nullptr;
   this->m_RigidityCoefficientImage         = RigidityImageType::New();
   this->m_RigidityCoefficientImageIsFilled = false;
 
@@ -74,13 +74,13 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   this->m_MovingRigidityImageDilation.resize( MovingImageDimension );
   for( unsigned int i = 0; i < FixedImageDimension; i++ )
   {
-    this->m_FixedRigidityImageDilation[ i ]  = 0;
-    this->m_MovingRigidityImageDilation[ i ] = 0;
+    this->m_FixedRigidityImageDilation[ i ]  = nullptr;
+    this->m_MovingRigidityImageDilation[ i ] = nullptr;
   }
 
   /** Initialize dilated rigidity images. */
-  this->m_FixedRigidityImageDilated  = 0;
-  this->m_MovingRigidityImageDilated = 0;
+  this->m_FixedRigidityImageDilated  = nullptr;
+  this->m_MovingRigidityImageDilated = nullptr;
 
   /** We don't use an image sampler for this advanced metric. */
   this->SetUseImageSampler( false );

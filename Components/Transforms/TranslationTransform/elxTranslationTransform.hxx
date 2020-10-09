@@ -67,7 +67,7 @@ TranslationTransformElastix< TElastix >
   bool automaticTransformInitialization = false;
   bool tmpBool                          = false;
   this->m_Configuration->ReadParameter( tmpBool, "AutomaticTransformInitialization", 0 );
-  if( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
+  if( tmpBool && this->Superclass1::GetInitialTransform() == nullptr )
   {
     automaticTransformInitialization = true;
   }

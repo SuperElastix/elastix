@@ -31,7 +31,7 @@ template< class TBinaryTree >
 BinaryANNTreeSearchBase< TBinaryTree >
 ::BinaryANNTreeSearchBase()
 {
-  this->m_BinaryTreeAsITKANNType = 0;
+  this->m_BinaryTreeAsITKANNType = nullptr;
 } // end Constructor
 
 
@@ -74,7 +74,7 @@ BinaryANNTreeSearchBase< TBinaryTree >
   {
     if( this->m_BinaryTreeAsITKANNType.IsNotNull() )
     {
-      this->m_BinaryTreeAsITKANNType = 0;
+      this->m_BinaryTreeAsITKANNType = nullptr;
       this->Modified();
     }
   }

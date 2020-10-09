@@ -38,10 +38,10 @@ DistancePreservingRigidityPenaltyTerm< TFixedImage, TScalarType >
   this->m_RigidityPenaltyTermValue = NumericTraits< MeasureType >::Zero;
 
   /** Images required for penalty calculation */
-  this->m_BSplineKnotImage      = 0;
-  this->m_PenaltyGridImage      = 0;
-  this->m_SegmentedImage        = 0;
-  this->m_SampledSegmentedImage = 0;
+  this->m_BSplineKnotImage      = nullptr;
+  this->m_PenaltyGridImage      = nullptr;
+  this->m_SegmentedImage        = nullptr;
+  this->m_SampledSegmentedImage = nullptr;
 
   /** Number of the penalty grid points, which belong to rigid regions */
   this->m_NumberOfRigidGrids = 0;

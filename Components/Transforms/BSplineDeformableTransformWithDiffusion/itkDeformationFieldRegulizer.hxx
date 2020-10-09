@@ -33,7 +33,7 @@ DeformationFieldRegulizer< TAnyITKTransform >
 ::DeformationFieldRegulizer()
 {
   /** Initialize. */
-  this->m_IntermediaryDeformationFieldTransform = 0;
+  this->m_IntermediaryDeformationFieldTransform = nullptr;
   this->m_Initialized                           = false;
 
 } // end Constructor

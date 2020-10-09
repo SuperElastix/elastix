@@ -31,7 +31,7 @@ template< class TInputImage >
 ImageSamplerBase< TInputImage >
 ::ImageSamplerBase()
 {
-  this->m_Mask                      = 0;
+  this->m_Mask                      = nullptr;
   this->m_NumberOfMasks             = 0;
   this->m_NumberOfInputImageRegions = 0;
   this->m_NumberOfSamples           = 0;
@@ -87,7 +87,7 @@ const typename ImageSamplerBase< TInputImage >::MaskType
 {
   if( this->m_MaskVector.size() < pos + 1 )
   {
-    return 0;
+    return nullptr;
   }
   return this->m_MaskVector[ pos ];
 

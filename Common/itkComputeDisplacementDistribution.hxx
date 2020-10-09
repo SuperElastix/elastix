@@ -48,7 +48,7 @@ ComputeDisplacementDistribution< TFixedImage, TTransform >
   this->m_Transform                    = nullptr;
   this->m_FixedImageMask               = nullptr;
   this->m_NumberOfJacobianMeasurements = 0;
-  this->m_SampleContainer              = 0;
+  this->m_SampleContainer              = nullptr;
 
   /** Threading related variables. */
   this->m_UseMultiThread = true;

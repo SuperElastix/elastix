@@ -287,7 +287,7 @@ const typename TransformBase< TElastix >::InitialTransformType
     return thisAsGrouper->GetInitialTransform();
   }
 
-  return 0;
+  return nullptr;
 
 } // end GetInitialTransform()
 
@@ -533,7 +533,7 @@ TransformBase< TElastix >
     initialTransformName, "Transform", 0 );
 
   /** Create an InitialTransform. */
-  PtrToCreator testcreator = 0;
+  PtrToCreator testcreator = nullptr;
   testcreator = this->GetElastix()->GetComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
   // Note that ObjectType::Pointer() yields a default-constructed SmartPointer (null).
@@ -594,7 +594,7 @@ TransformBase< TElastix >
     initialTransformName, "Transform", 0 );
 
   /** Create an InitialTransform. */
-  PtrToCreator testcreator = 0;
+  PtrToCreator testcreator = nullptr;
   testcreator = this->GetElastix()->GetComponentDatabase()
     ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
 

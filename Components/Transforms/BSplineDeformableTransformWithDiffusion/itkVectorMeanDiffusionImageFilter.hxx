@@ -41,9 +41,9 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
   /** Initialize things for the filter. */
   this->m_NumberOfIterations = 0;
   this->m_Radius.Fill( 1 );
-  this->m_RescaleFilter  = 0;
-  this->m_GrayValueImage = 0;
-  this->m_Cx             = 0;
+  this->m_RescaleFilter  = nullptr;
+  this->m_GrayValueImage = nullptr;
+  this->m_Cx             = nullptr;
 
 } // end Constructor
 

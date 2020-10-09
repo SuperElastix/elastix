@@ -32,8 +32,8 @@ AdvancedCombinationTransform< TScalarType, NDimensions >
 ::AdvancedCombinationTransform() : Superclass( NDimensions )
 {
   /** Initialize. */
-  this->m_InitialTransform = 0;
-  this->m_CurrentTransform = 0;
+  this->m_InitialTransform = nullptr;
+  this->m_CurrentTransform = nullptr;
 
   /** Set composition by default. */
   this->m_UseAddition    = false;

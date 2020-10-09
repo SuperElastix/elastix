@@ -35,7 +35,7 @@ template< class TElastix >
 FullSearch< TElastix >
 ::FullSearch()
 {
-  this->m_OptimizationSurface = 0;
+  this->m_OptimizationSurface = nullptr;
 
 } // end Constructor
 
@@ -331,7 +331,7 @@ FullSearch< TElastix >
   this->m_SearchSpaceDimensionNames.clear();
 
   /** Clear the full search ranges */
-  this->SetSearchSpace( 0 );
+  this->SetSearchSpace( nullptr );
 
 } // end AfterEachResolution()
 

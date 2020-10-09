@@ -39,21 +39,21 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 {
   this->m_NumberOfFixedHistogramBins        = 32;
   this->m_NumberOfMovingHistogramBins       = 32;
-  this->m_JointPDF                          = 0;
-  this->m_JointPDFDerivatives               = 0;
+  this->m_JointPDF                          = nullptr;
+  this->m_JointPDFDerivatives               = nullptr;
   this->m_FixedImageNormalizedMin           = 0.0;
   this->m_MovingImageNormalizedMin          = 0.0;
   this->m_FixedImageBinSize                 = 0.0;
   this->m_MovingImageBinSize                = 0.0;
   this->m_Alpha                             = 0.0;
-  this->m_FixedIncrementalMarginalPDFRight  = 0;
-  this->m_MovingIncrementalMarginalPDFRight = 0;
-  this->m_FixedIncrementalMarginalPDFLeft   = 0;
-  this->m_MovingIncrementalMarginalPDFLeft  = 0;
+  this->m_FixedIncrementalMarginalPDFRight  = nullptr;
+  this->m_MovingIncrementalMarginalPDFRight = nullptr;
+  this->m_FixedIncrementalMarginalPDFLeft   = nullptr;
+  this->m_MovingIncrementalMarginalPDFLeft  = nullptr;
 
-  this->m_FixedKernel                   = 0;
-  this->m_MovingKernel                  = 0;
-  this->m_DerivativeMovingKernel        = 0;
+  this->m_FixedKernel                   = nullptr;
+  this->m_MovingKernel                  = nullptr;
+  this->m_DerivativeMovingKernel        = nullptr;
   this->m_FixedKernelBSplineOrder       = 0;
   this->m_MovingKernelBSplineOrder      = 3;
   this->m_FixedParzenTermToIndexOffset  = 0.5;
@@ -233,10 +233,10 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   /** Allocate memory for the joint PDF and joint PDF derivatives. */
 
   /** First set these ones to zero */
-  this->m_FixedIncrementalMarginalPDFRight  = 0;
-  this->m_MovingIncrementalMarginalPDFRight = 0;
-  this->m_FixedIncrementalMarginalPDFLeft   = 0;
-  this->m_MovingIncrementalMarginalPDFLeft  = 0;
+  this->m_FixedIncrementalMarginalPDFRight  = nullptr;
+  this->m_MovingIncrementalMarginalPDFRight = nullptr;
+  this->m_FixedIncrementalMarginalPDFLeft   = nullptr;
+  this->m_MovingIncrementalMarginalPDFLeft  = nullptr;
 
   /** For the joint PDF define a region starting from {0,0}
    * with size {this->m_NumberOfMovingHistogramBins, this->m_NumberOfFixedHistogramBins}
@@ -282,7 +282,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
     if( this->GetUseFiniteDifferenceDerivative() )
     {
-      this->m_JointPDFDerivatives = 0;
+      this->m_JointPDFDerivatives = nullptr;
 
       this->m_IncrementalJointPDFRight = JointPDFDerivativesType::New();
       this->m_IncrementalJointPDFLeft  = JointPDFDerivativesType::New();
@@ -331,8 +331,8 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
     {
       if( this->m_UseExplicitPDFDerivatives )
       {
-        this->m_IncrementalJointPDFRight = 0;
-        this->m_IncrementalJointPDFLeft  = 0;
+        this->m_IncrementalJointPDFRight = nullptr;
+        this->m_IncrementalJointPDFLeft  = nullptr;
 
         this->m_JointPDFDerivatives = JointPDFDerivativesType::New();
         this->m_JointPDFDerivatives->SetRegions( jointPDFDerivativesRegion );
@@ -355,9 +355,9 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   }
   else
   {
-    this->m_JointPDFDerivatives      = 0;
-    this->m_IncrementalJointPDFRight = 0;
-    this->m_IncrementalJointPDFLeft  = 0;
+    this->m_JointPDFDerivatives      = nullptr;
+    this->m_IncrementalJointPDFRight = nullptr;
+    this->m_IncrementalJointPDFLeft  = nullptr;
   }
 
 } // end InitializeHistograms()
@@ -1078,7 +1078,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
     if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
-        mappedPoint, movingImageValue, 0 );
+        mappedPoint, movingImageValue, nullptr );
     }
 
     if( sampleOk )
@@ -1094,7 +1094,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
       /** Compute this sample's contribution to the joint distributions. */
       this->UpdateJointPDFAndDerivatives(
-        fixedImageValue, movingImageValue, 0, 0, this->m_JointPDF.GetPointer() );
+        fixedImageValue, movingImageValue, nullptr, nullptr, this->m_JointPDF.GetPointer() );
     }
 
   } // end iterating over fixed image spatial sample container for loop
@@ -1210,7 +1210,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
     if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
-        mappedPoint, movingImageValue, 0 );
+        mappedPoint, movingImageValue, nullptr );
     }
 
     if( sampleOk )
@@ -1226,7 +1226,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
 
       /** Compute this sample's contribution to the joint distributions. */
       this->UpdateJointPDFAndDerivatives(
-        fixedImageValue, movingImageValue, 0, 0,
+        fixedImageValue, movingImageValue, nullptr, nullptr,
         jointPDF.GetPointer() );
     }
   } // end iterating over fixed image spatial sample container for loop
@@ -1540,7 +1540,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
       if( sampleOk )
       {
         sampleOk = this->EvaluateMovingImageValueAndDerivative(
-          mappedPoint, movingImageValue, 0 );
+          mappedPoint, movingImageValue, nullptr );
         if( sampleOk )
         {
           movingImageValue = this->GetMovingImageLimiter()->Evaluate( movingImageValue );
@@ -1594,7 +1594,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         {
           RealType movingImageValueRight = 0.0;
           sampleOk = this->EvaluateMovingImageValueAndDerivative(
-            mappedPointRight, movingImageValueRight, 0 );
+            mappedPointRight, movingImageValueRight, nullptr );
           if( sampleOk )
           {
             movingImageValueRight
@@ -1617,7 +1617,7 @@ ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
         {
           RealType movingImageValueLeft = 0.0;
           sampleOk = this->EvaluateMovingImageValueAndDerivative(
-            mappedPointLeft, movingImageValueLeft, 0 );
+            mappedPointLeft, movingImageValueLeft, nullptr );
           if( sampleOk )
           {
             movingImageValueLeft

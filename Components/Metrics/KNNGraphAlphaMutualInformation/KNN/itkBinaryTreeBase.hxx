@@ -31,7 +31,7 @@ template< class TListSample >
 BinaryTreeBase< TListSample >
 ::BinaryTreeBase()
 {
-  this->m_Sample = 0;
+  this->m_Sample = nullptr;
 } // end Constructor
 
 

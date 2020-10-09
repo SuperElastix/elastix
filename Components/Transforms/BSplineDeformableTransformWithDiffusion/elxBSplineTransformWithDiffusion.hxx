@@ -46,19 +46,19 @@ BSplineTransformWithDiffusion< TElastix >
   this->m_Interpolator = InterpolatorType::New();
 
   /** Initialize things for diffusion. */
-  this->m_Diffusion                  = 0;
-  this->m_DeformationField           = 0;
-  this->m_DiffusedField              = 0;
-  this->m_GrayValueImage1            = 0;
-  this->m_GrayValueImage2            = 0;
-  this->m_MovingSegmentationImage    = 0;
-  this->m_FixedSegmentationImage     = 0;
-  this->m_MovingSegmentationReader   = 0;
-  this->m_FixedSegmentationReader    = 0;
+  this->m_Diffusion                  = nullptr;
+  this->m_DeformationField           = nullptr;
+  this->m_DiffusedField              = nullptr;
+  this->m_GrayValueImage1            = nullptr;
+  this->m_GrayValueImage2            = nullptr;
+  this->m_MovingSegmentationImage    = nullptr;
+  this->m_FixedSegmentationImage     = nullptr;
+  this->m_MovingSegmentationReader   = nullptr;
+  this->m_FixedSegmentationReader    = nullptr;
   this->m_MovingSegmentationFileName = "";
   this->m_FixedSegmentationFileName  = "";
-  this->m_Resampler1                 = 0;
-  this->m_Resampler2                 = 0;
+  this->m_Resampler1                 = nullptr;
+  this->m_Resampler2                 = nullptr;
   this->m_WriteDiffusionFiles        = false;
   this->m_AlsoFixed                  = true;
   this->m_ThresholdBool              = true;
@@ -566,15 +566,15 @@ BSplineTransformWithDiffusion< TElastix >
    * memory. Only those variables needed for the transform parameters
    * have to be kept.
    */
-  this->m_GrayValueImage1          = 0;
-  this->m_GrayValueImage2          = 0;
-  this->m_Resampler1               = 0;
-  this->m_Resampler2               = 0;
-  this->m_MovingSegmentationReader = 0;
-  this->m_FixedSegmentationReader  = 0;
-  this->m_MovingSegmentationImage  = 0;
-  this->m_FixedSegmentationImage   = 0;
-  this->m_Diffusion                = 0;
+  this->m_GrayValueImage1          = nullptr;
+  this->m_GrayValueImage2          = nullptr;
+  this->m_Resampler1               = nullptr;
+  this->m_Resampler2               = nullptr;
+  this->m_MovingSegmentationReader = nullptr;
+  this->m_FixedSegmentationReader  = nullptr;
+  this->m_MovingSegmentationImage  = nullptr;
+  this->m_FixedSegmentationImage   = nullptr;
+  this->m_Diffusion                = nullptr;
 
   /** In the very last iteration of the registration in the function
    * DiffuseDeformationField() the intermediary deformation field is updated:
@@ -584,8 +584,8 @@ BSplineTransformWithDiffusion< TElastix >
    * BSplineTransform).
    * Therefore the memory of the deformation fields can be freed.
    */
-  this->m_DeformationField = 0;
-  this->m_DiffusedField    = 0;
+  this->m_DeformationField = nullptr;
+  this->m_DiffusedField    = nullptr;
 
 } // end AfterRegistration()
 
@@ -1345,7 +1345,7 @@ BSplineTransformWithDiffusion< TElastix >
   /** Get rid of the initial transform, because this is now captured
    * within the DeformationFieldTransform.
    */
-  this->Superclass2::SetInitialTransform( 0 );
+  this->Superclass2::SetInitialTransform( nullptr );
 
   /** ------------- 7: Write images. ------------- */
 

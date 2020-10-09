@@ -48,29 +48,29 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
    */
   this->SetComputeGradient( false );
 
-  this->m_ImageSampler                = 0;
+  this->m_ImageSampler                = nullptr;
   this->m_UseImageSampler             = false;
   this->m_RequiredRatioOfValidSamples = 0.25;
 
-  this->m_LinearInterpolator              = 0;
-  this->m_BSplineInterpolator             = 0;
-  this->m_BSplineInterpolatorFloat        = 0;
-  this->m_ReducedBSplineInterpolator      = 0;
+  this->m_LinearInterpolator              = nullptr;
+  this->m_BSplineInterpolator             = nullptr;
+  this->m_BSplineInterpolatorFloat        = nullptr;
+  this->m_ReducedBSplineInterpolator      = nullptr;
   this->m_InterpolatorIsLinear            = false;
   this->m_InterpolatorIsBSpline           = false;
   this->m_InterpolatorIsBSplineFloat      = false;
   this->m_InterpolatorIsReducedBSpline    = false;
-  this->m_CentralDifferenceGradientFilter = 0;
+  this->m_CentralDifferenceGradientFilter = nullptr;
 
-  this->m_AdvancedTransform                                = 0;
+  this->m_AdvancedTransform                                = nullptr;
   this->m_TransformIsAdvanced                              = false;
   this->m_TransformIsBSpline                               = false;
   this->m_UseMovingImageDerivativeScales                   = false;
   this->m_ScaleGradientWithRespectToMovingImageOrientation = false;
   this->m_MovingImageDerivativeScales.Fill( 1.0 );
 
-  this->m_FixedImageLimiter     = 0;
-  this->m_MovingImageLimiter    = 0;
+  this->m_FixedImageLimiter     = nullptr;
+  this->m_MovingImageLimiter    = nullptr;
   this->m_UseFixedImageLimiter  = false;
   this->m_UseMovingImageLimiter = false;
   this->m_FixedLimitRangeRatio  = 0.01;
@@ -243,7 +243,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Set up fixed limiter. */
   if( this->GetUseFixedImageLimiter() )
   {
-    if( this->GetFixedImageLimiter() == 0 )
+    if( this->GetFixedImageLimiter() == nullptr )
     {
       itkExceptionMacro( << "No fixed image limiter has been set!" );
     }
@@ -298,7 +298,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   /** Set up moving limiter. */
   if( this->GetUseMovingImageLimiter() )
   {
-    if( this->GetMovingImageLimiter() == 0 )
+    if( this->GetMovingImageLimiter() == nullptr )
     {
       itkExceptionMacro( << "No moving image limiter has been set!" );
     }
@@ -404,7 +404,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   }
   else
   {
-    this->m_BSplineInterpolator = 0;
+    this->m_BSplineInterpolator = nullptr;
     itkDebugMacro( "Interpolator is not B-spline" );
   }
 
@@ -419,7 +419,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   }
   else
   {
-    this->m_BSplineInterpolatorFloat = 0;
+    this->m_BSplineInterpolatorFloat = nullptr;
     itkDebugMacro( "Interpolator is not BSplineFloat" );
   }
 
@@ -434,7 +434,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   }
   else
   {
-    this->m_ReducedBSplineInterpolator = 0;
+    this->m_ReducedBSplineInterpolator = nullptr;
     itkDebugMacro( "Interpolator is not ReducedBSpline" );
   }
 
@@ -448,7 +448,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
   }
   else
   {
-    this->m_LinearInterpolator = 0;
+    this->m_LinearInterpolator = nullptr;
   }
 
   /** Don't overwrite the gradient image if GetComputeGradient() == true.
@@ -474,7 +474,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     typedef itk::AdvancedRayCastInterpolateImageFunction<
       MovingImageType, CoordinateRepresentationType >       RayCastInterpolatorType;
     const bool interpolatorIsRayCast
-      = dynamic_cast< RayCastInterpolatorType * >( this->m_Interpolator.GetPointer() ) != 0;
+      = dynamic_cast< RayCastInterpolatorType * >( this->m_Interpolator.GetPointer() ) != nullptr;
 
     if( !this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat
       && !this->m_InterpolatorIsReducedBSpline
@@ -489,8 +489,8 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     }
     else
     {
-      this->m_CentralDifferenceGradientFilter = 0;
-      this->m_GradientImage                   = 0;
+      this->m_CentralDifferenceGradientFilter = nullptr;
+      this->m_GradientImage                   = nullptr;
     }
   }
 
@@ -513,7 +513,7 @@ AdvancedImageToImageMetric< TFixedImage, TMovingImage >
     this->m_Transform.GetPointer() );
   if( !testPtr )
   {
-    this->m_AdvancedTransform = 0;
+    this->m_AdvancedTransform = nullptr;
     itkDebugMacro( "Transform is not Advanced" );
     itkExceptionMacro( << "The AdvancedImageToImageMetric requires an AdvancedTransform" );
   }

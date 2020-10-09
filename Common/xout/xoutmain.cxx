@@ -22,7 +22,7 @@
 
 namespace xoutlibrary
 {
-static xoutbase_type * local_xout = 0;
+static xoutbase_type * local_xout = nullptr;
 
 xoutbase_type &
 get_xout( void )
@@ -38,7 +38,7 @@ set_xout( xoutbase_type * arg )
 }
 
 bool xout_valid() {
-  return local_xout != 0;
+  return local_xout != nullptr;
 }
 
 

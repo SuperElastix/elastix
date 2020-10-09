@@ -230,7 +230,7 @@ AffineDTITransformElastix< TElastix >
   bool tmpBool                          = false;
   this->m_Configuration->ReadParameter( tmpBool,
     "AutomaticTransformInitialization", 0 );
-  if( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
+  if( tmpBool && this->Superclass1::GetInitialTransform() == nullptr )
   {
     automaticTransformInitialization = true;
   }
@@ -296,7 +296,7 @@ AffineDTITransformElastix< TElastix >
    * the current (euler) transform.
    */
   if( this->GetUseComposition()
-    && this->Superclass1::GetInitialTransform() != 0 )
+    && this->Superclass1::GetInitialTransform() != nullptr )
   {
     InputPointType transformedCenterOfRotationPoint
       = this->Superclass1::GetInitialTransform()->TransformPoint(

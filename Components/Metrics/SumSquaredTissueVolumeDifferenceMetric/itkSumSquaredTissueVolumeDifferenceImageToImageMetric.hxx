@@ -112,7 +112,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage>
      */
     if( sampleOk )
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative( mappedPoint, movingImageValue, 0 );
+      sampleOk = this->EvaluateMovingImageValueAndDerivative( mappedPoint, movingImageValue, nullptr );
     }
 
     if( sampleOk )
@@ -255,7 +255,7 @@ void SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,TMovingImage
     */
     if( sampleOk )
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative( mappedPoint, movingImageValue, 0 );
+      sampleOk = this->EvaluateMovingImageValueAndDerivative( mappedPoint, movingImageValue, nullptr );
     }
 
     if( sampleOk )

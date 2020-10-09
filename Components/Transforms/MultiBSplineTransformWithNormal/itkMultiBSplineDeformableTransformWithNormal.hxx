@@ -39,8 +39,8 @@ MultiBSplineDeformableTransformWithNormal< TScalarType, NDimensions, VSplineOrde
 {
   // By default this class handle a unique Transform
   this->m_NbLabels           = 0;
-  this->m_Labels             = 0;
-  this->m_LabelsInterpolator = 0;
+  this->m_Labels             = nullptr;
+  this->m_LabelsInterpolator = nullptr;
   this->m_Trans.resize( 1 );
   // keep transform 0 to store parameters that are not kept here (GridSize, ...)
   this->m_Trans[ 0 ] = TransformType::New();
