@@ -133,7 +133,7 @@ ElastixMain::ElastixMain()
   /** Initialize the components. */
   this->m_Configuration = ConfigurationType::New();
 
-  this->m_Elastix = 0;
+  this->m_Elastix = nullptr;
 
   this->m_FixedImagePixelType = "";
   this->m_FixedImageDimension = 0;
@@ -143,16 +143,16 @@ ElastixMain::ElastixMain()
 
   this->m_DBIndex = 0;
 
-  this->m_FixedImageContainer  = 0;
-  this->m_MovingImageContainer = 0;
+  this->m_FixedImageContainer  = nullptr;
+  this->m_MovingImageContainer = nullptr;
 
-  this->m_FixedMaskContainer  = 0;
-  this->m_MovingMaskContainer = 0;
+  this->m_FixedMaskContainer  = nullptr;
+  this->m_MovingMaskContainer = nullptr;
 
-  this->m_ResultImageContainer = 0;
+  this->m_ResultImageContainer = nullptr;
 
-  this->m_FinalTransform   = 0;
-  this->m_InitialTransform = 0;
+  this->m_FinalTransform   = nullptr;
+  this->m_InitialTransform = nullptr;
   this->m_TransformParametersMap.clear();
 
 } // end Constructor
@@ -774,15 +774,15 @@ ElastixMain::LoadComponents( void )
 void
 ElastixMain::UnloadComponents( void )
 {
-  s_CDB = 0;
-  s_ComponentLoader->SetComponentDatabase( 0 );
+  s_CDB = nullptr;
+  s_ComponentLoader->SetComponentDatabase( nullptr );
 
   if( s_ComponentLoader )
   {
     s_ComponentLoader->UnloadComponents();
   }
 
-  s_ComponentLoader = 0;
+  s_ComponentLoader = nullptr;
 
 } // end UnloadComponents()
 
@@ -817,7 +817,7 @@ ElastixMain::CreateComponent(
   const ComponentDescriptionType & name )
 {
   /** A pointer to the New() function. */
-  PtrToCreator  testcreator = 0;
+  PtrToCreator  testcreator = nullptr;
   testcreator = this->s_CDB->GetCreator( name,  this->m_DBIndex );
 
   // Note that ObjectPointer() yields a default-constructed SmartPointer (null).

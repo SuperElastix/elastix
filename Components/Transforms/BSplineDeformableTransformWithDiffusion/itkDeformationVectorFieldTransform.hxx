@@ -37,7 +37,7 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
   /** Initialize m_Images. */
   for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    this->m_Images[ i ] = 0;
+    this->m_Images[ i ] = nullptr;
   }
 
 } // end Constructor
@@ -54,7 +54,7 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
   /** Initialize m_Images. */
   for( unsigned int i = 0; i < SpaceDimension; i++ )
   {
-    this->m_Images[ i ] = 0;
+    this->m_Images[ i ] = nullptr;
   }
 } // end Destructor
 

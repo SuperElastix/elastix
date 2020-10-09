@@ -46,7 +46,7 @@ QuasiNewtonLBFGSOptimizer::QuasiNewtonLBFGSOptimizer()
 
   this->m_MaximumNumberOfIterations  = 100;
   this->m_GradientMagnitudeTolerance = 1e-5;
-  this->m_LineSearchOptimizer        = 0;
+  this->m_LineSearchOptimizer        = nullptr;
   this->m_Memory                     = 5;
 
 } // end constructor

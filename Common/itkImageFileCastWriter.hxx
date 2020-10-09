@@ -36,7 +36,7 @@ template< class TInputImage >
 ImageFileCastWriter< TInputImage >
 ::ImageFileCastWriter()
 {
-  this->m_Caster              = 0;
+  this->m_Caster              = nullptr;
   this->m_OutputComponentType = this->GetDefaultOutputComponentType();
 }
 
@@ -53,7 +53,7 @@ ImageFileCastWriter< TInputImage >
   /** Set the pixeltype. */
   typedef typename InputImageType::InternalPixelType ScalarType;
   //dummyImageIO->SetPixelTypeInfo(typeid(ScalarType));
-  dummyImageIO->SetPixelTypeInfo( static_cast< const ScalarType * >( 0 ) );
+  dummyImageIO->SetPixelTypeInfo( static_cast< const ScalarType * >( nullptr ) );
 
   /** Get its description. */
   return dummyImageIO->GetComponentTypeAsString(
@@ -66,7 +66,7 @@ template< class TInputImage >
 ImageFileCastWriter< TInputImage >
 ::~ImageFileCastWriter()
 {
-  this->m_Caster = 0;
+  this->m_Caster = nullptr;
 }
 
 
@@ -88,7 +88,7 @@ ImageFileCastWriter< TInputImage >
   {
     typedef typename InputImageType::InternalPixelType VectorImageScalarType;
     //this->GetImageIO()->SetPixelTypeInfo( typeid(VectorImageScalarType) );
-    this->GetModifiableImageIO()->SetPixelTypeInfo( static_cast< const VectorImageScalarType * >( 0 ) );
+    this->GetModifiableImageIO()->SetPixelTypeInfo( static_cast< const VectorImageScalarType * >( nullptr ) );
 
     typedef typename InputImageType::AccessorFunctorType AccessorFunctorType;
     this->GetModifiableImageIO()->SetNumberOfComponents(AccessorFunctorType::GetVectorLength(input));
@@ -97,7 +97,7 @@ ImageFileCastWriter< TInputImage >
   {
     // Set the pixel and component type; the number of components.
     //this->GetImageIO()->SetPixelTypeInfo(typeid(ScalarType));
-    this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast< const ScalarType * >(0));
+    this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast< const ScalarType * >(nullptr));
   }
 
   /** Setup the image IO for writing. */
@@ -113,7 +113,7 @@ ImageFileCastWriter< TInputImage >
     this->GetImageIO()->GetComponentTypeAsString( this->GetImageIO()->GetComponentType() )
     && numberOfComponents == 1 )
   {
-    void *             convertedDataBuffer = 0;
+    void *             convertedDataBuffer = nullptr;
     const DataObject * inputAsDataObject
       = dynamic_cast< const DataObject * >( input );
 
@@ -173,7 +173,7 @@ ImageFileCastWriter< TInputImage >
     /** Do the writing */
     this->GetModifiableImageIO()->Write( convertedDataBuffer );
     /** Release the caster's memory */
-    this->m_Caster = 0;
+    this->m_Caster = nullptr;
 
   }
   else

@@ -1129,7 +1129,7 @@ RayCastHelper< TInputImage, TCoordRep >
 
     for( i = 0; i < 4; i++ )
     {
-      m_RayIntersectionVoxels[ i ] = 0;
+      m_RayIntersectionVoxels[ i ] = nullptr;
     }
     for( i = 0; i < 3; i++ )
     {
@@ -1488,7 +1488,7 @@ RayCastHelper< TInputImage, TCoordRep >
 
   for( i = 0; i < 4; i++ )
   {
-    m_RayIntersectionVoxels[ i ] = 0;
+    m_RayIntersectionVoxels[ i ] = nullptr;
   }
   for( i = 0; i < 3; i++ )
   {

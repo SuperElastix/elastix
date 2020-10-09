@@ -28,9 +28,9 @@ namespace itk
 template< class TPixel, unsigned int VDimension >
 NDImageTemplate< TPixel, VDimension >::NDImageTemplate()
 {
-  this->m_Image  = 0;
-  this->m_Writer = 0;
-  this->m_Reader = 0;
+  this->m_Image  = nullptr;
+  this->m_Writer = nullptr;
+  this->m_Reader = nullptr;
 }
 
 
@@ -299,7 +299,7 @@ NDImageTemplate< TPixel, VDimension >::GetImageIOWriter( void )
   }
   else
   {
-    return 0;
+    return nullptr;
   }
 }
 
@@ -326,7 +326,7 @@ NDImageTemplate< TPixel, VDimension >::GetImageIOReader( void )
   }
   else
   {
-    return 0;
+    return nullptr;
   }
 }
 

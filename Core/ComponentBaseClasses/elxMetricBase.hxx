@@ -33,7 +33,7 @@ MetricBase< TElastix >
 {
   /** Initialize. */
   this->m_ShowExactMetricValue    = false;
-  this->m_ExactMetricSampler      = 0;
+  this->m_ExactMetricSampler      = nullptr;
   this->m_CurrentExactMetricValue = 0.0;
   this->m_ExactMetricSampleGridSpacing.Fill( 1 );
   this->m_ExactMetricEachXNumberOfIterations = 1;
@@ -107,7 +107,7 @@ MetricBase< TElastix >
     = dynamic_cast< AdvancedMetricType * >( this );
 
   /** For advanced metrics several other things can be set. */
-  if( thisAsAdvanced != 0 )
+  if( thisAsAdvanced != nullptr )
   {
     /** Should the metric check for enough samples? */
     bool checkNumberOfSamples = true;
@@ -270,7 +270,7 @@ MetricBase< TElastix >
   /** Try to cast the current Sampler to a FullSampler. */
   ExactMetricImageSamplerType * testPointer
     = dynamic_cast< ExactMetricImageSamplerType * >( currentSampler.GetPointer() );
-  if( testPointer != 0 )
+  if( testPointer != nullptr )
   {
     /** GetValue gives us the exact value! */
     return this->GetAsITKBaseType()->GetValue( parameters );
@@ -320,7 +320,7 @@ MetricBase< TElastix >
     = dynamic_cast< const AdvancedMetricType * >( this );
 
   /** If no AdvancedMetricType, return false. */
-  if( thisAsMetricWithSampler == 0 )
+  if( thisAsMetricWithSampler == nullptr )
   {
     return false;
   }
@@ -346,7 +346,7 @@ MetricBase< TElastix >
   /** If no AdvancedMetricType, or if the MetricWithSampler does not
    * utilize the sampler, return.
    */
-  if( thisAsMetricWithSampler == 0 )
+  if( thisAsMetricWithSampler == nullptr )
   {
     return;
   }
@@ -377,13 +377,13 @@ typename MetricBase< TElastix >::ImageSamplerBaseType
   /** If no AdvancedMetricType, or if the MetricWithSampler does not
    * utilize the sampler, return 0.
    */
-  if( thisAsMetricWithSampler == 0 )
+  if( thisAsMetricWithSampler == nullptr )
   {
-    return 0;
+    return nullptr;
   }
   if( thisAsMetricWithSampler->GetUseImageSampler() == false )
   {
-    return 0;
+    return nullptr;
   }
 
   /** Return the sampler. */

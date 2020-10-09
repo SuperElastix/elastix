@@ -204,7 +204,7 @@ int
 MoreThuenteLineSearchOptimizer
 ::CheckSettings( void )
 {
-  if( this->GetCostFunction() == 0 )
+  if( this->GetCostFunction() == nullptr )
   {
     itkExceptionMacro( << "CostFunction has not been set!" );
   }

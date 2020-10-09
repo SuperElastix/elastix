@@ -32,7 +32,7 @@ ProgressCommand::ProgressCommand()
   this->m_EndString             = "%";
   this->m_Tag                   = 0;
   this->m_TagIsSet              = false;
-  this->m_ObservedProcessObject = 0;
+  this->m_ObservedProcessObject = nullptr;
   this->m_NumberOfVoxels        = 0;
   this->m_NumberOfUpdates       = 0;
 
@@ -130,7 +130,7 @@ ProgressCommand
     {
       filter->RemoveObserver( this->m_Tag );
       this->m_TagIsSet              = false;
-      this->m_ObservedProcessObject = 0;
+      this->m_ObservedProcessObject = nullptr;
     }
   }
 

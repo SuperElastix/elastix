@@ -856,7 +856,7 @@ ResamplerBase< TElastix >
     const unsigned int nofm = this->GetElastix()->GetNumberOfFixedMasks();
     for( unsigned int i = 0; i < nofm; ++i )
     {
-      if( this->GetElastix()->GetFixedMask( i ) != 0 )
+      if( this->GetElastix()->GetFixedMask( i ) != nullptr )
       {
         this->GetElastix()->GetFixedMask( i )->ReleaseData();
       }
@@ -866,7 +866,7 @@ ResamplerBase< TElastix >
     const unsigned int nomm = this->GetElastix()->GetNumberOfMovingMasks();
     for( unsigned int i = 0; i < nomm; ++i )
     {
-      if( this->GetElastix()->GetMovingMask( i ) != 0 )
+      if( this->GetElastix()->GetMovingMask( i ) != nullptr )
       {
         this->GetElastix()->GetMovingMask( i )->ReleaseData();
       }
@@ -879,7 +879,7 @@ ResamplerBase< TElastix >
    * zero. The interpolator is not needed anymore, since we have the
    * resampler interpolator.
    */
-  this->GetElastix()->GetElxInterpolatorBase()->GetAsITKBaseType()->SetInputImage( 0 );
+  this->GetElastix()->GetElxInterpolatorBase()->GetAsITKBaseType()->SetInputImage( nullptr );
 
   // Clear ImageSampler, metric, optimizer, interpolator, registration, internal images?
 

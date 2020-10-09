@@ -329,7 +329,7 @@ EulerStackTransform< TElastix >
    * the current (euler) transform.
    */
   if( this->GetUseComposition()
-    && this->Superclass1::GetInitialTransform() != 0 )
+    && this->Superclass1::GetInitialTransform() != nullptr )
   {
     /** Transform point to voxel coordinates. */
     InputPointType      fullDimensionCenterPoint;

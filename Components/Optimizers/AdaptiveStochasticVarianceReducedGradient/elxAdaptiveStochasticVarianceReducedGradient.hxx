@@ -75,7 +75,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
   this->m_OutsideIterations = 10;
 
   this->m_RandomGenerator = RandomGeneratorType::GetInstance();
-  this->m_AdvancedTransform = 0;
+  this->m_AdvancedTransform = nullptr;
 
   this->m_UseNoiseCompensation = true;
   this->m_OriginalButSigmoidToDefault = false;
@@ -1364,7 +1364,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>
     transform.GetPointer() );
   if ( !testPtr )
   {
-    this->m_AdvancedTransform = 0;
+    this->m_AdvancedTransform = nullptr;
     itkDebugMacro( "Transform is not Advanced" );
     itkExceptionMacro( << "The automatic parameter estimation of the ASGD "
       << "optimizer works only with advanced transforms" );

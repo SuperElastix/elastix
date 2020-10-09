@@ -323,7 +323,7 @@ typename CombinationImageToImageMetric< TFixedImage, TMovingImage >
 {
   if( pos >= this->GetNumberOfMetrics() )
   {
-    return 0;
+    return nullptr;
   }
   else
   {

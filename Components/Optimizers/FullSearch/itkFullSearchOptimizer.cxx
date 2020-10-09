@@ -43,7 +43,7 @@ FullSearchOptimizer
   m_StopCondition                 = FullRangeSearched;
   m_Stop                          = false;
   m_NumberOfSearchSpaceDimensions = 0;
-  m_SearchSpace                   = 0;
+  m_SearchSpace                   = nullptr;
   m_LastSearchSpaceChanges        = 0;
 
 }   //end constructor

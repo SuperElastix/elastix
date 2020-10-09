@@ -32,7 +32,7 @@ template< class TListSample >
 ANNBruteForceTree< TListSample >
 ::ANNBruteForceTree()
 {
-  this->m_ANNTree = 0;
+  this->m_ANNTree = nullptr;
 } // end Constructor
 
 

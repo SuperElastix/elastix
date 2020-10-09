@@ -129,7 +129,7 @@ ConjugateGradient< TElastix >::LineSearch(
   }
   catch( itk::ExceptionObject & err )
   {
-    if( this->GetLineSearchOptimizer() == 0 )
+    if( this->GetLineSearchOptimizer() == nullptr )
     {
       throw err;
     }

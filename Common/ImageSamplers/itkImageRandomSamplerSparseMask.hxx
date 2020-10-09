@@ -84,7 +84,7 @@ ImageRandomSamplerSparseMask< TInputImage >
     std::string            fullSamplerMessage = err.GetDescription();
     std::string::size_type loc                = fullSamplerMessage.find(
       "ERROR: failed to allocate memory for the sample container", 0 );
-    if( loc != std::string::npos && this->GetMask() == 0 )
+    if( loc != std::string::npos && this->GetMask() == nullptr )
     {
       message += "\nYou are using the ImageRandomSamplerSparseMask sampler, "
         "but you did not set a mask. The internal ImageFullSampler therefore "

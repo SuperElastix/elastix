@@ -31,7 +31,7 @@ namespace itk
 ScaledSingleValuedCostFunction
 ::ScaledSingleValuedCostFunction()
 {
-  this->m_UnscaledCostFunction = 0;
+  this->m_UnscaledCostFunction = nullptr;
   this->m_UseScales            = false;
   this->m_NegateCostFunction   = false;
 

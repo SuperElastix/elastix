@@ -231,7 +231,7 @@ main( int argc, char ** argv )
          << ConvertSecondsToDHMS( totaltimer.GetMean(), 1 ) << ".\n" << std::endl;
 
   /** Clean up. */
-  transformix = 0;
+  transformix = nullptr;
   TransformixMainType::UnloadComponents();
 
   /** Exit and return the error code. */

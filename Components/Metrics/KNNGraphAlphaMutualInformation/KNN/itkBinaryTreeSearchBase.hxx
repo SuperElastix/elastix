@@ -31,7 +31,7 @@ template< class TBinaryTree >
 BinaryTreeSearchBase< TBinaryTree >
 ::BinaryTreeSearchBase()
 {
-  this->m_BinaryTree        = 0;
+  this->m_BinaryTree        = nullptr;
   this->m_KNearestNeighbors = 1;
 } // end Constructor
 

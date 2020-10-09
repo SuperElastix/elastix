@@ -232,7 +232,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
     if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
-        mappedPoint, movingImageValue, 0 );
+        mappedPoint, movingImageValue, nullptr );
     }
 
     if( sampleOk )
@@ -368,7 +368,7 @@ AdvancedMeanSquaresImageToImageMetric< TFixedImage, TMovingImage >
     if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
-        mappedPoint, movingImageValue, 0 );
+        mappedPoint, movingImageValue, nullptr );
     }
 
     if( sampleOk )

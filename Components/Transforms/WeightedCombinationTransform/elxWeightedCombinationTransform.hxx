@@ -281,7 +281,7 @@ WeightedCombinationTransformElastix< TElastix >
 
     /** Create a SubTransform. */
     typename ObjectType::Pointer subTransform;
-    PtrToCreator testcreator = 0;
+    PtrToCreator testcreator = nullptr;
     testcreator = this->GetElastix()->GetComponentDatabase()
       ->GetCreator( subTransformName, this->m_Elastix->GetDBIndex() );
 

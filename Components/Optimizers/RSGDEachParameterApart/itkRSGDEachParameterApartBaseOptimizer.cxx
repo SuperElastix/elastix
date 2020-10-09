@@ -44,7 +44,7 @@ RSGDEachParameterApartBaseOptimizer
   m_CurrentIteration           =   0;
   m_Value                      = 0;
   m_Maximize                   = false;
-  m_CostFunction               = 0;
+  m_CostFunction               = nullptr;
 
   m_CurrentStepLengths.Fill( 0.0f );
   m_CurrentStepLength = 0;

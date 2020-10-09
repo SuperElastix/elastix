@@ -113,7 +113,7 @@ GradientDifferenceImageToImageMetric< TFixedImage, TMovingImage >
   /** Resampling for 3D->2D */
   RayCastInterpolatorType * rayCaster = dynamic_cast< RayCastInterpolatorType * >(
     const_cast< InterpolatorType * >( this->GetInterpolator() ) );
-  if( rayCaster != 0 )
+  if( rayCaster != nullptr )
   {
     this->m_TransformMovingImageFilter->SetTransform( rayCaster->GetTransform() );
   }

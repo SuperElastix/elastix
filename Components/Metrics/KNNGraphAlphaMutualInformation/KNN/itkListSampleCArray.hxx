@@ -34,7 +34,7 @@ template< class TMeasurementVector, class TInternalValue >
 ListSampleCArray< TMeasurementVector, TInternalValue >
 ::ListSampleCArray()
 {
-  this->m_InternalContainer     = 0;
+  this->m_InternalContainer     = nullptr;
   this->m_InternalContainerSize = 0;
   this->m_ActualSize            = 0;
 } // end Constructor

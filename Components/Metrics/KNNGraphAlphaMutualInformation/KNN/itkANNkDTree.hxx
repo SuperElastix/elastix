@@ -32,7 +32,7 @@ template< class TListSample >
 ANNkDTree< TListSample >
 ::ANNkDTree()
 {
-  this->m_ANNTree       = 0;
+  this->m_ANNTree       = nullptr;
   this->m_SplittingRule = ANN_KD_SL_MIDPT;
   this->m_BucketSize    = 1;
 

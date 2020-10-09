@@ -62,8 +62,8 @@ KernelTransform2< TScalarType, NDimensions >
   this->m_LInverseComputed             = false;
   this->m_LMatrixDecompositionComputed = false;
 
-  this->m_LMatrixDecompositionSVD = 0;
-  this->m_LMatrixDecompositionQR  = 0;
+  this->m_LMatrixDecompositionSVD = nullptr;
+  this->m_LMatrixDecompositionQR  = nullptr;
 
   this->m_Stiffness    = 0.0;
   this->m_PoissonRatio = 0.3;
@@ -263,7 +263,7 @@ KernelTransform2< TScalarType, NDimensions >
   {
     if( !this->m_LMatrixDecompositionComputed )
     {
-      if( this->m_LMatrixDecompositionSVD != 0 )
+      if( this->m_LMatrixDecompositionSVD != nullptr )
       {
         delete this->m_LMatrixDecompositionSVD;
       }
@@ -278,7 +278,7 @@ KernelTransform2< TScalarType, NDimensions >
   {
     if( !this->m_LMatrixDecompositionComputed )
     {
-      if( this->m_LMatrixDecompositionQR != 0 )
+      if( this->m_LMatrixDecompositionQR != nullptr )
       {
         delete this->m_LMatrixDecompositionQR;
       }

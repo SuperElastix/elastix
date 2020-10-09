@@ -30,8 +30,8 @@ namespace elastix
 ElastixBase::ElastixBase()
 {
   /** Initialize. */
-  this->m_Configuration     = 0;
-  this->m_ComponentDatabase = 0;
+  this->m_Configuration     = nullptr;
+  this->m_ComponentDatabase = nullptr;
   this->m_DBIndex           = 0;
 
   /** The default output precision of elxout is set to 6. */
@@ -63,8 +63,8 @@ ElastixBase::ElastixBase()
   this->m_ResultImageContainer = DataObjectContainerType::New();
 
   /** Initialize initialTransform and final transform. */
-  this->m_InitialTransform = 0;
-  this->m_FinalTransform   = 0;
+  this->m_InitialTransform = nullptr;
+  this->m_FinalTransform   = nullptr;
 
   /** From Elastix 4.3 to 4.7: Ignore direction cosines by default, for
    * backward compatability. From Elastix 4.8: set it to true by default.*/

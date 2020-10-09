@@ -36,13 +36,13 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
   this->m_Alpha           = 0.99;
   this->m_AvoidDivisionBy = 1e-10;
 
-  this->m_BinaryKNNTreeFixed  = 0;
-  this->m_BinaryKNNTreeMoving = 0;
-  this->m_BinaryKNNTreeJoint  = 0;
+  this->m_BinaryKNNTreeFixed  = nullptr;
+  this->m_BinaryKNNTreeMoving = nullptr;
+  this->m_BinaryKNNTreeJoint  = nullptr;
 
-  this->m_BinaryKNNTreeSearcherFixed  = 0;
-  this->m_BinaryKNNTreeSearcherMoving = 0;
-  this->m_BinaryKNNTreeSearcherJoint  = 0;
+  this->m_BinaryKNNTreeSearcherFixed  = nullptr;
+  this->m_BinaryKNNTreeSearcherMoving = nullptr;
+  this->m_BinaryKNNTreeSearcherJoint  = nullptr;
 
 } // end Constructor()
 
@@ -828,7 +828,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric< TFixedImage, TMovingImage >
       else
       {
         sampleOk = this->EvaluateMovingImageValueAndDerivative(
-          mappedPoint, movingImageValue, 0 );
+          mappedPoint, movingImageValue, nullptr );
       }
     }
 

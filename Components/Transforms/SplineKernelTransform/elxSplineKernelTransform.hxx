@@ -381,7 +381,7 @@ SplineKernelTransform< TElastix >
 
   /** Apply initial transform if necessary, for fixed image landmarks only. */
   if( landmarksInFixedImage && this->GetUseComposition()
-    && this->Superclass1::GetInitialTransform() != 0 )
+    && this->Superclass1::GetInitialTransform() != nullptr )
   {
     InputPointType inputPoint; inputPoint.Fill( 0.0f );
     for( unsigned int j = 0; j < nrofpoints; ++j )

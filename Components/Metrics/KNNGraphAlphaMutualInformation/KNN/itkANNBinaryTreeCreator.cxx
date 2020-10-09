@@ -77,7 +77,7 @@ ANNBinaryTreeCreator::DeleteANNkDTree( ANNkDTreeType * & tree )
   if( tree )
   {
     delete tree;
-    tree = 0;
+    tree = nullptr;
     DecreaseReferenceCount();
   }
 } // end DeleteANNkDTree
@@ -93,7 +93,7 @@ ANNBinaryTreeCreator::DeleteANNBruteForceTree( ANNBruteForceTreeType * & tree )
   if( tree )
   {
     delete tree;
-    tree = 0;
+    tree = nullptr;
     DecreaseReferenceCount();
   }
 } // end DeleteANNBruteForceTree

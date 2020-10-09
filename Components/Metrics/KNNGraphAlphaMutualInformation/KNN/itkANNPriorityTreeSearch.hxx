@@ -32,7 +32,7 @@ ANNPriorityTreeSearch< TBinaryTree >
 ::ANNPriorityTreeSearch()
 {
   this->m_ErrorBound         = 0.0;
-  this->m_BinaryTreeAskDTree = 0;
+  this->m_BinaryTreeAskDTree = nullptr;
 } // end Constructor
 
 
@@ -83,7 +83,7 @@ ANNPriorityTreeSearch< TBinaryTree >
   }
   else
   {
-    this->m_BinaryTreeAskDTree = 0;
+    this->m_BinaryTreeAskDTree = nullptr;
   }
 
 } // end SetBinaryTree

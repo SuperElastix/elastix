@@ -28,7 +28,7 @@ template< class TScalarType, unsigned int NDimensions, class TComponentType >
 DeformationFieldInterpolatingTransform< TScalarType, NDimensions,  TComponentType >::DeformationFieldInterpolatingTransform() :
   Superclass( OutputSpaceDimension )
 {
-  this->m_DeformationField     = 0;
+  this->m_DeformationField     = nullptr;
   this->m_ZeroDeformationField = DeformationFieldType::New();
   typename DeformationFieldType::SizeType dummySize;
   dummySize.Fill( 0 );
