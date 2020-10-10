@@ -19,7 +19,10 @@
 #define __elxMissingStructurePenalty_HXX__
 
 #include "elxMissingStructurePenalty.h"
-#include "itkTimeProbe.h"
+#include "itkTransformixInputPointFileReader.h"
+
+// ITK header file:
+#include <itkTimeProbe.h>
 
 namespace elastix
 {

@@ -18,6 +18,8 @@
 #ifndef __elxPolydataDummyPenalty_HXX__
 #define __elxPolydataDummyPenalty_HXX__
 
+#include "itkTransformixInputPointFileReader.h"
+
 #include <typeinfo>
 
 namespace elastix
