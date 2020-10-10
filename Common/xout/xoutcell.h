@@ -44,8 +44,6 @@ public:
   typedef xoutcell                  Self;
   typedef xoutbase< charT, traits > Superclass;
 
-  typedef std::basic_ostringstream< charT, traits > InternalBufferType;
-
   /** Constructors */
   xoutcell();
 
@@ -55,7 +53,9 @@ public:
   /** Write the buffered cell data to the outputs. */
   void WriteBufferedData( void ) override;
 
-protected:
+private:
+
+  typedef std::basic_ostringstream< charT, traits > InternalBufferType;
 
   InternalBufferType m_InternalBuffer;
 
