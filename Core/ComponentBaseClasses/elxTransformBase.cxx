@@ -16,17 +16,11 @@
  *
  *=========================================================================*/
 
-#include "elxElastixTemplate.h"
-#include "elxTransformBase.hxx"
-
 #include <itkImage.h>
 #include "elxTransformBase.hxx"
+#include "elxBaseComponentSE.hxx"
+#include "elxElastixTemplate.hxx"
 
-
-using ElastixType1 = elastix::ElastixTemplate < itk::Image<float>, itk::Image<float>>;
-using ElastixType2 = elastix::ElastixTemplate < itk::Image<short, 3>, itk::Image<short, 3>>;
-using ElastixType3 = elastix::ElastixTemplate < itk::Image<float, 3>, itk::Image<float, 3>>;
-using ElastixType4 = elastix::ElastixTemplate < itk::Image<short, 4>, itk::Image<short, 4>>;
 
 /*
 using ElastixType1 = elastix::ElastixTemplate < elastix::ElastixTypedef<1>::FixedImageType, elastix::ElastixTypedef<1>::MovingImageType>;
@@ -37,8 +31,25 @@ using ElastixType4 = elastix::ElastixTemplate < elastix::ElastixTypedef<4>::Fixe
 
 namespace elastix
 {
+  using ElastixType1 = ElastixTemplate < itk::Image<float>, itk::Image<float>>;
+  using ElastixType2 = ElastixTemplate < itk::Image<short, 3>, itk::Image<short, 3>>;
+  using ElastixType3 = ElastixTemplate < itk::Image<float, 3>, itk::Image<float, 3>>;
+  using ElastixType4 = ElastixTemplate < itk::Image<short, 4>, itk::Image<short, 4>>;
+
+  template class  ElastixTemplate < itk::Image<float>, itk::Image<float>>;
+  template class  ElastixTemplate < itk::Image<short, 3>, itk::Image<short, 3>>;
+  template class  ElastixTemplate < itk::Image<float, 3>, itk::Image<float, 3>>;
+  template class  ElastixTemplate < itk::Image<short, 4>, itk::Image<short, 4>>;
+
+
   template class TransformBase<ElastixType1>;
   template class TransformBase<ElastixType2>;
   template class TransformBase<ElastixType3>;
   template class TransformBase<ElastixType4>;
+
+  template class BaseComponentSE<ElastixType1>;
+  template class BaseComponentSE<ElastixType2>;
+  template class BaseComponentSE<ElastixType3>;
+  template class BaseComponentSE<ElastixType4>;
+
 }

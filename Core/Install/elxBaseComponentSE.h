@@ -126,8 +126,4 @@ protected:
 
 } //end namespace elastix
 
-#ifndef ITK_MANUAL_INSTANTIATION
-#include "elxBaseComponentSE.hxx"
-#endif
-
 #endif // end #ifndef __elxBaseComponentSE_h

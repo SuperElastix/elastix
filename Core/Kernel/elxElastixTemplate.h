@@ -413,12 +413,10 @@ private:
 
 };
 
+using namespace xl;
+
 } // end namespace elastix
 
 #undef elxGetBaseMacro
-
-#ifndef ITK_MANUAL_INSTANTIATION
-#include "elxElastixTemplate.hxx"
-#endif
 
 #endif // end #ifndef __elxElastixTemplate_h
