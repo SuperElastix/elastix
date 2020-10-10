@@ -42,20 +42,10 @@ public:
   typedef xoutsimple                Self;
   typedef xoutbase< charT, traits > Superclass;
 
-  typedef typename Superclass::traits_type  traits_type;
-  typedef typename Superclass::char_type    char_type;
-  typedef typename Superclass::int_type     int_type;
-  typedef typename Superclass::pos_type     pos_type;
-  typedef typename Superclass::off_type     off_type;
-  typedef typename Superclass::ostream_type ostream_type;
-  typedef typename Superclass::ios_type     ios_type;
-
-  typedef typename Superclass::CStreamMapType         CStreamMapType;
-  typedef typename Superclass::XStreamMapType         XStreamMapType;
-  typedef typename Superclass::CStreamMapIteratorType CStreamMapIteratorType;
-  typedef typename Superclass::XStreamMapIteratorType XStreamMapIteratorType;
-  typedef typename Superclass::CStreamMapEntryType    CStreamMapEntryType;
-  typedef typename Superclass::XStreamMapEntryType    XStreamMapEntryType;
+  /** Typedefs of Superclass */
+  using typename Superclass::ostream_type;
+  using typename Superclass::CStreamMapType;
+  using typename Superclass::XStreamMapType;
 
   /** Constructors */
   xoutsimple() = default;

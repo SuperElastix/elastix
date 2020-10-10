@@ -39,8 +39,8 @@ xoutrow< charT, traits >
 ::WriteBufferedData( void )
 {
   /** Write the cell-data to the outputs, separated by tabs. */
-  XStreamMapIteratorType xit   = this->m_XTargetCells.begin();
-  XStreamMapIteratorType tmpIt = xit;
+  auto xit   = this->m_XTargetCells.begin();
+  auto tmpIt = xit;
 
   for( ++tmpIt; tmpIt != this->m_XTargetCells.end(); ++xit, ++tmpIt )
   {
