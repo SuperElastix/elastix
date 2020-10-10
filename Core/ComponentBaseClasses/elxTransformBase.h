@@ -376,8 +376,4 @@ private:
 
 } // end namespace elastix
 
-#ifndef ITK_MANUAL_INSTANTIATION
-#include "elxTransformBase.hxx"
-#endif
-
 #endif // end #ifndef __elxTransformBase_h

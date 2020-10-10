@@ -62,6 +62,7 @@ set( ComponentBaseClassFiles
   ComponentBaseClasses/elxResampleInterpolatorBase.hxx
   ComponentBaseClasses/elxResamplerBase.hxx
   ComponentBaseClasses/elxTransformBase.hxx
+  ComponentBaseClasses/elxTransformBase.cxx
 )
 
 set( ProgressCommandFiles
