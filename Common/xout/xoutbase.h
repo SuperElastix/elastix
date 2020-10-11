@@ -161,22 +161,10 @@ protected:
   CStreamMapType m_CTargetCells;
   XStreamMapType m_XTargetCells;
 
-  /** Boolean that says whether the Callback-function must be called.
-   * False by default. */
-  bool m_Call{ false };
-
-  /** Called each time << is used, but only when m_Call == true; */
-  virtual void Callback( void ){}
-
   template< class T >
   Self & SendToTargets( const T & _arg )
   {
     Send< T >::ToTargets( const_cast< T & >( _arg ), m_CTargetCells, m_XTargetCells );
-    /** Call the callback method. */
-    if( m_Call )
-    {
-      this->Callback();
-    }
     return *this;
   } // end SendToTargets
 
