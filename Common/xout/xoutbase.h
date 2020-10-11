@@ -61,8 +61,6 @@ public:
 
   typedef std::map< std::string, ostream_type * > CStreamMapType;
   typedef std::map< std::string, Self * >         XStreamMapType;
-  typedef typename CStreamMapType::iterator       CStreamMapIteratorType;
-  typedef typename XStreamMapType::iterator       XStreamMapIteratorType;
   typedef typename CStreamMapType::value_type     CStreamMapEntryType;
   typedef typename XStreamMapType::value_type     XStreamMapEntryType;
 
@@ -164,36 +162,20 @@ protected:
   template< class T >
   Self & SendToTargets( const T & _arg )
   {
-    Send< T >::ToTargets( const_cast< T & >( _arg ), m_CTargetCells, m_XTargetCells );
+    /** Send input to the target c-streams. */
+    for( const auto& cell : m_CTargetCells )
+    {
+      *( cell.second ) << _arg;
+    }
+
+    /** Send input to the target xout-objects. */
+    for( const auto& cell :m_XTargetCells )
+    {
+      *( cell.second ) << _arg;
+    }
+
     return *this;
   } // end SendToTargets
-
-
-private:
-
-  template< class T >
-  class Send
-  {
-public:
-
-    static void ToTargets( T & _arg, CStreamMapType & CTargetCells, XStreamMapType & XTargetCells )
-    {
-      /** Send input to the target c-streams. */
-      for( const auto& cell : CTargetCells )
-      {
-        *( cell.second ) << _arg;
-      }
-
-      /** Send input to the target xout-objects. */
-      for( const auto& cell : XTargetCells )
-      {
-        *( cell.second ) << _arg;
-      }
-
-    } // end ToTargets
-
-
-  };
 
 };
 
