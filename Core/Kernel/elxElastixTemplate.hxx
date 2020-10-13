@@ -41,33 +41,6 @@ namespace elastix
 using namespace xl;
 
 /**
- * ********************* Constructor ****************************
- */
-
-template< class TFixedImage, class TMovingImage >
-ElastixTemplate< TFixedImage, TMovingImage >
-::ElastixTemplate()
-{
-  /** Initialize CallBack commands. */
-  this->m_BeforeEachResolutionCommand = nullptr;
-  this->m_AfterEachIterationCommand   = nullptr;
-
-  /** Create timers. */
-  this->m_Timer0.Reset();
-  this->m_IterationTimer.Reset();
-  this->m_ResolutionTimer.Reset();
-
-  /** Initialize the this->m_IterationCounter. */
-  this->m_IterationCounter = 0;
-
-  /** Initialize CurrentTransformParameterFileName. */
-  this->m_CurrentTransformParameterFileName = "";
-  this->m_TransformParametersMap.clear();
-
-} // end Constructor
-
-
-/**
  * ********************** GetFixedImage *************************
  */
 
