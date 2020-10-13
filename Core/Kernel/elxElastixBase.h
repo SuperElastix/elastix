@@ -397,28 +397,22 @@ protected:
   {
 public:
 
-    typedef TImage                                         ImageType;
-    typedef typename ImageType::Pointer                    ImagePointer;
-    typedef itk::ImageFileReader< ImageType >              ImageReaderType;
-    typedef typename ImageReaderType::Pointer              ImageReaderPointer;
-    typedef typename ImageType::DirectionType              DirectionType;
-    typedef itk::ChangeInformationImageFilter< ImageType > ChangeInfoFilterType;
-    typedef typename ChangeInfoFilterType::Pointer         ChangeInfoFilterPointer;
+    typedef typename TImage::DirectionType DirectionType;
 
     static DataObjectContainerPointer GenerateImageContainer(
-      FileNameContainerType * fileNameContainer, const std::string & imageDescription,
+      const FileNameContainerType * const fileNameContainer, const std::string & imageDescription,
       bool useDirectionCosines, DirectionType * originalDirectionCosines = nullptr )
     {
-      DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
+      const auto imageContainer = DataObjectContainerType::New();
 
       /** Loop over all image filenames. */
-      for( unsigned int i = 0; i < fileNameContainer->Size(); ++i )
+      for( const auto& fileName : *fileNameContainer )
       {
         /** Setup reader. */
-        ImageReaderPointer imageReader = ImageReaderType::New();
-        imageReader->SetFileName( fileNameContainer->ElementAt( i ).c_str() );
-        ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
-        DirectionType           direction;
+        const auto imageReader = itk::ImageFileReader< TImage >::New();
+        imageReader->SetFileName( fileName );
+        const auto infoChanger = itk::ChangeInformationImageFilter< TImage >::New();
+        DirectionType direction;
         direction.SetIdentity();
         infoChanger->SetOutputDirection( direction );
         infoChanger->SetChangeDirection( !useDirectionCosines );
@@ -441,16 +435,16 @@ public:
         }
 
         /** Store loaded image in the image container, as a DataObjectPointer. */
-        ImagePointer image = infoChanger->GetOutput();
-        imageContainer->CreateElementAt( i ) = image.GetPointer();
+        const auto image = infoChanger->GetOutput();
+        imageContainer->push_back( image );
 
         /** Store the original direction cosines */
-        if( originalDirectionCosines )
+        if( originalDirectionCosines != nullptr )
         {
           *originalDirectionCosines = imageReader->GetOutput()->GetDirection();
         }
 
-      } // end for i
+      } // end for
 
       return imageContainer;
 
@@ -470,13 +464,11 @@ public:
     static DataObjectContainerPointer GenerateImageContainer(
       DataObjectPointer image )
     {
-      unsigned int j = 0; //container with only one image for now
-
       /** Allocate image container pointer. */
-      DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
+      const auto imageContainer = DataObjectContainerType::New();
 
       /** Store image in image container. */
-      imageContainer->CreateElementAt( j ) = image;
+      imageContainer->push_back( image );
 
       /** Return the pointer to the new image container. */
       return imageContainer;
