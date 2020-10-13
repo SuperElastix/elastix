@@ -128,20 +128,6 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( ElastixTemplate, itk::Object );
 
-  /** Typedefs inherited from Superclass2. */
-  typedef Superclass2::ConfigurationType          ConfigurationType;
-  typedef Superclass2::ConfigurationPointer       ConfigurationPointer;
-  typedef Superclass2::ObjectType                 ObjectType;                   //for the components
-  typedef Superclass2::DataObjectType             DataObjectType;               //for the images
-  typedef Superclass2::ObjectPointer              ObjectPointer;
-  typedef Superclass2::DataObjectPointer          DataObjectPointer;
-  typedef Superclass2::ObjectContainerType        ObjectContainerType;
-  typedef Superclass2::DataObjectContainerType    DataObjectContainerType;
-  typedef Superclass2::FileNameContainerType      FileNameContainerType;
-  typedef Superclass2::ObjectContainerPointer     ObjectContainerPointer;
-  typedef Superclass2::DataObjectContainerPointer DataObjectContainerPointer;
-  typedef Superclass2::FileNameContainerPointer   FileNameContainerPointer;
-
   /** Typedef's for this class. */
   typedef TFixedImage                       FixedImageType;
   typedef TMovingImage                      MovingImageType;
