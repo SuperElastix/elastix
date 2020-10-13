@@ -457,21 +457,6 @@ public:
     } // end static method GenerateImageContainer
 
 
-    /** Static method overloaded GenerateImageContainer. */
-    static DataObjectContainerPointer GenerateImageContainer( DataObjectPointer image )
-    {
-      /** Allocate image container pointer. */
-      DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
-
-      /** Store image in image container (for now only one image in container!). */
-      imageContainer->CreateElementAt( 0 ) = image;
-
-      /** Return the pointer to the new image container. */
-      return imageContainer;
-
-    } // GenerateImageContainer()
-
-
     MultipleImageLoader() = default;
     ~MultipleImageLoader() = default;
 
