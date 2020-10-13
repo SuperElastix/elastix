@@ -337,12 +337,6 @@ private:
   ElastixTemplate();
   ~ElastixTemplate() override{}
 
-  /** Classes that contain a function to load multiple images, given a filename container. */
-  typedef typename Superclass2::MultipleImageLoader< FixedImageType >  FixedImageLoaderType;
-  typedef typename Superclass2::MultipleImageLoader< MovingImageType > MovingImageLoaderType;
-  typedef typename Superclass2::MultipleImageLoader< FixedMaskType >   FixedMaskLoaderType;
-  typedef typename Superclass2::MultipleImageLoader< MovingMaskType >  MovingMaskLoaderType;
-
   /** CallBack commands. */
   BeforeEachResolutionCommandPointer m_BeforeEachResolutionCommand;
   AfterEachIterationCommandPointer   m_AfterEachIterationCommand;

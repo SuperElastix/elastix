@@ -260,7 +260,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
   if( this->GetFixedImage() == nullptr )
   {
     this->SetFixedImageContainer(
-      FixedImageLoaderType::GenerateImageContainer(
+      MultipleImageLoader< FixedImageType >::GenerateImageContainer(
       this->GetFixedImageFileNameContainer(), "Fixed Image", useDirCos, &fixDirCos ) );
     this->SetOriginalFixedImageDirection( fixDirCos );
   }
@@ -280,19 +280,19 @@ ElastixTemplate< TFixedImage, TMovingImage >
   if( this->GetMovingImage() == nullptr )
   {
     this->SetMovingImageContainer(
-      MovingImageLoaderType::GenerateImageContainer(
+      MultipleImageLoader< MovingImageType >::GenerateImageContainer(
       this->GetMovingImageFileNameContainer(), "Moving Image", useDirCos ) );
   }
   if( this->GetFixedMask() == nullptr )
   {
     this->SetFixedMaskContainer(
-      FixedMaskLoaderType::GenerateImageContainer(
+      MultipleImageLoader< FixedMaskType >::GenerateImageContainer(
       this->GetFixedMaskFileNameContainer(), "Fixed Mask", useDirCos ) );
   }
   if( this->GetMovingMask() == nullptr )
   {
     this->SetMovingMaskContainer(
-      MovingMaskLoaderType::GenerateImageContainer(
+      MultipleImageLoader< MovingMaskType >::GenerateImageContainer(
       this->GetMovingMaskFileNameContainer(), "Moving Mask", useDirCos ) );
   }
 
@@ -398,7 +398,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
     if( this->GetMovingImage() == nullptr )
     {
       this->SetMovingImageContainer(
-        MovingImageLoaderType::GenerateImageContainer(
+        MultipleImageLoader< MovingImageType >::GenerateImageContainer(
         this->GetMovingImageFileNameContainer(), "Input Image", useDirCos ) );
     } // end if !moving image
 
