@@ -58,7 +58,7 @@
  */
 
 #define elxGetBaseMacro( _name, _elxbasetype ) \
-  virtual _elxbasetype * GetElx##_name##Base( void ) const \
+  _elxbasetype * GetElx##_name##Base( void ) const \
   { \
     return this->GetElx##_name##Base( 0 ); \
   } \
@@ -111,7 +111,7 @@ namespace elastix
  */
 
 template< class TFixedImage, class TMovingImage >
-class ElastixTemplate : public itk::Object, public ElastixBase
+class ElastixTemplate final : public itk::Object, public ElastixBase
 {
 public:
 
@@ -226,64 +226,64 @@ public:
   /** Get pointers to the images. They are obtained from the
    * {Fixed,Moving}ImageContainer and casted to the appropriate type.
    */
-  virtual FixedImageType * GetFixedImage( void ) const
+  FixedImageType * GetFixedImage( void ) const
   {
     return this->GetFixedImage( 0 );
   }
 
 
-  virtual FixedImageType * GetFixedImage( unsigned int idx ) const;
+  FixedImageType * GetFixedImage( unsigned int idx ) const;
 
-  virtual MovingImageType * GetMovingImage( void ) const
+  MovingImageType * GetMovingImage( void ) const
   {
     return this->GetMovingImage( 0 );
   }
 
 
-  virtual MovingImageType * GetMovingImage( unsigned int idx ) const;
+  MovingImageType * GetMovingImage( unsigned int idx ) const;
 
   /** Get pointers to the masks. They are obtained from the
    * {Fixed,Moving}MaskContainer and casted to the appropriate type.
    */
-  virtual FixedMaskType * GetFixedMask( void ) const
+  FixedMaskType * GetFixedMask( void ) const
   {
     return this->GetFixedMask( 0 );
   }
 
 
-  virtual FixedMaskType * GetFixedMask( unsigned int idx ) const;
+  FixedMaskType * GetFixedMask( unsigned int idx ) const;
 
-  virtual MovingMaskType * GetMovingMask( void ) const
+  MovingMaskType * GetMovingMask( void ) const
   {
     return this->GetMovingMask( 0 );
   }
 
 
-  virtual MovingMaskType * GetMovingMask( unsigned int idx ) const;
+  MovingMaskType * GetMovingMask( unsigned int idx ) const;
 
   /** Get pointers to the result image. They are obtained from the
    * ResultImageContainer and casted to the appropriate type.
    */
-  virtual ResultImageType * GetResultImage( void ) const
+  ResultImageType * GetResultImage( void ) const
   {
     return this->GetResultImage( 0 );
   }
 
 
-  virtual ResultImageType * GetResultImage( unsigned int idx ) const;
+  ResultImageType * GetResultImage( unsigned int idx ) const;
 
-  virtual int SetResultImage( DataObjectPointer result_image );
+  int SetResultImage( DataObjectPointer result_image );
 
 
-  virtual ResultDeformationFieldType * GetResultDeformationField( void ) const
+  ResultDeformationFieldType * GetResultDeformationField( void ) const
   {
     return this->GetResultDeformationField( 0 );
   }
 
 
-  virtual ResultDeformationFieldType * GetResultDeformationField( unsigned int idx ) const;
+  ResultDeformationFieldType * GetResultDeformationField( unsigned int idx ) const;
 
-  virtual int SetResultDeformationField( DataObjectPointer result_deformationfield );
+  int SetResultDeformationField( DataObjectPointer result_deformationfield );
 
   /** Main functions:
    * Run() for registration, and ApplyTransform() for just
@@ -296,7 +296,7 @@ public:
   /** The Callback functions. */
   int BeforeAll( void ) override;
 
-  virtual int BeforeAllTransformix( void );
+  int BeforeAllTransformix( void );
 
   void BeforeRegistration( void ) override;
 
@@ -318,9 +318,9 @@ public:
   void SetConfigurations( std::vector< ConfigurationPointer > & configurations ) override;
 
   /** Return configuration from vector of configurations. Library only. */
-  virtual ConfigurationPointer GetConfiguration( const size_t index );
+  ConfigurationPointer GetConfiguration( const size_t index );
 
-  virtual ConfigurationPointer GetConfiguration()
+  ConfigurationPointer GetConfiguration()
   {
     return Superclass2::GetConfiguration();
   }
@@ -330,9 +330,9 @@ public:
    * false if it failed to determine the original fixed image direction. In
    * that case the direction var is left unchanged. If no fixed image is
    * present, it tries to read it from the parameter file. */
-  virtual bool GetOriginalFixedImageDirection( FixedImageDirectionType & direction ) const;
+  bool GetOriginalFixedImageDirection( FixedImageDirectionType & direction ) const;
 
-protected:
+private:
 
   ElastixTemplate();
   ~ElastixTemplate() override{}
@@ -363,7 +363,7 @@ protected:
   unsigned int m_IterationCounter;
 
   /** CreateTransformParameterFile. */
-  virtual void CreateTransformParameterFile( const std::string FileName,
+  void CreateTransformParameterFile( const std::string FileName,
     const bool ToLog );
 
   /** CreateTransformParametersMap. */
@@ -376,7 +376,7 @@ protected:
   ParameterMapType m_TransformParametersMap;
 
   /** Open the IterationInfoFile, where the table with iteration info is written to. */
-  virtual void OpenIterationInfoFile( void );
+  void OpenIterationInfoFile( void );
 
   std::ofstream m_IterationInfoFile;
 
@@ -401,10 +401,10 @@ protected:
    * (for example "Metric1"). This makes sure that the component knows its
    * own function in the registration process.
    */
-  virtual void ConfigureComponents( Self * This );
+  void ConfigureComponents( Self * This );
 
   /** Set the direction in the superclass' m_OriginalFixedImageDirection variable */
-  virtual void SetOriginalFixedImageDirection( const FixedImageDirectionType & arg );
+  void SetOriginalFixedImageDirection( const FixedImageDirectionType & arg );
 
 private:
 
