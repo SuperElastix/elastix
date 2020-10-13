@@ -334,18 +334,18 @@ public:
 
 private:
 
-  ElastixTemplate();
-  ~ElastixTemplate() override{}
+  ElastixTemplate() = default;
+  ~ElastixTemplate() override = default;
 
   /** CallBack commands. */
-  BeforeEachResolutionCommandPointer m_BeforeEachResolutionCommand;
-  AfterEachIterationCommandPointer   m_AfterEachIterationCommand;
-  AfterEachResolutionCommandPointer  m_AfterEachResolutionCommand;
+  BeforeEachResolutionCommandPointer m_BeforeEachResolutionCommand{};
+  AfterEachIterationCommandPointer   m_AfterEachIterationCommand{};
+  AfterEachResolutionCommandPointer  m_AfterEachResolutionCommand{};
 
   /** Timers. */
-  TimerType m_Timer0;
-  TimerType m_IterationTimer;
-  TimerType m_ResolutionTimer;
+  TimerType m_Timer0{};
+  TimerType m_IterationTimer{};
+  TimerType m_ResolutionTimer{};
 
   /** Store the CurrentTransformParameterFileName. */
   std::string m_CurrentTransformParameterFileName;
@@ -354,7 +354,7 @@ private:
   std::vector< ConfigurationPointer > m_Configurations;
 
   /** Count the number of iterations. */
-  unsigned int m_IterationCounter;
+  unsigned int m_IterationCounter{};
 
   /** CreateTransformParameterFile. */
   void CreateTransformParameterFile( const std::string FileName,
