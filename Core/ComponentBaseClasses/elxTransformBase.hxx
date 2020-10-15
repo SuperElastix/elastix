@@ -448,13 +448,18 @@ TransformBase< TElastix >
   /** Call the function ReadInitialTransformFromFile. */
   if( fileName != "NoInitialTransform" )
   {
-    if (BaseComponent::IsElastixLibrary())
-    {
-      /** Get initial transform index number. */
-      std::istringstream to_size_t( fileName );
-      size_t             index;
-      to_size_t >> index;
+    // The value of "InitialTransformParametersFileName" is either an index
+    // (size_t) into the vector of configuration objects, or the file name of
+    // a transform parameters file. If it is an index, call
+    // ReadInitialTransformFromVector, otherwise call ReadInitialTransformFromFile.
 
+    /** Get initial transform index number. */
+    std::istringstream to_size_t( fileName );
+    size_t             index;
+    to_size_t >> index;
+
+    if( to_size_t.eof() && ! to_size_t.fail() )
+    {
       /** We can safely read the initial transform. */
       this->ReadInitialTransformFromVector( index );
     }
@@ -467,7 +472,7 @@ TransformBase< TElastix >
       std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(
         fileName.c_str() );
       std::string fullFileName2 = itksys::SystemTools::CollapseFullPath(
-        this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
+        this->m_Configuration->GetParameterFileName() );
       if( fullFileName1 == fullFileName2 )
       {
         itkExceptionMacro( << "ERROR: The InitialTransformParametersFileName "
