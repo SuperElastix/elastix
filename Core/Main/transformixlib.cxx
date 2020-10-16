@@ -171,6 +171,7 @@ TRANSFORMIX::TransformImage(
   argMap.insert( ArgumentMapEntryType( "-argv0", "transformix" ) );
 
   /** Setup xout. */
+  const elx::xoutManager manager{};
   int returndummy2 = elx::xoutSetup( logFileName.c_str(), performLogging, performCout );
   if( returndummy2 && performCout )
   {

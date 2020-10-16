@@ -199,10 +199,7 @@ ElastixFilter< TFixedImage, TMovingImage >
   }
 
   // Setup xout
-  if( elx::xoutSetup( logFileName.c_str(), this->GetLogToFile(), this->GetLogToConsole() ) )
-  {
-    itkExceptionMacro( "Error while setting up xout" );
-  }
+  const elx::xoutManager manager( logFileName, this->GetLogToFile(), this->GetLogToConsole() );
 
   // Run the (possibly multiple) registration(s)
   for( unsigned int i = 0; i < parameterMapVector.size(); ++i )

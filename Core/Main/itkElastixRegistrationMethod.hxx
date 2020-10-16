@@ -219,10 +219,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Setup xout
-  if (elastix::xoutSetup(logFileName.c_str(), this->GetLogToFile(), this->GetLogToConsole()))
-  {
-    itkExceptionMacro("Error while setting up xout");
-  }
+  const elastix::xoutManager manager(logFileName, this->GetLogToFile(), this->GetLogToConsole());
 
   // Run the (possibly multiple) registration(s)
   for (unsigned int i = 0; i < parameterMapVector.size(); ++i)
