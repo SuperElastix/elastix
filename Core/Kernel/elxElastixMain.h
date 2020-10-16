@@ -22,12 +22,15 @@
 #include "elxComponentLoader.h"
 
 #include "elxElastixBase.h"
-#include "itkObject.h"
-
-#include <iostream>
-#include <fstream>
-
 #include "itkParameterMapInterface.h"
+
+#include <itkObject.h>
+
+// Standard C++ header files:
+#include <fstream>
+#include <iostream>
+#include <string>
+
 
 namespace elastix
 {
@@ -49,6 +52,36 @@ namespace elastix
  * It returns 0 if everything went ok. 1 otherwise.
  */
 extern int xoutSetup( const char * logfilename, bool setupLogging, bool setupCout );
+
+
+/** Manages setting up and closing the "xout" output streams.
+ */
+class xoutManager
+{
+public:
+  ITK_DISALLOW_COPY_AND_ASSIGN(xoutManager);
+
+  /** This explicit constructor does set up the "xout" output streams. */
+  explicit xoutManager( const std::string & logfilename, const bool setupLogging, const bool setupCout );
+
+  /** The default-constructor only just constructs a manager object */ 
+  xoutManager() = default;
+
+  /** The destructor closes the "xout" output streams. */
+  ~xoutManager() = default;
+
+private:
+
+  struct Guard
+  {
+    ITK_DISALLOW_COPY_AND_ASSIGN(Guard);
+    Guard() = default;
+    ~Guard();
+  };
+
+  const Guard m_Guard{};
+};
+
 
 /**
  * \class ElastixMain

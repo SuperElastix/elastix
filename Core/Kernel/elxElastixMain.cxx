@@ -130,6 +130,24 @@ namespace elastix
 {
 
 /**
+ * ********************* xoutManager ******************************
+ */
+
+xoutManager::xoutManager( const std::string& logFileName, const bool setupLogging, const bool setupCout )
+{
+  if (xoutSetup(logFileName.c_str(), setupLogging, setupCout))
+  {
+    itkGenericExceptionMacro("Error while setting up xout");
+  }
+}
+
+xoutManager::Guard::~Guard()
+{
+  g_data = {};
+}
+
+
+/**
  * ********************* Constructor ****************************
  */
 
