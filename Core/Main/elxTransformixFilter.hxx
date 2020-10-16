@@ -155,10 +155,7 @@ TransformixFilter< TMovingImage >
   }
 
   // Setup xout
-  if( elx::xoutSetup( logFileName.c_str(), this->GetLogToFile(), this->GetLogToConsole() ) )
-  {
-    itkExceptionMacro( "Error while setting up xout" );
-  }
+  const elx::xoutManager manager( logFileName, this->GetLogToFile(), this->GetLogToConsole() );
 
   // Instantiate transformix
   TransformixMainPointer transformix = TransformixMainType::New();
