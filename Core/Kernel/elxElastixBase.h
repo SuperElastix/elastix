@@ -51,14 +51,14 @@
  * These macros are undef'd at the end of this file
  */
 #define elxGetObjectMacro( _name, _type ) \
-  virtual _type * Get##_name( void ) const \
+  _type * Get##_name( void ) const \
   { \
     return this->m_##_name.GetPointer(); \
   }
 //end elxGetObjectMacro
 
 #define elxSetObjectMacro( _name, _type ) \
-  virtual void Set##_name( _type * _arg ) \
+  void Set##_name( _type * _arg ) \
   { \
     if( this->m_##_name != _arg ) \
     { \
@@ -70,11 +70,11 @@
 
 /** defines for example: GetNumberOfMetrics() */
 #define elxGetNumberOfMacro( _name ) \
-  virtual unsigned int GetNumberOf##_name##s( void ) const \
+  unsigned int GetNumberOf##_name##s( void ) const \
   { \
-    if( this->Get##_name##Container() != nullptr ) \
+    if( this->m_##_name##Container != nullptr ) \
     { \
-      return this->Get##_name##Container()->Size(); \
+      return this->m_##_name##Container->Size(); \
     } \
     return 0; \
   }
