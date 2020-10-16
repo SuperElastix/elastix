@@ -196,9 +196,9 @@ public:
   elxSetObjectMacro( Configuration, ConfigurationType );
 
   /** Set the database index of the instantiated elastix object. */
-  virtual void SetDBIndex( DBIndexType _arg );
+  void SetDBIndex( DBIndexType _arg );
 
-  virtual DBIndexType GetDBIndex( void )
+  DBIndexType GetDBIndex( void )
   {
     return this->m_DBIndex;
   }
@@ -329,7 +329,7 @@ public:
   /** Function that is called at the very beginning of ElastixTemplate::ApplyTransform().
    * It checks the command line input arguments.
    */
-  virtual int BeforeAllTransformixBase( void );
+  int BeforeAllTransformixBase( void );
 
   /** Functions called before and after registration.
    * They install/uninstall the xout["iteration"] field.
@@ -342,7 +342,7 @@ public:
    * (The value assumed when no DefaultOutputPrecision is given in the
    * parameter file.
    */
-  virtual int GetDefaultOutputPrecision( void ) const
+  int GetDefaultOutputPrecision( void ) const
   {
     return this->m_DefaultOutputPrecision;
   }
@@ -351,14 +351,14 @@ public:
   /** Get whether direction cosines should be taken into account (true)
    * or ignored (false). This depends on the UseDirectionCosines
    * parameter. */
-  virtual bool GetUseDirectionCosines( void ) const;
+  bool GetUseDirectionCosines( void ) const;
 
   /** Set/Get the original fixed image direction as a flat array
    * (d11 d21 d31 d21 d22 etc ) */
-  virtual void SetOriginalFixedImageDirectionFlat(
+  void SetOriginalFixedImageDirectionFlat(
     const FlatDirectionCosinesType & arg );
 
-  virtual const FlatDirectionCosinesType & GetOriginalFixedImageDirectionFlat( void ) const;
+  const FlatDirectionCosinesType & GetOriginalFixedImageDirectionFlat( void ) const;
 
   /** Creates transformation parameters map. */
   virtual void CreateTransformParametersMap( void ) = 0;
