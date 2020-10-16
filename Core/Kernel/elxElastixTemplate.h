@@ -111,14 +111,13 @@ namespace elastix
  */
 
 template< class TFixedImage, class TMovingImage >
-class ElastixTemplate final : public itk::Object, public ElastixBase
+class ElastixTemplate final : public ElastixBase
 {
 public:
 
   /** Standard itk. */
   typedef ElastixTemplate                 Self;
-  typedef itk::Object                     Superclass1;
-  typedef ElastixBase                     Superclass2;
+  typedef ElastixBase                     Superclass;
   typedef itk::SmartPointer< Self >       Pointer;
   typedef itk::SmartPointer< const Self > ConstPointer;
 
@@ -126,7 +125,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ElastixTemplate, itk::Object );
+  itkTypeMacro( ElastixTemplate, ElastixBase );
 
   /** Typedef's for this class. */
   typedef TFixedImage                       FixedImageType;
@@ -308,7 +307,7 @@ public:
 
   ConfigurationPointer GetConfiguration()
   {
-    return Superclass2::GetConfiguration();
+    return Superclass::GetConfiguration();
   }
 
 
