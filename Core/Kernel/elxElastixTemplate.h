@@ -58,18 +58,14 @@
  */
 
 #define elxGetBaseMacro( _name, _elxbasetype ) \
-  _elxbasetype * GetElx##_name##Base( void ) const \
-  { \
-    return this->GetElx##_name##Base( 0 ); \
-  } \
-  _elxbasetype * GetElx##_name##Base( unsigned int idx ) const \
+  _elxbasetype * GetElx##_name##Base( const unsigned int idx = 0 ) const \
   { \
     if( idx < this->GetNumberOf##_name##s() ) \
     { \
       return dynamic_cast< _elxbasetype * >( \
         this->Get##_name##Container()->ElementAt( idx ).GetPointer() ); \
     } \
-    return 0; \
+    return nullptr; \
   }
 //end elxGetBaseMacro
 
@@ -211,40 +207,18 @@ public:
   /** Get pointers to the images. They are obtained from the
    * {Fixed,Moving}ImageContainer and casted to the appropriate type.
    */
-  FixedImageType * GetFixedImage( void ) const
-  {
-    return this->GetFixedImage( 0 );
-  }
 
+  FixedImageType * GetFixedImage( unsigned int idx = 0 ) const;
 
-  FixedImageType * GetFixedImage( unsigned int idx ) const;
-
-  MovingImageType * GetMovingImage( void ) const
-  {
-    return this->GetMovingImage( 0 );
-  }
-
-
-  MovingImageType * GetMovingImage( unsigned int idx ) const;
+  MovingImageType * GetMovingImage( unsigned int idx = 0 ) const;
 
   /** Get pointers to the masks. They are obtained from the
    * {Fixed,Moving}MaskContainer and casted to the appropriate type.
    */
-  FixedMaskType * GetFixedMask( void ) const
-  {
-    return this->GetFixedMask( 0 );
-  }
 
+  FixedMaskType * GetFixedMask( unsigned int idx = 0 ) const;
 
-  FixedMaskType * GetFixedMask( unsigned int idx ) const;
-
-  MovingMaskType * GetMovingMask( void ) const
-  {
-    return this->GetMovingMask( 0 );
-  }
-
-
-  MovingMaskType * GetMovingMask( unsigned int idx ) const;
+  MovingMaskType * GetMovingMask( unsigned int idx = 0 ) const;
 
   /** Get pointers to the result image. They are obtained from the
    * ResultImageContainer and casted to the appropriate type.
@@ -259,14 +233,7 @@ public:
 
   int SetResultImage( DataObjectPointer result_image );
 
-
-  ResultDeformationFieldType * GetResultDeformationField( void ) const
-  {
-    return this->GetResultDeformationField( 0 );
-  }
-
-
-  ResultDeformationFieldType * GetResultDeformationField( unsigned int idx ) const;
+  ResultDeformationFieldType * GetResultDeformationField( unsigned int idx = 0 ) const;
 
   int SetResultDeformationField( DataObjectPointer result_deformationfield );
 
