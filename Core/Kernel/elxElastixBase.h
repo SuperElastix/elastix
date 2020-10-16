@@ -63,7 +63,7 @@
     if( this->m_##_name != _arg ) \
     { \
       this->m_##_name = _arg; \
-      this->GetAsITKBaseType()->Modified(); \
+      this->itk::Object::Modified(); \
     } \
   }
 //end elxSetObjectMacro
@@ -142,7 +142,7 @@ namespace elastix
  * \ingroup Kernel
  */
 
-class ElastixBase : public BaseComponent
+class ElastixBase : public itk::Object, public BaseComponent
 {
 public:
 
@@ -178,18 +178,6 @@ public:
 
   /** Typedef that is used in the elastix dll version. */
   typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
-
-  /** The itk class that ElastixTemplate is expected to inherit from
-   * Of course ElastixTemplate also inherits from this class (ElastixBase).
-   */
-  typedef itk::Object ITKBaseType;
-
-  /** Cast to ITKBaseType. */
-  virtual ITKBaseType * GetAsITKBaseType( void )
-  {
-    return dynamic_cast< ITKBaseType * >( this );
-  }
-
 
   /** Set/Get the Configuration Object. */
   elxGetObjectMacro( Configuration, ConfigurationType );
