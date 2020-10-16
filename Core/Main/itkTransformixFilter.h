@@ -88,6 +88,8 @@ public:
   typedef typename itk::Image<itk::Vector<float, TMovingImage::ImageDimension>, TMovingImage::ImageDimension>
     OutputDeformationFieldType;
 
+  using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
+
   using InputImageType = TMovingImage;
   itkStaticConstMacro(MovingImageDimension, unsigned int, TMovingImage::ImageDimension);
 
@@ -95,9 +97,19 @@ public:
   virtual void
   SetMovingImage(TMovingImage * inputImage);
   const InputImageType *
-  GetMovingImage(void);
+  GetMovingImage() const;
   virtual void
-  RemoveMovingImage(void);
+  RemoveMovingImage();
+
+  /* Standard filter indexed input / output methods */
+  void
+  SetInput(InputImageType * movingImage);
+  const InputImageType *
+  GetInput() const;
+  void
+  SetInput(DataObjectPointerArraySizeType index, DataObject * input);
+  const DataObject *
+  GetInput(DataObjectPointerArraySizeType index) const;
 
   /** Set/Get/Remove moving point set filename. */
   itkSetMacro(FixedPointSetFileName, std::string);
@@ -132,6 +144,16 @@ public:
 
   const ParameterObjectType *
   GetTransformParameterObject() const;
+
+  using Superclass::GetOutput;
+  DataObject *
+  GetOutput(unsigned int idx);
+  const DataObject *
+  GetOutput(unsigned int idx) const;
+  OutputImageType *
+  GetOutput();
+  const OutputImageType *
+  GetOutput() const;
 
   OutputDeformationFieldType *
   GetOutputDeformationField();
@@ -194,8 +216,6 @@ private:
   /** Tell the compiler we want all definitions of Get/Set/Remove
    *  from ProcessObject and TransformixFilter.
    */
-  using ProcessObject::SetInput;
-  using ProcessObject::GetInput;
   using ProcessObject::RemoveInput;
 
   std::string m_FixedPointSetFileName;
