@@ -116,72 +116,6 @@ typename ElastixTemplate< TFixedImage, TMovingImage >::MovingMaskType
 
 } // end SetMovingMask()
 
-/**
- * ********************** GetResultImage *************************
- */
-
-template< class TFixedImage, class TMovingImage >
-typename ElastixTemplate< TFixedImage, TMovingImage >::ResultImageType
-* ElastixTemplate< TFixedImage, TMovingImage >
-::GetResultImage( unsigned int idx ) const
-{
-  if( idx < this->GetNumberOfResultImages() )
-  {
-    return dynamic_cast< ResultImageType * >(
-      this->GetResultImageContainer()->ElementAt( idx ).GetPointer() );
-  }
-
-  return nullptr;
-
-} // end GetResultImage()
-
-/**
- * ********************** SetResultImage *************************
- */
-
-template< class TFixedImage, class TMovingImage >
-int
-ElastixTemplate< TFixedImage, TMovingImage >
-::SetResultImage( DataObjectPointer result_image )
-{
-  this->SetResultImageContainer(
-    ElastixBase::GenerateDataObjectContainer( result_image ) );
-  return 0;
-} // end SetResultImage()
-
-
-/**
-* ********************** GetResultDeformationField *************************
-*/
-
-template< class TFixedImage, class TMovingImage >
-typename ElastixTemplate< TFixedImage, TMovingImage >::ResultDeformationFieldType
-* ElastixTemplate< TFixedImage, TMovingImage >
-::GetResultDeformationField( unsigned int idx ) const
-{
-  if (idx < this->GetNumberOfResultDeformationFields() )
-  {
-    return dynamic_cast< ResultDeformationFieldType * >(
-      this->GetResultDeformationFieldContainer()->ElementAt( idx ).GetPointer() );
-  }
-
-  return nullptr;
-
-} // end GetResultDeformationField()
-
-/**
-* ********************** SetResultDeformationField *************************
-*/
-
-template< class TFixedImage, class TMovingImage >
-int
-ElastixTemplate< TFixedImage, TMovingImage >
-::SetResultDeformationField( DataObjectPointer result_deformationfield )
-{
-  this->SetResultDeformationFieldContainer(
-    ElastixBase::GenerateDataObjectContainer( result_deformationfield ) );
-  return 0;
-} // end SetResultDeformationField()
 
 /**
  * **************************** Run *****************************
@@ -937,20 +871,6 @@ ElastixTemplate< TFixedImage, TMovingImage >
 
 
 /**
- * ************** GetTransformParametersMap *****************
- */
-
-template< class TFixedImage, class TMovingImage >
-itk::ParameterMapInterface::ParameterMapType
-//somehow using typedef ParameterMapType does not compile!
-ElastixTemplate< TFixedImage, TMovingImage >
-::GetTransformParametersMap( void ) const
-{
-  return this->m_TransformParametersMap;
-} // end GetTransformParametersMap()
-
-
-/**
  * ************** CreateTransformParametersMap ******************
  */
 
@@ -1270,32 +1190,6 @@ ElastixTemplate< TFixedImage, TMovingImage >
   }
 
 } // end SetOriginalFixedImageDirection()
-
-
-/**
- * ************** SetConfigurations *********************
- */
-
-template< class TFixedImage, class TMovingImage >
-void
-ElastixTemplate< TFixedImage, TMovingImage >
-::SetConfigurations( std::vector< ConfigurationPointer > & configurations )
-{
-  this->m_Configurations.clear();
-  this->m_Configurations = configurations;
-}
-
-
-/**
- * ************** GetConfiguration *********************
- */
-
-template< class TFixedImage, class TMovingImage >
-typename ElastixTemplate< TFixedImage, TMovingImage >::ConfigurationPointer
-ElastixTemplate< TFixedImage, TMovingImage >::GetConfiguration( const size_t index )
-{
-  return this->m_Configurations[ index ];
-}
 
 
 } // end namespace elastix
