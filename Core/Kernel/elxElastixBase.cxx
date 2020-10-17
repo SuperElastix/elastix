@@ -23,6 +23,108 @@
 namespace elastix
 {
 
+namespace
+{
+
+/**
+ * ********************* GenerateFileNameContainer ******************
+ */
+
+/** Read a series of command line options that satisfy the following syntax:
+  * {-f,-f0} \<filename0\> [-f1 \<filename1\> [ -f2 \<filename2\> ... ] ]
+  *
+  * This function is used by BeforeAllBase, and is not meant be used
+  * at other locations. The errorcode remains the input value if no errors
+  * occur. It is set to errorcode | 1 if the option was not given.
+  */
+ElastixBase::FileNameContainerPointer
+GenerateFileNameContainer(
+  const Configuration & configuration,
+  const std::string & optionkey, int & errorcode,
+  bool printerrors, bool printinfo )
+{
+  const auto fileNameContainer = ElastixBase::FileNameContainerType::New();
+
+  /** Try optionkey0. */
+  std::ostringstream argusedss( "" );
+  argusedss << optionkey << 0;
+  std::string argused = argusedss.str();
+  std::string check   = configuration.GetCommandLineArgument( argused.c_str() );
+  if( check == "" )
+  {
+    /** Try optionkey. */
+    std::ostringstream argusedss2( "" );
+    argusedss2 << optionkey;
+    argused = argusedss2.str();
+    check   = configuration.GetCommandLineArgument( argused.c_str() );
+    if( check == "" )
+    {
+      /** Both failed; return an error message, if desired. */
+      if( printerrors )
+      {
+        xl::xout[ "error" ]
+          << "ERROR: No CommandLine option \""
+          << optionkey << "\" or \""
+          << optionkey << 0 << "\" given!" << std::endl;
+      }
+      errorcode |= 1;
+
+      return fileNameContainer;
+    }
+  }
+
+  /** Optionkey or optionkey0 is found. */
+  if( check != "" )
+  {
+    /** Print info, if desired. */
+    if( printinfo )
+    {
+      /** Print the option, with some spaces, followed by the value. */
+      int          nrSpaces0 = 10 - argused.length();
+      unsigned int nrSpaces  = nrSpaces0 > 1 ? nrSpaces0 : 1;
+      std::string  spaces    = "";
+      spaces.resize( nrSpaces, ' ' );
+      elxout << argused << spaces << check << std::endl;
+    }
+    fileNameContainer->CreateElementAt( 0 ) = check;
+
+    /** Loop over all optionkey<i> options given with i > 0. */
+    unsigned int i           = 1;
+    bool         readsuccess = true;
+    while( readsuccess )
+    {
+      std::ostringstream argusedss2( "" );
+      argusedss2 << optionkey << i;
+      argused = argusedss2.str();
+      check   = configuration.GetCommandLineArgument( argused.c_str() );
+      if( check == "" )
+      {
+        readsuccess = false;
+      }
+      else
+      {
+        if( printinfo )
+        {
+          /** Print the option, with some spaces, followed by the value. */
+          int          nrSpaces0 = 10 - argused.length();
+          unsigned int nrSpaces  = nrSpaces0 > 1 ? nrSpaces0 : 1;
+          std::string  spaces    = "";
+          spaces.resize( nrSpaces, ' ' );
+          elxout << argused << spaces << check << std::endl;
+        }
+        fileNameContainer->CreateElementAt( i ) = check;
+        ++i;
+      }
+    } // end while
+  } // end if
+
+  return fileNameContainer;
+
+} // end GenerateFileNameContainer()
+
+} // end unnamed namespace
+
+
 /**
  * ********************* Constructor ****************************
  */
@@ -118,25 +220,25 @@ ElastixBase::BeforeAllBase( void )
    */
   if (!BaseComponent::IsElastixLibrary())
   {
-    this->m_FixedImageFileNameContainer = this->GenerateFileNameContainer(
-      "-f", returndummy, true, true );
-    this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
-      "-m", returndummy, true, true );
+    this->m_FixedImageFileNameContainer = GenerateFileNameContainer(
+      *(this->m_Configuration), "-f", returndummy, true, true );
+    this->m_MovingImageFileNameContainer = GenerateFileNameContainer(
+      *(this->m_Configuration), "-m", returndummy, true, true );
   }
   /** Read the fixed and moving mask filenames. These are not obliged options,
    * so do not print any errors if they are not present.
    * Do print some info (second boolean = true).
    */
   int maskreturndummy = 0;
-  this->m_FixedMaskFileNameContainer = this->GenerateFileNameContainer(
-    "-fMask", maskreturndummy, false, true );
+  this->m_FixedMaskFileNameContainer = GenerateFileNameContainer(
+    *(this->m_Configuration), "-fMask", maskreturndummy, false, true );
   if( maskreturndummy != 0 )
   {
     elxout << "-fMask    unspecified, so no fixed mask used" << std::endl;
   }
   maskreturndummy                     = 0;
-  this->m_MovingMaskFileNameContainer = this->GenerateFileNameContainer(
-    "-mMask", maskreturndummy, false, true );
+  this->m_MovingMaskFileNameContainer = GenerateFileNameContainer(
+    *(this->m_Configuration), "-mMask", maskreturndummy, false, true );
   if( maskreturndummy != 0 )
   {
     elxout << "-mMask    unspecified, so no moving mask used" << std::endl;
@@ -267,8 +369,8 @@ ElastixBase::BeforeAllTransformixBase( void )
      * Save the result in the moving image file name container.
      */
     int inreturndummy = 0;
-    this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
-      "-in", inreturndummy, false, true );
+    this->m_MovingImageFileNameContainer = GenerateFileNameContainer(
+      *(this->m_Configuration), "-in", inreturndummy, false, true );
     if( inreturndummy != 0 )
     {
       elxout << "-in       unspecified, so no input image specified" << std::endl;
@@ -355,95 +457,6 @@ ElastixBase::AfterRegistrationBase( void )
   xl::xout.RemoveTargetCell( "iteration" );
 
 } // end AfterRegistrationBase()
-
-
-/**
- * ********************* GenerateFileNameContainer ******************
- */
-
-ElastixBase::FileNameContainerPointer
-ElastixBase::GenerateFileNameContainer(
-  const std::string & optionkey, int & errorcode,
-  bool printerrors, bool printinfo ) const
-{
-  FileNameContainerPointer fileNameContainer = FileNameContainerType::New();
-
-  /** Try optionkey0. */
-  std::ostringstream argusedss( "" );
-  argusedss << optionkey << 0;
-  std::string argused = argusedss.str();
-  std::string check   = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
-  if( check == "" )
-  {
-    /** Try optionkey. */
-    std::ostringstream argusedss2( "" );
-    argusedss2 << optionkey;
-    argused = argusedss2.str();
-    check   = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
-    if( check == "" )
-    {
-      /** Both failed; return an error message, if desired. */
-      if( printerrors )
-      {
-        xl::xout[ "error" ]
-          << "ERROR: No CommandLine option \""
-          << optionkey << "\" or \""
-          << optionkey << 0 << "\" given!" << std::endl;
-      }
-      errorcode |= 1;
-
-      return fileNameContainer;
-    }
-  }
-
-  /** Optionkey or optionkey0 is found. */
-  if( check != "" )
-  {
-    /** Print info, if desired. */
-    if( printinfo )
-    {
-      /** Print the option, with some spaces, followed by the value. */
-      int          nrSpaces0 = 10 - argused.length();
-      unsigned int nrSpaces  = nrSpaces0 > 1 ? nrSpaces0 : 1;
-      std::string  spaces    = "";
-      spaces.resize( nrSpaces, ' ' );
-      elxout << argused << spaces << check << std::endl;
-    }
-    fileNameContainer->CreateElementAt( 0 ) = check;
-
-    /** Loop over all optionkey<i> options given with i > 0. */
-    unsigned int i           = 1;
-    bool         readsuccess = true;
-    while( readsuccess )
-    {
-      std::ostringstream argusedss2( "" );
-      argusedss2 << optionkey << i;
-      argused = argusedss2.str();
-      check   = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
-      if( check == "" )
-      {
-        readsuccess = false;
-      }
-      else
-      {
-        if( printinfo )
-        {
-          /** Print the option, with some spaces, followed by the value. */
-          int          nrSpaces0 = 10 - argused.length();
-          unsigned int nrSpaces  = nrSpaces0 > 1 ? nrSpaces0 : 1;
-          std::string  spaces    = "";
-          spaces.resize( nrSpaces, ' ' );
-          elxout << argused << spaces << check << std::endl;
-        }
-        fileNameContainer->CreateElementAt( i ) = check;
-        ++i;
-      }
-    } // end while
-  } // end if
-
-  return fileNameContainer;
-
-} // end GenerateFileNameContainer()
 
 
 /**

@@ -539,19 +539,6 @@ private:
   /** Use or ignore direction cosines. */
   bool m_UseDirectionCosines;
 
-  /** Read a series of command line options that satisfy the following syntax:
-   * {-f,-f0} \<filename0\> [-f1 \<filename1\> [ -f2 \<filename2\> ... ] ]
-   *
-   * This function is used by BeforeAllBase, and is not meant be used
-   * at other locations. The errorcode remains the input value if no errors
-   * occur. It is set to errorcode | 1 if the option was not given.
-   */
-  FileNameContainerPointer GenerateFileNameContainer(
-    const std::string & optionkey,
-    int & errorcode,
-    bool printerrors,
-    bool printinfo ) const;
-
 };
 
 } // end namespace elastix
