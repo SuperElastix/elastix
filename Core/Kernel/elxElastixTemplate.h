@@ -38,10 +38,7 @@
 #include "elxResampleInterpolatorBase.h"
 #include "elxTransformBase.h"
 
-#include "itkTimeProbe.h"
-
 #include <sstream>
-#include <fstream>
 
 /**
  * Macro that defines to functions. In the case of
@@ -177,9 +174,6 @@ public:
   typedef ResampleInterpolatorBase< Self > ResampleInterpolatorBaseType;
   typedef elx::TransformBase< Self >       TransformBaseType;
 
-  /** Typedef's for Timer class. */
-  typedef itk::TimeProbe TimerType;
-
   /** Typedef's for ApplyTransform.
    * \todo How useful is this? It is not consequently supported, since the
    * the input image is stored in the MovingImageContainer anyway.
@@ -294,20 +288,6 @@ private:
   AfterEachIterationCommandPointer   m_AfterEachIterationCommand{};
   AfterEachResolutionCommandPointer  m_AfterEachResolutionCommand{};
 
-  /** Timers. */
-  TimerType m_Timer0{};
-  TimerType m_IterationTimer{};
-  TimerType m_ResolutionTimer{};
-
-  /** Store the CurrentTransformParameterFileName. */
-  std::string m_CurrentTransformParameterFileName;
-
-  /** A vector of configuration objects, needed when transformix is used as library. */
-  std::vector< ConfigurationPointer > m_Configurations;
-
-  /** Count the number of iterations. */
-  unsigned int m_IterationCounter{};
-
   /** CreateTransformParameterFile. */
   void CreateTransformParameterFile( const std::string FileName,
     const bool ToLog );
@@ -318,13 +298,8 @@ private:
   /** GetTransformParametersMap. */
   ParameterMapType GetTransformParametersMap( void ) const override;
 
-  /** Stores transformation parameters map. */
-  ParameterMapType m_TransformParametersMap;
-
   /** Open the IterationInfoFile, where the table with iteration info is written to. */
   void OpenIterationInfoFile( void );
-
-  std::ofstream m_IterationInfoFile;
 
   /** Used by the callback functions, BeforeEachResolution() etc.).
    * This method calls a function in each component, in the following order:

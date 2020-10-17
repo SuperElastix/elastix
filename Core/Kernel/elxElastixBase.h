@@ -39,6 +39,7 @@
 #include <itkDataObject.h>
 #include <itkImageFileReader.h>
 #include <itkObject.h>
+#include <itkTimeProbe.h>
 #include <itkVectorContainer.h>
 
 #include <fstream>
@@ -178,6 +179,9 @@ public:
 
   /** Typedef that is used in the elastix dll version. */
   typedef itk::ParameterMapInterface::ParameterMapType ParameterMapType;
+
+  /** Typedef's for Timer class. */
+  typedef itk::TimeProbe TimerType;
 
   /** Set/Get the Configuration Object. */
   elxGetObjectMacro( Configuration, ConfigurationType );
@@ -367,6 +371,25 @@ protected:
   ComponentDatabasePointer m_ComponentDatabase;
 
   FlatDirectionCosinesType m_OriginalFixedImageDirection;
+
+  /** Timers. */
+  TimerType m_Timer0{};
+  TimerType m_IterationTimer{};
+  TimerType m_ResolutionTimer{};
+
+  /** Store the CurrentTransformParameterFileName. */
+  std::string m_CurrentTransformParameterFileName;
+
+  /** A vector of configuration objects, needed when transformix is used as library. */
+  std::vector< ConfigurationPointer > m_Configurations;
+
+  /** Count the number of iterations. */
+  unsigned int m_IterationCounter{};
+
+  /** Stores transformation parameters map. */
+  ParameterMapType m_TransformParametersMap;
+
+  std::ofstream m_IterationInfoFile;
 
   /** Convenient mini class to load the files specified by a filename container
    * The function GenerateImageContainer can be used without instantiating an
