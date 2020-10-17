@@ -476,6 +476,61 @@ ElastixBase::AfterRegistrationBase( void )
 
 } // end AfterRegistrationBase()
 
+/**
+ * ********************** GetResultImage *************************
+ */
+
+itk::DataObject*
+ElastixBase::GetResultImage( const unsigned int idx ) const
+{
+  if( idx < this->GetNumberOfResultImages() )
+  {
+    return this->m_ResultImageContainer->ElementAt( idx ).GetPointer();
+  }
+
+  return nullptr;
+
+} // end GetResultImage()
+
+
+/**
+ * ********************** SetResultImage *************************
+ */
+
+void
+ElastixBase::SetResultImage( DataObjectPointer result_image )
+{
+  this->SetResultImageContainer(
+    GenerateDataObjectContainer( result_image ) );
+} // end SetResultImage()
+
+
+/**
+* ********************** GetResultDeformationField *************************
+*/
+
+itk::DataObject*
+ElastixBase::GetResultDeformationField( unsigned int idx ) const
+{
+  if (idx < this->GetNumberOfResultDeformationFields() )
+  {
+    return this->m_ResultDeformationFieldContainer->ElementAt( idx ).GetPointer();
+  }
+
+  return nullptr;
+
+} // end GetResultDeformationField()
+
+/**
+* ********************** SetResultDeformationField *************************
+*/
+
+void
+ElastixBase::SetResultDeformationField( DataObjectPointer result_deformationfield )
+{
+  this->SetResultDeformationFieldContainer(
+    ElastixBase::GenerateDataObjectContainer( result_deformationfield ) );
+} // end SetResultDeformationField()
 
 /**
  * ******************** GetUseDirectionCosines ********************
@@ -508,6 +563,39 @@ const ElastixBase::FlatDirectionCosinesType &
 ElastixBase::GetOriginalFixedImageDirectionFlat( void ) const
 {
   return this->m_OriginalFixedImageDirection;
+}
+
+
+/**
+ * ************** GetTransformParametersMap *****************
+ */
+
+itk::ParameterMapInterface::ParameterMapType
+ElastixBase::GetTransformParametersMap( void ) const
+{
+  return this->m_TransformParametersMap;
+} // end GetTransformParametersMap()
+
+
+/**
+ * ************** SetConfigurations *********************
+ */
+
+void
+ElastixBase::SetConfigurations( const std::vector< ConfigurationPointer > & configurations )
+{
+  this->m_Configurations = configurations;
+}
+
+
+/**
+ * ************** GetConfiguration *********************
+ */
+
+ElastixBase::ConfigurationPointer
+ElastixBase::GetConfiguration( const size_t index ) const
+{
+  return this->m_Configurations[ index ];
 }
 
 

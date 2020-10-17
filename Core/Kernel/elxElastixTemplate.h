@@ -126,12 +126,6 @@ public:
   typedef typename FixedImageType::Pointer  FixedImagePointer;
   typedef typename MovingImageType::Pointer MovingImagePointer;
 
-  /** Result image */
-  typedef itk::DataObject ResultImageType;
-
-  /** Result deformation field */
-  typedef itk::DataObject ResultDeformationFieldType;
-
   /** For using the Dimensions. */
   itkStaticConstMacro( Dimension,       unsigned int, FixedImageType::ImageDimension );
   itkStaticConstMacro( FixedDimension,  unsigned int, FixedImageType::ImageDimension );
@@ -214,23 +208,6 @@ public:
 
   MovingMaskType * GetMovingMask( unsigned int idx = 0 ) const;
 
-  /** Get pointers to the result image. They are obtained from the
-   * ResultImageContainer and casted to the appropriate type.
-   */
-  ResultImageType * GetResultImage( void ) const
-  {
-    return this->GetResultImage( 0 );
-  }
-
-
-  ResultImageType * GetResultImage( unsigned int idx ) const;
-
-  int SetResultImage( DataObjectPointer result_image );
-
-  ResultDeformationFieldType * GetResultDeformationField( unsigned int idx = 0 ) const;
-
-  int SetResultDeformationField( DataObjectPointer result_deformationfield );
-
   /** Main functions:
    * Run() for registration, and ApplyTransform() for just
    * applying a transform to an image.
@@ -260,18 +237,6 @@ public:
   /** Get the name of the current transform parameter file. */
   itkGetStringMacro( CurrentTransformParameterFileName );
 
-  /** Set configuration vector. Library only. */
-  void SetConfigurations( std::vector< ConfigurationPointer > & configurations ) override;
-
-  /** Return configuration from vector of configurations. Library only. */
-  ConfigurationPointer GetConfiguration( const size_t index );
-
-  ConfigurationPointer GetConfiguration()
-  {
-    return Superclass::GetConfiguration();
-  }
-
-
   /** Get the original direction cosines of the fixed image. Returns
    * false if it failed to determine the original fixed image direction. In
    * that case the direction var is left unchanged. If no fixed image is
@@ -294,9 +259,6 @@ private:
 
   /** CreateTransformParametersMap. */
   void CreateTransformParametersMap( void ) override;
-
-  /** GetTransformParametersMap. */
-  ParameterMapType GetTransformParametersMap( void ) const override;
 
   /** Open the IterationInfoFile, where the table with iteration info is written to. */
   void OpenIterationInfoFile( void );

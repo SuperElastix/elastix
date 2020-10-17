@@ -168,6 +168,12 @@ public:
     unsigned int, std::string >               FileNameContainerType;
   typedef FileNameContainerType::Pointer FileNameContainerPointer;
 
+  /** Result image */
+  typedef itk::DataObject ResultImageType;
+
+  /** Result deformation field */
+  typedef itk::DataObject ResultDeformationFieldType;
+
   /** Other typedef's. */
   typedef ComponentDatabase                ComponentDatabaseType;
   typedef ComponentDatabaseType::Pointer   ComponentDatabasePointer;
@@ -330,6 +336,15 @@ public:
 
   void AfterRegistrationBase( void ) override;
 
+  ResultImageType* GetResultImage(const unsigned int idx = 0) const;
+
+  void SetResultImage( DataObjectPointer result_image );
+
+  ResultDeformationFieldType* GetResultDeformationField( unsigned int idx = 0 ) const;
+
+  void SetResultDeformationField( DataObjectPointer result_deformationfield );
+
+
   /** Get the default precision of xout.
    * (The value assumed when no DefaultOutputPrecision is given in the
    * parameter file.
@@ -356,10 +371,13 @@ public:
   virtual void CreateTransformParametersMap( void ) = 0;
 
   /** Gets transformation parameters map. */
-  virtual ParameterMapType GetTransformParametersMap( void ) const = 0;
+  ParameterMapType GetTransformParametersMap( void ) const;
 
   /** Set configuration vector. Library only. */
-  virtual void SetConfigurations( std::vector< ConfigurationPointer > & configurations ) = 0;
+  void SetConfigurations( const std::vector< ConfigurationPointer > & configurations );
+
+  /** Return configuration from vector of configurations. Library only. */
+  ConfigurationPointer GetConfiguration( const size_t index ) const;
 
 protected:
 
