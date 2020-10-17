@@ -467,29 +467,9 @@ public:
 
   };
 
-  class MultipleDataObjectFiller
-  {
-public:
-
-    /** GenerateImageContainer. */
-    static DataObjectContainerPointer GenerateImageContainer(
-      DataObjectPointer image )
-    {
-      /** Allocate image container pointer. */
-      const auto imageContainer = DataObjectContainerType::New();
-
-      /** Store image in image container. */
-      imageContainer->push_back( image );
-
-      /** Return the pointer to the new image container. */
-      return imageContainer;
-    } // end GenerateImageContainer()
-
-
-    /** Constructor and destructor. */
-    MultipleDataObjectFiller() = default;
-    ~MultipleDataObjectFiller() = default;
-  };
+  /** Generates a container that contains the specified data object */
+  static DataObjectContainerPointer GenerateDataObjectContainer(
+    DataObjectPointer dataObject );
 
 private:
 

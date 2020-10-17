@@ -176,6 +176,24 @@ ElastixBase::ElastixBase()
 
 
 /**
+ * ********************* GenerateDataObjectContainer ***********************
+ */
+
+ElastixBase::DataObjectContainerPointer
+ElastixBase::GenerateDataObjectContainer( DataObjectPointer dataObject )
+{
+  /** Allocate container pointer. */
+  const auto container = DataObjectContainerType::New();
+
+  /** Store object in container. */
+  container->push_back(dataObject);
+
+  /** Return the pointer to the new container. */
+  return container;
+}
+
+
+/**
  * ********************* SetDBIndex ***********************
  */
 
