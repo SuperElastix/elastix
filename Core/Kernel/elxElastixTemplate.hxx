@@ -145,7 +145,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 ::SetResultImage( DataObjectPointer result_image )
 {
   this->SetResultImageContainer(
-    MultipleDataObjectFiller::GenerateImageContainer( result_image ) );
+    ElastixBase::GenerateDataObjectContainer( result_image ) );
   return 0;
 } // end SetResultImage()
 
@@ -179,7 +179,7 @@ ElastixTemplate< TFixedImage, TMovingImage >
 ::SetResultDeformationField( DataObjectPointer result_deformationfield )
 {
   this->SetResultDeformationFieldContainer(
-    MultipleDataObjectFiller::GenerateImageContainer( result_deformationfield ) );
+    ElastixBase::GenerateDataObjectContainer( result_deformationfield ) );
   return 0;
 } // end SetResultDeformationField()
 
