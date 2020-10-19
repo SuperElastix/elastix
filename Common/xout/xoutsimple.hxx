@@ -94,8 +94,8 @@ xoutsimple< charT, traits >::SetOutputs( const XStreamMapType & outputmap )
  */
 
 template< class charT, class traits >
-const typename xoutsimple< charT, traits >::XStreamMapType
-& xoutsimple< charT, traits >::GetXOutputs( void )
+auto xoutsimple< charT, traits >::GetXOutputs( void )
+-> const XStreamMapType &
 {
   return this->m_XTargetCells;
 
@@ -106,8 +106,8 @@ const typename xoutsimple< charT, traits >::XStreamMapType
  */
 
 template< class charT, class traits >
-const typename xoutsimple< charT, traits >::CStreamMapType
-& xoutsimple< charT, traits >::GetCOutputs( void )
+auto xoutsimple< charT, traits >::GetCOutputs( void )
+-> const CStreamMapType &
 {
   return this->m_CTargetCells;
 
