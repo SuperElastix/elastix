@@ -985,3 +985,8 @@ trx_add_test( TransformixMemoryTest
   -in ${TestDataDir}/3DCT_lung_baseline_small.mha
   -tp ${TestDataDir}/transformparameters.3DCT_lung.affine.txt )
 
+elx_add_test( TransformixFilterTest "" "Transformix"
+  ${TestDataDir}/3DCT_lung_baseline_small.mha
+  ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  ${TestOutputDir}/TransformixFilterTest.mha )
+target_link_libraries( itkTransformixFilterTest elastix_lib transformix_lib )
